@@ -3,16 +3,10 @@
 //! the health line must report guard mode, index size, and a warm
 //! daemon after its own warm-up ping.
 
-use std::io::Write as _;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
 
-fn tmp(name: &str) -> PathBuf {
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
+mod common;
+use common::tmp;
 
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -25,39 +19,17 @@ fn repo_root() -> PathBuf {
 fn health_reports_mode_index_and_warm_daemon() {
     let dir = tmp("health-e2e");
     std::fs::write(dir.join("a.rs"), "fn seed(a: i64) -> i64 { a * 2 + 1 }\n").expect("a.rs");
-    let out = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .args(["dedup", "."])
-        .current_dir(&dir)
-        .output()
-        .expect("seed index");
-    assert!(out.status.success());
+    common::build_index(&dir);
     let envelope = serde_json::json!({
         "session_id": "t", "transcript_path": "t",
         "cwd": dir.display().to_string().replace('\\', "/"),
         "hook_event_name": "SessionStart"
     })
     .to_string();
-    let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .args(["health", "--hook"])
-        .current_dir(&dir)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .expect("spawn health");
-    child
-        .stdin
-        .as_mut()
-        .expect("stdin")
-        .write_all(envelope.as_bytes())
-        .expect("write");
-    let out = child.wait_with_output().expect("wait");
-    // shut the warmed daemon down before asserting
-    use codeeraser::daemon::{client, proto::Request};
-    let _ = client::request(&dir, &Request::Shutdown);
-    assert!(out.status.success(), "health must exit 0");
-    let v: serde_json::Value =
-        serde_json::from_str(String::from_utf8_lossy(&out.stdout).trim()).expect("json");
+    let out = common::run_hook(&dir, &["health", "--hook"], &envelope);
+    // shut the warmed daemon down before asserting on the line
+    common::shutdown_daemon(&dir);
+    let v: serde_json::Value = serde_json::from_str(out.trim()).expect("json");
     let ctx = v["hookSpecificOutput"]["additionalContext"]
         .as_str()
         .expect("additionalContext");

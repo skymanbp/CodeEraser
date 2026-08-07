@@ -10,31 +10,14 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+mod common;
+use common::rust_fn;
+
 static CASE: AtomicUsize = AtomicUsize::new(0);
 
 fn case_dir() -> PathBuf {
     let n = CASE.fetch_add(1, Ordering::Relaxed);
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("prop-{n}"));
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
-
-/// Parseable Rust with seed-controlled identifiers/literals so
-/// different seeds form T2 clones of each other.
-fn rust_fn(seed: u32) -> String {
-    format!(
-        "fn work_{seed}(input_{seed}: &[i64]) -> i64 {{
-    let mut total_{seed} = {seed};
-    for value_{seed} in input_{seed} {{
-        if *value_{seed} > {seed} {{
-            total_{seed} += value_{seed} * 3;
-        }}
-    }}
-    total_{seed}
-}}
-"
-    )
+    common::tmp(&format!("prop-{n}"))
 }
 
 #[derive(Debug, Clone)]

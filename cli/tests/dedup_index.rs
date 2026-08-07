@@ -6,33 +6,9 @@
 use codeeraser::dedup::{Params, index::Index, pairs, tokens};
 use codeeraser::scan::lang::Lang;
 use std::collections::BTreeSet;
-use std::path::PathBuf;
 
-fn tmp(name: &str) -> PathBuf {
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
-
-/// ~60 normalized tokens; `seed` renames identifiers and changes
-/// literals so pairs of outputs are T2 (not T1) clones.
-fn rust_fn(seed: u32) -> String {
-    format!(
-        "fn work_{seed}(input_{seed}: &[i64], limit_{seed}: i64) -> i64 {{
-    let mut total_{seed} = {seed};
-    for value_{seed} in input_{seed} {{
-        if *value_{seed} > limit_{seed} {{
-            total_{seed} += value_{seed} * {seed} + 7;
-        }} else {{
-            total_{seed} -= value_{seed} / 3;
-        }}
-    }}
-    total_{seed}
-}}
-"
-    )
-}
+mod common;
+use common::{rust_fn, tmp};
 
 #[test]
 fn cross_file_t2_clone_detected() {

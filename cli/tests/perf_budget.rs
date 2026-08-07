@@ -9,32 +9,11 @@ use codeeraser::daemon::client;
 use codeeraser::daemon::proto::{Request, Response};
 use codeeraser::dedup::{Params, analyze, index::Index};
 use codeeraser::scan::lang::Lang;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::Instant;
 
-fn corpus_dir(name: &str) -> PathBuf {
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
-
-fn rust_fn(seed: u32) -> String {
-    format!(
-        "fn work_{seed}(input_{seed}: &[i64], limit_{seed}: i64) -> i64 {{
-    let mut total_{seed} = {seed};
-    for value_{seed} in input_{seed} {{
-        if *value_{seed} > limit_{seed} {{
-            total_{seed} += value_{seed} * {seed} + 7;
-        }} else {{
-            total_{seed} -= value_{seed} / 3;
-        }}
-    }}
-    total_{seed}
-}}
-"
-    )
-}
+mod common;
+use common::{rust_fn, tmp as corpus_dir};
 
 /// 100k+ LOC: 460 files x 20 fns x ~11 lines. seed % 900 forms
 /// realistic clone families (~10 instances) without hot-cap regimes.
@@ -116,24 +95,7 @@ fn incremental_single_file_under_200ms() {
 fn probe_round_trip_p95_under_150ms() {
     let root = corpus_dir("perf-probe");
     generate_corpus(&root);
-    let mut child = std::process::Command::new(env!("CARGO_BIN_EXE_ce"))
-        .arg("daemon")
-        .arg(&root)
-        .env("CE_DAEMON_IDLE_SECS", "120")
-        .stdin(std::process::Stdio::null())
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .spawn()
-        .expect("spawn daemon");
-    let mut ready = false;
-    for _ in 0..50 {
-        std::thread::sleep(std::time::Duration::from_millis(100));
-        if client::request(&root, &Request::Ping).is_ok() {
-            ready = true;
-            break;
-        }
-    }
-    assert!(ready, "daemon never came up");
+    let child = common::spawn_daemon_ready(&root);
     let mut rtts: Vec<u128> = Vec::with_capacity(100);
     for _ in 0..100 {
         let t0 = Instant::now();
@@ -148,7 +110,7 @@ fn probe_round_trip_p95_under_150ms() {
         rtts[49] as f64 / 1000.0,
         rtts[99] as f64 / 1000.0
     );
-    let _ = client::request(&root, &Request::Shutdown);
-    let _ = child.wait();
+    common::shutdown_daemon(&root);
+    common::wait_exit(child, "daemon");
     release_assert(p95 < 150.0, &format!("probe p95 {p95:.2}ms exceeds budget"));
 }

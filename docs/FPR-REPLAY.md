@@ -21,8 +21,12 @@
   "新增文件与既有文件重复"判定正确。
 - 33 条：`cli/tests/*.rs` 之间共享的 `rust_fn(seed)`/`tmp()`/git 助手
   ——**作者本人复制粘贴的真实重复**（8 个测试文件各持一份）。工具当场
-  抓住了它要消灭的行为。治理项：抽 `tests/common/mod.rs` 共享助手
-  （已排期，M3 内完成）。
+  抓住了它要消灭的行为。治理项已完成：`tests/common/mod.rs` 统一
+  数据助手 + hook 运行器 + daemon 启动/回收 + observe 尾行读取，
+  自仓 dedup 251→211 块、助手家族跨文件对清零。保留不抽 = 用例
+  平行结构（deny/warn/observe 三态断言、dedup_index 刷新序列）；
+  divergence/metrics/sonar 间的嵌入 fixture 簇（155 块）与产品代码
+  audit/guard/health 的信封结构（8 块）另行排期。
 
 ## 重放捎带抓获的产品缺陷（已修）
 

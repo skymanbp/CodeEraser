@@ -5,31 +5,10 @@
 
 use codeeraser::dedup::{Params, index::Index, pairs, probe};
 use codeeraser::scan::lang::Lang;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-fn tmp(name: &str) -> PathBuf {
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
-
-fn rust_fn(seed: u32) -> String {
-    format!(
-        "fn work_{seed}(input_{seed}: &[i64], limit_{seed}: i64) -> i64 {{
-    let mut total_{seed} = {seed};
-    for value_{seed} in input_{seed} {{
-        if *value_{seed} > limit_{seed} {{
-            total_{seed} += value_{seed} * {seed} + 7;
-        }} else {{
-            total_{seed} -= value_{seed} / 3;
-        }}
-    }}
-    total_{seed}
-}}
-"
-    )
-}
+mod common;
+use common::{rust_fn, tmp};
 
 fn filter(p: Params) -> pairs::Filter {
     pairs::Filter {
@@ -111,24 +90,7 @@ fn probe_over_daemon_socket() {
     use codeeraser::daemon::proto::{Request, Response};
     let root = tmp("probe-daemon");
     let _ = seeded_index(&root);
-    let mut child = std::process::Command::new(env!("CARGO_BIN_EXE_ce"))
-        .arg("daemon")
-        .arg(&root)
-        .env("CE_DAEMON_IDLE_SECS", "120")
-        .stdin(std::process::Stdio::null())
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .spawn()
-        .expect("spawn daemon");
-    let mut ready = false;
-    for _ in 0..50 {
-        std::thread::sleep(std::time::Duration::from_millis(100));
-        if client::request(&root, &Request::Ping).is_ok() {
-            ready = true;
-            break;
-        }
-    }
-    assert!(ready, "daemon never came up");
+    let child = common::spawn_daemon_ready(&root);
     let req = Request::Probe {
         file_path: root.join("b.rs").display().to_string(),
         content: rust_fn(9),
@@ -145,6 +107,6 @@ fn probe_over_daemon_socket() {
         }
         other => panic!("expected probe report, got {other:?}"),
     }
-    let _ = client::request(&root, &Request::Shutdown);
-    let _ = child.wait();
+    common::shutdown_daemon(&root);
+    common::wait_exit(child, "daemon");
 }

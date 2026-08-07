@@ -3,32 +3,10 @@
 //! git repo with staged duplication.
 
 use std::io::{BufRead, BufReader, Write as _};
-use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-fn tmp(name: &str) -> PathBuf {
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
-
-fn rust_fn(seed: u32) -> String {
-    format!(
-        "fn work_{seed}(input_{seed}: &[i64], limit_{seed}: i64) -> i64 {{
-    let mut total_{seed} = {seed};
-    for value_{seed} in input_{seed} {{
-        if *value_{seed} > limit_{seed} {{
-            total_{seed} += value_{seed} * {seed} + 7;
-        }} else {{
-            total_{seed} -= value_{seed} / 3;
-        }}
-    }}
-    total_{seed}
-}}
-"
-    )
-}
+mod common;
+use common::{git, rust_fn, tmp};
 
 /// Server over a seeded project + a request closure; EOF on drop.
 struct McpSession {
@@ -114,17 +92,6 @@ fn mcp_tool_calls_and_unknown_method() {
     let err = s.ask(serde_json::json!({"jsonrpc": "2.0", "id": 5, "method": "nope"}));
     assert_eq!(err["error"]["code"], -32601);
     s.finish();
-}
-
-fn git(dir: &Path, args: &[&str]) {
-    let out = Command::new("git")
-        .arg("-C")
-        .arg(dir)
-        .args(["-c", "user.email=t@t", "-c", "user.name=t"])
-        .args(args)
-        .output()
-        .expect("git");
-    assert!(out.status.success(), "git {args:?}: {out:?}");
 }
 
 #[test]

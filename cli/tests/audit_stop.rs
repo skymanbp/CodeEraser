@@ -3,87 +3,23 @@
 //! touching changed files; observe stays silent but logs; the
 //! stop_hook_active loop guard short-circuits.
 
-use std::io::Write as _;
-use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::path::Path;
 
-fn tmp(name: &str) -> PathBuf {
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
-    dir
-}
-
-fn rust_fn(seed: u32) -> String {
-    format!(
-        "fn work_{seed}(input_{seed}: &[i64], limit_{seed}: i64) -> i64 {{
-    let mut total_{seed} = {seed};
-    for value_{seed} in input_{seed} {{
-        if *value_{seed} > limit_{seed} {{
-            total_{seed} += value_{seed} * {seed} + 7;
-        }} else {{
-            total_{seed} -= value_{seed} / 3;
-        }}
-    }}
-    total_{seed}
-}}
-"
-    )
-}
-
-fn git(dir: &Path, args: &[&str]) {
-    let out = Command::new("git")
-        .arg("-C")
-        .arg(dir)
-        .args(args)
-        .output()
-        .expect("git");
-    assert!(out.status.success(), "git {args:?}: {:?}", out);
-}
+mod common;
+use common::{git, rust_fn, tmp};
 
 /// Repo with a.rs committed; working tree adds b.rs = T2 clone of a.rs.
 fn seed_repo(dir: &Path, mode: &str) {
-    std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
-    std::fs::write(dir.join("ce.toml"), format!("[guard]\nmode = \"{mode}\"\n")).expect("ce.toml");
+    common::seed_sources(dir, mode);
     git(dir, &["init", "-q"]);
-    git(
-        dir,
-        &["-c", "user.email=t@t", "-c", "user.name=t", "add", "."],
-    );
-    git(
-        dir,
-        &[
-            "-c",
-            "user.email=t@t",
-            "-c",
-            "user.name=t",
-            "commit",
-            "-qm",
-            "seed",
-        ],
-    );
+    git(dir, &["add", "."]);
+    git(dir, &["commit", "-qm", "seed"]);
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (uncommitted clone)");
     git(dir, &["add", "b.rs"]); // numstat vs HEAD sees staged new files
 }
 
 fn run_audit(dir: &Path, envelope: &str) -> String {
-    let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .args(["audit", "--hook"])
-        .current_dir(dir)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .expect("spawn audit");
-    child
-        .stdin
-        .as_mut()
-        .expect("stdin")
-        .write_all(envelope.as_bytes())
-        .expect("write");
-    let out = child.wait_with_output().expect("wait");
-    assert!(out.status.success(), "audit must exit 0 (fail-open)");
-    String::from_utf8_lossy(&out.stdout).to_string()
+    common::run_hook(dir, &["audit", "--hook"], envelope)
 }
 
 fn envelope(dir: &Path, stop_hook_active: bool) -> String {
@@ -112,9 +48,7 @@ fn observe_mode_is_silent_but_logs() {
     seed_repo(&dir, "observe");
     let out = run_audit(&dir, &envelope(&dir, false));
     assert!(out.trim().is_empty(), "observe emits nothing: {out}");
-    let log = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).expect("log");
-    let line: serde_json::Value =
-        serde_json::from_str(log.lines().last().expect("line")).expect("ndjson");
+    let line = common::last_observe(&dir);
     assert_eq!(line["event"], "stop_audit");
     assert!(line["dup_blocks"].as_u64().expect("n") >= 1);
     assert!(line["net_loc"].as_i64().expect("net") > 0);
@@ -128,18 +62,7 @@ fn loop_guard_and_clean_tree_stay_silent() {
     let out = run_audit(&dir, &envelope(&dir, true));
     assert!(out.trim().is_empty(), "loop guard passes: {out}");
     // clean tree: commit everything, audit stays silent even in deny
-    git(
-        &dir,
-        &[
-            "-c",
-            "user.email=t@t",
-            "-c",
-            "user.name=t",
-            "commit",
-            "-qm",
-            "b",
-        ],
-    );
+    git(&dir, &["commit", "-qm", "b"]);
     let out2 = run_audit(&dir, &envelope(&dir, false));
     assert!(out2.trim().is_empty(), "clean tree passes: {out2}");
 }
