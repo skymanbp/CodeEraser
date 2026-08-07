@@ -1,10 +1,9 @@
 //! ce — CodeEraser CLI frontend.
-//! M0 scope: `--version` and `doctor` (spawns ce-core, verifies the
-//! NDJSON handshake per contracts/VERSIONING.md).
+//! `doctor` (ce-core handshake, M0) + `scan` (metrics, M1).
 
-mod handshake;
-
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
+use codeeraser::{handshake, scan};
+use std::path::PathBuf;
 use std::process::ExitCode;
 
 #[derive(Parser)]
@@ -27,11 +26,40 @@ enum Cmd {
         #[arg(long, default_value = "ce-core")]
         core: String,
     },
+    /// Measure size / complexity / readability metrics (M1 modules)
+    Scan {
+        /// Directory to scan (default: current directory)
+        path: Option<PathBuf>,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
+    },
+}
+
+#[derive(Clone, Copy, ValueEnum)]
+enum OutFormat {
+    Console,
+    Json,
 }
 
 fn main() -> ExitCode {
     match Cli::parse().cmd {
         Cmd::Doctor { core } => doctor(&core),
+        Cmd::Scan { path, format } => scan_cmd(path, format),
+    }
+}
+
+fn scan_cmd(path: Option<PathBuf>, format: OutFormat) -> ExitCode {
+    let root = path.unwrap_or_else(|| PathBuf::from("."));
+    let fmt = match format {
+        OutFormat::Console => scan::Format::Console,
+        OutFormat::Json => scan::Format::Json,
+    };
+    match scan::run(&root, fmt) {
+        Ok(code) => code,
+        Err(err) => {
+            eprintln!("ce scan: {err:#}");
+            ExitCode::from(2)
+        }
     }
 }
 

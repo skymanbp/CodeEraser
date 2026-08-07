@@ -29,8 +29,14 @@ jobs:
         run: |
           cargo build --locked
           cargo test --locked
-          cargo clippy --locked -- -D warnings
+          cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
+
+      # Dogfood (plan §7.5): this repo must pass its own scanner;
+      # exit 1 on any fail-level finding breaks the build.
+      - name: Dogfood (ce scan on this repo)
+        working-directory: cli
+        run: cargo run --locked -- scan ..
 
       - uses: haskell-actions/setup@v2
         id: hs
