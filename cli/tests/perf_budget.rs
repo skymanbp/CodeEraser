@@ -1,5 +1,6 @@
 //! M2 performance budgets (plan §6 M2): 100k-LOC full index < 30s,
 //! single-file incremental < 200ms, probe round-trip p95 < 150ms.
+//! M3 budget: `ce probe --hook` end-to-end (ce side) p95 < 1s.
 //! Ignored by default — run in RELEASE (debug numbers are not the
 //! budget's currency; assertions only fire in release):
 //!   cargo test --release --test perf_budget -- --ignored --nocapture
@@ -113,4 +114,59 @@ fn probe_round_trip_p95_under_150ms() {
     common::shutdown_daemon(&root);
     common::wait_exit(child, "daemon");
     release_assert(p95 < 150.0, &format!("probe p95 {p95:.2}ms exceeds budget"));
+}
+
+fn hook_envelope(dir: &Path, content: &str) -> String {
+    let cwd = dir.display().to_string().replace('\\', "/");
+    serde_json::json!({
+        "session_id": "bench", "transcript_path": "t", "cwd": cwd,
+        "hook_event_name": "PreToolUse", "tool_name": "Write",
+        "tool_input": {"file_path": format!("{cwd}/b.rs"), "content": content},
+        "tool_use_id": "t"
+    })
+    .to_string()
+}
+
+/// 30 timed hook calls; asserts every call decides (or stays silent).
+fn hook_samples(dir: &Path, envelope: &str, expect_decision: bool) -> Vec<u128> {
+    let mut ms = Vec::with_capacity(30);
+    for _ in 0..30 {
+        let t0 = Instant::now();
+        let out = common::run_hook(dir, &["probe", "--hook"], envelope);
+        ms.push(t0.elapsed().as_millis());
+        assert_eq!(!out.trim().is_empty(), expect_decision, "hook out: {out}");
+    }
+    ms.sort_unstable();
+    ms
+}
+
+#[test]
+#[ignore = "perf budget: run in release, records docs/PERF-BUDGET.md"]
+fn hook_e2e_p95_under_1s() {
+    let dir = corpus_dir("perf-hook");
+    common::seed_sources(&dir, "deny");
+    common::build_index(&dir);
+    // first call lazily spawns the daemon — the cold-path number
+    let clone = rust_fn(1);
+    let cold = Instant::now();
+    let first = common::run_hook(&dir, &["probe", "--hook"], &hook_envelope(&dir, &clone));
+    let cold_ms = cold.elapsed().as_millis();
+    assert!(first.contains("\"deny\""), "warm-up must decide: {first}");
+    let deny = hook_samples(&dir, &hook_envelope(&dir, &clone), true);
+    let clean = hook_samples(
+        &dir,
+        &hook_envelope(&dir, "fn fresh(n: u8) -> u8 { n / 2 }\n"),
+        false,
+    );
+    common::shutdown_daemon(&dir);
+    let p95 = deny[28];
+    println!(
+        "hook e2e (ce side): cold first {cold_ms} ms; deny median {} / p95 {p95} / max {} ms; \
+         clean median {} / p95 {} ms",
+        deny[14], deny[29], clean[14], clean[28]
+    );
+    release_assert(
+        p95 < 1000,
+        &format!("hook e2e p95 {p95}ms exceeds 1s budget"),
+    );
 }
