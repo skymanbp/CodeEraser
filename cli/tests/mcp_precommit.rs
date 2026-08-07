@@ -17,8 +17,7 @@ struct McpSession {
 
 fn mcp_session(name: &str) -> McpSession {
     let dir = tmp(name);
-    std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
-    std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (T2 clone)");
+    common::seed_clone_pair(&dir);
     let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
         .arg("mcp")
         .arg(&dir)
@@ -105,20 +104,12 @@ fn precommit_blocks_staged_duplication_in_deny() {
     // clean staged change passes
     std::fs::write(dir.join("c.rs"), "fn fresh(n: u8) -> u8 { n / 2 }\n").expect("c.rs");
     git(&dir, &["add", "c.rs"]);
-    let ok = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .arg("precommit")
-        .current_dir(&dir)
-        .output()
-        .expect("run");
+    let ok = common::run_ce(&dir, &["precommit"]);
     assert!(ok.status.success(), "clean staged change passes");
     // staged T2 clone blocks in deny mode
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs");
     git(&dir, &["add", "b.rs"]);
-    let blocked = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .arg("precommit")
-        .current_dir(&dir)
-        .output()
-        .expect("run");
+    let blocked = common::run_ce(&dir, &["precommit"]);
     assert!(!blocked.status.success(), "deny mode must block");
     let text = String::from_utf8_lossy(&blocked.stdout);
     assert!(text.contains("b.rs"), "report names the clone: {text}");

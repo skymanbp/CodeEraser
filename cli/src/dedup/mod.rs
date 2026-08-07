@@ -22,20 +22,49 @@ use std::process::ExitCode;
 /// suppressed-count transparency; 0.3.0 added parameter self-id.
 pub const SCHEMA_ID: &str = "ce.dedup-report/0.4.0";
 
+/// CLI options for [`run`] (bundled: six loose params would trip the
+/// project's own params threshold).
+pub struct RunOpts {
+    pub format: Format,
+    pub db: Option<PathBuf>,
+    pub min_tokens: Option<usize>,
+    pub min_distinct: Option<usize>,
+    pub check: bool,
+}
+
 /// Batch entry point: refresh the index (incremental), reap deleted
 /// files, verify anchors by token-stream extension, report blocks.
 /// `min_tokens` lowers the report filter below the guarantee t for
 /// calibration runs; detection below t is opportunistic (anchors are
-/// only guaranteed at >= t). Informational exit in M2.
-pub fn run(
-    root: &Path,
-    format: Format,
-    db: Option<PathBuf>,
-    min_tokens: Option<usize>,
-    min_distinct: Option<usize>,
-) -> Result<ExitCode> {
-    let (found, summary) = analyze(root, db, min_tokens, min_distinct)?;
-    emit(format, &found, &summary)?;
+/// only guaranteed at >= t). `check` turns the run into the R12
+/// ratchet gate against ce.toml [dedup] budget.
+pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
+    let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
+    emit(opts.format, &found, &summary)?;
+    if opts.check {
+        return check_budget(root, summary.blocks);
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
+/// R12 only-shrink ratchet: over budget fails; under budget prints
+/// the new floor so the budget gets ratcheted down in the same PR.
+fn check_budget(root: &Path, blocks: usize) -> Result<ExitCode> {
+    let cfg = Config::load(root).map_err(anyhow::Error::msg)?;
+    let Some(budget) = cfg.dedup.budget else {
+        anyhow::bail!("--check needs [dedup] budget in ce.toml");
+    };
+    if blocks > budget {
+        eprintln!(
+            "dedup ratchet: {blocks} clone blocks > budget {budget} — new duplication must not land"
+        );
+        return Ok(ExitCode::FAILURE);
+    }
+    if blocks < budget {
+        println!(
+            "dedup ratchet: {blocks} clone blocks < budget {budget} — ratchet the budget down"
+        );
+    }
     Ok(ExitCode::SUCCESS)
 }
 

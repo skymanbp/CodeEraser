@@ -35,23 +35,7 @@ enum Cmd {
         format: OutFormat,
     },
     /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
-    Dedup {
-        /// Directory to index (default: current directory)
-        path: Option<PathBuf>,
-        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
-        format: OutFormat,
-        /// Index database path (default: <path>/.ce/index.db)
-        #[arg(long)]
-        db: Option<PathBuf>,
-        /// Report threshold in normalized tokens (default: the
-        /// winnowing guarantee threshold, 50)
-        #[arg(long)]
-        min_tokens: Option<usize>,
-        /// Diversity floor: suppress blocks with fewer unique tokens
-        /// (default 7, from the M2 calibration; 0 disables)
-        #[arg(long)]
-        min_distinct: Option<usize>,
-    },
+    Dedup(DedupArgs),
     /// Run the per-project daemon in the foreground (ADR-003);
     /// normally lazy-started by `ce ping` / hook probes
     Daemon {
@@ -96,6 +80,29 @@ enum Cmd {
     },
 }
 
+#[derive(clap::Args)]
+struct DedupArgs {
+    /// Directory to index (default: current directory)
+    path: Option<PathBuf>,
+    #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+    format: OutFormat,
+    /// Index database path (default: <path>/.ce/index.db)
+    #[arg(long)]
+    db: Option<PathBuf>,
+    /// Report threshold in normalized tokens (default: the
+    /// winnowing guarantee threshold, 50)
+    #[arg(long)]
+    min_tokens: Option<usize>,
+    /// Diversity floor: suppress blocks with fewer unique tokens
+    /// (default 7, from the M2 calibration; 0 disables)
+    #[arg(long)]
+    min_distinct: Option<usize>,
+    /// Only-shrink ratchet: exit 1 when clone blocks exceed the
+    /// ce.toml [dedup] budget (M2 review R12)
+    #[arg(long)]
+    check: bool,
+}
+
 #[derive(Clone, Copy, ValueEnum)]
 enum OutFormat {
     Console,
@@ -106,13 +113,7 @@ fn main() -> ExitCode {
     match Cli::parse().cmd {
         Cmd::Doctor { core } => doctor(&core),
         Cmd::Scan { path, format } => scan_cmd(path, format),
-        Cmd::Dedup {
-            path,
-            format,
-            db,
-            min_tokens,
-            min_distinct,
-        } => dedup_cmd(path, format, db, min_tokens, min_distinct),
+        Cmd::Dedup(args) => dedup_cmd(args),
         Cmd::Probe { hook } => hook_cmd(hook, "probe", codeeraser::guard::run_hook),
         Cmd::Audit { hook } => hook_cmd(hook, "audit", codeeraser::audit::run_hook),
         Cmd::Health { hook } => hook_cmd(hook, "health", codeeraser::health::run_hook),
@@ -169,15 +170,16 @@ fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
     }
 }
 
-fn dedup_cmd(
-    path: Option<PathBuf>,
-    format: OutFormat,
-    db: Option<PathBuf>,
-    min_tokens: Option<usize>,
-    min_distinct: Option<usize>,
-) -> ExitCode {
-    let root = path.unwrap_or_else(|| PathBuf::from("."));
-    match dedup::run(&root, fmt(format), db, min_tokens, min_distinct) {
+fn dedup_cmd(args: DedupArgs) -> ExitCode {
+    let root = or_cwd(args.path);
+    let opts = dedup::RunOpts {
+        format: fmt(args.format),
+        db: args.db,
+        min_tokens: args.min_tokens,
+        min_distinct: args.min_distinct,
+        check: args.check,
+    };
+    match dedup::run(&root, opts) {
         Ok(code) => code,
         Err(err) => {
             eprintln!("ce dedup: {err:#}");

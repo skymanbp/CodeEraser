@@ -56,13 +56,25 @@ pub fn seed_sources(dir: &Path, mode: &str) {
     std::fs::write(dir.join("ce.toml"), format!("[guard]\nmode = \"{mode}\"\n")).expect("ce.toml");
 }
 
-/// Build the project index by running the real `ce dedup .` in `dir`.
-pub fn build_index(dir: &Path) {
-    let out = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .args(["dedup", "."])
+/// a.rs + b.rs forming a T2 clone pair that clears t=50.
+pub fn seed_clone_pair(dir: &Path) {
+    std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
+    std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (T2 clone)");
+}
+
+/// Run the real `ce` binary with `args` in `dir`; the caller asserts
+/// on success or failure (gate tests need both directions).
+pub fn run_ce(dir: &Path, args: &[&str]) -> std::process::Output {
+    Command::new(env!("CARGO_BIN_EXE_ce"))
+        .args(args)
         .current_dir(dir)
         .output()
-        .expect("seed index");
+        .expect("run ce")
+}
+
+/// Build the project index by running the real `ce dedup .` in `dir`.
+pub fn build_index(dir: &Path) {
+    let out = run_ce(dir, &["dedup", "."]);
     assert!(out.status.success(), "seed dedup failed");
 }
 

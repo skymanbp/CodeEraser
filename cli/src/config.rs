@@ -52,6 +52,14 @@ impl Default for Guard {
     }
 }
 
+/// Dedup ratchet (M2 review R12): `ce dedup --check` fails when the
+/// repo's clone-block count exceeds this only-shrink budget.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(default)]
+pub struct DedupCfg {
+    pub budget: Option<usize>,
+}
+
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default)]
 pub struct Config {
@@ -59,6 +67,7 @@ pub struct Config {
     /// Extra exclude globs, added on top of built-in defaults (§4.1).
     pub exclude: Vec<String>,
     pub guard: Guard,
+    pub dedup: DedupCfg,
 }
 
 impl Config {

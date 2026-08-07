@@ -9,13 +9,7 @@ use std::path::Path;
 use std::time::Instant;
 
 mod common;
-use common::{rust_fn, tmp as project_dir};
-
-/// T2 pair long enough to clear t=50.
-fn seed_clone_pair(dir: &Path) {
-    std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
-    std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs");
-}
+use common::{seed_clone_pair, tmp as project_dir};
 
 #[test]
 fn ping_dedup_shutdown_roundtrip() {
