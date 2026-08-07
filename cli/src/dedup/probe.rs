@@ -8,7 +8,7 @@ use super::index::Index;
 use super::pairs::{self, Filter, Streams};
 use super::{Params, tokens, winnow};
 use crate::scan::lang::Lang;
-use anyhow::{Context, Result};
+use anyhow::Result;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -66,7 +66,13 @@ fn load_candidate_streams(root: &Path, instances: &[super::index::Instance]) -> 
         let Some(lang) = Lang::from_path(&path) else {
             continue;
         };
-        let src = std::fs::read(&path).with_context(|| format!("read {}", path.display()))?;
+        // a candidate that vanished between indexing and this probe
+        // (delete/rename race — hit by the FPR replay on a real
+        // rename commit) is stale, not fatal: its anchors simply
+        // find no stream, same as the stale-offset skip
+        let Ok(src) = std::fs::read(&path) else {
+            continue;
+        };
         out.insert(rel.to_string(), tokens::stream(&src, lang)?);
     }
     Ok(out)
