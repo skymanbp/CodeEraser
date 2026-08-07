@@ -4,7 +4,9 @@
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。
-- 会话交接：先读 `memory/PROGRESS.md`（cc-memory 生成的 handoff 契约）。
+- 会话交接：先读 `memory/PROGRESS.md`（cc-memory 生成的 handoff 契约）。它是
+  **机器本地状态，不入版本库**（.gitignore 排除，用户 2026-08-07 决策）——
+  新 clone 上没有该文件属正常，由 cc-memory 首次会话重建。
 
 ## 硬性约束
 

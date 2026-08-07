@@ -31,3 +31,13 @@ contracts/fixtures/crosscheck/**/*.json
 
 # ce's own per-project index (ce dedup)
 .ce/
+
+# === cc-memory (local session state, NOT versioned) ===
+# User decision 2026-08-07: the whole memory/ tree stays out of the repo —
+# MEMORY/PLAN/PROGRESS.md are machine-local handoff state, not content.
+# ANCHORED on purpose: a bare "memory/" would also hide a stray
+# <subdir>/memory/ from `git status`, and that is exactly how a 184 KB
+# cli/memory/memory.db rode into commits 64780b9 / e296178 / d3f48df.
+# cc-memory anchors its own root now (>= v2.6.0); if it ever regresses, the
+# stray dir must show up as untracked noise, not vanish.
+/memory/

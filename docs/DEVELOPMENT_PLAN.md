@@ -256,7 +256,7 @@ CodeEraser/
 ├── core/                             # Haskell cabal：ce-core（判决层）
 ├── contracts/                        # 契约版本化机制 + 双语言共享 golden fixtures
 ├── docs/                             # 本计划、协议文档、评审记录
-└── memory/                           # cc-memory（已存在）
+└── memory/                           # cc-memory 本地状态（.gitignore 排除，不入库）
 ```
 
 ## 6. 里程碑（工期为单人 + agent 协作的粗估，标 ± 者不确定度高）
@@ -270,7 +270,7 @@ CodeEraser/
 | **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |
 | **M5** 深度去冗 + 图 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点）、`deadcode`、T3 冷路径、`docdup`（含代码注释/docstring 域）、三信号 join、`score`+棘轮、Haskell 语言支持（CoC 适配规范自定义并文档化） | 3–4 周 ± | T3 对 mizchi/similarity 可检出集召回 ≥ 90% 且精度 ≥ 85%；import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4）；本仓库自身跑通棘轮入 CI |
 | **M6** GUI | Tauri：报告可视化、趋势、删除候选浏览 | 2–3 周 | 对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s；三平台打包 |
-| **M7** 发布 | marketplace 上架、签名/公证、Releases 自动化、完整 MCP、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档 | 1–2 周 | 陌生机器一条命令可用；二进制 SHA256 校验链路端到端验证；**仓库转公开前全历史审计**（memory/、transcript、密钥、路径泄漏——D2-7）；文档过 `docdup` 自检；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG |
+| **M7** 发布 | marketplace 上架、签名/公证、Releases 自动化、完整 MCP、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档 | 1–2 周 | 陌生机器一条命令可用；二进制 SHA256 校验链路端到端验证；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）；文档过 `docdup` 自检；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG |
 
 **依赖**：M2←M1；M3←M2；M4←M3；M5←M4（churn 是三信号一腿，**串行**，v1.0 "并行"之说
 作废——A4）；M6 可与 M5 并行；M7 收尾。总计粗估 4–6 个月。
