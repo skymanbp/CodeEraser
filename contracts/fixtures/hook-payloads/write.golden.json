@@ -1,0 +1,15 @@
+{
+  "session_id": "c3b225ac-8fcd-470e-a0f3-b17bdb6ba6cd",
+  "transcript_path": "<HOME>/.claude/projects/<project-slug>/<session-id>.jsonl",
+  "cwd": "<PROJECT_DIR>",
+  "prompt_id": "24a0f413-c18a-4594-89be-a8ea92f52410",
+  "permission_mode": "bypassPermissions",
+  "effort": {"level": "xhigh"},
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "<PROJECT_DIR>/src/example.txt",
+    "content": "probe line one\nprobe line two\nprobe line two\n"
+  },
+  "tool_use_id": "toolu_01UQd2dMrgq2tQ5YW9HSCd23"
+}

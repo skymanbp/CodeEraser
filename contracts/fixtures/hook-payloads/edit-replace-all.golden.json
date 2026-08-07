@@ -1,0 +1,17 @@
+{
+  "session_id": "c3b225ac-8fcd-470e-a0f3-b17bdb6ba6cd",
+  "transcript_path": "<HOME>/.claude/projects/<project-slug>/<session-id>.jsonl",
+  "cwd": "<PROJECT_DIR>",
+  "prompt_id": "24a0f413-c18a-4594-89be-a8ea92f52410",
+  "permission_mode": "bypassPermissions",
+  "effort": {"level": "xhigh"},
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Edit",
+  "tool_input": {
+    "file_path": "<PROJECT_DIR>/src/example.txt",
+    "old_string": "probe line two",
+    "new_string": "probe line two REPLACED",
+    "replace_all": true
+  },
+  "tool_use_id": "toolu_01QSyz85t4N77ygn7ZsiH7Pf"
+}

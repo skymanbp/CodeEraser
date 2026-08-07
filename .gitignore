@@ -23,3 +23,5 @@ target/
 *.log
 *.tmp
 scratch/
+# raw hook captures carry machine paths; only sanitized *.golden.json are tracked
+contracts/fixtures/hook-payloads/payloads.ndjson
