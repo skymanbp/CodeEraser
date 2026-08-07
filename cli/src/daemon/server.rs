@@ -150,12 +150,53 @@ fn dispatch(
             };
             reply(reader.get_mut(), &resp)?;
         }
+        Request::Probe { file_path, content } => {
+            let t0 = Instant::now();
+            let resp = match run_probe(root, &file_path, &content) {
+                Ok(matches) => Response::ProbeReport {
+                    matches,
+                    elapsed_ms: t0.elapsed().as_millis() as u64,
+                },
+                Err(e) => Response::Error {
+                    message: format!("{e:#}"),
+                },
+            };
+            reply(reader.get_mut(), &resp)?;
+        }
         Request::Shutdown => {
             reply(reader.get_mut(), &Response::Bye)?;
             return Ok(false);
         }
     }
     Ok(true)
+}
+
+/// Cheap by design (ADR-004): opens the index read-path only, never
+/// refreshes; unknown language probes report no matches.
+fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::Value> {
+    use crate::dedup::{Params, index::Index, pairs, probe};
+    use crate::scan::lang::Lang;
+    let path = Path::new(file_path);
+    let Some(lang) = Lang::from_path(path) else {
+        return Ok(serde_json::json!([]));
+    };
+    if lang.grammar().is_none() {
+        return Ok(serde_json::json!([]));
+    }
+    let rel = path
+        .strip_prefix(root)
+        .unwrap_or(path)
+        .display()
+        .to_string()
+        .replace('\\', "/");
+    let p = Params::default();
+    let idx = Index::open(&root.join(".ce/index.db"), p)?;
+    let f = pairs::Filter {
+        min_tokens: p.guarantee(),
+        min_distinct: pairs::DEFAULT_MIN_DISTINCT,
+    };
+    let matches = probe::probe(&idx, root, &rel, content.as_bytes(), lang, p, f)?;
+    Ok(serde_json::to_value(matches)?)
 }
 
 fn run_dedup(

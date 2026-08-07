@@ -24,6 +24,12 @@ pub enum Request {
         #[serde(default)]
         min_distinct: Option<usize>,
     },
+    /// M3 cheap gate: verified T1/T2 matches for content about to be
+    /// written to `file_path` (excluded from matching). No refresh.
+    Probe {
+        file_path: String,
+        content: String,
+    },
     Shutdown,
 }
 
@@ -44,6 +50,10 @@ pub enum Response {
     },
     DedupReport {
         report: serde_json::Value,
+    },
+    ProbeReport {
+        matches: serde_json::Value,
+        elapsed_ms: u64,
     },
     Error {
         message: String,

@@ -122,6 +122,36 @@ impl Index {
         Ok(removed)
     }
 
+    /// Occurrences of the given hashes only (probe hot path) —
+    /// chunked to stay under SQLite's bind-parameter limit.
+    pub fn instances_for_hashes(&self, hashes: &[u64]) -> Result<Vec<Instance>> {
+        let mut rows: Vec<Instance> = Vec::new();
+        for chunk in hashes.chunks(500) {
+            let marks = vec!["?"; chunk.len()].join(",");
+            let sql = format!(
+                "SELECT f.hash, fl.path, f.start_tok, f.start_line, f.end_line
+                 FROM fingerprints f JOIN files fl ON fl.id = f.file_id
+                 WHERE f.hash IN ({marks})"
+            );
+            let mut stmt = self.conn.prepare(&sql)?;
+            let params = rusqlite::params_from_iter(chunk.iter().map(|h| *h as i64));
+            let found = stmt
+                .query_map(params, |r| {
+                    Ok(Instance {
+                        hash: r.get::<_, i64>(0)? as u64,
+                        file: r.get(1)?,
+                        start_tok: r.get::<_, i64>(2)? as usize,
+                        start_line: r.get::<_, i64>(3)? as usize,
+                        end_line: r.get::<_, i64>(4)? as usize,
+                    })
+                })?
+                .collect::<rusqlite::Result<Vec<_>>>()?;
+            rows.extend(found);
+        }
+        rows.sort();
+        Ok(rows)
+    }
+
     /// Every fingerprint occurrence, deterministically ordered.
     pub fn all_instances(&self) -> Result<Vec<Instance>> {
         let mut rows: Vec<Instance> = self

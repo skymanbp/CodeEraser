@@ -5,6 +5,7 @@
 
 pub mod index;
 pub mod pairs;
+pub mod probe;
 pub mod tokens;
 pub mod winnow;
 

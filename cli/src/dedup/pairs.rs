@@ -190,8 +190,9 @@ fn extend_anchor<'s>(
 /// Maximal exact common run around the anchor. For same-stream pairs
 /// the run is capped at the anchor gap so the two ranges stay
 /// disjoint (periodic code reports adjacent segments, like jscpd's
-/// models.py 837-847 <-> 847-857 pair).
-fn extend(
+/// models.py 837-847 <-> 847-857 pair). pub(crate): the M3 probe
+/// (dedup::probe) reuses the same verified-extension semantics.
+pub(crate) fn extend(
     sa: &[Token],
     a_tok: usize,
     sb: &[Token],
