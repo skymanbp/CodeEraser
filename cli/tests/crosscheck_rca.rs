@@ -151,7 +151,9 @@ fn diff_file(rel: &str, rca: &FnMap, ce: &FnMap, t: &mut Tally) {
         }
     }
     for (k, (name, rca_cc)) in rca {
-        let Some((_, ce_cc)) = ce.get(k) else { continue };
+        let Some((_, ce_cc)) = ce.get(k) else {
+            continue;
+        };
         t.units += 1;
         if rca_cc == ce_cc {
             t.agree += 1;
