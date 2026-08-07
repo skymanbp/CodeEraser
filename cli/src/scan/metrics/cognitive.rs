@@ -2,7 +2,10 @@
 //! (1) structural increments carry a nesting penalty, (2) `else` /
 //! `elif` / `else if` are flat +1 hybrids with no penalty, (3) lambdas
 //! raise nesting without incrementing, (4) a run of like boolean
-//! operators counts once, each alternation counts again.
+//! operators counts once, each alternation counts again, (5) labeled
+//! jumps (`goto L` / `break L` / `continue L`) are fundamental +1
+//! (p.8); plain jumps are free. Operator runs use coc_operators, not
+//! cc_operators: CoC ignores null-coalescing shorthand (p.6).
 //!
 //! else-branch handling: TS/Rust/Python surface else as a node kind
 //! (coc_flat_kinds); Go hides it in the if's `alternative` field, so
@@ -70,8 +73,17 @@ impl Walker<'_, '_> {
         } else if self.spec.coc_nest_only_kinds.contains(&kind) {
             self.walk_children(node, nesting + 1);
         } else {
+            if self.spec.coc_jump_kinds.contains(&kind) && self.has_label(node) {
+                self.score += 1; // fundamental: no nesting penalty
+            }
             self.walk_children(node, nesting);
         }
+    }
+
+    fn has_label(&self, node: Node<'_>) -> bool {
+        ast::children(node)
+            .iter()
+            .any(|c| self.spec.label_kinds.contains(&c.kind()))
     }
 
     fn structural(&mut self, node: Node<'_>, nesting: u32) {
@@ -163,5 +175,5 @@ fn collect_in_order<'s>(node: Node<'_>, src: &'s [u8], spec: &LangSpec, out: &mu
 
 fn logic_op<'s>(node: Node<'_>, src: &'s [u8], spec: &LangSpec) -> Option<&'s str> {
     let op = operator_text(node, src)?;
-    spec.cc_operators.contains(&op).then_some(op)
+    spec.coc_operators.contains(&op).then_some(op)
 }

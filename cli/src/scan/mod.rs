@@ -39,6 +39,7 @@ pub fn run(root: &Path, format: Format) -> Result<ExitCode> {
         Format::Console => report::print_console(&findings, &summary),
         Format::Json => {
             let rep = report::Report {
+                schema: report::SCHEMA,
                 files: &files,
                 findings: &findings,
                 summary,
@@ -89,6 +90,7 @@ fn measure_functions(
         .map(|unit| {
             let cog = metrics::cognitive::measure(unit.node, src, sp);
             FnMetrics {
+                name_ok: metrics::naming::conforms(sp.name_style, &unit.name),
                 name: unit.name,
                 start_line: unit.start_line,
                 end_line: unit.end_line,

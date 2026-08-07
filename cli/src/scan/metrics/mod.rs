@@ -2,6 +2,7 @@
 
 pub mod cognitive;
 pub mod cyclo;
+pub mod naming;
 pub mod size;
 
 use super::spec::LangSpec;
@@ -18,6 +19,8 @@ pub struct FnMetrics {
     pub cyclomatic: u32,
     pub cognitive: u32,
     pub max_nesting: u32,
+    /// Name conforms to the language's convention (readability §4.1).
+    pub name_ok: bool,
 }
 
 #[derive(Debug, Serialize)]

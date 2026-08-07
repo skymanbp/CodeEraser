@@ -12,6 +12,7 @@
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
 | Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 320 | **320/320 (100%)** | ✅ 零分歧（`cli/tests/crosscheck_rca.rs` 可复跑） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
+| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 5 例题 | **5/5** | ✅ `cli/tests/sonar_whitepaper.rs`（页码内注） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -56,6 +57,28 @@ completions.go:932 差 1 = findFlag() 一处 else 内 if；completions.go:316
 文本解析器的错位假象（嵌套 space 错位既改值也吞单位；真值单位数 320）。
 harness 内置 RCA 版本断言（钉 0.0.25）与归因白名单机制（当前为空，
 新真分歧须先入本清单再入白名单）。
+
+## Sonar 白皮书例题与立场钉死（2026-08-07 第三轮）
+
+白皮书 v1.7（2023-08-29）例题全过：sumOfPrimes=7 / getWords=1（p.10）、
+myMethod try-catch=9 / lambda 提嵌套=2（p.9）、toRegexp=20（p.19，
+验证 else-if 链子结构留在链层语义）。例题驱动补齐 2 个 ce 缺口：
+
+1. **labeled jump +1**（p.8 "Jumps to labels"）：`goto` / `break L` /
+   `continue L` 计基本 +1，普通 break/continue 不计。三门语言 label
+   子节点 kind 经 AST 探针核实（Go `label_name`、Rust `label`、TS
+   `statement_identifier`）；Go fixtures 中无 labeled jump/goto（grep
+   核实），已归档的 gocognit 对拍数字不受影响。
+2. **CoC 算子分表**：新增 `coc_operators`，TS `??` 从 CoC 移除（p.6
+   "Ignore shorthand" 明示忽略 null-coalescing）；CC 保留计 `??`
+   （真实分支路径）。
+
+立场钉死（`cli/tests/divergence_stances.rs`，计划 §6 M1 "分歧 case
+显式收录不回避"）：装饰器（p.15）——ce 单位拆分模型（lizard 同型）下
+Sonar 的装饰器特例天然不适用，not_a_decorator Sonar 聚合=2 vs ce 单位
+和=1，分歧如实记录；`?.` CC/CoC 均不计（CoC 依 p.6，CC 为 M1 立场）；
+Rust `break value` 不误计为 labeled jump。仍未实现：递归 +1（规范 §1，
+需调用图，M5；cognitive.rs 头部注记）。
 
 ## 工具注记
 

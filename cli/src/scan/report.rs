@@ -92,10 +92,19 @@ fn check_fn(path: &str, f: &FnMetrics, t: &Thresholds, out: &mut Vec<Finding>) {
             t.nesting_warn,
         ));
     }
+    // Naming is boolean: value 1 = one non-conforming name, limit 0.
+    if !f.name_ok {
+        out.push(mk("fn-naming", Level::Warn, 1, 0));
+    }
 }
+
+/// JSON output schema id; bump on any shape change (plan §7.1: schema
+/// changes must bump the version — mechanism live since M0).
+pub const SCHEMA: &str = "ce.scan-report/0.1.0";
 
 #[derive(Serialize)]
 pub struct Report<'a> {
+    pub schema: &'static str,
     pub files: &'a [FileMetrics],
     pub findings: &'a [Finding],
     pub summary: Summary,

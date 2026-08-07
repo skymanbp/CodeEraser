@@ -9,6 +9,17 @@
 
 use super::lang::Lang;
 
+/// Function-name convention for the readability naming check (§4.1).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NameStyle {
+    /// snake_case — PEP 8 (Python), RFC 430 (Rust): no uppercase.
+    Snake,
+    /// mixedCaps / PascalCase — Effective Go, common TS: no underscores.
+    MixedCaps,
+    /// No convention enforced (Markdown).
+    Any,
+}
+
 pub struct LangSpec {
     /// Node kinds counted as standalone function units. Anything not
     /// listed here (Go func_literal, Python lambda) is absorbed into
@@ -26,7 +37,20 @@ pub struct LangSpec {
     pub coc_flat_kinds: &'static [&'static str],
     /// Cognitive: raise nesting only (lambdas / inline fns).
     pub coc_nest_only_kinds: &'static [&'static str],
+    /// Cognitive: operator tokens forming counted boolean runs. Split
+    /// from cc_operators: the whitepaper (v1.7 p.6 "Ignore shorthand")
+    /// ignores null-coalescing in CoC while CC counts it as a branch.
+    pub coc_operators: &'static [&'static str],
+    /// Cognitive: jump statements adding a fundamental +1 when labeled
+    /// (whitepaper p.8 "Jumps to labels": goto / break L / continue L).
+    pub coc_jump_kinds: &'static [&'static str],
+    /// Node kind of the label child that marks a jump as labeled
+    /// (AST-probed: Go `label_name`, Rust `label`, TS
+    /// `statement_identifier`).
+    pub label_kinds: &'static [&'static str],
     pub comment_kinds: &'static [&'static str],
+    /// Readability: function-name convention (plan §4.1 naming item).
+    pub name_style: NameStyle,
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -68,7 +92,12 @@ static PYTHON: LangSpec = LangSpec {
     ],
     coc_flat_kinds: &["elif_clause", "else_clause"],
     coc_nest_only_kinds: &["lambda"],
+    coc_operators: &["and", "or"],
+    // Python has no labeled jumps.
+    coc_jump_kinds: &[],
+    label_kinds: &[],
     comment_kinds: &["comment"],
+    name_style: NameStyle::Snake,
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -103,7 +132,14 @@ static TYPESCRIPT: LangSpec = LangSpec {
     ],
     coc_flat_kinds: &["else_clause"],
     coc_nest_only_kinds: &["arrow_function", "function_expression"],
+    // `??` counts in CC (a real branch) but NOT here: whitepaper p.6
+    // ignores null-coalescing in CoC. `?.` counts in neither (M1 stance,
+    // pinned in tests/sonar_whitepaper.rs).
+    coc_operators: &["&&", "||"],
+    coc_jump_kinds: &["continue_statement", "break_statement"],
+    label_kinds: &["statement_identifier"],
     comment_kinds: &["comment"],
+    name_style: NameStyle::MixedCaps,
 };
 
 static RUST: LangSpec = LangSpec {
@@ -129,7 +165,13 @@ static RUST: LangSpec = LangSpec {
     ],
     coc_flat_kinds: &["else_clause"],
     coc_nest_only_kinds: &["closure_expression"],
+    coc_operators: &["&&", "||"],
+    // `break 'l` / `continue 'l`: the label child kind is `label`;
+    // a plain `break value` has an expression child, so it won't count.
+    coc_jump_kinds: &["continue_expression", "break_expression"],
+    label_kinds: &["label"],
     comment_kinds: &["line_comment", "block_comment"],
+    name_style: NameStyle::Snake,
 };
 
 static GO: LangSpec = LangSpec {
@@ -157,7 +199,12 @@ static GO: LangSpec = LangSpec {
     // field and is scored by the field-aware logic in cognitive.rs.
     coc_flat_kinds: &[],
     coc_nest_only_kinds: &["func_literal"],
+    coc_operators: &["&&", "||"],
+    // goto always carries a label_name, so it always counts.
+    coc_jump_kinds: &["continue_statement", "break_statement", "goto_statement"],
+    label_kinds: &["label_name"],
     comment_kinds: &["comment"],
+    name_style: NameStyle::MixedCaps,
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -168,5 +215,9 @@ static MARKDOWN: LangSpec = LangSpec {
     coc_nesting_kinds: &[],
     coc_flat_kinds: &[],
     coc_nest_only_kinds: &[],
+    coc_operators: &[],
+    coc_jump_kinds: &[],
+    label_kinds: &[],
     comment_kinds: &[],
+    name_style: NameStyle::Any,
 };
