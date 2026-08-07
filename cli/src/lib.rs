@@ -8,4 +8,5 @@ pub mod dedup;
 pub mod guard;
 pub mod handshake;
 pub mod health;
+pub mod mcp;
 pub mod scan;

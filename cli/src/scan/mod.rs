@@ -21,6 +21,22 @@ pub enum Format {
 }
 
 pub fn run(root: &Path, format: Format) -> Result<ExitCode> {
+    let (files, findings, summary) = analyze(root)?;
+    let failed = summary.fails > 0;
+    match format {
+        Format::Console => report::print_console(&findings, &summary),
+        Format::Json => println!("{}", report_string(&files, &findings, summary)?),
+    }
+    Ok(if failed {
+        ExitCode::from(1)
+    } else {
+        ExitCode::SUCCESS
+    })
+}
+
+/// Library entry shared by the CLI and the MCP server: measure and
+/// evaluate without printing anything.
+pub fn analyze(root: &Path) -> Result<(Vec<FileMetrics>, Vec<report::Finding>, report::Summary)> {
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
     let mut files = Vec::new();
     for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
@@ -34,24 +50,22 @@ pub fn run(root: &Path, format: Format) -> Result<ExitCode> {
         .flat_map(|f| report::evaluate(f, &config.thresholds))
         .collect();
     let summary = report::summarize(&files, &findings);
-    let failed = summary.fails > 0;
-    match format {
-        Format::Console => report::print_console(&findings, &summary),
-        Format::Json => {
-            let rep = report::Report {
-                schema: report::SCHEMA,
-                files: &files,
-                findings: &findings,
-                summary,
-            };
-            println!("{}", serde_json::to_string_pretty(&rep)?);
-        }
-    }
-    Ok(if failed {
-        ExitCode::from(1)
-    } else {
-        ExitCode::SUCCESS
-    })
+    Ok((files, findings, summary))
+}
+
+/// The scan report as its canonical JSON string (schema §7.1).
+pub fn report_string(
+    files: &[FileMetrics],
+    findings: &[report::Finding],
+    summary: report::Summary,
+) -> Result<String> {
+    let rep = report::Report {
+        schema: report::SCHEMA,
+        files,
+        findings,
+        summary,
+    };
+    Ok(serde_json::to_string_pretty(&rep)?)
 }
 
 fn measure_file(path: &Path, root: &Path, language: Lang) -> Result<FileMetrics> {

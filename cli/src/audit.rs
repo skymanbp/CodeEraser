@@ -63,13 +63,48 @@ fn audit(root: &Path) -> ExitCode {
     ExitCode::SUCCESS
 }
 
+/// pre-commit mode: STAGED changes only; blocks the commit (exit 1)
+/// when guard mode is deny and staged files touch duplicate blocks.
+/// Unlike the hooks this prints for humans — it runs in a terminal.
+pub fn run_precommit(root: &Path) -> ExitCode {
+    let mode = Config::load(root)
+        .map(|c| c.guard.mode)
+        .unwrap_or_else(|_| "observe".into());
+    let Some((net_loc, changed)) = diff_args(root, &["diff", "--cached", "--numstat"]) else {
+        eprintln!("ce precommit: not a git repo (skipped)");
+        return ExitCode::SUCCESS;
+    };
+    let dups = if changed.is_empty() {
+        Vec::new()
+    } else {
+        touched_duplicates(root, &changed)
+    };
+    observe_log(root, net_loc, &changed, &dups, &mode);
+    if dups.is_empty() {
+        println!(
+            "ce precommit: {} staged file(s), net {net_loc:+} LOC, no touched duplicates",
+            changed.len()
+        );
+        return ExitCode::SUCCESS;
+    }
+    println!("{}", reason(net_loc, &dups));
+    if mode == "deny" {
+        return ExitCode::from(1);
+    }
+    ExitCode::SUCCESS
+}
+
 /// (net added-deleted lines, changed file list) from
 /// `git diff --numstat HEAD`; None = fail open.
 fn diff_numstat(root: &Path) -> Option<(i64, Vec<String>)> {
+    diff_args(root, &["diff", "--numstat", "HEAD"])
+}
+
+fn diff_args(root: &Path, args: &[&str]) -> Option<(i64, Vec<String>)> {
     let out = std::process::Command::new("git")
         .args(["-C"])
         .arg(root)
-        .args(["diff", "--numstat", "HEAD"])
+        .args(args)
         .output()
         .ok()?;
     if !out.status.success() {

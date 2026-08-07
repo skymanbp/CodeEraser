@@ -83,6 +83,17 @@ enum Cmd {
         #[arg(long)]
         hook: bool,
     },
+    /// pre-commit gate: staged net LOC + touched duplicates
+    /// (exit 1 in deny mode when duplicates are touched)
+    Precommit {
+        /// Repository root (default: current directory)
+        root: Option<PathBuf>,
+    },
+    /// Minimal MCP server over stdio: scan + check_duplication
+    Mcp {
+        /// Project root the tools operate on (default: current directory)
+        root: Option<PathBuf>,
+    },
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -124,6 +135,18 @@ fn main() -> ExitCode {
             } else {
                 eprintln!("ce health: only --hook mode exists in M3");
                 ExitCode::from(2)
+            }
+        }
+        Cmd::Precommit { root } => {
+            codeeraser::audit::run_precommit(&root.unwrap_or_else(|| PathBuf::from(".")))
+        }
+        Cmd::Mcp { root } => {
+            match codeeraser::mcp::serve(&root.unwrap_or_else(|| PathBuf::from("."))) {
+                Ok(()) => ExitCode::SUCCESS,
+                Err(err) => {
+                    eprintln!("ce mcp: {err:#}");
+                    ExitCode::from(2)
+                }
             }
         }
         Cmd::Daemon { root } => match daemon::server::serve(&root) {
