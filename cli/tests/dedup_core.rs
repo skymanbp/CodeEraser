@@ -6,13 +6,11 @@ use codeeraser::dedup::{Params, tokens, winnow};
 use codeeraser::scan::{lang::Lang, spec};
 use std::collections::BTreeSet;
 
+mod common;
+
 fn toks(lang: Lang, src: &str) -> Vec<u64> {
     let sp = spec::spec(lang);
-    let mut parser = tree_sitter::Parser::new();
-    parser
-        .set_language(&lang.grammar().expect("grammar"))
-        .expect("set_language");
-    let tree = parser.parse(src, None).expect("parse");
+    let tree = common::parse(lang, src);
     tokens::tokenize(tree.root_node(), sp)
         .iter()
         .map(|t| t.hash)

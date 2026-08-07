@@ -20,6 +20,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+mod common;
+
 /// (start_line, end_line) → units on that span. A Vec, not a single
 /// entry: nested closures can share an identical one-line span (walk.rs
 /// fixture lines 1529/2718) and the RCA output has no columns to tell
@@ -121,16 +123,15 @@ fn collect_rca(space: &Value, out: &mut FnMap) {
 }
 
 fn ce_fns(root: &Path, rel: &str) -> FnMap {
-    let src = std::fs::read(root.join(rel)).expect("read fixture");
+    // read_to_string: the pinned fixtures are UTF-8 Rust sources, and
+    // common::parse takes &str (panic on invalid UTF-8 = same expect
+    // discipline as the old byte path)
+    let src = std::fs::read_to_string(root.join(rel)).expect("read fixture");
     let sp = spec::spec(Lang::Rust);
-    let mut parser = tree_sitter::Parser::new();
-    parser
-        .set_language(&Lang::Rust.grammar().expect("grammar"))
-        .expect("set_language");
-    let tree = parser.parse(&src, None).expect("parse fixture");
+    let tree = common::parse(Lang::Rust, &src);
     let mut out = FnMap::new();
-    for u in functions::extract(tree.root_node(), &src, sp) {
-        let cc = metrics::cyclo::measure(u.node, &src, sp);
+    for u in functions::extract(tree.root_node(), src.as_bytes(), sp) {
+        let cc = metrics::cyclo::measure(u.node, src.as_bytes(), sp);
         out.entry((u.start_line as u64, u.end_line as u64))
             .or_default()
             .push((u.name, cc));

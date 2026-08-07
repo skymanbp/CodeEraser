@@ -38,6 +38,17 @@ pub fn rust_fn(seed: u32) -> String {
     )
 }
 
+/// Parse `src` with the language's tree-sitter grammar — the shared
+/// head of every metric/token harness (metrics, divergence, sonar,
+/// dedup_core each kept a copy before the self-ratchet flagged it).
+pub fn parse(lang: codeeraser::scan::lang::Lang, src: &str) -> tree_sitter::Tree {
+    let mut parser = tree_sitter::Parser::new();
+    parser
+        .set_language(&lang.grammar().expect("grammar"))
+        .expect("set_language");
+    parser.parse(src, None).expect("parse")
+}
+
 /// Run git in `dir` with a throwaway identity; panic on failure.
 pub fn git(dir: &Path, args: &[&str]) {
     let out = Command::new("git")

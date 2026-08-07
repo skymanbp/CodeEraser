@@ -6,6 +6,8 @@
 
 use codeeraser::scan::{functions, lang::Lang, metrics, spec};
 
+mod common;
+
 struct Measured {
     name: String,
     lines: usize,
@@ -17,11 +19,7 @@ struct Measured {
 
 fn measure(lang: Lang, src: &str) -> Vec<Measured> {
     let sp = spec::spec(lang);
-    let mut parser = tree_sitter::Parser::new();
-    parser
-        .set_language(&lang.grammar().expect("grammar"))
-        .expect("set_language");
-    let tree = parser.parse(src, None).expect("parse");
+    let tree = common::parse(lang, src);
     functions::extract(tree.root_node(), src.as_bytes(), sp)
         .into_iter()
         .map(|u| {
