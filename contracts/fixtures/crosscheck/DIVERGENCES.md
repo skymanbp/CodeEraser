@@ -10,7 +10,7 @@
 | Go CC | gocyclo 0.6.0 | 52 | **52/52 (100%)** | ✅ 零分歧 |
 | Python CC | lizard 1.23.0 | 104 | 102/104 | 2 条归因保留（finally） |
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
-| Rust CC | rust-code-analysis 0.0.25（文本模式抽查） | 9（ban.rs 全量） | **9/9 (100%)** | ✅ 修复 `?` 后零分歧 |
+| Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 320 | **320/320 (100%)** | ✅ 零分歧（`cli/tests/crosscheck_rca.rs` 可复跑） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
@@ -47,18 +47,24 @@ completions.go:932 差 1 = findFlag() 一处 else 内 if；completions.go:316
 （span 316–585，270 行）差 17 = 3 个 else 块内嵌套结构的级联累积（机制已证，
 未逐项分解）。另：gocognit 省略 CoC=0 函数（20 条 only-ce 已验证全为 0，非分歧）。
 
-## Rust 全量对拍中间状态（2026-08-07 第二轮）
+## Rust 全量对拍终版（2026-08-07 第三轮，harness 固化）
 
-RCA 文本模式跑通全部 5 文件：**319/319 函数单位与 ce 完全对齐（含全部闭包，
-onlyRca=0 onlyCe=0）**，值一致 298/319。剩 21 条"分歧"经抽查证实主要是
-**临时扁平解析器在嵌套 space 处的错位假象**（skip_entry@1149 批量解析读作 2，
-单文件人工核对 RCA 真值=10=ce）。终版一致率待缩进感知 harness 固化后复跑出具；
-ban.rs 子集 9/9 为已核实基线。
+`cli/tests/crosscheck_rca.rs`（`#[ignore]` 集成测试，
+`cargo test --test crosscheck_rca -- --ignored --nocapture`）走 RCA JSON
+通路复跑全部 5 文件：**320/320 函数单位双向对齐（onlyRca=0 onlyCe=0）且
+值全部一致，零分歧**。第二轮的 21 条"分歧"与"319 个单位"均为临时扁平
+文本解析器的错位假象（嵌套 space 错位既改值也吞单位；真值单位数 320）。
+harness 内置 RCA 版本断言（钉 0.0.25）与归因白名单机制（当前为空，
+新真分歧须先入本清单再入白名单）。
 
 ## 工具注记
 
-- rust-code-analysis 0.0.25 在 Windows 下 JSON 输出不可靠：`--pr` 无文件产出、
-  `-o <dir>` 行为不稳定（一次落在输入文件旁、批量循环零产出）。文本树模式稳定
-  可用（ANSI 剥离后解析，须缩进感知）。lizard 的 RustReader 因 match_arm/`?`/
-  闭包三重定义差异不适合作 Rust 对照物（57/226 分歧，弃用）。
+- rust-code-analysis 0.0.25 JSON 通路可用条件（harness 已固化）：outdir 须
+  **预先存在**；`-o <outdir>` 与输入的**相对路径**拼接产出
+  `<outdir>/<rel>.json`（盘符绝对输入静默零产出）；每个 space 的
+  `cyclomatic.sum` 聚合**全部后代 space**，函数自身 CC =
+  `sum − Σ(直接子 space 的 sum)`（ban.rs check：29−8=21=ce 手工核实）。
+  `--pr` 无文件产出；文本树模式可用但须缩进感知（第二轮教训）。lizard 的
+  RustReader 因 match_arm/`?`/闭包三重定义差异不适合作 Rust 对照物
+  （57/226 分歧，弃用）。
 - PowerShell 管道会注入 UTF-8 BOM，两次破坏对拍通道——对拍一律走 bash/文件。
