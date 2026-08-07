@@ -93,6 +93,43 @@ user_version=2 门控重建；报告项 = 已验证精确归一化公共段 ≥ 
 0.3.0：summary 自述 kgram/window/min_tokens + hot_chained/
 stale_skipped。处置全表：docs/reviews/2026-08-07-m2-dedup-attack-review.md。
 
+## M2 收口大仓复测（终版，2026-08-07）
+
+对照物 = jscpd 5.0.14 全仓扫描（--min-tokens 50），语料 = 钉定 commit
+完整真实仓库（cobra adbc8813 全仓 36 go 文件、requests 1f6589ec 全仓
+37 py 文件），ce = 默认档（t=50, min_distinct=7）。
+
+**召回（用户拍板的归因排除口径）**：
+
+| 仓 | jscpd 集 | 原始召回 | 排除（逐条实读归因） | 排除后 |
+|---|---|---|---|---|
+| cobra | 109 | **106/109 = 97.2%（原始已过 95% 门）** | 3：测试双闭包共段手数 ≈46 token 差 4 到线（测度类）；bash/psh 补全脚本文本嵌于 Go 反引号字符串（字面量内容域，机制同 docstring——超出计划例举清单，特此显式注记） | 106/106 |
+| requests | 20 | 14/20 = 70% | 6：全部为纯 docstring 文本段互拷（api.py post/put/patch 三连、sessions 参数段、models `__bool__`/`__nonzero__`），LIT 折叠后 ≈15 token < k，实读铁证 | 14/14 |
+| 钉定 fixtures | 17 | 15/17 | 2（前节） | 15/15 |
+
+**多样性下限产品化（min_distinct=7 默认，schema 0.4.0）**：三语料
+FP 类 distinct ≤6 / TP 类 ≥7 的分离带下沿；抑制数入 summary 透明可查
+（fixtures 8 / cobra 13 / requests 12），`--min-distinct` 可覆盖，
+0 = 关闭。三语料复测确认**下限零误伤召回**（miss 集合逐条不变）。
+
+**精度（下限后默认报告，人工仲裁）**：
+
+- fixtures：161/162 = **99.4%**（全量仲裁；唯一存活 FP = div-16
+  intra-locale 离群）。
+- requests：57/63 = **90.5%**（63 块全清单分类 + 6 区域实读；6 FP =
+  parametrize 数据行家族越限存活）。
+- cobra：分层抽样 n=23（每 95 取 1 + 定向 2 读）0 FP；1890 块中 92%
+  为同质 completions_test 骨架家族（点估计 ≈100%，二项 95% 置信下界
+  87.7%——n 有限如实注记；家族同质性由 6+ 成员实读支撑）。
+
+**walk.rs 家族扩样（审阅 R5 承诺 ≥12/52）**：累计实读 13 个区域
+（1529/2718/2360-2391×2/1222-1255×2/327-350×2/2291-2335×3/
+2396-2445×3），全部为 tmpdir+mkdirp+wfile+assert_paths 同质测试样板
+真重复，零数据退化成员；家族 distinct 全体 ≥7 与仲裁一致。
+
+**真仓性能**：ripgrep 3fce3b5 全仓 56,386 LOC(.rs) 冷启动全量
+索引+验证 **1.29s**（预算 30s）；已录 PERF-BUDGET.md。
+
 ## 复现
 
 - jscpd：`npx jscpd --min-tokens 50 --reporters json --output <tmp>

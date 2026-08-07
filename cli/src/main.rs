@@ -47,6 +47,10 @@ enum Cmd {
         /// winnowing guarantee threshold, 50)
         #[arg(long)]
         min_tokens: Option<usize>,
+        /// Diversity floor: suppress blocks with fewer unique tokens
+        /// (default 7, from the M2 calibration; 0 disables)
+        #[arg(long)]
+        min_distinct: Option<usize>,
     },
     /// Run the per-project daemon in the foreground (ADR-003);
     /// normally lazy-started by `ce ping` / hook probes
@@ -76,7 +80,8 @@ fn main() -> ExitCode {
             format,
             db,
             min_tokens,
-        } => dedup_cmd(path, format, db, min_tokens),
+            min_distinct,
+        } => dedup_cmd(path, format, db, min_tokens, min_distinct),
         Cmd::Daemon { root } => match daemon::server::serve(&root) {
             Ok(()) => ExitCode::SUCCESS,
             Err(err) => {
@@ -115,9 +120,10 @@ fn dedup_cmd(
     format: OutFormat,
     db: Option<PathBuf>,
     min_tokens: Option<usize>,
+    min_distinct: Option<usize>,
 ) -> ExitCode {
     let root = path.unwrap_or_else(|| PathBuf::from("."));
-    match dedup::run(&root, fmt(format), db, min_tokens) {
+    match dedup::run(&root, fmt(format), db, min_tokens, min_distinct) {
         Ok(code) => code,
         Err(err) => {
             eprintln!("ce dedup: {err:#}");

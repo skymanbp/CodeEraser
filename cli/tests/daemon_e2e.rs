@@ -99,11 +99,15 @@ fn ping_dedup_shutdown_roundtrip() {
 
 /// The socket-side dedup probe must find the seeded T2 clone.
 fn assert_dedup_probe(root: &Path) {
-    match client::request(root, &Request::Dedup { min_tokens: None }).expect("dedup") {
+    let req = Request::Dedup {
+        min_tokens: None,
+        min_distinct: None,
+    };
+    match client::request(root, &req).expect("dedup") {
         Response::DedupReport { report } => {
             let blocks = report["blocks"].as_array().expect("blocks array");
             assert!(!blocks.is_empty(), "seeded clone must be found");
-            assert_eq!(report["schema"], "ce.dedup-report/0.3.0");
+            assert_eq!(report["schema"], "ce.dedup-report/0.4.0");
         }
         other => panic!("expected report, got {other:?}"),
     }

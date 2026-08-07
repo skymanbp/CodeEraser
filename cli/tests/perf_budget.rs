@@ -66,7 +66,7 @@ fn full_index_100k_loc_under_30s() {
     let loc = generate_corpus(&dir);
     println!("corpus: {loc} LOC");
     let t0 = Instant::now();
-    let (found, _) = analyze(&dir, None, None).expect("analyze");
+    let (found, _) = analyze(&dir, None, None, None).expect("analyze");
     let full = t0.elapsed();
     println!(
         "full index+verify: {:.2?} ({} blocks)",
@@ -84,7 +84,7 @@ fn full_index_100k_loc_under_30s() {
 fn incremental_single_file_under_200ms() {
     let dir = corpus_dir("perf-incr");
     generate_corpus(&dir);
-    analyze(&dir, None, None).expect("seed index");
+    analyze(&dir, None, None, None).expect("seed index");
     // mutate one file, then time ONLY its index refresh (the budgeted
     // unit); the warm full analyze is printed as context
     let target = dir.join("f000.rs");
@@ -100,7 +100,7 @@ fn incremental_single_file_under_200ms() {
     assert!(changed, "mutation must be re-indexed");
     drop(idx);
     let t1 = Instant::now();
-    analyze(&dir, None, None).expect("warm analyze");
+    analyze(&dir, None, None, None).expect("warm analyze");
     println!(
         "single-file refresh: {refresh:.2?}; warm full analyze: {:.2?}",
         t1.elapsed()

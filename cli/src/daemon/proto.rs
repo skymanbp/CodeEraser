@@ -21,6 +21,8 @@ pub enum Request {
     /// Run the dedup pipeline on the daemon's project root.
     Dedup {
         min_tokens: Option<usize>,
+        #[serde(default)]
+        min_distinct: Option<usize>,
     },
     Shutdown,
 }

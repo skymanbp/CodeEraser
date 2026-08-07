@@ -17,9 +17,9 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.3.0: summary self-identifies its parameters; hot groups chain
-/// instead of vanishing; stale-anchor counter added.
-pub const SCHEMA_ID: &str = "ce.dedup-report/0.3.0";
+/// 0.4.0: calibrated diversity floor (min_distinct, default 7) with
+/// suppressed-count transparency; 0.3.0 added parameter self-id.
+pub const SCHEMA_ID: &str = "ce.dedup-report/0.4.0";
 
 /// Batch entry point: refresh the index (incremental), reap deleted
 /// files, verify anchors by token-stream extension, report blocks.
@@ -31,8 +31,9 @@ pub fn run(
     format: Format,
     db: Option<PathBuf>,
     min_tokens: Option<usize>,
+    min_distinct: Option<usize>,
 ) -> Result<ExitCode> {
-    let (found, summary) = analyze(root, db, min_tokens)?;
+    let (found, summary) = analyze(root, db, min_tokens, min_distinct)?;
     emit(format, &found, &summary)?;
     Ok(ExitCode::SUCCESS)
 }
@@ -43,6 +44,7 @@ pub fn analyze(
     root: &Path,
     db: Option<PathBuf>,
     min_tokens: Option<usize>,
+    min_distinct: Option<usize>,
 ) -> Result<(pairs::Blocks, Summary)> {
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
     let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
@@ -58,8 +60,11 @@ pub fn analyze(
         // keep offsets and streams consistent (attack-review D1)
         instances = idx.all_instances()?;
     }
-    let min = min_tokens.unwrap_or(p.guarantee());
-    let found = pairs::clone_blocks(&instances, &streams.0, min);
+    let filter = pairs::Filter {
+        min_tokens: min_tokens.unwrap_or(p.guarantee()),
+        min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),
+    };
+    let found = pairs::clone_blocks(&instances, &streams.0, filter);
     let summary = Summary {
         files: live.len(),
         refreshed,
@@ -67,9 +72,11 @@ pub fn analyze(
         blocks: found.blocks.len(),
         hot_chained: found.hot_chained,
         stale_skipped: found.stale_skipped,
+        low_diversity_suppressed: found.low_diversity_suppressed,
         kgram: p.kgram,
         window: p.window,
-        min_tokens: min,
+        min_tokens: filter.min_tokens,
+        min_distinct: filter.min_distinct,
     };
     Ok((found, summary))
 }
@@ -148,9 +155,11 @@ pub struct Summary {
     blocks: usize,
     hot_chained: usize,
     stale_skipped: usize,
+    low_diversity_suppressed: usize,
     kgram: usize,
     window: usize,
     min_tokens: usize,
+    min_distinct: usize,
 }
 
 #[derive(Serialize)]
@@ -170,12 +179,14 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
                 );
             }
             println!(
-                "indexed {} files ({} refreshed, {} removed) — {} clone blocks (min {} tokens), {} hot chained, {} stale skipped",
+                "indexed {} files ({} refreshed, {} removed) — {} clone blocks (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped",
                 s.files,
                 s.refreshed,
                 s.removed,
                 s.blocks,
                 s.min_tokens,
+                s.min_distinct,
+                s.low_diversity_suppressed,
                 s.hot_chained,
                 s.stale_skipped
             );

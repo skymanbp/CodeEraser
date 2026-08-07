@@ -46,7 +46,24 @@ pub struct Blocks {
     /// (file changed between index refresh and stream load) — skipped
     /// and counted, never a panic (attack-review D1).
     pub stale_skipped: usize,
+    /// Blocks suppressed by the diversity floor — counted, never
+    /// silent (override with --min-distinct).
+    pub low_diversity_suppressed: usize,
 }
+
+/// Report filters. `min_distinct` defaults to 7: across the fixture
+/// corpus + cobra + requests the arbitrated data-row false positives
+/// (status_codes rows, locale key sections, pygments style dicts)
+/// measured distinct <= 6 while arbitrated true clones measured >= 7
+/// (M2 calibration, DEDUP-CALIBRATION.md; one 16-outlier FP survives
+/// — the floor buys precision, not purity).
+#[derive(Debug, Clone, Copy)]
+pub struct Filter {
+    pub min_tokens: usize,
+    pub min_distinct: usize,
+}
+
+pub const DEFAULT_MIN_DISTINCT: usize = 7;
 
 pub type Streams = BTreeMap<String, Vec<Token>>;
 
@@ -70,9 +87,9 @@ struct Ctx<'s> {
     stale_skipped: usize,
 }
 
-/// `t` is the report threshold in tokens (= the winnowing guarantee
-/// threshold by default, Params::window + Params::kgram - 1).
-pub fn clone_blocks(instances: &[Instance], streams: &Streams, t: usize) -> Blocks {
+/// `f.min_tokens` is the verified-run threshold (the winnowing
+/// guarantee t by default); `f.min_distinct` the diversity floor.
+pub fn clone_blocks(instances: &[Instance], streams: &Streams, f: Filter) -> Blocks {
     let mut by_hash: BTreeMap<u64, Vec<&Instance>> = BTreeMap::new();
     for inst in instances {
         by_hash.entry(inst.hash).or_default().push(inst);
@@ -87,23 +104,26 @@ pub fn clone_blocks(instances: &[Instance], streams: &Streams, t: usize) -> Bloc
             hot_chained += 1;
             group.sort_by(|x, y| (&x.file, x.start_tok).cmp(&(&y.file, y.start_tok)));
             for pair in group.windows(2) {
-                extend_anchor(pair[0], pair[1], streams, t, &mut ctx);
+                extend_anchor(pair[0], pair[1], streams, f.min_tokens, &mut ctx);
             }
         } else {
             for (i, a) in group.iter().enumerate() {
                 for b in &group[i + 1..] {
-                    extend_anchor(a, b, streams, t, &mut ctx);
+                    extend_anchor(a, b, streams, f.min_tokens, &mut ctx);
                 }
             }
         }
     }
-    let blocks = dominant(
+    let mut blocks = dominant(
         ctx.runs
             .into_iter()
             .map(|r| to_block(r, streams))
             .collect::<Vec<_>>(),
     );
+    let before = blocks.len();
+    blocks.retain(|b| b.distinct >= f.min_distinct);
     Blocks {
+        low_diversity_suppressed: before - blocks.len(),
         blocks,
         hot_chained,
         stale_skipped: ctx.stale_skipped,

@@ -5,6 +5,13 @@
 use codeeraser::dedup::{Params, index::Instance, pairs, tokens};
 use codeeraser::scan::lang::Lang;
 
+fn flt(min_tokens: usize) -> pairs::Filter {
+    pairs::Filter {
+        min_tokens,
+        min_distinct: pairs::DEFAULT_MIN_DISTINCT,
+    }
+}
+
 fn tok(hash: u64, line: usize) -> tokens::Token {
     tokens::Token {
         hash,
@@ -42,7 +49,7 @@ fn stale_anchor_skipped_not_panicked() {
     streams.insert("b.rs".into(), synth(&stream));
     // offset 61 is beyond the 59-token stream
     let instances = vec![anchor("a.rs", 9, 61), anchor("b.rs", 9, 10)];
-    let found = pairs::clone_blocks(&instances, &streams, Params::default().guarantee());
+    let found = pairs::clone_blocks(&instances, &streams, flt(Params::default().guarantee()));
     assert!(found.blocks.is_empty());
     assert_eq!(found.stale_skipped, 1, "stale anchor counted, not fatal");
 }
@@ -60,7 +67,7 @@ fn hot_group_chains_instead_of_vanishing() {
         streams.insert(name.clone(), synth(&shared));
         instances.push(anchor(&name, 7, 5));
     }
-    let found = pairs::clone_blocks(&instances, &streams, Params::default().guarantee());
+    let found = pairs::clone_blocks(&instances, &streams, flt(Params::default().guarantee()));
     assert_eq!(found.hot_chained, 1, "one hot hash group chained");
     assert_eq!(found.blocks.len(), 69, "adjacent chain covers all copies");
 }
@@ -80,7 +87,7 @@ fn sub_threshold_run_rejected() {
     streams.insert("a.rs".into(), synth(&a));
     streams.insert("b.rs".into(), synth(&b));
     let instances = vec![anchor("a.rs", 42, 40), anchor("b.rs", 42, 10)];
-    let found = pairs::clone_blocks(&instances, &streams, Params::default().guarantee());
+    let found = pairs::clone_blocks(&instances, &streams, flt(Params::default().guarantee()));
     assert!(found.blocks.is_empty(), "30 < t must not be reported");
 }
 
@@ -99,7 +106,7 @@ fn verified_run_has_exact_length() {
     streams.insert("b.rs".into(), synth(&b));
     // anchor deep inside the run: extension must recover the full 60
     let instances = vec![anchor("a.rs", 7, 55), anchor("b.rs", 7, 35)];
-    let found = pairs::clone_blocks(&instances, &streams, Params::default().guarantee());
+    let found = pairs::clone_blocks(&instances, &streams, flt(Params::default().guarantee()));
     assert_eq!(found.blocks.len(), 1);
     assert_eq!(found.blocks[0].tokens, 60, "maximal exact extension");
 }
@@ -134,7 +141,7 @@ fn work(input: &[i64], limit: i64) -> i64 {
         .into_iter()
         .map(|f| anchor("f.rs", f.hash, f.start))
         .collect();
-    let found = pairs::clone_blocks(&instances, &streams, p.guarantee());
+    let found = pairs::clone_blocks(&instances, &streams, flt(p.guarantee()));
     assert_eq!(found.blocks.len(), 1, "one maximal adjacent pair");
     let b = &found.blocks[0];
     assert_eq!(b.tokens, period, "capped at the anchor gap");
@@ -176,7 +183,7 @@ fn three_copies_yield_offset_class_runs() {
         .into_iter()
         .map(|f| anchor("f.rs", f.hash, f.start))
         .collect();
-    let found = pairs::clone_blocks(&instances, &streams, p.guarantee());
+    let found = pairs::clone_blocks(&instances, &streams, flt(p.guarantee()));
     assert_eq!(found.blocks.len(), 2, "one maximal run per offset class");
     for b in &found.blocks {
         assert_eq!(b.tokens, period, "len capped at one period (disjoint)");

@@ -53,7 +53,11 @@ fn cross_file_t2_clone_detected() {
         tokens::stream(rust_fn(2).as_bytes(), Lang::Rust).expect("sb"),
     );
     let instances = idx.all_instances().expect("instances");
-    let found = pairs::clone_blocks(&instances, &streams, p.guarantee());
+    let filter = pairs::Filter {
+        min_tokens: p.guarantee(),
+        min_distinct: pairs::DEFAULT_MIN_DISTINCT,
+    };
+    let found = pairs::clone_blocks(&instances, &streams, filter);
     assert_eq!(found.hot_chained, 0);
     assert_eq!(found.stale_skipped, 0);
     assert!(!found.blocks.is_empty(), "T2 clone must be detected");

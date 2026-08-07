@@ -138,8 +138,11 @@ fn dispatch(
                 uptime_ms: start.elapsed().as_millis() as u64,
             },
         )?,
-        Request::Dedup { min_tokens } => {
-            let resp = match run_dedup(root, min_tokens) {
+        Request::Dedup {
+            min_tokens,
+            min_distinct,
+        } => {
+            let resp = match run_dedup(root, min_tokens, min_distinct) {
                 Ok(report) => Response::DedupReport { report },
                 Err(e) => Response::Error {
                     message: format!("{e:#}"),
@@ -155,9 +158,13 @@ fn dispatch(
     Ok(true)
 }
 
-fn run_dedup(root: &Path, min_tokens: Option<usize>) -> Result<serde_json::Value> {
+fn run_dedup(
+    root: &Path,
+    min_tokens: Option<usize>,
+    min_distinct: Option<usize>,
+) -> Result<serde_json::Value> {
     let db: Option<PathBuf> = None; // daemon always uses <root>/.ce/index.db
-    let (found, summary) = crate::dedup::analyze(root, db, min_tokens)?;
+    let (found, summary) = crate::dedup::analyze(root, db, min_tokens, min_distinct)?;
     crate::dedup::report_json(&found, &summary)
 }
 
