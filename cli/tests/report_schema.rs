@@ -7,42 +7,9 @@
 use codeeraser::config::Thresholds;
 use codeeraser::scan::metrics::{FileMetrics, FnMetrics};
 use codeeraser::scan::report::{self, Report};
-use std::path::{Path, PathBuf};
 
 mod common;
-
-fn golden_path(name: &str) -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("cli/ has a parent")
-        .join("contracts/fixtures")
-        .join(name)
-}
-
-/// CE_BLESS=1 regenerates the golden; otherwise byte-compare
-/// (CRLF-normalized). Exactly "1": any-value is_ok() would let
-/// CE_BLESS=0 or an empty var silently bless-and-pass
-/// (attack-review finding).
-fn assert_matches_golden(json: &str, path: &Path) {
-    if std::env::var("CE_BLESS").as_deref() == Ok("1") {
-        std::fs::create_dir_all(path.parent().expect("golden dir")).expect("mkdir");
-        std::fs::write(path, format!("{json}\n")).expect("bless golden");
-        return;
-    }
-    let golden = std::fs::read_to_string(path)
-        .unwrap_or_else(|e| {
-            panic!(
-                "missing golden {} ({e}); CE_BLESS=1 to create",
-                path.display()
-            )
-        })
-        .replace("\r\n", "\n");
-    assert_eq!(
-        json.trim_end(),
-        golden.trim_end(),
-        "report shape drifted — bump the schema id and re-bless deliberately"
-    );
-}
+use common::{assert_matches_golden, golden_path};
 
 /// One file, one function that trips fn-naming — exercises every
 /// Report field including a Finding, with fixed input values.

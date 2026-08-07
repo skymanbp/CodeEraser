@@ -15,21 +15,7 @@ fn seed_project(dir: &Path, mode: &str) {
     common::build_index(dir);
 }
 
-fn envelope(dir: &Path, tool: &str, content: &str) -> String {
-    let file = dir.join("b.rs").display().to_string().replace('\\', "/");
-    let cwd = dir.display().to_string().replace('\\', "/");
-    let input = if tool == "Write" {
-        serde_json::json!({"file_path": file, "content": content})
-    } else {
-        serde_json::json!({"file_path": file, "old_string": "x", "new_string": content, "replace_all": false})
-    };
-    serde_json::json!({
-        "session_id": "t", "transcript_path": "t", "cwd": cwd,
-        "hook_event_name": "PreToolUse", "tool_name": tool,
-        "tool_input": input, "tool_use_id": "t"
-    })
-    .to_string()
-}
+use common::pretooluse_envelope as envelope;
 
 fn run_hook(dir: &Path, envelope: &str) -> String {
     common::run_hook(dir, &["probe", "--hook"], envelope)
@@ -59,15 +45,10 @@ fn warn_mode_allows_with_reason() {
     assert_eq!(v["hookSpecificOutput"]["permissionDecision"], "allow");
 }
 
-/// Run the probe expecting silence; return the observe entry it
-/// wrote (shared tail of the observe-mode and degraded cases).
 fn silent_probe_observe(dir: &Path, content: &str) -> serde_json::Value {
-    let out = run_hook(dir, &envelope(dir, "Write", content));
+    let env = envelope(dir, "Write", content);
+    let line = common::silent_hook_observe(dir, &["probe", "--hook"], &env, "probe");
     shutdown_daemon(dir);
-    assert!(out.trim().is_empty(), "must stay silent: {out}");
-    let line = common::last_observe(dir);
-    assert_eq!(line["event"], "probe", "feed discriminator");
-    assert!(line["ts_ms"].as_u64().expect("ts_ms") > 0, "stamped");
     line
 }
 

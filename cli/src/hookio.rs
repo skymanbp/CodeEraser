@@ -6,6 +6,12 @@
 
 use std::path::Path;
 
+/// Observe-feed line schema id, stamped on every entry; bump on any
+/// shape change (plan §7.1 discipline — the feed is the M4
+/// evaluation-set raw material, so its shape is a contract, pinned
+/// by contracts/fixtures/observe-feed/feed.golden.json).
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.1.0";
+
 /// Read the whole hook envelope from stdin and deserialize it.
 /// None = unreadable stdin or unparseable JSON — the caller treats
 /// that as "not for me" and exits 0 (fail-open).
@@ -29,6 +35,7 @@ pub fn observe_append(root: &Path, mut line: serde_json::Value) {
         .duration_since(std::time::UNIX_EPOCH)
         .map(|d| d.as_millis())
         .unwrap_or(0);
+    line["schema"] = serde_json::json!(OBSERVE_SCHEMA);
     line["ts_ms"] = serde_json::json!(epoch_ms);
     use std::io::Write as _;
     if let Ok(mut fh) = std::fs::OpenOptions::new()

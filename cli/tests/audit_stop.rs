@@ -8,28 +8,19 @@ use std::path::Path;
 mod common;
 use common::{git, seed_git_clone_repo as seed_repo, tmp};
 
+use common::stop_envelope as envelope;
+
 fn run_audit(dir: &Path, envelope: &str) -> String {
     common::run_hook(dir, &["audit", "--hook"], envelope)
 }
 
-/// Run the audit expecting silence, and return the observe entry it
-/// wrote (the shared tail of the observe-mode and degraded cases).
 fn silent_audit_observe(dir: &Path) -> serde_json::Value {
-    let out = run_audit(dir, &envelope(dir, false));
-    assert!(out.trim().is_empty(), "must stay silent: {out}");
-    let line = common::last_observe(dir);
-    assert_eq!(line["event"], "stop_audit");
-    assert!(line["ts_ms"].as_u64().expect("ts_ms") > 0, "stamped");
-    line
-}
-
-fn envelope(dir: &Path, stop_hook_active: bool) -> String {
-    serde_json::json!({
-        "session_id": "t", "transcript_path": "t",
-        "cwd": dir.display().to_string().replace('\\', "/"),
-        "hook_event_name": "Stop", "stop_hook_active": stop_hook_active
-    })
-    .to_string()
+    common::silent_hook_observe(
+        dir,
+        &["audit", "--hook"],
+        &envelope(dir, false),
+        "stop_audit",
+    )
 }
 
 #[test]

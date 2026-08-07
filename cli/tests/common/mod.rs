@@ -96,6 +96,40 @@ pub fn analyze(dir: &Path, blocks: usize, groups: usize) -> codeeraser::dedup::p
     found
 }
 
+/// Path of a golden fixture under contracts/fixtures.
+pub fn golden_path(name: &str) -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .expect("cli/ has a parent")
+        .join("contracts/fixtures")
+        .join(name)
+}
+
+/// CE_BLESS=1 regenerates the golden; otherwise byte-compare
+/// (CRLF-normalized). Exactly "1": any-value is_ok() would let
+/// CE_BLESS=0 or an empty var silently bless-and-pass
+/// (attack-review finding).
+pub fn assert_matches_golden(json: &str, path: &Path) {
+    if std::env::var("CE_BLESS").as_deref() == Ok("1") {
+        std::fs::create_dir_all(path.parent().expect("golden dir")).expect("mkdir");
+        std::fs::write(path, format!("{json}\n")).expect("bless golden");
+        return;
+    }
+    let golden = std::fs::read_to_string(path)
+        .unwrap_or_else(|e| {
+            panic!(
+                "missing golden {} ({e}); CE_BLESS=1 to create",
+                path.display()
+            )
+        })
+        .replace("\r\n", "\n");
+    assert_eq!(
+        json.trim_end(),
+        golden.trim_end(),
+        "report shape drifted — bump the schema id and re-bless deliberately"
+    );
+}
+
 /// Corrupt the project's dedup index so every deep check degrades —
 /// the A9f test fixture (audit, precommit, and guard variants).
 pub fn corrupt_index(dir: &Path) {
@@ -117,6 +151,34 @@ pub fn run_ce(dir: &Path, args: &[&str]) -> std::process::Output {
 pub fn build_index(dir: &Path) {
     let out = run_ce(dir, &["dedup", "."]);
     assert!(out.status.success(), "seed dedup failed");
+}
+
+/// PreToolUse envelope per the captured contract: Write carries
+/// `content`, Edit carries `new_string`.
+pub fn pretooluse_envelope(dir: &Path, tool: &str, content: &str) -> String {
+    let file = dir.join("b.rs").display().to_string().replace('\\', "/");
+    let cwd = dir.display().to_string().replace('\\', "/");
+    let input = if tool == "Write" {
+        serde_json::json!({"file_path": file, "content": content})
+    } else {
+        serde_json::json!({"file_path": file, "old_string": "x", "new_string": content, "replace_all": false})
+    };
+    serde_json::json!({
+        "session_id": "t", "transcript_path": "t", "cwd": cwd,
+        "hook_event_name": "PreToolUse", "tool_name": tool,
+        "tool_input": input, "tool_use_id": "t"
+    })
+    .to_string()
+}
+
+/// Stop envelope; `stop_hook_active` = the loop-prevention flag.
+pub fn stop_envelope(dir: &Path, stop_hook_active: bool) -> String {
+    serde_json::json!({
+        "session_id": "t", "transcript_path": "t",
+        "cwd": dir.display().to_string().replace('\\', "/"),
+        "hook_event_name": "Stop", "stop_hook_active": stop_hook_active
+    })
+    .to_string()
 }
 
 /// Run a `ce` hook subcommand with the envelope piped to stdin.
@@ -172,6 +234,23 @@ pub fn spawn_daemon_ready(root: &Path) -> Child {
 pub fn last_observe(dir: &Path) -> serde_json::Value {
     let log = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).expect("observe log");
     serde_json::from_str(log.lines().last().expect("line")).expect("ndjson")
+}
+
+/// Run a hook expecting SILENCE and return the observe entry it
+/// wrote, asserting the event discriminator and the ts_ms stamp —
+/// the shared tail of every observe/degraded case.
+pub fn silent_hook_observe(
+    dir: &Path,
+    args: &[&str],
+    stdin: &str,
+    event: &str,
+) -> serde_json::Value {
+    let out = run_hook(dir, args, stdin);
+    assert!(out.trim().is_empty(), "must stay silent: {out}");
+    let line = last_observe(dir);
+    assert_eq!(line["event"], event, "feed discriminator");
+    assert!(line["ts_ms"].as_u64().expect("ts_ms") > 0, "stamped");
+    line
 }
 
 /// Ask the daemon for `dir` to shut down (ignore errors — may be gone).
