@@ -29,3 +29,6 @@ tree-sitter-typescript = "0.23.2"
 
 [profile.release]
 strip = true
+
+[dev-dependencies]
+proptest = "1.11.0"
