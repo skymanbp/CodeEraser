@@ -11,7 +11,6 @@ use crate::config::Config;
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use serde::Deserialize;
-use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -41,11 +40,7 @@ struct ToolInput {
 
 /// Entry point for `ce probe --hook`. Never fails outward.
 pub fn run_hook() -> ExitCode {
-    let mut raw = String::new();
-    if std::io::stdin().read_to_string(&mut raw).is_err() {
-        return ExitCode::SUCCESS;
-    }
-    let Ok(env) = serde_json::from_str::<Envelope>(&raw) else {
+    let Some(env) = crate::hookio::read_envelope::<Envelope>() else {
         return ExitCode::SUCCESS;
     };
     if env.hook_event_name != "PreToolUse" || !matches!(env.tool_name.as_str(), "Write" | "Edit") {
@@ -146,28 +141,14 @@ fn observe_log(
     mode: &str,
     elapsed_ms: u128,
 ) {
-    let dir = root.join(".ce");
-    if std::fs::create_dir_all(&dir).is_err() {
-        return;
-    }
-    let epoch_ms = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| d.as_millis())
-        .unwrap_or(0);
-    let line = serde_json::json!({
-        "ts_ms": epoch_ms,
-        "file": file_path,
-        "mode": mode,
-        "degraded": matches.is_none(),
-        "matches": matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
-        "elapsed_ms": elapsed_ms,
-    });
-    use std::io::Write as _;
-    if let Ok(mut fh) = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(dir.join("observe.ndjson"))
-    {
-        let _ = writeln!(fh, "{line}");
-    }
+    crate::hookio::observe_append(
+        root,
+        serde_json::json!({
+            "file": file_path,
+            "mode": mode,
+            "degraded": matches.is_none(),
+            "matches": matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
+            "elapsed_ms": elapsed_ms,
+        }),
+    );
 }

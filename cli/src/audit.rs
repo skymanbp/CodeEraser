@@ -9,7 +9,6 @@
 
 use crate::config::Config;
 use serde::Deserialize;
-use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -27,11 +26,7 @@ struct Envelope {
 
 /// Entry point for `ce audit --hook`. Never fails outward.
 pub fn run_hook() -> ExitCode {
-    let mut raw = String::new();
-    if std::io::stdin().read_to_string(&mut raw).is_err() {
-        return ExitCode::SUCCESS;
-    }
-    let Ok(env) = serde_json::from_str::<Envelope>(&raw) else {
+    let Some(env) = crate::hookio::read_envelope::<Envelope>() else {
         return ExitCode::SUCCESS;
     };
     if env.hook_event_name != "Stop" || env.stop_hook_active || env.cwd.is_empty() {
@@ -167,29 +162,15 @@ fn observe_log(
     dups: &Option<Vec<String>>,
     mode: &str,
 ) {
-    let dir = root.join(".ce");
-    if std::fs::create_dir_all(&dir).is_err() {
-        return;
-    }
-    let epoch_ms = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| d.as_millis())
-        .unwrap_or(0);
-    let line = serde_json::json!({
-        "ts_ms": epoch_ms,
-        "event": "stop_audit",
-        "mode": mode,
-        "net_loc": net_loc,
-        "changed_files": changed.len(),
-        "degraded": dups.is_none(),
-        "dup_blocks": dups.as_deref().map(<[String]>::len).unwrap_or(0),
-    });
-    use std::io::Write as _;
-    if let Ok(mut fh) = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(dir.join("observe.ndjson"))
-    {
-        let _ = writeln!(fh, "{line}");
-    }
+    crate::hookio::observe_append(
+        root,
+        serde_json::json!({
+            "event": "stop_audit",
+            "mode": mode,
+            "net_loc": net_loc,
+            "changed_files": changed.len(),
+            "degraded": dups.is_none(),
+            "dup_blocks": dups.as_deref().map(<[String]>::len).unwrap_or(0),
+        }),
+    );
 }

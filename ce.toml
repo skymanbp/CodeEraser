@@ -7,12 +7,13 @@
 exclude = ["contracts/fixtures/crosscheck/**"]
 
 # Only-shrink clone ratchet (M2 review R12), enforced in CI via
-# `ce dedup --check`. 209 measured 2026-08-07: the A9f batch tripped
-# the gate at 213, and extracting the shared audit/precommit head
-# (gather) plus two test helpers landed one below the old 210 floor —
-# the gate has now caught its author on three consecutive landings.
-# Remaining mass = test-fixture cluster + parallel test bodies
-# (docs/FPR-REPLAY.md). Ratchet DOWN with every cleanup; never raise
-# without a plan amendment.
+# `ce dedup --check`. 205 measured 2026-08-07 after src/hookio.rs
+# unified the hook stdin intake + observe-feed writer (guard/audit/
+# health envelope family, -4). Kept, not extracted: the three
+# per-hook Envelope struct declarations + run_hook heads (4 blocks) —
+# parallel contract declarations, same category as the parallel test
+# bodies (docs/FPR-REPLAY.md). Remaining mass = test-fixture cluster.
+# Ratchet DOWN with every cleanup; never raise without a plan
+# amendment.
 [dedup]
-budget = 209
+budget = 205

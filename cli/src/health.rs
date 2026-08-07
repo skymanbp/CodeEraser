@@ -9,7 +9,6 @@ use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use crate::dedup::{Params, index::Index};
 use serde::Deserialize;
-use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -23,11 +22,7 @@ struct Envelope {
 
 /// Entry point for `ce health --hook`. Never fails outward.
 pub fn run_hook() -> ExitCode {
-    let mut raw = String::new();
-    if std::io::stdin().read_to_string(&mut raw).is_err() {
-        return ExitCode::SUCCESS;
-    }
-    let Ok(env) = serde_json::from_str::<Envelope>(&raw) else {
+    let Some(env) = crate::hookio::read_envelope::<Envelope>() else {
         return ExitCode::SUCCESS;
     };
     if env.hook_event_name != "SessionStart" || env.cwd.is_empty() {
