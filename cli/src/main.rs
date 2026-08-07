@@ -1,9 +1,9 @@
 //! ce — CodeEraser CLI frontend.
 //! `doctor` (ce-core handshake, M0) + `scan` (metrics, M1) +
-//! `dedup` (clone index, M2).
+//! `dedup` / `daemon` / `ping` (clone index + process model, M2).
 
 use clap::{Parser, Subcommand, ValueEnum};
-use codeeraser::{dedup, handshake, scan};
+use codeeraser::{daemon, dedup, handshake, scan};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -48,6 +48,17 @@ enum Cmd {
         #[arg(long)]
         min_tokens: Option<usize>,
     },
+    /// Run the per-project daemon in the foreground (ADR-003);
+    /// normally lazy-started by `ce ping` / hook probes
+    Daemon {
+        /// Project root to serve
+        root: PathBuf,
+    },
+    /// Round-trip a ping through the project daemon (lazy-starts it)
+    Ping {
+        /// Project root (default: current directory)
+        root: Option<PathBuf>,
+    },
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -66,6 +77,36 @@ fn main() -> ExitCode {
             db,
             min_tokens,
         } => dedup_cmd(path, format, db, min_tokens),
+        Cmd::Daemon { root } => match daemon::server::serve(&root) {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(err) => {
+                eprintln!("ce daemon: {err:#}");
+                ExitCode::from(2)
+            }
+        },
+        Cmd::Ping { root } => ping_cmd(root),
+    }
+}
+
+fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
+    let root = root.unwrap_or_else(|| PathBuf::from("."));
+    let started = std::time::Instant::now();
+    match daemon::client::request(&root, &daemon::proto::Request::Ping) {
+        Ok(daemon::proto::Response::Pong { uptime_ms }) => {
+            println!(
+                "pong: daemon up {uptime_ms} ms, round-trip {} ms",
+                started.elapsed().as_millis()
+            );
+            ExitCode::SUCCESS
+        }
+        Ok(other) => {
+            eprintln!("ce ping: unexpected reply: {other:?}");
+            ExitCode::from(2)
+        }
+        Err(err) => {
+            eprintln!("ce ping: {err:#}");
+            ExitCode::from(2)
+        }
     }
 }
 

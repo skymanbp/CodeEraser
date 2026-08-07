@@ -32,6 +32,18 @@ pub fn run(
     db: Option<PathBuf>,
     min_tokens: Option<usize>,
 ) -> Result<ExitCode> {
+    let (found, summary) = analyze(root, db, min_tokens)?;
+    emit(format, &found, &summary)?;
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Library entry shared by the CLI and the daemon: index, verify,
+/// and return the blocks + summary without printing anything.
+pub fn analyze(
+    root: &Path,
+    db: Option<PathBuf>,
+    min_tokens: Option<usize>,
+) -> Result<(pairs::Blocks, Summary)> {
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
     let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
     let p = Params::default();
@@ -59,8 +71,16 @@ pub fn run(
         window: p.window,
         min_tokens: min,
     };
-    emit(format, &found, &summary)?;
-    Ok(ExitCode::SUCCESS)
+    Ok((found, summary))
+}
+
+/// The dedup report as a self-contained JSON value (daemon wire use).
+pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<serde_json::Value> {
+    Ok(serde_json::to_value(Report {
+        schema: SCHEMA_ID,
+        blocks: &found.blocks,
+        summary: s,
+    })?)
 }
 
 /// Token streams for the files that share at least one fingerprint.
@@ -121,7 +141,7 @@ fn index_all(
 }
 
 #[derive(Serialize)]
-struct Summary {
+pub struct Summary {
     files: usize,
     refreshed: usize,
     removed: usize,
