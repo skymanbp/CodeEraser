@@ -26,6 +26,7 @@ fn ping_dedup_shutdown_roundtrip() {
     println!("warm ping round-trip: {warm_ms} ms");
 
     assert_dedup_probe(&root);
+    assert_probe_excludes_self(&root);
 
     // clean shutdown; the process must exit
     match client::request(&root, &Request::Shutdown).expect("shutdown") {
@@ -33,6 +34,32 @@ fn ping_dedup_shutdown_roundtrip() {
         other => panic!("expected bye, got {other:?}"),
     }
     common::wait_exit(child, "daemon after shutdown");
+}
+
+/// Probing content FOR an indexed file must not report that file as
+/// its own duplicate source. Cross-platform regression: the daemon
+/// canonicalizes its root (\\?\ form on Windows), so a plain
+/// absolute file_path never strip-matched it and self-exclusion was
+/// silently dead on Windows — first exposed by the observe-feed
+/// golden diverging between CI platforms.
+fn assert_probe_excludes_self(root: &Path) {
+    // the daemon indexed a.rs + b.rs via assert_dedup_probe's run
+    let req = Request::Probe {
+        file_path: root.join("a.rs").display().to_string().replace('\\', "/"),
+        content: common::rust_fn(9),
+    };
+    match client::request(root, &req).expect("probe") {
+        Response::ProbeReport { matches, .. } => {
+            let files: Vec<&str> = matches
+                .as_array()
+                .expect("matches array")
+                .iter()
+                .map(|m| m["file"].as_str().expect("file"))
+                .collect();
+            assert_eq!(files, ["b.rs"], "a.rs must be excluded as self");
+        }
+        other => panic!("expected probe report, got {other:?}"),
+    }
 }
 
 /// The socket-side dedup probe must find the seeded T2 clone.

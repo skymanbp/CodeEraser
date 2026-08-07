@@ -187,9 +187,17 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     if lang.grammar().is_none() {
         return Ok(serde_json::json!([]));
     }
-    let rel = path
+    // canonicalize before stripping: `root` is canonical (serve()),
+    // and on Windows that is the \\?\ verbatim form — a plain
+    // absolute file_path never strip-matches it, which silently
+    // killed probe self-exclusion (caught by the observe-feed golden
+    // diverging across CI platforms). A not-yet-existing file can't
+    // canonicalize — and can't be in the index either, so the raw
+    // fallback is safe.
+    let canon = std::fs::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
+    let rel = canon
         .strip_prefix(root)
-        .unwrap_or(path)
+        .unwrap_or(&canon)
         .display()
         .to_string()
         .replace('\\', "/");

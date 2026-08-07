@@ -4,7 +4,7 @@
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
-    "matches": 2,
+    "matches": 1,
     "mode": "observe",
     "schema": "ce.observe/0.1.0",
     "ts_ms": 0
