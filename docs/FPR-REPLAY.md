@@ -21,12 +21,15 @@
   "新增文件与既有文件重复"判定正确。
 - 33 条：`cli/tests/*.rs` 之间共享的 `rust_fn(seed)`/`tmp()`/git 助手
   ——**作者本人复制粘贴的真实重复**（8 个测试文件各持一份）。工具当场
-  抓住了它要消灭的行为。治理项已完成：`tests/common/mod.rs` 统一
-  数据助手 + hook 运行器 + daemon 启动/回收 + observe 尾行读取，
-  自仓 dedup 251→211 块、助手家族跨文件对清零。保留不抽 = 用例
-  平行结构（deny/warn/observe 三态断言、dedup_index 刷新序列）；
-  divergence/metrics/sonar 间的嵌入 fixture 簇（155 块）与产品代码
-  audit/guard/health 的信封结构（8 块）另行排期。
+  抓住了它要消灭的行为。治理已分四批完成（251→211→209→205→202 块，
+  预算同步降档）：`tests/common/mod.rs` 统一数据助手 + hook 运行器 +
+  daemon 启动/回收 + observe 尾行读取 + dedup 断言 + tree-sitter 解析
+  harness（第 5 份拷贝在 RCA 对拍 harness，切换后 322 单元实跑复验绿）；
+  `src/hookio.rs` 统一三 hook 的 stdin 进气与 observe 写入。保留不抽
+  =命名边界（ce.toml 注释同步）：用例平行结构（deny/warn/observe 三态
+  断言、dedup_index 刷新序列）、三 hook 的信封契约声明（4 块）、
+  metrics/divergence/sonar 的文档性测试体（~150 块——逐例白皮书引注
+  即内容本体，T2 把 src 字面量折叠后相邻用例连成一个家族）。
 
 ## 重放捎带抓获的产品缺陷（已修）
 
