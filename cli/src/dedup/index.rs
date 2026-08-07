@@ -67,15 +67,7 @@ impl Index {
         conn.pragma_update(None, "journal_mode", "WAL")?;
         conn.pragma_update(None, "busy_timeout", 5000)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
-        let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
-        if version != SCHEMA_VERSION || !meta_matches(&conn, p)? {
-            conn.execute_batch(SCHEMA)?;
-            conn.pragma_update(None, "user_version", SCHEMA_VERSION)?;
-            let mut stmt = conn.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
-            for (k, v) in meta_entries(p) {
-                stmt.execute((k, v))?;
-            }
-        }
+        ensure_cache_key(&conn, p)?;
         Ok(Self { conn })
     }
 
@@ -151,6 +143,22 @@ impl Index {
         rows.sort();
         Ok(rows)
     }
+}
+
+/// Wipe-and-recreate unless both the schema version and the meta
+/// cache key (params + tokenizer rev) match.
+fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {
+    let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
+    if version == SCHEMA_VERSION && meta_matches(conn, p)? {
+        return Ok(());
+    }
+    conn.execute_batch(SCHEMA)?;
+    conn.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+    let mut stmt = conn.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
+    for (k, v) in meta_entries(p) {
+        stmt.execute((k, v))?;
+    }
+    Ok(())
 }
 
 fn meta_entries(p: Params) -> [(&'static str, i64); 3] {
