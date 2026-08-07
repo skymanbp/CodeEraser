@@ -70,11 +70,13 @@ user_version=2 门控重建；报告项 = 已验证精确归一化公共段 ≥ 
   （16 块）、models.py 327↔428（jscpd 双确认）；假阳 9 块 =
   status_codes.py 数据行（1）+ locale 文件内部前后 key 段（8）——
   LIT 折叠使不同数据行同构，语义非克隆。
-- **召回门直陈**：计划 §6 M2 要求"对 jscpd 可检出集召回 ≥ 95%"，
-  当前 15/17 = 88.2%（默认档）/ 16/17 = 94.1%（--min-tokens 40）
-  **均未数值达标**。两 miss 的归因（docstring→docdup 域、阈值测度
-  差异）若要作为验收口径排除项，属计划契约变更，须用户拍板后改计划
-  重锁（CLAUDE.md 硬约束 2）——已上呈，不擅改。
+- **召回门口径（用户拍板 2026-08-07，AskUserQuestion，计划 §6 M2 行
+  已同步修订）**：采归因排除制——属 docdup 域（docstring/注释重复）
+  或阈值测度差异的条目可逐条证据归因排除，排除项入册。本 fixtures 集
+  排除清单：① `models.py __bool__<->__nonzero__`（docstring 域，任何
+  阈值下无锚点）；② `walk.rs 1224<->1249`（47 token 差 3 到线，测度
+  差异，--min-tokens 40 实测命中）。排除后召回 **15/15 = 100%**；
+  终版验收数字仍以 M2 收口的大仓对拍复测为准。
 - **退化类信号已产品化**：Block 新增 `distinct`（run 内唯一 token
   数）。按类精确均值（审阅 N21 更正）：假阳类 5.0（status_codes，
   n=1）/ 5.8（intra-locale，n=8）vs 真阳类 cobra 13（n=1）、locale
