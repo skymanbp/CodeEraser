@@ -5,7 +5,7 @@
 
 use codeeraser::daemon::client;
 use codeeraser::daemon::proto::{Request, Response};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 fn project_dir(name: &str) -> PathBuf {
@@ -16,7 +16,7 @@ fn project_dir(name: &str) -> PathBuf {
 }
 
 /// T2 pair long enough to clear t=50.
-fn seed_clone_pair(dir: &PathBuf) {
+fn seed_clone_pair(dir: &Path) {
     let f = |seed: u32| {
         format!(
             "fn work_{seed}(input_{seed}: &[i64], limit_{seed}: i64) -> i64 {{
@@ -40,7 +40,7 @@ fn seed_clone_pair(dir: &PathBuf) {
 /// The client spawns `ce daemon` via current_exe(), which in a test
 /// harness is the TEST binary — point it at the real ce instead by
 /// spawning the daemon ourselves before using the client.
-fn spawn_daemon(root: &PathBuf) -> std::process::Child {
+fn spawn_daemon(root: &Path) -> std::process::Child {
     std::process::Command::new(env!("CARGO_BIN_EXE_ce"))
         .arg("daemon")
         .arg(root)
@@ -80,15 +80,7 @@ fn ping_dedup_shutdown_roundtrip() {
     assert!(matches!(r, Response::Pong { .. }));
     println!("warm ping round-trip: {warm_ms} ms");
 
-    // dedup probe over the socket finds the seeded T2 clone
-    match client::request(&root, &Request::Dedup { min_tokens: None }).expect("dedup") {
-        Response::DedupReport { report } => {
-            let blocks = report["blocks"].as_array().expect("blocks array");
-            assert!(!blocks.is_empty(), "seeded clone must be found");
-            assert_eq!(report["schema"], "ce.dedup-report/0.3.0");
-        }
-        other => panic!("expected report, got {other:?}"),
-    }
+    assert_dedup_probe(&root);
 
     // clean shutdown; the process must exit
     match client::request(&root, &Request::Shutdown).expect("shutdown") {
@@ -103,6 +95,18 @@ fn ping_dedup_shutdown_roundtrip() {
     }
     let _ = child.kill();
     panic!("daemon did not exit after shutdown");
+}
+
+/// The socket-side dedup probe must find the seeded T2 clone.
+fn assert_dedup_probe(root: &Path) {
+    match client::request(root, &Request::Dedup { min_tokens: None }).expect("dedup") {
+        Response::DedupReport { report } => {
+            let blocks = report["blocks"].as_array().expect("blocks array");
+            assert!(!blocks.is_empty(), "seeded clone must be found");
+            assert_eq!(report["schema"], "ce.dedup-report/0.3.0");
+        }
+        other => panic!("expected report, got {other:?}"),
+    }
 }
 
 /// Version skew: a wrong-major hello gets `restart` and the daemon

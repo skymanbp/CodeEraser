@@ -50,8 +50,8 @@ fn round_trip(conn: &mut BufReader<Stream>, req: &Request) -> Result<Response> {
     if conn.read_line(&mut reply)? == 0 {
         bail!("daemon closed the connection");
     }
-    Ok(serde_json::from_str(reply.trim())
-        .with_context(|| format!("bad daemon reply `{}`", reply.trim()))?)
+    serde_json::from_str(reply.trim())
+        .with_context(|| format!("bad daemon reply `{}`", reply.trim()))
 }
 
 fn connect_or_spawn(root: &Path) -> Result<BufReader<Stream>> {
