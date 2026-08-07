@@ -8,9 +8,20 @@
 |---|---|---|---|---|
 | 1 | Claude Code fork hook 进程（Windows shell form 经 PowerShell） | ≤ 300 ms | 未测 | M3（echo-hook 计时） |
 | 2 | `ce` 冷启动（进程 + clap 解析 + 退出） | ≤ 100 ms | `ce --version` ×10：min 28.3 / median 30.3 / max 53.1 ms | ✅ M0 |
-| 3 | named pipe 连接 + 指纹探针往返（daemon 热态） | p95 ≤ 150 ms | 未测（daemon 未建） | M2 |
+| 3 | named pipe 连接 + 指纹探针往返（daemon 热态） | p95 ≤ 150 ms | ping ×100（101k LOC 仓）：median 0.27 / p95 0.50 / max 5.78 ms | ✅ M2 |
 | 4 | 判定组装 + stdout JSON 回传 | ≤ 50 ms | 未测 | M3 |
 | 合计 | PreToolUse 端到端 | **p95 < 1 s**（含 Defender/冷 daemon 余量） | 未测 | M3 验收门 |
+
+## M2 克隆索引预算（计划 §6 M2，实测 2026-08-07，release，合成 101,200 LOC 语料）
+
+| 项 | 预算 | 实测 | 状态 |
+|---|---|---|---|
+| 10 万 LOC 全量索引（含扩展验证与配对，919 块） | < 30 s | 1.92 s | ✅ |
+| 单文件增量刷新（内容哈希门控 + 重插指纹） | < 200 ms | 2.50 ms | ✅ |
+| 参考：warm 全量 analyze（索引快路径 + 全配对） | —（无预算） | 701 ms | 记录 |
+
+复跑：`cargo test --release --test perf_budget -- --ignored --nocapture`
+（合成语料确定性生成；M2 收口大仓复测时用真实仓库再录一列）。
 
 补充口径：
 
