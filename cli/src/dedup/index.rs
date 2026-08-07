@@ -12,28 +12,37 @@ use rusqlite::Connection;
 use std::collections::BTreeSet;
 use std::path::Path;
 
+/// Pre-release schema versioning: a mismatch drops and recreates the
+/// tables (the index is a cache — rebuilding is always safe).
+const SCHEMA_VERSION: i64 = 2;
+
 const SCHEMA: &str = "
-CREATE TABLE IF NOT EXISTS files (
+DROP TABLE IF EXISTS fingerprints;
+DROP TABLE IF EXISTS files;
+CREATE TABLE files (
   id INTEGER PRIMARY KEY,
   path TEXT UNIQUE NOT NULL,
   content_hash INTEGER NOT NULL,
   token_count INTEGER NOT NULL
 );
-CREATE TABLE IF NOT EXISTS fingerprints (
+CREATE TABLE fingerprints (
   hash INTEGER NOT NULL,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+  start_tok INTEGER NOT NULL,
   start_line INTEGER NOT NULL,
   end_line INTEGER NOT NULL
 );
-CREATE INDEX IF NOT EXISTS idx_fp_hash ON fingerprints(hash);
-CREATE INDEX IF NOT EXISTS idx_fp_file ON fingerprints(file_id);
+CREATE INDEX idx_fp_hash ON fingerprints(hash);
+CREATE INDEX idx_fp_file ON fingerprints(file_id);
 ";
 
-/// One fingerprint occurrence, joined back to its file.
+/// One fingerprint occurrence, joined back to its file. `start_tok`
+/// is the k-gram's token index — the anchor for extension verify.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Instance {
     pub hash: u64,
     pub file: String,
+    pub start_tok: usize,
     pub start_line: usize,
     pub end_line: usize,
 }
@@ -52,7 +61,11 @@ impl Index {
         conn.pragma_update(None, "journal_mode", "WAL")?;
         conn.pragma_update(None, "busy_timeout", 5000)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
-        conn.execute_batch(SCHEMA)?;
+        let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
+        if version != SCHEMA_VERSION {
+            conn.execute_batch(SCHEMA)?;
+            conn.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+        }
         Ok(Self { conn })
     }
 
@@ -72,7 +85,7 @@ impl Index {
         if stored == Some(chash) {
             return Ok(false);
         }
-        let toks = parse_tokens(src, lang)?;
+        let toks = tokens::stream(src, lang)?;
         let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();
         let fps = winnow::fingerprints(&hashes, p);
         let tx = self.conn.transaction()?;
@@ -111,15 +124,16 @@ impl Index {
         let mut rows: Vec<Instance> = self
             .conn
             .prepare(
-                "SELECT f.hash, fl.path, f.start_line, f.end_line
+                "SELECT f.hash, fl.path, f.start_tok, f.start_line, f.end_line
                  FROM fingerprints f JOIN files fl ON fl.id = f.file_id",
             )?
             .query_map([], |r| {
                 Ok(Instance {
                     hash: r.get::<_, i64>(0)? as u64,
                     file: r.get(1)?,
-                    start_line: r.get::<_, i64>(2)? as usize,
-                    end_line: r.get::<_, i64>(3)? as usize,
+                    start_tok: r.get::<_, i64>(2)? as usize,
+                    start_line: r.get::<_, i64>(3)? as usize,
+                    end_line: r.get::<_, i64>(4)? as usize,
                 })
             })?
             .collect::<rusqlite::Result<_>>()?;
@@ -136,17 +150,6 @@ fn ignore_no_rows(e: rusqlite::Error) -> rusqlite::Result<Option<i64>> {
     }
 }
 
-fn parse_tokens(src: &[u8], lang: Lang) -> Result<Vec<tokens::Token>> {
-    let grammar = lang
-        .grammar()
-        .context("size-only language has no token stream")?;
-    let sp = crate::scan::spec::spec(lang);
-    let mut parser = tree_sitter::Parser::new();
-    parser.set_language(&grammar).context("set_language")?;
-    let tree = parser.parse(src, None).context("parse")?;
-    Ok(tokens::tokenize(tree.root_node(), sp))
-}
-
 fn insert_fps(
     tx: &rusqlite::Transaction<'_>,
     file_id: i64,
@@ -155,12 +158,19 @@ fn insert_fps(
     p: Params,
 ) -> Result<()> {
     let mut stmt = tx.prepare(
-        "INSERT INTO fingerprints (hash, file_id, start_line, end_line) VALUES (?1, ?2, ?3, ?4)",
+        "INSERT INTO fingerprints (hash, file_id, start_tok, start_line, end_line)
+         VALUES (?1, ?2, ?3, ?4, ?5)",
     )?;
     for f in fps {
         let start = toks[f.start].start_line;
         let end = toks[f.start + p.kgram - 1].end_line;
-        stmt.execute((f.hash as i64, file_id, start as i64, end as i64))?;
+        stmt.execute((
+            f.hash as i64,
+            file_id,
+            f.start as i64,
+            start as i64,
+            end as i64,
+        ))?;
     }
     Ok(())
 }

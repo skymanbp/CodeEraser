@@ -10,7 +10,9 @@
 //! substitution), `*_literal` (Rust/Go).
 
 use crate::scan::ast;
+use crate::scan::lang::Lang;
 use crate::scan::spec::LangSpec;
+use anyhow::{Context, Result};
 use tree_sitter::Node;
 
 /// One normalized token, carrying its source span for report mapping.
@@ -28,6 +30,19 @@ enum Class {
     Id,
     Lit,
     Text,
+}
+
+/// Parse + tokenize one source in one call (index refresh and the
+/// pair-layer stream provider share this path).
+pub fn stream(src: &[u8], lang: Lang) -> Result<Vec<Token>> {
+    let grammar = lang
+        .grammar()
+        .context("size-only language has no token stream")?;
+    let sp = crate::scan::spec::spec(lang);
+    let mut parser = tree_sitter::Parser::new();
+    parser.set_language(&grammar).context("set_language")?;
+    let tree = parser.parse(src, None).context("parse")?;
+    Ok(tokenize(tree.root_node(), sp))
 }
 
 /// Normalized token stream of a whole parsed file. Comments are

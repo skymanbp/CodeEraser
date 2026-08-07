@@ -3,7 +3,7 @@
 //! here; proptest randomization lands with the M2 acceptance), the
 //! content-hash fast path, and deleted-file reaping.
 
-use codeeraser::dedup::{Params, index::Index, pairs};
+use codeeraser::dedup::{Params, index::Index, pairs, tokens};
 use codeeraser::scan::lang::Lang;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -43,11 +43,22 @@ fn cross_file_t2_clone_detected() {
         .expect("a");
     idx.refresh_file("b.rs", rust_fn(2).as_bytes(), Lang::Rust, p)
         .expect("b");
-    let found = pairs::clone_blocks(&idx.all_instances().expect("instances"));
+    let mut streams = pairs::Streams::new();
+    streams.insert(
+        "a.rs".into(),
+        tokens::stream(rust_fn(1).as_bytes(), Lang::Rust).expect("sa"),
+    );
+    streams.insert(
+        "b.rs".into(),
+        tokens::stream(rust_fn(2).as_bytes(), Lang::Rust).expect("sb"),
+    );
+    let instances = idx.all_instances().expect("instances");
+    let found = pairs::clone_blocks(&instances, &streams, p.guarantee());
     assert_eq!(found.hot_skipped, 0);
     assert!(!found.blocks.is_empty(), "T2 clone must be detected");
     let b = &found.blocks[0];
     assert_eq!((b.a_file.as_str(), b.b_file.as_str()), ("a.rs", "b.rs"));
+    assert!(b.tokens >= p.guarantee(), "verified length above t");
     assert!(b.a_start >= 1 && b.a_end <= 12, "range within the function");
 }
 

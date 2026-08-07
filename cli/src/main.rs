@@ -43,6 +43,10 @@ enum Cmd {
         /// Index database path (default: <path>/.ce/index.db)
         #[arg(long)]
         db: Option<PathBuf>,
+        /// Report threshold in normalized tokens (default: the
+        /// winnowing guarantee threshold, 50)
+        #[arg(long)]
+        min_tokens: Option<usize>,
     },
 }
 
@@ -56,13 +60,23 @@ fn main() -> ExitCode {
     match Cli::parse().cmd {
         Cmd::Doctor { core } => doctor(&core),
         Cmd::Scan { path, format } => scan_cmd(path, format),
-        Cmd::Dedup { path, format, db } => dedup_cmd(path, format, db),
+        Cmd::Dedup {
+            path,
+            format,
+            db,
+            min_tokens,
+        } => dedup_cmd(path, format, db, min_tokens),
     }
 }
 
-fn dedup_cmd(path: Option<PathBuf>, format: OutFormat, db: Option<PathBuf>) -> ExitCode {
+fn dedup_cmd(
+    path: Option<PathBuf>,
+    format: OutFormat,
+    db: Option<PathBuf>,
+    min_tokens: Option<usize>,
+) -> ExitCode {
     let root = path.unwrap_or_else(|| PathBuf::from("."));
-    match dedup::run(&root, fmt(format), db) {
+    match dedup::run(&root, fmt(format), db, min_tokens) {
         Ok(code) => code,
         Err(err) => {
             eprintln!("ce dedup: {err:#}");

@@ -17,18 +17,29 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.dedup-report/0.1.0";
+/// 0.2.0: blocks carry verified `tokens` length (was `fingerprints`).
+pub const SCHEMA_ID: &str = "ce.dedup-report/0.2.0";
 
 /// Batch entry point: refresh the index (incremental), reap deleted
-/// files, report clone blocks. Informational exit in M2 — thresholds
-/// and the ratchet arrive with guard wiring (M3).
-pub fn run(root: &Path, format: Format, db: Option<PathBuf>) -> Result<ExitCode> {
+/// files, verify anchors by token-stream extension, report blocks.
+/// `min_tokens` lowers the report filter below the guarantee t for
+/// calibration runs; detection below t is opportunistic (anchors are
+/// only guaranteed at >= t). Informational exit in M2.
+pub fn run(
+    root: &Path,
+    format: Format,
+    db: Option<PathBuf>,
+    min_tokens: Option<usize>,
+) -> Result<ExitCode> {
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
     let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
+    let p = Params::default();
     let mut idx = index::Index::open(&db_path)?;
     let (live, refreshed) = index_all(root, &config, &mut idx)?;
     let removed = idx.remove_missing(&live)?;
-    let found = pairs::clone_blocks(&idx.all_instances()?);
+    let instances = idx.all_instances()?;
+    let streams = load_streams(root, &pairs::candidate_files(&instances))?;
+    let found = pairs::clone_blocks(&instances, &streams, min_tokens.unwrap_or(p.guarantee()));
     let summary = Summary {
         files: live.len(),
         refreshed,
@@ -38,6 +49,22 @@ pub fn run(root: &Path, format: Format, db: Option<PathBuf>) -> Result<ExitCode>
     };
     emit(format, &found, &summary)?;
     Ok(ExitCode::SUCCESS)
+}
+
+/// Token streams for the files that share at least one fingerprint —
+/// the extension-verify working set (re-tokenized on demand; the M2
+/// daemon will keep these hot).
+fn load_streams(root: &Path, files: &BTreeSet<String>) -> Result<pairs::Streams> {
+    let mut out = pairs::Streams::new();
+    for rel in files {
+        let path = root.join(rel);
+        let Some(lang) = Lang::from_path(&path) else {
+            continue;
+        };
+        let src = std::fs::read(&path)?;
+        out.insert(rel.clone(), tokens::stream(&src, lang)?);
+    }
+    Ok(out)
 }
 
 fn index_all(
@@ -90,8 +117,8 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
         Format::Console => {
             for b in &found.blocks {
                 println!(
-                    "dup {}:{}-{} <-> {}:{}-{} ({} fp)",
-                    b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.fingerprints
+                    "dup {}:{}-{} <-> {}:{}-{} ({} tokens)",
+                    b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.tokens
                 );
             }
             println!(
@@ -119,6 +146,14 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
 pub struct Params {
     pub kgram: usize,
     pub window: usize,
+}
+
+impl Params {
+    /// Winnowing guarantee threshold t: every match of at least this
+    /// many tokens shares a fingerprint — also the report threshold.
+    pub fn guarantee(&self) -> usize {
+        self.window + self.kgram - 1
+    }
 }
 
 impl Default for Params {
