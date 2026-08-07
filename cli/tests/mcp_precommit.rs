@@ -93,6 +93,24 @@ fn mcp_tool_calls_and_unknown_method() {
     s.finish();
 }
 
+/// A9f: a broken index degrades the precommit VISIBLY — exit 0 even
+/// in deny (unverifiable state must not brick the commit), but the
+/// human is told, never shown a clean pass.
+#[test]
+fn precommit_broken_index_is_visible_not_silent() {
+    let dir = tmp("precommit-degraded");
+    common::seed_git_clone_repo(&dir, "deny");
+    std::fs::create_dir_all(dir.join(".ce")).expect(".ce");
+    std::fs::write(dir.join(".ce/index.db"), b"not a sqlite database").expect("corrupt db");
+    let out = common::run_ce(&dir, &["precommit"]);
+    assert!(out.status.success(), "degraded fails open, never bricks");
+    let text = String::from_utf8_lossy(&out.stdout);
+    assert!(
+        text.contains("DEGRADED"),
+        "degradation said out loud: {text}"
+    );
+}
+
 #[test]
 fn precommit_blocks_staged_duplication_in_deny() {
     let dir = tmp("precommit");

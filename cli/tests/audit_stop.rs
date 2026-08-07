@@ -6,20 +6,20 @@
 use std::path::Path;
 
 mod common;
-use common::{git, rust_fn, tmp};
-
-/// Repo with a.rs committed; working tree adds b.rs = T2 clone of a.rs.
-fn seed_repo(dir: &Path, mode: &str) {
-    common::seed_sources(dir, mode);
-    git(dir, &["init", "-q"]);
-    git(dir, &["add", "."]);
-    git(dir, &["commit", "-qm", "seed"]);
-    std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (uncommitted clone)");
-    git(dir, &["add", "b.rs"]); // numstat vs HEAD sees staged new files
-}
+use common::{git, seed_git_clone_repo as seed_repo, tmp};
 
 fn run_audit(dir: &Path, envelope: &str) -> String {
     common::run_hook(dir, &["audit", "--hook"], envelope)
+}
+
+/// Run the audit expecting silence, and return the observe entry it
+/// wrote (the shared tail of the observe-mode and degraded cases).
+fn silent_audit_observe(dir: &Path) -> serde_json::Value {
+    let out = run_audit(dir, &envelope(dir, false));
+    assert!(out.trim().is_empty(), "must stay silent: {out}");
+    let line = common::last_observe(dir);
+    assert_eq!(line["event"], "stop_audit");
+    line
 }
 
 fn envelope(dir: &Path, stop_hook_active: bool) -> String {
@@ -46,12 +46,24 @@ fn deny_mode_blocks_on_touched_duplication() {
 fn observe_mode_is_silent_but_logs() {
     let dir = tmp("audit-observe");
     seed_repo(&dir, "observe");
-    let out = run_audit(&dir, &envelope(&dir, false));
-    assert!(out.trim().is_empty(), "observe emits nothing: {out}");
-    let line = common::last_observe(&dir);
-    assert_eq!(line["event"], "stop_audit");
+    let line = silent_audit_observe(&dir);
+    assert_eq!(line["degraded"], false);
     assert!(line["dup_blocks"].as_u64().expect("n") >= 1);
     assert!(line["net_loc"].as_i64().expect("net") > 0);
+}
+
+/// A9f: a broken index must not brick the stop (fail-open) and must
+/// not be conflated with "no duplicates" — the observe entry stamps
+/// degraded, and deny mode does NOT block on unverifiable state.
+#[test]
+fn broken_index_degrades_visibly_not_silently() {
+    let dir = tmp("audit-degraded");
+    seed_repo(&dir, "deny");
+    std::fs::create_dir_all(dir.join(".ce")).expect(".ce");
+    std::fs::write(dir.join(".ce/index.db"), b"not a sqlite database").expect("corrupt db");
+    let line = silent_audit_observe(&dir);
+    assert_eq!(line["degraded"], true, "degradation stamped, not silent");
+    assert_eq!(line["dup_blocks"], 0);
 }
 
 #[test]

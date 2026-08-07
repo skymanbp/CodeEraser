@@ -7,10 +7,12 @@
 exclude = ["contracts/fixtures/crosscheck/**"]
 
 # Only-shrink clone ratchet (M2 review R12), enforced in CI via
-# `ce dedup --check`. 210 measured 2026-08-07 after the tests/common
-# helper extraction (the gate's own landing caught 3 fresh clones in
-# its first run and forced this cleanup); remaining mass = test-fixture
-# cluster + parallel test bodies (docs/FPR-REPLAY.md). Ratchet DOWN
-# with every cleanup; never raise without a plan amendment.
+# `ce dedup --check`. 209 measured 2026-08-07: the A9f batch tripped
+# the gate at 213, and extracting the shared audit/precommit head
+# (gather) plus two test helpers landed one below the old 210 floor —
+# the gate has now caught its author on three consecutive landings.
+# Remaining mass = test-fixture cluster + parallel test bodies
+# (docs/FPR-REPLAY.md). Ratchet DOWN with every cleanup; never raise
+# without a plan amendment.
 [dedup]
-budget = 210
+budget = 209

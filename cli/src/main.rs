@@ -206,11 +206,21 @@ fn scan_cmd(path: Option<PathBuf>, format: OutFormat) -> ExitCode {
     }
 }
 
+/// Environment + project health (plan §5.9-5): the same status line
+/// the SessionStart hook emits, the A9f degraded-run counter from the
+/// observe feed, then the ce-core handshake (which sets the exit
+/// code, as in M0).
 fn doctor(core: &str) -> ExitCode {
     println!(
         "ce {} (proto {})",
         env!("CARGO_PKG_VERSION"),
         handshake::PROTO
+    );
+    let root = PathBuf::from(".");
+    println!("project: {}", codeeraser::health::status_line(&root));
+    println!(
+        "degraded runs (observe feed): {}",
+        codeeraser::health::degraded_runs(&root)
     );
     match handshake::run(core) {
         Ok(reply) => {

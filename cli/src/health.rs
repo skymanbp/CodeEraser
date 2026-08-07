@@ -33,7 +33,7 @@ pub fn run_hook() -> ExitCode {
     if env.hook_event_name != "SessionStart" || env.cwd.is_empty() {
         return ExitCode::SUCCESS;
     }
-    let line = health_line(&PathBuf::from(&env.cwd));
+    let line = status_line(&PathBuf::from(&env.cwd));
     let payload = serde_json::json!({
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",
@@ -44,7 +44,9 @@ pub fn run_hook() -> ExitCode {
     ExitCode::SUCCESS
 }
 
-fn health_line(root: &Path) -> String {
+/// The one-line project status — shared by the SessionStart hook and
+/// `ce doctor` (plan §5.9-5: daemon health, index freshness).
+pub fn status_line(root: &Path) -> String {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
@@ -65,6 +67,20 @@ fn index_summary(root: &Path) -> String {
         Ok(n) => format!("{n} files"),
         Err(_) => "unreadable (degraded — deep checks off until rebuilt)".into(),
     }
+}
+
+/// Degraded runs recorded in the project's observe feed — the A9f
+/// visibility counter surfaced by `ce doctor` (plan §5.9-5). Both the
+/// PreToolUse guard and the Stop audit stamp `degraded` on every
+/// entry, so this is a plain count, not a heuristic.
+pub fn degraded_runs(root: &Path) -> usize {
+    let Ok(log) = std::fs::read_to_string(root.join(".ce/observe.ndjson")) else {
+        return 0;
+    };
+    log.lines()
+        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+        .filter(|j| j["degraded"] == serde_json::Value::Bool(true))
+        .count()
 }
 
 /// The warm-up ping: lazy-starts the daemon so the session's probes

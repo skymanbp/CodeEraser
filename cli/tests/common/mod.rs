@@ -62,6 +62,17 @@ pub fn seed_clone_pair(dir: &Path) {
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (T2 clone)");
 }
 
+/// Git repo with the T2 seed committed and b.rs (the clone) staged
+/// but uncommitted — the audit/precommit fixture shape.
+pub fn seed_git_clone_repo(dir: &Path, mode: &str) {
+    seed_sources(dir, mode);
+    git(dir, &["init", "-q"]);
+    git(dir, &["add", "."]);
+    git(dir, &["commit", "-qm", "seed"]);
+    std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (uncommitted clone)");
+    git(dir, &["add", "b.rs"]); // numstat vs HEAD sees staged new files
+}
+
 /// Run the library dedup pipeline on `dir`, assert the pairwise-block
 /// and group counts every caller checks anyway, and return the result
 /// for the distinctive per-test assertions. Counts live HERE so the

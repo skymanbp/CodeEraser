@@ -40,23 +40,36 @@ pub fn run_hook() -> ExitCode {
     audit(&PathBuf::from(&env.cwd))
 }
 
-fn audit(root: &Path) -> ExitCode {
+/// Shared head of the Stop audit and the pre-commit gate: guard
+/// mode, numstat over `diff`, touched duplicates (None = degraded,
+/// A9f), and the observe entry. Outer None = not a git repo — the
+/// caller fails open.
+type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
+fn gather(root: &Path, diff: &[&str]) -> Option<Gathered> {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
-    let Some((net_loc, changed)) = diff_numstat(root) else {
-        return ExitCode::SUCCESS; // not a git repo / git failed: fail open
-    };
+    let (net_loc, changed) = diff_args(root, diff)?;
     let dups = if changed.is_empty() {
-        Vec::new()
+        Some(Vec::new())
     } else {
         touched_duplicates(root, &changed)
     };
     observe_log(root, net_loc, &changed, &dups, &mode);
-    if mode == "deny" && !dups.is_empty() {
+    Some((mode, net_loc, changed, dups))
+}
+
+fn audit(root: &Path) -> ExitCode {
+    let Some((mode, net_loc, _, dups)) = gather(root, &["diff", "--numstat", "HEAD"]) else {
+        return ExitCode::SUCCESS; // not a git repo / git failed: fail open
+    };
+    if mode == "deny"
+        && let Some(dups) = dups.as_deref()
+        && !dups.is_empty()
+    {
         let payload = serde_json::json!({
             "decision": "block",
-            "reason": reason(net_loc, &dups),
+            "reason": reason(net_loc, dups),
         });
         println!("{payload}");
     }
@@ -67,19 +80,16 @@ fn audit(root: &Path) -> ExitCode {
 /// when guard mode is deny and staged files touch duplicate blocks.
 /// Unlike the hooks this prints for humans — it runs in a terminal.
 pub fn run_precommit(root: &Path) -> ExitCode {
-    let mode = Config::load(root)
-        .map(|c| c.guard.mode)
-        .unwrap_or_else(|_| "observe".into());
-    let Some((net_loc, changed)) = diff_args(root, &["diff", "--cached", "--numstat"]) else {
+    let Some((mode, net_loc, changed, dups)) = gather(root, &["diff", "--cached", "--numstat"])
+    else {
         eprintln!("ce precommit: not a git repo (skipped)");
         return ExitCode::SUCCESS;
     };
-    let dups = if changed.is_empty() {
-        Vec::new()
-    } else {
-        touched_duplicates(root, &changed)
+    let Some(dups) = dups.as_deref() else {
+        // A9f: fail open but never silently — the human sees it
+        println!("ce precommit: dedup index unavailable (DEGRADED — duplicate check skipped)");
+        return ExitCode::SUCCESS;
     };
-    observe_log(root, net_loc, &changed, &dups, &mode);
     if dups.is_empty() {
         println!(
             "ce precommit: {} staged file(s), net {net_loc:+} LOC, no touched duplicates",
@@ -87,17 +97,11 @@ pub fn run_precommit(root: &Path) -> ExitCode {
         );
         return ExitCode::SUCCESS;
     }
-    println!("{}", reason(net_loc, &dups));
+    println!("{}", reason(net_loc, dups));
     if mode == "deny" {
         return ExitCode::from(1);
     }
     ExitCode::SUCCESS
-}
-
-/// (net added-deleted lines, changed file list) from
-/// `git diff --numstat HEAD`; None = fail open.
-fn diff_numstat(root: &Path) -> Option<(i64, Vec<String>)> {
-    diff_args(root, &["diff", "--numstat", "HEAD"])
 }
 
 fn diff_args(root: &Path, args: &[&str]) -> Option<(i64, Vec<String>)> {
@@ -126,23 +130,25 @@ fn diff_args(root: &Path, args: &[&str]) -> Option<(i64, Vec<String>)> {
 
 /// Duplicate blocks with at least one side in the changed set. v1
 /// approximation of "newly added duplication" — an exact new-vs-old
-/// split needs the session-start baseline (M4).
-fn touched_duplicates(root: &Path, changed: &[String]) -> Vec<String> {
-    let Ok((found, _)) = crate::dedup::analyze(root, None, None, None) else {
-        return Vec::new();
-    };
-    found
-        .blocks
-        .iter()
-        .filter(|b| changed.contains(&b.a_file) || changed.contains(&b.b_file))
-        .take(10)
-        .map(|b| {
-            format!(
-                "{}:{}-{} <-> {}:{}-{} ({} tokens)",
-                b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.tokens
-            )
-        })
-        .collect()
+/// split needs the session-start baseline (M4). None = the dedup
+/// pipeline itself failed (index unavailable): DEGRADED, stamped in
+/// the observe entry — never conflated with "no duplicates" (A9f).
+fn touched_duplicates(root: &Path, changed: &[String]) -> Option<Vec<String>> {
+    let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
+    Some(
+        found
+            .blocks
+            .iter()
+            .filter(|b| changed.contains(&b.a_file) || changed.contains(&b.b_file))
+            .take(10)
+            .map(|b| {
+                format!(
+                    "{}:{}-{} <-> {}:{}-{} ({} tokens)",
+                    b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.tokens
+                )
+            })
+            .collect(),
+    )
 }
 
 fn reason(net_loc: i64, dups: &[String]) -> String {
@@ -154,7 +160,13 @@ fn reason(net_loc: i64, dups: &[String]) -> String {
     )
 }
 
-fn observe_log(root: &Path, net_loc: i64, changed: &[String], dups: &[String], mode: &str) {
+fn observe_log(
+    root: &Path,
+    net_loc: i64,
+    changed: &[String],
+    dups: &Option<Vec<String>>,
+    mode: &str,
+) {
     let dir = root.join(".ce");
     if std::fs::create_dir_all(&dir).is_err() {
         return;
@@ -169,7 +181,8 @@ fn observe_log(root: &Path, net_loc: i64, changed: &[String], dups: &[String], m
         "mode": mode,
         "net_loc": net_loc,
         "changed_files": changed.len(),
-        "dup_blocks": dups.len(),
+        "degraded": dups.is_none(),
+        "dup_blocks": dups.as_deref().map(<[String]>::len).unwrap_or(0),
     });
     use std::io::Write as _;
     if let Ok(mut fh) = std::fs::OpenOptions::new()
