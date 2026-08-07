@@ -1,0 +1,2 @@
+{"proto":"0.1.0","type":"hello","client":"ce","version":"0.0.1"}
+{"proto":"0.1.0","type":"hello","server":"ce-core","version":"0.0.1","accept":true}

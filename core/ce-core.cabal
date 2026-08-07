@@ -1,0 +1,18 @@
+cabal-version:      3.0
+name:               ce-core
+version:            0.0.1
+synopsis:           CodeEraser judgment core (M0: NDJSON handshake server)
+license:            Apache-2.0
+author:             skymanbp
+build-type:         Simple
+
+executable ce-core
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    other-modules:    CE.Handshake
+    build-depends:
+        base       >=4.19 && <5,
+        aeson      >=2.2,
+        bytestring >=0.11
+    default-language: GHC2021
+    ghc-options:      -Wall -Werror

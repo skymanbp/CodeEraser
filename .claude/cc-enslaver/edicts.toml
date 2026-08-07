@@ -1,0 +1,26 @@
+# cc-enslaver — Imperial Edicts (圣旨) file
+#
+# This file defines project-specific hard rules that the cc-enslaver
+# plugin enforces on top of the built-in 12 rules.
+#
+# Schema:
+#   [[edicts]]
+#   id = "E01"                  # unique short id
+#   text = "..."                # what the agent should see (imperative)
+#   severity = "must"           # "must" -> physically DENY on match
+#                               # "should" -> soft reminder only
+#   deny_edit = ['''regex''']   # patterns matched against Edit/Write
+#                               # new_string / content
+#   deny_bash = ['''regex''']   # patterns matched against Bash commands
+#   note = "..."                # optional rationale shown in the deny
+#                               # reason (not required)
+#
+# Use triple-quoted strings ('''...''') for regexes to avoid TOML's
+# escaping rules. Edits to this file take effect on the next hook event
+# (no reload needed).
+
+[[edicts]]
+id = "E01"
+text = "本仓库所有新写/修改的代码：单函数 <= 50 行（硬线 75 拒绝）；认知复杂度 CoC <= 15；单代码文件 <= 300 行（硬线 750 拒绝）。阈值出处 = DEVELOPMENT_PLAN.md §4.1（dogfood 自家标准）。拆分优先于豁免；确需超限必须行内注明 why"
+severity = "must"
+

@@ -1,0 +1,81 @@
+# CI per DEVELOPMENT_PLAN.md §6 M0. Private-repo billing (D2-8):
+# macOS is 10x-metered, so it runs only on tags and the weekly schedule.
+name: ci
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  schedule:
+    - cron: "0 3 * * 1" # weekly macOS coverage
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable # version pinned by cli/rust-toolchain.toml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: cli
+      - name: Rust build + test + lint
+        working-directory: cli
+        run: |
+          cargo build --locked
+          cargo test --locked
+          cargo clippy --locked -- -D warnings
+          cargo fmt --check
+
+      - uses: haskell-actions/setup@v2
+        id: hs
+        with:
+          ghc-version: "9.14.1"
+          cabal-version: "latest"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.hs.outputs.cabal-store }}
+            core/dist-newstyle
+          key: cabal-${{ runner.os }}-ghc9.14.1-${{ hashFiles('core/ce-core.cabal', 'core/cabal.project*') }}
+      - name: Haskell build
+        working-directory: core
+        run: |
+          cabal update
+          cabal build all
+
+      - name: Handshake smoke (ce doctor)
+        shell: bash
+        working-directory: cli
+        run: |
+          CORE_BIN=$(cd ../core && cabal list-bin ce-core)
+          cargo run --locked -- doctor --core "$CORE_BIN"
+
+  build-macos:
+    if: github.event_name == 'schedule' || startsWith(github.ref, 'refs/tags/')
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: cli
+      - name: Rust build + test
+        working-directory: cli
+        run: |
+          cargo build --locked
+          cargo test --locked
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.14.1"
+          cabal-version: "latest"
+      - name: Haskell build
+        working-directory: core
+        run: |
+          cabal update
+          cabal build all
