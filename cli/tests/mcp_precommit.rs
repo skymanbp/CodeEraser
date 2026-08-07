@@ -30,9 +30,15 @@ fn rust_fn(seed: u32) -> String {
     )
 }
 
-#[test]
-fn mcp_initialize_list_and_call_round_trip() {
-    let dir = tmp("mcp-rt");
+/// Server over a seeded project + a request closure; EOF on drop.
+struct McpSession {
+    child: std::process::Child,
+    stdin: std::process::ChildStdin,
+    lines: std::io::Lines<BufReader<std::process::ChildStdout>>,
+}
+
+fn mcp_session(name: &str) -> McpSession {
+    let dir = tmp(name);
     std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (T2 clone)");
     let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
@@ -43,19 +49,36 @@ fn mcp_initialize_list_and_call_round_trip() {
         .stderr(Stdio::null())
         .spawn()
         .expect("spawn mcp");
-    let mut stdin = child.stdin.take().expect("stdin");
-    let mut lines = BufReader::new(child.stdout.take().expect("stdout")).lines();
-    let mut ask = |req: serde_json::Value| -> serde_json::Value {
-        writeln!(stdin, "{req}").expect("write");
-        stdin.flush().expect("flush");
-        serde_json::from_str(&lines.next().expect("reply").expect("line")).expect("json")
-    };
-    let init = ask(serde_json::json!({
+    let stdin = child.stdin.take().expect("stdin");
+    let lines = BufReader::new(child.stdout.take().expect("stdout")).lines();
+    McpSession {
+        child,
+        stdin,
+        lines,
+    }
+}
+
+impl McpSession {
+    fn ask(&mut self, req: serde_json::Value) -> serde_json::Value {
+        writeln!(self.stdin, "{req}").expect("write");
+        self.stdin.flush().expect("flush");
+        serde_json::from_str(&self.lines.next().expect("reply").expect("line")).expect("json")
+    }
+    fn finish(mut self) {
+        drop(self.stdin); // EOF ends serve()
+        let _ = self.child.wait();
+    }
+}
+
+#[test]
+fn mcp_initialize_and_list() {
+    let mut s = mcp_session("mcp-init");
+    let init = s.ask(serde_json::json!({
         "jsonrpc": "2.0", "id": 1, "method": "initialize",
         "params": {"protocolVersion": "2024-11-05", "capabilities": {}}
     }));
     assert_eq!(init["result"]["serverInfo"]["name"], "codeeraser");
-    let list = ask(serde_json::json!({"jsonrpc": "2.0", "id": 2, "method": "tools/list"}));
+    let list = s.ask(serde_json::json!({"jsonrpc": "2.0", "id": 2, "method": "tools/list"}));
     let names: Vec<&str> = list["result"]["tools"]
         .as_array()
         .expect("tools")
@@ -63,7 +86,13 @@ fn mcp_initialize_list_and_call_round_trip() {
         .map(|t| t["name"].as_str().expect("name"))
         .collect();
     assert_eq!(names, ["scan", "check_duplication"]);
-    let dup = ask(serde_json::json!({
+    s.finish();
+}
+
+#[test]
+fn mcp_tool_calls_and_unknown_method() {
+    let mut s = mcp_session("mcp-tools");
+    let dup = s.ask(serde_json::json!({
         "jsonrpc": "2.0", "id": 3, "method": "tools/call",
         "params": {"name": "check_duplication", "arguments": {}}
     }));
@@ -74,7 +103,7 @@ fn mcp_initialize_list_and_call_round_trip() {
         !report["blocks"].as_array().expect("blocks").is_empty(),
         "T2 pair must be reported over MCP"
     );
-    let scan = ask(serde_json::json!({
+    let scan = s.ask(serde_json::json!({
         "jsonrpc": "2.0", "id": 4, "method": "tools/call",
         "params": {"name": "scan", "arguments": {}}
     }));
@@ -82,10 +111,9 @@ fn mcp_initialize_list_and_call_round_trip() {
     let sreport: serde_json::Value = serde_json::from_str(stext).expect("scan json");
     assert_eq!(sreport["schema"], "ce.scan-report/0.1.0");
     // unknown method gets a JSON-RPC error, not a hang or crash
-    let err = ask(serde_json::json!({"jsonrpc": "2.0", "id": 5, "method": "nope"}));
+    let err = s.ask(serde_json::json!({"jsonrpc": "2.0", "id": 5, "method": "nope"}));
     assert_eq!(err["error"]["code"], -32601);
-    drop(stdin); // EOF ends serve()
-    let _ = child.wait();
+    s.finish();
 }
 
 fn git(dir: &Path, args: &[&str]) {

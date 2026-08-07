@@ -113,50 +113,37 @@ fn main() -> ExitCode {
             min_tokens,
             min_distinct,
         } => dedup_cmd(path, format, db, min_tokens, min_distinct),
-        Cmd::Probe { hook } => {
-            if hook {
-                codeeraser::guard::run_hook()
-            } else {
-                eprintln!("ce probe: only --hook mode exists in M3");
-                ExitCode::from(2)
-            }
-        }
-        Cmd::Audit { hook } => {
-            if hook {
-                codeeraser::audit::run_hook()
-            } else {
-                eprintln!("ce audit: only --hook mode exists in M3");
-                ExitCode::from(2)
-            }
-        }
-        Cmd::Health { hook } => {
-            if hook {
-                codeeraser::health::run_hook()
-            } else {
-                eprintln!("ce health: only --hook mode exists in M3");
-                ExitCode::from(2)
-            }
-        }
-        Cmd::Precommit { root } => {
-            codeeraser::audit::run_precommit(&root.unwrap_or_else(|| PathBuf::from(".")))
-        }
-        Cmd::Mcp { root } => {
-            match codeeraser::mcp::serve(&root.unwrap_or_else(|| PathBuf::from("."))) {
-                Ok(()) => ExitCode::SUCCESS,
-                Err(err) => {
-                    eprintln!("ce mcp: {err:#}");
-                    ExitCode::from(2)
-                }
-            }
-        }
-        Cmd::Daemon { root } => match daemon::server::serve(&root) {
-            Ok(()) => ExitCode::SUCCESS,
-            Err(err) => {
-                eprintln!("ce daemon: {err:#}");
-                ExitCode::from(2)
-            }
-        },
+        Cmd::Probe { hook } => hook_cmd(hook, "probe", codeeraser::guard::run_hook),
+        Cmd::Audit { hook } => hook_cmd(hook, "audit", codeeraser::audit::run_hook),
+        Cmd::Health { hook } => hook_cmd(hook, "health", codeeraser::health::run_hook),
+        Cmd::Precommit { root } => codeeraser::audit::run_precommit(&or_cwd(root)),
+        Cmd::Mcp { root } => serve_cmd("mcp", codeeraser::mcp::serve(&or_cwd(root))),
+        Cmd::Daemon { root } => serve_cmd("daemon", daemon::server::serve(&root)),
         Cmd::Ping { root } => ping_cmd(root),
+    }
+}
+
+fn or_cwd(root: Option<PathBuf>) -> PathBuf {
+    root.unwrap_or_else(|| PathBuf::from("."))
+}
+
+/// The three hook entries share one contract: --hook or nothing.
+fn hook_cmd(hook: bool, name: &str, run: fn() -> ExitCode) -> ExitCode {
+    if hook {
+        run()
+    } else {
+        eprintln!("ce {name}: only --hook mode exists in M3");
+        ExitCode::from(2)
+    }
+}
+
+fn serve_cmd(name: &str, result: anyhow::Result<()>) -> ExitCode {
+    match result {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(err) => {
+            eprintln!("ce {name}: {err:#}");
+            ExitCode::from(2)
+        }
     }
 }
 
