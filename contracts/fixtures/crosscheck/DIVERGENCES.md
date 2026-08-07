@@ -7,12 +7,12 @@
 
 | 轴 | 对照物 | 函数数 | 一致 | 结果 |
 |---|---|---|---|---|
-| Go CC | gocyclo 0.6.0 | 52 | **52/52 (100%)** | ✅ 零分歧 |
+| Go CC | gocyclo 0.6.0 | 52 | **52/52 (100%)** | ✅ 零分歧（default_case 轴 fixtures 沉默，规范侧修正见缺口 #3） |
 | Python CC | lizard 1.23.0 | 104 | 102/104 | 2 条归因保留（finally） |
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
-| Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 320 | **320/320 (100%)** | ✅ 零分歧（`cli/tests/crosscheck_rca.rs` 可复跑） |
+| Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（`cli/tests/crosscheck_rca.rs` 可复跑；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
-| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 5 例题 | **5/5** | ✅ `cli/tests/sonar_whitepaper.rs`（页码内注） |
+| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -22,6 +22,12 @@
 2. **Rust `?` 运算符**：`expr?` 是隐式 early-return（等价 match Ok/Err），RCA 计入
    ——ce 补入 `try_expression`。实锤：ban.rs `check` 差值 4 = 函数体内恰好 4 个 `?`；
    修复后 ban.rs 9/9 与 RCA 全对（含全部闭包边界与值）。
+3. **Go `default_case` 误计**（攻击审阅发现）：gocyclo v0.6.0 complexity.go 明示
+   "ignore default case"，白皮书 p.5 margin（getWords CC=4）同侧——ce 移除。
+   fixtures 中零 `default:`，故 52/52 对此轴沉默、结论不受影响。
+4. **Rust let-chain `&&` 双指标漏计**（攻击审阅发现）：`let_chain` 无 operator
+   字段，`&&` 全匿名——CC/CoC 都数不到，且 ce 自身代码正用此惯用法。新增
+   `chain_kinds` 机制：CC 计 N-1 个接合点，CoC 计一个算子序列。
 
 ## 归因保留的规范差异（ce 立场正确，不跟随对照物）
 
@@ -52,11 +58,12 @@ completions.go:932 差 1 = findFlag() 一处 else 内 if；completions.go:316
 
 `cli/tests/crosscheck_rca.rs`（`#[ignore]` 集成测试，
 `cargo test --test crosscheck_rca -- --ignored --nocapture`）走 RCA JSON
-通路复跑全部 5 文件：**320/320 函数单位双向对齐（onlyRca=0 onlyCe=0）且
-值全部一致，零分歧**。第二轮的 21 条"分歧"与"319 个单位"均为临时扁平
-文本解析器的错位假象（嵌套 space 错位既改值也吞单位；真值单位数 320）。
-harness 内置 RCA 版本断言（钉 0.0.25）与归因白名单机制（当前为空，
-新真分歧须先入本清单再入白名单）。
+通路复跑全部 5 文件：**322/322 函数单位双向对齐且值全部一致，零分歧**。
+第二轮的 21 条"分歧"与"319 个单位"均为临时扁平文本解析器的错位假象。
+真值单位数 **322**：初版 harness 按 (start,end) 单键 join 时，walk.rs
+1529/2718 两处同行嵌套闭包同 span 对称覆盖、双侧各静默丢 1 个单位
+（攻击审阅发现）——现改同 span 多重集合比较并钉死总数断言。harness
+另含 RCA 版本断言（钉 0.0.25）、陈旧产物硬防与归因白名单（当前为空）。
 
 ## Sonar 白皮书例题与立场钉死（2026-08-07 第三轮）
 

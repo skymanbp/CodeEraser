@@ -61,6 +61,9 @@ impl Walker<'_, '_> {
         if self.is_logic_root(node) {
             self.score += operator_runs(node, self.src, self.spec);
         }
+        if self.spec.chain_kinds.contains(&kind) {
+            self.score += 1; // one run of anonymous `&&` (let_chain)
+        }
         if self.spec.coc_nesting_kinds.contains(&kind) {
             self.structural(node, nesting);
         } else if self.spec.coc_flat_kinds.contains(&kind) {

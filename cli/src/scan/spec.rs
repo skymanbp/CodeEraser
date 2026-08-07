@@ -31,6 +31,10 @@ pub struct LangSpec {
     pub cc_kinds: &'static [&'static str],
     /// Binary-operator tokens adding +1 cyclomatic (short-circuit ops).
     pub cc_operators: &'static [&'static str],
+    /// Kinds whose N children are joined by N-1 anonymous short-circuit
+    /// tokens invisible to cc_operators (Rust let_chain: no `operator`
+    /// field). CC adds N-1; CoC adds one operator run.
+    pub chain_kinds: &'static [&'static str],
     /// Cognitive: structures that increment AND raise nesting.
     pub coc_nesting_kinds: &'static [&'static str],
     /// Cognitive: flat +1 (no nesting penalty), e.g. `else`.
@@ -82,6 +86,7 @@ static PYTHON: LangSpec = LangSpec {
         "if_clause",
     ],
     cc_operators: &["and", "or"],
+    chain_kinds: &[],
     coc_nesting_kinds: &[
         "if_statement",
         "for_statement",
@@ -120,6 +125,7 @@ static TYPESCRIPT: LangSpec = LangSpec {
         "catch_clause",
     ],
     cc_operators: &["&&", "||", "??"],
+    chain_kinds: &[],
     coc_nesting_kinds: &[
         "if_statement",
         "for_statement",
@@ -131,7 +137,11 @@ static TYPESCRIPT: LangSpec = LangSpec {
         "ternary_expression",
     ],
     coc_flat_kinds: &["else_clause"],
-    coc_nest_only_kinds: &["arrow_function", "function_expression"],
+    // Empty on purpose: arrow/function_expression are STANDALONE units
+    // (fn_kinds) here, so a nest-only entry could never fire (the M1
+    // attack review caught the dead entries). Only absorbed inline fns
+    // (Go func_literal, Python lambda) belong in nest-only.
+    coc_nest_only_kinds: &[],
     // `??` counts in CC (a real branch) but NOT here: whitepaper p.6
     // ignores null-coalescing in CoC. `?.` counts in neither (M1 stance,
     // pinned in tests/sonar_whitepaper.rs).
@@ -156,6 +166,9 @@ static RUST: LangSpec = LangSpec {
         "try_expression",
     ],
     cc_operators: &["&&", "||"],
+    // let_chain joins let_conditions/exprs with anonymous `&&` tokens
+    // (no operator field — AST-probed; M1 attack review finding).
+    chain_kinds: &["let_chain"],
     coc_nesting_kinds: &[
         "if_expression",
         "for_expression",
@@ -164,7 +177,9 @@ static RUST: LangSpec = LangSpec {
         "match_expression",
     ],
     coc_flat_kinds: &["else_clause"],
-    coc_nest_only_kinds: &["closure_expression"],
+    // Empty on purpose: closure_expression is a standalone unit
+    // (fn_kinds), so nest-only could never fire (dead-entry review).
+    coc_nest_only_kinds: &[],
     coc_operators: &["&&", "||"],
     // `break 'l` / `continue 'l`: the label child kind is `label`;
     // a plain `break value` has an expression child, so it won't count.
@@ -182,12 +197,17 @@ static GO: LangSpec = LangSpec {
     cc_kinds: &[
         "if_statement",
         "for_statement",
+        // default_case is NOT counted: gocyclo v0.6.0 complexity.go
+        // skips CaseClause/CommClause with a nil list ("ignore default
+        // case"), and the whitepaper p.5 margin (getWords CC=4) agrees.
+        // Found by the M1 attack review — no default: in the fixtures,
+        // so 52/52 was silent on this axis.
         "expression_case",
         "type_case",
-        "default_case",
         "communication_case",
     ],
     cc_operators: &["&&", "||"],
+    chain_kinds: &[],
     coc_nesting_kinds: &[
         "if_statement",
         "for_statement",
@@ -212,6 +232,7 @@ static MARKDOWN: LangSpec = LangSpec {
     param_list_kinds: &[],
     cc_kinds: &[],
     cc_operators: &[],
+    chain_kinds: &[],
     coc_nesting_kinds: &[],
     coc_flat_kinds: &[],
     coc_nest_only_kinds: &[],

@@ -52,8 +52,8 @@ OUT:
 }
 
 /// p.5 + p.10 `getWords`: a switch and all its cases = one structural
-/// increment, CoC 1. (CC differs by model: the Java margin shows 4;
-/// ce's Go table counts default_case too — gocyclo-aligned, 52/52.)
+/// increment, CoC 1; CC 4 (p.5 margin — default adds no branch; the
+/// same rule as gocyclo v0.6.0's "ignore default case").
 #[test]
 fn p10_get_words() {
     let src = "\
@@ -73,6 +73,25 @@ func getWords(number int) string {
     let m = measure(Lang::Go, src);
     assert_eq!(m.len(), 1);
     assert_eq!(m[0].coc, 1, "whitepaper p.10 margin total");
+    assert_eq!(m[0].cc, 4, "whitepaper p.5 margin: default not counted");
+}
+
+/// p.8 second operator example: `if (a && !(b && c))` = 3 — the
+/// negated parenthesized sub-chain starts a NEW sequence even though
+/// the operator is the same. Pins ce's paren-bounded run model.
+#[test]
+fn p8_negated_paren_starts_new_run() {
+    let src = "\
+function f(a: boolean, b: boolean, c: boolean): boolean {
+  if (a && !(b && c)) {
+    return true;
+  }
+  return false;
+}
+";
+    let m = measure(Lang::TypeScript, src);
+    assert_eq!(m.len(), 1);
+    assert_eq!(m[0].coc, 3, "whitepaper p.8 margin: if +1, && +1, && +1");
 }
 
 /// p.9 `myMethod`: try is transparent (no increment, no nesting);

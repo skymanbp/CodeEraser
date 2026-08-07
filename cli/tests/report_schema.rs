@@ -53,7 +53,9 @@ fn report_json_matches_golden() {
     };
     let json = serde_json::to_string_pretty(&rep).expect("serialize");
     let path = golden_path();
-    if std::env::var("CE_BLESS").is_ok() {
+    // Exactly "1": any-value is_ok() would let CE_BLESS=0 or an empty
+    // var silently bless-and-pass (attack-review finding).
+    if std::env::var("CE_BLESS").as_deref() == Ok("1") {
         std::fs::write(&path, format!("{json}\n")).expect("bless golden");
         return;
     }

@@ -16,12 +16,20 @@
 
 use codeeraser::scan::{functions, lang::Lang, metrics, spec};
 use serde_json::Value;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// (start_line, end_line) → (name, own cyclomatic complexity)
-type FnMap = BTreeMap<(u64, u64), (String, u32)>;
+/// (start_line, end_line) → units on that span. A Vec, not a single
+/// entry: nested closures can share an identical one-line span (walk.rs
+/// fixture lines 1529/2718) and the RCA output has no columns to tell
+/// them apart — a plain map silently dropped one per side
+/// (attack-review finding).
+type FnMap = BTreeMap<(u64, u64), Vec<(String, u32)>>;
+
+/// Exact total function units across the 5 pinned fixtures, agreed by
+/// both tools. Pins the headline number against silent shrinkage.
+const TOTAL_UNITS: usize = 322;
 
 const FIXTURES: &[&str] = &[
     "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
@@ -32,7 +40,8 @@ const FIXTURES: &[&str] = &[
 ];
 
 /// Divergences attributed and retained in DIVERGENCES.md — must stay in
-/// sync with that file. Format: (fixture, start_line, rca_cc, ce_cc).
+/// sync with that file. Format: (fixture rel path exactly as listed in
+/// FIXTURES, start_line, rca_cc, ce_cc).
 const ATTRIBUTED: &[(&str, u64, u32, u32)] = &[];
 
 const OUT_DIR: &str = "target/rca-harness";
@@ -63,8 +72,10 @@ fn rca_fns(root: &Path, rel: &str) -> FnMap {
     // the nested <rel> subdirs itself — pre-create only the top level.
     std::fs::create_dir_all(root.join(OUT_DIR)).expect("create outdir");
     let json_path = root.join(OUT_DIR).join(format!("{rel}.json"));
-    // stale output would mask a silent RCA failure — remove first
+    // stale output would mask a silent RCA failure — remove first and
+    // PROVE it is gone (a swallowed removal error re-opens the hole)
     let _ = std::fs::remove_file(&json_path);
+    assert!(!json_path.exists(), "stale RCA output not removable: {rel}");
     let status = Command::new("rust-code-analysis-cli")
         .current_dir(root)
         .args(["-m", "-O", "json", "-o", OUT_DIR, "-p", rel])
@@ -98,7 +109,11 @@ fn collect_rca(space: &Value, out: &mut FnMap) {
             space["end_line"].as_u64().expect("end_line"),
         );
         let name = space["name"].as_str().unwrap_or("?").to_string();
-        out.insert(key, (name, (sum - child_sum).round() as u32));
+        let own = sum - child_sum;
+        // every RCA function space has own CC >= 1; anything below
+        // means the sum-minus-children extraction rule broke
+        assert!(own >= 0.5, "non-positive own CC for {name}: {own}");
+        out.entry(key).or_default().push((name, own.round() as u32));
     }
     for c in children {
         collect_rca(c, out);
@@ -113,13 +128,14 @@ fn ce_fns(root: &Path, rel: &str) -> FnMap {
         .set_language(&Lang::Rust.grammar().expect("grammar"))
         .expect("set_language");
     let tree = parser.parse(&src, None).expect("parse fixture");
-    functions::extract(tree.root_node(), &src, sp)
-        .into_iter()
-        .map(|u| {
-            let cc = metrics::cyclo::measure(u.node, &src, sp);
-            ((u.start_line as u64, u.end_line as u64), (u.name, cc))
-        })
-        .collect()
+    let mut out = FnMap::new();
+    for u in functions::extract(tree.root_node(), &src, sp) {
+        let cc = metrics::cyclo::measure(u.node, &src, sp);
+        out.entry((u.start_line as u64, u.end_line as u64))
+            .or_default()
+            .push((u.name, cc));
+    }
+    out
 }
 
 #[derive(Default)]
@@ -131,37 +147,47 @@ struct Tally {
 }
 
 fn is_attributed(rel: &str, start: u64, rca_cc: u32, ce_cc: u32) -> bool {
+    // exact path match — a suffix match could waive a divergence in the
+    // wrong fixture (flat __-joined names share suffixes)
     ATTRIBUTED
         .iter()
-        .any(|&(f, l, r, c)| rel.ends_with(f) && l == start && r == rca_cc && c == ce_cc)
+        .any(|&(f, l, r, c)| f == rel && l == start && r == rca_cc && c == ce_cc)
 }
 
-/// Set-diff one fixture: exact unit alignment both ways, then values.
+/// Set-diff one fixture: per-span unit counts must match both ways;
+/// same-span values compare as sorted multisets (columns unavailable).
 fn diff_file(rel: &str, rca: &FnMap, ce: &FnMap, t: &mut Tally) {
-    for (k, (name, _)) in rca {
-        if !ce.contains_key(k) {
-            t.problems
-                .push(format!("{rel}: only-RCA {name} @{}-{}", k.0, k.1));
-        }
-    }
-    for (k, (name, _)) in ce {
-        if !rca.contains_key(k) {
-            t.problems
-                .push(format!("{rel}: only-ce {name} @{}-{}", k.0, k.1));
-        }
-    }
-    for (k, (name, rca_cc)) in rca {
-        let Some((_, ce_cc)) = ce.get(k) else {
+    let empty = Vec::new();
+    let keys: BTreeSet<_> = rca.keys().chain(ce.keys()).collect();
+    for k in keys {
+        let r = rca.get(k).unwrap_or(&empty);
+        let c = ce.get(k).unwrap_or(&empty);
+        if r.len() != c.len() {
+            t.problems.push(format!(
+                "{rel}: span {}-{}: {} RCA vs {} ce units",
+                k.0,
+                k.1,
+                r.len(),
+                c.len()
+            ));
             continue;
+        }
+        let sorted = |v: &[(String, u32)]| {
+            let mut ccs: Vec<u32> = v.iter().map(|(_, cc)| *cc).collect();
+            ccs.sort_unstable();
+            ccs
         };
-        t.units += 1;
-        if rca_cc == ce_cc {
-            t.agree += 1;
-        } else if is_attributed(rel, k.0, *rca_cc, *ce_cc) {
-            t.attributed += 1;
-        } else {
-            t.problems
-                .push(format!("{rel}: {name} @{} rca={rca_cc} ce={ce_cc}", k.0));
+        for (rca_cc, ce_cc) in sorted(r).iter().zip(&sorted(c)) {
+            t.units += 1;
+            if rca_cc == ce_cc {
+                t.agree += 1;
+            } else if is_attributed(rel, k.0, *rca_cc, *ce_cc) {
+                t.attributed += 1;
+            } else {
+                let name = &r[0].0;
+                t.problems
+                    .push(format!("{rel}: {name} @{} rca={rca_cc} ce={ce_cc}", k.0));
+            }
         }
     }
 }
@@ -183,6 +209,10 @@ fn rust_cc_full_sweep_vs_rca() {
         t.attributed,
         ATTRIBUTED.len(),
         "attributed-divergence allowlist is stale — sync with DIVERGENCES.md"
+    );
+    assert_eq!(
+        t.units, TOTAL_UNITS,
+        "unit total drifted — two empty inputs would otherwise pass as 0/0"
     );
     assert!(
         t.problems.is_empty(),

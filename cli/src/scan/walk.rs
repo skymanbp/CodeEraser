@@ -57,7 +57,13 @@ fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::O
     }
     for glob in extra {
         // ce.toml lists positive globs to exclude; Override semantics
-        // need the leading '!' for exclusion.
+        // need the leading '!' for exclusion. A user-written '!' would
+        // double-negate into a silent no-op — reject it loudly.
+        if glob.starts_with('!') {
+            return Err(format!(
+                "ce.toml exclude {glob}: write the glob without '!' (entries are exclusions already)"
+            ));
+        }
         let g = format!("!{glob}");
         builder
             .add(&g)

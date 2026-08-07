@@ -33,9 +33,17 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 ## 对照工具版本（本机安装记录）
 
 - lizard 1.23.0（CC：python/typescript/rust 兜底）
-- gocyclo v0.6.0（CC：go）
+- gocyclo v0.6.0（CC：go；complexity.go 明示 "ignore default case"——
+  ce 同步不计 default_case）
 - gocognit（CoC：go，唯一外部 CoC 对照）
 - rust-code-analysis-cli 0.0.25，`cargo install --locked`（CC：rust；
   不带 --locked 会因新依赖编译失败——安装须知）
+
+## CoC 规范原文钉定（cli/tests/sonar_whitepaper.rs 判分依据）
+
+- SonarSource《Cognitive Complexity》白皮书 **v1.7（2023-08-29）**，
+  <https://www.sonarsource.com/docs/CognitiveComplexity.pdf>，
+  SHA-256 `d1bbd47a0c48500bfeafa5dfada42ecddfe1c3e75b7adebe11cb7a037fa4cb77`
+  （2026-08-07 下载核对；版权归 SonarSource，不入库，凭 hash 复验）。
 
 上游文件版权归各自项目所有，按其 license 复制于此仅作度量对拍测试。

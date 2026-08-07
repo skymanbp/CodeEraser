@@ -131,6 +131,57 @@ function drain(): void {
     assert_eq!(m[0].coc, 4, "for +1, for +2, continue outer +1");
 }
 
+/// Rust let-chains (2024 edition): the `&&` between let-conditions are
+/// anonymous tokens with no `operator` field, so they were invisible
+/// to both metrics until the chain_kinds mechanism (attack-review
+/// finding — ce's own code uses this idiom). CC: one +1 per joint;
+/// CoC: the chain is one operator run.
+#[test]
+fn rust_let_chain_counts() {
+    let src = "\
+fn f(x: Option<i32>, y: Option<i32>) -> i32 {
+    if let Some(a) = x
+        && let Some(b) = y
+        && a > 0
+    {
+        a + b
+    } else {
+        0
+    }
+}
+";
+    let m = measure(Lang::Rust, src);
+    assert_eq!(m.len(), 1);
+    assert_eq!(m[0].cc, 4, "1 + if + two anonymous && joints");
+    assert_eq!(m[0].coc, 3, "if +1, chain run +1, else +1");
+}
+
+/// Python `else` on for/while/try: ce scores the whitepaper hybrid
+/// flat +1 — the clause is a real branch in reading flow. The
+/// whitepaper (Java-centric) is silent on loop/try else; stance
+/// recorded, not hidden.
+#[test]
+fn python_loop_and_try_else_stance() {
+    let src = "\
+def search(xs):
+    for x in xs:
+        if x:
+            break
+    else:
+        return None
+    try:
+        return x
+    except ValueError:
+        return None
+    else:
+        pass
+";
+    let m = measure(Lang::Python, src);
+    assert_eq!(m.len(), 1);
+    // for +1, if +2, for-else +1, except +1, try-else +1 = 6
+    assert_eq!(m[0].coc, 6, "loop/try else each pay flat +1");
+}
+
 #[test]
 fn go_goto_counts() {
     let src = "\
