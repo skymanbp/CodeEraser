@@ -159,3 +159,32 @@ const outer = (xs: number[]) => {
     assert_eq!(outer.cc, 2);
     assert_eq!(inner.cc, 2, "1 + ternary");
 }
+
+#[test]
+fn python_comprehension_counts_cc_not_coc() {
+    // M1 cross-check finding: comprehension clauses are branch paths
+    // (lizard/radon count them in CC); CoC stays 0 (declarative).
+    let src = "\
+def f(xs):
+    return [x for x in xs if x > 0]
+";
+    let m = measure(Lang::Python, src);
+    assert_eq!(m.len(), 1);
+    assert_eq!(m[0].cc, 3, "1 + for_in_clause + if_clause");
+    assert_eq!(m[0].coc, 0, "no cognitive penalty for comprehensions");
+}
+
+#[test]
+fn rust_question_mark_counts_cc() {
+    // M1 cross-check finding: `expr?` is an implicit early-return branch
+    // (rust-code-analysis counts it; ban.rs check 21 vs 17 == 4x `?`).
+    let src = "\
+fn f(s: &str) -> Result<i32, std::num::ParseIntError> {
+    let a: i32 = s.parse()?;
+    Ok(a + 1)
+}
+";
+    let m = measure(Lang::Rust, src);
+    assert_eq!(m.len(), 1);
+    assert_eq!(m[0].cc, 2, "1 + try_expression");
+}

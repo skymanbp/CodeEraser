@@ -51,6 +51,11 @@ static PYTHON: LangSpec = LangSpec {
         "except_clause",
         "case_clause",
         "assert_statement",
+        // comprehension clauses are real branch paths: lizard and radon
+        // both count them (M1 cross-check finding). CoC deliberately does
+        // NOT count them (declarative expression, no nesting cost).
+        "for_in_clause",
+        "if_clause",
     ],
     cc_operators: &["and", "or"],
     coc_nesting_kinds: &[
@@ -110,6 +115,9 @@ static RUST: LangSpec = LangSpec {
         "for_expression",
         "while_expression",
         "loop_expression",
+        // `expr?` is an implicit early-return branch (== match Ok/Err);
+        // rust-code-analysis counts it (M1 cross-check, ban.rs 21 vs 17).
+        "try_expression",
     ],
     cc_operators: &["&&", "||"],
     coc_nesting_kinds: &[
