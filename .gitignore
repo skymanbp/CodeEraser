@@ -1,0 +1,27 @@
+# === OS / editor ===
+Thumbs.db
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# === Haskell (core/) ===
+dist-newstyle/
+.stack-work/
+*.hi
+*.o
+cabal.project.local
+cabal.project.local~
+
+# === Rust (cli/, gui/) ===
+# Cargo.lock is tracked for binaries — do NOT ignore it
+target/
+
+# === Go (if used) ===
+bin/
+*.exe~
+
+# === Generated / scratch ===
+*.log
+*.tmp
+scratch/
