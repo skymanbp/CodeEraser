@@ -1,17 +1,21 @@
 //! Clone-group (k-way family) aggregation over verified pairwise
 //! blocks (M2 attack-review R8): n mutual copies emit C(n,2) — or
 //! chained n-1 — pairwise blocks, inflating the block denominator. A
-//! group is a connected component over block endpoints, where
-//! overlapping spans in the same file count as one occurrence.
-//! Pairwise blocks stay in the report (the R12 ratchet metric and the
-//! audit/precommit diff filter consume them); groups are the
+//! group is a connected component over block endpoint spans, where
+//! only IDENTICAL spans are the same occurrence. Overlapping but
+//! non-identical spans stay distinct members ON PURPOSE: merging them
+//! let one file bridge unrelated families into a single "k-way"
+//! group, and let a same-file pair collapse to one member — both
+//! confirmed by e2e repro (attack review 2026-08-07, R8 batch).
+//! Pairwise blocks stay in the report (the R12 ratchet metric and
+//! the audit/precommit diff filter consume them); groups are the
 //! deduplicated view for humans and the M4 judgment layer.
 
 use super::pairs::Block;
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-/// One occurrence of the cloned region: a merged line span in a file.
+/// One occurrence of the cloned region: an exact endpoint line span.
 #[derive(Debug, Clone, Serialize)]
 pub struct Member {
     pub file: String,
@@ -19,7 +23,10 @@ pub struct Member {
     pub end: usize,
 }
 
-/// A k-way clone family: every member holds a copy of the region.
+/// A clone family: endpoint spans connected by verified blocks. Line
+/// spans are inclusive and coarser than token ranges, so a same-file
+/// pair whose two disjoint runs split one physical line still shows
+/// two members sharing that boundary line.
 #[derive(Debug, Clone, Serialize)]
 pub struct Group {
     pub members: Vec<Member>,
@@ -30,7 +37,7 @@ pub struct Group {
 }
 
 /// Aggregate pairwise blocks into families. Deterministic: groups are
-/// ordered by their first member, members by (file, start line).
+/// ordered by their first member, members by (file, start, end).
 pub fn group(blocks: &[Block]) -> Vec<Group> {
     let mut ids: BTreeMap<(&str, usize, usize), usize> = BTreeMap::new();
     let mut edges = Vec::with_capacity(blocks.len());
@@ -40,13 +47,10 @@ pub fn group(blocks: &[Block]) -> Vec<Group> {
         edges.push((a, c));
     }
     let mut uf: Vec<usize> = (0..ids.len()).collect();
-    let spans: Vec<(&str, usize, usize, usize)> =
-        ids.iter().map(|(&(f, s, e), &id)| (f, s, e, id)).collect();
-    link_overlaps(&mut uf, &spans);
     for &(a, c) in &edges {
         union(&mut uf, a, c);
     }
-    collect(&mut uf, &spans, blocks, &edges)
+    collect(&mut uf, &ids, blocks, &edges)
 }
 
 fn intern<'b>(
@@ -55,23 +59,6 @@ fn intern<'b>(
 ) -> usize {
     let next = ids.len();
     *ids.entry(key).or_insert(next)
-}
-
-/// Same-file spans that overlap are the same occurrence. dominant()
-/// only drops CONTAINED runs, so distinct maximal runs still overlap
-/// (R8's 97 mutually-overlapping pairs) — span equality alone would
-/// double-count them. Spans arrive sorted by (file, start, end).
-fn link_overlaps(uf: &mut [usize], spans: &[(&str, usize, usize, usize)]) {
-    let mut prev: Option<(usize, &str, usize)> = None;
-    for &(f, s, e, id) in spans {
-        prev = match prev {
-            Some((pid, pf, pe)) if pf == f && s <= pe => {
-                union(uf, pid, id);
-                Some((pid, pf, pe.max(e)))
-            }
-            _ => Some((id, f, e)),
-        };
-    }
 }
 
 fn find(uf: &mut [usize], x: usize) -> usize {
@@ -95,19 +82,17 @@ fn union(uf: &mut [usize], a: usize, b: usize) {
     }
 }
 
-/// Components → groups: merge overlapping member spans per file, then
-/// fold every block's stats into its component. Within one group the
-/// spans keep their global (file, start, end) order — a subsequence
-/// of a sorted sequence — so a last-member check suffices to merge.
+/// Components → groups: every interned span is a member of exactly
+/// one group; every block folds its stats into its component.
 fn collect(
     uf: &mut [usize],
-    spans: &[(&str, usize, usize, usize)],
+    ids: &BTreeMap<(&str, usize, usize), usize>,
     blocks: &[Block],
     edges: &[(usize, usize)],
 ) -> Vec<Group> {
     let mut order: Vec<usize> = Vec::new();
     let mut groups: BTreeMap<usize, Group> = BTreeMap::new();
-    for &(f, s, e, id) in spans {
+    for (&(f, s, e), &id) in ids {
         let root = find(uf, id);
         let g = groups.entry(root).or_insert_with(|| {
             order.push(root);
@@ -117,14 +102,11 @@ fn collect(
                 tokens: 0,
             }
         });
-        match g.members.last_mut() {
-            Some(m) if m.file == f && s <= m.end => m.end = m.end.max(e),
-            _ => g.members.push(Member {
-                file: f.to_string(),
-                start: s,
-                end: e,
-            }),
-        }
+        g.members.push(Member {
+            file: f.to_string(),
+            start: s,
+            end: e,
+        });
     }
     for (b, &(a, _)) in blocks.iter().zip(edges) {
         let g = groups.get_mut(&find(uf, a)).expect("endpoint interned");

@@ -39,6 +39,39 @@ fn health_reports_mode_index_and_warm_daemon() {
     assert!(ctx.contains("warm ("), "daemon warmed: {ctx}");
 }
 
+/// `ce doctor` (attack-review coverage gap): reports the pointed-at
+/// project's status WITHOUT starting a daemon, and counts degraded
+/// observe entries. Exit is non-zero here (no ce-core on PATH) — the
+/// project lines must print regardless.
+#[test]
+fn doctor_reports_project_without_spawning_daemon() {
+    let dir = tmp("doctor-e2e");
+    std::fs::write(dir.join("a.rs"), "fn seed(a: i64) -> i64 { a * 2 + 1 }\n").expect("a.rs");
+    common::build_index(&dir);
+    // one degraded observe entry to count (shape matches the feed)
+    std::fs::write(
+        dir.join(".ce/observe.ndjson"),
+        "{\"ts_ms\":1,\"event\":\"probe\",\"degraded\":true}\n{\"ts_ms\":2,\"event\":\"probe\",\"degraded\":false}\n",
+    )
+    .expect("observe seed");
+    for _ in 0..2 {
+        // twice: if the first run had spawned a daemon, the second
+        // would report "warm" and betray the side effect
+        let out = common::run_ce(&dir, &["doctor", "--core", "ce-core-missing", "."]);
+        assert!(!out.status.success(), "handshake must fail without core");
+        let text = String::from_utf8_lossy(&out.stdout);
+        assert!(text.contains("index: 1 files"), "project status: {text}");
+        assert!(
+            text.contains("not running (lazy-starts on first probe)"),
+            "doctor must not spawn the daemon: {text}"
+        );
+        assert!(
+            text.contains("degraded runs (observe feed): 1 of 2 entries"),
+            "degraded counter with lifetime frame: {text}"
+        );
+    }
+}
+
 #[test]
 fn plugin_manifests_parse_and_wire_real_subcommands() {
     let plugin = repo_root().join("plugin");

@@ -39,14 +39,24 @@ pub fn run_hook() -> ExitCode {
     ExitCode::SUCCESS
 }
 
-/// The one-line project status — shared by the SessionStart hook and
-/// `ce doctor` (plan §5.9-5: daemon health, index freshness).
+/// The SessionStart status line — includes the deliberate daemon
+/// WARM-UP (lazy start) so the session's probes are hot.
 pub fn status_line(root: &Path) -> String {
+    line(root, &daemon_summary(root))
+}
+
+/// The `ce doctor` status line (plan §5.9-5): same fields, but the
+/// daemon probe NEVER spawns — a diagnostic reports the pre-existing
+/// state instead of creating it (attack review 2026-08-07).
+pub fn doctor_line(root: &Path) -> String {
+    line(root, &daemon_status(root))
+}
+
+fn line(root: &Path, daemon: &str) -> String {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
     let index = index_summary(root);
-    let daemon = daemon_summary(root);
     format!(
         "[ce {} | guard: {mode} | index: {index} | daemon: {daemon}]",
         env!("CARGO_PKG_VERSION")
@@ -64,28 +74,52 @@ fn index_summary(root: &Path) -> String {
     }
 }
 
-/// Degraded runs recorded in the project's observe feed — the A9f
-/// visibility counter surfaced by `ce doctor` (plan §5.9-5). Both the
-/// PreToolUse guard and the Stop audit stamp `degraded` on every
-/// entry, so this is a plain count, not a heuristic.
-pub fn degraded_runs(root: &Path) -> usize {
+/// (degraded, total) entries in the project's observe feed — the A9f
+/// visibility counter surfaced by `ce doctor` (plan §5.9-5). Every
+/// producer (guard probe, Stop audit, precommit) stamps `degraded`,
+/// so this is a plain count. The total gives the lifetime frame: the
+/// feed is append-only, so the degraded count alone never returns to
+/// zero after one incident (attack-review finding).
+pub fn degraded_runs(root: &Path) -> (usize, usize) {
     let Ok(log) = std::fs::read_to_string(root.join(".ce/observe.ndjson")) else {
-        return 0;
+        return (0, 0);
     };
-    log.lines()
-        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+    let entries: Vec<serde_json::Value> = log
+        .lines()
+        .filter_map(|l| serde_json::from_str(l).ok())
+        .collect();
+    let degraded = entries
+        .iter()
         .filter(|j| j["degraded"] == serde_json::Value::Bool(true))
-        .count()
+        .count();
+    (degraded, entries.len())
+}
+
+/// Non-spawning daemon probe for `ce doctor`.
+fn daemon_status(root: &Path) -> String {
+    ping_line(
+        |r| client::request_if_running(r, &Request::Ping),
+        root,
+        "not running (lazy-starts on first probe)",
+    )
 }
 
 /// The warm-up ping: lazy-starts the daemon so the session's probes
 /// are hot. Unreachable = DEGRADED, said out loud per A9f.
 fn daemon_summary(root: &Path) -> String {
+    ping_line(
+        |r| client::request(r, &Request::Ping),
+        root,
+        "unreachable (DEGRADED: cheap checks only, guard fails open)",
+    )
+}
+
+fn ping_line(ping: impl Fn(&Path) -> anyhow::Result<Response>, root: &Path, down: &str) -> String {
     let started = std::time::Instant::now();
-    match client::request(root, &Request::Ping) {
+    match ping(root) {
         Ok(Response::Pong { .. }) => {
             format!("warm ({} ms)", started.elapsed().as_millis())
         }
-        _ => "unreachable (DEGRADED: cheap checks only, guard fails open)".into(),
+        _ => down.into(),
     }
 }

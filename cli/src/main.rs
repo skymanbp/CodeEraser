@@ -21,11 +21,14 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
-    /// Environment health: locate ce-core and verify the protocol handshake
+    /// Environment + project health: ce-core handshake, project
+    /// status line, degradation counter (never starts the daemon)
     Doctor {
         /// Path to the ce-core executable
         #[arg(long, default_value = "ce-core")]
         core: String,
+        /// Project root to report on (default: current directory)
+        root: Option<PathBuf>,
     },
     /// Measure size / complexity / readability metrics (M1 modules)
     Scan {
@@ -111,7 +114,7 @@ enum OutFormat {
 
 fn main() -> ExitCode {
     match Cli::parse().cmd {
-        Cmd::Doctor { core } => doctor(&core),
+        Cmd::Doctor { core, root } => doctor(&core, &or_cwd(root)),
         Cmd::Scan { path, format } => scan_cmd(path, format),
         Cmd::Dedup(args) => dedup_cmd(args),
         Cmd::Probe { hook } => hook_cmd(hook, "probe", codeeraser::guard::run_hook),
@@ -206,22 +209,18 @@ fn scan_cmd(path: Option<PathBuf>, format: OutFormat) -> ExitCode {
     }
 }
 
-/// Environment + project health (plan §5.9-5): the same status line
-/// the SessionStart hook emits, the A9f degraded-run counter from the
-/// observe feed, then the ce-core handshake (which sets the exit
-/// code, as in M0).
-fn doctor(core: &str) -> ExitCode {
+/// Environment + project health (plan §5.9-5): non-spawning project
+/// status line, the A9f degraded-run counter from the observe feed,
+/// then the ce-core handshake (which sets the exit code, as in M0).
+fn doctor(core: &str, root: &std::path::Path) -> ExitCode {
     println!(
         "ce {} (proto {})",
         env!("CARGO_PKG_VERSION"),
         handshake::PROTO
     );
-    let root = PathBuf::from(".");
-    println!("project: {}", codeeraser::health::status_line(&root));
-    println!(
-        "degraded runs (observe feed): {}",
-        codeeraser::health::degraded_runs(&root)
-    );
+    println!("project: {}", codeeraser::health::doctor_line(root));
+    let (degraded, total) = codeeraser::health::degraded_runs(root);
+    println!("degraded runs (observe feed): {degraded} of {total} entries");
     match handshake::run(core) {
         Ok(reply) => {
             println!("ce-core {} (proto {})", reply.version, reply.proto);

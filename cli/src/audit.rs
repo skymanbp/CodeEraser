@@ -37,10 +37,12 @@ pub fn run_hook() -> ExitCode {
 
 /// Shared head of the Stop audit and the pre-commit gate: guard
 /// mode, numstat over `diff`, touched duplicates (None = degraded,
-/// A9f), and the observe entry. Outer None = not a git repo — the
+/// A9f), and the observe entry stamped with `event` (the feed's
+/// discriminator — precommit runs must not masquerade as Stop
+/// audits, attack-review finding). Outer None = not a git repo — the
 /// caller fails open.
 type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
-fn gather(root: &Path, diff: &[&str]) -> Option<Gathered> {
+fn gather(root: &Path, diff: &[&str], event: &str) -> Option<Gathered> {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
@@ -50,12 +52,13 @@ fn gather(root: &Path, diff: &[&str]) -> Option<Gathered> {
     } else {
         touched_duplicates(root, &changed)
     };
-    observe_log(root, net_loc, &changed, &dups, &mode);
+    observe_log(root, event, net_loc, &changed, &dups, &mode);
     Some((mode, net_loc, changed, dups))
 }
 
 fn audit(root: &Path) -> ExitCode {
-    let Some((mode, net_loc, _, dups)) = gather(root, &["diff", "--numstat", "HEAD"]) else {
+    let Some((mode, net_loc, _, dups)) = gather(root, &["diff", "--numstat", "HEAD"], "stop_audit")
+    else {
         return ExitCode::SUCCESS; // not a git repo / git failed: fail open
     };
     if mode == "deny"
@@ -75,14 +78,20 @@ fn audit(root: &Path) -> ExitCode {
 /// when guard mode is deny and staged files touch duplicate blocks.
 /// Unlike the hooks this prints for humans — it runs in a terminal.
 pub fn run_precommit(root: &Path) -> ExitCode {
-    let Some((mode, net_loc, changed, dups)) = gather(root, &["diff", "--cached", "--numstat"])
+    let Some((mode, net_loc, changed, dups)) =
+        gather(root, &["diff", "--cached", "--numstat"], "precommit")
     else {
         eprintln!("ce precommit: not a git repo (skipped)");
         return ExitCode::SUCCESS;
     };
     let Some(dups) = dups.as_deref() else {
-        // A9f: fail open but never silently — the human sees it
-        println!("ce precommit: dedup index unavailable (DEGRADED — duplicate check skipped)");
+        // A9f: fail open but never silently — the human still gets
+        // the staged summary the healthy path prints
+        println!(
+            "ce precommit: {} staged file(s), net {net_loc:+} LOC — dedup index \
+             unavailable (DEGRADED: duplicate check skipped)",
+            changed.len()
+        );
         return ExitCode::SUCCESS;
     };
     if dups.is_empty() {
@@ -157,6 +166,7 @@ fn reason(net_loc: i64, dups: &[String]) -> String {
 
 fn observe_log(
     root: &Path,
+    event: &str,
     net_loc: i64,
     changed: &[String],
     dups: &Option<Vec<String>>,
@@ -165,7 +175,7 @@ fn observe_log(
     crate::hookio::observe_append(
         root,
         serde_json::json!({
-            "event": "stop_audit",
+            "event": event,
             "mode": mode,
             "net_loc": net_loc,
             "changed_files": changed.len(),

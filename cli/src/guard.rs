@@ -144,6 +144,7 @@ fn observe_log(
     crate::hookio::observe_append(
         root,
         serde_json::json!({
+            "event": "probe",
             "file": file_path,
             "mode": mode,
             "degraded": matches.is_none(),

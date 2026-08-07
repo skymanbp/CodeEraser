@@ -63,7 +63,9 @@ jobs:
         working-directory: cli
         run: |
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
-          cargo run --locked -- doctor --core "$CORE_BIN"
+          # ".." = report on the repo root, not cli/ (doctor no longer
+          # spawns a daemon, so nothing lingers holding the exe)
+          cargo run --locked -- doctor --core "$CORE_BIN" ..
 
   build-macos:
     if: github.event_name == 'schedule' || startsWith(github.ref, 'refs/tags/')

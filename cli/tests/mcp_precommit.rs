@@ -100,8 +100,7 @@ fn mcp_tool_calls_and_unknown_method() {
 fn precommit_broken_index_is_visible_not_silent() {
     let dir = tmp("precommit-degraded");
     common::seed_git_clone_repo(&dir, "deny");
-    std::fs::create_dir_all(dir.join(".ce")).expect(".ce");
-    std::fs::write(dir.join(".ce/index.db"), b"not a sqlite database").expect("corrupt db");
+    common::corrupt_index(&dir);
     let out = common::run_ce(&dir, &["precommit"]);
     assert!(out.status.success(), "degraded fails open, never bricks");
     let text = String::from_utf8_lossy(&out.stdout);
@@ -109,6 +108,13 @@ fn precommit_broken_index_is_visible_not_silent() {
         text.contains("DEGRADED"),
         "degradation said out loud: {text}"
     );
+    assert!(
+        text.contains("staged file(s)"),
+        "degraded line keeps the staged summary: {text}"
+    );
+    let line = common::last_observe(&dir);
+    assert_eq!(line["event"], "precommit", "not mislabeled stop_audit");
+    assert_eq!(line["degraded"], true);
 }
 
 #[test]

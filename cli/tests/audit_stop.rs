@@ -19,6 +19,7 @@ fn silent_audit_observe(dir: &Path) -> serde_json::Value {
     assert!(out.trim().is_empty(), "must stay silent: {out}");
     let line = common::last_observe(dir);
     assert_eq!(line["event"], "stop_audit");
+    assert!(line["ts_ms"].as_u64().expect("ts_ms") > 0, "stamped");
     line
 }
 
@@ -59,8 +60,7 @@ fn observe_mode_is_silent_but_logs() {
 fn broken_index_degrades_visibly_not_silently() {
     let dir = tmp("audit-degraded");
     seed_repo(&dir, "deny");
-    std::fs::create_dir_all(dir.join(".ce")).expect(".ce");
-    std::fs::write(dir.join(".ce/index.db"), b"not a sqlite database").expect("corrupt db");
+    common::corrupt_index(&dir);
     let line = silent_audit_observe(&dir);
     assert_eq!(line["degraded"], true, "degradation stamped, not silent");
     assert_eq!(line["dup_blocks"], 0);

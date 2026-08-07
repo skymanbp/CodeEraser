@@ -14,6 +14,18 @@ use std::time::Duration;
 const SPAWN_RETRIES: u32 = 20;
 const RETRY_DELAY: Duration = Duration::from_millis(100);
 
+/// One round-trip ONLY IF the daemon is already up — never spawns.
+/// `ce doctor` uses this: a diagnostic must not mutate the state it
+/// reports (attack review 2026-08-07: doctor's warm-up ping left a
+/// detached 30-min daemon per invocation dir, locking the exe).
+pub fn request_if_running(root: &Path, req: &Request) -> Result<Response> {
+    let mut conn = BufReader::new(try_connect(root)?);
+    match hello(&mut conn)? {
+        Response::HelloOk { .. } => round_trip(&mut conn, req),
+        other => bail!("incompatible daemon: {other:?}"),
+    }
+}
+
 /// One request/response round-trip, lazily starting the daemon.
 pub fn request(root: &Path, req: &Request) -> Result<Response> {
     let mut conn = connect_or_spawn(root)?;

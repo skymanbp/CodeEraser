@@ -96,6 +96,13 @@ pub fn analyze(dir: &Path, blocks: usize, groups: usize) -> codeeraser::dedup::p
     found
 }
 
+/// Corrupt the project's dedup index so every deep check degrades —
+/// the A9f test fixture (audit, precommit, and guard variants).
+pub fn corrupt_index(dir: &Path) {
+    std::fs::create_dir_all(dir.join(".ce")).expect(".ce");
+    std::fs::write(dir.join(".ce/index.db"), b"not a sqlite database").expect("corrupt db");
+}
+
 /// Run the real `ce` binary with `args` in `dir`; the caller asserts
 /// on success or failure (gate tests need both directions).
 pub fn run_ce(dir: &Path, args: &[&str]) -> std::process::Output {

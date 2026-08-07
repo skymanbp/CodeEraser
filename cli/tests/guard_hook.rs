@@ -59,16 +59,51 @@ fn warn_mode_allows_with_reason() {
     assert_eq!(v["hookSpecificOutput"]["permissionDecision"], "allow");
 }
 
+/// Run the probe expecting silence; return the observe entry it
+/// wrote (shared tail of the observe-mode and degraded cases).
+fn silent_probe_observe(dir: &Path, content: &str) -> serde_json::Value {
+    let out = run_hook(dir, &envelope(dir, "Write", content));
+    shutdown_daemon(dir);
+    assert!(out.trim().is_empty(), "must stay silent: {out}");
+    let line = common::last_observe(dir);
+    assert_eq!(line["event"], "probe", "feed discriminator");
+    assert!(line["ts_ms"].as_u64().expect("ts_ms") > 0, "stamped");
+    line
+}
+
 #[test]
 fn observe_mode_is_silent_but_logs() {
     let dir = tmp("guard-observe");
     seed_project(&dir, "observe");
-    let out = run_hook(&dir, &envelope(&dir, "Write", &rust_fn(3)));
-    shutdown_daemon(&dir);
-    assert!(out.trim().is_empty(), "observe emits nothing: {out}");
-    let line = common::last_observe(&dir);
+    let line = silent_probe_observe(&dir, &rust_fn(3));
     assert_eq!(line["degraded"], false);
     assert!(line["matches"].as_u64().expect("n") >= 1);
+}
+
+/// FAIL-OPEN intake (attack-review coverage gap): garbage stdin must
+/// exit 0 with no output for every hook subcommand — the shared
+/// hookio::read_envelope path.
+#[test]
+fn malformed_envelope_fails_open_everywhere() {
+    let dir = tmp("guard-garbage");
+    for sub in ["probe", "audit", "health"] {
+        let out = common::run_hook(&dir, &[sub, "--hook"], "{not json");
+        assert!(out.trim().is_empty(), "{sub} must stay silent: {out}");
+    }
+}
+
+/// A9f guard side (attack-review coverage gap): when the probe
+/// cannot deliver a verdict (index corrupt under the daemon), the
+/// edit passes even in deny mode (fail-open) and the observe entry
+/// stamps degraded=true — mirroring the audit-side degraded test.
+#[test]
+fn probe_failure_is_stamped_degraded() {
+    let dir = tmp("guard-degraded");
+    seed_project(&dir, "deny");
+    shutdown_daemon(&dir); // next probe respawns against the bad db
+    common::corrupt_index(&dir);
+    let line = silent_probe_observe(&dir, &rust_fn(1));
+    assert_eq!(line["degraded"], true, "stamped, not silent");
 }
 
 #[test]

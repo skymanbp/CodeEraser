@@ -43,14 +43,28 @@ fn three_way_family_is_one_group() {
     assert_eq!(g.tokens, found.blocks[0].tokens, "longest verified run");
 }
 
+/// Both two-family layouts: `hub=false` puts each family in its own
+/// file pair; `hub=true` co-locates one member of EACH family in
+/// hub.rs with their spans touching on a shared source line.
+fn seed_two_families(dir: &std::path::Path, hub: bool) {
+    if hub {
+        let joined = format!("{} {}", common::rust_fn(1).trim_end(), match_fn(9));
+        std::fs::write(dir.join("hub.rs"), joined).expect("hub.rs");
+        std::fs::write(dir.join("x.rs"), common::rust_fn(2)).expect("x.rs");
+        std::fs::write(dir.join("y.rs"), match_fn(3)).expect("y.rs");
+    } else {
+        common::seed_clone_pair(dir); // a.rs + b.rs (for/if family)
+        std::fs::write(dir.join("c.rs"), match_fn(3)).expect("c.rs");
+        std::fs::write(dir.join("d.rs"), match_fn(4)).expect("d.rs");
+    }
+}
+
 /// Two structurally unrelated clone pairs: the components must NOT
 /// fuse — two groups of two members each, ordered by first member.
 #[test]
 fn independent_families_stay_separate() {
     let dir = common::tmp("groups-independent");
-    common::seed_clone_pair(&dir); // a.rs + b.rs (for/if family)
-    std::fs::write(dir.join("c.rs"), match_fn(3)).expect("c.rs");
-    std::fs::write(dir.join("d.rs"), match_fn(4)).expect("d.rs");
+    seed_two_families(&dir, false);
     let found = common::analyze(&dir, 2, 2);
     for g in &found.groups {
         assert_eq!(g.members.len(), 2);
@@ -64,25 +78,67 @@ fn independent_families_stay_separate() {
     assert_eq!(first, ["a.rs", "b.rs"], "groups ordered by first member");
 }
 
+/// Write `src` as a project's single f.rs and analyze, expecting one
+/// group over `blocks` blocks (shared by the single-file cases).
+fn single_file_family(name: &str, src: String, blocks: usize) -> codeeraser::dedup::pairs::Blocks {
+    let dir = common::tmp(name);
+    std::fs::write(dir.join("f.rs"), src).expect("f.rs");
+    common::analyze(&dir, blocks, 1)
+}
+
 /// Three T2 copies in ONE file yield two offset-class runs that share
-/// the P1 span (dedup_pairs::three_copies_yield_offset_class_runs).
-/// R8's core complaint — overlapping spans double-counted — must
-/// collapse: one family, three disjoint members.
+/// an IDENTICAL P1 anchor span (dedup_pairs::three_copies_yield_
+/// offset_class_runs) — span interning fuses them: one family, three
+/// members, no double-count of P1.
 #[test]
-fn same_file_overlapping_spans_merge() {
-    let dir = common::tmp("groups-selfrepeat");
+fn same_file_offset_classes_share_identical_anchor() {
     let src = format!(
         "{}{}{}",
         common::rust_fn(1),
         common::rust_fn(2),
         common::rust_fn(3)
     );
-    std::fs::write(dir.join("f.rs"), src).expect("f.rs");
-    let found = common::analyze(&dir, 2, 1);
+    let found = single_file_family("groups-selfrepeat", src, 2);
     let g = &found.groups[0];
     assert_eq!(g.members.len(), 3, "P1, P2, P3 — no double-count");
     assert_eq!(g.blocks, 2);
     for pair in g.members.windows(2) {
         assert!(pair[0].end <= pair[1].start, "members disjoint, ascending");
     }
+}
+
+/// Attack-review regression (R8 batch): a file holding TWO unrelated
+/// cloned regions whose spans TOUCH on a shared line must not bridge
+/// the families — x.rs and y.rs share zero tokens and must never be
+/// reported as mutual copies.
+#[test]
+fn hub_file_does_not_bridge_families() {
+    let dir = common::tmp("groups-hub");
+    seed_two_families(&dir, true);
+    let found = common::analyze(&dir, 2, 2);
+    for g in &found.groups {
+        assert_eq!(g.members.len(), 2, "each family keeps its own pair");
+    }
+    // per-group token attribution: the two families differ in run
+    // length, so a global max would show up as equal values here
+    assert_ne!(
+        found.groups[0].tokens, found.groups[1].tokens,
+        "tokens is per-group, not a global max"
+    );
+}
+
+/// Attack-review regression (R8 batch): a same-file adjacent pair
+/// whose runs split one physical line (a_end == b_start) is TWO
+/// occurrences — the group view must never collapse it to one member
+/// and thereby deny the duplication its own block reports.
+#[test]
+fn adjacent_self_pair_keeps_two_members() {
+    let src = format!("{} {}", common::rust_fn(1).trim_end(), common::rust_fn(2));
+    let found = single_file_family("groups-adjacent", src, 1);
+    let g = &found.groups[0];
+    assert_eq!(g.members.len(), 2, "one block = two occurrences");
+    assert_eq!(
+        g.members[0].end, g.members[1].start,
+        "the two runs share exactly the boundary line"
+    );
 }
