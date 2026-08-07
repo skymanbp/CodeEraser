@@ -1,9 +1,15 @@
 [package]
-name = "ce"
+# crates.io name `ce` is squatted (2021, no bin); ripgrep pattern instead:
+# package `codeeraser`, binary `ce` (name-check 2026-08-07, cc-memory decision)
+name = "codeeraser"
 version = "0.0.1"
 edition = "2024"
-description = "CodeEraser CLI — erase LLM-induced code & document entropy"
+description = "CodeEraser — erase LLM-induced code & document entropy"
 license = "Apache-2.0"
+
+[[bin]]
+name = "ce"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }

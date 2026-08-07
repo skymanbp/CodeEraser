@@ -1,3 +1,7 @@
+-- aeson 2.x object keys are Key, not String; string literals for
+-- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
+{-# LANGUAGE OverloadedStrings #-}
+
 -- | Handshake protocol: pure request-line -> response-line mapping.
 -- Wire format: contracts/VERSIONING.md (NDJSON, SemVer major must match).
 module CE.Handshake (proto, respond) where
