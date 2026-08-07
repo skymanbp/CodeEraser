@@ -24,17 +24,27 @@ pub struct Match {
     pub distinct: usize,
 }
 
-/// Probe `content` (destined for `rel_self`, which is excluded — the
-/// index still holds its pre-edit version) against the project index.
+/// What is about to be written: destination (excluded from matching —
+/// the index still holds its pre-edit version), bytes, and language.
+pub struct Target<'a> {
+    pub rel: &'a str,
+    pub content: &'a [u8],
+    pub lang: Lang,
+}
+
+/// Probe the target content against the project index.
 pub fn probe(
     idx: &Index,
     root: &Path,
-    rel_self: &str,
-    content: &[u8],
-    lang: Lang,
+    target: Target<'_>,
     p: Params,
     f: Filter,
 ) -> Result<Vec<Match>> {
+    let Target {
+        rel: rel_self,
+        content,
+        lang,
+    } = target;
     let snippet = tokens::stream(content, lang)?;
     let hashes: Vec<u64> = snippet.iter().map(|t| t.hash).collect();
     let fps = winnow::fingerprints(&hashes, p);

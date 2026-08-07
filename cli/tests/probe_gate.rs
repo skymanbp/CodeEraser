@@ -54,16 +54,12 @@ fn probe_finds_t2_clone_of_indexed_file() {
     let idx = seeded_index(&dir);
     let p = Params::default();
     // new file whose content T2-clones a.rs (renamed ids, new literals)
-    let m = probe::probe(
-        &idx,
-        &dir,
-        "b.rs",
-        rust_fn(2).as_bytes(),
-        Lang::Rust,
-        p,
-        filter(p),
-    )
-    .expect("probe");
+    let target = probe::Target {
+        rel: "b.rs",
+        content: &rust_fn(2).into_bytes(),
+        lang: Lang::Rust,
+    };
+    let m = probe::probe(&idx, &dir, target, p, filter(p)).expect("probe");
     assert!(!m.is_empty(), "T2 clone of a.rs must be flagged");
     assert_eq!(m[0].file, "a.rs");
     assert!(m[0].tokens >= p.guarantee());
@@ -77,16 +73,12 @@ fn probe_excludes_the_edited_file_itself() {
     // re-writing a.rs with its own (slightly grown) content must not
     // self-flag against the pre-edit indexed version
     let grown = format!("{}\nfn extra() -> i64 {{ 42 }}\n", rust_fn(1));
-    let m = probe::probe(
-        &idx,
-        &dir,
-        "a.rs",
-        grown.as_bytes(),
-        Lang::Rust,
-        p,
-        filter(p),
-    )
-    .expect("probe");
+    let target = probe::Target {
+        rel: "a.rs",
+        content: grown.as_bytes(),
+        lang: Lang::Rust,
+    };
+    let m = probe::probe(&idx, &dir, target, p, filter(p)).expect("probe");
     assert!(m.is_empty(), "self-match must be excluded, got {m:?}");
 }
 
@@ -96,28 +88,20 @@ fn probe_ignores_short_and_unrelated_content() {
     let idx = seeded_index(&dir);
     let p = Params::default();
     let short = "fn tiny() -> i64 { 1 }\n";
-    let m = probe::probe(
-        &idx,
-        &dir,
-        "c.rs",
-        short.as_bytes(),
-        Lang::Rust,
-        p,
-        filter(p),
-    )
-    .expect("probe short");
+    let target = probe::Target {
+        rel: "c.rs",
+        content: short.as_bytes(),
+        lang: Lang::Rust,
+    };
+    let m = probe::probe(&idx, &dir, target, p, filter(p)).expect("probe short");
     assert!(m.is_empty(), "sub-threshold content stays silent");
     let unrelated = "fn other(a: u8) -> u8 { a.wrapping_add(3) }\n".repeat(8);
-    let m2 = probe::probe(
-        &idx,
-        &dir,
-        "d.rs",
-        unrelated.as_bytes(),
-        Lang::Rust,
-        p,
-        filter(p),
-    )
-    .expect("probe unrelated");
+    let target2 = probe::Target {
+        rel: "d.rs",
+        content: unrelated.as_bytes(),
+        lang: Lang::Rust,
+    };
+    let m2 = probe::probe(&idx, &dir, target2, p, filter(p)).expect("probe unrelated");
     assert!(m2.is_empty(), "unrelated content stays silent, got {m2:?}");
 }
 

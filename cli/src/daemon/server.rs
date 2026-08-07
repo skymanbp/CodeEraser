@@ -107,68 +107,72 @@ fn handle(stream: Stream, root: &Path, start: Instant) -> Result<bool> {
     }
 }
 
+/// Build the reply per request; the bool = keep serving.
 fn dispatch(
     reader: &mut BufReader<Stream>,
     root: &Path,
     start: Instant,
     req: Request,
 ) -> Result<bool> {
-    match req {
-        Request::Hello { proto } => {
-            if major(&proto) != major(DAEMON_PROTO) {
-                reply(
-                    reader.get_mut(),
-                    &Response::Restart {
-                        reason: format!("proto {proto} vs daemon {DAEMON_PROTO}"),
-                    },
-                )?;
-                return Ok(false); // exit → client respawns new binary
-            }
-            reply(
-                reader.get_mut(),
-                &Response::HelloOk {
-                    proto: DAEMON_PROTO.into(),
-                    version: env!("CARGO_PKG_VERSION").into(),
-                },
-            )?;
-        }
-        Request::Ping => reply(
-            reader.get_mut(),
-            &Response::Pong {
+    let (resp, keep) = match req {
+        Request::Hello { proto } => hello_reply(&proto),
+        Request::Ping => (
+            Response::Pong {
                 uptime_ms: start.elapsed().as_millis() as u64,
             },
-        )?,
+            true,
+        ),
         Request::Dedup {
             min_tokens,
             min_distinct,
-        } => {
-            let resp = match run_dedup(root, min_tokens, min_distinct) {
-                Ok(report) => Response::DedupReport { report },
-                Err(e) => Response::Error {
-                    message: format!("{e:#}"),
-                },
-            };
-            reply(reader.get_mut(), &resp)?;
-        }
-        Request::Probe { file_path, content } => {
-            let t0 = Instant::now();
-            let resp = match run_probe(root, &file_path, &content) {
-                Ok(matches) => Response::ProbeReport {
-                    matches,
-                    elapsed_ms: t0.elapsed().as_millis() as u64,
-                },
-                Err(e) => Response::Error {
-                    message: format!("{e:#}"),
-                },
-            };
-            reply(reader.get_mut(), &resp)?;
-        }
-        Request::Shutdown => {
-            reply(reader.get_mut(), &Response::Bye)?;
-            return Ok(false);
-        }
+        } => (dedup_reply(root, min_tokens, min_distinct), true),
+        Request::Probe { file_path, content } => (probe_reply(root, &file_path, &content), true),
+        Request::Shutdown => (Response::Bye, false),
+    };
+    reply(reader.get_mut(), &resp)?;
+    Ok(keep)
+}
+
+/// Version skew → restart reply and stop; the client respawns a
+/// daemon from its own (newer) binary.
+fn hello_reply(proto: &str) -> (Response, bool) {
+    if major(proto) != major(DAEMON_PROTO) {
+        return (
+            Response::Restart {
+                reason: format!("proto {proto} vs daemon {DAEMON_PROTO}"),
+            },
+            false,
+        );
     }
-    Ok(true)
+    (
+        Response::HelloOk {
+            proto: DAEMON_PROTO.into(),
+            version: env!("CARGO_PKG_VERSION").into(),
+        },
+        true,
+    )
+}
+
+fn dedup_reply(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>) -> Response {
+    match run_dedup(root, min_tokens, min_distinct) {
+        Ok(report) => Response::DedupReport { report },
+        Err(e) => Response::Error {
+            message: format!("{e:#}"),
+        },
+    }
+}
+
+fn probe_reply(root: &Path, file_path: &str, content: &str) -> Response {
+    let t0 = Instant::now();
+    match run_probe(root, file_path, content) {
+        Ok(matches) => Response::ProbeReport {
+            matches,
+            elapsed_ms: t0.elapsed().as_millis() as u64,
+        },
+        Err(e) => Response::Error {
+            message: format!("{e:#}"),
+        },
+    }
 }
 
 /// Cheap by design (ADR-004): opens the index read-path only, never
@@ -195,7 +199,12 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
         min_tokens: p.guarantee(),
         min_distinct: pairs::DEFAULT_MIN_DISTINCT,
     };
-    let matches = probe::probe(&idx, root, &rel, content.as_bytes(), lang, p, f)?;
+    let target = probe::Target {
+        rel: &rel,
+        content: content.as_bytes(),
+        lang,
+    };
+    let matches = probe::probe(&idx, root, target, p, f)?;
     Ok(serde_json::to_value(matches)?)
 }
 
