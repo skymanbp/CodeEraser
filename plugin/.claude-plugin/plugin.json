@@ -1,0 +1,19 @@
+{
+  "name": "codeeraser",
+  "description": "CodeEraser passive guard (0.x preview): a winnowing clone index behind a per-project daemon intercepts T1/T2 duplicate writes at PreToolUse, audits net LOC + touched duplicates at Stop, and reports health at SessionStart. Gradual modes observe/warn/ask/deny via ce.toml [guard]; every event feeds .ce/observe.ndjson. Preview is air-gapped: requires a locally installed `ce` binary on PATH (cargo install --path cli); SHA256-pinned binary download ships at M7 per ADR-007.",
+  "version": "0.1.0",
+  "author": {
+    "name": "skymanbp"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/skymanbp/CodeEraser",
+  "repository": "https://github.com/skymanbp/CodeEraser",
+  "keywords": [
+    "codeeraser",
+    "deduplication",
+    "clone-detection",
+    "code-quality",
+    "hooks",
+    "guard"
+  ]
+}

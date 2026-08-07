@@ -122,6 +122,13 @@ impl Index {
         Ok(removed)
     }
 
+    /// Indexed file count (SessionStart health line).
+    pub fn file_count(&self) -> Result<i64> {
+        Ok(self
+            .conn
+            .query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?)
+    }
+
     /// Occurrences of the given hashes only (probe hot path) —
     /// chunked to stay under SQLite's bind-parameter limit.
     pub fn instances_for_hashes(&self, hashes: &[u64]) -> Result<Vec<Instance>> {

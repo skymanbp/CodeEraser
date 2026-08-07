@@ -1,0 +1,39 @@
+{
+  "name": "codeeraser",
+  "owner": {
+    "name": "skymanbp"
+  },
+  "metadata": {
+    "description": "Single-plugin marketplace exposing the CodeEraser passive guard preview.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "codeeraser",
+      "source": "./",
+      "description": "CodeEraser passive guard (0.x preview): PreToolUse duplicate-write interception, Stop audit, SessionStart health — backed by a per-project winnowing clone index daemon. Requires `ce` on PATH (air-gapped preview).",
+      "version": "0.1.0",
+      "author": {
+        "name": "skymanbp"
+      },
+      "homepage": "https://github.com/skymanbp/CodeEraser",
+      "repository": "https://github.com/skymanbp/CodeEraser",
+      "license": "Apache-2.0",
+      "keywords": [
+        "codeeraser",
+        "deduplication",
+        "clone-detection",
+        "code-quality",
+        "hooks",
+        "guard"
+      ],
+      "category": "code-quality",
+      "tags": [
+        "claude-code",
+        "plugin",
+        "deduplication",
+        "guard"
+      ]
+    }
+  ]
+}

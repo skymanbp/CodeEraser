@@ -77,6 +77,12 @@ enum Cmd {
         #[arg(long)]
         hook: bool,
     },
+    /// SessionStart health line + daemon warm-up
+    Health {
+        /// Hook mode (the only mode in M3)
+        #[arg(long)]
+        hook: bool,
+    },
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -109,6 +115,14 @@ fn main() -> ExitCode {
                 codeeraser::audit::run_hook()
             } else {
                 eprintln!("ce audit: only --hook mode exists in M3");
+                ExitCode::from(2)
+            }
+        }
+        Cmd::Health { hook } => {
+            if hook {
+                codeeraser::health::run_hook()
+            } else {
+                eprintln!("ce health: only --hook mode exists in M3");
                 ExitCode::from(2)
             }
         }
