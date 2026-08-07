@@ -28,3 +28,6 @@ contracts/fixtures/hook-payloads/payloads.ndjson
 
 # RCA -o joins outdir with the input's relative path; keep tool output out of fixtures
 contracts/fixtures/crosscheck/**/*.json
+
+# ce's own per-project index (ce dedup)
+.ce/

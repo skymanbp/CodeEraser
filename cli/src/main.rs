@@ -1,8 +1,9 @@
 //! ce — CodeEraser CLI frontend.
-//! `doctor` (ce-core handshake, M0) + `scan` (metrics, M1).
+//! `doctor` (ce-core handshake, M0) + `scan` (metrics, M1) +
+//! `dedup` (clone index, M2).
 
 use clap::{Parser, Subcommand, ValueEnum};
-use codeeraser::{handshake, scan};
+use codeeraser::{dedup, handshake, scan};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -33,6 +34,16 @@ enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
+    /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
+    Dedup {
+        /// Directory to index (default: current directory)
+        path: Option<PathBuf>,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
+        /// Index database path (default: <path>/.ce/index.db)
+        #[arg(long)]
+        db: Option<PathBuf>,
+    },
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -45,16 +56,31 @@ fn main() -> ExitCode {
     match Cli::parse().cmd {
         Cmd::Doctor { core } => doctor(&core),
         Cmd::Scan { path, format } => scan_cmd(path, format),
+        Cmd::Dedup { path, format, db } => dedup_cmd(path, format, db),
+    }
+}
+
+fn dedup_cmd(path: Option<PathBuf>, format: OutFormat, db: Option<PathBuf>) -> ExitCode {
+    let root = path.unwrap_or_else(|| PathBuf::from("."));
+    match dedup::run(&root, fmt(format), db) {
+        Ok(code) => code,
+        Err(err) => {
+            eprintln!("ce dedup: {err:#}");
+            ExitCode::from(2)
+        }
+    }
+}
+
+fn fmt(format: OutFormat) -> scan::Format {
+    match format {
+        OutFormat::Console => scan::Format::Console,
+        OutFormat::Json => scan::Format::Json,
     }
 }
 
 fn scan_cmd(path: Option<PathBuf>, format: OutFormat) -> ExitCode {
     let root = path.unwrap_or_else(|| PathBuf::from("."));
-    let fmt = match format {
-        OutFormat::Console => scan::Format::Console,
-        OutFormat::Json => scan::Format::Json,
-    };
-    match scan::run(&root, fmt) {
+    match scan::run(&root, fmt(format)) {
         Ok(code) => code,
         Err(err) => {
             eprintln!("ce scan: {err:#}");
