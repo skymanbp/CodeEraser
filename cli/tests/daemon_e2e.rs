@@ -45,7 +45,9 @@ fn assert_dedup_probe(root: &Path) {
         Response::DedupReport { report } => {
             let blocks = report["blocks"].as_array().expect("blocks array");
             assert!(!blocks.is_empty(), "seeded clone must be found");
-            assert_eq!(report["schema"], "ce.dedup-report/0.4.0");
+            // transport check only — the schema SHAPE is pinned by the
+            // report_schema golden, so no literal id duplicated here
+            assert_eq!(report["schema"], codeeraser::dedup::SCHEMA_ID);
         }
         other => panic!("expected report, got {other:?}"),
     }

@@ -40,6 +40,8 @@ pub struct Block {
 #[derive(Debug, Serialize)]
 pub struct Blocks {
     pub blocks: Vec<Block>,
+    /// K-way families aggregated from `blocks` (attack-review R8).
+    pub groups: Vec<super::groups::Group>,
     /// Hash groups paired as adjacent chains instead of full pairwise.
     pub hot_chained: usize,
     /// Anchors whose stored token offset exceeded the live stream
@@ -124,6 +126,7 @@ pub fn clone_blocks(instances: &[Instance], streams: &Streams, f: Filter) -> Blo
     blocks.retain(|b| b.distinct >= f.min_distinct);
     Blocks {
         low_diversity_suppressed: before - blocks.len(),
+        groups: super::groups::group(&blocks),
         blocks,
         hot_chained,
         stale_skipped: ctx.stale_skipped,

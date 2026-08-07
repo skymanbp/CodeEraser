@@ -11,10 +11,29 @@
       "tokens": 55
     }
   ],
-  "schema": "ce.dedup-report/0.4.0",
+  "groups": [
+    {
+      "blocks": 1,
+      "members": [
+        {
+          "end": 11,
+          "file": "a.rs",
+          "start": 1
+        },
+        {
+          "end": 11,
+          "file": "b.rs",
+          "start": 1
+        }
+      ],
+      "tokens": 55
+    }
+  ],
+  "schema": "ce.dedup-report/0.5.0",
   "summary": {
     "blocks": 1,
     "files": 2,
+    "groups": 1,
     "hot_chained": 0,
     "kgram": 25,
     "low_diversity_suppressed": 0,

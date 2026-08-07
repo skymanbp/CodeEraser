@@ -3,6 +3,7 @@
 //! SIGMOD'03) → SQLite inverted index → clone blocks. T1/T2 only
 //! here; T3 is the M5 cold path.
 
+pub mod groups;
 pub mod index;
 pub mod pairs;
 pub mod probe;
@@ -18,9 +19,10 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.4.0: calibrated diversity floor (min_distinct, default 7) with
-/// suppressed-count transparency; 0.3.0 added parameter self-id.
-pub const SCHEMA_ID: &str = "ce.dedup-report/0.4.0";
+/// 0.5.0: clone groups — k-way families aggregated from pairwise
+/// blocks (attack-review R8 denominator inflation); 0.4.0 added the
+/// calibrated diversity floor (min_distinct, default 7).
+pub const SCHEMA_ID: &str = "ce.dedup-report/0.5.0";
 
 /// CLI options for [`run`] (bundled: six loose params would trip the
 /// project's own params threshold).
@@ -100,6 +102,7 @@ pub fn analyze(
         refreshed,
         removed,
         blocks: found.blocks.len(),
+        groups: found.groups.len(),
         hot_chained: found.hot_chained,
         stale_skipped: found.stale_skipped,
         low_diversity_suppressed: found.low_diversity_suppressed,
@@ -116,6 +119,7 @@ pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<serde_json::Val
     Ok(serde_json::to_value(Report {
         schema: SCHEMA_ID,
         blocks: &found.blocks,
+        groups: &found.groups,
         summary: s,
     })?)
 }
@@ -183,6 +187,7 @@ pub struct Summary {
     refreshed: usize,
     removed: usize,
     blocks: usize,
+    groups: usize,
     hot_chained: usize,
     stale_skipped: usize,
     low_diversity_suppressed: usize,
@@ -196,6 +201,7 @@ pub struct Summary {
 struct Report<'a> {
     schema: &'static str,
     blocks: &'a [pairs::Block],
+    groups: &'a [groups::Group],
     summary: &'a Summary,
 }
 
@@ -209,11 +215,12 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
                 );
             }
             println!(
-                "indexed {} files ({} refreshed, {} removed) — {} clone blocks (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped",
+                "indexed {} files ({} refreshed, {} removed) — {} clone blocks in {} groups (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped",
                 s.files,
                 s.refreshed,
                 s.removed,
                 s.blocks,
+                s.groups,
                 s.min_tokens,
                 s.min_distinct,
                 s.low_diversity_suppressed,
@@ -225,6 +232,7 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
             let rep = Report {
                 schema: SCHEMA_ID,
                 blocks: &found.blocks,
+                groups: &found.groups,
                 summary: s,
             };
             println!("{}", serde_json::to_string_pretty(&rep)?);

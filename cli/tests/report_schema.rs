@@ -85,7 +85,8 @@ fn scan_report_json_matches_golden() {
 }
 
 /// Real pipeline on a deterministic seed pair: pins block spans,
-/// token/distinct counts, and every summary field of the 0.4.x shape.
+/// token/distinct counts, groups, and every summary field of the
+/// 0.5.x shape.
 #[test]
 fn dedup_report_json_matches_golden() {
     let dir = common::tmp("dedup-golden");

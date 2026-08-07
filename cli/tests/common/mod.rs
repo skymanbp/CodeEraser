@@ -62,6 +62,18 @@ pub fn seed_clone_pair(dir: &Path) {
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (T2 clone)");
 }
 
+/// Run the library dedup pipeline on `dir`, assert the pairwise-block
+/// and group counts every caller checks anyway, and return the result
+/// for the distinctive per-test assertions. Counts live HERE so the
+/// per-test stanzas stay below the winnowing guarantee t — the
+/// ratchet caught three copies of that pattern (dedup_groups.rs).
+pub fn analyze(dir: &Path, blocks: usize, groups: usize) -> codeeraser::dedup::pairs::Blocks {
+    let (found, _) = codeeraser::dedup::analyze(dir, None, None, None).expect("analyze");
+    assert_eq!(found.blocks.len(), blocks, "pairwise block count");
+    assert_eq!(found.groups.len(), groups, "group count");
+    found
+}
+
 /// Run the real `ce` binary with `args` in `dir`; the caller asserts
 /// on success or failure (gate tests need both directions).
 pub fn run_ce(dir: &Path, args: &[&str]) -> std::process::Output {
