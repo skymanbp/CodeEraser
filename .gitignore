@@ -13,13 +13,11 @@ dist-newstyle/
 cabal.project.local
 cabal.project.local~
 
-# === Rust (cli/, gui/) ===
+# === Rust (cli/) ===
 # Cargo.lock is tracked for binaries — do NOT ignore it
+# NOTE: no "bin/" rule here — plugin/bin/ launcher scripts and
+# cli/src/bin/ MUST be committed (delta-review D1-1)
 target/
-
-# === Go (if used) ===
-bin/
-*.exe~
 
 # === Generated / scratch ===
 *.log
