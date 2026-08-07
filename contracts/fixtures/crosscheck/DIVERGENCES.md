@@ -11,7 +11,7 @@
 | Python CC | lizard 1.23.0 | 104 | 102/104 | 2 条归因保留（finally） |
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
 | Rust CC | rust-code-analysis 0.0.25（文本模式抽查） | 9（ban.rs 全量） | **9/9 (100%)** | ✅ 修复 `?` 后零分歧 |
-| Go CoC | gocognit | 32 非零 | 29/32 | 3 条待归因（ce 偏高，疑 func_literal 嵌套惩罚差异）⚠️ |
+| Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -36,18 +36,29 @@
   （ce 计 1 个短路算子）；④ `export default function` 匿名默认导出未被识别。
   lizard 无 AST 的状态机 reader 在 TS 上不可靠——正是本项目立项要解决的那类问题。
 
-## 待归因 ⚠️（下一工作段处理，不隐藏）
+## Go CoC 3 条：已归因保留（gocognit 的 else 块不提升嵌套层）
 
-- **Go CoC 3 条**：cobra.go:192（16 vs 18）、completions.go:316（101 vs 118）、
-  completions.go:932（7 vs 8）。ce 一致偏高，疑因 func_literal 的嵌套惩罚处理
-  与 gocognit 不同。归因后要么修 ce 要么注明规范出处。
-- gocognit 省略 CoC=0 函数（20 条 only-ce 已验证全为 0，非分歧）。
+最小实验（goprobe，2026-08-07）实锤：`else { if ... }` 内的 if，gocognit 按 if
+链所在层计罚（样本 a=3 / b=10），而 Sonar 白皮书"嵌套于断流结构内"的直读是
+else 分支与 then 同层受罚（ce：a=4 / b=11）。闭包语义两边一致（probe2：
+gocognit=5=ce，排除 func_literal 假说）。ce 站白皮书侧，保留分歧。逐条：
+cobra.go:192 差 2 = ld() 两个 else 内 if 各差 1（Sonar 语义手算 18 逐项吻合）；
+completions.go:932 差 1 = findFlag() 一处 else 内 if；completions.go:316
+（span 316–585，270 行）差 17 = 3 个 else 块内嵌套结构的级联累积（机制已证，
+未逐项分解）。另：gocognit 省略 CoC=0 函数（20 条 only-ce 已验证全为 0，非分歧）。
+
+## Rust 全量对拍中间状态（2026-08-07 第二轮）
+
+RCA 文本模式跑通全部 5 文件：**319/319 函数单位与 ce 完全对齐（含全部闭包，
+onlyRca=0 onlyCe=0）**，值一致 298/319。剩 21 条"分歧"经抽查证实主要是
+**临时扁平解析器在嵌套 space 处的错位假象**（skip_entry@1149 批量解析读作 2，
+单文件人工核对 RCA 真值=10=ce）。终版一致率待缩进感知 harness 固化后复跑出具；
+ban.rs 子集 9/9 为已核实基线。
 
 ## 工具注记
 
-- rust-code-analysis 0.0.25 在 Windows 下 JSON 输出（`-O json -o` 与 `--pr`）
-  静默无产物；文本树模式可用（ANSI 剥离后解析）。Rust 全量机器对拍受此限，
-  当前为 ban.rs 全量 9/9 + 文本模式抽查；其余 4 个 Rust fixture 的全量核对
-  待 harness 固化时用文本解析路径补齐。lizard 的 RustReader 因 match_arm/`?`/
+- rust-code-analysis 0.0.25 在 Windows 下 JSON 输出不可靠：`--pr` 无文件产出、
+  `-o <dir>` 行为不稳定（一次落在输入文件旁、批量循环零产出）。文本树模式稳定
+  可用（ANSI 剥离后解析，须缩进感知）。lizard 的 RustReader 因 match_arm/`?`/
   闭包三重定义差异不适合作 Rust 对照物（57/226 分歧，弃用）。
 - PowerShell 管道会注入 UTF-8 BOM，两次破坏对拍通道——对拍一律走 bash/文件。
