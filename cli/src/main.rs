@@ -63,6 +63,13 @@ enum Cmd {
         /// Project root (default: current directory)
         root: Option<PathBuf>,
     },
+    /// PreToolUse cheap gate: read the hook envelope on stdin, probe
+    /// the daemon, emit a permission decision per ce.toml [guard]
+    Probe {
+        /// Hook mode (the only mode in M3)
+        #[arg(long)]
+        hook: bool,
+    },
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -82,6 +89,14 @@ fn main() -> ExitCode {
             min_tokens,
             min_distinct,
         } => dedup_cmd(path, format, db, min_tokens, min_distinct),
+        Cmd::Probe { hook } => {
+            if hook {
+                codeeraser::guard::run_hook()
+            } else {
+                eprintln!("ce probe: only --hook mode exists in M3");
+                ExitCode::from(2)
+            }
+        }
         Cmd::Daemon { root } => match daemon::server::serve(&root) {
             Ok(()) => ExitCode::SUCCESS,
             Err(err) => {

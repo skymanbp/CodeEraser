@@ -82,6 +82,7 @@ fn try_connect(root: &Path) -> Result<Stream> {
 /// Detached spawn of THIS binary as the daemon; losing the race to
 /// another spawner is fine — the retry loop connects to whoever won.
 fn spawn_daemon(root: &Path) -> Result<()> {
+    unset_stdio_inheritance();
     let exe = std::env::current_exe().context("current_exe")?;
     std::process::Command::new(exe)
         .arg("daemon")
@@ -93,3 +94,33 @@ fn spawn_daemon(root: &Path) -> Result<()> {
         .context("spawn ce daemon")?;
     Ok(())
 }
+
+/// Windows handle-inheritance leak guard (found by the guard_hook
+/// e2e: it hung until the daemon died). When a hook process lazily
+/// spawns the long-lived daemon, the daemon inherits the hook's
+/// STDOUT PIPE write end — the hook's consumer (Claude Code, or a
+/// test's wait_with_output) then never sees EOF until the daemon
+/// exits, hanging the hook slot. Marking our own std handles
+/// non-inheritable before the spawn closes that hole; the daemon's
+/// stdio is null anyway. Unix needs nothing: std sets CLOEXEC on
+/// non-std fds and the null stdio covers the rest.
+#[cfg(windows)]
+fn unset_stdio_inheritance() {
+    use windows_sys::Win32::Foundation::{HANDLE_FLAG_INHERIT, SetHandleInformation};
+    use windows_sys::Win32::System::Console::{
+        GetStdHandle, STD_ERROR_HANDLE, STD_INPUT_HANDLE, STD_OUTPUT_HANDLE,
+    };
+    for which in [STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, STD_ERROR_HANDLE] {
+        // SAFETY: querying our own std handle and flipping its
+        // inherit flag touches no memory and cannot invalidate it.
+        unsafe {
+            let handle = GetStdHandle(which);
+            if !handle.is_null() && handle as isize != -1 {
+                SetHandleInformation(handle, HANDLE_FLAG_INHERIT, 0);
+            }
+        }
+    }
+}
+
+#[cfg(not(windows))]
+fn unset_stdio_inheritance() {}

@@ -1,0 +1,173 @@
+//! PreToolUse cheap gate (M3, ADR-004). Input: the hook envelope on
+//! stdin (empirically captured contract, contracts/fixtures/
+//! hook-payloads). Output: the permissionDecision JSON proven by the
+//! locally installed cc-enslaver hooks on this exact Claude Code
+//! build. FAIL-OPEN: any internal failure allows the edit — a guard
+//! must never brick editing; degraded runs land in the observe log.
+//! Every probed event is appended to <root>/.ce/observe.ndjson in ALL
+//! modes — the untainted M4 evaluation feed (plan D2-1).
+
+use crate::config::Config;
+use crate::daemon::client;
+use crate::daemon::proto::{Request, Response};
+use serde::Deserialize;
+use std::io::Read;
+use std::path::{Path, PathBuf};
+use std::process::ExitCode;
+
+#[derive(Deserialize)]
+struct Envelope {
+    #[serde(default)]
+    hook_event_name: String,
+    #[serde(default)]
+    tool_name: String,
+    #[serde(default)]
+    cwd: String,
+    #[serde(default)]
+    tool_input: ToolInput,
+}
+
+#[derive(Deserialize, Default)]
+struct ToolInput {
+    #[serde(default)]
+    file_path: String,
+    /// Write payloads carry `content`; Edit payloads carry
+    /// `new_string` (captured contract) — the added text either way.
+    #[serde(default)]
+    content: String,
+    #[serde(default)]
+    new_string: String,
+}
+
+/// Entry point for `ce probe --hook`. Never fails outward.
+pub fn run_hook() -> ExitCode {
+    let mut raw = String::new();
+    if std::io::stdin().read_to_string(&mut raw).is_err() {
+        return ExitCode::SUCCESS;
+    }
+    let Ok(env) = serde_json::from_str::<Envelope>(&raw) else {
+        return ExitCode::SUCCESS;
+    };
+    if env.hook_event_name != "PreToolUse" || !matches!(env.tool_name.as_str(), "Write" | "Edit") {
+        return ExitCode::SUCCESS;
+    }
+    let content = if env.tool_name == "Write" {
+        &env.tool_input.content
+    } else {
+        &env.tool_input.new_string
+    };
+    let root = PathBuf::from(&env.cwd);
+    decide(&root, &env.tool_input.file_path, content)
+}
+
+fn decide(root: &Path, file_path: &str, content: &str) -> ExitCode {
+    let mode = Config::load(root)
+        .map(|c| c.guard.mode)
+        .unwrap_or_else(|_| "observe".into());
+    let started = std::time::Instant::now();
+    let matches = probe_matches(root, file_path, content);
+    observe_log(
+        root,
+        file_path,
+        &matches,
+        &mode,
+        started.elapsed().as_millis(),
+    );
+    let Some(matches) = matches else {
+        return ExitCode::SUCCESS; // degraded (daemon unreachable): fail open
+    };
+    if matches.is_empty() {
+        return ExitCode::SUCCESS;
+    }
+    emit_decision(&mode, &reason(file_path, &matches));
+    ExitCode::SUCCESS
+}
+
+/// None = probe unavailable (degraded); Some(vec) = verified matches.
+fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serde_json::Value>> {
+    let req = Request::Probe {
+        file_path: file_path.to_string(),
+        content: content.to_string(),
+    };
+    match client::request(root, &req) {
+        Ok(Response::ProbeReport { matches, .. }) => {
+            Some(matches.as_array().cloned().unwrap_or_default())
+        }
+        _ => None,
+    }
+}
+
+fn reason(file_path: &str, matches: &[serde_json::Value]) -> String {
+    let top: Vec<String> = matches
+        .iter()
+        .take(3)
+        .map(|m| {
+            format!(
+                "{}:{}-{} ({} tokens)",
+                m["file"].as_str().unwrap_or("?"),
+                m["start_line"],
+                m["end_line"],
+                m["tokens"]
+            )
+        })
+        .collect();
+    format!(
+        "ce: content for {file_path} duplicates {} indexed region(s): {}. \
+         Reuse the existing implementation instead of re-writing it.",
+        matches.len(),
+        top.join("; ")
+    )
+}
+
+/// Decision JSON on stdout — the exact shape proven by cc-enslaver's
+/// working hooks (allow carries the reason as a visible warning).
+fn emit_decision(mode: &str, reason: &str) {
+    let decision = match mode {
+        "deny" => "deny",
+        "ask" => "ask",
+        "warn" => "allow",
+        _ => return, // observe: log only, no output
+    };
+    let payload = serde_json::json!({
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": decision,
+            "permissionDecisionReason": reason,
+        }
+    });
+    println!("{payload}");
+}
+
+/// One NDJSON line per probed event, all modes (M4 evaluation feed).
+fn observe_log(
+    root: &Path,
+    file_path: &str,
+    matches: &Option<Vec<serde_json::Value>>,
+    mode: &str,
+    elapsed_ms: u128,
+) {
+    let dir = root.join(".ce");
+    if std::fs::create_dir_all(&dir).is_err() {
+        return;
+    }
+    let epoch_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_millis())
+        .unwrap_or(0);
+    let line = serde_json::json!({
+        "ts_ms": epoch_ms,
+        "file": file_path,
+        "mode": mode,
+        "degraded": matches.is_none(),
+        "matches": matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
+        "elapsed_ms": elapsed_ms,
+    });
+    use std::io::Write as _;
+    if let Ok(mut fh) = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(dir.join("observe.ndjson"))
+    {
+        let _ = writeln!(fh, "{line}");
+    }
+}

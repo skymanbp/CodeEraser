@@ -4,5 +4,6 @@
 pub mod config;
 pub mod daemon;
 pub mod dedup;
+pub mod guard;
 pub mod handshake;
 pub mod scan;

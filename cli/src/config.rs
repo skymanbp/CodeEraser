@@ -35,12 +35,30 @@ impl Default for Thresholds {
     }
 }
 
+/// Passive-guard settings (plan §4.2, decision D-4 gradual rollout:
+/// observe → warn → ask → deny, promotion gated on measured FPR).
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default)]
+pub struct Guard {
+    /// "observe" | "warn" | "ask" | "deny"
+    pub mode: String,
+}
+
+impl Default for Guard {
+    fn default() -> Self {
+        Self {
+            mode: "observe".into(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default)]
 pub struct Config {
     pub thresholds: Thresholds,
     /// Extra exclude globs, added on top of built-in defaults (§4.1).
     pub exclude: Vec<String>,
+    pub guard: Guard,
 }
 
 impl Config {
