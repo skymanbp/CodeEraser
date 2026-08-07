@@ -36,7 +36,7 @@ fn rust_fn(seed: u32) -> String {
     )
 }
 
-/// >100k LOC: 460 files x 20 fns x ~11 lines. seed % 900 forms
+/// 100k+ LOC: 460 files x 20 fns x ~11 lines. seed % 900 forms
 /// realistic clone families (~10 instances) without hot-cap regimes.
 fn generate_corpus(dir: &Path) -> usize {
     let mut lines = 0;
