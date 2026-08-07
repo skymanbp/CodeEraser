@@ -1,0 +1,6 @@
+# ce dogfood config (plan §7.5). Thresholds stay at the §4.1 defaults.
+
+# contracts/fixtures/ holds pinned third-party cross-check sources and
+# captured hook-payload goldens: test DATA measured by the M1 acceptance
+# harness, not product code held to this repo's own standards (E01).
+exclude = ["contracts/fixtures/**"]
