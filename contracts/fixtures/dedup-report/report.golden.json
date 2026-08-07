@@ -1,0 +1,28 @@
+{
+  "blocks": [
+    {
+      "a_end": 11,
+      "a_file": "a.rs",
+      "a_start": 1,
+      "b_end": 11,
+      "b_file": "b.rs",
+      "b_start": 1,
+      "distinct": 28,
+      "tokens": 55
+    }
+  ],
+  "schema": "ce.dedup-report/0.4.0",
+  "summary": {
+    "blocks": 1,
+    "files": 2,
+    "hot_chained": 0,
+    "kgram": 25,
+    "low_diversity_suppressed": 0,
+    "min_distinct": 7,
+    "min_tokens": 50,
+    "refreshed": 2,
+    "removed": 0,
+    "stale_skipped": 0,
+    "window": 26
+  }
+}
