@@ -17,8 +17,9 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.2.0: blocks carry verified `tokens` length (was `fingerprints`).
-pub const SCHEMA_ID: &str = "ce.dedup-report/0.2.0";
+/// 0.3.0: summary self-identifies its parameters; hot groups chain
+/// instead of vanishing; stale-anchor counter added.
+pub const SCHEMA_ID: &str = "ce.dedup-report/0.3.0";
 
 /// Batch entry point: refresh the index (incremental), reap deleted
 /// files, verify anchors by token-stream extension, report blocks.
@@ -34,37 +35,60 @@ pub fn run(
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
     let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
     let p = Params::default();
-    let mut idx = index::Index::open(&db_path)?;
+    let mut idx = index::Index::open(&db_path, p)?;
     let (live, refreshed) = index_all(root, &config, &mut idx)?;
     let removed = idx.remove_missing(&live)?;
-    let instances = idx.all_instances()?;
-    let streams = load_streams(root, &pairs::candidate_files(&instances))?;
-    let found = pairs::clone_blocks(&instances, &streams, min_tokens.unwrap_or(p.guarantee()));
+    let mut instances = idx.all_instances()?;
+    let streams = load_streams(root, &pairs::candidate_files(&instances), &mut idx, p)?;
+    if streams.1 > 0 {
+        // a file changed between refresh and stream load; the streams
+        // were re-fed into the index, so re-fetch the instances to
+        // keep offsets and streams consistent (attack-review D1)
+        instances = idx.all_instances()?;
+    }
+    let min = min_tokens.unwrap_or(p.guarantee());
+    let found = pairs::clone_blocks(&instances, &streams.0, min);
     let summary = Summary {
         files: live.len(),
         refreshed,
         removed,
         blocks: found.blocks.len(),
-        hot_skipped: found.hot_skipped,
+        hot_chained: found.hot_chained,
+        stale_skipped: found.stale_skipped,
+        kgram: p.kgram,
+        window: p.window,
+        min_tokens: min,
     };
     emit(format, &found, &summary)?;
     Ok(ExitCode::SUCCESS)
 }
 
-/// Token streams for the files that share at least one fingerprint —
-/// the extension-verify working set (re-tokenized on demand; the M2
-/// daemon will keep these hot).
-fn load_streams(root: &Path, files: &BTreeSet<String>) -> Result<pairs::Streams> {
+/// Token streams for the files that share at least one fingerprint.
+/// Every stream is fed back through refresh_file with the very bytes
+/// just read: the content-hash fast path makes this free when nothing
+/// changed, and re-indexes atomically when something did — stored
+/// offsets can never disagree with the returned streams
+/// (single-threaded; the M2 daemon serializes writers per ADR-003).
+fn load_streams(
+    root: &Path,
+    files: &BTreeSet<String>,
+    idx: &mut index::Index,
+    p: Params,
+) -> Result<(pairs::Streams, usize)> {
     let mut out = pairs::Streams::new();
+    let mut changed = 0;
     for rel in files {
         let path = root.join(rel);
         let Some(lang) = Lang::from_path(&path) else {
             continue;
         };
         let src = std::fs::read(&path)?;
+        if idx.refresh_file(rel, &src, lang, p)? {
+            changed += 1;
+        }
         out.insert(rel.clone(), tokens::stream(&src, lang)?);
     }
-    Ok(out)
+    Ok((out, changed))
 }
 
 fn index_all(
@@ -102,7 +126,11 @@ struct Summary {
     refreshed: usize,
     removed: usize,
     blocks: usize,
-    hot_skipped: usize,
+    hot_chained: usize,
+    stale_skipped: usize,
+    kgram: usize,
+    window: usize,
+    min_tokens: usize,
 }
 
 #[derive(Serialize)]
@@ -122,8 +150,14 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
                 );
             }
             println!(
-                "indexed {} files ({} refreshed, {} removed) — {} clone blocks, {} hot hashes skipped",
-                s.files, s.refreshed, s.removed, s.blocks, s.hot_skipped
+                "indexed {} files ({} refreshed, {} removed) — {} clone blocks (min {} tokens), {} hot chained, {} stale skipped",
+                s.files,
+                s.refreshed,
+                s.removed,
+                s.blocks,
+                s.min_tokens,
+                s.hot_chained,
+                s.stale_skipped
             );
         }
         Format::Json => {

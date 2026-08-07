@@ -14,11 +14,12 @@ use std::path::Path;
 
 /// Pre-release schema versioning: a mismatch drops and recreates the
 /// tables (the index is a cache — rebuilding is always safe).
-const SCHEMA_VERSION: i64 = 2;
+const SCHEMA_VERSION: i64 = 3;
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS fingerprints;
 DROP TABLE IF EXISTS files;
+DROP TABLE IF EXISTS meta;
 CREATE TABLE files (
   id INTEGER PRIMARY KEY,
   path TEXT UNIQUE NOT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE fingerprints (
 );
 CREATE INDEX idx_fp_hash ON fingerprints(hash);
 CREATE INDEX idx_fp_file ON fingerprints(file_id);
+CREATE TABLE meta (k TEXT PRIMARY KEY, v INTEGER NOT NULL);
 ";
 
 /// One fingerprint occurrence, joined back to its file. `start_tok`
@@ -52,7 +54,11 @@ pub struct Index {
 }
 
 impl Index {
-    pub fn open(db_path: &Path) -> Result<Self> {
+    /// Open (or wipe-and-recreate) the index. The cache key is
+    /// schema version + winnowing params + tokenizer revision
+    /// (attack-review D2: params/tokenizer changes silently reused
+    /// stale fingerprints for unchanged files).
+    pub fn open(db_path: &Path, p: Params) -> Result<Self> {
         if let Some(dir) = db_path.parent() {
             std::fs::create_dir_all(dir).with_context(|| format!("create {}", dir.display()))?;
         }
@@ -62,9 +68,13 @@ impl Index {
         conn.pragma_update(None, "busy_timeout", 5000)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
         let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
-        if version != SCHEMA_VERSION {
+        if version != SCHEMA_VERSION || !meta_matches(&conn, p)? {
             conn.execute_batch(SCHEMA)?;
             conn.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+            let mut stmt = conn.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
+            for (k, v) in meta_entries(p) {
+                stmt.execute((k, v))?;
+            }
         }
         Ok(Self { conn })
     }
@@ -102,20 +112,21 @@ impl Index {
     }
 
     /// Drop rows for files no longer on disk; returns removed count.
+    /// One transaction — per-row autocommit meant one fsync per file.
     pub fn remove_missing(&mut self, live: &BTreeSet<String>) -> Result<usize> {
-        let paths: Vec<(i64, String)> = self
-            .conn
+        let tx = self.conn.transaction()?;
+        let paths: Vec<(i64, String)> = tx
             .prepare("SELECT id, path FROM files")?
             .query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?
             .collect::<rusqlite::Result<_>>()?;
         let mut removed = 0;
         for (id, path) in paths {
             if !live.contains(&path) {
-                self.conn
-                    .execute("DELETE FROM files WHERE id = ?1", (id,))?;
+                tx.execute("DELETE FROM files WHERE id = ?1", (id,))?;
                 removed += 1;
             }
         }
+        tx.commit()?;
         Ok(removed)
     }
 
@@ -140,6 +151,37 @@ impl Index {
         rows.sort();
         Ok(rows)
     }
+}
+
+fn meta_entries(p: Params) -> [(&'static str, i64); 3] {
+    [
+        ("kgram", p.kgram as i64),
+        ("window", p.window as i64),
+        ("tokenizer_rev", tokens::TOKENIZER_REV),
+    ]
+}
+
+fn meta_matches(conn: &Connection, p: Params) -> Result<bool> {
+    // a pre-meta database (or a foreign file) is a mismatch, not an
+    // error — but real SQL failures must still propagate
+    let has_meta: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'meta'",
+        [],
+        |r| r.get(0),
+    )?;
+    if has_meta == 0 {
+        return Ok(false);
+    }
+    for (k, want) in meta_entries(p) {
+        let got: Option<i64> = conn
+            .query_row("SELECT v FROM meta WHERE k = ?1", (k,), |r| r.get(0))
+            .map(Some)
+            .or_else(ignore_no_rows)?;
+        if got != Some(want) {
+            return Ok(false);
+        }
+    }
+    Ok(true)
 }
 
 fn ignore_no_rows(e: rusqlite::Error) -> rusqlite::Result<Option<i64>> {

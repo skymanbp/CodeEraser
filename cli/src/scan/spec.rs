@@ -55,6 +55,12 @@ pub struct LangSpec {
     pub comment_kinds: &'static [&'static str],
     /// Readability: function-name convention (plan §4.1 naming item).
     pub name_style: NameStyle,
+    /// Dedup: anonymous string-delimiter tokens that count as literal
+    /// pieces. Per-language because `'` is a QUOTE only where the
+    /// grammar lexes char/string content separately — in Rust `'` is
+    /// the lifetime/label tick (M2 attack review: classifying it LIT
+    /// made every `&'a str` signature a false clone driver).
+    pub literal_delims: &'static [&'static str],
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -103,6 +109,8 @@ static PYTHON: LangSpec = LangSpec {
     label_kinds: &[],
     comment_kinds: &["comment"],
     name_style: NameStyle::Snake,
+    // Python quotes surface as named string_start/string_end kinds.
+    literal_delims: &[],
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -150,6 +158,7 @@ static TYPESCRIPT: LangSpec = LangSpec {
     label_kinds: &["statement_identifier"],
     comment_kinds: &["comment"],
     name_style: NameStyle::MixedCaps,
+    literal_delims: &["\"", "'", "`"],
 };
 
 static RUST: LangSpec = LangSpec {
@@ -187,6 +196,9 @@ static RUST: LangSpec = LangSpec {
     label_kinds: &["label"],
     comment_kinds: &["line_comment", "block_comment"],
     name_style: NameStyle::Snake,
+    // NOT `'`: that is the lifetime/label tick (char_literal is one
+    // token and needs no delimiter piece).
+    literal_delims: &["\""],
 };
 
 static GO: LangSpec = LangSpec {
@@ -225,6 +237,8 @@ static GO: LangSpec = LangSpec {
     label_kinds: &["label_name"],
     comment_kinds: &["comment"],
     name_style: NameStyle::MixedCaps,
+    // `'` is Go's rune delimiter but rune_literal is a single token.
+    literal_delims: &["\"", "`"],
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -241,4 +255,5 @@ static MARKDOWN: LangSpec = LangSpec {
     label_kinds: &[],
     comment_kinds: &[],
     name_style: NameStyle::Any,
+    literal_delims: &[],
 };

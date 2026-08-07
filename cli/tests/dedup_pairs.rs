@@ -31,6 +31,40 @@ fn anchor(file: &str, hash: u64, start_tok: usize) -> Instance {
     }
 }
 
+/// Attack-review D1 regression: an anchor whose stored token offset
+/// exceeds the live stream (file shrank after indexing) is skipped
+/// and counted — never an out-of-bounds panic.
+#[test]
+fn stale_anchor_skipped_not_panicked() {
+    let stream: Vec<u64> = (1..60).collect();
+    let mut streams = pairs::Streams::new();
+    streams.insert("a.rs".into(), synth(&stream));
+    streams.insert("b.rs".into(), synth(&stream));
+    // offset 61 is beyond the 59-token stream
+    let instances = vec![anchor("a.rs", 9, 61), anchor("b.rs", 9, 10)];
+    let found = pairs::clone_blocks(&instances, &streams, Params::default().guarantee());
+    assert!(found.blocks.is_empty());
+    assert_eq!(found.stale_skipped, 1, "stale anchor counted, not fatal");
+}
+
+/// Attack-review D4 regression: a hash shared by MORE than HOT_CAP
+/// locations chains adjacent pairs instead of vanishing — 70 copies
+/// of the same content must still be reported, not zeroed.
+#[test]
+fn hot_group_chains_instead_of_vanishing() {
+    let shared: Vec<u64> = (1_000..1_060).collect();
+    let mut streams = pairs::Streams::new();
+    let mut instances = Vec::new();
+    for i in 0..70 {
+        let name = format!("f{i:02}.rs");
+        streams.insert(name.clone(), synth(&shared));
+        instances.push(anchor(&name, 7, 5));
+    }
+    let found = pairs::clone_blocks(&instances, &streams, Params::default().guarantee());
+    assert_eq!(found.hot_chained, 1, "one hot hash group chained");
+    assert_eq!(found.blocks.len(), 69, "adjacent chain covers all copies");
+}
+
 /// Shared run of 30 tokens (>= kgram noise floor, < t=50): the anchor
 /// exists but extension verification must reject it.
 #[test]

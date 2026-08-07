@@ -70,6 +70,37 @@ fn structure_is_preserved() {
     assert_ne!(toks(Lang::Python, a), toks(Lang::Python, b));
 }
 
+/// Attack-review D3 regression: a literal STATEMENT after a literal
+/// must stay a separate token — lexical-adjacency merging swallowed
+/// Python attribute docstrings and TS ASI directives entirely.
+#[test]
+fn literal_statement_not_swallowed() {
+    let with_doc = "X = \"abc\"\n\"\"\"Attribute docstring.\"\"\"\nY = 1\n";
+    let without = "X = \"abc\"\nY = 1\n";
+    assert_ne!(
+        toks(Lang::Python, with_doc),
+        toks(Lang::Python, without),
+        "the docstring statement must appear in the stream"
+    );
+    let ts_directive = "const a = 'x'\n'use strict'\nconst b = 2\n";
+    let ts_plain = "const a = 'x'\nconst b = 2\n";
+    assert_ne!(
+        toks(Lang::TypeScript, ts_directive),
+        toks(Lang::TypeScript, ts_plain)
+    );
+}
+
+/// Attack-review nit-14 regression: the Rust lifetime tick `'` is not
+/// a string delimiter — `&'a str` signatures must differ from `&str`.
+#[test]
+fn rust_lifetime_is_not_a_literal() {
+    let with_lt = "fn f<'a>(x: &'a str) -> &'a str { x }\n";
+    let without = "fn f(x: &str) -> &str { x }\n";
+    let a = toks(Lang::Rust, with_lt);
+    let b = toks(Lang::Rust, without);
+    assert_ne!(a, b, "lifetime ticks must not collapse into LIT");
+}
+
 /// Guarantee bound: a shared run of exactly t = window + kgram - 1
 /// tokens embedded in otherwise-disjoint sequences must share at
 /// least one fingerprint.

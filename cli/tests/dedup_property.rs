@@ -66,7 +66,7 @@ proptest! {
         let dir = case_dir();
         let p = Params::default();
         let mut model: BTreeMap<String, String> = BTreeMap::new();
-        let mut incr = Index::open(&dir.join("incr.db")).expect("open incr");
+        let mut incr = Index::open(&dir.join("incr.db"), p).expect("open incr");
         for op in &ops {
             match op {
                 Op::Upsert(i, seeds) => {
@@ -81,7 +81,7 @@ proptest! {
             // reap after every op so deletions interleave with upserts
             incr.remove_missing(&model.keys().cloned().collect()).expect("reap");
         }
-        let mut full = Index::open(&dir.join("full.db")).expect("open full");
+        let mut full = Index::open(&dir.join("full.db"), p).expect("open full");
         for (name, src) in &model {
             full.refresh_file(name, src.as_bytes(), Lang::Rust, p).expect("rebuild");
         }

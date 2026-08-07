@@ -58,18 +58,38 @@ user_version=2 门控重建；报告项 = 已验证精确归一化公共段 ≥ 
      token，差 3 到线。`--min-tokens 40` 实测召回 **16/17**——能力
      在，默认档更严；根因 = jscpd 的 min-tokens 50 用其细粒度 token
      度量，ce 的 50 用折叠后 token（同数字不同测度）。
-- **精度（人工仲裁，抽样 21/170 + 全部风险类逐块）：161/170 ≈ 94.7%
-  ≥ 90% 门**。判定明细：真阳类 = cobra `Gt()` 两半（教科书 T2）、
-  hyperlink assert 模板、walk.rs `from_entry*`/测试样板家族（128 块，
-  抽 4 核实）、benchmarks 套件三连、locale **跨文件**（同 key 序翻译
-  重复，16 块）、models.py 327↔428（jscpd 双确认）。假阳 9 块 =
-  status_codes.py 数据行（`LIT: (LIT,...),` 同构，1）+ locale
-  **文件内部**前后 key 段（数据行平行结构，8）——LIT 折叠使不同
-  数据行同构，语义非克隆。
+- **精度（初步仲裁，抽样 21/170 + 全部风险类逐块）：161/170 ≈ 94.7%**。
+  ⚠️ 统计口径（子系统攻击审阅 R5/R6）：walk.rs 家族占 128/170 而只抽
+  4 块（52 个 A 侧起始区域抽 ≤4，n=4 零失败的 95% 置信上界允许约 53%
+  类错误率）；locale 跨文件计真阳（判据 = 同 key 序的翻译重复）/文件
+  内部计假阳同源同机制、无外部 oracle——该判定若翻转则 145/170 ≈
+  85.3% 跌破 90% 门。故本数字是**初步点估计**，终版精度以 M2 收口时
+  扩样（walk.rs ≥12/52 区域）+ locale 类交叉仲裁复测为准。
+  判定明细：真阳类 = cobra `Gt()` 两半（教科书 T2）、hyperlink assert
+  模板、walk.rs 测试样板家族、benchmarks 套件三连、locale 跨文件
+  （16 块）、models.py 327↔428（jscpd 双确认）；假阳 9 块 =
+  status_codes.py 数据行（1）+ locale 文件内部前后 key 段（8）——
+  LIT 折叠使不同数据行同构，语义非克隆。
+- **召回门直陈**：计划 §6 M2 要求"对 jscpd 可检出集召回 ≥ 95%"，
+  当前 15/17 = 88.2%（默认档）/ 16/17 = 94.1%（--min-tokens 40）
+  **均未数值达标**。两 miss 的归因（docstring→docdup 域、阈值测度
+  差异）若要作为验收口径排除项，属计划契约变更，须用户拍板后改计划
+  重锁（CLAUDE.md 硬约束 2）——已上呈，不擅改。
 - **退化类信号已产品化**：Block 新增 `distinct`（run 内唯一 token
-  数）。实测分离度：假阳类 distinct 均值 5.0/5.8 vs 真阳类 13/19.1/
-  10.2（重叠带 7-16 存在，故只报告不静默过滤——M3 判决层合成信号，
-  报告 schema 仍 0.2.0 内向后兼容加字段）。
+  数）。按类精确均值（审阅 N21 更正）：假阳类 5.0（status_codes，
+  n=1）/ 5.8（intra-locale，n=8）vs 真阳类 cobra 13（n=1）、locale
+  跨文件 19.1（n=16）、walk.rs 家族 9.84（n=128）、hyperlink 9.0
+  （n=6）；重叠带 7-16 存在，故只报告不静默过滤（M3 判决层合成）。
+
+## 第三轮（审阅修复批，2026-08-07）
+
+分词器 rev 2（同父节点 LIT 合并 + 按语言字面量定界符，Rust lifetime
+`'` 不再误类）+ 索引缓存键补参数/分词器版本 + 热组邻接链（悬崖消除）
++ 陈旧锚点防卫计数。复测：**170 块 / 召回 15/17 / 9 风险类块全部
+不变**——修复不扰动 fixtures 标定（fixtures 无 attr-docstring/ASI/
+热组形态；lifetime 修复对克隆双侧一致故块集稳定）。报告 schema
+0.3.0：summary 自述 kgram/window/min_tokens + hot_chained/
+stale_skipped。处置全表：docs/reviews/2026-08-07-m2-dedup-attack-review.md。
 
 ## 复现
 

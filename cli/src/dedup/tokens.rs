@@ -1,19 +1,23 @@
 //! Leaf-token extraction + T2 normalization: identifiers → ID,
-//! literals → LIT (consecutive literal pieces collapse into one),
-//! comments skipped, everything else (keywords/punctuation) kept as
-//! its kind text. Classification rules derive from leaf-kind AST
-//! probes of all four grammars (2026-08-07), not guesses:
-//! every identifier-class kind ends in "identifier"; string pieces
-//! surface as start/end/content/fragment kinds plus anonymous quote
-//! tokens; numbers are `integer`/`float` (Py), `number` (TS — also
-//! the type keyword, deliberately merged: T2 covers type
-//! substitution), `*_literal` (Rust/Go).
+//! literals → LIT (pieces of ONE literal node collapse into one),
+//! comments skipped as whole subtrees, everything else kept as its
+//! kind text. Classification rules derive from leaf-kind AST probes
+//! of all four grammars, not guesses. Known M2 stances (documented,
+//! deliberate): booleans/None are NOT collapsed (their identity is
+//! usually semantic, unlike numbers/strings); Go `blank_identifier`
+//! normalizes to ID like any identifier.
 
 use crate::scan::ast;
 use crate::scan::lang::Lang;
 use crate::scan::spec::LangSpec;
 use anyhow::{Context, Result};
 use tree_sitter::Node;
+
+/// Bump when normalization semantics change: the index stores this in
+/// its meta table and wipes itself on mismatch (attack-review D2 —
+/// stale fingerprints from an older tokenizer never mix with new).
+/// rev 2: same-parent LIT merge + per-language literal delimiters.
+pub const TOKENIZER_REV: i64 = 2;
 
 /// One normalized token, carrying its source span for report mapping.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -45,28 +49,35 @@ pub fn stream(src: &[u8], lang: Lang) -> Result<Vec<Token>> {
     Ok(tokenize(tree.root_node(), sp))
 }
 
-/// Normalized token stream of a whole parsed file. Comments are
-/// skipped as WHOLE SUBTREES — tree-sitter-rust 0.24 line_comment is
-/// not a leaf (found by test: its child token leaked into the
-/// stream). Consecutive literal pieces merge into the previous LIT
-/// (a whole string is one LIT); a comment neither breaks nor joins
-/// a run.
+/// Normalized token stream of a whole parsed file. Literal pieces
+/// merge ONLY within the same parent literal node (attack-review D3:
+/// lexical-adjacency merging swallowed whole statements — a Python
+/// attribute docstring after a string assignment vanished and its
+/// lines ballooned the previous LIT's span).
 pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {
     let mut out: Vec<Token> = Vec::new();
-    let mut prev_lit = false;
+    let mut lit_parent: Option<usize> = None;
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
         if spec.comment_kinds.contains(&node.kind()) {
-            continue; // prev_lit intentionally unchanged
+            continue; // lit_parent intentionally unchanged
         }
         if node.child_count() > 0 {
             stack.extend(ast::children(node).into_iter().rev());
             continue;
         }
-        match classify(node.kind()) {
-            Class::Lit if prev_lit => extend_last(&mut out, node),
+        match classify(node.kind(), spec) {
+            Class::Lit => {
+                let parent = node.parent().map(|p| p.id());
+                if parent.is_some() && parent == lit_parent {
+                    extend_last(&mut out, node);
+                } else {
+                    lit_parent = parent;
+                    out.push(token(&Class::Lit, node.kind(), node));
+                }
+            }
             class => {
-                prev_lit = matches!(class, Class::Lit);
+                lit_parent = None;
                 out.push(token(&class, node.kind(), node));
             }
         }
@@ -78,7 +89,7 @@ fn token(class: &Class, kind: &str, node: Node<'_>) -> Token {
     let bytes = match class {
         Class::Id => ID_MARK,
         Class::Lit => LIT_MARK,
-        _ => kind.as_bytes(),
+        Class::Text => kind.as_bytes(),
     };
     Token {
         hash: fnv1a(bytes),
@@ -93,11 +104,11 @@ fn extend_last(out: &mut [Token], node: Node<'_>) {
     }
 }
 
-fn classify(kind: &str) -> Class {
+fn classify(kind: &str, spec: &LangSpec) -> Class {
     if kind.ends_with("identifier") {
         return Class::Id;
     }
-    if is_literal(kind) {
+    if is_literal(kind, spec) {
         return Class::Lit;
     }
     Class::Text
@@ -105,8 +116,10 @@ fn classify(kind: &str) -> Class {
 
 /// Literal pieces across the four grammars (probe-derived): whole
 /// literals, string content/fragment/start/end pieces, escape
-/// sequences, and the anonymous quote delimiter tokens.
-fn is_literal(kind: &str) -> bool {
+/// sequences, and the per-language anonymous delimiter tokens.
+/// Precondition: `kind` is a LEAF kind (composite kinds like Go
+/// `composite_literal` never reach here — tokenize recurses first).
+fn is_literal(kind: &str, spec: &LangSpec) -> bool {
     kind.ends_with("literal")
         || matches!(kind, "integer" | "float" | "number" | "escape_sequence")
         || (kind.contains("string")
@@ -114,7 +127,7 @@ fn is_literal(kind: &str) -> bool {
                 || kind.ends_with("fragment")
                 || kind.ends_with("start")
                 || kind.ends_with("end")))
-        || matches!(kind, "\"" | "'" | "`")
+        || spec.literal_delims.contains(&kind)
 }
 
 /// FNV-1a: tiny, dependency-free, stable across runs (index persists).

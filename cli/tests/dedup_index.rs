@@ -37,8 +37,8 @@ fn rust_fn(seed: u32) -> String {
 #[test]
 fn cross_file_t2_clone_detected() {
     let dir = tmp("t2-clone");
-    let mut idx = Index::open(&dir.join("index.db")).expect("open");
     let p = Params::default();
+    let mut idx = Index::open(&dir.join("index.db"), p).expect("open");
     idx.refresh_file("a.rs", rust_fn(1).as_bytes(), Lang::Rust, p)
         .expect("a");
     idx.refresh_file("b.rs", rust_fn(2).as_bytes(), Lang::Rust, p)
@@ -54,7 +54,8 @@ fn cross_file_t2_clone_detected() {
     );
     let instances = idx.all_instances().expect("instances");
     let found = pairs::clone_blocks(&instances, &streams, p.guarantee());
-    assert_eq!(found.hot_skipped, 0);
+    assert_eq!(found.hot_chained, 0);
+    assert_eq!(found.stale_skipped, 0);
     assert!(!found.blocks.is_empty(), "T2 clone must be detected");
     let b = &found.blocks[0];
     assert_eq!((b.a_file.as_str(), b.b_file.as_str()), ("a.rs", "b.rs"));
@@ -68,7 +69,7 @@ fn cross_file_t2_clone_detected() {
 fn incremental_equals_full_rebuild() {
     let dir = tmp("incr-full");
     let p = Params::default();
-    let mut incr = Index::open(&dir.join("incr.db")).expect("open");
+    let mut incr = Index::open(&dir.join("incr.db"), p).expect("open");
     for (name, seed) in [("a.rs", 1u32), ("b.rs", 2), ("c.rs", 3)] {
         incr.refresh_file(name, rust_fn(seed).as_bytes(), Lang::Rust, p)
             .expect("seed");
@@ -80,7 +81,7 @@ fn incremental_equals_full_rebuild() {
     let live: BTreeSet<String> = ["a.rs".into(), "b.rs".into()].into();
     incr.remove_missing(&live).expect("reap");
 
-    let mut full = Index::open(&dir.join("full.db")).expect("open");
+    let mut full = Index::open(&dir.join("full.db"), p).expect("open");
     full.refresh_file("a.rs", rust_fn(1).as_bytes(), Lang::Rust, p)
         .expect("a");
     full.refresh_file("b.rs", b2.as_bytes(), Lang::Rust, p)
@@ -96,8 +97,8 @@ fn incremental_equals_full_rebuild() {
 #[test]
 fn unchanged_content_is_fast_path() {
     let dir = tmp("fast-path");
-    let mut idx = Index::open(&dir.join("index.db")).expect("open");
     let p = Params::default();
+    let mut idx = Index::open(&dir.join("index.db"), p).expect("open");
     let src = rust_fn(5);
     assert!(
         idx.refresh_file("a.rs", src.as_bytes(), Lang::Rust, p)
@@ -110,11 +111,38 @@ fn unchanged_content_is_fast_path() {
     );
 }
 
+/// Attack-review D2 regression: the index cache key includes the
+/// winnowing params — reopening with different params wipes the
+/// cache instead of silently serving stale fingerprints.
+#[test]
+fn param_change_invalidates_index() {
+    let dir = tmp("param-wipe");
+    let p1 = Params::default();
+    let src = rust_fn(5);
+    {
+        let mut idx = Index::open(&dir.join("index.db"), p1).expect("open p1");
+        assert!(
+            idx.refresh_file("a.rs", src.as_bytes(), Lang::Rust, p1)
+                .expect("seed")
+        );
+    }
+    let p2 = Params {
+        kgram: 8,
+        window: 8,
+    };
+    let mut idx = Index::open(&dir.join("index.db"), p2).expect("open p2");
+    assert!(
+        idx.refresh_file("a.rs", src.as_bytes(), Lang::Rust, p2)
+            .expect("after wipe"),
+        "changed params must invalidate the cached fingerprints"
+    );
+}
+
 #[test]
 fn removed_file_is_purged() {
     let dir = tmp("purge");
-    let mut idx = Index::open(&dir.join("index.db")).expect("open");
     let p = Params::default();
+    let mut idx = Index::open(&dir.join("index.db"), p).expect("open");
     idx.refresh_file("a.rs", rust_fn(1).as_bytes(), Lang::Rust, p)
         .expect("a");
     idx.refresh_file("b.rs", rust_fn(2).as_bytes(), Lang::Rust, p)

@@ -11,9 +11,11 @@ use super::tokens::Token;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 
-/// A hash shared by more locations than this is boilerplate; its
-/// pairs explode quadratically. Skipped hashes are COUNTED and
-/// reported, never silently dropped.
+/// Above this group size, pairing switches from full pairwise
+/// (C(n,2)) to an adjacent chain (n-1 pairs) sorted by (file, tok).
+/// Attack-review D4: skipping hot groups made detection FALL TO ZERO
+/// as duplication rose (65 identical files → 0 blocks); chaining
+/// keeps every instance in ≥1 verified pair at linear cost.
 const HOT_CAP: usize = 64;
 
 /// A verified maximal common token run, mapped back to lines.
@@ -38,7 +40,12 @@ pub struct Block {
 #[derive(Debug, Serialize)]
 pub struct Blocks {
     pub blocks: Vec<Block>,
-    pub hot_skipped: usize,
+    /// Hash groups paired as adjacent chains instead of full pairwise.
+    pub hot_chained: usize,
+    /// Anchors whose stored token offset exceeded the live stream
+    /// (file changed between index refresh and stream load) — skipped
+    /// and counted, never a panic (attack-review D1).
+    pub stale_skipped: usize,
 }
 
 pub type Streams = BTreeMap<String, Vec<Token>>;
@@ -57,36 +64,49 @@ pub fn candidate_files(instances: &[Instance]) -> BTreeSet<String> {
         .collect()
 }
 
+/// Collects verified runs plus the transparency counters.
+struct Ctx<'s> {
+    runs: BTreeSet<(&'s str, usize, &'s str, usize, usize)>,
+    stale_skipped: usize,
+}
+
 /// `t` is the report threshold in tokens (= the winnowing guarantee
-/// threshold, Params::window + Params::kgram - 1).
+/// threshold by default, Params::window + Params::kgram - 1).
 pub fn clone_blocks(instances: &[Instance], streams: &Streams, t: usize) -> Blocks {
     let mut by_hash: BTreeMap<u64, Vec<&Instance>> = BTreeMap::new();
     for inst in instances {
         by_hash.entry(inst.hash).or_default().push(inst);
     }
-    let mut hot_skipped = 0;
-    // (a_file, a_tok, b_file, b_tok, len) — extension is maximal, so
-    // every anchor inside one true run lands on the same tuple.
-    let mut runs: BTreeSet<(&str, usize, &str, usize, usize)> = BTreeSet::new();
-    for group in by_hash.values().filter(|g| g.len() > 1) {
+    let mut hot_chained = 0;
+    let mut ctx = Ctx {
+        runs: BTreeSet::new(),
+        stale_skipped: 0,
+    };
+    for group in by_hash.values_mut().filter(|g| g.len() > 1) {
         if group.len() > HOT_CAP {
-            hot_skipped += 1;
-            continue;
-        }
-        for (i, a) in group.iter().enumerate() {
-            for b in &group[i + 1..] {
-                extend_anchor(a, b, streams, t, &mut runs);
+            hot_chained += 1;
+            group.sort_by(|x, y| (&x.file, x.start_tok).cmp(&(&y.file, y.start_tok)));
+            for pair in group.windows(2) {
+                extend_anchor(pair[0], pair[1], streams, t, &mut ctx);
+            }
+        } else {
+            for (i, a) in group.iter().enumerate() {
+                for b in &group[i + 1..] {
+                    extend_anchor(a, b, streams, t, &mut ctx);
+                }
             }
         }
     }
     let blocks = dominant(
-        runs.into_iter()
+        ctx.runs
+            .into_iter()
             .map(|r| to_block(r, streams))
             .collect::<Vec<_>>(),
     );
     Blocks {
         blocks,
-        hot_skipped,
+        hot_chained,
+        stale_skipped: ctx.stale_skipped,
     }
 }
 
@@ -121,27 +141,29 @@ fn extend_anchor<'s>(
     b: &Instance,
     streams: &'s Streams,
     t: usize,
-    runs: &mut BTreeSet<(&'s str, usize, &'s str, usize, usize)>,
+    ctx: &mut Ctx<'s>,
 ) {
     let (a, b) = if (&a.file, a.start_tok) <= (&b.file, b.start_tok) {
         (a, b)
     } else {
         (b, a)
     };
-    if a.file == b.file && a.start_tok == b.start_tok {
-        return;
-    }
-    let (Some(sa), Some(sb)) = (streams.get(&a.file), streams.get(&b.file)) else {
+    let (Some((af, sa)), Some((bf, sb))) = (
+        streams.get_key_value(&a.file),
+        streams.get_key_value(&b.file),
+    ) else {
         return; // caller did not provide the stream — no claim made
     };
+    // a stored offset beyond the live stream = the file changed after
+    // the index refresh; skip and count, never index out of bounds
+    if a.start_tok >= sa.len() || b.start_tok >= sb.len() {
+        ctx.stale_skipped += 1;
+        return;
+    }
     if let Some((a0, b0, len)) = extend(sa, a.start_tok, sb, b.start_tok, a.file == b.file)
         && len >= t
-        && let (Some((af, _)), Some((bf, _))) = (
-            streams.get_key_value(&a.file),
-            streams.get_key_value(&b.file),
-        )
     {
-        runs.insert((af.as_str(), a0, bf.as_str(), b0, len));
+        ctx.runs.insert((af.as_str(), a0, bf.as_str(), b0, len));
     }
 }
 
