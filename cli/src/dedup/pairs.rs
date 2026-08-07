@@ -27,6 +27,12 @@ pub struct Block {
     pub b_end: usize,
     /// Exact verified length of the common normalized-token run.
     pub tokens: usize,
+    /// Unique token hashes in the run — the literal-degeneracy signal:
+    /// data-row matches (`LIT: (LIT,...),` tables) have a tiny
+    /// alphabet while real code clones are diverse. Reported for the
+    /// M3 judgment layer; no silent filtering here (calibration
+    /// arbitration, DEDUP-CALIBRATION.md).
+    pub distinct: usize,
 }
 
 #[derive(Debug, Serialize)]
@@ -170,6 +176,11 @@ fn extend(
 fn to_block(run: (&str, usize, &str, usize, usize), streams: &Streams) -> Block {
     let (a_file, a0, b_file, b0, len) = run;
     let (sa, sb) = (&streams[a_file], &streams[b_file]);
+    let distinct = sa[a0..a0 + len]
+        .iter()
+        .map(|t| t.hash)
+        .collect::<BTreeSet<_>>()
+        .len();
     Block {
         a_file: a_file.to_string(),
         a_start: sa[a0].start_line,
@@ -178,5 +189,6 @@ fn to_block(run: (&str, usize, &str, usize, usize), streams: &Streams) -> Block 
         b_start: sb[b0].start_line,
         b_end: sb[b0 + len - 1].end_line,
         tokens: len,
+        distinct,
     }
 }
