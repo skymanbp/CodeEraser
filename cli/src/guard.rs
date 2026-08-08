@@ -22,6 +22,12 @@ struct Envelope {
     tool_name: String,
     #[serde(default)]
     cwd: String,
+    /// Claude Code stamps this on every hook event. Carried into the
+    /// observe feed (schema 0.2.0) because the M4 evaluation set is
+    /// partitioned BY SESSION — both the D2-2 count and the D2-1
+    /// purity rule are unanswerable without it.
+    #[serde(default)]
+    session_id: String,
     #[serde(default)]
     tool_input: ToolInput,
 }
@@ -52,10 +58,10 @@ pub fn run_hook() -> ExitCode {
         &env.tool_input.new_string
     };
     let root = PathBuf::from(&env.cwd);
-    decide(&root, &env.tool_input.file_path, content)
+    decide(&root, &env.tool_input.file_path, content, &env.session_id)
 }
 
-fn decide(root: &Path, file_path: &str, content: &str) -> ExitCode {
+fn decide(root: &Path, file_path: &str, content: &str, session: &str) -> ExitCode {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
@@ -63,10 +69,13 @@ fn decide(root: &Path, file_path: &str, content: &str) -> ExitCode {
     let matches = probe_matches(root, file_path, content);
     observe_log(
         root,
-        file_path,
-        &matches,
-        &mode,
-        started.elapsed().as_millis(),
+        ProbeEvent {
+            file: file_path,
+            mode: &mode,
+            session,
+            matches: &matches,
+            elapsed_ms: started.elapsed().as_millis(),
+        },
     );
     let Some(matches) = matches else {
         return ExitCode::SUCCESS; // degraded (daemon unreachable): fail open
@@ -133,23 +142,30 @@ fn emit_decision(mode: &str, reason: &str) {
     println!("{payload}");
 }
 
-/// One NDJSON line per probed event, all modes (M4 evaluation feed).
-fn observe_log(
-    root: &Path,
-    file_path: &str,
-    matches: &Option<Vec<serde_json::Value>>,
-    mode: &str,
+/// One probe observe entry. A struct rather than positional
+/// parameters: adding session identity would have taken the old
+/// signature to six, past the scan's fn-params limit of 5, and these
+/// fields are one cohesive record anyway.
+struct ProbeEvent<'a> {
+    file: &'a str,
+    mode: &'a str,
+    session: &'a str,
+    matches: &'a Option<Vec<serde_json::Value>>,
     elapsed_ms: u128,
-) {
+}
+
+/// One NDJSON line per probed event, all modes (M4 evaluation feed).
+fn observe_log(root: &Path, ev: ProbeEvent) {
     crate::hookio::observe_append(
         root,
+        Some(ev.session),
         serde_json::json!({
             "event": "probe",
-            "file": file_path,
-            "mode": mode,
-            "degraded": matches.is_none(),
-            "matches": matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
-            "elapsed_ms": elapsed_ms,
+            "file": ev.file,
+            "mode": ev.mode,
+            "degraded": ev.matches.is_none(),
+            "matches": ev.matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
+            "elapsed_ms": ev.elapsed_ms,
         }),
     );
 }

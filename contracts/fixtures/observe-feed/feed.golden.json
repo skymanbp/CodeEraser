@@ -6,7 +6,8 @@
     "file": "<file>",
     "matches": 1,
     "mode": "observe",
-    "schema": "ce.observe/0.1.0",
+    "schema": "ce.observe/0.2.0",
+    "session_id": "t",
     "ts_ms": 0
   },
   {
@@ -16,7 +17,8 @@
     "event": "stop_audit",
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.1.0",
+    "schema": "ce.observe/0.2.0",
+    "session_id": "t",
     "ts_ms": 0
   },
   {
@@ -26,7 +28,8 @@
     "event": "precommit",
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.1.0",
+    "schema": "ce.observe/0.2.0",
+    "session_id": null,
     "ts_ms": 0
   }
 ]

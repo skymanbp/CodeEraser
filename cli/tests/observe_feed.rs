@@ -1,10 +1,15 @@
-//! Observe-feed contract (ce.observe/0.1.0): the NDJSON feed is the
+//! Observe-feed contract (ce.observe/0.2.0): the NDJSON feed is the
 //! M4 evaluation-set raw material, so its line shape is pinned by a
 //! golden. One deterministic run of all three producers — probe,
 //! stop audit, precommit — with volatile fields normalized (ts_ms,
 //! elapsed_ms, absolute file path); key sets, schema/event tags,
 //! counts, mode, and degraded flags must match byte-for-byte.
 //! Bless flow: `CE_BLESS=1 cargo test --test observe_feed`.
+//!
+//! `session_id` is deliberately NOT normalized: the hook envelopes
+//! carry the literal "t", so the golden pins that the id survives the
+//! whole path — and that precommit, which is not a hook and owns no
+//! session, records null instead of borrowing one.
 
 mod common;
 

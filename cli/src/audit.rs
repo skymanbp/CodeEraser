@@ -18,6 +18,11 @@ struct Envelope {
     hook_event_name: String,
     #[serde(default)]
     cwd: String,
+    /// Claude Code stamps this on every hook event; it reaches the
+    /// observe feed (schema 0.2.0) so the M4 evaluation set can be
+    /// partitioned by session (D2-2 count, D2-1 purity).
+    #[serde(default)]
+    session_id: String,
     /// Loop-prevention flag: true when this Stop fired because a
     /// previous Stop hook already blocked once.
     #[serde(default)]
@@ -32,7 +37,7 @@ pub fn run_hook() -> ExitCode {
     if env.hook_event_name != "Stop" || env.stop_hook_active || env.cwd.is_empty() {
         return ExitCode::SUCCESS;
     }
-    audit(&PathBuf::from(&env.cwd))
+    audit(&PathBuf::from(&env.cwd), &env.session_id)
 }
 
 /// Shared head of the Stop audit and the pre-commit gate: guard
@@ -42,7 +47,7 @@ pub fn run_hook() -> ExitCode {
 /// audits, attack-review finding). Outer None = not a git repo — the
 /// caller fails open.
 type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
-fn gather(root: &Path, diff: &[&str], event: &str) -> Option<Gathered> {
+fn gather(root: &Path, diff: &[&str], event: &str, session: Option<&str>) -> Option<Gathered> {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
@@ -52,13 +57,27 @@ fn gather(root: &Path, diff: &[&str], event: &str) -> Option<Gathered> {
     } else {
         touched_duplicates(root, &changed)
     };
-    observe_log(root, event, net_loc, &changed, &dups, &mode);
+    observe_log(
+        root,
+        AuditEvent {
+            event,
+            mode: &mode,
+            session,
+            net_loc,
+            changed: changed.len(),
+            dups: dups.as_deref().map(<[String]>::len),
+        },
+    );
     Some((mode, net_loc, changed, dups))
 }
 
-fn audit(root: &Path) -> ExitCode {
-    let Some((mode, net_loc, _, dups)) = gather(root, &["diff", "--numstat", "HEAD"], "stop_audit")
-    else {
+fn audit(root: &Path, session: &str) -> ExitCode {
+    let Some((mode, net_loc, _, dups)) = gather(
+        root,
+        &["diff", "--numstat", "HEAD"],
+        "stop_audit",
+        Some(session),
+    ) else {
         return ExitCode::SUCCESS; // not a git repo / git failed: fail open
     };
     if mode == "deny"
@@ -78,8 +97,12 @@ fn audit(root: &Path) -> ExitCode {
 /// when guard mode is deny and staged files touch duplicate blocks.
 /// Unlike the hooks this prints for humans — it runs in a terminal.
 pub fn run_precommit(root: &Path) -> ExitCode {
+    // session = None, and that is the honest value: `ce precommit`
+    // runs in a terminal, not as a hook, so no session owns it. The
+    // feed records null rather than inventing one, which is what lets
+    // the M4 sampler exclude non-session events instead of guessing.
     let Some((mode, net_loc, changed, dups)) =
-        gather(root, &["diff", "--cached", "--numstat"], "precommit")
+        gather(root, &["diff", "--cached", "--numstat"], "precommit", None)
     else {
         eprintln!("ce precommit: not a git repo (skipped)");
         return ExitCode::SUCCESS;
@@ -164,23 +187,33 @@ fn reason(net_loc: i64, dups: &[String]) -> String {
     )
 }
 
-fn observe_log(
-    root: &Path,
-    event: &str,
+/// One Stop-audit / precommit observe entry. A struct rather than
+/// positional parameters: the old signature was already at six, one
+/// past the scan's fn-params limit of 5, and session identity would
+/// have made it seven.
+struct AuditEvent<'a> {
+    event: &'a str,
+    mode: &'a str,
+    /// None for `ce precommit` — see the call site.
+    session: Option<&'a str>,
     net_loc: i64,
-    changed: &[String],
-    dups: &Option<Vec<String>>,
-    mode: &str,
-) {
+    changed: usize,
+    /// None = the dedup pipeline itself failed (A9f degraded), which
+    /// must never be flattened into "zero duplicates".
+    dups: Option<usize>,
+}
+
+fn observe_log(root: &Path, ev: AuditEvent) {
     crate::hookio::observe_append(
         root,
+        ev.session,
         serde_json::json!({
-            "event": event,
-            "mode": mode,
-            "net_loc": net_loc,
-            "changed_files": changed.len(),
-            "degraded": dups.is_none(),
-            "dup_blocks": dups.as_deref().map(<[String]>::len).unwrap_or(0),
+            "event": ev.event,
+            "mode": ev.mode,
+            "net_loc": ev.net_loc,
+            "changed_files": ev.changed,
+            "degraded": ev.dups.is_none(),
+            "dup_blocks": ev.dups.unwrap_or(0),
         }),
     );
 }
