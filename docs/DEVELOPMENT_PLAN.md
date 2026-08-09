@@ -247,16 +247,16 @@ PreToolUse 只做无需 AST 的廉价检查（见 §4.2）；AST 深判在 PostT
    降级事件计入 Stop 汇总——fail-open 但绝不静默失效。
 
 ### 5.10 仓库布局（M0 建立）
-
 ```
 CodeEraser/
-├── .claude-plugin/marketplace.json   # 本仓库即 marketplace
-├── plugin/                           # hooks.json, skills/, bin/(启动脚本)
-├── cli/                              # Rust workspace：ce（CLI+daemon+GUI 后端）
-├── core/                             # Haskell cabal：ce-core（判决层）
-├── contracts/                        # 契约版本化机制 + 双语言共享 golden fixtures
-├── docs/                             # 本计划、协议文档、评审记录
-└── memory/                           # cc-memory 本地状态（.gitignore 排除，不入库）
+├── plugin/       # 单插件 marketplace 根：.claude-plugin/{marketplace,plugin}.json
+│                 # （source "./" 自指）+ hooks/hooks.json。原写「在仓库根」与实现
+│                 # 不符；2026-08-08 拍板改计划对齐已验证装机的实现
+├── cli/          # Rust workspace：ce（CLI+daemon+GUI 后端，含 hookio/probe/audit）
+├── core/         # Haskell cabal：ce-core（判决层）
+├── contracts/    # 契约版本化机制 + 双语言共享 golden fixtures
+├── docs/         # 本计划、协议文档、评审记录
+└── memory/       # cc-memory 本地状态（.gitignore 排除，不入库）
 ```
 
 ## 6. 里程碑（工期为单人 + agent 协作的粗估，标 ± 者不确定度高）
