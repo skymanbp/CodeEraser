@@ -4,5 +4,6 @@
 //! endpoints on this same channel.
 
 pub mod client;
+mod coldstart;
 pub mod proto;
 pub mod server;

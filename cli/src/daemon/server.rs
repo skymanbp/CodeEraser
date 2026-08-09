@@ -3,13 +3,14 @@
 //! the serialization IS the multi-session concurrency model), exits
 //! after 30 min idle or on a version-skew hello.
 
+use super::coldstart;
 use super::proto::{DAEMON_PROTO, Request, Response, major, socket_name};
 use anyhow::{Context, Result};
 use interprocess::local_socket::traits::ListenerExt;
 use interprocess::local_socket::{GenericNamespaced, ListenerOptions, Stream, ToNsName};
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
 /// 30 min idle → exit (ADR-003). Overridable for tests only.
@@ -27,59 +28,6 @@ fn touch(start: Instant) {
     LAST_ACTIVITY_MS.store(start.elapsed().as_millis() as u64, Ordering::Relaxed);
 }
 
-/// Cold-start index state (ADR-003). A never-built index answers
-/// probes with matches=0 — indistinguishable from a genuine clean
-/// probe, which is the silent-failure class §5.9 forbids. So probes
-/// answer an explicit Error (the client maps any non-report to
-/// degraded and fails open) until the first build lands.
-const INDEX_BUILDING: u8 = 0;
-const INDEX_READY: u8 = 1;
-const INDEX_FAILED: u8 = 2;
-static INDEX_STATE: AtomicU8 = AtomicU8::new(INDEX_BUILDING);
-
-fn indexed_file_count(root: &Path) -> i64 {
-    use crate::dedup::{Params, index::Index};
-    Index::open(&root.join(".ce/index.db"), Params::default())
-        .and_then(|idx| idx.file_count())
-        .unwrap_or(0)
-}
-
-/// serve()-time init: an index with content is serveable as-is; a
-/// never-built one gets its ADR-003 background first build.
-fn init_index_state(root: &Path) {
-    if indexed_file_count(root) > 0 {
-        INDEX_STATE.store(INDEX_READY, Ordering::Release);
-        return;
-    }
-    let root = root.to_path_buf();
-    std::thread::spawn(move || {
-        eprintln!("ce daemon: cold start, building first index");
-        match crate::dedup::analyze(&root, None, None, None) {
-            Ok(_) => INDEX_STATE.store(INDEX_READY, Ordering::Release),
-            Err(e) => {
-                eprintln!("ce daemon: first index build failed: {e:#}");
-                INDEX_STATE.store(INDEX_FAILED, Ordering::Release);
-            }
-        }
-    });
-}
-
-/// READY, or FAILED healed by an out-of-process build (Stop audit,
-/// hand-run `ce dedup`) that landed an index since. BUILDING never
-/// short-circuits on a count check: analyze commits per file, so a
-/// mid-build count sees a partial index — serving it would be the
-/// blind window again, just shorter.
-fn index_ready(root: &Path) -> bool {
-    match INDEX_STATE.load(Ordering::Acquire) {
-        INDEX_READY => true,
-        INDEX_FAILED if indexed_file_count(root) > 0 => {
-            INDEX_STATE.store(INDEX_READY, Ordering::Release);
-            true
-        }
-        _ => false,
-    }
-}
-
 /// Serve until idle timeout, shutdown request, or version skew.
 pub fn serve(root: &Path) -> Result<()> {
     let root = std::fs::canonicalize(root).with_context(|| format!("root {}", root.display()))?;
@@ -95,7 +43,7 @@ pub fn serve(root: &Path) -> Result<()> {
     let start = Instant::now();
     touch(start);
     spawn_idle_watchdog(start);
-    init_index_state(&root); // after bind: a lost race spawns no build
+    coldstart::init(&root); // after bind: a lost race spawns no build
     eprintln!("ce daemon: serving {} on {name}", root.display());
     for conn in listener.incoming() {
         let stream = match conn {
@@ -209,7 +157,10 @@ fn hello_reply(proto: &str) -> (Response, bool) {
 
 fn dedup_reply(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>) -> Response {
     match run_dedup(root, min_tokens, min_distinct) {
-        Ok(report) => Response::DedupReport { report },
+        Ok(report) => {
+            coldstart::mark_ready();
+            Response::DedupReport { report }
+        }
         Err(e) => Response::Error {
             message: format!("{e:#}"),
         },
@@ -217,7 +168,7 @@ fn dedup_reply(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usiz
 }
 
 fn probe_reply(root: &Path, file_path: &str, content: &str) -> Response {
-    if !index_ready(root) {
+    if !coldstart::index_ready(root) {
         return Response::Error {
             message: "index cold start: first build in progress".into(),
         };
