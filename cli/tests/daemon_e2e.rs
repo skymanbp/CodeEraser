@@ -6,10 +6,46 @@
 use codeeraser::daemon::client;
 use codeeraser::daemon::proto::{Request, Response};
 use std::path::Path;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 mod common;
 use common::{seed_clone_pair, tmp as project_dir};
+
+/// ADR-003 cold start: a repo whose index was never built must never
+/// get a silent empty ProbeReport — that reply is indistinguishable
+/// from a genuine clean probe (the §5.9 silent-failure class). The
+/// daemon answers Error (client maps it to degraded, fail-open) until
+/// its background first build lands, then serves real matches with no
+/// dedup run or Stop audit ever having touched the repo.
+#[test]
+fn cold_start_probe_degrades_then_serves_matches() {
+    let root = project_dir("daemon-cold");
+    seed_clone_pair(&root);
+    let child = common::spawn_daemon_ready(&root);
+    let req = Request::Probe {
+        file_path: root.join("new.rs").display().to_string().replace('\\', "/"),
+        content: common::rust_fn(9),
+    };
+    let deadline = Instant::now() + Duration::from_secs(30);
+    loop {
+        match client::request(&root, &req).expect("probe") {
+            Response::ProbeReport { matches, .. } => {
+                let n = matches.as_array().expect("matches array").len();
+                assert!(n > 0, "silent empty report from a never-built index");
+                break; // build landed; the seeded clones are visible
+            }
+            Response::Error { .. } => {} // degraded: honest cold start
+            other => panic!("unexpected reply: {other:?}"),
+        }
+        assert!(Instant::now() < deadline, "first index build never landed");
+        std::thread::sleep(Duration::from_millis(100)); // poll the async build
+    }
+    match client::request(&root, &Request::Shutdown).expect("shutdown") {
+        Response::Bye => {}
+        other => panic!("expected bye, got {other:?}"),
+    }
+    common::wait_exit(child, "daemon after cold-start test");
+}
 
 #[test]
 fn ping_dedup_shutdown_roundtrip() {
