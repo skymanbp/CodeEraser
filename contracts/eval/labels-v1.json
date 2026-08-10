@@ -1,0 +1,1920 @@
+{
+ "schema": "ce.eval-labels/1.0.0",
+ "source_manifest": "2026-08-10T15:24:50",
+ "source_prelabels": "contracts/eval/prelabels-v1.json",
+ "method": "per-item review of all 200 labeling samples against the actual diff (agent review under user delegation 2026-08-10, recorded in the manifest's ground_truth field). Every sample with a nonzero moved count was re-dumped with git color-moved and each moved line inspected for content; blank-line cross-matches (plain mode matches ANY identical line, including empty ones) were reclassified as novel/deleted. Full review notes stay in the local .ce-eval/review/reviewed.ndjson (git-ignored, D2-7).",
+ "invariant": "for every row: added_novel+added_moved and removed_deleted+removed_moved equal the prelabel numstat totals",
+ "summary": {
+  "samples": 200,
+  "prelabel_exact": 194,
+  "corrections": 6,
+  "is_normal_true": 200,
+  "totals": {
+   "added_novel": 10455,
+   "added_moved": 32,
+   "removed_deleted": 975,
+   "removed_moved": 30
+  },
+  "samples_with_moves": 6
+ },
+ "corrections": [
+  {
+   "id": "08e4a7e316141033",
+   "prelabel": {
+    "added_novel": 29,
+    "added_moved": 3,
+    "removed_deleted": 17,
+    "removed_moved": 1
+   },
+   "final": {
+    "added_novel": 32,
+    "added_moved": 0,
+    "removed_deleted": 18,
+    "removed_moved": 0
+   },
+   "reason": "all 3in/1out moved lines are blank (color-moved blank-line cross-match artifact)"
+  },
+  {
+   "id": "1293b847937792d0",
+   "prelabel": {
+    "added_novel": 11,
+    "added_moved": 1,
+    "removed_deleted": 1,
+    "removed_moved": 2
+   },
+   "final": {
+    "added_novel": 12,
+    "added_moved": 0,
+    "removed_deleted": 3,
+    "removed_moved": 0
+   },
+   "reason": "all 1in/2out moved lines are blank (same artifact)"
+  },
+  {
+   "id": "43d74aa52e985f7f",
+   "prelabel": {
+    "added_novel": 78,
+    "added_moved": 10,
+    "removed_deleted": 100,
+    "removed_moved": 15
+   },
+   "final": {
+    "added_novel": 88,
+    "added_moved": 0,
+    "removed_deleted": 115,
+    "removed_moved": 0
+   },
+   "reason": "all 10in/15out moved lines are blank (same artifact)"
+  },
+  {
+   "id": "46e45cae1c37ab64",
+   "prelabel": {
+    "added_novel": 34,
+    "added_moved": 5,
+    "removed_deleted": 23,
+    "removed_moved": 1
+   },
+   "final": {
+    "added_novel": 39,
+    "added_moved": 0,
+    "removed_deleted": 24,
+    "removed_moved": 0
+   },
+   "reason": "all 5in/1out moved lines are blank (same artifact)"
+  },
+  {
+   "id": "53cf1e5b22d85428",
+   "prelabel": {
+    "added_novel": 43,
+    "added_moved": 6,
+    "removed_deleted": 68,
+    "removed_moved": 8
+   },
+   "final": {
+    "added_novel": 49,
+    "added_moved": 0,
+    "removed_deleted": 76,
+    "removed_moved": 0
+   },
+   "reason": "all 6in/8out moved lines are blank (same artifact)"
+  },
+  {
+   "id": "97c24eca4a2c04f2",
+   "prelabel": {
+    "added_novel": 45,
+    "added_moved": 24,
+    "removed_deleted": 29,
+    "removed_moved": 21
+   },
+   "final": {
+    "added_novel": 52,
+    "added_moved": 17,
+    "removed_deleted": 33,
+    "removed_moved": 17
+   },
+   "reason": "mixed: 17/17 genuine relocations kept as moved; 7in/4out blank-line artifacts reclassified to novel/deleted"
+  }
+ ],
+ "labels": [
+  {
+   "id": "005ecfb46e189193",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 4,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "00ae8343e3523c8b",
+   "added_novel": 25,
+   "added_moved": 0,
+   "removed_deleted": 14,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "02b5a73ba93a483a",
+   "added_novel": 49,
+   "added_moved": 5,
+   "removed_deleted": 9,
+   "removed_moved": 3,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "05616562fd4fd059",
+   "added_novel": 94,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "061210e2dbeb88bd",
+   "added_novel": 31,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "089105dfc6b775d6",
+   "added_novel": 41,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "08e4a7e316141033",
+   "added_novel": 32,
+   "added_moved": 0,
+   "removed_deleted": 18,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": false
+  },
+  {
+   "id": "098db14b5f5b8d0a",
+   "added_novel": 158,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "0a7dfe6624c12821",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "0baafe084486183a",
+   "added_novel": 55,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "0bf6f3bf834729ae",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "0c284ba854cd4c20",
+   "added_novel": 14,
+   "added_moved": 0,
+   "removed_deleted": 8,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "0c714e7141cda00f",
+   "added_novel": 68,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "0d24fe68d62ee5db",
+   "added_novel": 304,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "102db36fbfb4470f",
+   "added_novel": 46,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "11f9e07b53a555de",
+   "added_novel": 72,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1224f33c09dafaf8",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1293b847937792d0",
+   "added_novel": 12,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": false
+  },
+  {
+   "id": "12cc1febe013ea07",
+   "added_novel": 0,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1309df5467bf42c6",
+   "added_novel": 390,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "14393634d6c8962e",
+   "added_novel": 25,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "15bf791a8bc7a415",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "15ea5a7e5a982f99",
+   "added_novel": 6,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1610c6ed3e4794db",
+   "added_novel": 6,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "17c1fcda458a66af",
+   "added_novel": 0,
+   "added_moved": 0,
+   "removed_deleted": 11,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1916835b5c8f2046",
+   "added_novel": 12,
+   "added_moved": 0,
+   "removed_deleted": 4,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1bb34bb31a22576f",
+   "added_novel": 35,
+   "added_moved": 0,
+   "removed_deleted": 9,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1c4eee45d8a8fc10",
+   "added_novel": 39,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1c7e2c2376fd7fe6",
+   "added_novel": 16,
+   "added_moved": 0,
+   "removed_deleted": 8,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1cf2c41f93a6eb9e",
+   "added_novel": 71,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1db73467579f9b33",
+   "added_novel": 15,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1e8ed3396aefaa91",
+   "added_novel": 80,
+   "added_moved": 0,
+   "removed_deleted": 99,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "1fefe81ec71fb7cc",
+   "added_novel": 67,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "237de66e0c451395",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 2,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "246a12f61e84b494",
+   "added_novel": 78,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "28d187fa021af70e",
+   "added_novel": 217,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "28f4d15b8654878d",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "2a17495efa7a592c",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "2b29e7bb5756cc6e",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "2cc6be0fe96bcb77",
+   "added_novel": 51,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "2f04eadd2f7e992a",
+   "added_novel": 39,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "30729cb3285bda14",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "31a57b34d75056ab",
+   "added_novel": 36,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "31aaa42c56e3915e",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "31df4eb04c0ef633",
+   "added_novel": 93,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "32cdc871a08bc26e",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "342b87208b60dffc",
+   "added_novel": 32,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "35a32161c49feb45",
+   "added_novel": 60,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3906447f6931e695",
+   "added_novel": 29,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "399d3dea30a4595f",
+   "added_novel": 81,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3a36ecd8fd4badce",
+   "added_novel": 9,
+   "added_moved": 2,
+   "removed_deleted": 4,
+   "removed_moved": 2,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3a5f17a0770c7a9a",
+   "added_novel": 42,
+   "added_moved": 3,
+   "removed_deleted": 36,
+   "removed_moved": 3,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3d164968f4e7887c",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3edeeccc3b492913",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3f0273a98efbd86b",
+   "added_novel": 118,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "3f8c5f6e0505b9d7",
+   "added_novel": 30,
+   "added_moved": 0,
+   "removed_deleted": 10,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "43d74aa52e985f7f",
+   "added_novel": 88,
+   "added_moved": 0,
+   "removed_deleted": 115,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": false
+  },
+  {
+   "id": "4598fd6f35529c3a",
+   "added_novel": 61,
+   "added_moved": 0,
+   "removed_deleted": 46,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "46af3ea0051a34ba",
+   "added_novel": 65,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "46e45cae1c37ab64",
+   "added_novel": 39,
+   "added_moved": 0,
+   "removed_deleted": 24,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": false
+  },
+  {
+   "id": "46fe0422c3b47eef",
+   "added_novel": 14,
+   "added_moved": 0,
+   "removed_deleted": 7,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "473a717d7ec2fa8a",
+   "added_novel": 84,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "47de1c0dac85da17",
+   "added_novel": 29,
+   "added_moved": 0,
+   "removed_deleted": 5,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "47e085b58bfa8623",
+   "added_novel": 28,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "499817295d6c0b9c",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "49fdd251d28ad590",
+   "added_novel": 202,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "4a53d6d6bceee7b6",
+   "added_novel": 242,
+   "added_moved": 0,
+   "removed_deleted": 2,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "4adef3ae79aa847c",
+   "added_novel": 33,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "4b2ebba347254dbd",
+   "added_novel": 31,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "4bd6ab50a4d841ac",
+   "added_novel": 27,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "4e7becbc4949f6ab",
+   "added_novel": 24,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "503edfc5d965b7ca",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "509fdc0d5c4dbdc4",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 4,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "51c0c989c453c4ae",
+   "added_novel": 60,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "51e8f509094b5ea5",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "53a545cf5868db64",
+   "added_novel": 146,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "53c74f93d524aa9d",
+   "added_novel": 8,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "53cf1e5b22d85428",
+   "added_novel": 49,
+   "added_moved": 0,
+   "removed_deleted": 76,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": false
+  },
+  {
+   "id": "54c02d5a4f4ca259",
+   "added_novel": 67,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "550ab0163f42bbac",
+   "added_novel": 64,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "56d6a8fc5794e36c",
+   "added_novel": 120,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "57c61ee821236758",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "585c8d840ee140f4",
+   "added_novel": 282,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "5a4718012dab9594",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "5aceba024a252144",
+   "added_novel": 25,
+   "added_moved": 0,
+   "removed_deleted": 25,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "5b3f62918d9c9036",
+   "added_novel": 236,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "5e8aba7f7692e197",
+   "added_novel": 3,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "5ec67b67986d6cf6",
+   "added_novel": 320,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "5ff4f7b6c957de0a",
+   "added_novel": 83,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "625d0e851a3dbaf1",
+   "added_novel": 34,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "62b4ff2e6781b46f",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "63238634289ccd7d",
+   "added_novel": 12,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "637a556c0b3e0c11",
+   "added_novel": 36,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "65767ea47d1c72f4",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 2,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "66cad9c74c29ce42",
+   "added_novel": 114,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "678156d7b06ec3cc",
+   "added_novel": 113,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "67d523934064953c",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 2,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "69e5d1931458274a",
+   "added_novel": 23,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "6b0c5ce517b7c17c",
+   "added_novel": 43,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "6d5c34e041a020fd",
+   "added_novel": 69,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "6dd5578bf7d03370",
+   "added_novel": 171,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "71a7590659b5a841",
+   "added_novel": 16,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7246aaa8058db109",
+   "added_novel": 70,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "732fbe008805ef25",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7547c7eef41d28fc",
+   "added_novel": 10,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7567e9516b531b5a",
+   "added_novel": 9,
+   "added_moved": 0,
+   "removed_deleted": 6,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "757c869f038206bd",
+   "added_novel": 81,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7856f9b0f4ad60a4",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7938fa908258a6ff",
+   "added_novel": 38,
+   "added_moved": 0,
+   "removed_deleted": 7,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7a649700b270b492",
+   "added_novel": 18,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7a8656c2f37cce19",
+   "added_novel": 6,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7b9e16085ca84f5e",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7d7e4bc4d79af1b5",
+   "added_novel": 23,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "7ea2b03fdf66f3fc",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "804abea0e4963ee7",
+   "added_novel": 3,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "805153e61a1e0e32",
+   "added_novel": 5,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "812bad0b8e748cad",
+   "added_novel": 8,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8243816acf60aeaa",
+   "added_novel": 9,
+   "added_moved": 0,
+   "removed_deleted": 4,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8430a7a01c93a380",
+   "added_novel": 111,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "84947b2aa8293ace",
+   "added_novel": 264,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "85787dc1fbb05afb",
+   "added_novel": 36,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "860d0fbdf1db81d3",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "867132a53bcbf011",
+   "added_novel": 55,
+   "added_moved": 0,
+   "removed_deleted": 111,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8733223db111ebe3",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8867bbb52c94303d",
+   "added_novel": 80,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8896bdb9791c5479",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8934a22375235f5c",
+   "added_novel": 10,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "896884b4948053c3",
+   "added_novel": 9,
+   "added_moved": 0,
+   "removed_deleted": 9,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "89b942c35189a5c2",
+   "added_novel": 17,
+   "added_moved": 0,
+   "removed_deleted": 8,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8a4a9cf47d34e3e8",
+   "added_novel": 8,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8ca644fab2df64e1",
+   "added_novel": 47,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8deee5964599eeda",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "8e60fc97a992ce50",
+   "added_novel": 45,
+   "added_moved": 0,
+   "removed_deleted": 2,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "91d78363f6da39cd",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "96c922db91fcdb12",
+   "added_novel": 115,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "97c24eca4a2c04f2",
+   "added_novel": 52,
+   "added_moved": 17,
+   "removed_deleted": 33,
+   "removed_moved": 17,
+   "is_normal": true,
+   "prelabel_ok": false
+  },
+  {
+   "id": "9db3d16de916b9da",
+   "added_novel": 9,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "9e4fd4e98e4dab7d",
+   "added_novel": 150,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "a01c2e28e7fb57aa",
+   "added_novel": 8,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "a3c165b14ef25e99",
+   "added_novel": 10,
+   "added_moved": 0,
+   "removed_deleted": 5,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "a7c0b4e83872d77b",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "ac595413ad23f942",
+   "added_novel": 9,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "ad2b2b52133acdfd",
+   "added_novel": 12,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "af313de1d1e7a0eb",
+   "added_novel": 6,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b19c5aad73bba4ac",
+   "added_novel": 20,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b1dfe0fbd1566fb1",
+   "added_novel": 41,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b4575f65f93a004f",
+   "added_novel": 3,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b45acf1f2025f2c8",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b5c1623744869126",
+   "added_novel": 67,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b60e1ff2c9ba0685",
+   "added_novel": 10,
+   "added_moved": 3,
+   "removed_deleted": 3,
+   "removed_moved": 3,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b78ad03bb5500c37",
+   "added_novel": 32,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b8c0a4536127c599",
+   "added_novel": 8,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "b97da38323fb595d",
+   "added_novel": 19,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "ba0dbfc0fe437f0a",
+   "added_novel": 56,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "ba56fc8dfa85fc54",
+   "added_novel": 28,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "ba9cf9bae7e6d4b0",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "bb0e617f5de274da",
+   "added_novel": 16,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "bbb089e67be581f8",
+   "added_novel": 69,
+   "added_moved": 0,
+   "removed_deleted": 63,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "bc8a8737792482a8",
+   "added_novel": 3,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "bf3d4f7d956ceb52",
+   "added_novel": 349,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "c072c393f7436d2e",
+   "added_novel": 136,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "c072f528d12afdf1",
+   "added_novel": 35,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "c1aad03ae796b4ad",
+   "added_novel": 223,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "c7fd66f9bd992cb8",
+   "added_novel": 20,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "caa370924a1ba17c",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 3,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "cb55e847fd48e174",
+   "added_novel": 2,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "cb6e322bd0b4278b",
+   "added_novel": 41,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "cc81ac032cd77fee",
+   "added_novel": 81,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "cd494cfc6fa3c282",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "cea117a8f526e518",
+   "added_novel": 44,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d0ab979d9e3c789f",
+   "added_novel": 38,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d1b90d4319460808",
+   "added_novel": 14,
+   "added_moved": 0,
+   "removed_deleted": 5,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d1d605237407e332",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d3fba341aecee7a9",
+   "added_novel": 11,
+   "added_moved": 0,
+   "removed_deleted": 7,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d6710911c95dcacf",
+   "added_novel": 219,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d6b91426d969a761",
+   "added_novel": 109,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "d6fd70d1d749d534",
+   "added_novel": 68,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "dc3ba9bfd6002d3b",
+   "added_novel": 1,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "dd3b31f40d14f71f",
+   "added_novel": 203,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e1445f2fe3a23b61",
+   "added_novel": 50,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e14bd5bb2c32be43",
+   "added_novel": 4,
+   "added_moved": 0,
+   "removed_deleted": 2,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e5038a060907355f",
+   "added_novel": 98,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e5f01887e67d7bc6",
+   "added_novel": 14,
+   "added_moved": 0,
+   "removed_deleted": 4,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e6f636e19ce1aa71",
+   "added_novel": 15,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e7b5cbb6c8f7b801",
+   "added_novel": 311,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e7f9d6e4239baf2f",
+   "added_novel": 31,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "e9128315d1c6b3d8",
+   "added_novel": 86,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "edae5fbe806fd294",
+   "added_novel": 15,
+   "added_moved": 2,
+   "removed_deleted": 5,
+   "removed_moved": 2,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "ee477e0bc118f98b",
+   "added_novel": 7,
+   "added_moved": 0,
+   "removed_deleted": 5,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "eebacc9ffe315115",
+   "added_novel": 194,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "efc5ca5965c375b4",
+   "added_novel": 117,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "f39cabbe732b5de0",
+   "added_novel": 8,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "f40678d2681bc6ef",
+   "added_novel": 16,
+   "added_moved": 0,
+   "removed_deleted": 8,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "f5f2cbb8c742c855",
+   "added_novel": 67,
+   "added_moved": 0,
+   "removed_deleted": 68,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "f6032ad445988880",
+   "added_novel": 10,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "fac5baaf31d0e46c",
+   "added_novel": 6,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "fae75fa04e113497",
+   "added_novel": 0,
+   "added_moved": 0,
+   "removed_deleted": 1,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "fbf4806375a01ca8",
+   "added_novel": 9,
+   "added_moved": 0,
+   "removed_deleted": 6,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "fdee01218e608293",
+   "added_novel": 242,
+   "added_moved": 0,
+   "removed_deleted": 0,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  },
+  {
+   "id": "fe2460bb0b97ba07",
+   "added_novel": 15,
+   "added_moved": 0,
+   "removed_deleted": 4,
+   "removed_moved": 0,
+   "is_normal": true,
+   "prelabel_ok": true
+  }
+ ]
+}

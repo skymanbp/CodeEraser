@@ -35,11 +35,27 @@
    五语言外、前态不可知、超 1 MiB、历史重放、guard 时代无 feed 链接
    （58 个编辑，纯净但无机器证据，不采）、deny 测试仓（0）。
 
-## Ground truth 溯源（标注子集 200）
+## Ground truth（标注子集 200，已定稿 2026-08-10）
 
-`git diff -M -C` 交叉 + 启发式预标四分类（matched/novel/moved/deleted），
-随后**由 agent 逐条审核全部 200 条**（用户 2026-08-10 明确委托，替代
-计划原文的人工标注；预标与审核修正分列存储，锚定偏差可审计）。
+三层分列存储，锚定偏差可审计：
+
+1. **预标** [contracts/eval/prelabels-v1.json](../contracts/eval/prelabels-v1.json)：
+   `git diff --no-index -U0 --color-moved=plain --color-moved-ws=allow-indentation-change`
+   的 SGR 行分类（31/32=deleted/novel，35/36=moved），逐样本 numstat 交叉断言。
+2. **逐条审核**（agent 全 200 条过目真实 diff，用户 2026-08-10 委托，替代计划
+   原文的人工标注）：194 条预标精确；**6 条修正，根因单一**——plain 模式对
+   **空行**也做跨位匹配，纯空行"移动"是伪影（5 条全伪影 + 1 条真移动 17/17
+   混伪影 7/4，全部 11 个带 moved 计数样本逐行 dump 甄别）。修正只在
+   novel/moved、deleted/moved 间移行，numstat 总和守恒。
+   完整审核注记（含各样本判定依据）留本地 `.ce-eval/review/reviewed.ndjson`。
+3. **定稿** [contracts/eval/labels-v1.json](../contracts/eval/labels-v1.json)：
+   200 行终值 + 6 条修正显式列出（预标值/终值/机制）。CI 门
+   `cargo test --test eval_labels` 校验 labels ↔ prelabels 除声明修正外逐行
+   一致、每行拆分总和守恒（红证：扰动任一数字即红）。
+
+终值：novel 10,455 / moved-in 32 / deleted 975 / moved-out 30；真移动样本
+6/200。**FPR ground truth：200/200 均 `is_normal=true`**——语料无异常编辑，
+M4 误报门（≤1%/500 行）的分母将全部来自正常编辑回放。
 
 ## 复跑 / 校验
 
