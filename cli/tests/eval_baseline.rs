@@ -16,29 +16,11 @@
 //! recall and the other 100% recall at ~50% precision. L1 must beat
 //! both — detect the genuine moves without the blank-line artifacts.
 
+mod eval_support;
+
+use eval_support::{CLASSES, by_id, load, numstat};
 use serde_json::{Value, json};
 use std::collections::HashMap;
-use std::process::Command;
-
-const CLASSES: [&str; 4] = [
-    "added_novel",
-    "added_moved",
-    "removed_deleted",
-    "removed_moved",
-];
-
-fn load(path: &str) -> Value {
-    serde_json::from_str(&std::fs::read_to_string(path).expect(path)).expect(path)
-}
-
-fn by_id<'a>(doc: &'a Value, key: &str) -> HashMap<&'a str, &'a Value> {
-    doc[key]
-        .as_array()
-        .expect(key)
-        .iter()
-        .map(|r| (r["id"].as_str().expect("id"), r))
-        .collect()
-}
 
 /// Score one variant's per-sample predictions against the labels:
 /// sample-exact count, per-class absolute line error, and moved-class
@@ -126,27 +108,6 @@ fn baseline_l0_matches_derivation() {
     assert_eq!(committed, build_doc(&pre, &lab), "baseline drifted");
 }
 
-fn numstat(a: &std::path::Path, b: &std::path::Path) -> (u64, u64) {
-    let out = Command::new("git")
-        .args([
-            "diff",
-            "--no-index",
-            "--numstat",
-            "-M",
-            "-C",
-            "--find-copies-harder",
-        ])
-        .arg(a)
-        .arg(b)
-        .output()
-        .expect("git diff numstat");
-    let text = String::from_utf8_lossy(&out.stdout);
-    let mut fields = text.split_whitespace();
-    let add = fields.next().and_then(|s| s.parse().ok()).unwrap_or(0);
-    let del = fields.next().and_then(|s| s.parse().ok()).unwrap_or(0);
-    (add, del)
-}
-
 /// Run the plan-literal L0 command on every labeling sample, assert it
 /// reproduces the recorded numstat, then write the baseline file.
 /// Run: CE_EVAL_OUT=<dir> cargo test --test eval_baseline -- --ignored --nocapture
@@ -169,7 +130,7 @@ fn generate_baseline_after_git_verification() {
         let b = tmp.join("b");
         std::fs::write(&a, sample["before"].as_str().unwrap()).expect("a");
         std::fs::write(&b, sample["after"].as_str().unwrap()).expect("b");
-        let (add, del) = numstat(&a, &b);
+        let (add, del) = numstat(&a, &b, &["-M", "-C", "--find-copies-harder"]);
         assert_eq!(add, row["numstat_added"].as_u64().unwrap(), "{id}: added");
         assert_eq!(
             del,

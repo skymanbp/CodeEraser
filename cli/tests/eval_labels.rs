@@ -4,28 +4,11 @@
 //! sums. Runs in CI on the two committed files — the local review
 //! notes are not needed to verify the published ground truth.
 
+mod eval_support;
+
+use eval_support::{CLASSES, by_id, load};
 use serde_json::Value;
 use std::collections::HashMap;
-
-const CLASSES: [&str; 4] = [
-    "added_novel",
-    "added_moved",
-    "removed_deleted",
-    "removed_moved",
-];
-
-fn load(path: &str) -> Value {
-    serde_json::from_str(&std::fs::read_to_string(path).expect(path)).expect(path)
-}
-
-fn by_id<'a>(doc: &'a Value, key: &str) -> HashMap<&'a str, &'a Value> {
-    doc[key]
-        .as_array()
-        .expect(key)
-        .iter()
-        .map(|r| (r["id"].as_str().expect("id"), r))
-        .collect()
-}
 
 /// Uncorrected rows must match the prelabel exactly; every row's class
 /// split must add back up to the prelabel numstat totals.

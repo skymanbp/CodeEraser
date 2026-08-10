@@ -11,6 +11,8 @@
 //!
 //! Run: CE_EVAL_OUT=<dir> cargo test --test eval_prelabel -- --ignored --nocapture
 
+mod eval_support;
+
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -85,20 +87,6 @@ fn color_moved_counts(a: &Path, b: &Path) -> LineClasses {
     classes
 }
 
-fn numstat(a: &Path, b: &Path) -> (usize, usize) {
-    let out = Command::new("git")
-        .args(["diff", "--no-index", "--numstat"])
-        .arg(a)
-        .arg(b)
-        .output()
-        .expect("git diff --numstat");
-    let text = String::from_utf8_lossy(&out.stdout);
-    let mut fields = text.split_whitespace();
-    let add = fields.next().and_then(|s| s.parse().ok()).unwrap_or(0);
-    let del = fields.next().and_then(|s| s.parse().ok()).unwrap_or(0);
-    (add, del)
-}
-
 fn prelabel_one(tmp: &Path, id: &str, sample: &Value) -> Value {
     let before = sample["before"].as_str().expect("before");
     let after = sample["after"].as_str().expect("after");
@@ -106,7 +94,8 @@ fn prelabel_one(tmp: &Path, id: &str, sample: &Value) -> Value {
     let b = tmp.join("b");
     std::fs::write(&a, before).expect("write a");
     std::fs::write(&b, after).expect("write b");
-    let (add, del) = numstat(&a, &b);
+    let (add, del) = eval_support::numstat(&a, &b, &[]);
+    let (add, del) = (add as usize, del as usize);
     let c = color_moved_counts(&a, &b);
     // moved lines are still counted by numstat as +/-; the split is
     // the whole point of the color pass
