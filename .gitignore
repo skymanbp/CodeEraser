@@ -32,6 +32,11 @@ contracts/fixtures/crosscheck/**/*.json
 # ce's own per-project index (ce dedup)
 .ce/
 
+# M4 evaluation-set payloads: full file contents from OTHER private
+# repositories (user decision 2026-08-10 — manifest in-repo, samples
+# local). Regenerable + hash-verifiable via tests/eval_extract.
+/.ce-eval/
+
 # === cc-memory (local session state, NOT versioned) ===
 # User decision 2026-08-07: the whole memory/ tree stays out of the repo —
 # MEMORY/PLAN/PROGRESS.md are machine-local handoff state, not content.
