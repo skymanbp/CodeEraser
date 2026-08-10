@@ -53,6 +53,23 @@ Stop 审计无变更时也跳过刷新——全新仓库首会话 probe 一律
 （"silent empty report"）新码绿；新鲜仓库实测首探即 deny（小仓首建在
 懒启动窗口内完成），全程未手动跑过 `ce dedup`。
 
+## 4. M3 dogfood 收口 census（2026-08-10）
+
+D2-2 判据全部达标（口径：`D:\Projects\*\.ce\observe.ndjson` 中
+schema `ce.observe/0.2.0` 的 distinct `session_id`；计数起点 = 2026-08-08
+22:03 重装，此前 1289 条 0.1.0 事件无会话身份、仅作旁证）：
+
+| 判据 | 目标 | 实测 |
+|---|---|---|
+| dogfood 会话数 | ≥ 10 | **10**（7 个项目：lore_disaster / CodeEraser / docsbot×2 / cc-memory×2 / Autoshop / interview-helper / cc-tree / anti-laziness） |
+| 其中观察档 | ≥ 5 | **10**（全部纯 observe，零拦截塑形——M4 语料满足 D2-1 纯净度） |
+| 会话累计 hook 延迟中位数 | < 15 s/百次编辑 | **0.982 s**（按会话求 probe 均值×100 取中位；min 0.196 / max 2.111） |
+
+跨度 08-08 22:04 → 08-10 04:59；共 2,671 probe + 225 stop_audit，
+degraded 仅 1 次（ce 重装瞬间探针连不上 daemon，fail-open 且如实标注）。
+用户拍板（2026-08-08）：计数只取自然积累，绝不模拟对话凑数；
+测试仓库的 headless 会话（§1）不在 dogfood feed 内，未混入计数。
+
 ## 复跑
 
 ```
@@ -60,4 +77,5 @@ Stop 审计无变更时也跳过刷新——全新仓库首会话 probe 一律
 claude -p --allowedTools "Write" < prompt.txt   # prompt 要求逐字写入 dup.py
 # 冷启动回归
 cargo test --test daemon_e2e cold_start
+# census：扫 D:\Projects\*\.ce\observe.ndjson，按 0.2.0 行 distinct session_id 计数
 ```

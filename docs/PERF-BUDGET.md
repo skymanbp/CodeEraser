@@ -44,7 +44,9 @@ hook e2e = `hook_e2e_p95_under_1s`）。
 补充口径：
 
 - 环节 2 的 Defender **首扫**（新编译 exe 第一次运行）不计入常规预算，单列记录（M0 验收原文）。
-- 会话累计口径：hook 延迟中位数 < 15 s / 百次编辑（M3 验收）。
+- 会话累计口径：hook 延迟中位数 < 15 s / 百次编辑（M3 验收）——**实测 0.982 s**
+  （2026-08-10 定稿：0.2.0 feed 全量 10 会话、2,671 次 probe，按会话求
+  均值×100 后取中位；min 0.196 / max 2.111 s，census 见 T1-INTERCEPT.md §4）。✅
 - daemon 冷启动（首次索引构建）不占热路径——未就绪期显式降级为廉价检查档（ADR-003）。
 - 复测命令：`cli/` 下 `cargo build --release` 后
   `1..10 | %{ (Measure-Command { .\target\release\ce.exe --version }).TotalMilliseconds }`。
