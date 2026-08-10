@@ -1,0 +1,1814 @@
+{
+  "commits": [
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": "cli/src/scan/metrics/cognitive.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/src/scan/metrics/cyclo.rs",
+          "before": "cli/src/scan/metrics/cyclo.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "cli/src/scan/metrics/naming.rs",
+          "before": "cli/src/scan/metrics/naming.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/src/scan/walk.rs",
+          "before": "cli/src/scan/walk.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 67,
+          "added_moved": 9,
+          "added_novel": 58,
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "deleted": 37,
+          "removed_deleted": 28,
+          "removed_moved": 9
+        },
+        {
+          "added": 51,
+          "added_moved": 0,
+          "added_novel": 51,
+          "after": "cli/tests/divergence_stances.rs",
+          "before": "cli/tests/divergence_stances.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 21,
+          "added_moved": 0,
+          "added_novel": 21,
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": "cli/tests/sonar_whitepaper.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "551fa4111e5e43084cca851ad419a3c0ea8aedc1",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 166,
+          "added_moved": 0,
+          "added_novel": 166,
+          "after": "cli/src/dedup/index.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 107,
+          "added_moved": 0,
+          "added_novel": 107,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 112,
+          "added_moved": 0,
+          "added_novel": 112,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 1,
+          "added_novel": 31,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 6,
+          "removed_deleted": 5,
+          "removed_moved": 1
+        },
+        {
+          "added": 116,
+          "added_moved": 0,
+          "added_novel": 116,
+          "after": "cli/tests/dedup_index.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "d7a4bdbee8ea08a3a850729ecb9c1b0d7fb926dd",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 7,
+        "out": 7
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 33,
+          "added_moved": 1,
+          "added_novel": 32,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 23,
+          "removed_deleted": 15,
+          "removed_moved": 8
+        },
+        {
+          "added": 42,
+          "added_moved": 0,
+          "added_novel": 42,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 129,
+          "added_moved": 0,
+          "added_novel": 129,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 59,
+          "removed_deleted": 59,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 7,
+          "added_novel": 8,
+          "after": "cli/src/dedup/tokens.rs",
+          "before": "cli/src/dedup/tokens.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 152,
+          "added_moved": 0,
+          "added_novel": 152,
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/src/dedup/tokens.rs",
+          "units": [
+            "stream"
+          ]
+        }
+      ],
+      "sha": "384d4c790283e5ebdd25d21f0371aee3960eeb6c",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 49,
+          "added_moved": 0,
+          "added_novel": 49,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 49,
+          "added_moved": 0,
+          "added_novel": 49,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 15,
+          "removed_deleted": 15,
+          "removed_moved": 0
+        },
+        {
+          "added": 50,
+          "added_moved": 4,
+          "added_novel": 46,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 28,
+          "removed_deleted": 24,
+          "removed_moved": 4
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "cli/src/dedup/tokens.rs",
+          "before": "cli/src/dedup/tokens.rs",
+          "deleted": 26,
+          "removed_deleted": 26,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 31,
+          "added_moved": 0,
+          "added_novel": 31,
+          "after": "cli/tests/dedup_core.rs",
+          "before": "cli/tests/dedup_core.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 0,
+          "added_novel": 34,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 0,
+          "added_novel": 34,
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": "cli/tests/dedup_pairs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/dedup_property.rs",
+          "before": "cli/tests/dedup_property.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "b2bf52ae133c0af9533974aee4328de4bb760367",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 17,
+          "added_moved": 6,
+          "added_novel": 11,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 9,
+          "removed_deleted": 3,
+          "removed_moved": 6
+        }
+      ],
+      "relocated_units": [],
+      "sha": "3ebefd1395a80e74984ebc22537df561d4ef79ff",
+      "within_file": {
+        "in": 6,
+        "out": 6
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 95,
+          "added_moved": 0,
+          "added_novel": 95,
+          "after": "cli/src/daemon/client.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/daemon/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 67,
+          "added_moved": 0,
+          "added_novel": 67,
+          "after": "cli/src/daemon/proto.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 169,
+          "added_moved": 0,
+          "added_novel": 169,
+          "after": "cli/src/daemon/server.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 2,
+          "added_novel": 21,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 3,
+          "removed_deleted": 1,
+          "removed_moved": 2
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 43,
+          "added_moved": 0,
+          "added_novel": 43,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 154,
+          "added_moved": 0,
+          "added_novel": 154,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "270710454db908bf5f840448560c749605d12f89",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 2
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 16,
+          "added_moved": 5,
+          "added_novel": 11,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 12,
+          "removed_deleted": 7,
+          "removed_moved": 5
+        }
+      ],
+      "relocated_units": [],
+      "sha": "06268248d3cd3cb2eb6beabbe607f46d679a6b64",
+      "within_file": {
+        "in": 5,
+        "out": 5
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 6,
+        "out": 7
+      },
+      "pairs": [
+        {
+          "added": 60,
+          "added_moved": 12,
+          "added_novel": 48,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 51,
+          "removed_deleted": 38,
+          "removed_moved": 13
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "cli/src/dedup/probe.rs",
+          "before": "cli/src/dedup/probe.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "cli/tests/probe_gate.rs",
+          "before": "cli/tests/probe_gate.rs",
+          "deleted": 40,
+          "removed_deleted": 40,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "d5c2fe9f568c8a4adeeaa259a4956ed4898b9c78",
+      "within_file": {
+        "in": 12,
+        "out": 13
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 2
+      },
+      "pairs": [
+        {
+          "added": 36,
+          "added_moved": 0,
+          "added_novel": 36,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 136,
+          "added_moved": 0,
+          "added_novel": 136,
+          "after": "cli/src/mcp.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 9,
+          "added_novel": 23,
+          "after": "cli/src/scan/mod.rs",
+          "before": "cli/src/scan/mod.rs",
+          "deleted": 18,
+          "removed_deleted": 9,
+          "removed_moved": 9
+        },
+        {
+          "added": 130,
+          "added_moved": 0,
+          "added_novel": 130,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "0105efa55e63d4ca98ed8c038b5fe0cdaceb2e54",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 30,
+          "added_moved": 2,
+          "added_novel": 28,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 43,
+          "removed_deleted": 39,
+          "removed_moved": 4
+        },
+        {
+          "added": 45,
+          "added_moved": 0,
+          "added_novel": 45,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 17,
+          "removed_deleted": 17,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "7917643211265749f56d9606935d2942af1ce56f",
+      "within_file": {
+        "in": 2,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "cli/tests/daemon_e2e.rs",
+          "lines": 1,
+          "side": "added",
+          "why": "freshly authored seed line; content coincides with removals from other files"
+        }
+      ],
+      "cross_file": {
+        "in": 63,
+        "out": 199
+      },
+      "nonsignificant": {
+        "in": 15,
+        "out": 65
+      },
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 86,
+          "removed_deleted": 52,
+          "removed_moved": 34
+        },
+        {
+          "added": 141,
+          "added_moved": 63,
+          "added_novel": 78,
+          "after": "cli/tests/common/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 81,
+          "removed_deleted": 50,
+          "removed_moved": 31
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 26,
+          "removed_deleted": 12,
+          "removed_moved": 14
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/tests/dedup_property.rs",
+          "before": "cli/tests/dedup_property.rs",
+          "deleted": 21,
+          "removed_deleted": 16,
+          "removed_moved": 5
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "deleted": 59,
+          "removed_deleted": 19,
+          "removed_moved": 40
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/tests/health_plugin.rs",
+          "before": "cli/tests/health_plugin.rs",
+          "deleted": 35,
+          "removed_deleted": 16,
+          "removed_moved": 19
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 35,
+          "removed_deleted": 13,
+          "removed_moved": 22
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "deleted": 44,
+          "removed_deleted": 27,
+          "removed_moved": 17
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/probe_gate.rs",
+          "before": "cli/tests/probe_gate.rs",
+          "deleted": 44,
+          "removed_deleted": 27,
+          "removed_moved": 17
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn",
+            "git",
+            "seed_sources",
+            "build_index",
+            "run_hook",
+            "spawn_daemon_ready",
+            "last_observe",
+            "shutdown_daemon",
+            "wait_exit"
+          ]
+        }
+      ],
+      "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "cli/src/dedup/mod.rs",
+          "lines": 2,
+          "side": "removed",
+          "why": "run() params became pub struct fields in the same file (textually changed by `pub`); git cross-paired the removals to main.rs's own within-file enum-to-struct restructure"
+        },
+        {
+          "file": "cli/tests/dedup_check.rs",
+          "lines": 1,
+          "side": "added",
+          "why": "file created in this commit; seed line freshly authored, content coincides with removals elsewhere"
+        }
+      ],
+      "cross_file": {
+        "in": 2,
+        "out": 3
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/src/config.rs",
+          "before": "cli/src/config.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 35,
+          "added_moved": 15,
+          "added_novel": 20,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 33,
+          "removed_deleted": 16,
+          "removed_moved": 17
+        },
+        {
+          "added": 17,
+          "added_moved": 4,
+          "added_novel": 13,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 5,
+          "removed_deleted": 3,
+          "removed_moved": 2
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 7,
+          "removed_deleted": 6,
+          "removed_moved": 1
+        },
+        {
+          "added": 35,
+          "added_moved": 0,
+          "added_novel": 35,
+          "after": "cli/tests/dedup_check.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 12,
+          "removed_deleted": 10,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "seed_clone_pair"
+          ]
+        }
+      ],
+      "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392",
+      "within_file": {
+        "in": 17,
+        "out": 19
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 2
+      },
+      "pairs": [
+        {
+          "added": 49,
+          "added_moved": 9,
+          "added_novel": 40,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 27,
+          "removed_deleted": 18,
+          "removed_moved": 9
+        }
+      ],
+      "relocated_units": [],
+      "sha": "ec2d00756cbd53f09cefd658eedadb091c516720",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 5,
+        "out": 5
+      },
+      "nonsignificant": {
+        "in": 4,
+        "out": 4
+      },
+      "pairs": [
+        {
+          "added": 55,
+          "added_moved": 11,
+          "added_novel": 44,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 42,
+          "removed_deleted": 31,
+          "removed_moved": 11
+        },
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 27,
+          "added_moved": 1,
+          "added_novel": 26,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 15,
+          "removed_deleted": 9,
+          "removed_moved": 6
+        },
+        {
+          "added": 11,
+          "added_moved": 5,
+          "added_novel": 6,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "seed_git_clone_repo"
+          ]
+        }
+      ],
+      "sha": "a3cf54d1f113f693a593fb6719e2c532d59c6c25",
+      "within_file": {
+        "in": 12,
+        "out": 12
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 13,
+        "out": 26
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 6
+      },
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 6,
+          "added_novel": 6,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 31,
+          "removed_deleted": 12,
+          "removed_moved": 19
+        },
+        {
+          "added": 11,
+          "added_moved": 5,
+          "added_novel": 6,
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "deleted": 30,
+          "removed_deleted": 12,
+          "removed_moved": 18
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 41,
+          "added_moved": 13,
+          "added_novel": 28,
+          "after": "cli/src/hookio.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/src/hookio.rs",
+          "units": [
+            "read_envelope",
+            "observe_append"
+          ]
+        }
+      ],
+      "sha": "6d8824e204dbb4435ebe7e48cc91e39ddcac5e50",
+      "within_file": {
+        "in": 11,
+        "out": 11
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 4,
+        "out": 18
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 11,
+          "added_moved": 4,
+          "added_novel": 7,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "deleted": 8,
+          "removed_deleted": 6,
+          "removed_moved": 2
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/dedup_core.rs",
+          "before": "cli/tests/dedup_core.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/divergence_stances.rs",
+          "before": "cli/tests/divergence_stances.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/metrics.rs",
+          "before": "cli/tests/metrics.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": "cli/tests/sonar_whitepaper.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "parse"
+          ]
+        }
+      ],
+      "sha": "1ef9cdf608d2628d629e049a986e826f6a12e83e",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "cli/tests/guard_hook.rs",
+          "lines": 1,
+          "side": "removed",
+          "why": "removal was an inline-into-helper rewrite in the same file (helper takes `dir`, not `&dir`); the matching addition in mcp_precommit.rs is an unrelated new assertion"
+        },
+        {
+          "file": "cli/tests/mcp_precommit.rs",
+          "lines": 1,
+          "side": "added",
+          "why": "freshly written assertion; content coincides with the line removed from guard_hook.rs"
+        }
+      ],
+      "cross_file": {
+        "in": 2,
+        "out": 4
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 3,
+          "added_novel": 21,
+          "after": "cli/src/dedup/groups.rs",
+          "before": "cli/src/dedup/groups.rs",
+          "deleted": 42,
+          "removed_deleted": 39,
+          "removed_moved": 3
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 48,
+          "added_moved": 0,
+          "added_novel": 48,
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "deleted": 14,
+          "removed_deleted": 14,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 13,
+          "removed_deleted": 13,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 2,
+          "removed_deleted": 0,
+          "removed_moved": 2
+        },
+        {
+          "added": 7,
+          "added_moved": 2,
+          "added_novel": 5,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 66,
+          "added_moved": 3,
+          "added_novel": 63,
+          "after": "cli/tests/dedup_groups.rs",
+          "before": "cli/tests/dedup_groups.rs",
+          "deleted": 10,
+          "removed_deleted": 7,
+          "removed_moved": 3
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 33,
+          "added_moved": 0,
+          "added_novel": 33,
+          "after": "cli/tests/health_plugin.rs",
+          "before": "cli/tests/health_plugin.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 2,
+          "removed_deleted": 0,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "corrupt_index"
+          ]
+        }
+      ],
+      "sha": "da8eb210b88ceec11eb46d01aa77b0ad29b43c5e",
+      "within_file": {
+        "in": 6,
+        "out": 6
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 42,
+        "out": 44
+      },
+      "nonsignificant": {
+        "in": 13,
+        "out": 13
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/src/hookio.rs",
+          "before": "cli/src/hookio.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 17,
+          "removed_deleted": 9,
+          "removed_moved": 8
+        },
+        {
+          "added": 79,
+          "added_moved": 42,
+          "added_novel": 37,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "deleted": 22,
+          "removed_deleted": 9,
+          "removed_moved": 13
+        },
+        {
+          "added": 52,
+          "added_moved": 0,
+          "added_novel": 52,
+          "after": "cli/tests/observe_feed.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 34,
+          "removed_deleted": 11,
+          "removed_moved": 23
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "golden_path",
+            "assert_matches_golden",
+            "pretooluse_envelope",
+            "stop_envelope",
+            "silent_hook_observe"
+          ]
+        }
+      ],
+      "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 53,
+          "added_moved": 0,
+          "added_novel": 53,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 1,
+          "added_novel": 33,
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "deleted": 18,
+          "removed_deleted": 17,
+          "removed_moved": 1
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "cli/src/hookio.rs",
+          "before": "cli/src/hookio.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/observe_feed.rs",
+          "before": "cli/tests/observe_feed.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "ebe27b18f0041e6cd8a46cf74eb26b831179d12f",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 14,
+        "out": 15
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 3
+      },
+      "pairs": [
+        {
+          "added": 84,
+          "added_moved": 14,
+          "added_novel": 70,
+          "after": "cli/src/daemon/coldstart.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/daemon/mod.rs",
+          "before": "cli/src/daemon/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 57,
+          "removed_deleted": 42,
+          "removed_moved": 15
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/src/daemon/coldstart.rs",
+          "units": [
+            "indexed_file_count",
+            "mark_ready",
+            "init",
+            "index_ready"
+          ]
+        }
+      ],
+      "sha": "822e7182f96811f1682a5b797c99faff58e0d8cf",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 23,
+        "out": 39
+      },
+      "nonsignificant": {
+        "in": 8,
+        "out": 14
+      },
+      "pairs": [
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/tests/eval_baseline.rs",
+          "before": "cli/tests/eval_baseline.rs",
+          "deleted": 43,
+          "removed_deleted": 22,
+          "removed_moved": 21
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/eval_labels.rs",
+          "before": "cli/tests/eval_labels.rs",
+          "deleted": 20,
+          "removed_deleted": 9,
+          "removed_moved": 11
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": "cli/tests/eval_prelabel.rs",
+          "deleted": 15,
+          "removed_deleted": 8,
+          "removed_moved": 7
+        },
+        {
+          "added": 52,
+          "added_moved": 23,
+          "added_novel": 29,
+          "after": "cli/tests/eval_support/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/eval_support/mod.rs",
+          "units": [
+            "CLASSES",
+            "load",
+            "by_id",
+            "numstat"
+          ]
+        }
+      ],
+      "sha": "f84aaa3c8cf71b3cfbf74064d0bd5e65a6a83a89",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 6,
+        "out": 6
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 2
+      },
+      "pairs": [
+        {
+          "added": 197,
+          "added_moved": 0,
+          "added_novel": 197,
+          "after": "cli/src/fourclass/diff.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 200,
+          "added_moved": 0,
+          "added_novel": 200,
+          "after": "cli/src/fourclass/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 115,
+          "added_moved": 0,
+          "added_novel": 115,
+          "after": "cli/src/fourclass/units.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/eval_baseline.rs",
+          "before": "cli/tests/eval_baseline.rs",
+          "deleted": 12,
+          "removed_deleted": 12,
+          "removed_moved": 0
+        },
+        {
+          "added": 142,
+          "added_moved": 0,
+          "added_novel": 142,
+          "after": "cli/tests/eval_l1.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": "cli/tests/eval_prelabel.rs",
+          "deleted": 29,
+          "removed_deleted": 23,
+          "removed_moved": 6
+        },
+        {
+          "added": 36,
+          "added_moved": 6,
+          "added_novel": 30,
+          "after": "cli/tests/eval_support/mod.rs",
+          "before": "cli/tests/eval_support/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "cli/tests/eval_support/mod.rs",
+          "units": [
+            "out_dir",
+            "read_sample",
+            "labeling_rows",
+            "finish_rows",
+            "write_doc"
+          ]
+        }
+      ],
+      "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    }
+  ],
+  "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",
+  "schema": "ce.eval-commit-labels/1.0.0",
+  "source_slice": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+  "summary": {
+    "commits_reviewed": 22,
+    "correction_lines": 6,
+    "moved_lines": {
+      "cross_in": 181,
+      "cross_out": 366,
+      "within_in": 107,
+      "within_out": 112
+    },
+    "nonsignificant": {
+      "in": 61,
+      "out": 121
+    },
+    "relocated_units": 35
+  }
+}

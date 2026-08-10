@@ -13,47 +13,10 @@
 
 mod eval_support;
 
+use eval_support::{LineClasses, classify_line};
 use serde_json::{Value, json};
 use std::path::Path;
 use std::process::Command;
-
-#[derive(Default)]
-struct LineClasses {
-    added_novel: usize,
-    added_moved: usize,
-    removed_deleted: usize,
-    removed_moved: usize,
-}
-
-/// Split a line into its leading SGR parameter runs and the first
-/// payload character. `\x1b[1;36m+` and `\x1b[36m+` must both read as
-/// cyan (empirically git's moved defaults are the BOLD variants, and
-/// the `---`/`+++` headers are bold with no color at all).
-fn sgr_prefix(line: &str) -> (Vec<&str>, Option<char>) {
-    let mut rest = line;
-    let mut codes = Vec::new();
-    while let Some(tail) = rest.strip_prefix("\x1b[") {
-        let Some(end) = tail.find('m') else { break };
-        codes.extend(tail[..end].split(';'));
-        rest = &tail[end + 1..];
-    }
-    (codes, rest.chars().next())
-}
-
-/// Classify one diff body line under --color-moved=plain: 31/32 =
-/// plain removed/added, 35/36 = moved out/in (bold or not); anything
-/// else (hunk/file headers) is not a body line.
-fn classify_line(line: &str, c: &mut LineClasses) {
-    let (codes, first) = sgr_prefix(line);
-    let has = |code: &str| codes.contains(&code);
-    match first {
-        Some('-') if has("35") => c.removed_moved += 1,
-        Some('-') if has("31") => c.removed_deleted += 1,
-        Some('+') if has("36") => c.added_moved += 1,
-        Some('+') if has("32") => c.added_novel += 1,
-        _ => {}
-    }
-}
 
 fn color_moved_counts(a: &Path, b: &Path) -> LineClasses {
     // -c color.diff=always because stdout is a pipe; U0 keeps the body

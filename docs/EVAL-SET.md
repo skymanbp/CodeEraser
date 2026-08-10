@@ -93,6 +93,40 @@ python difflib 独立复核 4/5 样本逐数一致，第 5 个 L1 比两者都�
 空行过滤——对齐机制的增量（单元归属、整函数搬迁摘要）由 lib 单测钉定，
 跨文件/整 commit 场景的区分力留待 L2 对比与 FPR 重放。
 
+## 整 commit 切片 v1（L2 增量仪器，预注册于任何 L2 代码之前，2026-08-10）
+
+本仓库 200 样本集的 moved GT 已饱和（上节）；按拍板，L2 的增量须在
+**整 commit / 跨文件 / 单元归属**维度证明——逐文件对的 L1 结构性看不见
+"函数离开 A 文件、落进 B 文件"。切片全部派生自本仓库自身 git 历史
+（真实编辑，零伪造，仓内可完整复现）：
+
+- **构成** [contracts/eval/commit-slice-v1.json](../contracts/eval/commit-slice-v1.json)：
+  宇宙 = 至 2f40f22（L1 落地 commit，仪器在自身宇宙之外）的线性历史 61 个
+  commit，五语言 scope（排除 memory/ 机器本地态 = M7 filter-repo 面，D2-7）
+  后 47 个入册、14 个无涉排除。预标引擎 `--color-moved=blocks`（git 自带
+  ≥20 字母数字 block 下限——plain 模式在 commit 粒度会为跨文件同文琐碎行
+  发明假移动，实测 2f40f22 下 153 条；代价是漏 sub-block 小移动，如实入册）。
+  文件配对 `-M -C`（纯改名由配对解释，不计移动行）。双跑逐字节复验。
+  M7 历史改写会更名全部 sha，届时切片确定性重生成。
+- **GT**（[contracts/eval/commit-labels-v1.json](../contracts/eval/commit-labels-v1.json)，
+  22 个 moved-bearing commit 逐条审核）：commit 粒度 moved 采用**来源语义**
+  而非内容集合语义——新写的行哪怕与别处删除同文也**不是**移动，恰是本产品
+  要抓的复制信号，计入 moved 会把重复藏进健康信号。三层可审计：① 机械显著性
+  过滤（无字母数字的 moved 标记 → novel/deleted，与 labels-v1 同约定，182 行）；
+  ② 机械跨文件/文件内划分（trim 内容配对，两可优先文件内）；③ 审核修正
+  （5 条 6 行内容巧合，各带机制，逐条对过原始 diff）。终值：**跨文件 moved
+  366 出/181 进 = 547 行**（11 个 commit，全部真实重构：tests/common 抽取、
+  eval_support 抽取、observe writer 进 hookio、冷启动状态机拆模块……35 个
+  搬迁单元具名入册）；文件内 112/107。CI 门逐行校验账本守恒。
+- **L1-on-slice 基线** [contracts/eval/commit-baseline-l1-v1.json](../contracts/eval/commit-baseline-l1-v1.json)：
+  L1 逐文件对跑全部 47 commit / 214 对。**检出 219/766 = 恰好全部文件内
+  GT，跨文件 0/547，巧合抵扣上界 0**——结构性盲区实测钉死。预测 251 vs
+  检出 219 的 32 行超出 = GT 引擎 block 下限漏掉的 sub-block 移动（如实
+  注记，非错误）。
+
+**L2 达标线**：在不虚报 25 个无移动 commit 的前提下召回 547 条跨文件
+moved 行（及其单元归属）。
+
 ## 复跑 / 校验
 
 ```

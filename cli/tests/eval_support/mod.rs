@@ -1,16 +1,34 @@
 //! Shared helpers for the eval_* test binaries (labels gate, prelabel
-//! generator, baseline). Extracted when the repo's own dedup ratchet
-//! caught these copied verbatim across the three files — the exact
-//! defect class this project exists to stop.
+//! generator, baselines, commit slice). Extracted when the repo's own
+//! dedup ratchet caught these copied verbatim across the test files —
+//! the exact defect class this project exists to stop.
 //!
 //! Each integration-test binary compiles this module independently and
-//! uses a different subset, so the unused remainder is expected.
+//! uses a different subset, so the unused remainder is expected —
+//! including the colordiff re-export in binaries that never touch
+//! colored diffs.
 #![allow(dead_code)]
+#![allow(unused_imports)]
 
+pub mod colordiff;
+pub use colordiff::*;
+
+use codeeraser::scan::lang::Lang;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::path::Path;
-use std::process::Command;
+
+/// Manifest lang codes and file extensions share one vocabulary.
+pub fn lang_of(code: &str) -> Lang {
+    match code {
+        "py" => Lang::Python,
+        "ts" => Lang::TypeScript,
+        "rs" => Lang::Rust,
+        "go" => Lang::Go,
+        "md" => Lang::Markdown,
+        other => panic!("unexpected lang {other}"),
+    }
+}
 
 /// The four ground-truth line classes, in canonical order.
 pub const CLASSES: [&str; 4] = [
@@ -24,13 +42,36 @@ pub fn load(path: &str) -> Value {
     serde_json::from_str(&std::fs::read_to_string(path).expect(path)).expect(path)
 }
 
-pub fn by_id<'a>(doc: &'a Value, key: &str) -> HashMap<&'a str, &'a Value> {
+/// Index a doc's row array by one of its string fields.
+pub fn by_field<'a>(doc: &'a Value, key: &str, field: &str) -> HashMap<&'a str, &'a Value> {
     doc[key]
         .as_array()
         .expect(key)
         .iter()
-        .map(|r| (r["id"].as_str().expect("id"), r))
+        .map(|r| (r[field].as_str().expect(field), r))
         .collect()
+}
+
+pub fn by_id<'a>(doc: &'a Value, key: &str) -> HashMap<&'a str, &'a Value> {
+    by_field(doc, key, "id")
+}
+
+/// Commit-slice/labels/baseline docs all key their rows by sha.
+pub fn by_sha(doc: &Value) -> HashMap<&str, &Value> {
+    by_field(doc, "commits", "sha")
+}
+
+/// Run the fourclass classifier and return the four counts in
+/// CLASSES order, refusing degraded (diff-capped) results.
+pub fn classify_counts(before: &str, after: &str, lang: Lang, what: &str) -> [u64; 4] {
+    let c = codeeraser::fourclass::classify(before, after, lang);
+    assert!(!c.degraded, "{what}: diff cap tripped on an eval sample");
+    [
+        c.counts.added_novel as u64,
+        c.counts.added_moved as u64,
+        c.counts.removed_deleted as u64,
+        c.counts.removed_moved as u64,
+    ]
 }
 
 /// The local eval-payload directory (eval_extract output).
@@ -69,20 +110,23 @@ pub fn write_doc(path: &str, doc: &Value, done: &str) {
     println!("{done}");
 }
 
-/// `git diff --no-index --numstat [extra…] a b` → (added, deleted).
-/// `extra` lets the baseline pass the plan-literal `-M -C
-/// --find-copies-harder` while the prelabel pass runs plain.
-pub fn numstat(a: &Path, b: &Path, extra: &[&str]) -> (u64, u64) {
-    let out = Command::new("git")
-        .args(["diff", "--no-index", "--numstat"])
-        .args(extra)
-        .arg(a)
-        .arg(b)
-        .output()
-        .expect("git diff numstat");
-    let text = String::from_utf8_lossy(&out.stdout);
-    let mut fields = text.split_whitespace();
-    let add = fields.next().and_then(|s| s.parse().ok()).unwrap_or(0);
-    let del = fields.next().and_then(|s| s.parse().ok()).unwrap_or(0);
-    (add, del)
+/// Load the frozen commit slice, build a derived doc from it, write.
+/// Every commit-slice-derived document shares this envelope and
+/// source (schema, source_slice, method, summary, commits).
+pub fn generate_commit_doc(
+    path: &str,
+    schema: &str,
+    method: &str,
+    build: impl FnOnce(&Value) -> (Value, Vec<Value>),
+) {
+    let slice = load("../contracts/eval/commit-slice-v1.json");
+    let (summary, commits) = build(&slice);
+    let doc = serde_json::json!({
+        "schema": schema,
+        "source_slice": slice["universe_tip"],
+        "method": method,
+        "summary": summary,
+        "commits": commits,
+    });
+    write_doc(path, &doc, &format!("{path} written"));
 }

@@ -1,0 +1,3680 @@
+{
+  "commits": [
+    {
+      "pairs": [
+        {
+          "after": "cli/src/handshake.rs",
+          "before": null,
+          "gt": [
+            100,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            100,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": null,
+          "gt": [
+            55,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            55,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "fc3ad6e4f870c78adc37e4a94a1ced513915f149"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/config.rs",
+          "before": null,
+          "gt": [
+            57,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            57,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": null,
+          "gt": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            6,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            33,
+            0,
+            5,
+            0
+          ],
+          "pred": [
+            33,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/ast.rs",
+          "before": null,
+          "gt": [
+            25,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            25,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/functions.rs",
+          "before": null,
+          "gt": [
+            82,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            82,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/lang.rs",
+          "before": null,
+          "gt": [
+            53,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            53,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": null,
+          "gt": [
+            167,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            167,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/cyclo.rs",
+          "before": null,
+          "gt": [
+            22,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            22,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/mod.rs",
+          "before": null,
+          "gt": [
+            46,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            46,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/size.rs",
+          "before": null,
+          "gt": [
+            32,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/mod.rs",
+          "before": null,
+          "gt": [
+            103,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            103,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/report.rs",
+          "before": null,
+          "gt": [
+            136,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            136,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/spec.rs",
+          "before": null,
+          "gt": [
+            164,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            164,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/walk.rs",
+          "before": null,
+          "gt": [
+            67,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            67,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/metrics.rs",
+          "before": null,
+          "gt": [
+            161,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            161,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "e296178015742a12c350b59b860a5082abdf9c8a"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "gt": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            8,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/metrics.rs",
+          "before": "cli/tests/metrics.rs",
+          "gt": [
+            29,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            29,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "d3f48dfc45f7b4be3516064c943a5bb12dd03797"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": null,
+          "gt": [
+            190,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            190,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "19a07a5b36aafbfa1bea5fab995e7800fcf930cf"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "sha": "b091821a8311f4c0a7a338ce76699fb061315473"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": "cli/src/scan/metrics/cognitive.rs",
+          "gt": [
+            14,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            14,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/mod.rs",
+          "before": "cli/src/scan/metrics/mod.rs",
+          "gt": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/naming.rs",
+          "before": null,
+          "gt": [
+            45,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            45,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/mod.rs",
+          "before": "cli/src/scan/mod.rs",
+          "gt": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            2,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/report.rs",
+          "before": "cli/src/scan/report.rs",
+          "gt": [
+            9,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            9,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "gt": [
+            51,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            51,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/divergence_stances.rs",
+          "before": null,
+          "gt": [
+            149,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            149,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/report_schema.rs",
+          "before": null,
+          "gt": [
+            73,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            73,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": null,
+          "gt": [
+            161,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            161,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "be6e6acd050591ab0ad2e8c699b935ebef523cfd"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": "cli/src/scan/metrics/cognitive.rs",
+          "gt": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/cyclo.rs",
+          "before": "cli/src/scan/metrics/cyclo.rs",
+          "gt": [
+            4,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            4,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/metrics/naming.rs",
+          "before": "cli/src/scan/metrics/naming.rs",
+          "gt": [
+            17,
+            0,
+            4,
+            0
+          ],
+          "pred": [
+            17,
+            0,
+            4,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "gt": [
+            24,
+            0,
+            3,
+            0
+          ],
+          "pred": [
+            24,
+            0,
+            3,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/walk.rs",
+          "before": "cli/src/scan/walk.rs",
+          "gt": [
+            7,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            7,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "gt": [
+            58,
+            9,
+            28,
+            9
+          ],
+          "pred": [
+            58,
+            9,
+            26,
+            11
+          ]
+        },
+        {
+          "after": "cli/tests/divergence_stances.rs",
+          "before": "cli/tests/divergence_stances.rs",
+          "gt": [
+            51,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            51,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": "cli/tests/sonar_whitepaper.rs",
+          "gt": [
+            21,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            21,
+            0,
+            2,
+            0
+          ]
+        }
+      ],
+      "sha": "551fa4111e5e43084cca851ad419a3c0ea8aedc1"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": null,
+          "gt": [
+            29,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            29,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/tokens.rs",
+          "before": null,
+          "gt": [
+            113,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            113,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/winnow.rs",
+          "before": null,
+          "gt": [
+            69,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            69,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_core.rs",
+          "before": null,
+          "gt": [
+            138,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            138,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "1657114abf4c6c7eb0211d398d0b0d9b9299a32e"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/index.rs",
+          "before": null,
+          "gt": [
+            166,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            166,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            107,
+            0,
+            3,
+            0
+          ],
+          "pred": [
+            107,
+            0,
+            3,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": null,
+          "gt": [
+            112,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            112,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            31,
+            1,
+            5,
+            1
+          ],
+          "pred": [
+            31,
+            1,
+            5,
+            1
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_index.rs",
+          "before": null,
+          "gt": [
+            116,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            116,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "d7a4bdbee8ea08a3a850729ecb9c1b0d7fb926dd"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/dedup_property.rs",
+          "before": null,
+          "gt": [
+            93,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            93,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "74d29e22a6a2bbcc295399ee1ffbf97bf1da0482"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "gt": [
+            32,
+            1,
+            15,
+            8
+          ],
+          "pred": [
+            32,
+            1,
+            22,
+            1
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            42,
+            0,
+            7,
+            0
+          ],
+          "pred": [
+            42,
+            0,
+            7,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "gt": [
+            129,
+            0,
+            59,
+            0
+          ],
+          "pred": [
+            129,
+            0,
+            59,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/tokens.rs",
+          "before": "cli/src/dedup/tokens.rs",
+          "gt": [
+            8,
+            7,
+            0,
+            0
+          ],
+          "pred": [
+            15,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            17,
+            0,
+            3,
+            0
+          ],
+          "pred": [
+            17,
+            0,
+            3,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "gt": [
+            13,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            13,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": null,
+          "gt": [
+            152,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            152,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "384d4c790283e5ebdd25d21f0371aee3960eeb6c"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "gt": [
+            12,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            12,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "ffe4ad0c2333f49a2a4adc29b4740b0130ec613a"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "gt": [
+            49,
+            0,
+            7,
+            0
+          ],
+          "pred": [
+            49,
+            0,
+            7,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            49,
+            0,
+            15,
+            0
+          ],
+          "pred": [
+            49,
+            0,
+            15,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "gt": [
+            46,
+            4,
+            24,
+            4
+          ],
+          "pred": [
+            45,
+            5,
+            23,
+            5
+          ]
+        },
+        {
+          "after": "cli/src/dedup/tokens.rs",
+          "before": "cli/src/dedup/tokens.rs",
+          "gt": [
+            39,
+            0,
+            26,
+            0
+          ],
+          "pred": [
+            39,
+            0,
+            26,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "gt": [
+            15,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            15,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_core.rs",
+          "before": "cli/tests/dedup_core.rs",
+          "gt": [
+            31,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            31,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "gt": [
+            34,
+            0,
+            6,
+            0
+          ],
+          "pred": [
+            34,
+            0,
+            6,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": "cli/tests/dedup_pairs.rs",
+          "gt": [
+            34,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            34,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_property.rs",
+          "before": "cli/tests/dedup_property.rs",
+          "gt": [
+            2,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            2,
+            0,
+            2,
+            0
+          ]
+        }
+      ],
+      "sha": "b2bf52ae133c0af9533974aee4328de4bb760367"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "gt": [
+            11,
+            6,
+            3,
+            6
+          ],
+          "pred": [
+            11,
+            6,
+            3,
+            6
+          ]
+        }
+      ],
+      "sha": "3ebefd1395a80e74984ebc22537df561d4ef79ff"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/client.rs",
+          "before": null,
+          "gt": [
+            95,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            95,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/mod.rs",
+          "before": null,
+          "gt": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            8,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/proto.rs",
+          "before": null,
+          "gt": [
+            67,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            67,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": null,
+          "gt": [
+            169,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            169,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            21,
+            2,
+            1,
+            2
+          ],
+          "pred": [
+            21,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            43,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            43,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": null,
+          "gt": [
+            154,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            154,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "270710454db908bf5f840448560c749605d12f89"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "gt": [
+            2,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            2,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            11,
+            5,
+            7,
+            5
+          ],
+          "pred": [
+            11,
+            5,
+            7,
+            5
+          ]
+        }
+      ],
+      "sha": "06268248d3cd3cb2eb6beabbe607f46d679a6b64"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/perf_budget.rs",
+          "before": null,
+          "gt": [
+            154,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            154,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "9f5df476a2dafd6967475ac1051a9c2bfbe23c6d"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "gt": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "sha": "e7bb8511637d464a3781a4c840dbb78cc8b73732"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/proto.rs",
+          "before": "cli/src/daemon/proto.rs",
+          "gt": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            2,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "gt": [
+            11,
+            0,
+            4,
+            0
+          ],
+          "pred": [
+            11,
+            0,
+            4,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            19,
+            0,
+            8,
+            0
+          ],
+          "pred": [
+            19,
+            0,
+            8,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "gt": [
+            26,
+            0,
+            6,
+            0
+          ],
+          "pred": [
+            26,
+            0,
+            6,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            8,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            8,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            6,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            6,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "gt": [
+            5,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            5,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": "cli/tests/dedup_pairs.rs",
+          "gt": [
+            13,
+            0,
+            6,
+            0
+          ],
+          "pred": [
+            13,
+            0,
+            6,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "gt": [
+            3,
+            0,
+            3,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            3,
+            0
+          ]
+        }
+      ],
+      "sha": "0511d4655756a8420518668bafa4a2125f3b169c"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/proto.rs",
+          "before": "cli/src/daemon/proto.rs",
+          "gt": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "gt": [
+            41,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            41,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "gt": [
+            30,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            30,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "gt": [
+            3,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/probe.rs",
+          "before": null,
+          "gt": [
+            115,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            115,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/probe_gate.rs",
+          "before": null,
+          "gt": [
+            166,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            166,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "fdb28c98d599154ca2fbc08449530915cd965d38"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "gt": [
+            48,
+            12,
+            38,
+            13
+          ],
+          "pred": [
+            47,
+            13,
+            37,
+            14
+          ]
+        },
+        {
+          "after": "cli/src/dedup/probe.rs",
+          "before": "cli/src/dedup/probe.rs",
+          "gt": [
+            15,
+            0,
+            5,
+            0
+          ],
+          "pred": [
+            15,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/probe_gate.rs",
+          "before": "cli/tests/probe_gate.rs",
+          "gt": [
+            24,
+            0,
+            40,
+            0
+          ],
+          "pred": [
+            24,
+            0,
+            40,
+            0
+          ]
+        }
+      ],
+      "sha": "d5c2fe9f568c8a4adeeaa259a4956ed4898b9c78"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/config.rs",
+          "before": "cli/src/config.rs",
+          "gt": [
+            18,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            18,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "gt": [
+            31,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            31,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/guard.rs",
+          "before": null,
+          "gt": [
+            173,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            173,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            15,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            15,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/guard_hook.rs",
+          "before": null,
+          "gt": [
+            143,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            143,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "a006ab600e7bbcd9f9c1ae07a3b62384d3450505"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/audit.rs",
+          "before": null,
+          "gt": [
+            147,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            147,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            15,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            15,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/audit_stop.rs",
+          "before": null,
+          "gt": [
+            145,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            145,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "427a9cb4bc61590ec6ac72b1f1ba61cab4be4b58"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "gt": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            7,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/health.rs",
+          "before": null,
+          "gt": [
+            80,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            80,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            14,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            14,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/health_plugin.rs",
+          "before": null,
+          "gt": [
+            110,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            110,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "ff4b5169f8f1d16b3a116a289f02261d990c9906"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "gt": [
+            36,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            36,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            23,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            23,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/mcp.rs",
+          "before": null,
+          "gt": [
+            136,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            136,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/scan/mod.rs",
+          "before": "cli/src/scan/mod.rs",
+          "gt": [
+            23,
+            9,
+            9,
+            9
+          ],
+          "pred": [
+            22,
+            10,
+            8,
+            10
+          ]
+        },
+        {
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": null,
+          "gt": [
+            130,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            130,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "0105efa55e63d4ca98ed8c038b5fe0cdaceb2e54"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            28,
+            2,
+            39,
+            4
+          ],
+          "pred": [
+            24,
+            6,
+            28,
+            15
+          ]
+        },
+        {
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "gt": [
+            45,
+            0,
+            17,
+            0
+          ],
+          "pred": [
+            43,
+            2,
+            16,
+            1
+          ]
+        }
+      ],
+      "sha": "7917643211265749f56d9606935d2942af1ce56f"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/probe.rs",
+          "before": "cli/src/dedup/probe.rs",
+          "gt": [
+            8,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            8,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/fpr_replay.rs",
+          "before": null,
+          "gt": [
+            162,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            162,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "3acd16a923a175c05e99583101cbf94fb8b5b998"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "gt": [
+            9,
+            0,
+            52,
+            34
+          ],
+          "pred": [
+            9,
+            0,
+            86,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": null,
+          "gt": [
+            78,
+            63,
+            0,
+            0
+          ],
+          "pred": [
+            141,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            9,
+            0,
+            50,
+            31
+          ],
+          "pred": [
+            9,
+            0,
+            81,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "gt": [
+            2,
+            0,
+            12,
+            14
+          ],
+          "pred": [
+            2,
+            0,
+            26,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_property.rs",
+          "before": "cli/tests/dedup_property.rs",
+          "gt": [
+            4,
+            0,
+            16,
+            5
+          ],
+          "pred": [
+            4,
+            0,
+            21,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "gt": [
+            7,
+            0,
+            19,
+            40
+          ],
+          "pred": [
+            7,
+            0,
+            59,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/health_plugin.rs",
+          "before": "cli/tests/health_plugin.rs",
+          "gt": [
+            7,
+            0,
+            16,
+            19
+          ],
+          "pred": [
+            7,
+            0,
+            35,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "gt": [
+            2,
+            0,
+            13,
+            22
+          ],
+          "pred": [
+            2,
+            0,
+            35,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "gt": [
+            6,
+            0,
+            27,
+            17
+          ],
+          "pred": [
+            6,
+            0,
+            44,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/probe_gate.rs",
+          "before": "cli/tests/probe_gate.rs",
+          "gt": [
+            6,
+            0,
+            27,
+            17
+          ],
+          "pred": [
+            6,
+            0,
+            44,
+            0
+          ]
+        }
+      ],
+      "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "gt": [
+            56,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            56,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "86febdfc4d6da6bc5d611bb234b48c1afba226fd"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/config.rs",
+          "before": "cli/src/config.rs",
+          "gt": [
+            9,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            9,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            39,
+            0,
+            10,
+            0
+          ],
+          "pred": [
+            39,
+            0,
+            10,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            20,
+            15,
+            16,
+            17
+          ],
+          "pred": [
+            19,
+            16,
+            13,
+            20
+          ]
+        },
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "gt": [
+            13,
+            4,
+            3,
+            2
+          ],
+          "pred": [
+            15,
+            2,
+            3,
+            2
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            1,
+            0,
+            6,
+            1
+          ],
+          "pred": [
+            1,
+            0,
+            7,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_check.rs",
+          "before": null,
+          "gt": [
+            35,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            35,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "gt": [
+            3,
+            0,
+            10,
+            2
+          ],
+          "pred": [
+            3,
+            0,
+            12,
+            0
+          ]
+        }
+      ],
+      "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "gt": [
+            40,
+            9,
+            18,
+            9
+          ],
+          "pred": [
+            39,
+            10,
+            17,
+            10
+          ]
+        }
+      ],
+      "sha": "ec2d00756cbd53f09cefd658eedadb091c516720"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/dedup/groups.rs",
+          "before": null,
+          "gt": [
+            138,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            138,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "gt": [
+            12,
+            0,
+            4,
+            0
+          ],
+          "pred": [
+            12,
+            0,
+            4,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "gt": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "gt": [
+            12,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            12,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            3,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_groups.rs",
+          "before": null,
+          "gt": [
+            88,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            88,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "gt": [
+            2,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            2,
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "sha": "5ab3c8169e023ad9ce332faca96711859fde002c"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "gt": [
+            44,
+            11,
+            31,
+            11
+          ],
+          "pred": [
+            44,
+            11,
+            31,
+            11
+          ]
+        },
+        {
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "gt": [
+            18,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            18,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "gt": [
+            26,
+            1,
+            9,
+            6
+          ],
+          "pred": [
+            26,
+            1,
+            14,
+            1
+          ]
+        },
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "gt": [
+            6,
+            5,
+            0,
+            0
+          ],
+          "pred": [
+            11,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "gt": [
+            18,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            18,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "a3cf54d1f113f693a593fb6719e2c532d59c6c25"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "gt": [
+            6,
+            6,
+            12,
+            19
+          ],
+          "pred": [
+            6,
+            6,
+            25,
+            6
+          ]
+        },
+        {
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "gt": [
+            6,
+            5,
+            12,
+            18
+          ],
+          "pred": [
+            6,
+            5,
+            25,
+            5
+          ]
+        },
+        {
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "gt": [
+            1,
+            0,
+            6,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            6,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/hookio.rs",
+          "before": null,
+          "gt": [
+            28,
+            13,
+            0,
+            0
+          ],
+          "pred": [
+            41,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "6d8824e204dbb4435ebe7e48cc91e39ddcac5e50"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "gt": [
+            7,
+            4,
+            0,
+            0
+          ],
+          "pred": [
+            11,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "gt": [
+            9,
+            0,
+            6,
+            2
+          ],
+          "pred": [
+            9,
+            0,
+            8,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_core.rs",
+          "before": "cli/tests/dedup_core.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            4
+          ],
+          "pred": [
+            3,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/divergence_stances.rs",
+          "before": "cli/tests/divergence_stances.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            4
+          ],
+          "pred": [
+            3,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/metrics.rs",
+          "before": "cli/tests/metrics.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            4
+          ],
+          "pred": [
+            3,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": "cli/tests/sonar_whitepaper.rs",
+          "gt": [
+            3,
+            0,
+            1,
+            4
+          ],
+          "pred": [
+            3,
+            0,
+            5,
+            0
+          ]
+        }
+      ],
+      "sha": "1ef9cdf608d2628d629e049a986e826f6a12e83e"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "gt": [
+            18,
+            0,
+            8,
+            0
+          ],
+          "pred": [
+            18,
+            0,
+            8,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "gt": [
+            12,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            12,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/dedup/groups.rs",
+          "before": "cli/src/dedup/groups.rs",
+          "gt": [
+            21,
+            3,
+            39,
+            3
+          ],
+          "pred": [
+            21,
+            3,
+            39,
+            3
+          ]
+        },
+        {
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "gt": [
+            48,
+            0,
+            14,
+            0
+          ],
+          "pred": [
+            48,
+            0,
+            14,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "gt": [
+            12,
+            0,
+            13,
+            0
+          ],
+          "pred": [
+            12,
+            0,
+            13,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "gt": [
+            2,
+            0,
+            0,
+            2
+          ],
+          "pred": [
+            2,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "gt": [
+            5,
+            2,
+            0,
+            0
+          ],
+          "pred": [
+            7,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/dedup_groups.rs",
+          "before": "cli/tests/dedup_groups.rs",
+          "gt": [
+            63,
+            3,
+            7,
+            3
+          ],
+          "pred": [
+            63,
+            3,
+            7,
+            3
+          ]
+        },
+        {
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "gt": [
+            39,
+            0,
+            4,
+            0
+          ],
+          "pred": [
+            39,
+            0,
+            4,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/health_plugin.rs",
+          "before": "cli/tests/health_plugin.rs",
+          "gt": [
+            33,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            33,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "gt": [
+            8,
+            0,
+            0,
+            2
+          ],
+          "pred": [
+            8,
+            0,
+            2,
+            0
+          ]
+        }
+      ],
+      "sha": "da8eb210b88ceec11eb46d01aa77b0ad29b43c5e"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/hookio.rs",
+          "before": "cli/src/hookio.rs",
+          "gt": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            7,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "gt": [
+            8,
+            0,
+            9,
+            8
+          ],
+          "pred": [
+            8,
+            0,
+            17,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "gt": [
+            37,
+            42,
+            0,
+            0
+          ],
+          "pred": [
+            79,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "gt": [
+            3,
+            0,
+            9,
+            13
+          ],
+          "pred": [
+            3,
+            0,
+            22,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/observe_feed.rs",
+          "before": null,
+          "gt": [
+            52,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            52,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "gt": [
+            1,
+            0,
+            11,
+            23
+          ],
+          "pred": [
+            1,
+            0,
+            34,
+            0
+          ]
+        }
+      ],
+      "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "gt": [
+            10,
+            0,
+            2,
+            0
+          ],
+          "pred": [
+            10,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            27,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            27,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "98d2af3e0be354867edc32cc7033cab86108058a"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "gt": [
+            53,
+            0,
+            20,
+            0
+          ],
+          "pred": [
+            53,
+            0,
+            20,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "gt": [
+            33,
+            1,
+            17,
+            1
+          ],
+          "pred": [
+            33,
+            1,
+            17,
+            1
+          ]
+        },
+        {
+          "after": "cli/src/hookio.rs",
+          "before": "cli/src/hookio.rs",
+          "gt": [
+            24,
+            0,
+            5,
+            0
+          ],
+          "pred": [
+            24,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/observe_feed.rs",
+          "before": "cli/tests/observe_feed.rs",
+          "gt": [
+            6,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            6,
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "sha": "ebe27b18f0041e6cd8a46cf74eb26b831179d12f"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "gt": [
+            60,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            60,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "gt": [
+            37,
+            0,
+            1,
+            0
+          ],
+          "pred": [
+            37,
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "sha": "8619437dda8d46a1d8dcbf0028abd481ba0190cb"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/daemon/coldstart.rs",
+          "before": null,
+          "gt": [
+            70,
+            14,
+            0,
+            0
+          ],
+          "pred": [
+            84,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/mod.rs",
+          "before": "cli/src/daemon/mod.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "gt": [
+            8,
+            0,
+            42,
+            15
+          ],
+          "pred": [
+            8,
+            0,
+            57,
+            0
+          ]
+        }
+      ],
+      "sha": "822e7182f96811f1682a5b797c99faff58e0d8cf"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/eval_extract/freeze.rs",
+          "before": null,
+          "gt": [
+            184,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            184,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_extract/main.rs",
+          "before": null,
+          "gt": [
+            215,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            215,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_extract/scan.rs",
+          "before": null,
+          "gt": [
+            278,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            278,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "1a03f687c1d4e79ab8dc18a7d8cc9db45b491b77"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": null,
+          "gt": [
+            172,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            172,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "b99c27ad164398cd9fdadc1f5da3a8c96784f818"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/eval_labels.rs",
+          "before": null,
+          "gt": [
+            117,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            117,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "4a4bee13e68a4899cbe0bd23dd07eb863a22f6a4"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/eval_baseline.rs",
+          "before": null,
+          "gt": [
+            188,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            188,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "caba57d9c2db8b3c1eb63dd38d8c6b5516e6de64"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/tests/eval_baseline.rs",
+          "before": "cli/tests/eval_baseline.rs",
+          "gt": [
+            4,
+            0,
+            22,
+            21
+          ],
+          "pred": [
+            4,
+            0,
+            43,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_labels.rs",
+          "before": "cli/tests/eval_labels.rs",
+          "gt": [
+            3,
+            0,
+            9,
+            11
+          ],
+          "pred": [
+            3,
+            0,
+            20,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": "cli/tests/eval_prelabel.rs",
+          "gt": [
+            4,
+            0,
+            8,
+            7
+          ],
+          "pred": [
+            4,
+            0,
+            15,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_support/mod.rs",
+          "before": null,
+          "gt": [
+            29,
+            23,
+            0,
+            0
+          ],
+          "pred": [
+            52,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "f84aaa3c8cf71b3cfbf74064d0bd5e65a6a83a89"
+    },
+    {
+      "pairs": [
+        {
+          "after": "cli/src/fourclass/diff.rs",
+          "before": null,
+          "gt": [
+            197,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            197,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/fourclass/mod.rs",
+          "before": null,
+          "gt": [
+            200,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            200,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/fourclass/units.rs",
+          "before": null,
+          "gt": [
+            115,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            115,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "gt": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_baseline.rs",
+          "before": "cli/tests/eval_baseline.rs",
+          "gt": [
+            6,
+            0,
+            12,
+            0
+          ],
+          "pred": [
+            6,
+            0,
+            12,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_l1.rs",
+          "before": null,
+          "gt": [
+            142,
+            0,
+            0,
+            0
+          ],
+          "pred": [
+            142,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": "cli/tests/eval_prelabel.rs",
+          "gt": [
+            10,
+            0,
+            23,
+            6
+          ],
+          "pred": [
+            10,
+            0,
+            29,
+            0
+          ]
+        },
+        {
+          "after": "cli/tests/eval_support/mod.rs",
+          "before": "cli/tests/eval_support/mod.rs",
+          "gt": [
+            30,
+            6,
+            0,
+            0
+          ],
+          "pred": [
+            36,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff"
+    }
+  ],
+  "method": "cli/src/fourclass classify() per file pair (empty side for created/deleted files), summed per commit; gt = commit-labels-v1 reviewed rows, slice prelabels for zero-move commits. Cross-file moved recall is zero by construction for a per-pair classifier; cross_credit_upper_bound bounds within-pair coincidence credit. GT within-file marks carry git's blocks-mode >=20-alnum block floor; L1's line-level matching may legitimately exceed them (predicted > detected).",
+  "schema": "ce.eval-commit-baseline/1.0.0",
+  "source_slice": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+  "summary": {
+    "commits": 47,
+    "commits_exact": 30,
+    "cross_credit_upper_bound": 0,
+    "cross_file_gt": 547,
+    "moved_lines": {
+      "detected": 219,
+      "ground_truth": 766,
+      "predicted": 251
+    },
+    "pairs": 214,
+    "pairs_exact": 165,
+    "within_file_gt": 219
+  }
+}

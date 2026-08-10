@@ -12,36 +12,17 @@
 
 mod eval_support;
 
-use codeeraser::fourclass;
-use codeeraser::scan::lang::Lang;
-use eval_support::{CLASSES, by_id, load};
+use eval_support::{CLASSES, by_id, classify_counts, lang_of, load};
 use serde_json::{Value, json};
-
-fn lang_of(name: &str) -> Lang {
-    match name {
-        "py" => Lang::Python,
-        "ts" => Lang::TypeScript,
-        "rs" => Lang::Rust,
-        "go" => Lang::Go,
-        "md" => Lang::Markdown,
-        other => panic!("unexpected manifest lang {other}"),
-    }
-}
 
 fn classify_sample(out_dir: &std::path::Path, id: &str, lang: &str) -> [u64; 4] {
     let sample = eval_support::read_sample(out_dir, id);
-    let c = fourclass::classify(
+    classify_counts(
         sample["before"].as_str().expect("before"),
         sample["after"].as_str().expect("after"),
         lang_of(lang),
-    );
-    assert!(!c.degraded, "{id}: diff cap tripped on an eval sample");
-    [
-        c.counts.added_novel as u64,
-        c.counts.added_moved as u64,
-        c.counts.removed_deleted as u64,
-        c.counts.removed_moved as u64,
-    ]
+        id,
+    )
 }
 
 /// Score rows and assemble the document. Kept free of file I/O so the

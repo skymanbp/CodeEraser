@@ -1,0 +1,2498 @@
+{
+  "commits": [
+    {
+      "pairs": [
+        {
+          "added": 100,
+          "added_moved": 0,
+          "added_novel": 100,
+          "after": "cli/src/handshake.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 55,
+          "added_moved": 0,
+          "added_novel": 55,
+          "after": "cli/src/main.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "fc3ad6e4f870c78adc37e4a94a1ced513915f149",
+      "subject": "M0: dual-project skeleton, contracts mechanism, CI, edict E01"
+    },
+    {
+      "pairs": [
+        {
+          "added": 57,
+          "added_moved": 0,
+          "added_novel": 57,
+          "after": "cli/src/config.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/src/lib.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 33,
+          "added_moved": 0,
+          "added_novel": 33,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 25,
+          "added_moved": 0,
+          "added_novel": 25,
+          "after": "cli/src/scan/ast.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 82,
+          "added_moved": 0,
+          "added_novel": 82,
+          "after": "cli/src/scan/functions.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 53,
+          "added_moved": 0,
+          "added_novel": 53,
+          "after": "cli/src/scan/lang.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 167,
+          "added_moved": 0,
+          "added_novel": 167,
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 22,
+          "added_moved": 0,
+          "added_novel": 22,
+          "after": "cli/src/scan/metrics/cyclo.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 46,
+          "added_moved": 0,
+          "added_novel": 46,
+          "after": "cli/src/scan/metrics/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 0,
+          "added_novel": 32,
+          "after": "cli/src/scan/metrics/size.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 103,
+          "added_moved": 0,
+          "added_novel": 103,
+          "after": "cli/src/scan/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 136,
+          "added_moved": 0,
+          "added_novel": 136,
+          "after": "cli/src/scan/report.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 164,
+          "added_moved": 0,
+          "added_novel": 164,
+          "after": "cli/src/scan/spec.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 67,
+          "added_moved": 0,
+          "added_novel": 67,
+          "after": "cli/src/scan/walk.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 161,
+          "added_moved": 0,
+          "added_novel": 161,
+          "after": "cli/tests/metrics.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "e296178015742a12c350b59b860a5082abdf9c8a",
+      "subject": "M1: scan MVP - size/complexity/readability metrics, 5 languages"
+    },
+    {
+      "pairs": [
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 29,
+          "added_moved": 0,
+          "added_novel": 29,
+          "after": "cli/tests/metrics.rs",
+          "before": "cli/tests/metrics.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "d3f48dfc45f7b4be3516064c943a5bb12dd03797",
+      "subject": "M1 cross-check: 2 real gaps fixed, all divergences attributed"
+    },
+    {
+      "pairs": [
+        {
+          "added": 190,
+          "added_moved": 0,
+          "added_novel": 190,
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "19a07a5b36aafbfa1bea5fab995e7800fcf930cf",
+      "subject": "M1: RCA JSON harness fixed as #[ignore] test; Rust CC final 320/320"
+    },
+    {
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "b091821a8311f4c0a7a338ce76699fb061315473",
+      "subject": "style: rustfmt let-else in crosscheck harness (CI fmt gate)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 14,
+          "added_moved": 0,
+          "added_novel": 14,
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": "cli/src/scan/metrics/cognitive.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/src/scan/metrics/mod.rs",
+          "before": "cli/src/scan/metrics/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 45,
+          "added_moved": 0,
+          "added_novel": 45,
+          "after": "cli/src/scan/metrics/naming.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/src/scan/mod.rs",
+          "before": "cli/src/scan/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/src/scan/report.rs",
+          "before": "cli/src/scan/report.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 51,
+          "added_moved": 0,
+          "added_novel": 51,
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 149,
+          "added_moved": 0,
+          "added_novel": 149,
+          "after": "cli/tests/divergence_stances.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 73,
+          "added_moved": 0,
+          "added_novel": 73,
+          "after": "cli/tests/report_schema.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 161,
+          "added_moved": 0,
+          "added_novel": 161,
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "be6e6acd050591ab0ad2e8c699b935ebef523cfd",
+      "subject": "M1: whitepaper goldens, labeled jumps, CoC operator split, naming, schema"
+    },
+    {
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/src/scan/metrics/cognitive.rs",
+          "before": "cli/src/scan/metrics/cognitive.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/src/scan/metrics/cyclo.rs",
+          "before": "cli/src/scan/metrics/cyclo.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "cli/src/scan/metrics/naming.rs",
+          "before": "cli/src/scan/metrics/naming.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/src/scan/walk.rs",
+          "before": "cli/src/scan/walk.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 67,
+          "added_moved": 9,
+          "added_novel": 58,
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "deleted": 37,
+          "removed_deleted": 28,
+          "removed_moved": 9
+        },
+        {
+          "added": 51,
+          "added_moved": 0,
+          "added_novel": 51,
+          "after": "cli/tests/divergence_stances.rs",
+          "before": "cli/tests/divergence_stances.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 21,
+          "added_moved": 0,
+          "added_novel": 21,
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": "cli/tests/sonar_whitepaper.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "551fa4111e5e43084cca851ad419a3c0ea8aedc1",
+      "subject": "M1: attack-review fix batch (3 defects, 6 risks, 4 nits dispositioned)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 29,
+          "added_moved": 0,
+          "added_novel": 29,
+          "after": "cli/src/dedup/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 113,
+          "added_moved": 0,
+          "added_novel": 113,
+          "after": "cli/src/dedup/tokens.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 69,
+          "added_moved": 0,
+          "added_novel": 69,
+          "after": "cli/src/dedup/winnow.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 138,
+          "added_moved": 0,
+          "added_novel": 138,
+          "after": "cli/tests/dedup_core.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "1657114abf4c6c7eb0211d398d0b0d9b9299a32e",
+      "subject": "M2: dedup core - token normalization + winnowing fingerprints"
+    },
+    {
+      "pairs": [
+        {
+          "added": 166,
+          "added_moved": 0,
+          "added_novel": 166,
+          "after": "cli/src/dedup/index.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 107,
+          "added_moved": 0,
+          "added_novel": 107,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 112,
+          "added_moved": 0,
+          "added_novel": 112,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 1,
+          "added_novel": 31,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 6,
+          "removed_deleted": 5,
+          "removed_moved": 1
+        },
+        {
+          "added": 116,
+          "added_moved": 0,
+          "added_novel": 116,
+          "after": "cli/tests/dedup_index.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "d7a4bdbee8ea08a3a850729ecb9c1b0d7fb926dd",
+      "subject": "M2: SQLite inverted index + incremental invalidation + ce dedup CLI"
+    },
+    {
+      "pairs": [
+        {
+          "added": 93,
+          "added_moved": 0,
+          "added_novel": 93,
+          "after": "cli/tests/dedup_property.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "74d29e22a6a2bbcc295399ee1ffbf97bf1da0482",
+      "subject": "M2: proptest incremental==full property + jscpd calibration round 1"
+    },
+    {
+      "pairs": [
+        {
+          "added": 33,
+          "added_moved": 1,
+          "added_novel": 32,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 23,
+          "removed_deleted": 15,
+          "removed_moved": 8
+        },
+        {
+          "added": 42,
+          "added_moved": 0,
+          "added_novel": 42,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 129,
+          "added_moved": 0,
+          "added_novel": 129,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 59,
+          "removed_deleted": 59,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 7,
+          "added_novel": 8,
+          "after": "cli/src/dedup/tokens.rs",
+          "before": "cli/src/dedup/tokens.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 152,
+          "added_moved": 0,
+          "added_novel": 152,
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "384d4c790283e5ebdd25d21f0371aee3960eeb6c",
+      "subject": "M2: pair layer -> anchor-extend-verify; calibration round 2"
+    },
+    {
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "ffe4ad0c2333f49a2a4adc29b4740b0130ec613a",
+      "subject": "M2: precision arbitration 94.7%; distinct-token degeneracy signal"
+    },
+    {
+      "pairs": [
+        {
+          "added": 49,
+          "added_moved": 0,
+          "added_novel": 49,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 49,
+          "added_moved": 0,
+          "added_novel": 49,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 15,
+          "removed_deleted": 15,
+          "removed_moved": 0
+        },
+        {
+          "added": 50,
+          "added_moved": 4,
+          "added_novel": 46,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 28,
+          "removed_deleted": 24,
+          "removed_moved": 4
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "cli/src/dedup/tokens.rs",
+          "before": "cli/src/dedup/tokens.rs",
+          "deleted": 26,
+          "removed_deleted": 26,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "cli/src/scan/spec.rs",
+          "before": "cli/src/scan/spec.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 31,
+          "added_moved": 0,
+          "added_novel": 31,
+          "after": "cli/tests/dedup_core.rs",
+          "before": "cli/tests/dedup_core.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 0,
+          "added_novel": 34,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 0,
+          "added_novel": 34,
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": "cli/tests/dedup_pairs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/dedup_property.rs",
+          "before": "cli/tests/dedup_property.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "b2bf52ae133c0af9533974aee4328de4bb760367",
+      "subject": "M2: dedup attack-review fix batch (4 defects fixed, full disposition)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 17,
+          "added_moved": 7,
+          "added_novel": 10,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 9,
+          "removed_deleted": 2,
+          "removed_moved": 7
+        }
+      ],
+      "sha": "3ebefd1395a80e74984ebc22537df561d4ef79ff",
+      "subject": "dogfood: split Index::open cache-key block (cyclomatic 16 -> under)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 95,
+          "added_moved": 0,
+          "added_novel": 95,
+          "after": "cli/src/daemon/client.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/daemon/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 67,
+          "added_moved": 0,
+          "added_novel": 67,
+          "after": "cli/src/daemon/proto.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 169,
+          "added_moved": 0,
+          "added_novel": 169,
+          "after": "cli/src/daemon/server.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 2,
+          "added_novel": 21,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 3,
+          "removed_deleted": 1,
+          "removed_moved": 2
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 43,
+          "added_moved": 0,
+          "added_novel": 43,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 154,
+          "added_moved": 0,
+          "added_novel": 154,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "270710454db908bf5f840448560c749605d12f89",
+      "subject": "M2: per-project daemon (ADR-003) - lazy start, NDJSON local socket"
+    },
+    {
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 16,
+          "added_moved": 7,
+          "added_novel": 9,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 12,
+          "removed_deleted": 5,
+          "removed_moved": 7
+        }
+      ],
+      "sha": "06268248d3cd3cb2eb6beabbe607f46d679a6b64",
+      "subject": "dogfood+clippy: daemon polish (needless Ok, &Path, 51-line test split)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 154,
+          "added_moved": 0,
+          "added_novel": 154,
+          "after": "cli/tests/perf_budget.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "9f5df476a2dafd6967475ac1051a9c2bfbe23c6d",
+      "subject": "M2: perf budgets measured - all three cleared with wide margins"
+    },
+    {
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "e7bb8511637d464a3781a4c840dbb78cc8b73732",
+      "subject": "clippy: doc-comment leading > read as blockquote (perf_budget)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/src/daemon/proto.rs",
+          "before": "cli/src/daemon/proto.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 11,
+          "added_moved": 0,
+          "added_novel": 11,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 19,
+          "added_moved": 0,
+          "added_novel": 19,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 26,
+          "added_moved": 0,
+          "added_novel": 26,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "cli/tests/dedup_pairs.rs",
+          "before": "cli/tests/dedup_pairs.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "0511d4655756a8420518668bafa4a2125f3b169c",
+      "subject": "M2 close: full-repo acceptance run - all gates met"
+    },
+    {
+      "pairs": [
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "cli/src/daemon/proto.rs",
+          "before": "cli/src/daemon/proto.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 41,
+          "added_moved": 0,
+          "added_novel": 41,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 30,
+          "added_moved": 0,
+          "added_novel": 30,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 115,
+          "added_moved": 0,
+          "added_novel": 115,
+          "after": "cli/src/dedup/probe.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 166,
+          "added_moved": 0,
+          "added_novel": 166,
+          "after": "cli/tests/probe_gate.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "fdb28c98d599154ca2fbc08449530915cd965d38",
+      "subject": "M3: content probe core - the PreToolUse cheap gate (ADR-004)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 60,
+          "added_moved": 18,
+          "added_novel": 42,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 51,
+          "removed_deleted": 31,
+          "removed_moved": 20
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "cli/src/dedup/probe.rs",
+          "before": "cli/src/dedup/probe.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "cli/tests/probe_gate.rs",
+          "before": "cli/tests/probe_gate.rs",
+          "deleted": 40,
+          "removed_deleted": 40,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "d5c2fe9f568c8a4adeeaa259a4956ed4898b9c78",
+      "subject": "dogfood: split daemon dispatch, bundle probe Target (3 warns cleared)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/src/config.rs",
+          "before": "cli/src/config.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 31,
+          "added_moved": 0,
+          "added_novel": 31,
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 173,
+          "added_moved": 0,
+          "added_novel": 173,
+          "after": "cli/src/guard.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 143,
+          "added_moved": 0,
+          "added_novel": 143,
+          "after": "cli/tests/guard_hook.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "a006ab600e7bbcd9f9c1ae07a3b62384d3450505",
+      "subject": "M3: ce probe --hook gate + Windows handle-inheritance leak fix"
+    },
+    {
+      "pairs": [
+        {
+          "added": 147,
+          "added_moved": 0,
+          "added_novel": 147,
+          "after": "cli/src/audit.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 145,
+          "added_moved": 0,
+          "added_novel": 145,
+          "after": "cli/tests/audit_stop.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "427a9cb4bc61590ec6ac72b1f1ba61cab4be4b58",
+      "subject": "M3: Stop audit v1 - net LOC + duplicates touching changed files"
+    },
+    {
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/src/dedup/index.rs",
+          "before": "cli/src/dedup/index.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 80,
+          "added_moved": 0,
+          "added_novel": 80,
+          "after": "cli/src/health.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 14,
+          "added_moved": 0,
+          "added_novel": 14,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 110,
+          "added_moved": 0,
+          "added_novel": 110,
+          "after": "cli/tests/health_plugin.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "ff4b5169f8f1d16b3a116a289f02261d990c9906",
+      "subject": "M3: SessionStart health line + plugin packaging (0.x preview shape)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 36,
+          "added_moved": 0,
+          "added_novel": 36,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 136,
+          "added_moved": 0,
+          "added_novel": 136,
+          "after": "cli/src/mcp.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 11,
+          "added_novel": 21,
+          "after": "cli/src/scan/mod.rs",
+          "before": "cli/src/scan/mod.rs",
+          "deleted": 18,
+          "removed_deleted": 7,
+          "removed_moved": 11
+        },
+        {
+          "added": 130,
+          "added_moved": 0,
+          "added_novel": 130,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "0105efa55e63d4ca98ed8c038b5fe0cdaceb2e54",
+      "subject": "M3: pre-commit gate + minimal MCP server (scan, check_duplication)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 30,
+          "added_moved": 2,
+          "added_novel": 28,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 43,
+          "removed_deleted": 39,
+          "removed_moved": 4
+        },
+        {
+          "added": 45,
+          "added_moved": 0,
+          "added_novel": 45,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 17,
+          "removed_deleted": 17,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "7917643211265749f56d9606935d2942af1ce56f",
+      "subject": "dogfood: split main() dispatch and the MCP round-trip test"
+    },
+    {
+      "pairs": [
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/dedup/probe.rs",
+          "before": "cli/src/dedup/probe.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 162,
+          "added_moved": 0,
+          "added_novel": 162,
+          "after": "cli/tests/fpr_replay.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "3acd16a923a175c05e99583101cbf94fb8b5b998",
+      "subject": "M3: FPR replay harness - 630 real edit events, 0 false intercepts"
+    },
+    {
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 86,
+          "removed_deleted": 43,
+          "removed_moved": 43
+        },
+        {
+          "added": 141,
+          "added_moved": 78,
+          "added_novel": 63,
+          "after": "cli/tests/common/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 1,
+          "added_novel": 8,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 81,
+          "removed_deleted": 41,
+          "removed_moved": 40
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/dedup_index.rs",
+          "before": "cli/tests/dedup_index.rs",
+          "deleted": 26,
+          "removed_deleted": 4,
+          "removed_moved": 22
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/tests/dedup_property.rs",
+          "before": "cli/tests/dedup_property.rs",
+          "deleted": 21,
+          "removed_deleted": 14,
+          "removed_moved": 7
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "deleted": 59,
+          "removed_deleted": 9,
+          "removed_moved": 50
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/tests/health_plugin.rs",
+          "before": "cli/tests/health_plugin.rs",
+          "deleted": 35,
+          "removed_deleted": 15,
+          "removed_moved": 20
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 35,
+          "removed_deleted": 3,
+          "removed_moved": 32
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "deleted": 44,
+          "removed_deleted": 19,
+          "removed_moved": 25
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/probe_gate.rs",
+          "before": "cli/tests/probe_gate.rs",
+          "deleted": 44,
+          "removed_deleted": 19,
+          "removed_moved": 25
+        }
+      ],
+      "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77",
+      "subject": "dogfood: extract shared test helpers into tests/common (ce-flagged debt)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 56,
+          "added_moved": 0,
+          "added_novel": 56,
+          "after": "cli/tests/perf_budget.rs",
+          "before": "cli/tests/perf_budget.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "86febdfc4d6da6bc5d611bb234b48c1afba226fd",
+      "subject": "M3: hook e2e latency budget measured - ce side p95 69ms vs 1s gate"
+    },
+    {
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/src/config.rs",
+          "before": "cli/src/config.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 10,
+          "removed_deleted": 8,
+          "removed_moved": 2
+        },
+        {
+          "added": 35,
+          "added_moved": 15,
+          "added_novel": 20,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 33,
+          "removed_deleted": 16,
+          "removed_moved": 17
+        },
+        {
+          "added": 17,
+          "added_moved": 4,
+          "added_novel": 13,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 5,
+          "removed_deleted": 3,
+          "removed_moved": 2
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 7,
+          "removed_deleted": 6,
+          "removed_moved": 1
+        },
+        {
+          "added": 35,
+          "added_moved": 1,
+          "added_novel": 34,
+          "after": "cli/tests/dedup_check.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 12,
+          "removed_deleted": 10,
+          "removed_moved": 2
+        }
+      ],
+      "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392",
+      "subject": "R12: only-shrink clone ratchet in CI (ce dedup --check)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 49,
+          "added_moved": 11,
+          "added_novel": 38,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 27,
+          "removed_deleted": 16,
+          "removed_moved": 11
+        }
+      ],
+      "sha": "ec2d00756cbd53f09cefd658eedadb091c516720",
+      "subject": "R10: dedup report JSON golden - pins the 0.4.0 wire shape"
+    },
+    {
+      "pairs": [
+        {
+          "added": 138,
+          "added_moved": 0,
+          "added_novel": 138,
+          "after": "cli/src/dedup/groups.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/src/dedup/mod.rs",
+          "before": "cli/src/dedup/mod.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/src/dedup/pairs.rs",
+          "before": "cli/src/dedup/pairs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 88,
+          "added_moved": 0,
+          "added_novel": 88,
+          "after": "cli/tests/dedup_groups.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "5ab3c8169e023ad9ce332faca96711859fde002c",
+      "subject": "R8: k-way clone-group representation (dedup schema 0.5.0)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 55,
+          "added_moved": 14,
+          "added_novel": 41,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 42,
+          "removed_deleted": 28,
+          "removed_moved": 14
+        },
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 27,
+          "added_moved": 1,
+          "added_novel": 26,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 15,
+          "removed_deleted": 8,
+          "removed_moved": 7
+        },
+        {
+          "added": 11,
+          "added_moved": 6,
+          "added_novel": 5,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "a3cf54d1f113f693a593fb6719e2c532d59c6c25",
+      "subject": "A9f: degradation is visible everywhere it can happen"
+    },
+    {
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 6,
+          "added_novel": 6,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 31,
+          "removed_deleted": 9,
+          "removed_moved": 22
+        },
+        {
+          "added": 11,
+          "added_moved": 5,
+          "added_novel": 6,
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "deleted": 30,
+          "removed_deleted": 9,
+          "removed_moved": 21
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 41,
+          "added_moved": 16,
+          "added_novel": 25,
+          "after": "cli/src/hookio.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "6d8824e204dbb4435ebe7e48cc91e39ddcac5e50",
+      "subject": "governance: shared hook intake + observe writer (src/hookio.rs)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 11,
+          "added_moved": 4,
+          "added_novel": 7,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "cli/tests/crosscheck_rca.rs",
+          "before": "cli/tests/crosscheck_rca.rs",
+          "deleted": 8,
+          "removed_deleted": 6,
+          "removed_moved": 2
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/dedup_core.rs",
+          "before": "cli/tests/dedup_core.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/divergence_stances.rs",
+          "before": "cli/tests/divergence_stances.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/metrics.rs",
+          "before": "cli/tests/metrics.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/sonar_whitepaper.rs",
+          "before": "cli/tests/sonar_whitepaper.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        }
+      ],
+      "sha": "1ef9cdf608d2628d629e049a986e826f6a12e83e",
+      "subject": "governance: one tree-sitter parse harness for all test measures"
+    },
+    {
+      "pairs": [
+        {
+          "added": 18,
+          "added_moved": 0,
+          "added_novel": 18,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/src/daemon/client.rs",
+          "before": "cli/src/daemon/client.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 3,
+          "added_novel": 21,
+          "after": "cli/src/dedup/groups.rs",
+          "before": "cli/src/dedup/groups.rs",
+          "deleted": 42,
+          "removed_deleted": 39,
+          "removed_moved": 3
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 48,
+          "added_moved": 0,
+          "added_novel": 48,
+          "after": "cli/src/health.rs",
+          "before": "cli/src/health.rs",
+          "deleted": 14,
+          "removed_deleted": 14,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "cli/src/main.rs",
+          "before": "cli/src/main.rs",
+          "deleted": 13,
+          "removed_deleted": 13,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 2,
+          "removed_deleted": 0,
+          "removed_moved": 2
+        },
+        {
+          "added": 7,
+          "added_moved": 2,
+          "added_novel": 5,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 66,
+          "added_moved": 3,
+          "added_novel": 63,
+          "after": "cli/tests/dedup_groups.rs",
+          "before": "cli/tests/dedup_groups.rs",
+          "deleted": 10,
+          "removed_deleted": 7,
+          "removed_moved": 3
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "deleted": 4,
+          "removed_deleted": 3,
+          "removed_moved": 1
+        },
+        {
+          "added": 33,
+          "added_moved": 0,
+          "added_novel": 33,
+          "after": "cli/tests/health_plugin.rs",
+          "before": "cli/tests/health_plugin.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 1,
+          "added_novel": 7,
+          "after": "cli/tests/mcp_precommit.rs",
+          "before": "cli/tests/mcp_precommit.rs",
+          "deleted": 2,
+          "removed_deleted": 0,
+          "removed_moved": 2
+        }
+      ],
+      "sha": "da8eb210b88ceec11eb46d01aa77b0ad29b43c5e",
+      "subject": "fix: attack-review batch — group semantics, doctor side effects, feed discrimination"
+    },
+    {
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "cli/src/hookio.rs",
+          "before": "cli/src/hookio.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/tests/audit_stop.rs",
+          "before": "cli/tests/audit_stop.rs",
+          "deleted": 17,
+          "removed_deleted": 6,
+          "removed_moved": 11
+        },
+        {
+          "added": 79,
+          "added_moved": 55,
+          "added_novel": 24,
+          "after": "cli/tests/common/mod.rs",
+          "before": "cli/tests/common/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/guard_hook.rs",
+          "before": "cli/tests/guard_hook.rs",
+          "deleted": 22,
+          "removed_deleted": 6,
+          "removed_moved": 16
+        },
+        {
+          "added": 52,
+          "added_moved": 0,
+          "added_novel": 52,
+          "after": "cli/tests/observe_feed.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/tests/report_schema.rs",
+          "before": "cli/tests/report_schema.rs",
+          "deleted": 34,
+          "removed_deleted": 4,
+          "removed_moved": 30
+        }
+      ],
+      "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3",
+      "subject": "observe feed contract: per-line schema id + golden (ce.observe/0.1.0)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 27,
+          "added_moved": 0,
+          "added_novel": 27,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "98d2af3e0be354867edc32cc7033cab86108058a",
+      "subject": "fix: probe self-exclusion dead on Windows (canonical-root strip mismatch)"
+    },
+    {
+      "pairs": [
+        {
+          "added": 53,
+          "added_moved": 0,
+          "added_novel": 53,
+          "after": "cli/src/audit.rs",
+          "before": "cli/src/audit.rs",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 1,
+          "added_novel": 33,
+          "after": "cli/src/guard.rs",
+          "before": "cli/src/guard.rs",
+          "deleted": 18,
+          "removed_deleted": 17,
+          "removed_moved": 1
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "cli/src/hookio.rs",
+          "before": "cli/src/hookio.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/observe_feed.rs",
+          "before": "cli/tests/observe_feed.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "ebe27b18f0041e6cd8a46cf74eb26b831179d12f",
+      "subject": "observe feed 0.2.0: session identity, without which two acceptance criteria were unmeasurable"
+    },
+    {
+      "pairs": [
+        {
+          "added": 60,
+          "added_moved": 0,
+          "added_novel": 60,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 37,
+          "added_moved": 0,
+          "added_novel": 37,
+          "after": "cli/tests/daemon_e2e.rs",
+          "before": "cli/tests/daemon_e2e.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "8619437dda8d46a1d8dcbf0028abd481ba0190cb",
+      "subject": "M3: T1 interception transcript + clean-env install verified; cold-start blind window closed"
+    },
+    {
+      "pairs": [
+        {
+          "added": 84,
+          "added_moved": 17,
+          "added_novel": 67,
+          "after": "cli/src/daemon/coldstart.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/daemon/mod.rs",
+          "before": "cli/src/daemon/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "cli/src/daemon/server.rs",
+          "before": "cli/src/daemon/server.rs",
+          "deleted": 57,
+          "removed_deleted": 39,
+          "removed_moved": 18
+        }
+      ],
+      "sha": "822e7182f96811f1682a5b797c99faff58e0d8cf",
+      "subject": "fix: cold-start races CI caught on both platforms; state machine gets its own module"
+    },
+    {
+      "pairs": [
+        {
+          "added": 184,
+          "added_moved": 0,
+          "added_novel": 184,
+          "after": "cli/tests/eval_extract/freeze.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 215,
+          "added_moved": 0,
+          "added_novel": 215,
+          "after": "cli/tests/eval_extract/main.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 278,
+          "added_moved": 0,
+          "added_novel": 278,
+          "after": "cli/tests/eval_extract/scan.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "1a03f687c1d4e79ab8dc18a7d8cc9db45b491b77",
+      "subject": "M4: pre-registered evaluation set v1 frozen before any classifier code exists"
+    },
+    {
+      "pairs": [
+        {
+          "added": 172,
+          "added_moved": 0,
+          "added_novel": 172,
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "b99c27ad164398cd9fdadc1f5da3a8c96784f818",
+      "subject": "M4-2: heuristic pre-labels for the 200-sample labeling subset"
+    },
+    {
+      "pairs": [
+        {
+          "added": 117,
+          "added_moved": 0,
+          "added_novel": 117,
+          "after": "cli/tests/eval_labels.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "4a4bee13e68a4899cbe0bd23dd07eb863a22f6a4",
+      "subject": "M4-2c: ground truth finalized — 200/200 reviewed, 6 corrections, one root cause"
+    },
+    {
+      "pairs": [
+        {
+          "added": 188,
+          "added_moved": 0,
+          "added_novel": 188,
+          "after": "cli/tests/eval_baseline.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "caba57d9c2db8b3c1eb63dd38d8c6b5516e6de64",
+      "subject": "M4-3: L0 baseline scored — the ladder's two zero-custom rungs fail in opposite directions"
+    },
+    {
+      "pairs": [
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/tests/eval_baseline.rs",
+          "before": "cli/tests/eval_baseline.rs",
+          "deleted": 43,
+          "removed_deleted": 15,
+          "removed_moved": 28
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "cli/tests/eval_labels.rs",
+          "before": "cli/tests/eval_labels.rs",
+          "deleted": 20,
+          "removed_deleted": 3,
+          "removed_moved": 17
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": "cli/tests/eval_prelabel.rs",
+          "deleted": 15,
+          "removed_deleted": 7,
+          "removed_moved": 8
+        },
+        {
+          "added": 52,
+          "added_moved": 31,
+          "added_novel": 21,
+          "after": "cli/tests/eval_support/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "f84aaa3c8cf71b3cfbf74064d0bd5e65a6a83a89",
+      "subject": "fix: our own ratchet caught our own copy-paste — eval helpers get one home"
+    },
+    {
+      "pairs": [
+        {
+          "added": 197,
+          "added_moved": 0,
+          "added_novel": 197,
+          "after": "cli/src/fourclass/diff.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 200,
+          "added_moved": 0,
+          "added_novel": 200,
+          "after": "cli/src/fourclass/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 115,
+          "added_moved": 0,
+          "added_novel": 115,
+          "after": "cli/src/fourclass/units.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "cli/src/lib.rs",
+          "before": "cli/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "cli/tests/eval_baseline.rs",
+          "before": "cli/tests/eval_baseline.rs",
+          "deleted": 12,
+          "removed_deleted": 12,
+          "removed_moved": 0
+        },
+        {
+          "added": 142,
+          "added_moved": 0,
+          "added_novel": 142,
+          "after": "cli/tests/eval_l1.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "cli/tests/eval_prelabel.rs",
+          "before": "cli/tests/eval_prelabel.rs",
+          "deleted": 29,
+          "removed_deleted": 21,
+          "removed_moved": 8
+        },
+        {
+          "added": 36,
+          "added_moved": 8,
+          "added_novel": 28,
+          "after": "cli/tests/eval_support/mod.rs",
+          "before": "cli/tests/eval_support/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+      "subject": "M4-4: L1 lands — function-boundary alignment closes both L0 gaps"
+    }
+  ],
+  "excluded": [
+    {
+      "reason": "no in-scope files",
+      "sha": "37c9a6b07dc714f873847fc249743850f3cb76c9"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "06bbc95c06b7e822acc3c385819cff3c55bb30d4"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "64780b9981fa24ec4d1a5ab7afe7922ba1b5b91b"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "ceae20f60c73d8a00cdabd45231aeb736df3d6e3"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "d5483dc4eda9993473140658610a6cbfcf2886a3"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "2e45745e3da67350b253d5623fd052cfeca05116"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "0a61d7f44457fde5a74d7fc9950b96f59c45f9be"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "791b804c35c8fc0b8f1e922e07876da08b27c12d"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "023abdc83cc3cad31d253324e8c300b1cb2ccee4"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "8ee3ea46b22429d8295c952719f20d83406c0bce"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "f8ab86e945b6a626ca3fd92a0fbd6553ea4e0a44"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "236dc54a8bec4549ffa72458d731615fba5b6d40"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "2f28b46366248b3110c826cf464ccf9c34e2780b"
+    },
+    {
+      "reason": "no in-scope files",
+      "sha": "8a71f12936d3618e315264971301d16d26d3d1e7"
+    }
+  ],
+  "method": "whole-commit git diff -U0 -M -C --color-moved=blocks --color-moved-ws=allow-indentation-change over this repository's own linear history; scope = five supported languages minus memory/ paths; per-pair splits numstat-conserved. blocks mode trades sub-block move recall for immunity to plain mode's trivial-line cross-file artifact.",
+  "schema": "ce.eval-commit-slice/1.0.0",
+  "summary": {
+    "commits": 47,
+    "commits_excluded": 14,
+    "moved_bearing": 22,
+    "totals": {
+      "added_moved": 352,
+      "added_novel": 10015,
+      "removed_deleted": 959,
+      "removed_moved": 602
+    }
+  },
+  "universe_tip": "2f40f22b85dcf3fd0979395286223ddf972550ff"
+}

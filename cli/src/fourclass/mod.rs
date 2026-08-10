@@ -99,8 +99,10 @@ fn hash_lines(lines: &[&str]) -> Vec<u64> {
 
 /// A line can carry move identity only if something in it names
 /// anything — blank lines and bare punctuation match anywhere and
-/// mean nothing.
-fn significant(line: &str) -> bool {
+/// mean nothing. Public because it *is* the ground-truth significance
+/// convention (labels-v1 / commit-labels-v1); eval tooling must apply
+/// the same rule, from one source.
+pub fn significant(line: &str) -> bool {
     line.chars().any(char::is_alphanumeric)
 }
 
