@@ -1,0 +1,219 @@
+{
+  "l0_numstat": {
+    "abs_line_error": {
+      "added_moved": 32,
+      "added_novel": 32,
+      "removed_deleted": 30,
+      "removed_moved": 30
+    },
+    "mismatched_samples": [
+      {
+        "gt": [
+          49,
+          5,
+          9,
+          3
+        ],
+        "id": "02b5a73ba93a483a",
+        "pred": [
+          54,
+          0,
+          12,
+          0
+        ]
+      },
+      {
+        "gt": [
+          9,
+          2,
+          4,
+          2
+        ],
+        "id": "3a36ecd8fd4badce",
+        "pred": [
+          11,
+          0,
+          6,
+          0
+        ]
+      },
+      {
+        "gt": [
+          42,
+          3,
+          36,
+          3
+        ],
+        "id": "3a5f17a0770c7a9a",
+        "pred": [
+          45,
+          0,
+          39,
+          0
+        ]
+      },
+      {
+        "gt": [
+          52,
+          17,
+          33,
+          17
+        ],
+        "id": "97c24eca4a2c04f2",
+        "pred": [
+          69,
+          0,
+          50,
+          0
+        ]
+      },
+      {
+        "gt": [
+          10,
+          3,
+          3,
+          3
+        ],
+        "id": "b60e1ff2c9ba0685",
+        "pred": [
+          13,
+          0,
+          6,
+          0
+        ]
+      },
+      {
+        "gt": [
+          15,
+          2,
+          5,
+          2
+        ],
+        "id": "edae5fbe806fd294",
+        "pred": [
+          17,
+          0,
+          7,
+          0
+        ]
+      }
+    ],
+    "moved_lines": {
+      "detected": 0,
+      "ground_truth": 62,
+      "predicted": 0
+    },
+    "sample_exact": 194,
+    "sample_total": 200
+  },
+  "method": "l0_numstat = git diff --no-index --numstat -M -C --find-copies-harder (plan §4.3 B3c; rename/copy flags are inert on single-file pairs — verified per sample by the ignored test); reference_color_moved = the prelabel engine scored against the corrected ground truth",
+  "reference_color_moved": {
+    "abs_line_error": {
+      "added_moved": 32,
+      "added_novel": 32,
+      "removed_deleted": 31,
+      "removed_moved": 31
+    },
+    "mismatched_samples": [
+      {
+        "gt": [
+          32,
+          0,
+          18,
+          0
+        ],
+        "id": "08e4a7e316141033",
+        "pred": [
+          29,
+          3,
+          17,
+          1
+        ]
+      },
+      {
+        "gt": [
+          12,
+          0,
+          3,
+          0
+        ],
+        "id": "1293b847937792d0",
+        "pred": [
+          11,
+          1,
+          1,
+          2
+        ]
+      },
+      {
+        "gt": [
+          88,
+          0,
+          115,
+          0
+        ],
+        "id": "43d74aa52e985f7f",
+        "pred": [
+          78,
+          10,
+          100,
+          15
+        ]
+      },
+      {
+        "gt": [
+          39,
+          0,
+          24,
+          0
+        ],
+        "id": "46e45cae1c37ab64",
+        "pred": [
+          34,
+          5,
+          23,
+          1
+        ]
+      },
+      {
+        "gt": [
+          49,
+          0,
+          76,
+          0
+        ],
+        "id": "53cf1e5b22d85428",
+        "pred": [
+          43,
+          6,
+          68,
+          8
+        ]
+      },
+      {
+        "gt": [
+          52,
+          17,
+          33,
+          17
+        ],
+        "id": "97c24eca4a2c04f2",
+        "pred": [
+          45,
+          24,
+          29,
+          21
+        ]
+      }
+    ],
+    "moved_lines": {
+      "detected": 62,
+      "ground_truth": 62,
+      "predicted": 125
+    },
+    "sample_exact": 194,
+    "sample_total": 200
+  },
+  "schema": "ce.eval-baseline/1.0.0",
+  "source_manifest": "2026-08-10T15:24:50"
+}
