@@ -5,6 +5,7 @@ pub mod audit;
 pub mod config;
 pub mod daemon;
 pub mod dedup;
+pub mod fourclass;
 pub mod guard;
 pub mod handshake;
 pub mod health;

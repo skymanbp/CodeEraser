@@ -14,7 +14,7 @@
 mod eval_support;
 
 use serde_json::{Value, json};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Command;
 
 #[derive(Default)]
@@ -23,17 +23,6 @@ struct LineClasses {
     added_moved: usize,
     removed_deleted: usize,
     removed_moved: usize,
-}
-
-fn out_dir() -> PathBuf {
-    PathBuf::from(std::env::var("CE_EVAL_OUT").unwrap_or_else(|_| "../.ce-eval".into()))
-}
-
-fn read_sample(dir: &Path, id: &str) -> Value {
-    let path = dir.join("samples").join(format!("{id}.json"));
-    let text = std::fs::read_to_string(&path)
-        .unwrap_or_else(|e| panic!("{}: {e} — regenerate via eval_extract", path.display()));
-    serde_json::from_str(&text).expect("sample json")
 }
 
 /// Split a line into its leading SGR parameter runs and the first
@@ -121,26 +110,19 @@ fn prelabel_one(tmp: &Path, id: &str, sample: &Value) -> Value {
 #[test]
 #[ignore] // needs the local .ce-eval payloads (eval_extract output)
 fn prelabel_labeling_subset() {
-    let manifest: Value = serde_json::from_str(
-        &std::fs::read_to_string("../contracts/eval/manifest-v1.json").expect("manifest"),
-    )
-    .expect("manifest json");
-    let samples_dir = out_dir();
+    let manifest = eval_support::load("../contracts/eval/manifest-v1.json");
+    let samples_dir = eval_support::out_dir();
     let tmp = samples_dir.join("tmp-prelabel");
     std::fs::create_dir_all(&tmp).expect("tmp dir");
 
     let mut rows = Vec::new();
-    for row in manifest["samples"].as_array().expect("samples") {
-        if row["labeling"].as_bool() != Some(true) {
-            continue;
-        }
+    for row in eval_support::labeling_rows(&manifest) {
         let id = row["id"].as_str().expect("id");
-        let sample = read_sample(&samples_dir, id);
+        let sample = eval_support::read_sample(&samples_dir, id);
         rows.push(prelabel_one(&tmp, id, &sample));
     }
     std::fs::remove_dir_all(&tmp).expect("cleanup tmp");
-    assert_eq!(rows.len(), 200, "labeling subset size");
-    rows.sort_by(|a, b| a["id"].as_str().cmp(&b["id"].as_str()));
+    eval_support::finish_rows(&mut rows);
 
     let git_version = Command::new("git").arg("--version").output().expect("git");
     let doc = json!({
@@ -152,10 +134,9 @@ fn prelabel_labeling_subset() {
                    deleted/novel, 35/36 = moved; numstat cross-checked",
         "prelabels": rows,
     });
-    std::fs::write(
+    eval_support::write_doc(
         "../contracts/eval/prelabels-v1.json",
-        serde_json::to_string_pretty(&doc).expect("ser"),
-    )
-    .expect("write prelabels");
-    println!("prelabeled 200 samples; numstat splits cross-checked");
+        &doc,
+        "prelabeled 200 samples; numstat splits cross-checked",
+    );
 }

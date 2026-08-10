@@ -116,16 +116,12 @@ fn baseline_l0_matches_derivation() {
 fn generate_baseline_after_git_verification() {
     let pre = load("../contracts/eval/prelabels-v1.json");
     let lab = load("../contracts/eval/labels-v1.json");
-    let out_dir = std::path::PathBuf::from(
-        std::env::var("CE_EVAL_OUT").unwrap_or_else(|_| "../.ce-eval".into()),
-    );
+    let out_dir = eval_support::out_dir();
     let tmp = out_dir.join("tmp-baseline");
     std::fs::create_dir_all(&tmp).expect("tmp dir");
     for row in pre["prelabels"].as_array().expect("prelabels") {
         let id = row["id"].as_str().expect("id");
-        let path = out_dir.join("samples").join(format!("{id}.json"));
-        let sample: Value = serde_json::from_str(&std::fs::read_to_string(&path).expect("sample"))
-            .expect("sample json");
+        let sample = eval_support::read_sample(&out_dir, id);
         let a = tmp.join("a");
         let b = tmp.join("b");
         std::fs::write(&a, sample["before"].as_str().unwrap()).expect("a");
@@ -139,11 +135,9 @@ fn generate_baseline_after_git_verification() {
         );
     }
     std::fs::remove_dir_all(&tmp).expect("cleanup");
-    let doc = build_doc(&pre, &lab);
-    std::fs::write(
+    eval_support::write_doc(
         "../contracts/eval/baseline-l0-v1.json",
-        serde_json::to_string_pretty(&doc).expect("ser") + "\n",
-    )
-    .expect("write baseline");
-    println!("verified 200 samples under -M -C --find-copies-harder; baseline written");
+        &build_doc(&pre, &lab),
+        "verified 200 samples under -M -C --find-copies-harder; baseline written",
+    );
 }
