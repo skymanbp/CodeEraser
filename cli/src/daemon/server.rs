@@ -4,6 +4,7 @@
 //! after 30 min idle or on a version-skew hello.
 
 use super::coldstart;
+use super::judge::Judge;
 use super::proto::{DAEMON_PROTO, Request, Response, major, socket_name};
 use anyhow::{Context, Result};
 use interprocess::local_socket::traits::ListenerExt;
@@ -45,6 +46,7 @@ pub fn serve(root: &Path) -> Result<()> {
     spawn_idle_watchdog(start);
     coldstart::init(&root); // after bind: a lost race spawns no build
     eprintln!("ce daemon: serving {} on {name}", root.display());
+    let mut judge = Judge::default();
     for conn in listener.incoming() {
         let stream = match conn {
             Ok(s) => s,
@@ -54,7 +56,7 @@ pub fn serve(root: &Path) -> Result<()> {
             }
         };
         touch(start);
-        match handle(stream, &root, start) {
+        match handle(stream, &root, start, &mut judge) {
             Ok(true) => {}
             Ok(false) => return Ok(()), // shutdown or skew exit
             Err(e) => eprintln!("ce daemon: connection: {e}"),
@@ -82,7 +84,7 @@ fn spawn_idle_watchdog(start: Instant) {
 }
 
 /// Returns Ok(false) when the daemon must stop (shutdown / skew).
-fn handle(stream: Stream, root: &Path, start: Instant) -> Result<bool> {
+fn handle(stream: Stream, root: &Path, start: Instant, judge: &mut Judge) -> Result<bool> {
     let mut reader = BufReader::new(stream);
     let mut line = String::new();
     loop {
@@ -103,7 +105,7 @@ fn handle(stream: Stream, root: &Path, start: Instant) -> Result<bool> {
             }
         };
         touch(start);
-        if !dispatch(&mut reader, root, start, req)? {
+        if !dispatch(&mut reader, root, start, judge, req)? {
             return Ok(false);
         }
     }
@@ -114,6 +116,7 @@ fn dispatch(
     reader: &mut BufReader<Stream>,
     root: &Path,
     start: Instant,
+    judge: &mut Judge,
     req: Request,
 ) -> Result<bool> {
     let (resp, keep) = match req {
@@ -129,6 +132,12 @@ fn dispatch(
             min_distinct,
         } => (dedup_reply(root, min_tokens, min_distinct), true),
         Request::Probe { file_path, content } => (probe_reply(root, &file_path, &content), true),
+        Request::FourClass { pairs } => (
+            Response::FourClassReport {
+                report: judge.classify(root, &pairs),
+            },
+            true,
+        ),
         Request::Shutdown => (Response::Bye, false),
     };
     reply(reader.get_mut(), &resp)?;

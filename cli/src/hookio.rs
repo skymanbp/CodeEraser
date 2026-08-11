@@ -19,7 +19,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.2.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.3.0";
 
 /// Read the whole hook envelope from stdin and deserialize it.
 /// None = unreadable stdin or unparseable JSON — the caller treats

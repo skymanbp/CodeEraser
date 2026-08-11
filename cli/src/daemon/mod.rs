@@ -5,5 +5,6 @@
 
 pub mod client;
 mod coldstart;
+pub mod judge;
 pub mod proto;
 pub mod server;

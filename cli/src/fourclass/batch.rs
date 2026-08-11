@@ -210,38 +210,37 @@ fn lines_of(v: &Value) -> Result<Vec<usize>, String> {
         .collect()
 }
 
-/// Unit-attribute each block by its head lines and aggregate.
+/// Unit-attribute each block LINE BY LINE — from/to lines correspond
+/// positionally, and one block can span several units (a bulk
+/// extraction moves many helpers in one contiguous region), so
+/// head-line attribution would name only the first unit and silently
+/// unname the rest (the relocation-register gate caught exactly
+/// that: 7 of 35 registered units unnamed).
 fn relocations_of(reply: &Value, inputs: &[PairInput]) -> Result<Vec<Relocation>, String> {
     let mut out: Vec<Relocation> = Vec::new();
     for b in reply["blocks"].as_array().ok_or("reply: blocks missing")? {
         let from_pair = b[0].as_u64().ok_or("block: from pair")? as usize;
         let to_pair = b[2].as_u64().ok_or("block: to pair")? as usize;
-        let from_lines = lines_of(&b[1])?;
-        let to_lines = lines_of(&b[3])?;
-        let owner = |input: &PairInput, text_is_before: bool, line: usize| {
-            let text = if text_is_before {
-                input.before
-            } else {
-                input.after
-            };
-            units::owner(&units::segments(text, input.lang), line).map(|u| u.key.clone())
-        };
-        let from_unit = owner(&inputs[from_pair], true, from_lines[0]);
-        let to_unit = owner(&inputs[to_pair], false, to_lines[0]);
-        match out.iter_mut().find(|r| {
-            r.from_pair == from_pair
-                && r.to_pair == to_pair
-                && r.from_unit == from_unit
-                && r.to_unit == to_unit
-        }) {
-            Some(r) => r.lines += from_lines.len(),
-            None => out.push(Relocation {
-                from_pair,
-                from_unit,
-                to_pair,
-                to_unit,
-                lines: from_lines.len(),
-            }),
+        let from_units = units::segments(inputs[from_pair].before, inputs[from_pair].lang);
+        let to_units = units::segments(inputs[to_pair].after, inputs[to_pair].lang);
+        for (fl, tl) in lines_of(&b[1])?.into_iter().zip(lines_of(&b[3])?) {
+            let from_unit = units::owner(&from_units, fl).map(|u| u.key.clone());
+            let to_unit = units::owner(&to_units, tl).map(|u| u.key.clone());
+            match out.iter_mut().find(|r| {
+                r.from_pair == from_pair
+                    && r.to_pair == to_pair
+                    && r.from_unit == from_unit
+                    && r.to_unit == to_unit
+            }) {
+                Some(r) => r.lines += 1,
+                None => out.push(Relocation {
+                    from_pair,
+                    from_unit,
+                    to_pair,
+                    to_unit,
+                    lines: 1,
+                }),
+            }
         }
     }
     Ok(out)

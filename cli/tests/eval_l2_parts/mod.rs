@@ -9,6 +9,7 @@
 use crate::eval_commit_review as review;
 use crate::eval_support::{pair_contents, pair_lang, u64s};
 use codeeraser::corelink::Link;
+use codeeraser::fourclass::MovedLine;
 use codeeraser::fourclass::batch::{BatchClassification, PairInput, classify_batch};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -73,6 +74,24 @@ pub fn side_text<'a>(texts: &'a Texts, side: &str, file: &str) -> &'a str {
         .unwrap_or_else(|| panic!("{side} {file} not in batch"))
 }
 
+/// (pair index, moved line) present in l2 but not in l1 — the
+/// shared substrate of the per-file delta and the unit naming.
+pub fn delta_moved<'a>(
+    l1: &'a BatchClassification,
+    l2: &'a BatchClassification,
+) -> Vec<(usize, &'a MovedLine)> {
+    let mut out = Vec::new();
+    for (i, (a, b)) in l1.pairs.iter().zip(&l2.pairs).enumerate() {
+        let base: Vec<(usize, bool)> = a.moved.iter().map(|m| (m.line, m.removed)).collect();
+        for m in &b.moved {
+            if !base.contains(&(m.line, m.removed)) {
+                out.push((i, m));
+            }
+        }
+    }
+    out
+}
+
 /// The L2-over-L1 delta as (side, file) -> sorted line list. Side
 /// "out" keys the before path, "in" the after path.
 pub fn delta_lines(
@@ -81,21 +100,16 @@ pub fn delta_lines(
     l2: &BatchClassification,
 ) -> BTreeMap<FileKey, Vec<usize>> {
     let mut out: BTreeMap<FileKey, Vec<usize>> = BTreeMap::new();
-    for ((a, b), (_, _, gp)) in l1.pairs.iter().zip(&l2.pairs).zip(texts) {
-        let base: Vec<(usize, bool)> = a.moved.iter().map(|m| (m.line, m.removed)).collect();
-        for m in &b.moved {
-            if base.contains(&(m.line, m.removed)) {
-                continue;
-            }
-            let (side, path) = if m.removed {
-                ("out", gp["before"].as_str().expect("before"))
-            } else {
-                ("in", gp["after"].as_str().expect("after"))
-            };
-            out.entry((side.into(), path.into()))
-                .or_default()
-                .push(m.line);
-        }
+    for (i, m) in delta_moved(l1, l2) {
+        let gp = &texts[i].2;
+        let (side, path) = if m.removed {
+            ("out", gp["before"].as_str().expect("before"))
+        } else {
+            ("in", gp["after"].as_str().expect("after"))
+        };
+        out.entry((side.into(), path.into()))
+            .or_default()
+            .push(m.line);
     }
     out.values_mut().for_each(|v| v.sort_unstable());
     out

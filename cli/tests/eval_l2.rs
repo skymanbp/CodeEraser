@@ -25,6 +25,7 @@
 
 mod eval_commit_review;
 mod eval_l2_parts;
+mod eval_l2_register;
 mod eval_support;
 
 use codeeraser::corelink::Link;
@@ -73,7 +74,13 @@ fn commit_row(link: &mut Link, s: &Value, labels: &Value) -> (Value, Vec<Value>)
                    "l1": a.to_vec(), "l2": b.to_vec()})
         })
         .collect();
-    (json!({"sha": sha, "pairs": pairs, "cross": rows}), ledger)
+    let relocations = eval_l2_register::relocations_json(&l2, gt_rows);
+    let moved_units = eval_l2_register::moved_units(&l1, &l2);
+    (
+        json!({"sha": sha, "pairs": pairs, "cross": rows, "relocations": relocations,
+               "moved_units": moved_units}),
+        ledger,
+    )
 }
 
 /// Determinism: reversed pair order must yield the same per-file
@@ -130,6 +137,8 @@ fn generate_commit_l2() {
                 &labels,
             );
             let mut doc_rows = std::mem::take(&mut rows);
+            let misses = eval_l2_register::register_misses(&doc_rows);
+            assert!(misses.is_empty(), "relocation register misses: {misses:?}");
             let summary = parts::summarize(&doc_rows, &ledger);
             doc_rows.push(json!({"extras_ledger": std::mem::take(&mut ledger)}));
             (summary, doc_rows)
@@ -175,6 +184,8 @@ fn commit_l2_consistent() {
     assert_eq!(s["cross_gt_out"], ml["cross_out"], "cross GT anchor");
     assert_eq!(s["cross_gt_in"], ml["cross_in"], "cross GT anchor");
     assert_eq!(s["cross_misses"], 0, "cross recall gate");
+    let misses = eval_l2_register::register_misses(rows);
+    assert!(misses.is_empty(), "relocation register misses: {misses:?}");
     check_rows(rows, &labels);
 }
 

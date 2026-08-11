@@ -32,14 +32,47 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
     let Some(tree) = parser.parse(text, None) else {
         return Vec::new();
     };
-    functions::extract(tree.root_node(), text.as_bytes(), spec::spec(lang))
+    let src = text.as_bytes();
+    let mut units: Vec<Unit> = functions::extract(tree.root_node(), src, spec::spec(lang))
         .into_iter()
         .map(|f| Unit {
             key: format!("{}/{}", f.name, f.params),
             start_line: f.start_line,
             end_line: f.end_line,
         })
-        .collect()
+        .collect();
+    units.extend(extra_units(tree.root_node(), src, lang));
+    units
+}
+
+/// Named non-function units (consts, types, …) from the kinds
+/// register — relocation reporting needs their names too; the M1
+/// function metrics do not, which is why this list lives in
+/// fourclass::kinds and not scan/spec.
+fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
+    let kinds = super::kinds::extra(lang);
+    let mut out = Vec::new();
+    if kinds.is_empty() {
+        return out;
+    }
+    let mut stack = vec![root];
+    while let Some(node) = stack.pop() {
+        if kinds.contains(&node.kind())
+            && let Some(name) = node.child_by_field_name("name")
+        {
+            out.push(Unit {
+                key: String::from_utf8_lossy(&src[name.byte_range()]).into_owned(),
+                start_line: node.start_position().row + 1,
+                end_line: node.end_position().row + 1,
+            });
+        }
+        for i in 0..node.child_count() {
+            if let Some(child) = node.child(i as u32) {
+                stack.push(child);
+            }
+        }
+    }
+    out
 }
 
 /// ATX headings open a section that runs to the next heading of any
@@ -105,11 +138,28 @@ mod tests {
         assert_eq!(owner(&units, 5).unwrap().key, "Two");
     }
 
+    /// The owning unit key of `line` in Rust `src` ("" = toplevel).
+    fn rust_owner(src: &str, line: usize) -> String {
+        let units = segments(src, Lang::Rust);
+        owner(&units, line)
+            .map(|u| u.key.clone())
+            .unwrap_or_default()
+    }
+
     #[test]
     fn nested_functions_resolve_to_innermost() {
         let src = "fn outer() {\n    fn inner() {\n        let x = 1;\n    }\n}\n";
-        let units = segments(src, Lang::Rust);
-        assert_eq!(owner(&units, 3).unwrap().key, "inner/0");
-        assert_eq!(owner(&units, 5).unwrap().key, "outer/0");
+        assert_eq!(rust_owner(src, 3), "inner/0");
+        assert_eq!(rust_owner(src, 5), "outer/0");
+    }
+
+    #[test]
+    fn named_non_function_units_are_registered() {
+        // the register's CLASSES case: a relocated pub const must be
+        // attributable by name (R-L2-6's 1-in-35 structural hole)
+        let src =
+            "pub const CLASSES: [&str; 4] = [\n    \"a\",\n];\n\nstruct Row {\n    id: u64,\n}\n";
+        assert_eq!(rust_owner(src, 2), "CLASSES");
+        assert_eq!(rust_owner(src, 6), "Row");
     }
 }

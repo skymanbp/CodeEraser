@@ -62,7 +62,12 @@ const CORRECTIONS: [(&str, &str, bool, u64, &str); 5] = [
 /// Reviewed relocation targets: (sha prefix, receiving file,
 /// comma-joined unit names). Qualitative GT for the unit-attribution
 /// dimension; bodies may be adapted in flight (the quantitative gate
-/// stays line-level).
+/// stays line-level). A "~" prefix marks a unit reviewed as
+/// adapted-in-flight — zero line-identical body lines survive
+/// (verified against the raw diff: the 2f40f22b8 helpers were
+/// generalized while moving, e.g. write_doc gained parameters), so
+/// line-level attribution is structurally impossible there and the
+/// register records that instead of pretending.
 const RELOCATED_UNITS: [(&str, &str, &str); 11] = [
     ("384d4c790", "cli/src/dedup/tokens.rs", "stream"),
     (
@@ -103,7 +108,7 @@ const RELOCATED_UNITS: [(&str, &str, &str); 11] = [
     (
         "2f40f22b8",
         "cli/tests/eval_support/mod.rs",
-        "out_dir,read_sample,labeling_rows,finish_rows,write_doc",
+        "~out_dir,read_sample,~labeling_rows,finish_rows,~write_doc",
     ),
 ];
 

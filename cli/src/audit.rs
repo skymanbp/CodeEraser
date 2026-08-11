@@ -47,7 +47,13 @@ pub fn run_hook() -> ExitCode {
 /// audits, attack-review finding). Outer None = not a git repo — the
 /// caller fails open.
 type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
-fn gather(root: &Path, diff: &[&str], event: &str, session: Option<&str>) -> Option<Gathered> {
+fn gather(
+    root: &Path,
+    diff: &[&str],
+    event: &str,
+    session: Option<&str>,
+    fourclass: Option<serde_json::Value>,
+) -> Option<Gathered> {
     let mode = Config::load(root)
         .map(|c| c.guard.mode)
         .unwrap_or_else(|_| "observe".into());
@@ -66,6 +72,7 @@ fn gather(root: &Path, diff: &[&str], event: &str, session: Option<&str>) -> Opt
             net_loc,
             changed: changed.len(),
             dups: dups.as_deref().map(<[String]>::len),
+            fourclass,
         },
     );
     Some((mode, net_loc, changed, dups))
@@ -77,6 +84,7 @@ fn audit(root: &Path, session: &str) -> ExitCode {
         &["diff", "--numstat", "HEAD"],
         "stop_audit",
         Some(session),
+        Some(fourclass_report(root)),
     ) else {
         return ExitCode::SUCCESS; // not a git repo / git failed: fail open
     };
@@ -93,6 +101,26 @@ fn audit(root: &Path, session: &str) -> ExitCode {
     ExitCode::SUCCESS
 }
 
+/// M4 four-class summary of the session's working-tree diff, via the
+/// daemon-owned ce-core link. INFORMATIONAL only (R-L2-4: no
+/// multi-file FPR instrument yet, so no deny path may lean on it),
+/// and `request_if_running` on purpose: a Stop must not pay a daemon
+/// spawn + cold index; a cold daemon is a visible degraded field, not
+/// a latency spike.
+fn fourclass_report(root: &Path) -> serde_json::Value {
+    use crate::daemon::{client, proto::Request, proto::Response};
+    let Some(pairs) = crate::fourclass::session::head_pairs(root) else {
+        return serde_json::json!({"degraded": "no_git"});
+    };
+    if pairs.is_empty() {
+        return serde_json::json!({"degraded": null, "relocations": []});
+    }
+    match client::request_if_running(root, &Request::FourClass { pairs }) {
+        Ok(Response::FourClassReport { report }) => report,
+        _ => serde_json::json!({"degraded": "daemon_unavailable"}),
+    }
+}
+
 /// pre-commit mode: STAGED changes only; blocks the commit (exit 1)
 /// when guard mode is deny and staged files touch duplicate blocks.
 /// Unlike the hooks this prints for humans — it runs in a terminal.
@@ -101,9 +129,13 @@ pub fn run_precommit(root: &Path) -> ExitCode {
     // runs in a terminal, not as a hook, so no session owns it. The
     // feed records null rather than inventing one, which is what lets
     // the M4 sampler exclude non-session events instead of guessing.
-    let Some((mode, net_loc, changed, dups)) =
-        gather(root, &["diff", "--cached", "--numstat"], "precommit", None)
-    else {
+    let Some((mode, net_loc, changed, dups)) = gather(
+        root,
+        &["diff", "--cached", "--numstat"],
+        "precommit",
+        None,
+        None, // four-class is a Stop concern; precommit stays v1
+    ) else {
         eprintln!("ce precommit: not a git repo (skipped)");
         return ExitCode::SUCCESS;
     };
@@ -201,19 +233,22 @@ struct AuditEvent<'a> {
     /// None = the dedup pipeline itself failed (A9f degraded), which
     /// must never be flattened into "zero duplicates".
     dups: Option<usize>,
+    /// M4 informational four-class report (Stop only; None on the
+    /// precommit path, and the field is then absent from the line).
+    fourclass: Option<serde_json::Value>,
 }
 
 fn observe_log(root: &Path, ev: AuditEvent) {
-    crate::hookio::observe_append(
-        root,
-        ev.session,
-        serde_json::json!({
-            "event": ev.event,
-            "mode": ev.mode,
-            "net_loc": ev.net_loc,
-            "changed_files": ev.changed,
-            "degraded": ev.dups.is_none(),
-            "dup_blocks": ev.dups.unwrap_or(0),
-        }),
-    );
+    let mut line = serde_json::json!({
+        "event": ev.event,
+        "mode": ev.mode,
+        "net_loc": ev.net_loc,
+        "changed_files": ev.changed,
+        "degraded": ev.dups.is_none(),
+        "dup_blocks": ev.dups.unwrap_or(0),
+    });
+    if let Some(fc) = ev.fourclass {
+        line["fourclass"] = fc;
+    }
+    crate::hookio::observe_append(root, ev.session, line);
 }

@@ -2,6 +2,7 @@
   "commits": [
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/handshake.rs",
@@ -48,10 +49,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "fc3ad6e4f870c78adc37e4a94a1ced513915f149"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/config.rs",
@@ -384,10 +387,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "e296178015742a12c350b59b860a5082abdf9c8a"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/scan/spec.rs",
@@ -434,10 +439,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "d3f48dfc45f7b4be3516064c943a5bb12dd03797"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/crosscheck_rca.rs",
@@ -462,10 +469,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "19a07a5b36aafbfa1bea5fab995e7800fcf930cf"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/crosscheck_rca.rs",
@@ -490,10 +499,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "b091821a8311f4c0a7a338ce76699fb061315473"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/scan/metrics/cognitive.rs",
@@ -694,10 +705,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "be6e6acd050591ab0ad2e8c699b935ebef523cfd"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/scan/metrics/cognitive.rs",
@@ -898,10 +911,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "551fa4111e5e43084cca851ad419a3c0ea8aedc1"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/mod.rs",
@@ -1014,10 +1029,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "1657114abf4c6c7eb0211d398d0b0d9b9299a32e"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/index.rs",
@@ -1130,10 +1147,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "d7a4bdbee8ea08a3a850729ecb9c1b0d7fb926dd"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/dedup_property.rs",
@@ -1158,6 +1177,7 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "74d29e22a6a2bbcc295399ee1ffbf97bf1da0482"
     },
     {
@@ -1174,6 +1194,10 @@
           "pred": 7,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "parse_tokens/2",
+        "stream/2"
       ],
       "pairs": [
         {
@@ -1331,10 +1355,20 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/src/dedup/index.rs",
+          "from_unit": "parse_tokens/2",
+          "lines": 7,
+          "to": "cli/src/dedup/tokens.rs",
+          "to_unit": "stream/2"
+        }
+      ],
       "sha": "384d4c790283e5ebdd25d21f0371aee3960eeb6c"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/pairs.rs",
@@ -1359,10 +1393,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "ffe4ad0c2333f49a2a4adc29b4740b0130ec613a"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/index.rs",
@@ -1563,10 +1599,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "b2bf52ae133c0af9533974aee4328de4bb760367"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/index.rs",
@@ -1591,10 +1629,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "3ebefd1395a80e74984ebc22537df561d4ef79ff"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/client.rs",
@@ -1773,10 +1813,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "270710454db908bf5f840448560c749605d12f89"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/client.rs",
@@ -1823,10 +1865,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "06268248d3cd3cb2eb6beabbe607f46d679a6b64"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/perf_budget.rs",
@@ -1851,10 +1895,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "9f5df476a2dafd6967475ac1051a9c2bfbe23c6d"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/perf_budget.rs",
@@ -1879,10 +1925,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "e7bb8511637d464a3781a4c840dbb78cc8b73732"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/proto.rs",
@@ -2083,10 +2131,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "0511d4655756a8420518668bafa4a2125f3b169c"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/proto.rs",
@@ -2243,10 +2293,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "fdb28c98d599154ca2fbc08449530915cd965d38"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/server.rs",
@@ -2315,10 +2367,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "d5c2fe9f568c8a4adeeaa259a4956ed4898b9c78"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/config.rs",
@@ -2453,10 +2507,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "a006ab600e7bbcd9f9c1ae07a3b62384d3450505"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/audit.rs",
@@ -2547,10 +2603,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "427a9cb4bc61590ec6ac72b1f1ba61cab4be4b58"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/index.rs",
@@ -2663,10 +2721,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "ff4b5169f8f1d16b3a116a289f02261d990c9906"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/audit.rs",
@@ -2801,10 +2861,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "0105efa55e63d4ca98ed8c038b5fe0cdaceb2e54"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/main.rs",
@@ -2851,10 +2913,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "7917643211265749f56d9606935d2942af1ce56f"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/probe.rs",
@@ -2901,6 +2965,7 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "3acd16a923a175c05e99583101cbf94fb8b5b998"
     },
     {
@@ -2965,6 +3030,33 @@
           "pred": 19,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "(anonymous)/1",
+        "build_index/1",
+        "case_dir/0",
+        "corpus_dir/1",
+        "git/2",
+        "health_reports_mode_index_and_warm_daemon/0",
+        "last_observe/1",
+        "observe_mode_is_silent_but_logs/0",
+        "ping_dedup_shutdown_roundtrip/0",
+        "probe_over_daemon_socket/0",
+        "probe_round_trip_p95_under_150ms/0",
+        "project_dir/1",
+        "run_audit/2",
+        "run_hook/2",
+        "run_hook/3",
+        "rust_fn/1",
+        "seed_project/2",
+        "seed_repo/2",
+        "seed_sources/2",
+        "shutdown_daemon/1",
+        "spawn_daemon/1",
+        "spawn_daemon_ready/1",
+        "tmp/1",
+        "version_skew_restarts_daemon/0",
+        "wait_exit/2"
       ],
       "pairs": [
         {
@@ -3188,10 +3280,279 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "git/2",
+          "lines": 6,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "git/2"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "seed_repo/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_sources/2"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "run_audit/2",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "run_hook/3"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "run_audit/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "project_dir/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "spawn_daemon/1",
+          "lines": 3,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "ping_dedup_shutdown_roundtrip/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "ping_dedup_shutdown_roundtrip/0",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "wait_exit/2"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "version_skew_restarts_daemon/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "version_skew_restarts_daemon/0",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "wait_exit/2"
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "from_unit": null,
+          "lines": 1,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": null
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/dedup_property.rs",
+          "from_unit": "case_dir/0",
+          "lines": 3,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/dedup_property.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "seed_project/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_sources/2"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "seed_project/2",
+          "lines": 6,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "build_index/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "run_hook/2",
+          "lines": 14,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "run_hook/3"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "run_hook/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "shutdown_daemon/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "shutdown_daemon/1"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "from_unit": "health_reports_mode_index_and_warm_daemon/0",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "build_index/1"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "from_unit": "health_reports_mode_index_and_warm_daemon/0",
+          "lines": 8,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "run_hook/3"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "from_unit": "health_reports_mode_index_and_warm_daemon/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "git/2",
+          "lines": 8,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "git/2"
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "from_unit": "corpus_dir/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "from_unit": "probe_round_trip_p95_under_150ms/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "from_unit": "probe_over_daemon_socket/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        }
+      ],
       "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/perf_budget.rs",
@@ -3216,6 +3577,7 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "86febdfc4d6da6bc5d611bb234b48c1afba226fd"
     },
     {
@@ -3238,6 +3600,10 @@
           "pred": 2,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "mcp_session/1",
+        "seed_clone_pair/1"
       ],
       "pairs": [
         {
@@ -3395,10 +3761,20 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "mcp_session/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_clone_pair/1"
+        }
+      ],
       "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/report_schema.rs",
@@ -3423,10 +3799,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "ec2d00756cbd53f09cefd658eedadb091c516720"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/dedup/groups.rs",
@@ -3583,6 +3961,7 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "5ab3c8169e023ad9ce332faca96711859fde002c"
     },
     {
@@ -3599,6 +3978,10 @@
           "pred": 5,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "seed_git_clone_repo/2",
+        "seed_repo/2"
       ],
       "pairs": [
         {
@@ -3734,6 +4117,15 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "seed_repo/2",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_git_clone_repo/2"
+        }
+      ],
       "sha": "a3cf54d1f113f693a593fb6719e2c532d59c6c25"
     },
     {
@@ -3762,6 +4154,13 @@
           "pred": 1,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "(anonymous)/1",
+        "observe_append/2",
+        "observe_log/5",
+        "read_envelope/0",
+        "run_hook/0"
       ],
       "pairs": [
         {
@@ -3875,6 +4274,36 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/src/audit.rs",
+          "from_unit": "observe_log/5",
+          "lines": 12,
+          "to": "cli/src/hookio.rs",
+          "to_unit": "observe_append/2"
+        },
+        {
+          "from": "cli/src/audit.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/src/hookio.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/src/guard.rs",
+          "from_unit": "observe_log/5",
+          "lines": 12,
+          "to": "cli/src/hookio.rs",
+          "to_unit": "observe_append/2"
+        },
+        {
+          "from": "cli/src/guard.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/src/hookio.rs",
+          "to_unit": "(anonymous)/1"
+        }
+      ],
       "sha": "6d8824e204dbb4435ebe7e48cc91e39ddcac5e50"
     },
     {
@@ -3915,6 +4344,12 @@
           "pred": 4,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "ce_fns/2",
+        "measure/2",
+        "parse/2",
+        "toks/2"
       ],
       "pairs": [
         {
@@ -4050,6 +4485,43 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/crosscheck_rca.rs",
+          "from_unit": "ce_fns/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "parse/2"
+        },
+        {
+          "from": "cli/tests/dedup_core.rs",
+          "from_unit": "toks/2",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "parse/2"
+        },
+        {
+          "from": "cli/tests/divergence_stances.rs",
+          "from_unit": "measure/2",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "parse/2"
+        },
+        {
+          "from": "cli/tests/metrics.rs",
+          "from_unit": "measure/2",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "parse/2"
+        },
+        {
+          "from": "cli/tests/sonar_whitepaper.rs",
+          "from_unit": "measure/2",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "parse/2"
+        }
+      ],
       "sha": "1ef9cdf608d2628d629e049a986e826f6a12e83e"
     },
     {
@@ -4072,6 +4544,11 @@
           "pred": 2,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "broken_index_degrades_visibly_not_silently/0",
+        "corrupt_index/1",
+        "precommit_broken_index_is_visible_not_silent/0"
       ],
       "pairs": [
         {
@@ -4339,6 +4816,22 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "broken_index_degrades_visibly_not_silently/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "corrupt_index/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "precommit_broken_index_is_visible_not_silent/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "corrupt_index/1"
+        }
+      ],
       "sha": "da8eb210b88ceec11eb46d01aa77b0ad29b43c5e"
     },
     {
@@ -4367,6 +4860,18 @@
           "pred": 23,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "(anonymous)/1",
+        "assert_matches_golden/2",
+        "envelope/2",
+        "envelope/3",
+        "golden_path/1",
+        "pretooluse_envelope/3",
+        "silent_audit_observe/1",
+        "silent_hook_observe/4",
+        "silent_probe_observe/2",
+        "stop_envelope/2"
       ],
       "pairs": [
         {
@@ -4502,10 +5007,62 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "silent_audit_observe/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "silent_hook_observe/4"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "envelope/2",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "stop_envelope/2"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "envelope/3",
+          "lines": 11,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "pretooluse_envelope/3"
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": "golden_path/1",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "golden_path/1"
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": null,
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": null
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": "assert_matches_golden/2",
+          "lines": 10,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "assert_matches_golden/2"
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "(anonymous)/1"
+        }
+      ],
       "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/server.rs",
@@ -4552,10 +5109,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "98d2af3e0be354867edc32cc7033cab86108058a"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/audit.rs",
@@ -4646,10 +5205,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "ebe27b18f0041e6cd8a46cf74eb26b831179d12f"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/src/daemon/server.rs",
@@ -4696,6 +5257,7 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "8619437dda8d46a1d8dcbf0028abd481ba0190cb"
     },
     {
@@ -4712,6 +5274,15 @@
           "pred": 16,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "(anonymous)/0",
+        "(anonymous)/1",
+        "index_ready/1",
+        "indexed_file_count/1",
+        "init/1",
+        "init_index_state/1",
+        "mark_ready/0"
       ],
       "pairs": [
         {
@@ -4781,10 +5352,48 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "indexed_file_count/1",
+          "lines": 4,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "indexed_file_count/1"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "init_index_state/1",
+          "lines": 1,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "init/1"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "(anonymous)/0",
+          "lines": 5,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "(anonymous)/0"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "index_ready/1",
+          "lines": 2,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "index_ready/1"
+        }
+      ],
       "sha": "822e7182f96811f1682a5b797c99faff58e0d8cf"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/eval_extract/freeze.rs",
@@ -4853,10 +5462,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "1a03f687c1d4e79ab8dc18a7d8cc9db45b491b77"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/eval_prelabel.rs",
@@ -4881,10 +5492,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "b99c27ad164398cd9fdadc1f5da3a8c96784f818"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/eval_labels.rs",
@@ -4909,10 +5522,12 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "4a4bee13e68a4899cbe0bd23dd07eb863a22f6a4"
     },
     {
       "cross": [],
+      "moved_units": [],
       "pairs": [
         {
           "after": "cli/tests/eval_baseline.rs",
@@ -4937,6 +5552,7 @@
           ]
         }
       ],
+      "relocations": [],
       "sha": "caba57d9c2db8b3c1eb63dd38d8c6b5516e6de64"
     },
     {
@@ -4965,6 +5581,14 @@
           "pred": 10,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "(anonymous)/1",
+        "CLASSES",
+        "by_id/2",
+        "load/1",
+        "numstat/2",
+        "numstat/3"
       ],
       "pairs": [
         {
@@ -5056,6 +5680,71 @@
           ]
         }
       ],
+      "relocations": [
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "CLASSES",
+          "lines": 4,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "CLASSES"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "by_id/2",
+          "lines": 5,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "by_id/2"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 3,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "numstat/2",
+          "lines": 7,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "numstat/3"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "CLASSES",
+          "lines": 4,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "CLASSES"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "by_id/2",
+          "lines": 5,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "by_id/2"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "numstat/2",
+          "lines": 8,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "numstat/3"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 2,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        }
+      ],
       "sha": "f84aaa3c8cf71b3cfbf74064d0bd5e65a6a83a89"
     },
     {
@@ -5072,6 +5761,13 @@
           "pred": 6,
           "side": "out"
         }
+      ],
+      "moved_units": [
+        "(anonymous)/1",
+        "(anonymous)/2",
+        "finish_rows/1",
+        "prelabel_labeling_subset/0",
+        "read_sample/2"
       ],
       "pairs": [
         {
@@ -5249,6 +5945,36 @@
             0,
             0
           ]
+        }
+      ],
+      "relocations": [
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "read_sample/2",
+          "lines": 3,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "read_sample/2"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "prelabel_labeling_subset/0",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "finish_rows/1"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "(anonymous)/2",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/2"
         }
       ],
       "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff"

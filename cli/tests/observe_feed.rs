@@ -1,4 +1,4 @@
-//! Observe-feed contract (ce.observe/0.2.0): the NDJSON feed is the
+//! Observe-feed contract (ce.observe/0.3.0): the NDJSON feed is the
 //! M4 evaluation-set raw material, so its line shape is pinned by a
 //! golden. One deterministic run of all three producers — probe,
 //! stop audit, precommit — with volatile fields normalized (ts_ms,

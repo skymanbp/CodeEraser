@@ -267,6 +267,17 @@ pub fn shutdown_daemon(dir: &Path) {
     let _ = client::request_if_running(dir, &Request::Shutdown);
 }
 
+/// Clean daemon shutdown (Bye asserted) then reaped exit — the
+/// shared tail of every daemon e2e case.
+pub fn shutdown_and_wait(root: &Path, child: Child, what: &str) {
+    use codeeraser::daemon::{client, proto::Request, proto::Response};
+    match client::request_if_running(root, &Request::Shutdown).expect("shutdown") {
+        Response::Bye => {}
+        other => panic!("expected bye, got {other:?}"),
+    }
+    wait_exit(child, what);
+}
+
 /// Wait ~5s for `child` to exit; kill it and panic on timeout.
 pub fn wait_exit(mut child: Child, what: &str) {
     for _ in 0..50 {

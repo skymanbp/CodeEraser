@@ -7,8 +7,9 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 
 /// Daemon protocol version — independent of the ce-core handshake
-/// proto (contracts/VERSIONING.md governs both).
-pub const DAEMON_PROTO: &str = "0.1.0";
+/// proto (contracts/VERSIONING.md governs both). 0.2.0: additive
+/// four-class judgment forwarding (M4).
+pub const DAEMON_PROTO: &str = "0.2.0";
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
@@ -29,6 +30,13 @@ pub enum Request {
     Probe {
         file_path: String,
         content: String,
+    },
+    /// M4 judgment: four-classify the given (before, after) path
+    /// pairs of the daemon's root, working tree vs HEAD, via the
+    /// daemon-owned ce-core link. Content is read daemon-side; only
+    /// paths cross this socket.
+    FourClass {
+        pairs: Vec<(Option<String>, Option<String>)>,
     },
     Shutdown,
 }
@@ -54,6 +62,11 @@ pub enum Response {
     ProbeReport {
         matches: serde_json::Value,
         elapsed_ms: u64,
+    },
+    /// Four-class totals + relocations (fourclass::session shape).
+    /// Degradation is inside the report, never silent (A9f).
+    FourClassReport {
+        report: serde_json::Value,
     },
     Error {
         message: String,
