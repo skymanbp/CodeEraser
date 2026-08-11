@@ -1,7 +1,9 @@
-# contracts/ — 契约版本化机制（M0 冻结机制，内容随 M4 定稿）
+# contracts/ — 契约版本化机制（M0 冻结机制，内容 M4 定稿 1.0.0）
 
 > 依据 DEVELOPMENT_PLAN.md §7.1 与评审 B1：M0 只冻结**版本化机制**，
-> IR/判决 schema 的**内容**在 M4 随真实需求定稿为 1.0。
+> IR/判决 schema 的**内容**在 M4 随真实需求定稿为 1.0——已于
+> 2026-08-11 完成：proto **1.0.0**，wire 形状与 0.2.0 完全一致，
+> bump 属声明性定稿；内容自此受 §2 的 major 规则约束。
 
 ## 1. 信封（envelope）
 
@@ -12,7 +14,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **0.2.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **1.0.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -57,4 +59,4 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 0.2.0 | §1 所列两处常量 |
+| 协议 | 1.0.0 | §1 所列两处常量 |

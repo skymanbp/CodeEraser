@@ -19,8 +19,8 @@ struct Envelope {
     #[serde(default)]
     cwd: String,
     /// Claude Code stamps this on every hook event; it reaches the
-    /// observe feed (schema 0.2.0) so the M4 evaluation set can be
-    /// partitioned by session (D2-2 count, D2-1 purity).
+    /// observe feed (schema: hookio::OBSERVE_SCHEMA) so the M4
+    /// evaluation set can be partitioned by session (D2-2, D2-1).
     #[serde(default)]
     session_id: String,
     /// Loop-prevention flag: true when this Stop fired because a

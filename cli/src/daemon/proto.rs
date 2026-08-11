@@ -7,9 +7,10 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 
 /// Daemon protocol version — independent of the ce-core handshake
-/// proto (contracts/VERSIONING.md governs both). 0.2.0: additive
-/// four-class judgment forwarding (M4).
-pub const DAEMON_PROTO: &str = "0.2.0";
+/// proto (contracts/VERSIONING.md governs both). 0.2.0 added the
+/// four-class forwarding; 1.0.0 = the M4 content finalization stamp,
+/// aligned with the handshake proto (no shape change).
+pub const DAEMON_PROTO: &str = "1.0.0";
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]

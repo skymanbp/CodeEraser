@@ -23,9 +23,9 @@ struct Envelope {
     #[serde(default)]
     cwd: String,
     /// Claude Code stamps this on every hook event. Carried into the
-    /// observe feed (schema 0.2.0) because the M4 evaluation set is
-    /// partitioned BY SESSION — both the D2-2 count and the D2-1
-    /// purity rule are unanswerable without it.
+    /// observe feed (schema: hookio::OBSERVE_SCHEMA) because the M4
+    /// evaluation set is partitioned BY SESSION — both the D2-2 count
+    /// and the D2-1 purity rule are unanswerable without it.
     #[serde(default)]
     session_id: String,
     #[serde(default)]

@@ -23,7 +23,7 @@ mode = "observe"   # observe（默认）| warn | ask | deny
 
 档位晋升按计划 D-4：FPR 数据达标才从 warn 升 ask/deny。
 观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
-每行带 `schema`（当前 `ce.observe/0.2.0`）、`session_id` 与 `ts_ms`；
+每行带 `schema`（当前 `ce.observe/0.3.0`，单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`）、`session_id` 与 `ts_ms`；
 `session_id` 为 `null` 表示该条不属于任何会话——`ce precommit` 跑在终端里、
 不是 hook，是唯一会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

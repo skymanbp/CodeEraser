@@ -86,7 +86,7 @@ structural = do
   d <- check "major mismatch is rejected" (field majorReply "accept" == Just (Bool False))
   pure (a && b && c && d)
  where
-  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"0.2.0\",\"type\":\"mystery\",\"id\":7}"
+  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"1.0.0\",\"type\":\"mystery\",\"id\":7}"
   oversizeReply = Protocol.respond "0.0.1" (B8.replicate 1048577 'x')
   majorReply = Protocol.respond "0.0.1" "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
 

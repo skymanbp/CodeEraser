@@ -10,7 +10,9 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-pub const PROTO: &str = "0.2.0";
+/// 1.0.0 = the M4 content finalization: wire shape identical to
+/// 0.2.0, the bump declares the content frozen under §2 major rules.
+pub const PROTO: &str = "1.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

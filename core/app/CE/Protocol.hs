@@ -17,8 +17,10 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 1.0.0 = the M4 content finalization: wire shape identical to
+-- 0.2.0, the bump declares the content frozen under §2 major rules.
 proto :: String
-proto = "0.2.0"
+proto = "1.0.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Legitimate requests are client-capped well below
