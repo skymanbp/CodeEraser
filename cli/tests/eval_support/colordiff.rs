@@ -162,6 +162,10 @@ pub fn walk_color_diff(raw: &str) -> Vec<BodyLine> {
 
 /// The commit-slice scope: the five supported languages, minus
 /// machine-local `memory/` state (also the M7 filter-repo surface).
+/// This is a canonical-extension benchmark on purpose — variant
+/// suffixes (.tsx/.mts/.markdown…) stay out on every corpus, and the
+/// self-specific excludes are inert on foreign repos without such
+/// paths; one frozen scope keeps corpora comparable.
 pub const COMMIT_SCOPE: [&str; 7] = [
     "*.rs",
     "*.py",
@@ -172,21 +176,35 @@ pub const COMMIT_SCOPE: [&str; 7] = [
     ":(exclude)cli/memory/**",
 ];
 
-/// Run git against the enclosing repository, optionally restricted to
+/// Run git against the corpus repository, optionally restricted to
 /// the commit-slice scope. Asserts success.
+///
+/// The corpus is the enclosing repository unless `CE_SLICE_REPO`
+/// names another one (M5-1 external validation; absolute path, same
+/// convention as fpr_replay's CE_FPR_REPO). Every slice instrument
+/// funnels its git here, so the one variable retargets slice
+/// generation, prelabels, and replay together — while doc provenance
+/// (generated_from) keeps its own git call bound to the enclosing
+/// repo on purpose: it records the instrument, not the corpus.
 pub fn git_run(args: &[&str], scoped: bool) -> String {
     let mut cmd = Command::new("git");
-    cmd.args(args);
+    if let Ok(repo) = std::env::var("CE_SLICE_REPO") {
+        cmd.arg("-C").arg(repo);
+    }
+    // renameLimit=0 = unlimited (verified on git 2.52): at the default
+    // limit a big commit silently degrades -M -C pairing into D+A,
+    // warning only on stderr with exit 0 — which the success path
+    // used to discard. Belt and braces: lift the limit AND refuse any
+    // success-with-stderr (GT generation has no benign warnings).
+    cmd.args(["-c", "diff.renameLimit=0"]).args(args);
     if scoped {
         cmd.arg("--");
         cmd.args(COMMIT_SCOPE);
     }
     let out = cmd.output().expect("git");
-    assert!(
-        out.status.success(),
-        "git {args:?}: {}",
-        String::from_utf8_lossy(&out.stderr)
-    );
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(out.status.success(), "git {args:?}: {stderr}");
+    assert!(stderr.trim().is_empty(), "git {args:?} warned: {stderr}");
     String::from_utf8_lossy(&out.stdout).into_owned()
 }
 

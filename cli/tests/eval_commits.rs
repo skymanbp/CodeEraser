@@ -17,17 +17,19 @@
 //! history rewrite renames every sha, so the slice is regenerated
 //! then: deterministic, diffable modulo sha renames.
 //!
+//! M5-1: CE_SLICE_REPO (+ NAME/TIP/BASE) retargets the instrument at
+//! an external corpus window (eval_support::corpus). The walk follows
+//! the first-parent chain including merges (a merge diffs against its
+//! first parent = the mainline increment; this repo's history has none).
+//!
 //! Run: cargo test --test eval_commits -- --ignored --nocapture
 
 mod eval_support;
 
-use eval_support::{CLASSES, LineClasses, git_run, load, write_doc};
+use eval_support::{CLASSES, Corpus, LineClasses, corpus, git_run, load, write_doc};
 use serde_json::{Value, json};
 use std::collections::HashMap;
 
-/// The L1 commit — the last commit before any L2 work, so the
-/// instrument stays outside its own universe.
-const UNIVERSE_TIP: &str = "2f40f22b85dcf3fd0979395286223ddf972550ff";
 /// Git's canonical empty tree: diff base for the root commit.
 const EMPTY_TREE: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
@@ -43,7 +45,8 @@ fn diff_z(flag: &str, base: &str, sha: &str) -> Vec<String> {
 
 /// (before, after) paths per `--name-status -z` entry; `None` marks
 /// the created/deleted side. Copies would break the "before side is
-/// consumed" reading of a pair, so they fail loudly (none in scope).
+/// consumed" reading of a pair, so they fail loudly — a deliberate
+/// stop forcing the copy-semantics decision (none in any corpus yet).
 fn name_status(base: &str, sha: &str) -> Vec<(Option<String>, Option<String>)> {
     let mut toks = diff_z("--name-status", base, sha).into_iter();
     let mut pairs = Vec::new();
@@ -135,29 +138,55 @@ fn commit_row(base: &str, sha: &str) -> Option<Value> {
         classes.keys()
     );
     let subject = git_run(&["log", "-1", "--format=%s", sha], false);
-    Some(json!({"sha": sha, "subject": subject.trim(), "pairs": pairs}))
+    let mut row = json!({"sha": sha, "subject": subject.trim(), "pairs": pairs});
+    // Merge rows are marked so the GT review can stratify them: an
+    // aggregate merge diff can pair lines across constituent commits
+    // that never coexisted in one edit. Absent on non-merges, so the
+    // frozen self slice (zero merges) is unchanged.
+    let parents = git_run(&["rev-list", "--parents", "-n", "1", sha], false);
+    let n = parents.split_whitespace().count().saturating_sub(1);
+    if n > 1 {
+        row["parents"] = json!(n);
+    }
+    Some(row)
 }
 
-/// Walk the linear universe oldest-first; the root commit diffs
-/// against the empty tree.
-fn commit_rows() -> (Vec<Value>, Vec<Value>) {
-    let list = git_run(
-        &[
-            "rev-list",
-            "--first-parent",
-            "--no-merges",
-            "--reverse",
-            UNIVERSE_TIP,
-        ],
-        false,
-    );
+/// Walk the corpus window oldest-first along the first-parent chain;
+/// a from-root walk diffs the root commit against the empty tree.
+fn commit_rows(c: &Corpus) -> (Vec<Value>, Vec<Value>) {
+    let range = match &c.base {
+        Some(base) => format!("{base}..{}", c.tip),
+        None => c.tip.clone(),
+    };
+    let list = git_run(&["rev-list", "--first-parent", "--reverse", &range], false);
     let shas: Vec<&str> = list.split_whitespace().collect();
-    let root = git_run(&["rev-list", "--max-parents=0", UNIVERSE_TIP], false);
-    assert_eq!(root.trim(), shas[0], "universe root");
+    assert!(!shas.is_empty(), "empty window {range}");
+    match &c.base {
+        None => {
+            // A shallow boundary masquerades as a root — the assertion
+            // below passes and truncated history silently regenerates
+            // the frozen self slice. Refuse shallow outright.
+            let shallow = git_run(&["rev-parse", "--is-shallow-repository"], false);
+            assert_eq!(shallow.trim(), "false", "self slice needs full history");
+            let root = git_run(&["rev-list", "--max-parents=0", &c.tip], false);
+            assert_eq!(root.trim(), shas[0], "universe root");
+        }
+        Some(base) => {
+            // The base must be the oldest window commit's FIRST parent
+            // — a merge's second parent is a valid rev that silently
+            // shifts the walk (reproduced: requests 1b40fdd's ^2).
+            let parent = git_run(&["rev-parse", &format!("{}^", shas[0])], false);
+            assert_eq!(parent.trim(), base, "base is not the first-parent boundary");
+        }
+    }
     let (mut rows, mut excluded) = (Vec::new(), Vec::new());
     for (i, sha) in shas.iter().enumerate() {
         let parent = format!("{sha}^");
-        let base = if i == 0 { EMPTY_TREE } else { parent.as_str() };
+        let base = if i == 0 && c.base.is_none() {
+            EMPTY_TREE
+        } else {
+            parent.as_str()
+        };
         match commit_row(base, sha) {
             Some(row) => rows.push(row),
             None => excluded.push(json!({"sha": sha, "reason": "no in-scope files"})),
@@ -190,36 +219,50 @@ fn summarize(rows: &[Value], excluded: usize) -> Value {
     })
 }
 
+/// The frozen shared method tail; the head names the corpus walk.
+/// The self-corpus wording is part of the frozen M4-5 doc.
+fn method(c: &Corpus) -> String {
+    let walk = match &c.name {
+        None => "this repository's own linear history".into(),
+        Some(name) => format!(
+            "the {name} corpus first-parent window {}..{} (a merge diffs \
+             against its first parent = the mainline increment)",
+            c.base.as_deref().expect("windowed corpus"),
+            c.tip
+        ),
+    };
+    format!(
+        "whole-commit git diff -U0 -M -C --color-moved=blocks \
+         --color-moved-ws=allow-indentation-change over {walk}; scope = \
+         five supported languages minus memory/ paths; per-pair splits \
+         numstat-conserved. blocks mode trades sub-block move recall for \
+         immunity to plain mode's trivial-line cross-file artifact."
+    )
+}
+
 #[test]
-#[ignore] // needs full (non-shallow) git history up to UNIVERSE_TIP
+#[ignore] // needs git history: full for the self slice, the pinned window otherwise
 fn generate_commit_slice() {
-    let (rows, excluded) = commit_rows();
-    let doc = json!({
+    let c = corpus();
+    let (rows, excluded) = commit_rows(&c);
+    let mut doc = json!({
         "schema": "ce.eval-commit-slice/1.0.0",
-        "universe_tip": UNIVERSE_TIP,
-        "method": "whole-commit git diff -U0 -M -C --color-moved=blocks \
-                   --color-moved-ws=allow-indentation-change over this \
-                   repository's own linear history; scope = five supported \
-                   languages minus memory/ paths; per-pair splits \
-                   numstat-conserved. blocks mode trades sub-block move \
-                   recall for immunity to plain mode's trivial-line \
-                   cross-file artifact.",
+        "universe_tip": c.tip,
+        "method": method(&c),
         "summary": summarize(&rows, excluded.len()),
         "excluded": excluded,
         "commits": rows,
     });
-    write_doc(
-        "../contracts/eval/commit-slice-v1.json",
-        &doc,
-        "commit slice written to contracts/eval/commit-slice-v1.json",
-    );
+    if let Some(name) = &c.name {
+        doc["corpus"] = json!(name);
+        doc["window_base"] = json!(c.base);
+    }
+    let path = c.doc_path();
+    write_doc(&path, &doc, &format!("commit slice written to {path}"));
 }
 
-/// CI gate: per-pair numstat conservation and the summary must
-/// re-derive from the committed rows. No git or local data needed.
-#[test]
-fn commit_slice_consistent() {
-    let doc = load("../contracts/eval/commit-slice-v1.json");
+fn check_slice(path: &str) {
+    let doc = load(path);
     let rows = doc["commits"].as_array().expect("commits");
     for r in rows {
         for p in r["pairs"].as_array().expect("pairs") {
@@ -235,5 +278,23 @@ fn commit_slice_consistent() {
         }
     }
     let excluded = doc["excluded"].as_array().expect("excluded").len();
-    assert_eq!(doc["summary"], summarize(rows, excluded), "summary drifted");
+    let derived = summarize(rows, excluded);
+    assert_eq!(doc["summary"], derived, "{path}: summary drifted");
+}
+
+/// CI gate: per-pair numstat conservation and the summary must
+/// re-derive from the committed rows — for every committed slice doc
+/// (self and external corpora). No git or local data needed.
+#[test]
+fn commit_slice_consistent() {
+    let mut checked = 0;
+    for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {
+        let file = entry.expect("entry").file_name();
+        let file = file.to_string_lossy();
+        if file.starts_with("commit-slice") && file.ends_with("-v1.json") {
+            check_slice(&format!("../contracts/eval/{file}"));
+            checked += 1;
+        }
+    }
+    assert!(checked >= 1, "no committed slice docs");
 }
