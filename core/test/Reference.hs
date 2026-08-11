@@ -23,9 +23,9 @@ type Run = [(Int, Word64)]
 -- against length so both depth and hash diversity get full coverage.
 instances :: [[Pair]]
 instances =
-  [ [Pair 0 rem0 [], Pair 1 [] add1] ++ probe
+  [ [Pair 0 rem0 [] [], Pair 1 [] add1 []] ++ probe
   | (rem0, add1) <- sides
-  , probe <- [] : [[Pair 2 [[(30, h)]] []] | h <- [1, 2, 3]]
+  , probe <- [] : [[Pair 2 [[(30, h)]] [] []] | h <- [1, 2, 3]]
   ]
  where
   sides :: [([Run], [Run])]

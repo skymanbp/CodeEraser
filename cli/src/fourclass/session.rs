@@ -95,10 +95,16 @@ pub fn report_json(batch: &BatchClassification, pairs: &[PathPair]) -> serde_jso
             })
         })
         .collect();
+    let suspicions: Vec<serde_json::Value> = batch
+        .suspicions
+        .iter()
+        .map(|(i, kind)| serde_json::json!({"file": name(*i, false), "kind": kind}))
+        .collect();
     serde_json::json!({
         "added_novel": totals[0], "added_moved": totals[1],
         "removed_deleted": totals[2], "removed_moved": totals[3],
         "relocations": relocations,
+        "suspicions": suspicions,
         "degraded": batch.degraded,
     })
 }

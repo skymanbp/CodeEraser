@@ -38,11 +38,14 @@ data Pair = Pair
   { pIdx :: Int
   , pRem :: [[(Int, Word64)]]
   , pAdd :: [[(Int, Word64)]]
+  , pDup :: [Word64]
+  -- ^ key hashes of units newly DUPLICATED on the after side --
+  -- symbol knowledge stays in Rust (ADR-002), only hashes cross
   }
 
 instance FromJSON Pair where
   parseJSON = withObject "Pair" $ \o ->
-    Pair <$> o .: "i" <*> o .: "rem" <*> o .: "add"
+    Pair <$> o .: "i" <*> o .: "rem" <*> o .: "add" <*> o .:? "dup" .!= []
 
 instance FromJSON Request where
   parseJSON = withObject "Request" $ \o ->
@@ -66,6 +69,7 @@ data Result = Result
   { resId :: Value
   , resMoved :: [(Int, [Int], [Int])]
   , resBlocks :: [Block]
+  , resSuspicions :: [(Int, String)]
   , resDegraded :: Maybe String
   }
 
@@ -77,6 +81,7 @@ encodeResult proto r =
     , "id" .= resId r
     , "moved" .= resMoved r
     , "blocks" .= [(bFromPair b, bFromLines b, bToPair b, bToLines b) | b <- resBlocks r]
+    , "suspicions" .= resSuspicions r
     , "degraded" .= maybe False (const True) (resDegraded r)
     ]
       <> maybe [] (\why -> ["reason" .= why]) (resDegraded r)

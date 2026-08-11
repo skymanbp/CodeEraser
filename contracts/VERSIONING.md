@@ -23,13 +23,16 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   发现**，接受/拒绝的唯一权威仍是 §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
-- `fourclass.request`（0.2.0 起）：`{"id","pairs":[{"i","rem":[[行,hash]],"add":[…]}]}`
-  ——L1 判为 novel/deleted 的**显著**行，hash = fnv1a(trim)，不携带路径/符号/文本
-  （ADR-002 A6）；`i` 为不透明文件对索引（跨匹配要求 `i` 不同）。within-first 前置
-  （同对 add∩rem 必空）由 core 在边界校验，违反 → `error/contract`。
+- `fourclass.request`（0.2.0 起）：`{"id","pairs":[{"i","rem":[[[行,hash],…],…],
+  "add":[…],"dup":[keyhash]}]}`——rem/add 为 L1 判 novel/deleted 的**显著**行按
+  **run 分组**（run 结构=对齐产物，Rust 侧产出），hash = fnv1a(trim)；`dup` =
+  after 侧新出现重复的**顶层具名单元**键哈希（堆叠证据，符号知识留在 Rust，
+  仅哈希过线——ADR-002 A6）；`i` 为不透明文件对索引（跨匹配要求 `i` 不同）。
+  within-first 前置（同对 add∩rem 必空）由 core 在边界校验，违反 → `error/contract`。
 - `fourclass.result`：`{"id","moved":[[i,出行,入行]],"blocks":[[源i,源行,宿i,宿行]],
-  "degraded"(,"reason"∈{bucket_cap})}`——moved 为单调重分类 delta（deleted→moved-out、
-  novel→moved-in）；blocks 为 ≥2 行的站点证据（扩展/归因行只进 moved 不进 blocks）。
+  "suspicions":[[i,规则名]],"degraded"(,"reason"∈{bucket_cap})}`——moved 为单调
+  重分类 delta；blocks 为 ≥2 行站点证据（扩展/归因行只进 moved 不进 blocks）；
+  suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
 
 ## 2. SemVer 协商规则
 

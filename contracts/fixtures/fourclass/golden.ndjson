@@ -1,12 +1,14 @@
 {"proto":"0.2.0","type":"fourclass.request","id":1,"pairs":[{"i":0,"rem":[[[10,111],[11,222],[12,333]]],"add":[]},{"i":1,"rem":[],"add":[[[5,111],[6,222],[7,333]]]}]}
-{"blocks":[[0,[10,11,12],1,[5,6,7]]],"degraded":false,"id":1,"moved":[[0,[10,11,12],[]],[1,[],[5,6,7]]],"proto":"0.2.0","type":"fourclass.result"}
+{"blocks":[[0,[10,11,12],1,[5,6,7]]],"degraded":false,"id":1,"moved":[[0,[10,11,12],[]],[1,[],[5,6,7]]],"proto":"0.2.0","suspicions":[],"type":"fourclass.result"}
 {"proto":"0.2.0","type":"fourclass.request","id":2,"pairs":[{"i":0,"rem":[[[10,777]]],"add":[]},{"i":1,"rem":[],"add":[[[5,777]]]}]}
-{"blocks":[],"degraded":false,"id":2,"moved":[],"proto":"0.2.0","type":"fourclass.result"}
+{"blocks":[],"degraded":false,"id":2,"moved":[],"proto":"0.2.0","suspicions":[],"type":"fourclass.result"}
 {"proto":"0.2.0","type":"fourclass.request","id":3,"pairs":[{"i":0,"rem":[[[10,111],[11,222]],[[20,444]]],"add":[]},{"i":1,"rem":[],"add":[[[5,111],[6,222],[7,999],[8,444]]]}]}
-{"blocks":[[0,[10,11],1,[5,6]]],"degraded":false,"id":3,"moved":[[0,[10,11,20],[]],[1,[],[5,6,8]]],"proto":"0.2.0","type":"fourclass.result"}
+{"blocks":[[0,[10,11],1,[5,6]]],"degraded":false,"id":3,"moved":[[0,[10,11,20],[]],[1,[],[5,6,8]]],"proto":"0.2.0","suspicions":[],"type":"fourclass.result"}
 {"proto":"0.2.0","type":"fourclass.request","id":4,"pairs":[{"i":0,"rem":[[[10,111],[11,222]]],"add":[]},{"i":1,"rem":[],"add":[[[5,111],[6,222]]]},{"i":2,"rem":[[[30,111]]],"add":[]}]}
-{"blocks":[[0,[10,11],1,[5,6]]],"degraded":false,"id":4,"moved":[[0,[10,11],[]],[1,[],[5,6]],[2,[30],[]]],"proto":"0.2.0","type":"fourclass.result"}
+{"blocks":[[0,[10,11],1,[5,6]]],"degraded":false,"id":4,"moved":[[0,[10,11],[]],[1,[],[5,6]],[2,[30],[]]],"proto":"0.2.0","suspicions":[],"type":"fourclass.result"}
 {"proto":"0.2.0","type":"fourclass.request","id":5,"pairs":[{"i":0,"rem":[[[1,42]]],"add":[[[9,42]]]}]}
 {"code":"contract","id":5,"message":"within-first violated: pair 0","proto":"0.2.0","type":"error"}
 {"proto":"0.2.0","type":"fourclass.request","id":6,"pairs":[{"i":0,"rem":[[[1,18446744073709551615],[2,3]]],"add":[]},{"i":1,"rem":[],"add":[[[4,18446744073709551615],[5,3]]]}]}
-{"blocks":[[0,[1,2],1,[4,5]]],"degraded":false,"id":6,"moved":[[0,[1,2],[]],[1,[],[4,5]]],"proto":"0.2.0","type":"fourclass.result"}
+{"blocks":[[0,[1,2],1,[4,5]]],"degraded":false,"id":6,"moved":[[0,[1,2],[]],[1,[],[4,5]]],"proto":"0.2.0","suspicions":[],"type":"fourclass.result"}
+{"proto":"0.2.0","type":"fourclass.request","id":7,"pairs":[{"i":0,"rem":[],"add":[[[1,101],[2,102],[3,103],[4,104],[5,105],[6,106],[7,107],[8,108],[9,109],[10,110],[11,111],[12,112],[13,113],[14,114],[15,115],[16,116],[17,117],[18,118],[19,119],[20,120]]],"dup":[9999]}]}
+{"blocks":[],"degraded":false,"id":7,"moved":[],"proto":"0.2.0","suspicions":[[0,"stacking"]],"type":"fourclass.result"}

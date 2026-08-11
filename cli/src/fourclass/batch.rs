@@ -14,6 +14,7 @@ use crate::corelink::Link;
 use crate::dedup::tokens::fnv1a;
 use crate::scan::lang::Lang;
 use serde_json::{Value, json};
+use std::collections::HashMap;
 
 pub struct PairInput<'a> {
     pub before: &'a str,
@@ -36,6 +37,8 @@ pub struct Relocation {
 pub struct BatchClassification {
     pub pairs: Vec<Classification>,
     pub relocations: Vec<Relocation>,
+    /// (pair index, rule name) per firing M4 judgment rule.
+    pub suspicions: Vec<(usize, String)>,
     /// None = the cross-file pass ran (or nothing needed asking).
     pub degraded: Option<String>,
 }
@@ -48,6 +51,7 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
     let done = |pairs, degraded| BatchClassification {
         pairs,
         relocations: Vec::new(),
+        suspicions: Vec::new(),
         degraded,
     };
     let Some(link) = link else {
@@ -63,17 +67,63 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
     {
         return done(pairs, None);
     }
-    match link.request("fourclass", request_body(&sent)) {
+    match link.request("fourclass", request_body(inputs, &sent)) {
         Err(e) => done(pairs, Some(e)),
         Ok(reply) => match merge(&reply, inputs, &sent, &mut pairs) {
             Err(e) => done(pairs, Some(e)),
             Ok(relocations) => BatchClassification {
                 pairs,
                 relocations,
+                suspicions: suspicions_of(&reply),
                 degraded: reply["reason"].as_str().map(String::from),
             },
         },
     }
+}
+
+fn suspicions_of(reply: &Value) -> Vec<(usize, String)> {
+    reply["suspicions"]
+        .as_array()
+        .map(|a| {
+            a.iter()
+                .filter_map(|s| Some((s[0].as_u64()? as usize, s[1].as_str()?.to_string())))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Unit keys newly DUPLICATED on the after side (their count rises
+/// to >= 2) — the stacking rule's symbol evidence, shipped as hashes
+/// only (ADR-002 A6). Only TOP-LEVEL named units count: a method
+/// nested in two different classes shares its flat key legitimately,
+/// and an anonymous closure has no stacking identity at all — both
+/// were measured false-positive sources on the real-edit corpus
+/// (contracts/eval/fpr-fourclass-v1.json flagged 8/600 before this
+/// scoping, all from exactly those two shapes).
+fn dup_units(input: &PairInput) -> Vec<u64> {
+    let count = |text: &str| -> HashMap<String, usize> {
+        let all = units::segments(text, input.lang);
+        let top_level = |u: &units::Unit| {
+            !all.iter().any(|v| {
+                (v.start_line < u.start_line && u.end_line <= v.end_line)
+                    || (v.start_line <= u.start_line && u.end_line < v.end_line)
+            })
+        };
+        all.iter()
+            .filter(|u| top_level(u) && !u.key.starts_with("(anonymous)"))
+            .fold(HashMap::new(), |mut m, u| {
+                *m.entry(u.key.clone()).or_default() += 1;
+                m
+            })
+    };
+    let before = count(input.before);
+    let mut out: Vec<u64> = count(input.after)
+        .into_iter()
+        .filter(|(k, n)| *n >= 2 && *n > before.get(k).copied().unwrap_or(0))
+        .map(|(k, _)| fnv1a(k.as_bytes()))
+        .collect();
+    out.sort_unstable();
+    out
 }
 
 /// One contiguous run of significant leftover lines. Run structure is
@@ -137,12 +187,14 @@ fn side_runs(text: &str, changed: &[usize], moved: &[usize]) -> Side {
     runs
 }
 
-fn request_body(sent: &[(Side, Side)]) -> Value {
+fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
     let pairs: Vec<Value> = sent
         .iter()
         .enumerate()
         .filter(|(_, (rem, add))| !rem.is_empty() || !add.is_empty())
-        .map(|(i, (rem, add))| json!({"i": i, "rem": rem, "add": add}))
+        .map(
+            |(i, (rem, add))| json!({"i": i, "rem": rem, "add": add, "dup": dup_units(&inputs[i])}),
+        )
         .collect();
     json!({"pairs": pairs})
 }
@@ -244,4 +296,60 @@ fn relocations_of(reply: &Value, inputs: &[PairInput]) -> Result<Vec<Relocation>
         }
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::scan::lang::Lang;
+
+    /// Red/green for the stacking evidence: a genuine top-level
+    /// duplicate fires; the two measured false-positive shapes —
+    /// same-name methods under different classes, anonymous
+    /// closures — do not (fpr-fourclass-v1.json's 8/600 before the
+    /// scoping, 0/600 after).
+    #[test]
+    fn dup_evidence_is_top_level_and_named() {
+        let real = PairInput {
+            before: "fn one() {}
+",
+            after: "fn one() {}
+fn work(a: i32) -> i32 { a }
+fn work(a: i32) -> i32 { a + 1 }
+",
+            lang: Lang::Rust,
+        };
+        assert_eq!(dup_units(&real).len(), 1, "top-level duplicate is evidence");
+        let methods = PairInput {
+            before: "",
+            after: "class A:
+    def add(self, x):
+        pass
+
+class B:
+    def add(self, x):
+        pass
+",
+            lang: Lang::Python,
+        };
+        assert_eq!(
+            dup_units(&methods),
+            Vec::<u64>::new(),
+            "cross-class methods are not"
+        );
+        let closures = PairInput {
+            before: "",
+            after: "fn go() {
+    let a = |x: i32| x;
+    let b = |x: i32| x + 1;
+}
+",
+            lang: Lang::Rust,
+        };
+        assert_eq!(
+            dup_units(&closures),
+            Vec::<u64>::new(),
+            "anonymous closures are not"
+        );
+    }
 }

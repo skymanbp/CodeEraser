@@ -12,6 +12,7 @@
 module CE.FourClass.Provenance (classify) where
 
 import CE.FourClass.Anchor (sites)
+import CE.FourClass.Verdict (suspicions)
 import CE.FourClass.Wire
 import Data.List (sortOn)
 import qualified Data.Map.Strict as M
@@ -20,8 +21,11 @@ import qualified Data.Set as S
 type Mark = (Int, Int) -- (pair, line)
 
 classify :: Request -> Result
-classify req = Result (reqId req) moved sortedBlocks reason
+classify req = Result (reqId req) moved sortedBlocks verdicts reason
  where
+  verdicts = suspicions [(p, sigLeft pAdd inMarks p, sigLeft pRem outMarks p) | p <- ps]
+  sigLeft side marks p =
+    length [() | (l, _) <- concat (side p), (pIdx p, l) `S.notMember` marks]
   ps = reqPairs req
   (blocks, capped) = sites ps
   sortedBlocks =

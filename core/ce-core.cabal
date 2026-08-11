@@ -11,7 +11,8 @@ executable ce-core
     hs-source-dirs:   app
     other-modules:    CE.Handshake, CE.Protocol, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
-                      CE.FourClass.Anchor, CE.FourClass.Provenance
+                      CE.FourClass.Anchor, CE.FourClass.Provenance,
+                      CE.FourClass.Verdict
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -31,7 +32,7 @@ test-suite ce-core-test
     other-modules:    CE.Handshake, CE.Protocol, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
-                      Reference
+                      CE.FourClass.Verdict, Reference
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

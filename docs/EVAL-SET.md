@@ -168,6 +168,19 @@ eval_l2_parts，棘轮始终回 201）。**外部效度未证**（R-L2-2）：�
 评分同源于本仓库历史；M5 须在第二仓库以同一 GT 流水线复测，届时 deny
 档位方可倚赖跨文件 moved 信号；Stop 汇总中该信号先行 informational。
 
+## FPR 主门（M4 验收主门，2026-08-11 通过）
+
+[contracts/eval/fpr-fourclass-v1.json](../contracts/eval/fpr-fourclass-v1.json)：
+全部 **600** 个真实编辑样本（全语料 reviewed-normal，计划下限 500）经真实
+流水线（classify_batch + ce-core 链）重放，M4 判定规则（堆叠嫌疑 =
+显著 novel ≥20 ∧ 删除 < novel/10 ∧ **顶层具名单元新出现重复键**，常数在
+CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言。
+首测曾 8/600（1.33%）红：根因非阈值而是证据语义——匿名闭包键（3 条 rs）
+与跨类同名方法平键（含 `__init__`×2，2 条 py）不构成堆叠身份；dup 证据
+收窄到**顶层具名单元**后 0/600，且红绿双向单测钉住真堆叠仍点火、两类
+误报形状不点火。**Recall 如实记 undefined**：语料按构造零异常样本，
+按计划"recall 报告但不设作弊性 100% 门"。
+
 ## 复跑 / 校验
 
 ```
