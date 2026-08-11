@@ -48,6 +48,44 @@ pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, S
     Ok(files)
 }
 
+/// Scope test for one file (existing or about to be created),
+/// sharing collect()'s override set so the two cannot drift.
+/// Known boundary: nested .gitignore/.ceignore files are honored by
+/// the walk but not here — only the root-level ones apply, because a
+/// not-yet-created file cannot be found by walking. For the guard's
+/// budget rule that costs at most a spurious ask inside a
+/// nested-ignored directory, never a silently skipped in-scope file.
+pub fn in_scope(root: &Path, path: &Path, extra_excludes: &[String]) -> bool {
+    let root = canon(root);
+    let Ok(rel) = canon(path).strip_prefix(&root).map(Path::to_path_buf) else {
+        return false; // outside the project root: not ours to judge
+    };
+    let Ok(overrides) = build_overrides(&root, extra_excludes) else {
+        return false;
+    };
+    if matches!(overrides.matched(&rel, false), ignore::Match::Ignore(_)) {
+        return false;
+    }
+    !ignored_by(&root, ".gitignore", &rel) && !ignored_by(&root, ".ceignore", &rel)
+}
+
+/// Canonicalize for prefix comparison; a not-yet-created file borrows
+/// its parent's canonical form so drive-letter case cannot split it.
+fn canon(p: &Path) -> PathBuf {
+    std::fs::canonicalize(p).unwrap_or_else(|_| match (p.parent(), p.file_name()) {
+        (Some(dir), Some(name)) => canon(dir).join(name),
+        _ => p.to_path_buf(),
+    })
+}
+
+fn ignored_by(root: &Path, ignore_file: &str, rel: &Path) -> bool {
+    let mut b = ignore::gitignore::GitignoreBuilder::new(root);
+    b.add(root.join(ignore_file));
+    b.build()
+        .map(|g| g.matched(rel, false).is_ignore())
+        .unwrap_or(false)
+}
+
 fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::Override, String> {
     let mut builder = OverrideBuilder::new(root);
     for glob in BUILTIN_EXCLUDES {

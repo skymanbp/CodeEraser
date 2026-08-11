@@ -53,8 +53,10 @@ pub fn doctor_line(root: &Path) -> String {
 }
 
 fn line(root: &Path, daemon: &str) -> String {
+    // Reported tier = what PreToolUse will actually do: the promoted
+    // classes' route default ("ask") unless ce.toml overrides.
     let mode = Config::load(root)
-        .map(|c| c.guard.mode)
+        .map(|c| c.guard.tier("ask"))
         .unwrap_or_else(|_| "observe".into());
     let index = index_summary(root);
     format!(

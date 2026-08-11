@@ -34,7 +34,9 @@ fn health_reports_mode_index_and_warm_daemon() {
         .as_str()
         .expect("additionalContext");
     assert_eq!(v["hookSpecificOutput"]["hookEventName"], "SessionStart");
-    assert!(ctx.contains("guard: observe"), "mode in line: {ctx}");
+    // no ce.toml mode here: the line reports the §4.2 step-2 route
+    // default for the promoted PreToolUse classes
+    assert!(ctx.contains("guard: ask"), "mode in line: {ctx}");
     assert!(ctx.contains("1 files"), "index size in line: {ctx}");
     assert!(ctx.contains("warm ("), "daemon warmed: {ctx}");
 }

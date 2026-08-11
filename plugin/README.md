@@ -18,10 +18,14 @@
 
 ```toml
 [guard]
-mode = "observe"   # observe（默认）| warn | ask | deny
+mode = "observe"   # 全局覆盖（可选）：observe | warn | ask | deny
+                   # 不写 = 计划 §4.2 路线默认（见下）
 ```
 
-档位晋升按计划 D-4：FPR 数据达标才从 warn 升 ask/deny。
+默认档位 = §4.2 路线第 2 级（2026-08-11 M4 FPR 门通过后生效，依据见根目录
+[CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
+（写后文件 > 750 行）**两类 PreToolUse 规则默认 `ask`；Stop 审计 /
+precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
 观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
 每行带 `schema`（当前 `ce.observe/0.3.0`，单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`）、`session_id` 与 `ts_ms`；
 `session_id` 为 `null` 表示该条不属于任何会话——`ce precommit` 跑在终端里、

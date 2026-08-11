@@ -54,8 +54,9 @@ fn gather(
     session: Option<&str>,
     fourclass: Option<serde_json::Value>,
 ) -> Option<Gathered> {
+    // The audit class is not §4.2-promoted: unset mode stays observe.
     let mode = Config::load(root)
-        .map(|c| c.guard.mode)
+        .map(|c| c.guard.tier("observe"))
         .unwrap_or_else(|_| "observe".into());
     let (net_loc, changed) = diff_args(root, diff)?;
     let dups = if changed.is_empty() {

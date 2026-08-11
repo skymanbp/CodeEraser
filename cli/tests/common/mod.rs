@@ -7,6 +7,12 @@
 //! subset of it, so unused items here are expected — that is the why
 //! for the allow below.
 #![allow(dead_code)]
+// The hooks re-export is likewise unused in binaries that never run
+// hooks — same subset story as dead_code above.
+#![allow(unused_imports)]
+
+pub mod hooks;
+pub use hooks::*;
 
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
@@ -153,57 +159,6 @@ pub fn build_index(dir: &Path) {
     assert!(out.status.success(), "seed dedup failed");
 }
 
-/// PreToolUse envelope per the captured contract: Write carries
-/// `content`, Edit carries `new_string`.
-pub fn pretooluse_envelope(dir: &Path, tool: &str, content: &str) -> String {
-    let file = dir.join("b.rs").display().to_string().replace('\\', "/");
-    let cwd = dir.display().to_string().replace('\\', "/");
-    let input = if tool == "Write" {
-        serde_json::json!({"file_path": file, "content": content})
-    } else {
-        serde_json::json!({"file_path": file, "old_string": "x", "new_string": content, "replace_all": false})
-    };
-    serde_json::json!({
-        "session_id": "t", "transcript_path": "t", "cwd": cwd,
-        "hook_event_name": "PreToolUse", "tool_name": tool,
-        "tool_input": input, "tool_use_id": "t"
-    })
-    .to_string()
-}
-
-/// Stop envelope; `stop_hook_active` = the loop-prevention flag.
-pub fn stop_envelope(dir: &Path, stop_hook_active: bool) -> String {
-    serde_json::json!({
-        "session_id": "t", "transcript_path": "t",
-        "cwd": dir.display().to_string().replace('\\', "/"),
-        "hook_event_name": "Stop", "stop_hook_active": stop_hook_active
-    })
-    .to_string()
-}
-
-/// Run a `ce` hook subcommand with the envelope piped to stdin.
-/// Hooks are fail-open, so the exit must be 0; returns stdout.
-pub fn run_hook(dir: &Path, args: &[&str], stdin: &str) -> String {
-    use std::io::Write as _;
-    let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .args(args)
-        .current_dir(dir)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .expect("spawn hook");
-    child
-        .stdin
-        .as_mut()
-        .expect("stdin")
-        .write_all(stdin.as_bytes())
-        .expect("write envelope");
-    let out = child.wait_with_output().expect("wait");
-    assert!(out.status.success(), "hook must always exit 0 (fail-open)");
-    String::from_utf8_lossy(&out.stdout).to_string()
-}
-
 /// Spawn the real `ce daemon` for `root` and wait until it answers a
 /// ping. Tests must NEVER go through the lazy-spawning
 /// `client::request`: it respawns current_exe(), which inside a test
@@ -233,29 +188,6 @@ pub fn spawn_daemon_ready(root: &Path) -> Child {
     let _ = child.kill();
     let _ = child.wait(); // reap — no zombie on the panic path
     panic!("daemon never came up");
-}
-
-/// Last line of the project's observe feed, parsed as JSON.
-pub fn last_observe(dir: &Path) -> serde_json::Value {
-    let log = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).expect("observe log");
-    serde_json::from_str(log.lines().last().expect("line")).expect("ndjson")
-}
-
-/// Run a hook expecting SILENCE and return the observe entry it
-/// wrote, asserting the event discriminator and the ts_ms stamp —
-/// the shared tail of every observe/degraded case.
-pub fn silent_hook_observe(
-    dir: &Path,
-    args: &[&str],
-    stdin: &str,
-    event: &str,
-) -> serde_json::Value {
-    let out = run_hook(dir, args, stdin);
-    assert!(out.trim().is_empty(), "must stay silent: {out}");
-    let line = last_observe(dir);
-    assert_eq!(line["event"], event, "feed discriminator");
-    assert!(line["ts_ms"].as_u64().expect("ts_ms") > 0, "stamped");
-    line
 }
 
 /// Ask the daemon for `dir` to shut down (ignore errors — may be

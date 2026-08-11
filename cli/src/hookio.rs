@@ -11,6 +11,9 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule
+/// keeps per-rule firing records for the step-3 decision at 1.0).
+///
 /// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,
 /// which left two M3/M4 acceptance criteria unmeasurable: "dogfood
 /// sessions >= 10, of which observe-mode >= 5" (D2-2) cannot be
@@ -19,7 +22,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.3.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.4.0";
 
 /// Read the whole hook envelope from stdin and deserialize it.
 /// None = unreadable stdin or unparseable JSON — the caller treats

@@ -42,6 +42,13 @@ struct ToolInput {
     content: String,
     #[serde(default)]
     new_string: String,
+    /// Edit-only (captured contract): what `new_string` replaces, and
+    /// whether every occurrence is replaced — enough to apply the
+    /// edit in memory for an exact post-write line count.
+    #[serde(default)]
+    old_string: String,
+    #[serde(default)]
+    replace_all: bool,
 }
 
 /// Entry point for `ce probe --hook`. Never fails outward.
@@ -52,19 +59,25 @@ pub fn run_hook() -> ExitCode {
     if env.hook_event_name != "PreToolUse" || !matches!(env.tool_name.as_str(), "Write" | "Edit") {
         return ExitCode::SUCCESS;
     }
+    let root = PathBuf::from(&env.cwd);
+    decide(&root, &env)
+}
+
+/// Both PreToolUse rule classes, one decision: T1/T2 duplicate write
+/// (daemon probe) and hard-budget breach (local arithmetic). An
+/// unreadable ce.toml downgrades everything to observe (fail-open);
+/// an absent one resolves to the §4.2 route defaults via tier().
+fn decide(root: &Path, env: &Envelope) -> ExitCode {
+    let cfg = Config::load(root).ok();
+    let mode = cfg
+        .as_ref()
+        .map_or_else(|| "observe".to_string(), |c| c.guard.tier("ask"));
+    let file_path = &env.tool_input.file_path;
     let content = if env.tool_name == "Write" {
         &env.tool_input.content
     } else {
         &env.tool_input.new_string
     };
-    let root = PathBuf::from(&env.cwd);
-    decide(&root, &env.tool_input.file_path, content, &env.session_id)
-}
-
-fn decide(root: &Path, file_path: &str, content: &str, session: &str) -> ExitCode {
-    let mode = Config::load(root)
-        .map(|c| c.guard.mode)
-        .unwrap_or_else(|_| "observe".into());
     let started = std::time::Instant::now();
     let matches = probe_matches(root, file_path, content);
     observe_log(
@@ -72,19 +85,82 @@ fn decide(root: &Path, file_path: &str, content: &str, session: &str) -> ExitCod
         ProbeEvent {
             file: file_path,
             mode: &mode,
-            session,
+            session: &env.session_id,
             matches: &matches,
             elapsed_ms: started.elapsed().as_millis(),
         },
     );
-    let Some(matches) = matches else {
-        return ExitCode::SUCCESS; // degraded (daemon unreachable): fail open
-    };
-    if matches.is_empty() {
-        return ExitCode::SUCCESS;
+    let mut reasons = Vec::new();
+    if let Some(ms) = &matches
+        && !ms.is_empty()
+    {
+        reasons.push(reason(file_path, ms));
     }
-    emit_decision(&mode, &reason(file_path, &matches));
+    if let Some((lines, why)) = cfg.and_then(|c| budget_breach(root, &c, env)) {
+        budget_log(root, env, &mode, lines);
+        reasons.push(why);
+    }
+    if !reasons.is_empty() {
+        emit_decision(&mode, &reasons.join(" "));
+    }
     ExitCode::SUCCESS
+}
+
+/// §4.2 step 2, second promoted rule class: the write would leave the
+/// file past the hard budget (thresholds.file_lines_fail). Exact
+/// arithmetic on the applied edit, daemon-free, scan-scope only — a
+/// file the scanner would never count cannot breach its budget.
+fn budget_breach(root: &Path, cfg: &Config, env: &Envelope) -> Option<(usize, String)> {
+    let cap = cfg.thresholds.file_lines_fail;
+    let path = Path::new(&env.tool_input.file_path);
+    crate::scan::lang::Lang::from_path(path)?;
+    let lines = resulting_lines(env)?;
+    if lines <= cap || !crate::scan::walk::in_scope(root, path, &cfg.exclude) {
+        return None;
+    }
+    let why = format!(
+        "ce: this write leaves {} at {lines} lines, past the hard budget \
+         of {cap} (plan §4.1). Split the file instead of growing it.",
+        env.tool_input.file_path
+    );
+    Some((lines, why))
+}
+
+/// Exact post-write line count: Write is the payload itself; Edit is
+/// the payload applied to the on-disk file under Edit's own semantics
+/// (first occurrence, or all with replace_all). None = not derivable
+/// (missing file / absent old_string): that tool call is failing on
+/// its own — the budget rule stays silent rather than guessing.
+fn resulting_lines(env: &Envelope) -> Option<usize> {
+    let t = &env.tool_input;
+    if env.tool_name == "Write" {
+        return Some(t.content.lines().count());
+    }
+    let on_disk = std::fs::read_to_string(&t.file_path).ok()?;
+    if t.old_string.is_empty() || !on_disk.contains(&t.old_string) {
+        return None;
+    }
+    let applied = if t.replace_all {
+        on_disk.replace(&t.old_string, &t.new_string)
+    } else {
+        on_disk.replacen(&t.old_string, &t.new_string, 1)
+    };
+    Some(applied.lines().count())
+}
+
+/// Budget firings get their own feed line (accounting for the §4.2
+/// step-3 decision at 1.0 needs per-rule records), in every tier.
+fn budget_log(root: &Path, env: &Envelope, mode: &str, lines: usize) {
+    crate::hookio::observe_append(
+        root,
+        Some(&env.session_id),
+        serde_json::json!({
+            "event": "budget",
+            "file": env.tool_input.file_path,
+            "mode": mode,
+            "resulting_lines": lines,
+        }),
+    );
 }
 
 /// None = probe unavailable (degraded); Some(vec) = verified matches.

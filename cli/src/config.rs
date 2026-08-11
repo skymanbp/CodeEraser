@@ -37,18 +37,24 @@ impl Default for Thresholds {
 
 /// Passive-guard settings (plan §4.2, decision D-4 gradual rollout:
 /// observe → warn → ask → deny, promotion gated on measured FPR).
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default)]
 pub struct Guard {
-    /// "observe" | "warn" | "ask" | "deny"
-    pub mode: String,
+    /// Explicit global tier: "observe" | "warn" | "ask" | "deny".
+    /// Unset = the §4.2 route defaults, resolved per rule class by
+    /// `tier` (step 2 landed 2026-08-11 — CHANGELOG).
+    pub mode: Option<String>,
 }
 
-impl Default for Guard {
-    fn default() -> Self {
-        Self {
-            mode: "observe".into(),
-        }
+impl Guard {
+    /// Effective tier for one rule class: an explicit `[guard] mode`
+    /// overrides every class; otherwise the plan-§4.2 route default
+    /// for that class applies ("ask" for the two classes promoted
+    /// after the M4 FPR gate, "observe" for everything else).
+    pub fn tier(&self, route_default: &str) -> String {
+        self.mode
+            .clone()
+            .unwrap_or_else(|| route_default.to_string())
     }
 }
 
