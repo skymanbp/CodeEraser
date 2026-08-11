@@ -1,0 +1,75 @@
+-- aeson 2.x object keys are Key, not String; string literals for
+-- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
+{-# LANGUAGE OverloadedStrings #-}
+
+-- | Base-only deterministic checks for the ce-core wire layer.
+-- The golden fixtures under contracts/fixtures/ are shared with the
+-- Rust side (cli/tests/core_wire.rs): byte drift on either side
+-- reddens both suites.
+module Main (main) where
+
+import qualified CE.Protocol as Protocol
+import Control.Monad (unless)
+import Data.Aeson (Value (..), decodeStrict)
+import qualified Data.Aeson.Key as Key
+import qualified Data.Aeson.KeyMap as KM
+import qualified Data.ByteString.Char8 as B8
+import System.Exit (exitFailure)
+
+-- | cabal test runs with the package root (core/) as cwd.
+fixtureDir :: FilePath
+fixtureDir = "../contracts/fixtures/handshake/"
+
+main :: IO ()
+main = do
+  results <-
+    sequence
+      [ goldenPairs "hello-ok.ndjson"
+      , goldenPairs "wire-errors.ndjson"
+      , structural
+      ]
+  unless (and results) exitFailure
+
+check :: String -> Bool -> IO Bool
+check name ok = do
+  putStrLn ((if ok then "ok   " else "FAIL ") <> name)
+  pure ok
+
+-- | Fixture files alternate request line / expected reply line.
+goldenPairs :: FilePath -> IO Bool
+goldenPairs file = do
+  raw <- B8.readFile (fixtureDir <> file)
+  let rows = pairs (filter (not . B8.null) (B8.lines raw))
+  results <- mapM (checkPair file) (zip [1 :: Int ..] rows)
+  pure (and results)
+ where
+  pairs (a : b : rest) = (a, b) : pairs rest
+  pairs [] = []
+  pairs [_] = error (file <> ": odd line count — fixtures are request/reply pairs")
+
+checkPair :: FilePath -> (Int, (B8.ByteString, B8.ByteString)) -> IO Bool
+checkPair file (n, (request, expected)) = do
+  let got = Protocol.respond "0.0.1" request
+  ok <- check (file <> " pair " <> show n) (got == expected)
+  unless ok $ do
+    B8.putStrLn ("  expected: " <> expected)
+    B8.putStrLn ("  got:      " <> got)
+  pure ok
+
+-- | Field-level assertions that do not depend on fixture bytes.
+structural :: IO Bool
+structural = do
+  a <- check "unknown type echoes id" (field unknownReply "id" == Just (Number 7))
+  b <- check "unknown type is error/unknown_type" (field unknownReply "code" == Just "unknown_type")
+  c <- check "oversize line is error/too_large" (field oversizeReply "code" == Just "too_large")
+  d <- check "major mismatch is rejected" (field majorReply "accept" == Just (Bool False))
+  pure (a && b && c && d)
+ where
+  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"0.2.0\",\"type\":\"mystery\",\"id\":7}"
+  oversizeReply = Protocol.respond "0.0.1" (B8.replicate 1048577 'x')
+  majorReply = Protocol.respond "0.0.1" "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
+
+field :: B8.ByteString -> String -> Maybe Value
+field bytes key = do
+  Object o <- decodeStrict bytes
+  KM.lookup (Key.fromString key) o

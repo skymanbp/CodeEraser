@@ -6,16 +6,23 @@
 ## 1. 信封（envelope）
 
 ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾，binary-mode I/O）。
-每条消息必带三个信封字段，其余字段由 `type` 决定：
+每条消息必带信封字段，其余字段由 `type` 决定：
 
 ```json
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **0.1.0**（单一来源：`cli/src/handshake.rs::PROTO`
-  与 `core/app/CE/Handshake.hs::proto`，两处必须一致，由 handshake fixture 测试钉住）。
+- `proto`：协议版本，当前 **0.2.0**（单一来源：`cli/src/corelink.rs::PROTO`
+  与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
-- 未知 `type` → 回错误应答，不崩溃。
+- 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
+  `{"proto","type":"error","id":<回显|null>,"code","message"}`，
+  `code ∈ {unknown_type, bad_request, too_large}`。core 侧在 JSON 解析**之前**
+  先做行字节上限预检（1 MiB），超限即 `too_large`，不解析。
+- `hello` 应答自 0.2.0 起带 `capabilities`（如 `["hello"]`）——**纯信息发现**，
+  接受/拒绝的唯一权威仍是 §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
+- 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
+  回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
 
 ## 2. SemVer 协商规则
 
@@ -25,8 +32,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 
 ## 3. Fixtures 约定
 
-- `fixtures/handshake/`：握手 golden（请求行 + 期望应答行），Rust/Haskell 两侧
-  测试共同消费——同一份文件，防两侧实现漂移。
+- `fixtures/handshake/`：wire golden（请求行 + 期望应答行交替；`hello-ok` 握手、
+  `wire-errors` 错误应答），Rust（`cli/tests/core_wire.rs`）与 Haskell
+  （`core/test/Spec.hs`）**逐字节**共同消费——同一份文件，防两侧实现漂移。
+  字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -38,4 +47,4 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 0.1.0 | §1 所列两处常量 |
+| 协议 | 0.2.0 | §1 所列两处常量 |

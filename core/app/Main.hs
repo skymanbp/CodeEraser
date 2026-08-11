@@ -5,7 +5,7 @@
 -- trap, GHC #10762 / #15021).
 module Main (main) where
 
-import CE.Handshake (respond)
+import CE.Protocol (respond)
 import qualified Data.ByteString.Char8 as B8
 import System.Environment (getArgs)
 import System.Exit (exitFailure)

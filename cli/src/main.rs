@@ -3,7 +3,7 @@
 //! `dedup` / `daemon` / `ping` (clone index + process model, M2).
 
 use clap::{Parser, Subcommand, ValueEnum};
-use codeeraser::{daemon, dedup, handshake, scan};
+use codeeraser::{corelink, daemon, dedup, scan};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -216,12 +216,12 @@ fn doctor(core: &str, root: &std::path::Path) -> ExitCode {
     println!(
         "ce {} (proto {})",
         env!("CARGO_PKG_VERSION"),
-        handshake::PROTO
+        corelink::PROTO
     );
     println!("project: {}", codeeraser::health::doctor_line(root));
     let (degraded, total) = codeeraser::health::degraded_runs(root);
     println!("degraded runs (observe feed): {degraded} of {total} entries");
-    match handshake::run(core) {
+    match corelink::run(core) {
         Ok(reply) => {
             println!("ce-core {} (proto {})", reply.version, reply.proto);
             println!("handshake: OK");

@@ -1,7 +1,7 @@
 cabal-version:      3.0
 name:               ce-core
 version:            0.0.1
-synopsis:           CodeEraser judgment core (M0: NDJSON handshake server)
+synopsis:           CodeEraser judgment core (NDJSON envelope + judgment types)
 license:            Apache-2.0
 author:             skymanbp
 build-type:         Simple
@@ -9,7 +9,23 @@ build-type:         Simple
 executable ce-core
     main-is:          Main.hs
     hs-source-dirs:   app
-    other-modules:    CE.Handshake
+    other-modules:    CE.Handshake, CE.Protocol
+    build-depends:
+        base       >=4.19 && <5,
+        aeson      >=2.2,
+        bytestring >=0.11
+    default-language: GHC2021
+    ghc-options:      -Wall -Werror
+
+-- base-only deterministic checks (plan §7.3 as amended 2026-08-11:
+-- no RNG inside a byte-determinism contract; Hedgehog is not in the
+-- freeze). Recompiling the app modules here is cheaper than a
+-- library restructure for one milestone.
+test-suite ce-core-test
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    hs-source-dirs:   app, test
+    other-modules:    CE.Handshake, CE.Protocol
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
