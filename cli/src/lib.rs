@@ -2,6 +2,7 @@
 //! this; the M2 daemon and integration tests consume it directly.
 
 pub mod audit;
+pub mod churn;
 pub mod config;
 pub mod corelink;
 pub mod daemon;

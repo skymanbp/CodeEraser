@@ -3,7 +3,7 @@
 //! `dedup` / `daemon` / `ping` (clone index + process model, M2).
 
 use clap::{Parser, Subcommand, ValueEnum};
-use codeeraser::{corelink, daemon, dedup, scan};
+use codeeraser::{churn, corelink, daemon, dedup, scan};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -34,6 +34,17 @@ enum Cmd {
     Scan {
         /// Directory to scan (default: current directory)
         path: Option<PathBuf>,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
+    },
+    /// Time-dimension metrics: append vs rewrite, windowed churn,
+    /// co-change pairs (M4; report-only, feeds the M5 join)
+    Churn {
+        /// Repository root (default: current directory)
+        root: Option<PathBuf>,
+        /// History window in days
+        #[arg(long, default_value_t = 14)]
+        days: u32,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
@@ -116,6 +127,7 @@ fn main() -> ExitCode {
     match Cli::parse().cmd {
         Cmd::Doctor { core, root } => doctor(&core, &or_cwd(root)),
         Cmd::Scan { path, format } => scan_cmd(path, format),
+        Cmd::Churn { root, days, format } => churn_cmd(&or_cwd(root), days, format),
         Cmd::Dedup(args) => dedup_cmd(args),
         Cmd::Probe { hook } => hook_cmd(hook, "probe", codeeraser::guard::run_hook),
         Cmd::Audit { hook } => hook_cmd(hook, "audit", codeeraser::audit::run_hook),
@@ -124,6 +136,22 @@ fn main() -> ExitCode {
         Cmd::Mcp { root } => serve_cmd("mcp", codeeraser::mcp::serve(&or_cwd(root))),
         Cmd::Daemon { root } => serve_cmd("daemon", daemon::server::serve(&root)),
         Cmd::Ping { root } => ping_cmd(root),
+    }
+}
+
+fn churn_cmd(root: &std::path::Path, days: u32, format: OutFormat) -> ExitCode {
+    match churn::run(root, days) {
+        Ok(report) => {
+            match format {
+                OutFormat::Console => churn::print_console(&report, days),
+                OutFormat::Json => println!("{}", churn::report_json(&report)),
+            }
+            ExitCode::SUCCESS
+        }
+        Err(err) => {
+            eprintln!("ce churn: {err:#}");
+            ExitCode::from(2)
+        }
     }
 }
 

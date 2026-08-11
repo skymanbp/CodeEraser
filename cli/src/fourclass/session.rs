@@ -15,10 +15,21 @@ pub type PathPair = (Option<String>, Option<String>);
 /// `git -M -C` (a pure rename is explained by the pairing), filtered
 /// to the supported languages. None = not a git repo / git failed.
 pub fn head_pairs(root: &Path) -> Option<Vec<PathPair>> {
+    diff_pairs(root, &["diff", "--name-status", "-z", "-M", "-C", "HEAD"])
+}
+
+/// One commit's file pairs against its first parent (same pairing
+/// and language filter as head_pairs) — the churn module's walk.
+pub fn commit_pairs(root: &Path, sha: &str) -> Option<Vec<PathPair>> {
+    let range = format!("{sha}^..{sha}");
+    diff_pairs(root, &["diff", "--name-status", "-z", "-M", "-C", &range])
+}
+
+fn diff_pairs(root: &Path, args: &[&str]) -> Option<Vec<PathPair>> {
     let out = std::process::Command::new("git")
         .arg("-C")
         .arg(root)
-        .args(["diff", "--name-status", "-z", "-M", "-C", "HEAD"])
+        .args(args)
         .output()
         .ok()?;
     if !out.status.success() {
