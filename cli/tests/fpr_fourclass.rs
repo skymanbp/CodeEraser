@@ -18,8 +18,8 @@
 mod eval_support;
 
 use codeeraser::corelink::Link;
-use codeeraser::fourclass::batch::{PairInput, classify_batch};
-use eval_support::{lang_of, load, write_doc};
+use codeeraser::fourclass::batch::classify_batch;
+use eval_support::{eval_doc, load, sample_pair, write_doc};
 use serde_json::{Value, json};
 
 #[test]
@@ -34,11 +34,7 @@ fn generate_fpr_fourclass() {
     let rows = manifest["samples"].as_array().expect("samples");
     let mut flagged: Vec<Value> = Vec::new();
     eval_support::each_sample(rows, |id, sample| {
-        let inputs = [PairInput {
-            before: sample["before"].as_str().expect("before"),
-            after: sample["after"].as_str().expect("after"),
-            lang: lang_of(sample["lang"].as_str().expect("lang")),
-        }];
+        let inputs = sample_pair(&sample);
         let b = classify_batch(&inputs, Some(&mut link));
         assert!(b.degraded.is_none(), "{id}: degraded {:?}", b.degraded);
         for (_, kind) in &b.suspicions {
@@ -68,18 +64,14 @@ fn generate_fpr_fourclass() {
         "gate_max_percent": 1,
         "recall": "undefined: corpus contains no abnormal edits",
     });
-    write_doc(
-        "../contracts/eval/fpr-fourclass-v1.json",
-        &doc,
-        "FPR doc written to contracts/eval/fpr-fourclass-v1.json",
-    );
+    write_doc(&eval_doc("fpr-fourclass"), &doc, "FPR doc written");
 }
 
 /// CI gate, no local data needed: the committed replay must clear
 /// the plan's main gate — false positives <= 1% of >= 500 samples.
 #[test]
 fn fpr_gate_holds() {
-    let doc = load("../contracts/eval/fpr-fourclass-v1.json");
+    let doc = load(&eval_doc("fpr-fourclass"));
     let samples = doc["samples"].as_u64().expect("samples");
     let flagged = doc["flagged"].as_array().expect("flagged").len() as u64;
     assert!(samples >= 500, "denominator floor: {samples}");

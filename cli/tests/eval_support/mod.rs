@@ -13,6 +13,7 @@
 pub mod colordiff;
 pub use colordiff::*;
 
+use codeeraser::fourclass::batch::PairInput;
 use codeeraser::scan::lang::Lang;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -104,6 +105,22 @@ pub fn each_sample(rows: &[Value], mut f: impl FnMut(&str, Value)) {
         let id = row["id"].as_str().expect("id");
         f(id, read_sample(&dir, id));
     }
+}
+
+/// A one-pair classify_batch input built from an eval sample payload
+/// — the manifest-replay shape shared by the L1-identity and FPR runs.
+pub fn sample_pair(sample: &Value) -> [PairInput<'_>; 1] {
+    [PairInput {
+        before: sample["before"].as_str().expect("before"),
+        after: sample["after"].as_str().expect("after"),
+        lang: lang_of(sample["lang"].as_str().expect("lang")),
+    }]
+}
+
+/// The canonical path of a contracts/eval document, derived from its
+/// name so a generator and its CI gate can never drift apart.
+pub fn eval_doc(name: &str) -> String {
+    format!("../contracts/eval/{name}-v1.json")
 }
 
 /// A JSON array of integers as `Vec<u64>`.

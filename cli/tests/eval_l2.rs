@@ -29,9 +29,9 @@ mod eval_l2_register;
 mod eval_support;
 
 use codeeraser::corelink::Link;
-use codeeraser::fourclass::batch::{PairInput, classify_batch};
+use codeeraser::fourclass::batch::classify_batch;
 use eval_l2_parts as parts;
-use eval_support::{by_sha, each_sample, gt_pairs, load, u64s};
+use eval_support::{by_sha, each_sample, gt_pairs, load, sample_pair, u64s};
 use serde_json::{Value, json};
 
 /// Both class splits must sum to the same numstat on each side.
@@ -155,11 +155,7 @@ fn l1_reproduced_on_200_samples() {
     let l1 = load("../contracts/eval/l1-v1.json");
     let rows = l1["rows"].as_array().expect("rows");
     each_sample(rows, |id, sample| {
-        let inputs = [PairInput {
-            before: sample["before"].as_str().expect("before"),
-            after: sample["after"].as_str().expect("after"),
-            lang: eval_support::lang_of(sample["lang"].as_str().expect("lang")),
-        }];
+        let inputs = sample_pair(&sample);
         let b = classify_batch(&inputs, None);
         let got = parts::counts_of(&b)[0];
         let row = rows.iter().find(|r| r["id"] == id).expect("row");
