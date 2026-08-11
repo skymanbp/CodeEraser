@@ -9,6 +9,7 @@
 module Main (main) where
 
 import CE.FourClass.Cost (destFloor, siteOpens)
+import qualified Reference
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -30,6 +31,7 @@ main = do
       , goldenPairs "fourclass/golden.ndjson"
       , structural
       , costModel
+      , Reference.equivalence
       ]
   unless (and results) exitFailure
 
