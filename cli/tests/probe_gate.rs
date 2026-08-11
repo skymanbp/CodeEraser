@@ -95,7 +95,7 @@ fn probe_over_daemon_socket() {
         file_path: root.join("b.rs").display().to_string(),
         content: rust_fn(9),
     };
-    match client::request(&root, &req).expect("probe") {
+    match client::request_if_running(&root, &req).expect("probe") {
         Response::ProbeReport {
             matches,
             elapsed_ms,

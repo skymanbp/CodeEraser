@@ -28,7 +28,7 @@ fn cold_start_probe_degrades_then_serves_matches() {
     };
     let deadline = Instant::now() + Duration::from_secs(30);
     loop {
-        match client::request(&root, &req).expect("probe") {
+        match client::request_if_running(&root, &req).expect("probe") {
             Response::ProbeReport { matches, .. } => {
                 let n = matches.as_array().expect("matches array").len();
                 assert!(n > 0, "silent empty report from a never-built index");
@@ -40,7 +40,7 @@ fn cold_start_probe_degrades_then_serves_matches() {
         assert!(Instant::now() < deadline, "first index build never landed");
         std::thread::sleep(Duration::from_millis(100)); // poll the async build
     }
-    match client::request(&root, &Request::Shutdown).expect("shutdown") {
+    match client::request_if_running(&root, &Request::Shutdown).expect("shutdown") {
         Response::Bye => {}
         other => panic!("expected bye, got {other:?}"),
     }
@@ -56,7 +56,7 @@ fn ping_dedup_shutdown_roundtrip() {
     // warm probe latency (informational; the formal p95 budget is the
     // M2 acceptance run)
     let t0 = Instant::now();
-    let r = client::request(&root, &Request::Ping).expect("warm ping");
+    let r = client::request_if_running(&root, &Request::Ping).expect("warm ping");
     let warm_ms = t0.elapsed().as_millis();
     assert!(matches!(r, Response::Pong { .. }));
     println!("warm ping round-trip: {warm_ms} ms");
@@ -65,7 +65,7 @@ fn ping_dedup_shutdown_roundtrip() {
     assert_probe_excludes_self(&root);
 
     // clean shutdown; the process must exit
-    match client::request(&root, &Request::Shutdown).expect("shutdown") {
+    match client::request_if_running(&root, &Request::Shutdown).expect("shutdown") {
         Response::Bye => {}
         other => panic!("expected bye, got {other:?}"),
     }
@@ -84,7 +84,7 @@ fn assert_probe_excludes_self(root: &Path) {
         file_path: root.join("a.rs").display().to_string().replace('\\', "/"),
         content: common::rust_fn(9),
     };
-    match client::request(root, &req).expect("probe") {
+    match client::request_if_running(root, &req).expect("probe") {
         Response::ProbeReport { matches, .. } => {
             let files: Vec<&str> = matches
                 .as_array()
@@ -104,7 +104,7 @@ fn assert_dedup_probe(root: &Path) {
         min_tokens: None,
         min_distinct: None,
     };
-    match client::request(root, &req).expect("dedup") {
+    match client::request_if_running(root, &req).expect("dedup") {
         Response::DedupReport { report } => {
             let blocks = report["blocks"].as_array().expect("blocks array");
             assert!(!blocks.is_empty(), "seeded clone must be found");

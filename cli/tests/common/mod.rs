@@ -205,9 +205,14 @@ pub fn run_hook(dir: &Path, args: &[&str], stdin: &str) -> String {
 }
 
 /// Spawn the real `ce daemon` for `root` and wait until it answers a
-/// ping. Spawning ourselves matters: the client's lazy start would
-/// respawn current_exe(), which inside a test harness is the TEST
-/// binary, not `ce`.
+/// ping. Tests must NEVER go through the lazy-spawning
+/// `client::request`: it respawns current_exe(), which inside a test
+/// harness is the TEST binary — libtest then treats the `daemon` arg
+/// as a name filter and runs `*_daemon` tests NESTED, wiping shared
+/// tmp dirs and double-serving sockets mid-test (the Windows-CI
+/// cold-start flake class). `request_if_running` never spawns; a
+/// connect failure is a loud test failure, not silent process spray.
+/// Daemon stderr is inherited so CI logs show its cold-start lines.
 pub fn spawn_daemon_ready(root: &Path) -> Child {
     use codeeraser::daemon::{client, proto::Request};
     let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
@@ -216,12 +221,12 @@ pub fn spawn_daemon_ready(root: &Path) -> Child {
         .env("CE_DAEMON_IDLE_SECS", "120")
         .stdin(Stdio::null())
         .stdout(Stdio::null())
-        .stderr(Stdio::null())
+        .stderr(Stdio::inherit())
         .spawn()
         .expect("spawn ce daemon");
     for _ in 0..50 {
         std::thread::sleep(std::time::Duration::from_millis(100));
-        if client::request(root, &Request::Ping).is_ok() {
+        if client::request_if_running(root, &Request::Ping).is_ok() {
             return child;
         }
     }
@@ -253,10 +258,13 @@ pub fn silent_hook_observe(
     line
 }
 
-/// Ask the daemon for `dir` to shut down (ignore errors — may be gone).
+/// Ask the daemon for `dir` to shut down (ignore errors — may be
+/// gone). Never the lazy-spawning path: spawning a daemon in order to
+/// shut it down would be absurd, and in a test harness it sprays
+/// nested test-binary processes (see spawn_daemon_ready).
 pub fn shutdown_daemon(dir: &Path) {
     use codeeraser::daemon::{client, proto::Request};
-    let _ = client::request(dir, &Request::Shutdown);
+    let _ = client::request_if_running(dir, &Request::Shutdown);
 }
 
 /// Wait ~5s for `child` to exit; kill it and panic on timeout.

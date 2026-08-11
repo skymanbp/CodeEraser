@@ -100,7 +100,7 @@ fn probe_round_trip_p95_under_150ms() {
     let mut rtts: Vec<u128> = Vec::with_capacity(100);
     for _ in 0..100 {
         let t0 = Instant::now();
-        let r = client::request(&root, &Request::Ping).expect("ping");
+        let r = client::request_if_running(&root, &Request::Ping).expect("ping");
         assert!(matches!(r, Response::Pong { .. }));
         rtts.push(t0.elapsed().as_micros());
     }
