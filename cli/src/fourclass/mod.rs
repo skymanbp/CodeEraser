@@ -19,6 +19,7 @@ pub mod batch;
 pub mod diff;
 pub mod kinds;
 pub mod session;
+pub mod stacking;
 pub mod units;
 
 use crate::scan::lang::Lang;

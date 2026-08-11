@@ -42,7 +42,49 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
         })
         .collect();
     units.extend(extra_units(tree.root_node(), src, lang));
+    if lang == Lang::Go {
+        qualify_go_methods(tree.root_node(), src, &mut units);
+    }
     units
+}
+
+/// Prefix Go method keys with their receiver type: `(T) add/1` and
+/// `(U) add/1` are different identities. Go has no containing unit
+/// node, so without this two same-name receivers collide into one
+/// top-level key — false stacking evidence (attack review F7).
+fn qualify_go_methods(root: tree_sitter::Node, src: &[u8], units: &mut [Unit]) {
+    let mut stack = vec![root];
+    while let Some(node) = stack.pop() {
+        if node.kind() == "method_declaration"
+            && let Some(recv) = receiver_type(node, src)
+        {
+            let line = node.start_position().row + 1;
+            for u in units.iter_mut().filter(|u| u.start_line == line) {
+                u.key = format!("({recv}) {}", u.key);
+            }
+        }
+        for i in 0..node.child_count() {
+            if let Some(child) = node.child(i as u32) {
+                stack.push(child);
+            }
+        }
+    }
+}
+
+/// The receiver's type text (`T`, `*U`) — the identity part; the
+/// binding name is deliberately excluded so renaming `(t T)` to
+/// `(x T)` keeps the unit's cross-version key stable.
+fn receiver_type(method: tree_sitter::Node, src: &[u8]) -> Option<String> {
+    let recv = method.child_by_field_name("receiver")?;
+    for i in 0..recv.child_count() {
+        if let Some(param) = recv.child(i as u32)
+            && param.kind() == "parameter_declaration"
+            && let Some(ty) = param.child_by_field_name("type")
+        {
+            return Some(String::from_utf8_lossy(&src[ty.byte_range()]).into_owned());
+        }
+    }
+    None
 }
 
 /// Named non-function units (consts, types, …) from the kinds
@@ -51,20 +93,18 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
 /// fourclass::kinds and not scan/spec.
 fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
     let kinds = super::kinds::extra(lang);
+    let typed = super::kinds::typed(lang);
     let mut out = Vec::new();
-    if kinds.is_empty() {
+    if kinds.is_empty() && typed.is_empty() {
         return out;
     }
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if kinds.contains(&node.kind())
-            && let Some(name) = node.child_by_field_name("name")
-        {
-            out.push(Unit {
-                key: String::from_utf8_lossy(&src[name.byte_range()]).into_owned(),
-                start_line: node.start_position().row + 1,
-                end_line: node.end_position().row + 1,
-            });
+        if let Some(key) = named_key(node, src, kinds) {
+            out.push(unit_at(node, key));
+        }
+        if let Some(key) = typed_key(node, src, typed) {
+            out.push(unit_at(node, key));
         }
         for i in 0..node.child_count() {
             if let Some(child) = node.child(i as u32) {
@@ -73,6 +113,41 @@ fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
         }
     }
     out
+}
+
+fn unit_at(node: tree_sitter::Node, key: String) -> Unit {
+    Unit {
+        key,
+        start_line: node.start_position().row + 1,
+        end_line: node.end_position().row + 1,
+    }
+}
+
+fn named_key(node: tree_sitter::Node, src: &[u8], kinds: &[&str]) -> Option<String> {
+    if !kinds.contains(&node.kind()) {
+        return None;
+    }
+    let name = node.child_by_field_name("name")?;
+    Some(String::from_utf8_lossy(&src[name.byte_range()]).into_owned())
+}
+
+/// Key for a typed-kind unit: `impl Foo`, or `impl Advisor for Foo`
+/// when the qualifier field is present (kinds::typed's why).
+fn typed_key(
+    node: tree_sitter::Node,
+    src: &[u8],
+    typed: &[(&str, &str, &str, &str)],
+) -> Option<String> {
+    let (_, field, qual_field, prefix) = typed.iter().find(|(k, ..)| *k == node.kind())?;
+    let name = node.child_by_field_name(field)?;
+    let text = String::from_utf8_lossy(&src[name.byte_range()]);
+    Some(match node.child_by_field_name(qual_field) {
+        Some(q) => format!(
+            "{prefix} {} for {text}",
+            String::from_utf8_lossy(&src[q.byte_range()])
+        ),
+        None => format!("{prefix} {text}"),
+    })
 }
 
 /// ATX headings open a section that runs to the next heading of any
@@ -151,6 +226,35 @@ mod tests {
         let src = "fn outer() {\n    fn inner() {\n        let x = 1;\n    }\n}\n";
         assert_eq!(rust_owner(src, 3), "inner/0");
         assert_eq!(rust_owner(src, 5), "outer/0");
+    }
+
+    /// Attack review F7: impl blocks are units (methods are span-
+    /// contained, not top-level), and Go methods carry their receiver
+    /// type in the key.
+    #[test]
+    fn impl_blocks_contain_their_methods() {
+        let src = "impl A {\n    fn add(&self) {}\n}\nimpl B {\n    fn add(&self) {}\n}\n\
+                   impl Show for A {\n    fn show(&self) {}\n}\n";
+        assert_eq!(rust_owner(src, 2), "add/1");
+        let units = segments(src, Lang::Rust);
+        let mut impls: Vec<&str> = units
+            .iter()
+            .filter(|u| u.key.starts_with("impl "))
+            .map(|u| u.key.as_str())
+            .collect();
+        impls.sort_unstable(); // extraction order is not part of the contract
+        // the trait qualifier keeps a type's inherent and trait impls
+        // distinct (the FPR replay caught them colliding)
+        assert_eq!(impls, ["impl A", "impl B", "impl Show for A"]);
+    }
+
+    #[test]
+    fn go_method_keys_carry_the_receiver_type() {
+        let src = "func (t T) add(x int) {}\nfunc (u *U) add(x int) {}\nfunc free(x int) {}\n";
+        let (_, keys) = keyed(src, Lang::Go);
+        assert!(keys.contains(&"(T) add/1".to_string()), "keys: {keys:?}");
+        assert!(keys.contains(&"(*U) add/1".to_string()), "keys: {keys:?}");
+        assert!(keys.contains(&"free/1".to_string()), "keys: {keys:?}");
     }
 
     #[test]

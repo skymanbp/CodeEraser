@@ -1185,12 +1185,30 @@
         {
           "file": "cli/src/dedup/tokens.rs",
           "gt": 7,
+          "gt_lines": [
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44
+          ],
           "pred": 7,
           "side": "in"
         },
         {
           "file": "cli/src/dedup/index.rs",
           "gt": 7,
+          "gt_lines": [
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146
+          ],
           "pred": 7,
           "side": "out"
         }
@@ -2973,60 +2991,342 @@
         {
           "file": "cli/tests/common/mod.rs",
           "gt": 63,
+          "gt_lines": [
+            11,
+            16,
+            17,
+            18,
+            19,
+            22,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            35,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            55,
+            56,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            73,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            86,
+            87,
+            88,
+            89,
+            97,
+            98,
+            99,
+            100,
+            101,
+            104,
+            105,
+            107,
+            108,
+            120,
+            126,
+            127,
+            132,
+            133,
+            134,
+            136,
+            138
+          ],
           "pred": 66,
           "side": "in"
         },
         {
           "file": "cli/tests/audit_stop.rs",
           "gt": 34,
+          "gt_lines": [
+            7,
+            11,
+            12,
+            13,
+            14,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            28,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            46,
+            47,
+            70,
+            72,
+            73,
+            74,
+            75,
+            76,
+            78,
+            79,
+            80,
+            81,
+            84,
+            86
+          ],
           "pred": 35,
           "side": "out"
         },
         {
           "file": "cli/tests/daemon_e2e.rs",
           "gt": 31,
+          "gt_lines": [
+            8,
+            12,
+            13,
+            14,
+            15,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            31,
+            45,
+            46,
+            47,
+            63,
+            64,
+            90,
+            91,
+            92,
+            94,
+            96,
+            123,
+            124,
+            154,
+            155,
+            156,
+            158,
+            160
+          ],
           "pred": 32,
           "side": "out"
         },
         {
           "file": "cli/tests/dedup_index.rs",
           "gt": 14,
+          "gt_lines": [
+            12,
+            13,
+            14,
+            15,
+            18,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            31
+          ],
           "pred": 14,
           "side": "out"
         },
         {
           "file": "cli/tests/dedup_property.rs",
           "gt": 5,
+          "gt_lines": [
+            18,
+            19,
+            20,
+            28,
+            29
+          ],
           "pred": 7,
           "side": "out"
         },
         {
           "file": "cli/tests/guard_hook.rs",
           "gt": 40,
+          "gt_lines": [
+            8,
+            12,
+            13,
+            14,
+            15,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            29,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            64,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            77,
+            78,
+            79,
+            80,
+            84,
+            85,
+            119
+          ],
           "pred": 41,
           "side": "out"
         },
         {
           "file": "cli/tests/health_plugin.rs",
           "gt": 19,
+          "gt_lines": [
+            11,
+            12,
+            13,
+            14,
+            28,
+            29,
+            31,
+            32,
+            40,
+            43,
+            44,
+            45,
+            46,
+            48,
+            49,
+            50,
+            51,
+            54,
+            56
+          ],
           "pred": 20,
           "side": "out"
         },
         {
           "file": "cli/tests/mcp_precommit.rs",
           "gt": 22,
+          "gt_lines": [
+            6,
+            10,
+            11,
+            12,
+            13,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            27,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127
+          ],
           "pred": 22,
           "side": "out"
         },
         {
           "file": "cli/tests/perf_budget.rs",
           "gt": 17,
+          "gt_lines": [
+            12,
+            16,
+            17,
+            18,
+            19,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            33,
+            122,
+            129,
+            130
+          ],
           "pred": 19,
           "side": "out"
         },
         {
           "file": "cli/tests/probe_gate.rs",
           "gt": 17,
+          "gt_lines": [
+            8,
+            11,
+            12,
+            13,
+            14,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            28,
+            117,
+            124,
+            125
+          ],
           "pred": 19,
           "side": "out"
         }
@@ -3585,18 +3885,29 @@
         {
           "file": "cli/tests/common/mod.rs",
           "gt": 2,
+          "gt_lines": [
+            61,
+            62
+          ],
           "pred": 2,
           "side": "in"
         },
         {
           "file": "cli/tests/daemon_e2e.rs",
           "gt": 1,
+          "gt_lines": [
+            16
+          ],
           "pred": 1,
           "side": "out"
         },
         {
           "file": "cli/tests/mcp_precommit.rs",
           "gt": 2,
+          "gt_lines": [
+            20,
+            21
+          ],
           "pred": 2,
           "side": "out"
         }
@@ -3969,12 +4280,26 @@
         {
           "file": "cli/tests/common/mod.rs",
           "gt": 5,
+          "gt_lines": [
+            69,
+            70,
+            71,
+            72,
+            73
+          ],
           "pred": 5,
           "side": "in"
         },
         {
           "file": "cli/tests/audit_stop.rs",
           "gt": 5,
+          "gt_lines": [
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
           "pred": 5,
           "side": "out"
         }
@@ -4133,24 +4458,70 @@
         {
           "file": "cli/src/hookio.rs",
           "gt": 13,
+          "gt_lines": [
+            24,
+            25,
+            26,
+            28,
+            29,
+            30,
+            31,
+            33,
+            34,
+            35,
+            36,
+            37,
+            39
+          ],
           "pred": 14,
           "side": "in"
         },
         {
           "file": "cli/src/audit.rs",
           "gt": 13,
+          "gt_lines": [
+            170,
+            171,
+            172,
+            174,
+            175,
+            176,
+            177,
+            187,
+            188,
+            189,
+            190,
+            191,
+            193
+          ],
           "pred": 14,
           "side": "out"
         },
         {
           "file": "cli/src/guard.rs",
           "gt": 13,
+          "gt_lines": [
+            149,
+            150,
+            151,
+            153,
+            154,
+            155,
+            156,
+            165,
+            166,
+            167,
+            168,
+            169,
+            171
+          ],
           "pred": 14,
           "side": "out"
         },
         {
           "file": "cli/src/health.rs",
           "gt": 0,
+          "gt_lines": null,
           "pred": 1,
           "side": "out"
         }
@@ -4311,36 +4682,70 @@
         {
           "file": "cli/tests/common/mod.rs",
           "gt": 4,
+          "gt_lines": [
+            45,
+            46,
+            47,
+            48
+          ],
           "pred": 4,
           "side": "in"
         },
         {
           "file": "cli/tests/crosscheck_rca.rs",
           "gt": 2,
+          "gt_lines": [
+            126,
+            127
+          ],
           "pred": 3,
           "side": "out"
         },
         {
           "file": "cli/tests/dedup_core.rs",
           "gt": 4,
+          "gt_lines": [
+            11,
+            12,
+            13,
+            14
+          ],
           "pred": 4,
           "side": "out"
         },
         {
           "file": "cli/tests/divergence_stances.rs",
           "gt": 4,
+          "gt_lines": [
+            16,
+            17,
+            18,
+            19
+          ],
           "pred": 4,
           "side": "out"
         },
         {
           "file": "cli/tests/metrics.rs",
           "gt": 4,
+          "gt_lines": [
+            20,
+            21,
+            22,
+            23
+          ],
           "pred": 4,
           "side": "out"
         },
         {
           "file": "cli/tests/sonar_whitepaper.rs",
           "gt": 4,
+          "gt_lines": [
+            15,
+            16,
+            17,
+            18
+          ],
           "pred": 4,
           "side": "out"
         }
@@ -4529,18 +4934,30 @@
         {
           "file": "cli/tests/common/mod.rs",
           "gt": 2,
+          "gt_lines": [
+            102,
+            103
+          ],
           "pred": 2,
           "side": "in"
         },
         {
           "file": "cli/tests/audit_stop.rs",
           "gt": 2,
+          "gt_lines": [
+            62,
+            63
+          ],
           "pred": 2,
           "side": "out"
         },
         {
           "file": "cli/tests/mcp_precommit.rs",
           "gt": 2,
+          "gt_lines": [
+            103,
+            104
+          ],
           "pred": 2,
           "side": "out"
         }
@@ -4839,24 +5256,118 @@
         {
           "file": "cli/tests/common/mod.rs",
           "gt": 42,
+          "gt_lines": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            108,
+            109,
+            110,
+            111,
+            113,
+            114,
+            115,
+            116,
+            118,
+            119,
+            120,
+            121,
+            122,
+            125,
+            126,
+            127,
+            128,
+            129,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            166,
+            167,
+            168,
+            169,
+            171,
+            176,
+            177,
+            178,
+            179,
+            181,
+            249,
+            252,
+            253
+          ],
           "pred": 42,
           "side": "in"
         },
         {
           "file": "cli/tests/audit_stop.rs",
           "gt": 8,
+          "gt_lines": [
+            19,
+            22,
+            23,
+            27,
+            28,
+            29,
+            30,
+            32
+          ],
           "pred": 8,
           "side": "out"
         },
         {
           "file": "cli/tests/guard_hook.rs",
           "gt": 13,
+          "gt_lines": [
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            26,
+            27,
+            28,
+            29,
+            31,
+            67,
+            70
+          ],
           "pred": 13,
           "side": "out"
         },
         {
           "file": "cli/tests/report_schema.rs",
           "gt": 23,
+          "gt_lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            22,
+            23,
+            24,
+            25,
+            27,
+            28,
+            29,
+            30,
+            32,
+            33,
+            34,
+            35,
+            36,
+            39,
+            40,
+            41,
+            42,
+            43
+          ],
           "pred": 23,
           "side": "out"
         }
@@ -5265,12 +5776,45 @@
         {
           "file": "cli/src/daemon/coldstart.rs",
           "gt": 14,
+          "gt_lines": [
+            20,
+            21,
+            22,
+            23,
+            24,
+            31,
+            43,
+            44,
+            50,
+            51,
+            53,
+            54,
+            73,
+            74
+          ],
           "pred": 15,
           "side": "in"
         },
         {
           "file": "cli/src/daemon/server.rs",
           "gt": 15,
+          "gt_lines": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            51,
+            54,
+            55,
+            56,
+            57,
+            59,
+            60,
+            73,
+            74,
+            76
+          ],
           "pred": 16,
           "side": "out"
         }
@@ -5560,24 +6104,94 @@
         {
           "file": "cli/tests/eval_support/mod.rs",
           "gt": 23,
+          "gt_lines": [
+            13,
+            17,
+            18,
+            19,
+            20,
+            24,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            40,
+            41,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ],
           "pred": 23,
           "side": "in"
         },
         {
           "file": "cli/tests/eval_baseline.rs",
           "gt": 21,
+          "gt_lines": [
+            21,
+            24,
+            25,
+            26,
+            27,
+            31,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147
+          ],
           "pred": 22,
           "side": "out"
         },
         {
           "file": "cli/tests/eval_labels.rs",
           "gt": 11,
+          "gt_lines": [
+            11,
+            12,
+            13,
+            14,
+            18,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27
+          ],
           "pred": 11,
           "side": "out"
         },
         {
           "file": "cli/tests/eval_prelabel.rs",
           "gt": 7,
+          "gt_lines": [
+            89,
+            90,
+            95,
+            96,
+            97,
+            98,
+            99
+          ],
           "pred": 10,
           "side": "out"
         }
@@ -5752,12 +6366,28 @@
         {
           "file": "cli/tests/eval_support/mod.rs",
           "gt": 6,
+          "gt_lines": [
+            42,
+            43,
+            44,
+            45,
+            61,
+            62
+          ],
           "pred": 6,
           "side": "in"
         },
         {
           "file": "cli/tests/eval_prelabel.rs",
           "gt": 6,
+          "gt_lines": [
+            33,
+            34,
+            35,
+            36,
+            142,
+            143
+          ],
           "pred": 6,
           "side": "out"
         }
@@ -6485,7 +7115,12 @@
       ]
     }
   ],
-  "method": "real pipeline: fourclass::batch::classify_batch over a live ce-core link, per slice commit; gt = commit-labels-v1; cross GT per file re-derived by the labels machinery (partition + reviewed corrections). Gates: cross misses = 0; coincidence files exact; zero invention on non-cross commits; L2>=L1 monotone with conserved sums (asserted at generation); extras itemized with content (GT blocks-mode floor under-marks sub-block moves); reversed-order determinism (asserted at generation); cost-model sensitivity pinned in core/test/Spec.hs.",
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "d086950a89046384c4309dd4c16e628af60545e7",
+    "dirty": true
+  },
+  "method": "real pipeline: fourclass::batch::classify_batch over a live ce-core link, per slice commit; gt = commit-labels-v1; cross GT per file re-derived by the labels machinery (partition + reviewed corrections). Gates: cross misses = 0 at LINE IDENTITY for files without a reviewed correction, count level on the corrected files; coincidence files exact; zero invention on non-cross commits; L2>=L1 monotone with conserved sums (asserted at generation); extras itemized with content AND frozen (a new above-GT row fails the generator until reviewed and blessed); reversed-order determinism (asserted at generation); cost-model sensitivity pinned in core/test/Spec.hs.",
   "schema": "ce.eval-commit-l2/1.0.0",
   "source_slice": "2f40f22b85dcf3fd0979395286223ddf972550ff",
   "summary": {

@@ -88,6 +88,10 @@ pub struct BodyLine {
     pub moved: bool,
     /// SGR-stripped content without the leading `-`/`+`.
     pub content: String,
+    /// 1-based line number on the line's OWN side, tracked from the
+    /// hunk headers (attack review F2: count-only ground truth could
+    /// not see a line-identity substitution).
+    pub line: usize,
 }
 
 impl BodyLine {
@@ -112,13 +116,23 @@ fn header_path(p: &str) -> Option<String> {
     })
 }
 
+/// `@@ -old[,n] +new[,n] @@` → the two 1-based starts.
+fn hunk_starts(plain: &str) -> Option<(usize, usize)> {
+    let rest = plain.strip_prefix("@@ -")?;
+    let (old, rest) = rest.split_once(" +")?;
+    let (new, _) = rest.split_once(" @@")?;
+    let num = |s: &str| s.split(',').next()?.parse().ok();
+    Some((num(old)?, num(new)?))
+}
+
 /// Walk a force-colored `git diff`: track file sections from their
-/// `---`/`+++` headers and classify every -/+ body line. Sections
-/// without those headers (pure rename, mode change) have no body
-/// lines by construction.
+/// `---`/`+++` headers, line counters from the hunk headers, and
+/// classify every -/+ body line. Sections without those headers
+/// (pure rename, mode change) have no body lines by construction.
 pub fn walk_color_diff(raw: &str) -> Vec<BodyLine> {
     let mut out = Vec::new();
     let (mut a_path, mut b_path): (Option<String>, Option<String>) = (None, None);
+    let (mut old_next, mut new_next) = (0usize, 0usize);
     for line in raw.lines() {
         let plain = strip_sgr(line);
         if plain.starts_with("diff --git ") {
@@ -127,13 +141,19 @@ pub fn walk_color_diff(raw: &str) -> Vec<BodyLine> {
             a_path = header_path(p);
         } else if let Some(p) = plain.strip_prefix("+++ ") {
             b_path = header_path(p);
+        } else if let Some((old, new)) = hunk_starts(&plain) {
+            (old_next, new_next) = (old, new);
         } else if let Some((added, moved)) = body_class(line) {
+            let counter = if added { &mut new_next } else { &mut old_next };
+            let line_no = *counter;
+            *counter += 1;
             out.push(BodyLine {
                 a_path: a_path.clone(),
                 b_path: b_path.clone(),
                 added,
                 moved,
                 content: plain[1..].to_string(),
+                line: line_no,
             });
         }
     }

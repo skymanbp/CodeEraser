@@ -63,7 +63,15 @@ pub fn in_scope(root: &Path, path: &Path, extra_excludes: &[String]) -> bool {
     let Ok(overrides) = build_overrides(&root, extra_excludes) else {
         return false;
     };
-    if matches!(overrides.matched(&rel, false), ignore::Match::Ignore(_)) {
+    // Directory patterns ("!vendor/", "gen/") match the DIRECTORY, so
+    // the file itself and every ancestor must be tested — the walk
+    // prunes at the directory, a single direct-path probe does not
+    // (attack review 2026-08-11 F10).
+    let excluded = std::iter::successors(Some(rel.as_path()), |p| p.parent()).any(|p| {
+        !p.as_os_str().is_empty()
+            && matches!(overrides.matched(p, p != rel), ignore::Match::Ignore(_))
+    });
+    if excluded {
         return false;
     }
     !ignored_by(&root, ".gitignore", &rel) && !ignored_by(&root, ".ceignore", &rel)
@@ -82,7 +90,8 @@ fn ignored_by(root: &Path, ignore_file: &str, rel: &Path) -> bool {
     let mut b = ignore::gitignore::GitignoreBuilder::new(root);
     b.add(root.join(ignore_file));
     b.build()
-        .map(|g| g.matched(rel, false).is_ignore())
+        // parent-aware on purpose: "generated/" must cover its files
+        .map(|g| g.matched_path_or_any_parents(rel, false).is_ignore())
         .unwrap_or(false)
 }
 

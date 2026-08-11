@@ -49,8 +49,10 @@ instances =
      in [zip [1 ..] a, zip [k + 3 ..] b] -- gap of 2 between runs
 
 -- | Every maximal (not extendable in either direction) common
--- contiguous hash segment of length >= destFloor between a removed
--- run and an added run of different pairs.
+-- contiguous hash segment between a removed run and an added run of
+-- different pairs whose DISTINCT content count clears destFloor
+-- (repeated copies of one line are a single piece of evidence —
+-- attack review F5, mirrored from Anchor.tryBlock).
 refBlocks :: [Pair] -> S.Set (Int, [Int], Int, [Int])
 refBlocks ps =
   S.fromList
@@ -62,10 +64,11 @@ refBlocks ps =
     , a <- pAdd q
     , x <- [0 .. length r - 1]
     , y <- [0 .. length a - 1]
-    , n <- [destFloor .. min (length r - x) (length a - y)]
+    , n <- [1 .. min (length r - x) (length a - y)]
     , let segR = take n (drop x r)
     , let segA = take n (drop y a)
     , map snd segR == map snd segA
+    , S.size (S.fromList (map snd segR)) >= destFloor
     , not (equalAt r a (x - 1) (y - 1)) -- maximal to the left
     , not (equalAt r a (x + n) (y + n)) -- maximal to the right
     ]

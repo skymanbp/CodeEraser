@@ -30,3 +30,18 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
         Lang::Go | Lang::Markdown => &[],
     }
 }
+
+/// Kinds whose unit name lives in a field OTHER than `name`, as
+/// (kind, name field, qualifier field, display prefix). Rust impl
+/// blocks carry only a `type` — without a unit for them, methods of
+/// two different impls look top-level and their shared name/arity
+/// key becomes false stacking evidence (attack review 2026-08-11
+/// F7). The qualifier keeps `impl Advisor for Foo` distinct from
+/// `impl Foo` — the two legitimately coexist (FPR replay caught the
+/// unqualified key colliding on exactly that shape).
+pub fn typed(lang: Lang) -> &'static [(&'static str, &'static str, &'static str, &'static str)] {
+    match lang {
+        Lang::Rust => &[("impl_item", "type", "trait", "impl")],
+        _ => &[],
+    }
+}

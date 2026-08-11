@@ -108,14 +108,5 @@ fn load_pair(
 }
 
 fn head_content(root: &Path, path: &str) -> Option<String> {
-    let out = std::process::Command::new("git")
-        .arg("-C")
-        .arg(root)
-        .args(["show", &format!("HEAD:{path}")])
-        .output()
-        .ok()?;
-    if !out.status.success() {
-        return None;
-    }
-    Some(String::from_utf8_lossy(&out.stdout).into_owned())
+    session::git_stdout(root, &["show", &format!("HEAD:{path}")])
 }

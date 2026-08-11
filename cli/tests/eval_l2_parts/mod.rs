@@ -115,38 +115,56 @@ pub fn delta_lines(
     out
 }
 
+/// Per-file cross ground truth: counts for every file, line
+/// identities for files without a reviewed correction (attack review
+/// F2 — the corrected lines' identities were never archived, so
+/// those files stay count-gated plus the coincidence-exact gate).
+pub struct CrossGt {
+    pub counts: BTreeMap<FileKey, u64>,
+    pub lines: BTreeMap<FileKey, Vec<usize>>,
+}
+
 /// Reviewed per-file cross GT via the labels machinery (mechanical
 /// partition + the reviewed corrections), same code that generated
 /// commit-labels-v1.json.
-pub fn cross_gt(sha: &str) -> BTreeMap<FileKey, u64> {
+pub fn cross_gt(sha: &str) -> CrossGt {
     let mut p = review::partition(sha);
     let _ = review::apply_corrections(sha, &mut p);
-    let mut out = BTreeMap::new();
-    let mut insert = |side: &str, per_file: &std::collections::HashMap<String, u64>| {
-        for (f, n) in per_file {
-            out.insert((side.to_string(), f.clone()), *n);
-        }
+    let mut gt = CrossGt {
+        counts: BTreeMap::new(),
+        lines: BTreeMap::new(),
     };
-    insert("out", &p.out.cross);
-    insert("in", &p.into.cross);
-    out
+    for (side, buckets) in [("out", &p.out), ("in", &p.into)] {
+        for (f, n) in &buckets.cross {
+            gt.counts.insert((side.to_string(), f.clone()), *n);
+        }
+        for (f, lines) in &buckets.cross_lines {
+            let mut lines = lines.clone();
+            lines.sort_unstable();
+            gt.lines.insert((side.to_string(), f.clone()), lines);
+        }
+    }
+    gt
 }
 
-/// Per-commit cross rows {file, side, gt, pred}; misses must be zero.
-/// A miss dumps the predicted lines with content so the divergence is
+/// Per-commit cross rows {file, side, gt, pred, gt_lines}; misses
+/// must be zero — at LINE IDENTITY where the GT has identities
+/// (attack review F2: a same-count substitution passed a count-only
+/// gate), at count level on the reviewed-correction files. A miss
+/// dumps the predicted lines with content so the divergence is
 /// diagnosable from the failure alone.
 pub fn cross_rows(
     sha: &str,
     texts: &Texts,
-    gt: &BTreeMap<FileKey, u64>,
+    gt: &CrossGt,
     delta: &BTreeMap<FileKey, Vec<usize>>,
 ) -> Vec<Value> {
-    let mut keys: Vec<&FileKey> = gt.keys().chain(delta.keys()).collect();
+    let mut keys: Vec<&FileKey> = gt.counts.keys().chain(delta.keys()).collect();
     keys.sort();
     keys.dedup();
     keys.iter()
         .map(|key| {
-            let g = gt.get(*key).copied().unwrap_or(0);
+            let g = gt.counts.get(*key).copied().unwrap_or(0);
             let lines = delta.get(*key).cloned().unwrap_or_default();
             let p = lines.len() as u64;
             assert!(
@@ -154,7 +172,22 @@ pub fn cross_rows(
                 "{sha}: cross miss on {key:?}: gt {g} pred {p}\npred lines:\n{}",
                 dump(texts, key, &lines)
             );
-            json!({"side": key.0, "file": key.1, "gt": g, "pred": p})
+            let gt_lines = gt.lines.get(*key);
+            if let Some(want) = gt_lines {
+                let missed: Vec<usize> = want
+                    .iter()
+                    .copied()
+                    .filter(|l| !lines.contains(l))
+                    .collect();
+                assert!(
+                    missed.is_empty(),
+                    "{sha}: line-identity miss on {key:?}: gt {want:?} missing \
+                     {missed:?}\npred lines:\n{}",
+                    dump(texts, key, &lines)
+                );
+            }
+            json!({"side": key.0, "file": key.1, "gt": g, "pred": p,
+                   "gt_lines": gt_lines})
         })
         .collect()
 }
@@ -171,12 +204,12 @@ fn dump(texts: &Texts, (side, file): &FileKey, lines: &[usize]) -> String {
 pub fn extras_ledger(
     sha: &str,
     texts: &Texts,
-    gt: &BTreeMap<FileKey, u64>,
+    gt: &CrossGt,
     delta: &BTreeMap<FileKey, Vec<usize>>,
 ) -> Vec<Value> {
     delta
         .iter()
-        .filter(|(key, lines)| (lines.len() as u64) > gt.get(*key).copied().unwrap_or(0))
+        .filter(|(key, lines)| (lines.len() as u64) > gt.counts.get(*key).copied().unwrap_or(0))
         .map(|((side, file), lines)| {
             let text: Vec<&str> = side_text(texts, side, file).lines().collect();
             let dump: Vec<String> = lines
@@ -184,7 +217,7 @@ pub fn extras_ledger(
                 .map(|&l| format!("{l}: {}", text[l - 1].trim()))
                 .collect();
             json!({"sha": &sha[..9], "side": side, "file": file,
-                   "gt": gt.get(&(side.clone(), file.clone())).copied().unwrap_or(0),
+                   "gt": gt.counts.get(&(side.clone(), file.clone())).copied().unwrap_or(0),
                    "pred": lines.len(), "lines": dump})
         })
         .collect()

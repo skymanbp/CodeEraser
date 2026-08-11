@@ -17,6 +17,7 @@ module CE.FourClass.Anchor
 import CE.FourClass.Cost (destFloor)
 import CE.FourClass.Wire (Block (..), Pair (..))
 import qualified Data.Map.Strict as M
+import qualified Data.Set as S
 import Data.Word (Word64)
 
 -- | A hash occurring more often than this on either side carries no
@@ -65,11 +66,14 @@ sites ps = (blocks, capped)
 
 -- | Extend forward from a block START (each block is discovered
 -- exactly once: interior positions have equal predecessors on both
--- sides and fail the start test).
+-- sides and fail the start test). The floor counts DISTINCT content
+-- values, not lines: one common line repeated twice is a single
+-- piece of evidence and must not open a site (attack review F5 —
+-- length alone let `[x,x]` matched against `[x,x]` clear the floor).
 tryBlock :: RunMap -> RunMap -> Occ -> Occ -> Maybe Block
 tryBlock rm am ro ao
   | not isStart = Nothing
-  | n >= destFloor =
+  | distinctEvidence >= destFloor =
       Just (Block (oPair ro) (map fst (take n rTail)) (oPair ao) (map fst (take n aTail)))
   | otherwise = Nothing
  where
@@ -82,3 +86,4 @@ tryBlock rm am ro ao
       || oPos ao == 0
       || snd (rRun !! (oPos ro - 1)) /= snd (aRun !! (oPos ao - 1))
   n = length (takeWhile (uncurry (==)) (zip (map snd rTail) (map snd aTail)))
+  distinctEvidence = S.size (S.fromList (map snd (take n rTail)))

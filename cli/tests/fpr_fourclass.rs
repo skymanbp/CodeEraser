@@ -51,6 +51,7 @@ fn generate_fpr_fourclass() {
     let doc = json!({
         "schema": "ce.eval-fpr-fourclass/1.0.0",
         "source_manifest": manifest["frozen_at"],
+        "generated_from": eval_support::generated_from(),
         "method": "every manifest sample replayed through \
                    fourclass::batch::classify_batch over a live ce-core \
                    link; a sample counts as a false positive when any M4 \

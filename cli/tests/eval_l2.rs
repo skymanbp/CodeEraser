@@ -105,6 +105,27 @@ fn assert_deterministic(link: &mut Link, sha: &str, labels: &Value) {
     assert_eq!(forward, backward, "{sha}: order-dependent delta");
 }
 
+/// Attack review F2: the extras ledger is FROZEN — a regeneration may
+/// not introduce rows absent from the committed doc. New extras mean
+/// new above-GT predictions; they must be REVIEWED, then blessed
+/// explicitly with CE_ACCEPT_EXTRAS=1, never absorbed silently.
+fn assert_extras_frozen(ledger: &[Value]) {
+    if std::env::var("CE_ACCEPT_EXTRAS").as_deref() == Ok("1") {
+        return;
+    }
+    let committed = load("../contracts/eval/commit-l2-v1.json");
+    let rows = committed["commits"].as_array().expect("commits");
+    let old = rows.last().expect("ledger row")["extras_ledger"]
+        .as_array()
+        .cloned()
+        .unwrap_or_default();
+    let fresh: Vec<&Value> = ledger.iter().filter(|e| !old.contains(e)).collect();
+    assert!(
+        fresh.is_empty(),
+        "unreviewed NEW extras (review, then CE_ACCEPT_EXTRAS=1): {fresh:#?}"
+    );
+}
+
 #[test]
 #[ignore] // needs full git history + a built ce-core (CE_CORE_BIN)
 fn generate_commit_l2() {
@@ -118,19 +139,22 @@ fn generate_commit_l2() {
         "real pipeline: fourclass::batch::classify_batch over a live \
          ce-core link, per slice commit; gt = commit-labels-v1; cross \
          GT per file re-derived by the labels machinery (partition + \
-         reviewed corrections). Gates: cross misses = 0; coincidence \
-         files exact; zero invention on non-cross commits; L2>=L1 \
-         monotone with conserved sums (asserted at generation); \
-         extras itemized with content (GT blocks-mode floor \
-         under-marks sub-block moves); reversed-order determinism \
-         (asserted at generation); cost-model sensitivity pinned in \
-         core/test/Spec.hs.",
+         reviewed corrections). Gates: cross misses = 0 at LINE \
+         IDENTITY for files without a reviewed correction, count \
+         level on the corrected files; coincidence files exact; zero \
+         invention on non-cross commits; L2>=L1 monotone with \
+         conserved sums (asserted at generation); extras itemized \
+         with content AND frozen (a new above-GT row fails the \
+         generator until reviewed and blessed); reversed-order \
+         determinism (asserted at generation); cost-model \
+         sensitivity pinned in core/test/Spec.hs.",
         |slice| {
             for s in slice["commits"].as_array().expect("commits") {
                 let (row, mut extra) = commit_row(&mut link, s, &labels);
                 rows.push(row);
                 ledger.append(&mut extra);
             }
+            assert_extras_frozen(&ledger);
             assert_deterministic(
                 &mut link,
                 "4822d04ff0a944eba62fed71cb6ccd226a647e77",

@@ -1,6 +1,11 @@
 {
   "flagged": [],
   "gate_max_percent": 1,
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "d086950a89046384c4309dd4c16e628af60545e7",
+    "dirty": true
+  },
   "method": "every manifest sample replayed through fourclass::batch::classify_batch over a live ce-core link; a sample counts as a false positive when any M4 judgment rule fires (the corpus is all-normal by review). Constants under test live in CE.FourClass.Verdict. Recall is undefined on this corpus (zero abnormal samples) and reported as such, per plan (no gamed 100% recall gate).",
   "recall": "undefined: corpus contains no abnormal edits",
   "samples": 600,

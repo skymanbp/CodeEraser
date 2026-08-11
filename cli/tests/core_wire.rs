@@ -1,8 +1,8 @@
 //! Cross-language wire goldens: the fixture files under
-//! contracts/fixtures/handshake/ alternate request line / expected
-//! reply line and are consumed byte-for-byte by BOTH this test and
-//! the Haskell suite (core/test/Spec.hs) — drift on either side
-//! reddens both. Byte comparison is sound because the freeze pins
+//! contracts/fixtures/ alternate request line / expected reply line
+//! and are consumed byte-for-byte by BOTH this test and the Haskell
+//! suite (core/test/Spec.hs) — drift on either side reddens both.
+//! Byte comparison is sound because the freeze pins
 //! `aeson +ordered-keymap` (deterministic key order).
 //!
 //! Requires a built ce-core: the gate must not silently skip, so a
@@ -46,6 +46,7 @@ fn wire_goldens_roundtrip() {
     for file in [
         "../contracts/fixtures/handshake/hello-ok.ndjson",
         "../contracts/fixtures/handshake/wire-errors.ndjson",
+        "../contracts/fixtures/fourclass/golden.ndjson",
     ] {
         for (n, (request, expected)) in fixture_pairs(file).into_iter().enumerate() {
             writeln!(stdin, "{request}").expect("write");
@@ -78,4 +79,42 @@ fn corelink_open_and_desync() {
         .request("mystery", serde_json::json!({}))
         .expect_err("unsupported type must not produce a result");
     assert!(err.contains("desync"), "visible failure, got: {err}");
+}
+
+/// Attack-review F3: a bucket-cap reply may still carry the partial
+/// blocks the core derived from uncapped hashes — the client must
+/// return PURE L1 plus the visible reason, never partial L2.
+#[test]
+fn degraded_reply_keeps_l1_pure() {
+    use codeeraser::fourclass::batch::{PairInput, classify_batch};
+    use codeeraser::scan::lang::Lang;
+    // 65 identical significant removals trip the 64 bucket cap, while
+    // alpha/beta form a block the core still reports alongside it.
+    let flood = "let flood_line = 1;\n".repeat(65);
+    let before_a = format!("{flood}let alpha = 2;\nlet beta = 3;\n");
+    let inputs = [
+        PairInput {
+            before: &before_a,
+            after: "",
+            lang: Lang::Rust,
+        },
+        PairInput {
+            before: "",
+            after: "let alpha = 2;\nlet beta = 3;\n",
+            lang: Lang::Rust,
+        },
+    ];
+    let l1 = classify_batch(&inputs, None);
+    let (mut link, _) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
+    let l2 = classify_batch(&inputs, Some(&mut link));
+    assert_eq!(l2.degraded.as_deref(), Some("bucket_cap"), "cap visible");
+    assert!(l2.relocations.is_empty(), "no partial relocations");
+    for (a, b) in l1.pairs.iter().zip(&l2.pairs) {
+        assert_eq!(
+            (a.counts.added_novel, a.counts.removed_deleted),
+            (b.counts.added_novel, b.counts.removed_deleted),
+            "degraded batch is bitwise L1"
+        );
+        assert_eq!(a.moved.len(), b.moved.len(), "no partial moved delta");
+    }
 }

@@ -128,22 +128,31 @@ fn budget_breach(root: &Path, cfg: &Config, env: &Envelope) -> Option<(usize, St
 
 /// Exact post-write line count: Write is the payload itself; Edit is
 /// the payload applied to the on-disk file under Edit's own semantics
-/// (first occurrence, or all with replace_all). None = not derivable
-/// (missing file / absent old_string): that tool call is failing on
-/// its own — the budget rule stays silent rather than guessing.
+/// — CRLF-normalized, and single replacement requires a UNIQUE match
+/// exactly as the real tool does (attack review F11: replacen on a
+/// non-unique old_string would judge a write that will never land).
+/// None = the tool call is failing on its own (missing file, absent
+/// or ambiguous old_string) — the budget rule stays silent.
 fn resulting_lines(env: &Envelope) -> Option<usize> {
     let t = &env.tool_input;
     if env.tool_name == "Write" {
         return Some(t.content.lines().count());
     }
-    let on_disk = std::fs::read_to_string(&t.file_path).ok()?;
-    if t.old_string.is_empty() || !on_disk.contains(&t.old_string) {
+    let on_disk = std::fs::read_to_string(&t.file_path)
+        .ok()?
+        .replace("\r\n", "\n");
+    let (old, new) = (
+        t.old_string.replace("\r\n", "\n"),
+        t.new_string.replace("\r\n", "\n"),
+    );
+    if old.is_empty() {
         return None;
     }
-    let applied = if t.replace_all {
-        on_disk.replace(&t.old_string, &t.new_string)
-    } else {
-        on_disk.replacen(&t.old_string, &t.new_string, 1)
+    let applied = match (t.replace_all, on_disk.matches(&old).count()) {
+        (_, 0) => return None,
+        (false, 1) => on_disk.replacen(&old, &new, 1),
+        (false, _) => return None, // the real Edit rejects ambiguity
+        (true, _) => on_disk.replace(&old, &new),
     };
     Some(applied.lines().count())
 }

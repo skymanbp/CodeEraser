@@ -122,6 +122,12 @@ pub fn total(m: &PerFile) -> u64 {
 pub struct SideBuckets {
     pub nonsig: PerFile,
     pub cross: PerFile,
+    /// Line identities behind `cross`, per file (attack review F2:
+    /// counts alone cannot see a same-count substitution). A file
+    /// with a reviewed correction is REMOVED from this map — the
+    /// corrected lines' identities were never archived, so only its
+    /// count (plus the coincidence-exact gate) remains authoritative.
+    pub cross_lines: HashMap<String, Vec<usize>>,
     pub within: u64,
 }
 
@@ -181,6 +187,7 @@ pub fn partition(sha: &str) -> Partition {
                 side.within += 1;
             } else {
                 *side.cross.entry(own.into()).or_default() += 1;
+                side.cross_lines.entry(own.into()).or_default().push(l.line);
             }
         }
     }
@@ -196,15 +203,19 @@ pub fn apply_corrections(sha: &str, p: &mut Partition) -> Vec<Value> {
         if !sha.starts_with(pre) {
             continue;
         }
-        let cross = &mut p.side_mut(added).cross;
-        let c = cross
+        let side_b = p.side_mut(added);
+        let c = side_b
+            .cross
             .get_mut(file)
             .unwrap_or_else(|| panic!("{sha}: correction target {file} not cross"));
         assert!(*c >= n, "{sha}: correction exceeds cross count of {file}");
         *c -= n;
         if *c == 0 {
-            cross.remove(file);
+            side_b.cross.remove(file);
         }
+        // which n lines were the coincidence is not archived: the
+        // file's line identities are no longer trustworthy
+        side_b.cross_lines.remove(file);
         let side = if added { "added" } else { "removed" };
         applied.push(json!({"file": file, "side": side, "lines": n, "why": why}));
     }

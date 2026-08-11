@@ -12,3 +12,5 @@
 {"blocks":[[0,[1,2],1,[4,5]]],"degraded":false,"id":6,"moved":[[0,[1,2],[]],[1,[],[4,5]]],"proto":"1.0.0","suspicions":[],"type":"fourclass.result"}
 {"proto":"1.0.0","type":"fourclass.request","id":7,"pairs":[{"i":0,"rem":[],"add":[[[1,101],[2,102],[3,103],[4,104],[5,105],[6,106],[7,107],[8,108],[9,109],[10,110],[11,111],[12,112],[13,113],[14,114],[15,115],[16,116],[17,117],[18,118],[19,119],[20,120]]],"dup":[9999]}]}
 {"blocks":[],"degraded":false,"id":7,"moved":[],"proto":"1.0.0","suspicions":[[0,"stacking"]],"type":"fourclass.result"}
+{"proto":"1.0.0","type":"fourclass.request","id":8,"pairs":[{"i":0,"rem":[[[1,55],[2,55]]],"add":[]},{"i":1,"rem":[],"add":[[[9,55],[10,55]]]}]}
+{"blocks":[],"degraded":false,"id":8,"moved":[],"proto":"1.0.0","suspicions":[],"type":"fourclass.result"}

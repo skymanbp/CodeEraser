@@ -29,15 +29,17 @@ maxLineBytes :: Int
 maxLineBytes = 1048576
 
 -- | Just the envelope: @type@ for dispatch, @id@ for echoing into
--- error replies. Unknown extra fields are ignored (§1).
+-- error replies, @proto@ for the per-message major check. Unknown
+-- extra fields are ignored (§1).
 data Envelope = Envelope
   { envType :: String
   , envId :: Maybe Value
+  , envProto :: Maybe String
   }
 
 instance FromJSON Envelope where
   parseJSON = withObject "Envelope" $ \o ->
-    Envelope <$> o .: "type" <*> o .:? "id"
+    Envelope <$> o .: "type" <*> o .:? "id" <*> o .:? "proto"
 
 -- | Answer one request line with one response line.
 respond :: String -> B8.ByteString -> B8.ByteString
@@ -48,13 +50,24 @@ respond version line
       Left e -> errReply Nothing "bad_request" ("parse error: " <> e)
       Right env -> dispatch version env line
 
+-- | Every non-hello message must carry a proto with the server's
+-- major (§1: 必带信封字段; 1.0.0 attack-review fix — the 0.x
+-- implementation negotiated only at hello, so a skewed or bare
+-- request was silently answered). hello keeps its own negotiation
+-- reply (accept:false), which is richer than an error line.
 dispatch :: String -> Envelope -> B8.ByteString -> B8.ByteString
-dispatch version env line = case envType env of
-  "hello" -> Handshake.respond proto version line
-  "fourclass.request" -> case FourClass.respond proto line of
-    Left (rid, code, message) -> errReply rid code message
-    Right bytes -> bytes
-  t -> errReply (envId env) "unknown_type" ("unsupported type: " <> t)
+dispatch version env line
+  | envType env == "hello" = Handshake.respond proto version line
+  | not (majorMatches (envProto env)) =
+      errReply (envId env) "bad_request" ("proto missing or major-mismatched (server " <> proto <> ")")
+  | envType env == "fourclass.request" = case FourClass.respond proto line of
+      Left (rid, code, message) -> errReply rid code message
+      Right bytes -> bytes
+  | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)
+
+majorMatches :: Maybe String -> Bool
+majorMatches Nothing = False
+majorMatches (Just v) = takeWhile (/= '.') v == takeWhile (/= '.') proto
 
 errReply :: Maybe Value -> String -> String -> B8.ByteString
 errReply requestId code message =

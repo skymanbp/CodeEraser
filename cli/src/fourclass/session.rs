@@ -20,28 +20,58 @@ pub fn head_pairs(root: &Path) -> Option<Vec<PathPair>> {
 
 /// One commit's file pairs against its first parent (same pairing
 /// and language filter as head_pairs) — the churn module's walk.
+/// A root commit has no parent; its base is git's empty tree, so its
+/// additions are counted instead of silently dropped (attack review
+/// 2026-08-11 F12: `sha^..sha` fails on the root and the caller's
+/// unwrap_or_default turned that into a zero-line commit while blame
+/// still counted the root's surviving lines).
 pub fn commit_pairs(root: &Path, sha: &str) -> Option<Vec<PathPair>> {
-    let range = format!("{sha}^..{sha}");
-    diff_pairs(root, &["diff", "--name-status", "-z", "-M", "-C", &range])
+    let base = rev_id(root, &format!("{sha}^")).or_else(|| empty_tree(root))?;
+    diff_pairs(
+        root,
+        &["diff", "--name-status", "-z", "-M", "-C", &base, sha],
+    )
 }
 
-fn diff_pairs(root: &Path, args: &[&str]) -> Option<Vec<PathPair>> {
+/// Run git in `root`, returning stdout on success — the ONE git
+/// spawner for the session/judge family (the self-ratchet caught the
+/// fourth copy of this shape). stdin is always the null device: no
+/// caller feeds input, and `hash-object --stdin` wants EOF.
+pub(crate) fn git_stdout(root: &Path, args: &[&str]) -> Option<String> {
     let out = std::process::Command::new("git")
         .arg("-C")
         .arg(root)
         .args(args)
+        .stdin(std::process::Stdio::null())
         .output()
         .ok()?;
-    if !out.status.success() {
-        return None;
-    }
-    let raw = String::from_utf8_lossy(&out.stdout).into_owned();
+    out.status
+        .success()
+        .then(|| String::from_utf8_lossy(&out.stdout).into_owned())
+}
+
+fn rev_id(root: &Path, rev: &str) -> Option<String> {
+    git_stdout(root, &["rev-parse", "--verify", "-q", rev]).map(|s| s.trim().to_string())
+}
+
+/// The empty tree's id from git itself (differs between sha1 and
+/// sha256 repositories, so never a hard-coded constant).
+fn empty_tree(root: &Path) -> Option<String> {
+    git_stdout(root, &["hash-object", "-t", "tree", "--stdin"]).map(|s| s.trim().to_string())
+}
+
+fn diff_pairs(root: &Path, args: &[&str]) -> Option<Vec<PathPair>> {
+    let raw = git_stdout(root, args)?;
     Some(parse_name_status(&raw))
 }
 
 /// `--name-status -z` tokens → (before, after) path pairs in the
-/// supported languages. Statuses beyond A/D/M/T/R (copies) have no
-/// "before side consumed" reading and are skipped, not misread.
+/// supported languages. A copy record carries TWO paths (source
+/// survives, destination is new material — exactly the duplication
+/// signal this product exists for), so it maps to an added file;
+/// consuming only one token would desynchronize the whole stream
+/// (attack review 2026-08-11 F13). Unknown one-path statuses are
+/// skipped, not misread.
 fn parse_name_status(raw: &str) -> Vec<PathPair> {
     let mut toks = raw.split('\0').take_while(|t| !t.is_empty());
     let mut pairs = Vec::new();
@@ -55,6 +85,10 @@ fn parse_name_status(raw: &str) -> Vec<PathPair> {
                 (p.clone(), p)
             }
             Some('R') => (path(), path()),
+            Some('C') => {
+                let _source_still_exists = path();
+                (None, path())
+            }
             _ => {
                 let _ = path();
                 continue;
@@ -115,7 +149,8 @@ mod tests {
 
     #[test]
     fn name_status_pairs_and_language_filter() {
-        let raw = "A\0new.rs\0D\0gone.py\0M\0kept.md\0R100\0old.rs\0moved.rs\0M\0skip.json\0";
+        let raw = "A\0new.rs\0D\0gone.py\0M\0kept.md\0R100\0old.rs\0moved.rs\0\
+                   C100\0src.rs\0copy.rs\0M\0skip.json\0M\0after_copy.rs\0";
         let pairs = parse_name_status(raw);
         assert_eq!(
             pairs,
@@ -124,6 +159,10 @@ mod tests {
                 (Some("gone.py".into()), None),
                 (Some("kept.md".into()), Some("kept.md".into())),
                 (Some("old.rs".into()), Some("moved.rs".into())),
+                (None, Some("copy.rs".into())),
+                // the record AFTER the copy proves the stream stayed
+                // in sync (F13's failure mode was desync from here on)
+                (Some("after_copy.rs".into()), Some("after_copy.rs".into())),
             ]
         );
     }

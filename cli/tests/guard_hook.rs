@@ -100,48 +100,76 @@ fn budget_breach_asks_by_default() {
     assert!(reason.contains("751 lines"), "exact count named: {reason}");
 }
 
-/// The budget rule shares the scanner's exclusion model: the same
-/// over-cap write into an excluded path stays silent.
+/// The budget rule shares the scanner's exclusion model, including
+/// directory-only patterns (attack review F10): a ce.toml glob, a
+/// ce.toml directory entry, and a root .gitignore directory entry
+/// all cover the files inside them — the old direct-path probe
+/// matched none of the directory forms.
 #[test]
 fn budget_respects_the_exclusion_model() {
     let dir = tmp("guard-budget-excl");
-    std::fs::write(dir.join("ce.toml"), "exclude = [\"gen/**\"]\n").expect("ce.toml");
-    std::fs::create_dir_all(dir.join("gen")).expect("gen/");
+    std::fs::write(dir.join("ce.toml"), "exclude = [\"gen/**\", \"dir/\"]\n").expect("ce.toml");
+    std::fs::write(dir.join(".gitignore"), "dropped/\n").expect(".gitignore");
     let big = "// filler\n".repeat(751);
-    let env = common::pretooluse_envelope_at(&dir, "gen/big.rs", "Write", &big);
-    let out = run_hook(&dir, &env);
+    for rel in ["gen/big.rs", "dir/big.rs", "dropped/big.rs"] {
+        std::fs::create_dir_all(dir.join(rel).parent().expect("parent")).expect("mkdir");
+        let env = common::pretooluse_envelope_at(&dir, rel, "Write", &big);
+        let out = run_hook(&dir, &env);
+        assert!(out.trim().is_empty(), "{rel} is excluded: {out}");
+    }
     shutdown_daemon(&dir);
-    assert!(out.trim().is_empty(), "excluded path passes: {out}");
 }
 
-/// Edit counting uses Edit's own apply semantics: replacing a marker
-/// with enough lines to cross the cap fires with the exact resulting
-/// count; an old_string the file does not contain stays silent (that
-/// Edit fails on its own — no guess, no prompt).
+/// b.rs Edit envelope with a chosen old_string (new_string fixed at
+/// four lines) — shared by the applied-edit and semantics tests.
+fn edit_envelope(dir: &Path, old: &str) -> String {
+    serde_json::json!({
+        "session_id": "t", "transcript_path": "t",
+        "cwd": dir.display().to_string().replace('\\', "/"),
+        "hook_event_name": "PreToolUse", "tool_name": "Edit",
+        "tool_input": {
+            "file_path": dir.join("b.rs").display().to_string().replace('\\', "/"),
+            "old_string": old, "new_string": "// a\n// b\n// c\n// d\n",
+            "replace_all": false
+        },
+        "tool_use_id": "t"
+    })
+    .to_string()
+}
+
+/// Edit counting uses Edit's OWN apply semantics (attack review
+/// F11), one row per shape: a unique marker fires with the exact
+/// resulting count; an absent old_string stays silent (that Edit
+/// fails on its own); an ambiguous one stays silent (the real tool
+/// rejects non-unique matches — judging that never-landing write
+/// would be a spurious ask); CRLF on disk is normalized, so the same
+/// edit is judged, not evaded.
 #[test]
 fn budget_counts_the_applied_edit() {
     let dir = tmp("guard-budget-edit");
-    let body = format!("{}marker\n", "// line\n".repeat(748));
-    std::fs::write(dir.join("b.rs"), &body).expect("b.rs");
-    let edit = |old: &str| {
-        serde_json::json!({
-            "session_id": "t", "transcript_path": "t",
-            "cwd": dir.display().to_string().replace('\\', "/"),
-            "hook_event_name": "PreToolUse", "tool_name": "Edit",
-            "tool_input": {
-                "file_path": dir.join("b.rs").display().to_string().replace('\\', "/"),
-                "old_string": old, "new_string": "// a\n// b\n// c\n// d\n",
-                "replace_all": false
-            },
-            "tool_use_id": "t"
-        })
-        .to_string()
-    };
-    let reason = common::expect_decision(&dir, &edit("marker\n"), "ask");
-    assert!(reason.contains("752 lines"), "748+4 applied: {reason}");
-    let silent = run_hook(&dir, &edit("absent-string\n"));
+    let lf = "// line\n".repeat(748);
+    let crlf = "// line\r\n".repeat(748);
+    let cases = [
+        (format!("{lf}marker\n"), "marker\n", Some("752 lines")),
+        (format!("{lf}marker\n"), "absent-string\n", None),
+        (format!("{lf}marker\nmarker\n"), "marker\n", None),
+        (format!("{crlf}marker\r\n"), "marker\n", Some("752 lines")),
+    ];
+    for (content, old, want) in cases {
+        std::fs::write(dir.join("b.rs"), &content).expect("b.rs");
+        let env = edit_envelope(&dir, old);
+        match want {
+            Some(count) => {
+                let reason = common::expect_decision(&dir, &env, "ask");
+                assert!(reason.contains(count), "{old:?}: {reason}");
+            }
+            None => {
+                let out = run_hook(&dir, &env);
+                assert!(out.trim().is_empty(), "{old:?} passes: {out}");
+            }
+        }
+    }
     shutdown_daemon(&dir);
-    assert!(silent.trim().is_empty(), "unmatched Edit passes: {silent}");
 }
 
 #[test]

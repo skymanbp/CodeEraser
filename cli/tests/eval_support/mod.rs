@@ -186,6 +186,26 @@ pub fn write_doc(path: &str, doc: &Value, done: &str) {
     println!("{done}");
 }
 
+/// The source revision an eval doc was generated from — a committed
+/// replay result is evidence only when bound to the code that
+/// produced it (attack review F1). By convention the doc lands in
+/// the CHILD of this commit (EVAL-SET.md), so `dirty` normally
+/// covers only the doc files themselves.
+pub fn generated_from() -> Value {
+    let git = |args: &[&str]| -> String {
+        let out = std::process::Command::new("git")
+            .args(args)
+            .output()
+            .expect("git");
+        String::from_utf8_lossy(&out.stdout).trim().to_string()
+    };
+    serde_json::json!({
+        "commit": git(&["rev-parse", "HEAD"]),
+        "dirty": !git(&["status", "--porcelain"]).is_empty(),
+        "ce": env!("CARGO_PKG_VERSION"),
+    })
+}
+
 /// Load the frozen commit slice, build a derived doc from it, write.
 /// Every commit-slice-derived document shares this envelope and
 /// source (schema, source_slice, method, summary, commits).
@@ -200,6 +220,7 @@ pub fn generate_commit_doc(
     let doc = serde_json::json!({
         "schema": schema,
         "source_slice": slice["universe_tip"],
+        "generated_from": generated_from(),
         "method": method,
         "summary": summary,
         "commits": commits,
