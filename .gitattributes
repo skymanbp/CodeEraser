@@ -1,0 +1,5 @@
+# Wire goldens are byte-exact NDJSON (contracts/VERSIONING.md §1: LF,
+# no BOM) consumed byte-for-byte by both language suites — EOL
+# conversion on checkout (Windows runners default autocrlf=true) would
+# redden them. Never translate.
+*.ndjson -text

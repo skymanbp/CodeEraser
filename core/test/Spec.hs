@@ -36,13 +36,17 @@ check name ok = do
   pure ok
 
 -- | Fixture files alternate request line / expected reply line.
+-- Trailing \r is stripped defensively: .gitattributes pins *.ndjson
+-- to -text, but a stray CRLF checkout must not turn a byte-golden
+-- mismatch into a mystery.
 goldenPairs :: FilePath -> IO Bool
 goldenPairs file = do
   raw <- B8.readFile (fixtureDir <> file)
-  let rows = pairs (filter (not . B8.null) (B8.lines raw))
+  let rows = pairs (filter (not . B8.null) (map stripCR (B8.lines raw)))
   results <- mapM (checkPair file) (zip [1 :: Int ..] rows)
   pure (and results)
  where
+  stripCR l = if not (B8.null l) && B8.last l == '\r' then B8.init l else l
   pairs (a : b : rest) = (a, b) : pairs rest
   pairs [] = []
   pairs [_] = error (file <> ": odd line count — fixtures are request/reply pairs")
