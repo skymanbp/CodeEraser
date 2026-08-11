@@ -36,5 +36,5 @@ violation ps =
   shares p =
     not . S.null $
       S.intersection
-        (S.fromList (map snd (pRem p)))
-        (S.fromList (map snd (pAdd p)))
+        (S.fromList (map snd (concat (pRem p))))
+        (S.fromList (map snd (concat (pAdd p))))

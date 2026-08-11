@@ -18,35 +18,14 @@
 
 mod eval_support;
 
-use eval_support::{CLASSES, by_sha, classify_counts, git_run, lang_of, load};
+use eval_support::{CLASSES, by_sha, classify_counts, file_at, gt_pairs, load, pair_lang};
 use serde_json::{Value, json};
-use std::collections::HashMap;
-
-/// File content at `rev`, empty for the created/deleted side.
-fn file_at(rev: &str, path: Option<&str>) -> String {
-    match path {
-        None => String::new(),
-        Some(p) => git_run(&["show", &format!("{rev}:{p}")], false),
-    }
-}
 
 fn classify_pair(sha: &str, pair: &Value) -> [u64; 4] {
-    let (before_path, after_path) = (pair["before"].as_str(), pair["after"].as_str());
-    let path = after_path.or(before_path).expect("pair has a side");
-    let ext = path.rsplit('.').next().expect("extension");
     let base = format!("{sha}^");
-    let before = file_at(&base, before_path);
-    let after = file_at(sha, after_path);
-    classify_counts(&before, &after, lang_of(ext), &format!("{sha}:{path}"))
-}
-
-/// Ground-truth pairs for a commit: the reviewed labels row when one
-/// exists, else the slice prelabels (zero moved marks — nothing to
-/// review, labels equal prelabels verbatim).
-fn gt_pairs<'a>(slice_row: &'a Value, labels: &HashMap<&str, &'a Value>) -> &'a Vec<Value> {
-    let sha = slice_row["sha"].as_str().expect("sha");
-    let row = labels.get(sha).copied().unwrap_or(slice_row);
-    row["pairs"].as_array().expect("pairs")
+    let before = file_at(&base, pair["before"].as_str());
+    let after = file_at(sha, pair["after"].as_str());
+    classify_counts(&before, &after, pair_lang(pair), &format!("{sha}: pair"))
 }
 
 /// Score one commit: per-pair gt/pred rows (the summary re-derives
@@ -56,7 +35,7 @@ fn score_commit(sha: &str, gt_rows: &[Value]) -> Value {
         .iter()
         .map(|gp| {
             let pred = classify_pair(sha, gp);
-            let gt: Vec<u64> = CLASSES.iter().map(|c| gp[c].as_u64().unwrap()).collect();
+            let gt = eval_support::gt_counts(gp);
             json!({"before": gp["before"], "after": gp["after"],
                    "gt": gt, "pred": pred.to_vec()})
         })

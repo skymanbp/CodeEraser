@@ -2,6 +2,10 @@
 //! ground truth (see eval_commit_labels.rs for the semantics). The
 //! two const tables ARE the per-item review record (2026-08-10):
 //! every entry was verified against the raw diff it describes.
+//!
+//! Compiled independently by eval_commit_labels and eval_l2, each
+//! using a subset — the unused remainder is expected.
+#![allow(dead_code)]
 
 use crate::eval_support::{BodyLine, commit_color_diff, walk_color_diff};
 use codeeraser::fourclass::significant;

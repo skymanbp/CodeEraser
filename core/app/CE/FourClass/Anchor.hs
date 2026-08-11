@@ -1,7 +1,8 @@
 -- | Phase 1 — site opening. Anchored blocks are maximal common
 -- contiguous hash sub-sequences between a removed run of one pair and
 -- an added run of a DIFFERENT pair, accepted iff their length clears
--- the derived floor (CE.FourClass.Cost.destFloor).
+-- the derived floor (CE.FourClass.Cost.destFloor). Runs arrive from
+-- the aligner (Wire): judgment consumes the run structure as given.
 --
 -- No exclusivity, no greedy claiming, no tie-break — required, not
 -- lazy: de-duplication commits are many-to-one (one destination body
@@ -10,7 +11,6 @@
 -- iteration order. Determinism is structural.
 module CE.FourClass.Anchor
   ( bucketCap
-  , runsOf
   , sites
   ) where
 
@@ -26,24 +26,14 @@ import Data.Word (Word64)
 bucketCap :: Int
 bucketCap = 64
 
--- | Maximal consecutive-line runs of one (ascending) side.
-runsOf :: [(Int, Word64)] -> [[(Int, Word64)]]
-runsOf = foldr step []
- where
-  step x [] = [[x]]
-  step x@(l, _) (run@((l', _) : _) : rest)
-    | l + 1 == l' = (x : run) : rest
-    | otherwise = [x] : run : rest
-  step x (run : rest) = [x] : run : rest -- empty run: unreachable
-
 -- | One side occurrence of a hash: (pair, run id, position in run).
 data Occ = Occ {oPair :: !Int, oRun :: !Int, oPos :: !Int}
 
 type RunMap = M.Map (Int, Int) [(Int, Word64)]
 
-buildRuns :: (Pair -> [(Int, Word64)]) -> [Pair] -> RunMap
+buildRuns :: (Pair -> [[(Int, Word64)]]) -> [Pair] -> RunMap
 buildRuns side ps =
-  M.fromList [((pIdx p, r), run) | p <- ps, (r, run) <- zip [0 ..] (runsOf (side p))]
+  M.fromList [((pIdx p, r), run) | p <- ps, (r, run) <- zip [0 ..] (side p)]
 
 buildIx :: RunMap -> M.Map Word64 [Occ]
 buildIx rm =

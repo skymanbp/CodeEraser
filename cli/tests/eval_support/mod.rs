@@ -61,6 +61,65 @@ pub fn by_sha(doc: &Value) -> HashMap<&str, &Value> {
     by_field(doc, "commits", "sha")
 }
 
+/// Ground-truth pairs for a commit: the reviewed labels row when one
+/// exists, else the slice prelabels (zero moved marks — nothing to
+/// review, labels equal prelabels verbatim).
+pub fn gt_pairs<'a>(slice_row: &'a Value, labels: &HashMap<&str, &'a Value>) -> &'a Vec<Value> {
+    let sha = slice_row["sha"].as_str().expect("sha");
+    let row = labels.get(sha).copied().unwrap_or(slice_row);
+    row["pairs"].as_array().expect("pairs")
+}
+
+/// File content at `rev`, empty for the created/deleted side.
+pub fn file_at(rev: &str, path: Option<&str>) -> String {
+    match path {
+        None => String::new(),
+        Some(p) => git_run(&["show", &format!("{rev}:{p}")], false),
+    }
+}
+
+/// The classification language of a slice pair, from its extension.
+pub fn pair_lang(pair: &Value) -> Lang {
+    let path = pair["after"]
+        .as_str()
+        .or(pair["before"].as_str())
+        .expect("pair has a side");
+    lang_of(path.rsplit('.').next().expect("extension"))
+}
+
+/// Both sides of a slice pair at `sha` (before side from `sha^`).
+pub fn pair_contents(sha: &str, pair: &Value) -> (String, String) {
+    let base = format!("{sha}^");
+    (
+        file_at(&base, pair["before"].as_str()),
+        file_at(sha, pair["after"].as_str()),
+    )
+}
+
+/// Iterate doc rows that carry sample ids, yielding each id with its
+/// loaded local payload (eval_extract output).
+pub fn each_sample(rows: &[Value], mut f: impl FnMut(&str, Value)) {
+    let dir = out_dir();
+    for row in rows {
+        let id = row["id"].as_str().expect("id");
+        f(id, read_sample(&dir, id));
+    }
+}
+
+/// A JSON array of integers as `Vec<u64>`.
+pub fn u64s(v: &Value) -> Vec<u64> {
+    v.as_array()
+        .expect("u64 array")
+        .iter()
+        .map(|x| x.as_u64().expect("u64"))
+        .collect()
+}
+
+/// A labels/slice pair row's four ground-truth class counts.
+pub fn gt_counts(pair: &Value) -> Vec<u64> {
+    CLASSES.iter().map(|c| pair[*c].as_u64().unwrap()).collect()
+}
+
 /// Run the fourclass classifier and return the four counts in
 /// CLASSES order, refusing degraded (diff-capped) results.
 pub fn classify_counts(before: &str, after: &str, lang: Lang, what: &str) -> [u64; 4] {

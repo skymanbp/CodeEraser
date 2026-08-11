@@ -15,6 +15,7 @@
 //! it left and the unit it joined (the guard's 指回位置), and
 //! summarizes intact unit relocations.
 
+pub mod batch;
 pub mod diff;
 pub mod units;
 
@@ -39,12 +40,21 @@ pub struct MovedLine {
     pub unit: Option<String>,
 }
 
+/// 1-based changed-line indices from the underlying diff, both
+/// sides — the batch layer derives L1 leftovers from these without
+/// re-running the diff.
+pub struct ChangedLines {
+    pub removed: Vec<usize>,
+    pub added: Vec<usize>,
+}
+
 pub struct Classification {
     pub counts: FourClass,
     pub moved: Vec<MovedLine>,
     /// Unit keys present on both sides whose changed lines are all
     /// moves — the "function relocated intact" summary.
     pub relocated_units: Vec<String>,
+    pub changed: ChangedLines,
     pub degraded: bool,
 }
 
@@ -77,10 +87,15 @@ pub fn classify(before: &str, after: &str, lang: Lang) -> Classification {
         }
     }
     let relocated_units = relocated(&moved, &before_units, &after_units, &d);
+    let changed = ChangedLines {
+        removed: d.removed.iter().map(|&i| i + 1).collect(),
+        added: d.added.iter().map(|&j| j + 1).collect(),
+    };
     Classification {
         counts,
         moved,
         relocated_units,
+        changed,
         degraded: d.degraded,
     }
 }

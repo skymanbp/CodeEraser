@@ -30,11 +30,14 @@ data Request = Request
 
 -- | `i` is an opaque pair index — the file-identity key (cross
 -- matching requires differing `i`). `rem`/`add` are ascending
--- (1-based line, trimmed-content hash) lists.
+-- (1-based line, trimmed-content hash) lists grouped into RUNS by
+-- the aligner: run structure is alignment data, so Rust produces it
+-- (blank/punctuation changed lines bridge a run; unchanged gaps and
+-- within-moved lines break it) and judgment consumes it as given.
 data Pair = Pair
   { pIdx :: Int
-  , pRem :: [(Int, Word64)]
-  , pAdd :: [(Int, Word64)]
+  , pRem :: [[(Int, Word64)]]
+  , pAdd :: [[(Int, Word64)]]
   }
 
 instance FromJSON Pair where

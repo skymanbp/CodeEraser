@@ -11,7 +11,7 @@
 -- so additions require site or edge evidence.
 module CE.FourClass.Provenance (classify) where
 
-import CE.FourClass.Anchor (runsOf, sites)
+import CE.FourClass.Anchor (sites)
 import CE.FourClass.Wire
 import Data.List (sortOn)
 import qualified Data.Map.Strict as M
@@ -27,13 +27,13 @@ classify req = Result (reqId req) moved sortedBlocks reason
   sortedBlocks =
     sortOn (\b -> (bFromPair b, bFromLines b, bToPair b, bToLines b)) blocks
   reason = if capped then Just "bucket_cap" else Nothing
-  outMarks = anchorMarks bFromPair bFromLines blocks `S.union` phase3 ps blocks
   inMarks = anchorMarks bToPair bToLines blocks `S.union` phase2 ps blocks
+  outMarks = anchorMarks bFromPair bFromLines blocks `S.union` phase3 ps inMarks
   moved =
     [ (pIdx p, outs, ins)
     | p <- ps
-    , let outs = [l | (l, _) <- pRem p, (pIdx p, l) `S.member` outMarks]
-    , let ins = [l | (l, _) <- pAdd p, (pIdx p, l) `S.member` inMarks]
+    , let outs = [l | (l, _) <- concat (pRem p), (pIdx p, l) `S.member` outMarks]
+    , let ins = [l | (l, _) <- concat (pAdd p), (pIdx p, l) `S.member` inMarks]
     , not (null outs && null ins)
     ]
 
@@ -51,7 +51,7 @@ phase2 ps blocks =
     [ (q, l)
     | p <- ps
     , let q = pIdx p
-    , (l, h) <- pAdd p
+    , (l, h) <- concat (pAdd p)
     , (q, l) `S.notMember` anchored
     , maybe False (\r -> (q, r) `S.member` anchoredRuns) (M.lookup (q, l) runId)
     , any (\src -> h `S.member` remHashesOf src) (sourcesInto q)
@@ -62,7 +62,7 @@ phase2 ps blocks =
     M.fromList
       [ ((pIdx p, l), r)
       | p <- ps
-      , (r, run) <- zip [0 :: Int ..] (runsOf (pAdd p))
+      , (r, run) <- zip [0 :: Int ..] (pAdd p)
       , (l, _) <- run
       ]
   anchoredRuns =
@@ -72,26 +72,32 @@ phase2 ps blocks =
   sourcesInto q = [src | (src, dst) <- edges, dst == q]
   remHashesOf src = M.findWithDefault S.empty src remByPair
   remByPair =
-    M.fromListWith S.union [(pIdx p, S.fromList (map snd (pRem p))) | p <- ps]
+    M.fromListWith
+      S.union
+      [(pIdx p, S.fromList (map snd (concat (pRem p)))) | p <- ps]
 
 -- | Asymmetric source attribution: a leftover removed line whose
--- content sits inside an accepted block landing in a DIFFERENT pair
--- is a further copy of relocated content — moved-out.
-phase3 :: [Pair] -> [Block] -> S.Set Mark
-phase3 ps blocks =
+-- content demonstrably LANDED at an accepted destination (any
+-- marked-in line — block content or its run-scoped extension — of a
+-- DIFFERENT pair) is a further copy of relocated content: moved-out.
+-- Attaching a source to an already-open site costs movedCost <
+-- plainCost, so this too is the cost model, not an extra rule.
+phase3 :: [Pair] -> S.Set Mark -> S.Set Mark
+phase3 ps inMarks =
   S.fromList
     [ (pp, l)
     | p <- ps
     , let pp = pIdx p
-    , (l, h) <- pRem p
+    , (l, h) <- concat (pRem p)
     , any (\(dst, hs) -> dst /= pp && h `S.member` hs) landed
     ]
  where
-  addHash = M.fromList [((pIdx p, l), h) | p <- ps, (l, h) <- pAdd p]
+  addHash = M.fromList [((pIdx p, l), h) | p <- ps, (l, h) <- concat (pAdd p)]
   landed =
     M.toList $
       M.fromListWith
         S.union
-        [ (bToPair b, S.fromList [addHash M.! (bToPair b, l) | l <- bToLines b])
-        | b <- blocks
+        [ (q, S.singleton h)
+        | (q, l) <- S.toList inMarks
+        , Just h <- [M.lookup (q, l) addHash]
         ]
