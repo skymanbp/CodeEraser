@@ -110,16 +110,16 @@ PostToolUse 不能阻断工具执行，但可反馈；强制阻断点 = PreToolU
 ### 4.3 F4「更新监督」判定模型（核心创新）
 
 四分类：**matched / novel / moved / deleted**。算法借鉴 difftastic 的代价模型思想
-（novel atom 高成本、节点匹配低成本，Dijkstra 最短路，
-<https://difftastic.wilfred.me.uk/diffing.html>）但自研实现——difftastic 的 JSON 标记
-unstable、有图规模/文件体积硬上限、且**不识别 moved**，而 moved 恰是 GitClear 体系的
-关键健康信号。
+（novel atom 高成本、匹配低成本，<https://difftastic.wilfred.me.uk/diffing.html>）但自研：
+整数常数代价模型，跨文件开站成本推导出 ≥2 行证据地板；不建图搜索——M4 冻结切片实测
+目的地非排他（去重多对一形态无分配问题），Dijkstra 推迟 M5 外部验证再评（2026-08-11 拍板）。
+difftastic 本身 JSON unstable、有硬上限、且**不识别 moved**（moved 恰是关键健康信号）。
 
 **Fallback 阶梯（B3c，先易后难，各级都是上一级的对照组）**：
 L0 = `git diff --numstat -M -C --find-copies-harder`（行级 added/deleted/moved，零自研）；
 L1 = L0 + 函数边界对齐（tree-sitter 符号表）；
-L2 = AST 级四分类（自研代价模型）。M4 从 L0/L1 建立 baseline 准确率，L2 必须证明
-相对 L1 的增量收益，L2 不达标时产品退回 L1 而非退回无。
+L2 = 跨文件来源判定（自研整数代价模型；AST 单元用于归属与搬迁登记）。M4 从 L0/L1 建立
+baseline 准确率，L2 必须证明相对 L1 的增量收益，不达标时产品退回 L1 而非退回无。
 
 判定规则（**意图无关**，A2c 修复；意图信号仅可选增强）：
 
@@ -281,8 +281,8 @@ CodeEraser/
    round-trip 断言；schema 变更必须 bump 版本（机制 M0 起，内容 M4 定稿）。
 2. **交叉核对**：度量与 lizard / radon / rust-code-analysis / Sonar 例题对拍，
    fixtures 来自钉死 commit 的真实仓库随机抽样，分歧 case 显式收录。
-3. **property-based**：Haskell 侧 Hedgehog（判决单调性、棘轮不可逆）；Rust 侧 proptest
-   （索引增量 ≡ 全量重建）。
+3. **property-based**：Rust 侧 proptest（索引增量 ≡ 全量重建）；Haskell 侧 M4 用 base-only
+   确定性测试（字节确定性契约不引 RNG；Hedgehog 不在 freeze，推迟 M5 再评——2026-08-11 拍板）。
 4. **评分敏感性测试**（B2）：扰动任一权重断言总分变化——直接针对 fuck-u-code 的
    死字段 bug 形态。
 5. **Dogfooding**：M1 起 CI 对 cli/ 与 docs/ 强制 `ce scan --fail-under`；M5 起
