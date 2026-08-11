@@ -61,16 +61,21 @@ fn wire_goldens_roundtrip() {
 }
 
 /// The corelink client against the real core: capabilities arrive,
-/// and an unsupported request comes back as a visible desync error
-/// (the L1-fallback trigger, A9f), not a hang or a wrong answer.
+/// a supported round-trip echoes id/type, and an unsupported request
+/// comes back as a visible desync error (the L1-fallback trigger,
+/// A9f), not a hang or a wrong answer.
 #[test]
 fn corelink_open_and_desync() {
     let (mut link, reply) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
     assert!(reply.accept, "hello accepted");
     assert!(link.has("hello"), "capability discovery");
-    assert!(!link.has("fourclass/1"), "not offered before M4-7");
-    let err = link
+    assert!(link.has("fourclass/1"), "judgment capability offered");
+    let ok = link
         .request("fourclass", serde_json::json!({"pairs": []}))
+        .expect("empty batch round-trips");
+    assert_eq!(ok["moved"], serde_json::json!([]));
+    let err = link
+        .request("mystery", serde_json::json!({}))
         .expect_err("unsupported type must not produce a result");
     assert!(err.contains("desync"), "visible failure, got: {err}");
 }

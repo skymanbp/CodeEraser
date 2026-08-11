@@ -9,6 +9,7 @@
 -- never a crash.
 module CE.Protocol (proto, respond) where
 
+import qualified CE.FourClass as FourClass
 import qualified CE.Handshake as Handshake
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -48,6 +49,9 @@ respond version line
 dispatch :: String -> Envelope -> B8.ByteString -> B8.ByteString
 dispatch version env line = case envType env of
   "hello" -> Handshake.respond proto version line
+  "fourclass.request" -> case FourClass.respond proto line of
+    Left (rid, code, message) -> errReply rid code message
+    Right bytes -> bytes
   t -> errReply (envId env) "unknown_type" ("unsupported type: " <> t)
 
 errReply :: Maybe Value -> String -> String -> B8.ByteString

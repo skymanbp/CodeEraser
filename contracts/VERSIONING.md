@@ -19,10 +19,17 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `{"proto","type":"error","id":<回显|null>,"code","message"}`，
   `code ∈ {unknown_type, bad_request, too_large}`。core 侧在 JSON 解析**之前**
   先做行字节上限预检（1 MiB），超限即 `too_large`，不解析。
-- `hello` 应答自 0.2.0 起带 `capabilities`（如 `["hello"]`）——**纯信息发现**，
-  接受/拒绝的唯一权威仍是 §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
+- `hello` 应答自 0.2.0 起带 `capabilities`（如 `["hello","fourclass/1"]`）——**纯信息
+  发现**，接受/拒绝的唯一权威仍是 §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
+- `fourclass.request`（0.2.0 起）：`{"id","pairs":[{"i","rem":[[行,hash]],"add":[…]}]}`
+  ——L1 判为 novel/deleted 的**显著**行，hash = fnv1a(trim)，不携带路径/符号/文本
+  （ADR-002 A6）；`i` 为不透明文件对索引（跨匹配要求 `i` 不同）。within-first 前置
+  （同对 add∩rem 必空）由 core 在边界校验，违反 → `error/contract`。
+- `fourclass.result`：`{"id","moved":[[i,出行,入行]],"blocks":[[源i,源行,宿i,宿行]],
+  "degraded"(,"reason"∈{bucket_cap})}`——moved 为单调重分类 delta（deleted→moved-out、
+  novel→moved-in）；blocks 为 ≥2 行的站点证据（扩展/归因行只进 moved 不进 blocks）。
 
 ## 2. SemVer 协商规则
 

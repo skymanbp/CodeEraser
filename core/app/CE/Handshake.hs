@@ -21,10 +21,9 @@ instance FromJSON Hello where
   parseJSON = withObject "Hello" $ \o -> Hello <$> o .: "proto"
 
 -- | Informational discovery only — SemVer stays the sole authority
--- for accept/reject (contracts/VERSIONING.md §1). fourclass lands
--- here when the judgment types ship.
+-- for accept/reject (contracts/VERSIONING.md §1).
 capabilities :: [String]
-capabilities = ["hello"]
+capabilities = ["hello", "fourclass/1"]
 
 data Reply = Reply
   { replyProto :: String

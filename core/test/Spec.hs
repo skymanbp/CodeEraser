@@ -8,6 +8,7 @@
 -- reddens both suites.
 module Main (main) where
 
+import CE.FourClass.Cost (destFloor, siteOpens)
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -18,17 +19,31 @@ import System.Exit (exitFailure)
 
 -- | cabal test runs with the package root (core/) as cwd.
 fixtureDir :: FilePath
-fixtureDir = "../contracts/fixtures/handshake/"
+fixtureDir = "../contracts/fixtures/"
 
 main :: IO ()
 main = do
   results <-
     sequence
-      [ goldenPairs "hello-ok.ndjson"
-      , goldenPairs "wire-errors.ndjson"
+      [ goldenPairs "handshake/hello-ok.ndjson"
+      , goldenPairs "handshake/wire-errors.ndjson"
+      , goldenPairs "fourclass/golden.ndjson"
       , structural
+      , costModel
       ]
   unless (and results) exitFailure
+
+-- | The floor is derived, and perturbing the site cost must move it
+-- (plan §7.4 sensitivity: a dead knob cannot hide).
+costModel :: IO Bool
+costModel = do
+  a <- check "cross floor derives to 2" (destFloor == 2)
+  b <- check "single cross line is a tie, does not open" (not (siteOpens 2 1))
+  c <-
+    check
+      "floor tracks the site cost (ablation table)"
+      ([minimum [n | n <- [1 .. 9], siteOpens s n] | s <- [0, 2, 4, 6]] == [1, 2, 3, 4])
+  pure (a && b && c)
 
 check :: String -> Bool -> IO Bool
 check name ok = do

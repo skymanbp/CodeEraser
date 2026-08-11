@@ -74,16 +74,17 @@ impl Link {
         self.caps.iter().any(|c| c == capability)
     }
 
-    /// One request line out, one reply line in. Stamps proto/type/id;
-    /// a reply that does not echo the id or carry the expected type is
-    /// a desync — the caller falls back to L1, visibly (A9f).
+    /// One `{kind}.request` line out, one `{kind}.result` line in.
+    /// Stamps proto/type/id; a reply that does not echo the id or
+    /// carry the expected type is a desync — the caller falls back to
+    /// L1, visibly (A9f).
     pub fn request(&mut self, kind: &str, mut body: Value) -> Result<Value, String> {
         self.next_id += 1;
         let obj = body
             .as_object_mut()
             .ok_or("request body must be an object")?;
         obj.insert("proto".into(), PROTO.into());
-        obj.insert("type".into(), kind.into());
+        obj.insert("type".into(), format!("{kind}.request").into());
         obj.insert("id".into(), self.next_id.into());
         let line = serde_json::to_string(&body).map_err(|e| e.to_string())?;
         self.send(&line)?;
