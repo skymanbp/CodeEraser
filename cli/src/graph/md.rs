@@ -1,14 +1,19 @@
 //! Markdown reference-site scanner (design brief §4, Markdown row;
-//! user decision D3 2026-08-12: link SYNTAX only — bare paths inside
-//! inline-code spans are deliberately not sites, the cost is visible
-//! in the unresolved ledger rather than inherited silently).
+//! user decision D3 2026-08-12: link SYNTAX only — bare unbracketed
+//! URLs and bare paths in inline code are deliberately not sites;
+//! `<http…>` autolinks, images and reference definitions ARE sites,
+//! so their later exclusion from the doc graph stays ledger-visible).
 //!
-//! Fence and inline-code awareness is a RED condition of sub-
-//! milestone 2b: a link-shaped string inside a fenced block or an
-//! inline code span must not emit a site. Bare URLs and reference
-//! definitions DO emit sites (they later resolve `external` /
-//! feed reference links), so their exclusion from the doc graph is
-//! ledger-visible, never silent.
+//! Fence, inline-code and HTML-comment awareness implement the 2b
+//! RED condition: a link-shaped string inside any of them must not
+//! emit a site. Inline code pairs backtick RUNS of equal length
+//! (CommonMark), not single backticks — the Opus review caught the
+//! first draft masking nothing inside ``double`` spans. Nested
+//! brackets are depth-matched, so a badge `[![alt](img)](url)` emits
+//! the link (url) AND the image (img) instead of one mislabeled
+//! site. Indented code blocks are NOT modeled (block context is
+//! list-sensitive); their rare link-shaped content stays a site and
+//! surfaces in the audit rather than silently.
 
 use super::sites::RawSite;
 
@@ -16,9 +21,10 @@ use super::sites::RawSite;
 pub fn detect(text: &str) -> Vec<RawSite> {
     let mut out = Vec::new();
     let mut fence: Option<char> = None;
+    let mut in_comment = false;
     for (i, line) in text.lines().enumerate() {
         let t = line.trim_start();
-        if let Some(mark) = fence_marker(t) {
+        if !in_comment && let Some(mark) = fence_marker(t) {
             match fence {
                 // only the SAME marker closes the fence (``` inside
                 // a ~~~ block is content, and vice versa)
@@ -31,7 +37,7 @@ pub fn detect(text: &str) -> Vec<RawSite> {
         if fence.is_some() {
             continue;
         }
-        scan_line(line, i + 1, &mut out);
+        scan_line(line, i + 1, &mut in_comment, &mut out);
     }
     out
 }
@@ -45,13 +51,16 @@ fn fence_marker(trimmed: &str) -> Option<char> {
 
 /// Sites on one non-fence line: reference definitions first (they
 /// own the whole line), then bracket links and autolinks outside
-/// inline-code spans.
-fn scan_line(line: &str, lineno: usize, out: &mut Vec<RawSite>) {
-    if let Some((id, target)) = ref_definition(line) {
-        out.push(RawSite::md("ref_def", lineno, format!("{id}: {target}")));
+/// inline-code spans and HTML comments.
+fn scan_line(line: &str, lineno: usize, in_comment: &mut bool, out: &mut Vec<RawSite>) {
+    let mut mask = comment_mask(line, in_comment);
+    merge_code_spans(line, &mut mask);
+    if !mask.first().copied().unwrap_or(false)
+        && let Some(target) = ref_definition(line)
+    {
+        out.push(RawSite::md("ref_def", lineno, target.to_string()));
         return;
     }
-    let mask = code_span_mask(line);
     let bytes = line.as_bytes();
     let mut i = 0;
     while i < bytes.len() {
@@ -67,68 +76,130 @@ fn scan_line(line: &str, lineno: usize, out: &mut Vec<RawSite>) {
     }
 }
 
-/// `[id]: target` at line start (CommonMark link reference
-/// definition). Skips `[id]:` with an empty rest.
-fn ref_definition(line: &str) -> Option<(&str, &str)> {
-    let t = line.trim_start();
-    let inner = t.strip_prefix('[')?;
-    let close = inner.find(']')?;
-    let rest = inner[close + 1..].strip_prefix(':')?;
-    let target = rest.split_whitespace().next()?;
-    (!target.is_empty()).then(|| (&inner[..close], target))
-}
-
-/// Byte mask of inline-code spans: true = inside backticks.
-fn code_span_mask(line: &str) -> Vec<bool> {
+/// Byte mask of `<!-- … -->` spans, stateful across lines.
+fn comment_mask(line: &str, in_comment: &mut bool) -> Vec<bool> {
     let mut mask = vec![false; line.len()];
-    let mut open: Option<usize> = None;
-    for (i, b) in line.bytes().enumerate() {
-        if b != b'`' {
-            continue;
-        }
-        match open {
-            Some(start) => {
-                mask[start..=i].fill(true);
-                open = None;
+    let mut i = 0;
+    while i < line.len() {
+        if *in_comment {
+            let end = line[i..].find("-->").map(|p| i + p + 3);
+            let stop = end.unwrap_or(line.len());
+            mask[i..stop].fill(true);
+            if end.is_some() {
+                *in_comment = false;
             }
-            None => open = Some(i),
+            i = stop;
+        } else {
+            match line[i..].find("<!--") {
+                Some(p) => {
+                    *in_comment = true;
+                    i += p;
+                }
+                None => break,
+            }
         }
     }
     mask
 }
 
-/// `[text](target)` (or `![alt](target)` = image) and `[text][id]`
-/// starting at byte `start`; returns the index scanning resumes at.
+/// Inline-code spans pair backtick RUNS of equal length (CommonMark:
+/// a run of N backticks closes only against another run of N).
+fn merge_code_spans(line: &str, mask: &mut [bool]) {
+    let runs = backtick_runs(line);
+    let mut i = 0;
+    while i < runs.len() {
+        let (start, len) = runs[i];
+        match runs[i + 1..].iter().position(|&(_, l)| l == len) {
+            Some(offset) => {
+                let (close, _) = runs[i + 1 + offset];
+                mask[start..close + len].fill(true);
+                i += offset + 2;
+            }
+            None => i += 1,
+        }
+    }
+}
+
+/// (byte start, run length) of every maximal backtick run.
+fn backtick_runs(line: &str) -> Vec<(usize, usize)> {
+    let bytes = line.as_bytes();
+    let mut runs = Vec::new();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'`' {
+            let start = i;
+            while i < bytes.len() && bytes[i] == b'`' {
+                i += 1;
+            }
+            runs.push((start, i - start));
+        } else {
+            i += 1;
+        }
+    }
+    runs
+}
+
+/// `[id]: target` at line start (CommonMark link reference
+/// definition). The spec is the TARGET alone — a verbatim substring
+/// of the source line (2b exit criterion; the first draft
+/// synthesized "id: target" and had to weaken its own test to pass).
+fn ref_definition(line: &str) -> Option<&str> {
+    let t = line.trim_start();
+    let inner = t.strip_prefix('[')?;
+    let close = inner.find(']')?;
+    let rest = inner[close + 1..].strip_prefix(':')?;
+    let target = rest.split_whitespace().next()?;
+    (!target.is_empty()).then_some(target)
+}
+
+/// Byte index of the ']' matching the '[' at `open`, depth-aware.
+fn matching_close(bytes: &[u8], open: usize) -> Option<usize> {
+    let mut depth = 0usize;
+    for (i, b) in bytes.iter().enumerate().skip(open) {
+        match b {
+            b'[' => depth += 1,
+            b']' => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(i);
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+/// `[label](target)` / `![alt](target)` / `[label][id]` starting at
+/// byte `start`. Returns start + 1 so nested constructs inside the
+/// label (badge images) get their own scan pass.
 fn bracket_site(line: &str, start: usize, lineno: usize, out: &mut Vec<RawSite>) -> usize {
     let bytes = line.as_bytes();
     let image = start > 0 && bytes[start - 1] == b'!';
-    let Some(close) = find_from(line, start + 1, b']') else {
+    let Some(close) = matching_close(bytes, start) else {
         return start + 1;
     };
     match bytes.get(close + 1) {
         Some(b'(') => {
-            let Some(end) = find_from(line, close + 2, b')') else {
-                return close + 1;
-            };
-            let target = line[close + 2..end].split_whitespace().next().unwrap_or("");
-            if !target.is_empty() {
-                let label = if image { "image" } else { "link" };
-                out.push(RawSite::md(label, lineno, target.to_string()));
+            if let Some(end) = find_from(line, close + 2, b')') {
+                let target = line[close + 2..end].split_whitespace().next().unwrap_or("");
+                if !target.is_empty() {
+                    let label = if image { "image" } else { "link" };
+                    out.push(RawSite::md(label, lineno, target.to_string()));
+                }
             }
-            end + 1
         }
         Some(b'[') => {
-            let Some(end) = find_from(line, close + 2, b']') else {
-                return close + 1;
-            };
-            let id = &line[close + 2..end];
-            if !id.is_empty() {
-                out.push(RawSite::md("ref_link", lineno, id.to_string()));
+            if let Some(end) = find_from(line, close + 2, b']') {
+                let id = &line[close + 2..end];
+                if !id.is_empty() {
+                    out.push(RawSite::md("ref_link", lineno, id.to_string()));
+                }
             }
-            end + 1
         }
-        _ => close + 1,
+        _ => {}
     }
+    start + 1
 }
 
 /// `<http://…>` autolink at byte `start`.
@@ -152,56 +223,5 @@ fn find_from(line: &str, from: usize, needle: u8) -> Option<usize> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::detect;
-
-    fn kinds_specs(text: &str) -> Vec<(&'static str, String)> {
-        detect(text).into_iter().map(|s| (s.kind, s.spec)).collect()
-    }
-
-    /// Sub-milestone 2b RED condition: link-shaped strings inside a
-    /// fenced block or an inline code span must not emit a site.
-    #[test]
-    fn fences_and_code_spans_emit_nothing() {
-        let text = "```md\n[fenced](./no.md)\n```\nsee `[coded](./no.md)` too\n~~~\n[tilde](./no.md)\n~~~\n";
-        assert_eq!(kinds_specs(text), vec![]);
-    }
-
-    /// A ``` inside an open ~~~ fence is content, not a closer.
-    #[test]
-    fn mismatched_fence_markers_do_not_close() {
-        let text = "~~~\n```\n[still fenced](./no.md)\n```\n~~~\n[out](./yes.md)\n";
-        assert_eq!(kinds_specs(text), vec![("link", "./yes.md".into())]);
-    }
-
-    #[test]
-    fn link_kinds_and_specs() {
-        let text = "[a](./a.md) ![img](img.png) [b][ref]\n[ref]: ./b.md\n<https://x.example>\n[anchor](#sec)\n";
-        assert_eq!(
-            kinds_specs(text),
-            vec![
-                ("link", "./a.md".into()),
-                ("image", "img.png".into()),
-                ("ref_link", "ref".into()),
-                ("ref_def", "ref: ./b.md".into()),
-                ("url", "https://x.example".into()),
-                ("link", "#sec".into()),
-            ]
-        );
-    }
-
-    /// Anti-invention: every spec is a substring of its source line.
-    #[test]
-    fn specs_are_line_substrings() {
-        let text = "intro [a](./a.md) and <https://x.example>\n[id]: ./target.md \"title\"\n";
-        let lines: Vec<&str> = text.lines().collect();
-        for site in detect(text) {
-            let line = lines[site.line - 1];
-            let ok = site.spec.split(' ').all(|part| {
-                let part = part.trim_end_matches(':');
-                line.contains(part)
-            });
-            assert!(ok, "spec {:?} not in line {:?}", site.spec, line);
-        }
-    }
-}
+#[path = "md_tests.rs"]
+mod tests;

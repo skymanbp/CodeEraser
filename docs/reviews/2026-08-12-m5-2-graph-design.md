@@ -15,7 +15,7 @@
 | # | 缺陷（出处） | 处置 |
 |---|---|---|
 | D1 | instrument-first 的 resolution_rate ≥ 66.7% 门把 stdlib/外部记为未解析→requests 上结构性不可达 | rate=(resolved+external)/N；锚可比数=GT 推导 recall；门 vs 报告→决策 6 |
-| D2 | 负对照不可达：ce.toml:7 排除 crosscheck/** | GRAPH_SCOPE 显式覆盖该排除，仅纳 10 个孤岛 fixture，必须落 external |
+| D2 | 负对照不可达：ce.toml:7 排除 crosscheck/** | GRAPH_SCOPE 显式覆盖该排除纳入孤岛 fixture（实冻结 23 行 = 20 个代码孤岛四语言各 5 + 3 个 md 文档；负对照义务只落在代码孤岛的 import 上——2b-iii Opus 反审核正，设计原文"10"仅数了 ts+go） |
 | D3 | 祖先断言需 .git，但 eval 族声明无 git | 独立 git 测试 cli/tests/graph_provenance.rs；eval_graph.rs 族保持纯 |
 | D4 | resolution-first 判决词汇缺"该解析而未解析"→recall 不可导 | 判决加 `missed`；GT 记 truth，precision/recall 同出 100 行 |
 | D5 | dedup/mod.rs 拆分低估（index_all 仅 27 行） | index_all + load_streams（:133-181）同迁 dedup/walkidx.rs |
@@ -215,7 +215,7 @@ G13（独立 git 测试 graph_provenance.rs）`git merge-base --is-ancestor <审
 | 2c | 抽样 + graph-sample-v1.json + 后备 | 两跑 id 同一；verify() 绿含重复 id 拒绝；每语言 ≥15；git log 证样本提交**先于**任何 cli/src/graph/ladder/ 文件。红：任一 |
 | 2d | 人工审计（100+后备）+ site_gaps | 100/100 行带指名机制的非空 why；G13 祖先断言绿；每语料 site_gaps 巡检有交代（可为空） |
 | 2e | schema v4、symbols/sites/edges、resolve_key、Markdown 入 files、两处 dedup/ 拆分 | (i) `ce dedup --check` 恰报 201 块；(ii) report.golden.json 字节同一；(iii) 增量≡全量；(iv) index.rs/dedup mod.rs/server.rs/main.rs 全 ≤300；(v) 100k LOC 全量重解析 <2s。红：任一 |
-| 2f | 阶梯 R1-R5，每语言一 PR：TS→Py→Rust→Go→Md | 每 rung：≥1 恰在该级解析的 fixture + ≥1 必须保持 Unresolved 的歧义/动态 fixture。红：歧义 fixture 被解析，或 10 crosscheck 孤岛解析成 external 之外任何东西 |
+| 2f | 阶梯 R1-R5，每语言一 PR：TS→Py→Rust→Go→Md | 每 rung：≥1 恰在该级解析的 fixture + ≥1 必须保持 Unresolved 的歧义/动态 fixture。红：歧义 fixture 被解析，或 20 个 crosscheck 代码孤岛（2b-iii 核正计数）解析成 external 之外任何东西 |
 | 2g | Haskell core + ReferenceGraph.hs | 暴力≡出品：(a) 4 标注顶点全部 2^16 有向图 × 3 固定入口集（入度/可达/SCC）；(b) 3 顶点全部 2^9 图 × 全部 2^3 入口集（四路判决全函数——唯一覆盖**入口集维度**的 pass）；前 3 失配报告。**死旋钮测试**：逐一扰动 minRung/entryMask/sccFloor 必须改变某 fixture 判决计数——直接对准计划 :75 指名的 fuck-u-code 死字段 bug |
 | 2h | **达标线** + `ce deadcode` + Request::Graph + join 面 | 冻结 100 上每语料 precision ≥0.90；recall/resolution_rate/r0_share 带分母发布；每级 cut 表公布；自仓 deadcode 全处置（每发现带判决类+入口理由，unresolvable_indegree 零声称）；≥1 死符号经外部工具（rustc dead_code/vulture）佐证且分歧逐项列明；冷索引回显式 Error 绝不静默空图；降级理由到达 SessionStart 健康行（health.rs:79-97）与 Stop 汇总，e2e 断言。红：任一，或档静默扣发без PENDING 记录 |
 | 2i（条件） | R6 全仓调用边 | 仅当授权：自己的 100 调用点审计样本 ≥0.90，否则 OFF 出厂并公布实测数 |

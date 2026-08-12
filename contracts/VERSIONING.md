@@ -64,6 +64,9 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **major 不同 = 拒绝**：应答 `accept:false` + `reason`，调用方报错退出。
 - minor/patch 不同 = 接受（新字段走"忽略未知字段"规则）。
 - 破坏性变更（删字段/改语义）必须 bump major，并同步更新两侧实现 + fixtures。
+- **信封常数变更**（行字节预检、错误码/reason 词汇扩充）：放宽 = minor（旧客户端
+  照常工作），收紧 = major；变更必须在 §1 就地改写并注明日期与依据（2.1.0 的
+  32 MiB 放宽为首例）。
 
 ## 3. Fixtures 约定
 

@@ -27,8 +27,11 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
     let (_config, candidates) = walk::scoped_lang_files(root).map_err(anyhow::Error::msg)?;
     let mut out = Vec::new();
     for (path, lang) in candidates {
-        let text =
-            std::fs::read_to_string(&path).with_context(|| format!("read {}", path.display()))?;
+        // lossy on purpose: one stray non-UTF-8 file must not abort
+        // the whole analysis (Opus review; matches the instrument,
+        // which hashes exactly the text the detector saw)
+        let bytes = std::fs::read(&path).with_context(|| format!("read {}", path.display()))?;
+        let text = String::from_utf8_lossy(&bytes);
         let rel = path
             .strip_prefix(root)
             .unwrap_or(&path)
@@ -95,6 +98,7 @@ fn rows_json(files: &[FileSites]) -> String {
                     "lang": f.lang.name(),
                     "kind": s.kind,
                     "line": s.line,
+                    "nth": s.nth,
                     "spec": s.spec,
                     "owner": s.owner,
                 })
@@ -102,4 +106,27 @@ fn rows_json(files: &[FileSites]) -> String {
         })
         .collect();
     serde_json::json!({ "sites": rows }).to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{analyze, counts};
+
+    /// End-to-end walk on a real (temp) tree — `ce graph --sites`'
+    /// engine gets its own test instead of only a smoke number in a
+    /// commit message (Opus review). Includes a non-UTF-8 in-scope
+    /// file: lossy reading keeps the run alive and still detects.
+    #[test]
+    fn analyze_walks_counts_and_survives_non_utf8() {
+        let dir = std::env::temp_dir().join(format!("ce-graph-walk-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).expect("mkdir");
+        std::fs::write(dir.join("a.py"), "import os\n").expect("a.py");
+        std::fs::write(dir.join("b.md"), "[x](./a.py)\n").expect("b.md");
+        std::fs::write(dir.join("c.py"), b"import sys\n\xff\xfe\n").expect("c.py");
+        let files = analyze(&dir).expect("analyze");
+        let by = counts(&files);
+        assert_eq!(by.get(&("python", "import")), Some(&2), "lossy file still detected");
+        assert_eq!(by.get(&("markdown", "link")), Some(&1));
+        std::fs::remove_dir_all(&dir).ok();
+    }
 }

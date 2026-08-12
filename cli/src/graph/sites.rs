@@ -6,9 +6,9 @@
 //!
 //! Multi-line specifiers (a rustfmt-folded `use x::{a, b, …}`) keep
 //! ONE site whose spec is the first line's fragment: the spec string
-//! is a location anchor and an anti-invention check (the slice gate
-//! asserts it is a substring of its source line) — resolution at 2f
-//! re-reads the AST and does not parse spec strings.
+//! is a location anchor and an anti-invention check (the self-corpus
+//! drift gate in eval_graph.rs re-detects and substring-checks it) —
+//! resolution at 2f re-reads the AST, never parses spec strings.
 
 use super::md;
 use super::spec::{SiteKind, Specifier, sites as site_table};
@@ -16,10 +16,14 @@ use crate::fourclass::units;
 use crate::scan::ast::{self, children};
 use crate::scan::lang::Lang;
 
-/// One detected site, before path attachment.
+/// One detected site, before path attachment. `nth` is the site's
+/// 0-based ordinal among same-line sites (document order), making
+/// (path, line, nth) a unique identity — (line, kind, spec) alone is
+/// not, and the 2c sampling rank key needs uniqueness (Opus review).
 pub struct RawSite {
     pub kind: &'static str,
     pub line: usize,
+    pub nth: usize,
     pub spec: String,
     pub owner: Option<String>,
 }
@@ -29,6 +33,7 @@ impl RawSite {
         RawSite {
             kind,
             line,
+            nth: 0,
             spec,
             owner: None,
         }
@@ -42,8 +47,20 @@ pub fn detect(text: &str, lang: Lang) -> Vec<RawSite> {
         None => md::detect(text),
     };
     let owners = units::segments(text, lang);
+    let mut prev = (0usize, 0usize);
     for site in &mut found {
-        site.owner = units::owner(&owners, site.line).map(|u| u.key.clone());
+        // A unit spanning exactly the site's single line IS the site
+        // (a `mod foo;` declaration is its own one-line unit) — self
+        // ownership is noise, not containment (Opus review).
+        site.owner = units::owner(&owners, site.line)
+            .filter(|u| !(u.start_line == site.line && u.end_line == site.line))
+            .map(|u| u.key.clone());
+        prev = if prev.0 == site.line {
+            (site.line, prev.1 + 1)
+        } else {
+            (site.line, 0)
+        };
+        site.nth = prev.1;
     }
     found
 }
@@ -110,6 +127,7 @@ fn site(label: &'static str, node: tree_sitter::Node, spec: String) -> RawSite {
     RawSite {
         kind: label,
         line: node.start_position().row + 1,
+        nth: 0, // assigned centrally in detect()
         spec,
         owner: None,
     }
@@ -121,7 +139,10 @@ fn field_text(node: tree_sitter::Node, src: &[u8], field: &str) -> Option<String
 
 /// Node text as a spec string: quotes trimmed (string-literal
 /// specifiers), truncated at the first newline (see module header),
-/// whitespace-trimmed. None when empty.
+/// whitespace-trimmed. None when empty — a degenerate specifier
+/// (`import ""`) drops the site; acceptable pre-resolution because
+/// nothing resolvable was referenced, and the 2f unresolved ledger
+/// is the honest home for such rows once resolution exists.
 fn node_text(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
     let raw = node.utf8_text(src).ok()?;
     let first = raw.split('\n').next().unwrap_or("");
@@ -186,5 +207,25 @@ mod tests {
                 );
             }
         }
+    }
+
+    /// Self-ownership is filtered (Opus review): a `mod foo;` site's
+    /// one-line unit is the site itself, so its owner is None, while
+    /// a use inside a real function keeps its owner. Same-line sites
+    /// get distinct nth ordinals (unique identity for 2c sampling).
+    #[test]
+    fn owner_not_self_and_nth_ordinals() {
+        let text = "mod alpha;\nfn holder() {\n    use crate::x;\n}\n";
+        let found = detect(text, Lang::Rust);
+        assert_eq!(found[0].kind, "mod_decl");
+        assert_eq!(found[0].owner, None, "self-ownership must filter");
+        assert_eq!(found[1].kind, "use");
+        assert_eq!(found[1].owner.as_deref(), Some("holder/0"));
+        let two = detect("[a](./x.md) [b](./y.md)\n", Lang::Markdown);
+        assert_eq!(
+            two.iter().map(|s| s.nth).collect::<Vec<_>>(),
+            vec![0, 1],
+            "same-line sites need distinct ordinals"
+        );
     }
 }

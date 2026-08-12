@@ -12,6 +12,7 @@ module CE.Protocol (proto, respond) where
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
+import Control.Applicative ((<|>))
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -64,11 +65,16 @@ dispatch version env line
   | envType env == "hello" = Handshake.respond proto version line
   | not (majorMatches (envProto env)) =
       errReply (envId env) "bad_request" ("proto missing or major-mismatched (server " <> proto <> ")")
+  -- A family-level decode failure hands back rid = Nothing, but the
+  -- ENVELOPE id is already in hand here — falling back to it keeps a
+  -- single malformed request from desyncing the whole session (the
+  -- client treats a non-echoed id as L2-down, VERSIONING.md §1; Opus
+  -- review, one fix for both families).
   | envType env == "fourclass.request" = case FourClass.respond proto line of
-      Left (rid, code, message) -> errReply rid code message
+      Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
   | envType env == "graph.request" = case Graph.respond proto line of
-      Left (rid, code, message) -> errReply rid code message
+      Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)
 

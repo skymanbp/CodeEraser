@@ -28,6 +28,40 @@ use std::collections::BTreeMap;
 const SCOPE_EXTS: [&str; 5] = ["go", "md", "py", "rs", "ts"];
 const SCOPE_EXCLUDES: [&str; 2] = ["memory/", "cli/memory/"];
 
+/// The frozen corpus set — a deleted or renamed slice doc reddens CI
+/// instead of blinding it (design G10; Opus review: the first gate
+/// held no per-corpus anchor at all). Sorted; None = the self doc.
+const FROZEN_CORPORA: [Option<&str>; 5] = [
+    None,
+    Some("cobra"),
+    Some("requests"),
+    Some("ripgrep"),
+    Some("zod"),
+];
+
+/// Pre-registered falsification constants (design §5), one binding
+/// for generator AND gate — duplicated literals were the exact
+/// throat-drift shape this file polices elsewhere (Opus review).
+fn constants() -> Value {
+    json!({"min_per_lang": 15, "r0_share_trigger": 0.80})
+}
+
+/// sha256 of the text the detector saw — the doc's content identity.
+fn content_sha(text: &str) -> String {
+    let mut h = Sha256::new();
+    h.update(text.as_bytes());
+    h.finalize().iter().map(|b| format!("{b:02x}")).collect()
+}
+
+/// Per-kind site counts, the shape frozen in every file row.
+fn kind_counts(sites: &[codeeraser::graph::sites::RawSite]) -> BTreeMap<&'static str, u64> {
+    let mut kinds = BTreeMap::new();
+    for s in sites {
+        *kinds.entry(s.kind).or_insert(0) += 1;
+    }
+    kinds
+}
+
 /// The self universe: pinned at the commit that landed the site
 /// detector (M5-2b-i), so regeneration is reproducible regardless of
 /// later history. A detector change bumps this pin and re-freezes
@@ -81,14 +115,8 @@ fn classify_path(path: &str) -> Result<&'static str, &'static str> {
 /// id) plus per-kind site counts.
 fn file_row(tip: &str, path: &str, code: &'static str) -> Value {
     let content = git_run(&["show", &format!("{tip}:{path}")], false);
-    let mut h = Sha256::new();
-    h.update(content.as_bytes());
-    let sha: String = h.finalize().iter().map(|b| format!("{b:02x}")).collect();
-    let mut kinds: BTreeMap<&'static str, u64> = BTreeMap::new();
-    for s in detect(&content, lang_of(code)) {
-        *kinds.entry(s.kind).or_insert(0) += 1;
-    }
-    json!({"path": path, "sha256": sha, "lang": code, "sites": kinds})
+    let kinds = kind_counts(&detect(&content, lang_of(code)));
+    json!({"path": path, "sha256": content_sha(&content), "lang": code, "sites": kinds})
 }
 
 /// Re-derivable from the rows alone — the CI gate re-runs this exact
@@ -133,7 +161,7 @@ fn generate_graph_slice() {
         "schema": "ce.eval-graph-slice/1.0.0",
         "corpus": {"name": name, "tip": tip},
         "scope": {"extensions": SCOPE_EXTS, "excludes": SCOPE_EXCLUDES},
-        "constants": {"min_per_lang": 15, "r0_share_trigger": 0.80},
+        "constants": constants(),
         "generated_from": generated_from(),
         "method": "site universe of the pinned tree: every in-scope file \
                    (canonical extensions minus machine-local memory/; the \
@@ -165,7 +193,16 @@ fn generate_graph_slice() {
 #[test]
 fn graph_slice_consistent() {
     let docs = eval_support::frozen_docs("graph-slice");
-    assert!(!docs.is_empty(), "no graph-slice docs frozen");
+    let mut names: Vec<Option<String>> = docs
+        .iter()
+        .map(|p| eval_support::doc_suffix(p, "graph-slice"))
+        .collect();
+    names.sort(); // file-name order interleaves the self doc
+    let expected: Vec<Option<String>> = FROZEN_CORPORA
+        .iter()
+        .map(|n| n.map(str::to_string))
+        .collect();
+    assert_eq!(names, expected, "frozen corpus set drifted (G10)");
     let mut lang_sites: BTreeMap<String, u64> = BTreeMap::new();
     for path in &docs {
         let doc = load(path);
@@ -179,14 +216,61 @@ fn graph_slice_consistent() {
     }
 }
 
+/// The detector and the frozen self universe must not drift apart
+/// silently (design RG3 made a CI fact — Opus review: a spec.rs or
+/// md.rs change used to invalidate all five docs with zero red
+/// signal). Every frozen row whose working-tree file still carries
+/// the frozen sha256 is re-detected: per-kind counts must match, and
+/// every detected spec must be a substring of its source line (the
+/// 2b exit criterion, previously asserted only on toy fixtures).
+/// Content-changed files are skipped — that is editing, not detector
+/// drift; a detector change re-pins GRAPH_SELF_TIP and re-freezes.
+#[test]
+fn self_universe_tracks_detector() {
+    let doc = load(&eval_doc("graph-slice"));
+    let mut verified = 0;
+    for row in doc["files"].as_array().expect("files") {
+        let path = row["path"].as_str().expect("path");
+        let Ok(bytes) = std::fs::read(format!("../{path}")) else {
+            continue;
+        };
+        let text = String::from_utf8_lossy(&bytes);
+        if content_sha(&text) != row["sha256"].as_str().expect("sha256") {
+            continue;
+        }
+        let sites = detect(&text, lang_of(row["lang"].as_str().expect("lang")));
+        let lines: Vec<&str> = text.lines().collect();
+        for s in &sites {
+            assert!(
+                lines[s.line - 1].contains(&s.spec),
+                "{path}:{}: spec {:?} is not a line substring",
+                s.line,
+                s.spec
+            );
+        }
+        assert_eq!(
+            row["sites"],
+            json!(kind_counts(&sites)),
+            "{path}: detector drifted from the frozen universe"
+        );
+        verified += 1;
+    }
+    // ordinary churn shrinks the verifiable set between freezes;
+    // this floor only guards against the gate going vacuous
+    assert!(verified >= 25, "drift gate near-vacuous: {verified} rows");
+}
+
 fn check_slice(path: &str, doc: &Value, lang_sites: &mut BTreeMap<String, u64>) {
     let files = doc["files"].as_array().expect("files");
     assert_eq!(doc["summary"], summarize(files), "{path}: summary drifted");
-    assert_eq!(
-        doc["constants"],
-        json!({"min_per_lang": 15, "r0_share_trigger": 0.80}),
-        "{path}: constants drifted"
-    );
+    assert_eq!(doc["constants"], constants(), "{path}: constants drifted");
+    for (category, n) in doc["excluded"].as_object().expect("excluded") {
+        assert!(
+            ["excluded_prefix", "variant_extension", "other_extension"].contains(&category.as_str())
+                && n.as_u64().is_some_and(|v| v > 0),
+            "{path}: malformed excluded row {category}"
+        );
+    }
     assert_eq!(doc["scope"]["extensions"], json!(SCOPE_EXTS), "{path}");
     assert_eq!(doc["scope"]["excludes"], json!(SCOPE_EXCLUDES), "{path}");
     let tip = doc["corpus"]["tip"].as_str().expect("tip");

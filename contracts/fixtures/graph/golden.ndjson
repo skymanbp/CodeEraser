@@ -8,3 +8,5 @@
 {"code":"contract","id":4,"message":"pos 0: index out of range","proto":"2.1.0","type":"error"}
 {"proto":"2.1.0","type":"graph.request","id":5,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,1,0]],"pos":[]}
 {"code":"contract","id":5,"message":"edge 0: malformed row (need [src,dst,kind,rung])","proto":"2.1.0","type":"error"}
+{"proto":"2.1.0","type":"graph.request","id":6,"nodes":[],"edges":"nope","pos":[]}
+{"code":"bad_request","id":6,"message":"graph: Error in $.edges: parsing [] failed, expected Array, but encountered String","proto":"2.1.0","type":"error"}

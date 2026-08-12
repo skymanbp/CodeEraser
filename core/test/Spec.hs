@@ -9,7 +9,7 @@
 module Main (main) where
 
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
-import CE.Graph.Cost (nodeCap)
+import CE.Graph.Cost (edgeCap, nodeCap)
 import qualified Reference
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
@@ -94,7 +94,23 @@ structural = do
   d <- check "major mismatch is rejected" (field majorReply "accept" == Just (Bool False))
   e <- check "over-cap graph degrades visibly" (field overCapReply "reason" == Just "graph_too_large")
   f <- check "over-cap graph is a degraded result" (field overCapReply "degraded" == Just (Bool True))
-  pure (a && b && c && d && e && f)
+  -- the degraded result is the ONLY success shape the 2a stub emits;
+  -- a wrong type or dropped id is a client-side desync
+  -- (corelink.rs), so the whole shape is pinned (Opus review)
+  g <-
+    check
+      "over-cap reply keeps type and id"
+      (field overCapReply "type" == Just "graph.result" && field overCapReply "id" == Just (Number 3))
+  h <-
+    check
+      "over-cap counts echo input, kept 0"
+      ( subfield overCapReply "counts" "nodes" == Just (Number (fromInteger nodeCap + 1))
+          && subfield overCapReply "counts" "kept" == Just (Number 0)
+      )
+  -- both halves of the compensating guard fire — edgeCap was a dead
+  -- knob in the first draft (Opus review)
+  i <- check "over-cap EDGES degrade too" (field edgeCapReply "reason" == Just "graph_too_large")
+  pure (a && b && c && d && e && f && g && h && i)
  where
   unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"2.1.0\",\"type\":\"mystery\",\"id\":7}"
   oversizeReply = Protocol.respond "0.0.1" (B8.replicate 33554433 'x')
@@ -102,10 +118,22 @@ structural = do
   overCapReply =
     Protocol.respond "0.0.1" $
       "{\"proto\":\"2.1.0\",\"type\":\"graph.request\",\"id\":3,\"nodes\":["
-        <> B8.intercalate "," (replicate (nodeCap + 1) "[0,0,0]")
+        <> B8.intercalate "," (replicate (fromInteger nodeCap + 1) "[0,0,0]")
         <> "],\"edges\":[],\"pos\":[]}"
+  -- cap check precedes validation by design, so identical edge rows
+  -- are fine here (never validated)
+  edgeCapReply =
+    Protocol.respond "0.0.1" $
+      "{\"proto\":\"2.1.0\",\"type\":\"graph.request\",\"id\":4,\"nodes\":[[0,0,0]],\"edges\":["
+        <> B8.intercalate "," (replicate (fromInteger edgeCap + 1) "[0,0,0,0]")
+        <> "],\"pos\":[]}"
 
 field :: B8.ByteString -> String -> Maybe Value
 field bytes key = do
   Object o <- decodeStrict bytes
   KM.lookup (Key.fromString key) o
+
+subfield :: B8.ByteString -> String -> String -> Maybe Value
+subfield bytes key sub = do
+  Object o <- field bytes key
+  KM.lookup (Key.fromString sub) o

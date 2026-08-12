@@ -46,7 +46,8 @@ respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.By
 respond proto line = case eitherDecodeStrict line of
   Left e -> Left (Nothing, "bad_request", "graph: " <> e)
   Right req
-    | length (reqNodes req) > nodeCap || length (reqEdges req) > edgeCap ->
+    | toInteger (length (reqNodes req)) > nodeCap
+        || toInteger (length (reqEdges req)) > edgeCap ->
         Right (tooLarge proto req)
     | Just why <- violation req ->
         Left (Just (reqId req), "contract", why)
