@@ -243,6 +243,22 @@ sub-block 移动）；320/341 commit 逐对精确。附带清偿一笔自仓欠�
 给审读表加 `~` 改编标记后 labels doc 未重生成（CI 只查 doc 内部一致，抓
 不到代码表↔doc 漂移），本轮掩码比对抓出并重生成（summary 计数不变）。
 
+**L2-on-requests 外验判决（2026-08-11，doc 未冻结——这正是判决）**：召回
+门过——跨文件 **18/18 行身份级召回**（cross_misses=0，resolve_proxies 搬
+迁完整回收）；**虚报门破**——2a6f290b（black/isort 格式化 commit）上 L2
+发明 2 站/4 行：`Timeout,`/`TooManyRedirects,` 在 test_requests.py 收拢
+↔ __init__.py 炸开，两行去重内容恰好够 destFloor=2 开站（对照：5aeec8b6
+的同内容×2 只算 1 条 distinct 证据被 F5 地板正确拒绝）。invention 门与巧
+合精确门双破 ⇒ **requests L2 doc 悬置**（草稿在 .ce-eval/analysis/，可确
+定性重生成），l2 一致性门按 corpus_doc_pairs_frozen 纳管已冻结语料。F4
+（删侧宽松归因）的改判条件——第二语料现过度归因形态——正式点火。变体裁
+决数据（整行 trim 相等频率，非 substring）：**频率加权失效**（巧合证据行
+before 树 freq=1，真移动行反有 freq=2/3）；块链失效（巧合行双双相邻）；
+流失效（无目的地竞争）；**分离信号 = 内容质量**（巧合站两行 7/16 alnum
+全短，真站多条 ≥20-alnum 重行）——"站点须含 ≥20-alnum 锚证据"变体与 git
+blocks 引擎及本 GT 的 20-alnum 哲学同构，待影子消融在双语料实测（自仓
+547/547 与 FPR 0/600 必须保持）。
+
 ## 复跑 / 校验
 
 ```

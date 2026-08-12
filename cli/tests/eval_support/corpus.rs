@@ -39,6 +39,27 @@ impl Corpus {
 /// unfinished freeze, and a gate that skips it would go silently
 /// blind on a whole corpus.
 pub fn corpus_doc_pairs(family: &str) -> Vec<(String, String)> {
+    let pairs = doc_pairs(family, true);
+    assert!(!pairs.is_empty(), "no committed slice docs");
+    pairs
+}
+
+/// Like corpus_doc_pairs, but a missing sibling is a PENDING corpus,
+/// not an error — for families that freeze later than the slice
+/// (L2 lands only once the bar passes on that corpus; requests is
+/// pending on the invention finding, see EVAL-SET). The self corpus
+/// sibling must still exist: that bar is frozen.
+pub fn corpus_doc_pairs_frozen(family: &str) -> Vec<(String, String)> {
+    let pairs = doc_pairs(family, false);
+    let self_doc = format!("../contracts/eval/commit-{family}-v1.json");
+    assert!(
+        pairs.iter().any(|(_, d)| *d == self_doc),
+        "self {family} doc missing"
+    );
+    pairs
+}
+
+fn doc_pairs(family: &str, required: bool) -> Vec<(String, String)> {
     let mut pairs = Vec::new();
     for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {
         let file = entry.expect("entry").file_name();
@@ -48,13 +69,11 @@ pub fn corpus_doc_pairs(family: &str) -> Vec<(String, String)> {
         }
         let sibling = file.replace("commit-slice", &format!("commit-{family}"));
         let sibling = format!("../contracts/eval/{sibling}");
-        assert!(
-            std::fs::exists(&sibling).expect("probe"),
-            "{file}: missing {family} sibling {sibling}"
-        );
-        pairs.push((format!("../contracts/eval/{file}"), sibling));
+        match std::fs::exists(&sibling).expect("probe") {
+            true => pairs.push((format!("../contracts/eval/{file}"), sibling)),
+            false => assert!(!required, "{file}: missing {family} sibling {sibling}"),
+        }
     }
-    assert!(!pairs.is_empty(), "no committed slice docs");
     pairs
 }
 

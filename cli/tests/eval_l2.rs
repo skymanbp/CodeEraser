@@ -20,6 +20,11 @@
 //! 7. cost-model sensitivity — pinned Haskell-side (Spec.hs
 //!    costModel: the floor tracks the site cost).
 //!
+//! M5-1c: corpus-aware throughout — CE_SLICE_* retargets generation,
+//! the gate covers every FROZEN corpus (requests pending: EVAL-SET),
+//! the coincidence table derives from each labels doc's corrections
+//! (verified set-equal to the old hardcoded self table).
+//!
 //! Run: CE_CORE_BIN=$(cd core && cabal list-bin ce-core) \
 //!      cargo test --test eval_l2 -- --ignored --nocapture
 
@@ -31,8 +36,11 @@ mod eval_support;
 use codeeraser::corelink::Link;
 use codeeraser::fourclass::batch::classify_batch;
 use eval_l2_parts as parts;
-use eval_support::{by_sha, each_sample, gt_pairs, load, sample_pair, u64s};
+use eval_support::{
+    by_sha, corpus, corpus_doc_pairs, each_sample, gt_pairs, load, sample_pair, u64s,
+};
 use serde_json::{Value, json};
+use std::collections::HashMap;
 
 /// Both class splits must sum to the same numstat on each side.
 fn assert_conserved(sha: &str, a: &[u64], b: &[u64]) {
@@ -84,10 +92,21 @@ fn commit_row(link: &mut Link, s: &Value, labels: &Value) -> (Value, Vec<Value>)
 }
 
 /// Determinism: reversed pair order must yield the same per-file
-/// delta on the largest relocation commit.
-fn assert_deterministic(link: &mut Link, sha: &str, labels: &Value) {
+/// delta on the corpus's largest cross commit — derived from the
+/// labels totals, not pinned (self elects 4822d04ff, 262 lines).
+fn assert_deterministic(link: &mut Link, labels: &Value) {
     let by = by_sha(labels);
-    let slice = load("../contracts/eval/commit-slice-v1.json");
+    let sha = labels["commits"]
+        .as_array()
+        .expect("commits")
+        .iter()
+        .max_by_key(|r| {
+            r["cross_file"]["out"].as_u64().unwrap() + r["cross_file"]["in"].as_u64().unwrap()
+        })
+        .expect("labels rows")["sha"]
+        .as_str()
+        .expect("sha");
+    let slice = load(&corpus().doc("slice"));
     let s = by_sha(&slice)[sha];
     let texts = parts::pair_texts(sha, gt_pairs(s, &by));
     let forward = parts::delta_lines(
@@ -113,12 +132,20 @@ fn assert_extras_frozen(ledger: &[Value]) {
     if std::env::var("CE_ACCEPT_EXTRAS").as_deref() == Ok("1") {
         return;
     }
-    let committed = load("../contracts/eval/commit-l2-v1.json");
-    let rows = committed["commits"].as_array().expect("commits");
-    let old = rows.last().expect("ledger row")["extras_ledger"]
-        .as_array()
-        .cloned()
-        .unwrap_or_default();
+    // A corpus's first freeze has no committed doc: everything is new
+    // and must go through the same review-then-bless flow.
+    let path = corpus().doc("l2");
+    let old = match std::fs::exists(&path).expect("probe") {
+        false => Vec::new(),
+        true => {
+            let committed = load(&path);
+            let rows = committed["commits"].as_array().expect("commits");
+            rows.last().expect("ledger row")["extras_ledger"]
+                .as_array()
+                .cloned()
+                .unwrap_or_default()
+        }
+    };
     let fresh: Vec<&Value> = ledger.iter().filter(|e| !old.contains(e)).collect();
     assert!(
         fresh.is_empty(),
@@ -126,28 +153,38 @@ fn assert_extras_frozen(ledger: &[Value]) {
     );
 }
 
+/// The corpus's labels-doc stem for the method text.
+fn labels_stem() -> String {
+    let path = corpus().doc("labels");
+    let name = path.rsplit('/').next().expect("file name");
+    name.trim_end_matches(".json").to_string()
+}
+
 #[test]
-#[ignore] // needs full git history + a built ce-core (CE_CORE_BIN)
+#[ignore] // needs the pinned window's git history + a built ce-core (CE_CORE_BIN)
 fn generate_commit_l2() {
-    let labels = load("../contracts/eval/commit-labels-v1.json");
+    let labels = load(&corpus().doc("labels"));
     let mut link = core_link();
     let mut ledger: Vec<Value> = Vec::new();
     let mut rows: Vec<Value> = Vec::new();
     eval_support::generate_commit_doc(
-        "../contracts/eval/commit-l2-v1.json",
+        "l2",
         "ce.eval-commit-l2/1.0.0",
-        "real pipeline: fourclass::batch::classify_batch over a live \
-         ce-core link, per slice commit; gt = commit-labels-v1; cross \
-         GT per file re-derived by the labels machinery (partition + \
-         reviewed corrections). Gates: cross misses = 0 at LINE \
-         IDENTITY for files without a reviewed correction, count \
-         level on the corrected files; coincidence files exact; zero \
-         invention on non-cross commits; L2>=L1 monotone with \
-         conserved sums (asserted at generation); extras itemized \
-         with content AND frozen (a new above-GT row fails the \
-         generator until reviewed and blessed); reversed-order \
-         determinism (asserted at generation); cost-model \
-         sensitivity pinned in core/test/Spec.hs.",
+        &format!(
+            "real pipeline: fourclass::batch::classify_batch over a live \
+             ce-core link, per slice commit; gt = {}; cross \
+             GT per file re-derived by the labels machinery (partition + \
+             reviewed corrections). Gates: cross misses = 0 at LINE \
+             IDENTITY for files without a reviewed correction, count \
+             level on the corrected files; coincidence files exact; zero \
+             invention on non-cross commits; L2>=L1 monotone with \
+             conserved sums (asserted at generation); extras itemized \
+             with content AND frozen (a new above-GT row fails the \
+             generator until reviewed and blessed); reversed-order \
+             determinism (asserted at generation); cost-model \
+             sensitivity pinned in core/test/Spec.hs.",
+            labels_stem()
+        ),
         |slice| {
             for s in slice["commits"].as_array().expect("commits") {
                 let (row, mut extra) = commit_row(&mut link, s, &labels);
@@ -155,11 +192,7 @@ fn generate_commit_l2() {
                 ledger.append(&mut extra);
             }
             assert_extras_frozen(&ledger);
-            assert_deterministic(
-                &mut link,
-                "4822d04ff0a944eba62fed71cb6ccd226a647e77",
-                &labels,
-            );
+            assert_deterministic(&mut link, &labels);
             let mut doc_rows = std::mem::take(&mut rows);
             let misses = eval_l2_register::register_misses(&doc_rows);
             assert!(misses.is_empty(), "relocation register misses: {misses:?}");
@@ -188,13 +221,20 @@ fn l1_reproduced_on_200_samples() {
     println!("200/200 single-pair batches reproduce l1-v1.json");
 }
 
-/// CI gate, no git needed: summary re-derives; cross GT anchors to
-/// the frozen labels totals; misses zero; coincidence files exact;
-/// invention zero; per-pair L2 conserves the GT numstat.
+/// CI gate, no git needed, every corpus: summary re-derives; cross
+/// GT anchors to the frozen labels totals; misses zero; coincidence
+/// files exact; invention zero; per-pair L2 conserves the GT totals.
 #[test]
 fn commit_l2_consistent() {
-    let doc = load("../contracts/eval/commit-l2-v1.json");
-    let labels = load("../contracts/eval/commit-labels-v1.json");
+    let labels_docs: HashMap<_, _> = corpus_doc_pairs("labels").into_iter().collect();
+    for (slice_path, doc_path) in eval_support::corpus_doc_pairs_frozen("l2") {
+        check_corpus(&labels_docs[&slice_path], &doc_path);
+    }
+}
+
+fn check_corpus(labels_path: &str, doc_path: &str) {
+    let doc = load(doc_path);
+    let labels = load(labels_path);
     let all = doc["commits"].as_array().expect("commits");
     let (tail, rows) = all.split_last().expect("rows");
     let ledger = tail["extras_ledger"].as_array().expect("ledger");
@@ -209,24 +249,38 @@ fn commit_l2_consistent() {
     check_rows(rows, &labels);
 }
 
+/// The labels row's reviewed-correction (file, cross-side) set —
+/// corrections record "added"/"removed", cross rows say "in"/"out".
+/// Replaces the old hardcoded self-corpus table: same data, one
+/// source, every corpus.
+fn correction_files(labels_row: &Value) -> Vec<(String, &'static str)> {
+    labels_row["corrections"]
+        .as_array()
+        .expect("corrections")
+        .iter()
+        .map(|c| {
+            let file = c["file"].as_str().expect("file").to_string();
+            let side = match c["side"].as_str().expect("side") {
+                "added" => "in",
+                _ => "out",
+            };
+            (file, side)
+        })
+        .collect()
+}
+
 fn check_rows(rows: &[Value], labels: &Value) {
     let by = by_sha(labels);
-    let coincidence = [
-        ("da8eb210b", "cli/tests/guard_hook.rs", "out"),
-        ("da8eb210b", "cli/tests/mcp_precommit.rs", "in"),
-        ("8d6b237a5", "cli/src/dedup/mod.rs", "out"),
-        ("8d6b237a5", "cli/tests/dedup_check.rs", "in"),
-        ("4822d04ff", "cli/tests/daemon_e2e.rs", "in"),
-    ];
     for r in rows {
         let sha = r["sha"].as_str().expect("sha");
-        let has_cross = by
-            .get(sha)
+        let lrow = by.get(sha);
+        let has_cross = lrow
             .map(|l| {
                 l["cross_file"]["out"].as_u64().unwrap() + l["cross_file"]["in"].as_u64().unwrap()
                     > 0
             })
             .unwrap_or(false);
+        let coincidence = lrow.map(|l| correction_files(l)).unwrap_or_default();
         for c in r["cross"].as_array().expect("cross") {
             let (g, p) = parts::gt_pred(c);
             if !has_cross {
@@ -234,7 +288,7 @@ fn check_rows(rows: &[Value], labels: &Value) {
             }
             let hit = coincidence
                 .iter()
-                .any(|(s9, f, sd)| sha.starts_with(s9) && c["file"] == *f && c["side"] == *sd);
+                .any(|(f, sd)| c["file"] == *f && c["side"] == *sd);
             if hit {
                 assert_eq!(p, g, "{sha}: coincidence file must be exact: {c}");
             }
