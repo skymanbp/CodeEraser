@@ -235,7 +235,11 @@ fn self_universe_tracks_detector() {
         let Ok(bytes) = std::fs::read(format!("../{path}")) else {
             continue;
         };
-        let text = String::from_utf8_lossy(&bytes);
+        // the frozen identity is git-blob text (LF); the Windows CI
+        // runner checks out with autocrlf=true, so normalize before
+        // comparing — first CI run of this gate was 0-row vacuous on
+        // windows-latest for exactly this reason
+        let text = String::from_utf8_lossy(&bytes).replace("\r\n", "\n");
         if content_sha(&text) != row["sha256"].as_str().expect("sha256") {
             continue;
         }
