@@ -27,7 +27,7 @@ mod eval_commit_review;
 mod eval_support;
 
 use eval_commit_review as review;
-use eval_support::{by_sha, load};
+use eval_support::by_sha;
 use review::{PerFile, total};
 use serde_json::{Value, json};
 
