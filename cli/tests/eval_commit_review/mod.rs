@@ -190,7 +190,7 @@ pub fn units_for(sha: &str) -> Vec<Value> {
 /// miss-side mirror of the extras ledger, itemized per line. Rows:
 /// (side, file, 1-based line).
 pub fn below_floor_for(sha: &str) -> Vec<(String, String, usize)> {
-    rows_for("below_floor", sha)
+    let rows: Vec<_> = rows_for("below_floor", sha)
         .map(|r| {
             (
                 r["side"].as_str().expect("side").to_string(),
@@ -198,7 +198,13 @@ pub fn below_floor_for(sha: &str) -> Vec<(String, String, usize)> {
                 r["line"].as_u64().expect("line") as usize,
             )
         })
-        .collect()
+        .collect();
+    // Every consumer waives per ROW; a duplicated row would widen
+    // the miss allowance silently (Codex review C3). Asserted here,
+    // the one throat every projection shares.
+    let distinct: HashSet<_> = rows.iter().collect();
+    assert_eq!(distinct.len(), rows.len(), "{sha}: duplicate register row");
+    rows
 }
 
 /// The reviewed source->destination edge layer (M5-1c-iii): one row

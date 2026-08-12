@@ -193,7 +193,13 @@ pub fn summarize(rows: &[Value], ledger: &[Value]) -> Value {
         "extras_lines",
         ledger
             .iter()
-            .map(|e| e["pred"].as_u64().unwrap() - e["gt"].as_u64().unwrap())
+            // charged against the recoverable bar gt − below_floor
+            // (pred + bf > gt guaranteed by the ledger filter), the
+            // same charge as the ablation scorer (Codex review C1)
+            .map(|e| {
+                e["pred"].as_u64().unwrap() + e["below_floor"].as_u64().unwrap_or(0)
+                    - e["gt"].as_u64().unwrap()
+            })
             .sum(),
     );
     json!(sums)

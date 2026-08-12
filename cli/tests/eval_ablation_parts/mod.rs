@@ -82,7 +82,11 @@ pub fn sites(sent: &[(Side, Side)]) -> (Vec<ShadowBlock>, bool) {
     // added occurrence product is the work the enumeration spends;
     // one-sided piles and small-x-large boilerplate buckets (ripgrep
     // b9de003f8, 082245dad) have tiny products and judge normally.
-    let over_work = |r: &[Occ], a: &[Occ]| r.len() * a.len() > BUCKET_CAP * BUCKET_CAP;
+    // u64 mirrors the core's Integer form: usize is 32-bit on some
+    // targets, where the product could overflow past the budget.
+    let over_work = |r: &[Occ], a: &[Occ]| {
+        (r.len() as u64) * (a.len() as u64) > (BUCKET_CAP * BUCKET_CAP) as u64
+    };
     let empty: Vec<Occ> = Vec::new();
     let capped = rem_ix
         .iter()

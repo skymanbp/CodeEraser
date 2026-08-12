@@ -81,6 +81,44 @@ fn corelink_open_and_desync() {
     assert!(err.contains("desync"), "visible failure, got: {err}");
 }
 
+/// The product cap's motivating shapes stay UN-degraded (Codex
+/// review C4: previously nothing pinned them, so reverting to the
+/// old per-side occurrence count would have passed every test).
+/// Both are real ripgrep shapes the per-side form mislabeled:
+/// b9de003f8 adds 66 identical lines with no removed partner
+/// (product 0); 082245dad pairs 5 removals with 118 additions
+/// (product 590 < 64^2 despite one side > 64).
+#[test]
+fn product_cap_spares_one_sided_and_small_product_shapes() {
+    use codeeraser::fourclass::batch::{PairInput, classify_batch};
+    use codeeraser::scan::lang::Lang;
+    let (mut link, _) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
+    let pile = "#[inline(always)]\n".repeat(66);
+    let one_sided = [PairInput {
+        before: "",
+        after: &pile,
+        lang: Lang::Rust,
+    }];
+    let out = classify_batch(&one_sided, Some(&mut link));
+    assert_eq!(out.degraded, None, "one-sided pile must not degrade");
+    let removed = "#[derive(Debug)]\n".repeat(5);
+    let added = "#[derive(Debug)]\n".repeat(118);
+    let small_product = [
+        PairInput {
+            before: &removed,
+            after: "",
+            lang: Lang::Rust,
+        },
+        PairInput {
+            before: "",
+            after: &added,
+            lang: Lang::Rust,
+        },
+    ];
+    let out = classify_batch(&small_product, Some(&mut link));
+    assert_eq!(out.degraded, None, "small-product bucket must not degrade");
+}
+
 /// Attack-review F3: a bucket-cap reply may still carry the partial
 /// blocks the core derived from uncapped hashes — the client must
 /// return PURE L1 plus the visible reason, never partial L2.

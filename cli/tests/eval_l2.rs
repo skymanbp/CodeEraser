@@ -173,7 +173,8 @@ fn generate_commit_l2() {
              destFloor, itemized per line); coincidence files exact; zero \
              invention on non-cross commits; L2>=L1 monotone with \
              conserved sums (asserted at generation); extras itemized \
-             with content AND frozen (a new above-GT row fails the \
+             with content AND frozen, charged against the recoverable \
+             bar gt - below_floor (a new above-bar row fails the \
              generator until reviewed and blessed); reversed-order \
              determinism (asserted at generation); cost-model \
              sensitivity pinned in core/test/Spec.hs.",

@@ -61,7 +61,13 @@ sites ps = (blocks, capped)
   addRuns = buildRuns pAdd ps
   remIx = buildIx remRuns
   addIx = buildIx addRuns
-  overWork remOccs addOccs = length remOccs * length addOccs > bucketCap * bucketCap
+  -- Integer, not Int: machine-width Int is 32-bit on some GHC
+  -- targets, where two ~50k-occurrence sides would overflow the
+  -- product and BYPASS the budget (Codex review C4). Once per
+  -- distinct hash — not a hot path.
+  overWork remOccs addOccs =
+    toInteger (length remOccs) * toInteger (length addOccs)
+      > toInteger bucketCap * toInteger bucketCap
   -- One direction suffices: the product is symmetric and a hash
   -- absent from either index has product zero.
   capped =

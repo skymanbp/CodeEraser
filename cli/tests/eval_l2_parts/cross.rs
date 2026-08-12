@@ -78,6 +78,16 @@ pub fn cross_rows(
             let p = lines.len() as u64;
             let waived = gt.waived.get(*key).unwrap_or(&none);
             let w = waived.len() as u64;
+            // A register row claims NO site can open for this line —
+            // a predicted register line disproves its own waiver
+            // (Codex review C3: the "structurally below floor"
+            // property was previously unasserted anywhere).
+            for l in waived {
+                assert!(
+                    !lines.contains(l),
+                    "{sha}: below-floor {key:?}:{l} was predicted"
+                );
+            }
             assert!(
                 p + w >= g,
                 "{sha}: cross miss on {key:?}: gt {g} pred {p}\npred lines:\n{}",
@@ -115,7 +125,12 @@ fn dump(texts: &Texts, (side, file): &FileKey, lines: &[usize]) -> String {
         .collect()
 }
 
-/// Extras (pred above GT) itemized with content for review.
+/// Extras itemized with content for review — pred above the
+/// RECOVERABLE bar (gt − below_floor): waived lines are structurally
+/// absent from pred (asserted in cross_rows), so charging against
+/// full gt would let up to |register| non-GT predictions ride the
+/// waiver's slack unledgered, and disagreed with the ablation
+/// scorer's effective-GT charge (Codex review C1: 500 vs 505).
 pub fn extras_ledger(
     sha: &str,
     texts: &Texts,
@@ -124,16 +139,25 @@ pub fn extras_ledger(
 ) -> Vec<Value> {
     delta
         .iter()
-        .filter(|(key, lines)| (lines.len() as u64) > gt.counts.get(*key).copied().unwrap_or(0))
-        .map(|((side, file), lines)| {
+        .filter_map(|(key, lines)| {
+            let g = gt.counts.get(key).copied().unwrap_or(0);
+            let w = gt.waived.get(key).map_or(0, |v| v.len() as u64);
+            let p = lines.len() as u64;
+            if p + w <= g {
+                return None;
+            }
+            let (side, file) = key;
             let text: Vec<&str> = side_text(texts, side, file).lines().collect();
             let dump: Vec<String> = lines
                 .iter()
                 .map(|&l| format!("{l}: {}", text[l - 1].trim()))
                 .collect();
-            json!({"sha": &sha[..9], "side": side, "file": file,
-                   "gt": gt.counts.get(&(side.clone(), file.clone())).copied().unwrap_or(0),
-                   "pred": lines.len(), "lines": dump})
+            let mut row = json!({"sha": &sha[..9], "side": side, "file": file,
+                   "gt": g, "pred": p, "lines": dump});
+            if w > 0 {
+                row["below_floor"] = json!(w);
+            }
+            Some(row)
         })
         .collect()
 }

@@ -66,11 +66,23 @@ fn adjust_pairs(row: &Value, out_delta: &PerFile, in_delta: &PerFile) -> Vec<Val
             let (mut nov, mut mvi) = (g("added_novel"), g("added_moved"));
             let (mut del, mut mvo) = (g("removed_deleted"), g("removed_moved"));
             take_delta(&mut in_left, &p["after"], &mut mvi, &mut nov);
-            take_delta(&mut out_left, &p["before"], &mut mvo, &mut del);
-            json!({"before": p["before"], "after": p["after"],
+            // A copy pair does NOT consume the before side (decided
+            // copy semantics): it shares its before path with the
+            // source's own pair, and pathname aggregation would hand
+            // the source's delta to whichever pair iterates first
+            // (Codex review C2). Non-copy before paths are unique per
+            // commit (git emits one M/D/R status per path).
+            if p["copied"] != json!(true) {
+                take_delta(&mut out_left, &p["before"], &mut mvo, &mut del);
+            }
+            let mut row = json!({"before": p["before"], "after": p["after"],
                    "added": g("added"), "deleted": g("deleted"),
                    "added_novel": nov, "added_moved": mvi,
-                   "removed_deleted": del, "removed_moved": mvo})
+                   "removed_deleted": del, "removed_moved": mvo});
+            if p["copied"] == json!(true) {
+                row["copied"] = json!(true);
+            }
+            row
         })
         .collect();
     assert!(
@@ -237,12 +249,25 @@ fn check_row(sha: &str, s: &Value, l: &Value, slice_moved: u64) {
         let g = |v: &Value, k: &str| v[k].as_u64().unwrap();
         assert_eq!(lp["before"], sp["before"], "{sha}: pair order");
         assert_eq!(lp["after"], sp["after"], "{sha}: pair order");
+        assert_eq!(lp["copied"], sp["copied"], "{sha}: copy marker drifted");
         let add = g(lp, "added_novel") + g(lp, "added_moved");
         assert_eq!(g(lp, "added"), add, "{sha}");
         let rem = g(lp, "removed_deleted") + g(lp, "removed_moved");
         assert_eq!(g(lp, "deleted"), rem, "{sha}");
         assert_eq!(g(lp, "added"), g(sp, "added"), "{sha}: numstat drifted");
         assert_eq!(g(lp, "deleted"), g(sp, "deleted"), "{sha}: numstat drifted");
+    }
+    // The register is DATA (the corpus review record); pin the frozen
+    // row to it at line identity so editing either side alone reddens
+    // CI (Codex review C3 — totals-only anchoring left register edits
+    // invisible until manual regeneration).
+    let reg: Vec<Value> = review::below_floor_for(sha)
+        .into_iter()
+        .map(|(side, file, line)| json!({"side": side, "file": file, "line": line}))
+        .collect();
+    match l.get("below_floor") {
+        None => assert!(reg.is_empty(), "{sha}: register rows missing from labels"),
+        Some(bf) => assert_eq!(bf, &json!(reg), "{sha}: register/labels drift"),
     }
     let g2 = |k: &str, side: &str| l[k][side].as_u64().unwrap();
     let final_moved = pair_sum(l, "added_moved") + pair_sum(l, "removed_moved");
