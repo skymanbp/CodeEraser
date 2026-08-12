@@ -114,8 +114,14 @@ fn generate_graph_slice() {
     let mut files = Vec::new();
     let mut excluded: BTreeMap<&str, u64> = BTreeMap::new();
     // -z: NUL-terminated, unquoted — non-ASCII paths must not arrive
-    // shell-escaped (core.quotePath would corrupt them)
-    let listing = git_run(&["ls-tree", "-r", "--name-only", "-z", &tip], false);
+    // shell-escaped (core.quotePath would corrupt them). --full-tree:
+    // the test runs with cwd cli/, and without it ls-tree emits
+    // cwd-relative paths while `show rev:path` resolves from the repo
+    // root (the M5-1c-ii lesson, recurred here on first run).
+    let listing = git_run(
+        &["ls-tree", "-r", "--full-tree", "--name-only", "-z", &tip],
+        false,
+    );
     for path in listing.split('\0').filter(|p| !p.is_empty()) {
         match classify_path(path) {
             Ok(code) => files.push(file_row(&tip, path, code)),
