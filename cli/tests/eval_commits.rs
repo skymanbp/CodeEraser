@@ -33,57 +33,46 @@ use std::collections::HashMap;
 /// Git's canonical empty tree: diff base for the root commit.
 const EMPTY_TREE: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
-/// One scoped `git diff <flag> -z -M -C` run → its NUL-separated
-/// tokens, trailing empty token dropped (no real token is empty).
-fn diff_z(flag: &str, base: &str, sha: &str) -> Vec<String> {
-    let raw = git_run(&["diff", flag, "-z", "-M", "-C", base, sha], true);
-    raw.split('\0')
-        .take_while(|t| !t.is_empty())
-        .map(str::to_string)
-        .collect()
-}
-
-/// (before, after) paths per `--name-status -z` entry; `None` marks
-/// the created/deleted side. Copies would break the "before side is
-/// consumed" reading of a pair, so they fail loudly — a deliberate
-/// stop forcing the copy-semantics decision (none in any corpus yet).
+/// (before, after) paths per `--name-status -z` entry (NUL tokens,
+/// trailing empty one dropped); `None` marks the created/deleted
+/// side. Copies would break the "before side is consumed" reading of
+/// a pair, so they fail loudly — a deliberate stop forcing the
+/// copy-semantics decision (none in any corpus yet).
 fn name_status(base: &str, sha: &str) -> Vec<(Option<String>, Option<String>)> {
-    let mut toks = diff_z("--name-status", base, sha).into_iter();
-    let mut pairs = Vec::new();
-    while let Some(status) = toks.next() {
-        let mut path = || toks.next().expect("path");
-        pairs.push(match status.chars().next().expect("status") {
-            'A' => (None, Some(path())),
-            'D' => (Some(path()), None),
-            'M' | 'T' => {
-                let p = path();
-                (Some(p.clone()), Some(p))
-            }
-            'R' => (Some(path()), Some(path())),
+    let raw = git_run(
+        &["diff", "--name-status", "-z", "-M", "-C", base, sha],
+        true,
+    );
+    let toks: Vec<&str> = raw.split('\0').take_while(|t| !t.is_empty()).collect();
+    let own = |t: Option<&&str>| Some((*t.expect("path")).to_string());
+    let (mut pairs, mut i) = (Vec::new(), 0);
+    while i < toks.len() {
+        let (one, two) = (toks.get(i + 1), toks.get(i + 2));
+        let (pair, arity) = match toks[i].chars().next().expect("status") {
+            'A' => ((None, own(one)), 2),
+            'D' => ((own(one), None), 2),
+            'M' | 'T' => ((own(one), own(one)), 2),
+            'R' => ((own(one), own(two)), 3),
             s => panic!("{sha}: unsupported status {s}"),
-        });
+        };
+        pairs.push(pair);
+        i += arity;
     }
     pairs
 }
 
-/// (added, deleted) per `--numstat -z` entry, same order as
-/// name_status (same diff, same flags). Rename entries carry their
-/// two paths as extra NUL tokens; binary `-` counts fail the parse
-/// loudly (in-scope files are text by construction).
-fn numstats(base: &str, sha: &str) -> Vec<(u64, u64)> {
-    let mut toks = diff_z("--numstat", base, sha).into_iter();
-    let mut rows = Vec::new();
-    while let Some(entry) = toks.next() {
-        let mut f = entry.split('\t');
-        let add = f.next().expect("added").parse().expect("numeric added");
-        let del = f.next().expect("deleted").parse().expect("numeric deleted");
-        if f.next().expect("path field").is_empty() {
-            toks.next().expect("old path");
-            toks.next().expect("new path");
-        }
-        rows.push((add, del));
+/// (added, deleted) per plain `-U0` diff section, keyed like the
+/// color walk — hunk-header arithmetic over the SAME edit script the
+/// bodies come from. numstat is out: myers overcounts against its own
+/// patch (requests 28d537dd, 15/6 vs 14/5; why in hunk_totals).
+fn hunk_stats(base: &str, sha: &str) -> HashMap<SectionKey, (u64, u64)> {
+    let raw = git_run(&["diff", "-U0", "-M", "-C", base, sha], true);
+    let mut map = HashMap::new();
+    for (a, b, del, add) in eval_support::hunk_totals(&raw) {
+        let dup = map.insert((a, b), (add, del));
+        assert!(dup.is_none(), "{sha}: duplicate diff section");
     }
-    rows
+    map
 }
 
 type SectionKey = (Option<String>, Option<String>);
@@ -101,22 +90,21 @@ fn color_classes(base: &str, sha: &str) -> HashMap<SectionKey, LineClasses> {
     map
 }
 
-/// One commit → row with per-pair numstat + four-class counts, or
-/// `None` when nothing in scope changed. Every pair's class split must
-/// conserve its numstat, and every diff section must land on a pair.
+/// One commit → row with per-pair added/deleted + four-class counts,
+/// or `None` when nothing in scope changed. Every pair's class split
+/// must conserve its hunk totals; every section must land on a pair.
 fn commit_row(base: &str, sha: &str) -> Option<Value> {
     let names = name_status(base, sha);
     if names.is_empty() {
         return None;
     }
-    let stats = numstats(base, sha);
-    assert_eq!(names.len(), stats.len(), "{sha}: name-status vs numstat");
+    let mut stats = hunk_stats(base, sha);
     let mut classes = color_classes(base, sha);
     let pairs: Vec<Value> = names
         .into_iter()
-        .zip(stats)
-        .map(|((before, after), (added, deleted))| {
-            let key = (before.clone(), after.clone());
+        .map(|(before, after)| {
+            let key = (before, after);
+            let (added, deleted) = stats.remove(&key).unwrap_or((0, 0));
             let c = classes.remove(&key).unwrap_or_default();
             assert_eq!(
                 added as usize,
@@ -125,6 +113,7 @@ fn commit_row(base: &str, sha: &str) -> Option<Value> {
             );
             let removed = c.removed_deleted + c.removed_moved;
             assert_eq!(deleted as usize, removed, "{sha}: {key:?} deleted");
+            let (before, after) = key;
             json!({"before": before, "after": after,
                    "added": added, "deleted": deleted,
                    "added_novel": c.added_novel, "added_moved": c.added_moved,
@@ -137,12 +126,16 @@ fn commit_row(base: &str, sha: &str) -> Option<Value> {
         "{sha}: unmatched sections {:?}",
         classes.keys()
     );
+    assert!(
+        stats.is_empty(),
+        "{sha}: unmatched hunk sections {:?}",
+        stats.keys()
+    );
     let subject = git_run(&["log", "-1", "--format=%s", sha], false);
     let mut row = json!({"sha": sha, "subject": subject.trim(), "pairs": pairs});
-    // Merge rows are marked so the GT review can stratify them: an
-    // aggregate merge diff can pair lines across constituent commits
-    // that never coexisted in one edit. Absent on non-merges, so the
-    // frozen self slice (zero merges) is unchanged.
+    // Merge rows are marked so the GT review can stratify them — an
+    // aggregate merge diff can pair lines across constituent commits.
+    // Absent on non-merges (frozen self slice: zero merges, unchanged).
     let parents = git_run(&["rev-list", "--parents", "-n", "1", sha], false);
     let n = parents.split_whitespace().count().saturating_sub(1);
     if n > 1 {
@@ -163,9 +156,8 @@ fn commit_rows(c: &Corpus) -> (Vec<Value>, Vec<Value>) {
     assert!(!shas.is_empty(), "empty window {range}");
     match &c.base {
         None => {
-            // A shallow boundary masquerades as a root — the assertion
-            // below passes and truncated history silently regenerates
-            // the frozen self slice. Refuse shallow outright.
+            // A shallow boundary masquerades as a root and truncated
+            // history would silently regenerate the frozen self slice.
             let shallow = git_run(&["rev-parse", "--is-shallow-repository"], false);
             assert_eq!(shallow.trim(), "false", "self slice needs full history");
             let root = git_run(&["rev-list", "--max-parents=0", &c.tip], false);
@@ -231,12 +223,20 @@ fn method(c: &Corpus) -> String {
             c.tip
         ),
     };
+    // "numstat" stays in the frozen self wording (equal to the hunk
+    // totals there — proven by byte-identical regen); external docs
+    // name the actual source, since numstat can diverge (28d537dd).
+    let conserved = if c.name.is_some() {
+        "hunk-header"
+    } else {
+        "numstat"
+    };
     format!(
         "whole-commit git diff -U0 -M -C --color-moved=blocks \
          --color-moved-ws=allow-indentation-change over {walk}; scope = \
          five supported languages minus memory/ paths; per-pair splits \
-         numstat-conserved. blocks mode trades sub-block move recall for \
-         immunity to plain mode's trivial-line cross-file artifact."
+         {conserved}-conserved. blocks mode trades sub-block move recall \
+         for immunity to plain mode's trivial-line cross-file artifact."
     )
 }
 

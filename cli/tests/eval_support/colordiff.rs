@@ -116,13 +116,53 @@ fn header_path(p: &str) -> Option<String> {
     })
 }
 
-/// `@@ -old[,n] +new[,n] @@` → the two 1-based starts.
-fn hunk_starts(plain: &str) -> Option<(usize, usize)> {
+/// `@@ -old[,n] +new[,k] @@` → the two raw range fields.
+fn hunk_ranges(plain: &str) -> Option<(&str, &str)> {
     let rest = plain.strip_prefix("@@ -")?;
     let (old, rest) = rest.split_once(" +")?;
     let (new, _) = rest.split_once(" @@")?;
+    Some((old, new))
+}
+
+/// Hunk header → the two 1-based starts.
+fn hunk_starts(plain: &str) -> Option<(usize, usize)> {
+    let (old, new) = hunk_ranges(plain)?;
     let num = |s: &str| s.split(',').next()?.parse().ok();
     Some((num(old)?, num(new)?))
+}
+
+/// Hunk header → the two span lengths (omitted = 1).
+fn hunk_spans(plain: &str) -> Option<(u64, u64)> {
+    let (old, new) = hunk_ranges(plain)?;
+    let span = |s: &str| match s.split_once(',') {
+        Some((_, n)) => n.parse().ok(),
+        None => Some(1),
+    };
+    Some((span(old)?, span(new)?))
+}
+
+/// Per-file-section (deleted, added) totals of a plain `-U0` diff,
+/// summed from its hunk headers — the second, body-independent
+/// reading the conservation assert compares against the colored
+/// walk. Replaces numstat: git's default myers can overcount there
+/// against its own patch (raw vs compacted edit script — requests
+/// 28d537dd reads 15/6 by numstat, 14/5 by patch, difflib, minimal,
+/// patience and histogram alike).
+pub fn hunk_totals(raw: &str) -> Vec<(Option<String>, Option<String>, u64, u64)> {
+    let mut out: Vec<(Option<String>, Option<String>, u64, u64)> = Vec::new();
+    let mut a_path: Option<String> = None;
+    for line in raw.lines() {
+        if let Some(p) = line.strip_prefix("--- ") {
+            a_path = header_path(p);
+        } else if let Some(p) = line.strip_prefix("+++ ") {
+            out.push((a_path.take(), header_path(p), 0, 0));
+        } else if let Some((del, add)) = hunk_spans(line) {
+            let s = out.last_mut().expect("hunk before file header");
+            s.2 += del;
+            s.3 += add;
+        }
+    }
+    out
 }
 
 /// Walk a force-colored `git diff`: track file sections from their
@@ -196,6 +236,10 @@ pub fn git_run(args: &[&str], scoped: bool) -> String {
     // warning only on stderr with exit 0 — which the success path
     // used to discard. Belt and braces: lift the limit AND refuse any
     // success-with-stderr (GT generation has no benign warnings).
+    // The algorithm stays default myers: the frozen self slice and its
+    // reviewed GT chain were generated under it (histogram regen
+    // drifts the doc), so counts are derived from hunk headers of the
+    // same script instead of numstat — see hunk_totals.
     cmd.args(["-c", "diff.renameLimit=0"]).args(args);
     if scoped {
         cmd.arg("--");

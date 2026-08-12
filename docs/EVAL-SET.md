@@ -206,6 +206,26 @@ CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言�
   ——首版修复被 FPR 重放当场抓到 `impl Foo`/`impl Advisor for Foo` 同键
   碰撞（1/600），归因根修后回 0/600。评估仪器抓自己的修复批，机制在工作。
 
+## requests 外验切片 v1（M5-1b 冻结，2026-08-11，预注册于任何外验评分之前）
+
+R-L2-2 的解药第一料：同一 GT 仪器（M5-1a 泛化，commit e7aa3f8）对准
+[psf/requests](https://github.com/psf/requests) 的 first-parent 窗口
+`00fd4c8e..8068356` （2018-05→克隆 tip，626 commit = 可见链全量，零主观
+筛选；merge 对第一父 diff = 主线增量，110 个 merge 行带 `parents` 标注供
+审读分层）。冻结档
+[contracts/eval/commit-slice-requests-v1.json](../contracts/eval/commit-slice-requests-v1.json)：
+**341 入册 + 285 无涉排除**；预标 moved 286 进/287 出，47 个 moved-bearing
+commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。双跑逐字节
+一致；CI 一致性门枚举全部 commit-slice\*-v1.json 共同校验。
+
+方法差异一处（如实入册）：`added/deleted` 改由**同一编辑脚本的 hunk 头
+算术**推导而非 numstat——默认 myers 下 git 的 numstat 会对自家 patch 超
+计（requests 28d537dd 实测 15/6 vs patch/difflib/minimal/patience/histogram
+一致的 14/5，守恒断言当场逮住）；钉 histogram 会漂移已冻结的自仓切片
+（实测 12 行），故弃。自仓 doc 在 hunk 推导下逐字节不变（numstat 在自仓
+逐对等于 hunk 总和，冻结叙述仍真）。复跑：M5-1a 的四个 CE_SLICE_* 环境变
+量 + 本节两端 sha。
+
 ## 复跑 / 校验
 
 ```
