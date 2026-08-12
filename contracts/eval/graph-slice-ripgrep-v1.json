@@ -55,6 +55,7 @@
       "path": "GUIDE.md",
       "sha256": "156337b59d9813beadc8f7489e9e86da9eec2c09e755e6baa31ec2c40c7e77eb",
       "sites": {
+        "image": 1,
         "link": 20
       }
     },
@@ -63,6 +64,7 @@
       "path": "README.md",
       "sha256": "945622d974f65e4e141ef9726c948c2640eebd222c5b101afb6445728283921e",
       "sites": {
+        "image": 4,
         "link": 72
       }
     },
@@ -104,6 +106,7 @@
       "path": "crates/cli/README.md",
       "sha256": "4e9a7a4b713878587089d2aec3aa147e8fdde74e93a58f17600a05fb2c3c16f1",
       "sites": {
+        "image": 2,
         "link": 5
       }
     },
@@ -368,6 +371,7 @@
       "path": "crates/globset/README.md",
       "sha256": "f521ea13d4b8622f86998487e6a00ec12663dbe0a59a6c9e13ef44ece0284332",
       "sites": {
+        "image": 2,
         "link": 7
       }
     },
@@ -423,6 +427,7 @@
       "path": "crates/grep/README.md",
       "sha256": "c22e4ea508683d0b1572f2a5b64a063e7f48a4e177f764ea08e075faa2c75e59",
       "sites": {
+        "image": 2,
         "link": 4
       }
     },
@@ -445,6 +450,7 @@
       "path": "crates/ignore/README.md",
       "sha256": "fad351a4d6dad422368750be404b7a419bc9f6ab5acc86934edb3502fba2029d",
       "sites": {
+        "image": 2,
         "link": 4
       }
     },
@@ -581,6 +587,7 @@
       "path": "crates/matcher/README.md",
       "sha256": "c14e2251a0164b86e8e9d232c547651d750c635d7ac8e7b29bae3247e5473e82",
       "sites": {
+        "image": 2,
         "link": 5
       }
     },
@@ -630,6 +637,7 @@
       "path": "crates/pcre2/README.md",
       "sha256": "9a8e0c090111340c3a39f4f67aa55d3545a774bc1b97a6801ea7c607f5649562",
       "sites": {
+        "image": 2,
         "link": 6
       }
     },
@@ -661,6 +669,7 @@
       "path": "crates/printer/README.md",
       "sha256": "cea6caa7bb8aff076993d681dcea8e03fecdd6a9b06dafeb6cc6040e92c31403",
       "sites": {
+        "image": 2,
         "link": 5
       }
     },
@@ -773,6 +782,7 @@
       "path": "crates/regex/README.md",
       "sha256": "ace5a38c993db0a725edd69233d6692761779531c5582c3dc07f5f94f8e03eb0",
       "sites": {
+        "image": 2,
         "link": 5
       }
     },
@@ -854,6 +864,7 @@
       "path": "crates/searcher/README.md",
       "sha256": "4f336034cdbcc9ff88e0db69b34813eebf0a13881705b8f63e9ccc3db3f290eb",
       "sites": {
+        "image": 2,
         "link": 5
       }
     },
@@ -1071,7 +1082,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "9afc4668c9fd69e977abb3f1cca03e70f3818fdf",
+    "commit": "8190115d788936f8ae43db64511006d00735fa68",
     "dirty": true
   },
   "method": "site universe of the pinned tree: every in-scope file (canonical extensions minus machine-local memory/; the crosscheck islands deliberately in scope as the negative control), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables only, no path ever consulted). Frozen before any resolver exists; the falsification constants are pre-registered here, before any measurement.",
@@ -1092,6 +1103,7 @@
   "summary": {
     "files": 133,
     "sites_by": {
+      "md/image": 23,
       "md/link": 708,
       "md/ref_def": 8,
       "md/ref_link": 2,
@@ -1099,6 +1111,6 @@
       "rs/mod_decl": 89,
       "rs/use": 404
     },
-    "total_sites": 1215
+    "total_sites": 1238
   }
 }

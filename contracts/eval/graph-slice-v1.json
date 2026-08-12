@@ -5,10 +5,10 @@
   },
   "corpus": {
     "name": null,
-    "tip": "eb5fe2465a34f1b8f580e2ce18c20eeed443b643"
+    "tip": "60f73e3bea7681721a2f572e64788948a17830f6"
   },
   "excluded": {
-    "other_extension": 63
+    "other_extension": 68
   },
   "files": [
     {
@@ -230,24 +230,33 @@
     {
       "lang": "rs",
       "path": "cli/src/graph/md.rs",
-      "sha256": "7d6969ec3247e4e9ad2c5a24812d391d8027908d93e18534b86a08c377edc740",
+      "sha256": "d547999896b9e03463463e7e281e708e97cdee3959057c4bacd498787a379383",
       "sites": {
-        "use": 2
+        "mod_decl": 1,
+        "use": 1
+      }
+    },
+    {
+      "lang": "rs",
+      "path": "cli/src/graph/md_tests.rs",
+      "sha256": "1c97d82a341f1e67cfb2a704bc0f78782c02b3c0e6ea0d03fa2f5bc9aacf1a97",
+      "sites": {
+        "use": 1
       }
     },
     {
       "lang": "rs",
       "path": "cli/src/graph/mod.rs",
-      "sha256": "81261dc0ec0ffbe3fe963de633657e42429578da201aca7e450c5c92b2e8b90b",
+      "sha256": "e4419fde1419ea913a6b89870d3f6b5e075a77b611a77698d2cd57c4e4bf18be",
       "sites": {
         "mod_decl": 3,
-        "use": 6
+        "use": 7
       }
     },
     {
       "lang": "rs",
       "path": "cli/src/graph/sites.rs",
-      "sha256": "2bd47a2a77458441385a2722a0cf22f40e1dd9b387e9a31bdba93e78bc92ab9e",
+      "sha256": "788a5befbeb36227a26019f5710bff7451da46604fa2e8a9442bd55043d8ca00",
       "sites": {
         "use": 7
       }
@@ -600,7 +609,7 @@
     {
       "lang": "rs",
       "path": "cli/tests/eval_commits.rs",
-      "sha256": "1aa62401893cc91957955030a89ae60f289cf15bd75dd1b3bedbff64b8b7e9c2",
+      "sha256": "876c0dee10aff794b5b351ab8008686edc54156d421872fea4f0065fc1391c18",
       "sites": {
         "mod_decl": 1,
         "use": 3
@@ -629,6 +638,15 @@
       "sha256": "d8f27792bdfda0e683dd0ba4e20fa5baa7e9cf5fba6887804fcbc183fe180962",
       "sites": {
         "use": 3
+      }
+    },
+    {
+      "lang": "rs",
+      "path": "cli/tests/eval_graph.rs",
+      "sha256": "f27928c31a9c6cbaa3216434e124d85634dc695732d335d8c0c0b1c766e9b944",
+      "sites": {
+        "mod_decl": 1,
+        "use": 5
       }
     },
     {
@@ -703,7 +721,7 @@
     {
       "lang": "rs",
       "path": "cli/tests/eval_support/corpus.rs",
-      "sha256": "cf2fb6cc3f4f67077e3fff0013cde57fe73be4a505fc70fe1a348a8d43d594d5",
+      "sha256": "d1666d52ece40ef337e3f676c9726aa59f865ac42c40e9218c41e827fdf5f97a",
       "sites": {
         "use": 1
       }
@@ -817,7 +835,7 @@
     {
       "lang": "md",
       "path": "contracts/VERSIONING.md",
-      "sha256": "d3e214c5dde33ea50536b700d8cbe2c40587d42f4614b41402cdcae44c2d4f96",
+      "sha256": "7dda80a068b3ebc3a69e9b94135b7304c1c784e37e69722272e05a10d164b4e2",
       "sites": {}
     },
     {
@@ -1031,9 +1049,9 @@
     {
       "lang": "md",
       "path": "docs/EVAL-SET.md",
-      "sha256": "5281f0b53aa69f59d7124467919f13218cfccdd5803125e8589396b9d73be174",
+      "sha256": "6085a2d1ebc22a3f08dea733a19b5e72e846c7202fc0587c2965d8c112fb343d",
       "sites": {
-        "link": 22
+        "link": 23
       }
     },
     {
@@ -1111,10 +1129,16 @@
     {
       "lang": "md",
       "path": "docs/reviews/2026-08-12-m5-2-graph-design.md",
-      "sha256": "85fcec9bab54ddab268c06303e58e27f0e6d8dd5336c0a4cc07a99a4874a0733",
+      "sha256": "54c6597c87cda7ea920a7def476ae899664576054553ed85c338131c3d427da2",
       "sites": {
         "ref_link": 1
       }
+    },
+    {
+      "lang": "md",
+      "path": "docs/reviews/2026-08-12-m5-2ab-opus-review.md",
+      "sha256": "48edfa1ec626fb3f2b261b71a70a126461fee0ac5b12f1e847039ca9c058a884",
+      "sites": {}
     },
     {
       "lang": "md",
@@ -1127,7 +1151,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "9afc4668c9fd69e977abb3f1cca03e70f3818fdf",
+    "commit": "8190115d788936f8ae43db64511006d00735fa68",
     "dirty": true
   },
   "method": "site universe of the pinned tree: every in-scope file (canonical extensions minus machine-local memory/; the crosscheck islands deliberately in scope as the negative control), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables only, no path ever consulted). Frozen before any resolver exists; the falsification constants are pre-registered here, before any measurement.",
@@ -1146,19 +1170,19 @@
     ]
   },
   "summary": {
-    "files": 138,
+    "files": 141,
     "sites_by": {
       "go/import": 26,
-      "md/link": 34,
+      "md/link": 35,
       "md/ref_link": 1,
       "md/url": 5,
       "py/import": 21,
       "py/import_from": 47,
-      "rs/mod_decl": 100,
-      "rs/use": 411,
+      "rs/mod_decl": 102,
+      "rs/use": 417,
       "ts/export_from": 1,
       "ts/import": 12
     },
-    "total_sites": 658
+    "total_sites": 667
   }
 }

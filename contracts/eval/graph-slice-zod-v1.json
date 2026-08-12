@@ -364,7 +364,7 @@
       "sha256": "b2ec8df2d489349c412dcf2d39b830c2f66b1bcdbc269fa1975d51870e66973a",
       "sites": {
         "image": 1,
-        "link": 263
+        "link": 256
       }
     },
     {
@@ -372,7 +372,7 @@
       "path": "packages/docs-v3/README_ZH.md",
       "sha256": "2239a1314940842794c34c0fec37cc13559516865c6a354dbd6f4e183e3f22c9",
       "sites": {
-        "link": 107
+        "link": 100
       }
     },
     {
@@ -388,7 +388,7 @@
       "path": "packages/docs-v3/home.md",
       "sha256": "88a6829adb8fa3ad5a791266a70fbee0a68ad81720d3be28c88883f913c43afb",
       "sites": {
-        "link": 268
+        "link": 261
       }
     },
     {
@@ -3132,7 +3132,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "9afc4668c9fd69e977abb3f1cca03e70f3818fdf",
+    "commit": "8190115d788936f8ae43db64511006d00735fa68",
     "dirty": true
   },
   "method": "site universe of the pinned tree: every in-scope file (canonical extensions minus machine-local memory/; the crosscheck islands deliberately in scope as the negative control), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables only, no path ever consulted). Frozen before any resolver exists; the falsification constants are pre-registered here, before any measurement.",
@@ -3154,12 +3154,12 @@
     "files": 393,
     "sites_by": {
       "md/image": 1,
-      "md/link": 678,
+      "md/link": 657,
       "md/ref_def": 10,
       "md/ref_link": 10,
       "ts/export_from": 118,
       "ts/import": 884
     },
-    "total_sites": 1701
+    "total_sites": 1680
   }
 }

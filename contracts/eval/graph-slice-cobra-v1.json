@@ -33,6 +33,7 @@
       "path": "README.md",
       "sha256": "50473243fcb2851020fc25bcd7ad372fc969825588b9994beec4d9e33523a0c0",
       "sites": {
+        "image": 4,
         "link": 16
       }
     },
@@ -436,7 +437,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "9afc4668c9fd69e977abb3f1cca03e70f3818fdf",
+    "commit": "8190115d788936f8ae43db64511006d00735fa68",
     "dirty": true
   },
   "method": "site universe of the pinned tree: every in-scope file (canonical extensions minus machine-local memory/; the crosscheck islands deliberately in scope as the negative control), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables only, no path ever consulted). Frozen before any resolver exists; the falsification constants are pre-registered here, before any measurement.",
@@ -458,10 +459,11 @@
     "files": 53,
     "sites_by": {
       "go/import": 190,
+      "md/image": 4,
       "md/link": 126,
       "md/ref_def": 1,
       "md/ref_link": 2
     },
-    "total_sites": 319
+    "total_sites": 323
   }
 }

@@ -284,11 +284,10 @@ graph-slice\*-v1.json：self@60f73e3（**含 crosscheck 孤岛 = 设计内负对
 2b-iii [Opus 反审](reviews/2026-08-12-m5-2ab-opus-review.md)加固后 RG3 首
 次点火换钉重冻结）、requests@8068356、ripgrep@3fce3b5、zod@912f0f5、
 cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。范围 = 五门正典扩展
-名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 +
-**测量前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门
-（eval_graph.rs）：summary 从行重导、常数/范围/语料集钉死（删档即红）、档
-名↔内嵌名一致、五语言联合非零（D2-4）、**检测器漂移门**（自仓 sha 未变行
-重检 = RG3 CI 化 + spec 子串判据）；生成双跑一致（modulo provenance）。
+名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 + **测量
+前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门：summary
+从行重导、常数/范围/语料集钉死（删档即红）、档名↔内嵌名一致、五语言联合非零
+（D2-4）、**检测器漂移门**（自仓 sha 未变行重检=RG3 CI 化+spec 子串）；双跑一致。
 
 ## 复跑 / 校验
 
