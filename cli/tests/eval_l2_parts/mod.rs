@@ -1,9 +1,15 @@
 //! Scoring machinery shared by the L2 bar (eval_l2.rs) and the
 //! ablation shadow (eval_ablation.rs): batch runs, the L2-over-L1
-//! delta, per-file cross GT via the labels machinery, extras ledger.
+//! delta, per-file cross GT via the labels machinery (cross.rs),
+//! extras ledger.
 #![allow(dead_code)]
 
-use crate::eval_commit_review as review;
+pub mod cross;
+// Re-exported so consumers keep the flat parts:: paths; each test
+// binary compiles this module separately and uses its own subset.
+#[allow(unused_imports)]
+pub use cross::{CrossGt, cross_gt, cross_rows, extras_ledger, gt_pred};
+
 use crate::eval_support::{by_sha, gt_pairs, pair_contents, pair_lang, u64s};
 use codeeraser::corelink::Link;
 use codeeraser::fourclass::MovedLine;
@@ -141,119 +147,6 @@ pub fn delta_lines(
     out
 }
 
-/// Per-file cross ground truth: counts for every file, line
-/// identities for files without a reviewed correction (attack review
-/// F2 — the corrected lines' identities were never archived, so
-/// those files stay count-gated plus the coincidence-exact gate).
-pub struct CrossGt {
-    pub counts: BTreeMap<FileKey, u64>,
-    pub lines: BTreeMap<FileKey, Vec<usize>>,
-}
-
-/// Reviewed per-file cross GT via the labels machinery (mechanical
-/// partition + the reviewed corrections), same code that generated
-/// commit-labels-v1.json.
-pub fn cross_gt(sha: &str) -> CrossGt {
-    let mut p = review::partition(sha);
-    let _ = review::apply_corrections(sha, &mut p);
-    let mut gt = CrossGt {
-        counts: BTreeMap::new(),
-        lines: BTreeMap::new(),
-    };
-    for (side, buckets) in [("out", &p.out), ("in", &p.into)] {
-        for (f, n) in &buckets.cross {
-            gt.counts.insert((side.to_string(), f.clone()), *n);
-        }
-        for (f, lines) in &buckets.cross_lines {
-            let mut lines = lines.clone();
-            lines.sort_unstable();
-            gt.lines.insert((side.to_string(), f.clone()), lines);
-        }
-    }
-    gt
-}
-
-/// Per-commit cross rows {file, side, gt, pred, gt_lines}; misses
-/// must be zero — at LINE IDENTITY where the GT has identities
-/// (attack review F2: a same-count substitution passed a count-only
-/// gate), at count level on the reviewed-correction files. A miss
-/// dumps the predicted lines with content so the divergence is
-/// diagnosable from the failure alone.
-pub fn cross_rows(
-    sha: &str,
-    texts: &Texts,
-    gt: &CrossGt,
-    delta: &BTreeMap<FileKey, Vec<usize>>,
-) -> Vec<Value> {
-    let mut keys: Vec<&FileKey> = gt.counts.keys().chain(delta.keys()).collect();
-    keys.sort();
-    keys.dedup();
-    keys.iter()
-        .map(|key| {
-            let g = gt.counts.get(*key).copied().unwrap_or(0);
-            let lines = delta.get(*key).cloned().unwrap_or_default();
-            let p = lines.len() as u64;
-            assert!(
-                p >= g,
-                "{sha}: cross miss on {key:?}: gt {g} pred {p}\npred lines:\n{}",
-                dump(texts, key, &lines)
-            );
-            let gt_lines = gt.lines.get(*key);
-            if let Some(want) = gt_lines {
-                let missed: Vec<usize> = want
-                    .iter()
-                    .copied()
-                    .filter(|l| !lines.contains(l))
-                    .collect();
-                assert!(
-                    missed.is_empty(),
-                    "{sha}: line-identity miss on {key:?}: gt {want:?} missing \
-                     {missed:?}\npred lines:\n{}",
-                    dump(texts, key, &lines)
-                );
-            }
-            json!({"side": key.0, "file": key.1, "gt": g, "pred": p,
-                   "gt_lines": gt_lines})
-        })
-        .collect()
-}
-
-fn dump(texts: &Texts, (side, file): &FileKey, lines: &[usize]) -> String {
-    let text: Vec<&str> = side_text(texts, side, file).lines().collect();
-    lines
-        .iter()
-        .map(|&l| format!("  {l}: {}\n", text[l - 1].trim()))
-        .collect()
-}
-
-/// Extras (pred above GT) itemized with content for review.
-pub fn extras_ledger(
-    sha: &str,
-    texts: &Texts,
-    gt: &CrossGt,
-    delta: &BTreeMap<FileKey, Vec<usize>>,
-) -> Vec<Value> {
-    delta
-        .iter()
-        .filter(|(key, lines)| (lines.len() as u64) > gt.counts.get(*key).copied().unwrap_or(0))
-        .map(|((side, file), lines)| {
-            let text: Vec<&str> = side_text(texts, side, file).lines().collect();
-            let dump: Vec<String> = lines
-                .iter()
-                .map(|&l| format!("{l}: {}", text[l - 1].trim()))
-                .collect();
-            json!({"sha": &sha[..9], "side": side, "file": file,
-                   "gt": gt.counts.get(&(side.clone(), file.clone())).copied().unwrap_or(0),
-                   "pred": lines.len(), "lines": dump})
-        })
-        .collect()
-}
-
-/// A cross row's (gt, pred) counts.
-pub fn gt_pred(c: &Value) -> (u64, u64) {
-    (c["gt"].as_u64().unwrap(), c["pred"].as_u64().unwrap())
-}
-
 /// Everything re-derivable from the committed rows (CI gate re-runs).
 pub fn summarize(rows: &[Value], ledger: &[Value]) -> Value {
     let mut sums: BTreeMap<&str, u64> = BTreeMap::new();
@@ -284,8 +177,15 @@ pub fn summarize(rows: &[Value], ledger: &[Value]) -> Value {
                 },
                 g,
             );
-            add("cross_hits", g.min(p));
-            add("cross_misses", g.saturating_sub(p));
+            // Reviewed below-floor lines leave the hit/miss ledger
+            // (hits + misses + below_floor == cross GT), so the miss
+            // gate reads "zero UNREVIEWED misses" on every corpus.
+            let w = c["below_floor"].as_array().map_or(0, |a| a.len() as u64);
+            add("cross_hits", (g - w).min(p));
+            add("cross_misses", (g - w).saturating_sub(p));
+            if w > 0 {
+                add("below_floor_lines", w);
+            }
         }
     }
     add("extras_files", ledger.len() as u64);

@@ -33,12 +33,15 @@ use std::collections::HashMap;
 /// Git's canonical empty tree: diff base for the root commit.
 const EMPTY_TREE: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
-/// (before, after) paths per `--name-status -z` entry (NUL tokens,
+/// (before, after, copied) per `--name-status -z` entry (NUL tokens,
 /// trailing empty one dropped); `None` marks the created/deleted
-/// side. Copies would break the "before side is consumed" reading of
-/// a pair, so they fail loudly — a deliberate stop forcing the
-/// copy-semantics decision (none in any corpus yet).
-fn name_status(base: &str, sha: &str) -> Vec<(Option<String>, Option<String>)> {
+/// side. A copy pairs the new file with its source WITHOUT consuming
+/// the before side — plain `-C` drafts only same-diff modified files
+/// as sources, so the source always keeps its own pair in the row —
+/// and the `copied` marker keeps the frozen doc readable as
+/// duplication, not relocation (provenance semantics; first corpus
+/// with a copy: ripgrep, literal.rs -> literalold.rs kept aside).
+fn name_status(base: &str, sha: &str) -> Vec<(Option<String>, Option<String>, bool)> {
     let raw = git_run(
         &["diff", "--name-status", "-z", "-M", "-C", base, sha],
         true,
@@ -49,10 +52,11 @@ fn name_status(base: &str, sha: &str) -> Vec<(Option<String>, Option<String>)> {
     while i < toks.len() {
         let (one, two) = (toks.get(i + 1), toks.get(i + 2));
         let (pair, arity) = match toks[i].chars().next().expect("status") {
-            'A' => ((None, own(one)), 2),
-            'D' => ((own(one), None), 2),
-            'M' | 'T' => ((own(one), own(one)), 2),
-            'R' => ((own(one), own(two)), 3),
+            'A' => ((None, own(one), false), 2),
+            'D' => ((own(one), None, false), 2),
+            'M' | 'T' => ((own(one), own(one), false), 2),
+            'R' => ((own(one), own(two), false), 3),
+            'C' => ((own(one), own(two), true), 3),
             s => panic!("{sha}: unsupported status {s}"),
         };
         pairs.push(pair);
@@ -102,7 +106,7 @@ fn commit_row(base: &str, sha: &str) -> Option<Value> {
     let mut classes = color_classes(base, sha);
     let pairs: Vec<Value> = names
         .into_iter()
-        .map(|(before, after)| {
+        .map(|(before, after, copied)| {
             let key = (before, after);
             let (added, deleted) = stats.remove(&key).unwrap_or((0, 0));
             let c = classes.remove(&key).unwrap_or_default();
@@ -114,11 +118,17 @@ fn commit_row(base: &str, sha: &str) -> Option<Value> {
             let removed = c.removed_deleted + c.removed_moved;
             assert_eq!(deleted as usize, removed, "{sha}: {key:?} deleted");
             let (before, after) = key;
-            json!({"before": before, "after": after,
+            let mut pair = json!({"before": before, "after": after,
                    "added": added, "deleted": deleted,
                    "added_novel": c.added_novel, "added_moved": c.added_moved,
                    "removed_deleted": c.removed_deleted,
-                   "removed_moved": c.removed_moved})
+                   "removed_moved": c.removed_moved});
+            // Copy pairs carry the marker (absent otherwise — frozen
+            // corpora predate it and regenerate byte-identical).
+            if copied {
+                pair["copied"] = json!(true);
+            }
+            pair
         })
         .collect();
     assert!(

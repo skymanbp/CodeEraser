@@ -99,7 +99,7 @@ fn label_row(row: &Value) -> Value {
         &merge(&p.out.nonsig, &corr_out),
         &merge(&p.into.nonsig, &corr_in),
     );
-    json!({
+    let mut out = json!({
         "sha": sha,
         "pairs": pairs,
         "nonsignificant": out_in(total(&p.out.nonsig), total(&p.into.nonsig)),
@@ -108,7 +108,18 @@ fn label_row(row: &Value) -> Value {
         "corrections": corrections,
         "relocated_units": review::units_for(sha),
         "relocation_edges": review::edges_for(sha),
-    })
+    });
+    // Reviewed below-floor lines (still cross-file moved TRUTH above;
+    // this is the waiver annotation). Absent when empty — corpora
+    // without a register regenerate byte-identical.
+    let bf: Vec<Value> = review::below_floor_for(sha)
+        .into_iter()
+        .map(|(side, file, line)| json!({"side": side, "file": file, "line": line}))
+        .collect();
+    if !bf.is_empty() {
+        out["below_floor"] = json!(bf);
+    }
+    out
 }
 
 /// Σ over rows of a nested `row[key][side]` counter.
@@ -130,7 +141,7 @@ fn summarize(rows: &[Value]) -> Value {
             .map(|u| u["units"].as_array().unwrap().len() as u64)
             .sum()
     };
-    json!({
+    let mut s = json!({
         "commits_reviewed": rows.len(),
         "moved_lines": {"cross_out": side("cross_file", "out"),
                         "cross_in": side("cross_file", "in"),
@@ -142,7 +153,15 @@ fn summarize(rows: &[Value]) -> Value {
         "relocated_units": unit_pairs("relocated_units"),
         // edge-unit pairs: one unit riding N edges counts N times.
         "relocation_edges": unit_pairs("relocation_edges"),
-    })
+    });
+    let below_floor: u64 = rows
+        .iter()
+        .map(|r| r["below_floor"].as_array().map_or(0, |a| a.len() as u64))
+        .sum();
+    if below_floor > 0 {
+        s["below_floor_lines"] = json!(below_floor);
+    }
+    s
 }
 
 #[test]

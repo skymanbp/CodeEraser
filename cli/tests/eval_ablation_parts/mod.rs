@@ -78,14 +78,21 @@ fn build_ix(sent: &[(Side, Side)], rem: bool) -> HashMap<u64, Vec<Occ>> {
 pub fn sites(sent: &[(Side, Side)]) -> (Vec<ShadowBlock>, bool) {
     let rem_ix = build_ix(sent, true);
     let add_ix = build_ix(sent, false);
-    let over = |occs: &[Occ]| occs.len() > BUCKET_CAP;
-    let capped = rem_ix.values().any(|v| over(v)) || add_ix.values().any(|v| over(v));
+    // Per-hash pairing budget (Anchor.hs `overWork`): the removed x
+    // added occurrence product is the work the enumeration spends;
+    // one-sided piles and small-x-large boilerplate buckets (ripgrep
+    // b9de003f8, 082245dad) have tiny products and judge normally.
+    let over_work = |r: &[Occ], a: &[Occ]| r.len() * a.len() > BUCKET_CAP * BUCKET_CAP;
+    let empty: Vec<Occ> = Vec::new();
+    let capped = rem_ix
+        .iter()
+        .any(|(h, v)| over_work(v, add_ix.get(h).unwrap_or(&empty)));
     let mut blocks: Vec<ShadowBlock> = Vec::new();
     for (h, rem_occs) in &rem_ix {
         let Some(add_occs) = add_ix.get(h) else {
             continue;
         };
-        if over(rem_occs) || over(add_occs) {
+        if over_work(rem_occs, add_occs) {
             continue;
         }
         for ro in rem_occs {

@@ -1,0 +1,4368 @@
+{
+  "commits": [
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 1,
+          "added_novel": 4,
+          "after": "GUIDE.md",
+          "before": "GUIDE.md",
+          "deleted": 5,
+          "removed_deleted": 4,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "e33d6e73f57d498c65abf83b7fa74ee35f835bcf",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 3,
+          "added_novel": 6,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 6,
+          "removed_deleted": 3,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "009dda1488ac6a01725b3e49ec9b81a1edf8036d",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 3
+      },
+      "pairs": [
+        {
+          "added": 50,
+          "added_moved": 13,
+          "added_novel": 37,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 20,
+          "removed_deleted": 7,
+          "removed_moved": 13
+        },
+        {
+          "added": 74,
+          "added_moved": 0,
+          "added_novel": 74,
+          "after": "tests/regression.rs",
+          "before": "tests/regression.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "91afd4214a9ada15e475bba02694f4fb50079cbc",
+      "within_file": {
+        "in": 13,
+        "out": 13
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 55,
+          "added_moved": 6,
+          "added_novel": 49,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 40,
+          "removed_deleted": 34,
+          "removed_moved": 6
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "28bff84a0adf2180d443584f6218799da34ae8f6",
+      "within_file": {
+        "in": 6,
+        "out": 6
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "crates/regex/src/multi.rs",
+          "lines": 1,
+          "side": "removed",
+          "why": "import rewritten in place (Hir -> {Hir, HirKind}); the removed old form coincides with rewritten literal.rs's fresh plain import"
+        },
+        {
+          "file": "crates/regex/src/literal.rs",
+          "lines": 1,
+          "side": "added",
+          "why": "literal.rs was rewritten for regex 1.9 (413 deleted) and freshly imports Hir; coincides with multi.rs's in-place import rewrite"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/globset/src/lib.rs",
+          "before": "crates/globset/src/lib.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 18,
+          "added_moved": 1,
+          "added_novel": 17,
+          "after": "crates/regex/src/crlf.rs",
+          "before": "crates/regex/src/crlf.rs",
+          "deleted": 24,
+          "removed_deleted": 23,
+          "removed_moved": 1
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/regex/src/literal.rs",
+          "before": "crates/regex/src/literal.rs",
+          "deleted": 413,
+          "removed_deleted": 413,
+          "removed_moved": 0
+        },
+        {
+          "added": 133,
+          "added_moved": 0,
+          "added_novel": 133,
+          "after": "crates/regex/src/literalold.rs",
+          "before": "crates/regex/src/literal.rs",
+          "deleted": 95,
+          "removed_deleted": 95,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "crates/regex/src/multi.rs",
+          "before": "crates/regex/src/multi.rs",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 0,
+          "added_novel": 34,
+          "after": "crates/regex/src/non_matching.rs",
+          "before": "crates/regex/src/non_matching.rs",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "crates/regex/src/strip.rs",
+          "before": "crates/regex/src/strip.rs",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/regex/src/util.rs",
+          "before": "crates/regex/src/util.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "1035f6b1ff502eb5b1a5fc49a79f45971c772d47",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 11,
+          "added_moved": 0,
+          "added_novel": 11,
+          "after": "crates/globset/src/lib.rs",
+          "before": "crates/globset/src/lib.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 51,
+          "added_moved": 1,
+          "added_novel": 50,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 22,
+          "removed_deleted": 21,
+          "removed_moved": 1
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "crates/regex/src/crlf.rs",
+          "before": "crates/regex/src/crlf.rs",
+          "deleted": 17,
+          "removed_deleted": 17,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "crates/regex/src/error.rs",
+          "before": "crates/regex/src/error.rs",
+          "deleted": 19,
+          "removed_deleted": 19,
+          "removed_moved": 0
+        },
+        {
+          "added": 20,
+          "added_moved": 0,
+          "added_novel": 20,
+          "after": "crates/regex/src/literal.rs",
+          "before": "crates/regex/src/literal.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 78,
+          "added_moved": 0,
+          "added_novel": 78,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 43,
+          "removed_deleted": 43,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/regex/src/multi.rs",
+          "before": "crates/regex/src/multi.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "crates/regex/src/non_matching.rs",
+          "before": "crates/regex/src/non_matching.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 0,
+          "added_novel": 32,
+          "after": "crates/regex/src/word.rs",
+          "before": "crates/regex/src/word.rs",
+          "deleted": 23,
+          "removed_deleted": 23,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "e028ea37928930c80e5c3172d1df306b85a86758",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 16,
+          "removed_deleted": 16,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": null,
+          "before": "crates/regex/src/crlf.rs",
+          "deleted": 189,
+          "removed_deleted": 189,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "crates/regex/src/lib.rs",
+          "before": "crates/regex/src/lib.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 1,
+          "added_novel": 3,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 82,
+          "removed_deleted": 81,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "9d62eb997a19efbf5e96d28870f8edad9bde1b9b",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "crates/regex/src/config.rs",
+          "lines": 1,
+          "side": "added",
+          "why": "fresh non_word/word-matcher construction writes `let mut config = self.config.clone();`; matcher.rs's same-content line is its own in-place reorder"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 11,
+          "added_moved": 1,
+          "added_novel": 10,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 46,
+          "removed_deleted": 45,
+          "removed_moved": 1
+        },
+        {
+          "added": 50,
+          "added_moved": 0,
+          "added_novel": 50,
+          "after": "crates/pcre2/src/matcher.rs",
+          "before": "crates/pcre2/src/matcher.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 299,
+          "added_moved": 9,
+          "added_novel": 290,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 209,
+          "removed_deleted": 200,
+          "removed_moved": 9
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "crates/regex/src/error.rs",
+          "before": "crates/regex/src/error.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "crates/regex/src/lib.rs",
+          "before": "crates/regex/src/lib.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 82,
+          "added_moved": 14,
+          "added_novel": 68,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 186,
+          "removed_deleted": 172,
+          "removed_moved": 14
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/regex/src/strip.rs",
+          "before": "crates/regex/src/strip.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "crates/regex/src/word.rs",
+          "before": "crates/regex/src/word.rs",
+          "deleted": 13,
+          "removed_deleted": 13,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "81341702af83ce3a3f087d581565c14ba0df4de4",
+      "within_file": {
+        "in": 24,
+        "out": 24
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 29,
+          "removed_deleted": 29,
+          "removed_moved": 0
+        },
+        {
+          "added": 39,
+          "added_moved": 0,
+          "added_novel": 39,
+          "after": "crates/regex/src/literal.rs",
+          "before": "crates/regex/src/literal.rs",
+          "deleted": 26,
+          "removed_deleted": 26,
+          "removed_moved": 0
+        },
+        {
+          "added": 41,
+          "added_moved": 1,
+          "added_novel": 40,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 10,
+          "removed_deleted": 9,
+          "removed_moved": 1
+        },
+        {
+          "added": 22,
+          "added_moved": 0,
+          "added_novel": 22,
+          "after": "crates/regex/src/word.rs",
+          "before": "crates/regex/src/word.rs",
+          "deleted": 11,
+          "removed_deleted": 11,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "8ac66a9e0461b0c50a5f69508f0740d893426d3d",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 5,
+          "added_moved": 2,
+          "added_novel": 3,
+          "after": "crates/cli/src/decompress.rs",
+          "before": "crates/cli/src/decompress.rs",
+          "deleted": 3,
+          "removed_deleted": 1,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "da8ecddce926bcf616f62c947058fe5487fd2a3b",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 196,
+          "added_moved": 0,
+          "added_novel": 196,
+          "after": "crates/ignore/src/default_types.rs",
+          "before": "crates/ignore/src/default_types.rs",
+          "deleted": 209,
+          "removed_deleted": 209,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 2,
+          "added_novel": 10,
+          "after": "crates/ignore/src/types.rs",
+          "before": "crates/ignore/src/types.rs",
+          "deleted": 4,
+          "removed_deleted": 2,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "f30a30867e2ad79ca7b556e5c0dbbe8c58a89267",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "crates/core/app.rs",
+          "before": "crates/core/app.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 39,
+          "added_moved": 1,
+          "added_novel": 38,
+          "after": "crates/searcher/src/searcher/core.rs",
+          "before": "crates/searcher/src/searcher/core.rs",
+          "deleted": 10,
+          "removed_deleted": 9,
+          "removed_moved": 1
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "crates/searcher/src/searcher/mod.rs",
+          "before": "crates/searcher/src/searcher/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "tests/feature.rs",
+          "before": "tests/feature.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "6d95c130d5fb56a8641092a4808f33640bfa935c",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 81,
+          "added_moved": 4,
+          "added_novel": 77,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 64,
+          "removed_deleted": 60,
+          "removed_moved": 4
+        },
+        {
+          "added": 90,
+          "added_moved": 34,
+          "added_novel": 56,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 54,
+          "removed_deleted": 18,
+          "removed_moved": 36
+        },
+        {
+          "added": 22,
+          "added_moved": 0,
+          "added_novel": 22,
+          "after": "tests/feature.rs",
+          "before": "tests/feature.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 45,
+          "added_moved": 0,
+          "added_novel": 45,
+          "after": "tests/misc.rs",
+          "before": "tests/misc.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "6abb962f0d655a186972462d88d2de4e5caf4a33",
+      "within_file": {
+        "in": 38,
+        "out": 40
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "crates/printer/src/summary.rs",
+          "lines": 1,
+          "side": "added",
+          "why": "new write_path's doc first line coincides with standard.rs's own write_path_field -> write_path rewrite; the doc bodies diverge from line two"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 21,
+          "added_moved": 0,
+          "added_novel": 21,
+          "after": "crates/cli/src/wtr.rs",
+          "before": "crates/cli/src/wtr.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 21,
+          "added_moved": 0,
+          "added_novel": 21,
+          "after": "crates/core/app.rs",
+          "before": "crates/core/app.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 38,
+          "added_moved": 0,
+          "added_novel": 38,
+          "after": "crates/core/path_printer.rs",
+          "before": "crates/core/path_printer.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/printer/src/counter.rs",
+          "before": "crates/printer/src/counter.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 664,
+          "added_moved": 0,
+          "added_novel": 664,
+          "after": "crates/printer/src/hyperlink.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "crates/printer/src/hyperlink_aliases.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/printer/src/lib.rs",
+          "before": "crates/printer/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 200,
+          "added_moved": 7,
+          "added_novel": 193,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 58,
+          "removed_deleted": 51,
+          "removed_moved": 7
+        },
+        {
+          "added": 60,
+          "added_moved": 3,
+          "added_novel": 57,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 13,
+          "removed_deleted": 7,
+          "removed_moved": 6
+        },
+        {
+          "added": 45,
+          "added_moved": 0,
+          "added_novel": 45,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/regression.rs",
+          "before": "tests/regression.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "1a50324013708e3c73bfa986d273af2f8e8e3360",
+      "within_file": {
+        "in": 10,
+        "out": 13
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 22,
+          "added_moved": 4,
+          "added_novel": 18,
+          "after": "crates/cli/src/decompress.rs",
+          "before": "crates/cli/src/decompress.rs",
+          "deleted": 32,
+          "removed_deleted": 28,
+          "removed_moved": 4
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "crates/cli/src/escape.rs",
+          "before": "crates/cli/src/escape.rs",
+          "deleted": 117,
+          "removed_deleted": 117,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "crates/cli/src/human.rs",
+          "before": "crates/cli/src/human.rs",
+          "deleted": 39,
+          "removed_deleted": 39,
+          "removed_moved": 0
+        },
+        {
+          "added": 70,
+          "added_moved": 5,
+          "added_novel": 65,
+          "after": "crates/cli/src/lib.rs",
+          "before": "crates/cli/src/lib.rs",
+          "deleted": 46,
+          "removed_deleted": 41,
+          "removed_moved": 5
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "crates/cli/src/pattern.rs",
+          "before": "crates/cli/src/pattern.rs",
+          "deleted": 18,
+          "removed_deleted": 18,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "crates/cli/src/process.rs",
+          "before": "crates/cli/src/process.rs",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/cli/src/wtr.rs",
+          "before": "crates/cli/src/wtr.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "crates/grep/examples/simplegrep.rs",
+          "before": "crates/grep/examples/simplegrep.rs",
+          "deleted": 11,
+          "removed_deleted": 11,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "19a08bee8a99e8c725b9781568013a9f686605a3",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 3,
+          "added_novel": 9,
+          "after": "crates/printer/src/color.rs",
+          "before": "crates/printer/src/color.rs",
+          "deleted": 26,
+          "removed_deleted": 23,
+          "removed_moved": 3
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "crates/printer/src/counter.rs",
+          "before": "crates/printer/src/counter.rs",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 51,
+          "added_moved": 0,
+          "added_novel": 51,
+          "after": "crates/printer/src/hyperlink.rs",
+          "before": "crates/printer/src/hyperlink.rs",
+          "deleted": 34,
+          "removed_deleted": 34,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/printer/src/hyperlink_aliases.rs",
+          "before": "crates/printer/src/hyperlink_aliases.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 16,
+          "added_moved": 1,
+          "added_novel": 15,
+          "after": "crates/printer/src/json.rs",
+          "before": "crates/printer/src/json.rs",
+          "deleted": 13,
+          "removed_deleted": 12,
+          "removed_moved": 1
+        },
+        {
+          "added": 31,
+          "added_moved": 0,
+          "added_novel": 31,
+          "after": "crates/printer/src/jsont.rs",
+          "before": "crates/printer/src/jsont.rs",
+          "deleted": 30,
+          "removed_deleted": 30,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 9,
+          "added_novel": 23,
+          "after": "crates/printer/src/lib.rs",
+          "before": "crates/printer/src/lib.rs",
+          "deleted": 33,
+          "removed_deleted": 24,
+          "removed_moved": 9
+        },
+        {
+          "added": 41,
+          "added_moved": 4,
+          "added_novel": 37,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 34,
+          "removed_deleted": 30,
+          "removed_moved": 4
+        },
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "crates/printer/src/stats.rs",
+          "before": "crates/printer/src/stats.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 25,
+          "added_moved": 0,
+          "added_novel": 25,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 19,
+          "removed_deleted": 19,
+          "removed_moved": 0
+        },
+        {
+          "added": 49,
+          "added_moved": 1,
+          "added_novel": 48,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 47,
+          "removed_deleted": 46,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "09905560ffc32206988c92c6a37c1c927c86e3cb",
+      "within_file": {
+        "in": 18,
+        "out": 18
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 74,
+        "out": 74
+      },
+      "nonsignificant": {
+        "in": 34,
+        "out": 33
+      },
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": null,
+          "before": "crates/core/path_printer.rs",
+          "deleted": 134,
+          "removed_deleted": 60,
+          "removed_moved": 74
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/printer/src/hyperlink.rs",
+          "before": "crates/printer/src/hyperlink.rs",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/printer/src/lib.rs",
+          "before": "crates/printer/src/lib.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 179,
+          "added_moved": 74,
+          "added_novel": 105,
+          "after": "crates/printer/src/path.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "crates/printer/src/path.rs",
+          "units": [
+            "Config",
+            "PathPrinterBuilder",
+            "PathPrinter",
+            "new",
+            "build",
+            "color_specs",
+            "hyperlink_pattern",
+            "separator",
+            "terminator",
+            "start_hyperlink_span"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "crates/core/path_printer.rs",
+          "to": "crates/printer/src/path.rs",
+          "units": [
+            "Config",
+            "PathPrinterBuilder",
+            "PathPrinter",
+            "new",
+            "build",
+            "color_specs",
+            "hyperlink_pattern",
+            "separator",
+            "terminator",
+            "start_hyperlink_span"
+          ]
+        }
+      ],
+      "sha": "23e21133ba6a8ca2c4d040092ad1bc22f14e8861",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 2,
+        "out": 2
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 3
+      },
+      "pairs": [
+        {
+          "added": 84,
+          "added_moved": 0,
+          "added_novel": 84,
+          "after": "crates/core/app.rs",
+          "before": "crates/core/app.rs",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 122,
+          "added_moved": 0,
+          "added_novel": 122,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 11,
+          "removed_deleted": 11,
+          "removed_moved": 0
+        },
+        {
+          "added": 772,
+          "added_moved": 20,
+          "added_novel": 752,
+          "after": "crates/printer/src/hyperlink.rs",
+          "before": "crates/printer/src/hyperlink.rs",
+          "deleted": 452,
+          "removed_deleted": 430,
+          "removed_moved": 22
+        },
+        {
+          "added": 76,
+          "added_moved": 2,
+          "added_novel": 74,
+          "after": "crates/printer/src/hyperlink_aliases.rs",
+          "before": "crates/printer/src/hyperlink_aliases.rs",
+          "deleted": 12,
+          "removed_deleted": 12,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/printer/src/lib.rs",
+          "before": "crates/printer/src/lib.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "crates/printer/src/path.rs",
+          "before": "crates/printer/src/path.rs",
+          "deleted": 26,
+          "removed_deleted": 26,
+          "removed_moved": 0
+        },
+        {
+          "added": 88,
+          "added_moved": 7,
+          "added_novel": 81,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 84,
+          "removed_deleted": 77,
+          "removed_moved": 7
+        },
+        {
+          "added": 36,
+          "added_moved": 0,
+          "added_novel": 36,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 35,
+          "removed_deleted": 35,
+          "removed_moved": 0
+        },
+        {
+          "added": 62,
+          "added_moved": 4,
+          "added_novel": 58,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 66,
+          "removed_deleted": 62,
+          "removed_moved": 4
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "crates/printer/src/hyperlink_aliases.rs",
+          "units": [
+            "aliases_are_valid_formats"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "crates/printer/src/hyperlink.rs",
+          "to": "crates/printer/src/hyperlink_aliases.rs",
+          "units": [
+            "aliases_are_valid_formats"
+          ]
+        }
+      ],
+      "sha": "f608d4d9b3ab210b7e6964ca7d1d7dc9c077329e",
+      "within_file": {
+        "in": 31,
+        "out": 31
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 41,
+          "added_moved": 2,
+          "added_novel": 39,
+          "after": "crates/core/app.rs",
+          "before": "crates/core/app.rs",
+          "deleted": 30,
+          "removed_deleted": 28,
+          "removed_moved": 2
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "0951820f63a1e38d755b2905e389e09c9b569040",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 30,
+          "added_moved": 0,
+          "added_novel": 30,
+          "after": "crates/globset/src/fnv.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 50,
+          "added_moved": 0,
+          "added_novel": 50,
+          "after": "crates/globset/src/glob.rs",
+          "before": "crates/globset/src/glob.rs",
+          "deleted": 65,
+          "removed_deleted": 65,
+          "removed_moved": 0
+        },
+        {
+          "added": 70,
+          "added_moved": 2,
+          "added_novel": 68,
+          "after": "crates/globset/src/lib.rs",
+          "before": "crates/globset/src/lib.rs",
+          "deleted": 60,
+          "removed_deleted": 58,
+          "removed_moved": 2
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "crates/globset/src/pathutil.rs",
+          "before": "crates/globset/src/pathutil.rs",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "7f456404010005142a6493fb48bd9fd06aca2731",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "crates/searcher/src/lib.rs",
+          "lines": 1,
+          "side": "removed",
+          "why": "pub use block rewritten to nested form in place; the removed member line coincides with core.rs's own re-indented member line (whose within-file reading was preferred)"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 4,
+        "out": 4
+      },
+      "pairs": [
+        {
+          "added": 36,
+          "added_moved": 16,
+          "added_novel": 20,
+          "after": "crates/searcher/src/lib.rs",
+          "before": "crates/searcher/src/lib.rs",
+          "deleted": 36,
+          "removed_deleted": 20,
+          "removed_moved": 16
+        },
+        {
+          "added": 30,
+          "added_moved": 0,
+          "added_novel": 30,
+          "after": "crates/searcher/src/line_buffer.rs",
+          "before": "crates/searcher/src/line_buffer.rs",
+          "deleted": 25,
+          "removed_deleted": 25,
+          "removed_moved": 0
+        },
+        {
+          "added": 17,
+          "added_moved": 0,
+          "added_novel": 17,
+          "after": "crates/searcher/src/lines.rs",
+          "before": "crates/searcher/src/lines.rs",
+          "deleted": 15,
+          "removed_deleted": 15,
+          "removed_moved": 0
+        },
+        {
+          "added": 35,
+          "added_moved": 1,
+          "added_novel": 34,
+          "after": "crates/searcher/src/searcher/core.rs",
+          "before": "crates/searcher/src/searcher/core.rs",
+          "deleted": 30,
+          "removed_deleted": 29,
+          "removed_moved": 1
+        },
+        {
+          "added": 24,
+          "added_moved": 0,
+          "added_novel": 24,
+          "after": "crates/searcher/src/searcher/glue.rs",
+          "before": "crates/searcher/src/searcher/glue.rs",
+          "deleted": 24,
+          "removed_deleted": 24,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/searcher/src/searcher/mmap.rs",
+          "before": "crates/searcher/src/searcher/mmap.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 34,
+          "added_moved": 2,
+          "added_novel": 32,
+          "after": "crates/searcher/src/searcher/mod.rs",
+          "before": "crates/searcher/src/searcher/mod.rs",
+          "deleted": 38,
+          "removed_deleted": 36,
+          "removed_moved": 2
+        },
+        {
+          "added": 35,
+          "added_moved": 1,
+          "added_novel": 34,
+          "after": "crates/searcher/src/sink.rs",
+          "before": "crates/searcher/src/sink.rs",
+          "deleted": 31,
+          "removed_deleted": 30,
+          "removed_moved": 1
+        },
+        {
+          "added": 48,
+          "added_moved": 1,
+          "added_novel": 47,
+          "after": "crates/searcher/src/testutil.rs",
+          "before": "crates/searcher/src/testutil.rs",
+          "deleted": 37,
+          "removed_deleted": 36,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "d53b7310ee1424a292228f7e8986fa9306f22a7f",
+      "within_file": {
+        "in": 21,
+        "out": 21
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 54,
+          "added_moved": 1,
+          "added_novel": 53,
+          "after": "crates/globset/src/lib.rs",
+          "before": "crates/globset/src/lib.rs",
+          "deleted": 7,
+          "removed_deleted": 6,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "be9e308999b94aba4be0406dafbd8aa6201e326a",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/ignore/examples/walk.rs",
+          "before": "crates/ignore/examples/walk.rs",
+          "deleted": 22,
+          "removed_deleted": 22,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/ignore/src/default_types.rs",
+          "before": "crates/ignore/src/default_types.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 54,
+          "added_moved": 0,
+          "added_novel": 54,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 50,
+          "removed_deleted": 50,
+          "removed_moved": 0
+        },
+        {
+          "added": 31,
+          "added_moved": 1,
+          "added_novel": 30,
+          "after": "crates/ignore/src/gitignore.rs",
+          "before": "crates/ignore/src/gitignore.rs",
+          "deleted": 27,
+          "removed_deleted": 26,
+          "removed_moved": 1
+        },
+        {
+          "added": 31,
+          "added_moved": 0,
+          "added_novel": 31,
+          "after": "crates/ignore/src/lib.rs",
+          "before": "crates/ignore/src/lib.rs",
+          "deleted": 33,
+          "removed_deleted": 33,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "crates/ignore/src/overrides.rs",
+          "before": "crates/ignore/src/overrides.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "crates/ignore/src/pathutil.rs",
+          "before": "crates/ignore/src/pathutil.rs",
+          "deleted": 12,
+          "removed_deleted": 12,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "crates/ignore/src/types.rs",
+          "before": "crates/ignore/src/types.rs",
+          "deleted": 15,
+          "removed_deleted": 15,
+          "removed_moved": 0
+        },
+        {
+          "added": 55,
+          "added_moved": 0,
+          "added_novel": 55,
+          "after": "crates/ignore/src/walk.rs",
+          "before": "crates/ignore/src/walk.rs",
+          "deleted": 55,
+          "removed_deleted": 55,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "f16ea0812db1e7218d98ce0a131b6b7aec510c3a",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 3
+      },
+      "pairs": [
+        {
+          "added": 62,
+          "added_moved": 7,
+          "added_novel": 55,
+          "after": "crates/core/args.rs",
+          "before": "crates/core/args.rs",
+          "deleted": 58,
+          "removed_deleted": 51,
+          "removed_moved": 7
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "crates/core/config.rs",
+          "before": "crates/core/config.rs",
+          "deleted": 15,
+          "removed_deleted": 15,
+          "removed_moved": 0
+        },
+        {
+          "added": 11,
+          "added_moved": 0,
+          "added_novel": 11,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 13,
+          "removed_deleted": 13,
+          "removed_moved": 0
+        },
+        {
+          "added": 22,
+          "added_moved": 0,
+          "added_novel": 22,
+          "after": "crates/core/search.rs",
+          "before": "crates/core/search.rs",
+          "deleted": 17,
+          "removed_deleted": 17,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/core/subject.rs",
+          "before": "crates/core/subject.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "392bb0944a7a2d0bc8d9e33a6c628a14fc8acc37",
+      "within_file": {
+        "in": 7,
+        "out": 7
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "crates/regex/src/word.rs",
+          "lines": 6,
+          "side": "removed",
+          "why": "word.rs deleted (WordMatcher eliminated by regex 1.9's native word handling); its generic matcher-API idiom lines coincide with matcher.rs's own rewritten method bodies, all of which had within-file partners (0 in confirms nothing arrived)"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/regex/src/ast.rs",
+          "before": "crates/regex/src/ast.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 78,
+          "removed_deleted": 78,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "crates/regex/src/error.rs",
+          "before": "crates/regex/src/error.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "crates/regex/src/lib.rs",
+          "before": "crates/regex/src/lib.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 51,
+          "added_moved": 21,
+          "added_novel": 30,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 346,
+          "removed_deleted": 325,
+          "removed_moved": 21
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "crates/regex/src/non_matching.rs",
+          "before": "crates/regex/src/non_matching.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": null,
+          "before": "crates/regex/src/word.rs",
+          "deleted": 341,
+          "removed_deleted": 341,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "tests/misc.rs",
+          "before": "tests/misc.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/regression.rs",
+          "before": "tests/regression.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "9626f167573527858f9736a3054882de87d6cd79",
+      "within_file": {
+        "in": 21,
+        "out": 21
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 4,
+          "added_novel": 8,
+          "after": "crates/regex/src/literal.rs",
+          "before": "crates/regex/src/literal.rs",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "c21302b4096f9ce1af095fbe8b14828a90ecfecb",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 2
+      },
+      "pairs": [
+        {
+          "added": 24,
+          "added_moved": 10,
+          "added_novel": 14,
+          "after": "build.rs",
+          "before": "build.rs",
+          "deleted": 26,
+          "removed_deleted": 16,
+          "removed_moved": 10
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "5b88515faf67b1a9e5541a2130a6bebf3bd21c89",
+      "within_file": {
+        "in": 10,
+        "out": 10
+      }
+    },
+    {
+      "below_floor": [
+        {
+          "file": "crates/core/args.rs",
+          "line": 512,
+          "side": "out"
+        },
+        {
+          "file": "crates/core/flags/parse.rs",
+          "line": 87,
+          "side": "in"
+        }
+      ],
+      "corrections": [],
+      "cross_file": {
+        "in": 381,
+        "out": 386
+      },
+      "nonsignificant": {
+        "in": 97,
+        "out": 103
+      },
+      "pairs": [
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "RELEASE-CHECKLIST.md",
+          "before": "RELEASE-CHECKLIST.md",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 20,
+          "added_moved": 1,
+          "added_novel": 19,
+          "after": "build.rs",
+          "before": "build.rs",
+          "deleted": 239,
+          "removed_deleted": 238,
+          "removed_moved": 1
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/cli/src/wtr.rs",
+          "before": "crates/cli/src/wtr.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": null,
+          "before": "crates/core/app.rs",
+          "deleted": 3251,
+          "removed_deleted": 3083,
+          "removed_moved": 168
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": null,
+          "before": "crates/core/args.rs",
+          "deleted": 1975,
+          "removed_deleted": 1778,
+          "removed_moved": 197
+        },
+        {
+          "added": 107,
+          "added_moved": 0,
+          "added_novel": 107,
+          "after": "crates/core/flags/complete/bash.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 47,
+          "added_moved": 0,
+          "added_novel": 47,
+          "after": "crates/core/flags/complete/fish.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "crates/core/flags/complete/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 86,
+          "added_moved": 0,
+          "added_novel": 86,
+          "after": "crates/core/flags/complete/powershell.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "crates/core/flags/complete/zsh.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/core/flags/config.rs",
+          "before": "crates/core/config.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 7625,
+          "added_moved": 172,
+          "added_novel": 7453,
+          "after": "crates/core/flags/defs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 259,
+          "added_moved": 0,
+          "added_novel": 259,
+          "after": "crates/core/flags/doc/help.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 110,
+          "added_moved": 0,
+          "added_novel": 110,
+          "after": "crates/core/flags/doc/man.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 38,
+          "added_moved": 0,
+          "added_novel": 38,
+          "after": "crates/core/flags/doc/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 148,
+          "added_moved": 0,
+          "added_novel": 148,
+          "after": "crates/core/flags/doc/version.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1409,
+          "added_moved": 162,
+          "added_novel": 1247,
+          "after": "crates/core/flags/hiargs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 758,
+          "added_moved": 25,
+          "added_novel": 733,
+          "after": "crates/core/flags/lowargs.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 282,
+          "added_moved": 0,
+          "added_novel": 282,
+          "after": "crates/core/flags/mod.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 392,
+          "added_moved": 1,
+          "added_novel": 391,
+          "after": "crates/core/flags/parse.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 60,
+          "added_moved": 0,
+          "added_novel": 60,
+          "after": "crates/core/haystack.rs",
+          "before": "crates/core/subject.rs",
+          "deleted": 57,
+          "removed_deleted": 57,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "crates/core/logger.rs",
+          "before": "crates/core/logger.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 336,
+          "added_moved": 38,
+          "added_novel": 298,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 211,
+          "removed_deleted": 194,
+          "removed_moved": 17
+        },
+        {
+          "added": 51,
+          "added_moved": 0,
+          "added_novel": 51,
+          "after": "crates/core/messages.rs",
+          "before": "crates/core/messages.rs",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 83,
+          "added_moved": 0,
+          "added_novel": 83,
+          "after": "crates/core/search.rs",
+          "before": "crates/core/search.rs",
+          "deleted": 189,
+          "removed_deleted": 168,
+          "removed_moved": 21
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/printer/src/json.rs",
+          "before": "crates/printer/src/json.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/searcher/src/searcher/mod.rs",
+          "before": "crates/searcher/src/searcher/mod.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 36,
+          "added_moved": 0,
+          "added_novel": 36,
+          "after": "tests/feature.rs",
+          "before": "tests/feature.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "tests/json.rs",
+          "before": "tests/json.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/regression.rs",
+          "before": "tests/regression.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "tests/util.rs",
+          "before": "tests/util.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "crates/core/flags/hiargs.rs",
+          "units": [
+            "current_dir",
+            "platform_hostname",
+            "wsl_prefix",
+            "suggest_pcre2",
+            "suggest_multiline"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "crates/core/args.rs",
+          "to": "crates/core/flags/hiargs.rs",
+          "units": [
+            "current_dir",
+            "platform_hostname",
+            "wsl_prefix",
+            "suggest_pcre2",
+            "suggest_multiline"
+          ]
+        }
+      ],
+      "sha": "082245dadb3854238e62b91aa95a46018cf16ef1",
+      "within_file": {
+        "in": 18,
+        "out": 18
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 15,
+        "out": 15
+      },
+      "pairs": [
+        {
+          "added": 129,
+          "added_moved": 1,
+          "added_novel": 128,
+          "after": "crates/printer/src/jsont.rs",
+          "before": "crates/printer/src/jsont.rs",
+          "deleted": 55,
+          "removed_deleted": 54,
+          "removed_moved": 1
+        },
+        {
+          "added": 66,
+          "added_moved": 28,
+          "added_novel": 38,
+          "after": "crates/printer/src/stats.rs",
+          "before": "crates/printer/src/stats.rs",
+          "deleted": 44,
+          "removed_deleted": 16,
+          "removed_moved": 28
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "9c84575229131239f92149cd5790ddb553d7eea8",
+      "within_file": {
+        "in": 29,
+        "out": 29
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 16,
+          "added_moved": 4,
+          "added_novel": 12,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 15,
+          "removed_deleted": 12,
+          "removed_moved": 3
+        },
+        {
+          "added": 104,
+          "added_moved": 0,
+          "added_novel": 104,
+          "after": "tests/feature.rs",
+          "before": "tests/feature.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "038524a580072e9346ee9f782679618e380f4f2e",
+      "within_file": {
+        "in": 4,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 4,
+        "out": 4
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 3
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 4,
+          "added_novel": 28,
+          "after": "crates/core/flags/doc/version.rs",
+          "before": "crates/core/flags/doc/version.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/mod.rs",
+          "before": "crates/core/flags/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 25,
+          "removed_deleted": 21,
+          "removed_moved": 4
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "crates/core/flags/doc/version.rs",
+          "units": [
+            "generate_pcre2"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "crates/core/main.rs",
+          "to": "crates/core/flags/doc/version.rs",
+          "units": [
+            "generate_pcre2"
+          ]
+        }
+      ],
+      "sha": "286de9564e511f01f13756c207e9b26ec781591d",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 45,
+          "added_moved": 2,
+          "added_novel": 43,
+          "after": "crates/core/flags/complete/fish.rs",
+          "before": "crates/core/flags/complete/fish.rs",
+          "deleted": 25,
+          "removed_deleted": 23,
+          "removed_moved": 2
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/core/flags/complete/mod.rs",
+          "before": "crates/core/flags/complete/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/complete/zsh.rs",
+          "before": "crates/core/flags/complete/zsh.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "crates/core/flags/defs.rs",
+          "before": "crates/core/flags/defs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 20,
+          "added_moved": 0,
+          "added_novel": 20,
+          "after": "crates/core/flags/mod.rs",
+          "before": "crates/core/flags/mod.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "e0a85678e112759f56f9e07d04a29f2eed6eb348",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 56,
+          "added_moved": 3,
+          "added_novel": 53,
+          "after": "crates/printer/src/hyperlink.rs",
+          "before": "crates/printer/src/hyperlink.rs",
+          "deleted": 26,
+          "removed_deleted": 23,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "119407d0a918ca54da1e0a5e8806dbb8cd7e2be0",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 20,
+          "added_moved": 1,
+          "added_novel": 19,
+          "after": "build.rs",
+          "before": "build.rs",
+          "deleted": 5,
+          "removed_deleted": 4,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "00e501b529fc709806a413a88c2f32487e7958cb",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "FAQ.md",
+          "before": "FAQ.md",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 38,
+          "added_moved": 0,
+          "added_novel": 38,
+          "after": "crates/core/flags/defs.rs",
+          "before": "crates/core/flags/defs.rs",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "crates/printer/src/color.rs",
+          "before": "crates/printer/src/color.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 29,
+          "added_moved": 2,
+          "added_novel": 27,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "99fe884536e18bcd9f3c57ce598791d5baa975b1",
+      "within_file": {
+        "in": 2,
+        "out": 1
+      }
+    },
+    {
+      "below_floor": [
+        {
+          "file": "crates/printer/src/hyperlink_aliases.rs",
+          "line": 26,
+          "side": "out"
+        },
+        {
+          "file": "crates/printer/src/hyperlink_aliases.rs",
+          "line": 28,
+          "side": "out"
+        },
+        {
+          "file": "crates/printer/src/hyperlink/mod.rs",
+          "line": 228,
+          "side": "in"
+        },
+        {
+          "file": "crates/printer/src/hyperlink/mod.rs",
+          "line": 230,
+          "side": "in"
+        }
+      ],
+      "corrections": [],
+      "cross_file": {
+        "in": 25,
+        "out": 25
+      },
+      "nonsignificant": {
+        "in": 9,
+        "out": 9
+      },
+      "pairs": [
+        {
+          "added": 27,
+          "added_moved": 0,
+          "added_novel": 27,
+          "after": "crates/core/flags/defs.rs",
+          "before": "crates/core/flags/defs.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 44,
+          "added_moved": 6,
+          "added_novel": 38,
+          "after": "crates/printer/src/hyperlink/aliases.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 129,
+          "added_moved": 19,
+          "added_novel": 110,
+          "after": "crates/printer/src/hyperlink/mod.rs",
+          "before": "crates/printer/src/hyperlink.rs",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": null,
+          "before": "crates/printer/src/hyperlink_aliases.rs",
+          "deleted": 85,
+          "removed_deleted": 60,
+          "removed_moved": 25
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/printer/src/lib.rs",
+          "before": "crates/printer/src/lib.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "crates/printer/src/hyperlink/aliases.rs",
+          "units": [
+            "HYPERLINK_PATTERN_ALIASES"
+          ]
+        },
+        {
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "units": [
+            "alias_names_are_reasonable",
+            "aliases_are_valid_formats"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "to": "crates/printer/src/hyperlink/aliases.rs",
+          "units": [
+            "HYPERLINK_PATTERN_ALIASES"
+          ]
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "units": [
+            "alias_names_are_reasonable",
+            "aliases_are_valid_formats"
+          ]
+        }
+      ],
+      "sha": "66aa4a63bb52468aa789cfa00c0643111ff03239",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 10,
+        "out": 7
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 2
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "crates/core/flags/defs.rs",
+          "before": "crates/core/flags/defs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "crates/core/flags/hiargs.rs",
+          "before": "crates/core/flags/hiargs.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 173,
+          "added_moved": 0,
+          "added_novel": 173,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 91,
+          "removed_deleted": 86,
+          "removed_moved": 5
+        },
+        {
+          "added": 91,
+          "added_moved": 9,
+          "added_novel": 82,
+          "after": "crates/searcher/src/searcher/core.rs",
+          "before": "crates/searcher/src/searcher/core.rs",
+          "deleted": 23,
+          "removed_deleted": 15,
+          "removed_moved": 8
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/searcher/src/searcher/glue.rs",
+          "before": "crates/searcher/src/searcher/glue.rs",
+          "deleted": 5,
+          "removed_deleted": 3,
+          "removed_moved": 2
+        },
+        {
+          "added": 35,
+          "added_moved": 8,
+          "added_novel": 27,
+          "after": "crates/searcher/src/searcher/mod.rs",
+          "before": "crates/searcher/src/searcher/mod.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/regression.rs",
+          "before": "tests/regression.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "crates/searcher/src/searcher/mod.rs",
+          "units": [
+            "max_matches"
+          ]
+        },
+        {
+          "to": "crates/searcher/src/searcher/core.rs",
+          "units": [
+            "find"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "crates/printer/src/standard.rs",
+          "to": "crates/searcher/src/searcher/mod.rs",
+          "units": [
+            "max_matches"
+          ]
+        },
+        {
+          "from": "crates/searcher/src/searcher/glue.rs",
+          "to": "crates/searcher/src/searcher/core.rs",
+          "units": [
+            "find"
+          ]
+        }
+      ],
+      "sha": "a6e0be3c909c5c09e5fb402c907f3beb88cfb4c4",
+      "within_file": {
+        "in": 8,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 37,
+          "added_moved": 0,
+          "added_novel": 37,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 20,
+          "added_moved": 1,
+          "added_novel": 19,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 7,
+          "removed_deleted": 6,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "64174b8e68b59e560ad459f3c11cc9c4f00964bd",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/cli/src/hostname.rs",
+          "before": "crates/cli/src/hostname.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/cli/src/lib.rs",
+          "before": "crates/cli/src/lib.rs",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/core/flags/complete/fish.rs",
+          "before": "crates/core/flags/complete/fish.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/complete/powershell.rs",
+          "before": "crates/core/flags/complete/powershell.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/config.rs",
+          "before": "crates/core/flags/config.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "crates/core/flags/defs.rs",
+          "before": "crates/core/flags/defs.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/doc/help.rs",
+          "before": "crates/core/flags/doc/help.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/doc/man.rs",
+          "before": "crates/core/flags/doc/man.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/doc/version.rs",
+          "before": "crates/core/flags/doc/version.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/core/flags/hiargs.rs",
+          "before": "crates/core/flags/hiargs.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/mod.rs",
+          "before": "crates/core/flags/mod.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/flags/parse.rs",
+          "before": "crates/core/flags/parse.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "crates/globset/src/glob.rs",
+          "before": "crates/globset/src/glob.rs",
+          "deleted": 22,
+          "removed_deleted": 22,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/globset/src/lib.rs",
+          "before": "crates/globset/src/lib.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/globset/src/pathutil.rs",
+          "before": "crates/globset/src/pathutil.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "crates/ignore/src/gitignore.rs",
+          "before": "crates/ignore/src/gitignore.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/ignore/src/lib.rs",
+          "before": "crates/ignore/src/lib.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "crates/ignore/src/overrides.rs",
+          "before": "crates/ignore/src/overrides.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/ignore/src/types.rs",
+          "before": "crates/ignore/src/types.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 2,
+          "added_novel": 2,
+          "after": "crates/ignore/src/walk.rs",
+          "before": "crates/ignore/src/walk.rs",
+          "deleted": 8,
+          "removed_deleted": 6,
+          "removed_moved": 2
+        },
+        {
+          "added": 30,
+          "added_moved": 0,
+          "added_novel": 30,
+          "after": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.rs",
+          "before": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.rs",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/matcher/src/interpolate.rs",
+          "before": "crates/matcher/src/interpolate.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "crates/printer/src/json.rs",
+          "before": "crates/printer/src/json.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "crates/printer/src/lib.rs",
+          "before": "crates/printer/src/lib.rs",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "crates/printer/src/standard.rs",
+          "before": "crates/printer/src/standard.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/printer/src/util.rs",
+          "before": "crates/printer/src/util.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/regex/src/config.rs",
+          "before": "crates/regex/src/config.rs",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/regex/src/literal.rs",
+          "before": "crates/regex/src/literal.rs",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 2,
+          "added_novel": 6,
+          "after": "crates/regex/src/matcher.rs",
+          "before": "crates/regex/src/matcher.rs",
+          "deleted": 6,
+          "removed_deleted": 4,
+          "removed_moved": 2
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/regex/src/strip.rs",
+          "before": "crates/regex/src/strip.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 1,
+          "added_novel": 1,
+          "after": "crates/searcher/examples/search-stdin.rs",
+          "before": "crates/searcher/examples/search-stdin.rs",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/searcher/src/lib.rs",
+          "before": "crates/searcher/src/lib.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/searcher/src/searcher/glue.rs",
+          "before": "crates/searcher/src/searcher/glue.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/searcher/src/searcher/mod.rs",
+          "before": "crates/searcher/src/searcher/mod.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/feature.rs",
+          "before": "tests/feature.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/misc.rs",
+          "before": "tests/misc.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/regression.rs",
+          "before": "tests/regression.rs",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "bb8172fe9baa450ede7ff84677ab45048675fd02",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "crates/core/flags/hiargs.rs",
+          "before": "crates/core/flags/hiargs.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 1,
+          "added_novel": 7,
+          "after": "crates/printer/src/json.rs",
+          "before": "crates/printer/src/json.rs",
+          "deleted": 73,
+          "removed_deleted": 72,
+          "removed_moved": 1
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/printer/src/summary.rs",
+          "before": "crates/printer/src/summary.rs",
+          "deleted": 33,
+          "removed_deleted": 33,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "9d8016d10c94a5af2768eb6dd0440386a7d317a0",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 92,
+          "added_moved": 3,
+          "added_novel": 89,
+          "after": "crates/ignore/src/walk.rs",
+          "before": "crates/ignore/src/walk.rs",
+          "deleted": 4,
+          "removed_deleted": 1,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "2924d0c4c0c87a147623d9254fbdbe7b28e7f872",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 21,
+          "added_moved": 1,
+          "added_novel": 20,
+          "after": "crates/core/search.rs",
+          "before": "crates/core/search.rs",
+          "deleted": 18,
+          "removed_deleted": 17,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "916415857f084e63efda03cf25a67fe7f6d24244",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 4,
+          "added_novel": 9,
+          "after": "crates/searcher/src/line_buffer.rs",
+          "before": "crates/searcher/src/line_buffer.rs",
+          "deleted": 8,
+          "removed_deleted": 4,
+          "removed_moved": 4
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/searcher/src/searcher/glue.rs",
+          "before": "crates/searcher/src/searcher/glue.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "8c6595c215d1e24bed5b7b86e2b18f3c871439ef",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 2,
+          "added_novel": 1,
+          "after": "crates/printer/src/json.rs",
+          "before": "crates/printer/src/json.rs",
+          "deleted": 4,
+          "removed_deleted": 2,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "63209ae0b95d31f28d14be5125fba3f61f5835e6",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "RELEASE-CHECKLIST.md",
+          "before": "RELEASE-CHECKLIST.md",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "365384a5c11760675768622b8c6e03e1e34ec81f",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 4,
+          "added_novel": 4,
+          "after": "crates/searcher/src/line_buffer.rs",
+          "before": "crates/searcher/src/line_buffer.rs",
+          "deleted": 13,
+          "removed_deleted": 9,
+          "removed_moved": 4
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/searcher/src/searcher/glue.rs",
+          "before": "crates/searcher/src/searcher/glue.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "d47663b1b4548e4fa02d6e4b575718d0f5f5e7d6",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 140,
+          "added_moved": 39,
+          "added_novel": 101,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 120,
+          "removed_deleted": 81,
+          "removed_moved": 39
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "79a23e0841ae84ef9b99c446052c8e6063a198bd",
+      "within_file": {
+        "in": 39,
+        "out": 39
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 78,
+          "added_moved": 3,
+          "added_novel": 75,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 26,
+          "removed_deleted": 23,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "43e2f08edef8c00e5d7719212c3e6a869bca1151",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 116,
+          "added_moved": 0,
+          "added_novel": 116,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 11,
+          "removed_deleted": 11,
+          "removed_moved": 0
+        },
+        {
+          "added": 48,
+          "added_moved": 1,
+          "added_novel": 47,
+          "after": "crates/ignore/src/walk.rs",
+          "before": "crates/ignore/src/walk.rs",
+          "deleted": 17,
+          "removed_deleted": 16,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "68b3c9e0d95950cfc835fb07924457919a4ec07d",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 178,
+          "added_moved": 1,
+          "added_novel": 177,
+          "after": "crates/globset/src/lib.rs",
+          "before": "crates/globset/src/lib.rs",
+          "deleted": 10,
+          "removed_deleted": 9,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "f55548ba9f24dda192880d4a3da2b52e90f6e194",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 1,
+          "added_novel": 6,
+          "after": "CHANGELOG.md",
+          "before": "CHANGELOG.md",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "5e16a5c9e57e81f6031a23faa2ace52205fa8242",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 66,
+          "added_moved": 11,
+          "added_novel": 55,
+          "after": "crates/ignore/src/walk.rs",
+          "before": "crates/ignore/src/walk.rs",
+          "deleted": 13,
+          "removed_deleted": 2,
+          "removed_moved": 11
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "0d7054d8e466d6aa0a6bb6cf121e87225d26df44",
+      "within_file": {
+        "in": 11,
+        "out": 11
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 45,
+          "added_moved": 23,
+          "added_novel": 22,
+          "after": "crates/ignore/src/pathutil.rs",
+          "before": "crates/ignore/src/pathutil.rs",
+          "deleted": 40,
+          "removed_deleted": 16,
+          "removed_moved": 24
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "626b8951acbced7ff710f4e01624a05f219eec38",
+      "within_file": {
+        "in": 23,
+        "out": 24
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 59,
+          "added_moved": 2,
+          "added_novel": 57,
+          "after": "crates/ignore/src/pathutil.rs",
+          "before": "crates/ignore/src/pathutil.rs",
+          "deleted": 14,
+          "removed_deleted": 12,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "6e527e9202f85a39ab2c4698636710204eb096e0",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 4
+      },
+      "pairs": [
+        {
+          "added": 57,
+          "added_moved": 19,
+          "added_novel": 38,
+          "after": "crates/ignore/src/pathutil.rs",
+          "before": "crates/ignore/src/pathutil.rs",
+          "deleted": 78,
+          "removed_deleted": 57,
+          "removed_moved": 21
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "c55818fd32d68cf742aea67bce86529f198bc985",
+      "within_file": {
+        "in": 19,
+        "out": 21
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "crates/ignore/src/dir.rs",
+          "before": "crates/ignore/src/dir.rs",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 1286,
+          "added_moved": 0,
+          "added_novel": 1286,
+          "after": "crates/ignore/src/incremental.rs",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "crates/ignore/src/lib.rs",
+          "before": "crates/ignore/src/lib.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 60,
+          "added_moved": 1,
+          "added_novel": 59,
+          "after": "crates/ignore/src/walk.rs",
+          "before": "crates/ignore/src/walk.rs",
+          "deleted": 8,
+          "removed_deleted": 6,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "b621e65b4fc8a50b55576b07526f21c5d051ad71",
+      "within_file": {
+        "in": 1,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 312,
+          "added_moved": 0,
+          "added_novel": 312,
+          "after": "crates/core/flags/defs.rs",
+          "before": "crates/core/flags/defs.rs",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 21,
+          "added_moved": 3,
+          "added_novel": 18,
+          "after": "crates/core/flags/doc/help.rs",
+          "before": "crates/core/flags/doc/help.rs",
+          "deleted": 3,
+          "removed_deleted": 0,
+          "removed_moved": 3
+        },
+        {
+          "added": 7,
+          "added_moved": 1,
+          "added_novel": 6,
+          "after": "crates/core/flags/doc/man.rs",
+          "before": "crates/core/flags/doc/man.rs",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "crates/core/flags/lowargs.rs",
+          "before": "crates/core/flags/lowargs.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "crates/core/flags/mod.rs",
+          "before": "crates/core/flags/mod.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "crates/core/main.rs",
+          "before": "crates/core/main.rs",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "relocation_edges": [],
+      "sha": "d958105d412b6a1ad014cb0e5832a9b029fa4977",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "b9e6780b8c4904aee88dac36e9775d29aebbfb72",
+    "dirty": true
+  },
+  "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",
+  "schema": "ce.eval-commit-labels/1.0.0",
+  "source_slice": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "summary": {
+    "below_floor_lines": 6,
+    "commits_reviewed": 57,
+    "correction_lines": 11,
+    "moved_lines": {
+      "cross_in": 496,
+      "cross_out": 498,
+      "within_in": 429,
+      "within_out": 437
+    },
+    "nonsignificant": {
+      "in": 192,
+      "out": 198
+    },
+    "relocated_units": 22,
+    "relocation_edges": 22
+  }
+}

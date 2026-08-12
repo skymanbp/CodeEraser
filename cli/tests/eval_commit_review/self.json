@@ -70,6 +70,7 @@
       "units": "~out_dir,read_sample,~labeling_rows,finish_rows,~write_doc"
     }
   ],
+  "below_floor": [],
   "relocation_edges": [
     { "sha": "4822d04ff", "from": "cli/tests/audit_stop.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn,git" },
     { "sha": "4822d04ff", "from": "cli/tests/daemon_e2e.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn" },

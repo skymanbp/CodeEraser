@@ -134,6 +134,23 @@ pub fn u64s(v: &Value) -> Vec<u64> {
         .collect()
 }
 
+/// Anchor a doc summary against its labels doc: the cross GT totals
+/// must match the frozen labels, and the doc's below-floor total
+/// (stored under `bf_key`, absent = empty register) must equal the
+/// labels-side register total. Returns (cross GT total, below-floor
+/// total) for the caller's conservation check — the one anchor both
+/// the L2 and ablation gates share.
+pub fn anchor_to_labels(s: &Value, labels: &Value, bf_key: &str) -> (u64, u64) {
+    let ml = &labels["summary"]["moved_lines"];
+    assert_eq!(s["cross_gt_out"], ml["cross_out"], "cross GT anchor");
+    assert_eq!(s["cross_gt_in"], ml["cross_in"], "cross GT anchor");
+    let bf = s[bf_key].as_u64().unwrap_or(0);
+    let lbf = labels["summary"]["below_floor_lines"].as_u64().unwrap_or(0);
+    assert_eq!(bf, lbf, "below-floor register anchor");
+    let gt = s["cross_gt_out"].as_u64().unwrap() + s["cross_gt_in"].as_u64().unwrap();
+    (gt, bf)
+}
+
 /// A labels/slice pair row's four ground-truth class counts.
 pub fn gt_counts(pair: &Value) -> Vec<u64> {
     CLASSES.iter().map(|c| pair[*c].as_u64().unwrap()).collect()

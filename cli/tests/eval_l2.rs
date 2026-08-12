@@ -3,7 +3,10 @@
 //! frozen slice and freezes the gates in commit-l2-v1.json:
 //!
 //! 1. cross recall — per-file hits cover the reviewed cross GT
-//!    (366 out / 181 in), misses = 0;
+//!    (366 out / 181 in), misses = 0 beyond the reviewed below-floor
+//!    register (M5-1d: true relocated lines with no >=2-distinct
+//!    contiguous companion, itemized per line — the miss-side mirror
+//!    of the extras ledger; empty on self and requests);
 //! 2. coincidence gate — on each reviewed correction file the
 //!    predicted cross count EQUALS the GT count: with per-file misses
 //!    at zero, an exact count leaves no room for the excluded line;
@@ -164,7 +167,10 @@ fn generate_commit_l2() {
              GT per file re-derived by the labels machinery (partition + \
              reviewed corrections). Gates: cross misses = 0 at LINE \
              IDENTITY for files without a reviewed correction, count \
-             level on the corrected files; coincidence files exact; zero \
+             level on the corrected files, zero beyond the reviewed \
+             below-floor register (true relocated lines with no \
+             >=2-distinct contiguous companion — structurally below \
+             destFloor, itemized per line); coincidence files exact; zero \
              invention on non-cross commits; L2>=L1 monotone with \
              conserved sums (asserted at generation); extras itemized \
              with content AND frozen (a new above-GT row fails the \
@@ -232,10 +238,14 @@ fn check_corpus(labels_path: &str, doc_path: &str) {
     let ledger = tail["extras_ledger"].as_array().expect("ledger");
     let s = &doc["summary"];
     assert_eq!(*s, parts::summarize(rows, ledger), "summary drifted");
-    let ml = &labels["summary"]["moved_lines"];
-    assert_eq!(s["cross_gt_out"], ml["cross_out"], "cross GT anchor");
-    assert_eq!(s["cross_gt_in"], ml["cross_in"], "cross GT anchor");
     assert_eq!(s["cross_misses"], 0, "cross recall gate");
+    // Anchors + the below-floor ledger: hits + waived == cross GT.
+    let (gt, bf) = eval_support::anchor_to_labels(s, &labels, "below_floor_lines");
+    assert_eq!(
+        s["cross_hits"].as_u64().unwrap() + bf,
+        gt,
+        "cross ledger conservation"
+    );
     let misses = eval_l2_register::register_misses(rows);
     assert!(misses.is_empty(), "relocation register misses: {misses:?}");
     let bad = eval_l2_register::edge_violations(rows);

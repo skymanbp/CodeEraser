@@ -256,21 +256,27 @@ pub fn metrics(
         let g = gt.counts.get(key).copied().unwrap_or(0);
         let lines = delta.get(key).unwrap_or(&empty);
         let p = lines.len() as u64;
+        // Reviewed below-floor lines leave the hit/miss ledger for
+        // every variant alike (hits + misses == GT - register), so
+        // the matrix compares variants on recoverable lines only.
+        let waived = gt.waived.get(key);
+        let eff = g - waived.map_or(0, |v| v.len() as u64);
         // Slots: 0 count_hits, 1 count_misses, 2 id_misses,
         //        3 invention, 4 extras_files, 5 extras_lines,
         //        6 pred (7 blocks_dropped is the driver's).
-        row.0[0] += g.min(p);
-        row.0[1] += g - g.min(p);
+        row.0[0] += eff.min(p);
+        row.0[1] += eff - eff.min(p);
         row.0[6] += p;
-        if p > g {
+        if p > eff {
             row.0[4] += 1;
-            row.0[5] += p - g;
+            row.0[5] += p - eff;
         }
         if !has_cross {
             row.0[3] += p;
         }
         if let Some(want) = gt.lines.get(key) {
-            row.0[2] += want.iter().filter(|l| !lines.contains(l)).count() as u64;
+            let unwaived = |l: &&usize| waived.is_none_or(|v| !v.contains(l)) && !lines.contains(l);
+            row.0[2] += want.iter().filter(unwaived).count() as u64;
         }
     }
     row

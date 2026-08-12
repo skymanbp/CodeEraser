@@ -88,10 +88,14 @@ fn corelink_open_and_desync() {
 fn degraded_reply_keeps_l1_pure() {
     use codeeraser::fourclass::batch::{PairInput, classify_batch};
     use codeeraser::scan::lang::Lang;
-    // 65 identical significant removals trip the 64 bucket cap, while
-    // alpha/beta form a block the core still reports alongside it.
+    // 65 identical removals x 65 identical additions of one content =
+    // pairing product 4225 > 64^2, tripping the per-hash work budget
+    // (one-sided or small-product piles are exempt — the product is
+    // the work), while alpha/beta form a block the core still derives
+    // alongside it.
     let flood = "let flood_line = 1;\n".repeat(65);
     let before_a = format!("{flood}let alpha = 2;\nlet beta = 3;\n");
+    let after_b = format!("{flood}let alpha = 2;\nlet beta = 3;\n");
     let inputs = [
         PairInput {
             before: &before_a,
@@ -100,7 +104,7 @@ fn degraded_reply_keeps_l1_pure() {
         },
         PairInput {
             before: "",
-            after: "let alpha = 2;\nlet beta = 3;\n",
+            after: &after_b,
             lang: Lang::Rust,
         },
     ];

@@ -30,9 +30,18 @@ pub fn diff(a: &[u64], b: &[u64]) -> DiffLines {
         .count();
     let (a_t, b_t) = (&a_t[..a_t.len() - suffix], &b_t[..b_t.len() - suffix]);
 
-    let (removed, added, degraded) = match myers(a_t, b_t) {
-        Some((r, ad)) => (r, ad, false),
-        None => ((0..a_t.len()).collect(), (0..b_t.len()).collect(), true),
+    // One side empty after trimming = pure insertion/deletion, whose
+    // minimal script IS every remaining line of the other side —
+    // exact by construction, so it must not ride the D-bounded search
+    // (which flags any window longer than MAX_D degraded: first hit
+    // was ripgrep 082245dad creating the 7,625-line flags/defs.rs).
+    let (removed, added, degraded) = if a_t.is_empty() || b_t.is_empty() {
+        ((0..a_t.len()).collect(), (0..b_t.len()).collect(), false)
+    } else {
+        match myers(a_t, b_t) {
+            Some((r, ad)) => (r, ad, false),
+            None => ((0..a_t.len()).collect(), (0..b_t.len()).collect(), true),
+        }
     };
     DiffLines {
         removed: removed.iter().map(|i| i + prefix).collect(),
@@ -140,6 +149,19 @@ mod tests {
         assert_eq!(run(&[1, 2, 3], &[1, 3]), (vec![1], vec![]));
         assert_eq!(run(&[], &[7, 8]), (vec![], vec![0, 1]));
         assert_eq!(run(&[7, 8], &[]), (vec![0, 1], vec![]));
+    }
+
+    #[test]
+    fn one_side_empty_is_exact_beyond_the_cap() {
+        // a pure creation/deletion larger than MAX_D is still exact —
+        // only the bounded SEARCH degrades, never the trivial script
+        let big: Vec<u64> = (0..(MAX_D as u64 + 10)).collect();
+        let d = diff(&[], &big);
+        assert!(!d.degraded);
+        assert_eq!((d.removed.len(), d.added.len()), (0, big.len()));
+        let d = diff(&big, &[]);
+        assert!(!d.degraded);
+        assert_eq!((d.removed.len(), d.added.len()), (big.len(), 0));
     }
 
     #[test]

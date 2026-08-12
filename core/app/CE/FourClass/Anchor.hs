@@ -26,10 +26,15 @@ type Entry = (Int, Word64, Int)
 hOf :: Entry -> Word64
 hOf (_, h, _) = h
 
--- | A hash occurring more often than this on either side carries no
--- provenance identity and is skipped (degraded, visibly). Measured
--- headroom on the frozen slice: largest bucket 9. This bounds an
--- adversarial generated file; it never fires on real input.
+-- | Per-hash pairing budget: a hash whose removed x added occurrence
+-- product exceeds bucketCap^2 degrades the request (all-or-nothing,
+-- attack review F3) — the product IS the work the site enumeration
+-- spends, so the bound is the same worst case as the old per-side
+-- form while never firing on real shapes the per-side count
+-- mislabeled: ripgrep b9de003f8 adds 66 identical #[inline] lines
+-- with no removed partner (product 0), and 082245dad pairs 5 removed
+-- #[derive(Debug)] with 118 added (product 590; such boilerplate is
+-- floor-dead anyway). Measured self-slice headroom: largest bucket 9.
 bucketCap :: Int
 bucketCap = 64
 
@@ -56,14 +61,19 @@ sites ps = (blocks, capped)
   addRuns = buildRuns pAdd ps
   remIx = buildIx remRuns
   addIx = buildIx addRuns
-  overCap = (> bucketCap) . length
-  capped = any overCap (M.elems remIx) || any overCap (M.elems addIx)
+  overWork remOccs addOccs = length remOccs * length addOccs > bucketCap * bucketCap
+  -- One direction suffices: the product is symmetric and a hash
+  -- absent from either index has product zero.
+  capped =
+    or
+      [ overWork remOccs (M.findWithDefault [] h addIx)
+      | (h, remOccs) <- M.toList remIx
+      ]
   blocks =
     [ block
     | (h, remOccs) <- M.toList remIx
-    , not (overCap remOccs)
     , let addOccs = M.findWithDefault [] h addIx
-    , not (overCap addOccs)
+    , not (overWork remOccs addOccs)
     , ro <- remOccs
     , ao <- addOccs
     , oPair ro /= oPair ao

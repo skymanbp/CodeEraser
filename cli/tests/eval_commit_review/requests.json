@@ -54,6 +54,7 @@
   "relocated_units": [
     { "sha": "99b3b4924", "to": "requests/utils.py", "units": "resolve_proxies" }
   ],
+  "below_floor": [],
   "relocation_edges": [
     { "sha": "99b3b4924", "from": "requests/sessions.py", "to": "requests/utils.py", "units": "resolve_proxies" }
   ]

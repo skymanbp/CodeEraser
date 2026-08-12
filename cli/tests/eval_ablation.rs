@@ -57,6 +57,7 @@ struct Acc {
     width: Vec<Value>,
     gt_out: u64,
     gt_in: u64,
+    below_floor: u64,
     equal: u64,
 }
 
@@ -113,6 +114,7 @@ fn commit_row(c: &Commit, acc: &mut Acc) {
             &mut acc.gt_in
         }) += g;
     }
+    acc.below_floor += c.gt.waived.values().map(|v| v.len() as u64).sum::<u64>();
     let mut vjson = serde_json::Map::new();
     let mut nonzero = false;
     for (name, v) in variants::ALL {
@@ -161,8 +163,11 @@ const METHOD: &str = "shadow ablation: a Rust mirror of the core's L2 judgment \
     count_misses, identity_misses, invention_lines, extras_files, \
     extras_lines, pred_lines, blocks_dropped]; all-zero commits omitted \
     (the gate conserves the GT total against the labels anchor, so a \
-    dropped nonzero row cannot hide). Tail row: quality kill ledger + \
-    phase3 width ledger.";
+    dropped nonzero row cannot hide). Reviewed below-floor lines (the \
+    corpus's register of true relocations with no >=2-distinct \
+    contiguous companion) leave every variant's hit/miss ledger alike: \
+    hits + misses == cross GT - register. Tail row: quality kill \
+    ledger + phase3 width ledger.";
 
 #[test]
 #[ignore] // needs the pinned window's git history + a built ce-core (CE_CORE_BIN)
@@ -180,7 +185,7 @@ fn generate_commit_ablation() {
                 let c = commit_shadow(&mut link, s, &labels);
                 commit_row(&c, &mut acc);
             }
-            let summary = json!({
+            let mut summary = json!({
                 "commits": commits.len() as u64,
                 "equivalence_commits": acc.equal,
                 "cross_gt_out": acc.gt_out,
@@ -191,6 +196,10 @@ fn generate_commit_ablation() {
                 "quality_kills": acc.kills.len() as u64,
                 "phase3_width": ledgers::width_summary(&acc.width),
             });
+            // absent when the corpus's below-floor register is empty
+            if acc.below_floor > 0 {
+                summary["below_floor"] = json!(acc.below_floor);
+            }
             let mut rows = std::mem::take(&mut acc.rows);
             rows.push(json!({
                 "kill_ledger": std::mem::take(&mut acc.kills),
@@ -199,6 +208,51 @@ fn generate_commit_ablation() {
             (summary, rows)
         },
     );
+}
+
+/// Diagnostic itemization, NOT a gate: per (side, file) divergence
+/// between the baseline shadow's delta and the reviewed cross GT,
+/// with line content — the corpus-freeze review view (misses,
+/// identity misses and extras are only counts in the matrix).
+#[test]
+#[ignore] // needs the pinned window's git history + a built ce-core (CE_CORE_BIN)
+fn dump_cross_divergence() {
+    let labels = load(&eval_support::corpus().doc("labels"));
+    let slice = load(&eval_support::corpus().doc("slice"));
+    let mut link = core_link();
+    for s in slice["commits"].as_array().expect("commits") {
+        let c = commit_shadow(&mut link, s, &labels);
+        let delta = shadow::delta(&c.texts, &c.base);
+        let mut keys: Vec<_> = c.gt.counts.keys().chain(delta.keys()).collect();
+        keys.sort();
+        keys.dedup();
+        for key in keys {
+            let g = c.gt.counts.get(key).copied().unwrap_or(0);
+            let pred = delta.get(key).cloned().unwrap_or_default();
+            let want = c.gt.lines.get(key);
+            let missing: Vec<usize> = want
+                .map(|w| w.iter().copied().filter(|l| !pred.contains(l)).collect())
+                .unwrap_or_default();
+            if pred.len() as u64 == g && missing.is_empty() {
+                continue;
+            }
+            println!(
+                "== {} {key:?} gt {g} pred {} missing {missing:?}",
+                &c.sha[..9],
+                pred.len()
+            );
+            let text = parts::side_text(&c.texts, &key.0, &key.1);
+            let lines: Vec<&str> = text.lines().collect();
+            let shown = pred
+                .iter()
+                .map(|l| (' ', *l))
+                .chain(missing.iter().map(|l| ('-', *l)));
+            for (mark, l) in shown {
+                let content = lines.get(l - 1).unwrap_or(&"?").trim();
+                println!("  {mark}{l}: {content}");
+            }
+        }
+    }
 }
 
 /// CI gate, no git needed, every corpus (hardened per Codex review
@@ -227,11 +281,9 @@ fn check_corpus(slice_path: &str, labels_path: &str, doc_path: &str) {
         s["equivalence_commits"], s["commits"],
         "fidelity must cover every commit"
     );
-    let ml = &labels["summary"]["moved_lines"];
-    assert_eq!(s["cross_gt_out"], ml["cross_out"], "cross GT anchor");
-    assert_eq!(s["cross_gt_in"], ml["cross_in"], "cross GT anchor");
+    let (_, bf) = eval_support::anchor_to_labels(s, &labels, "below_floor");
     check_rows_membership(&slice, rows);
-    check_sums(s, rows);
+    check_sums(s, rows, bf);
     check_ledgers(s, tail);
     let base = u64s(&s["variants"]["baseline"]);
     assert_eq!(base[1], 0, "baseline cross misses");
@@ -258,7 +310,7 @@ fn check_rows_membership(slice: &Value, rows: &[Value]) {
     }
 }
 
-fn check_sums(s: &Value, rows: &[Value]) {
+fn check_sums(s: &Value, rows: &[Value], below_floor: u64) {
     let gt = s["cross_gt_out"].as_u64().unwrap() + s["cross_gt_in"].as_u64().unwrap();
     for (name, _) in variants::ALL {
         let mut sum = vec![0u64; 8];
@@ -268,7 +320,12 @@ fn check_sums(s: &Value, rows: &[Value]) {
             }
         }
         assert_eq!(sum, u64s(&s["variants"][name]), "{name}: summary drifted");
-        assert_eq!(sum[0] + sum[1], gt, "{name}: GT total not conserved");
+        // reviewed below-floor lines leave every variant's ledger
+        assert_eq!(
+            sum[0] + sum[1],
+            gt - below_floor,
+            "{name}: GT total not conserved"
+        );
     }
 }
 

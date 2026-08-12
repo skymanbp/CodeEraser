@@ -27,6 +27,7 @@ fn tables() -> &'static Value {
         let raw = match crate::eval_support::corpus().name.as_deref() {
             None => include_str!("self.json"),
             Some("requests") => include_str!("requests.json"),
+            Some("ripgrep") => include_str!("ripgrep.json"),
             Some(other) => panic!("no review record for corpus {other}"),
         };
         serde_json::from_str(raw).expect("review record json")
@@ -181,6 +182,23 @@ fn project(key: &str, sha: &str, fields: &[&str]) -> Vec<Value> {
 
 pub fn units_for(sha: &str) -> Vec<Value> {
     project("relocated_units", sha, &["to"])
+}
+
+/// The reviewed below-floor register for one sha (M5-1d): true
+/// relocated lines whose destination offers no >=2-distinct
+/// CONTIGUOUS companion, so no site can open (destFloor) — the
+/// miss-side mirror of the extras ledger, itemized per line. Rows:
+/// (side, file, 1-based line).
+pub fn below_floor_for(sha: &str) -> Vec<(String, String, usize)> {
+    rows_for("below_floor", sha)
+        .map(|r| {
+            (
+                r["side"].as_str().expect("side").to_string(),
+                r["file"].as_str().expect("file").to_string(),
+                r["line"].as_u64().expect("line") as usize,
+            )
+        })
+        .collect()
 }
 
 /// The reviewed source->destination edge layer (M5-1c-iii): one row

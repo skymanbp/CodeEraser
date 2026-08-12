@@ -20,20 +20,19 @@
 
 ## 方法（全程无 RNG、无时钟——同输入必同输出，已双跑逐字节复验）
 
-1. **扫描**：遍历本机 Claude Code transcripts，配对每个 Edit/Write
-   `tool_use` 与其 `toolUseResult`，同一 id 只消费一次（compact/resume
-   会重放历史行，实测单会话 1,242/3,282 个 id 重复至 6 次）。
+1. **扫描**：遍历本机 transcripts，配对 Edit/Write `tool_use` 与
+   `toolUseResult`，同一 id 只消费一次（compact/resume 重放历史行，实测单
+   会话重复至 6 次）。
 2. **重建**：before = `originalFile`（Edit 必须非空；Write 空前态仅当
-   `type=create`——update 缺前态不可知，按弃置计，绝不伪造）；after =
-   Write 的 `content` 或对 before 施加 `structuredPatch`（上下文与删除行
-   严格核对，不匹配即弃置——不复刻 Edit 匹配语义，ADR-004 教训）。
-3. **视界**：`frozen_at` 在扫描收集点生效，弃置计数器同样被视界界定
-   （transcripts 持续生长，双跑确定性检查曾抓到 +2 漂移）。
-4. **分层抽样**：按 (项目, 语言) 分层，最大余数法配额 ∝ 层大小，层内
-   SHA-256 哈希序取前 N；标注子集对 600 个 id 二次哈希序取 200。
-5. **弃置全量入册**（manifest `excluded`，无静默截断）：错误/被拒结果、
-   五语言外、前态不可知、超 1 MiB、历史重放、guard 时代无 feed 链接
-   （58 个编辑，纯净但无机器证据，不采）、deny 测试仓（0）。
+   create——缺前态按弃置计，绝不伪造）；after = Write `content` 或对
+   before 施加 `structuredPatch`（严格核对，不匹配即弃置，ADR-004 教训）。
+3. **视界**：`frozen_at` 在扫描收集点生效，弃置计数器同受界定（双跑确定性
+   检查曾抓 +2 漂移）。
+4. **分层抽样**：(项目, 语言) 分层，最大余数法配额 ∝ 层大小，层内 SHA-256
+   哈希序取前 N；标注子集二次哈希序取 200。
+5. **弃置全量入册**（manifest `excluded`，无静默截断）：错误/被拒、五语言
+   外、前态不可知、超 1 MiB、历史重放、guard 时代无 feed 链接（58 个，纯净
+   但无机器证据）、deny 测试仓（0）。
 
 ## Ground truth（标注子集 200，已定稿 2026-08-10）
 
@@ -42,16 +41,14 @@
 1. **预标** [contracts/eval/prelabels-v1.json](../contracts/eval/prelabels-v1.json)：
    `git diff --no-index -U0 --color-moved=plain --color-moved-ws=allow-indentation-change`
    的 SGR 行分类（31/32=deleted/novel，35/36=moved），逐样本 numstat 交叉断言。
-2. **逐条审核**（agent 全 200 条过目真实 diff，用户 2026-08-10 委托，替代计划
-   原文的人工标注）：194 条预标精确；**6 条修正，根因单一**——plain 模式对
-   **空行**也做跨位匹配，纯空行"移动"是伪影（5 条全伪影 + 1 条真移动 17/17
-   混伪影 7/4，全部 11 个带 moved 计数样本逐行 dump 甄别）。修正只在
-   novel/moved、deleted/moved 间移行，numstat 总和守恒。
-   完整审核注记（含各样本判定依据）留本地 `.ce-eval/review/reviewed.ndjson`。
+2. **逐条审核**（agent 全 200 条过目真实 diff，用户 2026-08-10 委托）：194
+   条精确；**6 条修正根因单一**——plain 模式对**空行**跨位匹配，纯空行
+   "移动"是伪影（5 全伪影 + 1 混合 17/17 真 + 7/4 伪，11 个 moved 样本逐行
+   dump 甄别）；修正只在 novel/moved、deleted/moved 间移行，numstat 守恒。
+   审核注记留本地 `.ce-eval/review/reviewed.ndjson`。
 3. **定稿** [contracts/eval/labels-v1.json](../contracts/eval/labels-v1.json)：
-   200 行终值 + 6 条修正显式列出（预标值/终值/机制）。CI 门
-   `cargo test --test eval_labels` 校验 labels ↔ prelabels 除声明修正外逐行
-   一致、每行拆分总和守恒（红证：扰动任一数字即红）。
+   200 行终值 + 6 修正显式列出（预标值/终值/机制）。CI 门校验
+   labels ↔ prelabels 除声明修正外逐行一致、拆分守恒（红证双向）。
 
 终值：novel 10,455 / moved-in 32 / deleted 975 / moved-out 30；真移动样本
 6/200。**FPR ground truth：200/200 均 `is_normal=true`**——语料无异常编辑，
@@ -60,38 +57,24 @@ M4 误报门（≤1%/500 行）的分母将全部来自正常编辑回放。
 ## L0 基线（计划 §4.3 B3c 阶梯首级，2026-08-10）
 
 [contracts/eval/baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json)，
-两变体（CI 门 `eval_labels`/`eval_baseline` 从入库文件全量复核；git 实跑
-逐样本验证走 ignored 测试）：
-
-| 变体 | 样本精确 | moved 行召回 | moved 行精度 | 失误模式 |
-|---|---|---|---|---|
-| `l0_numstat`（计划命名的 `git diff --numstat -M -C --find-copies-harder`，单文件对上 rename/copy 旗标惰性，已逐样本实证） | 194/200 | **0/62** | — | 漏掉全部真移动（6 个真移动样本全错） |
-| `reference_color_moved`（git 自带移动检测 = 预标引擎） | 194/200 | 62/62 | 62/125（49.6%） | 空行跨位匹配发明 63 条假移动（6 个修正样本全错） |
-
-两者行级准确率都 ~99.5%——**头名指标必须是 moved 类召回/精度**，总行数
-准确率无区分力。两变体失误样本集只交于 1 个（混合样本）：L1（函数边界
-对齐）的达标线 = 同时关掉两个缺口——找回 62 条真移动且不吞空行伪影。
+两变体（CI 门从入库文件全量复核，git 实跑走 ignored 测试）、样本精确同为
+194/200：`l0_numstat`（计划命名命令；rename/copy 旗标对单文件对惰性已逐样本
+实证）moved 召回 **0/62**；`reference_color_moved`（= 预标引擎）召回 62/62
+但精度 62/125——空行跨位匹配发明 63 条假移动。行级准确率两者都 ~99.5% 无
+区分力 ⇒ **头名指标 = moved 类召回/精度**；两变体失误集只交于 1 个混合样本，
+L1 达标线 = 同时关掉两个缺口。
 
 ## L1（函数边界对齐，用户拍板全量实现 2026-08-10）
 
 实现 [cli/src/fourclass/](../cli/src/fourclass/)：自含 Myers 行 diff（探针路径
-不依赖 git，MAX_D 封顶降级显式标记）+ 显著行移动判定（缩进不敏感、仅含字母
-数字行、两侧独立标记=GT 口径）+ tree-sitter 单元归属（moved 行标注离开/加入
-的函数，整函数原样搬迁摘要）。评分 [contracts/eval/l1-v1.json](../contracts/eval/l1-v1.json)：
-
-| 指标 | L1 | 对照 L0 numstat | 对照 color-moved |
-|---|---|---|---|
-| moved 行召回 | **62/62** | 0/62 | 62/62 |
-| moved 行精度 | **62/62（100%）** | — | 49.6% |
-| 样本精确 | 195/200 | 194/200 | 194/200 |
-
-L0 的两个缺口同时关闭。5 个失配样本**全部是纯 diff 对齐差**：GT 总量经
-numstat 不变量继承了 git 的非最小对齐，L1 的 Myers 把 git 拆成 del+add 的
-相同空行对直接匹配（对称 -k/-k，无任何显著行分类不同，moved 全程精确）；
-python difflib 独立复核 4/5 样本逐数一致，第 5 个 L1 比两者都更小。
-**饱和注记（用户已确认）**：本集 moved GT 无法区分全量函数边界对齐与单纯
-空行过滤——对齐机制的增量（单元归属、整函数搬迁摘要）由 lib 单测钉定，
-跨文件/整 commit 场景的区分力留待 L2 对比与 FPR 重放。
+不依赖 git，MAX_D 封顶降级显式标记）+ 显著行移动判定（缩进不敏感、两侧独立
+标记 = GT 口径）+ tree-sitter 单元归属（moved 行标注离开/加入的函数）。评分
+[contracts/eval/l1-v1.json](../contracts/eval/l1-v1.json)：moved 召回
+**62/62**、精度 **100%**（L0 两缺口同关）、样本精确 195/200。5 个失配全是
+纯 diff 对齐差（GT 总量继承 git 非最小对齐；difflib 独立复核 4/5 逐数一致，
+第 5 个 L1 更小；moved 全程精确）。**饱和注记（用户已确认）**：本集 moved
+GT 无法区分全量函数边界对齐与单纯空行过滤——对齐增量由 lib 单测钉定，跨
+文件/整 commit 区分力留待 L2 与 FPR 重放。
 
 ## 整 commit 切片 v1（L2 增量仪器，预注册于任何 L2 代码之前，2026-08-10）
 
@@ -101,13 +84,11 @@ python difflib 独立复核 4/5 样本逐数一致，第 5 个 L1 比两者都�
 （真实编辑，零伪造，仓内可完整复现）：
 
 - **构成** [contracts/eval/commit-slice-v1.json](../contracts/eval/commit-slice-v1.json)：
-  宇宙 = 至 2f40f22（L1 落地 commit，仪器在自身宇宙之外）的线性历史 61 个
-  commit，五语言 scope（排除 memory/ 机器本地态 = M7 filter-repo 面，D2-7）
-  后 47 个入册、14 个无涉排除。预标引擎 `--color-moved=blocks`（git 自带
-  ≥20 字母数字 block 下限——plain 模式在 commit 粒度会为跨文件同文琐碎行
-  发明假移动，实测 2f40f22 下 153 条；代价是漏 sub-block 小移动，如实入册）。
-  文件配对 `-M -C`（纯改名由配对解释，不计移动行）。双跑逐字节复验。
-  M7 历史改写会更名全部 sha，届时切片确定性重生成。
+  宇宙 = 至 2f40f22（L1 落地，仪器在自身宇宙外）的线性历史 61 commit，五语言
+  scope（排除 memory/ 机器本地态，D2-7）后 47 入册、14 无涉排除。预标引擎
+  `--color-moved=blocks`（≥20 字母数字 block 下限：plain 在 commit 粒度为跨
+  文件琐碎行发明假移动，实测 153 条；代价漏 sub-block 小移动，如实入册）。
+  配对 `-M -C`（纯改名不计移动行）。双跑逐字节复验；M7 历史改写后确定性重生成。
 - **GT**（[contracts/eval/commit-labels-v1.json](../contracts/eval/commit-labels-v1.json)，
   22 个 moved-bearing commit 逐条审核）：commit 粒度 moved 采用**来源语义**
   而非内容集合语义——新写的行哪怕与别处删除同文也**不是**移动，恰是本产品
@@ -115,14 +96,12 @@ python difflib 独立复核 4/5 样本逐数一致，第 5 个 L1 比两者都�
   过滤（无字母数字的 moved 标记 → novel/deleted，与 labels-v1 同约定，182 行）；
   ② 机械跨文件/文件内划分（trim 内容配对，两可优先文件内）；③ 审核修正
   （5 条 6 行内容巧合，各带机制，逐条对过原始 diff）。终值：**跨文件 moved
-  366 出/181 进 = 547 行**（11 个 commit，全部真实重构：tests/common 抽取、
-  eval_support 抽取、observe writer 进 hookio、冷启动状态机拆模块……35 个
-  搬迁单元具名入册）；文件内 112/107。CI 门逐行校验账本守恒。
+  366 出/181 进 = 547 行**（11 个 commit 全真实重构，35 个搬迁单元具名入册）；
+  文件内 112/107。CI 门逐行校验账本守恒。
 - **L1-on-slice 基线** [contracts/eval/commit-baseline-l1-v1.json](../contracts/eval/commit-baseline-l1-v1.json)：
-  L1 逐文件对跑全部 47 commit / 214 对。**检出 219/766 = 恰好全部文件内
-  GT，跨文件 0/547，巧合抵扣上界 0**——结构性盲区实测钉死。预测 251 vs
-  检出 219 的 32 行超出 = GT 引擎 block 下限漏掉的 sub-block 移动（如实
-  注记，非错误）。
+  47 commit / 214 对全跑。**检出 219/766 = 恰好全部文件内 GT，跨文件
+  0/547，巧合抵扣上界 0**——结构性盲区实测钉死（预测超出 32 行 = GT block
+  下限漏标的 sub-block 移动，如实注记）。
 
 **L2 达标线**：在不虚报 25 个无移动 commit 的前提下召回 547 条跨文件
 moved 行（及其单元归属）。
@@ -146,14 +125,12 @@ m=1/v=3/s_cross=2 ⇒ **≥2 行跨文件证据地板由模型推导**（单跨�
 | 巧合门 | 5 个已审文件逐一 pred==gt 精确（配合逐文件 miss=0 ⇒ 无余地收留被剔行） |
 | 零虚报门 | 无跨移动 GT 的 commit 上跨预测 = 0（CI 门逐行断言） |
 | 单调 + L1 复现 | L2≥L1 且逐对总和守恒；单文件批在 200 样本集逐字复现 l1-v1.json |
-| extras 台账 | 24 行/17 文件逐条具名+内容入册（全部为 GT blocks 引擎 ≥20 字母数字
-  地板漏标的 sub-block 真移动：use 行随 helper 搬家、`read_envelope` 首行、
-  多次出现的 sleep/kill 尾巴——沿用逐条审核委托审读，无一属巧合类） |
+| extras 台账 | 24 行/17 文件逐条具名+内容入册（全部为 GT blocks 引擎地板漏标
+  的 sub-block 真移动，逐条审读，无一属巧合类） |
 | 确定性 | 逆序输入 delta 逐字节一致；三份 doc 重构前后哈希一致 |
 | 代价敏感性 | Spec.hs 钉死 s_cross∈{0,2,4,6}→地板{1,2,3,4}（死旋钮无处藏身） |
 | 参照等价 | 81,640 个穷举小实例上，生产实现与独立参照（双向极大性 block 枚举
-  + 相位集合式定义）逐一等价——实现↔规范用穷举钉死（种子随机在此空间是抽样，
-  穷举是全覆盖，Rust 侧 Myers↔暴力 LCS 同哲学）；规范↔真值由上表七门钉 |
+  + 相位集合式定义）逐一等价——实现↔规范穷举钉死；规范↔真值由上表七门钉 |
 | 搬迁登记 | 35 单元名册：32 具名（含 kinds.rs 关闭的 CLASSES 常量洞 + 经扩展相位
   归属的 mark_ready 类；块内逐行归属修掉"大块只记头单元"缺陷）+ 3 个 `~` 注记
   改编单元（out_dir/labeling_rows/write_doc 搬迁中被泛化，GT dump 证零行同一
@@ -185,26 +162,15 @@ CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言�
 
 评审 14 项（2 blocker + 10 major + 2 minor）逐条独立核实后处置，全档
 [docs/reviews/2026-08-11-m4-attack-review.md](reviews/2026-08-11-m4-attack-review.md)。
-证据完整性面的落地：
-
-- **行身份召回门**（F2）：SGR walker 解析 `@@` 头维护双侧行计数器，跨文件
-  GT 由计数升级为行号集合（无修正文件），生成器逐行断言覆盖——全语料一次
-  通过，547 条跨预测在行身份层面成立。
-- **extras 冻结**（F2）：重生成不得引入已提交台账之外的新 extras 行，须
-  先审读再以 `CE_ACCEPT_EXTRAS=1` 显式赐福——超 GT 预测自此有天花板。
-- **源版本绑定**（F1）：commit-l2 / fpr-fourclass doc 均带 `generated_from`
-  （HEAD sha + dirty + ce 版本）；约定 = doc 落在所记 commit 的**子提交**，
-  dirty 正常只覆盖 doc 自身。CI 门校验的是已提交 doc 的内部一致性；活体
-  重放因 D2-7（样本载荷含私有仓全文）只能本地跑——这是用户拍板的边界，
-  非疏漏，复跑命令见下节。
-- **判决语义加固**（F5/F6）：证据地板改计**去重内容数**（重复行不叠加为
-  证据）；run 桥长上界 = 冻结切片实测最大值 7（直方图入
-  batch.rs::MAX_BRIDGE 注释）——两者在全语料复验**零漂移**（doc 逐字节
-  不变，547/547 保持），纯增健壮性。
-- **堆叠证据归属**（F7）：impl 块成为具名容器单元（键含 trait 限定），
-  方法不再伪顶层；Go 方法键并入接收者类型；impl 容器整类排除出堆叠身份
-  ——首版修复被 FPR 重放当场抓到 `impl Foo`/`impl Advisor for Foo` 同键
-  碰撞（1/600），归因根修后回 0/600。评估仪器抓自己的修复批，机制在工作。
+证据完整性面：**行身份召回门**（F2：SGR walker 维护双侧行号，跨文件 GT 由
+计数升为行号集合，全语料一次通过）；**extras 冻结**（F2：重生成引入新
+extras 须先审读再 `CE_ACCEPT_EXTRAS=1` 显式赐福）；**源版本绑定**（F1：doc
+带 `generated_from`，约定 = doc 落在所记 commit 的**子提交**；活体重放因
+D2-7 只能本地跑，用户拍板边界，复跑命令见下节）；**判决语义加固**（F5/F6：
+证据地板改计**去重内容数**、run 桥长上界 = 实测 7——全语料复验零漂移，纯
+增健壮性）；**堆叠证据归属**（F7：impl 具名容器 + trait 限定键 + Go 接收者
+键；首版修复被 FPR 重放当场抓到 impl 同键碰撞 1/600，根修后回 0/600——
+评估仪器抓自己的修复批，机制在工作）。
 
 ## requests 外验切片 v1（M5-1b 冻结，2026-08-11，预注册于任何外验评分之前）
 
@@ -288,13 +254,47 @@ L2 声称的边必须被审读认可，越界即红**（生成器+CI 双点；�
 无行级证据，与改编谱系（~×3、run_hook 签名改编、resolve_proxies 改名搬
 迁）同为下一升级方向（改编/短单元对齐）的量化基线。
 
+## ripgrep 外验切片 v1（M5-1d 冻结，2026-08-12，Rust 补充语料）
+
+同一 GT 仪器对准 [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep)
+first-parent 窗口 `14860b0f..3fce3b5`（tip 即 M1 crosscheck/M2 性能钉定点，
+可见链全量 699 commit 零主观筛选）：**433 入册 + 266 排除**、57
+moved-bearing，双跑字节一致。语料首现 `C` 状态，copy 语义就此拍板：copy 对
+按 (源, 新) 配对但**不消费 before 侧**（单 `-C` 只把已修改文件当源），pair
+带 `copied: true` 记号——literal.rs→literalold.rs 旧版留档正是整文件复制
+膨胀形态。**GT 审读**：机械跨 506/499 集中 11 个 commit 逐条对原始 diff 审
+读——6 个真搬迁 commit 全量保留（PathPrinter 跨 crate 整迁、clap→lexopt
+重构 767 行、pcre2 版本块、hyperlink 别名表解体、max_matches
+printer→searcher、别名测试改编迁移），6 条修正/11 行巧合（就地 import 改
+写、重写文档首行、use 块嵌套化、被删 word.rs 的通用惯用行）。终值跨
+**498 出/496 进**、22 单元登记 + 22 边-单元对。**L1 基线**：盲区三度复现
+——巧合抵扣上界 26（首个非零，仍 ≪ 994）、387/433 逐对精确。
+
+**语料逼出两项真产品缺陷（根修 + 重钉）**：① 7,625 行纯新建文件的空侧
+diff 被 D 受限搜索误标 degraded → 空侧 = 构造性精确解短路（diff.rs，生产
+路径同愈）；② bucketCap 单侧计数在零配对成本处点火（66 条同文 `#[inline]`
+纯加入、5×118 样板桶）→ **乘积形工作量护栏** |rem|×|add| > 64²（最坏界不
+变、点火仍全请求纯 L1 = F3 语义、洪泛 e2e 翻双侧重钉；旧式在自仓/requests
+从未点火 ⇒ 判决零漂移，81,640 穷举等价与 FPR 0/600 保持）。**L2 冻结：
+hits 988 + 地板下 6 == 994 守恒、发明 0**（锚地板 held-out 零发明）、22
+登记单元全具名、8 边零越界、逆序确定性过。**地板下登记制**（用户拍板
+2026-08-12）：6 条真搬迁行在目的地无 ≥2-distinct 连续伙伴、结构性低于
+destFloor（单行注释 args.rs:512→parse.rs:87 双侧 + 改编 find 两对孤立行）
+——审读逐行入册（审读表 `below_floor`，extras 台账的 miss 侧镜像），门语
+义 = **零未审读 miss**（自仓/requests 登记空、bar 不变；hits+misses+
+below_floor==cross GT 三层 CI 锚定）。extras 500 行/14 文件逐行台账赐福，
+两类机制：GT blocks 引擎漏标的真搬迁（旗标文档段落、改编函数体内的同一
+行）+ 亚锚样板搭车（`Ok(())`/import 片段，F4 删侧宽松的既定代价）。**消融
+三度确认**：quality==baseline [988,0,0,0]、freq 13 miss / chain 9 miss 三
+语料全灭、F4 宽度探针零召回贡献、保真门 433/433（影子==活核逐字全等）。
+
 ## 复跑 / 校验
 
 ```
 cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> \
 CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
-# 重建 .ce-eval/ 并重写 manifest；与已提交 manifest diff 为空即完整复现
 ```
 
-约束：重建依赖本机 transcripts 留存；`.ce-eval/` 丢失可重建，
-transcripts 被清理后仅 manifest 哈希可证完整性（样本另行备份归用户）。
+重建 `.ce-eval/` 并重写 manifest，与已提交 manifest diff 为空即完整复现。
+约束：依赖本机 transcripts 留存；transcripts 清理后仅 manifest 哈希可证
+完整性（样本另行备份归用户）。

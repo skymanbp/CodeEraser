@@ -1,0 +1,623 @@
+{
+  "commits": [
+    {
+      "sha": "23e21133ba6a8ca2c4d040092ad1bc22f14e8861",
+      "variants": {
+        "baseline": [
+          148,
+          0,
+          0,
+          0,
+          0,
+          0,
+          148,
+          0
+        ],
+        "chain": [
+          148,
+          0,
+          0,
+          0,
+          0,
+          0,
+          148,
+          0
+        ],
+        "flow": [
+          148,
+          0,
+          0,
+          0,
+          0,
+          0,
+          148,
+          0
+        ],
+        "freq": [
+          148,
+          0,
+          0,
+          0,
+          0,
+          0,
+          148,
+          1
+        ],
+        "phase3_edge": [
+          148,
+          0,
+          0,
+          0,
+          0,
+          0,
+          148,
+          0
+        ],
+        "quality": [
+          148,
+          0,
+          0,
+          0,
+          0,
+          0,
+          148,
+          0
+        ]
+      }
+    },
+    {
+      "sha": "f608d4d9b3ab210b7e6964ca7d1d7dc9c077329e",
+      "variants": {
+        "baseline": [
+          4,
+          0,
+          0,
+          0,
+          2,
+          7,
+          11,
+          0
+        ],
+        "chain": [
+          4,
+          0,
+          0,
+          0,
+          2,
+          7,
+          11,
+          0
+        ],
+        "flow": [
+          4,
+          0,
+          0,
+          0,
+          2,
+          7,
+          11,
+          0
+        ],
+        "freq": [
+          4,
+          0,
+          0,
+          0,
+          2,
+          7,
+          11,
+          0
+        ],
+        "phase3_edge": [
+          4,
+          0,
+          0,
+          0,
+          2,
+          7,
+          11,
+          0
+        ],
+        "quality": [
+          4,
+          0,
+          0,
+          0,
+          2,
+          7,
+          11,
+          0
+        ]
+      }
+    },
+    {
+      "sha": "082245dadb3854238e62b91aa95a46018cf16ef1",
+      "variants": {
+        "baseline": [
+          765,
+          0,
+          0,
+          0,
+          8,
+          488,
+          1253,
+          0
+        ],
+        "chain": [
+          759,
+          6,
+          14,
+          0,
+          6,
+          480,
+          1239,
+          20
+        ],
+        "flow": [
+          765,
+          0,
+          0,
+          0,
+          8,
+          488,
+          1253,
+          9
+        ],
+        "freq": [
+          765,
+          0,
+          0,
+          0,
+          8,
+          488,
+          1253,
+          14
+        ],
+        "phase3_edge": [
+          765,
+          0,
+          0,
+          0,
+          7,
+          468,
+          1233,
+          0
+        ],
+        "quality": [
+          765,
+          0,
+          0,
+          0,
+          8,
+          488,
+          1253,
+          0
+        ]
+      }
+    },
+    {
+      "sha": "286de9564e511f01f13756c207e9b26ec781591d",
+      "variants": {
+        "baseline": [
+          8,
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          0
+        ],
+        "chain": [
+          8,
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          0
+        ],
+        "flow": [
+          8,
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          0
+        ],
+        "freq": [
+          8,
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          0
+        ],
+        "phase3_edge": [
+          8,
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          0
+        ],
+        "quality": [
+          8,
+          0,
+          0,
+          0,
+          2,
+          2,
+          10,
+          0
+        ]
+      }
+    },
+    {
+      "sha": "66aa4a63bb52468aa789cfa00c0643111ff03239",
+      "variants": {
+        "baseline": [
+          46,
+          0,
+          0,
+          0,
+          3,
+          8,
+          54,
+          0
+        ],
+        "chain": [
+          46,
+          0,
+          0,
+          0,
+          3,
+          8,
+          54,
+          0
+        ],
+        "flow": [
+          46,
+          0,
+          0,
+          0,
+          3,
+          8,
+          54,
+          0
+        ],
+        "freq": [
+          46,
+          0,
+          0,
+          0,
+          3,
+          8,
+          54,
+          0
+        ],
+        "phase3_edge": [
+          46,
+          0,
+          0,
+          0,
+          3,
+          8,
+          54,
+          0
+        ],
+        "quality": [
+          46,
+          0,
+          0,
+          0,
+          3,
+          8,
+          54,
+          0
+        ]
+      }
+    },
+    {
+      "sha": "a6e0be3c909c5c09e5fb402c907f3beb88cfb4c4",
+      "variants": {
+        "baseline": [
+          17,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0
+        ],
+        "chain": [
+          14,
+          3,
+          3,
+          0,
+          0,
+          0,
+          14,
+          1
+        ],
+        "flow": [
+          17,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0
+        ],
+        "freq": [
+          4,
+          13,
+          13,
+          0,
+          0,
+          0,
+          4,
+          3
+        ],
+        "phase3_edge": [
+          17,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0
+        ],
+        "quality": [
+          17,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0
+        ]
+      }
+    },
+    {
+      "kill_ledger": [],
+      "width_ledger": [
+        {
+          "content": "use std::{",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 1,
+          "sha": "082245dad"
+        },
+        {
+          "content": "None",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 87,
+          "sha": "082245dad"
+        },
+        {
+          "content": "} else {",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 88,
+          "sha": "082245dad"
+        },
+        {
+          "content": "Ok(())",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 135,
+          "sha": "082245dad"
+        },
+        {
+          "content": "Ok(())",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 176,
+          "sha": "082245dad"
+        },
+        {
+          "content": "} else {",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 213,
+          "sha": "082245dad"
+        },
+        {
+          "content": "} else {",
+          "file": "build.rs",
+          "in_gt": false,
+          "line": 230,
+          "sha": "082245dad"
+        },
+        {
+          "content": "format!(",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 95,
+          "sha": "082245dad"
+        },
+        {
+          "content": "format!(",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 102,
+          "sha": "082245dad"
+        },
+        {
+          "content": "/// error.",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 282,
+          "sha": "082245dad"
+        },
+        {
+          "content": "match self.kind {",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 365,
+          "sha": "082245dad"
+        },
+        {
+          "content": "match self.kind {",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 413,
+          "sha": "082245dad"
+        },
+        {
+          "content": "match self.kind {",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 445,
+          "sha": "082245dad"
+        },
+        {
+          "content": "match self.kind {",
+          "file": "crates/core/app.rs",
+          "in_gt": false,
+          "line": 471,
+          "sha": "082245dad"
+        },
+        {
+          "content": "use std::{",
+          "file": "crates/core/search.rs",
+          "in_gt": false,
+          "line": 1,
+          "sha": "082245dad"
+        },
+        {
+          "content": "path::{Path, PathBuf},",
+          "file": "crates/core/search.rs",
+          "in_gt": false,
+          "line": 3,
+          "sha": "082245dad"
+        },
+        {
+          "content": "use {",
+          "file": "crates/core/search.rs",
+          "in_gt": false,
+          "line": 7,
+          "sha": "082245dad"
+        },
+        {
+          "content": "#[cfg(feature = \"pcre2\")]",
+          "file": "crates/core/search.rs",
+          "in_gt": false,
+          "line": 20,
+          "sha": "082245dad"
+        },
+        {
+          "content": "match *self {",
+          "file": "crates/core/search.rs",
+          "in_gt": false,
+          "line": 242,
+          "sha": "082245dad"
+        },
+        {
+          "content": "} else {",
+          "file": "crates/core/search.rs",
+          "in_gt": false,
+          "line": 370,
+          "sha": "082245dad"
+        }
+      ]
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "b9e6780b8c4904aee88dac36e9775d29aebbfb72",
+    "dirty": true
+  },
+  "method": "shadow ablation: a Rust mirror of the core's L2 judgment (Anchor sites + Provenance phases 2/3) over the exact leftovers() run structure; on every commit the BASELINE shadow must equal the live ce-core delta AND the shadow's site set must equal the core's reply blocks verbatim (both asserted at generation — the mirror and its DECOMPOSITION are proven, not trusted). Variants re-judge the same input, each an exact predicate, not its menu family: quality = a site needs ONE evidence line with >= 20 alphanumeric chars (single-anchor rule; an aggregate-20 floor would NOT separate the requests invention, 7+16=23); freq = hard base-tree uniqueness gate (one evidence line with tree frequency 1; slice langs, memory/ excluded); chain = per pair-edge max-lines subset with strictly increasing source and destination STARTS (the most lenient non-crossing form); flow = greedy whole-block destination-line exclusivity (not a global matching); phase3_edge = deletion-side attribution requires an anchored edge (attack review F4 width probe). Rows: per variant [count_hits, count_misses, identity_misses, invention_lines, extras_files, extras_lines, pred_lines, blocks_dropped]; all-zero commits omitted (the gate conserves the GT total against the labels anchor, so a dropped nonzero row cannot hide). Reviewed below-floor lines (the corpus's register of true relocations with no >=2-distinct contiguous companion) leave every variant's hit/miss ledger alike: hits + misses == cross GT - register. Tail row: quality kill ledger + phase3 width ledger.",
+  "schema": "ce.eval-commit-ablation/1.0.0",
+  "source_slice": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "summary": {
+    "below_floor": 6,
+    "commits": 433,
+    "cross_gt_in": 496,
+    "cross_gt_out": 498,
+    "equivalence_commits": 433,
+    "phase3_width": {
+      "extra": 20,
+      "in_gt": 0,
+      "lines": 20,
+      "unknown": 0
+    },
+    "quality_kills": 0,
+    "variants": {
+      "baseline": [
+        988,
+        0,
+        0,
+        0,
+        15,
+        505,
+        1493,
+        0
+      ],
+      "chain": [
+        979,
+        9,
+        17,
+        0,
+        13,
+        497,
+        1476,
+        21
+      ],
+      "flow": [
+        988,
+        0,
+        0,
+        0,
+        15,
+        505,
+        1493,
+        9
+      ],
+      "freq": [
+        975,
+        13,
+        13,
+        0,
+        15,
+        505,
+        1480,
+        18
+      ],
+      "phase3_edge": [
+        988,
+        0,
+        0,
+        0,
+        14,
+        485,
+        1473,
+        0
+      ],
+      "quality": [
+        988,
+        0,
+        0,
+        0,
+        15,
+        505,
+        1493,
+        0
+      ]
+    }
+  }
+}
