@@ -67,12 +67,12 @@
 | `size` | 文件 LOC；函数长度；参数个数 | 文件 300 警告 / 750 阻断（ESLint max-lines=300；Sonar S104=750）；函数 50/75（ESLint=50；Sonar S138=75）；参数 5（Pylint） | M1 |
 | `complexity` | Cognitive Complexity 主判罚；Cyclomatic 辅助 | CoC 15（Sonar S3776）；CC 10–15（Sonar S1541=10 / lizard=15）。证据边界如实声明：ESEM 2020 元分析中 CoC 仅在理解耗时（r=0.54）与主观评分轴有支持，正确率轴无支持（r=−0.13 CI 跨零）；arXiv 2303.07722 中 CC 略优于 CoC。选 CoC 主判罚的理由是其对嵌套的惩罚正对准"堆叠"形态，而非"已证明的可维护性代理" | M1 |
 | `readability` | 命名规范、嵌套深度、注释密度 | 不用 Maintainability Index 作主分（van Deursen 批判：1994 系数从未重标定、与 LOC 共线）。主判罚永远 = LOC + CoC + 重复率 | M1 |
-| `clone` | 跨文件 T1/T2（热路径）；T3 near-miss（冷路径）；**不承诺 T4**（arXiv 2606.25272：SOTA 在 T4 全线退化） | T1/T2 min-tokens 50（jscpd 默认）；T3 TSED 0.85（mizchi/similarity 默认） | M2/M5 |
-| `docdup` | Markdown/纯文本段落 + **代码注释/docstring** 查重（与 `clone` 联动）：shingle + MinHash/LSH 粗筛 → Jaccard 复核 | 段落粒度；逐字下界 50 tokens（Lee et al. 2107.06499） | M5 |
+| `clone` | 跨文件 T1/T2（热路径）；T3 near-miss（冷路径）；**不承诺 T4**（arXiv 2606.25272：SOTA 在 T4 全线退化） | T1/T2 min-tokens 50（jscpd 默认）；T3 TSED 0.85（mizchi/similarity 默认） | M2/M5-3 |
+| `docdup` | Markdown/纯文本段落 + **代码注释/docstring** 查重（与 `clone` 联动）：shingle + MinHash/LSH 粗筛 → Jaccard 复核 | 段落粒度；逐字下界 50 tokens（Lee et al. 2107.06499） | M5-3 |
 | `churn` | 函数级追加 vs 重写比例、两周 churn、co-change 纠缠对 | 先例：GitClear 指标 + ops-codegraph-tool co-change | M4 |
-| `graph` | import/调用边抽取、跨文件符号解析、入度/环 | 工程量锚点：ops-codegraph-tool 用 6 级 import 解析达 precision 94.9%/recall 66.7%——这不是一行验收能带过的子系统 | M5 |
-| `deadcode` | 无引用符号/文档段落（图入度 = 0 ∧ 非入口） | 依赖 `graph` | M5 |
-| `score` | 综合评分 + 棘轮基线（语义见 ADR-006） | 权重表配**敏感性测试**：扰动任一权重断言总分变化（fuck-u-code 的真实 bug 是权重字段从未被评分路径读取——"权重和=1"断言测不到死字段） | M5 |
+| `graph` | import/调用边抽取、跨文件符号解析、入度/环 | 工程量锚点：ops-codegraph-tool 用 6 级 import 解析达 precision 94.9%/recall 66.7%——这不是一行验收能带过的子系统 | M5-2 |
+| `deadcode` | 无引用符号/文档段落（图入度 = 0 ∧ 非入口） | 依赖 `graph` | M5-2 |
+| `score` | 综合评分 + 棘轮基线（语义见 ADR-006） | 权重表配**敏感性测试**：扰动任一权重断言总分变化（fuck-u-code 的真实 bug 是权重字段从未被评分路径读取——"权重和=1"断言测不到死字段） | M5-3 |
 
 评分极性全程统一"越高越好"。幽默评语表（i18n 静态查表）为可选彩蛋，默认关闭，`--roast` 开启。
 
@@ -268,12 +268,12 @@ CodeEraser/
 | **M2** 克隆热路径 + 进程模型 | winnowing 指纹索引（token 归一化覆盖全部五门首发语言——D2-4）、`ce dedup`、daemon（ADR-003 全项：懒启动/握手/WAL/冷启动降级） | 3 周 ± | 10 万 LOC 全量索引 < 30s；单文件增量 < 200ms；探针往返（含管道）p95 < 150ms；对 jscpd 可检出集召回 ≥ 95%（属 docdup 域〔docstring/注释重复〕或阈值测度差异的条目可逐条证据归因排除，排除项入册——用户拍板 2026-08-07）**且**在同一真实仓库上精度 ≥ 90%（召回必配精度，B2）；property：增量 ≡ 全量重建 |
 | **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |
 | **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |
-| **M5** 深度去冗 + 图 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点）、`deadcode`、T3 冷路径、`docdup`（含代码注释/docstring 域）、三信号 join、`score`+棘轮、Haskell 语言支持（CoC 适配规范自定义并文档化） | 3–4 周 ± | T3 对 mizchi/similarity 可检出集召回 ≥ 90% 且精度 ≥ 85%；import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4）；本仓库自身跑通棘轮入 CI |
+| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置 |
+| **M5-3** 深度去冗 | T3 冷路径、`docdup`（含代码注释/docstring 域）、三信号 join、`score`+棘轮、Haskell 语言支持（CoC 适配规范自定义并文档化） | 3 周 ± | T3 对 mizchi/similarity 可检出集召回 ≥ 90% 且精度 ≥ 85%；本仓库自身跑通棘轮入 CI |
 | **M6** GUI | Tauri：报告可视化、趋势、删除候选浏览 | 2–3 周 | 对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s；三平台打包 |
 | **M7** 发布 | marketplace 上架、签名/公证、Releases 自动化、完整 MCP、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档 | 1–2 周 | 陌生机器一条命令可用；二进制 SHA256 校验链路端到端验证；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）；文档过 `docdup` 自检；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG |
 
-**依赖**：M2←M1；M3←M2；M4←M3；M5←M4（churn 是三信号一腿，**串行**，v1.0 "并行"之说
-作废——A4）；M6 可与 M5 并行；M7 收尾。总计粗估 4–6 个月。
+**依赖**：M2←M1；M3←M2；M4←M3；M5-2←M4（churn 是三信号一腿，**串行**——A4）；M5-3←M5-2；M6 可与 M5 并行；M7 收尾。总计粗估 4–6 个月。
 
 ## 7. 质量与测试策略
 
