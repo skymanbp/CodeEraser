@@ -210,7 +210,7 @@ G13（独立 git 测试 graph_provenance.rs）`git merge-base --is-ancestor <审
 
 | # | 内容 | 退出（红条件） |
 |---|---|---|
-| 2a | proto 2.1.0 + graph/1 capability + 空 graph.respond 对一切输入回 contract。机械、独立、先行——在语义存在前支付 golden 翻批 | 两常数读 2.1.0；全部现有 golden 重生成且两侧字节同一消费；新 contracts/fixtures/graph/golden.ndjson 5 对（含悬空端点 contract + graph_too_large 降级）。红：损坏单 golden 字节没让**两套**电池都红，或 diff 触及 proto/capabilities 之外 |
+| 2a | proto 2.1.0 + graph/1 capability + 空 graph.respond 对一切输入回 contract。机械、独立、先行——在语义存在前支付 golden 翻批 | 两常数读 2.1.0；全部现有 golden 重生成且两侧字节同一消费；新 contracts/fixtures/graph/golden.ndjson 5 对（含悬空端点 contract；graph_too_large 落地时改运行时结构检查——Spec.hs oversize 先例，超容量 fixture 行 ~1.5 MB 不入库）。红：损坏单 golden 字节没让**两套**电池都红，或 diff 触及 proto/capabilities 之外 |
 | 2b | GRAPH_SCOPE、graph/{sites,spec,md}.rs、`ce graph --sites`、slice 档（**无**解析器） | slice 档两次干净树跑字节同一；五语言站点数全非零；每站点 spec 是其源行子串。红：字节 diff，或围栏内链接形字串发出站点 |
 | 2c | 抽样 + graph-sample-v1.json + 后备 | 两跑 id 同一；verify() 绿含重复 id 拒绝；每语言 ≥15；git log 证样本提交**先于**任何 cli/src/graph/ladder/ 文件。红：任一 |
 | 2d | 人工审计（100+后备）+ site_gaps | 100/100 行带指名机制的非空 why；G13 祖先断言绿；每语料 site_gaps 巡检有交代（可为空） |

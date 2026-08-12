@@ -10,6 +10,7 @@
 module CE.Protocol (proto, respond) where
 
 import qualified CE.FourClass as FourClass
+import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -17,17 +18,19 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 2.0.0 = the M5-1c-iii anchor-width shape: rem/add entries carry a
--- third element (alnum width of the trimmed line) feeding
--- Cost.anchorFloor; a breaking request-shape change, so major per §2.
+-- 2.1.0 = graph/1 lands (M5-2a): additive type + additive
+-- capability, minor per §2. 2.0.0 was the M5-1c-iii anchor-width
+-- shape (rem/add entries carry the trimmed line's alnum width).
 proto :: String
-proto = "2.0.0"
+proto = "2.1.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
--- never decoded. Legitimate requests are client-capped well below
--- this (20k lines ≈ 600 KB).
+-- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
+-- the only client is the trusted same-machine daemon, and a graph
+-- request legitimately carries ~1 MB per 100k LOC — the real
+-- per-family guards are CE.Graph.Cost's node/edge caps.
 maxLineBytes :: Int
-maxLineBytes = 1048576
+maxLineBytes = 33554432
 
 -- | Just the envelope: @type@ for dispatch, @id@ for echoing into
 -- error replies, @proto@ for the per-message major check. Unknown
@@ -62,6 +65,9 @@ dispatch version env line
   | not (majorMatches (envProto env)) =
       errReply (envId env) "bad_request" ("proto missing or major-mismatched (server " <> proto <> ")")
   | envType env == "fourclass.request" = case FourClass.respond proto line of
+      Left (rid, code, message) -> errReply rid code message
+      Right bytes -> bytes
+  | envType env == "graph.request" = case Graph.respond proto line of
       Left (rid, code, message) -> errReply rid code message
       Right bytes -> bytes
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)

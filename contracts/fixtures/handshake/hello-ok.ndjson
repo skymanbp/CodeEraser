@@ -1,2 +1,2 @@
-{"proto":"2.0.0","type":"hello","client":"ce","version":"0.0.1"}
-{"accept":true,"capabilities":["hello","fourclass/2"],"proto":"2.0.0","server":"ce-core","type":"hello","version":"0.0.1"}
+{"proto":"2.1.0","type":"hello","client":"ce","version":"0.0.1"}
+{"accept":true,"capabilities":["hello","fourclass/2","graph/1"],"proto":"2.1.0","server":"ce-core","type":"hello","version":"0.0.1"}

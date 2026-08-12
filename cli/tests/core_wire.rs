@@ -47,6 +47,7 @@ fn wire_goldens_roundtrip() {
         "../contracts/fixtures/handshake/hello-ok.ndjson",
         "../contracts/fixtures/handshake/wire-errors.ndjson",
         "../contracts/fixtures/fourclass/golden.ndjson",
+        "../contracts/fixtures/graph/golden.ndjson",
     ] {
         for (n, (request, expected)) in fixture_pairs(file).into_iter().enumerate() {
             writeln!(stdin, "{request}").expect("write");
@@ -71,6 +72,7 @@ fn corelink_open_and_desync() {
     assert!(reply.accept, "hello accepted");
     assert!(link.has("hello"), "capability discovery");
     assert!(link.has("fourclass/2"), "judgment capability offered");
+    assert!(link.has("graph/1"), "graph capability offered (M5-2a)");
     let ok = link
         .request("fourclass", serde_json::json!({"pairs": []}))
         .expect("empty batch round-trips");

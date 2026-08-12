@@ -9,6 +9,7 @@
 module Main (main) where
 
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
+import CE.Graph.Cost (nodeCap)
 import qualified Reference
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
@@ -29,6 +30,7 @@ main = do
       [ goldenPairs "handshake/hello-ok.ndjson"
       , goldenPairs "handshake/wire-errors.ndjson"
       , goldenPairs "fourclass/golden.ndjson"
+      , goldenPairs "graph/golden.ndjson"
       , structural
       , costModel
       , Reference.equivalence
@@ -81,17 +83,27 @@ checkPair file (n, (request, expected)) = do
   pure ok
 
 -- | Field-level assertions that do not depend on fixture bytes.
+-- The oversize and over-cap probes are generated at run time — a
+-- 32 MiB line or a 131k-node request has no business weighing down
+-- a committed fixture file.
 structural :: IO Bool
 structural = do
   a <- check "unknown type echoes id" (field unknownReply "id" == Just (Number 7))
   b <- check "unknown type is error/unknown_type" (field unknownReply "code" == Just "unknown_type")
   c <- check "oversize line is error/too_large" (field oversizeReply "code" == Just "too_large")
   d <- check "major mismatch is rejected" (field majorReply "accept" == Just (Bool False))
-  pure (a && b && c && d)
+  e <- check "over-cap graph degrades visibly" (field overCapReply "reason" == Just "graph_too_large")
+  f <- check "over-cap graph is a degraded result" (field overCapReply "degraded" == Just (Bool True))
+  pure (a && b && c && d && e && f)
  where
-  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"2.0.0\",\"type\":\"mystery\",\"id\":7}"
-  oversizeReply = Protocol.respond "0.0.1" (B8.replicate 1048577 'x')
+  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"2.1.0\",\"type\":\"mystery\",\"id\":7}"
+  oversizeReply = Protocol.respond "0.0.1" (B8.replicate 33554433 'x')
   majorReply = Protocol.respond "0.0.1" "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
+  overCapReply =
+    Protocol.respond "0.0.1" $
+      "{\"proto\":\"2.1.0\",\"type\":\"graph.request\",\"id\":3,\"nodes\":["
+        <> B8.intercalate "," (replicate (nodeCap + 1) "[0,0,0]")
+        <> "],\"edges\":[],\"pos\":[]}"
 
 field :: B8.ByteString -> String -> Maybe Value
 field bytes key = do

@@ -1,0 +1,10 @@
+{"proto":"2.1.0","type":"graph.request","id":1,"nodes":[],"edges":[],"pos":[]}
+{"code":"contract","id":1,"message":"graph algorithms land at M5-2g behind their reference harness; a stub answer would be an invented judgment","proto":"2.1.0","type":"error"}
+{"proto":"2.1.0","type":"graph.request","id":2,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,2,0,1]],"pos":[]}
+{"code":"contract","id":2,"message":"edge 0: endpoint out of range","proto":"2.1.0","type":"error"}
+{"proto":"2.1.0","type":"graph.request","id":3,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,1,0,1],[0,1,0,1]],"pos":[]}
+{"code":"contract","id":3,"message":"edge 1: not strictly ascending","proto":"2.1.0","type":"error"}
+{"proto":"2.1.0","type":"graph.request","id":4,"nodes":[[0,0,0]],"edges":[],"pos":[3]}
+{"code":"contract","id":4,"message":"pos 0: index out of range","proto":"2.1.0","type":"error"}
+{"proto":"2.1.0","type":"graph.request","id":5,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,1,0]],"pos":[]}
+{"code":"contract","id":5,"message":"edge 0: malformed row (need [src,dst,kind,rung])","proto":"2.1.0","type":"error"}

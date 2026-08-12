@@ -12,7 +12,7 @@ executable ce-core
     other-modules:    CE.Handshake, CE.Protocol, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
-                      CE.FourClass.Verdict
+                      CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -32,7 +32,8 @@ test-suite ce-core-test
     other-modules:    CE.Handshake, CE.Protocol, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
-                      CE.FourClass.Verdict, Reference
+                      CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,
+                      Reference
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

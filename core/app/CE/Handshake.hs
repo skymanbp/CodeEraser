@@ -25,8 +25,9 @@ instance FromJSON Hello where
 -- | fourclass/2 = the anchor-width request shape (proto 2.0.0). An
 -- old client probing fourclass/1 sees absence and degrades to L1
 -- loudly instead of sending the un-parseable two-element shape.
+-- graph/1 = the M5-2 graph family (proto 2.1.0, additive).
 capabilities :: [String]
-capabilities = ["hello", "fourclass/2"]
+capabilities = ["hello", "fourclass/2", "graph/1"]
 
 data Reply = Reply
   { replyProto :: String
