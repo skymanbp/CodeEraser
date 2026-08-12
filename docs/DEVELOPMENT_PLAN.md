@@ -172,12 +172,12 @@ tree-sitter Rust 绑定是官方一等公民且语法 crate 跟随 0.26.x；最�
 mizchi/similarity、jscpd v5 引擎、ast-grep）全是 Rust，可参考复用（ast-grep-core，MIT）；
 GUI 由 Tauri 覆盖。Go 无以上任何优势。
 
-**ADR-002 Haskell 不拥有解析层；职责 = 判决层。**
+**ADR-002 Haskell 不拥有解析层；职责 = 判决层（2026-08-12 拍板细化：判定半落 Haskell）。**
 实证：Hackage `tree-sitter` 停在 0.9.0.3（2022-04-12），包描述自劝退
 （<https://hackage.haskell.org/package/tree-sitter>）；github/semantic 已 archived；
-唯一活跃替代 hs-tree-sitter 是 AGPL-3.0-only + 单人维护。→ Rust 解析并输出归一化 IR
-（符号、span、结构指纹、import 边；**token 流只入本地索引，不跨进程**——A6），
-Haskell 消费 IR 做判决。wire format 借鉴 ast-grep `--json=stream`。
+唯一活跃替代 hs-tree-sitter 是 AGPL-3.0-only + 单人维护。→ Rust 止于解析/抽取/索引并输出
+归一化 IR（符号、span、结构指纹、import 边；**token 流只入本地索引，不跨进程**——A6）；
+图算法（入度/环/SCC）与 docdup 复核判定在 Haskell。wire format 借鉴 ast-grep `--json=stream`。
 
 **ADR-003 进程模型（A3 拆分后）。**
 - hook 触发 = 短命 `ce` 进程；重活委托给 **per-project daemon**（同一二进制 `ce daemon`，
