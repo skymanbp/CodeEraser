@@ -26,7 +26,7 @@ mod eval_l2_parts;
 mod eval_support;
 
 use codeeraser::corelink::Link;
-use codeeraser::fourclass::batch::leftovers;
+use codeeraser::fourclass::batch::{leftovers, request_body};
 use eval_ablation_parts::variants::{self, Variant};
 use eval_ablation_parts::{self as shadow, ledgers};
 use eval_l2_parts as parts;
@@ -71,6 +71,23 @@ fn commit_shadow(link: &mut Link, s: &Value, labels: &Value) -> Commit {
     let base = shadow::moved(&sent, &blocks, false);
     let live = parts::delta_lines(&texts, &l1, &l2);
     assert_eq!(shadow::delta(&texts, &base), live, "{sha}: shadow != live");
+    // Codex review F1: the moved-map assert cannot pin site
+    // DECOMPOSITION (one union, many block sets) and the variants
+    // filter BLOCKS — replay the exact wire request and require the
+    // shadow's sites to equal the core's reply blocks verbatim.
+    if sent.iter().any(|(r, a)| !r.is_empty() || !a.is_empty()) {
+        let body = request_body(&parts::pair_inputs(&texts), &sent);
+        let reply = link.request("fourclass", body).expect("fourclass");
+        let mine: Vec<Value> = blocks
+            .iter()
+            .map(|b| json!([b.from_pair, b.from_lines, b.to_pair, b.to_lines]))
+            .collect();
+        assert_eq!(
+            json!(mine),
+            reply["blocks"],
+            "{sha}: shadow sites != core blocks"
+        );
+    }
     let gt = parts::cross_gt(&sha);
     let has_cross = parts::has_cross(by_sha(labels).get(sha.as_str()));
     let ctx = variants::Ctx::build(&sha, &texts, &blocks);
@@ -101,7 +118,8 @@ fn commit_row(c: &Commit, acc: &mut Acc) {
     for (name, v) in variants::ALL {
         let blocks = variants::filter(v, c.blocks.clone(), &c.ctx);
         let m = shadow::moved(&c.sent, &blocks, v == Variant::Phase3Edge);
-        let row = variants::metrics(&shadow::delta(&c.texts, &m), &c.gt, c.has_cross);
+        let mut row = variants::metrics(&shadow::delta(&c.texts, &m), &c.gt, c.has_cross);
+        row.0[7] = (c.blocks.len() - blocks.len()) as u64;
         nonzero |= !row.is_zero();
         acc.sums.entry(name).or_default().add(&row);
         vjson.insert(name.into(), row.to_json());
@@ -126,18 +144,25 @@ fn commit_row(c: &Commit, acc: &mut Acc) {
 
 const METHOD: &str = "shadow ablation: a Rust mirror of the core's L2 judgment \
     (Anchor sites + Provenance phases 2/3) over the exact leftovers() run \
-    structure; the BASELINE shadow must equal the live ce-core delta on every \
-    commit (asserted at generation — the mirror is proven, not trusted). \
-    Variants re-judge the same input: quality = a site needs one evidence \
-    line with >= 20 alphanumeric chars; freq = a site needs one evidence \
-    line whose trimmed content is unique in the base tree (slice langs, \
-    memory/ excluded); chain = per pair-edge maximum-lines subset with \
-    strictly increasing source and destination starts; flow = destination- \
-    line exclusivity, greedy by size then position; phase3_edge = deletion- \
-    side attribution requires an anchored edge (attack review F4 width \
-    probe). Rows: per variant [cross_hits, cross_misses, identity_misses, \
-    invention_lines, extras_files, extras_lines, pred_lines]; all-zero \
-    commits omitted. Tail row: quality kill ledger + phase3 width ledger.";
+    structure; on every commit the BASELINE shadow must equal the live \
+    ce-core delta AND the shadow's site set must equal the core's reply \
+    blocks verbatim (both asserted at generation — the mirror and its \
+    DECOMPOSITION are proven, not trusted). Variants re-judge the same \
+    input, each an exact predicate, not its menu family: quality = a site \
+    needs ONE evidence line with >= 20 alphanumeric chars (single-anchor \
+    rule; an aggregate-20 floor would NOT separate the requests invention, \
+    7+16=23); freq = hard base-tree uniqueness gate (one evidence line \
+    with tree frequency 1; slice langs, memory/ excluded); chain = per \
+    pair-edge max-lines subset with strictly increasing source and \
+    destination STARTS (the most lenient non-crossing form); flow = greedy \
+    whole-block destination-line exclusivity (not a global matching); \
+    phase3_edge = deletion-side attribution requires an anchored edge \
+    (attack review F4 width probe). Rows: per variant [count_hits, \
+    count_misses, identity_misses, invention_lines, extras_files, \
+    extras_lines, pred_lines, blocks_dropped]; all-zero commits omitted \
+    (the gate conserves the GT total against the labels anchor, so a \
+    dropped nonzero row cannot hide). Tail row: quality kill ledger + \
+    phase3 width ledger.";
 
 #[test]
 #[ignore] // needs the pinned window's git history + a built ce-core (CE_CORE_BIN)
@@ -176,10 +201,13 @@ fn generate_commit_ablation() {
     );
 }
 
-/// CI gate, no git needed, every corpus: the summary re-derives from
-/// the rows and ledgers; cross GT anchors to the frozen labels; the
-/// baseline column keeps the L2 bars (misses zero everywhere,
-/// invention zero on the self corpus).
+/// CI gate, no git needed, every corpus (hardened per Codex review
+/// F2 — a resummed doc is not integrity): row shas must be unique
+/// members of the frozen slice; every variant must CONSERVE the
+/// labels-anchored GT total (hits + misses == cross GT, so a zeroed
+/// or deleted row breaks the sum against an EXTERNAL anchor); the
+/// baseline column keeps the L2 bars and the quality column keeps
+/// the frozen verdict (zero misses, zero invention, every corpus).
 #[test]
 fn commit_ablation_consistent() {
     let labels_docs: HashMap<_, _> = corpus_doc_pairs("labels").into_iter().collect();
@@ -202,6 +230,7 @@ fn check_corpus(slice_path: &str, labels_path: &str, doc_path: &str) {
     let ml = &labels["summary"]["moved_lines"];
     assert_eq!(s["cross_gt_out"], ml["cross_out"], "cross GT anchor");
     assert_eq!(s["cross_gt_in"], ml["cross_in"], "cross GT anchor");
+    check_rows_membership(&slice, rows);
     check_sums(s, rows);
     check_ledgers(s, tail);
     let base = u64s(&s["variants"]["baseline"]);
@@ -210,17 +239,36 @@ fn check_corpus(slice_path: &str, labels_path: &str, doc_path: &str) {
     if doc_path == eval_doc("commit-ablation") {
         assert_eq!(base[3], 0, "self corpus: baseline invention");
     }
+    let quality = u64s(&s["variants"]["quality"]);
+    assert_eq!(&quality[1..4], [0, 0, 0], "quality verdict pins");
+}
+
+fn check_rows_membership(slice: &Value, rows: &[Value]) {
+    let shas: std::collections::HashSet<&str> = slice["commits"]
+        .as_array()
+        .expect("slice")
+        .iter()
+        .map(|c| c["sha"].as_str().expect("sha"))
+        .collect();
+    let mut seen = std::collections::HashSet::new();
+    for r in rows {
+        let sha = r["sha"].as_str().expect("row sha");
+        assert!(shas.contains(sha), "{sha}: row outside the slice");
+        assert!(seen.insert(sha), "{sha}: duplicate row");
+    }
 }
 
 fn check_sums(s: &Value, rows: &[Value]) {
+    let gt = s["cross_gt_out"].as_u64().unwrap() + s["cross_gt_in"].as_u64().unwrap();
     for (name, _) in variants::ALL {
-        let mut sum = vec![0u64; 7];
+        let mut sum = vec![0u64; 8];
         for r in rows {
             for (i, v) in u64s(&r["variants"][name]).iter().enumerate() {
                 sum[i] += v;
             }
         }
         assert_eq!(sum, u64s(&s["variants"][name]), "{name}: summary drifted");
+        assert_eq!(sum[0] + sum[1], gt, "{name}: GT total not conserved");
     }
 }
 

@@ -175,7 +175,11 @@ fn side_runs(text: &str, changed: &[usize], moved: &[usize]) -> Side {
     runs
 }
 
-fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
+/// Public so the ablation's block-level equivalence gate can replay
+/// the EXACT wire request and compare the shadow's site decomposition
+/// against the core's reply blocks (Codex review 2026-08-11 F1: the
+/// moved-map equivalence alone cannot pin block boundaries).
+pub fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
     let pairs: Vec<Value> = sent
         .iter()
         .enumerate()

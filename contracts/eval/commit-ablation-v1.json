@@ -10,7 +10,8 @@
           0,
           0,
           0,
-          14
+          14,
+          0
         ],
         "chain": [
           14,
@@ -19,7 +20,8 @@
           0,
           0,
           0,
-          14
+          14,
+          0
         ],
         "flow": [
           14,
@@ -28,7 +30,8 @@
           0,
           0,
           0,
-          14
+          14,
+          0
         ],
         "freq": [
           14,
@@ -37,7 +40,8 @@
           0,
           0,
           0,
-          14
+          14,
+          0
         ],
         "phase3_edge": [
           14,
@@ -46,7 +50,8 @@
           0,
           0,
           0,
-          14
+          14,
+          0
         ],
         "quality": [
           14,
@@ -55,7 +60,8 @@
           0,
           0,
           0,
-          14
+          14,
+          0
         ]
       }
     },
@@ -69,7 +75,8 @@
           0,
           8,
           13,
-          275
+          275,
+          0
         ],
         "chain": [
           262,
@@ -78,7 +85,8 @@
           0,
           8,
           13,
-          275
+          275,
+          5
         ],
         "flow": [
           262,
@@ -87,7 +95,8 @@
           0,
           8,
           13,
-          275
+          275,
+          30
         ],
         "freq": [
           234,
@@ -96,7 +105,8 @@
           0,
           4,
           5,
-          239
+          239,
+          36
         ],
         "phase3_edge": [
           262,
@@ -105,7 +115,8 @@
           0,
           8,
           13,
-          275
+          275,
+          0
         ],
         "quality": [
           262,
@@ -114,7 +125,8 @@
           0,
           8,
           13,
-          275
+          275,
+          11
         ]
       }
     },
@@ -128,7 +140,8 @@
           0,
           0,
           0,
-          5
+          5,
+          0
         ],
         "chain": [
           5,
@@ -137,7 +150,8 @@
           0,
           0,
           0,
-          5
+          5,
+          0
         ],
         "flow": [
           5,
@@ -146,7 +160,8 @@
           0,
           0,
           0,
-          5
+          5,
+          0
         ],
         "freq": [
           5,
@@ -155,7 +170,8 @@
           0,
           0,
           0,
-          5
+          5,
+          0
         ],
         "phase3_edge": [
           4,
@@ -164,7 +180,8 @@
           0,
           0,
           0,
-          4
+          4,
+          0
         ],
         "quality": [
           5,
@@ -173,7 +190,8 @@
           0,
           0,
           0,
-          5
+          5,
+          0
         ]
       }
     },
@@ -187,7 +205,8 @@
           0,
           0,
           0,
-          10
+          10,
+          0
         ],
         "chain": [
           10,
@@ -196,7 +215,8 @@
           0,
           0,
           0,
-          10
+          10,
+          0
         ],
         "flow": [
           10,
@@ -205,7 +225,8 @@
           0,
           0,
           0,
-          10
+          10,
+          0
         ],
         "freq": [
           10,
@@ -214,7 +235,8 @@
           0,
           0,
           0,
-          10
+          10,
+          0
         ],
         "phase3_edge": [
           10,
@@ -223,7 +245,8 @@
           0,
           0,
           0,
-          10
+          10,
+          0
         ],
         "quality": [
           10,
@@ -232,7 +255,8 @@
           0,
           0,
           0,
-          10
+          10,
+          0
         ]
       }
     },
@@ -246,7 +270,8 @@
           0,
           4,
           4,
-          43
+          43,
+          0
         ],
         "chain": [
           39,
@@ -255,7 +280,8 @@
           0,
           4,
           4,
-          43
+          43,
+          0
         ],
         "flow": [
           39,
@@ -264,7 +290,8 @@
           0,
           4,
           4,
-          43
+          43,
+          2
         ],
         "freq": [
           0,
@@ -273,7 +300,8 @@
           0,
           0,
           0,
-          0
+          0,
+          4
         ],
         "phase3_edge": [
           39,
@@ -282,7 +310,8 @@
           0,
           3,
           3,
-          42
+          42,
+          0
         ],
         "quality": [
           39,
@@ -291,7 +320,8 @@
           0,
           4,
           4,
-          43
+          43,
+          0
         ]
       }
     },
@@ -305,7 +335,8 @@
           0,
           1,
           1,
-          23
+          23,
+          0
         ],
         "chain": [
           22,
@@ -314,7 +345,8 @@
           0,
           1,
           1,
-          23
+          23,
+          0
         ],
         "flow": [
           22,
@@ -323,7 +355,8 @@
           0,
           1,
           1,
-          23
+          23,
+          4
         ],
         "freq": [
           0,
@@ -332,7 +365,8 @@
           0,
           0,
           0,
-          0
+          0,
+          5
         ],
         "phase3_edge": [
           22,
@@ -341,7 +375,8 @@
           0,
           1,
           1,
-          23
+          23,
+          0
         ],
         "quality": [
           22,
@@ -350,7 +385,8 @@
           0,
           1,
           1,
-          23
+          23,
+          0
         ]
       }
     },
@@ -364,7 +400,8 @@
           0,
           0,
           0,
-          6
+          6,
+          0
         ],
         "chain": [
           6,
@@ -373,7 +410,8 @@
           0,
           0,
           0,
-          6
+          6,
+          0
         ],
         "flow": [
           6,
@@ -382,7 +420,8 @@
           0,
           0,
           0,
-          6
+          6,
+          1
         ],
         "freq": [
           0,
@@ -391,7 +430,8 @@
           0,
           0,
           0,
-          0
+          0,
+          2
         ],
         "phase3_edge": [
           6,
@@ -400,7 +440,8 @@
           0,
           0,
           0,
-          6
+          6,
+          0
         ],
         "quality": [
           6,
@@ -409,7 +450,8 @@
           0,
           0,
           0,
-          6
+          6,
+          0
         ]
       }
     },
@@ -423,7 +465,8 @@
           0,
           0,
           0,
-          86
+          86,
+          0
         ],
         "chain": [
           78,
@@ -432,7 +475,8 @@
           0,
           0,
           0,
-          78
+          78,
+          1
         ],
         "flow": [
           86,
@@ -441,7 +485,8 @@
           0,
           0,
           0,
-          86
+          86,
+          0
         ],
         "freq": [
           78,
@@ -450,7 +495,8 @@
           0,
           0,
           0,
-          78
+          78,
+          1
         ],
         "phase3_edge": [
           86,
@@ -459,7 +505,8 @@
           0,
           0,
           0,
-          86
+          86,
+          0
         ],
         "quality": [
           86,
@@ -468,7 +515,8 @@
           0,
           0,
           0,
-          86
+          86,
+          0
         ]
       }
     },
@@ -482,7 +530,8 @@
           0,
           2,
           2,
-          31
+          31,
+          0
         ],
         "chain": [
           29,
@@ -491,7 +540,8 @@
           0,
           2,
           2,
-          31
+          31,
+          0
         ],
         "flow": [
           29,
@@ -500,7 +550,8 @@
           0,
           2,
           2,
-          31
+          31,
+          0
         ],
         "freq": [
           29,
@@ -509,7 +560,8 @@
           0,
           2,
           2,
-          31
+          31,
+          1
         ],
         "phase3_edge": [
           29,
@@ -518,7 +570,8 @@
           0,
           2,
           2,
-          31
+          31,
+          0
         ],
         "quality": [
           29,
@@ -527,7 +580,8 @@
           0,
           2,
           2,
-          31
+          31,
+          0
         ]
       }
     },
@@ -541,7 +595,8 @@
           0,
           2,
           4,
-          66
+          66,
+          0
         ],
         "chain": [
           62,
@@ -550,7 +605,8 @@
           0,
           2,
           4,
-          66
+          66,
+          0
         ],
         "flow": [
           62,
@@ -559,7 +615,8 @@
           0,
           2,
           4,
-          66
+          66,
+          4
         ],
         "freq": [
           62,
@@ -568,7 +625,8 @@
           0,
           2,
           4,
-          66
+          66,
+          6
         ],
         "phase3_edge": [
           62,
@@ -577,7 +635,8 @@
           0,
           2,
           4,
-          66
+          66,
+          0
         ],
         "quality": [
           62,
@@ -586,7 +645,8 @@
           0,
           2,
           4,
-          66
+          66,
+          3
         ]
       }
     },
@@ -600,7 +660,8 @@
           0,
           0,
           0,
-          12
+          12,
+          0
         ],
         "chain": [
           12,
@@ -609,7 +670,8 @@
           0,
           0,
           0,
-          12
+          12,
+          0
         ],
         "flow": [
           12,
@@ -618,7 +680,8 @@
           0,
           0,
           0,
-          12
+          12,
+          0
         ],
         "freq": [
           12,
@@ -627,7 +690,8 @@
           0,
           0,
           0,
-          12
+          12,
+          0
         ],
         "phase3_edge": [
           12,
@@ -636,7 +700,8 @@
           0,
           0,
           0,
-          12
+          12,
+          0
         ],
         "quality": [
           12,
@@ -645,7 +710,8 @@
           0,
           0,
           0,
-          12
+          12,
+          0
         ]
       }
     },
@@ -836,10 +902,10 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "43f2530825b6cfe6975c8b2ec1e89e39cac59173",
+    "commit": "371e9a26f6b5d59f9640d493836ead6bcbf68109",
     "dirty": true
   },
-  "method": "shadow ablation: a Rust mirror of the core's L2 judgment (Anchor sites + Provenance phases 2/3) over the exact leftovers() run structure; the BASELINE shadow must equal the live ce-core delta on every commit (asserted at generation — the mirror is proven, not trusted). Variants re-judge the same input: quality = a site needs one evidence line with >= 20 alphanumeric chars; freq = a site needs one evidence line whose trimmed content is unique in the base tree (slice langs, memory/ excluded); chain = per pair-edge maximum-lines subset with strictly increasing source and destination starts; flow = destination- line exclusivity, greedy by size then position; phase3_edge = deletion- side attribution requires an anchored edge (attack review F4 width probe). Rows: per variant [cross_hits, cross_misses, identity_misses, invention_lines, extras_files, extras_lines, pred_lines]; all-zero commits omitted. Tail row: quality kill ledger + phase3 width ledger.",
+  "method": "shadow ablation: a Rust mirror of the core's L2 judgment (Anchor sites + Provenance phases 2/3) over the exact leftovers() run structure; on every commit the BASELINE shadow must equal the live ce-core delta AND the shadow's site set must equal the core's reply blocks verbatim (both asserted at generation — the mirror and its DECOMPOSITION are proven, not trusted). Variants re-judge the same input, each an exact predicate, not its menu family: quality = a site needs ONE evidence line with >= 20 alphanumeric chars (single-anchor rule; an aggregate-20 floor would NOT separate the requests invention, 7+16=23); freq = hard base-tree uniqueness gate (one evidence line with tree frequency 1; slice langs, memory/ excluded); chain = per pair-edge max-lines subset with strictly increasing source and destination STARTS (the most lenient non-crossing form); flow = greedy whole-block destination-line exclusivity (not a global matching); phase3_edge = deletion-side attribution requires an anchored edge (attack review F4 width probe). Rows: per variant [count_hits, count_misses, identity_misses, invention_lines, extras_files, extras_lines, pred_lines, blocks_dropped]; all-zero commits omitted (the gate conserves the GT total against the labels anchor, so a dropped nonzero row cannot hide). Tail row: quality kill ledger + phase3 width ledger.",
   "schema": "ce.eval-commit-ablation/1.0.0",
   "source_slice": "2f40f22b85dcf3fd0979395286223ddf972550ff",
   "summary": {
@@ -862,7 +928,8 @@
         0,
         17,
         24,
-        571
+        571,
+        0
       ],
       "chain": [
         539,
@@ -871,7 +938,8 @@
         0,
         17,
         24,
-        563
+        563,
+        6
       ],
       "flow": [
         547,
@@ -880,7 +948,8 @@
         0,
         17,
         24,
-        571
+        571,
+        41
       ],
       "freq": [
         444,
@@ -889,7 +958,8 @@
         0,
         8,
         11,
-        455
+        455,
+        55
       ],
       "phase3_edge": [
         546,
@@ -898,7 +968,8 @@
         0,
         16,
         23,
-        569
+        569,
+        0
       ],
       "quality": [
         547,
@@ -907,7 +978,8 @@
         0,
         17,
         24,
-        571
+        571,
+        14
       ]
     }
   }

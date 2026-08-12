@@ -217,11 +217,15 @@ fn flow_filter(mut blocks: Vec<ShadowBlock>) -> Vec<ShadowBlock> {
 }
 
 /// One variant's per-commit score against the cross GT, in the
-/// summable [hits, misses, id_misses, invention, extras_files,
-/// extras_lines, pred] shape. Misses are DATA here, not failures —
-/// that is the whole point of an ablation row.
+/// summable [count_hits, count_misses, id_misses, invention,
+/// extras_files, extras_lines, pred, blocks_dropped] shape (hits and
+/// misses are COUNT-level; id_misses carries the line-identity gap).
+/// Misses are DATA here, not failures — that is the point of an
+/// ablation row. blocks_dropped is set by the driver, not metrics:
+/// identical output does NOT mean a filter never fired (a dropped
+/// site's lines can be re-covered by siblings and phases 2/3).
 #[derive(Default)]
-pub struct Row(pub [u64; 7]);
+pub struct Row(pub [u64; 8]);
 
 impl Row {
     pub fn add(&mut self, o: &Row) {
@@ -251,8 +255,9 @@ pub fn metrics(
         let g = gt.counts.get(key).copied().unwrap_or(0);
         let lines = delta.get(key).unwrap_or(&empty);
         let p = lines.len() as u64;
-        // Slots: 0 hits, 1 misses, 2 id_misses, 3 invention,
-        //        4 extras_files, 5 extras_lines, 6 pred.
+        // Slots: 0 count_hits, 1 count_misses, 2 id_misses,
+        //        3 invention, 4 extras_files, 5 extras_lines,
+        //        6 pred (7 blocks_dropped is the driver's).
         row.0[0] += g.min(p);
         row.0[1] += g - g.min(p);
         row.0[6] += p;
