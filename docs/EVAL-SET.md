@@ -120,12 +120,10 @@ m=1/v=3/s_cross=2 ⇒ **≥2 行跨文件证据地板由模型推导**（单跨�
 | 巧合门 | 5 个已审文件逐一 pred==gt 精确（配合逐文件 miss=0 ⇒ 无余地收留被剔行） |
 | 零虚报门 | 无跨移动 GT 的 commit 上跨预测 = 0（CI 门逐行断言） |
 | 单调 + L1 复现 | L2≥L1 且逐对总和守恒；单文件批在 200 样本集逐字复现 l1-v1.json |
-| extras 台账 | 24 行/17 文件逐条具名+内容入册（全部为 GT blocks 引擎地板漏标
-  的 sub-block 真移动，逐条审读，无一属巧合类） |
+| extras 台账 | 24 行/17 文件逐条具名+内容入册（全部为 GT blocks 引擎地板漏标的 sub-block 真移动，逐条审读，无一属巧合类） |
 | 确定性 | 逆序输入 delta 逐字节一致；三份 doc 重构前后哈希一致 |
 | 代价敏感性 | Spec.hs 钉死 s_cross∈{0,2,4,6}→地板{1,2,3,4}（死旋钮无处藏身） |
-| 参照等价 | 81,640 个穷举小实例上，生产实现与独立参照（双向极大性 block 枚举
-  + 相位集合式定义）逐一等价——实现↔规范穷举钉死；规范↔真值由上表七门钉 |
+| 参照等价 | 81,640 个穷举小实例上，生产实现与独立参照（双向极大性 block 枚举 + 相位集合式定义）逐一等价——实现↔规范穷举钉死；规范↔真值由上表七门钉 |
 | 搬迁登记 | 35 单元名册：32 具名（含 CLASSES 常量洞与扩展相位归属；块内逐行
   归属修掉"大块只记头单元"）+ 3 个 `~` 改编单元（GT dump 证零行同一存活，
   行级归属结构性不可能——如实入册而非硬凑） |
@@ -177,33 +175,29 @@ commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。�
 仓 doc 在 hunk 推导下字节不变。复跑：CE_SLICE_* 四变量 + 本节两端 sha。
 
 **GT 审读**（[commit-labels-requests-v1.json](../contracts/eval/commit-labels-requests-v1.json)）：
-机械两层后跨文件 15 出/15 进全部集中在 3 个 commit，逐行对原始 diff 审读
-→ **12 条巧合修正**（5aeec8b6 文档同步重写 1 删 2 增；2a6f290b black/isort
-全仓格式化 9 行：import 就地合并/炸开/收拢的内容巧合）+ **1 个真搬迁**保
-留（99b3b492：`rebuild_proxies` 判定体 9 行 sessions.py 缩进 8 → utils.py
-新函数 `resolve_proxies` 缩进 4，逐行同一）。终值跨 **9/9**、文件内
-255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json（数据
-即数据——平行 Rust 常量表会被自家棘轮判克隆）。
+机械两层后跨文件 15 出/15 进集中在 3 个 commit，逐行对原始 diff 审读 →
+**12 条巧合修正**（5aeec8b6 文档同步重写；2a6f290b black/isort 全仓格式化
+9 行内容巧合）+ **1 个真搬迁**（99b3b492：`rebuild_proxies` 判定体 9 行
+sessions.py → utils.py `resolve_proxies`，逐行同一）。终值跨 **9/9**、文件
+内 255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json（平
+行 Rust 常量表会被自家棘轮判克隆——数据即数据）。
 
 **L1-on-requests 基线**（[commit-baseline-l1-requests-v1.json](../contracts/eval/commit-baseline-l1-requests-v1.json)）：
-**cross_credit_upper_bound = 0**——自仓"跨文件 moved L1 结构性零召回"
-（0/547）在第二语料复现，R-L2-2 外验第一料落地；detected 510 / GT 530 /
-predicted 636（超出方向同自仓 = L1 合法声称 GT blocks 引擎漏标的
-sub-block 移动）；320/341 commit 逐对精确。附带清偿自仓欠账一笔：`~` 标
-记后未重生成的 labels doc（代码表↔doc 漂移 CI 不可见）掩码比对抓出重生成。
+**cross_credit_upper_bound = 0**——自仓跨文件 L1 结构性零召回（0/547）在
+第二语料复现，R-L2-2 外验第一料落地；detected 510 / GT 530 / predicted 636
+（超出 = L1 合法声称 GT blocks 漏标的 sub-block 移动）；320/341 逐对精确。
+附带清偿：`~` 标记后未重生成的 labels doc 由掩码比对抓出（漂移 CI 不可见）。
 
 **L2-on-requests 外验判决（2026-08-11）**：召回门过（跨 **18/18 行身份
 级**，resolve_proxies 完整回收）；**虚报门破**——black/isort commit 发明
-2 站/4 行（收拢↔炸开恰够 destFloor=2）⇒ doc 悬置、F4 改判条件点火，交下
-节影子消融双语料裁决（自仓 547/547 与 FPR 0/600 不可破）。
+2 站/4 行（恰够 destFloor=2）⇒ doc 悬置、F4 改判条件点火，交影子消融裁决。
 
 **影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)，
 Codex 评审处置 [2026-08-11-m5-1c-ii](reviews/2026-08-11-m5-1c-ii-ablation-review.md)）**：
 Rust 影子引擎镜像判决核（Anchor sites + Provenance phase2/3），吃
 leftovers() 同一 run 结构；**双重保真门逐 commit 断言**（自仓 47/47 +
-requests 341/341）：baseline 影子 == 活核 delta，且影子站点集 == 核 reply
-blocks **逐字全等**（分解也被证明，评审 F1）。矩阵（drops=被滤 block 数，
-输出相等≠未开火）：
+requests 341/341）：baseline 影子 == 活核 delta、影子站点集 == 核 reply
+blocks **逐字全等**（评审 F1）。矩阵（drops=被滤 block，输出相等≠未开火）：
 
 | 变体（精确谓词） | 自仓（GT 547） | requests（GT 18） |
 |---|---|---|
@@ -215,24 +209,21 @@ blocks **逐字全等**（分解也被证明，评审 F1）。矩阵（drops=被
 | phase3_edge（F4 探针） | 1 miss（宽度 +1 真召回/+1 已审 extra） | 宽度贡献 **0**（台账空） |
 
 裁决：**quality 在此六谓词、双语料内唯一赢家**；聚合-20 地板分离不了发明
-站（7+16=23）——单行锚才是有效形式。阈值：发明站死∧最险真站（19 锚）活
-= **17..19**；t=20 双语料亦过门（19 锚站转靠冗余）；>20 未扫描。**F4 以
-数据结案，维持原设计**：requests 零 error 贡献，自仓加边反破 547→546。
-**升级已落地（用户拍板阈值 19，wire 2.0.0）**：行级 alnum 随 rem/add 过
-线（判定全在 Haskell 的 Cost.anchorFloor），自仓 L2 summary 逐项不变、
-FPR 0/600 保持、升级后消融 baseline 七项 == 升级前 quality 列（双语料预
-注册全中）、**requests L2 首冻结：18/18、0 miss、0 extras、0 发明**——
-本节上文的"悬置"自此解除。
+站（7+16=23）——单行锚才是有效形式。阈值：发明站死∧最险真站（19 锚）活 =
+**17..19**；t=20 双语料亦过门（靠冗余）；>20 未扫描。**F4 以数据结案维持
+原设计**：requests 零 error 贡献，自仓加边反破 547→546。**升级已落地（拍
+板阈值 19，wire 2.0.0）**：行级 alnum 随 rem/add 过线（判定全在 Haskell
+Cost.anchorFloor），自仓 L2 summary 逐项不变、FPR 0/600 保持、升级后消融
+baseline 七项 == 升级前 quality 列（预注册全中）、**requests L2 首冻结：
+18/18、0 miss/0 extras/0 发明**——上文"悬置"自此解除。
 
-**边级 GT（M5-1c-iii 尾款）**：审读表新增 relocation_edges（来源→目的地
-+经边单元；自仓 16 边行/37 边-单元对，requests 1/1），每行对原始 diff 核
-实——名字存活者按定义删除扫描，改名收敛者按体行同一（project_dir /
-corpus_dir 即 common tmp 的同体异名）。验收反向设门：**edge_violations =
-L2 声称的边必须被审读认可，越界即红**（生成器+CI 双点；首跑即逮出定义扫
-描漏掉的 5 条改名体边——按 diff 补全 GT，非按 pipeline）。正向为测量：
-边覆盖 **自仓 31/37、requests 1/1**——未覆盖 = 短体单元开不了站 + ~ 改编
-无行级证据，与改编谱系（~×3、run_hook 签名改编、resolve_proxies 改名搬
-迁）同为下一升级方向（改编/短单元对齐）的量化基线。
+**边级 GT（M5-1c-iii 尾款）**：审读表新增 relocation_edges（自仓 16 边行/
+37 边-单元对，requests 1/1），每行对原始 diff 核实——名字存活者按定义删除
+扫描，改名收敛者按体行同一。验收反向设门：**edge_violations 越界即红**
+（生成器+CI 双点；首跑即逮出定义扫描漏掉的 5 条改名体边——按 diff 补全
+GT，非按 pipeline）。正向为测量：边覆盖 **自仓 31/37、requests 1/1**——
+未覆盖 = 短体单元开不了站 + ~ 改编无行级证据，即下一升级方向（改编/短单
+元对齐）的量化基线。
 
 ## ripgrep 外验切片 v1（M5-1d 冻结，2026-08-12，Rust 补充语料）
 
@@ -242,41 +233,38 @@ first-parent 窗口 `14860b0f..3fce3b5`（tip 即 M1 crosscheck/M2 性能钉定�
 moved-bearing，双跑字节一致。语料首现 `C` 状态，copy 语义就此拍板：copy 对
 按 (源, 新) 配对但**不消费 before 侧**（单 `-C` 只把已修改文件当源），pair
 带 `copied: true` 记号——literal.rs→literalold.rs 旧版留档正是整文件复制
-膨胀形态。**GT 审读**：机械跨 506/499 集中 11 个 commit 逐条对原始 diff 审
-读——6 个真搬迁 commit 全量保留（PathPrinter 跨 crate 整迁、clap→lexopt
-重构 767 行、pcre2 版本块、hyperlink 别名表解体、max_matches
-printer→searcher、别名测试改编迁移），6 条修正/11 行巧合（就地 import 改
-写、重写文档首行、use 块嵌套化、被删 word.rs 的通用惯用行）。终值跨
-**498 出/496 进**、22 单元登记 + 22 边-单元对。**L1 基线**：盲区三度复现
-——巧合抵扣上界 26（首个非零，仍 ≪ 994）、387/433 逐对精确。
+膨胀形态。**GT 审读**：机械跨 506/499 集中 11 个 commit 逐条对原始 diff
+审读——6 个真搬迁 commit 全量保留（PathPrinter 跨 crate、clap→lexopt 767
+行、pcre2 版本块、hyperlink 别名表解体、max_matches printer→searcher、别
+名测试改编迁移），6 修正/11 行巧合（就地 import 改写、重写文档首行、use
+嵌套化、被删 word.rs 惯用行）。终值跨 **498 出/496 进**、22 单元 + 22 边-
+单元对。**L1 基线**：盲区三度复现——巧合抵扣上界 26（首非零，≪ 994）、
+387/433 逐对精确。
 
 **语料逼出两项真产品缺陷（根修 + 重钉）**：① 7,625 行纯新建文件的空侧
-diff 被 D 受限搜索误标 degraded → 空侧 = 构造性精确解短路（diff.rs，生产
-路径同愈）；② bucketCap 单侧计数在零配对成本处点火（66 条同文 `#[inline]`
-纯加入、5×118 样板桶）→ **乘积形工作量护栏** |rem|×|add| > 64²（最坏界不
-变、点火仍全请求纯 L1 = F3 语义、洪泛 e2e 翻双侧重钉；旧式在自仓/requests
-从未点火 ⇒ 判决零漂移，81,640 穷举等价与 FPR 0/600 保持）。**L2 冻结：
-hits 988 + 地板下 6 == 994 守恒、发明 0**（锚地板 held-out 零发明）、22
-登记单元全具名、8 边零越界、逆序确定性过。**地板下登记制**（用户拍板
-2026-08-12）：6 条真搬迁行在目的地无 ≥2-distinct 连续伙伴、结构性低于
-destFloor（单行注释 args.rs:512→parse.rs:87 双侧 + 改编 find 两对孤立行）
-——审读逐行入册（审读表 `below_floor`，extras 台账的 miss 侧镜像），门语
-义 = **零未审读 miss**（自仓/requests 登记空、bar 不变；hits+misses+
-below_floor==cross GT 三层 CI 锚定）。extras 505 行/15 文件逐行台账赐福
-（可回收基线 gt−below_floor 计费），两类机制：GT blocks 引擎漏标的真搬迁
-（旗标文档段落、改编函数体内的同一行）+ 亚锚样板搭车（`Ok(())`/import 片
-段，F4 删侧宽松的既定代价）。**消融三度确认**：quality==baseline
-[988,0,0,0]、freq 13 miss / chain 9 miss 三语料全灭、F4 宽度探针零召回贡
-献、保真门 433/433（影子==活核逐字全等）。
+diff 被 D 受限搜索误标 degraded → 空侧构造性精确解短路（diff.rs，生产路径
+同愈）；② bucketCap 单侧计数在零配对成本处点火（66 条同文 `#[inline]`、
+5×118 样板桶）→ **乘积形护栏** |rem|×|add| > 64²（最坏界不变、点火仍纯
+L1 = F3 语义、洪泛 e2e 翻双侧重钉；旧式在自仓/requests 从未点火 ⇒ 判决零
+漂移，81,640 穷举等价与 FPR 0/600 保持）。**L2 冻结：hits 988 + 地板下 6
+== 994 守恒、发明 0**（held-out 零发明）、22 单元全具名、8 边零越界、逆序
+确定性过。**地板下登记制**（用户拍板 2026-08-12）：6 条真搬迁行结构性低于
+destFloor（单行注释双侧 + 改编 find 孤立行）——审读逐行入册（`below_floor`，
+extras 的 miss 侧镜像），门语义 = **零未审读 miss**（自仓/requests 登记空；
+hits+misses+below_floor==cross GT 三层锚定）。extras 505 行/15 文件台账赐
+福（可回收基线 gt−below_floor 计费）：GT blocks 漏标真搬迁 + 亚锚样板搭车
+（`Ok(())`/import 片段，F4 删侧宽松既定代价）。**消融三度确认**：
+quality==baseline [988,0,0,0]、freq 13 miss / chain 9 miss 三语料全灭、F4
+宽度零召回贡献、保真门 433/433（影子==活核逐字全等）。
 
 **Codex 评审处置（2026-08-12，无 blocker，3 major + 2 minor 全核实落地，
-[归档](reviews/2026-08-12-m5-1d-codex-review.md)）**：extras 统一可回收基
-线计费（消 500≠505 口径分歧与 waiver 隐身通道）；登记三重锚（waived 行被
-预测即自证非地板下 + 咽喉拒重复 + labels CI 行身份锚）；**by-name 评审表
-解析修复单元/边登记门在外语料 CI 的静默空转**（幻影单元反事实即红）；
-copy 不消费落进 labels 机器；乘积护栏 Integer 化 + 两真实形状非降级回归钉。
+[归档](reviews/2026-08-12-m5-1d-codex-review.md)）**：extras 统一可回收基线
+计费（消 500≠505 口径分歧与 waiver 隐身通道）；登记三重锚（waived 被预测即
+自证 + 咽喉拒重复 + labels 行身份锚）；**by-name 评审表解析修复外语料登记门
+静默空转**（幻影单元反事实即红）；copy 不消费落 labels 机器；乘积护栏
+Integer 化 + 两真实形状非降级回归钉。
 
-## graph 站点宇宙 v1（M5-2b 冻结，2026-08-12，预注册于任何解析器代码之前）
+## graph 站点宇宙 + 审计抽样 v1（M5-2b/2c 冻结，2026-08-12，均先于解析器）
 
 精度仪器的分母 = **免解析 SITES**（宇宙先于解析器冻结，解析器不得自选分
 母——[设计定稿](reviews/2026-08-12-m5-2-graph-design.md) §5）。五语料
@@ -288,6 +276,18 @@ cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。范围 = 五门正典
 前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门：summary
 从行重导、常数/范围/语料集钉死（删档即红）、档名↔内嵌名一致、五语言联合非零
 （D2-4）、**检测器漂移门**（自仓 sha 未变行重检=RG3 CI 化+spec 子串）；双跑一致。
+
+**审计抽样**（[graph-sample-v1.json](../contracts/eval/graph-sample-v1.json)，
+提交**先于任何 ladder/ 解析器**——2d 起 G13 祖先断言化）：rank id =
+sha256(域|corpus|commit|path|line|nth|kind|spec)，nth = 2b-iii 入身份的行内
+序号，spec 居末保单射；主样 **100** = 每语言地板 15 + 25 席按语言池最大余数
+（纯整数分摊）再按 kind 摊——go 16/md 25/py 17/rs 21/ts 21，语料谱 cobra 12/
+requests 15/ripgrep 25/self 18/zod 30；行序 = 独立 audit 域（审计者不见 rank
+序）；**后备每语言 20**（补分母不跨语言，护地板）；rung 域预注册、2f 实体化
+（非门）。池 = 逐文件对冻结 sha256+计数重建（凭核对不凭信任）；双跑
+modulo-provenance 全同。CI 门：verify() 重哈希 + 拒重复 id、字面量 100/20×5、
+审计序、配额↔行逐格且从 slice summary 经**同一分摊代码**重导、逐行宇宙绑定
+（tip/lang/kind/多重度封顶）、反事实（篡改 spec / 重复行必拒——断言非假设）。
 
 ## 复跑 / 校验
 
