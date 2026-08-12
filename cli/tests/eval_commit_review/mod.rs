@@ -16,31 +16,53 @@ use serde_json::{Value, json};
 use std::collections::{HashMap, HashSet};
 use std::sync::OnceLock;
 
-/// The active corpus's review record, embedded at compile time and
-/// resolved once (corpus() pins external window ends via git — not a
-/// per-row cost). corrections: reviewed content-coincidence entries
-/// {sha, file, added, lines, why}. relocated_units: reviewed
-/// relocation targets {sha, to, units}.
-fn tables() -> &'static Value {
-    static TABLES: OnceLock<Value> = OnceLock::new();
-    TABLES.get_or_init(|| {
-        let raw = match crate::eval_support::corpus().name.as_deref() {
-            None => include_str!("self.json"),
-            Some("requests") => include_str!("requests.json"),
-            Some("ripgrep") => include_str!("ripgrep.json"),
-            Some(other) => panic!("no review record for corpus {other}"),
-        };
-        serde_json::from_str(raw).expect("review record json")
-    })
+/// A named corpus's review record, embedded at compile time (all
+/// three parse once). corrections: reviewed content-coincidence
+/// entries {sha, file, added, lines, why}. relocated_units: reviewed
+/// relocation targets {sha, to, units}. CI gates iterate every
+/// frozen corpus, so resolution is BY NAME — resolving through the
+/// active corpus would silently read the wrong record there (the
+/// active-corpus form below serves the generators).
+fn tables_for(corpus: Option<&str>) -> &'static Value {
+    static TABLES: OnceLock<[(Option<&'static str>, Value); 3]> = OnceLock::new();
+    let parse = |raw: &str| serde_json::from_str(raw).expect("review record json");
+    let all = TABLES.get_or_init(|| {
+        [
+            (None, parse(include_str!("self.json"))),
+            (Some("requests"), parse(include_str!("requests.json"))),
+            (Some("ripgrep"), parse(include_str!("ripgrep.json"))),
+        ]
+    });
+    &all.iter()
+        .find(|(n, _)| *n == corpus)
+        .unwrap_or_else(|| panic!("no review record for corpus {corpus:?}"))
+        .1
 }
 
-/// The record's `key` rows whose sha prefix matches `sha`.
-fn rows_for<'a>(key: &str, sha: &'a str) -> impl Iterator<Item = &'static Value> + use<'a> {
-    tables()[key]
+/// The ACTIVE corpus's review record (corpus() pins external window
+/// ends via git — not a per-row cost) — the generators' view.
+fn tables() -> &'static Value {
+    static NAME: OnceLock<Option<String>> = OnceLock::new();
+    let name = NAME.get_or_init(|| crate::eval_support::corpus().name);
+    tables_for(name.as_deref())
+}
+
+/// A record's `key` rows whose sha prefix matches `sha`.
+fn rows_of<'a>(
+    t: &'static Value,
+    key: &str,
+    sha: &'a str,
+) -> impl Iterator<Item = &'static Value> + use<'a> {
+    t[key]
         .as_array()
         .expect("review rows")
         .iter()
         .filter(move |r| sha.starts_with(r["sha"].as_str().expect("sha prefix")))
+}
+
+/// The ACTIVE corpus's `key` rows for `sha` (generator view).
+fn rows_for<'a>(key: &str, sha: &'a str) -> impl Iterator<Item = &'static Value> + use<'a> {
+    rows_of(tables(), key, sha)
 }
 
 pub type PerFile = HashMap<String, u64>;
@@ -163,10 +185,11 @@ pub fn per_file_corrections(sha: &str, added: bool) -> PerFile {
         .collect()
 }
 
-/// Project review rows for one sha: carry `fields` through, split
-/// the comma-joined units — the one shape both registers share.
-fn project(key: &str, sha: &str, fields: &[&str]) -> Vec<Value> {
-    rows_for(key, sha)
+/// Project a record's review rows for one sha: carry `fields`
+/// through, split the comma-joined units — the one shape both
+/// registers share.
+fn project(t: &'static Value, key: &str, sha: &str, fields: &[&str]) -> Vec<Value> {
+    rows_of(t, key, sha)
         .map(|r| {
             let mut o = serde_json::Map::new();
             for f in fields {
@@ -181,7 +204,12 @@ fn project(key: &str, sha: &str, fields: &[&str]) -> Vec<Value> {
 }
 
 pub fn units_for(sha: &str) -> Vec<Value> {
-    project("relocated_units", sha, &["to"])
+    project(tables(), "relocated_units", sha, &["to"])
+}
+
+/// The named corpus's unit register (CI-gate view — see tables_for).
+pub fn units_in(corpus: Option<&str>, sha: &str) -> Vec<Value> {
+    project(tables_for(corpus), "relocated_units", sha, &["to"])
 }
 
 /// The reviewed below-floor register for one sha (M5-1d): true
@@ -190,7 +218,20 @@ pub fn units_for(sha: &str) -> Vec<Value> {
 /// miss-side mirror of the extras ledger, itemized per line. Rows:
 /// (side, file, 1-based line).
 pub fn below_floor_for(sha: &str) -> Vec<(String, String, usize)> {
-    let rows: Vec<_> = rows_for("below_floor", sha)
+    below_floor(rows_for("below_floor", sha), sha)
+}
+
+/// Same register, resolved BY corpus name — the CI gates' view
+/// (they iterate every frozen corpus regardless of CE_SLICE_*).
+pub fn below_floor_in(corpus: Option<&str>, sha: &str) -> Vec<(String, String, usize)> {
+    below_floor(rows_of(tables_for(corpus), "below_floor", sha), sha)
+}
+
+fn below_floor<'a>(
+    rows: impl Iterator<Item = &'a Value>,
+    sha: &str,
+) -> Vec<(String, String, usize)> {
+    let rows: Vec<_> = rows
         .map(|r| {
             (
                 r["side"].as_str().expect("side").to_string(),
@@ -211,5 +252,10 @@ pub fn below_floor_for(sha: &str) -> Vec<(String, String, usize)> {
 /// per (from file, to file) edge with the units that rode it. Units
 /// absent from every edge row are arrival-level GT only.
 pub fn edges_for(sha: &str) -> Vec<Value> {
-    project("relocation_edges", sha, &["from", "to"])
+    project(tables(), "relocation_edges", sha, &["from", "to"])
+}
+
+/// The named corpus's edge register (CI-gate view — see tables_for).
+pub fn edges_in(corpus: Option<&str>, sha: &str) -> Vec<Value> {
+    project(tables_for(corpus), "relocation_edges", sha, &["from", "to"])
 }

@@ -95,10 +95,15 @@ fn each_sha<'a>(rows: &'a [Value], mut f: impl FnMut(&'a str, &'a Value)) {
 /// review verified — an unverified source is an INVENTED edge. Units
 /// outside the table stay arrival-level (no edge obligation), so the
 /// check is reverse-only and cannot false-red on extension paths.
-pub fn edge_violations(rows: &[Value]) -> Vec<String> {
+/// `corpus` names the review record: the CI gate iterates every
+/// frozen corpus, and the active-corpus resolution it used before
+/// silently checked external docs against the SELF register — empty
+/// for their shas, so the check never ran (Codex review C3 class,
+/// caught by the below-floor anchor's first run).
+pub fn edge_violations(corpus: Option<&str>, rows: &[Value]) -> Vec<String> {
     let mut bad = Vec::new();
     each_sha(rows, |sha, r| {
-        let edges: Vec<Value> = review::edges_for(sha);
+        let edges: Vec<Value> = review::edges_in(corpus, sha);
         let allowed = |unit: &str, from: &str, to: &str| {
             edges
                 .iter()
@@ -122,11 +127,12 @@ pub fn edge_violations(rows: &[Value]) -> Vec<String> {
 
 /// Register entries not named by their commit's row. Pure const data
 /// on the register side, so the CI gate re-runs this without git.
-pub fn register_misses(rows: &[Value]) -> Vec<String> {
+/// `corpus` names the review record (see edge_violations).
+pub fn register_misses(corpus: Option<&str>, rows: &[Value]) -> Vec<String> {
     let mut misses = Vec::new();
     each_sha(rows, |sha, r| {
         let keys = row_keys(r);
-        for entry in review::units_for(sha) {
+        for entry in review::units_in(corpus, sha) {
             for unit in entry["units"].as_array().expect("units") {
                 let name = unit.as_str().expect("unit name");
                 // "~name" = reviewed as adapted-in-flight: zero

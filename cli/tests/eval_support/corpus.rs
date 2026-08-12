@@ -60,6 +60,20 @@ pub fn corpus_doc_pairs_frozen(family: &str) -> Vec<(String, String)> {
     pairs
 }
 
+/// The corpus-name suffix of a frozen doc path
+/// ("…/commit-labels-ripgrep-v1.json" → Some("ripgrep"), the self
+/// doc → None) — how a gate iterating EVERY corpus resolves the
+/// matching compiled review record (resolving via the active corpus
+/// would silently read the wrong one — Codex review C3 follow-up).
+pub fn doc_corpus_name(path: &str, family: &str) -> Option<String> {
+    let stem = path.rsplit('/').next().expect("file name");
+    let mid = stem
+        .strip_prefix(&format!("commit-{family}"))
+        .and_then(|s| s.strip_suffix("-v1.json"))
+        .unwrap_or_else(|| panic!("{path}: not a {family} doc"));
+    (!mid.is_empty()).then(|| mid.trim_start_matches('-').to_string())
+}
+
 fn doc_pairs(family: &str, required: bool) -> Vec<(String, String)> {
     let mut pairs = Vec::new();
     for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {

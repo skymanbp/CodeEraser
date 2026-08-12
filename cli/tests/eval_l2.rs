@@ -181,6 +181,7 @@ fn generate_commit_l2() {
             labels_stem()
         ),
         |slice| {
+            let name = corpus().name;
             for s in slice["commits"].as_array().expect("commits") {
                 let (row, mut extra) = commit_row(&mut link, s, &labels);
                 rows.push(row);
@@ -189,9 +190,9 @@ fn generate_commit_l2() {
             assert_extras_frozen(&ledger);
             assert_deterministic(&mut link, &labels);
             let mut doc_rows = std::mem::take(&mut rows);
-            let misses = eval_l2_register::register_misses(&doc_rows);
+            let misses = eval_l2_register::register_misses(name.as_deref(), &doc_rows);
             assert!(misses.is_empty(), "relocation register misses: {misses:?}");
-            let bad = eval_l2_register::edge_violations(&doc_rows);
+            let bad = eval_l2_register::edge_violations(name.as_deref(), &doc_rows);
             assert!(bad.is_empty(), "invented relocation edges: {bad:?}");
             let summary = parts::summarize(&doc_rows, &ledger);
             doc_rows.push(json!({"extras_ledger": std::mem::take(&mut ledger)}));
@@ -232,6 +233,10 @@ fn commit_l2_consistent() {
 }
 
 fn check_corpus(labels_path: &str, doc_path: &str) {
+    // The register checks resolve the review record BY corpus name —
+    // through the active corpus they silently checked external docs
+    // against the (empty-for-those-shas) self register.
+    let name = eval_support::doc_corpus_name(doc_path, "l2");
     let doc = load(doc_path);
     let labels = load(labels_path);
     let all = doc["commits"].as_array().expect("commits");
@@ -247,9 +252,9 @@ fn check_corpus(labels_path: &str, doc_path: &str) {
         gt,
         "cross ledger conservation"
     );
-    let misses = eval_l2_register::register_misses(rows);
+    let misses = eval_l2_register::register_misses(name.as_deref(), rows);
     assert!(misses.is_empty(), "relocation register misses: {misses:?}");
-    let bad = eval_l2_register::edge_violations(rows);
+    let bad = eval_l2_register::edge_violations(name.as_deref(), rows);
     assert!(bad.is_empty(), "invented relocation edges: {bad:?}");
     check_rows(rows, &labels);
 }

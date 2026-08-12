@@ -219,6 +219,7 @@ fn commit_labels_consistent() {
 }
 
 fn check_corpus(slice_path: &str, labels_path: &str) {
+    let corpus = eval_support::doc_corpus_name(labels_path, "labels");
     let slice = load(slice_path);
     let labels = load(labels_path);
     let by = by_sha(&labels);
@@ -230,7 +231,7 @@ fn check_corpus(slice_path: &str, labels_path: &str) {
             None => assert_eq!(moved, 0, "{sha}: moved-bearing but unreviewed"),
             Some(l) => {
                 seen += 1;
-                check_row(sha, s, l, moved);
+                check_row(corpus.as_deref(), sha, s, l, moved);
             }
         }
     }
@@ -239,7 +240,7 @@ fn check_corpus(slice_path: &str, labels_path: &str) {
     assert_eq!(labels["summary"], summarize(&rows), "summary drifted");
 }
 
-fn check_row(sha: &str, s: &Value, l: &Value, slice_moved: u64) {
+fn check_row(corpus: Option<&str>, sha: &str, s: &Value, l: &Value, slice_moved: u64) {
     for (sp, lp) in s["pairs"]
         .as_array()
         .unwrap()
@@ -257,11 +258,12 @@ fn check_row(sha: &str, s: &Value, l: &Value, slice_moved: u64) {
         assert_eq!(g(lp, "added"), g(sp, "added"), "{sha}: numstat drifted");
         assert_eq!(g(lp, "deleted"), g(sp, "deleted"), "{sha}: numstat drifted");
     }
-    // The register is DATA (the corpus review record); pin the frozen
+    // The register is DATA (this corpus's review record, resolved BY
+    // NAME — the gate iterates every frozen corpus); pin the frozen
     // row to it at line identity so editing either side alone reddens
     // CI (Codex review C3 — totals-only anchoring left register edits
     // invisible until manual regeneration).
-    let reg: Vec<Value> = review::below_floor_for(sha)
+    let reg: Vec<Value> = review::below_floor_in(corpus, sha)
         .into_iter()
         .map(|(side, file, line)| json!({"side": side, "file": file, "line": line}))
         .collect();
