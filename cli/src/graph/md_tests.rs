@@ -12,7 +12,8 @@ fn kinds_specs(text: &str) -> Vec<(&'static str, String)> {
 /// fenced block or an inline code span must not emit a site.
 #[test]
 fn fences_and_code_spans_emit_nothing() {
-    let text = "```md\n[fenced](./no.md)\n```\nsee `[coded](./no.md)` too\n~~~\n[tilde](./no.md)\n~~~\n";
+    let text =
+        "```md\n[fenced](./no.md)\n```\nsee `[coded](./no.md)` too\n~~~\n[tilde](./no.md)\n~~~\n";
     assert_eq!(kinds_specs(text), vec![]);
 }
 

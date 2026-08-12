@@ -267,7 +267,8 @@ fn check_slice(path: &str, doc: &Value, lang_sites: &mut BTreeMap<String, u64>) 
     assert_eq!(doc["constants"], constants(), "{path}: constants drifted");
     for (category, n) in doc["excluded"].as_object().expect("excluded") {
         assert!(
-            ["excluded_prefix", "variant_extension", "other_extension"].contains(&category.as_str())
+            ["excluded_prefix", "variant_extension", "other_extension"]
+                .contains(&category.as_str())
                 && n.as_u64().is_some_and(|v| v > 0),
             "{path}: malformed excluded row {category}"
         );

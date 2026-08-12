@@ -198,14 +198,15 @@ mod tests {
             let got: Vec<(&str, &str)> = found.iter().map(|s| (s.kind, s.spec.as_str())).collect();
             assert_eq!(got, *want, "{lang:?}");
             let lines: Vec<&str> = text.lines().collect();
-            for s in &found {
-                assert!(
-                    lines[s.line - 1].contains(&s.spec),
-                    "{lang:?}: spec {:?} not in line {:?}",
-                    s.spec,
-                    lines[s.line - 1]
-                );
-            }
+            let stray: Vec<&str> = found
+                .iter()
+                .filter(|s| !lines[s.line - 1].contains(&s.spec))
+                .map(|s| s.spec.as_str())
+                .collect();
+            assert!(
+                stray.is_empty(),
+                "{lang:?}: specs not line substrings: {stray:?}"
+            );
         }
     }
 

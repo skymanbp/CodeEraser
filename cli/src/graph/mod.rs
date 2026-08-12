@@ -119,13 +119,22 @@ mod tests {
     #[test]
     fn analyze_walks_counts_and_survives_non_utf8() {
         let dir = std::env::temp_dir().join(format!("ce-graph-walk-{}", std::process::id()));
+        let fixtures: [(&str, &[u8]); 3] = [
+            ("a.py", b"import os\n"),
+            ("b.md", b"[x](./a.py)\n"),
+            ("c.py", b"import sys\n\xff\xfe\n"),
+        ];
         std::fs::create_dir_all(&dir).expect("mkdir");
-        std::fs::write(dir.join("a.py"), "import os\n").expect("a.py");
-        std::fs::write(dir.join("b.md"), "[x](./a.py)\n").expect("b.md");
-        std::fs::write(dir.join("c.py"), b"import sys\n\xff\xfe\n").expect("c.py");
+        for (name, bytes) in fixtures {
+            std::fs::write(dir.join(name), bytes).expect(name);
+        }
         let files = analyze(&dir).expect("analyze");
         let by = counts(&files);
-        assert_eq!(by.get(&("python", "import")), Some(&2), "lossy file still detected");
+        assert_eq!(
+            by.get(&("python", "import")),
+            Some(&2),
+            "lossy file still detected"
+        );
         assert_eq!(by.get(&("markdown", "link")), Some(&1));
         std::fs::remove_dir_all(&dir).ok();
     }
