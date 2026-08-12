@@ -219,9 +219,7 @@ fn commit_labels_consistent() {
 }
 
 fn check_corpus(slice_path: &str, labels_path: &str) {
-    let corpus = eval_support::doc_corpus_name(labels_path, "labels");
-    let slice = load(slice_path);
-    let labels = load(labels_path);
+    let (corpus, slice, labels) = eval_support::gate_docs("labels", slice_path, labels_path);
     let by = by_sha(&labels);
     let mut seen = 0;
     for s in slice["commits"].as_array().expect("commits") {

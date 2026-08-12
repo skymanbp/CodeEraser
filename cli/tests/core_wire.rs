@@ -81,6 +81,28 @@ fn corelink_open_and_desync() {
     assert!(err.contains("desync"), "visible failure, got: {err}");
 }
 
+/// A two-pair batch in the cross-pair shape every bucket test uses:
+/// one pair pure removal, one pair pure addition (Rust lang).
+fn removal_addition_batch<'a>(
+    removed: &'a str,
+    added: &'a str,
+) -> [codeeraser::fourclass::batch::PairInput<'a>; 2] {
+    use codeeraser::fourclass::batch::PairInput;
+    use codeeraser::scan::lang::Lang;
+    [
+        PairInput {
+            before: removed,
+            after: "",
+            lang: Lang::Rust,
+        },
+        PairInput {
+            before: "",
+            after: added,
+            lang: Lang::Rust,
+        },
+    ]
+}
+
 /// The product cap's motivating shapes stay UN-degraded (Codex
 /// review C4: previously nothing pinned them, so reverting to the
 /// old per-side occurrence count would have passed every test).
@@ -90,31 +112,15 @@ fn corelink_open_and_desync() {
 /// (product 590 < 64^2 despite one side > 64).
 #[test]
 fn product_cap_spares_one_sided_and_small_product_shapes() {
-    use codeeraser::fourclass::batch::{PairInput, classify_batch};
-    use codeeraser::scan::lang::Lang;
+    use codeeraser::fourclass::batch::classify_batch;
     let (mut link, _) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
     let pile = "#[inline(always)]\n".repeat(66);
-    let one_sided = [PairInput {
-        before: "",
-        after: &pile,
-        lang: Lang::Rust,
-    }];
+    let one_sided = removal_addition_batch("", &pile);
     let out = classify_batch(&one_sided, Some(&mut link));
     assert_eq!(out.degraded, None, "one-sided pile must not degrade");
     let removed = "#[derive(Debug)]\n".repeat(5);
     let added = "#[derive(Debug)]\n".repeat(118);
-    let small_product = [
-        PairInput {
-            before: &removed,
-            after: "",
-            lang: Lang::Rust,
-        },
-        PairInput {
-            before: "",
-            after: &added,
-            lang: Lang::Rust,
-        },
-    ];
+    let small_product = removal_addition_batch(&removed, &added);
     let out = classify_batch(&small_product, Some(&mut link));
     assert_eq!(out.degraded, None, "small-product bucket must not degrade");
 }
@@ -124,8 +130,7 @@ fn product_cap_spares_one_sided_and_small_product_shapes() {
 /// return PURE L1 plus the visible reason, never partial L2.
 #[test]
 fn degraded_reply_keeps_l1_pure() {
-    use codeeraser::fourclass::batch::{PairInput, classify_batch};
-    use codeeraser::scan::lang::Lang;
+    use codeeraser::fourclass::batch::classify_batch;
     // 65 identical removals x 65 identical additions of one content =
     // pairing product 4225 > 64^2, tripping the per-hash work budget
     // (one-sided or small-product piles are exempt — the product is
@@ -134,18 +139,7 @@ fn degraded_reply_keeps_l1_pure() {
     let flood = "let flood_line = 1;\n".repeat(65);
     let before_a = format!("{flood}let alpha = 2;\nlet beta = 3;\n");
     let after_b = format!("{flood}let alpha = 2;\nlet beta = 3;\n");
-    let inputs = [
-        PairInput {
-            before: &before_a,
-            after: "",
-            lang: Lang::Rust,
-        },
-        PairInput {
-            before: "",
-            after: &after_b,
-            lang: Lang::Rust,
-        },
-    ];
+    let inputs = removal_addition_batch(&before_a, &after_b);
     let l1 = classify_batch(&inputs, None);
     let (mut link, _) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
     let l2 = classify_batch(&inputs, Some(&mut link));

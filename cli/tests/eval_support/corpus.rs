@@ -74,6 +74,21 @@ pub fn doc_corpus_name(path: &str, family: &str) -> Option<String> {
     (!mid.is_empty()).then(|| mid.trim_start_matches('-').to_string())
 }
 
+/// A frozen-doc gate's prologue: the corpus name parsed from the
+/// family doc's path plus both loaded documents (companion doc
+/// first) — the shared opening of every per-corpus CI gate.
+pub fn gate_docs(
+    family: &str,
+    companion: &str,
+    doc_path: &str,
+) -> (Option<String>, serde_json::Value, serde_json::Value) {
+    (
+        doc_corpus_name(doc_path, family),
+        super::load(companion),
+        super::load(doc_path),
+    )
+}
+
 fn doc_pairs(family: &str, required: bool) -> Vec<(String, String)> {
     let mut pairs = Vec::new();
     for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {

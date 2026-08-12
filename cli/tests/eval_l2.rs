@@ -236,9 +236,7 @@ fn check_corpus(labels_path: &str, doc_path: &str) {
     // The register checks resolve the review record BY corpus name —
     // through the active corpus they silently checked external docs
     // against the (empty-for-those-shas) self register.
-    let name = eval_support::doc_corpus_name(doc_path, "l2");
-    let doc = load(doc_path);
-    let labels = load(labels_path);
+    let (name, labels, doc) = eval_support::gate_docs("l2", labels_path, doc_path);
     let all = doc["commits"].as_array().expect("commits");
     let (tail, rows) = all.split_last().expect("rows");
     let ledger = tail["extras_ledger"].as_array().expect("ledger");
