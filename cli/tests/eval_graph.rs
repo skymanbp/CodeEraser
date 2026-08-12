@@ -13,9 +13,10 @@
 mod eval_support;
 
 use codeeraser::graph::sites::detect;
-use eval_support::{eval_doc, generated_from, git_run, lang_of, load, write_doc};
+use eval_support::{
+    content_sha, eval_doc, generated_from, git_run, kind_counts, lang_of, load, write_doc,
+};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
 /// Frozen graph-universe scope: canonical extensions only (variant
@@ -44,22 +45,6 @@ const FROZEN_CORPORA: [Option<&str>; 5] = [
 /// throat-drift shape this file polices elsewhere (Opus review).
 fn constants() -> Value {
     json!({"min_per_lang": 15, "r0_share_trigger": 0.80})
-}
-
-/// sha256 of the text the detector saw — the doc's content identity.
-fn content_sha(text: &str) -> String {
-    let mut h = Sha256::new();
-    h.update(text.as_bytes());
-    h.finalize().iter().map(|b| format!("{b:02x}")).collect()
-}
-
-/// Per-kind site counts, the shape frozen in every file row.
-fn kind_counts(sites: &[codeeraser::graph::sites::RawSite]) -> BTreeMap<&'static str, u64> {
-    let mut kinds = BTreeMap::new();
-    for s in sites {
-        *kinds.entry(s.kind).or_insert(0) += 1;
-    }
-    kinds
 }
 
 /// The self universe: pinned at the commit holding the CURRENT

@@ -45,6 +45,28 @@ pub fn load(path: &str) -> Value {
     serde_json::from_str(&std::fs::read_to_string(path).expect(path)).expect(path)
 }
 
+/// sha256 hex of the text the detector saw — the graph docs' content
+/// identity (moved here from eval_graph.rs when the sample instrument
+/// became its second consumer).
+pub fn content_sha(text: &str) -> String {
+    use sha2::Digest;
+    let mut h = sha2::Sha256::new();
+    h.update(text.as_bytes());
+    h.finalize().iter().map(|b| format!("{b:02x}")).collect()
+}
+
+/// Per-kind site counts, the shape frozen in every graph-slice file
+/// row (same relocation as content_sha).
+pub fn kind_counts(
+    sites: &[codeeraser::graph::sites::RawSite],
+) -> std::collections::BTreeMap<&'static str, u64> {
+    let mut kinds = std::collections::BTreeMap::new();
+    for s in sites {
+        *kinds.entry(s.kind).or_insert(0) += 1;
+    }
+    kinds
+}
+
 /// Index a doc's row array by one of its string fields.
 pub fn by_field<'a>(doc: &'a Value, key: &str, field: &str) -> HashMap<&'a str, &'a Value> {
     doc[key]

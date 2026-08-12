@@ -227,10 +227,6 @@ pub const COMMIT_SCOPE: [&str; 7] = [
 /// (generated_from) keeps its own git call bound to the enclosing
 /// repo on purpose: it records the instrument, not the corpus.
 pub fn git_run(args: &[&str], scoped: bool) -> String {
-    let mut cmd = Command::new("git");
-    if let Ok(repo) = std::env::var("CE_SLICE_REPO") {
-        cmd.arg("-C").arg(repo);
-    }
     // renameLimit=0 = unlimited (verified on git 2.52): at the default
     // limit a big commit silently degrades -M -C pairing into D+A,
     // warning only on stderr with exit 0 — which the success path
@@ -240,12 +236,28 @@ pub fn git_run(args: &[&str], scoped: bool) -> String {
     // reviewed GT chain were generated under it (histogram regen
     // drifts the doc), so counts are derived from hunk headers of the
     // same script instead of numstat — see hunk_totals.
-    cmd.args(["-c", "diff.renameLimit=0"]).args(args);
+    let repo = std::env::var("CE_SLICE_REPO").ok();
+    let mut full = vec!["-c", "diff.renameLimit=0"];
+    full.extend_from_slice(args);
     if scoped {
-        cmd.arg("--");
-        cmd.args(COMMIT_SCOPE);
+        full.push("--");
+        full.extend_from_slice(&COMMIT_SCOPE);
     }
-    let out = cmd.output().expect("git");
+    git_in(repo.as_deref(), &full)
+}
+
+/// Run git in `repo` (None = the enclosing repository) with the slice
+/// instruments' success discipline: a non-zero exit OR any stderr on
+/// success refuses (see git_run — a git warning on the success path
+/// is a silently degraded result). The per-call repo argument exists
+/// for the graph-sample pool walk, which reads several pinned corpora
+/// inside one process and so cannot ride the CE_SLICE_REPO env var.
+pub fn git_in(repo: Option<&str>, args: &[&str]) -> String {
+    let mut cmd = Command::new("git");
+    if let Some(repo) = repo {
+        cmd.arg("-C").arg(repo);
+    }
+    let out = cmd.args(args).output().expect("git");
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(out.status.success(), "git {args:?}: {stderr}");
     assert!(stderr.trim().is_empty(), "git {args:?} warned: {stderr}");
