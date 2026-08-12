@@ -96,19 +96,30 @@ pub fn gate_docs(
     )
 }
 
-fn doc_pairs(family: &str, required: bool) -> Vec<(String, String)> {
-    let mut pairs = Vec::new();
+/// Frozen docs under contracts/eval whose file name starts with
+/// `prefix` (and ends -v1.json), sorted — the ONE enumeration every
+/// doc-family gate consumes (the dedup ratchet caught this loop's
+/// third verbatim copy; the throat is the fix, not the third copy).
+pub fn frozen_docs(prefix: &str) -> Vec<String> {
+    let mut out = Vec::new();
     for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {
         let file = entry.expect("entry").file_name();
         let file = file.to_string_lossy();
-        if !(file.starts_with("commit-slice") && file.ends_with("-v1.json")) {
-            continue;
+        if file.starts_with(prefix) && file.ends_with("-v1.json") {
+            out.push(format!("../contracts/eval/{file}"));
         }
-        let sibling = file.replace("commit-slice", &format!("commit-{family}"));
-        let sibling = format!("../contracts/eval/{sibling}");
+    }
+    out.sort();
+    out
+}
+
+fn doc_pairs(family: &str, required: bool) -> Vec<(String, String)> {
+    let mut pairs = Vec::new();
+    for path in frozen_docs("commit-slice") {
+        let sibling = path.replace("commit-slice", &format!("commit-{family}"));
         match std::fs::exists(&sibling).expect("probe") {
-            true => pairs.push((format!("../contracts/eval/{file}"), sibling)),
-            false => assert!(!required, "{file}: missing {family} sibling {sibling}"),
+            true => pairs.push((path, sibling)),
+            false => assert!(!required, "{path}: missing {family} sibling {sibling}"),
         }
     }
     pairs

@@ -297,14 +297,9 @@ fn check_slice(path: &str) {
 /// (self and external corpora). No git or local data needed.
 #[test]
 fn commit_slice_consistent() {
-    let mut checked = 0;
-    for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {
-        let file = entry.expect("entry").file_name();
-        let file = file.to_string_lossy();
-        if file.starts_with("commit-slice") && file.ends_with("-v1.json") {
-            check_slice(&format!("../contracts/eval/{file}"));
-            checked += 1;
-        }
+    let docs = eval_support::frozen_docs("commit-slice");
+    assert!(!docs.is_empty(), "no committed slice docs");
+    for path in &docs {
+        check_slice(path);
     }
-    assert!(checked >= 1, "no committed slice docs");
 }

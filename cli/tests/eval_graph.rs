@@ -156,19 +156,6 @@ fn generate_graph_slice() {
     write_doc(&path, &doc, &format!("{path} written"));
 }
 
-fn slice_docs() -> Vec<String> {
-    let mut out = Vec::new();
-    for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {
-        let file = entry.expect("entry").file_name();
-        let file = file.to_string_lossy();
-        if file.starts_with("graph-slice") && file.ends_with("-v1.json") {
-            out.push(format!("../contracts/eval/{file}"));
-        }
-    }
-    out.sort();
-    out
-}
-
 /// CI gate, no git, every frozen slice: the summary re-derives from
 /// the rows via the generator's own scorer; constants and scope are
 /// the frozen ones; the tip is a pinned full OID; rows are sorted
@@ -177,7 +164,7 @@ fn slice_docs() -> Vec<String> {
 /// sites (D2-4 — the 2b exit criterion).
 #[test]
 fn graph_slice_consistent() {
-    let docs = slice_docs();
+    let docs = eval_support::frozen_docs("graph-slice");
     assert!(!docs.is_empty(), "no graph-slice docs frozen");
     let mut lang_sites: BTreeMap<String, u64> = BTreeMap::new();
     for path in &docs {
