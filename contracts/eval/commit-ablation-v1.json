@@ -86,7 +86,7 @@
           8,
           13,
           275,
-          5
+          2
         ],
         "flow": [
           262,
@@ -96,7 +96,7 @@
           8,
           13,
           275,
-          30
+          22
         ],
         "freq": [
           234,
@@ -106,7 +106,7 @@
           4,
           5,
           239,
-          36
+          27
         ],
         "phase3_edge": [
           262,
@@ -126,7 +126,7 @@
           8,
           13,
           275,
-          11
+          1
         ]
       }
     },
@@ -616,7 +616,7 @@
           2,
           4,
           66,
-          4
+          2
         ],
         "freq": [
           62,
@@ -626,7 +626,7 @@
           2,
           4,
           66,
-          6
+          3
         ],
         "phase3_edge": [
           62,
@@ -646,7 +646,7 @@
           2,
           4,
           66,
-          3
+          0
         ]
       }
     },
@@ -727,159 +727,6 @@
           "max_alnum": 19,
           "sha": "4822d04ff",
           "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/audit_stop.rs",
-          "lines": [
-            ".args(args)",
-            ".output()",
-            ".expect(\"git\");"
-          ],
-          "max_alnum": 9,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/audit_stop.rs",
-          "lines": [
-            ".current_dir(dir)",
-            ".stdin(Stdio::piped())",
-            ".stdout(Stdio::piped())",
-            ".stderr(Stdio::null())",
-            ".spawn()"
-          ],
-          "max_alnum": 16,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/audit_stop.rs",
-          "lines": [
-            ".stderr(Stdio::null())",
-            ".spawn()"
-          ],
-          "max_alnum": 15,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/audit_stop.rs",
-          "lines": [
-            "child",
-            ".stdin",
-            ".as_mut()",
-            ".expect(\"stdin\")"
-          ],
-          "max_alnum": 11,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/guard_hook.rs",
-          "lines": [
-            ".current_dir(dir)",
-            ".stdin(Stdio::piped())",
-            ".stdout(Stdio::piped())",
-            ".stderr(Stdio::null())",
-            ".spawn()",
-            ".expect(\"spawn hook\");",
-            "child",
-            ".stdin",
-            ".as_mut()",
-            ".expect(\"stdin\")"
-          ],
-          "max_alnum": 16,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/guard_hook.rs",
-          "lines": [
-            ".stderr(Stdio::null())",
-            ".spawn()"
-          ],
-          "max_alnum": 15,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/health_plugin.rs",
-          "lines": [
-            ".output()",
-            ".expect(\"seed index\");"
-          ],
-          "max_alnum": 15,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/health_plugin.rs",
-          "lines": [
-            ".stdin(Stdio::piped())",
-            ".stdout(Stdio::piped())",
-            ".stderr(Stdio::null())",
-            ".spawn()"
-          ],
-          "max_alnum": 16,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/health_plugin.rs",
-          "lines": [
-            ".stderr(Stdio::null())",
-            ".spawn()"
-          ],
-          "max_alnum": 15,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/health_plugin.rs",
-          "lines": [
-            "child",
-            ".stdin",
-            ".as_mut()",
-            ".expect(\"stdin\")"
-          ],
-          "max_alnum": 11,
-          "sha": "4822d04ff",
-          "to": "cli/tests/common/mod.rs"
-        },
-        {
-          "from": "cli/tests/eval_baseline.rs",
-          "lines": [
-            "\"added_novel\",",
-            "\"added_moved\",",
-            "\"removed_deleted\",",
-            "\"removed_moved\","
-          ],
-          "max_alnum": 14,
-          "sha": "f84aaa3c8",
-          "to": "cli/tests/eval_support/mod.rs"
-        },
-        {
-          "from": "cli/tests/eval_labels.rs",
-          "lines": [
-            "\"added_novel\",",
-            "\"added_moved\",",
-            "\"removed_deleted\",",
-            "\"removed_moved\","
-          ],
-          "max_alnum": 14,
-          "sha": "f84aaa3c8",
-          "to": "cli/tests/eval_support/mod.rs"
-        },
-        {
-          "from": "cli/tests/eval_prelabel.rs",
-          "lines": [
-            ".arg(a)",
-            ".arg(b)",
-            ".output()"
-          ],
-          "max_alnum": 6,
-          "sha": "f84aaa3c8",
-          "to": "cli/tests/eval_support/mod.rs"
         }
       ],
       "width_ledger": [
@@ -902,7 +749,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "371e9a26f6b5d59f9640d493836ead6bcbf68109",
+    "commit": "58070b80ef1752aed95575a529f3d7c6c137f1f8",
     "dirty": true
   },
   "method": "shadow ablation: a Rust mirror of the core's L2 judgment (Anchor sites + Provenance phases 2/3) over the exact leftovers() run structure; on every commit the BASELINE shadow must equal the live ce-core delta AND the shadow's site set must equal the core's reply blocks verbatim (both asserted at generation — the mirror and its DECOMPOSITION are proven, not trusted). Variants re-judge the same input, each an exact predicate, not its menu family: quality = a site needs ONE evidence line with >= 20 alphanumeric chars (single-anchor rule; an aggregate-20 floor would NOT separate the requests invention, 7+16=23); freq = hard base-tree uniqueness gate (one evidence line with tree frequency 1; slice langs, memory/ excluded); chain = per pair-edge max-lines subset with strictly increasing source and destination STARTS (the most lenient non-crossing form); flow = greedy whole-block destination-line exclusivity (not a global matching); phase3_edge = deletion-side attribution requires an anchored edge (attack review F4 width probe). Rows: per variant [count_hits, count_misses, identity_misses, invention_lines, extras_files, extras_lines, pred_lines, blocks_dropped]; all-zero commits omitted (the gate conserves the GT total against the labels anchor, so a dropped nonzero row cannot hide). Tail row: quality kill ledger + phase3 width ledger.",
@@ -919,7 +766,7 @@
       "lines": 2,
       "unknown": 0
     },
-    "quality_kills": 14,
+    "quality_kills": 1,
     "variants": {
       "baseline": [
         547,
@@ -939,7 +786,7 @@
         17,
         24,
         563,
-        6
+        3
       ],
       "flow": [
         547,
@@ -949,7 +796,7 @@
         17,
         24,
         571,
-        41
+        31
       ],
       "freq": [
         444,
@@ -959,7 +806,7 @@
         8,
         11,
         455,
-        55
+        43
       ],
       "phase3_edge": [
         546,
@@ -979,7 +826,7 @@
         17,
         24,
         571,
-        14
+        1
       ]
     }
   }

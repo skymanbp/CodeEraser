@@ -27,6 +27,11 @@ pub type Mark = (usize, usize);
 /// drift here fails the generation-time equivalence assert.
 pub const DEST_FLOOR: usize = 2;
 
+/// Mirror of CE.FourClass.Cost.anchorFloor (M5-1c-iii: a site needs
+/// one evidence line this wide; the ablation's quality variant at 20
+/// remains as the one-notch-stricter control).
+pub const ANCHOR_FLOOR: usize = 19;
+
 /// Mirror of CE.FourClass.Anchor.bucketCap.
 pub const BUCKET_CAP: usize = 64;
 
@@ -54,7 +59,7 @@ fn build_ix(sent: &[(Side, Side)], rem: bool) -> HashMap<u64, Vec<Occ>> {
     for (p, pair) in sent.iter().enumerate() {
         let side = if rem { &pair.0 } else { &pair.1 };
         for (r, run) in side.iter().enumerate() {
-            for (i, &(_, h)) in run.iter().enumerate() {
+            for (i, &(_, h, _)) in run.iter().enumerate() {
                 ix.entry(h).or_default().push(Occ {
                     pair: p,
                     run: r,
@@ -108,8 +113,8 @@ pub fn canon(blocks: &mut [ShadowBlock]) {
     });
 }
 
-/// Scan one side's flattened (line, hash) entries and keep the marks
-/// the predicate accepts — the shared tail of both phase passes.
+/// Scan one side's flattened (line, hash, width) entries and keep the
+/// marks the predicate accepts — the shared tail of both phase passes.
 fn side_marks(
     sent: &[(Side, Side)],
     rem: bool,
@@ -118,7 +123,7 @@ fn side_marks(
     let mut out = BTreeSet::new();
     for (p, pair) in sent.iter().enumerate() {
         let side = if rem { &pair.0 } else { &pair.1 };
-        for &(l, h) in side.iter().flatten() {
+        for &(l, h, _) in side.iter().flatten() {
             if keep(p, l, h) {
                 out.insert((p, l));
             }
@@ -130,7 +135,8 @@ fn side_marks(
 /// Anchor.hs `tryBlock`: extend forward from a block START (interior
 /// positions have equal predecessors and fail the start test, so each
 /// block is discovered exactly once). The floor counts DISTINCT
-/// content values, not lines (attack review F5).
+/// content values, not lines (attack review F5), and the evidence
+/// must include one ANCHOR line >= ANCHOR_FLOOR wide (M5-1c-iii).
 fn try_block(sent: &[(Side, Side)], ro: &Occ, ao: &Occ) -> Option<ShadowBlock> {
     let r_run = &sent[ro.pair].0[ro.run];
     let a_run = &sent[ao.pair].1[ao.run];
@@ -144,13 +150,15 @@ fn try_block(sent: &[(Side, Side)], ro: &Occ, ao: &Occ) -> Option<ShadowBlock> {
         .zip(a_tail)
         .take_while(|(r, a)| r.1 == a.1)
         .count();
-    let hashes: Vec<u64> = r_tail[..n].iter().map(|&(_, h)| h).collect();
+    let evidence = &r_tail[..n];
+    let hashes: Vec<u64> = evidence.iter().map(|&(_, h, _)| h).collect();
     let distinct: HashSet<u64> = hashes.iter().copied().collect();
-    (distinct.len() >= DEST_FLOOR).then(|| ShadowBlock {
+    let anchored = evidence.iter().any(|&(_, _, w)| w >= ANCHOR_FLOOR);
+    (distinct.len() >= DEST_FLOOR && anchored).then(|| ShadowBlock {
         from_pair: ro.pair,
-        from_lines: r_tail[..n].iter().map(|&(l, _)| l).collect(),
+        from_lines: evidence.iter().map(|&(l, _, _)| l).collect(),
         to_pair: ao.pair,
-        to_lines: a_tail[..n].iter().map(|&(l, _)| l).collect(),
+        to_lines: a_tail[..n].iter().map(|&(l, _, _)| l).collect(),
         hashes,
     })
 }
@@ -167,7 +175,7 @@ fn phase2(sent: &[(Side, Side)], blocks: &[ShadowBlock]) -> BTreeSet<Mark> {
     let mut run_id: HashMap<Mark, usize> = HashMap::new();
     for (q, pair) in sent.iter().enumerate() {
         for (r, run) in pair.1.iter().enumerate() {
-            for &(l, _) in run {
+            for &(l, _, _) in run {
                 run_id.insert((q, l), r);
             }
         }
@@ -179,7 +187,7 @@ fn phase2(sent: &[(Side, Side)], blocks: &[ShadowBlock]) -> BTreeSet<Mark> {
     let edges: HashSet<(usize, usize)> = blocks.iter().map(|b| (b.from_pair, b.to_pair)).collect();
     let rem_hashes: Vec<HashSet<u64>> = sent
         .iter()
-        .map(|p| p.0.iter().flatten().map(|&(_, h)| h).collect())
+        .map(|p| p.0.iter().flatten().map(|&(_, h, _)| h).collect())
         .collect();
     side_marks(sent, false, |q, l, h| {
         let fed = edges
@@ -202,7 +210,7 @@ fn phase3(
 ) -> BTreeSet<Mark> {
     let mut add_hash: HashMap<Mark, u64> = HashMap::new();
     for (q, pair) in sent.iter().enumerate() {
-        for &(l, h) in pair.1.iter().flatten() {
+        for &(l, h, _) in pair.1.iter().flatten() {
             add_hash.insert((q, l), h);
         }
     }

@@ -46,9 +46,10 @@ pub fn corpus_doc_pairs(family: &str) -> Vec<(String, String)> {
 
 /// Like corpus_doc_pairs, but a missing sibling is a PENDING corpus,
 /// not an error — for families that freeze later than the slice
-/// (L2 lands only once the bar passes on that corpus; requests is
-/// pending on the invention finding, see EVAL-SET). The self corpus
-/// sibling must still exist: that bar is frozen.
+/// (an L2 doc lands only once the bar passes on that corpus; the
+/// requests doc stayed pending on the invention finding until the
+/// anchor floor landed, see EVAL-SET). The self corpus sibling must
+/// still exist: that bar is frozen.
 pub fn corpus_doc_pairs_frozen(family: &str) -> Vec<(String, String)> {
     let pairs = doc_pairs(family, false);
     let self_doc = format!("../contracts/eval/commit-{family}-v1.json");

@@ -109,17 +109,17 @@ PostToolUse 不能阻断工具执行，但可反馈；强制阻断点 = PreToolU
 
 ### 4.3 F4「更新监督」判定模型（核心创新）
 
-四分类：**matched / novel / moved / deleted**。算法借鉴 difftastic 的代价模型思想
-（novel atom 高成本、匹配低成本，<https://difftastic.wilfred.me.uk/diffing.html>）但自研：
-整数常数代价模型，跨文件开站成本推导出 ≥2 行证据地板；不建图搜索——M4 冻结切片实测
-目的地非排他（去重多对一形态无分配问题），Dijkstra 推迟 M5 外部验证再评（2026-08-11 拍板）。
-difftastic 本身 JSON unstable、有硬上限、且**不识别 moved**（moved 恰是关键健康信号）。
+四分类：**matched / novel / moved / deleted**。借鉴 difftastic 代价模型思想但自研
+（<https://difftastic.wilfred.me.uk/diffing.html>；其 JSON unstable、有硬上限、且
+**不识别 moved**——moved 恰是关键健康信号）：整数常数代价模型，跨文件开站成本推导出
+≥2 行证据地板，站点另须**一条 ≥19-alnum 锚证据行**（M5-1c-ii 双语料影子消融，拍板
+2026-08-11：单行锚地板唯一保 547/547 满召回且清零 requests 发明；freq/chain/flow/图
+分配全以数据除名——目的地竞争被删侧归因吸收零错误，F4 删侧宽松以数据结案维持）。
 
 **Fallback 阶梯（B3c，先易后难，各级都是上一级的对照组）**：
-L0 = `git diff --numstat -M -C --find-copies-harder`（行级 added/deleted/moved，零自研）；
-L1 = L0 + 函数边界对齐（tree-sitter 符号表）；
-L2 = 跨文件来源判定（自研整数代价模型；AST 单元用于归属与搬迁登记）。M4 从 L0/L1 建立
-baseline 准确率，L2 必须证明相对 L1 的增量收益，不达标时产品退回 L1 而非退回无。
+L0 = `git diff --numstat -M -C --find-copies-harder`（零自研）；L1 = L0 + 函数边界
+对齐（tree-sitter 符号表）；L2 = 跨文件来源判定（自研整数代价模型；AST 单元用于归属
+与搬迁登记）。M4 从 L0/L1 建立 baseline，L2 须证明相对 L1 的增量收益，不达标退 L1。
 
 判定规则（**意图无关**，A2c 修复；意图信号仅可选增强）：
 

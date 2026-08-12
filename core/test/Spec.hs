@@ -8,7 +8,7 @@
 -- reddens both suites.
 module Main (main) where
 
-import CE.FourClass.Cost (destFloor, siteOpens)
+import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import qualified Reference
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
@@ -45,7 +45,10 @@ costModel = do
     check
       "floor tracks the site cost (ablation table)"
       ([minimum [n | n <- [1 .. 9], siteOpens s n] | s <- [0, 2, 4, 6]] == [1, 2, 3, 4])
-  pure (a && b && c)
+  -- Decided, not derived: the top of the measured safe window
+  -- (Cost.anchorFloor's why-comment carries the ablation evidence).
+  d <- check "anchor floor pinned to the decided window top" (anchorFloor == 19)
+  pure (a && b && c && d)
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -86,7 +89,7 @@ structural = do
   d <- check "major mismatch is rejected" (field majorReply "accept" == Just (Bool False))
   pure (a && b && c && d)
  where
-  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"1.0.0\",\"type\":\"mystery\",\"id\":7}"
+  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"2.0.0\",\"type\":\"mystery\",\"id\":7}"
   oversizeReply = Protocol.respond "0.0.1" (B8.replicate 1048577 'x')
   majorReply = Protocol.respond "0.0.1" "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
 

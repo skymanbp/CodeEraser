@@ -70,7 +70,7 @@ fn corelink_open_and_desync() {
     let (mut link, reply) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
     assert!(reply.accept, "hello accepted");
     assert!(link.has("hello"), "capability discovery");
-    assert!(link.has("fourclass/1"), "judgment capability offered");
+    assert!(link.has("fourclass/2"), "judgment capability offered");
     let ok = link
         .request("fourclass", serde_json::json!({"pairs": []}))
         .expect("empty batch round-trips");

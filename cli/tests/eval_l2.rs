@@ -211,7 +211,9 @@ fn l1_reproduced_on_200_samples() {
 
 /// CI gate, no git needed, every corpus: summary re-derives; cross
 /// GT anchors to the frozen labels totals; misses zero; coincidence
-/// files exact; invention zero; per-pair L2 conserves the GT totals.
+/// files exact; invention zero; per-pair L2 conserves the L1 totals
+/// (the judgment invariant — monotone reclassification moves lines
+/// between classes, never creates or drops them).
 #[test]
 fn commit_l2_consistent() {
     let labels_docs: HashMap<_, _> = corpus_doc_pairs("labels").into_iter().collect();
@@ -276,8 +278,15 @@ fn check_rows(rows: &[Value], labels: &Value) {
                 assert_eq!(p, g, "{sha}: coincidence file must be exact: {c}");
             }
         }
+        // Conservation holds between L1 and L2 — the judgment's own
+        // invariant. GT-vs-pipeline totals may legally diverge: the
+        // GT carrier is git's hunk arithmetic, the pipeline is our
+        // minimal Myers, and the two edit scripts differ on prose
+        // rewrites (requests 26466b54 README.md: 46/56 vs 41/51,
+        // both sides off by the same 5 — the 28d537dd class). The
+        // gt column stays as data; pairs_exact tracks its alignment.
         for p in r["pairs"].as_array().expect("pairs") {
-            assert_conserved(sha, &u64s(&p["gt"]), &u64s(&p["l2"]));
+            assert_conserved(sha, &u64s(&p["l1"]), &u64s(&p["l2"]));
         }
     }
 }

@@ -57,7 +57,7 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
     let Some(link) = link else {
         return done(pairs, Some("no_link".into()));
     };
-    if !link.has("fourclass/1") {
+    if !link.has("fourclass/2") {
         return done(pairs, Some("no_capability".into()));
     }
     let sent = leftovers(inputs, &pairs);
@@ -100,13 +100,15 @@ fn suspicions_of(reply: &Value) -> Vec<(usize, String)> {
         .unwrap_or_default()
 }
 
-/// One contiguous run of significant leftover lines. Run structure is
+/// One contiguous run of significant leftover lines, as (1-based
+/// line, fnv1a(trim), alnum width) — the width is the line fact the
+/// core's anchor floor judges on (wire 2.0.0). Run structure is
 /// ALIGNMENT data and therefore produced here, by the aligner: two
 /// leftovers are adjacent iff every line between them is also changed
 /// and none of those in-between changed lines is significant (blanks
 /// and bare punctuation bridge a run — git's moved blocks span them
 /// too; a significant in-between line, moved or unchanged, breaks it).
-pub type Run = Vec<(usize, u64)>;
+pub type Run = Vec<(usize, u64, usize)>;
 pub type Side = Vec<Run>;
 
 /// Per pair: the significant changed lines L1 left novel/deleted,
@@ -164,7 +166,7 @@ fn side_runs(text: &str, changed: &[usize], moved: &[usize]) -> Side {
         if open && l - last_kept - 1 > MAX_BRIDGE {
             open = false; // an over-long bridge is not adjacency
         }
-        let entry = (l, fnv1a(t.trim().as_bytes()));
+        let entry = (l, fnv1a(t.trim().as_bytes()), super::alnum_width(t));
         match runs.last_mut() {
             Some(run) if open => run.push(entry),
             _ => runs.push(vec![entry]),
@@ -223,7 +225,7 @@ fn apply_side(
     c: &mut Classification,
 ) -> Result<(), String> {
     for l in lines_of(lines)? {
-        if !sent.iter().flatten().any(|&(sl, _)| sl == l) {
+        if !sent.iter().flatten().any(|&(sl, _, _)| sl == l) {
             return Err(format!("delta line {l} was not a leftover"));
         }
         if removed {

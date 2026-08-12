@@ -14,11 +14,17 @@ module CE.FourClass.Anchor
   , sites
   ) where
 
-import CE.FourClass.Cost (destFloor)
+import CE.FourClass.Cost (anchorFloor, destFloor)
 import CE.FourClass.Wire (Block (..), Pair (..))
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 import Data.Word (Word64)
+
+-- | One wire entry: (1-based line, content hash, alnum width).
+type Entry = (Int, Word64, Int)
+
+hOf :: Entry -> Word64
+hOf (_, h, _) = h
 
 -- | A hash occurring more often than this on either side carries no
 -- provenance identity and is skipped (degraded, visibly). Measured
@@ -30,9 +36,9 @@ bucketCap = 64
 -- | One side occurrence of a hash: (pair, run id, position in run).
 data Occ = Occ {oPair :: !Int, oRun :: !Int, oPos :: !Int}
 
-type RunMap = M.Map (Int, Int) [(Int, Word64)]
+type RunMap = M.Map (Int, Int) [Entry]
 
-buildRuns :: (Pair -> [[(Int, Word64)]]) -> [Pair] -> RunMap
+buildRuns :: (Pair -> [[Entry]]) -> [Pair] -> RunMap
 buildRuns side ps =
   M.fromList [((pIdx p, r), run) | p <- ps, (r, run) <- zip [0 ..] (side p)]
 
@@ -40,7 +46,7 @@ buildIx :: RunMap -> M.Map Word64 [Occ]
 buildIx rm =
   M.fromListWith
     (flip (++))
-    [(h, [Occ p r i]) | ((p, r), run) <- M.toList rm, (i, (_, h)) <- zip [0 ..] run]
+    [(h, [Occ p r i]) | ((p, r), run) <- M.toList rm, (i, (_, h, _)) <- zip [0 ..] run]
 
 -- | All accepted blocks plus whether the bucket cap tripped.
 sites :: [Pair] -> ([Block], Bool)
@@ -70,11 +76,15 @@ sites ps = (blocks, capped)
 -- values, not lines: one common line repeated twice is a single
 -- piece of evidence and must not open a site (attack review F5 —
 -- length alone let `[x,x]` matched against `[x,x]` clear the floor).
+-- The evidence must also include one ANCHOR line (>= anchorFloor
+-- alnum chars): two short distinct lines cleared the old floor on a
+-- pure reformat commit (M5-1c-ii, requests 2a6f290b — `Timeout,` +
+-- `TooManyRedirects,` invented a station).
 tryBlock :: RunMap -> RunMap -> Occ -> Occ -> Maybe Block
 tryBlock rm am ro ao
   | not isStart = Nothing
-  | distinctEvidence >= destFloor =
-      Just (Block (oPair ro) (map fst (take n rTail)) (oPair ao) (map fst (take n aTail)))
+  | distinctEvidence >= destFloor && anchored =
+      Just (Block (oPair ro) [l | (l, _, _) <- evidence] (oPair ao) (map fst3 (take n aTail)))
   | otherwise = Nothing
  where
   rRun = rm M.! (oPair ro, oRun ro)
@@ -84,6 +94,9 @@ tryBlock rm am ro ao
   isStart =
     oPos ro == 0
       || oPos ao == 0
-      || snd (rRun !! (oPos ro - 1)) /= snd (aRun !! (oPos ao - 1))
-  n = length (takeWhile (uncurry (==)) (zip (map snd rTail) (map snd aTail)))
-  distinctEvidence = S.size (S.fromList (map snd (take n rTail)))
+      || hOf (rRun !! (oPos ro - 1)) /= hOf (aRun !! (oPos ao - 1))
+  n = length (takeWhile (uncurry (==)) (zip (map hOf rTail) (map hOf aTail)))
+  evidence = take n rTail
+  distinctEvidence = S.size (S.fromList (map hOf evidence))
+  anchored = any (\(_, _, w) -> w >= anchorFloor) evidence
+  fst3 (l, _, _) = l

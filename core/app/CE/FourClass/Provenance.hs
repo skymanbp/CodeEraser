@@ -25,7 +25,7 @@ classify req = Result (reqId req) moved sortedBlocks verdicts reason
  where
   verdicts = suspicions [(p, sigLeft pAdd inMarks p, sigLeft pRem outMarks p) | p <- ps]
   sigLeft side marks p =
-    length [() | (l, _) <- concat (side p), (pIdx p, l) `S.notMember` marks]
+    length [() | (l, _, _) <- concat (side p), (pIdx p, l) `S.notMember` marks]
   ps = reqPairs req
   (blocks, capped) = sites ps
   sortedBlocks =
@@ -36,8 +36,8 @@ classify req = Result (reqId req) moved sortedBlocks verdicts reason
   moved =
     [ (pIdx p, outs, ins)
     | p <- ps
-    , let outs = [l | (l, _) <- concat (pRem p), (pIdx p, l) `S.member` outMarks]
-    , let ins = [l | (l, _) <- concat (pAdd p), (pIdx p, l) `S.member` inMarks]
+    , let outs = [l | (l, _, _) <- concat (pRem p), (pIdx p, l) `S.member` outMarks]
+    , let ins = [l | (l, _, _) <- concat (pAdd p), (pIdx p, l) `S.member` inMarks]
     , not (null outs && null ins)
     ]
 
@@ -55,7 +55,7 @@ phase2 ps blocks =
     [ (q, l)
     | p <- ps
     , let q = pIdx p
-    , (l, h) <- concat (pAdd p)
+    , (l, h, _) <- concat (pAdd p)
     , (q, l) `S.notMember` anchored
     , maybe False (\r -> (q, r) `S.member` anchoredRuns) (M.lookup (q, l) runId)
     , any (\src -> h `S.member` remHashesOf src) (sourcesInto q)
@@ -67,7 +67,7 @@ phase2 ps blocks =
       [ ((pIdx p, l), r)
       | p <- ps
       , (r, run) <- zip [0 :: Int ..] (pAdd p)
-      , (l, _) <- run
+      , (l, _, _) <- run
       ]
   anchoredRuns =
     S.fromList
@@ -78,7 +78,7 @@ phase2 ps blocks =
   remByPair =
     M.fromListWith
       S.union
-      [(pIdx p, S.fromList (map snd (concat (pRem p)))) | p <- ps]
+      [(pIdx p, S.fromList [h | (_, h, _) <- concat (pRem p)]) | p <- ps]
 
 -- | Asymmetric source attribution: a leftover removed line whose
 -- content demonstrably LANDED at an accepted destination (any
@@ -92,11 +92,11 @@ phase3 ps inMarks =
     [ (pp, l)
     | p <- ps
     , let pp = pIdx p
-    , (l, h) <- concat (pRem p)
+    , (l, h, _) <- concat (pRem p)
     , any (\(dst, hs) -> dst /= pp && h `S.member` hs) landed
     ]
  where
-  addHash = M.fromList [((pIdx p, l), h) | p <- ps, (l, h) <- concat (pAdd p)]
+  addHash = M.fromList [((pIdx p, l), h) | p <- ps, (l, h, _) <- concat (pAdd p)]
   landed =
     M.toList $
       M.fromListWith

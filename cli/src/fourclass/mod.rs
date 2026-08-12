@@ -124,6 +124,14 @@ pub fn significant(line: &str) -> bool {
     line.chars().any(char::is_alphanumeric)
 }
 
+/// A line's anchor width: alphanumeric chars of the TRIMMED content.
+/// A LINE FACT the aligner ships to the core (wire 2.0.0) where the
+/// judgment (Cost.anchorFloor) consumes it; eval tooling measures
+/// with the same rule, from one source.
+pub fn alnum_width(line: &str) -> usize {
+    line.trim().chars().filter(|c| c.is_alphanumeric()).count()
+}
+
 fn sig_contents<'s>(lines: &[&'s str], changed: &[usize]) -> HashSet<&'s str> {
     changed
         .iter()

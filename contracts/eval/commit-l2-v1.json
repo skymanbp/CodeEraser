@@ -3598,7 +3598,7 @@
         {
           "from": "cli/tests/audit_stop.rs",
           "from_unit": "git/2",
-          "lines": 6,
+          "lines": 3,
           "to": "cli/tests/common/mod.rs",
           "to_unit": "git/2"
         },
@@ -3608,20 +3608,6 @@
           "lines": 2,
           "to": "cli/tests/common/mod.rs",
           "to_unit": "seed_sources/2"
-        },
-        {
-          "from": "cli/tests/audit_stop.rs",
-          "from_unit": "run_audit/2",
-          "lines": 9,
-          "to": "cli/tests/common/mod.rs",
-          "to_unit": "run_hook/3"
-        },
-        {
-          "from": "cli/tests/audit_stop.rs",
-          "from_unit": "run_audit/2",
-          "lines": 2,
-          "to": "cli/tests/common/mod.rs",
-          "to_unit": "spawn_daemon_ready/1"
         },
         {
           "from": "cli/tests/daemon_e2e.rs",
@@ -3738,16 +3724,9 @@
         {
           "from": "cli/tests/guard_hook.rs",
           "from_unit": "run_hook/2",
-          "lines": 14,
+          "lines": 4,
           "to": "cli/tests/common/mod.rs",
           "to_unit": "run_hook/3"
-        },
-        {
-          "from": "cli/tests/guard_hook.rs",
-          "from_unit": "run_hook/2",
-          "lines": 2,
-          "to": "cli/tests/common/mod.rs",
-          "to_unit": "spawn_daemon_ready/1"
         },
         {
           "from": "cli/tests/guard_hook.rs",
@@ -3766,23 +3745,9 @@
         {
           "from": "cli/tests/health_plugin.rs",
           "from_unit": "health_reports_mode_index_and_warm_daemon/0",
-          "lines": 4,
-          "to": "cli/tests/common/mod.rs",
-          "to_unit": "build_index/1"
-        },
-        {
-          "from": "cli/tests/health_plugin.rs",
-          "from_unit": "health_reports_mode_index_and_warm_daemon/0",
-          "lines": 8,
-          "to": "cli/tests/common/mod.rs",
-          "to_unit": "run_hook/3"
-        },
-        {
-          "from": "cli/tests/health_plugin.rs",
-          "from_unit": "health_reports_mode_index_and_warm_daemon/0",
           "lines": 2,
           "to": "cli/tests/common/mod.rs",
-          "to_unit": "spawn_daemon_ready/1"
+          "to_unit": "build_index/1"
         },
         {
           "from": "cli/tests/mcp_precommit.rs",
@@ -6297,13 +6262,6 @@
       "relocations": [
         {
           "from": "cli/tests/eval_baseline.rs",
-          "from_unit": "CLASSES",
-          "lines": 4,
-          "to": "cli/tests/eval_support/mod.rs",
-          "to_unit": "CLASSES"
-        },
-        {
-          "from": "cli/tests/eval_baseline.rs",
           "from_unit": "by_id/2",
           "lines": 5,
           "to": "cli/tests/eval_support/mod.rs",
@@ -6325,13 +6283,6 @@
         },
         {
           "from": "cli/tests/eval_labels.rs",
-          "from_unit": "CLASSES",
-          "lines": 4,
-          "to": "cli/tests/eval_support/mod.rs",
-          "to_unit": "CLASSES"
-        },
-        {
-          "from": "cli/tests/eval_labels.rs",
           "from_unit": "by_id/2",
           "lines": 5,
           "to": "cli/tests/eval_support/mod.rs",
@@ -6347,7 +6298,7 @@
         {
           "from": "cli/tests/eval_prelabel.rs",
           "from_unit": "numstat/2",
-          "lines": 8,
+          "lines": 5,
           "to": "cli/tests/eval_support/mod.rs",
           "to_unit": "numstat/3"
         },
@@ -7117,7 +7068,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "d086950a89046384c4309dd4c16e628af60545e7",
+    "commit": "58070b80ef1752aed95575a529f3d7c6c137f1f8",
     "dirty": true
   },
   "method": "real pipeline: fourclass::batch::classify_batch over a live ce-core link, per slice commit; gt = commit-labels-v1; cross GT per file re-derived by the labels machinery (partition + reviewed corrections). Gates: cross misses = 0 at LINE IDENTITY for files without a reviewed correction, count level on the corrected files; coincidence files exact; zero invention on non-cross commits; L2>=L1 monotone with conserved sums (asserted at generation); extras itemized with content AND frozen (a new above-GT row fails the generator until reviewed and blessed); reversed-order determinism (asserted at generation); cost-model sensitivity pinned in core/test/Spec.hs.",

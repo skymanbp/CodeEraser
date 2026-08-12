@@ -10,9 +10,12 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 1.0.0 = the M4 content finalization: wire shape identical to
+/// 2.0.0 = the M5-1c-iii anchor-width request shape (rem/add entries
+/// carry the trimmed line's alnum width — a breaking change, major
+/// per contracts/VERSIONING.md §2). 1.0.0 was the M4 content
+/// finalization: wire shape identical to
 /// 0.2.0, the bump declares the content frozen under §2 major rules.
-pub const PROTO: &str = "1.0.0";
+pub const PROTO: &str = "2.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

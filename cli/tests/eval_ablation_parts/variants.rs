@@ -12,8 +12,11 @@ use codeeraser::fourclass::significant;
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, HashMap};
 
-/// A site's anchor must carry at least this many alphanumeric chars —
-/// the same 20-alnum philosophy as the GT engine's block anchors.
+/// The quality VARIANT's anchor threshold — kept at 20 as the
+/// one-notch-stricter control now that the core itself enforces
+/// ANCHOR_FLOOR = 19 (M5-1c-iii): the frozen decision matrix was
+/// measured at 20, and the surviving delta between the two is
+/// exactly the thinnest real anchor observed (19).
 pub const QUALITY_ALNUM: usize = 20;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -109,15 +112,13 @@ fn base_freq(sha: &str) -> HashMap<String, u64> {
     freq
 }
 
-fn alnum(s: &str) -> usize {
-    s.chars().filter(|c| c.is_alphanumeric()).count()
-}
-
-/// The widest evidence line a site carries, in alphanumeric chars.
+/// The widest evidence line a site carries, in alphanumeric chars
+/// (codeeraser::fourclass::alnum_width — the same rule the aligner
+/// ships to the core, one source).
 pub fn anchor_alnum(b: &ShadowBlock, ctx: &Ctx) -> usize {
     b.hashes
         .iter()
-        .map(|h| alnum(&ctx.contents[h]))
+        .map(|h| codeeraser::fourclass::alnum_width(&ctx.contents[h]))
         .max()
         .unwrap_or(0)
 }

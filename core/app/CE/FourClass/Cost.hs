@@ -11,6 +11,7 @@ module CE.FourClass.Cost
   , siteCostCross
   , siteOpens
   , destFloor
+  , anchorFloor
   ) where
 
 -- | Cost of explaining a line as moved.
@@ -44,3 +45,14 @@ destFloor :: Int
 destFloor = go 1
  where
   go n = if siteOpens siteCostCross n then n else go (n + 1)
+
+-- | A cross-pair site must also carry ONE evidence line wide enough
+-- to hold provenance identity by itself: >= this many alphanumeric
+-- chars. Not derived — decided (2026-08-11) from the dual-corpus
+-- shadow ablation: the invented station's widest anchor measured 16,
+-- the thinnest real anchor 19, and every threshold in 17..19 kills
+-- all measured coincidences while keeping every measured real site
+-- (contracts/eval/commit-ablation*.json; the aggregate form fails —
+-- 7+16=23 would re-admit the invention).
+anchorFloor :: Int
+anchorFloor = 19

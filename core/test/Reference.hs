@@ -8,14 +8,25 @@
 -- generator SAMPLES a space this small; enumeration covers it.
 module Reference (equivalence) where
 
-import CE.FourClass.Cost (destFloor)
+import CE.FourClass.Cost (anchorFloor, destFloor)
 import CE.FourClass.Provenance (classify)
 import CE.FourClass.Wire
 import Data.Aeson (Value (Null))
 import qualified Data.Set as S
 import Data.Word (Word64)
 
-type Run = [(Int, Word64)]
+type Run = [(Int, Word64, Int)]
+
+-- | Width is a function of content, so it binds to the hash: hash 1
+-- is a SHORT line (below anchorFloor), every other hash is wide.
+-- The enumeration therefore covers all-short evidence (site refused
+-- by the anchor rule), mixed, and all-wide, without multiplying the
+-- instance space.
+widthOf :: Word64 -> Int
+widthOf h = if h == 1 then anchorFloor - 3 else anchorFloor + 4
+
+entry :: (Int, Word64) -> (Int, Word64, Int)
+entry (l, h) = (l, h, widthOf h)
 
 -- | Instance family: pair 0 removes (1-2 runs), pair 1 adds (1-2
 -- runs), pair 2 optionally removes one extra line (the
@@ -25,7 +36,7 @@ instances :: [[Pair]]
 instances =
   [ [Pair 0 rem0 [] [], Pair 1 [] add1 []] ++ probe
   | (rem0, add1) <- sides
-  , probe <- [] : [[Pair 2 [[(30, h)]] [] []] | h <- [1, 2, 3]]
+  , probe <- [] : [[Pair 2 [[entry (30, h)]] [] []] | h <- [1, 2, 3]]
   ]
  where
   sides :: [([Run], [Run])]
@@ -43,20 +54,21 @@ instances =
   sequencesOf :: Word64 -> Int -> [[Word64]]
   sequencesOf alphabet n = mapM (const [1 .. alphabet]) [1 .. n]
   runsAt :: [Word64] -> Int -> [Run]
-  runsAt hs 0 = [zip [1 ..] hs | not (null hs)]
+  runsAt hs 0 = [map entry (zip [1 ..] hs) | not (null hs)]
   runsAt hs k =
     let (a, b) = splitAt k hs
-     in [zip [1 ..] a, zip [k + 3 ..] b] -- gap of 2 between runs
+     in [map entry (zip [1 ..] a), map entry (zip [k + 3 ..] b)] -- gap of 2
 
 -- | Every maximal (not extendable in either direction) common
 -- contiguous hash segment between a removed run and an added run of
 -- different pairs whose DISTINCT content count clears destFloor
 -- (repeated copies of one line are a single piece of evidence —
--- attack review F5, mirrored from Anchor.tryBlock).
+-- attack review F5) and whose evidence includes one anchor line
+-- (>= anchorFloor alnum — M5-1c-iii), mirrored from Anchor.tryBlock.
 refBlocks :: [Pair] -> S.Set (Int, [Int], Int, [Int])
 refBlocks ps =
   S.fromList
-    [ (pIdx p, map fst segR, pIdx q, map fst segA)
+    [ (pIdx p, [l | (l, _, _) <- segR], pIdx q, [l | (l, _, _) <- segA])
     | p <- ps
     , q <- ps
     , pIdx p /= pIdx q
@@ -67,14 +79,17 @@ refBlocks ps =
     , n <- [1 .. min (length r - x) (length a - y)]
     , let segR = take n (drop x r)
     , let segA = take n (drop y a)
-    , map snd segR == map snd segA
-    , S.size (S.fromList (map snd segR)) >= destFloor
+    , hashes segR == hashes segA
+    , S.size (S.fromList (hashes segR)) >= destFloor
+    , any (\(_, _, w) -> w >= anchorFloor) segR
     , not (equalAt r a (x - 1) (y - 1)) -- maximal to the left
     , not (equalAt r a (x + n) (y + n)) -- maximal to the right
     ]
  where
+  hashes seg = [h | (_, h, _) <- seg]
   equalAt r a i j =
-    i >= 0 && j >= 0 && i < length r && j < length a && snd (r !! i) == snd (a !! j)
+    i >= 0 && j >= 0 && i < length r && j < length a && hOf (r !! i) == hOf (a !! j)
+  hOf (_, h, _) = h
 
 -- | The set-form phases over the reference blocks.
 refMarks :: [Pair] -> S.Set (Int, [Int], Int, [Int]) -> (S.Set (Int, Int), S.Set (Int, Int))
@@ -83,26 +98,26 @@ refMarks ps blocks = (outs `S.union` attributed, ins `S.union` extended)
   outs = S.fromList [(p, l) | (p, ls, _, _) <- S.toList blocks, l <- ls]
   ins = S.fromList [(q, l) | (_, _, q, ls) <- S.toList blocks, l <- ls]
   edges = S.fromList [(p, q) | (p, _, q, _) <- S.toList blocks]
-  remHashes p = S.fromList [h | pr <- ps, pIdx pr == p, (_, h) <- concat (pRem pr)]
+  remHashes p = S.fromList [h | pr <- ps, pIdx pr == p, (_, h, _) <- concat (pRem pr)]
   extended =
     S.fromList
       [ (pIdx q, l)
       | q <- ps
       , run <- pAdd q
-      , any (\(l', _) -> (pIdx q, l') `S.member` ins) run
-      , (l, h) <- run
+      , any (\(l', _, _) -> (pIdx q, l') `S.member` ins) run
+      , (l, h, _) <- run
       , (pIdx q, l) `S.notMember` ins
       , any (\(src, dst) -> dst == pIdx q && h `S.member` remHashes src) (S.toList edges)
       ]
   inHashes q =
     S.fromList
-      [h | pr <- ps, pIdx pr == q, (l, h) <- concat (pAdd pr), (q, l) `S.member` allIns]
+      [h | pr <- ps, pIdx pr == q, (l, h, _) <- concat (pAdd pr), (q, l) `S.member` allIns]
   allIns = ins `S.union` extended
   attributed =
     S.fromList
       [ (pIdx p, l)
       | p <- ps
-      , (l, h) <- concat (pRem p)
+      , (l, h, _) <- concat (pRem p)
       , any (\q -> pIdx q /= pIdx p && h `S.member` inHashes (pIdx q)) ps
       ]
 

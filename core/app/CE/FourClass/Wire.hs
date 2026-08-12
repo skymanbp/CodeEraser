@@ -30,14 +30,17 @@ data Request = Request
 
 -- | `i` is an opaque pair index — the file-identity key (cross
 -- matching requires differing `i`). `rem`/`add` are ascending
--- (1-based line, trimmed-content hash) lists grouped into RUNS by
--- the aligner: run structure is alignment data, so Rust produces it
--- (blank/punctuation changed lines bridge a run; unchanged gaps and
--- within-moved lines break it) and judgment consumes it as given.
+-- (1-based line, trimmed-content hash, alnum width) lists grouped
+-- into RUNS by the aligner: run structure is alignment data, so Rust
+-- produces it (blank/punctuation changed lines bridge a run;
+-- unchanged gaps and within-moved lines break it) and judgment
+-- consumes it as given. The width (proto 2.0.0) is a LINE FACT the
+-- aligner measures — the judgment it feeds (Cost.anchorFloor) lives
+-- entirely here.
 data Pair = Pair
   { pIdx :: Int
-  , pRem :: [[(Int, Word64)]]
-  , pAdd :: [[(Int, Word64)]]
+  , pRem :: [[(Int, Word64, Int)]]
+  , pAdd :: [[(Int, Word64, Int)]]
   , pDup :: [Word64]
   -- ^ key hashes of units newly DUPLICATED on the after side --
   -- symbol knowledge stays in Rust (ADR-002), only hashes cross

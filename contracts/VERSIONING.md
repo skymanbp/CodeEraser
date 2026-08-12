@@ -1,9 +1,10 @@
 # contracts/ — 契约版本化机制（M0 冻结机制，内容 M4 定稿 1.0.0）
 
 > 依据 DEVELOPMENT_PLAN.md §7.1 与评审 B1：M0 只冻结**版本化机制**，
-> IR/判决 schema 的**内容**在 M4 随真实需求定稿为 1.0——已于
-> 2026-08-11 完成：proto **1.0.0**，wire 形状与 0.2.0 完全一致，
-> bump 属声明性定稿；内容自此受 §2 的 major 规则约束。
+> IR/判决 schema 的**内容**在 M4 随真实需求定稿为 1.0（2026-08-11，
+> wire 形状与 0.2.0 一致的声明性定稿）。**2.0.0**（M5-1c-iii，
+> 2026-08-12）：rem/add 条目携第三元素 = trim 后 alnum 宽度，喂
+> Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 ## 1. 信封（envelope）
 
@@ -14,7 +15,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **1.0.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.0.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -24,13 +25,16 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **每条非 hello 消息的 `proto` 由 core 强制校验**（1.0.0 定稿修正，攻击评审 F8：
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
-- `hello` 应答自 0.2.0 起带 `capabilities`（如 `["hello","fourclass/1"]`）——**纯信息
-  发现**，接受/拒绝的唯一权威仍是 §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
+- `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2"]`；/2 =
+  2.0.0 的锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的
+  二元形状）——**纯信息发现**，接受/拒绝的唯一权威仍是 §2 的 SemVer；
+  能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
-- `fourclass.request`（0.2.0 起）：`{"id","pairs":[{"i","rem":[[[行,hash],…],…],
+- `fourclass.request`（2.0.0 形状）：`{"id","pairs":[{"i","rem":[[[行,hash,宽],…],…],
   "add":[…],"dup":[keyhash]}]}`——rem/add 为 L1 判 novel/deleted 的**显著**行按
-  **run 分组**（run 结构=对齐产物，Rust 侧产出），hash = fnv1a(trim)；`dup` =
+  **run 分组**（run 结构=对齐产物，Rust 侧产出），hash = fnv1a(trim)，宽 =
+  trim 后 alnum 计数（行事实，Cost.anchorFloor 的判定输入）；`dup` =
   after 侧新出现重复的**顶层具名单元**键哈希（堆叠证据，符号知识留在 Rust，
   仅哈希过线——ADR-002 A6）；`i` 为**稠密 0 基文件对位置**（与发送方批内文件对
   数组共同索引；1.0.0 定稿明确——攻击评审 F9：接收方按位置回查，稀疏 id 不受支持，
@@ -64,4 +68,4 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 1.0.0 | §1 所列两处常量 |
+| 协议 | 2.0.0 | §1 所列两处常量 |

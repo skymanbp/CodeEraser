@@ -22,8 +22,11 @@ instance FromJSON Hello where
 
 -- | Informational discovery only — SemVer stays the sole authority
 -- for accept/reject (contracts/VERSIONING.md §1).
+-- | fourclass/2 = the anchor-width request shape (proto 2.0.0). An
+-- old client probing fourclass/1 sees absence and degrades to L1
+-- loudly instead of sending the un-parseable two-element shape.
 capabilities :: [String]
-capabilities = ["hello", "fourclass/1"]
+capabilities = ["hello", "fourclass/2"]
 
 data Reply = Reply
   { replyProto :: String
