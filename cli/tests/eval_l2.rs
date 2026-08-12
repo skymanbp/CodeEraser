@@ -37,7 +37,7 @@ use codeeraser::corelink::Link;
 use codeeraser::fourclass::batch::classify_batch;
 use eval_l2_parts as parts;
 use eval_support::{
-    by_sha, corpus, corpus_doc_pairs, each_sample, gt_pairs, load, sample_pair, u64s,
+    by_sha, core_link, corpus, corpus_doc_pairs, each_sample, load, sample_pair, u64s,
 };
 use serde_json::{Value, json};
 use std::collections::HashMap;
@@ -48,22 +48,10 @@ fn assert_conserved(sha: &str, a: &[u64], b: &[u64]) {
     assert_eq!(a[2] + a[3], b[2] + b[3], "{sha}: removed conserved");
 }
 
-fn core_link() -> Link {
-    let bin = std::env::var("CE_CORE_BIN").expect(
-        "CE_CORE_BIN is unset — build the core and export it:\n  \
-         cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
-    );
-    Link::open(&bin).expect("ce-core link").0
-}
-
 fn commit_row(link: &mut Link, s: &Value, labels: &Value) -> (Value, Vec<Value>) {
-    let sha = s["sha"].as_str().expect("sha");
-    let by = by_sha(labels);
-    let gt_rows = gt_pairs(s, &by);
-    let texts = parts::pair_texts(sha, gt_rows);
-    let l1 = parts::run_batch(&texts, None);
-    let l2 = parts::run_batch(&texts, Some(link));
-    assert!(l2.degraded.is_none(), "{sha}: degraded {:?}", l2.degraded);
+    let (sha, texts) = parts::commit_texts(s, labels);
+    let sha = sha.as_str();
+    let (l1, l2) = parts::live_pair(sha, &texts, link);
     let (c1, c2) = (parts::counts_of(&l1), parts::counts_of(&l2));
     for (a, b) in c1.iter().zip(&c2) {
         assert!(b[1] >= a[1] && b[3] >= a[3], "{sha}: monotonicity");
@@ -73,6 +61,8 @@ fn commit_row(link: &mut Link, s: &Value, labels: &Value) -> (Value, Vec<Value>)
     let gt = parts::cross_gt(sha);
     let rows = parts::cross_rows(sha, &texts, &gt, &delta);
     let ledger = parts::extras_ledger(sha, &texts, &gt, &delta);
+    // The GT pair rows travel inside texts (pair_texts clones them).
+    let gt_rows: Vec<Value> = texts.iter().map(|t| t.2.clone()).collect();
     let pairs: Vec<Value> = gt_rows
         .iter()
         .zip(c1.iter().zip(&c2))
@@ -82,7 +72,7 @@ fn commit_row(link: &mut Link, s: &Value, labels: &Value) -> (Value, Vec<Value>)
                    "l1": a.to_vec(), "l2": b.to_vec()})
         })
         .collect();
-    let relocations = eval_l2_register::relocations_json(&l2, gt_rows);
+    let relocations = eval_l2_register::relocations_json(&l2, &gt_rows);
     let moved_units = eval_l2_register::moved_units(&l1, &l2);
     (
         json!({"sha": sha, "pairs": pairs, "cross": rows, "relocations": relocations,
@@ -95,7 +85,6 @@ fn commit_row(link: &mut Link, s: &Value, labels: &Value) -> (Value, Vec<Value>)
 /// delta on the corpus's largest cross commit — derived from the
 /// labels totals, not pinned (self elects 4822d04ff, 262 lines).
 fn assert_deterministic(link: &mut Link, labels: &Value) {
-    let by = by_sha(labels);
     let sha = labels["commits"]
         .as_array()
         .expect("commits")
@@ -107,8 +96,7 @@ fn assert_deterministic(link: &mut Link, labels: &Value) {
         .as_str()
         .expect("sha");
     let slice = load(&corpus().doc("slice"));
-    let s = by_sha(&slice)[sha];
-    let texts = parts::pair_texts(sha, gt_pairs(s, &by));
+    let (_, texts) = parts::commit_texts(by_sha(&slice)[sha], labels);
     let forward = parts::delta_lines(
         &texts,
         &parts::run_batch(&texts, None),
@@ -274,12 +262,7 @@ fn check_rows(rows: &[Value], labels: &Value) {
     for r in rows {
         let sha = r["sha"].as_str().expect("sha");
         let lrow = by.get(sha);
-        let has_cross = lrow
-            .map(|l| {
-                l["cross_file"]["out"].as_u64().unwrap() + l["cross_file"]["in"].as_u64().unwrap()
-                    > 0
-            })
-            .unwrap_or(false);
+        let has_cross = parts::has_cross(lrow);
         let coincidence = lrow.map(|l| correction_files(l)).unwrap_or_default();
         for c in r["cross"].as_array().expect("cross") {
             let (g, p) = parts::gt_pred(c);

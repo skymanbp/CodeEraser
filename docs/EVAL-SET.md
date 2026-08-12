@@ -259,6 +259,30 @@ before 树 freq=1，真移动行反有 freq=2/3）；块链失效（巧合行双
 blocks 引擎及本 GT 的 20-alnum 哲学同构，待影子消融在双语料实测（自仓
 547/547 与 FPR 0/600 必须保持）。
 
+**影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)）**：
+Rust 影子引擎精确镜像判决核（Anchor sites + Provenance phase2/3），吃
+leftovers() 同一 run 结构；**保真门 = baseline 影子与活 ce-core delta 逐
+commit 全等**（自仓 47/47 + requests 341/341，生成时断言——镜像是被证明
+的，不是被信任的）。变体形式化见 eval_ablation_parts/variants.rs。矩阵：
+
+| 变体 | 自仓（GT 547） | requests（GT 18） |
+|---|---|---|
+| baseline | 547 hit / 0 miss / 0 发明 | 18 / 0 / **4 发明** |
+| quality（≥20-alnum 锚） | 547 / 0 / 0，extras 不变 | 18 / 0 / **0**，pred=GT |
+| freq（base 树唯一行） | **103 miss** | 4 发明未修 |
+| chain（非交叉加权 LIS） | **8 miss** | 4 发明未修 |
+| flow（目的行独占） | 全程无操作 | 全程无操作 |
+| phase3_edge（F4 探针） | 1 miss（宽度 +1 真召回/+1 已审 extra） | 宽度贡献 **0**（台账空） |
+
+裁决：**质量地板唯一赢家**——requests 击杀台账恰好只含那个发明站（锚 16
+alnum）；自仓 14 杀全冗余（行由兄弟块/phase2/3 覆盖，pred 不变；杀锚宽
+6..19，最险 19 距阈值仅 1 字符 → 有效阈值窗口 (16,19]，取值供计划修订裁
+定）。**F4 以数据结案，维持原设计**：删侧宽度在 requests 零 error 贡献，
+自仓加边要求反破 547→546。freq 方向倒置语料级实锤（巧合行恰在 base 树唯
+一，真移动行反而重复）。核改路径：质量信号须过 wire（行级 alnum 由 Rust
+作为行事实随 rem/add 提供，判定仍全在 Haskell）——计划修订 + 契约升版后
+实施，requests L2 随赢家落地重生成并冻结。
+
 ## 复跑 / 校验
 
 ```

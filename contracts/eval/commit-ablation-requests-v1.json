@@ -1,0 +1,214 @@
+{
+  "commits": [
+    {
+      "sha": "99b3b492418d0751ca960178d274f89805095e4c",
+      "variants": {
+        "baseline": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        "chain": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        "flow": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        "freq": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        "phase3_edge": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        "quality": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ]
+      }
+    },
+    {
+      "sha": "2a6f290bc09324406708a4d404a88a45d848ddf9",
+      "variants": {
+        "baseline": [
+          0,
+          0,
+          0,
+          4,
+          2,
+          4,
+          4
+        ],
+        "chain": [
+          0,
+          0,
+          0,
+          4,
+          2,
+          4,
+          4
+        ],
+        "flow": [
+          0,
+          0,
+          0,
+          4,
+          2,
+          4,
+          4
+        ],
+        "freq": [
+          0,
+          0,
+          0,
+          4,
+          2,
+          4,
+          4
+        ],
+        "phase3_edge": [
+          0,
+          0,
+          0,
+          4,
+          2,
+          4,
+          4
+        ],
+        "quality": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "kill_ledger": [
+        {
+          "from": "tests/test_requests.py",
+          "lines": [
+            "Timeout,",
+            "TooManyRedirects,"
+          ],
+          "max_alnum": 16,
+          "sha": "2a6f290bc",
+          "to": "requests/__init__.py"
+        }
+      ],
+      "width_ledger": []
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "43f2530825b6cfe6975c8b2ec1e89e39cac59173",
+    "dirty": true
+  },
+  "method": "shadow ablation: a Rust mirror of the core's L2 judgment (Anchor sites + Provenance phases 2/3) over the exact leftovers() run structure; the BASELINE shadow must equal the live ce-core delta on every commit (asserted at generation — the mirror is proven, not trusted). Variants re-judge the same input: quality = a site needs one evidence line with >= 20 alphanumeric chars; freq = a site needs one evidence line whose trimmed content is unique in the base tree (slice langs, memory/ excluded); chain = per pair-edge maximum-lines subset with strictly increasing source and destination starts; flow = destination- line exclusivity, greedy by size then position; phase3_edge = deletion- side attribution requires an anchored edge (attack review F4 width probe). Rows: per variant [cross_hits, cross_misses, identity_misses, invention_lines, extras_files, extras_lines, pred_lines]; all-zero commits omitted. Tail row: quality kill ledger + phase3 width ledger.",
+  "schema": "ce.eval-commit-ablation/1.0.0",
+  "source_slice": "8068356288978c4f54661ae6f95afe0e0831885e",
+  "summary": {
+    "commits": 341,
+    "cross_gt_in": 9,
+    "cross_gt_out": 9,
+    "equivalence_commits": 341,
+    "phase3_width": {
+      "extra": 0,
+      "in_gt": 0,
+      "lines": 0,
+      "unknown": 0
+    },
+    "quality_kills": 1,
+    "variants": {
+      "baseline": [
+        18,
+        0,
+        0,
+        4,
+        2,
+        4,
+        22
+      ],
+      "chain": [
+        18,
+        0,
+        0,
+        4,
+        2,
+        4,
+        22
+      ],
+      "flow": [
+        18,
+        0,
+        0,
+        4,
+        2,
+        4,
+        22
+      ],
+      "freq": [
+        18,
+        0,
+        0,
+        4,
+        2,
+        4,
+        22
+      ],
+      "phase3_edge": [
+        18,
+        0,
+        0,
+        4,
+        2,
+        4,
+        22
+      ],
+      "quality": [
+        18,
+        0,
+        0,
+        0,
+        0,
+        0,
+        18
+      ]
+    }
+  }
+}

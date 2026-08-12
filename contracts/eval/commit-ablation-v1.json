@@ -1,0 +1,914 @@
+{
+  "commits": [
+    {
+      "sha": "384d4c790283e5ebdd25d21f0371aee3960eeb6c",
+      "variants": {
+        "baseline": [
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ],
+        "chain": [
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ],
+        "flow": [
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ],
+        "freq": [
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ],
+        "phase3_edge": [
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ],
+        "quality": [
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ]
+      }
+    },
+    {
+      "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77",
+      "variants": {
+        "baseline": [
+          262,
+          0,
+          0,
+          0,
+          8,
+          13,
+          275
+        ],
+        "chain": [
+          262,
+          0,
+          0,
+          0,
+          8,
+          13,
+          275
+        ],
+        "flow": [
+          262,
+          0,
+          0,
+          0,
+          8,
+          13,
+          275
+        ],
+        "freq": [
+          234,
+          28,
+          33,
+          0,
+          4,
+          5,
+          239
+        ],
+        "phase3_edge": [
+          262,
+          0,
+          0,
+          0,
+          8,
+          13,
+          275
+        ],
+        "quality": [
+          262,
+          0,
+          0,
+          0,
+          8,
+          13,
+          275
+        ]
+      }
+    },
+    {
+      "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392",
+      "variants": {
+        "baseline": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "chain": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "flow": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "freq": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "phase3_edge": [
+          4,
+          1,
+          1,
+          0,
+          0,
+          0,
+          4
+        ],
+        "quality": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ]
+      }
+    },
+    {
+      "sha": "a3cf54d1f113f693a593fb6719e2c532d59c6c25",
+      "variants": {
+        "baseline": [
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "chain": [
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "flow": [
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "freq": [
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "phase3_edge": [
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "quality": [
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10
+        ]
+      }
+    },
+    {
+      "sha": "6d8824e204dbb4435ebe7e48cc91e39ddcac5e50",
+      "variants": {
+        "baseline": [
+          39,
+          0,
+          0,
+          0,
+          4,
+          4,
+          43
+        ],
+        "chain": [
+          39,
+          0,
+          0,
+          0,
+          4,
+          4,
+          43
+        ],
+        "flow": [
+          39,
+          0,
+          0,
+          0,
+          4,
+          4,
+          43
+        ],
+        "freq": [
+          0,
+          39,
+          39,
+          0,
+          0,
+          0,
+          0
+        ],
+        "phase3_edge": [
+          39,
+          0,
+          0,
+          0,
+          3,
+          3,
+          42
+        ],
+        "quality": [
+          39,
+          0,
+          0,
+          0,
+          4,
+          4,
+          43
+        ]
+      }
+    },
+    {
+      "sha": "1ef9cdf608d2628d629e049a986e826f6a12e83e",
+      "variants": {
+        "baseline": [
+          22,
+          0,
+          0,
+          0,
+          1,
+          1,
+          23
+        ],
+        "chain": [
+          22,
+          0,
+          0,
+          0,
+          1,
+          1,
+          23
+        ],
+        "flow": [
+          22,
+          0,
+          0,
+          0,
+          1,
+          1,
+          23
+        ],
+        "freq": [
+          0,
+          22,
+          22,
+          0,
+          0,
+          0,
+          0
+        ],
+        "phase3_edge": [
+          22,
+          0,
+          0,
+          0,
+          1,
+          1,
+          23
+        ],
+        "quality": [
+          22,
+          0,
+          0,
+          0,
+          1,
+          1,
+          23
+        ]
+      }
+    },
+    {
+      "sha": "da8eb210b88ceec11eb46d01aa77b0ad29b43c5e",
+      "variants": {
+        "baseline": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "chain": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "flow": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "freq": [
+          0,
+          6,
+          6,
+          0,
+          0,
+          0,
+          0
+        ],
+        "phase3_edge": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "quality": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      }
+    },
+    {
+      "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3",
+      "variants": {
+        "baseline": [
+          86,
+          0,
+          0,
+          0,
+          0,
+          0,
+          86
+        ],
+        "chain": [
+          78,
+          8,
+          8,
+          0,
+          0,
+          0,
+          78
+        ],
+        "flow": [
+          86,
+          0,
+          0,
+          0,
+          0,
+          0,
+          86
+        ],
+        "freq": [
+          78,
+          8,
+          8,
+          0,
+          0,
+          0,
+          78
+        ],
+        "phase3_edge": [
+          86,
+          0,
+          0,
+          0,
+          0,
+          0,
+          86
+        ],
+        "quality": [
+          86,
+          0,
+          0,
+          0,
+          0,
+          0,
+          86
+        ]
+      }
+    },
+    {
+      "sha": "822e7182f96811f1682a5b797c99faff58e0d8cf",
+      "variants": {
+        "baseline": [
+          29,
+          0,
+          0,
+          0,
+          2,
+          2,
+          31
+        ],
+        "chain": [
+          29,
+          0,
+          0,
+          0,
+          2,
+          2,
+          31
+        ],
+        "flow": [
+          29,
+          0,
+          0,
+          0,
+          2,
+          2,
+          31
+        ],
+        "freq": [
+          29,
+          0,
+          0,
+          0,
+          2,
+          2,
+          31
+        ],
+        "phase3_edge": [
+          29,
+          0,
+          0,
+          0,
+          2,
+          2,
+          31
+        ],
+        "quality": [
+          29,
+          0,
+          0,
+          0,
+          2,
+          2,
+          31
+        ]
+      }
+    },
+    {
+      "sha": "f84aaa3c8cf71b3cfbf74064d0bd5e65a6a83a89",
+      "variants": {
+        "baseline": [
+          62,
+          0,
+          0,
+          0,
+          2,
+          4,
+          66
+        ],
+        "chain": [
+          62,
+          0,
+          0,
+          0,
+          2,
+          4,
+          66
+        ],
+        "flow": [
+          62,
+          0,
+          0,
+          0,
+          2,
+          4,
+          66
+        ],
+        "freq": [
+          62,
+          0,
+          0,
+          0,
+          2,
+          4,
+          66
+        ],
+        "phase3_edge": [
+          62,
+          0,
+          0,
+          0,
+          2,
+          4,
+          66
+        ],
+        "quality": [
+          62,
+          0,
+          0,
+          0,
+          2,
+          4,
+          66
+        ]
+      }
+    },
+    {
+      "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+      "variants": {
+        "baseline": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        "chain": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        "flow": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        "freq": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        "phase3_edge": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        "quality": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ]
+      }
+    },
+    {
+      "kill_ledger": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "lines": [
+            "let out = Command::new(\"git\")",
+            ".arg(\"-C\")",
+            ".arg(dir)"
+          ],
+          "max_alnum": 19,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "lines": [
+            ".args(args)",
+            ".output()",
+            ".expect(\"git\");"
+          ],
+          "max_alnum": 9,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "lines": [
+            ".current_dir(dir)",
+            ".stdin(Stdio::piped())",
+            ".stdout(Stdio::piped())",
+            ".stderr(Stdio::null())",
+            ".spawn()"
+          ],
+          "max_alnum": 16,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "lines": [
+            ".stderr(Stdio::null())",
+            ".spawn()"
+          ],
+          "max_alnum": 15,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "lines": [
+            "child",
+            ".stdin",
+            ".as_mut()",
+            ".expect(\"stdin\")"
+          ],
+          "max_alnum": 11,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "lines": [
+            ".current_dir(dir)",
+            ".stdin(Stdio::piped())",
+            ".stdout(Stdio::piped())",
+            ".stderr(Stdio::null())",
+            ".spawn()",
+            ".expect(\"spawn hook\");",
+            "child",
+            ".stdin",
+            ".as_mut()",
+            ".expect(\"stdin\")"
+          ],
+          "max_alnum": 16,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "lines": [
+            ".stderr(Stdio::null())",
+            ".spawn()"
+          ],
+          "max_alnum": 15,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "lines": [
+            ".output()",
+            ".expect(\"seed index\");"
+          ],
+          "max_alnum": 15,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "lines": [
+            ".stdin(Stdio::piped())",
+            ".stdout(Stdio::piped())",
+            ".stderr(Stdio::null())",
+            ".spawn()"
+          ],
+          "max_alnum": 16,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "lines": [
+            ".stderr(Stdio::null())",
+            ".spawn()"
+          ],
+          "max_alnum": 15,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "lines": [
+            "child",
+            ".stdin",
+            ".as_mut()",
+            ".expect(\"stdin\")"
+          ],
+          "max_alnum": 11,
+          "sha": "4822d04ff",
+          "to": "cli/tests/common/mod.rs"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "lines": [
+            "\"added_novel\",",
+            "\"added_moved\",",
+            "\"removed_deleted\",",
+            "\"removed_moved\","
+          ],
+          "max_alnum": 14,
+          "sha": "f84aaa3c8",
+          "to": "cli/tests/eval_support/mod.rs"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "lines": [
+            "\"added_novel\",",
+            "\"added_moved\",",
+            "\"removed_deleted\",",
+            "\"removed_moved\","
+          ],
+          "max_alnum": 14,
+          "sha": "f84aaa3c8",
+          "to": "cli/tests/eval_support/mod.rs"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "lines": [
+            ".arg(a)",
+            ".arg(b)",
+            ".output()"
+          ],
+          "max_alnum": 6,
+          "sha": "f84aaa3c8",
+          "to": "cli/tests/eval_support/mod.rs"
+        }
+      ],
+      "width_ledger": [
+        {
+          "content": "std::fs::write(dir.join(\"a.rs\"), rust_fn(1)).expect(\"a.rs\");",
+          "file": "cli/tests/daemon_e2e.rs",
+          "in_gt": true,
+          "line": 16,
+          "sha": "8d6b237a5"
+        },
+        {
+          "content": "let mut raw = String::new();",
+          "file": "cli/src/health.rs",
+          "in_gt": false,
+          "line": 26,
+          "sha": "6d8824e20"
+        }
+      ]
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "43f2530825b6cfe6975c8b2ec1e89e39cac59173",
+    "dirty": true
+  },
+  "method": "shadow ablation: a Rust mirror of the core's L2 judgment (Anchor sites + Provenance phases 2/3) over the exact leftovers() run structure; the BASELINE shadow must equal the live ce-core delta on every commit (asserted at generation — the mirror is proven, not trusted). Variants re-judge the same input: quality = a site needs one evidence line with >= 20 alphanumeric chars; freq = a site needs one evidence line whose trimmed content is unique in the base tree (slice langs, memory/ excluded); chain = per pair-edge maximum-lines subset with strictly increasing source and destination starts; flow = destination- line exclusivity, greedy by size then position; phase3_edge = deletion- side attribution requires an anchored edge (attack review F4 width probe). Rows: per variant [cross_hits, cross_misses, identity_misses, invention_lines, extras_files, extras_lines, pred_lines]; all-zero commits omitted. Tail row: quality kill ledger + phase3 width ledger.",
+  "schema": "ce.eval-commit-ablation/1.0.0",
+  "source_slice": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+  "summary": {
+    "commits": 47,
+    "cross_gt_in": 181,
+    "cross_gt_out": 366,
+    "equivalence_commits": 47,
+    "phase3_width": {
+      "extra": 1,
+      "in_gt": 1,
+      "lines": 2,
+      "unknown": 0
+    },
+    "quality_kills": 14,
+    "variants": {
+      "baseline": [
+        547,
+        0,
+        0,
+        0,
+        17,
+        24,
+        571
+      ],
+      "chain": [
+        539,
+        8,
+        8,
+        0,
+        17,
+        24,
+        563
+      ],
+      "flow": [
+        547,
+        0,
+        0,
+        0,
+        17,
+        24,
+        571
+      ],
+      "freq": [
+        444,
+        103,
+        108,
+        0,
+        8,
+        11,
+        455
+      ],
+      "phase3_edge": [
+        546,
+        1,
+        1,
+        0,
+        16,
+        23,
+        569
+      ],
+      "quality": [
+        547,
+        0,
+        0,
+        0,
+        17,
+        24,
+        571
+      ]
+    }
+  }
+}

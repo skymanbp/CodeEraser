@@ -1,13 +1,10 @@
-//! Scoring machinery for the L2 bar (eval_l2.rs): batch runs, the
-//! L2-over-L1 delta, per-file cross ground truth via the labels
-//! machinery, gate rows, and the extras ledger.
-//!
-//! Compiled only by eval_l2; split out to keep both files inside the
-//! repo's own E01 file budget.
+//! Scoring machinery shared by the L2 bar (eval_l2.rs) and the
+//! ablation shadow (eval_ablation.rs): batch runs, the L2-over-L1
+//! delta, per-file cross GT via the labels machinery, extras ledger.
 #![allow(dead_code)]
 
 use crate::eval_commit_review as review;
-use crate::eval_support::{pair_contents, pair_lang, u64s};
+use crate::eval_support::{by_sha, gt_pairs, pair_contents, pair_lang, u64s};
 use codeeraser::corelink::Link;
 use codeeraser::fourclass::MovedLine;
 use codeeraser::fourclass::batch::{BatchClassification, PairInput, classify_batch};
@@ -28,20 +25,49 @@ pub fn pair_texts(sha: &str, gt_rows: &[Value]) -> Texts {
         .collect()
 }
 
-pub fn run_batch(texts: &Texts, link: Option<&mut Link>) -> BatchClassification {
-    let inputs: Vec<PairInput> = texts
+/// classify_batch inputs for a batch's texts, in slice order.
+pub fn pair_inputs(texts: &Texts) -> Vec<PairInput<'_>> {
+    texts
         .iter()
         .map(|(before, after, gp)| PairInput {
             before,
             after,
             lang: pair_lang(gp),
         })
-        .collect();
-    let out = classify_batch(&inputs, link);
+        .collect()
+}
+
+pub fn run_batch(texts: &Texts, link: Option<&mut Link>) -> BatchClassification {
+    let out = classify_batch(&pair_inputs(texts), link);
     for (c, (_, _, gp)) in out.pairs.iter().zip(texts) {
         assert!(!c.degraded, "diff cap tripped on {gp}");
     }
     out
+}
+
+/// A commit's batch texts from its GT pairs (labels else prelabels).
+pub fn commit_texts(s: &Value, labels: &Value) -> (String, Texts) {
+    let sha = s["sha"].as_str().expect("sha");
+    let by = by_sha(labels);
+    (sha.into(), pair_texts(sha, gt_pairs(s, &by)))
+}
+
+/// Both live runs (pure L1, linked L2) of a commit, degraded refused.
+pub fn live_pair(
+    sha: &str,
+    texts: &Texts,
+    link: &mut Link,
+) -> (BatchClassification, BatchClassification) {
+    let l1 = run_batch(texts, None);
+    let l2 = run_batch(texts, Some(link));
+    assert!(l2.degraded.is_none(), "{sha}: degraded {:?}", l2.degraded);
+    (l1, l2)
+}
+
+/// Whether a labels row records any cross-file moved lines.
+pub fn has_cross(row: Option<&&Value>) -> bool {
+    let n = |l: &&Value, k: &str| l["cross_file"][k].as_u64().unwrap();
+    row.map(|l| n(l, "out") + n(l, "in") > 0).unwrap_or(false)
 }
 
 pub fn counts_of(b: &BatchClassification) -> Vec<[u64; 4]> {

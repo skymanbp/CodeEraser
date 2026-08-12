@@ -152,6 +152,17 @@ pub fn classify_counts(before: &str, after: &str, lang: Lang, what: &str) -> [u6
     ]
 }
 
+/// The live ce-core link every L2-family generator drives.
+pub fn core_link() -> codeeraser::corelink::Link {
+    let bin = std::env::var("CE_CORE_BIN").expect(
+        "CE_CORE_BIN is unset — build the core and export it:\n  \
+         cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
+    );
+    codeeraser::corelink::Link::open(&bin)
+        .expect("ce-core link")
+        .0
+}
+
 /// The local eval-payload directory (eval_extract output).
 pub fn out_dir() -> std::path::PathBuf {
     std::path::PathBuf::from(std::env::var("CE_EVAL_OUT").unwrap_or_else(|_| "../.ce-eval".into()))
