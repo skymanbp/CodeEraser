@@ -4,6 +4,15 @@
 
 use tree_sitter::Node;
 
+/// Parse one document — the shared prologue of every AST consumer
+/// (unit segmentation, graph site detection). None = grammar refused
+/// or parse failed; callers degrade to "no structure".
+pub fn parse(text: &str, grammar: &tree_sitter::Language) -> Option<tree_sitter::Tree> {
+    let mut parser = tree_sitter::Parser::new();
+    parser.set_language(grammar).ok()?;
+    parser.parse(text, None)
+}
+
 pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
     // cast is safe: a single file cannot hold > u32::MAX AST children
     (0..node.child_count())

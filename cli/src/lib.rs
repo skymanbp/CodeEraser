@@ -8,6 +8,7 @@ pub mod corelink;
 pub mod daemon;
 pub mod dedup;
 pub mod fourclass;
+pub mod graph;
 pub mod guard;
 pub mod health;
 pub mod hookio;

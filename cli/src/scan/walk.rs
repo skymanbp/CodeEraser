@@ -29,6 +29,27 @@ const BUILTIN_EXCLUDES: &[&str] = &[
     "!dist-newstyle/",
 ];
 
+/// Config plus language-tagged candidate files — the shared opening
+/// of every whole-tree analyzer (scan metrics, graph sites); the
+/// config rides along so callers needing thresholds do not load it
+/// twice.
+pub fn scoped_lang_files(
+    root: &Path,
+) -> Result<
+    (
+        crate::config::Config,
+        Vec<(PathBuf, crate::scan::lang::Lang)>,
+    ),
+    String,
+> {
+    let config = crate::config::Config::load(root)?;
+    let files = collect(root, &config.exclude)?
+        .into_iter()
+        .filter_map(|p| crate::scan::lang::Lang::from_path(&p).map(|l| (p, l)))
+        .collect();
+    Ok((config, files))
+}
+
 /// Collect candidate files under `root`, honoring the exclusion model.
 pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, String> {
     let overrides = build_overrides(root, extra_excludes)?;

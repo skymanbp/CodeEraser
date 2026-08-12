@@ -8,7 +8,6 @@ pub mod report;
 pub mod spec;
 pub mod walk;
 
-use crate::config::Config;
 use anyhow::{Context, Result};
 use lang::Lang;
 use metrics::{FileMetrics, FnMetrics};
@@ -37,12 +36,9 @@ pub fn run(root: &Path, format: Format) -> Result<ExitCode> {
 /// Library entry shared by the CLI and the MCP server: measure and
 /// evaluate without printing anything.
 pub fn analyze(root: &Path) -> Result<(Vec<FileMetrics>, Vec<report::Finding>, report::Summary)> {
-    let config = Config::load(root).map_err(anyhow::Error::msg)?;
+    let (config, candidates) = walk::scoped_lang_files(root).map_err(anyhow::Error::msg)?;
     let mut files = Vec::new();
-    for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
-        let Some(language) = Lang::from_path(&path) else {
-            continue;
-        };
+    for (path, language) in candidates {
         files.push(measure_file(&path, root, language)?);
     }
     let findings: Vec<_> = files

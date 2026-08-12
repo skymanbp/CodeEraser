@@ -3,6 +3,7 @@
 //! Markdown segments on ATX headings; lines outside any unit belong
 //! to the file's top level.
 
+use crate::scan::ast;
 use crate::scan::functions;
 use crate::scan::lang::Lang;
 use crate::scan::spec;
@@ -25,12 +26,8 @@ pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
 }
 
 fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<Unit> {
-    let mut parser = tree_sitter::Parser::new();
-    if parser.set_language(&grammar).is_err() {
+    let Some(tree) = ast::parse(text, &grammar) else {
         return Vec::new(); // no segmentation: everything is toplevel
-    }
-    let Some(tree) = parser.parse(text, None) else {
-        return Vec::new();
     };
     let src = text.as_bytes();
     let mut units: Vec<Unit> = functions::extract(tree.root_node(), src, spec::spec(lang))

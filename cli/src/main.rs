@@ -3,7 +3,7 @@
 //! `dedup` / `daemon` / `ping` (clone index + process model, M2).
 
 use clap::{Parser, Subcommand, ValueEnum};
-use codeeraser::{churn, corelink, daemon, dedup, scan};
+use codeeraser::{churn, corelink, daemon, dedup, graph, scan};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -45,6 +45,17 @@ enum Cmd {
         /// History window in days
         #[arg(long, default_value_t = 14)]
         days: u32,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
+    },
+    /// Dependency-graph subsystem (M5-2; only --sites exists yet:
+    /// resolution-free reference-site detection)
+    Graph {
+        /// Directory to analyze (default: current directory)
+        root: Option<PathBuf>,
+        /// List reference sites (the only M5-2b mode)
+        #[arg(long)]
+        sites: bool,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
@@ -128,6 +139,11 @@ fn main() -> ExitCode {
         Cmd::Doctor { core, root } => doctor(&core, &or_cwd(root)),
         Cmd::Scan { path, format } => scan_cmd(path, format),
         Cmd::Churn { root, days, format } => churn_cmd(&or_cwd(root), days, format),
+        Cmd::Graph {
+            root,
+            sites,
+            format,
+        } => graph_cmd(&or_cwd(root), sites, format),
         Cmd::Dedup(args) => dedup_cmd(args),
         Cmd::Probe { hook } => hook_cmd(hook, "probe", codeeraser::guard::run_hook),
         Cmd::Audit { hook } => hook_cmd(hook, "audit", codeeraser::audit::run_hook),
@@ -153,6 +169,14 @@ fn churn_cmd(root: &std::path::Path, days: u32, format: OutFormat) -> ExitCode {
             ExitCode::from(2)
         }
     }
+}
+
+fn graph_cmd(root: &std::path::Path, sites: bool, format: OutFormat) -> ExitCode {
+    if !sites {
+        eprintln!("ce graph: only --sites exists in M5-2b (the resolver lands at 2f)");
+        return ExitCode::from(2);
+    }
+    graph::run_sites(root, matches!(format, OutFormat::Json))
 }
 
 fn or_cwd(root: Option<PathBuf>) -> PathBuf {
