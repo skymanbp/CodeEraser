@@ -26856,6 +26856,7 @@
           "side": "out"
         },
         {
+          "below_floor": 1,
           "file": "crates/core/args.rs",
           "gt": 197,
           "lines": [
@@ -27261,6 +27262,36 @@
           "side": "in"
         },
         {
+          "below_floor": 2,
+          "file": "crates/printer/src/hyperlink/mod.rs",
+          "gt": 19,
+          "lines": [
+            "1118: #[test]",
+            "1125: assert!(",
+            "1126: name > prev,",
+            "1127: \"'{prev}' should come before '{name}' in \\",
+            "1128: HYPERLINK_PATTERN_ALIASES\",",
+            "1130: prev = name;",
+            "1134: #[test]",
+            "1135: fn alias_names_are_reasonable() {",
+            "1137: // There's no hard rule here, but if we want to define an alias",
+            "1138: // with a name that doesn't pass this assert, then we should",
+            "1139: // probably flag it as worthy of consideration. For example, we",
+            "1140: // really do not want to define an alias that contains `{` or `}`,",
+            "1141: // which might confuse it for a variable.",
+            "1143: || c == '+'",
+            "1144: || c == '-'",
+            "1145: || c == '.'));",
+            "1149: #[test]",
+            "1150: fn aliases_are_valid_formats() {",
+            "1153: assert!("
+          ],
+          "pred": 19,
+          "sha": "66aa4a63b",
+          "side": "in"
+        },
+        {
+          "below_floor": 2,
           "file": "crates/printer/src/hyperlink_aliases.rs",
           "gt": 25,
           "lines": [
@@ -27301,10 +27332,10 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "b9e6780b8c4904aee88dac36e9775d29aebbfb72",
+    "commit": "032b2079f601e811f47e5e0ed4cbc43ae1a59d2f",
     "dirty": true
   },
-  "method": "real pipeline: fourclass::batch::classify_batch over a live ce-core link, per slice commit; gt = commit-labels-ripgrep-v1; cross GT per file re-derived by the labels machinery (partition + reviewed corrections). Gates: cross misses = 0 at LINE IDENTITY for files without a reviewed correction, count level on the corrected files, zero beyond the reviewed below-floor register (true relocated lines with no >=2-distinct contiguous companion — structurally below destFloor, itemized per line); coincidence files exact; zero invention on non-cross commits; L2>=L1 monotone with conserved sums (asserted at generation); extras itemized with content AND frozen (a new above-GT row fails the generator until reviewed and blessed); reversed-order determinism (asserted at generation); cost-model sensitivity pinned in core/test/Spec.hs.",
+  "method": "real pipeline: fourclass::batch::classify_batch over a live ce-core link, per slice commit; gt = commit-labels-ripgrep-v1; cross GT per file re-derived by the labels machinery (partition + reviewed corrections). Gates: cross misses = 0 at LINE IDENTITY for files without a reviewed correction, count level on the corrected files, zero beyond the reviewed below-floor register (true relocated lines with no >=2-distinct contiguous companion — structurally below destFloor, itemized per line); coincidence files exact; zero invention on non-cross commits; L2>=L1 monotone with conserved sums (asserted at generation); extras itemized with content AND frozen, charged against the recoverable bar gt - below_floor (a new above-bar row fails the generator until reviewed and blessed); reversed-order determinism (asserted at generation); cost-model sensitivity pinned in core/test/Spec.hs.",
   "schema": "ce.eval-commit-l2/1.0.0",
   "source_slice": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
   "summary": {
@@ -27315,8 +27346,8 @@
     "cross_gt_out": 498,
     "cross_hits": 988,
     "cross_misses": 0,
-    "extras_files": 14,
-    "extras_lines": 500,
+    "extras_files": 15,
+    "extras_lines": 505,
     "moved_detected": 1859,
     "moved_gt": 1860,
     "moved_pred": 2702,

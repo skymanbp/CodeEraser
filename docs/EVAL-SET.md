@@ -21,8 +21,7 @@
 ## 方法（全程无 RNG、无时钟——同输入必同输出，已双跑逐字节复验）
 
 1. **扫描**：遍历本机 transcripts，配对 Edit/Write `tool_use` 与
-   `toolUseResult`，同一 id 只消费一次（compact/resume 重放历史行，实测单
-   会话重复至 6 次）。
+   `toolUseResult`，同一 id 只消费一次（compact/resume 重放，实测重复至 6 次）。
 2. **重建**：before = `originalFile`（Edit 必须非空；Write 空前态仅当
    create——缺前态按弃置计，绝不伪造）；after = Write `content` 或对
    before 施加 `structuredPatch`（严格核对，不匹配即弃置，ADR-004 教训）。
@@ -41,11 +40,10 @@
 1. **预标** [contracts/eval/prelabels-v1.json](../contracts/eval/prelabels-v1.json)：
    `git diff --no-index -U0 --color-moved=plain --color-moved-ws=allow-indentation-change`
    的 SGR 行分类（31/32=deleted/novel，35/36=moved），逐样本 numstat 交叉断言。
-2. **逐条审核**（agent 全 200 条过目真实 diff，用户 2026-08-10 委托）：194
-   条精确；**6 条修正根因单一**——plain 模式对**空行**跨位匹配，纯空行
-   "移动"是伪影（5 全伪影 + 1 混合 17/17 真 + 7/4 伪，11 个 moved 样本逐行
-   dump 甄别）；修正只在 novel/moved、deleted/moved 间移行，numstat 守恒。
-   审核注记留本地 `.ce-eval/review/reviewed.ndjson`。
+2. **逐条审核**（全 200 条过目真实 diff，用户 2026-08-10 委托）：194 条
+   精确；**6 条修正根因单一**——plain 模式空行跨位匹配伪影（11 个 moved
+   样本逐行 dump 甄别）；修正只在 novel/moved、deleted/moved 间移行，
+   numstat 守恒；注记留本地 `.ce-eval/review/reviewed.ndjson`。
 3. **定稿** [contracts/eval/labels-v1.json](../contracts/eval/labels-v1.json)：
    200 行终值 + 6 修正显式列出（预标值/终值/机制）。CI 门校验
    labels ↔ prelabels 除声明修正外逐行一致、拆分守恒（红证双向）。
@@ -136,14 +134,14 @@ m=1/v=3/s_cross=2 ⇒ **≥2 行跨文件证据地板由模型推导**（单跨�
   改编单元（out_dir/labeling_rows/write_doc 搬迁中被泛化，GT dump 证零行同一
   存活，行级归属结构性不可能——如实入册而非硬凑） |
 
-行级总量：moved detected 766/766（547 跨 + 219 文件内）。开发中真实流水线
-曾比设计实测短 5 行（common/mod.rs 63→60 等）——根因是 Haskell 端以显著行
-行号连续划 run，`}}`/空行把 git 视为整块的区域切碎；按"run 结构归对齐者"
-修正后闭合，且 5 个巧合文件门全程保持精确。M4-6/7 期间狗粮门另实战四轮
-（465 行文件拆分、CoC 24 重构、共 12+ 对克隆全数根治入 eval_support/
-eval_l2_parts，棘轮始终回 201）。**外部效度未证**（R-L2-2）：模型设计与
-评分同源于本仓库历史；M5 须在第二仓库以同一 GT 流水线复测，届时 deny
-档位方可倚赖跨文件 moved 信号；Stop 汇总中该信号先行 informational。
+行级总量：moved detected 766/766（547 跨 + 219 文件内；开发中曾短 5 行，
+根因 = 显著行行号连续划 run 切碎 git 整块，按"run 结构归对齐者"修正闭
+合）。M4-6/7 狗粮门实战四轮（465 行拆分、CoC 24、12+ 对克隆根治，棘轮回
+201）。**外部效度已证——R-L2-2 关闭（2026-08-12 用户授权解锁）**：
+requests（py，18/18 零发明）与 ripgrep（rs，held-out 988+6 守恒零发明）
+两个第二语料以同一 GT 流水线复测通过，Codex 独立评审无 blocker；deny 档
+位自此可倚赖跨文件 moved 信号（默认档位变更仍按计划 §4.2 在 M7 裁决），
+Stop 汇总该信号的 informational 前置解除。
 
 ## FPR 主门（M4 验收主门，2026-08-11 通过）
 
@@ -161,16 +159,13 @@ CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言�
 ## 攻击评审加固轮（2026-08-11，Codex gpt-5.6-sol 独立评审后）
 
 评审 14 项（2 blocker + 10 major + 2 minor）逐条独立核实后处置，全档
-[docs/reviews/2026-08-11-m4-attack-review.md](reviews/2026-08-11-m4-attack-review.md)。
-证据完整性面：**行身份召回门**（F2：SGR walker 维护双侧行号，跨文件 GT 由
-计数升为行号集合，全语料一次通过）；**extras 冻结**（F2：重生成引入新
-extras 须先审读再 `CE_ACCEPT_EXTRAS=1` 显式赐福）；**源版本绑定**（F1：doc
-带 `generated_from`，约定 = doc 落在所记 commit 的**子提交**；活体重放因
-D2-7 只能本地跑，用户拍板边界，复跑命令见下节）；**判决语义加固**（F5/F6：
-证据地板改计**去重内容数**、run 桥长上界 = 实测 7——全语料复验零漂移，纯
-增健壮性）；**堆叠证据归属**（F7：impl 具名容器 + trait 限定键 + Go 接收者
-键；首版修复被 FPR 重放当场抓到 impl 同键碰撞 1/600，根修后回 0/600——
-评估仪器抓自己的修复批，机制在工作）。
+[docs/reviews/2026-08-11-m4-attack-review.md](reviews/2026-08-11-m4-attack-review.md)：
+行身份召回门（F2：跨文件 GT 计数升为行号集合，全语料一次通过）；extras
+冻结（新行须先审读再 `CE_ACCEPT_EXTRAS=1` 赐福）；源版本绑定（F1：
+`generated_from`，doc 落所记 commit 的**子提交**，活体重放本地跑）；判决
+语义加固（F5/F6：去重内容数地板 + run 桥长上界 7，全语料零漂移）；堆叠
+证据归属（F7：具名容器/trait 限定键/Go 接收者键；首版修复被 FPR 重放当
+场抓 1/600，根修回 0/600——仪器抓自己的修复批，机制在工作）。
 
 ## requests 外验切片 v1（M5-1b 冻结，2026-08-11，预注册于任何外验评分之前）
 
@@ -208,14 +203,11 @@ sub-block 移动）；320/341 commit 逐对精确。附带清偿自仓欠账一�
 记后未重生成的 labels doc（代码表↔doc 漂移 CI 不可见）掩码比对抓出重生成。
 
 **L2-on-requests 外验判决（2026-08-11，当时 doc 未冻结——这正是判决）**：
-召回门过——跨文件 **18/18 行身份级召回**（cross_misses=0，resolve_proxies
-搬迁完整回收）；**虚报门破**——2a6f290b（black/isort 格式化 commit）上
-L2 发明 2 站/4 行：`Timeout,`/`TooManyRedirects,` 在 test_requests.py 收
-拢 ↔ __init__.py 炸开，两行去重内容恰好够 destFloor=2 开站（对照：
-5aeec8b6 的同内容×2 只算 1 条 distinct 证据被 F5 地板正确拒绝）。
-invention 门与巧合精确门双破 ⇒ requests L2 doc 悬置，F4 改判条件点火，
-升级候选交由下节影子消融在双语料实测裁决（自仓 547/547 与 FPR 0/600 不
-可破）。
+召回门过（跨文件 **18/18 行身份级**，resolve_proxies 完整回收）；**虚报
+门破**——black/isort 格式化 commit 2a6f290b 上发明 2 站/4 行（`Timeout,`/
+`TooManyRedirects,` 收拢↔炸开，两行去重内容恰够 destFloor=2；对照
+5aeec8b6 同内容×2 被 F5 地板正确拒绝）⇒ doc 悬置、F4 改判条件点火，升级
+候选交由下节影子消融双语料裁决（自仓 547/547 与 FPR 0/600 不可破）。
 
 **影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)，
 Codex 评审处置 [2026-08-11-m5-1c-ii](reviews/2026-08-11-m5-1c-ii-ablation-review.md)）**：
@@ -282,11 +274,19 @@ hits 988 + 地板下 6 == 994 守恒、发明 0**（锚地板 held-out 零发明
 destFloor（单行注释 args.rs:512→parse.rs:87 双侧 + 改编 find 两对孤立行）
 ——审读逐行入册（审读表 `below_floor`，extras 台账的 miss 侧镜像），门语
 义 = **零未审读 miss**（自仓/requests 登记空、bar 不变；hits+misses+
-below_floor==cross GT 三层 CI 锚定）。extras 500 行/14 文件逐行台账赐福，
-两类机制：GT blocks 引擎漏标的真搬迁（旗标文档段落、改编函数体内的同一
-行）+ 亚锚样板搭车（`Ok(())`/import 片段，F4 删侧宽松的既定代价）。**消融
-三度确认**：quality==baseline [988,0,0,0]、freq 13 miss / chain 9 miss 三
-语料全灭、F4 宽度探针零召回贡献、保真门 433/433（影子==活核逐字全等）。
+below_floor==cross GT 三层 CI 锚定）。extras 505 行/15 文件逐行台账赐福
+（可回收基线 gt−below_floor 计费），两类机制：GT blocks 引擎漏标的真搬迁
+（旗标文档段落、改编函数体内的同一行）+ 亚锚样板搭车（`Ok(())`/import 片
+段，F4 删侧宽松的既定代价）。**消融三度确认**：quality==baseline
+[988,0,0,0]、freq 13 miss / chain 9 miss 三语料全灭、F4 宽度探针零召回贡
+献、保真门 433/433（影子==活核逐字全等）。
+
+**Codex 评审处置（2026-08-12，无 blocker，3 major + 2 minor 全核实落地，
+[归档](reviews/2026-08-12-m5-1d-codex-review.md)）**：extras 统一可回收基
+线计费（消 500≠505 口径分歧与 waiver 隐身通道）；登记三重锚（waived 行被
+预测即自证非地板下 + 咽喉拒重复 + labels CI 行身份锚）；**by-name 评审表
+解析修复单元/边登记门在外语料 CI 的静默空转**（幻影单元反事实即红）；
+copy 不消费落进 labels 机器；乘积护栏 Integer 化 + 两真实形状非降级回归钉。
 
 ## 复跑 / 校验
 
