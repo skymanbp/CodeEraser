@@ -162,11 +162,30 @@ pub fn per_file_corrections(sha: &str, added: bool) -> PerFile {
         .collect()
 }
 
-pub fn units_for(sha: &str) -> Vec<Value> {
-    rows_for("relocated_units", sha)
+/// Project review rows for one sha: carry `fields` through, split
+/// the comma-joined units — the one shape both registers share.
+fn project(key: &str, sha: &str, fields: &[&str]) -> Vec<Value> {
+    rows_for(key, sha)
         .map(|r| {
+            let mut o = serde_json::Map::new();
+            for f in fields {
+                o.insert((*f).into(), r[*f].clone());
+            }
             let units = r["units"].as_str().expect("units");
-            json!({"to": r["to"], "units": units.split(',').map(str::trim).collect::<Vec<_>>()})
+            let split: Vec<&str> = units.split(',').map(str::trim).collect();
+            o.insert("units".into(), json!(split));
+            Value::Object(o)
         })
         .collect()
+}
+
+pub fn units_for(sha: &str) -> Vec<Value> {
+    project("relocated_units", sha, &["to"])
+}
+
+/// The reviewed source->destination edge layer (M5-1c-iii): one row
+/// per (from file, to file) edge with the units that rode it. Units
+/// absent from every edge row are arrival-level GT only.
+pub fn edges_for(sha: &str) -> Vec<Value> {
+    project("relocation_edges", sha, &["from", "to"])
 }

@@ -56,6 +56,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "5aeec8b661f992050b1d034e727d7ce0326e9a56",
       "within_file": {
         "in": 0,
@@ -105,6 +106,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "fdcb717cf726ddd39a2f22a5bbae3f1aa017d7f3",
       "within_file": {
         "in": 1,
@@ -154,6 +156,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "a6cd380c640087218695bc7c62311a4843777e43",
       "within_file": {
         "in": 2,
@@ -353,6 +356,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "75bdc998e2d430a35d869b2abf1779bd0d34890e",
       "within_file": {
         "in": 2,
@@ -382,6 +386,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "a345b776fb2cf67d1a1810349e71fd60a83f53eb",
       "within_file": {
         "in": 8,
@@ -411,6 +416,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "42c5a4f62268dd6e0499aac02a2ef481286e5798",
       "within_file": {
         "in": 10,
@@ -440,6 +446,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "ced3779126326b0da4a0fff47dbd8cc182119b16",
       "within_file": {
         "in": 1,
@@ -469,6 +476,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "2bc6aeb64e6eda4af5c8c1b2abc2f6fd45a8ebd9",
       "within_file": {
         "in": 1,
@@ -498,6 +506,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "c51a9efa2bc4285cabeb2f7e42386e89baa3df89",
       "within_file": {
         "in": 1,
@@ -527,6 +536,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "d675d83b1df5689aba066cf464507b8b04425ed1",
       "within_file": {
         "in": 1,
@@ -556,6 +566,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "9b51d7c4f2f3e0b1425e72ca01ec520a1eae0c5c",
       "within_file": {
         "in": 3,
@@ -585,6 +596,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "6d37433c0e42c9be37dd3ca17a649e81554ba1f7",
       "within_file": {
         "in": 1,
@@ -614,6 +626,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "26466b54ada86b01912adb999f7cd51efd4f60d6",
       "within_file": {
         "in": 3,
@@ -643,6 +656,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "6831d2d8e4f06b4f1f25f0c3d6a160d4ccac0513",
       "within_file": {
         "in": 1,
@@ -672,6 +686,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "06826504dac278a2dec57f1eba847239f66a78c8",
       "within_file": {
         "in": 3,
@@ -701,6 +716,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "38d9a4f65f5fe0e7d6254eda5be889d53f9e06ef",
       "within_file": {
         "in": 1,
@@ -730,6 +746,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "0357b0724bd01cc89169fd40ca0132cf3248aff3",
       "within_file": {
         "in": 7,
@@ -759,6 +776,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "24bcb9eab60d2db5e71979ea391b3e5675daff1f",
       "within_file": {
         "in": 10,
@@ -788,6 +806,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "db47b9b4a0c5877fb97f64ac442757604c4c45cc",
       "within_file": {
         "in": 5,
@@ -817,6 +836,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "2b3436e0e7831676044b57f6f2cc9eb7c188293e",
       "within_file": {
         "in": 2,
@@ -846,6 +866,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "7c71982260aa8f88c44daee64ccf61e2db2e301c",
       "within_file": {
         "in": 4,
@@ -935,6 +956,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "2ed84f55b22f19a1e1e8eea2e50963dce62052d3",
       "within_file": {
         "in": 5,
@@ -1014,6 +1036,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "db575eeedcfdb03bf31285afd3033e301df8b685",
       "within_file": {
         "in": 4,
@@ -1070,6 +1093,15 @@
           ]
         }
       ],
+      "relocation_edges": [
+        {
+          "from": "requests/sessions.py",
+          "to": "requests/utils.py",
+          "units": [
+            "resolve_proxies"
+          ]
+        }
+      ],
       "sha": "99b3b492418d0751ca960178d274f89805095e4c",
       "within_file": {
         "in": 0,
@@ -1109,6 +1141,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "17e6e27a93131b7295165408e69b4cadb098b0d7",
       "within_file": {
         "in": 1,
@@ -1268,6 +1301,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "8bce583b9547c7b82d44c8e97f37cf9a16cbe758",
       "within_file": {
         "in": 23,
@@ -1638,6 +1672,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "2a6f290bc09324406708a4d404a88a45d848ddf9",
       "within_file": {
         "in": 51,
@@ -1667,6 +1702,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "cb233a101d6333cf1895e3f46bde11874fcaba07",
       "within_file": {
         "in": 15,
@@ -1706,6 +1742,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "da9996fe4dc63356e9467d0a5e10df3d89a8528e",
       "within_file": {
         "in": 1,
@@ -1745,6 +1782,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "15585909c3dd3014e4083961c8a404709450151c",
       "within_file": {
         "in": 4,
@@ -1774,6 +1812,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "26bea1e498d6e234fbc9ce8e07c0389bac73810b",
       "within_file": {
         "in": 11,
@@ -1823,6 +1862,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "005571d1180835eb5266a3fdbdbe8fdae57d90c2",
       "within_file": {
         "in": 9,
@@ -1902,6 +1942,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "eeafb6ab3a54ab01cbf864d452ea30f5fdb67ce8",
       "within_file": {
         "in": 3,
@@ -1961,6 +2002,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "0c030f78d24f29a459dbf39b28b4cc765e2153d7",
       "within_file": {
         "in": 8,
@@ -1990,6 +2032,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "9a40d1277807f0a4f26c9a37eea8ec90faa8aadc",
       "within_file": {
         "in": 9,
@@ -2029,6 +2072,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "145b5399486b56e00250204f033441f3fdf2f3c9",
       "within_file": {
         "in": 2,
@@ -2058,6 +2102,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "e18879932287c2bf4bcee4ddf6ccb8a69b6fc656",
       "within_file": {
         "in": 3,
@@ -2107,6 +2152,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "79b74ef704dc0d804937c0d015c5e9c3b02b79bd",
       "within_file": {
         "in": 11,
@@ -2146,6 +2192,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "5b4b64c3467fd7a3c03f91ee641aaa348b6bed3b",
       "within_file": {
         "in": 1,
@@ -2175,6 +2222,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "90fee0876aea97c639b3bf698d83a12876d2f160",
       "within_file": {
         "in": 8,
@@ -2344,6 +2392,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "f8bec2f7ca9d7c03981a12ff8866a9b3923f1699",
       "within_file": {
         "in": 5,
@@ -2373,6 +2422,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "cb2c800518423e0042789ab09f8f6e719428a444",
       "within_file": {
         "in": 1,
@@ -2402,6 +2452,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "8b9bc8fc0f63be84602387913c4b689f19efd028",
       "within_file": {
         "in": 3,
@@ -2431,6 +2482,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "389eea58dfb2f2ee096421a812e3af29c0298951",
       "within_file": {
         "in": 3,
@@ -2620,6 +2672,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "561e4b6889f53584c39a67f8794c53a414f68481",
       "within_file": {
         "in": 5,
@@ -2649,6 +2702,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "cd90742ed94d901759e26766197d0ce7c7bd9c8e",
       "within_file": {
         "in": 1,
@@ -2708,6 +2762,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "e50e5945294f79ee9ab4ec69de24d14f9b26a7ae",
       "within_file": {
         "in": 1,
@@ -2717,7 +2772,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "695c059952b9cc35ed175fc7dadcb872c87efb2a",
+    "commit": "9ae3854a78ba688d6a34c98b35f47b4ee8ed24a7",
     "dirty": true
   },
   "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",
@@ -2736,6 +2791,7 @@
       "in": 16,
       "out": 15
     },
-    "relocated_units": 1
+    "relocated_units": 1,
+    "relocation_edges": 1
   }
 }

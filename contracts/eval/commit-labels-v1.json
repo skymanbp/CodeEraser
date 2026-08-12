@@ -103,6 +103,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "551fa4111e5e43084cca851ad419a3c0ea8aedc1",
       "within_file": {
         "in": 9,
@@ -172,6 +173,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "d7a4bdbee8ea08a3a850729ecb9c1b0d7fb926dd",
       "within_file": {
         "in": 1,
@@ -268,6 +270,7 @@
           ]
         }
       ],
+      "relocation_edges": [],
       "sha": "384d4c790283e5ebdd25d21f0371aee3960eeb6c",
       "within_file": {
         "in": 1,
@@ -377,6 +380,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "b2bf52ae133c0af9533974aee4328de4bb760367",
       "within_file": {
         "in": 4,
@@ -406,6 +410,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "3ebefd1395a80e74984ebc22537df561d4ef79ff",
       "within_file": {
         "in": 6,
@@ -505,6 +510,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "270710454db908bf5f840448560c749605d12f89",
       "within_file": {
         "in": 2,
@@ -544,6 +550,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "06268248d3cd3cb2eb6beabbe607f46d679a6b64",
       "within_file": {
         "in": 5,
@@ -593,6 +600,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "d5c2fe9f568c8a4adeeaa259a4956ed4898b9c78",
       "within_file": {
         "in": 12,
@@ -672,6 +680,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "0105efa55e63d4ca98ed8c038b5fe0cdaceb2e54",
       "within_file": {
         "in": 9,
@@ -711,6 +720,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "7917643211265749f56d9606935d2942af1ce56f",
       "within_file": {
         "in": 2,
@@ -853,6 +863,83 @@
           ]
         }
       ],
+      "relocation_edges": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn",
+            "git"
+          ]
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn"
+          ]
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn"
+          ]
+        },
+        {
+          "from": "cli/tests/dedup_property.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn"
+          ]
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn",
+            "run_hook",
+            "shutdown_daemon"
+          ]
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp"
+          ]
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn",
+            "git"
+          ]
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn"
+          ]
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "tmp",
+            "rust_fn"
+          ]
+        }
+      ],
       "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77",
       "within_file": {
         "in": 0,
@@ -962,6 +1049,22 @@
           ]
         }
       ],
+      "relocation_edges": [
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "seed_clone_pair"
+          ]
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "seed_clone_pair"
+          ]
+        }
+      ],
       "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392",
       "within_file": {
         "in": 17,
@@ -991,6 +1094,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "ec2d00756cbd53f09cefd658eedadb091c516720",
       "within_file": {
         "in": 9,
@@ -1077,6 +1181,7 @@
           ]
         }
       ],
+      "relocation_edges": [],
       "sha": "a3cf54d1f113f693a593fb6719e2c532d59c6c25",
       "within_file": {
         "in": 12,
@@ -1154,6 +1259,7 @@
           ]
         }
       ],
+      "relocation_edges": [],
       "sha": "6d8824e204dbb4435ebe7e48cc91e39ddcac5e50",
       "within_file": {
         "in": 11,
@@ -1240,6 +1346,7 @@
           ]
         }
       ],
+      "relocation_edges": [],
       "sha": "1ef9cdf608d2628d629e049a986e826f6a12e83e",
       "within_file": {
         "in": 0,
@@ -1399,6 +1506,7 @@
           ]
         }
       ],
+      "relocation_edges": [],
       "sha": "da8eb210b88ceec11eb46d01aa77b0ad29b43c5e",
       "within_file": {
         "in": 6,
@@ -1489,6 +1597,16 @@
           ]
         }
       ],
+      "relocation_edges": [
+        {
+          "from": "cli/tests/report_schema.rs",
+          "to": "cli/tests/common/mod.rs",
+          "units": [
+            "golden_path",
+            "assert_matches_golden"
+          ]
+        }
+      ],
       "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3",
       "within_file": {
         "in": 0,
@@ -1548,6 +1666,7 @@
         }
       ],
       "relocated_units": [],
+      "relocation_edges": [],
       "sha": "ebe27b18f0041e6cd8a46cf74eb26b831179d12f",
       "within_file": {
         "in": 1,
@@ -1603,6 +1722,16 @@
             "indexed_file_count",
             "mark_ready",
             "init",
+            "index_ready"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "cli/src/daemon/server.rs",
+          "to": "cli/src/daemon/coldstart.rs",
+          "units": [
+            "indexed_file_count",
             "index_ready"
           ]
         }
@@ -1672,6 +1801,34 @@
             "CLASSES",
             "load",
             "by_id",
+            "numstat"
+          ]
+        }
+      ],
+      "relocation_edges": [
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "to": "cli/tests/eval_support/mod.rs",
+          "units": [
+            "CLASSES",
+            "load",
+            "by_id",
+            "numstat"
+          ]
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "to": "cli/tests/eval_support/mod.rs",
+          "units": [
+            "CLASSES",
+            "load",
+            "by_id"
+          ]
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "to": "cli/tests/eval_support/mod.rs",
+          "units": [
             "numstat"
           ]
         }
@@ -1786,6 +1943,16 @@
           ]
         }
       ],
+      "relocation_edges": [
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "to": "cli/tests/eval_support/mod.rs",
+          "units": [
+            "read_sample",
+            "~out_dir"
+          ]
+        }
+      ],
       "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff",
       "within_file": {
         "in": 0,
@@ -1795,7 +1962,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "695c059952b9cc35ed175fc7dadcb872c87efb2a",
+    "commit": "9ae3854a78ba688d6a34c98b35f47b4ee8ed24a7",
     "dirty": true
   },
   "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",
@@ -1814,6 +1981,7 @@
       "in": 61,
       "out": 121
     },
-    "relocated_units": 35
+    "relocated_units": 35,
+    "relocation_edges": 37
   }
 }

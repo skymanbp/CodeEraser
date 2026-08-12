@@ -221,10 +221,9 @@ commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。�
 方法差异一处（如实入册）：`added/deleted` 改由**同一编辑脚本的 hunk 头
 算术**推导而非 numstat——默认 myers 下 git 的 numstat 会对自家 patch 超
 计（requests 28d537dd 实测 15/6 vs patch/difflib/minimal/patience/histogram
-一致的 14/5，守恒断言当场逮住）；钉 histogram 会漂移已冻结的自仓切片
-（实测 12 行），故弃。自仓 doc 在 hunk 推导下逐字节不变（numstat 在自仓
-逐对等于 hunk 总和，冻结叙述仍真）。复跑：M5-1a 的四个 CE_SLICE_* 环境变
-量 + 本节两端 sha。
+一致的 14/5，守恒断言当场逮住）；钉 histogram 会漂移已冻结的自仓切片，故
+弃；自仓 doc 在 hunk 推导下逐字节不变。复跑：M5-1a 的四个 CE_SLICE_* 环
+境变量 + 本节两端 sha。
 
 **GT 审读**（[commit-labels-requests-v1.json](../contracts/eval/commit-labels-requests-v1.json)）：
 机械两层后跨文件 15 出/15 进全部集中在 3 个 commit，逐行对原始 diff 审读
@@ -232,32 +231,25 @@ commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。�
 全仓格式化 9 行：import 就地合并/炸开/收拢的内容巧合）+ **1 个真搬迁**保
 留（99b3b492：`rebuild_proxies` 判定体 9 行 sessions.py 缩进 8 → utils.py
 新函数 `resolve_proxies` 缩进 4，逐行同一）。终值跨 **9/9**、文件内
-255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json
-（数据即数据——平行 Rust 常量表被自家棘轮判为克隆，如实改 JSON 载荷）。
+255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json（数据
+即数据——平行 Rust 常量表会被自家棘轮判克隆）。
 
 **L1-on-requests 基线**（[commit-baseline-l1-requests-v1.json](../contracts/eval/commit-baseline-l1-requests-v1.json)）：
 **cross_credit_upper_bound = 0**——自仓"跨文件 moved L1 结构性零召回"
 （0/547）在第二语料复现，R-L2-2 外验第一料落地；detected 510 / GT 530 /
 predicted 636（超出方向同自仓 = L1 合法声称 GT blocks 引擎漏标的
-sub-block 移动）；320/341 commit 逐对精确。附带清偿一笔自仓欠账：43dc354
-给审读表加 `~` 改编标记后 labels doc 未重生成（CI 只查 doc 内部一致，抓
-不到代码表↔doc 漂移），本轮掩码比对抓出并重生成（summary 计数不变）。
+sub-block 移动）；320/341 commit 逐对精确。附带清偿自仓欠账一笔：`~` 标
+记后未重生成的 labels doc（代码表↔doc 漂移 CI 不可见）掩码比对抓出重生成。
 
-**L2-on-requests 外验判决（2026-08-11，doc 未冻结——这正是判决）**：召回
-门过——跨文件 **18/18 行身份级召回**（cross_misses=0，resolve_proxies 搬
-迁完整回收）；**虚报门破**——2a6f290b（black/isort 格式化 commit）上 L2
-发明 2 站/4 行：`Timeout,`/`TooManyRedirects,` 在 test_requests.py 收拢
-↔ __init__.py 炸开，两行去重内容恰好够 destFloor=2 开站（对照：5aeec8b6
-的同内容×2 只算 1 条 distinct 证据被 F5 地板正确拒绝）。invention 门与巧
-合精确门双破 ⇒ **requests L2 doc 悬置**（草稿在 .ce-eval/analysis/，可确
-定性重生成），l2 一致性门按 corpus_doc_pairs_frozen 纳管已冻结语料。F4
-（删侧宽松归因）的改判条件——第二语料现过度归因形态——正式点火。变体裁
-决数据（整行 trim 相等频率，非 substring）：**频率加权失效**（巧合证据行
-before 树 freq=1，真移动行反有 freq=2/3）；块链失效（巧合行双双相邻）；
-流失效（无目的地竞争）；**分离信号 = 内容质量**（巧合站两行 7/16 alnum
-全短，真站多条 ≥20-alnum 重行）——"站点须含 ≥20-alnum 锚证据"变体与 git
-blocks 引擎及本 GT 的 20-alnum 哲学同构，待影子消融在双语料实测（自仓
-547/547 与 FPR 0/600 必须保持）。
+**L2-on-requests 外验判决（2026-08-11，当时 doc 未冻结——这正是判决）**：
+召回门过——跨文件 **18/18 行身份级召回**（cross_misses=0，resolve_proxies
+搬迁完整回收）；**虚报门破**——2a6f290b（black/isort 格式化 commit）上
+L2 发明 2 站/4 行：`Timeout,`/`TooManyRedirects,` 在 test_requests.py 收
+拢 ↔ __init__.py 炸开，两行去重内容恰好够 destFloor=2 开站（对照：
+5aeec8b6 的同内容×2 只算 1 条 distinct 证据被 F5 地板正确拒绝）。
+invention 门与巧合精确门双破 ⇒ requests L2 doc 悬置，F4 改判条件点火，
+升级候选交由下节影子消融在双语料实测裁决（自仓 547/547 与 FPR 0/600 不
+可破）。
 
 **影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)，
 Codex 评审处置 [2026-08-11-m5-1c-ii](reviews/2026-08-11-m5-1c-ii-ablation-review.md)）**：
@@ -286,13 +278,21 @@ FPR 0/600 保持、升级后消融 baseline 七项 == 升级前 quality 列（�
 注册全中）、**requests L2 首冻结：18/18、0 miss、0 extras、0 发明**——
 本节上文的"悬置"自此解除。
 
+**边级 GT（M5-1c-iii 尾款）**：审读表新增 relocation_edges（来源→目的地
++经边单元；自仓 16 边行/37 边-单元对，requests 1/1），每行对原始 diff 核
+实——名字存活者按定义删除扫描，改名收敛者按体行同一（project_dir /
+corpus_dir 即 common tmp 的同体异名）。验收反向设门：**edge_violations =
+L2 声称的边必须被审读认可，越界即红**（生成器+CI 双点；首跑即逮出定义扫
+描漏掉的 5 条改名体边——按 diff 补全 GT，非按 pipeline）。正向为测量：
+边覆盖 **自仓 31/37、requests 1/1**——未覆盖 = 短体单元开不了站 + ~ 改编
+无行级证据，与改编谱系（~×3、run_hook 签名改编、resolve_proxies 改名搬
+迁）同为下一升级方向（改编/短单元对齐）的量化基线。
+
 ## 复跑 / 校验
 
 ```
-cd cli
-CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> \
-CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 \
-cargo test --test eval_extract -- --ignored --nocapture
+cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> \
+CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
 # 重建 .ce-eval/ 并重写 manifest；与已提交 manifest diff 为空即完整复现
 ```
 

@@ -107,6 +107,7 @@ fn label_row(row: &Value) -> Value {
         "within_file": out_in(p.out.within, p.into.within),
         "corrections": corrections,
         "relocated_units": review::units_for(sha),
+        "relocation_edges": review::edges_for(sha),
     })
 }
 
@@ -123,11 +124,12 @@ fn summarize(rows: &[Value]) -> Value {
         .flat_map(|r| r["corrections"].as_array().expect("corrections"))
         .map(|c| c["lines"].as_u64().unwrap())
         .sum();
-    let units: u64 = rows
-        .iter()
-        .flat_map(|r| r["relocated_units"].as_array().unwrap())
-        .map(|u| u["units"].as_array().unwrap().len() as u64)
-        .sum();
+    let unit_pairs = |key: &str| -> u64 {
+        rows.iter()
+            .flat_map(|r| r[key].as_array().unwrap())
+            .map(|u| u["units"].as_array().unwrap().len() as u64)
+            .sum()
+    };
     json!({
         "commits_reviewed": rows.len(),
         "moved_lines": {"cross_out": side("cross_file", "out"),
@@ -137,7 +139,9 @@ fn summarize(rows: &[Value]) -> Value {
         "nonsignificant": {"out": side("nonsignificant", "out"),
                            "in": side("nonsignificant", "in")},
         "correction_lines": corrections,
-        "relocated_units": units,
+        "relocated_units": unit_pairs("relocated_units"),
+        // edge-unit pairs: one unit riding N edges counts N times.
+        "relocation_edges": unit_pairs("relocation_edges"),
     })
 }
 

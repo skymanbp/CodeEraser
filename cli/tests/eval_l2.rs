@@ -184,6 +184,8 @@ fn generate_commit_l2() {
             let mut doc_rows = std::mem::take(&mut rows);
             let misses = eval_l2_register::register_misses(&doc_rows);
             assert!(misses.is_empty(), "relocation register misses: {misses:?}");
+            let bad = eval_l2_register::edge_violations(&doc_rows);
+            assert!(bad.is_empty(), "invented relocation edges: {bad:?}");
             let summary = parts::summarize(&doc_rows, &ledger);
             doc_rows.push(json!({"extras_ledger": std::mem::take(&mut ledger)}));
             (summary, doc_rows)
@@ -236,6 +238,8 @@ fn check_corpus(labels_path: &str, doc_path: &str) {
     assert_eq!(s["cross_misses"], 0, "cross recall gate");
     let misses = eval_l2_register::register_misses(rows);
     assert!(misses.is_empty(), "relocation register misses: {misses:?}");
+    let bad = eval_l2_register::edge_violations(rows);
+    assert!(bad.is_empty(), "invented relocation edges: {bad:?}");
     check_rows(rows, &labels);
 }
 

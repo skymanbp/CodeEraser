@@ -1,5 +1,5 @@
 {
-  "_review": "Per-item review record for the SELF corpus (2026-08-10): every entry verified against the raw diff it describes. corrections: reviewed content-coincidence reclassifications out of the mechanical cross bucket. relocated_units: reviewed relocation targets, qualitative GT for unit attribution; a ~ prefix marks a unit reviewed as adapted-in-flight (zero line-identical body lines survive, e.g. the 2f40f22b8 helpers were generalized while moving), so line-level attribution is structurally impossible and the register records that instead of pretending.",
+  "_review": "Per-item review record for the SELF corpus (2026-08-10): every entry verified against the raw diff it describes. corrections: reviewed content-coincidence reclassifications out of the mechanical cross bucket. relocated_units: reviewed relocation targets, qualitative GT for unit attribution; a ~ prefix marks a unit reviewed as adapted-in-flight (zero line-identical body lines survive, e.g. the 2f40f22b8 helpers were generalized while moving), so line-level attribution is structurally impossible and the register records that instead of pretending. relocation_edges (M5-1c-iii, 2026-08-12): the source->destination edge layer; every row verified against the raw diff — by removed-definition scan where the name survived, by BODY-LINE identity where it did not (dedup convergence renames: daemon_e2e's project_dir and perf_budget's corpus_dir are line-identical bodies of common's tmp, daemon_e2e's f closure is rust_fn's, mcp_precommit inlined seed_clone_pair's body; run_hook's /2 -> /3 signature changed in flight). The edge gate's first run caught exactly the five renamed-body edges the definition scan had missed — the ledger was completed from the diffs, not from the pipeline. Entries absent here are arrival-level only (extension/attribution paths carry no block edge).",
   "corrections": [
     {
       "sha": "da8eb210b",
@@ -69,5 +69,24 @@
       "to": "cli/tests/eval_support/mod.rs",
       "units": "~out_dir,read_sample,~labeling_rows,finish_rows,~write_doc"
     }
+  ],
+  "relocation_edges": [
+    { "sha": "4822d04ff", "from": "cli/tests/audit_stop.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn,git" },
+    { "sha": "4822d04ff", "from": "cli/tests/daemon_e2e.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn" },
+    { "sha": "4822d04ff", "from": "cli/tests/dedup_index.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn" },
+    { "sha": "4822d04ff", "from": "cli/tests/dedup_property.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn" },
+    { "sha": "4822d04ff", "from": "cli/tests/guard_hook.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn,run_hook,shutdown_daemon" },
+    { "sha": "4822d04ff", "from": "cli/tests/health_plugin.rs", "to": "cli/tests/common/mod.rs", "units": "tmp" },
+    { "sha": "4822d04ff", "from": "cli/tests/mcp_precommit.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn,git" },
+    { "sha": "4822d04ff", "from": "cli/tests/perf_budget.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn" },
+    { "sha": "4822d04ff", "from": "cli/tests/probe_gate.rs", "to": "cli/tests/common/mod.rs", "units": "tmp,rust_fn" },
+    { "sha": "8d6b237a5", "from": "cli/tests/daemon_e2e.rs", "to": "cli/tests/common/mod.rs", "units": "seed_clone_pair" },
+    { "sha": "8d6b237a5", "from": "cli/tests/mcp_precommit.rs", "to": "cli/tests/common/mod.rs", "units": "seed_clone_pair" },
+    { "sha": "71b607d56", "from": "cli/tests/report_schema.rs", "to": "cli/tests/common/mod.rs", "units": "golden_path,assert_matches_golden" },
+    { "sha": "822e7182f", "from": "cli/src/daemon/server.rs", "to": "cli/src/daemon/coldstart.rs", "units": "indexed_file_count,index_ready" },
+    { "sha": "f84aaa3c8", "from": "cli/tests/eval_baseline.rs", "to": "cli/tests/eval_support/mod.rs", "units": "CLASSES,load,by_id,numstat" },
+    { "sha": "f84aaa3c8", "from": "cli/tests/eval_labels.rs", "to": "cli/tests/eval_support/mod.rs", "units": "CLASSES,load,by_id" },
+    { "sha": "f84aaa3c8", "from": "cli/tests/eval_prelabel.rs", "to": "cli/tests/eval_support/mod.rs", "units": "numstat" },
+    { "sha": "2f40f22b8", "from": "cli/tests/eval_prelabel.rs", "to": "cli/tests/eval_support/mod.rs", "units": "read_sample,~out_dir" }
   ]
 }
