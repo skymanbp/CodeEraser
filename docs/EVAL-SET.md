@@ -280,14 +280,15 @@ copy 不消费落进 labels 机器；乘积护栏 Integer 化 + 两真实形状�
 
 精度仪器的分母 = **免解析 SITES**（宇宙先于解析器冻结，解析器不得自选分
 母——[设计定稿](reviews/2026-08-12-m5-2-graph-design.md) §5）。五语料
-graph-slice\*-v1.json：self@eb5fe24（**含 crosscheck 孤岛 = 设计内负对照**，
-GRAPH_SCOPE 有意不套 ce.toml 排除）、requests@8068356、ripgrep@3fce3b5、
-zod@912f0f5、cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit，2026-08-12
-拍板）。范围 = 五门正典扩展名 − memory/；档载文件清单 + sha256 + 逐
-(lang,kind) 站点计数 + 逐类排除 + **测量前写死的证伪常数**（min_per_lang
-=15、r0_share_trigger=0.80）。CI 门（eval_graph.rs）：summary 从行重导
-（生成器同一 scorer）、常数/范围钉死、tip 全 OID、行有序无重、档名↔内嵌
-名一致、五语言联合覆盖非零（D2-4）；生成双跑字节一致。
+graph-slice\*-v1.json：self@60f73e3（**含 crosscheck 孤岛 = 设计内负对照**；
+2b-iii [Opus 反审](reviews/2026-08-12-m5-2ab-opus-review.md)加固后 RG3 首
+次点火换钉重冻结）、requests@8068356、ripgrep@3fce3b5、zod@912f0f5、
+cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。范围 = 五门正典扩展
+名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 +
+**测量前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门
+（eval_graph.rs）：summary 从行重导、常数/范围/语料集钉死（删档即红）、档
+名↔内嵌名一致、五语言联合非零（D2-4）、**检测器漂移门**（自仓 sha 未变行
+重检 = RG3 CI 化 + spec 子串判据）；生成双跑一致（modulo provenance）。
 
 ## 复跑 / 校验
 

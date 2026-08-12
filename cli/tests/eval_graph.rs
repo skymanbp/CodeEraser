@@ -62,11 +62,12 @@ fn kind_counts(sites: &[codeeraser::graph::sites::RawSite]) -> BTreeMap<&'static
     kinds
 }
 
-/// The self universe: pinned at the commit that landed the site
-/// detector (M5-2b-i), so regeneration is reproducible regardless of
-/// later history. A detector change bumps this pin and re-freezes
-/// the slice (design RG3 — a standing cost, stated).
-const GRAPH_SELF_TIP: &str = "eb5fe2465a34f1b8f580e2ce18c20eeed443b643";
+/// The self universe: pinned at the commit holding the CURRENT
+/// detector, so regeneration is reproducible regardless of later
+/// history. A detector change bumps this pin and re-freezes the
+/// slice (design RG3 — first fired by the M5-2b-iii hardening batch,
+/// which replaced the 2b-i pin eb5fe24).
+const GRAPH_SELF_TIP: &str = "60f73e3bea7681721a2f572e64788948a17830f6";
 
 /// (corpus name, pinned tree OID). Self unless CE_SLICE_REPO points
 /// elsewhere; external corpora must name themselves and pin their
