@@ -110,7 +110,7 @@ fn summarize(commits: &[Value], labels_doc: &Value) -> Value {
 #[ignore] // needs full (non-shallow) git history up to the slice tip
 fn generate_commit_baseline() {
     eval_support::generate_commit_doc(
-        "../contracts/eval/commit-baseline-l1-v1.json",
+        "baseline-l1",
         "ce.eval-commit-baseline/1.0.0",
         "cli/src/fourclass classify() per file pair (empty side for \
          created/deleted files), summed per commit; gt = \
@@ -122,7 +122,7 @@ fn generate_commit_baseline() {
          >=20-alnum block floor; L1's line-level matching may \
          legitimately exceed them (predicted > detected).",
         |slice| {
-            let labels_doc = load("../contracts/eval/commit-labels-v1.json");
+            let labels_doc = load(&eval_support::corpus().doc("labels"));
             let labels = by_sha(&labels_doc);
             let commits: Vec<Value> = slice["commits"]
                 .as_array()
@@ -136,13 +136,22 @@ fn generate_commit_baseline() {
 }
 
 /// CI gate: gt rows must match their source docs and the summary must
-/// re-derive from the committed rows. No git needed.
+/// re-derive from the committed rows. No git needed, every corpus.
 #[test]
 fn commit_baseline_consistent() {
-    let slice = load("../contracts/eval/commit-slice-v1.json");
-    let labels_doc = load("../contracts/eval/commit-labels-v1.json");
+    let labels: std::collections::HashMap<_, _> = eval_support::corpus_doc_pairs("labels")
+        .into_iter()
+        .collect();
+    for (slice_path, doc_path) in eval_support::corpus_doc_pairs("baseline-l1") {
+        check_corpus(&slice_path, &labels[&slice_path], &doc_path);
+    }
+}
+
+fn check_corpus(slice_path: &str, labels_path: &str, doc_path: &str) {
+    let slice = load(slice_path);
+    let labels_doc = load(labels_path);
     let labels = by_sha(&labels_doc);
-    let doc = load("../contracts/eval/commit-baseline-l1-v1.json");
+    let doc = load(doc_path);
     let commits = doc["commits"].as_array().expect("commits");
     let slice_rows = slice["commits"].as_array().expect("commits");
     assert_eq!(commits.len(), slice_rows.len(), "commit coverage");

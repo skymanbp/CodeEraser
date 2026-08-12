@@ -257,7 +257,7 @@ fn generate_commit_slice() {
         doc["corpus"] = json!(name);
         doc["window_base"] = json!(c.base);
     }
-    let path = c.doc_path();
+    let path = c.doc("slice");
     write_doc(&path, &doc, &format!("commit slice written to {path}"));
 }
 

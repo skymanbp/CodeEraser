@@ -1,0 +1,2741 @@
+{
+  "commits": [
+    {
+      "corrections": [
+        {
+          "file": "requests/sessions.py",
+          "lines": 1,
+          "side": "removed",
+          "why": "PR #4739 harmonized param docstrings in place: the old two-line data-param doc's continuation was removed as part of a rewrite, nothing left the file"
+        },
+        {
+          "file": "requests/api.py",
+          "lines": 2,
+          "side": "added",
+          "why": "freshly wrapped continuation lines of the harmonized docstrings; content coincides with the sessions.py removal"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "requests/api.py",
+          "before": "requests/api.py",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "5aeec8b661f992050b1d034e727d7ce0326e9a56",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 18,
+          "added_moved": 1,
+          "added_novel": 17,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 6,
+          "removed_deleted": 5,
+          "removed_moved": 1
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 26,
+          "added_moved": 0,
+          "added_novel": 26,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "fdcb717cf726ddd39a2f22a5bbae3f1aa017d7f3",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 6,
+          "added_moved": 1,
+          "added_novel": 5,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        },
+        {
+          "added": 7,
+          "added_moved": 1,
+          "added_novel": 6,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "a6cd380c640087218695bc7c62311a4843777e43",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 18,
+          "added_moved": 1,
+          "added_novel": 17,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 5,
+          "added_moved": 1,
+          "added_novel": 4,
+          "after": "requests/__init__.py",
+          "before": "requests/__init__.py",
+          "deleted": 10,
+          "removed_deleted": 9,
+          "removed_moved": 1
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "requests/__version__.py",
+          "before": "requests/__version__.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "requests/auth.py",
+          "before": "requests/auth.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/compat.py",
+          "before": "requests/compat.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "requests/cookies.py",
+          "before": "requests/cookies.py",
+          "deleted": 14,
+          "removed_deleted": 14,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/help.py",
+          "before": "requests/help.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "requests/hooks.py",
+          "before": "requests/hooks.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "requests/utils.py",
+          "before": "requests/utils.py",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "tests/test_help.py",
+          "before": "tests/test_help.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 14,
+          "added_moved": 0,
+          "added_novel": 14,
+          "after": "tests/test_lowlevel.py",
+          "before": "tests/test_lowlevel.py",
+          "deleted": 14,
+          "removed_deleted": 14,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "tests/test_testserver.py",
+          "before": "tests/test_testserver.py",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/test_utils.py",
+          "before": "tests/test_utils.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "75bdc998e2d430a35d869b2abf1779bd0d34890e",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 107,
+          "added_moved": 8,
+          "added_novel": 99,
+          "after": "docs/conf.py",
+          "before": "docs/conf.py",
+          "deleted": 103,
+          "removed_deleted": 95,
+          "removed_moved": 8
+        }
+      ],
+      "relocated_units": [],
+      "sha": "a345b776fb2cf67d1a1810349e71fd60a83f53eb",
+      "within_file": {
+        "in": 8,
+        "out": 8
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 13,
+          "added_moved": 10,
+          "added_novel": 3,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 58,
+          "removed_deleted": 48,
+          "removed_moved": 10
+        }
+      ],
+      "relocated_units": [],
+      "sha": "42c5a4f62268dd6e0499aac02a2ef481286e5798",
+      "within_file": {
+        "in": 10,
+        "out": 10
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 1,
+          "added_novel": 1,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "ced3779126326b0da4a0fff47dbd8cc182119b16",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "2bc6aeb64e6eda4af5c8c1b2abc2f6fd45a8ebd9",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 1,
+          "added_novel": 2,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "c51a9efa2bc4285cabeb2f7e42386e89baa3df89",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 2,
+          "added_moved": 1,
+          "added_novel": 1,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "d675d83b1df5689aba066cf464507b8b04425ed1",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 4,
+          "added_moved": 3,
+          "added_novel": 1,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 3,
+          "removed_deleted": 0,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "sha": "9b51d7c4f2f3e0b1425e72ca01ec520a1eae0c5c",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 3,
+          "added_moved": 1,
+          "added_novel": 2,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "6d37433c0e42c9be37dd3ca17a649e81554ba1f7",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 46,
+          "added_moved": 3,
+          "added_novel": 43,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 56,
+          "removed_deleted": 53,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "sha": "26466b54ada86b01912adb999f7cd51efd4f60d6",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 8,
+          "added_moved": 1,
+          "added_novel": 7,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 5,
+          "removed_deleted": 4,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "6831d2d8e4f06b4f1f25f0c3d6a160d4ccac0513",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 37,
+          "added_moved": 3,
+          "added_novel": 34,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 20,
+          "removed_deleted": 17,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "sha": "06826504dac278a2dec57f1eba847239f66a78c8",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 8,
+          "added_moved": 1,
+          "added_novel": 7,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "38d9a4f65f5fe0e7d6254eda5be889d53f9e06ef",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 10,
+          "added_moved": 7,
+          "added_novel": 3,
+          "after": "requests/status_codes.py",
+          "before": "requests/status_codes.py",
+          "deleted": 7,
+          "removed_deleted": 0,
+          "removed_moved": 7
+        }
+      ],
+      "relocated_units": [],
+      "sha": "0357b0724bd01cc89169fd40ca0132cf3248aff3",
+      "within_file": {
+        "in": 7,
+        "out": 7
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 58,
+          "added_moved": 10,
+          "added_novel": 48,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 13,
+          "removed_deleted": 3,
+          "removed_moved": 10
+        }
+      ],
+      "relocated_units": [],
+      "sha": "24bcb9eab60d2db5e71979ea391b3e5675daff1f",
+      "within_file": {
+        "in": 10,
+        "out": 10
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 14,
+          "added_moved": 5,
+          "added_novel": 9,
+          "after": "requests/__init__.py",
+          "before": "requests/__init__.py",
+          "deleted": 6,
+          "removed_deleted": 1,
+          "removed_moved": 5
+        }
+      ],
+      "relocated_units": [],
+      "sha": "db47b9b4a0c5877fb97f64ac442757604c4c45cc",
+      "within_file": {
+        "in": 5,
+        "out": 5
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 6,
+          "added_moved": 2,
+          "added_novel": 4,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 4,
+          "removed_deleted": 2,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "sha": "2b3436e0e7831676044b57f6f2cc9eb7c188293e",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 4,
+          "added_novel": 1,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        }
+      ],
+      "relocated_units": [],
+      "sha": "7c71982260aa8f88c44daee64ccf61e2db2e301c",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 16,
+          "added_moved": 0,
+          "added_novel": 16,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 26,
+          "added_moved": 4,
+          "added_novel": 22,
+          "after": "requests/__init__.py",
+          "before": "requests/__init__.py",
+          "deleted": 11,
+          "removed_deleted": 8,
+          "removed_moved": 3
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "requests/compat.py",
+          "before": "requests/compat.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 18,
+          "added_moved": 1,
+          "added_novel": 17,
+          "after": "requests/help.py",
+          "before": "requests/help.py",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 13,
+          "added_moved": 0,
+          "added_novel": 13,
+          "after": "requests/packages.py",
+          "before": "requests/packages.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "2ed84f55b22f19a1e1e8eea2e50963dce62052d3",
+      "within_file": {
+        "in": 5,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/__init__.py",
+          "before": "requests/__init__.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "requests/compat.py",
+          "before": "requests/compat.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "requests/exceptions.py",
+          "before": "requests/exceptions.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 18,
+          "added_moved": 3,
+          "added_novel": 15,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 11,
+          "removed_deleted": 8,
+          "removed_moved": 3
+        },
+        {
+          "added": 6,
+          "added_moved": 1,
+          "added_novel": 5,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "db575eeedcfdb03bf31285afd3033e301df8b685",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 9,
+        "out": 9
+      },
+      "nonsignificant": {
+        "in": 3,
+        "out": 3
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 17,
+          "removed_deleted": 8,
+          "removed_moved": 9
+        },
+        {
+          "added": 28,
+          "added_moved": 9,
+          "added_novel": 19,
+          "after": "requests/utils.py",
+          "before": "requests/utils.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [
+        {
+          "to": "requests/utils.py",
+          "units": [
+            "resolve_proxies"
+          ]
+        }
+      ],
+      "sha": "99b3b492418d0751ca960178d274f89805095e4c",
+      "within_file": {
+        "in": 0,
+        "out": 0
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 1,
+          "added_novel": 5,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "17e6e27a93131b7295165408e69b4cadb098b0d7",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 2,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 1,
+          "added_novel": 1,
+          "after": "requests/_internal_utils.py",
+          "before": "requests/_internal_utils.py",
+          "deleted": 5,
+          "removed_deleted": 4,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 26,
+          "added_moved": 18,
+          "added_novel": 8,
+          "after": "requests/compat.py",
+          "before": "requests/compat.py",
+          "deleted": 44,
+          "removed_deleted": 25,
+          "removed_moved": 19
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "requests/help.py",
+          "before": "requests/help.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 1,
+          "added_novel": 3,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 20,
+          "removed_deleted": 19,
+          "removed_moved": 1
+        },
+        {
+          "added": 3,
+          "added_moved": 2,
+          "added_novel": 1,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 7,
+          "removed_deleted": 5,
+          "removed_moved": 2
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "requests/utils.py",
+          "before": "requests/utils.py",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 30,
+          "added_moved": 1,
+          "added_novel": 29,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 17,
+          "removed_deleted": 16,
+          "removed_moved": 1
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "tests/compat.py",
+          "before": "tests/compat.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 32,
+          "added_moved": 0,
+          "added_novel": 32,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 36,
+          "removed_deleted": 36,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/test_utils.py",
+          "before": "tests/test_utils.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/testserver/server.py",
+          "before": "tests/testserver/server.py",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "8bce583b9547c7b82d44c8e97f37cf9a16cbe758",
+      "within_file": {
+        "in": 23,
+        "out": 24
+      }
+    },
+    {
+      "corrections": [
+        {
+          "file": "requests/utils.py",
+          "lines": 2,
+          "side": "removed",
+          "why": "isort rewrote both lines in place: parse_url merged into `from urllib3.util import make_headers, parse_url`, to_native_string gained `# noqa: F401`; cross partners are other files' own reformats"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "lines": 3,
+          "side": "removed",
+          "why": "multi-line exception import collapsed to a single line; the removed member lines (Timeout,/TooManyRedirects,/UnrewindableBodyError,) coincide with requests/*'s newly exploded one-per-line members"
+        },
+        {
+          "file": "requests/__init__.py",
+          "lines": 2,
+          "side": "added",
+          "why": "isort exploded the exceptions import one-per-line; Timeout, and TooManyRedirects, are freshly formatted lines coinciding with the test_requests.py collapse"
+        },
+        {
+          "file": "requests/adapters.py",
+          "lines": 1,
+          "side": "added",
+          "why": "old inline `from .exceptions import (Conn...` header rewritten to the bare parenthesized form; the fresh header line coincides with another file's removed one"
+        },
+        {
+          "file": "requests/utils.py",
+          "lines": 1,
+          "side": "added",
+          "why": "UnrewindableBodyError, freshly exploded from the old inline import tail `..., UnrewindableBodyError)`"
+        }
+      ],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": ".github/ISSUE_TEMPLATE.md",
+          "before": ".github/ISSUE_TEMPLATE.md",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 59,
+          "added_moved": 2,
+          "added_novel": 57,
+          "after": "requests/__init__.py",
+          "before": "requests/__init__.py",
+          "deleted": 31,
+          "removed_deleted": 29,
+          "removed_moved": 2
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "requests/__version__.py",
+          "before": "requests/__version__.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "requests/_internal_utils.py",
+          "before": "requests/_internal_utils.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 137,
+          "added_moved": 9,
+          "added_novel": 128,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 86,
+          "removed_deleted": 77,
+          "removed_moved": 9
+        },
+        {
+          "added": 8,
+          "added_moved": 0,
+          "added_novel": 8,
+          "after": "requests/api.py",
+          "before": "requests/api.py",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 83,
+          "added_moved": 1,
+          "added_novel": 82,
+          "after": "requests/auth.py",
+          "before": "requests/auth.py",
+          "deleted": 73,
+          "removed_deleted": 72,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "requests/certs.py",
+          "before": "requests/certs.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 28,
+          "added_moved": 3,
+          "added_novel": 25,
+          "after": "requests/compat.py",
+          "before": "requests/compat.py",
+          "deleted": 12,
+          "removed_deleted": 9,
+          "removed_moved": 3
+        },
+        {
+          "added": 82,
+          "added_moved": 0,
+          "added_novel": 82,
+          "after": "requests/cookies.py",
+          "before": "requests/cookies.py",
+          "deleted": 70,
+          "removed_deleted": 70,
+          "removed_moved": 0
+        },
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "requests/exceptions.py",
+          "before": "requests/exceptions.py",
+          "deleted": 7,
+          "removed_deleted": 7,
+          "removed_moved": 0
+        },
+        {
+          "added": 48,
+          "added_moved": 1,
+          "added_novel": 47,
+          "after": "requests/help.py",
+          "before": "requests/help.py",
+          "deleted": 49,
+          "removed_deleted": 48,
+          "removed_moved": 1
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "requests/hooks.py",
+          "before": "requests/hooks.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 192,
+          "added_moved": 8,
+          "added_novel": 184,
+          "after": "requests/models.py",
+          "before": "requests/models.py",
+          "deleted": 124,
+          "removed_deleted": 116,
+          "removed_moved": 8
+        },
+        {
+          "added": 9,
+          "added_moved": 1,
+          "added_novel": 8,
+          "after": "requests/packages.py",
+          "before": "requests/packages.py",
+          "deleted": 7,
+          "removed_deleted": 6,
+          "removed_moved": 1
+        },
+        {
+          "added": 161,
+          "added_moved": 6,
+          "added_novel": 155,
+          "after": "requests/sessions.py",
+          "before": "requests/sessions.py",
+          "deleted": 104,
+          "removed_deleted": 98,
+          "removed_moved": 6
+        },
+        {
+          "added": 87,
+          "added_moved": 0,
+          "added_novel": 87,
+          "after": "requests/status_codes.py",
+          "before": "requests/status_codes.py",
+          "deleted": 82,
+          "removed_deleted": 82,
+          "removed_moved": 0
+        },
+        {
+          "added": 3,
+          "added_moved": 0,
+          "added_novel": 3,
+          "after": "requests/structures.py",
+          "before": "requests/structures.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 193,
+          "added_moved": 7,
+          "added_novel": 186,
+          "after": "requests/utils.py",
+          "before": "requests/utils.py",
+          "deleted": 160,
+          "removed_deleted": 153,
+          "removed_moved": 7
+        },
+        {
+          "added": 56,
+          "added_moved": 0,
+          "added_novel": 56,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 55,
+          "removed_deleted": 55,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/__init__.py",
+          "before": "tests/__init__.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "tests/compat.py",
+          "before": "tests/compat.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "tests/conftest.py",
+          "before": "tests/conftest.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 0,
+          "added_novel": 6,
+          "after": "tests/test_help.py",
+          "before": "tests/test_help.py",
+          "deleted": 12,
+          "removed_deleted": 12,
+          "removed_moved": 0
+        },
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "tests/test_hooks.py",
+          "before": "tests/test_hooks.py",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 61,
+          "added_moved": 2,
+          "added_novel": 59,
+          "after": "tests/test_lowlevel.py",
+          "before": "tests/test_lowlevel.py",
+          "deleted": 62,
+          "removed_deleted": 60,
+          "removed_moved": 2
+        },
+        {
+          "added": 983,
+          "added_moved": 9,
+          "added_novel": 974,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 899,
+          "removed_deleted": 889,
+          "removed_moved": 10
+        },
+        {
+          "added": 20,
+          "added_moved": 0,
+          "added_novel": 20,
+          "after": "tests/test_structures.py",
+          "before": "tests/test_structures.py",
+          "deleted": 18,
+          "removed_deleted": 18,
+          "removed_moved": 0
+        },
+        {
+          "added": 22,
+          "added_moved": 0,
+          "added_novel": 22,
+          "after": "tests/test_testserver.py",
+          "before": "tests/test_testserver.py",
+          "deleted": 23,
+          "removed_deleted": 23,
+          "removed_moved": 0
+        },
+        {
+          "added": 470,
+          "added_moved": 2,
+          "added_novel": 468,
+          "after": "tests/test_utils.py",
+          "before": "tests/test_utils.py",
+          "deleted": 384,
+          "removed_deleted": 382,
+          "removed_moved": 2
+        },
+        {
+          "added": 22,
+          "added_moved": 0,
+          "added_novel": 22,
+          "after": "tests/testserver/server.py",
+          "before": "tests/testserver/server.py",
+          "deleted": 17,
+          "removed_deleted": 17,
+          "removed_moved": 0
+        },
+        {
+          "added": 0,
+          "added_moved": 0,
+          "added_novel": 0,
+          "after": "tests/utils.py",
+          "before": "tests/utils.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "2a6f290bc09324406708a4d404a88a45d848ddf9",
+      "within_file": {
+        "in": 51,
+        "out": 52
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 44,
+          "added_moved": 15,
+          "added_novel": 29,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 38,
+          "removed_deleted": 22,
+          "removed_moved": 16
+        }
+      ],
+      "relocated_units": [],
+      "sha": "cb233a101d6333cf1895e3f46bde11874fcaba07",
+      "within_file": {
+        "in": 15,
+        "out": 16
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 24,
+          "added_moved": 1,
+          "added_novel": 23,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 5,
+          "removed_deleted": 4,
+          "removed_moved": 1
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "requests/__version__.py",
+          "before": "requests/__version__.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "da9996fe4dc63356e9467d0a5e10df3d89a8528e",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 9,
+          "added_moved": 4,
+          "added_novel": 5,
+          "after": "tests/__init__.py",
+          "before": "tests/__init__.py",
+          "deleted": 5,
+          "removed_deleted": 1,
+          "removed_moved": 4
+        },
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "15585909c3dd3014e4083961c8a404709450151c",
+      "within_file": {
+        "in": 4,
+        "out": 4
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 13,
+          "added_moved": 11,
+          "added_novel": 2,
+          "after": "requests/adapters.py",
+          "before": "requests/adapters.py",
+          "deleted": 58,
+          "removed_deleted": 45,
+          "removed_moved": 13
+        }
+      ],
+      "relocated_units": [],
+      "sha": "26bea1e498d6e234fbc9ce8e07c0389bac73810b",
+      "within_file": {
+        "in": 11,
+        "out": 13
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 8,
+          "added_moved": 2,
+          "added_novel": 6,
+          "after": "tests/test_help.py",
+          "before": "tests/test_help.py",
+          "deleted": 6,
+          "removed_deleted": 4,
+          "removed_moved": 2
+        },
+        {
+          "added": 15,
+          "added_moved": 5,
+          "added_novel": 10,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 16,
+          "removed_deleted": 11,
+          "removed_moved": 5
+        },
+        {
+          "added": 5,
+          "added_moved": 2,
+          "added_novel": 3,
+          "after": "tests/test_utils.py",
+          "before": "tests/test_utils.py",
+          "deleted": 4,
+          "removed_deleted": 2,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "sha": "005571d1180835eb5266a3fdbdbe8fdae57d90c2",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 14,
+          "added_moved": 0,
+          "added_novel": 14,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 10,
+          "added_moved": 0,
+          "added_novel": 10,
+          "after": "tests/certs/README.md",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 11,
+          "added_moved": 0,
+          "added_novel": 11,
+          "after": "tests/certs/expired/README.md",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "tests/certs/mtls/README.md",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 135,
+          "added_moved": 3,
+          "added_novel": 132,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 5,
+          "removed_deleted": 4,
+          "removed_moved": 1
+        },
+        {
+          "added": 42,
+          "added_moved": 0,
+          "added_novel": 42,
+          "after": "tests/testserver/server.py",
+          "before": "tests/testserver/server.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "eeafb6ab3a54ab01cbf864d452ea30f5fdb67ce8",
+      "within_file": {
+        "in": 3,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "src/requests/__init__.py",
+          "before": "src/requests/__init__.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 20,
+          "added_moved": 0,
+          "added_novel": 20,
+          "after": "src/requests/compat.py",
+          "before": "src/requests/compat.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 6,
+          "added_moved": 1,
+          "added_novel": 5,
+          "after": "src/requests/models.py",
+          "before": "src/requests/models.py",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 9,
+          "added_moved": 7,
+          "added_novel": 2,
+          "after": "src/requests/packages.py",
+          "before": "src/requests/packages.py",
+          "deleted": 16,
+          "removed_deleted": 9,
+          "removed_moved": 7
+        }
+      ],
+      "relocated_units": [],
+      "sha": "0c030f78d24f29a459dbf39b28b4cc765e2153d7",
+      "within_file": {
+        "in": 8,
+        "out": 8
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 28,
+          "added_moved": 9,
+          "added_novel": 19,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 18,
+          "removed_deleted": 9,
+          "removed_moved": 9
+        }
+      ],
+      "relocated_units": [],
+      "sha": "9a40d1277807f0a4f26c9a37eea8ec90faa8aadc",
+      "within_file": {
+        "in": 9,
+        "out": 9
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 7,
+          "added_moved": 0,
+          "added_novel": 7,
+          "after": "HISTORY.md",
+          "before": "HISTORY.md",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 74,
+          "added_moved": 2,
+          "added_novel": 72,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 10,
+          "removed_deleted": 8,
+          "removed_moved": 2
+        }
+      ],
+      "relocated_units": [],
+      "sha": "145b5399486b56e00250204f033441f3fdf2f3c9",
+      "within_file": {
+        "in": 2,
+        "out": 2
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 19,
+          "added_moved": 3,
+          "added_novel": 16,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 5,
+          "removed_deleted": 2,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "sha": "e18879932287c2bf4bcee4ddf6ccb8a69b6fc656",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 4,
+        "out": 4
+      },
+      "pairs": [
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "src/requests/compat.py",
+          "before": "src/requests/compat.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "src/requests/utils.py",
+          "before": "src/requests/utils.py",
+          "deleted": 1,
+          "removed_deleted": 1,
+          "removed_moved": 0
+        },
+        {
+          "added": 24,
+          "added_moved": 11,
+          "added_novel": 13,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 17,
+          "removed_deleted": 6,
+          "removed_moved": 11
+        }
+      ],
+      "relocated_units": [],
+      "sha": "79b74ef704dc0d804937c0d015c5e9c3b02b79bd",
+      "within_file": {
+        "in": 11,
+        "out": 11
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "src/requests/utils.py",
+          "before": "src/requests/utils.py",
+          "deleted": 8,
+          "removed_deleted": 7,
+          "removed_moved": 1
+        },
+        {
+          "added": 19,
+          "added_moved": 0,
+          "added_novel": 19,
+          "after": "tests/test_utils.py",
+          "before": "tests/test_utils.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "5b4b64c3467fd7a3c03f91ee641aaa348b6bed3b",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 16,
+          "added_moved": 8,
+          "added_novel": 8,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 39,
+          "removed_deleted": 31,
+          "removed_moved": 8
+        }
+      ],
+      "relocated_units": [],
+      "sha": "90fee0876aea97c639b3bf698d83a12876d2f160",
+      "within_file": {
+        "in": 8,
+        "out": 8
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "src/requests/__init__.py",
+          "before": "src/requests/__init__.py",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "src/requests/_internal_utils.py",
+          "before": "src/requests/_internal_utils.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 8,
+          "added_moved": 2,
+          "added_novel": 6,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 6,
+          "removed_deleted": 4,
+          "removed_moved": 2
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "src/requests/auth.py",
+          "before": "src/requests/auth.py",
+          "deleted": 4,
+          "removed_deleted": 4,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "src/requests/certs.py",
+          "before": "src/requests/certs.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "src/requests/exceptions.py",
+          "before": "src/requests/exceptions.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "src/requests/help.py",
+          "before": "src/requests/help.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "src/requests/hooks.py",
+          "before": "src/requests/hooks.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "src/requests/models.py",
+          "before": "src/requests/models.py",
+          "deleted": 3,
+          "removed_deleted": 3,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "src/requests/sessions.py",
+          "before": "src/requests/sessions.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "src/requests/utils.py",
+          "before": "src/requests/utils.py",
+          "deleted": 3,
+          "removed_deleted": 2,
+          "removed_moved": 1
+        },
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "tests/test_lowlevel.py",
+          "before": "tests/test_lowlevel.py",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 9,
+          "added_moved": 0,
+          "added_novel": 9,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 10,
+          "removed_deleted": 10,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 1,
+          "added_novel": 1,
+          "after": "tests/test_testserver.py",
+          "before": "tests/test_testserver.py",
+          "deleted": 2,
+          "removed_deleted": 1,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "f8bec2f7ca9d7c03981a12ff8866a9b3923f1699",
+      "within_file": {
+        "in": 5,
+        "out": 5
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 4,
+          "added_moved": 1,
+          "added_novel": 3,
+          "after": "setup.py",
+          "before": "setup.py",
+          "deleted": 100,
+          "removed_deleted": 99,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "cb2c800518423e0042789ab09f8f6e719428a444",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 1,
+        "out": 1
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 3,
+          "added_novel": 2,
+          "after": "README.md",
+          "before": "README.md",
+          "deleted": 4,
+          "removed_deleted": 1,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "sha": "8b9bc8fc0f63be84602387913c4b689f19efd028",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 6,
+          "added_moved": 3,
+          "added_novel": 3,
+          "after": "tests/test_utils.py",
+          "before": "tests/test_utils.py",
+          "deleted": 3,
+          "removed_deleted": 0,
+          "removed_moved": 3
+        }
+      ],
+      "relocated_units": [],
+      "sha": "389eea58dfb2f2ee096421a812e3af29c0298951",
+      "within_file": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 53,
+          "added_moved": 0,
+          "added_novel": 53,
+          "after": "src/requests/__init__.py",
+          "before": "src/requests/__init__.py",
+          "deleted": 17,
+          "removed_deleted": 17,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "src/requests/_internal_utils.py",
+          "before": "src/requests/_internal_utils.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 176,
+          "added_moved": 0,
+          "added_novel": 176,
+          "after": "src/requests/_types.py",
+          "before": null,
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        },
+        {
+          "added": 100,
+          "added_moved": 0,
+          "added_novel": 100,
+          "after": "src/requests/adapters.py",
+          "before": "src/requests/adapters.py",
+          "deleted": 47,
+          "removed_deleted": 47,
+          "removed_moved": 0
+        },
+        {
+          "added": 31,
+          "added_moved": 0,
+          "added_novel": 31,
+          "after": "src/requests/api.py",
+          "before": "src/requests/api.py",
+          "deleted": 8,
+          "removed_deleted": 8,
+          "removed_moved": 0
+        },
+        {
+          "added": 75,
+          "added_moved": 0,
+          "added_novel": 75,
+          "after": "src/requests/auth.py",
+          "before": "src/requests/auth.py",
+          "deleted": 35,
+          "removed_deleted": 35,
+          "removed_moved": 0
+        },
+        {
+          "added": 12,
+          "added_moved": 0,
+          "added_novel": 12,
+          "after": "src/requests/compat.py",
+          "before": "src/requests/compat.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 143,
+          "added_moved": 0,
+          "added_novel": 143,
+          "after": "src/requests/cookies.py",
+          "before": "src/requests/cookies.py",
+          "deleted": 79,
+          "removed_deleted": 79,
+          "removed_moved": 0
+        },
+        {
+          "added": 15,
+          "added_moved": 0,
+          "added_novel": 15,
+          "after": "src/requests/exceptions.py",
+          "before": "src/requests/exceptions.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 14,
+          "added_moved": 0,
+          "added_novel": 14,
+          "after": "src/requests/help.py",
+          "before": "src/requests/help.py",
+          "deleted": 11,
+          "removed_deleted": 11,
+          "removed_moved": 0
+        },
+        {
+          "added": 23,
+          "added_moved": 0,
+          "added_novel": 23,
+          "after": "src/requests/hooks.py",
+          "before": "src/requests/hooks.py",
+          "deleted": 9,
+          "removed_deleted": 9,
+          "removed_moved": 0
+        },
+        {
+          "added": 257,
+          "added_moved": 3,
+          "added_novel": 254,
+          "after": "src/requests/models.py",
+          "before": "src/requests/models.py",
+          "deleted": 123,
+          "removed_deleted": 120,
+          "removed_moved": 3
+        },
+        {
+          "added": 155,
+          "added_moved": 2,
+          "added_novel": 153,
+          "after": "src/requests/sessions.py",
+          "before": "src/requests/sessions.py",
+          "deleted": 75,
+          "removed_deleted": 73,
+          "removed_moved": 2
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "src/requests/status_codes.py",
+          "before": "src/requests/status_codes.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        },
+        {
+          "added": 51,
+          "added_moved": 0,
+          "added_novel": 51,
+          "after": "src/requests/structures.py",
+          "before": "src/requests/structures.py",
+          "deleted": 20,
+          "removed_deleted": 20,
+          "removed_moved": 0
+        },
+        {
+          "added": 157,
+          "added_moved": 0,
+          "added_novel": 157,
+          "after": "src/requests/utils.py",
+          "before": "src/requests/utils.py",
+          "deleted": 87,
+          "removed_deleted": 87,
+          "removed_moved": 0
+        },
+        {
+          "added": 1,
+          "added_moved": 0,
+          "added_novel": 1,
+          "after": "tests/test_requests.py",
+          "before": "tests/test_requests.py",
+          "deleted": 0,
+          "removed_deleted": 0,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "561e4b6889f53584c39a67f8794c53a414f68481",
+      "within_file": {
+        "in": 5,
+        "out": 5
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 1,
+          "added_moved": 1,
+          "added_novel": 0,
+          "after": "src/requests/sessions.py",
+          "before": "src/requests/sessions.py",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        }
+      ],
+      "relocated_units": [],
+      "sha": "cd90742ed94d901759e26766197d0ce7c7bd9c8e",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    },
+    {
+      "corrections": [],
+      "cross_file": {
+        "in": 0,
+        "out": 0
+      },
+      "nonsignificant": {
+        "in": 0,
+        "out": 0
+      },
+      "pairs": [
+        {
+          "added": 5,
+          "added_moved": 0,
+          "added_novel": 5,
+          "after": "src/requests/__init__.py",
+          "before": "src/requests/__init__.py",
+          "deleted": 5,
+          "removed_deleted": 5,
+          "removed_moved": 0
+        },
+        {
+          "added": 5,
+          "added_moved": 1,
+          "added_novel": 4,
+          "after": "src/requests/compat.py",
+          "before": "src/requests/compat.py",
+          "deleted": 1,
+          "removed_deleted": 0,
+          "removed_moved": 1
+        },
+        {
+          "added": 4,
+          "added_moved": 0,
+          "added_novel": 4,
+          "after": "src/requests/help.py",
+          "before": "src/requests/help.py",
+          "deleted": 6,
+          "removed_deleted": 6,
+          "removed_moved": 0
+        },
+        {
+          "added": 2,
+          "added_moved": 0,
+          "added_novel": 2,
+          "after": "src/requests/models.py",
+          "before": "src/requests/models.py",
+          "deleted": 2,
+          "removed_deleted": 2,
+          "removed_moved": 0
+        }
+      ],
+      "relocated_units": [],
+      "sha": "e50e5945294f79ee9ab4ec69de24d14f9b26a7ae",
+      "within_file": {
+        "in": 1,
+        "out": 1
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "695c059952b9cc35ed175fc7dadcb872c87efb2a",
+    "dirty": true
+  },
+  "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",
+  "schema": "ce.eval-commit-labels/1.0.0",
+  "source_slice": "8068356288978c4f54661ae6f95afe0e0831885e",
+  "summary": {
+    "commits_reviewed": 47,
+    "correction_lines": 12,
+    "moved_lines": {
+      "cross_in": 9,
+      "cross_out": 9,
+      "within_in": 255,
+      "within_out": 257
+    },
+    "nonsignificant": {
+      "in": 16,
+      "out": 15
+    },
+    "relocated_units": 1
+  }
+}

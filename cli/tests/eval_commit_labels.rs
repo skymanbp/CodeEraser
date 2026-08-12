@@ -145,7 +145,7 @@ fn summarize(rows: &[Value]) -> Value {
 #[ignore] // needs full (non-shallow) git history up to the slice tip
 fn generate_commit_labels() {
     eval_support::generate_commit_doc(
-        "../contracts/eval/commit-labels-v1.json",
+        "labels",
         "ce.eval-commit-labels/1.0.0",
         "provenance semantics: moved = line that relocated as part \
                    of a block/unit relocation. Layer 1 (mechanical): moved \
@@ -172,14 +172,20 @@ fn generate_commit_labels() {
     );
 }
 
-/// CI gate, no git needed: labels rows cover exactly the slice's
-/// moved-bearing commits; per-pair sums conserve the slice numstat;
-/// the moved partition and reclassification ledger balance per row;
-/// the summary re-derives.
+/// CI gate, no git needed, every corpus: labels rows cover exactly
+/// the slice's moved-bearing commits; per-pair sums conserve the
+/// slice totals; the moved partition and reclassification ledger
+/// balance per row; the summary re-derives.
 #[test]
 fn commit_labels_consistent() {
-    let slice = load("../contracts/eval/commit-slice-v1.json");
-    let labels = load("../contracts/eval/commit-labels-v1.json");
+    for (slice_path, labels_path) in eval_support::corpus_doc_pairs("labels") {
+        check_corpus(&slice_path, &labels_path);
+    }
+}
+
+fn check_corpus(slice_path: &str, labels_path: &str) {
+    let slice = load(slice_path);
+    let labels = load(labels_path);
     let by = by_sha(&labels);
     let mut seen = 0;
     for s in slice["commits"].as_array().expect("commits") {

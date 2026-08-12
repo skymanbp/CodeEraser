@@ -1778,11 +1778,11 @@
         {
           "to": "cli/tests/eval_support/mod.rs",
           "units": [
-            "out_dir",
+            "~out_dir",
             "read_sample",
-            "labeling_rows",
+            "~labeling_rows",
             "finish_rows",
-            "write_doc"
+            "~write_doc"
           ]
         }
       ],
@@ -1793,6 +1793,11 @@
       }
     }
   ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "695c059952b9cc35ed175fc7dadcb872c87efb2a",
+    "dirty": true
+  },
   "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",
   "schema": "ce.eval-commit-labels/1.0.0",
   "source_slice": "2f40f22b85dcf3fd0979395286223ddf972550ff",

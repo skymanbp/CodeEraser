@@ -226,6 +226,23 @@ commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。�
 逐对等于 hunk 总和，冻结叙述仍真）。复跑：M5-1a 的四个 CE_SLICE_* 环境变
 量 + 本节两端 sha。
 
+**GT 审读**（[commit-labels-requests-v1.json](../contracts/eval/commit-labels-requests-v1.json)）：
+机械两层后跨文件 15 出/15 进全部集中在 3 个 commit，逐行对原始 diff 审读
+→ **12 条巧合修正**（5aeec8b6 文档同步重写 1 删 2 增；2a6f290b black/isort
+全仓格式化 9 行：import 就地合并/炸开/收拢的内容巧合）+ **1 个真搬迁**保
+留（99b3b492：`rebuild_proxies` 判定体 9 行 sessions.py 缩进 8 → utils.py
+新函数 `resolve_proxies` 缩进 4，逐行同一）。终值跨 **9/9**、文件内
+255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json
+（数据即数据——平行 Rust 常量表被自家棘轮判为克隆，如实改 JSON 载荷）。
+
+**L1-on-requests 基线**（[commit-baseline-l1-requests-v1.json](../contracts/eval/commit-baseline-l1-requests-v1.json)）：
+**cross_credit_upper_bound = 0**——自仓"跨文件 moved L1 结构性零召回"
+（0/547）在第二语料复现，R-L2-2 外验第一料落地；detected 510 / GT 530 /
+predicted 636（超出方向同自仓 = L1 合法声称 GT blocks 引擎漏标的
+sub-block 移动）；320/341 commit 逐对精确。附带清偿一笔自仓欠账：43dc354
+给审读表加 `~` 改编标记后 labels doc 未重生成（CI 只查 doc 内部一致，抓
+不到代码表↔doc 漂移），本轮掩码比对抓出并重生成（summary 计数不变）。
+
 ## 复跑 / 校验
 
 ```

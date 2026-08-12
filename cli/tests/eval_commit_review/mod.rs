@@ -1,7 +1,10 @@
-//! Review data + mechanical partition machinery for the commit-slice
-//! ground truth (see eval_commit_labels.rs for the semantics). The
-//! two const tables ARE the per-item review record (2026-08-10):
-//! every entry was verified against the raw diff it describes.
+//! Mechanical partition machinery for the commit-slice ground truth
+//! (see eval_commit_labels.rs for the semantics). The per-item review
+//! record is corpus-specific DATA and lives in self.json /
+//! requests.json (data as data — as Rust consts the parallel tables
+//! read as clone blocks to our own dedup ratchet); every entry there
+//! was verified against the raw diff it describes. The machinery
+//! here is corpus-neutral.
 //!
 //! Compiled independently by eval_commit_labels and eval_l2, each
 //! using a subset — the unused remainder is expected.
@@ -11,106 +14,33 @@ use crate::eval_support::{BodyLine, commit_color_diff, walk_color_diff};
 use codeeraser::fourclass::significant;
 use serde_json::{Value, json};
 use std::collections::{HashMap, HashSet};
+use std::sync::OnceLock;
 
-/// Reviewed content-coincidence corrections: (sha prefix, file,
-/// added-side, lines, mechanism).
-const CORRECTIONS: [(&str, &str, bool, u64, &str); 5] = [
-    (
-        "da8eb210b",
-        "cli/tests/guard_hook.rs",
-        false,
-        1,
-        "removal was an inline-into-helper rewrite in the same file \
-         (helper takes `dir`, not `&dir`); the matching addition in \
-         mcp_precommit.rs is an unrelated new assertion",
-    ),
-    (
-        "da8eb210b",
-        "cli/tests/mcp_precommit.rs",
-        true,
-        1,
-        "freshly written assertion; content coincides with the line \
-         removed from guard_hook.rs",
-    ),
-    (
-        "8d6b237a5",
-        "cli/src/dedup/mod.rs",
-        false,
-        2,
-        "run() params became pub struct fields in the same file \
-         (textually changed by `pub`); git cross-paired the removals \
-         to main.rs's own within-file enum-to-struct restructure",
-    ),
-    (
-        "8d6b237a5",
-        "cli/tests/dedup_check.rs",
-        true,
-        1,
-        "file created in this commit; seed line freshly authored, \
-         content coincides with removals elsewhere",
-    ),
-    (
-        "4822d04ff",
-        "cli/tests/daemon_e2e.rs",
-        true,
-        1,
-        "freshly authored seed line; content coincides with removals \
-         from other files",
-    ),
-];
+/// The active corpus's review record, embedded at compile time and
+/// resolved once (corpus() pins external window ends via git — not a
+/// per-row cost). corrections: reviewed content-coincidence entries
+/// {sha, file, added, lines, why}. relocated_units: reviewed
+/// relocation targets {sha, to, units}.
+fn tables() -> &'static Value {
+    static TABLES: OnceLock<Value> = OnceLock::new();
+    TABLES.get_or_init(|| {
+        let raw = match crate::eval_support::corpus().name.as_deref() {
+            None => include_str!("self.json"),
+            Some("requests") => include_str!("requests.json"),
+            Some(other) => panic!("no review record for corpus {other}"),
+        };
+        serde_json::from_str(raw).expect("review record json")
+    })
+}
 
-/// Reviewed relocation targets: (sha prefix, receiving file,
-/// comma-joined unit names). Qualitative GT for the unit-attribution
-/// dimension; bodies may be adapted in flight (the quantitative gate
-/// stays line-level). A "~" prefix marks a unit reviewed as
-/// adapted-in-flight — zero line-identical body lines survive
-/// (verified against the raw diff: the 2f40f22b8 helpers were
-/// generalized while moving, e.g. write_doc gained parameters), so
-/// line-level attribution is structurally impossible there and the
-/// register records that instead of pretending.
-const RELOCATED_UNITS: [(&str, &str, &str); 11] = [
-    ("384d4c790", "cli/src/dedup/tokens.rs", "stream"),
-    (
-        "4822d04ff",
-        "cli/tests/common/mod.rs",
-        "tmp,rust_fn,git,seed_sources,build_index,run_hook,\
-         spawn_daemon_ready,last_observe,shutdown_daemon,wait_exit",
-    ),
-    ("8d6b237a5", "cli/tests/common/mod.rs", "seed_clone_pair"),
-    (
-        "a3cf54d1f",
-        "cli/tests/common/mod.rs",
-        "seed_git_clone_repo",
-    ),
-    (
-        "6d8824e20",
-        "cli/src/hookio.rs",
-        "read_envelope,observe_append",
-    ),
-    ("1ef9cdf60", "cli/tests/common/mod.rs", "parse"),
-    ("da8eb210b", "cli/tests/common/mod.rs", "corrupt_index"),
-    (
-        "71b607d56",
-        "cli/tests/common/mod.rs",
-        "golden_path,assert_matches_golden,pretooluse_envelope,\
-         stop_envelope,silent_hook_observe",
-    ),
-    (
-        "822e7182f",
-        "cli/src/daemon/coldstart.rs",
-        "indexed_file_count,mark_ready,init,index_ready",
-    ),
-    (
-        "f84aaa3c8",
-        "cli/tests/eval_support/mod.rs",
-        "CLASSES,load,by_id,numstat",
-    ),
-    (
-        "2f40f22b8",
-        "cli/tests/eval_support/mod.rs",
-        "~out_dir,read_sample,~labeling_rows,finish_rows,~write_doc",
-    ),
-];
+/// The record's `key` rows whose sha prefix matches `sha`.
+fn rows_for<'a>(key: &str, sha: &'a str) -> impl Iterator<Item = &'static Value> + use<'a> {
+    tables()[key]
+        .as_array()
+        .expect("review rows")
+        .iter()
+        .filter(move |r| sha.starts_with(r["sha"].as_str().expect("sha prefix")))
+}
 
 pub type PerFile = HashMap<String, u64>;
 
@@ -199,10 +129,9 @@ pub fn partition(sha: &str) -> Partition {
 /// within-file partner). Returns the applied entries for the record.
 pub fn apply_corrections(sha: &str, p: &mut Partition) -> Vec<Value> {
     let mut applied = Vec::new();
-    for (pre, file, added, n, why) in CORRECTIONS {
-        if !sha.starts_with(pre) {
-            continue;
-        }
+    for r in rows_for("corrections", sha) {
+        let (file, added) = (r["file"].as_str().expect("file"), r["added"] == true);
+        let n = r["lines"].as_u64().expect("lines");
         let side_b = p.side_mut(added);
         let c = side_b
             .cross
@@ -217,26 +146,27 @@ pub fn apply_corrections(sha: &str, p: &mut Partition) -> Vec<Value> {
         // file's line identities are no longer trustworthy
         side_b.cross_lines.remove(file);
         let side = if added { "added" } else { "removed" };
-        applied.push(json!({"file": file, "side": side, "lines": n, "why": why}));
+        applied.push(json!({"file": file, "side": side, "lines": n, "why": r["why"]}));
     }
     applied
 }
 
 /// The corrections' per-file line counts for one side of one commit.
 pub fn per_file_corrections(sha: &str, added: bool) -> PerFile {
-    CORRECTIONS
-        .iter()
-        .filter(|(pre, _, a, _, _)| sha.starts_with(pre) && *a == added)
-        .map(|(_, file, _, n, _)| (file.to_string(), *n))
+    rows_for("corrections", sha)
+        .filter(|r| (r["added"] == true) == added)
+        .map(|r| {
+            let file = r["file"].as_str().expect("file").to_string();
+            (file, r["lines"].as_u64().expect("lines"))
+        })
         .collect()
 }
 
 pub fn units_for(sha: &str) -> Vec<Value> {
-    RELOCATED_UNITS
-        .iter()
-        .filter(|(pre, _, _)| sha.starts_with(pre))
-        .map(|(_, to, units)| {
-            json!({"to": to, "units": units.split(',').map(str::trim).collect::<Vec<_>>()})
+    rows_for("relocated_units", sha)
+        .map(|r| {
+            let units = r["units"].as_str().expect("units");
+            json!({"to": r["to"], "units": units.split(',').map(str::trim).collect::<Vec<_>>()})
         })
         .collect()
 }
