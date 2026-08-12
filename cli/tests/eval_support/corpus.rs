@@ -60,18 +60,25 @@ pub fn corpus_doc_pairs_frozen(family: &str) -> Vec<(String, String)> {
     pairs
 }
 
-/// The corpus-name suffix of a frozen doc path
-/// ("…/commit-labels-ripgrep-v1.json" → Some("ripgrep"), the self
-/// doc → None) — how a gate iterating EVERY corpus resolves the
-/// matching compiled review record (resolving via the active corpus
-/// would silently read the wrong one — Codex review C3 follow-up).
-pub fn doc_corpus_name(path: &str, family: &str) -> Option<String> {
-    let stem = path.rsplit('/').next().expect("file name");
-    let mid = stem
-        .strip_prefix(&format!("commit-{family}"))
+/// The corpus-name suffix of a frozen doc path for an arbitrary
+/// document stem: "…/{stem}-ripgrep-v1.json" → Some("ripgrep"), the
+/// self doc "…/{stem}-v1.json" → None. Shared by the commit families
+/// (below) and the graph family (eval_graph.rs).
+pub fn doc_suffix(path: &str, stem: &str) -> Option<String> {
+    let file = path.rsplit('/').next().expect("file name");
+    let mid = file
+        .strip_prefix(stem)
         .and_then(|s| s.strip_suffix("-v1.json"))
-        .unwrap_or_else(|| panic!("{path}: not a {family} doc"));
+        .unwrap_or_else(|| panic!("{path}: not a {stem} doc"));
     (!mid.is_empty()).then(|| mid.trim_start_matches('-').to_string())
+}
+
+/// doc_suffix for the commit families — how a gate iterating EVERY
+/// corpus resolves the matching compiled review record (resolving
+/// via the active corpus would silently read the wrong one — Codex
+/// review C3 follow-up).
+pub fn doc_corpus_name(path: &str, family: &str) -> Option<String> {
+    doc_suffix(path, &format!("commit-{family}"))
 }
 
 /// A frozen-doc gate's prologue: the corpus name parsed from the

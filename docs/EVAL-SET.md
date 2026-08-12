@@ -54,12 +54,11 @@ M4 误报门（≤1%/500 行）的分母将全部来自正常编辑回放。
 
 ## L0 基线（计划 §4.3 B3c 阶梯首级，2026-08-10）
 
-[contracts/eval/baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json)，
-两变体（CI 门从入库文件全量复核，git 实跑走 ignored 测试）、样本精确同为
-194/200：`l0_numstat`（计划命名命令；rename/copy 旗标对单文件对惰性已逐样本
-实证）moved 召回 **0/62**；`reference_color_moved`（= 预标引擎）召回 62/62
-但精度 62/125——空行跨位匹配发明 63 条假移动。行级准确率两者都 ~99.5% 无
-区分力 ⇒ **头名指标 = moved 类召回/精度**；两变体失误集只交于 1 个混合样本，
+[baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json) 两变体（CI 从
+入库文件全量复核，git 实跑走 ignored）、样本精确同为 194/200：`l0_numstat`
+moved 召回 **0/62**（rename/copy 旗标对单文件对惰性已逐样本实证）；
+`reference_color_moved`（= 预标引擎）召回 62/62 但精度 62/125（空行伪影
+63 条）。行级准确率双双 ~99.5% 无区分力 ⇒ **头名指标 = moved 类召回/精度**；
 L1 达标线 = 同时关掉两个缺口。
 
 ## L1（函数边界对齐，用户拍板全量实现 2026-08-10）
@@ -76,10 +75,8 @@ GT 无法区分全量函数边界对齐与单纯空行过滤——对齐增量�
 
 ## 整 commit 切片 v1（L2 增量仪器，预注册于任何 L2 代码之前，2026-08-10）
 
-本仓库 200 样本集的 moved GT 已饱和（上节）；按拍板，L2 的增量须在
-**整 commit / 跨文件 / 单元归属**维度证明——逐文件对的 L1 结构性看不见
-"函数离开 A 文件、落进 B 文件"。切片全部派生自本仓库自身 git 历史
-（真实编辑，零伪造，仓内可完整复现）：
+200 样本集 moved GT 已饱和（上节）⇒ L2 增量须在**整 commit / 跨文件 /
+单元归属**维度证明。切片全部派生自本仓库自身 git 历史（零伪造，可复现）：
 
 - **构成** [contracts/eval/commit-slice-v1.json](../contracts/eval/commit-slice-v1.json)：
   宇宙 = 至 2f40f22（L1 落地，仪器在自身宇宙外）的线性历史 61 commit，五语言
@@ -129,10 +126,9 @@ m=1/v=3/s_cross=2 ⇒ **≥2 行跨文件证据地板由模型推导**（单跨�
 | 代价敏感性 | Spec.hs 钉死 s_cross∈{0,2,4,6}→地板{1,2,3,4}（死旋钮无处藏身） |
 | 参照等价 | 81,640 个穷举小实例上，生产实现与独立参照（双向极大性 block 枚举
   + 相位集合式定义）逐一等价——实现↔规范穷举钉死；规范↔真值由上表七门钉 |
-| 搬迁登记 | 35 单元名册：32 具名（含 kinds.rs 关闭的 CLASSES 常量洞 + 经扩展相位
-  归属的 mark_ready 类；块内逐行归属修掉"大块只记头单元"缺陷）+ 3 个 `~` 注记
-  改编单元（out_dir/labeling_rows/write_doc 搬迁中被泛化，GT dump 证零行同一
-  存活，行级归属结构性不可能——如实入册而非硬凑） |
+| 搬迁登记 | 35 单元名册：32 具名（含 CLASSES 常量洞与扩展相位归属；块内逐行
+  归属修掉"大块只记头单元"）+ 3 个 `~` 改编单元（GT dump 证零行同一存活，
+  行级归属结构性不可能——如实入册而非硬凑） |
 
 行级总量：moved detected 766/766（547 跨 + 219 文件内；开发中曾短 5 行，
 根因 = 显著行行号连续划 run 切碎 git 整块，按"run 结构归对齐者"修正闭
@@ -150,22 +146,18 @@ Stop 汇总该信号的 informational 前置解除。
 流水线（classify_batch + ce-core 链）重放，M4 判定规则（堆叠嫌疑 =
 显著 novel ≥20 ∧ 删除 < novel/10 ∧ **顶层具名单元新出现重复键**，常数在
 CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言。
-首测曾 8/600（1.33%）红：根因非阈值而是证据语义——匿名闭包键（3 条 rs）
-与跨类同名方法平键（含 `__init__`×2，2 条 py）不构成堆叠身份；dup 证据
-收窄到**顶层具名单元**后 0/600，且红绿双向单测钉住真堆叠仍点火、两类
-误报形状不点火。**Recall 如实记 undefined**：语料按构造零异常样本，
-按计划"recall 报告但不设作弊性 100% 门"。
+首测 8/600 红的根因是证据语义非阈值（匿名闭包键、跨类同名方法平键不构成
+堆叠身份）；dup 证据收窄**顶层具名单元**后 0/600，红绿双向单测钉死。
+**Recall 如实 undefined**：语料按构造零异常，计划本就不设作弊性 100% 门。
 
 ## 攻击评审加固轮（2026-08-11，Codex gpt-5.6-sol 独立评审后）
 
-评审 14 项（2 blocker + 10 major + 2 minor）逐条独立核实后处置，全档
-[docs/reviews/2026-08-11-m4-attack-review.md](reviews/2026-08-11-m4-attack-review.md)：
-行身份召回门（F2：跨文件 GT 计数升为行号集合，全语料一次通过）；extras
-冻结（新行须先审读再 `CE_ACCEPT_EXTRAS=1` 赐福）；源版本绑定（F1：
-`generated_from`，doc 落所记 commit 的**子提交**，活体重放本地跑）；判决
-语义加固（F5/F6：去重内容数地板 + run 桥长上界 7，全语料零漂移）；堆叠
-证据归属（F7：具名容器/trait 限定键/Go 接收者键；首版修复被 FPR 重放当
-场抓 1/600，根修回 0/600——仪器抓自己的修复批，机制在工作）。
+评审 14 项逐条独立核实后处置，全档
+[2026-08-11-m4-attack-review.md](reviews/2026-08-11-m4-attack-review.md)：
+行身份召回门（F2）；extras 冻结（`CE_ACCEPT_EXTRAS=1` 审读赐福）；源版本
+绑定（F1：`generated_from`，doc 落所记 commit 的子提交）；判决语义加固
+（F5/F6：去重内容地板 + 桥长上界 7，全语料零漂移）；堆叠证据归属（F7：
+首版修复被 FPR 重放当场抓 1/600，根修回 0/600——仪器抓自己的修复批）。
 
 ## requests 外验切片 v1（M5-1b 冻结，2026-08-11，预注册于任何外验评分之前）
 
@@ -179,12 +171,10 @@ R-L2-2 的解药第一料：同一 GT 仪器（M5-1a 泛化，commit e7aa3f8）�
 commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。双跑逐字节
 一致；CI 一致性门枚举全部 commit-slice\*-v1.json 共同校验。
 
-方法差异一处（如实入册）：`added/deleted` 改由**同一编辑脚本的 hunk 头
-算术**推导而非 numstat——默认 myers 下 git 的 numstat 会对自家 patch 超
-计（requests 28d537dd 实测 15/6 vs patch/difflib/minimal/patience/histogram
-一致的 14/5，守恒断言当场逮住）；钉 histogram 会漂移已冻结的自仓切片，故
-弃；自仓 doc 在 hunk 推导下逐字节不变。复跑：M5-1a 的四个 CE_SLICE_* 环
-境变量 + 本节两端 sha。
+方法差异一处（如实入册）：`added/deleted` 改由**同一编辑脚本 hunk 头算术**
+推导——默认 myers 的 numstat 对自家 patch 超计（28d537dd 实测 15/6 vs 五
+算法一致的 14/5，守恒断言当场逮住）；钉 histogram 会漂自仓冻结档故弃；自
+仓 doc 在 hunk 推导下字节不变。复跑：CE_SLICE_* 四变量 + 本节两端 sha。
 
 **GT 审读**（[commit-labels-requests-v1.json](../contracts/eval/commit-labels-requests-v1.json)）：
 机械两层后跨文件 15 出/15 进全部集中在 3 个 commit，逐行对原始 diff 审读
@@ -202,12 +192,10 @@ predicted 636（超出方向同自仓 = L1 合法声称 GT blocks 引擎漏标�
 sub-block 移动）；320/341 commit 逐对精确。附带清偿自仓欠账一笔：`~` 标
 记后未重生成的 labels doc（代码表↔doc 漂移 CI 不可见）掩码比对抓出重生成。
 
-**L2-on-requests 外验判决（2026-08-11，当时 doc 未冻结——这正是判决）**：
-召回门过（跨文件 **18/18 行身份级**，resolve_proxies 完整回收）；**虚报
-门破**——black/isort 格式化 commit 2a6f290b 上发明 2 站/4 行（`Timeout,`/
-`TooManyRedirects,` 收拢↔炸开，两行去重内容恰够 destFloor=2；对照
-5aeec8b6 同内容×2 被 F5 地板正确拒绝）⇒ doc 悬置、F4 改判条件点火，升级
-候选交由下节影子消融双语料裁决（自仓 547/547 与 FPR 0/600 不可破）。
+**L2-on-requests 外验判决（2026-08-11）**：召回门过（跨 **18/18 行身份
+级**，resolve_proxies 完整回收）；**虚报门破**——black/isort commit 发明
+2 站/4 行（收拢↔炸开恰够 destFloor=2）⇒ doc 悬置、F4 改判条件点火，交下
+节影子消融双语料裁决（自仓 547/547 与 FPR 0/600 不可破）。
 
 **影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)，
 Codex 评审处置 [2026-08-11-m5-1c-ii](reviews/2026-08-11-m5-1c-ii-ablation-review.md)）**：
@@ -288,6 +276,19 @@ below_floor==cross GT 三层 CI 锚定）。extras 505 行/15 文件逐行台账
 解析修复单元/边登记门在外语料 CI 的静默空转**（幻影单元反事实即红）；
 copy 不消费落进 labels 机器；乘积护栏 Integer 化 + 两真实形状非降级回归钉。
 
+## graph 站点宇宙 v1（M5-2b 冻结，2026-08-12，预注册于任何解析器代码之前）
+
+精度仪器的分母 = **免解析 SITES**（宇宙先于解析器冻结，解析器不得自选分
+母——[设计定稿](reviews/2026-08-12-m5-2-graph-design.md) §5）。五语料
+graph-slice\*-v1.json：self@eb5fe24（**含 crosscheck 孤岛 = 设计内负对照**，
+GRAPH_SCOPE 有意不套 ce.toml 排除）、requests@8068356、ripgrep@3fce3b5、
+zod@912f0f5、cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit，2026-08-12
+拍板）。范围 = 五门正典扩展名 − memory/；档载文件清单 + sha256 + 逐
+(lang,kind) 站点计数 + 逐类排除 + **测量前写死的证伪常数**（min_per_lang
+=15、r0_share_trigger=0.80）。CI 门（eval_graph.rs）：summary 从行重导
+（生成器同一 scorer）、常数/范围钉死、tip 全 OID、行有序无重、档名↔内嵌
+名一致、五语言联合覆盖非零（D2-4）；生成双跑字节一致。
+
 ## 复跑 / 校验
 
 ```
@@ -295,6 +296,5 @@ cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> \
 CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
 ```
 
-重建 `.ce-eval/` 并重写 manifest，与已提交 manifest diff 为空即完整复现。
-约束：依赖本机 transcripts 留存；transcripts 清理后仅 manifest 哈希可证
-完整性（样本另行备份归用户）。
+重建 `.ce-eval/` 重写 manifest，与已提交 manifest diff 为空即完整复现；
+依赖本机 transcripts 留存，清理后仅 manifest 哈希可证（样本备份归用户）。
