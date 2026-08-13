@@ -7,18 +7,19 @@
 //! rung, so precision is attributable per level and a dirty rung can
 //! be voted out by data at 2h.
 //!
-//! Per-language rungs land one batch at a time (TS first); languages
-//! without a ladder yet return Unresolved(Unsupported) — an honest
-//! ledger row, never a silent skip. Dispatch carries the site's
-//! frozen kind label (store::KINDS): the TS/Py rungs are
-//! kind-uniform, but Rust's mod_decl and use walk different rungs,
-//! and the Markdown kinds will differ more.
+//! All five ladders have landed (TS → Py → Rust → Go → Md); a future
+//! language without rungs must return Unresolved(Unsupported) — an
+//! honest ledger row, never a silent skip. Dispatch carries the
+//! site's frozen kind label (store::KINDS): the TS/Py rungs are
+//! kind-uniform, Rust's mod_decl and use walk different rungs, and
+//! Markdown routes five kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
 use std::path::Path;
 
 pub mod go;
+pub mod md;
 pub mod py;
 pub mod rs;
 pub mod ts;
@@ -52,11 +53,24 @@ pub enum Outcome {
         path: String,
         rung: Rung,
     },
-    /// Exactly one in-scope PACKAGE directory (Go): the node identity
-    /// is (pkg_dir, "") and granularity is package — collapsing to a
-    /// single file would be a guess (design §4 row 4).
+    /// Exactly one in-scope PACKAGE directory (Go import, Markdown
+    /// directory link): the node identity is (pkg_dir, "") and
+    /// granularity is package — collapsing to a single file would be
+    /// a guess (design §4 row 4).
     ResolvedPackage {
         dir: String,
+        rung: Rung,
+    },
+    /// Markdown doc target (design §4 row 5): node identity is
+    /// (path, slug), granularity section. `slug: None` is the
+    /// anchored link whose section claim could not be confirmed
+    /// against the target's ATX slug set — the design's "degrade to
+    /// file level + ambiguous_anchor": the edge lands file-level
+    /// (dst_unit ""), and the refusal to guess a section stays
+    /// visible here instead of vanishing into a plain Resolved.
+    ResolvedSection {
+        path: String,
+        slug: Option<String>,
         rung: Rung,
     },
     /// Outside the corpus by design (registry dep, node_modules).
@@ -69,8 +83,10 @@ pub enum Outcome {
 /// What a resolver may consult. Candidate targets MUST come from
 /// `files` (the frozen in-scope set); `configs` are the resolver
 /// config paths the walk collected (all in resolve_key, store.rs);
-/// raw fs access via `root` may only justify External or block a
-/// rewrite — never mint an in-scope candidate.
+/// raw fs access via `root` may only justify External, block a
+/// rewrite, or read an in-scope candidate's own bytes to refine
+/// granularity (Md section slugs, R3 definition tables) — never
+/// mint an in-scope candidate.
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
     pub configs: &'a [String],
@@ -86,7 +102,7 @@ pub fn resolve(lang: Lang, kind: &str, from: &str, spec: &str, scope: &Scope) ->
         Lang::Python => py::resolve(from, spec, scope),
         Lang::Rust => rs::resolve(kind, from, spec, scope),
         Lang::Go => go::resolve(from, spec, scope),
-        Lang::Markdown => Outcome::Unresolved(Reason::Unsupported),
+        Lang::Markdown => md::resolve(kind, from, spec, scope),
     }
 }
 

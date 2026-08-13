@@ -1,8 +1,9 @@
-//! Ladder-test arrange helpers (the hooks.rs precedent: common/ is
-//! one module per concern, each binary uses a subset — the allows in
-//! mod.rs are module-level and cover this file too).
+//! Ladder-test arrange + act helpers (the hooks.rs precedent:
+//! common/ is one module per concern, each binary uses a subset —
+//! the allows in mod.rs are module-level and cover this file too).
 
-use codeeraser::graph::ladder::{Outcome, Reason, Scope};
+use codeeraser::graph::ladder::{self, Outcome, Reason, Scope};
+use codeeraser::scan::lang::Lang;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
@@ -58,6 +59,21 @@ impl Fixture {
     }
 }
 
+/// (lang, site kind, from-file, spec) → expected outcome. Aliases
+/// keep every row on one line: the table IS the spec, scannable or
+/// dead.
+pub type Case = (Lang, &'static str, &'static str, &'static str, Outcome);
+
+/// Drive a case table through the dispatcher against one
+/// materialized fixture — the shared act + assert throat.
+pub fn run_cases(fx: &Fixture, cases: Vec<Case>) {
+    let scope = fx.scope();
+    for (lang, kind, from, spec, want) in cases {
+        let got = ladder::resolve(lang, kind, from, spec, &scope);
+        assert_eq!(got, want, "{lang:?} {kind} {spec:?}");
+    }
+}
+
 /// Ladder case-table constructors: resolved file, resolved package
 /// directory (Go granularity), refusal, external.
 pub fn ok(path: &str, rung: u8) -> Outcome {
@@ -80,4 +96,22 @@ pub fn no(reason: Reason) -> Outcome {
 
 pub fn ext(rung: u8) -> Outcome {
     Outcome::External { rung }
+}
+
+pub fn sec(path: &str, slug: &str, rung: u8) -> Outcome {
+    Outcome::ResolvedSection {
+        path: path.to_string(),
+        slug: Some(slug.to_string()),
+        rung,
+    }
+}
+
+/// The anchored link whose section claim degraded to a file-level
+/// edge (design: ambiguous_anchor).
+pub fn secf(path: &str, rung: u8) -> Outcome {
+    Outcome::ResolvedSection {
+        path: path.to_string(),
+        slug: None,
+        rung,
+    }
 }

@@ -20,8 +20,20 @@ use super::sites::RawSite;
 /// Scan one Markdown document for reference sites.
 pub fn detect(text: &str) -> Vec<RawSite> {
     let mut out = Vec::new();
+    for (lineno, line, mask) in content_lines(text) {
+        scan_line(line, lineno, mask, &mut out);
+    }
+    out
+}
+
+/// Fence-aware, comment-masked walk of a document's content lines,
+/// shared with the ladder's heading and definition scans — ONE
+/// masking implementation: the ladder resolving through a definition
+/// the detector refused to see would be the drift bug.
+pub(crate) fn content_lines(text: &str) -> Vec<(usize, &str, Vec<bool>)> {
     let mut fence: Option<char> = None;
     let mut in_comment = false;
+    let mut out = Vec::new();
     for (i, line) in text.lines().enumerate() {
         let t = line.trim_start();
         if !in_comment && let Some(mark) = fence_marker(t) {
@@ -37,7 +49,7 @@ pub fn detect(text: &str) -> Vec<RawSite> {
         if fence.is_some() {
             continue;
         }
-        scan_line(line, i + 1, &mut in_comment, &mut out);
+        out.push((i + 1, line, comment_mask(line, &mut in_comment)));
     }
     out
 }
@@ -49,14 +61,13 @@ fn fence_marker(trimmed: &str) -> Option<char> {
         .find(|&mark| trimmed.chars().take_while(|&c| c == mark).count() >= 3)
 }
 
-/// Sites on one non-fence line: reference definitions first (they
-/// own the whole line), then bracket links and autolinks outside
+/// Sites on one content line: reference definitions first (they own
+/// the whole line), then bracket links and autolinks outside
 /// inline-code spans and HTML comments.
-fn scan_line(line: &str, lineno: usize, in_comment: &mut bool, out: &mut Vec<RawSite>) {
-    let mut mask = comment_mask(line, in_comment);
+fn scan_line(line: &str, lineno: usize, mut mask: Vec<bool>, out: &mut Vec<RawSite>) {
     merge_code_spans(line, &mut mask);
     if !mask.first().copied().unwrap_or(false)
-        && let Some(target) = ref_definition(line)
+        && let Some((_, target)) = ref_definition(line)
     {
         out.push(RawSite::md("ref_def", lineno, target.to_string()));
         return;
@@ -140,16 +151,18 @@ fn backtick_runs(line: &str) -> Vec<(usize, usize)> {
 }
 
 /// `[id]: target` at line start (CommonMark link reference
-/// definition). The spec is the TARGET alone — a verbatim substring
-/// of the source line (2b exit criterion; the first draft
-/// synthesized "id: target" and had to weaken its own test to pass).
-fn ref_definition(line: &str) -> Option<&str> {
+/// definition), as (label, target). The site spec is the TARGET
+/// alone — a verbatim substring of the source line (2b exit
+/// criterion; the first draft synthesized "id: target" and had to
+/// weaken its own test to pass); the label feeds the ladder's R3
+/// definition table.
+pub(crate) fn ref_definition(line: &str) -> Option<(&str, &str)> {
     let t = line.trim_start();
     let inner = t.strip_prefix('[')?;
     let close = inner.find(']')?;
     let rest = inner[close + 1..].strip_prefix(':')?;
     let target = rest.split_whitespace().next()?;
-    (!target.is_empty()).then_some(target)
+    (!target.is_empty()).then_some((&inner[..close], target))
 }
 
 /// Byte index of the ']' matching the '[' at `open`, depth-aware.

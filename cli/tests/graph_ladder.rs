@@ -1,16 +1,18 @@
 //! Resolution-ladder fixtures (design §6 2f exit row: per rung ≥1
 //! fixture resolving exactly at that rung, plus ambiguity fixtures
 //! that MUST stay Unresolved — an ambiguous fixture that resolves is
-//! the red condition). One shared tree and ONE (lang, kind, from,
-//! spec, want) case table drive every language — per-language table
-//! pairs were the dedup ratchet's first catch in this file. The
-//! broken-chain and dispatcher cases get their own trees.
+//! the red condition). One shared tree and one case table drive
+//! every import-shaped language — per-language table pairs were the
+//! dedup ratchet's first catch in this file. The Markdown rungs read
+//! document CONTENT (headings, definitions), so their doc-shaped
+//! habitat lives in graph_ladder_md.rs; the broken-chain case gets
+//! its own tree.
 
 use codeeraser::graph::ladder::{self, Outcome, Reason};
 use codeeraser::scan::lang::Lang;
 
 mod common;
-use common::{ext, fixture, no, ok, pkg};
+use common::{Case, ext, fixture, no, ok, pkg, run_cases};
 
 /// The shared fixture tree — every rung's habitat, all languages.
 const TREE: &[(&str, &str)] = &[
@@ -120,12 +122,8 @@ const TREE: &[(&str, &str)] = &[
     ("dupg/b/x/x.go", "package x\n"),
 ];
 
-/// (lang, site kind, from-file, spec) → expected outcome. Aliases
-/// keep every row on one line: the table IS the spec, scannable or
-/// dead. Split by dispatch shape, not to hide length.
-type Case = (Lang, &'static str, &'static str, &'static str, Outcome);
-
-/// TS + Py rows — the kind-uniform import ladders.
+/// TS + Py rows — the kind-uniform import ladders. Tables split by
+/// dispatch shape, not to hide length.
 fn import_cases() -> Vec<Case> {
     let (ts, py, im) = (Lang::TypeScript, Lang::Python, "import");
     let (app, con) = ("src/app.ts", "pkg/consumer.py");
@@ -232,15 +230,11 @@ fn rust_cases() -> Vec<Case> {
 #[test]
 fn rungs_resolve_and_refuse() {
     let fx = fixture("ladder-rungs", TREE);
-    let scope = fx.scope();
     let all = import_cases()
         .into_iter()
         .chain(rust_cases())
         .chain(go_cases());
-    for (lang, kind, from, spec, want) in all {
-        let got = ladder::resolve(lang, kind, from, spec, &scope);
-        assert_eq!(got, want, "{lang:?} {kind} {spec:?}");
-    }
+    run_cases(&fx, all.collect());
 }
 
 /// An extends cycle must refuse the whole tsconfig rung — config
@@ -258,16 +252,5 @@ fn extends_cycle_is_config_depth() {
     assert_eq!(
         ladder::resolve(Lang::TypeScript, "import", "a.ts", "anything", &fx.scope()),
         Outcome::Unresolved(Reason::ConfigDepth)
-    );
-}
-
-/// Languages without a ladder yet are honest Unsupported ledger
-/// rows, never silent skips (dispatcher contract).
-#[test]
-fn missing_ladders_are_unsupported() {
-    let fx = fixture("ladder-none", &[("n.md", "[x](./y.md)\n")]);
-    assert_eq!(
-        ladder::resolve(Lang::Markdown, "link", "n.md", "./y.md", &fx.scope()),
-        Outcome::Unresolved(Reason::Unsupported)
     );
 }
