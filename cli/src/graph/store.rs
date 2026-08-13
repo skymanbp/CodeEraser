@@ -72,21 +72,18 @@ fn kind_code(label: &str) -> Result<i64> {
         })
 }
 
-/// Resolver-relevant config files (design §4 ladder inputs). Exact
-/// basenames only; a tsconfig `extends` target under another name
-/// joins the key as a 2f refinement.
-const CONFIG_NAMES: &[&str] = &[
-    "Cargo.toml",
-    "go.mod",
-    "package.json",
-    "pyproject.toml",
-    "tsconfig.json",
-];
+/// Resolver-relevant config files (design §4 ladder inputs). The
+/// tsconfig arm is a basename pattern because `extends` targets
+/// conventionally read tsconfig.<flavor>.json and participate in
+/// resolution — leaving them out of the key would serve stale edges
+/// (2f refinement); an extends target under an arbitrary name stays
+/// a documented boundary.
+const CONFIG_NAMES: &[&str] = &["Cargo.toml", "go.mod", "package.json", "pyproject.toml"];
 
 pub fn is_resolver_config(path: &Path) -> bool {
-    path.file_name()
-        .and_then(|n| n.to_str())
-        .is_some_and(|n| CONFIG_NAMES.contains(&n))
+    path.file_name().and_then(|n| n.to_str()).is_some_and(|n| {
+        CONFIG_NAMES.contains(&n) || (n.starts_with("tsconfig") && n.ends_with(".json"))
+    })
 }
 
 /// Phase-2 cache key: fnv1a over the sorted in-scope paths plus each
