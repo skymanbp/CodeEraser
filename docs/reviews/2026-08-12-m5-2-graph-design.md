@@ -189,7 +189,10 @@ recall=correct/|truth 在语料内|——与 66.7% 锚可比、免疫 stdlib 配
 resolution_rate=(resolved+external)/N。r0_share=R1 解析占比。分母补足：审计沿冻结
 排名序伸入后备直到 **100 已答行**——保住计划"100 条"字面功效。
 **CI 门**（cli/tests/eval_graph.rs，纯 #[test] 无 git 无 core 二进制；summary 由
-生成器同一 scorer 从行重导）：G1 summary 重导相等 · G2 每语料 precision ≥0.90 ·
+生成器同一 scorer 从行重导）：G1 summary 重导相等 · G2 每语料 precision ≥0.90
+（**2cd 反审 F2 拍板 2026-08-12**：每语料门仅对 in-corpus GT 分母 ≥5 的语料生效
+——实测 ripgrep 10/zod 22 达标，cobra 1/requests 3/self 4 带分母发布不设门；
+计划字面的总体 100 条 ≥0.90 合同门不变）·
 G3 守恒 correct+wrong+missed+external_ok+unresolved_ok==100 三层 · G4 **双射**
 manifest id↔判决 id（缺行与幻影行同样响亮红）· G5 每语言 ≥15 审计站点**且各自报
 带分母的精度**，低于地板即红非脚注 · G6 自证伪：wrong 行的站点在 (path,line,spec)

@@ -285,10 +285,10 @@ rs 取定义点并记再导出链、TS 多行 import 首行=站点行。CI 门�
 echo+truth 宇宙绑定（反审 F4）+why 地板+反事实六连+语料谱常数；G13 强祖先门
 （a≠d，样本→审计→graph 代码盲窗全扫，fetch-depth:0）。**带分母登记（F2）**：
 60 external / 40 in-corpus——in 分母 cobra 1/requests 3/self 4/ripgrep 10/
-zod 22（G2 每语料门在 cobra 分母=1，2h 门语义待拍板）；md ref_def/ref_link/
-url 零席位（44 站无 GT）+ dynamic/ambiguous/none 零 GT = 2f fixture 面补；
-rank 极小性门不验——冻结 100 由反审独立重导逐字节认证
-（[2cd 归档](reviews/2026-08-12-m5-2cd-opus-review.md)）。
+zod 22（拍板 2026-08-12：**分母 ≥5 才设每语料门**=ripgrep/zod，其余带分母只
+报，总体 ≥0.90 合同门不变）；md ref_def/ref_link/url 零席位（44 站无 GT）+
+dynamic/ambiguous/none 零 GT = 2f fixture 面补；rank 极小性门不验——冻结
+100 由反审独立重导逐字节认证（[2cd 归档](reviews/2026-08-12-m5-2cd-opus-review.md)）。
 
 ## 复跑 / 校验
 
