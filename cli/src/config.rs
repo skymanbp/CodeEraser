@@ -66,6 +66,15 @@ pub struct DedupCfg {
     pub budget: Option<usize>,
 }
 
+/// Graph/deadcode settings (M5-2h). entry_globs marks extra
+/// liveness roots beyond the mechanical conventions (main-shaped
+/// files, test conventions, doc entries) — flag bit 3 on the wire.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(default)]
+pub struct GraphCfg {
+    pub entry_globs: Vec<String>,
+}
+
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default)]
 pub struct Config {
@@ -74,6 +83,7 @@ pub struct Config {
     pub exclude: Vec<String>,
     pub guard: Guard,
     pub dedup: DedupCfg,
+    pub graph: GraphCfg,
 }
 
 impl Config {

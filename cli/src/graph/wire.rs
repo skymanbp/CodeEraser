@@ -17,11 +17,14 @@ use std::path::Path;
 
 /// Frozen edge-kind codes: code→code import, doc→doc link, doc→code
 /// reference, image asset (excluded from deadcode by kind, design
-/// §4 Markdown row).
+/// §4 Markdown row), and the SYNTHETIC containment arc deadcode adds
+/// from a package node to its member files (reaching a package
+/// reaches what it holds — never stored, built at request time).
 pub const EDGE_IMPORT: i64 = 0;
 pub const EDGE_DOC_LINK: i64 = 1;
 pub const EDGE_DOC_REF: i64 = 2;
 pub const EDGE_ASSET: i64 = 3;
+pub const EDGE_CONTAIN: i64 = 4;
 
 /// Frozen granularity codes.
 pub const GRAN_FILE: i64 = 0;

@@ -26,6 +26,19 @@ pub struct Instance {
     pub end_line: usize,
 }
 
+impl Instance {
+    /// The one row mapper both instance queries share.
+    fn from_row(r: &rusqlite::Row<'_>) -> rusqlite::Result<Self> {
+        Ok(Instance {
+            hash: r.get::<_, i64>(0)? as u64,
+            file: r.get(1)?,
+            start_tok: r.get::<_, i64>(2)? as usize,
+            start_line: r.get::<_, i64>(3)? as usize,
+            end_line: r.get::<_, i64>(4)? as usize,
+        })
+    }
+}
+
 pub struct Index {
     conn: Connection,
 }
@@ -185,15 +198,7 @@ impl Index {
             let mut stmt = self.conn.prepare(&sql)?;
             let params = rusqlite::params_from_iter(chunk.iter().map(|h| *h as i64));
             let found = stmt
-                .query_map(params, |r| {
-                    Ok(Instance {
-                        hash: r.get::<_, i64>(0)? as u64,
-                        file: r.get(1)?,
-                        start_tok: r.get::<_, i64>(2)? as usize,
-                        start_line: r.get::<_, i64>(3)? as usize,
-                        end_line: r.get::<_, i64>(4)? as usize,
-                    })
-                })?
+                .query_map(params, Instance::from_row)?
                 .collect::<rusqlite::Result<Vec<_>>>()?;
             rows.extend(found);
         }
@@ -209,18 +214,17 @@ impl Index {
                 "SELECT f.hash, fl.path, f.start_tok, f.start_line, f.end_line
                  FROM fingerprints f JOIN files fl ON fl.id = f.file_id",
             )?
-            .query_map([], |r| {
-                Ok(Instance {
-                    hash: r.get::<_, i64>(0)? as u64,
-                    file: r.get(1)?,
-                    start_tok: r.get::<_, i64>(2)? as usize,
-                    start_line: r.get::<_, i64>(3)? as usize,
-                    end_line: r.get::<_, i64>(4)? as usize,
-                })
-            })?
+            .query_map([], Instance::from_row)?
             .collect::<rusqlite::Result<_>>()?;
         rows.sort();
         Ok(rows)
+    }
+
+    /// The raw connection, for the graph domain's read surface
+    /// (graph/load.rs) — reads only; every writer stays in this
+    /// module or graph/store.rs.
+    pub(crate) fn raw(&self) -> &rusqlite::Connection {
+        &self.conn
     }
 }
 

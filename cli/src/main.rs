@@ -1,9 +1,14 @@
-//! ce — CodeEraser CLI frontend.
-//! `doctor` (ce-core handshake, M0) + `scan` (metrics, M1) +
-//! `dedup` / `daemon` / `ping` (clone index + process model, M2).
+//! ce — CodeEraser CLI frontend: the clap surface only. Subcommand
+//! bodies live in main_cmds.rs (split at the 300-line dogfood gate,
+//! the RG13 plan). `doctor` (M0) + `scan` (M1) + `dedup`/`daemon`/
+//! `ping` (M2) + hooks (M3) + `churn` (M4) + `graph`/`deadcode`
+//! (M5-2).
 
-use clap::{Parser, Subcommand, ValueEnum};
-use codeeraser::{churn, corelink, daemon, dedup, graph, scan};
+mod main_cmds;
+
+use clap::{Parser, Subcommand};
+use codeeraser::daemon;
+use main_cmds::{self as cmds, DedupArgs, OutFormat, json};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -48,14 +53,28 @@ enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
-    /// Dependency-graph subsystem (M5-2; only --sites exists yet:
-    /// resolution-free reference-site detection)
+    /// Dependency-graph subsystem: --sites lists reference sites
+    /// (resolution-free); liveness lives under `ce deadcode`
     Graph {
         /// Directory to analyze (default: current directory)
         root: Option<PathBuf>,
-        /// List reference sites (the only M5-2b mode)
+        /// List reference sites
         #[arg(long)]
         sites: bool,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
+    },
+    /// Judge liveness over the cached reference graph (M5-2h): the
+    /// ladder's edges, the Haskell core's four-way verdicts
+    Deadcode {
+        /// Directory to judge (default: current directory)
+        root: Option<PathBuf>,
+        /// Index database path (default: <root>/.ce/index.db)
+        #[arg(long)]
+        db: Option<PathBuf>,
+        /// Path to the ce-core executable
+        #[arg(long, default_value = "ce-core")]
+        core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
@@ -105,183 +124,31 @@ enum Cmd {
     },
 }
 
-#[derive(clap::Args)]
-struct DedupArgs {
-    /// Directory to index (default: current directory)
-    path: Option<PathBuf>,
-    #[arg(long, value_enum, default_value_t = OutFormat::Console)]
-    format: OutFormat,
-    /// Index database path (default: <path>/.ce/index.db)
-    #[arg(long)]
-    db: Option<PathBuf>,
-    /// Report threshold in normalized tokens (default: the
-    /// winnowing guarantee threshold, 50)
-    #[arg(long)]
-    min_tokens: Option<usize>,
-    /// Diversity floor: suppress blocks with fewer unique tokens
-    /// (default 7, from the M2 calibration; 0 disables)
-    #[arg(long)]
-    min_distinct: Option<usize>,
-    /// Only-shrink ratchet: exit 1 when clone blocks exceed the
-    /// ce.toml [dedup] budget (M2 review R12)
-    #[arg(long)]
-    check: bool,
-}
-
-#[derive(Clone, Copy, ValueEnum)]
-enum OutFormat {
-    Console,
-    Json,
-}
-
 fn main() -> ExitCode {
     match Cli::parse().cmd {
-        Cmd::Doctor { core, root } => doctor(&core, &or_cwd(root)),
-        Cmd::Scan { path, format } => scan_cmd(path, format),
-        Cmd::Churn { root, days, format } => churn_cmd(&or_cwd(root), days, format),
+        Cmd::Doctor { core, root } => cmds::doctor(&core, &cmds::or_cwd(root)),
+        Cmd::Scan { path, format } => cmds::scan_cmd(path, json(format)),
+        Cmd::Churn { root, days, format } => {
+            cmds::churn_cmd(&cmds::or_cwd(root), days, json(format))
+        }
         Cmd::Graph {
             root,
             sites,
             format,
-        } => graph_cmd(&or_cwd(root), sites, format),
-        Cmd::Dedup(args) => dedup_cmd(args),
-        Cmd::Probe { hook } => hook_cmd(hook, "probe", codeeraser::guard::run_hook),
-        Cmd::Audit { hook } => hook_cmd(hook, "audit", codeeraser::audit::run_hook),
-        Cmd::Health { hook } => hook_cmd(hook, "health", codeeraser::health::run_hook),
-        Cmd::Precommit { root } => codeeraser::audit::run_precommit(&or_cwd(root)),
-        Cmd::Mcp { root } => serve_cmd("mcp", codeeraser::mcp::serve(&or_cwd(root))),
-        Cmd::Daemon { root } => serve_cmd("daemon", daemon::server::serve(&root)),
-        Cmd::Ping { root } => ping_cmd(root),
-    }
-}
-
-fn churn_cmd(root: &std::path::Path, days: u32, format: OutFormat) -> ExitCode {
-    match churn::run(root, days) {
-        Ok(report) => {
-            match format {
-                OutFormat::Console => churn::print_console(&report, days),
-                OutFormat::Json => println!("{}", churn::report_json(&report)),
-            }
-            ExitCode::SUCCESS
-        }
-        Err(err) => {
-            eprintln!("ce churn: {err:#}");
-            ExitCode::from(2)
-        }
-    }
-}
-
-fn graph_cmd(root: &std::path::Path, sites: bool, format: OutFormat) -> ExitCode {
-    if !sites {
-        eprintln!("ce graph: only --sites exists in M5-2b (the resolver lands at 2f)");
-        return ExitCode::from(2);
-    }
-    graph::run_sites(root, matches!(format, OutFormat::Json))
-}
-
-fn or_cwd(root: Option<PathBuf>) -> PathBuf {
-    root.unwrap_or_else(|| PathBuf::from("."))
-}
-
-/// The three hook entries share one contract: --hook or nothing.
-fn hook_cmd(hook: bool, name: &str, run: fn() -> ExitCode) -> ExitCode {
-    if hook {
-        run()
-    } else {
-        eprintln!("ce {name}: only --hook mode exists in M3");
-        ExitCode::from(2)
-    }
-}
-
-fn serve_cmd(name: &str, result: anyhow::Result<()>) -> ExitCode {
-    match result {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(err) => {
-            eprintln!("ce {name}: {err:#}");
-            ExitCode::from(2)
-        }
-    }
-}
-
-fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
-    let root = root.unwrap_or_else(|| PathBuf::from("."));
-    let started = std::time::Instant::now();
-    match daemon::client::request(&root, &daemon::proto::Request::Ping) {
-        Ok(daemon::proto::Response::Pong { uptime_ms }) => {
-            println!(
-                "pong: daemon up {uptime_ms} ms, round-trip {} ms",
-                started.elapsed().as_millis()
-            );
-            ExitCode::SUCCESS
-        }
-        Ok(other) => {
-            eprintln!("ce ping: unexpected reply: {other:?}");
-            ExitCode::from(2)
-        }
-        Err(err) => {
-            eprintln!("ce ping: {err:#}");
-            ExitCode::from(2)
-        }
-    }
-}
-
-fn dedup_cmd(args: DedupArgs) -> ExitCode {
-    let root = or_cwd(args.path);
-    let opts = dedup::RunOpts {
-        format: fmt(args.format),
-        db: args.db,
-        min_tokens: args.min_tokens,
-        min_distinct: args.min_distinct,
-        check: args.check,
-    };
-    match dedup::run(&root, opts) {
-        Ok(code) => code,
-        Err(err) => {
-            eprintln!("ce dedup: {err:#}");
-            ExitCode::from(2)
-        }
-    }
-}
-
-fn fmt(format: OutFormat) -> scan::Format {
-    match format {
-        OutFormat::Console => scan::Format::Console,
-        OutFormat::Json => scan::Format::Json,
-    }
-}
-
-fn scan_cmd(path: Option<PathBuf>, format: OutFormat) -> ExitCode {
-    let root = path.unwrap_or_else(|| PathBuf::from("."));
-    match scan::run(&root, fmt(format)) {
-        Ok(code) => code,
-        Err(err) => {
-            eprintln!("ce scan: {err:#}");
-            ExitCode::from(2)
-        }
-    }
-}
-
-/// Environment + project health (plan §5.9-5): non-spawning project
-/// status line, the A9f degraded-run counter from the observe feed,
-/// then the ce-core handshake (which sets the exit code, as in M0).
-fn doctor(core: &str, root: &std::path::Path) -> ExitCode {
-    println!(
-        "ce {} (proto {})",
-        env!("CARGO_PKG_VERSION"),
-        corelink::PROTO
-    );
-    println!("project: {}", codeeraser::health::doctor_line(root));
-    let (degraded, total) = codeeraser::health::degraded_runs(root);
-    println!("degraded runs (observe feed): {degraded} of {total} entries");
-    match corelink::run(core) {
-        Ok(reply) => {
-            println!("ce-core {} (proto {})", reply.version, reply.proto);
-            println!("handshake: OK");
-            ExitCode::SUCCESS
-        }
-        Err(err) => {
-            eprintln!("handshake: FAILED — {err}");
-            ExitCode::from(2)
-        }
+        } => cmds::graph_cmd(&cmds::or_cwd(root), sites, json(format)),
+        Cmd::Deadcode {
+            root,
+            db,
+            core,
+            format,
+        } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, &core, json(format)),
+        Cmd::Dedup(a) => cmds::dedup_cmd(a),
+        Cmd::Probe { hook } => cmds::hook_cmd(hook, "probe", codeeraser::guard::run_hook),
+        Cmd::Audit { hook } => cmds::hook_cmd(hook, "audit", codeeraser::audit::run_hook),
+        Cmd::Health { hook } => cmds::hook_cmd(hook, "health", codeeraser::health::run_hook),
+        Cmd::Precommit { root } => codeeraser::audit::run_precommit(&cmds::or_cwd(root)),
+        Cmd::Mcp { root } => cmds::serve_cmd("mcp", codeeraser::mcp::serve(&cmds::or_cwd(root))),
+        Cmd::Daemon { root } => cmds::serve_cmd("daemon", daemon::server::serve(&root)),
+        Cmd::Ping { root } => cmds::ping_cmd(root),
     }
 }

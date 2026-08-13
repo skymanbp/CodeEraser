@@ -6,9 +6,11 @@
 //! beside it; wire.rs bridges cached sites to edge rows for phase 2.
 
 pub mod cargo;
+pub mod deadcode;
 pub mod gomod;
 pub mod jsonc;
 pub mod ladder;
+pub mod load;
 pub mod md;
 pub mod roots;
 pub mod sites;

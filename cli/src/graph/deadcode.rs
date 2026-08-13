@@ -1,0 +1,286 @@
+//! `ce deadcode` (M5-2h): refresh the index (the ladder judges every
+//! site into the DB on the way), build the graph.request from the
+//! cached edges, let the Haskell core judge liveness, and name the
+//! verdicts back. An EMPTY graph is an explicit error, never a
+//! silent all-dead/all-alive report; a degraded core reply
+//! (graph_too_large) lands in the observe feed so doctor/health
+//! count it (A9f).
+//!
+//! Entry flags are mechanical conventions plus user config:
+//! main-shaped files and executable directories (bit 1), test
+//! conventions (bit 2), ce.toml [graph] entry_globs (bit 3), and the
+//! doc entries README.md / CLAUDE.md / docs indexes (bit 5). The
+//! design's "no entry rule = every doc trivially dies" stance is
+//! deliberate: an unlinked doc IS reported. Asset edges never count
+//! as references (design §4 Markdown row); a package node gets
+//! SYNTHETIC containment arcs to every file under it — reaching a
+//! package reaches what it holds (the self-repo disposition run
+//! found doc→directory edges stranded from the members the walk had
+//! already proven alive); section and package verdicts are REPORTED,
+//! never called dead (decision 4 / RG9 — aggregates are not code
+//! entities). unreferenced_public stays its own class end to end
+//! (RG10); the unresolved-site count travels with the report — the
+//! reader sees what the graph refuses to know (decision 5:
+//! symbol-level indegree stays out while call edges are off).
+
+use super::load::{GraphEdge, graph_rows};
+use crate::config::Config;
+use crate::corelink::Link;
+use crate::dedup::{self, index::Index};
+use anyhow::{Context, Result, bail};
+use serde_json::{Value, json};
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::{Path, PathBuf};
+
+pub const VERDICT_NAMES: [&str; 4] = [
+    "unref_private",
+    "unref_public",
+    "unreach_private",
+    "unreach_public",
+];
+
+#[derive(Debug)]
+pub struct Report {
+    /// (name, verdict name, why) — file nodes only.
+    pub dead: Vec<(String, &'static str, String)>,
+    /// Section/package verdicts: reported, never called dead.
+    pub reported: Vec<(String, &'static str)>,
+    pub nodes: usize,
+    pub kept: u64,
+    pub unresolved_sites: i64,
+    pub degraded: Option<String>,
+}
+
+struct Node {
+    path: String,
+    unit: String,
+    kind: i64,
+}
+
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
+    dedup::analyze(root, db.clone(), None, None).map_err(anyhow::Error::msg)?;
+    let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
+    let idx = Index::open(&db_path, dedup::Params::default())?;
+    let (files, edges, unresolved_sites) = graph_rows(&idx)?;
+    if files.is_empty() {
+        bail!(
+            "empty index at {} — nothing was walked; wrong root?",
+            db_path.display()
+        );
+    }
+    let config = Config::load(root).map_err(anyhow::Error::msg)?;
+    let nodes = nodes_of(&files, &edges);
+    let ids: BTreeMap<(&str, &str), usize> = nodes
+        .iter()
+        .enumerate()
+        .map(|(i, n)| ((n.path.as_str(), n.unit.as_str()), i))
+        .collect();
+    let rows: Vec<Value> = nodes.iter().map(|n| node_row(n, &config)).collect();
+    let mut wire: BTreeSet<[i64; 4]> = edges
+        .iter()
+        .filter(|e| e.kind != super::wire::EDGE_ASSET)
+        .map(|e| {
+            let s = ids[&(e.src.as_str(), "")] as i64;
+            let d = ids[&(e.dst_path.as_str(), e.dst_unit.as_str())] as i64;
+            [s, d, e.kind, e.rung]
+        })
+        .collect();
+    contain(&nodes, &ids, &mut wire);
+    let reply = judge(core, &rows, &wire)?;
+    let report = consume(&reply, &nodes, unresolved_sites)?;
+    if let Some(reason) = &report.degraded {
+        observe(root, reason);
+    }
+    Ok(report)
+}
+
+/// Dense node identities: every walked file plus every edge target —
+/// a BTreeSet, so the id assignment is a function of the graph and
+/// the wire bytes are shuffle-proof (G11). Kind reuses the wire
+/// granularity codes.
+fn nodes_of(files: &[String], edges: &[GraphEdge]) -> Vec<Node> {
+    let file_set: BTreeSet<&str> = files.iter().map(String::as_str).collect();
+    let mut set: BTreeSet<(String, String)> =
+        files.iter().map(|p| (p.clone(), String::new())).collect();
+    for e in edges {
+        set.insert((e.dst_path.clone(), e.dst_unit.clone()));
+    }
+    set.into_iter()
+        .map(|(path, unit)| {
+            let kind = if !unit.is_empty() {
+                super::wire::GRAN_SECTION
+            } else if file_set.contains(path.as_str()) {
+                super::wire::GRAN_FILE
+            } else {
+                super::wire::GRAN_PACKAGE
+            };
+            Node { path, unit, kind }
+        })
+        .collect()
+}
+
+/// Synthetic containment arcs: package node → every file under its
+/// directory (module header). rung 1: containment is a fact, not a
+/// resolution mechanism, and it must survive every rung ceiling.
+fn contain(nodes: &[Node], ids: &BTreeMap<(&str, &str), usize>, wire: &mut BTreeSet<[i64; 4]>) {
+    for pkg in nodes.iter().filter(|n| n.kind == super::wire::GRAN_PACKAGE) {
+        let prefix = format!("{}/", pkg.path);
+        let p = ids[&(pkg.path.as_str(), "")] as i64;
+        for member in nodes
+            .iter()
+            .filter(|n| n.kind == super::wire::GRAN_FILE && n.path.starts_with(&prefix))
+        {
+            let m = ids[&(member.path.as_str(), "")] as i64;
+            wire.insert([p, m, super::wire::EDGE_CONTAIN, 1]);
+        }
+    }
+}
+
+/// [lang, kind, flags] — only file nodes carry entry flags.
+fn node_row(n: &Node, config: &Config) -> Value {
+    let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
+        .map(|l| l as i64)
+        .unwrap_or(0);
+    let flags = if n.kind == super::wire::GRAN_FILE {
+        flags_of(&n.path, config)
+    } else {
+        0
+    };
+    json!([lang, n.kind, flags])
+}
+
+/// Mechanical entry conventions (module header); bit 0 (exported)
+/// stays unset at file granularity — public-ness is a symbol fact.
+fn flags_of(path: &str, config: &Config) -> i64 {
+    let base = path.rsplit('/').next().unwrap_or(path);
+    let mut f = 0i64;
+    if matches!(base, "main.rs" | "main.go" | "__main__.py" | "build.rs")
+        || ["src/bin/", "examples/", "benches/", "cmd/"]
+            .iter()
+            .any(|p| path.starts_with(p))
+    {
+        f |= 1 << 1;
+    }
+    if is_test(path, base) {
+        f |= 1 << 2;
+    }
+    if config
+        .graph
+        .entry_globs
+        .iter()
+        .any(|g| glob_hit(g, path, base))
+    {
+        f |= 1 << 3;
+    }
+    if matches!(base, "README.md" | "CLAUDE.md")
+        || (path.starts_with("docs/") && matches!(base, "index.md" | "README.md"))
+    {
+        f |= 1 << 5;
+    }
+    f
+}
+
+fn is_test(path: &str, base: &str) -> bool {
+    base.ends_with("_test.go")
+        || base.ends_with(".test.ts")
+        || (base.starts_with("test_") && base.ends_with(".py"))
+        || path.starts_with("tests/")
+        || path.contains("/tests/")
+        || path.contains("/__tests__/")
+}
+
+/// entry_globs matching: an exact path, a `dir/` prefix, or a
+/// `*.ext` basename pattern — the declarative subset the config
+/// documents (full glob syntax is not promised).
+fn glob_hit(glob: &str, path: &str, base: &str) -> bool {
+    if let Some(ext) = glob.strip_prefix("*.") {
+        return base.ends_with(&format!(".{ext}"));
+    }
+    glob == path || glob == base || (glob.ends_with('/') && path.starts_with(glob))
+}
+
+/// One graph.request over the open core link; a missing capability
+/// or a non-result reply is an error, never an empty report.
+fn judge(core: &str, nodes: &[Value], edges: &BTreeSet<[i64; 4]>) -> Result<Value> {
+    let (mut link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
+    if !link.has("graph/1") {
+        bail!("ce-core offers no graph/1 capability — upgrade the core");
+    }
+    let body = json!({
+        "nodes": nodes,
+        "edges": edges.iter().collect::<Vec<_>>(),
+        "pos": [],
+    });
+    let reply = link.request("graph", body).map_err(anyhow::Error::msg)?;
+    if reply["type"] != json!("graph.result") {
+        bail!("core replied {}: {reply}", reply["type"]);
+    }
+    Ok(reply)
+}
+
+fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Report> {
+    let mut report = Report {
+        dead: Vec::new(),
+        reported: Vec::new(),
+        nodes: nodes.len(),
+        kept: reply["counts"]["kept"].as_u64().unwrap_or(0),
+        unresolved_sites,
+        degraded: reply["reason"].as_str().map(str::to_string),
+    };
+    let dead: Vec<[usize; 2]> =
+        serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
+    for [idx, verdict] in dead {
+        let node = nodes.get(idx).context("index out of range")?;
+        let name = VERDICT_NAMES[verdict.checked_sub(1).context("verdict 0")?];
+        if node.kind == super::wire::GRAN_FILE {
+            let why = if verdict <= 2 {
+                "no kept in-edge and no entry flag"
+            } else {
+                "referenced only from dead code; no entry flag"
+            };
+            report.dead.push((node.path.clone(), name, why.to_string()));
+        } else if node.unit.is_empty() {
+            report.reported.push((node.path.clone(), name));
+        } else {
+            report
+                .reported
+                .push((format!("{}#{}", node.path, node.unit), name));
+        }
+    }
+    Ok(report)
+}
+
+/// A degraded judgment is a visible event (A9f): one observe-feed
+/// line, same contract as the guard/audit producers.
+fn observe(root: &Path, reason: &str) {
+    let line = json!({"hook": "deadcode", "degraded": true, "reason": reason});
+    let path = root.join(".ce/observe.ndjson");
+    if let Some(dir) = path.parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+    if let Ok(mut f) = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&path)
+    {
+        use std::io::Write;
+        let _ = writeln!(f, "{line}");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    /// The degradation loop closes: a stamped deadcode degradation
+    /// is COUNTED by the same health surface `ce doctor` prints —
+    /// asserted, not assumed (2h exit row).
+    #[test]
+    fn degraded_stamp_reaches_the_health_counter() {
+        let root = std::env::temp_dir().join(format!("ce-dc-observe-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).expect("mkdir");
+        assert_eq!(crate::health::degraded_runs(&root), (0, 0));
+        super::observe(&root, "graph_too_large");
+        assert_eq!(crate::health::degraded_runs(&root), (1, 1));
+        std::fs::remove_dir_all(&root).ok();
+    }
+}

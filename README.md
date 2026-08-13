@@ -9,10 +9,18 @@ LLM 在长期代码/文档工作中极度偏向"堆叠"与"打补丁"：重复�
 
 ## Status
 
-🔒 **Planning locked — implementation not started.**
+🚧 **M0–M5-1 shipped; M5-2 (graph + deadcode) closing.**
 
 完整开发计划见 [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)（由 cc-memory 锁定，
 任何推进以计划为准）。
+
+## Documentation
+
+- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) — the locked plan; every milestone answers to it
+- [EVAL-SET](docs/EVAL-SET.md) — frozen evaluation universes, samples, audits and their gates
+- [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — measured budgets and replay ledgers
+- [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
+- [docs/reviews/](docs/reviews/) — attack/design review records, one file per round
 
 ## Architecture (planned)
 
