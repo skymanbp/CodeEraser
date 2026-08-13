@@ -143,7 +143,7 @@ pub fn nearest_package(root: &Path, from_dir: &str) -> Option<Package> {
     package(root, &nearest_up(root, from_dir, "package.json")?)
 }
 
-fn nearest_up(root: &Path, from_dir: &str, name: &str) -> Option<String> {
+pub(crate) fn nearest_up(root: &Path, from_dir: &str, name: &str) -> Option<String> {
     let mut dir = from_dir;
     loop {
         let rel = join_dir(dir, name);
@@ -157,12 +157,12 @@ fn nearest_up(root: &Path, from_dir: &str, name: &str) -> Option<String> {
     }
 }
 
-fn parent_dir(rel: &str) -> String {
+pub(crate) fn parent_dir(rel: &str) -> String {
     rel.rfind('/')
         .map_or(String::new(), |i| rel[..i].to_string())
 }
 
-fn join_dir(dir: &str, name: &str) -> String {
+pub(crate) fn join_dir(dir: &str, name: &str) -> String {
     if dir.is_empty() {
         name.to_string()
     } else {
@@ -240,7 +240,7 @@ pub fn pyproject(root: &Path) -> Option<PyProject> {
 }
 
 /// Walk one dotted key path into a parsed TOML document.
-fn table_at<'a>(doc: &'a toml::Table, keys: &[&str]) -> Option<&'a toml::Value> {
+pub(crate) fn table_at<'a>(doc: &'a toml::Table, keys: &[&str]) -> Option<&'a toml::Value> {
     let mut cur = doc.get(keys[0])?;
     for key in &keys[1..] {
         cur = cur.get(key)?;

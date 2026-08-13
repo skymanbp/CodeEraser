@@ -150,13 +150,9 @@ fn match_pattern<'a>(pattern: &str, spec: &'a str) -> Option<&'a str> {
 /// through the member's exports map. None = not a member, fall on.
 fn workspace_rung(spec: &str, scope: &Scope) -> Option<Outcome> {
     let (name, subpath) = split_bare(spec);
-    let members: Vec<roots::Package> = scope
-        .configs
-        .iter()
-        .filter(|c| c.rsplit('/').next() == Some("package.json"))
-        .filter_map(|c| roots::package(scope.root, c))
-        .filter(|p| p.name.as_deref() == Some(name))
-        .collect();
+    let members = super::members(scope, "package.json", roots::package, |p| {
+        p.name.as_deref() == Some(name)
+    });
     match members.len() {
         0 => None,
         1 => Some(member_target(&members[0], subpath, scope)),

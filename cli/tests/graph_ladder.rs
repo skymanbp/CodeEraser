@@ -1,9 +1,9 @@
 //! Resolution-ladder fixtures (design §6 2f exit row: per rung ≥1
 //! fixture resolving exactly at that rung, plus ambiguity fixtures
 //! that MUST stay Unresolved — an ambiguous fixture that resolves is
-//! the red condition). One shared tree and ONE (lang, from, spec,
-//! want) case table drive every language — per-language table pairs
-//! were the dedup ratchet's first catch in this file. The
+//! the red condition). One shared tree and ONE (lang, kind, from,
+//! spec, want) case table drive every language — per-language table
+//! pairs were the dedup ratchet's first catch in this file. The
 //! broken-chain and dispatcher cases get their own trees.
 
 use codeeraser::graph::ladder::{self, Outcome, Reason, Scope};
@@ -15,7 +15,7 @@ use std::path::Path;
 mod common;
 use common::tmp;
 
-/// The shared fixture tree — every rung's habitat, both languages.
+/// The shared fixture tree — every rung's habitat, all languages.
 const TREE: &[(&str, &str)] = &[
     // TS R1: extension order + exact + traversal; widget.ts beats
     // widget/index.ts because the order IS the norm, not ambiguity
@@ -79,6 +79,31 @@ const TREE: &[(&str, &str)] = &[
         "pyproject.toml",
         "[project]\nname = \"fixture\"\ndependencies = [\"requests>=2.31\"]\n",
     ),
+    // Rust R1-R3: lib+main double root (a walk ending AT the root
+    // must refuse), a mod.rs chain, a 2018-style subdir, an E0761
+    // double habitat, and a [[bin]] crate with its own tree
+    (
+        "Cargo.toml",
+        "[package]\nname = \"rootcrate\"\n\n[dependencies]\nserde = \"1\"\nhelper-lib = { path = \"crates/helper\" }\n\n[[bin]]\nname = \"gen\"\npath = \"tools/gen.rs\"\n",
+    ),
+    ("src/lib.rs", "mod util;\n"),
+    ("src/main.rs", "fn main() {}\n"),
+    ("src/util.rs", "mod helper;\n"),
+    ("src/util/helper.rs", "\n"),
+    ("src/nest/mod.rs", "mod deep;\n"),
+    ("src/nest/deep.rs", "\n"),
+    ("src/dual.rs", "\n"),
+    ("src/dual/mod.rs", "\n"),
+    ("tools/gen.rs", "mod gadget;\n"),
+    ("tools/gadget.rs", "\n"),
+    // Rust R4: hyphenated member name (code says helper_lib), a
+    // duplicate-name pair, registry dep declared in root Cargo.toml
+    ("crates/helper/Cargo.toml", "[package]\nname='helper-lib'"),
+    ("crates/helper/src/lib.rs", "\n"),
+    ("crates/dupx/Cargo.toml", "[package]\nname='dup-crate'"),
+    ("crates/dupx/src/lib.rs", "\n"),
+    ("crates/dupy/Cargo.toml", "[package]\nname='dup-crate'"),
+    ("crates/dupy/src/lib.rs", "\n"),
 ];
 
 fn materialize(dir: &Path, tree: &[(&str, &str)]) -> (BTreeSet<String>, Vec<String>) {
@@ -116,44 +141,91 @@ fn ext(rung: u8) -> Outcome {
     Outcome::External { rung }
 }
 
-/// (lang, from-file, spec) → expected outcome, all rungs of both
-/// shipped ladders plus every refusal shape.
-fn cases() -> Vec<(Lang, &'static str, &'static str, Outcome)> {
-    let (ts, py) = (Lang::TypeScript, Lang::Python);
+/// (lang, site kind, from-file, spec) → expected outcome. Aliases
+/// keep every row on one line: the table IS the spec, scannable or
+/// dead. Split by dispatch shape, not to hide length.
+type Case = (Lang, &'static str, &'static str, &'static str, Outcome);
+
+/// TS + Py rows — the kind-uniform import ladders.
+fn import_cases() -> Vec<Case> {
+    let (ts, py, im) = (Lang::TypeScript, Lang::Python, "import");
     let (app, con) = ("src/app.ts", "pkg/consumer.py");
     vec![
-        (ts, app, "./util", ok("src/util.ts", 1)),
-        (ts, app, "./widget", ok("src/widget.ts", 1)),
-        (ts, app, "./util.ts", ok("src/util.ts", 1)),
-        (ts, app, "../shared/x", ok("shared/x.tsx", 1)),
-        (ts, app, "./legacy.js", ok("src/legacy.ts", 2)),
-        (ts, app, "./built.js", no(Reason::OutOfScope)),
-        (ts, app, "@app/util", ok("src/util.ts", 3)),
-        (ts, app, "leaf", ok("lib/leaf.ts", 3)),
-        (ts, app, "@dup/thing", no(Reason::AmbiguousPaths)),
-        (ts, app, "pkga", ok("packages/pkga/src/index.ts", 4)),
-        (ts, app, "pkga/sub", ok("packages/pkga/src/sub.ts", 4)),
-        (ts, app, "dup-pkg", no(Reason::AmbiguousWorkspace)),
-        (ts, app, "pkgb", no(Reason::AmbiguousExports)),
-        (ts, app, "lodash", ext(5)),
-        (ts, app, "leftover", ext(5)),
-        (ts, app, "unknown-pkg", no(Reason::OutOfScope)),
-        (ts, app, "./missing", no(Reason::OutOfScope)),
-        (py, con, ".mod", ok("pkg/mod.py", 1)),
-        (py, con, ".", ok("pkg/__init__.py", 1)),
-        (py, con, ".sub", ok("pkg/sub/__init__.py", 1)),
-        (py, con, ".sub.leaf", ok("pkg/sub/leaf.py", 1)),
-        (py, con, "..other", ok("other.py", 1)),
-        (py, con, "...breaks", no(Reason::OutOfScope)),
-        (py, con, "top", ok("top.py", 2)),
-        (py, con, "pkg.mod", ok("pkg/mod.py", 2)),
-        (py, con, "tool", no(Reason::AmbiguousRoot)),
-        (py, con, "pkg.missing", ok("pkg/__init__.py", 3)),
-        (py, con, "pkg.sub.missing", ok("pkg/sub/__init__.py", 3)),
-        (py, con, "os", ext(4)),
-        (py, con, "os.path", ext(4)),
-        (py, con, "requests", ext(4)),
-        (py, con, "nosuch_pkg", no(Reason::OutOfScope)),
+        (ts, im, app, "./util", ok("src/util.ts", 1)),
+        (ts, im, app, "./widget", ok("src/widget.ts", 1)),
+        (ts, im, app, "./util.ts", ok("src/util.ts", 1)),
+        (ts, im, app, "../shared/x", ok("shared/x.tsx", 1)),
+        (ts, im, app, "./legacy.js", ok("src/legacy.ts", 2)),
+        (ts, im, app, "./built.js", no(Reason::OutOfScope)),
+        (ts, im, app, "@app/util", ok("src/util.ts", 3)),
+        (ts, im, app, "leaf", ok("lib/leaf.ts", 3)),
+        (ts, im, app, "@dup/thing", no(Reason::AmbiguousPaths)),
+        (ts, im, app, "pkga", ok("packages/pkga/src/index.ts", 4)),
+        (ts, im, app, "pkga/sub", ok("packages/pkga/src/sub.ts", 4)),
+        (ts, im, app, "dup-pkg", no(Reason::AmbiguousWorkspace)),
+        (ts, im, app, "pkgb", no(Reason::AmbiguousExports)),
+        (ts, im, app, "lodash", ext(5)),
+        (ts, im, app, "leftover", ext(5)),
+        (ts, im, app, "unknown-pkg", no(Reason::OutOfScope)),
+        (ts, im, app, "./missing", no(Reason::OutOfScope)),
+        (py, im, con, ".mod", ok("pkg/mod.py", 1)),
+        (py, im, con, ".", ok("pkg/__init__.py", 1)),
+        (py, im, con, ".sub", ok("pkg/sub/__init__.py", 1)),
+        (py, im, con, ".sub.leaf", ok("pkg/sub/leaf.py", 1)),
+        (py, im, con, "..other", ok("other.py", 1)),
+        (py, im, con, "...breaks", no(Reason::OutOfScope)),
+        (py, im, con, "top", ok("top.py", 2)),
+        (py, im, con, "pkg.mod", ok("pkg/mod.py", 2)),
+        (py, im, con, "tool", no(Reason::AmbiguousRoot)),
+        (py, im, con, "pkg.missing", ok("pkg/__init__.py", 3)),
+        (py, im, con, "pkg.sub.missing", ok("pkg/sub/__init__.py", 3)),
+        (py, im, con, "os", ext(4)),
+        (py, im, con, "os.path", ext(4)),
+        (py, im, con, "requests", ext(4)),
+        (py, im, con, "nosuch_pkg", no(Reason::OutOfScope)),
+    ]
+}
+
+/// Rust rows — kind-dispatched: mod_decl builds the tree, use walks.
+fn rust_cases() -> Vec<Case> {
+    let (rs, md, us) = (Lang::Rust, "mod_decl", "use");
+    let (rlib, rutil, deep) = ("src/lib.rs", "src/util.rs", "src/nest/deep.rs");
+    let (nmod, tbin) = ("src/nest/mod.rs", "tools/gen.rs");
+    let (uh, hl) = ("src/util/helper.rs", "crates/helper/src/lib.rs");
+    vec![
+        // R1: root / mod.rs / 2018-subdir / [[bin]] anchors, the
+        // E0761 double, and the #[path] honesty row
+        (rs, md, rlib, "util", ok("src/util.rs", 1)),
+        (rs, md, rlib, "nest", ok(nmod, 1)),
+        (rs, md, rutil, "helper", ok(uh, 1)),
+        (rs, md, nmod, "deep", ok(deep, 1)),
+        (rs, md, tbin, "gadget", ok("tools/gadget.rs", 1)),
+        (rs, md, rlib, "dual", no(Reason::AmbiguousPaths)),
+        (rs, md, rlib, "pathed", no(Reason::OutOfScope)),
+        // R2: crate:: walks; a walk ending AT the root sees lib+main
+        // and refuses; a folded fragment's pre-{ prefix is complete;
+        // a hand-folded mid-path fragment is refused
+        (rs, us, rutil, "crate::nest::deep", ok(deep, 2)),
+        (rs, us, deep, "crate::util::helper as h", ok(uh, 2)),
+        (rs, us, rutil, "crate::nest::{", ok(nmod, 2)),
+        (rs, us, rutil, "crate::missing", no(Reason::AmbiguousRoot)),
+        (rs, us, tbin, "crate::gadget", ok("tools/gadget.rs", 2)),
+        (rs, us, rutil, "crate::dual::x", no(Reason::AmbiguousPaths)),
+        (rs, us, rutil, "foo::", no(Reason::OutOfScope)),
+        // R3: the island red condition — an intra-file self::
+        // reference must come home to its own file, never dangle
+        (rs, us, deep, "self::helpers", ok(deep, 3)),
+        (rs, us, nmod, "self::deep", ok(deep, 3)),
+        (rs, us, deep, "super::x", ok(nmod, 3)),
+        (rs, us, deep, "super::super::util", ok("src/util.rs", 3)),
+        (rs, us, rutil, "super::super::x", no(Reason::OutOfScope)),
+        // R4: normalized member name, duplicate pair, nothing,
+        // registry dep, builtin (order breaks table-tail cloning)
+        (rs, us, rutil, "helper_lib::x", ok(hl, 4)),
+        (rs, us, rlib, "dup_crate", no(Reason::AmbiguousWorkspace)),
+        (rs, us, rutil, "nowhere::x", no(Reason::OutOfScope)),
+        (rs, us, rutil, "serde::Serialize", ext(4)),
+        (rs, us, rutil, "std::fs", ext(4)),
     ]
 }
 
@@ -166,9 +238,9 @@ fn rungs_resolve_and_refuse() {
         configs: &configs,
         root: &dir,
     };
-    for (lang, from, spec, want) in cases() {
-        let got = ladder::resolve(lang, from, spec, &scope);
-        assert_eq!(got, want, "{lang:?} {spec:?}");
+    for (lang, kind, from, spec, want) in import_cases().into_iter().chain(rust_cases()) {
+        let got = ladder::resolve(lang, kind, from, spec, &scope);
+        assert_eq!(got, want, "{lang:?} {kind} {spec:?}");
     }
 }
 
@@ -189,7 +261,7 @@ fn extends_cycle_is_config_depth() {
         root: &dir,
     };
     assert_eq!(
-        ladder::resolve(Lang::TypeScript, "a.ts", "anything", &scope),
+        ladder::resolve(Lang::TypeScript, "import", "a.ts", "anything", &scope),
         Outcome::Unresolved(Reason::ConfigDepth)
     );
 }
@@ -199,15 +271,15 @@ fn extends_cycle_is_config_depth() {
 #[test]
 fn missing_ladders_are_unsupported() {
     let dir = tmp("ladder-none");
-    let (files, configs) = materialize(&dir, &[("m.rs", "use x;\n")]);
+    let (files, configs) = materialize(&dir, &[("m.go", "package m\n")]);
     let scope = Scope {
         files: &files,
         configs: &configs,
         root: &dir,
     };
-    for lang in [Lang::Rust, Lang::Go, Lang::Markdown] {
+    for lang in [Lang::Go, Lang::Markdown] {
         assert_eq!(
-            ladder::resolve(lang, "m.rs", "x", &scope),
+            ladder::resolve(lang, "import", "m.go", "x", &scope),
             Outcome::Unresolved(Reason::Unsupported),
             "{lang:?}"
         );

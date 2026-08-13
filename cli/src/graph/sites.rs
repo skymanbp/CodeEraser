@@ -7,8 +7,10 @@
 //! Multi-line specifiers (a rustfmt-folded `use x::{a, b, …}`) keep
 //! ONE site whose spec is the first line's fragment: the spec string
 //! is a location anchor and an anti-invention check (the self-corpus
-//! drift gate in eval_graph.rs re-detects and substring-checks it) —
-//! resolution at 2f re-reads the AST, never parses spec strings.
+//! drift gate in eval_graph.rs re-detects and substring-checks it).
+//! Resolution consumes only the pre-`{` prefix, which formatting
+//! folds never cut; a fragment cut mid-path is refused, never
+//! guessed shallow (ladder/rs.rs module header).
 
 use super::md;
 use super::spec::{SiteKind, Specifier, sites as site_table};

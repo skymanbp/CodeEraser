@@ -1,8 +1,10 @@
 //! `ce graph` orchestration (M5-2b: `--sites` only — the resolver
 //! ladder lands at 2f, judgment at 2g). Walk → detect → aggregate;
 //! the same detector feeds the frozen slice instrument, so this
-//! module stays resolution-free by construction.
+//! module stays resolution-free by construction. Resolution lives in
+//! ladder/ with its config surfaces (cargo / roots / jsonc) beside it.
 
+pub mod cargo;
 pub mod jsonc;
 pub mod ladder;
 pub mod md;
