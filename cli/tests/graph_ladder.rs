@@ -6,14 +6,11 @@
 //! pairs were the dedup ratchet's first catch in this file. The
 //! broken-chain and dispatcher cases get their own trees.
 
-use codeeraser::graph::ladder::{self, Outcome, Reason, Scope};
-use codeeraser::graph::store;
+use codeeraser::graph::ladder::{self, Outcome, Reason};
 use codeeraser::scan::lang::Lang;
-use std::collections::BTreeSet;
-use std::path::Path;
 
 mod common;
-use common::tmp;
+use common::{ext, fixture, no, ok, pkg};
 
 /// The shared fixture tree — every rung's habitat, all languages.
 const TREE: &[(&str, &str)] = &[
@@ -104,42 +101,24 @@ const TREE: &[(&str, &str)] = &[
     ("crates/dupx/src/lib.rs", "\n"),
     ("crates/dupy/Cargo.toml", "[package]\nname='dup-crate'"),
     ("crates/dupy/src/lib.rs", "\n"),
+    // Go R1-R3: nested module, a local replace target, a test-only
+    // dir that refuses, and a duplicate module pair
+    (
+        "go.mod",
+        "module x.io/root\nreplace x.io/away => ./vendored\n",
+    ),
+    ("cmd/main.go", "package main\n"),
+    ("pkg/util/util.go", "package util\n"),
+    ("pkg/util/util_test.go", "package util\n"),
+    ("tstonly/only_test.go", "package tstonly\n"),
+    ("vendored/v.go", "package vendored\n"),
+    ("nested/go.mod", "module x.io/nested\n"),
+    ("nested/lib/lib.go", "package lib\n"),
+    ("dupg/a/go.mod", "module x.io/dup\n"),
+    ("dupg/a/x/x.go", "package x\n"),
+    ("dupg/b/go.mod", "module x.io/dup\n"),
+    ("dupg/b/x/x.go", "package x\n"),
 ];
-
-fn materialize(dir: &Path, tree: &[(&str, &str)]) -> (BTreeSet<String>, Vec<String>) {
-    let mut files = BTreeSet::new();
-    let mut configs = Vec::new();
-    for (rel, content) in tree {
-        let path = dir.join(rel);
-        std::fs::create_dir_all(path.parent().expect("parent")).expect("mkdir");
-        std::fs::write(&path, content).expect(rel);
-        if rel.starts_with("node_modules/") {
-            continue; // the real walk never enters node_modules
-        }
-        if Lang::from_path(&path).is_some() {
-            files.insert(rel.to_string());
-        }
-        if store::is_resolver_config(&path) {
-            configs.push(rel.to_string());
-        }
-    }
-    (files, configs)
-}
-
-fn ok(path: &str, rung: u8) -> Outcome {
-    Outcome::Resolved {
-        path: path.to_string(),
-        rung,
-    }
-}
-
-fn no(reason: Reason) -> Outcome {
-    Outcome::Unresolved(reason)
-}
-
-fn ext(rung: u8) -> Outcome {
-    Outcome::External { rung }
-}
 
 /// (lang, site kind, from-file, spec) → expected outcome. Aliases
 /// keep every row on one line: the table IS the spec, scannable or
@@ -186,6 +165,27 @@ fn import_cases() -> Vec<Case> {
     ]
 }
 
+/// Go rows — package granularity: pkg() targets a DIRECTORY, and a
+/// test-only dir, a double-declared module, and a dotless non-std
+/// head all refuse.
+fn go_cases() -> Vec<Case> {
+    let (go, im, gm, nlib) = (Lang::Go, "import", "cmd/main.go", "nested/lib/lib.go");
+    let pu = "pkg/util";
+    vec![
+        (go, im, gm, "x.io/root/pkg/util", pkg(pu, 1)),
+        (go, im, nlib, "x.io/root/pkg/util", pkg(pu, 1)),
+        (go, im, gm, "x.io/nested/lib", pkg("nested/lib", 1)),
+        (go, im, gm, "x.io/root/tstonly", no(Reason::OutOfScope)),
+        (go, im, gm, "x.io/root/missing", no(Reason::OutOfScope)),
+        (go, im, gm, "x.io/away", pkg("vendored", 2)),
+        (go, im, gm, "x.io/dup/x", no(Reason::AmbiguousWorkspace)),
+        (go, im, gm, "fmt", ext(3)),
+        (go, im, gm, "notreal", no(Reason::OutOfScope)),
+        (go, im, gm, "net/http", ext(3)),
+        (go, im, gm, "github.com/spf13/pflag", ext(3)),
+    ]
+}
+
 /// Rust rows — kind-dispatched: mod_decl builds the tree, use walks.
 fn rust_cases() -> Vec<Case> {
     let (rs, md, us) = (Lang::Rust, "mod_decl", "use");
@@ -219,26 +219,25 @@ fn rust_cases() -> Vec<Case> {
         (rs, us, deep, "super::x", ok(nmod, 3)),
         (rs, us, deep, "super::super::util", ok("src/util.rs", 3)),
         (rs, us, rutil, "super::super::x", no(Reason::OutOfScope)),
-        // R4: normalized member name, duplicate pair, nothing,
-        // registry dep, builtin (order breaks table-tail cloning)
+        // R4: normalized member name, duplicate pair, registry dep,
+        // nothing, builtin (order breaks table-tail cloning)
         (rs, us, rutil, "helper_lib::x", ok(hl, 4)),
         (rs, us, rlib, "dup_crate", no(Reason::AmbiguousWorkspace)),
-        (rs, us, rutil, "nowhere::x", no(Reason::OutOfScope)),
         (rs, us, rutil, "serde::Serialize", ext(4)),
+        (rs, us, rutil, "nowhere::x", no(Reason::OutOfScope)),
         (rs, us, rutil, "std::fs", ext(4)),
     ]
 }
 
 #[test]
 fn rungs_resolve_and_refuse() {
-    let dir = tmp("ladder-rungs");
-    let (files, configs) = materialize(&dir, TREE);
-    let scope = Scope {
-        files: &files,
-        configs: &configs,
-        root: &dir,
-    };
-    for (lang, kind, from, spec, want) in import_cases().into_iter().chain(rust_cases()) {
+    let fx = fixture("ladder-rungs", TREE);
+    let scope = fx.scope();
+    let all = import_cases()
+        .into_iter()
+        .chain(rust_cases())
+        .chain(go_cases());
+    for (lang, kind, from, spec, want) in all {
         let got = ladder::resolve(lang, kind, from, spec, &scope);
         assert_eq!(got, want, "{lang:?} {kind} {spec:?}");
     }
@@ -248,20 +247,16 @@ fn rungs_resolve_and_refuse() {
 /// beyond the modeled chain is config_depth, never a guess.
 #[test]
 fn extends_cycle_is_config_depth() {
-    let dir = tmp("ladder-cycle");
-    let tree: &[(&str, &str)] = &[
-        ("a.ts", "export {};\n"),
-        ("tsconfig.json", "{\"extends\": \"./other.json\"}\n"),
-        ("other.json", "{\"extends\": \"./tsconfig.json\"}\n"),
-    ];
-    let (files, configs) = materialize(&dir, tree);
-    let scope = Scope {
-        files: &files,
-        configs: &configs,
-        root: &dir,
-    };
+    let fx = fixture(
+        "ladder-cycle",
+        &[
+            ("a.ts", "export {};\n"),
+            ("tsconfig.json", "{\"extends\": \"./other.json\"}\n"),
+            ("other.json", "{\"extends\": \"./tsconfig.json\"}\n"),
+        ],
+    );
     assert_eq!(
-        ladder::resolve(Lang::TypeScript, "import", "a.ts", "anything", &scope),
+        ladder::resolve(Lang::TypeScript, "import", "a.ts", "anything", &fx.scope()),
         Outcome::Unresolved(Reason::ConfigDepth)
     );
 }
@@ -270,18 +265,9 @@ fn extends_cycle_is_config_depth() {
 /// rows, never silent skips (dispatcher contract).
 #[test]
 fn missing_ladders_are_unsupported() {
-    let dir = tmp("ladder-none");
-    let (files, configs) = materialize(&dir, &[("m.go", "package m\n")]);
-    let scope = Scope {
-        files: &files,
-        configs: &configs,
-        root: &dir,
-    };
-    for lang in [Lang::Go, Lang::Markdown] {
-        assert_eq!(
-            ladder::resolve(lang, "import", "m.go", "x", &scope),
-            Outcome::Unresolved(Reason::Unsupported),
-            "{lang:?}"
-        );
-    }
+    let fx = fixture("ladder-none", &[("n.md", "[x](./y.md)\n")]);
+    assert_eq!(
+        ladder::resolve(Lang::Markdown, "link", "n.md", "./y.md", &fx.scope()),
+        Outcome::Unresolved(Reason::Unsupported)
+    );
 }

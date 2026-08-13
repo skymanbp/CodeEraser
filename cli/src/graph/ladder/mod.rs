@@ -18,6 +18,7 @@ use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
 use std::path::Path;
 
+pub mod go;
 pub mod py;
 pub mod rs;
 pub mod ts;
@@ -51,6 +52,13 @@ pub enum Outcome {
         path: String,
         rung: Rung,
     },
+    /// Exactly one in-scope PACKAGE directory (Go): the node identity
+    /// is (pkg_dir, "") and granularity is package — collapsing to a
+    /// single file would be a guess (design §4 row 4).
+    ResolvedPackage {
+        dir: String,
+        rung: Rung,
+    },
     /// Outside the corpus by design (registry dep, node_modules).
     External {
         rung: Rung,
@@ -77,7 +85,8 @@ pub fn resolve(lang: Lang, kind: &str, from: &str, spec: &str, scope: &Scope) ->
         Lang::TypeScript | Lang::Tsx => ts::resolve(from, spec, scope),
         Lang::Python => py::resolve(from, spec, scope),
         Lang::Rust => rs::resolve(kind, from, spec, scope),
-        _ => Outcome::Unresolved(Reason::Unsupported),
+        Lang::Go => go::resolve(from, spec, scope),
+        Lang::Markdown => Outcome::Unresolved(Reason::Unsupported),
     }
 }
 

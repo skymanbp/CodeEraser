@@ -2,9 +2,11 @@
 //! ladder lands at 2f, judgment at 2g). Walk → detect → aggregate;
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
-//! ladder/ with its config surfaces (cargo / roots / jsonc) beside it.
+//! ladder/ with its config surfaces (cargo / gomod / roots / jsonc)
+//! beside it.
 
 pub mod cargo;
+pub mod gomod;
 pub mod jsonc;
 pub mod ladder;
 pub mod md;
