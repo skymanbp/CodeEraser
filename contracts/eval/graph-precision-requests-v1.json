@@ -1,0 +1,314 @@
+{
+  "corpus": {
+    "name": "requests",
+    "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "ffa388fe71cc025f807bde12b9dda662082f5e8e",
+    "dirty": true
+  },
+  "method": "the frozen graph-sample rows of this corpus, resolved by the shipped ladder against the pinned tree materialized under a scratch root (every in-scope file sha-checked against the frozen slice — a polluted materialization never scores, G12), judged against the frozen audit truth. An in-corpus answer matches exactly, or at file level when the resolver made no unit claim (GT definition units are extra precision; symbol binding is the future R5 stance). External is an answer — external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over EVERY site of the frozen universe: its resolution rate is a recall CEILING — constructs the detector cannot see are in no denominator. Cut rule (pre-registered): publish the full per-rung table; the loosest minRung clearing 0.90 is the release knob.",
+  "rows": [
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 8,
+      "nth": 0,
+      "path": "tests/test_utils.py",
+      "rank": "061aa797717d2e4f3677df4be0d5c10225bca41f48f65bd567445aaa4c7331b0",
+      "reason": null,
+      "rung": 4,
+      "spec": "unittest",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "py",
+      "line": 1,
+      "nth": 0,
+      "path": "tests/test_testserver.py",
+      "rank": "08e1f1d0a836f32b094be41cd2dc42ebf361c1f0755fd511c473c14aaa8de0f7",
+      "reason": null,
+      "rung": 4,
+      "spec": "socket",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link",
+      "lang": "md",
+      "line": 228,
+      "nth": 0,
+      "path": "HISTORY.md",
+      "rank": "0272673c7690eda94ed03596388388110891b5d891082bb9e18e30c6a77b43b2",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/psf/requests/security/advisories/GHSA-j8r2-6x86-q33q",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "py",
+      "line": 10,
+      "nth": 0,
+      "path": "src/requests/models.py",
+      "rank": "0d17a172adcebf3ecf2e361cf84b9389463ff938f18ba33589ecda81d27d89fe",
+      "reason": null,
+      "rung": 4,
+      "spec": "datetime",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "src/requests/__init__.py",
+      "external": false,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 12,
+      "nth": 0,
+      "path": "tests/test_utils.py",
+      "rank": "02ddab6b5cc6caa122d2481d351c4d93bc150d3b8a2002e3784c0ecc7f8a220a",
+      "reason": null,
+      "rung": 2,
+      "spec": "requests",
+      "truth": "src/requests/compat.py",
+      "verdict": "wrong"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 27,
+      "nth": 0,
+      "path": "src/requests/models.py",
+      "rank": "0493c3cb7bf94ab865fd30ba683de7347afa575befcd0febd37b26a40233ded7",
+      "reason": null,
+      "rung": 4,
+      "spec": "urllib3.exceptions",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "py",
+      "line": 5,
+      "nth": 0,
+      "path": "src/requests/help.py",
+      "rank": "02d72c8a3ae71fb27855095d7adf65fd9e91292e4421288b16350ee065db8a74",
+      "reason": null,
+      "rung": 4,
+      "spec": "ssl",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 90,
+      "nth": 0,
+      "path": "src/requests/compat.py",
+      "rank": "07305b3f05999391dab268e1110b6db7c9cd10314611ad479fb04050894bbb36",
+      "reason": null,
+      "rung": 4,
+      "spec": "urllib.parse",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 71,
+      "nth": 0,
+      "path": "src/requests/adapters.py",
+      "rank": "0a010fb1fe588c3d99c356b9a26918997f544a2a0095d25bb256e389fbd61293",
+      "reason": null,
+      "rung": 4,
+      "spec": "urllib3.connectionpool",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 78,
+      "nth": 0,
+      "path": "src/requests/compat.py",
+      "rank": "0896159d24ab036ff812f50e637e9508d1195d7c146132ee0e5419c3ce0113a9",
+      "reason": null,
+      "rung": 4,
+      "spec": "json",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": false,
+      "kind": "import",
+      "lang": "py",
+      "line": 32,
+      "nth": 0,
+      "path": "src/requests/help.py",
+      "rank": "09c32bc8b310b4b573779c7acdd15d81632acb02c2efd5491076ac44f542708c",
+      "reason": "out_of_scope",
+      "rung": null,
+      "spec": "OpenSSL",
+      "truth": "external",
+      "verdict": "unresolved_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 81,
+      "nth": 0,
+      "path": "src/requests/compat.py",
+      "rank": "07ddfaaebf12ec331247df8cca78560284ca909f8ac69ca8a8cdb799d6c81b81",
+      "reason": null,
+      "rung": 4,
+      "spec": "collections",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 72,
+      "nth": 0,
+      "path": "src/requests/utils.py",
+      "rank": "06f5c9343a6ec418fbd85207afbed08ca78932a32b3cf1577054e0319616cd12",
+      "reason": null,
+      "rung": 4,
+      "spec": "http.cookiejar",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "src/requests/exceptions.py",
+      "external": false,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 63,
+      "nth": 0,
+      "path": "src/requests/utils.py",
+      "rank": "0191ec2217341c19b3c7dc03f0b360ab84b405d2acf303eb3b6a09299469948a",
+      "reason": null,
+      "rung": 1,
+      "spec": ".exceptions",
+      "truth": "src/requests/exceptions.py",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/requests/__init__.py",
+      "external": false,
+      "kind": "import",
+      "lang": "py",
+      "line": 27,
+      "nth": 0,
+      "path": "docs/conf.py",
+      "rank": "0dde98e3385a91de22131276cf8c7091eb399d92863e954f85f8230405378aea",
+      "reason": null,
+      "rung": 2,
+      "spec": "requests",
+      "truth": "src/requests/__init__.py",
+      "verdict": "correct"
+    }
+  ],
+  "schema": "ce.eval-graph-precision/1.0.0",
+  "summary": {
+    "by_lang": {
+      "md": {
+        "external_ok": 1
+      },
+      "py": {
+        "correct": 2,
+        "external_ok": 10,
+        "unresolved_ok": 1,
+        "wrong": 1
+      }
+    },
+    "cut": [
+      [
+        1,
+        1,
+        0,
+        1.0
+      ],
+      [
+        2,
+        2,
+        1,
+        0.6666666666666666
+      ],
+      [
+        3,
+        2,
+        1,
+        0.6666666666666666
+      ],
+      [
+        4,
+        2,
+        1,
+        0.6666666666666666
+      ],
+      [
+        5,
+        2,
+        1,
+        0.6666666666666666
+      ]
+    ],
+    "in_corpus_truths": 3,
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "verdicts": {
+      "correct": 2,
+      "external_ok": 11,
+      "unresolved_ok": 1,
+      "wrong": 1
+    }
+  },
+  "universe": {
+    "r0_share": 0.2765957446808511,
+    "resolution_by": {
+      "md/image/r5": 7,
+      "md/link/r1": 2,
+      "md/link/r5": 36,
+      "md/url/r5": 1,
+      "py/import/r2": 6,
+      "py/import/r4": 85,
+      "py/import_from/r1": 89,
+      "py/import_from/r2": 22,
+      "py/import_from/r3": 1,
+      "py/import_from/r4": 80
+    },
+    "resolution_rate": 0.9113573407202216,
+    "total_sites": 361,
+    "unresolved_by": {
+      "out_of_scope": 32
+    }
+  }
+}

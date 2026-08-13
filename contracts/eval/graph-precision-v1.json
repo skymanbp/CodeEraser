@@ -1,0 +1,362 @@
+{
+  "corpus": {
+    "name": null,
+    "tip": "60f73e3bea7681721a2f572e64788948a17830f6"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "ffa388fe71cc025f807bde12b9dda662082f5e8e",
+    "dirty": true
+  },
+  "method": "the frozen graph-sample rows of this corpus, resolved by the shipped ladder against the pinned tree materialized under a scratch root (every in-scope file sha-checked against the frozen slice — a polluted materialization never scores, G12), judged against the frozen audit truth. An in-corpus answer matches exactly, or at file level when the resolver made no unit claim (GT definition units are extra precision; symbol binding is the future R5 stance). External is an answer — external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over EVERY site of the frozen universe: its resolution rate is a recall CEILING — constructs the detector cannot see are in no denominator. Cut rule (pre-registered): publish the full per-rung table; the loosest minRung clearing 0.90 is the release knob.",
+  "rows": [
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 26,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/go/cobra.go",
+      "rank": "07f016cbb85cfd1e258ca8ca4abb758f95ddd151aec3e2f0576ff908be01d7d1",
+      "reason": null,
+      "rung": 3,
+      "spec": "strings",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 24,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "rank": "05f3c07da8569b5040a80b8f37437993da4982303b9068b874af2fdaebb9fcc9",
+      "reason": null,
+      "rung": 4,
+      "spec": "typing",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "use",
+      "lang": "rs",
+      "line": 15,
+      "nth": 0,
+      "path": "cli/src/graph/mod.rs",
+      "rank": "036853dadf6466b4c2a9d6a723549ee7c1a5cec01e9abe323ec02a0f93e61d91",
+      "reason": null,
+      "rung": 4,
+      "spec": "std::process::ExitCode",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "cli/src/scan/metrics/mod.rs",
+      "external": false,
+      "kind": "use",
+      "lang": "rs",
+      "line": 8,
+      "nth": 0,
+      "path": "cli/tests/report_schema.rs",
+      "rank": "002fb3c82058838b86f5781e1e3cd605b524cc317c33a0f97f3410fc58d89107",
+      "reason": null,
+      "rung": 4,
+      "spec": "codeeraser::scan::metrics::{FileMetrics, FnMetrics}",
+      "truth": "cli/src/scan/metrics/mod.rs",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "use",
+      "lang": "rs",
+      "line": 46,
+      "nth": 0,
+      "path": "cli/tests/eval_l2.rs",
+      "rank": "044468de60e420bf892c6c58158dcdcbe9d64618687dd705649472162bec5dfa",
+      "reason": null,
+      "rung": 4,
+      "spec": "std::collections::HashMap",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "use",
+      "lang": "rs",
+      "line": 7,
+      "nth": 0,
+      "path": "cli/tests/eval_l2_parts/cross.rs",
+      "rank": "010ad504abf5e33281979f08a026c8cf863467708ae336268c7c4589770259df",
+      "reason": null,
+      "rung": 4,
+      "spec": "serde_json::{Value, json}",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 18,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/go/completions.go",
+      "rank": "01234d96bd009a57d6fd971a17f6187edad2d6d4fcfafdc2049d640f8e8335d4",
+      "reason": null,
+      "rung": 3,
+      "spec": "fmt",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "py",
+      "line": 16,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/python/docs__conf.py",
+      "rank": "05ddbc091d641d2b3599705235211228eb1079ea812f563e63f883b2dbed7dc5",
+      "reason": null,
+      "rung": 4,
+      "spec": "os",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 19,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/go/bash_completionsV2.go",
+      "rank": "05ea5e33880da836c498f815ee4f1216297ad3cecc739dadfa4104e0fe48001c",
+      "reason": null,
+      "rung": 3,
+      "spec": "fmt",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "use",
+      "lang": "rs",
+      "line": 6,
+      "nth": 0,
+      "path": "cli/src/daemon/proto.rs",
+      "rank": "03db52054bde06120a89a3fc59a9c543b2b1b34ad9dafb8fefc8c0fe9c918dfc",
+      "reason": null,
+      "rung": 4,
+      "spec": "serde::{Deserialize, Serialize}",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+      "external": false,
+      "kind": "use",
+      "lang": "rs",
+      "line": 220,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+      "rank": "013dff93757e0db0bbb237fa4b6558398e81e9a187e5090c0c1b549736f904f5",
+      "reason": null,
+      "rung": 3,
+      "spec": "self::DirEntryInner::*",
+      "truth": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs#DirEntryInner",
+      "verdict": "correct"
+    },
+    {
+      "answered": "cli/tests/eval_commit_review/mod.rs",
+      "external": false,
+      "kind": "mod_decl",
+      "lang": "rs",
+      "line": 26,
+      "nth": 0,
+      "path": "cli/tests/eval_commit_labels.rs",
+      "rank": "001ea999e4a697e55ab39c329d05e471bdbc290f9f254fee8f87352a96836db6",
+      "reason": null,
+      "rung": 1,
+      "spec": "eval_commit_review",
+      "truth": "cli/tests/eval_commit_review/mod.rs",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 24,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/go/cobra.go",
+      "rank": "0b779e8567226656f65a78680208348b586dfecb37bcdfe1591530ccd65ca073",
+      "reason": null,
+      "rung": 3,
+      "spec": "reflect",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 22,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/go/command_win.go",
+      "rank": "0dd18c362983ad094b868b252815181dc8a5a574ce8bfa4cb5efbbd46584fd0c",
+      "reason": null,
+      "rung": 3,
+      "spec": "os",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 29,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/go/cobra.go",
+      "rank": "12b2dbebb9798b026fa1a66b78be1bbb5b4c010e2657df5a62c16348cd36ed67",
+      "reason": null,
+      "rung": 3,
+      "spec": "unicode",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "cli/src/fourclass",
+      "external": false,
+      "kind": "link",
+      "lang": "md",
+      "line": 66,
+      "nth": 0,
+      "path": "docs/EVAL-SET.md",
+      "rank": "039c295b9034ecf57ec1463203ccbaa0c75ab4c286fa815cf37d4d8bd8ff6b26",
+      "reason": null,
+      "rung": 1,
+      "spec": "../cli/src/fourclass/",
+      "truth": "cli/src/fourclass",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import_from",
+      "lang": "py",
+      "line": 12,
+      "nth": 0,
+      "path": "contracts/fixtures/crosscheck/python/src__requests__structures.py",
+      "rank": "03cc9816cad8f14cf354a8758e7aa13d9364cf5b60a7a328a90a59b122018501",
+      "reason": null,
+      "rung": 4,
+      "spec": "typing",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "use",
+      "lang": "rs",
+      "line": 12,
+      "nth": 0,
+      "path": "cli/src/health.rs",
+      "rank": "03eea60af6b3f22594beacc25dbd05a3fdcca1a0756fe92e0126b069f3a7c791",
+      "reason": null,
+      "rung": 4,
+      "spec": "std::path::{Path, PathBuf}",
+      "truth": "external",
+      "verdict": "external_ok"
+    }
+  ],
+  "schema": "ce.eval-graph-precision/1.0.0",
+  "summary": {
+    "by_lang": {
+      "go": {
+        "external_ok": 6
+      },
+      "md": {
+        "correct": 1
+      },
+      "py": {
+        "external_ok": 3
+      },
+      "rs": {
+        "correct": 3,
+        "external_ok": 5
+      }
+    },
+    "cut": [
+      [
+        1,
+        2,
+        0,
+        1.0
+      ],
+      [
+        2,
+        2,
+        0,
+        1.0
+      ],
+      [
+        3,
+        3,
+        0,
+        1.0
+      ],
+      [
+        4,
+        4,
+        0,
+        1.0
+      ],
+      [
+        5,
+        4,
+        0,
+        1.0
+      ]
+    ],
+    "in_corpus_truths": 4,
+    "precision": 1.0,
+    "recall": 1.0,
+    "verdicts": {
+      "correct": 4,
+      "external_ok": 14
+    }
+  },
+  "universe": {
+    "r0_share": 0.18147448015122875,
+    "resolution_by": {
+      "go/import/r3": 26,
+      "md/link/r1": 9,
+      "md/link/r5": 9,
+      "md/url/r5": 5,
+      "py/import/r4": 19,
+      "py/import_from/r4": 13,
+      "rs/mod_decl/r1": 87,
+      "rs/use/r2": 60,
+      "rs/use/r3": 58,
+      "rs/use/r4": 243
+    },
+    "resolution_rate": 0.7931034482758621,
+    "total_sites": 667,
+    "unresolved_by": {
+      "ambiguous_root": 1,
+      "out_of_scope": 137
+    }
+  }
+}

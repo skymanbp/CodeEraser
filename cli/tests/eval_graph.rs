@@ -14,86 +14,17 @@ mod eval_support;
 
 use codeeraser::graph::sites::detect;
 use eval_support::{
-    content_sha, eval_doc, generated_from, git_run, kind_counts, lang_of, load, write_doc,
+    SCOPE_EXCLUDES, SCOPE_EXTS, classify_path, content_sha, eval_doc, generated_from, git_run,
+    graph_corpus, kind_counts, lang_of, load, write_doc,
 };
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
-
-/// Frozen graph-universe scope: canonical extensions only (variant
-/// suffixes stay out on every corpus — the COMMIT_SCOPE argument:
-/// one frozen scope keeps corpora comparable), minus machine-local
-/// memory/. The crosscheck fixture islands are deliberately IN scope
-/// even though ce.toml excludes them from the product walk: their
-/// imports have no in-corpus target, so they are the designed-in
-/// negative control (design §5, judge defect D2).
-const SCOPE_EXTS: [&str; 5] = ["go", "md", "py", "rs", "ts"];
-const SCOPE_EXCLUDES: [&str; 2] = ["memory/", "cli/memory/"];
-
-/// The frozen corpus set — a deleted or renamed slice doc reddens CI
-/// instead of blinding it (design G10; Opus review: the first gate
-/// held no per-corpus anchor at all). Sorted; None = the self doc.
-const FROZEN_CORPORA: [Option<&str>; 5] = [
-    None,
-    Some("cobra"),
-    Some("requests"),
-    Some("ripgrep"),
-    Some("zod"),
-];
 
 /// Pre-registered falsification constants (design §5), one binding
 /// for generator AND gate — duplicated literals were the exact
 /// throat-drift shape this file polices elsewhere (Opus review).
 fn constants() -> Value {
     json!({"min_per_lang": 15, "r0_share_trigger": 0.80})
-}
-
-/// The self universe: pinned at the commit holding the CURRENT
-/// detector, so regeneration is reproducible regardless of later
-/// history. A detector change bumps this pin and re-freezes the
-/// slice (design RG3 — first fired by the M5-2b-iii hardening batch,
-/// which replaced the 2b-i pin eb5fe24).
-const GRAPH_SELF_TIP: &str = "60f73e3bea7681721a2f572e64788948a17830f6";
-
-/// (corpus name, pinned tree OID). Self unless CE_SLICE_REPO points
-/// elsewhere; external corpora must name themselves and pin their
-/// tip (rev-parsed to a full OID — a movable rev would make the doc
-/// unreproducible).
-fn graph_corpus() -> (Option<String>, String) {
-    let get = |k: &str| std::env::var(k).ok().filter(|v| !v.trim().is_empty());
-    if std::env::var("CE_SLICE_REPO").is_err() {
-        return (None, GRAPH_SELF_TIP.into());
-    }
-    let name = get("CE_GRAPH_NAME").expect("CE_SLICE_REPO needs CE_GRAPH_NAME");
-    let tip = get("CE_GRAPH_TIP").expect("CE_SLICE_REPO needs CE_GRAPH_TIP (pinned universe)");
-    let full = git_run(
-        &["rev-parse", "--verify", &format!("{tip}^{{commit}}")],
-        false,
-    );
-    (Some(name), full.trim().to_string())
-}
-
-/// Scope test for one tree path: Ok(lang code) or the itemized
-/// exclusion category the doc reports.
-fn classify_path(path: &str) -> Result<&'static str, &'static str> {
-    if SCOPE_EXCLUDES.iter().any(|p| path.starts_with(p)) {
-        return Err("excluded_prefix");
-    }
-    let name = path.rsplit('/').next().unwrap_or(path);
-    let Some((stem, ext)) = name.rsplit_once('.') else {
-        return Err("other_extension");
-    };
-    if stem.is_empty() {
-        return Err("other_extension"); // dotfiles (.gitignore, …)
-    }
-    match ext {
-        "go" => Ok("go"),
-        "md" => Ok("md"),
-        "py" => Ok("py"),
-        "rs" => Ok("rs"),
-        "ts" => Ok("ts"),
-        "tsx" | "mts" | "cts" | "markdown" => Err("variant_extension"),
-        _ => Err("other_extension"),
-    }
 }
 
 /// One inventory row: content identity (sha256 of the utf8-lossy
@@ -178,17 +109,7 @@ fn generate_graph_slice() {
 /// sites (D2-4 — the 2b exit criterion).
 #[test]
 fn graph_slice_consistent() {
-    let docs = eval_support::frozen_docs("graph-slice");
-    let mut names: Vec<Option<String>> = docs
-        .iter()
-        .map(|p| eval_support::doc_suffix(p, "graph-slice"))
-        .collect();
-    names.sort(); // file-name order interleaves the self doc
-    let expected: Vec<Option<String>> = FROZEN_CORPORA
-        .iter()
-        .map(|n| n.map(str::to_string))
-        .collect();
-    assert_eq!(names, expected, "frozen corpus set drifted (G10)");
+    let docs = eval_support::assert_frozen_corpus_set("graph-slice");
     let mut lang_sites: BTreeMap<String, u64> = BTreeMap::new();
     for path in &docs {
         let doc = load(path);

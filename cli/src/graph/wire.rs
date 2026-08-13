@@ -10,7 +10,7 @@
 //! codes below are frozen positions like store::KINDS — renaming or
 //! reordering is a GRAPH_REV bump.
 
-use super::ladder::{self, Outcome, Scope};
+use super::ladder::{self, Outcome, Scope, Site};
 use super::store::{CachedSite, EdgeRow, kind_label};
 use crate::scan::lang::Lang;
 use std::path::Path;
@@ -37,7 +37,13 @@ pub fn edges(site: &CachedSite, scope: &Scope) -> Vec<EdgeRow> {
     let Some(kind) = kind_label(site.kind) else {
         return Vec::new();
     };
-    let outcome = ladder::resolve(lang, kind, &site.file, &site.spec, scope);
+    let at = Site {
+        kind,
+        from: &site.file,
+        spec: &site.spec,
+        line: usize::try_from(site.line).unwrap_or(1),
+    };
+    let outcome = ladder::resolve(lang, &at, scope);
     rows(kind, outcome)
 }
 

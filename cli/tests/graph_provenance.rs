@@ -6,7 +6,7 @@
 
 mod eval_support;
 
-use eval_support::git_in;
+use eval_support::{eval_doc, git_in, load};
 
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
 
@@ -113,6 +113,35 @@ fn audit_precedes_any_resolver() {
             assert!(
                 is_ancestor(audit, &intro),
                 "{path}: graph code landed inside the sample→audit blind window (G13)"
+            );
+        }
+    }
+}
+
+/// The third leg (design G13 verbatim): the audit froze before any
+/// scoring ran — every precision doc's generated_from.commit
+/// strictly descends from every audit table.
+#[test]
+fn audit_precedes_scoring() {
+    require_full_history();
+    let audits = audit_intros();
+    for name in [
+        None,
+        Some("cobra"),
+        Some("requests"),
+        Some("ripgrep"),
+        Some("zod"),
+    ] {
+        let stem = match name {
+            Some(n) => format!("graph-precision-{n}"),
+            None => "graph-precision".into(),
+        };
+        let doc = load(&eval_doc(&stem));
+        let commit = doc["generated_from"]["commit"].as_str().expect("commit");
+        for audit in &audits {
+            assert!(
+                is_strict_ancestor(audit, commit),
+                "{stem}: scored before the audit froze (G13)"
             );
         }
     }

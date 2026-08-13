@@ -24,8 +24,10 @@ use std::path::Path;
 /// Bump when site extraction or ladder semantics change: it sits in
 /// the meta cache key, so stale graph rows are wiped (RG3 standing
 /// cost: a detector change also re-freezes the slice + voids the
-/// audited sample).
-pub const GRAPH_REV: i64 = 1;
+/// audited sample). 2 = the 2h ladder refinements (inline-module
+/// self/super anchoring, R4 member-tree descent) — ladder-only, so
+/// the frozen site universe stands.
+pub const GRAPH_REV: i64 = 2;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

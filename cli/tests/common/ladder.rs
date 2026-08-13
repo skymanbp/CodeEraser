@@ -65,12 +65,30 @@ impl Fixture {
 pub type Case = (Lang, &'static str, &'static str, &'static str, Outcome);
 
 /// Drive a case table through the dispatcher against one
-/// materialized fixture — the shared act + assert throat.
+/// materialized fixture — the shared act + assert throat. Case rows
+/// carry no line: table fixtures hold no inline modules, so line 1
+/// is exact (the inline-module cases pass real lines directly).
 pub fn run_cases(fx: &Fixture, cases: Vec<Case>) {
     let scope = fx.scope();
     for (lang, kind, from, spec, want) in cases {
-        let got = ladder::resolve(lang, kind, from, spec, &scope);
+        let got = ladder::resolve(lang, &site(kind, from, spec, 1), &scope);
         assert_eq!(got, want, "{lang:?} {kind} {spec:?}");
+    }
+}
+
+/// A one-off site for direct dispatch — the inline-module cases need
+/// a REAL line; the tables go through run_cases at line 1.
+pub fn site(
+    kind: &'static str,
+    from: &'static str,
+    spec: &'static str,
+    line: usize,
+) -> ladder::Site<'static> {
+    ladder::Site {
+        kind,
+        from,
+        spec,
+        line,
     }
 }
 

@@ -12,32 +12,14 @@
 
 mod eval_support;
 
-use eval_support::{eval_doc, frozen_docs, load};
+use eval_support::{TRUTH_KEYWORDS, eval_doc, frozen_docs, load, review_doc};
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
+// "mismatch" is NOT truth vocabulary (TRUTH_KEYWORDS): an auditor
+// reporting a frozen site it could not find must redden the gate,
+// not pass as a path.
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
-
-/// Non-path truth verdicts (design §5 vocabulary). Everything else
-/// must be a repo-relative "path" or "path#unit". "mismatch" is NOT
-/// vocabulary: an auditor reporting a frozen site it could not find
-/// must redden the gate, not pass as a path.
-const TRUTH_KEYWORDS: [&str; 4] = ["external", "dynamic", "ambiguous", "none"];
-
-fn review_text(corpus: &str) -> &'static str {
-    match corpus {
-        "cobra" => include_str!("eval_graph_review/cobra.json"),
-        "requests" => include_str!("eval_graph_review/requests.json"),
-        "ripgrep" => include_str!("eval_graph_review/ripgrep.json"),
-        "self" => include_str!("eval_graph_review/self.json"),
-        "zod" => include_str!("eval_graph_review/zod.json"),
-        other => panic!("no review table for {other}"),
-    }
-}
-
-fn review_doc(corpus: &str) -> Value {
-    serde_json::from_str(review_text(corpus)).expect(corpus)
-}
 
 /// The corpus's frozen file universe, from its in-repo slice doc —
 /// path-shaped truths bind to real universe members with zero git
@@ -82,14 +64,8 @@ fn check_corpus(corpus: &str, doc: &Value, sample_rows: &[Value]) {
     assert_eq!(audited.len(), sampled.len(), "{corpus}: audited row count");
     let mut seen = BTreeSet::new();
     for row in audited {
-        let rank = row["rank"].as_str().expect("rank");
-        assert!(seen.insert(rank), "{corpus}: duplicate audit row {rank}");
-        let s = sampled
-            .get(rank)
-            .unwrap_or_else(|| panic!("{corpus}: phantom audit row {rank}"));
-        for key in ["path", "line", "nth", "kind", "spec"] {
-            assert_eq!(row[key], s[key], "{corpus}/{rank}: {key} echo drifted");
-        }
+        let (rank, s) = eval_support::bijective_row(corpus, row, &sampled, &mut seen);
+        eval_support::assert_identity_echo(corpus, rank, row, s);
         assert_eq!(doc["tip"], s["commit"], "{corpus}: tip vs sampled commit");
         check_verdict(corpus, row, &universe);
     }

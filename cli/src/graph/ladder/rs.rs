@@ -8,11 +8,16 @@
 //! also lands `pub use` edges on the re-exporter (zero hops meets the
 //! design's ≤1 bound; the via_reexport flag needs symbol binding,
 //! 2g). R3 self::/super:: — the same tree anchored at the site's own
-//! file; a self:: path matching no child resolves to the file ITSELF
+//! file, with inline `mod` depth consumed BEFORE any file climb (the
+//! audited interpolate.rs/globset rows: a use inside `#[cfg(test)]
+//! mod tests` means super IS the enclosing file); a self:: path in an
+//! inline module or matching no child resolves to the file ITSELF
 //! (the island red condition: intra-file references come home, never
 //! dangle). R4 bare head: builtin crates and declared dependencies
 //! (registry or out-of-scope path) ⇒ External; an in-scope package
-//! matching by normalized name ('-' → '_') resolves to its lib root.
+//! matching by normalized name ('-' → '_') anchors at its lib root
+//! and the remaining segments descend its tree — the audit records
+//! the definition file, not the crate façade.
 //!
 //! R5 honesty: `#[path]` remaps need attribute text only the AST has
 //! — until phase 1.5 hands content over they land Unresolved (recall
@@ -23,25 +28,27 @@
 //! groups, so the pre-`{` prefix — all the walk consumes — is
 //! complete whenever a brace is present; a fragment ending in `::`
 //! with NO brace is a hand-folded cut, refused rather than guessed
-//! shallow. The blind spot (newline BEFORE `::`) reads as a complete
-//! spec and is repaid at phase 1.5.
+//! shallow. Symbol binding stays future work (the audited
+//! BinaryDetection re-export row is a KNOWN wrong): a name
+//! re-exported by the façade lands on the façade file.
 
-use super::{Outcome, Reason, Scope};
+use super::rs_tree::{climb, covering_roots, descend, walk_all};
+use super::{Outcome, Reason, Scope, Site};
 use crate::graph::{cargo, roots};
 use std::collections::BTreeSet;
 
 /// Crates the toolchain provides without any declaration.
 const BUILTIN: [&str; 5] = ["std", "core", "alloc", "proc_macro", "test"];
 
-pub fn resolve(kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {
-    let pkg = cargo::nearest(scope.root, &roots::parent_dir(from));
+pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
+    let pkg = cargo::nearest(scope.root, &roots::parent_dir(site.from));
     let roots_set = pkg
         .as_ref()
         .map(|p| p.crate_roots(scope.files))
         .unwrap_or_default();
-    match kind {
-        "mod_decl" => mod_rung(from, spec, &roots_set, scope.files),
-        "use" => use_rungs(from, spec, pkg.as_ref(), &roots_set, scope),
+    match site.kind {
+        "mod_decl" => mod_rung(site.from, site.spec, &roots_set, scope.files),
+        "use" => use_rungs(site, pkg.as_ref(), &roots_set, scope),
         _ => Outcome::Unresolved(Reason::Unsupported),
     }
 }
@@ -53,6 +60,7 @@ fn mod_rung(
     roots_set: &BTreeSet<String>,
     files: &BTreeSet<String>,
 ) -> Outcome {
+    use super::rs_tree::{Child, child};
     match child(from, name, roots_set, files) {
         Child::One(path) => Outcome::Resolved { path, rung: 1 },
         Child::Both => Outcome::Unresolved(Reason::AmbiguousPaths),
@@ -61,29 +69,82 @@ fn mod_rung(
 }
 
 fn use_rungs(
-    from: &str,
-    spec: &str,
+    site: &Site,
     pkg: Option<&cargo::Package>,
     roots_set: &BTreeSet<String>,
     scope: &Scope,
 ) -> Outcome {
-    let Some(segs) = use_path(spec) else {
+    let from = site.from;
+    let Some(segs) = use_path(site.spec) else {
         return Outcome::Unresolved(Reason::OutOfScope); // hand-folded fragment
     };
     let Some((head, rest)) = segs.split_first() else {
         return Outcome::Unresolved(Reason::OutOfScope); // `use {…}` group only
     };
-    let crate_anchors = covering_roots(from, roots_set);
     match *head {
-        "crate" => walk_all(crate_anchors, rest, 2, roots_set, scope.files),
-        "self" => walk_all(vec![from.to_string()], rest, 3, roots_set, scope.files),
+        "crate" => walk_all(
+            covering_roots(from, roots_set),
+            rest,
+            2,
+            roots_set,
+            scope.files,
+        ),
+        "self" => {
+            if inline_depth(scope, from, site.line) > 0 {
+                // self:: inside an inline module: every remaining
+                // segment is an item of THIS file — descending would
+                // mistake a sibling file module for the inline item
+                return Outcome::Resolved {
+                    path: from.to_string(),
+                    rung: 3,
+                };
+            }
+            walk_all(vec![from.to_string()], rest, 3, roots_set, scope.files)
+        }
         "super" => {
             let ups = 1 + rest.iter().take_while(|s| **s == "super").count();
-            let anchors = climb(from, ups, roots_set, scope.files);
-            walk_all(anchors, &rest[ups - 1..], 3, roots_set, scope.files)
+            let tail = &rest[ups - 1..];
+            // super consumes inline-module depth BEFORE any file
+            // climb (the audited interpolate.rs/globset rows)
+            let depth = inline_depth(scope, from, site.line);
+            if ups <= depth {
+                return walk_all(vec![from.to_string()], tail, 3, roots_set, scope.files);
+            }
+            let anchors = climb(from, ups - depth, roots_set, scope.files);
+            walk_all(anchors, tail, 3, roots_set, scope.files)
         }
         b if BUILTIN.contains(&b) => Outcome::External { rung: 4 },
-        name => extern_rung(name, pkg, scope),
+        name => extern_rung(name, rest, pkg, roots_set, scope),
+    }
+}
+
+/// How many inline `mod x { … }` bodies enclose the site line —
+/// parsed with the real grammar: a brace count would be lied to by
+/// string literals (the audited glue.rs CODE constant). Only a
+/// BODIED mod opens a nested scope; `mod x;` is a declaration.
+fn inline_depth(scope: &Scope, from: &str, line: usize) -> usize {
+    let Ok(text) = std::fs::read_to_string(scope.root.join(from)) else {
+        return 0;
+    };
+    let Some(grammar) = crate::scan::lang::Lang::Rust.grammar() else {
+        return 0;
+    };
+    let Some(tree) = crate::scan::ast::parse(&text, &grammar) else {
+        return 0;
+    };
+    let row = line.saturating_sub(1);
+    let (mut node, mut depth) = (tree.root_node(), 0);
+    'down: loop {
+        for c in crate::scan::ast::children(node) {
+            if c.start_position().row <= row && row <= c.end_position().row {
+                if c.kind() == "mod_item" && c.child_by_field_name("body").is_some() {
+                    depth += 1;
+                }
+                node = c;
+                continue 'down;
+            }
+        }
+        return depth;
     }
 }
 
@@ -109,173 +170,19 @@ fn use_path(spec: &str) -> Option<Vec<&str>> {
     )
 }
 
-/// Walk one segment list from every anchor; distinct terminals from
-/// different anchors are ambiguous_root (the Python cross-root
-/// stance), a double hit at one step is ambiguous_paths, an empty
-/// anchor set (climbed above the crate root) is out of scope.
-fn walk_all(
-    anchors: Vec<String>,
-    segs: &[&str],
-    rung: u8,
+/// R4: an in-scope Cargo package by normalized name anchors at its
+/// lib root and the remaining segments DESCEND its module tree —
+/// the audit records the definition file, not the crate façade
+/// (EVAL-SET 判例: 取定义点; a member whose root is not a scope file
+/// terminates here — the TS workspace precedent); a declared
+/// dependency ⇒ External; anything else is out of scope.
+fn extern_rung(
+    name: &str,
+    rest: &[&str],
+    pkg: Option<&cargo::Package>,
     roots_set: &BTreeSet<String>,
-    files: &BTreeSet<String>,
+    scope: &Scope,
 ) -> Outcome {
-    let mut hits = BTreeSet::new();
-    for anchor in anchors {
-        match descend(&anchor, segs, roots_set, files) {
-            Ok(target) => {
-                hits.insert(target);
-            }
-            Err(reason) => return Outcome::Unresolved(reason),
-        }
-    }
-    match hits.len() {
-        0 => Outcome::Unresolved(Reason::OutOfScope),
-        1 => Outcome::Resolved {
-            path: hits.pop_first().expect("len checked"),
-            rung,
-        },
-        _ => Outcome::Unresolved(Reason::AmbiguousRoot),
-    }
-}
-
-/// Descend the convention tree; stopping early is not failure — the
-/// remaining segments live inside the deepest matched file.
-fn descend(
-    anchor: &str,
-    segs: &[&str],
-    roots_set: &BTreeSet<String>,
-    files: &BTreeSet<String>,
-) -> Result<String, Reason> {
-    let mut cur = anchor.to_string();
-    for seg in segs {
-        match child(&cur, seg, roots_set, files) {
-            Child::One(next) => cur = next,
-            Child::Both => return Err(Reason::AmbiguousPaths),
-            Child::None => break,
-        }
-    }
-    Ok(cur)
-}
-
-enum Child {
-    One(String),
-    Both,
-    None,
-}
-
-/// The child-module lookup throat: dir/name.rs | dir/name/mod.rs,
-/// both present is rustc's own E0761 ambiguity.
-fn child(file: &str, name: &str, roots_set: &BTreeSet<String>, files: &BTreeSet<String>) -> Child {
-    let dir = child_dir(file, roots_set);
-    let plain = roots::join_dir(&dir, &format!("{name}.rs"));
-    let modrs = roots::join_dir(&dir, &format!("{name}/mod.rs"));
-    match (files.contains(&plain), files.contains(&modrs)) {
-        (true, true) => Child::Both,
-        (true, false) => Child::One(plain),
-        (false, true) => Child::One(modrs),
-        (false, false) => Child::None,
-    }
-}
-
-/// A crate root or a mod.rs parents children in its OWN directory;
-/// any other module file parents them under dir/<stem>/ (2018 style).
-fn child_dir(file: &str, roots_set: &BTreeSet<String>) -> String {
-    let dir = roots::parent_dir(file);
-    if roots_set.contains(file) || is_mod_rs(file) {
-        return dir;
-    }
-    let stem = file
-        .rsplit('/')
-        .next()
-        .unwrap_or(file)
-        .trim_end_matches(".rs");
-    roots::join_dir(&dir, stem)
-}
-
-fn is_mod_rs(file: &str) -> bool {
-    file == "mod.rs" || file.ends_with("/mod.rs")
-}
-
-/// The crate roots whose module tree can contain `from`: itself when
-/// it IS a root, else the roots whose directory is the deepest
-/// prefix (src/bin/x/helper.rs belongs to bin x, not to the lib that
-/// also covers src/ — deepest-wins is Cargo semantics, not a pick).
-fn covering_roots(from: &str, roots_set: &BTreeSet<String>) -> Vec<String> {
-    if roots_set.contains(from) {
-        return vec![from.to_string()];
-    }
-    let mut best: Vec<String> = Vec::new();
-    let mut best_len = 0usize;
-    for root in roots_set {
-        let dir = roots::parent_dir(root);
-        if !(dir.is_empty() || from.starts_with(&format!("{dir}/"))) {
-            continue;
-        }
-        if best.is_empty() || dir.len() > best_len {
-            best = vec![root.clone()];
-            best_len = dir.len();
-        } else if dir.len() == best_len {
-            best.push(root.clone());
-        }
-    }
-    best
-}
-
-/// k×super: each step maps every anchor to the file(s) owning its
-/// parent directory; a crate root has no parent and drops out. All
-/// owners of one directory share one child directory, so divergent
-/// climbs can only differ at the terminal — walk_all's check.
-fn climb(
-    from: &str,
-    ups: usize,
-    roots_set: &BTreeSet<String>,
-    files: &BTreeSet<String>,
-) -> Vec<String> {
-    let mut cur = BTreeSet::from([from.to_string()]);
-    for _ in 0..ups {
-        let mut next = BTreeSet::new();
-        for f in cur.iter().filter(|f| !roots_set.contains(*f)) {
-            let dir = if is_mod_rs(f) {
-                roots::parent_dir(&roots::parent_dir(f))
-            } else {
-                roots::parent_dir(f)
-            };
-            next.extend(owners(&dir, roots_set, files));
-        }
-        cur = next;
-        if cur.is_empty() {
-            break;
-        }
-    }
-    cur.into_iter().collect()
-}
-
-/// Files whose child directory is `dir`: dir/mod.rs, the sibling
-/// <dir>.rs, and any crate root sitting directly in dir.
-fn owners(dir: &str, roots_set: &BTreeSet<String>, files: &BTreeSet<String>) -> BTreeSet<String> {
-    let mut out = BTreeSet::new();
-    let modrs = roots::join_dir(dir, "mod.rs");
-    if files.contains(&modrs) {
-        out.insert(modrs);
-    }
-    let sibling = format!("{dir}.rs");
-    if !dir.is_empty() && files.contains(&sibling) {
-        out.insert(sibling);
-    }
-    for root in roots_set {
-        if roots::parent_dir(root) == dir {
-            out.insert(root.clone());
-        }
-    }
-    out
-}
-
-/// R4: an in-scope Cargo package by normalized name resolves to its
-/// lib root (a member whose root is not a scope file terminates here
-/// — the TS workspace precedent); a declared dependency ⇒ External;
-/// anything else is out of scope.
-fn extern_rung(name: &str, pkg: Option<&cargo::Package>, scope: &Scope) -> Outcome {
     let members = super::members(scope, "Cargo.toml", cargo::package, |p| {
         p.name
             .as_deref()
@@ -283,7 +190,14 @@ fn extern_rung(name: &str, pkg: Option<&cargo::Package>, scope: &Scope) -> Outco
     });
     match members.len() {
         1 => match members[0].lib_root(scope.files) {
-            Some(path) => Outcome::Resolved { path, rung: 4 },
+            Some(root) => {
+                let mut anchored = roots_set.clone();
+                anchored.insert(root.clone());
+                match descend(&root, rest, &anchored, scope.files) {
+                    Ok(path) => Outcome::Resolved { path, rung: 4 },
+                    Err(reason) => Outcome::Unresolved(reason),
+                }
+            }
             None => Outcome::Unresolved(Reason::OutOfScope),
         },
         0 => {

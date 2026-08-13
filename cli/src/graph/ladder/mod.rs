@@ -22,6 +22,7 @@ pub mod go;
 pub mod md;
 pub mod py;
 pub mod rs;
+mod rs_tree;
 pub mod ts;
 
 /// Which rung answered (1-based per the design §4 table); stored on
@@ -93,16 +94,26 @@ pub struct Scope<'a> {
     pub root: &'a Path,
 }
 
-/// Dispatch one site to its language ladder. `kind` is the site's
-/// frozen label; `from` is the source file repo-relative with
-/// forward slashes.
-pub fn resolve(lang: Lang, kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {
+/// One reference site as the ladder consumes it — the CachedSite
+/// projection that travels the dispatcher. `kind` is the frozen
+/// label; `from` is repo-relative with forward slashes; `line` is
+/// the 1-based source line — only Rust consumes it (inline-module
+/// depth anchors self/super), the other ladders are line-free.
+pub struct Site<'a> {
+    pub kind: &'a str,
+    pub from: &'a str,
+    pub spec: &'a str,
+    pub line: usize,
+}
+
+/// Dispatch one site to its language ladder.
+pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
     match lang {
-        Lang::TypeScript | Lang::Tsx => ts::resolve(from, spec, scope),
-        Lang::Python => py::resolve(from, spec, scope),
-        Lang::Rust => rs::resolve(kind, from, spec, scope),
-        Lang::Go => go::resolve(from, spec, scope),
-        Lang::Markdown => md::resolve(kind, from, spec, scope),
+        Lang::TypeScript | Lang::Tsx => ts::resolve(site.from, site.spec, scope),
+        Lang::Python => py::resolve(site.from, site.spec, scope),
+        Lang::Rust => rs::resolve(site, scope),
+        Lang::Go => go::resolve(site.from, site.spec, scope),
+        Lang::Markdown => md::resolve(site.kind, site.from, site.spec, scope),
     }
 }
 

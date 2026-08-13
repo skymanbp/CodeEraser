@@ -12,7 +12,7 @@ use codeeraser::graph::ladder::{self, Outcome, Reason};
 use codeeraser::scan::lang::Lang;
 
 mod common;
-use common::{Case, ext, fixture, no, ok, pkg, run_cases};
+use common::{Case, ext, fixture, no, ok, pkg, run_cases, site};
 
 /// The shared fixture tree — every rung's habitat, all languages.
 const TREE: &[(&str, &str)] = &[
@@ -99,6 +99,7 @@ const TREE: &[(&str, &str)] = &[
     // duplicate-name pair, registry dep declared in root Cargo.toml
     ("crates/helper/Cargo.toml", "[package]\nname='helper-lib'"),
     ("crates/helper/src/lib.rs", "\n"),
+    ("crates/helper/src/sub.rs", "\n"),
     ("crates/dupx/Cargo.toml", "[package]\nname='dup-crate'"),
     ("crates/dupx/src/lib.rs", "\n"),
     ("crates/dupy/Cargo.toml", "[package]\nname='dup-crate'"),
@@ -217,9 +218,18 @@ fn rust_cases() -> Vec<Case> {
         (rs, us, deep, "super::x", ok(nmod, 3)),
         (rs, us, deep, "super::super::util", ok("src/util.rs", 3)),
         (rs, us, rutil, "super::super::x", no(Reason::OutOfScope)),
-        // R4: normalized member name, duplicate pair, registry dep,
-        // nothing, builtin (order breaks table-tail cloning)
+        // R4: normalized member name, member-tree descent (the audit
+        // records the definition file, not the crate façade),
+        // duplicate pair, registry dep, nothing, builtin (order
+        // breaks table-tail cloning)
         (rs, us, rutil, "helper_lib::x", ok(hl, 4)),
+        (
+            rs,
+            us,
+            rutil,
+            "helper_lib::sub::y",
+            ok("crates/helper/src/sub.rs", 4),
+        ),
         (rs, us, rlib, "dup_crate", no(Reason::AmbiguousWorkspace)),
         (rs, us, rutil, "serde::Serialize", ext(4)),
         (rs, us, rutil, "nowhere::x", no(Reason::OutOfScope)),
@@ -250,7 +260,38 @@ fn extends_cycle_is_config_depth() {
         ],
     );
     assert_eq!(
-        ladder::resolve(Lang::TypeScript, "import", "a.ts", "anything", &fx.scope()),
+        ladder::resolve(
+            Lang::TypeScript,
+            &site("import", "a.ts", "anything", 1),
+            &fx.scope()
+        ),
         Outcome::Unresolved(Reason::ConfigDepth)
     );
+}
+
+/// Inline `mod` bodies anchor self/super at the FILE, not its parent
+/// (the audited interpolate.rs and globset rows): ups consume inline
+/// depth before any file climb, self inside an inline module is a
+/// self edge, and a post-climb tail may still name a FILE module.
+#[test]
+fn inline_mod_super_comes_home() {
+    let fx = fixture(
+        "ladder-inline",
+        &[
+            ("Cargo.toml", "[package]\nname='inl'"),
+            (
+                "src/lib.rs",
+                "pub fn escape() {}\nmod util;\n#[cfg(test)]\nmod tests {\n    use super::escape;\n    use self::helper::x;\n    use super::util;\n    mod deep {\n        use super::super::escape;\n    }\n}\n",
+            ),
+            ("src/util.rs", "\n"),
+        ],
+    );
+    let scope = fx.scope();
+    let at = |spec: &'static str, line: usize| {
+        ladder::resolve(Lang::Rust, &site("use", "src/lib.rs", spec, line), &scope)
+    };
+    assert_eq!(at("super::escape", 5), ok("src/lib.rs", 3));
+    assert_eq!(at("self::helper::x", 6), ok("src/lib.rs", 3));
+    assert_eq!(at("super::util", 7), ok("src/util.rs", 3));
+    assert_eq!(at("super::super::escape", 9), ok("src/lib.rs", 3));
 }

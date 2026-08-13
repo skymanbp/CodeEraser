@@ -12,8 +12,10 @@
 
 pub mod colordiff;
 pub mod corpus;
+pub mod graph;
 pub use colordiff::*;
 pub use corpus::*;
+pub use graph::*;
 
 use codeeraser::fourclass::batch::PairInput;
 use codeeraser::scan::lang::Lang;

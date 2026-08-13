@@ -1,0 +1,264 @@
+{
+  "corpus": {
+    "name": "cobra",
+    "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "ffa388fe71cc025f807bde12b9dda662082f5e8e",
+    "dirty": true
+  },
+  "method": "the frozen graph-sample rows of this corpus, resolved by the shipped ladder against the pinned tree materialized under a scratch root (every in-scope file sha-checked against the frozen slice — a polluted materialization never scores, G12), judged against the frozen audit truth. An in-corpus answer matches exactly, or at file level when the resolver made no unit claim (GT definition units are extra precision; symbol binding is the future R5 stance). External is an answer — external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over EVERY site of the frozen universe: its resolution rate is a recall CEILING — constructs the detector cannot see are in no denominator. Cut rule (pre-registered): publish the full per-rung table; the loosest minRung clearing 0.90 is the release knob.",
+  "rows": [
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 27,
+      "nth": 0,
+      "path": "cobra.go",
+      "rank": "0b2cc8d0b74a1baf20252ad725035ebbaa852b4a13e22af0df5e5d11e3bc9449",
+      "reason": null,
+      "rung": 3,
+      "spec": "text/template",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 18,
+      "nth": 0,
+      "path": "shell_completions.go",
+      "rank": "11d870a6470b79dc83ef4a3b0a50a07bc237bee45a127e341888db23f5fe12de",
+      "reason": null,
+      "rung": 3,
+      "spec": "github.com/spf13/pflag",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 23,
+      "nth": 0,
+      "path": "command_test.go",
+      "rank": "085ceaaa70a90add1fb6c1fe65752d67997bc1b5d4fc07d00e81db5170c6cd2c",
+      "reason": null,
+      "rung": 3,
+      "spec": "reflect",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 28,
+      "nth": 0,
+      "path": "doc/man_docs.go",
+      "rank": "0210a21dbf8d244462779a517c78203cbc3a366b854d9a26481950c6c3fddb9d",
+      "reason": null,
+      "rung": 3,
+      "spec": "github.com/cpuguy83/go-md2man/v2/md2man",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 21,
+      "nth": 0,
+      "path": "cobra.go",
+      "rank": "08e6f3b6d75997c7ae855039e0208746d48aadce2634da99b0d617e1d8c34484",
+      "reason": null,
+      "rung": 3,
+      "spec": "fmt",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link",
+      "lang": "md",
+      "line": 44,
+      "nth": 0,
+      "path": "site/content/projects_using_cobra.md",
+      "rank": "034117e8219963b549d13ccaa152f076cea8ac2c570b0c6f84a60ea83eac8049",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/lindell/multi-gitter",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link",
+      "lang": "md",
+      "line": 35,
+      "nth": 0,
+      "path": "site/content/projects_using_cobra.md",
+      "rank": "0209a79fef6540da477010ca55798fc4a085fc09b670b8965f6da2ff6aa04227",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/kubevirt/kubevirt",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 22,
+      "nth": 0,
+      "path": "command.go",
+      "rank": "0999edfb4e4f1951a9afe02d22deddd2e4f7e552f92f76fcacf3cba03f5cd233",
+      "reason": null,
+      "rung": 3,
+      "spec": "errors",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 23,
+      "nth": 0,
+      "path": "doc/man_docs_test.go",
+      "rank": "0bb16d69fd870340f08952c9f9d9e01427ff6a1b006d67b15ccae36cf04beb2d",
+      "reason": null,
+      "rung": 3,
+      "spec": "strings",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": ".",
+      "external": false,
+      "kind": "import",
+      "lang": "go",
+      "line": 25,
+      "nth": 0,
+      "path": "doc/yaml_docs.go",
+      "rank": "0d091f7769fd7a22a83d63bbd8d1601771195ae030686e66f5cdf67e1078134a",
+      "reason": null,
+      "rung": 1,
+      "spec": "github.com/spf13/cobra",
+      "truth": ".",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 18,
+      "nth": 0,
+      "path": "doc/cmd_test.go",
+      "rank": "0c2027641679eea8eb08da8caeb90dbe75eb3cd8eadfa41de01965b32ce4137e",
+      "reason": null,
+      "rung": 3,
+      "spec": "strings",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "import",
+      "lang": "go",
+      "line": 18,
+      "nth": 0,
+      "path": "doc/yaml_docs.go",
+      "rank": "0045bb3147d33c29f1cc16217a6be6fb27b10f35d4c4600eefb03c5d8d84d993",
+      "reason": null,
+      "rung": 3,
+      "spec": "fmt",
+      "truth": "external",
+      "verdict": "external_ok"
+    }
+  ],
+  "schema": "ce.eval-graph-precision/1.0.0",
+  "summary": {
+    "by_lang": {
+      "go": {
+        "correct": 1,
+        "external_ok": 9
+      },
+      "md": {
+        "external_ok": 2
+      }
+    },
+    "cut": [
+      [
+        1,
+        1,
+        0,
+        1.0
+      ],
+      [
+        2,
+        1,
+        0,
+        1.0
+      ],
+      [
+        3,
+        1,
+        0,
+        1.0
+      ],
+      [
+        4,
+        1,
+        0,
+        1.0
+      ],
+      [
+        5,
+        1,
+        0,
+        1.0
+      ]
+    ],
+    "in_corpus_truths": 1,
+    "precision": 1.0,
+    "recall": 1.0,
+    "verdicts": {
+      "correct": 1,
+      "external_ok": 11
+    }
+  },
+  "universe": {
+    "r0_share": 0.08722741433021806,
+    "resolution_by": {
+      "go/import/r1": 12,
+      "go/import/r3": 178,
+      "md/image/r5": 4,
+      "md/link/r1": 16,
+      "md/link/r2": 3,
+      "md/link/r4": 1,
+      "md/link/r5": 105,
+      "md/ref_def/r3": 1,
+      "md/ref_link/r3": 1
+    },
+    "resolution_rate": 0.9938080495356038,
+    "total_sites": 323,
+    "unresolved_by": {
+      "out_of_scope": 2
+    }
+  }
+}
