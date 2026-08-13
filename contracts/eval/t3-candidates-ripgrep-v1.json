@@ -1,0 +1,101 @@
+{
+  "constants": {
+    "hot_group_cap": 64,
+    "lsh_bands": 32,
+    "lsh_rows": 4,
+    "min_reported_pairs": 617,
+    "minhash_perms": 128,
+    "t3_min_nodes": 24,
+    "tsed_den": 100,
+    "tsed_num": 85
+  },
+  "corpus": {
+    "name": "ripgrep",
+    "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "c6d2465dc7513ed14e6a10d4346a0270f1b3c25a",
+    "dirty": true
+  },
+  "method": "candidate-pair universe of the pinned tree: the four-source union (S1 verified near-miss runs 25<=len<50 reclaimed from the T1/T2 extension pass; S2 same unit key across files; S3 raw fingerprint co-occurrence, no extension — wider than any reasonable candidate pass on purpose; S4 structural MinHash/LSH, supplementary, its band-group distribution published) over the admitted units (>= 24 named nodes) of the t3-universe sibling, reduced by the two provably admissible prunes (size band, label intersection — both decide 'provably below the 0.85 threshold', so no true clone pair is ever dropped). The candidate pass never consults TSED or TED: this universe freezes before the judge exists, and candidate recall is an upper bound on judged recall. pairs_sha256 fixes the exact surviving pair set; the frozen sample proves membership against it.",
+  "pairs_sha256": "58eb62f5b81c56c3a6680e2b8ea1b29a9f05dff9dfed13cc28b047267afdd065",
+  "schema": "ce.eval-t3-candidates/1.0.0",
+  "summary": {
+    "admitted_by_lang": {
+      "rs": 2489
+    },
+    "cross_lang_dropped": 0,
+    "identical_struct_pairs": 1234,
+    "pruned_label": 3490,
+    "pruned_size": 14310,
+    "raw_by": {
+      "s1/rs": 4965,
+      "s2/rs": 7028,
+      "s3/rs": 8791,
+      "s4/rs": 12472
+    },
+    "s3_hot_chained": 16,
+    "s4_band_groups": {
+      "10": 47,
+      "11": 75,
+      "12": 23,
+      "13": 51,
+      "14": 32,
+      "15": 28,
+      "16": 35,
+      "17": 15,
+      "18": 8,
+      "19": 1,
+      "2": 7045,
+      "20": 44,
+      "21": 6,
+      "22": 9,
+      "23": 3,
+      "24": 19,
+      "25": 7,
+      "26": 13,
+      "27": 2,
+      "28": 5,
+      "29": 3,
+      "3": 1472,
+      "30": 4,
+      "31": 9,
+      "32": 3,
+      "33": 30,
+      "34": 12,
+      "35": 9,
+      "36": 6,
+      "4": 684,
+      "41": 1,
+      "44": 1,
+      "45": 6,
+      "46": 3,
+      "47": 9,
+      "48": 2,
+      "5": 288,
+      "53": 1,
+      "55": 1,
+      "6": 187,
+      "60": 1,
+      "61": 1,
+      "7": 178,
+      "72": 1,
+      "8": 61,
+      "81": 3,
+      "82": 1,
+      "9": 62
+    },
+    "s4_hot_chained": 5,
+    "self_pair_dropped": 11986,
+    "survivors": 6201,
+    "survivors_by": {
+      "rs/l": 53,
+      "rs/m": 4560,
+      "rs/s": 1588
+    },
+    "union_pairs": 24001,
+    "units_admitted": 2489,
+    "unowned_dropped": 13373
+  }
+}

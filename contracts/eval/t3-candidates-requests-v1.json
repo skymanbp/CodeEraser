@@ -1,0 +1,63 @@
+{
+  "constants": {
+    "hot_group_cap": 64,
+    "lsh_bands": 32,
+    "lsh_rows": 4,
+    "min_reported_pairs": 18,
+    "minhash_perms": 128,
+    "t3_min_nodes": 24,
+    "tsed_den": 100,
+    "tsed_num": 85
+  },
+  "corpus": {
+    "name": "requests",
+    "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "c6d2465dc7513ed14e6a10d4346a0270f1b3c25a",
+    "dirty": true
+  },
+  "method": "candidate-pair universe of the pinned tree: the four-source union (S1 verified near-miss runs 25<=len<50 reclaimed from the T1/T2 extension pass; S2 same unit key across files; S3 raw fingerprint co-occurrence, no extension — wider than any reasonable candidate pass on purpose; S4 structural MinHash/LSH, supplementary, its band-group distribution published) over the admitted units (>= 24 named nodes) of the t3-universe sibling, reduced by the two provably admissible prunes (size band, label intersection — both decide 'provably below the 0.85 threshold', so no true clone pair is ever dropped). The candidate pass never consults TSED or TED: this universe freezes before the judge exists, and candidate recall is an upper bound on judged recall. pairs_sha256 fixes the exact surviving pair set; the frozen sample proves membership against it.",
+  "pairs_sha256": "a15934614ad900eb66a023b76302434445bafb57e872906981f1b054876e5528",
+  "schema": "ce.eval-t3-candidates/1.0.0",
+  "summary": {
+    "admitted_by_lang": {
+      "py": 623
+    },
+    "cross_lang_dropped": 0,
+    "identical_struct_pairs": 35,
+    "pruned_label": 99,
+    "pruned_size": 503,
+    "raw_by": {
+      "s1/py": 132,
+      "s2/py": 52,
+      "s3/py": 202,
+      "s4/py": 587
+    },
+    "s3_hot_chained": 0,
+    "s4_band_groups": {
+      "10": 1,
+      "12": 1,
+      "2": 1218,
+      "3": 296,
+      "4": 120,
+      "5": 23,
+      "6": 30,
+      "7": 2,
+      "8": 13,
+      "9": 2
+    },
+    "s4_hot_chained": 0,
+    "self_pair_dropped": 481,
+    "survivors": 128,
+    "survivors_by": {
+      "py/l": 6,
+      "py/m": 52,
+      "py/s": 70
+    },
+    "union_pairs": 730,
+    "units_admitted": 623,
+    "unowned_dropped": 439
+  }
+}

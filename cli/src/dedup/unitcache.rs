@@ -130,6 +130,55 @@ pub fn unit_rows(idx: &super::index::Index) -> Result<Vec<UnitRow>> {
     .collect())
 }
 
+/// One cached unit with its structural facts DECODED — the candidate
+/// generator's read surface (sig feeds the S4 MinHash source, hist
+/// feeds the §4.3 label-intersection prune). Inverse of
+/// sig_blob/hist_blob, one encode/decode pair in one file.
+pub struct FactRow {
+    pub path: String,
+    pub key: String,
+    pub nth: i64,
+    pub nodes: i64,
+    pub sig: Vec<u64>,
+    pub hist: Vec<(u64, u32)>,
+}
+
+/// Every cached unit's facts, deterministically ordered by identity.
+pub fn fact_rows(idx: &super::index::Index) -> Result<Vec<FactRow>> {
+    let rows = crate::graph::load::rows(
+        idx.raw(),
+        "SELECT f.path, u.key, u.nth, u.nodes, u.sig, u.hist
+         FROM unitsig u JOIN files f ON f.id = u.file_id
+         ORDER BY f.path, u.key, u.nth",
+        |r| {
+            let head: (String, String, i64, i64) = crate::graph::load::t4(r)?;
+            Ok((head, r.get::<_, Vec<u8>>(4)?, r.get::<_, Vec<u8>>(5)?))
+        },
+    )?;
+    Ok(rows
+        .into_iter()
+        .map(|((path, key, nth, nodes), sig, hist)| FactRow {
+            path,
+            key,
+            nth,
+            nodes,
+            sig: sig
+                .chunks_exact(8)
+                .map(|c| u64::from_le_bytes(c.try_into().expect("8-byte chunk")))
+                .collect(),
+            hist: hist
+                .chunks_exact(12)
+                .map(|c| {
+                    (
+                        u64::from_le_bytes(c[..8].try_into().expect("8-byte label")),
+                        u32::from_le_bytes(c[8..].try_into().expect("4-byte count")),
+                    )
+                })
+                .collect(),
+        })
+        .collect())
+}
+
 /// Count of unitsig rows with NO matching symbols row on
 /// (file, key, nth) — the two persisted views of one nth throat must
 /// agree, and `ce clone --units` asserts zero instead of assuming it.

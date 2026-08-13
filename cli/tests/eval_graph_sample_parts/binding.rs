@@ -4,7 +4,7 @@
 //! bound to the live frozen universes — a re-frozen slice reddens the
 //! sample instead of silently orphaning it.
 
-use crate::eval_support::{by_field, doc_suffix, eval_doc, frozen_docs, load};
+use crate::eval_support::{by_field, doc_suffix, eval_doc, frozen_docs, load, sum_obj};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, HashMap};
 
@@ -59,12 +59,7 @@ fn bind_row(
     let kind = row["kind"].as_str().expect("kind");
     let cap = file["sites"][kind].as_u64().unwrap_or(0);
     assert!(cap >= 1, "{tag}/{path}: no frozen {kind} site");
-    let total: u64 = file["sites"]
-        .as_object()
-        .expect("sites")
-        .values()
-        .map(|v| v.as_u64().expect("n"))
-        .sum();
+    let total = sum_obj(&file["sites"]);
     // honest bound (review F8): the slice docs carry no per-file line
     // counts, so `line` has no checkable upper bound here and `nth`
     // (per-line ordinal across kinds) is bounded only by the file

@@ -14,11 +14,13 @@ pub mod colordiff;
 pub mod corpus;
 pub mod dedup;
 pub mod graph;
+pub mod t3c;
 pub mod universe;
 pub use colordiff::*;
 pub use corpus::*;
 pub use dedup::*;
 pub use graph::*;
+pub use t3c::*;
 pub use universe::*;
 
 use codeeraser::fourclass::batch::PairInput;

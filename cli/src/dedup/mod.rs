@@ -3,11 +3,14 @@
 //! SIGMOD'03) → SQLite inverted index → clone blocks. T1/T2 only
 //! here; T3 is the M5 cold path.
 
+pub mod candidates;
 pub mod groups;
 pub mod index;
+pub mod minhash;
 pub mod pairs;
 pub mod probe;
 pub(crate) mod schema;
+mod sources;
 pub mod struct_fp;
 pub mod tokens;
 pub mod unitcache;

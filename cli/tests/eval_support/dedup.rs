@@ -1,4 +1,4 @@
-﻿//! T3-universe instrument shared surface (M5-3b, design vol.3 §9.2):
+//! T3-universe instrument shared surface (M5-3b, design vol.3 §9.2):
 //! the pre-registered sizeband constants, the per-file row derivation
 //! and the materialized-index leg — ONE binding for the generator
 //! (eval_t3_universe.rs) and its self-repo drift gate, so the frozen
@@ -115,15 +115,7 @@ pub fn t3_summarize(files: &[Value]) -> Value {
 /// labeled with the build profile so a debug number cannot pass as
 /// one.
 pub fn index_materialized(corpus: &str, walked: &[super::WalkedFile], doc: &Value) {
-    let root = std::env::temp_dir().join(format!("ce-t3-univ-{corpus}-{}", std::process::id()));
-    if root.exists() {
-        std::fs::remove_dir_all(&root).expect("clean temp tree");
-    }
-    for (path, _, text) in walked {
-        let file = root.join(path);
-        std::fs::create_dir_all(file.parent().expect("parent")).expect("mkdir");
-        std::fs::write(&file, text.as_bytes()).expect("materialize");
-    }
+    let root = materialize_tree("univ", corpus, walked);
     let t0 = std::time::Instant::now();
     let (idx, _) = refreshed_index(&root, None).expect("cold index");
     let cold = t0.elapsed().as_millis();
@@ -147,6 +139,26 @@ pub fn index_materialized(corpus: &str, walked: &[super::WalkedFile], doc: &Valu
         walked.len()
     );
     std::fs::remove_dir_all(&root).expect("drop temp tree");
+}
+
+/// Materialize one walked in-scope tree under the OS temp dir — the
+/// shared opening of the universe instrument's product-index leg and
+/// the candidate instrument (one tree bytes, two consumers).
+pub fn materialize_tree(
+    tag: &str,
+    corpus: &str,
+    walked: &[super::WalkedFile],
+) -> std::path::PathBuf {
+    let root = std::env::temp_dir().join(format!("ce-t3-{tag}-{corpus}-{}", std::process::id()));
+    if root.exists() {
+        std::fs::remove_dir_all(&root).expect("clean temp tree");
+    }
+    for (path, _, text) in walked {
+        let file = root.join(path);
+        std::fs::create_dir_all(file.parent().expect("parent")).expect("mkdir");
+        std::fs::write(&file, text.as_bytes()).expect("materialize");
+    }
+    root
 }
 
 /// Indexed ⊆ walked (an indexed phantom is a scope leak), every

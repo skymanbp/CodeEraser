@@ -16,7 +16,42 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Attack-review D4: skipping hot groups made detection FALL TO ZERO
 /// as duplication rose (65 identical files → 0 blocks); chaining
 /// keeps every instance in ≥1 verified pair at linear cost.
-const HOT_CAP: usize = 64;
+/// pub(crate): the S3 candidate source and the S4 band chaining ride
+/// the same cap (one binding).
+pub(crate) const HOT_CAP: usize = 64;
+
+/// One visit of the hash-group pairing walk.
+pub(crate) enum GroupEvent<'a> {
+    /// A group crossed HOT_CAP and was chained instead of paired.
+    Chained,
+    Pair(&'a Instance, &'a Instance),
+}
+
+/// Group instances by fingerprint hash and visit every candidate
+/// pair (chained above HOT_CAP) — ONE grouping walk for the T1/T2
+/// extension pass and the S3 candidate source, so the two can never
+/// disagree about which anchors exist.
+pub(crate) fn each_hash_pair<'a>(instances: &'a [Instance], mut f: impl FnMut(GroupEvent<'a>)) {
+    let mut by_hash: BTreeMap<u64, Vec<&Instance>> = BTreeMap::new();
+    for inst in instances {
+        by_hash.entry(inst.hash).or_default().push(inst);
+    }
+    for group in by_hash.values_mut().filter(|g| g.len() > 1) {
+        if group.len() > HOT_CAP {
+            f(GroupEvent::Chained);
+            group.sort_by(|x, y| (&x.file, x.start_tok).cmp(&(&y.file, y.start_tok)));
+            for w in group.windows(2) {
+                f(GroupEvent::Pair(w[0], w[1]));
+            }
+        } else {
+            for (i, a) in group.iter().enumerate() {
+                for b in &group[i + 1..] {
+                    f(GroupEvent::Pair(a, b));
+                }
+            }
+        }
+    }
+}
 
 /// A verified maximal common token run, mapped back to lines.
 #[derive(Debug, Clone, Serialize)]
@@ -83,54 +118,69 @@ pub fn candidate_files(instances: &[Instance]) -> BTreeSet<String> {
         .collect()
 }
 
-/// Collects verified runs plus the transparency counters.
+/// Collects verified runs plus the transparency counters. `t` is the
+/// report threshold; runs in [near_floor, t) land in the second sink
+/// instead of vanishing (near_floor usize::MAX disables it).
 struct Ctx<'s> {
     runs: BTreeSet<(&'s str, usize, &'s str, usize, usize)>,
+    near: BTreeSet<(&'s str, usize, &'s str, usize, usize)>,
     stale_skipped: usize,
+    t: usize,
+    near_floor: usize,
 }
 
 /// `f.min_tokens` is the verified-run threshold (the winnowing
 /// guarantee t by default); `f.min_distinct` the diversity floor.
 pub fn clone_blocks(instances: &[Instance], streams: &Streams, f: Filter) -> Blocks {
-    let mut by_hash: BTreeMap<u64, Vec<&Instance>> = BTreeMap::new();
-    for inst in instances {
-        by_hash.entry(inst.hash).or_default().push(inst);
-    }
+    clone_blocks_near(instances, streams, f, usize::MAX).0
+}
+
+/// clone_blocks plus the near-miss sink: verified runs BELOW the
+/// report threshold t but at/above `near_floor` — the population
+/// extend_anchor used to drop silently. A shared fingerprint
+/// guarantees a common kgram run, so with the floor at kgram this is
+/// exactly 25 <= len < 50: the T3 candidate source S1 (design §4.2).
+/// One grouping walk, one extension pass — the report path and the
+/// candidate source cannot disagree about what was verified; the
+/// near runs ride the same Block shape (their `distinct` is honest,
+/// just unused by S1).
+pub fn clone_blocks_near(
+    instances: &[Instance],
+    streams: &Streams,
+    f: Filter,
+    near_floor: usize,
+) -> (Blocks, Vec<Block>) {
     let mut hot_chained = 0;
     let mut ctx = Ctx {
         runs: BTreeSet::new(),
+        near: BTreeSet::new(),
         stale_skipped: 0,
+        t: f.min_tokens,
+        near_floor,
     };
-    for group in by_hash.values_mut().filter(|g| g.len() > 1) {
-        if group.len() > HOT_CAP {
-            hot_chained += 1;
-            group.sort_by(|x, y| (&x.file, x.start_tok).cmp(&(&y.file, y.start_tok)));
-            for pair in group.windows(2) {
-                extend_anchor(pair[0], pair[1], streams, f.min_tokens, &mut ctx);
-            }
-        } else {
-            for (i, a) in group.iter().enumerate() {
-                for b in &group[i + 1..] {
-                    extend_anchor(a, b, streams, f.min_tokens, &mut ctx);
-                }
-            }
-        }
-    }
+    each_hash_pair(instances, |ev| match ev {
+        GroupEvent::Chained => hot_chained += 1,
+        GroupEvent::Pair(a, b) => extend_anchor(a, b, streams, &mut ctx),
+    });
     let mut blocks = dominant(
         ctx.runs
             .into_iter()
             .map(|r| to_block(r, streams))
             .collect::<Vec<_>>(),
     );
+    let near = ctx.near.into_iter().map(|r| to_block(r, streams)).collect();
     let before = blocks.len();
     blocks.retain(|b| b.distinct >= f.min_distinct);
-    Blocks {
-        low_diversity_suppressed: before - blocks.len(),
-        groups: super::groups::group(&blocks),
-        blocks,
-        hot_chained,
-        stale_skipped: ctx.stale_skipped,
-    }
+    (
+        Blocks {
+            low_diversity_suppressed: before - blocks.len(),
+            groups: super::groups::group(&blocks),
+            blocks,
+            hot_chained,
+            stale_skipped: ctx.stale_skipped,
+        },
+        near,
+    )
 }
 
 /// Periodic content yields one maximal run per offset; shifted
@@ -159,13 +209,7 @@ fn dominant(mut blocks: Vec<Block>) -> Vec<Block> {
     kept
 }
 
-fn extend_anchor<'s>(
-    a: &Instance,
-    b: &Instance,
-    streams: &'s Streams,
-    t: usize,
-    ctx: &mut Ctx<'s>,
-) {
+fn extend_anchor<'s>(a: &Instance, b: &Instance, streams: &'s Streams, ctx: &mut Ctx<'s>) {
     let (a, b) = if (&a.file, a.start_tok) <= (&b.file, b.start_tok) {
         (a, b)
     } else {
@@ -183,10 +227,12 @@ fn extend_anchor<'s>(
         ctx.stale_skipped += 1;
         return;
     }
-    if let Some((a0, b0, len)) = extend(sa, a.start_tok, sb, b.start_tok, a.file == b.file)
-        && len >= t
-    {
-        ctx.runs.insert((af.as_str(), a0, bf.as_str(), b0, len));
+    if let Some((a0, b0, len)) = extend(sa, a.start_tok, sb, b.start_tok, a.file == b.file) {
+        if len >= ctx.t {
+            ctx.runs.insert((af.as_str(), a0, bf.as_str(), b0, len));
+        } else if len >= ctx.near_floor {
+            ctx.near.insert((af.as_str(), a0, bf.as_str(), b0, len));
+        }
     }
 }
 

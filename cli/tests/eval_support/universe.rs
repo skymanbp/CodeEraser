@@ -9,7 +9,7 @@
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
-use super::{classify_path, git_run};
+use super::classify_path;
 
 /// One walked file: repo-relative path, lang code, and the text the
 /// detectors see (utf8-lossy of the git blob).
@@ -25,11 +25,22 @@ pub fn doc_stem(family: &str, name: &Option<String>) -> String {
     }
 }
 
-/// The instrument walk of one pinned tree: every in-scope file plus
-/// the itemized exclusion tally — ONE walker for the slice and t3
-/// universes (a second walk could freeze two different trees under
-/// one tip).
+/// The instrument walk of one pinned tree in the CE_SLICE_REPO-
+/// selected corpus — the single-corpus generators' entry.
 pub fn walk_tree(tip: &str) -> (Vec<WalkedFile>, BTreeMap<&'static str, u64>) {
+    let repo = std::env::var("CE_SLICE_REPO").ok();
+    walk_tree_in(repo.as_deref(), tip)
+}
+
+/// The walk with an explicit repository — the multi-corpus pool walk
+/// reads several pinned corpora inside one process and cannot ride
+/// the env var (the graph-sample precedent). ONE walker for every
+/// universe family (a second walk could freeze two different trees
+/// under one tip).
+pub fn walk_tree_in(
+    repo: Option<&str>,
+    tip: &str,
+) -> (Vec<WalkedFile>, BTreeMap<&'static str, u64>) {
     let mut files = Vec::new();
     let mut excluded: BTreeMap<&'static str, u64> = BTreeMap::new();
     // -z: NUL-terminated, unquoted — non-ASCII paths must not arrive
@@ -37,14 +48,14 @@ pub fn walk_tree(tip: &str) -> (Vec<WalkedFile>, BTreeMap<&'static str, u64>) {
     // the tests run with cwd cli/, and without it ls-tree emits
     // cwd-relative paths while `show rev:path` resolves from the repo
     // root (the M5-1c-ii lesson, recurred on the slice's first run).
-    let listing = git_run(
+    let listing = super::git_in(
+        repo,
         &["ls-tree", "-r", "--full-tree", "--name-only", "-z", tip],
-        false,
     );
     for path in listing.split('\0').filter(|p| !p.is_empty()) {
         match classify_path(path) {
             Ok(code) => {
-                let text = git_run(&["show", &format!("{tip}:{path}")], false);
+                let text = super::git_in(repo, &["show", &format!("{tip}:{path}")]);
                 files.push((path.to_string(), code, text));
             }
             Err(category) => *excluded.entry(category).or_insert(0) += 1,
@@ -173,6 +184,16 @@ pub fn assert_doc_envelope(
         );
     }
     name
+}
+
+/// Sum of a JSON object's u64 values — the map-total idiom every
+/// per-key summary gate re-derives (site totals, survivor strata).
+pub fn sum_obj(v: &Value) -> u64 {
+    v.as_object()
+        .expect("object")
+        .values()
+        .map(|x| x.as_u64().expect("u64"))
+        .sum()
 }
 
 /// The working-tree drift walk both self gates share: every frozen
