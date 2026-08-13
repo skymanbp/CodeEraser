@@ -16,12 +16,18 @@ use std::time::Instant;
 mod common;
 use common::{rust_fn, tmp as corpus_dir};
 
-/// 100k+ LOC: 460 files x 20 fns x ~11 lines. seed % 900 forms
-/// realistic clone families (~10 instances) without hot-cap regimes.
-fn generate_corpus(dir: &Path) -> usize {
+/// 100k+ LOC: 460 files x (site_lines use-decls + 20 fns x ~11
+/// lines). seed % 900 forms realistic clone families (~10 instances)
+/// without hot-cap regimes. site_lines = 0 reproduces the M2 budget
+/// corpus byte-for-byte; site_lines > 0 adds cached graph sites for
+/// the M5-2e resolve-sweep budget without forking a second generator.
+fn corpus(dir: &Path, site_lines: u32) -> usize {
     let mut lines = 0;
     for f in 0..460u32 {
         let mut src = String::new();
+        for i in 0..site_lines {
+            src.push_str(&format!("use crate::dep_{}::item_{i};\n", (f + i) % 97));
+        }
         for i in 0..20u32 {
             src.push_str(&rust_fn((f * 20 + i) % 900));
         }
@@ -29,6 +35,10 @@ fn generate_corpus(dir: &Path) -> usize {
         std::fs::write(dir.join(format!("f{f:03}.rs")), src).expect("write");
     }
     lines
+}
+
+fn generate_corpus(dir: &Path) -> usize {
+    corpus(dir, 0)
 }
 
 fn release_assert(ok: bool, msg: &str) {
@@ -88,6 +98,38 @@ fn incremental_single_file_under_200ms() {
     release_assert(
         refresh.as_millis() < 200,
         &format!("incremental refresh {refresh:.2?} exceeds 200ms budget"),
+    );
+}
+
+/// M5-2e exit budget (design RG4): a resolve_key change replays the
+/// resolver over every cached site; > 2s on 100k LOC narrows phase 2
+/// to rung-consulting only changed-directory sites (the trigger is
+/// pre-committed in the design brief).
+#[test]
+#[ignore = "perf budget: run in release, records docs/PERF-BUDGET.md"]
+fn resolve_sweep_100k_loc_under_2s() {
+    let dir = corpus_dir("perf-resolve");
+    // 30 use-decls per file ≈ 13,800 cached sites — the self
+    // corpus's site density scaled to 100k LOC
+    let loc = corpus(&dir, 30);
+    analyze(&dir, None, None, None).expect("seed index");
+    let p = Params::default();
+    let mut idx = Index::open(&dir.join(".ce/index.db"), p).expect("open");
+    let mut sites = 0usize;
+    let t0 = Instant::now();
+    let fired = idx
+        .ensure_edges_resolved(1, |_| {
+            sites += 1;
+            Vec::new()
+        })
+        .expect("sweep");
+    let sweep = t0.elapsed();
+    assert!(fired, "fresh key must fire the sweep");
+    assert_eq!(sites, 460 * 30, "every cached site reaches the resolver");
+    println!("phase-2 sweep: {sweep:.2?} over {sites} cached sites ({loc} LOC)");
+    release_assert(
+        sweep.as_secs_f64() < 2.0,
+        &format!("resolve sweep {sweep:.2?} exceeds 2s budget"),
     );
 }
 

@@ -1,42 +1,19 @@
 //! SQLite inverted fingerprint index (ADR-005): `files` +
-//! `fingerprints`, WAL + busy_timeout per ADR-003. Incremental
-//! invalidation is content-hash gated per file: unchanged bytes touch
-//! nothing; a change deletes and reinserts only that file's rows. The
-//! M2 daemon becomes the sole writer; the batch CLI uses the same
-//! code single-threaded.
+//! `fingerprints` + the schema-v4 graph cache, WAL + busy_timeout per
+//! ADR-003. Incremental invalidation is content-hash gated per file:
+//! unchanged bytes touch nothing; a change deletes and reinserts only
+//! that file's rows — fingerprints and its graph phase-1 rows in the
+//! same transaction. The M2 daemon is the sole writer; the batch CLI
+//! uses the same code single-threaded. Schema lifecycle lives in
+//! dedup/schema.rs; graph DDL + phase 2 in graph/store.rs.
 
-use super::{Params, tokens, winnow};
+use super::{Params, schema, tokens, winnow};
+use crate::graph::store;
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
 use rusqlite::Connection;
 use std::collections::BTreeSet;
 use std::path::Path;
-
-/// Pre-release schema versioning: a mismatch drops and recreates the
-/// tables (the index is a cache — rebuilding is always safe).
-const SCHEMA_VERSION: i64 = 3;
-
-const SCHEMA: &str = "
-DROP TABLE IF EXISTS fingerprints;
-DROP TABLE IF EXISTS files;
-DROP TABLE IF EXISTS meta;
-CREATE TABLE files (
-  id INTEGER PRIMARY KEY,
-  path TEXT UNIQUE NOT NULL,
-  content_hash INTEGER NOT NULL,
-  token_count INTEGER NOT NULL
-);
-CREATE TABLE fingerprints (
-  hash INTEGER NOT NULL,
-  file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
-  start_tok INTEGER NOT NULL,
-  start_line INTEGER NOT NULL,
-  end_line INTEGER NOT NULL
-);
-CREATE INDEX idx_fp_hash ON fingerprints(hash);
-CREATE INDEX idx_fp_file ON fingerprints(file_id);
-CREATE TABLE meta (k TEXT PRIMARY KEY, v INTEGER NOT NULL);
-";
 
 /// One fingerprint occurrence, joined back to its file. `start_tok`
 /// is the k-gram's token index — the anchor for extension verify.
@@ -55,9 +32,9 @@ pub struct Index {
 
 impl Index {
     /// Open (or wipe-and-recreate) the index. The cache key is
-    /// schema version + winnowing params + tokenizer revision
-    /// (attack-review D2: params/tokenizer changes silently reused
-    /// stale fingerprints for unchanged files).
+    /// schema version + winnowing params + tokenizer revision +
+    /// graph revision (attack-review D2: params/tokenizer changes
+    /// silently reused stale fingerprints for unchanged files).
     pub fn open(db_path: &Path, p: Params) -> Result<Self> {
         if let Some(dir) = db_path.parent() {
             std::fs::create_dir_all(dir).with_context(|| format!("create {}", dir.display()))?;
@@ -67,7 +44,7 @@ impl Index {
         conn.pragma_update(None, "journal_mode", "WAL")?;
         conn.pragma_update(None, "busy_timeout", 5000)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
-        ensure_cache_key(&conn, p)?;
+        schema::ensure_cache_key(&conn, p)?;
         Ok(Self { conn })
     }
 
@@ -83,22 +60,31 @@ impl Index {
                 |r| r.get(0),
             )
             .map(Some)
-            .or_else(ignore_no_rows)?;
+            .or_else(schema::ignore_no_rows)?;
         if stored == Some(chash) {
             return Ok(false);
         }
-        let toks = tokens::stream(src, lang)?;
+        // Markdown (no grammar) enters `files` for the graph cache
+        // with zero fingerprint rows: all_instances joins from the
+        // fingerprints side, so the dedup ratchet is structurally
+        // untouched (design §3)
+        let toks = match lang.grammar() {
+            Some(_) => tokens::stream(src, lang)?,
+            None => Vec::new(),
+        };
         let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();
         let fps = winnow::fingerprints(&hashes, p);
         let tx = self.conn.transaction()?;
         tx.execute(
-            "INSERT INTO files (path, content_hash, token_count) VALUES (?1, ?2, ?3)
-             ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3",
-            (rel, chash, toks.len() as i64),
+            "INSERT INTO files (path, content_hash, token_count, has_tokens)
+             VALUES (?1, ?2, ?3, ?4)
+             ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3, has_tokens = ?4",
+            (rel, chash, toks.len() as i64, i64::from(lang.grammar().is_some())),
         )?;
         let id: i64 = tx.query_row("SELECT id FROM files WHERE path = ?1", (rel,), |r| r.get(0))?;
         tx.execute("DELETE FROM fingerprints WHERE file_id = ?1", (id,))?;
         insert_fps(&tx, id, &fps, &toks, p)?;
+        store::refresh_graph(&tx, id, &String::from_utf8_lossy(src), lang)?;
         tx.commit()?;
         Ok(true)
     }
@@ -122,11 +108,23 @@ impl Index {
         Ok(removed)
     }
 
-    /// Indexed file count (SessionStart health line).
+    /// Indexed file count (SessionStart health line). Since v4 this
+    /// includes zero-fingerprint Markdown rows — they ARE indexed.
     pub fn file_count(&self) -> Result<i64> {
         Ok(self
             .conn
             .query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?)
+    }
+
+    /// Phase-2 gate (design §3): edges depend on the whole file set
+    /// plus config bytes, never on one file. The resolver callback
+    /// slot is 2f's; until then callers pass an empty closure.
+    pub fn ensure_edges_resolved(
+        &mut self,
+        key: i64,
+        resolve: impl FnMut(&store::CachedSite) -> Vec<store::EdgeRow>,
+    ) -> Result<bool> {
+        store::ensure_resolved(&mut self.conn, key, resolve)
     }
 
     /// Occurrences of the given hashes only (probe hot path) —
@@ -179,61 +177,6 @@ impl Index {
             .collect::<rusqlite::Result<_>>()?;
         rows.sort();
         Ok(rows)
-    }
-}
-
-/// Wipe-and-recreate unless both the schema version and the meta
-/// cache key (params + tokenizer rev) match.
-fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {
-    let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
-    if version == SCHEMA_VERSION && meta_matches(conn, p)? {
-        return Ok(());
-    }
-    conn.execute_batch(SCHEMA)?;
-    conn.pragma_update(None, "user_version", SCHEMA_VERSION)?;
-    let mut stmt = conn.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
-    for (k, v) in meta_entries(p) {
-        stmt.execute((k, v))?;
-    }
-    Ok(())
-}
-
-fn meta_entries(p: Params) -> [(&'static str, i64); 3] {
-    [
-        ("kgram", p.kgram as i64),
-        ("window", p.window as i64),
-        ("tokenizer_rev", tokens::TOKENIZER_REV),
-    ]
-}
-
-fn meta_matches(conn: &Connection, p: Params) -> Result<bool> {
-    // a pre-meta database (or a foreign file) is a mismatch, not an
-    // error — but real SQL failures must still propagate
-    let has_meta: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'meta'",
-        [],
-        |r| r.get(0),
-    )?;
-    if has_meta == 0 {
-        return Ok(false);
-    }
-    for (k, want) in meta_entries(p) {
-        let got: Option<i64> = conn
-            .query_row("SELECT v FROM meta WHERE k = ?1", (k,), |r| r.get(0))
-            .map(Some)
-            .or_else(ignore_no_rows)?;
-        if got != Some(want) {
-            return Ok(false);
-        }
-    }
-    Ok(true)
-}
-
-fn ignore_no_rows(e: rusqlite::Error) -> rusqlite::Result<Option<i64>> {
-    if e == rusqlite::Error::QueryReturnedNoRows {
-        Ok(None)
-    } else {
-        Err(e)
     }
 }
 

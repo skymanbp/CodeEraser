@@ -7,14 +7,15 @@ pub mod groups;
 pub mod index;
 pub mod pairs;
 pub mod probe;
+pub(crate) mod schema;
 pub mod tokens;
+mod walkidx;
 pub mod winnow;
 
 use crate::config::Config;
-use crate::scan::{Format, lang::Lang, walk};
+use crate::scan::Format;
 use anyhow::Result;
 use serde::Serialize;
-use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -82,10 +83,15 @@ pub fn analyze(
     let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
     let p = Params::default();
     let mut idx = index::Index::open(&db_path, p)?;
-    let (live, refreshed) = index_all(root, &config, &mut idx)?;
-    let removed = idx.remove_missing(&live)?;
+    let walked = walkidx::index_all(root, &config, &mut idx)?;
+    let removed = idx.remove_missing(&walked.live)?;
+    // phase-2 gate (design §3): the resolver slot is filled at 2f;
+    // the empty closure keeps the edge table honest (nothing
+    // invented) while the key gate, cache reads, and invalidation
+    // plumbing run for real
+    idx.ensure_edges_resolved(walked.resolve_key, |_| Vec::new())?;
     let mut instances = idx.all_instances()?;
-    let streams = load_streams(root, &pairs::candidate_files(&instances), &mut idx, p)?;
+    let streams = walkidx::load_streams(root, &pairs::candidate_files(&instances), &mut idx, p)?;
     if streams.1 > 0 {
         // a file changed between refresh and stream load; the streams
         // were re-fed into the index, so re-fetch the instances to
@@ -98,8 +104,10 @@ pub fn analyze(
     };
     let found = pairs::clone_blocks(&instances, &streams.0, filter);
     let summary = Summary {
-        files: live.len(),
-        refreshed,
+        // has_tokens files only: Markdown rows are graph cache, and
+        // counting them would silently change dedup-report/0.5.0
+        files: walked.tokenized,
+        refreshed: walked.refreshed,
         removed,
         blocks: found.blocks.len(),
         groups: found.groups.len(),
@@ -122,63 +130,6 @@ pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<serde_json::Val
         groups: &found.groups,
         summary: s,
     })?)
-}
-
-/// Token streams for the files that share at least one fingerprint.
-/// Every stream is fed back through refresh_file with the very bytes
-/// just read: the content-hash fast path makes this free when nothing
-/// changed, and re-indexes atomically when something did — stored
-/// offsets can never disagree with the returned streams
-/// (single-threaded; the M2 daemon serializes writers per ADR-003).
-fn load_streams(
-    root: &Path,
-    files: &BTreeSet<String>,
-    idx: &mut index::Index,
-    p: Params,
-) -> Result<(pairs::Streams, usize)> {
-    let mut out = pairs::Streams::new();
-    let mut changed = 0;
-    for rel in files {
-        let path = root.join(rel);
-        let Some(lang) = Lang::from_path(&path) else {
-            continue;
-        };
-        let src = std::fs::read(&path)?;
-        if idx.refresh_file(rel, &src, lang, p)? {
-            changed += 1;
-        }
-        out.insert(rel.clone(), tokens::stream(&src, lang)?);
-    }
-    Ok((out, changed))
-}
-
-fn index_all(
-    root: &Path,
-    config: &Config,
-    idx: &mut index::Index,
-) -> Result<(BTreeSet<String>, usize)> {
-    let mut live = BTreeSet::new();
-    let mut refreshed = 0;
-    for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
-        let Some(lang) = Lang::from_path(&path) else {
-            continue;
-        };
-        if lang.grammar().is_none() {
-            continue; // Markdown: size-only, no token stream
-        }
-        let rel = path
-            .strip_prefix(root)
-            .unwrap_or(&path)
-            .display()
-            .to_string()
-            .replace('\\', "/");
-        let src = std::fs::read(&path)?;
-        if idx.refresh_file(&rel, &src, lang, Params::default())? {
-            refreshed += 1;
-        }
-        live.insert(rel);
-    }
-    Ok((live, refreshed))
 }
 
 #[derive(Serialize)]

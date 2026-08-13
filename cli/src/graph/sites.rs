@@ -42,6 +42,14 @@ impl RawSite {
 
 /// Detect every reference site in one document.
 pub fn detect(text: &str, lang: Lang) -> Vec<RawSite> {
+    detect_with_units(text, lang).0
+}
+
+/// Detection plus the unit segmentation it computes anyway for
+/// ownership: the graph store (schema v4 phase 1) persists both
+/// without a second parse. detect()'s output is byte-identical —
+/// the frozen universe and the eval drift gates stand on it (RG3).
+pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Unit>) {
     let mut found = match lang.grammar() {
         Some(grammar) => code_sites(text, lang, grammar),
         None => md::detect(text),
@@ -62,7 +70,7 @@ pub fn detect(text: &str, lang: Lang) -> Vec<RawSite> {
         };
         site.nth = prev.1;
     }
-    found
+    (found, owners)
 }
 
 fn code_sites(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<RawSite> {

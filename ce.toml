@@ -7,15 +7,15 @@
 exclude = ["contracts/fixtures/crosscheck/**"]
 
 # Only-shrink clone ratchet (M2 review R12), enforced in CI via
-# `ce dedup --check`. 201 measured 2026-08-07 after the R8 attack-
-# review fix batch (groups no longer merge overlapping spans — the
-# fusion/collapse defects — and the fix batch deduplicated its own
-# new tests). Kept, not extracted (named boundaries,
-# docs/FPR-REPLAY.md): per-hook Envelope declarations (parallel
-# contracts) and the metrics/divergence/sonar test bodies —
-# documentary stance tests whose per-case whitepaper citations ARE
-# the content; T2 folds their src literals so adjacent cases chain
-# into one family (~150 blocks). Ratchet DOWN with every cleanup;
-# never raise without a plan amendment.
+# `ce dedup --check`. 188 measured 2026-08-12 in the M5-2e schema-v4
+# batch: the ratchet caught the batch's own new test scaffolding
+# (+4 blocks) and the open_idx/put/corpus consolidation repaid 17
+# (prior floor: 201, 2026-08-07 R8 fix batch). Kept, not extracted
+# (named boundaries, docs/FPR-REPLAY.md): per-hook Envelope
+# declarations (parallel contracts) and the metrics/divergence/sonar
+# test bodies — documentary stance tests whose per-case whitepaper
+# citations ARE the content; T2 folds their src literals so adjacent
+# cases chain into one family (~150 blocks). Ratchet DOWN with every
+# cleanup; never raise without a plan amendment.
 [dedup]
-budget = 201
+budget = 188

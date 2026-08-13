@@ -6,6 +6,7 @@
 pub mod md;
 pub mod sites;
 pub mod spec;
+pub mod store;
 
 use crate::scan::lang::Lang;
 use crate::scan::walk;
