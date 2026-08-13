@@ -1,0 +1,10 @@
+{"proto":"2.2.0","type":"verdict.request","id":1,"sim":[],"pos":[],"tier":[],"churn":[],"cochange":[],"continuous":[],"discrete":[],"baseline":null,"weights":[],"floor":null}
+{"code":"contract","id":1,"message":"verdict/1: declared at 2.2.0, judgment lands with the score batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"verdict.request","id":2,"sim":[[0,1,1,90,100]],"pos":[[0,1,0,0,1,0],[1,2,1,1,2,3]],"tier":[[0,0],[1,0]],"churn":[[0,3,1,40,25]],"cochange":[[0,1,5]],"continuous":[[0,0,120]],"discrete":[7,9],"baseline":null,"weights":[[0,1]],"floor":null}
+{"code":"contract","id":2,"message":"verdict/1: declared at 2.2.0, judgment lands with the score batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"verdict.request","id":3,"sim":[],"pos":[],"tier":[],"churn":[],"cochange":[],"continuous":[],"discrete":[9,7],"baseline":null,"weights":[],"floor":null}
+{"code":"contract","id":3,"message":"verdict/1: declared at 2.2.0, judgment lands with the score batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"verdict.request","id":4,"sim":[[0,1,1,-1,100]],"pos":[],"tier":[],"churn":[],"cochange":[],"continuous":[],"discrete":[],"baseline":null,"weights":[],"floor":null}
+{"code":"contract","id":4,"message":"verdict/1: declared at 2.2.0, judgment lands with the score batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"verdict.request","id":5,"sim":[[0,7,1,90,100]],"pos":[[0,1,0,0,1,0]],"tier":[[0,0]],"churn":[],"cochange":[],"continuous":[],"discrete":[],"baseline":null,"weights":[],"floor":null}
+{"code":"contract","id":5,"message":"verdict/1: declared at 2.2.0, judgment lands with the score batch","proto":"2.2.0","type":"error"}

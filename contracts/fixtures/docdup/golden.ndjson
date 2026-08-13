@@ -1,0 +1,10 @@
+{"proto":"2.2.0","type":"docdup.request","id":1,"sets":[[1,2,3],[2,3,4]],"pairs":[[0,1,0]]}
+{"code":"contract","id":1,"message":"docdup/1: declared at 2.2.0, judgment lands with the docdup batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"docdup.request","id":2,"sets":[],"pairs":[]}
+{"code":"contract","id":2,"message":"docdup/1: declared at 2.2.0, judgment lands with the docdup batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"docdup.request","id":3,"sets":[[3,1,2]],"pairs":[]}
+{"code":"contract","id":3,"message":"docdup/1: declared at 2.2.0, judgment lands with the docdup batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"docdup.request","id":4,"sets":[[1,1,2]],"pairs":[]}
+{"code":"contract","id":4,"message":"docdup/1: declared at 2.2.0, judgment lands with the docdup batch","proto":"2.2.0","type":"error"}
+{"proto":"2.2.0","type":"docdup.request","id":5,"sets":[[1]],"pairs":[[0,1,0]]}
+{"code":"contract","id":5,"message":"docdup/1: declared at 2.2.0, judgment lands with the docdup batch","proto":"2.2.0","type":"error"}

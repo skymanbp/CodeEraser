@@ -19,11 +19,13 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 2.1.0 = graph/1 lands (M5-2a): additive type + additive
--- capability, minor per §2. 2.0.0 was the M5-1c-iii anchor-width
--- shape (rem/add entries carry the trimmed line's alnum width).
+-- 2.2.0 = clone/1 + docdup/1 + verdict/1 declared in ONE additive
+-- minor (M5-3a): stub handlers answer error/contract until each
+-- family's judgment batch lands — the declare-then-implement path
+-- graph/1 walked (2a → 2g). 2.1.0 = graph/1 (M5-2a); 2.0.0 was the
+-- M5-1c-iii anchor-width shape (rem/add entries carry alnum width).
 proto :: String
-proto = "2.1.0"
+proto = "2.2.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -76,6 +78,17 @@ dispatch version env line
   | envType env == "graph.request" = case Graph.respond proto line of
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
+  -- The three M5-3 families are DECLARED at 2.2.0 but still stubs:
+  -- every request — well-formed or not — answers error/contract
+  -- until the judgment batch lands (clone → T3, docdup → docdup,
+  -- verdict → score). Their goldens pin this stance and are
+  -- regenerated when each family's semantics arrive.
+  | envType env == "clone.request" =
+      errReply (envId env) "contract" "clone/1: declared at 2.2.0, judgment lands with the T3 batch"
+  | envType env == "docdup.request" =
+      errReply (envId env) "contract" "docdup/1: declared at 2.2.0, judgment lands with the docdup batch"
+  | envType env == "verdict.request" =
+      errReply (envId env) "contract" "verdict/1: declared at 2.2.0, judgment lands with the score batch"
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)
 
 majorMatches :: Maybe String -> Bool

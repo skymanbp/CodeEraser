@@ -33,6 +33,9 @@ main = do
       , goldenPairs "handshake/wire-errors.ndjson"
       , goldenPairs "fourclass/golden.ndjson"
       , goldenPairs "graph/golden.ndjson"
+      , goldenPairs "clone/golden.ndjson"
+      , goldenPairs "docdup/golden.ndjson"
+      , goldenPairs "verdict/golden.ndjson"
       , structural
       , costModel
       , Reference.equivalence

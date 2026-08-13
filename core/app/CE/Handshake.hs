@@ -26,8 +26,11 @@ instance FromJSON Hello where
 -- old client probing fourclass/1 sees absence and degrades to L1
 -- loudly instead of sending the un-parseable two-element shape.
 -- graph/1 = the M5-2 graph family (proto 2.1.0, additive).
+-- clone/1 + docdup/1 + verdict/1 = the M5-3 families, declared in
+-- one additive minor (proto 2.2.0) with stub handlers answering
+-- error/contract until each judgment batch lands (M5-3a).
 capabilities :: [String]
-capabilities = ["hello", "fourclass/2", "graph/1"]
+capabilities = ["hello", "fourclass/2", "graph/1", "clone/1", "docdup/1", "verdict/1"]
 
 data Reply = Reply
   { replyProto :: String

@@ -10,12 +10,13 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 2.1.0 = graph/1 lands (M5-2a): additive type + additive
-/// capability, minor per §2. 2.0.0 was the M5-1c-iii anchor-width
-/// request shape (a breaking change, major per §2); 1.0.0 was the M4
-/// content finalization (wire shape identical to 0.2.0, the bump
-/// declares the content frozen under §2 major rules).
-pub const PROTO: &str = "2.1.0";
+/// 2.2.0 = clone/1 + docdup/1 + verdict/1 declared in one additive
+/// minor (M5-3a; stubs answer error/contract until each judgment
+/// batch lands). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
+/// anchor-width request shape (a breaking change, major per §2);
+/// 1.0.0 was the M4 content finalization (wire shape identical to
+/// 0.2.0, the bump declares the content frozen under §2 major rules).
+pub const PROTO: &str = "2.2.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {
