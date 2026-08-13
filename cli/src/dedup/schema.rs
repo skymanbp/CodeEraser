@@ -11,13 +11,16 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 
 /// Pre-release schema versioning: a mismatch drops and recreates the
 /// tables (the index is a cache — rebuilding is always safe).
-/// v4: `has_tokens` on files (Markdown enters with zero fingerprint
-/// rows), the graph tables, and graph_rev in the cache key. The
-/// design's `ALTER TABLE files ADD has_tokens` folds into CREATE —
-/// the wipe model has no migration path to alter along.
-const SCHEMA_VERSION: i64 = 4;
+/// v5 (M5-3b): `symbols.nth` + UNIQUE identity (F2), the unitsig
+/// structural cache and the docsegs table, struct_rev + docdup_rev
+/// in the cache key. v4: `has_tokens` on files, the graph tables,
+/// graph_rev in the key. ALTERs fold into CREATE — the wipe model
+/// has no migration path to alter along.
+const SCHEMA_VERSION: i64 = 5;
 
 const SCHEMA: &str = "
+DROP TABLE IF EXISTS docsegs;
+DROP TABLE IF EXISTS unitsig;
 DROP TABLE IF EXISTS edges;
 DROP TABLE IF EXISTS sites;
 DROP TABLE IF EXISTS symbols;
@@ -60,6 +63,8 @@ pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {
     if !schema_current(&tx, p)? {
         tx.execute_batch(SCHEMA)?;
         tx.execute_batch(store::GRAPH_SCHEMA)?;
+        tx.execute_batch(super::unitcache::UNITSIG_SCHEMA)?;
+        tx.execute_batch(crate::docdup::DOCSEGS_SCHEMA)?;
         tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
         let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
         for (k, v) in meta_entries(p) {
@@ -76,12 +81,14 @@ fn schema_current(conn: &Connection, p: Params) -> Result<bool> {
     Ok(version == SCHEMA_VERSION && meta_matches(conn, p)?)
 }
 
-fn meta_entries(p: Params) -> [(&'static str, i64); 4] {
+fn meta_entries(p: Params) -> [(&'static str, i64); 6] {
     [
         ("kgram", p.kgram as i64),
         ("window", p.window as i64),
         ("tokenizer_rev", tokens::TOKENIZER_REV),
         ("graph_rev", store::GRAPH_REV),
+        ("struct_rev", super::struct_fp::STRUCT_REV),
+        ("docdup_rev", crate::docdup::DOCDUP_REV),
     ]
 }
 

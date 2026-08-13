@@ -33,10 +33,18 @@ pub const GRAPH_REV: i64 = 2;
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
 /// sites may point at absent or excluded files, and materializing
 /// phantom `files` rows to satisfy an FK would corrupt dedup.
+/// `nth` (schema v5, F2): occurrence order by start_line within one
+/// (file, key) — `(path, key)` alone is NOT an identity (a Rust
+/// method key carries no impl qualifier: `impl A { fn add }` and
+/// `impl B { fn add }` collide in one file). Known degradation,
+/// stated not painted over: deleting an EARLIER same-key sibling
+/// shifts the survivors' nth, which reads as one removal plus one
+/// addition downstream.
 pub const GRAPH_SCHEMA: &str = "
 CREATE TABLE symbols (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
-  key TEXT NOT NULL, start_line INTEGER NOT NULL, end_line INTEGER NOT NULL,
+  key TEXT NOT NULL, nth INTEGER NOT NULL,
+  start_line INTEGER NOT NULL, end_line INTEGER NOT NULL,
   flags INTEGER NOT NULL);
 CREATE TABLE sites (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
@@ -45,6 +53,7 @@ CREATE TABLE edges (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASC
   dst_path TEXT NOT NULL, dst_unit TEXT NOT NULL,
   kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL);
 CREATE INDEX idx_sym_file ON symbols(file_id, key);
+CREATE UNIQUE INDEX idx_sym_ident ON symbols(file_id, key, nth);
 CREATE INDEX idx_site_file ON sites(file_id);
 CREATE INDEX idx_edge_dst ON edges(dst_path);
 ";
@@ -124,10 +133,14 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
     // flags stay 0 until the wire build (2g) computes the bit set —
     // storing a guess would be inventing entry-point facts
     let mut sym = tx.prepare(
-        "INSERT INTO symbols (file_id, key, start_line, end_line, flags) VALUES (?1, ?2, ?3, ?4, 0)",
+        "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags)
+         VALUES (?1, ?2, ?3, ?4, ?5, 0)",
     )?;
-    for u in &segments {
-        sym.execute((file_id, &u.key, u.start_line as i64, u.end_line as i64))?;
+    // nth comes from the ONE assignment throat (units::with_nth) the
+    // unitsig cache also calls; the UNIQUE(file_id, key, nth) index
+    // makes any future divergence loud, not silent
+    for (u, nth) in crate::fourclass::units::with_nth(&segments) {
+        sym.execute((file_id, &u.key, nth, u.start_line as i64, u.end_line as i64))?;
     }
     let mut site = tx.prepare(
         "INSERT INTO sites (file_id, kind, line, spec, owner) VALUES (?1, ?2, ?3, ?4, ?5)",

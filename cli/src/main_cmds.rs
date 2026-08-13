@@ -106,6 +106,68 @@ fn print_deadcode(r: &graph::deadcode::Report, json: bool) {
     }
 }
 
+/// The clone flag set (DedupArgs precedent — an inline clap variant
+/// aligned token-for-token with the Graph variant and the ratchet
+/// bit it).
+#[derive(clap::Args)]
+pub struct CloneArgs {
+    /// Directory to analyze (default: current directory)
+    root: Option<PathBuf>,
+    /// Index database path (default: <root>/.ce/index.db)
+    #[arg(long)]
+    db: Option<PathBuf>,
+    /// List the unit universe
+    #[arg(long)]
+    units: bool,
+    #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+    format: OutFormat,
+}
+
+/// `ce clone --units` (M5-3b): refresh the index, assert the
+/// unitsig/symbols identity agreement (zero orphans — the nth throat
+/// is one function, and this checks it instead of assuming it), and
+/// list the cached unit universe. No judgment until the TED batch.
+pub fn clone_cmd(a: CloneArgs) -> ExitCode {
+    if !a.units {
+        eprintln!("ce clone: only --units exists until the T3 judgment batch lands");
+        return ExitCode::from(2);
+    }
+    match clone_units(&or_cwd(a.root), a.db) {
+        Ok(rows) => {
+            print_units(&rows, json(a.format));
+            ExitCode::SUCCESS
+        }
+        Err(err) => fail("clone", err),
+    }
+}
+
+fn clone_units(root: &Path, db: Option<PathBuf>) -> anyhow::Result<Vec<dedup::unitcache::UnitRow>> {
+    let (idx, _db_path) = dedup::refreshed_index(root, db)?;
+    let orphans = dedup::unitcache::identity_orphans(&idx)?;
+    anyhow::ensure!(
+        orphans == 0,
+        "{orphans} unitsig rows missing their symbols identity — nth throat drift"
+    );
+    dedup::unitcache::unit_rows(&idx)
+}
+
+fn print_units(rows: &[dedup::unitcache::UnitRow], json: bool) {
+    if json {
+        let doc = serde_json::json!({
+            "schema": "ce.clone-units/0.1.0",
+            "units": rows.iter().map(|u| serde_json::json!({
+                "path": u.path, "key": u.key, "nth": u.nth, "nodes": u.nodes,
+            })).collect::<Vec<_>>(),
+        });
+        println!("{doc}");
+        return;
+    }
+    for u in rows {
+        println!("{}  {}#{}  {} nodes", u.path, u.key, u.nth, u.nodes);
+    }
+    println!("clone units: {}", rows.len());
+}
+
 /// The dedup flag set (clap surface + body in one place: six loose
 /// params would trip the project's own params threshold; the flag
 /// SURFACE is unchanged from its main.rs days).

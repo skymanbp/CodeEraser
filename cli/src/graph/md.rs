@@ -26,6 +26,21 @@ pub fn detect(text: &str) -> Vec<RawSite> {
     out
 }
 
+/// content_lines PLUS the inline-code mask merged in — the full
+/// triple mask (fence + HTML comment + inline code) as one additive
+/// surface. docdup's segment extractor may ONLY call this (F3): the
+/// bare walk masks comments but not `code spans`, and a judge seeing
+/// text the detector masks would be the drift bug. No existing call
+/// path changes — scan_line still merges its own spans. Public: it
+/// IS the contracted docdup masking surface (design vol.2 §5.1).
+pub fn masked_content_lines(text: &str) -> Vec<(usize, &str, Vec<bool>)> {
+    let mut rows = content_lines(text);
+    for (_, line, mask) in &mut rows {
+        merge_code_spans(line, mask);
+    }
+    rows
+}
+
 /// Fence-aware, comment-masked walk of a document's content lines,
 /// shared with the ladder's heading and definition scans — ONE
 /// masking implementation: the ladder resolving through a definition

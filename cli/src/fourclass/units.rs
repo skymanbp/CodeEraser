@@ -172,6 +172,30 @@ fn markdown_segments(text: &str) -> Vec<Unit> {
     out
 }
 
+/// THE nth assignment (schema v5, F2): occurrence order by
+/// start_line within each key group — `(path, key)` alone is not an
+/// identity (same-key Rust methods across impl blocks collide in one
+/// file). The graph `symbols` rows and the dedup `unitsig` cache
+/// both persist (key, nth) and MUST agree, so both call this one
+/// throat instead of re-deriving the order.
+pub fn with_nth(units: &[Unit]) -> Vec<(&Unit, i64)> {
+    let mut ordered: Vec<&Unit> = units.iter().collect();
+    ordered.sort_by_key(|u| (u.key.as_str(), u.start_line, u.end_line));
+    let mut out = Vec::with_capacity(ordered.len());
+    let mut nth = 0i64;
+    let mut prev: Option<&str> = None;
+    for u in ordered {
+        nth = if prev == Some(u.key.as_str()) {
+            nth + 1
+        } else {
+            0
+        };
+        prev = Some(u.key.as_str());
+        out.push((u, nth));
+    }
+    out
+}
+
 /// The innermost unit containing `line` (1-based), or None = toplevel.
 pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {
     units

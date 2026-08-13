@@ -23,13 +23,14 @@
 //! reader sees what the graph refuses to know (decision 5:
 //! symbol-level indegree stays out while call edges are off).
 
-use super::load::{GraphEdge, graph_rows};
+use super::load::graph_rows;
+use super::nodes::{self, Node};
 use crate::config::Config;
 use crate::corelink::Link;
-use crate::dedup::{self, index::Index};
+use crate::dedup;
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 pub const VERDICT_NAMES: [&str; 4] = [
@@ -51,16 +52,8 @@ pub struct Report {
     pub degraded: Option<String>,
 }
 
-struct Node {
-    path: String,
-    unit: String,
-    kind: i64,
-}
-
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
-    dedup::analyze(root, db.clone(), None, None).map_err(anyhow::Error::msg)?;
-    let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
-    let idx = Index::open(&db_path, dedup::Params::default())?;
+    let (idx, db_path) = dedup::refreshed_index(root, db)?;
     let (files, edges, unresolved_sites) = graph_rows(&idx)?;
     if files.is_empty() {
         bail!(
@@ -69,13 +62,12 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
         );
     }
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
-    let nodes = nodes_of(&files, &edges);
-    let ids: BTreeMap<(&str, &str), usize> = nodes
-        .iter()
-        .enumerate()
-        .map(|(i, n)| ((n.path.as_str(), n.unit.as_str()), i))
-        .collect();
-    let rows: Vec<Value> = nodes.iter().map(|n| node_row(n, &config)).collect();
+    // identity assignment + containment live in the nodes.rs throat
+    // (F19) — the M5-3 join consumes the SAME functions, so both
+    // verdicts stand on one id space by construction
+    let node_list = nodes::nodes_of(&files, &edges);
+    let ids = nodes::ids(&node_list);
+    let rows: Vec<Value> = node_list.iter().map(|n| node_row(n, &config)).collect();
     let mut wire: BTreeSet<[i64; 4]> = edges
         .iter()
         .filter(|e| e.kind != super::wire::EDGE_ASSET)
@@ -85,55 +77,13 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
             [s, d, e.kind, e.rung]
         })
         .collect();
-    contain(&nodes, &ids, &mut wire);
+    nodes::contain(&node_list, &ids, &mut wire);
     let reply = judge(core, &rows, &wire)?;
-    let report = consume(&reply, &nodes, unresolved_sites)?;
+    let report = consume(&reply, &node_list, unresolved_sites)?;
     if let Some(reason) = &report.degraded {
         observe(root, reason);
     }
     Ok(report)
-}
-
-/// Dense node identities: every walked file plus every edge target —
-/// a BTreeSet, so the id assignment is a function of the graph and
-/// the wire bytes are shuffle-proof (G11). Kind reuses the wire
-/// granularity codes.
-fn nodes_of(files: &[String], edges: &[GraphEdge]) -> Vec<Node> {
-    let file_set: BTreeSet<&str> = files.iter().map(String::as_str).collect();
-    let mut set: BTreeSet<(String, String)> =
-        files.iter().map(|p| (p.clone(), String::new())).collect();
-    for e in edges {
-        set.insert((e.dst_path.clone(), e.dst_unit.clone()));
-    }
-    set.into_iter()
-        .map(|(path, unit)| {
-            let kind = if !unit.is_empty() {
-                super::wire::GRAN_SECTION
-            } else if file_set.contains(path.as_str()) {
-                super::wire::GRAN_FILE
-            } else {
-                super::wire::GRAN_PACKAGE
-            };
-            Node { path, unit, kind }
-        })
-        .collect()
-}
-
-/// Synthetic containment arcs: package node → every file under its
-/// directory (module header). rung 1: containment is a fact, not a
-/// resolution mechanism, and it must survive every rung ceiling.
-fn contain(nodes: &[Node], ids: &BTreeMap<(&str, &str), usize>, wire: &mut BTreeSet<[i64; 4]>) {
-    for pkg in nodes.iter().filter(|n| n.kind == super::wire::GRAN_PACKAGE) {
-        let prefix = format!("{}/", pkg.path);
-        let p = ids[&(pkg.path.as_str(), "")] as i64;
-        for member in nodes
-            .iter()
-            .filter(|n| n.kind == super::wire::GRAN_FILE && n.path.starts_with(&prefix))
-        {
-            let m = ids[&(member.path.as_str(), "")] as i64;
-            wire.insert([p, m, super::wire::EDGE_CONTAIN, 1]);
-        }
-    }
 }
 
 /// [lang, kind, flags] — only file nodes carry entry flags.

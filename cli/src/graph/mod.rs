@@ -12,10 +12,12 @@ pub mod jsonc;
 pub mod ladder;
 pub mod load;
 pub mod md;
+pub mod nodes;
 pub mod roots;
 pub mod sites;
 pub mod spec;
 pub mod store;
+pub mod symbols;
 pub mod wire;
 
 use crate::scan::lang::Lang;

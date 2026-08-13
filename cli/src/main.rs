@@ -8,7 +8,7 @@ mod main_cmds;
 
 use clap::{Parser, Subcommand};
 use codeeraser::daemon;
-use main_cmds::{self as cmds, DedupArgs, OutFormat, json};
+use main_cmds::{self as cmds, CloneArgs, DedupArgs, OutFormat, json};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -78,6 +78,9 @@ enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
+    /// T3 near-miss clone subsystem (M5-3): --units lists the cached
+    /// unit universe (no judgment until the TED batch lands)
+    Clone(CloneArgs),
     /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
     Dedup(DedupArgs),
     /// Run the per-project daemon in the foreground (ADR-003);
@@ -142,6 +145,7 @@ fn main() -> ExitCode {
             core,
             format,
         } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, &core, json(format)),
+        Cmd::Clone(a) => cmds::clone_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),
         Cmd::Probe { hook } => cmds::hook_cmd(hook, "probe", codeeraser::guard::run_hook),
         Cmd::Audit { hook } => cmds::hook_cmd(hook, "audit", codeeraser::audit::run_hook),

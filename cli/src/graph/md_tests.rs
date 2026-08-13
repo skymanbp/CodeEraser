@@ -2,7 +2,26 @@
 //! the E01 300-line ceiling after the Opus-review hardening. Pins
 //! the 2b RED conditions plus the review's counterexamples.
 
-use super::detect;
+use super::{detect, masked_content_lines};
+
+/// F3 (M5-3b): the docdup masking surface is the full triple mask —
+/// fenced lines are ABSENT, HTML-comment bytes and inline-code bytes
+/// are MASKED — in one additive call; the bare walk stays untouched
+/// for the detector's own scan path.
+#[test]
+fn masked_content_lines_carry_the_triple_mask() {
+    let text = "plain `code` tail\n```\nfenced\n```\n<!-- hidden --> shown\n";
+    let rows = masked_content_lines(text);
+    let lines: Vec<usize> = rows.iter().map(|(n, _, _)| *n).collect();
+    assert_eq!(lines, vec![1, 5], "fence interior absent, content kept");
+    let (_, l1, m1) = &rows[0];
+    let code = l1.find("`code`").unwrap();
+    assert!(m1[code] && m1[code + 5], "inline code masked");
+    assert!(!m1[0], "plain text unmasked");
+    let (_, l5, m5) = &rows[1];
+    assert!(m5[0], "comment bytes masked");
+    assert!(!m5[l5.find("shown").unwrap()], "text after comment live");
+}
 
 fn kinds_specs(text: &str) -> Vec<(&'static str, String)> {
     detect(text).into_iter().map(|s| (s.kind, s.spec)).collect()

@@ -8,7 +8,9 @@ pub mod index;
 pub mod pairs;
 pub mod probe;
 pub(crate) mod schema;
+pub mod struct_fp;
 pub mod tokens;
+pub mod unitcache;
 mod walkidx;
 pub mod winnow;
 
@@ -71,6 +73,16 @@ fn check_budget(root: &Path, blocks: usize) -> Result<ExitCode> {
         );
     }
     Ok(ExitCode::SUCCESS)
+}
+
+/// Refresh the index for `root` and open it — the one opening every
+/// cached-graph consumer (deadcode, `ce clone --units`) walks; the
+/// path rides back for error messages that name the database.
+pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index, PathBuf)> {
+    analyze(root, db.clone(), None, None)?;
+    let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
+    let idx = index::Index::open(&db_path, Params::default())?;
+    Ok((idx, db_path))
 }
 
 /// Library entry shared by the CLI and the daemon: index, verify,

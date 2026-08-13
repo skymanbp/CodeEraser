@@ -131,7 +131,11 @@ impl Index {
         let id: i64 = tx.query_row("SELECT id FROM files WHERE path = ?1", (rel,), |r| r.get(0))?;
         tx.execute("DELETE FROM fingerprints WHERE file_id = ?1", (id,))?;
         insert_fps(&tx, id, &fps, &toks, p)?;
-        store::refresh_graph(&tx, id, &String::from_utf8_lossy(src), lang)?;
+        let text = String::from_utf8_lossy(src);
+        store::refresh_graph(&tx, id, &text, lang)?;
+        // the honest FOURTH per-file parse (design F11) — unitsig
+        // rows ride the same content-hash-gated transaction
+        super::unitcache::refresh_units(&tx, id, &text, lang)?;
         tx.commit()?;
         Ok(true)
     }

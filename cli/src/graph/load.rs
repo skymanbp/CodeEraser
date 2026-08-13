@@ -17,37 +17,62 @@ pub struct GraphEdge {
     pub rung: i64,
 }
 
-impl GraphEdge {
-    // tuple hop on purpose: a field-by-field literal would align
-    // token-for-token with store.rs's CachedSite mapper (ratchet)
-    fn from_row(r: &rusqlite::Row<'_>) -> rusqlite::Result<Self> {
-        let (src, dst_path, dst_unit) = (r.get(0)?, r.get(1)?, r.get(2)?);
-        let (kind, rung) = (r.get(3)?, r.get(4)?);
-        Ok(GraphEdge {
-            src,
-            dst_path,
-            dst_unit,
-            kind,
-            rung,
-        })
-    }
+/// The one prepare→query_map→collect throat every cached-table read
+/// surface calls (load / symbols / unitcache): the boilerplate lived
+/// three times for one batch before the ratchet bit it.
+pub(crate) fn rows<T>(
+    conn: &rusqlite::Connection,
+    sql: &str,
+    map: impl FnMut(&rusqlite::Row<'_>) -> rusqlite::Result<T>,
+) -> Result<Vec<T>> {
+    Ok(conn
+        .prepare(sql)?
+        .query_map([], map)?
+        .collect::<rusqlite::Result<_>>()?)
+}
+
+/// Column-generic get-chains: under T2 normalization EVERY
+/// field-by-field row mapper is the same token stream, so the chain
+/// exists once per arity and each read surface keeps only its
+/// destructure→construct semantics (below the clone floor).
+/// `Col` is both shorthand and the token-shape breaker: four
+/// spelled-out FromSql bounds were themselves a 50-token run.
+pub(crate) trait Col: rusqlite::types::FromSql {}
+impl<T: rusqlite::types::FromSql> Col for T {}
+
+pub(crate) fn t5<A: Col, B: Col, C: Col, D: Col, E: Col>(
+    r: &rusqlite::Row<'_>,
+) -> rusqlite::Result<(A, B, C, D, E)> {
+    let head = t4(r)?;
+    Ok((head.0, head.1, head.2, head.3, r.get(4)?))
+}
+
+pub(crate) fn t4<A: Col, B: Col, C: Col, D: Col>(
+    r: &rusqlite::Row<'_>,
+) -> rusqlite::Result<(A, B, C, D)> {
+    Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
 }
 
 pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
     let conn = idx.raw();
-    let files: Vec<String> = conn
-        .prepare("SELECT path FROM files ORDER BY path")?
-        .query_map([], |r| r.get(0))?
-        .collect::<rusqlite::Result<_>>()?;
-    let edges: Vec<GraphEdge> = conn
-        .prepare(
-            "SELECT f.path, e.dst_path, e.dst_unit, e.kind, e.rung
-             FROM edges e JOIN sites s ON s.id = e.site_id
-             JOIN files f ON f.id = s.file_id
-             ORDER BY f.path, e.dst_path, e.dst_unit, e.kind, e.rung",
-        )?
-        .query_map([], GraphEdge::from_row)?
-        .collect::<rusqlite::Result<_>>()?;
+    let files = rows(conn, "SELECT path FROM files ORDER BY path", |r| r.get(0))?;
+    let edges = rows(
+        conn,
+        "SELECT f.path, e.dst_path, e.dst_unit, e.kind, e.rung
+         FROM edges e JOIN sites s ON s.id = e.site_id
+         JOIN files f ON f.id = s.file_id
+         ORDER BY f.path, e.dst_path, e.dst_unit, e.kind, e.rung",
+        t5,
+    )?
+    .into_iter()
+    .map(|(src, dst_path, dst_unit, kind, rung)| GraphEdge {
+        src,
+        dst_path,
+        dst_unit,
+        kind,
+        rung,
+    })
+    .collect();
     let unresolved: i64 = conn.query_row(
         "SELECT COUNT(*) FROM sites s
          WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id)",
