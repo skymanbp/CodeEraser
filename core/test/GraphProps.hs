@@ -1,0 +1,129 @@
+-- aeson 2.x object keys are Key, not String; string literals for
+-- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
+{-# LANGUAGE OverloadedStrings #-}
+
+-- | The graph judgment's knob ablation and fixed-seed property
+-- battery (plan §7.3 as amended v1.4). Dead-knob: perturbing each
+-- CE.Graph.Cost knob — minRung, entryMask, sccFloor — must move a
+-- verdict/report count on the fixture, the fuck-u-code dead-field
+-- shape the plan names. Properties: entry-mask and rung monotonicity
+-- of the dead set, SCC partition sanity, and the ascending-contract
+-- rejection, over 200 graphs from a fixed-seed LCG — a seeded
+-- generator samples what enumeration cannot afford (n > 4), and no
+-- RNG enters a byte-determinism contract.
+module GraphProps (battery) where
+
+import CE.Graph (respond)
+import CE.Graph.Build (build, sccList)
+import CE.Graph.Cost (entryMask, minRung, sccFloor)
+import CE.Graph.Cycles (cycles)
+import CE.Graph.Dead (verdicts)
+import Data.Aeson (Value (..), encode, object, (.=))
+import Data.Bits (xor)
+import qualified Data.ByteString.Lazy as BL
+import Data.List (isInfixOf, sort)
+import qualified Data.IntSet as IS
+import ReferenceGraph (reachB)
+
+battery :: IO Bool
+battery = do
+  a <- check "dead knobs all live (minRung / entryMask / sccFloor)" deadKnobs
+  b <- check "dead set anti-monotone in entryMask (200 seeded graphs)" (allGraphs maskMono)
+  c <- check "dead set anti-monotone in minRung (200 seeded graphs)" (allGraphs rungMono)
+  d <- check "SCC lists partition the vertex set (200 seeded graphs)" (allGraphs sccPartition)
+  e <- check "shuffled edge table is refused (200 seeded graphs)" (allGraphs shuffledRefused)
+  pure (a && b && c && d && e)
+
+check :: String -> Bool -> IO Bool
+check name ok = do
+  putStrLn ((if ok then "ok   " else "FAIL ") <> name)
+  pure ok
+
+-- | Fixture: entry 0 -> 1 over a rung-5 edge, an unreachable
+-- 2-cycle (2,3), two isolated nodes (4,5). Every knob perturbation
+-- must move (dead rows, cycle rows) — production (4,1).
+deadKnobs :: Bool
+deadKnobs =
+  and
+    [ judged (minRung - 1) entryMask sccFloor /= base
+    , judged minRung (entryMask `xor` 2) sccFloor /= base
+    , judged minRung entryMask (sccFloor + 1) /= base
+    ]
+ where
+  flagses = [2, 0, 0, 0, 0, 0]
+  rows = [[0, 1, 0, 5], [2, 3, 0, 1], [3, 2, 0, 1]]
+  base = judged minRung entryMask sccFloor
+  judged r m f =
+    let b = build r 6 rows
+     in (length (verdicts b m flagses), length (cycles f b))
+
+-- | 200 seeded graphs: (n, arcs with rungs, flags per node).
+allGraphs :: ((Int, [(Int, Int, Integer)], [Integer]) -> Bool) -> Bool
+allGraphs prop = all (prop . graphAt) [1 .. 200 :: Int]
+
+graphAt :: Int -> (Int, [(Int, Int, Integer)], [Integer])
+graphAt i = (n, arcs, flagses)
+ where
+  s0 = lcg (toInteger i * 7919)
+  n = 3 + fromInteger (s0 `mod` 6)
+  picks = drops (lcg s0) [(a, b) | a <- [0 .. n - 1], b <- [0 .. n - 1]]
+  arcs = [(a, b, 1 + lcg (toInteger (a * n + b)) `mod` 5) | (a, b) <- picks]
+  flagses = [lcg (s0 + toInteger v) `mod` 8 | v <- [1 .. n]]
+
+-- | Keep each element on a 1-in-4 draw from the seed stream.
+drops :: Integer -> [(Int, Int)] -> [(Int, Int)]
+drops _ [] = []
+drops s (x : xs)
+  | s `mod` 4 == 0 = x : drops (lcg s) xs
+  | otherwise = drops (lcg s) xs
+
+lcg :: Integer -> Integer
+lcg s = (s * 6364136223846793005 + 1442695040888963407) `mod` 18446744073709551616
+
+rowsOf :: [(Int, Int, Integer)] -> [[Integer]]
+rowsOf arcs = sort [[toInteger a, toInteger b, 0, r] | (a, b, r) <- arcs]
+
+deadIdx :: Integer -> Integer -> Int -> [(Int, Int, Integer)] -> [Integer] -> IS.IntSet
+deadIdx r m n arcs flagses =
+  IS.fromList (map fst (verdicts (build r n (rowsOf arcs)) m flagses))
+
+-- | More entry bits => more roots => the dead set can only shrink.
+maskMono :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
+maskMono (n, arcs, flagses) =
+  deadIdx minRung 126 n arcs flagses `IS.isSubsetOf` deadIdx minRung 2 n arcs flagses
+
+-- | A higher rung ceiling keeps more edges => reach grows => the
+-- dead set can only shrink.
+rungMono :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
+rungMono (n, arcs, flagses) =
+  deadIdx 5 entryMask n arcs flagses `IS.isSubsetOf` deadIdx 2 entryMask n arcs flagses
+
+-- | Every vertex in exactly one SCC, members mutually reachable
+-- (checked against the independent fixpoint).
+sccPartition :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
+sccPartition (n, arcs, _) =
+  sort (concat sccs) == [0 .. n - 1] && all mutual sccs
+ where
+  sccs = sccList (build 5 n (rowsOf arcs))
+  plain = [(a, b) | (a, b, _) <- arcs]
+  mutual ms = and [IS.member j (reachB plain [i]) | i <- ms, j <- ms]
+
+-- | Reversing a >=2-row edge table must trip the ascending contract.
+shuffledRefused :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
+shuffledRefused (n, arcs, _) =
+  case sortedRows of
+    rows@(_ : _ : _) -> refused (reverse rows)
+    _ -> True
+ where
+  sortedRows = rowsOf arcs
+  refused rows = case respond "2.1.0" (req rows) of
+    Left (_, code, msg) -> code == "contract" && "not strictly ascending" `isInfixOf` msg
+    Right _ -> False
+  req rows =
+    BL.toStrict . encode $
+      object
+        [ "id" .= (1 :: Int)
+        , "nodes" .= replicate n ([0, 0, 0] :: [Integer])
+        , "edges" .= rows
+        , "pos" .= ([] :: [Value])
+        ]

@@ -10,7 +10,9 @@ module Main (main) where
 
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
+import qualified GraphProps
 import qualified Reference
+import qualified ReferenceGraph
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -34,6 +36,8 @@ main = do
       , structural
       , costModel
       , Reference.equivalence
+      , ReferenceGraph.equivalence
+      , GraphProps.battery
       ]
   unless (and results) exitFailure
 

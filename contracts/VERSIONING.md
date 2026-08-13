@@ -50,14 +50,18 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,flags]],"edges":
   [[src,dst,kind,rung]],"unresolved":[[lang,kind,reason,count]],"pos":[idx]}`——
-  稠密 0 基索引即节点身份，**无文本形物过线**（ADR-002 A6）；边严格升序且去重、
-  端点与 pos 越界 → `error/contract`（边界契约由 core 机检）；超
-  `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
-  "reason":"graph_too_large"`（绝不截断）。**M5-2a 桩**：通过校验的请求一律
-  `error/contract`（算法在 M5-2g 随穷举参照 harness 落地，桩不发明判决）。
-- `graph.result`：`{"id","dead":[[idx,verdict]],"pos":[[idx,indeg,outdeg,sccId,
-  sccSize,reachIn]],"cycles":[[sccId,[idx]]],"counts":{"nodes","edges","kept"},
-  "degraded"(,"reason"∈{graph_too_large})}`（形状 2.1.0 预留，语义 M5-2g）。
+  稠密 0 基索引即节点身份，**无文本形物过线**（ADR-002 A6）；节点行三元组、
+  边严格升序且去重、端点与 pos 越界 → `error/contract`（边界契约由 core 机检）；
+  超 `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
+  "reason":"graph_too_large"`（绝不截断）。
+- `graph.result`（语义 M5-2g 落地，穷举参照 harness 见 core/test/）：
+  `{"id","dead":[[idx,verdict]],"pos":[[idx,indeg,outdeg,sccId,sccSize,reachIn]],
+  "cycles":[[sccId,[idx]]],"counts":{"nodes","edges","kept"},
+  "degraded"(,"reason"∈{graph_too_large})}`——verdict ∈ {1 unref_private,
+  2 unref_public, 3 unreach_private, 4 unreach_public}（入度×可达两轴 + 公私隔离）；
+  判定旋钮全在 `CE.Graph.Cost`：`minRung`(=5，边计为引用的 rung 上限)、
+  `entryMask`(=126，flags 位 1-6 为入口根；位 0 exported 有意不入——公私是判决轴
+  不是活性声明)、`sccFloor`(=2，环报告的最小 SCC)；kept = 去重后被判定采用的边数。
 
 ## 2. SemVer 协商规则
 

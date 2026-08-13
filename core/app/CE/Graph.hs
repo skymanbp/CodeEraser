@@ -2,19 +2,23 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | graph.request handler, M5-2a boundary stub: decode, enforce the
--- node/edge caps (the real oversize guard — the envelope byte
--- precheck is relaxed for the trusted same-machine child, 2026-08-12
--- decision), machine-check the boundary contract (edge rows are
--- [src,dst,kind,rung] four-tuples, endpoints and pos indices in
--- range, edges strictly ascending hence duplicate-free) — then
--- refuse. The algorithms land at M5-2g behind their exhaustive
--- reference harness; a stub that answered would be inventing
--- judgments. The validation layer written here survives 2g intact:
--- only the final refusal is replaced by computation.
+-- | graph.request handler: decode, enforce the node/edge caps (the
+-- real oversize guard — the envelope byte precheck is relaxed for
+-- the trusted same-machine child, 2026-08-12 decision),
+-- machine-check the boundary contract (node rows are
+-- [lang,kind,flags] and edge rows [src,dst,kind,rung], endpoints and
+-- pos indices in range, edges strictly ascending hence
+-- duplicate-free) — then judge. The M5-2a stub refused here; M5-2g
+-- replaced exactly that refusal with the computation, which lives
+-- behind the exhaustive reference harness (core/test/) and takes its
+-- knobs from CE.Graph.Cost — the only ablation targets.
 module CE.Graph (respond) where
 
-import CE.Graph.Cost (edgeCap, nodeCap)
+import CE.Graph.Build (Built (..), build)
+import CE.Graph.Cost (edgeCap, entryMask, minRung, nodeCap, sccFloor)
+import qualified CE.Graph.Cycles as Cycles
+import qualified CE.Graph.Dead as Dead
+import qualified CE.Graph.Position as Position
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -22,11 +26,12 @@ import Data.Foldable (asum)
 
 -- | Wire shape (design brief §2): index = node identity, nothing
 -- text-shaped crosses. @unresolved@ is part of the family shape but
--- carries no validation obligation, so the stub ignores it (§1
--- unknown-field rule). Absent @pos@ = counts only.
+-- carries no validation obligation — it is the honest ledger, not an
+-- input to judgment (§1 unknown-field rule). Absent @pos@ = counts
+-- only.
 data GraphReq = GraphReq
   { reqId :: Value
-  , reqNodes :: [Value]
+  , reqNodes :: [[Integer]]
   , reqEdges :: [[Integer]]
   , reqPos :: [Integer]
   }
@@ -40,8 +45,7 @@ instance FromJSON GraphReq where
       <*> o .:? "pos" .!= []
 
 -- | Left = (id to echo, error code, message) for the dispatcher's
--- error encoder; Right = the encoded graph.result line (M5-2a: only
--- the degraded graph_too_large shape exists).
+-- error encoder; Right = the encoded graph.result line.
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto line = case eitherDecodeStrict line of
   Left e -> Left (Nothing, "bad_request", "graph: " <> e)
@@ -52,12 +56,7 @@ respond proto line = case eitherDecodeStrict line of
     | Just why <- violation req ->
         Left (Just (reqId req), "contract", why)
     | otherwise ->
-        Left
-          ( Just (reqId req)
-          , "contract"
-          , "graph algorithms land at M5-2g behind their reference \
-            \harness; a stub answer would be an invented judgment"
-          )
+        Right (result proto req)
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
@@ -66,13 +65,23 @@ respond proto line = case eitherDecodeStrict line of
 violation :: GraphReq -> Maybe String
 violation req =
   asum
-    [ asum (zipWith (edgeRow n) [0 :: Int ..] es)
+    [ asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
+    , asum (zipWith (edgeRow n) [0 :: Int ..] es)
     , asum (zipWith notAscending [1 :: Int ..] (zip es (drop 1 es)))
     , asum (zipWith (posRow n) [0 :: Int ..] (reqPos req))
     ]
  where
   n = fromIntegral (length (reqNodes req))
   es = reqEdges req
+
+nodeRow :: Int -> [Integer] -> Maybe String
+nodeRow i row = case row of
+  [lang, kind, flags]
+    | any (< 0) [lang, kind, flags] -> Just (label <> "negative field")
+    | otherwise -> Nothing
+  _ -> Just (label <> "malformed row (need [lang,kind,flags])")
+ where
+  label = "node " <> show i <> ": "
 
 edgeRow :: Integer -> Int -> [Integer] -> Maybe String
 edgeRow n i row = case row of
@@ -93,6 +102,34 @@ posRow :: Integer -> Int -> Integer -> Maybe String
 posRow n i p
   | p < 0 || p >= n = Just ("pos " <> show i <> ": index out of range")
   | otherwise = Nothing
+
+-- | The judged result. Knobs are the CE.Graph.Cost constants;
+-- everything else is a function of the request, and the aeson
+-- KeyMap encodes keys sorted — deterministic bytes by construction.
+result :: String -> GraphReq -> B8.ByteString
+result proto req =
+  BL.toStrict . encode $
+    object
+      [ "proto" .= proto
+      , "type" .= ("graph.result" :: String)
+      , "id" .= reqId req
+      , "dead" .= [[toInteger i, toInteger v] | (i, v) <- Dead.verdicts b entryMask flagses]
+      , "pos" .= Position.positions b entryMask flagses (reqPos req)
+      , "cycles"
+          .= [ toJSON [toJSON (toInteger i), toJSON (map toInteger ms)]
+             | (i, ms) <- Cycles.cycles sccFloor b
+             ]
+      , "counts"
+          .= object
+            [ "nodes" .= length (reqNodes req)
+            , "edges" .= length (reqEdges req)
+            , "kept" .= bKept b
+            ]
+      , "degraded" .= False
+      ]
+ where
+  b = build minRung (length (reqNodes req)) (reqEdges req)
+  flagses = [f | [_, _, f] <- reqNodes req]
 
 -- | Over-cap refusal: a well-formed degraded result, never a
 -- truncated graph. counts echoes what arrived (informational);
