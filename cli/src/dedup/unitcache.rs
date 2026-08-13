@@ -26,32 +26,60 @@ CREATE TABLE unitsig (
 CREATE INDEX idx_unitsig_file ON unitsig(file_id);
 ";
 
-/// Replace one file's unitsig rows. Markdown (no grammar) and parse
-/// failures leave zero rows — T3 judges code units only; text
-/// duplication is docdup's domain.
-pub fn refresh_units(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang) -> Result<()> {
-    tx.execute("DELETE FROM unitsig WHERE file_id = ?1", (file_id,))?;
+/// The structural facts of one code unit — the pure half of
+/// refresh_units, and the ONE fact source the t3-universe instrument
+/// shares with the cache writer (a second derivation could freeze a
+/// universe the product never computes).
+pub struct UnitFact {
+    pub key: String,
+    pub nth: i64,
+    pub nodes: i64,
+    pub sig: BTreeSet<u64>,
+    pub hist: BTreeMap<u64, u32>,
+}
+
+/// Every code unit's facts. Markdown (no grammar) and parse failures
+/// yield none — T3 judges code units only; text duplication is
+/// docdup's domain.
+pub fn unit_facts(text: &str, lang: Lang) -> Vec<UnitFact> {
     let Some(grammar) = lang.grammar() else {
-        return Ok(());
+        return Vec::new();
     };
     let Some(tree) = ast::parse(text, &grammar) else {
-        return Ok(());
+        return Vec::new();
     };
     let spine = struct_fp::spine(tree.root_node());
     let segments = units::segments(text, lang);
+    units::with_nth(&segments)
+        .into_iter()
+        .map(|(u, nth)| {
+            let seq = struct_fp::unit_seq(&spine, u.start_line, u.end_line);
+            UnitFact {
+                key: u.key.clone(),
+                nth,
+                nodes: seq.len() as i64,
+                sig: struct_fp::shingles(&seq),
+                hist: struct_fp::histogram(&seq),
+            }
+        })
+        .collect()
+}
+
+/// Replace one file's unitsig rows with the facts.
+pub fn refresh_units(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang) -> Result<()> {
+    tx.execute("DELETE FROM unitsig WHERE file_id = ?1", (file_id,))?;
     let mut ins = tx.prepare(
         "INSERT INTO unitsig (file_id, key, nth, nodes, sig, hist)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
     )?;
-    for (u, nth) in units::with_nth(&segments) {
-        let seq = struct_fp::unit_seq(&spine, u.start_line, u.end_line);
+    for f in unit_facts(text, lang) {
         ins.execute((
             file_id,
-            &u.key,
-            nth,
-            seq.len() as i64,
-            sig_blob(&struct_fp::shingles(&seq)),
-            hist_blob(&struct_fp::histogram(&seq)),
+            &f.key,
+            f.nth,
+            f.nodes,
+            sig_blob(&f.sig),
+            hist_blob(&f.hist),
         ))?;
     }
     Ok(())

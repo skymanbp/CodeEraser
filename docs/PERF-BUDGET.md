@@ -37,6 +37,25 @@
 | 复测：10 万 LOC 全量索引（v4 起同事务含相 1 符号/站点抽取） | < 30 s | 2.19 s（v3 时 1.92 s） | ✅ |
 | 复测：单文件增量刷新（v4 起同事务写图行） | < 200 ms | 1.90 ms | ✅ |
 
+## M5-3b 第 4 次 per-file 解析预算（设计 F11，实测 2026-08-13，release，钉定树材料化五语料）
+
+schema v5 起 refresh_file 同事务多一次 unitsig 解析（token 流丢树，T3 事实
+另花一次解析——诚实记账，不写"零重解析"）。口径：`eval_t3_universe` 生成器
+的产品索引腿——钉定 tip 的 in-scope 树材料化后 `dedup::refreshed_index`
+冷/暖各一次；文件数 = 仪器 scope（含 md；tokenized 仅 grammar 语言）。
+
+| 语料（文件数） | 预算 | 冷索引（含第 4 次解析） | 暖（内容哈希门控） | 状态 |
+|---|---|---|---|---|
+| self（141） | 沿用 M2 全量 < 30 s | 1.19 s | 174 ms | ✅ |
+| ripgrep（133 = 110 rs + 23 md） | 同上 | 2.14 s | 406 ms | ✅ |
+| zod（393，最大语料） | 同上 | 3.58 s | 783 ms | ✅ |
+| cobra（53）/ requests（50） | 同上 | 515 / 450 ms | 102 / 81 ms | ✅ |
+
+复跑：`cli/` 内 `cargo test --release --test eval_t3_universe -- --ignored
+--nocapture`（外部语料另设 CE_SLICE_REPO/CE_GRAPH_NAME/CE_GRAPH_TIP；
+debug 构建的数字带 "NOT admissible" 标注拒收——2026-08-13 曾测得 debug 冷
+7.56 s 即为此类，已弃）。
+
 ## M3 hook 端到端预算（实测 2026-08-07，release，warm daemon，deny 档）
 
 | 项 | 预算 | 实测（30 次） | 状态 |

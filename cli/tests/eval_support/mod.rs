@@ -12,10 +12,14 @@
 
 pub mod colordiff;
 pub mod corpus;
+pub mod dedup;
 pub mod graph;
+pub mod universe;
 pub use colordiff::*;
 pub use corpus::*;
+pub use dedup::*;
 pub use graph::*;
+pub use universe::*;
 
 use codeeraser::fourclass::batch::PairInput;
 use codeeraser::scan::lang::Lang;

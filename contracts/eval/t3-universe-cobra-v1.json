@@ -1,0 +1,748 @@
+{
+  "constants": {
+    "floor_nodes": 24,
+    "m_max_nodes": 200,
+    "s_max_nodes": 60
+  },
+  "corpus": {
+    "name": "cobra",
+    "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+  },
+  "excluded": {
+    "other_extension": 13
+  },
+  "files": [
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "CONDUCT.md",
+      "sha256": "c8813f7b99072f1ef3b35eecb3d93433915dadee94f9b38444ce272761e90b77",
+      "symbols": 9,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "CONTRIBUTING.md",
+      "sha256": "abbfd11d2d1b8b5cecc04f16dcf38095dd4066e3cfb9da80427aa54f33bd05b6",
+      "symbols": 6,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "README.md",
+      "sha256": "50473243fcb2851020fc25bcd7ad372fc969825588b9994beec4d9e33523a0c0",
+      "symbols": 8,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "SECURITY.md",
+      "sha256": "121f99e405ad4369a962709d45933d9c80ebaf7ae55d866365642eb48cb6a941",
+      "symbols": 10,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 0,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "active_help.go",
+      "sha256": "92bde33086d33e413b9ac945ddb38f7487f9ce91067453a7ce97fd62fa59cdc5",
+      "symbols": 3,
+      "units": 3
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 6,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "active_help_test.go",
+      "sha256": "7ae9d42bd41c7acb4fb5a9fb2ab67c43f3118b3631986e2da50df2111fb7a246",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 4,
+        "s": 5
+      },
+      "lang": "go",
+      "path": "args.go",
+      "sha256": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 9,
+        "s": 57
+      },
+      "lang": "go",
+      "path": "args_test.go",
+      "sha256": "37058f718eb5ffc7d70f917d694c04aa11fc39ba32ad8d1db9766e9d8eb009ae",
+      "symbols": 67,
+      "units": 67
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 2,
+        "m": 11,
+        "s": 4
+      },
+      "lang": "go",
+      "path": "bash_completions.go",
+      "sha256": "7370190d5344eec0325b2fd2dd7a0f39ca2acc5881f818adb5124b16ee7ac507",
+      "symbols": 17,
+      "units": 17
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 4
+      },
+      "lang": "go",
+      "path": "bash_completionsV2.go",
+      "sha256": "906f68743cdae6ddb3228ca42e4b56d2a51371d7f135f67e4476342abffc6215",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "bash_completionsV2_test.go",
+      "sha256": "3cf7c192417f3b1e91e8e9a35f19af8d8c965a1e4d4db97fd27b530cffe14fbe",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 6,
+        "s": 3
+      },
+      "lang": "go",
+      "path": "bash_completions_test.go",
+      "sha256": "7bb8b9de6c45ba25595ca21feadea339be1851734ad26c750d3beaf715451e20",
+      "symbols": 10,
+      "units": 10
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 2,
+        "m": 2,
+        "s": 6
+      },
+      "lang": "go",
+      "path": "cobra.go",
+      "sha256": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+      "symbols": 14,
+      "units": 14
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 3,
+        "m": 2,
+        "s": 1
+      },
+      "lang": "go",
+      "path": "cobra_test.go",
+      "sha256": "bb9a5a989701f8df0d8797ceb0365ce3076052fcaa190aa8989b3b479bff6e09",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 31,
+        "l": 8,
+        "m": 29,
+        "s": 59
+      },
+      "lang": "go",
+      "path": "command.go",
+      "sha256": "f79613721ad04c9b438dfb30fe0ac3deca85c487658b0aa04a1ae6e4395bfd90",
+      "symbols": 127,
+      "units": 127
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "command_notwin.go",
+      "sha256": "505a8334864917e8439b3012e8e47d880643793bf5741bc048884a85037a8ac2",
+      "symbols": 0,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 26,
+        "m": 98,
+        "s": 10
+      },
+      "lang": "go",
+      "path": "command_test.go",
+      "sha256": "710a689a1512af3ca376a0aaaa2c0b77d10ea174f7e27db85c2f2316a087d0f3",
+      "symbols": 135,
+      "units": 135
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "command_win.go",
+      "sha256": "a9f85ba76b54df4b2589546562b325c7b1225388d5b177214d4b193516556390",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 4,
+        "m": 8,
+        "s": 7
+      },
+      "lang": "go",
+      "path": "completions.go",
+      "sha256": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+      "symbols": 22,
+      "units": 22
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 42,
+        "m": 10,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "completions_test.go",
+      "sha256": "3f8a8aabe2d279b84313fbfa08a08728008a8bc61744ab3522e7cee73b3faba9",
+      "symbols": 57,
+      "units": 57
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 0,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "doc/cmd_test.go",
+      "sha256": "c016acceee9185e9e37da50cce59dc1d818e4ef270c3940b1a74118c31d920fd",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 6,
+        "s": 1
+      },
+      "lang": "go",
+      "path": "doc/man_docs.go",
+      "sha256": "7f72248e811ea9842d85030280e600e545fcdd419a010aefa3d395c9c2428709",
+      "symbols": 8,
+      "units": 8
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 3,
+        "m": 6,
+        "s": 1
+      },
+      "lang": "go",
+      "path": "doc/man_docs_test.go",
+      "sha256": "3af3faa35a5f2042b76c76e58c4a2ec9425456aced698eb9f47da40b6d7b3eeb",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 2,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "doc/man_examples_test.go",
+      "sha256": "af8724be941648c28786fc1379e4d506e221b3063fcae4ee68f4334acf302d9c",
+      "symbols": 2,
+      "units": 2
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 2,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "doc/md_docs.go",
+      "sha256": "b6f51d89c0d9963df27b489066fd1617a58f805ec3ff7e0d3036088a13927daf",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 6,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "doc/md_docs_test.go",
+      "sha256": "4e7497a90f5c9c4d2c51bdd0b7382592ba4fa25985d0f4e24dd1c464a25f764a",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 3,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "doc/rest_docs.go",
+      "sha256": "4ffa45d039448b87c77cbec3ab5c827cb2a77038e8cf6f8ec75046b9d7d4dd26",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 5,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "doc/rest_docs_test.go",
+      "sha256": "e274379f6a7a2907336720f5a3b0c5127cd0b9cd7a07c0a4b7dd1d385a2e9473",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 0,
+        "s": 4
+      },
+      "lang": "go",
+      "path": "doc/util.go",
+      "sha256": "472bf86d75b3d9d73ba036391d7ad91a10bd76604d5333eebec659efbd3a9b6f",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 2,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "doc/yaml_docs.go",
+      "sha256": "44ff045c89a827987fc328e57697c4d89f5afa08e003fee3542fc88cacce85f9",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 5,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "doc/yaml_docs_test.go",
+      "sha256": "751db0b0b51d8c6ea0f57b2c6df85c9b9094b5045f7d33a246e0df11eb76d357",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "fish_completions.go",
+      "sha256": "637e46a5a81a45a5e9d509aa8a834e023e9a13dccf30ac815957f8ce7ec74fe0",
+      "symbols": 3,
+      "units": 3
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 7,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "fish_completions_test.go",
+      "sha256": "67a619ebf06e11d44b04544830ee2838d853bb27cea2616b0238d9a8b7298701",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 8,
+        "s": 2
+      },
+      "lang": "go",
+      "path": "flag_groups.go",
+      "sha256": "3b0572e1fc2fc6e8ef62319b4294cdda86259fb0b1afebc18b03fa643e431251",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 1,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "flag_groups_test.go",
+      "sha256": "3a13a270c02f712ea0597e2cb85a039c92c52cc166a127189d902ea0e41b9913",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 1,
+        "s": 4
+      },
+      "lang": "go",
+      "path": "powershell_completions.go",
+      "sha256": "6357a6d1adc9e798f21731cded574fc3e6e95240c92ee471541d61478b63351a",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "powershell_completions_test.go",
+      "sha256": "fd72b2a669d4ebc8d05999e5b782bcaa6e291edb5b780b8b7522f940f4a29c5b",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 11
+      },
+      "lang": "go",
+      "path": "shell_completions.go",
+      "sha256": "38244d5514d8de4c7bd1e03890992a9ee73885af53aab4294d8bed2d76f8938d",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/active_help.md",
+      "sha256": "c8d33092799705c026683285b11b204601522ca7754fa41c6125922ded4ca5d7",
+      "symbols": 8,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/completions/_index.md",
+      "sha256": "ee3a3296ef412fc61a2620c7f080df2d77f063e683a1b3cd18df76ec96443f08",
+      "symbols": 53,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/completions/bash.md",
+      "sha256": "28853748c5bbfb473712493239e5f13257afda01f96da6b418c12b6606e4dcf2",
+      "symbols": 2,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/completions/fish.md",
+      "sha256": "01fda364b794bc912be9bf5c5c8e440e9c975742f9b1e749d94a11d45bf9d110",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/completions/powershell.md",
+      "sha256": "b1355b5ae5220c734afa771afd3d39cedcbb191c6b8cc379de6b342d73db3d0d",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/completions/zsh.md",
+      "sha256": "80be9ceff2ebc0a84029278c29e3e5b7d8a278ea6504d38194e1c2b8a9747fac",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/docgen/_index.md",
+      "sha256": "a59b35bce8db2065a16503602cdbeb226cff89e0f5e0ab201e8f7e19d0c25b57",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/docgen/man.md",
+      "sha256": "388e7e8bfb35e6e8db980b5f920c5cf65e76e07d66750a00d0bc2d97f04314e3",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/docgen/md.md",
+      "sha256": "c31db20884568d9c3a7c875b9e10693e0c42ff47e4c560a28d58ce6c880b4475",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/docgen/rest.md",
+      "sha256": "db9ee0de43ba81d619d17e0a9458cd8e199f0bdc22ff002ade209795fb8b2ad6",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/docgen/yaml.md",
+      "sha256": "6a943f327e328b62d49f9dde4eb20fa7a9d5388459b993a84ca3bc69ac14b468",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/projects_using_cobra.md",
+      "sha256": "5a780f4bc7fa538e88e996fc1f0a2ae87b10f78bdb614752d83db8dc31e8cd8e",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "site/content/user_guide.md",
+      "sha256": "f8f09aadc3d11e2d41ade0238e83e8c55e446f0ffbcd70f4b93be86f598cedc3",
+      "symbols": 37,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 0,
+        "m": 0,
+        "s": 5
+      },
+      "lang": "go",
+      "path": "zsh_completions.go",
+      "sha256": "a80998389020b259308582d539cb3ae0979f83b55e8ffa68b20c46b015feae24",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "zsh_completions_test.go",
+      "sha256": "88aacf930d16a2c9c6508c36684215053f681ec51532c778378009e19d8af26d",
+      "symbols": 1,
+      "units": 1
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "c21d47f27ae1c259ee546da767688cf367a95fc3",
+    "dirty": true
+  },
+  "method": "unit universe of the pinned tree: every in-scope file inventoried with its symbols identity count (the detect_with_units + with_nth throat the graph store writes) and its code-unit count by named-node sizeband (the unitcache::unit_facts throat the unitsig cache writes; markdown carries zero units by design — text duplication is docdup's domain). below_floor units are structurally invisible to the T3 candidate pass, so candidate recall is an upper bound. Frozen before any candidate generator or TED judge exists; sizeband constants pre-registered before any measurement.",
+  "schema": "ce.eval-t3-universe/1.0.0",
+  "scope": {
+    "excludes": [
+      "memory/",
+      "cli/memory/"
+    ],
+    "extensions": [
+      "go",
+      "md",
+      "py",
+      "rs",
+      "ts"
+    ]
+  },
+  "summary": {
+    "bands_by": {
+      "go/below_floor": 55,
+      "go/l": 105,
+      "go/m": 237,
+      "go/s": 198,
+      "md/below_floor": 0,
+      "md/l": 0,
+      "md/m": 0,
+      "md/s": 0
+    },
+    "files": 53,
+    "symbols_by": {
+      "go": 595,
+      "md": 157
+    },
+    "total_symbols": 752,
+    "total_units": 595,
+    "units_by": {
+      "go": 595,
+      "md": 0
+    }
+  }
+}

@@ -1,0 +1,1910 @@
+{
+  "constants": {
+    "floor_nodes": 24,
+    "m_max_nodes": 200,
+    "s_max_nodes": 60
+  },
+  "corpus": {
+    "name": null,
+    "tip": "60f73e3bea7681721a2f572e64788948a17830f6"
+  },
+  "excluded": {
+    "other_extension": 68
+  },
+  "files": [
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "CHANGELOG.md",
+      "sha256": "736e69a650d082f8cb8e6d8ad3f6fe8f0ec3ffb6ee0667f61c40c2a6caf98288",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "CLAUDE.md",
+      "sha256": "1d99d97747851582daa60629216e5342e2a0feb09de365c35510801faf639ec1",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "README.md",
+      "sha256": "badfa6fd634cf11ed6bbfd014c0a222a6a405fab86f965b57e953f6e52d827c9",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 9,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/audit.rs",
+      "sha256": "98624ecda3af7d3097f8c09ee8db95fc24e657e0b8991655e5b4829017aea4c5",
+      "symbols": 15,
+      "units": 15
+    },
+    {
+      "bands": {
+        "below_floor": 7,
+        "l": 1,
+        "m": 8,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/src/churn.rs",
+      "sha256": "dac8f5e76ed2585c419a1bcc62202d74a3d4e65f5f00a2618f65bafc9c96ca9a",
+      "symbols": 23,
+      "units": 23
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 0,
+        "m": 2,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/src/config.rs",
+      "sha256": "72110a1ca1d24c30c84c6f65e8be5b2251ea280c06309a238e8123d8db0c1556",
+      "symbols": 13,
+      "units": 13
+    },
+    {
+      "bands": {
+        "below_floor": 14,
+        "l": 2,
+        "m": 4,
+        "s": 9
+      },
+      "lang": "rs",
+      "path": "cli/src/corelink.rs",
+      "sha256": "688081e01b0bcbd8d9d8f61bfd884da4ab0df02783efc466871021d9398e7caa",
+      "symbols": 29,
+      "units": 29
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 0,
+        "m": 6,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/src/daemon/client.rs",
+      "sha256": "e365277fc4dc7ce6a1ae0a06f363f959b5aec7d895719ef96d46e58e17a625ba",
+      "symbols": 12,
+      "units": 12
+    },
+    {
+      "bands": {
+        "below_floor": 7,
+        "l": 0,
+        "m": 2,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/src/daemon/coldstart.rs",
+      "sha256": "c76ef0781125393f260d54b25541f2ae656b86d7b0df3556b2a37d6f03d376a1",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 1,
+        "m": 4,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/src/daemon/judge.rs",
+      "sha256": "4ae0385baec5b396f61898c160544fb2deeb1783f7d238ef6a364a1ea436dfd9",
+      "symbols": 12,
+      "units": 12
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/src/daemon/mod.rs",
+      "sha256": "80f62398dc3afca0cf28a998d87af22a9e3f89b2427498f42aceda1832e43748",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 2,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/src/daemon/proto.rs",
+      "sha256": "2ef0a4df8da7aef08a20b6f4ff1b946509dc6dcfec5c0fcdcc0b7d49fb4a34c0",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 2,
+        "m": 8,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/daemon/server.rs",
+      "sha256": "01a7fbb6bca216d1c4a8ec9d7dfd8c234e59837dad10afc71dacfc96df63a02e",
+      "symbols": 18,
+      "units": 18
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 1,
+        "m": 2,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/groups.rs",
+      "sha256": "00ac52a118371c47067a12bd15fe2d91f7f9f3fd5bc17d3b38a06902e4bc133b",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 11,
+        "l": 3,
+        "m": 8,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/index.rs",
+      "sha256": "17f94ba9fc9d56d6206a8101f6f7c3576082e3891e9a0713b2025c4113a08b3e",
+      "symbols": 29,
+      "units": 29
+    },
+    {
+      "bands": {
+        "below_floor": 11,
+        "l": 1,
+        "m": 5,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/mod.rs",
+      "sha256": "4343631de944f84e03f1599e4a05ef38120a045b225a69bdd193c0a288f41304",
+      "symbols": 23,
+      "units": 23
+    },
+    {
+      "bands": {
+        "below_floor": 9,
+        "l": 1,
+        "m": 6,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/pairs.rs",
+      "sha256": "87fffed894d5251dedfdd390e0f8519140072f5813272aaf526eb62777964c88",
+      "symbols": 23,
+      "units": 23
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 1,
+        "m": 2,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/probe.rs",
+      "sha256": "71a47cdd271ebe53e9e15033a66ddb1ddc448692e0c729cb1acd1b1d2f3a44bb",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 6,
+        "l": 1,
+        "m": 3,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/tokens.rs",
+      "sha256": "e8dc7f261598108bc21fc0f5a6740f48f75ea37eba96f93546b85e3c69efd9d0",
+      "symbols": 13,
+      "units": 13
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 2,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/src/dedup/winnow.rs",
+      "sha256": "652461ff5ee10546d37abdab819c92f91855d73231706bb9ef15b651bf620f40",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 9,
+        "l": 2,
+        "m": 8,
+        "s": 14
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/batch.rs",
+      "sha256": "78d276405e897092ff3b8ba65e4341f286f3925c98a3468a9d2d078dfd444a0f",
+      "symbols": 33,
+      "units": 33
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 4,
+        "m": 5,
+        "s": 8
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/diff.rs",
+      "sha256": "66e2bcb7b8a3d9ec547779cda81efa91e6cac4446ce195a41d3fbadde9f2ce22",
+      "symbols": 21,
+      "units": 21
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/kinds.rs",
+      "sha256": "5e34f47e02eaa15d69bbb772bda62d64506a07d065f59d7ee5a575853f74f309",
+      "symbols": 2,
+      "units": 2
+    },
+    {
+      "bands": {
+        "below_floor": 15,
+        "l": 3,
+        "m": 4,
+        "s": 12
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/mod.rs",
+      "sha256": "44331fdcb6b9bffb9c80308c8f844d76db5fe5ea56d255e2b32d80baeab34b2e",
+      "symbols": 34,
+      "units": 34
+    },
+    {
+      "bands": {
+        "below_floor": 6,
+        "l": 2,
+        "m": 4,
+        "s": 8
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/session.rs",
+      "sha256": "340836e861ac31ba7f920b9812b411013139c3401cb3635d0d706739fe65eb7a",
+      "symbols": 20,
+      "units": 20
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 2,
+        "m": 2,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/stacking.rs",
+      "sha256": "5b96be3a98cb12a0e9cf4c6de5e8f57e9377d6da4856483fa26037e444537b6c",
+      "symbols": 10,
+      "units": 10
+    },
+    {
+      "bands": {
+        "below_floor": 7,
+        "l": 1,
+        "m": 10,
+        "s": 11
+      },
+      "lang": "rs",
+      "path": "cli/src/fourclass/units.rs",
+      "sha256": "71364fc9692c875fab4bd8cca844eee311e66bdfa126ad355f0ecf3433fb1974",
+      "symbols": 29,
+      "units": 29
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 1,
+        "m": 8,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/src/graph/md.rs",
+      "sha256": "d547999896b9e03463463e7e281e708e97cdee3959057c4bacd498787a379383",
+      "symbols": 18,
+      "units": 18
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 2,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/src/graph/md_tests.rs",
+      "sha256": "1c97d82a341f1e67cfb2a704bc0f78782c02b3c0e6ea0d03fa2f5bc9aacf1a97",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 1,
+        "m": 6,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/graph/mod.rs",
+      "sha256": "e4419fde1419ea913a6b89870d3f6b5e075a77b611a77698d2cd57c4e4bf18be",
+      "symbols": 16,
+      "units": 16
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 2,
+        "m": 6,
+        "s": 9
+      },
+      "lang": "rs",
+      "path": "cli/src/graph/sites.rs",
+      "sha256": "788a5befbeb36227a26019f5710bff7451da46604fa2e8a9442bd55043d8ca00",
+      "symbols": 21,
+      "units": 21
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 1,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/src/graph/spec.rs",
+      "sha256": "11ac8fd76ec348337662529effcdd8a33ba1ae07a67a52512ba6cd874a1288c5",
+      "symbols": 3,
+      "units": 3
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 1,
+        "m": 7,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/src/guard.rs",
+      "sha256": "48784e4dbfabd40222cd8a288c67c8fbeea862fc56ca606a2051c22214f94178",
+      "symbols": 16,
+      "units": 16
+    },
+    {
+      "bands": {
+        "below_floor": 9,
+        "l": 0,
+        "m": 5,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/src/health.rs",
+      "sha256": "13482bbfdabab757cd9076a6d8f60061c1c3a64533defc2961812e8ae83620a0",
+      "symbols": 17,
+      "units": 17
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 1,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/src/hookio.rs",
+      "sha256": "9e4e4cf309604f8d705c0ec858e2227fb1d39d3dfc9bb7521d5861491a86cffe",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 13,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/src/lib.rs",
+      "sha256": "852a758ac265ebf49abc1f0c8f55ab323eb25471484174b6fc617522aebbf62e",
+      "symbols": 13,
+      "units": 13
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 2,
+        "m": 6,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/src/main.rs",
+      "sha256": "6763d21a83e0ce38e9e6355ae861381e0f5997d1a4dc742e1f4dbfd8a0a10004",
+      "symbols": 18,
+      "units": 18
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 0,
+        "m": 5,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/src/mcp.rs",
+      "sha256": "07853b46e52deadf6f5f5b14fe2770d18b9eb18e76e22f44f3901ecca6d5428d",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 0,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/ast.rs",
+      "sha256": "efc35cbd1ab1ec557675fb1a81b8f130914fc0bbfbb7439cedf92390a041553c",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 0,
+        "m": 4,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/functions.rs",
+      "sha256": "926ff0c9a0a82038f5991fe7d46956542c690b4cf320f13f84f5f0e6c9997854",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 2,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/lang.rs",
+      "sha256": "4e0dad933595871b12222feb2b168dc9ead0aa5249ee62ff1d4765d28c1ff6f5",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 6,
+        "l": 2,
+        "m": 5,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/metrics/cognitive.rs",
+      "sha256": "19b9445bf52f58ea8bdb88c5a902f3a8798c2c4406968d4257d6df6183be2909",
+      "symbols": 20,
+      "units": 20
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/metrics/cyclo.rs",
+      "sha256": "faed23ca2c7d7fe0fd3843e2ae8fdc0f1d0272d8d7ac2ac6e0165c8eeef12864",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 0,
+        "m": 1,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/metrics/mod.rs",
+      "sha256": "c913e50be41e8bfb15eaebddc72a46e0d46125a24fc154f409f3fb9493cc6c62",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 2,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/metrics/naming.rs",
+      "sha256": "071c43f183d9cddbd6dd92c37133bc99119eb5baf0317f8343e15d50e2c5b915",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 2,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/metrics/size.rs",
+      "sha256": "47c47c24eed7dbbb661033828e5e04bd28cd669a01a13daedf8b9db3ef3fccd4",
+      "symbols": 3,
+      "units": 3
+    },
+    {
+      "bands": {
+        "below_floor": 11,
+        "l": 1,
+        "m": 4,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/mod.rs",
+      "sha256": "eb8d7d56de5d11aad81e2d8716fd7935b6f6ac32579a8ba97a35c928bd90826d",
+      "symbols": 18,
+      "units": 18
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 1,
+        "m": 3,
+        "s": 8
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/report.rs",
+      "sha256": "ae6de540b153245f8a97bf5f369811807c5efaab318cb71cc918f04461e32939",
+      "symbols": 15,
+      "units": 15
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 5,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/spec.rs",
+      "sha256": "b98b59967eb0a09afe560659ad3abaa85ae4ea13e76f66d1a6cd2c1db56bdff7",
+      "symbols": 8,
+      "units": 8
+    },
+    {
+      "bands": {
+        "below_floor": 6,
+        "l": 0,
+        "m": 6,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/src/scan/walk.rs",
+      "sha256": "844f6272132559530007ea9c9103971cc1c30322a9500a2b17b2bc29fad98b69",
+      "symbols": 18,
+      "units": 18
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 3,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/tests/audit_stop.rs",
+      "sha256": "1a9035e4c4fc1f4fba8ba688dfd2f845eb4e5f5630efd44a12b8ba7faf7deb4d",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 3,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/tests/churn.rs",
+      "sha256": "03f9027bf6f807963819fe6c70533ea0c3d375e19b52ef0b151a75cdd0be287e",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 4,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/tests/common/hooks.rs",
+      "sha256": "9e4c31af811328251b7432fbdee42760ea0ee22f2b38870d4b1fae1b81c4dbb3",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 0,
+        "m": 9,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/tests/common/mod.rs",
+      "sha256": "720e88403b0a1729fa065a7d5287219d58d13720c9ec1702d49f59f621878aff",
+      "symbols": 19,
+      "units": 19
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 5,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/tests/core_wire.rs",
+      "sha256": "9b8d6af69a33ffc135c3e17896c9e692ae56e847b2daaa84b7970254e1ee3d06",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 8,
+        "l": 2,
+        "m": 3,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/tests/crosscheck_rca.rs",
+      "sha256": "f24fc66dc9e812ccc5f51f0aec5eba41b2efdb58501c67da8f83626f39ac51d9",
+      "symbols": 19,
+      "units": 19
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 2,
+        "m": 4,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/daemon_e2e.rs",
+      "sha256": "e16adf5dc87dfa32e86ba37c9b502f1de34de906f53fff1ce303f5985a392282",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 1,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/dedup_check.rs",
+      "sha256": "91c171db49889944acca8b262cd173cdfac1dd6e53041d3e4d9c606b14f4df00",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 0,
+        "m": 5,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/tests/dedup_core.rs",
+      "sha256": "7756f9d571f9d9e82d9352a744fb58b34db9c69970f39395f5571de9dccd96b0",
+      "symbols": 13,
+      "units": 13
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 0,
+        "m": 6,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/tests/dedup_groups.rs",
+      "sha256": "425a100f3dea93dfe45c5e3b824c8d01ac95db2113b99352fe3fd2b05f88f821",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 2,
+        "m": 3,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/tests/dedup_index.rs",
+      "sha256": "68c18752a26fb0391718c7a00ecb3247550d99fd2f811080b942eeb6d367d618",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 2,
+        "m": 4,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/tests/dedup_pairs.rs",
+      "sha256": "4559e190a4b1870245c0af3d2adbe4785f888c9574b12247f1d5d89feef73763",
+      "symbols": 16,
+      "units": 16
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 0,
+        "m": 0,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/tests/dedup_property.rs",
+      "sha256": "ae7c37512301cd3ec2b7fb4ee6ad9bb031cba26a342ffa3565c49132f3640db0",
+      "symbols": 8,
+      "units": 8
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 2,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/tests/divergence_stances.rs",
+      "sha256": "e1e164c5ec50ab67bc52fed4aa962805a71fb55fb94eae3d2e6994d9c46d9963",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 8,
+        "l": 5,
+        "m": 4,
+        "s": 8
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_ablation.rs",
+      "sha256": "d0024c38b2f895fb0ed24181db005744790646a80a1c43034129836ef95cb2fd",
+      "symbols": 25,
+      "units": 25
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 5,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_ablation_parts/ledgers.rs",
+      "sha256": "04f6f533a7e6be1488e7c22fe3bed60a0238ebdd6a24cc9517683cca879982ea",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 15,
+        "l": 3,
+        "m": 9,
+        "s": 15
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_ablation_parts/mod.rs",
+      "sha256": "a27c6d944b28fd839ed1443897565f220a1af4dea9811ee27cca43bd3f7d2478",
+      "symbols": 42,
+      "units": 42
+    },
+    {
+      "bands": {
+        "below_floor": 11,
+        "l": 2,
+        "m": 6,
+        "s": 14
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_ablation_parts/variants.rs",
+      "sha256": "f969c8a0cf4a1ef22e130d162b21e9dfb76c0c4ab6b674c56c89521ff6d9a7be",
+      "symbols": 33,
+      "units": 33
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 2,
+        "m": 3,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_baseline.rs",
+      "sha256": "aa88dd6e122c81c84fb64af39f4b15f65d44818a46ff2ae9d2ca4d6808a77711",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 2,
+        "m": 6,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_commit_baseline.rs",
+      "sha256": "c9ccf72f34ac6c3631c482ca93117d4437fdc03536acc0035549345884a9f473",
+      "symbols": 15,
+      "units": 15
+    },
+    {
+      "bands": {
+        "below_floor": 16,
+        "l": 4,
+        "m": 6,
+        "s": 8
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_commit_labels.rs",
+      "sha256": "c97b5b412d02713bb4303692cab33f64d42ae9bf6cdb0b85fe07ffaae9ee0787",
+      "symbols": 34,
+      "units": 34
+    },
+    {
+      "bands": {
+        "below_floor": 12,
+        "l": 1,
+        "m": 8,
+        "s": 15
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_commit_review/mod.rs",
+      "sha256": "34169382929d33d5fe7269995da1aeba5cabc03ea95ca828d6f1a3fdc00023bb",
+      "symbols": 36,
+      "units": 36
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 3,
+        "m": 7,
+        "s": 3
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_commits.rs",
+      "sha256": "876c0dee10aff794b5b351ab8008686edc54156d421872fea4f0065fc1391c18",
+      "symbols": 16,
+      "units": 16
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 1,
+        "m": 6,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_extract/freeze.rs",
+      "sha256": "920574fcc84281a1312b65df46f75925c0efe70ea0fce75ba4cec5f8fd494451",
+      "symbols": 19,
+      "units": 19
+    },
+    {
+      "bands": {
+        "below_floor": 11,
+        "l": 1,
+        "m": 5,
+        "s": 2
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_extract/main.rs",
+      "sha256": "7dda3c721458baa69d3bc7f0af6567c3d6be40149a33d862c0e96bce27fe0934",
+      "symbols": 19,
+      "units": 19
+    },
+    {
+      "bands": {
+        "below_floor": 7,
+        "l": 3,
+        "m": 6,
+        "s": 5
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_extract/scan.rs",
+      "sha256": "d8f27792bdfda0e683dd0ba4e20fa5baa7e9cf5fba6887804fcbc183fe180962",
+      "symbols": 21,
+      "units": 21
+    },
+    {
+      "bands": {
+        "below_floor": 9,
+        "l": 2,
+        "m": 6,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_graph.rs",
+      "sha256": "f27928c31a9c6cbaa3216434e124d85634dc695732d335d8c0c0b1c766e9b944",
+      "symbols": 24,
+      "units": 24
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 1,
+        "m": 3,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_l1.rs",
+      "sha256": "271f5a8cdd79f0f0073f220018ed62c6920742aa4423b86f840167a3d42a1c1f",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 6,
+        "l": 4,
+        "m": 6,
+        "s": 9
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_l2.rs",
+      "sha256": "66b285769170ffee19d7d8c08f0df9f38b8462572ac8389a6f68cb1a34394349",
+      "symbols": 25,
+      "units": 25
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 4,
+        "m": 2,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_l2_parts/cross.rs",
+      "sha256": "da34e04694486360e3205eb143ca83e9d0c7254b5141736611462ff37e091d20",
+      "symbols": 14,
+      "units": 14
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 1,
+        "m": 6,
+        "s": 12
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_l2_parts/mod.rs",
+      "sha256": "275faa204603d21266d8526e1ea0d07fde88356e98168bb88f8d74a240204626",
+      "symbols": 24,
+      "units": 24
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 1,
+        "m": 7,
+        "s": 11
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_l2_register/mod.rs",
+      "sha256": "2c0feef755a1c8015c79f30eaf654bcf5b5f5a8fe5e0df37fb387c62e946ad73",
+      "symbols": 24,
+      "units": 24
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 1,
+        "m": 3,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_labels.rs",
+      "sha256": "cec9193279f88003933deb6ec66f50a5bba04d662db87eb06e48597227a17bc3",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 2,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_prelabel.rs",
+      "sha256": "67b2939b8f430b11bd932bceda958b36ad1b68907b894c85e5e11d498b2e99db",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 1,
+        "m": 9,
+        "s": 13
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_support/colordiff.rs",
+      "sha256": "0541b60aa15b3ff2002417dc4894b99284f96651f5135e30afa78573c1a8655c",
+      "symbols": 27,
+      "units": 27
+    },
+    {
+      "bands": {
+        "below_floor": 5,
+        "l": 0,
+        "m": 4,
+        "s": 9
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_support/corpus.rs",
+      "sha256": "d1666d52ece40ef337e3f676c9726aa59f865ac42c40e9218c41e827fdf5f97a",
+      "symbols": 18,
+      "units": 18
+    },
+    {
+      "bands": {
+        "below_floor": 8,
+        "l": 0,
+        "m": 8,
+        "s": 19
+      },
+      "lang": "rs",
+      "path": "cli/tests/eval_support/mod.rs",
+      "sha256": "585c175c92f67a202bbd00fde0f103bbbe1313883a880a9945d192687cf43f50",
+      "symbols": 35,
+      "units": 35
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 2,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/tests/fpr_fourclass.rs",
+      "sha256": "a9e9ee856ef190d8aec4842eab6249e2b858e374035a3b5f95cf295790791ce0",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 5,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "cli/tests/fpr_replay.rs",
+      "sha256": "59904ae481eb8a42893ce610c4848b7411643ba15d7e68402002a5b2bf89d0c9",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 5,
+        "s": 9
+      },
+      "lang": "rs",
+      "path": "cli/tests/guard_hook.rs",
+      "sha256": "11e976d0ce74748728a09e6c854accf08dfc55fa73ccf7353e52f829ce88e63d",
+      "symbols": 15,
+      "units": 15
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 2,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/health_plugin.rs",
+      "sha256": "e77b1870e1e3b2700ee4acc1283b4a7f81954ee09fb5b1690efe01abf70c1441",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 2,
+        "m": 5,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/mcp_precommit.rs",
+      "sha256": "131b6200d5802f34829a76d37a93af93ff62a8f54ae6f51d33725ac9c01b6ac5",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 5,
+        "s": 7
+      },
+      "lang": "rs",
+      "path": "cli/tests/metrics.rs",
+      "sha256": "3c5749e6196eab79d95a638c024b0bd62fecefa797a20289b81470b7a3af835c",
+      "symbols": 14,
+      "units": 14
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 3,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "cli/tests/observe_feed.rs",
+      "sha256": "915a5b6ae14229ac41bdf2e520a6da39bbb604dcbc2a2896798d00bd17413f63",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 1,
+        "m": 6,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/perf_budget.rs",
+      "sha256": "06fb05e17eada4ff4c248f713f90962e509fc67fd94d497d2b7730ba8f61f891",
+      "symbols": 9,
+      "units": 9
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 0,
+        "m": 5,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/probe_gate.rs",
+      "sha256": "e26f361c99a4a8f715b69eb83abc0d399c512244172b7bb38d56d0776c779945",
+      "symbols": 7,
+      "units": 7
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 2,
+        "s": 1
+      },
+      "lang": "rs",
+      "path": "cli/tests/report_schema.rs",
+      "sha256": "18e834ea09418e3cfcdf436e725db64cfb9e3e0873b92009d2736dd1b1900c30",
+      "symbols": 5,
+      "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 2,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/tests/sonar_whitepaper.rs",
+      "sha256": "3abaacc4378c88ab72a8cd67c09995b25de27af369e177c805be674f481a064c",
+      "symbols": 10,
+      "units": 10
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "contracts/VERSIONING.md",
+      "sha256": "7dda80a068b3ebc3a69e9b94135b7304c1c784e37e69722272e05a10d164b4e2",
+      "symbols": 5,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "contracts/fixtures/crosscheck/DEDUP-CALIBRATION.md",
+      "sha256": "f78222cc1efbc9af7a154722b679547c1bbf9963be6d1885a7b14beb92d85b96",
+      "symbols": 9,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "contracts/fixtures/crosscheck/DIVERGENCES.md",
+      "sha256": "d271c649b741bea08673e11c6f19d6ab959d686382dc41d3d379fc3ede47fa5d",
+      "symbols": 8,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "contracts/fixtures/crosscheck/SOURCES.md",
+      "sha256": "ca0b563ee44af4a0b444a9bee44ef79ddae1d221d51ad3fce86ba13d45e8b031",
+      "symbols": 5,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 2,
+        "l": 0,
+        "m": 4,
+        "s": 5
+      },
+      "lang": "go",
+      "path": "contracts/fixtures/crosscheck/go/args.go",
+      "sha256": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+      "symbols": 11,
+      "units": 11
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 4
+      },
+      "lang": "go",
+      "path": "contracts/fixtures/crosscheck/go/bash_completionsV2.go",
+      "sha256": "906f68743cdae6ddb3228ca42e4b56d2a51371d7f135f67e4476342abffc6215",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 2,
+        "m": 2,
+        "s": 6
+      },
+      "lang": "go",
+      "path": "contracts/fixtures/crosscheck/go/cobra.go",
+      "sha256": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+      "symbols": 14,
+      "units": 14
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "go",
+      "path": "contracts/fixtures/crosscheck/go/command_win.go",
+      "sha256": "a9f85ba76b54df4b2589546562b325c7b1225388d5b177214d4b193516556390",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 4,
+        "m": 8,
+        "s": 7
+      },
+      "lang": "go",
+      "path": "contracts/fixtures/crosscheck/go/completions.go",
+      "sha256": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+      "symbols": 22,
+      "units": 22
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "py",
+      "path": "contracts/fixtures/crosscheck/python/docs__conf.py",
+      "sha256": "6ae03d28d23dcc0dbbaf18334a7208a07eb87268bc1ebb6f81ad6931f9f217af",
+      "symbols": 0,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 12,
+        "l": 9,
+        "m": 19,
+        "s": 17
+      },
+      "lang": "py",
+      "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "sha256": "a3351c3c12a86bf5ed211533875350bc4791e9327a685f8c19ba54343e471e26",
+      "symbols": 57,
+      "units": 57
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 1
+      },
+      "lang": "py",
+      "path": "contracts/fixtures/crosscheck/python/src__requests__status_codes.py",
+      "sha256": "1950f47c89cf18019787e07d8ce48f66d6b38e622f7d94d70a90247fee6c040e",
+      "symbols": 2,
+      "units": 2
+    },
+    {
+      "bands": {
+        "below_floor": 8,
+        "l": 2,
+        "m": 1,
+        "s": 8
+      },
+      "lang": "py",
+      "path": "contracts/fixtures/crosscheck/python/src__requests__structures.py",
+      "sha256": "ba9460c39078f25e6f1d2a24ac941ac6f8d2ee97197fa8c8d0c262d8a1e67a02",
+      "symbols": 19,
+      "units": 19
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 4,
+        "m": 27,
+        "s": 15
+      },
+      "lang": "py",
+      "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "sha256": "b879cb3f671cf1c28e8ff9b2b02151bcdb8974b4820a514cfdd1f5a038443cd2",
+      "symbols": 47,
+      "units": 47
+    },
+    {
+      "bands": {
+        "below_floor": 76,
+        "l": 18,
+        "m": 56,
+        "s": 97
+      },
+      "lang": "rs",
+      "path": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+      "sha256": "a81c751dc22763d8efda6fb88fd77c0e03c42fb17538a94497a5737ba8b4b919",
+      "symbols": 247,
+      "units": 247
+    },
+    {
+      "bands": {
+        "below_floor": 40,
+        "l": 8,
+        "m": 23,
+        "s": 25
+      },
+      "lang": "rs",
+      "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__hyperlink__mod.rs",
+      "sha256": "8887b066987643638d822ec53ebd44f10b9d1a1bab00d9152579a56dfad284fb",
+      "symbols": 96,
+      "units": 96
+    },
+    {
+      "bands": {
+        "below_floor": 12,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "rs",
+      "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__lib.rs",
+      "sha256": "1d81cc139f7aa416b909ebf69baafe2b025bf7d11143f5ddf9f68a923b69c6d8",
+      "symbols": 12,
+      "units": 12
+    },
+    {
+      "bands": {
+        "below_floor": 18,
+        "l": 6,
+        "m": 17,
+        "s": 20
+      },
+      "lang": "rs",
+      "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__util.rs",
+      "sha256": "59d984c9b7586592faaa8fc146a67346ece2aed3365f8ccc8a211c12744d9484",
+      "symbols": 61,
+      "units": 61
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 1,
+        "m": 2,
+        "s": 4
+      },
+      "lang": "rs",
+      "path": "contracts/fixtures/crosscheck/rust/crates__regex__src__ban.rs",
+      "sha256": "9ea2fd822d4e4445df3c54a3081fce35bc2d7b839cc19985aa984e6062d06459",
+      "symbols": 10,
+      "units": 10
+    },
+    {
+      "bands": {
+        "below_floor": 7,
+        "l": 0,
+        "m": 0,
+        "s": 5
+      },
+      "lang": "ts",
+      "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v3__benchmarks__object.ts",
+      "sha256": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+      "symbols": 12,
+      "units": 12
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 2,
+        "m": 0,
+        "s": 1
+      },
+      "lang": "ts",
+      "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__locales__bg.ts",
+      "sha256": "1ceb9a24c1237ac105cb03dd2931bf0a01adb02910fcc4d370b0ea86b9e12c0b",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 1,
+        "l": 2,
+        "m": 0,
+        "s": 1
+      },
+      "lang": "ts",
+      "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__locales__ota.ts",
+      "sha256": "6196c2f66a1c6064fae606cf7ae7454e3aa7fb264650daaebfe34506dfbb9e9b",
+      "symbols": 4,
+      "units": 4
+    },
+    {
+      "bands": {
+        "below_floor": 3,
+        "l": 2,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "ts",
+      "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__locales__ru.ts",
+      "sha256": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934",
+      "symbols": 6,
+      "units": 6
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "ts",
+      "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__mini__index.ts",
+      "sha256": "455d93e660b61feec18cd4c31e2f394627546ae8ab31f9bacdab6318112ac31c",
+      "symbols": 0,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "contracts/fixtures/hook-payloads/README.md",
+      "sha256": "bc514a2f50af0488901fc1ec4aad3222b53171c9dbbdd3d89d9c50a455c5d3fd",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 1,
+        "s": 0
+      },
+      "lang": "py",
+      "path": "contracts/fixtures/hook-payloads/dump.py",
+      "sha256": "89acd4884d8080897c1df13120329fc5a1d3efb0f0bdda33eb0ce90207c890b8",
+      "symbols": 1,
+      "units": 1
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/DEVELOPMENT_PLAN.md",
+      "sha256": "e54902af3ff76c433c1346321699ef56a2b0ed310a8e558da192ba51ef2f0bea",
+      "symbols": 18,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/EVAL-SET.md",
+      "sha256": "6085a2d1ebc22a3f08dea733a19b5e72e846c7202fc0587c2965d8c112fb343d",
+      "symbols": 14,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/FPR-REPLAY.md",
+      "sha256": "0f86dd0993d289fa9bfb77178fd2036f2765eea34eaf1181f59dbb998253875f",
+      "symbols": 5,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/PERF-BUDGET.md",
+      "sha256": "af98e84c8faac130a59da8ada6bce2db3dda1edaf2f92843732faafff157cbd5",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/T1-INTERCEPT.md",
+      "sha256": "eda6bc17b91900173791cb130c7bdeca898c1ec07503fb3d2cdc4fc41156a505",
+      "symbols": 9,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-06-plan-v1.0-attack-review.md",
+      "sha256": "46ec15f9372f17f8d02d65b20f77d9aaa73e0aeffe7da84d9f3f494845cecfaf",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-07-m1-attack-review.md",
+      "sha256": "cfa9002b617e9a50404299b6fc9cdab4cca80aa2734e580d85f5c946ed5a8c47",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-07-m2-dedup-attack-review.md",
+      "sha256": "35607cd62542c43920fed2d98915c8ad07753d2b0bd820ae693316998b59507f",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-07-plan-v1.2-delta-review.md",
+      "sha256": "8aef8a214f4e8e58cb3bbb905bd6504b12f601225ca84b6fa68886e45b445870",
+      "symbols": 2,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-07-r8-a9f-attack-review.md",
+      "sha256": "c1a1d57a8728bf5a1883ec10602cfbc8144e96b0fb0e9545563e8002ac836243",
+      "symbols": 4,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-11-m4-attack-review.md",
+      "sha256": "f3874e8dff4f461c615a8e76d0f2e165065eb86f1fcbbed88e583d9d03e0ec7c",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-11-m5-1a-instrument-review.md",
+      "sha256": "36adb83f30decb0fc288f2bf1456d4769e3e44192162545c0952ecbb62742ee5",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-11-m5-1c-ii-ablation-review.md",
+      "sha256": "6d937b581a65a566377182e22907a1ecb2723659670befc9838a52f3d3a2fbd8",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-12-m5-1d-codex-review.md",
+      "sha256": "ed6653bb68cd227d1d018dac65a02a6b8a04d0a5cc528c685228aeaa6455db7e",
+      "symbols": 1,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-12-m5-2-graph-design.md",
+      "sha256": "54c6597c87cda7ea920a7def476ae899664576054553ed85c338131c3d427da2",
+      "symbols": 10,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "docs/reviews/2026-08-12-m5-2ab-opus-review.md",
+      "sha256": "48edfa1ec626fb3f2b261b71a70a126461fee0ac5b12f1e847039ca9c058a884",
+      "symbols": 3,
+      "units": 0
+    },
+    {
+      "bands": {
+        "below_floor": 0,
+        "l": 0,
+        "m": 0,
+        "s": 0
+      },
+      "lang": "md",
+      "path": "plugin/README.md",
+      "sha256": "e66048e82a3485d0081d73cf85aa2e6232327a91986335aa39b39f214201181e",
+      "symbols": 3,
+      "units": 0
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "c21d47f27ae1c259ee546da767688cf367a95fc3",
+    "dirty": true
+  },
+  "method": "unit universe of the pinned tree: every in-scope file inventoried with its symbols identity count (the detect_with_units + with_nth throat the graph store writes) and its code-unit count by named-node sizeband (the unitcache::unit_facts throat the unitsig cache writes; markdown carries zero units by design — text duplication is docdup's domain). below_floor units are structurally invisible to the T3 candidate pass, so candidate recall is an upper bound. Frozen before any candidate generator or TED judge exists; sizeband constants pre-registered before any measurement.",
+  "schema": "ce.eval-t3-universe/1.0.0",
+  "scope": {
+    "excludes": [
+      "memory/",
+      "cli/memory/"
+    ],
+    "extensions": [
+      "go",
+      "md",
+      "py",
+      "rs",
+      "ts"
+    ]
+  },
+  "summary": {
+    "bands_by": {
+      "go/below_floor": 9,
+      "go/l": 6,
+      "go/m": 15,
+      "go/s": 22,
+      "md/below_floor": 0,
+      "md/l": 0,
+      "md/m": 0,
+      "md/s": 0,
+      "py/below_floor": 21,
+      "py/l": 15,
+      "py/m": 49,
+      "py/s": 41,
+      "rs/below_floor": 578,
+      "rs/l": 134,
+      "rs/m": 507,
+      "rs/s": 605,
+      "ts/below_floor": 12,
+      "ts/l": 6,
+      "ts/m": 1,
+      "ts/s": 7
+    },
+    "files": 141,
+    "symbols_by": {
+      "go": 52,
+      "md": 127,
+      "py": 126,
+      "rs": 1824,
+      "ts": 26
+    },
+    "total_symbols": 2155,
+    "total_units": 2028,
+    "units_by": {
+      "go": 52,
+      "md": 0,
+      "py": 126,
+      "rs": 1824,
+      "ts": 26
+    }
+  }
+}

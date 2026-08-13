@@ -4,7 +4,9 @@
 //! exists, so the resolver can never choose its own precision
 //! denominator; the falsification constants (min_per_lang,
 //! r0_share_trigger) are written into the doc before any measurement
-//! exists.
+//! exists. The instrument skeleton (walker, envelope, gate opening,
+//! drift walk) lives in eval_support/universe.rs, shared with the
+//! M5-3 t3-universe family.
 //!
 //! Generate (per corpus; external corpora via CE_SLICE_REPO +
 //! CE_GRAPH_NAME + CE_GRAPH_TIP):
@@ -13,12 +15,18 @@
 mod eval_support;
 
 use codeeraser::graph::sites::detect;
-use eval_support::{
-    SCOPE_EXCLUDES, SCOPE_EXTS, classify_path, content_sha, eval_doc, generated_from, git_run,
-    graph_corpus, kind_counts, lang_of, load, write_doc,
-};
+use eval_support::*;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
+
+const METHOD: &str = "site universe of the pinned tree: every in-scope file \
+    (canonical extensions minus machine-local memory/; the crosscheck \
+    islands deliberately in scope as the negative control), inventoried \
+    with the sha256 of the text the detector saw and its resolution-free \
+    per-kind site counts (graph::sites — grammar kind tables only, no \
+    path ever consulted). Frozen before any resolver exists; the \
+    falsification constants are pre-registered here, before any \
+    measurement.";
 
 /// Pre-registered falsification constants (design §5), one binding
 /// for generator AND gate — duplicated literals were the exact
@@ -30,10 +38,9 @@ fn constants() -> Value {
 /// One inventory row: content identity (sha256 of the utf8-lossy
 /// text the detector saw — the instrument's identity, not git's blob
 /// id) plus per-kind site counts.
-fn file_row(tip: &str, path: &str, code: &'static str) -> Value {
-    let content = git_run(&["show", &format!("{tip}:{path}")], false);
-    let kinds = kind_counts(&detect(&content, lang_of(code)));
-    json!({"path": path, "sha256": content_sha(&content), "lang": code, "sites": kinds})
+fn file_row(path: &str, code: &str, content: &str) -> Value {
+    let kinds = kind_counts(&detect(content, lang_of(code)));
+    json!({"path": path, "sha256": content_sha(content), "lang": code, "sites": kinds})
 }
 
 /// Re-derivable from the rows alone — the CI gate re-runs this exact
@@ -56,65 +63,27 @@ fn summarize(files: &[Value]) -> Value {
 #[ignore] // needs the corpus repository (git show at the pinned tip)
 fn generate_graph_slice() {
     let (name, tip) = graph_corpus();
-    let mut files = Vec::new();
-    let mut excluded: BTreeMap<&str, u64> = BTreeMap::new();
-    // -z: NUL-terminated, unquoted — non-ASCII paths must not arrive
-    // shell-escaped (core.quotePath would corrupt them). --full-tree:
-    // the test runs with cwd cli/, and without it ls-tree emits
-    // cwd-relative paths while `show rev:path` resolves from the repo
-    // root (the M5-1c-ii lesson, recurred here on first run).
-    let listing = git_run(
-        &["ls-tree", "-r", "--full-tree", "--name-only", "-z", &tip],
-        false,
-    );
-    for path in listing.split('\0').filter(|p| !p.is_empty()) {
-        match classify_path(path) {
-            Ok(code) => files.push(file_row(&tip, path, code)),
-            Err(category) => *excluded.entry(category).or_insert(0) += 1,
-        }
-    }
-    files.sort_by(|a, b| a["path"].as_str().cmp(&b["path"].as_str()));
-    let doc = json!({
-        "schema": "ce.eval-graph-slice/1.0.0",
-        "corpus": {"name": name, "tip": tip},
-        "scope": {"extensions": SCOPE_EXTS, "excludes": SCOPE_EXCLUDES},
-        "constants": constants(),
-        "generated_from": generated_from(),
-        "method": "site universe of the pinned tree: every in-scope file \
-                   (canonical extensions minus machine-local memory/; the \
-                   crosscheck islands deliberately in scope as the negative \
-                   control), inventoried with the sha256 of the text the \
-                   detector saw and its resolution-free per-kind site counts \
-                   (graph::sites — grammar kind tables only, no path ever \
-                   consulted). Frozen before any resolver exists; the \
-                   falsification constants are pre-registered here, before \
-                   any measurement.",
-        "summary": summarize(&files),
-        "excluded": excluded,
-        "files": files,
-    });
-    let stem = match &name {
-        Some(n) => format!("graph-slice-{n}"),
-        None => "graph-slice".into(),
-    };
-    let path = eval_doc(&stem);
-    write_doc(&path, &doc, &format!("{path} written"));
+    let (walked, excluded) = walk_tree(&tip);
+    let parts = universe_parts(&walked, excluded, file_row, constants(), summarize);
+    let doc = universe_doc("ce.eval-graph-slice/1.0.0", METHOD, &name, &tip, parts);
+    write_universe("graph-slice", &name, &doc);
 }
 
-/// CI gate, no git, every frozen slice: the summary re-derives from
-/// the rows via the generator's own scorer; constants and scope are
-/// the frozen ones; the tip is a pinned full OID; rows are sorted
-/// and duplicate-free; the embedded corpus name matches the file
-/// name; and the frozen docs jointly cover all five languages with
+/// CI gate, no git, every frozen slice: the shared envelope (summary
+/// re-derived by the generator's own scorer, frozen constants and
+/// scope, pinned tip, sorted rows) plus the family's own coverage
+/// fact — the frozen docs jointly cover all five languages with
 /// sites (D2-4 — the 2b exit criterion).
 #[test]
 fn graph_slice_consistent() {
-    let docs = eval_support::assert_frozen_corpus_set("graph-slice");
     let mut lang_sites: BTreeMap<String, u64> = BTreeMap::new();
-    for path in &docs {
-        let doc = load(path);
-        check_slice(path, &doc, &mut lang_sites);
-    }
+    each_frozen_doc("graph-slice", |path, doc| {
+        assert_doc_envelope(path, doc, "graph-slice", summarize, constants);
+        for (langkind, n) in doc["summary"]["sites_by"].as_object().expect("sites_by") {
+            let lang = langkind.split('/').next().expect("lang/kind");
+            *lang_sites.entry(lang.to_string()).or_insert(0) += n.as_u64().expect("n");
+        }
+    });
     for lang in SCOPE_EXTS {
         assert!(
             lang_sites.get(lang).copied().unwrap_or(0) > 0,
@@ -126,30 +95,15 @@ fn graph_slice_consistent() {
 /// The detector and the frozen self universe must not drift apart
 /// silently (design RG3 made a CI fact — Opus review: a spec.rs or
 /// md.rs change used to invalidate all five docs with zero red
-/// signal). Every frozen row whose working-tree file still carries
-/// the frozen sha256 is re-detected: per-kind counts must match, and
-/// every detected spec must be a substring of its source line (the
-/// 2b exit criterion, previously asserted only on toy fixtures).
-/// Content-changed files are skipped — that is editing, not detector
-/// drift; a detector change re-pins GRAPH_SELF_TIP and re-freezes.
+/// signal). Every sha-matched row is re-detected: per-kind counts
+/// must match, and every detected spec must be a substring of its
+/// statement window (the 2b exit criterion, previously asserted only
+/// on toy fixtures).
 #[test]
 fn self_universe_tracks_detector() {
     let doc = load(&eval_doc("graph-slice"));
-    let mut verified = 0;
-    for row in doc["files"].as_array().expect("files") {
-        let path = row["path"].as_str().expect("path");
-        let Ok(bytes) = std::fs::read(format!("../{path}")) else {
-            continue;
-        };
-        // the frozen identity is git-blob text (LF); the Windows CI
-        // runner checks out with autocrlf=true, so normalize before
-        // comparing — first CI run of this gate was 0-row vacuous on
-        // windows-latest for exactly this reason
-        let text = String::from_utf8_lossy(&bytes).replace("\r\n", "\n");
-        if content_sha(&text) != row["sha256"].as_str().expect("sha256") {
-            continue;
-        }
-        let sites = detect(&text, lang_of(row["lang"].as_str().expect("lang")));
+    let verified = each_frozen_match(&doc, |row, path, lang, text| {
+        let sites = detect(text, lang_of(lang));
         let lines: Vec<&str> = text.lines().collect();
         for s in &sites {
             // the site line is the STATEMENT HEAD: a multi-line TS
@@ -170,46 +124,8 @@ fn self_universe_tracks_detector() {
             json!(kind_counts(&sites)),
             "{path}: detector drifted from the frozen universe"
         );
-        verified += 1;
-    }
+    });
     // ordinary churn shrinks the verifiable set between freezes;
     // this floor only guards against the gate going vacuous
     assert!(verified >= 25, "drift gate near-vacuous: {verified} rows");
-}
-
-fn check_slice(path: &str, doc: &Value, lang_sites: &mut BTreeMap<String, u64>) {
-    let files = doc["files"].as_array().expect("files");
-    assert_eq!(doc["summary"], summarize(files), "{path}: summary drifted");
-    assert_eq!(doc["constants"], constants(), "{path}: constants drifted");
-    for (category, n) in doc["excluded"].as_object().expect("excluded") {
-        assert!(
-            ["excluded_prefix", "variant_extension", "other_extension"]
-                .contains(&category.as_str())
-                && n.as_u64().is_some_and(|v| v > 0),
-            "{path}: malformed excluded row {category}"
-        );
-    }
-    assert_eq!(doc["scope"]["extensions"], json!(SCOPE_EXTS), "{path}");
-    assert_eq!(doc["scope"]["excludes"], json!(SCOPE_EXCLUDES), "{path}");
-    let tip = doc["corpus"]["tip"].as_str().expect("tip");
-    assert!(
-        tip.len() == 40 && tip.chars().all(|c| c.is_ascii_hexdigit()),
-        "{path}: tip is not a pinned full OID"
-    );
-    let name = doc["corpus"]["name"].as_str().map(str::to_string);
-    assert_eq!(
-        name,
-        eval_support::doc_suffix(path, "graph-slice"),
-        "{path}: embedded corpus name does not match the file name"
-    );
-    for pair in files.windows(2) {
-        assert!(
-            pair[0]["path"].as_str() < pair[1]["path"].as_str(),
-            "{path}: rows unsorted or duplicated"
-        );
-    }
-    for (langkind, n) in doc["summary"]["sites_by"].as_object().expect("sites_by") {
-        let lang = langkind.split('/').next().expect("lang/kind");
-        *lang_sites.entry(lang.to_string()).or_insert(0) += n.as_u64().expect("n");
-    }
 }
