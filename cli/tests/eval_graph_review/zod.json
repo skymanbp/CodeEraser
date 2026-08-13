@@ -1,0 +1,350 @@
+{
+ "corpus": "zod",
+ "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+ "auditor": "opus independent subagent (user delegation 2026-08-12; RG15: assembled verbatim, judgments untouched)",
+ "rows": [
+  {
+   "rank": "02a21a9d69c273f0cda883163dc361071de7de730b0648a8067319e106abf568",
+   "path": "packages/zod/src/v3/tests/tuple.test.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "import",
+   "spec": "vitest",
+   "truth": "external",
+   "why": "Bare specifier on `import { expect, test } from \"vitest\";`; no workspace package at tip is named vitest (packages/* names are zod, @zod/benchmarks, @zod/docs, @zod/integration, @zod/resolution, @zod/treeshaking, @zod/tsc-perftest), and vitest ^4.1.5 is a root devDependency, so it resolves into node_modules."
+  },
+  {
+   "rank": "0109a0eac94704707852b407d8d78917e25282b7472aff264ba939e38a05721c",
+   "path": "packages/docs-v3/home.md",
+   "line": 550,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/samchungy/zod-openapi",
+   "truth": "external",
+   "why": "Inline markdown link destination is an absolute https URL, so it leaves the repository entirely; no relative resolution applies."
+  },
+  {
+   "rank": "03ffdc0cfe00738b934551d2a98b5de281c6589feee88fffef9dc21f9baa4f5a",
+   "path": "packages/zod/src/index.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "export_from",
+   "spec": "./v4/classic/external.js",
+   "truth": "packages/zod/src/v4/classic/external.ts",
+   "why": "Relative ESM specifier with explicit .js resolved from packages/zod/src maps to the sibling TypeScript source under this repo's zshy/@zod/source convention; packages/zod/src/v4/classic/external.ts exists at tip while external/index.ts does not."
+  },
+  {
+   "rank": "04fcc8f936f47434545847684a7d1a158a383e2a8a5eebaf9863d791a8c17b14",
+   "path": "packages/zod/src/v4/classic/schemas.ts",
+   "line": 7,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./checks.js",
+   "truth": "packages/zod/src/v4/classic/checks.ts",
+   "why": "Sibling relative specifier from packages/zod/src/v4/classic; the .js extension maps to the .ts source, and checks.ts is present in that directory at tip."
+  },
+  {
+   "rank": "01a39e745591808ef8e5ee4cee35473d39a9a9982bb9de74cdcbda662c2a0b33",
+   "path": "packages/zod/src/v3/tests/bigint.test.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "import",
+   "spec": "vitest",
+   "truth": "external",
+   "why": "Bare specifier resolving to the node_modules vitest devDependency declared in the root package.json; no in-repo workspace package is named vitest."
+  },
+  {
+   "rank": "000879019148e5a9fbb645a16934974ea47baf6146024296ff9a0ea3696fcd6b",
+   "path": "packages/zod/src/v4/core/errors.ts",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./checks.js",
+   "truth": "packages/zod/src/v4/core/checks.ts",
+   "why": "Sibling relative type-only import from packages/zod/src/v4/core; .js maps to the .ts source and packages/zod/src/v4/core/checks.ts exists at tip."
+  },
+  {
+   "rank": "02e6f4d5edd85c05a88fba56da7a2aa727bdac996cfed02eb1be39ad42a1c2a9",
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 120,
+   "nth": 0,
+   "kind": "link",
+   "spec": "#parse",
+   "truth": "packages/docs-v3/README_KO.md#parse",
+   "why": "Bare fragment link resolves within the same document; the GitHub slug of heading \"### `.parse`\" at README_KO.md line 2061 (backticks and leading dot stripped) is exactly \"parse\"."
+  },
+  {
+   "rank": "067466bfbb6df6b97bb223a7fcb7fa55a09ed36c9a33ec7a3cc2a75879dee2a8",
+   "path": "packages/zod/src/v4/classic/tests/number.test.ts",
+   "line": 3,
+   "nth": 0,
+   "kind": "import",
+   "spec": "zod/v4",
+   "truth": "packages/zod/src/v4/index.ts",
+   "why": "Bare specifier \"zod\" is the in-repo workspace package packages/zod (pnpm-workspace.yaml `packages/*` with linkWorkspacePackages: true, root devDep `\"zod\": \"workspace:*\"`), and the root tsconfig's customConditions [\"@zod/source\"] plus vitest.config.ts resolve.conditions select the \"./v4\" export's \"@zod/source\" branch \"./src/v4/index.ts\" — the only npm zod copy present is the aliased `zod3`, so there is no second candidate."
+  },
+  {
+   "rank": "027ccf5cc660c5566bc004adb8937efc4da4ee830d0d439fc17a57032cc33662",
+   "path": "packages/zod/src/v4/core/tests/locales/he.test.ts",
+   "line": 3,
+   "nth": 0,
+   "kind": "import",
+   "spec": "../../../locales/he.js",
+   "truth": "packages/zod/src/v4/locales/he.ts",
+   "why": "Three levels up from packages/zod/src/v4/core/tests/locales lands on packages/zod/src/v4, then locales/he.js maps to the sibling .ts source; packages/zod/src/v4/locales/he.ts exists at tip."
+  },
+  {
+   "rank": "014dec6a6161bef1630f3c3edf16b2f46bf32d19ae5e522707f5f9a5f8f64517",
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 71,
+   "nth": 0,
+   "kind": "link",
+   "spec": "#문자열",
+   "truth": "packages/docs-v3/README_KO.md#문자열",
+   "why": "In-page fragment; the Hangul slug matches heading \"## 문자열\" at README_KO.md line 759 (non-ASCII heading text is preserved verbatim by GitHub's slugger)."
+  },
+  {
+   "rank": "0258c3b201cb94c3935e526e6224733f423d646c6d281a2a11a38a148e697b9b",
+   "path": "CONTRIBUTING.md",
+   "line": 90,
+   "nth": 0,
+   "kind": "link",
+   "spec": "play.ts",
+   "truth": "play.ts",
+   "why": "Extension-less relative markdown link resolved against the linking file's directory, which is the repo root; play.ts is a top-level file in the tip tree."
+  },
+  {
+   "rank": "01262153c25709010c8ca025b4143a214034d237f9bf667b814bce1cdbc79873",
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 484,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/anatine/zod-plugins/tree/main/packages/zod-nestjs",
+   "truth": "external",
+   "why": "Absolute https URL to a different GitHub repository (anatine/zod-plugins); nothing in this tree is referenced."
+  },
+  {
+   "rank": "01a917e5f7d5cd5c56650ebb36fac5a36a5da4460cd507b7e91b3d547d69162b",
+   "path": "packages/integration/fixtures/drizzle-zod/index.ts",
+   "line": 6,
+   "nth": 0,
+   "kind": "import",
+   "spec": "drizzle-zod",
+   "truth": "external",
+   "why": "Bare specifier; drizzle-zod ^0.8.3 is a devDependency of the @zod/integration package and no packages/* workspace member is named drizzle-zod, so it resolves into node_modules."
+  },
+  {
+   "rank": "0480a7290030b29e8f71267a423517c5a56b3c7865f0bbe6e007eeaf0e889260",
+   "path": "packages/zod/src/v4/mini/coerce.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./schemas.js",
+   "truth": "packages/zod/src/v4/mini/schemas.ts",
+   "why": "Sibling relative specifier from packages/zod/src/v4/mini; .js maps to the .ts source and packages/zod/src/v4/mini/schemas.ts exists at tip."
+  },
+  {
+   "rank": "00b45a50cd0834ee45362e2cfcceffa4856a844823c4a04942a56e8c0c74f87b",
+   "path": "packages/zod/src/v4/locales/ta.ts",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "../core/checks.js",
+   "truth": "packages/zod/src/v4/core/checks.ts",
+   "why": "One level up from packages/zod/src/v4/locales is packages/zod/src/v4, then core/checks.js maps to the .ts source; packages/zod/src/v4/core/checks.ts exists at tip."
+  },
+  {
+   "rank": "0378c2cf7e5cdd06f5885ee0eead7bc6d6465bb409f428af429ef77cf9b8d0a4",
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 136,
+   "nth": 0,
+   "kind": "link",
+   "spec": "#비동기-변환async-transforms",
+   "truth": "packages/docs-v3/README_KO.md#비동기-변환async-transforms",
+   "why": "In-page fragment; heading \"#### 비동기 변환(Async Transforms)\" at README_KO.md line 2399 slugifies by lowercasing, dropping the parentheses, and turning spaces into hyphens, yielding exactly this anchor."
+  },
+  {
+   "rank": "00a613c0d1e3487d9a0fc5a6479bf93dda2ff6d513e13118b71545a315fcbd43",
+   "path": "packages/zod/src/v4/core/checks.ts",
+   "line": 7,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./util.js",
+   "truth": "packages/zod/src/v4/core/util.ts",
+   "why": "Sibling relative namespace import from packages/zod/src/v4/core; .js maps to the .ts source and util.ts is present in that directory at tip."
+  },
+  {
+   "rank": "02ca98a69e17737dd484ed5965a200f138805b316ff50202997ae586b9bf8d2d",
+   "path": "packages/zod/src/v4/core/api.ts",
+   "line": 5,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./schemas.js",
+   "truth": "packages/zod/src/v4/core/schemas.ts",
+   "why": "Sibling relative specifier from packages/zod/src/v4/core; .js maps to the .ts source and packages/zod/src/v4/core/schemas.ts exists at tip."
+  },
+  {
+   "rank": "065b5e6e7b7bf50f1872b1b7aefa09712b9c981ad4300ca52fca679a01f500e7",
+   "path": "packages/zod/src/v4/locales/zh-CN.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "import",
+   "spec": "../core/errors.js",
+   "truth": "packages/zod/src/v4/core/errors.ts",
+   "why": "One level up from packages/zod/src/v4/locales to packages/zod/src/v4, then core/errors.js maps to the .ts source; packages/zod/src/v4/core/errors.ts exists at tip."
+  },
+  {
+   "rank": "01c1d0d5bf6b1dc5d8f3620a5aeda4568c0c2433faf2a4e478ed5df193b7671a",
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 547,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/saiichihashimoto/sanity-typed/tree/main/packages/zod",
+   "truth": "external",
+   "why": "Absolute https URL to the saiichihashimoto/sanity-typed repository; it is the first of two links on this line (nth 0), the second being the sanity.io docs URL."
+  },
+  {
+   "rank": "0456eb5c260085364ffa0dbf2bfd9105fcc5fbc979e21e41d0a88b1da970ae85",
+   "path": "packages/zod/src/v4/mini/tests/computed.test.ts",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "vitest",
+   "truth": "external",
+   "why": "Bare specifier resolving to the node_modules vitest devDependency from the root package.json; no workspace package carries that name."
+  },
+  {
+   "rank": "019133d551f2747ddf595417d0d0e63637218e106ec50fb331852412723f8ba7",
+   "path": "packages/zod/src/v3/tests/catch.test.ts",
+   "line": 5,
+   "nth": 0,
+   "kind": "import",
+   "spec": "../helpers/util.js",
+   "truth": "packages/zod/src/v3/helpers/util.ts",
+   "why": "One level up from packages/zod/src/v3/tests is packages/zod/src/v3, then helpers/util.js maps to the .ts source; packages/zod/src/v3/helpers/util.ts exists at tip."
+  },
+  {
+   "rank": "056ef51dd8bbf2813d5597f5a2cb4cbdf60c827b579bee53c400a4f1dd5e1772",
+   "path": "packages/zod/src/v3/benchmarks/ipv4.ts",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "benchmark",
+   "truth": "external",
+   "why": "Bare specifier for the npm benchmark ^2.1.4 root devDependency; the superficially similar in-repo packages/bench declares the name @zod/benchmarks, so no workspace member matches \"benchmark\"."
+  },
+  {
+   "rank": "02b2da06745074ac0075b6a615b141008faa45d1a06fce510cf9b813622af48f",
+   "path": "packages/zod/src/v4/mini/iso.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./schemas.js",
+   "truth": "packages/zod/src/v4/mini/schemas.ts",
+   "why": "Sibling relative specifier from packages/zod/src/v4/mini; .js maps to the .ts source and schemas.ts is present in that directory at tip."
+  },
+  {
+   "rank": "016a383b6b605173dde20c5d4a57de48fe583bbcd82c694d526da0bfa1ffd7c6",
+   "path": "packages/zod/src/v4/locales/bg.ts",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "../core/checks.js",
+   "truth": "packages/zod/src/v4/core/checks.ts",
+   "why": "One level up from packages/zod/src/v4/locales to packages/zod/src/v4, then core/checks.js maps to the .ts source, which exists at tip."
+  },
+  {
+   "rank": "051d32c7ae7ed7e1bc93dd7f3e3ea78768406ca1c01b3f9494368351a97b50a6",
+   "path": "packages/zod/src/v3/types.ts",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./ZodError.js",
+   "truth": "packages/zod/src/v3/ZodError.ts",
+   "why": "Line 1 is the `import {` head of a multi-line import statement whose specifier \"./ZodError.js\" sits on line 9 of the same statement; the sibling relative path from packages/zod/src/v3 maps to ZodError.ts, present at tip."
+  },
+  {
+   "rank": "00efa6a4907534d73da4ce03d0351018291cee0f1277de426371dfb6b1d723f4",
+   "path": "packages/zod/src/v4/core/index.ts",
+   "line": 12,
+   "nth": 0,
+   "kind": "export_from",
+   "spec": "./api.js",
+   "truth": "packages/zod/src/v4/core/api.ts",
+   "why": "Sibling relative re-export from packages/zod/src/v4/core; .js maps to the .ts source and api.ts exists in that directory at tip."
+  },
+  {
+   "rank": "065ffd47d04650b692db910795e8ee3d78d5b4360992b1b7a31a690a1e949e6e",
+   "path": "packages/bench/property-access.ts",
+   "line": 2,
+   "nth": 0,
+   "kind": "import",
+   "spec": "./metabench.js",
+   "truth": "packages/bench/metabench.ts",
+   "why": "Sibling relative specifier from packages/bench; .js maps to the .ts source and packages/bench/metabench.ts exists at tip."
+  },
+  {
+   "rank": "027d2ce645697d0518f592c87ff56342d781da4232faf6becb2adff227cb781a",
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 94,
+   "nth": 0,
+   "kind": "link",
+   "spec": "#required",
+   "truth": "packages/docs-v3/README_KO.md#required",
+   "why": "In-page fragment; heading \"### `.required`\" at README_KO.md line 1419 slugifies to \"required\" after backticks and the leading dot are stripped."
+  },
+  {
+   "rank": "0137ae4ab9de1f2f93c0895a2d3bf66a4da0d23b06f5a9535fe81cb341252e9b",
+   "path": "packages/docs-v3/README_ZH.md",
+   "line": 97,
+   "nth": 0,
+   "kind": "link",
+   "spec": "#comparison",
+   "truth": "packages/docs-v3/README_ZH.md#comparison",
+   "why": "In-page fragment on the Chinese TOC entry `- [比较](#comparison)`; the target is the English heading \"# Comparison\" at README_ZH.md line 1902, which slugifies to \"comparison\"."
+  }
+ ],
+ "site_gaps": [
+  {
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 2,
+   "note": "`<img src=\"logo.svg\" .../>` inside a raw HTML block — a relative IN-CORPUS image reference resolving to packages/docs-v3/logo.svg (verified present at tip). A markdown kind-table detector (inline links/images/autolinks/ref defs) sees only an HTML block node and misses it."
+  },
+  {
+   "path": "packages/docs-v3/README_ZH.md",
+   "line": 2,
+   "note": "Same construct: `<img src=\"logo.svg\" .../>` in an HTML block, resolving to the in-corpus packages/docs-v3/logo.svg."
+  },
+  {
+   "path": "packages/docs-v3/home.md",
+   "line": 2,
+   "note": "`<img src=\"https://raw.githubusercontent.com/colinhacks/zod/main/logo.svg\" .../>` in an HTML block — external image reference invisible to a markdown-node-only detector."
+  },
+  {
+   "path": "packages/docs-v3/home.md",
+   "line": 11,
+   "note": "HTML-block `<a href=...><img src=.../></a>` badge pairs; ~65 further `<a href>` / `<img src>` occurrences in this file through line 459 (e.g. 12-26, 191-309, 323-392, 406-459) are all missed by markdown link/image kinds."
+  },
+  {
+   "path": "packages/docs-v3/home.md",
+   "line": 193,
+   "note": "`<source media=\"(prefers-color-scheme: dark)\" srcset=\"https://...\">` inside `<picture>` — srcset URLs are a reference-bearing attribute with no markdown equivalent; recurs at 218, 234, 252, 268, 286, 302, 408."
+  },
+  {
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 12,
+   "note": "HTML-block `<a href>` / `<img src>` badge and sponsor markup; ~60 further occurrences through line 437 (12-32, 192-298, 312-370, 384-437), plus `<source ... srcset>` at 194, 219, 237, 255, 273, 291, 386. All missed by markdown link/image kinds."
+  },
+  {
+   "path": "packages/docs-v3/README_KO.md",
+   "line": 39,
+   "note": "Two `<a href=\"https://go.clerk.com/zod-clerk\">` links live inside an HTML comment `<!-- ... -->`. Not a miss but the mirror-image hazard: a regex/HTML-attribute detector added to close the gaps above would emit false-positive sites here, since commented-out markup is not a live reference."
+  },
+  {
+   "path": "packages/docs-v3/README_ZH.md",
+   "line": 6,
+   "note": "HTML-block `<a href>` / `<img src>` markup; ~55 further occurrences through line 277 (10-29, 131-277) are missed by markdown link/image kinds."
+  }
+ ],
+ "notes": "Tip 912f0f51b0ced654d0069741e7160834dca742ee is checked out and the corpus working tree is clean (git status --porcelain empty), but every judgment above was made from `git show <tip>:<path>` / `git cat-file -e <tip>:<path>` against the pinned object, never the worktree. All 30 spec strings were confirmed present at the recorded line with one convention note: packages/zod/src/v3/types.ts line 1 is `import {`, the head of a multi-line import statement whose specifier \"./ZodError.js\" appears on line 9 — the site is the statement start, so this is a line-convention artifact, not a mismatch; no row was judged \"mismatch\". Workspace resolution facts used for the `zod/v4` row: pnpm-workspace.yaml lists `packages/*` with linkWorkspacePackages: true; packages/zod/package.json name is \"zod\" and its exports map \"./v4\" to the \"@zod/source\" branch \"./src/v4/index.ts\"; the root tsconfig.json sets customConditions [\"@zod/source\"] and vitest.config.ts sets resolve.conditions/[ssr.]externalConditions to [\"@zod/source\", \"default\"], so the source branch wins for both tsc and the test runner — the only npm-registry zod in the tree is the alias `zod3` (npm:zod@~3.24.0), which does not claim the \"zod\" specifier, hence no ambiguity. No `import x = require(...)`, dynamic `import(expr)`, or `/// <reference>` directive appears anywhere in the 20 TypeScript files touched by these rows; all site gaps found were markdown HTML-block references."
+}

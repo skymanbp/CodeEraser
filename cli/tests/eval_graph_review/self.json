@@ -1,0 +1,225 @@
+{
+ "corpus": "self",
+ "tip": "60f73e3bea7681721a2f572e64788948a17830f6",
+ "auditor": "opus independent subagent (user delegation 2026-08-12; RG15: assembled verbatim, judgments untouched)",
+ "rows": [
+  {
+   "rank": "07f016cbb85cfd1e258ca8ca4abb758f95ddd151aec3e2f0576ff908be01d7d1",
+   "path": "contracts/fixtures/crosscheck/go/cobra.go",
+   "line": 26,
+   "nth": 0,
+   "kind": "import",
+   "spec": "strings",
+   "truth": "external",
+   "why": "Line 26 is `\"strings\"` inside the import block at lines 20-30; `strings` is a Go standard-library package, and the fixture island contracts/fixtures/crosscheck/go/ holds only five `package cobra` files with no go.mod and no vendored stdlib, so nothing in-corpus can supply it."
+  },
+  {
+   "rank": "05f3c07da8569b5040a80b8f37437993da4982303b9068b874af2fdaebb9fcc9",
+   "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+   "line": 24,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "typing",
+   "truth": "external",
+   "why": "Line 24 opens the parenthesized `from typing import (` continuing to line 31; `typing` is CPython stdlib and the flattened python island (5 files: docs__conf.py plus four src__requests__*.py) contains no typing.py that could shadow it."
+  },
+  {
+   "rank": "036853dadf6466b4c2a9d6a723549ee7c1a5cec01e9abe323ec02a0f93e61d91",
+   "path": "cli/src/graph/mod.rs",
+   "line": 15,
+   "nth": 0,
+   "kind": "use",
+   "spec": "std::process::ExitCode",
+   "truth": "external",
+   "why": "`use std::process::ExitCode;` — the `std` path root is the Rust standard library, resolved by the compiler's extern prelude, never by a file in this repo."
+  },
+  {
+   "rank": "002fb3c82058838b86f5781e1e3cd605b524cc317c33a0f97f3410fc58d89107",
+   "path": "cli/tests/report_schema.rs",
+   "line": 8,
+   "nth": 0,
+   "kind": "use",
+   "spec": "codeeraser::scan::metrics::{FileMetrics, FnMetrics}",
+   "truth": "cli/src/scan/metrics/mod.rs",
+   "why": "`codeeraser` is this repo's own lib crate (cli/Cargo.toml:4 `name = \"codeeraser\"`), so the integration test resolves through cli/src/lib.rs:16 `pub mod scan` → cli/src/scan/mod.rs:6 `pub mod metrics`; cli/src/scan/metrics is a directory with no sibling metrics.rs, so the module file is metrics/mod.rs, which defines both structs directly (FnMetrics at :13, FileMetrics at :27)."
+  },
+  {
+   "rank": "044468de60e420bf892c6c58158dcdcbe9d64618687dd705649472162bec5dfa",
+   "path": "cli/tests/eval_l2.rs",
+   "line": 46,
+   "nth": 0,
+   "kind": "use",
+   "spec": "std::collections::HashMap",
+   "truth": "external",
+   "why": "`use std::collections::HashMap;` — `std` root, supplied by the Rust standard library via the extern prelude, not by any in-corpus module file."
+  },
+  {
+   "rank": "010ad504abf5e33281979f08a026c8cf863467708ae336268c7c4589770259df",
+   "path": "cli/tests/eval_l2_parts/cross.rs",
+   "line": 7,
+   "nth": 0,
+   "kind": "use",
+   "spec": "serde_json::{Value, json}",
+   "truth": "external",
+   "why": "`serde_json` is a third-party dependency crate resolved through Cargo's extern prelude; the in-corpus `use` on line 5-6 (`super::…`, `crate::eval_commit_review`) are the file's local ones, this is not."
+  },
+  {
+   "rank": "01234d96bd009a57d6fd971a17f6187edad2d6d4fcfafdc2049d640f8e8335d4",
+   "path": "contracts/fixtures/crosscheck/go/completions.go",
+   "line": 18,
+   "nth": 0,
+   "kind": "import",
+   "spec": "fmt",
+   "truth": "external",
+   "why": "Line 18 is `\"fmt\"` in the import block at 17-26 (whose only non-stdlib entry is github.com/spf13/pflag); `fmt` is a Go stdlib package with no in-corpus provider in the go fixture island."
+  },
+  {
+   "rank": "05ddbc091d641d2b3599705235211228eb1079ea812f563e63f883b2dbed7dc5",
+   "path": "contracts/fixtures/crosscheck/python/docs__conf.py",
+   "line": 16,
+   "nth": 0,
+   "kind": "import",
+   "spec": "os",
+   "truth": "external",
+   "why": "`import os` at line 16 names the CPython stdlib module; the flattened python island has no os.py, and the sys.path manipulation on lines 24-25 points outside the repo tree anyway."
+  },
+  {
+   "rank": "05ea5e33880da836c498f815ee4f1216297ad3cecc739dadfa4104e0fe48001c",
+   "path": "contracts/fixtures/crosscheck/go/bash_completionsV2.go",
+   "line": 19,
+   "nth": 0,
+   "kind": "import",
+   "spec": "fmt",
+   "truth": "external",
+   "why": "Line 19 is `\"fmt\"` in a pure-stdlib import block (bytes/fmt/io/os, lines 17-22); Go stdlib, no in-corpus target in the deliberately import-orphaned go island."
+  },
+  {
+   "rank": "03db52054bde06120a89a3fc59a9c543b2b1b34ad9dafb8fefc8c0fe9c918dfc",
+   "path": "cli/src/daemon/proto.rs",
+   "line": 6,
+   "nth": 0,
+   "kind": "use",
+   "spec": "serde::{Deserialize, Serialize}",
+   "truth": "external",
+   "why": "`serde` is a third-party Cargo dependency (derive macros used at lines 15 and 45); resolved via the extern prelude, so no cli/src file is the target."
+  },
+  {
+   "rank": "013dff93757e0db0bbb237fa4b6558398e81e9a187e5090c0c1b549736f904f5",
+   "path": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+   "line": 220,
+   "nth": 0,
+   "kind": "use",
+   "spec": "self::DirEntryInner::*",
+   "truth": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs#DirEntryInner",
+   "why": "In a `use` path `self::` denotes the enclosing MODULE (not the impl's `self` type), and this flattened fixture file is its own top-level module: `enum DirEntryInner` is defined at line 131 of the same file, so this glob-imports that enum's variants in-file — the rare crosscheck-island site with a genuine in-corpus target (contrast line 17 `use crate::{…}`, which points at the absent `ignore` crate root)."
+  },
+  {
+   "rank": "001ea999e4a697e55ab39c329d05e471bdbc290f9f254fee8f87352a96836db6",
+   "path": "cli/tests/eval_commit_labels.rs",
+   "line": 26,
+   "nth": 0,
+   "kind": "mod_decl",
+   "spec": "eval_commit_review",
+   "truth": "cli/tests/eval_commit_review/mod.rs",
+   "why": "`mod eval_commit_review;` with no `#[path]` attribute (line 25 is the last `//!` header line), so sibling probing applies: `git ls-tree` at tip shows no cli/tests/eval_commit_review.rs, only the directory cli/tests/eval_commit_review/ containing mod.rs (plus self/requests/ripgrep .json data), so the directory-form module file is the target."
+  },
+  {
+   "rank": "0b779e8567226656f65a78680208348b586dfecb37bcdfe1591530ccd65ca073",
+   "path": "contracts/fixtures/crosscheck/go/cobra.go",
+   "line": 24,
+   "nth": 0,
+   "kind": "import",
+   "spec": "reflect",
+   "truth": "external",
+   "why": "Line 24 is `\"reflect\"`, a Go stdlib package, in cobra.go's all-stdlib import block (lines 20-30); the go island has no go.mod and no in-corpus package that could provide it."
+  },
+  {
+   "rank": "0dd18c362983ad094b868b252815181dc8a5a574ce8bfa4cb5efbbd46584fd0c",
+   "path": "contracts/fixtures/crosscheck/go/command_win.go",
+   "line": 22,
+   "nth": 0,
+   "kind": "import",
+   "spec": "os",
+   "truth": "external",
+   "why": "Line 22 is `\"os\"` (Go stdlib) inside the windows-only build-tagged import block at 20-26, whose sole third-party entry is github.com/inconshreveable/mousetrap; nothing in the fixture island defines an `os` package."
+  },
+  {
+   "rank": "12b2dbebb9798b026fa1a66b78be1bbb5b4c010e2657df5a62c16348cd36ed67",
+   "path": "contracts/fixtures/crosscheck/go/cobra.go",
+   "line": 29,
+   "nth": 0,
+   "kind": "import",
+   "spec": "unicode",
+   "truth": "external",
+   "why": "Line 29 is `\"unicode\"`, the last entry of cobra.go's stdlib import block; Go standard library, no in-corpus provider in contracts/fixtures/crosscheck/go/."
+  },
+  {
+   "rank": "039c295b9034ecf57ec1463203ccbaa0c75ab4c286fa815cf37d4d8bd8ff6b26",
+   "path": "docs/EVAL-SET.md",
+   "line": 66,
+   "nth": 0,
+   "kind": "link",
+   "spec": "../cli/src/fourclass/",
+   "truth": "cli/src/fourclass",
+   "why": "Relative link resolved against the linking file's directory docs/ → cli/src/fourclass/, which at tip is a tree (verified by `cat-file -e` and `ls-tree`: batch.rs, diff.rs, kinds.rs, mod.rs, session.rs, stacking.rs, units.rs), so the truth is the directory itself, not a file."
+  },
+  {
+   "rank": "03cc9816cad8f14cf354a8758e7aa13d9364cf5b60a7a328a90a59b122018501",
+   "path": "contracts/fixtures/crosscheck/python/src__requests__structures.py",
+   "line": 12,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "typing",
+   "truth": "external",
+   "why": "`from typing import Any, Generic, TypeVar, overload` — CPython stdlib module; the flattened island directory contains no typing.py (and its sibling relative import `from .compat import …` on line 14 is itself dangling, confirming the no-in-corpus-target design)."
+  },
+  {
+   "rank": "03eea60af6b3f22594beacc25dbd05a3fdcca1a0756fe92e0126b069f3a7c791",
+   "path": "cli/src/health.rs",
+   "line": 12,
+   "nth": 0,
+   "kind": "use",
+   "spec": "std::path::{Path, PathBuf}",
+   "truth": "external",
+   "why": "`use std::path::{Path, PathBuf};` — `std` root, Rust standard library via the extern prelude; the in-corpus imports in this file are the `crate::…` lines 7-10, not this one."
+  }
+ ],
+ "site_gaps": [
+  {
+   "path": "cli/tests/report_schema.rs",
+   "line": 51,
+   "note": "golden_path(\"scan-report/report.golden.json\") — a fixture file reference carried entirely in a string literal; cli/tests/common/mod.rs:106-112 joins CARGO_MANIFEST_DIR's parent with \"contracts/fixtures\", so it resolves to contracts/fixtures/scan-report/report.golden.json (verified present at tip). No use/mod kind can see it."
+  },
+  {
+   "path": "cli/tests/report_schema.rs",
+   "line": 64,
+   "note": "Same construct: golden_path(\"dedup-report/report.golden.json\") → contracts/fixtures/dedup-report/report.golden.json (verified present at tip), invisible to a use/mod kind table."
+  },
+  {
+   "path": "cli/tests/eval_l2.rs",
+   "line": 210,
+   "note": "load(\"../contracts/eval/l1-v1.json\") — cwd-relative data reference (cargo test runs with cwd = cli/, and eval_support::load at cli/tests/eval_support/mod.rs:44-46 does a bare fs::read_to_string), resolving to contracts/eval/l1-v1.json (verified present at tip). Not an import construct, so no rs kind fires."
+  },
+  {
+   "path": "contracts/fixtures/crosscheck/python/docs__conf.py",
+   "line": 24,
+   "note": "sys.path.insert(0, os.path.abspath(\"..\")) — and \"_themes\" on line 25 — rewrites import resolution for the `import requests` on line 27; an import kind table records line 27's specifier but never the sys.path mutation that decides where it points (dynamic resolution)."
+  },
+  {
+   "path": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+   "line": 11,
+   "note": "`use {` with NO leading path segment groups three distinct crate roots across lines 11-15 (crossbeam_deque::{Stealer, Worker as Deque}, same_file::Handle, walkdir::WalkDir). A use detector that takes the text after `use` as a single specifier records one bogus spec instead of three external roots."
+  },
+  {
+   "path": "cli/src/graph/mod.rs",
+   "line": 112,
+   "note": "`#[cfg(test)] mod tests { … }` is a braced INLINE module, not a file reference — a mod-kind matcher keying on `mod NAME` without requiring the terminating semicolon would emit a phantom site here (false positive, the mirror hazard of a miss)."
+  },
+  {
+   "path": "docs/EVAL-SET.md",
+   "line": 46,
+   "note": "Backticked prose paths (`.ce-eval/review/reviewed.ndjson` here, `.ce-eval/` on lines 6 and 299) are not link syntax, so md link/image/autolink kinds skip them; harmless at tip because .ce-eval/ is gitignored and absent from the tree, but it is the pattern by which a real doc→path reference could hide."
+  }
+ ],
+ "notes": "All 18 spec strings matched their pinned-tip lines byte-for-byte via `git show <tip>:<path>` — zero mismatches. Three rows have in-corpus targets (report_schema.rs:8 → cli/src/scan/metrics/mod.rs; eval_commit_labels.rs:26 → cli/tests/eval_commit_review/mod.rs; EVAL-SET.md:66 → cli/src/fourclass directory), each confirmed with `git cat-file -e`/`ls-tree` at the tip, and the mod_decl was disambiguated by confirming NO sibling cli/tests/eval_commit_review.rs exists. One fixture-island row is NOT external despite the island's negative-control design: walk.rs:220 `use self::DirEntryInner::*` targets an enum defined at line 131 of the same file. The remaining 14 are std/third-party. Directory listings used to rule out shadowing: contracts/fixtures/crosscheck/go/ (5 files, no go.mod) and contracts/fixtures/crosscheck/python/ (5 flattened files, no typing.py/os.py)."
+}

@@ -1,0 +1,190 @@
+{
+ "corpus": "requests",
+ "tip": "8068356288978c4f54661ae6f95afe0e0831885e",
+ "auditor": "opus independent subagent (user delegation 2026-08-12; RG15: assembled verbatim, judgments untouched)",
+ "rows": [
+  {
+   "rank": "061aa797717d2e4f3677df4be0d5c10225bca41f48f65bd567445aaa4c7331b0",
+   "path": "tests/test_utils.py",
+   "line": 8,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "unittest",
+   "truth": "external",
+   "why": "Line 8 is `from unittest import mock`; `unittest` is a CPython stdlib package and the tip tree contains no top-level `unittest` module or vendored copy (verified via `git ls-tree -r <tip> --name-only`), so the absolute import escapes the corpus."
+  },
+  {
+   "rank": "08e1f1d0a836f32b094be41cd2dc42ebf361c1f0755fd511c473c14aaa8de0f7",
+   "path": "tests/test_testserver.py",
+   "line": 1,
+   "nth": 0,
+   "kind": "import",
+   "spec": "socket",
+   "truth": "external",
+   "why": "Line 1 is `import socket`, an absolute import of the stdlib `socket` module; no `socket.py` exists anywhere in the tip tree to shadow it, so it resolves outside the corpus."
+  },
+  {
+   "rank": "0272673c7690eda94ed03596388388110891b5d891082bb9e18e30c6a77b43b2",
+   "path": "HISTORY.md",
+   "line": 228,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/psf/requests/security/advisories/GHSA-j8r2-6x86-q33q",
+   "truth": "external",
+   "why": "Line 228 is the inline markdown link `[Github Security Advisory](https://github.com/psf/requests/security/advisories/GHSA-j8r2-6x86-q33q)`; the destination is an absolute https URL to GitHub's advisory service, not a relative path resolvable against the repo root."
+  },
+  {
+   "rank": "0d17a172adcebf3ecf2e361cf84b9389463ff938f18ba33589ecda81d27d89fe",
+   "path": "src/requests/models.py",
+   "line": 10,
+   "nth": 0,
+   "kind": "import",
+   "spec": "datetime",
+   "truth": "external",
+   "why": "Line 10 is `import datetime`, an absolute import of the stdlib `datetime` module; the tip tree has no `datetime` module under `src/requests/` or at top level, so it cannot resolve in-corpus."
+  },
+  {
+   "rank": "02ddab6b5cc6caa122d2481d351c4d93bc150d3b8a2002e3784c0ecc7f8a220a",
+   "path": "tests/test_utils.py",
+   "line": 12,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "requests",
+   "truth": "src/requests/compat.py",
+   "why": "Line 12 is `from requests import compat`; `requests` resolves in-corpus to the src-layout package `src/requests/` (pyproject.toml:83-84 declares `[tool.setuptools.packages.find] where = [\"src\"]`), and `compat` is a submodule of that package, not a name bound in `__init__.py` (which imports only `packages, utils` at line 158), so submodule import machinery loads `src/requests/compat.py` (existence verified with `git cat-file -e`)."
+  },
+  {
+   "rank": "0493c3cb7bf94ab865fd30ba683de7347afa575befcd0febd37b26a40233ded7",
+   "path": "src/requests/models.py",
+   "line": 27,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "urllib3.exceptions",
+   "truth": "external",
+   "why": "Line 27 opens `from urllib3.exceptions import (DecodeError, LocationParseError, ProtocolError, ReadTimeoutError, SSLError)`; urllib3 is a declared runtime dependency and is NOT vendored at this tip — the full tree listing contains no `urllib3` directory anywhere (unlike the pre-2.16 `requests/packages` vendoring era)."
+  },
+  {
+   "rank": "02d72c8a3ae71fb27855095d7adf65fd9e91292e4421288b16350ee065db8a74",
+   "path": "src/requests/help.py",
+   "line": 5,
+   "nth": 0,
+   "kind": "import",
+   "spec": "ssl",
+   "truth": "external",
+   "why": "Line 5 is `import ssl`, an absolute import of the stdlib `ssl` module; no `ssl.py` exists in the tip tree, so the reference leaves the corpus."
+  },
+  {
+   "rank": "07305b3f05999391dab268e1110b6db7c9cd10314611ad479fb04050894bbb36",
+   "path": "src/requests/compat.py",
+   "line": 90,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "urllib.parse",
+   "truth": "external",
+   "why": "Line 90 opens `from urllib.parse import (quote, quote_plus, unquote, ...)`; `urllib.parse` is the stdlib package submodule, and the tip tree vendors no `urllib` package, so it resolves outside the corpus."
+  },
+  {
+   "rank": "0a010fb1fe588c3d99c356b9a26918997f544a2a0095d25bb256e389fbd61293",
+   "path": "src/requests/adapters.py",
+   "line": 71,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "urllib3.connectionpool",
+   "truth": "external",
+   "why": "Line 71 is `from urllib3.connectionpool import HTTPConnectionPool` inside the `if typing.TYPE_CHECKING:` block (line 70); type-checking-only or not, the module path is the third-party urllib3 distribution, which is not vendored at this tip."
+  },
+  {
+   "rank": "0896159d24ab036ff812f50e637e9508d1195d7c146132ee0e5419c3ce0113a9",
+   "path": "src/requests/compat.py",
+   "line": 78,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "json",
+   "truth": "external",
+   "why": "Line 78 is `from json import JSONDecodeError`, taken in the `else` branch of the simplejson/json resolution block (lines 66-78); `json` is the stdlib package and no `json` module exists in the tip tree."
+  },
+  {
+   "rank": "09c32bc8b310b4b573779c7acdd15d81632acb02c2efd5491076ac44f542708c",
+   "path": "src/requests/help.py",
+   "line": 32,
+   "nth": 0,
+   "kind": "import",
+   "spec": "OpenSSL",
+   "truth": "external",
+   "why": "Line 32 is `import OpenSSL` in the `else` branch of the `try: from urllib3.contrib import pyopenssl` guard (lines 24-32); `OpenSSL` is the third-party pyOpenSSL top-level package, absent from the tip tree, so the optional dependency resolves outside the corpus."
+  },
+  {
+   "rank": "07ddfaaebf12ec331247df8cca78560284ca909f8ac69ca8a8cdb799d6c81b81",
+   "path": "src/requests/compat.py",
+   "line": 81,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "collections",
+   "truth": "external",
+   "why": "Line 81 is `from collections import OrderedDict` (kept for backwards compatibility); `collections` is the stdlib package and nothing in the tip tree shadows it."
+  },
+  {
+   "rank": "06f5c9343a6ec418fbd85207afbed08ca78932a32b3cf1577054e0319616cd12",
+   "path": "src/requests/utils.py",
+   "line": 72,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": "http.cookiejar",
+   "truth": "external",
+   "why": "Line 72 is `from http.cookiejar import CookieJar` inside the `if TYPE_CHECKING:` block (line 71); `http.cookiejar` is a stdlib package submodule and no `http` package is vendored at this tip."
+  },
+  {
+   "rank": "0191ec2217341c19b3c7dc03f0b360ab84b405d2acf303eb3b6a09299469948a",
+   "path": "src/requests/utils.py",
+   "line": 63,
+   "nth": 0,
+   "kind": "import_from",
+   "spec": ".exceptions",
+   "truth": "src/requests/exceptions.py",
+   "why": "Line 63 opens `from .exceptions import (FileModeWarning, InvalidHeader, InvalidURL, UnrewindableBodyError)`; the single leading dot resolves against the importing file's package directory `src/requests/`, giving `src/requests/exceptions.py` (verified with `git cat-file -e`), where all four names are defined as classes at lines 157, 122, 118 and 146 — file-level truth because four distinct symbols are pulled in one statement."
+  },
+  {
+   "rank": "0dde98e3385a91de22131276cf8c7091eb399d92863e954f85f8230405378aea",
+   "path": "docs/conf.py",
+   "line": 27,
+   "nth": 0,
+   "kind": "import",
+   "spec": "requests",
+   "truth": "src/requests/__init__.py",
+   "why": "Line 27 is `import requests`, an absolute import of the in-repo package, which under the src layout (pyproject.toml:83-84 `where = [\"src\"]`) is `src/requests/__init__.py` (existence verified with `git cat-file -e`); note the neighbouring `sys.path.insert(0, os.path.abspath(\"..\"))` at line 24 is stale pre-src-layout scaffolding — the repo root holds no `requests/` directory at this tip, so the import is satisfied by the installed/editable distribution, whose source of record is still `src/requests/__init__.py`."
+  }
+ ],
+ "site_gaps": [
+  {
+   "path": "src/requests/compat.py",
+   "line": 42,
+   "note": "`chardet = importlib.import_module(lib)` inside `_resolve_char_detection()`, looping over the literal tuple `(\"chardet\", \"charset_normalizer\")` at line 39 — a dynamic module reference that an import/import_from kind table cannot see; the two module names live only as string literals."
+  },
+  {
+   "path": "src/requests/__init__.py",
+   "line": 188,
+   "note": "`__all__ = (...)` tuple spanning lines 188+ enumerates re-exported symbol names as bare strings (\"ConnectionError\", \"Session\", \"Response\", ...); these are re-export references to `.exceptions`, `.models`, `.sessions` etc. that a py import/import_from detector never emits."
+  },
+  {
+   "path": "src/requests/__init__.py",
+   "line": 13,
+   "note": "Doctest inside the module docstring contains `>>> import requests` (and prose reference to `requests.api` at line 34, plus the docs URL at line 35) — reference-bearing text that is not an AST import node."
+  },
+  {
+   "path": "HISTORY.md",
+   "line": 239,
+   "note": "Bare URL in prose: `reviewing https://urllib3.readthedocs.io/en/latest/v2-migration-guide.html` — no `[](...)` inline-link syntax and no `<...>` autolink delimiters, so a detector keyed on link/image/autolink/ref-def node kinds misses this GFM-style bare-URL autolink."
+  },
+  {
+   "path": "docs/conf.py",
+   "line": 25,
+   "note": "`sys.path.insert(0, os.path.abspath(\"_themes\"))` (and line 24's `os.path.abspath(\"..\")`) reference in-repo directories as string literals — `docs/_themes/` exists at the tip (flask_theme_support.py verified) — and these calls also rewrite import resolution for the whole file; invisible to an import-kind table."
+  },
+  {
+   "path": "docs/conf.py",
+   "line": 46,
+   "note": "`templates_path = [\"_templates\"]` (and `html_static_path = [\"_static\"]` at line 158) are string-literal directory references resolving to `docs/_templates/sidebar.html` and `docs/_static/custom.css`, both verified present at the tip; a py detector limited to import/import_from emits neither."
+  }
+ ],
+ "notes": "All 15 spec strings were confirmed verbatim on their stated lines via `git show <tip>:<path> | sed -n '<line>p'` — zero mismatches. The tip is a src-layout tree (`src/requests/...`, 20 modules) with NO vendored third-party packages: a full `git ls-tree -r <tip> --name-only` filtered for `urllib3|idna|OpenSSL|charset_normalizer|json|collections|unittest|socket|datetime|ssl` at top level returned nothing, so every stdlib/third-party judgment above rests on verified absence rather than assumption. 13 of 15 rows are external; the two in-corpus rows (tests/test_utils.py:12, src/requests/utils.py:63) plus the docs/conf.py package import were each confirmed with `git cat-file -e`. Row 14 is reported file-level rather than `path#symbol` because the statement imports four distinct symbols; all four class definitions were nonetheless read and located in exceptions.py."
+}

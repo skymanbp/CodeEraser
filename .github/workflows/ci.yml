@@ -19,6 +19,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # graph_provenance.rs asserts sample -> audit -> resolver
+          # commit ancestry (design G13); a shallow clone has no
+          # ancestry to check and the test refuses it loudly
+          fetch-depth: 0
 
       # Haskell first: the Rust test step consumes the built ce-core
       # via CE_CORE_BIN (cross-language wire goldens) — without it the
@@ -87,6 +92,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # graph_provenance.rs ancestry, same as above
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.14.1"

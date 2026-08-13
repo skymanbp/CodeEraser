@@ -1,0 +1,300 @@
+{
+ "corpus": "ripgrep",
+ "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+ "auditor": "opus independent subagent (user delegation 2026-08-12; RG15: assembled verbatim, judgments untouched)",
+ "rows": [
+  {
+   "rank": "0036dba751a329f79bac03d17752be16afa769452bbce0ee195e2d8a1b3a6c56",
+   "path": "crates/matcher/src/lib.rs",
+   "line": 41,
+   "nth": 0,
+   "kind": "mod_decl",
+   "spec": "interpolate",
+   "truth": "crates/matcher/src/interpolate.rs",
+   "why": "`mod interpolate;` at crates/matcher/src/lib.rs:41 is a crate-root module decl, so sibling probing under crates/matcher/src/ resolves it to interpolate.rs (present at tip; interpolate/mod.rs absent, verified by cat-file -e)."
+  },
+  {
+   "rank": "01d49914b53137781a43c2f9e0e187c7855134b1dd90f2898a19ff8d27fd6b15",
+   "path": "crates/core/haystack.rs",
+   "line": 12,
+   "nth": 0,
+   "kind": "use",
+   "spec": "std::path::Path",
+   "truth": "external",
+   "why": "The path's first segment is the `std` extern prelude crate, which is not a workspace member, so the import leaves the corpus entirely."
+  },
+  {
+   "rank": "0057ece2ddf39f28c61f53d2e5040f13b52c428f4fe1543644a7118eaaa9313b",
+   "path": "CHANGELOG.md",
+   "line": 368,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/2381",
+   "truth": "external",
+   "why": "Inline markdown link `[BUG #2381](...)` whose destination is an absolute https URL to the GitHub issue tracker, not a repo-relative path, so no tree entry is implicated."
+  },
+  {
+   "rank": "048ef7c6aca533f9665b7d0d40fe6b5f38c1b9f572acd6f641441b5966cf6447",
+   "path": "crates/ignore/src/gitignore.rs",
+   "line": 667,
+   "nth": 0,
+   "kind": "use",
+   "spec": "regex_automata::{meta::Regex, util::syntax}",
+   "truth": "external",
+   "why": "Function-body `use` inside parse_excludes_file; the root segment `regex_automata` is a crates.io dependency of the ignore crate, not one of the workspace members listed in the root Cargo.toml."
+  },
+  {
+   "rank": "02da367fa65c95c8f3caa93e184cda0596ccdd0d95bde47a3e67d70286aaefe9",
+   "path": "CHANGELOG.md",
+   "line": 1255,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/200",
+   "truth": "external",
+   "why": "Inline markdown link with an absolute https destination on the GitHub issue tracker; absolute URLs never resolve against the linking file's directory."
+  },
+  {
+   "rank": "01d97ee94c16cf2bd85ce71a2d1a34abe65d737cfa38bd71ecfbdc7e7fd9acc8",
+   "path": "crates/matcher/src/interpolate.rs",
+   "line": 147,
+   "nth": 0,
+   "kind": "use",
+   "spec": "super::{CaptureRef, find_cap_ref, interpolate}",
+   "truth": "crates/matcher/src/interpolate.rs",
+   "why": "The `use` sits in the inline `#[cfg(test)] mod tests` opened at interpolate.rs:146, so `super` is the enclosing `interpolate` module — the same file; all three names are defined there (interpolate:14, CaptureRef:64, find_cap_ref:97), making it a self-referential import resolved file-level."
+  },
+  {
+   "rank": "02cb629a322620edb59244eeee327b6194e164fdd7a37ce8d8bf65b966c22e52",
+   "path": "crates/core/flags/config.rs",
+   "line": 113,
+   "nth": 0,
+   "kind": "use",
+   "spec": "std::ffi::OsString",
+   "truth": "external",
+   "why": "Import inside the inline `mod tests` at config.rs:111; root segment `std` comes from the extern prelude, outside the workspace."
+  },
+  {
+   "rank": "013335ea6f7976dcbd5988f596939a473d8b08a13068f5f56bebdeb9d803027b",
+   "path": "crates/searcher/src/searcher/glue.rs",
+   "line": 1497,
+   "nth": 0,
+   "kind": "use",
+   "spec": "crate::testutil::RegexMatcher",
+   "truth": "crates/searcher/src/testutil.rs#RegexMatcher",
+   "why": "`crate::` anchors at the grep-searcher root crates/searcher/src/lib.rs, whose `#[cfg(test)] mod testutil;` (lib.rs:106) resolves by sibling probing to testutil.rs (testutil/mod.rs absent); `pub(crate) struct RegexMatcher` is defined there at line 24."
+  },
+  {
+   "rank": "02f8314cece720f2deea78e4bdf5e51c4517055d6a8c4ee8778962619bb647a4",
+   "path": "CHANGELOG.md",
+   "line": 1043,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/951",
+   "truth": "external",
+   "why": "Inline markdown link to an absolute GitHub issue URL; no in-tree target is referenced."
+  },
+  {
+   "rank": "01096170694a5bc329e6f02a8bac9f0af83039e067efc8a1c1b00997c33f3d39",
+   "path": "crates/globset/src/glob.rs",
+   "line": 6,
+   "nth": 0,
+   "kind": "use",
+   "spec": "crate::{Candidate, Error, ErrorKind, new_regex}",
+   "truth": "crates/globset/src/lib.rs",
+   "why": "`crate::` anchors at the globset crate root crates/globset/src/lib.rs, where all four names are defined directly (Candidate:599, Error:157, ErrorKind:167, new_regex:271) rather than re-exported, so the brace group is a single file-level edge to lib.rs."
+  },
+  {
+   "rank": "00846893eb475002823c58478dda9d624da428eed25bc2115f48f18f0f0be153",
+   "path": "CHANGELOG.md",
+   "line": 521,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/pull/1869",
+   "truth": "external",
+   "why": "Inline markdown link whose destination is an absolute https URL to a GitHub pull request, outside the repository tree."
+  },
+  {
+   "rank": "002fb263695134bf6d8bd9d3fe3e805d2cb0a0d0846ab77bc7ce4cf2f8abb3af",
+   "path": "crates/globset/src/lib.rs",
+   "line": 1266,
+   "nth": 0,
+   "kind": "use",
+   "spec": "super::escape",
+   "truth": "crates/globset/src/lib.rs#escape",
+   "why": "The `use` is inside the `#[cfg(test)] mod tests` opened at lib.rs:1135, so `super` is the crate root module — this same file — where `pub fn escape` is defined at lib.rs:1115."
+  },
+  {
+   "rank": "004766b4fd2a769e56c4180451b2d6b0ef6fb268f3092dbc874c9a47dbd27cbb",
+   "path": "CHANGELOG.md",
+   "line": 1318,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/pull/538",
+   "truth": "external",
+   "why": "Continuation line of a multi-link bullet (1316-1321); the destination is an absolute GitHub pull-request URL, so it resolves off-repo."
+  },
+  {
+   "rank": "01b0df57088d9173be95b24099c1a38f9fe2def1c57689ff2403e92d90c6fb5f",
+   "path": "CHANGELOG.md",
+   "line": 704,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/1284",
+   "truth": "external",
+   "why": "Inline markdown link to an absolute GitHub issue URL; absolute schemes bypass directory-relative resolution."
+  },
+  {
+   "rank": "019871bd145271256cf9af60e8c11a802f8f2927bf85092f8315819663d1f3ec",
+   "path": "crates/regex/src/lib.rs",
+   "line": 14,
+   "nth": 0,
+   "kind": "mod_decl",
+   "spec": "error",
+   "truth": "crates/regex/src/error.rs",
+   "why": "`mod error;` at the grep-regex crate root resolves by sibling probing to crates/regex/src/error.rs (present at tip; error/mod.rs absent, verified by cat-file -e)."
+  },
+  {
+   "rank": "04647610ade5ee77c7688c861171becfded7b6b2e36671c69677f6b68279919e",
+   "path": "crates/ignore/src/lib.rs",
+   "line": 524,
+   "nth": 0,
+   "kind": "use",
+   "spec": "std::sync::atomic::{AtomicUsize, Ordering}",
+   "truth": "external",
+   "why": "Function-body `use` inside TempDir::new in the crate's test module; root segment `std` is the extern-prelude standard library, outside the workspace."
+  },
+  {
+   "rank": "0321bb25b43cca11cc96452385f1563fc0b6c7bfc392ec4ee7cf5d6d778dec35",
+   "path": "FAQ.md",
+   "line": 7,
+   "nth": 0,
+   "kind": "link",
+   "spec": "#complete",
+   "truth": "FAQ.md#complete",
+   "why": "Fragment-only destination, so it resolves against the linking document itself; the anchor exists at FAQ.md:91 as the raw-HTML heading `<h3 name=\"complete\">`, not as a markdown heading slug."
+  },
+  {
+   "rank": "003ba082f6f4d1e3d9b716d030a538848bc25fb9f1c60123693d8b9896dec006",
+   "path": "crates/printer/src/hyperlink/aliases.rs",
+   "line": 1,
+   "nth": 0,
+   "kind": "use",
+   "spec": "crate::hyperlink::HyperlinkAlias",
+   "truth": "crates/printer/src/hyperlink/mod.rs#HyperlinkAlias",
+   "why": "`crate::` anchors at the grep-printer root crates/printer/src/lib.rs; the `hyperlink` module is the directory form, backed by crates/printer/src/hyperlink/mod.rs (hyperlink.rs absent at tip), where `pub struct HyperlinkAlias` is defined at line 191."
+  },
+  {
+   "rank": "00b286acaf6f4214395543e753d6da646276c4ce9b760c7922dc2c167aa37f42",
+   "path": "CHANGELOG.md",
+   "line": 350,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/2046",
+   "truth": "external",
+   "why": "Inline markdown link with an absolute GitHub issue-tracker destination; no repo-relative target."
+  },
+  {
+   "rank": "020394afc85c5268fca4306014c432a69aa57801d9480836437ce05c95e43faf",
+   "path": "CHANGELOG.md",
+   "line": 1660,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/199",
+   "truth": "external",
+   "why": "Inline markdown link to an absolute GitHub issue URL, resolved off-repo rather than against CHANGELOG.md's directory."
+  },
+  {
+   "rank": "02ad3be6badf528155091305418703cdd06fa4d744cece72c40db37d2d9071bc",
+   "path": "crates/printer/src/json.rs",
+   "line": 923,
+   "nth": 0,
+   "kind": "use",
+   "spec": "grep_searcher::BinaryDetection",
+   "truth": "crates/searcher/src/searcher/mod.rs#BinaryDetection",
+   "why": "Root segment `grep_searcher` is the underscored form of package grep-searcher, a path dependency (`path = \"../searcher\"` in crates/printer/Cargo.toml) and workspace member, so it is in-corpus; the name is re-exported from crates/searcher/src/lib.rs:86-96 but defined as `pub struct BinaryDetection` at crates/searcher/src/searcher/mod.rs:55."
+  },
+  {
+   "rank": "00b197592a19a27a7c5f17ef20f8b52e4b4120a762202e597d52a787ce2ed5f5",
+   "path": "crates/regex/src/lib.rs",
+   "line": 11,
+   "nth": 0,
+   "kind": "mod_decl",
+   "spec": "ast",
+   "truth": "crates/regex/src/ast.rs",
+   "why": "`mod ast;` at the grep-regex crate root resolves by sibling probing to crates/regex/src/ast.rs (present at tip; ast/mod.rs absent, verified by cat-file -e)."
+  },
+  {
+   "rank": "02edb8154aeb827fda104d18238b5073f58900dc462eb749d2909a822020a327",
+   "path": "CHANGELOG.md",
+   "line": 1679,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://github.com/BurntSushi/ripgrep/issues/206",
+   "truth": "external",
+   "why": "Inline markdown link whose destination is an absolute GitHub issue URL, outside the pinned tree."
+  },
+  {
+   "rank": "0bee43834cbbe137ccd3a6566b61de8e6679f296a8edec25d4a88dfb86d2da72",
+   "path": "crates/searcher/README.md",
+   "line": 9,
+   "nth": 1,
+   "kind": "image",
+   "spec": "https://img.shields.io/crates/v/grep-searcher.svg",
+   "truth": "external",
+   "why": "The crates.io version badge image nested inside the link `[![](...svg)](https://crates.io/crates/grep-searcher)`; its src is an absolute https URL on img.shields.io, so it is fetched off-repo."
+  },
+  {
+   "rank": "0356cbc698636ce072fb70cf3c001e0da4ceb4f6aef8d033f99e2842eefc8ccf",
+   "path": "README.md",
+   "line": 207,
+   "nth": 0,
+   "kind": "link",
+   "spec": "https://docs.rs/crossbeam",
+   "truth": "external",
+   "why": "Inline markdown link `[`crossbeam`](https://docs.rs/crossbeam)` pointing at docs.rs for a third-party crate; absolute URL, no in-tree target (note: the adjacent `ignore` link on line 208 likewise points at docs.rs, not at crates/ignore)."
+  }
+ ],
+ "site_gaps": [
+  {
+   "path": "FAQ.md",
+   "line": 91,
+   "note": "Raw-HTML anchor definition `<h3 name=\"complete\">` — the resolution target of the `#complete` link on line 7. 27 such anchors exist (lines 32,40,47,60,91,153,173,180,194,202,240,305,336,362,382,409,427,461,756,782,818,832,859,924,952,1015,1052). A detector whose md kind table is links/images/autolinks/ref-defs never indexes HTML-block anchors, so same-file fragment targets cannot be validated and every `#...` link looks dangling."
+  },
+  {
+   "path": "FAQ.md",
+   "line": 170,
+   "note": "Bare URL on its own prose line (`https://github.com/BurntSushi/ripgrep/issues/152`) — no `[]()` syntax and no `<>` autolink delimiters, so a link/image/autolink/ref-def detector misses this reference site."
+  },
+  {
+   "path": "FAQ.md",
+   "line": 379,
+   "note": "Bare URL embedded mid-sentence (`For more details, see https://github.com/BurntSushi/ripgrep/issues/1277`) — GFM autolink-literal, not a bracketed autolink; missed by a strict CommonMark link/autolink table."
+  },
+  {
+   "path": "README.md",
+   "line": 215,
+   "note": "Bare URL `https://beyondgrep.com/feature-comparison/` at the end of a prose sentence — GFM autolink literal with no markdown link syntax; missed."
+  },
+  {
+   "path": "CHANGELOG.md",
+   "line": 993,
+   "note": "Bare URL `https://github.com/BurntSushi/termcolor` on an indented bullet continuation line; not a markdown link, so missed by the md kind table."
+  },
+  {
+   "path": "CHANGELOG.md",
+   "line": 1408,
+   "note": "Bare URL `https://encoding.spec.whatwg.org/#concept-encoding-get` on a bullet continuation line; not a markdown link, so missed."
+  },
+  {
+   "path": "crates/searcher/src/searcher/glue.rs",
+   "line": 372,
+   "note": "False-positive hazard rather than a miss: `extern crate snap;` occurs inside the Rust string literal `const CODE` (glue.rs:371-385, test-corpus text), so a line-oriented `extern crate`/use detector would emit a phantom reference site here. A real parser must exclude string-literal spans."
+  },
+  {
+   "path": "crates/globset/src/lib.rs",
+   "line": 20,
+   "note": "False-positive hazard: `use globset::Glob;` (also lines 36 and 52) sits inside the `/*! ... */` crate doc block's rustdoc code fences, at column 0. A line-oriented `use` detector emits phantom sites that resolve to the globset crate itself and therefore look plausibly in-corpus. Same pattern in crates/ignore/src/lib.rs:19 and :37 (`use ignore::Walk;` / `use ignore::WalkBuilder;`, doc block ends at line 45)."
+  }
+ ],
+ "notes": "Every row's line/spec matched at the pinned tip — zero mismatches. Workspace membership verified from the root Cargo.toml [workspace].members and each crates/*/Cargo.toml package name (globset, ignore, grep, grep-cli, grep-index, grep-matcher, grep-pcre2, grep-printer, grep-regex, grep-searcher); the root `ripgrep` bin crate is rooted at crates/core/main.rs, which is why crates/core/* files carry no src/ segment. All claimed in-corpus targets confirmed with `git cat-file -e`, and each mod_decl's rejected alternative (foo/mod.rs) confirmed absent. Two judgment calls worth recording: (1) row 02ad3be6 (`use grep_searcher::BinaryDetection`) is credited to the definition site crates/searcher/src/searcher/mod.rs#BinaryDetection, not to the re-export point crates/searcher/src/lib.rs — a detector that stops at the crate root would land on lib.rs; (2) rows 01d97ee9 and 01096170 import several names at once from one module, so they are file-level rather than symbol-level truths."
+}

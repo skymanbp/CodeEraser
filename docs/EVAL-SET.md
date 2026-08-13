@@ -1,10 +1,9 @@
 # M4 预注册评估集 v1（计划 §6 M4，D2-1 纯净度）
 
-> 冻结于四分类任何实现代码之前（预注册的全部意义）。本文件 + 
-> [contracts/eval/manifest-v1.json](../contracts/eval/manifest-v1.json)
-> 共同构成冻结记录；样本载荷含其它私有仓库全文，按用户拍板
-> （2026-08-10）**不入库**，落本地 `.ce-eval/`（.gitignore），由
-> manifest 的逐样本 SHA-256 钉定、可随时重建校验。
+> 冻结于四分类任何实现代码之前（预注册的全部意义）。本文件 +
+> [manifest-v1.json](../contracts/eval/manifest-v1.json) 共同构成冻结记录；
+> 样本载荷含其它私有仓库全文，按用户拍板（2026-08-10）**不入库**，落本地
+> `.ce-eval/`（.gitignore），manifest 逐样本 SHA-256 钉定、可随时重建校验。
 
 ## 构成（用户拍板 2026-08-10）
 
@@ -21,32 +20,31 @@
 ## 方法（全程无 RNG、无时钟——同输入必同输出，已双跑逐字节复验）
 
 1. **扫描**：遍历本机 transcripts，配对 Edit/Write `tool_use` 与
-   `toolUseResult`，同一 id 只消费一次（compact/resume 重放，实测重复至 6 次）。
-2. **重建**：before = `originalFile`（Edit 必须非空；Write 空前态仅当
-   create——缺前态按弃置计，绝不伪造）；after = Write `content` 或对
-   before 施加 `structuredPatch`（严格核对，不匹配即弃置，ADR-004 教训）。
-3. **视界**：`frozen_at` 在扫描收集点生效，弃置计数器同受界定（双跑确定性
-   检查曾抓 +2 漂移）。
+   `toolUseResult`，同一 id 只消费一次（compact/resume 重放实测重复至 6 次）。
+2. **重建**：before = `originalFile`（Edit 必须非空；Write 空前态仅当 create
+   ——缺前态按弃置计，绝不伪造）；after = Write `content` 或对 before 施加
+   `structuredPatch`（严格核对，不匹配即弃置，ADR-004 教训）。
+3. **视界**：`frozen_at` 在扫描收集点生效，弃置计数器同受界定（双跑曾抓 +2 漂移）。
 4. **分层抽样**：(项目, 语言) 分层，最大余数法配额 ∝ 层大小，层内 SHA-256
    哈希序取前 N；标注子集二次哈希序取 200。
-5. **弃置全量入册**（manifest `excluded`，无静默截断）：错误/被拒、五语言
-   外、前态不可知、超 1 MiB、历史重放、guard 时代无 feed 链接（58 个，纯净
-   但无机器证据）、deny 测试仓（0）。
+5. **弃置全量入册**（manifest `excluded`，无静默截断）：错误/被拒、五语言外、
+   前态不可知、超 1 MiB、历史重放、guard 时代无 feed 链接（58 个，无机器证据）、
+   deny 测试仓（0）。
 
 ## Ground truth（标注子集 200，已定稿 2026-08-10）
 
 三层分列存储，锚定偏差可审计：
 
-1. **预标** [contracts/eval/prelabels-v1.json](../contracts/eval/prelabels-v1.json)：
+1. **预标** [prelabels-v1.json](../contracts/eval/prelabels-v1.json)：
    `git diff --no-index -U0 --color-moved=plain --color-moved-ws=allow-indentation-change`
    的 SGR 行分类（31/32=deleted/novel，35/36=moved），逐样本 numstat 交叉断言。
-2. **逐条审核**（全 200 条过目真实 diff，用户 2026-08-10 委托）：194 条
-   精确；**6 条修正根因单一**——plain 模式空行跨位匹配伪影（11 个 moved
-   样本逐行 dump 甄别）；修正只在 novel/moved、deleted/moved 间移行，
-   numstat 守恒；注记留本地 `.ce-eval/review/reviewed.ndjson`。
-3. **定稿** [contracts/eval/labels-v1.json](../contracts/eval/labels-v1.json)：
-   200 行终值 + 6 修正显式列出（预标值/终值/机制）。CI 门校验
-   labels ↔ prelabels 除声明修正外逐行一致、拆分守恒（红证双向）。
+2. **逐条审核**（全 200 条过目真实 diff，用户 2026-08-10 委托）：194 精确；
+   **6 条修正根因单一**——plain 空行跨位匹配伪影（11 个 moved 样本逐行 dump
+   甄别）；修正只在 novel/moved、deleted/moved 间移行，numstat 守恒；注记留
+   本地 `.ce-eval/review/reviewed.ndjson`。
+3. **定稿** [labels-v1.json](../contracts/eval/labels-v1.json)：200 行终值 +
+   6 修正显式列出（预标值/终值/机制）。CI 门校验 labels↔prelabels 除声明修
+   正外逐行一致、拆分守恒（红证双向）。
 
 终值：novel 10,455 / moved-in 32 / deleted 975 / moved-out 30；真移动样本
 6/200。**FPR ground truth：200/200 均 `is_normal=true`**——语料无异常编辑，
@@ -54,45 +52,42 @@ M4 误报门（≤1%/500 行）的分母将全部来自正常编辑回放。
 
 ## L0 基线（计划 §4.3 B3c 阶梯首级，2026-08-10）
 
-[baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json) 两变体（CI 从
-入库文件全量复核，git 实跑走 ignored）、样本精确同为 194/200：`l0_numstat`
-moved 召回 **0/62**（rename/copy 旗标对单文件对惰性已逐样本实证）；
-`reference_color_moved`（= 预标引擎）召回 62/62 但精度 62/125（空行伪影
-63 条）。行级准确率双双 ~99.5% 无区分力 ⇒ **头名指标 = moved 类召回/精度**；
-L1 达标线 = 同时关掉两个缺口。
+[baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json) 两变体（CI 从入
+库文件全量复核，git 实跑走 ignored）、样本精确同为 194/200：`l0_numstat`
+moved 召回 **0/62**（rename/copy 旗标对单文件对惰性逐样本实证）；
+`reference_color_moved`（=预标引擎）召回 62/62 但精度 62/125（空行伪影 63）。
+行级准确率双双 ~99.5% 无区分力 ⇒ **头名指标 = moved 类召回/精度**；L1 达标
+线 = 同时关掉两个缺口。
 
 ## L1（函数边界对齐，用户拍板全量实现 2026-08-10）
 
-实现 [cli/src/fourclass/](../cli/src/fourclass/)：自含 Myers 行 diff（探针路径
-不依赖 git，MAX_D 封顶降级显式标记）+ 显著行移动判定（缩进不敏感、两侧独立
-标记 = GT 口径）+ tree-sitter 单元归属（moved 行标注离开/加入的函数）。评分
-[contracts/eval/l1-v1.json](../contracts/eval/l1-v1.json)：moved 召回
-**62/62**、精度 **100%**（L0 两缺口同关）、样本精确 195/200。5 个失配全是
-纯 diff 对齐差（GT 总量继承 git 非最小对齐；difflib 独立复核 4/5 逐数一致，
-第 5 个 L1 更小；moved 全程精确）。**饱和注记（用户已确认）**：本集 moved
-GT 无法区分全量函数边界对齐与单纯空行过滤——对齐增量由 lib 单测钉定，跨
-文件/整 commit 区分力留待 L2 与 FPR 重放。
+实现 [cli/src/fourclass/](../cli/src/fourclass/)：自含 Myers 行 diff（探针不
+依赖 git，MAX_D 封顶降级显式）+ 显著行移动判定（缩进不敏感、两侧独立标记 =
+GT 口径）+ tree-sitter 单元归属。评分 [l1-v1.json](../contracts/eval/l1-v1.json)：
+moved 召回 **62/62**、精度 **100%**（L0 两缺口同关）、样本精确 195/200。5 个
+失配全是纯 diff 对齐差（GT 继承 git 非最小对齐；difflib 复核 4/5 逐数一致，
+第 5 个 L1 更小；moved 全程精确）。**饱和注记（用户已确认）**：本集 moved GT
+无法区分全量函数边界对齐与空行过滤——对齐增量由 lib 单测钉定，跨文件/整
+commit 区分力留待 L2 与 FPR 重放。
 
 ## 整 commit 切片 v1（L2 增量仪器，预注册于任何 L2 代码之前，2026-08-10）
 
 200 样本集 moved GT 已饱和（上节）⇒ L2 增量须在**整 commit / 跨文件 /
 单元归属**维度证明。切片全部派生自本仓库自身 git 历史（零伪造，可复现）：
 
-- **构成** [contracts/eval/commit-slice-v1.json](../contracts/eval/commit-slice-v1.json)：
-  宇宙 = 至 2f40f22（L1 落地，仪器在自身宇宙外）的线性历史 61 commit，五语言
-  scope（排除 memory/ 机器本地态，D2-7）后 47 入册、14 无涉排除。预标引擎
-  `--color-moved=blocks`（≥20 字母数字 block 下限：plain 在 commit 粒度为跨
-  文件琐碎行发明假移动，实测 153 条；代价漏 sub-block 小移动，如实入册）。
-  配对 `-M -C`（纯改名不计移动行）。双跑逐字节复验；M7 历史改写后确定性重生成。
-- **GT**（[contracts/eval/commit-labels-v1.json](../contracts/eval/commit-labels-v1.json)，
-  22 个 moved-bearing commit 逐条审核）：commit 粒度 moved 采用**来源语义**
-  而非内容集合语义——新写的行哪怕与别处删除同文也**不是**移动，恰是本产品
-  要抓的复制信号，计入 moved 会把重复藏进健康信号。三层可审计：① 机械显著性
-  过滤（无字母数字的 moved 标记 → novel/deleted，与 labels-v1 同约定，182 行）；
-  ② 机械跨文件/文件内划分（trim 内容配对，两可优先文件内）；③ 审核修正
-  （5 条 6 行内容巧合，各带机制，逐条对过原始 diff）。终值：**跨文件 moved
-  366 出/181 进 = 547 行**（11 个 commit 全真实重构，35 个搬迁单元具名入册）；
-  文件内 112/107。CI 门逐行校验账本守恒。
+- **构成** [commit-slice-v1.json](../contracts/eval/commit-slice-v1.json)：宇宙
+  = 至 2f40f22（L1 落地，仪器在自身宇宙外）线性历史 61 commit，五语言 scope
+  （排除 memory/，D2-7）后 47 入册、14 无涉排除。预标引擎 `--color-moved=blocks`
+  （≥20 字母数字 block 下限：plain 在 commit 粒度发明假移动实测 153 条；代价
+  漏 sub-block 小移动，如实入册）。配对 `-M -C`（纯改名不计移动行）。双跑逐
+  字节复验；M7 历史改写后确定性重生成。
+- **GT**（[commit-labels-v1.json](../contracts/eval/commit-labels-v1.json)，22
+  个 moved-bearing commit 逐条审核）：moved 采用**来源语义**——新写行哪怕与
+  别处删除同文也**不是**移动（计入 moved 会把重复藏进健康信号，恰是要抓的复
+  制信号）。三层可审计：①机械显著性过滤（182 行，与 labels-v1 同约定）；
+  ②机械跨/内划分（两可优先文件内）；③审核修正（5 条 6 行巧合，各带机制，逐
+  条对过原始 diff）。终值：**跨文件 moved 366 出/181 进 = 547 行**（11 个真
+  实重构 commit，35 搬迁单元具名）；文件内 112/107。CI 门逐行校验账本守恒。
 - **L1-on-slice 基线** [contracts/eval/commit-baseline-l1-v1.json](../contracts/eval/commit-baseline-l1-v1.json)：
   47 commit / 214 对全跑。**检出 219/766 = 恰好全部文件内 GT，跨文件
   0/547，巧合抵扣上界 0**——结构性盲区实测钉死（预测超出 32 行 = GT block
@@ -150,8 +145,7 @@ CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言�
 
 ## 攻击评审加固轮（2026-08-11，Codex gpt-5.6-sol 独立评审后）
 
-评审 14 项逐条独立核实后处置，全档
-[2026-08-11-m4-attack-review.md](reviews/2026-08-11-m4-attack-review.md)：
+评审 14 项逐条独立核实后处置（[归档](reviews/2026-08-11-m4-attack-review.md)）：
 行身份召回门（F2）；extras 冻结（`CE_ACCEPT_EXTRAS=1` 审读赐福）；源版本
 绑定（F1：`generated_from`，doc 落所记 commit 的子提交）；判决语义加固
 （F5/F6：去重内容地板 + 桥长上界 7，全语料零漂移）；堆叠证据归属（F7：
@@ -160,19 +154,17 @@ CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言�
 ## requests 外验切片 v1（M5-1b 冻结，2026-08-11，预注册于任何外验评分之前）
 
 R-L2-2 的解药第一料：同一 GT 仪器（M5-1a 泛化，commit e7aa3f8）对准
-[psf/requests](https://github.com/psf/requests) 的 first-parent 窗口
-`00fd4c8e..8068356` （2018-05→克隆 tip，626 commit = 可见链全量，零主观
-筛选；merge 对第一父 diff = 主线增量，110 个 merge 行带 `parents` 标注供
-审读分层）。冻结档
-[contracts/eval/commit-slice-requests-v1.json](../contracts/eval/commit-slice-requests-v1.json)：
-**341 入册 + 285 无涉排除**；预标 moved 286 进/287 出，47 个 moved-bearing
-commit（21 个多文件对 = 跨文件候选）；对语言 py 486 / md 161。双跑逐字节
-一致；CI 一致性门枚举全部 commit-slice\*-v1.json 共同校验。
-
-方法差异一处（如实入册）：`added/deleted` 改由**同一编辑脚本 hunk 头算术**
-推导——默认 myers 的 numstat 对自家 patch 超计（28d537dd 实测 15/6 vs 五
-算法一致的 14/5，守恒断言当场逮住）；钉 histogram 会漂自仓冻结档故弃；自
-仓 doc 在 hunk 推导下字节不变。复跑：CE_SLICE_* 四变量 + 本节两端 sha。
+[psf/requests](https://github.com/psf/requests) first-parent 窗口
+`00fd4c8e..8068356`（2018-05→克隆 tip，626 commit = 可见链全量零主观筛选；
+merge 对第一父 diff = 主线增量，110 个 merge 行带 `parents` 标注）。冻结档
+[commit-slice-requests-v1.json](../contracts/eval/commit-slice-requests-v1.json)：
+**341 入册 + 285 无涉排除**；预标 moved 286 进/287 出，47 moved-bearing
+（21 个多文件对）；py 486 / md 161。双跑逐字节一致；CI 一致性门枚举全部
+commit-slice\*-v1.json。方法差异一处（如实入册）：`added/deleted` 改由**同
+一编辑脚本 hunk 头算术**推导——默认 myers 的 numstat 对自家 patch 超计
+（28d537dd 实测 15/6 vs 五算法一致的 14/5，守恒断言当场逮住）；钉
+histogram 会漂自仓冻结档故弃；自仓 doc 在 hunk 推导下字节不变。复跑：
+CE_SLICE_* 四变量 + 本节两端 sha。
 
 **GT 审读**（[commit-labels-requests-v1.json](../contracts/eval/commit-labels-requests-v1.json)）：
 机械两层后跨文件 15 出/15 进集中在 3 个 commit，逐行对原始 diff 审读 →
@@ -288,6 +280,14 @@ requests 15/ripgrep 25/self 18/zod 30；行序 = 独立 audit 域（审计者不
 modulo-provenance 全同。CI 门：verify() 重哈希 + 拒重复 id、字面量 100/20×5、
 审计序、配额↔行逐格且从 slice summary 经**同一分摊代码**重导、逐行宇宙绑定
 （tip/lang/kind/多重度封顶）、反事实（篡改 spec / 重复行必拒——断言非假设）。
+
+**精度审计 GT**（M5-2d，cli/tests/eval_graph_review/{五语料}.json；执行 = Opus
+独立代理——用户委托 2026-08-12 镜像 M4-2c，装配 verbatim 判决不动）：100/100
+逐站在钉定 OID 读源、零失配零后备消耗；truth = path[#unit]/external/dynamic/
+ambiguous/none，why 全带指名机制；37 条 site_gaps（HTML 块引用、GFM 裸 URL、
+别名 import、字符串/doc 注释假站点双向危害）。判例：Go 包导入=目录级 truth、
+rs 取定义点并记再导出链、TS 多行 import 首行=站点行。CI 门：rank 双射+身份
+echo+词表+why 地板+反事实三连；G13 祖先门（审计→ladder/ 引线武装，fetch-depth:0）。
 
 ## 复跑 / 校验
 
