@@ -79,7 +79,12 @@ impl Index {
             "INSERT INTO files (path, content_hash, token_count, has_tokens)
              VALUES (?1, ?2, ?3, ?4)
              ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3, has_tokens = ?4",
-            (rel, chash, toks.len() as i64, i64::from(lang.grammar().is_some())),
+            (
+                rel,
+                chash,
+                toks.len() as i64,
+                i64::from(lang.grammar().is_some()),
+            ),
         )?;
         let id: i64 = tx.query_row("SELECT id FROM files WHERE path = ?1", (rel,), |r| r.get(0))?;
         tx.execute("DELETE FROM fingerprints WHERE file_id = ?1", (id,))?;

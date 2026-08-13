@@ -24,11 +24,7 @@ pub(super) struct WalkIndex {
     pub resolve_key: i64,
 }
 
-pub(super) fn index_all(
-    root: &Path,
-    config: &Config,
-    idx: &mut index::Index,
-) -> Result<WalkIndex> {
+pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) -> Result<WalkIndex> {
     let mut out = WalkIndex {
         live: BTreeSet::new(),
         tokenized: 0,
