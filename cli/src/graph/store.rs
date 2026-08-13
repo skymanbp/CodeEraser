@@ -11,8 +11,9 @@
 //! single atomic whole-tree refresh — each side self-checks via its
 //! own gate. A content refresh CASCADE-drops that file's old sites'
 //! edges while resolve_key stands still; re-resolving just that file
-//! is the 2f refresh step. Until the resolver exists, every edge row
-//! comes from the phase-2 callback below, which 2e callers stub empty.
+//! is resolve_refreshed (phase 1.5). Every edge row flows through
+//! the one insert throat below, fed by the phase-2 sweep or the
+//! phase-1.5 refresh — both driven by the wire.rs ladder bridge.
 
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
@@ -70,6 +71,12 @@ fn kind_code(label: &str) -> Result<i64> {
         .with_context(|| {
             format!("site kind {label:?} not in store::KINDS — add it and bump GRAPH_REV")
         })
+}
+
+pub(crate) fn kind_label(code: i64) -> Option<&'static str> {
+    usize::try_from(code)
+        .ok()
+        .and_then(|i| KINDS.get(i).copied())
 }
 
 /// Resolver-relevant config files (design §4 ladder inputs). The
@@ -178,11 +185,51 @@ pub fn ensure_resolved(
     }
     tx.execute("DELETE FROM edges", [])?;
     let sites = cached_sites(&tx)?;
+    insert_edges(&tx, &sites, &mut resolve)?;
+    tx.execute(
+        "INSERT INTO meta (k, v) VALUES ('resolve_key', ?1)
+         ON CONFLICT(k) DO UPDATE SET v = ?1",
+        (key,),
+    )?;
+    tx.commit()?;
+    Ok(true)
+}
+
+/// Phase 1.5 (module header contract): a content refresh cascade-
+/// dropped that file's edges while resolve_key stood still — re-
+/// resolve JUST the refreshed files' cached sites. Callers pass only
+/// files NOT covered by a phase-2 sweep this run; a swept file here
+/// would double-insert its edges.
+pub fn resolve_refreshed(
+    conn: &mut Connection,
+    dirty: &BTreeSet<String>,
+    mut resolve: impl FnMut(&CachedSite) -> Vec<EdgeRow>,
+) -> Result<()> {
+    if dirty.is_empty() {
+        return Ok(());
+    }
+    let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    let sites: Vec<CachedSite> = cached_sites(&tx)?
+        .into_iter()
+        .filter(|s| dirty.contains(&s.file))
+        .collect();
+    insert_edges(&tx, &sites, &mut resolve)?;
+    tx.commit()?;
+    Ok(())
+}
+
+/// The single edge-insert throat shared by the phase-2 sweep and the
+/// phase-1.5 per-file refresh.
+fn insert_edges(
+    tx: &Transaction<'_>,
+    sites: &[CachedSite],
+    resolve: &mut impl FnMut(&CachedSite) -> Vec<EdgeRow>,
+) -> Result<()> {
     let mut ins = tx.prepare(
         "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
     )?;
-    for s in &sites {
+    for s in sites {
         for e in resolve(s) {
             ins.execute((
                 s.id,
@@ -194,14 +241,7 @@ pub fn ensure_resolved(
             ))?;
         }
     }
-    drop(ins);
-    tx.execute(
-        "INSERT INTO meta (k, v) VALUES ('resolve_key', ?1)
-         ON CONFLICT(k) DO UPDATE SET v = ?1",
-        (key,),
-    )?;
-    tx.commit()?;
-    Ok(true)
+    Ok(())
 }
 
 /// Every cached site joined to its path, deterministically ordered.

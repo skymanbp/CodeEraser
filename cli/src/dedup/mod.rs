@@ -13,9 +13,11 @@ mod walkidx;
 pub mod winnow;
 
 use crate::config::Config;
+use crate::graph::{ladder, store, wire};
 use crate::scan::Format;
 use anyhow::Result;
 use serde::Serialize;
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -85,19 +87,15 @@ pub fn analyze(
     let mut idx = index::Index::open(&db_path, p)?;
     let walked = walkidx::index_all(root, &config, &mut idx)?;
     let removed = idx.remove_missing(&walked.live)?;
-    // phase-2 gate (design §3): the resolver slot is filled at 2f;
-    // the empty closure keeps the edge table honest (nothing
-    // invented) while the key gate, cache reads, and invalidation
-    // plumbing run for real
-    idx.ensure_edges_resolved(walked.resolve_key, |_| Vec::new())?;
     let mut instances = idx.all_instances()?;
     let streams = walkidx::load_streams(root, &pairs::candidate_files(&instances), &mut idx, p)?;
-    if streams.1 > 0 {
+    if !streams.1.is_empty() {
         // a file changed between refresh and stream load; the streams
         // were re-fed into the index, so re-fetch the instances to
         // keep offsets and streams consistent (attack-review D1)
         instances = idx.all_instances()?;
     }
+    resolve_edges(&mut idx, root, &walked, &streams.1)?;
     let filter = pairs::Filter {
         min_tokens: min_tokens.unwrap_or(p.guarantee()),
         min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),
@@ -107,7 +105,7 @@ pub fn analyze(
         // has_tokens files only: Markdown rows are graph cache, and
         // counting them would silently change dedup-report/0.5.0
         files: walked.tokenized,
-        refreshed: walked.refreshed,
+        refreshed: walked.dirty.len(),
         removed,
         blocks: found.blocks.len(),
         groups: found.groups.len(),
@@ -120,6 +118,32 @@ pub fn analyze(
         min_distinct: filter.min_distinct,
     };
     Ok((found, summary))
+}
+
+/// Phases 2 and 1.5 (design §3), AFTER every refresh of the run so
+/// the sweep covers all current sites: the ladder resolver rides the
+/// key gate — a stable key touches nothing, a shifted key sweeps
+/// every edge. Without a sweep, content refreshes (walk or stream
+/// reload) kept the key but cascade-dropped their files' edges; the
+/// per-file pass restores exactly those.
+fn resolve_edges(
+    idx: &mut index::Index,
+    root: &Path,
+    walked: &walkidx::WalkIndex,
+    stream_dirty: &BTreeSet<String>,
+) -> Result<()> {
+    let scope = ladder::Scope {
+        files: &walked.live,
+        configs: &walked.configs,
+        root,
+    };
+    let mut resolver = |s: &store::CachedSite| wire::edges(s, &scope);
+    if idx.ensure_edges_resolved(walked.resolve_key, &mut resolver)? {
+        return Ok(());
+    }
+    let mut dirty = walked.dirty.clone();
+    dirty.extend(stream_dirty.iter().cloned());
+    idx.resolve_refreshed(&dirty, &mut resolver)
 }
 
 /// The dedup report as a self-contained JSON value (daemon wire use).

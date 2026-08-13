@@ -62,8 +62,7 @@ fn load_candidate_streams(root: &Path, instances: &[super::index::Instance]) -> 
     let files: BTreeSet<&str> = instances.iter().map(|i| i.file.as_str()).collect();
     let mut out = Streams::new();
     for rel in files {
-        let path = root.join(rel);
-        let Some(lang) = Lang::from_path(&path) else {
+        let Some((path, lang)) = super::walkidx::lang_path(root, rel) else {
             continue;
         };
         // a candidate that vanished between indexing and this probe

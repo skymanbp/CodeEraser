@@ -152,13 +152,23 @@ impl Index {
 
     /// Phase-2 gate (design §3): edges depend on the whole file set
     /// plus config bytes, never on one file. The resolver callback
-    /// slot is 2f's; until then callers pass an empty closure.
+    /// is the wire.rs ladder bridge since 2f.
     pub fn ensure_edges_resolved(
         &mut self,
         key: i64,
         resolve: impl FnMut(&store::CachedSite) -> Vec<store::EdgeRow>,
     ) -> Result<bool> {
         store::ensure_resolved(&mut self.conn, key, resolve)
+    }
+
+    /// Phase-1.5 per-file edge refresh (store.rs contract): only for
+    /// refreshed files a phase-2 sweep did NOT already cover.
+    pub fn resolve_refreshed(
+        &mut self,
+        dirty: &BTreeSet<String>,
+        resolve: impl FnMut(&store::CachedSite) -> Vec<store::EdgeRow>,
+    ) -> Result<()> {
+        store::resolve_refreshed(&mut self.conn, dirty, resolve)
     }
 
     /// Occurrences of the given hashes only (probe hot path) —

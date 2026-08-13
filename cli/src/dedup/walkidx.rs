@@ -16,19 +16,23 @@ use std::collections::BTreeSet;
 use std::path::Path;
 
 /// One full-tree pass: what lives, how much of it carries tokens,
-/// and the phase-2 key derived from the walked paths + config bytes.
+/// which files were content-refreshed (their edges cascade-dropped —
+/// phase 1.5's work list), the resolver-config paths, and the
+/// phase-2 key derived from the walked paths + config bytes.
 pub(super) struct WalkIndex {
     pub live: BTreeSet<String>,
+    pub configs: Vec<String>,
     pub tokenized: usize,
-    pub refreshed: usize,
+    pub dirty: BTreeSet<String>,
     pub resolve_key: i64,
 }
 
 pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) -> Result<WalkIndex> {
     let mut out = WalkIndex {
         live: BTreeSet::new(),
+        configs: Vec::new(),
         tokenized: 0,
-        refreshed: 0,
+        dirty: BTreeSet::new(),
         resolve_key: 0,
     };
     let mut configs: Vec<(String, u64)> = Vec::new();
@@ -43,7 +47,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         };
         let src = std::fs::read(&path)?;
         if idx.refresh_file(&rel, &src, lang, Params::default())? {
-            out.refreshed += 1;
+            out.dirty.insert(rel.clone());
         }
         if lang.grammar().is_some() {
             out.tokenized += 1;
@@ -53,6 +57,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     // collect() sorts and live is a BTreeSet — the key is a function
     // of the tree, not of walk order
     out.resolve_key = store::resolve_key(&out.live, &configs);
+    out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)
 }
 
@@ -67,21 +72,28 @@ pub(super) fn load_streams(
     files: &BTreeSet<String>,
     idx: &mut index::Index,
     p: Params,
-) -> Result<(pairs::Streams, usize)> {
+) -> Result<(pairs::Streams, BTreeSet<String>)> {
     let mut out = pairs::Streams::new();
-    let mut changed = 0;
+    let mut changed = BTreeSet::new();
     for rel in files {
-        let path = root.join(rel);
-        let Some(lang) = Lang::from_path(&path) else {
+        let Some((path, lang)) = lang_path(root, rel) else {
             continue;
         };
         let src = std::fs::read(&path)?;
         if idx.refresh_file(rel, &src, lang, p)? {
-            changed += 1;
+            changed.insert(rel.clone());
         }
         out.insert(rel.clone(), tokens::stream(&src, lang)?);
     }
     Ok((out, changed))
+}
+
+/// rel → absolute path + language; None for non-lang paths (the
+/// shared gate of this walk and the probe's candidate loop).
+pub(super) fn lang_path(root: &Path, rel: &str) -> Option<(std::path::PathBuf, Lang)> {
+    let path = root.join(rel);
+    let lang = Lang::from_path(&path)?;
+    Some((path, lang))
 }
 
 fn rel_of(root: &Path, path: &Path) -> String {

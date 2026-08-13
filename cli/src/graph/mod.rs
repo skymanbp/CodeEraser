@@ -3,7 +3,7 @@
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
 //! ladder/ with its config surfaces (cargo / gomod / roots / jsonc)
-//! beside it.
+//! beside it; wire.rs bridges cached sites to edge rows for phase 2.
 
 pub mod cargo;
 pub mod gomod;
@@ -14,6 +14,7 @@ pub mod roots;
 pub mod sites;
 pub mod spec;
 pub mod store;
+pub mod wire;
 
 use crate::scan::lang::Lang;
 use crate::scan::walk;
