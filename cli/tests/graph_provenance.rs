@@ -45,28 +45,46 @@ fn is_ancestor(ancestor: &str, descendant: &str) -> bool {
         .success()
 }
 
+/// --is-ancestor is REFLEXIVE (review F6): sample and audit frozen in
+/// one commit would pass the plain form and defeat the very ordering
+/// the gate certifies — strictness is the claim, so assert it.
+fn is_strict_ancestor(ancestor: &str, descendant: &str) -> bool {
+    ancestor != descendant && is_ancestor(ancestor, descendant)
+}
+
+fn audit_intros() -> Vec<String> {
+    CORPORA
+        .iter()
+        .map(|c| intro_commit(&format!("cli/tests/eval_graph_review/{c}.json")))
+        .collect()
+}
+
 /// The sample was drawn blind, then audited: every review table must
-/// descend from the commit that froze the sample.
+/// STRICTLY descend from the commit that froze the sample.
 #[test]
 fn sample_precedes_audit() {
     require_full_history();
     let sample = intro_commit("contracts/eval/graph-sample-v1.json");
-    for corpus in CORPORA {
-        let audit = intro_commit(&format!("cli/tests/eval_graph_review/{corpus}.json"));
+    for audit in audit_intros() {
         assert!(
-            is_ancestor(&sample, &audit),
-            "{corpus}: audit table predates the sample freeze (G13)"
+            is_strict_ancestor(&sample, &audit),
+            "audit table does not strictly descend from the sample freeze (G13)"
         );
     }
 }
 
-/// Armed tripwire: today no resolver exists (cli/src/graph/ladder/
-/// has no history — that emptiness is itself asserted structure);
-/// the moment a ladder file lands, its FIRST commit must descend
-/// from every audit table, or "audit before scoring" was violated.
+/// Armed tripwire, two layers (review F7: a resolver landing outside
+/// the pre-registered ladder/ path must not slip the ordering check).
+/// Layer 1: the design-registered resolver home cli/src/graph/ladder
+/// must postdate every audit table. Layer 2: EVERY cli/src/graph file
+/// in the current tree either predates the sample freeze (detector
+/// era) or descends from the audit freeze — nothing graph-shaped may
+/// land inside the blind window between sampling and audit.
 #[test]
 fn audit_precedes_any_resolver() {
     require_full_history();
+    let sample = intro_commit("contracts/eval/graph-sample-v1.json");
+    let audits = audit_intros();
     let ladder = git_in(
         Some(".."),
         &[
@@ -77,14 +95,25 @@ fn audit_precedes_any_resolver() {
             "cli/src/graph/ladder",
         ],
     );
-    let Some(first_ladder) = ladder.lines().next() else {
-        return; // pre-resolver era: nothing to order yet, gate stays armed
-    };
-    for corpus in CORPORA {
-        let audit = intro_commit(&format!("cli/tests/eval_graph_review/{corpus}.json"));
-        assert!(
-            is_ancestor(&audit, first_ladder),
-            "{corpus}: a resolver landed before the audit froze (G13)"
-        );
+    if let Some(first_ladder) = ladder.lines().next() {
+        for audit in &audits {
+            assert!(
+                is_strict_ancestor(audit, first_ladder),
+                "a ladder file landed before the audit froze (G13)"
+            );
+        }
+    }
+    let tree = git_in(Some(".."), &["ls-files", "--", "cli/src/graph"]);
+    for path in tree.lines().filter(|p| !p.is_empty()) {
+        let intro = intro_commit(path);
+        if is_ancestor(&intro, &sample) {
+            continue; // detector-era file, in place before the draw
+        }
+        for audit in &audits {
+            assert!(
+                is_ancestor(audit, &intro),
+                "{path}: graph code landed inside the sample→audit blind window (G13)"
+            );
+        }
     }
 }

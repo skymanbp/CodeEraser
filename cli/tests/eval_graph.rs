@@ -231,9 +231,15 @@ fn self_universe_tracks_detector() {
         let sites = detect(&text, lang_of(row["lang"].as_str().expect("lang")));
         let lines: Vec<&str> = text.lines().collect();
         for s in &sites {
+            // the site line is the STATEMENT HEAD: a multi-line TS
+            // import carries its full specifier on a later line of
+            // the same statement (2c/2d review F1 — 14 frozen zod
+            // sites), so the anti-invention property is "spec within
+            // the statement window", not "spec on the head line"
+            let end = (s.line + 15).min(lines.len());
             assert!(
-                lines[s.line - 1].contains(&s.spec),
-                "{path}:{}: spec {:?} is not a line substring",
+                lines[s.line - 1..end].iter().any(|l| l.contains(&s.spec)),
+                "{path}:{}: spec {:?} not within its statement window",
                 s.line,
                 s.spec
             );

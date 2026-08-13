@@ -27,9 +27,8 @@
 3. **视界**：`frozen_at` 在扫描收集点生效，弃置计数器同受界定（双跑曾抓 +2 漂移）。
 4. **分层抽样**：(项目, 语言) 分层，最大余数法配额 ∝ 层大小，层内 SHA-256
    哈希序取前 N；标注子集二次哈希序取 200。
-5. **弃置全量入册**（manifest `excluded`，无静默截断）：错误/被拒、五语言外、
-   前态不可知、超 1 MiB、历史重放、guard 时代无 feed 链接（58 个，无机器证据）、
-   deny 测试仓（0）。
+5. **弃置全量入册**（manifest `excluded`，无静默截断）：错误/被拒、五语言外、前态
+   不可知、超 1 MiB、历史重放、guard 时代无 feed 链接（58，无机器证据）、deny 测试仓（0）。
 
 ## Ground truth（标注子集 200，已定稿 2026-08-10）
 
@@ -39,9 +38,8 @@
    `git diff --no-index -U0 --color-moved=plain --color-moved-ws=allow-indentation-change`
    的 SGR 行分类（31/32=deleted/novel，35/36=moved），逐样本 numstat 交叉断言。
 2. **逐条审核**（全 200 条过目真实 diff，用户 2026-08-10 委托）：194 精确；
-   **6 条修正根因单一**——plain 空行跨位匹配伪影（11 个 moved 样本逐行 dump
-   甄别）；修正只在 novel/moved、deleted/moved 间移行，numstat 守恒；注记留
-   本地 `.ce-eval/review/reviewed.ndjson`。
+   **6 条修正根因单一**——plain 空行跨位匹配伪影（11 个 moved 样本逐行甄别）；
+   修正只在 novel/moved、deleted/moved 间移行，numstat 守恒；注记留本地。
 3. **定稿** [labels-v1.json](../contracts/eval/labels-v1.json)：200 行终值 +
    6 修正显式列出（预标值/终值/机制）。CI 门校验 labels↔prelabels 除声明修
    正外逐行一致、拆分守恒（红证双向）。
@@ -88,10 +86,9 @@ commit 区分力留待 L2 与 FPR 重放。
   ②机械跨/内划分（两可优先文件内）；③审核修正（5 条 6 行巧合，各带机制，逐
   条对过原始 diff）。终值：**跨文件 moved 366 出/181 进 = 547 行**（11 个真
   实重构 commit，35 搬迁单元具名）；文件内 112/107。CI 门逐行校验账本守恒。
-- **L1-on-slice 基线** [contracts/eval/commit-baseline-l1-v1.json](../contracts/eval/commit-baseline-l1-v1.json)：
-  47 commit / 214 对全跑。**检出 219/766 = 恰好全部文件内 GT，跨文件
-  0/547，巧合抵扣上界 0**——结构性盲区实测钉死（预测超出 32 行 = GT block
-  下限漏标的 sub-block 移动，如实注记）。
+- **L1-on-slice 基线** [commit-baseline-l1-v1.json](../contracts/eval/commit-baseline-l1-v1.json)：
+  47 commit / 214 对全跑。**检出 219/766 = 恰好全部文件内 GT，跨文件 0/547，
+  巧合抵扣上界 0**——结构性盲区钉死（超出 32 行 = GT 漏标 sub-block，如实注记）。
 
 **L2 达标线**：在不虚报 25 个无移动 commit 的前提下召回 547 条跨文件
 moved 行（及其单元归属）。
@@ -123,14 +120,12 @@ m=1/v=3/s_cross=2 ⇒ **≥2 行跨文件证据地板由模型推导**（单跨�
   归属修掉"大块只记头单元"）+ 3 个 `~` 改编单元（GT dump 证零行同一存活，
   行级归属结构性不可能——如实入册而非硬凑） |
 
-行级总量：moved detected 766/766（547 跨 + 219 文件内；开发中曾短 5 行，
-根因 = 显著行行号连续划 run 切碎 git 整块，按"run 结构归对齐者"修正闭
-合）。M4-6/7 狗粮门实战四轮（465 行拆分、CoC 24、12+ 对克隆根治，棘轮回
-201）。**外部效度已证——R-L2-2 关闭（2026-08-12 用户授权解锁）**：
-requests（py，18/18 零发明）与 ripgrep（rs，held-out 988+6 守恒零发明）
-两个第二语料以同一 GT 流水线复测通过，Codex 独立评审无 blocker；deny 档
-位自此可倚赖跨文件 moved 信号（默认档位变更仍按计划 §4.2 在 M7 裁决），
-Stop 汇总该信号的 informational 前置解除。
+行级总量：moved detected 766/766（547 跨 + 219 文件内；曾短 5 行 = 连续划
+run 切碎 git 整块，按"run 结构归对齐者"闭合）。狗粮四轮（465 行拆分、CoC
+24、12+ 对克隆根治，棘轮回 201）。**外部效度已证——R-L2-2 关闭（2026-08-12
+用户授权）**：requests 18/18 零发明 + ripgrep held-out 988+6 守恒零发明，
+同一 GT 流水线，Codex 评审无 blocker；deny 档自此可倚赖跨文件 moved（默认
+档位变更仍按计划 §4.2 在 M7 裁决），Stop 汇总 informational 前置解除。
 
 ## FPR 主门（M4 验收主门，2026-08-11 通过）
 
@@ -138,10 +133,10 @@ Stop 汇总该信号的 informational 前置解除。
 全部 **600** 个真实编辑样本（全语料 reviewed-normal，计划下限 500）经真实
 流水线（classify_batch + ce-core 链）重放，M4 判定规则（堆叠嫌疑 =
 显著 novel ≥20 ∧ 删除 < novel/10 ∧ **顶层具名单元新出现重复键**，常数在
-CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言。
-首测 8/600 红的根因是证据语义非阈值（匿名闭包键、跨类同名方法平键不构成
-堆叠身份）；dup 证据收窄**顶层具名单元**后 0/600，红绿双向单测钉死。
-**Recall 如实 undefined**：语料按构造零异常，计划本就不设作弊性 100% 门。
+CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言。首测
+8/600 红 = 证据语义非阈值（匿名闭包键/跨类同名平键非堆叠身份）→ dup 收窄
+**顶层具名单元**后 0/600，红绿双向单测钉死。**Recall 如实 undefined**：语
+料按构造零异常，计划本就不设作弊性 100% 门。
 
 ## 攻击评审加固轮（2026-08-11，Codex gpt-5.6-sol 独立评审后）
 
@@ -171,8 +166,7 @@ CE_SLICE_* 四变量 + 本节两端 sha。
 **12 条巧合修正**（5aeec8b6 文档同步重写；2a6f290b black/isort 全仓格式化
 9 行内容巧合）+ **1 个真搬迁**（99b3b492：`rebuild_proxies` 判定体 9 行
 sessions.py → utils.py `resolve_proxies`，逐行同一）。终值跨 **9/9**、文件
-内 255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json（平
-行 Rust 常量表会被自家棘轮判克隆——数据即数据）。
+内 255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json。
 
 **L1-on-requests 基线**（[commit-baseline-l1-requests-v1.json](../contracts/eval/commit-baseline-l1-requests-v1.json)）：
 **cross_credit_upper_bound = 0**——自仓跨文件 L1 结构性零召回（0/547）在
@@ -212,8 +206,8 @@ baseline 七项 == 升级前 quality 列（预注册全中）、**requests L2 �
 **边级 GT（M5-1c-iii 尾款）**：审读表新增 relocation_edges（自仓 16 边行/
 37 边-单元对，requests 1/1），每行对原始 diff 核实——名字存活者按定义删除
 扫描，改名收敛者按体行同一。验收反向设门：**edge_violations 越界即红**
-（生成器+CI 双点；首跑即逮出定义扫描漏掉的 5 条改名体边——按 diff 补全
-GT，非按 pipeline）。正向为测量：边覆盖 **自仓 31/37、requests 1/1**——
+（生成器+CI 双点；首跑逮出 5 条改名体边——按 diff 补全 GT，非按
+pipeline）。正向为测量：边覆盖 **自仓 31/37、requests 1/1**——
 未覆盖 = 短体单元开不了站 + ~ 改编无行级证据，即下一升级方向（改编/短单
 元对齐）的量化基线。
 
@@ -267,7 +261,8 @@ cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。范围 = 五门正典
 名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 + **测量
 前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门：summary
 从行重导、常数/范围/语料集钉死（删档即红）、档名↔内嵌名一致、五语言联合非零
-（D2-4）、**检测器漂移门**（自仓 sha 未变行重检=RG3 CI 化+spec 子串）；双跑一致。
+（D2-4）、**检测器漂移门**（自仓 sha 未变行重检=RG3 CI 化+spec **语句窗口**
+子串——站点行=语句头，TS 多行 spec 落后行，14/4269 zod 站，反审 F1）；双跑一致。
 
 **审计抽样**（[graph-sample-v1.json](../contracts/eval/graph-sample-v1.json)，
 提交**先于任何 ladder/ 解析器**——2d 起 G13 祖先断言化）：rank id =
@@ -278,8 +273,8 @@ requests 15/ripgrep 25/self 18/zod 30；行序 = 独立 audit 域（审计者不
 序）；**后备每语言 20**（补分母不跨语言，护地板）；rung 域预注册、2f 实体化
 （非门）。池 = 逐文件对冻结 sha256+计数重建（凭核对不凭信任）；双跑
 modulo-provenance 全同。CI 门：verify() 重哈希 + 拒重复 id、字面量 100/20×5、
-审计序、配额↔行逐格且从 slice summary 经**同一分摊代码**重导、逐行宇宙绑定
-（tip/lang/kind/多重度封顶）、反事实（篡改 spec / 重复行必拒——断言非假设）。
+审计序、配额↔行逐格且从 slice summary 经**同一分摊代码**重导、逐行宇宙绑定、
+反事实（篡改/重复必拒——断言非假设）。
 
 **精度审计 GT**（M5-2d，cli/tests/eval_graph_review/{五语料}.json；执行 = Opus
 独立代理——用户委托 2026-08-12 镜像 M4-2c，装配 verbatim 判决不动）：100/100
@@ -287,7 +282,13 @@ modulo-provenance 全同。CI 门：verify() 重哈希 + 拒重复 id、字面�
 ambiguous/none，why 全带指名机制；37 条 site_gaps（HTML 块引用、GFM 裸 URL、
 别名 import、字符串/doc 注释假站点双向危害）。判例：Go 包导入=目录级 truth、
 rs 取定义点并记再导出链、TS 多行 import 首行=站点行。CI 门：rank 双射+身份
-echo+词表+why 地板+反事实三连；G13 祖先门（审计→ladder/ 引线武装，fetch-depth:0）。
+echo+truth 宇宙绑定（反审 F4）+why 地板+反事实六连+语料谱常数；G13 强祖先门
+（a≠d，样本→审计→graph 代码盲窗全扫，fetch-depth:0）。**带分母登记（F2）**：
+60 external / 40 in-corpus——in 分母 cobra 1/requests 3/self 4/ripgrep 10/
+zod 22（G2 每语料门在 cobra 分母=1，2h 门语义待拍板）；md ref_def/ref_link/
+url 零席位（44 站无 GT）+ dynamic/ambiguous/none 零 GT = 2f fixture 面补；
+rank 极小性门不验——冻结 100 由反审独立重导逐字节认证
+（[2cd 归档](reviews/2026-08-12-m5-2cd-opus-review.md)）。
 
 ## 复跑 / 校验
 
@@ -296,5 +297,4 @@ cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> \
 CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
 ```
 
-重建 `.ce-eval/` 重写 manifest，与已提交 manifest diff 为空即完整复现；
-依赖本机 transcripts 留存，清理后仅 manifest 哈希可证（样本备份归用户）。
+重建 `.ce-eval/` 重写 manifest，diff 为空即完整复现；依赖本机 transcripts 留存，清理后仅 manifest 哈希可证（样本备份归用户）。

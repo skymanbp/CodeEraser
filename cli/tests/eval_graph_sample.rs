@@ -217,6 +217,29 @@ fn graph_sample_strata_hold() {
     }
 }
 
+/// The frozen corpus spectrum, asserted (2c/2d review F14: a forged
+/// row swapped across corpora passed every gate — per-cell strata do
+/// not pin per-corpus counts).
+#[test]
+fn graph_sample_corpus_spectrum_holds() {
+    let (rows, _, _) = sample();
+    let spectrum: BTreeMap<String, u64> = [
+        ("cobra", 12u64),
+        ("requests", 15),
+        ("ripgrep", 25),
+        ("self", 18),
+        ("zod", 30),
+    ]
+    .iter()
+    .map(|(c, n)| (c.to_string(), *n))
+    .collect();
+    assert_eq!(
+        tally(&rows, |r| r["corpus"].as_str().expect("corpus").into()),
+        spectrum,
+        "corpus spectrum drifted from the frozen draw"
+    );
+}
+
 /// Counterfactual (the G9 discipline): a tampered payload and a
 /// duplicated row must actually refuse — asserted, not assumed.
 #[test]

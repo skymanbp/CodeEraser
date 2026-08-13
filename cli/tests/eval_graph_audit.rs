@@ -12,7 +12,7 @@
 
 mod eval_support;
 
-use eval_support::{eval_doc, load};
+use eval_support::{eval_doc, frozen_docs, load};
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -39,6 +39,30 @@ fn review_doc(corpus: &str) -> Value {
     serde_json::from_str(review_text(corpus)).expect(corpus)
 }
 
+/// The corpus's frozen file universe, from its in-repo slice doc —
+/// path-shaped truths bind to real universe members with zero git
+/// (review F4: any single-line string used to pass as "path-shaped";
+/// the truth column, 2d's entire deliverable, had no CI validation.
+/// The review verified all 39 path truths are in-universe, so the
+/// strong binding is safe to freeze).
+fn universe_paths(corpus: &str) -> BTreeSet<String> {
+    let stem = match corpus {
+        "self" => "graph-slice".into(),
+        other => format!("graph-slice-{other}"),
+    };
+    let path = eval_doc(&stem);
+    assert!(
+        frozen_docs("graph-slice").contains(&path),
+        "{corpus}: no slice doc"
+    );
+    load(&path)["files"]
+        .as_array()
+        .expect("files")
+        .iter()
+        .map(|f| f["path"].as_str().expect("path").to_string())
+        .collect()
+}
+
 /// One corpus checked against the frozen sample: embedded name and
 /// tip, a rank bijection (phantom and missing rows equally loud),
 /// verbatim echo of every identity field, and a verdict per row.
@@ -48,6 +72,7 @@ fn check_corpus(corpus: &str, doc: &Value, sample_rows: &[Value]) {
         Some(corpus),
         "{corpus}: embedded name"
     );
+    let universe = universe_paths(corpus);
     let audited = doc["rows"].as_array().expect("rows");
     let sampled: BTreeMap<&str, &Value> = sample_rows
         .iter()
@@ -66,28 +91,32 @@ fn check_corpus(corpus: &str, doc: &Value, sample_rows: &[Value]) {
             assert_eq!(row[key], s[key], "{corpus}/{rank}: {key} echo drifted");
         }
         assert_eq!(doc["tip"], s["commit"], "{corpus}: tip vs sampled commit");
-        check_verdict(corpus, row);
+        check_verdict(corpus, row, &universe);
     }
 }
 
-/// truth ∈ keywords, or a path-shaped in-corpus target; why must be
-/// substantive (the mechanism-naming requirement is enforced at
-/// review time — the gate holds the floor: non-empty, not a stub).
-fn check_verdict(corpus: &str, row: &Value) {
+/// truth ∈ keywords, or an in-corpus target BOUND to the frozen file
+/// universe: the base (before any #unit) must be ".", a universe
+/// file, or a directory prefix of one. why must be substantive (the
+/// mechanism-naming requirement is enforced at review time — the
+/// gate holds the floor: non-empty, not a stub).
+fn check_verdict(corpus: &str, row: &Value, universe: &BTreeSet<String>) {
     let truth = row["truth"].as_str().expect("truth");
     assert_ne!(
         truth, "mismatch",
         "{corpus}: frozen site not found by auditor"
     );
-    let path_shaped = !truth.is_empty()
-        && truth == truth.trim()
-        && !truth.contains('\n')
-        && !truth.contains('\\');
-    assert!(
-        TRUTH_KEYWORDS.contains(&truth) || path_shaped,
-        "{corpus}:{} bad truth {truth:?}",
-        row["line"]
-    );
+    if !TRUTH_KEYWORDS.contains(&truth) {
+        let base = truth.split('#').next().expect("base");
+        let bound = base == "."
+            || universe.contains(base)
+            || universe.iter().any(|p| p.starts_with(&format!("{base}/")));
+        assert!(
+            bound,
+            "{corpus}:{} truth {truth:?} names no frozen-universe member",
+            row["line"]
+        );
+    }
     let why = row["why"].as_str().expect("why").trim();
     assert!(
         why.len() >= 15,
@@ -129,9 +158,10 @@ fn audit_site_gaps_accounted() {
     }
 }
 
-/// Counterfactual (the G9 discipline): a phantom rank, a stub why,
-/// and an auditor mismatch must each actually redden — asserted via
-/// catch_unwind, not assumed.
+/// Counterfactual (the G9 discipline): every advertised refusal is
+/// exercised, not assumed — table-driven after the first three
+/// copy-pasted mutations tripped the repo's own dedup ratchet
+/// (reviews F10/F4 added the last three cases).
 #[test]
 fn audit_refuses_tampering() {
     let sample = load(&eval_doc("graph-sample"));
@@ -143,13 +173,19 @@ fn audit_refuses_tampering() {
     };
     let pristine = review_doc("cobra");
     assert!(!refused(&pristine), "pristine table must pass");
-    let mut phantom = pristine.clone();
-    phantom["rows"][0]["rank"] = Value::from("not-a-sampled-rank");
-    assert!(refused(&phantom), "phantom rank must refuse");
-    let mut stub = pristine.clone();
-    stub["rows"][0]["why"] = Value::from("yes");
-    assert!(refused(&stub), "stub why must refuse");
-    let mut lost = pristine.clone();
-    lost["rows"][0]["truth"] = Value::from("mismatch");
-    assert!(refused(&lost), "auditor mismatch must refuse");
+    let field_mutations: [(&str, &str, &str); 5] = [
+        ("rank", "not-a-sampled-rank", "phantom rank"),
+        ("why", "yes", "stub why"),
+        ("truth", "mismatch", "auditor mismatch"),
+        ("spec", "phantom-spec", "identity echo drift"),
+        ("truth", "probably/exceptions.py", "non-universe truth"),
+    ];
+    for (field, value, label) in field_mutations {
+        let mut doc = pristine.clone();
+        doc["rows"][0][field] = Value::from(value);
+        assert!(refused(&doc), "{label} must refuse");
+    }
+    let mut missing = pristine.clone();
+    missing["rows"].as_array_mut().expect("rows").remove(0);
+    assert!(refused(&missing), "missing row must refuse");
 }

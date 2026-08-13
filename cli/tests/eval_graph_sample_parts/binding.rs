@@ -65,8 +65,11 @@ fn bind_row(
         .values()
         .map(|v| v.as_u64().expect("n"))
         .sum();
-    // nth is the site's per-line ordinal across kinds, so the file
-    // total is its only frozen upper bound
+    // honest bound (review F8): the slice docs carry no per-file line
+    // counts, so `line` has no checkable upper bound here and `nth`
+    // (per-line ordinal across kinds) is bounded only by the file
+    // total — tampering with either is caught by the rank hash in
+    // verify_row, not by this range check
     assert!(
         row["line"].as_u64().expect("line") >= 1 && row["nth"].as_u64().expect("nth") < total,
         "{tag}/{path}: line/nth out of range"

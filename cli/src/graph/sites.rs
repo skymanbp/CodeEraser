@@ -157,7 +157,11 @@ mod tests {
 
     /// One table drives both checks per language: the expected
     /// (kind, spec) sequence, and the anti-invention rule that every
-    /// spec is a substring of its source line (2b exit criterion).
+    /// spec is a substring of its STATEMENT WINDOW — the site line is
+    /// the statement head, and a multi-line TS import carries its
+    /// full specifier on a later line of the same statement (2c/2d
+    /// review F1: 14 frozen zod sites; rust only holds the per-line
+    /// form by accident of first-line truncation).
     /// Pinned shapes: `mod foo { … }` is not a site, a plain export
     /// is not a site, one site per Python import target, and a
     /// multi-line use keeps ONE site whose spec is the first-line
@@ -175,8 +179,12 @@ mod tests {
             ),
             (
                 Lang::TypeScript,
-                "import { x } from \"./util\";\nexport { y } from './other';\nexport const z = 1;\n",
-                &[("import", "./util"), ("export_from", "./other")],
+                "import { x } from \"./util\";\nimport {\n  a,\n  b,\n} from \"./multi\";\nexport { y } from './other';\nexport const z = 1;\n",
+                &[
+                    ("import", "./util"),
+                    ("import", "./multi"),
+                    ("export_from", "./other"),
+                ],
             ),
             (
                 Lang::Rust,
@@ -200,12 +208,15 @@ mod tests {
             let lines: Vec<&str> = text.lines().collect();
             let stray: Vec<&str> = found
                 .iter()
-                .filter(|s| !lines[s.line - 1].contains(&s.spec))
+                .filter(|s| {
+                    let end = (s.line + 15).min(lines.len());
+                    !lines[s.line - 1..end].iter().any(|l| l.contains(&s.spec))
+                })
                 .map(|s| s.spec.as_str())
                 .collect();
             assert!(
                 stray.is_empty(),
-                "{lang:?}: specs not line substrings: {stray:?}"
+                "{lang:?}: specs not within their statement window: {stray:?}"
             );
         }
     }
