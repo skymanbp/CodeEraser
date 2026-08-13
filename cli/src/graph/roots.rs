@@ -197,83 +197,62 @@ pub fn join_rel(dir: &str, spec: &str) -> Option<String> {
 
 fn read_jsonc(root: &Path, rel: &str) -> Option<Value> {
     let text = std::fs::read_to_string(root.join(rel)).ok()?;
-    serde_json::from_str(&strip_trailing_commas(&strip_comments(&text))).ok()
+    serde_json::from_str(&super::jsonc::clean(&text)).ok()
 }
 
-type Stream<'a> = std::iter::Peekable<std::str::Chars<'a>>;
-
-/// Remove // and /* */ comments outside string literals
-/// (char-based: byte indexing would shred multi-byte UTF-8).
-fn strip_comments(text: &str) -> String {
-    let mut out = String::with_capacity(text.len());
-    let mut chars = text.chars().peekable();
-    while let Some(c) = chars.next() {
-        match c {
-            '"' => {
-                out.push('"');
-                copy_string(&mut chars, &mut out);
-            }
-            '/' if chars.peek() == Some(&'/') => skip_line(&mut chars, &mut out),
-            '/' if chars.peek() == Some(&'*') => skip_block(&mut chars),
-            _ => out.push(c),
-        }
-    }
-    out
+/// Python-side project surface: extra source roots and declared
+/// dependency names, both read from the repo-root pyproject.toml
+/// (its bytes sit in resolve_key, so answers cannot go stale).
+pub struct PyProject {
+    /// Directories that act as import roots besides the repo root
+    /// and src/ ([tool.setuptools.package-dir] values and
+    /// [tool.poetry.packages].from values).
+    pub source_dirs: Vec<String>,
+    /// [project] dependencies, reduced to bare package names.
+    pub deps: Vec<String>,
 }
 
-/// Copy a string literal verbatim through its closing quote.
-fn copy_string(chars: &mut Stream, out: &mut String) {
-    while let Some(c) = chars.next() {
-        out.push(c);
-        match c {
-            '\\' => out.extend(chars.next()),
-            '"' => return,
-            _ => {}
-        }
-    }
+pub fn pyproject(root: &Path) -> Option<PyProject> {
+    let text = std::fs::read_to_string(root.join("pyproject.toml")).ok()?;
+    // toml 1.x: Value::from_str parses a single VALUE; documents
+    // parse as Table
+    let doc: toml::Table = text.parse().ok()?;
+    let setuptools = table_at(&doc, &["tool", "setuptools", "package-dir"])
+        .and_then(toml::Value::as_table)
+        .into_iter()
+        .flat_map(|map| map.values().filter_map(toml::Value::as_str));
+    let poetry = table_at(&doc, &["tool", "poetry", "packages"])
+        .and_then(toml::Value::as_array)
+        .into_iter()
+        .flat_map(|pkgs| {
+            pkgs.iter()
+                .filter_map(|p| p.get("from").and_then(toml::Value::as_str))
+        });
+    let source_dirs = setuptools.chain(poetry).map(str::to_string).collect();
+    let deps = table_at(&doc, &["project", "dependencies"])
+        .and_then(toml::Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter_map(|d| d.as_str())
+        .map(dep_name)
+        .collect();
+    Some(PyProject { source_dirs, deps })
 }
 
-/// Skip to end of line, keeping the newline itself.
-fn skip_line(chars: &mut Stream, out: &mut String) {
-    for n in chars.by_ref() {
-        if n == '\n' {
-            out.push('\n');
-            return;
-        }
+/// Walk one dotted key path into a parsed TOML document.
+fn table_at<'a>(doc: &'a toml::Table, keys: &[&str]) -> Option<&'a toml::Value> {
+    let mut cur = doc.get(keys[0])?;
+    for key in &keys[1..] {
+        cur = cur.get(key)?;
     }
+    Some(cur)
 }
 
-/// Skip a /* */ block comment (the '*' peeked by the caller).
-fn skip_block(chars: &mut Stream) {
-    chars.next();
-    let mut prev = ' ';
-    for n in chars.by_ref() {
-        if prev == '*' && n == '/' {
-            return;
-        }
-        prev = n;
-    }
-}
-
-/// Remove commas whose next non-whitespace token closes a scope —
-/// string-aware, so a literal `"x, }"` value stays intact.
-fn strip_trailing_commas(text: &str) -> String {
-    let mut out = String::with_capacity(text.len());
-    let mut in_str = false;
-    let mut escaped = false;
-    for (i, c) in text.char_indices() {
-        if in_str {
-            in_str = escaped || c != '"';
-            escaped = !escaped && c == '\\';
-        } else if c == '"' {
-            in_str = true;
-        } else if c == ',' {
-            let next = text[i + 1..].chars().find(|n| !n.is_whitespace());
-            if matches!(next, Some('}') | Some(']')) {
-                continue;
-            }
-        }
-        out.push(c);
-    }
-    out
+/// "requests>=2.31 ; extra" → "requests" (PEP 508 name prefix).
+fn dep_name(requirement: &str) -> String {
+    requirement
+        .find(|c: char| !(c.is_alphanumeric() || c == '-' || c == '_' || c == '.'))
+        .map_or(requirement, |i| &requirement[..i])
+        .trim()
+        .to_string()
 }

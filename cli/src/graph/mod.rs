@@ -3,6 +3,7 @@
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction.
 
+pub mod jsonc;
 pub mod ladder;
 pub mod md;
 pub mod roots;

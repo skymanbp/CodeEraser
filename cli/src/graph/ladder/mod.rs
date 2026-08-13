@@ -15,6 +15,7 @@ use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
 use std::path::Path;
 
+pub mod py;
 pub mod ts;
 
 /// Which rung answered (1-based per the design §4 table); stored on
@@ -27,6 +28,7 @@ pub type Rung = u8;
 pub enum Reason {
     Dynamic,
     AmbiguousPaths,
+    AmbiguousRoot,
     AmbiguousWorkspace,
     AmbiguousExports,
     Macro,
@@ -66,6 +68,7 @@ pub struct Scope<'a> {
 pub fn resolve(lang: Lang, from: &str, spec: &str, scope: &Scope) -> Outcome {
     match lang {
         Lang::TypeScript | Lang::Tsx => ts::resolve(from, spec, scope),
+        Lang::Python => py::resolve(from, spec, scope),
         _ => Outcome::Unresolved(Reason::Unsupported),
     }
 }
