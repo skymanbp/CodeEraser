@@ -30,6 +30,31 @@ pub struct Index {
     conn: Connection,
 }
 
+/// Switch to WAL, tolerating the racing-creators deadlock: two fresh
+/// connections both upgrading SHARED → EXCLUSIVE for the mode switch
+/// make SQLite hand one an IMMEDIATE busy — deadlock detection
+/// structurally bypasses the busy handler, so the timeout never
+/// applies. A bounded re-check loop is the prescribed handling (the
+/// pragma may also report the OLD mode instead of erroring): the
+/// winner's persistent switch satisfies the loser's re-read.
+fn ensure_wal(conn: &Connection) -> Result<()> {
+    for _ in 0..100 {
+        match conn.query_row("PRAGMA journal_mode = WAL", [], |r| r.get::<_, String>(0)) {
+            Ok(mode) if mode.eq_ignore_ascii_case("wal") => return Ok(()),
+            Ok(_) => {}
+            Err(e) if is_busy(&e) => {}
+            Err(e) => return Err(e.into()),
+        }
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    }
+    anyhow::bail!("journal_mode=WAL still contended after 100 retries")
+}
+
+fn is_busy(e: &rusqlite::Error) -> bool {
+    matches!(e, rusqlite::Error::SqliteFailure(f, _)
+        if f.code == rusqlite::ErrorCode::DatabaseBusy)
+}
+
 impl Index {
     /// Open (or wipe-and-recreate) the index. The cache key is
     /// schema version + winnowing params + tokenizer revision +
@@ -41,8 +66,10 @@ impl Index {
         }
         let conn = Connection::open(db_path)
             .with_context(|| format!("open index {}", db_path.display()))?;
-        conn.pragma_update(None, "journal_mode", "WAL")?;
+        // busy_timeout before any lock-taking statement — the default
+        // of 0 turns every contention into an instant error
         conn.pragma_update(None, "busy_timeout", 5000)?;
+        ensure_wal(&conn)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
         schema::ensure_cache_key(&conn, p)?;
         Ok(Self { conn })
@@ -50,6 +77,8 @@ impl Index {
 
     /// Refresh one file; returns false when the stored content hash
     /// already matches (nothing touched — the incremental fast path).
+    /// (Concurrent-writer hardening is out of contract: the module
+    /// header's "daemon is the sole writer" stands; only OPEN races.)
     pub fn refresh_file(&mut self, rel: &str, src: &[u8], lang: Lang, p: Params) -> Result<bool> {
         let chash = tokens::fnv1a(src) as i64;
         let stored: Option<i64> = self

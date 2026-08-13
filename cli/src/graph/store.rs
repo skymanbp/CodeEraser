@@ -16,7 +16,7 @@
 
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
-use rusqlite::{Connection, Transaction};
+use rusqlite::{Connection, Transaction, TransactionBehavior};
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -156,22 +156,26 @@ pub struct EdgeRow {
 
 /// Phase-2 gate: a matching stored key touches nothing; otherwise one
 /// transaction drops every edge and replays the resolver over the
-/// cached sites. Returns whether the sweep fired.
+/// cached sites. Returns whether the sweep fired. The key check
+/// lives INSIDE an IMMEDIATE transaction: a deferred check-then-sweep
+/// pair interleaving with a concurrent sweep is the same
+/// check-then-rebuild race class the schema wipe was caught with on
+/// CI (and WAL turns the late lock upgrade into busy_snapshot).
 pub fn ensure_resolved(
     conn: &mut Connection,
     key: i64,
     mut resolve: impl FnMut(&CachedSite) -> Vec<EdgeRow>,
 ) -> Result<bool> {
-    let stored: Option<i64> = conn
+    let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    let stored: Option<i64> = tx
         .query_row("SELECT v FROM meta WHERE k = 'resolve_key'", [], |r| {
             r.get(0)
         })
         .map(Some)
         .or_else(crate::dedup::schema::ignore_no_rows)?;
     if stored == Some(key) {
-        return Ok(false);
+        return Ok(false); // tx drops: rollback of zero writes
     }
-    let tx = conn.transaction()?;
     tx.execute("DELETE FROM edges", [])?;
     let sites = cached_sites(&tx)?;
     let mut ins = tx.prepare(

@@ -7,7 +7,7 @@
 use super::{Params, tokens};
 use crate::graph::store;
 use anyhow::Result;
-use rusqlite::Connection;
+use rusqlite::{Connection, Transaction, TransactionBehavior};
 
 /// Pre-release schema versioning: a mismatch drops and recreates the
 /// tables (the index is a cache — rebuilding is always safe).
@@ -46,20 +46,34 @@ CREATE TABLE meta (k TEXT PRIMARY KEY, v INTEGER NOT NULL);
 /// Wipe-and-recreate unless both the schema version and the meta
 /// cache key (params + tokenizer rev + graph rev) match
 /// (attack-review D2: params/tokenizer changes silently reused stale
-/// fingerprints for unchanged files).
+/// fingerprints for unchanged files). Concurrent openers race this
+/// check — CI caught two autocommit rebuilds interleaving statement
+/// by statement ("table sites already exists") — so the rebuild
+/// takes the write lock FIRST (IMMEDIATE; busy_timeout waits) and
+/// re-checks under it: the race loser finds the winner's fresh
+/// schema and touches nothing.
 pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {
-    let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
-    if version == SCHEMA_VERSION && meta_matches(conn, p)? {
+    if schema_current(conn, p)? {
         return Ok(());
     }
-    conn.execute_batch(SCHEMA)?;
-    conn.execute_batch(store::GRAPH_SCHEMA)?;
-    conn.pragma_update(None, "user_version", SCHEMA_VERSION)?;
-    let mut stmt = conn.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
-    for (k, v) in meta_entries(p) {
-        stmt.execute((k, v))?;
+    let tx = Transaction::new_unchecked(conn, TransactionBehavior::Immediate)?;
+    if !schema_current(&tx, p)? {
+        tx.execute_batch(SCHEMA)?;
+        tx.execute_batch(store::GRAPH_SCHEMA)?;
+        tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+        let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
+        for (k, v) in meta_entries(p) {
+            stmt.execute((k, v))?;
+        }
+        drop(stmt);
     }
+    tx.commit()?;
     Ok(())
+}
+
+fn schema_current(conn: &Connection, p: Params) -> Result<bool> {
+    let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
+    Ok(version == SCHEMA_VERSION && meta_matches(conn, p)?)
 }
 
 fn meta_entries(p: Params) -> [(&'static str, i64); 4] {

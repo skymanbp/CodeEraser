@@ -26,6 +26,38 @@ fn put(idx: &mut Index, name: &str, src: &str) {
         .expect(name);
 }
 
+/// Two connections opening a fresh index concurrently must both
+/// succeed: the schema rebuild is double-checked under an IMMEDIATE
+/// write lock, so racing openers serialize instead of interleaving
+/// DROP/CREATE statements (the daemon_e2e failure CI caught twice —
+/// "table files/sites already exists").
+#[test]
+fn concurrent_open_rebuilds_once() {
+    let dir = tmp("race-open");
+    let db = dir.join("index.db");
+    for round in 0..8 {
+        for suffix in ["", "-wal", "-shm"] {
+            std::fs::remove_file(dir.join(format!("index.db{suffix}"))).ok();
+        }
+        let barrier = std::sync::Barrier::new(2);
+        std::thread::scope(|s| {
+            let handles: Vec<_> = (0..2)
+                .map(|_| {
+                    s.spawn(|| {
+                        barrier.wait();
+                        Index::open(&db, Params::default()).map(drop)
+                    })
+                })
+                .collect();
+            for h in handles {
+                h.join()
+                    .expect("join")
+                    .unwrap_or_else(|e| panic!("round {round}: {e:#}"));
+            }
+        });
+    }
+}
+
 #[test]
 fn cross_file_t2_clone_detected() {
     let p = Params::default();
