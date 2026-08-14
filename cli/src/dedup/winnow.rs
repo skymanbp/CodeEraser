@@ -17,8 +17,11 @@ pub struct Fingerprint {
 const BASE: u64 = 1_000_003;
 
 /// Rolling k-gram hashes of the token-hash sequence (wrapping u64
-/// arithmetic; standard Rabin-Karp update).
-fn kgram_hashes(tokens: &[u64], k: usize) -> Vec<u64> {
+/// arithmetic; standard Rabin-Karp update). pub(crate): docdup's
+/// word shingles ride the SAME rolling hash (design §5.3, F29 — the
+/// offline oracle and the product filter must share one
+/// implementation, and a second Rabin-Karp would fork it).
+pub(crate) fn kgram_hashes(tokens: &[u64], k: usize) -> Vec<u64> {
     if tokens.len() < k {
         return Vec::new();
     }

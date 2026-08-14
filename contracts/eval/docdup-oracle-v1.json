@@ -1,0 +1,101 @@
+{
+  "constants": {
+    "doc_shingle": 5,
+    "jaccard_universe_floor": [
+      30,
+      100
+    ],
+    "oracle_segcap": 8192,
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": null,
+    "tip": "60f73e3bea7681721a2f572e64788948a17830f6"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "dirty": true
+  },
+  "method": "exact oracle over live admitted segments: every pair with integer-exact Jaccard >= 30/100 on the deduped shingle sets, plus every pair whose longest common contiguous shingle run spans >= 50 words. Candidate enumeration walks the shingle inverted index — complete for both rules since each requires a shared shingle. Segment counts above oracle_segcap withhold the corpus with a written reason (F31), never a silent downsample.",
+  "pairs": [
+    {
+      "a": {
+        "end_line": 844,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+        "start_line": 838
+      },
+      "b": {
+        "end_line": 854,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+        "start_line": 848
+      },
+      "inter": 60,
+      "union": 60,
+      "verbatim": 64
+    },
+    {
+      "a": {
+        "end_line": 844,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+        "start_line": 838
+      },
+      "b": {
+        "end_line": 869,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+        "start_line": 863
+      },
+      "inter": 56,
+      "union": 67,
+      "verbatim": 54
+    },
+    {
+      "a": {
+        "end_line": 854,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+        "start_line": 848
+      },
+      "b": {
+        "end_line": 869,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+        "start_line": 863
+      },
+      "inter": 56,
+      "union": 67,
+      "verbatim": 54
+    },
+    {
+      "a": {
+        "end_line": 360,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+        "start_line": 344
+      },
+      "b": {
+        "end_line": 394,
+        "kind": "docstring",
+        "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+        "start_line": 379
+      },
+      "inter": 26,
+      "union": 79,
+      "verbatim": 18
+    }
+  ],
+  "schema": "ce.eval-docdup-oracle/1.0.0",
+  "summary": {
+    "by_rule": {
+      "jaccard": 4,
+      "verbatim": 3
+    },
+    "candidate_pairs": 33,
+    "pairs": 4,
+    "segments_live": 115
+  }
+}

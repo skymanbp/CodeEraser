@@ -13,12 +13,16 @@
 pub mod colordiff;
 pub mod corpus;
 pub mod dedup;
+pub mod docseg;
+pub mod family;
 pub mod graph;
 pub mod t3c;
 pub mod universe;
 pub use colordiff::*;
 pub use corpus::*;
 pub use dedup::*;
+pub use docseg::*;
+pub use family::*;
 pub use graph::*;
 pub use t3c::*;
 pub use universe::*;

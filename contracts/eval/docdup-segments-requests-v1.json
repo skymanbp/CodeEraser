@@ -1,0 +1,716 @@
+{
+  "constants": {
+    "doc_shingle": 5,
+    "docdup_rev": 2,
+    "exempt": [
+      "live",
+      "license_header",
+      "inline_allow"
+    ],
+    "kinds": [
+      "md_para",
+      "comment_block",
+      "docstring"
+    ],
+    "license_head_lines": 5,
+    "min_doc_tokens": 50,
+    "route_notes": {
+      "baseline": "the baseline exemption stock arrives with ce baseline (3i)",
+      "inline_allow": "the ce:allow(docdup) vocabulary is CE-specific; the route is proven live by the seeded counterfactual battery, not by corpus incidence",
+      "path": "walk::in_scope refuses excluded paths before extraction runs"
+    },
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "requests",
+    "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+  },
+  "excluded": {
+    "other_extension": 80
+  },
+  "files": [
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 15,
+        "indented_code_lines": 1
+      },
+      "live": 4,
+      "path": ".github/AI_POLICY.md",
+      "seg_sha256": "abc4d8be82d2c094752a57fe8067e0719b2fcf95808a8210da982356d5ecf595",
+      "segs_by": {
+        "md_para": 4
+      },
+      "sha256": "4f663ef74cbff605bc64948424b7d8d188c097f2b169870515892feda5e67afe"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": ".github/CODE_OF_CONDUCT.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0216c86755ca264f605593cc82deadc13c3e84b97a60bf461fcda7b4b8b23242"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 4,
+        "indented_code_lines": 12
+      },
+      "live": 4,
+      "path": ".github/CONTRIBUTING.md",
+      "seg_sha256": "b9af2ec1a573138f403a353f84f911526eeb1420d95a1fe276e78ca16f21e724",
+      "segs_by": {
+        "md_para": 4
+      },
+      "sha256": "c9c7c1c7fe74d4aa6ea5d6556c33804bc49eca09d6765329d9d28adc08161e11"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 5,
+        "indented_code_lines": 1
+      },
+      "live": 0,
+      "path": ".github/ISSUE_TEMPLATE.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "24ac47c35e70fb3c7dfb2b768ac3ae49f6ea997b96beca4fe489f279429509ca"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 3,
+        "indented_code_lines": 1
+      },
+      "live": 0,
+      "path": ".github/ISSUE_TEMPLATE/Bug_report.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4887dbec17c9e2fd703c0c8ae3e20882f9be53f7fe4a36d61c130838576afe35"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": ".github/ISSUE_TEMPLATE/Custom.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3f1a2a5591714c25485a4ce6679cec328962f4fd223ce02e2ddeaf43c86f1496"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": ".github/ISSUE_TEMPLATE/Feature_request.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "97d416c863d8090ae33909cbf90693aca37a23108d5d8e30003b28eaa7b64e40"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 12
+      },
+      "live": 5,
+      "path": ".github/SECURITY.md",
+      "seg_sha256": "366ce677947d56566c3fe0477006654172defc9198b01d405db600abd2c6e69a",
+      "segs_by": {
+        "md_para": 5
+      },
+      "sha256": "4d8f1a61f94c22df37414ac13a0e5c1e5e40fcb563797cf996b20dc50a85e5d0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 505,
+        "indented_code_lines": 270
+      },
+      "live": 41,
+      "path": "HISTORY.md",
+      "seg_sha256": "c81ede048611c9db1f3fcd7c5cd3446acc9caf71c4059fff1dafd8d0fc353dfd",
+      "segs_by": {
+        "md_para": 41
+      },
+      "sha256": "f779ef32bdb04e23869a197f63812b0ca1f40ca1c4621f38cbcce06dbb6085b8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 11
+      },
+      "live": 1,
+      "path": "README.md",
+      "seg_sha256": "41f550e2f22fc5b035af784ea9dd28485a167b1593a42e2a248ecff3cdbbd00b",
+      "segs_by": {
+        "md_para": 1
+      },
+      "sha256": "2a9268c9be5f4dc9abe9105740be7c5234babc3dd2b25eb11ca376c538a0c67b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 1,
+      "path": "docs/_themes/flask_theme_support.py",
+      "seg_sha256": "0d8e318dfb9065fd4c84baa87b8748f51de97de7b7e47e4fad3faebcae2781d9",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "bba3677c6eeb99f678e808e90142a025b798b7658bac1ab4632591df8441d209"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 87
+      },
+      "live": 1,
+      "path": "docs/conf.py",
+      "seg_sha256": "98a42ab2cc7a7796538241186c45501323ee94c49a6a42588ce8995041665554",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "6ae03d28d23dcc0dbbaf18334a7208a07eb87268bc1ebb6f81ad6931f9f217af"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "setup.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1728c11af4134997015ab07547544852e2f7e103c79a5b0486a8486799f50e0a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 16
+      },
+      "live": 0,
+      "path": "src/requests/__init__.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "80534322a1a3167d8775829ee220a6acf4fe455f3f778c4b8e94bcf7fadfa0b5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "src/requests/__version__.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "abba90670b0370a3dc40d97c2dea46a35d4bec941ff10d7c3cf3098ef04a17f9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 3,
+        "skeleton_line": 2
+      },
+      "live": 0,
+      "path": "src/requests/_internal_utils.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4c7d8d132c9898fc7d715e473f3ac74785ddc4ab96d2c9240f87835dc6d981ff"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 1,
+      "path": "src/requests/_types.py",
+      "seg_sha256": "8762a3af05859f36f3ee7dd441f61d76c58e579225a1a1ffc7748a4848f89e97",
+      "segs_by": {
+        "docstring": 1
+      },
+      "sha256": "84dec9789a8e839807242448a9aa86acd12c440211921e32f43afcbc422a629c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 28,
+        "skeleton_line": 51
+      },
+      "live": 8,
+      "path": "src/requests/adapters.py",
+      "seg_sha256": "e6f2b38c229d77e26bea99d83822738c03b1592e108f345304ff90c8908f79f7",
+      "segs_by": {
+        "docstring": 8
+      },
+      "sha256": "cc9b1b02694fee0353481fbad84fe3ddbedec4441dba54df7914c63f2aa85937"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 9,
+        "skeleton_line": 52
+      },
+      "live": 1,
+      "path": "src/requests/api.py",
+      "seg_sha256": "777599ed48d5258707951ee45810af1f8e327467e5984bf1e5a39fb3cc654cce",
+      "segs_by": {
+        "docstring": 1
+      },
+      "sha256": "4d15480ac046f089209798e8650476ef4a28ebe6f81b400758f8ef42ec6b5509"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 26,
+        "skeleton_line": 2
+      },
+      "live": 1,
+      "path": "src/requests/auth.py",
+      "seg_sha256": "fdb387090f22ddc86007e0b4ded7a4798b375ff6a01478451f192d6418ecc2e3",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "fdc8bb34a8a5a088b169ca13277d107b0bc94ee63ed5e89dd4f5569d9b2bb04c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "src/requests/certs.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "fd9c6b83359cef90ff6c4eeeab8dcc2388da382ebca7d00a499b3c0b434a87e4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 17,
+        "skeleton_line": 8
+      },
+      "live": 0,
+      "path": "src/requests/compat.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4a51c5ab07b015c298d6ea69d71502979cd3ed6b935d88e4433ce5341dacf584"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 60,
+        "skeleton_line": 22
+      },
+      "live": 2,
+      "path": "src/requests/cookies.py",
+      "seg_sha256": "6c5aeacfeed4982c9358667bd0301da69b9e9d824d82258307180329b0bccc74",
+      "segs_by": {
+        "docstring": 2
+      },
+      "sha256": "05d12b965c76f229803e17aef1c9969d712e4f4d0f6a06c05e0a47212fd5b417"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 29
+      },
+      "live": 1,
+      "path": "src/requests/exceptions.py",
+      "seg_sha256": "1a5f1a0df54f738e827acdd5ff2ece43b6b471ad2bcb8c0b8d6b9a1fc741e554",
+      "segs_by": {
+        "docstring": 1
+      },
+      "sha256": "c5e18f3352454968e337bb3056f0867df2f37c0a0d2c1a77dc05e7e0b3c0411b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 1,
+      "path": "src/requests/help.py",
+      "seg_sha256": "4299675e4074bde66f25cee6a39857c220ac8e64980954d73a022b505d951b5f",
+      "segs_by": {
+        "docstring": 1
+      },
+      "sha256": "e5845e93980b2e25be418fb7fe0b8e6e999fef8f84afc5a43f4546efdc24691f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "src/requests/hooks.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ebd8a02475d31a0e473a8f553e9501ff43645b9563885ad52844e7a63f0d76ab"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 110,
+        "skeleton_line": 12
+      },
+      "live": 12,
+      "path": "src/requests/models.py",
+      "seg_sha256": "4247dbd5e638d03154e7431757e2f550a5c6595fa37102143ca6ee7197a414b2",
+      "segs_by": {
+        "comment_block": 2,
+        "docstring": 10
+      },
+      "sha256": "a3351c3c12a86bf5ed211533875350bc4791e9327a685f8c19ba54343e471e26"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "src/requests/packages.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "fe0d2067af355320252874631fa91a9db6a8c71d9e01beaacdc5e2383c932287"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 95,
+        "skeleton_line": 50
+      },
+      "live": 5,
+      "path": "src/requests/sessions.py",
+      "seg_sha256": "924f55035aafa0a59d27ea4751fe31a8f773663ad628e2cf8757ac6b9402ee76",
+      "segs_by": {
+        "comment_block": 3,
+        "docstring": 2
+      },
+      "sha256": "3d2089736ced93b2b405624a943f866d22652b17df06a85eb010f86272fc3e7d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 5,
+        "skeleton_line": 1
+      },
+      "live": 1,
+      "path": "src/requests/status_codes.py",
+      "seg_sha256": "41aca6c969c41a982e4139d8874ea3cb3856bb4545c6a948cbee2f5755816aa7",
+      "segs_by": {
+        "docstring": 1
+      },
+      "sha256": "1950f47c89cf18019787e07d8ce48f66d6b38e622f7d94d70a90247fee6c040e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 1,
+      "path": "src/requests/structures.py",
+      "seg_sha256": "5c421db67be6331403bfc3dd2e7f5ed600c3f2fbcb0267547cbe50a549b3671a",
+      "segs_by": {
+        "docstring": 1
+      },
+      "sha256": "ba9460c39078f25e6f1d2a24ac941ac6f8d2ee97197fa8c8d0c262d8a1e67a02"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 99,
+        "skeleton_line": 46
+      },
+      "live": 5,
+      "path": "src/requests/utils.py",
+      "seg_sha256": "8c628ebba3b41808523bd507fed2a80dc9796b470da3db953211a14657f64872",
+      "segs_by": {
+        "comment_block": 1,
+        "docstring": 4
+      },
+      "sha256": "b879cb3f671cf1c28e8ff9b2b02151bcdb8974b4820a514cfdd1f5a038443cd2"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "tests/__init__.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ac7f253daae0905f9b3dec647cae736bb3c090185aa373b30b3e851599e5342c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "tests/certs/README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a902fe53d4cc6224b59532e47d94fc42726b2227462e801538aa50a7888d38f3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "tests/certs/expired/README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "80690554d2353ab1c348bee8df833bdf7b3cd1cb8d728b4380221f34b5881eeb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "tests/certs/mtls/README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "57dd4ec5bd44f1d2e1bc2de7e6cb292eb62f2236d34fd889a46d81a19dbde9f7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {},
+      "live": 0,
+      "path": "tests/compat.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d58ff5e3167de0140a667cc51427f809c552e485875c95b9dad43ce13ba15083"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "tests/conftest.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6d65ffb582519f80a66c5d1ef571e3c33395a199f9e67fcb500c6ad2d7800e0a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "tests/test_adapters.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "102494aa704f8505fb22fa476452f6aa3aae756da82fe2d5b2a2a3f366b38bf4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "tests/test_help.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1c2ac8ca9f4986429717791df766122b23e1fe90aa621318380ccf1f8e83d0f6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {},
+      "live": 0,
+      "path": "tests/test_hooks.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a9e5163f538543a660be3b06650cd0b803ff0c503f5948f66b6fc50ede38109c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 37
+      },
+      "live": 0,
+      "path": "tests/test_lowlevel.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "db5fac7340c49c49551e3e41679a8ee6e385c56054f84073932354a8da87df65"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {},
+      "live": 0,
+      "path": "tests/test_packages.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "90875423db059d65b39416d7b6d01b18938851b8071279877400beb506e08676"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 103
+      },
+      "live": 2,
+      "path": "tests/test_requests.py",
+      "seg_sha256": "0fe3a7ab7ba48447cb6edab4ab1d3adaf0e0b455ceafc272c25ac07effb939a5",
+      "segs_by": {
+        "docstring": 2
+      },
+      "sha256": "5eacf6341d236e225ce6a37a592f3b410f20e69ec17641f0e2c99b03a79b904d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "tests/test_structures.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f984b7fc68fb2bd6ec82463b0cf5b6bd2ac773293cac6629fc3361f9f66947e9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 16
+      },
+      "live": 0,
+      "path": "tests/test_testserver.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "90ac39d6cb9c0fbaa94c5aa59646bf6097829ae73e50ac284a41135188f95d33"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 33
+      },
+      "live": 0,
+      "path": "tests/test_utils.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "00d027432443a1aa9539c00a09550de9439cdd696d2e6acf2dc997de3a416946"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {},
+      "live": 0,
+      "path": "tests/testserver/__init__.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "tests/testserver/server.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "15a9092cc5edb005af6732097555515c4b82093d9394f6463c966259f83068c3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "py",
+      "ledger": {},
+      "live": 0,
+      "path": "tests/utils.py",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "cfaec86690eba62573c8c730a121332837809333fb2b1006a20e2e8f4d34d4de"
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "dirty": true
+  },
+  "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
+  "schema": "ce.eval-docdup-segments/1.0.0",
+  "scope": {
+    "excludes": [
+      "memory/",
+      "cli/memory/"
+    ],
+    "extensions": [
+      "go",
+      "md",
+      "py",
+      "rs",
+      "ts"
+    ]
+  },
+  "summary": {
+    "exempt_by": {},
+    "files_with_segments": 20,
+    "ledger": {
+      "below_floor": 1415,
+      "indented_code_lines": 285,
+      "skeleton_line": 246
+    },
+    "live": 98,
+    "segs_by": {
+      "comment_block": 9,
+      "docstring": 34,
+      "md_para": 55
+    }
+  }
+}

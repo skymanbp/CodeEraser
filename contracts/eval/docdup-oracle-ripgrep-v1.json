@@ -1,0 +1,186 @@
+{
+  "constants": {
+    "doc_shingle": 5,
+    "jaccard_universe_floor": [
+      30,
+      100
+    ],
+    "oracle_segcap": 8192,
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "ripgrep",
+    "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "dirty": true
+  },
+  "method": "exact oracle over live admitted segments: every pair with integer-exact Jaccard >= 30/100 on the deduped shingle sets, plus every pair whose longest common contiguous shingle run spans >= 50 words. Candidate enumeration walks the shingle inverted index — complete for both rules since each requires a shared shingle. Segment counts above oracle_segcap withhold the corpus with a written reason (F31), never a silent downsample.",
+  "pairs": [
+    {
+      "a": {
+        "end_line": 1300,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1297
+      },
+      "b": {
+        "end_line": 1941,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1938
+      },
+      "inter": 46,
+      "union": 46,
+      "verbatim": 50
+    },
+    {
+      "a": {
+        "end_line": 1300,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1297
+      },
+      "b": {
+        "end_line": 2037,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 2034
+      },
+      "inter": 46,
+      "union": 46,
+      "verbatim": 50
+    },
+    {
+      "a": {
+        "end_line": 1309,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1304
+      },
+      "b": {
+        "end_line": 1953,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1948
+      },
+      "inter": 75,
+      "union": 75,
+      "verbatim": 79
+    },
+    {
+      "a": {
+        "end_line": 1309,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1304
+      },
+      "b": {
+        "end_line": 2049,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 2044
+      },
+      "inter": 75,
+      "union": 75,
+      "verbatim": 79
+    },
+    {
+      "a": {
+        "end_line": 1941,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1938
+      },
+      "b": {
+        "end_line": 2037,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 2034
+      },
+      "inter": 46,
+      "union": 46,
+      "verbatim": 50
+    },
+    {
+      "a": {
+        "end_line": 1953,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 1948
+      },
+      "b": {
+        "end_line": 2049,
+        "kind": "comment_block",
+        "path": "crates/core/flags/defs.rs",
+        "start_line": 2044
+      },
+      "inter": 75,
+      "union": 75,
+      "verbatim": 79
+    },
+    {
+      "a": {
+        "end_line": 659,
+        "kind": "comment_block",
+        "path": "crates/printer/src/json.rs",
+        "start_line": 654
+      },
+      "b": {
+        "end_line": 714,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 708
+      },
+      "inter": 61,
+      "union": 74,
+      "verbatim": 65
+    },
+    {
+      "a": {
+        "end_line": 58,
+        "kind": "comment_block",
+        "path": "crates/printer/src/lib.rs",
+        "start_line": 1
+      },
+      "b": {
+        "end_line": 82,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/lib.rs",
+        "start_line": 1
+      },
+      "inter": 82,
+      "union": 752,
+      "verbatim": 79
+    },
+    {
+      "a": {
+        "end_line": 647,
+        "kind": "comment_block",
+        "path": "tests/misc.rs",
+        "start_line": 635
+      },
+      "b": {
+        "end_line": 678,
+        "kind": "comment_block",
+        "path": "tests/misc.rs",
+        "start_line": 666
+      },
+      "inter": 52,
+      "union": 69,
+      "verbatim": 45
+    }
+  ],
+  "schema": "ce.eval-docdup-oracle/1.0.0",
+  "summary": {
+    "by_rule": {
+      "jaccard": 8,
+      "verbatim": 8
+    },
+    "candidate_pairs": 2056,
+    "pairs": 9,
+    "segments_live": 251
+  }
+}

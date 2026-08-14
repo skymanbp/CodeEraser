@@ -136,6 +136,9 @@ impl Index {
         // the honest FOURTH per-file parse (design F11) — unitsig
         // rows ride the same content-hash-gated transaction
         super::unitcache::refresh_units(&tx, id, &text, lang)?;
+        // and the FIFTH: docdup's own additive tree (RM7 — sharing
+        // the tokenizer's would couple TOKENIZER_REV to comments)
+        crate::docdup::refresh_segments(&tx, id, &text, lang)?;
         tx.commit()?;
         Ok(true)
     }

@@ -1,0 +1,4563 @@
+{
+  "constants": {
+    "doc_shingle": 5,
+    "docdup_rev": 2,
+    "exempt": [
+      "live",
+      "license_header",
+      "inline_allow"
+    ],
+    "kinds": [
+      "md_para",
+      "comment_block",
+      "docstring"
+    ],
+    "license_head_lines": 5,
+    "min_doc_tokens": 50,
+    "route_notes": {
+      "baseline": "the baseline exemption stock arrives with ce baseline (3i)",
+      "inline_allow": "the ce:allow(docdup) vocabulary is CE-specific; the route is proven live by the seeded counterfactual battery, not by corpus incidence",
+      "path": "walk::in_scope refuses excluded paths before extraction runs"
+    },
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "zod",
+    "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+  },
+  "excluded": {
+    "other_extension": 158,
+    "variant_extension": 32
+  },
+  "files": [
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 5,
+      "path": "AGENTS.md",
+      "seg_sha256": "0738fdf0255f4f3f0fc37896b6ca8bd568f761100043d9da79644df6207e1641",
+      "segs_by": {
+        "md_para": 5
+      },
+      "sha256": "9f6b470dbca541fc400059e5d8eb337184a24545b4b71a864db9f79f38a01177"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "CLAUDE.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 18
+      },
+      "live": 6,
+      "path": "CODE_OF_CONDUCT.md",
+      "seg_sha256": "c850a7659535faee06ccf4bbd4eaffa34a76548f3bc18b79f7af3f0bccf3080d",
+      "segs_by": {
+        "md_para": 6
+      },
+      "sha256": "fa9eb2d3adc70da2e63084c10384661326b4f7ad956352dae7cf7b857fbe314e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 29
+      },
+      "live": 0,
+      "path": "CONTRIBUTING.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f5721d0b1f486c4268e377900bc19a675543aa1e52d4b99209584eb5d099b082"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "439c0c93c68f5dffea46de6df34f3b545d001d19570b5ee4975755d40bcf2c78"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "SECURITY.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "246450874a5d11493c4eb283671af9e25b855daddf6f7789f582c703c8ed8b71"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/bench/array.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e888a6783db46b1aae4dcda3bb04cf8f06e58635c8c1d5297b61db934d57965e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/bench/benchUtil.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "89f257f8079661e7056881113f6e2ede02743de5834232b6bb5d48b29be5b2a7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/boolean.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6931d98dac4ca0d2cd38528691380fe607ff42e424fbd9a7f951a433313a14a4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/bench/datetime-regex.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "25fa33abdba1af623f533d387df58b58a44f09195c7b9dbf5c9df4534a4c502f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/datetime.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "98b754e446320d9a11d3208ef9d8a3b2246d4187e4afbd910a94ef6bd93e37ab"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/bench/discriminated-union.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c999539984ecfbb3ca4aaec3e52793a8b3614209797cf4f908a5d371b990d07a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/error-handling.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f26da233a3e30f6ea0ed4db5a905d444c2d1c6b881fa97b3391463328d1bc303"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/bench/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d27110d4bd9a04943ce05403120142a2a40ffecda8af1019f188f03866d7d02a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/bench/init.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "283d3ab70be84b44a7da188e200e3b6b76add82a859d83349878af9987e6cc72"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 0,
+      "path": "packages/bench/instanceof.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "81ede367e55164d1ad07511dc710fffba8f5670c346f6088963f7425eba5690a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/ipv4-regex.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e3a53e8f66e340bdb47254170fd9345b31b7485d6463e2e3c25eb5186950aa49"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/jit-union.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "84af9d8ea24b5e51f1349a0333d15f832eb1c4713a42e22e0ab1c7433416e053"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/key-iteration.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5dd73d8d5e5df73e44acf73b3c0cb7f40ad394c8d7996e4b82146bdc97c5ead6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/lazy-box.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "640a699fe11c64924c165fda6cc4f0a5d8f34d323c7ac814280f1e2ee550b299"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/bench/libs.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b4bf81d075a9bed253b294f25246115d8e0b55d86b468ba6c9f59a24778b418b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 0,
+      "path": "packages/bench/metabench.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "342d0c32460b6dff14beff99a3b72b8fbd24e312593ef63abae0dd4ac1e946c3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/number.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4209f50172a1a4601cc2866c1aba5ab535f8a23290d5cc2616a098b164d808f1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-async.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "dc260ad18a2295ebc1285fffb842f90e3cc31963f7867890f5cd341ce0861adf"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-creation.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d27768af53e0c9b25f8a7ca109f9dfa119ea4f48583a6640bed73221acedf669"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-fail.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "45e5ebbdb6a762f2fcaf800799ae250580c651da0bd536e05598d1b525f9c09a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-moltar-jitless.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5a875ffb5bfb960279ddbdc2d0f131d1aaf87635b57213d6c095ee425e1361e8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-moltar.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b28dbdb4c061f0f6f5f8cabc5cfc0996f824786530cf1ed58145bbc91789a868"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-safe.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "28a023622878fc5a4cbf4807f3f51f725ea5776b0c53198d4a63aea59ecab8cd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object-safeasync.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "eaab86e84ee49769eb72baaa5c1bf6aefa9253b11ec68059df6b6c0d24585632"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/bench/object-setup.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "43129577572798fc9d79e24e04f4a6511d8d2765362d4ff40b0cf16a15848bea"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3ee9b68e1849e88e9bb2bdd64447fe2a9b7c04f461e39f053d2909c21e8daa5c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/bench/property-access.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "799328120485c29a4e56e10f72542e93411a22ad393e05146349e630529af306"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/bench/safe.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "750435a0ad2cbbf79d949b511afc3ee723c5f7c6390619deebac9dfc9a51abe6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/bench/safeparse.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "500f98a07dcada24dd3ba6781e6d011978ffd7b7671dd7ef3c064097893f2e29"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/single-element-enum.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5d5481eccfce8e5bc11ce3ba9e955ebf86fc52a1f11d79692db97e850a995f9e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/single-item-union.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f92443eb549b9b11aec00658cc9de5f282fd31c91a05b680409fc9b5dc846d4d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "69f0d7d61540fe4aed89eb070fe1c6f5d7e46ee170b95b6962670ea9322dcd82"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/bench/union.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d8b0dc13196d6e3c64c8ca778ce9b1ad1d095388c2a5b85cf7464c62b4ce352a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 46
+      },
+      "live": 1,
+      "path": "packages/docs-v3/CHANGELOG.md",
+      "seg_sha256": "59cc1e84ba9909e06d2c6fdde1bb78644fe0b8e9f66d1f2f14de7d078c653211",
+      "segs_by": {
+        "md_para": 1
+      },
+      "sha256": "491c8ddc14fc19791c2aadef4b9738d49fb1cf2432ff6cb74ad0e14927db2cc6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 18
+      },
+      "live": 6,
+      "path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "seg_sha256": "c850a7659535faee06ccf4bbd4eaffa34a76548f3bc18b79f7af3f0bccf3080d",
+      "segs_by": {
+        "md_para": 6
+      },
+      "sha256": "fa9eb2d3adc70da2e63084c10384661326b4f7ad956352dae7cf7b857fbe314e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 23
+      },
+      "live": 1,
+      "path": "packages/docs-v3/CONTRIBUTING.md",
+      "seg_sha256": "d21ad42b27ef185b0e92290312b887fe188ae9b9534a3e5882245120c4401cda",
+      "segs_by": {
+        "md_para": 1
+      },
+      "sha256": "60b1be452fcddb467deb636ad8a5488d613c3249c14c0dc9b006895c7c51b8fa"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 40
+      },
+      "live": 1,
+      "path": "packages/docs-v3/ERROR_HANDLING.md",
+      "seg_sha256": "36ea953c7392c949d64aa7be6b97ed23283df866f1071056f7f4dcf148510018",
+      "segs_by": {
+        "md_para": 1
+      },
+      "sha256": "e71b94b27fbe3343b97bea89c668c9d50a2e06a963d989e351a9ed735313c37c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 11
+      },
+      "live": 4,
+      "path": "packages/docs-v3/MIGRATION.md",
+      "seg_sha256": "d42b4f34be360f134f613b98b46cc644ae56063050ee0f8b0acd3c704adea1f8",
+      "segs_by": {
+        "md_para": 4
+      },
+      "sha256": "68765886315699ff7bce6256b44fcf16a91b73a42c7b35417a1103b974fc7be4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 275,
+        "indented_code_lines": 300
+      },
+      "live": 18,
+      "path": "packages/docs-v3/README_KO.md",
+      "seg_sha256": "61b812f59e25ccafe4feff5cbb9b5127467c198b5ee9ae07a3b142ae29073fd9",
+      "segs_by": {
+        "md_para": 18
+      },
+      "sha256": "b2ec8df2d489349c412dcf2d39b830c2f66b1bcdbc269fa1975d51870e66973a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 167,
+        "indented_code_lines": 131
+      },
+      "live": 7,
+      "path": "packages/docs-v3/README_ZH.md",
+      "seg_sha256": "2972f3235ca0942240fd97131a7d5f324306cdee214906faa017ea4fa8ece29f",
+      "segs_by": {
+        "md_para": 7
+      },
+      "sha256": "2239a1314940842794c34c0fec37cc13559516865c6a354dbd6f4e183e3f22c9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 11,
+      "path": "packages/docs-v3/blog/clerk-fellowship.md",
+      "seg_sha256": "dcd3fd1c99bc30ee449235cc02daea204c1c97f4512b508fd75f1709b28f5838",
+      "segs_by": {
+        "md_para": 11
+      },
+      "sha256": "b0b4e3b6ec4ab9a462ef1712ca8331e678a06eea503280f694d16e41378395a6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 284,
+        "indented_code_lines": 260
+      },
+      "live": 25,
+      "path": "packages/docs-v3/home.md",
+      "seg_sha256": "ddf266467624ad7824c9005a69240d86d8cad6c5c064ffaa528078ffb6ded207",
+      "segs_by": {
+        "md_para": 25
+      },
+      "sha256": "88a6829adb8fa3ad5a791266a70fbee0a68ad81720d3be28c88883f913c43afb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/docs/README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7f0502b803e70774369c8c996480f3a8d101556abcc11395564b7091d0595561"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/docs/app/api/search/route.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "83e6215d2264e6f437bfee232678208dc944b902ada0c29e67b02fdc65ac89b5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/docs/app/llms-full.txt/route.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "510276e7433835dfdb3bcbd34c6864248b2bcd8eb8b3be08f45af462aa219c13"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 0,
+      "path": "packages/docs/app/llms.txt/route.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f774b8c8adbdd089c937461d0615845bfb87f55032ae61a151499ae3443e9eb1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/docs/content/api.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e8a097b1503aebd72521069a8d4da6c3e40fe92839793ce96d968a8ca024b186"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/docs/loaders/get-llm-text.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d6e6203578509ed242d2a79eb373c59d90e1c11959796df1ea1c052c55381eb9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/docs/loaders/source.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4d02ae83003a622f1f7e1df5ed8ffa1cd88c41f0026142c55785173e0e3b1e41"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/docs/loaders/stars.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f3bb939c538aafcc75e05c249471cec570e9df8669363178087f00897ac19691"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/docs/source.config.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "67de45af6983f5001c45b795ac8ef9c9ac6d7a602434cbb0332f260a197950a2"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/docs/vitest.config.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8fc5dec98e5eb40e6090cfff0bb621b08cf0bea5c7555c5bc1f34cc3317dc9e1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/integration/fixtures/ai-sdk/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "bf6e0f6b3858481fcf0b6f7cfab6ee3d6ec3e939a3a66f19c001be1f646c6815"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/integration/fixtures/drizzle-zod/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "14039451255da47d90225d3c8094d69c005949b97c09f54e83ab1141cefa43da"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/integration/fixtures/internal-types/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "99af96637a410ac264f19d03d6b84ff7a1c3092783088754fe4c51de3dddc2d6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/resolution/README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ef4a2be4e2871c13e916dfea99d49abb3a21a29c7ed1bfd9c8325526e167fb7b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "packages/resolution/attw.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b57403796b4404d025a9ba56a944011546fa3ad78e60e3d42f7796c6de76412a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/resolution/src/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f7665e1286e9eea47466c1a2680415ecb36ce36ddcb72ba2b1aa27a9dfce3560"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/resolution/test-resolution.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9bf5ab4f9599e6688f416f6f8825c5f7affcb2304e7098db219872380ec94f56"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/resolution/vitest.config.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6469722039db4cca732e06bb82b9151fb3e0437ff64ae12c2ddd181b23bd8fa4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/example-mini.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f4839656bbd37a51e7f87df135dad7cd3fdfed09da2967599bc4c8d5da633487"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/treeshake/example.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "680f74eac73702c5e72f838b142097c23f51f499b9148d4d13e99d550636cd53"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/valibot-boolean.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "05ff6163ffb948a42d3a3244a1be68dc1a70265ae5c5a7ae70bfe37ba9e524e7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/valibot-object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2be8017e0acd9f67496898fa39fd8243b6d45aaba9852b29c968ce6a1aeb000e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/treeshake/valibot-simple-object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9b966b91fef20359ac3c58e6d831f7e4c5fc768aa4adfdce93ba363c3c89a05b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/valibot-string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4b746b7c81bdc4c96dbe1e470c6b5286250f4233f1c9990a623ec07c9a93439d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-boolean.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "427398ee5106bb9ed8e0dee59d277c5dc2956a6f90380ddde3df0e1658a16b2a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-full.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "af119d3601b281ff89c874298c950ba945d5f37fdd9b998f1d544dd7f5020036"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-locale.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a6dd56e70907d5c351248376ea7cf20ed34830810e01b295c065a0988037e6d3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-locales.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d557ba708d86d94453e4b7da58ac68fb13d51973e10b382078e5d33aad410bf7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-mini-boolean.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "bf6c2f0e6daf5100b20a7247c66dd37e9ab154d7d7faa7581996061060d042b6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-mini-full.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "03b9ebd144eab89114359f0a2d7d43c886f15a9cdc5a1a9c96d16704ee7eefe6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-mini-object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "65f170608fbe0d0a52391ed6c6330e53651d716b1617a05e427c0d3f0dee8167"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/treeshake/zod-mini-simple-object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c906647ccb51fa8e0205cecb22f572a61a31a0272b66f922c0b56d4a1630015b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-mini-string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "26f36d6dab0618c2112ee67baf51b752b662abd0bedbbda04d48e85ddc32a18a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "297f55933dbf877ef1606159216e639e86595371735da0eecb86bbaafc6a4c7a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod-string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e774fb6ee7ae7b0e06d82fef6ed69dab8746369efa26af1df957a7a967978257"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod3-boolean.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "11d8cca9b461f6c7b677a91933d1f5f4921f2b8265fd1cf3b621a281034d448b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod3-full.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "75bfb1f97ee5607d6800c1f8ed6821b5bfd8856ece22721bf6b71c2cd80e4f89"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod3-object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "14548646b0bb4a5d1f25e1fb3cead266e7216b2c978d50e90a0bfdee4a0313cd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/treeshake/zod3-string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a6733760be8a7f5d16c442778a1e80f43e1ce4f7640fa524d025ad7ace75aaba"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/tsc/README.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ef4a2be4e2871c13e916dfea99d49abb3a21a29c7ed1bfd9c8325526e167fb7b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/tsc/bench/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "16c8ca35c19d84104a654d3b25c8445e85d8b89f5906f4a094cd9fc555eb781e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/tsc/bench/lots-of-objects.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "772e4a2aeb8e21df163b971d53b98c5df21aca29a1b472c6141480d7e97c09b9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/tsc/bench/object-with-extend.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ae9d02b4fdef1de55503e300de9272c1c479bd0f6571b349c281673d69a7893b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/tsc/bench/omit-extend.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2a32b18e2d6a56342fab74307cad0c9971b0cf6a7ed78427ef6869c964055d3d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/tsc/bench/string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "07f45341272ce81ab18da41c6c57486bf260c06aec2d1db5cea7518eda4b2e8f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/tsc/bench/strongly-connected.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6a6a3391ac048337f2c10ceb8228482a4228a0984af397322aeb0db4d8d53dba"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 8
+      },
+      "live": 0,
+      "path": "packages/tsc/bisect.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "28280053c989b54a25e0fc79468304a3025ef26fada6ff15ffdb838c50892363"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 16
+      },
+      "live": 0,
+      "path": "packages/tsc/extend.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "712a4d622fb2ccfa20f52ad17e7f57fad3a6cb77426dc8de7df0c53aa018334a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 44
+      },
+      "live": 0,
+      "path": "packages/tsc/generate.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d05cd89dcfc2cbc24c4e392922beb308a6525942c108dd0744c94ae35720cbe1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 16,
+        "indented_code_lines": 3
+      },
+      "live": 2,
+      "path": "packages/zod/README.md",
+      "seg_sha256": "efc761230a425de283e5ded5c71025edf6f505ed186417c6c5f1d2ff7f1d2409",
+      "segs_by": {
+        "md_para": 2
+      },
+      "sha256": "0ae96d90800b51cee45fe028e14474db1e58ea6479e4d9ed02de28b53c27500e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c733a1897d6b4b30dad6998597f6896b265b094a65534359ada34b08ecf8932c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/locales/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0b98ccbe349eb9774d8c96fa381335cef127140996f91a4eea47b7742b55f51d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/mini/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "92f42fea7c90ec3f2f623a923d8798d2a316cb4ff93d6399084065b9214365de"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/ZodError.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8dfceb801ead825e44bbcca2cb84ea578e6c8cdfef72e3716968386ae3bacb05"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/datetime.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0d1a81e5608b286c1843aaecb20bd7d1f62b6674a610a51dc7d1043bed05963d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "33e4f792dbfdc735a72f92fcc117d3dbaea8e7ff3937d523bef3df44814805d3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "27f4322ad98e28575d5849a7612c6acea55cd5be8a1571d1885a656e8a9d5620"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/ipv4.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3ef475926d7e95a5880cd9d7bd780f98642189010046bb9748e27e50360da333"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/object.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "706d51c7048aff5108dd71b33b5c66d354a6856be0a48b23bc32e55d284c31d0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/realworld.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9bcc944a5e875ca191ca10542c113dde3c754e45a196400726f251b045e14215"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/string.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ed17ef186249dc4f1da01a2d5e0bd3c87da6d0d2dcad89e8afa05e0920d98536"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/benchmarks/union.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9eec8e3e58cb4d3dd76be11874187f71a99c27e06c639de0cc9d8d928687fe0a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/errors.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "cb8debd524102d5a38dbaadd72b220f68349dbac51ac9663569c1807f64b3772"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/external.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5d26d2e47e2352def36f89a3e8bf8581da22b7f857e07ef3114cd52cf4813445"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/helpers/enumUtil.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "dffcb43b363e6804128c415c128c32dbbda302049cfce7662b2f0e17eeae044e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/helpers/errorUtil.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "808aa0875577c556006ca193a5d4bd35a2ade57e50e09199fd9cbf6e780f0a31"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/helpers/parseUtil.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "cb94690c02dce392b98ca364de0d4b24f42db715fbb1759a08bcfb7fa6674645"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/helpers/partialUtil.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "68848db44869461bc20373abdcd002e32cb3759e2d5801ba3d9894d2c23db0b1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/helpers/typeAliases.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d3cfde44f8089768ebb08098c96d01ca260b88bccf238d55eee93f1c620ff5a5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/helpers/util.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "df1b9ea5a29a591f273555e240142431617e686aa6a97f172193770c26841a52"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3db2efd285e7328d8014b54a7fce3f4861ebcdc655df40517092ed0050983617"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/locales/en.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f729055c5f4acb839084e5c66c80bdecca02a78df6b048224e56e634322cb223"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 24
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/standard-schema.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e14e38f67bfc8d76e208366f639b73b3292f2bd46c97a44f43535c2389927ece"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/Mocker.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b7732bb15ed6ab38f61dd4a15f088af109b0a99eccb50cdd9f542a17bb935f5e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/all-errors.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ac1e032526bd4dcb874880df7c28f7a1b60b1b850f68da95df28ead0317527e8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/anyunknown.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "fac8ebb9d3007f7ef1ea320eed85b22b3248fde6bb1fe645a1a513b69442c014"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/array.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e7d3813182c59e511d350bebbd2a25b349868cc73d057b23b1d85a4d927b3711"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 28
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/async-parsing.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "45f829362cc917d9505e244ea0d9a06d71a1953747dc31e57780388e82ad5afa"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/async-refinements.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "cfd6752223678338c949f1716deeff8c18807f31343d6a4544f494d10e5acf60"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/base.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "989d8ff33e43dbeb3d08d8f659a3269d22fb573a86d48c72da58ab84e484e532"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/bigint.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "799b38ffff2d2a977493846e127d6f76e5cdb346d8886a2d2c76616253170f45"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 8
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/branded.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d0d7213caa6b727fe72a4bd99631984c4038ecbe8f67001840b447ca4b2085b0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/catch.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e4b1727836b5cdca66337af180a756fab2b712f61d49d17326a90c0a54080be5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 25
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/coerce.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "30dec33039db38b3c2baecbee09c74afc1d9adc68a6229a35628a1bac4539db9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/complex.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d3d971894c68f8b357b86232f8d9336622f86abb38f8b718f4064427a9021d82"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/custom.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6837c23478b39dc6304a98bbbba4a1df9b973d40f6243f0939bfbc339d96b01d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/date.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7d352eab070ae8f4fcbc61674f6b238159699ec4b96754ec1aac0cac74091c34"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 22
+      },
+      "live": 1,
+      "path": "packages/zod/src/v3/tests/deepmasking.test.ts",
+      "seg_sha256": "8892aa8fee9f77aa238d8c90bfb0351b856be7fc699455b5e4dd2ae1e43f4b6f",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "8b6cef1cdb8eb422ebb50b24e4f88742f13eaf0abf83b08a3980f2406a4b6ac6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/default.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "92067a119b984ab2750a1eba8e1a5573276aeaed95056e9e283f4a3bb54e5d5e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/description.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f1b75327fd817bb63c3b2e3be0ff9aff7511e2a391713756d8cb26cbfd3d5aa5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 9
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/discriminated-unions.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5bd00d9f7eeac9dd60faa03af58b5a915040f54b93ff77c4eab0d4a18f8b9e9c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/enum.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3fcf9f740cd53f52431abda4c61a3732dde44c3a9f1033159e9c0c92fcebd09a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 1,
+      "path": "packages/zod/src/v3/tests/error.test.ts",
+      "seg_sha256": "7570da06af0b2159bc233d459ff8d89c61ea8b0c0f218ac00e96ac877f82ecdc",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "1c77f7fefb917210ac238159c8116bd159158c260008bb6fd2f8a91ba9e55538"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/firstparty.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9906d7da8e62f7b9b7e5cd9553bea0872ad8a0b259214034108cec8a624cfc1d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/firstpartyschematypes.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9be5a0881151df777293172088b2039ed7e1e6f4a98a7557cdd0211f108c9b96"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/function.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "86530ee38e4aaec27b5bc28f525139019d7f872cbddcccf38c031d6202728eb5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 1,
+      "path": "packages/zod/src/v3/tests/generics.test.ts",
+      "seg_sha256": "ffd0b6d10f8dca12f0c5e00d0011fcfa80f925d6a3c45e41e8cf43c199a305b9",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "d1a4c54239acff333f76231084c48133257fefe14f504d0cab055979b5a9e723"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/instanceof.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b11897351fcf312dee317408b7aa27929ba37538c468588429f4f4ae3c5fa4ce"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/intersection.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c560d1fbca45e049f07eb2a382f7ee4c678164825cf5725b014312eac9412c8c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/language-server.source.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "aeb84d6fb14e6511a3509a0545770d869986f397ee02da640730d4ff97c6be4a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 33
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/language-server.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c75a03c145d1b0f28c62cba881aae1db600912a1df3be99d1996a18da776c498"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/literal.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a22faed6c08e04c75d6bb0180d5e1fafc4645b15445a479f338016ee4855c362"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/map.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "bb52432835e9fa70a94f444fc9e7c2d8e6ac5eb905cc3b8ae54846e52fa57360"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/masking.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "557f4bc4d8f4ab29afd87f07cf70fa4de60d765fc86fbc5eb4b788f34dd825a2"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/mocker.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "46f64d2995e29c5838189ed10cd1b185b44c33dbc21418364a80ac19f285362b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/nan.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6a8dd316585ebc82ea125b63700d981485111b91421a69f2acecf0fc1df1a223"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/nativeEnum.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6f64363193a447f71a8aa5440461bdb5451c6c4433fb4fca785ef4798d5b52fb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/nullable.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c51336535632e1404455bca333ccafc143191600047251a3e3e13f551693c516"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/number.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d56a65ec9bc03482c2b23eecb97c5213b564b5aaafeaf205d2a1f54a2c91e1d8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/object-augmentation.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "69777e89506b2d8157c98e176dde94a7c664db7228485c52a18154ac4b794382"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/object-in-es5-env.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "687d2c52ddaaca24ab3d3e301cba042a7560888570af23b50a0597d3012d500c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/object.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d6f810c5b66b8a6c58af82bfd2fcfcf1e118cffdeff7d8e5d433fc68b8c974c4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/optional.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0edb7a6478e931bf256f3d71d1367d2b8199b4082101dba97cc306e4dc3c92c9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/parseUtil.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "822a6d836b05ab38eadf26592420eba6be694dc7c1d654388efbb601af00c288"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/parser.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7c8b720c921618f6c89eb08eae80ba45602fa04dafe9c7b9b861512954d70f9b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/partials.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "edffc60d54ac33d1404f04653a70fd7c491a4a526bb9544c390b177defb2464a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 9
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/pickomit.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "cd05293952b5fb0ca26eeb9ba6cd69a26f58fa5c62eb35f9ce1eb1ac9e00ccd6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/pipeline.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b285aac721b744da8c5a0a093c9ed57244643e1e333df576922e67bfaa9e16ab"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/preprocess.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7433e95a0504f7a250b7beaac30a5e8f500c315d99b3badb978a0b28ed7a61dd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/primitive.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d0214e93de931a8e6b89b3cb89df1cbf7299d6be00abcdde71ffdcb811953dea"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/promise.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c03c19525c56cea7808d982bd23ba89b5a48db13934e8d4824e13ee0a249d19b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 1,
+      "path": "packages/zod/src/v3/tests/readonly.test.ts",
+      "seg_sha256": "e5463f9cd17f6d19e5416cbc57d23a16c933f66c851263b8df0ae32ae7fde1a9",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "dc0ffe451674c8938b67bdcb63deff7958dd1f0e5ec69a485bba470c978817c1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/record.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ebefc7ad59b2246787408efe7aaf2f7beec0b5c90c70e79990dcbf241c2d6c95"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 21
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/recursive.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9ccc037ef698ceeb4e6986e02aaee71ff318c4dc0f875b9253bff6ba14db9137"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/refine.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2f3a329952b6f0109028a142225d719b05307a18f7395297711f725b599933f8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/safeparse.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5aa7597109dea6647d0ab022a4aab694c44acfeae53386ea6366b806fbd3e872"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/set.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "eeadd9dabd30b857c5de8526503cb1e5c8b6aa45a99c4708958ca1f822bb3da2"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/standard-schema.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f74076e43f44c887b3bf7d26d5ec686b8070359e63fe373e6c45b6c7708c025c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 69
+      },
+      "live": 2,
+      "path": "packages/zod/src/v3/tests/string.test.ts",
+      "seg_sha256": "52e50ff197ead2e5faad62c32751eed41d88b3cc331f746154f980f101a4d0ac",
+      "segs_by": {
+        "comment_block": 2
+      },
+      "sha256": "19ac9a6b0a7c610038d93dd9f97d453ad3a54bd5e1b1dab99e25d544872d93cd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/transformer.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e3da81596e0077326f442153a741c9ba25669b8b5eb025a8ea7fc1eb0106faf7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/tuple.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e8a48c8791387c94076c7eee8c9b7e18712a45356c7167f7c43bedd54544614f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/unions.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0c32f20d663b30438bb8ff834b7f066722160720a25a90e6513a66b9baa4604d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/validations.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "10ae103a7c7d9e5ce8bdacf9ef30bc44a52cdadf64fe365f492d27dcb432b482"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v3/tests/void.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6bdad3b7ba624eb3bd03c0bfea611de46c10aba62d03df9bd2ba49bafedc15cb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 81,
+        "skeleton_line": 3
+      },
+      "live": 6,
+      "path": "packages/zod/src/v3/types.ts",
+      "seg_sha256": "1c551b8568912956e687700047f71136de16a228329b0470aeef7de796802570",
+      "segs_by": {
+        "comment_block": 6
+      },
+      "sha256": "1cfe15702dbccfc592bb46679bb6979c6b1b44b9790114a01447436849f0900d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4-mini/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "92f42fea7c90ec3f2f623a923d8798d2a316cb4ff93d6399084065b9214365de"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/checks.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "69b22321bc8e86f2175750051ab1f69d411b750c2b43d34a8995a6cdd957d981"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/coerce.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9cf6429965d7d55dc4e50999af50cbad5b57b5f3372bba13038133aba62ba600"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 15
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/compat.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1333987ab926fb40f4708758fc674c50be1f05540b62fd1de5cb8ccda574e532"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 20
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/errors.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "be648af028447d6b84b4365d72303400190b812e65d70407921637ec18752a0a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/external.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "bb9e67ae9a4cf314b05a17f0e9817680259dac9017dbb6948cd45fc2f4859f86"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 70,
+        "skeleton_line": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "04907934e2ae504a06060e92f67d753d015303faafc3ccc9e838ee6b2acfaf04"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8f199f0404574864bd10cac8311858f39d50d418609a0ef089dfd444d4977840"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/iso.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ff9a91c925ea4ad50f216b2969d8ca2cc6c586aaad37e5e112353eb64a055993"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 14
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/parse.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1e1091d983650fa84811402ab28229d3d72469a31bc2ae0aab697255653f22b5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 276
+      },
+      "live": 2,
+      "path": "packages/zod/src/v4/classic/schemas.ts",
+      "seg_sha256": "0ca1da9e516691bf87acddf48b6e6f2f590079ee0a6165b3974b918e1abb715f",
+      "segs_by": {
+        "comment_block": 2
+      },
+      "sha256": "aadb69bdd0eee0c3ad8533c27c27cd386bff1f2219cf23a43cb9af40d93781c0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/anyunknown.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c5fbbcc05862414d2bf8d8c33e90b15f07d2542e56408e668bc4ab8dcdae5758"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/apply.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "61591882450f8c221848f4dbd7cbd8434a6f68ea1d9c9e0f9849a2ddd39e982c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 18
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/array.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a73d624a81a7308e901b2584c491eb40dcb05f04c2acd96fb90f96bff5547058"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 40
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/assignability.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d404a85f8b206d3e36d8c70777452b968868712605efcbcfabec2138f43c0fbd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 27
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5854e0b2712dea24b27f8d0b5dad384e06eaa785539e1388df941fb4fe6ff80b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/async-refinements.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ac573cf82efdba4cf92c86ac959f63177c4622338609848869f778c0d125cdb2"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/base.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0401d2c75ed792b13bf811fc77801c485b89671460a4d52439cf1908fe94f2b7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/bigint.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "85cbf87b9df6b154ad7d3f5df030b38fb2c2761dcbc2d4a2ddc7ba06de95433d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 14
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/brand.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "55f5c431d7c776573120301b55e7ff13494a15e196005985cc721b84257ca28d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/catch.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f26950f87b5e53068722938cdf619b1b33523041e230e441f5fff484aad5073f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/coalesce.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e03d0cc88ac34605b99061da2e0ce22a7e7fbca0467819096994bcf63bb5b8f9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 84,
+        "skeleton_line": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3498ad27ece4f8d97a9588728a909d6fee046b7ef8d6d9f442ce702193f0d789"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 56
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/codec.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "78b343937dff63d944423f4a0b76d55848a5da6f302654e362f49ad864d8f28d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 25
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/coerce.test.ts",
+      "seg_sha256": "6d08ad5c32cdace82d0c05a5d252d6089488309e99a3e2f441f7e64b6caf69fb",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "b1c494141f3120e5f4253c2bbe1131468d32281e8a9513f27fb40fee3142b55a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/continuability.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "af4b675b7f56aec6ec77b17a3154a4afc3fc097d99ebb7216144114a8651f50f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/custom.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "130ec42a9e192f5b4f43a890303921cb0ec7f1e878a4f0d6a1aacfe863ff1b91"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/date.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "400552113bd79e7ce63ba82df4681b4d53e96c089f20335a297c6d64f06e1bb1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 10
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/datetime.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "427520775e99d6a3a9749773f0e6285239b98bbcfd7055fabe51b40535fa8aa8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/default.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1998ea199e02050557cc828b15e6ba6a95ff306e4e187f2fc6ef35a1f5a00597"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/describe-meta-checks.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "158dfd02d9ef87993a87d70a6365cf83082cb6125bb7c94433361b07864bffbf"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/description.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c7f59501ffad7792ae76c178e6098de70c3da062280dc788f3354187335cfd8f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/detached-methods.test.ts",
+      "seg_sha256": "1b75e527d1f05e97d953989b868bb1cd2fc7f6da6aeec070108541123a24ae54",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "d232cbcd263a8f974a2c3e0c950ea654c935eeb4609f4ea58282cbc87446c854"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 21
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/discriminated-unions.test.ts",
+      "seg_sha256": "a983ee84f44d45af87b5a9659941b251ff7c29ade43098bb6ab03540fabc57a3",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "b6e0ee06c586e7e19192fe44545919521d6c8fd838f4ebdcdfb1c7dfc60e96e3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/enum.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2a76a8b5c6116fb06a249284afaf3aba4512a790264f86871857a0b5f6af7650"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 23
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/error-utils.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ad331101fef6b5c95ccba2572379267d34865a8a2d5ec0498f53e336d9f75f3c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 15
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/error.test.ts",
+      "seg_sha256": "a73e20f5b08f01ccc9430c1fb5a9a2977f105f20f3ca7fcb3497915c92e88b01",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "f38b436b7cba83cb35993e05fc7feeb7e8e1dc6695dd069936e232412f6fce5a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/file.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3c6d15d9c9230a1047e2036aa7c56ee9bed22d8b91dccab6c7afeec42fe978e9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/firstparty.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "60e754acdfeb6bac8dc94fe59f15df0b0a94e9fbead52d230f27ea687aa85cc9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/fix-json-issue.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "91b2334b6cf9e57d3842b0e9ba624ae68938d1955d292277f54f566b487adcdf"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 40,
+        "skeleton_line": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/from-json-schema.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "21c067addb40013dd9426319cf1efdb48cca6731867c9220d77c516eac0b5a25"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/function.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "981b39cd56d07589469f4de688d9b80475d0aa62557f1197419272d76f15c45b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/generics.test.ts",
+      "seg_sha256": "d46846b190f5139f0eda5ba42bfe673286df0a40e6e0c4584b618bcc8f7a269a",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "e4dc0d13796ff0d0ef8b5286dd168afec62ddeef66fae429cc9860b2bbd8f80b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/global-config.test.ts",
+      "seg_sha256": "410cc2be787a71a270ff395d57caa0a1417674761c2ee8f2a2161ad85f68b6ce",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "af2c38d5daa984e4500c1551edebf7f63b3ed1f59d81c545051d49557e5d98b0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 12
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/hash.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "14633fa651f6bbdd23ef23a8ce4c4520c3981f7462980f8b8cef8ee5fdc85ef5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 34
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/index.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "863039233394640f766f76d1fed2ee6a400ec3b1671dc04d0ecbabadcbf5ee60"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/instanceof.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "800ed933a0ffd3cf89804dd5fecaab52c7f414c557a3e226ab96e68bd9c1a045"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 6
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/intersection.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7b4519955878c89d1cd2b8f301a34c9673b7c424b181577d4232f35d0ed5afbb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/jitless-allows-eval.test.ts",
+      "seg_sha256": "75e14151ea3ef8674df13b182e197c51032d58fdf64abc8af1f03f6c58c2d9a2",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "ffa9a32838111e58388ec0d290c612ce318ed379eae43e8faa73c065e286dd21"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 4,
+      "path": "packages/zod/src/v4/classic/tests/json.test.ts",
+      "seg_sha256": "dfd22bde41a8bc5acb91ddb3e9962b1b1d75361f5a6201b2ee5e57513af74681",
+      "segs_by": {
+        "comment_block": 4
+      },
+      "sha256": "290deec902da7e61afbfed997cf5b85316a8e272df11759c1f21ec7dab03dc69"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/lazy.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4c3c1ac8620955f7f19713771ef48d8401fa0deecd0e1dfda205fecf89f8c8cc"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/literal.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a861896be65d22ddcc0cb10bfcb3bc8bd8ed0397406617d0cb1f76f69768def6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/locales_ka.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ee0d37eb64e595252599f93566c96bea701bcbf6e54f26d5a205e07bd3824e75"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/locales_ro.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0d3417af99256eff7bd6fc9c62fc88c6ad5218d1ebdc67560fd991ae741b122d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/map.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e72678211016dbd56aa2f63fcb07ccd8825a94ee5a978e9497acc29e590affed"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/nan.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2ff494cc0c8c785f29b0b4c2eff2e93b3f829b518266d78a05ee40fea9ffc11a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/nested-refine.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8e3f3492563a93adaded8b352e03a087f1c5c2f6a5fbc853ca4e2706ea006799"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/nonoptional.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f14e374f6e33d7ada15398cde5248cb66f3c946c9734382f467c3c7ea4f5fc44"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/nullable.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a749dc3a8ca78ac05c94abd82958c692b492e4ed6d93c6c05ad1b9a769067850"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 11,
+        "skeleton_line": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/number.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8ad04b67347dc6fba257cf035004fd5e9f153e5aac8a4339d66fae02a5726257"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 20
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/object.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5f9896158985eb1111dac7c08b9969c16fecc23d7e56af0ead479b5db26e456c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 20
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/optional.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "103cd2009189b956f057db2831d0ac0991bcca49bedba9f654350c9fe3745b90"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 31
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/partial.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "624ef613ef89c79abd6054057be5f377af36c83a1ffcbfacca07e90bc9688128"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 12
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/pickomit.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2b5f364388752e5b8557af42787b8abb22a1725e59d9d7351aa4760060088531"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/pipe.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9383a52f0f85e97ff34e7bd485bedf2c1a5ef3ffd37ace47001de7b885b7adfd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/prefault.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3350163af45504b6785285f148da357adbea11425a21142df763d65a10f472c1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/preprocess-types.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "017458794a2935d84e3e525d068b6053a10b00b5f3c8165ee979b8d2e40f7351"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/preprocess.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8b8b4ac142419034e0a057e42f9f0d84890fb69c772a9059e10276b2c47e9611"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/primitive.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b5a2f74d03039eff1d20229ab35594d1e9a808dc50b943e802724525338f9f1f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/promise.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ff9f2225dda8e05a63b4e8b9008c5ee71b1fb0bfa00f80f627f31631e7bacf7a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/prototypes.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c6e493d089995c8aecc728b99bd2dbcb6f56137be4537c3e2fd657838c582ebc"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/readonly.test.ts",
+      "seg_sha256": "bf4c961a928bb964adb522b75f6a1e208b34b3674ea3956c8410ec3a476fd8f3",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "a4c8d53118278b6d2617222d9dc40400aa4f396e6527f68e9ab2fd6a99c3ed8c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 32
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/record.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e9434dc71b9371f05b60cc4483c6ee0bf52006c6a950492cb844a997777b64ab"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 20
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/recursive-types.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "47d6273f86a73d537fe033293110ef0f64b5ed749a221563517d9b7ca7a7b751"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 19
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/classic/tests/refine.test.ts",
+      "seg_sha256": "b730b5b8250fed7e722e3d61f01f6b7f764970a61b8ded5df062e448e4694bc0",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "6e420a6712788d94661194763d926f00e8031ba236f8904eee18d32e80eb1745"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 12
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/registries.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ae7641a0f26d86d3c2e79e83699a41f84f0292da050a0d33e373c40a859d1514"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/set.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4e3d1d08df1bcd2e659a2f6de0f12f816e756ac9ec98b253cdb931ffe8ecc951"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/standard-schema.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3fd8ccbdfa11b512793fb9261c6592198c81b1e292c57672b83686c2dc97b153"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 18
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/string-formats.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d6b61815603bbfc8a7acaeac23d88773195c45991c7b85dffc85e23f24b37640"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 163
+      },
+      "live": 2,
+      "path": "packages/zod/src/v4/classic/tests/string.test.ts",
+      "seg_sha256": "7d633ea9206c1e25c5cc6a6373f15723b9653dd3d1b3d371dc1d61a0924a2951",
+      "segs_by": {
+        "comment_block": 2
+      },
+      "sha256": "3af4edeb6b7d3976919f505b4fb09dbde6d4e8bb320bcef865be779f9051d125"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/stringbool.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6a5f06aa81c442476c2c656607ec580707afbb08df67eb813ce7dd0f20c42fdd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 41,
+        "skeleton_line": 1
+      },
+      "live": 3,
+      "path": "packages/zod/src/v4/classic/tests/template-literal.test.ts",
+      "seg_sha256": "ce54449adeff97ea85416abf9bfb8c439b7abdda7b5a6d3fd99e5591ff58cc4c",
+      "segs_by": {
+        "comment_block": 3
+      },
+      "sha256": "318f80e1f5be027d4f8a1e80b09351c2c118dbc411b3d3f2f368621209eaf62a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/to-json-schema-methods.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2c3df06e0757019a6fa226d954653d8627055f723d69c5cc49083cdfa6c1b6a2"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 55
+      },
+      "live": 2,
+      "path": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
+      "seg_sha256": "98457f14bd259596dcb2877b8d7585e6016596ac62604ebad6aa9bf3b1c1051f",
+      "segs_by": {
+        "comment_block": 2
+      },
+      "sha256": "a6315d64791334aac95d1c736f3bf4b3b84eaee0aee69248204a81a5988e1f4a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/transform.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9ede5ae08caa09a485836baf417dd4d7b786209ccdef7b30beb6182911df8eab"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 26
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/tuple.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "cb02f33a02fecf5ee278cb0ffb2d9da848cbb23d9408d67fa2679dd7ac1ebf4c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/union.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "110b65a0d6791147783c8d8f1544fc1217bc8188ea8b91de2d37cc818fe35350"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/url.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a8371c6100e0399d593c7a0539a776e53513f095a667bbecfbf8e7aa5d0e5e21"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 14
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/validations.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b2dd61b3b20b082cee04ef5d988cb4852909f9f0e71bbaf2a91f1a681bc674be"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/classic/tests/void.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a1e5ff5f759a09e192764d4f153443bc5735cf8b6db6d810e21f0dddb414e805"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 209
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/api.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "676709befaaaa6cd85739dcf7ba233d85f4a16012fb65efecbb53f8ae7b67a5b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 75
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/checks.ts",
+      "seg_sha256": "528c01f28fde556271c5fa4d66f0d4e20648fd6364bab078732467a04bbf5a92",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "e5dd4c62f0672a609e5d68d2147329c509f5384b4090ced612e049bc0cfce427"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/config.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3c3ec0c03ee7387685f7a5e0155d9d55f251ffe4cfb5f4447bcbd380aed3d847"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/core.ts",
+      "seg_sha256": "f43c926f952ccf3833d74ee1e81b02d6f68f5a3c4e84556adca19687a3f17b4a",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "cd7ea3d935d02e3e4057c13870807b189618cf120608569ba253a605dc96c6ee"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/doc.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "496e63b612809bf031a1964bb2e74c1af4c1a4ba1f8e5cd6f164818ea135205a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 19
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/errors.ts",
+      "seg_sha256": "e7c6370142b5fca912a67a7d7567b00dc15152f3ce85868c97245678a8179bbc",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "77ae18dda4bcf14d2dbe9c82ef5db3d2ec59fd7c60c3e331dbcb3c15658b3017"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f9698820ee8371215e8d015cfa060230c62e65428397dce83f78e6538976301c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 14,
+        "skeleton_line": 2
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/json-schema-generator.ts",
+      "seg_sha256": "f1dc22a4d3dce16e37a4b7214216131145f0b652f2db26ce70307dea76c78bf6",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "341b5ed63c4022c14ac68e586094963468703b46be3da5e3f14dd485a763880d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 31
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/json-schema-processors.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f73b65afdfd9f016523b9091f82258e6fecbf3bf79fe58f046083cf3e7563e99"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/json-schema.ts",
+      "seg_sha256": "46e8b47be32b083c88a23ea297c72a68742287fad84f821ea43b467ea4ff3285",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "42b03730793dc873cce370997da2b1347b00d27effab1793173d7fe7bf422f0c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 14
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/parse.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "47bc4d3fe021b827bca5d89deab5f8937cecba6ee1b690f2cb24f7cbc3daecf9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 38,
+        "skeleton_line": 1
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/regexes.ts",
+      "seg_sha256": "ef92a6caa4c426bc198dc208a1c97c00e16b894f122dce30046a7483b6efc45d",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "da0efe9a6612fc6cdc0b5ac9606b5b5375e3a011bcdccecf7bb605600f844455"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/registries.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b2aa63eccee9d645a97d668a6ec076c36dc2feb0cb200a34e99681eb6bb036ff"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 305
+      },
+      "live": 6,
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "seg_sha256": "adbf89a9fee712dbb280a5760fafa4bf397a118f552e82db891d3c5ef9bad5bc",
+      "segs_by": {
+        "comment_block": 6
+      },
+      "sha256": "934bc0ff4312a3e86645ea5dccfdb59aa316345035e8394f72d938d98dd6728a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 45
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/core/standard-schema.ts",
+      "seg_sha256": "52bae40617899314a529f02c103e6d4410e77b8226104913d1a7566de1b54b20",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "7f9ce0873e08c80de2f2a9f6d4968c2c6b2b1541058ca849a8ddd6e66edabaeb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/extend.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4054a484af74303035b47f26f1c8d66cca6fae3454c0f9fb720b298c512aca68"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/index.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f9a514f603c4350f532d14c5a3fd4748935c4ffb1ab90fa8e8df8671163a7524"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/be.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d6c1dbf1710130c39d58aa149c5f33cea1e445f05fda5fff6c6e6393358d699d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 23
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/el.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "964ecb2c3cd61a9eeb84a2253c67fe9a393e2699e78391a05c9a0e7e0ce026e7"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/en.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "47ca30449996a5ac057cec09f9df1f937ba4a4fa580a0512daec2b7985cad51f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 20
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/es.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "08d570db1dd2cd1ddd16ecef4c6d9d7e3e293937e255ef6cb960fbabb5ba4a02"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/fr.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2b27f80aa753079c42870c2ca35f4aa14202fc861cb46456898d8f64b993650c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/he.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6551ebb8d72ba1590aebb260b66eb8e4e61b64fd075b2785071f86156c427e53"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 18
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/hr.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "36cc00cbb5e67d9bc801c3a72bcc39ac3b080585ca34d47bbe314e9e3ab41010"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/nl.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d5dc058d2ef32676fb3d154f19d4b193c6e0ac16bbd109ba7409fba643f05bf3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/ru.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1944b0643c6ef9e194e5256515363d9f475eacb7339ff1745a7629ca38109dd8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/tr.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0bda1f663f8412363eac54bf91f031e769f7c4a950a094e365abc5c6ee123c33"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/locales/uz.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6545408a2d71920a472a70ff02811910c283bd00a93e4f5b7869fad9253d7f32"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/record-constructor.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e1d5009d4e3a8d428bf769819aac90939d5be584da4cf41879fcfc534f62e21d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/tests/recursive-tuples.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "de7ba7681619983d9cfe832e550fb18ae85aeae8a35c8114b7b510789670415f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 71,
+        "skeleton_line": 2
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/to-json-schema.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "de47cdaf40f487194cbeaef4950369eaec31657a22d92ea0fdf5bc84629509fb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 46
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/util.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f87ed4b568ea38ce1557f965521e999e239c2c82dc6cc9de32da5b3eb802ba4d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/core/versions.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "847580315b9909d204bdf5feb4dad7f220c226b77c4fad11857b7751bcdb6bdc"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 46
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/core/zsf.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "975e61b52c8de9fad0a0086952b9ee8a1abbacfa4489659529c53e80dd78094e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9f0dfd9a085d4ec23e8a073406300e4bffeb0fd3540b1f395c44b566f27d4d49"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ar.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8054c5e04c4b201530470d58107bdca01d8448c205355586598c58be67bb20de"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/az.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1ba2f1aca056de1ca94fee5b45c76f462dee20cef4ee83b509ede549ffbee4c4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/be.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9892697f73e1f85908ada746677eebb653089c98694bec447d3c89c74ba15846"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/bg.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1ceb9a24c1237ac105cb03dd2931bf0a01adb02910fcc4d370b0ea86b9e12c0b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ca.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "4c69dfb00879543db9271a2d3b9a1fd9d0c596ecae920fbcd843ae17b0b8dd59"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/cs.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "8d1ab1f874af4df4efd3d96d453554ea3d5246734965f3a1184c5d3ed7acd22f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/da.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "20284ead729cade046763d4b88a9030671c275c84b6f7674fab21d2ff19ecd26"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/de.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "484c73f2f256cf2799f09eb7336e688b8dc959487e55371506af5d7162505a3e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/el.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2a66db26cc1ee92dfa844d354cb3da44f2439010f156c744e35d6c9ac0fc445c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/en.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "eec1e82d86be6f317fff4a7e5146ecae0257b44bb9a587280fbeb575e6ce2276"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/eo.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c6224f39d3d00013ba35df80e31dc30969de0f697c9986f909361488adf879b5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/es.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "71ea82ecdc8e432fbe2086a6efe893de83aca680815e47f4110cc02ddcaa799c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/fa.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5bc092a80e239b86d26cad889fa38684e388a032ca463c30e92725de07a5417f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/fi.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e11126c188044945b9e1e42371c19b3298fe7abc090d3811fbeb3ddad17175ae"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/fr-CA.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1c354baac8023c8966299c2e2ada7ed7c4e5fe3f8a6e2a1fcb970a90c5740099"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/fr.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "378e8e3dfe0543f1e566bd91eaca3121ca70dc132c0ef42ad08482344b32e9e0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 18
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/he.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ff5f09653068c2e040e484cd23c84c10392fea9e3df8d205e7a171531b7db848"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/hr.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "884616b4b04ede769bec60e6062892010e5ccdcc776dc59403513725dfefdf54"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/hu.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "bc6aedb4f25c0268a4609f4f427775f3d4651db9c81d8c29f7cc9655c96f3eef"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/hy.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c5b2dea72ac0a6429d9d69df86542faeaa28e0fa58fd9aa0746458e92fadbe0b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/id.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "a84da6cc0e82349e6a2434d4d1e460d75295478b45b11557014f7eee4d1b8e7a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "d73f41a76614855d43eea493030a1aa05dca30c9a17015a0da5b8b70da61b6b1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/is.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6025fe9486271726434fc77621a14487956ab05d0db8cb2e5445a92173c1e350"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/it.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3300a1e55b3476f892548b12618e19c3ab8a11af258533147384cba949bb5cac"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ja.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0ed8c9e13577e56e76e7c1ff40933d1ab2231d5816eb7b3627f893d5540ff9eb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ka.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f559cca21be2766bd6d89a8895cd5dbe89760330d64aa50465d28f56c3856925"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/kh.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b55c1375cf0fbb40248ccc5d940074ef1448d38902ef0c8017d7ebda43649efb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/km.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6cd34ef94d14e2d296c5d8ff21a919961c7caf21c5da859fe76855e8750e826c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ko.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "0700f119194d1b692076b85c94be96fd41215c88e28de89a6cac357e136295fe"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/lt.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ddae086cb5c27f9874add33cd66b3d7a7f45350ab791ddc468fbad25b1c99fdc"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/mk.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5dfbac6701d5bf50c6c76b92fff3297b47d40f5e5900dce41dc0d48d407ce1d4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ms.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "246a8a2997454a1efdaf81227e43ffa429d9eda12ad7ff0cd3dc835980def8b6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/nl.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "187e906eb12f237251cd35c74d6d9dba9e1b2fb40ca68616b480d77cadc3d973"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/no.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "25ce191aa5d7a573004ffd25e48fc0750c036e2365bf5b0f7164433eb1e88400"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ota.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6196c2f66a1c6064fae606cf7ae7454e3aa7fb264650daaebfe34506dfbb9e9b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/pl.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "63ac5508a19419fad93db12c513e644eb08f2846c5a4f6886d4819135a17a860"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ps.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "661d8d4114196cf9c4c2875404ea0879e660c914b868ef310551cc11e60eed3d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/pt.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "82b5482b0dc7d8ca30e6133777fcc6708cb494893d3ba00500d72a7e1739fc17"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ro.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7b0850d8ef8bdf8c2005c1bcd9de76895981c6a2724c77dda96dd0668305fb97"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ru.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/sl.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "6582606d723929a37ac94ff6fff058072fe4b2558fd1ea98dd4b76748d1f63cd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/sv.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "2f28ddad416e860ecd11046583e053d32c9f841753040a154071b34abf629abb"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ta.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "551ce6d5cefb79a1e5950e2537ebde262a28fd8b7199e287b1f12aa8e252dc3f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/th.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "18a55aa92af4976a5e3be30f8643c56077127216cca7ce08fa676a138e3d7efa"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/tr.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "db327df1e436b74830931a35930f7618c93a06d71b3d8dc02fd06cb1ffcee879"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ua.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "46a90664b22f2b079c7ee1d36c957df8b39442717c3df68c8bbb6a0df20eadce"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/uk.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3cd51c3095b1539e94c128bc7a86667b5181b1ac8c42d9b62755f92823b52e64"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/ur.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "9c8806d9130229e0d43305646dab00e4f76953c51a88cb71c5a469f50f4e2ad8"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/uz.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "da5c837210c20d30aa6563bee50ee054393ec141a94aeddef9e403417a8d1756"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/vi.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "462339b6af6fca46c34a739e83f990250382bb0db8f13ad356d5b37fa5267dc9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/yo.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f64ff235524ee35a35ae035a17a63476e08a5642dcc564a149237fa113d0dd4f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/zh-CN.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "632e15e67730fecca886f30861836eb0935605912314df047880ab503cbd79fc"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/locales/zh-TW.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "651bb03a87d375b9dd72c8dc12755be75c7f4d4b09045aa34ebed9d9ab4ad5f6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/checks.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "c4f16c0e97aa6f0385c0bd147a0438f522343797d72f4cf0cb466213e0b74635"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 5
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/coerce.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f9c2a48957a89038bdec5fb122045cf887a1b9e44243c07cce318a1a54123de9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/external.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7d7f5c3c525487a7da8772152f9ad67e31c9316bbba01a1319ff210dde2a03da"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/index.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "455d93e660b61feec18cd4c31e2f394627546ae8ab31f9bacdab6318112ac31c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 12
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/iso.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "e3718bdd5cca94e376dc3a7b45b16554ba8526a8bea5dbfc7145504cdbfd8b2d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/parse.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f56f7674e03f0ff117dc804c6cb50361d9dc6ad33a12277009ec753ff99ccf0e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 317
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/schemas.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "70a344c2764565a55a9ac042e9c2d82ed672d950c48d0b9da305005d290141a1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/apply.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b628c171da1faba6482164550557c2875418bbf4d7a1868e67528280e7030969"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 39
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/assignability.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "bf52ca9e89d34717a46dce06d03f2000027009ceaa0798dfa3bf8e47b5d537f6"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 16
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/brand.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3b1fa34adaf81944b3f4ab98a77954eb64aa9e1d94f95ad2d0091aa51f03671c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 17
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/checks.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "14c8c7c6fba2bc5a06a5f7fbfdf7774bf7a7135c233b47887cb306e5b7f71aa3"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 55
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/codec.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "1c105dad82b9ff8b41170facfb23da29028e1cfbf5ff9e6b576e35338905a044"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/computed.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "675fc1a036b656b796959fd8f90d6d3d5655c3f6788769e798f56447fba02d58"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/error.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "72d8e9e476dc934d09d5311fff1823b7f74f169ce30b696cf6870e6b514b1cf4"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/functions.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "52556da49c569c96f3d4c77d2569e801966ce3bf9a0cde2648d5b2de197d2007"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 36
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/index.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ba15d7b13dcd57f70605932bf303958cf88c3d7781881ec73991407ada27ce1e"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 13
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/number.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5e546f7b16d97b2a30fea914a900fa48d0de173ee58eb8a3bde04e1783e7c7e5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 14
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/object.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "27e93d0daec2650bd1fde5cc47d77d2ee718a237e90ae6455b532d084039db3f"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/prototypes.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "53d57aa1c4401cbe1958be7521b65c72ff55cf4993b1ae57543f4138f2c1e2e1"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 16
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/recursive-types.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "78e04f901c5eb872c12bd4b328c2696c27eb2b0c1bb7d3aeb1e5bff8aabcfa5b"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 0,
+      "path": "packages/zod/src/v4/mini/tests/standard-schema.test.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "7354f57b6f3fbfaca4ea117220c101a095a7cf8ac529650e756befbce8817ae5"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 38
+      },
+      "live": 1,
+      "path": "packages/zod/src/v4/mini/tests/string.test.ts",
+      "seg_sha256": "cd9cc57598fcf715f5735e2491be3eee3a2ac23522890fd28b2bc6e2b676fa07",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "efb9ef22f2179e700a2033edd4e1e03a6fe4f6b95fa4bc0bd29223065e1ec0a0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "packages/zod/vitest.config.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "49c9e26afb17070d77b674403513523739f11eb6cdb2fc60ea9a0a2a05963420"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "play.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "f989fc8e38a6211ee21df40f5c87a65b231e0a5d370057c6cc9b1afe90fe0432"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {},
+      "live": 0,
+      "path": "rfcs/index.md",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "40523cc0828b05074a61584b7c1ab548acf4aecf0a21dc7c80936fe1bdbac35c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "scripts/check-semver.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "b603ca1db3e5ecae9750b850ce2d996a42f4b2f2ff417ca9fabdc8fa84a14d59"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 7
+      },
+      "live": 0,
+      "path": "scripts/check-versions.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "5a4189f39d2f3d27ca012ed51ca165dec968ede87016b813f99fcb4ce19f6a75"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 1
+      },
+      "live": 0,
+      "path": "scripts/fail-on-console.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "3c174b24fdf1b10e0aa222616b85e8529899e245f3e09f93e69f7e1a82bdbe43"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {
+        "below_floor": 12
+      },
+      "live": 0,
+      "path": "scripts/write-stub-package-jsons.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "ba6fd4ac5c84f2a26fdc0525b75a53779d187544f8a58bc1f0a02fe5201915fd"
+    },
+    {
+      "exempt_by": {},
+      "lang": "ts",
+      "ledger": {},
+      "live": 0,
+      "path": "vitest.config.ts",
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
+      "sha256": "04a55003ffaa3fe760fc652388e112af0f96938581422d109e4605791c0ffe8d"
+    },
+    {
+      "exempt_by": {},
+      "lang": "md",
+      "ledger": {
+        "below_floor": 41
+      },
+      "live": 8,
+      "path": "wiki/optionality.md",
+      "seg_sha256": "d67941cdb44426cb3e2fc58c0c588dd84ede5ca626eb9701152731ece270784a",
+      "segs_by": {
+        "md_para": 8
+      },
+      "sha256": "ad0f482fe55c1c8db7d5cfca04880e74c62b74f70f9ba7401211be04663ca514"
+    }
+  ],
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "dirty": true
+  },
+  "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
+  "schema": "ce.eval-docdup-segments/1.0.0",
+  "scope": {
+    "excludes": [
+      "memory/",
+      "cli/memory/"
+    ],
+    "extensions": [
+      "go",
+      "md",
+      "py",
+      "rs",
+      "ts"
+    ]
+  },
+  "summary": {
+    "exempt_by": {},
+    "files_with_segments": 42,
+    "ledger": {
+      "below_floor": 4718,
+      "indented_code_lines": 694,
+      "skeleton_line": 13
+    },
+    "live": 143,
+    "segs_by": {
+      "comment_block": 48,
+      "md_para": 95
+    }
+  }
+}

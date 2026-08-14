@@ -37,19 +37,20 @@
 | 复测：10 万 LOC 全量索引（v4 起同事务含相 1 符号/站点抽取） | < 30 s | 2.19 s（v3 时 1.92 s） | ✅ |
 | 复测：单文件增量刷新（v4 起同事务写图行） | < 200 ms | 1.90 ms | ✅ |
 
-## M5-3b 第 4 次 per-file 解析预算（设计 F11，实测 2026-08-13，release，钉定树材料化五语料）
+## M5-3b/3d 第 4+5 次 per-file 解析预算（设计 F11/RM7，重测 2026-08-13 3d 批，release，钉定树材料化五语料）
 
 schema v5 起 refresh_file 同事务多一次 unitsig 解析（token 流丢树，T3 事实
-另花一次解析——诚实记账，不写"零重解析"）。口径：`eval_t3_universe` 生成器
-的产品索引腿——钉定 tip 的 in-scope 树材料化后 `dedup::refreshed_index`
+另花一次解析）；3d 起再多一次 docdup 段抽取解析（RM7：独立加法抽取器，与
+tokenize 各走各的树——诚实记账，不写"零重解析"）。口径：`eval_t3_universe`
+生成器的产品索引腿——钉定 tip 的 in-scope 树材料化后 `dedup::refreshed_index`
 冷/暖各一次；文件数 = 仪器 scope（含 md；tokenized 仅 grammar 语言）。
 
-| 语料（文件数） | 预算 | 冷索引（含第 4 次解析） | 暖（内容哈希门控） | 状态 |
+| 语料（文件数） | 预算 | 冷索引（含第 4+5 次解析） | 暖（内容哈希门控） | 状态 |
 |---|---|---|---|---|
-| self（141） | 沿用 M2 全量 < 30 s | 1.19 s | 174 ms | ✅ |
-| ripgrep（133 = 110 rs + 23 md） | 同上 | 2.14 s | 406 ms | ✅ |
-| zod（393，最大语料） | 同上 | 3.58 s | 783 ms | ✅ |
-| cobra（53）/ requests（50） | 同上 | 515 / 450 ms | 102 / 81 ms | ✅ |
+| self（141） | 沿用 M2 全量 < 30 s | 1.07 s（3b 两解析时 1.19 s） | 144 ms | ✅ |
+| ripgrep（133 = 110 rs + 23 md） | 同上 | 2.06 s（3b 2.14 s） | 356 ms | ✅ |
+| zod（393，最大语料） | 同上 | 3.12 s（3b 3.58 s） | 626 ms | ✅ |
+| cobra（53）/ requests（50） | 同上 | 512 / 390 ms | 92 / 61 ms | ✅ |
 
 复跑：`cli/` 内 `cargo test --release --test eval_t3_universe -- --ignored
 --nocapture`（外部语料另设 CE_SLICE_REPO/CE_GRAPH_NAME/CE_GRAPH_TIP；

@@ -148,6 +148,34 @@ fn param_change_invalidates_index() {
     );
 }
 
+/// 3d exit criterion: docdup_rev sits in the meta cache key, so a
+/// bumped extraction revision wipes stale docsegs rows. The const
+/// cannot change in-process, so the bump is simulated by rewriting
+/// the stored meta value — same mechanism, same wipe.
+#[test]
+fn docdup_rev_bump_invalidates_index() {
+    let src = format!("/* {}*/\nfn main() {{}}\n", "word ".repeat(60));
+    let (dir, mut idx) = open_idx("docdup-rev", "index.db");
+    idx.refresh_file("a.rs", src.as_bytes(), Lang::Rust, Params::default())
+        .expect("first");
+    drop(idx);
+    let db = dir.join("index.db");
+    let conn = rusqlite::Connection::open(&db).expect("raw open");
+    let segs: i64 = conn
+        .query_row("SELECT COUNT(*) FROM docsegs", [], |r| r.get(0))
+        .expect("count");
+    assert_eq!(segs, 1, "the 60-word comment block must be cached");
+    conn.execute("UPDATE meta SET v = v + 1 WHERE k = 'docdup_rev'", [])
+        .expect("bump");
+    drop(conn);
+    let mut idx = Index::open(&db, Params::default()).expect("reopen");
+    assert!(
+        idx.refresh_file("a.rs", src.as_bytes(), Lang::Rust, Params::default())
+            .expect("after wipe"),
+        "a bumped docdup_rev must wipe the cache"
+    );
+}
+
 /// Schema v4: Markdown enters `files` as a zero-fingerprint graph
 /// row — the instance set stays empty (the dedup ratchet is
 /// structurally untouched), the content-hash fast path covers it,

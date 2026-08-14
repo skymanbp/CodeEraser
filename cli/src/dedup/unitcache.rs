@@ -42,47 +42,47 @@ pub struct UnitFact {
 /// yield none — T3 judges code units only; text duplication is
 /// docdup's domain.
 pub fn unit_facts(text: &str, lang: Lang) -> Vec<UnitFact> {
-    let Some(grammar) = lang.grammar() else {
-        return Vec::new();
-    };
-    let Some(tree) = ast::parse(text, &grammar) else {
-        return Vec::new();
-    };
-    let spine = struct_fp::spine(tree.root_node());
-    let segments = units::segments(text, lang);
-    units::with_nth(&segments)
-        .into_iter()
-        .map(|(u, nth)| {
-            let seq = struct_fp::unit_seq(&spine, u.start_line, u.end_line);
-            UnitFact {
-                key: u.key.clone(),
-                nth,
-                nodes: seq.len() as i64,
-                sig: struct_fp::shingles(&seq),
-                hist: struct_fp::histogram(&seq),
-            }
-        })
-        .collect()
+    ast::with_tree(text, lang, |tree| {
+        let spine = struct_fp::spine(tree.root_node());
+        let segments = units::segments(text, lang);
+        units::with_nth(&segments)
+            .into_iter()
+            .map(|(u, nth)| {
+                let seq = struct_fp::unit_seq(&spine, u.start_line, u.end_line);
+                UnitFact {
+                    key: u.key.clone(),
+                    nth,
+                    nodes: seq.len() as i64,
+                    sig: struct_fp::shingles(&seq),
+                    hist: struct_fp::histogram(&seq),
+                }
+            })
+            .collect()
+    })
 }
 
 /// Replace one file's unitsig rows with the facts.
 pub fn refresh_units(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang) -> Result<()> {
-    tx.execute("DELETE FROM unitsig WHERE file_id = ?1", (file_id,))?;
-    let mut ins = tx.prepare(
+    super::schema::replace_file_rows(
+        tx,
+        "unitsig",
+        file_id,
         "INSERT INTO unitsig (file_id, key, nth, nodes, sig, hist)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-    )?;
-    for f in unit_facts(text, lang) {
-        ins.execute((
-            file_id,
-            &f.key,
-            f.nth,
-            f.nodes,
-            sig_blob(&f.sig),
-            hist_blob(&f.hist),
-        ))?;
-    }
-    Ok(())
+        |ins| {
+            for f in unit_facts(text, lang) {
+                ins.execute((
+                    file_id,
+                    &f.key,
+                    f.nth,
+                    f.nodes,
+                    sig_blob(&f.sig),
+                    hist_blob(&f.hist),
+                ))?;
+            }
+            Ok(())
+        },
+    )
 }
 
 fn sig_blob(set: &BTreeSet<u64>) -> Vec<u8> {

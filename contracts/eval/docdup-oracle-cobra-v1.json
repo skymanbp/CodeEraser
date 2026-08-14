@@ -1,0 +1,169 @@
+{
+  "constants": {
+    "doc_shingle": 5,
+    "jaccard_universe_floor": [
+      30,
+      100
+    ],
+    "oracle_segcap": 8192,
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "cobra",
+    "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "dirty": true
+  },
+  "method": "exact oracle over live admitted segments: every pair with integer-exact Jaccard >= 30/100 on the deduped shingle sets, plus every pair whose longest common contiguous shingle run spans >= 50 words. Candidate enumeration walks the shingle inverted index — complete for both rules since each requires a shared shingle. Segment counts above oracle_segcap withhold the corpus with a written reason (F31), never a silent downsample.",
+  "pairs": [
+    {
+      "a": {
+        "end_line": 37,
+        "kind": "comment_block",
+        "path": "doc/man_docs.go",
+        "start_line": 33
+      },
+      "b": {
+        "end_line": 124,
+        "kind": "comment_block",
+        "path": "doc/md_docs.go",
+        "start_line": 119
+      },
+      "inter": 58,
+      "union": 68,
+      "verbatim": 62
+    },
+    {
+      "a": {
+        "end_line": 37,
+        "kind": "comment_block",
+        "path": "doc/man_docs.go",
+        "start_line": 33
+      },
+      "b": {
+        "end_line": 137,
+        "kind": "comment_block",
+        "path": "doc/rest_docs.go",
+        "start_line": 132
+      },
+      "inter": 49,
+      "union": 72,
+      "verbatim": 46
+    },
+    {
+      "a": {
+        "end_line": 37,
+        "kind": "comment_block",
+        "path": "doc/man_docs.go",
+        "start_line": 33
+      },
+      "b": {
+        "end_line": 52,
+        "kind": "comment_block",
+        "path": "doc/yaml_docs.go",
+        "start_line": 48
+      },
+      "inter": 48,
+      "union": 73,
+      "verbatim": 46
+    },
+    {
+      "a": {
+        "end_line": 124,
+        "kind": "comment_block",
+        "path": "doc/md_docs.go",
+        "start_line": 119
+      },
+      "b": {
+        "end_line": 137,
+        "kind": "comment_block",
+        "path": "doc/rest_docs.go",
+        "start_line": 132
+      },
+      "inter": 49,
+      "union": 72,
+      "verbatim": 46
+    },
+    {
+      "a": {
+        "end_line": 124,
+        "kind": "comment_block",
+        "path": "doc/md_docs.go",
+        "start_line": 119
+      },
+      "b": {
+        "end_line": 52,
+        "kind": "comment_block",
+        "path": "doc/yaml_docs.go",
+        "start_line": 48
+      },
+      "inter": 48,
+      "union": 73,
+      "verbatim": 46
+    },
+    {
+      "a": {
+        "end_line": 137,
+        "kind": "comment_block",
+        "path": "doc/rest_docs.go",
+        "start_line": 132
+      },
+      "b": {
+        "end_line": 52,
+        "kind": "comment_block",
+        "path": "doc/yaml_docs.go",
+        "start_line": 48
+      },
+      "inter": 52,
+      "union": 64,
+      "verbatim": 56
+    },
+    {
+      "a": {
+        "end_line": 53,
+        "kind": "comment_block",
+        "path": "shell_completions.go",
+        "start_line": 48
+      },
+      "b": {
+        "end_line": 76,
+        "kind": "comment_block",
+        "path": "shell_completions.go",
+        "start_line": 71
+      },
+      "inter": 49,
+      "union": 49,
+      "verbatim": 53
+    },
+    {
+      "a": {
+        "end_line": 555,
+        "kind": "md_para",
+        "path": "site/content/completions/_index.md",
+        "start_line": 543
+      },
+      "b": {
+        "end_line": 616,
+        "kind": "md_para",
+        "path": "site/content/completions/_index.md",
+        "start_line": 604
+      },
+      "inter": 88,
+      "union": 88,
+      "verbatim": 113
+    }
+  ],
+  "schema": "ce.eval-docdup-oracle/1.0.0",
+  "summary": {
+    "by_rule": {
+      "jaccard": 8,
+      "verbatim": 4
+    },
+    "candidate_pairs": 22,
+    "pairs": 8,
+    "segments_live": 59
+  }
+}

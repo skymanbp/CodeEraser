@@ -196,6 +196,19 @@ pub fn sum_obj(v: &Value) -> u64 {
         .sum()
 }
 
+/// Accumulate a JSON object's u64 values into a cross-corpus map and
+/// return the object's own total — the one accumulation walk every
+/// universe gate and summarizer shares.
+pub fn sum_obj_into(obj: &Value, into: &mut BTreeMap<String, u64>) -> u64 {
+    let mut total = 0;
+    for (k, v) in obj.as_object().expect("object") {
+        let n = v.as_u64().expect("u64");
+        *into.entry(k.clone()).or_insert(0) += n;
+        total += n;
+    }
+    total
+}
+
 /// The working-tree drift walk both self gates share: every frozen
 /// row whose working-tree file still carries the frozen sha256 is
 /// handed to `check` as (row, path, lang code, text); returns how

@@ -13,6 +13,25 @@ pub fn parse(text: &str, grammar: &tree_sitter::Language) -> Option<tree_sitter:
     parser.parse(text, None)
 }
 
+/// The grammar lookup + parse in one throat — every "facts of one
+/// file" extractor (unitcache, docdup) opens with exactly this, and
+/// the repo's own ratchet caught the pair re-instantiating it. None =
+/// size-only language or parse failure.
+pub fn parse_lang(text: &str, lang: crate::scan::lang::Lang) -> Option<tree_sitter::Tree> {
+    parse(text, &lang.grammar()?)
+}
+
+/// Parse-or-empty: run the extractor on the tree, or return no facts
+/// (the guard idiom itself was the second thing the ratchet caught
+/// the extractor pair sharing).
+pub fn with_tree<T>(
+    text: &str,
+    lang: crate::scan::lang::Lang,
+    extract: impl FnOnce(tree_sitter::Tree) -> Vec<T>,
+) -> Vec<T> {
+    parse_lang(text, lang).map_or_else(Vec::new, extract)
+}
+
 pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
     // cast is safe: a single file cannot hold > u32::MAX AST children
     (0..node.child_count())

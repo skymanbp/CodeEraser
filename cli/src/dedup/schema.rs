@@ -122,3 +122,22 @@ pub(crate) fn ignore_no_rows(e: rusqlite::Error) -> rusqlite::Result<Option<i64>
         Err(e)
     }
 }
+
+/// The one per-file cache-refresh shape: delete the file's rows,
+/// prepare the insert, let the caller drive it (unitsig and docsegs
+/// both write this way — the ratchet caught the pair re-instantiating
+/// the walk).
+pub(crate) fn replace_file_rows(
+    tx: &Transaction<'_>,
+    table: &str,
+    file_id: i64,
+    insert: &str,
+    fill: impl FnOnce(&mut rusqlite::Statement<'_>) -> Result<()>,
+) -> Result<()> {
+    tx.execute(
+        &format!("DELETE FROM {table} WHERE file_id = ?1"),
+        (file_id,),
+    )?;
+    let mut ins = tx.prepare(insert)?;
+    fill(&mut ins)
+}
