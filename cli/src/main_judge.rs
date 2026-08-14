@@ -11,19 +11,20 @@ use std::process::ExitCode;
 
 /// The flag set every core-judgment family shares: root, output
 /// format, core path, cache db. Families flatten this and add their
-/// own switches.
+/// own switches (pub(crate): the score family lives in its own
+/// module and reads the same set).
 #[derive(clap::Args)]
 pub struct JudgeArgs {
     /// Directory to analyze (default: current directory)
-    root: Option<PathBuf>,
+    pub(crate) root: Option<PathBuf>,
     #[arg(long, value_enum, default_value_t = OutFormat::Console)]
-    format: OutFormat,
+    pub(crate) format: OutFormat,
     /// Path to the ce-core executable
     #[arg(long, default_value = "ce-core")]
-    core: String,
+    pub(crate) core: String,
     /// Index database path (default: <root>/.ce/index.db)
     #[arg(long)]
-    db: Option<PathBuf>,
+    pub(crate) db: Option<PathBuf>,
 }
 
 #[derive(clap::Args)]

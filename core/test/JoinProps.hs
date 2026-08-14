@@ -1,12 +1,12 @@
 -- | The join lattice's fixed-seed property battery (M5-3h; the wire
--- hookup is 3i, so these properties judge the lattice BEFORE any
--- bytes do). Non-vacuity first (the F16 stance): the population must
--- produce every verdict class, else the battery asserts over
--- nothing — deterministic fixtures guarantee the seats the seeded
--- rows might miss, and every knob probe owns a boundary fixture that
--- must flip. The RG10 counterfactual is 同形: the SAME row with only
--- the dead flank's exported bit flipped must abandon
--- delete_candidate and raise the guard bit.
+-- hookup landed with 3i, and the sim leg speaks the wire vocabulary:
+-- (simKind, num, den) against the owning family's threshold).
+-- Non-vacuity first (the F16 stance): the population must produce
+-- every verdict class, else the battery asserts over nothing —
+-- deterministic fixtures guarantee the seats and every knob probe
+-- owns a boundary fixture that must flip. The RG10 counterfactual
+-- is 同形: the SAME row with only the dead flank's exported bit
+-- flipped must abandon delete_candidate and raise the guard bit.
 module JoinProps (battery) where
 
 import CE.Verdict.Join
@@ -17,7 +17,7 @@ battery = do
   a <- check "non-vacuous: all four verdict classes appear" allClasses
   b <- check "RG10 counterfactual: a public dead flank never deletes" rg10
   c <- check "legsMask honest: gated => 3 legs; graph-absent never gates" legsHonest
-  d <- check "dead knobs all live (sim/cochange/rewriteNum/rewriteDen/entryMask)" deadKnobs
+  d <- check "dead knobs all live (clone/dup thresholds, cochange, rewrite, entryMask)" deadKnobs
   e <- check "priority: merge outranks hotspot when both hold" priority
   f <- check "reason bit 0 never fires (deliberately absent)" bitZeroSilent
   g <- check "reason ledger pinned on the delete and guard fixtures" ledgerPinned
@@ -41,35 +41,37 @@ alive n scc = Just (Pos {pIndeg = n, pReach = 1, pFlags = 0, pScc = scc})
 deadPos :: Integer -> Maybe Pos
 deadPos flags = Just (Pos {pIndeg = 0, pReach = 0, pFlags = flags, pScc = 0})
 
--- | sim sits EXACTLY on the floor — the simFloor probe's boundary.
+-- | sim sits EXACTLY on the clone threshold (85/100) — the
+-- kCloneNum/kCloneDen probes' boundary.
 mergeRow :: Legs
-mergeRow = Legs (kSimFloor bound) (alive 1 0) (alive 2 1) (0, 0) (0, 0) Nothing
+mergeRow = Legs (1, kCloneNum bound, kCloneDen bound) (alive 1 0) (alive 2 1) (0, 0) (0, 0) Nothing
 
 deleteRow :: Legs
-deleteRow = Legs (kSimFloor bound + 10) (deadPos 0) (alive 1 1) (0, 0) (0, 0) Nothing
+deleteRow = Legs (1, 90, 100) (deadPos 0) (alive 1 1) (0, 0) (0, 0) Nothing
 
 -- | Same shape as deleteRow with the dead flank public (bit 0).
 publicGuardRow :: Legs
-publicGuardRow = Legs (kSimFloor bound + 10) (deadPos 1) (alive 1 1) (0, 0) (0, 0) Nothing
+publicGuardRow = Legs (1, 90, 100) (deadPos 1) (alive 1 1) (0, 0) (0, 0) Nothing
 
 -- | Dead flank carries the test entry bit (2): entry under the bound
 -- mask, dead once the entryMask probe strips that bit.
 entryFlankRow :: Legs
-entryFlankRow = Legs (kSimFloor bound + 10) (deadPos 2) (alive 1 1) (0, 0) (0, 0) Nothing
+entryFlankRow = Legs (1, 90, 100) (deadPos 2) (alive 1 1) (0, 0) (0, 0) Nothing
 
--- | Same-SCC referenced pair (merge cannot fire), rewrite share at
--- EXACTLY rewriteNum/rewriteDen — the rewrite probes' boundary; the
--- cochange argument is the cochangeFloor probe's.
+-- | Same-SCC referenced pair (merge cannot fire), docdup-kind sim
+-- EXACTLY on 80/100 (the kDupNum/kDupDen probes' boundary), rewrite
+-- share EXACTLY on 50/100 (the rewrite probes'), cochange argument
+-- the cochangeFloor probe's.
 hotspotRow :: Maybe Integer -> Legs
-hotspotRow c = Legs (kSimFloor bound + 10) (alive 1 0) (alive 1 0) (25, 25) (25, 25) c
+hotspotRow c = Legs (2, kDupNum bound, kDupDen bound) (alive 1 0) (alive 1 0) (25, 25) (25, 25) c
 
 -- | Satisfies merge AND hotspot conditions at once.
 bothRow :: Legs
-bothRow = Legs (kSimFloor bound + 10) (alive 1 0) (alive 1 1) (25, 25) (25, 25) (Just 3)
+bothRow = Legs (1, 90, 100) (alive 1 0) (alive 1 1) (25, 25) (25, 25) (Just 3)
 
 -- | Unit tier: one graph leg honestly missing.
 tierURow :: Legs
-tierURow = Legs (kSimFloor bound + 10) Nothing (alive 1 0) (5, 5) (5, 5) (Just 3)
+tierURow = Legs (1, 90, 100) Nothing (alive 1 0) (5, 5) (5, 5) (Just 3)
 
 fixtures :: [Legs]
 fixtures =
@@ -86,13 +88,15 @@ fixtures =
 pop :: [Legs]
 pop = fixtures <> map rowAt [1 .. 400]
 
--- | Seeded rows (no RNG in a deterministic contract): sim boundary-
--- heavy, graph legs sometimes absent, flags drawn from
--- {0, public, test-entry, dyn-entry}.
+-- | Seeded rows (no RNG in a deterministic contract): sim drawn
+-- boundary-heavy across both families, graph legs sometimes absent,
+-- flags drawn from {0, public, test-entry, dyn-entry}.
 rowAt :: Int -> Legs
 rowAt i =
   Legs
-    { lSim = [kSimFloor bound - 1, kSimFloor bound, kSimFloor bound + 73] !! (s 1 `mod` 3)
+    { lSim =
+        [(1, 84, 100), (1, 85, 100), (2, 80, 100), (2, 79, 100), (0, 100, 100)]
+          !! (s 1 `mod` 5)
     , lGraphA = posAt 2
     , lGraphB = posAt 3
     , lChurnA = (toInteger (s 4 `mod` 40), toInteger (s 5 `mod` 40))
@@ -157,7 +161,10 @@ deadKnobs :: Bool
 deadKnobs =
   all
     (/= base)
-    [ census bound {kSimFloor = kSimFloor bound + 1}
+    [ census bound {kCloneNum = kCloneNum bound + 1}
+    , census bound {kCloneDen = kCloneDen bound - 1}
+    , census bound {kDupNum = kDupNum bound + 1}
+    , census bound {kDupDen = kDupDen bound - 1}
     , census bound {kCochangeFloor = kCochangeFloor bound + 1}
     , census bound {kRewriteNum = kRewriteNum bound + 1}
     , census bound {kRewriteDen = kRewriteDen bound - 1}

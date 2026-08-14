@@ -11,12 +11,14 @@ module Main (main) where
 import CE.Docdup.Cost (docPairCap, docSetCap)
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
+import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified CloneProps
 import qualified GraphProps
 import qualified JoinProps
 import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
+import qualified VerdictProps
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -49,6 +51,7 @@ main = do
       , GraphProps.battery
       , CloneProps.battery
       , JoinProps.battery
+      , VerdictProps.battery
       ]
   unless (and results) exitFailure
 
@@ -93,7 +96,12 @@ costModel = do
   -- Decided, not derived: the top of the measured safe window
   -- (Cost.anchorFloor's why-comment carries the ablation evidence).
   d <- check "anchor floor pinned to the decided window top" (anchorFloor == 19)
-  pure (a && b && c && d)
+  -- The ADR-006 tolerance legs cross at ceiling 500: below it the
+  -- +10 leg wins, above it the 2% leg — one assertion per branch
+  -- (plan §7.1), so neither leg can silently die.
+  e <- check "tolerance below the crossover rides +10" (tolerated ratchetBound 100 == 110)
+  f <- check "tolerance above the crossover rides +2%" (tolerated ratchetBound 1000 == 1020)
+  pure (a && b && c && d && e && f)
 
 check :: String -> Bool -> IO Bool
 check name ok = do

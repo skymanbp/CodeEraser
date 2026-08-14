@@ -14,6 +14,7 @@ import qualified CE.Docdup as Docdup
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
+import qualified CE.Verdict as Verdict
 import Control.Applicative ((<|>))
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -81,17 +82,17 @@ dispatch version env line
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
   -- clone/1 landed with the T3 batch (M5-3e), docdup/1 with the
-  -- docdup batch (M5-3g); verdict/1 remains a declared-at-2.2.0 stub
-  -- answering error/contract until the score batch (3i). Goldens pin
-  -- each stance and regenerate when a family's semantics arrive.
+  -- docdup batch (M5-3g), verdict/1 with the score batch (M5-3i) —
+  -- each walked the declare-then-implement path the goldens pin.
   | envType env == "clone.request" = case Clone.respond proto line of
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
   | envType env == "docdup.request" = case Docdup.respond proto line of
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
-  | envType env == "verdict.request" =
-      errReply (envId env) "contract" "verdict/1: declared at 2.2.0, judgment lands with the score batch"
+  | envType env == "verdict.request" = case Verdict.respond proto line of
+      Left (rid, code, message) -> errReply (rid <|> envId env) code message
+      Right bytes -> bytes
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)
 
 majorMatches :: Maybe String -> Bool

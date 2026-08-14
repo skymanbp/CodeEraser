@@ -93,6 +93,18 @@ ripgrep 冷 < 60 s；zod 为容量压力例（存活对最多），超线即收 
 | `ce join ..` 端到端（冷 fresh db：全量索引 + 四源图 + pos 行 + churn + 双层装配） | 265.0 s | join 的非 churn 腿 ≈ 噪声内（同日 join 全程 < churn 单测）；首测 284.3 s 弃用=五盲审代理并发争用污染 |
 | 台账跨期守恒 | 44,879 = 44,870(473adfc 双计数器) + 9(473adfc 自身) | 派生总数逐数复现旧计数器口径，rewrote 4,255 不变 |
 
+## M5-3i `ce check` 判决路径（ADR-006 门，实测 2026-08-14，release，静默机）
+
+口径：`ce check ..` 端到端 = 索引刷新 + T1/T2 块 + 图 pos + scan 全量度量指纹化
++ 成员集哈希 + 单条 verdict.request + 回判。churn 表默认空（`--days` 显式开——
+blame 代价见 3h 节，空表=诚实缺席非零主张）。
+
+| 项 | 实测 | 状态 |
+|---|---|---|
+| 冷（fresh db，全量索引+图+scan+判决） | 31.6 s | CI 门可承受（与 cargo test 同级） |
+| 暖（哈希门控索引） | 1.21 s | ✅ pre-commit 级 |
+| 容差活体 | 2 条 toleranceDrawn（本批文档编辑被 max(+2%,+10) 吸收）| 机制实证 |
+
 ## M5-3g docdup 判决冷路径（设计卷二 §5.3，实测 2026-08-14，release）
 
 口径：`ce docdup <root> --db <fresh>` 端到端 = 冷索引（六次解析含 docsegs）

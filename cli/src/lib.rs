@@ -18,6 +18,7 @@ pub mod lockstep;
 pub mod mcp;
 pub mod report;
 pub mod scan;
+pub mod score;
 
 #[cfg(test)]
 pub(crate) mod testutil;

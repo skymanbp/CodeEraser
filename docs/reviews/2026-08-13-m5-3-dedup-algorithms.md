@@ -210,6 +210,14 @@ ceiling 抓——这正是 ADR-006 自己的两机制分工（`:208-212`），�
 **共存，不替代**（judgment-first 的取舍，最低风险）。今天的 CI 门是标量
 （`ci.yml:79` → `check_budget`，`dedup/mod.rs:57-74`）；集合门并行运行，
 `cli/tests/baseline_bridge.rs` 断言 `len(discrete.clone) == ce.toml budget`。
+
+> **修正案（2026-08-14，3i 实测后用户拍板，守恒式桥）**：上行的字面等式与
+> §7.2 的成员身份在真实数据上互斥——自仓 97 块经单元对身份塌缩为 40 成员
+> （57 块与既有成员同单元对，M1 表族多块同对是主源），而 §7.2 排除行号/块序
+> 是有意的搬移稳定性设计，不动。桥改为**守恒式**：
+> `members + collapsed == blocks == budget`（块空间与成员空间之间的完整
+> 会计，塌缩数入报告绝不静默）。标量门与集合门仍被同一笔账钢性耦合——
+> 任一侧漂移即红——只是等式从错误的算术换成守恒的算术。
 "只缩"不变量从计数强化为**集合包含**：`new ⊆ old`，否则须 `CE_ACCEPT_BASELINE=1`。
 `ce.toml:32` 的"never raise without a plan amendment"跨格式存活。
 **语料 generation 入基线 schema**——Haskell 入语料是 generation 变更，不能伪装成回归

@@ -74,6 +74,19 @@ pub struct GraphWire {
     pub unresolved_sites: i64,
 }
 
+/// The file-tier slice of the wire's dense assignment: (index, path)
+/// in node order — the join and the score assemble their pos
+/// requests and tier universes through this ONE selector (the
+/// ratchet caught the second copy growing).
+pub fn file_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
+    w.nodes
+        .iter()
+        .enumerate()
+        .filter(|(_, n)| n.kind == super::wire::GRAN_FILE)
+        .map(|(i, n)| (i as i64, n.path.as_str()))
+        .collect()
+}
+
 pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     let (idx, db_path) = dedup::refreshed_index(root, db)?;
     let (files, edges, unresolved_sites) = graph_rows(&idx)?;

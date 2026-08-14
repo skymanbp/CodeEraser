@@ -70,13 +70,18 @@ jobs:
           cargo fmt --check
 
       # Dogfood (plan §7.5): this repo must pass its own scanner
-      # (exit 1 on fail-level findings) and its own clone ratchet
-      # (R12: blocks must not exceed the ce.toml [dedup] budget).
-      - name: Dogfood (ce scan + dedup ratchet on this repo)
+      # (exit 1 on fail-level findings), its own clone ratchet
+      # (R12: blocks must not exceed the ce.toml [dedup] budget), and
+      # the ADR-006 baseline gate (M5-3i: the scalar and set gates run
+      # in parallel, welded by the conservation bridge in
+      # baseline_bridge.rs — §7.3 as amended).
+      - name: Dogfood (ce scan + dedup ratchet + check on this repo)
+        shell: bash
         working-directory: cli
         run: |
           cargo run --locked -- scan ..
           cargo run --locked -- dedup .. --check
+          cargo run --locked -- check .. --core "$(cd ../core && cabal list-bin ce-core)"
 
       - name: Handshake smoke (ce doctor)
         shell: bash

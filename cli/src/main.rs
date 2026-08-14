@@ -6,11 +6,13 @@
 
 mod main_cmds;
 mod main_judge;
+mod main_score;
 
 use clap::{Parser, Subcommand};
 use codeeraser::daemon;
 use main_cmds::{self as cmds, DedupArgs, OutFormat, json};
 use main_judge::{CloneArgs, DocdupArgs, JoinArgs};
+use main_score::{BaselineArgs, CheckArgs};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -89,6 +91,12 @@ enum Cmd {
     /// Three-signal join (M5-3h): similarity + graph position +
     /// per-unit churn, file and unit tiers (report-only until 3i)
     Join(JoinArgs),
+    /// ADR-006 gate (M5-3i): judge the repo against ce-baseline.json
+    /// — ratchet OR --fail-under floor, either alone fails
+    Check(CheckArgs),
+    /// Persist the core's newBaseline as ce-baseline.json (the
+    /// violation set only shrinks without CE_ACCEPT_BASELINE=1)
+    Baseline(BaselineArgs),
     /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
     Dedup(DedupArgs),
     /// Run the per-project daemon in the foreground (ADR-003);
@@ -165,6 +173,8 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Cmd> {
         Cmd::Clone(a) => main_judge::clone_cmd(a),
         Cmd::Docdup(a) => main_judge::docdup_cmd(a),
         Cmd::Join(a) => main_judge::join_cmd(a),
+        Cmd::Check(a) => main_score::check_cmd(a),
+        Cmd::Baseline(a) => main_score::baseline_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),
         other => return Err(other),
     })

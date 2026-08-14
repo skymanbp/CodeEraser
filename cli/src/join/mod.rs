@@ -15,7 +15,6 @@ pub mod churn_unit;
 use crate::churn;
 use crate::dedup::{self, pairs::Block};
 use crate::graph::deadcode;
-use crate::graph::wire::GRAN_FILE;
 use anyhow::{Context, Result};
 use serde::Serialize;
 use serde_json::{Value, json};
@@ -59,13 +58,7 @@ pub struct Report {
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Report> {
     let (found, _summary) = dedup::analyze(root, db.clone(), None, None)?;
     let w = deadcode::build_wire(root, db)?;
-    let pos_req: Vec<i64> = w
-        .nodes
-        .iter()
-        .enumerate()
-        .filter(|(_, n)| n.kind == GRAN_FILE)
-        .map(|(i, _)| i as i64)
-        .collect();
+    let pos_req: Vec<i64> = deadcode::file_nodes(&w).iter().map(|&(i, _)| i).collect();
     let reply = deadcode::judge(core, &w, &pos_req)?;
     let degraded = reply["reason"].as_str().map(str::to_string);
     let posmap = pos_map(&reply, &w)?;
@@ -81,8 +74,9 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
 
 /// path → position from the reply's pos rows; each row's echoed
 /// index names a node in OUR dense assignment (F19: one id space),
-/// so an out-of-range echo is a refusal, not a skip.
-fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<String, Pos>> {
+/// so an out-of-range echo is a refusal, not a skip. pub(crate):
+/// the score assembly reads the same map (one decoding, 3i).
+pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<String, Pos>> {
     let rows: Vec<[i64; 6]> = serde_json::from_value(reply["pos"].clone()).context("pos rows")?;
     let mut map = HashMap::new();
     for [p, indeg, outdeg, scc_id, scc_size, reach_in] in rows {

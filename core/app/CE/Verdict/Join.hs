@@ -1,9 +1,11 @@
 -- | The three-signal join verdict lattice (design §6.3), PURE: legs
--- in, (verdict, legsMask, reasonBits) out. The verdict/1 wire family
--- is declared at proto 2.2.0 with a stub refusal; the hookup that
--- replaces the stub lands with the 3i score batch — this module
--- exists first so the JoinProps battery judges the lattice before
--- any wire bytes do (the M5-2a graph stub → 2g replacement pattern).
+-- in, (verdict, legsMask, reasonBits) out. Built one batch ahead of
+-- its wire (M5-3h) and hooked to verdict/1 by the score batch (3i) —
+-- the M5-2a graph stub → 2g replacement pattern. The similarity leg
+-- speaks the wire's own vocabulary: (simKind, num, den), judged
+-- against the OWNING family's threshold (clone 85/100, docdup
+-- 80/100) by cross-multiplication — the 3h token-count floor was the
+-- pre-wire approximation and died with the hookup.
 --
 -- Verdict codes are the design table's own numbering:
 -- 0 report_only / 1 merge_candidate / 2 delete_candidate /
@@ -23,12 +25,17 @@ module CE.Verdict.Join
   , legChurn
   ) where
 
+import CE.Clone.Cost (tsedDen, tsedNum)
+import CE.Docdup.Cost (jaccardDen, jaccardNum)
 import CE.Graph.Cost (entryMask)
 import qualified CE.Verdict.Cost as Cost
 import Data.Bits (bit, testBit, (.&.), (.|.))
 
 -- | One side's graph position (the Position.hs row minus its echoed
--- index, reduced to the fields the lattice reads).
+-- index, reduced to the fields the lattice reads). On the verdict/1
+-- wire pFlags is structurally 0 (file-granularity flags never cross;
+-- entry-ness is implied by reachIn) — the field stays because the
+-- lattice's RG10 guard and its battery exercise it.
 data Pos = Pos
   { pIndeg :: Integer
   , pReach :: Integer
@@ -43,7 +50,9 @@ data Pos = Pos
 -- below the churn report's own table floor — unknown-small, which
 -- never fires a verdict, rather than a fabricated zero.
 data Legs = Legs
-  { lSim :: Integer
+  { lSim :: (Integer, Integer, Integer)
+  -- ^ (simKind, num, den): 0 t1t2 / 1 t3 / 2 docdup, the family's
+  -- own score ratio.
   , lGraphA :: Maybe Pos
   , lGraphB :: Maybe Pos
   , lChurnA :: (Integer, Integer)
@@ -54,18 +63,32 @@ data Legs = Legs
 -- | The knobs travel as parameters (the 2g mechanism: the battery
 -- perturbs fields; production binds constants at the boundary).
 data Knobs = Knobs
-  { kSimFloor :: Integer
+  { kCloneNum :: Integer
+  , kCloneDen :: Integer
+  , kDupNum :: Integer
+  , kDupDen :: Integer
   , kCochangeFloor :: Integer
   , kRewriteNum :: Integer
   , kRewriteDen :: Integer
   , kEntryMask :: Integer
   }
 
--- | The Cost binding the 3i wire boundary will pass. entryMask is
--- REUSED from the graph family: one entry authority — a second mask
--- would let the two judgments disagree about what an entry is.
+-- | The Cost binding the wire boundary passes. The similarity
+-- thresholds and entryMask are REUSED from their owning families —
+-- one authority each; a second copy would let two judgments disagree
+-- about the same fact.
 bound :: Knobs
-bound = Knobs Cost.simFloor Cost.cochangeFloor Cost.rewriteNum Cost.rewriteDen entryMask
+bound =
+  Knobs
+    { kCloneNum = tsedNum
+    , kCloneDen = tsedDen
+    , kDupNum = jaccardNum
+    , kDupDen = jaccardDen
+    , kCochangeFloor = Cost.cochangeFloor
+    , kRewriteNum = Cost.rewriteNum
+    , kRewriteDen = Cost.rewriteDen
+    , kEntryMask = entryMask
+    }
 
 -- | legsMask bits: which signals were actually present.
 legSim, legGraph, legChurn :: Integer
@@ -80,7 +103,12 @@ legChurn = 4
 judge :: Knobs -> Legs -> (Integer, Integer, Integer)
 judge k l = (code, legsMask, reasons)
  where
-  simOver = lSim l >= kSimFloor k
+  (kind, num, den) = lSim l
+  -- the OWNING family's bar, cross-multiplied: t1t2/t3 share the
+  -- clone threshold, docdup its own
+  simOver = case kind of
+    2 -> num * kDupDen k >= den * kDupNum k
+    _ -> num * kCloneDen k >= den * kCloneNum k
   pair = (,) <$> lGraphA l <*> lGraphB l
   graphBoth = case pair of
     Just _ -> True
