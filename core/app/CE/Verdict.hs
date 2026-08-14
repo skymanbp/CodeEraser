@@ -60,11 +60,7 @@ result proto req =
       [ "proto" .= proto
       , "type" .= ("verdict.result" :: String)
       , "id" .= reqId req
-      , "candidates"
-          .= [ [u, v, code, bits, mask]
-             | row@(u : v : _) <- reqSim req
-             , let (code, mask, bits) = judge bound (legsOf row)
-             ]
+      , "candidates" .= candidates req
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
       , "ratchet"
@@ -78,6 +74,22 @@ result proto req =
       , "newBaseline" .= object ["continuous" .= rNewCont r, "discrete" .= rNewDisc r]
       , "degraded" .= False
       ]
+ where
+  pens = penalties scoreBound (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
+  (perMille, _viol) = score scoreBound (reqWeights req) pens
+  base = either (const Nothing) id (parseBaseline (reqBaseline req))
+  r = ratchet ratchetBound base (reqCont req) (reqDisc req)
+  floorFail = maybe False (perMille <) (reqFloor req)
+  failBit = not (null (rOver r)) || not (null (rAdded r)) || floorFail
+
+-- | Join-candidate rows, one per sim row (split from result at the
+-- E01 line — the leg maps are the candidates' concern alone).
+candidates :: VerdictReq -> [[Integer]]
+candidates req =
+  [ [u, v, code, bits, mask]
+  | row@(u : v : _) <- reqSim req
+  , let (code, mask, bits) = judge bound (legsOf row)
+  ]
  where
   -- wire flags are structurally 0 at file granularity (entry-ness
   -- rides reachIn; exported-ness is a symbol fact, R6) — the Pos
@@ -100,12 +112,6 @@ result proto req =
         , lCochange = M.lookup (u, v) cochMap
         }
     _ -> error "sim row shape enforced by violation"
-  pens = penalties scoreBound (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
-  (perMille, _viol) = score scoreBound (reqWeights req) pens
-  base = either (const Nothing) id (parseBaseline (reqBaseline req))
-  r = ratchet ratchetBound base (reqCont req) (reqDisc req)
-  floorFail = maybe False (perMille <) (reqFloor req)
-  failBit = not (null (rOver r)) || not (null (rAdded r)) || floorFail
 
 -- | Over-cap refusal: a well-formed degraded result with the FULL
 -- key set, never a truncated judgment.

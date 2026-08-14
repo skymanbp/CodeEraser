@@ -36,6 +36,12 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         resolve_key: 0,
     };
     let mut configs: Vec<(String, u64)> = Vec::new();
+    // md slug sets are resolver INPUTS like config bytes (the anchor
+    // rung reads the target's headings), so they join the key — a
+    // heading edit anywhere re-fires the phase-2 sweep (M5 close,
+    // repaying the 2f cross-file staleness debt). Key inputs only:
+    // Scope.configs stays real config paths.
+    let mut md_facts: Vec<(String, u64)> = Vec::new();
     for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
         let rel = rel_of(root, &path);
         if store::is_resolver_config(&path) {
@@ -46,6 +52,10 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
             continue;
         };
         let src = std::fs::read(&path)?;
+        if lang == Lang::Markdown {
+            let text = String::from_utf8_lossy(&src);
+            md_facts.push((rel.clone(), crate::graph::ladder::md::slug_hash(&text)));
+        }
         if idx.refresh_file(&rel, &src, lang, Params::default())? {
             out.dirty.insert(rel.clone());
         }
@@ -56,7 +66,9 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     }
     // collect() sorts and live is a BTreeSet — the key is a function
     // of the tree, not of walk order
-    out.resolve_key = store::resolve_key(&out.live, &configs);
+    let mut key_inputs = configs.clone();
+    key_inputs.extend(md_facts);
+    out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)
 }

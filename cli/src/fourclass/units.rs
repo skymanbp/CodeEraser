@@ -269,13 +269,27 @@ mod tests {
         assert_eq!(impls, ["impl A", "impl B", "impl Show for A"]);
     }
 
+    /// The multi-param rows pin the M5-close arity repayment (3h
+    /// blind-audit defect): the receiver-collapsed count keyed every
+    /// method `/1`; the `parameters` field carries the real list.
+    /// Grouped `a, b int` stays ONE declaration by standing stance.
     #[test]
-    fn go_method_keys_carry_the_receiver_type() {
-        let src = "func (t T) add(x int) {}\nfunc (u *U) add(x int) {}\nfunc free(x int) {}\n";
+    fn go_method_keys_carry_the_receiver_type_and_real_arity() {
+        let src = "func (t T) add(x int) {}\nfunc (u *U) add(x int) {}\nfunc free(x int) {}\n\
+                   func (t T) mix(x int, y string) {}\nfunc (t T) grouped(a, b int) {}\n\
+                   func (t T) none() {}\n";
         let (_, keys) = keyed(src, Lang::Go);
-        assert!(keys.contains(&"(T) add/1".to_string()), "keys: {keys:?}");
-        assert!(keys.contains(&"(*U) add/1".to_string()), "keys: {keys:?}");
-        assert!(keys.contains(&"free/1".to_string()), "keys: {keys:?}");
+        let want = [
+            "(T) add/1",
+            "(*U) add/1",
+            "free/1",
+            "(T) mix/2",
+            "(T) grouped/1",
+            "(T) none/0",
+        ];
+        for k in want {
+            assert!(keys.contains(&k.to_string()), "missing {k}; keys: {keys:?}");
+        }
     }
 
     #[test]

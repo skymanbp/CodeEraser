@@ -30,7 +30,10 @@ use std::path::Path;
 /// rows hold ZERO sites (the pre-3l table was empty) and a content-
 /// hash gate would keep serving them; the frozen five-language docs
 /// stand — their scope constant never included .hs (SCOPE_EXTS).
-pub const GRAPH_REV: i64 = 3;
+/// 4 = the M5-close Go arity repayment: unit KEYS embed params
+/// (`name/params`), and cached symbols rows for Go methods carried
+/// the receiver-collapsed arity.
+pub const GRAPH_REV: i64 = 4;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

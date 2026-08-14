@@ -79,16 +79,26 @@ refBlocks ps =
     , n <- [1 .. min (length r - x) (length a - y)]
     , let segR = take n (drop x r)
     , let segA = take n (drop y a)
-    , hashes segR == hashes segA
-    , S.size (S.fromList (hashes segR)) >= destFloor
-    , any (\(_, _, w) -> w >= anchorFloor) segR
-    , not (equalAt r a (x - 1) (y - 1)) -- maximal to the left
-    , not (equalAt r a (x + n) (y + n)) -- maximal to the right
+    , blockOk (r, a) (x, y, n) (segR, segA)
     ]
+
+-- | The definition's five clauses in one predicate (split from the
+-- generator comprehension at the E01 CC line — the clauses ARE the
+-- block definition, named together): equal hash sequences, the
+-- distinct-hash floor, an anchor-width witness, and maximality on
+-- both sides. Arguments travel as the removed/added PAIRS they are
+-- plus the (x, y, n) block coordinates.
+blockOk :: (Run, Run) -> (Int, Int, Int) -> (Run, Run) -> Bool
+blockOk (r, a) (x, y, n) (segR, segA) =
+  hashes segR == hashes segA
+    && S.size (S.fromList (hashes segR)) >= destFloor
+    && any (\(_, _, w) -> w >= anchorFloor) segR
+    && not (equalAt r a (x - 1) (y - 1)) -- maximal to the left
+    && not (equalAt r a (x + n) (y + n)) -- maximal to the right
  where
   hashes seg = [h | (_, h, _) <- seg]
-  equalAt r a i j =
-    i >= 0 && j >= 0 && i < length r && j < length a && hOf (r !! i) == hOf (a !! j)
+  equalAt rr aa i j =
+    i >= 0 && j >= 0 && i < length rr && j < length aa && hOf (rr !! i) == hOf (aa !! j)
   hOf (_, h, _) = h
 
 -- | The set-form phases over the reference blocks.

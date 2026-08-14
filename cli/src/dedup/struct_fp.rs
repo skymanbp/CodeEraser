@@ -8,7 +8,9 @@ use std::collections::{BTreeMap, BTreeSet};
 
 /// Bump when the spine/shingle/histogram semantics change: it sits in
 /// the meta cache key (schema v5), so stale unitsig rows are wiped.
-pub const STRUCT_REV: i64 = 1;
+/// 2 = the M5-close Go arity repayment: unitsig rows are keyed by
+/// unit identity (`name/params`), stale for Go methods.
+pub const STRUCT_REV: i64 = 2;
 
 /// Shingle width over the kind sequence. Decided, not derived
 /// (registered before any evaluation data existed — instruments

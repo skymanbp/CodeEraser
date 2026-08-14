@@ -72,21 +72,47 @@ scoreBound =
 axisCodes :: [Integer]
 axisCodes = [0 .. 6]
 
--- | Violation count per axis, one predicate each — every predicate
--- owns exactly one knob so the per-axis perturbation battery has a
--- lever per row.
+-- | Violation count per axis — every axis is one NAMED predicate
+-- function owning exactly one knob, so the per-axis perturbation
+-- battery has a lever per row (the M5-close warn repayment: seven
+-- guarded comprehensions in one body read as CC 17; the table now
+-- carries names, the predicates carry the decisions).
 penalties :: ScoreKnobs -> Facts -> [(Integer, Integer)]
 penalties k f =
-  [ (0, count [() | [_, 0, v] <- fCont f, v > sSizeCeil k])
-  , (1, count [() | [_, 1, v] <- fCont f, v > sCocCeil k])
-  , (2, count [() | [_, _, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k])
-  , (3, count [() | [_, _, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k])
-  , (4, count [() | [_, indeg, _, _, _, 0] <- fPos f, indeg <= sDeadIndegCeil k])
-  , (5, count [() | [_, rw, ap, _, _] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k])
-  , (6, count [() | [_, _, _, _, size, _] <- fPos f, size >= sCycleFloor k])
+  [ (0, sizeOver k f)
+  , (1, cocOver k f)
+  , (2, cloneHits k f)
+  , (3, dupHits k f)
+  , (4, deadFiles k f)
+  , (5, churnHeavy k f)
+  , (6, cycleMembers k f)
   ]
- where
-  count = toInteger . length
+
+count :: [()] -> Integer
+count = toInteger . length
+
+sizeOver :: ScoreKnobs -> Facts -> Integer
+sizeOver k f = count [() | [_, 0, v] <- fCont f, v > sSizeCeil k]
+
+cocOver :: ScoreKnobs -> Facts -> Integer
+cocOver k f = count [() | [_, 1, v] <- fCont f, v > sCocCeil k]
+
+cloneHits :: ScoreKnobs -> Facts -> Integer
+cloneHits k f =
+  count [() | [_, _, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]
+
+dupHits :: ScoreKnobs -> Facts -> Integer
+dupHits k f = count [() | [_, _, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k]
+
+deadFiles :: ScoreKnobs -> Facts -> Integer
+deadFiles k f = count [() | [_, indeg, _, _, _, 0] <- fPos f, indeg <= sDeadIndegCeil k]
+
+churnHeavy :: ScoreKnobs -> Facts -> Integer
+churnHeavy k f =
+  count [() | [_, rw, ap, _, _] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]
+
+cycleMembers :: ScoreKnobs -> Facts -> Integer
+cycleMembers k f = count [() | [_, _, _, _, size, _] <- fPos f, size >= sCycleFloor k]
 
 -- | (perMille, total violation count) under the effective weights:
 -- wire rows [axisCode, numerator] override; unlisted axes weigh

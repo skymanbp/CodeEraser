@@ -24,10 +24,12 @@
 //! rendered-text slugging (markdown syntax inside a heading drifts
 //! the slug), and the heading walk is fence- and comment-aware but
 //! not indented-code-aware — every approximation failure degrades an
-//! anchor to file level, never invents a section. A cross-file
-//! section answer can go stale when only the TARGET's headings
-//! change: resolve_key hashes configs, not md bodies — phase-2
-//! wiring debt, stated not painted over.
+//! anchor to file level, never invents a section. Cross-file
+//! staleness is closed at the key (M5 close, repaying the 2f wiring
+//! debt): the ONLY target-content fact this ladder consults is the
+//! slug set (anchor() below), so every md file's slug_hash is a
+//! resolve_key input — a heading edit anywhere shifts the key and
+//! the phase-2 sweep re-validates every anchor.
 
 use super::{Outcome, Reason, Scope};
 use crate::graph::md::{content_lines, detect, ref_definition};
@@ -196,6 +198,18 @@ fn relabel(outcome: Outcome) -> Outcome {
         Outcome::External { .. } => Outcome::External { rung: 3 },
         unresolved => unresolved,
     }
+}
+
+/// The slug set folded to one resolve_key input (module header):
+/// order-sensitive on purpose — duplicate -N suffixes shift with
+/// order, and the set IS what anchor() consults.
+pub fn slug_hash(text: &str) -> u64 {
+    let mut buf = Vec::new();
+    for slug in slug_set(text) {
+        buf.extend_from_slice(slug.as_bytes());
+        buf.push(b'\n');
+    }
+    crate::dedup::tokens::fnv1a(&buf)
 }
 
 /// GitHub-slugged ATX headings in document order, -N suffixes for

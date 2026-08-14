@@ -74,3 +74,39 @@ fn edges_land_and_survive_content_refresh() {
     dedup::analyze(&dir, None, None, None).expect("second run");
     assert_eq!(edges(&db), want, "second run under a stable key");
 }
+
+/// The 2f cross-file staleness debt, repaid and pinned (M5 close):
+/// the SOURCE file never changes, only the TARGET's heading — the
+/// slug_hash key input must re-fire the sweep, or the section edge
+/// serves the dead slug forever. One table drives the three rounds
+/// (validate → degrade on rename → re-validate on restore).
+#[test]
+fn target_heading_edit_refreshes_the_source_anchor() {
+    let dir = common::tmp("wire-md-stale");
+    std::fs::write(dir.join("a.md"), "[x](./c.md#alpha)\n").expect("a.md");
+    let db = dir.join(".ce/index.db");
+    let rounds: [(&str, &str, i64, &str); 3] = [
+        (
+            "# Alpha\nbody\n",
+            "alpha",
+            2,
+            "the anchor validates against Alpha",
+        ),
+        (
+            "# Beta\nbody\n",
+            "",
+            0,
+            "the stale slug degrades to file level",
+        ),
+        ("# Alpha\nbody\n", "alpha", 2, "the anchor re-validates"),
+    ];
+    for (target, unit, gran, why) in rounds {
+        std::fs::write(dir.join("c.md"), target).expect("c.md");
+        dedup::analyze(&dir, None, None, None).expect(why);
+        assert_eq!(
+            edges(&db),
+            rows(&[("a.md", "c.md", unit, 1, 2, gran)]),
+            "{why}"
+        );
+    }
+}

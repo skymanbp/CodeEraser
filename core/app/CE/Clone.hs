@@ -48,11 +48,11 @@ respond proto line = case eitherDecodeStrict line of
   Right req
     | any (\t -> toInteger (length (wLab t)) > unitNodeCap) (reqTrees req)
         || toInteger (length (reqPairs req)) > pairCap ->
-        Right (reply proto req [] 0 0 True)
+        Right (reply proto req [] (0, 0) True)
     | Just why <- violation req -> Left (Just (reqId req), "contract", why)
     | otherwise ->
         let (scores, judged, pre) = judge (map decodeTree (reqTrees req)) (reqPairs req)
-         in Right (reply proto req scores judged pre False)
+         in Right (reply proto req scores (judged, pre) False)
 
 decodeTree :: WireTree -> Tree
 decodeTree t =
@@ -134,8 +134,10 @@ judge trees ps = foldr step ([], 0, 0) ps
     size = fromIntegral . tSize
   step _ acc = acc -- unreachable: pair shape validated upstream
 
-reply :: String -> CloneReq -> [[Integer]] -> Int -> Int -> Bool -> B8.ByteString
-reply proto req scores judged pre degraded =
+-- | (judged, prefiltered) travel as the one counts pair they are —
+-- six positional parameters was the E01 arity warn (M5 close).
+reply :: String -> CloneReq -> [[Integer]] -> (Int, Int) -> Bool -> B8.ByteString
+reply proto req scores (judged, pre) degraded =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("clone.result" :: String)

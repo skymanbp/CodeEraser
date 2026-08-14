@@ -72,18 +72,23 @@ fn field_for(parent_kind: &str) -> &'static str {
     }
 }
 
-/// KNOWN DEFECT (M5-3h blind audit, auditor B; probe-verified
-/// 2026-08-14): Go method_declaration's RECEIVER is itself a
-/// parameter_list, so the first-of-kind scan below counts the
-/// receiver (always 1), never the parameters — `func (t T) add(x
-/// int, y string)` keys as `(T) add/1`, colliding arities. The fix
-/// (prefer the `parameters` FIELD before the kind scan) changes
-/// unitsig/symbols identity keys and cascades into the frozen Go
-/// universes (cobra), so it ships with a rev bump + re-freeze batch,
-/// not as a drive-by here.
+/// The `parameters` FIELD wins over the kind scan (M5 close, repaying
+/// the 3h blind-audit defect): Go method_declaration's RECEIVER is
+/// itself a parameter_list, so a first-of-kind scan counted the
+/// receiver (always 1) and collapsed every method's arity. The field
+/// survey (probe 2026-08-14): Go/Rust/Python/TS carry `parameters`
+/// naming exactly the node the kind scan found — identical counts —
+/// while Go methods name the REAL list past the receiver; Haskell has
+/// no such field and keeps the `patterns` kind fallback. Go's grouped
+/// `a, b int` stays ONE declaration — arity counts declarations, the
+/// pre-existing stance, untouched here.
 fn param_count(node: Node<'_>, spec: &LangSpec) -> usize {
-    let Some(params) = child_of_kinds(node, spec.param_list_kinds) else {
-        return 0;
+    let params = match node.child_by_field_name("parameters") {
+        Some(field) => field,
+        None => match child_of_kinds(node, spec.param_list_kinds) {
+            Some(found) => found,
+            None => return 0,
+        },
     };
     ast::named_children(params)
         .into_iter()

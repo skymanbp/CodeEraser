@@ -51,15 +51,18 @@ instance FromJSON VerdictReq where
       <*> o .: "weights"
       <*> o .: "floor"
 
--- | First boundary-contract offender, if any.
+-- | First boundary-contract offender, if any. The row checkers are
+-- top-level functions taking the universe size n (the M5-close warn
+-- repayment: a 64-line where block was the E01 offender, and the
+-- checkers never needed the closure — only n and the tier table).
 violation :: VerdictReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith tierRow [0 :: Int ..] (reqTier req))
-    , table "sim" (pairRow 5) 2 (reqSim req)
-    , asum (zipWith posRow [0 :: Int ..] (reqPos req)) <|> ascendingBy "pos" 1 (reqPos req)
-    , table "churn" (nodeRow 5) 1 (reqChurn req)
-    , table "cochange" (pairRow 3) 2 (reqCochange req)
+    , table "sim" (pairRow n 5) 2 (reqSim req)
+    , asum (zipWith (posRow req n) [0 :: Int ..] (reqPos req)) <|> ascendingBy "pos" 1 (reqPos req)
+    , table "churn" (nodeRow n 5) 1 (reqChurn req)
+    , table "cochange" (pairRow n 3) 2 (reqCochange req)
     , table "continuous" contRow 2 (reqCont req)
     , asum (zipWith discEntry [0 :: Int ..] (reqDisc req))
     , ascendingBy "discrete" 1 (map pure (reqDisc req))
@@ -69,54 +72,70 @@ violation req =
     ]
  where
   n = toInteger (length (reqTier req))
-  table name rowCheck idWidth rows =
-    asum (zipWith (rowCheck name) [0 :: Int ..] rows) <|> ascendingBy name idWidth rows
-  tierRow i row = case row of
-    [u, code]
-      | u /= toInteger i -> Just ("tier " <> show i <> ": index mismatch")
-      | code < 0 || code > 1 -> Just ("tier " <> show i <> ": unknown tier code")
-      | otherwise -> Nothing
-    _ -> Just ("tier " <> show i <> ": malformed row (need [u,tier])")
-  pairRow arity name i row = case row of
-    (u : v : _)
-      | length row /= arity -> Just (label name i <> "malformed row")
-      | any (< 0) row -> Just (label name i <> "negative field")
-      | u >= n || v >= n -> Just (label name i <> "endpoint out of range")
-      | u >= v -> Just (label name i <> "pair not ascending")
-      | otherwise -> Nothing
-    _ -> Just (label name i <> "malformed row")
-  nodeRow arity name i row = case row of
-    (u : _)
-      | length row /= arity -> Just (label name i <> "malformed row")
-      | any (< 0) row -> Just (label name i <> "negative field")
-      | u >= n -> Just (label name i <> "node out of range")
-      | otherwise -> Nothing
-    _ -> Just (label name i <> "malformed row")
-  posRow i row = case row of
-    [u, indeg, outdeg, sccId, sccSize, reachIn]
-      | any (< 0) [u, indeg, outdeg, sccId, sccSize, reachIn] ->
-          Just (label "pos" i <> "negative field")
-      | u >= n -> Just (label "pos" i <> "node out of range")
-      | tierOf u /= Just 0 -> Just (label "pos" i <> "unit-tier node")
-      | otherwise -> Nothing
-    _ -> Just (label "pos" i <> "malformed row (need 6 fields)")
-  -- continuous entities are FINGERPRINTS (u64), not tier indexes:
-  -- the ratchet joins current-vs-baseline on (u, code) across runs,
-  -- and a tier index shifts whenever a file lands — so u here is
-  -- range-checked against u64, never against the node universe
-  contRow name i row = case row of
-    [u, code, v]
-      | any (< 0) [u, code, v] -> Just (label name i <> "negative field")
-      | u >= 18446744073709551616 -> Just (label name i <> "outside u64")
-      | code > 6 -> Just (label name i <> "unknown metric code")
-      | otherwise -> Nothing
-    _ -> Just (label name i <> "malformed row")
-  discEntry i x
-    | x < 0 || x >= 18446744073709551616 = Just (label "discrete" i <> "outside u64")
-    | otherwise = Nothing
-  tierOf u = case [code | [t, code] <- reqTier req, t == u] of
-    (c : _) -> Just c
-    [] -> Nothing
+
+table :: String -> (String -> Int -> [Integer] -> Maybe String) -> Int -> [[Integer]] -> Maybe String
+table name rowCheck idWidth rows =
+  asum (zipWith (rowCheck name) [0 :: Int ..] rows) <|> ascendingBy name idWidth rows
+
+tierRow :: Int -> [Integer] -> Maybe String
+tierRow i row = case row of
+  [u, code]
+    | u /= toInteger i -> Just ("tier " <> show i <> ": index mismatch")
+    | code < 0 || code > 1 -> Just ("tier " <> show i <> ": unknown tier code")
+    | otherwise -> Nothing
+  _ -> Just ("tier " <> show i <> ": malformed row (need [u,tier])")
+
+pairRow :: Integer -> Int -> String -> Int -> [Integer] -> Maybe String
+pairRow n arity name i row = case row of
+  (u : v : _)
+    | length row /= arity -> Just (label name i <> "malformed row")
+    | any (< 0) row -> Just (label name i <> "negative field")
+    | u >= n || v >= n -> Just (label name i <> "endpoint out of range")
+    | u >= v -> Just (label name i <> "pair not ascending")
+    | otherwise -> Nothing
+  _ -> Just (label name i <> "malformed row")
+
+nodeRow :: Integer -> Int -> String -> Int -> [Integer] -> Maybe String
+nodeRow n arity name i row = case row of
+  (u : _)
+    | length row /= arity -> Just (label name i <> "malformed row")
+    | any (< 0) row -> Just (label name i <> "negative field")
+    | u >= n -> Just (label name i <> "node out of range")
+    | otherwise -> Nothing
+  _ -> Just (label name i <> "malformed row")
+
+posRow :: VerdictReq -> Integer -> Int -> [Integer] -> Maybe String
+posRow req n i row = case row of
+  [u, indeg, outdeg, sccId, sccSize, reachIn]
+    | any (< 0) [u, indeg, outdeg, sccId, sccSize, reachIn] ->
+        Just (label "pos" i <> "negative field")
+    | u >= n -> Just (label "pos" i <> "node out of range")
+    | tierOf req u /= Just 0 -> Just (label "pos" i <> "unit-tier node")
+    | otherwise -> Nothing
+  _ -> Just (label "pos" i <> "malformed row (need 6 fields)")
+
+-- | continuous entities are FINGERPRINTS (u64), not tier indexes:
+-- the ratchet joins current-vs-baseline on (u, code) across runs,
+-- and a tier index shifts whenever a file lands — so u here is
+-- range-checked against u64, never against the node universe.
+contRow :: String -> Int -> [Integer] -> Maybe String
+contRow name i row = case row of
+  [u, code, v]
+    | any (< 0) [u, code, v] -> Just (label name i <> "negative field")
+    | u >= 18446744073709551616 -> Just (label name i <> "outside u64")
+    | code > 6 -> Just (label name i <> "unknown metric code")
+    | otherwise -> Nothing
+  _ -> Just (label name i <> "malformed row")
+
+discEntry :: Int -> Integer -> Maybe String
+discEntry i x
+  | x < 0 || x >= 18446744073709551616 = Just (label "discrete" i <> "outside u64")
+  | otherwise = Nothing
+
+tierOf :: VerdictReq -> Integer -> Maybe Integer
+tierOf req u = case [code | [t, code] <- reqTier req, t == u] of
+  (c : _) -> Just c
+  [] -> Nothing
 
 label :: String -> Int -> String
 label name i = name <> " " <> show i <> ": "

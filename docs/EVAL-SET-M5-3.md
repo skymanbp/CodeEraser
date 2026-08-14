@@ -44,6 +44,16 @@ ripgrep 18 / cobra 12 / zod 19；self answered 1 不设门）。余量 not_clone
 θ=85 为过合同最宽松格点（θ 全表 50..100 入档）；审计 = 五独立审计员 100/100
 封闭六类 truth；T-G14 clones 地板 219 / 84 / 3,773 / 842 / 10,036。
 
+**探测器 epoch 边界（M5 收口拍板，2026-08-14）**：本族五档整体冻结于 Go arity
+修复前的探测器（3h 盲审缺陷：method receiver 计入元数，`(T) f/1` 塌缩；修复 =
+`param_count` parameters 字段优先，仅 Go method 受影响）。一手拓扑核实：
+sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必断
+`pool_digests` 锚链、重冻 sample 即换样即作废五审计员 GT——**部分重冻不存在**。
+处置 = 族内锚链自洽照旧、CI 信封门照跑（从冻结行自重导，不触现探测器）、
+审计判决为内容级（key 只是标签）故 GT 有效；重生成走 `--ignored` 生成器时
+必须**整族连审计一起**按新 epoch 重立。churn 台账零 .go 行（实测），
+活体重放门零冲击。
+
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
@@ -129,6 +139,32 @@ sites 测试、spec sites()）全按拆分机制清零非豁免。dedup 预算 1
 零抬升（go↔hs 阶梯前导 T2 块以 helper-first 序断流偿清）。
 冻结五语言宇宙全族不动（SCOPE_EXTS 按构造封闭；2h 精度门版图不含
 Haskell = 既定验收边界，3l 验收线 = rung fixture 全绿，plan M5-3B 行）。
+
+## M5 收口（欠账清算，2026-08-14）
+
+**①Go arity**（3h 盲审缺陷）：`param_count` parameters 字段优先（五语言字段
+实探：Go/Rust/Py/TS 字段=kind 扫描同节点、Haskell 无字段走回退——冲击面恰限
+Go method）；GRAPH_REV 3→4 + STRUCT_REV 1→2（unit key 内嵌 params，两侧缓存
+陈旧）；钉 = `fourclass::units` 六 key 表（`(T) mix/2`/`(T) grouped/1`/
+`(T) none/0`）；T3 冻结族按 epoch 档立（见 T3 节，用户拍板保审计）；churn
+台账零 .go 行实测，活体重放门零冲击。
+**②md 节陈旧**（2f 既档）：目标 slug 集哈希入 resolve_key（`md::slug_hash`
+单咽喉；anchor() 是唯一跨文件内容读）；钉 = `graph_wire::
+target_heading_edit_refreshes_the_source_anchor` 三轮表驱动，反事实（副本法
+断 key 折入）实证红。
+**③core Haskell 六警清零**（拆分非豁免）：Protocol dispatch 表驱动（五同形
+case 臂 → families 表 + familyReply，顺带退休两自对块）；Wire violation
+行检器提顶层；Verdict result 拆 candidates 装配；Score penalties 每轴一具名
+谓词（正合"每谓词一旋钮"）；Clone reply 计数捆绑 (judged, prefiltered)；
+Reference refBlocks 抽 blockOk 五子句谓词（定义誊写保真）——Spec 电池全绿
+护航。**预算 149→148 真下棘**（Protocol −2 落袋；本批自增 +5 当场表驱动
+偿清）；警台账 18→13。
+**④立场档（带界收口，不清而档）**：R6 调用边/RG10 公共位 = 计划内条件项
+（M5-2 行：独立 100 调用点审计 ≥90% 方开），M5 以 import-绑定层收口、RG10
+对 file-tier 休眠为既定立场；T3 改编与短单元（<floor_nodes 24）= 设计卷
+已档域界，仪器地板如实发布；aeson 类 store 安装依赖 = hs.rs 头部 stated
+boundary；py-tree-sitter 0.26 结点存活期不安全 = 3h 盲审外部工具注记，
+本仓零依赖。
 
 ## 复跑
 

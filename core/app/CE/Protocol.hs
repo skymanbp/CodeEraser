@@ -60,6 +60,21 @@ respond version line
       Left e -> errReply Nothing "bad_request" ("parse error: " <> e)
       Right env -> dispatch version env line
 
+-- | One row per judgment family — clone/1 landed with the T3 batch
+-- (M5-3e), docdup/1 with the docdup batch (M5-3g), verdict/1 with
+-- the score batch (M5-3i), each walking the declare-then-implement
+-- path the goldens pin. Five identical case arms once inflated
+-- dispatch to CC 19 (the M5-close warn repayment): the table IS the
+-- dispatch, one arm total.
+families :: [(String, String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString)]
+families =
+  [ ("fourclass.request", FourClass.respond)
+  , ("graph.request", Graph.respond)
+  , ("clone.request", Clone.respond)
+  , ("docdup.request", Docdup.respond)
+  , ("verdict.request", Verdict.respond)
+  ]
+
 -- | Every non-hello message must carry a proto with the server's
 -- major (§1: 必带信封字段; 1.0.0 attack-review fix — the 0.x
 -- implementation negotiated only at hello, so a skewed or bare
@@ -70,30 +85,18 @@ dispatch version env line
   | envType env == "hello" = Handshake.respond proto version line
   | not (majorMatches (envProto env)) =
       errReply (envId env) "bad_request" ("proto missing or major-mismatched (server " <> proto <> ")")
-  -- A family-level decode failure hands back rid = Nothing, but the
-  -- ENVELOPE id is already in hand here — falling back to it keeps a
-  -- single malformed request from desyncing the whole session (the
-  -- client treats a non-echoed id as L2-down, VERSIONING.md §1; Opus
-  -- review, one fix for both families).
-  | envType env == "fourclass.request" = case FourClass.respond proto line of
-      Left (rid, code, message) -> errReply (rid <|> envId env) code message
-      Right bytes -> bytes
-  | envType env == "graph.request" = case Graph.respond proto line of
-      Left (rid, code, message) -> errReply (rid <|> envId env) code message
-      Right bytes -> bytes
-  -- clone/1 landed with the T3 batch (M5-3e), docdup/1 with the
-  -- docdup batch (M5-3g), verdict/1 with the score batch (M5-3i) —
-  -- each walked the declare-then-implement path the goldens pin.
-  | envType env == "clone.request" = case Clone.respond proto line of
-      Left (rid, code, message) -> errReply (rid <|> envId env) code message
-      Right bytes -> bytes
-  | envType env == "docdup.request" = case Docdup.respond proto line of
-      Left (rid, code, message) -> errReply (rid <|> envId env) code message
-      Right bytes -> bytes
-  | envType env == "verdict.request" = case Verdict.respond proto line of
-      Left (rid, code, message) -> errReply (rid <|> envId env) code message
-      Right bytes -> bytes
+  | Just familyRespond <- lookup (envType env) families =
+      familyReply env (familyRespond proto line)
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)
+
+-- | A family-level decode failure hands back rid = Nothing, but the
+-- ENVELOPE id is already in hand here — falling back to it keeps a
+-- single malformed request from desyncing the whole session (the
+-- client treats a non-echoed id as L2-down, VERSIONING.md §1; Opus
+-- review, one fix for every family).
+familyReply :: Envelope -> Either (Maybe Value, String, String) B8.ByteString -> B8.ByteString
+familyReply env (Left (rid, code, message)) = errReply (rid <|> envId env) code message
+familyReply _ (Right bytes) = bytes
 
 majorMatches :: Maybe String -> Bool
 majorMatches Nothing = False

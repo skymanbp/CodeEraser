@@ -55,5 +55,9 @@ entry_globs = [
 #     (the table IS the register -- per-case citations are the
 #     content; T2 folds the src literals so its rows chain against
 #     the three sibling tables). Same boundary, larger family.
+# 149 -> 148 (M5 close): the Protocol.hs dispatch table-drive retired
+# both self-pairs (-2); the close's own additions (md-staleness e2e
+# stanzas) were table-driven on the spot (+5 caught, repaid); net -1
+# banked. Measured after cargo fmt, as always.
 # Ratchet DOWN from here with every cleanup.
-budget = 149
+budget = 148
