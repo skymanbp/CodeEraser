@@ -85,8 +85,14 @@ DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0�
 - 3j 门迁移：CI awk 300 门退役（同批删除）；替代 = 逐文件棘轮 ceiling +
   `core_size_gate` 三腿逐文件断言（产品发射 / 基线覆盖 / tolerated≤300 不弱于）
   + no-awk 守卫（两门并存即红）+ 母册 EVAL-SET.md ceiling≤300 硬红（RM20）。
-  `.hs` size-only 行走 continuous 指纹表（`Lang::Haskell` 留 3k 语料 generation
-  预注册，见设计卷 §8.4）。
+- 3k 语料 generation（预注册 RM14/§8.4 兑现）：
+  `contracts/eval/pre-haskell-members-v1.json` 冻结 3j 收口树（`4b39695`）的
+  40 个 pre-Haskell discrete 成员；门 `baseline_bridge::
+  pre_haskell_members_survive_every_generation` 断言其为每个后继基线的真子集。
+  预算 97→150 双笔具名（+13 generation / +40 表族，`ce.toml` 历史段）；churn
+  台账重放改按工件冻结语言域比对（五语言白名单，`eval_churn_ledger`）。
+  CoC 立场登记册 = `contracts/coc-haskell-divergences.md`（D0 无外部 oracle
+  起十三条），机检半身 = `coc_haskell` 电池 + 五语言等价对拍。
 
 ## 复跑
 

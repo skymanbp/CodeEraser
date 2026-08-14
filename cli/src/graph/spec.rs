@@ -81,7 +81,10 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
             label: "import",
             via: Specifier::Field("path"),
         }],
-        // Markdown is scanned line-wise in graph/md.rs (no grammar).
-        Lang::Markdown => &[],
+        // Markdown scans line-wise in graph/md.rs (no grammar);
+        // Haskell's import edges are the 3l ladder's batch (explicit
+        // arm, never `_`: a catch-all would silently eat that
+        // landing); the sentinel is never walked at all.
+        Lang::Markdown | Lang::Haskell | Lang::LangUnknown => &[],
     }
 }

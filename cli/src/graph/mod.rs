@@ -40,18 +40,20 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
     let (_config, candidates) = walk::scoped_lang_files(root).map_err(anyhow::Error::msg)?;
     let mut out = Vec::new();
     for (path, lang) in candidates {
+        // Haskell is corpus-admitted (3k) but graph-DEFERRED: its
+        // ladder is the 3l batch, and a file the resolver cannot
+        // connect would sit isolated and read as dead — "cannot see"
+        // must never report "dead". Explicit so 3l deletes this arm.
+        if lang == Lang::Haskell {
+            continue;
+        }
         // lossy on purpose: one stray non-UTF-8 file must not abort
         // the whole analysis (Opus review; matches the instrument,
         // which hashes exactly the text the detector saw)
         let bytes = std::fs::read(&path).with_context(|| format!("read {}", path.display()))?;
         let text = String::from_utf8_lossy(&bytes);
-        let rel = path
-            .strip_prefix(root)
-            .unwrap_or(&path)
-            .to_string_lossy()
-            .replace('\\', "/");
         out.push(FileSites {
-            path: rel,
+            path: crate::scan::walk::rel_str(root, &path),
             lang,
             sites: sites::detect(&text, lang),
         });

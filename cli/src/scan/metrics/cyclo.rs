@@ -10,6 +10,12 @@ use tree_sitter::Node;
 pub fn measure(fn_node: Node<'_>, src: &[u8], spec: &LangSpec) -> u32 {
     let mut cc: u32 = 1;
     for node in own_nodes(fn_node, spec) {
+        // keyword tokens can share their structure's kind name
+        // (Haskell: the anon `case` token inside the `case` node) —
+        // kind tables describe named STRUCTURE nodes only
+        if !node.is_named() {
+            continue;
+        }
         if spec.cc_kinds.contains(&node.kind()) {
             cc += 1;
         } else if spec.chain_kinds.contains(&node.kind()) {

@@ -114,6 +114,12 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Rust => rs::resolve(site, scope),
         Lang::Go => go::resolve(site.from, site.spec, scope),
         Lang::Markdown => md::resolve(site.kind, site.from, site.spec, scope),
+        // Haskell has no ladder until 3l — and no site vocabulary yet
+        // (graph/spec.rs), so this arm is unreachable by construction;
+        // if a site kind ever lands first, the honest answer is the
+        // documented no-rungs stance, never a guess. The sentinel is
+        // never walked at all.
+        Lang::Haskell | Lang::LangUnknown => Outcome::Unresolved(Reason::Unsupported),
     }
 }
 

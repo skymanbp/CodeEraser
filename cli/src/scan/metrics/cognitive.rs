@@ -54,8 +54,15 @@ impl Walker<'_, '_> {
     }
 
     fn visit(&mut self, node: Node<'_>, nesting: u32) {
+        // keyword tokens can share their structure's kind name
+        // (Haskell: the anon `case` token inside the `case` node) —
+        // the kind tables below describe named STRUCTURE nodes only,
+        // and anon tokens are leaves with nothing to walk
+        if !node.is_named() {
+            return;
+        }
         let kind = node.kind();
-        if self.spec.fn_kinds.contains(&kind) {
+        if crate::scan::functions::is_unit_node(node, self.spec) {
             return; // nested standalone unit: measured separately
         }
         if self.is_logic_root(node) {
@@ -163,15 +170,22 @@ fn operator_runs(root: Node<'_>, src: &[u8], spec: &LangSpec) -> u32 {
 }
 
 /// In-order (left, self, right) so runs reflect source token order.
+/// Operand fields differ by grammar family: python/ts/rust/go expose
+/// `left`/`right`, tree-sitter-haskell `left_operand`/`right_operand`
+/// (AST-probed 3k) — one alias lookup instead of a per-lang walker.
 fn collect_in_order<'s>(node: Node<'_>, src: &'s [u8], spec: &LangSpec, out: &mut Vec<&'s str>) {
     let Some(op) = logic_op(node, src, spec) else {
         return;
     };
-    if let Some(left) = node.child_by_field_name("left") {
+    let operand = |side: &str, alias: &str| {
+        node.child_by_field_name(side)
+            .or_else(|| node.child_by_field_name(alias))
+    };
+    if let Some(left) = operand("left", "left_operand") {
         collect_in_order(left, src, spec, out);
     }
     out.push(op);
-    if let Some(right) = node.child_by_field_name("right") {
+    if let Some(right) = operand("right", "right_operand") {
         collect_in_order(right, src, spec, out);
     }
 }

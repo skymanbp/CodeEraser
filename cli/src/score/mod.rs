@@ -149,13 +149,14 @@ fn member_set(root: &Path, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) 
 }
 
 /// Continuous fact rows for the whole tree: every scanned file's
-/// size and function complexity, plus the size-only rows for the
-/// Haskell sources the scanner cannot parse yet. pub: the 3j gate
-/// test asserts per-file coverage through this same throat.
+/// size and function complexity. The 3j-era side-walk for `.hs`
+/// sizes is gone — the scanner speaks Haskell since 3k, and the
+/// collision ensure below is what would have caught the two paths
+/// double-emitting a file. pub: the 3j gate test asserts per-file
+/// coverage through this same throat.
 pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
     let (files, _findings, _summary) = scan::analyze(root)?;
     let mut rows: Vec<[u64; 3]> = files.iter().flat_map(baseline::continuous_rows).collect();
-    rows.extend(hs_size_rows(root)?);
     rows.sort_unstable();
     // a fingerprint collision would silently merge two entities —
     // refuse loudly instead (never observed; FNV64 over short paths)
@@ -163,31 +164,6 @@ pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
         rows.windows(2).all(|w| w[0][..2] != w[1][..2]),
         "continuous entity fingerprint collision"
     );
-    Ok(rows)
-}
-
-/// Size-only rows for `.hs` files (M5-3j): `Lang::Haskell` does not
-/// exist until 3k — adding it is a pre-registered corpus generation
-/// change (design §8.4) — but the E01 file ceiling must gate core/
-/// NOW, replacing the CI awk gate. The fingerprint-keyed continuous
-/// table never requires tier membership, so these rows ride along
-/// without touching the dedup or graph corpora. DELETE at 3k when
-/// the scanner speaks Haskell: the collision ensure above fires
-/// loudly if both paths ever emit the same file.
-fn hs_size_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
-    let config = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let mut rows = Vec::new();
-    for path in scan::walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
-        if path.extension().and_then(|e| e.to_str()) != Some("hs") {
-            continue;
-        }
-        let src = std::fs::read(&path)?;
-        rows.push([
-            baseline::file_entity(&scan::walk::rel_str(root, &path)),
-            0,
-            scan::metrics::size::total_lines(&src) as u64,
-        ]);
-    }
     Ok(rows)
 }
 

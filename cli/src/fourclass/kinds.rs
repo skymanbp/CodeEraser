@@ -27,7 +27,10 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
             "interface_declaration",
             "enum_declaration",
         ],
-        Lang::Go | Lang::Markdown => &[],
+        // Haskell's named type forms (data_type/newtype/class) stay
+        // out until a Haskell relocation case exists — the Go
+        // precedent above; the sentinel is never walked.
+        Lang::Go | Lang::Markdown | Lang::Haskell | Lang::LangUnknown => &[],
     }
 }
 

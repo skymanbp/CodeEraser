@@ -111,6 +111,22 @@ fn git(repo: &Path, args: &[&str]) -> String {
     String::from_utf8_lossy(&common::git_out(repo, args)).into_owned()
 }
 
+/// The frozen ledger's own language universe: the 3h blind audit's
+/// transcription spec named FIVE tree-sitter languages, so the
+/// artifact's rows can only ever cover those — replay compares on
+/// the artifact's scope, not on whatever the product speaks today.
+/// An ALLOWLIST of the freeze-time set (never a deny of the newest
+/// language): Haskell rows (3k) and any later language fall outside
+/// automatically, and the frozen half must still match ROW FOR ROW
+/// (frozen-not-product stays the systematic-misattribution alarm).
+fn in_frozen_scope(path: &str) -> bool {
+    use codeeraser::scan::lang::Lang;
+    matches!(
+        Lang::from_path(Path::new(path)),
+        Some(Lang::Python | Lang::TypeScript | Lang::Tsx | Lang::Rust | Lang::Go | Lang::Markdown)
+    )
+}
+
 #[test]
 #[ignore] // needs the self repo's git history containing the pinned tip
 fn product_matches_the_audited_ledger_row_for_row() {
@@ -123,6 +139,7 @@ fn product_matches_the_audited_ledger_row_for_row() {
         let sha = c["sha"].as_str().expect("sha");
         let got: Vec<_> = churn::commit_ledger(root, sha)
             .iter()
+            .filter(|u| in_frozen_scope(&u.path))
             .map(product_row)
             .collect();
         let want: Vec<_> = c["rows"]

@@ -61,6 +61,12 @@ pub struct LangSpec {
     /// the lifetime/label tick (M2 attack review: classifying it LIT
     /// made every `&'a str` signature a false clone driver).
     pub literal_delims: &'static [&'static str],
+    /// fn_kinds entries that form a unit ONLY when the node carries a
+    /// `name` field. Haskell's `bind` kind is also the do-statement
+    /// `x <- act` and pattern-bind kind (AST-probed 3k) — without the
+    /// name gate every do line would become a standalone unit and its
+    /// complexity would vanish from the host.
+    pub fn_named_only_kinds: &'static [&'static str],
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -70,6 +76,10 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
         Lang::Rust => &RUST,
         Lang::Go => &GO,
         Lang::Markdown => &MARKDOWN,
+        Lang::Haskell => &super::spec_hs::HASKELL,
+        // Never walked (from_path cannot yield the sentinel); the
+        // empty table is the honest degenerate if it ever is.
+        Lang::LangUnknown => &MARKDOWN,
     }
 }
 
@@ -111,6 +121,7 @@ static PYTHON: LangSpec = LangSpec {
     name_style: NameStyle::Snake,
     // Python quotes surface as named string_start/string_end kinds.
     literal_delims: &[],
+    fn_named_only_kinds: &[],
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -159,6 +170,7 @@ static TYPESCRIPT: LangSpec = LangSpec {
     comment_kinds: &["comment"],
     name_style: NameStyle::MixedCaps,
     literal_delims: &["\"", "'", "`"],
+    fn_named_only_kinds: &[],
 };
 
 static RUST: LangSpec = LangSpec {
@@ -199,6 +211,7 @@ static RUST: LangSpec = LangSpec {
     // NOT `'`: that is the lifetime/label tick (char_literal is one
     // token and needs no delimiter piece).
     literal_delims: &["\""],
+    fn_named_only_kinds: &[],
 };
 
 static GO: LangSpec = LangSpec {
@@ -239,6 +252,7 @@ static GO: LangSpec = LangSpec {
     name_style: NameStyle::MixedCaps,
     // `'` is Go's rune delimiter but rune_literal is a single token.
     literal_delims: &["\"", "`"],
+    fn_named_only_kinds: &[],
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -256,4 +270,5 @@ static MARKDOWN: LangSpec = LangSpec {
     comment_kinds: &[],
     name_style: NameStyle::Any,
     literal_delims: &[],
+    fn_named_only_kinds: &[],
 };

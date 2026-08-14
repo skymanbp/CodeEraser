@@ -15,11 +15,22 @@ pub struct FnUnit<'t> {
     pub params: usize,
 }
 
+/// THE standalone-unit predicate — extraction, own_nodes and the
+/// cognitive walker must agree on what a unit is, so they all call
+/// this one throat. Name-gated kinds (Haskell `bind`, which is also
+/// the do-statement / pattern-bind kind) only open a unit when the
+/// node carries a `name` field.
+pub fn is_unit_node(node: Node<'_>, spec: &LangSpec) -> bool {
+    spec.fn_kinds.contains(&node.kind())
+        && (!spec.fn_named_only_kinds.contains(&node.kind())
+            || node.child_by_field_name("name").is_some())
+}
+
 pub fn extract<'t>(root: Node<'t>, src: &[u8], spec: &LangSpec) -> Vec<FnUnit<'t>> {
     let mut out = Vec::new();
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if spec.fn_kinds.contains(&node.kind()) {
+        if is_unit_node(node, spec) {
             out.push(unit(node, src, spec));
         }
         stack.extend(ast::children(node).into_iter().rev());

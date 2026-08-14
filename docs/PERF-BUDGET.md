@@ -93,6 +93,16 @@ ripgrep 冷 < 60 s；zod 为容量压力例（存活对最多），超线即收 
 | `ce join ..` 端到端（冷 fresh db：全量索引 + 四源图 + pos 行 + churn + 双层装配） | 265.0 s | join 的非 churn 腿 ≈ 噪声内（同日 join 全程 < churn 单测）；首测 284.3 s 弃用=五盲审代理并发争用污染 |
 | 台账跨期守恒 | 44,879 = 44,870(473adfc 双计数器) + 9(473adfc 自身) | 派生总数逐数复现旧计数器口径，rewrote 4,255 不变 |
 
+## M5-3k Haskell 入语料后全链（实测 2026-08-14，release，静默机，fresh `.ce/` 已核实删除）
+
+口径：37 个 `.hs`（3,646 行）首次进入 scan/dedup 语料（graph 仍五语言=3l 前显式门）。
+
+| 项 | 实测 | 记录 |
+|---|---|---|
+| `ce scan .`（252→251 文件、2,984 函数含 ~790 Haskell 单元） | 0.9 s | tree-sitter-haskell 解析增量在噪声内 |
+| `ce dedup .`（冷，225 文件、150 块） | 2.3 s | 语料 generation 后冷索引不劣化 |
+| `ce check .`（暖索引） | 1.15 s | ✅ pre-commit 级维持 |
+
 ## M5-3j 门迁移后 `ce check`（+.hs size-only 走文件，实测 2026-08-14，release，静默机）
 
 口径：3i 口径 + `hs_size_rows` 的第二次全树 walk（37 个 `.hs` 读文件计行）。

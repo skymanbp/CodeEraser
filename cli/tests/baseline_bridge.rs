@@ -56,6 +56,42 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
     assert!(o.reply.degraded.is_none(), "healthy judgment");
 }
 
+/// The 3k corpus-generation gate (RM14, pre-registered): the frozen
+/// pre-Haskell discrete member set must stay a SUBSET of every later
+/// committed baseline — growth is a batch of named additions, never
+/// a silent rewrite of history.
+#[test]
+fn pre_haskell_members_survive_every_generation() {
+    let frozen: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string("../contracts/eval/pre-haskell-members-v1.json").expect("frozen"),
+    )
+    .expect("frozen json");
+    let baseline: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string("../ce-baseline.json").expect("committed baseline"),
+    )
+    .expect("baseline json");
+    let now: std::collections::HashSet<u64> = baseline["discrete"]
+        .as_array()
+        .expect("discrete")
+        .iter()
+        .map(|v| v.as_u64().expect("member id"))
+        .collect();
+    let old: Vec<u64> = frozen["members"]
+        .as_array()
+        .expect("members")
+        .iter()
+        .map(|v| v.as_u64().expect("member id"))
+        .collect();
+    assert_eq!(old.len(), 40, "the frozen set is the 3j-close 40");
+    for m in &old {
+        assert!(
+            now.contains(m),
+            "pre-Haskell member {m} vanished from the committed baseline — \
+             corpus growth must never rewrite the pre-generation set"
+        );
+    }
+}
+
 /// ADR-006: floor and ratchet each fail ALONE — the floor trips with
 /// an empty added set, the ratchet trips with no floor on the wire.
 #[test]

@@ -32,5 +32,26 @@ entry_globs = [
 [dedup]
 # 187 -> 97 (M5-3g bite-17 repayment); the last block is the two
 # families sharing ONE lockstep_scores call, indistinguishable under
-# token normalization -- an honest landing point, not a regression
-budget = 97
+# token normalization -- an honest landing point, not a regression.
+#
+# 97 -> 149 (M5-3k, two named contributions, both measured 2026-08-14
+# with the final spec AFTER cargo fmt -- line wraps move block
+# boundaries, so the budget is only ever measured on formatted code;
+# neither contribution is a raise-without-amendment):
+#   +13 corpus GENERATION (pre-registered, RM14/§8.4):
+#     budget_before_haskell = 97, haskell_delta = +13 -- 37 core .hs
+#     files first entered the corpus; the members are the wire-family
+#     scaffolding (Clone/Docdup/Graph/Verdict decode+cap+bounds
+#     shapes, Protocol dispatch arms, JoinProps fixtures), the Haskell
+#     analogue of the M1 table families above. The pre-Haskell
+#     DISCRETE MEMBER set (40 ids; blocks collapse into unit-pair
+#     members per §7.2) is frozen in
+#     contracts/eval/pre-haskell-members-v1.json and CI asserts it
+#     stays a SUBSET of every later baseline.
+#   +39 documentary-table family growth: tests/coc_haskell.rs is the
+#     FOURTH member of the named metrics/divergence/sonar table family
+#     (the table IS the register -- per-case citations are the
+#     content; T2 folds the src literals so its rows chain against
+#     the three sibling tables). Same boundary, larger family.
+# Ratchet DOWN from here with every cleanup.
+budget = 149

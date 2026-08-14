@@ -6,6 +6,7 @@ pub mod lang;
 pub mod metrics;
 pub mod report;
 pub mod spec;
+pub mod spec_hs;
 pub mod walk;
 
 use anyhow::{Context, Result};

@@ -123,9 +123,11 @@ pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
 
 /// [lang, kind, flags] — only file nodes carry entry flags.
 fn node_row(n: &Node, config: &Config) -> Value {
+    // unknown extension = the sentinel code, NOT Python's 0 (RM15:
+    // the two were indistinguishable on the wire before 3k)
     let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
         .map(|l| l as i64)
-        .unwrap_or(0);
+        .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
     let flags = if n.kind == super::wire::GRAN_FILE {
         flags_of(&n.path, config)
     } else {

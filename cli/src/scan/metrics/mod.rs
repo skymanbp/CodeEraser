@@ -33,12 +33,14 @@ pub struct FileMetrics {
 }
 
 /// Pre-order nodes of a function subtree, excluding nested standalone
-/// function units (they are measured as their own units).
+/// function units (they are measured as their own units; the shared
+/// is_unit_node predicate keeps this in lockstep with extraction).
 pub fn own_nodes<'t>(fn_node: Node<'t>, spec: &LangSpec) -> Vec<Node<'t>> {
     let mut out = Vec::new();
     let mut stack = vec![fn_node];
     while let Some(node) = stack.pop() {
-        let nested_standalone = node.id() != fn_node.id() && spec.fn_kinds.contains(&node.kind());
+        let nested_standalone =
+            node.id() != fn_node.id() && crate::scan::functions::is_unit_node(node, spec);
         if nested_standalone {
             continue;
         }
