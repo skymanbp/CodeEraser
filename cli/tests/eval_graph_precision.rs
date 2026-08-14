@@ -15,8 +15,8 @@ mod eval_support;
 
 use eval_graph_precision_parts as parts;
 use eval_support::{
-    assert_frozen_corpus_set, assert_identity_echo, eval_doc, generated_from, graph_corpus, load,
-    review_doc, str_pairs, write_doc,
+    assert_identity_echo, eval_doc, generated_from, graph_corpus, load, review_doc, str_pairs,
+    write_doc,
 };
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -42,27 +42,13 @@ fn corpus_rows<'a>(sample: &'a Value, corpus_key: &str) -> Vec<&'a Value> {
 }
 
 /// Ranks whose verdict demands attention (everything but correct /
-/// external_ok) — the frozen ledger of G8: growth needs blessing.
+/// external_ok) — the frozen ledger of G8: growth needs blessing
+/// (the shared eval_support ledger gate consumes this).
 fn attention(rows: &[Value]) -> BTreeSet<String> {
     rows.iter()
         .filter(|r| !matches!(r["verdict"].as_str(), Some("correct") | Some("external_ok")))
         .map(|r| r["rank"].as_str().expect("rank").to_string())
         .collect()
-}
-
-/// G8: an existing doc's wrong/missed/unresolved ledger is frozen —
-/// new attention rows need explicit blessing.
-fn assert_ledger_frozen(path: &str, rows: &[Value]) {
-    let Ok(old) = std::fs::read_to_string(path) else {
-        return;
-    };
-    let old: Value = serde_json::from_str(&old).expect("old doc");
-    let frozen = attention(old["rows"].as_array().expect("rows"));
-    let grown: Vec<_> = attention(rows).difference(&frozen).cloned().collect();
-    assert!(
-        grown.is_empty() || std::env::var("CE_ACCEPT_GRAPH").as_deref() == Ok("1"),
-        "wrong/missed/unresolved ledger grew ({grown:?}) — regressions need CE_ACCEPT_GRAPH=1 (G8)"
-    );
 }
 
 #[test]
@@ -92,7 +78,7 @@ fn generate_graph_precision() {
         })
         .collect();
     let path = eval_doc(&doc_stem(name.as_deref()));
-    assert_ledger_frozen(&path, &rows);
+    eval_support::assert_ledger_frozen(&path, &rows, &attention, "CE_ACCEPT_GRAPH");
     let doc = json!({
         "schema": "ce.eval-graph-precision/1.0.0",
         "corpus": {"name": name, "tip": tip},
@@ -129,34 +115,19 @@ fn check_row<'a>(
 ) {
     let (rank, s) = eval_support::bijective_row(corpus_key, row, sampled, seen);
     assert_identity_echo(corpus_key, rank, row, s);
-    let truth = truths
-        .get(rank)
-        .unwrap_or_else(|| panic!("{corpus_key}: {rank} not in the audit"));
-    assert_eq!(
-        row["truth"].as_str(),
-        Some(*truth),
-        "{corpus_key}/{rank}: truth echo drifted"
-    );
-    let recomputed = parts::verdict_of(
-        truth,
-        row["answered"].as_str(),
-        row["external"].as_bool().unwrap_or(false),
-    );
-    assert_eq!(
-        row["verdict"].as_str(),
-        Some(recomputed),
-        "{corpus_key}/{rank}: stored verdict contradicts its own row (G6)"
-    );
+    eval_support::assert_row_verdict(corpus_key, rank, row, truths, |truth| {
+        parts::verdict_of(
+            truth,
+            row["answered"].as_str(),
+            row["external"].as_bool().unwrap_or(false),
+        )
+    });
 }
 
 /// One corpus's precision doc checked end to end (G1/G3/G4/G6/G7).
 fn check_precision_doc(corpus_key: &str, doc: &Value, sample: &Value) {
+    eval_support::assert_summary_rederived(corpus_key, doc, parts::rescore);
     let rows = doc["rows"].as_array().expect("rows");
-    assert_eq!(
-        doc["summary"],
-        parts::rescore(rows),
-        "{corpus_key}: summary drifted from rows (G1)"
-    );
     let sampled: BTreeMap<&str, &Value> = corpus_rows(sample, corpus_key)
         .into_iter()
         .map(|r| (r["rank"].as_str().expect("rank"), r))
@@ -168,29 +139,16 @@ fn check_precision_doc(corpus_key: &str, doc: &Value, sample: &Value) {
     for row in rows {
         check_row(corpus_key, row, &sampled, &truths, &mut seen);
     }
-    let verdicts = doc["summary"]["verdicts"].as_object().expect("verdicts");
-    let total: u64 = verdicts.values().map(|v| v.as_u64().expect("n")).sum();
-    assert_eq!(total, rows.len() as u64, "{corpus_key}: conservation (G3)");
-    for key in verdicts.keys() {
-        assert!(
-            parts::VERDICTS.contains(&key.as_str()),
-            "{corpus_key}: unknown verdict class {key}"
-        );
-    }
+    eval_support::assert_verdict_conservation(corpus_key, doc, &parts::VERDICTS);
 }
 
 /// Aggregates one doc into the cross-corpus tallies and applies the
-/// per-corpus gate where the in-corpus GT denominator reaches 5.
-fn corpus_gate(path: &str, sample: &Value, agg: &mut (u64, u64, u64, BTreeMap<String, u64>)) {
-    let doc = load(path);
-    let key = eval_support::doc_suffix(path, "graph-precision").unwrap_or_else(|| "self".into());
-    check_precision_doc(&key, &doc, sample);
-    let v = &doc["summary"]["verdicts"];
-    let n = |k: &str| v[k].as_u64().unwrap_or(0);
-    let (c, w) = (n("correct"), n("wrong"));
-    agg.0 += c;
-    agg.1 += w;
-    agg.2 += doc["rows"].as_array().expect("rows").len() as u64;
+/// per-corpus gate where the in-corpus GT denominator reaches 5
+/// (this family's G2 semantics; the T3 family gates on answered).
+fn corpus_gate(path: &str, sample: &Value, agg: &mut eval_support::PrecisionAgg) {
+    let (key, doc, c, w) =
+        eval_support::open_scored_doc(path, "graph-precision", sample, agg, check_precision_doc);
+    agg.rows += doc["rows"].as_array().expect("rows").len() as u64;
     for (lang, verdicts) in doc["summary"]["by_lang"].as_object().expect("by_lang") {
         let n: u64 = verdicts
             .as_object()
@@ -198,70 +156,42 @@ fn corpus_gate(path: &str, sample: &Value, agg: &mut (u64, u64, u64, BTreeMap<St
             .values()
             .map(|x| x.as_u64().unwrap())
             .sum();
-        *agg.3.entry(lang.clone()).or_insert(0) += n;
+        eval_support::tally_add(&mut agg.by_lang, lang, n);
     }
     let in_truth = doc["summary"]["in_corpus_truths"].as_u64().expect("in");
-    if in_truth >= 5 {
-        let p = c as f64 / (c + w) as f64;
-        assert!(
-            p >= 0.90,
-            "{key}: per-corpus precision {p:.3} < 0.90 on denominator {in_truth} (G2)"
-        );
-    }
+    eval_support::assert_corpus_precision(&key, (c, w), in_truth, 0.90, "G2");
 }
 
-/// The full gate: every frozen corpus doc present (G10), each
-/// internally consistent, 100 judged rows in total (G3), per-language
-/// floors (G5), and the precision contract (G2): overall >= 0.90,
-/// per-corpus >= 0.90 where the in-corpus GT denominator reaches 5
-/// (2026-08-12 decision — derived from the docs, not hardcoded).
-#[test]
-fn precision_meets_the_contract() {
-    let docs = assert_frozen_corpus_set("graph-precision");
-    let sample = load(&eval_doc("graph-sample"));
-    let mut agg = (0u64, 0u64, 0u64, BTreeMap::new());
-    for path in &docs {
-        corpus_gate(path, &sample, &mut agg);
-    }
-    let (c_all, w_all, total, by_lang) = agg;
-    assert_eq!(
-        total, 100,
-        "judged rows across corpora (G3, the contract 100)"
-    );
-    for (lang, n) in &by_lang {
-        assert!(*n >= 15, "{lang}: {n} judged rows < per-lang floor 15 (G5)");
-    }
-    let overall = c_all as f64 / (c_all + w_all) as f64;
-    assert!(
-        overall >= 0.90,
-        "overall precision {overall:.3} < 0.90 over the frozen 100 (G2 contract)"
-    );
-}
+const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {
+    family: "graph-precision",
+    sample: "graph-sample",
+    gate: 0.90,
+    tag: "G2 contract",
+    mutations: &[("rank", "not-a-sampled-rank", "phantom rank")],
+};
 
-/// G9: every advertised refusal is exercised — a tampered doc must
-/// redden the checker, not pass politely.
+/// The full gate in one battery: every frozen corpus doc present
+/// (G10), each internally consistent, 100 judged rows (G3),
+/// per-language floors (G5), the precision contract (G2: overall and
+/// per-corpus >= 0.90 where the in-corpus GT denominator reaches 5 —
+/// the 2026-08-12 decision), then G9's refusals — pristine, phantom
+/// and dropped in the shared battery; the two-field flip and cooked
+/// summary as this family's bespoke cases.
 #[test]
-fn precision_refuses_tampering() {
-    let sample = load(&eval_doc("graph-sample"));
-    let pristine = load(&eval_doc(&doc_stem(Some("zod"))));
-    let refused =
-        |doc: &Value| eval_support::doc_refused(doc, &|d| check_precision_doc("zod", d, &sample));
-    assert!(!refused(&pristine), "pristine doc must pass");
-    let mut flipped = pristine.clone();
-    flipped["rows"][0]["verdict"] = Value::from("correct");
-    flipped["rows"][0]["answered"] = Value::from("not/the/truth.ts");
-    let mut phantom = pristine.clone();
-    phantom["rows"][0]["rank"] = Value::from("not-a-sampled-rank");
-    let mut dropped = pristine.clone();
-    dropped["rows"].as_array_mut().expect("rows").remove(0);
-    let mut cooked = pristine.clone();
-    cooked["summary"]["verdicts"]["wrong"] = json!(0);
-    for (label, doc) in [
-        ("flipped verdict", &flipped),
-        ("phantom rank", &phantom),
-        ("dropped row", &dropped),
-        ("cooked summary", &cooked),
-    ] {
-        assert!(refused(doc), "{label} must refuse (G9)");
-    }
+fn precision_contract_and_refusals() {
+    eval_support::assert_precision_family(
+        &SPEC,
+        corpus_gate,
+        &check_precision_doc,
+        |pristine, refused| {
+            let mut flipped = pristine.clone();
+            flipped["rows"][0]["verdict"] = Value::from("correct");
+            flipped["rows"][0]["answered"] = Value::from("not/the/truth.ts");
+            let mut cooked = pristine.clone();
+            cooked["summary"]["verdicts"]["wrong"] = json!(0);
+            for (label, doc) in [("flipped verdict", &flipped), ("cooked summary", &cooked)] {
+                assert!(refused(doc), "{label} must refuse (G9)");
+            }
+        },
+    );
 }

@@ -100,6 +100,22 @@ pub fn gate_docs(
 /// `prefix` (and ends -v1.json), sorted — the ONE enumeration every
 /// doc-family gate consumes (the dedup ratchet caught this loop's
 /// third verbatim copy; the throat is the fix, not the third copy).
+/// The built ce-core binary path (generators that spawn the product
+/// driver need the PATH; link consumers use core_link).
+pub fn core_bin() -> String {
+    std::env::var("CE_CORE_BIN").expect(
+        "CE_CORE_BIN is unset — build the core and export it:\n  \
+         cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
+    )
+}
+
+/// The live ce-core link every L2-family generator drives.
+pub fn core_link() -> codeeraser::corelink::Link {
+    codeeraser::corelink::Link::open(&core_bin())
+        .expect("ce-core link")
+        .0
+}
+
 pub fn frozen_docs(prefix: &str) -> Vec<String> {
     let mut out = Vec::new();
     for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {

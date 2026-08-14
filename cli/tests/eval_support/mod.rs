@@ -16,6 +16,7 @@ pub mod dedup;
 pub mod docseg;
 pub mod family;
 pub mod graph;
+pub mod precision;
 pub mod provenance;
 pub mod t3c;
 pub mod t3f;
@@ -26,6 +27,7 @@ pub use dedup::*;
 pub use docseg::*;
 pub use family::*;
 pub use graph::*;
+pub use precision::*;
 pub use provenance::*;
 pub use t3c::*;
 pub use t3f::*;
@@ -205,22 +207,6 @@ pub fn classify_counts(before: &str, after: &str, lang: Lang, what: &str) -> [u6
         c.counts.removed_deleted as u64,
         c.counts.removed_moved as u64,
     ]
-}
-
-/// The built ce-core binary path (generators that spawn the product
-/// driver need the PATH; link consumers use core_link).
-pub fn core_bin() -> String {
-    std::env::var("CE_CORE_BIN").expect(
-        "CE_CORE_BIN is unset — build the core and export it:\n  \
-         cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
-    )
-}
-
-/// The live ce-core link every L2-family generator drives.
-pub fn core_link() -> codeeraser::corelink::Link {
-    codeeraser::corelink::Link::open(&core_bin())
-        .expect("ce-core link")
-        .0
 }
 
 /// The local eval-payload directory (eval_extract output).

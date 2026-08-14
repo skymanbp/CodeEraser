@@ -48,6 +48,64 @@ pub fn is_strict_ancestor(ancestor: &str, descendant: &str) -> bool {
     ancestor != descendant && is_ancestor(ancestor, descendant)
 }
 
+/// Per-corpus artifact intro commits from a path template — the
+/// audit-table list both provenance families build.
+pub fn corpus_intros(template: &dyn Fn(&str) -> String, corpora: &[&str]) -> Vec<String> {
+    corpora.iter().map(|c| intro_commit(&template(c))).collect()
+}
+
+/// One ordering leg: every listed intro strictly descends from the
+/// anchor commit.
+pub fn assert_all_postdate(anchor: &str, intros: &[String], what: &str) {
+    for intro in intros {
+        assert!(is_strict_ancestor(anchor, intro), "{what}");
+    }
+}
+
+/// The scoring leg: every listed doc's generated_from.commit
+/// strictly descends from every audit intro — GT froze before any
+/// score existed.
+pub fn assert_docs_postdate_audits(audits: &[String], stems: &[String], what: &str) {
+    for stem in stems {
+        let doc = super::load(&super::eval_doc(stem));
+        let commit = doc["generated_from"]["commit"].as_str().expect("commit");
+        for audit in audits {
+            assert!(is_strict_ancestor(audit, commit), "{stem}: {what}");
+        }
+    }
+}
+
+/// The sample→audit→scoring ordering as ONE walk (both provenance
+/// families run exactly this pair of legs; the subtree and resolver
+/// legs stay with the family): every audit table strictly descends
+/// from the sample freeze, every precision doc strictly descends
+/// from every audit table.
+pub fn assert_audit_scoring_legs(
+    sample_path: &str,
+    audit_template: &dyn Fn(&str) -> String,
+    corpora: &[&str],
+    precision_family: &str,
+    tag: &str,
+) {
+    require_full_history();
+    let sample = intro_commit(sample_path);
+    let audits = corpus_intros(audit_template, corpora);
+    assert_all_postdate(
+        &sample,
+        &audits,
+        &format!("audit table does not strictly descend from the sample freeze ({tag})"),
+    );
+    let stems: Vec<String> = super::FROZEN_CORPORA
+        .iter()
+        .map(|n| super::doc_stem(precision_family, &n.map(str::to_string)))
+        .collect();
+    assert_docs_postdate_audits(
+        &audits,
+        &stems,
+        &format!("scored before the audit froze ({tag})"),
+    );
+}
+
 /// Every file currently under `subtree` must have been introduced
 /// STRICTLY after `anchor` — the full-scan blind-window leg: nothing
 /// judge-shaped may predate the frozen draw, wherever it landed.

@@ -42,26 +42,23 @@ pub fn verdict_of(judgment: &str, judged_clone: bool, truth: &str) -> &'static s
     }
 }
 
-fn count_into(map: &mut BTreeMap<String, u64>, key: &str) {
-    *map.entry(key.to_string()).or_insert(0) += 1;
-}
-
 /// The whole summary from the rows alone — verdict tallies, truth
 /// conservation, per-language verdicts, the answered denominator and
-/// the θ cut table. The CI gate re-runs this exact function.
+/// the θ cut table. The CI gate re-runs this exact function; flat
+/// tallies run through the shared tally_field throat.
 pub fn rescore(rows: &[Value]) -> Value {
     let mut verdicts: BTreeMap<String, u64> = BTreeMap::new();
     let mut by_truth: BTreeMap<String, u64> = BTreeMap::new();
+    super::eval_support::tally_field(rows, "verdict", &mut verdicts);
+    super::eval_support::tally_field(rows, "truth", &mut by_truth);
     let mut by_lang: BTreeMap<String, BTreeMap<String, u64>> = BTreeMap::new();
     for r in rows {
-        let v = r["verdict"].as_str().expect("verdict");
-        count_into(&mut verdicts, v);
-        count_into(&mut by_truth, r["truth"].as_str().expect("truth"));
-        count_into(
+        super::eval_support::tally_add(
             by_lang
                 .entry(r["lang"].as_str().expect("lang").into())
                 .or_default(),
-            v,
+            r["verdict"].as_str().expect("verdict"),
+            1,
         );
     }
     let n = |k: &str| verdicts.get(k).copied().unwrap_or(0);
@@ -103,26 +100,11 @@ fn theta_table(rows: &[Value]) -> Value {
     json!(table)
 }
 
-/// T-G8: an existing doc's wrong ledger is frozen — growth needs
-/// explicit blessing.
-pub fn assert_wrong_frozen(path: &str, rows: &[Value]) {
-    let wrong_ranks = |rows: &[Value]| -> Vec<String> {
-        rows.iter()
-            .filter(|r| r["verdict"] == "wrong")
-            .map(|r| r["rank"].as_str().expect("rank").to_string())
-            .collect()
-    };
-    let Ok(old) = std::fs::read_to_string(path) else {
-        return;
-    };
-    let old: Value = serde_json::from_str(&old).expect("old doc");
-    let frozen = wrong_ranks(old["rows"].as_array().expect("rows"));
-    let grown: Vec<String> = wrong_ranks(rows)
-        .into_iter()
-        .filter(|r| !frozen.contains(r))
-        .collect();
-    assert!(
-        grown.is_empty() || std::env::var("CE_ACCEPT_T3").as_deref() == Ok("1"),
-        "wrong ledger grew ({grown:?}) — regressions need CE_ACCEPT_T3=1 (T-G8)"
-    );
+/// The T-G8 attention set: ranks of rows scored wrong (the shared
+/// frozen-ledger gate consumes this via eval_support::precision).
+pub fn wrong_ranks(rows: &[Value]) -> std::collections::BTreeSet<String> {
+    rows.iter()
+        .filter(|r| r["verdict"] == "wrong")
+        .map(|r| r["rank"].as_str().expect("rank").to_string())
+        .collect()
 }

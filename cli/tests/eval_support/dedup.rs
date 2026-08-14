@@ -89,14 +89,14 @@ pub fn t3_summarize(files: &[Value]) -> Value {
         let lang = f["lang"].as_str().expect("lang");
         let s = f["symbols"].as_u64().expect("symbols");
         let u = f["units"].as_u64().expect("units");
-        *symbols_by.entry(lang.to_string()).or_insert(0) += s;
-        *units_by.entry(lang.to_string()).or_insert(0) += u;
+        super::tally_add(&mut symbols_by, lang, s);
+        super::tally_add(&mut units_by, lang, u);
         symbols += s;
         units += u;
         let mut in_bands = 0;
         for (band, n) in f["bands"].as_object().expect("bands") {
             let n = n.as_u64().expect("count");
-            *bands_by.entry(format!("{lang}/{band}")).or_insert(0) += n;
+            super::tally_add(&mut bands_by, &format!("{lang}/{band}"), n);
             in_bands += n;
         }
         assert_eq!(u, in_bands, "{}: units escape the bands", f["path"]);

@@ -6,31 +6,28 @@
 
 mod eval_support;
 
-use eval_support::{
-    eval_doc, git_in, intro_commit, is_ancestor, is_strict_ancestor, load, require_full_history,
-};
+use eval_support::{git_in, intro_commit, is_ancestor, is_strict_ancestor, require_full_history};
 
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
 
 fn audit_intros() -> Vec<String> {
-    CORPORA
-        .iter()
-        .map(|c| intro_commit(&format!("cli/tests/eval_graph_review/{c}.json")))
-        .collect()
+    eval_support::corpus_intros(
+        &|c| format!("cli/tests/eval_graph_review/{c}.json"),
+        &CORPORA,
+    )
 }
 
-/// The sample was drawn blind, then audited: every review table must
-/// STRICTLY descend from the commit that froze the sample.
+/// Legs 1 and 3: sample ≺ every audit table ≺ every precision doc's
+/// generated_from.commit — the shared ordering walk.
 #[test]
-fn sample_precedes_audit() {
-    require_full_history();
-    let sample = intro_commit("contracts/eval/graph-sample-v1.json");
-    for audit in audit_intros() {
-        assert!(
-            is_strict_ancestor(&sample, &audit),
-            "audit table does not strictly descend from the sample freeze (G13)"
-        );
-    }
+fn sample_audit_scoring_ordered() {
+    eval_support::assert_audit_scoring_legs(
+        "contracts/eval/graph-sample-v1.json",
+        &|c| format!("cli/tests/eval_graph_review/{c}.json"),
+        &CORPORA,
+        "graph-precision",
+        "G13",
+    );
 }
 
 /// Armed tripwire, two layers (review F7: a resolver landing outside
@@ -73,35 +70,6 @@ fn audit_precedes_any_resolver() {
             assert!(
                 is_ancestor(audit, &intro),
                 "{path}: graph code landed inside the sample→audit blind window (G13)"
-            );
-        }
-    }
-}
-
-/// The third leg (design G13 verbatim): the audit froze before any
-/// scoring ran — every precision doc's generated_from.commit
-/// strictly descends from every audit table.
-#[test]
-fn audit_precedes_scoring() {
-    require_full_history();
-    let audits = audit_intros();
-    for name in [
-        None,
-        Some("cobra"),
-        Some("requests"),
-        Some("ripgrep"),
-        Some("zod"),
-    ] {
-        let stem = match name {
-            Some(n) => format!("graph-precision-{n}"),
-            None => "graph-precision".into(),
-        };
-        let doc = load(&eval_doc(&stem));
-        let commit = doc["generated_from"]["commit"].as_str().expect("commit");
-        for audit in &audits {
-            assert!(
-                is_strict_ancestor(audit, commit),
-                "{stem}: scored before the audit froze (G13)"
             );
         }
     }
