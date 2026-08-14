@@ -76,6 +76,15 @@ ripgrep 冷 < 60 s；zod 为容量压力例（存活对最多），超线即收 
 > （森林表是稠密矩形）后 self 判决段 ≈ 1 s、ripgrep 22 s——重写全程由
 > CloneProps 穷举等价电池守护，clone golden 重放字节同值。
 
+## M5-3h churn 腿先决测量（设计卷二 §6.1 红线：blame 代价先入册，实测 2026-08-14，release）
+
+口径：`ce churn .. --days N` 现状端到端 = 窗口提交枚举 + 逐提交逐文件 `git show`
+双侧 + fourclass 解析 + 逐 touched 文件 `git blame --line-porcelain HEAD`（无缓存）。
+自仓 138 提交（14d 与 30d 同数=仓史不足 30 天）：**156.7 s / 154.9 s**——blame+show
+子进程风暴主导。3h 约束（产品化前先决）：逐单元 churn 归属必须在 classify_commit
+**既有**的 show+units::segments 解析面内完成，**零新增 git 调用**（结构性断言，
+非事后测量）；blame/survival 半场不动。
+
 ## M5-3g docdup 判决冷路径（设计卷二 §5.3，实测 2026-08-14，release）
 
 口径：`ce docdup <root> --db <fresh>` 端到端 = 冷索引（六次解析含 docsegs）
