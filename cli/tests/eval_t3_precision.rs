@@ -205,6 +205,8 @@ const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {
     sample: "t3-sample",
     gate: 0.85,
     tag: "T-G2 contract",
+    total: 100,
+    slice_floor: 15,
     mutations: &[
         ("rank", "not-a-sampled-rank", "phantom rank"),
         ("truth", "not-a-truth", "cooked truth echo"),

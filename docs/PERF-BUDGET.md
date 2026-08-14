@@ -76,7 +76,15 @@ ripgrep 冷 < 60 s；zod 为容量压力例（存活对最多），超线即收 
 > （森林表是稠密矩形）后 self 判决段 ≈ 1 s、ripgrep 22 s——重写全程由
 > CloneProps 穷举等价电池守护，clone golden 重放字节同值。
 
-## M3 hook 端到端预算（实测 2026-08-07，release，warm daemon，deny 档）
+## M5-3g docdup 判决冷路径（设计卷二 §5.3，实测 2026-08-14，release）
+
+口径：`ce docdup <root> --db <fresh>` 端到端 = 冷索引（六次解析含 docsegs）
++ LSH∪种子候选 + 逐字 run（seed-extend，候选文件重读走 walked_text 单喉）
++ 分块 docdup.request（docPairCap 4096）+ Haskell 精确 Jaccard + 回映。
+自仓（工作树，ce.toml 排除 crosscheck）：89 live 段、38 候选（全种子源）、
+1 请求、38 判、**0 上报**（RM13 报告态：自仓文档现无可报重复）——冷 2.59 s ✅。
+五语料 docdup-precision 生成（钉定树材料化 + 全量产品跑 ×5 + 候选双跑）
+一次 67.5 s ✅；单语料判决段均 < 3 s（段宇宙远小于单元宇宙，pairCap 未触发）。
 
 | 项 | 预算 | 实测（30 次） | 状态 |
 |---|---|---|---|

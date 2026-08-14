@@ -233,30 +233,33 @@ pub fn assert_verdict_conservation(corpus: &str, doc: &Value, classes: &[&str]) 
 }
 
 /// The family contract walk: every frozen doc opened through the
-/// family's own corpus gate, then the overall gate.
+/// family's own corpus gate, then the overall gate at the family's
+/// own row total and per-slice floor.
 pub fn assert_family_contract(
-    family: &str,
-    sample_name: &str,
-    gate: f64,
-    tag: &str,
+    spec: &FamilySpec,
     mut corpus_gate: impl FnMut(&str, &Value, &mut PrecisionAgg),
 ) {
-    let docs = super::assert_frozen_corpus_set(family);
-    let sample = super::load(&super::eval_doc(sample_name));
+    let docs = super::assert_frozen_corpus_set(spec.family);
+    let sample = super::load(&super::eval_doc(spec.sample));
     let mut agg = PrecisionAgg::default();
     for path in &docs {
         corpus_gate(path, &sample, &mut agg);
     }
-    assert_overall_precision(&agg, 100, 15, gate, tag);
+    assert_overall_precision(&agg, spec.total, spec.slice_floor, spec.gate, spec.tag);
 }
 
 /// One precision family's constants, bundled (the E01 params cap and
-/// the twin-test scaffold both dissolve into this one spec).
+/// the twin-test scaffold both dissolve into this one spec). `total`
+/// = judged rows across corpora; `slice_floor` = the per-slice
+/// (language / kind) floor, 0 when population-bounded and recorded
+/// in the doc method instead.
 pub struct FamilySpec<'a> {
     pub family: &'a str,
     pub sample: &'a str,
     pub gate: f64,
     pub tag: &'a str,
+    pub total: u64,
+    pub slice_floor: u64,
     pub mutations: &'a [(&'a str, &'a str, &'a str)],
 }
 
@@ -270,7 +273,7 @@ pub fn assert_precision_family(
     check_doc: &dyn Fn(&str, &Value, &Value),
     bespoke: impl FnOnce(&Value, &dyn Fn(&Value) -> bool),
 ) {
-    assert_family_contract(spec.family, spec.sample, spec.gate, spec.tag, corpus_gate);
+    assert_family_contract(spec, corpus_gate);
     assert_zod_battery(
         spec.family,
         spec.sample,

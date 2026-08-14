@@ -167,6 +167,8 @@ const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {
     sample: "graph-sample",
     gate: 0.90,
     tag: "G2 contract",
+    total: 100,
+    slice_floor: 15,
     mutations: &[("rank", "not-a-sampled-rank", "phantom rank")],
 };
 
