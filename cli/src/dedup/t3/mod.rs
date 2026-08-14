@@ -16,7 +16,8 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.clone-report/0.1.0";
+/// 0.2.0 = the S5 counts (M5 close).
+pub const SCHEMA_ID: &str = "ce.clone-report/0.2.0";
 
 /// One unit's judged fate on the way to the wire.
 enum Outcome {
@@ -42,6 +43,10 @@ pub struct Counts {
     pub over_cap_units: usize,
     pub forest_units: usize,
     pub survivors: u64,
+    pub s5_windowed: u64,
+    pub s5_pruned_label: u64,
+    pub s5_already: u64,
+    pub s5_new: u64,
     pub pairs_dropped_over_cap: u64,
     pub pairs_dropped_forest: u64,
     pub sent: u64,
@@ -60,7 +65,10 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
         orphans == 0,
         "{orphans} unitsig rows missing their symbols identity — nth throat drift"
     );
-    let cand = candidates::collect(root, &mut idx)?;
+    let mut cand = candidates::collect(root, &mut idx)?;
+    // the product judgment sees the exhaustive S5 extension; the
+    // frozen-instrument path calls collect() alone (candidates.rs)
+    candidates::extend_exhaustive(&mut cand);
     let built = build_trees(root, &cand.units)?;
     let (sendable, dropped_over_cap, dropped_forest) = sendable_pairs(&cand.pairs, &built);
     let (rows, judged, prefiltered, requests) = judge(core, &built, &sendable)?;
@@ -83,6 +91,10 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
         over_cap_units,
         forest_units,
         survivors: cand.tally.survivors,
+        s5_windowed: cand.tally.s5_windowed,
+        s5_pruned_label: cand.tally.s5_pruned_label,
+        s5_already: cand.tally.s5_already,
+        s5_new: cand.tally.s5_new,
         pairs_dropped_over_cap: dropped_over_cap,
         pairs_dropped_forest: dropped_forest,
         sent: sendable.len() as u64,

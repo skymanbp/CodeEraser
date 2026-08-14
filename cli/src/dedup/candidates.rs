@@ -40,7 +40,11 @@ pub const HOT_GROUP_CAP: usize = super::pairs::HOT_CAP;
 /// Candidate source labels in bit order: bit i of a pair's `sources`
 /// byte means SOURCES[i] found it. One table — the generators' bit
 /// assignment and the sample's label lookup can never drift apart.
-pub const SOURCES: [&str; 4] = ["s1", "s2", "s3", "s4"];
+/// s5 (bit 4) is the M5-close exhaustive source and PRODUCT-ONLY:
+/// the frozen t3-candidates epoch re-derives collect() by digest, so
+/// s5 lives in extend_exhaustive at the `ce clone` seam — frozen
+/// docs can never carry bit 4.
+pub const SOURCES: [&str; 5] = ["s1", "s2", "s3", "s4", "s5"];
 
 /// One admitted unit; its position in Candidates::units is its id.
 pub struct Unit {
@@ -76,6 +80,13 @@ pub struct Tally {
     pub s3_hot_chained: u64,
     pub s4_hot_chained: u64,
     pub s4_band_groups: BTreeMap<u64, u64>,
+    /// S5 ledger (extend_exhaustive): pairs the size window admitted,
+    /// how many the label bound cut, how many were already four-source
+    /// candidates, and how many are NEW to the judgment.
+    pub s5_windowed: u64,
+    pub s5_pruned_label: u64,
+    pub s5_already: u64,
+    pub s5_new: u64,
 }
 
 pub struct Candidates {
@@ -180,6 +191,62 @@ fn prune(units: &[Unit], union: BTreeMap<(usize, usize), u8>, tally: &mut Tally)
     out
 }
 
+/// S5, the exhaustive in-domain source (M5 close, repaying the recall
+/// instrument's finding: the four identity-signal sources cap recall
+/// at their own yield — requests produced 128 candidate pairs against
+/// a 425-pair comparator denominator, so even a perfect judgment
+/// could not clear 0.30). Same-language admitted units, sorted by
+/// node count; only pairs inside the §4.3 size bound are GENERATED
+/// (`min·den >= num·max` — the identical predicate the prune
+/// applies, evaluated at generation so the pair space stays near-
+/// linear), and the label bound then cuts like everywhere else.
+/// PRODUCT-ONLY by design: collect() stays the frozen four-source
+/// pass whose digest the 3c/3f instruments re-derive on CI, and the
+/// audited precision sample was drawn from that universe — S5 pairs
+/// are candidates the frozen epoch never claimed.
+pub fn extend_exhaustive(c: &mut Candidates) {
+    let have: std::collections::BTreeSet<(usize, usize)> =
+        c.pairs.iter().map(|p| (p.a, p.b)).collect();
+    let mut by_lang: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
+    for (id, u) in c.units.iter().enumerate() {
+        by_lang.entry(&u.lang).or_default().push(id);
+    }
+    let mut fresh = Vec::new();
+    for ids in by_lang.values_mut() {
+        ids.sort_by_key(|&id| c.units[id].nodes);
+        for (i, &a) in ids.iter().enumerate() {
+            for &b in &ids[i + 1..] {
+                // ascending node order: a holds the min side, so the
+                // window closes exactly where the size prune would cut
+                if c.units[a].nodes * TSED_DEN < TSED_NUM * c.units[b].nodes {
+                    break;
+                }
+                c.tally.s5_windowed += 1;
+                let pair = (a.min(b), a.max(b));
+                if have.contains(&pair) {
+                    c.tally.s5_already += 1;
+                } else if matches!(verdict(&c.units[a], &c.units[b]), Verdict::Label) {
+                    c.tally.s5_pruned_label += 1;
+                } else {
+                    fresh.push(pair);
+                }
+            }
+        }
+    }
+    fresh.sort_unstable();
+    fresh.dedup();
+    c.tally.s5_new = fresh.len() as u64;
+    c.pairs.extend(fresh.into_iter().map(|(a, b)| PairRow {
+        a,
+        b,
+        sources: 1 << 4,
+    }));
+    // the clone wire refuses non-ascending pair rows (the frozen
+    // boundary contract) — appended S5 rows must fold back into the
+    // canonical order
+    c.pairs.sort_by_key(|p| (p.a, p.b));
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -224,5 +291,57 @@ mod tests {
                 "n1 = {n1}"
             );
         }
+    }
+
+    /// S5's window IS the size bound, its label cut IS the shared
+    /// verdict, and an existing four-source pair is never duplicated
+    /// — the new pair carries bit 4 alone (frozen docs can never
+    /// hold it, so the source vocabulary stays epoch-safe).
+    #[test]
+    fn exhaustive_extension_windows_prunes_and_never_duplicates() {
+        let full = || vec![(1u64, 100u32)];
+        let mut c = Candidates {
+            // ids 0..3: three ~100-node units sharing labels, one
+            // 84-node unit outside the size window vs 100
+            units: vec![
+                unit(100, full()),
+                unit(100, full()),
+                unit(100, vec![(2, 100)]),
+                unit(84, full()),
+            ],
+            pairs: vec![PairRow {
+                a: 0,
+                b: 1,
+                sources: 0b0010,
+            }],
+            tally: Tally::default(),
+        };
+        extend_exhaustive(&mut c);
+        let s5: Vec<(usize, usize, u8)> = c
+            .pairs
+            .iter()
+            .filter(|p| p.sources == 1 << 4)
+            .map(|p| (p.a, p.b, p.sources))
+            .collect();
+        // (0,1) stays four-source only; (0,2)/(1,2) are label-cut;
+        // (3,*) sits outside the window on every side ≥100... except
+        // 84·100 >= 85·100 is FALSE, so 84 pairs with nothing
+        assert_eq!(s5, vec![], "no fresh pair survives here");
+        assert_eq!(
+            (c.tally.s5_already, c.tally.s5_pruned_label, c.tally.s5_new),
+            (1, 2, 0)
+        );
+        // a genuinely similar unseen pair DOES land, bit 4 alone
+        let mut c2 = Candidates {
+            units: vec![unit(100, full()), unit(90, full())],
+            pairs: vec![],
+            tally: Tally::default(),
+        };
+        extend_exhaustive(&mut c2);
+        assert_eq!(c2.tally.s5_new, 1);
+        assert_eq!(
+            (c2.pairs[0].a, c2.pairs[0].b, c2.pairs[0].sources),
+            (0, 1, 1 << 4)
+        );
     }
 }

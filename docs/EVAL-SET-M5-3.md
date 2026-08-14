@@ -166,14 +166,43 @@ Reference refBlocks 抽 blockOk 五子句谓词（定义誊写保真）——Spe
 boundary；py-tree-sitter 0.26 结点存活期不安全 = 3h 盲审外部工具注记，
 本仓零依赖。
 
+## T3 recall 仪器 B（3m，M5 收口补齐——3a–3g 批缝漏建经验收复核挖出）
+
+**对照物**（provenance 全入档）：similarity-ts 0.5.0（TS，阈值 0.87@main.rs:22，
+`-e ts --no-types`=对齐冻结 canonical-extension 域+函数域）、similarity-py 0.5.0
+（Py，0.85@main.rs:22）、similarity-generic 0.5.0（Go，0.85@main.rs:31；
+**Windows 目录行走缺陷实证（os error 5）→逐文件调用=仅文件内对、名基匹配**）；
+ripgrep 排除（similarity-rs="(future)" 官方 --supported 输出）、self 排除
+（覆盖语言面全为 crosscheck 夹具=产品排除域）。分母=对照物默认参数全检出集，
+**永不缩减**；记功=ce 全层（T1/T2 块或 T3 clone 判决双侧 span 重叠 ≥1 行）。
+
+**根修 = S5 全对候选源**（`candidates::extend_exhaustive`，产品 `ce clone` 专用
+——collect() 四源冻结面零扰动，冻结族 digest 门照绿）：同语言按节点数排序，
+尺寸窗=§4.3 尺寸剪枝同谓词于生成时执行，标签剪枝照跑；wire 升序契约由终排序
+恢复（首跑 desync 教训）。修前候选盲区=硬上限（requests 128 候选对 vs 分母
+425、cobra 1,124 vs 9,205）；修后 not_candidate 桶**清零**。
+
+**冻结 = `t3-recall-{zod,requests,cobra}-v1.json`**（`ce.eval-t3-recall/1.0.0`；
+门 `eval_t3_recall` 信封重放+封闭词表+回归地板+覆盖清单封闭）：recall_raw
+zod **3/6=0.50** / requests **67/425=0.158** / cobra **1417/9205=0.154**；
+recall_incremental 0.0 / 0.058 / 0.083（触发器 <0.50 书面处置=本节即处置：
+增量低因 T3 域与对照物测度轴不同，见下）。**miss 100% 机械归因且全部定义性**：
+size_bound_not_clone 1/135/4453（ce 注册 TSED 下 best-case sim=min/max<0.85
+=数学不可能）+below_floor 0/0/2578（注册短单元域界 T3_MIN_NODES=24）+
+judged_not_clone 2/223/757（真送 TED、按 θ=85/100 拒）。**结论=测度分歧非
+盲区**：mizchi similarity 轴≠ce TSED 轴，0.90 字面门对该对照物可证不可达
+→计划 v1.6 修正案（用户拍板 2026-08-14）：门改只升不降回归地板。
+PERF：S5 后 `ce clone` 冷 requests 1.8s / cobra 3.6s / zod 47.1s
+（19,193→~40k 判决对量级，pre-S5 zod 24.9s@3e——全对候选的代价如实入册）。
+
 ## 复跑
 
 ```
 cd cli && cargo test --test eval_t3_universe --test eval_t3_candidates \
-  --test eval_t3_sample --test eval_t3_precision --test eval_docdup_universe \
-  --test eval_docdup_oracle --test eval_docdup_sample \
-  --test eval_docdup_precision --test eval_churn_ledger \
-  --test baseline_bridge --test core_size_gate
+  --test eval_t3_sample --test eval_t3_precision --test eval_t3_recall \
+  --test eval_docdup_universe --test eval_docdup_oracle \
+  --test eval_docdup_sample --test eval_docdup_precision \
+  --test eval_churn_ledger --test baseline_bridge --test core_size_gate
 ```
 
 外部四语料需本地 `.ce-eval/` 克隆（tip 见上表，CI 门 `rev-parse` 复核 RM19）；
