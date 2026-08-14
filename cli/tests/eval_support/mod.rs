@@ -17,6 +17,7 @@ pub mod docseg;
 pub mod family;
 pub mod graph;
 pub mod t3c;
+pub mod t3f;
 pub mod universe;
 pub use colordiff::*;
 pub use corpus::*;
@@ -25,6 +26,7 @@ pub use docseg::*;
 pub use family::*;
 pub use graph::*;
 pub use t3c::*;
+pub use t3f::*;
 pub use universe::*;
 
 use codeeraser::fourclass::batch::PairInput;

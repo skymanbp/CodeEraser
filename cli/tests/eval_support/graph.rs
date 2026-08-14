@@ -121,24 +121,145 @@ pub fn classify_path(path: &str) -> Result<&'static str, &'static str> {
 /// must be a repo-relative "path" or "path#unit".
 pub const TRUTH_KEYWORDS: [&str; 4] = ["external", "dynamic", "ambiguous", "none"];
 
-/// The audit ground truth, resolved BY NAME on day one (the M5-1d C3
-/// lesson: a gate that resolves via the active corpus reads the
+/// The graph audit ground truth as a by-name mount table (the M5-1d
+/// C3 lesson: a gate that resolves via the active corpus reads the
 /// wrong book and stays green). include_str! makes a missing corpus
 /// a compile error — a whole corpus can never go silently blind
 /// (G10). Shared by the audit gate and the precision instrument.
+pub const GRAPH_REVIEWS: [(&str, &str); 5] = [
+    ("cobra", include_str!("../eval_graph_review/cobra.json")),
+    (
+        "requests",
+        include_str!("../eval_graph_review/requests.json"),
+    ),
+    ("ripgrep", include_str!("../eval_graph_review/ripgrep.json")),
+    ("self", include_str!("../eval_graph_review/self.json")),
+    ("zod", include_str!("../eval_graph_review/zod.json")),
+];
+
+/// Resolve one family's by-name GT mount: table rows are include_str!
+/// bindings, so a missing corpus is a compile error and a wrong name
+/// a loud panic — per family, as DATA (the t3 family's second match
+/// arm was the repo's own ratchet catching the shape).
+pub fn mounted(family: &str, table: &[(&str, &'static str)], corpus: &str) -> &'static str {
+    table
+        .iter()
+        .find(|(n, _)| *n == corpus)
+        .map(|(_, t)| *t)
+        .unwrap_or_else(|| panic!("no {family} review table for {corpus}"))
+}
+
 pub fn review_text(corpus: &str) -> &'static str {
-    match corpus {
-        "cobra" => include_str!("../eval_graph_review/cobra.json"),
-        "requests" => include_str!("../eval_graph_review/requests.json"),
-        "ripgrep" => include_str!("../eval_graph_review/ripgrep.json"),
-        "self" => include_str!("../eval_graph_review/self.json"),
-        "zod" => include_str!("../eval_graph_review/zod.json"),
-        other => panic!("no review table for {other}"),
-    }
+    mounted("graph", &GRAPH_REVIEWS, corpus)
 }
 
 pub fn review_doc(corpus: &str) -> serde_json::Value {
     serde_json::from_str(review_text(corpus)).expect(corpus)
+}
+
+/// The rows of one corpus, in frozen order — the ONE sample filter
+/// every audit/precision family selects rows with (three families
+/// re-grew it independently before the ratchet paired them).
+pub fn of_corpus<'a>(rows: &'a [Value], corpus: &str) -> Vec<&'a Value> {
+    rows.iter()
+        .filter(|r| r["corpus"].as_str() == Some(corpus))
+        .collect()
+}
+
+/// Every promised seat must hold a nonzero count — a vocabulary
+/// class or coverage lane that silently empties is how a gate goes
+/// blind while staying green. Shared by the slice coverage gate and
+/// the audit vocabulary-seat gate.
+pub fn assert_nonzero_seats(counts: &BTreeMap<String, u64>, seats: &[&str], what: &str) {
+    for seat in seats {
+        assert!(
+            counts.get(*seat).copied().unwrap_or(0) > 0,
+            "{seat}: {what}"
+        );
+    }
+}
+
+/// site_gaps/unit_gaps: a REQUIRED field on every audit table — an
+/// absent sweep is indistinguishable from a sweep that found nothing,
+/// so the shape itself carries the "looked, found none" claim. One
+/// checker for every audit family.
+pub fn assert_gaps_accounted(corpus: &str, doc: &Value, key: &str) {
+    let gaps = doc[key]
+        .as_array()
+        .unwrap_or_else(|| panic!("{corpus}: {key} missing (empty allowed, absent not)"));
+    for gap in gaps {
+        let well_formed = gap["path"].as_str().is_some_and(|p| !p.is_empty())
+            && gap["note"].as_str().is_some_and(|n| n.len() >= 10);
+        assert!(well_formed, "{corpus}: malformed {key} row {gap}");
+    }
+}
+
+/// Does `check` panic on this doc? The G9 counterfactual primitive
+/// every tamper battery runs on.
+pub fn doc_refused(doc: &Value, check: &dyn Fn(&Value)) -> bool {
+    let doc = doc.clone();
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || check(&doc))).is_err()
+}
+
+/// The table-driven half of every audit tamper battery: pristine
+/// passes, each single-field mutation of row 0 refuses, a dropped
+/// row refuses. Families add their bespoke cases via doc_refused.
+pub fn assert_tampering_refused(
+    pristine: &Value,
+    mutations: &[(&str, &str, &str)],
+    check: &dyn Fn(&Value),
+) {
+    assert!(!doc_refused(pristine, check), "pristine table must pass");
+    for (field, value, label) in mutations {
+        let mut doc = pristine.clone();
+        doc["rows"][0][*field] = Value::from(*value);
+        assert!(doc_refused(&doc, check), "{label} must refuse");
+    }
+    let mut missing = pristine.clone();
+    missing["rows"].as_array_mut().expect("rows").remove(0);
+    assert!(doc_refused(&missing, check), "missing row must refuse");
+}
+
+/// The per-corpus audited↔sampled bijection walk (G3/G4/G7): count
+/// equality, then every audited row resolved against its sampled row
+/// and deduped; row CONTENT stays with the calling family.
+pub fn each_audited_row<'a>(
+    corpus: &str,
+    audited: &'a [Value],
+    sample_rows: &[&'a Value],
+    mut f: impl FnMut(&'a str, &'a Value, &'a Value),
+) {
+    let sampled: BTreeMap<&str, &Value> = sample_rows
+        .iter()
+        .map(|r| (r["rank"].as_str().expect("rank"), *r))
+        .collect();
+    assert_eq!(audited.len(), sampled.len(), "{corpus}: audited row count");
+    let mut seen = BTreeSet::new();
+    for row in audited {
+        let (rank, s) = bijective_row(corpus, row, &sampled, &mut seen);
+        f(rank, row, s);
+    }
+}
+
+/// One audit table's whole frame: embedded corpus name, rows
+/// extracted, this corpus's sample selected, bijection walked — the
+/// calling family's closure checks row content only (the frame
+/// itself was the last shape the ratchet caught the two audit
+/// families sharing).
+pub fn check_audit_frame<'a>(
+    corpus: &str,
+    doc: &'a Value,
+    sample_rows: &'a [Value],
+    f: impl FnMut(&'a str, &'a Value, &'a Value),
+) {
+    assert_eq!(
+        doc["corpus"].as_str(),
+        Some(corpus),
+        "{corpus}: embedded name"
+    );
+    let audited = doc["rows"].as_array().expect("rows");
+    let sampled = of_corpus(sample_rows, corpus);
+    each_audited_row(corpus, audited, &sampled, f);
 }
 
 /// (corpus name, pinned tree OID). Self unless CE_SLICE_REPO points

@@ -15,7 +15,7 @@ use crate::scan::lang::Lang;
 use anyhow::{Context, Result, ensure};
 use serde::Serialize;
 use serde_json::json;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
@@ -110,7 +110,9 @@ fn name(u: &Unit) -> String {
 /// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — integer cross-
 /// multiplication with the SAME constants the admissible prunes used;
 /// the wire carries raw ted, so the verdict recomputes from one run.
-fn is_clone(ted: i64, n1: i64, n2: i64) -> bool {
+/// Public: the 3f precision instrument scores sampled pairs through
+/// THIS binding — a re-derived formula would be a second threshold.
+pub fn is_clone(ted: i64, n1: i64, n2: i64) -> bool {
     let mx = n1.max(n2);
     (mx - ted) * TSED_DEN >= TSED_NUM * mx
 }
@@ -211,24 +213,12 @@ fn judge(core: &str, built: &[Outcome], sendable: &[&PairRow]) -> Result<JudgeOu
         requests: 0,
     };
     for chunk in sendable.chunks(wire::PAIR_CAP) {
-        let order: Vec<usize> = chunk
-            .iter()
-            .flat_map(|p| [p.a, p.b])
-            .collect::<BTreeSet<_>>()
-            .into_iter()
-            .collect();
-        let rank: BTreeMap<usize, usize> = order.iter().enumerate().map(|(r, &g)| (g, r)).collect();
-        let trees: Vec<&tree::UnitTree> = order
-            .iter()
-            .map(|&g| match &built[g] {
-                Outcome::Tree(t) => t,
-                _ => unreachable!("sendable pairs reference built trees only"),
-            })
-            .collect();
-        let local: Vec<[usize; 2]> = chunk.iter().map(|p| [rank[&p.a], rank[&p.b]]).collect();
-        let reply = link
-            .request("clone", wire::request_body(&trees, &local))
-            .map_err(anyhow::Error::msg)?;
+        let ab: Vec<(usize, usize)> = chunk.iter().map(|p| (p.a, p.b)).collect();
+        let (order, body) = wire::chunk_request(&ab, |g| match &built[g] {
+            Outcome::Tree(t) => t,
+            _ => unreachable!("sendable pairs reference built trees only"),
+        });
+        let reply = link.request("clone", body).map_err(anyhow::Error::msg)?;
         let scores = wire::parse_result(&reply)?;
         out.judged += scores.judged;
         out.prefiltered += scores.prefiltered;

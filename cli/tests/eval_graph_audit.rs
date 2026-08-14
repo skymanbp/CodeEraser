@@ -14,7 +14,7 @@ mod eval_support;
 
 use eval_support::{TRUTH_KEYWORDS, eval_doc, frozen_docs, load, review_doc};
 use serde_json::Value;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 
 // "mismatch" is NOT truth vocabulary (TRUTH_KEYWORDS): an auditor
 // reporting a frozen site it could not find must redden the gate,
@@ -49,26 +49,12 @@ fn universe_paths(corpus: &str) -> BTreeSet<String> {
 /// tip, a rank bijection (phantom and missing rows equally loud),
 /// verbatim echo of every identity field, and a verdict per row.
 fn check_corpus(corpus: &str, doc: &Value, sample_rows: &[Value]) {
-    assert_eq!(
-        doc["corpus"].as_str(),
-        Some(corpus),
-        "{corpus}: embedded name"
-    );
     let universe = universe_paths(corpus);
-    let audited = doc["rows"].as_array().expect("rows");
-    let sampled: BTreeMap<&str, &Value> = sample_rows
-        .iter()
-        .filter(|r| r["corpus"].as_str() == Some(corpus))
-        .map(|r| (r["rank"].as_str().expect("rank"), r))
-        .collect();
-    assert_eq!(audited.len(), sampled.len(), "{corpus}: audited row count");
-    let mut seen = BTreeSet::new();
-    for row in audited {
-        let (rank, s) = eval_support::bijective_row(corpus, row, &sampled, &mut seen);
+    eval_support::check_audit_frame(corpus, doc, sample_rows, |rank, row, s| {
         eval_support::assert_identity_echo(corpus, rank, row, s);
         assert_eq!(doc["tip"], s["commit"], "{corpus}: tip vs sampled commit");
         check_verdict(corpus, row, &universe);
-    }
+    });
 }
 
 /// truth ∈ keywords, or an in-corpus target BOUND to the frozen file
@@ -122,46 +108,26 @@ fn audit_covers_sample_bijectively() {
 #[test]
 fn audit_site_gaps_accounted() {
     for corpus in CORPORA {
-        let doc = review_doc(corpus);
-        let gaps = doc["site_gaps"]
-            .as_array()
-            .unwrap_or_else(|| panic!("{corpus}: site_gaps missing (empty allowed, absent not)"));
-        for gap in gaps {
-            let well_formed = gap["path"].as_str().is_some_and(|p| !p.is_empty())
-                && gap["note"].as_str().is_some_and(|n| n.len() >= 10);
-            assert!(well_formed, "{corpus}: malformed site gap {gap}");
-        }
+        eval_support::assert_gaps_accounted(corpus, &review_doc(corpus), "site_gaps");
     }
 }
 
 /// Counterfactual (the G9 discipline): every advertised refusal is
-/// exercised, not assumed — table-driven after the first three
-/// copy-pasted mutations tripped the repo's own dedup ratchet
+/// exercised, not assumed — the shared table-driven battery
 /// (reviews F10/F4 added the last three cases).
 #[test]
 fn audit_refuses_tampering() {
     let sample = load(&eval_doc("graph-sample"));
     let rows = sample["rows"].as_array().expect("rows").clone();
-    let refused = |doc: &Value| {
-        let doc = doc.clone();
-        let rows = rows.clone();
-        std::panic::catch_unwind(move || check_corpus("cobra", &doc, &rows)).is_err()
-    };
-    let pristine = review_doc("cobra");
-    assert!(!refused(&pristine), "pristine table must pass");
-    let field_mutations: [(&str, &str, &str); 5] = [
-        ("rank", "not-a-sampled-rank", "phantom rank"),
-        ("why", "yes", "stub why"),
-        ("truth", "mismatch", "auditor mismatch"),
-        ("spec", "phantom-spec", "identity echo drift"),
-        ("truth", "probably/exceptions.py", "non-universe truth"),
-    ];
-    for (field, value, label) in field_mutations {
-        let mut doc = pristine.clone();
-        doc["rows"][0][field] = Value::from(value);
-        assert!(refused(&doc), "{label} must refuse");
-    }
-    let mut missing = pristine.clone();
-    missing["rows"].as_array_mut().expect("rows").remove(0);
-    assert!(refused(&missing), "missing row must refuse");
+    eval_support::assert_tampering_refused(
+        &review_doc("cobra"),
+        &[
+            ("rank", "not-a-sampled-rank", "phantom rank"),
+            ("why", "yes", "stub why"),
+            ("truth", "mismatch", "auditor mismatch"),
+            ("spec", "phantom-spec", "identity echo drift"),
+            ("truth", "probably/exceptions.py", "non-universe truth"),
+        ],
+        &|doc| check_corpus("cobra", doc, &rows),
+    );
 }

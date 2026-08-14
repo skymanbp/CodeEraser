@@ -1,0 +1,47 @@
+{
+  "corpus": "self",
+  "tip": "60f73e3bea7681721a2f572e64788948a17830f6",
+  "auditor": "independent Opus subagent (M5-2d precedent; RM18: assembly carried verbatim texts only, no judgment fields)",
+  "rows": [
+    {
+      "rank": "007676b71af1a531046fb745fe09644179a2f3fe9baec3d9947d1a46e18856ba",
+      "corpus": "self",
+      "lang": "rs",
+      "band": "s",
+      "source": "s4",
+      "a_path": "cli/src/scan/walk.rs",
+      "a_key": "(anonymous)/1",
+      "a_nth": 0,
+      "b_path": "cli/src/scan/walk.rs",
+      "b_key": "(anonymous)/1",
+      "b_nth": 1,
+      "truth": "t1t2",
+      "why": "Byte-for-byte identical text `.filter_map(|p| crate::scan::lang::Lang::from_path(&p).map(|l| (p, l)))` — same file, same line 48, two anonymous closure units (nth 0 and nth 1) sliced to the identical span, so the tokens match exactly with no renaming at all."
+    },
+    {
+      "rank": "10f19af4695b3ab8959fb191cbbdb7377c7a27e0ad4217a0ee05a71ba6efc213",
+      "corpus": "self",
+      "lang": "py",
+      "band": "s",
+      "source": "s4",
+      "a_path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "a_key": "iter_slices/2",
+      "a_nth": 0,
+      "b_path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "b_key": "iter_slices/2",
+      "b_nth": 1,
+      "truth": "t1t2",
+      "why": "Same name `iter_slices`, same parameter names `string`/`slice_length`, same `| None` and `Generator[..., None, None]` shape and same `...` body; the only token difference is the consistent type-identifier substitution `bytes`->`str` in both the parameter and the Generator element, which identifier-normalized fingerprinting reports as an exact renamed copy."
+    }
+  ],
+  "unit_gaps": [
+    {
+      "path": "cli/src/scan/walk.rs",
+      "note": "Row 007676b7: both sides are the same single chained method-call line (a_start==a_end==b_start==b_end==48) rather than a self-contained unit; the two nth values (0 and 1) suggest the outer `|p| ...` closure and the inner `|l| (p, l)` closure were both sliced to the whole enclosing line, so the two 'units' are the same text and the inner closure's real extent is not represented."
+    },
+    {
+      "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "note": "Row 10f19af4: the slices (614-616, 618-620) start at `def` and omit the preceding decorator line, so the `@overload` marker that makes these two adjacent stubs sibling signatures of one function rather than duplicate definitions is not visible in the extracted text; the def+`...` body itself is otherwise coherent."
+    }
+  ]
+}

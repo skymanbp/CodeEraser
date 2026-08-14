@@ -55,18 +55,8 @@ fn row_hash(domain: &str, row: &Value) -> String {
 /// Walk one corpus's frozen candidate doc + live pass into pool rows,
 /// asserting the digest anchor before a single row enters the pool.
 fn corpus_pool(name: &Option<String>) -> (String, Vec<PoolRow>) {
-    let corpus = name.as_deref().unwrap_or("self").to_string();
-    let doc = load(&eval_doc(&doc_stem("t3-candidates", name)));
-    let tip = doc["corpus"]["tip"].as_str().expect("tip").to_string();
-    let repo = name
-        .as_ref()
-        .map(|n| format!("{}/corpora/{n}", out_dir().display()));
-    let c = corpus_candidates(repo.as_deref(), name, &tip);
-    assert_eq!(
-        pair_digest(&c),
-        doc["pairs_sha256"].as_str().expect("digest"),
-        "{corpus}: live candidate pass no longer matches the frozen universe"
-    );
+    let a = eval_support::anchored_candidates(name);
+    let (corpus, tip, c) = (a.corpus, a.tip, a.candidates);
     let rows = c
         .pairs
         .iter()

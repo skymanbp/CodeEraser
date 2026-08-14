@@ -84,12 +84,11 @@ fn graph_slice_consistent() {
             *lang_sites.entry(lang.to_string()).or_insert(0) += n.as_u64().expect("n");
         }
     });
-    for lang in SCOPE_EXTS {
-        assert!(
-            lang_sites.get(lang).copied().unwrap_or(0) > 0,
-            "no {lang} sites across frozen slices (D2-4)"
-        );
-    }
+    eval_support::assert_nonzero_seats(
+        &lang_sites,
+        &SCOPE_EXTS,
+        "no sites in any frozen slice (D2-4)",
+    );
 }
 
 /// The detector and the frozen self universe must not drift apart

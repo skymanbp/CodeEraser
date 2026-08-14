@@ -35,14 +35,10 @@ fn slice_stem(name: Option<&str>) -> String {
     }
 }
 
-/// Sample rows of one corpus, in frozen sample order.
+/// Sample rows of one corpus, in frozen sample order (the shared
+/// of_corpus filter under the graph sample's key).
 fn corpus_rows<'a>(sample: &'a Value, corpus_key: &str) -> Vec<&'a Value> {
-    sample["rows"]
-        .as_array()
-        .expect("rows")
-        .iter()
-        .filter(|r| r["corpus"].as_str() == Some(corpus_key))
-        .collect()
+    eval_support::of_corpus(sample["rows"].as_array().expect("rows"), corpus_key)
 }
 
 /// Ranks whose verdict demands attention (everything but correct /
@@ -248,10 +244,8 @@ fn precision_meets_the_contract() {
 fn precision_refuses_tampering() {
     let sample = load(&eval_doc("graph-sample"));
     let pristine = load(&eval_doc(&doc_stem(Some("zod"))));
-    let refused = |doc: &Value| {
-        let (doc, sample) = (doc.clone(), sample.clone());
-        std::panic::catch_unwind(move || check_precision_doc("zod", &doc, &sample)).is_err()
-    };
+    let refused =
+        |doc: &Value| eval_support::doc_refused(doc, &|d| check_precision_doc("zod", d, &sample));
     assert!(!refused(&pristine), "pristine doc must pass");
     let mut flipped = pristine.clone();
     flipped["rows"][0]["verdict"] = Value::from("correct");

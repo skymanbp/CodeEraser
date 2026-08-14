@@ -40,6 +40,39 @@ pub fn t3c_constants(corpus: &str) -> Value {
     })
 }
 
+/// One corpus resolved end to end: frozen candidates doc → pinned
+/// tip → live candidate pass, digest-anchored before a single pair
+/// is consumed. The start line of every 3c/3f consumer (the sample
+/// generator and the audit assembly both walked this verbatim until
+/// the ratchet paired them).
+pub struct Anchored {
+    pub corpus: String,
+    pub tip: String,
+    pub repo: Option<String>,
+    pub candidates: Candidates,
+}
+
+pub fn anchored_candidates(name: &Option<String>) -> Anchored {
+    let corpus = name.as_deref().unwrap_or("self").to_string();
+    let doc = super::load(&super::eval_doc(&super::doc_stem("t3-candidates", name)));
+    let tip = doc["corpus"]["tip"].as_str().expect("tip").to_string();
+    let repo = name
+        .as_ref()
+        .map(|n| format!("{}/corpora/{n}", super::out_dir().display()));
+    let candidates = corpus_candidates(repo.as_deref(), name, &tip);
+    assert_eq!(
+        pair_digest(&candidates),
+        doc["pairs_sha256"].as_str().expect("digest"),
+        "{corpus}: live candidate pass no longer matches the frozen universe"
+    );
+    Anchored {
+        corpus,
+        tip,
+        repo,
+        candidates,
+    }
+}
+
 /// Materialized pinned tree → product index → candidate pass, with
 /// the walk anchored to the frozen t3-universe sibling first (same
 /// tip, same path→sha256 inventory).

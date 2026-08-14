@@ -9,7 +9,7 @@ use super::tree::UnitTree;
 use crate::dedup::candidates::{TSED_DEN, TSED_NUM};
 use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "clone/1";
@@ -42,6 +42,28 @@ pub fn request_body(trees: &[&UnitTree], pairs: &[[usize; 2]]) -> Value {
         })
         .collect();
     json!({"trees": rows, "pairs": pairs})
+}
+
+/// One chunk's request-local layout: global unit ids by sorted rank
+/// (the monotone map keeps the wire's strictly-ascending pair rows
+/// for free) and the encoded body. Reply score rows map back through
+/// the returned order. ONE throat — the product driver and the 3f
+/// precision instrument both lay out chunks here, so the rank
+/// discipline can never fork.
+pub fn chunk_request<'t>(
+    pairs: &[(usize, usize)],
+    tree_of: impl Fn(usize) -> &'t UnitTree,
+) -> (Vec<usize>, Value) {
+    let order: Vec<usize> = pairs
+        .iter()
+        .flat_map(|&(a, b)| [a, b])
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    let rank: BTreeMap<usize, usize> = order.iter().enumerate().map(|(r, &g)| (g, r)).collect();
+    let trees: Vec<&UnitTree> = order.iter().map(|&g| tree_of(g)).collect();
+    let local: Vec<[usize; 2]> = pairs.iter().map(|&(a, b)| [rank[&a], rank[&b]]).collect();
+    (order, request_body(&trees, &local))
 }
 
 /// One chunk's judged scores, in request-local tree indices.
