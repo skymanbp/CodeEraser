@@ -27,7 +27,7 @@ mode = "observe"   # 全局覆盖（可选）：observe | warn | ask | deny
 （写后文件 > 750 行）**两类 PreToolUse 规则默认 `ask`；Stop 审计 /
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
 观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
-每行带 `schema`（当前 `ce.observe/0.3.0`，单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`）、`session_id` 与 `ts_ms`；
+每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`——版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
 `session_id` 为 `null` 表示该条不属于任何会话——`ce precommit` 跑在终端里、
 不是 hook，是唯一会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

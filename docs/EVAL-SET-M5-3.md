@@ -217,6 +217,19 @@ CloneProps +prefilter 族性质（shipped `provablyBelow` ⇒ 真 ted 非克隆�
 daemon 冷启动 vs 外部写者收敛（coldstart 竞态注记转为按构造良性）；
 M6 GUI 直写同库自此有据（风险 R1 解除）。
 
+**CI 门补全批（审计 D5/D6/D7/D8/D9 响应）**：①`ce check --fail-under 800`
+入双平台 dogfood（floor 腿活化；800=实测 866–872 带下 66‰ 塌方地板，
+决定值非推导值）；churn 腿（--days 14，axis 5 活=实测 2 hit）实测 215.8s
+⇒ 仅 ubuntu 一腿承担（成本有界诚实覆盖非全平台结构性死亡）。
+②`ce deadcode --check`/`ce docdup --check` 新旗入 CI（emit_checked 单咽喉
+=dedup --check 同形；deadcode_e2e 红绿双向钉：孤儿必红、entry_globs 处置
+必绿）——M5-2「全处置」与 §7.5 docdup 条款自此代码执行非纪律执行。
+③`regen_tables` 三 --ignored 漂移检测（D8 生成器回仓）：go STD/py STDLIB/
+hs_boot 各按其记录管线对工具链重导出集合比对——**首跑即抓获自身滤网语义
+缺陷**（Go internal 规则=任一路径段，`log/internal` 逃过前缀检查而冻结表
+本身正确），修后 3/3 全表零漂移证毕。④D7 根修=删 README 版本抄本立单源
+（hookio.rs::OBSERVE_SCHEMA 唯一权威）。
+
 ## 复跑
 
 ```

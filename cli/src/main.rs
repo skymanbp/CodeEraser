@@ -81,6 +81,10 @@ enum Cmd {
         core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
+        /// Exit 1 when any file-tier dead verdict lands (the CI
+        /// dogfood gate for the M5-2 "全处置" acceptance row)
+        #[arg(long)]
+        check: bool,
     },
     /// T3 near-miss clone judgment (M5-3): TED via the core's
     /// clone/1; --units lists the cached unit universe instead
@@ -169,7 +173,8 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Cmd> {
             db,
             core,
             format,
-        } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, &core, json(format)),
+            check,
+        } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, &core, json(format), check),
         Cmd::Clone(a) => main_judge::clone_cmd(a),
         Cmd::Docdup(a) => main_judge::docdup_cmd(a),
         Cmd::Join(a) => main_judge::join_cmd(a),

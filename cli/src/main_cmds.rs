@@ -55,10 +55,27 @@ pub fn graph_cmd(root: &Path, sites: bool, json: bool) -> ExitCode {
     graph::run_sites(root, json)
 }
 
-pub fn deadcode_cmd(root: &Path, db: Option<PathBuf>, core: &str, json: bool) -> ExitCode {
+pub fn deadcode_cmd(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    json: bool,
+    check: bool,
+) -> ExitCode {
     match graph::deadcode::run(root, db, core) {
         Ok(report) => {
             print_deadcode(&report, json);
+            // --check (M5-close CI gate): the M5-2 acceptance row
+            // "本仓库 deadcode 发现全处置" was honored by discipline
+            // only — a finding must now be dispositioned or the gate
+            // is red, exactly the dedup --check shape
+            if check && !report.dead.is_empty() {
+                eprintln!(
+                    "deadcode check: {} dead file(s) — disposition or entry_globs them",
+                    report.dead.len()
+                );
+                return ExitCode::FAILURE;
+            }
             ExitCode::SUCCESS
         }
         Err(err) => fail("deadcode", err),

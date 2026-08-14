@@ -40,6 +40,10 @@ pub struct CloneArgs {
 pub struct DocdupArgs {
     #[command(flatten)]
     judge: JudgeArgs,
+    /// Exit 1 when any duplication is reported (the CI dogfood gate —
+    /// plan §7.5's docdup clause, honored in code since M5 close)
+    #[arg(long)]
+    check: bool,
 }
 
 #[derive(clap::Args)]
@@ -71,9 +75,25 @@ fn emit<R>(
     run: impl FnOnce() -> anyhow::Result<R>,
     print: impl FnOnce(&R),
 ) -> ExitCode {
+    emit_checked(name, run, print, |_| None)
+}
+
+/// emit plus a veto: a --check style gate turns a printed report
+/// into exit 1 with a named reason — one throat for every checkable
+/// judgment family (the dedup --check shape).
+fn emit_checked<R>(
+    name: &str,
+    run: impl FnOnce() -> anyhow::Result<R>,
+    print: impl FnOnce(&R),
+    veto: impl FnOnce(&R) -> Option<String>,
+) -> ExitCode {
     match run() {
         Ok(report) => {
             print(&report);
+            if let Some(why) = veto(&report) {
+                eprintln!("{name} check: {why}");
+                return ExitCode::FAILURE;
+            }
             ExitCode::SUCCESS
         }
         Err(err) => fail(name, err),
@@ -86,10 +106,18 @@ fn emit<R>(
 pub fn docdup_cmd(a: DocdupArgs) -> ExitCode {
     let j = a.judge;
     let as_json = json(j.format);
-    emit(
+    emit_checked(
         "docdup",
         || docdup::judge::run(&or_cwd(j.root), j.db, &j.core),
         |r| docdup::judge::print(r, as_json),
+        |r| {
+            (a.check && !r.hits.is_empty()).then(|| {
+                format!(
+                    "{} reported duplication(s) — resolve or exempt them",
+                    r.hits.len()
+                )
+            })
+        },
     )
 }
 

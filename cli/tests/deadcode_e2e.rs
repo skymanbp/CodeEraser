@@ -77,3 +77,33 @@ fn empty_index_is_an_explicit_error() {
         "explicit empty-index error, got: {err:#}"
     );
 }
+
+/// The CI gate flag fires BOTH ways (M5-close: a gate that never
+/// demonstrated red is unproven): a dead orphan makes `--check` exit
+/// 1; dispositioning it through entry_globs turns the same tree
+/// green. Arrange rides the shared fixture throat — hand-written
+/// write stanzas were the ratchet's catch here.
+#[test]
+fn check_flag_reds_on_dead_and_greens_on_disposition() {
+    let fx = common::fixture(
+        "deadcode-checkflag",
+        &[
+            ("ce.toml", "[graph]\nentry_globs = [\"root.ts\"]\n"),
+            ("root.ts", "import './used';\n"),
+            ("used.ts", "export {};\n"),
+            ("orphan.ts", "export {};\n"),
+        ],
+    );
+    let core = core_bin();
+    let gate = |why: &str, ok: bool| {
+        let out = common::run_ce(&fx.dir, &["deadcode", ".", "--core", &core, "--check"]);
+        assert_eq!(out.status.success(), ok, "{why}");
+    };
+    gate("an undispositioned orphan must red", false);
+    std::fs::write(
+        fx.dir.join("ce.toml"),
+        "[graph]\nentry_globs = [\"root.ts\", \"orphan.ts\"]\n",
+    )
+    .expect("toml");
+    gate("a dispositioned tree must pass", true);
+}

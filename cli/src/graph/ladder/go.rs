@@ -161,8 +161,9 @@ fn external_rung(spec: &str) -> Outcome {
 /// (2026-08-13) via `go list std` with internal/ and vendor/ paths
 /// filtered out (user code cannot import them), never hand-typed. A
 /// missing name degrades to Unresolved (precision-safe), visible in
-/// the ledger, and is repaid by regenerating this list.
-const STD: &str = "\
+/// the ledger, and is repaid by regenerating this list. pub: the
+/// regen_tables drift check re-derives it from the toolchain.
+pub const STD: &str = "\
 archive/tar archive/zip bufio bytes cmp compress/bzip2 compress/flate
 compress/gzip compress/lzw compress/zlib container/heap container/list
 container/ring context crypto crypto/aes crypto/cipher crypto/des crypto/dsa

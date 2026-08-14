@@ -20,7 +20,9 @@ use std::path::Path;
 
 pub mod go;
 pub mod hs;
-mod hs_boot;
+// pub: the regen_tables drift check re-derives the BOOT table from
+// the toolchain (M5-close audit D8 — reproducible regeneration)
+pub mod hs_boot;
 pub mod md;
 pub mod py;
 pub mod rs;
