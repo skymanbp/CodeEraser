@@ -66,9 +66,8 @@ pub fn report_string(
 
 fn measure_file(path: &Path, root: &Path, language: Lang) -> Result<FileMetrics> {
     let src = std::fs::read(path).with_context(|| format!("read {}", path.display()))?;
-    let rel = path.strip_prefix(root).unwrap_or(path);
     let mut out = FileMetrics {
-        path: rel.display().to_string().replace('\\', "/"),
+        path: walk::rel_str(root, path),
         lang: language.name(),
         total_lines: metrics::size::total_lines(&src),
         comment_lines: 0,

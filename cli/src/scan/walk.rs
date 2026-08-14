@@ -50,6 +50,18 @@ pub fn scoped_lang_files(
     Ok((config, files))
 }
 
+/// Repo-root-relative path in the report's canonical spelling
+/// (forward slashes) — the ONE form file identities are keyed and
+/// fingerprinted under; scan reports and baseline entities must
+/// never disagree on it.
+pub fn rel_str(root: &Path, path: &Path) -> String {
+    path.strip_prefix(root)
+        .unwrap_or(path)
+        .display()
+        .to_string()
+        .replace('\\', "/")
+}
+
 /// Collect candidate files under `root`, honoring the exclusion model.
 pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, String> {
     let overrides = build_overrides(root, extra_excludes)?;

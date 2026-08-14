@@ -46,14 +46,11 @@ jobs:
           cabal build all
           cabal test all
 
-      # Interim E01 gate for core/ until ce scan speaks Haskell (M5):
-      # 300-line file ceiling over core/**/*.hs, red on breach.
-      - name: Haskell file-size gate (E01 interim)
-        shell: bash
-        run: |
-          bad=$(find core/app core/test -name '*.hs' -exec wc -l {} + \
-                | awk '$2 != "total" && $1 > 300 {print; found=1} END {exit found}') \
-            || { echo "E01: Haskell file over 300 lines:"; echo "$bad"; exit 1; }
+      # The interim Haskell file-size gate (E01, 300-line ceiling
+      # over core/**/*.hs) retired here (M5-3j): per-file ratchet
+      # ceilings in ce-baseline.json now gate core/ via `ce check`,
+      # and tests/core_size_gate.rs asserts per file that the
+      # replacement is never weaker — and that this step stays gone.
 
       - uses: dtolnay/rust-toolchain@stable # version pinned by cli/rust-toolchain.toml
       - uses: Swatinem/rust-cache@v2

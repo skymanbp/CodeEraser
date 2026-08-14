@@ -4,6 +4,7 @@
 > [manifest-v1.json](../contracts/eval/manifest-v1.json) 共同构成冻结记录；
 > 样本载荷含其它私有仓库全文，按用户拍板（2026-08-10）**不入库**，落本地
 > `.ce-eval/`（.gitignore），manifest 逐样本 SHA-256 钉定、可随时重建校验。
+> 本册收录至 M5-2；M5-3 仪器冻结登记另册 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)（决策 ⑨ 拆册 2026-08-14；本册 300 行自此为 E01 硬线，`core_size_gate.rs` ceiling 断言执行——RM20）。
 
 ## 构成（用户拍板 2026-08-10）
 
@@ -293,8 +294,7 @@ dynamic/ambiguous/none 零 GT = 2f fixture 面补；rank 极小性门不验—�
 ## 复跑 / 校验
 
 ```
-cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> \
-CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
+cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
 ```
 
 重建 `.ce-eval/` 重写 manifest，diff 为空即完整复现；依赖本机 transcripts 留存，清理后仅 manifest 哈希可证（样本备份归用户）。
