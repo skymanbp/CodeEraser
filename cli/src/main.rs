@@ -78,8 +78,8 @@ enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
-    /// T3 near-miss clone subsystem (M5-3): --units lists the cached
-    /// unit universe (no judgment until the TED batch lands)
+    /// T3 near-miss clone judgment (M5-3): TED via the core's
+    /// clone/1; --units lists the cached unit universe instead
     Clone(CloneArgs),
     /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
     Dedup(DedupArgs),

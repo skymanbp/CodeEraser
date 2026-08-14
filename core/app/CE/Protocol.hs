@@ -9,6 +9,7 @@
 -- never a crash.
 module CE.Protocol (proto, respond) where
 
+import qualified CE.Clone as Clone
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
@@ -78,13 +79,13 @@ dispatch version env line
   | envType env == "graph.request" = case Graph.respond proto line of
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
-  -- The three M5-3 families are DECLARED at 2.2.0 but still stubs:
-  -- every request — well-formed or not — answers error/contract
-  -- until the judgment batch lands (clone → T3, docdup → docdup,
-  -- verdict → score). Their goldens pin this stance and are
-  -- regenerated when each family's semantics arrive.
-  | envType env == "clone.request" =
-      errReply (envId env) "contract" "clone/1: declared at 2.2.0, judgment lands with the T3 batch"
+  -- clone/1 judgment landed with the T3 batch (M5-3e); docdup/1 and
+  -- verdict/1 remain declared-at-2.2.0 stubs answering error/contract
+  -- until their judgment batches (3g, 3i). Goldens pin each stance
+  -- and regenerate when a family's semantics arrive.
+  | envType env == "clone.request" = case Clone.respond proto line of
+      Left (rid, code, message) -> errReply (rid <|> envId env) code message
+      Right bytes -> bytes
   | envType env == "docdup.request" =
       errReply (envId env) "contract" "docdup/1: declared at 2.2.0, judgment lands with the docdup batch"
   | envType env == "verdict.request" =

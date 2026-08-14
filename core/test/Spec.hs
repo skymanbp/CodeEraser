@@ -10,6 +10,7 @@ module Main (main) where
 
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
+import qualified CloneProps
 import qualified GraphProps
 import qualified Reference
 import qualified ReferenceGraph
@@ -41,6 +42,7 @@ main = do
       , Reference.equivalence
       , ReferenceGraph.equivalence
       , GraphProps.battery
+      , CloneProps.battery
       ]
   unless (and results) exitFailure
 

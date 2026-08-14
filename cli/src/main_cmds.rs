@@ -116,21 +116,30 @@ pub struct CloneArgs {
     /// Index database path (default: <root>/.ce/index.db)
     #[arg(long)]
     db: Option<PathBuf>,
-    /// List the unit universe
+    /// List the unit universe instead of judging
     #[arg(long)]
     units: bool,
+    /// Path to the ce-core executable
+    #[arg(long, default_value = "ce-core")]
+    core: String,
     #[arg(long, value_enum, default_value_t = OutFormat::Console)]
     format: OutFormat,
 }
 
-/// `ce clone --units` (M5-3b): refresh the index, assert the
-/// unitsig/symbols identity agreement (zero orphans — the nth throat
-/// is one function, and this checks it instead of assuming it), and
-/// list the cached unit universe. No judgment until the TED batch.
+/// `ce clone` (M5-3e): the T3 TED judgment over the frozen candidate
+/// pass — trees to the core in chunks, raw scores back, verdicts at
+/// 85/100. `--units` (M5-3b) instead lists the cached unit universe
+/// after asserting the unitsig/symbols identity agreement (zero
+/// orphans — the nth throat is one function, checked, not assumed).
 pub fn clone_cmd(a: CloneArgs) -> ExitCode {
     if !a.units {
-        eprintln!("ce clone: only --units exists until the T3 judgment batch lands");
-        return ExitCode::from(2);
+        return match dedup::t3::run(&or_cwd(a.root), a.db, &a.core) {
+            Ok(report) => {
+                dedup::t3::print(&report, json(a.format));
+                ExitCode::SUCCESS
+            }
+            Err(err) => fail("clone", err),
+        };
     }
     match clone_units(&or_cwd(a.root), a.db) {
         Ok(rows) => {

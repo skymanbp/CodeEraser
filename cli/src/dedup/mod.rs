@@ -12,6 +12,7 @@ pub mod probe;
 pub(crate) mod schema;
 mod sources;
 pub mod struct_fp;
+pub mod t3;
 pub mod tokens;
 pub mod unitcache;
 mod walkidx;
