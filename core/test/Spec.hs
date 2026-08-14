@@ -13,6 +13,7 @@ import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
 import qualified CloneProps
 import qualified GraphProps
+import qualified JoinProps
 import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
@@ -47,6 +48,7 @@ main = do
       , ReferenceJaccard.equivalence
       , GraphProps.battery
       , CloneProps.battery
+      , JoinProps.battery
       ]
   unless (and results) exitFailure
 

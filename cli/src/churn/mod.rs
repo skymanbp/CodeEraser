@@ -12,10 +12,27 @@
 //!    author-time), churn = 1 - survival.
 //! 3. co-change pairs: files repeatedly changing in the same commits.
 //!
+//! M5-3h: attribution is a per-unit LEDGER keyed (path, unit key,
+//! nth), key "" for top-level lines, and the report's window totals
+//! are SUMS over that ledger — conservation by construction, there
+//! is no second bookkeeping to drift. The ledger reuses the commit's
+//! existing `show` + `units::segments` surfaces and adds ZERO git
+//! calls (PERF-BUDGET M5-3h: blame alone already costs 155 s on the
+//! self window). Known degradation: nth is taken in each commit's
+//! own after-snapshot, so deleting an earlier same-key sibling later
+//! in the window shifts nth for its survivors (the member-id caveat,
+//! 2026-08-13-m5-3-dedup-algorithms.md §7.2) — recorded, not masked.
+//!
 //! Report-only in M4 (no thresholds, no gating); numbers feed the
-//! M5 three-signal join.
+//! M5 three-signal join. Report shapes live in report.rs (the 300
+//! dogfood gate split).
+
+mod report;
+
+pub use report::{Report, UnitRow, print_console, report_json};
 
 use crate::fourclass::session;
+use crate::fourclass::units::{self, Unit};
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
 use std::collections::HashMap;
@@ -24,35 +41,21 @@ use std::process::Command;
 
 /// Commits with more changed files than this are skipped for pair
 /// counting (quadratic) and reported, never silently dropped.
-const COCHANGE_FILE_CAP: usize = 20;
+pub(crate) const COCHANGE_FILE_CAP: usize = 20;
 
-pub struct Report {
-    pub commits: usize,
-    pub append_lines: usize,
-    pub rewrite_lines: usize,
-    pub added_in_window: usize,
-    pub surviving: usize,
-    pub cochange: Vec<(String, String, usize)>,
-    pub skipped_large: usize,
-}
+/// (path, unit key, nth) → (appended, rewrote) line counts.
+type Ledger = HashMap<(String, String, i64), (usize, usize)>;
 
 pub fn run(root: &Path, days: u32) -> Result<Report> {
     let shas = window_commits(root, days)?;
-    let mut report = Report {
-        commits: shas.len(),
-        append_lines: 0,
-        rewrite_lines: 0,
-        added_in_window: 0,
-        surviving: 0,
-        cochange: Vec::new(),
-        skipped_large: 0,
-    };
+    let mut ledger = Ledger::new();
     let mut pair_counts: HashMap<(String, String), usize> = HashMap::new();
+    let mut skipped_large = 0usize;
     let mut touched: Vec<String> = Vec::new();
     for sha in &shas {
         let pairs = session::commit_pairs(root, sha).unwrap_or_default();
-        classify_commit(root, sha, &pairs, &mut report);
-        count_cochange(&pairs, &mut pair_counts, &mut report.skipped_large);
+        classify_commit(root, sha, &pairs, &mut ledger);
+        count_cochange(&pairs, &mut pair_counts, &mut skipped_large);
         for (_, after) in &pairs {
             if let Some(f) = after
                 && !touched.contains(f)
@@ -61,9 +64,38 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
             }
         }
     }
-    report.surviving = survival(root, days, &touched)?;
-    report.cochange = top_pairs(pair_counts);
-    Ok(report)
+    Ok(Report {
+        commits: shas.len(),
+        units: sorted_rows(ledger),
+        surviving: survival(root, days, &touched)?,
+        cochange: top_pairs(pair_counts),
+        skipped_large,
+    })
+}
+
+/// One commit's ledger rows through the SAME classify_commit throat
+/// run() folds over — the eval instrument's product surface (the
+/// 40-commit hand-audited ledger replays exactly this).
+pub fn commit_ledger(root: &Path, sha: &str) -> Vec<UnitRow> {
+    let pairs = session::commit_pairs(root, sha).unwrap_or_default();
+    let mut ledger = Ledger::new();
+    classify_commit(root, sha, &pairs, &mut ledger);
+    sorted_rows(ledger)
+}
+
+fn sorted_rows(ledger: Ledger) -> Vec<UnitRow> {
+    let mut rows: Vec<UnitRow> = ledger
+        .into_iter()
+        .map(|((path, key, nth), (appended, rewrote))| UnitRow {
+            path,
+            key,
+            nth,
+            appended,
+            rewrote,
+        })
+        .collect();
+    rows.sort_by(|a, b| (&a.path, &a.key, a.nth).cmp(&(&b.path, &b.key, b.nth)));
+    rows
 }
 
 fn window_commits(root: &Path, days: u32) -> Result<Vec<String>> {
@@ -82,36 +114,66 @@ fn window_commits(root: &Path, days: u32) -> Result<Vec<String>> {
     Ok(out.split_whitespace().map(str::to_string).collect())
 }
 
-/// Append vs rewrite per pair, plus the window's added-line total.
-fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], r: &mut Report) {
-    for (before_path, after_path) in pairs {
-        let Some(after_path) = after_path.as_deref() else {
-            continue; // deletion adds nothing
-        };
-        let Some(lang) = Lang::from_path(Path::new(after_path)) else {
-            continue;
-        };
-        let before = before_path
-            .as_deref()
-            .and_then(|p| show(root, sha, p, true))
-            .unwrap_or_default();
-        let Some(after) = show(root, sha, after_path, false) else {
+/// The one before/after fetch for a commit's pair: after path, both
+/// texts, the language. classify_commit and the conservation
+/// instrument read the same bytes through this, so the two can never
+/// diverge on what a commit changed. None = deletion, non-language
+/// file, or an unreadable after side.
+pub fn pair_texts<'p>(
+    root: &Path,
+    sha: &str,
+    pair: &'p session::PathPair,
+) -> Option<(&'p str, String, String, Lang)> {
+    let after_path = pair.1.as_deref()?;
+    let lang = Lang::from_path(Path::new(after_path))?;
+    let before = pair
+        .0
+        .as_deref()
+        .and_then(|p| show(root, sha, p, true))
+        .unwrap_or_default();
+    let after = show(root, sha, after_path, false)?;
+    Some((after_path, before, after, lang))
+}
+
+/// Append vs rewrite per added line, attributed into the ledger by
+/// the owning unit of the commit's after-snapshot. nth comes from
+/// the same `with_nth` throat the unitsig/symbols caches persist,
+/// so a HEAD-side join on (path, key, nth) names the same unit.
+fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: &mut Ledger) {
+    for pair in pairs {
+        let Some((after_path, before, after, lang)) = pair_texts(root, sha, pair) else {
             continue;
         };
         let c = crate::fourclass::classify(&before, &after, lang);
-        let before_units = crate::fourclass::units::segments(&before, lang);
-        let after_units = crate::fourclass::units::segments(&after, lang);
+        let before_units = units::segments(&before, lang);
+        let after_units = units::segments(&after, lang);
+        let nths = units::with_nth(&after_units);
         for &l in &c.changed.added {
-            r.added_in_window += 1;
-            let rewrite = crate::fourclass::units::owner(&after_units, l)
-                .is_some_and(|u| before_units.iter().any(|b| b.key == u.key));
+            let owner = units::owner(&after_units, l);
+            let rewrite = owner.is_some_and(|u| before_units.iter().any(|b| b.key == u.key));
+            let row = ledger.entry(unit_id(after_path, owner, &nths)).or_default();
             if rewrite {
-                r.rewrite_lines += 1;
+                row.1 += 1;
             } else {
-                r.append_lines += 1;
+                row.0 += 1;
             }
         }
     }
+}
+
+/// Ledger identity of `owner`: pointer-match into the `with_nth`
+/// view of the SAME unit slice (both borrow after_units, so a miss
+/// is a bug worth a loud stop, not a silent nth 0).
+fn unit_id(path: &str, owner: Option<&Unit>, nths: &[(&Unit, i64)]) -> (String, String, i64) {
+    let Some(u) = owner else {
+        return (path.to_string(), String::new(), 0);
+    };
+    let nth = nths
+        .iter()
+        .find(|(w, _)| std::ptr::eq(*w, u))
+        .expect("owner and with_nth walk the same slice")
+        .1;
+    (path.to_string(), u.key.clone(), nth)
 }
 
 fn count_cochange(
@@ -186,42 +248,4 @@ fn git(root: &Path, args: &[&str]) -> Result<String> {
         anyhow::bail!("git {args:?} failed");
     }
     Ok(String::from_utf8_lossy(&out.stdout).into_owned())
-}
-
-pub fn report_json(r: &Report) -> serde_json::Value {
-    let churned = r.added_in_window.saturating_sub(r.surviving);
-    serde_json::json!({
-        "schema": "ce.churn-report/0.1.0",
-        "commits": r.commits,
-        "append_lines": r.append_lines,
-        "rewrite_lines": r.rewrite_lines,
-        "added_in_window": r.added_in_window,
-        "surviving": r.surviving,
-        "churned": churned,
-        "cochange": r.cochange.iter()
-            .map(|(a, b, n)| serde_json::json!({"a": a, "b": b, "count": n}))
-            .collect::<Vec<_>>(),
-        "skipped_large_commits": r.skipped_large,
-    })
-}
-
-pub fn print_console(r: &Report, days: u32) {
-    let churned = r.added_in_window.saturating_sub(r.surviving);
-    println!(
-        "churn window {days}d: {} commits, appended {} / rewrote {} lines",
-        r.commits, r.append_lines, r.rewrite_lines
-    );
-    println!(
-        "window survival: {} of {} added lines survive at HEAD ({churned} churned)",
-        r.surviving, r.added_in_window
-    );
-    for (a, b, n) in &r.cochange {
-        println!("co-change x{n}: {a} <-> {b}");
-    }
-    if r.skipped_large > 0 {
-        println!(
-            "note: {} commit(s) above {COCHANGE_FILE_CAP} files skipped for pairing",
-            r.skipped_large
-        );
-    }
 }

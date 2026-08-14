@@ -11,8 +11,10 @@
 // hooks — same subset story as dead_code above.
 #![allow(unused_imports)]
 
+pub mod gitio;
 pub mod hooks;
 pub mod ladder;
+pub use gitio::*;
 pub use hooks::*;
 pub use ladder::*;
 
@@ -119,18 +121,6 @@ pub fn run_metric_cases(cases: &[MetricCase]) {
             assert_eq!(got, want, "{key}[{i}]: {why}");
         }
     }
-}
-
-/// Run git in `dir` with a throwaway identity; panic on failure.
-pub fn git(dir: &Path, args: &[&str]) {
-    let out = Command::new("git")
-        .arg("-C")
-        .arg(dir)
-        .args(["-c", "user.email=t@t", "-c", "user.name=t"])
-        .args(args)
-        .output()
-        .expect("git");
-    assert!(out.status.success(), "git {args:?}: {out:?}");
 }
 
 /// Write `a.rs` (the T2 seed) plus a ce.toml pinning the guard mode.

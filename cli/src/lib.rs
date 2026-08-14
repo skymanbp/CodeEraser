@@ -13,7 +13,11 @@ pub mod graph;
 pub mod guard;
 pub mod health;
 pub mod hookio;
+pub mod join;
 pub mod lockstep;
 pub mod mcp;
 pub mod report;
 pub mod scan;
+
+#[cfg(test)]
+pub(crate) mod testutil;

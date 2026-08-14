@@ -10,7 +10,7 @@ mod main_judge;
 use clap::{Parser, Subcommand};
 use codeeraser::daemon;
 use main_cmds::{self as cmds, DedupArgs, OutFormat, json};
-use main_judge::{CloneArgs, DocdupArgs};
+use main_judge::{CloneArgs, DocdupArgs, JoinArgs};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -86,6 +86,9 @@ enum Cmd {
     /// Documentation-duplication judgment (M5-3g): exact Jaccard via
     /// the core's docdup/1 over the cached live segments
     Docdup(DocdupArgs),
+    /// Three-signal join (M5-3h): similarity + graph position +
+    /// per-unit churn, file and unit tiers (report-only until 3i)
+    Join(JoinArgs),
     /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
     Dedup(DedupArgs),
     /// Run the per-project daemon in the foreground (ADR-003);
@@ -161,6 +164,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Cmd> {
         } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, &core, json(format)),
         Cmd::Clone(a) => main_judge::clone_cmd(a),
         Cmd::Docdup(a) => main_judge::docdup_cmd(a),
+        Cmd::Join(a) => main_judge::join_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),
         other => return Err(other),
     })

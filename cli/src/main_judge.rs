@@ -5,7 +5,7 @@
 //! field-for-field.
 
 use crate::main_cmds::{OutFormat, fail, json, or_cwd};
-use codeeraser::{dedup, docdup};
+use codeeraser::{dedup, docdup, join};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -39,6 +39,28 @@ pub struct CloneArgs {
 pub struct DocdupArgs {
     #[command(flatten)]
     judge: JudgeArgs,
+}
+
+#[derive(clap::Args)]
+pub struct JoinArgs {
+    #[command(flatten)]
+    judge: JudgeArgs,
+    /// Churn window in days
+    #[arg(long, default_value_t = 14)]
+    days: u32,
+}
+
+/// `ce join` (M5-3h): assemble the three signal legs — similarity,
+/// graph position, per-unit churn — report-only until the verdict
+/// lattice's wire hookup (3i).
+pub fn join_cmd(a: JoinArgs) -> ExitCode {
+    let j = a.judge;
+    let as_json = json(j.format);
+    emit(
+        "join",
+        || join::run(&or_cwd(j.root), j.db, &j.core, a.days),
+        |r| join::print(r, as_json),
+    )
 }
 
 /// Run one family's judgment and print its report — the ONE

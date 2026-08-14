@@ -53,6 +53,28 @@ pub struct Report {
 }
 
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
+    let w = build_wire(root, db)?;
+    let reply = judge(core, &w, &[])?;
+    let report = consume(&reply, &w.nodes, w.unresolved_sites)?;
+    if let Some(reason) = &report.degraded {
+        observe(root, reason);
+    }
+    Ok(report)
+}
+
+/// Everything one graph.request carries, built once — the request
+/// throat deadcode and the M5-3 join share: same node identity, same
+/// node rows, same edge wire, so the liveness verdict and the join's
+/// position rows stand on one graph by construction (F19), and a
+/// second copy of this assembly is exactly what nodes.rs forbids.
+pub struct GraphWire {
+    pub nodes: Vec<Node>,
+    pub rows: Vec<Value>,
+    pub edges: BTreeSet<[i64; 4]>,
+    pub unresolved_sites: i64,
+}
+
+pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     let (idx, db_path) = dedup::refreshed_index(root, db)?;
     let (files, edges, unresolved_sites) = graph_rows(&idx)?;
     if files.is_empty() {
@@ -65,9 +87,9 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     // identity assignment + containment live in the nodes.rs throat
     // (F19) — the M5-3 join consumes the SAME functions, so both
     // verdicts stand on one id space by construction
-    let node_list = nodes::nodes_of(&files, &edges);
-    let ids = nodes::ids(&node_list);
-    let rows: Vec<Value> = node_list.iter().map(|n| node_row(n, &config)).collect();
+    let nodes = nodes::nodes_of(&files, &edges);
+    let ids = nodes::ids(&nodes);
+    let rows: Vec<Value> = nodes.iter().map(|n| node_row(n, &config)).collect();
     let mut wire: BTreeSet<[i64; 4]> = edges
         .iter()
         .filter(|e| e.kind != super::wire::EDGE_ASSET)
@@ -77,13 +99,13 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
             [s, d, e.kind, e.rung]
         })
         .collect();
-    nodes::contain(&node_list, &ids, &mut wire);
-    let reply = judge(core, &rows, &wire)?;
-    let report = consume(&reply, &node_list, unresolved_sites)?;
-    if let Some(reason) = &report.degraded {
-        observe(root, reason);
-    }
-    Ok(report)
+    nodes::contain(&nodes, &ids, &mut wire);
+    Ok(GraphWire {
+        nodes,
+        rows,
+        edges: wire,
+        unresolved_sites,
+    })
 }
 
 /// [lang, kind, flags] — only file nodes carry entry flags.
@@ -150,20 +172,27 @@ fn glob_hit(glob: &str, path: &str, base: &str) -> bool {
 }
 
 /// One graph.request over the open core link; a missing capability
-/// or a non-result reply is an error, never an empty report.
-fn judge(core: &str, nodes: &[Value], edges: &BTreeSet<[i64; 4]>) -> Result<Value> {
+/// or a non-result reply is an error, never an empty report. `pos`
+/// asks for position rows (the join's leg; deadcode sends none), and
+/// a non-degraded reply MUST answer every requested index — a short
+/// pos table would silently starve the join, so it refuses here.
+pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
     let (mut link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
     if !link.has("graph/1") {
         bail!("ce-core offers no graph/1 capability — upgrade the core");
     }
     let body = json!({
-        "nodes": nodes,
-        "edges": edges.iter().collect::<Vec<_>>(),
-        "pos": [],
+        "nodes": w.rows,
+        "edges": w.edges.iter().collect::<Vec<_>>(),
+        "pos": pos,
     });
     let reply = link.request("graph", body).map_err(anyhow::Error::msg)?;
     if reply["type"] != json!("graph.result") {
         bail!("core replied {}: {reply}", reply["type"]);
+    }
+    let rows = reply["pos"].as_array().map(Vec::len).unwrap_or(0);
+    if reply["degraded"] != json!(true) && rows != pos.len() {
+        bail!("graph.result answered {rows} of {} pos rows", pos.len());
     }
     Ok(reply)
 }
@@ -225,9 +254,7 @@ mod tests {
     /// asserted, not assumed (2h exit row).
     #[test]
     fn degraded_stamp_reaches_the_health_counter() {
-        let root = std::env::temp_dir().join(format!("ce-dc-observe-{}", std::process::id()));
-        let _ = std::fs::remove_dir_all(&root);
-        std::fs::create_dir_all(&root).expect("mkdir");
+        let root = crate::testutil::scratch("dc-observe");
         assert_eq!(crate::health::degraded_runs(&root), (0, 0));
         super::observe(&root, "graph_too_large");
         assert_eq!(crate::health::degraded_runs(&root), (1, 1));

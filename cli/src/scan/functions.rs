@@ -61,6 +61,15 @@ fn field_for(parent_kind: &str) -> &'static str {
     }
 }
 
+/// KNOWN DEFECT (M5-3h blind audit, auditor B; probe-verified
+/// 2026-08-14): Go method_declaration's RECEIVER is itself a
+/// parameter_list, so the first-of-kind scan below counts the
+/// receiver (always 1), never the parameters — `func (t T) add(x
+/// int, y string)` keys as `(T) add/1`, colliding arities. The fix
+/// (prefer the `parameters` FIELD before the kind scan) changes
+/// unitsig/symbols identity keys and cascades into the frozen Go
+/// universes (cobra), so it ships with a rev bump + re-freeze batch,
+/// not as a drive-by here.
 fn param_count(node: Node<'_>, spec: &LangSpec) -> usize {
     let Some(params) = child_of_kinds(node, spec.param_list_kinds) else {
         return 0;

@@ -11,8 +11,11 @@
 //!   cargo test --release --test fpr_replay -- --ignored --nocapture
 //! Optionally CE_FPR_REPO=<path> to replay another repository.
 
+mod common;
+
 use codeeraser::dedup::{Params, index::Index, pairs, probe};
 use codeeraser::scan::lang::Lang;
+use common::git_out;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
@@ -25,17 +28,6 @@ fn replay_root() -> PathBuf {
                 .expect("cli/ has a parent")
                 .to_path_buf()
         })
-}
-
-fn git_out(repo: &Path, args: &[&str]) -> Vec<u8> {
-    let out = std::process::Command::new("git")
-        .arg("-C")
-        .arg(repo)
-        .args(args)
-        .output()
-        .expect("git");
-    assert!(out.status.success(), "git {args:?} failed");
-    out.stdout
 }
 
 fn git_lines(repo: &Path, args: &[&str]) -> Vec<String> {

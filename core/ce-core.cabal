@@ -16,7 +16,8 @@ executable ce-core
                       CE.Graph.Build, CE.Graph.Dead, CE.Graph.Cycles,
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
-                      CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard
+                      CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
+                      CE.Verdict.Cost, CE.Verdict.Join
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -42,8 +43,10 @@ test-suite ce-core-test
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
                       CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
+                      CE.Verdict.Cost, CE.Verdict.Join,
                       Reference, ReferenceGraph, GraphProps,
-                      ReferenceTed, CloneProps, ReferenceJaccard
+                      ReferenceTed, CloneProps, ReferenceJaccard,
+                      JoinProps
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
