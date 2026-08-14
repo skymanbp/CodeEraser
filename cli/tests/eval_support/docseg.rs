@@ -11,6 +11,13 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Oracle emission floor: J >= 30/100 (decided — instruments §9.6).
 pub const JACCARD_UNIVERSE_FLOOR: (u64, u64) = (30, 100);
 
+/// Report floor: J >= 80/100, pre-registered (§9.6 jaccardNum/Den)
+/// BEFORE the judge exists — the sample instrument tallies its
+/// population bands with this pair, and when CE.Docdup.Cost lands
+/// (3g judge batch) the wire's knobs echo holds the product to the
+/// same two integers.
+pub const JACCARD_REPORT_FLOOR: (u64, u64) = (80, 100);
+
 /// F31 cost bound: a corpus with more live segments than this is
 /// WITHHELD with a written reason, never silently downsampled.
 pub const DOCDUP_ORACLE_SEGCAP: usize = 8192;
