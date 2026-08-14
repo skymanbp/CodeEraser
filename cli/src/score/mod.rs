@@ -68,6 +68,12 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         Some(days) => churn_rows(root, days, &idx)?,
         None => (Vec::new(), Vec::new()),
     };
+    // ce.toml speaks its size/coc ceilings onto the wire (ADR-008
+    // first step); the reply echoes the effective pair and judge()
+    // asserts the round trip — the 300/15 mirror is retired
+    let t = crate::config::Config::load(root)
+        .map_err(anyhow::Error::msg)?
+        .thresholds;
     let req = wire::Request {
         sim,
         pos: pos_rows(&files, &posmap),
@@ -81,6 +87,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
             baseline::read(root)?.unwrap_or(serde_json::Value::Null)
         },
         floor: opts.floor,
+        ceilings: vec![[0, t.file_lines_warn as i64], [1, t.cognitive_warn as i64]],
         files,
     };
     let reply = wire::judge(&opts.core, &req)?;

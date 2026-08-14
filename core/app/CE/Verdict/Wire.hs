@@ -35,6 +35,12 @@ data VerdictReq = VerdictReq
   , reqBaseline :: Value
   , reqWeights :: [[Integer]]
   , reqFloor :: Maybe Integer
+  , -- ADR-008 first step (2.3.0, additive — absent parses as []):
+    -- [axisCode, ceiling] rows overriding the size (0) and coc (1)
+    -- axis ceilings; ce.toml is the source, this wire is the road,
+    -- and the Cost.hs values become DEFAULTS instead of the second
+    -- half of an uncheckable mirror (M5-close audit D2)
+    reqCeilings :: [[Integer]]
   }
 
 instance FromJSON VerdictReq where
@@ -51,6 +57,7 @@ instance FromJSON VerdictReq where
       <*> o .: "baseline"
       <*> o .: "weights"
       <*> o .: "floor"
+      <*> o .:? "ceilings" .!= []
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -70,6 +77,7 @@ violation req =
     , ascendingBy "discrete" 1 (map pure (reqDisc req))
     , either Just (const Nothing) (parseBaseline (reqBaseline req))
     , weightsOffence (reqWeights req)
+    , ceilingsOffence (reqCeilings req)
     , floorOffence (reqFloor req)
     ]
  where
@@ -196,28 +204,41 @@ parseBaseline v = case AT.parse bl v of
       | otherwise -> Nothing
     _ -> Just (label "baseline.continuous" i <> "malformed row")
 
--- | Weight rows [axis, numerator], ascending by axis (unique). A
--- request may zero SOME axes (unlisted ones default to 1); zeroing
--- all seven leaves the score with no divisor and is refused.
+-- | The two knob tables (weights, ceilings) speak ONE row grammar —
+-- [axis, value] rows, strictly ascending by axis (unique) — and
+-- differ only in DATA: the axis bound, its refusal text, and the
+-- value judgment. The dedup ratchet caught the second table cloning
+-- the first's scaffolding; the shared grammar is the throat.
+knobTable :: String -> Integer -> String -> (Integer -> Maybe String) -> [[Integer]] -> Maybe String
+knobTable name axisMax axisWhy judgeV = table name one 1
+ where
+  one nm i row = case row of
+    [code, v]
+      | code < 0 || code > axisMax -> Just (label nm i <> axisWhy)
+      | Just why <- judgeV v -> Just (label nm i <> why)
+      | otherwise -> Nothing
+    _ -> Just (label nm i <> "malformed row (need [axis,value])")
+
+-- | A request may zero SOME axes (unlisted ones default to 1);
+-- zeroing all seven leaves the score with no divisor and is refused.
 weightsOffence :: [[Integer]] -> Maybe String
 weightsOffence rows =
-  asum
-    [ asum (zipWith one [0 :: Int ..] rows)
-    , ascendingBy "weights" 1 rows
-    , if length rows == 7 && all zeroed rows
-        then Just "weights: every axis zeroed"
-        else Nothing
-    ]
+  knobTable "weights" 6 "unknown axis code" negW rows
+    <|> if length rows == 7 && all zeroed rows
+      then Just "weights: every axis zeroed"
+      else Nothing
  where
-  one i row = case row of
-    [code, w]
-      | code < 0 || w < 0 -> Just (label "weights" i <> "negative field")
-      | code > 6 -> Just (label "weights" i <> "unknown axis code")
-      | otherwise -> Nothing
-    _ -> Just (label "weights" i <> "malformed row (need [axis,weight])")
+  negW w = if w < 0 then Just "negative field" else Nothing
   zeroed row = case row of
     [_, w] -> w == 0
     _ -> False
+
+-- | Only the size (0) and coc (1) axes are configurable in this
+-- step, and a ceiling below 1 would violate every unit by fiat.
+ceilingsOffence :: [[Integer]] -> Maybe String
+ceilingsOffence = knobTable "ceilings" 1 "unknown ceiling axis" low
+ where
+  low v = if v < 1 then Just "ceiling below 1" else Nothing
 
 floorOffence :: Maybe Integer -> Maybe String
 floorOffence Nothing = Nothing

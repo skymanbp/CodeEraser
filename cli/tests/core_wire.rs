@@ -89,6 +89,32 @@ fn corelink_open_and_desync() {
     assert!(err.contains("desync"), "visible failure, got: {err}");
 }
 
+/// ADR-008 first step: an EMPTY ceilings table makes the core judge
+/// with its Cost.hs defaults, and the echo must equal ce.toml's
+/// `Thresholds::default()` — the two halves of the retired 300/15
+/// mirror now meet in ONE assertion that reddens when either side
+/// moves alone (M5-close audit D2).
+#[test]
+fn ceilings_default_drift_gate() {
+    let t = codeeraser::config::Thresholds::default();
+    let (mut link, _) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
+    let reply = link
+        .request(
+            "verdict",
+            serde_json::json!({
+                "sim": [], "pos": [], "tier": [], "churn": [], "cochange": [],
+                "continuous": [], "discrete": [], "baseline": null,
+                "weights": [], "floor": null, "ceilings": []
+            }),
+        )
+        .expect("verdict round-trip");
+    assert_eq!(
+        reply["knobs"],
+        serde_json::json!({"sizeCeil": t.file_lines_warn, "cocCeil": t.cognitive_warn}),
+        "core Cost.hs defaults drifted from ce.toml Thresholds::default()"
+    );
+}
+
 /// A two-pair batch in the cross-pair shape every bucket test uses:
 /// one pair pure removal, one pair pure addition (Rust lang).
 fn removal_addition_batch<'a>(

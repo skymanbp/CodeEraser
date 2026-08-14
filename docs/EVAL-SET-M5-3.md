@@ -230,6 +230,24 @@ hs_boot 各按其记录管线对工具链重导出集合比对——**首跑即�
 本身正确），修后 3/3 全表零漂移证毕。④D7 根修=删 README 版本抄本立单源
 （hookio.rs::OBSERVE_SCHEMA 唯一权威）。
 
+## ADR-008 首步（300/15 入 wire，2026-08-14）
+
+**镜像退役**（M5 收口审计 D2 最后一对无检镜像）：`verdict.request` 加性
+`ceilings` 表（`[[axis,ceiling]]`，axis 0=size/1=coc；缺席=空=Cost.hs
+**默认值**——proto 2.3.0 加性 minor，request 行偏斜 fixture 纪律照旧）；
+Rust 侧 `score::run` 经 `Config::load` 单咽喉发
+`[[0,file_lines_warn],[1,cognitive_warn]]`，应答 `knobs` 回显生效值、
+`wire::judge` 断言往返。**漂移门 = `core_wire::ceilings_default_drift_gate`**：
+空表回显 == `Thresholds::default()`（300/15）——Cost.hs 默认与 ce.toml
+默认在同一条断言相会，任一侧独动即红（此前两常量互为无检镜像）。
+Haskell 权威 = `ceilingsOffence` 域检（axis>1/值<1/降序拒绝，VerdictProps
++3 具名探针）+ `effectiveKnobs`（scoreBound 覆盖式）+ `ceilingKnob` 性质
+（真 respond 驱动：310 尺寸行默认 300 下受罚、请求 400 下净，回显双态钉）。
+golden 翻批 41 reply 行逐行审（40 = proto 位 + verdict 两档默认 knobs；
+新 pair 6 = ceilings [[0,400],[1,20]] 生效+回显）。**棘轮咬偿**：ceilings
+检器克隆 weights 脚手架当场被抓（149>148）→ `knobTable` 单文法咽喉
+（两表差异降为数据：axis 界/拒绝文/值判），148==148 净、零豁免。
+
 ## 复跑
 
 ```
@@ -237,7 +255,8 @@ cd cli && cargo test --test eval_t3_universe --test eval_t3_candidates \
   --test eval_t3_sample --test eval_t3_precision --test eval_t3_recall \
   --test eval_docdup_universe --test eval_docdup_oracle \
   --test eval_docdup_sample --test eval_docdup_precision \
-  --test eval_churn_ledger --test baseline_bridge --test core_size_gate
+  --test eval_churn_ledger --test baseline_bridge --test core_size_gate \
+  --test core_wire
 ```
 
 外部四语料需本地 `.ce-eval/` 克隆（tip 见上表，CI 门 `rev-parse` 复核 RM19）；

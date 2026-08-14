@@ -16,7 +16,7 @@ module CE.Verdict (respond) where
 import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
 import CE.Verdict.Join (Legs (..), Pos (..), bound, judge)
 import CE.Verdict.Ratchet (Ratcheted (..), ratchet, ratchetBound)
-import CE.Verdict.Score (Facts (..), penalties, score, scoreBound)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), penalties, score, scoreBound)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -72,15 +72,32 @@ result proto req =
             , "fail" .= failBit
             ]
       , "newBaseline" .= object ["continuous" .= rNewCont r, "discrete" .= rNewDisc r]
+      , -- the EFFECTIVE ceilings echo (ADR-008 first step): the
+        -- client asserts the round trip, and the empty-ceilings
+        -- default gate pins core defaults == ce.toml defaults —
+        -- the drift check the retired mirror never had
+        "knobs" .= object ["sizeCeil" .= sSizeCeil k, "cocCeil" .= sCocCeil k]
       , "degraded" .= False
       ]
  where
-  pens = penalties scoreBound (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
-  (perMille, _viol) = score scoreBound (reqWeights req) pens
+  k = effectiveKnobs (reqCeilings req)
+  pens = penalties k (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
+  (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id (parseBaseline (reqBaseline req))
   r = ratchet ratchetBound base (reqCont req) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
   failBit = not (null (rOver r)) || not (null (rAdded r)) || floorFail
+
+-- | scoreBound with the request's [axis, ceiling] rows applied —
+-- axis 0 = size, axis 1 = coc (the only configurable pair in this
+-- step; validation bounds the codes). Absent rows keep the Cost.hs
+-- DEFAULTS, which the wire demoted from mirror-half to fallback.
+effectiveKnobs :: [[Integer]] -> ScoreKnobs
+effectiveKnobs = foldl' apply scoreBound
+ where
+  apply k [0, v] = k {sSizeCeil = v}
+  apply k [1, v] = k {sCocCeil = v}
+  apply k _ = k
 
 -- | Join-candidate rows, one per sim row (split from result at the
 -- E01 line — the leg maps are the candidates' concern alone).
@@ -134,6 +151,12 @@ tooLarge proto req =
             , "fail" .= False
             ]
       , "newBaseline" .= object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Value])]
+      , -- defaults: no judgment ran, so no override was applied
+        "knobs"
+          .= object
+            [ "sizeCeil" .= sSizeCeil scoreBound
+            , "cocCeil" .= sCocCeil scoreBound
+            ]
       , "degraded" .= True
       , "reason" .= ("verdict_too_large" :: String)
       ]

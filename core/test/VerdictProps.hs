@@ -38,7 +38,8 @@ battery = do
   f <- check "ratchet idempotence: newBaseline fed back judges nothing" idempotent
   g <- check "tolerance-over sets shrink as tolAbs grows (inclusion)" overMono
   h <- check "refusals name the offender with code and message" refusals
-  pure (and [a, b, c, d, e, f, g, h])
+  i <- check "ceilings override moves the score and echoes in knobs" ceilingKnob
+  pure (and [a, b, c, d, e, f, g, h, i])
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -239,6 +240,10 @@ refusals =
       -- and a zero denominator each refuse by name
       refused (simReq [[0, 1, 3, 50, 100]]) "unknown sim kind"
     , refused (simReq [[0, 1, 0, 50, 0]]) "zero denominator"
+    , -- the ceilings table (ADR-008 first step) refuses by name too
+      refused (ceilReq [[2, 300]]) "unknown ceiling axis"
+    , refused (ceilReq [[0, 0]]) "ceiling below 1"
+    , refused (ceilReq [[1, 15], [0, 300]]) "not strictly ascending"
     ]
  where
   simReq rows =
@@ -246,14 +251,40 @@ refusals =
       "tier"
       (toJSON ([[0, 0], [1, 0]] :: [[Integer]]))
       (setKey "sim" (toJSON (rows :: [[Integer]])) base)
+  ceilReq rows = setKey "ceilings" (toJSON (rows :: [[Integer]])) base
   base = wireReq [] [] [] []
   posReq =
     setKey
       "tier"
       (toJSON ([[0, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]] :: [[Integer]]))
       (setKey "pos" (toJSON [[1, 0, 0, 0, 1, 0 :: Integer]]) base)
-  setKey k v (Object o) = Object (KM.insert (Key.fromString k) v o)
-  setKey _ _ v = v
   refused r want = case respond "0.0.1" (BL.toStrict (encode r)) of
     Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
     Right _ -> False
+
+setKey :: String -> Value -> Value -> Value
+setKey k v (Object o) = Object (KM.insert (Key.fromString k) v o)
+setKey _ _ v = v
+
+-- | ADR-008 first step, driven through the REAL respond: a size row
+-- at 310 violates the default 300 ceiling and is clean under a
+-- requested 400 — the score must move — and the reply echoes the
+-- EFFECTIVE knobs both times (the round trip the Rust client
+-- asserts; an absent ceilings table echoes the defaults).
+ceilingKnob :: Bool
+ceilingKnob = case (run Nothing, run (Just [[0, 400]])) of
+  (Just (s0, k0), Just (s1, k1)) ->
+    s0 /= s1 && k0 == (Number 300, Number 15) && k1 == (Number 400, Number 15)
+  _ -> False
+ where
+  run :: Maybe [[Integer]] -> Maybe (Value, (Value, Value))
+  run ceil = do
+    let req = maybe id (setKey "ceilings" . toJSON) ceil sized
+    bytes <- either (const Nothing) Just (respond "0.0.1" (BL.toStrict (encode req)))
+    Object o <- decodeStrict bytes
+    s <- KM.lookup "score" o
+    Object k <- KM.lookup "knobs" o
+    sc <- KM.lookup "sizeCeil" k
+    cc <- KM.lookup "cocCeil" k
+    pure (s, (sc, cc))
+  sized = setKey "continuous" (toJSON [[0, 0, 310 :: Integer]]) (wireReq [] [] [] [])

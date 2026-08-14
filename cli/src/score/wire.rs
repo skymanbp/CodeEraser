@@ -22,6 +22,11 @@ pub struct Request {
     pub discrete: Vec<u64>,
     pub baseline: Value,
     pub floor: Option<u32>,
+    /// [axis, ceiling] rows from ce.toml (0 = size, 1 = coc):
+    /// the config is the source, this wire is the road, and the
+    /// core's Cost.hs values are DEFAULTS — no longer half of the
+    /// uncheckable 300/15 mirror ADR-008 retired (audit D2).
+    pub ceilings: Vec<[i64; 2]>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -35,6 +40,9 @@ pub struct Reply {
     pub tolerance_drawn: Vec<[u64; 3]>,
     pub fail: bool,
     pub new_baseline: Value,
+    /// The EFFECTIVE [sizeCeil, cocCeil] the core judged with —
+    /// echoed so judge() can assert the round trip.
+    pub knobs: [i64; 2],
     pub degraded: Option<String>,
 }
 
@@ -52,6 +60,7 @@ pub fn body(r: &Request) -> Value {
         // opening stance (decision ⑦) and live in the core's Cost
         "weights": [],
         "floor": r.floor,
+        "ceilings": r.ceilings,
     })
 }
 
@@ -68,7 +77,20 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     if reply["type"] != json!("verdict.result") {
         bail!("core replied {}: {reply}", reply["type"]);
     }
-    parse(&reply)
+    let reply = parse(&reply)?;
+    // round trip: every ceiling row sent must be the one judged with
+    // (a degraded reply never judged — it echoes the defaults, and
+    // degradation already fails the check upstream)
+    if reply.degraded.is_none() {
+        for &[axis, v] in &r.ceilings {
+            let got = reply.knobs[axis as usize];
+            anyhow::ensure!(
+                got == v,
+                "core judged with ceiling {got} on axis {axis}, ce sent {v}"
+            );
+        }
+    }
+    Ok(reply)
 }
 
 fn parse(v: &Value) -> Result<Reply> {
@@ -89,6 +111,13 @@ fn parse(v: &Value) -> Result<Reply> {
             .context("toleranceDrawn")?,
         fail: ratchet["fail"].as_bool().context("fail")?,
         new_baseline: rows("newBaseline")?,
+        knobs: {
+            let k = rows("knobs")?;
+            [
+                k["sizeCeil"].as_i64().context("knobs.sizeCeil")?,
+                k["cocCeil"].as_i64().context("knobs.cocCeil")?,
+            ]
+        },
         degraded: v["reason"].as_str().map(str::to_string),
     })
 }
