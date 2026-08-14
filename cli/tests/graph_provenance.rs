@@ -6,51 +6,11 @@
 
 mod eval_support;
 
-use eval_support::{eval_doc, git_in, load};
+use eval_support::{
+    eval_doc, git_in, intro_commit, is_ancestor, is_strict_ancestor, load, require_full_history,
+};
 
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
-
-fn require_full_history() {
-    let shallow = git_in(Some(".."), &["rev-parse", "--is-shallow-repository"]);
-    assert_eq!(
-        shallow.trim(),
-        "false",
-        "shallow clone: ancestry is uncheckable — fetch-depth: 0 (see ci.yml)"
-    );
-}
-
-/// First commit that introduced `path` (repo-relative).
-fn intro_commit(path: &str) -> String {
-    let log = git_in(Some(".."), &["log", "--reverse", "--format=%H", "--", path]);
-    log.lines()
-        .next()
-        .unwrap_or_else(|| panic!("{path}: never committed"))
-        .to_string()
-}
-
-/// merge-base --is-ancestor: the exit code IS the answer, so this one
-/// call bypasses git_in's success assertion on purpose.
-fn is_ancestor(ancestor: &str, descendant: &str) -> bool {
-    std::process::Command::new("git")
-        .args([
-            "-C",
-            "..",
-            "merge-base",
-            "--is-ancestor",
-            ancestor,
-            descendant,
-        ])
-        .status()
-        .expect("git")
-        .success()
-}
-
-/// --is-ancestor is REFLEXIVE (review F6): sample and audit frozen in
-/// one commit would pass the plain form and defeat the very ordering
-/// the gate certifies — strictness is the claim, so assert it.
-fn is_strict_ancestor(ancestor: &str, descendant: &str) -> bool {
-    ancestor != descendant && is_ancestor(ancestor, descendant)
-}
 
 fn audit_intros() -> Vec<String> {
     CORPORA
