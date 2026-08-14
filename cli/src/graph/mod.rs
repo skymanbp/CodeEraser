@@ -2,9 +2,11 @@
 //! ladder lands at 2f, judgment at 2g). Walk → detect → aggregate;
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
-//! ladder/ with its config surfaces (cargo / gomod / roots / jsonc)
-//! beside it; wire.rs bridges cached sites to edge rows for phase 2.
+//! ladder/ with its config surfaces (cabal / cargo / gomod / roots /
+//! jsonc) beside it; wire.rs bridges cached sites to edge rows for
+//! phase 2.
 
+pub mod cabal;
 pub mod cargo;
 pub mod deadcode;
 pub mod gomod;
@@ -40,13 +42,6 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
     let (_config, candidates) = walk::scoped_lang_files(root).map_err(anyhow::Error::msg)?;
     let mut out = Vec::new();
     for (path, lang) in candidates {
-        // Haskell is corpus-admitted (3k) but graph-DEFERRED: its
-        // ladder is the 3l batch, and a file the resolver cannot
-        // connect would sit isolated and read as dead — "cannot see"
-        // must never report "dead". Explicit so 3l deletes this arm.
-        if lang == Lang::Haskell {
-            continue;
-        }
         // lossy on purpose: one stray non-UTF-8 file must not abort
         // the whole analysis (Opus review; matches the instrument,
         // which hashes exactly the text the detector saw)

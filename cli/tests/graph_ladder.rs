@@ -3,10 +3,12 @@
 //! that MUST stay Unresolved — an ambiguous fixture that resolves is
 //! the red condition). One shared tree and one case table drive
 //! every import-shaped language — per-language table pairs were the
-//! dedup ratchet's first catch in this file. The Markdown rungs read
-//! document CONTENT (headings, definitions), so their doc-shaped
-//! habitat lives in graph_ladder_md.rs; the broken-chain case gets
-//! its own tree.
+//! dedup ratchet's first catch in this file, and that discipline is
+//! why the file sits over the E01 300 soft line since the sixth
+//! language (3l): splitting per language would re-create the caught
+//! pattern. The Markdown rungs read document CONTENT (headings,
+//! definitions), so their doc-shaped habitat lives in
+//! graph_ladder_md.rs; the broken-chain case gets its own tree.
 
 use codeeraser::graph::ladder::{self, Outcome, Reason};
 use codeeraser::scan::lang::Lang;
@@ -121,6 +123,27 @@ const TREE: &[(&str, &str)] = &[
     ("dupg/a/x/x.go", "package x\n"),
     ("dupg/b/go.mod", "module x.io/dup\n"),
     ("dupg/b/x/x.go", "package x\n"),
+    // Hs R1-R2: one cabal with two stanzas (multi-root test-suite,
+    // a comment INSIDE the build-depends block), a dual-root
+    // ambiguity habitat, a two-cabal workspace tie, and a bare-ghc
+    // loose pair with no cabal at all
+    (
+        "hs/pkg.cabal",
+        "cabal-version: 3.0\nname: fixture-hs\n\nexecutable app\n    main-is:          Main.hs\n    hs-source-dirs:   app\n    build-depends:\n        base >=4.19 && <5,\n        -- a comment inside the block must not eat what follows\n        bytestring >=0.11,\n        aeson >=2.2\n\ntest-suite spec\n    type:             exitcode-stdio-1.0\n    main-is:          Spec.hs\n    hs-source-dirs:   app, tst\n    build-depends:    base\n",
+    ),
+    ("hs/app/Main.hs", "module Main where\n"),
+    ("hs/app/CE/Alpha.hs", "module CE.Alpha where\n"),
+    ("hs/app/CE/Alpha/Deep.hs", "module CE.Alpha.Deep where\n"),
+    ("hs/app/Dup.hs", "module Dup where\n"),
+    ("hs/tst/Spec.hs", "module Main where\n"),
+    ("hs/tst/Props.hs", "module Props where\n"),
+    ("hs/tst/Dup.hs", "module Dup where\n"),
+    ("hs/wsdup/one.cabal", "library\n    hs-source-dirs: src\n"),
+    ("hs/wsdup/two.cabal", "library\n    hs-source-dirs: src\n"),
+    ("hs/wsdup/src/W.hs", "module W where\n"),
+    ("hs/wsdup/src/Use.hs", "module Use where\nimport W\n"),
+    ("loose.hs", "import Helper\n"),
+    ("Helper.hs", "module Helper where\n"),
 ];
 
 /// TS + Py rows — the kind-uniform import ladders. Tables split by
@@ -237,13 +260,57 @@ fn rust_cases() -> Vec<Case> {
     ]
 }
 
+/// Haskell rows — cabal-anchored roots. Pinned stances: a file two
+/// stanzas both hold walks the UNION of their roots (which component
+/// compiles it is unknowable, so cross-component disagreement
+/// refuses); the external table answers only through the owner's
+/// build-depends (Data.Map refuses while containers is undeclared),
+/// and with no cabal at all the whole global db is default-visible
+/// (bare-ghc semantics); a declared dep OUTSIDE the global db
+/// (aeson, store-installed) refuses — module→package needs evidence,
+/// never a guess.
+fn hs_cases() -> Vec<Case> {
+    let (hs, im) = (Lang::Haskell, "import");
+    let (hm, hsp, lo) = ("hs/app/Main.hs", "hs/tst/Spec.hs", "loose.hs");
+    vec![
+        (hs, im, hm, "CE.Alpha", ok("hs/app/CE/Alpha.hs", 1)),
+        (
+            hs,
+            im,
+            hm,
+            "CE.Alpha.Deep",
+            ok("hs/app/CE/Alpha/Deep.hs", 1),
+        ),
+        (hs, im, hsp, "Props", ok("hs/tst/Props.hs", 1)),
+        (hs, im, hsp, "CE.Alpha", ok("hs/app/CE/Alpha.hs", 1)),
+        (hs, im, hsp, "Dup", no(Reason::AmbiguousRoot)),
+        (hs, im, hm, "Dup", no(Reason::AmbiguousRoot)),
+        (hs, im, lo, "Helper", ok("Helper.hs", 1)),
+        (hs, im, hm, "Data.List", ext(2)),
+        (hs, im, hm, "Data.ByteString.Lazy", ext(2)),
+        (hs, im, hm, "Data.Map", no(Reason::OutOfScope)),
+        (hs, im, lo, "Data.Map", ext(2)),
+        (hs, im, hm, "Data.Aeson", no(Reason::OutOfScope)),
+        (hs, im, hm, "CE.Missing", no(Reason::OutOfScope)),
+        (hs, im, hm, "lowercase.name", no(Reason::OutOfScope)),
+        (
+            hs,
+            im,
+            "hs/wsdup/src/Use.hs",
+            "W",
+            no(Reason::AmbiguousWorkspace),
+        ),
+    ]
+}
+
 #[test]
 fn rungs_resolve_and_refuse() {
     let fx = fixture("ladder-rungs", TREE);
     let all = import_cases()
         .into_iter()
         .chain(rust_cases())
-        .chain(go_cases());
+        .chain(go_cases())
+        .chain(hs_cases());
     run_cases(&fx, all.collect());
 }
 

@@ -89,10 +89,46 @@ DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0�
   `contracts/eval/pre-haskell-members-v1.json` 冻结 3j 收口树（`4b39695`）的
   40 个 pre-Haskell discrete 成员；门 `baseline_bridge::
   pre_haskell_members_survive_every_generation` 断言其为每个后继基线的真子集。
-  预算 97→150 双笔具名（+13 generation / +40 表族，`ce.toml` 历史段）；churn
+  预算 97→149 双笔具名（+13 generation / +39 表族，`ce.toml` 历史段；本行
+  3l 勘误——本册曾记 150/+40，权威数是 fmt 后量得的 149/+39）；churn
   台账重放改按工件冻结语言域比对（五语言白名单，`eval_churn_ledger`）。
-  CoC 立场登记册 = `contracts/coc-haskell-divergences.md`（D0 无外部 oracle
-  起十三条），机检半身 = `coc_haskell` 电池 + 五语言等价对拍。
+  CoC 立场登记册 =
+  [coc-haskell-divergences.md](../contracts/coc-haskell-divergences.md)
+  （D0 无外部 oracle 起十三条），机检半身 = `coc_haskell` 电池 + 五语言等价对拍。
+
+## Graph 阶梯（3l，M5-3B 收官）
+
+**阶梯**（`ladder/hs.rs` 两 rung + `graph/cabal.rs` 解析面；站点 =
+`graph/spec.rs` import 臂，`module` 字段单咽喉——anon `import` token 与
+`foreign_import` 内层 token 撞 kind 名（D11 类）但无该字段，构造性丢弃）：
+R1 = cabal 源根行走（owner 按目录前缀最深、同深两 cabal = ambiguous_workspace；
+stanza 归属并集立场——双 stanza 共持文件跨组件分歧即 ambiguous_root 拒绝；
+无 cabal 锚仓根 = 裸 ghc 语义）；R2 = `hs_boot.rs` 机生成表（GHC 9.14.1
+全局包库 43 包 1,510 模块；滤除 = 库自记 exposed 位（`ghc`）+ 零模块包两条
+db 事实，零圈选），有 cabal 时按 owner build-depends 门控、无 cabal 时整库
+默认可见。库外声明依赖（aeson，store 安装）拒绝 out_of_scope——module→package
+无证据绝不猜。
+
+**电池**（门 `graph_ladder::rungs_resolve_and_refuse`，hs 15 行）：每 rung
+≥1 恰级 fixture + 歧义保持 Unresolved（跨根 Dup 双席、双 cabal 工作区）+
+build-depends 门双向（bytestring 声明 → ext(2)；containers 未声明 → 拒绝）+
+裸 ghc 双向 + 块内注释不吃后续 deps；反事实（copy-restore）翻 Data.Map 门
+案例实证见红。cabal 真钉 = `cabal::tests` 解析真 `core/ce-core.cabal`
+（两 stanza 根 + 五 deps）。
+
+**自仓活化实测**（release，fresh `.ce`）：deadcode **34 → 0**——32 个 .hs
+孤岛误判全经真 import 边 + Main.hs/Spec.hs 机械入口约定（cabal main-is
+惯例）活化，余 2 同批处置归零：`segments_tests.rs` 入 entry_globs（第三个
+`#[path]` 档，rs.rs R5 既档）、CoC 登记册由上节 md 真链接活化（unlinked
+doc IS reported 立场的机制性偿还）。勘合逐数分解 **176 站点 = 78 R1
+入库边 + 80 声明外部（base/containers/bytestring/array）+ 18 aeson 库外**。
+GRAPH_REV 2→3（.hs 缓存行空表陈旧）；`.cabal` 入 resolve_key。自仓警
+台账 16→18：+`hs_boot.rs` 676 行（机生成表，头部 why）+`graph_ladder.rs`
+364 行（共享树纪律，头部 why）；本批新码三处 E01 警（cabal parse 三连、
+sites 测试、spec sites()）全按拆分机制清零非豁免。dedup 预算 149==149
+零抬升（go↔hs 阶梯前导 T2 块以 helper-first 序断流偿清）。
+冻结五语言宇宙全族不动（SCOPE_EXTS 按构造封闭；2h 精度门版图不含
+Haskell = 既定验收边界，3l 验收线 = rung fixture 全绿，plan M5-3B 行）。
 
 ## 复跑
 

@@ -173,15 +173,19 @@ mod tests {
     /// review F1: 14 frozen zod sites; rust only holds the per-line
     /// form by accident of first-line truncation).
     /// Pinned shapes: `mod foo { … }` is not a site, a plain export
-    /// is not a site, one site per Python import target, and a
+    /// is not a site, one site per Python import target, a
     /// multi-line use keeps ONE site whose spec is the first-line
-    /// fragment (module header).
+    /// fragment (module header), a qualified/aliased Haskell import
+    /// keeps the bare module name, and `foreign import` is NOT a
+    /// site — its anon `import` token shares the kind name (the 3k
+    /// D11 collision class) but carries no module field.
     /// (language, source, expected (kind, spec) sequence).
     type Case = (Lang, &'static str, &'static [(&'static str, &'static str)]);
 
-    #[test]
-    fn per_language_kinds_specs_and_line_substrings() {
-        let cases: [Case; 4] = [
+    /// The per-language table, split from its assertion loop at the
+    /// E01 fn-length line.
+    fn cases() -> [Case; 5] {
+        [
             (
                 Lang::Python,
                 "import a.b, c as d\nfrom .pkg import thing\n",
@@ -210,8 +214,21 @@ mod tests {
                 "package main\n\nimport (\n\t\"fmt\"\n\t\"github.com/x/y\"\n)\n",
                 &[("import", "fmt"), ("import", "github.com/x/y")],
             ),
-        ];
-        for (lang, text, want) in cases {
+            (
+                Lang::Haskell,
+                "module Main where\n\nimport CE.Alpha\nimport qualified Data.Map as M\nimport Data.List (sort)\n\nforeign import ccall \"math.h sin\" c_sin :: Double -> Double\n",
+                &[
+                    ("import", "CE.Alpha"),
+                    ("import", "Data.Map"),
+                    ("import", "Data.List"),
+                ],
+            ),
+        ]
+    }
+
+    #[test]
+    fn per_language_kinds_specs_and_line_substrings() {
+        for (lang, text, want) in cases() {
             let found = detect(text, lang);
             let got: Vec<(&str, &str)> = found.iter().map(|s| (s.kind, s.spec.as_str())).collect();
             assert_eq!(got, *want, "{lang:?}");

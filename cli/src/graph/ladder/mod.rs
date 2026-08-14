@@ -7,9 +7,9 @@
 //! rung, so precision is attributable per level and a dirty rung can
 //! be voted out by data at 2h.
 //!
-//! All five ladders have landed (TS → Py → Rust → Go → Md); a future
-//! language without rungs must return Unresolved(Unsupported) — an
-//! honest ledger row, never a silent skip. Dispatch carries the
+//! All six ladders have landed (TS → Py → Rust → Go → Md → Hs); a
+//! future language without rungs must return Unresolved(Unsupported)
+//! — an honest ledger row, never a silent skip. Dispatch carries the
 //! site's frozen kind label (store::KINDS): the TS/Py rungs are
 //! kind-uniform, Rust's mod_decl and use walk different rungs, and
 //! Markdown routes five kinds through one chain.
@@ -19,6 +19,8 @@ use std::collections::BTreeSet;
 use std::path::Path;
 
 pub mod go;
+pub mod hs;
+mod hs_boot;
 pub mod md;
 pub mod py;
 pub mod rs;
@@ -114,12 +116,11 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Rust => rs::resolve(site, scope),
         Lang::Go => go::resolve(site.from, site.spec, scope),
         Lang::Markdown => md::resolve(site.kind, site.from, site.spec, scope),
-        // Haskell has no ladder until 3l — and no site vocabulary yet
-        // (graph/spec.rs), so this arm is unreachable by construction;
-        // if a site kind ever lands first, the honest answer is the
-        // documented no-rungs stance, never a guess. The sentinel is
-        // never walked at all.
-        Lang::Haskell | Lang::LangUnknown => Outcome::Unresolved(Reason::Unsupported),
+        Lang::Haskell => hs::resolve(site.from, site.spec, scope),
+        // The sentinel is never walked at all; if it ever is, the
+        // honest answer is the documented no-rungs stance, never a
+        // guess.
+        Lang::LangUnknown => Outcome::Unresolved(Reason::Unsupported),
     }
 }
 

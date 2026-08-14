@@ -137,14 +137,20 @@ fn node_row(n: &Node, config: &Config) -> Value {
 }
 
 /// Mechanical entry conventions (module header); bit 0 (exported)
-/// stays unset at file granularity — public-ness is a symbol fact.
+/// stays unset at file granularity — public-ness is a symbol fact
+/// (3l re-review: Haskell module export lists included — a header's
+/// exports node is symbol-level, same stance as the five launch
+/// languages). Main.hs is cabal's executable main-is convention —
+/// nothing imports a main module, exactly like main.rs.
 fn flags_of(path: &str, config: &Config) -> i64 {
     let base = path.rsplit('/').next().unwrap_or(path);
     let mut f = 0i64;
-    if matches!(base, "main.rs" | "main.go" | "__main__.py" | "build.rs")
-        || ["src/bin/", "examples/", "benches/", "cmd/"]
-            .iter()
-            .any(|p| path.starts_with(p))
+    if matches!(
+        base,
+        "main.rs" | "main.go" | "__main__.py" | "build.rs" | "Main.hs"
+    ) || ["src/bin/", "examples/", "benches/", "cmd/"]
+        .iter()
+        .any(|p| path.starts_with(p))
     {
         f |= 1 << 1;
     }
@@ -167,10 +173,13 @@ fn flags_of(path: &str, config: &Config) -> i64 {
     f
 }
 
+/// Spec.hs is the cabal test-suite main-is convention (hspec/stack
+/// templates) — the test root nothing imports, like _test.go.
 fn is_test(path: &str, base: &str) -> bool {
     base.ends_with("_test.go")
         || base.ends_with(".test.ts")
         || (base.starts_with("test_") && base.ends_with(".py"))
+        || base == "Spec.hs"
         || path.starts_with("tests/")
         || path.contains("/tests/")
         || path.contains("/__tests__/")

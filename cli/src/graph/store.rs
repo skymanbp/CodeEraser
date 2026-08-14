@@ -26,8 +26,11 @@ use std::path::Path;
 /// cost: a detector change also re-freezes the slice + voids the
 /// audited sample). 2 = the 2h ladder refinements (inline-module
 /// self/super anchoring, R4 member-tree descent) — ladder-only, so
-/// the frozen site universe stands.
-pub const GRAPH_REV: i64 = 2;
+/// the frozen site universe stands. 3 = 3l Haskell sites: cached .hs
+/// rows hold ZERO sites (the pre-3l table was empty) and a content-
+/// hash gate would keep serving them; the frozen five-language docs
+/// stand — their scope constant never included .hs (SCOPE_EXTS).
+pub const GRAPH_REV: i64 = 3;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -98,9 +101,14 @@ pub(crate) fn kind_label(code: i64) -> Option<&'static str> {
 /// a documented boundary.
 const CONFIG_NAMES: &[&str] = &["Cargo.toml", "go.mod", "package.json", "pyproject.toml"];
 
+/// `.cabal` is a basename SUFFIX (the file carries the package name:
+/// ce-core.cabal); cabal.project stays out — the hs ladder anchors
+/// by directory prefix and never reads a workspace list (hs.rs).
 pub fn is_resolver_config(path: &Path) -> bool {
     path.file_name().and_then(|n| n.to_str()).is_some_and(|n| {
-        CONFIG_NAMES.contains(&n) || (n.starts_with("tsconfig") && n.ends_with(".json"))
+        CONFIG_NAMES.contains(&n)
+            || (n.starts_with("tsconfig") && n.ends_with(".json"))
+            || n.ends_with(".cabal")
     })
 }
 

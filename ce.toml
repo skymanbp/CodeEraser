@@ -8,7 +8,8 @@ exclude = ["contracts/fixtures/crosscheck/**"]
 
 # Deadcode liveness roots beyond the mechanical conventions (M5-2h).
 # fixtures/ is test DATA measured by harnesses, not code with
-# importers; the two *_tests.rs files are mounted via #[path] mod 鈥?# a construct the site detector deliberately does not read (rs.rs R5
+# importers; the three *_tests.rs files are mounted via #[path] mod —
+# a construct the site detector deliberately does not read (rs.rs R5
 # known debt: rustc compiles them, the graph cannot see the mount,
 # and the divergence is documented rather than guessed away).
 [graph]
@@ -16,6 +17,7 @@ entry_globs = [
     "contracts/fixtures/",
     "cli/src/graph/md_tests.rs",
     "cli/src/graph/store_tests.rs",
+    "cli/src/docdup/segments_tests.rs",
 ]
 
 # Only-shrink clone ratchet (M2 review R12), enforced in CI via

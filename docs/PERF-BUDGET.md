@@ -103,6 +103,18 @@ ripgrep 冷 < 60 s；zod 为容量压力例（存活对最多），超线即收 
 | `ce dedup .`（冷，225 文件、150 块） | 2.3 s | 语料 generation 后冷索引不劣化 |
 | `ce check .`（暖索引） | 1.15 s | ✅ pre-commit 级维持 |
 
+## M5-3l graph 阶梯后全链（实测 2026-08-14，release，静默机，fresh `.ce/` 已核实删除）
+
+口径：176 个 Haskell import 站点入图（cabal 解析 + 两 rung 阶梯 + 1,371 模块
+boot 表逐串匹配），GRAPH_REV 3 全量重解析。
+
+| 项 | 实测 | 记录 |
+|---|---|---|
+| `ce scan .`（256 文件、2,765 函数） | 0.52 s | 噪声内 |
+| `ce dedup .`（冷，228 文件、149 块） | 2.68 s | 站点检测 + phase-2 阶梯全量重放在冷成本内 |
+| `ce deadcode .`（暖索引 + 判决往返） | 0.47 s | 619 kept 边、0 dead |
+| `ce check .`（暖索引） | 1.36 s | ✅ pre-commit 级维持；boot 表线性扫描（~80 站点 × 43 包）无感 |
+
 ## M5-3j 门迁移后 `ce check`（+.hs size-only 走文件，实测 2026-08-14，release，静默机）
 
 口径：3i 口径 + `hs_size_rows` 的第二次全树 walk（37 个 `.hs` 读文件计行）。

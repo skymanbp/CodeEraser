@@ -36,6 +36,18 @@ pub struct SiteKind {
     pub via: Specifier,
 }
 
+/// The anon `import` keyword token and foreign_import's inner token
+/// share this kind name (the 3k D11 collision class, AST-probed
+/// 2026-08-14) but carry no `module` field, so the Field specifier
+/// drops them by construction. Housed outside sites() for the E01
+/// fn-length line — a lone table, not the 3k statics trap (that
+/// extraction PAIRED two isomorphic tables into a new T2 block).
+const HASKELL: [SiteKind; 1] = [SiteKind {
+    node: "import",
+    label: "import",
+    via: Specifier::Field("module"),
+}];
+
 /// The site vocabulary of one language. Labels are frozen doc/wire
 /// identity — renaming one is a contract change.
 pub fn sites(lang: Lang) -> &'static [SiteKind] {
@@ -81,10 +93,9 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
             label: "import",
             via: Specifier::Field("path"),
         }],
-        // Markdown scans line-wise in graph/md.rs (no grammar);
-        // Haskell's import edges are the 3l ladder's batch (explicit
-        // arm, never `_`: a catch-all would silently eat that
-        // landing); the sentinel is never walked at all.
-        Lang::Markdown | Lang::Haskell | Lang::LangUnknown => &[],
+        Lang::Haskell => &HASKELL,
+        // Markdown scans line-wise in graph/md.rs (no grammar); the
+        // sentinel is never walked at all.
+        Lang::Markdown | Lang::LangUnknown => &[],
     }
 }
