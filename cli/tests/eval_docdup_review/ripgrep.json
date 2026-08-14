@@ -1,0 +1,154 @@
+{
+  "corpus": "ripgrep",
+  "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "rows": [
+    {
+      "rank": "9231b6b913c721470529017f35088143632308def97081e674f84484c13b7fb1",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_kind": "comment_block",
+      "a_start": 1297,
+      "a_end": 1300,
+      "b_path": "crates/core/flags/defs.rs",
+      "b_kind": "comment_block",
+      "b_start": 1938,
+      "b_end": 1941,
+      "truth": "redundant",
+      "why": "Byte-for-byte the same four-line explanation of why an escaped invalid-UTF-8 argument is accepted, copy-pasted above two different tests in the same file (defs.rs:1297 and :1938), with no wording changed at all."
+    },
+    {
+      "rank": "7c818c014e1d3b64a5f8c766676f8ca7aee9a13b9e245c3fbf8c0398f49a902d",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/printer/src/json.rs",
+      "a_kind": "comment_block",
+      "a_start": 654,
+      "a_end": 659,
+      "b_path": "crates/printer/src/standard.rs",
+      "b_kind": "comment_block",
+      "b_start": 708,
+      "b_end": 714,
+      "truth": "redundant",
+      "why": "The same six-line rationale for precomputing per-match locations was copied from one printer sink into the other (json.rs vs standard.rs); only a trailing parenthetical about the extra replacement search was appended, so the shared prose is copied wording, not independent writing."
+    },
+    {
+      "rank": "52ea5d2ebfe70f6f64541bb0c6eacd819081cb921c0eac431840a6b6f2c2b67d",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_kind": "comment_block",
+      "a_start": 1938,
+      "a_end": 1941,
+      "b_path": "crates/core/flags/defs.rs",
+      "b_kind": "comment_block",
+      "b_start": 2034,
+      "b_end": 2037,
+      "truth": "redundant",
+      "why": "Identical text to the character between defs.rs:1938 and defs.rs:2034 — the same escaped-invalid-UTF-8 explanation pasted a third time above another flag's test."
+    },
+    {
+      "rank": "a0258801e720d150e448bb8e072c7e33831843a5d9784d7812679e4f4e1228e6",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "tests/misc.rs",
+      "a_kind": "comment_block",
+      "a_start": 635,
+      "a_end": 647,
+      "b_path": "tests/misc.rs",
+      "b_kind": "comment_block",
+      "b_start": 666,
+      "b_end": 678,
+      "truth": "redundant",
+      "why": "A test comment including its ASCII directory-tree diagram was copy-pasted for the sibling test and edited by a few characters only (\".git directory\" to \".git *file*\" for submodules, \".git/\" to \".git\"); the surviving prose is copied verbatim rather than rewritten."
+    },
+    {
+      "rank": "426f9471fc737503380c36df909dca7e55693c55636da2a049a84f3c11a5f7c8",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_kind": "comment_block",
+      "a_start": 1948,
+      "a_end": 1953,
+      "b_path": "crates/core/flags/defs.rs",
+      "b_kind": "comment_block",
+      "b_start": 2044,
+      "b_end": 2049,
+      "truth": "redundant",
+      "why": "The identical six-line paragraph explaining why a raw invalid-UTF-8 flag value fails the UTF-8 check appears unchanged at defs.rs:1948 and defs.rs:2044 above two analogous separator-flag tests."
+    },
+    {
+      "rank": "cdcbaa42f16d0c642ac02fa91364c556b6c6284b61370dd905bc0366364246f8",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_kind": "comment_block",
+      "a_start": 1297,
+      "a_end": 1300,
+      "b_path": "crates/core/flags/defs.rs",
+      "b_kind": "comment_block",
+      "b_start": 2034,
+      "b_end": 2037,
+      "truth": "redundant",
+      "why": "Third pairing of the same word-identical escaped-invalid-UTF-8 comment (defs.rs:1297 vs :2034), so the same text now exists at three sites in one file."
+    },
+    {
+      "rank": "61ee9bab3a034c19ce3388320d5e2d8f978ac9f9dc399d915693deac25bf2095",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_kind": "comment_block",
+      "a_start": 1304,
+      "a_end": 1309,
+      "b_path": "crates/core/flags/defs.rs",
+      "b_kind": "comment_block",
+      "b_start": 2044,
+      "b_end": 2049,
+      "truth": "redundant",
+      "why": "Word-identical copy of the \"we specifically try to pass an invalid UTF-8 argument\" paragraph at defs.rs:1304 and :2044; nothing distinguishes the two spans textually."
+    },
+    {
+      "rank": "a3228cca7cb775dab0bf17800b18ace9caa2ef7558424bc2e4de021e15b0227e",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_kind": "comment_block",
+      "a_start": 1304,
+      "a_end": 1309,
+      "b_path": "crates/core/flags/defs.rs",
+      "b_kind": "comment_block",
+      "b_start": 1948,
+      "b_end": 1953,
+      "truth": "redundant",
+      "why": "Same paragraph again, unchanged, at defs.rs:1304 and :1948 — completing the third-occurrence triangle of one copy-pasted test rationale."
+    }
+  ],
+  "retired": [
+    {
+      "rank": "50d64ba2def91e348da2a29b95e2bfadab0f39a052520079d1c2ed9ccd2b4bd8",
+      "corpus": "ripgrep",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "a_path": "crates/printer/src/lib.rs",
+      "a_kind": "comment_block",
+      "a_start": 1,
+      "a_end": 58,
+      "b_path": "crates/searcher/src/lib.rs",
+      "b_kind": "comment_block",
+      "b_start": 1,
+      "b_end": 82,
+      "truth": "quoted",
+      "why": "The two crate-level rustdocs describe completely different crates (printers vs line-oriented searcher); the overlap is the verbatim SHERLOCK doctest fixture — the same six-line Conan Doyle excerpt embedded as a byte-string corpus in both examples — plus the shared rustdoc template headings, and that embedded common source is the bulk of the shared characters.",
+      "note": "removed from the universe by the 2026-08-14 attainment-line-B amendment (DOCDUP_REV 3 masks: html_line / fenced_code_line / overlong_line); kept as the exemption's audited evidence"
+    }
+  ],
+  "doc_gaps": [
+    {
+      "path": "crates/core/flags/defs.rs",
+      "note": "The six defs.rs spans stop exactly at the comment and exclude the test body below, so the segments carry no trace of which flag each test exercises; the only thing that distinguishes these otherwise byte-identical spans lies outside the span boundaries."
+    },
+    {
+      "path": "crates/printer/src/lib.rs",
+      "note": "The span covers the whole 58-line module doc, so a fenced runnable doctest (including the SHERLOCK byte-string fixture and assert_eq! lines) is folded into what is measured as documentation prose; the same is true of the 82-line searcher/src/lib.rs span."
+    }
+  ]
+}

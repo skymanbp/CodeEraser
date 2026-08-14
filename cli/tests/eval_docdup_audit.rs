@@ -89,3 +89,127 @@ fn generate_docdup_audit_assembly() {
         "assemblies must cover the census exactly"
     );
 }
+
+/// Every retired identity of the 2026-08-14 amendment, frozen: rows
+/// audited under the v1 census whose pairs the three masks removed
+/// from the universe — the exemption's evidence, never silently
+/// dropped and never allowed back into the active bijection.
+const RETIRED_TOTAL: usize = 15;
+
+/// One corpus's frozen audit table against the frozen census: name
+/// and tip embedded, a rank bijection over ACTIVE rows (phantom and
+/// missing equally loud), verbatim identity echo, a verdict per row,
+/// and the retired evidence checked against the same vocabulary.
+fn check_corpus(corpus: &str, doc: &Value, sample: &Value) {
+    let mains = sample["main"].as_array().expect("main");
+    eval_support::check_audit_frame(corpus, doc, mains, |rank, row, s| {
+        for key in eval_support::DOCDUP_IDENTITY {
+            assert_eq!(row[key], s[key], "{corpus}/{rank}: {key} echo drifted");
+        }
+        assert_eq!(doc["tip"], s["tip"], "{corpus}: tip vs sampled tip");
+        check_verdict(corpus, rank, row);
+    });
+    eval_support::assert_gaps_accounted(corpus, doc, "doc_gaps");
+    let census: std::collections::BTreeSet<&str> = mains
+        .iter()
+        .map(|r| r["rank"].as_str().expect("rank"))
+        .collect();
+    for row in doc["retired"].as_array().expect("retired") {
+        let rank = row["rank"].as_str().expect("rank");
+        assert!(
+            !census.contains(rank),
+            "{corpus}/{rank}: retired row still in the census"
+        );
+        check_verdict(corpus, rank, row);
+        assert!(
+            row["note"].as_str().is_some_and(|n| n.len() >= 10),
+            "{corpus}/{rank}: retired row without its amendment note"
+        );
+    }
+}
+
+/// truth in the closed vocabulary; why holds the mechanism floor.
+/// No edit axis in this family — the pair identity IS the geometry.
+fn check_verdict(corpus: &str, rank: &str, row: &Value) {
+    let truth = row["truth"].as_str().expect("truth");
+    assert!(
+        eval_support::DOCDUP_TRUTHS.contains(&truth),
+        "{corpus}/{rank}: unknown truth {truth:?}"
+    );
+    let why = row["why"].as_str().expect("why").trim();
+    assert!(
+        why.len() >= 15,
+        "{corpus}/{rank}: why is not a mechanism: {why:?}"
+    );
+}
+
+/// The audit exit: every census row audited per corpus with identity
+/// echo intact, the retired evidence complete, and the vocabulary
+/// seats real — redundant plus every audited FP family (skeleton,
+/// tabular, quoted) hold nonzero seats across active+retired.
+/// paraphrase's seat is EMPTY by measurement (docseg.rs note): the
+/// miss class lives below the oracle floor, recorded not manufactured.
+#[test]
+fn audit_covers_census_bijectively() {
+    let sample = load(&eval_doc("docdup-sample"));
+    let (mut total, mut retired_total) = (0, 0);
+    let mut by_truth: std::collections::BTreeMap<String, u64> = Default::default();
+    for corpus in CORPORA {
+        let doc = eval_support::docdup_review_doc(corpus);
+        check_corpus(corpus, &doc, &sample);
+        for key in ["rows", "retired"] {
+            for row in doc[key].as_array().expect(key) {
+                *by_truth
+                    .entry(row["truth"].as_str().expect("truth").into())
+                    .or_insert(0) += 1;
+            }
+        }
+        total += doc["rows"].as_array().expect("rows").len();
+        retired_total += doc["retired"].as_array().expect("retired").len();
+    }
+    assert_eq!(total, sample["main"].as_array().expect("main").len());
+    assert_eq!(retired_total, RETIRED_TOTAL, "retired evidence shrank");
+    eval_support::assert_nonzero_seats(
+        &by_truth,
+        &["redundant", "skeleton", "tabular", "quoted"],
+        "audited vocabulary seat is empty",
+    );
+}
+
+/// Counterfactual (G9 discipline): every advertised refusal is
+/// exercised — the shared table-driven battery plus the retired-row
+/// cases only this family owns.
+#[test]
+fn audit_refuses_tampering() {
+    let sample = load(&eval_doc("docdup-sample"));
+    let check = |doc: &Value| check_corpus("zod", doc, &sample);
+    let pristine = eval_support::docdup_review_doc("zod");
+    eval_support::assert_tampering_refused(
+        &pristine,
+        &[
+            ("rank", "not-a-census-rank", "phantom rank"),
+            ("why", "yes", "stub why"),
+            ("truth", "mismatch", "non-vocabulary truth"),
+            ("a_path", "phantom/path.md", "identity echo drift"),
+        ],
+        &check,
+    );
+    // a retired row whose rank is still in the census must refuse —
+    // "retired" claims the pair LEFT the universe
+    let mut smuggled = pristine.clone();
+    let active_rank = smuggled["rows"][0]["rank"].clone();
+    smuggled["retired"][0]["rank"] = active_rank;
+    assert!(
+        eval_support::doc_refused(&smuggled, &check),
+        "retired row colliding with the census must refuse"
+    );
+    let mut noteless = pristine.clone();
+    noteless["retired"][0]
+        .as_object_mut()
+        .expect("row")
+        .remove("note");
+    assert!(
+        eval_support::doc_refused(&noteless, &check),
+        "retired row without its amendment note must refuse"
+    );
+}

@@ -28,7 +28,10 @@ pub const DOCDUP_IDENTITY: [&str; 10] = [
 /// Closed audit truth vocabulary (instruments §9.5 C2). paraphrase is
 /// single-listed by design: docdup is lexical, so reworded
 /// duplication is a designed-in miss for the judge — the class exists
-/// so the audit can SAY so instead of folding it away.
+/// so the audit can SAY so instead of folding it away. The 2026-08-14
+/// census audit found its seat EMPTY: at J >= 0.30 rewording has
+/// already collapsed the shingle overlap, so the miss class lives
+/// entirely below the oracle floor — recorded, not manufactured.
 pub const DOCDUP_TRUTHS: [&str; 8] = [
     "redundant",
     "paraphrase",
@@ -39,6 +42,27 @@ pub const DOCDUP_TRUTHS: [&str; 8] = [
     "deliberate_xref",
     "unrelated",
 ];
+
+/// The docdup audit ground truth as a by-name mount table (the
+/// GRAPH_REVIEWS posture: include_str! makes a missing corpus a
+/// compile error, so a whole corpus can never go silently blind).
+pub const DOCDUP_REVIEWS: [(&str, &'static str); 5] = [
+    ("cobra", include_str!("../eval_docdup_review/cobra.json")),
+    (
+        "requests",
+        include_str!("../eval_docdup_review/requests.json"),
+    ),
+    (
+        "ripgrep",
+        include_str!("../eval_docdup_review/ripgrep.json"),
+    ),
+    ("self", include_str!("../eval_docdup_review/self.json")),
+    ("zod", include_str!("../eval_docdup_review/zod.json")),
+];
+
+pub fn docdup_review_doc(corpus: &str) -> Value {
+    serde_json::from_str(super::mounted("docdup", &DOCDUP_REVIEWS, corpus)).expect(corpus)
+}
 
 /// F31 cost bound: a corpus with more live segments than this is
 /// WITHHELD with a written reason, never silently downsampled.
