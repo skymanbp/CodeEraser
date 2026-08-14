@@ -77,8 +77,9 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
 /// Every stream is fed back through refresh_file with the very bytes
 /// just read: the content-hash fast path makes this free when nothing
 /// changed, and re-indexes atomically when something did — stored
-/// offsets can never disagree with the returned streams
-/// (single-threaded; the M2 daemon serializes writers per ADR-003).
+/// offsets can never disagree with the returned streams (each
+/// refresh is one idempotent transaction — the v1.7 convergent-
+/// cache contract).
 pub(super) fn load_streams(
     root: &Path,
     files: &BTreeSet<String>,

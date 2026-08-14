@@ -36,9 +36,12 @@ pub fn mark_ready() {
 /// accept loop delays daemon readiness past the client's spawn-retry
 /// window on a slow CI disk (a missed shutdown then leaks a 30-min
 /// daemon that locks the exe). An index with content is serveable
-/// as-is; a never-built one gets its ADR-003 first build. The failure
-/// transition is a compare_exchange: a concurrent Dedup request may
-/// have built the full index and marked READY — never clobber it.
+/// as-is; a never-built one gets its ADR-003 first build. This build
+/// CAN interleave with a Dedup request or an external `ce dedup` —
+/// benign under the v1.7 convergent-cache contract, pinned by the
+/// concurrent_writers battery's daemon leg. The failure transition
+/// is a compare_exchange: a concurrent Dedup request may have built
+/// the full index and marked READY — never clobber it.
 pub fn init(root: &Path) {
     let root = root.to_path_buf();
     std::thread::spawn(move || {

@@ -1,8 +1,8 @@
 # CodeEraser 开发计划
 
-> **版本** v1.6 · 2026-08-14 · 状态：🔒 已由 cc-memory 锁定
+> **版本** v1.7 · 2026-08-14 · 状态：🔒 已由 cc-memory 锁定
 > 本文件是本仓库唯一权威计划。修改流程：改本文件 → 重新 ccm 锁定 → 才能动代码。
-> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案（仪器实证测度不可达→回归地板门，用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）。
+> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）。
 > 本文件行数以锁定时为棘轮上界：只准变短，不准变长；更新必须就地改写。
 > 调研依据：2026-08-06 七路并行实证调研（GitHub API / 官方文档 / 论文原文），关键事实附 URL。
 
@@ -180,8 +180,8 @@ GUI 由 Tauri 覆盖。Go 无以上任何优势。
 - hook 触发 = 短命 `ce` 进程；重活委托给 **per-project daemon**（同一二进制 `ce daemon`，
   首次使用懒启动，空闲 30 min 自动退出）。
 - 通道：Windows named pipe / Unix domain socket，管道名 = 项目路径哈希，凭据即本用户。
-- daemon 是 SQLite 索引的**唯一写者**（WAL + busy_timeout），多 session/subagent 并发
-  由 daemon 串行化。
+- 索引=**收敛式多写者缓存**（v1.7，审计实证唯一写者从未成立）：写路径全内容门控+幂等+IMMEDIATE 锁内自检，WAL 逐事务串行 ⇒ 并发写者对静止树收敛于串行序终态（验收=`concurrent_writers` 双进程电池）；
+  daemon 角色=性能（热缓存+探针热路径）非正确性，M6 GUI 直写同库有据。
 - 版本 skew：连接握手带协议版本，不匹配 → daemon 自杀重启（新二进制路径由客户端传入）。
 - 冷启动：首次索引后台异步构建；未就绪期间 guard **显式降级**为廉价检查档（降级状态
   进 SessionStart 健康行与 Stop 汇总，不静默——A9f）。

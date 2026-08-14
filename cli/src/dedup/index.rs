@@ -1,11 +1,14 @@
 //! SQLite inverted fingerprint index (ADR-005): `files` +
 //! `fingerprints` + the schema-v4 graph cache, WAL + busy_timeout per
-//! ADR-003. Incremental invalidation is content-hash gated per file:
-//! unchanged bytes touch nothing; a change deletes and reinserts only
-//! that file's rows — fingerprints and its graph phase-1 rows in the
-//! same transaction. The M2 daemon is the sole writer; the batch CLI
-//! uses the same code single-threaded. Schema lifecycle lives in
-//! dedup/schema.rs; graph DDL + phase 2 in graph/store.rs.
+//! ADR-003 as amended (plan v1.7): the index is a CONVERGENT
+//! multi-writer cache. Incremental invalidation is content-hash gated
+//! per file: unchanged bytes touch nothing; a change deletes and
+//! reinserts only that file's rows — fingerprints and its graph
+//! phase-1 rows in ONE transaction, so any interleaving of writers
+//! converges to a serial-order state (acceptance: the
+//! concurrent_writers battery). The daemon exists for performance,
+//! not correctness. Schema lifecycle lives in dedup/schema.rs; graph
+//! DDL + phase 2 in graph/store.rs.
 
 use super::{Params, schema, tokens, winnow};
 use crate::graph::store;
@@ -90,8 +93,10 @@ impl Index {
 
     /// Refresh one file; returns false when the stored content hash
     /// already matches (nothing touched — the incremental fast path).
-    /// (Concurrent-writer hardening is out of contract: the module
-    /// header's "daemon is the sole writer" stands; only OPEN races.)
+    /// Concurrent-writer safe by idempotence (v1.7): the delete +
+    /// reinsert rides one transaction keyed by content, so two
+    /// writers of the same bytes commit the same rows in either
+    /// order — the convergence leg the battery pins.
     pub fn refresh_file(&mut self, rel: &str, src: &[u8], lang: Lang, p: Params) -> Result<bool> {
         let chash = tokens::fnv1a(src) as i64;
         let stored: Option<i64> = self

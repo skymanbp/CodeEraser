@@ -209,6 +209,13 @@ CloneProps +prefilter 族性质（shipped `provablyBelow` ⇒ 真 ted 非克隆�
 补上转写零执行缺口）；Go receiver 限定上移抽取根 `functions::name_of`
 （fourclass 后置 qualify 删除——D4 的 baseline 键重拼按构造消亡；键值字面
 不变由 units 电池逐 key 证同，rev 零 bump）。
+**HIGH-3 = 计划 v1.7 修正案（用户拍板：根治不偷懒）**：「daemon 唯一写者」
+（审计实证从未成立）改写为**收敛式多写者缓存**契约——写路径全内容门控+
+幂等+IMMEDIATE 锁内自检，WAL 逐事务串行 ⇒ 并发写者对静止树收敛于串行序
+终态；HIGH-1 恰移除了最后一个非幂等写者（候选路径），契约由此可证。
+验收件=`concurrent_writers` 双电池：双进程同库 dedup 收敛于串行 digest、
+daemon 冷启动 vs 外部写者收敛（coldstart 竞态注记转为按构造良性）；
+M6 GUI 直写同库自此有据（风险 R1 解除）。
 
 ## 复跑
 
