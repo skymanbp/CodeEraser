@@ -1,0 +1,204 @@
+{
+  "constants": {
+    "doc_line_cap": 200,
+    "doc_shingle": 5,
+    "docdup_rev": 3,
+    "exempt": [
+      "live",
+      "license_header",
+      "inline_allow"
+    ],
+    "kinds": [
+      "md_para",
+      "comment_block",
+      "docstring"
+    ],
+    "license_head_lines": 5,
+    "min_doc_tokens": 50,
+    "route_notes": {
+      "baseline": "the baseline exemption stock arrives with ce baseline (3i)",
+      "inline_allow": "the ce:allow(docdup) vocabulary is CE-specific; the route is proven live by the seeded counterfactual battery, not by corpus incidence",
+      "path": "walk::in_scope refuses excluded paths before extraction runs"
+    },
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": null,
+    "tip": "60f73e3bea7681721a2f572e64788948a17830f6"
+  },
+  "d1": {
+    "found": 3,
+    "missing": [],
+    "total": 3
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "5f3b73b79f3fcc40acf45a957af4356b5197666f",
+    "dirty": true
+  },
+  "method": "every census row joined to the FULL product judgment on the materialized pinned tree; correct = {redundant, paraphrase} (delegated mapping), wrong = the six no-duplication families; the D3 gate covers md_para+comment_block, docstring publishes ungated (decision ④); D1 = product coarse-filter recall over the oracle's report-floor pairs; D2 = the core's exact inter/union must equal the offline oracle's; the J-floor grid re-derives from the frozen oracle numbers. The census is the full 32-pair REV-3 universe (population < 100, zero selection); per-kind floors are population-bounded.",
+  "rows": [
+    {
+      "a_end": 854,
+      "a_kind": "docstring",
+      "a_path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "a_start": 848,
+      "b_end": 869,
+      "b_kind": "docstring",
+      "b_path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "b_start": 863,
+      "corpus": "self",
+      "judged": {
+        "inter": 56,
+        "reported": true,
+        "union": 67,
+        "verbatim": 54
+      },
+      "oracle": {
+        "inter": 56,
+        "union": 67,
+        "verbatim": 54
+      },
+      "rank": "456014ebe2229caaca23cc3ae76aab253802249a95222c24c63f212176e02cb5",
+      "tip": "60f73e3bea7681721a2f572e64788948a17830f6",
+      "truth": "redundant",
+      "verdict": "docstring"
+    },
+    {
+      "a_end": 844,
+      "a_kind": "docstring",
+      "a_path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "a_start": 838,
+      "b_end": 869,
+      "b_kind": "docstring",
+      "b_path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "b_start": 863,
+      "corpus": "self",
+      "judged": {
+        "inter": 56,
+        "reported": true,
+        "union": 67,
+        "verbatim": 54
+      },
+      "oracle": {
+        "inter": 56,
+        "union": 67,
+        "verbatim": 54
+      },
+      "rank": "7b8ddcc9d2580f4c5936a47154dc89aa4c386b7cf01a5d69d12f55dda2c72df2",
+      "tip": "60f73e3bea7681721a2f572e64788948a17830f6",
+      "truth": "redundant",
+      "verdict": "docstring"
+    },
+    {
+      "a_end": 844,
+      "a_kind": "docstring",
+      "a_path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "a_start": 838,
+      "b_end": 854,
+      "b_kind": "docstring",
+      "b_path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "b_start": 848,
+      "corpus": "self",
+      "judged": {
+        "inter": 60,
+        "reported": true,
+        "union": 60,
+        "verbatim": 64
+      },
+      "oracle": {
+        "inter": 60,
+        "union": 60,
+        "verbatim": 64
+      },
+      "rank": "a07e5df44592aa3056862ce7789a27ce1e245e5ee9505c396e37addb12c12838",
+      "tip": "60f73e3bea7681721a2f572e64788948a17830f6",
+      "truth": "redundant",
+      "verdict": "docstring"
+    },
+    {
+      "a_end": 360,
+      "a_kind": "docstring",
+      "a_path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "a_start": 344,
+      "b_end": 394,
+      "b_kind": "docstring",
+      "b_path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "b_start": 379,
+      "corpus": "self",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 26,
+        "union": 79,
+        "verbatim": 18
+      },
+      "rank": "d08bed2bec419dc277d062765b2a4a91cfbe4983cabc17a73c61324849d1a54e",
+      "tip": "60f73e3bea7681721a2f572e64788948a17830f6",
+      "truth": "skeleton",
+      "verdict": "not_reported"
+    }
+  ],
+  "schema": "ce.eval-docdup-precision/1.0.0",
+  "summary": {
+    "docstring": {
+      "correct": 3
+    },
+    "floor_grid": {
+      "100": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "50": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "60": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "70": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "75": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "80": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "85": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "90": {
+        "correct": 0,
+        "wrong": 0
+      },
+      "95": {
+        "correct": 0,
+        "wrong": 0
+      }
+    },
+    "verdicts": {
+      "docstring": 3,
+      "not_reported": 1
+    }
+  },
+  "universe": {
+    "dups": 3,
+    "hot_bands": 0,
+    "hot_shingles": 0,
+    "jaccard_dups": 3,
+    "judged": 33,
+    "lsh_pairs": 3,
+    "over_cap_segments": 0,
+    "requests": 1,
+    "seed_pairs": 30,
+    "segments": 114,
+    "sent": 33
+  }
+}

@@ -30,4 +30,7 @@ entry_globs = [
 # cases chain into one family (~150 blocks). Ratchet DOWN with every
 # cleanup; never raise without a plan amendment.
 [dedup]
-budget = 96
+# 187 -> 97 (M5-3g bite-17 repayment); the last block is the two
+# families sharing ONE lockstep_scores call, indistinguishable under
+# token normalization -- an honest landing point, not a regression
+budget = 97

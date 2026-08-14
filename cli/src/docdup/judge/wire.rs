@@ -45,16 +45,6 @@ pub fn chunk_request<'s>(
     (order, json!({"sets": sets, "pairs": local}))
 }
 
-/// This family's corelink bindings for the shared lockstep machine.
-pub fn family(core: &str) -> crate::lockstep::Family<'_> {
-    crate::lockstep::Family {
-        core,
-        cap: CAP,
-        kind: "docdup",
-        chunk: DOC_PAIR_CAP,
-    }
-}
-
 /// Decode one docdup.result into request-local rows `(i, j, (inter,
 /// union))` plus `[judged, jaccardDups]` — the shared parse_scores
 /// throat with this family's knob list, which pins BOTH single-owner
@@ -73,11 +63,22 @@ pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64)>
         "judge/wire.rs vs Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
         &["judged", "jaccardDups"],
     )?;
-    let local = rows
-        .into_iter()
-        .map(|[i, j, inter, union]| (i as usize, j as usize, (inter, union)))
-        .collect();
-    Ok((local, c))
+    Ok((
+        rows.into_iter()
+            .map(|[i, j, inter, union]| (i as usize, j as usize, (inter, union)))
+            .collect(),
+        c,
+    ))
+}
+
+/// This family's corelink bindings for the shared lockstep machine.
+pub fn family(core: &str) -> crate::lockstep::Family<'_> {
+    crate::lockstep::Family {
+        core,
+        cap: CAP,
+        kind: "docdup",
+        chunk: DOC_PAIR_CAP,
+    }
 }
 
 #[cfg(test)]

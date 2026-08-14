@@ -175,6 +175,15 @@ pub fn tally_field(rows: &[Value], field: &str, map: &mut BTreeMap<String, u64>)
     }
 }
 
+/// The ranks whose verdict is "wrong" — the attention set every
+/// family's frozen ledger (G8/T-G8/D8) watches.
+pub fn wrong_ranks(rows: &[Value]) -> BTreeSet<String> {
+    rows.iter()
+        .filter(|r| r["verdict"] == "wrong")
+        .map(|r| r["rank"].as_str().expect("rank").to_string())
+        .collect()
+}
+
 /// The G6/T-G6 discipline: the stored verdict must equal the one its
 /// own row re-derives.
 pub fn assert_verdict_recomputed(corpus: &str, rank: &str, row: &Value, recomputed: &str) {

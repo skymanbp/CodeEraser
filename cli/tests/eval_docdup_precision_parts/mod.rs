@@ -6,10 +6,13 @@
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
-/// Verdict classes (D4 conservation): scoped correct/wrong carry the
-/// gate; docstring rows publish outside the D3 scope (decision ④);
-/// not_reported closes the census.
-pub const VERDICTS: [&str; 4] = ["correct", "wrong", "docstring", "not_reported"];
+/// identity → (inter, union, verbatim) — the exact-number join every
+/// re-derivation runs on.
+pub type OracleMap = BTreeMap<(String, i64, String, i64), (u64, u64, u64)>;
+
+/// The published J-floor grid (percent numerators over 100); 80 is
+/// the shipped jaccardNum.
+pub const FLOOR_GRID: [u64; 9] = [50, 60, 70, 75, 80, 85, 90, 95, 100];
 
 /// The delegated correct↔truth mapping (the 3f "most elegant"
 /// delegation, docdup edition, recorded in every doc method):
@@ -18,9 +21,10 @@ pub const VERDICTS: [&str; 4] = ["correct", "wrong", "docstring", "not_reported"
 /// skeleton, tabular, quoted, deliberate_xref, unrelated}.
 pub const CORRECT_TRUTHS: [&str; 2] = ["redundant", "paraphrase"];
 
-/// The published J-floor grid (percent numerators over 100); 80 is
-/// the shipped jaccardNum.
-pub const FLOOR_GRID: [u64; 9] = [50, 60, 70, 75, 80, 85, 90, 95, 100];
+/// Verdict classes (D4 conservation): scoped correct/wrong carry the
+/// gate; docstring rows publish outside the D3 scope (decision ④);
+/// not_reported closes the census.
+pub const VERDICTS: [&str; 4] = ["correct", "wrong", "docstring", "not_reported"];
 
 /// A census row's scope: docstring pairs publish ungated.
 pub fn scope_of(row: &Value) -> &'static str {
@@ -63,9 +67,8 @@ pub fn oracle_key(p: &Value) -> (String, i64, String, i64) {
     )
 }
 
-/// identity → (inter, union, verbatim) of one corpus's frozen oracle
-/// — the exact numbers every re-derivation joins on.
-pub fn oracle_join(corpus: &str) -> BTreeMap<(String, i64, String, i64), (u64, u64, u64)> {
+/// One corpus's frozen oracle as an OracleMap.
+pub fn oracle_join(corpus: &str) -> OracleMap {
     let name = (corpus != "self").then(|| corpus.to_string());
     let doc = super::eval_support::load(&super::eval_support::eval_doc(
         &super::eval_support::doc_stem("docdup-oracle", &name),
@@ -98,7 +101,7 @@ pub fn check_row(
     rank: &str,
     row: &Value,
     truths: &BTreeMap<&str, &str>,
-    oracle: &BTreeMap<(String, i64, String, i64), (u64, u64, u64)>,
+    oracle: &OracleMap,
 ) {
     super::eval_support::assert_row_verdict(corpus, rank, row, truths, |truth| {
         verdict_of(
@@ -204,11 +207,10 @@ pub fn rescore(corpus: &str, rows: &[Value]) -> Value {
     let oracle = oracle_join(corpus);
     let mut verdicts: BTreeMap<String, u64> = BTreeMap::new();
     let mut doc_split: BTreeMap<String, u64> = BTreeMap::new();
-    let mut grid: BTreeMap<String, Value> = BTreeMap::new();
     for row in rows {
         super::eval_support::tally_add(&mut verdicts, row["verdict"].as_str().expect("v"), 1);
         if row["verdict"] == "docstring" {
-            let key = if CORRECT_TRUTHS.contains(&row["truth"].as_str().expect("t")) {
+            let key = if correct_truth(row) {
                 "correct"
             } else {
                 "wrong"
@@ -216,19 +218,30 @@ pub fn rescore(corpus: &str, rows: &[Value]) -> Value {
             super::eval_support::tally_add(&mut doc_split, key, 1);
         }
     }
-    for floor in FLOOR_GRID {
-        let (mut c, mut w) = (0u64, 0u64);
-        for row in rows {
-            let (inter, union, verbatim) = oracle[&census_key(row)];
-            if scope_of(row) == "scoped" && reported_at(floor, inter, union, verbatim) {
-                if CORRECT_TRUTHS.contains(&row["truth"].as_str().expect("t")) {
-                    c += 1;
-                } else {
-                    w += 1;
-                }
+    let grid: BTreeMap<String, Value> = FLOOR_GRID
+        .iter()
+        .map(|&floor| (floor.to_string(), grid_entry(rows, &oracle, floor)))
+        .collect();
+    json!({"verdicts": verdicts, "docstring": doc_split, "floor_grid": grid})
+}
+
+fn correct_truth(row: &Value) -> bool {
+    CORRECT_TRUTHS.contains(&row["truth"].as_str().expect("truth"))
+}
+
+/// One J-floor grid cell: the scoped correct/wrong tallies had the
+/// report threshold sat at `floor`/100.
+fn grid_entry(rows: &[Value], oracle: &OracleMap, floor: u64) -> Value {
+    let (mut c, mut w) = (0u64, 0u64);
+    for row in rows {
+        let (inter, union, verbatim) = oracle[&census_key(row)];
+        if scope_of(row) == "scoped" && reported_at(floor, inter, union, verbatim) {
+            if correct_truth(row) {
+                c += 1;
+            } else {
+                w += 1;
             }
         }
-        grid.insert(floor.to_string(), json!({"correct": c, "wrong": w}));
     }
-    json!({"verdicts": verdicts, "docstring": doc_split, "floor_grid": grid})
+    json!({"correct": c, "wrong": w})
 }

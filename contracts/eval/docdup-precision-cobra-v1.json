@@ -1,0 +1,297 @@
+{
+  "constants": {
+    "doc_line_cap": 200,
+    "doc_shingle": 5,
+    "docdup_rev": 3,
+    "exempt": [
+      "live",
+      "license_header",
+      "inline_allow"
+    ],
+    "kinds": [
+      "md_para",
+      "comment_block",
+      "docstring"
+    ],
+    "license_head_lines": 5,
+    "min_doc_tokens": 50,
+    "route_notes": {
+      "baseline": "the baseline exemption stock arrives with ce baseline (3i)",
+      "inline_allow": "the ce:allow(docdup) vocabulary is CE-specific; the route is proven live by the seeded counterfactual battery, not by corpus incidence",
+      "path": "walk::in_scope refuses excluded paths before extraction runs"
+    },
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "cobra",
+    "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+  },
+  "d1": {
+    "found": 4,
+    "missing": [],
+    "total": 4
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "5f3b73b79f3fcc40acf45a957af4356b5197666f",
+    "dirty": true
+  },
+  "method": "every census row joined to the FULL product judgment on the materialized pinned tree; correct = {redundant, paraphrase} (delegated mapping), wrong = the six no-duplication families; the D3 gate covers md_para+comment_block, docstring publishes ungated (decision ④); D1 = product coarse-filter recall over the oracle's report-floor pairs; D2 = the core's exact inter/union must equal the offline oracle's; the J-floor grid re-derives from the frozen oracle numbers. The census is the full 32-pair REV-3 universe (population < 100, zero selection); per-kind floors are population-bounded.",
+  "rows": [
+    {
+      "a_end": 124,
+      "a_kind": "comment_block",
+      "a_path": "doc/md_docs.go",
+      "a_start": 119,
+      "b_end": 52,
+      "b_kind": "comment_block",
+      "b_path": "doc/yaml_docs.go",
+      "b_start": 48,
+      "corpus": "cobra",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 48,
+        "union": 73,
+        "verbatim": 46
+      },
+      "rank": "7fc28f307acc8d4b5242d20c6714aa74e38662c1bb9c75c27a633906cf32b5a8",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 37,
+      "a_kind": "comment_block",
+      "a_path": "doc/man_docs.go",
+      "a_start": 33,
+      "b_end": 137,
+      "b_kind": "comment_block",
+      "b_path": "doc/rest_docs.go",
+      "b_start": 132,
+      "corpus": "cobra",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 49,
+        "union": 72,
+        "verbatim": 46
+      },
+      "rank": "8c69d06c7b0285f5c171c32f9732fcebd3f97b2e706df847cf58b7158dcc97c5",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 37,
+      "a_kind": "comment_block",
+      "a_path": "doc/man_docs.go",
+      "a_start": 33,
+      "b_end": 124,
+      "b_kind": "comment_block",
+      "b_path": "doc/md_docs.go",
+      "b_start": 119,
+      "corpus": "cobra",
+      "judged": {
+        "inter": 58,
+        "reported": true,
+        "union": 68,
+        "verbatim": 62
+      },
+      "oracle": {
+        "inter": 58,
+        "union": 68,
+        "verbatim": 62
+      },
+      "rank": "71595734aff23fa750a55a254c36cc4d00dd32c346ecb0dd6ebc9ccb701fca6b",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 124,
+      "a_kind": "comment_block",
+      "a_path": "doc/md_docs.go",
+      "a_start": 119,
+      "b_end": 137,
+      "b_kind": "comment_block",
+      "b_path": "doc/rest_docs.go",
+      "b_start": 132,
+      "corpus": "cobra",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 49,
+        "union": 72,
+        "verbatim": 46
+      },
+      "rank": "3e009f7e2b87494b339386d62d04dfe7f72c4400cce690249429b363729b1a27",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 137,
+      "a_kind": "comment_block",
+      "a_path": "doc/rest_docs.go",
+      "a_start": 132,
+      "b_end": 52,
+      "b_kind": "comment_block",
+      "b_path": "doc/yaml_docs.go",
+      "b_start": 48,
+      "corpus": "cobra",
+      "judged": {
+        "inter": 52,
+        "reported": true,
+        "union": 64,
+        "verbatim": 56
+      },
+      "oracle": {
+        "inter": 52,
+        "union": 64,
+        "verbatim": 56
+      },
+      "rank": "03b6d00e6b4506937903cdbb85ff016e9575c2448040832110ab9056bcbe4a89",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 555,
+      "a_kind": "md_para",
+      "a_path": "site/content/completions/_index.md",
+      "a_start": 543,
+      "b_end": 616,
+      "b_kind": "md_para",
+      "b_path": "site/content/completions/_index.md",
+      "b_start": 604,
+      "corpus": "cobra",
+      "judged": {
+        "inter": 88,
+        "reported": true,
+        "union": 88,
+        "verbatim": 113
+      },
+      "oracle": {
+        "inter": 88,
+        "union": 88,
+        "verbatim": 113
+      },
+      "rank": "f973de75a3e41f9a8472ad0a4494ddadc4720eb0ed007cd70c8a8d9406d7fccf",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 37,
+      "a_kind": "comment_block",
+      "a_path": "doc/man_docs.go",
+      "a_start": 33,
+      "b_end": 52,
+      "b_kind": "comment_block",
+      "b_path": "doc/yaml_docs.go",
+      "b_start": 48,
+      "corpus": "cobra",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 48,
+        "union": 73,
+        "verbatim": 46
+      },
+      "rank": "024d6774610af522b7ba0ef4920025bdaff063acab8a3a01ae55b3f0009d88e2",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 53,
+      "a_kind": "comment_block",
+      "a_path": "shell_completions.go",
+      "a_start": 48,
+      "b_end": 76,
+      "b_kind": "comment_block",
+      "b_path": "shell_completions.go",
+      "b_start": 71,
+      "corpus": "cobra",
+      "judged": {
+        "inter": 49,
+        "reported": true,
+        "union": 49,
+        "verbatim": 53
+      },
+      "oracle": {
+        "inter": 49,
+        "union": 49,
+        "verbatim": 53
+      },
+      "rank": "34c781797d102f1888eba5c65898d06da5ea925119f842104701f2b9e8e12a18",
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "truth": "redundant",
+      "verdict": "correct"
+    }
+  ],
+  "schema": "ce.eval-docdup-precision/1.0.0",
+  "summary": {
+    "docstring": {},
+    "floor_grid": {
+      "100": {
+        "correct": 4,
+        "wrong": 0
+      },
+      "50": {
+        "correct": 8,
+        "wrong": 0
+      },
+      "60": {
+        "correct": 8,
+        "wrong": 0
+      },
+      "70": {
+        "correct": 4,
+        "wrong": 0
+      },
+      "75": {
+        "correct": 4,
+        "wrong": 0
+      },
+      "80": {
+        "correct": 4,
+        "wrong": 0
+      },
+      "85": {
+        "correct": 4,
+        "wrong": 0
+      },
+      "90": {
+        "correct": 4,
+        "wrong": 0
+      },
+      "95": {
+        "correct": 4,
+        "wrong": 0
+      }
+    },
+    "verdicts": {
+      "correct": 4,
+      "not_reported": 4
+    }
+  },
+  "universe": {
+    "dups": 4,
+    "hot_bands": 0,
+    "hot_shingles": 0,
+    "jaccard_dups": 4,
+    "judged": 22,
+    "lsh_pairs": 4,
+    "over_cap_segments": 0,
+    "requests": 1,
+    "seed_pairs": 18,
+    "segments": 59,
+    "sent": 22
+  }
+}

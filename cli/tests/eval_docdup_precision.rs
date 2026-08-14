@@ -38,31 +38,14 @@ fn hit_key(h: &Value) -> PairKey {
     (ap, asr, bp, bs)
 }
 
-/// One corpus generated end to end: anchored walk, materialized tree,
-/// full product run, candidate pass, census join, frozen doc.
-fn generate_corpus(name: &Option<String>, sample: &Value) {
-    let corpus = name.as_deref().unwrap_or("self").to_string();
-    let seg_doc = load(&eval_doc(&doc_stem("docdup-segments", name)));
-    let tip = seg_doc["corpus"]["tip"].as_str().expect("tip").to_string();
-    let repo = name
-        .as_ref()
-        .map(|n| format!("{}/corpora/{n}", out_dir().display()));
-    let (walked, _) = walk_tree_in(repo.as_deref(), &tip);
-    let frozen = str_pairs(&seg_doc, "files", "path", "sha256");
-    assert_eq!(frozen.len(), walked.len(), "{corpus}: inventory drifted");
-    let root = materialize_tree("docdup", &corpus, &walked);
-    let report = codeeraser::docdup::judge::run(&root, None, &core_bin()).expect("product run");
-    let dups: BTreeMap<PairKey, &Value> = {
-        Box::leak(Box::new(serde_json::to_value(&report.hits).expect("hits")))
-            .as_array()
-            .expect("hits")
-            .iter()
-            .map(|h| (hit_key(h), h))
-            .collect()
-    };
-    let (idx, _) = codeeraser::dedup::refreshed_index(&root, None).expect("index");
+/// The whole product pass over one materialized pinned tree: the
+/// full judgment report plus the candidate-pair key set (D1's
+/// numerator source), both through product throats only.
+fn product_pass(root: &std::path::Path) -> (Value, Value, BTreeSet<PairKey>) {
+    let report = codeeraser::docdup::judge::run(root, None, &core_bin()).expect("product run");
+    let (idx, _) = codeeraser::dedup::refreshed_index(root, None).expect("index");
     let segs = codeeraser::docdup::judge::candidates::live_rows(&idx).expect("live rows");
-    let cand = codeeraser::docdup::judge::candidates::collect(&root, &segs).expect("candidates");
+    let cand = codeeraser::docdup::judge::candidates::collect(root, &segs).expect("candidates");
     let cand_keys: BTreeSet<PairKey> = cand
         .pairs
         .iter()
@@ -75,6 +58,29 @@ fn generate_corpus(name: &Option<String>, sample: &Value) {
             )
         })
         .collect();
+    (
+        serde_json::to_value(&report.hits).expect("hits"),
+        serde_json::to_value(&report.counts).expect("counts"),
+        cand_keys,
+    )
+}
+
+/// One corpus generated end to end: anchored walk, materialized tree,
+/// full product run, candidate pass, census join, frozen doc.
+fn generate_corpus(name: &Option<String>, sample: &Value) {
+    let corpus = name.as_deref().unwrap_or("self").to_string();
+    let (seg_doc, tip) = frozen_tip("docdup-segments", name);
+    let (walked, _) = walk_tree_in(corpus_repo(name).as_deref(), &tip);
+    let frozen = str_pairs(&seg_doc, "files", "path", "sha256");
+    assert_eq!(frozen.len(), walked.len(), "{corpus}: inventory drifted");
+    let root = materialize_tree("docdup", &corpus, &walked);
+    let (hits, universe, cand_keys) = product_pass(&root);
+    let dups: BTreeMap<PairKey, &Value> = hits
+        .as_array()
+        .expect("hits")
+        .iter()
+        .map(|h| (hit_key(h), h))
+        .collect();
     let oracle = parts::oracle_join(&corpus);
     let d1 = d1_recall(&corpus, &oracle, &cand_keys);
     let rows: Vec<Value> = of_corpus(sample["main"].as_array().expect("main"), &corpus)
@@ -84,13 +90,7 @@ fn generate_corpus(name: &Option<String>, sample: &Value) {
     // D8: the wrong ledger is frozen — regressions need the family's
     // explicit blessing variable, never a silent regeneration.
     let path = eval_doc(&doc_stem("docdup-precision", name));
-    let wrong_ranks = |rows: &[Value]| -> std::collections::BTreeSet<String> {
-        rows.iter()
-            .filter(|r| r["verdict"] == "wrong")
-            .map(|r| r["rank"].as_str().expect("rank").to_string())
-            .collect()
-    };
-    assert_ledger_frozen(&path, &rows, &wrong_ranks, "CE_ACCEPT_DOCDUP");
+    assert_ledger_frozen(&path, &rows, &eval_support::wrong_ranks, "CE_ACCEPT_DOCDUP");
     let doc = json!({
         "schema": "ce.eval-docdup-precision/1.0.0",
         "corpus": {"name": name, "tip": tip},
@@ -106,7 +106,7 @@ fn generate_corpus(name: &Option<String>, sample: &Value) {
                    re-derives from the frozen oracle numbers. The census is the \
                    full 32-pair REV-3 universe (population < 100, zero \
                    selection); per-kind floors are population-bounded.",
-        "universe": serde_json::to_value(&report.counts).expect("counts"),
+        "universe": universe,
         "d1": d1,
         "summary": parts::rescore(&corpus, &rows),
         "rows": rows,
@@ -192,22 +192,23 @@ fn generate_docdup_precision() {
     }
 }
 
-/// The attainment-line-B contract: 32 census rows across corpora, D3
-/// >= 0.85 overall and per corpus where the answered denominator
-/// reaches 5, D1/D2/D4/D5 per doc, then D9 — the shared mutation
-/// table plus the re-check-stub and exemption-stub bespoke variants.
+/// The attainment-line-B contract: 32 census rows across corpora,
+/// D3 at least 0.85 overall and per corpus where the answered
+/// denominator reaches 5, D1/D2/D4/D5 per doc, then D9 — the shared
+/// mutation table plus the re-check-stub and exemption-stub bespoke
+/// variants.
 const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {
-    family: "docdup-precision",
-    sample: "docdup-sample",
-    gate: 0.85,
-    tag: "D3 attainment line B",
-    total: 32,
-    slice_floor: 0, // per-kind floors are population-bounded (method)
     mutations: &[
         ("rank", "not-a-census-rank", "phantom rank"),
         ("truth", "mismatch", "cooked truth echo"),
         ("a_path", "phantom/path.md", "identity echo drift"),
     ],
+    total: 32,
+    slice_floor: 0, // per-kind floors are population-bounded (method)
+    gate: 0.85,
+    tag: "D3 attainment line B",
+    family: "docdup-precision",
+    sample: "docdup-sample",
 };
 
 #[test]

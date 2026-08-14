@@ -58,7 +58,14 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     let (idx, _db_path) = crate::dedup::refreshed_index(root, db)?;
     let segs = candidates::live_rows(&idx)?;
     let cand = candidates::collect(root, &segs)?;
-    let (rows, judged, jaccard_dups, requests) = judge(core, &segs, &cand.pairs)?;
+    // the family's lockstep bindings, inline: this judge is thin
+    // enough that a separate fn was pure scaffolding (bite 17 tail)
+    let (rows, judged, jaccard_dups, requests) = crate::lockstep::lockstep_scores(
+        &wire::family(core),
+        &cand.pairs,
+        |chunk| wire::chunk_request(chunk, |g| &segs[g].set),
+        wire::parse_result,
+    )?;
     let runs: BTreeMap<(usize, usize), u64> =
         cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
     let dups: Vec<crate::report::Pair<Doc>> = rows
@@ -86,31 +93,6 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     Ok(Report { hits: dups, counts })
 }
 
-fn name(s: &candidates::SegRow) -> String {
-    format!(
-        "{}:{}-{} {}",
-        s.path,
-        s.start_line,
-        s.end_line,
-        crate::docdup::spec::KIND_NAMES[s.kind as usize]
-    )
-}
-
-/// Family bindings for the ONE lockstep machine; counter0 = judged,
-/// counter1 = jaccardDups.
-fn judge(
-    core: &str,
-    segs: &[candidates::SegRow],
-    pairs: &[(usize, usize, u64)],
-) -> Result<crate::lockstep::Judged<(u64, u64)>> {
-    crate::lockstep::lockstep_scores(
-        &wire::family(core),
-        pairs,
-        |chunk| wire::chunk_request(chunk, |g| &segs[g].set),
-        wire::parse_result,
-    )
-}
-
 /// Report emission through the ONE shared envelope+console throat.
 pub fn print(r: &Report, as_json: bool) {
     crate::report::emit(
@@ -119,6 +101,16 @@ pub fn print(r: &Report, as_json: bool) {
         as_json,
         "docdup {a} <-> {b}  J {inter}/{union} verbatim {verbatim}",
     );
+}
+
+fn name(s: &candidates::SegRow) -> String {
+    format!(
+        "{}:{}-{} {}",
+        s.path,
+        s.start_line,
+        s.end_line,
+        crate::docdup::spec::KIND_NAMES[s.kind as usize]
+    )
 }
 
 #[cfg(test)]

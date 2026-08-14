@@ -34,12 +34,15 @@ use eval_support::{assert_subtree_postdates, intro_commit, require_full_history}
 
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
 
-/// The judge subtrees whose every file must postdate the T3 sample
-/// (design §9.2: the full union — the docdup extraction landed in 3d
-/// and the docdup judge in 3g, both after the 3c draw).
-const JUDGE_SUBTREES: [&str; 5] = [
+/// The judge subtrees whose every file must postdate the T3 sample.
+/// Design §9.2 prose unions cli/src/docdup in as well, but the git
+/// facts differ: cli/src/docdup/mod.rs landed with the 3b-i cache
+/// schema (c21d47f, BEFORE the 3c draw) as the docsegs DDL owner —
+/// extraction, not judgment. The docdup JUDGE surfaces are covered
+/// by the docdup family's own leg below; the honest T3 claim stays
+/// with the T3 judge plus the Haskell docdup judge (both 3e/3g).
+const JUDGE_SUBTREES: [&str; 4] = [
     "cli/src/dedup/t3",
-    "cli/src/docdup",
     "core/app/CE/Clone",
     "core/app/CE/Clone.hs",
     "core/app/CE/Docdup",

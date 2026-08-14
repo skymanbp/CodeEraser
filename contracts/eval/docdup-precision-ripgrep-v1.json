@@ -1,0 +1,306 @@
+{
+  "constants": {
+    "doc_line_cap": 200,
+    "doc_shingle": 5,
+    "docdup_rev": 3,
+    "exempt": [
+      "live",
+      "license_header",
+      "inline_allow"
+    ],
+    "kinds": [
+      "md_para",
+      "comment_block",
+      "docstring"
+    ],
+    "license_head_lines": 5,
+    "min_doc_tokens": 50,
+    "route_notes": {
+      "baseline": "the baseline exemption stock arrives with ce baseline (3i)",
+      "inline_allow": "the ce:allow(docdup) vocabulary is CE-specific; the route is proven live by the seeded counterfactual battery, not by corpus incidence",
+      "path": "walk::in_scope refuses excluded paths before extraction runs"
+    },
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "ripgrep",
+    "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+  },
+  "d1": {
+    "found": 7,
+    "missing": [],
+    "total": 7
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "5f3b73b79f3fcc40acf45a957af4356b5197666f",
+    "dirty": true
+  },
+  "method": "every census row joined to the FULL product judgment on the materialized pinned tree; correct = {redundant, paraphrase} (delegated mapping), wrong = the six no-duplication families; the D3 gate covers md_para+comment_block, docstring publishes ungated (decision ④); D1 = product coarse-filter recall over the oracle's report-floor pairs; D2 = the core's exact inter/union must equal the offline oracle's; the J-floor grid re-derives from the frozen oracle numbers. The census is the full 32-pair REV-3 universe (population < 100, zero selection); per-kind floors are population-bounded.",
+  "rows": [
+    {
+      "a_end": 1300,
+      "a_kind": "comment_block",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_start": 1297,
+      "b_end": 1941,
+      "b_kind": "comment_block",
+      "b_path": "crates/core/flags/defs.rs",
+      "b_start": 1938,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 46,
+        "reported": true,
+        "union": 46,
+        "verbatim": 50
+      },
+      "oracle": {
+        "inter": 46,
+        "union": 46,
+        "verbatim": 50
+      },
+      "rank": "9231b6b913c721470529017f35088143632308def97081e674f84484c13b7fb1",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 659,
+      "a_kind": "comment_block",
+      "a_path": "crates/printer/src/json.rs",
+      "a_start": 654,
+      "b_end": 714,
+      "b_kind": "comment_block",
+      "b_path": "crates/printer/src/standard.rs",
+      "b_start": 708,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 61,
+        "reported": true,
+        "union": 74,
+        "verbatim": 65
+      },
+      "oracle": {
+        "inter": 61,
+        "union": 74,
+        "verbatim": 65
+      },
+      "rank": "7c818c014e1d3b64a5f8c766676f8ca7aee9a13b9e245c3fbf8c0398f49a902d",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 1941,
+      "a_kind": "comment_block",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_start": 1938,
+      "b_end": 2037,
+      "b_kind": "comment_block",
+      "b_path": "crates/core/flags/defs.rs",
+      "b_start": 2034,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 46,
+        "reported": true,
+        "union": 46,
+        "verbatim": 50
+      },
+      "oracle": {
+        "inter": 46,
+        "union": 46,
+        "verbatim": 50
+      },
+      "rank": "52ea5d2ebfe70f6f64541bb0c6eacd819081cb921c0eac431840a6b6f2c2b67d",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 647,
+      "a_kind": "comment_block",
+      "a_path": "tests/misc.rs",
+      "a_start": 635,
+      "b_end": 678,
+      "b_kind": "comment_block",
+      "b_path": "tests/misc.rs",
+      "b_start": 666,
+      "corpus": "ripgrep",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 52,
+        "union": 69,
+        "verbatim": 45
+      },
+      "rank": "a0258801e720d150e448bb8e072c7e33831843a5d9784d7812679e4f4e1228e6",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 1953,
+      "a_kind": "comment_block",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_start": 1948,
+      "b_end": 2049,
+      "b_kind": "comment_block",
+      "b_path": "crates/core/flags/defs.rs",
+      "b_start": 2044,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 75,
+        "reported": true,
+        "union": 75,
+        "verbatim": 79
+      },
+      "oracle": {
+        "inter": 75,
+        "union": 75,
+        "verbatim": 79
+      },
+      "rank": "426f9471fc737503380c36df909dca7e55693c55636da2a049a84f3c11a5f7c8",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 1300,
+      "a_kind": "comment_block",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_start": 1297,
+      "b_end": 2037,
+      "b_kind": "comment_block",
+      "b_path": "crates/core/flags/defs.rs",
+      "b_start": 2034,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 46,
+        "reported": true,
+        "union": 46,
+        "verbatim": 50
+      },
+      "oracle": {
+        "inter": 46,
+        "union": 46,
+        "verbatim": 50
+      },
+      "rank": "cdcbaa42f16d0c642ac02fa91364c556b6c6284b61370dd905bc0366364246f8",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 1309,
+      "a_kind": "comment_block",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_start": 1304,
+      "b_end": 2049,
+      "b_kind": "comment_block",
+      "b_path": "crates/core/flags/defs.rs",
+      "b_start": 2044,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 75,
+        "reported": true,
+        "union": 75,
+        "verbatim": 79
+      },
+      "oracle": {
+        "inter": 75,
+        "union": 75,
+        "verbatim": 79
+      },
+      "rank": "61ee9bab3a034c19ce3388320d5e2d8f978ac9f9dc399d915693deac25bf2095",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 1309,
+      "a_kind": "comment_block",
+      "a_path": "crates/core/flags/defs.rs",
+      "a_start": 1304,
+      "b_end": 1953,
+      "b_kind": "comment_block",
+      "b_path": "crates/core/flags/defs.rs",
+      "b_start": 1948,
+      "corpus": "ripgrep",
+      "judged": {
+        "inter": 75,
+        "reported": true,
+        "union": 75,
+        "verbatim": 79
+      },
+      "oracle": {
+        "inter": 75,
+        "union": 75,
+        "verbatim": 79
+      },
+      "rank": "a3228cca7cb775dab0bf17800b18ace9caa2ef7558424bc2e4de021e15b0227e",
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "truth": "redundant",
+      "verdict": "correct"
+    }
+  ],
+  "schema": "ce.eval-docdup-precision/1.0.0",
+  "summary": {
+    "docstring": {},
+    "floor_grid": {
+      "100": {
+        "correct": 7,
+        "wrong": 0
+      },
+      "50": {
+        "correct": 8,
+        "wrong": 0
+      },
+      "60": {
+        "correct": 8,
+        "wrong": 0
+      },
+      "70": {
+        "correct": 8,
+        "wrong": 0
+      },
+      "75": {
+        "correct": 8,
+        "wrong": 0
+      },
+      "80": {
+        "correct": 7,
+        "wrong": 0
+      },
+      "85": {
+        "correct": 7,
+        "wrong": 0
+      },
+      "90": {
+        "correct": 7,
+        "wrong": 0
+      },
+      "95": {
+        "correct": 7,
+        "wrong": 0
+      }
+    },
+    "verdicts": {
+      "correct": 7,
+      "not_reported": 1
+    }
+  },
+  "universe": {
+    "dups": 7,
+    "hot_bands": 0,
+    "hot_shingles": 0,
+    "jaccard_dups": 7,
+    "judged": 2056,
+    "lsh_pairs": 8,
+    "over_cap_segments": 0,
+    "requests": 1,
+    "seed_pairs": 2048,
+    "segments": 251,
+    "sent": 2056
+  }
+}

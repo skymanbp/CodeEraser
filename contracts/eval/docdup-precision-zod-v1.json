@@ -1,0 +1,303 @@
+{
+  "constants": {
+    "doc_line_cap": 200,
+    "doc_shingle": 5,
+    "docdup_rev": 3,
+    "exempt": [
+      "live",
+      "license_header",
+      "inline_allow"
+    ],
+    "kinds": [
+      "md_para",
+      "comment_block",
+      "docstring"
+    ],
+    "license_head_lines": 5,
+    "min_doc_tokens": 50,
+    "route_notes": {
+      "baseline": "the baseline exemption stock arrives with ce baseline (3i)",
+      "inline_allow": "the ce:allow(docdup) vocabulary is CE-specific; the route is proven live by the seeded counterfactual battery, not by corpus incidence",
+      "path": "walk::in_scope refuses excluded paths before extraction runs"
+    },
+    "verbatim_floor": 50
+  },
+  "corpus": {
+    "name": "zod",
+    "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+  },
+  "d1": {
+    "found": 6,
+    "missing": [],
+    "total": 6
+  },
+  "generated_from": {
+    "ce": "0.0.1",
+    "commit": "5f3b73b79f3fcc40acf45a957af4356b5197666f",
+    "dirty": true
+  },
+  "method": "every census row joined to the FULL product judgment on the materialized pinned tree; correct = {redundant, paraphrase} (delegated mapping), wrong = the six no-duplication families; the D3 gate covers md_para+comment_block, docstring publishes ungated (decision ④); D1 = product coarse-filter recall over the oracle's report-floor pairs; D2 = the core's exact inter/union must equal the offline oracle's; the J-floor grid re-derives from the frozen oracle numbers. The census is the full 32-pair REV-3 universe (population < 100, zero selection); per-kind floors are population-bounded.",
+  "rows": [
+    {
+      "a_end": 104,
+      "a_kind": "md_para",
+      "a_path": "CODE_OF_CONDUCT.md",
+      "a_start": 100,
+      "b_end": 104,
+      "b_kind": "md_para",
+      "b_path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "b_start": 100,
+      "corpus": "zod",
+      "judged": {
+        "inter": 50,
+        "reported": true,
+        "union": 50,
+        "verbatim": 54
+      },
+      "oracle": {
+        "inter": 50,
+        "union": 50,
+        "verbatim": 54
+      },
+      "rank": "f5bd91fc708b6eac618e8f5f05535705e2605193d3cde964987183ddee4c81c2",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 37,
+      "a_kind": "md_para",
+      "a_path": "CODE_OF_CONDUCT.md",
+      "a_start": 30,
+      "b_end": 37,
+      "b_kind": "md_para",
+      "b_path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "b_start": 30,
+      "corpus": "zod",
+      "judged": {
+        "inter": 52,
+        "reported": true,
+        "union": 52,
+        "verbatim": 56
+      },
+      "oracle": {
+        "inter": 52,
+        "union": 52,
+        "verbatim": 56
+      },
+      "rank": "adc51013439279718de2e3ef3636a867d457b1e6086e777f291fca65457dd97e",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 10,
+      "a_kind": "md_para",
+      "a_path": "CODE_OF_CONDUCT.md",
+      "a_start": 5,
+      "b_end": 10,
+      "b_kind": "md_para",
+      "b_path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "b_start": 5,
+      "corpus": "zod",
+      "judged": {
+        "inter": 50,
+        "reported": true,
+        "union": 50,
+        "verbatim": 54
+      },
+      "oracle": {
+        "inter": 50,
+        "union": 50,
+        "verbatim": 54
+      },
+      "rank": "4d3a1fa8b22f572f2f685b5300e09c7b71035386abfb822e0fcbf2d786d7e612",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 57,
+      "a_kind": "md_para",
+      "a_path": "CODE_OF_CONDUCT.md",
+      "a_start": 53,
+      "b_end": 57,
+      "b_kind": "md_para",
+      "b_path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "b_start": 53,
+      "corpus": "zod",
+      "judged": {
+        "inter": 50,
+        "reported": true,
+        "union": 50,
+        "verbatim": 54
+      },
+      "oracle": {
+        "inter": 50,
+        "union": 50,
+        "verbatim": 54
+      },
+      "rank": "e2818135c46ee9b25488f5ee5ec6daeae24e4d2e521d2a996ae17c18266b10b6",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 2735,
+      "a_kind": "comment_block",
+      "a_path": "packages/zod/src/v3/types.ts",
+      "a_start": 2701,
+      "b_end": 2763,
+      "b_kind": "comment_block",
+      "b_path": "packages/zod/src/v3/types.ts",
+      "b_start": 2743,
+      "corpus": "zod",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 34,
+        "union": 113,
+        "verbatim": 29
+      },
+      "rank": "69ca9778fa929c2b557b1b1de0aa8df3d96bc0697c23bdb01282ed80373b80ba",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 93,
+      "a_kind": "md_para",
+      "a_path": "CODE_OF_CONDUCT.md",
+      "a_start": 88,
+      "b_end": 93,
+      "b_kind": "md_para",
+      "b_path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "b_start": 88,
+      "corpus": "zod",
+      "judged": {
+        "inter": 52,
+        "reported": true,
+        "union": 52,
+        "verbatim": 56
+      },
+      "oracle": {
+        "inter": 52,
+        "union": 52,
+        "verbatim": 56
+      },
+      "rank": "2fb97874f53b7e10cad5f8b69a82de48c371be21d53a10c2bb7e1d5aa35bd92d",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "correct"
+    },
+    {
+      "a_end": 40,
+      "a_kind": "comment_block",
+      "a_path": "packages/zod/src/v3/tests/generics.test.ts",
+      "a_start": 23,
+      "b_end": 49,
+      "b_kind": "comment_block",
+      "b_path": "packages/zod/src/v4/classic/tests/generics.test.ts",
+      "b_start": 36,
+      "corpus": "zod",
+      "judged": {
+        "reported": false
+      },
+      "oracle": {
+        "inter": 45,
+        "union": 71,
+        "verbatim": 30
+      },
+      "rank": "43fde97c3ba8355b023c43da1990801aa17efeaf96f59461efc80b014d519eb5",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "not_reported"
+    },
+    {
+      "a_end": 26,
+      "a_kind": "md_para",
+      "a_path": "CODE_OF_CONDUCT.md",
+      "a_start": 20,
+      "b_end": 26,
+      "b_kind": "md_para",
+      "b_path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "b_start": 20,
+      "corpus": "zod",
+      "judged": {
+        "inter": 48,
+        "reported": true,
+        "union": 48,
+        "verbatim": 52
+      },
+      "oracle": {
+        "inter": 48,
+        "union": 48,
+        "verbatim": 52
+      },
+      "rank": "66bf0762fe81499066edfbaa05ecdb579a780335d58215b6465383d2f38dff4e",
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "truth": "redundant",
+      "verdict": "correct"
+    }
+  ],
+  "schema": "ce.eval-docdup-precision/1.0.0",
+  "summary": {
+    "docstring": {},
+    "floor_grid": {
+      "100": {
+        "correct": 6,
+        "wrong": 0
+      },
+      "50": {
+        "correct": 7,
+        "wrong": 0
+      },
+      "60": {
+        "correct": 7,
+        "wrong": 0
+      },
+      "70": {
+        "correct": 6,
+        "wrong": 0
+      },
+      "75": {
+        "correct": 6,
+        "wrong": 0
+      },
+      "80": {
+        "correct": 6,
+        "wrong": 0
+      },
+      "85": {
+        "correct": 6,
+        "wrong": 0
+      },
+      "90": {
+        "correct": 6,
+        "wrong": 0
+      },
+      "95": {
+        "correct": 6,
+        "wrong": 0
+      }
+    },
+    "verdicts": {
+      "correct": 6,
+      "not_reported": 2
+    }
+  },
+  "universe": {
+    "dups": 6,
+    "hot_bands": 0,
+    "hot_shingles": 0,
+    "jaccard_dups": 6,
+    "judged": 78,
+    "lsh_pairs": 6,
+    "over_cap_segments": 0,
+    "requests": 1,
+    "seed_pairs": 72,
+    "segments": 117,
+    "sent": 78
+  }
+}

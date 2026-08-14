@@ -25,6 +25,21 @@ pub fn doc_stem(family: &str, name: &Option<String>) -> String {
     }
 }
 
+/// Where an external corpus repository lives (None = self) — the ONE
+/// path convention every anchored generator resolves.
+pub fn corpus_repo(name: &Option<String>) -> Option<String> {
+    name.as_ref()
+        .map(|n| format!("{}/corpora/{n}", super::out_dir().display()))
+}
+
+/// One family sibling's frozen doc and pinned tip — the anchored
+/// opening every generator shares.
+pub fn frozen_tip(family: &str, name: &Option<String>) -> (Value, String) {
+    let doc = super::load(&super::eval_doc(&doc_stem(family, name)));
+    let tip = doc["corpus"]["tip"].as_str().expect("tip").to_string();
+    (doc, tip)
+}
+
 /// The instrument walk of one pinned tree in the CE_SLICE_REPO-
 /// selected corpus — the single-corpus generators' entry.
 pub fn walk_tree(tip: &str) -> (Vec<WalkedFile>, BTreeMap<&'static str, u64>) {
