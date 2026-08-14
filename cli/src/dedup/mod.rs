@@ -89,6 +89,17 @@ pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index
     Ok((idx, db_path))
 }
 
+/// The walkidx read + index.rs text conversion, verbatim — ONE decode
+/// for every judgment-side re-read (t3 trees, docdup sequences): a
+/// different decode here would judge text the cache never saw.
+pub fn walked_text(root: &Path, path: &str) -> Result<(String, crate::scan::lang::Lang)> {
+    use anyhow::Context;
+    let bytes = std::fs::read(root.join(path)).with_context(|| path.to_string())?;
+    let lang = crate::scan::lang::Lang::from_path(Path::new(path))
+        .with_context(|| format!("{path}: no lang"))?;
+    Ok((String::from_utf8_lossy(&bytes).into_owned(), lang))
+}
+
 /// Library entry shared by the CLI and the daemon: index, verify,
 /// and return the blocks + summary without printing anything.
 pub fn analyze(

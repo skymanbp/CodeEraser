@@ -40,18 +40,10 @@ pub const T3_IDENTITY: [&str; 10] = [
     "corpus", "lang", "band", "source", "a_path", "a_key", "a_nth", "b_path", "b_key", "b_nth",
 ];
 
-/// The T3 audit ground-truth mount (the C3 by-name discipline via
-/// the shared table resolver — graph.rs::mounted, T-G10).
-pub const T3_REVIEWS: [(&str, &str); 5] = [
-    ("cobra", include_str!("../eval_t3_review/cobra.json")),
-    ("requests", include_str!("../eval_t3_review/requests.json")),
-    ("ripgrep", include_str!("../eval_t3_review/ripgrep.json")),
-    ("self", include_str!("../eval_t3_review/self.json")),
-    ("zod", include_str!("../eval_t3_review/zod.json")),
-];
-
+/// The t3 family's mount into the ONE review registry (the C3
+/// by-name discipline, T-G10).
 pub fn t3_review_doc(corpus: &str) -> Value {
-    serde_json::from_str(super::mounted("t3", &T3_REVIEWS, corpus)).expect(corpus)
+    super::review_of("t3", corpus)
 }
 
 /// The frozen sample's MAIN rows of one corpus, in doc (audit-domain)
@@ -260,10 +252,8 @@ fn score_pairs(
     assert!(sendable.len() <= wire::PAIR_CAP, "sample exceeds pairCap");
     let (order, body) = wire::chunk_request(sendable, |g| &trees[&g]);
     let reply = link.request("clone", body).expect("clone.request");
-    let scores = wire::parse_result(&reply).expect("clone.result");
-    scores
-        .rows
-        .into_iter()
-        .map(|(i, j, ted, n1, n2)| ((order[i], order[j]), Judgment::Scored { ted, n1, n2 }))
+    let (rows, _counts) = wire::parse_result(&reply).expect("clone.result");
+    rows.into_iter()
+        .map(|(i, j, (ted, n1, n2))| ((order[i], order[j]), Judgment::Scored { ted, n1, n2 }))
         .collect()
 }

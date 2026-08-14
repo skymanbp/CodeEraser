@@ -2,33 +2,18 @@
 //! examples, ported to the launch languages (plan §6 M1: "CoC 过
 //! Sonar 白皮书共通例题"). Every expected value below is read from the
 //! whitepaper's margin annotations at the cited page, not re-derived.
+//! The rows ride the shared table runner (common::run_metric_cases);
+//! each row's why strings carry the page citations.
 
-use codeeraser::scan::{functions, lang::Lang, metrics, spec};
+use codeeraser::scan::lang::Lang;
 
 mod common;
 
-struct Scores {
-    cc: u32,
-    coc: u32,
-}
-
-fn measure(lang: Lang, src: &str) -> Vec<Scores> {
-    let sp = spec::spec(lang);
-    let tree = common::parse(lang, src);
-    functions::extract(tree.root_node(), src.as_bytes(), sp)
-        .into_iter()
-        .map(|u| Scores {
-            cc: metrics::cyclo::measure(u.node, src.as_bytes(), sp),
-            coc: metrics::cognitive::measure(u.node, src.as_bytes(), sp).score,
-        })
-        .collect()
-}
-
-/// p.5 + p.10 `sumOfPrimes`: CoC 7 (for +1, for +2, if +3, labeled
-/// `continue OUT` +1), Cyclomatic 4. Go port keeps the labeled jump.
-#[test]
-fn p10_sum_of_primes() {
-    let src = "\
+const CASES: &[common::MetricCase] = &[
+    // p.5 + p.10 sumOfPrimes: Go port keeps the labeled jump.
+    common::MetricCase {
+        lang: Lang::Go,
+        src: "\
 func sumOfPrimes(max int) int {
 	total := 0
 OUT:
@@ -42,19 +27,23 @@ OUT:
 	}
 	return total
 }
-";
-    let m = measure(Lang::Go, src);
-    assert_eq!(m.len(), 1);
-    assert_eq!(m[0].coc, 7, "whitepaper p.10 margin total");
-    assert_eq!(m[0].cc, 4, "whitepaper p.5 margin total");
-}
-
-/// p.5 + p.10 `getWords`: a switch and all its cases = one structural
-/// increment, CoC 1; CC 4 (p.5 margin — default adds no branch; the
-/// same rule as gocyclo v0.6.0's "ignore default case").
-#[test]
-fn p10_get_words() {
-    let src = "\
+",
+        fns: 1,
+        checks: &[
+            (
+                0,
+                "coc",
+                7,
+                "p.10 margin: for +1, for +2, if +3, continue OUT +1",
+            ),
+            (0, "cc", 4, "p.5 margin total"),
+        ],
+    },
+    // p.5 + p.10 getWords: a switch and all its cases = one structural
+    // increment; CC 4 (default adds no branch — gocyclo v0.6.0 rule).
+    common::MetricCase {
+        lang: Lang::Go,
+        src: "\
 func getWords(number int) string {
 	switch number {
 	case 1:
@@ -67,36 +56,32 @@ func getWords(number int) string {
 		return \"lots\"
 	}
 }
-";
-    let m = measure(Lang::Go, src);
-    assert_eq!(m.len(), 1);
-    assert_eq!(m[0].coc, 1, "whitepaper p.10 margin total");
-    assert_eq!(m[0].cc, 4, "whitepaper p.5 margin: default not counted");
-}
-
-/// p.8 second operator example: `if (a && !(b && c))` = 3 — the
-/// negated parenthesized sub-chain starts a NEW sequence even though
-/// the operator is the same. Pins ce's paren-bounded run model.
-#[test]
-fn p8_negated_paren_starts_new_run() {
-    let src = "\
+",
+        fns: 1,
+        checks: &[
+            (0, "coc", 1, "p.10 margin: one structural increment"),
+            (0, "cc", 4, "p.5 margin: default not counted"),
+        ],
+    },
+    // p.8 second operator example: the negated parenthesized sub-chain
+    // starts a NEW sequence — pins ce's paren-bounded run model.
+    common::MetricCase {
+        lang: Lang::TypeScript,
+        src: "\
 function f(a: boolean, b: boolean, c: boolean): boolean {
   if (a && !(b && c)) {
     return true;
   }
   return false;
 }
-";
-    let m = measure(Lang::TypeScript, src);
-    assert_eq!(m.len(), 1);
-    assert_eq!(m[0].coc, 3, "whitepaper p.8 margin: if +1, && +1, && +1");
-}
-
-/// p.9 `myMethod`: try is transparent (no increment, no nesting);
-/// if +1, for +2, while +3, catch +1, if +2 = 9. Python try/except port.
-#[test]
-fn p9_my_method_try_catch() {
-    let src = "\
+",
+        fns: 1,
+        checks: &[(0, "coc", 3, "p.8 margin: if +1, && +1, && +1")],
+    },
+    // p.9 myMethod: try is transparent (no increment, no nesting).
+    common::MetricCase {
+        lang: Lang::Python,
+        src: "\
 def my_method():
     try:
         if condition1:
@@ -106,17 +91,20 @@ def my_method():
     except (ValueError, TypeError):
         if condition2:
             pass
-";
-    let m = measure(Lang::Python, src);
-    assert_eq!(m.len(), 1);
-    assert_eq!(m[0].coc, 9, "whitepaper p.9 margin total");
-}
-
-/// p.9 `myMethod2`: a lambda increments nothing but raises nesting, so
-/// the if inside it costs +2. Go func-literal port (absorbed unit).
-#[test]
-fn p9_lambda_raises_nesting() {
-    let src = "\
+",
+        fns: 1,
+        checks: &[(
+            0,
+            "coc",
+            9,
+            "p.9 margin: if +1, for +2, while +3, catch +1, if +2",
+        )],
+    },
+    // p.9 myMethod2: a lambda increments nothing but raises nesting —
+    // Go func-literal port (absorbed unit).
+    common::MetricCase {
+        lang: Lang::Go,
+        src: "\
 func myMethod2() {
 	r := func() {
 		if condition1 {
@@ -124,18 +112,15 @@ func myMethod2() {
 	}
 	_ = r
 }
-";
-    let m = measure(Lang::Go, src);
-    assert_eq!(m.len(), 1);
-    assert_eq!(m[0].coc, 2, "whitepaper p.9 margin total");
-}
-
-/// p.19 `toRegexp` (Appendix C): the full else-if chain example,
-/// margin sum 20 — exercises ternary at depth 0, mixed operator runs,
-/// flat else-if with children at chain level, nested ifs to depth 3.
-#[test]
-fn p19_to_regexp() {
-    let src = r#"
+",
+        fns: 1,
+        checks: &[(0, "coc", 2, "p.9 margin: lambda nests, if pays +2")],
+    },
+    // p.19 toRegexp (Appendix C): ternary at depth 0, mixed operator
+    // runs, flat else-if with children at chain level, depth-3 ifs.
+    common::MetricCase {
+        lang: Lang::TypeScript,
+        src: r#"
 function toRegexp(antPattern: string, directorySeparator: string): string {
   const escapedDirectorySeparator = "\\" + directorySeparator;
   let sb = "^";
@@ -171,8 +156,13 @@ function toRegexp(antPattern: string, directorySeparator: string): string {
   sb += "$";
   return sb;
 }
-"#;
-    let m = measure(Lang::TypeScript, src);
-    assert_eq!(m.len(), 1);
-    assert_eq!(m[0].coc, 20, "whitepaper p.19 margin total");
+"#,
+        fns: 1,
+        checks: &[(0, "coc", 20, "p.19 margin total")],
+    },
+];
+
+#[test]
+fn whitepaper_worked_examples() {
+    common::run_metric_cases(CASES);
 }

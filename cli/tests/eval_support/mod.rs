@@ -10,6 +10,7 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
+pub mod auditgen;
 pub mod colordiff;
 pub mod corpus;
 pub mod dedup;
@@ -21,6 +22,7 @@ pub mod provenance;
 pub mod t3c;
 pub mod t3f;
 pub mod universe;
+pub use auditgen::*;
 pub use colordiff::*;
 pub use corpus::*;
 pub use dedup::*;

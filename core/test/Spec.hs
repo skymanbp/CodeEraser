@@ -8,12 +8,14 @@
 -- reddens both suites.
 module Main (main) where
 
+import CE.Docdup.Cost (docPairCap, docSetCap)
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
 import qualified CloneProps
 import qualified GraphProps
 import qualified Reference
 import qualified ReferenceGraph
+import qualified ReferenceJaccard
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -38,13 +40,43 @@ main = do
       , goldenPairs "docdup/golden.ndjson"
       , goldenPairs "verdict/golden.ndjson"
       , structural
+      , docdupStructural
       , costModel
       , Reference.equivalence
       , ReferenceGraph.equivalence
+      , ReferenceJaccard.equivalence
       , GraphProps.battery
       , CloneProps.battery
       ]
   unless (and results) exitFailure
+
+-- | Runtime-generated docdup cap probes (the graph over-cap posture:
+-- an 8k-element set has no business weighing down a fixture file).
+-- BOTH halves of the cap guard fire — a compensating guard with a
+-- dead half was the Graph edgeCap defect the first draft shipped.
+docdupStructural :: IO Bool
+docdupStructural = do
+  a <- check "over-cap docdup SET degrades" (field setCapReply "reason" == Just "docdup_too_large")
+  b <- check "over-cap docdup PAIRS degrade" (field pairCapReply "reason" == Just "docdup_too_large")
+  c <-
+    check
+      "degraded docdup reply keeps type and id"
+      (field setCapReply "type" == Just "docdup.result" && field setCapReply "id" == Just (Number 9))
+  pure (a && b && c)
+ where
+  ints ns = B8.intercalate "," (map (B8.pack . show) ns)
+  setCapReply =
+    Protocol.respond "0.0.1" $
+      "{\"proto\":\"2.2.0\",\"type\":\"docdup.request\",\"id\":9,\"sets\":[["
+        <> ints [0 .. docSetCap]
+        <> "]],\"pairs\":[]}"
+  -- cap check precedes validation by design, so identical pair rows
+  -- are fine here (never validated)
+  pairCapReply =
+    Protocol.respond "0.0.1" $
+      "{\"proto\":\"2.2.0\",\"type\":\"docdup.request\",\"id\":10,\"sets\":[[1,2]],\"pairs\":["
+        <> B8.intercalate "," (replicate (fromInteger docPairCap + 1) "[0,0,0]")
+        <> "]}"
 
 -- | The floor is derived, and perturbing the site cost must move it
 -- (plan §7.4 sensitivity: a dead knob cannot hide).

@@ -24,24 +24,11 @@ use std::collections::BTreeMap;
 const RANK_DOMAIN: &str = "ce-docdup-pair-v1";
 const AUDIT_DOMAIN: &str = "ce-docdup-audit-v1";
 
-/// The domain-separated hash of one row — the ONE derivation the gate
-/// repeats from the frozen fields (D5 posture).
+/// The domain-separated hash of one row — the shared identity_hash
+/// throat over this family's frozen identity order; the ONE
+/// derivation the gate repeats from the frozen fields (D5 posture).
 fn row_hash(domain: &str, row: &Value) -> String {
-    let s = |k: &str| row[k].as_str().unwrap_or_else(|| panic!("{k}"));
-    let n = |k: &str| row[k].as_i64().unwrap_or_else(|| panic!("{k}"));
-    content_sha(&format!(
-        "{domain}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",
-        s("corpus"),
-        s("tip"),
-        s("a_path"),
-        s("a_kind"),
-        n("a_start"),
-        n("a_end"),
-        s("b_path"),
-        s("b_kind"),
-        n("b_start"),
-        n("b_end"),
-    ))
+    eval_support::identity_hash(domain, row, &eval_support::DOCDUP_IDENTITY)
 }
 
 fn side_fields(row: &mut Value, side: &str, seg: &Value) {
@@ -103,25 +90,23 @@ fn derive() -> (Vec<Value>, Value) {
 #[ignore] // writes a contracts file; the derivation itself is pure
 fn generate_docdup_sample() {
     let (rows, tallies) = derive();
-    let doc = json!({
-        "schema": "ce.eval-docdup-sample/1.0.0",
-        "domains": {"rank": RANK_DOMAIN, "audit": AUDIT_DOMAIN},
-        "generated_from": generated_from(),
-        "method": "complete census of the frozen five-corpus docdup oracle: every \
-                   emitted pair (J >= 30/100 or verbatim run >= 50 words) enters — \
-                   the C2 design's 100-row hash-rank draw assumes a population \
-                   >= 100, and the frozen universe holds 30 report-floor pairs \
-                   (47 with the margin band), so a census is the zero-selection \
-                   stronger form and per-kind floors are population-bounded \
-                   (docstring pairs number 6 in total). Ranks keep the registered \
-                   ce-docdup-pair-v1 domain; rows are listed in the independent \
-                   audit-domain order. The report/margin split uses the \
-                   pre-registered 80/100 report floor and the product \
-                   VERBATIM_FLOOR; auditors never see it (assembly carries \
-                   verbatim segment texts and identities only).",
-        "tallies": tallies,
-        "main": rows,
-    });
+    let doc = eval_support::sample_doc(
+        "ce.eval-docdup-sample/1.0.0",
+        (RANK_DOMAIN, AUDIT_DOMAIN),
+        "complete census of the frozen five-corpus docdup oracle: every \
+         emitted pair (J >= 30/100 or verbatim run >= 50 words) enters — \
+         the C2 design's 100-row hash-rank draw assumes a population \
+         >= 100, and the frozen universe holds 30 report-floor pairs \
+         (47 with the margin band), so a census is the zero-selection \
+         stronger form and per-kind floors are population-bounded \
+         (docstring pairs number 6 in total). Ranks keep the registered \
+         ce-docdup-pair-v1 domain; rows are listed in the independent \
+         audit-domain order. The report/margin split uses the \
+         pre-registered 80/100 report floor and the product \
+         VERBATIM_FLOOR; auditors never see it (assembly carries \
+         verbatim segment texts and identities only).",
+        json!({"tallies": tallies, "main": rows}),
+    );
     let path = eval_doc("docdup-sample");
     write_doc(&path, &doc, &format!("{path} written"));
 }
@@ -139,9 +124,9 @@ fn docdup_sample_is_the_oracle_census() {
         "domains drifted"
     );
     assert_eq!(doc["tallies"], tallies, "population tallies drifted");
-    let main = doc["main"].as_array().expect("main");
-    assert_eq!(main.len(), rows.len(), "census is not the full oracle");
-    for (got, want) in main.iter().zip(&rows) {
-        assert_eq!(got, want, "row drifted from the oracle census");
-    }
+    assert_eq!(
+        doc["main"],
+        Value::Array(rows),
+        "census drifted from the oracle derivation"
+    );
 }

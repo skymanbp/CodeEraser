@@ -57,6 +57,70 @@ pub fn parse(lang: codeeraser::scan::lang::Lang, src: &str) -> tree_sitter::Tree
     parser.parse(src, None).expect("parse")
 }
 
+/// One measured unit — every scan-metric battery's assertion currency
+/// (metrics / divergence-stances / sonar-whitepaper each kept its own
+/// struct + measure loop until the self-ratchet flagged the trio).
+pub struct MeasuredUnit {
+    pub name: String,
+    pub lines: usize,
+    pub params: usize,
+    pub cc: u32,
+    pub coc: u32,
+    pub nesting: u32,
+}
+
+/// Every extracted unit of `src` with all five metrics.
+pub fn measure_units(lang: codeeraser::scan::lang::Lang, src: &str) -> Vec<MeasuredUnit> {
+    use codeeraser::scan::{functions, metrics, spec};
+    let sp = spec::spec(lang);
+    let tree = parse(lang, src);
+    functions::extract(tree.root_node(), src.as_bytes(), sp)
+        .into_iter()
+        .map(|u| {
+            let cog = metrics::cognitive::measure(u.node, src.as_bytes(), sp);
+            MeasuredUnit {
+                name: u.name,
+                lines: u.end_line - u.start_line + 1,
+                params: u.params,
+                cc: metrics::cyclo::measure(u.node, src.as_bytes(), sp),
+                coc: cog.score,
+                nesting: cog.max_nesting,
+            }
+        })
+        .collect()
+}
+
+/// One table row of a metric battery: source, expected unit count and
+/// the (unit index, metric, expected, why) checks. The why strings
+/// carry the whitepaper citations / stance records — the table IS the
+/// register.
+pub struct MetricCase {
+    pub lang: codeeraser::scan::lang::Lang,
+    pub src: &'static str,
+    pub fns: usize,
+    pub checks: &'static [(usize, &'static str, u32, &'static str)],
+}
+
+/// Run a metric battery table — ONE assertion loop for the three
+/// scan-metric test files.
+pub fn run_metric_cases(cases: &[MetricCase]) {
+    for c in cases {
+        let m = measure_units(c.lang, c.src);
+        assert_eq!(m.len(), c.fns, "unit count for:\n{}", c.src);
+        for &(i, key, want, why) in c.checks {
+            let got = match key {
+                "cc" => m[i].cc,
+                "coc" => m[i].coc,
+                "nesting" => m[i].nesting,
+                "lines" => m[i].lines as u32,
+                "params" => m[i].params as u32,
+                other => panic!("unknown metric key {other}"),
+            };
+            assert_eq!(got, want, "{key}[{i}]: {why}");
+        }
+    }
+}
+
 /// Run git in `dir` with a throwaway identity; panic on failure.
 pub fn git(dir: &Path, args: &[&str]) {
     let out = Command::new("git")

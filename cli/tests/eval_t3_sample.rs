@@ -33,23 +33,17 @@ struct PoolRow {
     lang: String,
 }
 
-/// The domain-separated hash of one row under `domain` — the ONE
+/// The domain-separated hash of one row under `domain` — the shared
+/// identity_hash throat over this family's field order; the ONE
 /// derivation verify() repeats from the frozen fields (G4).
 fn row_hash(domain: &str, row: &Value) -> String {
-    let s = |k: &str| row[k].as_str().unwrap_or_else(|| panic!("{k}"));
-    let n = |k: &str| row[k].as_i64().unwrap_or_else(|| panic!("{k}"));
-    content_sha(&format!(
-        "{domain}|{}|{}|{}|{}|{}|{}|{}|{}|{}",
-        s("corpus"),
-        s("tip"),
-        s("a_path"),
-        s("a_key"),
-        n("a_nth"),
-        s("b_path"),
-        s("b_key"),
-        n("b_nth"),
-        s("source")
-    ))
+    eval_support::identity_hash(
+        domain,
+        row,
+        &[
+            "corpus", "tip", "a_path", "a_key", "a_nth", "b_path", "b_key", "b_nth", "source",
+        ],
+    )
 }
 
 /// Walk one corpus's frozen candidate doc + live pass into pool rows,
@@ -144,25 +138,26 @@ fn generate_t3_sample() {
     }
     // auditors see audit order, never rank order (independent domain)
     main.sort_by_key(|r| row_hash(AUDIT_DOMAIN, r));
-    let doc = json!({
-        "schema": "ce.eval-t3-sample/1.0.0",
-        "domains": {"rank": RANK_DOMAIN, "audit": AUDIT_DOMAIN},
-        "generated_from": generated_from(),
-        "method": "hash-ranked sample over the five frozen candidate universes: \
-                   rank = sha256(rank domain | corpus | tip | pair identity | \
-                   source), no RNG, no clock; 100 main rows = floor 15 per unit \
-                   language (four — markdown has no units by design) + 40 seats \
-                   by largest remainder over pool shares; backup 20 per language \
-                   continues each language's rank order and never crosses \
-                   languages (denominator top-up, floors protected). Pool \
-                   membership is digest-bound to the t3-candidates docs; rows \
-                   are listed in the independent audit-domain order.",
-        "pool_by_lang": pool_by,
-        "pool_digests": digests,
-        "quotas": q,
-        "main": main,
-        "backup": backup,
-    });
+    let doc = eval_support::sample_doc(
+        "ce.eval-t3-sample/1.0.0",
+        (RANK_DOMAIN, AUDIT_DOMAIN),
+        "hash-ranked sample over the five frozen candidate universes: \
+         rank = sha256(rank domain | corpus | tip | pair identity | \
+         source), no RNG, no clock; 100 main rows = floor 15 per unit \
+         language (four — markdown has no units by design) + 40 seats \
+         by largest remainder over pool shares; backup 20 per language \
+         continues each language's rank order and never crosses \
+         languages (denominator top-up, floors protected). Pool \
+         membership is digest-bound to the t3-candidates docs; rows \
+         are listed in the independent audit-domain order.",
+        json!({
+            "pool_by_lang": pool_by,
+            "pool_digests": digests,
+            "quotas": q,
+            "main": main,
+            "backup": backup,
+        }),
+    );
     let path = eval_doc("t3-sample");
     write_doc(&path, &doc, &format!("{path} written"));
 }

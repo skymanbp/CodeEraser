@@ -9,6 +9,10 @@ use crate::scan::lang::Lang;
 /// 2107.06499, verbatim lower bound 50 tokens).
 pub const MIN_DOC_TOKENS: usize = 50;
 
+/// License-header window: only a file's FIRST comment block starting
+/// at or above this line can be a license header. Decided.
+pub const LICENSE_HEAD_LINES: i64 = 5;
+
 /// Verbatim hard-hit floor in words (same provenance as
 /// MIN_DOC_TOKENS). A common word run this long is a duplicate
 /// regardless of what Jaccard says about the rest of the segment.
@@ -19,10 +23,6 @@ pub const VERBATIM_FLOOR: usize = 50;
 /// docdup-segments doc's method line — the constant's backing is a
 /// generation-time measurement, not a remembered citation.
 pub const DOC_SHINGLE: usize = 5;
-
-/// License-header window: only a file's FIRST comment block starting
-/// at or above this line can be a license header. Decided.
-pub const LICENSE_HEAD_LINES: i64 = 5;
 
 /// Longest comment/docstring line still treated as prose, in visible
 /// chars. Decided, not derived (2026-08-14 attainment-line-B

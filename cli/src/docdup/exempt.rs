@@ -18,18 +18,19 @@ pub const EXEMPT_LIVE: i64 = 0;
 pub const EXEMPT_LICENSE: i64 = 1;
 pub const EXEMPT_ALLOW: i64 = 2;
 
-/// Every count the extraction pipeline sheds anywhere. The last three
-/// rows are the 2026-08-14 attainment-line-B amendment (ccm #842):
-/// embedded code/structure inside documentation is not prose.
+/// Every count the extraction pipeline sheds anywhere. The md walk's
+/// own shed counters ride embedded (segments::MdShed — one owner, no
+/// field copying); fenced_code_line and overlong_line are the
+/// comment-side rows of the 2026-08-14 attainment-line-B amendment
+/// (ccm #842): embedded code inside documentation is not prose.
 #[derive(Default)]
 pub struct Ledger {
     pub license_header: u64,
     pub skeleton_line: u64,
+    pub md: super::segments::MdShed,
     pub inline_allow: u64,
     pub allow_missing_why: u64,
     pub below_floor: u64,
-    pub indented_code_lines: u64,
-    pub html_line: u64,
     pub fenced_code_line: u64,
     pub overlong_line: u64,
 }

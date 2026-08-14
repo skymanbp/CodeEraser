@@ -10,11 +10,8 @@ pub mod tree;
 pub mod wire;
 
 use super::candidates::{self, PairRow, TSED_DEN, TSED_NUM, Unit};
-use crate::corelink::Link;
-use crate::scan::lang::Lang;
-use anyhow::{Context, Result, ensure};
+use anyhow::{Result, ensure};
 use serde::Serialize;
-use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -28,14 +25,16 @@ enum Outcome {
     Forest,
 }
 
+/// The family metric block riding each reported pair (report::Pair
+/// flattens it, so the JSON row shape is unchanged).
 #[derive(Serialize)]
-pub struct Hit {
-    pub a: String,
-    pub b: String,
+pub struct Ted {
     pub ted: i64,
     pub n1: i64,
     pub n2: i64,
 }
+
+pub type Report = crate::report::Report<Ted, Counts>;
 
 #[derive(Serialize)]
 pub struct Counts {
@@ -52,11 +51,6 @@ pub struct Counts {
     pub clones: usize,
 }
 
-pub struct Report {
-    pub clones: Vec<Hit>,
-    pub counts: Counts,
-}
-
 /// The whole judgment: refresh + identity gate, candidates, trees,
 /// chunked clone.requests, verdicts.
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
@@ -69,17 +63,14 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     let cand = candidates::collect(root, &mut idx)?;
     let built = build_trees(root, &cand.units)?;
     let (sendable, dropped_over_cap, dropped_forest) = sendable_pairs(&cand.pairs, &built);
-    let out = judge(core, &built, &sendable)?;
-    let clones: Vec<Hit> = out
-        .rows
+    let (rows, judged, prefiltered, requests) = judge(core, &built, &sendable)?;
+    let clones: Vec<crate::report::Pair<Ted>> = rows
         .iter()
-        .filter(|&&(_, _, ted, n1, n2)| is_clone(ted, n1, n2))
-        .map(|&(a, b, ted, n1, n2)| Hit {
+        .filter(|&&(_, _, (ted, n1, n2))| is_clone(ted, n1, n2))
+        .map(|&(a, b, (ted, n1, n2))| crate::report::Pair {
             a: name(&cand.units[a]),
             b: name(&cand.units[b]),
-            ted,
-            n1,
-            n2,
+            m: Ted { ted, n1, n2 },
         })
         .collect();
     let (over_cap_units, forest_units) = built.iter().fold((0, 0), |(oc, fo), b| match b {
@@ -95,12 +86,15 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
         pairs_dropped_over_cap: dropped_over_cap,
         pairs_dropped_forest: dropped_forest,
         sent: sendable.len() as u64,
-        requests: out.requests,
-        prefiltered: out.prefiltered,
-        judged: out.judged,
+        requests,
+        prefiltered,
+        judged,
         clones: clones.len(),
     };
-    Ok(Report { clones, counts })
+    Ok(Report {
+        hits: clones,
+        counts,
+    })
 }
 
 fn name(u: &Unit) -> String {
@@ -134,11 +128,7 @@ fn build_trees(root: &Path, units: &[Unit]) -> Result<Vec<Outcome>> {
         }
     }
     for (path, ids) in by_file {
-        // the walkidx read + index.rs text conversion, verbatim — a
-        // different decode here would judge text the cache never saw
-        let bytes = std::fs::read(root.join(path)).with_context(|| path.to_string())?;
-        let text = String::from_utf8_lossy(&bytes);
-        let lang = Lang::from_path(Path::new(path)).with_context(|| format!("{path}: no lang"))?;
+        let (text, lang) = super::walked_text(root, path)?;
         let spans: Vec<(usize, usize)> = ids
             .iter()
             .map(|&i| (units[i].start_line as usize, units[i].end_line as usize))
@@ -189,77 +179,34 @@ fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairR
     (sendable, over_cap, forest)
 }
 
-struct JudgeOut {
-    rows: Vec<(usize, usize, i64, i64, i64)>,
-    judged: u64,
-    prefiltered: u64,
-    requests: usize,
+/// Family bindings for the ONE lockstep machine; counter0 = judged,
+/// counter1 = prefiltered.
+fn judge(
+    core: &str,
+    built: &[Outcome],
+    sendable: &[&PairRow],
+) -> Result<crate::lockstep::Judged<(i64, i64, i64)>> {
+    crate::lockstep::lockstep_scores(
+        &wire::family(core),
+        sendable,
+        |chunk| {
+            let ab: Vec<(usize, usize)> = chunk.iter().map(|p| (p.a, p.b)).collect();
+            wire::chunk_request(&ab, |g| match &built[g] {
+                Outcome::Tree(t) => t,
+                _ => unreachable!("sendable pairs reference built trees only"),
+            })
+        },
+        wire::parse_result,
+    )
 }
 
-/// Chunked lockstep judging over ONE core link. Request-local tree
-/// indices are the chunk's unit ids by sorted rank — the monotone
-/// map keeps the wire's strictly-ascending pair rows for free.
-fn judge(core: &str, built: &[Outcome], sendable: &[&PairRow]) -> Result<JudgeOut> {
-    let (mut link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
-    ensure!(
-        link.has(wire::CAP),
-        "ce-core offers no {} capability — upgrade the core",
-        wire::CAP
-    );
-    let mut out = JudgeOut {
-        rows: Vec::new(),
-        judged: 0,
-        prefiltered: 0,
-        requests: 0,
-    };
-    for chunk in sendable.chunks(wire::PAIR_CAP) {
-        let ab: Vec<(usize, usize)> = chunk.iter().map(|p| (p.a, p.b)).collect();
-        let (order, body) = wire::chunk_request(&ab, |g| match &built[g] {
-            Outcome::Tree(t) => t,
-            _ => unreachable!("sendable pairs reference built trees only"),
-        });
-        let reply = link.request("clone", body).map_err(anyhow::Error::msg)?;
-        let scores = wire::parse_result(&reply)?;
-        out.judged += scores.judged;
-        out.prefiltered += scores.prefiltered;
-        out.requests += 1;
-        for (i, j, ted, n1, n2) in scores.rows {
-            out.rows.push((order[i], order[j], ted, n1, n2));
-        }
-    }
-    out.rows.sort_unstable();
-    Ok(out)
-}
-
-/// Report emission (churn precedent: printing lives with the report,
-/// main_cmds stays a router under its 300-line gate).
+/// Report emission through the ONE shared envelope+console throat.
 pub fn print(r: &Report, as_json: bool) {
-    if as_json {
-        let doc = json!({"schema": SCHEMA_ID, "clones": r.clones, "counts": r.counts});
-        println!("{doc}");
-        return;
-    }
-    for h in &r.clones {
-        println!(
-            "clone {} <-> {}  ted {} (nodes {}/{})",
-            h.a, h.b, h.ted, h.n1, h.n2
-        );
-    }
-    let c = &r.counts;
-    println!(
-        "t3: {} units ({} over cap, {} forest), {} candidate pairs, {} sent in {} requests \
-         ({}+{} dropped), {} prefiltered, {} judged — {} clones",
-        c.units,
-        c.over_cap_units,
-        c.forest_units,
-        c.survivors,
-        c.sent,
-        c.requests,
-        c.pairs_dropped_over_cap,
-        c.pairs_dropped_forest,
-        c.prefiltered,
-        c.judged,
-        c.clones
+    crate::report::emit(
+        (SCHEMA_ID, "clones"),
+        r,
+        as_json,
+        "clone {a} <-> {b}  ted {ted} (nodes {n1}/{n2})",
     );
 }
 

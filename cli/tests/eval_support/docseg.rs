@@ -43,25 +43,9 @@ pub const DOCDUP_TRUTHS: [&str; 8] = [
     "unrelated",
 ];
 
-/// The docdup audit ground truth as a by-name mount table (the
-/// GRAPH_REVIEWS posture: include_str! makes a missing corpus a
-/// compile error, so a whole corpus can never go silently blind).
-pub const DOCDUP_REVIEWS: [(&str, &'static str); 5] = [
-    ("cobra", include_str!("../eval_docdup_review/cobra.json")),
-    (
-        "requests",
-        include_str!("../eval_docdup_review/requests.json"),
-    ),
-    (
-        "ripgrep",
-        include_str!("../eval_docdup_review/ripgrep.json"),
-    ),
-    ("self", include_str!("../eval_docdup_review/self.json")),
-    ("zod", include_str!("../eval_docdup_review/zod.json")),
-];
-
+/// The docdup family's mount into the ONE review registry.
 pub fn docdup_review_doc(corpus: &str) -> Value {
-    serde_json::from_str(super::mounted("docdup", &DOCDUP_REVIEWS, corpus)).expect(corpus)
+    super::review_of("docdup", corpus)
 }
 
 /// F31 cost bound: a corpus with more live segments than this is
@@ -126,8 +110,8 @@ fn ledger_obj(lg: &exempt::Ledger) -> Value {
         ("skeleton_line", lg.skeleton_line),
         ("allow_missing_why", lg.allow_missing_why),
         ("below_floor", lg.below_floor),
-        ("indented_code_lines", lg.indented_code_lines),
-        ("html_line", lg.html_line),
+        ("indented_code_lines", lg.md.indented),
+        ("html_line", lg.md.html),
         ("fenced_code_line", lg.fenced_code_line),
         ("overlong_line", lg.overlong_line),
     ];

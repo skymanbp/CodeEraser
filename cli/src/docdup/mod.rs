@@ -9,6 +9,7 @@
 //! exemption classify → store; raw == below_floor + stored.
 
 pub mod exempt;
+pub mod judge;
 pub mod segments;
 pub mod shingle;
 pub mod spec;
@@ -56,8 +57,7 @@ pub struct DocFacts {
 pub fn doc_facts(text: &str, lang: Lang) -> DocFacts {
     let (raw, shed) = segments::extract(text, lang);
     let mut ledger = exempt::Ledger {
-        indented_code_lines: shed.indented,
-        html_line: shed.html,
+        md: shed,
         ..Default::default()
     };
     let first_comment = raw.iter().position(|s| s.kind == spec::KIND_COMMENT);

@@ -10,6 +10,7 @@
 module CE.Protocol (proto, respond) where
 
 import qualified CE.Clone as Clone
+import qualified CE.Docdup as Docdup
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
@@ -79,15 +80,16 @@ dispatch version env line
   | envType env == "graph.request" = case Graph.respond proto line of
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
-  -- clone/1 judgment landed with the T3 batch (M5-3e); docdup/1 and
-  -- verdict/1 remain declared-at-2.2.0 stubs answering error/contract
-  -- until their judgment batches (3g, 3i). Goldens pin each stance
-  -- and regenerate when a family's semantics arrive.
+  -- clone/1 landed with the T3 batch (M5-3e), docdup/1 with the
+  -- docdup batch (M5-3g); verdict/1 remains a declared-at-2.2.0 stub
+  -- answering error/contract until the score batch (3i). Goldens pin
+  -- each stance and regenerate when a family's semantics arrive.
   | envType env == "clone.request" = case Clone.respond proto line of
       Left (rid, code, message) -> errReply (rid <|> envId env) code message
       Right bytes -> bytes
-  | envType env == "docdup.request" =
-      errReply (envId env) "contract" "docdup/1: declared at 2.2.0, judgment lands with the docdup batch"
+  | envType env == "docdup.request" = case Docdup.respond proto line of
+      Left (rid, code, message) -> errReply (rid <|> envId env) code message
+      Right bytes -> bytes
   | envType env == "verdict.request" =
       errReply (envId env) "contract" "verdict/1: declared at 2.2.0, judgment lands with the score batch"
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)

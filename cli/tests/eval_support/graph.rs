@@ -121,40 +121,11 @@ pub fn classify_path(path: &str) -> Result<&'static str, &'static str> {
 /// must be a repo-relative "path" or "path#unit".
 pub const TRUTH_KEYWORDS: [&str; 4] = ["external", "dynamic", "ambiguous", "none"];
 
-/// The graph audit ground truth as a by-name mount table (the M5-1d
-/// C3 lesson: a gate that resolves via the active corpus reads the
-/// wrong book and stays green). include_str! makes a missing corpus
-/// a compile error — a whole corpus can never go silently blind
-/// (G10). Shared by the audit gate and the precision instrument.
-pub const GRAPH_REVIEWS: [(&str, &str); 5] = [
-    ("cobra", include_str!("../eval_graph_review/cobra.json")),
-    (
-        "requests",
-        include_str!("../eval_graph_review/requests.json"),
-    ),
-    ("ripgrep", include_str!("../eval_graph_review/ripgrep.json")),
-    ("self", include_str!("../eval_graph_review/self.json")),
-    ("zod", include_str!("../eval_graph_review/zod.json")),
-];
-
-/// Resolve one family's by-name GT mount: table rows are include_str!
-/// bindings, so a missing corpus is a compile error and a wrong name
-/// a loud panic — per family, as DATA (the t3 family's second match
-/// arm was the repo's own ratchet catching the shape).
-pub fn mounted(family: &str, table: &[(&str, &'static str)], corpus: &str) -> &'static str {
-    table
-        .iter()
-        .find(|(n, _)| *n == corpus)
-        .map(|(_, t)| *t)
-        .unwrap_or_else(|| panic!("no {family} review table for {corpus}"))
-}
-
-pub fn review_text(corpus: &str) -> &'static str {
-    mounted("graph", &GRAPH_REVIEWS, corpus)
-}
-
+/// The graph family's mount into the ONE review registry
+/// (auditgen::REVIEWS — the M5-1d C3 lesson: a gate that resolves
+/// via the active corpus reads the wrong book and stays green).
 pub fn review_doc(corpus: &str) -> serde_json::Value {
-    serde_json::from_str(review_text(corpus)).expect(corpus)
+    super::review_of("graph", corpus)
 }
 
 /// The rows of one corpus, in frozen order — the ONE sample filter

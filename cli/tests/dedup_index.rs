@@ -154,7 +154,10 @@ fn param_change_invalidates_index() {
 /// the stored meta value — same mechanism, same wipe.
 #[test]
 fn docdup_rev_bump_invalidates_index() {
-    let src = format!("/* {}*/\nfn main() {{}}\n", "word ".repeat(60));
+    // hard-wrapped: a single 300-char comment line would (correctly)
+    // fall to the REV-3 overlong mask instead of caching
+    let line = format!("   {}\n", "word ".repeat(20).trim());
+    let src = format!("/* prose\n{}*/\nfn main() {{}}\n", line.repeat(3));
     let (dir, mut idx) = open_idx("docdup-rev", "index.db");
     idx.refresh_file("a.rs", src.as_bytes(), Lang::Rust, Params::default())
         .expect("first");

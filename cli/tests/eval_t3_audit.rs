@@ -16,9 +16,7 @@
 
 mod eval_support;
 
-use eval_support::{
-    FROZEN_CORPORA, WalkedFile, core_link, eval_doc, load, out_dir, t3f, walk_tree_in,
-};
+use eval_support::{FROZEN_CORPORA, WalkedFile, core_link, eval_doc, load, t3f, walk_tree_in};
 use serde_json::{Value, json};
 
 /// One corpus's assembly: judge the sampled mains, then write the
@@ -32,27 +30,18 @@ fn assemble_corpus(name: &Option<String>, sample: &Value) -> (u64, u64, u64) {
     let mut link = core_link();
     let judgments = t3f::judge_sample(&c, &texts, &rows, &mut link);
     let assembled: Vec<Value> = rows.iter().map(|r| assembly_row(r, &walked)).collect();
-    let path = format!(
-        "{}/analysis/t3-audit-assembly-{corpus}.json",
-        out_dir().display()
+    eval_support::write_assembly(
+        "t3",
+        &corpus,
+        &tip,
+        "verbatim assembly for the independent T3 audit; no judgment fields \
+         by design (RM18) — the auditor sees code, not verdicts",
+        assembled,
     );
-    let doc = json!({
-        "corpus": corpus,
-        "tip": tip,
-        "note": "verbatim assembly for the independent T3 audit; no judgment fields \
-                 by design (RM18) — the auditor sees code, not verdicts",
-        "rows": assembled,
-    });
-    std::fs::write(
-        &path,
-        serde_json::to_string_pretty(&doc).expect("ser") + "\n",
-    )
-    .expect(&path);
     let clones = judgments.iter().filter(|j| j.is_clone()).count() as u64;
     let scored = judgments.iter().filter(|j| j.label() == "scored").count() as u64;
     println!(
-        "{corpus}: {} rows assembled -> {path}; judged {scored}, clone {clones}, drops {:?}",
-        rows.len(),
+        "{corpus}: judged {scored}, clone {clones}, drops {:?}",
         judgments
             .iter()
             .filter(|j| j.label() != "scored")
@@ -110,43 +99,27 @@ fn generate_t3_audit_assembly() {
 
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
 
-/// One corpus's frozen audit table against the frozen sample:
-/// embedded name and tip, a rank bijection (phantom and missing rows
-/// equally loud), verbatim identity echo, and a verdict per row.
+const FAMILY: eval_support::AuditFamily = eval_support::AuditFamily {
+    identity: &t3f::T3_IDENTITY,
+    truths: &t3f::T3_TRUTHS,
+    gaps_key: "unit_gaps",
+};
+
+/// The shared frame plus this family's bespoke axis: the edit label
+/// rides clone rows ONLY (both directions asserted).
 fn check_corpus(corpus: &str, doc: &Value, sample: &Value) {
     let mains = sample["main"].as_array().expect("main");
-    eval_support::check_audit_frame(corpus, doc, mains, |rank, row, s| {
-        for key in t3f::T3_IDENTITY {
-            assert_eq!(row[key], s[key], "{corpus}/{rank}: {key} echo drifted");
+    FAMILY.check_frame(corpus, doc, mains, |rank, row, _| {
+        match (row["truth"] == "clone", row["edit"].as_str()) {
+            (true, Some(e)) => assert!(
+                t3f::T3_EDITS.contains(&e),
+                "{corpus}/{rank}: unknown edit {e:?}"
+            ),
+            (true, None) => panic!("{corpus}/{rank}: clone row without its edit axis"),
+            (false, Some(_)) => panic!("{corpus}/{rank}: edit on a non-clone row"),
+            (false, None) => {}
         }
-        assert_eq!(doc["tip"], s["tip"], "{corpus}: tip vs sampled tip");
-        check_verdict(corpus, rank, row);
     });
-    eval_support::assert_gaps_accounted(corpus, doc, "unit_gaps");
-}
-
-/// truth in the closed vocabulary; the edit axis rides clone rows
-/// ONLY (both directions asserted); why holds the mechanism floor.
-fn check_verdict(corpus: &str, rank: &str, row: &Value) {
-    let truth = row["truth"].as_str().expect("truth");
-    assert!(
-        t3f::T3_TRUTHS.contains(&truth),
-        "{corpus}/{rank}: unknown truth {truth:?}"
-    );
-    match (truth == "clone", row["edit"].as_str()) {
-        (true, Some(e)) => assert!(
-            t3f::T3_EDITS.contains(&e),
-            "{corpus}/{rank}: unknown edit {e:?}"
-        ),
-        (true, None) => panic!("{corpus}/{rank}: clone row without its edit axis"),
-        (false, Some(_)) => panic!("{corpus}/{rank}: edit on a non-clone row"),
-        (false, None) => {}
-    }
-    let why = row["why"].as_str().expect("why").trim();
-    assert!(
-        why.len() >= 15,
-        "{corpus}/{rank}: why is not a mechanism: {why:?}"
-    );
 }
 
 /// The 3f audit exit: every sampled main row audited, per corpus,
@@ -157,25 +130,26 @@ fn check_verdict(corpus: &str, rank: &str, row: &Value) {
 #[test]
 fn audit_covers_sample_bijectively() {
     let sample = load(&eval_doc("t3-sample"));
-    let mut total = 0;
-    let mut by_truth: std::collections::BTreeMap<String, u64> = Default::default();
-    for corpus in CORPORA {
-        let doc = t3f::t3_review_doc(corpus);
-        check_corpus(corpus, &doc, &sample);
-        for row in doc["rows"].as_array().expect("rows") {
-            *by_truth
-                .entry(row["truth"].as_str().expect("truth").into())
-                .or_insert(0) += 1;
-        }
-        total += doc["rows"].as_array().expect("rows").len();
-    }
-    assert_eq!(total, sample["main"].as_array().expect("main").len());
-    eval_support::assert_nonzero_seats(
-        &by_truth,
+    eval_support::assert_coverage_and_seats(
+        &sample,
+        &CORPORA,
+        |corpus| {
+            let doc = t3f::t3_review_doc(corpus);
+            check_corpus(corpus, &doc, &sample);
+            doc
+        },
+        &["rows"],
         &["boilerplate", "t1t2"],
-        "promised vocabulary seat is empty",
     );
 }
+
+/// This family's tamper mutations for the shared battery.
+const MUTATIONS: [(&str, &str, &str); 4] = [
+    ("rank", "not-a-sampled-rank", "phantom rank"),
+    ("why", "yes", "stub why"),
+    ("truth", "mismatch", "non-vocabulary truth"),
+    ("a_key", "phantom-key", "identity echo drift"),
+];
 
 /// Counterfactual (G9 discipline): every advertised refusal is
 /// exercised, not assumed — the shared table-driven battery plus the
@@ -184,17 +158,7 @@ fn audit_covers_sample_bijectively() {
 fn audit_refuses_tampering() {
     let sample = load(&eval_doc("t3-sample"));
     let check = |doc: &Value| check_corpus("cobra", doc, &sample);
-    let pristine = t3f::t3_review_doc("cobra");
-    eval_support::assert_tampering_refused(
-        &pristine,
-        &[
-            ("rank", "not-a-sampled-rank", "phantom rank"),
-            ("why", "yes", "stub why"),
-            ("truth", "mismatch", "non-vocabulary truth"),
-            ("a_key", "phantom-key", "identity echo drift"),
-        ],
-        &check,
-    );
+    let pristine = eval_support::tamper_prologue("t3", "cobra", &MUTATIONS, &check);
     let clone_row = pristine["rows"]
         .as_array()
         .expect("rows")

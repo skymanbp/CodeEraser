@@ -15,7 +15,8 @@ executable ce-core
                       CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,
                       CE.Graph.Build, CE.Graph.Dead, CE.Graph.Cycles,
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
-                      CE.Clone.Prefilter, CE.Clone.Ted
+                      CE.Clone.Prefilter, CE.Clone.Ted,
+                      CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -25,7 +26,7 @@ executable ce-core
     default-language: GHC2021
     ghc-options:      -Wall -Werror
 
--- base-only deterministic checks (plan §7.3 as amended 2026-08-11:
+-- base-only deterministic checks (plan 搂7.3 as amended 2026-08-11:
 -- no RNG inside a byte-determinism contract; Hedgehog is not in the
 -- freeze). Recompiling the app modules here is cheaper than a
 -- library restructure for one milestone.
@@ -40,8 +41,9 @@ test-suite ce-core-test
                       CE.Graph.Build, CE.Graph.Dead, CE.Graph.Cycles,
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
+                      CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
                       Reference, ReferenceGraph, GraphProps,
-                      ReferenceTed, CloneProps
+                      ReferenceTed, CloneProps, ReferenceJaccard
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
