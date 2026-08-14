@@ -1,7 +1,8 @@
 {
   "constants": {
+    "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 2,
+    "docdup_rev": 3,
     "exempt": [
       "live",
       "license_header",
@@ -1272,7 +1273,8 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 7
+        "below_floor": 8,
+        "html_line": 1
       },
       "live": 0,
       "path": "contracts/fixtures/crosscheck/SOURCES.md",
@@ -1380,6 +1382,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 110,
+        "fenced_code_line": 4,
         "skeleton_line": 12
       },
       "live": 12,
@@ -1410,7 +1413,8 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 10,
+        "fenced_code_line": 4
       },
       "live": 1,
       "path": "contracts/fixtures/crosscheck/python/src__requests__structures.py",
@@ -1425,6 +1429,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 99,
+        "fenced_code_line": 5,
         "skeleton_line": 46
       },
       "live": 5,
@@ -1454,7 +1459,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 205
+        "below_floor": 205,
+        "fenced_code_line": 2
       },
       "live": 5,
       "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__hyperlink__mod.rs",
@@ -1467,10 +1473,12 @@
     {
       "exempt_by": {},
       "lang": "rs",
-      "ledger": {},
+      "ledger": {
+        "fenced_code_line": 31
+      },
       "live": 2,
       "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__lib.rs",
-      "seg_sha256": "cc596cf79a8521d0b102c4b9bcf9990da00d900b83553ff0b2c899dab77238ce",
+      "seg_sha256": "87acd6a5fc6f30756bfea6bdf8089aab493c2785c096c87340130c7310445d5e",
       "segs_by": {
         "comment_block": 2
       },
@@ -1582,13 +1590,14 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 19
+        "below_floor": 21,
+        "html_line": 1
       },
-      "live": 12,
+      "live": 11,
       "path": "docs/DEVELOPMENT_PLAN.md",
-      "seg_sha256": "8e8d72e57ebd974adc334a48b3abd5c6f4bbf8e9c0edd07843adf1c5676600d9",
+      "seg_sha256": "d5db70d39f5d20ae3074aa5ee02d75a38f6e8a460fe6a5a9b5b3acc37081b9de",
       "segs_by": {
-        "md_para": 12
+        "md_para": 11
       },
       "sha256": "e54902af3ff76c433c1346321699ef56a2b0ed310a8e558da192ba51ef2f0bea"
     },
@@ -1811,7 +1820,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "commit": "1cd31154ce974d55e3df460ddbee6a40b772d96b",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -1835,15 +1844,17 @@
     },
     "files_with_segments": 41,
     "ledger": {
-      "below_floor": 3781,
+      "below_floor": 3784,
+      "fenced_code_line": 46,
+      "html_line": 2,
       "indented_code_lines": 12,
       "skeleton_line": 60
     },
-    "live": 115,
+    "live": 114,
     "segs_by": {
       "comment_block": 39,
       "docstring": 16,
-      "md_para": 65
+      "md_para": 64
     }
   }
 }

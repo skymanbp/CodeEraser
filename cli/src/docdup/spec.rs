@@ -24,6 +24,16 @@ pub const DOC_SHINGLE: usize = 5;
 /// at or above this line can be a license header. Decided.
 pub const LICENSE_HEAD_LINES: i64 = 5;
 
+/// Longest comment/docstring line still treated as prose, in visible
+/// chars. Decided, not derived (2026-08-14 attainment-line-B
+/// amendment, ccm #842): hard-wrapped comment prose runs under ~120
+/// chars by convention, while the audited FP lines — regex literals
+/// and inline snapshots — ran 300+/600+; lines past this cap are
+/// data/generated/code, masked with an overlong_line ledger count.
+/// md_para is exempt: markdown legitimately writes one long prose
+/// line per paragraph.
+pub const DOC_LINE_CAP: usize = 200;
+
 /// Segment kinds as frozen position codes (the wire.rs edge-code
 /// discipline: reordering is a DOCDUP_REV bump).
 pub const KIND_NAMES: [&str; 3] = ["md_para", "comment_block", "docstring"];

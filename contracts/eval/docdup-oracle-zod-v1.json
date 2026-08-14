@@ -14,7 +14,7 @@
   },
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "commit": "1cd31154ce974d55e3df460ddbee6a40b772d96b",
     "dirty": true
   },
   "method": "exact oracle over live admitted segments: every pair with integer-exact Jaccard >= 30/100 on the deduped shingle sets, plus every pair whose longest common contiguous shingle run spans >= 50 words. Candidate enumeration walks the shingle inverted index — complete for both rules since each requires a shared shingle. Segment counts above oracle_segcap withhold the corpus with a written reason (F31), never a silent downsample.",
@@ -123,176 +123,6 @@
     },
     {
       "a": {
-        "end_line": 17,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 1
-      },
-      "b": {
-        "end_line": 16,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_ZH.md",
-        "start_line": 1
-      },
-      "inter": 110,
-      "union": 201,
-      "verbatim": 47
-    },
-    {
-      "a": {
-        "end_line": 17,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 1
-      },
-      "b": {
-        "end_line": 16,
-        "kind": "md_para",
-        "path": "packages/docs-v3/home.md",
-        "start_line": 1
-      },
-      "inter": 106,
-      "union": 196,
-      "verbatim": 47
-    },
-    {
-      "a": {
-        "end_line": 17,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 1
-      },
-      "b": {
-        "end_line": 18,
-        "kind": "md_para",
-        "path": "packages/zod/README.md",
-        "start_line": 12
-      },
-      "inter": 72,
-      "union": 184,
-      "verbatim": 34
-    },
-    {
-      "a": {
-        "end_line": 34,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 19
-      },
-      "b": {
-        "end_line": 31,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_ZH.md",
-        "start_line": 18
-      },
-      "inter": 48,
-      "union": 77,
-      "verbatim": 40
-    },
-    {
-      "a": {
-        "end_line": 303,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 212
-      },
-      "b": {
-        "end_line": 314,
-        "kind": "md_para",
-        "path": "packages/docs-v3/home.md",
-        "start_line": 211
-      },
-      "inter": 248,
-      "union": 436,
-      "verbatim": 74
-    },
-    {
-      "a": {
-        "end_line": 375,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 309
-      },
-      "b": {
-        "end_line": 397,
-        "kind": "md_para",
-        "path": "packages/docs-v3/home.md",
-        "start_line": 320
-      },
-      "inter": 230,
-      "union": 369,
-      "verbatim": 89
-    },
-    {
-      "a": {
-        "end_line": 441,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_KO.md",
-        "start_line": 381
-      },
-      "b": {
-        "end_line": 463,
-        "kind": "md_para",
-        "path": "packages/docs-v3/home.md",
-        "start_line": 403
-      },
-      "inter": 203,
-      "union": 257,
-      "verbatim": 105
-    },
-    {
-      "a": {
-        "end_line": 16,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_ZH.md",
-        "start_line": 1
-      },
-      "b": {
-        "end_line": 16,
-        "kind": "md_para",
-        "path": "packages/docs-v3/home.md",
-        "start_line": 1
-      },
-      "inter": 117,
-      "union": 198,
-      "verbatim": 110
-    },
-    {
-      "a": {
-        "end_line": 16,
-        "kind": "md_para",
-        "path": "packages/docs-v3/README_ZH.md",
-        "start_line": 1
-      },
-      "b": {
-        "end_line": 18,
-        "kind": "md_para",
-        "path": "packages/zod/README.md",
-        "start_line": 12
-      },
-      "inter": 99,
-      "union": 170,
-      "verbatim": 49
-    },
-    {
-      "a": {
-        "end_line": 16,
-        "kind": "md_para",
-        "path": "packages/docs-v3/home.md",
-        "start_line": 1
-      },
-      "b": {
-        "end_line": 18,
-        "kind": "md_para",
-        "path": "packages/zod/README.md",
-        "start_line": 12
-      },
-      "inter": 85,
-      "union": 175,
-      "verbatim": 49
-    },
-    {
-      "a": {
         "end_line": 40,
         "kind": "comment_block",
         "path": "packages/zod/src/v3/tests/generics.test.ts",
@@ -310,57 +140,6 @@
     },
     {
       "a": {
-        "end_line": 616,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v3/types.ts",
-        "start_line": 605
-      },
-      "b": {
-        "end_line": 632,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v3/types.ts",
-        "start_line": 631
-      },
-      "inter": 78,
-      "union": 255,
-      "verbatim": 116
-    },
-    {
-      "a": {
-        "end_line": 632,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v3/types.ts",
-        "start_line": 631
-      },
-      "b": {
-        "end_line": 569,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v4/classic/tests/template-literal.test.ts",
-        "start_line": 567
-      },
-      "inter": 46,
-      "union": 135,
-      "verbatim": 37
-    },
-    {
-      "a": {
-        "end_line": 632,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v3/types.ts",
-        "start_line": 631
-      },
-      "b": {
-        "end_line": 390,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
-        "start_line": 385
-      },
-      "inter": 46,
-      "union": 139,
-      "verbatim": 37
-    },
-    {
-      "a": {
         "end_line": 2735,
         "kind": "comment_block",
         "path": "packages/zod/src/v3/types.ts",
@@ -375,33 +154,16 @@
       "inter": 34,
       "union": 113,
       "verbatim": 29
-    },
-    {
-      "a": {
-        "end_line": 569,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v4/classic/tests/template-literal.test.ts",
-        "start_line": 567
-      },
-      "b": {
-        "end_line": 390,
-        "kind": "comment_block",
-        "path": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
-        "start_line": 385
-      },
-      "inter": 95,
-      "union": 111,
-      "verbatim": 168
     }
   ],
   "schema": "ce.eval-docdup-oracle/1.0.0",
   "summary": {
     "by_rule": {
-      "jaccard": 22,
-      "verbatim": 12
+      "jaccard": 8,
+      "verbatim": 6
     },
-    "candidate_pairs": 254,
-    "pairs": 22,
-    "segments_live": 143
+    "candidate_pairs": 78,
+    "pairs": 8,
+    "segments_live": 117
   }
 }

@@ -18,6 +18,28 @@ pub const JACCARD_UNIVERSE_FLOOR: (u64, u64) = (30, 100);
 /// same two integers.
 pub const JACCARD_REPORT_FLOOR: (u64, u64) = (80, 100);
 
+/// The frozen pair identity every docdup instrument echoes verbatim
+/// (D5): the segment geometry IS the identity — spans were frozen by
+/// the 3d extraction, so no key/nth resolution is ever re-derived.
+pub const DOCDUP_IDENTITY: [&str; 10] = [
+    "corpus", "tip", "a_path", "a_kind", "a_start", "a_end", "b_path", "b_kind", "b_start", "b_end",
+];
+
+/// Closed audit truth vocabulary (instruments §9.5 C2). paraphrase is
+/// single-listed by design: docdup is lexical, so reworded
+/// duplication is a designed-in miss for the judge — the class exists
+/// so the audit can SAY so instead of folding it away.
+pub const DOCDUP_TRUTHS: [&str; 8] = [
+    "redundant",
+    "paraphrase",
+    "license",
+    "skeleton",
+    "tabular",
+    "quoted",
+    "deliberate_xref",
+    "unrelated",
+];
+
 /// F31 cost bound: a corpus with more live segments than this is
 /// WITHHELD with a written reason, never silently downsampled.
 pub const DOCDUP_ORACLE_SEGCAP: usize = 8192;
@@ -28,6 +50,7 @@ pub fn docdup_constants() -> Value {
         "doc_shingle": spec::DOC_SHINGLE,
         "verbatim_floor": spec::VERBATIM_FLOOR,
         "license_head_lines": spec::LICENSE_HEAD_LINES,
+        "doc_line_cap": spec::DOC_LINE_CAP,
         "kinds": spec::KIND_NAMES,
         "exempt": exempt::EXEMPT_NAMES,
         "docdup_rev": docdup::DOCDUP_REV,
@@ -80,6 +103,9 @@ fn ledger_obj(lg: &exempt::Ledger) -> Value {
         ("allow_missing_why", lg.allow_missing_why),
         ("below_floor", lg.below_floor),
         ("indented_code_lines", lg.indented_code_lines),
+        ("html_line", lg.html_line),
+        ("fenced_code_line", lg.fenced_code_line),
+        ("overlong_line", lg.overlong_line),
     ];
     Value::Object(
         rows.into_iter()

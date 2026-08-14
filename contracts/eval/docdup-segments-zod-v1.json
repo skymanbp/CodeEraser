@@ -1,7 +1,8 @@
 {
   "constants": {
+    "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 2,
+    "docdup_rev": 3,
     "exempt": [
       "live",
       "license_header",
@@ -536,14 +537,15 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 275,
-        "indented_code_lines": 300
+        "below_floor": 272,
+        "html_line": 300,
+        "indented_code_lines": 86
       },
-      "live": 18,
+      "live": 11,
       "path": "packages/docs-v3/README_KO.md",
-      "seg_sha256": "61b812f59e25ccafe4feff5cbb9b5127467c198b5ee9ae07a3b142ae29073fd9",
+      "seg_sha256": "b63d47d48ea147f94f50bc32ee56f0ab9f55c8078f845030fc62fcf036744e7a",
       "segs_by": {
-        "md_para": 18
+        "md_para": 11
       },
       "sha256": "b2ec8df2d489349c412dcf2d39b830c2f66b1bcdbc269fa1975d51870e66973a"
     },
@@ -551,14 +553,15 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 167,
-        "indented_code_lines": 131
+        "below_floor": 168,
+        "html_line": 176,
+        "indented_code_lines": 5
       },
-      "live": 7,
+      "live": 2,
       "path": "packages/docs-v3/README_ZH.md",
-      "seg_sha256": "2972f3235ca0942240fd97131a7d5f324306cdee214906faa017ea4fa8ece29f",
+      "seg_sha256": "a136fadcbe98ea30d78e83dd2a500b6b0f8d36cdcc8e9260baf9268da37afc66",
       "segs_by": {
-        "md_para": 7
+        "md_para": 2
       },
       "sha256": "2239a1314940842794c34c0fec37cc13559516865c6a354dbd6f4e183e3f22c9"
     },
@@ -566,7 +569,8 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 9,
+        "html_line": 5
       },
       "live": 11,
       "path": "packages/docs-v3/blog/clerk-fellowship.md",
@@ -580,14 +584,15 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 284,
-        "indented_code_lines": 260
+        "below_floor": 244,
+        "html_line": 332,
+        "indented_code_lines": 29
       },
-      "live": 25,
+      "live": 20,
       "path": "packages/docs-v3/home.md",
-      "seg_sha256": "ddf266467624ad7824c9005a69240d86d8cad6c5c064ffaa528078ffb6ded207",
+      "seg_sha256": "12c5ca9d7a3687c3a0386fcab88cb1d50ddb5592c468083db70ca76426667ced",
       "segs_by": {
-        "md_para": 25
+        "md_para": 20
       },
       "sha256": "88a6829adb8fa3ad5a791266a70fbee0a68ad81720d3be28c88883f913c43afb"
     },
@@ -595,7 +600,7 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 1
+        "html_line": 6
       },
       "live": 0,
       "path": "packages/docs/README.md",
@@ -1131,15 +1136,14 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 16,
-        "indented_code_lines": 3
+        "below_floor": 12,
+        "html_line": 32,
+        "indented_code_lines": 2
       },
-      "live": 2,
+      "live": 0,
       "path": "packages/zod/README.md",
-      "seg_sha256": "efc761230a425de283e5ded5c71025edf6f505ed186417c6c5f1d2ff7f1d2409",
-      "segs_by": {
-        "md_para": 2
-      },
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
       "sha256": "0ae96d90800b51cee45fe028e14474db1e58ea6479e4d9ed02de28b53c27500e"
     },
     {
@@ -2140,14 +2144,16 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 81,
+        "below_floor": 82,
+        "fenced_code_line": 3,
+        "overlong_line": 4,
         "skeleton_line": 3
       },
-      "live": 6,
+      "live": 5,
       "path": "packages/zod/src/v3/types.ts",
-      "seg_sha256": "1c551b8568912956e687700047f71136de16a228329b0470aeef7de796802570",
+      "seg_sha256": "dbb1fe539d7f0d7fb979f3d3e847a215c06a4455c96c5abdce5ed16926998e96",
       "segs_by": {
-        "comment_block": 6
+        "comment_block": 5
       },
       "sha256": "1cfe15702dbccfc592bb46679bb6979c6b1b44b9790114a01447436849f0900d"
     },
@@ -2266,7 +2272,8 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 276
+        "below_floor": 276,
+        "fenced_code_line": 12
       },
       "live": 2,
       "path": "packages/zod/src/v4/classic/schemas.ts",
@@ -3109,14 +3116,15 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 41,
+        "below_floor": 42,
+        "overlong_line": 1,
         "skeleton_line": 1
       },
-      "live": 3,
+      "live": 2,
       "path": "packages/zod/src/v4/classic/tests/template-literal.test.ts",
-      "seg_sha256": "ce54449adeff97ea85416abf9bfb8c439b7abdda7b5a6d3fd99e5591ff58cc4c",
+      "seg_sha256": "3dd1652f7eacc241cf2212cb0fca43792f06da0b3802a45c519cde0f727508c5",
       "segs_by": {
-        "comment_block": 3
+        "comment_block": 2
       },
       "sha256": "318f80e1f5be027d4f8a1e80b09351c2c118dbc411b3d3f2f368621209eaf62a"
     },
@@ -3136,13 +3144,14 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 55
+        "below_floor": 56,
+        "overlong_line": 1
       },
-      "live": 2,
+      "live": 1,
       "path": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts",
-      "seg_sha256": "98457f14bd259596dcb2877b8d7585e6016596ac62604ebad6aa9bf3b1c1051f",
+      "seg_sha256": "96433199c2e5dbd40f5e1707a75f8495462eed2de2d35f1727aadd319f9273f4",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 1
       },
       "sha256": "a6315d64791334aac95d1c736f3bf4b3b84eaee0aee69248204a81a5988e1f4a"
     },
@@ -3218,7 +3227,8 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 209
+        "below_floor": 209,
+        "fenced_code_line": 4
       },
       "live": 0,
       "path": "packages/zod/src/v4/core/api.ts",
@@ -3282,14 +3292,13 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 19
+        "below_floor": 20,
+        "fenced_code_line": 24
       },
-      "live": 1,
+      "live": 0,
       "path": "packages/zod/src/v4/core/errors.ts",
-      "seg_sha256": "e7c6370142b5fca912a67a7d7567b00dc15152f3ce85868c97245678a8179bbc",
-      "segs_by": {
-        "comment_block": 1
-      },
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
       "sha256": "77ae18dda4bcf14d2dbe9c82ef5db3d2ec59fd7c60c3e331dbcb3c15658b3017"
     },
     {
@@ -3306,15 +3315,14 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 14,
+        "below_floor": 15,
+        "fenced_code_line": 9,
         "skeleton_line": 2
       },
-      "live": 1,
+      "live": 0,
       "path": "packages/zod/src/v4/core/json-schema-generator.ts",
-      "seg_sha256": "f1dc22a4d3dce16e37a4b7214216131145f0b652f2db26ce70307dea76c78bf6",
-      "segs_by": {
-        "comment_block": 1
-      },
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
       "sha256": "341b5ed63c4022c14ac68e586094963468703b46be3da5e3f14dd485a763880d"
     },
     {
@@ -3359,15 +3367,14 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 38,
+        "below_floor": 39,
+        "overlong_line": 1,
         "skeleton_line": 1
       },
-      "live": 1,
+      "live": 0,
       "path": "packages/zod/src/v4/core/regexes.ts",
-      "seg_sha256": "ef92a6caa4c426bc198dc208a1c97c00e16b894f122dce30046a7483b6efc45d",
-      "segs_by": {
-        "comment_block": 1
-      },
+      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "segs_by": {},
       "sha256": "da0efe9a6612fc6cdc0b5ac9606b5b5375e3a011bcdccecf7bb605600f844455"
     },
     {
@@ -3386,13 +3393,14 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 305
+        "below_floor": 306,
+        "overlong_line": 1
       },
-      "live": 6,
+      "live": 5,
       "path": "packages/zod/src/v4/core/schemas.ts",
-      "seg_sha256": "adbf89a9fee712dbb280a5760fafa4bf397a118f552e82db891d3c5ef9bad5bc",
+      "seg_sha256": "55e9697cad445ed57903d764026e122b7ff9c2ff1e114055f5d4591374ae7780",
       "segs_by": {
-        "comment_block": 6
+        "comment_block": 5
       },
       "sha256": "934bc0ff4312a3e86645ea5dccfdb59aa316345035e8394f72d938d98dd6728a"
     },
@@ -4239,7 +4247,8 @@
       "exempt_by": {},
       "lang": "ts",
       "ledger": {
-        "below_floor": 317
+        "below_floor": 317,
+        "fenced_code_line": 4
       },
       "live": 0,
       "path": "packages/zod/src/v4/mini/schemas.ts",
@@ -4528,7 +4537,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "commit": "1cd31154ce974d55e3df460ddbee6a40b772d96b",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -4548,16 +4557,19 @@
   },
   "summary": {
     "exempt_by": {},
-    "files_with_segments": 42,
+    "files_with_segments": 38,
     "ledger": {
-      "below_floor": 4718,
-      "indented_code_lines": 694,
+      "below_floor": 4677,
+      "fenced_code_line": 56,
+      "html_line": 851,
+      "indented_code_lines": 122,
+      "overlong_line": 8,
       "skeleton_line": 13
     },
-    "live": 143,
+    "live": 117,
     "segs_by": {
-      "comment_block": 48,
-      "md_para": 95
+      "comment_block": 41,
+      "md_para": 76
     }
   }
 }

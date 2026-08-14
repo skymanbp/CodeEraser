@@ -18,8 +18,10 @@ use anyhow::Result;
 use rusqlite::Transaction;
 
 /// Bump when segment-extraction semantics change: it sits in the meta
-/// cache key (schema v5), so stale docsegs rows are wiped.
-pub const DOCDUP_REV: i64 = 2;
+/// cache key (schema v5), so stale docsegs rows are wiped. 3 = the
+/// 2026-08-14 attainment-line-B amendment (ccm #842): html_line /
+/// fenced_code_line / overlong_line masks.
+pub const DOCDUP_REV: i64 = 3;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs). `kind`
 /// and `exempt` are the frozen position codes in spec::KIND_NAMES /
@@ -52,9 +54,10 @@ pub struct DocFacts {
 /// Every admitted document segment of one file, with the full shed
 /// ledger.
 pub fn doc_facts(text: &str, lang: Lang) -> DocFacts {
-    let (raw, indented) = segments::extract(text, lang);
+    let (raw, shed) = segments::extract(text, lang);
     let mut ledger = exempt::Ledger {
-        indented_code_lines: indented,
+        indented_code_lines: shed.indented,
+        html_line: shed.html,
         ..Default::default()
     };
     let first_comment = raw.iter().position(|s| s.kind == spec::KIND_COMMENT);
@@ -126,9 +129,11 @@ mod tests {
     /// caught self-detonating (F8).
     #[test]
     fn seeded_license_and_skeleton_survive_as_zero_live_segments() {
-        let filler = "word ".repeat(60);
+        // hard-wrapped filler: real license headers wrap; a single
+        // 300-char line would (correctly) fall to the overlong mask
+        let filler = format!("# {}\n", "word ".repeat(20).trim()).repeat(3);
         let py = format!(
-            "# Licensed under the Apache License, Version 2.0 (the \"License\");\n# {filler}\n\ndef f():\n    \"\"\"Args:\n    Returns:\n    Raises:\n    \"\"\"\n    return 1\n"
+            "# Licensed under the Apache License, Version 2.0 (the \"License\");\n{filler}\ndef f():\n    \"\"\"Args:\n    Returns:\n    Raises:\n    \"\"\"\n    return 1\n"
         );
         let facts = doc_facts(&py, Lang::Python);
         let live = facts

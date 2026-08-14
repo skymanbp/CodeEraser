@@ -1,7 +1,8 @@
 {
   "constants": {
+    "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 2,
+    "docdup_rev": 3,
     "exempt": [
       "live",
       "license_header",
@@ -61,12 +62,13 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 29,
-        "indented_code_lines": 4
+        "below_floor": 26,
+        "html_line": 16,
+        "indented_code_lines": 3
       },
       "live": 3,
       "path": "README.md",
-      "seg_sha256": "8b08bbe2e4db578b372fd358286bf3934f41dcd73d7af0f325a44eee4084b581",
+      "seg_sha256": "aef3de00b85ab153576cfdc8454c22a4d5a9e6389a745dfd24808f2cda1de8e4",
       "segs_by": {
         "md_para": 3
       },
@@ -829,7 +831,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "commit": "1cd31154ce974d55e3df460ddbee6a40b772d96b",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -853,8 +855,9 @@
     },
     "files_with_segments": 45,
     "ledger": {
-      "below_floor": 1043,
-      "indented_code_lines": 6,
+      "below_floor": 1040,
+      "html_line": 16,
+      "indented_code_lines": 5,
       "skeleton_line": 2
     },
     "live": 59,

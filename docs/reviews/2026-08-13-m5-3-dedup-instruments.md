@@ -113,6 +113,14 @@ n=5 层（+448 棵 → 302,500 对）由 `CE_DEEP_TED=1` 门控走 nightly/tag�
 `{redundant, paraphrase, license, skeleton, tabular, quoted, deliberate_xref, unrelated}`。
 `paraphrase` **必须单列**：docdup 是词汇级的，改写重复是**设计内 miss** 不是 bug。
 
+> **2026-08-14 落地勘误（普查制）**：冻结宇宙的报告地板人口 = 30 对（含边际带 47），
+> 100 行抽样在此宇宙算术不可能 ⇒ 样本 = **全量普查**（零选择，严格强于抽样；边际带
+> 一并入审使 J-floor 敏感性表两侧皆有已审真值），`min_per_kind` 受人口约束。
+> 实测审计（五独立审计员 47/47）：`paraphrase` 席位**为空**——J ≥ 0.30 处改写重复
+> 已被词汇重叠塌缩淘汰出宇宙，miss 类整体位于 oracle 地板之下；这本身是词汇法
+> 设计边界的实证，入档不造席。达标线 B 修正案（三条行级掩码 + REV 3 重冻结）见
+> 算法卷 §5.2 修正案块。
+
 **D 门**：D1 oracle 召回 ≥**0.99**（硬门，逐语料）· D2 **可靠性**：每条上报对的精确
 Jaccard ≥ 报告地板 **或** 逐字 run ≥ 50 ——这条证明 Haskell 复核**确实点火**了 ·
 D3 精度 ≥**0.85**（`md_para` + `comment_block`；决策 ④）· D4 八类守恒 == 100 ·
@@ -138,6 +146,7 @@ Rust `DOC_SHINGLE` == `docdup.result.knobs.shingleK`（F29）。
 | `tsedNum` / `tsedDen` | 85 / 100 | `CE/Clone/Cost.hs` | plan `:67` 给了数但**未给可核出处** ⇒ 本仓自定义并文档化（决策 ②） |
 | `unitNodeCap` / `pairCap` | 256 / 4096 | `CE/Clone/Cost.hs` | decided + **sizing anchor 注释**（`Graph/Cost.hs:15-26` 体例）+ 3e 实测 |
 | `min_doc_tokens` / `verbatim_floor` | 50 / 50 | `docdup/spec.rs` + slice 档 | **有出处**：plan `:68`（Lee et al. 2107.06499） |
+| `DOC_LINE_CAP` | 200 | `docdup/spec.rs` | decided, not derived（2026-08-14 达标线 B 修正案：注释/docstring 段内可见内容超此长度 = 正则/数据/生成物非散文；FP 实证两行 300+/600+ 字符，硬换行散文惯例 <120；播种反事实钉死） |
 | `DOC_SHINGLE` | 5 | `docdup/spec.rs` | ⚠️ 落地批次二选一：实读论文记节/页，**或**写"decided, not derived"+ 实测窗口 + 反事实（`FourClass/Cost.hs:53-58` 体例）。**不许凭记忆写出处** |
 | `jaccardNum/jaccardDen` | 80 / 100 | `CE/Docdup/Cost.hs` | 同上 |
 | `jaccard_universe_floor` | 30/100 | oracle 档 | decided（oracle 发射地板） |

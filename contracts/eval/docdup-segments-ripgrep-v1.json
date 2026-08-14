@@ -1,7 +1,8 @@
 {
   "constants": {
+    "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 2,
+    "docdup_rev": 3,
     "exempt": [
       "live",
       "license_header",
@@ -85,7 +86,8 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 122
+        "below_floor": 122,
+        "html_line": 54
       },
       "live": 37,
       "path": "FAQ.md",
@@ -193,7 +195,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 212
+        "below_floor": 212,
+        "fenced_code_line": 2
       },
       "live": 0,
       "path": "crates/cli/src/decompress.rs",
@@ -205,7 +208,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 60
+        "below_floor": 60,
+        "fenced_code_line": 4
       },
       "live": 0,
       "path": "crates/cli/src/escape.rs",
@@ -243,11 +247,12 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 45
+        "below_floor": 45,
+        "fenced_code_line": 12
       },
       "live": 1,
       "path": "crates/cli/src/lib.rs",
-      "seg_sha256": "9cb19a9da4e0373def327cc0fafa1a27687a22c77d60a1db495177ef3bd89d12",
+      "seg_sha256": "b7222d9c0ba9694a9b71deb2c88dca0d97a2157c7d5e2913fba57332edf47452",
       "segs_by": {
         "comment_block": 1
       },
@@ -257,7 +262,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 59
+        "below_floor": 59,
+        "fenced_code_line": 2
       },
       "live": 0,
       "path": "crates/cli/src/pattern.rs",
@@ -269,7 +275,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 106
+        "below_floor": 106,
+        "fenced_code_line": 2
       },
       "live": 1,
       "path": "crates/cli/src/process.rs",
@@ -652,11 +659,12 @@
       "lang": "rs",
       "ledger": {
         "below_floor": 127,
+        "fenced_code_line": 39,
         "skeleton_line": 3
       },
       "live": 2,
       "path": "crates/globset/src/lib.rs",
-      "seg_sha256": "ce0f874e21cb6bfdb1325a3065d3fe0347375551184aca1caf363a1345e8cc61",
+      "seg_sha256": "5f6b6c5ef4b54ca5b3c51c588bdb16b94a8eb8dbf3e380f4d5f27baa4f20adb8",
       "segs_by": {
         "comment_block": 2
       },
@@ -784,7 +792,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 190
+        "below_floor": 190,
+        "fenced_code_line": 2
       },
       "live": 2,
       "path": "crates/ignore/src/incremental.rs",
@@ -799,11 +808,12 @@
       "lang": "rs",
       "ledger": {
         "below_floor": 87,
+        "fenced_code_line": 19,
         "skeleton_line": 1
       },
       "live": 1,
       "path": "crates/ignore/src/lib.rs",
-      "seg_sha256": "baf9797289f550314d1f35745482002ee5819ee17ba58cdea06432844e77a489",
+      "seg_sha256": "545770f8585ab7a6a722e1fa8aa715596e7fd92dd54bef092782199a2f8c37d0",
       "segs_by": {
         "comment_block": 1
       },
@@ -838,11 +848,12 @@
       "lang": "rs",
       "ledger": {
         "below_floor": 87,
-        "skeleton_line": 3
+        "fenced_code_line": 52,
+        "skeleton_line": 2
       },
       "live": 1,
       "path": "crates/ignore/src/types.rs",
-      "seg_sha256": "df4091a0434f29694b6988b7eeac55faa195663982df588bf584afa997d0974c",
+      "seg_sha256": "25532a83f4164e404c95ffcacfb7e91713bce28f5cb69c3445a8c10751b80b42",
       "segs_by": {
         "comment_block": 1
       },
@@ -962,7 +973,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 482
+        "below_floor": 482,
+        "fenced_code_line": 2
       },
       "live": 1,
       "path": "crates/matcher/src/lib.rs",
@@ -1070,7 +1082,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 93
+        "below_floor": 93,
+        "fenced_code_line": 2
       },
       "live": 0,
       "path": "crates/printer/src/color.rs",
@@ -1106,7 +1119,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 205
+        "below_floor": 205,
+        "fenced_code_line": 2
       },
       "live": 5,
       "path": "crates/printer/src/hyperlink/mod.rs",
@@ -1120,7 +1134,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 480
+        "below_floor": 480,
+        "fenced_code_line": 14
       },
       "live": 1,
       "path": "crates/printer/src/json.rs",
@@ -1147,10 +1162,12 @@
     {
       "exempt_by": {},
       "lang": "rs",
-      "ledger": {},
+      "ledger": {
+        "fenced_code_line": 31
+      },
       "live": 2,
       "path": "crates/printer/src/lib.rs",
-      "seg_sha256": "cc596cf79a8521d0b102c4b9bcf9990da00d900b83553ff0b2c899dab77238ce",
+      "seg_sha256": "87acd6a5fc6f30756bfea6bdf8089aab493c2785c096c87340130c7310445d5e",
       "segs_by": {
         "comment_block": 2
       },
@@ -1352,7 +1369,8 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 35
+        "below_floor": 35,
+        "fenced_code_line": 2
       },
       "live": 0,
       "path": "crates/regex/src/strip.rs",
@@ -1385,10 +1403,12 @@
     {
       "exempt_by": {},
       "lang": "rs",
-      "ledger": {},
+      "ledger": {
+        "fenced_code_line": 38
+      },
       "live": 1,
       "path": "crates/searcher/src/lib.rs",
-      "seg_sha256": "db52d64fd05a2db52cbf2d7127b89407a73924b55b12a488100bd2bba1d8a64c",
+      "seg_sha256": "13b2531af003811f31c2f9d82b0820372d2df5e7c088d898170fd4e6b0f05238",
       "segs_by": {
         "comment_block": 1
       },
@@ -1708,7 +1728,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "commit": "1cd31154ce974d55e3df460ddbee6a40b772d96b",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -1731,8 +1751,10 @@
     "files_with_segments": 50,
     "ledger": {
       "below_floor": 8742,
+      "fenced_code_line": 225,
+      "html_line": 54,
       "indented_code_lines": 61,
-      "skeleton_line": 8
+      "skeleton_line": 7
     },
     "live": 251,
     "segs_by": {

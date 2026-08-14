@@ -74,3 +74,22 @@ fn rust_block_and_line_comments_extract() {
         [(KIND_COMMENT, 1, 2), (KIND_COMMENT, 4, 5)]
     );
 }
+
+/// Seeded counterfactual for the 2026-08-14 amendment's md half: a
+/// sponsor-table / badge-strip block (every line HTML markup — the
+/// audited zod FP shape) yields ZERO segments and a nonzero
+/// html_line count, while a single LONG line of genuine md prose
+/// (past DOC_LINE_CAP) survives untouched — the false-kill guard.
+#[test]
+fn html_markup_lines_shed_but_long_md_prose_survives() {
+    let table = "<table align=\"center\">\n  <tr>\n    <td align=\"center\">\n      \
+                 <img src=\"logo.svg\" alt=\"x\" />\n    </td>\n  </tr>\n</table>\n";
+    let (segs, shed) = extract(table, Lang::Markdown);
+    assert!(segs.is_empty(), "HTML block must form no md_para");
+    assert_eq!(shed.html, 7, "every markup line ledgered");
+    let prose = format!("{}\n", "word ".repeat(60).trim());
+    assert!(prose.len() > crate::docdup::spec::DOC_LINE_CAP);
+    let (segs, shed) = extract(&prose, Lang::Markdown);
+    assert_eq!(segs.len(), 1, "unwrapped md prose is content");
+    assert_eq!(shed.html, 0);
+}

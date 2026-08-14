@@ -8,7 +8,8 @@
 
 use super::segments::{RawSeg, SegLine};
 use super::spec::{
-    ALLOW_MARKER, KIND_MD_PARA, LICENSE_HEAD_LINES, LICENSE_MARKERS, SKELETON_PREFIXES,
+    ALLOW_MARKER, DOC_LINE_CAP, KIND_MD_PARA, LICENSE_HEAD_LINES, LICENSE_MARKERS,
+    SKELETON_PREFIXES,
 };
 
 /// Exemption classes as frozen position codes; 0 = live.
@@ -17,7 +18,9 @@ pub const EXEMPT_LIVE: i64 = 0;
 pub const EXEMPT_LICENSE: i64 = 1;
 pub const EXEMPT_ALLOW: i64 = 2;
 
-/// Every count the extraction pipeline sheds anywhere.
+/// Every count the extraction pipeline sheds anywhere. The last three
+/// rows are the 2026-08-14 attainment-line-B amendment (ccm #842):
+/// embedded code/structure inside documentation is not prose.
 #[derive(Default)]
 pub struct Ledger {
     pub license_header: u64,
@@ -26,6 +29,9 @@ pub struct Ledger {
     pub allow_missing_why: u64,
     pub below_floor: u64,
     pub indented_code_lines: u64,
+    pub html_line: u64,
+    pub fenced_code_line: u64,
+    pub overlong_line: u64,
 }
 
 /// The exemption class of one admitted segment. License first (the
@@ -63,21 +69,45 @@ fn allow_has_why(seg: &RawSeg) -> bool {
     })
 }
 
-/// Line-level skeleton strip for comment/docstring segments (plan
-/// :79 "template rows" — the Google/Sphinx/JSDoc section vocabulary).
-/// md paragraphs are untouched: a `---` there is a thematic break,
-/// not a docstring underline. Returns the surviving lines.
+/// Line-level strip for comment/docstring segments: skeleton rows
+/// (plan :79 — the Google/Sphinx/JSDoc section vocabulary), fenced
+/// code regions (```/~~~ toggling, fence lines included — the F3
+/// "the judge sees prose" contract extended to documentation text
+/// wherever it lives) and overlong data/regex lines (DOC_LINE_CAP).
+/// md paragraphs are untouched by ALL three: a `---` there is a
+/// thematic break, md fences were masked by the detector already,
+/// and a single long md line is legitimate unwrapped prose. Returns
+/// the surviving lines.
 pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLine> {
-    let (mut keep, mut stripped) = (Vec::new(), 0);
+    let mut keep = Vec::new();
+    let mut fenced = false;
     for line in &seg.lines {
-        if seg.kind != KIND_MD_PARA && skeleton_line(&line.text) {
-            stripped += 1;
+        if seg.kind == KIND_MD_PARA {
+            keep.push(line);
+            continue;
+        }
+        let opens = fence_line(&line.text);
+        if fenced || opens {
+            // an unclosed fence honestly strips to segment end —
+            // everything after ``` is code until proven otherwise
+            ledger.fenced_code_line += 1;
+            fenced = fenced != opens; // XOR: toggle on fence lines
+        } else if skeleton_line(&line.text) {
+            ledger.skeleton_line += 1;
+        } else if line.text.trim().chars().count() > DOC_LINE_CAP {
+            ledger.overlong_line += 1;
         } else {
             keep.push(line);
         }
     }
-    ledger.skeleton_line += stripped;
     keep
+}
+
+/// A fence marker line, matched after stripping the comment
+/// decoration prefix (rustdoc `/// ```rust`, block-comment indents).
+fn fence_line(text: &str) -> bool {
+    let bare = text.trim().trim_start_matches(['#', '/', '*', '!', ' ']);
+    bare.starts_with("```") || bare.starts_with("~~~")
 }
 
 /// A skeleton line, matched after stripping the comment decoration
@@ -165,5 +195,37 @@ mod tests {
         }
         assert!(!skeleton_line("returns the cached value"));
         assert!(skeleton_line(" * ----"));
+    }
+
+    /// Seeded counterfactual for the 2026-08-14 amendment's comment
+    /// half: a rustdoc fenced doctest (the audited ripgrep FP shape)
+    /// and an overlong regex line (the audited zod FP shape) strip
+    /// with their ledger counts; prose around them survives; an
+    /// UNCLOSED fence strips to segment end.
+    #[test]
+    fn fenced_and_overlong_comment_lines_strip_with_ledger() {
+        let mut lg = Ledger::default();
+        let long = format!("// const rx = /{}/;", "a|".repeat(150));
+        let c = seg(
+            1,
+            10,
+            &[
+                "/// This crate provides printers.",
+                "/// ```rust",
+                "/// let x = search();",
+                "/// ```",
+                "/// More prose after the example.",
+                &long,
+            ],
+        );
+        let kept = strip_skeleton(&c, &mut lg);
+        assert_eq!(kept.len(), 2, "prose survives, code and regex do not");
+        assert_eq!(lg.fenced_code_line, 3);
+        assert_eq!(lg.overlong_line, 1);
+        let unclosed = seg(1, 1, &["// prose", "// ```", "// code one", "// code two"]);
+        assert_eq!(strip_skeleton(&unclosed, &mut lg).len(), 1);
+        assert_eq!(lg.fenced_code_line, 6, "unclosed fence strips to end");
+        let md = seg(KIND_MD_PARA, 1, &[&long]);
+        assert_eq!(strip_skeleton(&md, &mut lg).len(), 1, "md untouched");
     }
 }

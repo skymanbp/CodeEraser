@@ -1,7 +1,8 @@
 {
   "constants": {
+    "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 2,
+    "docdup_rev": 3,
     "exempt": [
       "live",
       "license_header",
@@ -233,6 +234,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 3,
+        "fenced_code_line": 5,
         "skeleton_line": 2
       },
       "live": 0,
@@ -245,7 +247,8 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 13
+        "below_floor": 13,
+        "fenced_code_line": 6
       },
       "live": 1,
       "path": "src/requests/_types.py",
@@ -260,6 +263,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 28,
+        "fenced_code_line": 5,
         "skeleton_line": 51
       },
       "live": 8,
@@ -275,6 +279,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 9,
+        "fenced_code_line": 7,
         "skeleton_line": 52
       },
       "live": 1,
@@ -290,6 +295,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 26,
+        "fenced_code_line": 4,
         "skeleton_line": 2
       },
       "live": 1,
@@ -317,6 +323,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 17,
+        "fenced_code_line": 6,
         "skeleton_line": 8
       },
       "live": 0,
@@ -330,6 +337,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 60,
+        "fenced_code_line": 6,
         "skeleton_line": 22
       },
       "live": 2,
@@ -344,7 +352,8 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 29
+        "below_floor": 29,
+        "fenced_code_line": 4
       },
       "live": 1,
       "path": "src/requests/exceptions.py",
@@ -372,7 +381,8 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 3
+        "below_floor": 3,
+        "fenced_code_line": 9
       },
       "live": 0,
       "path": "src/requests/hooks.py",
@@ -385,6 +395,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 110,
+        "fenced_code_line": 4,
         "skeleton_line": 12
       },
       "live": 12,
@@ -413,6 +424,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 95,
+        "fenced_code_line": 5,
         "skeleton_line": 50
       },
       "live": 5,
@@ -443,7 +455,8 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 10,
+        "fenced_code_line": 4
       },
       "live": 1,
       "path": "src/requests/structures.py",
@@ -458,6 +471,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 99,
+        "fenced_code_line": 5,
         "skeleton_line": 46
       },
       "live": 5,
@@ -680,7 +694,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "6f76860c1bffa6c551cd76068633a30ad5074df7",
+    "commit": "1cd31154ce974d55e3df460ddbee6a40b772d96b",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -703,6 +717,7 @@
     "files_with_segments": 20,
     "ledger": {
       "below_floor": 1415,
+      "fenced_code_line": 70,
       "indented_code_lines": 285,
       "skeleton_line": 246
     },

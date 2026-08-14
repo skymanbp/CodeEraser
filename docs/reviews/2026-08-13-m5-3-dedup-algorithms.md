@@ -77,7 +77,7 @@ clone ⇔ (max(n1,n2) − ted) · tsedDen ≥ tsedNum · max(n1,n2)   -- 85/100�
 
 | kind | 抽取 | 边界 |
 |---|---|---|
-| `md_para` | **`md::masked_content_lines`**（F3 新增：围栏 `md.rs:39-48` + HTML 注释 + 行内码等长反引号 run 配对）；段落 = 非空内容行的极大连续段 | 排除 ATX 标题行、表格行、纯列表标记行。缩进代码块**不建模**（`md.rs:14-16` 明言），其罕见链接形内容留在 `doc_gaps` 台账 |
+| `md_para` | **`md::masked_content_lines`**（F3 新增：围栏 `md.rs:39-48` + HTML 注释 + 行内码等长反引号 run 配对）；段落 = 非空内容行的极大连续段 | 排除 ATX 标题行、表格行、纯列表标记行、**HTML 标记行（trim 后以 `<`+字母或 `</` 开头 = CommonMark HTML block 判据；2026-08-14 达标线 B 修正案：审计实证 zod 赞助商 `<table>` 网格与 README 徽章/模板头全为此形，词汇法在 J≈1.0 处不可分辨，属结构非散文）**。缩进代码块**不建模**（`md.rs:14-16` 明言），其罕见链接形内容留在 `doc_gaps` 台账 |
 | `comment_block` | 同一 parse 树上收 `spec.comment_kinds`（Python `["comment"]` `spec.rs:110`；TS `:159`；Rust `["line_comment","block_comment"]` `:197`；Go `:238`；Md `[]` `:256`），同起始列 + 行连续者合并 | Rust `///` 词法上就是 `line_comment`，自动入域 |
 | `docstring` | `DocSpec.docstring_hosts` 驱动：Python = module/function/class 体首个 `expression_statement > string` | docstring 今天**不是**注释——它作为单个 `\x02LIT` 存活（`tokens.rs:107-131` + 同父合并 `:70-78`）。实测后果在册：`DEDUP-CALIBRATION.md:107` 的 requests 六条 miss |
 
@@ -93,6 +93,19 @@ clone ⇔ (max(n1,n2) − ted) · tsedDen ≥ tsedNum · max(n1,n2)   -- 85/100�
 豁免来源是这条评审的起因：`2026-08-07-plan-v1.2-delta-review.md:`**15**（Apache-2.0 头
 自爆，F8）。**每一类必须计数入档，不得静默**——`pairs.rs:51-53` 的
 `low_diversity_suppressed`、`churn.rs:123-126` 的无声上限禁令同一纪律。
+
+> **2026-08-14 达标线 B 修正案（用户拍板"机制修复入本批"）**：3g 独立审计（47 对普查，
+> 五审计员盲审）实证达标线 B 投影 0.708 < 0.85——报告地板上 7 对 FP 全部为**文档内嵌
+> 代码/结构**而非散文：zod 赞助商 HTML 表格 ×3 + README 模板头 ×1（md 侧）、注释内
+> 超长正则/快照行 ×2 + rustdoc 围栏 doctest ×1（注释侧）。按 F8 license 先例走
+> "发现 FP 族→类别级机制豁免"，抽取层新增**三条行级掩码**（全部带台账计数与播种反事实）：
+> ① md HTML 标记行（上表，`html_line`）；② 注释/docstring 段内**围栏区域**
+> （```/~~~ 切换，围栏行含，`fenced_code_line`——F3"判决器只见散文"契约在注释域的
+> 延伸）；③ 注释/docstring 段内**超长行**（可见内容 > `DOC_LINE_CAP = 200` 字符 =
+> 正则/数据/生成物，非硬换行散文；decided + 反事实；`overlong_line`）。md_para
+> **不受**②③（md 围栏已在检测器掩码；md 段落合法单行长散文）。`DOCDUP_REV` 2→3，
+> 五语料 universe/oracle/census 重冻结；已审 47 对真值保留为超集，被修正案移出宇宙的
+> 行以 `retired` 段冻结存证（正是豁免的证据），新增对补审。
 
 ### 5.3 管线
 

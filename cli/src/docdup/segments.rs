@@ -29,14 +29,22 @@ pub struct RawSeg {
     pub lines: Vec<SegLine>,
 }
 
-/// All raw segments of one file in line order, plus the indented-code
-/// gap count (md indented code blocks are NOT modeled — md.rs:14-16 —
-/// their lines stay inside paragraphs and the ledger keeps that
-/// visible instead of silent).
-pub fn extract(text: &str, lang: Lang) -> (Vec<RawSeg>, u64) {
+/// The line counts md extraction sheds without segments: indented
+/// code (NOT modeled — md.rs:14-16) and HTML-markup lines (the
+/// 2026-08-14 attainment-line-B amendment, ccm #842) — the ledger
+/// keeps both visible instead of silent.
+#[derive(Default)]
+pub struct MdShed {
+    pub indented: u64,
+    pub html: u64,
+}
+
+/// All raw segments of one file in line order, plus the md shed
+/// counts.
+pub fn extract(text: &str, lang: Lang) -> (Vec<RawSeg>, MdShed) {
     match lang {
         Lang::Markdown => md_paragraphs(text),
-        _ => (tree_segments(text, lang), 0),
+        _ => (tree_segments(text, lang), MdShed::default()),
     }
 }
 
@@ -44,11 +52,13 @@ pub fn extract(text: &str, lang: Lang) -> (Vec<RawSeg>, u64) {
 /// heading line never reaches us / is refused, so it breaks
 /// adjacency and therefore the paragraph — no state beyond the last
 /// line number is needed.
-fn md_paragraphs(text: &str) -> (Vec<RawSeg>, u64) {
+fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {
     let (mut segs, mut cur) = (Vec::new(), Vec::<(usize, SegLine)>::new());
-    let (mut gaps, mut last) = (0u64, 0usize);
+    let (mut shed, mut last) = (MdShed::default(), 0usize);
     for (no, line, mask) in md::masked_content_lines(text) {
-        if !paragraph_line(&visible(line, &mask)) {
+        let vis = visible(line, &mask);
+        if !paragraph_line(&vis) {
+            shed.html += u64::from(html_line(&vis));
             flush(&mut cur, &mut segs);
             continue;
         }
@@ -56,7 +66,7 @@ fn md_paragraphs(text: &str) -> (Vec<RawSeg>, u64) {
             flush(&mut cur, &mut segs);
         }
         if line.starts_with("    ") || line.starts_with('\t') {
-            gaps += 1;
+            shed.indented += 1;
         }
         let seg_line = SegLine {
             text: line.to_string(),
@@ -66,7 +76,7 @@ fn md_paragraphs(text: &str) -> (Vec<RawSeg>, u64) {
         last = no;
     }
     flush(&mut cur, &mut segs);
-    (segs, gaps)
+    (segs, shed)
 }
 
 /// The unmasked chars of a line, trimmed — classification must not
@@ -80,11 +90,28 @@ fn visible(line: &str, mask: &[bool]) -> String {
         .to_string()
 }
 
-/// Paragraph content excludes ATX headings, table rows and lines that
+/// Paragraph content excludes ATX headings, table rows, lines that
 /// are ONLY a list marker (design §5.1; a list item WITH text is
-/// content).
+/// content) and HTML-markup lines (2026-08-14 amendment: sponsor
+/// tables, badge strips and template headers are structure the
+/// lexical judge cannot tell from prose at J ≈ 1.0).
 fn paragraph_line(vis: &str) -> bool {
-    !vis.is_empty() && !vis.starts_with('#') && !vis.starts_with('|') && !bare_marker(vis)
+    !vis.is_empty()
+        && !vis.starts_with('#')
+        && !vis.starts_with('|')
+        && !bare_marker(vis)
+        && !html_line(vis)
+}
+
+/// The CommonMark HTML-block start condition, line-level: `<` then an
+/// ASCII letter (open tag) or `/` (close tag). `<!--` never reaches
+/// here — the detector masks HTML comments (F3).
+fn html_line(vis: &str) -> bool {
+    let mut chars = vis.chars();
+    chars.next() == Some('<')
+        && chars
+            .next()
+            .is_some_and(|c| c.is_ascii_alphabetic() || c == '/')
 }
 
 fn bare_marker(vis: &str) -> bool {
