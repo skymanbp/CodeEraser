@@ -21,6 +21,7 @@ import Control.Applicative ((<|>))
 import Data.Aeson
 import qualified Data.Aeson.Types as AT
 import Data.Foldable (asum)
+import qualified Data.IntSet as IS
 
 data VerdictReq = VerdictReq
   { reqId :: Value
@@ -59,8 +60,9 @@ violation :: VerdictReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith tierRow [0 :: Int ..] (reqTier req))
-    , table "sim" (pairRow n 5) 2 (reqSim req)
-    , asum (zipWith (posRow req n) [0 :: Int ..] (reqPos req)) <|> ascendingBy "pos" 1 (reqPos req)
+    , table "sim" (simRow n) 2 (reqSim req)
+    , asum (zipWith (posRow unitTier n) [0 :: Int ..] (reqPos req))
+        <|> ascendingBy "pos" 1 (reqPos req)
     , table "churn" (nodeRow n 5) 1 (reqChurn req)
     , table "cochange" (pairRow n 3) 2 (reqCochange req)
     , table "continuous" contRow 2 (reqCont req)
@@ -72,6 +74,13 @@ violation req =
     ]
  where
   n = toInteger (length (reqTier req))
+  -- built lazily, consulted only after the tier element of the asum
+  -- has proven density (row i names node i) — the review HIGH-2
+  -- repayment: the old per-row list scan re-derived that index and
+  -- cost F²/2 across a legal request
+  unitTier =
+    IS.fromList
+      [i | (i, [_, code]) <- zip [0 :: Int ..] (reqTier req), code /= 0]
 
 table :: String -> (String -> Int -> [Integer] -> Maybe String) -> Int -> [[Integer]] -> Maybe String
 table name rowCheck idWidth rows =
@@ -95,6 +104,19 @@ pairRow n arity name i row = case row of
     | otherwise -> Nothing
   _ -> Just (label name i <> "malformed row")
 
+-- | sim rows carry the ONE enum + ratio the module used to leave
+-- unchecked (review MED: Join routed an out-of-enum kind to the
+-- clone bar while Score scored it zero, and den = 0 made the
+-- cross-multiplication vacuously true — a certain clone from 0/0).
+simRow :: Integer -> String -> Int -> [Integer] -> Maybe String
+simRow n name i row =
+  pairRow n 5 name i row <|> case row of
+    [_, _, kind, _, den]
+      | kind > 2 -> Just (label name i <> "unknown sim kind")
+      | den == 0 -> Just (label name i <> "zero denominator")
+      | otherwise -> Nothing
+    _ -> Nothing
+
 nodeRow :: Integer -> Int -> String -> Int -> [Integer] -> Maybe String
 nodeRow n arity name i row = case row of
   (u : _)
@@ -104,13 +126,15 @@ nodeRow n arity name i row = case row of
     | otherwise -> Nothing
   _ -> Just (label name i <> "malformed row")
 
-posRow :: VerdictReq -> Integer -> Int -> [Integer] -> Maybe String
-posRow req n i row = case row of
+posRow :: IS.IntSet -> Integer -> Int -> [Integer] -> Maybe String
+posRow unitTier n i row = case row of
   [u, indeg, outdeg, sccId, sccSize, reachIn]
     | any (< 0) [u, indeg, outdeg, sccId, sccSize, reachIn] ->
         Just (label "pos" i <> "negative field")
     | u >= n -> Just (label "pos" i <> "node out of range")
-    | tierOf req u /= Just 0 -> Just (label "pos" i <> "unit-tier node")
+    -- range-checked above and the tier table is dense by the time
+    -- this runs, so set membership IS "tier code /= 0"
+    | IS.member (fromInteger u) unitTier -> Just (label "pos" i <> "unit-tier node")
     | otherwise -> Nothing
   _ -> Just (label "pos" i <> "malformed row (need 6 fields)")
 
@@ -131,11 +155,6 @@ discEntry :: Int -> Integer -> Maybe String
 discEntry i x
   | x < 0 || x >= 18446744073709551616 = Just (label "discrete" i <> "outside u64")
   | otherwise = Nothing
-
-tierOf :: VerdictReq -> Integer -> Maybe Integer
-tierOf req u = case [code | [t, code] <- reqTier req, t == u] of
-  (c : _) -> Just c
-  [] -> Nothing
 
 label :: String -> Int -> String
 label name i = name <> " " <> show i <> ": "

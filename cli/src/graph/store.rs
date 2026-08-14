@@ -62,6 +62,7 @@ CREATE INDEX idx_sym_file ON symbols(file_id, key);
 CREATE UNIQUE INDEX idx_sym_ident ON symbols(file_id, key, nth);
 CREATE INDEX idx_site_file ON sites(file_id);
 CREATE INDEX idx_edge_dst ON edges(dst_path);
+CREATE INDEX idx_edge_site ON edges(site_id);
 ";
 
 /// Frozen site-kind storage codes: label -> row position. Appending

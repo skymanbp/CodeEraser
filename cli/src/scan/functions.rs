@@ -51,9 +51,19 @@ fn unit<'t>(node: Node<'t>, src: &[u8], spec: &LangSpec) -> FnUnit<'t> {
 
 /// Name from the node's `name` field, else from an enclosing
 /// variable_declarator/pair (arrow functions), else "(anonymous)".
+/// Go methods carry their receiver TYPE as a prefix — `(T) add` and
+/// `(*U) add` are different identities (attack review F7), and the
+/// qualification lives HERE at the one extraction root so metric
+/// names, unit keys and continuous baseline entities agree by
+/// construction (M5-close review D4: a post-pass in fourclass let
+/// the baseline re-spell the key without it).
 fn name_of(node: Node<'_>, src: &[u8]) -> String {
     if let Some(name) = node.child_by_field_name("name") {
-        return text(name, src);
+        let base = text(name, src);
+        return match receiver_type(node, src) {
+            Some(recv) => format!("({recv}) {base}"),
+            None => base,
+        };
     }
     if let Some(parent) = node.parent()
         && matches!(parent.kind(), "variable_declarator" | "pair" | "assignment")
@@ -62,6 +72,21 @@ fn name_of(node: Node<'_>, src: &[u8]) -> String {
         return text(name, src);
     }
     "(anonymous)".to_string()
+}
+
+/// The receiver's type text (`T`, `*U`) for a Go method_declaration —
+/// the identity part; the binding name is deliberately excluded so
+/// renaming `(t T)` to `(x T)` keeps the cross-version key stable.
+fn receiver_type(node: Node<'_>, src: &[u8]) -> Option<String> {
+    if node.kind() != "method_declaration" {
+        return None;
+    }
+    let recv = node.child_by_field_name("receiver")?;
+    ast::named_children(recv)
+        .into_iter()
+        .find(|c| c.kind() == "parameter_declaration")
+        .and_then(|p| p.child_by_field_name("type"))
+        .map(|ty| text(ty, src))
 }
 
 fn field_for(parent_kind: &str) -> &'static str {

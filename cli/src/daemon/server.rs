@@ -212,14 +212,10 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     // killed probe self-exclusion (caught by the observe-feed golden
     // diverging across CI platforms). A not-yet-existing file can't
     // canonicalize — and can't be in the index either, so the raw
-    // fallback is safe.
+    // fallback is safe. The SPELLING then goes through the one
+    // rel_str throat (M5-close review: this was the third copy).
     let canon = std::fs::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
-    let rel = canon
-        .strip_prefix(root)
-        .unwrap_or(&canon)
-        .display()
-        .to_string()
-        .replace('\\', "/");
+    let rel = crate::scan::walk::rel_str(root, &canon);
     let p = Params::default();
     let idx = Index::open(&root.join(".ce/index.db"), p)?;
     let f = pairs::Filter {

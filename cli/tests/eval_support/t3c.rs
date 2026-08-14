@@ -95,8 +95,8 @@ pub fn corpus_candidates(repo: Option<&str>, name: &Option<String>, tip: &str) -
     }
     let corpus = name.as_deref().unwrap_or("self");
     let root = super::materialize_tree("cand", corpus, &walked);
-    let (mut idx, _) = codeeraser::dedup::refreshed_index(&root, None).expect("index");
-    let c = candidates::collect(&root, &mut idx).expect("candidate pass");
+    let (idx, _) = codeeraser::dedup::refreshed_index(&root, None).expect("index");
+    let c = candidates::collect(&root, &idx).expect("candidate pass");
     // the open connection holds .ce/index.db inside the tree — close
     // it first or Windows refuses the removal
     drop(idx);

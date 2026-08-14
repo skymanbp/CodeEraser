@@ -59,13 +59,13 @@ pub struct Counts {
 /// The whole judgment: refresh + identity gate, candidates, trees,
 /// chunked clone.requests, verdicts.
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
-    let (mut idx, _db_path) = super::refreshed_index(root, db)?;
+    let (idx, _db_path) = super::refreshed_index(root, db)?;
     let orphans = super::unitcache::identity_orphans(&idx)?;
     ensure!(
         orphans == 0,
         "{orphans} unitsig rows missing their symbols identity — nth throat drift"
     );
-    let mut cand = candidates::collect(root, &mut idx)?;
+    let mut cand = candidates::collect(root, &idx)?;
     // the product judgment sees the exhaustive S5 extension; the
     // frozen-instrument path calls collect() alone (candidates.rs)
     candidates::extend_exhaustive(&mut cand);

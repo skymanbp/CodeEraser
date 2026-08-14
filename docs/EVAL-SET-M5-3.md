@@ -195,6 +195,21 @@ judged_not_clone 2/223/757（真送 TED、按 θ=85/100 拒）。**结论=测度
 PERF：S5 后 `ce clone` 冷 requests 1.8s / cobra 3.6s / zod 47.1s
 （19,193→~40k 判决对量级，pre-S5 zod 24.9s@3e——全对候选的代价如实入册）。
 
+## 审查热修批（M5 收口审计响应，2026-08-14）
+
+HIGH-1：候选路径只读化——`walkidx::read_streams`（鲜读+不写；缺流/陈旧偏移
+是 `extend_anchor` 既有守卫案），`candidates::collect` 收 `&Index`，S1 的
+load_streams 写路径退役（评审实证：中途保存的文件其级联删边被静默孤儿化）。
+HIGH-2：`Verdict/Wire.hs` tierOf 线性扫（O(F²)）→ 懒 IntSet（O(F)；tier 稠密
+性由 asum 首元先证）。MED：sim 行域检查（kind>2 拒 "unknown sim kind"、
+den=0 拒 "zero denominator"，VerdictProps +2 具名探针）；`idx_edge_site`
+索引 + SCHEMA_VERSION 6（唯一无 FK 子键索引的级联子表）；rel_str 咽喉收拢
+（walkidx::rel_of 删、daemon 尾拼写换 throat 调用——双审查员收敛项）；
+CloneProps +prefilter 族性质（shipped `provablyBelow` ⇒ 真 ted 非克隆，
+补上转写零执行缺口）；Go receiver 限定上移抽取根 `functions::name_of`
+（fourclass 后置 qualify 删除——D4 的 baseline 键重拼按构造消亡；键值字面
+不变由 units 电池逐 key 证同，rev 零 bump）。
+
 ## 复跑
 
 ```

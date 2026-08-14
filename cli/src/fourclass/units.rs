@@ -30,6 +30,10 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
         return Vec::new(); // no segmentation: everything is toplevel
     };
     let src = text.as_bytes();
+    // Go receiver qualification ("(T) add") rides f.name from the
+    // extraction root (scan::functions::name_of) — one throat for
+    // metric names, these keys and the baseline entities (M5-close
+    // review D4 retired the post-pass that lived here).
     let mut units: Vec<Unit> = functions::extract(tree.root_node(), src, spec::spec(lang))
         .into_iter()
         .map(|f| Unit {
@@ -39,49 +43,7 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
         })
         .collect();
     units.extend(extra_units(tree.root_node(), src, lang));
-    if lang == Lang::Go {
-        qualify_go_methods(tree.root_node(), src, &mut units);
-    }
     units
-}
-
-/// Prefix Go method keys with their receiver type: `(T) add/1` and
-/// `(U) add/1` are different identities. Go has no containing unit
-/// node, so without this two same-name receivers collide into one
-/// top-level key — false stacking evidence (attack review F7).
-fn qualify_go_methods(root: tree_sitter::Node, src: &[u8], units: &mut [Unit]) {
-    let mut stack = vec![root];
-    while let Some(node) = stack.pop() {
-        if node.kind() == "method_declaration"
-            && let Some(recv) = receiver_type(node, src)
-        {
-            let line = node.start_position().row + 1;
-            for u in units.iter_mut().filter(|u| u.start_line == line) {
-                u.key = format!("({recv}) {}", u.key);
-            }
-        }
-        for i in 0..node.child_count() {
-            if let Some(child) = node.child(i as u32) {
-                stack.push(child);
-            }
-        }
-    }
-}
-
-/// The receiver's type text (`T`, `*U`) — the identity part; the
-/// binding name is deliberately excluded so renaming `(t T)` to
-/// `(x T)` keeps the unit's cross-version key stable.
-fn receiver_type(method: tree_sitter::Node, src: &[u8]) -> Option<String> {
-    let recv = method.child_by_field_name("receiver")?;
-    for i in 0..recv.child_count() {
-        if let Some(param) = recv.child(i as u32)
-            && param.kind() == "parameter_declaration"
-            && let Some(ty) = param.child_by_field_name("type")
-        {
-            return Some(String::from_utf8_lossy(&src[ty.byte_range()]).into_owned());
-        }
-    }
-    None
 }
 
 /// Named non-function units (consts, types, …) from the kinds

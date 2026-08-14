@@ -38,10 +38,9 @@ impl<'u> Gen<'u> {
         &mut self,
         root: &Path,
         instances: &[Instance],
-        idx: &mut super::index::Index,
     ) -> Result<BTreeMap<(usize, usize), u8>> {
         let sets = [
-            self.near_pairs(root, instances, idx)?,
+            self.near_pairs(root, instances)?,
             self.same_key(),
             self.fingerprint_pairs(instances),
             self.structural_pairs(),
@@ -133,15 +132,18 @@ impl<'u> Gen<'u> {
 
     /// S1: the verified near-miss runs (25 <= len < 50) the T1/T2
     /// report threshold drops — reclaimed via pairs.rs's second sink.
+    /// READ-ONLY (M5-close review HIGH-1): the candidate pass must
+    /// never write the index — its load_streams predecessor silently
+    /// re-hashed mid-run edits and orphaned their cascade-dropped
+    /// edges; read_streams makes no claim on drifted files instead.
     fn near_pairs(
         &mut self,
         root: &Path,
         instances: &[Instance],
-        idx: &mut super::index::Index,
     ) -> Result<BTreeSet<(usize, usize)>> {
         let p = Params::default();
         let files = pairs::candidate_files(instances);
-        let (streams, _) = walkidx::load_streams(root, &files, idx, p)?;
+        let streams = walkidx::read_streams(root, &files);
         let filter = pairs::Filter {
             min_tokens: p.guarantee(),
             min_distinct: 0,

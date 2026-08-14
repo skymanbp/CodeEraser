@@ -235,8 +235,17 @@ refusals =
     , refused (setKey "tier" (toJSON [[1, 0 :: Integer]]) base) "index mismatch"
     , refused posReq "unit-tier node"
     , refused (setKey "weights" (toJSON [[c, 0] | c <- [0 .. 6 :: Integer]]) base) "every axis zeroed"
+    , -- the sim domain pair (M5-close review): an out-of-enum kind
+      -- and a zero denominator each refuse by name
+      refused (simReq [[0, 1, 3, 50, 100]]) "unknown sim kind"
+    , refused (simReq [[0, 1, 0, 50, 0]]) "zero denominator"
     ]
  where
+  simReq rows =
+    setKey
+      "tier"
+      (toJSON ([[0, 0], [1, 0]] :: [[Integer]]))
+      (setKey "sim" (toJSON (rows :: [[Integer]])) base)
   base = wireReq [] [] [] []
   posReq =
     setKey

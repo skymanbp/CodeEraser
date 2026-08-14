@@ -8,6 +8,7 @@
 module CloneProps (battery) where
 
 import CE.Clone.Cost (tsedDen, tsedNum)
+import CE.Clone.Prefilter (provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
 import Data.Array.Unboxed (listArray)
 import qualified Data.IntMap.Strict as IM
@@ -31,8 +32,13 @@ battery = do
   d <- check "metric: identity and symmetry" (identitySym fam)
   e <- check "metric: triangle inequality" (triangle fam)
   f <- knobAlive teds
+  -- the SHIPPED predicate, not just its math (M5-close review: the
+  -- transcription had zero executed coverage — the bounds were
+  -- asserted via ReferenceTed's own tallies while provablyBelow's
+  -- one call site was production)
+  g <- check "prefilter: provablyBelow implies not-a-clone under real ted" (all pruneOk teds)
   putStrLn ("     clone family: maxN " <> show maxN <> ", trees " <> show (length fam))
-  pure (a && b && c && d && e && f)
+  pure (a && b && c && d && e && f && g)
 
 check :: String -> Bool -> IO Bool
 check name ok = putStrLn ((if ok then "ok   " else "FAIL ") <> name) >> pure ok
@@ -51,6 +57,12 @@ labelBound (v, a, b) = v >= mx a b - fromIntegral (labelInterOf a b)
 
 sizeBound :: (Integer, T, T) -> Bool
 sizeBound (v, a, b) = v >= abs (size a - size b)
+
+-- | Admissibility of the shipped prune against the real ted: a
+-- pruned pair's best case (mx − ted) still misses the threshold.
+pruneOk :: (Integer, T, T) -> Bool
+pruneOk (v, a, b) =
+  not (provablyBelow (fst a) (fst b)) || (mx a b - v) * tsedDen < tsedNum * mx a b
 
 size :: T -> Integer
 size = fromIntegral . length . fst

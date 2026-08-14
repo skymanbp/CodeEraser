@@ -43,7 +43,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     // Scope.configs stays real config paths.
     let mut md_facts: Vec<(String, u64)> = Vec::new();
     for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
-        let rel = rel_of(root, &path);
+        let rel = walk::rel_str(root, &path);
         if store::is_resolver_config(&path) {
             configs.push((rel, tokens::fnv1a(&std::fs::read(&path)?)));
             continue;
@@ -100,18 +100,36 @@ pub(super) fn load_streams(
     Ok((out, changed))
 }
 
+/// Read-only streams for a pass that must never write (M5-close
+/// review HIGH-1: the S1 candidate walk used load_streams and threw
+/// its `changed` set away — a file saved mid-`ce clone` had its
+/// cascade-dropped edges silently orphaned until an unrelated
+/// resolve_key shift, because the stored content hash was already
+/// updated). Fresh-read bytes; a stale stored offset is already the
+/// extension pass's own guarded case (pairs::extend_anchor counts
+/// stale_skipped, probe.rs walks the same line), and an unreadable
+/// or untokenizable file simply provides no stream — "no claim
+/// made", never an abort mid-candidates.
+pub(super) fn read_streams(root: &Path, files: &BTreeSet<String>) -> pairs::Streams {
+    let mut out = pairs::Streams::new();
+    for rel in files {
+        let Some((path, lang)) = lang_path(root, rel) else {
+            continue;
+        };
+        let Ok(src) = std::fs::read(&path) else {
+            continue;
+        };
+        if let Ok(stream) = tokens::stream(&src, lang) {
+            out.insert(rel.clone(), stream);
+        }
+    }
+    out
+}
+
 /// rel → absolute path + language; None for non-lang paths (the
 /// shared gate of this walk and the probe's candidate loop).
 pub(super) fn lang_path(root: &Path, rel: &str) -> Option<(std::path::PathBuf, Lang)> {
     let path = root.join(rel);
     let lang = Lang::from_path(&path)?;
     Some((path, lang))
-}
-
-fn rel_of(root: &Path, path: &Path) -> String {
-    path.strip_prefix(root)
-        .unwrap_or(path)
-        .display()
-        .to_string()
-        .replace('\\', "/")
 }

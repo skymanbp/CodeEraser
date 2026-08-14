@@ -85,6 +85,9 @@ pub fn fn_entity(path: &str, key: &str, nth: i64) -> u64 {
 /// assigned by the units::with_nth throat over the scan's own spans.
 pub fn continuous_rows(f: &FileMetrics) -> Vec<[u64; 3]> {
     let mut rows = vec![[file_entity(&f.path), 0, f.total_lines as u64]];
+    // m.name already carries the Go receiver qualification from the
+    // extraction root (functions::name_of), so this composition and
+    // the unit-cache keys agree by construction (M5-close review D4)
     let fn_units: Vec<Unit> = f
         .functions
         .iter()

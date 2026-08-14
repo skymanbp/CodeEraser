@@ -95,12 +95,13 @@ pub struct Candidates {
     pub tally: Tally,
 }
 
-/// The whole candidate pass over one refreshed index.
-pub fn collect(root: &Path, idx: &mut Index) -> Result<Candidates> {
+/// The whole candidate pass over one refreshed index — READ-ONLY on
+/// the index (review HIGH-1: a writing candidate pass orphaned edges).
+pub fn collect(root: &Path, idx: &Index) -> Result<Candidates> {
     let units = admitted(idx)?;
     let instances = idx.all_instances()?;
     let mut g = super::sources::Gen::new(&units);
-    let union = g.union(root, &instances, idx)?;
+    let union = g.union(root, &instances)?;
     let mut tally = g.tally;
     let pairs = prune(&units, union, &mut tally);
     Ok(Candidates {

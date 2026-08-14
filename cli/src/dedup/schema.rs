@@ -11,12 +11,14 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 
 /// Pre-release schema versioning: a mismatch drops and recreates the
 /// tables (the index is a cache — rebuilding is always safe).
-/// v5 (M5-3b): `symbols.nth` + UNIQUE identity (F2), the unitsig
-/// structural cache and the docsegs table, struct_rev + docdup_rev
-/// in the cache key. v4: `has_tokens` on files, the graph tables,
-/// graph_rev in the key. ALTERs fold into CREATE — the wipe model
-/// has no migration path to alter along.
-const SCHEMA_VERSION: i64 = 5;
+/// v6 (M5 close): idx_edge_site — edges was the only cascade child
+/// with no FK-key index, so every per-file sites delete full-scanned
+/// the edge table (review MED). v5 (M5-3b): `symbols.nth` + UNIQUE
+/// identity (F2), the unitsig structural cache and the docsegs
+/// table, struct_rev + docdup_rev in the cache key. v4: `has_tokens`
+/// on files, the graph tables, graph_rev in the key. ALTERs fold
+/// into CREATE — the wipe model has no migration path to alter along.
+const SCHEMA_VERSION: i64 = 6;
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS docsegs;
