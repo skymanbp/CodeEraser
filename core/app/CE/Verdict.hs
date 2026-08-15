@@ -15,7 +15,7 @@ module CE.Verdict (respond) where
 
 import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
 import CE.Verdict.Join (Legs (..), Pos (..), bound, judge)
-import CE.Verdict.Ratchet (Ratcheted (..), ratchet, ratchetBound)
+import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), penalties, score, scoreBound)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
 import Data.Aeson
@@ -24,18 +24,23 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
 
 -- | Left = (id to echo, error code, message) for the dispatcher's
--- error encoder; Right = the encoded verdict.result line.
+-- error encoder; Right = the encoded verdict.result line. The
+-- baseline is parsed exactly ONCE here and handed to the cap, the
+-- boundary check and the judgment (the M5-close review pair:
+-- baseline rows escaped the row cap, and parseBaseline ran twice).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto line = case eitherDecodeStrict line of
   Left e -> Left (Nothing, "bad_request", "verdict: " <> e)
   Right req
     | toInteger (length (reqTier req)) > verdictNodeCap
-        || toInteger (rowTotal req) > verdictRowCap ->
+        || toInteger (rowTotal req + baselineRows parsed) > verdictRowCap ->
         Right (tooLarge proto req)
-    | Just why <- violation req ->
+    | Just why <- violation parsed req ->
         Left (Just (reqId req), "contract", why)
     | otherwise ->
-        Right (result proto req)
+        Right (result proto parsed req)
+   where
+    parsed = parseBaseline (reqBaseline req)
 
 rowTotal :: VerdictReq -> Int
 rowTotal req =
@@ -48,13 +53,20 @@ rowTotal req =
     , length (reqDisc req)
     ]
 
+-- | Baseline rows count toward the SAME row cap as the live tables —
+-- a malformed baseline contributes 0 and is refused by violation
+-- immediately after the cap admits the request.
+baselineRows :: Either String (Maybe Baseline) -> Int
+baselineRows (Right (Just (Baseline cont disc))) = length cont + length disc
+baselineRows _ = 0
+
 -- | The judged result: join candidates per sim row, the seven axes,
 -- the ratchet delta, and the tightened baseline. fail is the
 -- ADR-006 conjunction: ratchet (over ceiling past tolerance, or a
 -- new discrete member) OR the --fail-under floor — either alone
 -- fails (plan: "两者任一 fail 即 fail").
-result :: String -> VerdictReq -> B8.ByteString
-result proto req =
+result :: String -> Either String (Maybe Baseline) -> VerdictReq -> B8.ByteString
+result proto parsed req =
   BL.toStrict . encode $
     object
       [ "proto" .= proto
@@ -83,7 +95,7 @@ result proto req =
   k = effectiveKnobs (reqCeilings req)
   pens = penalties k (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
   (perMille, _viol) = score k (reqWeights req) pens
-  base = either (const Nothing) id (parseBaseline (reqBaseline req))
+  base = either (const Nothing) id parsed
   r = ratchet ratchetBound base (reqCont req) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
   failBit = not (null (rOver r)) || not (null (rAdded r)) || floorFail

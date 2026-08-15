@@ -63,8 +63,12 @@ instance FromJSON VerdictReq where
 -- top-level functions taking the universe size n (the M5-close warn
 -- repayment: a 64-line where block was the E01 offender, and the
 -- checkers never needed the closure — only n and the tier table).
-violation :: VerdictReq -> Maybe String
-violation req =
+-- The baseline arrives PRE-PARSED: CE.Verdict parses it exactly once
+-- and both the row cap and this check consume that result (the
+-- M5-close LOW "parseBaseline runs twice per request", repaid
+-- together with the baseline cap escape).
+violation :: Either String (Maybe Baseline) -> VerdictReq -> Maybe String
+violation parsed req =
   asum
     [ asum (zipWith tierRow [0 :: Int ..] (reqTier req))
     , table "sim" (simRow n) 2 (reqSim req)
@@ -75,7 +79,7 @@ violation req =
     , table "continuous" contRow 2 (reqCont req)
     , asum (zipWith discEntry [0 :: Int ..] (reqDisc req))
     , ascendingBy "discrete" 1 (map pure (reqDisc req))
-    , either Just (const Nothing) (parseBaseline (reqBaseline req))
+    , either Just (const Nothing) parsed
     , weightsOffence (reqWeights req)
     , ceilingsOffence (reqCeilings req)
     , floorOffence (reqFloor req)
