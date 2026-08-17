@@ -31,8 +31,19 @@ instance FromJSON Hello where
 -- error/contract until each judgment batch lands (M5-3a).
 -- scan/1 = the graded-verdict-table family (ADR-008 P3, proto
 -- 2.7.0, additive), declared WITH its judgment in one batch.
+-- structure/1 = the tree-scale entropy family (M6 S2, proto 2.9.0,
+-- additive), likewise declared with its judgment.
 capabilities :: [String]
-capabilities = ["hello", "fourclass/2", "graph/1", "clone/1", "docdup/1", "verdict/1", "scan/1"]
+capabilities =
+  [ "hello"
+  , "fourclass/2"
+  , "graph/1"
+  , "clone/1"
+  , "docdup/1"
+  , "verdict/1"
+  , "scan/1"
+  , "structure/1"
+  ]
 
 data Reply = Reply
   { replyProto :: String

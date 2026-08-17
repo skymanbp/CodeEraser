@@ -16,9 +16,7 @@ import CE.Verdict.Cost (verdictNodeCap)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
-import qualified Data.ByteString.Lazy as BL
-import Data.List (isInfixOf)
-import WireHarness (replyObjWith, runChecks, setKey)
+import WireHarness (refusedBy, replyObjWith, runChecks, setKey)
 
 battery :: IO Bool
 battery =
@@ -159,9 +157,7 @@ refusals =
       "tier"
       (toJSON ([[0, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]] :: [[Integer]]))
       (setKey "pos" (toJSON [[1, 0, 0, 0, 1, 0 :: Integer]]) base)
-  refused r want = case respond "0.0.1" (BL.toStrict (encode r)) of
-    Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
-    Right _ -> False
+  refused = refusedBy respond
 
 -- | ADR-008 first step, driven through the REAL respond: a size row
 -- at 310 violates the default 300 ceiling and is clean under a

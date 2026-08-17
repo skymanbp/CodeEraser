@@ -20,6 +20,7 @@ import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
 import qualified ScanProps
+import qualified StructureProps
 import qualified VerdictProps
 import qualified VerdictWireProps
 import qualified CE.Protocol as Protocol
@@ -46,6 +47,7 @@ main = do
       , goldenPairs "docdup/golden.ndjson"
       , goldenPairs "verdict/golden.ndjson"
       , goldenPairs "scan/golden.ndjson"
+      , goldenPairs "structure/golden.ndjson"
       , structural
       , refusalProbes
       , docdupStructural
@@ -58,6 +60,7 @@ main = do
       , EntropyProps.battery
       , JoinProps.battery
       , ScanProps.battery
+      , StructureProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
       ]

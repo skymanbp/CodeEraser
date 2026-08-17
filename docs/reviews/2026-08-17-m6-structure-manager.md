@@ -54,12 +54,18 @@ per-mille，scoreScale 纪律）、（b）**树相对熵**（定标有理数，�
 
 ## 4. wire 形（structure/1，加性 minor；§5.9.2 名不过线）
 
-- request：`nodes` 稠密表 `[id, parent, kindCode, aggregates…]`（目录/文件
-  形状+逐节点聚合值；路径名留 Rust 按位置回排）、`dirEdges [a,b,refs]`、
-  `naming [sibSetId, patternCode, count]` 分布行、`docs`/`conventions` 行、
-  可选 `declared`（A 层模板行，ce.toml 编译而来）+ knob 表（既有文法）。
-- reply：逐节点 `levels`/分数（位置对齐，scan/1 先例）、七轴罚分、结构分、
-  `entropy`（定标 ‰）、A 层偏差行（仅声明时）、全量 knobs/参照回显、
+- request（S2 as-built）：`nodes` 稠密表 `[id, parent, depth, subdirs,
+  files]`（目录树，parent 先于子、根自环深 0；路径名留 Rust 按位置回排）、
+  `patterns [dirId, code, count]` 命名分布行、`conventions [dirId, bits]`
+  约定位、`fileRefs [dirId, inside, outside, count]` 逐目录触点分桶
+  ——**`dirEdges` 撤出 v1**：S2 混流轴以 fileRefs 触点为单一事实基，
+  目录×目录边表等 S3+ 配 Newman 模块度一起加行（一轴一基，不留两套
+  引用事实并存的缝）；可选 `declared`（A 层模板行，S3）+ knob 表
+  （既有文法，code 0..8）。
+- reply（S2 as-built）：五判轴 `axes [code, penalty]`（S0 几何/S1 命名/
+  S2 混流/S3 错位/S4 文档；S5/S6 行 S3+ 加入，缺席=不判）、`score`
+  （Score.hs 公式形，等权判轴数）、`entropy` 头行（定标 ‰：全局命名+
+  目录文件数分布）、`findings [dirId, axis]` 稀疏下钻、全量 knobs 回显、
   degraded 自带 fail=true（P1 立场）。
 
 ## 5. 可视化数据面（CLI 与 GUI 共用一份）
@@ -74,9 +80,10 @@ flat nodes+parent（机器友好、流式可增量）；CLI 渲染 = 顶部总�
 
 - **S1 测量+熵核**：Rust 聚合面（§3 新建量）+ `CE.Structure.Entropy`
   有理数原语+参照电池（穷举小树 vs 定义式）——先证数学再接线。
-- **S2 家族接线**：structure/1 wire + 分级/罚分判决 + golden 册 +
-  `ce structure` CLI（JSON/console）+ 门链可选腿（报告态，不设门——
-  新轴先观测后挂门，recall 仪器教训）。
+- **S2 家族接线**（已落地，proto 2.9.0）：structure/1 wire（§4 as-built
+  形）+ 五轴罚分判决 + golden 五对 + `ce structure` CLI
+  （JSON=ce.structure-report/0.1.0 / console）——报告态，不设门：
+  新轴先观测后挂门，recall 仪器教训。
 - **S3 A 层覆盖**：ce.toml `[structure]` 声明→KL 与指名偏差；
   deny_unknown_fields 与响亮降级从第一天起（反审 C2 教训）。
 - **S4 GUI 首屏**：Tauri 树图消费 §5 schema（M6 主体并轨；验收=计划 M6

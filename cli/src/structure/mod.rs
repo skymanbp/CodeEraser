@@ -8,4 +8,6 @@
 //! counts and dense tree shape will cross the wire (§5.9.2).
 
 pub mod edges;
+pub mod judge;
 pub mod tree;
+pub mod wire;

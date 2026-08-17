@@ -18,6 +18,7 @@ import CE.Verdict.Join (Knobs (..), Legs (..), Pos (..), bound, judge)
 import CE.Verdict.Ratchet (Baseline (..), RatchetKnobs (..), Ratcheted (..), ratchet, ratchetBound)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), effectiveWeights, penalties, score, scoreBound)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
+import CE.Wire (applyRows, pick)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -180,21 +181,9 @@ effectiveJoin k thrs =
     , kCochangeFloor = pick thrs 3 (kCochangeFloor bound)
     }
 
--- | Last [code, value] match or the default (later rows win — the
--- applyRows fold order, though validation's ascending rule already
--- forbids duplicate codes within one table).
-pick :: [[Integer]] -> Integer -> Integer -> Integer
-pick rows code dflt = last (dflt : [v | [c, v] <- rows, c == code])
-
--- | Fold [code, value] rows through the setter table; rows whose
--- code the table does not own fall through untouched (validation
--- already bounded every code).
-applyRows :: [(Integer, Integer -> a -> a)] -> [[Integer]] -> a -> a
-applyRows setters = flip (foldl' step)
- where
-  step k row = case row of
-    [code, v] | Just set <- lookup code setters -> set v k
-    _ -> k
+-- pick/applyRows live in CE.Wire since the twelfth bite (the
+-- seventh family recloned both) — the fold grammar is family
+-- infrastructure, not verdict-family property.
 
 -- | Every configurable knob the judgment ran with, echoed so the
 -- client can assert the FULL round trip and the empty-table default

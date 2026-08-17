@@ -13,9 +13,7 @@ module ScanProps (battery) where
 import CE.Scan (respond)
 import CE.Scan.Cost (gradeWith, scanRowCap)
 import Data.Aeson
-import Data.List (isInfixOf)
-import qualified Data.ByteString.Lazy as BL
-import WireHarness (field, replyObjWith, runChecks, setKey)
+import WireHarness (field, refusedBy, replyObjWith, runChecks, setKey)
 
 battery :: IO Bool
 battery =
@@ -92,9 +90,7 @@ refusals =
     ]
  where
   gradeReq gs = setKey "grades" (toJSON (gs :: [[Integer]])) (wireReq [])
-  refused r want = case respond "0.0.1" (BL.toStrict (encode r)) of
-    Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
-    Right _ -> False
+  refused = refusedBy respond
 
 -- | P1 posture on the new family: one row past the cap degrades to
 -- a complete reply whose fail bit is TRUE.

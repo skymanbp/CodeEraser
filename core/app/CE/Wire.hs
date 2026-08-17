@@ -7,7 +7,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), ascendingOn, respondWith, notAscending) where
+module CE.Wire (Family (..), applyRows, ascendingOn, pick, respondWith, notAscending) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -59,3 +59,20 @@ ascendingOn what proj rows =
         [1 :: Int ..]
         (zip rows (drop 1 rows))
     )
+
+-- | Fold [code, value] rows through a setter table; rows whose code
+-- the table does not own fall through untouched (validation already
+-- bounded every code). Promoted from CE.Verdict when the seventh
+-- family recloned it verbatim (the twelfth ratchet bite).
+applyRows :: [(Integer, Integer -> a -> a)] -> [[Integer]] -> a -> a
+applyRows setters = flip (foldl' step)
+ where
+  step k row = case row of
+    [code, v] | Just set <- lookup code setters -> set v k
+    _ -> k
+
+-- | Last [code, value] match or the default (later rows win — the
+-- applyRows fold order, though validation's ascending rule already
+-- forbids duplicate codes within one table).
+pick :: [[Integer]] -> Integer -> Integer -> Integer
+pick rows code dflt = last (dflt : [v | [c, v] <- rows, c == code])

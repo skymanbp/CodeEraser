@@ -79,6 +79,17 @@ entry_globs = [
 # decode ladders + export lists -- the Cost-ladder class, one
 # authority per family forbids cross-family folding) shifts
 # composition batch to batch but stays inside the budget.
-# Measured after cargo fmt, as always.
+# 143 -> 156 (M6 S2, twelfth bite): the SEVENTH wire family
+# (structure/1) landed at +17; every mechanically-foldable shape was
+# repaid first -- applyRows/pick promoted to CE.Wire, the knob
+# getter+setter single-authority table, WireHarness::refusedBy (the
+# fourth pasted refusal predicate), lockstep::reply_field +
+# refuse_degraded reuse, the violation spec-row loop, and the
+# core_wire capability loop -- leaving exactly the named
+# architecture class: the family's Cost ladder, Facts/Knobs/bound
+# records, Family literal, Req decode, reply object, battery
+# fixture and wire structs (+13, the SAME magnitude and class as
+# the 3k "+13 core wire family" precedent). One authority per
+# family forbids cross-family folding; measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 143
+budget = 156

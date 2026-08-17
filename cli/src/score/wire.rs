@@ -214,11 +214,7 @@ fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
 }
 
 fn parse(v: &Value) -> Result<Reply> {
-    let rows = |key: &str| -> Result<Value> {
-        v.get(key)
-            .cloned()
-            .with_context(|| format!("verdict.result missing {key}"))
-    };
+    let rows = |key: &str| crate::lockstep::reply_field(v, key);
     let r = ratchet_of(&rows("ratchet")?)?;
     Ok(Reply {
         candidates: serde_json::from_value(rows("candidates")?).context("candidates")?,

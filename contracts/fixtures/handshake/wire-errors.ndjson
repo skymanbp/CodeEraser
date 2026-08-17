@@ -1,8 +1,8 @@
 {"proto":"2.1.0","type":"mystery","id":7}
-{"code":"unknown_type","id":7,"message":"unsupported type: mystery","proto":"2.8.0","type":"error"}
+{"code":"unknown_type","id":7,"message":"unsupported type: mystery","proto":"2.9.0","type":"error"}
 {"type":"fourclass.request","id":9,"pairs":[]}
-{"code":"bad_request","id":9,"message":"proto missing or major-mismatched (server 2.8.0)","proto":"2.8.0","type":"error"}
+{"code":"bad_request","id":9,"message":"proto missing or major-mismatched (server 2.9.0)","proto":"2.9.0","type":"error"}
 {"proto":"9.0.0","type":"fourclass.request","id":10,"pairs":[]}
-{"code":"bad_request","id":10,"message":"proto missing or major-mismatched (server 2.8.0)","proto":"2.8.0","type":"error"}
+{"code":"bad_request","id":10,"message":"proto missing or major-mismatched (server 2.9.0)","proto":"2.9.0","type":"error"}
 not json at all
-{"code":"bad_request","id":null,"message":"parse error: Unexpected \"not json at all\", expecting JSON value","proto":"2.8.0","type":"error"}
+{"code":"bad_request","id":null,"message":"parse error: Unexpected \"not json at all\", expecting JSON value","proto":"2.9.0","type":"error"}

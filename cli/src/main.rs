@@ -11,7 +11,7 @@ mod main_score;
 use clap::{Parser, Subcommand};
 use codeeraser::daemon;
 use main_cmds::{self as cmds, DedupArgs, OutFormat, json};
-use main_judge::{CloneArgs, DocdupArgs, JoinArgs};
+use main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs};
 use main_score::{BaselineArgs, CheckArgs};
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -99,6 +99,9 @@ enum Cmd {
     /// Three-signal join (M5-3h): similarity + graph position +
     /// per-unit churn, file and unit tiers (report-only until 3i)
     Join(JoinArgs),
+    /// Tree-scale structure judgment (M6): entropy, axes and
+    /// findings via the core's structure/1 (report-only in S2)
+    Structure(StructureArgs),
     /// ADR-006 gate (M5-3i): judge the repo against ce-baseline.json
     /// — ratchet OR --fail-under floor, either alone fails
     Check(CheckArgs),
@@ -185,6 +188,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Clone(a) => main_judge::clone_cmd(a),
         Cmd::Docdup(a) => main_judge::docdup_cmd(a),
         Cmd::Join(a) => main_judge::join_cmd(a),
+        Cmd::Structure(a) => main_judge::structure_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),

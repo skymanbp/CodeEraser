@@ -15,6 +15,7 @@ import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
 import qualified CE.Scan as Scan
+import qualified CE.Structure as Structure
 import qualified CE.Verdict as Verdict
 import Control.Applicative ((<|>))
 import Data.Aeson
@@ -24,7 +25,11 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 2.8.0 = the review-repair minor (ADR-008 反审批): verdict replies
+-- 2.9.0 = the structure minor (M6 S2): the structure/1 family —
+-- tree-scale fact tables in (dense nodes, pattern distributions,
+-- convention bits, file reference splits), five judged axes, the
+-- headline entropy rows and sparse findings out. 2.8.0 = the
+-- review-repair minor (ADR-008 反审批): verdict replies
 -- gain the effective `weights` table and the ratchet's held-name
 -- `failed` list; floor validates against the effective scale;
 -- self-pairs and same-pair duplicates refuse at the boundary; caps
@@ -45,7 +50,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.8.0"
+proto = "2.9.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -106,6 +111,7 @@ families =
   , ("docdup.request", Docdup.respond)
   , ("verdict.request", Verdict.respond)
   , ("scan.request", Scan.respond)
+  , ("structure.request", Structure.respond)
   ]
 
 -- | Every non-hello message must carry a proto with the server's

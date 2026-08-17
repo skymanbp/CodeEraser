@@ -55,6 +55,25 @@ pub struct JoinArgs {
     days: u32,
 }
 
+#[derive(clap::Args)]
+pub struct StructureArgs {
+    #[command(flatten)]
+    judge: JudgeArgs,
+}
+
+/// `ce structure` (M6 S2): the tree-scale entropy judgment —
+/// aggregates to the core's structure/1, dense verdicts re-labelled
+/// with local names. Report-only until a score floor lands (S3+).
+pub fn structure_cmd(a: StructureArgs) -> ExitCode {
+    let j = a.judge;
+    let as_json = json(j.format);
+    emit(
+        "structure",
+        || codeeraser::structure::judge::run(&or_cwd(j.root), j.db, &j.core),
+        |r| codeeraser::structure::judge::print(r, as_json),
+    )
+}
+
 /// `ce join` (M5-3h): assemble the three signal legs — similarity,
 /// graph position, per-unit churn — report-only until the verdict
 /// lattice's wire hookup (3i).

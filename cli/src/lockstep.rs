@@ -120,6 +120,17 @@ pub fn verdict_bits(reply: &Value, rows: usize) -> anyhow::Result<Vec<bool>> {
     Ok(bits)
 }
 
+/// A required reply field, its absence named — the third
+/// hand-rolled closure of this shape (score, then structure) made
+/// it family infrastructure.
+pub fn reply_field(reply: &Value, key: &str) -> anyhow::Result<Value> {
+    use anyhow::Context;
+    reply
+        .get(key)
+        .cloned()
+        .with_context(|| format!("reply missing {key}"))
+}
+
 /// The reply's score rows plus the named u64 counters, decoded once.
 pub fn scores_and_counts<R: serde::de::DeserializeOwned>(
     reply: &Value,

@@ -8,13 +8,14 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (field, replyObjWith, runChecks, setKey) where
+module WireHarness (field, refusedBy, replyObjWith, runChecks, setKey) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
+import Data.List (isInfixOf)
 
 -- | The checks-as-a-table runner (the VerdictWireProps shape).
 runChecks :: [(String, Bool)] -> IO Bool
@@ -40,3 +41,15 @@ setKey _ _ v = v
 
 field :: Object -> String -> Maybe Value
 field o k = KM.lookup (Key.fromString k) o
+
+-- | A named contract refusal through a family's REAL respond — the
+-- fourth pasted copy of this predicate (structure joining scan and
+-- verdict) triggered the promotion (twelfth bite, test half).
+refusedBy ::
+  (String -> B8.ByteString -> Either (a, String, String) b) ->
+  Value ->
+  String ->
+  Bool
+refusedBy respond r want = case respond "0.0.1" (BL.toStrict (encode r)) of
+  Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
+  Right _ -> False

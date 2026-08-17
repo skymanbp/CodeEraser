@@ -63,6 +63,19 @@
 > 具名拒绝）、scan 分块（C5，行帽内分请求）、grade_rows 预校验指名
 > ce.toml 键（C6）、degraded 读真布尔（C9）、check-report schema
 > 0.2.0（C12）。收紧不升 major 之据=同机锁版客户端（挂账清零批先例）。
+> **2.9.0**（M6 S2 structure/1，2026-08-17）：新家族（加性 type +
+> capability，判决与声明同批）——树尺度熵判决：request 携稠密目录
+> `nodes [id,parent,depth,subdirs,files]`（id==下标、parent 先于子、
+> 根自环深 0）+ `patterns [dirId,code,count]`（命名模式分布，码 0..6）
+> + `conventions [dirId,bits]`（1=README/2=config）+ `fileRefs
+> [dirId,inside,outside,count]`（逐文件引用触点聚合）+ `knobs` 表
+> （码 0..8，既有文法；`CE.Structure.Cost` 默认）；result 回五判轴
+> `axes`（S0 几何/S1 命名/S2 混流/S3 错位/S4 文档）+ `score`
+> （Score.hs 公式形等权五轴）+ `entropy`（0=全局命名 Tsallis-2‰、
+> 1=扇出分布‰）+ `findings [dirId,axis]` 稀疏下钻 + knobs 全表回显；
+> 名/路径永不过线；`degraded.reason ∈ {structure_too_large}` 自带
+> fail=true；S2 报告态不设门。本家族 Rust 侧**无判决镜像**（设计册
+> 拍板：无冻结仪器需求，反审 C1 缝类在设计期关闭）。
 
 ## 1. 信封（envelope）
 
@@ -73,7 +86,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.8.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.9.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -180,5 +193,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.8.0 | §1 所列两处常量 |
+| 协议 | 2.9.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |
