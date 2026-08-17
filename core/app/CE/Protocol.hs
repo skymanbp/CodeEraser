@@ -7,7 +7,7 @@
 -- @error@ reply. Every failure becomes a well-formed error line —
 -- never a hello-shaped rejection (the M0 defect this module fixes),
 -- never a crash.
-module CE.Protocol (proto, respond) where
+module CE.Protocol (internalError, proto, respond) where
 
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
@@ -17,6 +17,7 @@ import qualified CE.Handshake as Handshake
 import qualified CE.Verdict as Verdict
 import Control.Applicative ((<|>))
 import Data.Aeson
+import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 
@@ -57,8 +58,23 @@ respond version line
   | B8.length line > maxLineBytes =
       errReply Nothing "too_large" "request line exceeds the byte ceiling"
   | otherwise = case eitherDecodeStrict line of
-      Left e -> errReply Nothing "bad_request" ("parse error: " <> e)
+      Left e -> errReply (lenientId line) "bad_request" ("parse error: " <> e)
       Right env -> dispatch version env line
+
+-- | When the ENVELOPE fails to decode (type missing or mistyped) the
+-- line may still be a JSON object carrying an id — echo it, so a
+-- shape typo does not read as L2-down client-side (the non-echoed-id
+-- desync rule, VERSIONING.md §1; M5-close review LOW).
+lenientId :: B8.ByteString -> Maybe Value
+lenientId line = case decodeStrict line of
+  Just (Object o) -> KM.lookup "id" o
+  _ -> Nothing
+
+-- | The Main loop's exception barrier reply ("never a crash",
+-- structurally): id stays null — the computation died before any
+-- field of it could be trusted.
+internalError :: String -> B8.ByteString
+internalError = errReply Nothing "internal"
 
 -- | One row per judgment family — clone/1 landed with the T3 batch
 -- (M5-3e), docdup/1 with the docdup batch (M5-3g), verdict/1 with

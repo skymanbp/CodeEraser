@@ -59,5 +59,10 @@ entry_globs = [
 # both self-pairs (-2); the close's own additions (md-staleness e2e
 # stanzas) were table-driven on the spot (+5 caught, repaid); net -1
 # banked. Measured after cargo fmt, as always.
+# 148 -> 145 (ledger-clearance C1): the FourClass violation rewrite
+# (duplicate-pIdx + within-first under one Maybe String), the Graph
+# notAscending generalization (edge/pos share one checker) and the
+# Score/Protocol touch-ups retired three cross-module blocks -- all
+# banked, no exemptions drawn.
 # Ratchet DOWN from here with every cleanup.
-budget = 148
+budget = 145

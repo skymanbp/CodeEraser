@@ -12,7 +12,6 @@ module CE.Verdict.Score
   ( Facts (..)
   , ScoreKnobs (..)
   , scoreBound
-  , axisCodes
   , penalties
   , score
   ) where
@@ -67,16 +66,14 @@ scoreBound =
     , sDefaultWeight = Cost.defaultWeight
     }
 
--- | The seven axes: 0 size / 1 complexity / 2 clone / 3 docdup /
--- 4 deadcode / 5 churn / 6 graph_cycle (decision ⑦).
-axisCodes :: [Integer]
-axisCodes = [0 .. 6]
-
--- | Violation count per axis — every axis is one NAMED predicate
--- function owning exactly one knob, so the per-axis perturbation
--- battery has a lever per row (the M5-close warn repayment: seven
--- guarded comprehensions in one body read as CC 17; the table now
--- carries names, the predicates carry the decisions).
+-- | Violation count per axis — 0 size / 1 complexity / 2 clone /
+-- 3 docdup / 4 deadcode / 5 churn / 6 graph_cycle (decision ⑦; the
+-- separate axisCodes constant was a dead export, M5-close review
+-- LOW). Every axis is one NAMED predicate function owning exactly
+-- one knob, so the per-axis perturbation battery has a lever per row
+-- (the M5-close warn repayment: seven guarded comprehensions in one
+-- body read as CC 17; the table now carries names, the predicates
+-- carry the decisions).
 penalties :: ScoreKnobs -> Facts -> [(Integer, Integer)]
 penalties k f =
   [ (0, sizeOver k f)

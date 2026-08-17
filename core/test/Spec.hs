@@ -43,6 +43,7 @@ main = do
       , goldenPairs "docdup/golden.ndjson"
       , goldenPairs "verdict/golden.ndjson"
       , structural
+      , refusalProbes
       , docdupStructural
       , costModel
       , Reference.equivalence
@@ -161,7 +162,7 @@ structural = do
   -- both halves of the compensating guard fire — edgeCap was a dead
   -- knob in the first draft (Opus review)
   i <- check "over-cap EDGES degrade too" (field edgeCapReply "reason" == Just "graph_too_large")
-  pure (a && b && c && d && e && f && g && h && i)
+  pure (and [a, b, c, d, e, f, g, h, i])
  where
   unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"2.1.0\",\"type\":\"mystery\",\"id\":7}"
   oversizeReply = Protocol.respond "0.0.1" (B8.replicate 33554433 'x')
@@ -178,6 +179,28 @@ structural = do
       "{\"proto\":\"2.1.0\",\"type\":\"graph.request\",\"id\":4,\"nodes\":[[0,0,0]],\"edges\":["
         <> B8.intercalate "," (replicate (fromInteger edgeCap + 1) "[0,0,0,0]")
         <> "],\"pos\":[]}"
+
+-- | The ledger-clearance C1 refusal trio, split from structural at
+-- the E01 50-line function cap: a typo'd envelope still echoes its
+-- id, and the two new boundary rows refuse by name.
+refusalProbes :: IO Bool
+refusalProbes = do
+  -- without the id echo the client reads a shape mistake as L2-down
+  -- (the non-echoed-id desync rule, VERSIONING.md §1)
+  j <- check "envelope decode failure echoes a present id" (field badEnvReply "id" == Just (Number 42))
+  k <- check "graph pos must ascend" (field dupPosReply "message" == Just "pos 1: not strictly ascending")
+  l <- check "duplicate fourclass pair index refused" (field dupPairReply "message" == Just "duplicate pair index: 3")
+  pure (and [j, k, l])
+ where
+  badEnvReply = Protocol.respond "0.0.1" "{\"proto\":\"2.3.0\",\"id\":42}"
+  dupPosReply =
+    Protocol.respond
+      "0.0.1"
+      "{\"proto\":\"2.3.0\",\"type\":\"graph.request\",\"id\":5,\"nodes\":[[0,0,0],[0,0,0]],\"edges\":[],\"pos\":[1,1]}"
+  dupPairReply =
+    Protocol.respond
+      "0.0.1"
+      "{\"proto\":\"2.3.0\",\"type\":\"fourclass.request\",\"id\":6,\"pairs\":[{\"i\":3,\"rem\":[],\"add\":[]},{\"i\":3,\"rem\":[],\"add\":[]}]}"
 
 field :: B8.ByteString -> String -> Maybe Value
 field bytes key = do

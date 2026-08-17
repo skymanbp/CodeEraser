@@ -36,9 +36,15 @@ siteCostCross = 2
 
 -- | A site opens iff explaining its lines as moved beats leaving
 -- them plain: n*movedCost + s < n*plainCost. Ties resolve to not
--- opening (conservative).
+-- opening (conservative). The multiply rides Integer — decision ③
+-- (Codex C4, Anchor.overWork) backported at this module's ONLY
+-- multiply site: n is bounded by the 32 MiB line cap (< 3.4M
+-- entries) so machine Int cannot overflow today, but the judgment
+-- must not depend on that arithmetic being redone at every reading.
 siteOpens :: Int -> Int -> Bool
-siteOpens s n = n * movedCost + s < n * plainCost
+siteOpens s n =
+  toInteger n * toInteger movedCost + toInteger s
+    < toInteger n * toInteger plainCost
 
 -- | Minimal block length that opens a cross-pair site (derived).
 destFloor :: Int

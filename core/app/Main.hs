@@ -5,7 +5,8 @@
 -- trap, GHC #10762 / #15021).
 module Main (main) where
 
-import CE.Protocol (respond)
+import CE.Protocol (internalError, respond)
+import Control.Exception (SomeException, evaluate, try)
 import qualified Data.ByteString.Char8 as B8
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
@@ -35,5 +36,12 @@ serve = do
       then pure ()
       else do
         line <- B8.hGetLine stdin
-        B8.hPutStrLn stdout (respond coreVersion line)
+        -- "never a crash" as STRUCTURE, not argument (M5-close review
+        -- LOW): respond is pure and its strict ByteString is fully
+        -- materialized by evaluate, so any defect surfaces here as an
+        -- error line and the session survives
+        reply <- try (evaluate (respond coreVersion line))
+        B8.hPutStrLn stdout (either onCrash id reply)
         loop
+  onCrash :: SomeException -> B8.ByteString
+  onCrash = internalError . show

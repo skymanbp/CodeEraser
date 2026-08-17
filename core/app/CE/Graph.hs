@@ -67,12 +67,18 @@ violation req =
   asum
     [ asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , asum (zipWith (edgeRow n) [0 :: Int ..] es)
-    , asum (zipWith notAscending [1 :: Int ..] (zip es (drop 1 es)))
-    , asum (zipWith (posRow n) [0 :: Int ..] (reqPos req))
+    , asum (zipWith (notAscending "edge") [1 :: Int ..] (zip es (drop 1 es)))
+    , asum (zipWith (posRow n) [0 :: Int ..] ps)
+    , -- ascending pos is also the reply BOUND (M5-close review MED:
+      -- pos escaped the declared caps — a repeated-index list made
+      -- the reply larger than the request without limit; strictly
+      -- ascending indices in [0, n) cannot exceed nodeCap rows)
+      asum (zipWith (notAscending "pos") [1 :: Int ..] (zip ps (drop 1 ps)))
     ]
  where
   n = fromIntegral (length (reqNodes req))
   es = reqEdges req
+  ps = reqPos req
 
 nodeRow :: Int -> [Integer] -> Maybe String
 nodeRow i row = case row of
@@ -93,10 +99,12 @@ edgeRow n i row = case row of
  where
   label = "edge " <> show i <> ": "
 
-notAscending :: Int -> ([Integer], [Integer]) -> Maybe String
-notAscending i (prev, cur)
+-- | Shared by the edge rows (list Ord is lexicographic) and the pos
+-- scalars — one checker, the table name as data.
+notAscending :: (Ord a) => String -> Int -> (a, a) -> Maybe String
+notAscending what i (prev, cur)
   | prev < cur = Nothing
-  | otherwise = Just ("edge " <> show i <> ": not strictly ascending")
+  | otherwise = Just (what <> " " <> show i <> ": not strictly ascending")
 
 posRow :: Integer -> Int -> Integer -> Maybe String
 posRow n i p
