@@ -39,6 +39,17 @@
 > Rust 侧退出码消费 fail 位、报告行自渲染；`ce baseline` 的 only-shrink
 > 集合再解释同批收敛为消费 fail 位（该线无 floor 无 dedup 对，fail ≡
 > added∨over，语义等价）。
+> **2.7.0**（ADR-008 P3 scan 分级入 core，2026-08-17）：新家族 `scan/1`
+> （加性 type + 加性 capability，2.1.0 先例）——request 携测量行
+> `[[code,value]]`（码 0..6 = file-lines/fn-lines/fn-params/cyclomatic/
+> cognitive/nesting/fn-naming）+ 可选 `grades` 覆盖表
+> `[[code,warn,fail]]`（fail 0 = 无硬线；ce.toml 是源、
+> `CE.Scan.Cost.gradeTable` 是默认）；result 回位置对齐 `levels`
+> （0/1/2）+ `fail` 位（任一 level-2 即 true；退出码语义在 core）+
+> 生效 `grades` 全表回显（Rust 钉镜像）；`degraded.reason ∈
+> {scan_too_large}` 且 degraded 自带 fail=true（P1 立场）。主体名/
+> 路径永不过线（§5.9.2）；Rust `report.rs::evaluate` 降为钉住镜像
+> （mcp/score 辅面读镜像，`ce scan` 门以整报告 ensure 逐跑证等）。
 
 ## 1. 信封（envelope）
 
@@ -49,7 +60,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.6.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.7.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -65,9 +76,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
-  "clone/1","docdup/1","verdict/1"]`；/2 = 2.0.0 的锚宽请求形状——旧客户端探 /1 得
-  缺席，响亮降级 L1 而非发不可解析的二元形状；graph/1 = M5-2 图族；clone/docdup/
-  verdict = M5-3 三族，2.2.0 同批声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  "clone/1","docdup/1","verdict/1","scan/1"]`；/2 = 2.0.0 的锚宽请求形状——旧客户端
+  探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；graph/1 = M5-2 图族；clone/
+  docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 = ADR-008 P3 分级判决族，
+  2.7.0 随判决同批声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -149,5 +161,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.6.0 | §1 所列两处常量 |
+| 协议 | 2.7.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

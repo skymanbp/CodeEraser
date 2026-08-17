@@ -56,10 +56,37 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
     assert!(o.reply.degraded.is_none(), "healthy judgment");
 }
 
+/// Frozen members whose SOURCE duplication was genuinely REMOVED
+/// after the freeze — each entry names its de-duplication batch.
+/// The gate below exists for GENERATION immutability (a corpus
+/// regeneration dropping members arrives with no entry here); real
+/// cleanups are this tool's whole point and retire BY NAME, never
+/// silently. A listed id back in the baseline = a stale entry,
+/// refused — the ledger can only ever describe the present.
+const RETIRED: [(u64, &str); 3] = [
+    (
+        5157928330096415643,
+        "ADR-008 P3 tenth bite: probe_gate.rs Target/probe stanzas table-driven",
+    ),
+    (
+        13860957365059798074,
+        "ADR-008 P3 tenth bite: probe_gate.rs Target/probe stanzas table-driven",
+    ),
+    (
+        17525617435279245638,
+        "ADR-008 P3 tenth bite: probe_gate.rs Target/probe stanzas table-driven",
+    ),
+];
+
 /// The 3k corpus-generation gate (RM14, pre-registered): the frozen
 /// pre-Haskell discrete member set must stay a SUBSET of every later
 /// committed baseline — growth is a batch of named additions, never
-/// a silent rewrite of history.
+/// a silent rewrite of history. Deliberate de-duplication exits
+/// through the named RETIRED ledger above (its first entries landed
+/// when the P3 repayment removed real pre-freeze duplication and
+/// this gate's original unconditional subset form went red — the
+/// gate could not tell a cleanup from a rewrite until the ledger
+/// gave cleanups a spoken exit).
 #[test]
 fn pre_haskell_members_survive_every_generation() {
     let frozen: serde_json::Value = serde_json::from_str(
@@ -84,10 +111,17 @@ fn pre_haskell_members_survive_every_generation() {
         .collect();
     assert_eq!(old.len(), 40, "the frozen set is the 3j-close 40");
     for m in &old {
+        if let Some((_, why)) = RETIRED.iter().find(|(id, _)| id == m) {
+            assert!(
+                !now.contains(m),
+                "retired member {m} is back in the baseline — stale RETIRED entry ({why})"
+            );
+            continue;
+        }
         assert!(
             now.contains(m),
-            "pre-Haskell member {m} vanished from the committed baseline — \
-             corpus growth must never rewrite the pre-generation set"
+            "pre-Haskell member {m} vanished from the committed baseline without a \
+             named retirement — corpus growth must never rewrite the pre-generation set"
         );
     }
 }

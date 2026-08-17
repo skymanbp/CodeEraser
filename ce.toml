@@ -64,5 +64,15 @@ entry_globs = [
 # notAscending generalization (edge/pos share one checker) and the
 # Score/Protocol touch-ups retired three cross-module blocks -- all
 # banked, no exemptions drawn.
+# 145 -> 143 (ADR-008 P3, tenth bite): the sixth wire family (scan/1)
+# recloned the family skeleton (+9 measured); repaid at the mechanism
+# -- CE.Wire respondWith + shared notAscending (Graph/Clone/Docdup/
+# Scan one cascade), test/WireHarness.hs (the respond-battery
+# scaffold), lockstep::open_family (the third hand-rolled link-open),
+# and the probe_gate Target/probe stanza table-drive (-3 standing).
+# Five family-boilerplate blocks remain by architecture (per-family
+# Family literals + Req decode ladders -- the Cost-ladder class, one
+# authority per family forbids cross-family folding); net -2 banked.
+# Measured after cargo fmt, as always.
 # Ratchet DOWN from here with every cleanup.
-budget = 145
+budget = 143

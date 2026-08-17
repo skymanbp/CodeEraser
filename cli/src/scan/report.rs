@@ -13,7 +13,7 @@ pub enum Level {
     Fail,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, PartialEq)]
 pub struct Finding {
     pub file: String,
     pub line: usize,
@@ -24,6 +24,84 @@ pub struct Finding {
     pub subject: String,
 }
 
+/// Metric codes are frozen positions; index = code (the knobs.rs
+/// registry pattern shared with wire::grade_rows and the core's
+/// CE.Scan.Cost.gradeTable).
+pub const RULES: [&str; 7] = [
+    "file-lines",
+    "fn-lines",
+    "fn-params",
+    "cyclomatic",
+    "cognitive",
+    "nesting",
+    "fn-naming",
+];
+
+/// One measurement row bound for the wire plus everything the
+/// report needs to name it locally — paths and subjects never cross
+/// (§5.9.2 index privacy; ADR-008 P3).
+pub struct Row {
+    pub code: u64,
+    pub value: usize,
+    pub file: String,
+    pub line: usize,
+    pub subject: String,
+}
+
+/// Every (subject, metric) measurement in report order — the file
+/// row first, then each function's six metric rows: the SAME order
+/// and vocabulary evaluate() walks, so the whole-report mirror
+/// ensure in scan::run can compare finding lists directly.
+pub fn rows_of(files: &[FileMetrics]) -> Vec<Row> {
+    let mut out = Vec::new();
+    for f in files {
+        let file_row = |code, value, line: usize, subject: &str| Row {
+            code,
+            value,
+            file: f.path.clone(),
+            line,
+            subject: subject.to_string(),
+        };
+        out.push(file_row(0, f.total_lines, 1, &f.path));
+        for func in &f.functions {
+            let m = |code, value| file_row(code, value, func.start_line, &func.name);
+            out.push(m(1, func.lines));
+            out.push(m(2, func.params));
+            out.push(m(3, func.cyclomatic as usize));
+            out.push(m(4, func.cognitive as usize));
+            out.push(m(5, func.max_nesting as usize));
+            out.push(m(6, usize::from(!func.name_ok)));
+        }
+    }
+    out
+}
+
+/// Findings from the CORE's positional levels (ADR-008 P3): level 0
+/// rows vanish, 1 = warn, 2 = fail; the displayed limit comes from
+/// the echoed grade table by (code, level) — the same effective set
+/// the core judged with.
+pub fn findings_from(rows: &[Row], levels: &[u8], grades: &[[u64; 3]]) -> Vec<Finding> {
+    rows.iter()
+        .zip(levels.iter().copied())
+        .filter(|&(_, l)| l > 0)
+        .map(|(r, l)| Finding {
+            file: r.file.clone(),
+            line: r.line,
+            rule: RULES[r.code as usize],
+            level: if l == 2 { Level::Fail } else { Level::Warn },
+            value: r.value,
+            threshold: grades[r.code as usize][if l == 2 { 2 } else { 1 }] as usize,
+            subject: r.subject.clone(),
+        })
+        .collect()
+}
+
+/// Threshold evaluation — since ADR-008 P3 a MIRROR of the core's
+/// graded verdict table (CE.Scan.Cost), not an authority: `ce scan`
+/// builds its findings from the wire's levels and proves this
+/// binding equal per run (the whole-report ensure); the auxiliary
+/// surfaces (mcp scan tool, the score family's measurement reuse,
+/// report_schema) keep reading it locally.
 pub fn evaluate(file: &FileMetrics, t: &Thresholds) -> Vec<Finding> {
     let mut out = Vec::new();
     check_file(file, t, &mut out);

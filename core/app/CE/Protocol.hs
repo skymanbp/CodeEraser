@@ -14,6 +14,7 @@ import qualified CE.Docdup as Docdup
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
+import qualified CE.Scan as Scan
 import qualified CE.Verdict as Verdict
 import Control.Applicative ((<|>))
 import Data.Aeson
@@ -23,21 +24,24 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 2.6.0 = the ratchet-unification minor (ADR-008 P2):
--- verdict.request gains the additive `dedup` [blocks, budget] pair
--- and the fail table its dedup_budget row — the second ratchet's
--- comparison is the core's. 2.5.0 = the verdict-repatriation minor
--- (ADR-008 P1): clone/docdup replies gain per-row `verdicts` bits,
--- the docdup echo gains `verbatimFloor`, and the degraded verdict
--- reply carries ratchet.fail=true itself. 2.4.0 = verdict.request
--- `thresholds` + `tolerance` knob rows and the reply's FULL
--- effective-knob echo (ADR-008 P4): additive, absent fields parse
--- as no override. 2.3.0 = `ceilings` rows + the two-knob echo
--- (ADR-008 first step, M5 close); 2.2.0 = clone/1 + docdup/1 +
--- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
--- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
+-- 2.7.0 = the scan-grading minor (ADR-008 P3): the scan/1 family —
+-- measurement rows in, graded levels and the fail bit out, the
+-- grade table echoed whole. 2.6.0 = the ratchet-unification minor
+-- (ADR-008 P2): verdict.request gains the additive `dedup`
+-- [blocks, budget] pair and the fail table its dedup_budget row —
+-- the second ratchet's comparison is the core's. 2.5.0 = the
+-- verdict-repatriation minor (ADR-008 P1): clone/docdup replies
+-- gain per-row `verdicts` bits, the docdup echo gains
+-- `verbatimFloor`, and the degraded verdict reply carries
+-- ratchet.fail=true itself. 2.4.0 = verdict.request `thresholds` +
+-- `tolerance` knob rows and the reply's FULL effective-knob echo
+-- (ADR-008 P4): additive, absent fields parse as no override.
+-- 2.3.0 = `ceilings` rows + the two-knob echo (ADR-008 first step,
+-- M5 close); 2.2.0 = clone/1 + docdup/1 + verdict/1 in ONE additive
+-- minor (M5-3a); 2.1.0 = graph/1 (M5-2a); 2.0.0 = the M5-1c-iii
+-- anchor shape.
 proto :: String
-proto = "2.6.0"
+proto = "2.7.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -97,6 +101,7 @@ families =
   , ("clone.request", Clone.respond)
   , ("docdup.request", Docdup.respond)
   , ("verdict.request", Verdict.respond)
+  , ("scan.request", Scan.respond)
   ]
 
 -- | Every non-hello message must carry a proto with the server's

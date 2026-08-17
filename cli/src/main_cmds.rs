@@ -29,8 +29,8 @@ pub fn fmt(json: bool) -> scan::Format {
     }
 }
 
-pub fn scan_cmd(path: Option<PathBuf>, json: bool) -> ExitCode {
-    fallible("scan", scan::run(&or_cwd(path), fmt(json)))
+pub fn scan_cmd(path: Option<PathBuf>, json: bool, core: &str) -> ExitCode {
+    fallible("scan", scan::run(&or_cwd(path), fmt(json), core))
 }
 
 pub fn churn_cmd(root: &Path, days: u32, json: bool) -> ExitCode {

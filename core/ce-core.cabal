@@ -17,6 +17,7 @@ executable ce-core
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
                       CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
+                      CE.Scan, CE.Scan.Cost, CE.Wire,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet,
                       CE.Verdict.Table, CE.Verdict.Wire
@@ -45,12 +46,14 @@ test-suite ce-core-test
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
                       CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
+                      CE.Scan, CE.Scan.Cost, CE.Wire,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet,
                       CE.Verdict.Table, CE.Verdict.Wire,
                       Reference, ReferenceGraph, GraphProps,
                       ReferenceTed, CloneProps, ReferenceJaccard,
-                      JoinProps, VerdictProps, VerdictWireProps
+                      JoinProps, ScanProps, VerdictProps,
+                      VerdictWireProps, WireHarness
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

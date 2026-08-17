@@ -29,8 +29,10 @@ instance FromJSON Hello where
 -- clone/1 + docdup/1 + verdict/1 = the M5-3 families, declared in
 -- one additive minor (proto 2.2.0) with stub handlers answering
 -- error/contract until each judgment batch lands (M5-3a).
+-- scan/1 = the graded-verdict-table family (ADR-008 P3, proto
+-- 2.7.0, additive), declared WITH its judgment in one batch.
 capabilities :: [String]
-capabilities = ["hello", "fourclass/2", "graph/1", "clone/1", "docdup/1", "verdict/1"]
+capabilities = ["hello", "fourclass/2", "graph/1", "clone/1", "docdup/1", "verdict/1", "scan/1"]
 
 data Reply = Reply
   { replyProto :: String

@@ -39,12 +39,16 @@ enum Cmd {
         /// Project root to report on (default: current directory)
         root: Option<PathBuf>,
     },
-    /// Measure size / complexity / readability metrics (M1 modules)
+    /// Measure size / complexity / readability metrics (M1 modules;
+    /// levels graded by the core since ADR-008 P3)
     Scan {
         /// Directory to scan (default: current directory)
         path: Option<PathBuf>,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
+        /// Path to the ce-core executable
+        #[arg(long, default_value = "ce-core")]
+        core: String,
     },
     /// Time-dimension metrics: append vs rewrite, windowed churn,
     /// co-change pairs (M4; report-only, feeds the M5 join)
@@ -162,7 +166,7 @@ fn main() -> ExitCode {
 /// dispatcher under the repo's own complexity gate as families grow.
 fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
     Ok(match cmd {
-        Cmd::Scan { path, format } => cmds::scan_cmd(path, json(format)),
+        Cmd::Scan { path, format, core } => cmds::scan_cmd(path, json(format), &core),
         Cmd::Churn { root, days, format } => {
             cmds::churn_cmd(&cmds::or_cwd(root), days, json(format))
         }

@@ -7,7 +7,8 @@
 -- drives the REAL CE.Verdict.respond — ablation, idempotence,
 -- refusal-by-name, and the knob-table probes (ceilings from the
 -- first ADR-008 step; thresholds/tolerance from P4). The pure
--- score/ratchet checks stay in VerdictProps.
+-- score/ratchet checks stay in VerdictProps; the scaffold lives in
+-- WireHarness (the P3 tenth-bite repayment).
 module VerdictWireProps (battery) where
 
 import CE.Verdict (respond)
@@ -17,14 +18,11 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Lazy as BL
 import Data.List (isInfixOf)
+import WireHarness (replyObjWith, runChecks, setKey)
 
--- | The checks as a TABLE (also what keeps this module's scaffold
--- from cloning VerdictProps' monadic sequence — the batch's own
--- ratchet bite).
 battery :: IO Bool
-battery = fmap and (mapM one checks)
- where
-  checks =
+battery =
+  runChecks
     [ ("ablating any join leg moves the candidate census", ablation)
     , ("ratchet idempotence: newBaseline fed back judges nothing", idempotent)
     , ("refusals name the offender with code and message", refusals)
@@ -33,9 +31,6 @@ battery = fmap and (mapM one checks)
     , ("an over-cap request degrades to a reply that FAILS", degradedFails)
     , ("the dedup pair fails over budget and passes at it", dedupBudget)
     ]
-  one (name, ok) = do
-    putStrLn ((if ok then "ok   " else "FAIL ") <> name)
-    pure ok
 
 -- | A wire request whose candidates cover merge, delete and hotspot;
 -- the ablations empty one leg each and the census must move.
@@ -71,10 +66,7 @@ wChurn = [[4, 30, 10, 0, 0], [5, 30, 10, 0, 0]]
 wCoch = [[4, 5, 3]]
 
 replyObj :: Value -> Maybe Object
-replyObj r = do
-  bytes <- either (const Nothing) Just (respond "0.0.1" (BL.toStrict (encode r)))
-  Object o <- decodeStrict bytes
-  pure o
+replyObj = replyObjWith respond
 
 candidateCensus :: Value -> Maybe [Int]
 candidateCensus req = do
@@ -170,10 +162,6 @@ refusals =
   refused r want = case respond "0.0.1" (BL.toStrict (encode r)) of
     Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
     Right _ -> False
-
-setKey :: String -> Value -> Value -> Value
-setKey k v (Object o) = Object (KM.insert (Key.fromString k) v o)
-setKey _ _ v = v
 
 -- | ADR-008 first step, driven through the REAL respond: a size row
 -- at 310 violates the default 300 ceiling and is clean under a

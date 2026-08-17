@@ -31,6 +31,7 @@ import CE.Docdup.Cost
   , verbatimFloor
   )
 import CE.Docdup.Jaccard (interUnion)
+import CE.Wire (Family (..), notAscending, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -47,28 +48,32 @@ instance FromJSON DocdupReq where
   parseJSON = withObject "DocdupReq" $ \o ->
     DocdupReq <$> o .: "id" <*> o .: "sets" <*> o .: "pairs"
 
--- | Left = (id to echo, error code, message); Right = the encoded
--- docdup.result line.
+-- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto line = case eitherDecodeStrict line of
-  Left e -> Left (Nothing, "bad_request", "docdup: " <> e)
-  Right req
-    | any (\s -> toInteger (length s) > docSetCap) (reqSets req)
-        || toInteger (length (reqPairs req)) > docPairCap ->
-        Right (reply proto req [] 0 True)
-    | Just why <- violation req -> Left (Just (reqId req), "contract", why)
-    | otherwise ->
-        let (rows, dups) = judge (reqSets req) (reqPairs req)
-         in Right (reply proto req rows dups False)
+respond proto =
+  respondWith
+    Family
+      { famName = "docdup"
+      , famId = reqId
+      , famOverCap = \req ->
+          any (\s -> toInteger (length s) > docSetCap) (reqSets req)
+            || toInteger (length (reqPairs req)) > docPairCap
+      , famOffence = violation
+      , famDegraded = \req -> reply proto req [] 0 True
+      , famJudged = \req ->
+          let (rows, dups) = judge (reqSets req) (reqPairs req)
+           in reply proto req rows dups False
+      }
 
 -- | First boundary-contract offender in request order (Clone.hs
--- posture: the message names the violator deterministically).
+-- posture: the message names the violator deterministically); the
+-- ascending checker is CE.Wire's shared one.
 violation :: DocdupReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith setShape [0 :: Int ..] ss)
     , asum (zipWith (pairRow (length ss)) [0 :: Int ..] ps)
-    , asum (zipWith notAscending [1 :: Int ..] (zip ps (drop 1 ps)))
+    , asum (zipWith (notAscending "pair") [1 :: Int ..] (zip ps (drop 1 ps)))
     ]
  where
   ss = reqSets req
@@ -94,11 +99,6 @@ pairRow n p row = case row of
   _ -> Just (label <> "malformed row (need [i,j,verbatimRun])")
  where
   label = "pair " <> show p <> ": "
-
-notAscending :: Int -> ([Integer], [Integer]) -> Maybe String
-notAscending p (prev, cur)
-  | prev < cur = Nothing
-  | otherwise = Just ("pair " <> show p <> ": not strictly ascending")
 
 -- | Judge every pair: exact Jaccard on the two sets, raw counts out,
 -- each row paired with the owner's FULL verdict (ADR-008 P1) — the

@@ -19,6 +19,7 @@ import CE.Graph.Cost (edgeCap, entryMask, minRung, nodeCap, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
+import CE.Wire (Family (..), notAscending, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -44,19 +45,22 @@ instance FromJSON GraphReq where
       <*> o .: "edges"
       <*> o .:? "pos" .!= []
 
--- | Left = (id to echo, error code, message) for the dispatcher's
--- error encoder; Right = the encoded graph.result line.
+-- | The shared cascade with this family's bindings (CE.Wire —
+-- decode error prefix, caps, offence, replies all byte-identical to
+-- the pre-skeleton cascade; the goldens are the proof).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto line = case eitherDecodeStrict line of
-  Left e -> Left (Nothing, "bad_request", "graph: " <> e)
-  Right req
-    | toInteger (length (reqNodes req)) > nodeCap
-        || toInteger (length (reqEdges req)) > edgeCap ->
-        Right (tooLarge proto req)
-    | Just why <- violation req ->
-        Left (Just (reqId req), "contract", why)
-    | otherwise ->
-        Right (result proto req)
+respond proto =
+  respondWith
+    Family
+      { famName = "graph"
+      , famId = reqId
+      , famOverCap = \req ->
+          toInteger (length (reqNodes req)) > nodeCap
+            || toInteger (length (reqEdges req)) > edgeCap
+      , famOffence = violation
+      , famDegraded = tooLarge proto
+      , famJudged = result proto
+      }
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
@@ -99,12 +103,8 @@ edgeRow n i row = case row of
  where
   label = "edge " <> show i <> ": "
 
--- | Shared by the edge rows (list Ord is lexicographic) and the pos
--- scalars — one checker, the table name as data.
-notAscending :: (Ord a) => String -> Int -> (a, a) -> Maybe String
-notAscending what i (prev, cur)
-  | prev < cur = Nothing
-  | otherwise = Just (what <> " " <> show i <> ": not strictly ascending")
+-- notAscending moved to CE.Wire (its birthplace was here — the
+-- tenth ratchet bite promoted it to the shared skeleton).
 
 posRow :: Integer -> Int -> Integer -> Maybe String
 posRow n i p

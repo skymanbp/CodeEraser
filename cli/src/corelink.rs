@@ -10,20 +10,22 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 2.6.0 = the ratchet-unification minor (ADR-008 P2):
-/// verdict.request gains the additive `dedup` [blocks, budget] pair
-/// — the second ratchet's comparison is the core's. 2.5.0 = the
-/// verdict-repatriation minor (ADR-008 P1): clone/docdup replies
-/// carry per-row `verdicts` bits, the docdup echo gains
-/// `verbatimFloor`, the degraded verdict reply fails by itself.
-/// 2.4.0 = verdict.request `thresholds` + `tolerance` knob rows and
-/// the FULL effective-knob echo (ADR-008 P4, additive). 2.3.0 =
-/// `ceilings` rows + the two-knob echo (ADR-008 first step). 2.2.0
-/// = clone/1 + docdup/1 + verdict/1 in one additive minor (M5-3a).
-/// 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii anchor-width
-/// request shape (a breaking change, major per §2); 1.0.0 was the
-/// M4 content finalization freeze.
-pub const PROTO: &str = "2.6.0";
+/// 2.7.0 = the scan-grading minor (ADR-008 P3): the scan/1 family —
+/// measurement rows in, graded levels and the fail bit out, the
+/// grade table echoed whole. 2.6.0 = the ratchet-unification minor
+/// (ADR-008 P2): verdict.request gains the additive `dedup`
+/// [blocks, budget] pair — the second ratchet's comparison is the
+/// core's. 2.5.0 = the verdict-repatriation minor (ADR-008 P1):
+/// clone/docdup replies carry per-row `verdicts` bits, the docdup
+/// echo gains `verbatimFloor`, the degraded verdict reply fails by
+/// itself. 2.4.0 = verdict.request `thresholds` + `tolerance` knob
+/// rows and the FULL effective-knob echo (ADR-008 P4, additive).
+/// 2.3.0 = `ceilings` rows + the two-knob echo (ADR-008 first
+/// step). 2.2.0 = clone/1 + docdup/1 + verdict/1 in one additive
+/// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
+/// anchor-width request shape (a breaking change, major per §2);
+/// 1.0.0 was the M4 content finalization freeze.
+pub const PROTO: &str = "2.7.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

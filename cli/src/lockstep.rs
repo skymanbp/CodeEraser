@@ -26,6 +26,19 @@ pub type Scored<E> = (Vec<(usize, usize, E)>, [u64; 2]);
 /// counters, and the request count.
 pub type Judged<E> = (Vec<(usize, usize, E)>, u64, u64, usize);
 
+/// Open the link and demand one capability — the shared head every
+/// judgment surface speaks (the lockstep families here, the score
+/// wire, the scan wire): the repo's own ratchet caught the third
+/// hand-rolled copy when the scan family landed (ADR-008 P3).
+pub fn open_family(core: &str, cap: &str) -> anyhow::Result<Link> {
+    let (link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
+    anyhow::ensure!(
+        link.has(cap),
+        "ce-core offers no {cap} capability — upgrade the core"
+    );
+    Ok(link)
+}
+
 /// Chunked lockstep judging over ONE link: capability gate, chunk,
 /// build a request-local body, one request per chunk, map each wire
 /// row's endpoints through its chunk's rank order, accumulate the two
@@ -36,12 +49,7 @@ pub fn lockstep_scores<P, E: Ord>(
     build: impl Fn(&[P]) -> (Vec<usize>, Value),
     parse: impl Fn(&Value) -> anyhow::Result<Scored<E>>,
 ) -> anyhow::Result<Judged<E>> {
-    let (mut link, _hello) = Link::open(fam.core).map_err(anyhow::Error::msg)?;
-    anyhow::ensure!(
-        link.has(fam.cap),
-        "ce-core offers no {} capability — upgrade the core",
-        fam.cap
-    );
+    let mut link = open_family(fam.core, fam.cap)?;
     let (mut rows, mut c0, mut c1, mut requests) = (Vec::new(), 0, 0, 0);
     for c in pairs.chunks(fam.chunk) {
         let (order, body) = build(c);

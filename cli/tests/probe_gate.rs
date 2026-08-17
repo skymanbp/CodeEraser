@@ -27,37 +27,38 @@ fn seeded_index(dir: &Path) -> Index {
     idx
 }
 
+/// One probe of `content` as `rel` through the seeded index — the
+/// Target/probe stanza used to be pasted per test (three standing
+/// dedup-ratchet blocks, repaid with the ADR-008 P3 batch).
+fn probed(idx: &Index, dir: &Path, rel: &'static str, content: &[u8]) -> Vec<probe::Match> {
+    let p = Params::default();
+    let target = probe::Target {
+        rel,
+        content,
+        lang: Lang::Rust,
+    };
+    probe::probe(idx, dir, target, p, filter(p)).expect("probe")
+}
+
 #[test]
 fn probe_finds_t2_clone_of_indexed_file() {
     let dir = tmp("probe-hit");
     let idx = seeded_index(&dir);
-    let p = Params::default();
     // new file whose content T2-clones a.rs (renamed ids, new literals)
-    let target = probe::Target {
-        rel: "b.rs",
-        content: &rust_fn(2).into_bytes(),
-        lang: Lang::Rust,
-    };
-    let m = probe::probe(&idx, &dir, target, p, filter(p)).expect("probe");
+    let m = probed(&idx, &dir, "b.rs", &rust_fn(2).into_bytes());
     assert!(!m.is_empty(), "T2 clone of a.rs must be flagged");
     assert_eq!(m[0].file, "a.rs");
-    assert!(m[0].tokens >= p.guarantee());
+    assert!(m[0].tokens >= Params::default().guarantee());
 }
 
 #[test]
 fn probe_excludes_the_edited_file_itself() {
     let dir = tmp("probe-self");
     let idx = seeded_index(&dir);
-    let p = Params::default();
     // re-writing a.rs with its own (slightly grown) content must not
     // self-flag against the pre-edit indexed version
     let grown = format!("{}\nfn extra() -> i64 {{ 42 }}\n", rust_fn(1));
-    let target = probe::Target {
-        rel: "a.rs",
-        content: grown.as_bytes(),
-        lang: Lang::Rust,
-    };
-    let m = probe::probe(&idx, &dir, target, p, filter(p)).expect("probe");
+    let m = probed(&idx, &dir, "a.rs", grown.as_bytes());
     assert!(m.is_empty(), "self-match must be excluded, got {m:?}");
 }
 
@@ -65,22 +66,10 @@ fn probe_excludes_the_edited_file_itself() {
 fn probe_ignores_short_and_unrelated_content() {
     let dir = tmp("probe-quiet");
     let idx = seeded_index(&dir);
-    let p = Params::default();
-    let short = "fn tiny() -> i64 { 1 }\n";
-    let target = probe::Target {
-        rel: "c.rs",
-        content: short.as_bytes(),
-        lang: Lang::Rust,
-    };
-    let m = probe::probe(&idx, &dir, target, p, filter(p)).expect("probe short");
+    let m = probed(&idx, &dir, "c.rs", b"fn tiny() -> i64 { 1 }\n");
     assert!(m.is_empty(), "sub-threshold content stays silent");
     let unrelated = "fn other(a: u8) -> u8 { a.wrapping_add(3) }\n".repeat(8);
-    let target2 = probe::Target {
-        rel: "d.rs",
-        content: unrelated.as_bytes(),
-        lang: Lang::Rust,
-    };
-    let m2 = probe::probe(&idx, &dir, target2, p, filter(p)).expect("probe unrelated");
+    let m2 = probed(&idx, &dir, "d.rs", unrelated.as_bytes());
     assert!(m2.is_empty(), "unrelated content stays silent, got {m2:?}");
 }
 

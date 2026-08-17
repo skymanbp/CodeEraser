@@ -21,6 +21,7 @@ module CE.Clone (respond) where
 import CE.Clone.Cost (cloneDecides, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
+import CE.Wire (Family (..), notAscending, respondWith)
 import Data.Aeson
 import Data.Array.Unboxed (elems, listArray)
 import qualified Data.ByteString.Char8 as B8
@@ -43,19 +44,22 @@ instance FromJSON CloneReq where
   parseJSON = withObject "CloneReq" $ \o ->
     CloneReq <$> o .: "id" <*> o .: "trees" <*> o .: "pairs"
 
--- | Left = (id to echo, error code, message); Right = the encoded
--- clone.result line.
+-- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto line = case eitherDecodeStrict line of
-  Left e -> Left (Nothing, "bad_request", "clone: " <> e)
-  Right req
-    | any (\t -> toInteger (length (wLab t)) > unitNodeCap) (reqTrees req)
-        || toInteger (length (reqPairs req)) > pairCap ->
-        Right (reply proto req [] (0, 0) True)
-    | Just why <- violation req -> Left (Just (reqId req), "contract", why)
-    | otherwise ->
-        let (scores, judged, pre) = judge (map decodeTree (reqTrees req)) (reqPairs req)
-         in Right (reply proto req scores (judged, pre) False)
+respond proto =
+  respondWith
+    Family
+      { famName = "clone"
+      , famId = reqId
+      , famOverCap = \req ->
+          any (\t -> toInteger (length (wLab t)) > unitNodeCap) (reqTrees req)
+            || toInteger (length (reqPairs req)) > pairCap
+      , famOffence = violation
+      , famDegraded = \req -> reply proto req [] (0, 0) True
+      , famJudged = \req ->
+          let (scores, judged, pre) = judge (map decodeTree (reqTrees req)) (reqPairs req)
+           in reply proto req scores (judged, pre) False
+      }
 
 decodeTree :: WireTree -> Tree
 decodeTree t =
@@ -66,13 +70,14 @@ decodeTree t =
     }
 
 -- | First boundary-contract offender in request order (Graph.hs
--- posture: the message names the violator deterministically).
+-- posture: the message names the violator deterministically); the
+-- ascending checker is CE.Wire's shared one.
 violation :: CloneReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith treeShape [0 :: Int ..] ts)
     , asum (zipWith (pairRow (length ts)) [0 :: Int ..] ps)
-    , asum (zipWith notAscending [1 :: Int ..] (zip ps (drop 1 ps)))
+    , asum (zipWith (notAscending "pair") [1 :: Int ..] (zip ps (drop 1 ps)))
     ]
  where
   ts = reqTrees req
@@ -112,11 +117,6 @@ pairRow n p row = case row of
   _ -> Just (label <> "malformed row (need [i,j])")
  where
   label = "pair " <> show p <> ": "
-
-notAscending :: Int -> ([Int], [Int]) -> Maybe String
-notAscending p (prev, cur)
-  | prev < cur = Nothing
-  | otherwise = Just ("pair " <> show p <> ": not strictly ascending")
 
 -- | Judge every pair: the admissible prefilter proves "below
 -- threshold" without TED where it can (below threshold ⇒ not a

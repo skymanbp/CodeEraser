@@ -1,4 +1,8 @@
-//! `ce scan` orchestration: walk → parse → measure → evaluate → emit.
+//! `ce scan` orchestration: walk → parse → measure → judge → emit.
+//! Since ADR-008 P3 the LEVEL judgment is the core's (scan/1, the
+//! graded verdict table); measurement and report rendering stay
+//! here, and the local evaluate() binding survives as the pinned
+//! mirror the whole-report ensure proves equal on every gate run.
 
 pub mod ast;
 pub mod functions;
@@ -8,6 +12,7 @@ pub mod report;
 pub mod spec;
 pub mod spec_hs;
 pub mod walk;
+pub mod wire;
 
 use anyhow::{Context, Result};
 use lang::Lang;
@@ -20,26 +25,51 @@ pub enum Format {
     Json,
 }
 
-pub fn run(root: &Path, format: Format) -> Result<ExitCode> {
-    let (files, findings, summary) = analyze(root)?;
-    let failed = summary.fails > 0;
+pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
+    let (config, files) = measured(root)?;
+    let rows = report::rows_of(&files);
+    let grades = wire::grade_rows(&config.thresholds);
+    let wire_rows: Vec<[u64; 2]> = rows.iter().map(|r| [r.code, r.value as u64]).collect();
+    let (levels, fail) = wire::judge(core, &wire_rows, &grades)?;
+    let findings = report::findings_from(&rows, &levels, &grades);
+    // ADR-008 P3 drift ensure: the report is built from the CORE's
+    // levels; the pinned mirror must reproduce it whole or the run
+    // dies loudly — formula drift named, never a silently forked
+    // verdict (the mcp/score surfaces read the mirror, so this is
+    // what keeps them equal to the gate by proof)
+    let mirror: Vec<report::Finding> = files
+        .iter()
+        .flat_map(|f| report::evaluate(f, &config.thresholds))
+        .collect();
+    anyhow::ensure!(
+        findings == mirror,
+        "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
+    );
+    let summary = report::summarize(&files, &findings);
     match format {
         Format::Console => report::print_console(&findings, &summary),
         Format::Json => println!("{}", report_string(&files, &findings, summary)?),
     }
-    Ok(if failed {
+    Ok(if fail {
         ExitCode::from(1)
     } else {
         ExitCode::SUCCESS
     })
 }
 
-/// Library entry shared by the CLI and the MCP server: measure and
-/// evaluate without printing anything.
-pub fn analyze(root: &Path) -> Result<(Vec<FileMetrics>, Vec<report::Finding>, report::Summary)> {
-    let (config, files) = walk::each_surviving(root, |path, language, src| {
+/// Measurement alone — the walk every scan surface shares.
+fn measured(root: &Path) -> Result<(crate::config::Config, Vec<FileMetrics>)> {
+    walk::each_surviving(root, |path, language, src| {
         measure_file(src, path, root, language)
-    })?;
+    })
+}
+
+/// Library entry shared by the MCP server and the score family's
+/// measurement reuse: measure and evaluate through the MIRROR
+/// binding without printing anything (no core link on these
+/// auxiliary surfaces; the gate's ensure proves the mirror equal).
+pub fn analyze(root: &Path) -> Result<(Vec<FileMetrics>, Vec<report::Finding>, report::Summary)> {
+    let (config, files) = measured(root)?;
     let findings: Vec<_> = files
         .iter()
         .flat_map(|f| report::evaluate(f, &config.thresholds))

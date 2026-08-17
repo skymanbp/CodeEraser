@@ -118,10 +118,7 @@ pub fn body(r: &Request) -> Value {
 /// One verdict.request over the open core link; a missing capability
 /// or a non-result reply is an error, never an empty judgment.
 pub fn judge(core: &str, r: &Request) -> Result<Reply> {
-    let (mut link, _hello) = crate::corelink::Link::open(core).map_err(anyhow::Error::msg)?;
-    if !link.has(CAPABILITY) {
-        bail!("ce-core offers no {CAPABILITY} capability — upgrade the core");
-    }
+    let mut link = crate::lockstep::open_family(core, CAPABILITY)?;
     let reply = link
         .request("verdict", body(r))
         .map_err(anyhow::Error::msg)?;

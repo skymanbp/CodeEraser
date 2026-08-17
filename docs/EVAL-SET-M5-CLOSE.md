@@ -243,6 +243,30 @@ proto 变化（audit_golden_p2.py 对 HEAD 逐对相消）。clippy 抓
 result_large_err（DedupArgs+--core 使 Cmd 越 128B）→ 交接位 Box 单次
 分配修于解析路径。
 
+**P3 scan 分级入 core（四片收官）**：proto 2.7.0 加性 minor——新家族
+`scan/1`（加性 type+capability，2.1.0 先例；判决与声明同批）：分级判决表
+本体落 `CE.Scan.Cost.gradeTable`（(code,warn,fail) 七行，fail 0=无硬线，
+数值=计划 §4.1 与 `Thresholds::default` 同源）+`gradeWith` 单比较；
+request 携 `[[code,value]]` 测量行+可选 `grades` 覆盖（ce.toml 源、Cost
+默认——effectiveKnobs 模式第三例）；reply 回位置 `levels`+`fail` 位
+（退出码语义在 core）+生效 grades 全表回显；主体名/路径永不过线
+（§5.9.2）。Rust=`scan/wire.rs`（grade_rows 七行恒发+回显钉+degraded 拒
++levels 长度锁）、`report.rs::evaluate` 降钉住镜像（mcp/score 辅面继续
+读镜像）、`ce scan` 门=`findings_from(core levels)` 建报告+**整报告
+ensure findings==mirror**（3015 函数 ~18.6k 行活体逐跑证等）、`--core`
+同律、CI scan 腿接核。**反事实**：ScanProps 五探针（双线双向边界/位置
+对齐/[0,400,750] 覆盖翻 310 行 level 1→0 且回显携带/六具名拒绝/超帽
+degraded∧fail）+golden 新册五对（三形 levels [1,0,1,2]、覆盖端到端、
+两具名错）。**棘轮第十咬 +9**（第六家族复刻家族骨架，3g 预言三次应验）
+**偿至 143<145 真下棘**：CE.Wire `respondWith`+共享 `notAscending`
+（Graph/Clone/Docdup/Scan 四家一梯）、test/WireHarness.hs（respond 电池
+架）、`lockstep::open_family`（第三份手卷 link-open 收咽喉）、probe_gate
+Target/probe 段表驱动（清三站账块）；余五块=Family 字面量+Req 解码梯
+（Cost 声明梯同类，one-authority-per-family 禁跨家折叠）入 ce.toml 台账；
+预算 145→143 显名下棘。**PERF**：release scan 冷 0.98s/暖 0.42-0.43s
+（账面基线 0.52s 无核——暖态更快，冷态半秒级，验收过无回滚）；hello
+capabilities 加 `scan/1`=机检审计中唯一非 proto 变化（2.2.0 同例）。
+
 ## 复跑
 
 本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test daemon_proto --test concurrent_writers` （清零批新门）。
