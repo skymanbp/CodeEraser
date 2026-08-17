@@ -22,9 +22,13 @@ pub struct Dir {
     pub conventions: u8,
 }
 
-/// The aggregated tree: dense ids, root = 0 (the walk root).
+/// The aggregated tree: dense ids, root = 0 (the walk root). `ids`
+/// maps directory paths to their dense id — the join key every
+/// downstream aggregation (dir edges, rollups) resolves through, so
+/// the numbering can never fork.
 pub struct Tree {
     pub dirs: Vec<Dir>,
+    pub ids: BTreeMap<String, usize>,
 }
 
 /// Name-pattern codes, index = wire code (frozen positions, the
@@ -82,7 +86,16 @@ pub fn build(paths: &[String]) -> Tree {
             dirs[dir].conventions |= CONV_CONFIG;
         }
     }
-    Tree { dirs }
+    Tree { dirs, ids }
+}
+
+/// The owning directory id of a walk-relative FILE path (the same
+/// split every aggregation uses); None = the file's directory never
+/// entered this tree — a caller-side universe mismatch, never a
+/// guess.
+pub fn dir_of(tree: &Tree, path: &str) -> Option<usize> {
+    let (dir_path, _) = split_dir(path);
+    tree.ids.get(dir_path).copied()
 }
 
 fn root() -> Dir {
