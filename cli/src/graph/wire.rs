@@ -78,12 +78,13 @@ fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
 }
 
 /// Code kinds import; the md kinds split doc_link / doc_ref by
-/// target, and an image is always an asset.
+/// target (the md::is_md_path throat, so `.markdown` labels like
+/// `.md`), and an image is always an asset.
 fn edge_kind(kind: &str, dst: &str) -> i64 {
     match kind {
         "image" => EDGE_ASSET,
         "link" | "ref_link" | "ref_def" | "url" => {
-            if dst.ends_with(".md") {
+            if crate::graph::md::is_md_path(dst) {
                 EDGE_DOC_LINK
             } else {
                 EDGE_DOC_REF

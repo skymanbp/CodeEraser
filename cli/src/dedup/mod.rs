@@ -159,10 +159,14 @@ fn resolve_edges(
     walked: &walkidx::WalkIndex,
     stream_dirty: &BTreeSet<String>,
 ) -> Result<()> {
+    // one memo per sweep call: the quiescent-tree window the caches
+    // are sound for (ladder::Memo)
+    let memo = ladder::Memo::default();
     let scope = ladder::Scope {
         files: &walked.live,
         configs: &walked.configs,
         root,
+        memo: &memo,
     };
     let mut resolver = |s: &store::CachedSite| wire::edges(s, &scope);
     if idx.ensure_edges_resolved(walked.resolve_key, &mut resolver)? {

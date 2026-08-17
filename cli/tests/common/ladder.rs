@@ -37,6 +37,7 @@ pub struct Fixture {
     pub dir: PathBuf,
     pub files: BTreeSet<String>,
     pub configs: Vec<String>,
+    pub memo: ladder::Memo,
 }
 
 pub fn fixture(tag: &str, tree: &[(&str, &str)]) -> Fixture {
@@ -46,6 +47,7 @@ pub fn fixture(tag: &str, tree: &[(&str, &str)]) -> Fixture {
         dir,
         files,
         configs,
+        memo: Default::default(),
     }
 }
 
@@ -55,6 +57,7 @@ impl Fixture {
             files: &self.files,
             configs: &self.configs,
             root: &self.dir,
+            memo: &self.memo,
         }
     }
 }

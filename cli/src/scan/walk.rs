@@ -62,6 +62,38 @@ pub fn rel_str(root: &Path, path: &Path) -> String {
         .replace('\\', "/")
 }
 
+/// Read a walked file, degrading a MID-WALK DELETION to None — one
+/// vanished file must not abort the whole run (the probe.rs stale
+/// precedent; M5-close review LOW, shared by scan and graph). Every
+/// other error still surfaces: an unreadable file that EXISTS is a
+/// real defect, not a race.
+pub fn read_surviving(path: &Path) -> anyhow::Result<Option<Vec<u8>>> {
+    use anyhow::Context;
+    match std::fs::read(path) {
+        Ok(bytes) => Ok(Some(bytes)),
+        Err(_) if !path.exists() => Ok(None),
+        Err(e) => Err(e).with_context(|| format!("read {}", path.display())),
+    }
+}
+
+/// Walk + read with the survival rule in ONE place: the per-file
+/// judgment stays with the caller, the loop shape lives here (scan
+/// and graph carried twin loops until the ratchet bit the pair).
+pub fn each_surviving<T>(
+    root: &Path,
+    mut per_file: impl FnMut(&Path, crate::scan::lang::Lang, Vec<u8>) -> anyhow::Result<T>,
+) -> anyhow::Result<(crate::config::Config, Vec<T>)> {
+    let (config, candidates) = scoped_lang_files(root).map_err(anyhow::Error::msg)?;
+    let mut out = Vec::new();
+    for (path, lang) in candidates {
+        let Some(bytes) = read_surviving(&path)? else {
+            continue;
+        };
+        out.push(per_file(&path, lang, bytes)?);
+    }
+    Ok((config, out))
+}
+
 /// Collect candidate files under `root`, honoring the exclusion model.
 pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, String> {
     let overrides = build_overrides(root, extra_excludes)?;

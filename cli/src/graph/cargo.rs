@@ -8,7 +8,9 @@ use std::collections::BTreeSet;
 use std::path::Path;
 
 /// One Cargo.toml surface, enough for the R1 root set and the R4
-/// workspace / dependency rungs.
+/// workspace / dependency rungs. Clone: the sweep memo hands out
+/// per-config parses once and callers keep owned copies.
+#[derive(Clone)]
 pub struct Package {
     /// Repo-relative directory of the package ("" = repo root).
     pub dir: String,

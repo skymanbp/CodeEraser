@@ -15,8 +15,11 @@
 //! Markdown routes five kinds through one chain.
 
 use crate::scan::lang::Lang;
-use std::collections::BTreeSet;
+use std::any::Any;
+use std::cell::RefCell;
+use std::collections::{BTreeSet, HashMap};
 use std::path::Path;
+use std::rc::Rc;
 
 pub mod go;
 pub mod hs;
@@ -96,6 +99,43 @@ pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
     pub configs: &'a [String],
     pub root: &'a Path,
+    pub memo: &'a Memo,
+}
+
+/// The memo's slot table, aliased so the shape reads once.
+type Slots = RefCell<HashMap<(&'static str, String), Rc<dyn Any>>>;
+
+/// Per-sweep memo (M5-close review MED: every site re-parsed its
+/// configs and re-derived root sets — O(sites × files) with a
+/// tree-sitter or TOML parse per site). One keyed any-cache carried
+/// by the Scope: a sweep sees a QUIESCENT tree (the resolve_key gate
+/// / phase-1.5 dirty set), so caching derived structures for one
+/// sweep's lifetime cannot serve stale answers.
+#[derive(Default)]
+pub struct Memo(Slots);
+
+impl Memo {
+    /// The one cache throat: compute once per (namespace, key). A
+    /// namespace always stores one concrete type; the downcast
+    /// therefore only misses on a programming error, and falling
+    /// through to a rebuild keeps even that case correct.
+    pub fn cached<T: 'static>(
+        &self,
+        ns: &'static str,
+        key: &str,
+        build: impl FnOnce() -> T,
+    ) -> Rc<T> {
+        if let Some(hit) = self.0.borrow().get(&(ns, key.to_string()))
+            && let Ok(t) = hit.clone().downcast::<T>()
+        {
+            return t;
+        }
+        let made = Rc::new(build());
+        self.0
+            .borrow_mut()
+            .insert((ns, key.to_string()), made.clone() as Rc<dyn Any>);
+        made
+    }
 }
 
 /// One reference site as the ladder consumes it — the CachedSite
@@ -127,12 +167,12 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
 }
 
 /// Shared workspace-member throat for the R4 rungs: the in-scope
-/// configs of one basename, parsed and filtered by name — each
-/// caller judges the hit count (1 = the member, more = its own
-/// ambiguity reason).
-pub(crate) fn members<T>(
+/// configs of one basename, parsed once per sweep (the memo), and
+/// filtered by name — each caller judges the hit count (1 = the
+/// member, more = its own ambiguity reason).
+pub(crate) fn members<T: Clone + 'static>(
     scope: &Scope,
-    basename: &str,
+    basename: &'static str,
     load: impl Fn(&Path, &str) -> Option<T>,
     keep: impl Fn(&T) -> bool,
 ) -> Vec<T> {
@@ -140,7 +180,13 @@ pub(crate) fn members<T>(
         .configs
         .iter()
         .filter(|c| c.rsplit('/').next() == Some(basename))
-        .filter_map(|c| load(scope.root, c))
+        .filter_map(|c| {
+            scope
+                .memo
+                .cached(basename, c, || load(scope.root, c))
+                .as_ref()
+                .clone()
+        })
         .filter(|t| keep(t))
         .collect()
 }

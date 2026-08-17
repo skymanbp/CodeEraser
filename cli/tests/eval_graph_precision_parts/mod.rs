@@ -9,26 +9,14 @@ use crate::eval_support::{
 use codeeraser::graph::ladder::{self, Outcome, Reason, Scope, Site};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 /// The pinned tree, materialized: the frozen in-scope file set plus
 /// the resolver configs (configs carry no slice identity of their
-/// own — the tree OID pins them transitively).
-pub struct Mat {
-    pub root: PathBuf,
-    pub files: BTreeSet<String>,
-    pub configs: Vec<String>,
-}
-
-impl Mat {
-    pub fn scope(&self) -> Scope<'_> {
-        Scope {
-            files: &self.files,
-            configs: &self.configs,
-            root: &self.root,
-        }
-    }
-}
+/// own — the tree OID pins them transitively). The ladder Fixture IS
+/// this shape — the ratchet caught the twin once the sweep memo
+/// joined both, so the instrument reuses the one throat.
+pub type Mat = crate::common::ladder::Fixture;
 
 /// Write the pinned tree's in-scope files + resolver configs under a
 /// scratch root. Every in-scope file's text must hash to the frozen
@@ -43,9 +31,10 @@ pub fn materialize(name: &str, tip: &str, slice: &Value) -> Mat {
         false,
     );
     let mut m = Mat {
-        root,
+        dir: root,
         files: BTreeSet::new(),
         configs: Vec::new(),
+        memo: Default::default(),
     };
     for path in listing.split('\0').filter(|p| !p.is_empty()) {
         let in_scope = classify_path(path).is_ok();
@@ -67,7 +56,7 @@ pub fn materialize(name: &str, tip: &str, slice: &Value) -> Mat {
         } else {
             m.configs.push(path.to_string());
         }
-        let dst = m.root.join(path);
+        let dst = m.dir.join(path);
         std::fs::create_dir_all(dst.parent().expect("parent")).expect("mkdir");
         std::fs::write(&dst, text.as_bytes()).expect(path);
     }
@@ -233,7 +222,7 @@ pub fn universe_ledger(m: &Mat) -> Value {
     let (mut total, mut answered, mut r1) = (0u64, 0u64, 0u64);
     for path in &m.files {
         let code = classify_path(path).expect("in scope");
-        let text = std::fs::read_to_string(m.root.join(path)).expect(path);
+        let text = std::fs::read_to_string(m.dir.join(path)).expect(path);
         for site in codeeraser::graph::sites::detect(&text, lang_of(code)) {
             total += 1;
             let at = Site {

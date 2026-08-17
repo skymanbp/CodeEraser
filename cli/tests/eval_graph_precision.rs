@@ -10,6 +10,9 @@
 //! ledger needs CE_ACCEPT_GRAPH=1):
 //!   cargo test --test eval_graph_precision -- --ignored --nocapture
 
+// mounted for ladder::Fixture only — the ratchet caught Mat cloning
+// its shape once the sweep memo joined both (C2)
+mod common;
 mod eval_graph_precision_parts;
 mod eval_support;
 

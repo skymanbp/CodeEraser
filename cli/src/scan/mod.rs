@@ -37,11 +37,9 @@ pub fn run(root: &Path, format: Format) -> Result<ExitCode> {
 /// Library entry shared by the CLI and the MCP server: measure and
 /// evaluate without printing anything.
 pub fn analyze(root: &Path) -> Result<(Vec<FileMetrics>, Vec<report::Finding>, report::Summary)> {
-    let (config, candidates) = walk::scoped_lang_files(root).map_err(anyhow::Error::msg)?;
-    let mut files = Vec::new();
-    for (path, language) in candidates {
-        files.push(measure_file(&path, root, language)?);
-    }
+    let (config, files) = walk::each_surviving(root, |path, language, src| {
+        measure_file(src, path, root, language)
+    })?;
     let findings: Vec<_> = files
         .iter()
         .flat_map(|f| report::evaluate(f, &config.thresholds))
@@ -65,8 +63,7 @@ pub fn report_string(
     Ok(serde_json::to_string_pretty(&rep)?)
 }
 
-fn measure_file(path: &Path, root: &Path, language: Lang) -> Result<FileMetrics> {
-    let src = std::fs::read(path).with_context(|| format!("read {}", path.display()))?;
+fn measure_file(src: Vec<u8>, path: &Path, root: &Path, language: Lang) -> Result<FileMetrics> {
     let mut out = FileMetrics {
         path: walk::rel_str(root, path),
         lang: language.name(),

@@ -25,7 +25,7 @@ pub mod wire;
 
 use crate::scan::lang::Lang;
 use crate::scan::walk;
-use anyhow::{Context, Result};
+use anyhow::Result;
 use std::collections::BTreeMap;
 use std::path::Path;
 use std::process::ExitCode;
@@ -38,22 +38,20 @@ pub struct FileSites {
 }
 
 /// Detect reference sites across the tree (exclusion model = the
-/// scan walker's: .gitignore + .ceignore + built-ins + ce.toml).
+/// scan walker's: .gitignore + .ceignore + built-ins + ce.toml;
+/// mid-walk deletions degrade inside walk::each_surviving).
 pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
-    let (_config, candidates) = walk::scoped_lang_files(root).map_err(anyhow::Error::msg)?;
-    let mut out = Vec::new();
-    for (path, lang) in candidates {
+    let (_config, mut out) = walk::each_surviving(root, |path, lang, bytes| {
         // lossy on purpose: one stray non-UTF-8 file must not abort
         // the whole analysis (Opus review; matches the instrument,
         // which hashes exactly the text the detector saw)
-        let bytes = std::fs::read(&path).with_context(|| format!("read {}", path.display()))?;
         let text = String::from_utf8_lossy(&bytes);
-        out.push(FileSites {
-            path: crate::scan::walk::rel_str(root, &path),
+        Ok(FileSites {
+            path: crate::scan::walk::rel_str(root, path),
             lang,
             sites: sites::detect(&text, lang),
-        });
-    }
+        })
+    })?;
     out.sort_by(|a, b| a.path.cmp(&b.path));
     Ok(out)
 }

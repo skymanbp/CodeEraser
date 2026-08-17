@@ -17,6 +17,17 @@
 
 use super::sites::RawSite;
 
+/// The ONE answer to "is this path a markdown document" — driven by
+/// the walker's own extension table (Lang::from_path), so `.markdown`
+/// files anchor-validate and edge-label exactly like `.md` (M5-close
+/// review LOW: two `ends_with(".md")` tests each missed the alias).
+pub fn is_md_path(path: &str) -> bool {
+    matches!(
+        crate::scan::lang::Lang::from_path(std::path::Path::new(path)),
+        Some(crate::scan::lang::Lang::Markdown)
+    )
+}
+
 /// Scan one Markdown document for reference sites.
 pub fn detect(text: &str) -> Vec<RawSite> {
     let mut out = Vec::new();

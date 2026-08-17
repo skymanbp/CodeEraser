@@ -17,10 +17,14 @@ use std::path::Path;
 /// One stanza's source roots, repo-relative ("" = repo root). A
 /// stanza that declares no hs-source-dirs gets the package directory
 /// itself — cabal's own default of ".".
+#[derive(Clone)]
 pub struct Stanza {
     pub roots: Vec<String>,
 }
 
+/// Clone: the sweep memo hands out per-config parses once and
+/// callers keep owned copies.
+#[derive(Clone)]
 pub struct Cabal {
     /// Repo-relative directory of the .cabal file ("" = repo root).
     pub dir: String,
@@ -45,20 +49,26 @@ pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
         deps: Vec::new(),
     };
     let lines: Vec<&str> = text.lines().collect();
-    let mut i = 0;
+    // pre-2.0 top-level fields (before any header) are live
+    let (mut i, mut live) = (0, true);
     while i < lines.len() {
-        i = step(&mut out, &dir, &lines, i);
+        i = step(&mut out, &mut live, &dir, &lines, i);
     }
     finish(&mut out, &dir);
     Some(out)
 }
 
 /// One parser step — a stanza header, a field with its continuation
-/// block, or a line to skip; returns the next line index.
-fn step(out: &mut Cabal, dir: &str, lines: &[&str], i: usize) -> usize {
+/// block, or a line to skip; returns the next line index. A `common`
+/// or unknown header opens a DEAD region: its fields reach
+/// components only through `import:` indirection (not modeled), and
+/// routing them to the previous stanza mis-attributed a common
+/// stanza's hs-source-dirs (M5-close review LOW).
+fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], i: usize) -> usize {
     let trimmed = lines[i].trim();
     if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() {
-        if HEADS.contains(&head_word(trimmed).as_str()) {
+        *live = HEADS.contains(&head_word(trimmed).as_str());
+        if *live {
             out.stanzas.push(Stanza { roots: Vec::new() });
         }
         return i + 1;
@@ -68,7 +78,9 @@ fn step(out: &mut Cabal, dir: &str, lines: &[&str], i: usize) -> usize {
     };
     let mut values = vec![first.to_string()];
     let next = continuation(lines, i + 1, &mut values);
-    consume(out, dir, &field, &values);
+    if *live {
+        consume(out, dir, &field, &values);
+    }
     next
 }
 

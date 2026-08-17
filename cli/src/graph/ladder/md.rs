@@ -35,6 +35,7 @@ use super::{Outcome, Reason, Scope};
 use crate::graph::md::{content_lines, detect, ref_definition};
 use crate::graph::roots;
 use std::collections::{BTreeMap, BTreeSet};
+use std::rc::Rc;
 
 pub fn resolve(kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {
     match kind {
@@ -67,7 +68,9 @@ fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {
     };
     if scope.files.contains(&target) {
         return match frag {
-            Some(f) if target.ends_with(".md") && !f.is_empty() => anchor(target, f, scope),
+            Some(f) if crate::graph::md::is_md_path(&target) && !f.is_empty() => {
+                anchor(target, f, scope)
+            }
             _ => Outcome::Resolved {
                 path: target,
                 rung: 1,
@@ -114,8 +117,13 @@ fn directory(target: String, scope: &Scope) -> Outcome {
 /// R2: the fragment against the target's ATX slug set; anything but
 /// exactly one match degrades to the file (slug: None).
 fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
-    let text = std::fs::read_to_string(scope.root.join(&target)).unwrap_or_default();
-    let hits = slug_set(&text).into_iter().filter(|s| s == frag).count();
+    // per-sweep: one read + slug pass per TARGET file, not one per
+    // anchored link pointing at it (review MED)
+    let slugs = scope.memo.cached("md_slugs", &target, || {
+        let text = std::fs::read_to_string(scope.root.join(&target)).unwrap_or_default();
+        slug_set(&text)
+    });
+    let hits = slugs.iter().filter(|s| *s == frag).count();
     let slug = (hits == 1).then(|| frag.to_string());
     Outcome::ResolvedSection {
         path: target,
@@ -127,8 +135,8 @@ fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
 /// R3: substitute the definition and rerun the chain, relabeled —
 /// the rung that answered is the reference machinery.
 fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {
-    let (defs, _) = refs(from, scope);
-    match defs.get(&fold(spec)) {
+    let table = refs(from, scope);
+    match table.0.get(&fold(spec)) {
         Some(target) => relabel(link(from, target, scope)),
         None => Outcome::Unresolved(Reason::OutOfScope),
     }
@@ -139,7 +147,8 @@ fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {
 /// header). A duplicate label's later definition is inert under
 /// first-wins, so it lands in the unused arm.
 fn ref_def(from: &str, spec: &str, scope: &Scope) -> Outcome {
-    let (defs, used) = refs(from, scope);
+    let table = refs(from, scope);
+    let (defs, used) = (&table.0, &table.1);
     let live = defs
         .iter()
         .any(|(label, t)| t == spec && used.contains(label));
@@ -150,9 +159,13 @@ fn ref_def(from: &str, spec: &str, scope: &Scope) -> Outcome {
     }
 }
 
-fn refs(from: &str, scope: &Scope) -> (BTreeMap<String, String>, BTreeSet<String>) {
-    let text = std::fs::read_to_string(scope.root.join(from)).unwrap_or_default();
-    ref_table(&text)
+/// Per-sweep: every ref site in one file used to re-read it AND
+/// re-run the full detector walk (review MED).
+fn refs(from: &str, scope: &Scope) -> Rc<(BTreeMap<String, String>, BTreeSet<String>)> {
+    scope.memo.cached("md_refs", from, || {
+        let text = std::fs::read_to_string(scope.root.join(from)).unwrap_or_default();
+        ref_table(&text)
+    })
 }
 
 /// The in-file reference surface: first-win definitions by folded

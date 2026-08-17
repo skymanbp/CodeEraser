@@ -15,6 +15,10 @@ pub struct GraphEdge {
     pub dst_unit: String,
     pub kind: i64,
     pub rung: i64,
+    /// Stored wire granularity — node minting reads it instead of
+    /// inferring "package" from mere absence (M5-close review LOW:
+    /// image assets and dangling doc refs were minted as packages).
+    pub granularity: i64,
 }
 
 /// The one prepare→query_map→collect throat every cached-table read
@@ -47,6 +51,13 @@ pub(crate) fn t5<A: Col, B: Col, C: Col, D: Col, E: Col>(
     Ok((head.0, head.1, head.2, head.3, r.get(4)?))
 }
 
+pub(crate) fn t6<A: Col, B: Col, C: Col, D: Col, E: Col, F: Col>(
+    r: &rusqlite::Row<'_>,
+) -> rusqlite::Result<(A, B, C, D, E, F)> {
+    let head = t5(r)?;
+    Ok((head.0, head.1, head.2, head.3, head.4, r.get(5)?))
+}
+
 pub(crate) fn t4<A: Col, B: Col, C: Col, D: Col>(
     r: &rusqlite::Row<'_>,
 ) -> rusqlite::Result<(A, B, C, D)> {
@@ -58,20 +69,23 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
     let files = rows(conn, "SELECT path FROM files ORDER BY path", |r| r.get(0))?;
     let edges = rows(
         conn,
-        "SELECT f.path, e.dst_path, e.dst_unit, e.kind, e.rung
+        "SELECT f.path, e.dst_path, e.dst_unit, e.kind, e.rung, e.granularity
          FROM edges e JOIN sites s ON s.id = e.site_id
          JOIN files f ON f.id = s.file_id
          ORDER BY f.path, e.dst_path, e.dst_unit, e.kind, e.rung",
-        t5,
+        t6,
     )?
     .into_iter()
-    .map(|(src, dst_path, dst_unit, kind, rung)| GraphEdge {
-        src,
-        dst_path,
-        dst_unit,
-        kind,
-        rung,
-    })
+    .map(
+        |(src, dst_path, dst_unit, kind, rung, granularity)| GraphEdge {
+            src,
+            dst_path,
+            dst_unit,
+            kind,
+            rung,
+            granularity,
+        },
+    )
     .collect();
     let unresolved: i64 = conn.query_row(
         "SELECT COUNT(*) FROM sites s

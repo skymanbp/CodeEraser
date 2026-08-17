@@ -82,7 +82,12 @@ fn owner(from: &str, scope: &Scope) -> Result<Option<Cabal>, Reason> {
     let mut best: Option<Cabal> = None;
     let mut tied = false;
     for rel in scope.configs.iter().filter(|c| c.ends_with(".cabal")) {
-        let Some(c) = cabal::parse(scope.root, rel) else {
+        // per-sweep: one parse per .cabal, not one per SITE per
+        // .cabal (review MED)
+        let hit = scope
+            .memo
+            .cached("cabal", rel, || cabal::parse(scope.root, rel));
+        let Some(c) = hit.as_ref().clone() else {
             continue;
         };
         if !(c.dir.is_empty() || from.starts_with(&format!("{}/", c.dir))) {

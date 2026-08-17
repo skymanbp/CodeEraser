@@ -218,11 +218,20 @@ fn string_leaves(value: &Value, out: &mut Vec<String>) {
 
 /// R5: bare specifier declared in the nearest package.json deps, or
 /// physically present under the root node_modules/ ⇒ External.
+/// Both facts ride the sweep memo — the walk-up parse and the fs
+/// stat used to repeat per SITE (review MED class).
 fn bare_rung(dir: &str, spec: &str, scope: &Scope) -> Outcome {
     let (name, _) = split_bare(spec);
-    let declared =
-        roots::nearest_package(scope.root, dir).is_some_and(|p| p.deps.iter().any(|d| d == name));
-    if declared || scope.root.join("node_modules").join(name).is_dir() {
+    let declared = scope
+        .memo
+        .cached("ts_near", dir, || roots::nearest_package(scope.root, dir))
+        .as_ref()
+        .as_ref()
+        .is_some_and(|p| p.deps.iter().any(|d| d == name));
+    let vendored = *scope.memo.cached("ts_nm", name, || {
+        scope.root.join("node_modules").join(name).is_dir()
+    });
+    if declared || vendored {
         return Outcome::External { rung: 5 };
     }
     Outcome::Unresolved(Reason::OutOfScope)

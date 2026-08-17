@@ -25,10 +25,10 @@ use std::collections::BTreeSet;
 
 pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome {
     let mods = modules(scope);
-    if let Some(outcome) = module_rung(spec, &mods, scope.files) {
+    if let Some(outcome) = module_rung(spec, &mods, scope) {
         return outcome;
     }
-    if let Some(outcome) = replace_rung(from, spec, &mods, scope.files) {
+    if let Some(outcome) = replace_rung(from, spec, &mods, scope) {
         return outcome;
     }
     external_rung(spec)
@@ -41,7 +41,7 @@ fn modules(scope: &Scope) -> Vec<GoMod> {
 
 /// R1: the longest module prefix owns the import; the remainder
 /// names a package directory under the module's own directory.
-fn module_rung(spec: &str, mods: &[GoMod], files: &BTreeSet<String>) -> Option<Outcome> {
+fn module_rung(spec: &str, mods: &[GoMod], scope: &Scope) -> Option<Outcome> {
     let mut best_len = 0;
     let mut dirs = BTreeSet::new();
     for m in mods {
@@ -65,7 +65,7 @@ fn module_rung(spec: &str, mods: &[GoMod], files: &BTreeSet<String>) -> Option<O
     }
     match dirs.len() {
         0 => None,
-        1 => Some(package(dirs.pop_first().expect("len checked"), files, 1)),
+        1 => Some(package(dirs.pop_first().expect("len checked"), scope, 1)),
         _ => Some(Outcome::Unresolved(Reason::AmbiguousWorkspace)),
     }
 }
@@ -82,12 +82,7 @@ fn strip_module<'a>(spec: &'a str, module: &str) -> Option<&'a str> {
 }
 
 /// R2: the importer's module's replace directives, longest old wins.
-fn replace_rung(
-    from: &str,
-    spec: &str,
-    mods: &[GoMod],
-    files: &BTreeSet<String>,
-) -> Option<Outcome> {
+fn replace_rung(from: &str, spec: &str, mods: &[GoMod], scope: &Scope) -> Option<Outcome> {
     let owner = owner(from, mods)?;
     let (rest, new) = owner
         .replaces
@@ -101,14 +96,14 @@ fn replace_rung(
         } else {
             roots::join_dir(&base, rest)
         };
-        return Some(package(dir, files, 2));
+        return Some(package(dir, scope, 2));
     }
     let rewritten = if rest.is_empty() {
         new.clone()
     } else {
         format!("{new}/{rest}")
     };
-    match module_rung(&rewritten, mods, files) {
+    match module_rung(&rewritten, mods, scope) {
         Some(outcome) => Some(relabel(outcome)),
         None => Some(external_rung(&rewritten)),
     }
@@ -122,16 +117,19 @@ fn owner<'a>(from: &str, mods: &'a [GoMod]) -> Option<&'a GoMod> {
 }
 
 /// A directory is an importable package while it directly holds an
-/// in-scope non-test .go file.
-fn package(dir: String, files: &BTreeSet<String>, rung: u8) -> Outcome {
-    let prefix = if dir.is_empty() {
-        String::new()
-    } else {
-        format!("{dir}/")
-    };
-    let importable = files.iter().any(|f| {
-        f.strip_prefix(&prefix).is_some_and(|rest| {
-            rest.ends_with(".go") && !rest.contains('/') && !rest.ends_with("_test.go")
+/// in-scope non-test .go file — an O(files) scan every import of one
+/// directory used to repay (review MED), now once per sweep.
+fn package(dir: String, scope: &Scope, rung: u8) -> Outcome {
+    let importable = *scope.memo.cached("go_pkg", &dir, || {
+        let prefix = if dir.is_empty() {
+            String::new()
+        } else {
+            format!("{dir}/")
+        };
+        scope.files.iter().any(|f| {
+            f.strip_prefix(&prefix).is_some_and(|rest| {
+                rest.ends_with(".go") && !rest.contains('/') && !rest.ends_with("_test.go")
+            })
         })
     });
     if importable {

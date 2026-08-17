@@ -106,7 +106,10 @@ fn collect_ts(doc: &Value, dir: &str, opts: &mut TsOptions) {
     }
 }
 
-/// One package.json surface, enough for the R4/R5 rungs.
+/// One package.json surface, enough for the R4/R5 rungs. Clone: the
+/// sweep memo hands out per-config parses once and callers keep
+/// owned copies.
+#[derive(Clone)]
 pub struct Package {
     /// Repo-relative directory of the package ("" = repo root).
     pub dir: String,

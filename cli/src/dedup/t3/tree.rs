@@ -59,17 +59,21 @@ fn build(root: Node, start: usize, end: usize) -> Built {
 /// nearest named ancestor is not. Containment is the unit_seq
 /// predicate verbatim; descent stops at a hit (position nesting makes
 /// the whole subtree selected) and at ranges that cannot intersect.
+/// Explicit stack like every other walker in this crate (M5-close
+/// review LOW: call-stack recursion made a pathologically deep AST a
+/// process abort instead of a judgment).
 fn maximal<'t>(node: Node<'t>, start: usize, end: usize, out: &mut Vec<Node<'t>>) {
-    let (s, e) = lines(node);
-    if e < start || s > end {
-        return;
-    }
-    if node.is_named() && start <= s && e <= end {
-        out.push(node);
-        return;
-    }
-    for child in ast::children(node) {
-        maximal(child, start, end, out);
+    let mut stack = vec![node];
+    while let Some(n) = stack.pop() {
+        let (s, e) = lines(n);
+        if e < start || s > end {
+            continue;
+        }
+        if n.is_named() && start <= s && e <= end {
+            out.push(n);
+            continue;
+        }
+        stack.extend(ast::children(n).into_iter().rev());
     }
 }
 
@@ -81,32 +85,38 @@ fn lines(node: Node) -> (usize, usize) {
 
 /// Postorder emission of `node`'s named subtree (children first, left
 /// to right, nearest-named flattening across anonymous intermediates
-/// — the spine's selection, with structure kept). Returns the emitted
-/// node's lld VALUE: its leftmost leaf's postorder index.
-fn emit(node: Node, t: &mut UnitTree) -> i64 {
-    let mut first = None;
-    for kid in named_kids(node) {
-        let l = emit(kid, t);
-        first.get_or_insert(l);
+/// — the spine's selection, with structure kept). Two-phase explicit
+/// stack; a node's lld is the postorder index of its leftmost leaf,
+/// which is exactly `lab.len()` at ENTER time whenever the subtree
+/// emits anything before the node itself — the recursive
+/// first-child-return threading, derived instead of threaded.
+fn emit(node: Node, t: &mut UnitTree) {
+    let mut stack = vec![(node, None)];
+    while let Some((n, entered_at)) = stack.pop() {
+        let Some(base) = entered_at else {
+            stack.push((n, Some(t.lab.len() as i64)));
+            let kids = named_kids(n);
+            stack.extend(kids.into_iter().rev().map(|k| (k, None)));
+            continue;
+        };
+        let idx = t.lab.len() as i64;
+        t.lab.push(struct_fp::kind_code(n.kind()));
+        t.lld.push(if base < idx { base } else { idx });
     }
-    let idx = t.lab.len() as i64;
-    let l = first.unwrap_or(idx);
-    t.lab.push(struct_fp::kind_code(node.kind()));
-    t.lld.push(l);
-    l
 }
 
 /// A node's named children, looking through anonymous intermediates
-/// (today's grammars make anonymous nodes terminals, so the recursion
+/// (today's grammars make anonymous nodes terminals, so the descent
 /// costs nothing — it keeps the selected SET identical to the spine's
 /// all-children walk by construction, not by grammar accident).
 fn named_kids(node: Node) -> Vec<Node> {
     let mut out = Vec::new();
-    for child in ast::children(node) {
-        if child.is_named() {
-            out.push(child);
+    let mut stack: Vec<Node> = ast::children(node).into_iter().rev().collect();
+    while let Some(c) = stack.pop() {
+        if c.is_named() {
+            out.push(c);
         } else {
-            out.extend(named_kids(child));
+            stack.extend(ast::children(c).into_iter().rev());
         }
     }
     out

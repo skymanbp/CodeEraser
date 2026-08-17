@@ -7,6 +7,9 @@
 use super::roots;
 use std::path::Path;
 
+/// Clone: the sweep memo hands out per-config parses once and
+/// callers keep owned copies.
+#[derive(Clone)]
 pub struct GoMod {
     /// Repo-relative directory of the go.mod ("" = repo root).
     pub dir: String,

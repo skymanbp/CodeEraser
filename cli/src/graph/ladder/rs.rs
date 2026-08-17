@@ -41,14 +41,23 @@ use std::collections::BTreeSet;
 const BUILTIN: [&str; 5] = ["std", "core", "alloc", "proc_macro", "test"];
 
 pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
-    let pkg = cargo::nearest(scope.root, &roots::parent_dir(site.from));
-    let roots_set = pkg
-        .as_ref()
-        .map(|p| p.crate_roots(scope.files))
-        .unwrap_or_default();
+    // per-sweep: sites in one directory share the nearest-Cargo.toml
+    // walk-up + parse and the O(files) crate-root scan (review MED —
+    // this pair was re-derived for EVERY site)
+    let ctx = scope
+        .memo
+        .cached("rs_ctx", &roots::parent_dir(site.from), || {
+            let pkg = cargo::nearest(scope.root, &roots::parent_dir(site.from));
+            let roots_set = pkg
+                .as_ref()
+                .map(|p| p.crate_roots(scope.files))
+                .unwrap_or_default();
+            (pkg, roots_set)
+        });
+    let (pkg, roots_set) = (&ctx.0, &ctx.1);
     match site.kind {
-        "mod_decl" => mod_rung(site.from, site.spec, &roots_set, scope.files),
-        "use" => use_rungs(site, pkg.as_ref(), &roots_set, scope),
+        "mod_decl" => mod_rung(site.from, site.spec, roots_set, scope.files),
+        "use" => use_rungs(site, pkg.as_ref(), roots_set, scope),
         _ => Outcome::Unresolved(Reason::Unsupported),
     }
 }
@@ -123,13 +132,16 @@ fn use_rungs(
 /// string literals (the audited glue.rs CODE constant). Only a
 /// BODIED mod opens a nested scope; `mod x;` is a declaration.
 fn inline_depth(scope: &Scope, from: &str, line: usize) -> usize {
-    let Ok(text) = std::fs::read_to_string(scope.root.join(from)) else {
-        return 0;
-    };
-    let Some(grammar) = crate::scan::lang::Lang::Rust.grammar() else {
-        return 0;
-    };
-    let Some(tree) = crate::scan::ast::parse(&text, &grammar) else {
+    // per-sweep parse cache: every self/super site in one file used
+    // to re-read AND re-parse it with tree-sitter (review MED); the
+    // text rides along so the tree's provenance stays in one place
+    let parsed = scope.memo.cached("rs_tree", from, || {
+        let text = std::fs::read_to_string(scope.root.join(from)).ok()?;
+        let grammar = crate::scan::lang::Lang::Rust.grammar()?;
+        let tree = crate::scan::ast::parse(&text, &grammar)?;
+        Some((text, tree))
+    });
+    let Some((_, tree)) = parsed.as_ref() else {
         return 0;
     };
     let row = line.saturating_sub(1);
