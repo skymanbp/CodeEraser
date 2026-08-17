@@ -41,6 +41,9 @@ pub struct RunOpts {
     pub min_tokens: Option<usize>,
     pub min_distinct: Option<usize>,
     pub check: bool,
+    /// ce-core path — consulted by `check` alone (ADR-008 P2: the
+    /// budget comparison is the core's verdict).
+    pub core: String,
 }
 
 /// Batch entry point: refresh the index (incremental), reap deleted
@@ -53,19 +56,24 @@ pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
     let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
     emit(opts.format, &found, &summary)?;
     if opts.check {
-        return check_budget(root, summary.blocks);
+        return check_budget(root, summary.blocks, &opts.core);
     }
     Ok(ExitCode::SUCCESS)
 }
 
-/// R12 only-shrink ratchet: over budget fails; under budget prints
-/// the new floor so the budget gets ratcheted down in the same PR.
-fn check_budget(root: &Path, blocks: usize) -> Result<ExitCode> {
+/// R12 only-shrink ratchet, judged by the CORE since ADR-008 P2: a
+/// minimal verdict.request carries [blocks, budget] and the fail
+/// bit answers — Rust renders the report lines from its own numbers
+/// but never re-derives the exit code (the under-budget advisory is
+/// reporting, not judgment).
+fn check_budget(root: &Path, blocks: usize, core: &str) -> Result<ExitCode> {
     let cfg = Config::load(root).map_err(anyhow::Error::msg)?;
     let Some(budget) = cfg.dedup.budget else {
         anyhow::bail!("--check needs [dedup] budget in ce.toml");
     };
-    if blocks > budget {
+    let req = crate::score::wire::Request::dedup_only(blocks as u64, budget as u64);
+    let reply = crate::score::wire::judge(core, &req)?;
+    if reply.fail {
         eprintln!(
             "dedup ratchet: {blocks} clone blocks > budget {budget} — new duplication must not land"
         );

@@ -38,6 +38,11 @@ pub struct Request {
     pub weights: KnobTable,
     pub thresholds: KnobTable,
     pub tolerance: KnobTable,
+    /// The dedup budget pair [blocks, budget] (ADR-008 P2): sent by
+    /// `ce dedup --check` alone — the second ratchet's comparison
+    /// is the core's. None = the condition is not evaluated, which
+    /// keeps the ce check/baseline road byte-identical.
+    pub dedup: Option<[u64; 2]>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -56,6 +61,30 @@ pub struct Reply {
     /// empty-table drift gate pins the defaults.
     pub knobs: BTreeMap<String, i64>,
     pub degraded: Option<String>,
+}
+
+impl Request {
+    /// The empty-tables request `ce dedup --check` sends (ADR-008
+    /// P2): nothing to score, no baseline, just the pair — the
+    /// reply's fail bit is the whole judgment.
+    pub fn dedup_only(blocks: u64, budget: u64) -> Self {
+        Request {
+            files: Vec::new(),
+            sim: Vec::new(),
+            pos: Vec::new(),
+            churn: Vec::new(),
+            cochange: Vec::new(),
+            continuous: Vec::new(),
+            discrete: Vec::new(),
+            baseline: Value::Null,
+            floor: None,
+            ceilings: Vec::new(),
+            weights: Vec::new(),
+            thresholds: Vec::new(),
+            tolerance: Vec::new(),
+            dedup: Some([blocks, budget]),
+        }
+    }
 }
 
 pub fn body(r: &Request) -> Value {
@@ -79,6 +108,9 @@ pub fn body(r: &Request) -> Value {
         ("tolerance", &r.tolerance),
     ] {
         o[key] = json!(rows);
+    }
+    if let Some(pair) = r.dedup {
+        o["dedup"] = json!(pair);
     }
     o
 }

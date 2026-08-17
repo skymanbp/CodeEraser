@@ -150,14 +150,17 @@ enum Cmd {
 fn main() -> ExitCode {
     match analysis(Cli::parse().cmd) {
         Ok(code) => code,
-        Err(cmd) => infra(cmd),
+        Err(cmd) => infra(*cmd),
     }
 }
 
 /// Analysis-family dispatch (the metric/judgment subcommands); hands
-/// back any command it does not own. The two-stage match keeps each
+/// back any command it does not own — boxed, because the handoff is
+/// the Err lane and Cmd's largest variant crossed clippy's 128-byte
+/// line when DedupArgs grew its --core (ADR-008 P2); one allocation
+/// on a once-per-process parse path. The two-stage match keeps each
 /// dispatcher under the repo's own complexity gate as families grow.
-fn analysis(cmd: Cmd) -> Result<ExitCode, Cmd> {
+fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
     Ok(match cmd {
         Cmd::Scan { path, format } => cmds::scan_cmd(path, json(format)),
         Cmd::Churn { root, days, format } => {
@@ -181,7 +184,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Cmd> {
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),
-        other => return Err(other),
+        other => return Err(Box::new(other)),
     })
 }
 

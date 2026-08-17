@@ -32,6 +32,13 @@
 > **degraded verdict 应答自带 `ratchet.fail=true`**（"不能判者绝不放行"
 > 由 core 自述，Rust 侧 `|| degraded` 再解释退役——语义位翻转仅此一处，
 > 属 P1 契约本体，golden 无 degraded 对、由 VerdictWireProps 电池钉住）。
+> **2.6.0**（ADR-008 P2 棘轮统一，2026-08-17）：`verdict.request` 加性
+> `dedup` 对（`[blocks,budget]`，仅 `ce dedup --check` 发送；缺席=条件
+> 不评估，ce check 之路字节不变）+ fail 具名条件表加第四行
+> `dedup_budget`——第二棘轮的比较自此在 core（`blocks > budget` 即 fail）；
+> Rust 侧退出码消费 fail 位、报告行自渲染；`ce baseline` 的 only-shrink
+> 集合再解释同批收敛为消费 fail 位（该线无 floor 无 dedup 对，fail ≡
+> added∨over，语义等价）。
 
 ## 1. 信封（envelope）
 
@@ -42,7 +49,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.5.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.6.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -106,8 +113,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     ∨ verbatim 半的全析取——run 过线正是为让 core 持有全部判决输入）；
     `degraded.reason ∈ {docdup_too_large}`。
   - `verdict/1`（判决落 score 批）：request 携三信号事实表 + `baseline` 原样字节
-    （Rust 不解释，ADR-008 反抢跑）；result 回判决四码 + `reasonBits`/`legsMask`
-    自陈 + 棘轮集合 delta；`degraded.reason ∈ {verdict_too_large}`。
+    （Rust 不解释，ADR-008 反抢跑），2.6.0 起并可携加性 `dedup`
+    `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用）；
+    result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta；
+    `degraded.reason ∈ {verdict_too_large}`。
 
 ## 2. SemVer 协商规则
 
@@ -140,5 +149,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.5.0 | §1 所列两处常量 |
+| 协议 | 2.6.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

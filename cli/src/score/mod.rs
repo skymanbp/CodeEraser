@@ -91,6 +91,9 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         weights: knobs::weight_rows(&cfg.score)?,
         thresholds: knobs::threshold_rows(&cfg.score),
         tolerance: knobs::tolerance_rows(&cfg.score),
+        // the dedup pair is `ce dedup --check`'s leg alone (P2) —
+        // this road stays byte-identical
+        dedup: None,
         files,
     };
     let reply = wire::judge(&opts.core, &req)?;

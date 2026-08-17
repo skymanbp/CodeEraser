@@ -31,6 +31,7 @@ battery = fmap and (mapM one checks)
     , ("ceilings override moves the score and echoes in knobs", ceilingKnob)
     , ("thresholds/tolerance rows move the verdict and echo", thresholdKnob)
     , ("an over-cap request degrades to a reply that FAILS", degradedFails)
+    , ("the dedup pair fails over budget and passes at it", dedupBudget)
     ]
   one (name, ok) = do
     putStrLn ((if ok then "ok   " else "FAIL ") <> name)
@@ -146,6 +147,10 @@ refusals =
     , refused (thrReq [[5, 0]]) "knob below 1"
     , refused (tolReq [[3, 1]]) "unknown tolerance leg"
     , refused (tolReq [[1, 0]]) "knob below 1"
+    , -- the P2 dedup pair refuses by name too — a malformed pair
+      -- must never read as "under budget"
+      refused (setKey "dedup" (toJSON [1 :: Integer]) base) "malformed pair"
+    , refused (setKey "dedup" (toJSON [-1, 5 :: Integer]) base) "negative field"
     ]
  where
   simReq rows =
@@ -225,6 +230,20 @@ thresholdKnob = scaleMoves && tolFlips
     Bool f <- KM.lookup "fail" rat
     e <- echo o "tolAbs"
     pure (f, e)
+
+-- | ADR-008 P2 through the REAL respond: the [blocks, budget] pair
+-- answers through the fail bit — one over budget fails, at budget
+-- passes; the absent case is every OTHER check in this battery
+-- (none sends the pair, none fails on it).
+dedupBudget :: Bool
+dedupBudget = failAt [146, 145] == Just True && failAt [145, 145] == Just False
+ where
+  failAt :: [Integer] -> Maybe Bool
+  failAt pair = do
+    o <- replyObj (setKey "dedup" (toJSON pair) (wireReq [] [] [] []))
+    Object rat <- KM.lookup "ratchet" o
+    Bool f <- KM.lookup "fail" rat
+    pure f
 
 -- | ADR-008 P1 through the REAL respond: one node past the cap
 -- degrades to a complete reply whose ratchet.fail is TRUE — a gate

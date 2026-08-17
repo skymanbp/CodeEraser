@@ -225,6 +225,24 @@ respond〕）。Rust 侧=`lockstep::verdict_bits` 单咽喉（长度锁：位数
 三行 delete 同形 fixture 表驱动化为 `deadFlankRow flags` 单构造子，
 145==145 零豁免。
 
+**P2 棘轮统一**：proto 2.6.0 加性 minor——第二棘轮的比较入 core：
+verdict.request 加 `dedup` `[blocks,budget]` 对（仅 `ce dedup --check`
+发送；缺席=条件不评估，ce check/baseline 之路字节不变）+ failConditions
+具名表加第四行 `dedup_budget`（比较 `blocks > budget` 即 core 判决本体，
+dedupOffence 边界拒形变对——错形绝不读作"under budget"）；Rust 侧
+`check_budget` 发 `Request::dedup_only` 极小请求、退出码消费 fail 位、
+两条报告行自渲染（under-budget 建议行=报告非判决）；`ce dedup --check`
+获 `--core`（与 check/deadcode/docdup 同律），CI dogfood 腿同批接核；
+`ce baseline` 的 only-shrink 集合再解释收敛为消费 fail 位（该线无 floor
+无 dedup 对，fail ≡ added∨over 语义等价；establish 路 fail 恒 False 同证）；
+CE_ACCEPT_BASELINE 留 Rust=操作员出口非判决。**反事实**：VerdictWireProps
+`dedupBudget`（146/145 翻 fail、145/145 过）+ 两具名拒绝（[1] 形错、[-1,5]
+负值）+ golden 新 pair 8（dedup [146,145] 过真 exe：fail:true 而
+added/over 空=条件独断）；44 行翻批经归一化机检=43 行纯 proto 位零非
+proto 变化（audit_golden_p2.py 对 HEAD 逐对相消）。clippy 抓
+result_large_err（DedupArgs+--core 使 Cmd 越 128B）→ 交接位 Box 单次
+分配修于解析路径。
+
 ## 复跑
 
 本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test daemon_proto --test concurrent_writers` （清零批新门）。

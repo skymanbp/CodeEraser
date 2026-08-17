@@ -92,7 +92,11 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
         eprintln!("baseline: refusing to persist a degraded judgment");
         return ExitCode::FAILURE;
     }
-    if !o.reply.added.is_empty() || !o.reply.over.is_empty() {
+    // the core's fail bit IS the only-shrink refusal (ADR-008 P2):
+    // this wire carries no floor and no dedup pair, so fail ≡
+    // added∨over — the set re-interpretation retires, the counts
+    // below are reporting
+    if o.reply.fail {
         eprintln!(
             "baseline: {} new member(s), {} ceiling(s) busted — both halves only \
              improve; set CE_ACCEPT_BASELINE=1 to re-establish from the current tree",

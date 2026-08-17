@@ -100,16 +100,24 @@ result proto parsed req =
   base = either (const Nothing) id parsed
   r = ratchet rk base (reqCont req) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
-  failBit = any snd (failConditions r floorFail)
+  -- the second ratchet's comparison lives HERE (ADR-008 P2): the
+  -- pair's shape is already validated, absent = not judged
+  dedupOver = case reqDedup req of
+    Just [blocks, budget] -> blocks > budget
+    _ -> False
+  failBit = any snd (failConditions r floorFail dedupOver)
 
 -- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):
 -- any held condition fails — over ceiling past tolerance, a new
--- discrete member, or the --fail-under floor ("either alone fails").
-failConditions :: Ratcheted -> Bool -> [(String, Bool)]
-failConditions r floorFail =
+-- discrete member, the --fail-under floor ("either alone fails"),
+-- or the dedup blocks-over-budget half (P2: `ce dedup --check`
+-- sends the pair; the ce check road never does).
+failConditions :: Ratcheted -> Bool -> Bool -> [(String, Bool)]
+failConditions r floorFail dedupOver =
   [ ("ratchet_over", not (null (rOver r)))
   , ("discrete_added", not (null (rAdded r)))
   , ("floor", floorFail)
+  , ("dedup_budget", dedupOver)
   ]
 
 -- | scoreBound with the request's knob rows applied: the ceilings

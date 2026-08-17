@@ -80,7 +80,7 @@ jobs:
         run: |
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan ..
-          cargo run --locked -- dedup .. --check
+          cargo run --locked -- dedup .. --check --core "$CORE_BIN"
           cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 800
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check

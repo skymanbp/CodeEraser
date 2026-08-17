@@ -58,6 +58,11 @@ data VerdictReq = VerdictReq
     -- = every knob at its Cost.hs DEFAULT.
     reqThresholds :: [[Integer]]
   , reqTolerance :: [[Integer]]
+  , -- ADR-008 P2 (2.6.0, additive): the dedup budget pair
+    -- [blocks, budget] — the second ratchet's verdict inputs, sent
+    -- by `ce dedup --check` alone. Absent = the condition is not
+    -- evaluated (the ce check road is untouched).
+    reqDedup :: Maybe [Integer]
   }
 
 instance FromJSON VerdictReq where
@@ -77,6 +82,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "ceilings" .!= []
       <*> o .:? "thresholds" .!= []
       <*> o .:? "tolerance" .!= []
+      <*> o .:? "dedup"
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -104,6 +110,7 @@ violation parsed req =
     , thresholdsOffence (reqThresholds req)
     , toleranceOffence (reqTolerance req)
     , floorOffence (reqFloor req)
+    , dedupOffence (reqDedup req)
     ]
  where
   n = toInteger (length (reqTier req))
@@ -218,3 +225,16 @@ floorOffence Nothing = Nothing
 floorOffence (Just f)
   | f < 0 || f > 1000 = Just "floor: outside per-mille range"
   | otherwise = Nothing
+
+-- | ADR-008 P2: the dedup budget pair is two in-range counts or
+-- nothing — a malformed pair must never read as "under budget".
+dedupOffence :: Maybe [Integer] -> Maybe String
+dedupOffence Nothing = Nothing
+dedupOffence (Just row) = case row of
+  [blocks, budget]
+    | blocks < 0 || budget < 0 -> Just "dedup: negative field"
+    | blocks >= u64 || budget >= u64 -> Just "dedup: outside u64"
+    | otherwise -> Nothing
+  _ -> Just "dedup: malformed pair (need [blocks,budget])"
+ where
+  u64 = 18446744073709551616

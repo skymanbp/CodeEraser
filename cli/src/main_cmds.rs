@@ -154,9 +154,13 @@ pub struct DedupArgs {
     #[arg(long)]
     min_distinct: Option<usize>,
     /// Only-shrink ratchet: exit 1 when clone blocks exceed the
-    /// ce.toml [dedup] budget (M2 review R12)
+    /// ce.toml [dedup] budget (M2 review R12; the comparison is the
+    /// core's verdict since ADR-008 P2)
     #[arg(long)]
     check: bool,
+    /// Path to the ce-core executable (consulted by --check alone)
+    #[arg(long, default_value = "ce-core")]
+    core: String,
 }
 
 pub fn dedup_cmd(a: DedupArgs) -> ExitCode {
@@ -166,6 +170,7 @@ pub fn dedup_cmd(a: DedupArgs) -> ExitCode {
         min_tokens: a.min_tokens,
         min_distinct: a.min_distinct,
         check: a.check,
+        core: a.core,
     };
     match dedup::run(&or_cwd(a.path), opts) {
         Ok(code) => code,
