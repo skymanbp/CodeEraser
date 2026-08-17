@@ -13,11 +13,10 @@ fn mem_db() -> Connection {
     conn
 }
 
-/// Phase 1 + phase 2 against the real v4 schema: rows land, the
-/// key gate skips on match and fires on change, and a phase-1
-/// re-run cascades the stale edges away with the old sites.
-#[test]
-fn two_phase_lifecycle() {
+/// mem_db with one file row and its phase-1 rows committed — the
+/// arrange both lifecycle batteries share (the ratchet's own catch
+/// when the idempotency battery landed).
+fn seeded(text: &str) -> Connection {
     let mut conn = mem_db();
     conn.execute(
         "INSERT INTO files (path, content_hash, token_count, has_tokens) VALUES ('a.rs', 1, 0, 1)",
@@ -25,14 +24,17 @@ fn two_phase_lifecycle() {
     )
     .expect("file row");
     let tx = conn.transaction().expect("tx");
-    refresh_graph(
-        &tx,
-        1,
-        "mod alpha;\nfn holder() {\n    use crate::x;\n}\n",
-        Lang::Rust,
-    )
-    .expect("phase 1");
+    refresh_graph(&tx, 1, text, Lang::Rust).expect("phase 1");
     tx.commit().expect("commit");
+    conn
+}
+
+/// Phase 1 + phase 2 against the real v4 schema: rows land, the
+/// key gate skips on match and fires on change, and a phase-1
+/// re-run cascades the stale edges away with the old sites.
+#[test]
+fn two_phase_lifecycle() {
+    let mut conn = seeded("mod alpha;\nfn holder() {\n    use crate::x;\n}\n");
     let mut seen = 0;
     let fired = ensure_resolved(&mut conn, 7, |s| {
         seen += 1;
@@ -67,6 +69,39 @@ fn two_phase_lifecycle() {
 fn edge_count(conn: &Connection) -> i64 {
     conn.query_row("SELECT COUNT(*) FROM edges", [], |r| r.get(0))
         .expect("edge count")
+}
+
+fn one_edge(s: &CachedSite) -> Vec<EdgeRow> {
+    vec![EdgeRow {
+        dst_path: s.file.clone(),
+        dst_unit: String::new(),
+        kind: s.kind,
+        rung: 1,
+        granularity: 0,
+    }]
+}
+
+/// The nightly-CI interleaving (run 31991997431), projected onto one
+/// connection so it is deterministic: writer B refreshes a file,
+/// writer A's phase-2 sweep lands edges on B's NEW site rows and
+/// sets resolve_key (so B's own sweep skips), then B runs phase 1.5
+/// over its dirty file. Plan v1.7 says every write path is
+/// idempotent — the edge set must equal one serial pass, not stack.
+#[test]
+fn phase_15_is_idempotent_over_a_swept_file() {
+    let mut conn = seeded("mod alpha;\n");
+    assert!(
+        ensure_resolved(&mut conn, 7, one_edge).expect("sweep"),
+        "the racing sweep fires"
+    );
+    assert_eq!(edge_count(&conn), 1);
+    let dirty: BTreeSet<String> = ["a.rs".to_string()].into();
+    resolve_refreshed(&mut conn, &dirty, one_edge).expect("phase 1.5");
+    assert_eq!(
+        edge_count(&conn),
+        1,
+        "phase 1.5 over a swept file must converge, not stack"
+    );
 }
 
 /// The storage codes are frozen positions; an unregistered label

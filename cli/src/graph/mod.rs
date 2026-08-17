@@ -11,6 +11,7 @@ pub mod cargo;
 pub mod deadcode;
 pub mod gomod;
 pub mod jsonc;
+pub mod keys;
 pub mod ladder;
 pub mod load;
 pub mod md;
