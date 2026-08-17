@@ -55,7 +55,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable # version pinned by cli/rust-toolchain.toml
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: cli
+          workspaces: |
+            cli
+            gui/src-tauri
       - name: Rust build + test + lint
         shell: bash
         working-directory: cli
@@ -64,6 +66,23 @@ jobs:
           cargo build --locked
           cargo test --locked
           cargo clippy --locked --all-targets -- -D warnings
+          cargo fmt --check
+
+      # GUI shell (M6 S4b): compiles on both push platforms so the
+      # window can never rot silently. The webview system deps are
+      # ubuntu-only (Windows ships WebView2); packaging itself stays
+      # a release-tag concern, not a per-push gate.
+      - name: GUI system deps (ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev
+      - name: GUI build + lint
+        shell: bash
+        working-directory: gui/src-tauri
+        run: |
+          cargo build --locked
+          cargo clippy --locked -- -D warnings
           cargo fmt --check
 
       # Dogfood (plan §7.5): this repo must pass its own scanner
@@ -125,7 +144,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: cli
+          workspaces: |
+            cli
+            gui/src-tauri
       - name: Rust build + test
         shell: bash
         working-directory: cli
@@ -133,3 +154,7 @@ jobs:
           export CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo build --locked
           cargo test --locked
+      - name: GUI build (macOS coverage)
+        shell: bash
+        working-directory: gui/src-tauri
+        run: cargo build --locked

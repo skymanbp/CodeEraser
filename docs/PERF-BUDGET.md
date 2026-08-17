@@ -180,3 +180,21 @@ hook e2e = `hook_e2e_p95_under_1s`）。
 
 复跑：`cargo build --release` 后
 `1..3 | %{ (Measure-Command { .\target\release\ce.exe scan . --core $env:CE_CORE_BIN }).TotalSeconds }`。
+
+## M6 S4b `ce structure` 验收实测（2026-08-17，release，外部真语料，--db 指 scratch=真冷）
+
+> 计划 M6 验收行：「10 万 LOC 冷启动到首屏 <60s、报告打开 <3s」。GUI 首屏
+> = 同一 judge::run+report_json 管线 + webview 渲染（毫秒级），故 CLI 端到端
+> 即首屏时延的账面上界。冷=索引/图/判决全新建；暖=同 db 重跑（≈「报告打开」）。
+
+| 语料 | 规模（rs/ts/py/go/md 行数） | 冷 | 暖 | 门 |
+|---|---|---|---|---|
+| zod | 71,645 | 8.36 s | 2.66 s | ✅ 冷 ≪60s；暖 <3s |
+| ripgrep | 55,076 | 5.29 s | 1.64 s | ✅ 同上 |
+
+- 10 万 LOC 无现成单仓语料——按 zod 线性外推 ≈11.7s，距 60s 门 5 倍余量；
+  外推注记如实入册（非实测数字）。
+- 面效度旁证：ripgrep 树 982/1000、zod 平铺 src 794/1000（axes 3:63 错位
+  文件）——与两仓结构口碑同向。
+- 复跑：`ce structure .ce-eval\corpora\<c> --db <fresh> --core $env:CE_CORE_BIN`
+  各二连（首=冷、次=暖）。

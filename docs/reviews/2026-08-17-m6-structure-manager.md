@@ -104,11 +104,17 @@ name, depth, subdirs, files, axes}]}` —— flat nodes+parent（机器友好、
   [dirId,stale,total]` 可选表 + knob 11=staleMin；测量=`--days N`
   才发（md 出边目标×单遍窗口 git log，同 commit 双改=不陈旧）；
   自仓活体：`--days 14` 轴 5:4、全七轴 860/1000。
-- **S4 GUI 首屏**（S4a 已落地）：gui/ 独立 package（Tauri v2 壳
-  path-dep cli 库；CI 暂无 gui 腿——Linux webkit 系统依赖与打包同批
-  留 S4b）+ §5 as-built 首屏本机活体（开窗/判决/树图）。
-  **S4b 待续**：CI gui 腿 + `cargo tauri build` 三平台打包 + M6
-  验收数字实测（10 万 LOC 冷启动到首屏 <60s、报告打开 <3s）。
+- **S4 GUI 首屏**（S4a+S4b 已落地，M6 主体收官）：gui/ 独立 package
+  （Tauri v2 壳 path-dep cli 库）+ §5 as-built 首屏本机活体。
+  **S4b as-built**：CI gui 腿=两 push 平台编译门（ubuntu 装
+  webkit2gtk-4.1/gtk-3/rsvg/ssl 系统依赖，Windows 自带 WebView2；
+  macOS 随 schedule/tag 腿）+ 本机 `cargo tauri build` 产
+  `CodeEraser_0.0.1_x64-setup.exe`（NSIS 6.2MB；appimage/dmg 目标
+  已入 conf，随各自平台构建时产出——逐 push 只门编译不门打包）+
+  验收实测入 PERF-BUDGET.md M6 节：zod 71.6k 冷 8.36s/暖 2.66s、
+  ripgrep 55k 冷 5.29s/暖 1.64s——10 万 LOC 外推 ≈11.7s ≪60s 门、
+  暖 <3s 门两语料双过；面效度旁证=ripgrep 982 vs zod 794 与两仓
+  结构口碑同向。
 
 ## 7. 风险与预先立场
 

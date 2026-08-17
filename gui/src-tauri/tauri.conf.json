@@ -20,6 +20,8 @@
     }
   },
   "bundle": {
-    "active": false
+    "active": true,
+    "targets": ["nsis", "appimage", "dmg"],
+    "icon": ["icons/icon.ico"]
   }
 }
