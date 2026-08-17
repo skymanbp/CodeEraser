@@ -19,6 +19,7 @@ pub mod mcp;
 pub mod report;
 pub mod scan;
 pub mod score;
+pub mod structure;
 
 #[cfg(test)]
 pub(crate) mod testutil;
