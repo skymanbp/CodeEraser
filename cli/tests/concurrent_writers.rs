@@ -1,8 +1,10 @@
 //! ADR-003 as amended (plan v1.7): the index is a CONVERGENT
-//! multi-writer cache — every write path is content-gated, idempotent
-//! and self-checking inside IMMEDIATE transactions (the 91835db race
-//! family), so concurrent writers over a quiescent tree converge to
-//! the serial-order state. The audit demonstrated the old
+//! multi-writer cache. Convergence rests on two named legs (the
+//! index.rs header, reworded by the clearance review): per-file
+//! refresh converges by IDEMPOTENCE (delete-then-reinsert of
+//! identical bytes, content-gated), while the order-sensitive paths
+//! (phase-2 sweep, phase 1.5, remove_missing) hold IMMEDIATE locks
+//! around the reads they act on. The audit demonstrated the old
 //! "daemon is the sole writer" clause never held (nine subcommands
 //! write in-process; the daemon's own cold start races its accept
 //! loop) — this battery is the amendment's acceptance: real OS
@@ -96,18 +98,14 @@ fn assert_converged(dir: &Path, want: &str, what: &str) {
     );
 }
 
-/// Two real `ce dedup` processes on ONE database, launched together;
-/// both must exit 0 (busy_timeout absorbs the write contention) and
-/// the surviving state must equal a serial run's digest.
-#[test]
-fn two_concurrent_dedups_converge_to_the_serial_state() {
-    let want = serial_want("conc-serial");
-    let dir = common::tmp("conc-double");
-    habitat(&dir);
+/// Launch two real `ce dedup` processes on `dir` together and require
+/// both to land (busy_timeout absorbs the contention) — the one race
+/// throat both writer legs share (the ratchet's second catch here).
+fn race_two(dir: &Path) {
     let spawn = || {
         std::process::Command::new(env!("CARGO_BIN_EXE_ce"))
             .args(["dedup", "."])
-            .current_dir(&dir)
+            .current_dir(dir)
             .spawn()
             .expect("spawn ce dedup")
     };
@@ -117,12 +115,61 @@ fn two_concurrent_dedups_converge_to_the_serial_state() {
         ra.success() && rb.success(),
         "concurrent writers must both land: {ra:?} {rb:?}"
     );
+}
+
+/// Two real `ce dedup` processes on ONE database, launched together;
+/// the surviving state must equal a serial run's digest.
+#[test]
+fn two_concurrent_dedups_converge_to_the_serial_state() {
+    let want = serial_want("conc-serial");
+    let dir = common::tmp("conc-double");
+    habitat(&dir);
+    race_two(&dir);
     assert_converged(&dir, &want, "two concurrent dedups");
 }
 
-/// The daemon's cold-start indexing races an EXTERNAL writer on the
-/// same database — the exact interleaving coldstart.rs documents.
-/// Both must land and the state must still be the serial state.
+/// A DIRTY tree raced by two writers: after the first index lands,
+/// one file mutates and another is deleted, then two `ce dedup`
+/// processes race the update. This forces the content-gate refresh,
+/// the FK cascade AND remove_missing's delete to interleave for real
+/// (clearance review: the quiescent-habitat legs never exercised the
+/// deletion path at all).
+#[test]
+fn racing_writers_over_a_mutated_tree_converge() {
+    let serial = common::tmp("conc-mut-serial");
+    habitat(&serial);
+    assert!(common::run_ce(&serial, &["dedup", "."]).status.success());
+    mutate(&serial);
+    assert!(common::run_ce(&serial, &["dedup", "."]).status.success());
+    let want = digest(&serial.join(".ce/index.db"));
+
+    let dir = common::tmp("conc-mut-double");
+    habitat(&dir);
+    assert!(common::run_ce(&dir, &["dedup", "."]).status.success());
+    mutate(&dir);
+    race_two(&dir);
+    assert_converged(&dir, &want, "raced writers over a mutated tree");
+}
+
+/// The same mutation on both trees: guide.md's heading changes (slug
+/// fact + content refresh) and twin.rs vanishes (remove_missing).
+fn mutate(dir: &Path) {
+    std::fs::write(
+        dir.join("docs/guide.md"),
+        "# Guide2\nsee [top](../README.md)\n",
+    )
+    .expect("guide.md");
+    std::fs::remove_file(dir.join("src/twin.rs")).expect("rm twin.rs");
+}
+
+/// The daemon's cold-start indexing OVERLAPPING an external writer on
+/// the same database. Honest coverage note (clearance review): the
+/// overlap is opportunistic, not forced — on a small habitat the cold
+/// build may finish before the external writer starts, in which case
+/// this leg pins re-run convergence only; the DETERMINISTIC
+/// interleaving mechanism is pinned by store_tests::
+/// phase_15_is_idempotent_over_a_swept_file, and both-exit-0 plus the
+/// digest equality hold under every schedule.
 #[test]
 fn daemon_cold_start_races_an_external_writer_and_converges() {
     let want = serial_want("conc-dserial");

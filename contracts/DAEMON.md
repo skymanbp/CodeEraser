@@ -57,6 +57,13 @@
 - 形状唯一权威 = `proto.rs` 两枚 enum；本册**不抄写字段清单**
   （单源纪律，M5-close D7 先例）——golden 冻结每个变体的规范字节，
   `cargo test --test daemon_proto`（CE_BLESS=1 蓄意重生成）守护。
+- **覆盖边界（清零批审查注记）**：golden 冻结的是 enum 变体的**信封
+  形状**；`dedup_report.report`、`probe_report.matches`、
+  `four_class_report.report` 三个嵌套载荷是 `serde_json::Value` 直通，
+  其内部键**不在**本门覆盖内（fixture 里的载荷是示意占位）。各自的
+  权威与钉点：dedup report = `dedup::report_json`（observe golden +
+  daemon_e2e 消费）、fourclass report = `fourclass::session` 形状
+  （hook e2e 断言）、probe matches = probe.rs 报告形（guard 电池）。
 
 ## 5. 复跑
 

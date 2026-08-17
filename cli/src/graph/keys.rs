@@ -43,3 +43,55 @@ pub fn resolve_key(live: &BTreeSet<String>, configs: &[(String, u64)]) -> i64 {
     }
     crate::dedup::tokens::fnv1a(&buf) as i64
 }
+
+/// TS-resolver filesystem facts that can never enter the walked set
+/// — compiled-JS twins of in-scope TS files (esm_rewrite stats them)
+/// and the node_modules entry names (bare_rung stats them). They are
+/// resolve-key INPUTS exactly like md slug hashes (the M5-close
+/// precedent): mutate one and the phase-2 sweep must re-fire —
+/// before this, those edges were cached across the mutation forever
+/// (clearance review MED).
+pub fn ts_fs_facts(root: &Path, live: &BTreeSet<String>) -> Vec<(String, u64)> {
+    let mut twins = Vec::new();
+    for p in live {
+        let Some(stem) = p.strip_suffix(".ts").or_else(|| p.strip_suffix(".tsx")) else {
+            continue;
+        };
+        for ext in ["js", "mjs", "cjs"] {
+            let twin = format!("{stem}.{ext}");
+            if root.join(&twin).is_file() {
+                twins.push(twin);
+            }
+        }
+    }
+    twins.sort();
+    let mut nm = node_modules_names(root);
+    nm.sort();
+    let h = |v: &[String]| crate::dedup::tokens::fnv1a(v.join("\n").as_bytes());
+    vec![
+        ("ts:js_twins".into(), h(&twins)),
+        ("ts:node_modules".into(), h(&nm)),
+    ]
+}
+
+/// Top-level node_modules entries, @scope dirs expanded one level —
+/// the exact shapes bare_rung's `is_dir` probes can name.
+fn node_modules_names(root: &Path) -> Vec<String> {
+    let mut out = Vec::new();
+    let Ok(entries) = std::fs::read_dir(root.join("node_modules")) else {
+        return out;
+    };
+    for e in entries.flatten() {
+        let name = e.file_name().to_string_lossy().into_owned();
+        if name.starts_with('@') {
+            if let Ok(inner) = std::fs::read_dir(e.path()) {
+                for s in inner.flatten() {
+                    out.push(format!("{name}/{}", s.file_name().to_string_lossy()));
+                }
+            }
+        } else {
+            out.push(name);
+        }
+    }
+    out
+}

@@ -6,7 +6,7 @@
 module Main (main) where
 
 import CE.Protocol (internalError, respond)
-import Control.Exception (SomeException, evaluate, try)
+import Control.Exception (SomeAsyncException, SomeException, evaluate, fromException, throwIO, try)
 import qualified Data.ByteString.Char8 as B8
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
@@ -41,7 +41,13 @@ serve = do
         -- materialized by evaluate, so any defect surfaces here as an
         -- error line and the session survives
         reply <- try (evaluate (respond coreVersion line))
-        B8.hPutStrLn stdout (either onCrash id reply)
+        out <- either onCrash pure reply
+        B8.hPutStrLn stdout out
         loop
-  onCrash :: SomeException -> B8.ByteString
-  onCrash = internalError . show
+  -- an ASYNC exception (interrupt, RTS kill) is not a request defect
+  -- — rethrow so the barrier never makes the process uninterruptible
+  -- (clearance review on the first cut's SomeException net)
+  onCrash :: SomeException -> IO B8.ByteString
+  onCrash e = case fromException e :: Maybe SomeAsyncException of
+    Just _ -> throwIO e
+    Nothing -> pure (internalError (show e))

@@ -11,7 +11,16 @@
    "ripgrep",
    "self"
   ],
-  "workflow_run": "wf_70a4b368-77f"
+  "workflow_run": "wf_70a4b368-77f",
+  "corpus_notes": {
+   "requests": [
+    "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   ],
+   "self": [
+    "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   ]
+  },
+  "repair": "2026-08-17: 40 sites carried per-corpus methodology prose in `corpus` (agent formatting); reassigned to the bare name by 20-site position, prose preserved in corpus_notes. Classes/counts untouched."
  },
  "gate": {
   "threshold": 0.9,
@@ -270,7 +279,7 @@
     "class": "correct_absent",
     "true_target": "external (builtin str.split)",
     "why": "First call at/after line 40 is `urllib3_version_list = urllib3_version.split(\".\")[:3]`; the receiver is the parameter annotated `urllib3_version: str` (line 61), so the target is str.split, and grep for `def split(` over the whole corpus root returns nothing.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/_internal_utils.py",
@@ -280,7 +289,7 @@
     "class": "correct_absent",
     "true_target": "external (Python builtin isinstance)",
     "why": "Lines 40-45 are the docstring of `def unicode_is_ascii`, so the first call at/after 40 is `assert isinstance(u_string, str)`; no `def isinstance(` exists anywhere in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/_internal_utils.py",
@@ -290,7 +299,7 @@
     "class": "correct_absent",
     "true_target": "external (builtin str.encode)",
     "why": "Second site in this file (substituting for __version__.py, which has no call expressions at all): `u_string.encode(\"ascii\")` where `u_string: str` per the signature at line 39; grep finds no `def encode(` in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/_types.py",
@@ -300,7 +309,7 @@
     "class": "correct_absent",
     "true_target": "external (Python builtin isinstance)",
     "why": "Lines 40-188 of _types.py contain only TypeAlias assignments, Protocol/TypedDict class bodies and subscripts — no call expressions — so per the rule I scanned backwards to the nearest preceding call, `return isinstance(obj, SupportsRead) or hasattr(obj, \"read\")` (line 34); no in-repo `def isinstance(`.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/adapters.py",
@@ -310,7 +319,7 @@
     "class": "true_unique",
     "true_target": "src/requests/exceptions.py:114 (class InvalidSchema(RequestException, ValueError))",
     "why": "Lines 39-64 are pure import statements, so the first call at/after 40 is `raise InvalidSchema(\"Missing dependencies for SOCKS support.\")`; adapters.py:44 imports it via `from .exceptions import (... InvalidSchema ...)` and the corpus contains exactly one definition, exceptions.py:114.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/api.py",
@@ -320,7 +329,7 @@
     "class": "true_unique",
     "true_target": "src/requests/sessions.py:395 (class Session(SessionRedirectMixin))",
     "why": "Lines 27-65 are the request() docstring (its `>>> requests.request(...)` example is inside a string and skipped), so the first real call is `with sessions.Session() as session:`; api.py:15 does `from . import sessions` and the only in-repo definition named Session is sessions.py:395.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/auth.py",
@@ -330,7 +339,7 @@
     "class": "correct_absent",
     "true_target": "external (Python builtin isinstance)",
     "why": "Lines 40-43 are comments inside `_basic_auth_str`, so the first call at/after 40 is `if not isinstance(username, basestring):`; no `def isinstance(` exists in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/certs.py",
@@ -340,7 +349,7 @@
     "class": "correct_absent",
     "true_target": "external (Python builtin print)",
     "why": "certs.py is 18 lines (<40) so the middle line is 9, which sits in the module docstring; the first call at/after it is the textually-outermost `print(where())` in the `if __name__ == \"__main__\"` block, and no `def print(` exists in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/compat.py",
@@ -350,7 +359,7 @@
     "class": "correct_absent",
     "true_target": "external (stdlib importlib.import_module)",
     "why": "First call at/after line 40 is `chardet = importlib.import_module(lib)` inside `_resolve_char_detection`; the receiver comes from `import importlib` at compat.py:14, and grep finds no `def import_module(` in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/cookies.py",
@@ -360,7 +369,7 @@
     "class": "false_wrong",
     "true_target": "src/requests/_types.py:47 (def is_prepared) — reached under the local alias _is_prepared",
     "why": "The call is `assert _is_prepared(request)` and cookies.py:20 reads `from ._types import is_prepared as _is_prepared`, so the real target is in-repo but is defined under a DIFFERENT name; whole-repo same-name matching on `_is_prepared` finds 0 definitions and therefore mints no edge where a genuine intra-repo edge exists (the false-negative / aliased-import subtype of wrong behavior; it is not correct_absent because the target is not external).",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/exceptions.py",
@@ -370,7 +379,7 @@
     "class": "false_ambig",
     "true_target": "external (json.JSONDecodeError.__init__ via `from .compat import JSONDecodeError as CompatJSONDecodeError`)",
     "why": "The call is `CompatJSONDecodeError.__init__(self, *args)` and exceptions.py:14 aliases the stdlib/simplejson JSONDecodeError, so the true target is external — yet grep for `^\\s*def __init__\\s*\\(` returns 30 in-repo .py definitions (auth.py x6, models.py x3, structures.py x2, tests/test_requests.py x8, …), so name matching would fan out 30 wrong edges.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/help.py",
@@ -380,7 +389,7 @@
     "class": "correct_absent",
     "true_target": "external (stdlib platform.python_implementation)",
     "why": "Lines 36-45 are the `_implementation` docstring, so the first call at/after 40 is `implementation = platform.python_implementation()`; the receiver is `import platform` (help.py:4) and no `def python_implementation(` exists in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/hooks.py",
@@ -390,7 +399,7 @@
     "class": "false_ambig",
     "true_target": "external (dict/Mapping.get builtin method)",
     "why": "The call is `hook_list: ... = hooks_dict.get(key)` where line 39 sets `hooks_dict = hooks or {}` typed `_t.HooksInputType | None` (a Mapping), so the target is the builtin Mapping.get — but the corpus holds 6 `def get(` lines (api.py:74, cookies.py:211, sessions.py:655, structures.py:124/127/129, i.e. 4 distinct implementations plus 2 @overload stubs), all of them wrong edges.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/models.py",
@@ -400,7 +409,7 @@
     "class": "correct_absent",
     "true_target": "external (stdlib urllib.parse.urlsplit, re-exported through requests.compat)",
     "why": "Lines 40-115 are imports, module constants and the RequestEncodingMixin header, so the first call at/after 40 is `p = urlsplit(cast(str, self.url))`; models.py:48 imports urlsplit from .compat, and compat.py:99 imports it from urllib.parse — a pure re-export chain with no in-repo `def urlsplit(`.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/packages.py",
@@ -410,7 +419,7 @@
     "class": "correct_absent",
     "true_target": "external (Python builtin list)",
     "why": "packages.py is 23 lines (<40) so the middle line is 12, and that line is itself the first call: `for mod in list(sys.modules):`; grep finds no `def list(` or `class list` in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/sessions.py",
@@ -420,7 +429,7 @@
     "class": "correct_absent",
     "true_target": "external (Python builtin isinstance)",
     "why": "Lines 40-88 are imports, the TYPE_CHECKING block, the preferred_clock branch and merge_setting's docstring/early returns, so the first call at/after 40 is `isinstance(session_setting, Mapping) and isinstance(request_setting, Mapping)`; no in-repo `def isinstance(`.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/status_codes.py",
@@ -430,7 +439,7 @@
     "class": "true_unique",
     "true_target": "src/requests/structures.py:96 (class LookupDict(dict[str, _VT]))",
     "why": "Lines 23-104 are a literal `_codes` dict of int->tuple entries with no calls, so the first call at/after 40 is `codes: LookupDict[int] = LookupDict(name=\"status_codes\")`; status_codes.py:21 does `from .structures import LookupDict` and structures.py:96 is the sole definition of that name corpus-wide.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/structures.py",
@@ -440,7 +449,7 @@
     "class": "correct_absent",
     "true_target": "external (stdlib collections.OrderedDict)",
     "why": "Lines 20-45 are the CaseInsensitiveDict class header and docstring (its `cid = CaseInsensitiveDict()` example is inside the string and skipped), so the first call at/after 40 is `self._store = OrderedDict()`; structures.py:10 reads `from collections import OrderedDict` and no in-repo def/class of that name exists.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/utils.py",
@@ -450,7 +459,7 @@
     "class": "correct_absent",
     "true_target": "external (certifi.where)",
     "why": "Lines 39-78 are imports plus the NETRC_FILES tuple, so the first call at/after 40 is `DEFAULT_CA_BUNDLE_PATH: str = certs.where()`; utils.py:35 does `from . import certs` and certs.py:15 is only `from certifi import where`, so the chain terminates outside the repo and grep finds no `def where(`.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "src/requests/utils.py",
@@ -460,7 +469,7 @@
     "class": "correct_absent",
     "true_target": "external (builtin str.join)",
     "why": "Second site in utils.py (the k=19 pick collides on the last index): `DEFAULT_ACCEPT_ENCODING: Final = \", \".join(` — the receiver is the string literal `\", \"`, so the target is str.join, and no `def join(` exists anywhere in the corpus.",
-    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+    "corpus": "requests"
    },
    {
     "file": "active_help.go",
@@ -870,7 +879,7 @@
     "class": "true_unique",
     "true_target": "cli/src/audit.rs:82 fn audit(root: &Path, session: &str) -> ExitCode",
     "why": "run_hook's tail is `audit(&PathBuf::from(&env.cwd), &env.session_id)`; the only in-corpus `fn audit(` is the private same-file definition at audit.rs:82, whose (&Path, &str) signature matches the two arguments.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/daemon/judge.rs",
@@ -880,7 +889,7 @@
     "class": "true_unique",
     "true_target": "cli/src/fourclass/batch.rs:46 pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchClassification",
     "why": "judge.rs:9 imports `use crate::fourclass::batch::{PairInput, classify_batch};` and the sole in-corpus definition is batch.rs:46; no other `fn classify_batch` exists in Rust or Haskell.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/dedup/index.rs",
@@ -890,7 +899,7 @@
     "class": "correct_absent",
     "true_target": "external — rusqlite::Row::get",
     "why": "`end_line: r.get::<_, i64>(4)? as usize,` inside `fn from_row(r: &rusqlite::Row<'_>)` (index.rs:34); grep for `fn get(`/`fn get<` over cli/src and core/app returns nothing, so name matching correctly mints no edge.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/dedup/struct_fp.rs",
@@ -900,7 +909,7 @@
     "class": "correct_absent",
     "true_target": "external — std Vec::pop",
     "why": "`while let Some(node) = stack.pop()` with `let mut stack = vec![root];` on the previous line (struct_fp.rs:39), so the receiver is Vec<tree_sitter::Node>; there is no `fn pop` anywhere in the corpus (the only hit repo-wide is the vendored fixture contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs).",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/dedup/winnow.rs",
@@ -910,7 +919,7 @@
     "class": "false_wrong",
     "true_target": "external — std Vec::push",
     "why": "`hashes.push(h);` where `let mut hashes = Vec::with_capacity(...)` (winnow.rs:29) makes the receiver Vec<u64>, but the corpus holds exactly one `fn push`: cli/src/dedup/sources.rs:69 `fn push(&mut self, set: &mut BTreeSet<(usize, usize)>, x: usize, y: usize, src: &str)`, an inherent candidate-collector method — name matching mints one edge and it is the wrong one.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/docdup/segments.rs",
@@ -920,7 +929,7 @@
     "class": "true_unique",
     "true_target": "cli/src/docdup/segments.rs:55 fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed)",
     "why": "`Lang::Markdown => md_paragraphs(text),` inside `pub fn extract`; the single in-corpus `fn md_paragraphs` is the private same-file definition at segments.rs:55 and its return type matches extract's.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/fourclass/mod.rs",
@@ -930,7 +939,7 @@
     "class": "false_wrong",
     "true_target": "external — std str::lines",
     "why": "`let a: Vec<&str> = before.lines().collect();` with `before: &str` from `pub fn classify(before: &str, after: &str, lang: Lang)` (mod.rs:64), yet the corpus's one `fn lines` is cli/src/dedup/t3/tree.rs:78 `fn lines(node: Node) -> (usize, usize)` — an unrelated tree-sitter span helper that shadows the stdlib callee.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/graph/gomod.rs",
@@ -940,7 +949,7 @@
     "class": "true_unique",
     "true_target": "cli/src/graph/roots.rs:160 pub(crate) fn parent_dir(rel: &str) -> String",
     "why": "`dir: roots::parent_dir(rel),` resolved through `use super::roots;` (gomod.rs:7); roots.rs:160 is the only `fn parent_dir` in the corpus. (Skipped the enclosing `Some(GoMod { .. })` on line 41 as an enum-variant constructor, not a function call.)",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/graph/ladder/mod.rs",
@@ -950,7 +959,7 @@
     "class": "false_ambig",
     "true_target": "cli/src/graph/ladder/ts.rs:25 pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome",
     "why": "`Lang::TypeScript | Lang::Tsx => ts::resolve(site.from, site.spec, scope),` in the dispatcher; the corpus defines `fn resolve` eight times — ladder/{ts,py,rs,go,md,hs}.rs, ladder/mod.rs:114 itself, and cli/src/mcp.rs:119 — so name matching would fan one site out to eight targets including a self-edge.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/graph/md_tests.rs",
@@ -960,7 +969,7 @@
     "class": "true_unique",
     "true_target": "cli/src/graph/md_tests.rs:26 fn kinds_specs(text: &str) -> Vec<(&'static str, String)>",
     "why": "`assert_eq!(kinds_specs(text), vec![]);` — the assert_eq! macro itself is skipped per the protocol, and the inner callee's only definition is the same-file helper at md_tests.rs:26.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/graph/store_tests.rs",
@@ -970,7 +979,7 @@
     "class": "correct_absent",
     "true_target": "external — std String::clone (Clone trait)",
     "why": "`dst_path: s.file.clone(),` inside the ensure_resolved closure, where `s` is a `CachedSite` and `pub file: String` (cli/src/graph/store.rs:175); the corpus has no hand-written `fn clone` (only derives), so no edge is minted.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/join/mod.rs",
@@ -980,7 +989,7 @@
     "class": "false_ambig",
     "true_target": "cli/src/dedup/mod.rs:105 pub fn analyze(root, db, min_tokens, min_distinct) -> Result<(pairs::Blocks, Summary)>",
     "why": "`let (found, _summary) = dedup::analyze(root, db.clone(), None, None)?;` resolved via `use crate::dedup::{self, pairs::Block};` (join/mod.rs:16), but three in-corpus `fn analyze` exist — dedup/mod.rs:105, scan/mod.rs:39, graph/mod.rs:41 (a fourth lives in the excluded cli/tests/common/mod.rs:154).",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/main_score.rs",
@@ -990,7 +999,7 @@
     "class": "true_unique",
     "true_target": "cli/src/main_cmds.rs:20 pub fn or_cwd(root: Option<PathBuf>) -> PathBuf",
     "why": "`let (root, as_json) = (or_cwd(judge.root), json(judge.format));` with `use crate::main_cmds::{fail, json, or_cwd};` at main_score.rs:8; main_cmds.rs:20 is the only definition of that name.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/scan/metrics/cyclo.rs",
@@ -1000,7 +1009,7 @@
     "class": "correct_absent",
     "true_target": "external — tree_sitter::Node::is_named",
     "why": "File is 30 lines (<40) so the middle line 15 was used and the first call at/after it is `if !node.is_named() {` on line 16; `node` comes from `own_nodes(fn_node, spec)` yielding tree_sitter::Node, and no `fn is_named` exists in the corpus.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "cli/src/scan/walk.rs",
@@ -1010,7 +1019,7 @@
     "class": "true_unique",
     "true_target": "cli/src/config.rs:91 pub fn load(root: &Path) -> Result<Self, String> (inside impl Config at config.rs:89)",
     "why": "Substituted file for index 94 (spec_hs.rs has no call expressions at all). `let config = crate::config::Config::load(root)?;` names the path explicitly, and config.rs:91 is the corpus's only `fn load` (cli/tests/eval_support/mod.rs:64 is outside the corpus).",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "core/app/CE/Clone.hs",
@@ -1020,7 +1029,7 @@
     "class": "correct_absent",
     "true_target": "external — Data.Aeson.withObject",
     "why": "`parseJSON = withObject \"CloneReq\" $ \\o ->` in the FromJSON CloneReq instance; the name enters unqualified through `import Data.Aeson` (Clone.hs:21) and no corpus module defines `withObject` (no `^withObject ::` or Rust `fn withObject`).",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "core/app/CE/FourClass.hs",
@@ -1030,7 +1039,7 @@
     "class": "false_ambig",
     "true_target": "core/app/CE/FourClass.hs:30 violation :: [Pair] -> Maybe Int",
     "why": "File is 39 lines (<40) so middle line 20 applies: `Right req -> case violation (reqPairs req) of` binds to the same module's local definition at FourClass.hs:30, but the corpus has five top-level `violation` bindings — CE/Clone.hs:67, CE/Docdup.hs:56, CE/FourClass.hs:30, CE/Graph.hs:65, CE/Verdict/Wire.hs:70 — each a different type; only Haskell's module scoping disambiguates them.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "core/app/CE/Graph/Build.hs",
@@ -1040,7 +1049,7 @@
     "class": "correct_absent",
     "true_target": "external — Data.IntSet.fromList",
     "why": "`reachFrom b seeds = IS.fromList (concatMap (G.reachable (bGraph b)) seeds)` with `import qualified Data.IntSet as IS` (Build.hs:11); no corpus binding is named `fromList`, so the qualified container call correctly yields no in-repo edge.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "core/app/CE/Protocol.hs",
@@ -1050,7 +1059,7 @@
     "class": "correct_absent",
     "true_target": "external — Data.Aeson.withObject",
     "why": "`parseJSON = withObject \"Envelope\" $ \\o ->` (first application at/after line 40; lines 41-50 are a comment block and the Envelope record), unqualified from `import Data.Aeson` at Protocol.hs:19; no corpus definition of that name.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    },
    {
     "file": "core/app/Main.hs",
@@ -1060,7 +1069,7 @@
     "class": "correct_absent",
     "true_target": "external — System.IO.hPutStrLn",
     "why": "File is 39 lines (<40) so the middle line 20 applies, but line 20 (`[] -> serve`) is a bare nullary reference rather than an application, so the first real call expression is `hPutStrLn stderr (\"ce-core: unknown arguments: \" <> unwords args)` at line 22, coming from `import System.IO` (Main.hs:12); no corpus binding is named hPutStrLn.",
-    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+    "corpus": "self"
    }
   ]
  }

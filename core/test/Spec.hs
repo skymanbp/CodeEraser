@@ -180,18 +180,28 @@ structural = do
         <> B8.intercalate "," (replicate (fromInteger edgeCap + 1) "[0,0,0,0]")
         <> "],\"pos\":[]}"
 
--- | The ledger-clearance C1 refusal trio, split from structural at
--- the E01 50-line function cap: a typo'd envelope still echoes its
--- id, and the two new boundary rows refuse by name.
+-- | The ledger-clearance refusal probes, split from structural at
+-- the E01 50-line function cap and TABLE-driven (the dedup ratchet
+-- caught the check-ladder shape cloning structural's): a typo'd
+-- envelope still echoes its id (without it the client reads a shape
+-- mistake as L2-down, VERSIONING.md §1), the two new boundary rows
+-- refuse by name, and the exception barrier's error code is pinned
+-- to the §1 enum — the clearance review caught `internal` shipping
+-- outside the booklet's closed set.
 refusalProbes :: IO Bool
 refusalProbes = do
-  -- without the id echo the client reads a shape mistake as L2-down
-  -- (the non-echoed-id desync rule, VERSIONING.md §1)
-  j <- check "envelope decode failure echoes a present id" (field badEnvReply "id" == Just (Number 42))
-  k <- check "graph pos must ascend" (field dupPosReply "message" == Just "pos 1: not strictly ascending")
-  l <- check "duplicate fourclass pair index refused" (field dupPairReply "message" == Just "duplicate pair index: 3")
-  pure (and [j, k, l])
+  results <-
+    mapM
+      probe
+      [ ("envelope decode failure echoes a present id", badEnvReply, "id", Number 42)
+      , ("graph pos must ascend", dupPosReply, "message", String "pos 1: not strictly ascending")
+      , ("duplicate fourclass pair index refused", dupPairReply, "message", String "duplicate pair index: 3")
+      , ("barrier reply carries code internal", Protocol.internalError "boom", "code", String "internal")
+      , ("barrier id stays null", Protocol.internalError "boom", "id", Null)
+      ]
+  pure (and results)
  where
+  probe (name, bytes, key, want) = check name (field bytes key == Just want)
   badEnvReply = Protocol.respond "0.0.1" "{\"proto\":\"2.3.0\",\"id\":42}"
   dupPosReply =
     Protocol.respond

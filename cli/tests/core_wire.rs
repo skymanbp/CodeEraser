@@ -73,6 +73,15 @@ fn wire_goldens_roundtrip() {
 fn corelink_open_and_desync() {
     let (mut link, reply) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
     assert!(reply.accept, "hello accepted");
+    // the FULL version welds here, not just the negotiated major —
+    // clearance review: §1's "pinned by the shared fixture" claim was
+    // false for the Rust constant, which could advance alone with
+    // every test green
+    assert_eq!(
+        reply.proto,
+        codeeraser::corelink::PROTO,
+        "client PROTO and core proto drifted"
+    );
     assert!(link.has("hello"), "capability discovery");
     assert!(link.has("fourclass/2"), "judgment capability offered");
     assert!(link.has("graph/1"), "graph capability offered (M5-2a)");

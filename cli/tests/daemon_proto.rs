@@ -127,6 +127,18 @@ fn freeze<T: serde::Serialize + serde::de::DeserializeOwned>(
 
 #[test]
 fn wire_shapes_are_frozen() {
+    // count pins beside the wildcard-free matches: adding a variant
+    // breaks req_tag/resp_tag at COMPILE time, and these two lines
+    // are where the walk ends — bump each count WITH its fixture
+    // line, or the "every variant is frozen" claim silently rots
+    // (clearance review). requests() carries 7 items over 6 variants
+    // (Dedup appears twice to pin the null-optional shape).
+    assert_eq!(
+        requests().len(),
+        7,
+        "request battery: 6 variants + the None-Dedup shape"
+    );
+    assert_eq!(replies().len(), 8, "reply battery covers all 8 variants");
     freeze(requests(), req_tag, "daemon/requests.ndjson");
     freeze(replies(), resp_tag, "daemon/replies.ndjson");
 }

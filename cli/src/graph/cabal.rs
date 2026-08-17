@@ -60,13 +60,16 @@ pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
 
 /// One parser step — a stanza header, a field with its continuation
 /// block, or a line to skip; returns the next line index. A `common`
-/// or unknown header opens a DEAD region: its fields reach
-/// components only through `import:` indirection (not modeled), and
-/// routing them to the previous stanza mis-attributed a common
-/// stanza's hs-source-dirs (M5-close review LOW).
+/// or unknown header opens a DEAD region for hs-source-dirs: those
+/// reach components only through `import:` indirection (not
+/// modeled), and routing them to the previous stanza mis-attributed
+/// a common stanza's roots (M5-close review LOW). A column-0 COMMENT
+/// is not a header and must not toggle the region — the clearance
+/// review caught the first cut killing a live stanza's fields on a
+/// top-level `-- note` inside it.
 fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], i: usize) -> usize {
     let trimmed = lines[i].trim();
-    if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() {
+    if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() && !trimmed.starts_with("--") {
         *live = HEADS.contains(&head_word(trimmed).as_str());
         if *live {
             out.stanzas.push(Stanza { roots: Vec::new() });
@@ -78,9 +81,7 @@ fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], i: usize) -
     };
     let mut values = vec![first.to_string()];
     let next = continuation(lines, i + 1, &mut values);
-    if *live {
-        consume(out, dir, &field, &values);
-    }
+    consume(out, dir, &field, &values, *live);
     next
 }
 
@@ -121,12 +122,19 @@ fn finish(out: &mut Cabal, dir: &str) {
     out.deps.dedup();
 }
 
-/// Route one collected field into the surface. Fields outside a
-/// stanza (pre-2.0 top-level layout) fall to the LAST stanza if one
-/// exists, else are dropped — the empty-stanza default covers them.
-fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String]) {
+/// Route one collected field into the surface. hs-source-dirs is
+/// per-STANZA and only lands while live (a common stanza's roots
+/// reach components only via import:, not modeled); build-depends is
+/// the file-wide UNION feeding the R2 external gate — a dependency
+/// declared in a `common` stanza IS declared in this file, so it
+/// accumulates regardless of the region (clearance review: the first
+/// cut starved hs.rs's gate for the common-deps + import layout).
+/// Fields outside any stanza (pre-2.0 top-level layout) fall to the
+/// LAST stanza if one exists, else are dropped — the empty-stanza
+/// default covers them.
+fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String], live: bool) {
     match field {
-        "hs-source-dirs" => {
+        "hs-source-dirs" if live => {
             let Some(stanza) = out.stanzas.last_mut() else {
                 return;
             };
@@ -216,6 +224,40 @@ mod tests {
         assert_eq!(
             c.deps,
             ["aeson", "array", "base", "bytestring", "containers"]
+        );
+    }
+
+    fn parse_str(text: &str) -> super::Cabal {
+        let dir = std::env::temp_dir().join(format!("ce-cabal-probe-{}", std::process::id()));
+        std::fs::create_dir_all(dir.join("pkg")).expect("mkdir");
+        std::fs::write(dir.join("pkg/x.cabal"), text).expect("write");
+        parse(&dir, "pkg/x.cabal").expect("parse")
+    }
+
+    /// The two dead-region boundary cases the clearance review drew
+    /// (both counterfactual against the first `live`-bit cut):
+    /// a column-0 comment INSIDE a live stanza must not open a dead
+    /// region, and a `common` stanza drops its roots but its
+    /// build-depends still join the file-wide union feeding R2.
+    #[test]
+    fn comments_keep_stanzas_live_and_common_deps_still_count() {
+        let c =
+            parse_str("library\n-- top-level note\n  hs-source-dirs: src\n  build-depends: base\n");
+        assert_eq!(c.stanzas[0].roots, ["pkg/src".to_string()]);
+        assert_eq!(c.deps, ["base"]);
+        let c = parse_str(
+            "common deps\n  hs-source-dirs: gen\n  build-depends: text\nlibrary\n  hs-source-dirs: src\n",
+        );
+        assert_eq!(c.stanzas.len(), 1, "common opens no stanza");
+        assert_eq!(
+            c.stanzas[0].roots,
+            ["pkg/src".to_string()],
+            "common roots dropped"
+        );
+        assert_eq!(
+            c.deps,
+            ["text"],
+            "common build-depends still declared in this file"
         );
     }
 }

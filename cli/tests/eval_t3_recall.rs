@@ -80,35 +80,52 @@ fn tally_rows(corpus: &str, rows: &[serde_json::Value]) -> (u64, u64, u64, Bucke
     (det, t12, t3_rest, buckets)
 }
 
+/// Provenance + description pins (split from the test body at the
+/// E01 warn line): tool identity fields, coverage exclusions, and
+/// the method text SPEAKING the vocabulary the rows use — the first
+/// freeze described a different one (clearance review: the prose
+/// denied the very separation the rows perform).
+fn check_provenance(corpus: &str, doc: &serde_json::Value, buckets: &Buckets) {
+    assert_eq!(doc["schema"], "ce.eval-t3-recall/1.0.0", "{corpus}");
+    assert_eq!(doc["corpus"]["name"], corpus, "{corpus}: name");
+    for field in ["name", "version", "threshold_source", "invocation"] {
+        assert!(
+            doc["tool"][field].as_str().is_some_and(|s| !s.is_empty()),
+            "{corpus}: tool.{field} missing — provenance is the contract"
+        );
+    }
+    let method = doc["method"].as_str().expect("method");
+    assert!(
+        method.contains("ripgrep EXCLUDED") && method.contains("self EXCLUDED"),
+        "{corpus}: the coverage exclusions must ride the doc"
+    );
+    for seat in buckets.keys() {
+        assert!(
+            method.contains(seat),
+            "{corpus}: bucket {seat} carries misses but the method text never names it"
+        );
+    }
+}
+
 #[test]
 fn recall_docs_replay_and_never_regress() {
     for (corpus, f_det, f_den) in FLOORS {
         let doc = load(&doc_path(corpus));
-        assert_eq!(doc["schema"], "ce.eval-t3-recall/1.0.0", "{corpus}");
-        assert_eq!(doc["corpus"]["name"], corpus, "{corpus}: name");
-        for field in ["name", "version", "threshold_source", "invocation"] {
-            assert!(
-                doc["tool"][field].as_str().is_some_and(|s| !s.is_empty()),
-                "{corpus}: tool.{field} missing — provenance is the contract"
-            );
-        }
-        let method = doc["method"].as_str().expect("method");
-        assert!(
-            method.contains("ripgrep EXCLUDED") && method.contains("self EXCLUDED"),
-            "{corpus}: the coverage exclusions must ride the doc"
-        );
         let rows = doc["rows"].as_array().expect("rows");
         let (det, t12, t3_rest, buckets) = tally_rows(corpus, rows);
-        let s = &doc["summary"];
-        let n = |k: &str| s[k].as_u64().unwrap_or_else(|| panic!("{corpus}: {k}"));
-        assert_eq!(n("denominator"), rows.len() as u64, "{corpus}: denominator");
-        assert_eq!(n("detected"), det, "{corpus}: detected drifted from rows");
-        assert_eq!(n("t1t2_covered"), t12, "{corpus}: t1t2 drifted");
-        assert_eq!(n("t3_of_rest"), t3_rest, "{corpus}: t3 drifted");
-        assert_eq!(
-            n("incremental_denominator"),
-            rows.len() as u64 - t12,
-            "{corpus}: incremental denominator"
+        check_provenance(corpus, &doc, &buckets);
+        // decision ③: the denominator NEVER shrinks — the ratio floor
+        // alone would stay green through a row-deleting re-freeze
+        // (clearance review HIGH)
+        assert!(
+            rows.len() as u64 >= f_den,
+            "{corpus}: denominator shrank below the frozen epoch {f_den}"
+        );
+        replay_summary(
+            corpus,
+            &doc["summary"],
+            rows.len() as u64,
+            (det, t12, t3_rest),
         );
         let frozen: Buckets = doc["miss_attribution"]
             .as_object()
@@ -131,6 +148,37 @@ fn recall_docs_replay_and_never_regress() {
     }
 }
 
+/// The summary block replays FROM the tallied rows — including the
+/// two PUBLISHED ratios, the only fields the first cut skipped
+/// (clearance review: a doc could carry recall_raw 0.90 over
+/// 1417/9205 integers and stay green). Split from the test body at
+/// the E01 75-line hard cap — the tool biting this very file a
+/// second time.
+fn replay_summary(corpus: &str, s: &serde_json::Value, den: u64, tally: (u64, u64, u64)) {
+    let (det, t12, t3) = tally;
+    let n = |k: &str| s[k].as_u64().unwrap_or_else(|| panic!("{corpus}: {k}"));
+    assert_eq!(n("denominator"), den, "{corpus}: denominator");
+    assert_eq!(n("detected"), det, "{corpus}: detected drifted from rows");
+    assert_eq!(n("t1t2_covered"), t12, "{corpus}: t1t2 drifted");
+    assert_eq!(n("t3_of_rest"), t3, "{corpus}: t3 drifted");
+    assert_eq!(
+        n("incremental_denominator"),
+        den - t12,
+        "{corpus}: incremental denominator"
+    );
+    // tolerance = half an ulp of the generator's 4-decimal rounding
+    // (requests stores 0.1576 for 67/425 = 0.157647… — convention)
+    let f = |k: &str| s[k].as_f64().unwrap_or_else(|| panic!("{corpus}: {k}"));
+    assert!(
+        (f("recall_raw") - det as f64 / den as f64).abs() < 5e-5,
+        "{corpus}: recall_raw drifted from detected/denominator"
+    );
+    assert!(
+        (f("recall_incremental") - t3 as f64 / (den - t12) as f64).abs() < 5e-5,
+        "{corpus}: recall_incremental drifted from t3_of_rest/incremental_denominator"
+    );
+}
+
 /// The three covered corpora are the whole family — a fourth doc (or
 /// a vanished one) is a coverage-list change that must be decided,
 /// not slipped in.
@@ -148,6 +196,17 @@ fn coverage_list_is_closed() {
             "{absent}: excluded from coverage by the documented reasons — a doc here is a decision"
         );
     }
-    let total: u64 = FLOORS.iter().map(|(_, _, d)| d).sum();
+    // summed from the FROZEN DOCS, not the in-file constant — the
+    // first cut summed FLOORS, a compile-time truth that could never
+    // fire on data (clearance review)
+    let total: u64 = FLOORS
+        .iter()
+        .map(|(corpus, _, _)| {
+            load(&doc_path(corpus))["rows"]
+                .as_array()
+                .expect("rows")
+                .len() as u64
+        })
+        .sum();
     assert!(total >= 9_000, "family denominator went near-vacuous");
 }

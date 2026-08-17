@@ -4,17 +4,22 @@
 //! multi-writer cache. Incremental invalidation is content-hash gated
 //! per file: unchanged bytes touch nothing; a change deletes and
 //! reinserts only that file's rows — fingerprints and its graph
-//! phase-1 rows in ONE transaction, so any interleaving of writers
-//! converges to a serial-order state (acceptance: the
-//! concurrent_writers battery). The daemon exists for performance,
-//! not correctness. Schema lifecycle lives in dedup/schema.rs; graph
-//! DDL + phase 2 in graph/store.rs.
+//! phase-1 rows in ONE transaction. Convergence rests on TWO legs,
+//! named precisely (clearance review): refresh_file's gate check runs
+//! before its DEFERRED transaction, so two writers may both refresh —
+//! and converge because delete-then-reinsert of IDENTICAL bytes is
+//! idempotent; remove_missing acts on a read it takes INSIDE an
+//! IMMEDIATE lock (a DEFERRED read-then-upgrade dies BUSY_SNAPSHOT
+//! under WAL — busy_timeout does not cover snapshot invalidation).
+//! Acceptance: the concurrent_writers battery. The daemon exists for
+//! performance, not correctness. Schema lifecycle lives in
+//! dedup/schema.rs; graph DDL + phase 2 in graph/store.rs.
 
 use super::{Params, schema, tokens, winnow};
 use crate::graph::store;
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
-use rusqlite::Connection;
+use rusqlite::{Connection, TransactionBehavior};
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -149,9 +154,16 @@ impl Index {
     }
 
     /// Drop rows for files no longer on disk; returns removed count.
-    /// One transaction — per-row autocommit meant one fsync per file.
+    /// One IMMEDIATE transaction (clearance review HIGH): the SELECT
+    /// this acts on sits inside the write lock — the DEFERRED
+    /// read-then-upgrade form hit SQLITE_BUSY_SNAPSHOT under WAL
+    /// whenever a concurrent writer landed between them, and the busy
+    /// handler is not consulted for that case. Also one transaction,
+    /// not per-row autocommit (one fsync per file).
     pub fn remove_missing(&mut self, live: &BTreeSet<String>) -> Result<usize> {
-        let tx = self.conn.transaction()?;
+        let tx = self
+            .conn
+            .transaction_with_behavior(TransactionBehavior::Immediate)?;
         let paths: Vec<(i64, String)> = tx
             .prepare("SELECT id, path FROM files")?
             .query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?
@@ -173,6 +185,16 @@ impl Index {
         Ok(self
             .conn
             .query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?)
+    }
+
+    /// Coldstart completeness stamp + probe — the meta lifecycle
+    /// lives in schema.rs; these are the Index-typed doors.
+    pub fn mark_full_build(&mut self) -> Result<()> {
+        schema::mark_full_build(&self.conn)
+    }
+
+    pub fn full_build_done(&self) -> Result<bool> {
+        schema::full_build_done(&self.conn)
     }
 
     /// Phase-2 gate (design §3): edges depend on the whole file set

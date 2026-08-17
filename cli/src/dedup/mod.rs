@@ -123,6 +123,11 @@ pub fn analyze(
         instances = idx.all_instances()?;
     }
     resolve_edges(&mut idx, root, &walked, &streams.1)?;
+    // completeness as a POSITIVE cross-process fact for coldstart —
+    // this line only runs after every table of a FULL pass committed
+    // (clearance review: a row count read a concurrent writer's
+    // partial index as complete)
+    idx.mark_full_build()?;
     let filter = pairs::Filter {
         min_tokens: min_tokens.unwrap_or(p.guarantee()),
         min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),

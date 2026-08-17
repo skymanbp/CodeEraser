@@ -53,8 +53,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     let w = deadcode::build_wire(root, opts.db)?;
     let fnodes = deadcode::file_nodes(&w);
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
-    let graph_reply = deadcode::judge(&opts.core, &w, &pos_req)?;
-    let posmap = join::pos_map(&graph_reply, &w)?;
+    let posmap = judged_positions(&opts.core, &w, &pos_req)?;
     let files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();
     let idx: HashMap<&str, i64> = files
         .iter()
@@ -99,6 +98,25 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         skipped_self,
         reply,
     })
+}
+
+/// Graph judgment + the degraded refusal in one leg (split from run
+/// at the E01 warn line): a degraded reply judged nothing, and its
+/// empty pos table would silently drop every pos row downstream —
+/// the sibling of the deadcode --check hole (clearance review; "a
+/// gate that could not judge must never pass").
+fn judged_positions(
+    core: &str,
+    w: &deadcode::GraphWire,
+    pos_req: &[i64],
+) -> Result<HashMap<String, join::Pos>> {
+    let reply = deadcode::judge(core, w, pos_req)?;
+    anyhow::ensure!(
+        reply["degraded"] != serde_json::json!(true),
+        "graph judgment degraded ({}) — refusing to score on it",
+        reply["reason"].as_str().unwrap_or("?")
+    );
+    join::pos_map(&reply, w)
 }
 
 fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 6]> {

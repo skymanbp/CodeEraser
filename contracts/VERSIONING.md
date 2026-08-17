@@ -32,7 +32,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
   `{"proto","type":"error","id":<回显|null>,"code","message"}`，
-  `code ∈ {unknown_type, bad_request, too_large, contract}`。core 侧在 JSON 解析
+  `code ∈ {unknown_type, bad_request, too_large, contract, internal}`——`internal`
+  为第五席，2.3.0 同代的 Main.hs 异常屏障引入（挂账清零批 2026-08-17：纯判决
+  计算内任何缺陷成为 error/internal 行而非进程崩溃，id 恒 null——计算死在可信
+  回显之前；Spec `refusalProbes` 钉其 code 字符串）。core 侧在 JSON 解析
   **之前**先做行字节上限预检（2.1.0 起 32 MiB，此前 1 MiB——2026-08-12 决策：
   唯一客户端是同机受信 daemon，而 graph 请求在 100k LOC 量级合法地 ~1 MB；
   真防护 = 各族容量护栏），超限即 `too_large`，不解析。

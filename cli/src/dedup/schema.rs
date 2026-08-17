@@ -125,6 +125,30 @@ pub(crate) fn ignore_no_rows(e: rusqlite::Error) -> rusqlite::Result<Option<i64>
     }
 }
 
+/// Stamp "a full analyze completed on this database" — the coldstart
+/// completeness fact (idempotent upsert; additive meta key, absent =
+/// never completed; a bare row count was a per-process premise the
+/// clearance review retired).
+pub(crate) fn mark_full_build(conn: &rusqlite::Connection) -> anyhow::Result<()> {
+    conn.execute(
+        "INSERT INTO meta (k, v) VALUES ('full_build', 1)
+         ON CONFLICT(k) DO UPDATE SET v = 1",
+        [],
+    )?;
+    Ok(())
+}
+
+/// Whether any full analyze ever completed here (see mark_full_build).
+pub(crate) fn full_build_done(conn: &rusqlite::Connection) -> anyhow::Result<bool> {
+    let v: Option<i64> = conn
+        .query_row("SELECT v FROM meta WHERE k = 'full_build'", [], |r| {
+            r.get(0)
+        })
+        .map(Some)
+        .or_else(ignore_no_rows)?;
+    Ok(v == Some(1))
+}
+
 /// The one per-file cache-refresh shape: delete the file's rows,
 /// prepare the insert, let the caller drive it (unitsig and docsegs
 /// both write this way — the ratchet caught the pair re-instantiating

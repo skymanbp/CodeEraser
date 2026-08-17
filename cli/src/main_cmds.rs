@@ -68,7 +68,17 @@ pub fn deadcode_cmd(
             // --check (M5-close CI gate): the M5-2 acceptance row
             // "本仓库 deadcode 发现全处置" was honored by discipline
             // only — a finding must now be dispositioned or the gate
-            // is red, exactly the dedup --check shape
+            // is red, exactly the dedup --check shape. A DEGRADED
+            // reply judged nothing and its empty dead list must never
+            // read as green (clearance review: the score/mod stance —
+            // a gate that could not judge must never pass).
+            if check && report.degraded.is_some() {
+                eprintln!(
+                    "deadcode check: degraded ({}) — nothing was judged, refusing to pass",
+                    report.degraded.as_deref().unwrap_or("?")
+                );
+                return ExitCode::FAILURE;
+            }
             if check && !report.dead.is_empty() {
                 eprintln!(
                     "deadcode check: {} dead file(s) — disposition or entry_globs them",

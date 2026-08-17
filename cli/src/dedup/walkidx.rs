@@ -65,9 +65,13 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         out.live.insert(rel);
     }
     // collect() sorts and live is a BTreeSet — the key is a function
-    // of the tree, not of walk order
+    // of the tree, not of walk order. TS fs facts (compiled-JS twins,
+    // node_modules names) join like md slugs: the ladder stats them
+    // but the walk can never carry them (clearance review MED — their
+    // mutation previously never re-fired the sweep).
     let mut key_inputs = configs.clone();
     key_inputs.extend(md_facts);
+    key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live));
     out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)

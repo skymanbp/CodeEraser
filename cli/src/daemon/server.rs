@@ -88,12 +88,18 @@ fn spawn_idle_watchdog(start: Instant) {
 /// Returns Ok(false) when the daemon must stop (shutdown / skew).
 fn handle(stream: Stream, root: &Path, start: Instant, judge: &mut Judge) -> Result<bool> {
     let mut reader = BufReader::new(stream);
-    let mut line = String::new();
+    let mut buf = Vec::new();
     loop {
-        line.clear();
-        if reader.read_line(&mut line)? == 0 {
+        buf.clear();
+        if reader.read_until(b'\n', &mut buf)? == 0 {
             return Ok(true); // client hung up
         }
+        // bytes first, lossy second: a non-UTF-8 line is the same
+        // 坏行 class as bad JSON and must get the error reply with
+        // the connection surviving — read_line's Err tore the
+        // connection down silently (clearance review vs DAEMON.md's
+        // 「绝不崩连接」 promise)
+        let line = String::from_utf8_lossy(&buf);
         let req: Request = match serde_json::from_str(line.trim()) {
             Ok(r) => r,
             Err(e) => {
