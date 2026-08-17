@@ -1,8 +1,8 @@
 # CodeEraser 开发计划
 
-> **版本** v1.8 · 2026-08-17 · 状态：🔒 已由 cc-memory 锁定
+> **版本** v1.9 · 2026-08-17 · 状态：🔒 已由 cc-memory 锁定
 > 本文件是本仓库唯一权威计划。修改流程：改本文件 → 重新 ccm 锁定 → 才能动代码。
-> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）。
+> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）；v1.9 = M6 并入结构管理器（structure/1 树尺度熵判决=GUI 首屏数据面，两拍板 2026-08-17：[reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md)）。
 > 本文件行数以锁定时为棘轮上界：只准变短，不准变长；更新必须就地改写。
 > 调研依据：2026-08-06 七路并行实证调研（GitHub API / 官方文档 / 论文原文），关键事实附 URL。
 
@@ -270,7 +270,7 @@ CodeEraser/
 | **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |
 | **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205，`eval_t3_recall`）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |
 | **M5-3B** 深度去冗·判决 | 三信号 join、`score`+棘轮（`check`/`baseline` 子命令归此）、Haskell 语言支持**全套**（size+CC+CoC+注释域 + graph 阶梯按 M5-2f 每 rung fixture 纪律；先决 = tree-sitter-haskell 0.26 ABI 可得性 spike——拍板⑧） | 3 周 ± | join 不设数值门（验收 = 诚实包 + 图腿缺席发 null 绝不编造——拍板④）；score 敏感性电池绿（非空性 + 互异性双前置）；本仓库自身跑通棘轮入 CI；Haskell 阶梯每 rung fixture 全绿（grammar 不可得 ⇒ size-only 落回并公开记录，CoC 与阶梯顺延） |
-| **M6** GUI | Tauri：报告可视化、趋势、删除候选浏览 | 2–3 周 | 对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s；三平台打包 |
+| **M6** GUI+结构管理器 | structure/1 家族（树尺度熵判决：C 自参照地板+A 声明覆盖、七轴 S0-S6、判决全 Haskell 测量复用 Rust——设计册 [reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md) 四切片）+ `ce structure` JSON 树报告 + Tauri 可视化（树图首屏消费同一 schema）、趋势、删除候选浏览 | 3–4 周 | 熵原语过穷举参照电池；每轴 F16 非真空前置；每片反事实杠杆+golden 手算；对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s；三平台打包 |
 | **M7** 发布 | marketplace 上架、签名/公证、Releases 自动化、完整 MCP、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档 | 1–2 周 | 陌生机器一条命令可用；二进制 SHA256 校验链路端到端验证；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）；文档过 `docdup` 自检；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG |
 
 **依赖**：M2←M1；M3←M2；M4←M3；M5-2←M4（churn 是三信号一腿，**串行**——A4）；M5-3A←M5-2；M5-3B←M5-3A；M6 可与 M5 并行；M7 收尾。总计粗估 4–6 个月。
