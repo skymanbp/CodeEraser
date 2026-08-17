@@ -1,0 +1,8 @@
+{"type":"hello_ok","proto":"1.0.0","version":"0.0.1"}
+{"type":"restart","reason":"major skew: client 2.0.0 vs daemon 1.0.0"}
+{"type":"pong","uptime_ms":12}
+{"type":"dedup_report","report":{"blocks":[],"groups":[]}}
+{"type":"probe_report","matches":[],"elapsed_ms":3}
+{"type":"four_class_report","report":{"degraded":null,"pairs":[]}}
+{"type":"error","message":"bad request: expected value"}
+{"type":"bye"}

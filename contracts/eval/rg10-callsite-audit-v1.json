@@ -1,0 +1,1067 @@
+{
+ "schema": "ce.rg10-callsite-audit/1.0.0",
+ "date": "2026-08-17",
+ "provenance": {
+  "plan_line": "M5-2: 调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开（2026-08-12 拍板）",
+  "method": "5 corpora x 20 deterministic sites (lexicographic file index round(k*(F-1)/19), first call at/after line 40), whole-repo same-name definition census per site, true target derived from imports/receivers; 3 adversarial re-adjudication lenses over strided thirds",
+  "corpora": [
+   "zod",
+   "requests",
+   "cobra",
+   "ripgrep",
+   "self"
+  ],
+  "workflow_run": "wf_70a4b368-77f"
+ },
+ "gate": {
+  "threshold": 0.9,
+  "measured_behavioral_rate": 0.72,
+  "edge_precision": 0.5757575757575758,
+  "verdict": "CLOSED — 72/100 behavioral (38 true_unique + 34 correct_absent), edge precision 38/66 = 0.576; even granting every verifier disagreement in the favorable direction the rate stays <= 0.74. The R6 whole-repo name-matching conditional item is permanently closed by the plan's own criterion."
+ },
+ "result": {
+  "total": 100,
+  "counts": {
+   "false_ambig": 23,
+   "correct_absent": 34,
+   "true_unique": 38,
+   "false_wrong": 5
+  },
+  "behavioral_correct": 72,
+  "behavioral_rate": 0.72,
+  "edge_precision_num": 38,
+  "edge_precision_den": 66,
+  "disagreements": [
+   {
+    "corpus": "ripgrep",
+    "file": "crates/ignore/src/gitignore.rs",
+    "line": 48,
+    "agree": false,
+    "note": "The `as_ref` count of 1 (globset/glob.rs:84) is right, but the callee pick violates the audit's own outermost-call rule used at cobra/flag_groups.go:40 and requests/certs.py:18 — line 48 is `self.from.as_ref().map(|p| &**p)` whose outermost call_expression is `.map`, and `fn map` has TWO in-repo definitions (ignore/lib.rs:475, ignore/types.rs:205), which would make this false_ambig rather than false_wrong."
+   },
+   {
+    "corpus": "self",
+    "file": "core/app/CE/FourClass.hs",
+    "line": 20,
+    "agree": false,
+    "note": "The n_defs=5 count is right (Clone.hs:67, Docdup.hs:56, FourClass.hs:31, Graph.hs:65, Verdict/Wire.hs:70) but the site is mis-anchored and the class does not survive: FourClass.hs is 44 lines (45 under the audit's split('\\n') convention), not 39, so the >=40 branch applies and the first application at/after line 40 is `S.intersection` at line 42 (zero in-repo defs -> correct_absent); separately the quoted `violation (reqPairs req)` call is at line 22 not 20, and the true target is `violation :: [Pair] -> Maybe String` at line 31 not `Maybe Int` at line 30."
+   },
+   {
+    "corpus": "self",
+    "file": "core/app/Main.hs",
+    "line": 22,
+    "agree": false,
+    "note": "hPutStrLn genuinely has zero in-repo definitions, but the record's premises are false: Main.hs is 47 lines (48 under split('\\n')), not 39, so the middle-line rule never applies; line 20 is `[\"--version\"] -> putStrLn (...)` not `[] -> serve` (that is line 21); and the hPutStrLn call is at line 23, while the correct >=40 anchor would land on line 43's `try (evaluate (respond coreVersion line))`."
+   },
+   {
+    "corpus": "requests",
+    "file": "src/requests/cookies.py",
+    "line": 46,
+    "agree": false,
+    "note": "Off-by-category: the contract defines false_wrong as EXACTLY 1 in-repo same-name definition, but this record carries n_defs=0 (verified: only `def is_prepared` at _types.py:47 exists, never `_is_prepared`), so the case falls outside all four classes — under by-token counting no class applies (aliased-import false negative is uncovered), and under by-resolved-symbol counting n_defs=1 and that def IS the target, which would make it true_unique; either way false_wrong does not follow."
+   }
+  ],
+  "sites": [
+   {
+    "file": "packages/resolution/src/index.ts",
+    "line": 20,
+    "callee": "config",
+    "n_defs": 2,
+    "class": "false_ambig",
+    "true_target": "packages/zod/src/v4/core/core.ts:150",
+    "why": "File is 38 lines (<40) so middle line 19 used; first call at/after is `z4.config(fr());` with `import * as z4 from \"zod/v4\"` and package.json dep `\"zod\": \"workspace:*\"` -> packages/zod exports \"./v4\" to src/v4/index.ts -> classic/external.ts re-exports config from ../core/index.js, which re-exports core.ts:150 (config.ts is NOT in core/index.ts's export list), but two in-repo `export function config(` definitions exist (core/core.ts:150 and core/config.ts:12).",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+    "line": 40,
+    "callee": "add",
+    "n_defs": 2,
+    "class": "false_ambig",
+    "true_target": "external",
+    "why": "Line 40 `  .add(\"valid: b\", () => {` chains off `new Benchmark.Suite(...)` (line 5) with `import Benchmark from \"benchmark\"` (line 1), an npm dep declared at root package.json:25; the two in-repo `add` definitions (packages/bench/metabench.ts:74 `add(name: string, fn: (val: D) => any): this {` and packages/zod/src/v4/core/registries.ts:33 `add<S extends Schema>(`) are both wrong targets.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v3/benchmarks/string.ts",
+    "line": 41,
+    "callee": "add",
+    "n_defs": 2,
+    "class": "false_ambig",
+    "true_target": "external",
+    "why": "First callee at/after line 40 is line 41 `  .add(\"invalid: null\", () => {`; the receiver `suite` is `new Benchmark.Suite(SUITE_NAME)` (line 6) from the external `benchmark` package, while name matching would mint edges to metabench.ts:74 and registries.ts:33.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v3/helpers/parseUtil.ts",
+    "line": 73,
+    "callee": "getErrorMap",
+    "n_defs": 2,
+    "class": "false_ambig",
+    "true_target": "packages/zod/src/v3/errors.ts:11",
+    "why": "Line 73 `  const overrideMap = getErrorMap();` resolves through line 2 `import { getErrorMap } from \"../errors.js\";` to v3/errors.ts:11, but a second unrelated in-repo definition exists at packages/zod/src/v4/classic/compat.ts:53 `export function getErrorMap(): core.$ZodErrorMap<core.$ZodIssue> | undefined {`.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v3/types.ts",
+    "line": 76,
+    "callee": "isArray",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "Substituted file: sampled index 24 (v3/standard-schema.ts) contains zero call expressions (pure type/namespace declarations), so the next unused index 25 was used. First call at/after line 40 is line 76 `      if (Array.isArray(this._key)) {`; an exhaustive grep for `isArray` across the corpus returns only `Array.isArray` call sites and no definition, so the JS builtin is correctly left unmatched.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/classic/external.ts",
+    "line": 11,
+    "callee": "config",
+    "n_defs": 2,
+    "class": "false_ambig",
+    "true_target": "packages/zod/src/v4/core/core.ts:150",
+    "why": "Lines 40-53 are export statements only, so scanning backwards the nearest call is line 11 `config(en());`, bound by line 9 `import { config } from \"../core/index.js\";`; core/index.ts (16 lines) re-exports ./core.js but never ./config.js, so the true target is core.ts:150 while name matching also hits core/config.ts:12.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/core/api.ts",
+    "line": 69,
+    "callee": "normalizeParams",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:517",
+    "why": "First call_expression at/after line 40 is line 69 `    ...util.normalizeParams(params),` (line 67's `new Class({` is a new_expression, excluded consistently across all 20 sites); line 6 `import * as util from \"./util.js\"` and the sole definition is util.ts:517 `export function normalizeParams<T>(_params: T): Normalize<T> {`.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/core/json-schema-generator.ts",
+    "line": 89,
+    "callee": "initializeContext",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/to-json-schema.ts:118",
+    "why": "Substituted file: sampled index 43 (v4/core/index.ts) is 17 lines of pure re-exports with zero calls, so next unused index 44 was used. Lines 40-45 sit inside a JSDoc block and were skipped; line 89 `    this.ctx = initializeContext({` binds to the named import at line 12 from \"./to-json-schema.js\", whose only live definition is to-json-schema.ts:118 (line 109 is a commented-out variant, not counted).",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/core/registries.ts",
+    "line": 40,
+    "callee": "set",
+    "n_defs": 7,
+    "class": "false_ambig",
+    "true_target": "external",
+    "why": "Line 40 `      this._idmap.set(meta.id!, schema);` has receiver `_idmap: Map<string, Schema> = new Map()` (line 31), so the true target is the JS builtin Map.prototype.set, yet seven in-repo function/method definitions named `set` exist (v4/classic/schemas.ts:57 and :1901, v4/mini/schemas.ts:1266, v4/core/util.ts:273 and :540, packages/bench/property-access.ts:25 and :41).",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/ar.ts",
+    "line": 60,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "Substituted file: sampled index 55 (v4/core/zsf.ts, 324 lines of interfaces/comments) and the next index 56 (v4/index.ts, 5 lines) both contain zero calls, so next unused index 57 was used. Line 60 `        const receivedType = util.parsedType(issue.input);` binds via line 3 `import * as util from \"../core/util.js\";` to the single definition util.ts:885 `export function parsedType(data: unknown)` (the many `const parsedType = this._getType(input)` lines in v3/types.ts are variable assignments, not definitions).",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/ca.ts",
+    "line": 60,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "Lines 40-59 are object-literal entries and a switch head; line 60 `        const receivedType = util.parsedType(issue.input);` resolves through line 3 `import * as util from \"../core/util.js\";` to the unique definition at core/util.ts:885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/eo.ts",
+    "line": 63,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "First call at/after line 40 is line 63 `        const receivedType = util.parsedType(issue.input);` (lines 40-62 are dictionary entries and index accesses); `import * as util from \"../core/util.js\"` at line 3 gives the single in-repo definition core/util.ts:885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/he.ts",
+    "line": 41,
+    "callee": "typeEntry",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/locales/he.ts:38",
+    "why": "Line 41 `    const e = typeEntry(t);` inside `const typeLabel = (t?: string | null): string => {` calls the file-local arrow defined at line 38 `  const typeEntry = (t?: string | null) => (t ? TypeNames[t] : undefined);`; a corpus-wide grep for `typeEntry` returns only this definition plus two call sites in the same file.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/is.ts",
+    "line": 62,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "Lines 40-61 are FormatDictionary/TypeDictionary literals; line 62 `        const receivedType = util.parsedType(issue.input);` binds via line 3 `import * as util from \"../core/util.js\";` to the sole definition core/util.ts:885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/ko.ts",
+    "line": 60,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "Line 60 `        const receivedType = util.parsedType(issue.input);` is the first call at/after line 40; `import * as util from \"../core/util.js\"` (line 3) resolves to the unique `export function parsedType(data: unknown)` at core/util.ts:885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/pl.ts",
+    "line": 62,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "Line 62 `        const receivedType = util.parsedType(issue.input);` follows only literal object entries after line 40; the `util` namespace import at line 3 points at core/util.ts, whose single `parsedType` definition is at line 885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/sv.ts",
+    "line": 62,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "First call at/after line 40 is line 62 `        const receivedType = util.parsedType(issue.input);`; line 3 `import * as util from \"../core/util.js\";` and grep shows exactly one function definition named parsedType, at core/util.ts:885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/locales/ur.ts",
+    "line": 63,
+    "callee": "parsedType",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/util.ts:885",
+    "why": "Lines 40-62 are dictionary entries and index reads; line 63 `        const receivedType = util.parsedType(issue.input);` binds through line 3 `import * as util from \"../core/util.js\";` to the unique definition core/util.ts:885.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/mini/coerce.ts",
+    "line": 16,
+    "callee": "_coercedBoolean",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/api.ts:684",
+    "why": "Substituted file: sampled index 110 (v4/mini/checks.ts) is a 33-line re-export block with zero calls, so next unused index 111 was used; the file is 28 lines so the middle line (14/15) applies and the first call is line 16 `  return core._coercedBoolean(schemas.ZodMiniBoolean, params) as schemas.ZodMiniBoolean<T>;`, resolving via `import * as core from \"../core/index.js\"` (index re-exports ./api.js) to the only definition api.ts:684.",
+    "corpus": "zod"
+   },
+   {
+    "file": "packages/zod/src/v4/mini/schemas.ts",
+    "line": 43,
+    "callee": "$constructor",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "packages/zod/src/v4/core/core.ts:17",
+    "why": "Lines 40-42 are type declarations; line 43 `export const ZodMiniType: core.$constructor<ZodMiniType> = /*@__PURE__*/ core.$constructor(` calls through `import * as core from \"../core/index.js\"` (index.ts:1 `export * from \"./core.js\"`) to the single definition core.ts:17 `export /*@__NO_SIDE_EFFECTS__*/ function $constructor<T extends ZodTrait, D = T[\"_zod\"][\"def\"]>(`.",
+    "corpus": "zod"
+   },
+   {
+    "file": "src/requests/__init__.py",
+    "line": 65,
+    "callee": "split",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (builtin str.split)",
+    "why": "First call at/after line 40 is `urllib3_version_list = urllib3_version.split(\".\")[:3]`; the receiver is the parameter annotated `urllib3_version: str` (line 61), so the target is str.split, and grep for `def split(` over the whole corpus root returns nothing.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/_internal_utils.py",
+    "line": 46,
+    "callee": "isinstance",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (Python builtin isinstance)",
+    "why": "Lines 40-45 are the docstring of `def unicode_is_ascii`, so the first call at/after 40 is `assert isinstance(u_string, str)`; no `def isinstance(` exists anywhere in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/_internal_utils.py",
+    "line": 48,
+    "callee": "encode",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (builtin str.encode)",
+    "why": "Second site in this file (substituting for __version__.py, which has no call expressions at all): `u_string.encode(\"ascii\")` where `u_string: str` per the signature at line 39; grep finds no `def encode(` in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/_types.py",
+    "line": 34,
+    "callee": "isinstance",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (Python builtin isinstance)",
+    "why": "Lines 40-188 of _types.py contain only TypeAlias assignments, Protocol/TypedDict class bodies and subscripts — no call expressions — so per the rule I scanned backwards to the nearest preceding call, `return isinstance(obj, SupportsRead) or hasattr(obj, \"read\")` (line 34); no in-repo `def isinstance(`.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/adapters.py",
+    "line": 67,
+    "callee": "InvalidSchema",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "src/requests/exceptions.py:114 (class InvalidSchema(RequestException, ValueError))",
+    "why": "Lines 39-64 are pure import statements, so the first call at/after 40 is `raise InvalidSchema(\"Missing dependencies for SOCKS support.\")`; adapters.py:44 imports it via `from .exceptions import (... InvalidSchema ...)` and the corpus contains exactly one definition, exceptions.py:114.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/api.py",
+    "line": 70,
+    "callee": "Session",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "src/requests/sessions.py:395 (class Session(SessionRedirectMixin))",
+    "why": "Lines 27-65 are the request() docstring (its `>>> requests.request(...)` example is inside a string and skipped), so the first real call is `with sessions.Session() as session:`; api.py:15 does `from . import sessions` and the only in-repo definition named Session is sessions.py:395.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/auth.py",
+    "line": 44,
+    "callee": "isinstance",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (Python builtin isinstance)",
+    "why": "Lines 40-43 are comments inside `_basic_auth_str`, so the first call at/after 40 is `if not isinstance(username, basestring):`; no `def isinstance(` exists in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/certs.py",
+    "line": 18,
+    "callee": "print",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (Python builtin print)",
+    "why": "certs.py is 18 lines (<40) so the middle line is 9, which sits in the module docstring; the first call at/after it is the textually-outermost `print(where())` in the `if __name__ == \"__main__\"` block, and no `def print(` exists in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/compat.py",
+    "line": 42,
+    "callee": "import_module",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (stdlib importlib.import_module)",
+    "why": "First call at/after line 40 is `chardet = importlib.import_module(lib)` inside `_resolve_char_detection`; the receiver comes from `import importlib` at compat.py:14, and grep finds no `def import_module(` in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/cookies.py",
+    "line": 46,
+    "callee": "_is_prepared",
+    "n_defs": 0,
+    "class": "false_wrong",
+    "true_target": "src/requests/_types.py:47 (def is_prepared) — reached under the local alias _is_prepared",
+    "why": "The call is `assert _is_prepared(request)` and cookies.py:20 reads `from ._types import is_prepared as _is_prepared`, so the real target is in-repo but is defined under a DIFFERENT name; whole-repo same-name matching on `_is_prepared` finds 0 definitions and therefore mints no edge where a genuine intra-repo edge exists (the false-negative / aliased-import subtype of wrong behavior; it is not correct_absent because the target is not external).",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/exceptions.py",
+    "line": 52,
+    "callee": "__init__",
+    "n_defs": 30,
+    "class": "false_ambig",
+    "true_target": "external (json.JSONDecodeError.__init__ via `from .compat import JSONDecodeError as CompatJSONDecodeError`)",
+    "why": "The call is `CompatJSONDecodeError.__init__(self, *args)` and exceptions.py:14 aliases the stdlib/simplejson JSONDecodeError, so the true target is external — yet grep for `^\\s*def __init__\\s*\\(` returns 30 in-repo .py definitions (auth.py x6, models.py x3, structures.py x2, tests/test_requests.py x8, …), so name matching would fan out 30 wrong edges.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/help.py",
+    "line": 46,
+    "callee": "python_implementation",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (stdlib platform.python_implementation)",
+    "why": "Lines 36-45 are the `_implementation` docstring, so the first call at/after 40 is `implementation = platform.python_implementation()`; the receiver is `import platform` (help.py:4) and no `def python_implementation(` exists in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/hooks.py",
+    "line": 40,
+    "callee": "get",
+    "n_defs": 6,
+    "class": "false_ambig",
+    "true_target": "external (dict/Mapping.get builtin method)",
+    "why": "The call is `hook_list: ... = hooks_dict.get(key)` where line 39 sets `hooks_dict = hooks or {}` typed `_t.HooksInputType | None` (a Mapping), so the target is the builtin Mapping.get — but the corpus holds 6 `def get(` lines (api.py:74, cookies.py:211, sessions.py:655, structures.py:124/127/129, i.e. 4 distinct implementations plus 2 @overload stubs), all of them wrong edges.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/models.py",
+    "line": 117,
+    "callee": "urlsplit",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (stdlib urllib.parse.urlsplit, re-exported through requests.compat)",
+    "why": "Lines 40-115 are imports, module constants and the RequestEncodingMixin header, so the first call at/after 40 is `p = urlsplit(cast(str, self.url))`; models.py:48 imports urlsplit from .compat, and compat.py:99 imports it from urllib.parse — a pure re-export chain with no in-repo `def urlsplit(`.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/packages.py",
+    "line": 12,
+    "callee": "list",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (Python builtin list)",
+    "why": "packages.py is 23 lines (<40) so the middle line is 12, and that line is itself the first call: `for mod in list(sys.modules):`; grep finds no `def list(` or `class list` in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/sessions.py",
+    "line": 92,
+    "callee": "isinstance",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (Python builtin isinstance)",
+    "why": "Lines 40-88 are imports, the TYPE_CHECKING block, the preferred_clock branch and merge_setting's docstring/early returns, so the first call at/after 40 is `isinstance(session_setting, Mapping) and isinstance(request_setting, Mapping)`; no in-repo `def isinstance(`.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/status_codes.py",
+    "line": 106,
+    "callee": "LookupDict",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "src/requests/structures.py:96 (class LookupDict(dict[str, _VT]))",
+    "why": "Lines 23-104 are a literal `_codes` dict of int->tuple entries with no calls, so the first call at/after 40 is `codes: LookupDict[int] = LookupDict(name=\"status_codes\")`; status_codes.py:21 does `from .structures import LookupDict` and structures.py:96 is the sole definition of that name corpus-wide.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/structures.py",
+    "line": 54,
+    "callee": "OrderedDict",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (stdlib collections.OrderedDict)",
+    "why": "Lines 20-45 are the CaseInsensitiveDict class header and docstring (its `cid = CaseInsensitiveDict()` example is inside the string and skipped), so the first call at/after 40 is `self._store = OrderedDict()`; structures.py:10 reads `from collections import OrderedDict` and no in-repo def/class of that name exists.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/utils.py",
+    "line": 82,
+    "callee": "where",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (certifi.where)",
+    "why": "Lines 39-78 are imports plus the NETRC_FILES tuple, so the first call at/after 40 is `DEFAULT_CA_BUNDLE_PATH: str = certs.where()`; utils.py:35 does `from . import certs` and certs.py:15 is only `from certifi import where`, so the chain terminates outside the repo and grep finds no `def where(`.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "src/requests/utils.py",
+    "line": 91,
+    "callee": "join",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external (builtin str.join)",
+    "why": "Second site in utils.py (the k=19 pick collides on the last index): `DEFAULT_ACCEPT_ENCODING: Final = \", \".join(` — the receiver is the string literal `\", \"`, so the target is str.join, and no `def join(` exists anywhere in the corpus.",
+    "corpus": "requests (d:/Projects/CodeEraser/.ce-eval/corpora/requests) — Python; eligible product files under src/requests/ number F=19, i.e. FEWER than the 20 picks the protocol requests. Deterministic resolution actually used: indices round(k*18/19) for k=0..19 map onto 0..18 with collisions stepped forward, exhausting all 19 files by k=18; k=19 targets index 18 (utils.py) which is already used, so utils.py contributes a SECOND site. Additionally index 1 (__version__.py, 14 lines) contains ZERO call expressions anywhere in the file, so its slot steps forward to index 2 (_internal_utils.py), which therefore contributes a second site as well. Net: 18 files x 1 site + _internal_utils.py x 2 + utils.py x 2 = 20 sites. n_defs was counted over the WHOLE corpus root (src/ + tests/ + testserver/) restricted to .py files, with `def N(` for functions/methods and `class N(`/`class N:` for constructor callees (a class is what a Python constructor call actually resolves to); .rst code blocks in docs/ were not counted."
+   },
+   {
+    "file": "active_help.go",
+    "line": 48,
+    "callee": "Getenv",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "`activeHelpCfg := os.Getenv(activeHelpGlobalEnvVar)` — os is stdlib (import block lines 17-20); corpus-wide grep for `func (…) Getenv(` returns 0 definitions, so name matching mints no edge.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "args.go",
+    "line": 44,
+    "callee": "Errorf",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "`return fmt.Errorf(\"unknown command %q for %q\", args[0], cmd.CommandPath())` — fmt is stdlib (import line 18); no in-repo `func Errorf(` anywhere in the corpus.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "bash_completions.go",
+    "line": 401,
+    "callee": "activeHelpEnvVar",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "active_help.go:58 func activeHelpEnvVar(name string) string",
+    "why": "Lines 40-398 are inside the raw string opened at line 38, so the first real call at/after 40 is `ShellCompDirectiveFilterFileExt, ShellCompDirectiveFilterDirs, activeHelpEnvVar(name)))`; the single package-level definition is active_help.go:58 (same package cobra).",
+    "corpus": "cobra"
+   },
+   {
+    "file": "bash_completionsV2.go",
+    "line": 471,
+    "callee": "Create",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "Raw string spans lines 37-463, so first real call at/after 40 is `outFile, err := os.Create(filename)` in GenBashCompletionFileV2; os is stdlib (import line 21) and no in-repo `func Create(` exists.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "cobra.go",
+    "line": 100,
+    "callee": "append",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "`initializers = append(initializers, y...)` in OnInitialize — `append` is a Go predeclared builtin; grep finds no in-repo definition named `append` (only `appendIfNotPresent`, a different name), so no edge is minted.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "command.go",
+    "line": 323,
+    "callee": "tmpl",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cobra.go:179 func tmpl(text string) *tmplFunc",
+    "why": "Lines 40-268 are the Command struct/type declarations, so the first call at/after 40 is `c.usageTemplate = tmpl(s)` in SetUsageTemplate; the sole definition is cobra.go:179 `func tmpl(text string) *tmplFunc` in the same package.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "command_win.go",
+    "line": 39,
+    "callee": "Exit",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "File is 42 lines; lines 40-42 are only closing braces so the backward scan lands on `os.Exit(1)` in preExecHook; os is stdlib (import line 22) and no in-repo `func Exit(` exists.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "completions.go",
+    "line": 171,
+    "callee": "Flag",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "command.go:1844 func (c *Command) Flag(name string) (flag *flag.Flag)",
+    "why": "First call at/after 40 (line 41 is the composite literal `&sync.RWMutex{}`, not a call) is `flag := c.Flag(flagName)` inside `func (c *Command) RegisterFlagCompletionFunc`; receiver c is *Command and command.go:1844 is the only definition named Flag.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "doc/man_docs.go",
+    "line": 53,
+    "callee": "Commands",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "command.go:1332 func (c *Command) Commands() []*Command",
+    "why": "`for _, c := range cmd.Commands() {` in GenManTreeFromOpts; cmd is *cobra.Command and go.mod declares `module github.com/spf13/cobra`, so the import resolves in-repo to the single definition at command.go:1332.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "doc/md_docs.go",
+    "line": 41,
+    "callee": "InheritedFlags",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "command.go:1744 func (c *Command) InheritedFlags() *flag.FlagSet",
+    "why": "`parentFlags := cmd.InheritedFlags()` in printOptions; cmd is *cobra.Command (in-repo module path) and command.go:1744 is the only definition with that name.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "doc/rest_docs.go",
+    "line": 40,
+    "callee": "InheritedFlags",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "command.go:1744 func (c *Command) InheritedFlags() *flag.FlagSet",
+    "why": "`parentFlags := cmd.InheritedFlags()` in printOptionsReST; same in-repo *cobra.Command receiver, single definition at command.go:1744.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "doc/util.go",
+    "line": 42,
+    "callee": "len",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "File is 53 lines; first call at/after 40 is the leftmost call on `if len(s) > 60 && !strings.Contains(s, \"\\n\") {` — `len` is a Go predeclared builtin and grep finds no in-repo `func len(`; the method `func (s byName) Len()` at util.go:50 differs in case and does not match.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "doc/yaml_docs.go",
+    "line": 56,
+    "callee": "GenYamlTreeCustom",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "doc/yaml_docs.go:60 func GenYamlTreeCustom(cmd *cobra.Command, dir string, filePrepender, linkHandler func(string) string) error",
+    "why": "Lines 40-46 are cmdDoc struct fields and lines 54-55 are func literals, so the first call at/after 40 is `return GenYamlTreeCustom(cmd, dir, emptyStr, identity)`; the only definition is four lines below at yaml_docs.go:60.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "fish_completions.go",
+    "line": 272,
+    "callee": "activeHelpEnvVar",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "active_help.go:58 func activeHelpEnvVar(name string) string",
+    "why": "Raw string spans lines 36-270, so the first real call at/after 40 is `…ShellCompDirectiveKeepOrder, activeHelpEnvVar(name)))`; single package-level definition at active_help.go:58.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "flag_groups.go",
+    "line": 40,
+    "callee": "SetAnnotation",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "Outermost call on `if err := c.Flags().SetAnnotation(v, requiredAsGroupAnnotation, append(…)); err != nil {` — c.Flags() returns *pflag.FlagSet (command.go:1688) so SetAnnotation is pflag's; corpus grep finds no in-repo `func … SetAnnotation(`.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "powershell_completions.go",
+    "line": 310,
+    "callee": "activeHelpEnvVar",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "active_help.go:58 func activeHelpEnvVar(name string) string",
+    "why": "Raw string (with `+\"…\"+` splices at 47/112/117/152, none of which are calls) spans 38-308, so the first real call at/after 40 is `…ShellCompDirectiveKeepOrder, activeHelpEnvVar(name)))` at line 310; single definition at active_help.go:58.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "shell_completions.go",
+    "line": 45,
+    "callee": "MarkFlagFilename",
+    "n_defs": 2,
+    "class": "false_ambig",
+    "true_target": "shell_completions.go:67 func MarkFlagFilename(flags *pflag.FlagSet, name string, extensions ...string) error",
+    "why": "`return MarkFlagFilename(c.Flags(), name, extensions...)` is an unqualified call inside `func (c *Command) MarkFlagFilename` (line 44), so it targets the package-level overload at line 67; whole-repo name matching also mints an edge to the *Command method at line 44, creating a spurious self-recursion.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "zsh_completions.go",
+    "line": 43,
+    "callee": "genZshCompletion",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "zsh_completions.go:80 func (c *Command) genZshCompletion(w io.Writer, includeDesc bool) error",
+    "why": "`return c.genZshCompletion(w, false)` in GenZshCompletionNoDesc; receiver c is *Command and the only definition of that name is zsh_completions.go:80.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "command.go",
+    "line": 383,
+    "callee": "SetNormalizeFunc",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "Second sampled site (see note): outermost call of `c.Flags().SetNormalizeFunc(n)` in SetGlobalNormalizationFunc; c.Flags() returns *flag.FlagSet where flag = github.com/spf13/pflag (import line 30), and no in-repo `func … SetNormalizeFunc(` exists.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "completions.go",
+    "line": 175,
+    "callee": "Lock",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external",
+    "why": "Second sampled site (see note): `flagCompletionMutex.Lock()` where `var flagCompletionMutex = &sync.RWMutex{}` (completions.go:41), so Lock is stdlib sync; corpus grep finds no in-repo `func … Lock(`.",
+    "corpus": "cobra"
+   },
+   {
+    "file": "crates/cli/src/decompress.rs",
+    "line": 54,
+    "callee": "default_decompression_commands",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "crates/cli/src/decompress.rs:490 fn default_decompression_commands",
+    "why": "Call `default_decompression_commands()` inside DecompressionMatcherBuilder::build; the only in-repo definition is the private free fn in the same file at decompress.rs:490 (`fn default_decompression_commands() -> Vec<DecompressionCommand> {`), so name matching yields exactly the right edge.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/cli/src/pattern.rs",
+    "line": 41,
+    "callee": "new",
+    "n_defs": 89,
+    "class": "false_ambig",
+    "true_target": "external (std::io::Error::new; `use std::{ffi::OsStr, io, path::Path}` at pattern.rs:1)",
+    "why": "`io::Error::new(io::ErrorKind::Other, paterr)` resolves through the std `io` import at line 1, but `fn new(` has 89 definitions across 42 in-repo files, so same-name matching would mint 89 wrong edges and zero right ones.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/core/flags/complete/fish.rs",
+    "line": 42,
+    "callee": "push_str",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "why": "`completion.push_str(\" -r -f -a '\");` where `completion` is a String built from `TEMPLATE.replace(...)` at fish.rs:24, so the target is std String::push_str; Grep for `fn push_str\\s*[(<]` over the corpus returns no matches, so no edge is minted.",
+    "true_target": "external (std::string::String::push_str)",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/core/flags/defs.rs",
+    "line": 185,
+    "callee": "is_empty",
+    "n_defs": 11,
+    "class": "false_ambig",
+    "true_target": "external (std Vec::is_empty; LowArgs.globs is `pub(crate) globs: Vec<String>` at crates/core/flags/lowargs.rs:59)",
+    "why": "`if !self.globs.is_empty() {` in LowArgs::indexing_unsupported_flag targets std Vec::is_empty, yet 11 in-repo `fn is_empty` definitions exist (globset lib.rs:331/1063, ignore types.rs:241, matcher lib.rs:153/407, ...), all of them wrong.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/core/flags/hiargs.rs",
+    "line": 123,
+    "callee": "supported",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "crates/core/flags/lowargs.rs:689 SortMode::supported",
+    "why": "`sort.supported()?;` where `sort` binds `low.sort: Option<SortMode>` (LowArgs), and the sole in-repo definition `pub(crate) fn supported(&self) -> anyhow::Result<()>` sits in `impl SortMode` at lowargs.rs:686-689.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/core/haystack.rs",
+    "line": 51,
+    "callee": "error",
+    "n_defs": 4,
+    "class": "false_ambig",
+    "true_target": "crates/ignore/src/walk.rs:98 DirEntry::error (impl DirEntry begins walk.rs:36)",
+    "why": "`if let Some(err) = hay.dent.error() {` calls DirEntry::error (field `dent: ignore::DirEntry`, haystack.rs:99), but `fn error(` also matches globset glob.rs:819 and two `#[cfg(test)] fn error()` in core/flags/config.rs:139/164, so the edge set is 4-way ambiguous.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/core/main.rs",
+    "line": 45,
+    "callee": "run",
+    "n_defs": 6,
+    "class": "false_ambig",
+    "true_target": "crates/core/main.rs:78 fn run",
+    "why": "`match run(flags::parse()) {` targets the free fn at main.rs:78, but five other `fn run` definitions exist (ignore walk.rs:1428/1761, searcher glue.rs:38/117/166), so same-name matching adds five bogus cross-crate edges.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/globset/src/glob.rs",
+    "line": 52,
+    "callee": "basename_literal",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "crates/globset/src/glob.rs:559 Glob::basename_literal",
+    "why": "`if let Some(lit) = pat.basename_literal() {` with `pat: &Glob`, and the only definition `fn basename_literal(&self) -> Option<String>` lives in `impl Glob` (opened at glob.rs:281) at line 559.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/grep/examples/simplegrep.rs",
+    "line": 40,
+    "callee": "build",
+    "n_defs": 27,
+    "class": "false_ambig",
+    "true_target": "crates/printer/src/standard.rs:127 StandardBuilder::build",
+    "why": "`.build(cli::stdout(...))` terminates the `StandardBuilder::new().color_specs(...)` chain started at simplegrep.rs:38, resolving to standard.rs:127, but there are 27 in-repo `fn build` definitions (globset, ignore, searcher, index, cli, printer, regex, pcre2), the worst ambiguity class in this sample.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/ignore/src/gitignore.rs",
+    "line": 48,
+    "callee": "as_ref",
+    "n_defs": 1,
+    "class": "false_wrong",
+    "true_target": "external (std Option::as_ref; field `from: Option<PathBuf>` at gitignore.rs:34)",
+    "why": "`self.from.as_ref().map(|p| &**p)` calls std Option::as_ref, yet the single in-repo `fn as_ref(&self) -> &Glob` (globset/src/glob.rs:84, `impl AsRef<Glob> for Glob`) would be minted as the unique — and entirely wrong — target.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/ignore/src/types.rs",
+    "line": 208,
+    "callee": "f",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external to the definition index (the caller-supplied closure bound to `F: FnOnce(T) -> U` in `fn map` at types.rs:205)",
+    "why": "`Selection::Select(name, f(inner))` invokes the generic closure parameter `f`; Grep for `fn f\\s*[(<]` over the corpus returns nothing, so name matching correctly mints no edge — note the true callee is an anonymous closure rather than stdlib, so 'correct_absent' here means 'correctly no named-definition edge'.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/matcher/src/interpolate.rs",
+    "line": 40,
+    "callee": "push",
+    "n_defs": 3,
+    "class": "false_ambig",
+    "true_target": "external (std Vec::push; parameter `dst: &mut Vec<u8>` at interpolate.rs:18)",
+    "why": "`dst.push(b'$');` targets std Vec::push, but three in-repo `fn push` definitions exist (ignore lib.rs:376 PartialErrorBuilder, regex literal.rs:471, ignore walk.rs:1692), so three wrong edges are minted.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/pcre2/src/matcher.rs",
+    "line": 49,
+    "callee": "clone",
+    "n_defs": 1,
+    "class": "false_wrong",
+    "true_target": "external (pcre2::bytes::RegexBuilder's derived Clone; field `builder: RegexBuilder` at matcher.rs:13, imported from `pcre2::bytes` at matcher.rs:5)",
+    "why": "`let mut builder = self.builder.clone();` clones the external pcre2 RegexBuilder, but the single in-repo `fn clone(&self) -> Error` (crates/ignore/src/lib.rs:123) would be minted as the unique target — a cross-crate edge to an unrelated type.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/printer/src/json.rs",
+    "line": 61,
+    "callee": "default",
+    "n_defs": 26,
+    "class": "false_ambig",
+    "true_target": "crates/printer/src/json.rs:32 `impl Default for Config { fn default() -> Config }`",
+    "why": "`JSONBuilder { config: Config::default() }` resolves to the same-file `impl Default for Config` at json.rs:31-32, but 26 in-repo `fn default(` definitions exist (including nine other types literally named `Config`), so the correct edge is buried among 25 wrong ones.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/printer/src/standard.rs",
+    "line": 62,
+    "callee": "default",
+    "n_defs": 26,
+    "class": "false_ambig",
+    "true_target": "compiler-derived Default for ColorSpecs (crates/printer/src/color.rs:87-88 `#[derive(Clone, Debug, Default, Eq, PartialEq)] pub struct ColorSpecs`)",
+    "why": "`colors: ColorSpecs::default(),` inside `impl Default for Config` targets a derived impl that has no textual `fn default` at all, while 26 unrelated `fn default(` definitions exist in-repo — so every minted edge is wrong and the real one is unminatable.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/regex/src/ast.rs",
+    "line": 57,
+    "callee": "done",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "crates/regex/src/ast.rs:141 AstAnalysis::done",
+    "why": "`if self.done() {` inside `AstAnalysis::from_ast_impl`, and the sole in-repo `fn done(&self) -> bool` is at ast.rs:141 within the same `impl AstAnalysis` block opened at ast.rs:13.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/regex/src/literal.rs",
+    "line": 57,
+    "callee": "config",
+    "n_defs": 3,
+    "class": "false_ambig",
+    "true_target": "crates/regex/src/config.rs:232 ConfiguredHIR::config",
+    "why": "`if chir.config().line_terminator.is_none() {` with `chir: &ConfiguredHIR` (literal.rs:54) resolves to `pub(crate) fn config(&self) -> &Config` in `impl ConfiguredHIR` (config.rs:163/232), but two more `fn config` exist in printer/src/standard.rs:1536 and :1739.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/searcher/src/line_buffer.rs",
+    "line": 102,
+    "callee": "default",
+    "n_defs": 26,
+    "class": "false_ambig",
+    "true_target": "crates/searcher/src/line_buffer.rs:30 `impl Default for BufferAllocation { fn default() -> BufferAllocation }`",
+    "why": "Substituted file for sample index 80 (crates/searcher/src/lib.rs is 106 lines of module doc-comment, `pub use` and `mod` declarations with no call expression anywhere, forward or backward), so the next unused index 81 was taken: `buffer_alloc: BufferAllocation::default(),` targets line_buffer.rs:30 among 26 in-repo `fn default(` definitions.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/searcher/src/searcher/core.rs",
+    "line": 65,
+    "callee": "multi_line_with_matcher",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "crates/searcher/src/searcher/mod.rs:896 Searcher::multi_line_with_matcher",
+    "why": "`if !core.searcher.multi_line_with_matcher(&core.matcher) {` with `searcher: &'s Searcher` (core.rs:24), and the only definition `pub fn multi_line_with_matcher<M: Matcher>(&self, matcher: M) -> bool` is in `impl Searcher` (mod.rs:833/896).",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "crates/searcher/src/testutil.rs",
+    "line": 74,
+    "callee": "find_at",
+    "n_defs": 8,
+    "class": "false_ambig",
+    "true_target": "external (regex::bytes::Regex::find_at; field `regex: Regex` at testutil.rs:25, imported from `regex::bytes` at testutil.rs:8)",
+    "why": "`.find_at(haystack, at)` is called on the external regex crate's Regex, yet eight in-repo `fn find_at` definitions exist — including the enclosing file's own Matcher impl at testutil.rs:67, so the self-file definition is minted as a plausible-looking but wrong edge.",
+    "corpus": "ripgrep"
+   },
+   {
+    "file": "cli/src/audit.rs",
+    "line": 40,
+    "callee": "audit",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/audit.rs:82 fn audit(root: &Path, session: &str) -> ExitCode",
+    "why": "run_hook's tail is `audit(&PathBuf::from(&env.cwd), &env.session_id)`; the only in-corpus `fn audit(` is the private same-file definition at audit.rs:82, whose (&Path, &str) signature matches the two arguments.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/daemon/judge.rs",
+    "line": 43,
+    "callee": "classify_batch",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/fourclass/batch.rs:46 pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchClassification",
+    "why": "judge.rs:9 imports `use crate::fourclass::batch::{PairInput, classify_batch};` and the sole in-corpus definition is batch.rs:46; no other `fn classify_batch` exists in Rust or Haskell.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/dedup/index.rs",
+    "line": 40,
+    "callee": "get",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — rusqlite::Row::get",
+    "why": "`end_line: r.get::<_, i64>(4)? as usize,` inside `fn from_row(r: &rusqlite::Row<'_>)` (index.rs:34); grep for `fn get(`/`fn get<` over cli/src and core/app returns nothing, so name matching correctly mints no edge.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/dedup/struct_fp.rs",
+    "line": 40,
+    "callee": "pop",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — std Vec::pop",
+    "why": "`while let Some(node) = stack.pop()` with `let mut stack = vec![root];` on the previous line (struct_fp.rs:39), so the receiver is Vec<tree_sitter::Node>; there is no `fn pop` anywhere in the corpus (the only hit repo-wide is the vendored fixture contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs).",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/dedup/winnow.rs",
+    "line": 40,
+    "callee": "push",
+    "n_defs": 1,
+    "class": "false_wrong",
+    "true_target": "external — std Vec::push",
+    "why": "`hashes.push(h);` where `let mut hashes = Vec::with_capacity(...)` (winnow.rs:29) makes the receiver Vec<u64>, but the corpus holds exactly one `fn push`: cli/src/dedup/sources.rs:69 `fn push(&mut self, set: &mut BTreeSet<(usize, usize)>, x: usize, y: usize, src: &str)`, an inherent candidate-collector method — name matching mints one edge and it is the wrong one.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/docdup/segments.rs",
+    "line": 46,
+    "callee": "md_paragraphs",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/docdup/segments.rs:55 fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed)",
+    "why": "`Lang::Markdown => md_paragraphs(text),` inside `pub fn extract`; the single in-corpus `fn md_paragraphs` is the private same-file definition at segments.rs:55 and its return type matches extract's.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/fourclass/mod.rs",
+    "line": 65,
+    "callee": "lines",
+    "n_defs": 1,
+    "class": "false_wrong",
+    "true_target": "external — std str::lines",
+    "why": "`let a: Vec<&str> = before.lines().collect();` with `before: &str` from `pub fn classify(before: &str, after: &str, lang: Lang)` (mod.rs:64), yet the corpus's one `fn lines` is cli/src/dedup/t3/tree.rs:78 `fn lines(node: Node) -> (usize, usize)` — an unrelated tree-sitter span helper that shadows the stdlib callee.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/graph/gomod.rs",
+    "line": 42,
+    "callee": "parent_dir",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/graph/roots.rs:160 pub(crate) fn parent_dir(rel: &str) -> String",
+    "why": "`dir: roots::parent_dir(rel),` resolved through `use super::roots;` (gomod.rs:7); roots.rs:160 is the only `fn parent_dir` in the corpus. (Skipped the enclosing `Some(GoMod { .. })` on line 41 as an enum-variant constructor, not a function call.)",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/graph/ladder/mod.rs",
+    "line": 116,
+    "callee": "resolve",
+    "n_defs": 8,
+    "class": "false_ambig",
+    "true_target": "cli/src/graph/ladder/ts.rs:25 pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome",
+    "why": "`Lang::TypeScript | Lang::Tsx => ts::resolve(site.from, site.spec, scope),` in the dispatcher; the corpus defines `fn resolve` eight times — ladder/{ts,py,rs,go,md,hs}.rs, ladder/mod.rs:114 itself, and cli/src/mcp.rs:119 — so name matching would fan one site out to eight targets including a self-edge.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/graph/md_tests.rs",
+    "line": 44,
+    "callee": "kinds_specs",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/graph/md_tests.rs:26 fn kinds_specs(text: &str) -> Vec<(&'static str, String)>",
+    "why": "`assert_eq!(kinds_specs(text), vec![]);` — the assert_eq! macro itself is skipped per the protocol, and the inner callee's only definition is the same-file helper at md_tests.rs:26.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/graph/store_tests.rs",
+    "line": 40,
+    "callee": "clone",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — std String::clone (Clone trait)",
+    "why": "`dst_path: s.file.clone(),` inside the ensure_resolved closure, where `s` is a `CachedSite` and `pub file: String` (cli/src/graph/store.rs:175); the corpus has no hand-written `fn clone` (only derives), so no edge is minted.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/join/mod.rs",
+    "line": 59,
+    "callee": "analyze",
+    "n_defs": 3,
+    "class": "false_ambig",
+    "true_target": "cli/src/dedup/mod.rs:105 pub fn analyze(root, db, min_tokens, min_distinct) -> Result<(pairs::Blocks, Summary)>",
+    "why": "`let (found, _summary) = dedup::analyze(root, db.clone(), None, None)?;` resolved via `use crate::dedup::{self, pairs::Block};` (join/mod.rs:16), but three in-corpus `fn analyze` exist — dedup/mod.rs:105, scan/mod.rs:39, graph/mod.rs:41 (a fourth lives in the excluded cli/tests/common/mod.rs:154).",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/main_score.rs",
+    "line": 43,
+    "callee": "or_cwd",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/main_cmds.rs:20 pub fn or_cwd(root: Option<PathBuf>) -> PathBuf",
+    "why": "`let (root, as_json) = (or_cwd(judge.root), json(judge.format));` with `use crate::main_cmds::{fail, json, or_cwd};` at main_score.rs:8; main_cmds.rs:20 is the only definition of that name.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/scan/metrics/cyclo.rs",
+    "line": 16,
+    "callee": "is_named",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — tree_sitter::Node::is_named",
+    "why": "File is 30 lines (<40) so the middle line 15 was used and the first call at/after it is `if !node.is_named() {` on line 16; `node` comes from `own_nodes(fn_node, spec)` yielding tree_sitter::Node, and no `fn is_named` exists in the corpus.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "cli/src/scan/walk.rs",
+    "line": 45,
+    "callee": "load",
+    "n_defs": 1,
+    "class": "true_unique",
+    "true_target": "cli/src/config.rs:91 pub fn load(root: &Path) -> Result<Self, String> (inside impl Config at config.rs:89)",
+    "why": "Substituted file for index 94 (spec_hs.rs has no call expressions at all). `let config = crate::config::Config::load(root)?;` names the path explicitly, and config.rs:91 is the corpus's only `fn load` (cli/tests/eval_support/mod.rs:64 is outside the corpus).",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "core/app/CE/Clone.hs",
+    "line": 40,
+    "callee": "withObject",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — Data.Aeson.withObject",
+    "why": "`parseJSON = withObject \"CloneReq\" $ \\o ->` in the FromJSON CloneReq instance; the name enters unqualified through `import Data.Aeson` (Clone.hs:21) and no corpus module defines `withObject` (no `^withObject ::` or Rust `fn withObject`).",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "core/app/CE/FourClass.hs",
+    "line": 20,
+    "callee": "violation",
+    "n_defs": 5,
+    "class": "false_ambig",
+    "true_target": "core/app/CE/FourClass.hs:30 violation :: [Pair] -> Maybe Int",
+    "why": "File is 39 lines (<40) so middle line 20 applies: `Right req -> case violation (reqPairs req) of` binds to the same module's local definition at FourClass.hs:30, but the corpus has five top-level `violation` bindings — CE/Clone.hs:67, CE/Docdup.hs:56, CE/FourClass.hs:30, CE/Graph.hs:65, CE/Verdict/Wire.hs:70 — each a different type; only Haskell's module scoping disambiguates them.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "core/app/CE/Graph/Build.hs",
+    "line": 42,
+    "callee": "fromList",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — Data.IntSet.fromList",
+    "why": "`reachFrom b seeds = IS.fromList (concatMap (G.reachable (bGraph b)) seeds)` with `import qualified Data.IntSet as IS` (Build.hs:11); no corpus binding is named `fromList`, so the qualified container call correctly yields no in-repo edge.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "core/app/CE/Protocol.hs",
+    "line": 51,
+    "callee": "withObject",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — Data.Aeson.withObject",
+    "why": "`parseJSON = withObject \"Envelope\" $ \\o ->` (first application at/after line 40; lines 41-50 are a comment block and the Envelope record), unqualified from `import Data.Aeson` at Protocol.hs:19; no corpus definition of that name.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   },
+   {
+    "file": "core/app/Main.hs",
+    "line": 22,
+    "callee": "hPutStrLn",
+    "n_defs": 0,
+    "class": "correct_absent",
+    "true_target": "external — System.IO.hPutStrLn",
+    "why": "File is 39 lines (<40) so the middle line 20 applies, but line 20 (`[] -> serve`) is a bare nullary reference rather than an application, so the first real call expression is `hPutStrLn stderr (\"ce-core: unknown arguments: \" <> unwords args)` at line 22, coming from `import System.IO` (Main.hs:12); no corpus binding is named hPutStrLn.",
+    "corpus": "self @ d:/Projects/CodeEraser (Rust cli/src/**/*.rs + Haskell core/app/**/*.hs; cli/tests/ and core/test/ excluded). F=128 eligible files; 20 sampled at round(k*127/19), k=0..19. Index 94 (cli/src/scan/spec_hs.rs) contains ZERO call expressions in the whole file (a `use` plus one static `LangSpec` struct literal), so per the collision rule it was stepped to the next unused index 95 = cli/src/scan/walk.rs. n_defs counted over the corpus file set only (vendored fixtures under contracts/fixtures/ and test dirs are outside it). Result: 7 true_unique, 8 correct_absent, 3 false_ambig, 2 false_wrong -> whole-repo same-name matching is correct at 15/20 = 75%."
+   }
+  ]
+ }
+}

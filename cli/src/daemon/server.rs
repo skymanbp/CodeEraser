@@ -1,7 +1,9 @@
-//! Per-project daemon server (ADR-003): lazy-started by the client,
-//! sole writer of the SQLite index (requests are handled serially —
-//! the serialization IS the multi-session concurrency model), exits
-//! after 30 min idle or on a version-skew hello.
+//! Per-project daemon server (ADR-003 as amended, plan v1.7): lazy-
+//! started by the client, ONE convergent writer among the CLI's own
+//! (requests are handled serially within the daemon; cross-process
+//! convergence is the idempotent-write contract concurrent_writers
+//! proves), exits after 30 min idle or on a version-skew hello.
+//! Wire contract: contracts/DAEMON.md + the daemon_proto goldens.
 
 use super::coldstart;
 use super::judge::Judge;
