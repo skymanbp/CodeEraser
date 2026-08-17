@@ -16,7 +16,10 @@ use std::path::{Path, PathBuf};
 /// [{dir, kind}], declaredDirs. 0.3.0 (S3b): + deep (whether the S6
 /// redundancy rollup rode the wire — axis-6 rows exist only then).
 /// 0.4.0 (S3c): + days (the staleness window; null = axis 5 off).
-pub const SCHEMA_ID: &str = "ce.structure-report/0.4.0";
+/// 0.5.0 (S4a): + tree [{id, parent, name, depth, subdirs, files,
+/// axes}] — the flat parent-linked rows the booklet §5 promised the
+/// GUI, per-node axes rolled from the findings.
+pub const SCHEMA_ID: &str = "ce.structure-report/0.5.0";
 
 pub struct Report {
     pub score: i64,
@@ -42,6 +45,19 @@ pub struct Report {
     /// The staleness window in days (--days): axis-5 rows exist
     /// exactly when set.
     pub days: Option<u32>,
+    /// The flat parent-linked tree (booklet §5): one row per walked
+    /// directory, per-node axis codes rolled from the findings —
+    /// the GUI's first-screen data face.
+    pub tree: Vec<TreeRow>,
+}
+
+pub struct TreeRow {
+    pub name: String,
+    pub parent: usize,
+    pub depth: u32,
+    pub subdirs: u32,
+    pub files: u32,
+    pub axes: Vec<i64>,
 }
 
 pub fn run(
@@ -57,6 +73,7 @@ pub fn run(
     let req = assemble(root, db, core, &t, (deep, days))?;
     let reply = wire::judge(core, &req)?;
     let names = names_by_id(&t);
+    let tree = tree_rows(&t, &names, &reply.findings);
     let findings = relabel(&names, &reply.findings);
     let deviations = relabel(&names, &reply.deviations);
     let scale = reply
@@ -77,7 +94,31 @@ pub fn run(
         declared: req.declared.len(),
         deep,
         days,
+        tree,
     })
+}
+
+/// One row per directory, the findings convolved back onto their
+/// nodes — the report keeps the DENSE ids so the GUI can link
+/// parents without re-deriving anything.
+fn tree_rows(t: &tree::Tree, names: &[String], findings: &[[i64; 2]]) -> Vec<TreeRow> {
+    let mut rows: Vec<TreeRow> = t
+        .dirs
+        .iter()
+        .enumerate()
+        .map(|(i, d)| TreeRow {
+            name: names[i].clone(),
+            parent: d.parent,
+            depth: d.depth,
+            subdirs: d.subdirs,
+            files: d.files,
+            axes: Vec::new(),
+        })
+        .collect();
+    for &[d, axis] in findings {
+        rows[d as usize].axes.push(axis);
+    }
+    rows
 }
 
 /// The whole request from one walked tree: the always-on tables,
@@ -156,25 +197,45 @@ struct JsonReport<'a> {
     declared_dirs: usize,
     deep: bool,
     days: Option<u32>,
+    tree: Vec<serde_json::Value>,
+}
+
+/// The ONE report document (§5: CLI JSON and the GUI consume the
+/// SAME shape — a second report form is exactly what the booklet
+/// forbids). Public since S4a: the Tauri command calls this.
+pub fn report_json(r: &Report) -> serde_json::Value {
+    let doc = JsonReport {
+        schema: SCHEMA_ID,
+        score: r.score,
+        score_scale: r.scale,
+        entropy: &r.entropy,
+        axes: &r.axes,
+        findings: labeled(&r.findings, "dir", "axis"),
+        dirs: r.dirs,
+        divergence: r.divergence,
+        deviations: labeled(&r.deviations, "dir", "kind"),
+        declared_dirs: r.declared,
+        deep: r.deep,
+        days: r.days,
+        tree: r
+            .tree
+            .iter()
+            .enumerate()
+            .map(|(i, n)| {
+                serde_json::json!({
+                    "id": i, "parent": n.parent, "name": n.name,
+                    "depth": n.depth, "subdirs": n.subdirs,
+                    "files": n.files, "axes": n.axes,
+                })
+            })
+            .collect(),
+    };
+    serde_json::to_value(&doc).expect("report json")
 }
 
 pub fn print(r: &Report, as_json: bool) {
     if as_json {
-        let doc = JsonReport {
-            schema: SCHEMA_ID,
-            score: r.score,
-            score_scale: r.scale,
-            entropy: &r.entropy,
-            axes: &r.axes,
-            findings: labeled(&r.findings, "dir", "axis"),
-            dirs: r.dirs,
-            divergence: r.divergence,
-            deviations: labeled(&r.deviations, "dir", "kind"),
-            declared_dirs: r.declared,
-            deep: r.deep,
-            days: r.days,
-        };
-        println!("{}", serde_json::to_string(&doc).expect("report json"));
+        println!("{}", report_json(r));
         return;
     }
     let axes: Vec<String> = r.axes.iter().map(|[c, p]| format!("{c}:{p}")).collect();

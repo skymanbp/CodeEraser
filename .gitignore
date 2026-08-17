@@ -19,6 +19,11 @@ cabal.project.local~
 # cli/src/bin/ MUST be committed (delta-review D1-1)
 target/
 
+# === Tauri GUI (gui/, M6 S4) ===
+# tauri-build regenerates these ACL/schema json files every build;
+# capabilities/*.json (hand-written) ARE tracked
+gui/src-tauri/gen/
+
 # === Generated / scratch ===
 *.log
 *.tmp

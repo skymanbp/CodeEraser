@@ -70,11 +70,17 @@ per-mille，scoreScale 纪律）、（b）**树相对熵**（定标有理数，�
 
 ## 5. 可视化数据面（CLI 与 GUI 共用一份）
 
-`ce structure [--format json] --core <exe>`：JSON = `{schema, score, entropy,
-axes, tree: [{id, parent, name, kind, level, score, axes…}], deviations}` ——
-flat nodes+parent（机器友好、流式可增量）；CLI 渲染 = 顶部总分/熵 + 逐轴
-概要 + top-N 违规下钻；GUI（Tauri，M6 主体）= 树图/treemap 首屏直接消费
-同一 schema，无第二报告形。
+`ce structure [--format json] --core <exe>`（S4a as-built，schema
+0.5.0）：JSON = `{schema, score, scoreScale, entropy, axes, findings,
+divergence, deviations, declaredDirs, deep, days, tree: [{id, parent,
+name, depth, subdirs, files, axes}]}` —— flat nodes+parent（机器友好、
+流式可增量；每节点 axes=findings 卷积回节点）；CLI 渲染 = 顶部总分/熵
++ 逐轴概要 + 违规下钻；GUI（Tauri v2 壳 gui/src-tauri + **webview=
+最小 vanilla JS**〔用户拍板 2026-08-17：零 npm 零构建链，JS 只做渲染
+胶水〕）= `structure_report` command 进程内直调
+`codeeraser::structure::judge::{run, report_json}` —— **同一 schema
+同一函数，无第二报告形按构造成立**；首屏=summary 条+SVG 切片树图
+（findings 热度着色）+详情栏。
 
 ## 6. 切片（每片一提交链一 CI 绿，ADR-008 纪律）
 
@@ -98,8 +104,11 @@ flat nodes+parent（机器友好、流式可增量）；CLI 渲染 = 顶部总�
   [dirId,stale,total]` 可选表 + knob 11=staleMin；测量=`--days N`
   才发（md 出边目标×单遍窗口 git log，同 commit 双改=不陈旧）；
   自仓活体：`--days 14` 轴 5:4、全七轴 860/1000。
-- **S4 GUI 首屏**：Tauri 树图消费 §5 schema（M6 主体并轨；验收=计划 M6
-  行既有数字：10 万 LOC 冷启动到首屏 <60s、报告打开 <3s）。
+- **S4 GUI 首屏**（S4a 已落地）：gui/ 独立 package（Tauri v2 壳
+  path-dep cli 库；CI 暂无 gui 腿——Linux webkit 系统依赖与打包同批
+  留 S4b）+ §5 as-built 首屏本机活体（开窗/判决/树图）。
+  **S4b 待续**：CI gui 腿 + `cargo tauri build` 三平台打包 + M6
+  验收数字实测（10 万 LOC 冷启动到首屏 <60s、报告打开 <3s）。
 
 ## 7. 风险与预先立场
 

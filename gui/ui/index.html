@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- CodeEraser GUI first screen (M6 S4a): renders the ONE report
+     document (ce.structure-report/0.5.0). No framework, no build
+     step — the webview layer is rendering glue by user ruling. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CodeEraser — structure</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <input id="root" type="text" spellcheck="false" />
+    <label><input id="deep" type="checkbox" /> deep (S6)</label>
+    <label>days <input id="days" type="number" min="1" placeholder="off" /></label>
+    <button id="scan">scan</button>
+    <span id="status"></span>
+  </header>
+  <section id="summary" hidden>
+    <div class="stat"><span id="score"></span><small id="scale"></small></div>
+    <div class="stat" id="entropy"></div>
+    <div class="stat" id="axes"></div>
+    <div class="stat" id="divergence"></div>
+  </section>
+  <main>
+    <svg id="treemap" preserveAspectRatio="none"></svg>
+    <aside id="detail"></aside>
+  </main>
+  <script src="main.js" defer></script>
+</body>
+</html>
