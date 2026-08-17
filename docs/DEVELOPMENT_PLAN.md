@@ -1,8 +1,8 @@
 # CodeEraser 开发计划
 
-> **版本** v1.7 · 2026-08-14 · 状态：🔒 已由 cc-memory 锁定
+> **版本** v1.8 · 2026-08-17 · 状态：🔒 已由 cc-memory 锁定
 > 本文件是本仓库唯一权威计划。修改流程：改本文件 → 重新 ccm 锁定 → 才能动代码。
-> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）。
+> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）。
 > 本文件行数以锁定时为棘轮上界：只准变短，不准变长；更新必须就地改写。
 > 调研依据：2026-08-06 七路并行实证调研（GitHub API / 官方文档 / 论文原文），关键事实附 URL。
 
@@ -227,10 +227,10 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
   自设 `timeout` 并按 R3 fail-open + 显式记录。
 - ⚠️ 官方文档无 Edit/Write hook payload 逐字示例 → M0 用 echo-hook 实测 dump 固化 fixture。
 
-**ADR-008 策略即数据 = Haskell 规则 DSL（2026-08-12 拍板；M5-3 收口后启动，可与 M6 并行）。**
-一切"什么算违规/豁免/预算/棘轮"的策略语义以类型化规则 DSL 在 ce-core 求值——§5 架构图
-"规则引擎"的落地形态；Rust 只解析 `ce.toml` 并原样过 wire，不解释语义。既有策略迁移的
-验收 = 迁移前后判决字节等价（golden 全绿）。Haskell 占比提升是副产品，禁止为占比写代码。
+**ADR-008 策略即数据 = Haskell 规则 DSL（2026-08-12 拍板；细则 v1.8 三拍板 2026-08-17）。**
+判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以"位台账+判决表"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。
+Rust 解析 `ce.toml` 原样过 wire 不解释语义。四片：P4 配置面与表化→P1 判决权回迁（is_clone/verbatim 半边/degraded→FAIL）→P2 棘轮统一（budget 比较入 core）→P3 scan 分级入 core（scan 获 --core，PERF 超标单片回滚）。
+验收 = 产品判决面字节等价（上报集/退出码/报告行，golden 全绿）+每片反事实证表承重；wire 按 proto minor 加性演进。占比提升是副产品，禁止为占比写代码。全档：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)。
 
 ### 5.9 安全与隐私（A9，上市场的准入条件）
 
