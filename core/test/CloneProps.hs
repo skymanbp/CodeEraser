@@ -3,11 +3,13 @@
 -- the mapping-definition brute force, the two admissible prune
 -- bounds hold against brute-force ted, ted is a metric, and the
 -- threshold knob is alive (perturbing it moves the verdict count,
--- with the nonemptiness precondition asserted — F16). CI walks
--- n ≤ 4; CE_DEEP_TED=1 extends to n = 5 (nightly).
+-- with the nonemptiness precondition asserted — F16). Since ADR-008
+-- P1 every verdict assertion runs through Cost.cloneDecides — the
+-- binding whose bit crosses the wire. CI walks n ≤ 4; CE_DEEP_TED=1
+-- extends to n = 5 (nightly).
 module CloneProps (battery) where
 
-import CE.Clone.Cost (tsedDen, tsedNum)
+import CE.Clone.Cost (cloneDecides, cloneDecidesWith, tsedDen, tsedNum)
 import CE.Clone.Prefilter (provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
 import Data.Array.Unboxed (listArray)
@@ -37,8 +39,19 @@ battery = do
   -- asserted via ReferenceTed's own tallies while provablyBelow's
   -- one call site was production)
   g <- check "prefilter: provablyBelow implies not-a-clone under real ted" (all pruneOk teds)
+  -- the ADR-008 P1 counterfactual: the SHIPPED verdict binding sits
+  -- exactly on the threshold in both directions, and a perturbed
+  -- knob flips the boundary pair — the bit the wire now carries is
+  -- this formula's output, so this lever is the migration's proof
+  h <-
+    check
+      "verdict boundary: ted 15/16 at max 100, and 86/100 flips it"
+      ( cloneDecides 15 100 90
+          && not (cloneDecides 16 100 90)
+          && not (cloneDecidesWith (86, 100) 15 100 90)
+      )
   putStrLn ("     clone family: maxN " <> show maxN <> ", trees " <> show (length fam))
-  pure (a && b && c && d && e && f && g)
+  pure (a && b && c && d && e && f && g && h)
 
 check :: String -> Bool -> IO Bool
 check name ok = putStrLn ((if ok then "ok   " else "FAIL ") <> name) >> pure ok
@@ -58,11 +71,13 @@ labelBound (v, a, b) = v >= mx a b - fromIntegral (labelInterOf a b)
 sizeBound :: (Integer, T, T) -> Bool
 sizeBound (v, a, b) = v >= abs (size a - size b)
 
--- | Admissibility of the shipped prune against the real ted: a
--- pruned pair's best case (mx − ted) still misses the threshold.
+-- | Admissibility of the shipped prune against the real ted and the
+-- SHIPPED verdict binding (ADR-008 P1: cloneDecides is the formula
+-- whose bit crosses the wire — asserting through it, not a local
+-- transcription, is what makes this admissibility executed coverage).
 pruneOk :: (Integer, T, T) -> Bool
 pruneOk (v, a, b) =
-  not (provablyBelow (fst a) (fst b)) || (mx a b - v) * tsedDen < tsedNum * mx a b
+  not (provablyBelow (fst a) (fst b)) || not (cloneDecides v (size a) (size b))
 
 size :: T -> Integer
 size = fromIntegral . length . fst
@@ -90,9 +105,12 @@ triangle fam =
 -- | The clone verdict at a given ratio, counted over the family; the
 -- production knob must separate from a perturbed one on a nonempty
 -- flip set — a dead threshold cannot hide behind an empty family.
+-- Counted through cloneDecidesWith: ONE formula (P1), so the probe
+-- perturbs the production comparison, never a re-implementation.
 knobAlive :: [(Integer, T, T)] -> IO Bool
 knobAlive teds = do
-  let count num den = length [() | (v, a, b) <- teds, (mx a b - v) * den >= num * mx a b]
+  let count num den =
+        length [() | (v, a, b) <- teds, cloneDecidesWith (num, den) v (size a) (size b)]
       (at85, at75) = (count tsedNum tsedDen, count 75 100)
   a <- check "knob nonemptiness: clones exist at 85/100" (at85 > 0)
   b <- check "knob alive: 85/100 vs 75/100 flips a nonempty set" (at75 > at85)

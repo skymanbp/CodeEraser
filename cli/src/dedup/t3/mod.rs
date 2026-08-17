@@ -35,6 +35,10 @@ pub struct Ted {
     pub n2: i64,
 }
 
+/// One judged wire row's payload: raw ted, the two sizes, and the
+/// core's verdict bit (ADR-008 P1).
+type ScoredTed = (i64, i64, i64, bool);
+
 pub type Report = crate::report::Report<Ted, Counts>;
 
 #[derive(Serialize)]
@@ -72,15 +76,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     let built = build_trees(root, &cand.units)?;
     let (sendable, dropped_over_cap, dropped_forest) = sendable_pairs(&cand.pairs, &built);
     let (rows, judged, prefiltered, requests) = judge(core, &built, &sendable)?;
-    let clones: Vec<crate::report::Pair<Ted>> = rows
-        .iter()
-        .filter(|&&(_, _, (ted, n1, n2))| is_clone(ted, n1, n2))
-        .map(|&(a, b, (ted, n1, n2))| crate::report::Pair {
-            a: name(&cand.units[a]),
-            b: name(&cand.units[b]),
-            m: Ted { ted, n1, n2 },
-        })
-        .collect();
+    let clones = reported_clones(&rows, &cand.units)?;
     let (over_cap_units, forest_units) = built.iter().fold((0, 0), |(oc, fo), b| match b {
         Outcome::OverCap => (oc + 1, fo),
         Outcome::Forest => (oc, fo + 1),
@@ -113,11 +109,38 @@ fn name(u: &Unit) -> String {
     format!("{}:{}#{}", u.path, u.key, u.nth)
 }
 
-/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — integer cross-
-/// multiplication with the SAME constants the admissible prunes used;
-/// the wire carries raw ted, so the verdict recomputes from one run.
-/// Public: the 3f precision instrument scores sampled pairs through
-/// THIS binding — a re-derived formula would be a second threshold.
+/// The reported set from the CORE's verdict bits (ADR-008 P1), with
+/// the per-row drift ensure: the pinned mirror must agree or the run
+/// dies loudly — formula drift named, never a silently forked
+/// verdict (the frozen 3f instruments score through is_clone, so
+/// this check is what keeps them equal to the product by proof).
+fn reported_clones(
+    rows: &[(usize, usize, ScoredTed)],
+    units: &[Unit],
+) -> Result<Vec<crate::report::Pair<Ted>>> {
+    for &(_, _, (ted, n1, n2, v)) in rows {
+        ensure!(
+            v == is_clone(ted, n1, n2),
+            "core clone verdict ({v}) disagrees with the pinned mirror at ted {ted} nodes {n1}/{n2} — formula drift (Clone/Cost.hs vs t3/mod.rs)"
+        );
+    }
+    Ok(rows
+        .iter()
+        .filter(|&&(_, _, (_, _, _, v))| v)
+        .map(|&(a, b, (ted, n1, n2, _))| crate::report::Pair {
+            a: name(&units[a]),
+            b: name(&units[b]),
+            m: Ted { ted, n1, n2 },
+        })
+        .collect())
+}
+
+/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — since ADR-008 P1 a
+/// MIRROR of the core's verdict (CE.Clone.Cost.cloneDecides), not an
+/// authority: the reported set is built from the wire's per-row
+/// verdict bits, and this binding remains for the frozen 3f
+/// precision instruments plus run()'s per-row drift ensure. Same
+/// constants as the admissible prunes; the knobs echo pins them.
 pub fn is_clone(ted: i64, n1: i64, n2: i64) -> bool {
     let mx = n1.max(n2);
     (mx - ted) * TSED_DEN >= TSED_NUM * mx
@@ -197,7 +220,7 @@ fn judge(
     core: &str,
     built: &[Outcome],
     sendable: &[&PairRow],
-) -> Result<crate::lockstep::Judged<(i64, i64, i64)>> {
+) -> Result<crate::lockstep::Judged<ScoredTed>> {
     crate::lockstep::lockstep_scores(
         &wire::family(core),
         sendable,

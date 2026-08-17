@@ -47,17 +47,14 @@ deadPos flags = Just (Pos {pIndeg = 0, pReach = 0, pFlags = flags, pScc = 0})
 mergeRow :: Legs
 mergeRow = Legs (1, kCloneNum bound, kCloneDen bound) (alive 1 0) (alive 2 1) (0, 0) (0, 0) Nothing
 
-deleteRow :: Legs
-deleteRow = Legs (1, 90, 100) (deadPos 0) (alive 1 1) (0, 0) (0, 0) Nothing
-
--- | Same shape as deleteRow with the dead flank public (bit 0).
-publicGuardRow :: Legs
-publicGuardRow = Legs (1, 90, 100) (deadPos 1) (alive 1 1) (0, 0) (0, 0) Nothing
-
--- | Dead flank carries the test entry bit (2): entry under the bound
--- mask, dead once the entryMask probe strips that bit.
-entryFlankRow :: Legs
-entryFlankRow = Legs (1, 90, 100) (deadPos 2) (alive 1 1) (0, 0) (0, 0) Nothing
+-- | The delete-shape row by the dead flank's flag bits: 0 =
+-- delete_candidate, 1 = public (the RG10 guard's fixture), 2 = test
+-- entry (dead once the entryMask probe strips that bit). ONE
+-- constructor — the three sibling rows differed only here, and the
+-- repo's own ratchet caught the ladder when the ninth bite went
+-- looking for repayment (ADR-008 P1).
+deadFlankRow :: Integer -> Legs
+deadFlankRow flags = Legs (1, 90, 100) (deadPos flags) (alive 1 1) (0, 0) (0, 0) Nothing
 
 -- | Same-SCC referenced pair (merge cannot fire), docdup-kind sim
 -- EXACTLY on 80/100 (the kDupNum/kDupDen probes' boundary), rewrite
@@ -77,9 +74,9 @@ tierURow = Legs (1, 90, 100) Nothing (alive 1 0) (5, 5) (5, 5) (Just 3)
 fixtures :: [Legs]
 fixtures =
   [ mergeRow
-  , deleteRow
-  , publicGuardRow
-  , entryFlankRow
+  , deadFlankRow 0
+  , deadFlankRow 1
+  , deadFlankRow 2
   , hotspotRow (Just (kCochangeFloor bound))
   , hotspotRow (Just (kCochangeFloor bound + 1))
   , bothRow
@@ -132,7 +129,7 @@ allClasses = all (> 0) (census bound)
 
 -- | Every delete in the population, republished with its dead flank
 -- public, must leave class 2 and raise bit 6 — and there must BE
--- deletes to flip (deleteRow guarantees the seat).
+-- deletes to flip (deadFlankRow 0 guarantees the seat).
 rg10 :: Bool
 rg10 = not (null dels) && all blocked dels
  where
@@ -196,4 +193,4 @@ bitZeroSilent = all (\l -> not (testBit (reasonsOf l) 0)) pop
 -- bits {1,2,4,5} = 54; guard = bits {1,2,4,5,6} = 118 (deadFlank
 -- stays set — publicness blocks the verdict, not the observation).
 ledgerPinned :: Bool
-ledgerPinned = reasonsOf deleteRow == 54 && reasonsOf publicGuardRow == 118
+ledgerPinned = reasonsOf (deadFlankRow 0) == 54 && reasonsOf (deadFlankRow 1) == 118

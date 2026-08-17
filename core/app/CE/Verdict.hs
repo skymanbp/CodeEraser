@@ -242,7 +242,10 @@ tooLarge proto req =
             , "removed" .= ([] :: [Value])
             , "over" .= ([] :: [Value])
             , "toleranceDrawn" .= ([] :: [Value])
-            , "fail" .= False
+            , -- ADR-008 P1: a gate that could not judge must never
+              -- pass, said by the CORE — the degraded reply carries
+              -- its own fail semantics; Rust relays, never re-derives
+              "fail" .= True
             ]
       , "newBaseline" .= object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Value])]
       , -- defaults: no judgment ran, so no override was applied

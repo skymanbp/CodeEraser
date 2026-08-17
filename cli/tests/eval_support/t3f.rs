@@ -253,7 +253,11 @@ fn score_pairs(
     let (order, body) = wire::chunk_request(sendable, |g| &trees[&g]);
     let reply = link.request("clone", body).expect("clone.request");
     let (rows, _counts) = wire::parse_result(&reply).expect("clone.result");
+    // the instrument's verdict stays its local is_clone binding
+    // (frozen semantics); the wire's ADR-008 P1 bit is dropped here,
+    // and the product run()'s per-row ensure is what proves the two
+    // can never fork silently
     rows.into_iter()
-        .map(|(i, j, (ted, n1, n2))| ((order[i], order[j]), Judgment::Scored { ted, n1, n2 }))
+        .map(|(i, j, (ted, n1, n2, _))| ((order[i], order[j]), Judgment::Scored { ted, n1, n2 }))
         .collect()
 }

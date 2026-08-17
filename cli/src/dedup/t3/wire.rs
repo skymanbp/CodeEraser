@@ -71,21 +71,25 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
 }
 
 /// Decode one clone.result into request-local rows `(i, j, (ted, n1,
-/// n2))` plus `[judged, prefiltered]` — the shared parse_scores
-/// throat with this family's knob list (the prunes' admissibility
-/// argument collapses if the judge's ratio drifts from
+/// n2, verdict))` plus `[judged, prefiltered]` — the shared
+/// parse_scores throat with this family's knob list (the prunes'
+/// admissibility argument collapses if the judge's ratio drifts from
 /// candidates.rs; a degraded reply to a client-sized request means
-/// the cap mirrors above disagree with Cost.hs).
-pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64)>> {
+/// the cap mirrors above disagree with Cost.hs), zipped with the
+/// core's per-row verdict bits (ADR-008 P1: the reported set is the
+/// core's decision — raw ted stays for the instruments' cut tables).
+pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {
     let (rows, c): (Vec<[i64; 5]>, _) = crate::lockstep::parse_scores(
         reply,
         &[("tsedNum", json!(TSED_NUM)), ("tsedDen", json!(TSED_DEN))],
         "t3/wire.rs+candidates.rs vs Clone/Cost.hs",
         &["judged", "prefiltered"],
     )?;
+    let bits = crate::lockstep::verdict_bits(reply, rows.len())?;
     let local = rows
         .into_iter()
-        .map(|[i, j, ted, n1, n2]| (i as usize, j as usize, (ted, n1, n2)))
+        .zip(bits)
+        .map(|([i, j, ted, n1, n2], v)| (i as usize, j as usize, (ted, n1, n2, v)))
         .collect();
     Ok((local, c))
 }
@@ -114,12 +118,12 @@ mod tests {
         assert_eq!(body["trees"][0]["lab"], json!([0, 1, 0]));
         assert_eq!(body["trees"][1]["lab"], json!([1, 2]));
         assert_eq!(body["pairs"], json!([[0, 1]]));
-        let ok = json!({"scores": [[0, 1, 2, 3, 3]],
+        let ok = json!({"scores": [[0, 1, 2, 3, 3]], "verdicts": [false],
             "counts": {"judged": 1, "prefiltered": 0},
             "knobs": {"tsedNum": 85, "tsedDen": 100}, "degraded": false});
         assert_eq!(
             parse_result(&ok).expect("well-formed").0,
-            vec![(0, 1, (2, 3, 3))]
+            vec![(0, 1, (2, 3, 3, false))]
         );
         let mut drifted = ok;
         drifted["knobs"]["tsedNum"] = json!(80);

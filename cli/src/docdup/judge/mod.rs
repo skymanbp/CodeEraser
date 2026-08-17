@@ -1,15 +1,17 @@
 //! `ce docdup` judgment (design vol.2 §5.3, M5-3g): live cached
 //! segments → coarse candidates (LSH ∪ verbatim seeds) → chunks of at
 //! most DOC_PAIR_CAP pairs over one core link for the exact Haskell
-//! Jaccard re-check → the ONE is_dup verdict throat. Raw inter/union
-//! cross the wire, never a ratio; the verbatim half of the verdict is
-//! Rust-owned (the runs are computed here), the Jaccard half is the
-//! core's 80/100 pinned by the knobs echo.
+//! Jaccard re-check. Raw inter/union cross the wire, never a ratio,
+//! and since ADR-008 P1 each score row comes back with the CORE's
+//! full verdict bit (CE.Docdup.Cost.dupVerdict: Jaccard ∨ verbatim —
+//! the runs computed here ride the request as verdict inputs, F26);
+//! the reported set is the core's decision, cross-checked per row
+//! against the pinned is_dup mirror.
 
 pub mod candidates;
 pub mod wire;
 
-use anyhow::Result;
+use anyhow::{Result, ensure};
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -43,10 +45,11 @@ pub struct Doc {
 pub type Report = crate::report::Report<Doc, Counts>;
 
 /// dup ⇔ inter·JACCARD_DEN ≥ JACCARD_NUM·union ∨ verbatim ≥
-/// VERBATIM_FLOOR — integer cross-multiplication with the mirrored
-/// constants the knobs echo pins, OR the Rust-owned verbatim floor.
-/// Public: the precision instrument scores census pairs through THIS
-/// binding — a re-derived formula would be a second threshold.
+/// VERBATIM_FLOOR — since ADR-008 P1 a MIRROR of the core's verdict
+/// (CE.Docdup.Cost.dupVerdict), not an authority: the reported set
+/// is built from the wire's per-row bits, and this binding remains
+/// for run()'s per-row drift ensure. All three numbers are pinned by
+/// the knobs echo.
 pub fn is_dup(inter: u64, union: u64, verbatim: u64) -> bool {
     inter * wire::JACCARD_DEN >= wire::JACCARD_NUM * union
         || verbatim >= crate::docdup::spec::VERBATIM_FLOOR as u64
@@ -68,10 +71,20 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     )?;
     let runs: BTreeMap<(usize, usize), u64> =
         cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
+    // ADR-008 P1: the reported set is built from the CORE's verdict
+    // bits; the pinned mirror must agree per row or the run dies
+    // loudly — formula drift named, never a silently forked verdict
+    for &(a, b, (inter, union, v)) in &rows {
+        ensure!(
+            v == is_dup(inter, union, runs[&(a, b)]),
+            "core docdup verdict ({v}) disagrees with the pinned mirror at J {inter}/{union} run {} — formula drift (Docdup/Cost.hs vs judge/mod.rs)",
+            runs[&(a, b)]
+        );
+    }
     let dups: Vec<crate::report::Pair<Doc>> = rows
         .iter()
-        .filter(|&&(a, b, (inter, union))| is_dup(inter, union, runs[&(a, b)]))
-        .map(|&(a, b, (inter, union))| crate::report::Pair {
+        .filter(|&&(_, _, (_, _, v))| v)
+        .map(|&(a, b, (inter, union, _))| crate::report::Pair {
             a: name(&segs[a]),
             b: name(&segs[b]),
             m: Doc {

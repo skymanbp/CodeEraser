@@ -5,10 +5,13 @@ module CE.Docdup.Cost
   ( jaccardNum
   , jaccardDen
   , shingleK
+  , verbatimFloor
   , docSetCap
   , docPairCap
   , dupDecides
   , dupDecidesWith
+  , dupVerdict
+  , dupVerdictWith
   ) where
 
 -- | The Jaccard report threshold as an integer ratio (0.80). Defined
@@ -53,12 +56,19 @@ docSetCap = 8192
 docPairCap :: Integer
 docPairCap = 4096
 
+-- | Verbatim hard-hit floor in words. Same provenance as the Rust
+-- mirror it now owns (spec.rs VERBATIM_FLOOR: plan :68, Lee et al.
+-- 2107.06499, verbatim lower bound 50 tokens). ADR-008 P1 moves the
+-- floor's VERDICT home here: the run lengths already ride each
+-- request row ([i,j,run] — F26), the texts never cross the wire
+-- (§5.9.2), and the knobs echo pins the Rust mirror to this number.
+verbatimFloor :: Integer
+verbatimFloor = 50
+
 -- | The Jaccard half of the duplication verdict, stated by the
 -- threshold's OWNER: dup ⇔ inter·jaccardDen ≥ jaccardNum·union.
--- The verbatim half of the disjunction is Rust-owned (spec.rs
--- VERBATIM_FLOOR, where the runs are computed); this half is applied
--- here per scored row into counts.jaccardDups, and re-applied by the
--- Rust is_dup mirror that the knobs echo pins.
+-- Applied per scored row into counts.jaccardDups, and mirrored by
+-- the Rust is_dup binding that the knobs echo pins.
 dupDecides :: Integer -> Integer -> Bool
 dupDecides = dupDecidesWith jaccardNum jaccardDen
 
@@ -68,3 +78,16 @@ dupDecides = dupDecidesWith jaccardNum jaccardDen
 -- re-implementation.
 dupDecidesWith :: Integer -> Integer -> Integer -> Integer -> Bool
 dupDecidesWith num den inter union = inter * den >= num * union
+
+-- | The FULL duplication verdict (ADR-008 P1): Jaccard half ∨
+-- verbatim half, both owned here now that the wire carries every
+-- verdict input — the reported set is the core's decision, riding
+-- each reply as a per-row bit.
+dupVerdict :: Integer -> Integer -> Integer -> Bool
+dupVerdict = dupVerdictWith (jaccardNum, jaccardDen, verbatimFloor)
+
+-- | The knob-parameterized disjunction — ONE formula, so the
+-- battery's probes perturb the production comparison on BOTH halves.
+dupVerdictWith :: (Integer, Integer, Integer) -> Integer -> Integer -> Integer -> Bool
+dupVerdictWith (num, den, vfloor) inter union run =
+  dupDecidesWith num den inter union || run >= vfloor

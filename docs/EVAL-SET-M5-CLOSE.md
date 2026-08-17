@@ -202,6 +202,29 @@ VerdictProps 拆 VerdictWireProps（300 线拆分非豁免）。**棘轮第八�
 qualified+表驱动）；145==145 零豁免。判决字节等价=判决字段（score/axes/
 candidates/ratchet）逐字节不变于 golden 全册。
 
+**P1 判决权回迁**：proto 2.5.0 加性 minor——三处判决权入 core：①t3
+`is_clone` → `CE.Clone.Cost.cloneDecides`（clone.result 加性 `verdicts`
+布尔数组，每 score 行一位同序；上报集自此由 core 的位构建）②docdup
+`is_dup` 全析取 → `CE.Docdup.Cost.dupVerdict`（Jaccard 半 ∨ verbatim 半；
+`verbatimFloor=50` 判决权迁入 core 并入 knobs 回显——run 长度过线〔F26〕
+文本不过〔§5.9.2〕正是为此）③degraded verdict 回复自带 `ratchet.fail=true`
+（"不能判者绝不放行"由 core 自述；`main_score` 的 `|| degraded` 再解释
+退役——语义位翻转仅此一处=P1 契约本体，golden 无 degraded 对、由
+VerdictWireProps `degradedFails` 探针钉住〔verdictNodeCap+1 行 tier 真过
+respond〕）。Rust 侧=`lockstep::verdict_bits` 单咽喉（长度锁：位数≠行数即
+拒）+两家 `parse_result` 拉链；`is_clone`/`is_dup` 降为**镜像**（3f 冻结
+仪器语义零扰动继续走本地绑定），产品 run() 逐行 ensure 位==镜像——公式漂移
+指名即死，仪器与产品由证明而非信任保持相等。**反事实杠杆**：CloneProps
+边界（ted 15/16@max100，86/100 翻）+ ReferenceJaccard verbatim 半
+（run 50/49，地板 51 翻）+ degradedFails 全绿。golden 翻批 43 行逐审=
+41 行纯 proto 位+加性字段（判决字段逐字节不变）+docdup 新 pair 6 三形
+判决 `[true,false,true]`（verbatim 独断/近界拒/Jaccard 恰在 80/100）与
+手算逐格吻合。**棘轮第九咬**：Docdup/Cost 增 knob 使两家 Cost 模块的
+声明梯同形越 50-token 地板（distinct 8）——跨家抽取被 Verdict/Cost 自家
+立场明文禁止（one authority per family），按史例改偿最近可偿形：JoinProps
+三行 delete 同形 fixture 表驱动化为 `deadFlankRow flags` 单构造子，
+145==145 零豁免。
+
 ## 复跑
 
 本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test daemon_proto --test concurrent_writers` （清零批新门）。

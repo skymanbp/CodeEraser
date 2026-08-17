@@ -57,14 +57,16 @@ fn judged(
     }
 }
 
-/// `ce check`: judge, print, and fail on the core's word — ratchet
-/// OR floor (either alone), plus a degraded reply (a gate that
-/// could not judge must never pass).
+/// `ce check`: judge, print, and fail on the core's word ALONE —
+/// ratchet, floor, and since ADR-008 P1 the degraded case too: the
+/// core's degraded reply carries fail=true itself ("a gate that
+/// could not judge must never pass", said by the core), so the old
+/// `|| degraded` disjunct here retired as re-derived policy.
 pub fn check_cmd(a: CheckArgs) -> ExitCode {
     match judged(a.judge, a.days, a.fail_under, false) {
         Err(code) => code,
         Ok((_root, o)) => {
-            if o.reply.fail || o.reply.degraded.is_some() {
+            if o.reply.fail {
                 ExitCode::FAILURE
             } else {
                 ExitCode::SUCCESS

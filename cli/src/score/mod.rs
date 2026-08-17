@@ -5,8 +5,9 @@
 //! send ONE verdict.request with the committed baseline VERBATIM,
 //! and relay the core's judgment. Rust computes no policy: score,
 //! tolerance, membership and fail all come back on the wire
-//! (ADR-008). A degraded reply FAILS the check — a gate that could
-//! not judge must never pass.
+//! (ADR-008) — including the degraded case, whose reply carries
+//! fail=true from the core itself since P1 (a gate that could not
+//! judge must never pass, and the core says so).
 
 pub mod baseline;
 pub mod knobs;

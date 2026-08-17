@@ -102,7 +102,7 @@ fn emit_checked<R>(
 
 /// `ce docdup` (M5-3g): the documentation-duplication judgment over
 /// the live cached segments — shingle sets to the core in chunks,
-/// raw inter/union back, verdicts through the one is_dup throat.
+/// raw inter/union plus the core's verdict bits back (ADR-008 P1).
 pub fn docdup_cmd(a: DocdupArgs) -> ExitCode {
     let j = a.judge;
     let as_json = json(j.format);
@@ -122,10 +122,11 @@ pub fn docdup_cmd(a: DocdupArgs) -> ExitCode {
 }
 
 /// `ce clone` (M5-3e): the T3 TED judgment over the frozen candidate
-/// pass — trees to the core in chunks, raw scores back, verdicts at
-/// 85/100. `--units` (M5-3b) instead lists the cached unit universe
-/// after asserting the unitsig/symbols identity agreement (zero
-/// orphans — the nth throat is one function, checked, not assumed).
+/// pass — trees to the core in chunks, raw scores plus the core's
+/// verdict bits back (ADR-008 P1). `--units` (M5-3b) instead lists
+/// the cached unit universe after asserting the unitsig/symbols
+/// identity agreement (zero orphans — the nth throat is one
+/// function, checked, not assumed).
 pub fn clone_cmd(a: CloneArgs) -> ExitCode {
     let j = a.judge;
     let as_json = json(j.format);

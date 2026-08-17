@@ -11,6 +11,7 @@
 module VerdictWireProps (battery) where
 
 import CE.Verdict (respond)
+import CE.Verdict.Cost (verdictNodeCap)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
@@ -29,6 +30,7 @@ battery = fmap and (mapM one checks)
     , ("refusals name the offender with code and message", refusals)
     , ("ceilings override moves the score and echoes in knobs", ceilingKnob)
     , ("thresholds/tolerance rows move the verdict and echo", thresholdKnob)
+    , ("an over-cap request degrades to a reply that FAILS", degradedFails)
     ]
   one (name, ok) = do
     putStrLn ((if ok then "ok   " else "FAIL ") <> name)
@@ -223,3 +225,21 @@ thresholdKnob = scaleMoves && tolFlips
     Bool f <- KM.lookup "fail" rat
     e <- echo o "tolAbs"
     pure (f, e)
+
+-- | ADR-008 P1 through the REAL respond: one node past the cap
+-- degrades to a complete reply whose ratchet.fail is TRUE — a gate
+-- that could not judge must never pass, said by the CORE; the Rust
+-- side relays the bit, never re-derives the rule.
+degradedFails :: Bool
+degradedFails = case replyObj overCap of
+  Nothing -> False
+  Just o ->
+    KM.lookup "degraded" o == Just (Bool True)
+      && ( do
+             Object rat <- KM.lookup "ratchet" o
+             KM.lookup "fail" rat
+         )
+        == Just (Bool True)
+ where
+  overCap =
+    setKey "tier" (toJSON [[u, 0] | u <- [0 .. verdictNodeCap]]) (wireReq [] [] [] [])

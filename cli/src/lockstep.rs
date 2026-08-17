@@ -96,6 +96,22 @@ pub fn refuse_degraded(reply: &Value, mirrors: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// The reply's per-row verdict bits (ADR-008 P1: the core owns the
+/// reported-set decision, one bit per score row in row order; scores
+/// stay raw for the instruments' cut tables), length-locked to the
+/// score rows they qualify — ONE decode throat for every family.
+pub fn verdict_bits(reply: &Value, rows: usize) -> anyhow::Result<Vec<bool>> {
+    use anyhow::Context;
+    let bits: Vec<bool> = serde_json::from_value(reply["verdicts"].clone()).context("verdicts")?;
+    anyhow::ensure!(
+        bits.len() == rows,
+        "core sent {} verdicts for {} score rows",
+        bits.len(),
+        rows
+    );
+    Ok(bits)
+}
+
 /// The reply's score rows plus the named u64 counters, decoded once.
 pub fn scores_and_counts<R: serde::de::DeserializeOwned>(
     reply: &Value,
@@ -148,5 +164,19 @@ mod tests {
         assert!(refuse_degraded(&bad, "pair").is_err());
         let (rows, counts) = scores_and_counts::<[u64; 2]>(&ok, &["n"]).expect("decode");
         assert_eq!((rows, counts), (vec![[1, 2]], vec![3]));
+    }
+
+    /// The verdict-bit throat (ADR-008 P1) fires generically ONCE
+    /// here: bits decode in row order, a truncated or missing array
+    /// refuses — an unqualified score row must never default.
+    #[test]
+    fn verdict_bits_decode_and_length_lock() {
+        let ok = json!({"verdicts": [true, false]});
+        assert_eq!(verdict_bits(&ok, 2).expect("bits"), vec![true, false]);
+        assert!(verdict_bits(&ok, 3).is_err(), "truncated bits refuse");
+        assert!(
+            verdict_bits(&json!({}), 0).is_err(),
+            "missing verdicts refuses even for zero rows"
+        );
     }
 }

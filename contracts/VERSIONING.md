@@ -24,6 +24,14 @@
 > 应答 `knobs` 回显扩为**全量生效集**（12 键）；weights 通道由
 > ce.toml `[score.weights]` 驱动（Rust 恒发空数组退役）。判决语义
 > 逐字节不变（判决表化=纯重述）；码表单一权威 = `cli/src/score/knobs.rs`。
+> **2.5.0**（ADR-008 P1 判决权回迁，2026-08-17）：clone/docdup 应答
+> 加性 `verdicts` 数组（每 score 行一布尔、同序——上报集自此是 **core
+> 的判决**，Rust 只转发并以镜像逐行 ensure 抓漂移，绝不再推导）；
+> docdup `knobs` 回显加 `verbatimFloor`（=50，判决权随 P1 迁入
+> `CE.Docdup.Cost`——run 长度早已过线〔F26〕，文本从不过线）；
+> **degraded verdict 应答自带 `ratchet.fail=true`**（"不能判者绝不放行"
+> 由 core 自述，Rust 侧 `|| degraded` 再解释退役——语义位翻转仅此一处，
+> 属 P1 契约本体，golden 无 degraded 对、由 VerdictWireProps 电池钉住）。
 
 ## 1. 信封（envelope）
 
@@ -34,7 +42,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.4.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.5.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -88,10 +96,14 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   - `clone/1`（判决落 T3 批）：request 携后序树
     `{"trees":[{"lab":[Int],"lld":[Int]}],"pairs":[[i,j]]}`（`lld[i]` = 最左叶后代
     后序下标，`0 ≤ lld[i] ≤ i` + 后序可重建性机检；pairs 严格升序去重、端点在界内）；
-    result 回原始 `ted` 与规模不回比值；`degraded.reason ∈ {clone_too_large}`。
+    result 回原始 `ted` 与规模不回比值，2.5.0 起并回加性 `verdicts` 布尔数组
+    （每 score 行一位，`CE.Clone.Cost.cloneDecides` 的输出——上报集的唯一权威）；
+    `degraded.reason ∈ {clone_too_large}`。
   - `docdup/1`（判决落 docdup 批）：request 携**升序去重 shingle 哈希集**
     `{"sets":[[u64]],"pairs":[[i,j,verbatimRun]]}`（集合非序列——token 流不跨进程，
-    ADR-002 A6；逐字 run 在 Rust 算好只过整数）；result 回 `[i,j,inter,union]`；
+    ADR-002 A6；逐字 run 在 Rust 算好只过整数）；result 回 `[i,j,inter,union]`，
+    2.5.0 起并回加性 `verdicts` 数组（`CE.Docdup.Cost.dupVerdict` = Jaccard 半
+    ∨ verbatim 半的全析取——run 过线正是为让 core 持有全部判决输入）；
     `degraded.reason ∈ {docdup_too_large}`。
   - `verdict/1`（判决落 score 批）：request 携三信号事实表 + `baseline` 原样字节
     （Rust 不解释，ADR-008 反抢跑）；result 回判决四码 + `reasonBits`/`legsMask`
@@ -128,5 +140,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.4.0 | §1 所列两处常量 |
+| 协议 | 2.5.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

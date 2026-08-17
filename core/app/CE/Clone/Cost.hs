@@ -1,7 +1,14 @@
 -- | The T3 knobs — every constant the clone judgment reads, nothing
 -- else (the CE.Graph.Cost posture: ablation targets live in ONE
 -- module, so a dead knob has nowhere to hide).
-module CE.Clone.Cost (tsedNum, tsedDen, unitNodeCap, pairCap) where
+module CE.Clone.Cost
+  ( tsedNum
+  , tsedDen
+  , unitNodeCap
+  , pairCap
+  , cloneDecides
+  , cloneDecidesWith
+  ) where
 
 -- | The clone threshold as an integer ratio (0.85). Defined in-repo
 -- and documented here (2026-08-13 decision ②): plan §4.1 gives the
@@ -33,3 +40,20 @@ unitNodeCap = 256
 -- silent edit.
 pairCap :: Integer
 pairCap = 4096
+
+-- | The clone verdict, stated by the threshold's OWNER (ADR-008 P1:
+-- the reported set is the core's decision, riding each reply as a
+-- per-row verdict bit; the Rust is_clone binding the knobs echo pins
+-- is a mirror for the frozen 3f instruments and run()'s drift
+-- ensure, never an authority).
+cloneDecides :: Integer -> Integer -> Integer -> Bool
+cloneDecides = cloneDecidesWith (tsedNum, tsedDen)
+
+-- | The threshold-parameterized form (the Docdup dupDecidesWith
+-- posture): ONE formula, so the battery's dead-knob and boundary
+-- probes exercise the production comparison, never a
+-- re-implementation.
+cloneDecidesWith :: (Integer, Integer) -> Integer -> Integer -> Integer -> Bool
+cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den >= num * mx
+ where
+  mx = max n1 n2

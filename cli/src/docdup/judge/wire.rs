@@ -3,11 +3,13 @@
 //! and the Jaccard ratio are MIRRORS of CE.Docdup.Cost — the Haskell
 //! module owns the numbers, and both drift directions are named at
 //! runtime: a mirror larger than the core's makes the core degrade
-//! (asserted below), a ratio or shingle-width drift breaks the knobs
-//! echo (D13/F29: the estimator's alphabet geometry and the judge's
-//! threshold each have exactly one owner and one pinned mirror).
+//! (asserted below), a ratio, shingle-width or verbatim-floor drift
+//! breaks the knobs echo (D13/F29: the estimator's alphabet geometry
+//! and the judge's thresholds each have exactly one owner and one
+//! pinned mirror — verbatimFloor joined the pinned set at ADR-008 P1
+//! when its verdict home moved to the core).
 
-use crate::docdup::spec::DOC_SHINGLE;
+use crate::docdup::spec::{DOC_SHINGLE, VERBATIM_FLOOR};
 use anyhow::Result;
 use serde_json::{Value, json};
 
@@ -46,26 +48,32 @@ pub fn chunk_request<'s>(
 }
 
 /// Decode one docdup.result into request-local rows `(i, j, (inter,
-/// union))` plus `[judged, jaccardDups]` — the shared parse_scores
-/// throat with this family's knob list, which pins BOTH single-owner
-/// numbers: the 80/100 ratio (whose Rust mirror applies the verdict)
-/// and shingleK == DOC_SHINGLE (D13 — two sides shingling at
-/// different widths would compare incommensurable alphabets and no
-/// downstream gate could tell).
-pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64)>> {
+/// union, verdict))` plus `[judged, jaccardDups]` — the shared
+/// parse_scores throat with this family's knob list, which pins
+/// every single-owner number: the 80/100 ratio, shingleK ==
+/// DOC_SHINGLE (D13 — two sides shingling at different widths would
+/// compare incommensurable alphabets and no downstream gate could
+/// tell), and since ADR-008 P1 verbatimFloor == VERBATIM_FLOOR (the
+/// floor's verdict home moved to Docdup/Cost.hs; the Rust constant
+/// is the instruments' mirror). The rows zip with the core's
+/// per-row verdict bits — the reported set is the core's decision.
+pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, bool)>> {
     let (rows, c): (Vec<[u64; 4]>, _) = crate::lockstep::parse_scores(
         reply,
         &[
             ("jaccardNum", json!(JACCARD_NUM)),
             ("jaccardDen", json!(JACCARD_DEN)),
             ("shingleK", json!(DOC_SHINGLE)),
+            ("verbatimFloor", json!(VERBATIM_FLOOR)),
         ],
         "judge/wire.rs vs Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
         &["judged", "jaccardDups"],
     )?;
+    let bits = crate::lockstep::verdict_bits(reply, rows.len())?;
     Ok((
         rows.into_iter()
-            .map(|[i, j, inter, union]| (i as usize, j as usize, (inter, union)))
+            .zip(bits)
+            .map(|([i, j, inter, union], v)| (i as usize, j as usize, (inter, union, v)))
             .collect(),
         c,
     ))
@@ -96,13 +104,14 @@ mod tests {
         assert_eq!(order, vec![0, 1, 2]);
         assert_eq!(body["sets"], json!([[1, 2], [3, 4], [5, 6]]));
         assert_eq!(body["pairs"], json!([[2, 0, 7], [2, 1, 0]]));
-        let ok = json!({"scores": [[0, 1, 2, 4]],
+        let ok = json!({"scores": [[0, 1, 2, 4]], "verdicts": [false],
             "counts": {"judged": 1, "jaccardDups": 0},
-            "knobs": {"jaccardNum": 80, "jaccardDen": 100, "shingleK": 5},
+            "knobs": {"jaccardNum": 80, "jaccardDen": 100, "shingleK": 5,
+                "verbatimFloor": 50},
             "degraded": false});
         assert_eq!(
             parse_result(&ok).expect("well-formed").0,
-            vec![(0, 1, (2, 4))]
+            vec![(0, 1, (2, 4, false))]
         );
         let mut drifted = ok;
         drifted["knobs"]["shingleK"] = json!(4);

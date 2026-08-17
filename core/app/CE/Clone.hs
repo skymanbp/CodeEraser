@@ -10,12 +10,15 @@
 -- ascending pairs) — then judge: the judge-side admissible prefilter
 -- first, Zhang-Shasha TED for the rest. Raw ted and sizes cross the
 -- wire, never a ratio — the pre-registered cut table recomputes from
--- one run. The M5-3a stub refused here; this batch replaced exactly
--- that refusal, and the computation lives behind the exhaustive
--- reference harness (core/test/CloneProps.hs ≡ ReferenceTed).
+-- one run — and since ADR-008 P1 each score row carries the OWNER's
+-- verdict bit (Cost.cloneDecides): the reported set is the core's
+-- decision, relayed by Rust, never re-derived there. The M5-3a stub
+-- refused here; this batch replaced exactly that refusal, and the
+-- computation lives behind the exhaustive reference harness
+-- (core/test/CloneProps.hs ≡ ReferenceTed).
 module CE.Clone (respond) where
 
-import CE.Clone.Cost (pairCap, tsedDen, tsedNum, unitNodeCap)
+import CE.Clone.Cost (cloneDecides, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
 import Data.Aeson
@@ -116,33 +119,42 @@ notAscending p (prev, cur)
   | otherwise = Just ("pair " <> show p <> ": not strictly ascending")
 
 -- | Judge every pair: the admissible prefilter proves "below
--- threshold" without TED where it can; the rest get exact
--- Zhang-Shasha. Score rows carry raw ted and sizes only.
-judge :: [Tree] -> [[Int]] -> ([[Integer]], Int, Int)
+-- threshold" without TED where it can (below threshold ⇒ not a
+-- clone, so no row and no bit); the rest get exact Zhang-Shasha.
+-- Score rows carry raw ted and sizes, each paired with the owner's
+-- verdict (ADR-008 P1).
+judge :: [Tree] -> [[Int]] -> ([([Integer], Bool)], Int, Int)
 judge trees ps = foldr step ([], 0, 0) ps
  where
   arr = IM.fromList (zip [0 ..] trees)
   step [i, j] (rows, judged, pre)
     | provablyBelow (elems (tLab a)) (elems (tLab b)) = (rows, judged, pre + 1)
     | otherwise =
-        ( [fromIntegral i, fromIntegral j, ted a b, size a, size b] : rows
+        ( ( [fromIntegral i, fromIntegral j, d, size a, size b]
+          , cloneDecides d (size a) (size b)
+          )
+            : rows
         , judged + 1
         , pre
         )
    where
     (a, b) = (arr IM.! i, arr IM.! j)
+    d = ted a b
     size = fromIntegral . tSize
   step _ acc = acc -- unreachable: pair shape validated upstream
 
 -- | (judged, prefiltered) travel as the one counts pair they are —
 -- six positional parameters was the E01 arity warn (M5 close).
-reply :: String -> CloneReq -> [[Integer]] -> (Int, Int) -> Bool -> B8.ByteString
-reply proto req scores (judged, pre) degraded =
+-- verdicts is the ADR-008 P1 additive field: one bit per score row,
+-- same order — scores stay raw for the instruments' cut tables.
+reply :: String -> CloneReq -> [([Integer], Bool)] -> (Int, Int) -> Bool -> B8.ByteString
+reply proto req scored (judged, pre) degraded =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("clone.result" :: String)
     , "id" .= reqId req
-    , "scores" .= scores
+    , "scores" .= map fst scored
+    , "verdicts" .= map snd scored
     , "counts"
         .= object
           [ "trees" .= length (reqTrees req)

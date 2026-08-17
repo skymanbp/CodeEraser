@@ -9,7 +9,14 @@
 -- magnitude probes for the Integer path.
 module ReferenceJaccard (equivalence) where
 
-import CE.Docdup.Cost (dupDecides, dupDecidesWith, jaccardDen, jaccardNum)
+import CE.Docdup.Cost
+  ( dupDecides
+  , dupDecidesWith
+  , dupVerdict
+  , dupVerdictWith
+  , jaccardDen
+  , jaccardNum
+  )
 import CE.Docdup.Jaccard (interUnion)
 import Data.Ratio ((%))
 
@@ -63,7 +70,20 @@ equivalence = do
       "threshold sits exactly on 80/100 in both directions"
       (dupDecides 4 5 && not (dupDecides 3 4) && dupDecides 8 10)
   e <- deadKnob
-  pure (a && b && c && d && e)
+  -- the ADR-008 P1 counterfactual on the verdict's NEW half: the
+  -- SHIPPED disjunction sits exactly on the 50-word floor in both
+  -- directions, a perturbed floor flips the boundary run, and the
+  -- Jaccard half still decides alone — the bit the wire now carries
+  -- is this formula's output
+  f <-
+    check
+      "verbatim half: run 50/49 both directions, floor 51 flips it, jaccard alone decides"
+      ( dupVerdict 0 100 50
+          && not (dupVerdict 0 100 49)
+          && not (dupVerdictWith (jaccardNum, jaccardDen, 51) 0 100 50)
+          && dupVerdict 4 5 0
+      )
+  pure (a && b && c && d && e && f)
 
 -- | Dead-knob probe (CloneProps posture): perturbing the ratio must
 -- move the family's decision count, and the preconditions are

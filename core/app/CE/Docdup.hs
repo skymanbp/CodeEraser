@@ -9,17 +9,27 @@
 -- u64 sets, [i,j,verbatimRun] rows with in-range endpoints and
 -- non-negative runs, strictly ascending rows) — then judge: exact
 -- Jaccard per pair via Data.Set. Raw inter and union cross the wire,
--- never a ratio; the Jaccard half of the verdict is also applied
--- HERE by its owner (counts.jaccardDups, Cost.dupDecides), while the
--- verbatim half stays with Rust, which computed the runs — the run
--- rides the request so one wire transcript carries the complete
--- verdict inputs (F26), and is deliberately absent from every reply
--- field. The M5-3a stub refused here; this batch replaced exactly
--- that refusal, and the computation lives behind the exhaustive
--- reference harness (core/test/ReferenceJaccard.hs).
+-- never a ratio, and since ADR-008 P1 each score row carries the
+-- OWNER's full verdict bit (Cost.dupVerdict: Jaccard half ∨ verbatim
+-- half — the run rides the request precisely so one wire transcript
+-- holds the complete verdict inputs, F26, and stays absent from
+-- every reply field). The reported set is the core's decision,
+-- relayed by Rust, never re-derived there. The M5-3a stub refused
+-- here; this batch replaced exactly that refusal, and the
+-- computation lives behind the exhaustive reference harness
+-- (core/test/ReferenceJaccard.hs).
 module CE.Docdup (respond) where
 
-import CE.Docdup.Cost (docPairCap, docSetCap, dupDecides, jaccardDen, jaccardNum, shingleK)
+import CE.Docdup.Cost
+  ( docPairCap
+  , docSetCap
+  , dupDecides
+  , dupVerdict
+  , jaccardDen
+  , jaccardNum
+  , shingleK
+  , verbatimFloor
+  )
 import CE.Docdup.Jaccard (interUnion)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -91,32 +101,37 @@ notAscending p (prev, cur)
   | otherwise = Just ("pair " <> show p <> ": not strictly ascending")
 
 -- | Judge every pair: exact Jaccard on the two sets, raw counts out,
--- the owner's threshold half tallied (never per-row verdicts — the
--- cut table downstream recomputes from one run).
-judge :: [[Integer]] -> [[Integer]] -> ([[Integer]], Int)
+-- each row paired with the owner's FULL verdict (ADR-008 P1) — the
+-- Jaccard-half tally stays as the additive counts.jaccardDups it
+-- always was.
+judge :: [[Integer]] -> [[Integer]] -> ([([Integer], Bool)], Int)
 judge sets ps = foldr step ([], 0) ps
  where
   arr = IM.fromList (zip [0 ..] sets)
-  step (i : j : _) (rows, dups) =
-    ( [i, j, inter, union] : rows
+  step (i : j : run : _) (rows, dups) =
+    ( ([i, j, inter, union], dupVerdict inter union run) : rows
     , if dupDecides inter union then dups + 1 else dups
     )
    where
     (inter, union) = interUnion (arr IM.! fromIntegral i) (arr IM.! fromIntegral j)
   step _ acc = acc -- unreachable: row shape validated upstream
 
-reply :: String -> DocdupReq -> [[Integer]] -> Int -> Bool -> B8.ByteString
-reply proto req scores dups degraded =
+-- | verdicts is the ADR-008 P1 additive field: one bit per score
+-- row, same order; verbatimFloor joins the echo so the Rust mirror
+-- is pinned like every other single-owner number.
+reply :: String -> DocdupReq -> [([Integer], Bool)] -> Int -> Bool -> B8.ByteString
+reply proto req scored dups degraded =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("docdup.result" :: String)
     , "id" .= reqId req
-    , "scores" .= scores
+    , "scores" .= map fst scored
+    , "verdicts" .= map snd scored
     , "counts"
         .= object
           [ "sets" .= length (reqSets req)
           , "pairs" .= length (reqPairs req)
-          , "judged" .= length scores
+          , "judged" .= length scored
           , "jaccardDups" .= dups
           ]
     , "knobs"
@@ -124,6 +139,7 @@ reply proto req scores dups degraded =
           [ "jaccardNum" .= jaccardNum
           , "jaccardDen" .= jaccardDen
           , "shingleK" .= shingleK
+          , "verbatimFloor" .= verbatimFloor
           ]
     , "degraded" .= degraded
     ]
