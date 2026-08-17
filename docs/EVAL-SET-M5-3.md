@@ -140,113 +140,11 @@ sites 测试、spec sites()）全按拆分机制清零非豁免。dedup 预算 1
 冻结五语言宇宙全族不动（SCOPE_EXTS 按构造封闭；2h 精度门版图不含
 Haskell = 既定验收边界，3l 验收线 = rung fixture 全绿，plan M5-3B 行）。
 
-## M5 收口（欠账清算，2026-08-14）
+## M5 收口之后（拆册指针）
 
-**①Go arity**（3h 盲审缺陷）：`param_count` parameters 字段优先（五语言字段
-实探：Go/Rust/Py/TS 字段=kind 扫描同节点、Haskell 无字段走回退——冲击面恰限
-Go method）；GRAPH_REV 3→4 + STRUCT_REV 1→2（unit key 内嵌 params，两侧缓存
-陈旧）；钉 = `fourclass::units` 六 key 表（`(T) mix/2`/`(T) grouped/1`/
-`(T) none/0`）；T3 冻结族按 epoch 档立（见 T3 节，用户拍板保审计）；churn
-台账零 .go 行实测，活体重放门零冲击。
-**②md 节陈旧**（2f 既档）：目标 slug 集哈希入 resolve_key（`md::slug_hash`
-单咽喉；anchor() 是唯一跨文件内容读）；钉 = `graph_wire::
-target_heading_edit_refreshes_the_source_anchor` 三轮表驱动，反事实（副本法
-断 key 折入）实证红。
-**③core Haskell 六警清零**（拆分非豁免）：Protocol dispatch 表驱动（五同形
-case 臂 → families 表 + familyReply，顺带退休两自对块）；Wire violation
-行检器提顶层；Verdict result 拆 candidates 装配；Score penalties 每轴一具名
-谓词（正合"每谓词一旋钮"）；Clone reply 计数捆绑 (judged, prefiltered)；
-Reference refBlocks 抽 blockOk 五子句谓词（定义誊写保真）——Spec 电池全绿
-护航。**预算 149→148 真下棘**（Protocol −2 落袋；本批自增 +5 当场表驱动
-偿清）；警台账 18→13。
-**④立场档（带界收口，不清而档）**：R6 调用边/RG10 公共位 = 计划内条件项
-（M5-2 行：独立 100 调用点审计 ≥90% 方开），M5 以 import-绑定层收口、RG10
-对 file-tier 休眠为既定立场；T3 改编与短单元（<floor_nodes 24）= 设计卷
-已档域界，仪器地板如实发布；aeson 类 store 安装依赖 = hs.rs 头部 stated
-boundary；py-tree-sitter 0.26 结点存活期不安全 = 3h 盲审外部工具注记，
-本仓零依赖。
-
-## T3 recall 仪器 B（3m，M5 收口补齐——3a–3g 批缝漏建经验收复核挖出）
-
-**对照物**（provenance 全入档）：similarity-ts 0.5.0（TS，阈值 0.87@main.rs:22，
-`-e ts --no-types`=对齐冻结 canonical-extension 域+函数域）、similarity-py 0.5.0
-（Py，0.85@main.rs:22）、similarity-generic 0.5.0（Go，0.85@main.rs:31；
-**Windows 目录行走缺陷实证（os error 5）→逐文件调用=仅文件内对、名基匹配**）；
-ripgrep 排除（similarity-rs="(future)" 官方 --supported 输出）、self 排除
-（覆盖语言面全为 crosscheck 夹具=产品排除域）。分母=对照物默认参数全检出集，
-**永不缩减**；记功=ce 全层（T1/T2 块或 T3 clone 判决双侧 span 重叠 ≥1 行）。
-
-**根修 = S5 全对候选源**（`candidates::extend_exhaustive`，产品 `ce clone` 专用
-——collect() 四源冻结面零扰动，冻结族 digest 门照绿）：同语言按节点数排序，
-尺寸窗=§4.3 尺寸剪枝同谓词于生成时执行，标签剪枝照跑；wire 升序契约由终排序
-恢复（首跑 desync 教训）。修前候选盲区=硬上限（requests 128 候选对 vs 分母
-425、cobra 1,124 vs 9,205）；修后 not_candidate 桶**清零**。
-
-**冻结 = `t3-recall-{zod,requests,cobra}-v1.json`**（`ce.eval-t3-recall/1.0.0`；
-门 `eval_t3_recall` 信封重放+封闭词表+回归地板+覆盖清单封闭）：recall_raw
-zod **3/6=0.50** / requests **67/425=0.158** / cobra **1417/9205=0.154**；
-recall_incremental 0.0 / 0.058 / 0.083（触发器 <0.50 书面处置=本节即处置：
-增量低因 T3 域与对照物测度轴不同，见下）。**miss 100% 机械归因且全部定义性**：
-size_bound_not_clone 1/135/4453（ce 注册 TSED 下 best-case sim=min/max<0.85
-=数学不可能）+below_floor 0/0/2578（注册短单元域界 T3_MIN_NODES=24）+
-judged_not_clone 2/223/757（真送 TED、按 θ=85/100 拒）。**结论=测度分歧非
-盲区**：mizchi similarity 轴≠ce TSED 轴，0.90 字面门对该对照物可证不可达
-→计划 v1.6 修正案（用户拍板 2026-08-14）：门改只升不降回归地板。
-PERF：S5 后 `ce clone` 冷 requests 1.8s / cobra 3.6s / zod 47.1s
-（19,193→~40k 判决对量级，pre-S5 zod 24.9s@3e——全对候选的代价如实入册）。
-
-## 审查热修批（M5 收口审计响应，2026-08-14）
-
-HIGH-1：候选路径只读化——`walkidx::read_streams`（鲜读+不写；缺流/陈旧偏移
-是 `extend_anchor` 既有守卫案），`candidates::collect` 收 `&Index`，S1 的
-load_streams 写路径退役（评审实证：中途保存的文件其级联删边被静默孤儿化）。
-HIGH-2：`Verdict/Wire.hs` tierOf 线性扫（O(F²)）→ 懒 IntSet（O(F)；tier 稠密
-性由 asum 首元先证）。MED：sim 行域检查（kind>2 拒 "unknown sim kind"、
-den=0 拒 "zero denominator"，VerdictProps +2 具名探针）；`idx_edge_site`
-索引 + SCHEMA_VERSION 6（唯一无 FK 子键索引的级联子表）；rel_str 咽喉收拢
-（walkidx::rel_of 删、daemon 尾拼写换 throat 调用——双审查员收敛项）；
-CloneProps +prefilter 族性质（shipped `provablyBelow` ⇒ 真 ted 非克隆，
-补上转写零执行缺口）；Go receiver 限定上移抽取根 `functions::name_of`
-（fourclass 后置 qualify 删除——D4 的 baseline 键重拼按构造消亡；键值字面
-不变由 units 电池逐 key 证同，rev 零 bump）。
-**HIGH-3 = 计划 v1.7 修正案（用户拍板：根治不偷懒）**：「daemon 唯一写者」
-（审计实证从未成立）改写为**收敛式多写者缓存**契约——写路径全内容门控+
-幂等+IMMEDIATE 锁内自检，WAL 逐事务串行 ⇒ 并发写者对静止树收敛于串行序
-终态；HIGH-1 恰移除了最后一个非幂等写者（候选路径），契约由此可证。
-验收件=`concurrent_writers` 双电池：双进程同库 dedup 收敛于串行 digest、
-daemon 冷启动 vs 外部写者收敛（coldstart 竞态注记转为按构造良性）；
-M6 GUI 直写同库自此有据（风险 R1 解除）。
-
-**CI 门补全批（审计 D5/D6/D7/D8/D9 响应）**：①`ce check --fail-under 800`
-入双平台 dogfood（floor 腿活化；800=实测 866–872 带下 66‰ 塌方地板，
-决定值非推导值）；churn 腿（--days 14，axis 5 活=实测 2 hit）实测 215.8s
-⇒ 仅 ubuntu 一腿承担（成本有界诚实覆盖非全平台结构性死亡）。
-②`ce deadcode --check`/`ce docdup --check` 新旗入 CI（emit_checked 单咽喉
-=dedup --check 同形；deadcode_e2e 红绿双向钉：孤儿必红、entry_globs 处置
-必绿）——M5-2「全处置」与 §7.5 docdup 条款自此代码执行非纪律执行。
-③`regen_tables` 三 --ignored 漂移检测（D8 生成器回仓）：go STD/py STDLIB/
-hs_boot 各按其记录管线对工具链重导出集合比对——**首跑即抓获自身滤网语义
-缺陷**（Go internal 规则=任一路径段，`log/internal` 逃过前缀检查而冻结表
-本身正确），修后 3/3 全表零漂移证毕。④D7 根修=删 README 版本抄本立单源
-（hookio.rs::OBSERVE_SCHEMA 唯一权威）。
-
-## ADR-008 首步（300/15 入 wire，2026-08-14）
-
-**镜像退役**（M5 收口审计 D2 最后一对无检镜像）：`verdict.request` 加性
-`ceilings` 表（`[[axis,ceiling]]`，axis 0=size/1=coc；缺席=空=Cost.hs
-**默认值**——proto 2.3.0 加性 minor，request 行偏斜 fixture 纪律照旧）；
-Rust 侧 `score::run` 经 `Config::load` 单咽喉发
-`[[0,file_lines_warn],[1,cognitive_warn]]`，应答 `knobs` 回显生效值、
-`wire::judge` 断言往返。**漂移门 = `core_wire::ceilings_default_drift_gate`**：
-空表回显 == `Thresholds::default()`（300/15）——Cost.hs 默认与 ce.toml
-默认在同一条断言相会，任一侧独动即红（此前两常量互为无检镜像）。
-Haskell 权威 = `ceilingsOffence` 域检（axis>1/值<1/降序拒绝，VerdictProps
-+3 具名探针）+ `effectiveKnobs`（scoreBound 覆盖式）+ `ceilingKnob` 性质
-（真 respond 驱动：310 尺寸行默认 300 下受罚、请求 400 下净，回显双态钉）。
-golden 翻批 41 reply 行逐行审（40 = proto 位 + verdict 两档默认 knobs；
-新 pair 6 = ceilings [[0,400],[1,20]] 生效+回显）。**棘轮咬偿**：ceilings
-检器克隆 weights 脚手架当场被抓（149>148）→ `knobTable` 单文法咽喉
-（两表差异降为数据：axis 界/拒绝文/值判），148==148 净、零豁免。
+M5 收口欠账清算、3m recall 仪器 B、审查热修+CI 门补全、ADR-008 首步、
+挂账清零批的冻结登记 → [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md)
+（本册 300 行线的二次拆册，2026-08-17）。
 
 ## 复跑
 
