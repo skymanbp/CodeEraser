@@ -76,6 +76,16 @@
 > 名/路径永不过线；`degraded.reason ∈ {structure_too_large}` 自带
 > fail=true；S2 报告态不设门。本家族 Rust 侧**无判决镜像**（设计册
 > 拍板：无冻结仪器需求，反审 C1 缝类在设计期关闭）。
+> **2.10.0**（M6 S3a A 层声明覆盖，2026-08-17）：`structure.request`
+> 加性 `declared` 表（`[[dirId,weight]]`，dirId 升序、weight≥1；
+> ce.toml `[structure.layout]` 编译而来，声明路径查不到走树目录=
+> Rust 侧响亮拒绝）；应答**仅声明时**携 `divergence`（`[χ²‰]` 单元素
+> 或 `[]`=未声明领土持有质量，数字绝不装）与 `deviations`
+> `[[dirId,kind]]` 指名行（kind 0=未声明领土有文件、1=声明 bin 零
+> 归属）；归属=最深声明祖先（R1 cabal 先例），`"."` 即兜底 bin；
+> 未声明请求的应答与 2.9.0 逐字节同形（键整体缺席）；degraded 应答
+> 不携 A 层键。散度=χ²（Σ(p−q)²/q，`CE.Structure.Entropy.chi2`，
+> 全程 Data.Ratio、‰ 定标）。
 
 ## 1. 信封（envelope）
 
@@ -86,7 +96,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.9.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.10.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -193,5 +203,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.9.0 | §1 所列两处常量 |
+| 协议 | 2.10.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

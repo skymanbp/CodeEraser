@@ -98,6 +98,19 @@ pub struct ScoreCfg {
     pub tol_abs: Option<u32>,
 }
 
+/// Structure declaration layer (M6 S3a, design booklet §2 row A):
+/// the OPTIONAL layout template the χ² divergence judges against.
+/// Absent = the self-referential floor alone (row C). Keys are
+/// directory paths relative to the root ("." = the root itself, the
+/// catch-all bin under deepest-owner semantics); values are
+/// relative weights >= 1. deny_unknown_fields from day one — the
+/// review C2 lesson, not a later retrofit.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct StructureCfg {
+    pub layout: std::collections::BTreeMap<String, u32>,
+}
+
 /// deny_unknown_fields everywhere (ADR-008 P4): a mistyped policy
 /// key used to be SILENTLY dropped — a config that looks live and
 /// does nothing is the exact failure mode this repo exists to fight.
@@ -111,6 +124,7 @@ pub struct Config {
     pub dedup: DedupCfg,
     pub graph: GraphCfg,
     pub score: ScoreCfg,
+    pub structure: StructureCfg,
 }
 
 impl Config {

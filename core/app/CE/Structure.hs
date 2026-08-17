@@ -17,6 +17,7 @@ module CE.Structure (respond) where
 
 import CE.Structure.Axes (Facts (..), Knobs (..), axes, bound, entropyRows, findings)
 import CE.Structure.Cost (structNodeCap)
+import CE.Structure.Declared (declaredRows)
 import CE.Wire (Family (..), applyRows, ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -29,6 +30,7 @@ data StructReq = StructReq
   , reqPatterns :: [[Integer]]
   , reqConventions :: [[Integer]]
   , reqFileRefs :: [[Integer]]
+  , reqDeclared :: [[Integer]]
   , reqKnobs :: [[Integer]]
   }
 
@@ -40,6 +42,7 @@ instance FromJSON StructReq where
       <*> o .:? "patterns" .!= []
       <*> o .:? "conventions" .!= []
       <*> o .:? "fileRefs" .!= []
+      <*> o .:? "declared" .!= []
       <*> o .:? "knobs" .!= []
 
 -- | The shared cascade with this family's bindings (CE.Wire).
@@ -77,6 +80,7 @@ violation req =
     [ ((3, "pattern", patternOk), take 2, reqPatterns req)
     , ((2, "convention", convOk), take 1, reqConventions req)
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
+    , ((2, "declared", declOk), take 1, reqDeclared req)
     ]
   patternOk row = case row of
     [_, code, count] | code > 6 -> Just "unknown pattern code"
@@ -90,6 +94,10 @@ violation req =
   refsOk row = case row of
     [_, _, _, count] | count < 1 -> Just "count below 1"
                      | otherwise -> Nothing
+    _ -> Nothing
+  declOk row = case row of
+    [_, w] | w < 1 -> Just "weight below 1"
+           | otherwise -> Nothing
     _ -> Nothing
 
 -- | One dense node row: id == index, parent < id (root 0 loops to
@@ -161,7 +169,11 @@ effective rows = applyRows [(c, s) | (c, _, s) <- knobTable] rows bound
 -- sparse findings — plus the FULL effective knob echo (table form).
 -- fail = degraded alone in S2 (the report-only stance: the CLI
 -- gates nothing until a score floor lands with S3+); a degraded
--- reply carries fail=true (P1) and echoes the defaults.
+-- reply carries fail=true (P1) and echoes the defaults. The S3
+-- A-layer keys (divergence + deviations) exist ONLY when the
+-- request declares a layout — an undeclared request answers the
+-- S2 shape byte for byte, and a degraded reply drops the
+-- declaration with the rest of the facts.
 reply :: String -> StructReq -> Knobs -> Bool -> B8.ByteString
 reply proto req k degraded =
   BL.toStrict . encode . object $
@@ -172,16 +184,22 @@ reply proto req k degraded =
     , "score" .= score
     , "entropy" .= entropyRows facts
     , "findings" .= findings k facts
-    , "fail" .= degraded
-    , "knobs" .= [[c, g k] | (c, g, _) <- knobTable]
-    , "degraded" .= degraded
     ]
+      <> declaredKeys
+      <> [ "fail" .= degraded
+         , "knobs" .= [[c, g k] | (c, g, _) <- knobTable]
+         , "degraded" .= degraded
+         ]
       <> ["reason" .= ("structure_too_large" :: String) | degraded]
  where
   facts =
     if degraded
       then Facts [] [] [] []
       else Facts (reqNodes req) (reqPatterns req) (reqConventions req) (reqFileRefs req)
+  declaredKeys = case declaredRows (fNodes facts) (if degraded then [] else reqDeclared req) of
+    Nothing -> []
+    Just (divergence, deviations) ->
+      ["divergence" .= divergence, "deviations" .= deviations]
   pens = axes k facts
   raw = sum [p * kViolCost k | (_, p) <- pens]
   score = max 0 (kScale k - raw `div` toInteger (length pens))

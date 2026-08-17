@@ -21,6 +21,7 @@ battery =
     , ("every structure knob is a live lever", knobLevers)
     , ("structure refusals name the offender", refusals)
     , ("an over-cap structure request degrades and FAILS", degradedFails)
+    , ("the declared layout overlays by hand-computed digit", declaredOverlay)
     ]
 
 -- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1
@@ -35,7 +36,7 @@ battery =
 wireReq :: Value
 wireReq =
   object
-    [ "proto" .= ("2.9.0" :: String)
+    [ "proto" .= ("2.10.0" :: String)
     , "type" .= ("structure.request" :: String)
     , "id" .= (1 :: Int)
     , "nodes"
@@ -97,10 +98,45 @@ refusals =
     , refused (setKey "knobs" (toJSON [[9, 1 :: Integer]]) wireReq) "unknown structure knob"
     , refused (setKey "knobs" (toJSON [[3, 0 :: Integer]]) wireReq) "knob below 1"
     , refused (setKey "patterns" (toJSON [[1, 3, 4], [1, 0, 5 :: Integer]]) wireReq) "not strictly ascending"
+    , refused (setKey "declared" (toJSON [[9, 1 :: Integer]]) wireReq) "declared 0: dir out of range"
+    , refused (setKey "declared" (toJSON [[1, 0 :: Integer]]) wireReq) "weight below 1"
+    , refused (setKey "declared" (toJSON [[2, 1], [1, 1 :: Integer]]) wireReq) "declared 1: not strictly ascending"
     ]
  where
   nodes rows = setKey "nodes" (toJSON (rows :: [[Integer]])) wireReq
   refused = refusedBy respond
+
+-- | The S3 A-layer against the same fixture, every digit by hand.
+-- Full coverage — declared (0,w1)(1,w2)(2,w3), owned (3,9,6) of 18:
+-- p=(1/6,1/2,1/3) vs q=(1/6,1/3,1/2), χ² = (1/6)²/(1/3) +
+-- (1/6)²/(1/2) = 5/36 → 138‰; weights (1,3,2) match the tree
+-- exactly → 0 (the weight lever, F16). Partial coverage — declare
+-- dir 1 alone: root and dir 2 hold unowned mass → kind-0 rows, no
+-- number. Declaring the empty dir 3 names it kind 1 (dir 3's owner
+-- chain also proves nesting: its mass would fold into dir 2's bin).
+-- No declaration → NO A-layer keys (the S2 shape, byte posture).
+declaredOverlay :: Bool
+declaredOverlay =
+  all probe overlayCases
+    && fmap keysOff (replyObj wireReq) == Just True
+ where
+  probe (rows, dv, dev) = at rows == Just (toJSON dv, toJSON dev)
+  at rows = do
+    o <- replyObj (setKey "declared" (toJSON (rows :: [[Integer]])) wireReq)
+    d <- field o "divergence"
+    v <- field o "deviations"
+    pure (d, v)
+  keysOff o = field o "divergence" == Nothing && field o "deviations" == Nothing
+
+-- | (declared rows, divergence row, deviation rows) — the probe
+-- table IS the A-layer contract in miniature.
+overlayCases :: [([[Integer]], [Integer], [[Integer]])]
+overlayCases =
+  [ ([[0, 1], [1, 2], [2, 3]], [138], [])
+  , ([[0, 1], [1, 3], [2, 2]], [0], [])
+  , ([[1, 1]], [], [[0, 0], [2, 0]])
+  , ([[1, 1], [3, 1]], [], [[0, 0], [2, 0], [3, 1]])
+  ]
 
 -- | P1 posture on the newest family: one node past the cap
 -- degrades to a complete reply whose fail bit is TRUE.

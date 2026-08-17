@@ -84,8 +84,15 @@ flat nodes+parent（机器友好、流式可增量）；CLI 渲染 = 顶部总�
   形）+ 五轴罚分判决 + golden 五对 + `ce structure` CLI
   （JSON=ce.structure-report/0.1.0 / console）——报告态，不设门：
   新轴先观测后挂门，recall 仪器教训。
-- **S3 A 层覆盖**：ce.toml `[structure]` 声明→KL 与指名偏差；
-  deny_unknown_fields 与响亮降级从第一天起（反审 C2 教训）。
+- **S3 A 层覆盖**（S3a 已落地，proto 2.10.0）：ce.toml
+  `[structure.layout]` 声明→`declared [dirId,weight]` 行→χ² 散度
+  （`CE.Structure.Declared`，归属=最深声明祖先，`"."`=兜底 bin）
+  与指名偏差行（kind 0=未声明领土有文件、1=声明 bin 零归属；未声明
+  领土持有质量时散度不出数，偏差行说在哪）；deny_unknown_fields 与
+  响亮降级（声明路径查不到=拒绝装配）从第一天起（反审 C2 教训）。
+  **S3b 待续**：S5 文档新鲜度（churn 窗口 join，`--days` 诚实缺席）
+  + S6 冗余/孤儿卷积（dedup/deadcode 判决逐目录 rollup）两轴行入
+  wire，缺席=不判。
 - **S4 GUI 首屏**：Tauri 树图消费 §5 schema（M6 主体并轨；验收=计划 M6
   行既有数字：10 万 LOC 冷启动到首屏 <60s、报告打开 <3s）。
 

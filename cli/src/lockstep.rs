@@ -131,6 +131,15 @@ pub fn reply_field(reply: &Value, key: &str) -> anyhow::Result<Value> {
         .with_context(|| format!("reply missing {key}"))
 }
 
+/// The typed sibling: fetch AND decode in one throat. The
+/// from_value+context ladder recloned across the wire parsers when
+/// the A-layer keys landed (thirteenth ratchet bite) — every table
+/// row a family reads now comes through here.
+pub fn reply_rows<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> anyhow::Result<T> {
+    use anyhow::Context;
+    serde_json::from_value(reply_field(reply, key)?).with_context(|| format!("decode {key}"))
+}
+
 /// The reply's score rows plus the named u64 counters, decoded once.
 pub fn scores_and_counts<R: serde::de::DeserializeOwned>(
     reply: &Value,

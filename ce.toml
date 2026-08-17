@@ -6,6 +6,19 @@
 # goldens) is ce-authored and stays scanned (attack-review narrowing).
 exclude = ["contracts/fixtures/crosscheck/**"]
 
+# Declared layout (M6 S3a, design booklet §2 row A): the weights are
+# this repo's own expectation of where its files live — cli carries
+# the measurement half, core the judgment half, contracts the frozen
+# wire, docs the reviews. "." is the catch-all bin (deepest-owner
+# semantics), so the χ² divergence is always a number here and any
+# drift shows up in `ce structure` as a moving per-mille.
+[structure.layout]
+"." = 2
+"cli" = 8
+"core" = 5
+"contracts" = 2
+"docs" = 2
+
 # Deadcode liveness roots beyond the mechanical conventions (M5-2h).
 # fixtures/ is test DATA measured by harnesses, not code with
 # importers; the three *_tests.rs files are mounted via #[path] mod —
@@ -91,5 +104,18 @@ entry_globs = [
 # fixture and wire structs (+13, the SAME magnitude and class as
 # the 3k "+13 core wire family" precedent). One authority per
 # family forbids cross-family folding; measured after cargo fmt.
+# 156 -> 160 (M6 S3a, thirteenth bite): the A-layer keys grew the
+# structure family's EXISTING named-class members past block
+# boundaries -- the Reply/Request record scaffolds now chain two
+# more windows against score/wire.rs, StructReq's reqDeclared field
+# pushed its record across the 50-token line against Verdict/Wire's,
+# and the overlayCases probe table is a documentary-table member
+# (the data IS the contract). The mechanically-foldable shapes were
+# repaid in the same batch: lockstep::reply_rows (the typed decode
+# throat, both wire parsers rewired), judge.rs relabel + labeled
+# (findings/deviations one throat each), and the overlay probes
+# table-driven. A generic cross-family record would trade this
+# ledger line for real coupling; declined by standing stance.
+# Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 156
+budget = 160

@@ -202,33 +202,33 @@ struct RatchetEcho {
 }
 
 fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
+    use crate::lockstep::reply_rows as rows;
     Ok(RatchetEcho {
-        added: serde_json::from_value(r["added"].clone()).context("added")?,
-        removed: serde_json::from_value(r["removed"].clone()).context("removed")?,
-        over: serde_json::from_value(r["over"].clone()).context("over")?,
-        tolerance_drawn: serde_json::from_value(r["toleranceDrawn"].clone())
-            .context("toleranceDrawn")?,
+        added: rows(r, "added")?,
+        removed: rows(r, "removed")?,
+        over: rows(r, "over")?,
+        tolerance_drawn: rows(r, "toleranceDrawn")?,
         fail: r["fail"].as_bool().context("fail")?,
-        failed: serde_json::from_value(r["failed"].clone()).context("failed")?,
+        failed: rows(r, "failed")?,
     })
 }
 
 fn parse(v: &Value) -> Result<Reply> {
-    let rows = |key: &str| crate::lockstep::reply_field(v, key);
-    let r = ratchet_of(&rows("ratchet")?)?;
+    use crate::lockstep::reply_rows as rows;
+    let r = ratchet_of(&crate::lockstep::reply_field(v, "ratchet")?)?;
     Ok(Reply {
-        candidates: serde_json::from_value(rows("candidates")?).context("candidates")?,
+        candidates: rows(v, "candidates")?,
         score: v["score"].as_i64().context("score")?,
-        axes: serde_json::from_value(rows("axes")?).context("axes")?,
+        axes: rows(v, "axes")?,
         added: r.added,
         removed: r.removed,
         over: r.over,
         tolerance_drawn: r.tolerance_drawn,
         fail: r.fail,
         failed: r.failed,
-        new_baseline: rows("newBaseline")?,
-        knobs: serde_json::from_value(rows("knobs")?).context("knobs")?,
-        weights: serde_json::from_value(rows("weights")?).context("weights")?,
+        new_baseline: crate::lockstep::reply_field(v, "newBaseline")?,
+        knobs: rows(v, "knobs")?,
+        weights: rows(v, "weights")?,
         degraded: degraded_of(v),
     })
 }
