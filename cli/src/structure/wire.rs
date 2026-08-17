@@ -26,6 +26,9 @@ pub struct Request {
     /// from ce.toml's [structure] layout, dirId-ascending. Empty =
     /// no declaration — the reply carries no A-layer keys at all.
     pub declared: Vec<[u64; 2]>,
+    /// The S5 staleness join (S3c): [dirId, stale, total] rows —
+    /// same absence semantics as redundancy, driven by --days.
+    pub stale_docs: Option<Vec<[u64; 3]>>,
     /// The S6 rollup (S3b): [dirId, dupBlocks, deadUnits] rows.
     /// None = the table stays off the wire and axis 6 is honestly
     /// unjudged; Some(empty) = judged clean (absence vs zero).
@@ -66,6 +69,9 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     });
     if !r.declared.is_empty() {
         body["declared"] = json!(r.declared);
+    }
+    if let Some(rows) = &r.stale_docs {
+        body["staleDocs"] = json!(rows);
     }
     if let Some(rows) = &r.redundancy {
         body["redundancy"] = json!(rows);

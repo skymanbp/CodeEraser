@@ -117,5 +117,14 @@ entry_globs = [
 # table-driven. A generic cross-family record would trade this
 # ledger line for real coupling; declined by standing stance.
 # Measured after cargo fmt.
+# 160 -> 161 (M6 S3c, net +1 of three legs): the wire Request's new
+# stale_docs field BROKE two score/structure record chains (-2);
+# the knobTable's twelfth row tipped the single-authority
+# getter+setter table into homogeneous self-chaining (+2 -- the
+# knob face IS one table by the weights lesson, and record-update
+# syntax cannot be data-driven further in standard Haskell, so the
+# chain is the price of the design and carries its name here); the
+# staleAxis battery grew the named battery-skeleton member against
+# VerdictWireProps (+1). Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 160
+budget = 161

@@ -32,6 +32,9 @@ data Facts = Facts
   -- ^ [dirId, bits]
   , fFileRefs :: [[Integer]]
   -- ^ [dirId, inside, outside, count]
+  , fStaleDocs :: Maybe [[Integer]]
+  -- ^ [dirId, stale, total] — same Maybe stance as fRedundancy:
+  -- axis 5 judges exactly when the table rode the wire.
   , fRedundancy :: Maybe [[Integer]]
   -- ^ [dirId, dupBlocks, deadUnits] — Nothing = the table never
   -- rode the wire and axis 6 is NOT judged; Just [] = it rode
@@ -50,6 +53,7 @@ data Knobs = Knobs
   , kScale :: Integer
   , kDupMin :: Integer
   , kDeadMin :: Integer
+  , kStaleMin :: Integer
   }
 
 bound :: Knobs
@@ -66,6 +70,7 @@ bound =
     , kScale = Cost.structScale
     , kDupMin = Cost.dupMin
     , kDeadMin = Cost.deadMin
+    , kStaleMin = Cost.staleMin
     }
 
 -- | Violation count per judged axis — 0 geometry / 1 naming /
@@ -81,6 +86,7 @@ axes k f =
   , (3, misplaced k f)
   , (4, count (docs k f))
   ]
+    <> [(5, count (stale k rows)) | Just rows <- [fStaleDocs f]]
     <> [(6, count (redundant k rows)) | Just rows <- [fRedundancy f]]
  where
   count = toInteger . length
@@ -92,9 +98,17 @@ findings k f =
   [ [d, axis]
   | (axis, ds) <-
       [(0, geometry k f), (1, naming k f), (2, mixing k f), (4, docs k f)]
+        <> [(5, stale k rows) | Just rows <- [fStaleDocs f]]
         <> [(6, redundant k rows) | Just rows <- [fRedundancy f]]
   , d <- ds
   ]
+
+-- | S5: directories whose stale-document count reaches its floor —
+-- the docs whose referenced code moved on after their last edit
+-- (the measurement side joins the md ladder with the churn window;
+-- here only the counts are judged).
+stale :: Knobs -> [[Integer]] -> [Integer]
+stale k rows = [d | [d, s, _total] <- rows, s >= kStaleMin k]
 
 -- | S6: directories whose clone-block or dead-unit rollup reaches
 -- its floor — duplication and orphans are the per-file families'

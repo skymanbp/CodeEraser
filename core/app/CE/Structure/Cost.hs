@@ -16,6 +16,7 @@ module CE.Structure.Cost
   , structScale
   , dupMin
   , deadMin
+  , staleMin
   , structNodeCap
   ) where
 
@@ -81,6 +82,12 @@ dupMin = 1
 -- (knob code 10).
 deadMin :: Integer
 deadMin = 1
+
+-- | S5: stale documents per directory at or above this count flag
+-- the directory — a doc whose referenced code moved on after its
+-- last edit is entropy in prose form (knob code 11).
+staleMin :: Integer
+staleMin = 1
 
 -- | Node ceiling (the verdictRowCap magnitude anchor): over-cap
 -- answers a complete degraded reply that FAILS (the P1 posture).

@@ -137,6 +137,71 @@ pub fn redundancy_rows(
         .collect())
 }
 
+/// The S5 staleness join: every markdown file's outgoing reference
+/// targets (the md ladder's own resolutions, file-granular via each
+/// node's path) against ONE windowed `git log` pass. A doc is stale
+/// when any target changed after the doc's own last change inside
+/// the window — a same-commit update of both is NOT stale (the doc
+/// kept up). Docs without references carry no total; absence of the
+/// whole table (no --days) leaves axis 5 unjudged.
+pub fn stale_doc_rows(
+    root: &Path,
+    db: Option<PathBuf>,
+    t: &tree::Tree,
+    days: u32,
+) -> Result<Vec<[u64; 3]>> {
+    let w = crate::graph::deadcode::build_wire(root, db)?;
+    let mut targets: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
+    for e in &w.edges {
+        let s = &w.nodes[e[0] as usize];
+        let d = &w.nodes[e[1] as usize];
+        if s.path.ends_with(".md") && d.path != s.path {
+            targets.entry(s.path.as_str()).or_default().insert(&d.path);
+        }
+    }
+    let newest = newest_in_window(root, days)?;
+    let mut per_dir: BTreeMap<usize, [u64; 2]> = BTreeMap::new();
+    for (md, tgts) in &targets {
+        let dir = tree::dir_of(t, md)
+            .ok_or_else(|| anyhow::anyhow!("md node {md} outside the walked tree"))?;
+        let doc_last = newest.get(*md).copied();
+        let is_stale = tgts.iter().any(|tg| match (newest.get(*tg), doc_last) {
+            (Some(&tt), Some(dl)) => tt > dl,
+            (Some(_), None) => true,
+            (None, _) => false,
+        });
+        let e = per_dir.entry(dir).or_insert([0, 0]);
+        e[1] += 1;
+        if is_stale {
+            e[0] += 1;
+        }
+    }
+    Ok(per_dir
+        .into_iter()
+        .map(|(d, [s, n])| [d as u64, s, n])
+        .collect())
+}
+
+/// Newest commit time per touched file inside the window, one git
+/// pass (churn's own runner — no second git throat). The \x01
+/// sentinel keeps an all-digit FILENAME from parsing as a commit
+/// time.
+fn newest_in_window(root: &Path, days: u32) -> Result<BTreeMap<String, i64>> {
+    let since = format!("--since={days} days ago");
+    let log = crate::churn::git(root, &["log", &since, "--format=%x01%ct", "--name-only"])?;
+    let mut newest: BTreeMap<String, i64> = BTreeMap::new();
+    let mut cur = 0i64;
+    for line in log.lines() {
+        if let Some(ts) = line.strip_prefix('\u{1}') {
+            cur = ts.trim().parse().context("commit time")?;
+        } else if !line.is_empty() {
+            let e = newest.entry(line.to_string()).or_insert(cur);
+            *e = (*e).max(cur);
+        }
+    }
+    Ok(newest)
+}
+
 /// ce.toml's [structure] layout compiled to [dirId, weight] rows —
 /// a declared path that names no walked directory is a LOUD config
 /// error (a template that names nothing judges nothing), never a

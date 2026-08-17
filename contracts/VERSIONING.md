@@ -98,6 +98,16 @@
 > 同批勘误：regen 脚本 pair-9 注入缺幂等门，verdict golden 曾被重复
 > 追加（22→26 行，重放同答故 CI 未红）——文件去重回 9 对、脚本改
 > 重复请求行断言（注入块随对入档退役，P4 pair-7 先例）。
+> **2.12.0**（M6 S3c S5 文档新鲜度轴，七轴面收官，2026-08-17）：
+> `structure.request` 可选 `staleDocs` 表（`[[dirId,stale,total]]`，
+> dirId 升序、total≥1、stale≤total；缺席=轴 5 不判、空=判净）+ knob
+> 11=staleMin；应答轴/findings 码 5 行仅表在时出现（序恒升：5 在 6
+> 前）；knobs 回显恒 12 行。测量=`ce structure --days N`：md 出边
+> 目标（graph 边端点自带 path，节级目标归其文件）×单遍窗口 git log
+> （\x01 哨兵防全数字文件名混入时间行；同 commit 双改=不陈旧）。
+> 同批机制修：golden pair 5 的 unknown-knob 探针两次因 knob 面增长
+> 转合法——冻结移动边界是错法；改钉稳定未知码 99，精确 max+1 边界
+> 由电池随面同步持有。
 
 ## 1. 信封（envelope）
 
@@ -108,7 +118,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.11.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.12.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -215,5 +225,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.11.0 | §1 所列两处常量 |
+| 协议 | 2.12.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

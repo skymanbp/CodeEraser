@@ -237,7 +237,10 @@ fn show(root: &Path, sha: &str, path: &str, parent: bool) -> Option<String> {
     git(root, &["show", &rev]).ok()
 }
 
-fn git(root: &Path, args: &[&str]) -> Result<String> {
+/// The ONE product-side git runner (pub(crate) since M6 S3c: the
+/// structure staleness join reuses it rather than growing a second
+/// copy — the gitio lesson from the test side, applied here).
+pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
     let out = Command::new("git")
         .arg("-C")
         .arg(root)

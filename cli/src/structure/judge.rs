@@ -15,7 +15,8 @@ use std::path::{Path, PathBuf};
 /// 0.2.0 (M6 S3a): + divergence (per-mille χ² or null), deviations
 /// [{dir, kind}], declaredDirs. 0.3.0 (S3b): + deep (whether the S6
 /// redundancy rollup rode the wire — axis-6 rows exist only then).
-pub const SCHEMA_ID: &str = "ce.structure-report/0.3.0";
+/// 0.4.0 (S3c): + days (the staleness window; null = axis 5 off).
+pub const SCHEMA_ID: &str = "ce.structure-report/0.4.0";
 
 pub struct Report {
     pub score: i64,
@@ -38,27 +39,22 @@ pub struct Report {
     /// Whether the S6 rollup rode the wire (--deep): axis-6 rows in
     /// axes/findings exist exactly when true.
     pub deep: bool,
+    /// The staleness window in days (--days): axis-5 rows exist
+    /// exactly when set.
+    pub days: Option<u32>,
 }
 
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, deep: bool) -> Result<Report> {
+pub fn run(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    deep: bool,
+    days: Option<u32>,
+) -> Result<Report> {
     let (files, _findings, _summary) = crate::scan::analyze(root)?;
     let paths: Vec<String> = files.iter().map(|f| f.path.clone()).collect();
     let t = tree::build(&paths);
-    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let declared = rows::declared_rows(&cfg.structure.layout, &t)?;
-    let redundancy = if deep {
-        Some(rows::redundancy_rows(root, db.clone(), core, &t)?)
-    } else {
-        None
-    };
-    let req = wire::Request {
-        nodes: rows::node_rows(&t),
-        patterns: rows::pattern_rows(&t),
-        conventions: rows::convention_rows(&t),
-        file_refs: rows::file_ref_rows(root, db, &t)?,
-        declared,
-        redundancy,
-    };
+    let req = assemble(root, db, core, &t, (deep, days))?;
     let reply = wire::judge(core, &req)?;
     let names = names_by_id(&t);
     let findings = relabel(&names, &reply.findings);
@@ -80,6 +76,41 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, deep: bool) -> Result<R
         deviations,
         declared: req.declared.len(),
         deep,
+        days,
+    })
+}
+
+/// The whole request from one walked tree: the always-on tables,
+/// the ce.toml layout, and the two honestly-optional axes (split
+/// from run() when the third optional table pushed it past the
+/// repo's own function gate). The two axis switches travel as ONE
+/// pair — they are one decision ("which optional axes ride"), and
+/// the param gate agrees.
+fn assemble(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    t: &tree::Tree,
+    (deep, days): (bool, Option<u32>),
+) -> Result<wire::Request> {
+    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
+    let stale_docs = match days {
+        Some(d) => Some(rows::stale_doc_rows(root, db.clone(), t, d)?),
+        None => None,
+    };
+    let redundancy = if deep {
+        Some(rows::redundancy_rows(root, db.clone(), core, t)?)
+    } else {
+        None
+    };
+    Ok(wire::Request {
+        nodes: rows::node_rows(t),
+        patterns: rows::pattern_rows(t),
+        conventions: rows::convention_rows(t),
+        file_refs: rows::file_ref_rows(root, db, t)?,
+        declared: rows::declared_rows(&cfg.structure.layout, t)?,
+        stale_docs,
+        redundancy,
     })
 }
 
@@ -124,6 +155,7 @@ struct JsonReport<'a> {
     #[serde(rename = "declaredDirs")]
     declared_dirs: usize,
     deep: bool,
+    days: Option<u32>,
 }
 
 pub fn print(r: &Report, as_json: bool) {
@@ -140,6 +172,7 @@ pub fn print(r: &Report, as_json: bool) {
             deviations: labeled(&r.deviations, "dir", "kind"),
             declared_dirs: r.declared,
             deep: r.deep,
+            days: r.days,
         };
         println!("{}", serde_json::to_string(&doc).expect("report json"));
         return;

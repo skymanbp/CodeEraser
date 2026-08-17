@@ -23,6 +23,7 @@ battery =
     , ("an over-cap structure request degrades and FAILS", degradedFails)
     , ("the declared layout overlays by hand-computed digit", declaredOverlay)
     , ("the redundancy axis judges present, absent and clean apart", redundancyAxis)
+    , ("the staleness axis judges by hand-computed digit", staleAxis)
     ]
 
 -- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1
@@ -96,7 +97,12 @@ refusals =
     , refused (setKey "patterns" (toJSON [[0, 7, 1 :: Integer]]) wireReq) "unknown pattern code"
     , refused (setKey "conventions" (toJSON [[0, 0 :: Integer]]) wireReq) "bits outside 1..3"
     , refused (setKey "fileRefs" (toJSON [[9, 0, 1, 1 :: Integer]]) wireReq) "dir out of range"
-    , refused (setKey "knobs" (toJSON [[11, 1 :: Integer]]) wireReq) "unknown structure knob"
+    , -- max+1: the boundary-exact unknown code, moved WITH the knob
+      -- face by this battery's own F16 discipline (the golden's
+      -- unknown-knob pair probes a stably-unknown 99 instead — the
+      -- second face-growth made its probe legal and taught us not
+      -- to freeze a moving boundary in a fixture)
+      refused (setKey "knobs" (toJSON [[12, 1 :: Integer]]) wireReq) "unknown structure knob"
     , refused (setKey "knobs" (toJSON [[3, 0 :: Integer]]) wireReq) "knob below 1"
     , refused (setKey "patterns" (toJSON [[1, 3, 4], [1, 0, 5 :: Integer]]) wireReq) "not strictly ascending"
     , refused (setKey "declared" (toJSON [[9, 1 :: Integer]]) wireReq) "declared 0: dir out of range"
@@ -169,6 +175,34 @@ redundancyAxis =
   redAt rows = setKey "redundancy" (toJSON (rows :: [[Integer]])) wireReq
   probeAt rows key = replyObj (redAt rows) >>= \o -> field o key
   field' k o = field o k
+
+-- | S3c, the same absence-vs-zero ladder as redundancyAxis, by
+-- hand: empty table = six axes with [5,0], 1000 − 50 div 6 = 992;
+-- dir 1 one stale doc of two = [5,1], raw 60, score 990, findings
+-- gain [1,5] (after [1,4], before any axis-6 row); staleMin 2
+-- releases it back to 992 (F16); both optional tables together =
+-- seven axes, raw 80, score 1000 − 80 div 7 = 989. Refusals ride
+-- the shared dir-table loop with the two stale-specific rules.
+staleAxis :: Bool
+staleAxis =
+  and
+    [ staleAt [] "score" == Just (toJSON (992 :: Integer))
+    , staleAt flagged "score" == Just (toJSON (990 :: Integer))
+    , staleAt flagged "findings"
+        == Just (toJSON [[1, 1], [1, 2], [1, 4], [1, 5 :: Integer]])
+    , fmap (`field` "score") (replyObj (setKey "knobs" (toJSON [[11, 2 :: Integer]]) staleReq))
+        == Just (Just (toJSON (992 :: Integer)))
+    , fmap (`field` "score") (replyObj bothReq) == Just (Just (toJSON (989 :: Integer)))
+    , refusedBy respond (staleReqAt [[1, 3, 2]]) "stale above total"
+    , refusedBy respond (staleReqAt [[1, 0, 0]]) "total below 1"
+    ]
+ where
+  flagged = [[1, 1, 2 :: Integer]]
+  staleReq = staleReqAt flagged
+  staleReqAt rows = setKey "staleDocs" (toJSON (rows :: [[Integer]])) wireReq
+  staleAt rows key = replyObj (staleReqAt rows) >>= \o -> field o key
+  bothReq =
+    setKey "redundancy" (toJSON [[1, 1, 0], [2, 0, 1 :: Integer]]) staleReq
 
 -- | P1 posture on the newest family: one node past the cap
 -- degrades to a complete reply whose fail bit is TRUE.

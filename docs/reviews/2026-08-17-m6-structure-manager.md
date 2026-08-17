@@ -93,8 +93,11 @@ flat nodes+parent（机器友好、流式可增量）；CLI 渲染 = 顶部总�
   **S3b 已落地（proto 2.11.0）**：S6 冗余/孤儿卷积轴——`redundancy
   [dirId,dupBlocks,deadUnits]` 可选表（缺席=不判、空=判净）+ knobs
   9/10（dupMin/deadMin）；测量=`--deep` 才发（dedup 块+deadcode 死
-  单元逐目录卷积，degraded 拒伪零）。**S3c 待续**：S5 文档新鲜度
-  （churn 窗口 join，`--days` 诚实缺席，knob 11=staleMin）。
+  单元逐目录卷积，degraded 拒伪零）。**S3c 已落地（proto 2.12.0，
+  S3 全收官=七轴面闭合）**：S5 文档新鲜度轴——`staleDocs
+  [dirId,stale,total]` 可选表 + knob 11=staleMin；测量=`--days N`
+  才发（md 出边目标×单遍窗口 git log，同 commit 双改=不陈旧）；
+  自仓活体：`--days 14` 轴 5:4、全七轴 860/1000。
 - **S4 GUI 首屏**：Tauri 树图消费 §5 schema（M6 主体并轨；验收=计划 M6
   行既有数字：10 万 LOC 冷启动到首屏 <60s、报告打开 <3s）。
 

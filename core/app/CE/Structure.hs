@@ -31,9 +31,10 @@ data StructReq = StructReq
   , reqConventions :: [[Integer]]
   , reqFileRefs :: [[Integer]]
   , reqDeclared :: [[Integer]]
+  , reqStaleDocs :: Maybe [[Integer]]
   , reqRedundancy :: Maybe [[Integer]]
-  -- ^ Maybe, not defaulted: an absent table means axis 6 is not
-  -- judged, an empty one that it judged clean — the churn-table
+  -- ^ Both Maybe, not defaulted: an absent table means its axis is
+  -- not judged, an empty one that it judged clean — the churn-table
   -- honesty (absence is spoken, never zero-filled).
   , reqKnobs :: [[Integer]]
   }
@@ -47,6 +48,7 @@ instance FromJSON StructReq where
       <*> o .:? "conventions" .!= []
       <*> o .:? "fileRefs" .!= []
       <*> o .:? "declared" .!= []
+      <*> o .:? "staleDocs"
       <*> o .:? "redundancy"
       <*> o .:? "knobs" .!= []
 
@@ -86,9 +88,15 @@ violation req =
     , ((2, "convention", convOk), take 1, reqConventions req)
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
     , ((2, "declared", declOk), take 1, reqDeclared req)
+    , ((3, "staleDocs", staleOk), take 1, concat (reqStaleDocs req))
     , ((3, "redundancy", noExtra), take 1, concat (reqRedundancy req))
     ]
   noExtra _ = Nothing
+  staleOk row = case row of
+    [_, s, total] | total < 1 -> Just "total below 1"
+                  | s > total -> Just "stale above total"
+                  | otherwise -> Nothing
+    _ -> Nothing
   patternOk row = case row of
     [_, code, count] | code > 6 -> Just "unknown pattern code"
                      | count < 1 -> Just "count below 1"
@@ -143,7 +151,7 @@ knobsOffence rows =
  where
   one i row = case row of
     [code, v]
-      | code < 0 || code > 10 -> Just (label <> "unknown structure knob")
+      | code < 0 || code > 11 -> Just (label <> "unknown structure knob")
       | v < 1 -> Just (label <> "knob below 1")
       | otherwise -> Nothing
     _ -> Just (label <> "malformed row (need [code,value])")
@@ -166,6 +174,7 @@ knobTable =
   , (8, kScale, \v k -> k {kScale = v})
   , (9, kDupMin, \v k -> k {kDupMin = v})
   , (10, kDeadMin, \v k -> k {kDeadMin = v})
+  , (11, kStaleMin, \v k -> k {kStaleMin = v})
   ]
 
 -- | Knob rows over the Cost defaults (the effectiveKnobs pattern):
@@ -203,13 +212,14 @@ reply proto req k degraded =
  where
   facts =
     if degraded
-      then Facts [] [] [] [] Nothing
+      then Facts [] [] [] [] Nothing Nothing
       else
         Facts
           (reqNodes req)
           (reqPatterns req)
           (reqConventions req)
           (reqFileRefs req)
+          (reqStaleDocs req)
           (reqRedundancy req)
   declaredKeys = case declaredRows (fNodes facts) (if degraded then [] else reqDeclared req) of
     Nothing -> []

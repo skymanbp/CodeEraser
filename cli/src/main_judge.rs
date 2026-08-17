@@ -64,6 +64,11 @@ pub struct StructureArgs {
     /// liveness judgment; absent = the axis is honestly unjudged)
     #[arg(long)]
     deep: bool,
+    /// Judge the S5 doc-staleness axis over this git window in days
+    /// (docs whose referenced code changed after their last edit;
+    /// absent = the axis is honestly unjudged)
+    #[arg(long)]
+    days: Option<u32>,
 }
 
 /// `ce structure` (M6 S2): the tree-scale entropy judgment —
@@ -74,7 +79,7 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
     let as_json = json(j.format);
     emit(
         "structure",
-        || codeeraser::structure::judge::run(&or_cwd(j.root), j.db, &j.core, a.deep),
+        || codeeraser::structure::judge::run(&or_cwd(j.root), j.db, &j.core, a.deep, a.days),
         |r| codeeraser::structure::judge::print(r, as_json),
     )
 }
