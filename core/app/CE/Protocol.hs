@@ -23,13 +23,14 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 2.3.0 = verdict.request `ceilings` rows + the reply's effective-
--- knobs echo (ADR-008 first step, M5 close): additive, absent field
--- parses as no override. 2.2.0 = clone/1 + docdup/1 + verdict/1
--- declared in ONE additive minor (M5-3a); 2.1.0 = graph/1 (M5-2a);
--- 2.0.0 was the M5-1c-iii anchor-width shape.
+-- 2.4.0 = verdict.request `thresholds` + `tolerance` knob rows and
+-- the reply's FULL effective-knob echo (ADR-008 P4): additive,
+-- absent fields parse as no override. 2.3.0 = `ceilings` rows +
+-- the two-knob echo (ADR-008 first step, M5 close); 2.2.0 =
+-- clone/1 + docdup/1 + verdict/1 in ONE additive minor (M5-3a);
+-- 2.1.0 = graph/1 (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.3.0"
+proto = "2.4.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

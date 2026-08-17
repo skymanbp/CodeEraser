@@ -14,8 +14,8 @@
 module CE.Verdict (respond) where
 
 import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
-import CE.Verdict.Join (Legs (..), Pos (..), bound, judge)
-import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
+import CE.Verdict.Join (Knobs (..), Legs (..), Pos (..), bound, judge)
+import CE.Verdict.Ratchet (Baseline (..), RatchetKnobs (..), Ratcheted (..), ratchet, ratchetBound)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), penalties, score, scoreBound)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
 import Data.Aeson
@@ -72,7 +72,7 @@ result proto parsed req =
       [ "proto" .= proto
       , "type" .= ("verdict.result" :: String)
       , "id" .= reqId req
-      , "candidates" .= candidates req
+      , "candidates" .= candidates jk req
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
       , "ratchet"
@@ -84,40 +84,122 @@ result proto parsed req =
             , "fail" .= failBit
             ]
       , "newBaseline" .= object ["continuous" .= rNewCont r, "discrete" .= rNewDisc r]
-      , -- the EFFECTIVE ceilings echo (ADR-008 first step): the
-        -- client asserts the round trip, and the empty-ceilings
-        -- default gate pins core defaults == ce.toml defaults —
-        -- the drift check the retired mirror never had
-        "knobs" .= object ["sizeCeil" .= sSizeCeil k, "cocCeil" .= sCocCeil k]
+      , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
+        -- round trip, and the empty-table default gate pins core
+        -- defaults == ce.toml defaults — the drift check the
+        -- retired mirrors never had
+        "knobs" .= knobsEcho k rk jk
       , "degraded" .= False
       ]
  where
-  k = effectiveKnobs (reqCeilings req)
+  k = effectiveKnobs (reqCeilings req) (reqThresholds req)
+  rk = effectiveRatchet (reqTolerance req)
+  jk = effectiveJoin k (reqThresholds req)
   pens = penalties k (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
   (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id parsed
-  r = ratchet ratchetBound base (reqCont req) (reqDisc req)
+  r = ratchet rk base (reqCont req) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
-  failBit = not (null (rOver r)) || not (null (rAdded r)) || floorFail
+  failBit = any snd (failConditions r floorFail)
 
--- | scoreBound with the request's [axis, ceiling] rows applied —
--- axis 0 = size, axis 1 = coc (the only configurable pair in this
--- step; validation bounds the codes). Absent rows keep the Cost.hs
--- DEFAULTS, which the wire demoted from mirror-half to fallback.
-effectiveKnobs :: [[Integer]] -> ScoreKnobs
-effectiveKnobs = foldl' apply scoreBound
+-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):
+-- any held condition fails — over ceiling past tolerance, a new
+-- discrete member, or the --fail-under floor ("either alone fails").
+failConditions :: Ratcheted -> Bool -> [(String, Bool)]
+failConditions r floorFail =
+  [ ("ratchet_over", not (null (rOver r)))
+  , ("discrete_added", not (null (rAdded r)))
+  , ("floor", floorFail)
+  ]
+
+-- | scoreBound with the request's knob rows applied: the ceilings
+-- table drives axes 0/1, the thresholds table its Score-owned codes
+-- (3 = cochangeFloor is Join-owned and falls through to
+-- effectiveJoin). One (code, setter) row per knob; absent rows keep
+-- the Cost.hs DEFAULTS. Two tables, not four: the batch's first
+-- ratchet bite was the join/tolerance sibling tables, repaid by
+-- effectiveJoin/effectiveRatchet constructing records directly.
+effectiveKnobs :: [[Integer]] -> [[Integer]] -> ScoreKnobs
+effectiveKnobs ceils thrs =
+  applyRows ceilingSetters ceils (applyRows thresholdSetters thrs scoreBound)
+
+ceilingSetters :: [(Integer, Integer -> ScoreKnobs -> ScoreKnobs)]
+ceilingSetters = [(0, \v k -> k {sSizeCeil = v}), (1, \v k -> k {sCocCeil = v})]
+
+thresholdSetters :: [(Integer, Integer -> ScoreKnobs -> ScoreKnobs)]
+thresholdSetters =
+  [ (0, \v k -> k {sDeadIndegCeil = v})
+  , (1, \v k -> k {sRewriteNum = v})
+  , (2, \v k -> k {sRewriteDen = v})
+  , (4, \v k -> k {sViolCost = v})
+  , (5, \v k -> k {sDefaultWeight = v})
+  , (6, \v k -> k {sScoreScale = v})
+  ]
+
+-- | The tolerance legs by position (0 num / 1 den / 2 abs): a
+-- record from lookups, not a sibling lambda table.
+effectiveRatchet :: [[Integer]] -> RatchetKnobs
+effectiveRatchet rows =
+  RatchetKnobs (leg 0 rTolNum) (leg 1 rTolDen) (leg 2 rTolAbs)
  where
-  apply k [0, v] = k {sSizeCeil = v}
-  apply k [1, v] = k {sCocCeil = v}
-  apply k _ = k
+  leg c f = pick rows c (f ratchetBound)
+
+-- | The join lattice reads the SAME effective rewrite ratio the
+-- score judged with (one authority, two readers) plus the cochange
+-- floor row (code 3) the score does not own.
+effectiveJoin :: ScoreKnobs -> [[Integer]] -> Knobs
+effectiveJoin k thrs =
+  bound
+    { kRewriteNum = sRewriteNum k
+    , kRewriteDen = sRewriteDen k
+    , kCochangeFloor = pick thrs 3 (kCochangeFloor bound)
+    }
+
+-- | Last [code, value] match or the default (later rows win — the
+-- applyRows fold order, though validation's ascending rule already
+-- forbids duplicate codes within one table).
+pick :: [[Integer]] -> Integer -> Integer -> Integer
+pick rows code dflt = last (dflt : [v | [c, v] <- rows, c == code])
+
+-- | Fold [code, value] rows through the setter table; rows whose
+-- code the table does not own fall through untouched (validation
+-- already bounded every code).
+applyRows :: [(Integer, Integer -> a -> a)] -> [[Integer]] -> a -> a
+applyRows setters = flip (foldl' step)
+ where
+  step k row = case row of
+    [code, v] | Just set <- lookup code setters -> set v k
+    _ -> k
+
+-- | Every configurable knob the judgment ran with, echoed so the
+-- client can assert the FULL round trip and the empty-table default
+-- gate can kill every remaining mirror.
+knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Value
+knobsEcho k rk jk =
+  object
+    [ "sizeCeil" .= sSizeCeil k
+    , "cocCeil" .= sCocCeil k
+    , "deadIndegCeil" .= sDeadIndegCeil k
+    , "rewriteNum" .= sRewriteNum k
+    , "rewriteDen" .= sRewriteDen k
+    , "cochangeFloor" .= kCochangeFloor jk
+    , "violCost" .= sViolCost k
+    , "defaultWeight" .= sDefaultWeight k
+    , "scoreScale" .= sScoreScale k
+    , "tolNum" .= rTolNum rk
+    , "tolDen" .= rTolDen rk
+    , "tolAbs" .= rTolAbs rk
+    ]
 
 -- | Join-candidate rows, one per sim row (split from result at the
--- E01 line — the leg maps are the candidates' concern alone).
-candidates :: VerdictReq -> [[Integer]]
-candidates req =
+-- E01 line — the leg maps are the candidates' concern alone). The
+-- effective Join knobs arrive from the same thresholds table the
+-- score reads, so the two judgments share one authority.
+candidates :: Knobs -> VerdictReq -> [[Integer]]
+candidates jk req =
   [ [u, v, code, bits, mask]
   | row@(u : v : _) <- reqSim req
-  , let (code, mask, bits) = judge bound (legsOf row)
+  , let (code, mask, bits) = judge jk (legsOf row)
   ]
  where
   -- wire flags are structurally 0 at file granularity (entry-ness
@@ -164,11 +246,7 @@ tooLarge proto req =
             ]
       , "newBaseline" .= object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Value])]
       , -- defaults: no judgment ran, so no override was applied
-        "knobs"
-          .= object
-            [ "sizeCeil" .= sSizeCeil scoreBound
-            , "cocCeil" .= sCocCeil scoreBound
-            ]
+        "knobs" .= knobsEcho scoreBound ratchetBound bound
       , "degraded" .= True
       , "reason" .= ("verdict_too_large" :: String)
       ]

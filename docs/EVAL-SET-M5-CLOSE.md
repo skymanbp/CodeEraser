@@ -175,6 +175,33 @@ score run 超警）；预算 145==145 零豁免。
 自身内容；R1 由 v1.7 解除、R2 由 C3 清、R6 由 regen_tables 已清、R7 由
 CI 门批已清。**挂账清零终态：账本空。**
 
+## ADR-008 集中收口批（计划 v1.8，2026-08-17 起）
+
+**章程（6159bde）**：三拍板=①判决/测量分界（判决·豁免判定·预算·棘轮·阻断
+入 core；测量参数留 Rust 单点声明+回显钉；判据=源文本/行级内容过 wire 即
+测量侧；guard 热路径与 hook 协议映射两判例）②DSL 形态=位台账+判决表
+③四片全收（P4→P1→P2→P3）。两路独立普查冻结+17 项 Rust 独立语义逐项归边
+（6 迁 9 留 2 判例）：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)。
+
+**P4 配置面与表化**：proto 2.4.0 加性 minor——`thresholds`（codes 0..6）+
+`tolerance`（legs 0..2）两表入 wire（`knobTable` 文法泛化：judgeV 收 code
+参、逐码域判）；应答 `knobs` 回显扩为 12 键全量生效集；weights 通道打通
+（ce.toml `[score.weights]` 按轴名驱动，Rust 恒空数组退役）；`Config`
+全节 `deny_unknown_fields`（错拼策略键静默丢弃陷阱修）；码表单一权威=
+`score/knobs.rs`（code=下标的名单表）。**隐式策略表化**：Join 判决优先级
+落 `verdictTable`（(code,必需位,禁止位) 有序行，delete 行=旧 deleteReady
+的位等价——至多一死翼引理；`judgeWith` 参数化+JoinProps 重排电池=转表
+必红，堵普查缺口 3）；graph 四路码落 `deadTable`（(public,referenced)→code
+总查表，暴力参照即其重排反事实）；fail 合取落具名条件表；Score 1000/`max 0`
+入 `scoreScale` knob（缺口 1 清）；`effectiveJoin` 直读 score 生效 rewrite
+比（一权威两读者）。golden 翻批=proto 位全册+verdict 回显扩展+新 pair 7
+（scoreScale 500→499 分、tolAbs 0→310>306 over 触发 fail）逐行审；
+VerdictProps 拆 VerdictWireProps（300 线拆分非豁免）。**棘轮第八咬十块
+全偿**（四 setter 姊妹表→双表+双直构、knobs 双表→下标名单、Request 字段
+带→KnobTable 别名、body json 行群→四表单循环、import/电池脚手架→
+qualified+表驱动）；145==145 零豁免。判决字节等价=判决字段（score/axes/
+candidates/ratchet）逐字节不变于 golden 全册。
+
 ## 复跑
 
 本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test daemon_proto --test concurrent_writers` （清零批新门）。

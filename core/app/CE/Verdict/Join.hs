@@ -20,6 +20,8 @@ module CE.Verdict.Join
   , Knobs (..)
   , bound
   , judge
+  , judgeWith
+  , verdictTable
   , legSim
   , legGraph
   , legChurn
@@ -96,12 +98,34 @@ legSim = 1
 legGraph = 2
 legChurn = 4
 
--- | (verdict, legsMask, reasonBits). The bit meanings live as the
--- per-bit table in CE.Verdict.Cost; bits record which conditions
--- HELD, the code is the lattice's conclusion, and the two travel
--- together so a two-leg firing can never hide.
+-- | The verdict TABLE (ADR-008 lattice-table form): ordered rows
+-- (code, requiredBits, forbiddenBits) over the SAME reason-bit
+-- ledger the reply ships; the first row whose required bits all
+-- hold and whose forbidden bits all stay clear is the verdict, else
+-- 0 report_only. The priority (merge > delete > churn) used to be
+-- guard order no battery could see (ADR-008 survey gap 3) — now it
+-- is data, and the JoinProps reorder probe judges with a permuted
+-- copy and watches a crafted pair flip. delete's row is EXACTLY the
+-- old deleteReady: at most one flank can be dead (deadV needs indeg
+-- 0 on x and >= 1 on its partner), so dead-flank(5) held with
+-- public-guard(6) clear names that one flank non-public — RG10
+-- stays in the CONDITION, never a post-filter.
+verdictTable :: [(Integer, [Int], [Int])]
+verdictTable =
+  [ (1, [1, 2, 3, 4], []) -- merge: sim + graph + both referenced + distinct sccs
+  , (2, [1, 2, 5], [6]) -- delete: sim + graph + dead flank, RG10 clear
+  , (3, [1, 2, 7, 8], []) -- churn_hotspot: sim + graph + cochange + rewrite
+  ]
+
+-- | (verdict, legsMask, reasonBits) under the production table.
 judge :: Knobs -> Legs -> (Integer, Integer, Integer)
-judge k l = (code, legsMask, reasons)
+judge = judgeWith verdictTable
+
+-- | The bit meanings live as the per-bit table in CE.Verdict.Cost;
+-- bits record which conditions HELD, the table concludes, and the
+-- two travel together so a two-leg firing can never hide.
+judgeWith :: [(Integer, [Int], [Int])] -> Knobs -> Legs -> (Integer, Integer, Integer)
+judgeWith table k l = (code, legsMask, reasons)
  where
   (kind, num, den) = lSim l
   -- the OWNING family's bar, cross-multiplied: t1t2/t3 share the
@@ -120,21 +144,15 @@ judge k l = (code, legsMask, reasons)
   deadV x y = pIndeg x == 0 && pReach x == 0 && (pFlags x .&. kEntryMask k) == 0 && pIndeg y >= 1
   flanks = maybe [] (\(a, b) -> [(a, b), (b, a)]) pair
   deadFlank = any (uncurry deadV) flanks
-  -- RG10 lives in the CONDITION, not a post-filter: a public flank
-  -- never becomes delete-ready, and the guard bit says why
-  deleteReady = any (\(x, y) -> deadV x y && not (testBit (pFlags x) 0)) flanks
   publicGuard = any (\(x, y) -> deadV x y && testBit (pFlags x) 0) flanks
   (apA, rwA) = lChurnA l
   (apB, rwB) = lChurnB l
   total = apA + rwA + apB + rwB
   rewriteHot = total > 0 && (rwA + rwB) * kRewriteDen k >= total * kRewriteNum k
   cochangeHot = maybe False (>= kCochangeFloor k) (lCochange l)
-  gated = simOver && graphBoth
-  code
-    | gated && bothRef && sccDistinct = 1
-    | gated && deleteReady = 2
-    | gated && cochangeHot && rewriteHot = 3
-    | otherwise = 0
+  code = case [c | (c, req, forb) <- table, all (testBit reasons) req, not (any (testBit reasons) forb)] of
+    (c : _) -> c
+    [] -> 0
   legsMask = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn
   reasons =
     sum

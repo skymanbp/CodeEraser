@@ -10,13 +10,14 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 2.3.0 = verdict.request `ceilings` rows + the reply's effective-
-/// knobs echo (ADR-008 first step, additive). 2.2.0 = clone/1 +
-/// docdup/1 + verdict/1 declared in one additive minor (M5-3a).
+/// 2.4.0 = verdict.request `thresholds` + `tolerance` knob rows and
+/// the FULL effective-knob echo (ADR-008 P4, additive). 2.3.0 =
+/// `ceilings` rows + the two-knob echo (ADR-008 first step). 2.2.0
+/// = clone/1 + docdup/1 + verdict/1 in one additive minor (M5-3a).
 /// 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii anchor-width
 /// request shape (a breaking change, major per §2); 1.0.0 was the
 /// M4 content finalization freeze.
-pub const PROTO: &str = "2.3.0";
+pub const PROTO: &str = "2.4.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

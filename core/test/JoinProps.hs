@@ -21,7 +21,8 @@ battery = do
   e <- check "priority: merge outranks hotspot when both hold" priority
   f <- check "reason bit 0 never fires (deliberately absent)" bitZeroSilent
   g <- check "reason ledger pinned on the delete and guard fixtures" ledgerPinned
-  pure (and [a, b, c, d, e, f, g])
+  h <- check "reorder: rotating the verdict table flips the both-row" reorder
+  pure (and [a, b, c, d, e, f, g, h])
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -175,6 +176,18 @@ deadKnobs =
 
 priority :: Bool
 priority = verdictOf bothRow == 1
+
+-- | The table IS the priority (ADR-008 P4): the same both-conditions
+-- row judged under a rotated copy of the production table flips
+-- merge -> hotspot. Guard order used to hide exactly this from
+-- every battery (the census counts classes, not ranks).
+reorder :: Bool
+reorder = v == 3
+ where
+  rotated =
+    [row | row@(c, _, _) <- verdictTable, c == 3]
+      <> [row | row@(c, _, _) <- verdictTable, c /= 3]
+  (v, _, _) = judgeWith rotated bound bothRow
 
 bitZeroSilent :: Bool
 bitZeroSilent = all (\l -> not (testBit (reasonsOf l) 0)) pop

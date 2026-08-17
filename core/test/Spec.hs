@@ -19,6 +19,7 @@ import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
 import qualified VerdictProps
+import qualified VerdictWireProps
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -53,6 +54,7 @@ main = do
       , CloneProps.battery
       , JoinProps.battery
       , VerdictProps.battery
+      , VerdictWireProps.battery
       ]
   unless (and results) exitFailure
 

@@ -17,6 +17,15 @@ module CE.Verdict.Wire
   ) where
 
 import CE.Verdict.Ratchet (Baseline (..))
+import CE.Verdict.Table
+  ( ascendingBy
+  , ceilingsOffence
+  , label
+  , table
+  , thresholdsOffence
+  , toleranceOffence
+  , weightsOffence
+  )
 import Control.Applicative ((<|>))
 import Data.Aeson
 import qualified Data.Aeson.Types as AT
@@ -41,6 +50,14 @@ data VerdictReq = VerdictReq
     -- and the Cost.hs values become DEFAULTS instead of the second
     -- half of an uncheckable mirror (M5-close audit D2)
     reqCeilings :: [[Integer]]
+  , -- ADR-008 P4 (2.4.0, additive): the remaining verdict-family
+    -- knobs speak the same [code, value] grammar — thresholds codes
+    -- 0..6 (deadIndegCeil / rewriteNum / rewriteDen / cochangeFloor
+    -- / violCost / defaultWeight / scoreScale) and the ADR-006
+    -- tolerance legs 0..2 (tolNum / tolDen / tolAbs). Absent = []
+    -- = every knob at its Cost.hs DEFAULT.
+    reqThresholds :: [[Integer]]
+  , reqTolerance :: [[Integer]]
   }
 
 instance FromJSON VerdictReq where
@@ -58,6 +75,8 @@ instance FromJSON VerdictReq where
       <*> o .: "weights"
       <*> o .: "floor"
       <*> o .:? "ceilings" .!= []
+      <*> o .:? "thresholds" .!= []
+      <*> o .:? "tolerance" .!= []
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -82,6 +101,8 @@ violation parsed req =
     , either Just (const Nothing) parsed
     , weightsOffence (reqWeights req)
     , ceilingsOffence (reqCeilings req)
+    , thresholdsOffence (reqThresholds req)
+    , toleranceOffence (reqTolerance req)
     , floorOffence (reqFloor req)
     ]
  where
@@ -93,10 +114,6 @@ violation parsed req =
   unitTier =
     IS.fromList
       [i | (i, [_, code]) <- zip [0 :: Int ..] (reqTier req), code /= 0]
-
-table :: String -> (String -> Int -> [Integer] -> Maybe String) -> Int -> [[Integer]] -> Maybe String
-table name rowCheck idWidth rows =
-  asum (zipWith (rowCheck name) [0 :: Int ..] rows) <|> ascendingBy name idWidth rows
 
 tierRow :: Int -> [Integer] -> Maybe String
 tierRow i row = case row of
@@ -168,21 +185,6 @@ discEntry i x
   | x < 0 || x >= 18446744073709551616 = Just (label "discrete" i <> "outside u64")
   | otherwise = Nothing
 
-label :: String -> Int -> String
-label name i = name <> " " <> show i <> ": "
-
--- | Strictly ascending on the first `k` fields — the row's IDENTITY;
--- duplicate identities are refused by implication, whatever the
--- payload says.
-ascendingBy :: String -> Int -> [[Integer]] -> Maybe String
-ascendingBy name k rows =
-  asum
-    [ if take k prev < take k cur
-        then Nothing
-        else Just (label name i <> "not strictly ascending")
-    | (i, (prev, cur)) <- zip [1 ..] (zip rows (drop 1 rows))
-    ]
-
 -- | The one reader of ce-baseline.json bytes: null = establish;
 -- otherwise {continuous, discrete} with the same row discipline as
 -- the live tables. Entities are NOT range-checked against the tier
@@ -208,41 +210,8 @@ parseBaseline v = case AT.parse bl v of
       | otherwise -> Nothing
     _ -> Just (label "baseline.continuous" i <> "malformed row")
 
--- | The two knob tables (weights, ceilings) speak ONE row grammar —
--- [axis, value] rows, strictly ascending by axis (unique) — and
--- differ only in DATA: the axis bound, its refusal text, and the
--- value judgment. The dedup ratchet caught the second table cloning
--- the first's scaffolding; the shared grammar is the throat.
-knobTable :: String -> Integer -> String -> (Integer -> Maybe String) -> [[Integer]] -> Maybe String
-knobTable name axisMax axisWhy judgeV = table name one 1
- where
-  one nm i row = case row of
-    [code, v]
-      | code < 0 || code > axisMax -> Just (label nm i <> axisWhy)
-      | Just why <- judgeV v -> Just (label nm i <> why)
-      | otherwise -> Nothing
-    _ -> Just (label nm i <> "malformed row (need [axis,value])")
-
--- | A request may zero SOME axes (unlisted ones default to 1);
--- zeroing all seven leaves the score with no divisor and is refused.
-weightsOffence :: [[Integer]] -> Maybe String
-weightsOffence rows =
-  knobTable "weights" 6 "unknown axis code" negW rows
-    <|> if length rows == 7 && all zeroed rows
-      then Just "weights: every axis zeroed"
-      else Nothing
- where
-  negW w = if w < 0 then Just "negative field" else Nothing
-  zeroed row = case row of
-    [_, w] -> w == 0
-    _ -> False
-
--- | Only the size (0) and coc (1) axes are configurable in this
--- step, and a ceiling below 1 would violate every unit by fiat.
-ceilingsOffence :: [[Integer]] -> Maybe String
-ceilingsOffence = knobTable "ceilings" 1 "unknown ceiling axis" low
- where
-  low v = if v < 1 then Just "ceiling below 1" else Nothing
+-- knob-table offences live in CE.Verdict.Table (the shared row
+-- grammar), split from this module at the 300-line law.
 
 floorOffence :: Maybe Integer -> Maybe String
 floorOffence Nothing = Nothing

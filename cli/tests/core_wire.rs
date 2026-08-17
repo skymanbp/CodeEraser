@@ -98,13 +98,16 @@ fn corelink_open_and_desync() {
     assert!(err.contains("desync"), "visible failure, got: {err}");
 }
 
-/// ADR-008 first step: an EMPTY ceilings table makes the core judge
-/// with its Cost.hs defaults, and the echo must equal ce.toml's
-/// `Thresholds::default()` — the two halves of the retired 300/15
-/// mirror now meet in ONE assertion that reddens when either side
-/// moves alone (M5-close audit D2).
+/// ADR-008 (first step + P4): EMPTY knob tables make the core judge
+/// with its Cost.hs defaults, and the FULL echo must equal the set
+/// pinned here — ONE assertion that reddens when either side moves
+/// alone (audit D2 for the 300/15 pair; P4 extends the gate to the
+/// whole knob face). The ceilings half reads ce.toml's
+/// `Thresholds::default()` — the config IS its source; the P4 knobs
+/// have no config default (absent key = core default), so this
+/// literal object is their pinned mirror, the drift check itself.
 #[test]
-fn ceilings_default_drift_gate() {
+fn knob_default_drift_gate() {
     let t = codeeraser::config::Thresholds::default();
     let (mut link, _) = codeeraser::corelink::Link::open(&core_bin()).expect("open");
     let reply = link
@@ -113,14 +116,20 @@ fn ceilings_default_drift_gate() {
             serde_json::json!({
                 "sim": [], "pos": [], "tier": [], "churn": [], "cochange": [],
                 "continuous": [], "discrete": [], "baseline": null,
-                "weights": [], "floor": null, "ceilings": []
+                "weights": [], "floor": null, "ceilings": [],
+                "thresholds": [], "tolerance": []
             }),
         )
         .expect("verdict round-trip");
     assert_eq!(
         reply["knobs"],
-        serde_json::json!({"sizeCeil": t.file_lines_warn, "cocCeil": t.cognitive_warn}),
-        "core Cost.hs defaults drifted from ce.toml Thresholds::default()"
+        serde_json::json!({
+            "sizeCeil": t.file_lines_warn, "cocCeil": t.cognitive_warn,
+            "deadIndegCeil": 0, "rewriteNum": 50, "rewriteDen": 100,
+            "cochangeFloor": 2, "violCost": 10, "defaultWeight": 1,
+            "scoreScale": 1000, "tolNum": 102, "tolDen": 100, "tolAbs": 10,
+        }),
+        "core Cost.hs defaults drifted from the pinned knob face"
     );
 }
 

@@ -9,6 +9,7 @@
 //! not judge must never pass.
 
 pub mod baseline;
+pub mod knobs;
 pub mod wire;
 
 use crate::graph::deadcode;
@@ -67,12 +68,11 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         Some(days) => churn_rows(root, days, &idx)?,
         None => (Vec::new(), Vec::new()),
     };
-    // ce.toml speaks its size/coc ceilings onto the wire (ADR-008
-    // first step); the reply echoes the effective pair and judge()
-    // asserts the round trip — the 300/15 mirror is retired
-    let t = crate::config::Config::load(root)
-        .map_err(anyhow::Error::msg)?
-        .thresholds;
+    // ce.toml speaks its knob tables onto the wire (ADR-008: the
+    // first step sent the ceilings; P4 adds weights, thresholds and
+    // tolerance through score::knobs' declared tables); the reply
+    // echoes the effective set and judge() asserts the round trip
+    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let req = wire::Request {
         sim,
         pos: pos_rows(&files, &posmap),
@@ -86,7 +86,10 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
             baseline::read(root)?.unwrap_or(serde_json::Value::Null)
         },
         floor: opts.floor,
-        ceilings: vec![[0, t.file_lines_warn as i64], [1, t.cognitive_warn as i64]],
+        ceilings: knobs::ceiling_rows(&cfg.thresholds),
+        weights: knobs::weight_rows(&cfg.score)?,
+        thresholds: knobs::threshold_rows(&cfg.score),
+        tolerance: knobs::tolerance_rows(&cfg.score),
         files,
     };
     let reply = wire::judge(&opts.core, &req)?;

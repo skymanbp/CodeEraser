@@ -8,7 +8,7 @@ use std::path::Path;
 /// ESLint max-lines=300, Sonar S104=750/S138=75, ESLint fn=50,
 /// Pylint max-args=5, Sonar S3776 CoC=15, lizard CC=15).
 #[derive(Debug, Clone, Deserialize)]
-#[serde(default)]
+#[serde(default, deny_unknown_fields)]
 pub struct Thresholds {
     pub file_lines_warn: usize,
     pub file_lines_fail: usize,
@@ -38,7 +38,7 @@ impl Default for Thresholds {
 /// Passive-guard settings (plan §4.2, decision D-4 gradual rollout:
 /// observe → warn → ask → deny, promotion gated on measured FPR).
 #[derive(Debug, Clone, Default, Deserialize)]
-#[serde(default)]
+#[serde(default, deny_unknown_fields)]
 pub struct Guard {
     /// Explicit global tier: "observe" | "warn" | "ask" | "deny".
     /// Unset = the §4.2 route defaults, resolved per rule class by
@@ -61,7 +61,7 @@ impl Guard {
 /// Dedup ratchet (M2 review R12): `ce dedup --check` fails when the
 /// repo's clone-block count exceeds this only-shrink budget.
 #[derive(Debug, Clone, Default, Deserialize)]
-#[serde(default)]
+#[serde(default, deny_unknown_fields)]
 pub struct DedupCfg {
     pub budget: Option<usize>,
 }
@@ -70,13 +70,39 @@ pub struct DedupCfg {
 /// liveness roots beyond the mechanical conventions (main-shaped
 /// files, test conventions, doc entries) — flag bit 3 on the wire.
 #[derive(Debug, Clone, Default, Deserialize)]
-#[serde(default)]
+#[serde(default, deny_unknown_fields)]
 pub struct GraphCfg {
     pub entry_globs: Vec<String>,
 }
 
+/// Verdict-family knobs (ADR-008 P4): every value is OPTIONAL — an
+/// absent key sends no wire row and the core's Cost.hs default
+/// judges. Key names mirror the core knob names; the wire codes
+/// live in score::knobs as ONE declared table.
 #[derive(Debug, Clone, Default, Deserialize)]
-#[serde(default)]
+#[serde(default, deny_unknown_fields)]
+pub struct ScoreCfg {
+    /// Per-axis weight numerators by axis NAME (size / complexity /
+    /// clone / docdup / deadcode / churn / cycle); unlisted axes
+    /// keep the decision-⑦ equal weight.
+    pub weights: std::collections::BTreeMap<String, u32>,
+    pub dead_indeg_ceil: Option<u32>,
+    pub rewrite_num: Option<u32>,
+    pub rewrite_den: Option<u32>,
+    pub cochange_floor: Option<u32>,
+    pub viol_cost: Option<u32>,
+    pub default_weight: Option<u32>,
+    pub score_scale: Option<u32>,
+    pub tol_num: Option<u32>,
+    pub tol_den: Option<u32>,
+    pub tol_abs: Option<u32>,
+}
+
+/// deny_unknown_fields everywhere (ADR-008 P4): a mistyped policy
+/// key used to be SILENTLY dropped — a config that looks live and
+/// does nothing is the exact failure mode this repo exists to fight.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(default, deny_unknown_fields)]
 pub struct Config {
     pub thresholds: Thresholds,
     /// Extra exclude globs, added on top of built-in defaults (§4.1).
@@ -84,6 +110,7 @@ pub struct Config {
     pub guard: Guard,
     pub dedup: DedupCfg,
     pub graph: GraphCfg,
+    pub score: ScoreCfg,
 }
 
 impl Config {

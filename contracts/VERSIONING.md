@@ -17,6 +17,13 @@
 > 空 = 用 Cost.hs 默认）+ 应答加性 `knobs` 回显生效值——ce.toml 是
 > 源、wire 是路、Cost.hs 300/15 降为**默认值**而非镜像另一半；空表
 > 回显 == `Thresholds::default()` 由漂移门钉住（M5 收口审计 D2）。
+> **2.4.0**（ADR-008 P4，2026-08-17）：`verdict.request` 加性
+> `thresholds` 表（codes 0..6 = deadIndegCeil/rewriteNum/rewriteDen/
+> cochangeFloor/violCost/defaultWeight/scoreScale）与 `tolerance` 表
+> （legs 0..2 = tolNum/tolDen/tolAbs），同一 `[code,value]` 单行文法；
+> 应答 `knobs` 回显扩为**全量生效集**（12 键）；weights 通道由
+> ce.toml `[score.weights]` 驱动（Rust 恒发空数组退役）。判决语义
+> 逐字节不变（判决表化=纯重述）；码表单一权威 = `cli/src/score/knobs.rs`。
 
 ## 1. 信封（envelope）
 
@@ -27,7 +34,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.3.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.4.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -121,5 +128,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.3.0 | §1 所列两处常量 |
+| 协议 | 2.4.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

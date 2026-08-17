@@ -56,6 +56,7 @@ module CE.Verdict.Cost
   , deadIndegCeil
   , violCost
   , defaultWeight
+  , scoreScale
   , verdictNodeCap
   , verdictRowCap
   ) where
@@ -121,6 +122,14 @@ violCost = 10
 -- wire can override per axis, and wTotal follows.
 defaultWeight :: Integer
 defaultWeight = 1
+
+-- | The score's opening value (per-mille scale) — the last scoring
+-- number that lived as an inline literal in Score.score, outside
+-- every perturbation battery's reach (ADR-008 survey gap 1). The
+-- floor stays a structural `max 0`, not a knob: a negative score
+-- has no meaning at any scale.
+scoreScale :: Integer
+scoreScale = 1000
 
 -- | Real oversize protection for verdict requests (the envelope
 -- byte precheck is relaxed for the trusted same-machine child).

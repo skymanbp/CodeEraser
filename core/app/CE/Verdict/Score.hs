@@ -47,6 +47,7 @@ data ScoreKnobs = ScoreKnobs
   , sCycleFloor :: Integer
   , sViolCost :: Integer
   , sDefaultWeight :: Integer
+  , sScoreScale :: Integer
   }
 
 scoreBound :: ScoreKnobs
@@ -64,6 +65,7 @@ scoreBound =
     , sCycleFloor = sccFloor
     , sViolCost = Cost.violCost
     , sDefaultWeight = Cost.defaultWeight
+    , sScoreScale = Cost.scoreScale
     }
 
 -- | Violation count per axis — 0 size / 1 complexity / 2 clone /
@@ -125,5 +127,5 @@ score k weights pens = (perMille, totalViol)
   weighted = [(effWeight code, p) | (code, p) <- pens]
   wTotal = sum (map fst weighted)
   raw = sum [w * p * sViolCost k | (w, p) <- weighted]
-  perMille = max 0 (1000 - raw `div` wTotal)
+  perMille = max 0 (sScoreScale k - raw `div` wTotal)
   totalViol = sum (map snd pens)

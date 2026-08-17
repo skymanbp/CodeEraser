@@ -4,10 +4,16 @@
 //! set, the baseline VERBATIM, and the floor. The reply's ratchet
 //! and score come back raw; Rust never recomputes them (ADR-008).
 
+use crate::score::knobs;
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
+use std::collections::BTreeMap;
 
 pub const CAPABILITY: &str = "verdict/1";
+
+/// One knob table: [code, value] rows, code-ascending (the shared
+/// wire grammar every knob family speaks).
+pub type KnobTable = Vec<[i64; 2]>;
 
 /// The assembled fact tables, index space = `files` (tier F, dense,
 /// sorted — the caller builds it from the graph wire's own node
@@ -22,11 +28,16 @@ pub struct Request {
     pub discrete: Vec<u64>,
     pub baseline: Value,
     pub floor: Option<u32>,
-    /// [axis, ceiling] rows from ce.toml (0 = size, 1 = coc):
-    /// the config is the source, this wire is the road, and the
-    /// core's Cost.hs values are DEFAULTS — no longer half of the
-    /// uncheckable 300/15 mirror ADR-008 retired (audit D2).
-    pub ceilings: Vec<[i64; 2]>,
+    /// The four knob tables ce.toml speaks (ADR-008): ceilings
+    /// axes 0/1 (the 27b9bc2 road; config is the source, Cost.hs
+    /// values are DEFAULTS), and the P4 trio — weights [axis, w]
+    /// (the deliberate always-empty array retired; [score.weights]
+    /// drives it), thresholds codes 0..6, tolerance legs 0..2.
+    /// score::knobs owns every code registry.
+    pub ceilings: KnobTable,
+    pub weights: KnobTable,
+    pub thresholds: KnobTable,
+    pub tolerance: KnobTable,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -40,14 +51,15 @@ pub struct Reply {
     pub tolerance_drawn: Vec<[u64; 3]>,
     pub fail: bool,
     pub new_baseline: Value,
-    /// The EFFECTIVE [sizeCeil, cocCeil] the core judged with —
-    /// echoed so judge() can assert the round trip.
-    pub knobs: [i64; 2],
+    /// The FULL effective-knob echo (ADR-008 P4) — every key the
+    /// core judged with, so judge() asserts the round trip and the
+    /// empty-table drift gate pins the defaults.
+    pub knobs: BTreeMap<String, i64>,
     pub degraded: Option<String>,
 }
 
 pub fn body(r: &Request) -> Value {
-    json!({
+    let mut o = json!({
         "sim": r.sim,
         "pos": r.pos,
         "tier": (0..r.files.len()).map(|u| [u as i64, 0]).collect::<Vec<_>>(),
@@ -56,12 +68,19 @@ pub fn body(r: &Request) -> Value {
         "continuous": r.continuous,
         "discrete": r.discrete,
         "baseline": r.baseline,
-        // weights deliberately empty: equal weights are the decided
-        // opening stance (decision ⑦) and live in the core's Cost
-        "weights": [],
         "floor": r.floor,
-        "ceilings": r.ceilings,
-    })
+    });
+    // the four knob tables ride one loop — table-driven at the
+    // assembly site too, not just in the core's evaluator
+    for (key, rows) in [
+        ("ceilings", &r.ceilings),
+        ("weights", &r.weights),
+        ("thresholds", &r.thresholds),
+        ("tolerance", &r.tolerance),
+    ] {
+        o[key] = json!(rows);
+    }
+    o
 }
 
 /// One verdict.request over the open core link; a missing capability
@@ -78,19 +97,33 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         bail!("core replied {}: {reply}", reply["type"]);
     }
     let reply = parse(&reply)?;
-    // round trip: every ceiling row sent must be the one judged with
+    // round trip: every knob row sent must be the one judged with
     // (a degraded reply never judged — it echoes the defaults, and
-    // degradation already fails the check upstream)
+    // degradation already fails the check upstream). weights have
+    // no echo key; their lever is pinned by the core battery and
+    // the golden pair that sends one.
     if reply.degraded.is_none() {
-        for &[axis, v] in &r.ceilings {
-            let got = reply.knobs[axis as usize];
-            anyhow::ensure!(
-                got == v,
-                "core judged with ceiling {got} on axis {axis}, ce sent {v}"
-            );
-        }
+        assert_echo(&knobs::CEILING_KEYS, &r.ceilings, &reply.knobs)?;
+        assert_echo(&knobs::THRESHOLD_KEYS, &r.thresholds, &reply.knobs)?;
+        assert_echo(&knobs::TOLERANCE_KEYS, &r.tolerance, &reply.knobs)?;
     }
     Ok(reply)
+}
+
+/// Sent [code, value] rows against the reply's knob echo, names
+/// resolved through the SAME index-is-code registry that assembled
+/// them (score::knobs).
+fn assert_echo(keys: &[&str], sent: &[[i64; 2]], got: &BTreeMap<String, i64>) -> Result<()> {
+    for &[code, v] in sent {
+        let key = keys
+            .get(code as usize)
+            .with_context(|| format!("no echo key for knob code {code}"))?;
+        let echoed = got
+            .get(*key)
+            .with_context(|| format!("reply echo missing {key}"))?;
+        anyhow::ensure!(*echoed == v, "core judged with {key}={echoed}, ce sent {v}");
+    }
+    Ok(())
 }
 
 fn parse(v: &Value) -> Result<Reply> {
@@ -111,13 +144,7 @@ fn parse(v: &Value) -> Result<Reply> {
             .context("toleranceDrawn")?,
         fail: ratchet["fail"].as_bool().context("fail")?,
         new_baseline: rows("newBaseline")?,
-        knobs: {
-            let k = rows("knobs")?;
-            [
-                k["sizeCeil"].as_i64().context("knobs.sizeCeil")?,
-                k["cocCeil"].as_i64().context("knobs.cocCeil")?,
-            ]
-        },
+        knobs: serde_json::from_value(rows("knobs")?).context("knobs")?,
         degraded: v["reason"].as_str().map(str::to_string),
     })
 }
