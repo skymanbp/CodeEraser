@@ -11,9 +11,11 @@
 // hooks — same subset story as dead_code above.
 #![allow(unused_imports)]
 
+pub mod gates;
 pub mod gitio;
 pub mod hooks;
 pub mod ladder;
+pub use gates::*;
 pub use gitio::*;
 pub use hooks::*;
 pub use ladder::*;

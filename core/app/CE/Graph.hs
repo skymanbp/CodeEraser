@@ -19,7 +19,7 @@ import CE.Graph.Cost (edgeCap, entryMask, minRung, nodeCap, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
-import CE.Wire (Family (..), notAscending, respondWith)
+import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -71,13 +71,13 @@ violation req =
   asum
     [ asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , asum (zipWith (edgeRow n) [0 :: Int ..] es)
-    , asum (zipWith (notAscending "edge") [1 :: Int ..] (zip es (drop 1 es)))
+    , ascendingOn "edge" id es
     , asum (zipWith (posRow n) [0 :: Int ..] ps)
     , -- ascending pos is also the reply BOUND (M5-close review MED:
       -- pos escaped the declared caps — a repeated-index list made
       -- the reply larger than the request without limit; strictly
       -- ascending indices in [0, n) cannot exceed nodeCap rows)
-      asum (zipWith (notAscending "pos") [1 :: Int ..] (zip ps (drop 1 ps)))
+      ascendingOn "pos" id ps
     ]
  where
   n = fromIntegral (length (reqNodes req))

@@ -166,3 +166,17 @@ hook e2e = `hook_e2e_p95_under_1s`）。
 - daemon 冷启动（首次索引构建）不占热路径——未就绪期显式降级为廉价检查档（ADR-003）。
 - 复测命令：`cli/` 下 `cargo build --release` 后
   `1..10 | %{ (Measure-Command { .\target\release\ce.exe --version }).TotalMilliseconds }`。
+
+## ADR-008 P3 `ce scan` 接核后冷路径（实测 2026-08-17，release，自仓 273 文件 / 3,015 函数 ≈ 18.6k 测量行）
+
+> 口径：`ce scan . --core <exe>` 端到端 = walk+parse+度量 + 一次 scan.request
+> （分块阈 524288 行，自仓单请求）+ 整报告镜像 ensure + 渲染。P3 验收条款
+> "冷延迟入 PERF-BUDGET 实测、超标单片回滚"的落账（反审 C18 补记）。
+
+| 环节 | 账面基线（3l，无核） | 实测（×3 连测） | 判 |
+|---|---|---|---|
+| `ce scan .` 冷（首跑，核首启+握手） | 0.52 s | 0.98 s | ✅ 无回滚触发 |
+| `ce scan .` 暖（核复用系统缓存） | 0.52 s | 0.42–0.43 s | ✅ 反快于无核基线 |
+
+复跑：`cargo build --release` 后
+`1..3 | %{ (Measure-Command { .\target\release\ce.exe scan . --core $env:CE_CORE_BIN }).TotalSeconds }`。

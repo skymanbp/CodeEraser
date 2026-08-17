@@ -68,7 +68,9 @@ pub fn run_hook() -> ExitCode {
 /// unreadable ce.toml downgrades everything to observe (fail-open);
 /// an absent one resolves to the §4.2 route defaults via tier().
 fn decide(root: &Path, env: &Envelope) -> ExitCode {
-    let cfg = Config::load(root).ok();
+    let loaded = Config::load(root);
+    let broken = loaded.as_ref().err().cloned();
+    let cfg = loaded.ok();
     let mode = cfg
         .as_ref()
         .map_or_else(|| "observe".to_string(), |c| c.guard.tier("ask"));
@@ -100,10 +102,29 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
         budget_log(root, env, &mode, lines);
         reasons.push(why);
     }
-    if !reasons.is_empty() {
-        emit_decision(&mode, &reasons.join(" "));
-    }
+    emit_reasons(&mode, reasons, &broken);
     ExitCode::SUCCESS
+}
+
+/// Fired reasons → one decision line. A BROKEN ce.toml still fails
+/// open (a typo must never brick an edit) but no longer fails
+/// SILENT: when a rule fires anyway, the decision surfaces as a
+/// visible warn naming the config error instead of vanishing into
+/// observe (review C2: deny→observe with zero operator signal; the
+/// health line carries the same error at SessionStart). Split from
+/// decide() at the E01 line.
+fn emit_reasons(mode: &str, mut reasons: Vec<String>, broken: &Option<String>) {
+    if reasons.is_empty() {
+        return;
+    }
+    if let Some(e) = broken {
+        reasons.push(format!(
+            "(ce.toml unreadable, guard degraded to observe: {e})"
+        ));
+        emit_decision("warn", &reasons.join(" "));
+    } else {
+        emit_decision(mode, &reasons.join(" "));
+    }
 }
 
 /// §4.2 step 2, second promoted rule class: the write would leave the
@@ -112,6 +133,11 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
 /// file the scanner would never count cannot breach its budget.
 fn budget_breach(root: &Path, cfg: &Config, env: &Envelope) -> Option<(usize, String)> {
     let cap = cfg.thresholds.file_lines_fail;
+    // cap 0 = no hard line exists (the P3 grade-table contract) —
+    // without this the hook read 0 as "every write breaches"
+    if cap == 0 {
+        return None;
+    }
     let path = Path::new(&env.tool_input.file_path);
     crate::scan::lang::Lang::from_path(path)?;
     let lines = resulting_lines(env)?;

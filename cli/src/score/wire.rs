@@ -55,11 +55,19 @@ pub struct Reply {
     pub over: Vec<[u64; 4]>,
     pub tolerance_drawn: Vec<[u64; 3]>,
     pub fail: bool,
+    /// The HELD fail-condition names (review C8, 2.8.0): consumers
+    /// attribute the fail bit by name, never by construction-time
+    /// coincidence.
+    pub failed: Vec<String>,
     pub new_baseline: Value,
     /// The FULL effective-knob echo (ADR-008 P4) — every key the
     /// core judged with, so judge() asserts the round trip and the
     /// empty-table drift gate pins the defaults.
     pub knobs: BTreeMap<String, i64>,
+    /// The effective per-axis weight table 0..6 (review C3, 2.8.0):
+    /// the one knob family that had no round trip until the panel
+    /// caught the no-op golden covering for it.
+    pub weights: Vec<[i64; 2]>,
     pub degraded: Option<String>,
 }
 
@@ -128,15 +136,41 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     let reply = parse(&reply)?;
     // round trip: every knob row sent must be the one judged with
     // (a degraded reply never judged — it echoes the defaults, and
-    // degradation already fails the check upstream). weights have
-    // no echo key; their lever is pinned by the core battery and
-    // the golden pair that sends one.
+    // degradation already fails the check upstream). weights joined
+    // the pinned set at 2.8.0 (review C3: "pinned by the golden
+    // pair" was false — that pair sent the default weight).
     if reply.degraded.is_none() {
         assert_echo(&knobs::CEILING_KEYS, &r.ceilings, &reply.knobs)?;
         assert_echo(&knobs::THRESHOLD_KEYS, &r.thresholds, &reply.knobs)?;
         assert_echo(&knobs::TOLERANCE_KEYS, &r.tolerance, &reply.knobs)?;
+        let dw = *reply.knobs.get("defaultWeight").context("defaultWeight")?;
+        assert_weights(&r.weights, &reply.weights, dw)?;
     }
     Ok(reply)
+}
+
+/// Sent [axis, w] rows against the reply's effective weight table:
+/// every axis 0..6 must echo the sent override or the default — a
+/// dead or mis-indexed channel reddens here at every judged run.
+fn assert_weights(sent: &[[i64; 2]], echoed: &[[i64; 2]], default_w: i64) -> Result<()> {
+    anyhow::ensure!(
+        echoed.len() == 7,
+        "weights echo has {} axes, want 7",
+        echoed.len()
+    );
+    for (axis, row) in echoed.iter().enumerate() {
+        let want = sent
+            .iter()
+            .find(|[c, _]| *c == axis as i64)
+            .map(|[_, w]| *w)
+            .unwrap_or(default_w);
+        anyhow::ensure!(
+            row[0] == axis as i64 && row[1] == want,
+            "core weighted axis {axis} at {:?}, ce sent {want}",
+            row
+        );
+    }
+    Ok(())
 }
 
 /// Sent [code, value] rows against the reply's knob echo, names
@@ -155,25 +189,62 @@ fn assert_echo(keys: &[&str], sent: &[[i64; 2]], got: &BTreeMap<String, i64>) ->
     Ok(())
 }
 
+/// The ratchet sub-object's six fields, decoded once (split from
+/// parse() when the 2.8.0 `failed` row pushed it past the repo's
+/// own cyclomatic gate).
+struct RatchetEcho {
+    added: Vec<u64>,
+    removed: Vec<u64>,
+    over: Vec<[u64; 4]>,
+    tolerance_drawn: Vec<[u64; 3]>,
+    fail: bool,
+    failed: Vec<String>,
+}
+
+fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
+    Ok(RatchetEcho {
+        added: serde_json::from_value(r["added"].clone()).context("added")?,
+        removed: serde_json::from_value(r["removed"].clone()).context("removed")?,
+        over: serde_json::from_value(r["over"].clone()).context("over")?,
+        tolerance_drawn: serde_json::from_value(r["toleranceDrawn"].clone())
+            .context("toleranceDrawn")?,
+        fail: r["fail"].as_bool().context("fail")?,
+        failed: serde_json::from_value(r["failed"].clone()).context("failed")?,
+    })
+}
+
 fn parse(v: &Value) -> Result<Reply> {
     let rows = |key: &str| -> Result<Value> {
         v.get(key)
             .cloned()
             .with_context(|| format!("verdict.result missing {key}"))
     };
-    let ratchet = rows("ratchet")?;
+    let r = ratchet_of(&rows("ratchet")?)?;
     Ok(Reply {
         candidates: serde_json::from_value(rows("candidates")?).context("candidates")?,
         score: v["score"].as_i64().context("score")?,
         axes: serde_json::from_value(rows("axes")?).context("axes")?,
-        added: serde_json::from_value(ratchet["added"].clone()).context("added")?,
-        removed: serde_json::from_value(ratchet["removed"].clone()).context("removed")?,
-        over: serde_json::from_value(ratchet["over"].clone()).context("over")?,
-        tolerance_drawn: serde_json::from_value(ratchet["toleranceDrawn"].clone())
-            .context("toleranceDrawn")?,
-        fail: ratchet["fail"].as_bool().context("fail")?,
+        added: r.added,
+        removed: r.removed,
+        over: r.over,
+        tolerance_drawn: r.tolerance_drawn,
+        fail: r.fail,
+        failed: r.failed,
         new_baseline: rows("newBaseline")?,
         knobs: serde_json::from_value(rows("knobs")?).context("knobs")?,
-        degraded: v["reason"].as_str().map(str::to_string),
+        weights: serde_json::from_value(rows("weights")?).context("weights")?,
+        degraded: degraded_of(v),
     })
+}
+
+/// The AUTHORITATIVE degraded bit, with reason as its label (review
+/// C9: deriving from reason presence let a reasonless degraded
+/// reply pass as judged; split keeps parse() under the cyclomatic
+/// gate).
+fn degraded_of(v: &Value) -> Option<String> {
+    if v["degraded"] == Value::Bool(true) {
+        Some(v["reason"].as_str().unwrap_or("degraded").to_string())
+    } else {
+        None
+    }
 }

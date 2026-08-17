@@ -267,6 +267,31 @@ Target/probe 段表驱动（清三站账块）；余五块=Family 字面量+Req 
 （账面基线 0.52s 无核——暖态更快，冷态半秒级，验收过无回滚）；hello
 capabilities 加 `scan/1`=机检审计中唯一非 proto 变化（2.2.0 同例）。
 
+## ADR-008 反审修复批（proto 2.8.0，2026-08-17）
+
+**四路独立同路反审**（用户拍板结构：亲审 + 三 Opus 各 ~25 万 token 禁编辑
+纯读码+手算 golden）：20 项 confirmed（2 HIGH），refuted 列四路收敛=判决
+迁移本体零缺陷（对齐/等价/establish/golden 算术全员独立复证）；缺陷全落
+**配置可达面与镜像语义缝**。主修：①fail=0 语义三分裂〔3/3 路 HIGH：core=
+无硬线/evaluate 镜像=全 fail/guard=全 breach〕→镜像+guard 对齐 core 单一
+语义 ②deny_unknown_fields 使错拼键令 guard 静默 fail-open〔B 路独有 HIGH〕
+→响亮化（guard 触发时 warn 具名 config 错、health/doctor 行显式 ERROR；
+audit 类默认即 observe 裁定不动，会话级信号由 health 线承担）③weights
+通道无往返〔3/3 路；golden [[0,1]]=默认值无操作〕→`effectiveWeights`
+单查找双读者+reply 加性 `weights` 表+Rust 逐轴 assert+AXES 序单元测试钉+
+新 golden pair 9（[[2,3]]×clone 轴罚分=997，死通道会是 999——手算吻合）
+④corelink desync 吞具名拒绝〔3/3〕→error 型回复上浮 code+message
+⑤scan 单请求帽→分块循环（levels 拼接/fail OR）⑥warn>fail 配置杀 scan→
+grade_rows 预校验指名 ce.toml 键 ⑦floor 按生效 scoreScale 校验
+⑧`ratchet.failed` 持名条件表+check_budget 按名归因+degraded 拒
+⑨degraded 读真布尔 ⑩docdup (i,j) 前缀升序+clone/docdup 自环拒+帽盖
+knob/grade 表+degraded 回显默认表 ⑪check-report schema 0.2.0+打印用生效
+scale ⑫scan/1 能力断言+gate e2e（红绿过真核）；C19 裁定=fail==warn 合法
+单线配置（修注释非收紧）。**棘轮第十一咬 +5 全偿 143==143**：C10 投影
+lambda 升 `CE.Wire.ascendingOn`（五站点横扫 Graph/Clone/Docdup/Scan）、
+第三份 CE_CORE_BIN expect 收 `common::core_bin`、红绿门段收
+`common::gate_red_green` 且两门并册 `tests/gate_e2e.rs`。
+
 ## 复跑
 
 本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test daemon_proto --test concurrent_writers` （清零批新门）。

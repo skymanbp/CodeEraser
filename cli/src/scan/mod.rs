@@ -28,7 +28,7 @@ pub enum Format {
 pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
     let (config, files) = measured(root)?;
     let rows = report::rows_of(&files);
-    let grades = wire::grade_rows(&config.thresholds);
+    let grades = wire::grade_rows(&config.thresholds)?;
     let wire_rows: Vec<[u64; 2]> = rows.iter().map(|r| [r.code, r.value as u64]).collect();
     let (levels, fail) = wire::judge(core, &wire_rows, &grades)?;
     let findings = report::findings_from(&rows, &levels, &grades);

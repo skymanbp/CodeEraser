@@ -31,7 +31,7 @@ import CE.Docdup.Cost
   , verbatimFloor
   )
 import CE.Docdup.Jaccard (interUnion)
-import CE.Wire (Family (..), notAscending, respondWith)
+import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -73,7 +73,10 @@ violation req =
   asum
     [ asum (zipWith setShape [0 :: Int ..] ss)
     , asum (zipWith (pairRow (length ss)) [0 :: Int ..] ps)
-    , asum (zipWith (notAscending "pair") [1 :: Int ..] (zip ps (drop 1 ps)))
+    , -- ascend on the (i,j) IDENTITY PREFIX, not the whole row
+      -- (review C10: [[0,1,0],[0,1,60]] was lexicographically
+      -- ascending and judged the same pair twice with two bits)
+      ascendingOn "pair" (take 2) ps
     ]
  where
   ss = reqSets req
@@ -94,6 +97,8 @@ pairRow n p row = case row of
   [i, j, run]
     | i < 0 || j < 0 || i >= toInteger n || j >= toInteger n ->
         Just (label <> "endpoint out of range")
+    -- a segment is not a duplicate of itself (review C11)
+    | i == j -> Just (label <> "self pair")
     | run < 0 -> Just (label <> "negative verbatim run")
     | otherwise -> Nothing
   _ -> Just (label <> "malformed row (need [i,j,verbatimRun])")

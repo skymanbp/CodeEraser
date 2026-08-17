@@ -7,10 +7,11 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), respondWith, notAscending) where
+module CE.Wire (Family (..), ascendingOn, respondWith, notAscending) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
+import Data.Foldable (asum)
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family
@@ -44,3 +45,17 @@ notAscending :: (Ord a) => String -> Int -> (a, a) -> Maybe String
 notAscending what i (prev, cur)
   | prev < cur = Nothing
   | otherwise = Just (what <> " " <> show i <> ": not strictly ascending")
+
+-- | Whole-table ascending pass on a PROJECTION of each row — the
+-- identity prefix for docdup pairs (take 2), the code for scan
+-- grades (take 1), the whole row for clone pairs and graph edges
+-- (id). One zipWith, five call sites: the review-repair batch's own
+-- ratchet bite was the projection lambda cloning across families.
+ascendingOn :: (Ord b) => String -> (a -> b) -> [a] -> Maybe String
+ascendingOn what proj rows =
+  asum
+    ( zipWith
+        (\i (p, c) -> notAscending what i (proj p, proj c))
+        [1 :: Int ..]
+        (zip rows (drop 1 rows))
+    )

@@ -11,7 +11,7 @@
 pub mod candidates;
 pub mod wire;
 
-use anyhow::{Result, ensure};
+use anyhow::{Context, Result, ensure};
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -71,29 +71,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     )?;
     let runs: BTreeMap<(usize, usize), u64> =
         cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
-    // ADR-008 P1: the reported set is built from the CORE's verdict
-    // bits; the pinned mirror must agree per row or the run dies
-    // loudly — formula drift named, never a silently forked verdict
-    for &(a, b, (inter, union, v)) in &rows {
-        ensure!(
-            v == is_dup(inter, union, runs[&(a, b)]),
-            "core docdup verdict ({v}) disagrees with the pinned mirror at J {inter}/{union} run {} — formula drift (Docdup/Cost.hs vs judge/mod.rs)",
-            runs[&(a, b)]
-        );
-    }
-    let dups: Vec<crate::report::Pair<Doc>> = rows
-        .iter()
-        .filter(|&&(_, _, (_, _, v))| v)
-        .map(|&(a, b, (inter, union, _))| crate::report::Pair {
-            a: name(&segs[a]),
-            b: name(&segs[b]),
-            m: Doc {
-                inter,
-                union,
-                verbatim: runs[&(a, b)],
-            },
-        })
-        .collect();
+    let dups = reported_dups(&rows, &runs, &segs)?;
     let counts = Counts {
         segments: segs.len(),
         sent: cand.pairs.len() as u64,
@@ -104,6 +82,42 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
         dups: dups.len(),
     };
     Ok(Report { hits: dups, counts })
+}
+
+/// The reported set from the CORE's verdict bits (ADR-008 P1), with
+/// the per-row drift ensure — the pinned mirror must agree or the
+/// run dies loudly (formula drift named, never a silently forked
+/// verdict) — in one defensive pass (review C20: the runs[..]
+/// indexings were the last decode site that panicked instead of
+/// erroring on an unexpected pair echo). Split from run() at the
+/// E01 line, the t3::reported_clones shape.
+fn reported_dups(
+    rows: &[(usize, usize, (u64, u64, bool))],
+    runs: &BTreeMap<(usize, usize), u64>,
+    segs: &[candidates::SegRow],
+) -> Result<Vec<crate::report::Pair<Doc>>> {
+    let mut dups = Vec::new();
+    for &(a, b, (inter, union, v)) in rows {
+        let run = *runs
+            .get(&(a, b))
+            .with_context(|| format!("core echoed pair ({a},{b}) that was never sent"))?;
+        ensure!(
+            v == is_dup(inter, union, run),
+            "core docdup verdict ({v}) disagrees with the pinned mirror at J {inter}/{union} run {run} — formula drift (Docdup/Cost.hs vs judge/mod.rs)"
+        );
+        if v {
+            dups.push(crate::report::Pair {
+                a: name(&segs[a]),
+                b: name(&segs[b]),
+                m: Doc {
+                    inter,
+                    union,
+                    verbatim: run,
+                },
+            });
+        }
+    }
+    Ok(dups)
 }
 
 /// Report emission through the ONE shared envelope+console throat.

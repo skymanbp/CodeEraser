@@ -10,6 +10,10 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.8.0 = the review-repair minor (ADR-008 反审批): verdict replies
+/// gain the effective `weights` table and the ratchet `failed` name
+/// list; floor validates against the effective scale; self/duplicate
+/// pairs refuse; caps cover the knob tables.
 /// 2.7.0 = the scan-grading minor (ADR-008 P3): the scan/1 family —
 /// measurement rows in, graded levels and the fail bit out, the
 /// grade table echoed whole. 2.6.0 = the ratchet-unification minor
@@ -25,7 +29,7 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.7.0";
+pub const PROTO: &str = "2.8.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {
@@ -106,6 +110,17 @@ impl Link {
         let reply: Value =
             serde_json::from_str(&self.read_line()?).map_err(|e| format!("bad reply: {e}"))?;
         let expected = format!("{kind}.result");
+        // an error reply that echoes our id is a REFUSAL, not a
+        // desync: surface the core's named reason (review C4 — the
+        // knob roads put ce.toml values behind these messages, and
+        // "desync" hid every one of them)
+        if reply["type"] == "error" && reply["id"] == self.next_id {
+            return Err(format!(
+                "core refused {kind}.request: {}: {}",
+                reply["code"].as_str().unwrap_or("?"),
+                reply["message"].as_str().unwrap_or("?")
+            ));
+        }
         if reply["type"] != expected.as_str() || reply["id"] != self.next_id {
             return Err(format!("desync: expected {expected} id {}", self.next_id));
         }

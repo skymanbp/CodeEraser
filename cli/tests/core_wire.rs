@@ -88,6 +88,7 @@ fn corelink_open_and_desync() {
     assert!(link.has("graph/1"), "graph capability offered (M5-2a)");
     assert!(link.has("clone/1"), "clone capability declared (M5-3a)");
     assert!(link.has("docdup/1"), "docdup capability declared (M5-3a)");
+    assert!(link.has("scan/1"), "scan capability declared (ADR-008 P3)");
     assert!(link.has("verdict/1"), "verdict capability declared (M5-3a)");
     let ok = link
         .request("fourclass", serde_json::json!({"pairs": []}))
@@ -96,7 +97,9 @@ fn corelink_open_and_desync() {
     let err = link
         .request("mystery", serde_json::json!({}))
         .expect_err("unsupported type must not produce a result");
-    assert!(err.contains("desync"), "visible failure, got: {err}");
+    // the refusal surfaces the core's NAMED code since 2.8.0 (review
+    // C4: "desync" used to swallow every error/contract message)
+    assert!(err.contains("unknown_type"), "named refusal, got: {err}");
 }
 
 /// ADR-008 (first step + P4): EMPTY knob tables make the core judge

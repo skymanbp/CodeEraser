@@ -121,7 +121,10 @@ fn check_file(file: &FileMetrics, t: &Thresholds, out: &mut Vec<Finding>) {
         threshold,
         subject: file.path.clone(),
     };
-    if file.total_lines > t.file_lines_fail {
+    // fail 0 = no hard line exists — the published P3 contract
+    // (CE.Scan.Cost.gradeTable); the review panel caught this mirror
+    // reading 0 as "everything fails" while the core read "no line"
+    if t.file_lines_fail > 0 && file.total_lines > t.file_lines_fail {
         out.push(mk(Level::Fail, file.total_lines, t.file_lines_fail));
     } else if file.total_lines > t.file_lines_warn {
         out.push(mk(Level::Warn, file.total_lines, t.file_lines_warn));
@@ -138,7 +141,8 @@ fn check_fn(path: &str, f: &FnMetrics, t: &Thresholds, out: &mut Vec<Finding>) {
         threshold,
         subject: f.name.clone(),
     };
-    if f.lines > t.fn_lines_fail {
+    // fail 0 = no hard line (the check_file contract, same owner)
+    if t.fn_lines_fail > 0 && f.lines > t.fn_lines_fail {
         out.push(mk("fn-lines", Level::Fail, f.lines, t.fn_lines_fail));
     } else if f.lines > t.fn_lines_warn {
         out.push(mk("fn-lines", Level::Warn, f.lines, t.fn_lines_warn));

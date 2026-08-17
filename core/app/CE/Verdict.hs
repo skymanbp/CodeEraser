@@ -16,7 +16,7 @@ module CE.Verdict (respond) where
 import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
 import CE.Verdict.Join (Knobs (..), Legs (..), Pos (..), bound, judge)
 import CE.Verdict.Ratchet (Baseline (..), RatchetKnobs (..), Ratcheted (..), ratchet, ratchetBound)
-import CE.Verdict.Score (Facts (..), ScoreKnobs (..), penalties, score, scoreBound)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), effectiveWeights, penalties, score, scoreBound)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -51,6 +51,14 @@ rowTotal req =
     , length (reqCochange req)
     , length (reqCont req)
     , length (reqDisc req)
+    , -- the knob tables and the dedup pair count too (review C15:
+      -- the declared cap missed these request dimensions, so an
+      -- oversized knob table was walked in full by the checker)
+      length (reqWeights req)
+    , length (reqCeilings req)
+    , length (reqThresholds req)
+    , length (reqTolerance req)
+    , maybe 0 length (reqDedup req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -82,6 +90,10 @@ result proto parsed req =
             , "over" .= rOver r
             , "toleranceDrawn" .= rDrawn r
             , "fail" .= failBit
+            , -- the HELD condition names (review C8, 2.8.0
+              -- additive): consumers attribute the fail bit by name
+              -- instead of by construction-time coincidence
+              "failed" .= [name | (name, True) <- conds]
             ]
       , "newBaseline" .= object ["continuous" .= rNewCont r, "discrete" .= rNewDisc r]
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
@@ -89,6 +101,10 @@ result proto parsed req =
         -- defaults == ce.toml defaults — the drift check the
         -- retired mirrors never had
         "knobs" .= knobsEcho k rk jk
+      , -- the effective weight table 0..6 (review C3, 2.8.0
+        -- additive): the one knob family that had no round trip —
+        -- computed by the SAME lookup the score folded with
+        "weights" .= effectiveWeights k (reqWeights req)
       , "degraded" .= False
       ]
  where
@@ -105,7 +121,8 @@ result proto parsed req =
   dedupOver = case reqDedup req of
     Just [blocks, budget] -> blocks > budget
     _ -> False
-  failBit = any snd (failConditions r floorFail dedupOver)
+  conds = failConditions r floorFail dedupOver
+  failBit = any snd conds
 
 -- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):
 -- any held condition fails — over ceiling past tolerance, a new
@@ -254,10 +271,12 @@ tooLarge proto req =
               -- pass, said by the CORE — the degraded reply carries
               -- its own fail semantics; Rust relays, never re-derives
               "fail" .= True
+            , "failed" .= (["degraded"] :: [String])
             ]
       , "newBaseline" .= object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Value])]
       , -- defaults: no judgment ran, so no override was applied
         "knobs" .= knobsEcho scoreBound ratchetBound bound
+      , "weights" .= effectiveWeights scoreBound []
       , "degraded" .= True
       , "reason" .= ("verdict_too_large" :: String)
       ]

@@ -23,8 +23,28 @@ pub const SCAN_ROW_CAP: usize = 524288;
 /// and fail per row (fail 0 = no hard line), straight from
 /// Thresholds — the source (the P4 knob-table pattern, third table
 /// form). Code 6 (fn-naming) is the boolean row: warn 0, value 0/1.
-pub fn grade_rows(t: &Thresholds) -> Vec<[u64; 3]> {
-    vec![
+/// An incoherent ladder is refused HERE with the ce.toml keys named
+/// (review C6: the core refuses it too, but a config mistake must
+/// not surface as a wire refusal).
+pub fn grade_rows(t: &Thresholds) -> Result<Vec<[u64; 3]>> {
+    for (warn, fail, keys) in [
+        (
+            t.file_lines_warn,
+            t.file_lines_fail,
+            "file_lines_warn/file_lines_fail",
+        ),
+        (
+            t.fn_lines_warn,
+            t.fn_lines_fail,
+            "fn_lines_warn/fn_lines_fail",
+        ),
+    ] {
+        ensure!(
+            fail == 0 || fail >= warn,
+            "ce.toml [thresholds] {keys}: the fail line {fail} sits below the warn line {warn}"
+        );
+    }
+    Ok(vec![
         [0, t.file_lines_warn as u64, t.file_lines_fail as u64],
         [1, t.fn_lines_warn as u64, t.fn_lines_fail as u64],
         [2, t.params_warn as u64, 0],
@@ -32,42 +52,45 @@ pub fn grade_rows(t: &Thresholds) -> Vec<[u64; 3]> {
         [4, t.cognitive_warn as u64, 0],
         [5, t.nesting_warn as u64, 0],
         [6, 0, 0],
-    ]
+    ])
 }
 
-/// One scan.request over one link: levels come back positionally
-/// (length-locked to the rows), the echoed grade table must be the
-/// one this side sent, and a degraded reply to a client-sized
-/// request is a cap-mirror drift error, never a judgment.
+/// Chunked scan judging over ONE link (review C5: the single-request
+/// form errored out entirely past the row cap — rows grade
+/// independently, so chunking is trivially sound): levels come back
+/// positionally per chunk and concatenate, the fail bit ORs, the
+/// echoed grade table must be the one this side sent every time, and
+/// a degraded reply to a chunk-sized request is a cap-mirror drift
+/// error, never a judgment.
 pub fn judge(core: &str, rows: &[[u64; 2]], grades: &[[u64; 3]]) -> Result<(Vec<u8>, bool)> {
-    ensure!(
-        rows.len() <= SCAN_ROW_CAP,
-        "{} measurement rows exceed the scan/1 cap {SCAN_ROW_CAP}",
-        rows.len()
-    );
     let mut link = crate::lockstep::open_family(core, CAP)?;
-    let reply = link
-        .request("scan", json!({"rows": rows, "grades": grades}))
-        .map_err(anyhow::Error::msg)?;
-    ensure!(
-        reply["degraded"] == json!(false),
-        "core degraded a client-sized request ({}) — cap mirror drift (scan/wire.rs vs Scan/Cost.hs)",
-        reply["reason"]
-    );
-    let echoed: Vec<[u64; 3]> =
-        serde_json::from_value(reply["grades"].clone()).context("grades")?;
-    ensure!(
-        echoed == grades,
-        "core judged with grade table {echoed:?}, ce sent {grades:?} — one table, two owners"
-    );
-    let levels: Vec<u8> = serde_json::from_value(reply["levels"].clone()).context("levels")?;
-    ensure!(
-        levels.len() == rows.len(),
-        "core sent {} levels for {} rows",
-        levels.len(),
-        rows.len()
-    );
-    let fail = reply["fail"].as_bool().context("fail")?;
+    let (mut levels, mut fail) = (Vec::new(), false);
+    for chunk in rows.chunks(SCAN_ROW_CAP) {
+        let reply = link
+            .request("scan", json!({"rows": chunk, "grades": grades}))
+            .map_err(anyhow::Error::msg)?;
+        ensure!(
+            reply["degraded"] == json!(false),
+            "core degraded a chunk-sized request ({}) — cap mirror drift (scan/wire.rs vs Scan/Cost.hs)",
+            reply["reason"]
+        );
+        let echoed: Vec<[u64; 3]> =
+            serde_json::from_value(reply["grades"].clone()).context("grades")?;
+        ensure!(
+            echoed == grades,
+            "core judged with grade table {echoed:?}, ce sent {grades:?} — one table, two owners"
+        );
+        let chunk_levels: Vec<u8> =
+            serde_json::from_value(reply["levels"].clone()).context("levels")?;
+        ensure!(
+            chunk_levels.len() == chunk.len(),
+            "core sent {} levels for {} rows",
+            chunk_levels.len(),
+            chunk.len()
+        );
+        levels.extend(chunk_levels);
+        fail |= reply["fail"].as_bool().context("fail")?;
+    }
     Ok((levels, fail))
 }
 
@@ -80,11 +103,25 @@ mod tests {
     /// book pins the core half, this pins the assembly half.
     #[test]
     fn default_grades_carry_every_code_in_order() {
-        let rows = grade_rows(&Thresholds::default());
+        let rows = grade_rows(&Thresholds::default()).expect("coherent defaults");
         assert_eq!(rows.len(), 7);
         assert!(rows.iter().enumerate().all(|(i, r)| r[0] == i as u64));
         assert_eq!(rows[0], [0, 300, 750]);
         assert_eq!(rows[1], [1, 50, 75]);
         assert_eq!(rows[6], [6, 0, 0]);
+        // the C6 ladder guard names the ce.toml keys, and fail 0
+        // stays a legal "no hard line"
+        let raised = Thresholds {
+            file_lines_warn: 800,
+            ..Thresholds::default()
+        };
+        let err = grade_rows(&raised).expect_err("fail below warn refuses");
+        assert!(err.to_string().contains("file_lines_warn"), "{err}");
+        let unlined = Thresholds {
+            file_lines_warn: 800,
+            file_lines_fail: 0,
+            ..Thresholds::default()
+        };
+        grade_rows(&unlined).expect("fail 0 = no hard line is coherent");
     }
 }

@@ -84,3 +84,34 @@ pub fn weight_rows(s: &ScoreCfg) -> Result<Vec<[i64; 2]>> {
     out.sort_unstable();
     Ok(out)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The name→code weld is load-bearing wire vocabulary (review
+    /// C3): the axis order IS the core's Score.penalties order, so
+    /// this literal pin turns a reorder into a named red instead of
+    /// a silently re-aimed weight — with the 2.8.0 echo assert as
+    /// the runtime half of the same weld.
+    #[test]
+    fn axes_order_is_frozen_and_weight_rows_resolve_names() {
+        assert_eq!(
+            AXES,
+            [
+                "size",
+                "complexity",
+                "clone",
+                "docdup",
+                "deadcode",
+                "churn",
+                "cycle"
+            ]
+        );
+        let mut cfg = ScoreCfg::default();
+        cfg.weights.insert("clone".into(), 5);
+        assert_eq!(weight_rows(&cfg).expect("known name"), vec![[2, 5]]);
+        cfg.weights.insert("bogus".into(), 1);
+        assert!(weight_rows(&cfg).is_err(), "unknown axis name refuses");
+    }
+}

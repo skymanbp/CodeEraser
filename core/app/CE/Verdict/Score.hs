@@ -12,6 +12,7 @@ module CE.Verdict.Score
   ( Facts (..)
   , ScoreKnobs (..)
   , scoreBound
+  , effectiveWeights
   , penalties
   , score
   ) where
@@ -113,18 +114,27 @@ churnHeavy k f =
 cycleMembers :: ScoreKnobs -> Facts -> Integer
 cycleMembers k f = count [() | [_, _, _, _, size, _] <- fPos f, size >= sCycleFloor k]
 
--- | (perMille, total violation count) under the effective weights:
--- wire rows [axisCode, numerator] override; unlisted axes weigh
--- sDefaultWeight. wTotal = sum of effective weights (derived);
--- validation refuses an all-zero weight table, so the divisor is
--- never 0.
+-- | One axis's effective weight: wire rows [axisCode, numerator]
+-- override; unlisted axes weigh sDefaultWeight. ONE lookup, two
+-- readers — the score fold and the reply's echo (review C3: weights
+-- was the only knob family without a round trip; a fold-local
+-- lookup was where the echo could silently diverge from the score).
+effWeight :: ScoreKnobs -> [[Integer]] -> Integer -> Integer
+effWeight k weights code = case [w | [c, w] <- weights, c == code] of
+  (w : _) -> w
+  [] -> sDefaultWeight k
+
+-- | The full effective table 0..6 for the reply's echo.
+effectiveWeights :: ScoreKnobs -> [[Integer]] -> [[Integer]]
+effectiveWeights k weights = [[c, effWeight k weights c] | c <- [0 .. 6]]
+
+-- | (perMille, total violation count) under the effective weights;
+-- wTotal = sum of effective weights (derived); validation refuses an
+-- all-zero weight table, so the divisor is never 0.
 score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)
 score k weights pens = (perMille, totalViol)
  where
-  effWeight code = case [w | [c, w] <- weights, c == code] of
-    (w : _) -> w
-    [] -> sDefaultWeight k
-  weighted = [(effWeight code, p) | (code, p) <- pens]
+  weighted = [(effWeight k weights code, p) | (code, p) <- pens]
   wTotal = sum (map fst weighted)
   raw = sum [w * p * sViolCost k | (w, p) <- weighted]
   perMille = max 0 (sScoreScale k - raw `div` wTotal)

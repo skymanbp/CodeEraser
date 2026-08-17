@@ -16,6 +16,7 @@ module CE.Verdict.Wire
   , parseBaseline
   ) where
 
+import CE.Verdict.Cost (scoreScale)
 import CE.Verdict.Ratchet (Baseline (..))
 import CE.Verdict.Table
   ( ascendingBy
@@ -109,7 +110,7 @@ violation parsed req =
     , ceilingsOffence (reqCeilings req)
     , thresholdsOffence (reqThresholds req)
     , toleranceOffence (reqTolerance req)
-    , floorOffence (reqFloor req)
+    , floorOffence (reqThresholds req) (reqFloor req)
     , dedupOffence (reqDedup req)
     ]
  where
@@ -220,11 +221,19 @@ parseBaseline v = case AT.parse bl v of
 -- knob-table offences live in CE.Verdict.Table (the shared row
 -- grammar), split from this module at the 300-line law.
 
-floorOffence :: Maybe Integer -> Maybe String
-floorOffence Nothing = Nothing
-floorOffence (Just f)
-  | f < 0 || f > 1000 = Just "floor: outside per-mille range"
+-- | The floor is bounded by the EFFECTIVE score scale (review C7:
+-- the 1000 literal survived scoreScale becoming a knob in the same
+-- batch — a floor above the scale can never pass, and one above
+-- every reachable score would fail forever undiagnosed; both refuse
+-- by name now). The thresholds table is validated before this row
+-- of the asum, so the [6, v] scan reads checked rows only.
+floorOffence :: [[Integer]] -> Maybe Integer -> Maybe String
+floorOffence _ Nothing = Nothing
+floorOffence thrs (Just f)
+  | f < 0 || f > scale = Just "floor: outside the effective score scale"
   | otherwise = Nothing
+ where
+  scale = last (scoreScale : [v | [6, v] <- thrs])
 
 -- | ADR-008 P2: the dedup budget pair is two in-range counts or
 -- nothing — a malformed pair must never read as "under budget".

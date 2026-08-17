@@ -15,7 +15,7 @@
 module CE.Scan (respond) where
 
 import CE.Scan.Cost (gradeTable, gradeWith, scanRowCap)
-import CE.Wire (Family (..), notAscending, respondWith)
+import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -38,7 +38,10 @@ respond proto =
     Family
       { famName = "scan"
       , famId = reqId
-      , famOverCap = \req -> toInteger (length (reqRows req)) > scanRowCap
+      , -- grades count toward the cap too (review C15: the declared
+        -- ceiling missed the second request dimension)
+        famOverCap = \req ->
+          toInteger (length (reqRows req) + length (reqGrades req)) > scanRowCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req [] True
       , famJudged = \req ->
@@ -55,15 +58,8 @@ violation req =
   asum
     [ asum (zipWith rowShape [0 :: Int ..] (reqRows req))
     , asum (zipWith gradeShape [0 :: Int ..] (reqGrades req))
-    , asum
-        ( zipWith
-            (\i (p, c) -> notAscending "grade" i (take 1 p, take 1 c))
-            [1 :: Int ..]
-            (zip gs (drop 1 gs))
-        )
+    , ascendingOn "grade" (take 1) (reqGrades req)
     ]
- where
-  gs = reqGrades req
 
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of
@@ -76,9 +72,12 @@ rowShape i row = case row of
  where
   label = "row " <> show i <> ": "
 
--- | A grade override must stay a coherent two-line ladder: a hard
--- line below the warn line would make warn unreachable — refused,
--- never silently reordered.
+-- | A grade override must stay a coherent ladder: a hard line BELOW
+-- the warn line is refused, never silently reordered. fail == warn
+-- is deliberately legal (review C19 ruling): it is the single-line
+-- config — every breach grades 2 and the warn band is empty by the
+-- user's own choice, which gradeWith honors on both sides of the
+-- mirror.
 gradeShape :: Int -> [Integer] -> Maybe String
 gradeShape i row = case row of
   [code, warn, failLine]
@@ -123,7 +122,11 @@ reply proto req levels degraded =
           , "fails" .= count 2
           ]
     , "fail" .= (degraded || count 2 > 0)
-    , "grades" .= [[c, w, f] | (c, (w, f)) <- effective (reqGrades req)]
+    , -- a degraded reply echoes the DEFAULTS: its overrides were
+      -- never validated, and an unvalidated table must not be
+      -- presented as effective (review C14; the Verdict tooLarge
+      -- posture)
+      "grades" .= [[c, w, f] | (c, (w, f)) <- effective (if degraded then [] else reqGrades req)]
     , "degraded" .= degraded
     ]
       <> ["reason" .= ("scan_too_large" :: String) | degraded]

@@ -21,7 +21,11 @@ use serde_json::json;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::{Path, PathBuf};
 
-pub const SCHEMA_ID: &str = "ce.check-report/0.1.0";
+/// 0.2.0 (review C12): ratchet.fail grew degraded/dedup semantics
+/// at proto 2.5/2.6 and the ratchet object gains `failed` (held
+/// condition names) + top-level `scoreScale` — plan §7.1 demands
+/// the bump.
+pub const SCHEMA_ID: &str = "ce.check-report/0.2.0";
 
 pub struct Opts {
     pub db: Option<PathBuf>,
@@ -232,11 +236,15 @@ pub fn report_json(o: &Outcome) -> serde_json::Value {
     json!({
         "schema": SCHEMA_ID,
         "score": r.score,
+        // the denominator is a knob since P4 — a bare score was
+        // unrecoverable for consumers (review C17)
+        "scoreScale": r.knobs.get("scoreScale"),
         "axes": r.axes,
         "candidates": r.candidates,
         "ratchet": {
             "added": r.added, "removed": r.removed, "over": r.over,
             "toleranceDrawn": r.tolerance_drawn, "fail": r.fail,
+            "failed": r.failed,
         },
         "counts": {
             "files": o.files, "simPairs": o.sim_pairs, "members": o.members,
@@ -253,8 +261,10 @@ pub fn print(o: &Outcome, as_json: bool) {
     }
     let r = &o.reply;
     let axes: Vec<String> = r.axes.iter().map(|[c, p]| format!("{c}:{p}")).collect();
+    // the effective scale, never the retired /1000 literal (C17)
+    let scale = r.knobs.get("scoreScale").copied().unwrap_or(1000);
     println!(
-        "check score {}/1000 | axes {} | {} candidates",
+        "check score {}/{scale} | axes {} | {} candidates",
         r.score,
         axes.join(" "),
         r.candidates.len()

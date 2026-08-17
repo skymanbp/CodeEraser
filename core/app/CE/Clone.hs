@@ -21,7 +21,7 @@ module CE.Clone (respond) where
 import CE.Clone.Cost (cloneDecides, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
-import CE.Wire (Family (..), notAscending, respondWith)
+import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
 import Data.Array.Unboxed (elems, listArray)
 import qualified Data.ByteString.Char8 as B8
@@ -77,7 +77,7 @@ violation req =
   asum
     [ asum (zipWith treeShape [0 :: Int ..] ts)
     , asum (zipWith (pairRow (length ts)) [0 :: Int ..] ps)
-    , asum (zipWith (notAscending "pair") [1 :: Int ..] (zip ps (drop 1 ps)))
+    , ascendingOn "pair" id ps
     ]
  where
   ts = reqTrees req
@@ -113,6 +113,9 @@ pairRow :: Int -> Int -> [Int] -> Maybe String
 pairRow n p row = case row of
   [i, j]
     | i < 0 || j < 0 || i >= n || j >= n -> Just (label <> "endpoint out of range")
+    -- a unit is not a clone of itself (review C11: [0,0] passed and
+    -- judged ted 0 = certain clone)
+    | i == j -> Just (label <> "self pair")
     | otherwise -> Nothing
   _ -> Just (label <> "malformed row (need [i,j])")
  where

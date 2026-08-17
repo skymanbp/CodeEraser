@@ -49,7 +49,20 @@
 > 生效 `grades` 全表回显（Rust 钉镜像）；`degraded.reason ∈
 > {scan_too_large}` 且 degraded 自带 fail=true（P1 立场）。主体名/
 > 路径永不过线（§5.9.2）；Rust `report.rs::evaluate` 降为钉住镜像
-> （mcp/score 辅面读镜像，`ce scan` 门以整报告 ensure 逐跑证等）。
+> （mcp 辅面读镜像、score 面只复用测量不读判决——反审 C11 勘误，
+> `ce scan` 门以整报告 ensure 逐跑证等）。
+> **2.8.0**（ADR-008 反审修复批，2026-08-17）：四路独立反审（亲审+三
+> Opus 同路）20 项 confirmed 的契约面偿付——verdict.result 加性
+> `weights` 生效表（0..6 全轴，`CE.Verdict.Score.effectiveWeights`
+> 与评分折叠共用同一查找；反审 C3：weights 曾是唯一无往返的 knob 族）
+> + `ratchet.failed` 持名条件表（消费者按名归因 fail 位，反审 C8）；
+> `floor` 改按**生效 scoreScale** 校验（C7）；边界收紧同批记载：
+> clone/docdup 拒自环对（C11）、docdup 升序改 (i,j) 身份前缀（C10）、
+> 帽盖 knob/grade 表（C15）、scan degraded 回显默认表（C14）。Rust 侧
+> =corelink 上浮 error/contract 的 code+message（C4，"desync" 不再吞
+> 具名拒绝）、scan 分块（C5，行帽内分请求）、grade_rows 预校验指名
+> ce.toml 键（C6）、degraded 读真布尔（C9）、check-report schema
+> 0.2.0（C12）。收紧不升 major 之据=同机锁版客户端（挂账清零批先例）。
 
 ## 1. 信封（envelope）
 
@@ -60,7 +73,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.7.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.8.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -127,8 +140,14 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   - `verdict/1`（判决落 score 批）：request 携三信号事实表 + `baseline` 原样字节
     （Rust 不解释，ADR-008 反抢跑），2.6.0 起并可携加性 `dedup`
     `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用）；
-    result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta；
+    result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta，
+    2.8.0 起并回生效 `weights` 表与 `ratchet.failed` 持名条件表；
     `degraded.reason ∈ {verdict_too_large}`。
+  - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]]}`
+    （码 0..6，主体名/路径不过线）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
+    （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）；result 回
+    `{"levels":[0|1|2 逐行],"counts":{rows,warns,fails},"fail",生效 "grades" 全表}`；
+    `degraded.reason ∈ {scan_too_large}` 且自带 fail=true。
 
 ## 2. SemVer 协商规则
 
@@ -161,5 +180,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.7.0 | §1 所列两处常量 |
+| 协议 | 2.8.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

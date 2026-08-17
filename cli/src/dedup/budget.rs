@@ -1,0 +1,46 @@
+//! The R12 only-shrink budget gate (`ce dedup --check`), split from
+//! mod.rs when the review-repair asserts pushed it past the 300-line
+//! dogfood ceiling. The comparison is the CORE's since ADR-008 P2: a
+//! minimal verdict.request carries [blocks, budget] and the fail bit
+//! answers — Rust renders the report lines from its own numbers but
+//! never re-derives the exit code (the under-budget advisory is
+//! reporting, not judgment).
+
+use crate::config::Config;
+use anyhow::Result;
+use std::path::Path;
+use std::process::ExitCode;
+
+pub fn check(root: &Path, blocks: usize, core: &str) -> Result<ExitCode> {
+    let cfg = Config::load(root).map_err(anyhow::Error::msg)?;
+    let Some(budget) = cfg.dedup.budget else {
+        anyhow::bail!("--check needs [dedup] budget in ce.toml");
+    };
+    let req = crate::score::wire::Request::dedup_only(blocks as u64, budget as u64);
+    let reply = crate::score::wire::judge(core, &req)?;
+    anyhow::ensure!(
+        reply.degraded.is_none(),
+        "dedup check: core degraded the judgment ({:?}) — refusing to gate on it",
+        reply.degraded
+    );
+    if reply.fail {
+        // attribute by the HELD names, never by construction-time
+        // coincidence (review C8): this message claims the budget,
+        // so the fail must BE the budget condition
+        anyhow::ensure!(
+            reply.failed == ["dedup_budget"],
+            "dedup check failed on {:?}, not the budget — message would misattribute",
+            reply.failed
+        );
+        eprintln!(
+            "dedup ratchet: {blocks} clone blocks > budget {budget} — new duplication must not land"
+        );
+        return Ok(ExitCode::FAILURE);
+    }
+    if blocks < budget {
+        println!(
+            "dedup ratchet: {blocks} clone blocks < budget {budget} — ratchet the budget down"
+        );
+    }
+    Ok(ExitCode::SUCCESS)
+}

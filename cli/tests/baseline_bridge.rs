@@ -11,14 +11,8 @@
 mod common;
 
 use codeeraser::score::{self, Opts};
+use common::core_bin;
 use std::path::{Path, PathBuf};
-
-fn core_bin() -> String {
-    std::env::var("CE_CORE_BIN").expect(
-        "CE_CORE_BIN is unset — build the core and export it:\n  \
-         cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
-    )
-}
 
 fn opts(db: Option<PathBuf>, floor: Option<u32>) -> Opts {
     Opts {

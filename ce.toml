@@ -70,9 +70,15 @@ entry_globs = [
 # Scan one cascade), test/WireHarness.hs (the respond-battery
 # scaffold), lockstep::open_family (the third hand-rolled link-open),
 # and the probe_gate Target/probe stanza table-drive (-3 standing).
-# Five family-boilerplate blocks remain by architecture (per-family
-# Family literals + Req decode ladders -- the Cost-ladder class, one
-# authority per family forbids cross-family folding); net -2 banked.
+# 143 == 143 held through the review-repair batch (eleventh bite, +5
+# caught): the C10 projection lambda promoted to CE.Wire.ascendingOn
+# (five call sites), the third pasted CE_CORE_BIN expect became
+# common::core_bin, the red/green gate stanza became
+# common::gate_red_green with both gates merged into tests/gate_e2e.rs.
+# The family-boilerplate REMAINDER (per-family Family literals + Req
+# decode ladders + export lists -- the Cost-ladder class, one
+# authority per family forbids cross-family folding) shifts
+# composition batch to batch but stays inside the budget.
 # Measured after cargo fmt, as always.
 # Ratchet DOWN from here with every cleanup.
 budget = 143

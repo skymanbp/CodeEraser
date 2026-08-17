@@ -54,10 +54,16 @@ pub fn doctor_line(root: &Path) -> String {
 
 fn line(root: &Path, daemon: &str) -> String {
     // Reported tier = what PreToolUse will actually do: the promoted
-    // classes' route default ("ask") unless ce.toml overrides.
+    // classes' route default ("ask") unless ce.toml overrides. A
+    // config ERROR must not print byte-identically to a deliberate
+    // observe (review C2): the degradation names its cause here, the
+    // one line every session and every `ce doctor` shows.
     let mode = Config::load(root)
         .map(|c| c.guard.tier("ask"))
-        .unwrap_or_else(|_| "observe".into());
+        .unwrap_or_else(|e| {
+            let gist: String = e.chars().take(80).collect();
+            format!("observe (ce.toml ERROR: {gist})")
+        });
     let index = index_summary(root);
     format!(
         "[ce {} | guard: {mode} | index: {index} | daemon: {daemon}]",

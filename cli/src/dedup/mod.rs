@@ -3,6 +3,7 @@
 //! SIGMOD'03) → SQLite inverted index → clone blocks. T1/T2 only
 //! here; T3 is the M5 cold path.
 
+mod budget;
 pub mod candidates;
 pub mod groups;
 pub mod index;
@@ -56,33 +57,9 @@ pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
     let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
     emit(opts.format, &found, &summary)?;
     if opts.check {
-        return check_budget(root, summary.blocks, &opts.core);
-    }
-    Ok(ExitCode::SUCCESS)
-}
-
-/// R12 only-shrink ratchet, judged by the CORE since ADR-008 P2: a
-/// minimal verdict.request carries [blocks, budget] and the fail
-/// bit answers — Rust renders the report lines from its own numbers
-/// but never re-derives the exit code (the under-budget advisory is
-/// reporting, not judgment).
-fn check_budget(root: &Path, blocks: usize, core: &str) -> Result<ExitCode> {
-    let cfg = Config::load(root).map_err(anyhow::Error::msg)?;
-    let Some(budget) = cfg.dedup.budget else {
-        anyhow::bail!("--check needs [dedup] budget in ce.toml");
-    };
-    let req = crate::score::wire::Request::dedup_only(blocks as u64, budget as u64);
-    let reply = crate::score::wire::judge(core, &req)?;
-    if reply.fail {
-        eprintln!(
-            "dedup ratchet: {blocks} clone blocks > budget {budget} — new duplication must not land"
-        );
-        return Ok(ExitCode::FAILURE);
-    }
-    if blocks < budget {
-        println!(
-            "dedup ratchet: {blocks} clone blocks < budget {budget} — ratchet the budget down"
-        );
+        // the R12 gate lives in budget.rs (split at the 300-line
+        // dogfood ceiling when the review-repair asserts landed)
+        return budget::check(root, summary.blocks, &opts.core);
     }
     Ok(ExitCode::SUCCESS)
 }
