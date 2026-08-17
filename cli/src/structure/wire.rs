@@ -26,6 +26,10 @@ pub struct Request {
     /// from ce.toml's [structure] layout, dirId-ascending. Empty =
     /// no declaration — the reply carries no A-layer keys at all.
     pub declared: Vec<[u64; 2]>,
+    /// The S6 rollup (S3b): [dirId, dupBlocks, deadUnits] rows.
+    /// None = the table stays off the wire and axis 6 is honestly
+    /// unjudged; Some(empty) = judged clean (absence vs zero).
+    pub redundancy: Option<Vec<[u64; 3]>>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -62,6 +66,9 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     });
     if !r.declared.is_empty() {
         body["declared"] = json!(r.declared);
+    }
+    if let Some(rows) = &r.redundancy {
+        body["redundancy"] = json!(rows);
     }
     let reply = link
         .request("structure", body)

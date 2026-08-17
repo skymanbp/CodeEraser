@@ -25,6 +25,11 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.11.0 = the redundancy-axis minor (M6 S3b): structure.request
+-- gains the OPTIONAL `redundancy` [dirId, dupBlocks, deadUnits]
+-- rollup (absent = axis 6 not judged, empty = judged clean — the
+-- churn-table honesty) and knobs 9/10 (dupMin/deadMin); the reply's
+-- axes/findings carry code-6 rows only when the table rode.
 -- 2.10.0 = the declared-layout minor (M6 S3a): structure.request
 -- gains the additive `declared` [dirId, weight] rows (ce.toml's
 -- [structure] layout, owner = deepest declared ancestor) and the
@@ -56,7 +61,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.10.0"
+proto = "2.11.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

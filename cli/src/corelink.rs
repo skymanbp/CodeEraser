@@ -10,6 +10,9 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.11.0 = the redundancy-axis minor (M6 S3b): structure.request
+/// gains the optional `redundancy` rollup rows (absent = axis 6
+/// unjudged) and knobs 9/10.
 /// 2.10.0 = the declared-layout minor (M6 S3a): structure.request
 /// gains the additive `declared` [dirId, weight] rows and the reply
 /// — only when a layout is declared — the `divergence` χ² row plus
@@ -35,7 +38,7 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.10.0";
+pub const PROTO: &str = "2.11.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

@@ -9,5 +9,6 @@
 
 pub mod edges;
 pub mod judge;
+pub mod rows;
 pub mod tree;
 pub mod wire;

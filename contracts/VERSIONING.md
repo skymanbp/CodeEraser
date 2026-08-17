@@ -86,6 +86,18 @@
 > 未声明请求的应答与 2.9.0 逐字节同形（键整体缺席）；degraded 应答
 > 不携 A 层键。散度=χ²（Σ(p−q)²/q，`CE.Structure.Entropy.chi2`，
 > 全程 Data.Ratio、‰ 定标）。
+> **2.11.0**（M6 S3b S6 冗余轴，2026-08-17）：`structure.request`
+> 可选 `redundancy` 表（`[[dirId,dupBlocks,deadUnits]]`，dirId 升序；
+> **缺席=轴 6 不判、空表=判为净**——churn 表诚实缺席立场在 wire 语法
+> 的重演，Maybe 解码不设默认）+ knobs 码 9=dupMin/10=deadMin（着陆序
+> 编码，S3c 的 staleMin 预留 11）；应答 `axes`/`findings` 仅表在时携
+> 码 6 行，score 等权除以**判轴数**；knobs 回显恒 11 行（全表）。
+> 测量侧=`ce structure --deep`：dedup 块逐目录卷积（一块记入每个涉及
+> 目录一次）+ deadcode 死单元卷积，liveness degraded 时整卷积拒绝
+> （伪零不上线）；两者都是既有家族的**判决输出**，树尺度绝不重推导。
+> 同批勘误：regen 脚本 pair-9 注入缺幂等门，verdict golden 曾被重复
+> 追加（22→26 行，重放同答故 CI 未红）——文件去重回 9 对、脚本改
+> 重复请求行断言（注入块随对入档退役，P4 pair-7 先例）。
 
 ## 1. 信封（envelope）
 
@@ -96,7 +108,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.10.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.11.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -203,5 +215,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.10.0 | §1 所列两处常量 |
+| 协议 | 2.11.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

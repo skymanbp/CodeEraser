@@ -22,6 +22,7 @@ battery =
     , ("structure refusals name the offender", refusals)
     , ("an over-cap structure request degrades and FAILS", degradedFails)
     , ("the declared layout overlays by hand-computed digit", declaredOverlay)
+    , ("the redundancy axis judges present, absent and clean apart", redundancyAxis)
     ]
 
 -- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1
@@ -95,7 +96,7 @@ refusals =
     , refused (setKey "patterns" (toJSON [[0, 7, 1 :: Integer]]) wireReq) "unknown pattern code"
     , refused (setKey "conventions" (toJSON [[0, 0 :: Integer]]) wireReq) "bits outside 1..3"
     , refused (setKey "fileRefs" (toJSON [[9, 0, 1, 1 :: Integer]]) wireReq) "dir out of range"
-    , refused (setKey "knobs" (toJSON [[9, 1 :: Integer]]) wireReq) "unknown structure knob"
+    , refused (setKey "knobs" (toJSON [[11, 1 :: Integer]]) wireReq) "unknown structure knob"
     , refused (setKey "knobs" (toJSON [[3, 0 :: Integer]]) wireReq) "knob below 1"
     , refused (setKey "patterns" (toJSON [[1, 3, 4], [1, 0, 5 :: Integer]]) wireReq) "not strictly ascending"
     , refused (setKey "declared" (toJSON [[9, 1 :: Integer]]) wireReq) "declared 0: dir out of range"
@@ -137,6 +138,37 @@ overlayCases =
   , ([[1, 1]], [], [[0, 0], [2, 0]])
   , ([[1, 1], [3, 1]], [], [[0, 0], [2, 0], [3, 1]])
   ]
+
+-- | S3b, absence vs zero vs mass — all by hand. Absent table: five
+-- axes, score 990 (fixtureJudged). Empty table: six axes with
+-- [6,0], score 1000 − 50 div 6 = 992. Two flagged dirs (dir 1 one
+-- clone block, dir 2 one dead unit): raw 70, score 1000 − 11 =
+-- 989, findings gain [1,6],[2,6]. Knob levers: dupMin 2 releases
+-- dir 1, deadMin 2 releases dir 2 — either way one dir stays and
+-- the score moves to 990 (F16, both knobs live). Refusals ride the
+-- shared dir-table loop.
+redundancyAxis :: Bool
+redundancyAxis =
+  and
+    [ probeAt [] "score" == Just (toJSON (992 :: Integer))
+    , probeAt [] "axes"
+        == Just (toJSON [[0, 0], [1, 1], [2, 1], [3, 2], [4, 1], [6, 0 :: Integer]])
+    , probeAt flagged "score" == Just (toJSON (989 :: Integer))
+    , probeAt flagged "findings"
+        == Just (toJSON [[1, 1], [1, 2], [1, 4], [1, 6], [2, 6 :: Integer]])
+    , fmap (field' "score") (replyObj (setKey "knobs" (toJSON [[9, 2 :: Integer]]) redReq))
+        == Just (Just (toJSON (990 :: Integer)))
+    , fmap (field' "score") (replyObj (setKey "knobs" (toJSON [[10, 2 :: Integer]]) redReq))
+        == Just (Just (toJSON (990 :: Integer)))
+    , refusedBy respond (redAt [[9, 0, 0]]) "redundancy 0: dir out of range"
+    , refusedBy respond (redAt [[2, 1, 0], [1, 0, 1]]) "redundancy 1: not strictly ascending"
+    ]
+ where
+  flagged = [[1, 1, 0], [2, 0, 1 :: Integer]]
+  redReq = redAt flagged
+  redAt rows = setKey "redundancy" (toJSON (rows :: [[Integer]])) wireReq
+  probeAt rows key = replyObj (redAt rows) >>= \o -> field o key
+  field' k o = field o k
 
 -- | P1 posture on the newest family: one node past the cap
 -- degrades to a complete reply whose fail bit is TRUE.

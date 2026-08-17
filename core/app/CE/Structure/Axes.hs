@@ -32,6 +32,10 @@ data Facts = Facts
   -- ^ [dirId, bits]
   , fFileRefs :: [[Integer]]
   -- ^ [dirId, inside, outside, count]
+  , fRedundancy :: Maybe [[Integer]]
+  -- ^ [dirId, dupBlocks, deadUnits] — Nothing = the table never
+  -- rode the wire and axis 6 is NOT judged; Just [] = it rode
+  -- empty and the axis judged clean (absence vs zero, spoken).
   }
 
 data Knobs = Knobs
@@ -44,6 +48,8 @@ data Knobs = Knobs
   , kBigDirFloor :: Integer
   , kViolCost :: Integer
   , kScale :: Integer
+  , kDupMin :: Integer
+  , kDeadMin :: Integer
   }
 
 bound :: Knobs
@@ -58,10 +64,15 @@ bound =
     , kBigDirFloor = Cost.bigDirFloor
     , kViolCost = Cost.structViolCost
     , kScale = Cost.structScale
+    , kDupMin = Cost.dupMin
+    , kDeadMin = Cost.deadMin
     }
 
 -- | Violation count per judged axis — 0 geometry / 1 naming /
--- 2 mixing / 3 misplacement / 4 documentation.
+-- 2 mixing / 3 misplacement / 4 documentation, plus 6 redundancy
+-- when its fact table rode the wire (design §3: S5/S6 axes join as
+-- their rows arrive; an absent table is an unjudged axis, and the
+-- score divides by the JUDGED count).
 axes :: Knobs -> Facts -> [(Integer, Integer)]
 axes k f =
   [ (0, count (geometry k f))
@@ -70,6 +81,7 @@ axes k f =
   , (3, misplaced k f)
   , (4, count (docs k f))
   ]
+    <> [(6, count (redundant k rows)) | Just rows <- [fRedundancy f]]
  where
   count = toInteger . length
 
@@ -78,8 +90,20 @@ axes k f =
 findings :: Knobs -> Facts -> [[Integer]]
 findings k f =
   [ [d, axis]
-  | (axis, ds) <- [(0, geometry k f), (1, naming k f), (2, mixing k f), (4, docs k f)]
+  | (axis, ds) <-
+      [(0, geometry k f), (1, naming k f), (2, mixing k f), (4, docs k f)]
+        <> [(6, redundant k rows) | Just rows <- [fRedundancy f]]
   , d <- ds
+  ]
+
+-- | S6: directories whose clone-block or dead-unit rollup reaches
+-- its floor — duplication and orphans are the per-file families'
+-- verdicts convolved to the tree scale, never re-derived here.
+redundant :: Knobs -> [[Integer]] -> [Integer]
+redundant k rows =
+  [ d
+  | [d, dupBlocks, deadUnits] <- rows
+  , dupBlocks >= kDupMin k || deadUnits >= kDeadMin k
   ]
 
 geometry :: Knobs -> Facts -> [Integer]

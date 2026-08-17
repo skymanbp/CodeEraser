@@ -14,6 +14,8 @@ module CE.Structure.Cost
   , bigDirFloor
   , structViolCost
   , structScale
+  , dupMin
+  , deadMin
   , structNodeCap
   ) where
 
@@ -66,6 +68,19 @@ structViolCost = 10
 -- | The structure score's opening value (per-mille scale).
 structScale :: Integer
 structScale = 1000
+
+-- | S6: a directory joins the redundancy finding when its clone
+-- blocks reach this floor — one block is already this tool's whole
+-- argument, so the default floor is 1 (knob code 9, landing order:
+-- the S3c staleness knob takes 11).
+dupMin :: Integer
+dupMin = 1
+
+-- | S6: dead (unreachable) units per directory at or above this
+-- count flag the directory — orphan code is never furniture
+-- (knob code 10).
+deadMin :: Integer
+deadMin = 1
 
 -- | Node ceiling (the verdictRowCap magnitude anchor): over-cap
 -- answers a complete degraded reply that FAILS (the P1 posture).

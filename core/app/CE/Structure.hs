@@ -31,6 +31,10 @@ data StructReq = StructReq
   , reqConventions :: [[Integer]]
   , reqFileRefs :: [[Integer]]
   , reqDeclared :: [[Integer]]
+  , reqRedundancy :: Maybe [[Integer]]
+  -- ^ Maybe, not defaulted: an absent table means axis 6 is not
+  -- judged, an empty one that it judged clean — the churn-table
+  -- honesty (absence is spoken, never zero-filled).
   , reqKnobs :: [[Integer]]
   }
 
@@ -43,6 +47,7 @@ instance FromJSON StructReq where
       <*> o .:? "conventions" .!= []
       <*> o .:? "fileRefs" .!= []
       <*> o .:? "declared" .!= []
+      <*> o .:? "redundancy"
       <*> o .:? "knobs" .!= []
 
 -- | The shared cascade with this family's bindings (CE.Wire).
@@ -81,7 +86,9 @@ violation req =
     , ((2, "convention", convOk), take 1, reqConventions req)
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
     , ((2, "declared", declOk), take 1, reqDeclared req)
+    , ((3, "redundancy", noExtra), take 1, concat (reqRedundancy req))
     ]
+  noExtra _ = Nothing
   patternOk row = case row of
     [_, code, count] | code > 6 -> Just "unknown pattern code"
                      | count < 1 -> Just "count below 1"
@@ -136,7 +143,7 @@ knobsOffence rows =
  where
   one i row = case row of
     [code, v]
-      | code < 0 || code > 8 -> Just (label <> "unknown structure knob")
+      | code < 0 || code > 10 -> Just (label <> "unknown structure knob")
       | v < 1 -> Just (label <> "knob below 1")
       | otherwise -> Nothing
     _ -> Just (label <> "malformed row (need [code,value])")
@@ -157,6 +164,8 @@ knobTable =
   , (6, kBigDirFloor, \v k -> k {kBigDirFloor = v})
   , (7, kViolCost, \v k -> k {kViolCost = v})
   , (8, kScale, \v k -> k {kScale = v})
+  , (9, kDupMin, \v k -> k {kDupMin = v})
+  , (10, kDeadMin, \v k -> k {kDeadMin = v})
   ]
 
 -- | Knob rows over the Cost defaults (the effectiveKnobs pattern):
@@ -194,8 +203,14 @@ reply proto req k degraded =
  where
   facts =
     if degraded
-      then Facts [] [] [] []
-      else Facts (reqNodes req) (reqPatterns req) (reqConventions req) (reqFileRefs req)
+      then Facts [] [] [] [] Nothing
+      else
+        Facts
+          (reqNodes req)
+          (reqPatterns req)
+          (reqConventions req)
+          (reqFileRefs req)
+          (reqRedundancy req)
   declaredKeys = case declaredRows (fNodes facts) (if degraded then [] else reqDeclared req) of
     Nothing -> []
     Just (divergence, deviations) ->

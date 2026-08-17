@@ -59,6 +59,11 @@ pub struct JoinArgs {
 pub struct StructureArgs {
     #[command(flatten)]
     judge: JudgeArgs,
+    /// Also roll clone blocks and dead units up per directory and
+    /// judge the S6 redundancy axis (runs the dedup census and the
+    /// liveness judgment; absent = the axis is honestly unjudged)
+    #[arg(long)]
+    deep: bool,
 }
 
 /// `ce structure` (M6 S2): the tree-scale entropy judgment —
@@ -69,7 +74,7 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
     let as_json = json(j.format);
     emit(
         "structure",
-        || codeeraser::structure::judge::run(&or_cwd(j.root), j.db, &j.core),
+        || codeeraser::structure::judge::run(&or_cwd(j.root), j.db, &j.core, a.deep),
         |r| codeeraser::structure::judge::print(r, as_json),
     )
 }
