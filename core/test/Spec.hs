@@ -13,6 +13,7 @@ import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
 import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified CloneProps
+import qualified EntropyProps
 import qualified GraphProps
 import qualified JoinProps
 import qualified Reference
@@ -54,6 +55,7 @@ main = do
       , ReferenceJaccard.equivalence
       , GraphProps.battery
       , CloneProps.battery
+      , EntropyProps.battery
       , JoinProps.battery
       , ScanProps.battery
       , VerdictProps.battery

@@ -27,6 +27,12 @@ per-mille，scoreScale 纪律）、（b）**树相对熵**（定标有理数，�
 **定案 = C 地板 + A 覆盖**（Cost 默认 + ce.toml 覆盖的既有 knob 模式在
 树尺度的重演）。整数纪律：core 无浮点铁律不破——熵与散度全程
 `Data.Ratio`/定标整数（ReferenceJaccard 先例），发布值为 ‰ 定标。
+**S1 具体化（实现定案）**：Shannon/KL 需对数=无理数不可精确判定，故取
+同族有理闭成员——熵 = **Tsallis-2**（= Gini–Simpson，1−Σp²，两次独立
+抽取相异概率）、散度 = **χ²**（Σ(p−q)²/q，f-散度族，序语义与 KL 同向；
+观测质量落在参照零质量 bin 上 = Nothing，由 S3 指名偏差行承接而非塌成
+数字）；参照电池 = 代数 vs 逐对枚举在 125 向量穷举族上相等
+（`CE.Structure.Entropy` + `EntropyProps`）。
 
 ## 3. 信号普查与轴表（七轴，S0..S6；每轴一具名谓词一旋钮，Score.hs 体例）
 
