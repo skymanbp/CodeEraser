@@ -68,6 +68,14 @@ jobs:
           cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
 
+      # M7-P1: the ADR-007 bootstrap chain, four states (PATH
+      # fallback / fresh verified download / warm cache / tampered
+      # refusal) with the real debug ce as payload over file:// —
+      # hermetic on purpose; the https transport is curl's contract.
+      - name: Bootstrap chain e2e
+        shell: bash
+        run: bash .github/scripts/bootstrap_e2e.sh cli/target/debug/ce plugin/bin/ce.sh
+
       # GUI shell (M6 S4b): compiles on both push platforms so the
       # window can never rot silently. The webview system deps are
       # ubuntu-only (Windows ships WebView2); packaging itself stays
@@ -154,6 +162,9 @@ jobs:
           export CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo build --locked
           cargo test --locked
+      - name: Bootstrap chain e2e (macOS leg)
+        shell: bash
+        run: bash .github/scripts/bootstrap_e2e.sh cli/target/debug/ce plugin/bin/ce.sh
       - name: GUI build (macOS coverage)
         shell: bash
         working-directory: gui/src-tauri

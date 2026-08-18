@@ -42,6 +42,13 @@ SHA256SUMS；插件清单写入 pinned hash；SessionStart 下载→校验→拒
 端到端验证；air-gapped 手动放置路保留并回归。鸡蛋序设计：workflow 先产工件与校验和 →
 pinned hash 提交 → 再打正式 tag（两段式，清单永不引用未产出的 hash）。
 **验收**：draft Release 上三平台工件齐备；校验链自动验证（含故意篡改一例拒绝执行）。
+**As-built（本批）**：plugin/bin/{manifest.env,ce.sh}——清单=sh 可 source 键值对（零
+解析依赖，空 pin=air-gapped 回归按构造成立）；垫片解析序=数据目录已验证副本→带 pin
+下载+校验+原子落位→PATH 兜底，**校验失败响亮拒绝不落位不转 PATH**；hooks.json 三钩改走
+`${CLAUDE_PLUGIN_ROOT}/bin/ce.sh`；release.yml 两段式（dispatch 三平台 draft+SHA256SUMS，
+tag 段**不重建**只验 pin 后 publish——Rust/GHC 构建非位可复现，重建即假 pin）；
+bootstrap_e2e.sh **四态**电池（超合同一态：+PATH 回归）入 ci.yml 三平台，file:// 测试缝
+（https 传输属 curl 契约，如实注记）；本地 Windows 4 态 PASS + 跳校验突变体反事实红。
 
 ### P2 产品面收尾（完整 MCP + eject + 1.0 档位）
 MCP 面按拍板③扩展；`ce eject` 实现（清基线、`.ce/`、`CLAUDE_PLUGIN_DATA` 索引——§5.9.4

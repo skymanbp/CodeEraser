@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ce health --hook"
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" health --hook"
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ce probe --hook"
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" probe --hook"
           }
         ]
       }
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ce audit --hook"
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" audit --hook"
           }
         ]
       }

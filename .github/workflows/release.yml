@@ -1,0 +1,152 @@
+# Release automation (M7-P1, ADR-007). Two-phase by design
+# (docs/reviews/2026-08-17-m7-release-track.md P1): a manual
+# workflow_dispatch builds the three platforms and uploads DRAFT
+# assets + SHA256SUMS; the measured hashes then land in
+# plugin/bin/manifest.env as a commit; only then the v* tag is cut,
+# whose job re-downloads the SAME draft assets (no rebuild — Rust and
+# GHC builds are not bit-reproducible across runs, so a rebuild would
+# invalidate honest pins), verifies every pin, and publishes.
+# macOS 10x billing (D2-8) is fine here: releases are rare and
+# explicitly human-triggered.
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to draft (e.g. 0.1.0, no leading v)"
+        required: true
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            key: x86_64-windows
+            ext: .exe
+          - os: ubuntu-latest
+            key: x86_64-linux
+            ext: ""
+          - os: macos-latest
+            key: aarch64-macos
+            ext: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable # pinned by cli/rust-toolchain.toml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            cli
+            gui/src-tauri
+      - name: GUI system deps (ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev
+      - name: Build ce (release)
+        shell: bash
+        working-directory: cli
+        run: cargo build --release --locked
+      # tauri-cli compiles from source (~minutes) — acceptable at
+      # release cadence; rust-cache does not cover cargo install.
+      - name: Install tauri-cli
+        shell: bash
+        run: cargo install tauri-cli --version '^2' --locked
+      - name: Build GUI bundle
+        shell: bash
+        working-directory: gui/src-tauri
+        run: cargo tauri build
+      - name: Stage versioned artifacts
+        shell: bash
+        run: |
+          VER="${{ inputs.version }}"
+          KEY="${{ matrix.key }}"
+          EXT="${{ matrix.ext }}"
+          mkdir -p dist
+          cp "cli/target/release/ce$EXT" "dist/ce-$VER-$KEY$EXT"
+          case "$KEY" in
+            x86_64-windows)
+              cp gui/src-tauri/target/release/bundle/nsis/*-setup.exe \
+                 "dist/CodeEraser-$VER-$KEY-setup.exe" ;;
+            x86_64-linux)
+              cp gui/src-tauri/target/release/bundle/appimage/*.AppImage \
+                 "dist/CodeEraser-$VER-$KEY.AppImage" ;;
+            aarch64-macos)
+              cp gui/src-tauri/target/release/bundle/dmg/*.dmg \
+                 "dist/CodeEraser-$VER-$KEY.dmg" ;;
+          esac
+          ls -l dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.key }}
+          path: dist/*
+          if-no-files-found: error
+
+  draft:
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          merge-multiple: true
+          path: dist
+      - name: Checksums + draft release
+        shell: bash
+        run: |
+          VER="${{ inputs.version }}"
+          cd dist
+          sha256sum -- * > SHA256SUMS
+          cat SHA256SUMS
+          cd ..
+          if gh release view "v$VER" >/dev/null 2>&1; then
+            gh release upload "v$VER" dist/* --clobber
+          else
+            gh release create "v$VER" --draft \
+              --title "CodeEraser $VER" \
+              --notes "Draft build phase (M7-P1). Unsigned binaries — verify SHA256SUMS; pins land in plugin/bin/manifest.env before the tag publishes this release." \
+              dist/*
+          fi
+
+  verify-publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify draft assets against manifest pins, then publish
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VER="${TAG#v}"
+          . plugin/bin/manifest.env
+          [ "$CE_MANIFEST_VERSION" = "$VER" ] || {
+            echo "manifest version $CE_MANIFEST_VERSION != tag $VER"; exit 1; }
+          mkdir dist && cd dist
+          gh release download "$TAG" --pattern '*'
+          sha256sum -c SHA256SUMS
+          check_pin() { # $1=envkey $2=filename
+            eval "pin=\${CE_SHA256_$1_CE:-}"
+            [ -n "$pin" ] || { echo "pin $1 is EMPTY — tag phase requires complete pins"; exit 1; }
+            got=$(sha256sum "$2" | cut -d' ' -f1)
+            [ "$got" = "$pin" ] || { echo "pin $1 mismatch: expected $pin got $got"; exit 1; }
+            echo "pin $1 ok"
+          }
+          check_pin X86_64_WINDOWS "ce-$VER-x86_64-windows.exe"
+          check_pin X86_64_LINUX "ce-$VER-x86_64-linux"
+          check_pin AARCH64_MACOS "ce-$VER-aarch64-macos"
+          gh release edit "$TAG" --draft=false
