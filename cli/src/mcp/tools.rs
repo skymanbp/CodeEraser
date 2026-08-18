@@ -90,6 +90,16 @@ pub const TOOLS: &[Tool] = &[
         extra: &[],
         run: check,
     },
+    Tool {
+        name: "trend",
+        desc: "Score trajectory over mainline git history (ce.trend-report schema; \
+               points cache in the index, rebuildable from history).",
+        extra: &[
+            ("commits", "integer", "mainline window size (default 10)"),
+            ("batch", "integer", "max uncached commits measured per call"),
+        ],
+        run: trend,
+    },
 ];
 
 /// tools/list descriptor for one row — `path` rides every schema.
@@ -174,16 +184,26 @@ fn docdup(root: &Path, _a: &Value) -> Result<String> {
     judged(root, "docdup")
 }
 
+/// run → report_json → String, the arg-carrying faces' shared tail
+/// (the P4 ratchet caught structure/trend growing token twins of it).
+fn doc<T>(r: anyhow::Result<T>, to_json: impl FnOnce(&T) -> Value) -> Result<String> {
+    Ok(to_json(&r?).to_string())
+}
+
 fn join(root: &Path, a: &Value) -> Result<String> {
-    let r = crate::join::run(root, None, &core(), days(a, 14))?;
-    Ok(crate::join::report_json(&r).to_string())
+    doc(
+        crate::join::run(root, None, &core(), days(a, 14)),
+        crate::join::report_json,
+    )
 }
 
 fn structure(root: &Path, a: &Value) -> Result<String> {
     let deep = a["deep"].as_bool().unwrap_or(false);
     let d = a["days"].as_u64().map(|v| v as u32);
-    let r = crate::structure::judge::run(root, None, &core(), deep, d)?;
-    Ok(crate::structure::judge::report_json(&r).to_string())
+    doc(
+        crate::structure::judge::run(root, None, &core(), deep, d),
+        crate::structure::judge::report_json,
+    )
 }
 
 fn check(root: &Path, _a: &Value) -> Result<String> {
@@ -198,4 +218,13 @@ fn check(root: &Path, _a: &Value) -> Result<String> {
         },
     )?;
     Ok(crate::score::report_json(&o).to_string())
+}
+
+fn trend(root: &Path, a: &Value) -> Result<String> {
+    let commits = a["commits"].as_u64().map_or(10, |v| v as usize);
+    let batch = a["batch"].as_u64().map(|v| v as usize);
+    doc(
+        crate::trend::run(root, None, &core(), commits, batch),
+        crate::trend::report_json,
+    )
 }

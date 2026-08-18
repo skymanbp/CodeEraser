@@ -71,16 +71,58 @@ pub struct StructureArgs {
     days: Option<u32>,
 }
 
+#[derive(clap::Args)]
+pub struct TrendArgs {
+    #[command(flatten)]
+    judge: JudgeArgs,
+    /// Mainline window: newest N first-parent commits
+    #[arg(long, default_value_t = 30)]
+    commits: usize,
+    /// Measure at most this many uncached commits per run (absent =
+    /// all of them; the GUI passes small batches for progress)
+    #[arg(long)]
+    batch: Option<usize>,
+}
+
+/// The one flag-unpack + emit stanza for plain report families:
+/// unpack JudgeArgs, run with (root, db, core), print with as_json.
+/// structure/join were already shape twins and `ce trend` would have
+/// been the third — the P4 ratchet caught the stanza; it now exists
+/// once and each command is its one-line library call.
+fn family_cmd<R>(
+    j: JudgeArgs,
+    name: &str,
+    run: impl FnOnce(&Path, Option<PathBuf>, &str) -> anyhow::Result<R>,
+    print: impl FnOnce(&R, bool),
+) -> ExitCode {
+    let as_json = json(j.format);
+    emit(
+        name,
+        || run(&or_cwd(j.root), j.db, &j.core),
+        |r| print(r, as_json),
+    )
+}
+
+/// `ce trend` (M7-P4): the score trajectory over mainline history —
+/// cached in the index db, rebuildable from git at will.
+pub fn trend_cmd(a: TrendArgs) -> ExitCode {
+    family_cmd(
+        a.judge,
+        "trend",
+        move |r, db, c| codeeraser::trend::run(r, db, c, a.commits, a.batch),
+        codeeraser::trend::print,
+    )
+}
+
 /// `ce structure` (M6 S2): the tree-scale entropy judgment —
 /// aggregates to the core's structure/1, dense verdicts re-labelled
 /// with local names. Report-only until a score floor lands (S3+).
 pub fn structure_cmd(a: StructureArgs) -> ExitCode {
-    let j = a.judge;
-    let as_json = json(j.format);
-    emit(
+    family_cmd(
+        a.judge,
         "structure",
-        || codeeraser::structure::judge::run(&or_cwd(j.root), j.db, &j.core, a.deep, a.days),
-        |r| codeeraser::structure::judge::print(r, as_json),
+        move |r, db, c| codeeraser::structure::judge::run(r, db, c, a.deep, a.days),
+        codeeraser::structure::judge::print,
     )
 }
 
@@ -88,12 +130,11 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
 /// graph position, per-unit churn — report-only until the verdict
 /// lattice's wire hookup (3i).
 pub fn join_cmd(a: JoinArgs) -> ExitCode {
-    let j = a.judge;
-    let as_json = json(j.format);
-    emit(
+    family_cmd(
+        a.judge,
         "join",
-        || join::run(&or_cwd(j.root), j.db, &j.core, a.days),
-        |r| join::print(r, as_json),
+        move |r, db, c| join::run(r, db, c, a.days),
+        join::print,
     )
 }
 

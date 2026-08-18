@@ -137,13 +137,20 @@ pub fn seed_clone_pair(dir: &Path) {
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (T2 clone)");
 }
 
+/// Stage everything present and commit it — the one commit stanza
+/// (the P4 ratchet caught trend_rebuild's seed re-growing this trio
+/// of git calls token for token).
+pub fn commit_all(dir: &Path, msg: &str) {
+    git(dir, &["add", "."]);
+    git(dir, &["commit", "-qm", msg]);
+}
+
 /// Git repo with the T2 seed committed and b.rs (the clone) staged
 /// but uncommitted — the audit/precommit fixture shape.
 pub fn seed_git_clone_repo(dir: &Path, mode: &str) {
     seed_sources(dir, mode);
     git(dir, &["init", "-q"]);
-    git(dir, &["add", "."]);
-    git(dir, &["commit", "-qm", "seed"]);
+    commit_all(dir, "seed");
     std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs (uncommitted clone)");
     git(dir, &["add", "b.rs"]); // numstat vs HEAD sees staged new files
 }

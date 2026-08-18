@@ -66,7 +66,8 @@ fn mcp_initialize_and_list() {
         .map(|t| t["name"].as_str().expect("name"))
         .collect();
     // M7-P2 ruling ③: the full read-only report face — and nothing
-    // with a write verb (no baseline, no config, no establish).
+    // with a write verb (no baseline, no config, no establish; the
+    // trend cache is index-cache bookkeeping, not a write action).
     assert_eq!(
         names,
         [
@@ -80,6 +81,7 @@ fn mcp_initialize_and_list() {
             "join",
             "structure",
             "check",
+            "trend",
         ]
     );
     s.finish();
@@ -114,14 +116,17 @@ fn mcp_report_faces_match_library() {
     s.finish();
 }
 
-/// The ten expected report strings, each produced through the public
-/// library face the MCP adapter claims to be a transport for — rows
-/// built by one closure so the builder cannot re-grow parallel row
-/// stanzas (the census caught two builders doing exactly that; the
-/// over-50-line length is that finding's why — the 50-line split WAS
-/// the twin-stanza clone, so one long builder is the honest shape).
+/// The eleven expected report strings, each produced through the
+/// public library face the MCP adapter claims to be a transport for —
+/// rows built by one closure so the builder cannot re-grow parallel
+/// row stanzas (the census caught two builders doing exactly that;
+/// the over-50-line length is that finding's why — the 50-line split
+/// WAS the twin-stanza clone, so one long builder is the honest
+/// shape). The trend row runs library-first on purpose: it seeds the
+/// cache, so the MCP call reads the same warm rows (the Summary
+/// refresh-counter lesson, applied to the trend cache).
 fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Value, String)> {
-    use codeeraser::{churn, dedup, docdup, graph, join, report, scan, score, structure};
+    use codeeraser::{churn, dedup, docdup, graph, join, report, scan, score, structure, trend};
     let core = common::core_bin();
     let a = serde_json::json!({});
     let row = |name: &'static str, text: String| (name, a.clone(), text);
@@ -186,6 +191,11 @@ fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Valu
         row(
             "check",
             score::report_json(&score::run(dir, opts).expect("check")).to_string(),
+        ),
+        row(
+            "trend",
+            // commits=10 mirrors the MCP adapter's default exactly
+            trend::report_json(&trend::run(dir, None, &core, 10, None).expect("trend")).to_string(),
         ),
     ]
 }

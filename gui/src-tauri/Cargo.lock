@@ -340,6 +340,7 @@ dependencies = [
 name = "ce-gui"
 version = "0.0.1"
 dependencies = [
+ "anyhow",
  "codeeraser",
  "serde_json",
  "tauri",

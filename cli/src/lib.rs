@@ -21,6 +21,7 @@ pub mod report;
 pub mod scan;
 pub mod score;
 pub mod structure;
+pub mod trend;
 
 #[cfg(test)]
 pub(crate) mod testutil;

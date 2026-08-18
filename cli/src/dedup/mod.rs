@@ -69,9 +69,15 @@ pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
 /// path rides back for error messages that name the database.
 pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index, PathBuf)> {
     analyze(root, db.clone(), None, None)?;
-    let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
+    let db_path = index_db_path(root, db);
     let idx = index::Index::open(&db_path, Params::default())?;
     Ok((idx, db_path))
+}
+
+/// The ONE spelling of the default index location (a third caller —
+/// trend — would have grown a third copy of the join).
+pub(crate) fn index_db_path(root: &Path, db: Option<PathBuf>) -> PathBuf {
+    db.unwrap_or_else(|| root.join(".ce/index.db"))
 }
 
 /// The walkidx read + index.rs text conversion, verbatim — ONE decode
@@ -94,7 +100,7 @@ pub fn analyze(
     min_distinct: Option<usize>,
 ) -> Result<(pairs::Blocks, Summary)> {
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
-    let db_path = db.unwrap_or_else(|| root.join(".ce/index.db"));
+    let db_path = index_db_path(root, db);
     let p = Params::default();
     let mut idx = index::Index::open(&db_path, p)?;
     let walked = walkidx::index_all(root, &config, &mut idx)?;

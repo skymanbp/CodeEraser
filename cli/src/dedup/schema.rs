@@ -11,16 +11,20 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 
 /// Pre-release schema versioning: a mismatch drops and recreates the
 /// tables (the index is a cache — rebuilding is always safe).
-/// v6 (M5 close): idx_edge_site — edges was the only cascade child
-/// with no FK-key index, so every per-file sites delete full-scanned
-/// the edge table (review MED). v5 (M5-3b): `symbols.nth` + UNIQUE
-/// identity (F2), the unitsig structural cache and the docsegs
-/// table, struct_rev + docdup_rev in the cache key. v4: `has_tokens`
-/// on files, the graph tables, graph_rev in the key. ALTERs fold
-/// into CREATE — the wipe model has no migration path to alter along.
-const SCHEMA_VERSION: i64 = 6;
+/// v7 (M7-P4): the trend table — score points ride the SAME wipe as
+/// the fingerprints because a measurement-rev bump breaks their
+/// comparability (trend.rs header). v6 (M5 close): idx_edge_site —
+/// edges was the only cascade child with no FK-key index, so every
+/// per-file sites delete full-scanned the edge table (review MED).
+/// v5 (M5-3b): `symbols.nth` + UNIQUE identity (F2), the unitsig
+/// structural cache and the docsegs table, struct_rev + docdup_rev
+/// in the cache key. v4: `has_tokens` on files, the graph tables,
+/// graph_rev in the key. ALTERs fold into CREATE — the wipe model
+/// has no migration path to alter along.
+const SCHEMA_VERSION: i64 = 7;
 
 const SCHEMA: &str = "
+DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;
 DROP TABLE IF EXISTS unitsig;
 DROP TABLE IF EXISTS edges;
@@ -63,18 +67,25 @@ pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {
     }
     let tx = Transaction::new_unchecked(conn, TransactionBehavior::Immediate)?;
     if !schema_current(&tx, p)? {
-        tx.execute_batch(SCHEMA)?;
-        tx.execute_batch(store::GRAPH_SCHEMA)?;
-        tx.execute_batch(super::unitcache::UNITSIG_SCHEMA)?;
-        tx.execute_batch(crate::docdup::DOCSEGS_SCHEMA)?;
-        tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
-        let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
-        for (k, v) in meta_entries(p) {
-            stmt.execute((k, v))?;
-        }
-        drop(stmt);
+        rebuild(&tx, p)?;
     }
     tx.commit()?;
+    Ok(())
+}
+
+/// The wipe-and-recreate body, one DDL domain per line (split out
+/// when the trend batch pushed the caller over the complexity gate).
+fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
+    tx.execute_batch(SCHEMA)?;
+    tx.execute_batch(store::GRAPH_SCHEMA)?;
+    tx.execute_batch(super::unitcache::UNITSIG_SCHEMA)?;
+    tx.execute_batch(crate::docdup::DOCSEGS_SCHEMA)?;
+    tx.execute_batch(crate::trend::TREND_SCHEMA)?;
+    tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+    let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
+    for (k, v) in meta_entries(p) {
+        stmt.execute((k, v))?;
+    }
     Ok(())
 }
 

@@ -157,10 +157,10 @@ pub fn report_json(r: &Report) -> Value {
 }
 
 pub fn print(r: &Report, as_json: bool) {
-    if as_json {
-        println!("{}", report_json(r));
-        return;
-    }
+    crate::report::print_doc(as_json, || report_json(r), || print_console(r));
+}
+
+fn print_console(r: &Report) {
     for f in &r.files {
         println!(
             "join {} <-> {}: {} blocks / {} tokens | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {}",

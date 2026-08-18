@@ -1,7 +1,10 @@
-// CodeEraser GUI glue (M6 S4a). This file RENDERS the report
-// document — every number it shows was judged in the core and
-// measured in the codeeraser crate; nothing is derived here beyond
-// layout geometry. Axis labels mirror the design booklet §3 table.
+// CodeEraser GUI glue (M6 S4a structure screen + M7-P4 tab shell).
+// This file RENDERS the report document — every number it shows was
+// judged in the core and measured in the codeeraser crate; nothing
+// is derived here beyond layout geometry. Axis labels mirror the
+// design booklet §3 table. The trend / candidates screens live in
+// their own files (the repo's own 300-line gate applies to JS too);
+// `invoke`, `$`, `esc` and `row` here are the shared globals.
 "use strict";
 
 const invoke = window.__TAURI__.core.invoke;
@@ -14,8 +17,21 @@ const AXIS = [
 let report = null;
 let children = [];
 
+// Tab switching is pure visibility — each screen keeps its own state.
+function tabs() {
+  const all = document.querySelectorAll("#tabs .tab");
+  all.forEach((b) =>
+    b.addEventListener("click", () => {
+      all.forEach((x) => x.classList.toggle("on", x === b));
+      document.querySelectorAll(".view").forEach((v) => {
+        v.hidden = v.id !== "view-" + b.dataset.tab;
+      });
+    }));
+}
+
 async function boot() {
   $("root").value = await invoke("default_root").catch(() => "");
+  tabs();
   $("scan").addEventListener("click", scan);
   $("root").addEventListener("keydown", (e) => e.key === "Enter" && scan());
   window.addEventListener("resize", () => report && drawTreemap());

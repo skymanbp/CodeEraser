@@ -239,7 +239,9 @@ fn show(root: &Path, sha: &str, path: &str, parent: bool) -> Option<String> {
 
 /// The ONE product-side git runner (pub(crate) since M6 S3c: the
 /// structure staleness join reuses it rather than growing a second
-/// copy — the gitio lesson from the test side, applied here).
+/// copy — the gitio lesson from the test side, applied here). The
+/// error carries git's own stderr: a bare "failed" cost the trend
+/// battery a debugging cycle and would reach users via failed[].
 pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
     let out = Command::new("git")
         .arg("-C")
@@ -248,7 +250,8 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
         .output()
         .context("git")?;
     if !out.status.success() {
-        anyhow::bail!("git {args:?} failed");
+        let err = String::from_utf8_lossy(&out.stderr);
+        anyhow::bail!("git {args:?} failed: {}", err.trim());
     }
     Ok(String::from_utf8_lossy(&out.stdout).into_owned())
 }

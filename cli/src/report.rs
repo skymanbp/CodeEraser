@@ -23,6 +23,18 @@ pub struct Report<M: Serialize, C: Serialize> {
     pub counts: C,
 }
 
+/// The one --format gate for families whose Report does not fit the
+/// Pair/counts mold (join, trend): print the JSON document or run
+/// the console closure — the `if as_json {…; return}` skeleton was
+/// the P4 ratchet's cross-family token twin.
+pub fn print_doc(as_json: bool, doc: impl FnOnce() -> serde_json::Value, console: impl FnOnce()) {
+    if as_json {
+        println!("{}", doc());
+    } else {
+        console();
+    }
+}
+
 /// Print one family's report: the JSON envelope `{schema, <key>,
 /// counts}` under --format json, otherwise one templated line per
 /// hit plus the counts flattened as `key value` pairs. The hit line

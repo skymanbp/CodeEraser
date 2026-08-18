@@ -92,6 +92,19 @@ Linux 反事实（剥 Win32 复刻联集）与在仓 NOTICE 逐行同一。
 （Tier F 三腿判决）+ dedup 块清单，GUI 列表+定位跳转，判决零渗入 JS（M6 立场延续）。
 **验收**：趋势数据可从 git 历史重导出（缓存可重建性断言）；删候列表与 CLI 报告行
 集合相等（同一 report_json 喉）。
+**As-built（本批）**：trend.rs=`ce trend` 第八报告家族（ce.trend-report/0.1.0）：
+每点=该 commit 在 detached 临时 worktree 里的 score::run 绝对分（NULL baseline/无
+churn 窗/树自带 ce.toml），缓存表入 index.db **同一 wipe 生命周期（schema v7）=
+可比性契约**（测量 rev 变更即趋势点失比较性，随库同批失效）；重建断言电池
+trend_rebuild.rs 三腿=全量测→删库重measure逐行相等→纯缓存读，另 batch=1 增量算术；
+MCP 第 11 工具+对拍行（库先行暖缓存）；删候浏览=join/dedup 两 report_json 原喉
+（文档序渲染零排序零判决）；GUI 三 tab（structure/trend/candidates）+SVG 折线+
+批量续测按钮（pending 算术）；worktree 名 sha+pid+seq 三元唯一（并发同 sha 撞车
+实抓）；churn::git 报错补 stderr（贫瘠报错吞败因实抓）；棘轮第十四咬 +9 偿 8=
+gui judged()/main_judge::family_cmd/mcp doc()/report::print_doc（join 同迁）/
+commit_all+表驱动，残 1=同元数 tauri 委托构造性孪生具名入 ce.toml 161→162；
+PERF 自仓=冷回填 16.5s/点（每点全冷索引）、暖读 1.1s——GUI 默认 30 点冷≈8min，
+批量 5/次即此实证的设计。
 
 ### P5 签名/公证（已依拍板①退役为修正案）
 裁决=本轨零外部付费：签名/公证整体后置 post-1.0（计划 v2.1 落款），README 未签名明示

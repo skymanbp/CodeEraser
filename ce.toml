@@ -126,5 +126,17 @@ entry_globs = [
 # chain is the price of the design and carries its name here); the
 # staleAxis battery grew the named battery-skeleton member against
 # VerdictWireProps (+1). Measured after cargo fmt.
+# 161 -> 162 (M7-P4, fourteenth bite): the trend family (+9 caught)
+# repaid 8 at the mechanism -- gui judged() (three spawn_blocking
+# command twins folded to one throat), main_judge::family_cmd (the
+# flag-unpack+emit stanza, fourth copy caught), mcp doc() (the
+# run->report_json tail), report::print_doc (the --format gate
+# skeleton, trend AND join migrated), tests common::commit_all +
+# the batch-assert table-drive. The remaining +1 is
+# structure_report<->trend_report: two SAME-ARITY one-expression
+# tauri delegations, token-identical under T2 normalization by
+# construction -- one #[tauri::command] fn per webview command is
+# the macro's surface contract, the GUI analogue of the Haskell
+# Family-literal class. Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 161
+budget = 162

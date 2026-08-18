@@ -102,6 +102,9 @@ enum Cmd {
     /// Tree-scale structure judgment (M6): entropy, axes and
     /// findings via the core's structure/1 (report-only in S2)
     Structure(StructureArgs),
+    /// Score trajectory over mainline history (M7-P4): per-commit
+    /// absolute check score, cached in the index, rebuildable
+    Trend(main_judge::TrendArgs),
     /// ADR-006 gate (M5-3i): judge the repo against ce-baseline.json
     /// — ratchet OR --fail-under floor, either alone fails
     Check(CheckArgs),
@@ -198,6 +201,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Docdup(a) => main_judge::docdup_cmd(a),
         Cmd::Join(a) => main_judge::join_cmd(a),
         Cmd::Structure(a) => main_judge::structure_cmd(a),
+        Cmd::Trend(a) => main_judge::trend_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),

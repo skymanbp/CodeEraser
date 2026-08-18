@@ -1,31 +1,68 @@
 <!doctype html>
-<!-- CodeEraser GUI first screen (M6 S4a): renders the ONE report
-     document (ce.structure-report/0.5.0). No framework, no build
-     step — the webview layer is rendering glue by user ruling. -->
+<!-- CodeEraser GUI (M6 S4a structure screen + M7-P4 trend and
+     deletion-candidate screens): renders the report documents and
+     nothing else — no framework, no build step, judgment zero-leak
+     into JS (webview layer is rendering glue by user ruling). -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>CodeEraser — structure</title>
+  <title>CodeEraser</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <input id="root" type="text" spellcheck="false" />
-    <label><input id="deep" type="checkbox" /> deep (S6)</label>
-    <label>days <input id="days" type="number" min="1" placeholder="off" /></label>
-    <button id="scan">scan</button>
+    <nav id="tabs">
+      <button class="tab on" data-tab="structure">structure</button>
+      <button class="tab" data-tab="trend">trend</button>
+      <button class="tab" data-tab="candidates">candidates</button>
+    </nav>
     <span id="status"></span>
   </header>
-  <section id="summary" hidden>
-    <div class="stat"><span id="score"></span><small id="scale"></small></div>
-    <div class="stat" id="entropy"></div>
-    <div class="stat" id="axes"></div>
-    <div class="stat" id="divergence"></div>
-  </section>
-  <main>
-    <svg id="treemap" preserveAspectRatio="none"></svg>
-    <aside id="detail"></aside>
-  </main>
+
+  <div id="view-structure" class="view">
+    <section class="bar">
+      <label><input id="deep" type="checkbox" /> deep (S6)</label>
+      <label>days <input id="days" type="number" min="1" placeholder="off" /></label>
+      <button id="scan">scan</button>
+    </section>
+    <section id="summary" hidden>
+      <div class="stat"><span id="score"></span><small id="scale"></small></div>
+      <div class="stat" id="entropy"></div>
+      <div class="stat" id="axes"></div>
+      <div class="stat" id="divergence"></div>
+    </section>
+    <main>
+      <svg id="treemap" preserveAspectRatio="none"></svg>
+      <aside id="detail"></aside>
+    </main>
+  </div>
+
+  <div id="view-trend" class="view" hidden>
+    <section class="bar">
+      <label>commits <input id="trend-commits" type="number" min="2" value="30" /></label>
+      <button id="trend-load">load</button>
+      <button id="trend-more" hidden></button>
+    </section>
+    <main>
+      <svg id="trendchart" preserveAspectRatio="none"></svg>
+      <aside id="trend-detail"></aside>
+    </main>
+  </div>
+
+  <div id="view-candidates" class="view" hidden>
+    <section class="bar">
+      <label>days <input id="cand-days" type="number" min="1" value="14" /></label>
+      <button id="cand-load">load</button>
+    </section>
+    <main>
+      <div id="cand-list"></div>
+      <aside id="cand-detail"></aside>
+    </main>
+  </div>
+
   <script src="main.js" defer></script>
+  <script src="trend.js" defer></script>
+  <script src="candidates.js" defer></script>
 </body>
 </html>
