@@ -14,6 +14,9 @@
 //! only the measuring toolchain is today's).
 
 pub mod judge;
+mod report;
+
+pub use report::{print, report_json};
 
 use crate::score;
 use crate::{churn, dedup};
@@ -239,53 +242,4 @@ fn put(conn: &rusqlite::Connection, r: &Row) -> Result<()> {
         ),
     )?;
     Ok(())
-}
-
-pub fn report_json(r: &Report) -> Value {
-    json!({
-        "schema": SCHEMA_ID,
-        "window": r.window,
-        "pending": r.pending,
-        "rows": r.rows,
-        "failed": r.failed.iter().map(|(s, w)| json!([s, w])).collect::<Vec<_>>(),
-        "judgment": judge::judgment_json(&r.judgment),
-    })
-}
-
-pub fn print(r: &Report, as_json: bool) {
-    crate::report::print_doc(
-        as_json,
-        || report_json(r),
-        || {
-            for row in &r.rows {
-                let axes: Vec<String> = row.axes.iter().map(|[c, p]| format!("{c}:{p}")).collect();
-                println!(
-                    "trend {} {} score {}/{} | axes {}",
-                    &row.commit[..12],
-                    row.ts,
-                    row.score,
-                    row.scale,
-                    axes.join(" ")
-                );
-            }
-            for (sha, why) in &r.failed {
-                println!("trend {sha} FAILED: {why}");
-            }
-            let j = &r.judgment;
-            println!(
-                "trend verdict: {}{}{}",
-                judge::verdict_str(j),
-                j.slope_micro_per_day
-                    .map(|s| format!(" (slope {s} micro-permille/day)"))
-                    .unwrap_or_default(),
-                if j.fail { " -> FAIL" } else { "" }
-            );
-            println!(
-                "trend window: {} commits, {} measured, {} pending",
-                r.window,
-                r.rows.len(),
-                r.pending
-            );
-        },
-    );
 }

@@ -78,12 +78,13 @@ pub fn judgment_json(j: &Judgment) -> Value {
 }
 
 /// Console words for the verdict code — rendering only, the code is
-/// the core's.
+/// the core's; bilingual via the i18n switch (M8-G3b).
 pub fn verdict_str(j: &Judgment) -> &'static str {
+    use crate::i18n::t;
     match j.verdict {
-        Some(0) => "improving",
-        Some(1) => "flat",
-        Some(2) => "degrading",
-        _ => "unjudged (below minPoints)",
+        Some(0) => t("improving", "上行"),
+        Some(1) => t("flat", "持平"),
+        Some(2) => t("degrading", "恶化"),
+        _ => t("unjudged (below minPoints)", "未判（低于最小点数）"),
     }
 }

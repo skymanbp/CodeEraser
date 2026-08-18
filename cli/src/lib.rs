@@ -14,6 +14,7 @@ pub mod graph;
 pub mod guard;
 pub mod health;
 pub mod hookio;
+pub mod i18n;
 pub mod join;
 pub mod lockstep;
 pub mod mcp;

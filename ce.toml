@@ -157,5 +157,12 @@ entry_globs = [
 # 169 -> 168: the tie-legality fix (non-descending ts + the
 # zero-variance guard) reshaped the violation walker off its scan
 # twin — banked in the same batch. Measured after cargo fmt.
+# 168 -> 169 (M8-G3b, sixteenth bite): the bilingual console face.
+# The first draft's dual-println branches were one structural twin
+# PER LINE (+8 caught immediately); i18n::line — templates as data,
+# one call per line — repaid the class at the mechanism, leaving
+# exactly one boundary shift: trend's report_json + print_doc
+# wrapper re-chained against join's (the named family-boilerplate
+# member it already shares). Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 168
+budget = 169

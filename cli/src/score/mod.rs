@@ -11,7 +11,10 @@
 
 pub mod baseline;
 pub mod knobs;
+mod report;
 pub mod wire;
+
+pub use report::{print, report_json};
 
 use crate::graph::deadcode;
 use crate::join::churn_unit::UnitMap;
@@ -229,61 +232,4 @@ fn churn_rows(root: &Path, days: u32, idx: &HashMap<&str, i64>) -> Result<ChurnT
         }
     }
     Ok((churn_t, coch.into_iter().collect()))
-}
-
-pub fn report_json(o: &Outcome) -> serde_json::Value {
-    let r = &o.reply;
-    json!({
-        "schema": SCHEMA_ID,
-        "score": r.score,
-        // the denominator is a knob since P4 — a bare score was
-        // unrecoverable for consumers (review C17)
-        "scoreScale": r.knobs.get("scoreScale"),
-        "axes": r.axes,
-        "candidates": r.candidates,
-        "ratchet": {
-            "added": r.added, "removed": r.removed, "over": r.over,
-            "toleranceDrawn": r.tolerance_drawn, "fail": r.fail,
-            "failed": r.failed,
-        },
-        "counts": {
-            "files": o.files, "simPairs": o.sim_pairs, "members": o.members,
-            "collapsed": o.collapsed, "skippedSelf": o.skipped_self,
-        },
-        "degraded": r.degraded,
-    })
-}
-
-pub fn print(o: &Outcome, as_json: bool) {
-    if as_json {
-        println!("{}", report_json(o));
-        return;
-    }
-    let r = &o.reply;
-    let axes: Vec<String> = r.axes.iter().map(|[c, p]| format!("{c}:{p}")).collect();
-    // the effective scale, never the retired /1000 literal (C17)
-    let scale = r.knobs.get("scoreScale").copied().unwrap_or(1000);
-    println!(
-        "check score {}/{scale} | axes {} | {} candidates",
-        r.score,
-        axes.join(" "),
-        r.candidates.len()
-    );
-    println!(
-        "ratchet: {} added, {} removed, {} over, {} tolerance drawn -> {}",
-        r.added.len(),
-        r.removed.len(),
-        r.over.len(),
-        r.tolerance_drawn.len(),
-        if r.fail { "FAIL" } else { "pass" }
-    );
-    if o.collapsed > 0 || o.skipped_self > 0 {
-        println!(
-            "note: {} blocks collapsed into existing members, {} intra-file pairs off the sim table",
-            o.collapsed, o.skipped_self
-        );
-    }
-    if let Some(reason) = &r.degraded {
-        println!("check degraded: {reason} -> FAIL (a gate that cannot judge must not pass)");
-    }
 }
