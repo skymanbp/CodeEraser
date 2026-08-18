@@ -10,7 +10,6 @@
 use crate::eval_commit_review as review;
 use crate::eval_l2_parts::delta_moved;
 use codeeraser::fourclass::batch::BatchClassification;
-use codeeraser::fourclass::session;
 use serde_json::Value;
 
 /// Unit keys attributed to the L2-over-L1 delta lines themselves.

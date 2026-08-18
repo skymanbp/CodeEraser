@@ -10,10 +10,9 @@ pub mod cross;
 #[allow(unused_imports)]
 pub use cross::{CrossGt, cross_gt, cross_rows, extras_ledger, gt_pred};
 
-use crate::eval_support::{by_sha, gt_pairs, pair_contents, pair_lang, u64s};
-use codeeraser::corelink::Link;
+use crate::eval_support::u64s;
 use codeeraser::fourclass::MovedLine;
-use codeeraser::fourclass::batch::{BatchClassification, PairInput, classify_batch};
+use codeeraser::fourclass::batch::BatchClassification;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
