@@ -2,7 +2,7 @@
 
 > **版本** v1.9 · 2026-08-17 · 状态：🔒 已由 cc-memory 锁定
 > 本文件是本仓库唯一权威计划。修改流程：改本文件 → 重新 ccm 锁定 → 才能动代码。
-> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）；v1.9 = M6 并入结构管理器（structure/1 树尺度熵判决=GUI 首屏数据面，两拍板 2026-08-17：[reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md)）；v2.0 = M6 收口修正案（用户拍板 2026-08-17：趋势面板+删除候选浏览移 M7——趋势需历史存储设计、删候浏览宜与发布后反馈同批；Linux/macOS 实包归 M7 Releases 自动化，M6 以 Windows 实包+三平台编译门收口）；v2.1 = M7 签名后置修正案（用户拍板 2026-08-17：0.x 不购证书/账号，README 明示未签名 + SHA256 校验链路承重，签名/公证后置 post-1.0；M7 章程四拍板与切片 P1→P2→P3→P4→P6：[reviews/2026-08-17-m7-release-track.md](reviews/2026-08-17-m7-release-track.md)）。
+> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）；v1.9 = M6 并入结构管理器（structure/1 树尺度熵判决=GUI 首屏数据面，两拍板 2026-08-17：[reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md)）；v2.0 = M6 收口修正案（用户拍板 2026-08-17：趋势面板+删除候选浏览移 M7——趋势需历史存储设计、删候浏览宜与发布后反馈同批；Linux/macOS 实包归 M7 Releases 自动化，M6 以 Windows 实包+三平台编译门收口）；v2.1 = M7 签名后置修正案（用户拍板 2026-08-17：0.x 不购证书/账号，README 明示未签名 + SHA256 校验链路承重，签名/公证后置 post-1.0；M7 章程四拍板与切片 P1→P2→P3→P4→P6：[reviews/2026-08-17-m7-release-track.md](reviews/2026-08-17-m7-release-track.md)）；v2.2 = M8 成长轨立册（用户五条+三拍板 2026-08-17：IP=软著+商标〔发明专利落选→P6 零专利时序约束；商标宜先于 P6 提交防抢注〕、全量文档对齐+生成器门控、i18n en 默认+zh 查表切换、GitHub 可见度；契约正文=[reviews/2026-08-17-m8-growth-track.md](reviews/2026-08-17-m8-growth-track.md)）。
 > 本文件行数以锁定时为棘轮上界：只准变短，不准变长；更新必须就地改写。
 > 调研依据：2026-08-06 七路并行实证调研（GitHub API / 官方文档 / 论文原文），关键事实附 URL。
 
@@ -273,7 +273,7 @@ CodeEraser/
 | **M6** GUI+结构管理器（**已收口 2026-08-17，v2.0 修正案**） | structure/1 家族（树尺度熵判决：C 自参照地板+A 声明覆盖、七轴 S0-S6、判决全 Haskell 测量复用 Rust——设计册 [reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md) 四切片）+ `ce structure` JSON 树报告 + Tauri 可视化（树图首屏消费同一 schema） | 3–4 周 | 熵原语过穷举参照电池 ✓；每轴 F16 非真空前置 ✓；每片反事实杠杆+golden 手算 ✓；对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s（实测 zod 71.6k 冷 8.36s/暖 2.66s，[PERF-BUDGET.md](PERF-BUDGET.md) M6 节）✓；Windows 实包（NSIS）+三平台编译门 ✓（Linux/macOS 实件=M7） |
 | **M7** 发布 | marketplace 上架、未签名明示（签名/公证后置 post-1.0——v2.1）、Releases 自动化（**含 Linux/macOS 实包**——v2.0）、完整 MCP（只读报告面——章程拍板③）、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档、**GUI 二期：趋势面板+删除候选浏览**（v2.0 移入） | 1–2 周 | 陌生机器一条命令可用；二进制 SHA256 校验链路端到端验证；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）；文档过 `docdup` 自检；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG |
 
-**依赖**：M2←M1；M3←M2；M4←M3；M5-2←M4（churn 是三信号一腿，**串行**——A4）；M5-3A←M5-2；M5-3B←M5-3A；M6 可与 M5 并行；M7 收尾。总计粗估 4–6 个月。
+**依赖**：M2←M1；M3←M2；M4←M3；M5-2←M4（churn 是三信号一腿，**串行**——A4）；M5-3A←M5-2；M5-3B←M5-3A；M6 可与 M5 并行；M7 收尾；M8←M7（成长轨，契约在册——v2.2；G1 IP 材料可与 M7 并行，商标先于 P6）。总计粗估 4–6 个月。
 
 ## 7. 质量与测试策略
 
