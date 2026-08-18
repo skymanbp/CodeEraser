@@ -68,3 +68,96 @@ pub fn observe_append(root: &Path, session: Option<&str>, mut line: serde_json::
         let _ = writeln!(fh, "{line}");
     }
 }
+
+/// §4.4 B4 anti-bloat budgets — the guard must not itself become a
+/// context entropy source. The plan writes budgets in tokens; the
+/// hook sees chars, so the conversion rides one declared measurement
+/// constant (4 chars/token, the common English heuristic). Deep
+/// reports stay on disk (the observe feed) — the clip marker says so.
+pub const WARN_BUDGET_TOKENS: usize = 200;
+pub const STOP_BUDGET_TOKENS: usize = 400;
+const CHARS_PER_TOKEN: usize = 4;
+
+/// Clip an injected reason to its token budget, on a char boundary,
+/// with a marker pointing at the on-disk full record.
+pub fn clip(reason: &str, budget_tokens: usize) -> String {
+    let cap = budget_tokens * CHARS_PER_TOKEN;
+    if reason.len() <= cap {
+        return reason.to_string();
+    }
+    const MARK: &str = "… (clipped; full report in .ce/observe.ndjson)";
+    let mut cut = cap.saturating_sub(MARK.len());
+    while cut > 0 && !reason.is_char_boundary(cut) {
+        cut -= 1;
+    }
+    format!("{}{MARK}", &reason[..cut])
+}
+
+/// §4.4 B4 session-level suppression: has this (rule, file) already
+/// FIRED for this session? The observe feed IS the accumulator the
+/// clause's "silently accumulate" half names — probe lines count only
+/// when matches > 0 (a clean probe never warned anyone). Any read or
+/// parse failure = not warned: fail open toward REPORTING, the
+/// opposite bias from enforcement fail-open.
+pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> bool {
+    if session.is_empty() {
+        return false;
+    }
+    let Ok(feed) = std::fs::read_to_string(root.join(".ce/observe.ndjson")) else {
+        return false;
+    };
+    feed.lines()
+        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+        .any(|v| {
+            v["session_id"] == session
+                && v["event"] == rule
+                && v["file"] == file
+                && (rule != "probe" || v["matches"].as_u64().unwrap_or(0) > 0)
+        })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// B4 acceptance half 1: the clip is identity under budget, caps
+    /// at budget with the on-disk pointer over it, and never splits a
+    /// multi-byte char (the marker itself starts with one).
+    #[test]
+    fn clip_caps_at_budget_and_respects_char_boundaries() {
+        assert_eq!(clip("short", WARN_BUDGET_TOKENS), "short");
+        let long = "预算".repeat(400); // 800 chars, 2400 bytes
+        let clipped = clip(&long, WARN_BUDGET_TOKENS);
+        assert!(clipped.len() <= WARN_BUDGET_TOKENS * CHARS_PER_TOKEN);
+        assert!(clipped.ends_with("observe.ndjson)"));
+        assert!(clipped.chars().count() > 0); // boundary-safe slice
+    }
+
+    /// B4 acceptance half 2: one warn per (rule, file) per session —
+    /// a clean probe line never counts, a fired one does, and other
+    /// files, sessions and rules stay unsuppressed.
+    #[test]
+    fn already_warned_is_per_session_rule_and_file() {
+        let dir = std::env::temp_dir().join(format!("ce-b4-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).expect("mkdir");
+        let line = |m: u64| serde_json::json!({"event": "probe", "file": "a.rs", "matches": m});
+        observe_append(&dir, Some("s1"), line(0));
+        assert!(!already_warned(&dir, "s1", "probe", "a.rs"), "clean probe");
+        observe_append(&dir, Some("s1"), line(2));
+        assert!(already_warned(&dir, "s1", "probe", "a.rs"), "fired probe");
+        assert!(
+            !already_warned(&dir, "s2", "probe", "a.rs"),
+            "other session"
+        );
+        assert!(!already_warned(&dir, "s1", "probe", "b.rs"), "other file");
+        assert!(!already_warned(&dir, "s1", "budget", "a.rs"), "other rule");
+        observe_append(
+            &dir,
+            Some("s1"),
+            serde_json::json!({"event": "budget", "file": "a.rs"}),
+        );
+        assert!(already_warned(&dir, "s1", "budget", "a.rs"), "budget fired");
+        assert!(!already_warned(&dir, "", "probe", "a.rs"), "no session");
+        std::fs::remove_dir_all(&dir).ok();
+    }
+}

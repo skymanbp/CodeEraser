@@ -83,6 +83,13 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     };
     let started = std::time::Instant::now();
     let matches = probe_matches(root, file_path, content);
+    // B4 suppression consults the feed BEFORE this event lands in it;
+    // it shapes the warn INJECTION only — deny/ask are enforcement,
+    // not context bloat, and repeat every time they hold
+    let enforced = matches!(mode.as_str(), "deny" | "ask");
+    let seen =
+        |rule| !enforced && crate::hookio::already_warned(root, &env.session_id, rule, file_path);
+    let (dup_seen, budget_seen) = (seen("probe"), seen("budget"));
     observe_log(
         root,
         ProbeEvent {
@@ -96,12 +103,15 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let mut reasons = Vec::new();
     if let Some(ms) = &matches
         && !ms.is_empty()
+        && !dup_seen
     {
         reasons.push(reason(file_path, ms));
     }
     if let Some((lines, why)) = cfg.and_then(|c| budget_breach(root, &c, env)) {
         budget_log(root, env, &mode, lines);
-        reasons.push(why);
+        if !budget_seen {
+            reasons.push(why);
+        }
     }
     emit_reasons(&mode, reasons, &broken);
     ExitCode::SUCCESS
@@ -126,6 +136,13 @@ fn emit_reasons(mode: &str, mut reasons: Vec<String>, broken: &Option<String>) {
     } else {
         emit_decision(mode, &reasons.join(" "));
     }
+}
+
+/// §4.4 B4: every injected reason rides the warn token budget (the
+/// clip marker points at the observe feed, where the full record
+/// already lives). Applied at the one emission throat.
+fn clipped(reason: &str) -> String {
+    crate::hookio::clip(reason, crate::hookio::WARN_BUDGET_TOKENS)
 }
 
 /// §4.2 step 2, second promoted rule class: the write would leave the
@@ -248,7 +265,7 @@ fn emit_decision(mode: &str, reason: &str) {
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",
             "permissionDecision": decision,
-            "permissionDecisionReason": reason,
+            "permissionDecisionReason": clipped(reason),
         }
     });
     println!("{payload}");

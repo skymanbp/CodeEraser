@@ -95,7 +95,13 @@ fn audit(root: &Path, session: &str) -> ExitCode {
     {
         let payload = serde_json::json!({
             "decision": "block",
-            "reason": reason(net_loc, dups),
+            // §4.4 B4: the Stop summary rides its own 400-token
+            // budget (precommit prints for a terminal, not a
+            // context window, and stays unclipped)
+            "reason": crate::hookio::clip(
+                &reason(net_loc, dups),
+                crate::hookio::STOP_BUDGET_TOKENS,
+            ),
         });
         println!("{payload}");
     }
