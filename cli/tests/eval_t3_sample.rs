@@ -26,13 +26,6 @@ const BACKUP: u64 = 20;
 const RANK_DOMAIN: &str = "ce-t3-pair-v1";
 const AUDIT_DOMAIN: &str = "ce-t3-audit-v1";
 
-/// One pool row, already carrying everything an auditor needs.
-struct PoolRow {
-    row: Value,
-    rank: String,
-    lang: String,
-}
-
 /// The domain-separated hash of one row under `domain` — the shared
 /// identity_hash throat over this family's field order; the ONE
 /// derivation verify() repeats from the frozen fields (G4).
@@ -43,49 +36,6 @@ fn row_hash(domain: &str, row: &Value) -> String {
         &[
             "corpus", "tip", "a_path", "a_key", "a_nth", "b_path", "b_key", "b_nth", "source",
         ],
-    )
-}
-
-/// Walk one corpus's frozen candidate doc + live pass into pool rows,
-/// asserting the digest anchor before a single row enters the pool.
-fn corpus_pool(name: &Option<String>) -> (String, Vec<PoolRow>) {
-    let a = eval_support::anchored_candidates(name);
-    let (corpus, tip, c) = (a.corpus, a.tip, a.candidates);
-    let rows = c
-        .pairs
-        .iter()
-        .map(|p| {
-            let row = sample_row(&c, p, &corpus, &tip);
-            PoolRow {
-                rank: row_hash(RANK_DOMAIN, &row),
-                lang: row["lang"].as_str().expect("lang").to_string(),
-                row,
-            }
-        })
-        .collect();
-    (corpus, rows)
-}
-
-/// The per-language pick: `take` rows into main, the next BACKUP
-/// rows into that language's backup — global rank order, never
-/// crossing languages (denominator top-up, floors protected).
-fn pick(pool: &[PoolRow], lang: &str, take: usize) -> (Vec<Value>, Vec<Value>) {
-    let ranked: Vec<&PoolRow> = pool.iter().filter(|r| r.lang == lang).collect();
-    assert!(
-        ranked.len() >= take + BACKUP as usize,
-        "{lang}: pool too small for quota + backup"
-    );
-    let with_rank = |r: &&PoolRow| {
-        let mut row = r.row.clone();
-        row["rank"] = json!(r.rank);
-        row
-    };
-    (
-        ranked[..take].iter().map(with_rank).collect(),
-        ranked[take..take + BACKUP as usize]
-            .iter()
-            .map(with_rank)
-            .collect(),
     )
 }
 
@@ -109,57 +59,6 @@ fn quotas(pool_by: &BTreeMap<String, u64>) -> BTreeMap<String, u64> {
         *q.get_mut(*lang).expect("lang") += 1;
     }
     q
-}
-
-#[test]
-#[ignore] // needs all five corpus repositories
-fn generate_t3_sample() {
-    let mut pool: Vec<PoolRow> = Vec::new();
-    let mut digests: BTreeMap<String, Value> = BTreeMap::new();
-    for name in FROZEN_CORPORA {
-        let name = name.map(str::to_string);
-        let (corpus, rows) = corpus_pool(&name);
-        let doc = load(&eval_doc(&doc_stem("t3-candidates", &name)));
-        digests.insert(corpus, doc["pairs_sha256"].clone());
-        pool.extend(rows);
-    }
-    let mut pool_by: BTreeMap<String, u64> = BTreeMap::new();
-    for r in &pool {
-        *pool_by.entry(r.lang.clone()).or_insert(0) += 1;
-    }
-    pool.sort_by(|x, y| x.rank.cmp(&y.rank));
-    let q = quotas(&pool_by);
-    let (mut main, mut backup): (Vec<Value>, BTreeMap<&str, Vec<Value>>) =
-        (Vec::new(), BTreeMap::new());
-    for lang in LANGS {
-        let (m, b) = pick(&pool, lang, q[lang] as usize);
-        main.extend(m);
-        backup.insert(lang, b);
-    }
-    // auditors see audit order, never rank order (independent domain)
-    main.sort_by_key(|r| row_hash(AUDIT_DOMAIN, r));
-    let doc = eval_support::sample_doc(
-        "ce.eval-t3-sample/1.0.0",
-        (RANK_DOMAIN, AUDIT_DOMAIN),
-        "hash-ranked sample over the five frozen candidate universes: \
-         rank = sha256(rank domain | corpus | tip | pair identity | \
-         source), no RNG, no clock; 100 main rows = floor 15 per unit \
-         language (four — markdown has no units by design) + 40 seats \
-         by largest remainder over pool shares; backup 20 per language \
-         continues each language's rank order and never crosses \
-         languages (denominator top-up, floors protected). Pool \
-         membership is digest-bound to the t3-candidates docs; rows \
-         are listed in the independent audit-domain order.",
-        json!({
-            "pool_by_lang": pool_by,
-            "pool_digests": digests,
-            "quotas": q,
-            "main": main,
-            "backup": backup,
-        }),
-    );
-    let path = eval_doc("t3-sample");
-    write_doc(&path, &doc, &format!("{path} written"));
 }
 
 /// CI gate, no git: every stored rank re-derives from its own row

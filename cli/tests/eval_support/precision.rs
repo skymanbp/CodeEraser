@@ -69,26 +69,6 @@ pub fn assert_overall_precision(
     );
 }
 
-/// G8/T-G8: an existing doc's attention ledger is frozen — growth
-/// needs the family's explicit blessing variable.
-pub fn assert_ledger_frozen(
-    path: &str,
-    current: &[Value],
-    attention: &dyn Fn(&[Value]) -> BTreeSet<String>,
-    accept_env: &str,
-) {
-    let Ok(old) = std::fs::read_to_string(path) else {
-        return;
-    };
-    let old: Value = serde_json::from_str(&old).expect("old doc");
-    let frozen = attention(old["rows"].as_array().expect("rows"));
-    let grown: Vec<String> = attention(current).difference(&frozen).cloned().collect();
-    assert!(
-        grown.is_empty() || std::env::var(accept_env).as_deref() == Ok("1"),
-        "attention ledger grew ({grown:?}) — regressions need {accept_env}=1"
-    );
-}
-
 /// One count into a string-keyed tally — the map-accumulation throat
 /// the summarizers share (an amount of 1 is the common case).
 pub fn tally_add(map: &mut BTreeMap<String, u64>, key: &str, n: u64) {
@@ -173,15 +153,6 @@ pub fn tally_field(rows: &[Value], field: &str, map: &mut BTreeMap<String, u64>)
     for r in rows {
         tally_add(map, r[field].as_str().expect(field), 1);
     }
-}
-
-/// The ranks whose verdict is "wrong" — the attention set every
-/// family's frozen ledger (G8/T-G8/D8) watches.
-pub fn wrong_ranks(rows: &[Value]) -> BTreeSet<String> {
-    rows.iter()
-        .filter(|r| r["verdict"] == "wrong")
-        .map(|r| r["rank"].as_str().expect("rank").to_string())
-        .collect()
 }
 
 /// The G6/T-G6 discipline: the stored verdict must equal the one its

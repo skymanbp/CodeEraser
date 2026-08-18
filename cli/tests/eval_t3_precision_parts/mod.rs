@@ -99,12 +99,3 @@ fn theta_table(rows: &[Value]) -> Value {
     }
     json!(table)
 }
-
-/// The T-G8 attention set: ranks of rows scored wrong (the shared
-/// frozen-ledger gate consumes this via eval_support::precision).
-pub fn wrong_ranks(rows: &[Value]) -> std::collections::BTreeSet<String> {
-    rows.iter()
-        .filter(|r| r["verdict"] == "wrong")
-        .map(|r| r["rank"].as_str().expect("rank").to_string())
-        .collect()
-}

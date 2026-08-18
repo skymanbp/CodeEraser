@@ -17,94 +17,14 @@ mod eval_graph_precision_parts;
 mod eval_support;
 
 use eval_graph_precision_parts as parts;
-use eval_support::{
-    assert_identity_echo, eval_doc, generated_from, graph_corpus, load, review_doc, str_pairs,
-    write_doc,
-};
+use eval_support::{assert_identity_echo, review_doc, str_pairs};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
-
-fn doc_stem(name: Option<&str>) -> String {
-    match name {
-        Some(n) => format!("graph-precision-{n}"),
-        None => "graph-precision".into(),
-    }
-}
-
-fn slice_stem(name: Option<&str>) -> String {
-    match name {
-        Some(n) => format!("graph-slice-{n}"),
-        None => "graph-slice".into(),
-    }
-}
 
 /// Sample rows of one corpus, in frozen sample order (the shared
 /// of_corpus filter under the graph sample's key).
 fn corpus_rows<'a>(sample: &'a Value, corpus_key: &str) -> Vec<&'a Value> {
     eval_support::of_corpus(sample["rows"].as_array().expect("rows"), corpus_key)
-}
-
-/// Ranks whose verdict demands attention (everything but correct /
-/// external_ok) — the frozen ledger of G8: growth needs blessing
-/// (the shared eval_support ledger gate consumes this).
-fn attention(rows: &[Value]) -> BTreeSet<String> {
-    rows.iter()
-        .filter(|r| !matches!(r["verdict"].as_str(), Some("correct") | Some("external_ok")))
-        .map(|r| r["rank"].as_str().expect("rank").to_string())
-        .collect()
-}
-
-#[test]
-#[ignore] // needs the corpus repository (git show at the pinned tip)
-fn generate_graph_precision() {
-    let (name, tip) = graph_corpus();
-    let corpus_key = name.clone().unwrap_or_else(|| "self".into());
-    let slice = load(&eval_doc(&slice_stem(name.as_deref())));
-    assert_eq!(
-        slice["corpus"]["tip"].as_str(),
-        Some(tip.as_str()),
-        "pinned tip disagrees with the frozen slice — wrong tree never scores"
-    );
-    let sample = load(&eval_doc("graph-sample"));
-    let review = review_doc(&corpus_key);
-    let truths = str_pairs(&review, "rows", "rank", "truth");
-    let mat = parts::materialize(&corpus_key, &tip, &slice);
-    let scope = mat.scope();
-    let rows: Vec<Value> = corpus_rows(&sample, &corpus_key)
-        .into_iter()
-        .map(|r| {
-            let rank = r["rank"].as_str().expect("rank");
-            let truth = truths
-                .get(rank)
-                .unwrap_or_else(|| panic!("{rank}: sampled but unaudited"));
-            parts::judge_row(r, truth, &scope)
-        })
-        .collect();
-    let path = eval_doc(&doc_stem(name.as_deref()));
-    eval_support::assert_ledger_frozen(&path, &rows, &attention, "CE_ACCEPT_GRAPH");
-    let doc = json!({
-        "schema": "ce.eval-graph-precision/1.0.0",
-        "corpus": {"name": name, "tip": tip},
-        "generated_from": generated_from(),
-        "method": "the frozen graph-sample rows of this corpus, resolved by the \
-                   shipped ladder against the pinned tree materialized under a \
-                   scratch root (every in-scope file sha-checked against the \
-                   frozen slice — a polluted materialization never scores, G12), \
-                   judged against the frozen audit truth. An in-corpus answer \
-                   matches exactly, or at file level when the resolver made no \
-                   unit claim (GT definition units are extra precision; symbol \
-                   binding is the future R5 stance). External is an answer — \
-                   external on an in-corpus truth is wrong, never missed. The \
-                   universe ledger runs the ladder over EVERY site of the frozen \
-                   universe: its resolution rate is a recall CEILING — constructs \
-                   the detector cannot see are in no denominator. Cut rule \
-                   (pre-registered): publish the full per-rung table; the loosest \
-                   minRung clearing 0.90 is the release knob.",
-        "summary": parts::rescore(&rows),
-        "universe": parts::universe_ledger(&mat),
-        "rows": rows,
-    });
-    write_doc(&path, &doc, &format!("{path} written"));
 }
 
 /// One judged row against its sampled identity and frozen truth:

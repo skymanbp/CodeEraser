@@ -57,7 +57,7 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
 /// cleanups are this tool's whole point and retire BY NAME, never
 /// silently. A listed id back in the baseline = a stale entry,
 /// refused — the ledger can only ever describe the present.
-const RETIRED: [(u64, &str); 3] = [
+const RETIRED: [(u64, &str); 6] = [
     (
         5157928330096415643,
         "ADR-008 P3 tenth bite: probe_gate.rs Target/probe stanzas table-driven",
@@ -69,6 +69,18 @@ const RETIRED: [(u64, &str); 3] = [
     (
         17525617435279245638,
         "ADR-008 P3 tenth bite: probe_gate.rs Target/probe stanzas table-driven",
+    ),
+    (
+        9291417281997523150,
+        "M7.5 deep-thin: dormant generator/replay halves excised (EVAL-SET amendment)",
+    ),
+    (
+        11389896668359803242,
+        "M7.5 deep-thin: dormant generator/replay halves excised (EVAL-SET amendment)",
+    ),
+    (
+        11980760446779025474,
+        "M7.5 deep-thin: dormant generator/replay halves excised (EVAL-SET amendment)",
     ),
 ];
 

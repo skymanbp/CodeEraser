@@ -227,22 +227,3 @@ pub fn sample_doc(schema: &str, domains: (&str, &str), method: &str, body: Value
     }
     doc
 }
-
-/// Write one corpus's verbatim audit assembly under
-/// .ce-eval/analysis/ (machine-local, never committed) and report it.
-pub fn write_assembly(family: &str, corpus: &str, tip: &str, note: &str, rows: Vec<Value>) {
-    let path = format!(
-        "{}/analysis/{family}-audit-assembly-{corpus}.json",
-        super::out_dir().display()
-    );
-    let doc = json!({"corpus": corpus, "tip": tip, "note": note, "rows": rows});
-    std::fs::write(
-        &path,
-        serde_json::to_string_pretty(&doc).expect("ser") + "\n",
-    )
-    .expect(&path);
-    println!(
-        "{corpus}: {} rows assembled -> {path}",
-        doc["rows"].as_array().expect("rows").len()
-    );
-}

@@ -13,21 +13,6 @@ use codeeraser::fourclass::batch::BatchClassification;
 use codeeraser::fourclass::session;
 use serde_json::Value;
 
-/// The batch relocations in the session report shape, named by the
-/// gt pair paths.
-pub fn relocations_json(batch: &BatchClassification, gt_rows: &[Value]) -> Value {
-    let pairs: Vec<session::PathPair> = gt_rows
-        .iter()
-        .map(|gp| {
-            (
-                gp["before"].as_str().map(String::from),
-                gp["after"].as_str().map(String::from),
-            )
-        })
-        .collect();
-    session::report_json(batch, &pairs)["relocations"].clone()
-}
-
 /// Unit keys attributed to the L2-over-L1 delta lines themselves.
 pub fn moved_units(l1: &BatchClassification, l2: &BatchClassification) -> Vec<String> {
     let mut out: Vec<String> = Vec::new();

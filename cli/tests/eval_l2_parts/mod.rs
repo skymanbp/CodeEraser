@@ -20,74 +20,10 @@ use std::collections::BTreeMap;
 pub type Texts = Vec<(String, String, Value)>;
 pub type FileKey = (String, String); // (side, file)
 
-/// (before text, after text, gt pair row) per pair, in slice order.
-pub fn pair_texts(sha: &str, gt_rows: &[Value]) -> Texts {
-    gt_rows
-        .iter()
-        .map(|gp| {
-            let (before, after) = pair_contents(sha, gp);
-            (before, after, gp.clone())
-        })
-        .collect()
-}
-
-/// classify_batch inputs for a batch's texts, in slice order.
-pub fn pair_inputs(texts: &Texts) -> Vec<PairInput<'_>> {
-    texts
-        .iter()
-        .map(|(before, after, gp)| PairInput {
-            before,
-            after,
-            lang: pair_lang(gp),
-        })
-        .collect()
-}
-
-pub fn run_batch(texts: &Texts, link: Option<&mut Link>) -> BatchClassification {
-    let out = classify_batch(&pair_inputs(texts), link);
-    for (c, (_, _, gp)) in out.pairs.iter().zip(texts) {
-        assert!(!c.degraded, "diff cap tripped on {gp}");
-    }
-    out
-}
-
-/// A commit's batch texts from its GT pairs (labels else prelabels).
-pub fn commit_texts(s: &Value, labels: &Value) -> (String, Texts) {
-    let sha = s["sha"].as_str().expect("sha");
-    let by = by_sha(labels);
-    (sha.into(), pair_texts(sha, gt_pairs(s, &by)))
-}
-
-/// Both live runs (pure L1, linked L2) of a commit, degraded refused.
-pub fn live_pair(
-    sha: &str,
-    texts: &Texts,
-    link: &mut Link,
-) -> (BatchClassification, BatchClassification) {
-    let l1 = run_batch(texts, None);
-    let l2 = run_batch(texts, Some(link));
-    assert!(l2.degraded.is_none(), "{sha}: degraded {:?}", l2.degraded);
-    (l1, l2)
-}
-
 /// Whether a labels row records any cross-file moved lines.
 pub fn has_cross(row: Option<&&Value>) -> bool {
     let n = |l: &&Value, k: &str| l["cross_file"][k].as_u64().unwrap();
     row.map(|l| n(l, "out") + n(l, "in") > 0).unwrap_or(false)
-}
-
-pub fn counts_of(b: &BatchClassification) -> Vec<[u64; 4]> {
-    b.pairs
-        .iter()
-        .map(|c| {
-            [
-                c.counts.added_novel as u64,
-                c.counts.added_moved as u64,
-                c.counts.removed_deleted as u64,
-                c.counts.removed_moved as u64,
-            ]
-        })
-        .collect()
 }
 
 /// The side's text for a (side, file) key within one batch.

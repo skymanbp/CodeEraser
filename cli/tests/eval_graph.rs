@@ -19,28 +19,11 @@ use eval_support::*;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
-const METHOD: &str = "site universe of the pinned tree: every in-scope file \
-    (canonical extensions minus machine-local memory/; the crosscheck \
-    islands deliberately in scope as the negative control), inventoried \
-    with the sha256 of the text the detector saw and its resolution-free \
-    per-kind site counts (graph::sites — grammar kind tables only, no \
-    path ever consulted). Frozen before any resolver exists; the \
-    falsification constants are pre-registered here, before any \
-    measurement.";
-
 /// Pre-registered falsification constants (design §5), one binding
 /// for generator AND gate — duplicated literals were the exact
 /// throat-drift shape this file polices elsewhere (Opus review).
 fn constants() -> Value {
     json!({"min_per_lang": 15, "r0_share_trigger": 0.80})
-}
-
-/// One inventory row: content identity (sha256 of the utf8-lossy
-/// text the detector saw — the instrument's identity, not git's blob
-/// id) plus per-kind site counts.
-fn file_row(path: &str, code: &str, content: &str) -> Value {
-    let kinds = kind_counts(&detect(content, lang_of(code)));
-    json!({"path": path, "sha256": content_sha(content), "lang": code, "sites": kinds})
 }
 
 /// Re-derivable from the rows alone — the CI gate re-runs this exact
@@ -57,16 +40,6 @@ fn summarize(files: &[Value]) -> Value {
         }
     }
     json!({"files": files.len(), "total_sites": total, "sites_by": by})
-}
-
-#[test]
-#[ignore] // needs the corpus repository (git show at the pinned tip)
-fn generate_graph_slice() {
-    let (name, tip) = graph_corpus();
-    let (walked, excluded) = walk_tree(&tip);
-    let parts = universe_parts(&walked, excluded, file_row, constants(), summarize);
-    let doc = universe_doc("ce.eval-graph-slice/1.0.0", METHOD, &name, &tip, parts);
-    write_universe("graph-slice", &name, &doc);
 }
 
 /// CI gate, no git, every frozen slice: the shared envelope (summary

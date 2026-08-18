@@ -291,10 +291,10 @@ zod 22（拍板 2026-08-12：**分母 ≥5 才设每语料门**=ripgrep/zod，�
 dynamic/ambiguous/none 零 GT = 2f fixture 面补；rank 极小性门不验——冻结
 100 由反审独立重导逐字节认证（[2cd 归档](reviews/2026-08-12-m5-2cd-opus-review.md)）。
 
-## 复跑 / 校验
+## 复跑 / 校验 — M7.5 深度瘦身修正案（2026-08-18，用户拍板 ccm #1152）
 
-```
-cd cli && CE_EVAL_TRANSCRIPTS=<transcripts root> CE_EVAL_FEEDS=<projects root> CE_EVAL_FROZEN_AT=2026-08-10T15:24:50 cargo test --test eval_extract -- --ignored
-```
-
-重建 `.ce-eval/` 重写 manifest，diff 为空即完整复现；依赖本机 transcripts 留存，清理后仅 manifest 哈希可证（样本备份归用户）。
+**休眠仪器全退役，冻结门全保留。** 本册验收数字与冻结工件不变；变化的是复核方式：每次 push 在 CI 跑的活门（各族 `*_consistent`/`precision_contract_and_refusals`/audit 双射/recall 回归地板/T-G 反事实）继续钉住在册冻结 JSON；只能手动跑、依赖本机 `.ce-eval`/transcripts 的 `#[ignore]` 重放与生成器整体退出工作树，复核与再生成走 git 历史（本修正案提交的父 commit=最后完整快照）。
+退役（整文件）：`eval_extract/`（M4 冻结驱动+freeze/scan，manifest 哈希链封册）、`eval_prelabel.rs`、`fpr_replay.rs`（FPR-REPLAY.md 封册为最终记录）、`perf_budget.rs`（PERF-BUDGET.md 同）、`crosscheck_rca.rs`（crosscheck fixtures **保留**=graph 宇宙设计内负对照，活门在读）、`regen_tables.rs`（表变更时从历史复活再冻结）。
+退役（文件内）：22 个混载仪器的 `generate_*`/scout/重放半场共 27 fn+专属支援件约 77 项（零引用不动点清扫；编译器+全量测试双证活门无损）。
+冻结工件退役：仅 `manifest-v1.json`（6.6k 行，M4 抽取清单——其仪器链整体封册后读者归零）。首拟名单曾含 t3-universe 四语料件+t3-candidates-v1，**活门 `t3_candidates_consistent` 当场红回**——`each_frozen_doc` 按家族前缀动态拼路，字面路径普查看不见此类读者；冻结件退役判据自此为"删后全量测试绿"实证，不凭引用扫描。
+**再生成**：rev 变更需重冻结时 `git checkout <父提交> -- cli/tests/<仪器>` 复活生成器，跑毕重退役。历史即真源（与 trend 缓存同立场）。

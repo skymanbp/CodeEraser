@@ -87,6 +87,23 @@ directory/process 均不在 exe 闭包）→修正案：NOTICE 测度改**三平
 HS_PLATFORM_ONLY 冻结表补缺席平台行，walker 静默跳过改指名红（同覆盖门立场），
 Linux 反事实（剥 Win32 复刻联集）与在仓 NOTICE 逐行同一。
 
+### M7.5 清理批（v2.3 插片，用户三拍板 2026-08-18 ccm #1152）
+深度瘦身+trend/1 入核，P6 前置。**As-built（瘦身半场）**：普查=7 代理测试级全量
+census（65 文件逐 #[test] 二分 ignored/活门+工件读者映射+CI 接线枚举）推翻文件级
+预估——22 个 eval 文件为混载体（活门=每 push CI 跑的一致性/精度/审计门，冻结 JSON
+多数被活门钉住必须保留）；执行=8 整文件退役（5 仪器+eval_extract 三件）+27 个
+generate_*/scout/重放 fn 割除+支援域零引用不动点清扫约 77 项（eval_support/
+eval_extract/各 *_parts；#![allow(dead_code)] 静默死件靠引用普查非编译器）+
+冻结件退役仅 manifest-v1.json（首拟 6 件被活门 t3_candidates_consistent 红回
+5 件——each_frozen_doc 动态拼路是字面普查盲区，退役判据改"删后全量绿"实证）；
+**crosscheck fixtures 保留**（graph 宇宙设计内负对照，活门在读——文件级预估的
+第二处反例）；净 −11.2k 行；EVAL-SET 修正案记退役名录+git 复活路径（压缩至
+256 行过 RM20 300 硬线，3j 门首触发即咬），FPR-REPLAY/PERF-BUDGET 封册；
+世代门二次点火=3 员具名入 RETIRED（M7.5 类目）；全量测试+clippy 双绿证活门
+零缺员；dedup 158 块（162→158 下棘 4 全入账）。教训=①普查必须测试级（同文件
+混载）②动态拼路读者字面普查不可见=删冻结件必以全量绿实证 ③多行字符串 const
+分号终止启发会误切 ④glob 重导出下词频普查须不动点迭代补岛效应。
+
 ### P4 GUI 二期（v2.0 移入项）
 趋势面板：历史时序数据面按拍板②设计；删除候选浏览：消费 `ce join` 报告
 （Tier F 三腿判决）+ dedup 块清单，GUI 列表+定位跳转，判决零渗入 JS（M6 立场延续）。

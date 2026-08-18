@@ -18,30 +18,8 @@
 
 mod eval_support;
 
-use eval_support::{CLASSES, by_sha, classify_counts, file_at, gt_pairs, load, pair_lang};
+use eval_support::{CLASSES, by_sha, gt_pairs, load};
 use serde_json::{Value, json};
-
-fn classify_pair(sha: &str, pair: &Value) -> [u64; 4] {
-    let base = format!("{sha}^");
-    let before = file_at(&base, pair["before"].as_str());
-    let after = file_at(sha, pair["after"].as_str());
-    classify_counts(&before, &after, pair_lang(pair), &format!("{sha}: pair"))
-}
-
-/// Score one commit: per-pair gt/pred rows (the summary re-derives
-/// every total from these).
-fn score_commit(sha: &str, gt_rows: &[Value]) -> Value {
-    let pairs: Vec<Value> = gt_rows
-        .iter()
-        .map(|gp| {
-            let pred = classify_pair(sha, gp);
-            let gt = eval_support::gt_counts(gp);
-            json!({"before": gp["before"], "after": gp["after"],
-                   "gt": gt, "pred": pred.to_vec()})
-        })
-        .collect();
-    json!({"sha": sha, "pairs": pairs})
-}
 
 #[derive(Default)]
 struct Totals {
@@ -104,35 +82,6 @@ fn summarize(commits: &[Value], labels_doc: &Value) -> Value {
         "within_file_gt": within_gt,
         "cross_credit_upper_bound": t.moved_detected.saturating_sub(within_gt),
     })
-}
-
-#[test]
-#[ignore] // needs full (non-shallow) git history up to the slice tip
-fn generate_commit_baseline() {
-    eval_support::generate_commit_doc(
-        "baseline-l1",
-        "ce.eval-commit-baseline/1.0.0",
-        "cli/src/fourclass classify() per file pair (empty side for \
-         created/deleted files), summed per commit; gt = \
-         commit-labels-v1 reviewed rows, slice prelabels for \
-         zero-move commits. Cross-file moved recall is zero by \
-         construction for a per-pair classifier; \
-         cross_credit_upper_bound bounds within-pair coincidence \
-         credit. GT within-file marks carry git's blocks-mode \
-         >=20-alnum block floor; L1's line-level matching may \
-         legitimately exceed them (predicted > detected).",
-        |slice| {
-            let labels_doc = load(&eval_support::corpus().doc("labels"));
-            let labels = by_sha(&labels_doc);
-            let commits: Vec<Value> = slice["commits"]
-                .as_array()
-                .expect("commits")
-                .iter()
-                .map(|s| score_commit(s["sha"].as_str().expect("sha"), gt_pairs(s, &labels)))
-                .collect();
-            (summarize(&commits, &labels_doc), commits)
-        },
-    );
 }
 
 /// CI gate: gt rows must match their source docs and the summary must

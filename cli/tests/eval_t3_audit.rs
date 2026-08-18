@@ -16,86 +16,8 @@
 
 mod eval_support;
 
-use eval_support::{FROZEN_CORPORA, WalkedFile, core_link, eval_doc, load, t3f, walk_tree_in};
-use serde_json::{Value, json};
-
-/// One corpus's assembly: judge the sampled mains, then write the
-/// verbatim audit package. Returns (clone-judged, judged, total).
-fn assemble_corpus(name: &Option<String>, sample: &Value) -> (u64, u64, u64) {
-    let a = eval_support::anchored_candidates(name);
-    let (corpus, tip, c) = (a.corpus, a.tip, a.candidates);
-    let (walked, _) = walk_tree_in(a.repo.as_deref(), &tip);
-    let texts = t3f::texts_by_path(&walked);
-    let rows = t3f::main_rows(sample, &corpus, &tip);
-    let mut link = core_link();
-    let judgments = t3f::judge_sample(&c, &texts, &rows, &mut link);
-    let assembled: Vec<Value> = rows.iter().map(|r| assembly_row(r, &walked)).collect();
-    eval_support::write_assembly(
-        "t3",
-        &corpus,
-        &tip,
-        "verbatim assembly for the independent T3 audit; no judgment fields \
-         by design (RM18) — the auditor sees code, not verdicts",
-        assembled,
-    );
-    let clones = judgments.iter().filter(|j| j.is_clone()).count() as u64;
-    let scored = judgments.iter().filter(|j| j.label() == "scored").count() as u64;
-    println!(
-        "{corpus}: judged {scored}, clone {clones}, drops {:?}",
-        judgments
-            .iter()
-            .filter(|j| j.label() != "scored")
-            .map(|j| j.label())
-            .collect::<Vec<_>>()
-    );
-    (clones, scored, rows.len() as u64)
-}
-
-/// One assembly row: frozen identity + spans + verbatim texts, both
-/// sides sliced through the SAME segmentation throat the cache used.
-fn assembly_row(r: &Value, walked: &[WalkedFile]) -> Value {
-    let texts = t3f::texts_by_path(walked);
-    let side = |p: &str, k: &str, n: &str| {
-        let path = r[p].as_str().expect(p);
-        let (code, text) = texts[path];
-        let spans = t3f::file_spans(text, eval_support::lang_of(code));
-        let key = (r[k].as_str().expect(k).to_string(), r[n].as_i64().expect(n));
-        let (start, end) = *spans
-            .get(&key)
-            .unwrap_or_else(|| panic!("{path}: sampled unit {key:?} has no span"));
-        (start, end, t3f::slice_lines(text, start, end))
-    };
-    let (a_start, a_end, a_text) = side("a_path", "a_key", "a_nth");
-    let (b_start, b_end, b_text) = side("b_path", "b_key", "b_nth");
-    let mut row = json!({
-        "rank": r["rank"],
-        "a_start": a_start, "a_end": a_end, "a_text": a_text,
-        "b_start": b_start, "b_end": b_end, "b_text": b_text,
-    });
-    for key in t3f::T3_IDENTITY {
-        row[key] = r[key].clone();
-    }
-    row
-}
-
-#[test]
-#[ignore] // needs the five corpus repositories + CE_CORE_BIN
-fn generate_t3_audit_assembly() {
-    let sample = load(&eval_doc("t3-sample"));
-    let (mut clones, mut scored, mut total) = (0, 0, 0);
-    for name in FROZEN_CORPORA {
-        let name = name.map(str::to_string);
-        let (c, s, t) = assemble_corpus(&name, &sample);
-        clones += c;
-        scored += s;
-        total += t;
-    }
-    println!(
-        "mains: {total} rows, {scored} judged, {clones} judged clone \
-         (min_answered {} — backups needed only below it)",
-        t3f::MIN_ANSWERED
-    );
-}
+use eval_support::{eval_doc, load, t3f};
+use serde_json::Value;
 
 const CORPORA: [&str; 5] = ["cobra", "requests", "ripgrep", "self", "zod"];
 

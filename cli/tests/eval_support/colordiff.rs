@@ -56,13 +56,6 @@ pub fn body_class(line: &str) -> Option<(bool, bool)> {
     }
 }
 
-/// Classify one diff body line into running four-class counts.
-pub fn classify_line(line: &str, c: &mut LineClasses) {
-    if let Some((added, moved)) = body_class(line) {
-        c.count(added, moved);
-    }
-}
-
 /// Remove every SGR escape (`\x1b[…m`) anywhere in the line — for
 /// parsing file headers out of force-colored whole-commit diffs.
 pub fn strip_sgr(line: &str) -> String {

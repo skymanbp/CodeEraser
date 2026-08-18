@@ -86,31 +86,6 @@ fn derive() -> (Vec<Value>, Value) {
     (rows, tallies)
 }
 
-#[test]
-#[ignore] // writes a contracts file; the derivation itself is pure
-fn generate_docdup_sample() {
-    let (rows, tallies) = derive();
-    let doc = eval_support::sample_doc(
-        "ce.eval-docdup-sample/1.0.0",
-        (RANK_DOMAIN, AUDIT_DOMAIN),
-        "complete census of the frozen five-corpus docdup oracle: every \
-         emitted pair (J >= 30/100 or verbatim run >= 50 words) enters — \
-         the C2 design's 100-row hash-rank draw assumes a population \
-         >= 100, and the frozen universe holds 30 report-floor pairs \
-         (47 with the margin band), so a census is the zero-selection \
-         stronger form and per-kind floors are population-bounded \
-         (docstring pairs number 6 in total). Ranks keep the registered \
-         ce-docdup-pair-v1 domain; rows are listed in the independent \
-         audit-domain order. The report/margin split uses the \
-         pre-registered 80/100 report floor and the product \
-         VERBATIM_FLOOR; auditors never see it (assembly carries \
-         verbatim segment texts and identities only).",
-        json!({"tallies": tallies, "main": rows}),
-    );
-    let path = eval_doc("docdup-sample");
-    write_doc(&path, &doc, &format!("{path} written"));
-}
-
 /// CI gate: the frozen doc IS the derivation's output — rows
 /// (including every rank), order and tallies re-derive from the
 /// frozen oracle docs; nothing else can sit in main.

@@ -105,62 +105,6 @@ pub fn t3_summarize(files: &[Value]) -> Value {
            "total_units": units, "units_by": units_by, "bands_by": bands_by})
 }
 
-/// The product-index leg of the generator: materialize the in-scope
-/// tree, run the real indexer twice (cold, then warm), and let the
-/// REAL tables prove what the pure derivation asserted — the
-/// UNIQUE(file_id, key, nth) inserts land collision-free on this
-/// corpus and the two persisted views agree (identity_orphans == 0).
-/// The timings are the honest fourth-parse cost (F11) for the
-/// PERF-BUDGET ledger — admissible only from a release build, and
-/// labeled with the build profile so a debug number cannot pass as
-/// one.
-pub fn index_materialized(corpus: &str, walked: &[super::WalkedFile], doc: &Value) {
-    let root = materialize_tree("univ", corpus, walked);
-    let t0 = std::time::Instant::now();
-    let (idx, _) = refreshed_index(&root, None).expect("cold index");
-    let cold = t0.elapsed().as_millis();
-    assert_eq!(
-        unitcache::identity_orphans(&idx).expect("orphans"),
-        0,
-        "{corpus}: unitsig rows missing their symbols identity"
-    );
-    check_indexed_subset(corpus, &root, walked, doc, &idx);
-    drop(idx);
-    let t1 = std::time::Instant::now();
-    drop(refreshed_index(&root, None).expect("warm index"));
-    let warm = t1.elapsed().as_millis();
-    let profile = if cfg!(debug_assertions) {
-        "debug build — NOT admissible for PERF-BUDGET"
-    } else {
-        "release"
-    };
-    println!(
-        "PERF t3-universe {corpus}: cold {cold} ms, warm {warm} ms, {} files ({profile})",
-        walked.len()
-    );
-    std::fs::remove_dir_all(&root).expect("drop temp tree");
-}
-
-/// Materialize one walked in-scope tree under the OS temp dir — the
-/// shared opening of the universe instrument's product-index leg and
-/// the candidate instrument (one tree bytes, two consumers).
-pub fn materialize_tree(
-    tag: &str,
-    corpus: &str,
-    walked: &[super::WalkedFile],
-) -> std::path::PathBuf {
-    let root = std::env::temp_dir().join(format!("ce-t3-{tag}-{corpus}-{}", std::process::id()));
-    if root.exists() {
-        std::fs::remove_dir_all(&root).expect("clean temp tree");
-    }
-    for (path, _, text) in walked {
-        let file = root.join(path);
-        std::fs::create_dir_all(file.parent().expect("parent")).expect("mkdir");
-        std::fs::write(&file, text.as_bytes()).expect("materialize");
-    }
-    root
-}
-
 /// Indexed ⊆ walked (an indexed phantom is a scope leak), every
 /// walked-but-unindexed path is provably product-invisible (hidden,
 /// or excluded by the product's own scope test — the instrument scope

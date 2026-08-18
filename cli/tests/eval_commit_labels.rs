@@ -28,7 +28,6 @@ mod eval_support;
 
 use eval_commit_review as review;
 use eval_support::by_sha;
-use review::{PerFile, total};
 use serde_json::{Value, json};
 
 fn pair_sum(row: &Value, key: &str) -> u64 {
@@ -38,100 +37,6 @@ fn pair_sum(row: &Value, key: &str) -> u64 {
         .iter()
         .map(|p| p[key].as_u64().unwrap())
         .sum()
-}
-
-fn out_in(out: u64, into: u64) -> Value {
-    json!({"out": out, "in": into})
-}
-
-/// Move this pair-side's reclassified lines from `moved` into the
-/// plain class, consuming the side's pending delta.
-fn take_delta(left: &mut PerFile, path: &Value, moved: &mut u64, plain: &mut u64) {
-    if let Some(d) = path.as_str().and_then(|f| left.remove(f)) {
-        assert!(*moved >= d, "delta exceeds moved");
-        *moved -= d;
-        *plain += d;
-    }
-}
-
-/// Final per-pair labels: slice prelabels minus every reclassified
-/// line (nonsignificant + corrections) on its owning side.
-fn adjust_pairs(row: &Value, out_delta: &PerFile, in_delta: &PerFile) -> Vec<Value> {
-    let (mut out_left, mut in_left) = (out_delta.clone(), in_delta.clone());
-    let pairs = row["pairs"].as_array().expect("pairs");
-    let adjusted = pairs
-        .iter()
-        .map(|p| {
-            let g = |k: &str| p[k].as_u64().unwrap();
-            let (mut nov, mut mvi) = (g("added_novel"), g("added_moved"));
-            let (mut del, mut mvo) = (g("removed_deleted"), g("removed_moved"));
-            take_delta(&mut in_left, &p["after"], &mut mvi, &mut nov);
-            // A copy pair does NOT consume the before side (decided
-            // copy semantics): it shares its before path with the
-            // source's own pair, and pathname aggregation would hand
-            // the source's delta to whichever pair iterates first
-            // (Codex review C2). Non-copy before paths are unique per
-            // commit (git emits one M/D/R status per path).
-            if p["copied"] != json!(true) {
-                take_delta(&mut out_left, &p["before"], &mut mvo, &mut del);
-            }
-            let mut row = json!({"before": p["before"], "after": p["after"],
-                   "added": g("added"), "deleted": g("deleted"),
-                   "added_novel": nov, "added_moved": mvi,
-                   "removed_deleted": del, "removed_moved": mvo});
-            if p["copied"] == json!(true) {
-                row["copied"] = json!(true);
-            }
-            row
-        })
-        .collect();
-    assert!(
-        out_left.is_empty() && in_left.is_empty(),
-        "unconsumed deltas"
-    );
-    adjusted
-}
-
-fn merge(a: &PerFile, b: &PerFile) -> PerFile {
-    let mut out = a.clone();
-    for (k, v) in b {
-        *out.entry(k.clone()).or_default() += v;
-    }
-    out
-}
-
-fn label_row(row: &Value) -> Value {
-    let sha = row["sha"].as_str().expect("sha");
-    let mut p = review::partition(sha);
-    let corrections = review::apply_corrections(sha, &mut p);
-    let corr_out = review::per_file_corrections(sha, false);
-    let corr_in = review::per_file_corrections(sha, true);
-    let pairs = adjust_pairs(
-        row,
-        &merge(&p.out.nonsig, &corr_out),
-        &merge(&p.into.nonsig, &corr_in),
-    );
-    let mut out = json!({
-        "sha": sha,
-        "pairs": pairs,
-        "nonsignificant": out_in(total(&p.out.nonsig), total(&p.into.nonsig)),
-        "cross_file": out_in(total(&p.out.cross), total(&p.into.cross)),
-        "within_file": out_in(p.out.within, p.into.within),
-        "corrections": corrections,
-        "relocated_units": review::units_for(sha),
-        "relocation_edges": review::edges_for(sha),
-    });
-    // Reviewed below-floor lines (still cross-file moved TRUTH above;
-    // this is the waiver annotation). Absent when empty — corpora
-    // without a register regenerate byte-identical.
-    let bf: Vec<Value> = review::below_floor_for(sha)
-        .into_iter()
-        .map(|(side, file, line)| json!({"side": side, "file": file, "line": line}))
-        .collect();
-    if !bf.is_empty() {
-        out["below_floor"] = json!(bf);
-    }
-    out
 }
 
 /// Σ over rows of a nested `row[key][side]` counter.
@@ -174,37 +79,6 @@ fn summarize(rows: &[Value]) -> Value {
         s["below_floor_lines"] = json!(below_floor);
     }
     s
-}
-
-#[test]
-#[ignore] // needs full (non-shallow) git history up to the slice tip
-fn generate_commit_labels() {
-    eval_support::generate_commit_doc(
-        "labels",
-        "ce.eval-commit-labels/1.0.0",
-        "provenance semantics: moved = line that relocated as part \
-                   of a block/unit relocation. Layer 1 (mechanical): moved \
-                   marks without alphanumeric content reclassify to \
-                   novel/deleted (labels-v1 convention, fourclass::significant). \
-                   Layer 2 (mechanical): trimmed-content pairing across the \
-                   commit partitions moved lines cross-file vs within-file, \
-                   preferring within when both readings exist. Layer 3 \
-                   (reviewed): content-coincidence pairs verified against raw \
-                   diffs reclassify to novel/deleted — a fresh line duplicating \
-                   removed content is the duplication signal, not a move. \
-                   Commits with zero moved marks are unreviewed: their labels \
-                   equal the slice prelabels verbatim.",
-        |slice| {
-            let rows: Vec<Value> = slice["commits"]
-                .as_array()
-                .expect("commits")
-                .iter()
-                .filter(|r| pair_sum(r, "added_moved") + pair_sum(r, "removed_moved") > 0)
-                .map(label_row)
-                .collect();
-            (summarize(&rows), rows)
-        },
-    );
 }
 
 /// CI gate, no git needed, every corpus: labels rows cover exactly

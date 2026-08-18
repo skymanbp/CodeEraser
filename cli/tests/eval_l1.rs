@@ -12,18 +12,8 @@
 
 mod eval_support;
 
-use eval_support::{CLASSES, by_id, classify_counts, lang_of, load};
+use eval_support::{CLASSES, by_id, load};
 use serde_json::{Value, json};
-
-fn classify_sample(out_dir: &std::path::Path, id: &str, lang: &str) -> [u64; 4] {
-    let sample = eval_support::read_sample(out_dir, id);
-    classify_counts(
-        sample["before"].as_str().expect("before"),
-        sample["after"].as_str().expect("after"),
-        lang_of(lang),
-        id,
-    )
-}
 
 /// Score rows and assemble the document. Kept free of file I/O so the
 /// CI gate can re-run it on the committed rows.
@@ -52,55 +42,6 @@ fn summarize(rows: &[Value]) -> Value {
                         "detected": moved_hit},
         "mismatched_samples": mismatched,
     })
-}
-
-#[test]
-#[ignore] // needs the local .ce-eval payloads (eval_extract output)
-fn generate_l1_scores() {
-    let manifest = load("../contracts/eval/manifest-v1.json");
-    let lab = load("../contracts/eval/labels-v1.json");
-    let labels = by_id(&lab, "labels");
-    let out_dir = eval_support::out_dir();
-    let mut rows = Vec::new();
-    for s in eval_support::labeling_rows(&manifest) {
-        let id = s["id"].as_str().expect("id");
-        let pred = classify_sample(&out_dir, id, s["lang"].as_str().expect("lang"));
-        let gt: Vec<u64> = CLASSES
-            .iter()
-            .map(|c| labels[id][c].as_u64().unwrap())
-            .collect();
-        rows.push(json!({"id": id, "gt": gt, "pred": pred.to_vec()}));
-    }
-    eval_support::finish_rows(&mut rows);
-    let doc = json!({
-        "schema": "ce.eval-l1/1.0.0",
-        "source_manifest": lab["source_manifest"],
-        "method": "cli/src/fourclass classify(): self-contained Myers line diff \
-                   + significant-line move marking (indentation-insensitive, \
-                   alphanumeric-bearing lines only, sides independent) + \
-                   tree-sitter unit attribution. Saturation caveat: this eval \
-                   set's moved ground truth cannot discriminate the full \
-                   function-boundary machinery from blank-line filtering alone \
-                   (user-acknowledged 2026-08-10); the alignment's added value \
-                   is the per-line unit attribution and intact-relocation \
-                   summary, exercised by lib unit tests.",
-        "alignment_note": "every mismatched sample is a pure diff-alignment \
-                   delta: the ground truth's totals inherit git's alignment \
-                   via the numstat invariant, and git's diff is not minimal \
-                   there — L1's Myers matches k identical blank-line pairs git \
-                   split as del+add (symmetric -k/-k on novel/deleted, no \
-                   significant line classified differently, moved exact). \
-                   Independently confirmed with python difflib, which \
-                   reproduces L1's counts on 4/5 samples exactly; on the \
-                   fifth L1 is strictly more minimal than both.",
-        "summary": summarize(&rows),
-        "rows": rows,
-    });
-    eval_support::write_doc(
-        "../contracts/eval/l1-v1.json",
-        &doc,
-        "scored 200 samples; summary written to contracts/eval/l1-v1.json",
-    );
 }
 
 /// CI gate: the committed summary must re-derive from the committed

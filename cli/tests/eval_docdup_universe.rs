@@ -38,12 +38,6 @@ const FAMILY: UniverseFamily = UniverseFamily {
     summarize: docdup_summarize,
 };
 
-#[test]
-#[ignore] // needs the corpus repository (git show at the pinned tip)
-fn generate_docdup_segments() {
-    FAMILY.freeze("graph-slice", |_, _| {});
-}
-
 /// CI gate, no git: the family skeleton asserts the envelope (summary
 /// re-derived with row-level conservation, frozen constants and
 /// scope, pinned tip, sorted rows) and the graph-slice sibling

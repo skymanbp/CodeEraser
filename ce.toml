@@ -138,5 +138,10 @@ entry_globs = [
 # construction -- one #[tauri::command] fn per webview command is
 # the macro's surface contract, the GUI analogue of the Haskell
 # Family-literal class. Measured after cargo fmt.
+# 162 -> 158 (M7.5 deep-thin, banked): retiring the dormant
+# generator/replay instruments took their block-chained scaffolding
+# with them (whole-file retirements + the generate_* halves of the
+# mixed eval files). Ratchet DOWN honored: -4 banked, no exemptions
+# drawn. Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 162
+budget = 158

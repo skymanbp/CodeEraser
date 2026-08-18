@@ -52,7 +52,6 @@ pub struct Site {
     pub line: u64,
     pub nth: u64,
     pub kind: String,
-    pub lang: String,
     pub spec: String,
 }
 
@@ -132,65 +131,6 @@ pub fn quotas_from_counts(cells: &BTreeMap<String, u64>) -> BTreeMap<String, u64
     out
 }
 
-pub struct Draw<'a> {
-    pub primary: Vec<&'a Site>,
-    pub backups: Vec<&'a Site>,
-    pub cells: BTreeMap<String, u64>,
-}
-
-/// The full deterministic draw. Primaries: within every (lang,kind)
-/// cell, the site-domain rank picks the cell quota; the assembled
-/// 100 are then ordered by the audit domain (the frozen audit
-/// sequence — the auditor never sees rank order). Backups: per
-/// language, the audit-domain rank over the unselected remainder
-/// picks BACKUP_PER_LANG rows — replenishment stays inside the
-/// language stratum, or one unanswerable primary would sink its
-/// language below the pre-registered floor.
-pub fn draw(pool: &[Site]) -> Draw<'_> {
-    let mut counts: BTreeMap<String, u64> = BTreeMap::new();
-    let mut by_cell: BTreeMap<String, Vec<&Site>> = BTreeMap::new();
-    for s in pool {
-        let cell = format!("{}/{}", s.lang, s.kind);
-        *counts.entry(cell.clone()).or_insert(0) += 1;
-        by_cell.entry(cell).or_default().push(s);
-    }
-    let cells = quotas_from_counts(&counts);
-    let mut primary: Vec<&Site> = Vec::new();
-    for (cell, sites) in &mut by_cell {
-        sites.sort_by_cached_key(|s| rank_of(SITE_DOMAIN, s));
-        primary.extend(sites.iter().copied().take(cells[cell] as usize));
-    }
-    primary.sort_by_cached_key(|s| rank_of(AUDIT_DOMAIN, s));
-    let picked: BTreeSet<String> = primary.iter().map(|s| payload(s)).collect();
-    let mut backups: Vec<&Site> = Vec::new();
-    for lang in by_cell
-        .keys()
-        .map(|c| lang_of_cell(c))
-        .collect::<BTreeSet<_>>()
-    {
-        let mut rest: Vec<&Site> = pool
-            .iter()
-            .filter(|s| s.lang == lang && !picked.contains(&payload(s)))
-            .collect();
-        rest.sort_by_cached_key(|s| rank_of(AUDIT_DOMAIN, s));
-        backups.extend(rest.into_iter().take(BACKUP_PER_LANG as usize));
-    }
-    Draw {
-        primary,
-        backups,
-        cells,
-    }
-}
-
-/// One frozen doc row — both domain hashes included so verify_row
-/// can refuse a tampered payload.
-pub fn row_json(s: &Site) -> Value {
-    json!({"corpus": s.corpus, "commit": s.commit, "path": s.path,
-           "line": s.line, "nth": s.nth, "kind": s.kind, "lang": s.lang,
-           "spec": s.spec, "rank": rank_of(SITE_DOMAIN, s),
-           "audit": rank_of(AUDIT_DOMAIN, s)})
-}
-
 /// Rebuild a Site from a frozen doc row; a missing or mistyped field
 /// refuses instead of defaulting.
 pub fn site_of(row: &Value) -> Result<Site, String> {
@@ -201,6 +141,10 @@ pub fn site_of(row: &Value) -> Result<Site, String> {
             .ok_or(format!("bad {k}"))
     };
     let n = |k: &str| row[k].as_u64().ok_or(format!("bad {k}"));
+    // lang is validated like every frozen field but not stored: the
+    // payload doc above keeps it out of identity, and its value is
+    // cross-checked against the file table by binding.rs instead
+    s("lang")?;
     Ok(Site {
         corpus: s("corpus")?,
         commit: s("commit")?,
@@ -208,7 +152,6 @@ pub fn site_of(row: &Value) -> Result<Site, String> {
         line: n("line")?,
         nth: n("nth")?,
         kind: s("kind")?,
-        lang: s("lang")?,
         spec: s("spec")?,
     })
 }
@@ -269,7 +212,6 @@ mod tests {
             line: 3,
             nth: 0,
             kind: "link".into(),
-            lang: "md".into(),
             spec: "x|y".into(),
         };
         assert_ne!(rank_of(SITE_DOMAIN, &s), rank_of(AUDIT_DOMAIN, &s));

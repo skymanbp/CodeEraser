@@ -15,7 +15,6 @@
 mod eval_support;
 
 use eval_support::*;
-use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 const METHOD: &str = "unit universe of the pinned tree: every in-scope file \
@@ -36,55 +35,6 @@ const FAMILY: UniverseFamily = UniverseFamily {
     constants: t3_constants,
     summarize: t3_summarize,
 };
-
-/// The RG3 proof at generation time: the frozen slice doc and this
-/// walk saw byte-identical trees (same path set, same per-file
-/// sha256), and the CURRENT detector still reproduces the frozen
-/// per-file site counts and the frozen sites_by summary on those
-/// bytes — the 3b exit criterion "five-corpus site counts identical
-/// to the existing slice docs", asserted rather than assumed.
-fn assert_slice_identity(slice: &Value, walked: &[WalkedFile]) {
-    let frozen = str_pairs(slice, "files", "path", "sha256");
-    assert_eq!(
-        frozen.keys().copied().collect::<Vec<_>>(),
-        walked
-            .iter()
-            .map(|(p, _, _)| p.as_str())
-            .collect::<Vec<_>>(),
-        "walked path set != frozen slice path set"
-    );
-    let rows = by_field(slice, "files", "path");
-    let mut sites_by: BTreeMap<String, u64> = BTreeMap::new();
-    for (path, code, text) in walked {
-        assert_eq!(
-            frozen[path.as_str()],
-            content_sha(text),
-            "{path}: content drifted from the frozen slice"
-        );
-        let kinds = kind_counts(&codeeraser::graph::sites::detect(text, lang_of(code)));
-        assert_eq!(
-            rows[path.as_str()]["sites"],
-            json!(kinds),
-            "{path}: recomputed sites != frozen slice row (RG3)"
-        );
-        for (kind, n) in kinds {
-            *sites_by.entry(format!("{code}/{kind}")).or_insert(0) += n;
-        }
-    }
-    assert_eq!(
-        slice["summary"]["sites_by"],
-        json!(sites_by),
-        "recomputed sites_by != frozen slice summary (RG3)"
-    );
-}
-
-#[test]
-#[ignore] // needs the corpus repository (git show at the pinned tip)
-fn generate_t3_universe() {
-    let (name, doc, walked) = FAMILY.generate("graph-slice", assert_slice_identity);
-    index_materialized(name.as_deref().unwrap_or("self"), &walked, &doc);
-    write_universe(FAMILY.family, &name, &doc);
-}
 
 /// CI gate, no git: the family skeleton asserts the envelope and the
 /// graph-slice sibling anchor per doc; this family then requires five

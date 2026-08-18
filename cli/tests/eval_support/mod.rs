@@ -141,26 +141,6 @@ pub fn pair_contents(sha: &str, pair: &Value) -> (String, String) {
     )
 }
 
-/// Iterate doc rows that carry sample ids, yielding each id with its
-/// loaded local payload (eval_extract output).
-pub fn each_sample(rows: &[Value], mut f: impl FnMut(&str, Value)) {
-    let dir = out_dir();
-    for row in rows {
-        let id = row["id"].as_str().expect("id");
-        f(id, read_sample(&dir, id));
-    }
-}
-
-/// A one-pair classify_batch input built from an eval sample payload
-/// — the manifest-replay shape shared by the L1-identity and FPR runs.
-pub fn sample_pair(sample: &Value) -> [PairInput<'_>; 1] {
-    [PairInput {
-        before: sample["before"].as_str().expect("before"),
-        after: sample["after"].as_str().expect("after"),
-        lang: lang_of(sample["lang"].as_str().expect("lang")),
-    }]
-}
-
 /// The canonical path of a contracts/eval document, derived from its
 /// name so a generator and its CI gate can never drift apart.
 pub fn eval_doc(name: &str) -> String {
@@ -193,51 +173,9 @@ pub fn anchor_to_labels(s: &Value, labels: &Value, bf_key: &str) -> (u64, u64) {
     (gt, bf)
 }
 
-/// A labels/slice pair row's four ground-truth class counts.
-pub fn gt_counts(pair: &Value) -> Vec<u64> {
-    CLASSES.iter().map(|c| pair[*c].as_u64().unwrap()).collect()
-}
-
-/// Run the fourclass classifier and return the four counts in
-/// CLASSES order, refusing degraded (diff-capped) results.
-pub fn classify_counts(before: &str, after: &str, lang: Lang, what: &str) -> [u64; 4] {
-    let c = codeeraser::fourclass::classify(before, after, lang);
-    assert!(!c.degraded, "{what}: diff cap tripped on an eval sample");
-    [
-        c.counts.added_novel as u64,
-        c.counts.added_moved as u64,
-        c.counts.removed_deleted as u64,
-        c.counts.removed_moved as u64,
-    ]
-}
-
 /// The local eval-payload directory (eval_extract output).
 pub fn out_dir() -> std::path::PathBuf {
     std::path::PathBuf::from(std::env::var("CE_EVAL_OUT").unwrap_or_else(|_| "../.ce-eval".into()))
-}
-
-pub fn read_sample(dir: &Path, id: &str) -> Value {
-    let path = dir.join("samples").join(format!("{id}.json"));
-    let text = std::fs::read_to_string(&path)
-        .unwrap_or_else(|e| panic!("{}: {e} — regenerate via eval_extract", path.display()));
-    serde_json::from_str(&text).expect("sample json")
-}
-
-/// The manifest rows flagged for the 200-sample labeling subset.
-pub fn labeling_rows(manifest: &Value) -> Vec<&Value> {
-    manifest["samples"]
-        .as_array()
-        .expect("samples")
-        .iter()
-        .filter(|r| r["labeling"].as_bool() == Some(true))
-        .collect()
-}
-
-/// Every generated document carries exactly the 200 labeling rows,
-/// sorted by id for stable diffs.
-pub fn finish_rows(rows: &mut [Value]) {
-    assert_eq!(rows.len(), 200, "labeling subset size");
-    rows.sort_by(|a, b| a["id"].as_str().cmp(&b["id"].as_str()));
 }
 
 /// Write a generated contracts/eval document (pretty + trailing
@@ -265,29 +203,4 @@ pub fn generated_from() -> Value {
         "dirty": !git(&["status", "--porcelain"]).is_empty(),
         "ce": env!("CARGO_PKG_VERSION"),
     })
-}
-
-/// Load the corpus's frozen commit slice, build the `family` doc from
-/// it, write to the corpus's path for that family. Every derived
-/// document shares this envelope and source (schema, source_slice,
-/// method, summary, commits).
-pub fn generate_commit_doc(
-    family: &str,
-    schema: &str,
-    method: &str,
-    build: impl FnOnce(&Value) -> (Value, Vec<Value>),
-) {
-    let c = corpus();
-    let slice = load(&c.doc("slice"));
-    let (summary, commits) = build(&slice);
-    let doc = serde_json::json!({
-        "schema": schema,
-        "source_slice": slice["universe_tip"],
-        "generated_from": generated_from(),
-        "method": method,
-        "summary": summary,
-        "commits": commits,
-    });
-    let path = c.doc(family);
-    write_doc(&path, &doc, &format!("{path} written"));
 }

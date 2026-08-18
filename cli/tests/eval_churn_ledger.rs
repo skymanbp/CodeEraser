@@ -18,11 +18,8 @@
 mod common;
 mod eval_support;
 
-use codeeraser::churn;
-use codeeraser::fourclass::session;
 use serde_json::Value;
 use std::collections::BTreeMap;
-use std::path::Path;
 
 fn doc() -> Value {
     eval_support::load(&eval_support::eval_doc("churn-ledger"))
@@ -32,10 +29,6 @@ fn doc() -> Value {
 /// the row IS the tuple, so serde does the shape checking.
 fn frozen_row(v: &Value) -> (String, String, i64, usize, usize) {
     serde_json::from_value(v.clone()).expect("row [path,key,nth,appended,rewrote]")
-}
-
-fn product_row(u: &churn::UnitRow) -> (String, String, i64, usize, usize) {
-    (u.path.clone(), u.key.clone(), u.nth, u.appended, u.rewrote)
 }
 
 /// Validate one frozen commit (hex sha; rows sorted, identity-unique,
@@ -103,122 +96,4 @@ fn ledger_structure_is_sound() {
     assert_eq!(d["totals"]["appended"].as_u64(), Some(appended));
     assert_eq!(d["totals"]["rewrote"].as_u64(), Some(rewrote));
     assert!(rows_n > 0, "an all-empty ledger audits nothing");
-}
-
-/// git stdout in `repo` through the common spawn-and-assert throat —
-/// the gates must never turn a broken history into a silent pass.
-fn git(repo: &Path, args: &[&str]) -> String {
-    String::from_utf8_lossy(&common::git_out(repo, args)).into_owned()
-}
-
-/// The frozen ledger's own language universe: the 3h blind audit's
-/// transcription spec named FIVE tree-sitter languages, so the
-/// artifact's rows can only ever cover those — replay compares on
-/// the artifact's scope, not on whatever the product speaks today.
-/// An ALLOWLIST of the freeze-time set (never a deny of the newest
-/// language): Haskell rows (3k) and any later language fall outside
-/// automatically, and the frozen half must still match ROW FOR ROW
-/// (frozen-not-product stays the systematic-misattribution alarm).
-fn in_frozen_scope(path: &str) -> bool {
-    use codeeraser::scan::lang::Lang;
-    matches!(
-        Lang::from_path(Path::new(path)),
-        Some(Lang::Python | Lang::TypeScript | Lang::Tsx | Lang::Rust | Lang::Go | Lang::Markdown)
-    )
-}
-
-#[test]
-#[ignore] // needs the self repo's git history containing the pinned tip
-fn product_matches_the_audited_ledger_row_for_row() {
-    let d = doc();
-    let root = Path::new("..");
-    let tip = d["tip"].as_str().expect("tip");
-    git(root, &["merge-base", "--is-ancestor", tip, "HEAD"]);
-    let mut mismatches = Vec::new();
-    for c in d["commits"].as_array().expect("commits") {
-        let sha = c["sha"].as_str().expect("sha");
-        let got: Vec<_> = churn::commit_ledger(root, sha)
-            .iter()
-            .filter(|u| in_frozen_scope(&u.path))
-            .map(product_row)
-            .collect();
-        let want: Vec<_> = c["rows"]
-            .as_array()
-            .expect("rows")
-            .iter()
-            .map(frozen_row)
-            .collect();
-        if got != want {
-            let extra: Vec<_> = got.iter().filter(|r| !want.contains(r)).collect();
-            let missing: Vec<_> = want.iter().filter(|r| !got.contains(r)).collect();
-            mismatches.push(format!(
-                "{sha}: product-not-frozen {extra:?} | frozen-not-product {missing:?}"
-            ));
-        }
-    }
-    assert!(
-        mismatches.is_empty(),
-        "{} of 40 commits disagree:\n{}",
-        mismatches.len(),
-        mismatches.join("\n")
-    );
-}
-
-/// Added-line count of one commit WITHOUT unit attribution: the same
-/// pair_texts + classify surfaces the ledger consumes, but the count
-/// never touches owner/nth/ledger code — a ledger that drops or
-/// double-books lines cannot balance against this.
-fn independent_added(repo: &Path, sha: &str) -> usize {
-    session::commit_pairs(repo, sha)
-        .unwrap_or_default()
-        .iter()
-        .filter_map(|pair| churn::pair_texts(repo, sha, pair))
-        .map(|(_, before, after, lang)| {
-            codeeraser::fourclass::classify(&before, &after, lang)
-                .changed
-                .added
-                .len()
-        })
-        .sum()
-}
-
-#[test]
-#[ignore] // needs the corpora clones under .ce-eval plus self history
-fn per_corpus_conservation_over_recent_commits() {
-    let corpora: [Option<String>; 5] = [
-        None,
-        Some("cobra".into()),
-        Some("requests".into()),
-        Some("ripgrep".into()),
-        Some("zod".into()),
-    ];
-    for name in corpora {
-        let repo = match eval_support::universe::corpus_repo(&name) {
-            Some(p) => std::path::PathBuf::from(p),
-            None => std::path::PathBuf::from(".."),
-        };
-        let tip = match &name {
-            Some(_) => eval_support::universe::frozen_tip("t3-universe", &name).1,
-            None => doc()["tip"].as_str().expect("tip").to_string(),
-        };
-        let log = git(
-            &repo,
-            &[
-                "log",
-                &tip,
-                "--first-parent",
-                "--no-merges",
-                "-20",
-                "--format=%H",
-            ],
-        );
-        let label = name.as_deref().unwrap_or("self");
-        for sha in log.split_whitespace() {
-            let rows = churn::commit_ledger(&repo, sha);
-            let summed: usize = rows.iter().map(|r| r.appended + r.rewrote).sum();
-            let counted = independent_added(&repo, sha);
-            assert_eq!(summed, counted, "{label} {sha}: ledger sum vs added count");
-        }
-        println!("conservation {label}: 20 commits balanced");
-    }
 }

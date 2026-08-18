@@ -17,107 +17,10 @@
 mod eval_graph_sample_parts;
 mod eval_support;
 
-use codeeraser::graph::sites::detect;
 use eval_graph_sample_parts as select;
-use eval_support::{
-    content_sha, eval_doc, generated_from, git_in, kind_counts, lang_of, load, out_dir, write_doc,
-};
-use select::binding::universes;
+use eval_support::{eval_doc, load};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
-
-/// Where a corpus repository lives: the enclosing repo for self, the
-/// machine-local clone for external corpora (the out_dir convention
-/// every eval payload uses; SOURCES.md pins the commits).
-fn repo_of(tag: &str) -> Option<String> {
-    if tag == "self" {
-        return None;
-    }
-    let dir = out_dir().join("corpora").join(tag);
-    assert!(
-        dir.is_dir(),
-        "{}: clone the corpus first (contracts/eval/SOURCES.md)",
-        dir.display()
-    );
-    Some(dir.to_string_lossy().into_owned())
-}
-
-/// Every site of one frozen universe, re-detected at the pinned tip.
-/// Each file must reproduce BOTH its frozen content identity and its
-/// frozen per-kind counts — the pool equals the frozen universe by
-/// checked reconstruction, not by trust.
-fn corpus_pool(tag: &str, doc: &Value) -> Vec<select::Site> {
-    let repo = repo_of(tag);
-    let tip = doc["corpus"]["tip"].as_str().expect("tip");
-    let mut pool = Vec::new();
-    for row in doc["files"].as_array().expect("files") {
-        let path = row["path"].as_str().expect("path");
-        let text = git_in(repo.as_deref(), &["show", &format!("{tip}:{path}")]);
-        assert_eq!(
-            content_sha(&text),
-            row["sha256"].as_str().expect("sha256"),
-            "{tag}/{path}: content identity drifted from the frozen universe"
-        );
-        let lang = row["lang"].as_str().expect("lang");
-        let sites = detect(&text, lang_of(lang));
-        assert_eq!(
-            json!(kind_counts(&sites)),
-            row["sites"],
-            "{tag}/{path}: detector disagrees with the frozen universe"
-        );
-        for s in sites {
-            pool.push(select::Site {
-                corpus: tag.into(),
-                commit: tip.into(),
-                path: path.into(),
-                line: s.line as u64,
-                nth: s.nth as u64,
-                kind: s.kind.into(),
-                lang: lang.into(),
-                spec: s.spec,
-            });
-        }
-    }
-    pool
-}
-
-#[test]
-#[ignore] // needs every corpus repository at its pinned tip
-fn generate_graph_sample() {
-    let mut pool = Vec::new();
-    let mut sources = Vec::new();
-    for (tag, doc) in universes() {
-        pool.extend(corpus_pool(&tag, &doc));
-        sources.push(json!({"corpus": tag, "tip": doc["corpus"]["tip"],
-                            "total_sites": doc["summary"]["total_sites"]}));
-    }
-    let draw = select::draw(&pool);
-    let doc = json!({
-        "schema": "ce.eval-graph-sample/1.0.0",
-        "constants": select::constants(),
-        "generated_from": generated_from(),
-        "method": "hash-ranked stratified draw over the union of the five \
-                   frozen site universes, reconstructed file-by-file against \
-                   their frozen sha256 and per-kind counts. rank id = \
-                   sha256(domain|corpus|commit|path|line|nth|kind|spec) — the \
-                   design-§5 payload plus nth, which entered site identity at \
-                   2b-iii (same-line sites would otherwise collide); spec is \
-                   the last field so the encoding is injective. Primaries: \
-                   per-language floor then largest-remainder extras, spread \
-                   over kinds by largest remainder, top of the site-domain \
-                   rank per cell; rows are stored in audit-domain order. \
-                   Backups: per language, the audit-domain rank over the \
-                   unselected remainder — audit walks them until 100 answered \
-                   rows. The rung domain is pre-registered here and \
-                   materializes at 2f when measured rungs exist (not a gate).",
-        "sources": sources,
-        "allocation": draw.cells,
-        "rows": draw.primary.iter().map(|s| select::row_json(s)).collect::<Vec<_>>(),
-        "backups": draw.backups.iter().map(|s| select::row_json(s)).collect::<Vec<_>>(),
-    });
-    let path = eval_doc("graph-sample");
-    write_doc(&path, &doc, &format!("{path} written"));
-}
 
 /// Count rows per derived key.
 fn tally(rows: &[Value], key: impl Fn(&Value) -> String) -> BTreeMap<String, u64> {

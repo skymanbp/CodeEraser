@@ -18,7 +18,7 @@
 
 mod eval_support;
 
-use eval_support::{CLASSES, by_id, load, numstat};
+use eval_support::{CLASSES, by_id, load};
 use serde_json::{Value, json};
 use std::collections::HashMap;
 
@@ -106,38 +106,4 @@ fn baseline_l0_matches_derivation() {
     let lab = load("../contracts/eval/labels-v1.json");
     let committed = load("../contracts/eval/baseline-l0-v1.json");
     assert_eq!(committed, build_doc(&pre, &lab), "baseline drifted");
-}
-
-/// Run the plan-literal L0 command on every labeling sample, assert it
-/// reproduces the recorded numstat, then write the baseline file.
-/// Run: CE_EVAL_OUT=<dir> cargo test --test eval_baseline -- --ignored --nocapture
-#[test]
-#[ignore] // needs the local .ce-eval payloads (eval_extract output)
-fn generate_baseline_after_git_verification() {
-    let pre = load("../contracts/eval/prelabels-v1.json");
-    let lab = load("../contracts/eval/labels-v1.json");
-    let out_dir = eval_support::out_dir();
-    let tmp = out_dir.join("tmp-baseline");
-    std::fs::create_dir_all(&tmp).expect("tmp dir");
-    for row in pre["prelabels"].as_array().expect("prelabels") {
-        let id = row["id"].as_str().expect("id");
-        let sample = eval_support::read_sample(&out_dir, id);
-        let a = tmp.join("a");
-        let b = tmp.join("b");
-        std::fs::write(&a, sample["before"].as_str().unwrap()).expect("a");
-        std::fs::write(&b, sample["after"].as_str().unwrap()).expect("b");
-        let (add, del) = numstat(&a, &b, &["-M", "-C", "--find-copies-harder"]);
-        assert_eq!(add, row["numstat_added"].as_u64().unwrap(), "{id}: added");
-        assert_eq!(
-            del,
-            row["numstat_deleted"].as_u64().unwrap(),
-            "{id}: deleted"
-        );
-    }
-    std::fs::remove_dir_all(&tmp).expect("cleanup");
-    eval_support::write_doc(
-        "../contracts/eval/baseline-l0-v1.json",
-        &build_doc(&pre, &lab),
-        "verified 200 samples under -M -C --find-copies-harder; baseline written",
-    );
 }
