@@ -74,6 +74,14 @@ NOTICE（三工程依赖许可证清单，机器可复核：从 Cargo.lock/cabal
 安装文档全翻新（含未签名明示——若拍板①走修正案）；全部对外文档过 `ce docdup` 自检
 （M7 行验收原文）。
 **验收**：NOTICE 与依赖冻结面零漂移（生成器入 CI 比对）；docdup 自检零上报。
+**As-built（本批）**：NOTICE 563 行 548 依赖行=Rust 双 workspace 并集（cargo metadata
+直读 license，无 SPDX 者具名注记）+ Haskell **exe 依赖闭包**（诚实测度：plan.json 步行
+exe:ce-core 传递闭包 61 包，测试链 7 包按"不随二进制分发"出局）；许可证冻结表 64 行
+机采（ghc-pkg 全局+store 双 db，2026-08-17 SPDX 原样）+覆盖门=闭包新包无表行指名红
+（hs_boot 机生成表先例）；门=notice_gate.rs 字节比对（CE_BLESS=1 重生成），篡改反事实
+红实证+复原绿；README 全英文事实版重写：0.x 状态/源码安装/**未签名明示+SHA256 校验指引
+（拍板①修正案落地，R1 兑现）**/命令表/守卫档位与诚实边界/NOTICE 指针；docdup 自检腿=
+CI 既有门对新 README/设计册增量保持零上报。
 
 ### P4 GUI 二期（v2.0 移入项）
 趋势面板：历史时序数据面按拍板②设计；删除候选浏览：消费 `ce join` 报告

@@ -1,18 +1,81 @@
 # CodeEraser
 
-> 对抗 LLM 代码/文档熵增的橡皮擦 —— An eraser against LLM-induced code & document entropy.
+> An eraser against LLM-induced code & document entropy.
 
-LLM 在长期代码/文档工作中极度偏向"堆叠"与"打补丁"：重复实现同一函数、同一事实写多处、
-更新变成追加、文件越改越长。CodeEraser 是一个 CLI + GUI 工具，作为 **Claude Code 插件**
-提供 hooks 强制拦截，其他 agent（Codex / Kimi Code …）经 MCP / pre-commit / CI 集成，
-用**主动审计**与**被动拦截**两种模式对抗这种熵增。
+LLMs drift toward stacking and patching over long-lived work: the same
+function implemented twice, the same fact written in three places,
+updates that arrive as appends, files that only ever grow. CodeEraser
+fights that drift at the moment of writing — a Rust CLI + Tauri GUI in
+front of a Haskell judgment core, shipped as a Claude Code plugin with
+PreToolUse/Stop interception, and reachable from any agent through a
+read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚧 **M0–M5-1 shipped; M5-2 (graph + deadcode) closing.**
+🚧 **0.x preview. M0–M6 shipped; M7 (release track) in progress.**
 
-完整开发计划见 [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)（由 cc-memory 锁定，
-任何推进以计划为准）。
+The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
+This repository gates itself with its own scanner, clone ratchet,
+baseline and deadcode/docdup checks on every push.
+
+## Install (from source)
+
+Prerequisites: the pinned Rust toolchain (`cli/rust-toolchain.toml`)
+and GHC 9.14.1 + cabal for the judgment core.
+
+```sh
+# the judgment core (ce-core)
+cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
+
+# the CLI (binary name: ce)
+cargo install --path cli
+```
+
+Judgment subcommands take the core via `--core "$CE_CORE_BIN"` (or the
+`CE_CORE_BIN` environment variable through the daemon/MCP paths).
+
+### Binaries — unsigned, verify checksums
+
+Release artifacts (three platforms + GUI installers) are built by the
+[release workflow](.github/workflows/release.yml) with a `SHA256SUMS`
+manifest. **They are not code-signed or notarized yet** (deferred past
+1.0 by plan amendment v2.1): Windows SmartScreen and macOS Gatekeeper
+will warn or refuse until you allow the app explicitly. The trust
+anchor is the checksum chain — after downloading:
+
+```sh
+sha256sum -c --ignore-missing SHA256SUMS
+```
+
+The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the
+same pins automatically and refuses a mismatching download out loud.
+
+## Commands
+
+| Command | What it reports / judges |
+|---|---|
+| `ce scan` | size / complexity / readability metrics, core-graded |
+| `ce dedup` | T1/T2 clone blocks (winnowing index); `--check` gates the budget |
+| `ce clone` | T3 near-miss clones (tree edit distance) |
+| `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |
+| `ce graph --sites` / `ce deadcode` | reference sites; liveness verdicts |
+| `ce churn` / `ce join` | git-window churn; the three-signal join |
+| `ce structure` | tree-scale structure judgment (seven axes) |
+| `ce check` / `ce baseline` | ADR-006 ratchet + score floor against `ce-baseline.json` |
+| `ce mcp` | read-only MCP server: every report above as a tool |
+| `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |
+
+## Guard (Claude Code plugin)
+
+The plugin intercepts at PreToolUse (cheap probes) and audits at Stop.
+Since the 1.0 tier switch, the two FPR-gated rule classes — exact
+T1/T2 duplicate writes and hard-budget breaches (a write leaving a
+file past 750 lines) — **deny by default**; everything else observes
+until it has its own false-positive record (ledger in
+[CHANGELOG.md](CHANGELOG.md)). An explicit `[guard] mode` in `ce.toml`
+overrides every class. Honest boundary: PreToolUse shapes behavior,
+it is not a security wall — shell writes bypass it, and the Stop
+audit + CI gates are the backstop.
 
 ## Documentation
 
@@ -22,14 +85,16 @@ LLM 在长期代码/文档工作中极度偏向"堆叠"与"打补丁"：重复�
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
 - [docs/reviews/](docs/reviews/) — attack/design review records, one file per round
 
-## Architecture (planned)
+## Architecture
 
-| 层 | 语言 | 职责 |
+| Layer | Language | Owns |
 |---|---|---|
-| Core (`core/`) | Haskell | 判决层：规则引擎、编辑四分类、评分棘轮、依赖图、TSED |
-| Frontend (`cli/`) | Rust | 解析、索引、CLI、GUI(Tauri)、daemon、agent 集成 |
-| Plugin (`plugin/`) | manifest + hooks | Claude Code 插件市场分发、PreToolUse/Stop 拦截 |
+| Core (`core/`) | Haskell | judgment: rules, verdicts, scoring ratchet, graph liveness, TSED, structure entropy |
+| Frontend (`cli/`) | Rust | parsing (tree-sitter), winnowing index, CLI, daemon, GUI backend, hooks, MCP |
+| GUI (`gui/`) | Rust + vanilla JS | Tauri shell over the same report schema the CLI emits |
+| Plugin (`plugin/`) | manifest + hooks + sh starter | marketplace layout, pinned-binary bootstrap, interception |
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE).
+Apache-2.0 — see [LICENSE](LICENSE). Third-party inventory: [NOTICE](NOTICE)
+(regenerated and gated byte-exact in CI by `cli/tests/notice_gate.rs`).
