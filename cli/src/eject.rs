@@ -8,32 +8,52 @@
 //! nowhere).
 
 use crate::daemon::{client, proto::Request};
+use crate::i18n::line;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 pub fn run(root: &Path, yes: bool) -> ExitCode {
     let targets = targets(root);
     if targets.is_empty() {
-        println!("eject: nothing to remove (no .ce/, baseline, or pinned binaries)");
+        println!(
+            "{}",
+            crate::i18n::t(
+                "eject: nothing to remove (no .ce/, baseline, or pinned binaries)",
+                "eject：无可移除项（没有 .ce/、基线或钉扎二进制）",
+            )
+        );
         return ExitCode::SUCCESS;
     }
     if !yes {
         for t in &targets {
-            println!("would remove: {}", t.display());
+            println!(
+                "{}",
+                line("would remove: {}", "将移除：{}", &[&t.display()])
+            );
         }
         println!(
-            "eject: dry run — pass --yes to remove {} target(s)",
-            targets.len()
+            "{}",
+            line(
+                "eject: dry run — pass --yes to remove {} target(s)",
+                "eject：试运行 — 传 --yes 以移除 {} 个目标",
+                &[&targets.len()],
+            )
         );
         return ExitCode::SUCCESS;
     }
     // Never the lazy-spawn path: spawning a daemon in order to shut
     // it down would recreate the state being removed.
     let _ = client::request_if_running(root, &Request::Shutdown);
+    remove_all(&targets)
+}
+
+/// The destructive phase (split at the 50-line fn gate): remove each
+/// target, name every success and failure, and tally the exit.
+fn remove_all(targets: &[PathBuf]) -> ExitCode {
     let mut failed = 0;
-    for t in &targets {
+    for t in targets {
         match remove(t) {
-            Ok(()) => println!("removed: {}", t.display()),
+            Ok(()) => println!("{}", line("removed: {}", "已移除：{}", &[&t.display()])),
             Err(e) => {
                 failed += 1;
                 eprintln!("eject: {} — {e}", t.display());
@@ -41,7 +61,14 @@ pub fn run(root: &Path, yes: bool) -> ExitCode {
         }
     }
     if failed > 0 {
-        eprintln!("eject: {failed} target(s) not removed");
+        eprintln!(
+            "{}",
+            line(
+                "eject: {} target(s) not removed",
+                "eject：{} 个目标未移除",
+                &[&failed],
+            )
+        );
         return ExitCode::FAILURE;
     }
     ExitCode::SUCCESS

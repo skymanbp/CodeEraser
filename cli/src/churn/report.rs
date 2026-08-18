@@ -4,6 +4,7 @@
 //! the conservation-by-construction half of the ledger design.
 
 use super::COCHANGE_FILE_CAP;
+use crate::i18n::line;
 
 /// One ledger row: lines the window added inside this unit. `key` ""
 /// (with nth 0) is the file's top level — `owner()` found no
@@ -62,22 +63,39 @@ pub fn print_console(r: &Report, days: u32) {
     let added = r.added_in_window();
     let churned = added.saturating_sub(r.surviving);
     println!(
-        "churn window {days}d: {} commits, appended {} / rewrote {} lines",
-        r.commits,
-        r.append_lines(),
-        r.rewrite_lines()
+        "{}",
+        line(
+            "churn window {}d: {} commits, appended {} / rewrote {} lines",
+            "改动窗口 {} 天：{} 个提交，追加 {} / 重写 {} 行",
+            &[&days, &r.commits, &r.append_lines(), &r.rewrite_lines()],
+        )
     );
     println!(
-        "window survival: {} of {added} added lines survive at HEAD ({churned} churned)",
-        r.surviving
+        "{}",
+        line(
+            "window survival: {} of {} added lines survive at HEAD ({} churned)",
+            "窗口存活：新增 {} / {} 行存活至 HEAD（{} 已翻改）",
+            &[&r.surviving, &added, &churned],
+        )
     );
     for (a, b, n) in &r.cochange {
-        println!("co-change x{n}: {a} <-> {b}");
+        println!(
+            "{}",
+            line(
+                "co-change x{}: {} <-> {}",
+                "共变 x{}：{} <-> {}",
+                &[n, a, b]
+            )
+        );
     }
     if r.skipped_large > 0 {
         println!(
-            "note: {} commit(s) above {COCHANGE_FILE_CAP} files skipped for pairing",
-            r.skipped_large
+            "{}",
+            line(
+                "note: {} commit(s) above {} files skipped for pairing",
+                "注：{} 个提交超过 {} 文件上限，未参与配对",
+                &[&r.skipped_large, &COCHANGE_FILE_CAP],
+            )
         );
     }
 }

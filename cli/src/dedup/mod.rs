@@ -209,27 +209,7 @@ struct Report<'a> {
 
 fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
     match format {
-        Format::Console => {
-            for b in &found.blocks {
-                println!(
-                    "dup {}:{}-{} <-> {}:{}-{} ({} tokens)",
-                    b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.tokens
-                );
-            }
-            println!(
-                "indexed {} files ({} refreshed, {} removed) — {} clone blocks in {} groups (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped",
-                s.files,
-                s.refreshed,
-                s.removed,
-                s.blocks,
-                s.groups,
-                s.min_tokens,
-                s.min_distinct,
-                s.low_diversity_suppressed,
-                s.hot_chained,
-                s.stale_skipped
-            );
-        }
+        Format::Console => print_console(found, s),
         Format::Json => {
             let rep = Report {
                 schema: SCHEMA_ID,
@@ -241,6 +221,46 @@ fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
         }
     }
     Ok(())
+}
+
+/// The console face (split from emit at the 50-line fn gate when the
+/// bilingual lines landed, M8-G3b).
+fn print_console(found: &pairs::Blocks, s: &Summary) {
+    for b in &found.blocks {
+        println!(
+            "{}",
+            crate::i18n::line(
+                "dup {}:{}-{} <-> {}:{}-{} ({} tokens)",
+                "重复 {}:{}-{} <-> {}:{}-{}（{} tokens）",
+                &[
+                    &b.a_file, &b.a_start, &b.a_end, &b.b_file, &b.b_start, &b.b_end, &b.tokens,
+                ],
+            )
+        );
+    }
+    // named binding (not inline): the inline array made this call a
+    // T2 twin of the dup-line call above — the repo's own ratchet bit
+    // the pair the day it landed
+    let counts: [&dyn std::fmt::Display; 10] = [
+        &s.files,
+        &s.refreshed,
+        &s.removed,
+        &s.blocks,
+        &s.groups,
+        &s.min_tokens,
+        &s.min_distinct,
+        &s.low_diversity_suppressed,
+        &s.hot_chained,
+        &s.stale_skipped,
+    ];
+    println!(
+        "{}",
+        crate::i18n::line(
+            "indexed {} files ({} refreshed, {} removed) — {} clone blocks in {} groups (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped",
+            "已索引 {} 个文件（刷新 {}，移除 {}）— {} 个克隆块 / {} 组（最少 {} tokens，多样性 >= {}），抑制低多样性 {}，热链 {}，跳过陈旧 {}",
+            &counts,
+        )
+    );
 }
 
 /// Winnowing parameters. Guarantee threshold t = matches of at least

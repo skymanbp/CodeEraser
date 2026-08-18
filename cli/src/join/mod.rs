@@ -15,6 +15,7 @@ pub mod churn_unit;
 use crate::churn;
 use crate::dedup::{self, pairs::Block};
 use crate::graph::deadcode;
+use crate::i18n::line;
 use anyhow::{Context, Result};
 use serde::Serialize;
 use serde_json::{Value, json};
@@ -163,45 +164,71 @@ pub fn print(r: &Report, as_json: bool) {
 fn print_console(r: &Report) {
     for f in &r.files {
         println!(
-            "join {} <-> {}: {} blocks / {} tokens | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {}",
-            f.a,
-            f.b,
-            f.blocks,
-            f.tokens,
-            pos_str(f.graph_a),
-            pos_str(f.graph_b),
-            f.churn_a.appended,
-            f.churn_a.rewrote,
-            f.churn_b.appended,
-            f.churn_b.rewrote,
-            f.cochange.map_or_else(|| "-".into(), |n| n.to_string()),
+            "{}",
+            line(
+                "join {} <-> {}: {} blocks / {} tokens | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {}",
+                "联判 {} <-> {}：{} 块 / {} tokens | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {}",
+                &[
+                    &f.a,
+                    &f.b,
+                    &f.blocks,
+                    &f.tokens,
+                    &pos_str(f.graph_a),
+                    &pos_str(f.graph_b),
+                    &f.churn_a.appended,
+                    &f.churn_a.rewrote,
+                    &f.churn_b.appended,
+                    &f.churn_b.rewrote,
+                    &f.cochange.map_or_else(|| "-".into(), |n| n.to_string()),
+                ],
+            )
         );
     }
+    print_unit_tail(r);
+}
+
+/// The unit rows + degraded note + window summary (split at the
+/// 50-line fn gate when the bilingual console landed, M8-G3b).
+fn print_unit_tail(r: &Report) {
     for u in &r.units {
         println!(
-            "unit {}#{}~{} <-> {}#{}~{}: {} tokens | churn +{}/~{} | +{}/~{} | graph null (R6 locked)",
-            u.a.path,
-            u.a.key,
-            u.a.nth,
-            u.b.path,
-            u.b.key,
-            u.b.nth,
-            u.tokens,
-            u.churn_a.appended,
-            u.churn_a.rewrote,
-            u.churn_b.appended,
-            u.churn_b.rewrote,
+            "{}",
+            line(
+                "unit {}#{}~{} <-> {}#{}~{}: {} tokens | churn +{}/~{} | +{}/~{} | graph null (R6 locked)",
+                "单元 {}#{}~{} <-> {}#{}~{}：{} tokens | 改动 +{}/~{} | +{}/~{} | 图 null（R6 锁定）",
+                &[
+                    &u.a.path,
+                    &u.a.key,
+                    &u.a.nth,
+                    &u.b.path,
+                    &u.b.key,
+                    &u.b.nth,
+                    &u.tokens,
+                    &u.churn_a.appended,
+                    &u.churn_a.rewrote,
+                    &u.churn_b.appended,
+                    &u.churn_b.rewrote,
+                ],
+            )
         );
     }
     if let Some(reason) = &r.degraded {
-        println!("join graph leg degraded: {reason}");
+        println!(
+            "{}",
+            line(
+                "join graph leg degraded: {}",
+                "联判图信号腿已降级：{}",
+                &[reason],
+            )
+        );
     }
     println!(
-        "join {}d window: {} file pairs, {} unit rows, {} commits (report-only; verdict lattice lands in 3i)",
-        r.days,
-        r.files.len(),
-        r.units.len(),
-        r.commits
+        "{}",
+        line(
+            "join {}d window: {} file pairs, {} unit rows, {} commits (report-only; verdict lattice lands in 3i)",
+            "联判 {} 天窗口：{} 文件对，{} 单元行，{} 提交（仅报告；判决格 3i 落地）",
+            &[&r.days, &r.files.len(), &r.units.len(), &r.commits],
+        )
     );
 }
 

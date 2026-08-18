@@ -211,17 +211,39 @@ pub fn summarize(files: &[FileMetrics], findings: &[Finding]) -> Summary {
 
 pub fn print_console(findings: &[Finding], summary: &Summary) {
     for f in findings {
+        // FAIL/warn are exit-code vocabulary — never translated
         let tag = match f.level {
             Level::Fail => "FAIL",
             Level::Warn => "warn",
         };
         println!(
-            "{tag} {}:{} {} = {} (limit {}) [{}]",
-            f.file, f.line, f.rule, f.value, f.threshold, f.subject
+            "{}",
+            crate::i18n::line(
+                "{} {}:{} {} = {} (limit {}) [{}]",
+                "{} {}:{} {} = {}（上限 {}）[{}]",
+                &[
+                    &tag,
+                    &f.file,
+                    &f.line,
+                    &f.rule,
+                    &f.value,
+                    &f.threshold,
+                    &f.subject
+                ],
+            )
         );
     }
     println!(
-        "scanned {} files / {} functions — {} warn, {} fail",
-        summary.files, summary.functions, summary.warns, summary.fails
+        "{}",
+        crate::i18n::line(
+            "scanned {} files / {} functions — {} warn, {} fail",
+            "已扫描 {} 文件 / {} 函数 — {} warn，{} fail",
+            &[
+                &summary.files,
+                &summary.functions,
+                &summary.warns,
+                &summary.fails
+            ],
+        )
     );
 }

@@ -3,6 +3,7 @@
 //! design). main.rs owns the clap surface; this file owns the work.
 
 use clap::ValueEnum;
+use codeeraser::i18n::line;
 use codeeraser::{churn, corelink, daemon, dedup, graph, scan};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -74,15 +75,23 @@ pub fn deadcode_cmd(
             // a gate that could not judge must never pass).
             if check && report.degraded.is_some() {
                 eprintln!(
-                    "deadcode check: degraded ({}) — nothing was judged, refusing to pass",
-                    report.degraded.as_deref().unwrap_or("?")
+                    "{}",
+                    line(
+                        "deadcode check: degraded ({}) — nothing was judged, refusing to pass",
+                        "deadcode check：已降级（{}）— 未判决任何内容，拒绝通过",
+                        &[&report.degraded.as_deref().unwrap_or("?")],
+                    )
                 );
                 return ExitCode::FAILURE;
             }
             if check && !report.dead.is_empty() {
                 eprintln!(
-                    "deadcode check: {} dead file(s) — disposition or entry_globs them",
-                    report.dead.len()
+                    "{}",
+                    line(
+                        "deadcode check: {} dead file(s) — disposition or entry_globs them",
+                        "deadcode check：{} 个死文件 — 请处置或加入 entry_globs",
+                        &[&report.dead.len()],
+                    )
                 );
                 return ExitCode::FAILURE;
             }
@@ -102,22 +111,54 @@ fn print_deadcode(r: &graph::deadcode::Report, json: bool) {
         return;
     }
     for (name, verdict, why) in &r.dead {
-        println!("dead: {name}  {verdict}  ({why})");
+        println!(
+            "{}",
+            line(
+                "dead: {}  {}  ({})",
+                "死件：{}  {}（{}）",
+                &[name, verdict, why],
+            )
+        );
     }
     for (name, verdict) in &r.reported {
-        println!("aggregate: {name}  {verdict}  (reported, never dead — decision 4)");
+        println!(
+            "{}",
+            line(
+                "aggregate: {}  {}  (reported, never dead — decision 4)",
+                "聚合件：{}  {}（仅报告，永不判死 — 决议 4）",
+                &[name, verdict],
+            )
+        );
     }
+    print_deadcode_tail(r);
+}
+
+/// The summary + degraded lines (split at the 50-line fn gate).
+fn print_deadcode_tail(r: &graph::deadcode::Report) {
     println!(
-        "deadcode: {} nodes, {} kept edges, {} dead, {} aggregate reports, \
-         {} unresolved sites (verdicts assume none lands in-corpus)",
-        r.nodes,
-        r.kept,
-        r.dead.len(),
-        r.reported.len(),
-        r.unresolved_sites
+        "{}",
+        line(
+            "deadcode: {} nodes, {} kept edges, {} dead, {} aggregate reports, \
+             {} unresolved sites (verdicts assume none lands in-corpus)",
+            "死码：{} 节点，{} 保留边，{} 死件，{} 聚合报告，{} 未解析调用点（判决假设它们皆不落语料内）",
+            &[
+                &r.nodes,
+                &r.kept,
+                &r.dead.len(),
+                &r.reported.len(),
+                &r.unresolved_sites,
+            ],
+        )
     );
     if let Some(reason) = &r.degraded {
-        println!("degraded: {reason} (nothing was analyzed)");
+        println!(
+            "{}",
+            line(
+                "degraded: {} (nothing was analyzed)",
+                "降级：{}（未分析任何内容）",
+                &[reason],
+            )
+        );
     }
 }
 
@@ -211,9 +252,23 @@ pub fn doctor(core: &str, root: &Path) -> ExitCode {
         env!("CARGO_PKG_VERSION"),
         corelink::PROTO
     );
-    println!("project: {}", codeeraser::health::doctor_line(root));
+    println!(
+        "{}",
+        line(
+            "project: {}",
+            "项目：{}",
+            &[&codeeraser::health::doctor_line(root)],
+        )
+    );
     let (degraded, total) = codeeraser::health::degraded_runs(root);
-    println!("degraded runs (observe feed): {degraded} of {total} entries");
+    println!(
+        "{}",
+        line(
+            "degraded runs (observe feed): {} of {} entries",
+            "降级运行（observe 流水）：{} / {} 条",
+            &[&degraded, &total],
+        )
+    );
     match corelink::run(core) {
         Ok(reply) => {
             println!("ce-core {} (proto {})", reply.version, reply.proto);

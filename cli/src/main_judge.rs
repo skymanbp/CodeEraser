@@ -182,9 +182,10 @@ pub fn docdup_cmd(a: DocdupArgs) -> ExitCode {
         |r| docdup::judge::print(r, as_json),
         |r| {
             (a.check && !r.hits.is_empty()).then(|| {
-                format!(
+                codeeraser::i18n::line(
                     "{} reported duplication(s) — resolve or exempt them",
-                    r.hits.len()
+                    "{} 处重复被报告 — 请解决或豁免",
+                    &[&r.hits.len()],
                 )
             })
         },
@@ -238,5 +239,8 @@ fn print_units(rows: &[dedup::unitcache::UnitRow], json: bool) {
     for u in rows {
         println!("{}  {}#{}  {} nodes", u.path, u.key, u.nth, u.nodes);
     }
-    println!("clone units: {}", rows.len());
+    println!(
+        "{}",
+        codeeraser::i18n::line("clone units: {}", "克隆单元：{}", &[&rows.len()])
+    );
 }

@@ -7,8 +7,9 @@
 
 use super::{rows, tree, wire};
 use anyhow::{Context, Result};
-use serde::Serialize;
 use std::path::{Path, PathBuf};
+
+pub use super::report::{print, report_json};
 
 /// JSON output schema id; bump on shape change (plan §7.1). This is
 /// the ONE schema the CLI report and the S4 GUI tree share.
@@ -173,99 +174,6 @@ fn relabel(names: &[String], rows: &[[i64; 2]]) -> Vec<(String, i64)> {
         .collect()
 }
 
-/// (name, code) pairs as {key1, key2} JSON objects — the report's
-/// two labelled tables share one shape.
-fn labeled(rows: &[(String, i64)], k1: &str, k2: &str) -> Vec<serde_json::Value> {
-    rows.iter()
-        .map(|(d, c)| serde_json::json!({k1: d, k2: c}))
-        .collect()
-}
-
-#[derive(Serialize)]
-struct JsonReport<'a> {
-    schema: &'static str,
-    score: i64,
-    #[serde(rename = "scoreScale")]
-    score_scale: i64,
-    entropy: &'a [[i64; 2]],
-    axes: &'a [[i64; 2]],
-    findings: Vec<serde_json::Value>,
-    dirs: usize,
-    divergence: Option<i64>,
-    deviations: Vec<serde_json::Value>,
-    #[serde(rename = "declaredDirs")]
-    declared_dirs: usize,
-    deep: bool,
-    days: Option<u32>,
-    tree: Vec<serde_json::Value>,
-}
-
-/// The ONE report document (§5: CLI JSON and the GUI consume the
-/// SAME shape — a second report form is exactly what the booklet
-/// forbids). Public since S4a: the Tauri command calls this.
-pub fn report_json(r: &Report) -> serde_json::Value {
-    let doc = JsonReport {
-        schema: SCHEMA_ID,
-        score: r.score,
-        score_scale: r.scale,
-        entropy: &r.entropy,
-        axes: &r.axes,
-        findings: labeled(&r.findings, "dir", "axis"),
-        dirs: r.dirs,
-        divergence: r.divergence,
-        deviations: labeled(&r.deviations, "dir", "kind"),
-        declared_dirs: r.declared,
-        deep: r.deep,
-        days: r.days,
-        tree: r
-            .tree
-            .iter()
-            .enumerate()
-            .map(|(i, n)| {
-                serde_json::json!({
-                    "id": i, "parent": n.parent, "name": n.name,
-                    "depth": n.depth, "subdirs": n.subdirs,
-                    "files": n.files, "axes": n.axes,
-                })
-            })
-            .collect(),
-    };
-    serde_json::to_value(&doc).expect("report json")
-}
-
-pub fn print(r: &Report, as_json: bool) {
-    if as_json {
-        println!("{}", report_json(r));
-        return;
-    }
-    let axes: Vec<String> = r.axes.iter().map(|[c, p]| format!("{c}:{p}")).collect();
-    let ent: Vec<String> = r.entropy.iter().map(|[k, v]| format!("{k}:{v}")).collect();
-    println!(
-        "structure score {}/{} | entropy {} | axes {} | {} dirs",
-        r.score,
-        r.scale,
-        ent.join(" "),
-        axes.join(" "),
-        r.dirs
-    );
-    if r.declared > 0 {
-        match r.divergence {
-            Some(d) => println!("layout divergence {d}‰ over {} declared dirs", r.declared),
-            None => println!(
-                "layout divergence undefined: mass outside the {} declared dirs",
-                r.declared
-            ),
-        }
-    }
-    for (dir, kind) in &r.deviations {
-        let label = if *kind == 0 {
-            "undeclared territory"
-        } else {
-            "declared but empty"
-        };
-        println!("deviation {dir}  {label}");
-    }
-    for (dir, axis) in &r.findings {
-        println!("finding {dir}  axis {axis}");
-    }
-}
+// report faces (report_json + the bilingual console) live in
+// report.rs since M8-G3b — re-exported above so callers keep the
+// structure::judge::{print, report_json} paths.

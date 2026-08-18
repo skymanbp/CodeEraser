@@ -126,7 +126,10 @@ pub fn print(r: &Report, as_json: bool) {
         (SCHEMA_ID, "dups"),
         r,
         as_json,
-        "docdup {a} <-> {b}  J {inter}/{union} verbatim {verbatim}",
+        crate::i18n::t(
+            "docdup {a} <-> {b}  J {inter}/{union} verbatim {verbatim}",
+            "文档重复 {a} <-> {b}  J {inter}/{union} 逐字 {verbatim}",
+        ),
     );
 }
 

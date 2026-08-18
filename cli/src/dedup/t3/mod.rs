@@ -241,7 +241,10 @@ pub fn print(r: &Report, as_json: bool) {
         (SCHEMA_ID, "clones"),
         r,
         as_json,
-        "clone {a} <-> {b}  ted {ted} (nodes {n1}/{n2})",
+        crate::i18n::t(
+            "clone {a} <-> {b}  ted {ted} (nodes {n1}/{n2})",
+            "克隆 {a} <-> {b}  ted {ted}（节点 {n1}/{n2}）",
+        ),
     );
 }
 

@@ -33,13 +33,23 @@ pub fn check(root: &Path, blocks: usize, core: &str) -> Result<ExitCode> {
             reply.failed
         );
         eprintln!(
-            "dedup ratchet: {blocks} clone blocks > budget {budget} — new duplication must not land"
+            "{}",
+            crate::i18n::line(
+                "dedup ratchet: {} clone blocks > budget {} — new duplication must not land",
+                "去冗棘轮：{} 个克隆块 > 预算 {} — 新增重复不得落地",
+                &[&blocks, &budget],
+            )
         );
         return Ok(ExitCode::FAILURE);
     }
     if blocks < budget {
         println!(
-            "dedup ratchet: {blocks} clone blocks < budget {budget} — ratchet the budget down"
+            "{}",
+            crate::i18n::line(
+                "dedup ratchet: {} clone blocks < budget {} — ratchet the budget down",
+                "去冗棘轮：{} 个克隆块 < 预算 {} — 请把预算下调咬合",
+                &[&blocks, &budget],
+            )
         );
     }
     Ok(ExitCode::SUCCESS)
