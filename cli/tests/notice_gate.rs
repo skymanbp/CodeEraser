@@ -5,7 +5,12 @@
 //! section straight from `cargo metadata` over both workspaces (the
 //! lockfiles are the truth), the Haskell section from the ce-core
 //! EXECUTABLE dependency closure in cabal's plan.json joined against
-//! the frozen license table below. CE_BLESS=1 regenerates.
+//! the frozen license table below. The closure is PER-PLATFORM
+//! (probed 2026-08-18: Win32 rides in solely via `time` on Windows;
+//! the POSIX closures carry no unix counterpart), while NOTICE
+//! inventories the union over the three shipped binaries — so a
+//! platform-only package absent from this host's closure is emitted
+//! from its frozen row. CE_BLESS=1 regenerates.
 //!
 //! Table provenance: harvested 2026-08-17 from `ghc-pkg field '*'
 //! name,version,license` over the GHC 9.14.1 global db and the cabal
@@ -87,6 +92,15 @@ const HS_LICENSES: &[(&str, &str, &str)] = &[
     ("witherable", "0.5", "BSD-3-Clause"),
 ];
 
+/// Packages that enter the executable closure on SOME platforms only.
+/// Probed 2026-08-18 against both CI closures: Win32 is referenced by
+/// exactly one parent (`time`, Windows-conditional dep), and the Linux
+/// regeneration came out exactly one row smaller with no unix package
+/// anywhere in its closure. A platform where the package is absent
+/// still emits its frozen HS_LICENSES row, so every platform
+/// regenerates the same union NOTICE.
+const HS_PLATFORM_ONLY: &[&str] = &["Win32"];
+
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .parent()
@@ -147,7 +161,13 @@ fn hs_closure(root: &Path) -> BTreeSet<(String, String)> {
     let mut seen: BTreeSet<&str> = BTreeSet::new();
     let mut stack = vec![exe["id"].as_str().expect("id")];
     while let Some(id) = stack.pop() {
-        let Some(u) = by_id.get(id) else { continue };
+        // A dep id missing from install-plan would silently shrink the
+        // legal inventory — same failure class the coverage gate below
+        // reddens for, so it reddens BY NAME too (0 hits on both CI
+        // platforms as of 2026-08-18).
+        let u = by_id
+            .get(id)
+            .unwrap_or_else(|| panic!("dep id {id} not in install-plan"));
         if !seen.insert(id) {
             continue;
         }
@@ -175,9 +195,23 @@ fn hs_closure(root: &Path) -> BTreeSet<(String, String)> {
 }
 
 /// Closure joined against the frozen table — a missing row is red BY
-/// NAME so a new dependency cannot ship license-unread.
+/// NAME so a new dependency cannot ship license-unread. Platform-only
+/// packages absent from THIS host's closure join from their frozen
+/// rows, so the emitted set is the union over shipped platforms.
 fn hs_rows(root: &Path) -> Vec<(String, String, String)> {
-    hs_closure(root)
+    let mut closure = hs_closure(root);
+    for name in HS_PLATFORM_ONLY {
+        if !closure.iter().any(|(n, _)| n == name) {
+            let rows: Vec<_> = HS_LICENSES.iter().filter(|(n, _, _)| n == name).collect();
+            assert_eq!(
+                rows.len(),
+                1,
+                "platform-only {name}: exactly one frozen row"
+            );
+            closure.insert((rows[0].0.to_string(), rows[0].1.to_string()));
+        }
+    }
+    closure
         .into_iter()
         .map(|(n, v)| {
             let lic = HS_LICENSES
@@ -210,7 +244,8 @@ fn notice_text(root: &Path) -> String {
     for (n, v, l) in &rust {
         s += &format!("{n} {v} — {l}\n");
     }
-    s += "\n== ce-core (Haskell packages; executable dependency closure) ==\n\n";
+    s += "\n== ce-core (Haskell packages; executable dependency closure, \
+          union over shipped platforms) ==\n\n";
     for (n, v, l) in &hs {
         s += &format!("{n} {v} — {l}\n");
     }

@@ -81,7 +81,11 @@ exe:ce-core 传递闭包 61 包，测试链 7 包按"不随二进制分发"出�
 （hs_boot 机生成表先例）；门=notice_gate.rs 字节比对（CE_BLESS=1 重生成），篡改反事实
 红实证+复原绿；README 全英文事实版重写：0.x 状态/源码安装/**未签名明示+SHA256 校验指引
 （拍板①修正案落地，R1 兑现）**/命令表/守卫档位与诚实边界/NOTICE 指针；docdup 自检腿=
-CI 既有门对新 README/设计册增量保持零上报。
+CI 既有门对新 README/设计册增量保持零上报。首点火 ubuntu 红抓获**闭包按平台分歧**
+（Win32 仅经 `time` 的 Windows 条件依赖进入；Linux 闭包恰少一行且无 unix——实探证
+directory/process 均不在 exe 闭包）→修正案：NOTICE 测度改**三平台发布物联集**，
+HS_PLATFORM_ONLY 冻结表补缺席平台行，walker 静默跳过改指名红（同覆盖门立场），
+Linux 反事实（剥 Win32 复刻联集）与在仓 NOTICE 逐行同一。
 
 ### P4 GUI 二期（v2.0 移入项）
 趋势面板：历史时序数据面按拍板②设计；删除候选浏览：消费 `ce join` 报告

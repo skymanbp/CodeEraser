@@ -497,7 +497,7 @@ zerovec 0.11.7 — Unicode-3.0
 zerovec-derive 0.11.4 — Unicode-3.0
 zmij 1.0.23 — MIT
 
-== ce-core (Haskell packages; executable dependency closure) ==
+== ce-core (Haskell packages; executable dependency closure, union over shipped platforms) ==
 
 OneTuple 0.4.3 — BSD-3-Clause
 QuickCheck 2.18.0.0 — BSD-3-Clause
