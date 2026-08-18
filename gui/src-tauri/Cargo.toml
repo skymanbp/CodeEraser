@@ -1,7 +1,7 @@
 # CodeEraser GUI shell (M6 S4a): a Tauri v2 window over the SAME
-# library pipeline the CLI runs 鈥?the report document is produced by
+# library pipeline the CLI runs — the report document is produced by
 # codeeraser::structure::judge::report_json, so there is exactly one
-# report shape (design booklet 搂5). Deliberately OUTSIDE the cli
+# report shape (design booklet §5). Deliberately OUTSIDE the cli
 # package: the CI test lanes stay webview-free until the S4b
 # packaging leg brings the platform deps.
 [package]

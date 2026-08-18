@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "CodeEraser 鈥?structure",
+        "title": "CodeEraser — structure",
         "width": 1280,
         "height": 840
       }
