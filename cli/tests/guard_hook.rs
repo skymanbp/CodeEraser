@@ -78,25 +78,25 @@ fn probe_failure_is_stamped_degraded() {
     assert_eq!(line["degraded"], true, "stamped, not silent");
 }
 
-/// §4.2 step 2 (landed after the M4 FPR gate): with NO [guard] mode
-/// in ce.toml — here, no ce.toml at all — the promoted rule classes
-/// default to ask. Before step 2 this exact rewrite was silent.
+/// §4.2 step 3 (1.0, M7-P2): with NO [guard] mode in ce.toml — here,
+/// no ce.toml at all — the promoted rule classes default to DENY
+/// (config::PROMOTED_DEFAULT; the FPR ledger is in the CHANGELOG).
 #[test]
-fn default_tier_asks_on_t1_rewrite() {
-    let dir = tmp("guard-default-ask");
+fn default_tier_denies_t1_rewrite() {
+    let dir = tmp("guard-default-deny");
     std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
     common::build_index(&dir);
-    common::expect_decision(&dir, &envelope(&dir, "Write", &rust_fn(1)), "ask");
+    common::expect_decision(&dir, &envelope(&dir, "Write", &rust_fn(1)), "deny");
 }
 
-/// §4.2 step 2, second promoted class: a Write that leaves the file
-/// past the 750-line hard budget asks by default — daemon-free
+/// §4.2 step 3, second promoted class: a Write that leaves the file
+/// past the 750-line hard budget denies by default — daemon-free
 /// arithmetic, so not even an index is needed.
 #[test]
-fn budget_breach_asks_by_default() {
+fn budget_breach_denies_by_default() {
     let dir = tmp("guard-budget");
     let big = "// filler\n".repeat(751);
-    let reason = common::expect_decision(&dir, &envelope(&dir, "Write", &big), "ask");
+    let reason = common::expect_decision(&dir, &envelope(&dir, "Write", &big), "deny");
     assert!(reason.contains("751 lines"), "exact count named: {reason}");
 }
 
@@ -160,7 +160,7 @@ fn budget_counts_the_applied_edit() {
         let env = edit_envelope(&dir, old);
         match want {
             Some(count) => {
-                let reason = common::expect_decision(&dir, &env, "ask");
+                let reason = common::expect_decision(&dir, &env, "deny");
                 assert!(reason.contains(count), "{old:?}: {reason}");
             }
             None => {

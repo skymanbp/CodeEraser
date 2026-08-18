@@ -18,24 +18,27 @@ struct McpSession {
 fn mcp_session(name: &str) -> McpSession {
     let dir = tmp(name);
     common::seed_clone_pair(&dir);
-    let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .arg("mcp")
-        .arg(&dir)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .expect("spawn mcp");
-    let stdin = child.stdin.take().expect("stdin");
-    let lines = BufReader::new(child.stdout.take().expect("stdout")).lines();
-    McpSession {
-        child,
-        stdin,
-        lines,
-    }
+    McpSession::over(&dir)
 }
 
 impl McpSession {
+    fn over(dir: &std::path::Path) -> McpSession {
+        let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
+            .arg("mcp")
+            .arg(dir)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .expect("spawn mcp");
+        let stdin = child.stdin.take().expect("stdin");
+        let lines = BufReader::new(child.stdout.take().expect("stdout")).lines();
+        McpSession {
+            child,
+            stdin,
+            lines,
+        }
+    }
     fn ask(&mut self, req: serde_json::Value) -> serde_json::Value {
         writeln!(self.stdin, "{req}").expect("write");
         self.stdin.flush().expect("flush");
@@ -62,8 +65,129 @@ fn mcp_initialize_and_list() {
         .iter()
         .map(|t| t["name"].as_str().expect("name"))
         .collect();
-    assert_eq!(names, ["scan", "check_duplication"]);
+    // M7-P2 ruling ③: the full read-only report face — and nothing
+    // with a write verb (no baseline, no config, no establish).
+    assert_eq!(
+        names,
+        [
+            "scan",
+            "check_duplication",
+            "churn",
+            "graph_sites",
+            "deadcode",
+            "clone",
+            "docdup",
+            "join",
+            "structure",
+            "check",
+        ]
+    );
     s.finish();
+}
+
+/// M7-P2 acceptance: each report tool's MCP text equals the SAME
+/// report produced through the family's public library face — the
+/// catalog is a transport, never a second serializer. The project is
+/// git-seeded so the churn/join windows have history to read.
+#[test]
+fn mcp_report_faces_match_library() {
+    let dir = tmp("mcp-faces");
+    common::seed_clone_pair(&dir);
+    git(&dir, &["init", "-q"]);
+    git(&dir, &["add", "."]);
+    git(&dir, &["commit", "-qm", "seed"]);
+    // Steady-state the index once first: Summary carries refresh
+    // counters (refreshed/removed/stale_skipped), so both faces must
+    // observe the same warm index — otherwise this compares cache
+    // states, not serializations.
+    codeeraser::dedup::analyze(&dir, None, None, None).expect("warm");
+    let mut s = McpSession::over(&dir);
+    for (id, (name, args, want)) in library_reports(&dir).into_iter().enumerate() {
+        let got = s.ask(serde_json::json!({
+            "jsonrpc": "2.0", "id": 100 + id, "method": "tools/call",
+            "params": {"name": name, "arguments": args}
+        }));
+        assert_eq!(got["result"]["isError"], false, "{name} errored: {got}");
+        let text = got["result"]["content"][0]["text"].as_str().expect("text");
+        assert_eq!(text, want, "{name} drifted from its library face");
+    }
+    s.finish();
+}
+
+/// The ten expected report strings, each produced through the public
+/// library face the MCP adapter claims to be a transport for — rows
+/// built by one closure so the builder cannot re-grow parallel row
+/// stanzas (the census caught two builders doing exactly that; the
+/// over-50-line length is that finding's why — the 50-line split WAS
+/// the twin-stanza clone, so one long builder is the honest shape).
+fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Value, String)> {
+    use codeeraser::{churn, dedup, docdup, graph, join, report, scan, score, structure};
+    let core = common::core_bin();
+    let a = serde_json::json!({});
+    let row = |name: &'static str, text: String| (name, a.clone(), text);
+    let (files, findings, summary) = scan::analyze(dir).expect("scan");
+    let (found, dsum) = dedup::analyze(dir, None, None, None).expect("dedup");
+    let opts = score::Opts {
+        db: None,
+        core: core.clone(),
+        days: None,
+        floor: None,
+        establish: false,
+    };
+    vec![
+        row(
+            "scan",
+            scan::report_string(&files, &findings, summary).expect("scan json"),
+        ),
+        row(
+            "check_duplication",
+            dedup::report_json(&found, &dsum).expect("dj").to_string(),
+        ),
+        row(
+            "churn",
+            churn::report_json(&churn::run(dir, 14).expect("churn")).to_string(),
+        ),
+        row(
+            "graph_sites",
+            graph::sites_json(&graph::analyze(dir).expect("sites")),
+        ),
+        row(
+            "deadcode",
+            report::deadcode_json(&graph::deadcode::run(dir, None, &core).expect("dead"))
+                .to_string(),
+        ),
+        row(
+            "clone",
+            report::envelope(
+                (dedup::t3::SCHEMA_ID, "clones"),
+                &dedup::t3::run(dir, None, &core).expect("clone"),
+            )
+            .to_string(),
+        ),
+        row(
+            "docdup",
+            report::envelope(
+                (docdup::judge::SCHEMA_ID, "dups"),
+                &docdup::judge::run(dir, None, &core).expect("docdup"),
+            )
+            .to_string(),
+        ),
+        row(
+            "join",
+            join::report_json(&join::run(dir, None, &core, 14).expect("join")).to_string(),
+        ),
+        row(
+            "structure",
+            structure::judge::report_json(
+                &structure::judge::run(dir, None, &core, false, None).expect("structure"),
+            )
+            .to_string(),
+        ),
+        row(
+            "check",
+            score::report_json(&score::run(dir, opts).expect("check")).to_string(),
+        ),
+    ]
 }
 
 #[test]

@@ -17,6 +17,31 @@ pub fn core_bin() -> String {
     )
 }
 
+/// Run `ce` expecting success; the stdout text comes back for content
+/// assertions — the run/assert/read stanza lives once (the P2 census
+/// caught sibling copies growing across eject/doctor/mcp tests).
+pub fn run_expect(dir: &Path, args: &[&str]) -> String {
+    let out = super::run_ce(dir, args);
+    assert!(
+        out.status.success(),
+        "ce {args:?} failed: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    String::from_utf8_lossy(&out.stdout).into_owned()
+}
+
+/// Seed several files at once, parents included — the multi-write
+/// stanza lives once (same census).
+pub fn write_all(dir: &Path, files: &[(&str, &str)]) {
+    for (rel, content) in files {
+        let p = dir.join(rel);
+        if let Some(parent) = p.parent() {
+            std::fs::create_dir_all(parent).expect("mkdir");
+        }
+        std::fs::write(p, content).expect(rel);
+    }
+}
+
 /// Red-then-green gate e2e through the real binaries: run expecting
 /// exit 1 with `needle` on the chosen stream, apply `repair`, run
 /// again expecting exit 0 — the stanza every --check/--core gate

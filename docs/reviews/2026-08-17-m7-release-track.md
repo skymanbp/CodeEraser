@@ -49,6 +49,9 @@ pinned hash 提交 → 再打正式 tag（两段式，清单永不引用未产�
 tag 段**不重建**只验 pin 后 publish——Rust/GHC 构建非位可复现，重建即假 pin）；
 bootstrap_e2e.sh **四态**电池（超合同一态：+PATH 回归）入 ci.yml 三平台，file:// 测试缝
 （https 传输属 curl 契约，如实注记）；本地 Windows 4 态 PASS + 跳校验突变体反事实红。
+draft 实弹（run 32087836041）：v0.1.0 七工件=三平台 ce 二进制 14.9/15.8/16.2MB（全落
+ADR-007 预测 8–19MB 带）+ NSIS 3.9MB/dmg 5.7MB/AppImage 80MB + SHA256SUMS；本地下载
+`sha256sum -c` OK——验收两腿（工件齐备+校验链三层）全过，P1 收口 ccm #1126。
 
 ### P2 产品面收尾（完整 MCP + eject + 1.0 档位）
 MCP 面按拍板③扩展；`ce eject` 实现（清基线、`.ce/`、`CLAUDE_PLUGIN_DATA` 索引——§5.9.4
@@ -56,6 +59,15 @@ MCP 面按拍板③扩展；`ce eject` 实现（清基线、`.ce/`、`CLAUDE_PLU
 既有先例格式发布。
 **验收**：MCP 新工具逐个 golden 对拍；eject 后目录状态断言（建→驻→eject→零残留）；
 档位切换有 FPR 依据行。
+**As-built（本批）**：MCP=mcp/{mod,tools}.rs，十工具**单一权威表**同时生成 tools/list 与
+dispatch（判决族复用 daemon 的 core 解析器；写动词零暴露=拍板③硬形）；对拍电池=十面
+MCP 文本逐一等于家族公共库序列化（暖索引稳态后字节相等——Summary 携刷新计数器，冷暖
+态差异被电池首跑抓获后以稳态化根修）；库侧三处单喉上提（report::envelope 半函数、
+graph::sites_json 公开、deadcode::report_json 出二进制入库）；eject=dry-run 默认+
+`--yes` 实删（关 daemon 先行+有界拆卸重试），三电池=dry 零删/带活 daemon 零残留/
+CLAUDE_PLUGIN_DATA 只扫 `ce-*`；档位 1.0=`config::PROMOTED_DEFAULT` 单常量（guard 执行
+面与 health 报告面同源不可漂移），两晋级类 deny，Stop/precommit 无 FPR 记录维持
+observe（如实缺席），CHANGELOG 第 3 级条目引第 2 级同一账本。
 
 ### P3 合规与文档
 NOTICE（三工程依赖许可证清单，机器可复核：从 Cargo.lock/cabal 冻结面生成）；README 与

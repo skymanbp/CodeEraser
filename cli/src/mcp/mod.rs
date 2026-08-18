@@ -1,10 +1,13 @@
-//! Minimal MCP server over stdio (M3, plan A8: sit exactly where
-//! jscpd already lives for agent ecosystems). JSON-RPC 2.0, one JSON
-//! object per line. Two tools: `scan` (metrics report) and
-//! `check_duplication` (verified clone blocks). Shapes follow MCP
-//! protocol revision 2024-11-05; self-consistency is pinned by the
-//! round-trip test, and real-client compliance is an explicit 0.x
-//! preview acceptance item (M3) — not claimed here.
+//! MCP server over stdio (M3, plan A8) — grown to the FULL read-only
+//! report face at M7-P2 (charter ruling ③): every judgment family's
+//! JSON report is a tool, and write verbs (baseline accept, config)
+//! are deliberately absent — an agent must never re-baseline itself
+//! through this surface. JSON-RPC 2.0, one JSON object per line,
+//! shapes per MCP protocol revision 2024-11-05; the tool catalog is
+//! ONE table (tools.rs) driving both tools/list and dispatch, so a
+//! listed-but-undispatchable tool is unrepresentable.
+
+mod tools;
 
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -69,48 +72,17 @@ fn initialize_result() -> Value {
 }
 
 fn tools_list() -> Value {
-    json!({
-        "tools": [
-            {
-                "name": "scan",
-                "description": "Size/complexity/readability metrics report \
-                    (ce.scan-report schema) for the project or a subpath.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "path": {"type": "string", "description": "subpath (default: project root)"}
-                    }
-                }
-            },
-            {
-                "name": "check_duplication",
-                "description": "Verified T1/T2 clone blocks \
-                    (ce.dedup-report schema) for the project or a subpath.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "path": {"type": "string", "description": "subpath (default: project root)"},
-                        "min_tokens": {"type": "integer", "description": "report threshold (default 50)"}
-                    }
-                }
-            }
-        ]
-    })
+    json!({"tools": tools::TOOLS.iter().map(tools::descriptor).collect::<Vec<_>>()})
 }
 
 fn tool_call(root: &Path, params: &Value) -> Result<Value> {
     let name = params["name"].as_str().unwrap_or_default();
     let args = &params["arguments"];
     let target = resolve(root, args["path"].as_str());
-    let text = match name {
-        "scan" => scan_json(&target)?,
-        "check_duplication" => {
-            let min = args["min_tokens"].as_u64().map(|v| v as usize);
-            let (found, summary) = crate::dedup::analyze(&target, None, min, None)?;
-            crate::dedup::report_json(&found, &summary)?.to_string()
-        }
-        other => anyhow::bail!("unknown tool: {other}"),
+    let Some(tool) = tools::TOOLS.iter().find(|t| t.name == name) else {
+        anyhow::bail!("unknown tool: {name}");
     };
+    let text = (tool.run)(&target, args)?;
     Ok(json!({"content": [{"type": "text", "text": text}], "isError": false}))
 }
 
@@ -126,11 +98,4 @@ fn resolve(root: &Path, sub: Option<&str>) -> PathBuf {
         Ok(c) if c.starts_with(&canon_root) => joined,
         _ => root.to_path_buf(),
     }
-}
-
-/// The scan report as a JSON string (same library pipeline and
-/// schema as `ce scan --format json`).
-fn scan_json(root: &Path) -> Result<String> {
-    let (files, findings, summary) = crate::scan::analyze(root)?;
-    crate::scan::report_string(&files, &findings, summary)
 }

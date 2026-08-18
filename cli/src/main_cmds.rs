@@ -98,19 +98,7 @@ pub fn deadcode_cmd(
 /// reader sees it.
 fn print_deadcode(r: &graph::deadcode::Report, json: bool) {
     if json {
-        let doc = serde_json::json!({
-            "schema": "ce.deadcode-report/0.1.0",
-            "dead": r.dead.iter().map(|(n, v, w)| {
-                serde_json::json!({"name": n, "verdict": v, "why": w})
-            }).collect::<Vec<_>>(),
-            "reported": r.reported.iter().map(|(n, v)| {
-                serde_json::json!({"name": n, "verdict": v})
-            }).collect::<Vec<_>>(),
-            "counts": {"nodes": r.nodes, "kept_edges": r.kept},
-            "unresolved_sites": r.unresolved_sites,
-            "degraded": r.degraded,
-        });
-        println!("{doc}");
+        println!("{}", codeeraser::report::deadcode_json(r));
         return;
     }
     for (name, verdict, why) in &r.dead {

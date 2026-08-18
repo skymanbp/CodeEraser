@@ -1,0 +1,201 @@
+//! The MCP tool catalog: one row per family — name, description,
+//! extra input properties, report adapter. The table is the single
+//! authority for BOTH tools/list and dispatch. Read-only by
+//! construction (M7 charter ruling ③): every adapter ends at a
+//! family's public report serialization; none touches baselines or
+//! config, and the judgment families reuse the daemon's core-binary
+//! resolver instead of growing a second one.
+
+use anyhow::Result;
+use serde_json::{Value, json};
+use std::path::Path;
+
+pub struct Tool {
+    pub name: &'static str,
+    pub desc: &'static str,
+    /// Extra inputSchema properties beyond the shared `path`:
+    /// (name, JSON type, description).
+    pub extra: &'static [(&'static str, &'static str, &'static str)],
+    pub run: fn(&Path, &Value) -> Result<String>,
+}
+
+const DAYS: (&str, &str, &str) = ("days", "integer", "git history window in days (default 14)");
+
+pub const TOOLS: &[Tool] = &[
+    Tool {
+        name: "scan",
+        desc: "Size/complexity/readability metrics report (ce.scan-report schema).",
+        extra: &[],
+        run: scan,
+    },
+    Tool {
+        name: "check_duplication",
+        desc: "Verified T1/T2 clone blocks (ce.dedup-report schema).",
+        extra: &[("min_tokens", "integer", "report threshold (default 50)")],
+        run: check_duplication,
+    },
+    Tool {
+        name: "churn",
+        desc: "Append-vs-rewrite and co-change over a git window (ce.churn-report schema).",
+        extra: &[DAYS],
+        run: churn,
+    },
+    Tool {
+        name: "graph_sites",
+        desc: "Reference sites, resolution-free (the ce graph --sites rows).",
+        extra: &[],
+        run: graph_sites,
+    },
+    Tool {
+        name: "deadcode",
+        desc: "Liveness verdicts over the reference graph (ce.deadcode-report schema).",
+        extra: &[],
+        run: deadcode,
+    },
+    Tool {
+        name: "clone",
+        desc: "T3 near-miss clone judgment (ce.clone-report schema).",
+        extra: &[],
+        run: clone_report,
+    },
+    Tool {
+        name: "docdup",
+        desc: "Documentation-duplication judgment (ce.docdup-report schema).",
+        extra: &[],
+        run: docdup,
+    },
+    Tool {
+        name: "join",
+        desc: "Three-signal join: similarity, graph position, churn (ce.join-report schema).",
+        extra: &[DAYS],
+        run: join,
+    },
+    Tool {
+        name: "structure",
+        desc: "Tree-scale structure judgment, seven axes (ce.structure-report schema).",
+        extra: &[
+            ("deep", "boolean", "also judge the S6 redundancy axis"),
+            (
+                "days",
+                "integer",
+                "judge the S5 doc-staleness axis over this window",
+            ),
+        ],
+        run: structure,
+    },
+    Tool {
+        name: "check",
+        desc: "ADR-006 baseline judgment: score, ratchet and axes (report only — \
+               this surface never writes a baseline).",
+        extra: &[],
+        run: check,
+    },
+];
+
+/// tools/list descriptor for one row — `path` rides every schema.
+pub fn descriptor(t: &Tool) -> Value {
+    let mut props = serde_json::Map::new();
+    props.insert(
+        "path".into(),
+        json!({"type": "string", "description": "subpath (default: project root)"}),
+    );
+    for (name, ty, desc) in t.extra {
+        props.insert((*name).into(), json!({"type": ty, "description": desc}));
+    }
+    json!({
+        "name": t.name,
+        "description": t.desc,
+        "inputSchema": {"type": "object", "properties": props},
+    })
+}
+
+/// CE_CORE_BIN → sibling → PATH: the daemon's resolver, one authority.
+fn core() -> String {
+    crate::daemon::judge::core_bin().unwrap_or_else(|| "ce-core".into())
+}
+
+fn days(args: &Value, default: u32) -> u32 {
+    args["days"].as_u64().map_or(default, |v| v as u32)
+}
+
+fn scan(root: &Path, _a: &Value) -> Result<String> {
+    let (files, findings, summary) = crate::scan::analyze(root)?;
+    crate::scan::report_string(&files, &findings, summary)
+}
+
+fn check_duplication(root: &Path, a: &Value) -> Result<String> {
+    let min = a["min_tokens"].as_u64().map(|v| v as usize);
+    let (found, summary) = crate::dedup::analyze(root, None, min, None)?;
+    Ok(crate::dedup::report_json(&found, &summary)?.to_string())
+}
+
+fn churn(root: &Path, a: &Value) -> Result<String> {
+    Ok(crate::churn::report_json(&crate::churn::run(root, days(a, 14))?).to_string())
+}
+
+fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
+    Ok(crate::graph::sites_json(&crate::graph::analyze(root)?))
+}
+
+/// The plain judged faces (no extra knobs) share ONE adapter body —
+/// the census caught their three shells chaining into clone blocks;
+/// the shell now exists once and thin per-name fns satisfy the
+/// table's fn-pointer field.
+fn judged(root: &Path, which: &str) -> Result<String> {
+    let core = core();
+    Ok(match which {
+        "deadcode" => {
+            crate::report::deadcode_json(&crate::graph::deadcode::run(root, None, &core)?)
+                .to_string()
+        }
+        "clone" => crate::report::envelope(
+            (crate::dedup::t3::SCHEMA_ID, "clones"),
+            &crate::dedup::t3::run(root, None, &core)?,
+        )
+        .to_string(),
+        "docdup" => crate::report::envelope(
+            (crate::docdup::judge::SCHEMA_ID, "dups"),
+            &crate::docdup::judge::run(root, None, &core)?,
+        )
+        .to_string(),
+        other => anyhow::bail!("not a plain judged face: {other}"),
+    })
+}
+
+fn deadcode(root: &Path, _a: &Value) -> Result<String> {
+    judged(root, "deadcode")
+}
+
+fn clone_report(root: &Path, _a: &Value) -> Result<String> {
+    judged(root, "clone")
+}
+
+fn docdup(root: &Path, _a: &Value) -> Result<String> {
+    judged(root, "docdup")
+}
+
+fn join(root: &Path, a: &Value) -> Result<String> {
+    let r = crate::join::run(root, None, &core(), days(a, 14))?;
+    Ok(crate::join::report_json(&r).to_string())
+}
+
+fn structure(root: &Path, a: &Value) -> Result<String> {
+    let deep = a["deep"].as_bool().unwrap_or(false);
+    let d = a["days"].as_u64().map(|v| v as u32);
+    let r = crate::structure::judge::run(root, None, &core(), deep, d)?;
+    Ok(crate::structure::judge::report_json(&r).to_string())
+}
+
+fn check(root: &Path, _a: &Value) -> Result<String> {
+    let o = crate::score::run(
+        root,
+        crate::score::Opts {
+            db: None,
+            core: core(),
+            days: None,
+            floor: None,
+            establish: false,
+        },
+    )?;
+    Ok(crate::score::report_json(&o).to_string())
+}

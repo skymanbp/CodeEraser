@@ -147,10 +147,19 @@ enum Cmd {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,
     },
-    /// Minimal MCP server over stdio: scan + check_duplication
+    /// MCP server over stdio: the read-only report face of every
+    /// judgment family (M7-P2)
     Mcp {
         /// Project root the tools operate on (default: current directory)
         root: Option<PathBuf>,
+    },
+    /// Uninstall project state: .ce/, baseline, pins (dry-run default)
+    Eject {
+        /// Project root to eject (default: current directory)
+        root: Option<PathBuf>,
+        /// Actually remove (default: dry run naming every target)
+        #[arg(long)]
+        yes: bool,
     },
 }
 
@@ -205,6 +214,7 @@ fn infra(cmd: Cmd) -> ExitCode {
         Cmd::Health { hook } => cmds::hook_cmd(hook, "health", codeeraser::health::run_hook),
         Cmd::Precommit { root } => codeeraser::audit::run_precommit(&cmds::or_cwd(root)),
         Cmd::Mcp { root } => cmds::serve_cmd("mcp", codeeraser::mcp::serve(&cmds::or_cwd(root))),
+        Cmd::Eject { root, yes } => codeeraser::eject::run(&cmds::or_cwd(root), yes),
         Cmd::Daemon { root } => cmds::serve_cmd("daemon", daemon::server::serve(&root)),
         Cmd::Ping { root } => cmds::ping_cmd(root),
         _ => unreachable!("analysis() owns every other command"),

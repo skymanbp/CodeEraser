@@ -34,18 +34,11 @@ pub fn emit<M: Serialize, C: Serialize>(
     as_json: bool,
     template: &str,
 ) {
-    let (schema, key) = head;
     if as_json {
-        let mut doc = serde_json::Map::new();
-        doc.insert("schema".into(), schema.into());
-        doc.insert(key.into(), serde_json::to_value(&r.hits).expect("hits"));
-        doc.insert(
-            "counts".into(),
-            serde_json::to_value(&r.counts).expect("counts"),
-        );
-        println!("{}", serde_json::Value::Object(doc));
+        println!("{}", envelope(head, r));
         return;
     }
+    let (_schema, key) = head;
     for h in &r.hits {
         println!(
             "{}",
@@ -60,6 +53,43 @@ pub fn emit<M: Serialize, C: Serialize>(
         .map(|(k, n)| format!("{k} {n}"))
         .collect();
     println!("{key}: {}", parts.join(", "));
+}
+
+/// The deadcode report as its wire JSON document — one serialization
+/// for the CLI's --format json and the MCP report face (lifted out
+/// of the binary at M7-P2 and housed with the other shared report
+/// shapes; a second copy in a consumer is the drift the ratchet
+/// bites).
+pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
+    use serde_json::json;
+    json!({
+        "schema": "ce.deadcode-report/0.1.0",
+        "dead": r.dead.iter().map(|(n, v, w)| {
+            json!({"name": n, "verdict": v, "why": w})
+        }).collect::<Vec<_>>(),
+        "reported": r.reported.iter().map(|(n, v)| {
+            json!({"name": n, "verdict": v})
+        }).collect::<Vec<_>>(),
+        "counts": {"nodes": r.nodes, "kept_edges": r.kept},
+        "unresolved_sites": r.unresolved_sites,
+        "degraded": r.degraded,
+    })
+}
+
+/// The JSON half of emit as a value — the MCP report face returns
+/// this instead of printing, so the envelope stays one authority.
+pub fn envelope<M: Serialize, C: Serialize>(
+    (schema, key): (&str, &str),
+    r: &Report<M, C>,
+) -> serde_json::Value {
+    let mut doc = serde_json::Map::new();
+    doc.insert("schema".into(), schema.into());
+    doc.insert(key.into(), serde_json::to_value(&r.hits).expect("hits"));
+    doc.insert(
+        "counts".into(),
+        serde_json::to_value(&r.counts).expect("counts"),
+    );
+    serde_json::Value::Object(doc)
 }
 
 /// Substitute every `{field}` in the template with the object's

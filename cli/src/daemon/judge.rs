@@ -70,8 +70,9 @@ impl Judge {
     }
 }
 
-/// CE_CORE_BIN, else a ce-core sibling of this binary, else PATH.
-fn core_bin() -> Option<String> {
+/// CE_CORE_BIN, else a ce-core sibling of this binary, else PATH —
+/// the daemon's resolver, reused by the MCP server (one authority).
+pub(crate) fn core_bin() -> Option<String> {
     if let Ok(bin) = std::env::var("CE_CORE_BIN") {
         return Some(bin);
     }

@@ -62,6 +62,9 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     Ok(report)
 }
 
+// The report's JSON face lives in report.rs (deadcode_json) with the
+// other shared serializations — lifted out of the binary at M7-P2.
+
 /// Everything one graph.request carries, built once — the request
 /// throat deadcode and the M5-3 join share: same node identity, same
 /// node rows, same edge wire, so the liveness verdict and the join's

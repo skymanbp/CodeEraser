@@ -71,9 +71,10 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let loaded = Config::load(root);
     let broken = loaded.as_ref().err().cloned();
     let cfg = loaded.ok();
-    let mode = cfg
-        .as_ref()
-        .map_or_else(|| "observe".to_string(), |c| c.guard.tier("ask"));
+    let mode = cfg.as_ref().map_or_else(
+        || "observe".to_string(),
+        |c| c.guard.tier(crate::config::PROMOTED_DEFAULT),
+    );
     let file_path = &env.tool_input.file_path;
     let content = if env.tool_name == "Write" {
         &env.tool_input.content

@@ -203,6 +203,8 @@ pub fn corrupt_index(dir: &Path) {
 
 /// Run the real `ce` binary with `args` in `dir`; the caller asserts
 /// on success or failure (gate tests need both directions).
+/// run_expect / write_all (the success-direction and multi-write
+/// stanzas) live in gates.rs — mod.rs sits at its own 300-line gate.
 pub fn run_ce(dir: &Path, args: &[&str]) -> std::process::Output {
     Command::new(env!("CARGO_BIN_EXE_ce"))
         .args(args)

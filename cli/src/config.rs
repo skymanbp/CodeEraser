@@ -46,11 +46,18 @@ pub struct Guard {
     pub mode: Option<String>,
 }
 
+/// §4.2 step-3 route default for the two promoted PreToolUse classes
+/// (T1/T2 duplicate write, hard-budget breach): deny at 1.0, decided
+/// M7-P2 on the recorded FPR ledger (CHANGELOG 2026-08-17). ONE
+/// constant — guard.rs and health.rs both read it, so the enforced
+/// tier and the reported tier cannot drift apart.
+pub const PROMOTED_DEFAULT: &str = "deny";
+
 impl Guard {
     /// Effective tier for one rule class: an explicit `[guard] mode`
     /// overrides every class; otherwise the plan-§4.2 route default
-    /// for that class applies ("ask" for the two classes promoted
-    /// after the M4 FPR gate, "observe" for everything else).
+    /// for that class applies (PROMOTED_DEFAULT for the two classes
+    /// promoted through the FPR gates, "observe" for everything else).
     pub fn tier(&self, route_default: &str) -> String {
         self.mode
             .clone()

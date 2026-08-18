@@ -61,7 +61,7 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
 pub fn run_sites(root: &Path, json: bool) -> ExitCode {
     match analyze(root) {
         Ok(files) if json => {
-            println!("{}", rows_json(&files));
+            println!("{}", sites_json(&files));
             ExitCode::SUCCESS
         }
         Ok(files) => {
@@ -97,7 +97,9 @@ fn print_counts(files: &[FileSites]) {
     }
 }
 
-fn rows_json(files: &[FileSites]) -> String {
+/// Full site rows as JSON — the `--sites` face and the MCP tool
+/// share this one serialization.
+pub fn sites_json(files: &[FileSites]) -> String {
     let rows: Vec<serde_json::Value> = files
         .iter()
         .flat_map(|f| {
