@@ -1227,7 +1227,7 @@
   },
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "b4ad6430e019d002cd4ebff87f52fbfb9318aab6",
+    "commit": "9b5a6ff38d1e972c6b6f2587a55395a8f138f306",
     "dirty": false
   },
   "method": "hash-ranked stratified draw over the union of the five frozen site universes, reconstructed file-by-file against their frozen sha256 and per-kind counts. rank id = sha256(domain|corpus|commit|path|line|nth|kind|spec) — the design-§5 payload plus nth, which entered site identity at 2b-iii (same-line sites would otherwise collide); spec is the last field so the encoding is injective. Primaries: per-language floor then largest-remainder extras, spread over kinds by largest remainder, top of the site-domain rank per cell; rows are stored in audit-domain order. Backups: per language, the audit-domain rank over the unselected remainder — audit walks them until 100 answered rows. The rung domain is pre-registered here and materializes at 2f when measured rungs exist (not a gate).",

@@ -15,7 +15,7 @@
   },
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "2c67ebe6c6b48f9cd03fe308b0cebe35c687c0e8",
+    "commit": "dfba03a41a8b2e6b552782b0dd2c3a3ba88322cb",
     "dirty": true
   },
   "method": "the frozen t3-sample mains of this corpus, joined back to the digest-anchored live candidate pass, judged by the shipped judge (product tree build, product wire codec, product 85/100 verdict binding) over the pinned tree, scored against the frozen independent audit. correct = judged-clone row whose audited truth has copy lineage {clone, variant, t1t2} (user-delegated mapping, 2026-08-13; t1t2 credited per decision 3's whole-product stance); boilerplate / unrelated / generated are the no-lineage FP families and score wrong. Precision is over answered (judged-clone) rows only; the candidate pass's recall is a CEILING — pairs the four sources cannot see are in no denominator. The universe ledger carries the corpus-wide product run (reported pairs vs the pre-registered min_reported_pairs floor, T-G14, plus the over-cap/forest drop ledgers). The θ table publishes every grid threshold; the release knob is the loosest θ clearing 0.85 — published, never tuned silently.",

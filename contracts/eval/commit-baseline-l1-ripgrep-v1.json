@@ -17208,7 +17208,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "032b2079f601e811f47e5e0ed4cbc43ae1a59d2f",
+    "commit": "98fda723f0a6ce1ef0fe160674c0533dfa372edc",
     "dirty": true
   },
   "method": "cli/src/fourclass classify() per file pair (empty side for created/deleted files), summed per commit; gt = commit-labels-v1 reviewed rows, slice prelabels for zero-move commits. Cross-file moved recall is zero by construction for a per-pair classifier; cross_credit_upper_bound bounds within-pair coincidence credit. GT within-file marks carry git's blocks-mode >=20-alnum block floor; L1's line-level matching may legitimately exceed them (predicted > detected).",

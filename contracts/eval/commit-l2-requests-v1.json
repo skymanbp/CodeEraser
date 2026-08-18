@@ -17014,7 +17014,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "58070b80ef1752aed95575a529f3d7c6c137f1f8",
+    "commit": "a7953c334960e7cdf384f9befc5839ae6b4c24a6",
     "dirty": true
   },
   "method": "real pipeline: fourclass::batch::classify_batch over a live ce-core link, per slice commit; gt = commit-labels-requests-v1; cross GT per file re-derived by the labels machinery (partition + reviewed corrections). Gates: cross misses = 0 at LINE IDENTITY for files without a reviewed correction, count level on the corrected files; coincidence files exact; zero invention on non-cross commits; L2>=L1 monotone with conserved sums (asserted at generation); extras itemized with content AND frozen (a new above-GT row fails the generator until reviewed and blessed); reversed-order determinism (asserted at generation); cost-model sensitivity pinned in core/test/Spec.hs.",

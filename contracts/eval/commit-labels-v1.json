@@ -1962,7 +1962,7 @@
   ],
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "9ae3854a78ba688d6a34c98b35f47b4ee8ed24a7",
+    "commit": "6a89cda660de9905064ff9ee99ccf1227bb2fc97",
     "dirty": true
   },
   "method": "provenance semantics: moved = line that relocated as part of a block/unit relocation. Layer 1 (mechanical): moved marks without alphanumeric content reclassify to novel/deleted (labels-v1 convention, fourclass::significant). Layer 2 (mechanical): trimmed-content pairing across the commit partitions moved lines cross-file vs within-file, preferring within when both readings exist. Layer 3 (reviewed): content-coincidence pairs verified against raw diffs reclassify to novel/deleted — a fresh line duplicating removed content is the duplication signal, not a move. Commits with zero moved marks are unreviewed: their labels equal the slice prelabels verbatim.",

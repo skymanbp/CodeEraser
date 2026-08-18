@@ -15,7 +15,7 @@
   },
   "generated_from": {
     "ce": "0.0.1",
-    "commit": "c6d2465dc7513ed14e6a10d4346a0270f1b3c25a",
+    "commit": "ea494f463b7c3728c6ca4be98526f96526e5986f",
     "dirty": true
   },
   "method": "candidate-pair universe of the pinned tree: the four-source union (S1 verified near-miss runs 25<=len<50 reclaimed from the T1/T2 extension pass; S2 same unit key across files; S3 raw fingerprint co-occurrence, no extension — wider than any reasonable candidate pass on purpose; S4 structural MinHash/LSH, supplementary, its band-group distribution published) over the admitted units (>= 24 named nodes) of the t3-universe sibling, reduced by the two provably admissible prunes (size band, label intersection — both decide 'provably below the 0.85 threshold', so no true clone pair is ever dropped). The candidate pass never consults TSED or TED: this universe freezes before the judge exists, and candidate recall is an upper bound on judged recall. pairs_sha256 fixes the exact surviving pair set; the frozen sample proves membership against it.",

@@ -2,7 +2,7 @@
  "schema": "ce.eval-pre-haskell-members/1.0.0",
  "method": "the committed ce-baseline.json discrete member set at the last pre-Haskell tree (M5-3j close): the generation gate asserts these ids remain a SUBSET of every later baseline discrete set - corpus growth must be a named addition, never a silent rewrite (design RM14, pre-registered)",
  "generated_from": {
-  "commit": "4b396951281387cb8233f9a07890b70166366cc6",
+  "commit": "fb9c1390e68c8c21ff4e10d6eaac5ce8c21e614d",
   "source": "ce-baseline.json"
  },
  "budget_before_haskell": 97,
