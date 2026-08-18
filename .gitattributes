@@ -3,3 +3,9 @@
 # conversion on checkout (Windows runners default autocrlf=true) would
 # redden them. Never translate.
 *.ndjson -text
+
+# sh scripts and the sh-sourced manifest run under git-bash on Windows
+# too (plugin starter + bootstrap e2e, M7-P1) — a CRLF checkout would
+# \r-poison them (the M5-3a lesson, second application). Pin LF.
+*.sh text eol=lf
+manifest.env text eol=lf
