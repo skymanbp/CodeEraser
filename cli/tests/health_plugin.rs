@@ -115,11 +115,25 @@ fn plugin_manifests_parse_and_wire_real_subcommands() {
     for shipped in ["bin/ce.sh", "bin/manifest.env"] {
         assert!(plugin.join(shipped).is_file(), "{shipped} missing");
     }
-    // marketplace manifest parses and points at this plugin
+}
+
+/// The marketplace manifest lives at the REPO root — the only
+/// location `/plugin marketplace add owner/repo` reads (official
+/// plugin-marketplaces docs, verified 2026-08-18; the old
+/// plugin-local copy was undiscoverable by the one-command add) —
+/// and points at plugin/; the entry carries NO version so
+/// plugin.json stays the one version authority.
+#[test]
+fn marketplace_manifest_sits_at_repo_root_and_points_home() {
     let market: serde_json::Value = serde_json::from_str(
-        &std::fs::read_to_string(plugin.join(".claude-plugin/marketplace.json"))
-            .expect("marketplace.json"),
+        &std::fs::read_to_string(repo_root().join(".claude-plugin/marketplace.json"))
+            .expect("marketplace.json at repo root"),
     )
     .expect("marketplace.json parses");
     assert_eq!(market["plugins"][0]["name"], "codeeraser");
+    assert_eq!(market["plugins"][0]["source"], "./plugin");
+    assert!(
+        market["plugins"][0].get("version").is_none(),
+        "entry version must stay unset — plugin.json is the authority"
+    );
 }

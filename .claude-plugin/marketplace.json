@@ -4,15 +4,13 @@
     "name": "skymanbp"
   },
   "metadata": {
-    "description": "Single-plugin marketplace exposing the CodeEraser passive guard preview.",
-    "version": "0.1.0"
+    "description": "Single-plugin marketplace exposing the CodeEraser passive guard."
   },
   "plugins": [
     {
       "name": "codeeraser",
-      "source": "./",
-      "description": "CodeEraser passive guard (0.x preview): PreToolUse duplicate-write interception, Stop audit, SessionStart health — backed by a per-project winnowing clone index daemon. Requires `ce` on PATH (air-gapped preview).",
-      "version": "0.1.0",
+      "source": "./plugin",
+      "description": "CodeEraser passive guard: PreToolUse duplicate-write interception, Stop audit, SessionStart health — backed by a per-project winnowing clone index daemon. The starter downloads the SHA256-pinned ce binary from GitHub Releases on first run (manifest.env pins); a locally installed `ce` on PATH also works.",
       "author": {
         "name": "skymanbp"
       },

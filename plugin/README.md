@@ -1,4 +1,4 @@
-# codeeraser plugin — 0.x preview（air-gapped）
+# codeeraser plugin
 
 被动 guard 三件套（全部 fail-open，内部失败一律放行）：
 
@@ -8,12 +8,17 @@
 | PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入内容做 T1/T2 探针；按 `ce.toml [guard] mode` 决策 |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块；仅 deny 档拦停 |
 
-## 预览期安装（无网络分发，ADR-007 的 SHA256 pinned 下载在 M7）
+## 安装
 
-1. `cargo install --path cli`（或把 `cli/target/release` 加入 PATH），
-   确认 `ce --version` 可用；
-2. 本地 marketplace 安装本目录（`/plugin marketplace add <repo>/plugin`，
-   再 `/plugin install codeeraser@codeeraser`）；
+公开 marketplace 一键装（清单在仓根 `.claude-plugin/marketplace.json`）：
+
+1. `/plugin marketplace add skymanbp/CodeEraser`
+2. `/plugin install codeeraser@codeeraser`
+
+`ce` 真身由 `bin/ce.sh` 三级解析（ADR-007）：已验证本地副本 →
+按 `bin/manifest.env` 的 SHA256 pin 从 GitHub Releases 下载并校验 →
+PATH 上的 `ce` 兜底。源码安装（`cargo install --path cli`）依然可用。
+
 3. 项目里可选 `ce.toml`：
 
 ```toml

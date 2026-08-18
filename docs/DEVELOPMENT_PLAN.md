@@ -214,8 +214,8 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
   两者任一 fail 即 fail。`ce-baseline.json` 提交进仓库（betterer 范式）。
 
 **ADR-007 插件工程约束（官方文档核实，2026-08-06）。**
-- 布局：`plugin/.claude-plugin/plugin.json`（省略 `version` 则 commit SHA 即版本；**自 0.x
-  预览起带显式 version**——D2-2）；同目录 `marketplace.json` 即 marketplace（source "./" 自指）。
+- 布局：`plugin/.claude-plugin/plugin.json`（省略 `version` 则 commit SHA 即版本；**显式
+  version**——D2-2）；仓根 `.claude-plugin/marketplace.json`（source "./plugin"：`owner/repo` 一键添加只认仓根清单——官方文档核实 2026-08-18）。
 - 安装拷贝进 `~/.claude/plugins/cache` → 禁止越界相对引用。
 - 二进制分发路径**唯一化（A9a）**：仓库 `bin/` 只放轻量启动脚本；真身二进制由
   SessionStart 从 GitHub Releases 下载到 `CLAUDE_PLUGIN_DATA`（跨版本保留），
@@ -249,7 +249,7 @@ Rust 解析 `ce.toml` 原样过 wire 不解释语义。四片：P4 配置面与�
 ### 5.10 仓库布局（M0 建立）
 ```
 CodeEraser/
-├── plugin/       # 单插件 marketplace 根：.claude-plugin/{marketplace,plugin}.json（source "./" 自指）+ hooks/hooks.json
+├── plugin/       # 插件根：.claude-plugin/plugin.json + hooks/hooks.json（marketplace 清单在仓根 .claude-plugin/，source "./plugin"）
 ├── cli/          # Rust workspace：ce（CLI+daemon，含 hookio/probe/audit）
 ├── gui/          # Tauri 外壳 + vanilla JS 界面（消费 CLI 同一报告 schema）
 ├── core/         # Haskell cabal：ce-core（判决层）
