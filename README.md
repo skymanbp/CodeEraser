@@ -1,5 +1,7 @@
 # CodeEraser
 
+English | **[中文](README.zh.md)**
+
 > An eraser against LLM-induced code & document entropy.
 
 LLMs drift toward stacking and patching over long-lived work: the same

@@ -1,8 +1,10 @@
 <!doctype html>
 <!-- CodeEraser GUI (M6 S4a structure screen + M7-P4 trend and
-     deletion-candidate screens): renders the report documents and
-     nothing else — no framework, no build step, judgment zero-leak
-     into JS (webview layer is rendering glue by user ruling). -->
+     deletion-candidate screens + M8-G3a i18n): renders the report
+     documents and nothing else — no framework, no build step,
+     judgment zero-leak into JS (webview layer is rendering glue by
+     user ruling). Labels come from i18n.js (en default, zh switch);
+     data-i18n marks every static label. -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -13,18 +15,19 @@
   <header>
     <input id="root" type="text" spellcheck="false" />
     <nav id="tabs">
-      <button class="tab on" data-tab="structure">structure</button>
-      <button class="tab" data-tab="trend">trend</button>
-      <button class="tab" data-tab="candidates">candidates</button>
+      <button class="tab on" data-tab="structure" data-i18n="tabStructure"></button>
+      <button class="tab" data-tab="trend" data-i18n="tabTrend"></button>
+      <button class="tab" data-tab="candidates" data-i18n="tabCandidates"></button>
     </nav>
+    <button id="lang" title="English / 中文"></button>
     <span id="status"></span>
   </header>
 
   <div id="view-structure" class="view">
     <section class="bar">
-      <label><input id="deep" type="checkbox" /> deep (S6)</label>
-      <label>days <input id="days" type="number" min="1" placeholder="off" /></label>
-      <button id="scan">scan</button>
+      <label><input id="deep" type="checkbox" /> <span data-i18n="deep"></span></label>
+      <label><span data-i18n="days"></span> <input id="days" type="number" min="1" data-i18n-ph="off" /></label>
+      <button id="scan" data-i18n="scan"></button>
     </section>
     <section id="summary" hidden>
       <div class="stat"><span id="score"></span><small id="scale"></small></div>
@@ -40,8 +43,8 @@
 
   <div id="view-trend" class="view" hidden>
     <section class="bar">
-      <label>commits <input id="trend-commits" type="number" min="2" value="30" /></label>
-      <button id="trend-load">load</button>
+      <label><span data-i18n="commits"></span> <input id="trend-commits" type="number" min="2" value="30" /></label>
+      <button id="trend-load" data-i18n="load"></button>
       <button id="trend-more" hidden></button>
     </section>
     <main>
@@ -52,8 +55,8 @@
 
   <div id="view-candidates" class="view" hidden>
     <section class="bar">
-      <label>days <input id="cand-days" type="number" min="1" value="14" /></label>
-      <button id="cand-load">load</button>
+      <label><span data-i18n="days"></span> <input id="cand-days" type="number" min="1" value="14" /></label>
+      <button id="cand-load" data-i18n="load"></button>
     </section>
     <main>
       <div id="cand-list"></div>
@@ -61,6 +64,7 @@
     </main>
   </div>
 
+  <script src="i18n.js" defer></script>
   <script src="main.js" defer></script>
   <script src="trend.js" defer></script>
   <script src="candidates.js" defer></script>

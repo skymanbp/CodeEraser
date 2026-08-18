@@ -1,7 +1,7 @@
-// CodeEraser GUI — trend screen (M7-P4). Renders the
-// ce.trend-report document: score points over mainline history.
-// Every number shown was judged in the core; the only math here is
-// pixel geometry. Uses main.js globals (invoke, $, esc, row).
+// CodeEraser GUI — trend screen (M7-P4, i18n'd M8-G3a). Renders the
+// ce.trend-report document: score points over mainline history plus
+// the core's trend/1 judgment. Every number shown was judged in the
+// core; the only math here is pixel geometry. Labels via i18n.js.
 "use strict";
 
 let trendReport = null;
@@ -14,13 +14,14 @@ function trendBoot() {
   $("trend-load").addEventListener("click", () => loadTrend(null));
   $("trend-more").addEventListener("click", () => loadTrend(TREND_BATCH));
   window.addEventListener("resize", () => trendReport && drawTrend());
+  i18nRefreshers.push(() => trendReport && renderTrend());
 }
 
 async function loadTrend(batch) {
   const commits = Number($("trend-commits").value) || 30;
   $("trend-load").disabled = true;
   $("status").className = "";
-  $("status").textContent = batch === null ? "measuring history…" : "measuring more…";
+  $("status").textContent = batch === null ? tr("measuring") : tr("measuringMore");
   try {
     trendReport = await invoke("trend_report", {
       root: $("root").value,
@@ -40,16 +41,16 @@ async function loadTrend(batch) {
 function renderTrend() {
   const more = $("trend-more");
   more.hidden = trendReport.pending === 0;
-  more.textContent = `measure ${Math.min(TREND_BATCH, trendReport.pending)} more (${trendReport.pending} pending)`;
+  more.textContent = tr("measureMore", Math.min(TREND_BATCH, trendReport.pending), trendReport.pending);
   drawTrend();
   const parts = [
-    `<h2>trend</h2>`,
-    row("window", trendReport.window + " commits"),
-    row("measured", trendReport.rows.length),
-    row("pending", trendReport.pending),
+    `<h2>${tr("trend")}</h2>`,
+    row(tr("window"), tr("windowCommits", trendReport.window)),
+    row(tr("measured"), trendReport.rows.length),
+    row(tr("pending"), trendReport.pending),
   ];
   for (const [sha, why] of trendReport.failed) {
-    parts.push(row("failed " + sha, esc(why)));
+    parts.push(row(`${tr("failedPrefix")} ${sha}`, esc(why)));
   }
   $("trend-detail").innerHTML = parts.join("");
 }
@@ -97,9 +98,9 @@ function drawTrend() {
 function trendPoint(r) {
   $("trend-detail").innerHTML = [
     `<h2>${esc(r.commit.slice(0, 12))}</h2>`,
-    row("date", new Date(r.ts * 1000).toISOString().slice(0, 19).replace("T", " ")),
-    row("score", `${r.score} / ${r.scale}`),
-    row("axes", r.axes.map(([c, p]) => `${c}:${p}`).join("  ") || "none"),
+    row(tr("date"), new Date(r.ts * 1000).toISOString().slice(0, 19).replace("T", " ")),
+    row(tr("score"), `${r.score} / ${r.scale}`),
+    row(tr("axes"), r.axes.map(([c, p]) => `${tr("axisNames")[c]}:${p}`).join("  ") || tr("none")),
   ].join("");
 }
 

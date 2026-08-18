@@ -1,18 +1,13 @@
-// CodeEraser GUI glue (M6 S4a structure screen + M7-P4 tab shell).
-// This file RENDERS the report document — every number it shows was
-// judged in the core and measured in the codeeraser crate; nothing
-// is derived here beyond layout geometry. Axis labels mirror the
-// design booklet §3 table. The trend / candidates screens live in
-// their own files (the repo's own 300-line gate applies to JS too);
-// `invoke`, `$`, `esc` and `row` here are the shared globals.
+// CodeEraser GUI glue (M6 S4a structure screen + M7-P4 tab shell +
+// M8-G3a i18n). This file RENDERS the report document — every number
+// it shows was judged in the core and measured in the codeeraser
+// crate; nothing is derived here beyond layout geometry. Labels come
+// from i18n.js (tr / axis names); `invoke`, `$`, `esc` and `row`
+// here are the shared globals the sibling screens use.
 "use strict";
 
 const invoke = window.__TAURI__.core.invoke;
 const $ = (id) => document.getElementById(id);
-const AXIS = [
-  "geometry", "naming", "mixing", "misplaced",
-  "docs", "stale-docs", "redundancy",
-];
 
 let report = null;
 let children = [];
@@ -30,6 +25,9 @@ function tabs() {
 }
 
 async function boot() {
+  applyStaticI18n();
+  $("lang").addEventListener("click", toggleLang);
+  i18nRefreshers.push(() => report && (render(), showDetail(0)));
   $("root").value = await invoke("default_root").catch(() => "");
   tabs();
   $("scan").addEventListener("click", scan);
@@ -41,7 +39,7 @@ async function scan() {
   const days = $("days").value ? Number($("days").value) : null;
   $("scan").disabled = true;
   $("status").className = "";
-  $("status").textContent = "judging…";
+  $("status").textContent = tr("judging");
   try {
     report = await invoke("structure_report", {
       root: $("root").value,
@@ -63,15 +61,15 @@ function render() {
   $("score").textContent = report.score;
   $("scale").textContent = "/ " + report.scoreScale;
   $("entropy").textContent =
-    "entropy " + report.entropy.map(([k, v]) => `${k}:${v}‰`).join("  ");
+    tr("entropy") + " " + report.entropy.map(([k, v]) => `${k}:${v}‰`).join("  ");
   $("axes").textContent = report.axes
-    .map(([c, p]) => `${AXIS[c]} ${p}`)
+    .map(([c, p]) => `${tr("axisNames")[c]} ${p}`)
     .join("  ");
   $("divergence").textContent =
     report.declaredDirs > 0
       ? report.divergence === null
-        ? "divergence: mass outside declared dirs"
-        : `divergence ${report.divergence}‰`
+        ? tr("divergenceOutside")
+        : `χ² ${report.divergence}‰`
       : "";
   children = report.tree.map(() => []);
   report.tree.forEach((n, i) => {
@@ -141,7 +139,7 @@ function drawRect(id, x, y, wd, ht) {
     showDetail(id);
   });
   const title = document.createElementNS(ns, "title");
-  title.textContent = `${n.name}  files ${n.files}  findings ${n.axes.length}`;
+  title.textContent = `${n.name}  ${tr("files")} ${n.files}  ${tr("findings")} ${n.axes.length}`;
   r.appendChild(title);
   $("treemap").appendChild(r);
   if (wd > 60 && ht > 26) {
@@ -166,14 +164,14 @@ function showDetail(id) {
   const n = report.tree[id];
   const rows = [
     `<h2>${esc(n.name)}</h2>`,
-    row("depth", n.depth),
-    row("subdirs", n.subdirs),
-    row("files", n.files),
-    row("findings", n.axes.map((a) => AXIS[a]).join(", ") || "none"),
+    row(tr("depth"), n.depth),
+    row(tr("subdirs"), n.subdirs),
+    row(tr("files"), n.files),
+    row(tr("findings"), n.axes.map((a) => tr("axisNames")[a]).join(", ") || tr("none")),
   ];
   for (const d of report.deviations) {
     if (d.dir === n.name) {
-      rows.push(row("deviation", d.kind === 0 ? "undeclared territory" : "declared but empty"));
+      rows.push(row(tr("deviation"), d.kind === 0 ? tr("undeclared") : tr("declaredEmpty")));
     }
   }
   $("detail").innerHTML = rows.join("");

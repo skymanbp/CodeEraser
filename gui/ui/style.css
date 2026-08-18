@@ -48,6 +48,14 @@ header input[type="text"] {
   cursor: pointer;
 }
 #tabs .tab.on { background: var(--accent); color: var(--ink); }
+#lang {
+  background: var(--panel);
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
 #status { color: var(--dim); min-width: 120px; }
 #status.err { color: #e08a82; }
 
