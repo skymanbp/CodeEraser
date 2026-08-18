@@ -22,7 +22,6 @@ use crate::score;
 use crate::{churn, dedup};
 use anyhow::{Context, Result};
 use serde::Serialize;
-use serde_json::{Value, json};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 

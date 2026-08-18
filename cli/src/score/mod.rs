@@ -20,7 +20,6 @@ use crate::graph::deadcode;
 use crate::join::churn_unit::UnitMap;
 use crate::{churn, dedup, join, scan};
 use anyhow::Result;
-use serde_json::json;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::{Path, PathBuf};
 
