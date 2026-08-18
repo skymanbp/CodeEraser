@@ -9,9 +9,23 @@
 
 use std::sync::OnceLock;
 
-/// True exactly when CE_LANG=zh — read once per process.
+static ZH: OnceLock<bool> = OnceLock::new();
+
+/// Pin the language from the CLI's `--lang` (G3 charter: the flag
+/// and CE_LANG are the two selectors, flag wins). Must run before
+/// any zh() read — main reads the flag straight off argv ahead of
+/// clap so even `--help` renders in the chosen language; a pin that
+/// arrives after the first lookup loses (OnceLock), which no caller
+/// does today.
+pub fn init(lang: Option<&str>) {
+    if let Some(l) = lang {
+        let _ = ZH.set(l == "zh");
+    }
+}
+
+/// True exactly when the pinned --lang, else CE_LANG, says zh —
+/// resolved once per process.
 pub fn zh() -> bool {
-    static ZH: OnceLock<bool> = OnceLock::new();
     *ZH.get_or_init(|| std::env::var("CE_LANG").is_ok_and(|v| v == "zh"))
 }
 

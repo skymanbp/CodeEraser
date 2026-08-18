@@ -65,8 +65,9 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce mcp` | 只读 MCP 服务器：上述每个报告都是一个工具 |
 | `ce doctor` / `ce eject` | 健康行；按项目完整卸载（默认 dry-run） |
 
-控制台报告默认英文，`CE_LANG=zh` 切换整行中文查表。JSON 输出与
-FAIL/pass 词汇永不翻译——那是机器面。GUI 自带语言切换钮。
+控制台报告与 `--help` 默认英文，`--lang zh`（或 `CE_LANG=zh`，旗标
+优先）切换整行中文查表。JSON 输出与 FAIL/pass 词汇永不翻译——那是
+机器面。GUI 自带语言切换钮。
 
 ## Guard（Claude Code 插件）
 

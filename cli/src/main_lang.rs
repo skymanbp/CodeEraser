@@ -1,0 +1,194 @@
+//! Runtime help localization (M8-G3b): under zh the built Command's
+//! about/help strings are swapped from the lookup below — the
+//! English surface stays the derive's own doc comments (zero
+//! normalized tokens by construction). The zh side travels as ONE
+//! tab-separated literal: the tuple-table first cut T2-matched two
+//! unrelated data tables in the corpus (hs_boot's module rows,
+//! notice_gate's census rows) — under literal abstraction any
+//! homogeneous tuple list matches any other, so the data is one
+//! token instead. The completeness test at the bottom is the
+//! charter's G3 acceptance: a missing zh entry is red, a dead key
+//! is red. clap's own framework vocabulary (error:, Usage:, Print
+//! help) stays English — the FAIL/pass stance applied to the parser.
+
+use std::collections::HashMap;
+use std::sync::OnceLock;
+
+/// `key<TAB>zh` per line. Keys: `ce` = root about, `ce.lang` = the
+/// global flag, `<cmd>` = a subcommand's about, `<cmd>.<arg id>` =
+/// an arg's help.
+const ZH_TSV: &str = "\
+ce	CodeEraser — 消除 LLM 引入的代码与文档熵
+ce.lang	控制台语言（优先于 CE_LANG）
+doctor	环境与项目健康：ce-core 握手、项目状态行、降级计数（绝不启动守护进程）
+doctor.core	ce-core 可执行文件路径
+doctor.root	要报告的项目根（默认当前目录）
+scan	度量尺寸 / 复杂度 / 可读性指标（M1 模块；自 ADR-008 P3 起由核分级）
+scan.path	要扫描的目录（默认当前目录）
+scan.core	ce-core 可执行文件路径
+churn	时间维度指标：追加对重写、窗口改动、共变对（M4；仅报告，供 M5 联判）
+churn.root	仓库根（默认当前目录）
+churn.days	历史窗口天数
+graph	依赖图子系统：--sites 列出引用站点（不做解析）；存活性判决在 `ce deadcode`
+graph.root	要分析的目录（默认当前目录）
+graph.sites	列出引用站点
+deadcode	在缓存引用图上判决存活性（M5-2h）：阶梯的边，Haskell 核的四路判决
+deadcode.root	要判决的目录（默认当前目录）
+deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
+deadcode.core	ce-core 可执行文件路径
+deadcode.check	任一文件级死判落地即退出 1（M5-2「全处置」验收行的 CI 自食门）
+clone	T3 近似克隆判决（M5-3）：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
+clone.root	要分析的目录（默认当前目录）
+clone.core	ce-core 可执行文件路径
+clone.db	索引数据库路径（默认 <root>/.ce/index.db）
+clone.units	改为列出单元宇宙而非判决
+docdup	文档重复判决（M5-3g）：对缓存活段经核 docdup/1 精确 Jaccard
+docdup.root	要分析的目录（默认当前目录）
+docdup.core	ce-core 可执行文件路径
+docdup.db	索引数据库路径（默认 <root>/.ce/index.db）
+docdup.check	任一重复被报告即退出 1（CI 自食门 — 计划 §7.5 docdup 条款，M5 收口起代码兑现）
+join	三信号联判（M5-3h）：相似度 + 图位置 + 单元改动，文件与单元两层（3i 前仅报告）
+join.root	要分析的目录（默认当前目录）
+join.core	ce-core 可执行文件路径
+join.db	索引数据库路径（默认 <root>/.ce/index.db）
+join.days	改动窗口天数
+structure	树尺度结构判决（M6）：熵、判轴与发现，经核 structure/1（S2 阶段仅报告）
+structure.root	要分析的目录（默认当前目录）
+structure.core	ce-core 可执行文件路径
+structure.db	索引数据库路径（默认 <root>/.ce/index.db）
+structure.deep	同时按目录卷积克隆块与死单元并判 S6 冗余轴（会跑去冗普查与存活判决；缺省 = 该轴诚实未判）
+structure.days	按此 git 窗口天数判 S5 文档陈旧轴（所引代码晚于文档最后编辑而变；缺省 = 该轴诚实未判）
+trend	主线历史上的分数轨迹（M7-P4）：逐提交绝对检查分，缓存于索引，可重建
+trend.root	要分析的目录（默认当前目录）
+trend.core	ce-core 可执行文件路径
+trend.db	索引数据库路径（默认 <root>/.ce/index.db）
+trend.commits	主线窗口：最新 N 个第一父提交
+trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部；GUI 传小批量以显示进度）
+check	ADR-006 门（M5-3i）：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负
+check.root	要分析的目录（默认当前目录）
+check.core	ce-core 可执行文件路径
+check.db	索引数据库路径（默认 <root>/.ce/index.db）
+check.days	改动窗口天数（省略 = 改动表保持为空）
+check.fail_under	分数落在此千分比地板之下即判负
+baseline	把核的 newBaseline 落盘为 ce-baseline.json（无 CE_ACCEPT_BASELINE=1 时违规集只准缩）
+baseline.root	要分析的目录（默认当前目录）
+baseline.core	ce-core 可执行文件路径
+baseline.db	索引数据库路径（默认 <root>/.ce/index.db）
+baseline.days	改动窗口天数（省略 = 改动表保持为空）
+dedup	经 winnowing 指纹索引检测 T1/T2 克隆（M2）
+dedup.path	要索引的目录（默认当前目录）
+dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
+dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50）
+dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，出自 M2 校准；0 关闭）
+dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（M2 评审 R12；自 ADR-008 P2 起比较即核的判决）
+dedup.core	ce-core 可执行文件路径（仅 --check 咨询）
+daemon	前台运行按项目守护进程（ADR-003）；通常由 `ce ping` / 钩子探针惰启
+daemon.root	要服务的项目根
+ping	经项目守护进程往返一次 ping（会惰启它）
+ping.root	项目根（默认当前目录）
+probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定
+probe.hook	钩子模式（M3 唯一模式）
+audit	Stop 审计 v1：净行数 + 触及改动文件的重复块（仅 deny 档拦停）
+audit.hook	钩子模式（M3 唯一模式）
+health	SessionStart 健康行 + 守护进程预热
+health.hook	钩子模式（M3 唯一模式）
+precommit	pre-commit 门：暂存净行数 + 触及的重复（deny 档触重即退出 1）
+precommit.root	仓库根（默认当前目录）
+mcp	stdio 上的 MCP 服务器：每个判决家族的只读报告面（M7-P2）
+mcp.root	工具作用的项目根（默认当前目录）
+eject	卸载项目状态：.ce/、基线、钉扎件（默认试运行）
+eject.root	要卸载的项目根（默认当前目录）
+eject.yes	真正移除（默认试运行并点名每个目标）
+";
+
+fn zh_map() -> &'static HashMap<&'static str, &'static str> {
+    static MAP: OnceLock<HashMap<&'static str, &'static str>> = OnceLock::new();
+    MAP.get_or_init(|| ZH_TSV.lines().filter_map(|l| l.split_once('\t')).collect())
+}
+
+/// Swap every about/help to zh off the lookup. Each subcommand is
+/// touched exactly once (clap re-appends on mutation, so a second
+/// pass would scramble the listing order); a lookup miss is a no-op
+/// here — the completeness test below is the enforcement.
+pub(crate) fn localize(mut cmd: clap::Command) -> clap::Command {
+    let m = zh_map();
+    cmd = cmd.about(m["ce"]).mut_arg("lang", |a| a.help(m["ce.lang"]));
+    let subs: Vec<(String, Vec<String>)> = cmd
+        .get_subcommands()
+        .map(|s| {
+            let args = s
+                .get_arguments()
+                .filter(|a| a.get_help().is_some())
+                .map(|a| a.get_id().to_string())
+                .collect();
+            (s.get_name().to_string(), args)
+        })
+        .collect();
+    for (name, args) in subs {
+        cmd = cmd.mut_subcommand(&name, |mut sc| {
+            if let Some(zh) = m.get(name.as_str()) {
+                sc = sc.about(*zh);
+            }
+            for id in &args {
+                if let Some(zh) = m.get(format!("{name}.{id}").as_str()) {
+                    let zh: &'static str = zh;
+                    sc = sc.mut_arg(id.as_str(), |a| a.help(zh));
+                }
+            }
+            sc
+        });
+    }
+    cmd
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::CommandFactory;
+
+    /// The charter's G3 acceptance for this face: the zh lookup is
+    /// complete in BOTH directions — a subcommand or helped arg
+    /// without a zh entry is red (missing key), and a key naming a
+    /// node that no longer exists is red too (dead key), so a flag
+    /// rename cannot silently strand its translation.
+    #[test]
+    fn zh_lookup_is_complete_and_alive() {
+        let cmd = crate::main_cli::Cli::command();
+        let m = zh_map();
+        assert!(m.contains_key("ce") && m.contains_key("ce.lang"));
+        for sc in cmd.get_subcommands() {
+            let name = sc.get_name();
+            if name == "help" {
+                continue;
+            }
+            assert!(m.contains_key(name), "subcommand {name} has no zh about");
+            for a in sc.get_arguments() {
+                let id = a.get_id().as_str();
+                if matches!(id, "help" | "version" | "lang") || a.get_help().is_none() {
+                    continue; // format carries no help by design
+                }
+                assert!(
+                    m.contains_key(format!("{name}.{id}").as_str()),
+                    "arg {name}.{id} has no zh help"
+                );
+            }
+        }
+        for k in m.keys() {
+            if matches!(*k, "ce" | "ce.lang") {
+                continue;
+            }
+            match k.split_once('.') {
+                None => assert!(cmd.find_subcommand(k).is_some(), "dead key {k}"),
+                Some((c, a)) => {
+                    let sc = cmd
+                        .find_subcommand(c)
+                        .unwrap_or_else(|| panic!("dead key {k}: no subcommand {c}"));
+                    assert!(
+                        sc.get_arguments().any(|x| x.get_id().as_str() == a),
+                        "dead key {k}: no arg {a}"
+                    );
+                }
+            }
+        }
+    }
+}

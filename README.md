@@ -68,10 +68,10 @@ same pins automatically and refuses a mismatching download out loud.
 | `ce mcp` | read-only MCP server: every report above as a tool |
 | `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |
 
-Console reports speak English by default and Chinese under
-`CE_LANG=zh` (whole-line lookup). JSON output and the FAIL/pass
-vocabulary are never translated — they are the machine face. The GUI
-carries its own language toggle.
+Console reports and `--help` speak English by default and Chinese
+under `--lang zh` (or `CE_LANG=zh`; the flag wins). JSON output and
+the FAIL/pass vocabulary are never translated — they are the machine
+face. The GUI carries its own language toggle.
 
 ## Guard (Claude Code plugin)
 
