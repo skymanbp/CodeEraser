@@ -173,12 +173,27 @@ pub fn run(core: &str) -> Result<HelloReply, String> {
     Link::open(core).map(|(_link, reply)| reply)
 }
 
+/// The effective core binary for a `--core` flag value: an explicit
+/// path is used verbatim; the untouched default routes through the
+/// daemon's resolver chain — CE_CORE_BIN, a ce-core SIBLING of this
+/// executable (the installed layout drops both binaries side by
+/// side), then PATH. One authority with daemon/MCP (core_bin), and
+/// applied at the ONE spawn throat below, so every judgment family
+/// resolves identically with no per-flag plumbing.
+pub fn resolve_core(core: &str) -> String {
+    if core != "ce-core" {
+        return core.to_string();
+    }
+    crate::daemon::judge::core_bin().unwrap_or_else(|| core.to_string())
+}
+
 fn spawn(core: &str) -> Result<Child, String> {
-    Command::new(core)
+    let effective = resolve_core(core);
+    Command::new(&effective)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()
-        .map_err(|e| format!("cannot start `{core}`: {e}"))
+        .map_err(|e| format!("cannot start `{effective}`: {e}"))
 }
 
 fn validate(reply: HelloReply) -> Result<HelloReply, String> {
@@ -207,4 +222,21 @@ fn major(v: &str) -> Result<u64, String> {
         .next()
         .and_then(|s| s.parse().ok())
         .ok_or_else(|| format!("bad semver `{v}`"))
+}
+
+#[cfg(test)]
+mod tests {
+    /// An explicit --core path travels verbatim; the untouched
+    /// default consults the ONE resolver the daemon and MCP already
+    /// use — equality against core_bin pins the single-authority
+    /// property without poking the process environment (the e2e
+    /// suite owns CE_CORE_BIN; mutating it here would race them).
+    #[test]
+    fn explicit_core_wins_and_default_routes_through_the_one_resolver() {
+        assert_eq!(super::resolve_core("x/custom/core"), "x/custom/core");
+        assert_eq!(
+            super::resolve_core("ce-core"),
+            crate::daemon::judge::core_bin().expect("resolver always answers")
+        );
+    }
 }

@@ -187,7 +187,8 @@ pub struct DedupArgs {
     /// core's verdict since ADR-008 P2)
     #[arg(long)]
     check: bool,
-    /// Path to the ce-core executable (consulted by --check alone)
+    /// Path to the ce-core executable, consulted by --check alone
+    /// (default: CE_CORE_BIN, a ce-core beside this binary, then PATH)
     #[arg(long, default_value = "ce-core")]
     core: String,
 }

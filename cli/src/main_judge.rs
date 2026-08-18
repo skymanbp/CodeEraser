@@ -19,7 +19,8 @@ pub struct JudgeArgs {
     pub(crate) root: Option<PathBuf>,
     #[arg(long, value_enum, default_value_t = OutFormat::Console)]
     pub(crate) format: OutFormat,
-    /// Path to the ce-core executable
+    /// Path to the ce-core executable (default: CE_CORE_BIN, a
+    /// ce-core beside this binary, then PATH)
     #[arg(long, default_value = "ce-core")]
     pub(crate) core: String,
     /// Index database path (default: <root>/.ce/index.db)

@@ -52,7 +52,7 @@ Arguments:
   [ROOT]  Project root to report on (default: current directory)
 
 Options:
-      --core <CORE>  Path to the ce-core executable [default: ce-core]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
   -h, --help         Print help
 ```
@@ -70,7 +70,7 @@ Arguments:
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help             Print help
 ```
 
@@ -121,7 +121,7 @@ Arguments:
 Options:
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
       --check            Exit 1 when any file-tier dead verdict lands (the CI dogfood gate for the M5-2 full-disposition acceptance row)
   -h, --help             Print help
@@ -140,7 +140,7 @@ Arguments:
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --units            List the unit universe instead of judging
   -h, --help             Print help
@@ -159,7 +159,7 @@ Arguments:
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --check            Exit 1 when any duplication is reported (the CI dogfood gate — plan §7.5's docdup clause, honored in code since M5 close)
   -h, --help             Print help
@@ -178,7 +178,7 @@ Arguments:
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --days <DAYS>      Churn window in days [default: 14]
   -h, --help             Print help
@@ -197,7 +197,7 @@ Arguments:
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --deep             Also roll clone blocks and dead units up per directory and judge the S6 redundancy axis (runs the dedup census and the liveness judgment; absent = the axis is honestly unjudged)
       --days <DAYS>      Judge the S5 doc-staleness axis over this git window in days (docs whose referenced code changed after their last edit; absent = the axis is honestly unjudged)
@@ -217,7 +217,7 @@ Arguments:
 Options:
       --format <FORMAT>    [default: console] [possible values: console, json]
       --lang <LANG>        Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>        Path to the ce-core executable [default: ce-core]
+      --core <CORE>        Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>            Index database path (default: <root>/.ce/index.db)
       --commits <COMMITS>  Mainline window: newest N first-parent commits [default: 30]
       --batch <BATCH>      Measure at most this many uncached commits per run (absent = all of them; the GUI passes small batches for progress)
@@ -237,7 +237,7 @@ Arguments:
 Options:
       --format <FORMAT>          [default: console] [possible values: console, json]
       --lang <LANG>              Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>              Path to the ce-core executable [default: ce-core]
+      --core <CORE>              Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>                  Index database path (default: <root>/.ce/index.db)
       --days <DAYS>              Churn window in days (omit = churn tables stay empty)
       --fail-under <FAIL_UNDER>  Fail when the score lands under this per-mille floor
@@ -257,7 +257,7 @@ Arguments:
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable [default: ce-core]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --days <DAYS>      Churn window in days (omit = churn tables stay empty)
   -h, --help             Print help
@@ -280,7 +280,7 @@ Options:
       --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50)
       --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from the M2 calibration; 0 disables)
       --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (M2 review R12; the comparison is the core's verdict since ADR-008 P2)
-      --core <CORE>                  Path to the ce-core executable (consulted by --check alone) [default: ce-core]
+      --core <CORE>                  Path to the ce-core executable, consulted by --check alone (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help                         Print help
 ```
 

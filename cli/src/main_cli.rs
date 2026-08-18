@@ -51,7 +51,8 @@ pub(crate) enum Cmd {
     /// Environment + project health: ce-core handshake, project
     /// status line, degradation counter (never starts the daemon)
     Doctor {
-        /// Path to the ce-core executable
+        /// Path to the ce-core executable (default: CE_CORE_BIN, a
+        /// ce-core beside this binary, then PATH)
         #[arg(long, default_value = "ce-core")]
         core: String,
         /// Project root to report on (default: current directory)
@@ -64,7 +65,8 @@ pub(crate) enum Cmd {
         path: Option<PathBuf>,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
-        /// Path to the ce-core executable
+        /// Path to the ce-core executable (default: CE_CORE_BIN, a
+        /// ce-core beside this binary, then PATH)
         #[arg(long, default_value = "ce-core")]
         core: String,
     },
@@ -98,7 +100,8 @@ pub(crate) enum Cmd {
         /// Index database path (default: <root>/.ce/index.db)
         #[arg(long)]
         db: Option<PathBuf>,
-        /// Path to the ce-core executable
+        /// Path to the ce-core executable (default: CE_CORE_BIN, a
+        /// ce-core beside this binary, then PATH)
         #[arg(long, default_value = "ce-core")]
         core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]

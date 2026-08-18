@@ -63,6 +63,42 @@ if [ "$key" != "unsupported" ]; then
 fi
 data="${CLAUDE_PLUGIN_DATA:-}"
 
+# ce-core rides the same pin flow (from v0.2.0): placed as a plain
+# `ce-core` sibling in the data dir — exactly where ce's resolver
+# probes — BEFORE ce execs. A fetch failure degrades (hooks never
+# need the core; judgment families report their own handshake miss),
+# but a pin mismatch refuses as loudly as ce's own: a tampered core
+# must not hide behind a PATH ce-core.
+ensure_core() {
+    corepin=""
+    if [ "$key" != "unsupported" ]; then
+        eval "corepin=\${CE_SHA256_$(echo "$key" | tr 'a-z-' 'A-Z_')_CECORE:-}"
+    fi
+    if [ -z "$corepin" ] || [ -z "$data" ]; then return 0; fi
+    coretgt="$data/ce-core$ext"
+    if [ -x "$coretgt" ] && [ "$(sha_of "$coretgt")" = "$corepin" ]; then
+        return 0
+    fi
+    if [ -n "${CE_AIRGAPPED:-}" ]; then return 0; fi
+    coreurl="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-core-$CE_MANIFEST_VERSION-$key$ext"
+    coretmp="$coretgt.download"
+    if ! fetch "$coreurl" "$coretmp"; then
+        rm -f "$coretmp"
+        echo "codeeraser: ce-core download failed ($coreurl) — judgment families degrade until it lands"
+        return 0
+    fi
+    coregot=$(sha_of "$coretmp")
+    if [ "$coregot" != "$corepin" ]; then
+        rm -f "$coretmp"
+        echo "codeeraser: REFUSING downloaded ce-core — SHA256 mismatch for $coreurl" >&2
+        echo "codeeraser: expected $corepin" >&2
+        echo "codeeraser: actual   $coregot" >&2
+        exit 1
+    fi
+    chmod +x "$coretmp"
+    mv -f "$coretmp" "$coretgt"
+}
+
 # No pin or no data dir: the download path is not configured — PATH ce.
 if [ -z "$pin" ] || [ -z "$data" ]; then
     run_path_ce "$@"
@@ -70,6 +106,7 @@ fi
 
 target="$data/ce-$CE_MANIFEST_VERSION-$key$ext"
 if [ -x "$target" ] && [ "$(sha_of "$target")" = "$pin" ]; then
+    ensure_core
     exec "$target" "$@"
 fi
 
@@ -97,4 +134,5 @@ if [ "$got" != "$pin" ]; then
 fi
 chmod +x "$tmp"
 mv -f "$tmp" "$target"
+ensure_core
 exec "$target" "$@"

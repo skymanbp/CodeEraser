@@ -31,12 +31,15 @@ jobs:
         include:
           - os: windows-latest
             key: x86_64-windows
+            triple: x86_64-pc-windows-msvc
             ext: .exe
           - os: ubuntu-latest
             key: x86_64-linux
+            triple: x86_64-unknown-linux-gnu
             ext: ""
           - os: macos-latest
             key: aarch64-macos
+            triple: aarch64-apple-darwin
             ext: ""
     runs-on: ${{ matrix.os }}
     steps:
@@ -61,6 +64,25 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev
+      # ce-core ships beside ce from v0.2.0 — the judgment layer stops
+      # being source-install-only (the release face's biggest UX gap).
+      # The freeze file pins the build plan, so the cache key is honest.
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.14.1"
+      - name: Cabal store cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cabal/store
+            core/dist-newstyle
+          key: cecore-${{ matrix.key }}-${{ hashFiles('core/cabal.project.freeze') }}
+      - name: Build ce-core (release)
+        shell: bash
+        working-directory: core
+        run: |
+          cabal update
+          cabal build exe:ce-core
       - name: Build ce (release)
         shell: bash
         working-directory: cli
@@ -70,10 +92,28 @@ jobs:
       - name: Install tauri-cli
         shell: bash
         run: cargo install tauri-cli --version '^2' --locked
-      - name: Build GUI bundle
+      # the installer carries all three binaries (v0.2.0 formalization):
+      # externalBin sidecars land in the app dir, which is exactly
+      # where ce's ce-core sibling resolution probes
+      - name: Stage sidecar binaries for the bundle
+        shell: bash
+        run: |
+          mkdir -p gui/src-tauri/binaries
+          cp "cli/target/release/ce${{ matrix.ext }}" \
+             "gui/src-tauri/binaries/ce-${{ matrix.triple }}${{ matrix.ext }}"
+          CORE=$(cd core && cabal list-bin ce-core)
+          cp "$CORE" "gui/src-tauri/binaries/ce-core-${{ matrix.triple }}${{ matrix.ext }}"
+      # externalBin is injected HERE, not in tauri.conf.json:
+      # tauri-build validates the sidecar files at COMPILE time, so a
+      # static declaration would break every compile gate that has no
+      # staged binaries (probed locally 2026-08-18) — bundling config
+      # lives with the one pipeline that stages the bundle.
+      - name: Build GUI bundle (with sidecars)
         shell: bash
         working-directory: gui/src-tauri
-        run: cargo tauri build
+        run: |
+          cargo tauri build --config \
+            '{"bundle":{"externalBin":["binaries/ce","binaries/ce-core"]}}'
       - name: Stage versioned artifacts
         shell: bash
         run: |
@@ -82,6 +122,8 @@ jobs:
           EXT="${{ matrix.ext }}"
           mkdir -p dist
           cp "cli/target/release/ce$EXT" "dist/ce-$VER-$KEY$EXT"
+          CORE=$(cd core && cabal list-bin ce-core)
+          cp "$CORE" "dist/ce-core-$VER-$KEY$EXT"
           case "$KEY" in
             x86_64-windows)
               cp gui/src-tauri/target/release/bundle/nsis/*-setup.exe \
@@ -148,14 +190,17 @@ jobs:
           mkdir dist && cd dist
           gh release download "$TAG" --pattern '*'
           sha256sum -c SHA256SUMS
-          check_pin() { # $1=envkey $2=filename
-            eval "pin=\${CE_SHA256_$1_CE:-}"
+          check_pin() { # $1=envkey tail (PLATFORM_CE | PLATFORM_CECORE) $2=filename
+            eval "pin=\${CE_SHA256_$1:-}"
             [ -n "$pin" ] || { echo "pin $1 is EMPTY — tag phase requires complete pins"; exit 1; }
             got=$(sha256sum "$2" | cut -d' ' -f1)
             [ "$got" = "$pin" ] || { echo "pin $1 mismatch: expected $pin got $got"; exit 1; }
             echo "pin $1 ok"
           }
-          check_pin X86_64_WINDOWS "ce-$VER-x86_64-windows.exe"
-          check_pin X86_64_LINUX "ce-$VER-x86_64-linux"
-          check_pin AARCH64_MACOS "ce-$VER-aarch64-macos"
+          check_pin X86_64_WINDOWS_CE "ce-$VER-x86_64-windows.exe"
+          check_pin X86_64_LINUX_CE "ce-$VER-x86_64-linux"
+          check_pin AARCH64_MACOS_CE "ce-$VER-aarch64-macos"
+          check_pin X86_64_WINDOWS_CECORE "ce-core-$VER-x86_64-windows.exe"
+          check_pin X86_64_LINUX_CECORE "ce-core-$VER-x86_64-linux"
+          check_pin AARCH64_MACOS_CECORE "ce-core-$VER-aarch64-macos"
           gh release edit "$TAG" --draft=false
