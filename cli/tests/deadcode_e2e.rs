@@ -78,14 +78,28 @@ fn empty_index_is_an_explicit_error() {
     );
 }
 
-/// The CI gate flag fires BOTH ways (M5-close: a gate that never
-/// demonstrated red is unproven): a dead orphan makes `--check` exit
-/// 1; dispositioning it through entry_globs turns the same tree
-/// green. Arrange rides the shared fixture throat — hand-written
-/// write stanzas were the ratchet's catch here.
+/// Shared red→green harness for the `--check` gate: build the tree,
+/// expect exit 1, apply the one-file rewrite, expect exit 0 (a gate
+/// that never demonstrated red is unproven — M5-close stance; a
+/// second copy of this stanza was the ratchet's catch, twice).
+fn check_flips_on(tag: &str, tree: &[(&str, &str)], rewrite: (&str, &str), why: [&str; 2]) {
+    let fx = common::fixture(tag, tree);
+    let core = core_bin();
+    let gate = |msg: &str, ok: bool| {
+        let out = common::run_ce(&fx.dir, &["deadcode", ".", "--core", &core, "--check"]);
+        assert_eq!(out.status.success(), ok, "{msg}");
+    };
+    gate(why[0], false);
+    std::fs::write(fx.dir.join(rewrite.0), rewrite.1).expect("rewrite");
+    gate(why[1], true);
+}
+
+/// The CI gate flag fires BOTH ways: a dead orphan makes `--check`
+/// exit 1; dispositioning it through entry_globs turns the same
+/// tree green.
 #[test]
 fn check_flag_reds_on_dead_and_greens_on_disposition() {
-    let fx = common::fixture(
+    check_flips_on(
         "deadcode-checkflag",
         &[
             ("ce.toml", "[graph]\nentry_globs = [\"root.ts\"]\n"),
@@ -93,17 +107,35 @@ fn check_flag_reds_on_dead_and_greens_on_disposition() {
             ("used.ts", "export {};\n"),
             ("orphan.ts", "export {};\n"),
         ],
+        (
+            "ce.toml",
+            "[graph]\nentry_globs = [\"root.ts\", \"orphan.ts\"]\n",
+        ),
+        [
+            "an undispositioned orphan must red",
+            "a dispositioned tree must pass",
+        ],
     );
-    let core = core_bin();
-    let gate = |why: &str, ok: bool| {
-        let out = common::run_ce(&fx.dir, &["deadcode", ".", "--core", &core, "--check"]);
-        assert_eq!(out.status.success(), ok, "{why}");
-    };
-    gate("an undispositioned orphan must red", false);
-    std::fs::write(
-        fx.dir.join("ce.toml"),
-        "[graph]\nentry_globs = [\"root.ts\", \"orphan.ts\"]\n",
-    )
-    .expect("toml");
-    gate("a dispositioned tree must pass", true);
+}
+
+/// A `#[path]`-mounted file is ALIVE with no per-file entry_globs at
+/// all (GRAPH_REV 5) — the gate that keeps the ce.toml exemption
+/// retirement safe against a ladder regression: the same tree reds
+/// as an orphan without the attribute and greens on the mount alone.
+#[test]
+fn path_mount_alone_keeps_its_target_alive() {
+    check_flips_on(
+        "deadcode-pathmount",
+        &[
+            ("ce.toml", "[graph]\nentry_globs = [\"src/lib.rs\"]\n"),
+            ("Cargo.toml", "[package]\nname='pm'"),
+            ("src/lib.rs", "mod helper;\n"),
+            ("src/helper_impl.rs", "pub fn h() {}\n"),
+        ],
+        ("src/lib.rs", "#[path = \"helper_impl.rs\"]\nmod helper;\n"),
+        [
+            "without the attribute the target is an orphan and must red",
+            "the #[path] mount alone must keep the target alive",
+        ],
+    );
 }

@@ -4,9 +4,75 @@
 //! super-climb over file-level module owners. rs.rs owns the rung
 //! POLICY; this file owns the tree MECHANICS.
 
-use super::Reason;
+use super::{Reason, Scope};
 use crate::graph::roots;
 use std::collections::BTreeSet;
+
+/// Per-sweep parse cache (review MED): every self/super/#[path] site
+/// in one file shares one read + parse; the text rides along so the
+/// tree's provenance stays in one place.
+pub(crate) fn cached_tree(
+    scope: &Scope,
+    from: &str,
+) -> std::rc::Rc<Option<(String, tree_sitter::Tree)>> {
+    scope.memo.cached("rs_tree", from, || {
+        let text = std::fs::read_to_string(scope.root.join(from)).ok()?;
+        let grammar = crate::scan::lang::Lang::Rust.grammar()?;
+        let tree = crate::scan::ast::parse(&text, &grammar)?;
+        Some((text, tree))
+    })
+}
+
+/// The root→leaf chain of nodes covering `row` — ONE descent walker
+/// shared by the inline-depth count and the #[path] probe (a second
+/// copy of this loop was the ratchet's eighteenth catch).
+pub(crate) fn covering_chain(tree: &tree_sitter::Tree, row: usize) -> Vec<tree_sitter::Node<'_>> {
+    let (mut node, mut out) = (tree.root_node(), Vec::new());
+    'down: loop {
+        for c in crate::scan::ast::children(node) {
+            if c.start_position().row <= row && row <= c.end_position().row {
+                out.push(c);
+                node = c;
+                continue 'down;
+            }
+        }
+        return out;
+    }
+}
+
+/// The mod_item starting exactly at `row` whose name field is
+/// `name` — a projection of the shared covering chain.
+pub(crate) fn mod_item_at<'t>(
+    tree: &'t tree_sitter::Tree,
+    src: &str,
+    row: usize,
+    name: &str,
+) -> Option<tree_sitter::Node<'t>> {
+    covering_chain(tree, row).into_iter().find(|c| {
+        c.kind() == "mod_item"
+            && c.start_position().row == row
+            && c.child_by_field_name("name")
+                .and_then(|n| n.utf8_text(src.as_bytes()).ok())
+                == Some(name)
+    })
+}
+
+/// `Some(target)` when `item` is `#[path = "target"]` — the value
+/// field's string_content, so the quotes never travel.
+pub(crate) fn attr_path_value(item: tree_sitter::Node, src: &str) -> Option<String> {
+    let attr = crate::scan::ast::children(item)
+        .into_iter()
+        .find(|c| c.kind() == "attribute")?;
+    let key = attr.named_child(0)?;
+    if key.utf8_text(src.as_bytes()).ok()? != "path" {
+        return None;
+    }
+    let val = attr.child_by_field_name("value")?;
+    let content = crate::scan::ast::children(val)
+        .into_iter()
+        .find(|c| c.kind() == "string_content")?;
+    content.utf8_text(src.as_bytes()).ok().map(str::to_string)
+}
 
 /// Walk one segment list from every anchor; distinct terminals from
 /// different anchors are ambiguous_root (the Python cross-root

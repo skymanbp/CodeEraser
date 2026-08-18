@@ -119,6 +119,16 @@ boot 表逐串匹配），GRAPH_REV 3 全量重解析。
 | `ce deadcode .`（暖索引 + 判决往返） | 0.47 s | 619 kept 边、0 dead |
 | `ce check .`（暖索引） | 1.36 s | ✅ pre-commit 级维持；boot 表线性扫描（~80 站点 × 43 包）无感 |
 
+## M8 缺口清算 `#[path]` 阶梯后（实测 2026-08-18，release，GRAPH_REV 5 全量重建）
+
+口径：mod_decl 站点先探 `#[path]` 属性（per-sweep 缓存树上的兄弟回溯），自仓
++4 kept 边（三个 `#[path]` 测试挂载 + eval_docdup_precision 的挂载）、−4 未解析。
+
+| 项 | 实测 | 记录 |
+|---|---|---|
+| `ce dedup .`（冷，REV 5 全量重建，`.ce/` 删除后计时同链） | 2.72 s | 与 REV 3 先例 2.68 s 同量级，属性探针无感 |
+| `ce deadcode .`（暖索引 + 判决往返） | 1.56 s | 733 kept 边、0 dead、615 未解析 |
+
 ## M5-3j 门迁移后 `ce check`（+.hs size-only 走文件，实测 2026-08-14，release，静默机）
 
 口径：3i 口径 + `hs_size_rows` 的第二次全树 walk（37 个 `.hs` 读文件计行）。

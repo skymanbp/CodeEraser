@@ -19,11 +19,14 @@
 //! and the remaining segments descend its tree — the audit records
 //! the definition file, not the crate façade.
 //!
-//! R5 honesty: `#[path]` remaps need attribute text only the AST has
-//! — until phase 1.5 hands content over they land Unresolved (recall
-//! loss, never a wrong edge); macro-generated mod/use never parse as
-//! mod_item/use_declaration, so the macro bucket is structurally
-//! empty (the Python dynamic precedent). Specs are first-line
+//! R5: `#[path = "…"]` remaps answer at R1 (design §4 Rust row —
+//! pre-registered, the literal answers at R1): the attribute is read
+//! off the per-sweep cached tree, anchored at the DECLARING file's
+//! own directory; an inline-module context refuses (its base needs
+//! the enclosing mod names, which inline_depth does not carry).
+//! Macro-generated mod/use never parse as mod_item/use_declaration,
+//! so the macro bucket is structurally empty (the Python dynamic
+//! precedent). Specs are first-line
 //! fragments (sites.rs), but rustfmt folds `use` only at brace
 //! groups, so the pre-`{` prefix — all the walk consumes — is
 //! complete whenever a brace is present; a fragment ending in `::`
@@ -56,21 +59,30 @@ pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
         });
     let (pkg, roots_set) = (&ctx.0, &ctx.1);
     match site.kind {
-        "mod_decl" => mod_rung(site.from, site.spec, roots_set, scope.files),
+        "mod_decl" => mod_rung(site, roots_set, scope),
         "use" => use_rungs(site, pkg.as_ref(), roots_set, scope),
         _ => Outcome::Unresolved(Reason::Unsupported),
     }
 }
 
-/// R1: one child lookup — the shared throat all tree walks use.
-fn mod_rung(
-    from: &str,
-    name: &str,
-    roots_set: &BTreeSet<String>,
-    files: &BTreeSet<String>,
-) -> Outcome {
+/// R1: an explicit `#[path]` remap wins outright; otherwise one
+/// child lookup — the shared throat all tree walks use. The remap's
+/// base is the declaring file's OWN directory (rustc semantics for a
+/// file-level mod), never the convention child_dir — routing it
+/// through `child` would resolve one directory too deep.
+fn mod_rung(site: &Site, roots_set: &BTreeSet<String>, scope: &Scope) -> Outcome {
     use super::rs_tree::{Child, child};
-    match child(from, name, roots_set, files) {
+    if let Some(target) = path_attr(scope, site.from, site.line, site.spec) {
+        if inline_depth(scope, site.from, site.line) > 0 {
+            return Outcome::Unresolved(Reason::OutOfScope);
+        }
+        let base = roots::parent_dir(site.from);
+        return match roots::join_rel(&base, &target) {
+            Some(path) if scope.files.contains(&path) => Outcome::Resolved { path, rung: 1 },
+            _ => Outcome::Unresolved(Reason::OutOfScope),
+        };
+    }
+    match child(site.from, site.spec, roots_set, scope.files) {
         Child::One(path) => Outcome::Resolved { path, rung: 1 },
         Child::Both => Outcome::Unresolved(Reason::AmbiguousPaths),
         Child::None => Outcome::Unresolved(Reason::OutOfScope),
@@ -132,32 +144,37 @@ fn use_rungs(
 /// string literals (the audited glue.rs CODE constant). Only a
 /// BODIED mod opens a nested scope; `mod x;` is a declaration.
 fn inline_depth(scope: &Scope, from: &str, line: usize) -> usize {
-    // per-sweep parse cache: every self/super site in one file used
-    // to re-read AND re-parse it with tree-sitter (review MED); the
-    // text rides along so the tree's provenance stays in one place
-    let parsed = scope.memo.cached("rs_tree", from, || {
-        let text = std::fs::read_to_string(scope.root.join(from)).ok()?;
-        let grammar = crate::scan::lang::Lang::Rust.grammar()?;
-        let tree = crate::scan::ast::parse(&text, &grammar)?;
-        Some((text, tree))
-    });
+    let parsed = super::rs_tree::cached_tree(scope, from);
     let Some((_, tree)) = parsed.as_ref() else {
         return 0;
     };
-    let row = line.saturating_sub(1);
-    let (mut node, mut depth) = (tree.root_node(), 0);
-    'down: loop {
-        for c in crate::scan::ast::children(node) {
-            if c.start_position().row <= row && row <= c.end_position().row {
-                if c.kind() == "mod_item" && c.child_by_field_name("body").is_some() {
-                    depth += 1;
-                }
-                node = c;
-                continue 'down;
-            }
+    super::rs_tree::covering_chain(tree, line.saturating_sub(1))
+        .iter()
+        .filter(|c| c.kind() == "mod_item" && c.child_by_field_name("body").is_some())
+        .count()
+}
+
+/// The `#[path = "…"]` remap on the mod_decl at `line` named `name`,
+/// if any. Attributes are preceding SIBLINGS of the item (mod_item
+/// has no attribute member in the grammar) and they stack — the
+/// self-repo mounts all sit behind a #[cfg(test)] — so the walk
+/// steps back over consecutive attribute_items.
+fn path_attr(scope: &Scope, from: &str, line: usize, name: &str) -> Option<String> {
+    use super::rs_tree::{attr_path_value, cached_tree, mod_item_at};
+    let parsed = cached_tree(scope, from);
+    let (text, tree) = parsed.as_ref().as_ref()?;
+    let node = mod_item_at(tree, text, line.saturating_sub(1), name)?;
+    let mut prev = node.prev_sibling();
+    while let Some(p) = prev {
+        if p.kind() != "attribute_item" {
+            break;
         }
-        return depth;
+        if let Some(v) = attr_path_value(p, text) {
+            return Some(v);
+        }
+        prev = p.prev_sibling();
     }
+    None
 }
 
 /// The module-path prefix of a use spec. None = a fragment cut

@@ -35,8 +35,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// stand — their scope constant never included .hs (SCOPE_EXTS).
 /// 4 = the M5-close Go arity repayment: unit KEYS embed params
 /// (`name/params`), and cached symbols rows for Go methods carried
-/// the receiver-collapsed arity.
-pub const GRAPH_REV: i64 = 4;
+/// the receiver-collapsed arity. 5 = the `#[path]` R1 remap (design
+/// §4 Rust row, R5 column: the literal answers at R1) — ladder-only,
+/// so the frozen site universe stands and the audited sample keeps
+/// its identity keys.
+pub const GRAPH_REV: i64 = 5;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

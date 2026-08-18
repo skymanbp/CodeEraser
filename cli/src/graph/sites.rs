@@ -202,7 +202,10 @@ mod tests {
             ),
             (
                 Lang::Rust,
-                "mod alpha;\nmod beta { fn x() {} }\nuse crate::a::{b, c};\nuse crate::{\n    d,\n    e,\n};\n",
+                // the #[path] attribute emits NO site of its own — the
+                // remap is ladder-side (rs.rs path_attr), which is what
+                // keeps the frozen site universe standing across REV 5
+                "mod alpha;\n#[path = \"x.rs\"]\nmod beta { fn x() {} }\nuse crate::a::{b, c};\nuse crate::{\n    d,\n    e,\n};\n",
                 &[
                     ("mod_decl", "alpha"),
                     ("use", "crate::a::{b, c}"),

@@ -215,8 +215,8 @@ fn rust_cases() -> Vec<Case> {
     let (nmod, tbin) = ("src/nest/mod.rs", "tools/gen.rs");
     let (uh, hl) = ("src/util/helper.rs", "crates/helper/src/lib.rs");
     vec![
-        // R1: root / mod.rs / 2018-subdir / [[bin]] anchors, the
-        // E0761 double, and the #[path] honesty row
+        // R1: root / mod.rs / 2018-subdir / [[bin]] anchors, the E0761
+        // double; #[path] is line-anchored — its battery sits below
         (rs, md, rlib, "util", ok("src/util.rs", 1)),
         (rs, md, rlib, "nest", ok(nmod, 1)),
         (rs, md, rutil, "helper", ok(uh, 1)),
@@ -361,4 +361,59 @@ fn inline_mod_super_comes_home() {
     assert_eq!(at("self::helper::x", 6), ok("src/lib.rs", 3));
     assert_eq!(at("super::util", 7), ok("src/util.rs", 3));
     assert_eq!(at("super::super::escape", 9), ok("src/lib.rs", 3));
+}
+
+/// `#[path = "…"]` remaps answer at R1 (design §4 Rust row, R5
+/// column: the literal answers at R1). Line-anchored like the inline
+/// cases — the shared table drives line 1 only. Pinned here: the
+/// base is the declarer's OWN directory for every declarer kind
+/// (never the convention child_dir — the one bug this rung can
+/// have), attributes stack in either order, `../` traverses and a
+/// repo escape refuses, a missing target never invents, and an
+/// inline-module context refuses even when the file exists.
+#[test]
+fn path_attr_remaps_resolve_at_r1() {
+    let fx = fixture(
+        "ladder-path-attr",
+        &[
+            ("Cargo.toml", "[package]\nname='pa'"),
+            (
+                "src/graph/md.rs",
+                "#[cfg(test)]\n#[path = \"md_tests.rs\"]\nmod tests;\n#[path = \"also.rs\"]\n#[cfg(test)]\nmod also;\n#[path = \"../up.rs\"]\nmod up;\n#[path = \"../../../out.rs\"]\nmod esc;\n#[path = \"nope.rs\"]\nmod nope;\nmod inline {\n    #[path = \"md_tests.rs\"]\n    mod hidden;\n}\n",
+            ),
+            ("src/graph/md_tests.rs", "\n"),
+            ("src/graph/also.rs", "\n"),
+            ("src/up.rs", "\n"),
+            ("src/lib.rs", "mod graph;\n"),
+            (
+                "src/graph/mod.rs",
+                "mod md;\n#[path = \"store_tests.rs\"]\nmod tests;\n",
+            ),
+            ("src/graph/store_tests.rs", "\n"),
+        ],
+    );
+    let scope = fx.scope();
+    let at = |from: &'static str, spec: &'static str, line: usize| {
+        ladder::resolve(Lang::Rust, &site("mod_decl", from, spec, line), &scope)
+    };
+    // sibling-dir base from a non-mod.rs declarer, NOT child_dir
+    assert_eq!(
+        at("src/graph/md.rs", "tests", 3),
+        ok("src/graph/md_tests.rs", 1)
+    );
+    // attribute order is immaterial
+    assert_eq!(at("src/graph/md.rs", "also", 6), ok("src/graph/also.rs", 1));
+    // ../ traversal, repo escape, and a missing target all stay honest
+    assert_eq!(at("src/graph/md.rs", "up", 8), ok("src/up.rs", 1));
+    assert_eq!(at("src/graph/md.rs", "esc", 10), no(Reason::OutOfScope));
+    assert_eq!(at("src/graph/md.rs", "nope", 12), no(Reason::OutOfScope));
+    // inline-module context refuses even though md_tests.rs exists
+    assert_eq!(at("src/graph/md.rs", "hidden", 15), no(Reason::OutOfScope));
+    // mod.rs declarer: same own-dir base rule
+    assert_eq!(
+        at("src/graph/mod.rs", "tests", 3),
+        ok("src/graph/store_tests.rs", 1)
+    );
+    // the plain convention next to a remap is not hijacked
+    assert_eq!(at("src/graph/mod.rs", "md", 1), ok("src/graph/md.rs", 1));
 }
