@@ -89,7 +89,13 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
         Ok(pair) => pair,
     };
     if o.reply.degraded.is_some() {
-        eprintln!("baseline: refusing to persist a degraded judgment");
+        eprintln!(
+            "{}",
+            codeeraser::i18n::t(
+                "baseline: refusing to persist a degraded judgment",
+                "baseline：拒绝落盘一次降级判决",
+            )
+        );
         return ExitCode::FAILURE;
     }
     // the core's fail bit IS the only-shrink refusal (ADR-008 P2):
@@ -98,16 +104,27 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
     // below are reporting
     if o.reply.fail {
         eprintln!(
-            "baseline: {} new member(s), {} ceiling(s) busted — both halves only \
-             improve; set CE_ACCEPT_BASELINE=1 to re-establish from the current tree",
-            o.reply.added.len(),
-            o.reply.over.len()
+            "{}",
+            codeeraser::i18n::line(
+                "baseline: {} new member(s), {} ceiling(s) busted — both halves only \
+                 improve; set CE_ACCEPT_BASELINE=1 to re-establish from the current tree",
+                "baseline：新增成员 {} 个、突破天花板 {} 处 — 两半都只准改善；\
+                 设 CE_ACCEPT_BASELINE=1 方可按当前树重立",
+                &[&o.reply.added.len(), &o.reply.over.len()],
+            )
         );
         return ExitCode::FAILURE;
     }
     match score::baseline::write(&root, &o.reply.new_baseline) {
         Ok(()) => {
-            println!("baseline written: {}", score::baseline::BASELINE_FILE);
+            println!(
+                "{}",
+                codeeraser::i18n::line(
+                    "baseline written: {}",
+                    "基线已写入：{}",
+                    &[&score::baseline::BASELINE_FILE],
+                )
+            );
             ExitCode::SUCCESS
         }
         Err(err) => fail("baseline", err),

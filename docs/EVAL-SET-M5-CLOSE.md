@@ -117,22 +117,22 @@ golden 翻批 41 reply 行逐行审（40 = proto 位 + verdict 两档默认 knob
 ## 挂账清零批（M6 前清零，2026-08-14 → 2026-08-17）
 
 **账本**：M5 收口审计（artifact 4548131c）残留 MED×2 + LOW 开放项 + R2
-契约册 + RG10 条件项 + 五批审查欠账，逐项清偿至零。六提交链
-68cf2eb→ef2ce91→06ef3e1→9cda405→67f4f68(+f1ed34d 活化修)→a049275。
+契约册 + RG10 条件项 + 五批审查欠账，逐项清偿至零。六提交链（P6 清史后名）
+70aa75e→dfc23d4→13a633e→08715c1→40e45ed(+4c2f189 活化修)→de7d4b5。
 
-**收敛热修（68cf2eb）**：夜跑 31991997431 抓获 v1.7 契约真破口——相 1.5
+**收敛热修（70aa75e）**：夜跑 31991997431 抓获 v1.7 契约真破口——相 1.5
 裸 INSERT 的防重护栏是进程内知识，跨进程交错（B 刷文件→A sweep 盖到 B 的
 新 site 并落 key→B 跳 sweep 后相 1.5 重插）双插边。根修=同锁内
 delete-then-insert；确定性电池=CI 交错投影单连接（`phase_15_is_idempotent_
 over_a_swept_file` 修前红 2≠1；本机 40 环进程竞态 0 命中=Windows 调度打不中
 窗口，ubuntu 打中）。store.rs 297 行按 E01 拆 keys.rs。
 
-**C1（ef2ce91+06ef3e1）**：verdict baseline 单跑+行数入 cap；graph pos 严格
+**C1（dfc23d4+13a633e）**：verdict baseline 单跑+行数入 cap；graph pos 严格
 升序=应答按契约有界；fourclass 重复 pIdx 具名拒绝；信封解码失败仍回显在场
 id；Main 异常屏障；axisCodes 死导出删；siteOpens 唯一乘法点 Integer 化。
 golden 全字节稳定；**预算真下棘 148→145**（三跨模块块退休）。
 
-**C2（9cda405）**：sweep memo=Scope 携每 sweep 键控 any-cache（members()
+**C2（08715c1）**：sweep memo=Scope 携每 sweep 键控 any-cache（members()
 咽喉+rs 目录级 Cargo/crate-root+每文件 tree-sitter+go importable+hs cabal+
 md slug/ref 表+ts walk-up 与 node_modules）；PERF release 冷 sweep：ripgrep
 3.33→2.83s、self 2.11→1.92s（渐近类 O(sites×files)→O(dirs×files+sites)，
@@ -141,10 +141,10 @@ md slug/ref 表+ts walk-up 与 node_modules）；PERF release 冷 sweep：ripgre
 `md::is_md_path`；走树删文件经 `each_surviving` 降级；t3/tree 三递归换显式
 栈（lld=进入时 lab 长可证=最左叶后序位）。
 
-**C3（67f4f68+f1ed34d）**：daemon 契约册 contracts/DAEMON.md+形状 golden
+**C3（40e45ed+4c2f189）**：daemon 契约册 contracts/DAEMON.md+形状 golden
 fixtures/daemon/+daemon_proto 重放门（tag 函数无通配臂=新变体编译断裂）；
 server.rs sole-writer 陈旧注改写；VERSIONING §4 daemon 行。CI 首点火即被
-自家 deadcode 门抓获（DAEMON.md 反引号拼写零入边）→真链接活化 f1ed34d
+自家 deadcode 门抓获（DAEMON.md 反引号拼写零入边）→真链接活化 4c2f189
 （3l 先例；教训=本地门链必须镜像全部 CI dogfood 腿）。
 
 **RG10 条件项收案（永闭）**：计划 M5-2 条件（独立 100 调用点审计 ≥90% 方开
@@ -153,8 +153,8 @@ R6 全仓同名匹配）实测=5 语料×20 确定性采样+3 镜对抗复审：
 5）、铸边精度 **38/66=0.576**；四条复审异议全按有利翻正仍 ≤74。按计划自身
 判据**永久关闭**；证据冻结 `contracts/eval/rg10-callsite-audit-v1.json`。
 
-**全量独立审查（ba1c0f5..HEAD，60 代理六维×双怀疑者）**：27 项判决=15
-confirmed+6 contested+6 refuted；**C4（a049275）全数偿清**：HIGH=
+**全量独立审查（bc7d849..HEAD，60 代理六维×双怀疑者）**：27 项判决=15
+confirmed+6 contested+6 refuted；**C4（de7d4b5）全数偿清**：HIGH=
 `remove_missing` DEFERRED 读改写（v1.7 漏掉的最后一条，WAL 下
 BUSY_SNAPSHOT 不可重试）→IMMEDIATE+变异树竞态腿；deadcode --check 与
 ce check 的 degraded 放行双洞→双拒（"不能判决的门绝不放行"扫至最后两个
@@ -177,7 +177,7 @@ CI 门批已清。**挂账清零终态：账本空。**
 
 ## ADR-008 集中收口批（计划 v1.8，2026-08-17 起）
 
-**章程（6159bde）**：三拍板=①判决/测量分界（判决·豁免判定·预算·棘轮·阻断
+**章程（3e2fb66）**：三拍板=①判决/测量分界（判决·豁免判定·预算·棘轮·阻断
 入 core；测量参数留 Rust 单点声明+回显钉；判据=源文本/行级内容过 wire 即
 测量侧；guard 热路径与 hook 协议映射两判例）②DSL 形态=位台账+判决表
 ③四片全收（P4→P1→P2→P3）。两路独立普查冻结+17 项 Rust 独立语义逐项归边

@@ -56,10 +56,10 @@ tokenize 各走各的树——诚实记账，不写"零重解析"）。口径：
 | zod（393，最大语料） | 同上 | 3.12 s（3b 3.58 s） | 626 ms | ✅ |
 | cobra（53）/ requests（50） | 同上 | 512 / 390 ms | 92 / 61 ms | ✅ |
 
-复跑：`cli/` 内 `cargo test --release --test eval_t3_universe -- --ignored
---nocapture`（外部语料另设 CE_SLICE_REPO/CE_GRAPH_NAME/CE_GRAPH_TIP；
-debug 构建的数字带 "NOT admissible" 标注拒收——2026-08-13 曾测得 debug 冷
-7.56 s 即为此类，已弃）。
+复跑：该 `#[ignore]` 生成器腿已随 M7.5 封册退役（见文首横幅）——复现本表
+需按 EVAL-SET.md 再生成节从 git 历史复活仪器后以 `--release` 跑（外部语料
+另设 CE_SLICE_REPO/CE_GRAPH_NAME/CE_GRAPH_TIP；debug 构建的数字带
+"NOT admissible" 标注拒收——2026-08-13 曾测得 debug 冷 7.56 s 即为此类，已弃）。
 
 ## M5-3e T3 判决冷路径（设计卷二 §4.4，实测 2026-08-13，release）
 

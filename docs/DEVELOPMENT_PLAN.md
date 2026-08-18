@@ -49,7 +49,7 @@
 
 | 形态 | 载体 | 里程碑 |
 |---|---|---|
-| **主动**：`ce` CLI | 单二进制（Rust），`codeeraser` 为等价 alias；`ce scan / check / dedup / report / baseline / doctor / eject` | M1 起（`check`/`baseline` 落地于 M5-3B、`report` M6、`eject` M7——2026-08-13 拍板⑩） |
+| **主动**：`ce` CLI | 单二进制（Rust），`codeeraser` 为等价 alias；`ce scan / check / dedup / structure / baseline / doctor / eject` | M1 起（`check`/`baseline` 落地于 M5-3B、`structure` M6、`eject` M7——2026-08-13 拍板⑩） |
 | **被动**：Claude Code 插件 | hooks（PreToolUse/PostToolUse/Stop/SessionStart）+ skills + `bin/` | M3 |
 | **被动**：通用 agent 集成 | pre-commit、CI（退出码 + `--fail-under`）、**最小 MCP server（M3）**、完整 MCP（M7） | M3/M7 |
 | GUI | Tauri（复用 Rust 前端） | M6 |
@@ -165,7 +165,7 @@ Haskell 承重且不背 1s 预算。
 ### 架构决策记录（ADR，偏离须先改本文件）
 
 **ADR-001 前端语言 = Rust（Go 落选）。**
-tree-sitter Rust 绑定是官方一等公民且语法 crate 跟随 0.26.x；最近先例（difftastic、
+tree-sitter Rust 绑定是官方一等公民（核心 crate 0.26.x，语法 crate 各按其 ABI 锁定）；最近先例（difftastic、
 mizchi/similarity、jscpd v5 引擎、ast-grep）全是 Rust，可参考复用（ast-grep-core，MIT）；
 GUI 由 Tauri 覆盖。Go 无以上任何优势。
 
@@ -214,8 +214,8 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
   两者任一 fail 即 fail。`ce-baseline.json` 提交进仓库（betterer 范式）。
 
 **ADR-007 插件工程约束（官方文档核实，2026-08-06）。**
-- 布局：`.claude-plugin/plugin.json`（省略 `version` 则 commit SHA 即版本；**自 0.x 预览起
-  改带显式 version**——D2-2）；仓库根 `.claude-plugin/marketplace.json` 即 marketplace。
+- 布局：`plugin/.claude-plugin/plugin.json`（省略 `version` 则 commit SHA 即版本；**自 0.x
+  预览起带显式 version**——D2-2）；同目录 `marketplace.json` 即 marketplace（source "./" 自指）。
 - 安装拷贝进 `~/.claude/plugins/cache` → 禁止越界相对引用。
 - 二进制分发路径**唯一化（A9a）**：仓库 `bin/` 只放轻量启动脚本；真身二进制由
   SessionStart 从 GitHub Releases 下载到 `CLAUDE_PLUGIN_DATA`（跨版本保留），
@@ -249,9 +249,9 @@ Rust 解析 `ce.toml` 原样过 wire 不解释语义。四片：P4 配置面与�
 ### 5.10 仓库布局（M0 建立）
 ```
 CodeEraser/
-├── plugin/       # 单插件 marketplace 根：.claude-plugin/{marketplace,plugin}.json
-│                 # （source "./" 自指）+ hooks/hooks.json（2026-08-08 拍板对齐装机实现）
-├── cli/          # Rust workspace：ce（CLI+daemon+GUI 后端，含 hookio/probe/audit）
+├── plugin/       # 单插件 marketplace 根：.claude-plugin/{marketplace,plugin}.json（source "./" 自指）+ hooks/hooks.json
+├── cli/          # Rust workspace：ce（CLI+daemon，含 hookio/probe/audit）
+├── gui/          # Tauri 外壳 + vanilla JS 界面（消费 CLI 同一报告 schema）
 ├── core/         # Haskell cabal：ce-core（判决层）
 ├── contracts/    # 契约版本化机制 + 双语言共享 golden fixtures
 ├── docs/         # 本计划、协议文档、评审记录
@@ -286,8 +286,8 @@ CodeEraser/
    固定种子 base-only 生成器，不动 freeze——2026-08-12 拍板，取代"推迟 M5 再评"）。
 4. **评分敏感性测试**（B2）：扰动任一权重断言总分变化——直接针对 fuck-u-code 的
    死字段 bug 形态。
-5. **Dogfooding**：M1 起 CI 对 cli/ 与 docs/ 强制 `ce scan --fail-under`；M5 起
-   core/（Haskell 支持就位）+ 棘轮。本文件受行数棘轮（首部声明）与 `docdup` 约束。
+5. **Dogfooding**：M1 起 CI 对仓库强制 `ce scan` 退出码门；M5 起 core/（Haskell
+   支持就位）+ 棘轮（`--fail-under` 属 `ce check`）。本文件受行数棘轮与 `docdup` 约束。
 6. **性能预算进 CI 基准**，回归即 fail。锚点如实标注：jscpd 3.44s/17K 文件是**批扫**
    数据，只锚定 M2 的全量索引预算；热路径预算不由它推出，由 M0 分解表实测建立（A6）。
 
@@ -296,7 +296,7 @@ CodeEraser/
 | # | 风险 | 缓解 |
 |---|---|---|
 | R1 | Haskell/Windows 工具链 | GHC 9.14 LTS 锁版 + M0 实测依赖可解；CI 必含 windows-latest；stdio 全程 binary mode；禁 DLL；未签名二进制的 Defender/EDR 误报风险 → 签名 post-1.0（v2.1），其间 README 明示 |
-| R2 | tree-sitter 语法 crate 漂移 | 锁 0.26.x；语法版本入 lockfile；升级走独立 PR + golden 全绿 |
+| R2 | tree-sitter 语法 crate 漂移 | 核心锁 0.26.x、语法 crate 按 lockfile 钉住；升级走独立 PR + golden 全绿 |
 | R3 | hook 延迟劣化 → 用户关插件 | daemon + 增量索引；分解表预算进 CI；超时 fail-open 降级为 warn，降级**必须可见**（doctor/健康行/Stop 汇总——A9f） |
 | R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |
 | R5 | 竞品挤压（**触发器式**，A8） | 监测触发器：jscpd/desloppify 发布 diff 级 gating，或 Claude Code 内置类似能力 → 差异化收缩至三信号 join + 四分类，届时 M5 join 提前、热路径查重改评估复用竞品引擎 |

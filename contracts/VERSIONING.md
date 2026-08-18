@@ -145,10 +145,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
-  "clone/1","docdup/1","verdict/1","scan/1"]`；/2 = 2.0.0 的锚宽请求形状——旧客户端
-  探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；graph/1 = M5-2 图族；clone/
-  docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 = ADR-008 P3 分级判决族，
-  2.7.0 随判决同批声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/1"]`；/2 = 2.0.0 的
+  锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
+  graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
+  ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
+  trend/1 = M7.5b 趋势族，2.13.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。

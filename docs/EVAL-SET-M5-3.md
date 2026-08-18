@@ -20,12 +20,12 @@
 ## T3 仪器链（3b 宇宙 → 3c 候选/抽样 → 3f 精度）
 
 **宇宙**（`t3-universe{,-requests,-ripgrep,-cobra,-zod}-v1.json`，
-`ce.eval-t3-universe/1.0.0`，生成于 `c21d47f`；门 `eval_t3_universe`）：
+`ce.eval-t3-universe/1.0.0`，生成于 `a7c2672`；门 `eval_t3_universe`）：
 units self 2,028（141 文件）/ requests 807（50）/ ripgrep 4,397（133）/
 cobra 595（53）/ zod 7,078（393）；常数 floor_nodes 24、s_max 60、m_max 200。
 
 **候选**（`t3-candidates-*-v1.json`，`ce.eval-t3-candidates/1.0.0`，生成于
-`c6d2465`；门 `eval_t3_candidates`）：四源并集（S1 段二汇 / S2 同键 / S3 裸指纹
+`ea494f4`；门 `eval_t3_candidates`）：四源并集（S1 段二汇 / S2 同键 / S3 裸指纹
 / S4 MinHash-LSH (128,32,4)）+ 两道可容许剪枝与判决同界（85/100 整数交叉相乘）。
 survivors self 490 / requests 128 / ripgrep 6,201 / cobra 1,158 / zod 21,740
 （zod 剪枝实证：pruned_size 1,844,192 + pruned_label 264,236 → 21,740）。
@@ -37,11 +37,11 @@ main 100 + backup 20×4，配额 ts 44 / rs 24 / go 17 / py 15（最大余数 �
 21,750 / 6,676 / 1,161 / 130），哈希序无 RNG。
 
 **精度 = 达标线 A**（`t3-precision-*-v1.json`，`ce.eval-t3-precision/1.0.0`，
-生成于 `2c67ebe`；门 `eval_t3_precision`）：answered 61 全 correct、wrong 0 →
+生成于 `dfba03a`；门 `eval_t3_precision`）：answered 61 全 correct、wrong 0 →
 **总体 precision 1.000**（合同 ≥0.85）；分母 ≥5 语料逐个 1.000（requests 11 /
 ripgrep 18 / cobra 12 / zod 19；self answered 1 不设门）。余量 not_clone 31
 （zod boilerplate 16 全落 TSED<0.85 的机制性分离）+ dropped 8 = 100 全记账。
-θ=85 为过合同最宽松格点（θ 全表 50..100 入档）；审计 = 五独立审计员 100/100
+θ 全表 70..100 入档、逐格 wrong 恒 0（合同格点 85 在档）；审计 = 五独立审计员 100/100
 封闭六类 truth；T-G14 clones 地板 219 / 84 / 3,773 / 842 / 10,036。
 
 **探测器 epoch 边界（M5 收口拍板，2026-08-14）**：本族五档整体冻结于 Go arity
@@ -57,7 +57,7 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
-`1cd3115`，DOCDUP_REV **3**（修正案后重冻结）；门 `eval_docdup_universe`）：live
+`b70909e`，DOCDUP_REV **3**（修正案后重冻结）；门 `eval_docdup_universe`）：live
 段 self 114 / requests 98 / ripgrep 251 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
 verbatim_floor 50、DOC_LINE_CAP 200、license 头 5 行豁免、SEGCAP 8192。
 
@@ -71,9 +71,9 @@ oracle 对 self 4 / requests 4 / ripgrep 8 / cobra 8 / zod 8 = **32**。
 report_floor 23 + margin 9。census v2 = v1 的严格子集（retired 15 对冻结存证）。
 
 **精度 = 达标线 B 修正案**（`docdup-precision-*-v1.json`，
-`ce.eval-docdup-precision/1.0.0`，生成于 `5f3b73b`；门 `eval_docdup_precision`）：
+`ce.eval-docdup-precision/1.0.0`，生成于 `0b13d4b`；门 `eval_docdup_precision`）：
 D3 scoped **17/17** correct（ripgrep 7 + cobra 4 + zod 6）+ docstring **6/6**
-（self 3 + requests 3，不设门）+ not_reported 8 台账化；D1 oracle 召回
+（self 3 + requests 3，不设门）+ not_reported 9 台账化；D1 oracle 召回
 self 3/3、requests 3/3、ripgrep 7/7、cobra 4/4、zod 6/6 全 100%（硬门 0.99）；
 修正案 = 三条类别级行掩码（html_line / fenced_code_line / overlong_line），
 DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0。
@@ -96,7 +96,7 @@ DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0�
   `core_size_gate` 三腿逐文件断言（产品发射 / 基线覆盖 / tolerated≤300 不弱于）
   + no-awk 守卫（两门并存即红）+ 母册 EVAL-SET.md ceiling≤300 硬红（RM20）。
 - 3k 语料 generation（预注册 RM14/§8.4 兑现）：
-  `contracts/eval/pre-haskell-members-v1.json` 冻结 3j 收口树（`4b39695`）的
+  `contracts/eval/pre-haskell-members-v1.json` 冻结 3j 收口树（`fb9c139`）的
   40 个 pre-Haskell discrete 成员；门 `baseline_bridge::
   pre_haskell_members_survive_every_generation` 断言其为每个后继基线的真子集。
   预算 97→149 双笔具名（+13 generation / +39 表族，`ce.toml` 历史段；本行
@@ -114,7 +114,7 @@ DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0�
 R1 = cabal 源根行走（owner 按目录前缀最深、同深两 cabal = ambiguous_workspace；
 stanza 归属并集立场——双 stanza 共持文件跨组件分歧即 ambiguous_root 拒绝；
 无 cabal 锚仓根 = 裸 ghc 语义）；R2 = `hs_boot.rs` 机生成表（GHC 9.14.1
-全局包库 43 包 1,510 模块；滤除 = 库自记 exposed 位（`ghc`）+ 零模块包两条
+全局包库 43 包 1,371 模块；滤除 = 库自记 exposed 位（`ghc`）+ 零模块包两条
 db 事实，零圈选），有 cabal 时按 owner build-depends 门控、无 cabal 时整库
 默认可见。库外声明依赖（aeson，store 安装）拒绝 out_of_scope——module→package
 无证据绝不猜。

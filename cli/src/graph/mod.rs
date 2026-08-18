@@ -89,9 +89,17 @@ pub fn counts(files: &[FileSites]) -> BTreeMap<(&'static str, &'static str), usi
 fn print_counts(files: &[FileSites]) {
     let total: usize = files.iter().map(|f| f.sites.len()).sum();
     println!(
-        "graph sites: {total} across {} files",
-        files.iter().filter(|f| !f.sites.is_empty()).count()
+        "{}",
+        crate::i18n::line(
+            "graph sites: {} across {} files",
+            "图引用站点：{} 个，分布于 {} 个文件",
+            &[
+                &total,
+                &files.iter().filter(|f| !f.sites.is_empty()).count(),
+            ],
+        )
     );
+    // the per-(lang, kind) rows are pure data — nothing to translate
     for ((lang, kind), n) in counts(files) {
         println!("  {lang:<10} {kind:<12} {n}");
     }

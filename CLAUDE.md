@@ -1,6 +1,6 @@
 # CodeEraser — 项目级指令（Claude Code 每次会话加载）
 
-## 当前状态：🔒 计划已锁定，未获用户明确指令不得开始实现
+## 当前状态：M0–M7 已交付，M8（成长轨）进行中；切片开工由用户拍板
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。

@@ -1,9 +1,9 @@
 # M4 预注册评估集 v1（计划 §6 M4，D2-1 纯净度）
 
-> 冻结于四分类任何实现代码之前（预注册的全部意义）。本文件 +
-> [manifest-v1.json](../contracts/eval/manifest-v1.json) 共同构成冻结记录；
-> 样本载荷含其它私有仓库全文，按用户拍板（2026-08-10）**不入库**，落本地
-> `.ce-eval/`（.gitignore），manifest 逐样本 SHA-256 钉定、可随时重建校验。
+> 冻结于四分类任何实现代码之前（预注册的全部意义）。本文件即冻结记录
+> （曾与 manifest-v1.json 共同构成；该件已按文末 M7.5 修正案退役，逐样本
+> SHA-256 钉定走 git 历史复活校验）；样本载荷含其它私有仓库全文，按用户
+> 拍板（2026-08-10）**不入库**，落本地 `.ce-eval/`（.gitignore）。
 > 本册收录至 M5-2；M5-3 仪器冻结登记另册 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)（决策 ⑨ 拆册 2026-08-14；本册 300 行自此为 E01 硬线，`core_size_gate.rs` ceiling 断言执行——RM20）。
 
 ## 构成（用户拍板 2026-08-10）
@@ -204,7 +204,7 @@ Cost.anchorFloor），自仓 L2 summary 逐项不变、FPR 0/600 保持、升级
 baseline 七项 == 升级前 quality 列（预注册全中）、**requests L2 首冻结：
 18/18、0 miss/0 extras/0 发明**——上文"悬置"自此解除。
 
-**边级 GT（M5-1c-iii 尾款）**：审读表新增 relocation_edges（自仓 16 边行/
+**边级 GT（M5-1c-iii 尾款）**：审读表新增 relocation_edges（自仓 17 边行/
 37 边-单元对，requests 1/1），每行对原始 diff 核实——名字存活者按定义删除
 扫描，改名收敛者按体行同一。验收反向设门：**edge_violations 越界即红**
 （生成器+CI 双点；首跑逮出 5 条改名体边——按 diff 补全 GT，非按

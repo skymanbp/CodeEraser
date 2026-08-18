@@ -10,7 +10,7 @@
 | Go CC | gocyclo 0.6.0 | 52 | **52/52 (100%)** | ✅ 零分歧（default_case 轴 fixtures 沉默，规范侧修正见缺口 #3） |
 | Python CC | lizard 1.23.0 | 104 | 102/104 | 2 条归因保留（finally） |
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
-| Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（`cli/tests/crosscheck_rca.rs` 可复跑；同 span 闭包多重集合比较） |
+| Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（harness 已随 M7.5 封册退役，复跑从 git 历史复活；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
 | CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
 
@@ -56,8 +56,8 @@ completions.go:932 差 1 = findFlag() 一处 else 内 if；completions.go:316
 
 ## Rust 全量对拍终版（2026-08-07 第三轮，harness 固化）
 
-`cli/tests/crosscheck_rca.rs`（`#[ignore]` 集成测试，
-`cargo test --test crosscheck_rca -- --ignored --nocapture`）走 RCA JSON
+harness `crosscheck_rca.rs`（`#[ignore]` 集成测试；已随 M7.5 深度瘦身
+退役，复跑=按 EVAL-SET.md 再生成节从 git 历史复活）当时走 RCA JSON
 通路复跑全部 5 文件：**322/322 函数单位双向对齐且值全部一致，零分歧**。
 第二轮的 21 条"分歧"与"319 个单位"均为临时扁平文本解析器的错位假象。
 真值单位数 **322**：初版 harness 按 (start,end) 单键 join 时，walk.rs

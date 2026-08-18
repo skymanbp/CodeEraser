@@ -14,11 +14,12 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚧 **0.x preview. M0–M6 shipped; M7 (release track) in progress.**
+🚧 **0.x preview. M0–M7 shipped; M8 (growth track) in progress.**
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 This repository gates itself with its own scanner, clone ratchet,
-baseline and deadcode/docdup checks on every push.
+baseline and deadcode/docdup checks on every push to `main` (plus
+pull requests and a weekly scheduled run).
 
 ## Install (from source)
 
