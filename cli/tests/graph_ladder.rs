@@ -366,54 +366,72 @@ fn inline_mod_super_comes_home() {
 /// `#[path = "…"]` remaps answer at R1 (design §4 Rust row, R5
 /// column: the literal answers at R1). Line-anchored like the inline
 /// cases — the shared table drives line 1 only. Pinned here: the
-/// base is the declarer's OWN directory for every declarer kind
-/// (never the convention child_dir — the one bug this rung can
-/// have), attributes stack in either order, `../` traverses and a
-/// repo escape refuses, a missing target never invents, and an
-/// inline-module context refuses even when the file exists.
+/// FILE-LEVEL base is the declarer's OWN directory for every
+/// declarer kind (never the convention child_dir — the one bug this
+/// rung can have); the INLINE-module base is child_dir plus the
+/// enclosing mod names (both rustc-reference habitats); raw-string
+/// literals carry the same content node; attributes stack in either
+/// order; `../` traverses while a repo escape or a missing target
+/// refuses, never invents.
+/// The #[path] habitat tree (the TREE convention: the fixture IS the
+/// spec) — both declarer kinds, stacked attributes, a raw string,
+/// traversal/escape/missing targets, and both inline-module bases.
+const PATH_TREE: &[(&str, &str)] = &[
+    ("Cargo.toml", "[package]\nname='pa'"),
+    (
+        "src/graph/md.rs",
+        "#[cfg(test)]\n#[path = \"md_tests.rs\"]\nmod tests;\n#[path = \"also.rs\"]\n#[cfg(test)]\nmod also;\n#[path = \"../up.rs\"]\nmod up;\n#[path = \"../../../out.rs\"]\nmod esc;\n#[path = \"nope.rs\"]\nmod nope;\n#[path = r\"also.rs\"]\nmod raw;\nmod inline {\n    #[path = \"md_tests.rs\"]\n    mod hidden;\n}\n",
+    ),
+    ("src/graph/md_tests.rs", "\n"),
+    ("src/graph/also.rs", "\n"),
+    ("src/graph/md/inline/md_tests.rs", "\n"),
+    ("src/up.rs", "\n"),
+    ("src/lib.rs", "mod graph;\n"),
+    (
+        "src/graph/mod.rs",
+        "mod md;\n#[path = \"store_tests.rs\"]\nmod tests;\nmod deep {\n    #[path = \"extra.rs\"]\n    mod e;\n}\n",
+    ),
+    ("src/graph/store_tests.rs", "\n"),
+    ("src/graph/deep/extra.rs", "\n"),
+];
+
 #[test]
 fn path_attr_remaps_resolve_at_r1() {
-    let fx = fixture(
-        "ladder-path-attr",
-        &[
-            ("Cargo.toml", "[package]\nname='pa'"),
-            (
-                "src/graph/md.rs",
-                "#[cfg(test)]\n#[path = \"md_tests.rs\"]\nmod tests;\n#[path = \"also.rs\"]\n#[cfg(test)]\nmod also;\n#[path = \"../up.rs\"]\nmod up;\n#[path = \"../../../out.rs\"]\nmod esc;\n#[path = \"nope.rs\"]\nmod nope;\nmod inline {\n    #[path = \"md_tests.rs\"]\n    mod hidden;\n}\n",
-            ),
-            ("src/graph/md_tests.rs", "\n"),
-            ("src/graph/also.rs", "\n"),
-            ("src/up.rs", "\n"),
-            ("src/lib.rs", "mod graph;\n"),
-            (
-                "src/graph/mod.rs",
-                "mod md;\n#[path = \"store_tests.rs\"]\nmod tests;\n",
-            ),
-            ("src/graph/store_tests.rs", "\n"),
-        ],
-    );
+    let fx = fixture("ladder-path-attr", PATH_TREE);
     let scope = fx.scope();
-    let at = |from: &'static str, spec: &'static str, line: usize| {
-        ladder::resolve(Lang::Rust, &site("mod_decl", from, spec, line), &scope)
-    };
-    // sibling-dir base from a non-mod.rs declarer, NOT child_dir
-    assert_eq!(
-        at("src/graph/md.rs", "tests", 3),
-        ok("src/graph/md_tests.rs", 1)
-    );
-    // attribute order is immaterial
-    assert_eq!(at("src/graph/md.rs", "also", 6), ok("src/graph/also.rs", 1));
-    // ../ traversal, repo escape, and a missing target all stay honest
-    assert_eq!(at("src/graph/md.rs", "up", 8), ok("src/up.rs", 1));
-    assert_eq!(at("src/graph/md.rs", "esc", 10), no(Reason::OutOfScope));
-    assert_eq!(at("src/graph/md.rs", "nope", 12), no(Reason::OutOfScope));
-    // inline-module context refuses even though md_tests.rs exists
-    assert_eq!(at("src/graph/md.rs", "hidden", 15), no(Reason::OutOfScope));
-    // mod.rs declarer: same own-dir base rule
-    assert_eq!(
-        at("src/graph/mod.rs", "tests", 3),
-        ok("src/graph/store_tests.rs", 1)
-    );
-    // the plain convention next to a remap is not hijacked
-    assert_eq!(at("src/graph/mod.rs", "md", 1), ok("src/graph/md.rs", 1));
+    // (from, spec, line, want) — row order: own-dir base (never
+    // child_dir), attribute stacking both ways, ../ traversal, repo
+    // escape, missing target, raw string, inline habitat in both
+    // declarer kinds, and the un-hijacked plain convention
+    let cases: &[(&'static str, &'static str, usize, Outcome)] = &[
+        (
+            "src/graph/md.rs",
+            "tests",
+            3,
+            ok("src/graph/md_tests.rs", 1),
+        ),
+        ("src/graph/md.rs", "also", 6, ok("src/graph/also.rs", 1)),
+        ("src/graph/md.rs", "up", 8, ok("src/up.rs", 1)),
+        ("src/graph/md.rs", "esc", 10, no(Reason::OutOfScope)),
+        ("src/graph/md.rs", "nope", 12, no(Reason::OutOfScope)),
+        ("src/graph/md.rs", "raw", 14, ok("src/graph/also.rs", 1)),
+        (
+            "src/graph/md.rs",
+            "hidden",
+            17,
+            ok("src/graph/md/inline/md_tests.rs", 1),
+        ),
+        (
+            "src/graph/mod.rs",
+            "tests",
+            3,
+            ok("src/graph/store_tests.rs", 1),
+        ),
+        ("src/graph/mod.rs", "e", 6, ok("src/graph/deep/extra.rs", 1)),
+        ("src/graph/mod.rs", "md", 1, ok("src/graph/md.rs", 1)),
+    ];
+    for (from, spec, line, want) in cases {
+        let got = ladder::resolve(Lang::Rust, &site("mod_decl", from, spec, *line), &scope);
+        assert_eq!(&got, want, "{from} {spec} @{line}");
+    }
 }

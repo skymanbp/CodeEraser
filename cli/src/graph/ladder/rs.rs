@@ -66,17 +66,11 @@ pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
 }
 
 /// R1: an explicit `#[path]` remap wins outright; otherwise one
-/// child lookup — the shared throat all tree walks use. The remap's
-/// base is the declaring file's OWN directory (rustc semantics for a
-/// file-level mod), never the convention child_dir — routing it
-/// through `child` would resolve one directory too deep.
+/// child lookup — the shared throat all tree walks use.
 fn mod_rung(site: &Site, roots_set: &BTreeSet<String>, scope: &Scope) -> Outcome {
     use super::rs_tree::{Child, child};
     if let Some(target) = path_attr(scope, site.from, site.line, site.spec) {
-        if inline_depth(scope, site.from, site.line) > 0 {
-            return Outcome::Unresolved(Reason::OutOfScope);
-        }
-        let base = roots::parent_dir(site.from);
+        let base = path_base(scope, site, roots_set);
         return match roots::join_rel(&base, &target) {
             Some(path) if scope.files.contains(&path) => Outcome::Resolved { path, rung: 1 },
             _ => Outcome::Unresolved(Reason::OutOfScope),
@@ -87,6 +81,29 @@ fn mod_rung(site: &Site, roots_set: &BTreeSet<String>, scope: &Scope) -> Outcome
         Child::Both => Outcome::Unresolved(Reason::AmbiguousPaths),
         Child::None => Outcome::Unresolved(Reason::OutOfScope),
     }
+}
+
+/// The directory a `#[path]` literal resolves against (rustc
+/// reference, both habitats): file-level = the declaring file's OWN
+/// directory — never the convention child_dir, which would land one
+/// level too deep; inside inline modules the enclosing mod names
+/// become directories under the file's child_dir (own dir for
+/// mod-rs/crate roots, dir/<stem> otherwise — the SAME rule the
+/// convention walk uses, so the two habitats share one authority).
+fn path_base(scope: &Scope, site: &Site, roots_set: &BTreeSet<String>) -> String {
+    let parsed = super::rs_tree::cached_tree(scope, site.from);
+    let mods = match parsed.as_ref() {
+        Some((text, tree)) => super::rs_tree::inline_mods(tree, text, site.line.saturating_sub(1)),
+        None => Vec::new(),
+    };
+    if mods.is_empty() {
+        return roots::parent_dir(site.from);
+    }
+    let mut base = super::rs_tree::child_dir(site.from, roots_set);
+    for m in mods {
+        base = roots::join_dir(&base, &m);
+    }
+    base
 }
 
 fn use_rungs(

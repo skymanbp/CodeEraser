@@ -40,6 +40,19 @@ pub(crate) fn covering_chain(tree: &tree_sitter::Tree, row: usize) -> Vec<tree_s
     }
 }
 
+/// Names of the BODIED mod_items enclosing `row`, outermost first —
+/// the inline-module components of a #[path] base (the same chain
+/// inline_depth counts; here the names travel).
+pub(crate) fn inline_mods(tree: &tree_sitter::Tree, src: &str, row: usize) -> Vec<String> {
+    covering_chain(tree, row)
+        .iter()
+        .filter(|c| c.kind() == "mod_item" && c.child_by_field_name("body").is_some())
+        .filter_map(|c| c.child_by_field_name("name"))
+        .filter_map(|n| n.utf8_text(src.as_bytes()).ok())
+        .map(str::to_string)
+        .collect()
+}
+
 /// The mod_item starting exactly at `row` whose name field is
 /// `name` — a projection of the shared covering chain.
 pub(crate) fn mod_item_at<'t>(
@@ -150,7 +163,9 @@ pub(crate) fn child(
 
 /// A crate root or a mod.rs parents children in its OWN directory;
 /// any other module file parents them under dir/<stem>/ (2018 style).
-fn child_dir(file: &str, roots_set: &BTreeSet<String>) -> String {
+/// pub(crate): the #[path] rung's INLINE-context base is exactly
+/// this rule plus the enclosing inline mod names (rustc reference).
+pub(crate) fn child_dir(file: &str, roots_set: &BTreeSet<String>) -> String {
     let dir = roots::parent_dir(file);
     if roots_set.contains(file) || is_mod_rs(file) {
         return dir;

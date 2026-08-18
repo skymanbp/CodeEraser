@@ -38,8 +38,10 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// the receiver-collapsed arity. 5 = the `#[path]` R1 remap (design
 /// §4 Rust row, R5 column: the literal answers at R1) — ladder-only,
 /// so the frozen site universe stands and the audited sample keeps
-/// its identity keys.
-pub const GRAPH_REV: i64 = 5;
+/// its identity keys. 6 = the remap's inline-module habitat
+/// (child_dir + enclosing mod names, rustc reference) — the depth>0
+/// refusal becomes an edge, same ladder-only class as 5.
+pub const GRAPH_REV: i64 = 6;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
