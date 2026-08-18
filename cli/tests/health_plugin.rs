@@ -92,7 +92,14 @@ fn plugin_manifests_parse_and_wire_real_subcommands() {
         &std::fs::read_to_string(plugin.join("hooks/hooks.json")).expect("hooks.json"),
     )
     .expect("hooks.json parses");
-    let known = ["ce health --hook", "ce probe --hook", "ce audit --hook"];
+    // M7-P1: hooks enter through the ADR-007 starter (verified pinned
+    // copy -> pinned download -> PATH ce); the literals ARE the
+    // contract — a drifted wiring is a broken plugin install.
+    let known = [
+        "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" health --hook",
+        "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" probe --hook",
+        "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" audit --hook",
+    ];
     let events = hooks["hooks"].as_object().expect("events");
     assert_eq!(events.len(), 3, "SessionStart + PreToolUse + Stop");
     for (event, entries) in events {
@@ -107,6 +114,9 @@ fn plugin_manifests_parse_and_wire_real_subcommands() {
             }
         }
     }
+    // the wire target and its manifest ship with the plugin
+    assert!(plugin.join("bin/ce.sh").is_file(), "starter missing");
+    assert!(plugin.join("bin/manifest.env").is_file(), "manifest missing");
     // marketplace manifest parses and points at this plugin
     let market: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(plugin.join(".claude-plugin/marketplace.json"))
