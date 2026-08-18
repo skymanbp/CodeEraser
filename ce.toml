@@ -1,7 +1,7 @@
-# ce dogfood config (plan 搂7.5). Thresholds stay at the 搂4.1 defaults.
+# ce dogfood config (plan §7.5). Thresholds stay at the §4.1 defaults.
 
 # Only the pinned THIRD-PARTY cross-check sources are exempt from this
-# repo's own standards 鈥?they are test data measured by the acceptance
+# repo's own standards — they are test data measured by the acceptance
 # harness. Everything else under contracts/ (hook capture script, docs,
 # goldens) is ce-authored and stays scanned (attack-review narrowing).
 exclude = ["contracts/fixtures/crosscheck/**"]
@@ -40,7 +40,7 @@ entry_globs = [
 # (prior floor: 201, 2026-08-07 R8 fix batch). Kept, not extracted
 # (named boundaries, docs/FPR-REPLAY.md): per-hook Envelope
 # declarations (parallel contracts) and the metrics/divergence/sonar
-# test bodies 鈥?documentary stance tests whose per-case whitepaper
+# test bodies — documentary stance tests whose per-case whitepaper
 # citations ARE the content; T2 folds their src literals so adjacent
 # cases chain into one family (~150 blocks). Ratchet DOWN with every
 # cleanup; never raise without a plan amendment.

@@ -15,6 +15,10 @@ use std::path::PathBuf;
 #[derive(Parser)]
 #[command(
     name = "ce",
+    // usage lines otherwise render argv[0] — "ce.exe" on Windows,
+    // "ce" elsewhere; the docs gate regenerates the same page on
+    // every platform only when the canonical name is pinned
+    bin_name = "ce",
     version,
     about = "CodeEraser — erase LLM-induced code & document entropy",
     arg_required_else_help = true
@@ -100,7 +104,7 @@ pub(crate) enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
         /// Exit 1 when any file-tier dead verdict lands (the CI
-        /// dogfood gate for the M5-2 "全处置" acceptance row)
+        /// dogfood gate for the M5-2 full-disposition acceptance row)
         #[arg(long)]
         check: bool,
     },
