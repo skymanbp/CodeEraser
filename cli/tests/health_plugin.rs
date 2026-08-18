@@ -116,7 +116,10 @@ fn plugin_manifests_parse_and_wire_real_subcommands() {
     }
     // the wire target and its manifest ship with the plugin
     assert!(plugin.join("bin/ce.sh").is_file(), "starter missing");
-    assert!(plugin.join("bin/manifest.env").is_file(), "manifest missing");
+    assert!(
+        plugin.join("bin/manifest.env").is_file(),
+        "manifest missing"
+    );
     // marketplace manifest parses and points at this plugin
     let market: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(plugin.join(".claude-plugin/marketplace.json"))
