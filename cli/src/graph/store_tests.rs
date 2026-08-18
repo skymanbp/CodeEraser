@@ -127,4 +127,12 @@ fn resolve_key_tracks_paths_and_configs() {
         resolve_key(&one, &[("Cargo.toml".to_string(), 5)]),
         "config hash participates"
     );
+    // the md slug facts ride the same pair list (walkidx) — the
+    // M5-close staleness repayment's key-level contract, pinned
+    // where resolve_key lives and not only in the e2e
+    assert_ne!(
+        base,
+        resolve_key(&one, &[("b.md".to_string(), 9)]),
+        "md slug facts participate"
+    );
 }

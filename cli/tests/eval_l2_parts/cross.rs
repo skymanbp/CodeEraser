@@ -70,51 +70,59 @@ pub fn cross_rows(
     let mut keys: Vec<&FileKey> = gt.counts.keys().chain(delta.keys()).collect();
     keys.sort();
     keys.dedup();
-    let none: Vec<usize> = Vec::new();
     keys.iter()
         .map(|key| {
-            let g = gt.counts.get(*key).copied().unwrap_or(0);
             let lines = delta.get(*key).cloned().unwrap_or_default();
-            let p = lines.len() as u64;
-            let waived = gt.waived.get(*key).unwrap_or(&none);
-            let w = waived.len() as u64;
-            // A register row claims NO site can open for this line —
-            // a predicted register line disproves its own waiver
-            // (Codex review C3: the "structurally below floor"
-            // property was previously unasserted anywhere).
-            for l in waived {
-                assert!(
-                    !lines.contains(l),
-                    "{sha}: below-floor {key:?}:{l} was predicted"
-                );
-            }
-            assert!(
-                p + w >= g,
-                "{sha}: cross miss on {key:?}: gt {g} pred {p}\npred lines:\n{}",
-                dump(texts, key, &lines)
-            );
-            let gt_lines = gt.lines.get(*key);
-            if let Some(want) = gt_lines {
-                let missed: Vec<usize> = want
-                    .iter()
-                    .copied()
-                    .filter(|l| !lines.contains(l) && !waived.contains(l))
-                    .collect();
-                assert!(
-                    missed.is_empty(),
-                    "{sha}: line-identity miss on {key:?}: gt {want:?} missing \
-                     {missed:?}\npred lines:\n{}",
-                    dump(texts, key, &lines)
-                );
-            }
-            let mut row = json!({"side": key.0, "file": key.1, "gt": g, "pred": p,
-                   "gt_lines": gt_lines});
-            if !waived.is_empty() {
-                row["below_floor"] = json!(waived);
-            }
-            row
+            cross_row(sha, texts, gt, key, &lines)
         })
         .collect()
+}
+
+/// One per-file verdict (split from cross_rows at the E01 fn gate):
+/// the three gate batteries — the below-floor waiver disproof, the
+/// count-miss gate and the line-identity gate — are one per-file
+/// judgment and travel together.
+fn cross_row(sha: &str, texts: &Texts, gt: &CrossGt, key: &FileKey, lines: &[usize]) -> Value {
+    let g = gt.counts.get(key).copied().unwrap_or(0);
+    let p = lines.len() as u64;
+    let none: Vec<usize> = Vec::new();
+    let waived = gt.waived.get(key).unwrap_or(&none);
+    let w = waived.len() as u64;
+    // A register row claims NO site can open for this line —
+    // a predicted register line disproves its own waiver
+    // (Codex review C3: the "structurally below floor"
+    // property was previously unasserted anywhere).
+    for l in waived {
+        assert!(
+            !lines.contains(l),
+            "{sha}: below-floor {key:?}:{l} was predicted"
+        );
+    }
+    assert!(
+        p + w >= g,
+        "{sha}: cross miss on {key:?}: gt {g} pred {p}\npred lines:\n{}",
+        dump(texts, key, lines)
+    );
+    let gt_lines = gt.lines.get(key);
+    if let Some(want) = gt_lines {
+        let missed: Vec<usize> = want
+            .iter()
+            .copied()
+            .filter(|l| !lines.contains(l) && !waived.contains(l))
+            .collect();
+        assert!(
+            missed.is_empty(),
+            "{sha}: line-identity miss on {key:?}: gt {want:?} missing \
+             {missed:?}\npred lines:\n{}",
+            dump(texts, key, lines)
+        );
+    }
+    let mut row = json!({"side": key.0, "file": key.1, "gt": g, "pred": p,
+           "gt_lines": gt_lines});
+    if !waived.is_empty() {
+        row["below_floor"] = json!(waived);
+    }
+    row
 }
 
 fn dump(texts: &Texts, (side, file): &FileKey, lines: &[usize]) -> String {

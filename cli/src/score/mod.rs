@@ -56,9 +56,23 @@ pub struct Outcome {
     pub skipped_self: usize,
 }
 
-pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
+/// The measurement half of a check run — everything read off the
+/// repo before ce.toml speaks (split from run at the E01 warn line,
+/// the SECOND time: ADR-008 P4's knob tables re-grew the body the
+/// M5-close split had repaid).
+struct Measured {
+    files: Vec<String>,
+    idx: HashMap<String, i64>,
+    sim: Vec<[i64; 5]>,
+    pos: Vec<[i64; 6]>,
+    members: Vec<u64>,
+    collapsed: usize,
+    skipped_self: usize,
+}
+
+fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     let (found, _summary) = dedup::analyze(root, opts.db.clone(), None, None)?;
-    let w = deadcode::build_wire(root, opts.db)?;
+    let w = deadcode::build_wire(root, opts.db.clone())?;
     let fnodes = deadcode::file_nodes(&w);
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
     let posmap = judged_positions(&opts.core, &w, &pos_req)?;
@@ -71,22 +85,38 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     let mut sim = Vec::new();
     let skipped_self = sim_rows(&found.blocks, &idx, &mut sim);
     let (members, collapsed) = member_set(root, &found.blocks);
+    Ok(Measured {
+        pos: pos_rows(&files, &posmap),
+        idx: idx.into_iter().map(|(k, v)| (k.to_string(), v)).collect(),
+        files,
+        sim,
+        members,
+        collapsed,
+        skipped_self,
+    })
+}
+
+/// Judge the repo against the committed baseline: measure, window
+/// churn when asked, then ce.toml speaks its knob tables onto the
+/// wire (ADR-008: the first step sent the ceilings; P4 added
+/// weights, thresholds and tolerance through score::knobs' declared
+/// tables — the reply echoes the effective set and judge() asserts
+/// the round trip).
+pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
+    let m = measure(root, &opts)?;
+    let idx: HashMap<&str, i64> = m.idx.iter().map(|(k, v)| (k.as_str(), *v)).collect();
     let (churn_t, cochange_t) = match opts.days {
         Some(days) => churn_rows(root, days, &idx)?,
         None => (Vec::new(), Vec::new()),
     };
-    // ce.toml speaks its knob tables onto the wire (ADR-008: the
-    // first step sent the ceilings; P4 adds weights, thresholds and
-    // tolerance through score::knobs' declared tables); the reply
-    // echoes the effective set and judge() asserts the round trip
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let req = wire::Request {
-        sim,
-        pos: pos_rows(&files, &posmap),
+        sim: m.sim,
+        pos: m.pos,
         churn: churn_t,
         cochange: cochange_t,
         continuous: continuous_rows(root)?,
-        discrete: members,
+        discrete: m.members,
         baseline: if opts.establish {
             serde_json::Value::Null
         } else {
@@ -100,15 +130,15 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         // the dedup pair is `ce dedup --check`'s leg alone (P2) —
         // this road stays byte-identical
         dedup: None,
-        files,
+        files: m.files,
     };
     let reply = wire::judge(&opts.core, &req)?;
     Ok(Outcome {
         files: req.files.len(),
         sim_pairs: req.sim.len(),
         members: req.discrete.len(),
-        collapsed,
-        skipped_self,
+        collapsed: m.collapsed,
+        skipped_self: m.skipped_self,
         reply,
     })
 }

@@ -88,7 +88,8 @@ knobShape i row = case row of
 -- must not gate (unlike a degraded reply, where judgment was DENIED
 -- by the cap and fail=true says so).
 judged :: String -> TrendReq -> B8.ByteString
-judged proto req = reply proto req effective verdict slope False
+judged proto req =
+  reply proto req Judgment{jEffective = effective, jVerdict = verdict, jSlope = slope, jDegraded = False}
  where
   effective = [(c, pick (reqKnobs req) c d) | (c, d) <- knobTable]
   minPoints = pick (reqKnobs req) 0 3
@@ -103,28 +104,34 @@ judged proto req = reply proto req effective verdict slope False
 -- DEFAULT knobs — an unvalidated override must not be presented as
 -- effective (the scan C14 posture).
 degraded :: String -> TrendReq -> B8.ByteString
-degraded proto req = reply proto req [(c, d) | (c, d) <- knobTable] Nothing Nothing True
+degraded proto req =
+  reply proto req Judgment{jEffective = knobTable, jVerdict = Nothing, jSlope = Nothing, jDegraded = True}
 
-reply ::
-  String ->
-  TrendReq ->
-  [(Integer, Integer)] ->
-  Maybe Integer ->
-  Maybe Rational ->
-  Bool ->
-  B8.ByteString
-reply proto req effective verdict slope isDegraded =
+-- | One judgment, four payloads — the record keeps reply at the
+-- arity line its five sibling families hold (Structure's Knobs
+-- precedent; a sixth positional argument was the scan warn). Local
+-- to this family: one authority per family forbids a shared shape.
+data Judgment = Judgment
+  { jEffective :: [(Integer, Integer)]
+  , jVerdict :: Maybe Integer
+  , jSlope :: Maybe Rational
+  , jDegraded :: Bool
+  }
+
+-- | The trend.result object: exact-Rational slope display-rounded
+-- (round-half-even; the verdict compared the EXACT value and no
+-- client re-derives it), fail = degraded or an armed decline floor.
+reply :: String -> TrendReq -> Judgment -> B8.ByteString
+reply proto req j =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("trend.result" :: String)
     , "id" .= reqId req
-    , -- display-grade rounding (round-half-even); the verdict above
-      -- compared the EXACT Rational and no client re-derives it
-      "slopeMicroPerDay" .= fmap (round :: Rational -> Integer) slope
-    , "verdict" .= verdict
-    , "fail" .= (isDegraded || (verdict == Just 2 && lookup 1 effective > Just 0))
-    , "knobs" .= [[c, v] | (c, v) <- effective]
+    , "slopeMicroPerDay" .= fmap (round :: Rational -> Integer) (jSlope j)
+    , "verdict" .= jVerdict j
+    , "fail" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))
+    , "knobs" .= [[c, v] | (c, v) <- jEffective j]
     , "counts" .= object ["rows" .= length (reqRows req)]
-    , "degraded" .= isDegraded
+    , "degraded" .= jDegraded j
     ]
-      <> ["reason" .= ("trend_too_large" :: String) | isDegraded]
+      <> ["reason" .= ("trend_too_large" :: String) | jDegraded j]

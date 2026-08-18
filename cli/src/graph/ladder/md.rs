@@ -294,3 +294,7 @@ fn is_scheme(spec: &str) -> bool {
             .chars()
             .all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
 }
+
+#[cfg(test)]
+#[path = "md_tests.rs"]
+mod tests;

@@ -41,6 +41,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      # the version has ONE source — cli/Cargo.toml. v0.1.0 shipped
+      # binaries reporting 0.0.1 because the input was free text;
+      # now a mismatch fails before any platform builds.
+      - name: Version input must match the crate
+        shell: bash
+        run: |
+          CRATE=$(grep -m1 '^version' cli/Cargo.toml | cut -d'"' -f2)
+          [ "$CRATE" = "${{ inputs.version }}" ] || {
+            echo "input ${{ inputs.version }} != cli/Cargo.toml $CRATE"; exit 1; }
       - uses: dtolnay/rust-toolchain@stable # pinned by cli/rust-toolchain.toml
       - uses: Swatinem/rust-cache@v2
         with:

@@ -102,25 +102,7 @@ pub fn summarize(rows: &[Value], ledger: &[Value]) -> Value {
         add("commits", 1);
         add("commits_exact", exact as u64);
         for c in r["cross"].as_array().expect("cross") {
-            let (g, p) = gt_pred(c);
-            let side = c["side"].as_str().unwrap();
-            add(
-                if side == "out" {
-                    "cross_gt_out"
-                } else {
-                    "cross_gt_in"
-                },
-                g,
-            );
-            // Reviewed below-floor lines leave the hit/miss ledger
-            // (hits + misses + below_floor == cross GT), so the miss
-            // gate reads "zero UNREVIEWED misses" on every corpus.
-            let w = c["below_floor"].as_array().map_or(0, |a| a.len() as u64);
-            add("cross_hits", (g - w).min(p));
-            add("cross_misses", (g - w).saturating_sub(p));
-            if w > 0 {
-                add("below_floor_lines", w);
-            }
+            add_cross(c, &mut add);
         }
     }
     add("extras_files", ledger.len() as u64);
@@ -138,4 +120,28 @@ pub fn summarize(rows: &[Value], ledger: &[Value]) -> Value {
             .sum(),
     );
     json!(sums)
+}
+
+/// The per-row cross fold (split from summarize at the E01 fn gate):
+/// side bucketing, the below-floor subtraction, hits and misses.
+fn add_cross(c: &Value, add: &mut impl FnMut(&'static str, u64)) {
+    let (g, p) = gt_pred(c);
+    let side = c["side"].as_str().unwrap();
+    add(
+        if side == "out" {
+            "cross_gt_out"
+        } else {
+            "cross_gt_in"
+        },
+        g,
+    );
+    // Reviewed below-floor lines leave the hit/miss ledger
+    // (hits + misses + below_floor == cross GT), so the miss
+    // gate reads "zero UNREVIEWED misses" on every corpus.
+    let w = c["below_floor"].as_array().map_or(0, |a| a.len() as u64);
+    add("cross_hits", (g - w).min(p));
+    add("cross_misses", (g - w).saturating_sub(p));
+    if w > 0 {
+        add("below_floor_lines", w);
+    }
 }
