@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (field, refusedBy, replyObjWith, runChecks, setKey) where
+module WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -24,6 +24,18 @@ runChecks checks = fmap and (mapM one checks)
   one (name, ok) = do
     putStrLn ((if ok then "ok   " else "FAIL ") <> name)
     pure ok
+
+-- | A [[Integer]]-rows request envelope — the scan/trend batteries'
+-- shared wireReq shape (the trend family's landing recloned scan's
+-- line for line; fifteenth-bite test-half repayment).
+rowsRequest :: String -> String -> [[Integer]] -> Value
+rowsRequest protoV kind rows =
+  object
+    [ "proto" .= protoV
+    , "type" .= kind
+    , "id" .= (1 :: Int)
+    , "rows" .= rows
+    ]
 
 -- | Drive a family's REAL respond and decode the reply object.
 replyObjWith ::

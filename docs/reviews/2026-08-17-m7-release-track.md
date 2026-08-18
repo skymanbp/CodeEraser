@@ -103,6 +103,19 @@ eval_extract/各 *_parts；#![allow(dead_code)] 静默死件靠引用普查非�
 零缺员；dedup 158 块（162→158 下棘 4 全入账）。教训=①普查必须测试级（同文件
 混载）②动态拼路读者字面普查不可见=删冻结件必以全量绿实证 ③多行字符串 const
 分号终止启发会误切 ④glob 重导出下词频普查须不动点迭代补岛效应。
+**As-built（trend/1 入核半场，M7.5b）**：proto 2.13.0 加性 minor=第八判决家族
+trend/1：CE.Trend{,.Cost}（最小二乘斜率全程 Data.Ratio 精确比较，μ‰/day；
+verdict 0 升/1 平/2 恶化；**fail 仅声明地板>0 且恶化才置位=report-only 上线纪律**；
+不足 minPoints 斜率与 verdict 皆 null=缺席非平；超帽降级 fail=true P1 立场）+
+两钮（0=minPoints≥2、1=declineFloorMicro）ce.toml [trend] 仅声明才上 wire
+（27b9bc2 模式）；TrendProps 六检=乘积式≡中心矩第二推导穷举格（有理精确等）+
+边界+地板杠杆+缺席+具名拒绝+degradedFails；golden 五对手算逐位+全家族 reply
+2.13.0 重生成（request 不动，3i 先例）；Rust=trend/judge.rs 纯转发（不建判决
+镜像=structure 立场，knob 回显钉往返），报告 schema 0.2.0 携 judgment，
+CLI/GUI/MCP 三面自动承载；**棘轮第十五咬 +13=家族骨架类三次应验**（3k/S2 同型
+同量），偿 WireHarness::rowsRequest（scan/trend wireReq 单喉）残 11 具名入
+ce.toml 158→169；教训=PS5.1 Get-Content 无编码参数按 GBK 误读 UTF-8 文档
+（VERSIONING.md 一度写坏，git 恢复+Edit 工具重施——文档改写永不走 PS 管道）。
 
 ### P4 GUI 二期（v2.0 移入项）
 趋势面板：历史时序数据面按拍板②设计；删除候选浏览：消费 `ce join` 报告

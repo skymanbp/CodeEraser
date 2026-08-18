@@ -16,6 +16,7 @@ import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
 import qualified CE.Scan as Scan
 import qualified CE.Structure as Structure
+import qualified CE.Trend as Trend
 import qualified CE.Verdict as Verdict
 import Control.Applicative ((<|>))
 import Data.Aeson
@@ -25,6 +26,11 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.13.0 = the trend minor (M7.5b): the trend/1 family — the score
+-- trajectory's [ts, score, scale] rows in (ascending ts), the exact-
+-- Rational least-squares slope verdict out with the two-knob echo
+-- (minPoints / declineFloorMicro); below minPoints answers null,
+-- and the fail bit trips only under a DECLARED floor.
 -- 2.12.0 = the staleness-axis minor (M6 S3c, closing the seven-axis
 -- face): structure.request gains the OPTIONAL `staleDocs`
 -- [dirId, stale, total] join (same absence semantics) and knob 11
@@ -65,7 +71,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.12.0"
+proto = "2.13.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -127,6 +133,7 @@ families =
   , ("verdict.request", Verdict.respond)
   , ("scan.request", Scan.respond)
   , ("structure.request", Structure.respond)
+  , ("trend.request", Trend.respond)
   ]
 
 -- | Every non-hello message must carry a proto with the server's

@@ -20,7 +20,7 @@ executable ce-core
                       CE.Scan, CE.Scan.Cost, CE.Structure,
                       CE.Structure.Axes, CE.Structure.Cost,
                       CE.Structure.Declared, CE.Structure.Entropy,
-                      CE.Wire,
+                      CE.Trend, CE.Trend.Cost, CE.Wire,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet,
                       CE.Verdict.Table, CE.Verdict.Wire
@@ -52,14 +52,14 @@ test-suite ce-core-test
                       CE.Scan, CE.Scan.Cost, CE.Structure,
                       CE.Structure.Axes, CE.Structure.Cost,
                       CE.Structure.Declared, CE.Structure.Entropy,
-                      CE.Wire,
+                      CE.Trend, CE.Trend.Cost, CE.Wire,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet,
                       CE.Verdict.Table, CE.Verdict.Wire,
                       Reference, ReferenceGraph, GraphProps,
                       ReferenceTed, CloneProps, ReferenceJaccard,
                       EntropyProps, JoinProps, ScanProps,
-                      StructureProps, VerdictProps,
+                      StructureProps, TrendProps, VerdictProps,
                       VerdictWireProps, WireHarness
     build-depends:
         base       >=4.19 && <5,

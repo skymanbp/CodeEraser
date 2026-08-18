@@ -13,7 +13,7 @@ module ScanProps (battery) where
 import CE.Scan (respond)
 import CE.Scan.Cost (gradeWith, scanRowCap)
 import Data.Aeson
-import WireHarness (field, refusedBy, replyObjWith, runChecks, setKey)
+import WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
 
 battery :: IO Bool
 battery =
@@ -36,13 +36,7 @@ boundaries =
     && map (gradeWith (0, 0)) [0, 1] == [0, 1]
 
 wireReq :: [[Integer]] -> Value
-wireReq rows =
-  object
-    [ "proto" .= ("2.7.0" :: String)
-    , "type" .= ("scan.request" :: String)
-    , "id" .= (1 :: Int)
-    , "rows" .= rows
-    ]
+wireReq = rowsRequest "2.7.0" "scan.request"
 
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond

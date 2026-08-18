@@ -108,6 +108,17 @@
 > 同批机制修：golden pair 5 的 unknown-knob 探针两次因 knob 面增长
 > 转合法——冻结移动边界是错法；改钉稳定未知码 99，精确 max+1 边界
 > 由电池随面同步持有。
+> **2.13.0**（M7.5b trend/1 第八判决家族，2026-08-18）：
+> `trend.request` `rows=[[ts,score,scale]]`（ts **非降序**——同秒提交
+> 合法常见〔rebase/脚本推送整批同秒〕，倒退才拒；scale>0、
+> 0≤score≤scale）+ 可选 `knobs`（码 0=minPoints 默认 3〔<2 拒绝〕、
+> 1=declineFloorMicro 默认 0=report-only）；应答=最小二乘斜率
+> `slopeMicroPerDay`（判决在核内全程 Data.Ratio 精确比较，回显整数为
+> round 显示值，无客户端重导）+ `verdict`（0 升/1 平/2 恶化）+
+> `fail`（**仅声明地板>0 且恶化才置位**）；不足 minPoints 或时间戳
+> 零方差（全同秒=欠定）时斜率与 verdict 皆 null=缺席非平；knobs 回显
+> 恒 2 行；超帽=完整降级应答 fail=true（P1 立场）。测量侧=`ce trend`
+> （缓存 schema v7），ce.toml `[trend]` 两钮仅声明才上 wire。
 
 ## 1. 信封（envelope）
 
@@ -118,7 +129,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.12.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.13.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -225,5 +236,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.12.0 | §1 所列两处常量 |
+| 协议 | 2.13.0 | §1 所列两处常量 |
 | daemon 协议 | 1.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

@@ -143,5 +143,19 @@ entry_globs = [
 # with them (whole-file retirements + the generate_* halves of the
 # mixed eval files). Ratchet DOWN honored: -4 banked, no exemptions
 # drawn. Measured after cargo fmt.
+# 158 -> 169 (M7.5b, fifteenth bite): the EIGHTH wire family
+# (trend/1) landed at +13 — the same magnitude and class as the 3k
+# "+13 core wire family" and the S2 structure +13 precedents. The
+# mechanically-foldable share was repaid first (WireHarness::
+# rowsRequest — the scan/trend batteries' wireReq envelope, one
+# throat), leaving exactly the named architecture class: the
+# family's Req record + decode ladder, the respondWith Family
+# literal, the violation/rowShape asum skeleton, the reply head and
+# the battery lever/probe stanzas chaining against their four
+# sibling families. One authority per family forbids cross-family
+# folding (standing stance since S2); measured after cargo fmt.
+# 169 -> 168: the tie-legality fix (non-descending ts + the
+# zero-variance guard) reshaped the violation walker off its scan
+# twin — banked in the same batch. Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 158
+budget = 168

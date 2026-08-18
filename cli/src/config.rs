@@ -118,6 +118,18 @@ pub struct StructureCfg {
     pub layout: std::collections::BTreeMap<String, u32>,
 }
 
+/// Trend-family knobs (M7.5b, trend/1): both OPTIONAL — absent =
+/// the core's own defaults (minPoints 3, floor 0 = report-only; the
+/// knob rows ride the wire only when declared, the ceilings/27b9bc2
+/// pattern). decline_floor_micro is micro-per-mille per day; a
+/// declared floor is what arms the fail bit.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct TrendCfg {
+    pub min_points: Option<u32>,
+    pub decline_floor_micro: Option<u64>,
+}
+
 /// deny_unknown_fields everywhere (ADR-008 P4): a mistyped policy
 /// key used to be SILENTLY dropped — a config that looks live and
 /// does nothing is the exact failure mode this repo exists to fight.
@@ -132,6 +144,7 @@ pub struct Config {
     pub graph: GraphCfg,
     pub score: ScoreCfg,
     pub structure: StructureCfg,
+    pub trend: TrendCfg,
 }
 
 impl Config {

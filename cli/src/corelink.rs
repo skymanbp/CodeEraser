@@ -13,6 +13,10 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 /// 2.12.0 = the staleness-axis minor (M6 S3c): structure.request
 /// gains the optional `staleDocs` join rows (absent = axis 5
 /// unjudged) and knob 11 — the seven-axis face closes.
+/// 2.13.0 = the trend minor (M7.5b): the trend/1 family — the score
+/// trajectory's [ts, score, scale] rows in, the exact-Rational
+/// least-squares slope verdict out with the two-knob echo; below
+/// minPoints answers null, fail trips only under a declared floor.
 /// 2.11.0 = the redundancy-axis minor (M6 S3b): structure.request
 /// gains the optional `redundancy` rollup rows (absent = axis 6
 /// unjudged) and knobs 9/10.
@@ -41,7 +45,7 @@ use std::process::{Child, ChildStdout, Command, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.12.0";
+pub const PROTO: &str = "2.13.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

@@ -33,6 +33,8 @@ instance FromJSON Hello where
 -- 2.7.0, additive), declared WITH its judgment in one batch.
 -- structure/1 = the tree-scale entropy family (M6 S2, proto 2.9.0,
 -- additive), likewise declared with its judgment.
+-- trend/1 = the score-trajectory slope family (M7.5b, proto 2.13.0,
+-- additive), likewise declared with its judgment.
 capabilities :: [String]
 capabilities =
   [ "hello"
@@ -43,6 +45,7 @@ capabilities =
   , "verdict/1"
   , "scan/1"
   , "structure/1"
+  , "trend/1"
   ]
 
 data Reply = Reply

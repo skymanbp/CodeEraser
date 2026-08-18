@@ -13,6 +13,8 @@
 //! knobs (a historical tree is judged as it declared itself then;
 //! only the measuring toolchain is today's).
 
+pub mod judge;
+
 use crate::score;
 use crate::{churn, dedup};
 use anyhow::{Context, Result};
@@ -22,7 +24,8 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.trend-report/0.1.0";
+/// 0.2.0 (M7.5b): the report carries the core's trend/1 judgment.
+pub const SCHEMA_ID: &str = "ce.trend-report/0.2.0";
 
 /// DDL executed inside the index's ONE schema batch (dedup::schema)
 /// — created and wiped with the cache, never on a second lifecycle.
@@ -57,10 +60,13 @@ pub struct Report {
     /// (short sha, reason) for commits that refused to measure this
     /// run — reported, never silently absent.
     pub failed: Vec<(String, String)>,
+    /// The core's trend/1 slope verdict over the window (M7.5b).
+    pub judgment: judge::Judgment,
 }
 
 /// Measure up to `batch` (None = all) uncached mainline commits of
-/// the newest `commits`, persist them, and return the window's rows.
+/// the newest `commits`, persist them, hand the window to the core's
+/// trend/1 judgment, and return the report.
 pub fn run(
     root: &Path,
     db: Option<PathBuf>,
@@ -86,11 +92,13 @@ pub fn run(
     }
     let mut rows: Vec<Row> = shas.iter().filter_map(|(s, _)| have.remove(s)).collect();
     rows.reverse(); // git log is newest-first; charts read oldest-first
+    let judgment = judge::judge(root, core, &rows)?;
     Ok(Report {
         window: shas.len(),
         pending: missing.len() - measured,
         rows,
         failed,
+        judgment,
     })
 }
 
@@ -240,6 +248,7 @@ pub fn report_json(r: &Report) -> Value {
         "pending": r.pending,
         "rows": r.rows,
         "failed": r.failed.iter().map(|(s, w)| json!([s, w])).collect::<Vec<_>>(),
+        "judgment": judge::judgment_json(&r.judgment),
     })
 }
 
@@ -262,6 +271,15 @@ pub fn print(r: &Report, as_json: bool) {
             for (sha, why) in &r.failed {
                 println!("trend {sha} FAILED: {why}");
             }
+            let j = &r.judgment;
+            println!(
+                "trend verdict: {}{}{}",
+                judge::verdict_str(j),
+                j.slope_micro_per_day
+                    .map(|s| format!(" (slope {s} micro-permille/day)"))
+                    .unwrap_or_default(),
+                if j.fail { " -> FAIL" } else { "" }
+            );
             println!(
                 "trend window: {} commits, {} measured, {} pending",
                 r.window,
