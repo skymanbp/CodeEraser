@@ -10,7 +10,7 @@
     {
       "name": "codeeraser",
       "source": "./plugin",
-      "description": "CodeEraser passive guard: PreToolUse duplicate-write interception, Stop audit, SessionStart health — backed by a per-project winnowing clone index daemon. The starter downloads the SHA256-pinned ce binary from GitHub Releases on first run (manifest.env pins); a locally installed `ce` on PATH also works.",
+      "description": "CodeEraser passive guard + erase skill: PreToolUse duplicate-write interception, Stop audit, SessionStart health, and guided safe deletion of findings — backed by a per-project winnowing clone index daemon. The starter resolves ce and the ce-core judgment core in three steps: a verified local copy, a SHA256-pinned download from GitHub Releases (manifest.env pins), then PATH.",
       "author": {
         "name": "skymanbp"
       },

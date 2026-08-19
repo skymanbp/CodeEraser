@@ -45,9 +45,9 @@
 
 <div class="term">
   <div class="bar"><i></i><i></i><i></i></div>
-  <pre><span class="p">$</span> ce --lang zh check --roast
-<span class="s">check score 822/1000</span> | axes 0:4 1:0 2:42 3:0 4:0 5:0 6:79 | 42 candidates
-ratchet: 0 added, 0 removed, 0 over, 1 tolerance drawn -&gt; <span class="s">pass</span>
+  <pre><span class="p">$</span> ce check --lang zh --roast
+<span class="s">检查分数 822/1000</span> | 判轴 0:4 1:0 2:42 3:0 4:0 5:0 6:79 | 候选 42
+棘轮：新增 0，移除 0，超限 0，动用容差 5 -&gt; <span class="s">pass</span>
 <span class="r">毒舌：熵在缓慢败退。橡皮别放凉。</span></pre>
   <p class="cap">真实输出——CodeEraser 判决它自己的仓库。棘轮只收不放：
   违规集入基线银行，新增熵直接判负。</p>
@@ -67,10 +67,10 @@ ratchet: 0 added, 0 removed, 0 over, 1 tolerance drawn -&gt; <span class="s">pas
 </div>
 
 <h2>信任锚</h2>
-<p class="trust">每个发布二进制都以 SHA256 钉扎在
-<code>plugin/bin/manifest.env</code>，发布前逐一校验；安装包附带可离线核对的
-<code>SHA256SUMS</code>。代码签名被刻意排除在设计外——哈希链就是永久信任锚。
-度量在 Rust，判决在 Haskell，本仓库每次提交都用自己的工具给自己把门。</p>
+<p class="trust">六个 CLI 与判决核二进制（三平台 × ce / ce-core）以 SHA256 钉扎在
+<code>plugin/bin/manifest.env</code>，发布前逐一校验；全部发布资产——含 GUI 安装包——
+均由可离线核对的 <code>SHA256SUMS</code> 覆盖。代码签名被刻意排除在设计外——哈希链
+就是永久信任锚。度量在 Rust，判决在 Haskell，本仓库每次提交都用自己的工具给自己把门。</p>
 
 <footer class="site">
   <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·

@@ -1,12 +1,16 @@
 # codeeraser plugin
 
-被动 guard 三件套（全部 fail-open，内部失败一律放行）：
+被动 guard 三钩（全部 fail-open，内部失败一律放行）+ 一个主动 skill：
 
 | hook | 命令 | 行为 |
 |---|---|---|
 | SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热 |
 | PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入内容做 T1/T2 探针；按 `ce.toml [guard] mode` 决策 |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块；仅 deny 档拦停 |
+
+skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
+的发现引导成安全删除（先读全文、查引用、小批删、重跑门证收敛），
+用户说"清理重复/死码"时由 Claude 自动调用。
 
 ## 安装
 
@@ -15,9 +19,10 @@
 1. `/plugin marketplace add skymanbp/CodeEraser`
 2. `/plugin install codeeraser@codeeraser`
 
-`ce` 真身由 `bin/ce.sh` 三级解析（ADR-007）：已验证本地副本 →
-按 `bin/manifest.env` 的 SHA256 pin 从 GitHub Releases 下载并校验 →
-PATH 上的 `ce` 兜底。源码安装（`cargo install --path cli`）依然可用。
+`ce` 与判决核 `ce-core` 两个真身均由 `bin/ce.sh` 三级解析（ADR-007）：
+已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（六枚：三平台 ×
+双二进制）从 GitHub Releases 下载并校验 → PATH 兜底。源码安装
+（`cargo install codeeraser` 或 `--path cli`）依然可用。
 
 3. 项目里可选 `ce.toml`：
 

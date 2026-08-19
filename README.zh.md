@@ -38,6 +38,10 @@ aarch64-macos）、三个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg—�
 skymanbp/CodeEraser`，再 `/plugin install codeeraser`——引导脚本自动
 下载并按 SHA256 pin 校验两个二进制。
 
+**Cargo。** `cargo install codeeraser` 从
+[crates.io](https://crates.io/crates/codeeraser) 构建 CLI（二进制名
+`ce`）；判决核 `ce-core` 从 Releases 下载或源码构建后放它旁边。
+
 **从源码。** 前置：钉版 Rust 工具链（`cli/rust-toolchain.toml`）与
 GHC 9.14.1 + cabal（判决核）。
 
@@ -97,6 +101,7 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 
 ## 文档
 
+- [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md) — 由二进制与配置 schema 生成；漂移即 CI 门变红
 - [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) — 锁定计划；每个里程碑对它负责
 - [EVAL-SET](docs/EVAL-SET.md) — 冻结评估宇宙、抽样、审计及其门禁
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — 实测预算与重放台账

@@ -47,15 +47,16 @@ flags, no env vars.
 skymanbp/CodeEraser`, then `/plugin install codeeraser` — the starter
 downloads and SHA256-verifies both binaries automatically.
 
+**Cargo.** `cargo install codeeraser` builds the CLI (binary name
+`ce`); drop a `ce-core` from Releases or a source build beside it.
+
 **From source.** Prerequisites: the pinned Rust toolchain
 (`cli/rust-toolchain.toml`) and GHC 9.14.1 + cabal for the core.
 
 ```sh
 # the judgment core (ce-core)
 cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
-
-# the CLI (binary name: ce)
-cargo install --path cli
+cargo install --path cli   # the CLI
 ```
 
 Core resolution is one chain everywhere: `CE_CORE_BIN` → a `ce-core`

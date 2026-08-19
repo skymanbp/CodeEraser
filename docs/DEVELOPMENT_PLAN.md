@@ -1,12 +1,10 @@
 # CodeEraser 开发计划
 
-> **版本** v2.3 · 2026-08-18 · 状态：🔒 已由 cc-memory 锁定
+> **版本** v2.4 · 2026-08-19 · 状态：🔒 已由 cc-memory 锁定 · **M0–M8 全交付，v0.3.0 已发布（2026-08-19）**
 > 本文件是本仓库唯一权威计划。修改流程：改本文件 → 重新 ccm 锁定 → 才能动代码。
-> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）；v1.9 = M6 并入结构管理器（structure/1 树尺度熵判决=GUI 首屏数据面，两拍板 2026-08-17：[reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md)）；v2.0 = M6 收口修正案（用户拍板 2026-08-17：趋势面板+删除候选浏览移 M7——趋势需历史存储设计、删候浏览宜与发布后反馈同批；Linux/macOS 实包归 M7 Releases 自动化，M6 以 Windows 实包+三平台编译门收口）；v2.1 = M7 签名后置修正案（用户拍板 2026-08-17：0.x 不购证书/账号，README 明示未签名 + SHA256 校验链路承重，签名/公证后置 post-1.0；M7 章程四拍板与切片 P1→P2→P3→P4→P6：[reviews/2026-08-17-m7-release-track.md](reviews/2026-08-17-m7-release-track.md)）；v2.2 = M8 成长轨立册（用户五条+三拍板 2026-08-17：IP=软著+商标〔发明专利落选→P6 零专利时序约束；商标宜先于 P6 提交防抢注〕、全量文档对齐+生成器门控、i18n en 默认+zh 查表切换、GitHub 可见度；契约正文=[reviews/2026-08-17-m8-growth-track.md](reviews/2026-08-17-m8-growth-track.md)）；v2.3 = M7.5 清理批修正案（用户三拍板 2026-08-18 ccm #1152：休眠评估仪器深度瘦身走 [EVAL-SET.md](EVAL-SET.md) 修正案〔CI 活门全保、复核链交 git 历史〕+ trend/1 趋势判决入核=Haskell 合约内抬占比、语言分工边界不动；P6 前置执行）。
+> v1.0→v1.3 经两轮攻击评审收口（记录见 [docs/reviews/](reviews/)）；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：[reviews/2026-08-13-m5-3-dedup-instruments.md](reviews/2026-08-13-m5-3-dedup-instruments.md) §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)）；v1.9 = M6 并入结构管理器（structure/1 树尺度熵判决=GUI 首屏数据面，两拍板 2026-08-17：[reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md)）；v2.0 = M6 收口修正案（用户拍板 2026-08-17：趋势面板+删除候选浏览移 M7——趋势需历史存储设计、删候浏览宜与发布后反馈同批；Linux/macOS 实包归 M7 Releases 自动化，M6 以 Windows 实包+三平台编译门收口）；v2.1 = M7 签名后置修正案（用户拍板 2026-08-17：0.x 不购证书/账号，README 明示未签名 + SHA256 校验链路承重，签名/公证后置 post-1.0；M7 章程四拍板与切片 P1→P2→P3→P4→P6：[reviews/2026-08-17-m7-release-track.md](reviews/2026-08-17-m7-release-track.md)）；v2.2 = M8 成长轨立册（用户五条+三拍板 2026-08-17：IP=软著+商标〔发明专利落选→P6 零专利时序约束；商标宜先于 P6 提交防抢注〕、全量文档对齐+生成器门控、i18n en 默认+zh 查表切换、GitHub 可见度；契约正文=[reviews/2026-08-17-m8-growth-track.md](reviews/2026-08-17-m8-growth-track.md)）；v2.3 = M7.5 清理批修正案（用户三拍板 2026-08-18 ccm #1152：休眠评估仪器深度瘦身走 [EVAL-SET.md](EVAL-SET.md) 修正案〔CI 活门全保、复核链交 git 历史〕+ trend/1 趋势判决入核=Haskell 合约内抬占比、语言分工边界不动；P6 前置执行）；v2.4 = 收口记账修正案（2026-08-19：M7/M8 收口标注、签名裁定统一为"不做"、guard 第 3 级 as-built=observe、分发行更新为已公开——纯记录性同步，零架构变更）。
 > 本文件行数以锁定时为棘轮上界：只准变短，不准变长；更新必须就地改写。
 > 调研依据：2026-08-06 七路并行实证调研（GitHub API / 官方文档 / 论文原文），关键事实附 URL。
-
----
 
 ## 0. 一句话定位
 
@@ -53,7 +51,7 @@
 | **被动**：Claude Code 插件 | hooks（as-built 三钩：SessionStart/PreToolUse/Stop）+ skills（erase 删除引导，2026-08-19）+ `bin/` 垫片；PostToolUse 深判**退役**（职责归 Stop 审计+CI） | M3 |
 | **被动**：通用 agent 集成 | pre-commit、CI（退出码 + `--fail-under`）、**最小 MCP server（M3）**、完整 MCP（M7） | M3/M7 |
 | GUI | Tauri（复用 Rust 前端） | M6 |
-| 分发 | 私有开发；M3 后发 **0.x 预览**（本地/私有 marketplace 自用 dogfood；预览期二进制走 ADR-007 air-gapped 手动放置——私有仓 Releases 无匿名下载，D2-3）；M7 公开上 marketplace + GitHub Releases | M3/M7 |
+| 分发 | M3 后 0.x 预览（air-gapped 手动放置，D2-3）；M7 起已公开（as-built 2026-08-19）：marketplace + GitHub Releases + crates.io（`cargo install codeeraser`）+ npm 指针 + 官网 codeeraser.dev | M3/M7 |
 
 ## 4. 功能规格
 
@@ -101,7 +99,8 @@ PostToolUse 不能阻断工具执行，但可反馈；强制阻断点 = PreToolU
 1. 0.x（M3–M4）：默认 `warn`；`deny` 能力存在，用户可按规则开启；
 2. M4 的 FPR 门（§6）通过后：**T1/T2 精确重复写入**与**硬预算超限（文件 >750 行）**两类
    规则默认升为 `ask`；
-3. 1.0（M7）：上述两类默认 `deny`，其余规则默认 `ask`/`warn` 按各自 FPR 记录决定。
+3. 1.0（M7）：上述两类默认 `deny`；其余规则 as-built 默认 **observe**（无各自 FPR
+   记录即无晋级资格，如实缺席——2026-08-17 切换生效，和解记录见 CHANGELOG）。
    每次默认档位变更在 CHANGELOG 记录依据（FPR 数据）。
 
 ### 4.3 F4「更新监督」判定模型（核心创新）
@@ -271,7 +270,8 @@ CodeEraser/
 | **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205，`eval_t3_recall`）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |
 | **M5-3B** 深度去冗·判决 | 三信号 join、`score`+棘轮（`check`/`baseline` 子命令归此）、Haskell 语言支持**全套**（size+CC+CoC+注释域 + graph 阶梯按 M5-2f 每 rung fixture 纪律；先决 = tree-sitter-haskell 0.26 ABI 可得性 spike——拍板⑧） | 3 周 ± | join 不设数值门（验收 = 诚实包 + 图腿缺席发 null 绝不编造——拍板④）；score 敏感性电池绿（非空性 + 互异性双前置）；本仓库自身跑通棘轮入 CI；Haskell 阶梯每 rung fixture 全绿（grammar 不可得 ⇒ size-only 落回并公开记录，CoC 与阶梯顺延） |
 | **M6** GUI+结构管理器（**已收口 2026-08-17，v2.0 修正案**） | structure/1 家族（树尺度熵判决：C 自参照地板+A 声明覆盖、七轴 S0-S6、判决全 Haskell 测量复用 Rust——设计册 [reviews/2026-08-17-m6-structure-manager.md](reviews/2026-08-17-m6-structure-manager.md) 四切片）+ `ce structure` JSON 树报告 + Tauri 可视化（树图首屏消费同一 schema） | 3–4 周 | 熵原语过穷举参照电池 ✓；每轴 F16 非真空前置 ✓；每片反事实杠杆+golden 手算 ✓；对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s（实测 zod 71.6k 冷 8.36s/暖 2.66s，[PERF-BUDGET.md](PERF-BUDGET.md) M6 节）✓；Windows 实包（NSIS）+三平台编译门 ✓（Linux/macOS 实件=M7） |
-| **M7** 发布 | marketplace 上架、未签名明示（签名/公证后置 post-1.0——v2.1）、Releases 自动化（**含 Linux/macOS 实包**——v2.0）、完整 MCP（只读报告面——章程拍板③）、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档、**GUI 二期：趋势面板+删除候选浏览**（v2.0 移入）、**M7.5 清理批（v2.3，P6 前置）：休眠评估仪器深度瘦身走 EVAL-SET 修正案 + trend/1 趋势判决入核（Haskell 合约内抬占比——2026-08-18 拍板 ccm #1152）** | 1–2 周 | 陌生机器一条命令可用；二进制 SHA256 校验链路端到端验证；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）；文档过 `docdup` 自检；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG；M7.5 后 CI 活门集合零缺员（普查测试级二分实证） |
+| **M7** 发布（**已收口 2026-08-18**） | marketplace 上架、未签名明示（签名/公证裁定不做——2026-08-19，见 ADR-007/R1）、Releases 自动化（**含 Linux/macOS 实包**——v2.0）、完整 MCP（只读报告面——章程拍板③）、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档、**GUI 二期：趋势面板+删除候选浏览**（v2.0 移入）、**M7.5 清理批（v2.3，P6 前置）：休眠评估仪器深度瘦身走 EVAL-SET 修正案 + trend/1 趋势判决入核（Haskell 合约内抬占比——2026-08-18 拍板 ccm #1152）** | 1–2 周 | 陌生机器一条命令可用 ✓；二进制 SHA256 校验链路端到端验证 ✓；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）✓；文档过 `docdup` 自检 ✓；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG ✓；M7.5 后 CI 活门集合零缺员（普查测试级二分实证）✓ |
+| **M8** 成长轨（**已收口 2026-08-19，随 v0.3.0 发布**） | IP（软著 eCO 已递交 + 商标申请中——G1）、全量文档对齐 + 生成器门控（docs/reference/{cli,ce-toml}.md 由二进制/schema 生成，`docs_gate.rs` CI 门）、i18n（en 默认 + zh 查表：CLI/GUI/roast，机器面永不翻译）、GitHub 可见度（README 徽章、官网 codeeraser.dev、crates.io + npm 指针、应用图标）；契约=[reviews/2026-08-17-m8-growth-track.md](reviews/2026-08-17-m8-growth-track.md) | 1–2 周 | 生成式参考漂移即 CI 红 ✓；`--lang zh` 全行覆盖且 JSON/FAIL 词汇不译 ✓；v0.3.0 发布链十资产 + 六 pin 四重复验全绿 ✓ |
 
 **依赖**：M2←M1；M3←M2；M4←M3；M5-2←M4（churn 是三信号一腿，**串行**——A4）；M5-3A←M5-2；M5-3B←M5-3A；M6 可与 M5 并行；M7 收尾；M8←M7（成长轨，契约在册——v2.2；G1 IP 材料可与 M7 并行，商标先于 P6）。总计粗估 4–6 个月。
 

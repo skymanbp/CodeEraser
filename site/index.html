@@ -48,7 +48,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
   <pre><span class="p">$</span> ce check --roast
 <span class="s">check score 822/1000</span> | axes 0:4 1:0 2:42 3:0 4:0 5:0 6:79 | 42 candidates
-ratchet: 0 added, 0 removed, 0 over, 1 tolerance drawn -&gt; <span class="s">pass</span>
+ratchet: 0 added, 0 removed, 0 over, 5 tolerance drawn -&gt; <span class="s">pass</span>
 <span class="r">roast: entropy is losing, slowly. keep the eraser warm.</span></pre>
   <p class="cap">Real output — CodeEraser judging its own repository. The ratchet only shrinks:
   every violation is banked in a baseline, and new entropy fails the gate.</p>
@@ -68,11 +68,12 @@ ratchet: 0 added, 0 removed, 0 over, 1 tolerance drawn -&gt; <span class="s">pas
 </div>
 
 <h2>Trust anchor</h2>
-<p class="trust">Every release binary is pinned by SHA256 in
-<code>plugin/bin/manifest.env</code> and verified before publish; installers carry a
-<code>SHA256SUMS</code> you can check offline. Code signing is deliberately out of scope —
-the hash chain is the permanent anchor. Measurement lives in Rust, judgment in Haskell,
-and this repository gates itself with its own tool on every commit.</p>
+<p class="trust">The six CLI &amp; core binaries (three platforms × ce / ce-core) are pinned
+by SHA256 in <code>plugin/bin/manifest.env</code> and verified before publish; every
+release asset — GUI installers included — is covered by a <code>SHA256SUMS</code> you can
+check offline. Code signing is deliberately out of scope — the hash chain is the permanent
+anchor. Measurement lives in Rust, judgment in Haskell, and this repository gates itself
+with its own tool on every commit.</p>
 
 <footer class="site">
   <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
