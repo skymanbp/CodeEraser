@@ -96,7 +96,7 @@ function render() {
     .map(([k, v]) => `<span>${esc(tr("entropyNames")[k] ?? String(k))} <b>${v}‰</b></span>`)
     .join("");
   $("axes").innerHTML = report.axes
-    .map(([c, p]) => `<span${p === 0 ? ' class="zero"' : ""}>${esc(tr("axisNames")[c])} <b>${p}</b></span>`)
+    .map(([c, p]) => `<span${p === 0 ? ' class="zero"' : ""}>${esc(axisName(c))} <b>${p}</b></span>`)
     .join("");
   $("divergence").textContent =
     report.declaredDirs > 0
@@ -144,14 +144,14 @@ function drawTreemap() {
 // next child would worsen its worst aspect ratio.
 function layout(id, x, y, wd, ht, w) {
   if (wd < 3 || ht < 3) return;
-  // Unary chains (core/app/CE, gui/src-tauri/src …) collapse to ONE
-  // strip: a path of single children burns a 16px band per level and
-  // biases the area encoding against deep subtrees. One branching
-  // level, one strip; the joined path is the label.
-  const path = [id];
-  while (children[path[path.length - 1]].length === 1) {
-    path.push(children[path[path.length - 1]][0]);
-  }
+  // Empty unary chains (core/app/CE, gui/src-tauri/src …) collapse to
+  // ONE strip: a path of single children burns a 16px band per level
+  // and biases the area encoding against deep subtrees. One branching
+  // level, one strip; the joined path is the label. foldChain
+  // (structree.js) is the SHARED rule, so the two lenses cannot
+  // disagree about which directories they name — and it never folds
+  // away a node that carries findings of its own.
+  const path = foldChain(id);
   const tail = path[path.length - 1];
   drawRect(tail, x, y, wd, ht, path.map((i) => report.tree[i].name.split("/").pop() || ".").join("/"));
   const kids = children[tail];
@@ -271,7 +271,7 @@ function showDetail(id) {
     row(tr("depth"), n.depth),
     row(tr("subdirs"), n.subdirs),
     row(tr("files"), n.files),
-    row(tr("findings"), n.axes.map((a) => tr("axisNames")[a]).join(", ") || tr("none")),
+    row(tr("findings"), n.axes.map(axisName).join(", ") || tr("none")),
   ];
   for (const d of report.deviations) {
     if (d.dir === n.name) {
@@ -281,7 +281,11 @@ function showDetail(id) {
   $("detail").innerHTML = rows.join("");
 }
 
-const row = (k, v) => `<div class="row">${k}: <b>${esc(String(v))}</b></div>`;
+// BOTH sides escaped. The key is an i18n literal at almost every call
+// site, but not all of them — trend.js builds one from report data —
+// and an asymmetry that holds only by convention is one call site away
+// from being false.
+const row = (k, v) => `<div class="row">${esc(String(k))}: <b>${esc(String(v))}</b></div>`;
 const esc = (s) =>
   s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 

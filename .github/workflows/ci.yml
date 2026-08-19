@@ -111,6 +111,14 @@ jobs:
           cargo clippy --locked -- -D warnings
           cargo fmt --check
 
+      # gui/ui/*.js is outside the scanner's language set, so the two
+      # structure lenses had no gate of their own — and a fold that
+      # hid findings shipped. This one runs the real module over a
+      # boundary fixture; it carries its own non-emptiness assertion.
+      - name: GUI lens invariant
+        shell: bash
+        run: node gui/tests/lens_invariant.js
+
       # Dogfood (plan §7.5): this repo must pass its own scanner
       # (exit 1 on fail-level findings), its own clone ratchet
       # (R12: blocks must not exceed the ce.toml [dedup] budget), the

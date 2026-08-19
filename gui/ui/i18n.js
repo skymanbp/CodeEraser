@@ -82,6 +82,17 @@ function tr(key, ...args) {
   return typeof v === "function" ? v(...args) : v;
 }
 
+// An axis code with no name degrades to its NUMBER rather than
+// throwing. The tables cover every code the core emits today, but
+// `esc(undefined)` is a TypeError, and inside toggleLang's refresher
+// loop nothing catches it: the screens after the thrower would never
+// re-render while ceLang and localStorage had already flipped. The
+// entropy table next door already had this guard; the axis one did
+// not, in four places.
+function axisName(code) {
+  return tr("axisNames")[code] ?? String(code);
+}
+
 // Static labels re-fill on boot and on toggle; screens re-render
 // their loaded reports themselves (i18nRefreshers registered per
 // screen in each file's boot).

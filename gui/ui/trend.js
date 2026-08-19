@@ -73,10 +73,14 @@ function trendDomain(rows, scale) {
   const lo0 = Math.min(...scores);
   const hi0 = Math.max(...scores);
   const span = Math.max(hi0 - lo0, Math.round(scale * 0.02));
-  return {
-    lo: Math.max(0, lo0 - Math.round(span * 0.35)),
-    hi: Math.min(scale, hi0 + Math.round(span * 0.35)),
-  };
+  const lo = Math.max(0, lo0 - Math.round(span * 0.35));
+  const hi = Math.min(scale, hi0 + Math.round(span * 0.35));
+  // A FLAT series under a small scale collapses the domain to a point:
+  // the 2% span floor rounds to 0 below scale 25 (score_scale is a
+  // ce.toml knob validated only as >= 1), and y() then divides by zero
+  // into NaN coordinates — a silently blank chart, no error anywhere.
+  // The x() twin right below guards its own single-point case.
+  return hi > lo ? { lo, hi } : { lo, hi: lo + 1 };
 }
 
 function drawTrend() {
@@ -157,7 +161,7 @@ function trendPoint(r) {
     `<h2>${esc(r.commit.slice(0, 12))}</h2>`,
     row(tr("date"), new Date(r.ts * 1000).toISOString().slice(0, 19).replace("T", " ")),
     row(tr("score"), `${r.score} / ${r.scale}`),
-    row(tr("axes"), r.axes.map(([c, p]) => `${tr("axisNames")[c]}:${p}`).join("  ") || tr("none")),
+    row(tr("axes"), r.axes.map(([c, p]) => `${axisName(c)}:${p}`).join("  ") || tr("none")),
   ].join("");
 }
 

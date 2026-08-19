@@ -10,10 +10,24 @@
 
 let joinDoc = null;
 let dedupDoc = null;
+// What the reader picked, so a LANGUAGE TOGGLE does not throw it away:
+// the refresher rebuilds this screen's innerHTML wholesale, and the
+// structure screen restores its own selection afterwards while these
+// two silently dropped theirs.
+let candSel = null;
 
 function candBoot() {
   $("cand-load").addEventListener("click", loadCandidates);
   i18nRefreshers.push(() => joinDoc && dedupDoc && renderCandidates());
+}
+
+// Largest value in a report column. A LOOP, not Math.max(...rows):
+// spread passes one argument per row and throws RangeError past
+// ~125k of them — these lists carry no cap of their own.
+function maxOf(rows, pick) {
+  let m = 1;
+  for (const r of rows) m = Math.max(m, pick(r));
+  return m;
 }
 
 async function loadCandidates() {
@@ -30,6 +44,10 @@ async function loadCandidates() {
     ]);
     joinDoc = j;
     dedupDoc = d;
+    // row indices belong to the document they came from: carrying a
+    // selection across a new run would index a different pair, or
+    // past the end of a shorter list
+    candSel = null;
     renderCandidates();
     setStatus(joinDoc.schema, false);
   } catch (e) {
@@ -59,7 +77,7 @@ function renderCandidates() {
   const parts = [];
   parts.push(`<h2>${tr("pairsHead", joinDoc.files.length, joinDoc.days, joinDoc.commits)}</h2>`);
   if (joinDoc.degraded) parts.push(`<p class="err">${esc(tr("degraded", joinDoc.degraded))}</p>`);
-  const fMax = Math.max(...joinDoc.files.map((f) => f.tokens), 1);
+  const fMax = maxOf(joinDoc.files, (f) => f.tokens);
   joinDoc.files.forEach((f, i) => {
     parts.push(
       `<div class="cand" data-kind="file" data-i="${i}"${barStyle(f.tokens, fMax)}>` +
@@ -68,7 +86,7 @@ function renderCandidates() {
     );
   });
   parts.push(`<h2>${tr("unitPairs")} — ${joinDoc.units.length}</h2>`);
-  const uMax = Math.max(...joinDoc.units.map((u) => u.tokens), 1);
+  const uMax = maxOf(joinDoc.units, (u) => u.tokens);
   joinDoc.units.forEach((u, i) => {
     parts.push(
       `<div class="cand" data-kind="unit" data-i="${i}"${barStyle(u.tokens, uMax)}>` +
@@ -77,7 +95,7 @@ function renderCandidates() {
     );
   });
   parts.push(`<h2>${tr("cloneBlocks")} — ${dedupDoc.blocks.length}</h2>`);
-  const bMax = Math.max(...dedupDoc.blocks.map((b) => b.tokens), 1);
+  const bMax = maxOf(dedupDoc.blocks, (b) => b.tokens);
   dedupDoc.blocks.forEach((b, i) => {
     parts.push(
       `<div class="cand" data-kind="block" data-i="${i}"${barStyle(b.tokens, bMax)}>` +
@@ -90,9 +108,9 @@ function renderCandidates() {
   list.innerHTML = parts.join("");
   list.querySelectorAll(".cand").forEach((el) =>
     el.addEventListener("click", () => {
-      list.querySelectorAll(".cand.sel").forEach((s) => s.classList.remove("sel"));
-      el.classList.add("sel");
-      candDetail(el.dataset.kind, Number(el.dataset.i));
+      candSel = { kind: el.dataset.kind, i: Number(el.dataset.i) };
+      markSelected(list);
+      candDetail(candSel.kind, candSel.i);
     }));
   // seed the aside so the column is never dead space before a click
   $("cand-detail").innerHTML = [
@@ -102,6 +120,20 @@ function renderCandidates() {
     row(tr("unitPairs"), joinDoc.units.length),
     row(tr("cloneBlocks"), dedupDoc.blocks.length),
   ].join("");
+  // a re-render (language toggle) puts the reader back where they were
+  if (candSel) {
+    markSelected(list);
+    candDetail(candSel.kind, candSel.i);
+  }
+}
+
+// The one place `.sel` moves: derived from candSel, never from the
+// clicked element, so a rebuild restores the same state a click sets.
+function markSelected(list) {
+  list.querySelectorAll(".cand.sel").forEach((s) => s.classList.remove("sel"));
+  list
+    .querySelector(`.cand[data-kind="${candSel.kind}"][data-i="${candSel.i}"]`)
+    ?.classList.add("sel");
 }
 
 const pos = (p) =>
