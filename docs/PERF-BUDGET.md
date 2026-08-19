@@ -129,6 +129,16 @@ boot 表逐串匹配），GRAPH_REV 3 全量重解析。
 | `ce dedup .`（冷，REV 5 全量重建，`.ce/` 删除后计时同链） | 2.72 s | 与 REV 3 先例 2.68 s 同量级，属性探针无感 |
 | `ce deadcode .`（暖索引 + 判决往返） | 1.56 s | 733 kept 边、0 dead、615 未解析 |
 
+## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
+
+口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。
+
+| 项 | 实测 | 记录 |
+|---|---|---|
+| `ce dedup .`（冷，272 文件、169 块/86 组） | 5.15 s | REV 5 先例 2.72 s；文件 228→272 + 绑定面首建 + 负载窗口合成，未静默机复测 |
+| `ce check .`（token 暖 + REV 7 图首建） | 4.84 s | 边相阶梯全量重放一次性成本 |
+| `ce check .`（真暖） | 2.54 s | ✅ pre-commit 级维持 |
+
 ## M5-3j 门迁移后 `ce check`（+.hs size-only 走文件，实测 2026-08-14，release，静默机）
 
 口径：3i 口径 + `hs_size_rows` 的第二次全树 walk（37 个 `.hs` 读文件计行）。
