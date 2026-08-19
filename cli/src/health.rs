@@ -2,7 +2,7 @@
 //! surfaced, never silent). Also the session's daemon WARM-UP: the
 //! lazy ping here means later PreToolUse probes hit a hot daemon.
 //! Output = the additionalContext shape proven by the locally
-//! installed cc-enslaver SessionStart hook. Always exits 0.
+//! installed cc-enforcer SessionStart hook. Always exits 0.
 
 use crate::config::Config;
 use crate::daemon::client;

@@ -4,7 +4,7 @@
 //! (plan A4). Same discipline as the PreToolUse gate: fail-open on
 //! any internal failure, every run appended to .ce/observe.ndjson.
 //! Stop hooks know exactly one enforcement shape (proven by the
-//! locally installed cc-enslaver): top-level
+//! locally installed cc-enforcer): top-level
 //! {"decision":"block","reason":...}; only deny mode uses it.
 
 use crate::config::Config;

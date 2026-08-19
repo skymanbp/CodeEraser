@@ -1,7 +1,7 @@
 //! PreToolUse cheap gate (M3, ADR-004). Input: the hook envelope on
 //! stdin (empirically captured contract, contracts/fixtures/
 //! hook-payloads). Output: the permissionDecision JSON proven by the
-//! locally installed cc-enslaver hooks on this exact Claude Code
+//! locally installed cc-enforcer hooks on this exact Claude Code
 //! build. FAIL-OPEN: any internal failure allows the edit — a guard
 //! must never brick editing; degraded runs land in the observe log.
 //! Every probed event is appended to <root>/.ce/observe.ndjson in ALL
@@ -252,7 +252,7 @@ fn reason(file_path: &str, matches: &[serde_json::Value]) -> String {
     )
 }
 
-/// Decision JSON on stdout — the exact shape proven by cc-enslaver's
+/// Decision JSON on stdout — the exact shape proven by cc-enforcer's
 /// working hooks (allow carries the reason as a visible warning).
 fn emit_decision(mode: &str, reason: &str) {
     let decision = match mode {

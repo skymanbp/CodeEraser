@@ -61,7 +61,7 @@ schema `ce.observe/0.2.0` 的 distinct `session_id`；计数起点 = 2026-08-08
 
 | 判据 | 目标 | 实测 |
 |---|---|---|
-| dogfood 会话数 | ≥ 10 | **10**（7 个项目：lore_disaster / CodeEraser / docsbot×2 / cc-memory×2 / Autoshop / interview-helper / cc-tree / anti-laziness） |
+| dogfood 会话数 | ≥ 10 | **10**（7 个项目：lore_disaster / CodeEraser / docsbot×2 / cc-memory×2 / Autoshop / interview-helper / cc-tree / cc-enforcer） |
 | 其中观察档 | ≥ 5 | **10**（全部纯 observe，零拦截塑形——M4 语料满足 D2-1 纯净度） |
 | 会话累计 hook 延迟中位数 | < 15 s/百次编辑 | **0.982 s**（按会话求 probe 均值×100 取中位；min 0.196 / max 2.111） |
 
