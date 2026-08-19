@@ -16,6 +16,12 @@ import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.List (isInfixOf)
+import Data.Version (showVersion)
+import Paths_ce_core (version)
+
+-- | Same single source as Spec/Main — never an injected literal.
+coreVersion :: String
+coreVersion = showVersion version
 
 -- | The checks-as-a-table runner (the VerdictWireProps shape).
 runChecks :: [(String, Bool)] -> IO Bool
@@ -43,7 +49,7 @@ replyObjWith ::
   Value ->
   Maybe Object
 replyObjWith respond r = do
-  bytes <- either (const Nothing) Just (respond "0.0.1" (BL.toStrict (encode r)))
+  bytes <- either (const Nothing) Just (respond coreVersion (BL.toStrict (encode r)))
   Object o <- decodeStrict bytes
   pure o
 
@@ -62,6 +68,6 @@ refusedBy ::
   Value ->
   String ->
   Bool
-refusedBy respond r want = case respond "0.0.1" (BL.toStrict (encode r)) of
+refusedBy respond r want = case respond coreVersion (BL.toStrict (encode r)) of
   Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
   Right _ -> False

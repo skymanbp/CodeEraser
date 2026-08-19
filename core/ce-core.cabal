@@ -46,7 +46,9 @@ test-suite ce-core-test
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     hs-source-dirs:   app, test
-    other-modules:    CE.Handshake, CE.Protocol, CE.FourClass,
+    autogen-modules:  Paths_ce_core
+    other-modules:    Paths_ce_core,
+                      CE.Handshake, CE.Protocol, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
                       CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,

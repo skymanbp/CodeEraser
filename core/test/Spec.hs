@@ -30,11 +30,19 @@ import Data.Aeson (Value (..), decodeStrict)
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
+import Data.Version (showVersion)
+import Paths_ce_core (version)
 import System.Exit (exitFailure)
 
 -- | cabal test runs with the package root (core/) as cwd.
 fixtureDir :: FilePath
 fixtureDir = "../contracts/fixtures/"
+
+-- | The version respond echoes — the cabal-generated single source
+-- (Main.hs derives the same way; an injected literal here once
+-- pinned 0.0.1 into the hello golden while the shipped core moved).
+coreVersion :: String
+coreVersion = showVersion version
 
 main :: IO ()
 main = do
@@ -85,14 +93,14 @@ docdupStructural = do
  where
   ints ns = B8.intercalate "," (map (B8.pack . show) ns)
   setCapReply =
-    Protocol.respond "0.0.1" $
+    Protocol.respond coreVersion $
       "{\"proto\":\"2.2.0\",\"type\":\"docdup.request\",\"id\":9,\"sets\":[["
         <> ints [0 .. docSetCap]
         <> "]],\"pairs\":[]}"
   -- cap check precedes validation by design, so identical pair rows
   -- are fine here (never validated)
   pairCapReply =
-    Protocol.respond "0.0.1" $
+    Protocol.respond coreVersion $
       "{\"proto\":\"2.2.0\",\"type\":\"docdup.request\",\"id\":10,\"sets\":[[1,2]],\"pairs\":["
         <> B8.intercalate "," (replicate (fromInteger docPairCap + 1) "[0,0,0]")
         <> "]}"
@@ -140,7 +148,7 @@ goldenPairs file = do
 
 checkPair :: FilePath -> (Int, (B8.ByteString, B8.ByteString)) -> IO Bool
 checkPair file (n, (request, expected)) = do
-  let got = Protocol.respond "0.0.1" request
+  let got = Protocol.respond coreVersion request
   ok <- check (file <> " pair " <> show n) (got == expected)
   unless ok $ do
     B8.putStrLn ("  expected: " <> expected)
@@ -177,18 +185,18 @@ structural = do
   i <- check "over-cap EDGES degrade too" (field edgeCapReply "reason" == Just "graph_too_large")
   pure (and [a, b, c, d, e, f, g, h, i])
  where
-  unknownReply = Protocol.respond "0.0.1" "{\"proto\":\"2.1.0\",\"type\":\"mystery\",\"id\":7}"
-  oversizeReply = Protocol.respond "0.0.1" (B8.replicate 33554433 'x')
-  majorReply = Protocol.respond "0.0.1" "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
+  unknownReply = Protocol.respond coreVersion "{\"proto\":\"2.1.0\",\"type\":\"mystery\",\"id\":7}"
+  oversizeReply = Protocol.respond coreVersion (B8.replicate 33554433 'x')
+  majorReply = Protocol.respond coreVersion "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
   overCapReply =
-    Protocol.respond "0.0.1" $
+    Protocol.respond coreVersion $
       "{\"proto\":\"2.1.0\",\"type\":\"graph.request\",\"id\":3,\"nodes\":["
         <> B8.intercalate "," (replicate (fromInteger nodeCap + 1) "[0,0,0]")
         <> "],\"edges\":[],\"pos\":[]}"
   -- cap check precedes validation by design, so identical edge rows
   -- are fine here (never validated)
   edgeCapReply =
-    Protocol.respond "0.0.1" $
+    Protocol.respond coreVersion $
       "{\"proto\":\"2.1.0\",\"type\":\"graph.request\",\"id\":4,\"nodes\":[[0,0,0]],\"edges\":["
         <> B8.intercalate "," (replicate (fromInteger edgeCap + 1) "[0,0,0,0]")
         <> "],\"pos\":[]}"
@@ -215,14 +223,14 @@ refusalProbes = do
   pure (and results)
  where
   probe (name, bytes, key, want) = check name (field bytes key == Just want)
-  badEnvReply = Protocol.respond "0.0.1" "{\"proto\":\"2.3.0\",\"id\":42}"
+  badEnvReply = Protocol.respond coreVersion "{\"proto\":\"2.3.0\",\"id\":42}"
   dupPosReply =
     Protocol.respond
-      "0.0.1"
+      coreVersion
       "{\"proto\":\"2.3.0\",\"type\":\"graph.request\",\"id\":5,\"nodes\":[[0,0,0],[0,0,0]],\"edges\":[],\"pos\":[1,1]}"
   dupPairReply =
     Protocol.respond
-      "0.0.1"
+      coreVersion
       "{\"proto\":\"2.3.0\",\"type\":\"fourclass.request\",\"id\":6,\"pairs\":[{\"i\":3,\"rem\":[],\"add\":[]},{\"i\":3,\"rem\":[],\"add\":[]}]}"
 
 field :: B8.ByteString -> String -> Maybe Value
