@@ -28,6 +28,10 @@ exclude = ["contracts/fixtures/crosscheck/**"]
 [graph]
 entry_globs = [
     "contracts/fixtures/",
+    # Skills are loaded by the Claude Code plugin runtime by path
+    # convention (skills/<name>/SKILL.md) — liveness comes from the
+    # external loader, never from an in-corpus reference edge.
+    "plugin/skills/",
 ]
 
 # Only-shrink clone ratchet (M2 review R12), enforced in CI via
