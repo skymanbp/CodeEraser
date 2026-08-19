@@ -6,8 +6,37 @@
 //! both (exit-code vocabulary, not prose). JSON is never translated.
 
 use super::{Outcome, SCHEMA_ID};
-use crate::i18n::line;
+use crate::i18n::{line, t};
 use serde_json::json;
+
+/// The `--roast` easter egg: one verdict-flavored line per score
+/// band, i18n-tabled like every console string. Bands are computed
+/// against the EFFECTIVE scale, never a /1000 literal (the C17
+/// discipline holds for jokes too). Console-only by contract —
+/// JSON is the machine face and machines don't laugh.
+pub fn roast_line(o: &Outcome) {
+    let r = &o.reply;
+    let scale = r.knobs.get("scoreScale").copied().unwrap_or(1000).max(1);
+    let (en, zh) = match r.score * 1000 / scale {
+        900.. => (
+            "roast: suspiciously clean. who did you pay?",
+            "毒舌：干净得可疑。你贿赂谁了？",
+        ),
+        750..=899 => (
+            "roast: entropy is losing, slowly. keep the eraser warm.",
+            "毒舌：熵在缓慢败退。橡皮别放凉。",
+        ),
+        600..=749 => (
+            "roast: half garden, half landfill. bring the shovel.",
+            "毒舌：半是花园半是垃圾场。铲子带上。",
+        ),
+        _ => (
+            "roast: this repo needs an exorcist, not an eraser.",
+            "毒舌：这仓库需要的不是橡皮，是驱魔师。",
+        ),
+    };
+    println!("{}", t(en, zh));
+}
 
 pub fn report_json(o: &Outcome) -> serde_json::Value {
     let r = &o.reply;

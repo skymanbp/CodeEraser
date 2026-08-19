@@ -11,7 +11,7 @@
 
 pub mod baseline;
 pub mod knobs;
-mod report;
+pub mod report;
 pub mod wire;
 
 pub use report::{print, report_json};

@@ -51,9 +51,9 @@ PATH；显式 `--core <路径>` 永远最优先。
 ### 二进制 —— 未签名，请校验哈希
 
 发布工件由 [release 工作流](.github/workflows/release.yml)构建并以
-`SHA256SUMS` 钉住。**尚未代码签名/公证**（按计划修正案 v2.1 后置到 1.0 之后）：
-Windows SmartScreen 与 macOS Gatekeeper 会警告或拒绝，需你显式允许。
-信任锚是校验链——下载后：
+`SHA256SUMS` 钉住。**不做代码签名/公证**（2026-08-19 裁定——免费工具
+成本收益不成立）：Windows SmartScreen 与 macOS Gatekeeper 会警告，需你
+显式允许。永久信任锚是校验链——下载后：
 
 ```sh
 sha256sum -c --ignore-missing SHA256SUMS

@@ -70,6 +70,7 @@ check.core	ce-core 可执行文件路径
 check.db	索引数据库路径（默认 <root>/.ce/index.db）
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负
+check.roast	在控制台判决后附一行毒舌评语（彩蛋）
 baseline	把核的 newBaseline 落盘为 ce-baseline.json（无 CE_ACCEPT_BASELINE=1 时违规集只准缩）
 baseline.root	要分析的目录（默认当前目录）
 baseline.core	ce-core 可执行文件路径

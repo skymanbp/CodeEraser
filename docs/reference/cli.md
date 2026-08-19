@@ -241,6 +241,7 @@ Options:
       --db <DB>                  Index database path (default: <root>/.ce/index.db)
       --days <DAYS>              Churn window in days (omit = churn tables stay empty)
       --fail-under <FAIL_UNDER>  Fail when the score lands under this per-mille floor
+      --roast                    Append a roast line to the console verdict (easter egg)
   -h, --help                     Print help
 ```
 

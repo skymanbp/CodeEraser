@@ -20,6 +20,9 @@ pub struct CheckArgs {
     /// Fail when the score lands under this per-mille floor
     #[arg(long)]
     fail_under: Option<u32>,
+    /// Append a roast line to the console verdict (easter egg)
+    #[arg(long)]
+    roast: bool,
 }
 
 #[derive(clap::Args)]
@@ -39,6 +42,7 @@ fn judged(
     days: Option<u32>,
     floor: Option<u32>,
     establish: bool,
+    roast: bool,
 ) -> Result<(std::path::PathBuf, score::Outcome), ExitCode> {
     let (root, as_json) = (or_cwd(judge.root), json(judge.format));
     let opts = score::Opts {
@@ -51,6 +55,9 @@ fn judged(
     match score::run(&root, opts) {
         Ok(o) => {
             score::print(&o, as_json);
+            if roast && !as_json {
+                score::report::roast_line(&o);
+            }
             Ok((root, o))
         }
         Err(err) => Err(fail("check", err)),
@@ -63,7 +70,7 @@ fn judged(
 /// could not judge must never pass", said by the core), so the old
 /// `|| degraded` disjunct here retired as re-derived policy.
 pub fn check_cmd(a: CheckArgs) -> ExitCode {
-    match judged(a.judge, a.days, a.fail_under, false) {
+    match judged(a.judge, a.days, a.fail_under, false, a.roast) {
         Err(code) => code,
         Ok((_root, o)) => {
             if o.reply.fail {
@@ -84,7 +91,7 @@ pub fn check_cmd(a: CheckArgs) -> ExitCode {
 /// facts become the floor — growth accepted DELIBERATELY.
 pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
     let accepted = std::env::var("CE_ACCEPT_BASELINE").as_deref() == Ok("1");
-    let (root, o) = match judged(a.judge, a.days, None, accepted) {
+    let (root, o) = match judged(a.judge, a.days, None, accepted, false) {
         Err(code) => return code,
         Ok(pair) => pair,
     };

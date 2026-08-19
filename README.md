@@ -57,10 +57,11 @@ always wins.
 
 Release artifacts are built by the
 [release workflow](.github/workflows/release.yml) and pinned in
-`SHA256SUMS`. **They are not code-signed or notarized yet** (deferred
-past 1.0 by plan amendment v2.1): Windows SmartScreen and macOS
-Gatekeeper will warn or refuse until you allow the app explicitly.
-The trust anchor is the checksum chain — after downloading:
+`SHA256SUMS`. **They are not code-signed or notarized** (ruled out
+2026-08-19 — the cost/benefit does not hold for a free tool): Windows
+SmartScreen and macOS Gatekeeper will warn until you allow the app
+explicitly. The permanent trust anchor is the checksum chain — after
+downloading:
 
 ```sh
 sha256sum -c --ignore-missing SHA256SUMS

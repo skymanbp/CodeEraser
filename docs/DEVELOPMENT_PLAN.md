@@ -50,7 +50,7 @@
 | 形态 | 载体 | 里程碑 |
 |---|---|---|
 | **主动**：`ce` CLI | 单二进制（Rust），`codeeraser` 为等价 alias；`ce scan / check / dedup / structure / baseline / doctor / eject` | M1 起（`check`/`baseline` 落地于 M5-3B、`structure` M6、`eject` M7——2026-08-13 拍板⑩） |
-| **被动**：Claude Code 插件 | hooks（as-built 三钩：SessionStart/PreToolUse/Stop）+ `bin/` 垫片；PostToolUse 深判与 skills 未落地（职责由 Stop 审计+CI 承担） | M3 |
+| **被动**：Claude Code 插件 | hooks（as-built 三钩：SessionStart/PreToolUse/Stop）+ skills（erase 删除引导，2026-08-19）+ `bin/` 垫片；PostToolUse 深判**退役**（职责归 Stop 审计+CI） | M3 |
 | **被动**：通用 agent 集成 | pre-commit、CI（退出码 + `--fail-under`）、**最小 MCP server（M3）**、完整 MCP（M7） | M3/M7 |
 | GUI | Tauri（复用 Rust 前端） | M6 |
 | 分发 | 私有开发；M3 后发 **0.x 预览**（本地/私有 marketplace 自用 dogfood；预览期二进制走 ADR-007 air-gapped 手动放置——私有仓 Releases 无匿名下载，D2-3）；M7 公开上 marketplace + GitHub Releases | M3/M7 |
@@ -71,7 +71,7 @@
 | `deadcode` | 无引用符号/文档段落（图入度 = 0 ∧ 非入口） | 依赖 `graph` | M5-2 |
 | `score` | 综合评分 + 棘轮基线（语义见 ADR-006） | 权重表配**敏感性测试**：扰动任一权重断言总分变化（fuck-u-code 的真实 bug 是权重字段从未被评分路径读取——"权重和=1"断言测不到死字段） | M5-3 |
 
-评分极性全程统一"越高越好"。幽默评语表彩蛋未实现——落地的 i18n 面是 `--lang`/`CE_LANG`（G3b）。
+评分极性全程统一"越高越好"。幽默评语彩蛋 as-built：`ce check --roast`（i18n 查表，2026-08-19）。
 
 **排除模型（M1 起内置，A2d）**：默认排除 lockfile、minified/生成物（`*.min.js`、
 protobuf/OpenAPI 产物）、vendored、快照测试、migration、二进制/数据文件；叠加
@@ -87,7 +87,7 @@ PostToolUse 不能阻断工具执行，但可反馈；强制阻断点 = PreToolU
 | Hook | 职责（与 ADR-004 混合强制点一致） |
 |---|---|
 | `PreToolUse`（`Edit\|Write`） | 只做**无需 AST 的廉价检查**：路径排除、目标文件当前 LOC 预算、单次写入体积、`new_string` 片段对指纹索引的 T1/T2 探针。超限 → `permissionDecision:"deny"/"ask"` + 指回既有 `file:line`。不做 AST diff（避免重放 Edit 落盘语义这一隐藏子系统，评审 A2a） |
-| `PostToolUse`（`Edit\|Write`）/ `FileChanged` | **未落地（as-built 注记 2026-08-19）**——深判职责由 Stop 审计（git diff 净效果）与 CI 门承担；`session-findings` 工件不存在，钩子面即上下三行 |
+| `PostToolUse`（`Edit\|Write`）/ `FileChanged` | **退役（裁定 2026-08-19）**——官方语义不能阻断只能反馈，深判职责由 Stop 审计（git diff 净效果）与 CI 门承担；再加一层反馈面即上下文熵源（B4 立场） |
 | `Stop` | 本轮净效果审计（基于 **git diff**，因此对 Bash/`>>` 写入同样生效）：净 LOC、新增重复块、（M4 起）四分类汇总。引入净冗余而声称完成 → `decision:"block"` 要求返工 |
 | `SessionStart` | 引导二进制（见 §5.9）；注入 guard 健康状态一行（daemon 是否存活、索引 freshness、上会话降级计数） |
 | `UserPromptSubmit`（可选） | 廉价启发式标记本轮意图（更新 vs 新增），仅作 §4.3 的可选辅助信号，非判定前提 |
@@ -131,8 +131,8 @@ L0 = `git diff --numstat -M -C --find-copies-harder`（零自研）；L1 = L0 + 
 ### 4.4 CLI UX 与输出
 
 - 退出码：`0` 通过 / `1` 违规 / `2` 内部错误；`--fail-under <score>`（与棘轮合成语义见 ADR-006）。
-- 格式（as-built）：console、JSON 两种（`--format`）；SARIF/Markdown 未落地。
-- 分工（as-built）：CLI 只出结构化事实（报告族 JSON + `ce mcp` 只读面），解读归消费方 LLM。
+- 格式（as-built）：console、JSON 两种（`--format`）；SARIF/Markdown 退役（裁定 2026-08-19）。
+- 分工（as-built）：CLI 只出结构化事实（报告族 JSON + `ce mcp` 只读面 + erase skill 引导删除），解读归消费方 LLM。
 - **hook 输出 token 预算（B4，anti-bloat 工具不得自己成为上下文熵源）**：
   warn 注入 ≤ 200 tokens/事件；同一 `(rule, file)` 每会话只报一次，后续静默累积；
   深度报告落盘 `.ce/`，由 skill 按需读取；Stop 汇总 ≤ 400 tokens。预算进 M3 验收。
@@ -221,8 +221,8 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
   SessionStart 从 GitHub Releases 下载到 `CLAUDE_PLUGIN_DATA`（跨版本保留），
   **HTTPS + SHA256 pinned 在插件清单内**，校验失败拒绝执行并明示。三平台二进制
   预期 8–19 MB/个（shellcheck 7.69 MB ~ hlint 18.99 MB 区间），不塞仓库。
-  air-gapped 模式：允许用户手动放置二进制 + 本地校验。代码签名/公证按 v2.1 后置
-  post-1.0（Windows SmartScreen / macOS Gatekeeper），其间 README 明示未签名状态。
+  air-gapped 模式：允许用户手动放置二进制 + 本地校验。代码签名/公证**裁定不做**
+  （2026-08-19，成本/收益不成立；有商业需求再议）——SHA256 链为永久信任锚，README 明示。
 - DENY 协议：exit 2 + stderr，或 exit 0 + `{"hookSpecificOutput":{"permissionDecision":"deny",...}}`；
   自设 `timeout` 并按 R3 fail-open + 显式记录。
 - ⚠️ 官方文档无 Edit/Write hook payload 逐字示例 → M0 用 echo-hook 实测 dump 固化 fixture。
@@ -295,7 +295,7 @@ CodeEraser/
 
 | # | 风险 | 缓解 |
 |---|---|---|
-| R1 | Haskell/Windows 工具链 | GHC 9.14 LTS 锁版 + M0 实测依赖可解；CI 必含 windows-latest；stdio 全程 binary mode；禁 DLL；未签名二进制的 Defender/EDR 误报风险 → 签名 post-1.0（v2.1），其间 README 明示 |
+| R1 | Haskell/Windows 工具链 | GHC 9.14 LTS 锁版 + M0 实测依赖可解；CI 必含 windows-latest；stdio 全程 binary mode；禁 DLL；未签名二进制的 Defender/EDR 误报风险 → 签名裁定不做（2026-08-19），SHA256 链承重，README 明示 |
 | R2 | tree-sitter 语法 crate 漂移 | 核心锁 0.26.x、语法 crate 按 lockfile 钉住；升级走独立 PR + golden 全绿 |
 | R3 | hook 延迟劣化 → 用户关插件 | daemon + 增量索引；分解表预算进 CI；超时 fail-open 降级为 warn，降级**必须可见**（doctor/健康行/Stop 汇总——A9f） |
 | R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |
