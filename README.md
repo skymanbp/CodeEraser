@@ -6,7 +6,7 @@ English | **[中文](README.zh.md)**
 
 > An eraser against LLM-induced code & document entropy.
 
-![The GUI's structure treemap and score, judging this repository](docs/assets/gui-structure.png)
+<img src="docs/assets/gui-structure.png" alt="The GUI's structure treemap and score, judging this repository" width="740">
 
 LLMs drift toward stacking and patching over long-lived work: the same
 function implemented twice, the same fact written in three places,
@@ -41,12 +41,10 @@ binaries as sidecars), and `SHA256SUMS`. For the CLI: download
 subcommands find it through the sibling leg of the resolver, no
 flags, no env vars.
 
-**Claude Code plugin (one command).** `/plugin marketplace add
-skymanbp/CodeEraser`, then `/plugin install codeeraser` — the starter
-downloads and SHA256-verifies both binaries automatically.
+**Claude Code plugin.** `/plugin marketplace add skymanbp/CodeEraser`,
+then `/plugin install codeeraser` — both binaries arrive SHA256-verified.
 
-**Cargo.** `cargo install codeeraser` builds the CLI (binary name
-`ce`); drop a `ce-core` from Releases or a source build beside it.
+**Cargo.** `cargo install codeeraser` builds `ce`; drop a `ce-core` beside it.
 
 **From source.** Prerequisites: the pinned Rust toolchain
 (`cli/rust-toolchain.toml`) and GHC 9.14.1 + cabal for the core.
@@ -121,6 +119,8 @@ audit + CI gates are the backstop.
 - [docs/reviews/](docs/reviews/) — attack/design review records, one file per round
 
 ## Architecture
+
+![From repository to verdict: sources measured in Rust, judged in Haskell, rendered by five faces](docs/assets/architecture.svg)
 
 | Layer | Language | Owns |
 |---|---|---|

@@ -4,7 +4,7 @@
 
 > 对抗 LLM 引致的代码与文档熵增的橡皮擦。
 
-![GUI 结构树图与分数——判决本仓库自身](docs/assets/gui-structure.png)
+<img src="docs/assets/gui-structure.png" alt="GUI 结构树图与分数——判决本仓库自身" width="740">
 
 LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数被实现两遍、
 同一个事实写在三处、更新以追加的方式到来、文件只增不减。CodeEraser
@@ -49,9 +49,7 @@ GHC 9.14.1 + cabal（判决核）。
 ```sh
 # 判决核（ce-core）
 cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
-
-# CLI（二进制名：ce）
-cargo install --path cli
+cargo install --path cli   # CLI（二进制名：ce）
 ```
 
 核解析全线一条链：`CE_CORE_BIN` → 运行中二进制旁的 `ce-core` 兄弟 →
@@ -110,6 +108,8 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 - [docs/reviews/](docs/reviews/) — 攻击/设计评审记录，一轮一档
 
 ## 架构
+
+![从仓库到判决：Rust 度量、Haskell 判决、五张面孔渲染](docs/assets/architecture.svg)
 
 | 层 | 语言 | 职责 |
 |---|---|---|

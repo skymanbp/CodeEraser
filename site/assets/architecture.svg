@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 640" role="img"
+     aria-label="CodeEraser architecture: repository sources measured by the Rust frontend, judged by the Haskell core, rendered by five faces">
+  <!-- Self-painted ground: the diagram carries its own dark panel so it
+       reads identically on GitHub light/dark and on codeeraser.dev. -->
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#57c7a8"/>
+    </marker>
+    <marker id="av" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e4574a"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="1178" height="638" rx="18" fill="#10141d" stroke="#2a3347"/>
+
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', monospace">
+    <text x="30" y="50" font-size="19" font-weight="600" fill="#f4efe6">CodeEraser — how a verdict is made</text>
+    <text x="30" y="72" font-size="11" fill="#8593ad">measurement in Rust · judgment in Haskell · every face renders the same schema'd reports</text>
+
+    <!-- ===== repository ===== -->
+    <g>
+      <rect x="28" y="240" width="168" height="164" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <text x="44" y="268" font-size="13" font-weight="600" fill="#cdd6e4">repository</text>
+      <rect x="42" y="284" width="140" height="30" rx="7" fill="#171c28" stroke="#2a3347"/>
+      <text x="52" y="303" font-size="11" fill="#cdd6e4">source code</text>
+      <rect x="42" y="322" width="140" height="30" rx="7" fill="#171c28" stroke="#2a3347"/>
+      <text x="52" y="341" font-size="11" fill="#cdd6e4">docs &amp; comments</text>
+      <rect x="42" y="360" width="140" height="30" rx="7" fill="#171c28" stroke="#2a3347"/>
+      <text x="52" y="379" font-size="11" fill="#cdd6e4">git history</text>
+    </g>
+
+    <!-- ===== cli/ Rust: measure ===== -->
+    <g>
+      <rect x="242" y="130" width="292" height="384" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="242" y="130" width="4" height="384" rx="2" fill="#d9a35b"/>
+      <text x="262" y="160" font-size="13" font-weight="600" fill="#d9a35b">cli/ — Rust</text>
+      <text x="516" y="160" font-size="10" letter-spacing="1.5" fill="#8593ad" text-anchor="end">MEASURE</text>
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="258" y="176" width="260" height="54" rx="8"/>
+        <rect x="258" y="240" width="260" height="54" rx="8"/>
+        <rect x="258" y="304" width="260" height="54" rx="8"/>
+        <rect x="258" y="368" width="260" height="54" rx="8"/>
+        <rect x="258" y="432" width="260" height="54" rx="8"/>
+      </g>
+      <g font-size="11.5" fill="#cdd6e4">
+        <text x="272" y="198">tree-sitter parsing</text>
+        <text x="272" y="262">winnowing clone index</text>
+        <text x="272" y="326">reference graph</text>
+        <text x="272" y="390">churn over git windows</text>
+        <text x="272" y="454">warm daemon</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="272" y="216">one grammar per language</text>
+        <text x="272" y="280">fingerprints → .ce/index.db</text>
+        <text x="272" y="344">import sites + resolver ladder</text>
+        <text x="272" y="408">append / rewrite / delete rates</text>
+        <text x="272" y="472">index stays hot between calls</text>
+      </g>
+    </g>
+
+    <!-- ===== core/ Haskell: judge ===== -->
+    <g>
+      <rect x="606" y="130" width="280" height="384" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="606" y="130" width="4" height="384" rx="2" fill="#e4574a"/>
+      <text x="626" y="160" font-size="13" font-weight="600" fill="#e4574a">core/ — Haskell</text>
+      <text x="868" y="160" font-size="10" letter-spacing="1.5" fill="#8593ad" text-anchor="end">JUDGE</text>
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="622" y="176" width="248" height="54" rx="8"/>
+        <rect x="622" y="240" width="248" height="54" rx="8"/>
+        <rect x="622" y="304" width="248" height="54" rx="8"/>
+        <rect x="622" y="368" width="248" height="54" rx="8"/>
+        <rect x="622" y="432" width="248" height="54" rx="8"/>
+      </g>
+      <g font-size="11.5" fill="#cdd6e4">
+        <text x="636" y="198">structure entropy</text>
+        <text x="636" y="262">clone verdicts</text>
+        <text x="636" y="326">deadcode liveness</text>
+        <text x="636" y="390">doc duplication</text>
+        <text x="636" y="454">score + ratchet</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="636" y="216">seven axes over the whole tree</text>
+        <text x="636" y="280">T1/T2 exact · T3 tree edit distance</text>
+        <text x="636" y="344">no kept in-edge, no entry → dead</text>
+        <text x="636" y="408">exact Jaccard on live segments</text>
+        <text x="636" y="472">0–1000, only allowed to shrink</text>
+      </g>
+    </g>
+
+    <!-- ===== faces ===== -->
+    <g>
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="940" y="130" width="212" height="60" rx="8"/>
+        <rect x="940" y="211" width="212" height="60" rx="8"/>
+        <rect x="940" y="292" width="212" height="60" rx="8"/>
+        <rect x="940" y="373" width="212" height="60" rx="8"/>
+        <rect x="940" y="454" width="212" height="60" rx="8"/>
+      </g>
+      <g font-size="11.5" font-weight="600" fill="#57c7a8">
+        <text x="954" y="153">terminal</text>
+        <text x="954" y="234">GUI — Tauri</text>
+        <text x="954" y="315">MCP server</text>
+        <text x="954" y="396">guard hooks</text>
+        <text x="954" y="477">CI gate</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="954" y="171">console + schema'd JSON</text>
+        <text x="954" y="252">webview renders geometry only</text>
+        <text x="954" y="333">read-only tools for any agent</text>
+        <text x="954" y="414">PreToolUse probe · Stop audit</text>
+        <text x="954" y="495">ce check --fail-under → exit 1</text>
+      </g>
+    </g>
+
+    <!-- ===== flow ===== -->
+    <g stroke-width="1.6" fill="none">
+      <path d="M196 322 H236" stroke="#57c7a8" marker-end="url(#a)"/>
+      <path d="M534 322 H600" stroke="#e4574a" marker-end="url(#av)"/>
+      <g stroke="#57c7a8" opacity="0.85">
+        <path d="M886 322 C916 322 910 160 934 160" marker-end="url(#a)"/>
+        <path d="M886 322 C916 322 910 241 934 241" marker-end="url(#a)"/>
+        <path d="M886 322 H934" marker-end="url(#a)"/>
+        <path d="M886 322 C916 322 910 403 934 403" marker-end="url(#a)"/>
+        <path d="M886 322 C916 322 910 484 934 484" marker-end="url(#a)"/>
+      </g>
+    </g>
+    <text x="567" y="304" font-size="9.5" fill="#8593ad" text-anchor="middle">JSON</text>
+    <text x="567" y="345" font-size="9.5" fill="#8593ad" text-anchor="middle">stdio</text>
+
+    <text x="590" y="596" font-size="10.5" fill="#8593ad" text-anchor="middle">one versioned report schema per family — every face renders the same rows · judgment never enters the webview</text>
+  </g>
+</svg>

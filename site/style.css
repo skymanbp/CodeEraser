@@ -29,7 +29,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--verm); outline-
 .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
 header.site {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   padding: 18px 0;
 }
 header.site img { width: 28px; height: 28px; border-radius: 6px; }
@@ -40,7 +40,7 @@ header.site nav a:hover { color: var(--text); }
 
 .hero { padding: 56px 0 40px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
 .hero img { width: 160px; height: 160px; border-radius: 28px; box-shadow: 0 12px 48px rgba(0,0,0,0.5); }
-.hero .pitch { flex: 1; min-width: 300px; }
+.hero .pitch { flex: 1; min-width: min(300px, 100%); }
 .hero h1 {
   font-family: var(--mono); font-size: clamp(2rem, 5vw, 2.9rem);
   color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
@@ -56,7 +56,8 @@ header.site nav a:hover { color: var(--text); }
   border-radius: 10px; padding: 10px 16px;
 }
 .install .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); min-width: 7.5em; }
-.install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; }
+/* flex:1 + min-width:0 blockify the code cell so overflow-x can act */
+.install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; flex: 1; min-width: 0; }
 
 .term {
   background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 12px;
@@ -81,7 +82,9 @@ h2 {
   font-family: var(--mono); font-size: 1.3rem; color: var(--paper);
   margin: 48px 0 18px; letter-spacing: -0.01em;
 }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 14px; }
+/* min(Npx, 100%) caps every fixed column floor at the container width:
+   a 320px floor inside a 312px viewport was blowing the whole page wide */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(215px, 100%), 1fr)); gap: 14px; }
 .card {
   background: var(--panel); border: 1px solid var(--panel-edge);
   border-radius: 10px; padding: 16px 18px;
@@ -89,7 +92,7 @@ h2 {
 .card b { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; display: block; margin-bottom: 6px; }
 .card p { font-size: 0.88rem; color: var(--muted); }
 
-.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 14px; }
 .shot {
   background: var(--panel); border: 1px solid var(--panel-edge);
   border-radius: 12px; overflow: hidden; margin: 0;
@@ -97,6 +100,11 @@ h2 {
 .shot img { width: 100%; display: block; }
 .shot figcaption { padding: 10px 14px; font-size: 0.8rem; color: var(--muted); }
 .shot figcaption code { font-family: var(--mono); color: var(--text); }
+
+/* the architecture SVG paints its own ground — no panel behind it */
+.arch { margin: 0; }
+.arch img { width: 100%; display: block; border-radius: 14px; }
+.arch figcaption { padding: 10px 4px; font-size: 0.8rem; color: var(--muted); }
 
 .trust {
   background: var(--panel); border-left: 3px solid var(--amber);

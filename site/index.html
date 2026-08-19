@@ -89,6 +89,12 @@ ratchet: 0 added, 0 removed, 0 over, 5 tolerance drawn -&gt; <span class="s">pas
   <div class="card"><b>Guard hooks</b><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
 </div>
 
+<h2>Under the hood</h2>
+<figure class="arch">
+  <img src="/assets/architecture.svg" alt="Architecture: repository sources measured by the Rust frontend (tree-sitter, winnowing index, reference graph, churn, warm daemon), judged by the Haskell core (entropy, clones, liveness, doc duplication, ratcheted score), rendered by five faces (terminal, GUI, MCP, hooks, CI)" loading="lazy">
+  <figcaption>Measurement in Rust, judgment in Haskell — one wire, one report schema per family, five faces.</figcaption>
+</figure>
+
 <h2>Trust anchor</h2>
 <p class="trust">The six CLI &amp; core binaries (three platforms × ce / ce-core) are pinned
 by SHA256 in <code>plugin/bin/manifest.env</code> and verified before publish; every
