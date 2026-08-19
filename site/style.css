@@ -1,5 +1,8 @@
 /* codeeraser.dev — committed dark, the icon's world.
-   Palette: ink ground, vermilion eraser, teal keyword, amber string. */
+   Palette: ink ground, vermilion eraser, teal keyword, amber string.
+   Editing this file? Bump ?v= on both pages' <link> — HTML is served
+   uncached but this sheet is edge/browser-cached for 4h; without the
+   bump, fresh HTML pairs with a stale sheet on returning visitors. */
 :root {
   --ink-0: #10141d;
   --ink-1: #171c28;
