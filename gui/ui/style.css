@@ -1,18 +1,19 @@
-/* CodeEraser GUI (M6 S4a + M7-P4, refreshed post-0.3.0) — sober
-   report chrome; the visualizations are the page. Ground and panels
-   sit in the icon's ink world; vermilion is the BRAND channel only
-   (wordmark + active tab), the interaction accent is a steel blue,
-   the teal ring is the keyboard/focus channel, and the alarm ramp in
-   main.js stays the one semantic channel for findings density.
-   Three screens share one shell: header (brand + root + tabs), a
-   per-view control bar, a main canvas with a detail aside. */
+/* CodeEraser GUI shell (M6 S4a + M7-P4, refreshed post-0.3.0) —
+   sober report chrome; the visualizations are the page and live in
+   screens.css. Ground and panels sit in the icon's ink world;
+   vermilion is the BRAND channel only (wordmark + active tab), the
+   interaction accent is a steel blue, the teal ring is the
+   keyboard/focus + selection channel, and the alarm ramp in main.js
+   stays the one semantic channel for findings density. Three screens
+   share this shell: header (brand + root + tabs), a per-view control
+   bar, a main canvas with a detail aside. */
 :root {
   --bg: #12151a;
   --panel: #1a1f27;
   --panel-2: #222834;
   --ink: #dde3ec;
   --dim: #8b95a7;
-  --faint: #5c6577;
+  --faint: #7b8598; /* 4.9:1 on --bg — ticks and hints stay AA-legible */
   --line: #2b323e;
   --brand: #e4574a;
   --accent: #33608f;
@@ -35,6 +36,10 @@ body {
 button, input { font: inherit; }
 button { cursor: pointer; transition: background 0.12s, color 0.12s, border-color 0.12s; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+/* one home for hidden-ness: flex/grid displays would otherwise beat
+   the UA's [hidden] rule (the blank-summary-band bug) */
+.view[hidden], #summary[hidden], #legend[hidden], .empty[hidden] { display: none; }
 
 /* ---- header: brand · root · tabs · lang · status ---- */
 header {
@@ -111,9 +116,10 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 }
 #lang:hover { color: var(--ink); border-color: var(--dim); }
 #status {
+  /* fixed column: a status text sized to itself would shove the tab
+     strip sideways on every screen switch and mid-run swap */
+  flex: 0 0 230px;
   color: var(--dim);
-  min-width: 120px;
-  max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -124,7 +130,6 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 
 /* ---- per-view control bar ---- */
 .view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-.view[hidden] { display: none; }
 .bar {
   display: flex;
   gap: 14px;
@@ -157,28 +162,13 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 .bar button:hover { background: var(--accent-hi); }
 .bar button:disabled { opacity: 0.45; cursor: default; }
 
-/* ---- structure summary strip ---- */
-/* display:flex would beat the UA's [hidden]{display:none} — restate it */
-#summary[hidden] { display: none; }
-#summary {
-  display: flex;
-  gap: 28px;
-  align-items: baseline;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
-  font-variant-numeric: tabular-nums;
-}
-#summary .stat { color: var(--dim); font-size: 13px; }
-#summary .stat small { color: var(--faint); margin-left: 5px; }
-#score { font-size: 24px; font-weight: 650; color: var(--ink); }
-
 /* ---- main canvas + detail aside (shared) ---- */
 main { flex: 1; display: flex; min-height: 0; position: relative; }
 main svg { flex: 1; height: 100%; }
 main aside {
   width: 340px;
   border-left: 1px solid var(--line);
-  padding: 14px 16px;
+  padding: 14px;
   overflow-y: auto;
   font-family: var(--mono);
   font-size: 12px;
@@ -201,60 +191,6 @@ main aside .row b { color: var(--ink); font-weight: 600; }
   font-size: 13px;
   pointer-events: none;
 }
-.empty[hidden] { display: none; }
-
-/* ---- treemap ---- */
-#treemap rect { stroke: var(--bg); stroke-width: 1.5; cursor: pointer; }
-#treemap rect:hover { stroke: var(--dim); }
-#treemap rect.sel { stroke: var(--focus); }
-#treemap text {
-  fill: var(--ink);
-  fill-opacity: 0.92;
-  font-size: 11px;
-  pointer-events: none;
-  font-family: var(--mono);
-}
-
-/* ---- trend chart ---- */
-#trendchart .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
-#trendchart .trendarea { fill: var(--accent); fill-opacity: 0.14; }
-#trendchart .trendline { fill: none; stroke: var(--accent-hi); stroke-width: 2; }
-#trendchart .trendpt { fill: var(--ink); cursor: pointer; }
-#trendchart .trendpt:hover { fill: var(--brand); }
-
-/* ---- candidate browser ---- */
-#cand-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 14px;
-  font-family: var(--mono);
-  font-size: 12px;
-}
-#cand-list h2 {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--dim);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin: 14px 0 7px;
-}
-#cand-list .cand {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  padding: 6px 10px;
-  border: 1px solid var(--line);
-  border-left: 2px solid var(--line);
-  border-radius: var(--radius);
-  margin-bottom: 4px;
-  cursor: pointer;
-}
-#cand-list .cand .pair { flex: 1; overflow-wrap: anywhere; }
-#cand-list .cand:hover { background: var(--panel); }
-#cand-list .cand.sel { background: var(--panel); border-left-color: var(--focus); }
-#cand-list .cand b { color: var(--ink); font-weight: 600; }
-#cand-list .cand span { color: var(--dim); white-space: nowrap; }
-#cand-list .err { color: var(--err); }
 
 /* ---- chrome-wide quiet scrollbars (WebView2) ---- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -267,5 +203,5 @@ main aside .row b { color: var(--ink); font-weight: 600; }
 ::-webkit-scrollbar-thumb:hover { background: var(--faint); }
 
 @media (prefers-reduced-motion: reduce) {
-  button { transition: none; }
+  button, #trendchart .trendpt { transition: none; }
 }

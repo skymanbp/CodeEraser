@@ -10,6 +10,7 @@
   <meta charset="utf-8" />
   <title>CodeEraser</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="screens.css" />
 </head>
 <body>
   <header>
@@ -31,10 +32,14 @@
       <button id="scan" data-i18n="scan"></button>
     </section>
     <section id="summary" hidden>
-      <div class="stat"><span id="score"></span><small id="scale"></small></div>
+      <div class="stat" id="scorewrap">
+        <span id="score"></span><small id="scale"></small>
+        <div id="scorebar"><div id="scorefill"></div></div>
+      </div>
       <div class="stat" id="entropy"></div>
       <div class="stat" id="axes"></div>
       <div class="stat" id="divergence"></div>
+      <div class="stat" id="legend" hidden></div>
     </section>
     <main>
       <svg id="treemap" preserveAspectRatio="none"></svg>

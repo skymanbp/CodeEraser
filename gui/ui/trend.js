@@ -45,16 +45,38 @@ function renderTrend() {
   more.hidden = trendReport.pending === 0;
   more.textContent = tr("measureMore", Math.min(TREND_BATCH, trendReport.pending), trendReport.pending);
   drawTrend();
-  const parts = [
-    `<h2>${tr("trend")}</h2>`,
+  const rows = trendReport.rows;
+  const parts = [`<h2>${tr("trend")}</h2>`];
+  if (rows.length) {
+    // the one number this screen is about leads the aside
+    const last = rows[rows.length - 1];
+    parts.push(`<div class="bigscore">${last.score}<small> / ${last.scale}</small></div>`);
+  }
+  parts.push(
     row(tr("window"), tr("windowCommits", trendReport.window)),
-    row(tr("measured"), trendReport.rows.length),
+    row(tr("measured"), rows.length),
     row(tr("pending"), trendReport.pending),
-  ];
+  );
   for (const [sha, why] of trendReport.failed) {
     parts.push(row(`${tr("failedPrefix")} ${sha}`, why));
   }
   $("trend-detail").innerHTML = parts.join("");
+}
+
+// The y-domain is data-driven with a 2%-of-scale span floor and 35%
+// headroom, clamped to [0, scale] — a flat 820-ish series must not
+// compress into a 2px band on a 0..1000 canvas. The non-zero baseline
+// is DECLARED: ticks carry the real values and the endpoint label
+// carries "/ scale".
+function trendDomain(rows, scale) {
+  const scores = rows.map((r) => r.score);
+  const lo0 = Math.min(...scores);
+  const hi0 = Math.max(...scores);
+  const span = Math.max(hi0 - lo0, Math.round(scale * 0.02));
+  return {
+    lo: Math.max(0, lo0 - Math.round(span * 0.35)),
+    hi: Math.min(scale, hi0 + Math.round(span * 0.35)),
+  };
 }
 
 function drawTrend() {
@@ -66,30 +88,44 @@ function drawTrend() {
   const rows = trendReport.rows;
   if (!rows.length) return;
   const ns = "http://www.w3.org/2000/svg";
-  const pad = 28;
-  // y = score as a fraction of its own scale — chart geometry over
-  // two report facts, not a derived judgment
-  const y = (r) => pad + (1 - r.score / r.scale) * (height - 2 * pad);
-  const x = (i) => pad + (rows.length === 1 ? 0 : (i * (width - 2 * pad)) / (rows.length - 1));
+  // padL leaves room for four tabular glyphs of tick; gridlines snap
+  // to the half-pixel grid so a 1px stroke does not antialias into
+  // two blurred rows
+  const padL = 56;
+  const pad = 34;
+  const scale = rows[0].scale; // the report's own score scale
+  const { lo, hi } = trendDomain(rows, scale);
+  const y = (r) => pad + (1 - (r.score - lo) / (hi - lo)) * (height - 2 * pad);
+  const x = (i) => padL + (rows.length === 1 ? 0 : (i * (width - padL - pad)) / (rows.length - 1));
   for (const frac of [0, 0.5, 1]) {
     const g = document.createElementNS(ns, "line");
-    const gy = pad + frac * (height - 2 * pad);
-    g.setAttribute("x1", pad); g.setAttribute("x2", width - pad);
+    const gy = Math.round(pad + frac * (height - 2 * pad)) + 0.5;
+    g.setAttribute("x1", padL); g.setAttribute("x2", width - pad);
     g.setAttribute("y1", gy); g.setAttribute("y2", gy);
     g.setAttribute("class", "grid");
     svg.appendChild(g);
+    const tick = document.createElementNS(ns, "text");
+    tick.setAttribute("x", padL - 10);
+    tick.setAttribute("y", gy + 4);
+    tick.setAttribute("class", "axis tick");
+    tick.textContent = Math.round(hi - frac * (hi - lo));
+    svg.appendChild(tick);
   }
-  const pts = rows.map((r, i) => `${x(i)},${y(r)}`);
-  if (rows.length > 1) {
-    const area = document.createElementNS(ns, "polygon");
-    area.setAttribute(
-      "points",
-      `${x(0)},${height - pad} ${pts.join(" ")} ${x(rows.length - 1)},${height - pad}`);
-    area.setAttribute("class", "trendarea");
-    svg.appendChild(area);
-  }
+  // x extent: first/last commit + date — index-spaced, so the honest
+  // axis names the endpoints rather than faking a time scale
+  const xcap = (r, anchor, px) => {
+    const t = document.createElementNS(ns, "text");
+    t.setAttribute("x", px);
+    t.setAttribute("y", height - pad + 16);
+    t.setAttribute("class", "axis");
+    t.setAttribute("text-anchor", anchor);
+    t.textContent = `${new Date(r.ts * 1000).toISOString().slice(0, 10)} ${r.commit.slice(0, 7)}`;
+    return t;
+  };
+  svg.appendChild(xcap(rows[0], "start", padL));
+  if (rows.length > 1) svg.appendChild(xcap(rows[rows.length - 1], "end", width - pad));
   const line = document.createElementNS(ns, "polyline");
-  line.setAttribute("points", pts.join(" "));
+  line.setAttribute("points", rows.map((r, i) => `${x(i)},${y(r)}`).join(" "));
   line.setAttribute("class", "trendline");
   svg.appendChild(line);
   rows.forEach((r, i) => {
@@ -97,7 +133,7 @@ function drawTrend() {
     c.setAttribute("cx", x(i));
     c.setAttribute("cy", y(r));
     c.setAttribute("r", 4);
-    c.setAttribute("class", "trendpt");
+    c.setAttribute("class", i === rows.length - 1 ? "trendpt end" : "trendpt");
     const t = document.createElementNS(ns, "title");
     const when = new Date(r.ts * 1000).toISOString().slice(0, 10);
     t.textContent = `${r.commit.slice(0, 12)}  ${when}  ${r.score}/${r.scale}`;
@@ -105,6 +141,15 @@ function drawTrend() {
     c.addEventListener("click", () => trendPoint(r));
     svg.appendChild(c);
   });
+  const last = rows[rows.length - 1];
+  const lbl = document.createElementNS(ns, "text");
+  const lx = x(rows.length - 1);
+  lbl.setAttribute("x", Math.min(lx + 8, width - pad));
+  lbl.setAttribute("y", y(last) - 10);
+  lbl.setAttribute("class", "endlabel");
+  if (lx > width - 110) lbl.setAttribute("text-anchor", "end");
+  lbl.textContent = `${last.score} / ${last.scale}`;
+  svg.appendChild(lbl);
 }
 
 function trendPoint(r) {

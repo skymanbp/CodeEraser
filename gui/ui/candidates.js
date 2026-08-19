@@ -3,6 +3,9 @@
 // + unit pairs) and the ce.dedup-report block list, in DOCUMENT
 // ORDER — the list is the CLI's own report rows through the same
 // report_json throats, and no verdict or ranking is derived here.
+// The per-row background bar is tokens/max(tokens) as width — pure
+// geometry over a printed number (the scorefill stance), normalized
+// per section because the three sections measure different things.
 "use strict";
 
 let joinDoc = null;
@@ -36,32 +39,50 @@ async function loadCandidates() {
   }
 }
 
+// Path with the shared directory prefix receded — the basename is
+// the discriminating token and the only bold text on the row.
+const dimPath = (s) => {
+  const i = s.lastIndexOf("/");
+  if (i < 0) return `<b>${esc(s)}</b>`;
+  return `<span class="dir">${esc(s.slice(0, i + 1))}</span><b>${esc(s.slice(i + 1))}</b>`;
+};
+
+// A ↔ A is a different relation (intra-file duplication) — name it
+// instead of printing a pair that reads as a rendering bug.
+const pairHtml = (a, b) =>
+  a === b ? `${dimPath(a)} <span class="dir">${esc(tr("selfPair"))}</span>` : `${dimPath(a)} ↔ ${dimPath(b)}`;
+
+const barStyle = (v, max) => ` style="--w:${((100 * v) / (max || 1)).toFixed(1)}%"`;
+
 function renderCandidates() {
   $("empty-candidates").hidden = true;
   const parts = [];
   parts.push(`<h2>${tr("pairsHead", joinDoc.files.length, joinDoc.days, joinDoc.commits)}</h2>`);
   if (joinDoc.degraded) parts.push(`<p class="err">${esc(tr("degraded", joinDoc.degraded))}</p>`);
+  const fMax = Math.max(...joinDoc.files.map((f) => f.tokens), 1);
   joinDoc.files.forEach((f, i) => {
     parts.push(
-      `<div class="cand" data-kind="file" data-i="${i}">` +
-      `<span class="pair"><b>${esc(f.a)}</b> ↔ <b>${esc(f.b)}</b></span>` +
+      `<div class="cand" data-kind="file" data-i="${i}"${barStyle(f.tokens, fMax)}>` +
+      `<span class="pair">${pairHtml(f.a, f.b)}</span>` +
       `<span>${tr("blockTokens", f.blocks, f.tokens)}</span></div>`
     );
   });
   parts.push(`<h2>${tr("unitPairs")} — ${joinDoc.units.length}</h2>`);
+  const uMax = Math.max(...joinDoc.units.map((u) => u.tokens), 1);
   joinDoc.units.forEach((u, i) => {
     parts.push(
-      `<div class="cand" data-kind="unit" data-i="${i}">` +
-      `<span class="pair"><b>${esc(u.a.path)}#${esc(u.a.key)}</b> ↔ <b>${esc(u.b.path)}#${esc(u.b.key)}</b></span>` +
+      `<div class="cand" data-kind="unit" data-i="${i}"${barStyle(u.tokens, uMax)}>` +
+      `<span class="pair">${pairHtml(u.a.path, u.b.path)}<span class="dir">#${esc(u.a.key)}</span></span>` +
       `<span>${tr("tokensOnly", u.tokens)}</span></div>`
     );
   });
   parts.push(`<h2>${tr("cloneBlocks")} — ${dedupDoc.blocks.length}</h2>`);
+  const bMax = Math.max(...dedupDoc.blocks.map((b) => b.tokens), 1);
   dedupDoc.blocks.forEach((b, i) => {
     parts.push(
-      `<div class="cand" data-kind="block" data-i="${i}">` +
-      `<span class="pair"><b>${esc(b.a_file)}:${b.a_start}-${b.a_end}</b> ↔ ` +
-      `<b>${esc(b.b_file)}:${b.b_start}-${b.b_end}</b></span>` +
+      `<div class="cand" data-kind="block" data-i="${i}"${barStyle(b.tokens, bMax)}>` +
+      `<span class="pair">${dimPath(b.a_file)}:${b.a_start}-${b.a_end} ↔ ` +
+      `${dimPath(b.b_file)}:${b.b_start}-${b.b_end}</span>` +
       `<span>${tr("tokensOnly", b.tokens)}</span></div>`
     );
   });
@@ -73,6 +94,14 @@ function renderCandidates() {
       el.classList.add("sel");
       candDetail(el.dataset.kind, Number(el.dataset.i));
     }));
+  // seed the aside so the column is never dead space before a click
+  $("cand-detail").innerHTML = [
+    `<h2>${tr("tabCandidates")}</h2>`,
+    row(tr("days"), joinDoc.days),
+    row(tr("filePairs"), joinDoc.files.length),
+    row(tr("unitPairs"), joinDoc.units.length),
+    row(tr("cloneBlocks"), dedupDoc.blocks.length),
+  ].join("");
 }
 
 const pos = (p) =>
