@@ -42,6 +42,10 @@ contracts/fixtures/crosscheck/**/*.json
 # local). Regenerable + hash-verifiable via tests/eval_extract.
 /.ce-eval/
 
+# === Local credentials (NEVER versioned) ===
+# API keys the user hands to tooling live here; the repo is PUBLIC.
+/.secret
+
 # === cc-memory (local session state, NOT versioned) ===
 # User decision 2026-08-07: the whole memory/ tree stays out of the repo —
 # MEMORY/PLAN/PROGRESS.md are machine-local handoff state, not content.
