@@ -98,7 +98,8 @@ findings :: Knobs -> Facts -> [[Integer]]
 findings k f =
   [ [d, axis]
   | (axis, ds) <-
-      [(0, geometry k f), (1, naming k f), (2, mixing k f), (4, docs k f)]
+      [(0, geometry k f), (1, naming k f), (2, mixing k f)]
+        <> [(3, misplacedDirs k f), (4, docs k f)]
         <> [(5, stale k rows) | Just rows <- [fStaleDocs f]]
         <> [(6, redundant k rows) | Just rows <- [fRedundancy f]]
   , d <- ds
@@ -163,13 +164,21 @@ touchesByDir f =
 -- past the floor AND more than twice inside (the ratio is the
 -- predicate's definition in v1). Counts ride the aggregated rows.
 misplaced :: Knobs -> Facts -> Integer
-misplaced k f =
-  sum
-    [ n
-    | [_, inside, outside, n] <- fFileRefs f
-    , outside >= kMisplaceMin k
-    , outside > 2 * inside
-    ]
+misplaced k f = sum [n | (_, n) <- misplacedRows k f]
+
+-- | The dirs those files report — the axis-3 findings leg the doc
+-- promised but dropped (deduped: several fFileRefs rows per dir).
+misplacedDirs :: Knobs -> Facts -> [Integer]
+misplacedDirs k f = M.keys (M.fromList [(d, ()) | (d, _) <- misplacedRows k f])
+
+-- | ONE predicate for both faces of axis 3 (count and location).
+misplacedRows :: Knobs -> Facts -> [(Integer, Integer)]
+misplacedRows k f =
+  [ (d, n)
+  | [d, inside, outside, n] <- fFileRefs f
+  , outside >= kMisplaceMin k
+  , outside > 2 * inside
+  ]
 
 -- | Big directories missing their README, plus the root missing a
 -- recognized config (bits: 1 = README, 2 = config).

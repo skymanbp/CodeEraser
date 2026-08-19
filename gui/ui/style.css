@@ -39,7 +39,8 @@ button { cursor: pointer; transition: background 0.12s, color 0.12s, border-colo
 
 /* one home for hidden-ness: flex/grid displays would otherwise beat
    the UA's [hidden] rule (the blank-summary-band bug) */
-.view[hidden], #summary[hidden], #legend[hidden], .empty[hidden] { display: none; }
+.view[hidden], #summary[hidden], #legend[hidden], .empty[hidden],
+#treemap[hidden], #structree[hidden], #vswitch[hidden] { display: none; }
 
 /* ---- header: brand · root · tabs · lang · status ---- */
 header {

@@ -56,6 +56,12 @@ wireReq =
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond
 
+-- | The fixture's always-on findings (axes 1..4 flag dir 1) — ONE
+-- definition, because the optional-axis probes below assert the same
+-- prefix plus their own gain.
+baseFindings :: [[Integer]]
+baseFindings = [[1, 1], [1, 2], [1, 3], [1, 4]]
+
 fixtureJudged :: Bool
 fixtureJudged = case replyObj wireReq of
   Nothing -> False
@@ -63,7 +69,7 @@ fixtureJudged = case replyObj wireReq of
     field o "axes" == Just (toJSON [[0, 0], [1, 1], [2, 1], [3, 2], [4, 1 :: Integer]])
       && field o "score" == Just (Number 990)
       && field o "entropy" == Just (toJSON [[0, 782], [1, 916 :: Integer]])
-      && field o "findings" == Just (toJSON [[1, 1], [1, 2], [1, 4 :: Integer]])
+      && field o "findings" == Just (toJSON baseFindings)
       && field o "fail" == Just (Bool False)
 
 -- | Each knob row against its hand-computed flip: the same fixture,
@@ -161,8 +167,7 @@ redundancyAxis =
     , probeAt [] "axes"
         == Just (toJSON [[0, 0], [1, 1], [2, 1], [3, 2], [4, 1], [6, 0 :: Integer]])
     , probeAt flagged "score" == Just (toJSON (989 :: Integer))
-    , probeAt flagged "findings"
-        == Just (toJSON [[1, 1], [1, 2], [1, 4], [1, 6], [2, 6 :: Integer]])
+    , probeAt flagged "findings" == Just (toJSON (baseFindings <> [[1, 6], [2, 6]]))
     , fmap (field' "score") (replyObj (setKey "knobs" (toJSON [[9, 2 :: Integer]]) redReq))
         == Just (Just (toJSON (990 :: Integer)))
     , fmap (field' "score") (replyObj (setKey "knobs" (toJSON [[10, 2 :: Integer]]) redReq))
@@ -189,8 +194,7 @@ staleAxis =
   and
     [ staleAt [] "score" == Just (toJSON (992 :: Integer))
     , staleAt flagged "score" == Just (toJSON (990 :: Integer))
-    , staleAt flagged "findings"
-        == Just (toJSON [[1, 1], [1, 2], [1, 4], [1, 5 :: Integer]])
+    , staleAt flagged "findings" == Just (toJSON (baseFindings <> [[1, 5]]))
     , fmap (`field` "score") (replyObj (setKey "knobs" (toJSON [[11, 2 :: Integer]]) staleReq))
         == Just (Just (toJSON (992 :: Integer)))
     , fmap (`field` "score") (replyObj bothReq) == Just (Just (toJSON (989 :: Integer)))

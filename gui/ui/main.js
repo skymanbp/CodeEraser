@@ -56,8 +56,9 @@ async function boot() {
   tabs();
   $("scan").addEventListener("click", scan);
   $("root").addEventListener("keydown", (e) => e.key === "Enter" && scan());
-  window.addEventListener("resize", () => report && drawTreemap());
-  redrawers.structure = () => report && drawTreemap();
+  // redrawStructure (structree.js) routes to the active lens
+  window.addEventListener("resize", () => report && redrawStructure());
+  redrawers.structure = () => report && redrawStructure();
 }
 
 async function scan() {
@@ -112,7 +113,7 @@ function render() {
   report.tree.forEach((n, i) => {
     if (i > 0) children[n.parent].push(i);
   });
-  drawTreemap();
+  redrawStructure();
   showDetail(selId);
 }
 

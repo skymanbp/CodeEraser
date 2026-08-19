@@ -40,9 +40,14 @@
       <div class="stat" id="axes"></div>
       <div class="stat" id="divergence"></div>
       <div class="stat" id="legend" hidden></div>
+      <div id="vswitch" hidden>
+        <button data-v="map" data-i18n="viewMap"></button>
+        <button data-v="tree" data-i18n="viewTree"></button>
+      </div>
     </section>
     <main>
       <svg id="treemap" preserveAspectRatio="none"></svg>
+      <div id="structree" hidden></div>
       <aside id="detail"></aside>
       <div class="empty" id="empty-structure" data-i18n="emptyStructure"></div>
     </main>
@@ -75,6 +80,7 @@
 
   <script src="i18n.js" defer></script>
   <script src="main.js" defer></script>
+  <script src="structree.js" defer></script>
   <script src="trend.js" defer></script>
   <script src="candidates.js" defer></script>
 </body>

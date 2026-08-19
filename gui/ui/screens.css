@@ -39,6 +39,120 @@
 }
 #legend span { margin-left: 6px; font-size: 12px; color: var(--faint); }
 
+/* ---- structure view switch (map | tree) — lives in the summary
+   row beside the legend it swaps under; same family as #tabs, but
+   no brand underline: vermilion stays the brand channel ---- */
+#vswitch {
+  margin-left: 18px;
+  display: flex;
+  align-self: center;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2px;
+  gap: 2px;
+}
+#vswitch button {
+  background: none;
+  border: 0;
+  color: var(--dim);
+  border-radius: 4px;
+  padding: 0 12px;
+  height: calc(var(--ctl-h) - 8px);
+  font-size: 12.5px;
+}
+#vswitch button:hover { color: var(--ink); }
+#vswitch button.on {
+  background: var(--panel-2);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* ---- structure tree ---- */
+#structree {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-gutter: stable; /* expand/collapse must not shift columns */
+  padding: 0 12px 8px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+/* grid, not flex: own / subtree / files line up as columns down the
+   whole list. The reading cap sits on the ROWS, not the pane, so the
+   aside divider keeps the same geometry as the map lens. */
+.trow {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) 34px 44px 48px;
+  align-items: center;
+  gap: 8px;
+  max-width: 860px;
+  line-height: 18px; /* integer row box (18 + 2×3 = 24px pitch): the
+     inherited 1.45 gave 24.125px rows and a beaded heat rail */
+  padding: 3px 10px;
+  padding-left: calc(10px + var(--d, 0) * 22px);
+  /* one hairline guide per indent level */
+  background-image: repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 22px);
+  background-repeat: no-repeat;
+  background-position: 17px 0;
+  background-size: calc(var(--d, 0) * 22px) 100%;
+  /* the 3px left rail is the subtree-heat channel; square on the
+     rail side so rows fuse into one scannable column */
+  border-left: 3px solid transparent;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  color: var(--dim);
+}
+/* background-color, never the shorthand: it would wipe the guides */
+.trow:hover { background-color: var(--panel); }
+/* selection = teal on the RIGHT edge, so the alarm rail on the left
+   stays a pure uninterrupted channel */
+.trow.sel { background-color: var(--panel-2); box-shadow: inset -2px 0 0 var(--focus); }
+.trow.thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--bg);
+  background-image: none;
+  color: var(--faint);
+  font-size: 11px;
+  cursor: default;
+}
+.trow.thead:hover { background-color: var(--bg); }
+.trow .tw { text-align: center; color: var(--dim); user-select: none; }
+.trow .tname {
+  color: var(--ink);
+  /* truncate, never reflow — the row title holds the full path */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.trow .tname .tags { font-style: normal; color: var(--faint); font-size: 11px; margin-left: 8px; }
+.trow .fchip {
+  justify-self: center;
+  min-width: 22px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  /* the ring keeps own=1 (the darkest fill) visible on the panel */
+  box-shadow: inset 0 0 0 1px rgba(221, 227, 236, 0.22);
+}
+.trow .fchip:empty { box-shadow: none; }
+.trow .fchip:empty::before { content: "·"; color: var(--faint); }
+.trow.thead .fchip { box-shadow: none; min-width: 0; padding: 0; font-weight: 400; }
+.trow .tsub,
+.trow .tmeta {
+  justify-self: end;
+  color: var(--dim);
+  font-size: 11.5px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.trow .tmeta { color: var(--faint); }
+
 /* ---- treemap ---- */
 #treemap rect { stroke: var(--bg); stroke-width: 1.5; cursor: pointer; }
 #treemap rect:hover { stroke: var(--dim); }
