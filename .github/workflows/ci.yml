@@ -83,16 +83,23 @@ jobs:
       # a release-tag concern, not a per-push gate.
       - name: GUI system deps (ubuntu only)
         if: matrix.os == 'ubuntu-latest'
-        # The runner's apt mirror intermittently black-holes mid-fetch
-        # (three runs hung here for hours on 2026-08-19 alone). Socket
-        # timeouts + three tries + a step timeout turn a six-hour hang
-        # into a fast, visible failure; the sleep is retry backoff.
-        timeout-minutes: 10
+        # azure.archive.ubuntu.com intermittently black-holes (three
+        # runs hung here for hours on 2026-08-19; the armored retry
+        # then died differently — every round burned 30s x 4 sources
+        # on the dead mirror before apt fell back, and a slow-drip
+        # install never tripped the read timeout, so ONE attempt ate
+        # the whole step budget). So: point the runner's mirrorlist
+        # (the file:/etc/apt/apt-mirrors.txt the sources consume, per
+        # the failing run's own log) straight at the archive that DID
+        # answer, cap each try with timeout(1), and keep the step
+        # timeout as the hard floor. The sleep is retry backoff.
+        timeout-minutes: 15
         run: |
+          echo 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
           APT='-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30'
           ok=""
           for i in 1 2 3; do
-            if sudo apt-get $APT update && sudo apt-get $APT install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev; then ok=1; break; fi
+            if timeout 120 sudo apt-get $APT update && timeout 420 sudo apt-get $APT install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev; then ok=1; break; fi
             echo "apt attempt $i failed; backing off" && sleep 10
           done
           [ -n "$ok" ]
