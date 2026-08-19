@@ -140,6 +140,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # graph_provenance.rs ancestry, same as above
+      # The GHC toolchain itself is cached: macOS images ship no
+      # preinstalled 9.14.1 (ubuntu/windows do), so every run used to
+      # download the tarball from downloads.haskell.org — a single
+      # point of failure measured in full on 2026-08-19 (haskell.org
+      # data-corruption outage, four red reruns). On a hit ghcup finds
+      # the install locally and never touches the origin.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.ghcup
+          key: ghcup-macos-ghc9.14.1
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.14.1"

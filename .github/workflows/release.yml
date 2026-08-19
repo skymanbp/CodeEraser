@@ -67,6 +67,15 @@ jobs:
       # ce-core ships beside ce from v0.2.0 — the judgment layer stops
       # being source-install-only (the release face's biggest UX gap).
       # The freeze file pins the build plan, so the cache key is honest.
+      # macOS only: the runner image ships no preinstalled 9.14.1, so
+      # without this cache every release build re-downloads GHC from
+      # downloads.haskell.org (the 2026-08-19 outage lesson, see
+      # ci.yml build-macos for the full why).
+      - uses: actions/cache@v4
+        if: matrix.os == 'macos-latest'
+        with:
+          path: ~/.ghcup
+          key: ghcup-macos-ghc9.14.1
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.14.1"
