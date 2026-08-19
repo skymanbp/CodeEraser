@@ -1,6 +1,6 @@
-# cc-enslaver — Imperial Edicts (圣旨) file
+# cc-enforcer — Imperial Edicts (圣旨) file
 #
-# This file defines project-specific hard rules that the cc-enslaver
+# This file defines project-specific hard rules that the cc-enforcer
 # plugin enforces on top of the built-in 12 rules.
 #
 # Schema:
