@@ -17,13 +17,18 @@ fn filter(p: Params) -> pairs::Filter {
     }
 }
 
-/// Index a.rs on disk, then probe content that T2-clones it.
+/// Index a.rs on disk, then probe content that T2-clones it. The
+/// completeness stamp is honest — a.rs IS the whole corpus — and it
+/// is what keeps the daemon leg schedule-free: an unstamped index
+/// sends the daemon into its ADR-003 first build, and a probe racing
+/// that build gets the cold-start refusal (CI caught the window).
 fn seeded_index(dir: &Path) -> Index {
     let p = Params::default();
     std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("write a.rs");
     let mut idx = Index::open(&dir.join(".ce/index.db"), p).expect("open");
     idx.refresh_file("a.rs", rust_fn(1).as_bytes(), Lang::Rust, p)
         .expect("seed");
+    idx.mark_full_build().expect("stamp");
     idx
 }
 
