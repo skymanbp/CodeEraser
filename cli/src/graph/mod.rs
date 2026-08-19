@@ -105,6 +105,10 @@ fn print_counts(files: &[FileSites]) {
     }
 }
 
+/// The sites document's version identity — every other report family
+/// carries one; the e2e matrix caught this face shipping bare JSON.
+pub const SCHEMA_ID: &str = "ce.sites-report/0.1.0";
+
 /// Full site rows as JSON — the `--sites` face and the MCP tool
 /// share this one serialization.
 pub fn sites_json(files: &[FileSites]) -> String {
@@ -124,7 +128,7 @@ pub fn sites_json(files: &[FileSites]) -> String {
             })
         })
         .collect();
-    serde_json::json!({ "sites": rows }).to_string()
+    serde_json::json!({ "schema": SCHEMA_ID, "sites": rows }).to_string()
 }
 
 #[cfg(test)]

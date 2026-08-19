@@ -1,10 +1,9 @@
 //! Stop audit v1 (M3): net LOC of the working tree vs HEAD plus
-//! duplicate blocks touching the changed files. Deliberately NOT the
-//! four-way edit classification — that is the M4 judgment layer
-//! (plan A4). Same discipline as the PreToolUse gate: fail-open on
-//! any internal failure, every run appended to .ce/observe.ndjson.
-//! Stop hooks know exactly one enforcement shape (proven by the
-//! locally installed cc-enforcer): top-level
+//! duplicate blocks touching the changed files — deliberately NOT the
+//! four-way classification (that is M4). PreToolUse-gate discipline:
+//! fail-open on any internal failure, every run appended to
+//! .ce/observe.ndjson. Stop hooks know exactly one enforcement shape
+//! (proven by the locally installed cc-enforcer): top-level
 //! {"decision":"block","reason":...}; only deny mode uses it.
 
 use crate::config::Config;
@@ -18,13 +17,11 @@ struct Envelope {
     hook_event_name: String,
     #[serde(default)]
     cwd: String,
-    /// Claude Code stamps this on every hook event; it reaches the
-    /// observe feed (schema: hookio::OBSERVE_SCHEMA) so the M4
-    /// evaluation set can be partitioned by session (D2-2, D2-1).
+    /// Stamped on every hook event; reaches the observe feed so the
+    /// M4 evaluation set can be partitioned by session (D2-1/D2-2).
     #[serde(default)]
     session_id: String,
-    /// Loop-prevention flag: true when this Stop fired because a
-    /// previous Stop hook already blocked once.
+    /// Loop guard: true when a previous Stop hook already blocked.
     #[serde(default)]
     stop_hook_active: bool,
 }
@@ -40,12 +37,10 @@ pub fn run_hook() -> ExitCode {
     audit(&crate::hookio::project_root(&env.cwd), &env.session_id)
 }
 
-/// Shared head of the Stop audit and the pre-commit gate: guard
-/// mode, numstat over `diff`, touched duplicates (None = degraded,
-/// A9f), and the observe entry stamped with `event` (the feed's
-/// discriminator — precommit runs must not masquerade as Stop
-/// audits, attack-review finding). Outer None = not a git repo — the
-/// caller fails open.
+/// Shared head of the Stop audit and the pre-commit gate: guard mode,
+/// numstat over `diff`, touched duplicates (None = degraded, A9f) and
+/// the `event`-stamped observe entry (precommit must not masquerade
+/// as a Stop audit). Outer None = not a git repo: fail open.
 type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
 fn gather(
     root: &Path,
@@ -58,7 +53,16 @@ fn gather(
     let mode = Config::load(root)
         .map(|c| c.guard.tier("observe"))
         .unwrap_or_else(|_| "observe".into());
-    let (net_loc, changed) = diff_args(root, diff)?;
+    let (mut net_loc, mut changed) = diff_args(root, diff)?;
+    if event == "stop_audit" {
+        // §4.2 promises the Stop audit covers Bash writes, but `git
+        // diff HEAD` cannot see a brand-new untracked file — the stop
+        // path merges them in; precommit stays staged-only by design.
+        if let Some((n, mut files)) = untracked(root) {
+            net_loc += n;
+            changed.append(&mut files);
+        }
+    }
     let dups = if changed.is_empty() {
         Some(Vec::new())
     } else {
@@ -95,9 +99,7 @@ fn audit(root: &Path, session: &str) -> ExitCode {
     {
         let payload = serde_json::json!({
             "decision": "block",
-            // §4.4 B4: the Stop summary rides its own 400-token
-            // budget (precommit prints for a terminal, not a
-            // context window, and stays unclipped)
+            // §4.4 B4: the Stop summary rides its own 400-token budget
             "reason": crate::hookio::clip(
                 &reason(net_loc, dups),
                 crate::hookio::STOP_BUDGET_TOKENS,
@@ -108,12 +110,10 @@ fn audit(root: &Path, session: &str) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-/// M4 four-class summary of the session's working-tree diff, via the
-/// daemon-owned ce-core link. INFORMATIONAL only (R-L2-4: no
-/// multi-file FPR instrument yet, so no deny path may lean on it),
-/// and `request_if_running` on purpose: a Stop must not pay a daemon
-/// spawn + cold index; a cold daemon is a visible degraded field, not
-/// a latency spike.
+/// M4 four-class summary of the session's working-tree diff via the
+/// daemon-owned ce-core link. INFORMATIONAL only (R-L2-4: no deny
+/// path may lean on it); `request_if_running` because a Stop must not
+/// pay a daemon spawn — cold = a visible degraded field, not latency.
 fn fourclass_report(root: &Path) -> serde_json::Value {
     use crate::daemon::{client, proto::Request, proto::Response};
     let Some(pairs) = crate::fourclass::session::head_pairs(root) else {
@@ -132,10 +132,8 @@ fn fourclass_report(root: &Path) -> serde_json::Value {
 /// when guard mode is deny and staged files touch duplicate blocks.
 /// Unlike the hooks this prints for humans — it runs in a terminal.
 pub fn run_precommit(root: &Path) -> ExitCode {
-    // session = None, and that is the honest value: `ce precommit`
-    // runs in a terminal, not as a hook, so no session owns it. The
-    // feed records null rather than inventing one, which is what lets
-    // the M4 sampler exclude non-session events instead of guessing.
+    // session = None honestly: `ce precommit` runs in a terminal, no
+    // session owns it — the M4 sampler excludes non-session events.
     let Some((mode, net_loc, changed, dups)) = gather(
         root,
         &["diff", "--cached", "--numstat"],
@@ -171,18 +169,11 @@ pub fn run_precommit(root: &Path) -> ExitCode {
 }
 
 fn diff_args(root: &Path, args: &[&str]) -> Option<(i64, Vec<String>)> {
-    let out = std::process::Command::new("git")
-        .args(["-C"])
-        .arg(root)
-        .args(args)
-        .output()
-        .ok()?;
-    if !out.status.success() {
-        return None;
-    }
+    // churn::git = the ONE git runner; .ok() keeps hooks fail-open
+    let text = crate::churn::git(root, args).ok()?;
     let mut net = 0i64;
     let mut files = Vec::new();
-    for line in String::from_utf8_lossy(&out.stdout).lines() {
+    for line in text.lines() {
         let mut cols = line.split('\t');
         let (a, d, path) = (cols.next()?, cols.next()?, cols.next()?);
         // '-' marks binary files: count the file, skip the arithmetic
@@ -194,11 +185,31 @@ fn diff_args(root: &Path, args: &[&str]) -> Option<(i64, Vec<String>)> {
     Some((net, files))
 }
 
-/// Duplicate blocks with at least one side in the changed set. v1
-/// approximation of "newly added duplication" — an exact new-vs-old
-/// split needs the session-start baseline (M4). None = the dedup
-/// pipeline itself failed (index unavailable): DEGRADED, stamped in
-/// the observe entry — never conflated with "no duplicates" (A9f).
+/// Untracked-but-not-ignored files with their line counts — the Stop
+/// audit's blind spot without this (see the gather() call site).
+/// `.ce/` is ce's own state, never user entropy; binary files count 0
+/// lines but still enter the changed set (the numstat `-` stance).
+fn untracked(root: &Path) -> Option<(i64, Vec<String>)> {
+    let text = crate::churn::git(root, &["ls-files", "--others", "--exclude-standard"]).ok()?;
+    let mut net = 0i64;
+    let mut files = Vec::new();
+    for line in text.lines() {
+        let path = line.trim().replace('\\', "/");
+        if path.is_empty() || path.starts_with(".ce/") {
+            continue;
+        }
+        net += std::fs::read_to_string(root.join(&path))
+            .map(|s| s.lines().count() as i64)
+            .unwrap_or(0);
+        files.push(path);
+    }
+    Some((net, files))
+}
+
+/// Duplicate blocks with at least one side in the changed set — the
+/// v1 approximation of "newly added duplication" (exact split = M4).
+/// None = the dedup pipeline itself failed: DEGRADED, stamped in the
+/// observe entry, never conflated with "no duplicates" (A9f).
 fn touched_duplicates(root: &Path, changed: &[String]) -> Option<Vec<String>> {
     let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
     Some(
@@ -227,9 +238,8 @@ fn reason(net_loc: i64, dups: &[String]) -> String {
 }
 
 /// One Stop-audit / precommit observe entry. A struct rather than
-/// positional parameters: the old signature was already at six, one
-/// past the scan's fn-params limit of 5, and session identity would
-/// have made it seven.
+/// positional parameters: the old signature was already past the
+/// scan's fn-params limit of 5.
 struct AuditEvent<'a> {
     event: &'a str,
     mode: &'a str,
@@ -237,11 +247,11 @@ struct AuditEvent<'a> {
     session: Option<&'a str>,
     net_loc: i64,
     changed: usize,
-    /// None = the dedup pipeline itself failed (A9f degraded), which
-    /// must never be flattened into "zero duplicates".
+    /// None = the dedup pipeline failed (A9f degraded), never
+    /// flattened into "zero duplicates".
     dups: Option<usize>,
-    /// M4 informational four-class report (Stop only; None on the
-    /// precommit path, and the field is then absent from the line).
+    /// M4 informational four-class report (Stop only; absent on the
+    /// precommit path).
     fourclass: Option<serde_json::Value>,
 }
 
