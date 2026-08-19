@@ -54,6 +54,28 @@ ratchet: 0 added, 0 removed, 0 over, 5 tolerance drawn -&gt; <span class="s">pas
   every violation is banked in a baseline, and new entropy fails the gate.</p>
 </div>
 
+<h2>See it work</h2>
+<div class="shots">
+  <figure class="shot">
+    <img src="/assets/gui-structure.png" alt="CodeEraser GUI: squarified structure treemap of the CodeEraser repository, tiles heated by findings density, score 872/1000" loading="lazy">
+    <figcaption>The structure screen judging this repository: a squarified treemap, tiles heated by findings density, one ratcheted score.</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="/assets/gui-candidates.png" alt="CodeEraser GUI: deletion-candidate browser listing similar file pairs with block and token counts" loading="lazy">
+    <figcaption>The deletion-candidate browser: similarity × graph position × churn, the same rows <code>ce join</code> prints.</figcaption>
+  </figure>
+</div>
+
+<h2>Wire it in</h2>
+<div class="installs">
+  <div class="install"><span class="k">CI gate</span>
+    <code>ce check . --fail-under 800&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
+  <div class="install"><span class="k">pre-commit</span>
+    <code>ce precommit&nbsp;&nbsp;# staged net LOC + touched duplicates</code></div>
+  <div class="install"><span class="k">MCP</span>
+    <code>ce mcp&nbsp;&nbsp;# every report family as a read-only tool for any agent</code></div>
+</div>
+
 <h2>Judgment families</h2>
 <div class="grid">
   <div class="card"><b>ce check</b><p>The gate. One 0–1000 score over seven axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p></div>

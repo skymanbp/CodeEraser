@@ -89,6 +89,15 @@ h2 {
 .card b { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; display: block; margin-bottom: 6px; }
 .card p { font-size: 0.88rem; color: var(--muted); }
 
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.shot {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 12px; overflow: hidden; margin: 0;
+}
+.shot img { width: 100%; display: block; }
+.shot figcaption { padding: 10px 14px; font-size: 0.8rem; color: var(--muted); }
+.shot figcaption code { font-family: var(--mono); color: var(--text); }
+
 .trust {
   background: var(--panel); border-left: 3px solid var(--amber);
   border-radius: 0 10px 10px 0; padding: 18px 22px; margin: 20px 0 8px;

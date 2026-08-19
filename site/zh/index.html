@@ -53,6 +53,28 @@
   违规集入基线银行，新增熵直接判负。</p>
 </div>
 
+<h2>看它工作</h2>
+<div class="shots">
+  <figure class="shot">
+    <img src="/assets/gui-structure.png" alt="CodeEraser GUI：方化结构树图判决 CodeEraser 仓库自身，色块按发现密度加热，分数 872/1000" loading="lazy">
+    <figcaption>结构屏判决本仓库自身：方化树图，色块按发现密度加热，一个只准变好的分数。</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="/assets/gui-candidates.png" alt="CodeEraser GUI：删除候选浏览器，列出相似文件对与块/token 计数" loading="lazy">
+    <figcaption>删除候选浏览器：相似度 × 图位置 × 变动史，与 <code>ce join</code> 打印的同一批行。</figcaption>
+  </figure>
+</div>
+
+<h2>接进工作流</h2>
+<div class="installs">
+  <div class="install"><span class="k">CI 门</span>
+    <code>ce check . --fail-under 800&nbsp;&nbsp;# 棘轮+地板；exit 1 直接把流水线判红</code></div>
+  <div class="install"><span class="k">pre-commit</span>
+    <code>ce precommit&nbsp;&nbsp;# 暂存区净行数 + 涉改重复块</code></div>
+  <div class="install"><span class="k">MCP</span>
+    <code>ce mcp&nbsp;&nbsp;# 每个报告家族都是任意 agent 可读的只读工具</code></div>
+</div>
+
 <h2>判决家族</h2>
 <div class="grid">
   <div class="card"><b>ce check</b><p>总门。七轴合成 0–1000 分，对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p></div>

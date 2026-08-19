@@ -1,14 +1,12 @@
 # CodeEraser
 
-[![ci](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml/badge.svg)](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml)
-[![crates.io](https://img.shields.io/crates/v/codeeraser)](https://crates.io/crates/codeeraser)
-[![npm](https://img.shields.io/npm/v/codeeraser)](https://www.npmjs.com/package/codeeraser)
-[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![site](https://img.shields.io/badge/site-codeeraser.dev-e4574a)](https://codeeraser.dev)
+[![ci](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml/badge.svg)](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml) [![crates.io](https://img.shields.io/crates/v/codeeraser)](https://crates.io/crates/codeeraser) [![npm](https://img.shields.io/npm/v/codeeraser)](https://www.npmjs.com/package/codeeraser) [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE) [![site](https://img.shields.io/badge/site-codeeraser.dev-e4574a)](https://codeeraser.dev)
 
 English | **[中文](README.zh.md)**
 
 > An eraser against LLM-induced code & document entropy.
+
+![The GUI's structure treemap and score, judging this repository](docs/assets/gui-structure.png)
 
 LLMs drift toward stacking and patching over long-lived work: the same
 function implemented twice, the same fact written in three places,

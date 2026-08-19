@@ -1,9 +1,10 @@
 # CodeEraser
 
-**[English](README.md)** | 中文
-（徽章行只住英文 README——逐字节相同的块在两份文件里正是本工具判死的冗余）
+**[English](README.md)** | 中文 （徽章行只住英文 README——逐字节相同的块在两份文件里正是本工具判死的冗余）
 
 > 对抗 LLM 引致的代码与文档熵增的橡皮擦。
+
+![GUI 结构树图与分数——判决本仓库自身](docs/assets/gui-structure.png)
 
 LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数被实现两遍、
 同一个事实写在三处、更新以追加的方式到来、文件只增不减。CodeEraser
