@@ -90,50 +90,55 @@ pub(crate) fn attr_path_value(item: tree_sitter::Node, src: &str) -> Option<Stri
 /// Walk one segment list from every anchor; distinct terminals from
 /// different anchors are ambiguous_root (the Python cross-root
 /// stance), a double hit at one step is ambiguous_paths, an empty
-/// anchor set (climbed above the crate root) is out of scope.
+/// anchor set (climbed above the crate root) is out of scope. The
+/// second return is how many segments the single-hit terminal
+/// CONSUMED — the symbol-binding hook's trigger state (remaining
+/// segments = segs[used..]); 0 whenever there is no single hit.
 pub(crate) fn walk_all(
     anchors: Vec<String>,
     segs: &[&str],
     rung: u8,
     roots_set: &BTreeSet<String>,
     files: &BTreeSet<String>,
-) -> super::Outcome {
-    let mut hits = BTreeSet::new();
+) -> (super::Outcome, usize) {
+    let mut hits: BTreeSet<(String, usize)> = BTreeSet::new();
     for anchor in anchors {
         match descend(&anchor, segs, roots_set, files) {
-            Ok(target) => {
-                hits.insert(target);
+            Ok(hit) => {
+                hits.insert(hit);
             }
-            Err(reason) => return super::Outcome::Unresolved(reason),
+            Err(reason) => return (super::Outcome::Unresolved(reason), 0),
         }
     }
-    match hits.len() {
-        0 => super::Outcome::Unresolved(Reason::OutOfScope),
-        1 => super::Outcome::Resolved {
-            path: hits.pop_first().expect("len checked"),
-            rung,
-        },
-        _ => super::Outcome::Unresolved(Reason::AmbiguousRoot),
+    let paths: BTreeSet<&str> = hits.iter().map(|(p, _)| p.as_str()).collect();
+    match paths.len() {
+        0 => (super::Outcome::Unresolved(Reason::OutOfScope), 0),
+        1 => {
+            let (path, used) = hits.pop_first().expect("len checked");
+            (super::Outcome::Resolved { path, rung }, used)
+        }
+        _ => (super::Outcome::Unresolved(Reason::AmbiguousRoot), 0),
     }
 }
 
 /// Descend the convention tree; stopping early is not failure — the
-/// remaining segments live inside the deepest matched file.
+/// remaining segments live inside the deepest matched file (or its
+/// re-export surface: the consumed count travels for the binder).
 pub(crate) fn descend(
     anchor: &str,
     segs: &[&str],
     roots_set: &BTreeSet<String>,
     files: &BTreeSet<String>,
-) -> Result<String, Reason> {
+) -> Result<(String, usize), Reason> {
     let mut cur = anchor.to_string();
-    for seg in segs {
+    for (i, seg) in segs.iter().enumerate() {
         match child(&cur, seg, roots_set, files) {
             Child::One(next) => cur = next,
             Child::Both => return Err(Reason::AmbiguousPaths),
-            Child::None => break,
+            Child::None => return Ok((cur, i)),
         }
     }
-    Ok(cur)
+    Ok((cur, segs.len()))
 }
 
 pub(crate) enum Child {

@@ -44,6 +44,7 @@ fn two_phase_lifecycle() {
             kind: s.kind,
             rung: 1,
             granularity: 0,
+            via_reexport: 0,
         }]
     })
     .expect("sweep");
@@ -78,6 +79,7 @@ fn one_edge(s: &CachedSite) -> Vec<EdgeRow> {
         kind: s.kind,
         rung: 1,
         granularity: 0,
+        via_reexport: 0,
     }]
 }
 
@@ -134,5 +136,11 @@ fn resolve_key_tracks_paths_and_configs() {
         base,
         resolve_key(&one, &[("b.md".to_string(), 9)]),
         "md slug facts participate"
+    );
+    // the Rust pub-use surface rides the same list (§4 R5 amendment)
+    assert_ne!(
+        base,
+        resolve_key(&one, &[("b.rs".to_string(), 9)]),
+        "rs pub-use facts participate"
     );
 }

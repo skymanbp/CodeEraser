@@ -40,8 +40,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// so the frozen site universe stands and the audited sample keeps
 /// its identity keys. 6 = the remap's inline-module habitat
 /// (child_dir + enclosing mod names, rustc reference) — the depth>0
-/// refusal becomes an edge, same ladder-only class as 5.
-pub const GRAPH_REV: i64 = 6;
+/// refusal becomes an edge, same ladder-only class as 5. 7 = the §4
+/// R5 amendment (2026-08-18, user-ratified): `pub use` binds ≤1 hop
+/// to the DEFINITION file with the via_reexport mark — ladder-only
+/// plus one additive edges column (schema v8 wipes the db anyway).
+pub const GRAPH_REV: i64 = 7;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -65,7 +68,8 @@ CREATE TABLE sites (id INTEGER PRIMARY KEY,
   kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT);
 CREATE TABLE edges (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
   dst_path TEXT NOT NULL, dst_unit TEXT NOT NULL,
-  kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL);
+  kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL,
+  via_reexport INTEGER NOT NULL DEFAULT 0);
 CREATE INDEX idx_sym_file ON symbols(file_id, key);
 CREATE UNIQUE INDEX idx_sym_ident ON symbols(file_id, key, nth);
 CREATE INDEX idx_site_file ON sites(file_id);
@@ -157,6 +161,9 @@ pub struct EdgeRow {
     pub kind: i64,
     pub rung: i64,
     pub granularity: i64,
+    /// 1 = the answer crossed a terminal file's re-export surface
+    /// (§4 R5 amendment 2026-08-18) — the via_reexport mark.
+    pub via_reexport: i64,
 }
 
 /// Phase-2 gate: a matching stored key touches nothing; otherwise one
@@ -235,8 +242,8 @@ fn insert_edges(
     resolve: &mut impl FnMut(&CachedSite) -> Vec<EdgeRow>,
 ) -> Result<()> {
     let mut ins = tx.prepare(
-        "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+        "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity, via_reexport)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
     )?;
     for s in sites {
         for e in resolve(s) {
@@ -247,6 +254,7 @@ fn insert_edges(
                 e.kind,
                 e.rung,
                 e.granularity,
+                e.via_reexport,
             ))?;
         }
     }

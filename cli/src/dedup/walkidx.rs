@@ -52,10 +52,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
             continue;
         };
         let src = std::fs::read(&path)?;
-        if lang == Lang::Markdown {
-            let text = String::from_utf8_lossy(&src);
-            md_facts.push((rel.clone(), crate::graph::ladder::md::slug_hash(&text)));
-        }
+        lang_fact(lang, &rel, &src, &mut md_facts);
         if idx.refresh_file(&rel, &src, lang, Params::default())? {
             out.dirty.insert(rel.clone());
         }
@@ -75,6 +72,21 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)
+}
+
+/// Cross-file resolver INPUTS per language (split from index_all at
+/// the E01 fn gate): md heading slugs and the Rust pub-use surface
+/// both join the resolve_key — the same discipline, one throat.
+fn lang_fact(lang: Lang, rel: &str, src: &[u8], facts: &mut Vec<(String, u64)>) {
+    let text = String::from_utf8_lossy(src);
+    match lang {
+        Lang::Markdown => facts.push((rel.to_string(), crate::graph::ladder::md::slug_hash(&text))),
+        Lang::Rust => facts.push((
+            rel.to_string(),
+            crate::graph::ladder::rs_reexport::pubuse_hash(&text),
+        )),
+        _ => {}
+    }
 }
 
 /// Token streams for the files that share at least one fingerprint.

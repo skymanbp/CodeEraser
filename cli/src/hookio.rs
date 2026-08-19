@@ -24,6 +24,27 @@ use std::path::Path;
 /// one session or ten.
 pub const OBSERVE_SCHEMA: &str = "ce.observe/0.4.0";
 
+/// The project root for a hook envelope's cwd: the NEAREST ancestor
+/// (cwd itself first) holding a `ce.toml` or a `.git` — cross-session
+/// field report 2026-08-18: the raw cwd made the same edit judge
+/// differently depending on where the shell had cd'd, and fragmented
+/// the index/daemon per directory. A tree with neither anchor keeps
+/// the cwd verbatim (the old behavior as the honest fallback). One
+/// throat for all three hooks — the drift was a class, not a site.
+pub fn project_root(cwd: &str) -> std::path::PathBuf {
+    let start = std::path::PathBuf::from(cwd);
+    let mut probe = start.as_path();
+    loop {
+        if probe.join("ce.toml").exists() || probe.join(".git").exists() {
+            return probe.to_path_buf();
+        }
+        match probe.parent() {
+            Some(p) if !p.as_os_str().is_empty() => probe = p,
+            _ => return start,
+        }
+    }
+}
+
 /// Read the whole hook envelope from stdin and deserialize it.
 /// None = unreadable stdin or unparseable JSON — the caller treats
 /// that as "not for me" and exits 0 (fail-open).
@@ -119,6 +140,35 @@ pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> boo
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The hook root ascends to the nearest anchor (ce.toml or
+    /// .git), cwd itself first; an anchorless tree keeps the cwd —
+    /// the field-report counterexample was `cd background/` flipping
+    /// the same write's verdict.
+    #[test]
+    fn project_root_ascends_to_the_nearest_anchor() {
+        let dir = std::env::temp_dir().join(format!("ce-root-{}", std::process::id()));
+        let deep = dir.join("repo/sub/deep");
+        std::fs::create_dir_all(&deep).expect("mkdir");
+        std::fs::write(dir.join("repo/ce.toml"), "\n").expect("anchor");
+        let cwd = deep.to_string_lossy().to_string();
+        assert_eq!(project_root(&cwd), dir.join("repo"), "ascends to ce.toml");
+        assert_eq!(
+            project_root(&dir.join("repo").to_string_lossy()),
+            dir.join("repo"),
+            "cwd itself first"
+        );
+        let loose = dir.join("loose");
+        std::fs::create_dir_all(&loose).expect("mkdir");
+        let lc = loose.to_string_lossy().to_string();
+        // the walk above `loose` may cross REAL anchors on the host
+        // (temp dirs live under a user profile) — assert the honest
+        // property instead: the answer is `loose` itself or one of
+        // its ancestors carrying a real anchor, never a sibling
+        let got = project_root(&lc);
+        assert!(loose.starts_with(&got), "never leaves the ancestry line");
+        std::fs::remove_dir_all(&dir).ok();
+    }
 
     /// B4 acceptance half 1: the clip is identity under budget, caps
     /// at budget with the on-disk pointer over it, and never splits a

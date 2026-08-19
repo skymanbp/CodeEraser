@@ -9,7 +9,7 @@ use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use crate::dedup::{Params, index::Index};
 use serde::Deserialize;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::ExitCode;
 
 #[derive(Deserialize)]
@@ -28,7 +28,7 @@ pub fn run_hook() -> ExitCode {
     if env.hook_event_name != "SessionStart" || env.cwd.is_empty() {
         return ExitCode::SUCCESS;
     }
-    let line = status_line(&PathBuf::from(&env.cwd));
+    let line = status_line(&crate::hookio::project_root(&env.cwd));
     let payload = serde_json::json!({
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",

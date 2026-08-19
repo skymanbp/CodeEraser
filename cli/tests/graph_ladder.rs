@@ -14,7 +14,10 @@ use codeeraser::graph::ladder::{self, Outcome, Reason};
 use codeeraser::scan::lang::Lang;
 
 mod common;
-use common::{Case, ext, fixture, no, ok, pkg, run_cases, site};
+// two groups on purpose: the one-line form token-chained against
+// graph_ladder_md.rs's header under T2 (the census's catch)
+use common::{Case, run_cases, site, via};
+use common::{ext, fixture, no, ok, pkg};
 
 /// The shared fixture tree — every rung's habitat, all languages.
 const TREE: &[(&str, &str)] = &[
@@ -394,6 +397,74 @@ const PATH_TREE: &[(&str, &str)] = &[
     ("src/graph/store_tests.rs", "\n"),
     ("src/graph/deep/extra.rs", "\n"),
 ];
+
+/// The re-export habitat (§4 R5 as amended 2026-08-18): a facade
+/// whose nested `pub use` binds a remaining segment answers the
+/// DEFINITION file as ResolvedVia — one hop, bind-free inside.
+/// Refusal rows: a glob never binds, two matching entries never
+/// pick, a locally-defined name never hops, a chained facade
+/// terminates at the middle (pub extern crate is invisible), and a
+/// private `use` re-exports nothing.
+const REEXPORT_TREE: &[(&str, &str)] = &[
+    (
+        "Cargo.toml",
+        "[package]\nname = \"fac\"\n\n[dependencies]\nsearcher-lib = { path = \"crates/searcher\" }\n",
+    ),
+    ("src/lib.rs", "mod consumer;\n"),
+    // the BinaryDetection shape: extern member -> lib root facade ->
+    // nested group re-export -> definition file
+    (
+        "crates/searcher/Cargo.toml",
+        "[package]\nname='searcher-lib'",
+    ),
+    (
+        "crates/searcher/src/lib.rs",
+        "pub use crate::{searcher::{Binary, Config as Conf}, sink::*};\nuse crate::quiet::Hidden;\npub use crate::dup_a::Twice;\npub use crate::dup_b::Twice;\npub use crate::local::Local;\nmod searcher;\nmod sink;\nmod quiet;\nmod dup_a;\nmod dup_b;\nmod local;\npub struct Local;\n",
+    ),
+    (
+        "crates/searcher/src/searcher.rs",
+        "pub struct Binary;\npub struct Config;\n",
+    ),
+    ("crates/searcher/src/sink.rs", "pub struct Sink;\n"),
+    ("crates/searcher/src/quiet.rs", "pub struct Hidden;\n"),
+    ("crates/searcher/src/dup_a.rs", "pub struct Twice;\n"),
+    ("crates/searcher/src/dup_b.rs", "pub struct Twice;\n"),
+    ("crates/searcher/src/local.rs", "pub struct Local;\n"),
+];
+
+#[test]
+fn reexport_binds_one_hop_to_the_definition() {
+    let fx = fixture("ladder-reexport", REEXPORT_TREE);
+    let scope = fx.scope();
+    let lib = "crates/searcher/src/lib.rs";
+    // (spec from src/lib.rs, want) — every row rides the R4 member
+    // rung into the facade, then the binder speaks or refuses
+    let cases: &[(&'static str, Outcome)] = &[
+        // nested group binds -> definition file, marked via
+        (
+            "searcher_lib::Binary",
+            via("crates/searcher/src/searcher.rs", 4),
+        ),
+        // `as` binds the ALIAS, not the source name
+        (
+            "searcher_lib::Conf",
+            via("crates/searcher/src/searcher.rs", 4),
+        ),
+        ("searcher_lib::Config", ok(lib, 4)),
+        // a glob binds an unknown set — never followed
+        ("searcher_lib::Sink", ok(lib, 4)),
+        // two entries bind Twice — picking would invent a path
+        ("searcher_lib::Twice", ok(lib, 4)),
+        // the facade defines Local itself — definition wins
+        ("searcher_lib::Local", ok(lib, 4)),
+        // a private use re-exports nothing
+        ("searcher_lib::Hidden", ok(lib, 4)),
+    ];
+    for (spec, want) in cases {
+        let got = ladder::resolve(Lang::Rust, &site("use", "src/lib.rs", spec, 1), &scope);
+        assert_eq!(&got, want, "{spec}");
+    }
+}
 
 #[test]
 fn path_attr_remaps_resolve_at_r1() {

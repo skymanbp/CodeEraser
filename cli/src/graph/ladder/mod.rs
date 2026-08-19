@@ -29,6 +29,9 @@ pub mod hs_boot;
 pub mod md;
 pub mod py;
 pub mod rs;
+// pub: walkidx feeds pubuse_hash into resolve_key (the slug-hash
+// discipline for the binder's cross-file input)
+pub mod rs_reexport;
 mod rs_tree;
 pub mod ts;
 
@@ -81,6 +84,14 @@ pub enum Outcome {
         slug: Option<String>,
         rung: Rung,
     },
+    /// Resolved THROUGH a terminal file's re-export surface (§4 R5
+    /// as amended 2026-08-18: one hop to the definition file; the
+    /// via_reexport mark rides the edge row). Same edge semantics as
+    /// Resolved everywhere except the stored flag.
+    ResolvedVia {
+        path: String,
+        rung: Rung,
+    },
     /// Outside the corpus by design (registry dep, node_modules).
     External {
         rung: Rung,
@@ -92,8 +103,9 @@ pub enum Outcome {
 /// `files` (the frozen in-scope set); `configs` are the resolver
 /// config paths the walk collected (all in resolve_key, store.rs);
 /// raw fs access via `root` may only justify External, block a
-/// rewrite, or read an in-scope candidate's own bytes to refine
-/// granularity (Md section slugs, R3 definition tables) — never
+/// rewrite, read an in-scope candidate's own bytes to refine
+/// granularity (Md section slugs, R3 definition tables), or read a
+/// walk TERMINAL's own bytes for the one-hop re-export bind — never
 /// mint an in-scope candidate.
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,

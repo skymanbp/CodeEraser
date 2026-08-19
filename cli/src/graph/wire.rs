@@ -53,19 +53,21 @@ pub fn edges(site: &CachedSite, scope: &Scope) -> Vec<EdgeRow> {
 /// In-corpus outcomes only. dst_unit "" is the file or package node;
 /// a slugless section outcome is the file-level anchor degrade.
 fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
-    let (dst_path, dst_unit, rung, granularity) = match outcome {
-        Outcome::Resolved { path, rung } => (path, String::new(), rung, GRAN_FILE),
-        Outcome::ResolvedPackage { dir, rung } => (dir, String::new(), rung, GRAN_PACKAGE),
+    let (dst_path, dst_unit, rung, granularity, via) = match outcome {
+        Outcome::Resolved { path, rung } => (path, String::new(), rung, GRAN_FILE, 0),
+        // §4 R5 amendment: same file-level edge, the hop recorded
+        Outcome::ResolvedVia { path, rung } => (path, String::new(), rung, GRAN_FILE, 1),
+        Outcome::ResolvedPackage { dir, rung } => (dir, String::new(), rung, GRAN_PACKAGE, 0),
         Outcome::ResolvedSection {
             path,
             slug: Some(slug),
             rung,
-        } => (path, slug, rung, GRAN_SECTION),
+        } => (path, slug, rung, GRAN_SECTION, 0),
         Outcome::ResolvedSection {
             path,
             slug: None,
             rung,
-        } => (path, String::new(), rung, GRAN_FILE),
+        } => (path, String::new(), rung, GRAN_FILE, 0),
         Outcome::External { .. } | Outcome::Unresolved(_) => return Vec::new(),
     };
     vec![EdgeRow {
@@ -74,6 +76,7 @@ fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
         dst_unit,
         rung: i64::from(rung),
         granularity,
+        via_reexport: via,
     }]
 }
 

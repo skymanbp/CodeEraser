@@ -23,11 +23,17 @@ pub use ladder::*;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
 
-/// Fresh per-test dir under the cargo target tmpdir (wiped if present).
+/// Fresh per-test dir under the cargo target tmpdir (wiped if
+/// present). Carries an empty `.git` anchor: hookio::project_root
+/// ascends to the nearest ce.toml/.git, and an anchorless fixture
+/// under target/tmp would ascend into the REAL repo (three guard
+/// batteries did exactly that when the anchoring landed). Real hook
+/// cwds are never anchorless voids; the walker skips hidden dirs,
+/// so scans see nothing.
 pub fn tmp(name: &str) -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(name);
     let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("mkdir");
+    std::fs::create_dir_all(dir.join(".git")).expect("mkdir");
     dir
 }
 

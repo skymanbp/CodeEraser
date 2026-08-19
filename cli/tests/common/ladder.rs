@@ -115,6 +115,14 @@ pub fn no(reason: Reason) -> Outcome {
     Outcome::Unresolved(reason)
 }
 
+/// Resolved through a re-export surface (§4 R5 amendment).
+pub fn via(path: &str, rung: u8) -> Outcome {
+    Outcome::ResolvedVia {
+        path: path.to_string(),
+        rung,
+    }
+}
+
 pub fn ext(rung: u8) -> Outcome {
     Outcome::External { rung }
 }

@@ -11,7 +11,7 @@ use crate::config::Config;
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use serde::Deserialize;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::ExitCode;
 
 #[derive(Deserialize)]
@@ -59,7 +59,7 @@ pub fn run_hook() -> ExitCode {
     if env.hook_event_name != "PreToolUse" || !matches!(env.tool_name.as_str(), "Write" | "Edit") {
         return ExitCode::SUCCESS;
     }
-    let root = PathBuf::from(&env.cwd);
+    let root = crate::hookio::project_root(&env.cwd);
     decide(&root, &env)
 }
 

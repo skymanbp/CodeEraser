@@ -19,9 +19,10 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// v5 (M5-3b): `symbols.nth` + UNIQUE identity (F2), the unitsig
 /// structural cache and the docsegs table, struct_rev + docdup_rev
 /// in the cache key. v4: `has_tokens` on files, the graph tables,
-/// graph_rev in the key. ALTERs fold into CREATE — the wipe model
+/// graph_rev in the key. v8: edges.via_reexport (the §4 R5
+/// amendment's mark). ALTERs fold into CREATE — the wipe model
 /// has no migration path to alter along.
-const SCHEMA_VERSION: i64 = 7;
+const SCHEMA_VERSION: i64 = 8;
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS trend;

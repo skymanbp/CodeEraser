@@ -9,7 +9,7 @@
 
 use crate::config::Config;
 use serde::Deserialize;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::ExitCode;
 
 #[derive(Deserialize)]
@@ -37,7 +37,7 @@ pub fn run_hook() -> ExitCode {
     if env.hook_event_name != "Stop" || env.stop_hook_active || env.cwd.is_empty() {
         return ExitCode::SUCCESS;
     }
-    audit(&PathBuf::from(&env.cwd), &env.session_id)
+    audit(&crate::hookio::project_root(&env.cwd), &env.session_id)
 }
 
 /// Shared head of the Stop audit and the pre-commit gate: guard
