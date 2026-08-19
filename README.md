@@ -1,5 +1,11 @@
 # CodeEraser
 
+[![ci](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml/badge.svg)](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/codeeraser)](https://crates.io/crates/codeeraser)
+[![npm](https://img.shields.io/npm/v/codeeraser)](https://www.npmjs.com/package/codeeraser)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![site](https://img.shields.io/badge/site-codeeraser.dev-e4574a)](https://codeeraser.dev)
+
 English | **[中文](README.zh.md)**
 
 > An eraser against LLM-induced code & document entropy.
@@ -14,7 +20,10 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚧 **0.x preview. M0–M7 shipped; M8 (growth track) in progress.**
+🚀 **v0.3.0 released — all planned milestones (M0–M8) shipped.**
+Installers, [crates.io](https://crates.io/crates/codeeraser), the npm
+pointer and [codeeraser.dev](https://codeeraser.dev) are live; the
+next cycle starts from real-world trial feedback.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 This repository gates itself with its own scanner, clone ratchet,

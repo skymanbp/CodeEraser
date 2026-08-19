@@ -1,6 +1,7 @@
 # CodeEraser
 
 **[English](README.md)** | 中文
+（徽章行只住英文 README——逐字节相同的块在两份文件里正是本工具判死的冗余）
 
 > 对抗 LLM 引致的代码与文档熵增的橡皮擦。
 
@@ -12,7 +13,10 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚧 **0.x 预览。M0–M7 已交付；M8（成长轨）进行中。**
+🚀 **v0.3.0 已发布——全部既定里程碑（M0–M8）交付完毕。**
+安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包
+与 [codeeraser.dev](https://codeeraser.dev) 官网均已上线；下一周期
+从真实试用反馈启动。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。
 本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）都用
