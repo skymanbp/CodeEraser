@@ -113,8 +113,14 @@ pub fn report_json(batch: &BatchClassification, pairs: &[PathPair]) -> serde_jso
         totals[2] += c.counts.removed_deleted as u64;
         totals[3] += c.counts.removed_moved as u64;
     }
+    // The index is the CORE's, so it is checked here rather than
+    // trusted: `&pairs[idx]` on a bad reply panics, and this runs
+    // inside the daemon, which has no catch_unwind and would take
+    // every connected client down with it.
     let name = |idx: usize, before: bool| -> serde_json::Value {
-        let (b, a) = &pairs[idx];
+        let Some((b, a)) = pairs.get(idx) else {
+            return serde_json::Value::Null;
+        };
         let side = if before { b } else { a };
         side.as_deref().or(a.as_deref()).or(b.as_deref()).into()
     };

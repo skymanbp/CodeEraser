@@ -267,8 +267,13 @@ fn relocations_of(reply: &Value, inputs: &[PairInput]) -> Result<Vec<Relocation>
     for b in reply["blocks"].as_array().ok_or("reply: blocks missing")? {
         let from_pair = b[0].as_u64().ok_or("block: from pair")? as usize;
         let to_pair = b[2].as_u64().ok_or("block: to pair")? as usize;
-        let from_units = units::segments(inputs[from_pair].before, inputs[from_pair].lang);
-        let to_units = units::segments(inputs[to_pair].after, inputs[to_pair].lang);
+        // .get, like merge() twenty lines up: a slice index straight
+        // off the wire panics the DAEMON, which owns this call and has
+        // no catch_unwind — one bad reply drops every client
+        let from = inputs.get(from_pair).ok_or("block: from pair out of range")?;
+        let to = inputs.get(to_pair).ok_or("block: to pair out of range")?;
+        let from_units = units::segments(from.before, from.lang);
+        let to_units = units::segments(to.after, to.lang);
         for (fl, tl) in lines_of(&b[1])?.into_iter().zip(lines_of(&b[3])?) {
             let from_unit = units::owner(&from_units, fl).map(|u| u.key.clone());
             let to_unit = units::owner(&to_units, tl).map(|u| u.key.clone());

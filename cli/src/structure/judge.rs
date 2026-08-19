@@ -6,7 +6,7 @@
 //! floor lands (S3+): the CLI gates nothing here.
 
 use super::{rows, tree, wire};
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, ensure};
 use std::path::{Path, PathBuf};
 
 pub use super::report::{print, report_json};
@@ -74,6 +74,13 @@ pub fn run(
     let req = assemble(root, db, core, &t, (deep, days))?;
     let reply = wire::judge(core, &req)?;
     let names = names_by_id(&t);
+    // The boundary contract runs on the REQUEST side (Structure.hs
+    // dirRow); nothing checked the ids coming BACK, and both faces
+    // subscript a Vec with them — a negative wraps, a large one panics.
+    let n = names.len() as i64;
+    for &[d, _] in reply.findings.iter().chain(&reply.deviations) {
+        ensure!((0..n).contains(&d), "structure reply: dir id {d} outside 0..{n}");
+    }
     let tree = tree_rows(&t, &names, &reply.findings);
     let findings = relabel(&names, &reply.findings);
     let deviations = relabel(&names, &reply.deviations);

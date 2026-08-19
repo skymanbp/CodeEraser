@@ -28,13 +28,22 @@ impl Judge {
         root: &Path,
         pairs: &[(Option<String>, Option<String>)],
     ) -> serde_json::Value {
-        let texts: Vec<(String, String, Lang)> = pairs
+        // ONE index space. A pair index in the core's reply is a
+        // coordinate into what we SENT, and load_pair drops pairs
+        // (non-language, unreadable, `git show` failure) — resolving
+        // those indices against the UNFILTERED list named the wrong
+        // file for every pair after a drop, with degraded: null
+        // vouching for the report.
+        let kept: Vec<(session::PathPair, (String, String, Lang))> = pairs
             .iter()
-            .filter_map(|(before, after)| load_pair(root, before.as_deref(), after.as_deref()))
+            .filter_map(|p| {
+                load_pair(root, p.0.as_deref(), p.1.as_deref()).map(|t| (p.clone(), t))
+            })
             .collect();
-        let inputs: Vec<PairInput> = texts
+        let sent: Vec<session::PathPair> = kept.iter().map(|(p, _)| p.clone()).collect();
+        let inputs: Vec<PairInput> = kept
             .iter()
-            .map(|(b, a, lang)| PairInput {
+            .map(|(_, (b, a, lang))| PairInput {
                 before: b,
                 after: a,
                 lang: *lang,
@@ -46,7 +55,7 @@ impl Judge {
         } else {
             self.failures = 0;
         }
-        session::report_json(&batch, pairs)
+        session::report_json(&batch, &sent)
     }
 
     fn link_mut(&mut self) -> Option<&mut Link> {
