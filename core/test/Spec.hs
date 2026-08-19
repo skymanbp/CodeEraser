@@ -33,6 +33,7 @@ import qualified Data.ByteString.Char8 as B8
 import Data.Version (showVersion)
 import Paths_ce_core (version)
 import System.Exit (exitFailure)
+import System.IO (hSetEncoding, stderr, stdout, utf8)
 
 -- | cabal test runs with the package root (core/) as cwd.
 fixtureDir :: FilePath
@@ -46,6 +47,11 @@ coreVersion = showVersion version
 
 main :: IO ()
 main = do
+  -- Test names carry Unicode (≥, −); GHC's String output encodes
+  -- with the host locale, so a non-UTF-8 Windows codepage crashes
+  -- the whole suite mid-run. The harness pins its own encoding.
+  hSetEncoding stdout utf8
+  hSetEncoding stderr utf8
   results <-
     sequence
       [ goldenPairs "handshake/hello-ok.ndjson"
