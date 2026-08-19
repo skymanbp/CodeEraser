@@ -1,6 +1,9 @@
 cabal-version:      3.0
 name:               ce-core
-version:            0.0.1
+-- tracks the product version (one release train with cli/Cargo.toml;
+-- pinned by cli's version_mirrors_move_with_the_crate) — the 0.0.1
+-- era shipped a v0.2.0 asset that self-reported 0.0.1
+version:            0.2.0
 synopsis:           CodeEraser judgment core (NDJSON envelope + judgment types)
 license:            Apache-2.0
 author:             skymanbp
@@ -9,7 +12,9 @@ build-type:         Simple
 executable ce-core
     main-is:          Main.hs
     hs-source-dirs:   app
-    other-modules:    CE.Handshake, CE.Protocol, CE.FourClass,
+    autogen-modules:  Paths_ce_core
+    other-modules:    Paths_ce_core,
+                      CE.Handshake, CE.Protocol, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
                       CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,

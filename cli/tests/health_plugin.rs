@@ -139,6 +139,15 @@ fn version_mirrors_move_with_the_crate() {
         .and_then(|rest| rest.strip_suffix('"'))
         .expect("gui version line");
     assert_eq!(gui_version, crate_version, "gui/src-tauri/Cargo.toml");
+    // the judgment core rides the same release train (its binary
+    // self-reports this via the cabal-generated Paths_ce_core)
+    let cabal = std::fs::read_to_string(root.join("core/ce-core.cabal")).expect("ce-core.cabal");
+    let core_version = cabal
+        .lines()
+        .find_map(|l| l.strip_prefix("version:"))
+        .map(str::trim)
+        .expect("cabal version line");
+    assert_eq!(core_version, crate_version, "core/ce-core.cabal");
 }
 
 /// The marketplace manifest lives at the REPO root — the only

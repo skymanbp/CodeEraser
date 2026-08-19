@@ -8,12 +8,16 @@ module Main (main) where
 import CE.Protocol (internalError, respond)
 import Control.Exception (SomeAsyncException, SomeException, evaluate, fromException, throwIO, try)
 import qualified Data.ByteString.Char8 as B8
+import Data.Version (showVersion)
+import Paths_ce_core (version)
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.IO
 
+-- one source — the .cabal version, via the cabal-generated module
+-- (a second literal here is how a v0.2.0 asset self-reported 0.0.1)
 coreVersion :: String
-coreVersion = "0.0.1"
+coreVersion = showVersion version
 
 main :: IO ()
 main = getArgs >>= \case
