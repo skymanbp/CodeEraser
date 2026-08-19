@@ -1,9 +1,8 @@
 //! ce — CodeEraser CLI frontend: dispatch only. The clap surface
 //! lives in main_cli.rs (split at the 300-line dogfood gate when the
 //! bilingual help landed, M8-G3b); subcommand bodies in main_cmds.rs
-//! (the RG13 plan). `doctor` (M0) + `scan` (M1) + `dedup`/`daemon`/
-//! `ping` (M2) + hooks (M3) + `churn` (M4) + `graph`/`deadcode`
-//! (M5-2).
+//! (the RG13 plan). The full subcommand roster is main_cli.rs's —
+//! a milestone list here went stale nine subcommands deep.
 
 mod main_cli;
 mod main_cmds;

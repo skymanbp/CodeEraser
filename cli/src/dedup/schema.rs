@@ -1,5 +1,6 @@
-//! Schema v4 lifecycle of the single `.ce/index.db` (ADR-005 + M5-2
-//! design brief §3). The dedup tables (files/fingerprints/meta) are
+//! Schema lifecycle of the single `.ce/index.db` (ADR-005 + M5-2
+//! design brief §3; current version = SCHEMA_VERSION below, whose
+//! doc lists the ladder). The dedup tables (files/fingerprints/meta) are
 //! defined here; the graph tables (symbols/sites/edges) are created
 //! from graph/store's CREATE-only DDL — but their DROPs belong to
 //! this wipe, because schema versioning is one lifecycle, not two.

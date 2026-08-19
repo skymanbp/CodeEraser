@@ -1,12 +1,15 @@
 #!/bin/sh
-# Bootstrap chain e2e (M7-P1 acceptance): drives plugin/bin/ce.sh
-# through its four states with the just-built REAL ce binary as the
-# payload and file:// as the transport (hermetic — the https leg is
-# curl's contract, not ours; stated in the CI step name). States:
+# Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
+# drives plugin/bin/ce.sh through its six states with the just-built
+# REAL ce binary as the payload and file:// as the transport
+# (hermetic — the https leg is curl's contract, not ours; stated in
+# the CI step name). States:
 #   0 regression : empty pins -> PATH ce answers (air-gapped stance)
 #   1 fresh      : pin + source -> download, verify, place, exec
 #   2 warm       : source deleted -> cached verified copy answers
 #   3 tampered   : wrong pin -> exit 1, loud refusal, nothing placed
+#   4 core along : pinned ce-core placed as a plain sibling in data
+#   5 bad core   : tampered ce-core refused as loudly as a tampered ce
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
 

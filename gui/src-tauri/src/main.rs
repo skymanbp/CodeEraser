@@ -21,11 +21,15 @@ fn default_root() -> Result<String, String> {
         .map_err(|e| e.to_string())
 }
 
-/// CE_CORE_BIN, spoken loudly when absent — the S4a resolution,
-/// shared by every judging command.
-fn core_env() -> Result<String, String> {
-    std::env::var("CE_CORE_BIN")
-        .map_err(|_| "CE_CORE_BIN is unset — build the core and export it".to_string())
+/// The ONE core resolution — corelink's resolver chain (CE_CORE_BIN →
+/// a `ce-core` sibling of this executable → PATH). The installers
+/// stage ce-core as a sidecar beside the app binary, which is exactly
+/// the sibling leg; the S4a env-only read told installer users to go
+/// build the Haskell core while it sat next door. A truly missing
+/// core still fails loudly — the judgment run reports the spawn
+/// failure by name, same as the CLI.
+fn core_path() -> String {
+    codeeraser::corelink::resolve_core("ce-core")
 }
 
 /// The one judged-command body: resolve the core, run the library
@@ -37,7 +41,7 @@ where
     F: FnOnce(&str) -> anyhow::Result<Value> + Send + 'static,
 {
     tauri::async_runtime::spawn_blocking(move || {
-        let core = core_env()?;
+        let core = core_path();
         f(&core).map_err(|e| format!("{e:#}"))
     })
     .await

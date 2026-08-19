@@ -52,7 +52,7 @@ M4 误报门（≤1%/500 行）的分母将全部来自正常编辑回放。
 ## L0 基线（计划 §4.3 B3c 阶梯首级，2026-08-10）
 
 [baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json) 两变体（CI 从入
-库文件全量复核，git 实跑走 ignored）、样本精确同为 194/200：`l0_numstat`
+库文件全量复核；git 实跑腿已随 M7.5 退役，走 git 复活）、样本精确同为 194/200：`l0_numstat`
 moved 召回 **0/62**（rename/copy 旗标对单文件对惰性逐样本实证）；
 `reference_color_moved`（=预标引擎）召回 62/62 但精度 62/125（空行伪影 63）。
 行级准确率双双 ~99.5% 无区分力 ⇒ **头名指标 = moved 类召回/精度**；L1 达标

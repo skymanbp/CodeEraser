@@ -4,9 +4,10 @@
 
 -- | The structure family's battery (M6 S2): one hand-computed tree
 -- fixture through the REAL respond — axes, score, entropy rows and
--- findings all checked to the digit — plus a lever per knob (every
--- one of the nine rows must flip a designated number, F16), the
--- refusals by name, and the degraded-fails posture.
+-- findings all checked to the digit — plus a lever per knob (twelve
+-- rows total, F16: 0..8 levered in knobLevers below, 9/10 in the
+-- redundancy leg and 11 in the staleness leg), the refusals by
+-- name, and the degraded-fails posture.
 module StructureProps (battery) where
 
 import CE.Structure (respond)
@@ -66,8 +67,8 @@ fixtureJudged = case replyObj wireReq of
       && field o "fail" == Just (Bool False)
 
 -- | Each knob row against its hand-computed flip: the same fixture,
--- one override, one designated number moves (F16: nine knobs, nine
--- levers, none dead).
+-- one override, one designated number moves (F16 for knobs 0..8;
+-- 9/10/11 get their levers in the redundancy/staleness legs).
 knobLevers :: Bool
 knobLevers =
   and

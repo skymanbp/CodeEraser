@@ -68,9 +68,10 @@ jobs:
           cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
 
-      # M7-P1: the ADR-007 bootstrap chain, four states (PATH
-      # fallback / fresh verified download / warm cache / tampered
-      # refusal) with the real debug ce as payload over file:// —
+      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, six
+      # states (PATH fallback / fresh verified download / warm cache /
+      # tampered refusal / pinned ce-core sibling placement / tampered
+      # core refusal) with the real debug ce as payload over file:// —
       # hermetic on purpose; the https transport is curl's contract.
       - name: Bootstrap chain e2e
         shell: bash

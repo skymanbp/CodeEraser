@@ -44,6 +44,9 @@
 
 ## 复现
 
+仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——先
+`git checkout <退役前提交> -- cli/tests/fpr_replay.rs` 复活，再：
+
 - 自仓：`cargo test --release --test fpr_replay -- --ignored --nocapture`
 - 外部仓：`CE_FPR_REPO=<path> cargo test --release --test fpr_replay -- --ignored --nocapture`
   （本记录的 requests 语料：钉定 commit 浅克隆后 `git fetch --deepen 400`）

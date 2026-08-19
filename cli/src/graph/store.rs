@@ -1,5 +1,6 @@
-//! Graph persistence in the shared `.ce/index.db` (schema v4, design
-//! brief §3): the symbols/sites/edges tables and the two-phase
+//! Graph persistence in the shared `.ce/index.db` (one schema
+//! lifecycle owned by dedup/schema.rs — v8 at the §4 R5 amendment;
+//! design brief §3): the symbols/sites/edges tables and the two-phase
 //! invalidation contract. Phase 1 (symbols + sites) is a pure
 //! function of one file's bytes and runs inside refresh_file's
 //! existing transaction; phase 2 (edges) depends on the WHOLE file

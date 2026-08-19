@@ -7,8 +7,10 @@
 -- distributions, convention bits, per-file reference splits —
 -- enforce the node cap (over-cap = a complete degraded reply that
 -- FAILS, the P1 posture), machine-check the boundary contract in
--- request order, then judge the five S2 axes and the headline
--- entropy rows. Names and paths never cross (§5.9.2): the report's
+-- request order, then judge the axes — five S2 axes always, plus
+-- staleness (5) and redundancy (6) when their S3 fact tables ride
+-- the wire — and the headline entropy rows. Names and paths never
+-- cross (§5.9.2): the report's
 -- vocabulary is dense ids, codes and counts, re-labelled by the
 -- Rust side that kept the names. Knob rows ride the established
 -- [code, value] grammar; ce.toml is the source, Cost.hs the
@@ -182,9 +184,10 @@ knobTable =
 effective :: [[Integer]] -> Knobs
 effective rows = applyRows [(c, s) | (c, _, s) <- knobTable] rows bound
 
--- | The judged reply: five axes, the Score.hs fold at equal weight
--- over the judged axis count, the headline entropy rows and the
--- sparse findings — plus the FULL effective knob echo (table form).
+-- | The judged reply: five to seven axis rows (the two conditional
+-- axes join when their tables rode the wire), the Score.hs fold at
+-- equal weight over the judged axis count, the headline entropy rows
+-- and the sparse findings — plus the FULL effective knob echo.
 -- fail = degraded alone in S2 (the report-only stance: the CLI
 -- gates nothing until a score floor lands with S3+); a degraded
 -- reply carries fail=true (P1) and echoes the defaults. The S3

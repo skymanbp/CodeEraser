@@ -2,10 +2,11 @@
 //! Chinese is a lookup switch). The HARD constraint: the English
 //! path returns the exact literal at the call site — every test
 //! assertion and every machine consumer of console lines runs under
-//! the default and must see identical bytes. Chinese activates only
-//! under CE_LANG=zh (env single-source for now; a ce.toml [ui] road
-//! can join later without moving any call site). Report JSON is
-//! never translated — schemas are the machine face.
+//! the default and must see identical bytes. Chinese activates via
+//! the global `--lang zh` flag or CE_LANG=zh — flag wins (G3b-iii;
+//! a ce.toml [ui] road can still join later without moving any call
+//! site). Report JSON is never translated — schemas are the machine
+//! face.
 
 use std::sync::OnceLock;
 

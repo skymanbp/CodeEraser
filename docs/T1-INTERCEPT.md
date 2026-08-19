@@ -1,8 +1,10 @@
 # T1 拦截实录（M3 验收项，DEVELOPMENT_PLAN.md §6 M3）
 
+> **存档册（2026-08-08 实测快照，装机 ce 0.0.1、本地 marketplace 时代）**：
+> 版本串与安装路径按当日实况保留不改写；现行版本/安装路径见 README
+> （v0.2.0 起 marketplace 清单在仓根、二进制预编译发布）。
 > 口径：真实 Claude Code 会话（headless `claude -p`，hooks 全量生效）在
 > deny 档测试仓库中写入 T1 重复内容，被 PreToolUse 拦截，transcript 为证。
-> 同批完成 0.x 预览干净环境安装验证。实测日期 2026-08-08，装机 ce 0.0.1。
 
 ## 1. 端到端拦截（2026-08-08 22:46）
 

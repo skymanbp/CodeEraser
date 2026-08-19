@@ -21,10 +21,25 @@ This repository gates itself with its own scanner, clone ratchet,
 baseline and deadcode/docdup checks on every push to `main` (plus
 pull requests and a weekly scheduled run).
 
-## Install (from source)
+## Install
 
-Prerequisites: the pinned Rust toolchain (`cli/rust-toolchain.toml`)
-and GHC 9.14.1 + cabal for the judgment core.
+**Prebuilt (v0.2.0+, recommended).** Every
+[release](https://github.com/skymanbp/CodeEraser/releases) ships ten
+assets: `ce` **and** the `ce-core` judgment core for three platforms
+(x86_64-windows / x86_64-linux / aarch64-macos), three GUI installers
+(NSIS `setup.exe` / AppImage / dmg — each bundling the GUI with both
+binaries as sidecars), and `SHA256SUMS`. For the CLI: download
+`ce-<ver>-<platform>`, rename it `ce`, put it on PATH, and drop
+`ce-core-<ver>-<platform>` beside it as `ce-core` — judgment
+subcommands find it through the sibling leg of the resolver, no
+flags, no env vars.
+
+**Claude Code plugin (one command).** `/plugin marketplace add
+skymanbp/CodeEraser`, then `/plugin install codeeraser` — the starter
+downloads and SHA256-verifies both binaries automatically.
+
+**From source.** Prerequisites: the pinned Rust toolchain
+(`cli/rust-toolchain.toml`) and GHC 9.14.1 + cabal for the core.
 
 ```sh
 # the judgment core (ce-core)
@@ -34,17 +49,18 @@ cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
 cargo install --path cli
 ```
 
-Judgment subcommands take the core via `--core "$CE_CORE_BIN"` (or the
-`CE_CORE_BIN` environment variable through the daemon/MCP paths).
+Core resolution is one chain everywhere: `CE_CORE_BIN` → a `ce-core`
+sibling of the running binary → PATH; an explicit `--core <path>`
+always wins.
 
 ### Binaries — unsigned, verify checksums
 
-Release artifacts (three platforms + GUI installers) are built by the
-[release workflow](.github/workflows/release.yml) with a `SHA256SUMS`
-manifest. **They are not code-signed or notarized yet** (deferred past
-1.0 by plan amendment v2.1): Windows SmartScreen and macOS Gatekeeper
-will warn or refuse until you allow the app explicitly. The trust
-anchor is the checksum chain — after downloading:
+Release artifacts are built by the
+[release workflow](.github/workflows/release.yml) and pinned in
+`SHA256SUMS`. **They are not code-signed or notarized yet** (deferred
+past 1.0 by plan amendment v2.1): Windows SmartScreen and macOS
+Gatekeeper will warn or refuse until you allow the app explicitly.
+The trust anchor is the checksum chain — after downloading:
 
 ```sh
 sha256sum -c --ignore-missing SHA256SUMS
@@ -102,7 +118,7 @@ audit + CI gates are the backstop.
 | Core (`core/`) | Haskell | judgment: rules, verdicts, scoring ratchet, graph liveness, TSED, structure entropy |
 | Frontend (`cli/`) | Rust | parsing (tree-sitter), winnowing index, CLI, daemon, GUI backend, hooks, MCP |
 | GUI (`gui/`) | Rust + vanilla JS | Tauri shell over the same report schema the CLI emits |
-| Plugin (`plugin/`) | manifest + hooks + sh starter | marketplace layout, pinned-binary bootstrap, interception |
+| Plugin (`plugin/`) | manifest + hooks + sh starter | pinned-binary bootstrap, interception (the marketplace manifest lives at the repo root `.claude-plugin/`) |
 
 ## License
 

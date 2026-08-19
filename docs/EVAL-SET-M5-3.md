@@ -158,4 +158,5 @@ cd cli && cargo test --test eval_t3_universe --test eval_t3_candidates \
 ```
 
 外部四语料需本地 `.ce-eval/` 克隆（tip 见上表，CI 门 `rev-parse` 复核 RM19）；
-冻结件重生成走各 `--ignored` 生成器测试，diff 为空即完整复现。
+冻结件重生成：生成器已随 M7.5 退役，先 `git checkout <父提交> -- cli/tests/<仪器>`
+复活再跑（EVAL-SET.md 再生成节同律），diff 为空即完整复现。

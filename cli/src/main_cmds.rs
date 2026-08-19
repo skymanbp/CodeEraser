@@ -1,6 +1,7 @@
 //! Subcommand bodies for the `ce` binary (split from main.rs at the
 //! 300-line dogfood gate — the RG13 plan written into the M5-2
-//! design). main.rs owns the clap surface; this file owns the work.
+//! design). main_cli.rs owns the clap surface (its own G3b split),
+//! main.rs dispatches; this file owns the work.
 
 use clap::ValueEnum;
 use codeeraser::i18n::line;

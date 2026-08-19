@@ -19,10 +19,23 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 自己的扫描器、克隆棘轮、基线与死码/文档重复检查门禁自身（吃自己的
 狗粮）。
 
-## 安装（从源码）
+## 安装
 
-前置：钉版 Rust 工具链（`cli/rust-toolchain.toml`）与 GHC 9.14.1 +
-cabal（判决核）。
+**预编译（v0.2.0 起，推荐）。** 每个
+[release](https://github.com/skymanbp/CodeEraser/releases) 发十件资产：
+三平台的 `ce` **与** `ce-core` 判决核（x86_64-windows / x86_64-linux /
+aarch64-macos）、三个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg——
+均内含 GUI 与两个二进制 sidecar）、`SHA256SUMS`。CLI 用法：下载
+`ce-<版本>-<平台>` 改名 `ce` 放 PATH，把 `ce-core-<版本>-<平台>` 改名
+`ce-core` 放它旁边——判决类子命令经解析链的兄弟腿自动找到它，
+零旗标零环境变量。
+
+**Claude Code 插件（一条命令）。** `/plugin marketplace add
+skymanbp/CodeEraser`，再 `/plugin install codeeraser`——引导脚本自动
+下载并按 SHA256 pin 校验两个二进制。
+
+**从源码。** 前置：钉版 Rust 工具链（`cli/rust-toolchain.toml`）与
+GHC 9.14.1 + cabal（判决核）。
 
 ```sh
 # 判决核（ce-core）
@@ -32,14 +45,13 @@ cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
 cargo install --path cli
 ```
 
-判决类子命令通过 `--core "$CE_CORE_BIN"` 传入核（daemon/MCP 路径亦可用
-`CE_CORE_BIN` 环境变量）。
+核解析全线一条链：`CE_CORE_BIN` → 运行中二进制旁的 `ce-core` 兄弟 →
+PATH；显式 `--core <路径>` 永远最优先。
 
 ### 二进制 —— 未签名，请校验哈希
 
-发布工件（三平台 + GUI 安装包）由
-[release 工作流](.github/workflows/release.yml)构建并附 `SHA256SUMS`
-清单。**尚未代码签名/公证**（按计划修正案 v2.1 后置到 1.0 之后）：
+发布工件由 [release 工作流](.github/workflows/release.yml)构建并以
+`SHA256SUMS` 钉住。**尚未代码签名/公证**（按计划修正案 v2.1 后置到 1.0 之后）：
 Windows SmartScreen 与 macOS Gatekeeper 会警告或拒绝，需你显式允许。
 信任锚是校验链——下载后：
 
@@ -94,7 +106,7 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 | 核（`core/`） | Haskell | 判决：规则、裁定、评分棘轮、图存活性、TSED、结构熵 |
 | 前端（`cli/`） | Rust | 解析（tree-sitter）、winnowing 索引、CLI、daemon、GUI 后端、hooks、MCP |
 | GUI（`gui/`） | Rust + 原生 JS | Tauri 壳，消费与 CLI 同一份报告 schema |
-| 插件（`plugin/`） | 清单 + hooks + sh 引导 | marketplace 布局、钉版二进制引导、拦截 |
+| 插件（`plugin/`） | 清单 + hooks + sh 引导 | 钉版二进制引导、拦截（marketplace 清单在仓根 `.claude-plugin/`） |
 
 ## 许可证
 

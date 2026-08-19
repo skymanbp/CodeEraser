@@ -1,6 +1,7 @@
--- | The five S2-judged structure axes (design booklet §3, S0..S4;
--- S5/S6 join in S3+ when their report rows ride the wire): each
--- axis is ONE named predicate over the validated fact tables,
+-- | The seven structure axes (design booklet §3): S0..S4 always
+-- judged; staleness (5, S3c) and redundancy (6, S3b) judged when
+-- their report rows ride the wire — both landed, both live here.
+-- Each axis is ONE named predicate over the validated fact tables,
 -- owning its knobs, so the perturbation battery has a lever per
 -- row — the Score.hs mechanism at the tree scale. Everything here
 -- is pure; the knobs travel as parameters bound at 'bound'.
@@ -74,10 +75,10 @@ bound =
     }
 
 -- | Violation count per judged axis — 0 geometry / 1 naming /
--- 2 mixing / 3 misplacement / 4 documentation, plus 6 redundancy
--- when its fact table rode the wire (design §3: S5/S6 axes join as
--- their rows arrive; an absent table is an unjudged axis, and the
--- score divides by the JUDGED count).
+-- 2 mixing / 3 misplacement / 4 documentation, plus 5 staleness and
+-- 6 redundancy when their fact tables rode the wire (design §3: an
+-- absent table is an unjudged axis, and the score divides by the
+-- JUDGED count).
 axes :: Knobs -> Facts -> [(Integer, Integer)]
 axes k f =
   [ (0, count (geometry k f))
