@@ -14,14 +14,15 @@ function trendBoot() {
   $("trend-load").addEventListener("click", () => loadTrend(null));
   $("trend-more").addEventListener("click", () => loadTrend(TREND_BATCH));
   window.addEventListener("resize", () => trendReport && drawTrend());
+  redrawers.trend = () => trendReport && drawTrend();
   i18nRefreshers.push(() => trendReport && renderTrend());
 }
 
 async function loadTrend(batch) {
-  const commits = Number($("trend-commits").value) || 30;
+  const commits = posInt($("trend-commits").value, 2, 30);
   $("trend-load").disabled = true;
-  $("status").className = "";
-  $("status").textContent = batch === null ? tr("measuring") : tr("measuringMore");
+  $("trend-more").disabled = true;
+  setStatus(batch === null ? tr("measuring") : tr("measuringMore"), false);
   try {
     trendReport = await invoke("trend_report", {
       root: $("root").value,
@@ -29,16 +30,17 @@ async function loadTrend(batch) {
       batch,
     });
     renderTrend();
-    $("status").textContent = trendReport.schema;
+    setStatus(trendReport.schema, false);
   } catch (e) {
-    $("status").className = "err";
-    $("status").textContent = String(e);
+    setStatus(String(e), true);
   } finally {
     $("trend-load").disabled = false;
+    $("trend-more").disabled = false;
   }
 }
 
 function renderTrend() {
+  $("empty-trend").hidden = true;
   const more = $("trend-more");
   more.hidden = trendReport.pending === 0;
   more.textContent = tr("measureMore", Math.min(TREND_BATCH, trendReport.pending), trendReport.pending);
@@ -50,7 +52,7 @@ function renderTrend() {
     row(tr("pending"), trendReport.pending),
   ];
   for (const [sha, why] of trendReport.failed) {
-    parts.push(row(`${tr("failedPrefix")} ${sha}`, esc(why)));
+    parts.push(row(`${tr("failedPrefix")} ${sha}`, why));
   }
   $("trend-detail").innerHTML = parts.join("");
 }
@@ -58,6 +60,7 @@ function renderTrend() {
 function drawTrend() {
   const svg = $("trendchart");
   const { width, height } = svg.getBoundingClientRect();
+  if (!width || !height) return; // hidden view measures 0×0 — keep the old drawing
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.textContent = "";
   const rows = trendReport.rows;
@@ -76,8 +79,17 @@ function drawTrend() {
     g.setAttribute("class", "grid");
     svg.appendChild(g);
   }
+  const pts = rows.map((r, i) => `${x(i)},${y(r)}`);
+  if (rows.length > 1) {
+    const area = document.createElementNS(ns, "polygon");
+    area.setAttribute(
+      "points",
+      `${x(0)},${height - pad} ${pts.join(" ")} ${x(rows.length - 1)},${height - pad}`);
+    area.setAttribute("class", "trendarea");
+    svg.appendChild(area);
+  }
   const line = document.createElementNS(ns, "polyline");
-  line.setAttribute("points", rows.map((r, i) => `${x(i)},${y(r)}`).join(" "));
+  line.setAttribute("points", pts.join(" "));
   line.setAttribute("class", "trendline");
   svg.appendChild(line);
   rows.forEach((r, i) => {

@@ -10,9 +10,11 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "CodeEraser — structure",
+        "title": "CodeEraser",
         "width": 1280,
-        "height": 840
+        "height": 840,
+        "minWidth": 860,
+        "minHeight": 560
       }
     ],
     "security": {

@@ -10,35 +10,41 @@ let dedupDoc = null;
 
 function candBoot() {
   $("cand-load").addEventListener("click", loadCandidates);
-  i18nRefreshers.push(() => joinDoc && renderCandidates());
+  i18nRefreshers.push(() => joinDoc && dedupDoc && renderCandidates());
 }
 
 async function loadCandidates() {
-  const days = Number($("cand-days").value) || 14;
+  const days = posInt($("cand-days").value, 1, 14);
   $("cand-load").disabled = true;
-  $("status").className = "";
-  $("status").textContent = tr("joining");
+  setStatus(tr("joining"), false);
   try {
-    joinDoc = await invoke("join_report", { root: $("root").value, days });
-    dedupDoc = await invoke("dedup_report", { root: $("root").value });
+    // Fetch both documents, then commit both — a failure must not
+    // leave one screen-half stale against the other's new run.
+    const root = $("root").value;
+    const [j, d] = await Promise.all([
+      invoke("join_report", { root, days }),
+      invoke("dedup_report", { root }),
+    ]);
+    joinDoc = j;
+    dedupDoc = d;
     renderCandidates();
-    $("status").textContent = joinDoc.schema;
+    setStatus(joinDoc.schema, false);
   } catch (e) {
-    $("status").className = "err";
-    $("status").textContent = String(e);
+    setStatus(String(e), true);
   } finally {
     $("cand-load").disabled = false;
   }
 }
 
 function renderCandidates() {
+  $("empty-candidates").hidden = true;
   const parts = [];
   parts.push(`<h2>${tr("pairsHead", joinDoc.files.length, joinDoc.days, joinDoc.commits)}</h2>`);
   if (joinDoc.degraded) parts.push(`<p class="err">${esc(tr("degraded", joinDoc.degraded))}</p>`);
   joinDoc.files.forEach((f, i) => {
     parts.push(
       `<div class="cand" data-kind="file" data-i="${i}">` +
-      `<b>${esc(f.a)}</b> ↔ <b>${esc(f.b)}</b>` +
+      `<span class="pair"><b>${esc(f.a)}</b> ↔ <b>${esc(f.b)}</b></span>` +
       `<span>${tr("blockTokens", f.blocks, f.tokens)}</span></div>`
     );
   });
@@ -46,7 +52,7 @@ function renderCandidates() {
   joinDoc.units.forEach((u, i) => {
     parts.push(
       `<div class="cand" data-kind="unit" data-i="${i}">` +
-      `<b>${esc(u.a.path)}#${esc(u.a.key)}</b> ↔ <b>${esc(u.b.path)}#${esc(u.b.key)}</b>` +
+      `<span class="pair"><b>${esc(u.a.path)}#${esc(u.a.key)}</b> ↔ <b>${esc(u.b.path)}#${esc(u.b.key)}</b></span>` +
       `<span>${tr("tokensOnly", u.tokens)}</span></div>`
     );
   });
@@ -54,21 +60,28 @@ function renderCandidates() {
   dedupDoc.blocks.forEach((b, i) => {
     parts.push(
       `<div class="cand" data-kind="block" data-i="${i}">` +
-      `<b>${esc(b.a_file)}:${b.a_start}-${b.a_end}</b> ↔ ` +
-      `<b>${esc(b.b_file)}:${b.b_start}-${b.b_end}</b>` +
+      `<span class="pair"><b>${esc(b.a_file)}:${b.a_start}-${b.a_end}</b> ↔ ` +
+      `<b>${esc(b.b_file)}:${b.b_start}-${b.b_end}</b></span>` +
       `<span>${tr("tokensOnly", b.tokens)}</span></div>`
     );
   });
   const list = $("cand-list");
   list.innerHTML = parts.join("");
   list.querySelectorAll(".cand").forEach((el) =>
-    el.addEventListener("click", () => candDetail(el.dataset.kind, Number(el.dataset.i))));
+    el.addEventListener("click", () => {
+      list.querySelectorAll(".cand.sel").forEach((s) => s.classList.remove("sel"));
+      el.classList.add("sel");
+      candDetail(el.dataset.kind, Number(el.dataset.i));
+    }));
 }
 
 const pos = (p) =>
   p === null ? tr("posNull") : `in ${p[0]} · out ${p[1]} · scc ${p[2]}×${p[3]} · reach ${p[4]}`;
 const churnStr = (c) => `+${c.appended} / ~${c.rewrote}`;
 
+// row() escapes its value itself — everything passed in stays RAW
+// (pre-escaping here double-escaped caveats and paths to visible
+// entities).
 function candDetail(kind, i) {
   const rows = [];
   if (kind === "file") {
@@ -83,12 +96,12 @@ function candDetail(kind, i) {
     rows.push(`<h2>${esc(u.a.path)}#${esc(u.a.key)}~${u.a.nth} ↔ ${esc(u.b.path)}#${esc(u.b.key)}~${u.b.nth}</h2>`);
     rows.push(row(tr("tokens"), u.tokens));
     rows.push(row(tr("churnA"), churnStr(u.churn_a)), row(tr("churnB"), churnStr(u.churn_b)));
-    rows.push(row(tr("graphA"), esc(u.caveat)));
+    rows.push(row(tr("graphA"), u.caveat));
   } else {
     const b = dedupDoc.blocks[i];
     rows.push(`<h2>${tr("cloneBlock")}</h2>`);
-    rows.push(row("a", `${esc(b.a_file)}:${b.a_start}-${b.a_end}`));
-    rows.push(row("b", `${esc(b.b_file)}:${b.b_start}-${b.b_end}`));
+    rows.push(row("a", `${b.a_file}:${b.a_start}-${b.a_end}`));
+    rows.push(row("b", `${b.b_file}:${b.b_start}-${b.b_end}`));
     rows.push(row(tr("tokens"), b.tokens));
   }
   $("cand-detail").innerHTML = rows.join("");

@@ -1,150 +1,271 @@
-/* CodeEraser GUI (M6 S4a + M7-P4) — sober report chrome; the
-   visualizations are the page. Colors: neutral slate ground, one
-   alarm ramp for findings density (the semantic channel, not
-   decoration). Three screens share one shell: header (root + tabs),
-   a per-view control bar, a main canvas with a detail aside. */
+/* CodeEraser GUI (M6 S4a + M7-P4, refreshed post-0.3.0) — sober
+   report chrome; the visualizations are the page. Ground and panels
+   sit in the icon's ink world; vermilion is the BRAND channel only
+   (wordmark + active tab), the interaction accent is a steel blue,
+   the teal ring is the keyboard/focus channel, and the alarm ramp in
+   main.js stays the one semantic channel for findings density.
+   Three screens share one shell: header (brand + root + tabs), a
+   per-view control bar, a main canvas with a detail aside. */
 :root {
-  --bg: #14171c;
-  --panel: #1d2129;
-  --ink: #d7dce4;
-  --dim: #8a93a3;
-  --line: #2a303b;
-  --ok: #3e5c47;
-  --hot: #b0483f;
-  --accent: #2d4a66;
+  --bg: #12151a;
+  --panel: #1a1f27;
+  --panel-2: #222834;
+  --ink: #dde3ec;
+  --dim: #8b95a7;
+  --faint: #5c6577;
+  --line: #2b323e;
+  --brand: #e4574a;
+  --accent: #33608f;
+  --accent-hi: #3f74ab;
+  --focus: #57c7a8;
+  --err: #e08a82;
+  --ctl-h: 30px;
+  --radius: 6px;
+  --mono: "Cascadia Mono", Consolas, monospace;
 }
 * { box-sizing: border-box; margin: 0; }
 html, body { height: 100%; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font: 14px/1.45 "Segoe UI", system-ui, sans-serif;
+  font: 14px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
   display: flex;
   flex-direction: column;
 }
+button, input { font: inherit; }
+button { cursor: pointer; transition: background 0.12s, color 0.12s, border-color 0.12s; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+/* ---- header: brand · root · tabs · lang · status ---- */
 header {
   display: flex;
   gap: 10px;
   align-items: center;
-  padding: 10px 14px;
+  padding: 9px 14px;
   border-bottom: 1px solid var(--line);
+  background: var(--panel);
 }
+#brand {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  user-select: none;
+}
+#brand img { width: 20px; height: 20px; display: block; }
+#brand .tm { color: var(--brand); }
 header input[type="text"] {
   flex: 1;
-  background: var(--panel);
+  min-width: 120px;
+  height: var(--ctl-h);
+  background: var(--bg);
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 6px 9px;
-  font-family: Consolas, monospace;
+  border-radius: var(--radius);
+  padding: 0 10px;
+  font-family: var(--mono);
+  font-size: 12.5px;
 }
-#tabs { display: flex; gap: 4px; }
+header input[type="text"]:focus { border-color: var(--focus); outline: none; }
+#tabs {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2px;
+  gap: 2px;
+}
 #tabs .tab {
-  background: var(--panel);
+  position: relative;
+  background: none;
   color: var(--dim);
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: 4px;
-  padding: 6px 14px;
-  cursor: pointer;
+  padding: 0 14px;
+  height: calc(var(--ctl-h) - 6px);
 }
-#tabs .tab.on { background: var(--accent); color: var(--ink); }
+#tabs .tab:hover { color: var(--ink); }
+#tabs .tab.on { background: var(--panel-2); color: var(--ink); }
+#tabs .tab.on::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--brand);
+}
 #lang {
-  background: var(--panel);
+  background: none;
   color: var(--dim);
   border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 6px 10px;
-  cursor: pointer;
+  border-radius: var(--radius);
+  height: var(--ctl-h);
+  padding: 0 10px;
+  font-size: 12.5px;
 }
-#status { color: var(--dim); min-width: 120px; }
-#status.err { color: #e08a82; }
+#lang:hover { color: var(--ink); border-color: var(--dim); }
+#status {
+  color: var(--dim);
+  min-width: 120px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  text-align: right;
+}
+#status.err { color: var(--err); }
 
+/* ---- per-view control bar ---- */
 .view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .view[hidden] { display: none; }
 .bar {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   align-items: center;
   padding: 8px 14px;
   border-bottom: 1px solid var(--line);
 }
-.bar label { color: var(--dim); display: flex; gap: 5px; align-items: center; }
+.bar label { color: var(--dim); display: flex; gap: 6px; align-items: center; }
+.bar input[type="checkbox"] { accent-color: var(--accent-hi); }
 .bar input[type="number"] {
   width: 64px;
+  height: var(--ctl-h);
   background: var(--panel);
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 5px 7px;
+  border-radius: var(--radius);
+  padding: 0 8px;
+  font-variant-numeric: tabular-nums;
 }
+.bar input[type="number"]:focus { border-color: var(--focus); outline: none; }
 .bar button {
   background: var(--accent);
   color: var(--ink);
   border: 0;
-  border-radius: 4px;
-  padding: 7px 18px;
-  cursor: pointer;
+  border-radius: var(--radius);
+  height: var(--ctl-h);
+  padding: 0 20px;
+  font-weight: 600;
 }
-.bar button:disabled { opacity: 0.5; }
+.bar button:hover { background: var(--accent-hi); }
+.bar button:disabled { opacity: 0.45; cursor: default; }
 
+/* ---- structure summary strip ---- */
+/* display:flex would beat the UA's [hidden]{display:none} — restate it */
+#summary[hidden] { display: none; }
 #summary {
   display: flex;
-  gap: 26px;
+  gap: 28px;
+  align-items: baseline;
   padding: 10px 16px;
   border-bottom: 1px solid var(--line);
   font-variant-numeric: tabular-nums;
 }
-#summary .stat small { color: var(--dim); margin-left: 5px; }
-#score { font-size: 22px; font-weight: 600; }
+#summary .stat { color: var(--dim); font-size: 13px; }
+#summary .stat small { color: var(--faint); margin-left: 5px; }
+#score { font-size: 24px; font-weight: 650; color: var(--ink); }
 
-main { flex: 1; display: flex; min-height: 0; }
+/* ---- main canvas + detail aside (shared) ---- */
+main { flex: 1; display: flex; min-height: 0; position: relative; }
 main svg { flex: 1; height: 100%; }
-#treemap rect { stroke: var(--bg); stroke-width: 1.5; cursor: pointer; }
-#treemap rect:hover { stroke: var(--ink); }
-#treemap text {
-  fill: var(--ink);
-  font-size: 11px;
-  pointer-events: none;
-  font-family: Consolas, monospace;
-}
 main aside {
-  width: 320px;
+  width: 340px;
   border-left: 1px solid var(--line);
-  padding: 12px 14px;
+  padding: 14px 16px;
   overflow-y: auto;
-  font-family: Consolas, monospace;
+  font-family: var(--mono);
   font-size: 12px;
 }
-main aside h2 { font-size: 13px; margin-bottom: 8px; color: var(--ink); }
-main aside .row { padding: 3px 0; color: var(--dim); }
+main aside h2 {
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+main aside .row { padding: 3px 0; color: var(--dim); overflow-wrap: anywhere; }
 main aside .row b { color: var(--ink); font-weight: 600; }
+.empty {
+  position: absolute;
+  inset: 0 340px 0 0; /* skip the aside so the hint centers on the canvas */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--faint);
+  font-size: 13px;
+  pointer-events: none;
+}
+.empty[hidden] { display: none; }
 
-/* trend chart */
-#trendchart .grid { stroke: var(--line); stroke-width: 1; }
-#trendchart .trendline { fill: none; stroke: var(--accent); stroke-width: 2; }
+/* ---- treemap ---- */
+#treemap rect { stroke: var(--bg); stroke-width: 1.5; cursor: pointer; }
+#treemap rect:hover { stroke: var(--dim); }
+#treemap rect.sel { stroke: var(--focus); }
+#treemap text {
+  fill: var(--ink);
+  fill-opacity: 0.92;
+  font-size: 11px;
+  pointer-events: none;
+  font-family: var(--mono);
+}
+
+/* ---- trend chart ---- */
+#trendchart .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
+#trendchart .trendarea { fill: var(--accent); fill-opacity: 0.14; }
+#trendchart .trendline { fill: none; stroke: var(--accent-hi); stroke-width: 2; }
 #trendchart .trendpt { fill: var(--ink); cursor: pointer; }
-#trendchart .trendpt:hover { fill: var(--hot); }
+#trendchart .trendpt:hover { fill: var(--brand); }
 
-/* candidate browser */
+/* ---- candidate browser ---- */
 #cand-list {
   flex: 1;
   overflow-y: auto;
   padding: 10px 14px;
-  font-family: Consolas, monospace;
+  font-family: var(--mono);
   font-size: 12px;
 }
-#cand-list h2 { font-size: 13px; color: var(--dim); margin: 12px 0 6px; }
+#cand-list h2 {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 14px 0 7px;
+}
 #cand-list .cand {
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  padding: 5px 8px;
+  padding: 6px 10px;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-left: 2px solid var(--line);
+  border-radius: var(--radius);
   margin-bottom: 4px;
   cursor: pointer;
 }
+#cand-list .cand .pair { flex: 1; overflow-wrap: anywhere; }
 #cand-list .cand:hover { background: var(--panel); }
+#cand-list .cand.sel { background: var(--panel); border-left-color: var(--focus); }
 #cand-list .cand b { color: var(--ink); font-weight: 600; }
 #cand-list .cand span { color: var(--dim); white-space: nowrap; }
-#cand-list .err { color: #e08a82; }
+#cand-list .err { color: var(--err); }
+
+/* ---- chrome-wide quiet scrollbars (WebView2) ---- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+
+@media (prefers-reduced-motion: reduce) {
+  button { transition: none; }
+}

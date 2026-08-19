@@ -2,17 +2,23 @@
 // M8-G3a i18n). This file RENDERS the report document — every number
 // it shows was judged in the core and measured in the codeeraser
 // crate; nothing is derived here beyond layout geometry. Labels come
-// from i18n.js (tr / axis names); `invoke`, `$`, `esc` and `row`
-// here are the shared globals the sibling screens use.
+// from i18n.js (tr / axis names); `invoke`, `$`, `esc`, `row`,
+// `setStatus`, `posInt` and `redrawers` are the shared globals the
+// sibling screens use.
 "use strict";
 
 const invoke = window.__TAURI__.core.invoke;
 const $ = (id) => document.getElementById(id);
 
+// Per-screen redraw hooks: switching back to a tab re-renders its
+// SVG, because a chart drawn (or resized) while its view was hidden
+// measured a 0×0 rect and holds no usable geometry.
+const redrawers = {};
+
 let report = null;
 let children = [];
+let selId = 0;
 
-// Tab switching is pure visibility — each screen keeps its own state.
 function tabs() {
   const all = document.querySelectorAll("#tabs .tab");
   all.forEach((b) =>
@@ -21,42 +27,61 @@ function tabs() {
       document.querySelectorAll(".view").forEach((v) => {
         v.hidden = v.id !== "view-" + b.dataset.tab;
       });
+      redrawers[b.dataset.tab]?.();
     }));
+}
+
+// One status line for all three screens; long errors ellipsize in
+// CSS, so the full text rides on the tooltip.
+function setStatus(text, isErr) {
+  const s = $("status");
+  s.className = isErr ? "err" : "";
+  s.textContent = text;
+  s.title = isErr ? text : "";
+}
+
+// Number inputs guard here, not just in the HTML min attribute —
+// typed garbage or a negative would otherwise reach the backend as a
+// deserialization error. Invalid → fallback (null = axis unjudged).
+function posInt(value, min, fallback) {
+  const n = Math.floor(Number(value));
+  return Number.isFinite(n) && n >= min ? n : fallback;
 }
 
 async function boot() {
   applyStaticI18n();
   $("lang").addEventListener("click", toggleLang);
-  i18nRefreshers.push(() => report && (render(), showDetail(0)));
+  i18nRefreshers.push(() => report && render());
   $("root").value = await invoke("default_root").catch(() => "");
   tabs();
   $("scan").addEventListener("click", scan);
   $("root").addEventListener("keydown", (e) => e.key === "Enter" && scan());
   window.addEventListener("resize", () => report && drawTreemap());
+  redrawers.structure = () => report && drawTreemap();
 }
 
 async function scan() {
-  const days = $("days").value ? Number($("days").value) : null;
+  const days = $("days").value ? posInt($("days").value, 1, null) : null;
   $("scan").disabled = true;
-  $("status").className = "";
-  $("status").textContent = tr("judging");
+  setStatus(tr("judging"), false);
   try {
     report = await invoke("structure_report", {
       root: $("root").value,
       deep: $("deep").checked,
       days,
     });
+    if (selId >= report.tree.length) selId = 0;
     render();
-    $("status").textContent = report.schema;
+    setStatus(report.schema, false);
   } catch (e) {
-    $("status").className = "err";
-    $("status").textContent = String(e);
+    setStatus(String(e), true);
   } finally {
     $("scan").disabled = false;
   }
 }
 
 function render() {
+  $("empty-structure").hidden = true;
   $("summary").hidden = false;
   $("score").textContent = report.score;
   $("scale").textContent = "/ " + report.scoreScale;
@@ -76,7 +101,7 @@ function render() {
     if (i > 0) children[n.parent].push(i);
   });
   drawTreemap();
-  showDetail(0);
+  showDetail(selId);
 }
 
 // Subtree weight = every file under the node (+1 keeps empty dirs
@@ -93,6 +118,7 @@ function weights() {
 function drawTreemap() {
   const svg = $("treemap");
   const { width, height } = svg.getBoundingClientRect();
+  if (!width || !height) return; // hidden view measures 0×0 — keep the old drawing
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.textContent = "";
   const w = weights();
@@ -134,9 +160,10 @@ function drawRect(id, x, y, wd, ht) {
   r.setAttribute("width", Math.max(wd, 0));
   r.setAttribute("height", Math.max(ht, 0));
   r.setAttribute("fill", heat(n.axes.length));
+  if (id === selId) r.setAttribute("class", "sel");
   r.addEventListener("click", (e) => {
     e.stopPropagation();
-    showDetail(id);
+    selectNode(id);
   });
   const title = document.createElementNS(ns, "title");
   title.textContent = `${n.name}  ${tr("files")} ${n.files}  ${tr("findings")} ${n.axes.length}`;
@@ -146,7 +173,11 @@ function drawRect(id, x, y, wd, ht) {
     const t = document.createElementNS(ns, "text");
     t.setAttribute("x", x + 5);
     t.setAttribute("y", y + 13);
-    t.textContent = n.name.split("/").pop() || ".";
+    // ~6.6px per glyph at 11px mono; clip so labels never spill
+    // across a sibling rectangle.
+    const label = n.name.split("/").pop() || ".";
+    const fit = Math.floor((wd - 10) / 6.6);
+    t.textContent = label.length > fit ? label.slice(0, Math.max(fit - 1, 1)) + "…" : label;
     $("treemap").appendChild(t);
   }
 }
@@ -155,9 +186,23 @@ function drawRect(id, x, y, wd, ht) {
 // steps toward the hot end (capped at 4 — beyond that it is simply
 // red).
 function heat(findings) {
-  if (findings === 0) return "#232b31";
+  if (findings === 0) return "#222932";
   const stops = ["#4a3a33", "#6d4136", "#8f4439", "#b0483f"];
   return stops[Math.min(findings, stops.length) - 1];
+}
+
+function selectNode(id) {
+  selId = id;
+  $("treemap").querySelectorAll("rect").forEach((r) => r.removeAttribute("class"));
+  const rects = $("treemap").querySelectorAll("rect");
+  // rects append in layout() DFS order, not tree order — re-render
+  // detail and let drawTreemap restore the highlight next redraw.
+  showDetail(id);
+  rects.forEach((r) => {
+    if (r.querySelector("title")?.textContent.startsWith(report.tree[id].name + "  ")) {
+      r.setAttribute("class", "sel");
+    }
+  });
 }
 
 function showDetail(id) {

@@ -13,6 +13,7 @@
 </head>
 <body>
   <header>
+    <span id="brand"><img src="icon.png" alt="" />CodeEraser<span class="tm">.</span></span>
     <input id="root" type="text" spellcheck="false" />
     <nav id="tabs">
       <button class="tab on" data-tab="structure" data-i18n="tabStructure"></button>
@@ -38,6 +39,7 @@
     <main>
       <svg id="treemap" preserveAspectRatio="none"></svg>
       <aside id="detail"></aside>
+      <div class="empty" id="empty-structure" data-i18n="emptyStructure"></div>
     </main>
   </div>
 
@@ -50,6 +52,7 @@
     <main>
       <svg id="trendchart" preserveAspectRatio="none"></svg>
       <aside id="trend-detail"></aside>
+      <div class="empty" id="empty-trend" data-i18n="emptyTrend"></div>
     </main>
   </div>
 
@@ -61,6 +64,7 @@
     <main>
       <div id="cand-list"></div>
       <aside id="cand-detail"></aside>
+      <div class="empty" id="empty-candidates" data-i18n="emptyCandidates"></div>
     </main>
   </div>
 
