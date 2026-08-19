@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser — erase LLM-induced code &amp; document entropy</title>
+<meta name="description" content="CodeEraser judges your repository: clone detection, dead-code liveness, doc duplication, structural entropy — measurement in Rust, judgment in Haskell, one ratcheted score.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <img src="/icon-256.png" alt="">
+  <span class="name">CodeEraser</span>
+  <nav>
+    <a href="/zh/">中文</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+    <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Download</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <img src="/icon-256.png" alt="CodeEraser icon: an eraser mid-swipe through rows of code">
+  <div class="pitch">
+    <h1>CodeEraser<span class="tm">™</span></h1>
+    <p class="tag">LLMs write code that <em>accretes</em> — duplicated blocks, dead files,
+    stale docs, structural sprawl. CodeEraser measures it, judges it, and gates it
+    with a score that is only allowed to get better.</p>
+    <div class="installs">
+      <div class="install"><span class="k">Installer</span>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — Windows · Linux · macOS, GUI + CLI + judgment core, SHA256-pinned</code></div>
+      <div class="install"><span class="k">Cargo</span>
+        <code>cargo install codeeraser</code></div>
+      <div class="install"><span class="k">Claude Code</span>
+        <code>/plugin marketplace add skymanbp/CodeEraser</code></div>
+    </div>
+  </div>
+</section>
+
+<div class="term">
+  <div class="bar"><i></i><i></i><i></i></div>
+  <pre><span class="p">$</span> ce check --roast
+<span class="s">check score 822/1000</span> | axes 0:4 1:0 2:42 3:0 4:0 5:0 6:79 | 42 candidates
+ratchet: 0 added, 0 removed, 0 over, 1 tolerance drawn -&gt; <span class="s">pass</span>
+<span class="r">roast: entropy is losing, slowly. keep the eraser warm.</span></pre>
+  <p class="cap">Real output — CodeEraser judging its own repository. The ratchet only shrinks:
+  every violation is banked in a baseline, and new entropy fails the gate.</p>
+</div>
+
+<h2>Judgment families</h2>
+<div class="grid">
+  <div class="card"><b>ce check</b><p>The gate. One 0–1000 score over seven axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p></div>
+  <div class="card"><b>ce dedup</b><p>T1/T2 clone detection via winnowing fingerprints, with a clone-block budget your repo can only ratchet down.</p></div>
+  <div class="card"><b>ce clone</b><p>T3 near-clones judged by tree edit distance in the Haskell core — renamed and reshaped copies included.</p></div>
+  <div class="card"><b>ce deadcode</b><p>Liveness verdicts on a cached reference graph: no kept in-edge, no entry flag — dead, and the gate says so.</p></div>
+  <div class="card"><b>ce docdup</b><p>Duplicated prose across docs and comments, judged by exact Jaccard over live segments.</p></div>
+  <div class="card"><b>ce structure</b><p>Tree-scale entropy: layout divergence, doc staleness, redundancy axes over the whole repository.</p></div>
+  <div class="card"><b>ce scan</b><p>Size, complexity and readability per file and function — the classic metrics, core-graded.</p></div>
+  <div class="card"><b>ce trend</b><p>Your score across mainline history — cached per commit, rebuildable, honest about direction.</p></div>
+  <div class="card"><b>Guard hooks</b><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
+</div>
+
+<h2>Trust anchor</h2>
+<p class="trust">Every release binary is pinned by SHA256 in
+<code>plugin/bin/manifest.env</code> and verified before publish; installers carry a
+<code>SHA256SUMS</code> you can check offline. Code signing is deliberately out of scope —
+the hash chain is the permanent anchor. Measurement lives in Rust, judgment in Haskell,
+and this repository gates itself with its own tool on every commit.</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
+  <p>"CodeEraser"™ is a trademark of skymanbp (registration pending). Per Apache-2.0 §6,
+     the license does not grant trademark rights. © 2026 skymanbp.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+/* codeeraser.dev — committed dark, the icon's world.
+   Palette: ink ground, vermilion eraser, teal keyword, amber string. */
+:root {
+  --ink-0: #10141d;
+  --ink-1: #171c28;
+  --panel: #1e2534;
+  --panel-edge: #2a3347;
+  --text: #cdd6e4;
+  --muted: #8593ad;
+  --verm: #e4574a;
+  --teal: #57c7a8;
+  --amber: #d9a35b;
+  --paper: #f4efe6;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --sans: "IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: linear-gradient(180deg, var(--ink-1) 0%, var(--ink-0) 100%);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.65;
+  min-height: 100vh;
+}
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+header.site {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 0;
+}
+header.site img { width: 28px; height: 28px; border-radius: 6px; }
+header.site .name { font-family: var(--mono); font-weight: 600; font-size: 1.05rem; color: var(--paper); }
+header.site nav { margin-left: auto; display: flex; gap: 18px; align-items: center; font-size: 0.92rem; }
+header.site nav a { color: var(--muted); }
+header.site nav a:hover { color: var(--text); }
+
+.hero { padding: 56px 0 40px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+.hero img { width: 160px; height: 160px; border-radius: 28px; box-shadow: 0 12px 48px rgba(0,0,0,0.5); }
+.hero .pitch { flex: 1; min-width: 300px; }
+.hero h1 {
+  font-family: var(--mono); font-size: clamp(2rem, 5vw, 2.9rem);
+  color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
+}
+.hero h1 .tm { font-size: 0.45em; vertical-align: super; color: var(--muted); }
+.hero p.tag { font-size: 1.15rem; color: var(--muted); margin: 10px 0 24px; max-width: 34em; }
+.hero p.tag em { color: var(--verm); font-style: normal; font-weight: 600; }
+
+.installs { display: flex; flex-direction: column; gap: 10px; }
+.install {
+  display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 10px; padding: 10px 16px;
+}
+.install .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); min-width: 7.5em; }
+.install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; }
+
+.term {
+  background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 12px;
+  margin: 40px 0; overflow: hidden;
+}
+.term .bar {
+  display: flex; gap: 7px; padding: 11px 14px;
+  border-bottom: 1px solid var(--panel-edge);
+}
+.term .bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--panel-edge); }
+.term .bar i:first-child { background: var(--verm); }
+.term pre {
+  padding: 18px 20px; overflow-x: auto;
+  font-family: var(--mono); font-size: 0.84rem; line-height: 1.7; color: var(--muted);
+}
+.term .p { color: var(--teal); }
+.term .s { color: var(--paper); font-weight: 600; }
+.term .r { color: var(--verm); }
+.term .cap { padding: 0 20px 14px; font-size: 0.8rem; color: var(--muted); }
+
+h2 {
+  font-family: var(--mono); font-size: 1.3rem; color: var(--paper);
+  margin: 48px 0 18px; letter-spacing: -0.01em;
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 14px; }
+.card {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 10px; padding: 16px 18px;
+}
+.card b { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; display: block; margin-bottom: 6px; }
+.card p { font-size: 0.88rem; color: var(--muted); }
+
+.trust {
+  background: var(--panel); border-left: 3px solid var(--amber);
+  border-radius: 0 10px 10px 0; padding: 18px 22px; margin: 20px 0 8px;
+  font-size: 0.95rem; color: var(--muted);
+}
+.trust code { font-family: var(--mono); color: var(--text); }
+
+footer.site {
+  margin-top: 64px; padding: 28px 0 40px;
+  border-top: 1px solid var(--panel-edge);
+  font-size: 0.85rem; color: var(--muted);
+}
+footer.site p + p { margin-top: 6px; }
+
+@media (max-width: 640px) {
+  .hero { padding-top: 32px; gap: 24px; }
+  .hero img { width: 110px; height: 110px; border-radius: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser — 消除 LLM 引入的代码与文档熵</title>
+<meta name="description" content="CodeEraser 判决你的仓库：克隆检测、死代码存活性、文档重复、结构熵——度量在 Rust，判决在 Haskell，一个只准变好的分数。">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <img src="/icon-256.png" alt="">
+  <span class="name">CodeEraser</span>
+  <nav>
+    <a href="/">English</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+    <a href="https://github.com/skymanbp/CodeEraser/releases/latest">下载</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <img src="/icon-256.png" alt="CodeEraser 图标：橡皮扫过代码行">
+  <div class="pitch">
+    <h1>CodeEraser<span class="tm">™</span></h1>
+    <p class="tag">LLM 写的代码会<em>堆积</em>——重复代码块、死文件、过期文档、结构蔓延。
+    CodeEraser 度量它、判决它、用一个只准变好的分数把住大门。</p>
+    <div class="installs">
+      <div class="install"><span class="k">安装包</span>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — Windows · Linux · macOS，GUI + CLI + 判决核，SHA256 钉扎</code></div>
+      <div class="install"><span class="k">Cargo</span>
+        <code>cargo install codeeraser</code></div>
+      <div class="install"><span class="k">Claude Code</span>
+        <code>/plugin marketplace add skymanbp/CodeEraser</code></div>
+    </div>
+  </div>
+</section>
+
+<div class="term">
+  <div class="bar"><i></i><i></i><i></i></div>
+  <pre><span class="p">$</span> ce --lang zh check --roast
+<span class="s">check score 822/1000</span> | axes 0:4 1:0 2:42 3:0 4:0 5:0 6:79 | 42 candidates
+ratchet: 0 added, 0 removed, 0 over, 1 tolerance drawn -&gt; <span class="s">pass</span>
+<span class="r">毒舌：熵在缓慢败退。橡皮别放凉。</span></pre>
+  <p class="cap">真实输出——CodeEraser 判决它自己的仓库。棘轮只收不放：
+  违规集入基线银行，新增熵直接判负。</p>
+</div>
+
+<h2>判决家族</h2>
+<div class="grid">
+  <div class="card"><b>ce check</b><p>总门。七轴合成 0–1000 分，对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p></div>
+  <div class="card"><b>ce dedup</b><p>winnowing 指纹的 T1/T2 克隆检测，克隆块预算只准往下棘。</p></div>
+  <div class="card"><b>ce clone</b><p>T3 近似克隆：Haskell 核的树编辑距离判决，改名换形的拷贝一并抓。</p></div>
+  <div class="card"><b>ce deadcode</b><p>缓存引用图上的存活性判决：无保留入边、无入口声明——判死，门就红。</p></div>
+  <div class="card"><b>ce docdup</b><p>文档与注释里的重复散文，活段上的精确 Jaccard 判决。</p></div>
+  <div class="card"><b>ce structure</b><p>树尺度结构熵：布局偏离、文档陈旧、冗余诸轴，整仓一览。</p></div>
+  <div class="card"><b>ce scan</b><p>逐文件逐函数的尺寸、复杂度、可读性——经典指标，核分级。</p></div>
+  <div class="card"><b>ce trend</b><p>主线历史上的分数轨迹——逐提交缓存、可重建、方向诚实。</p></div>
+  <div class="card"><b>守卫钩子</b><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，停止时审计，会话开始报健康。</p></div>
+</div>
+
+<h2>信任锚</h2>
+<p class="trust">每个发布二进制都以 SHA256 钉扎在
+<code>plugin/bin/manifest.env</code>，发布前逐一校验；安装包附带可离线核对的
+<code>SHA256SUMS</code>。代码签名被刻意排除在设计外——哈希链就是永久信任锚。
+度量在 Rust，判决在 Haskell，本仓库每次提交都用自己的工具给自己把门。</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
+  <p>"CodeEraser"™ 为 skymanbp 商标（注册申请中）。依 Apache-2.0 §6，
+     许可证不授予商标权。© 2026 skymanbp。</p>
+</footer>
+
+</div>
+</body>
+</html>
