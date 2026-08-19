@@ -124,3 +124,6 @@ audit + CI gates are the backstop.
 
 Apache-2.0 — see [LICENSE](LICENSE). Third-party inventory: [NOTICE](NOTICE)
 (regenerated and gated byte-exact in CI by `cli/tests/notice_gate.rs`).
+
+"CodeEraser"™ is a trademark of skymanbp (registration pending). Per
+Apache-2.0 §6, the license covers the code, not the name.

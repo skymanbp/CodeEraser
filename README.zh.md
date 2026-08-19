@@ -112,3 +112,6 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 
 Apache-2.0 —— 见 [LICENSE](LICENSE)。第三方清单：[NOTICE](NOTICE)
 （由 `cli/tests/notice_gate.rs` 在 CI 中再生成并逐字节门控）。
+
+"CodeEraser"™ 为 skymanbp 商标（注册申请中）。按 Apache-2.0 §6，
+许可证覆盖代码，不授予名称使用权。
