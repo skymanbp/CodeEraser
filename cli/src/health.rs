@@ -58,13 +58,9 @@ fn line(root: &Path, daemon: &str) -> String {
     // ce.toml overrides. A config ERROR must not print
     // byte-identically to a deliberate observe (review C2): the
     // degradation names its cause here, the one line every session
-    // and every `ce doctor` shows.
-    let mode = Config::load(root)
-        .map(|c| c.guard.tier(crate::config::PROMOTED_DEFAULT))
-        .unwrap_or_else(|e| {
-            let gist: String = e.chars().take(80).collect();
-            format!("observe (ce.toml ERROR: {gist})")
-        });
+    // and every `ce doctor` shows — through config::tier_of, the ONE
+    // renderer the Stop audit now shares.
+    let mode = crate::config::tier_of(&Config::load(root), crate::config::PROMOTED_DEFAULT);
     let index = index_summary(root);
     format!(
         "[ce {} | guard: {mode} | index: {index} | daemon: {daemon}]",

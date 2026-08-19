@@ -2,28 +2,13 @@
 //! blocks on touched duplication; observe logs silently; the
 //! stop_hook_active loop guard short-circuits.
 
-use std::path::Path;
-
 mod common;
-use common::{git, seed_git_clone_repo as seed_repo, stop_envelope as envelope, tmp};
-
-/// Audit once, expect a Stop block whose reason names `needle`.
-fn assert_blocks(dir: &Path, needle: &str) {
-    let out = common::run_hook(dir, &["audit", "--hook"], &envelope(dir, false));
-    let v: serde_json::Value = serde_json::from_str(out.trim()).expect("block json");
-    assert_eq!(v["decision"], "block");
-    let reason = v["reason"].as_str().expect("reason");
-    assert!(reason.contains(needle), "reason names {needle}: {reason}");
-}
-
-fn silent_audit_observe(dir: &Path) -> serde_json::Value {
-    common::silent_hook_observe(
-        dir,
-        &["audit", "--hook"],
-        &envelope(dir, false),
-        "stop_audit",
-    )
-}
+// The seed-and-assert throat lives in common/audit.rs — the bypass
+// battery wants the same one, and two copies of it were a clone.
+use common::{
+    assert_stop_blocks as assert_blocks, committed_then, git, seed_git_clone_repo as seed_repo,
+    stop_envelope as envelope, stop_observe as silent_audit_observe, tmp,
+};
 
 #[test]
 fn deny_mode_blocks_on_touched_duplication() {
@@ -37,12 +22,12 @@ fn deny_mode_blocks_on_touched_duplication() {
 /// HEAD` — this pins the ls-files --others merge in gather().
 #[test]
 fn untracked_duplicate_from_bash_still_blocks() {
-    let dir = tmp("audit-untracked");
-    seed_repo(&dir, "deny");
     // commit the helper's staged clone away; then a THIRD, unstaged copy
-    git(&dir, &["commit", "-qm", "clean"]);
-    std::fs::write(dir.join("c.rs"), common::rust_fn(3)).expect("c.rs");
-    assert_blocks(&dir, "c.rs");
+    committed_then(
+        "audit-untracked",
+        |d| std::fs::write(d.join("c.rs"), common::rust_fn(3)).expect("c.rs"),
+        "c.rs",
+    );
 }
 
 #[test]

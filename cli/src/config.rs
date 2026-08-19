@@ -35,35 +35,12 @@ impl Default for Thresholds {
     }
 }
 
-/// Passive-guard settings (plan §4.2, decision D-4 gradual rollout:
-/// observe → warn → ask → deny, promotion gated on measured FPR).
-#[derive(Debug, Clone, Default, Deserialize)]
-#[serde(default, deny_unknown_fields)]
-pub struct Guard {
-    /// Explicit global tier: "observe" | "warn" | "ask" | "deny".
-    /// Unset = the §4.2 route defaults, resolved per rule class by
-    /// `tier` (step 2 landed 2026-08-11 — CHANGELOG).
-    pub mode: Option<String>,
-}
-
-/// §4.2 step-3 route default for the two promoted PreToolUse classes
-/// (T1/T2 duplicate write, hard-budget breach): deny at 1.0, decided
-/// M7-P2 on the recorded FPR ledger (CHANGELOG 2026-08-17). ONE
-/// constant — guard.rs and health.rs both read it, so the enforced
-/// tier and the reported tier cannot drift apart.
-pub const PROMOTED_DEFAULT: &str = "deny";
-
-impl Guard {
-    /// Effective tier for one rule class: an explicit `[guard] mode`
-    /// overrides every class; otherwise the plan-§4.2 route default
-    /// for that class applies (PROMOTED_DEFAULT for the two classes
-    /// promoted through the FPR gates, "observe" for everything else).
-    pub fn tier(&self, route_default: &str) -> String {
-        self.mode
-            .clone()
-            .unwrap_or_else(|| route_default.to_string())
-    }
-}
+// The guard tier is POLICY, not schema: it validates the declared
+// value and renders its own degradation, and three surfaces have to
+// agree on both. Re-exported so every existing `config::Guard` /
+// `config::PROMOTED_DEFAULT` path keeps working.
+mod tier;
+pub use tier::{Guard, PROMOTED_DEFAULT, TIERS, tier_of};
 
 /// Dedup ratchet (M2 review R12): `ce dedup --check` fails when the
 /// repo's clone-block count exceeds this only-shrink budget.

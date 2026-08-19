@@ -246,7 +246,17 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
     let out = Command::new("git")
         .arg("-C")
         .arg(root)
+        // core.quotePath (git's DEFAULT) C-quotes non-ASCII paths, and
+        // every consumer joins git's answer against ce's own rel_str
+        // spelling — a quoted path matches nothing and fails SILENTLY
+        // (the Stop deny gate skipped CJK filenames; the staleness
+        // join called those docs fresh). Fixed at the ONE runner;
+        // fourclass::session is already immune via -z.
+        .args(["-c", "core.quotePath=false"])
         .args(args)
+        // No caller feeds git input and `hash-object --stdin` wants
+        // EOF; inheriting a hook's stdin would let git block on it.
+        .stdin(std::process::Stdio::null())
         .output()
         .context("git")?;
     if !out.status.success() {

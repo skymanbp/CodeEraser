@@ -11,14 +11,15 @@
 // hooks — same subset story as dead_code above.
 #![allow(unused_imports)]
 
+pub mod audit;
 pub mod gates;
 pub mod gitio;
 pub mod hooks;
 pub mod ladder;
-pub use gates::*;
-pub use gitio::*;
-pub use hooks::*;
-pub use ladder::*;
+// One brace, not five `pub use` lines: the per-line form made this
+// index a byte-shaped twin of eval_support/mod.rs the moment a fifth
+// entry joined, and a module index is not something to clone.
+pub use {audit::*, gates::*, gitio::*, hooks::*, ladder::*};
 
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};

@@ -5,6 +5,10 @@
 //! .ce/observe.ndjson. Stop hooks know exactly one enforcement shape
 //! (proven by the locally installed cc-enforcer): top-level
 //! {"decision":"block","reason":...}; only deny mode uses it.
+//! WHAT changed lives in changes.rs — a mismatch between git's path
+//! spelling and ce's is a silent gate bypass, not an error.
+
+mod changes;
 
 use crate::config::Config;
 use serde::Deserialize;
@@ -40,25 +44,27 @@ pub fn run_hook() -> ExitCode {
 /// Shared head of the Stop audit and the pre-commit gate: guard mode,
 /// numstat over `diff`, touched duplicates (None = degraded, A9f) and
 /// the `event`-stamped observe entry (precommit must not masquerade
-/// as a Stop audit). Outer None = not a git repo: fail open.
+/// as a Stop audit). Outer None = git could not answer: fail open.
 type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
 fn gather(
     root: &Path,
-    diff: &[&str],
+    diff_tail: &[&str],
     event: &str,
     session: Option<&str>,
     fourclass: Option<serde_json::Value>,
 ) -> Option<Gathered> {
+    // ONE load: tier rendering and the exclusion list both need it,
+    // and a broken ce.toml must name itself (config::tier_of).
+    let loaded = Config::load(root);
     // The audit class is not §4.2-promoted: unset mode stays observe.
-    let mode = Config::load(root)
-        .map(|c| c.guard.tier("observe"))
-        .unwrap_or_else(|_| "observe".into());
-    let (mut net_loc, mut changed) = diff_args(root, diff)?;
+    let mode = crate::config::tier_of(&loaded, "observe");
+    let (mut net_loc, mut changed) = changes::diff(root, diff_tail)?;
     if event == "stop_audit" {
         // §4.2 promises the Stop audit covers Bash writes, but `git
-        // diff HEAD` cannot see a brand-new untracked file — the stop
-        // path merges them in; precommit stays staged-only by design.
-        if let Some((n, mut files)) = untracked(root) {
+        // diff` cannot see a brand-new untracked file — the stop path
+        // merges them in; precommit stays staged-only by design.
+        let excludes = loaded.map(|c| c.exclude).unwrap_or_default();
+        if let Some((n, mut files)) = changes::untracked(root, &excludes) {
             net_loc += n;
             changed.append(&mut files);
         }
@@ -84,14 +90,18 @@ fn gather(
 }
 
 fn audit(root: &Path, session: &str) -> ExitCode {
+    // Not a git repo: nothing to audit, and no `.ce/` written here.
+    let Some(base) = changes::base_rev(root) else {
+        return ExitCode::SUCCESS;
+    };
     let Some((mode, net_loc, _, dups)) = gather(
         root,
-        &["diff", "--numstat", "HEAD"],
+        &[base.as_str()],
         "stop_audit",
         Some(session),
         Some(fourclass_report(root)),
     ) else {
-        return ExitCode::SUCCESS; // not a git repo / git failed: fail open
+        return degraded_stop(root, session);
     };
     if mode == "deny"
         && let Some(dups) = dups.as_deref()
@@ -107,6 +117,27 @@ fn audit(root: &Path, session: &str) -> ExitCode {
         });
         println!("{payload}");
     }
+    ExitCode::SUCCESS
+}
+
+/// git resolved the base but not the diff: a real degradation the
+/// feed has to SAY. A Stop that writes nothing reads to the M4
+/// ledger exactly like a clean one — and that ledger is the stated
+/// gate for promoting this audit to deny.
+fn degraded_stop(root: &Path, session: &str) -> ExitCode {
+    let mode = crate::config::tier_of(&Config::load(root), "observe");
+    observe_log(
+        root,
+        AuditEvent {
+            event: "stop_audit",
+            mode: &mode,
+            session: Some(session),
+            net_loc: 0,
+            changed: 0,
+            dups: None, // stamps degraded: true
+            fourclass: None,
+        },
+    );
     ExitCode::SUCCESS
 }
 
@@ -134,9 +165,11 @@ fn fourclass_report(root: &Path) -> serde_json::Value {
 pub fn run_precommit(root: &Path) -> ExitCode {
     // session = None honestly: `ce precommit` runs in a terminal, no
     // session owns it — the M4 sampler excludes non-session events.
+    // `--cached` needs no base rev: git compares the index against an
+    // unborn HEAD without complaint, unlike the Stop leg.
     let Some((mode, net_loc, changed, dups)) = gather(
         root,
-        &["diff", "--cached", "--numstat"],
+        &["--cached"],
         "precommit",
         None,
         None, // four-class is a Stop concern; precommit stays v1
@@ -168,55 +201,20 @@ pub fn run_precommit(root: &Path) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-fn diff_args(root: &Path, args: &[&str]) -> Option<(i64, Vec<String>)> {
-    // churn::git = the ONE git runner; .ok() keeps hooks fail-open
-    let text = crate::churn::git(root, args).ok()?;
-    let mut net = 0i64;
-    let mut files = Vec::new();
-    for line in text.lines() {
-        let mut cols = line.split('\t');
-        let (a, d, path) = (cols.next()?, cols.next()?, cols.next()?);
-        // '-' marks binary files: count the file, skip the arithmetic
-        if let (Ok(a), Ok(d)) = (a.parse::<i64>(), d.parse::<i64>()) {
-            net += a - d;
-        }
-        files.push(path.replace('\\', "/"));
-    }
-    Some((net, files))
-}
-
-/// Untracked-but-not-ignored files with their line counts — the Stop
-/// audit's blind spot without this (see the gather() call site).
-/// `.ce/` is ce's own state, never user entropy; binary files count 0
-/// lines but still enter the changed set (the numstat `-` stance).
-fn untracked(root: &Path) -> Option<(i64, Vec<String>)> {
-    let text = crate::churn::git(root, &["ls-files", "--others", "--exclude-standard"]).ok()?;
-    let mut net = 0i64;
-    let mut files = Vec::new();
-    for line in text.lines() {
-        let path = line.trim().replace('\\', "/");
-        if path.is_empty() || path.starts_with(".ce/") {
-            continue;
-        }
-        net += std::fs::read_to_string(root.join(&path))
-            .map(|s| s.lines().count() as i64)
-            .unwrap_or(0);
-        files.push(path);
-    }
-    Some((net, files))
-}
-
 /// Duplicate blocks with at least one side in the changed set — the
 /// v1 approximation of "newly added duplication" (exact split = M4).
 /// None = the dedup pipeline itself failed: DEGRADED, stamped in the
 /// observe entry, never conflated with "no duplicates" (A9f).
 fn touched_duplicates(root: &Path, changed: &[String]) -> Option<Vec<String>> {
     let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
+    // a set, not a Vec scan: blocks × changed was O(B·C) string
+    // compares on every Stop (~50 M on a large index)
+    let touched: std::collections::HashSet<&str> = changed.iter().map(String::as_str).collect();
     Some(
         found
             .blocks
             .iter()
-            .filter(|b| changed.contains(&b.a_file) || changed.contains(&b.b_file))
+            .filter(|b| touched.contains(b.a_file.as_str()) || touched.contains(b.b_file.as_str()))
             .take(10)
             .map(|b| {
                 format!(

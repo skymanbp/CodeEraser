@@ -27,7 +27,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 
 | key | default | meaning |
 |---|---|---|
-| `mode` | *(absent)* | Explicit hook tier for every rule class: observe / warn / ask / deny; unset = per-class route defaults (deny for the two FPR-promoted classes, observe otherwise) |
+| `mode` | *(absent)* | Explicit hook tier for every rule class: observe / warn / ask / deny; unset = per-class route defaults (deny for the two FPR-promoted classes, observe otherwise). Any other value is a typo, not a tier: it resolves to observe and the SessionStart line, `ce doctor` and the observe feed all name it — a mistyped mode can never look armed |
 
 ## [dedup]
 
