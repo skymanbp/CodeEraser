@@ -31,7 +31,7 @@ thresholds.params_warn\tWarn once a function takes more parameters than this
 thresholds.cyclomatic_warn\tWarn past this cyclomatic complexity
 thresholds.cognitive_warn\tWarn past this cognitive complexity
 thresholds.nesting_warn\tWarn past this block-nesting depth
-guard.mode\tExplicit hook tier for every rule class: observe / warn / ask / deny; unset = per-class route defaults (deny for the two FPR-promoted classes, observe otherwise)
+guard.mode\tExplicit hook tier for every rule class: observe / warn / ask / deny; unset = per-class route defaults (deny for the two FPR-promoted classes, observe otherwise). Any other value is a typo, not a tier: it resolves to observe and the SessionStart line, `ce doctor` and the observe feed all name it, so a mistyped mode can never look armed
 dedup.budget\tOnly-shrink clone-block budget; `ce dedup --check` fails when the repo exceeds it
 graph.entry_globs\tExtra liveness roots for the deadcode judgment, beyond the mechanical entry conventions
 score.weights\tPer-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default

@@ -38,6 +38,21 @@ pub fn committed_then(name: &str, mutate: impl FnOnce(&Path), needle: &str) {
     assert_stop_blocks(&dir, needle);
 }
 
+/// A subdirectory carrying a PLAIN FILE named `.git` next to a clone
+/// of the repo's seed — the anchor-hijack shape, which a broken
+/// submodule checkout leaves behind without anyone meaning to.
+pub fn fake_anchor_subdir(dir: &Path, name: &str) -> PathBuf {
+    let sub = dir.join(name);
+    std::fs::create_dir_all(&sub).expect("mkdir");
+    for (file, body) in [
+        (".git", String::from("not a gitdir pointer")),
+        ("c.rs", rust_fn(3)),
+    ] {
+        std::fs::write(sub.join(file), body).expect("fixture file");
+    }
+    sub
+}
+
 /// A deny-mode repo whose CE anchor (ce.toml) sits `pkg_rel` below
 /// the git anchor, with the clone STAGED rather than committed;
 /// `commit_seed = false` leaves HEAD unborn. Returns the CE root —

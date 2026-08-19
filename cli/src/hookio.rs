@@ -35,7 +35,7 @@ pub fn project_root(cwd: &str) -> std::path::PathBuf {
     let start = std::path::PathBuf::from(cwd);
     let mut probe = start.as_path();
     loop {
-        if probe.join("ce.toml").exists() || probe.join(".git").exists() {
+        if probe.join("ce.toml").is_file() || is_git_anchor(&probe.join(".git")) {
             return probe.to_path_buf();
         }
         match probe.parent() {
@@ -43,6 +43,12 @@ pub fn project_root(cwd: &str) -> std::path::PathBuf {
             _ => return start,
         }
     }
+}
+
+/// A REAL git anchor: the `.git` dir or a worktree gitfile. `.exists()`
+/// took any FILE of that name, so one Write re-rooted a subtree's hooks.
+fn is_git_anchor(p: &Path) -> bool {
+    p.is_dir() || std::fs::read_to_string(p).is_ok_and(|s| s.starts_with("gitdir:"))
 }
 
 /// Read the whole hook envelope from stdin and deserialize it.
@@ -81,12 +87,16 @@ pub fn observe_append(root: &Path, session: Option<&str>, mut line: serde_json::
     };
     line["ts_ms"] = serde_json::json!(epoch_ms);
     use std::io::Write as _;
+    // ONE write_all: `writeln!` gives every fmt fragment its own write()
+    // on an unbuffered File, so concurrent hooks interleaved INSIDE a
+    // record — and every reader filter_map(ok)'d the wreckage away.
+    let record = format!("{line}\n");
     if let Ok(mut fh) = std::fs::OpenOptions::new()
         .create(true)
         .append(true)
         .open(dir.join("observe.ndjson"))
     {
-        let _ = writeln!(fh, "{line}");
+        let _ = fh.write_all(record.as_bytes());
     }
 }
 

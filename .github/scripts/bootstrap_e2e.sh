@@ -10,6 +10,10 @@
 #   3 tampered   : wrong pin -> exit 1, loud refusal, nothing placed
 #   4 core along : pinned ce-core placed as a plain sibling in data
 #   5 bad core   : tampered ce-core refused as loudly as a tampered ce
+#   6 quiet fail : a failed download falls back to PATH and keeps its
+#                  notice OFF stdout (the hook stream is JSON only)
+#   7 stale core : a MISMATCHING ce-core already on disk is refused and
+#                  REMOVED, not left behind for ce's resolver
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
 
@@ -88,7 +92,10 @@ err=$(CE_MANIFEST_FILE="$work/manifest3.env" \
 [ "$rc" -ne 0 ] || fail 3 "tampered download did not refuse (rc=0)"
 case "$err" in *"SHA256 mismatch"*) ;; *) fail 3 "refusal not loud: $err" ;; esac
 [ ! -f "$work/data3/$payload" ] || fail 3 "tampered binary was placed"
-[ ! -f "$work/data3/$payload.download" ] || fail 3 "tmp download not cleaned"
+# any .download* leftover, not just the un-suffixed name: the temp
+# carries a PID so two sessions cannot curl into one path
+left=$(ls "$work/data3" 2>/dev/null | grep -c '\.download' || true)
+[ "$left" = "0" ] || fail 3 "tmp download not cleaned ($left left)"
 
 # --- state 4: core rides along — pinned ce-core lands as a plain
 # sibling in the data dir (exactly where ce's resolver probes); the
@@ -125,4 +132,38 @@ err=$(CE_MANIFEST_FILE="$work/manifest5.env" \
 case "$err" in *"REFUSING downloaded ce-core"*) ;; *) fail 5 "core refusal not loud: $err" ;; esac
 [ ! -f "$work/data5/ce-core$ext" ] || fail 5 "tampered ce-core was placed"
 
-echo "bootstrap_e2e: PASS (6 states, key=$key)"
+# --- state 6: a failed download degrades to PATH, and its notice
+# stays OFF stdout. The starter always exec's into a hook whose stdout
+# must be the decision JSON alone; a human line printed there made the
+# whole stream unparseable and the project's own readers (which parse
+# the ENTIRE stdout) dropped the decision silently ------------------
+cat >"$work/manifest6.env" <<EOF
+CE_MANIFEST_VERSION="0.0.0-test"
+CE_BASE_URL="file:///nonexistent"
+CE_SHA256_${envkey}_CE="$pin"
+EOF
+out=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest6.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data6" sh "$STARTER" --version 2>/dev/null)
+[ "$out" = "$want" ] || fail 6 "stdout carried more than the payload's own output: '$out'"
+
+# --- state 7: a MISMATCHING ce-core already on disk is refused AND
+# removed — the download leg always refused a bad core, but a bad one
+# already placed survived every early return and stayed exactly where
+# ce's resolver probes for a plain `ce-core` sibling ----------------
+mkdir -p "$work/data7"
+cp "$CE_BIN" "$work/data7/ce-core$ext"   # content does not match the pin below
+rm -f "$work/src/$corepayload"           # and the download leg cannot replace it
+cat >"$work/manifest7.env" <<EOF
+CE_MANIFEST_VERSION="0.0.0-test"
+CE_BASE_URL="file:///nonexistent"
+CE_SHA256_${envkey}_CE="$pin"
+CE_SHA256_${envkey}_CECORE="1111111111111111111111111111111111111111111111111111111111111111"
+EOF
+err=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest7.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/src" \
+      CLAUDE_PLUGIN_DATA="$work/data7" sh "$STARTER" --version 2>&1 >/dev/null) || true
+case "$err" in *"REFUSING on-disk ce-core"*) ;; *) fail 7 "stale core not refused: $err" ;; esac
+[ ! -f "$work/data7/ce-core$ext" ] || fail 7 "mismatching ce-core left in place"
+
+echo "bootstrap_e2e: PASS (8 states, key=$key)"

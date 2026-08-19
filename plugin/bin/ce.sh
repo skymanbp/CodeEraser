@@ -9,6 +9,13 @@
 # fall through to PATH, so a tampered download cannot hide behind a
 # locally installed binary. Hooks stay fail-open (R3): "no binary
 # anywhere" reports one line and exits 0 instead of blocking a session.
+#
+# EVERY human line here goes to STDERR. The plan's hook protocol is
+# `exit 2 + stderr` OR `exit 0 + {"hookSpecificOutput":…}`, and this
+# script always exec's into a hook whose stdout must be that JSON and
+# nothing else — a notice printed before it made the whole stream
+# unparseable, and the project's own readers (which parse the entire
+# stdout) silently dropped the decision.
 set -u
 
 here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
@@ -31,6 +38,10 @@ plat_key() {
     esac
 }
 
+have_hasher() {
+    command -v sha256sum >/dev/null 2>&1 || command -v shasum >/dev/null 2>&1
+}
+
 sha_of() {
     if command -v sha256sum >/dev/null 2>&1; then
         sha256sum "$1" | cut -d' ' -f1
@@ -42,15 +53,24 @@ sha_of() {
 fetch() { # $1=url $2=dest — file:// is the hermetic test transport
     case "$1" in
         file://*) cp "${1#file://}" "$2" ;;
-        *) curl -fsSL -o "$2" "$1" ;;
+        # bounded on purpose: an unbounded body is written to disk
+        # before the hash is ever computed, and a captive portal that
+        # never finishes would hang the hook rather than fail it
+        *) curl -fsSL --proto '=https' --max-time 120 --max-filesize 104857600 -o "$2" "$1" ;;
     esac
 }
 
 run_path_ce() {
     if command -v ce >/dev/null 2>&1; then
+        # A pin EXISTS for this platform yet we are here: the verified
+        # copy could not be produced. An unverified exec must not be
+        # indistinguishable from a pin-checked one, so it says so. An
+        # EMPTY pin is the documented air-gapped/preview stance (or a
+        # platform this release never built) and stays quiet.
+        [ -z "$pin" ] || echo "codeeraser: pin unverified for $key — running PATH ce unchecked" >&2
         exec ce "$@"
     fi
-    echo "codeeraser: no ce binary (no verified copy, no PATH ce) — install with 'cargo install --path cli' or place a pinned binary in CLAUDE_PLUGIN_DATA"
+    echo "codeeraser: no ce binary (no verified copy, no PATH ce) — install with 'cargo install --path cli' or place a pinned binary in CLAUDE_PLUGIN_DATA" >&2
     exit 0
 }
 
@@ -76,15 +96,29 @@ ensure_core() {
     fi
     if [ -z "$corepin" ] || [ -z "$data" ]; then return 0; fi
     coretgt="$data/ce-core$ext"
-    if [ -x "$coretgt" ] && [ "$(sha_of "$coretgt")" = "$corepin" ]; then
-        return 0
+    if [ -x "$coretgt" ]; then
+        if [ "$(sha_of "$coretgt")" = "$corepin" ]; then
+            return 0
+        fi
+        # A MISMATCHING copy already on disk is the same artifact the
+        # download path refuses outright, so it gets the same answer:
+        # removed here, before any return can leave it in place for
+        # ce's resolver to pick up as a plain sibling. The old code
+        # only rejected a bad DOWNLOAD, so one prior file write pinned
+        # an attacker's core into every later session.
+        echo "codeeraser: REFUSING on-disk ce-core — SHA256 mismatch, removing $coretgt" >&2
+        rm -f "$coretgt"
     fi
     if [ -n "${CE_AIRGAPPED:-}" ]; then return 0; fi
     coreurl="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-core-$CE_MANIFEST_VERSION-$key$ext"
-    coretmp="$coretgt.download"
+    # PID-suffixed: two sessions sharing one CLAUDE_PLUGIN_DATA used to
+    # curl into the SAME path, and the interleaved bytes then failed the
+    # hash — a security-grade "REFUSING" for a benign race, plus an
+    # rm -f that deleted the sibling's file mid-verify.
+    coretmp="$coretgt.download.$$"
     if ! fetch "$coreurl" "$coretmp"; then
         rm -f "$coretmp"
-        echo "codeeraser: ce-core download failed ($coreurl) — judgment families degrade until it lands"
+        echo "codeeraser: ce-core download failed ($coreurl) — judgment families degrade until it lands" >&2
         return 0
     fi
     coregot=$(sha_of "$coretmp")
@@ -104,6 +138,15 @@ if [ -z "$pin" ] || [ -z "$data" ]; then
     run_path_ce "$@"
 fi
 
+# A host with neither hasher cannot verify anything, and R3 says
+# DEGRADE, not die: the old code produced an empty hash, compared it
+# against the pin, and so re-downloaded the binary and exited 1 on
+# every single hook.
+if ! have_hasher; then
+    echo "codeeraser: no sha256sum/shasum here — cannot verify the pin" >&2
+    run_path_ce "$@"
+fi
+
 target="$data/ce-$CE_MANIFEST_VERSION-$key$ext"
 if [ -x "$target" ] && [ "$(sha_of "$target")" = "$pin" ]; then
     ensure_core
@@ -118,10 +161,10 @@ fi
 
 mkdir -p "$data"
 url="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-$CE_MANIFEST_VERSION-$key$ext"
-tmp="$target.download"
+tmp="$target.download.$$" # PID-suffixed — see ensure_core
 if ! fetch "$url" "$tmp"; then
     rm -f "$tmp"
-    echo "codeeraser: download failed ($url) — falling back to PATH ce"
+    echo "codeeraser: download failed ($url) — falling back to PATH ce" >&2
     run_path_ce "$@"
 fi
 got=$(sha_of "$tmp")

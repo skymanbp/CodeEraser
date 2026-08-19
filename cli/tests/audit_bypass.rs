@@ -61,6 +61,20 @@ fn renamed_clone_still_blocks() {
     );
 }
 
+/// `hookio::project_root` accepted ANY `.git` — including a plain
+/// FILE of that name, which one Write creates and the PreToolUse
+/// probe cannot object to (`.git` has no language). The subtree then
+/// anchored to itself: a fresh root with no ce.toml, so the guard
+/// fell to its unset default and went quiet, writing its feed
+/// somewhere else entirely. Broken submodule checkouts leave `.git`
+/// FILES routinely, so this needs no attacker.
+#[test]
+fn a_plain_dot_git_file_cannot_re_root_the_guard() {
+    let dir = common::tmp("bypass-anchor");
+    common::seed_git_clone_repo(&dir, "deny");
+    blocks(&common::fake_anchor_subdir(&dir, "sub"), "c.rs");
+}
+
 /// `mode = "Deny"` used to come back from `tier()` verbatim: the
 /// audit compares `== "deny"` and stayed silent, while SessionStart
 /// printed `guard: Deny` as though it were armed.

@@ -1,11 +1,13 @@
 {
+  "_why_timeout": "DEVELOPMENT_PLAN.md §4.2 requires each hook to set its own timeout and fail open (R3). Values are ceilings, not budgets: the probe's measured p95 is well under 1s (PERF-BUDGET.md), the Stop audit runs the dedup pipeline (~3s cold on a 500-file tree), and SessionStart pays the daemon warm-up. A hook that hangs must end the session's wait, not own it.",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" health --hook"
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" health --hook",
+            "timeout": 30
           }
         ]
       }
@@ -16,7 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" probe --hook"
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" probe --hook",
+            "timeout": 15
           }
         ]
       }
@@ -26,7 +29,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" audit --hook"
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/bin/ce.sh\" audit --hook",
+            "timeout": 60
           }
         ]
       }
