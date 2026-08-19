@@ -4,6 +4,7 @@ Thumbs.db
 *.swp
 .vscode/
 .idea/
+.wrangler/
 
 # === Haskell (core/) ===
 dist-newstyle/
