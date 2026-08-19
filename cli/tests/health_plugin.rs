@@ -82,12 +82,6 @@ fn plugin_manifests_parse_and_wire_real_subcommands() {
     )
     .expect("plugin.json parses");
     assert_eq!(manifest["name"], "codeeraser");
-    assert!(
-        manifest["version"]
-            .as_str()
-            .expect("version")
-            .starts_with("0.1.")
-    );
     let hooks: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(plugin.join("hooks/hooks.json")).expect("hooks.json"),
     )
@@ -115,6 +109,36 @@ fn plugin_manifests_parse_and_wire_real_subcommands() {
     for shipped in ["bin/ce.sh", "bin/manifest.env"] {
         assert!(plugin.join(shipped).is_file(), "{shipped} missing");
     }
+}
+
+/// Every shipped version mirror equals the crate version — ONE
+/// source (release.yml pins the dispatch input == crate; this pins
+/// the mirrors, replacing a hardcoded "0.1." prefix the 0.2.0 bump
+/// broke). The v0.1.0 era proved the drift class: a 0.1.0
+/// plugin.json beside a 0.1.1 crate while binaries reported 0.0.1.
+/// Cargo.lock mirrors are already machine-checked by --locked.
+#[test]
+fn version_mirrors_move_with_the_crate() {
+    let crate_version = env!("CARGO_PKG_VERSION");
+    let root = repo_root();
+    for json_mirror in [
+        "plugin/.claude-plugin/plugin.json",
+        "gui/src-tauri/tauri.conf.json",
+    ] {
+        let doc: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(root.join(json_mirror)).expect(json_mirror),
+        )
+        .expect("mirror parses");
+        assert_eq!(doc["version"], crate_version, "{json_mirror}");
+    }
+    let gui_toml =
+        std::fs::read_to_string(root.join("gui/src-tauri/Cargo.toml")).expect("gui Cargo.toml");
+    let gui_version = gui_toml
+        .lines()
+        .find_map(|l| l.strip_prefix("version = \""))
+        .and_then(|rest| rest.strip_suffix('"'))
+        .expect("gui version line");
+    assert_eq!(gui_version, crate_version, "gui/src-tauri/Cargo.toml");
 }
 
 /// The marketplace manifest lives at the REPO root — the only
