@@ -57,7 +57,13 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
 /// cleanups are this tool's whole point and retire BY NAME, never
 /// silently. A listed id back in the baseline = a stale entry,
 /// refused — the ledger can only ever describe the present.
-const RETIRED: [(u64, &str); 6] = [
+const RETIRED: [(u64, &str); 7] = [
+    (
+        12069581799026901328,
+        "v0.5.0 cleanup: the docdup/t3 audit assembly legs retired whole \
+         (one-shot instruments, user ruling 2026-08-20) — their twin \
+         stanzas went with the files",
+    ),
     (
         5157928330096415643,
         "ADR-008 P3 tenth bite: probe_gate.rs Target/probe stanzas table-driven",

@@ -165,5 +165,7 @@ entry_globs = [
 # exactly one boundary shift: trend's report_json + print_doc
 # wrapper re-chained against join's (the named family-boilerplate
 # member it already shares). Measured after cargo fmt.
+# 169 -> 167 (v0.5.0 cleanup batch): retiring the fifteen one-shot
+# evaluation instruments took two of their clone blocks with them.
 # Ratchet DOWN from here with every cleanup.
-budget = 169
+budget = 167
