@@ -36,20 +36,25 @@ pub fn spawn_daemon_ready(root: &Path) -> Child {
     panic!("daemon never came up");
 }
 
-/// One raw NDJSON line → the daemon's one reply line, bypassing the
-/// client (its hello/token/respawn behaviors are exactly what the
-/// auth and skew batteries need to step around).
+/// A raw connection to the daemon for `root`, bypassing the client
+/// (its hello/token/respawn behaviors are exactly what the auth,
+/// skew, stall, and oversize batteries need to step around).
+pub fn raw_daemon_connect(root: &Path) -> std::io::BufReader<interprocess::local_socket::Stream> {
+    use interprocess::local_socket::traits::Stream as _;
+    use interprocess::local_socket::{GenericNamespaced, Stream, ToNsName};
+    let ns = codeeraser::daemon::proto::socket_name(root)
+        .to_ns_name::<GenericNamespaced>()
+        .expect("name");
+    std::io::BufReader::new(Stream::connect(ns).expect("connect"))
+}
+
+/// One raw NDJSON line → the daemon's one reply line.
 pub fn raw_daemon_line(
     root: &Path,
     req: &codeeraser::daemon::proto::Request,
 ) -> codeeraser::daemon::proto::Response {
-    use interprocess::local_socket::traits::Stream as _;
-    use interprocess::local_socket::{GenericNamespaced, Stream, ToNsName};
-    use std::io::{BufRead, BufReader, Write};
-    let ns = codeeraser::daemon::proto::socket_name(root)
-        .to_ns_name::<GenericNamespaced>()
-        .expect("name");
-    let mut conn = BufReader::new(Stream::connect(ns).expect("connect"));
+    use std::io::{BufRead, Write};
+    let mut conn = raw_daemon_connect(root);
     writeln!(
         conn.get_mut(),
         "{}",

@@ -180,6 +180,49 @@ fn version_skew_restarts_daemon() {
     common::wait_exit(child, "daemon on version skew");
 }
 
+/// A connection that never sends a byte must park ITS OWN thread,
+/// not the daemon: before the per-connection threads (review
+/// 2026-08-20 #3) this ping blocked forever behind the parked
+/// connection in the serial accept loop.
+#[test]
+fn a_silent_connection_does_not_stall_the_next_client() {
+    let root = project_dir("daemon-stall");
+    let child = common::spawn_daemon_ready(&root);
+    let parked = common::raw_daemon_connect(&root);
+    let r = client::request_if_running(&root, &Request::Ping).expect("ping past parked conn");
+    assert!(matches!(r, Response::Pong { .. }), "got {r:?}");
+    drop(parked);
+    common::shutdown_and_wait(&root, child, "daemon after stall test");
+}
+
+/// An unauthed line longer than the pre-hello cap is refused AT the
+/// cap — the bytes beyond it are never buffered or parsed, so a
+/// tokenless prober cannot feed the daemon an unbounded line.
+#[test]
+fn an_unauthed_oversize_line_is_refused_at_the_cap() {
+    use std::io::{BufRead, Write};
+    let root = project_dir("daemon-oversize");
+    let child = common::spawn_daemon_ready(&root);
+    let mut conn = common::raw_daemon_connect(&root);
+    let noise = vec![b'x'; 8192]; // twice the cap, no newline
+    conn.get_mut().write_all(&noise).expect("write");
+    conn.get_mut().flush().expect("flush");
+    let mut reply = String::new();
+    conn.read_line(&mut reply).expect("read");
+    let resp: Response = serde_json::from_str(reply.trim()).expect("parse");
+    assert!(
+        matches!(&resp, Response::Error { message } if message.contains("pre-hello cap")),
+        "got {resp:?}"
+    );
+    // then the connection closes: EOF, or a broken pipe on Windows
+    // (the daemon dropped its end with our excess bytes unread)
+    match conn.read_line(&mut reply) {
+        Ok(0) | Err(_) => {}
+        Ok(n) => panic!("connection stayed open: {n} more bytes"),
+    }
+    common::shutdown_and_wait(&root, child, "daemon after oversize test");
+}
+
 fn is_unauthorized(resp: &Response) -> bool {
     matches!(resp, Response::Error { message } if message.starts_with("unauthorized"))
 }

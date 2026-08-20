@@ -54,6 +54,14 @@ impl Judge {
         session::report_json(&batch, &sent)
     }
 
+    /// Drop the core link NOW (its Drop kills + reaps the ce-core
+    /// child). The whole-daemon exits run `std::process::exit` from a
+    /// connection thread (server/conn.rs), which skips destructors —
+    /// without this, every shutdown/skew orphaned a ce-core process.
+    pub fn retire_link(&mut self) {
+        self.link = None;
+    }
+
     fn link_mut(&mut self) -> Option<&mut Link> {
         if self.link.is_none() && self.failures < MAX_FAILURES {
             match core_bin().and_then(|bin| Link::open(&bin).ok()) {

@@ -5,7 +5,7 @@
 
 use super::auth;
 use super::proto::{DAEMON_PROTO, Request, Response, socket_name};
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result, bail, ensure};
 use interprocess::local_socket::traits::Stream as _;
 use interprocess::local_socket::{GenericNamespaced, Stream, ToNsName};
 use std::io::{BufRead, BufReader, Write};
@@ -19,24 +19,69 @@ const RETRY_DELAY: Duration = Duration::from_millis(100);
 /// `ce doctor` uses this: a diagnostic must not mutate the state it
 /// reports (attack review 2026-08-07: doctor's warm-up ping left a
 /// detached 30-min daemon per invocation dir, locking the exe).
+/// One unauthorized retry, same window as `request`: eject's
+/// shutdown raced a freshly bound daemon's token write, gave up on
+/// the refusal, and removed .ce out from under a live daemon
+/// (review 2026-08-20 #7).
 pub fn request_if_running(root: &Path, req: &Request) -> Result<Response> {
-    let mut conn = BufReader::new(try_connect(root)?);
-    match hello(&mut conn, root)? {
-        Response::HelloOk { .. } => round_trip(&mut conn, req),
-        other => bail!("incompatible daemon: {other:?}"),
-    }
+    negotiate(root, req, false)
 }
 
-/// One round-trip, lazily starting the daemon. Either recoverable
+/// A HelloOk is only trusted when the replied proto is not OLDER
+/// than this client's (same major — a mismatch gets `restart`). An
+/// already-running pre-1.1.0 daemon parses the 1.1.0 hello (serde
+/// ignores the unknown token field), checks no credential, and
+/// answers HelloOk — trusting that reply kept the credential gate
+/// inert until the old daemon idled out (review 2026-08-20 #1).
+fn stale(theirs: &str) -> bool {
+    use super::proto::major_minor;
+    major_minor(theirs) < major_minor(DAEMON_PROTO)
+}
+
+/// One round-trip, lazily starting the daemon. Every recoverable
 /// hello outcome gets exactly one more round: a skew restart
-/// (respawn from this binary) or an unauthorized refusal (a fresh
-/// daemon mints its token moments after the bind this client raced).
+/// (respawn from this binary), an unauthorized refusal (a fresh
+/// daemon mints its token moments after the bind this client raced),
+/// or a STALE HelloOk — a same-major older daemon is asked to leave
+/// (it answered our hello by its own rules, so it takes a shutdown)
+/// and the respawn round brings up one from this binary.
 pub fn request(root: &Path, req: &Request) -> Result<Response> {
-    let mut conn = connect_or_spawn(root)?;
+    negotiate(root, req, true)
+}
+
+/// The one hello loop both entry points share (the dedup ratchet
+/// caught them growing as clones). Every recoverable outcome gets
+/// exactly one more round; `lazy` gates the respawn arms — the
+/// if-running path may reconnect but never bring a daemon up.
+fn negotiate(root: &Path, req: &Request, lazy: bool) -> Result<Response> {
+    let mut conn = if lazy {
+        connect_or_spawn(root)?
+    } else {
+        BufReader::new(try_connect(root)?)
+    };
     for retry in [false, true] {
         match hello(&mut conn, root)? {
+            Response::HelloOk { ref proto, .. } if stale(proto) => {
+                if !lazy {
+                    // forward only the shutdown eject needs to retire
+                    // it; anything else refuses to trust that reply
+                    if matches!(req, Request::Shutdown) {
+                        return round_trip(&mut conn, req);
+                    }
+                    bail!(
+                        "stale daemon (proto {proto} vs {DAEMON_PROTO}); any ce command replaces it"
+                    );
+                }
+                ensure!(
+                    !retry,
+                    "stale daemon (proto {proto} vs {DAEMON_PROTO}) survived a shutdown round"
+                );
+                round_trip(&mut conn, &Request::Shutdown)?;
+                std::thread::sleep(RETRY_DELAY); // let the old one die
+                conn = connect_or_spawn(root)?;
+            }
             Response::HelloOk { .. } => return round_trip(&mut conn, req),
-            Response::Restart { .. } if !retry => conn = connect_or_spawn(root)?,
+            Response::Restart { .. } if lazy && !retry => conn = connect_or_spawn(root)?,
             Response::Error { ref message } if !retry && message.starts_with("unauthorized") => {
                 std::thread::sleep(RETRY_DELAY); // let the fresh token land
                 conn = BufReader::new(try_connect(root)?);
@@ -139,3 +184,20 @@ fn unset_stdio_inheritance() {
 
 #[cfg(not(windows))]
 fn unset_stdio_inheritance() {}
+
+#[cfg(test)]
+mod tests {
+    use super::stale;
+
+    /// The staleness ordering the HelloOk trust check rides on: an
+    /// older minor (1.0 predates the credential gate) and garbage
+    /// are stale; the current proto and NEWER minors (additive by
+    /// the versioning contract) are not.
+    #[test]
+    fn stale_orders_minors_and_distrusts_garbage() {
+        assert!(stale("1.0.0"), "pre-credential daemon");
+        assert!(stale("not-a-version"), "unparseable proto");
+        assert!(!stale(super::DAEMON_PROTO), "current");
+        assert!(!stale("1.99.0"), "newer minor is additive");
+    }
+}

@@ -99,3 +99,11 @@ pub fn socket_name(root: &Path) -> String {
 pub fn major(v: &str) -> Option<u64> {
     v.split('.').next().and_then(|s| s.parse().ok())
 }
+
+/// (major, minor) for the client's staleness ordering (client.rs);
+/// None for unparseable — which Option's Ord ranks below every
+/// parsed pair, so garbage protos read as stale, never as current.
+pub fn major_minor(v: &str) -> Option<(u64, u64)> {
+    let mut parts = v.split('.');
+    Some((parts.next()?.parse().ok()?, parts.next()?.parse().ok()?))
+}

@@ -13,14 +13,21 @@
   （`cli/src/daemon/proto.rs::socket_name`）——每项目根一个 daemon。
 - 凭据（1.1.0，`daemon/auth.rs`）：socket 名可推导，连接本身不设防；
   真正的门是 `hello.token` 必须等于 `<root>/.ce/daemon.token`（每次
-  serve 在 bind 后新铸；Unix 0600，Windows 继承项目目录 ACL）。能力
+  serve 在 bind 后新铸，**先删后独占创建**——绝不写穿符号链接、绝不
+  沿用旧文件的宽模式；Unix 0600，Windows 继承项目目录 ACL）。能力
   边界 = 能读项目目录——daemon 每条应答都派生自项目自身内容，文件
   系统放行的人在这里学不到新东西，拒绝的人连 probe/shutdown 都到
-  不了。未认证行 → `error{unauthorized}` 且**连接**关闭，daemon 存续。
+  不了。未认证行 → `error{unauthorized}` 且**连接**关闭，daemon 存续；
+  token 比较为常数时间（2026-08-20 加固批）。
 - 消息：NDJSON，一行一条；serde 外部 tag `type`，snake_case
-  （`{"type":"hello","proto":"1.1.0","token":"…"}`）。
-- 每连接可承载多条请求（server.rs `handle` 循环）；解析失败回
-  `error` 行并**继续**本连接，绝不崩连接。
+  （`{"type":"hello","proto":"1.1.0","token":"…"}`）。**未认证行长
+  上限 4 KiB**（超限 → `error` 并关连接，超出部分不缓冲不解析）；
+  认证后不限长（probe/four_class 合法携带整文件内容）。
+- 每连接可承载多条请求（server/conn.rs `handle` 循环）；解析失败回
+  `error` 行并**继续**本连接，绝不崩连接。**连接并发、请求串行**：
+  每连接一线程（静默连接只占住自己，卡不住 accept 循环；线程上限
+  64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
+  纪律不变。
 - 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **1.1.0**：
   加性 `hello.token`，1.0.0 行仍可解析、得 unauthorized 拒绝），与
   ce↔ce-core 的 handshake proto（VERSIONING.md §1）**相互独立**。
@@ -35,13 +42,21 @@
   击杀）。token 不符 → `error{unauthorized}` 且连接关闭；major 不符 →
   `restart{reason}` 且 daemon **退出**——客户端从自己（更新的）二进制
   重启一个。客户端在 unauthorized 上重读 token 文件再试**一轮**
-  （刚 spawn 的 daemon 在 bind 后毫秒级才落盘新 token）。
+  （刚 spawn 的 daemon 在 bind 后毫秒级才落盘新 token）；
+  `request_if_running`（doctor/eject/audit）同享这一轮重试——eject
+  曾撞上该窗口后把 .ce 从活 daemon 脚下删走。
+- **回执校验（2026-08-20 #1）**：客户端**不盲信 `hello_ok`**——回执
+  `proto` 旧于自身（同 major、低 minor，如仍在跑的 1.0.x 旧进程：
+  它无视 token 字段、不查任何凭证）即判 stale：`request` 令其
+  shutdown 后 respawn 一轮；`request_if_running` 只放行 Shutdown
+  （eject 仍可令其退役），其余请求报错拒信。
 - **空闲退出**：30 分钟无活动（`CE_DAEMON_IDLE_SECS` 仅测试可调）；
   watchdog 读 lock-free 时间戳，卡住的请求挡不住它。
 - **shutdown** → `bye` 后退出。
 - 冷启动索引在 bind **之后**起线程（抢 bind 失败的进程不建库）；
   写路径遵循 ADR-003 v1.7 收敛式多写者契约——daemon 是收敛写者
-  **之一**（自身内部按连接串行），不是「唯一写者」。
+  **之一**（自身内部按**请求**串行：连接是并发线程，dispatch 过
+  judge 互斥锁），不是「唯一写者」。
 
 ## 3. 消息表（形状以 golden 为准，此表是语义）
 
@@ -78,7 +93,7 @@
 
 ```
 cd cli && cargo test --test daemon_proto        # 形状漂移门
-cd cli && cargo test --test daemon_e2e          # 活体生命周期
-cd cli && cargo test --test daemon_auth         # 1.1.0 凭证门
+cd cli && cargo test --test daemon_e2e          # 生命周期+凭证门+界读（daemon_auth 已并入）
+cd cli && cargo test --release --lib -- daemon::  # 凭证落盘/staleness/常数时间 单元层
 cd cli && cargo test --test concurrent_writers  # v1.7 收敛契约
 ```
