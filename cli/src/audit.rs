@@ -4,9 +4,8 @@
 //! fail-open on any internal failure, every run appended to
 //! .ce/observe.ndjson. Stop hooks know exactly one enforcement shape
 //! (proven by the locally installed cc-enforcer): top-level
-//! {"decision":"block","reason":...}; only deny mode uses it.
-//! WHAT changed lives in changes.rs — a mismatch between git's path
-//! spelling and ce's is a silent gate bypass, not an error.
+//! {"decision":"block","reason":...}; only deny mode uses it. WHAT
+//! changed lives in changes.rs (git's paths in ce's own vocabulary).
 
 mod changes;
 
@@ -205,12 +204,9 @@ pub fn run_precommit(root: &Path) -> ExitCode {
 /// v1 approximation of "newly added duplication" (exact split = M4).
 /// None = the dedup pipeline itself failed: DEGRADED, stamped in the
 /// observe entry, never conflated with "no duplicates" (A9f).
-///
-/// Cost stance, unified 2026-08-19: an ENFORCEMENT leg pays for its
-/// own verdict — in-process, budgeted (PERF-BUDGET.md Stop row) — an
-/// INFORMATIONAL leg never pays a spawn (fourclass_report above).
-/// Request::Dedup routing MEASURED a wash (daemon recomputes analyze
-/// per request); a real win = daemon result caching, ledgered.
+/// Cost stance, unified 2026-08-19: ENFORCEMENT pays for its verdict
+/// (budgeted — PERF-BUDGET.md Stop row), INFORMATION never pays a
+/// spawn (fourclass_report). Request::Dedup routing measured a wash.
 fn touched_duplicates(root: &Path, changed: &[String]) -> Option<Vec<String>> {
     let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
     // a set, not a Vec scan: blocks × changed was O(B·C) string

@@ -131,15 +131,12 @@ boot 表逐串匹配），GRAPH_REV 3 全量重解析。
 
 ## Stop 审计预算（立行 2026-08-19，release，自仓 278 文件，非静默机，n=5 手测）
 
-口径：e2e = 信封 + 两 git 腿 + 进程内 dedup（大头）+ four-class 降级字段
-+ observe。成本立场（用户拍板统一）：**执法腿为自己的判决付费、信息腿
-绝不付 spawn**。Request::Dedup 路由实测打平（721 vs 723 ms：daemon 逐
-请求重算 analyze），撤案；真提速=daemon 结果缓存+失效（评审档挂账）。
+口径：e2e = 信封 + 两 git 腿 + 进程内 dedup（大头）+ four-class 降级字段 + observe。成本立场（拍板统一）：**执法腿为判决付费、信息腿绝不付 spawn**。
+Request::Dedup 路由实测打平（721 vs 723 ms，daemon 逐请求重算），撤案；真提速=结果缓存+失效（挂账）。
 
 | 项 | 预算 | 实测 | 状态 |
 |---|---|---|---|
-| `ce audit --hook` e2e（暖） | median < 1.5 s | 721 ms（5 跑 707–958） | ✅ |
-| 同上（冷索引） | < 5 s | 3.06 s（评审 PoC，git-archive 副本） | ✅ |
+| `ce audit --hook` e2e 暖 / 冷 | median <1.5 s / <5 s | 721 ms（707–958）/ 3.06 s（评审 PoC） | ✅ |
 | 分解：dedup 单独（暖）/ git 腿 | —（记录） | 469 ms / 80 ms | 记录 |
 
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
