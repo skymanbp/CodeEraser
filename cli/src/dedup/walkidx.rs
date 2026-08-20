@@ -51,7 +51,9 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
             configs.extend(walk::read_surviving(&path)?.map(|b| (rel, tokens::fnv1a(&b))));
             continue;
         }
-        let Some(lang) = Lang::from_path(&path) else {
+        // judged_path: the scan-only arm (plan v2.5) never enters the
+        // index — it feeds only judgment surfaces
+        let Some(lang) = Lang::judged_path(&path) else {
             continue;
         };
         let Some(src) = walk::read_surviving(&path)? else {
@@ -150,10 +152,12 @@ pub(super) fn read_streams(root: &Path, files: &BTreeSet<String>) -> pairs::Stre
     out
 }
 
-/// rel → absolute path + language; None for non-lang paths (the
-/// shared gate of this walk and the probe's candidate loop).
+/// rel → absolute path + language; None for non-lang paths AND for
+/// the scan-only arm (the shared gate of this walk and the probe's
+/// candidate loop — index files are judged by construction, so the
+/// judged_path form here is defense in depth, not a behavior change).
 pub(super) fn lang_path(root: &Path, rel: &str) -> Option<(std::path::PathBuf, Lang)> {
     let path = root.join(rel);
-    let lang = Lang::from_path(&path)?;
+    let lang = Lang::judged_path(&path)?;
     Some((path, lang))
 }

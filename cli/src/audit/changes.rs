@@ -113,9 +113,11 @@ pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)>
     for rec in records(&text) {
         let path = rec.replace('\\', "/");
         let full = root.join(&path);
+        // judged_path: the scan-only arm (plan v2.5) never enters
+        // the Stop audit's changed-file universe
         if path.is_empty()
             || ce_owned(&path)
-            || crate::scan::lang::Lang::from_path(&full).is_none()
+            || crate::scan::lang::Lang::judged_path(&full).is_none()
             || !crate::scan::walk::in_scope(root, &full, excludes)
         {
             continue;

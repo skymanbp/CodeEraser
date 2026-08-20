@@ -69,8 +69,7 @@ pub fn run(
     days: Option<u32>,
 ) -> Result<Report> {
     let (files, _findings, _summary) = crate::scan::analyze(root)?;
-    let paths: Vec<String> = files.iter().map(|f| f.path.clone()).collect();
-    let t = tree::build(&paths);
+    let t = tree::build(&judged_paths(&files));
     let req = assemble(root, db, core, &t, (deep, days))?;
     let reply = wire::judge(core, &req)?;
     let names = names_by_id(&t);
@@ -107,6 +106,17 @@ pub fn run(
         days,
         tree,
     })
+}
+
+/// Judged languages only (plan v2.5): letting the scan-only arm in
+/// would change every axis — S2 would call a normal front-end dir
+/// (.ts beside .css) language-mixing, which is judgment drift.
+fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
+    files
+        .iter()
+        .filter(|f| crate::scan::lang::Lang::judged_path(std::path::Path::new(&f.path)).is_some())
+        .map(|f| f.path.clone())
+        .collect()
 }
 
 /// One row per directory, the findings convolved back onto their

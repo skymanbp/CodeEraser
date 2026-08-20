@@ -104,7 +104,8 @@ fn load_pair(
     before: Option<&str>,
     after: Option<&str>,
 ) -> Option<(String, String, Lang)> {
-    let lang = Lang::from_path(Path::new(after.or(before)?))?;
+    // judged_path: the scan-only arm (plan v2.5) is never classified
+    let lang = Lang::judged_path(Path::new(after.or(before)?))?;
     let before_text = match before {
         None => String::new(),
         Some(p) => head_content(root, p)?,

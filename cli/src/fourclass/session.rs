@@ -95,7 +95,9 @@ fn parse_name_status(raw: &str) -> Vec<PathPair> {
             }
         };
         let side = pair.1.as_deref().or(pair.0.as_deref());
-        if side.is_some_and(|p| Lang::from_path(Path::new(p)).is_some()) {
+        // judged_path: the scan-only arm (plan v2.5) is size-gated,
+        // never four-classified
+        if side.is_some_and(|p| Lang::judged_path(Path::new(p)).is_some()) {
             pairs.push(pair);
         }
     }

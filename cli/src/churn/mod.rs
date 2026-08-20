@@ -125,7 +125,8 @@ pub fn pair_texts<'p>(
     pair: &'p session::PathPair,
 ) -> Option<(&'p str, String, String, Lang)> {
     let after_path = pair.1.as_deref()?;
-    let lang = Lang::from_path(Path::new(after_path))?;
+    // judged_path: the scan-only arm (plan v2.5) is never churned
+    let lang = Lang::judged_path(Path::new(after_path))?;
     let before = pair
         .0
         .as_deref()

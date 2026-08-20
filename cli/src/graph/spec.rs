@@ -95,7 +95,8 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
         }],
         Lang::Haskell => &HASKELL,
         // Markdown scans line-wise in graph/md.rs (no grammar); the
-        // sentinel is never walked at all.
-        Lang::Markdown | Lang::LangUnknown => &[],
+        // sentinel is never walked, and the scan-only arm (plan
+        // v2.5) is never indexed — no site vocabulary either way.
+        _ => &[],
     }
 }

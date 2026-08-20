@@ -2,10 +2,14 @@
 //! M1 launch set (plan §6 M1): TypeScript / Python / Rust / Go / Markdown
 //! (Markdown is size-only: no grammar, no functions). M5-3k adds
 //! Haskell (full grammar — spike pinned in tests/hs_grammar_pin.rs).
+//! Plan v2.5 adds the SCAN-ONLY arm: common front-end/script
+//! extensions that enter the scan's size gates, the guard's hard
+//! budget and the score ratchet — and nothing else (see scan_only).
 //!
 //! APPEND-ONLY: `Lang as i64` is a frozen wire position (graph node
 //! rows) — inserting a variant would silently relabel every language
-//! code downstream (RM15).
+//! code downstream (RM15). Scan-only variants sit AFTER the sentinel
+//! and never reach the wire anyway (they are never indexed).
 
 use std::path::Path;
 
@@ -24,25 +28,79 @@ pub enum Lang {
     /// unknown extension was indistinguishable from Python on the
     /// wire; the core's contract only rejects negatives).
     LangUnknown, // 7
+    // ---- the v2.5 scan-only arm (never on the wire) ----
+    JavaScript, // 8
+    Css,        // 9
+    Html,       // 10
+    Vue,        // 11
+    Svelte,     // 12
+    Shell,      // 13
+    Yaml,       // 14
 }
 
+/// ONE row per language: variant, extensions, report name, scan-only
+/// bit. This table drives from_path / name / scan_only — as separate
+/// matches each was a cyclomatic-warn-sized copy of the same facts.
+const LANGS: &[(Lang, &[&str], &str, bool)] = &[
+    (Lang::Python, &["py"], "python", false),
+    (Lang::TypeScript, &["ts", "mts", "cts"], "typescript", false),
+    (Lang::Tsx, &["tsx"], "tsx", false),
+    (Lang::Rust, &["rs"], "rust", false),
+    (Lang::Go, &["go"], "go", false),
+    (Lang::Markdown, &["md", "markdown"], "markdown", false),
+    (Lang::Haskell, &["hs"], "haskell", false),
+    (Lang::LangUnknown, &[], "unknown", false),
+    (
+        Lang::JavaScript,
+        &["js", "mjs", "cjs", "jsx"],
+        "javascript",
+        true,
+    ),
+    (Lang::Css, &["css", "scss", "less"], "css", true),
+    (Lang::Html, &["html", "htm"], "html", true),
+    (Lang::Vue, &["vue"], "vue", true),
+    (Lang::Svelte, &["svelte"], "svelte", true),
+    (Lang::Shell, &["sh", "bash"], "shell", true),
+    (Lang::Yaml, &["yml", "yaml"], "yaml", true),
+];
+
 impl Lang {
-    pub fn from_path(path: &Path) -> Option<Self> {
-        let ext = path.extension()?.to_str()?;
-        match ext {
-            "py" => Some(Self::Python),
-            "ts" | "mts" | "cts" => Some(Self::TypeScript),
-            "tsx" => Some(Self::Tsx),
-            "rs" => Some(Self::Rust),
-            "go" => Some(Self::Go),
-            "md" | "markdown" => Some(Self::Markdown),
-            "hs" => Some(Self::Haskell),
-            _ => None,
-        }
+    /// This language's LANGS row — total by construction (every
+    /// variant is in the table; the count is pinned in tests).
+    fn row(self) -> &'static (Lang, &'static [&'static str], &'static str, bool) {
+        LANGS
+            .iter()
+            .find(|&&(l, ..)| l == self)
+            .expect("every Lang variant has a LANGS row")
     }
 
-    /// Grammar for AST-backed languages; None = size-only (Markdown)
-    /// or the wire sentinel (never walked).
+    pub fn from_path(path: &Path) -> Option<Self> {
+        let ext = path.extension()?.to_str()?;
+        LANGS
+            .iter()
+            .find(|(_, exts, ..)| exts.contains(&ext))
+            .map(|&(l, ..)| l)
+    }
+
+    /// from_path in the judgment surfaces' form: None for unknown
+    /// extensions AND for the scan-only arm. fourclass, churn and
+    /// structure inputs come through here; the scan and the guard's
+    /// budget stay on from_path (the plan v2.5 boundary).
+    pub fn judged_path(path: &Path) -> Option<Self> {
+        Self::from_path(path).filter(|l| !l.scan_only())
+    }
+
+    /// The plan v2.5 boundary predicate: a scan-only language enters
+    /// the scan (size gates), the guard's hard budget and the score
+    /// ratchet — and NEVER the dedup index, the graph, or any
+    /// judgment family. Markdown is not in this class: it is
+    /// grammar-less but fully judged (docdup corpus, graph ladder).
+    pub fn scan_only(self) -> bool {
+        self.row().3
+    }
+
+    /// Grammar for AST-backed languages; None = size-only (Markdown,
+    /// the scan-only arm) or the wire sentinel (never walked).
     pub fn grammar(self) -> Option<tree_sitter::Language> {
         match self {
             Self::Python => Some(tree_sitter_python::LANGUAGE.into()),
@@ -50,22 +108,36 @@ impl Lang {
             Self::Tsx => Some(tree_sitter_typescript::LANGUAGE_TSX.into()),
             Self::Rust => Some(tree_sitter_rust::LANGUAGE.into()),
             Self::Go => Some(tree_sitter_go::LANGUAGE.into()),
-            Self::Markdown => None,
             Self::Haskell => Some(tree_sitter_haskell::LANGUAGE.into()),
-            Self::LangUnknown => None,
+            _ => None,
         }
     }
 
     pub fn name(self) -> &'static str {
-        match self {
-            Self::Python => "python",
-            Self::TypeScript => "typescript",
-            Self::Tsx => "tsx",
-            Self::Rust => "rust",
-            Self::Go => "go",
-            Self::Markdown => "markdown",
-            Self::Haskell => "haskell",
-            Self::LangUnknown => "unknown",
+        self.row().2
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The LANGS table is total (row() cannot panic), the wire
+    /// positions are frozen (RM15), and the v2.5 boundary splits
+    /// exactly where the plan says: scan-only after the sentinel,
+    /// Markdown grammar-less but judged.
+    #[test]
+    fn langs_table_is_total_and_the_boundary_holds() {
+        assert_eq!(LANGS.len(), 15, "one row per variant");
+        assert_eq!(Lang::LangUnknown as i64, 7, "frozen sentinel");
+        assert_eq!(Lang::JavaScript as i64, 8, "arm appends after it");
+        for &(l, ..) in LANGS {
+            assert!(!l.name().is_empty()); // row() is total
+            assert_eq!(l.scan_only(), l as i64 > 7, "boundary = the sentinel");
         }
+        let js = Path::new("a.js");
+        assert_eq!(Lang::from_path(js), Some(Lang::JavaScript));
+        assert_eq!(Lang::judged_path(js), None, "sized, never judged");
+        assert_eq!(Lang::judged_path(Path::new("a.md")), Some(Lang::Markdown));
     }
 }

@@ -20,7 +20,9 @@ pub fn materialize(dir: &Path, tree: &[(&str, &str)]) -> (BTreeSet<String>, Vec<
         if rel.starts_with("node_modules/") {
             continue;
         }
-        if codeeraser::scan::lang::Lang::from_path(&path).is_some() {
+        // judged_path — the index walk's own gate (plan v2.5): the
+        // scan-only arm never enters the file set the resolver sees
+        if codeeraser::scan::lang::Lang::judged_path(&path).is_some() {
             files.insert(rel.to_string());
         }
         if codeeraser::graph::store::is_resolver_config(&path) {

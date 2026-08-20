@@ -171,10 +171,10 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Go => go::resolve(site.from, site.spec, scope),
         Lang::Markdown => md::resolve(site.kind, site.from, site.spec, scope),
         Lang::Haskell => hs::resolve(site.from, site.spec, scope),
-        // The sentinel is never walked at all; if it ever is, the
-        // honest answer is the documented no-rungs stance, never a
-        // guess.
-        Lang::LangUnknown => Outcome::Unresolved(Reason::Unsupported),
+        // The sentinel is never walked, and the scan-only arm (plan
+        // v2.5) is never indexed — if either ever arrives, the honest
+        // answer is the documented no-rungs stance, never a guess.
+        _ => Outcome::Unresolved(Reason::Unsupported),
     }
 }
 

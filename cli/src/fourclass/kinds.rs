@@ -29,8 +29,9 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
         ],
         // Haskell's named type forms (data_type/newtype/class) stay
         // out until a Haskell relocation case exists — the Go
-        // precedent above; the sentinel is never walked.
-        Lang::Go | Lang::Markdown | Lang::Haskell | Lang::LangUnknown => &[],
+        // precedent above; the sentinel is never walked, and the
+        // scan-only arm (plan v2.5) is never four-classified.
+        _ => &[],
     }
 }
 

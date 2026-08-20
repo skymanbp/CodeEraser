@@ -77,9 +77,11 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
         Lang::Go => &GO,
         Lang::Markdown => &MARKDOWN,
         Lang::Haskell => &super::spec_hs::HASKELL,
-        // Never walked (from_path cannot yield the sentinel); the
-        // empty table is the honest degenerate if it ever is.
-        Lang::LangUnknown => &MARKDOWN,
+        // The sentinel is never walked; the scan-only arm (plan
+        // v2.5) is size-only like Markdown — grammar() is None for
+        // all of them, so measure_file never reaches these tables:
+        // the empty MARKDOWN spec is the honest degenerate.
+        _ => &MARKDOWN,
     }
 }
 
