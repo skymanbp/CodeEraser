@@ -124,6 +124,18 @@ pub struct Config {
     pub trend: TrendCfg,
 }
 
+/// Seconds from an env TEST SEAM, else the shipped default — the one
+/// shape behind CE_DAEMON_IDLE_SECS (a daemon e2e cannot idle 30 min)
+/// and CE_CORE_DEADLINE_SECS (a wedged-core test cannot wait a
+/// minute); the ratchet caught the second copy of the parse.
+pub fn env_secs(var: &str, default_secs: u64) -> std::time::Duration {
+    std::env::var(var)
+        .ok()
+        .and_then(|s| s.parse().ok())
+        .map(std::time::Duration::from_secs)
+        .unwrap_or(std::time::Duration::from_secs(default_secs))
+}
+
 impl Config {
     /// Load `ce.toml` from `root`; absent file = defaults.
     pub fn load(root: &Path) -> Result<Self, String> {

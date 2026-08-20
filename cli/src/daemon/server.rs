@@ -18,11 +18,7 @@ use std::time::{Duration, Instant};
 
 /// 30 min idle → exit (ADR-003). Overridable for tests only.
 fn idle_max() -> Duration {
-    std::env::var("CE_DAEMON_IDLE_SECS")
-        .ok()
-        .and_then(|s| s.parse().ok())
-        .map(Duration::from_secs)
-        .unwrap_or(Duration::from_secs(30 * 60))
+    crate::config::env_secs("CE_DAEMON_IDLE_SECS", 30 * 60)
 }
 
 static LAST_ACTIVITY_MS: AtomicU64 = AtomicU64::new(0);

@@ -3,10 +3,12 @@
 //! requests — strict lockstep, exactly one request outstanding; the
 //! one-shot `run` (hello + EOF) remains for `ce doctor`.
 
+mod pipe;
+
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::io::{BufRead, BufReader, Write};
-use std::process::{Child, ChildStdout, Command, Stdio};
+use std::io::Write;
+use std::process::{Child, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
@@ -71,10 +73,14 @@ pub struct HelloReply {
     pub capabilities: Vec<String>,
 }
 
-/// A live core process past its accepted hello.
+/// A live core process past its accepted hello. Replies arrive via
+/// pipe::reader's channel so every wait carries a deadline — an
+/// unbounded read_line let a wedged core hold the daemon and every
+/// hook behind it forever.
 pub struct Link {
     child: Child,
-    out: BufReader<ChildStdout>,
+    replies: std::sync::mpsc::Receiver<std::io::Result<String>>,
+    deadline: std::time::Duration,
     caps: Vec<String>,
     next_id: u64,
 }
@@ -83,10 +89,11 @@ impl Link {
     /// Spawn `core` and perform the handshake; the link stays open.
     pub fn open(core: &str) -> Result<(Link, HelloReply), String> {
         let mut child = spawn(core)?;
-        let out = BufReader::new(child.stdout.take().ok_or("no stdout pipe")?);
+        let replies = pipe::reader(child.stdout.take().ok_or("no stdout pipe")?);
         let mut link = Link {
             child,
-            out,
+            replies,
+            deadline: pipe::deadline(),
             caps: Vec::new(),
             next_id: 0,
         };
@@ -150,20 +157,17 @@ impl Link {
     }
 
     fn read_line(&mut self) -> Result<String, String> {
-        let mut line = String::new();
-        self.out
-            .read_line(&mut line)
-            .map_err(|e| format!("read: {e}"))?;
-        if line.is_empty() {
-            return Err("core closed the pipe".into());
-        }
-        Ok(line.trim().to_string())
+        pipe::next_line(&self.replies, self.deadline, &mut self.child)
     }
 }
 
 impl Drop for Link {
     fn drop(&mut self) {
-        drop(self.child.stdin.take()); // EOF => core exits
+        drop(self.child.stdin.take()); // EOF: the polite exit
+        // then make exit unconditional — a bare wait() on a wedged
+        // core blocked Drop forever, and the core keeps no state a
+        // kill could corrupt (pure stdin/stdout judge)
+        let _ = self.child.kill();
         let _ = self.child.wait();
     }
 }
