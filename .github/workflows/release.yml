@@ -1,5 +1,5 @@
 # Release automation (M7-P1, ADR-007). Two-phase by design
-# (docs/reviews/2026-08-17-m7-release-track.md P1): a manual
+# (docs/RELEASE.md, distilled from the M7 booklet in git history): a manual
 # workflow_dispatch builds the three platforms and uploads DRAFT
 # assets + SHA256SUMS; the measured hashes then land in
 # plugin/bin/manifest.env as a commit; only then the v* tag is cut,

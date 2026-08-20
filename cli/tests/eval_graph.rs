@@ -1,5 +1,5 @@
 //! M5-2 graph-slice instrument: the frozen SITE universe per corpus
-//! (design brief docs/reviews/2026-08-12-m5-2-graph-design.md §5).
+//! (design brief §5 — git history: docs/reviews/2026-08-12-m5-2-graph-design.md).
 //! The universe is sites, not edges — frozen BEFORE any resolver
 //! exists, so the resolver can never choose its own precision
 //! denominator; the falsification constants (min_per_lang,

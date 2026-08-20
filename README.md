@@ -116,7 +116,8 @@ audit + CI gates are the backstop.
 - [EVAL-SET](docs/EVAL-SET.md) — frozen evaluation universes, samples, audits and their gates
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — measured budgets and replay ledgers
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
-- [docs/reviews/](docs/reviews/) — attack/design review records, one file per round
+- [docs/RELEASE.md](docs/RELEASE.md) — the two-phase release runbook
+- [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 axis semantics (S0–S6)
 
 ## Architecture
 

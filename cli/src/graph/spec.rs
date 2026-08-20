@@ -1,6 +1,6 @@
 //! Per-language site-kind tables for the graph subsystem (design
-//! brief docs/reviews/2026-08-12-m5-2-graph-design.md §1/§4): which
-//! tree-sitter node kinds open a reference SITE and where the
+//! brief §1/§4, git history: docs/reviews/2026-08-12-m5-2-graph-
+//! design.md): which tree-sitter node kinds open a SITE and where the
 //! specifier string lives. Tuple-table shape per fourclass/kinds.rs;
 //! `scan/spec.rs` must not grow these — its fn_kinds drives the M1
 //! metrics and the dogfood ratchet, a separate concern.

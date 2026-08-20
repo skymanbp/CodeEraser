@@ -105,7 +105,8 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 - [EVAL-SET](docs/EVAL-SET.md) — 冻结评估宇宙、抽样、审计及其门禁
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — 实测预算与重放台账
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — wire 契约与 SemVer 规则
-- [docs/reviews/](docs/reviews/) — 攻击/设计评审记录，一轮一档
+- [docs/RELEASE.md](docs/RELEASE.md) — 两段式发版 runbook
+- [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 七轴语义（S0–S6）
 
 ## 架构
 

@@ -181,7 +181,7 @@ CI 门批已清。**挂账清零终态：账本空。**
 入 core；测量参数留 Rust 单点声明+回显钉；判据=源文本/行级内容过 wire 即
 测量侧；guard 热路径与 hook 协议映射两判例）②DSL 形态=位台账+判决表
 ③四片全收（P4→P1→P2→P3）。两路独立普查冻结+17 项 Rust 独立语义逐项归边
-（6 迁 9 留 2 判例）：[reviews/2026-08-17-adr-008-policy-dsl.md](reviews/2026-08-17-adr-008-policy-dsl.md)。
+（6 迁 9 留 2 判例）：reviews/2026-08-17-adr-008-policy-dsl.md（git 历史）。
 
 **P4 配置面与表化**：proto 2.4.0 加性 minor——`thresholds`（codes 0..6）+
 `tolerance`（legs 0..2）两表入 wire（`knobTable` 文法泛化：judgeV 收 code

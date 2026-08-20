@@ -141,7 +141,7 @@ CE.FourClass.Verdict 一处）——**误报 0/600 = 0% ≤ 1%**，CI 门断言�
 
 ## 攻击评审加固轮（2026-08-11，Codex gpt-5.6-sol 独立评审后）
 
-评审 14 项逐条独立核实后处置（[归档](reviews/2026-08-11-m4-attack-review.md)）：
+评审 14 项逐条独立核实后处置（归档（reviews 档在 git 历史））：
 行身份召回门（F2）；extras 冻结（`CE_ACCEPT_EXTRAS=1` 审读赐福）；源版本
 绑定（F1：`generated_from`，doc 落所记 commit 的子提交）；判决语义加固
 （F5/F6：去重内容地板 + 桥长上界 7，全语料零漂移）；堆叠证据归属（F7：
@@ -180,7 +180,7 @@ sessions.py → utils.py `resolve_proxies`，逐行同一）。终值跨 **9/9**
 2 站/4 行（恰够 destFloor=2）⇒ doc 悬置、F4 改判条件点火，交影子消融裁决。
 
 **影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)，
-Codex 评审处置 [2026-08-11-m5-1c-ii](reviews/2026-08-11-m5-1c-ii-ablation-review.md)）**：
+Codex 评审处置 2026-08-11-m5-1c-ii（reviews 档在 git 历史））**：
 Rust 影子引擎镜像判决核（Anchor sites + Provenance phase2/3），吃
 leftovers() 同一 run 结构；**双重保真门逐 commit 断言**（自仓 47/47 +
 requests 341/341）：baseline 影子 == 活核 delta、影子站点集 == 核 reply
@@ -245,7 +245,7 @@ quality==baseline [988,0,0,0]、freq 13 miss / chain 9 miss 三语料全灭、F4
 宽度零召回贡献、保真门 433/433（影子==活核逐字全等）。
 
 **Codex 评审处置（2026-08-12，无 blocker，3 major + 2 minor 全核实落地，
-[归档](reviews/2026-08-12-m5-1d-codex-review.md)）**：extras 统一可回收基线
+归档（reviews 档在 git 历史））**：extras 统一可回收基线
 计费（消 500≠505 口径分歧与 waiver 隐身通道）；登记三重锚（waived 被预测即
 自证 + 咽喉拒重复 + labels 行身份锚）；**by-name 评审表解析修复外语料登记门
 静默空转**（幻影单元反事实即红）；copy 不消费落 labels 机器；乘积护栏
@@ -254,9 +254,9 @@ Integer 化 + 两真实形状非降级回归钉。
 ## graph 站点宇宙 + 审计抽样 v1（M5-2b/2c 冻结，2026-08-12，均先于解析器）
 
 精度仪器的分母 = **免解析 SITES**（宇宙先于解析器冻结，解析器不得自选分
-母——[设计定稿](reviews/2026-08-12-m5-2-graph-design.md) §5）。五语料
+母——设计定稿（reviews 档在 git 历史） §5）。五语料
 graph-slice\*-v1.json：self@60f73e3（**含 crosscheck 孤岛 = 设计内负对照**；
-2b-iii [Opus 反审](reviews/2026-08-12-m5-2ab-opus-review.md)加固后 RG3 首
+2b-iii Opus 反审（reviews 档在 git 历史）加固后 RG3 首
 次点火换钉重冻结）、requests@8068356、ripgrep@3fce3b5、zod@912f0f5、
 cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。范围 = 五门正典扩展
 名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 + **测量
@@ -289,7 +289,7 @@ echo+truth 宇宙绑定（反审 F4）+why 地板+反事实六连+语料谱常�
 zod 22（拍板 2026-08-12：**分母 ≥5 才设每语料门**=ripgrep/zod，其余带分母只
 报，总体 ≥0.90 合同门不变）；md ref_def/ref_link/url 零席位（44 站无 GT）+
 dynamic/ambiguous/none 零 GT = 2f fixture 面补；rank 极小性门不验——冻结
-100 由反审独立重导逐字节认证（[2cd 归档](reviews/2026-08-12-m5-2cd-opus-review.md)）。
+100 由反审独立重导逐字节认证（2cd 归档（reviews 档在 git 历史））。
 
 ## 复跑 / 校验 — M7.5 深度瘦身修正案（2026-08-18，用户拍板 ccm #1152）
 

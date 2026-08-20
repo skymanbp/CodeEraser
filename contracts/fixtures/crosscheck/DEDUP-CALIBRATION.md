@@ -91,7 +91,7 @@ user_version=2 门控重建；报告项 = 已验证精确归一化公共段 ≥ 
 不变**——修复不扰动 fixtures 标定（fixtures 无 attr-docstring/ASI/
 热组形态；lifetime 修复对克隆双侧一致故块集稳定）。报告 schema
 0.3.0：summary 自述 kgram/window/min_tokens + hot_chained/
-stale_skipped。处置全表：docs/reviews/2026-08-07-m2-dedup-attack-review.md。
+stale_skipped。处置全表在 git 历史：docs/reviews/2026-08-07-m2-dedup-attack-review.md。
 
 ## M2 收口大仓复测（终版，2026-08-07）
 

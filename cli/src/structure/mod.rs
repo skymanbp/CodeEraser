@@ -1,6 +1,6 @@
-//! The structure family's MEASUREMENT face (M6 S1, design booklet
-//! docs/reviews/2026-08-17-m6-structure-manager.md §3): tree-scale
-//! aggregates the structure/1 judgment consumes. Everything here is
+//! The structure family's MEASUREMENT face (M6 S1; axis semantics
+//! in docs/reference/structure-axes.md, full booklet in git
+//! history): tree-scale aggregates the structure/1 judgment consumes. Everything here is
 //! fact production — depths, fanouts, name-pattern distributions,
 //! convention bits — and none of it judges: the entropy, the axes
 //! and the verdicts live in CE.Structure.* (the ADR-008 boundary,
