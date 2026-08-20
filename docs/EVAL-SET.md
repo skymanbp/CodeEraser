@@ -51,8 +51,8 @@ M4 误报门（≤1%/500 行）的分母将全部来自正常编辑回放。
 
 ## L0 基线（计划 §4.3 B3c 阶梯首级，2026-08-10）
 
-[baseline-l0-v1.json](../contracts/eval/baseline-l0-v1.json) 两变体（CI 从入
-库文件全量复核；git 实跑腿已随 M7.5 退役，走 git 复活）、样本精确同为 194/200：`l0_numstat`
+baseline-l0-v1.json 两变体（冻结件与其 CI 复核门已随 v0.5.0 瘦身退役，
+全档在 git 历史）、样本精确同为 194/200：`l0_numstat`
 moved 召回 **0/62**（rename/copy 旗标对单文件对惰性逐样本实证）；
 `reference_color_moved`（=预标引擎）召回 62/62 但精度 62/125（空行伪影 63）。
 行级准确率双双 ~99.5% 无区分力 ⇒ **头名指标 = moved 类召回/精度**；L1 达标
@@ -87,7 +87,7 @@ commit 区分力留待 L2 与 FPR 重放。
   ②机械跨/内划分（两可优先文件内）；③审核修正（5 条 6 行巧合，各带机制，逐
   条对过原始 diff）。终值：**跨文件 moved 366 出/181 进 = 547 行**（11 个真
   实重构 commit，35 搬迁单元具名）；文件内 112/107。CI 门逐行校验账本守恒。
-- **L1-on-slice 基线** [commit-baseline-l1-v1.json](../contracts/eval/commit-baseline-l1-v1.json)：
+- **L1-on-slice 基线** commit-baseline-l1-v1.json（v0.5.0 退役，git 历史）：
   47 commit / 214 对全跑。**检出 219/766 = 恰好全部文件内 GT，跨文件 0/547，
   巧合抵扣上界 0**——结构性盲区钉死（超出 32 行 = GT 漏标 sub-block，如实注记）。
 
@@ -169,7 +169,7 @@ CE_SLICE_* 四变量 + 本节两端 sha。
 sessions.py → utils.py `resolve_proxies`，逐行同一）。终值跨 **9/9**、文件
 内 255/257、非显著 15/16。审读记录 = eval_commit_review/requests.json。
 
-**L1-on-requests 基线**（[commit-baseline-l1-requests-v1.json](../contracts/eval/commit-baseline-l1-requests-v1.json)）：
+**L1-on-requests 基线**（commit-baseline-l1-requests-v1.json，v0.5.0 退役，git 历史）：
 **cross_credit_upper_bound = 0**——自仓跨文件 L1 结构性零召回（0/547）在
 第二语料复现，R-L2-2 外验第一料落地；detected 510 / GT 530 / predicted 636
 （超出 = L1 合法声称 GT blocks 漏标的 sub-block 移动）；320/341 逐对精确。
@@ -179,8 +179,8 @@ sessions.py → utils.py `resolve_proxies`，逐行同一）。终值跨 **9/9**
 级**，resolve_proxies 完整回收）；**虚报门破**——black/isort commit 发明
 2 站/4 行（恰够 destFloor=2）⇒ doc 悬置、F4 改判条件点火，交影子消融裁决。
 
-**影子消融裁决（M5-1c-ii，[commit-ablation-v1.json](../contracts/eval/commit-ablation-v1.json) / [-requests-](../contracts/eval/commit-ablation-requests-v1.json)，
-Codex 评审处置 2026-08-11-m5-1c-ii（reviews 档在 git 历史））**：
+**影子消融裁决（M5-1c-ii，commit-ablation-v1.json / -requests-（两件 v0.5.0
+退役，git 历史），Codex 评审处置 2026-08-11-m5-1c-ii（reviews 档在 git 历史））**：
 Rust 影子引擎镜像判决核（Anchor sites + Provenance phase2/3），吃
 leftovers() 同一 run 结构；**双重保真门逐 commit 断言**（自仓 47/47 +
 requests 341/341）：baseline 影子 == 活核 delta、影子站点集 == 核 reply

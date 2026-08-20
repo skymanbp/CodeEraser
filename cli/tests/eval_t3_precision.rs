@@ -139,3 +139,119 @@ fn precision_contract_and_refusals() {
         },
     );
 }
+
+// ——— The frozen sample's OWN integrity (M5-3c) ———
+// Restored from eval_t3_sample.rs (review 2026-08-20 #10): the v0.5.0
+// test consolidation retired that file as a one-shot generator, but
+// its verification leg was a LIVE corpora-free CI gate — without it a
+// mutated t3-sample-v1.json still scores. Same family, same doc, so
+// the battery lives here now; the generator stays retired.
+
+/// T3 sample languages: the four with units — markdown is docdup's
+/// domain and carries zero units by design (3b), so the design's
+/// "floor 15 per language" spans four languages here, leaving
+/// 100 − 60 = 40 largest-remainder seats.
+const LANGS: [&str; 4] = ["go", "py", "rs", "ts"];
+const MAIN: u64 = 100;
+const FLOOR: u64 = 15;
+const BACKUP: u64 = 20;
+const RANK_DOMAIN: &str = "ce-t3-pair-v1";
+const AUDIT_DOMAIN: &str = "ce-t3-audit-v1";
+
+/// The domain-separated hash of one row under `domain` — the shared
+/// identity_hash throat over this family's field order; the ONE
+/// derivation the gate repeats from the frozen fields (G4).
+fn row_hash(domain: &str, row: &Value) -> String {
+    eval_support::identity_hash(
+        domain,
+        row,
+        &[
+            "corpus", "tip", "a_path", "a_key", "a_nth", "b_path", "b_key", "b_nth", "source",
+        ],
+    )
+}
+
+/// Main quotas: floor 15 per language, remaining seats by largest
+/// remainder over pool shares (pure integer arithmetic, ties broken
+/// by language order) — the ONE apportion the gate re-runs.
+fn quotas(pool_by: &BTreeMap<String, u64>) -> BTreeMap<String, u64> {
+    let seats = MAIN - FLOOR * LANGS.len() as u64;
+    let total: u64 = pool_by.values().sum();
+    let mut q: BTreeMap<String, u64> = BTreeMap::new();
+    let mut rems: Vec<(u64, &str)> = Vec::new();
+    let mut used = 0;
+    for lang in LANGS {
+        let share = seats * pool_by[lang];
+        q.insert(lang.into(), FLOOR + share / total);
+        used += share / total;
+        rems.push((share % total, lang));
+    }
+    rems.sort_by(|x, y| (y.0, x.1).cmp(&(x.0, y.1)));
+    for (_, lang) in rems.iter().take((seats - used) as usize) {
+        *q.get_mut(*lang).expect("lang") += 1;
+    }
+    q
+}
+
+/// Rank re-derivation + uniqueness of one frozen row — main and
+/// backup rows pass the same throat.
+fn check_sample_row(scope: &str, row: &Value, seen: &mut std::collections::BTreeSet<String>) {
+    let rank = row["rank"].as_str().expect("rank");
+    assert_eq!(rank, row_hash(RANK_DOMAIN, row), "{scope}: rank forged");
+    assert!(seen.insert(rank.to_string()), "{scope}: duplicate row");
+}
+
+/// CI gate, no git: every stored rank re-derives from its own row
+/// fields (a tampered row or a smuggled rank reddens), ids are
+/// unique across main and backup, quotas re-derive from the recorded
+/// pool via the same apportion code, floors hold, main rows sit in
+/// audit order, and the pool digests still equal the frozen
+/// candidate docs (the CI-persistent pool anchor; rank-order
+/// continuation of the backups is a generation-time fact — it needs
+/// the pool, which lives in the corpora, not the repo).
+#[test]
+fn t3_sample_verifies() {
+    let doc = eval_support::load(&eval_support::eval_doc("t3-sample"));
+    let pool_by: BTreeMap<String, u64> = doc["pool_by_lang"]
+        .as_object()
+        .expect("pool")
+        .iter()
+        .map(|(k, v)| (k.clone(), v.as_u64().expect("n")))
+        .collect();
+    let q = quotas(&pool_by);
+    assert_eq!(json!(q), doc["quotas"], "quotas drifted from the apportion");
+    let main = doc["main"].as_array().expect("main");
+    assert_eq!(main.len(), MAIN as usize, "main size");
+    let mut seen = std::collections::BTreeSet::new();
+    let mut by_lang: BTreeMap<&str, u64> = BTreeMap::new();
+    let mut audits: Vec<String> = Vec::new();
+    for row in main {
+        check_sample_row("main", row, &mut seen);
+        *by_lang
+            .entry(row["lang"].as_str().expect("lang"))
+            .or_insert(0) += 1;
+        audits.push(row_hash(AUDIT_DOMAIN, row));
+    }
+    assert!(audits.is_sorted(), "main rows not in audit order");
+    for lang in LANGS {
+        assert_eq!(by_lang[lang], q[lang], "{lang}: quota broken");
+        assert!(by_lang[lang] >= FLOOR, "{lang}: floor broken");
+        let bk = doc["backup"][lang].as_array().expect("backup");
+        assert_eq!(bk.len(), BACKUP as usize, "{lang}: backup size");
+        for row in bk {
+            check_sample_row(lang, row, &mut seen);
+        }
+    }
+    for name in eval_support::FROZEN_CORPORA {
+        let name = name.map(str::to_string);
+        let cand = eval_support::load(&eval_support::eval_doc(&eval_support::doc_stem(
+            "t3-candidates",
+            &name,
+        )));
+        let corpus = name.as_deref().unwrap_or("self");
+        assert_eq!(
+            doc["pool_digests"][corpus], cand["pairs_sha256"],
+            "{corpus}: pool anchor drifted from the frozen candidates"
+        );
+    }
+}

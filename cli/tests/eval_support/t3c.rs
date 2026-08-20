@@ -1,8 +1,9 @@
 //! t3-candidates shared surface (M5-3c): the frozen constants, the
 //! corpus→candidate-pass runner and the pool digest — ONE binding for
-//! the candidate instrument (eval_t3_candidates.rs) and the sample
-//! instrument (eval_t3_sample.rs), so the frozen pair universe and
-//! the sample drawn from it can never disagree about what a pair is.
+//! the candidate instrument (eval_t3_candidates.rs) and the sample's
+//! integrity gate (t3_sample_verifies in eval_t3_precision.rs since
+//! the v0.5.0 consolidation), so the frozen pair universe and the
+//! sample drawn from it can never disagree about what a pair is.
 
 use codeeraser::dedup::candidates::{self, Candidates};
 use serde_json::{Value, json};

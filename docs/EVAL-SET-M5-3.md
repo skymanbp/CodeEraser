@@ -80,7 +80,8 @@ DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0�
 
 ## Churn 台账（3h 盲审）
 
-`churn-ledger-v1.json`（`ce.churn-ledger/1`；门 `eval_churn_ledger`）：self tip
+`churn-ledger-v1.json`（`ce.churn-ledger/1`；冻结件与门 `eval_churn_ledger`
+已随 v0.5.0 瘦身退役，全档在 git 历史）：self tip
 `473adfce`，40 提交、1,993 行，totals appended 16,327 / rewrote 1,461；五盲审
 代理 × 8 席蛇形均衡，**26/40 逐行零仲裁**；14 提交差异全过逐文件守恒证书
 （equal-minimal-alignment-slide 类）后按产品 Myers 仲裁双方存证；重放门 40/40 +
