@@ -75,8 +75,7 @@ fn remove_all(targets: &[PathBuf]) -> ExitCode {
 }
 
 /// Everything eject owns, existing entries only: the §5.9-4 list —
-/// .ce/ (index + observe feed), ce-baseline.json, pinned `ce-*`
-/// starter binaries under CLAUDE_PLUGIN_DATA.
+/// .ce/, ce-baseline.json, pinned starter binaries (see `ours`).
 fn targets(root: &Path) -> Vec<PathBuf> {
     let mut out = Vec::new();
     let ce = root.join(".ce");
@@ -90,13 +89,24 @@ fn targets(root: &Path) -> Vec<PathBuf> {
     if let Ok(data) = std::env::var("CLAUDE_PLUGIN_DATA")
         && let Ok(entries) = std::fs::read_dir(&data)
     {
+        // is_file: a DIRECTORY is never a starter artifact, and --yes
+        // deletes this list recursively
         for e in entries.flatten() {
-            if e.file_name().to_string_lossy().starts_with("ce-") {
+            if ours(&e.file_name().to_string_lossy()) && e.file_type().is_ok_and(|t| t.is_file()) {
                 out.push(e.path());
             }
         }
     }
     out
+}
+
+/// Ours = `ce-core[.exe]` or `ce-<version>-…` (versions open with a
+/// DIGIT); `starts_with("ce-")` also ate a neighbour's `ce-cache`.
+fn ours(name: &str) -> bool {
+    let Some(tail) = name.strip_prefix("ce-") else {
+        return false;
+    };
+    tail == "core" || tail.starts_with("core.") || tail.starts_with(|c: char| c.is_ascii_digit())
 }
 
 /// Remove one target with a bounded teardown wait: the daemon just

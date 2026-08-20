@@ -63,7 +63,15 @@ pub fn ids(nodes: &[Node]) -> BTreeMap<(&str, &str), usize> {
 /// mechanism, and it must survive every rung ceiling.
 pub fn contain(nodes: &[Node], ids: &BTreeMap<(&str, &str), usize>, wire: &mut BTreeSet<[i64; 4]>) {
     for pkg in nodes.iter().filter(|n| n.kind == super::wire::GRAN_PACKAGE) {
-        let prefix = format!("{}/", pkg.path);
+        // A package at the REPO ROOT has path "", and `format!("{}/",
+        // "")` is "/" — which no repo-relative member starts with, so
+        // the root package contained nothing and its files read as
+        // unreferenced (measured: a root lib.go imported by cmd/main.go
+        // was reported dead).
+        let prefix = match pkg.path.as_str() {
+            "" => String::new(),
+            p => format!("{p}/"),
+        };
         let p = ids[&(pkg.path.as_str(), "")] as i64;
         for member in nodes
             .iter()
@@ -115,14 +123,8 @@ mod tests {
             edge("a.rs", "lib", "", g),
         ];
         assert_eq!(triples(&files, &edges), triples(&rev_files, &rev_edges));
-        // package "lib" contains lib/b.rs via a synthetic arc
-        let nodes = nodes_of(&files, &edges);
-        let ids = ids(&nodes);
-        let mut wire = BTreeSet::new();
-        contain(&nodes, &ids, &mut wire);
-        let p = ids[&("lib", "")] as i64;
-        let m = ids[&("lib/b.rs", "")] as i64;
-        assert!(wire.contains(&[p, m, crate::graph::wire::EDGE_CONTAIN, 1]));
+        // containment arcs (named AND root package) live in
+        // tests/graph_containment.rs — behaviour, not identity
     }
 
     /// An absent-file target is a FILE node unless an edge's stored

@@ -124,8 +124,14 @@ fn core() -> String {
     crate::daemon::judge::core_bin().unwrap_or_else(|| "ce-core".into())
 }
 
+/// The window asked for, or the default. `as u32` TRUNCATED:
+/// `days = 4294967296` became 0 and judged a zero-day window.
 fn days(args: &Value, default: u32) -> u32 {
-    args["days"].as_u64().map_or(default, |v| v as u32)
+    args["days"]
+        .as_u64()
+        .and_then(|v| u32::try_from(v).ok())
+        .filter(|&v| v > 0)
+        .unwrap_or(default)
 }
 
 fn scan(root: &Path, _a: &Value) -> Result<String> {
@@ -199,7 +205,11 @@ fn join(root: &Path, a: &Value) -> Result<String> {
 
 fn structure(root: &Path, a: &Value) -> Result<String> {
     let deep = a["deep"].as_bool().unwrap_or(false);
-    let d = a["days"].as_u64().map(|v| v as u32);
+    // absent = axis 5 unjudged (the honest Option), but a PRESENT and
+    // unusable value must not truncate into a zero-day window
+    let d = a["days"]
+        .as_u64()
+        .map(|v| u32::try_from(v).unwrap_or(u32::MAX).max(1));
     doc(
         crate::structure::judge::run(root, None, &core(), deep, d),
         crate::structure::judge::report_json,

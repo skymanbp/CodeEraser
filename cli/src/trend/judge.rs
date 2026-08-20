@@ -52,19 +52,29 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
         slope_micro_per_day: reply["slopeMicroPerDay"].as_i64(),
         verdict: reply["verdict"].as_i64(),
         fail: reply["fail"] == json!(true),
-        knobs: parse_knobs(&reply["knobs"])?,
+        knobs: parse_knobs(&reply["knobs"], &knobs)?,
     })
 }
 
 /// The effective-knob echo, refused on drift from the request's own
 /// declared rows (the P4 round-trip pin, relay form).
-fn parse_knobs(v: &Value) -> Result<Vec<[i64; 2]>> {
+///
+/// It counted rows only, so an echo of two WRONG values passed and
+/// was reported effective — what a round-trip pin exists to catch.
+fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {
     let rows: Vec<[i64; 2]> = serde_json::from_value(v.clone())?;
     anyhow::ensure!(
         rows.len() == 2,
         "trend knob echo carries {} rows",
         rows.len()
     );
+    for [code, want] in sent {
+        let got = rows.iter().find(|[c, _]| c == code).map(|[_, v]| *v);
+        anyhow::ensure!(
+            got == Some(*want),
+            "trend knob {code}: sent {want}, echo says {got:?} — one number, two owners"
+        );
+    }
     Ok(rows)
 }
 
