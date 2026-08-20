@@ -14,13 +14,15 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚀 **v0.5.0 已发布——全部既定里程碑（M0–M8）交付完毕，外加一轮
-加固周期。** 安装包、[crates.io](https://crates.io/crates/codeeraser)、
-npm 指针包与 [codeeraser.dev](https://codeeraser.dev) 官网均已上线。
-本周期：daemon 凭证门端到端加固（双路外部评审，发现全数关闭）、
-尺寸门扩展至前端/脚本常用扩展（仅计尺寸，永不入判决）、结构轴 3
-改按目录计数（已声明的分数迁移）、计划 v2.6 尺寸软区间+拆分 ROI
-契约锁定（v0.6 实现）。
+🚀 **v0.6.0 已发布——计划 v2.6 尺寸顾问全案落地。** 安装包、
+[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
+[codeeraser.dev](https://codeeraser.dev) 官网均已上线。本周期：
+尺寸轴改**梯度**（精确有理凸曲线替换 300 行二值悬崖——已声明的
+分数迁移）、软线改**相对**（在基线冻结时由各仓库自身判决语言集
+的尺寸分布导出，钳制于 [200,500]，冻入 `ce-baseline.json`）、
+`ce structure --split-candidates` 为越线文件计最优缝价——或以
+数字写下它的内聚豁免；落在区间内的写入先入 observe 台账，任何
+档位晋升都要先有自己的记录。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。
 本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）都用
@@ -82,7 +84,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce docdup` | 文档重复（段落、注释、docstring） |
 | `ce graph --sites` / `ce deadcode` | 引用站点；存活性判决 |
 | `ce churn` / `ce join` | git 窗口变动；三信号联结 |
-| `ce structure` | 树尺度结构判决（七轴） |
+| `ce structure` | 树尺度结构判决（七轴）；`--split-candidates` 为越线文件计最优缝价——或写下它的内聚豁免 |
 | `ce trend` | 主线历史分数轨迹（缓存可从 git 重建） |
 | `ce check` / `ce baseline` | ADR-006 棘轮 + 分数地板（对 `ce-baseline.json`） |
 | `ce mcp` | 只读 MCP 服务器：上述每个报告都是一个工具 |

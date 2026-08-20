@@ -18,15 +18,18 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.5.0 released — all planned milestones (M0–M8) shipped, plus a
-hardening cycle.** Installers, [crates.io](https://crates.io/crates/codeeraser),
+🚀 **v0.6.0 released — the plan-v2.6 size advisory, implemented in
+full.** Installers, [crates.io](https://crates.io/crates/codeeraser),
 the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live.
-This cycle: the daemon's credential gate hardened end to end (a
-dual-lane external review, all findings closed), the size gates
-extended to common front-end/script extensions (size-only, never
-judged), structure axis 3 recalibrated to count directories (a
-declared score migration), and the plan-v2.6 size soft-zone +
-split-ROI contract locked for v0.6.
+This cycle: the size axis is **graded** (a convex soft-zone curve in
+exact rational arithmetic replaces the binary 300-line cliff — a
+declared score migration), the soft line is **relative** (derived
+from each repository's own judged-language size distribution at
+baseline establish, clamped to [200, 500], frozen in
+`ce-baseline.json`), and `ce structure --split-candidates` prices
+the best seam of every file past the line — or writes its cohesion
+alibi in numbers. Writes landing inside the zone get an
+observe-only feed ledger before any tier ever arms.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 This repository gates itself with its own scanner, clone ratchet,
@@ -91,7 +94,7 @@ same pins automatically and refuses a mismatching download out loud.
 | `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |
 | `ce graph --sites` / `ce deadcode` | reference sites; liveness verdicts |
 | `ce churn` / `ce join` | git-window churn; the three-signal join |
-| `ce structure` | tree-scale structure judgment (seven axes) |
+| `ce structure` | tree-scale structure judgment (seven axes); `--split-candidates` prices the best seam of every file past the soft line — or writes its cohesion alibi |
 | `ce trend` | score trajectory over mainline history (cache rebuilds from git) |
 | `ce check` / `ce baseline` | ADR-006 ratchet + score floor against `ce-baseline.json` |
 | `ce mcp` | read-only MCP server: every report above as a tool |

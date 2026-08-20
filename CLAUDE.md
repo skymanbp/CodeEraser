@@ -1,6 +1,6 @@
 # CodeEraser — 项目级指令（Claude Code 每次会话加载）
 
-## 当前状态：M0–M8 全交付，v0.5.0 已发布（2026-08-20，五渠道）；本周期收口 = 双路评审 12 条全修（daemon 凭证门加固批 a / 边界回退语义批 b / 清理余波批 c）+ 计划 v2.6 契约锁定（尺寸软区间+拆分 ROI，实现排 v0.6，设计册 docs/reference/size-advisory.md）
+## 当前状态：M0–M8 全交付，v0.6.0 已发布（2026-08-20）；计划 v2.6 尺寸顾问全案落地（wire 2.14.0）：轴 0 梯度化（分数迁移 818→809 已声明）、相对软线 S 冻入基线（自仓 303，k=2 五语料标定）、`ce structure --split-candidates` 拆分 ROI 面 + 无缝自动豁免、guard zone observe 台账（feed 0.5.0）；设计册 docs/reference/size-advisory.md 含 P2/P4 as-built 实录
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。
