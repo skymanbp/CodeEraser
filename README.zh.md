@@ -14,15 +14,14 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚀 **v0.6.0 已发布——计划 v2.6 尺寸顾问全案落地。** 安装包、
+🚀 **v0.7.0 已发布——尺寸顾问收口成环。** 安装包、
 [crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
 [codeeraser.dev](https://codeeraser.dev) 官网均已上线。本周期：
-尺寸轴改**梯度**（精确有理凸曲线替换 300 行二值悬崖——已声明的
-分数迁移）、软线改**相对**（在基线冻结时由各仓库自身判决语言集
-的尺寸分布导出，钳制于 [200,500]，冻入 `ce-baseline.json`）、
-`ce structure --split-candidates` 为越线文件计最优缝价——或以
-数字写下它的内聚豁免；落在区间内的写入先入 observe 台账，任何
-档位晋升都要先有自己的记录。
+拆分顾问按**全额**计缝价——被切断的引用、被切穿的克隆块、跨缝的
+共变对，逐项按外语料标定的价目入账；渐进区的位置→档位映射接线于
+显式 `[guard] zone_tiers` 之后（默认仍只记台账：没有误报记录就
+没有晋升）；顾问面同批入驻 MCP 工具面与 GUI 结构屏。相对软线随
+每次具名重立重算，`ce-baseline.json` 是唯一权威。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。
 本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）都用
@@ -114,7 +113,7 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — wire 契约与 SemVer 规则
 - [docs/RELEASE.md](docs/RELEASE.md) — 两段式发版 runbook
 - [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 七轴语义（S0–S6）
-- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — 计划 v2.6 尺寸软区间+拆分 ROI 契约（v0.6 实现）
+- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — 尺寸软区间+拆分 ROI 契约（v0.6 实现；v0.7 补齐四腿缝价）
 
 ## 架构
 

@@ -18,18 +18,17 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.6.0 released — the plan-v2.6 size advisory, implemented in
-full.** Installers, [crates.io](https://crates.io/crates/codeeraser),
+🚀 **v0.7.0 released — the size advisory closes its loop.**
+Installers, [crates.io](https://crates.io/crates/codeeraser),
 the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live.
-This cycle: the size axis is **graded** (a convex soft-zone curve in
-exact rational arithmetic replaces the binary 300-line cliff — a
-declared score migration), the soft line is **relative** (derived
-from each repository's own judged-language size distribution at
-baseline establish, clamped to [200, 500], frozen in
-`ce-baseline.json`), and `ce structure --split-candidates` prices
-the best seam of every file past the line — or writes its cohesion
-alibi in numbers. Writes landing inside the zone get an
-observe-only feed ledger before any tier ever arms.
+This cycle: the split advisory prices a seam's FULL cost — severed
+references, cut clone blocks and crossing co-change pairs, each at a
+corpus-calibrated price — the graded zone's position→tier map is
+wired behind an explicit `[guard] zone_tiers` opt-in (the default
+stays observe-only: no false-positive record, no promotion), and the
+advisory joins the MCP tool surface and the GUI structure screen.
+The soft line stays relative and re-derives at every named baseline
+re-establish; `ce-baseline.json` is the one authority.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 This repository gates itself with its own scanner, clone ratchet,
@@ -129,7 +128,7 @@ audit + CI gates are the backstop.
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
 - [docs/RELEASE.md](docs/RELEASE.md) — the two-phase release runbook
 - [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 axis semantics (S0–S6)
-- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — the plan-v2.6 size soft-zone + split-ROI contract (shipped in v0.6.0)
+- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — the size soft-zone + split-ROI contract (shipped in v0.6.0; four-leg seam pricing in v0.7.0)
 
 ## Architecture
 
