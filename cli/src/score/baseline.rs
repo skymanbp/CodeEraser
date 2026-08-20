@@ -127,12 +127,17 @@ pub fn read(root: &Path) -> Result<Option<Value>> {
 
 /// Write the core's newBaseline back as the committed file, wrapped
 /// in the schema envelope (extra keys are ignored by the core's
-/// reader, so the envelope never desyncs the wire shape).
+/// reader, so the envelope never desyncs the wire shape). softLine
+/// (2.14.0) is copied EXPLICITLY: this writer rebuilds the document
+/// from named keys, so a key it does not name would be silently
+/// dropped on every re-establish — the v0.6 map called this the
+/// single easiest thing to miss.
 pub fn write(root: &Path, new_baseline: &Value) -> Result<()> {
     let doc = json!({
         "schema": SCHEMA_ID,
         "continuous": new_baseline["continuous"],
         "discrete": new_baseline["discrete"],
+        "softLine": new_baseline["softLine"],
     });
     let path = root.join(BASELINE_FILE);
     std::fs::write(&path, format!("{}\n", serde_json::to_string_pretty(&doc)?))

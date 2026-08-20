@@ -24,7 +24,9 @@ pub const AXES: [&str; 7] = [
 ];
 
 /// Reply echo keys, index = wire code, one list per knob table.
-pub const CEILING_KEYS: [&str; 2] = ["sizeCeil", "cocCeil"];
+/// Codes 2..4 are the v0.6 zone knobs (plan v2.6): the hard line H,
+/// P_max, and the soft-line exponent k.
+pub const CEILING_KEYS: [&str; 5] = ["sizeCeil", "cocCeil", "sizeHard", "sizePMax", "softLineK"];
 pub const THRESHOLD_KEYS: [&str; 7] = [
     "deadIndegCeil",
     "rewriteNum",
@@ -36,10 +38,25 @@ pub const THRESHOLD_KEYS: [&str; 7] = [
 ];
 pub const TOLERANCE_KEYS: [&str; 3] = ["tolNum", "tolDen", "tolAbs"];
 
-/// The ceilings rows ce.toml always speaks (both axes have config
-/// defaults, so both rows are always sent — the 27b9bc2 road).
-pub fn ceiling_rows(t: &Thresholds) -> Vec<[i64; 2]> {
-    vec![[0, t.file_lines_warn as i64], [1, t.cognitive_warn as i64]]
+/// The ceilings rows ce.toml speaks: codes 0/1 always (both have
+/// config defaults — the 27b9bc2 road), code 2 = the hard line H
+/// whenever one is declared (`file_lines_fail == 0` means "no hard
+/// line" per the scan grade contract, and the core refuses a
+/// ceiling below 1 — so the curve then scales on the core's default
+/// 750), codes 3/4 only when ce.toml declares them (the trend
+/// pattern: absent = the core default judges).
+pub fn ceiling_rows(t: &Thresholds, s: &ScoreCfg) -> Vec<[i64; 2]> {
+    let mut out = vec![[0, t.file_lines_warn as i64], [1, t.cognitive_warn as i64]];
+    if t.file_lines_fail >= 1 {
+        out.push([2, t.file_lines_fail as i64]);
+    }
+    if let Some(p) = s.size_penalty_max {
+        out.push([3, p as i64]);
+    }
+    if let Some(k) = s.soft_line_k {
+        out.push([4, k as i64]);
+    }
+    out
 }
 
 /// [code, value] rows from a value array whose index IS the code;

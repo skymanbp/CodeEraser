@@ -18,10 +18,13 @@ import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 
 -- | A parsed ce-baseline.json: per-entity continuous ceilings
--- [u,metricCode,value] and the discrete violation-fingerprint set.
+-- [u,metricCode,value], the discrete violation-fingerprint set, and
+-- (v0.6, plan v2.6 §B) the frozen soft line — Nothing on a
+-- pre-v0.6 file, re-derived only at establish.
 data Baseline = Baseline
   { bCont :: [[Integer]]
   , bDisc :: [Integer]
+  , bSoft :: Maybe Integer
   }
 
 data RatchetKnobs = RatchetKnobs

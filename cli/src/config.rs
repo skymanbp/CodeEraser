@@ -70,6 +70,12 @@ pub struct ScoreCfg {
     /// clone / docdup / deadcode / churn / cycle); unlisted axes
     /// keep the decision-⑦ equal weight.
     pub weights: std::collections::BTreeMap<String, u32>,
+    /// v0.6 soft-zone curve (plan v2.6 §A): the axis-0 penalty of a
+    /// file AT the hard line; absent = the core's default 10.
+    pub size_penalty_max: Option<u32>,
+    /// v0.6 relative soft line (§B): the multiplicative-MAD exponent
+    /// k in S = clamp(median·r^k, [200,500]); absent = default 2.
+    pub soft_line_k: Option<u32>,
     pub dead_indeg_ceil: Option<u32>,
     pub rewrite_num: Option<u32>,
     pub rewrite_den: Option<u32>,

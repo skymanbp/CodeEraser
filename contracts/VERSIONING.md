@@ -108,6 +108,20 @@
 > 同批机制修：golden pair 5 的 unknown-knob 探针两次因 knob 面增长
 > 转合法——冻结移动边界是错法；改钉稳定未知码 99，精确 max+1 边界
 > 由电池随面同步持有。
+> **2.14.0**（v0.6 尺寸软区间+相对软线，计划 v2.6 §A/§B，2026-08-20）：
+> `verdict.request` 加性可选表 `judgedLoc=[loc,...]`（**判决语言集**每
+> 文件行数多重集，非降序、值 <2^64；缺席=[]=S 不可导出；计入 row cap
+> ——C15 纪律）；`ceilings` 码域 0..1 扩至 **0..4**（2=sizeHard 默认
+> 750〔硬线首次入核〕、3=sizePMax 默认 10、4=softLineK 默认 2，值 ≥1）；
+> `newBaseline` 加性键 `softLine`（整数或 null）：establish 时由核按
+> **乘法序统计**导出 S=clamp(floor(median·r^k), [200,500])，r=median
+> max(x/m,m/x)——log 单调故与 median+k·MAD(log-LOC) 精确等价，全程
+> Data.Ratio 零对数（Entropy.hs 纪律）；非 establish 原样携带（重锚仅随
+> CE_ACCEPT_BASELINE）。**轴 0 判决语义变更（分数迁移，发版声明义务）**：
+> 二值计数改凸罚 p(x)=P_max·((x−S)/(H−S))²（x>S 全程同式，轴内有理
+> 累加、轴口一次 floor，axes 行形不变）；S=基线 softLine，缺省回落
+> sizeCeil；H≤S 退化为旧二值（防除零，具名测试钉住）。knobsEcho
+> 12 键 → **15 键**（+sizeHard/sizePMax/softLineK）。
 > **2.13.0**（M7.5b trend/1 第八判决家族，2026-08-18）：
 > `trend.request` `rows=[[ts,score,scale]]`（ts **次序不设限**——
 > 2026-08-20 评审 #9 放宽：最小二乘与次序无关，而 first-parent 历史

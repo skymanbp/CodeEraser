@@ -66,10 +66,12 @@ weightsOffence rows =
     [_, w] -> w == 0
     _ -> False
 
--- | Only the size (0) and coc (1) axes are configurable here, and a
--- ceiling below 1 would violate every unit by fiat.
+-- | Codes 0..4 since 2.14.0: size soft-fallback (0), coc (1), and
+-- the v0.6 zone knobs — hard line H (2), P_max (3), soft-line
+-- exponent k (4). A value below 1 would violate every unit by fiat
+-- (and a zero H or P_max would kill the curve).
 ceilingsOffence :: [[Integer]] -> Maybe String
-ceilingsOffence = knobTable "ceilings" 1 "unknown ceiling axis" low
+ceilingsOffence = knobTable "ceilings" 4 "unknown ceiling axis" low
  where
   low _ v = if v < 1 then Just "ceiling below 1" else Nothing
 

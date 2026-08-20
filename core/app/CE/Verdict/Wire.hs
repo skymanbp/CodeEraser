@@ -64,6 +64,12 @@ data VerdictReq = VerdictReq
     -- by `ce dedup --check` alone. Absent = the condition is not
     -- evaluated (the ce check road is untouched).
     reqDedup :: Maybe [Integer]
+  , -- plan v2.6 §B (2.14.0, additive): the JUDGED-language file-LOC
+    -- multiset the soft line derives from at establish. Values
+    -- only — no entities, no paths (§5.9.2); the size axis itself
+    -- keeps judging the wider continuous table (the v2.5 scan-only
+    -- arm stays size-gated). Absent = [] = no derivable S.
+    reqJudgedLoc :: [Integer]
   }
 
 instance FromJSON VerdictReq where
@@ -84,6 +90,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "thresholds" .!= []
       <*> o .:? "tolerance" .!= []
       <*> o .:? "dedup"
+      <*> o .:? "judgedLoc" .!= []
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -112,6 +119,7 @@ violation parsed req =
     , toleranceOffence (reqTolerance req)
     , floorOffence (reqThresholds req) (reqFloor req)
     , dedupOffence (reqDedup req)
+    , judgedLocOffence (reqJudgedLoc req)
     ]
  where
   n = toInteger (length (reqTier req))
@@ -195,28 +203,37 @@ discEntry i x
 
 -- | The one reader of ce-baseline.json bytes: null = establish;
 -- otherwise {continuous, discrete} with the same row discipline as
--- the live tables. Entities are NOT range-checked against the tier
--- universe — a baseline may outlive the files it measured.
+-- the live tables, plus (2.14.0, additive) the optional frozen
+-- softLine — absent or null on a pre-v0.6 file, and the size axis
+-- then falls back to the sizeCeil knob. Entities are NOT
+-- range-checked against the tier universe — a baseline may outlive
+-- the files it measured.
 parseBaseline :: Value -> Either String (Maybe Baseline)
 parseBaseline Null = Right Nothing
 parseBaseline v = case AT.parse bl v of
   AT.Error e -> Left ("baseline: " <> e)
-  AT.Success (cont, disc) ->
+  AT.Success (cont, disc, soft) ->
     case asum
       [ asum (zipWith contShape [0 :: Int ..] cont)
       , ascendingBy "baseline.continuous" 2 cont
       , ascendingBy "baseline.discrete" 1 (map pure disc)
+      , softShape soft
       ] of
       Just why -> Left why
-      Nothing -> Right (Just (Baseline cont disc))
+      Nothing -> Right (Just (Baseline cont disc soft))
  where
-  bl = withObject "baseline" $ \o -> (,) <$> o .: "continuous" <*> o .: "discrete"
+  bl = withObject "baseline" $ \o ->
+    (,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine"
   contShape i row = case row of
     [_, code, _]
       | any (< 0) row -> Just (label "baseline.continuous" i <> "negative field")
       | code > 6 -> Just (label "baseline.continuous" i <> "unknown metric code")
       | otherwise -> Nothing
     _ -> Just (label "baseline.continuous" i <> "malformed row")
+  softShape Nothing = Nothing
+  softShape (Just s)
+    | s < 1 || s >= 18446744073709551616 = Just "baseline.softLine: outside 1..u64"
+    | otherwise = Nothing
 
 -- knob-table offences live in CE.Verdict.Table (the shared row
 -- grammar), split from this module at the 300-line law.
@@ -247,3 +264,22 @@ dedupOffence (Just row) = case row of
   _ -> Just "dedup: malformed pair (need [blocks,budget])"
  where
   u64 = 18446744073709551616
+
+-- | plan v2.6 §B: the judged-LOC multiset is values only,
+-- non-descending (duplicates are the POINT of a multiset — the
+-- strict ascendingBy would refuse two same-length files), in u64.
+judgedLocOffence :: [Integer] -> Maybe String
+judgedLocOffence locs =
+  asum
+    [ asum (zipWith one [0 :: Int ..] locs)
+    , asum
+        [ if prev <= cur
+            then Nothing
+            else Just (label "judgedLoc" i <> "not non-descending")
+        | (i, (prev, cur)) <- zip [1 :: Int ..] (zip locs (drop 1 locs))
+        ]
+    ]
+ where
+  one i x
+    | x < 0 || x >= 18446744073709551616 = Just (label "judgedLoc" i <> "outside u64")
+    | otherwise = Nothing

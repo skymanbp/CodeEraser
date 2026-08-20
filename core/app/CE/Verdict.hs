@@ -13,12 +13,13 @@
 -- graph family's 2a → 2g path, walked a third time.
 module CE.Verdict (respond) where
 
-import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
-import CE.Verdict.Join (Knobs (..), Legs (..), Pos (..), bound, judge)
-import CE.Verdict.Ratchet (Baseline (..), RatchetKnobs (..), Ratcheted (..), ratchet, ratchetBound)
+import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap)
+import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, judge)
+import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
+import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), effectiveWeights, penalties, score, scoreBound)
+import CE.Verdict.Soft (softLine)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
-import CE.Wire (applyRows, pick)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -60,13 +61,14 @@ rowTotal req =
     , length (reqThresholds req)
     , length (reqTolerance req)
     , maybe 0 length (reqDedup req)
+    , length (reqJudgedLoc req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
 -- a malformed baseline contributes 0 and is refused by violation
 -- immediately after the cap admits the request.
 baselineRows :: Either String (Maybe Baseline) -> Int
-baselineRows (Right (Just (Baseline cont disc))) = length cont + length disc
+baselineRows (Right (Just (Baseline cont disc _))) = length cont + length disc
 baselineRows _ = 0
 
 -- | The judged result: join candidates per sim row, the seven axes,
@@ -96,7 +98,13 @@ result proto parsed req =
               -- instead of by construction-time coincidence
               "failed" .= [name | (name, True) <- conds]
             ]
-      , "newBaseline" .= object ["continuous" .= rNewCont r, "discrete" .= rNewDisc r]
+      , -- softLine (2.14.0, plan v2.6 §B): derived from judgedLoc at
+        -- establish, carried verbatim otherwise — the re-anchor is
+        -- CE_ACCEPT_BASELINE by construction, because only establish
+        -- reaches the derivation
+        "newBaseline"
+          .= object
+            ["continuous" .= rNewCont r, "discrete" .= rNewDisc r, "softLine" .= newSoft]
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
@@ -112,9 +120,17 @@ result proto parsed req =
   k = effectiveKnobs (reqCeilings req) (reqThresholds req)
   rk = effectiveRatchet (reqTolerance req)
   jk = effectiveJoin k (reqThresholds req)
-  pens = penalties k (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
+  pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
   (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id parsed
+  -- the soft line judging THIS run: the committed one, or (only at
+  -- establish) the fresh derivation — which is also what the new
+  -- baseline freezes, so the establishing run and every later run
+  -- judge with the same S
+  effSoft = case base of
+    Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)
+    Just b -> bSoft b
+  newSoft = effSoft
   r = ratchet rk base (reqCont req) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
   -- the second ratchet's comparison lives HERE (ADR-008 P2): the
@@ -137,73 +153,6 @@ failConditions r floorFail dedupOver =
   , ("floor", floorFail)
   , ("dedup_budget", dedupOver)
   ]
-
--- | scoreBound with the request's knob rows applied: the ceilings
--- table drives axes 0/1, the thresholds table its Score-owned codes
--- (3 = cochangeFloor is Join-owned and falls through to
--- effectiveJoin). One (code, setter) row per knob; absent rows keep
--- the Cost.hs DEFAULTS. Two tables, not four: the batch's first
--- ratchet bite was the join/tolerance sibling tables, repaid by
--- effectiveJoin/effectiveRatchet constructing records directly.
-effectiveKnobs :: [[Integer]] -> [[Integer]] -> ScoreKnobs
-effectiveKnobs ceils thrs =
-  applyRows ceilingSetters ceils (applyRows thresholdSetters thrs scoreBound)
-
-ceilingSetters :: [(Integer, Integer -> ScoreKnobs -> ScoreKnobs)]
-ceilingSetters = [(0, \v k -> k {sSizeCeil = v}), (1, \v k -> k {sCocCeil = v})]
-
-thresholdSetters :: [(Integer, Integer -> ScoreKnobs -> ScoreKnobs)]
-thresholdSetters =
-  [ (0, \v k -> k {sDeadIndegCeil = v})
-  , (1, \v k -> k {sRewriteNum = v})
-  , (2, \v k -> k {sRewriteDen = v})
-  , (4, \v k -> k {sViolCost = v})
-  , (5, \v k -> k {sDefaultWeight = v})
-  , (6, \v k -> k {sScoreScale = v})
-  ]
-
--- | The tolerance legs by position (0 num / 1 den / 2 abs): a
--- record from lookups, not a sibling lambda table.
-effectiveRatchet :: [[Integer]] -> RatchetKnobs
-effectiveRatchet rows =
-  RatchetKnobs (leg 0 rTolNum) (leg 1 rTolDen) (leg 2 rTolAbs)
- where
-  leg c f = pick rows c (f ratchetBound)
-
--- | The join lattice reads the SAME effective rewrite ratio the
--- score judged with (one authority, two readers) plus the cochange
--- floor row (code 3) the score does not own.
-effectiveJoin :: ScoreKnobs -> [[Integer]] -> Knobs
-effectiveJoin k thrs =
-  bound
-    { kRewriteNum = sRewriteNum k
-    , kRewriteDen = sRewriteDen k
-    , kCochangeFloor = pick thrs 3 (kCochangeFloor bound)
-    }
-
--- pick/applyRows live in CE.Wire since the twelfth bite (the
--- seventh family recloned both) — the fold grammar is family
--- infrastructure, not verdict-family property.
-
--- | Every configurable knob the judgment ran with, echoed so the
--- client can assert the FULL round trip and the empty-table default
--- gate can kill every remaining mirror.
-knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Value
-knobsEcho k rk jk =
-  object
-    [ "sizeCeil" .= sSizeCeil k
-    , "cocCeil" .= sCocCeil k
-    , "deadIndegCeil" .= sDeadIndegCeil k
-    , "rewriteNum" .= sRewriteNum k
-    , "rewriteDen" .= sRewriteDen k
-    , "cochangeFloor" .= kCochangeFloor jk
-    , "violCost" .= sViolCost k
-    , "defaultWeight" .= sDefaultWeight k
-    , "scoreScale" .= sScoreScale k
-    , "tolNum" .= rTolNum rk
-    , "tolDen" .= rTolDen rk
-    , "tolAbs" .= rTolAbs rk
-    ]
 
 -- | Join-candidate rows, one per sim row (split from result at the
 -- E01 line — the leg maps are the candidates' concern alone). The
@@ -262,7 +211,12 @@ tooLarge proto req =
               "fail" .= True
             , "failed" .= (["degraded"] :: [String])
             ]
-      , "newBaseline" .= object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Value])]
+      , "newBaseline"
+          .= object
+            [ "continuous" .= ([] :: [Value])
+            , "discrete" .= ([] :: [Value])
+            , "softLine" .= (Nothing :: Maybe Integer)
+            ]
       , -- defaults: no judgment ran, so no override was applied
         "knobs" .= knobsEcho scoreBound ratchetBound bound
       , "weights" .= effectiveWeights scoreBound []

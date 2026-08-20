@@ -110,12 +110,13 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         None => (Vec::new(), Vec::new()),
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
+    let (continuous, judged_loc) = size_facts(root)?;
     let req = wire::Request {
         sim: m.sim,
         pos: m.pos,
         churn: churn_t,
         cochange: cochange_t,
-        continuous: continuous_rows(root)?,
+        continuous,
         discrete: m.members,
         baseline: if opts.establish {
             serde_json::Value::Null
@@ -123,13 +124,14 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
             baseline::read(root)?.unwrap_or(serde_json::Value::Null)
         },
         floor: opts.floor,
-        ceilings: knobs::ceiling_rows(&cfg.thresholds),
+        ceilings: knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
         weights: knobs::weight_rows(&cfg.score)?,
         thresholds: knobs::threshold_rows(&cfg.score),
         tolerance: knobs::tolerance_rows(&cfg.score),
         // the dedup pair is `ce dedup --check`'s leg alone (P2) —
         // this road stays byte-identical
         dedup: None,
+        judged_loc,
         files: m.files,
     };
     let reply = wire::judge(&opts.core, &req)?;
@@ -223,6 +225,15 @@ fn member_set(root: &Path, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) 
 /// double-emitting a file. pub: the 3j gate test asserts per-file
 /// coverage through this same throat.
 pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
+    Ok(size_facts(root)?.0)
+}
+
+/// One walk, both size facts (plan v2.6 §B): the continuous rows
+/// over the SCAN set (the v2.5 scan-only arm stays size-gated), and
+/// the judged-language LOC multiset the core derives the soft line
+/// from — two universes on purpose, the boundary being
+/// Lang::judged_path (the ONE v2.5 authority).
+fn size_facts(root: &Path) -> Result<(Vec<[u64; 3]>, Vec<u64>)> {
     let (files, _findings, _summary) = scan::analyze(root)?;
     let mut rows: Vec<[u64; 3]> = files.iter().flat_map(baseline::continuous_rows).collect();
     rows.sort_unstable();
@@ -232,7 +243,13 @@ pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
         rows.windows(2).all(|w| w[0][..2] != w[1][..2]),
         "continuous entity fingerprint collision"
     );
-    Ok(rows)
+    let mut locs: Vec<u64> = files
+        .iter()
+        .filter(|f| crate::scan::lang::Lang::judged_path(Path::new(&f.path)).is_some())
+        .map(|f| f.total_lines as u64)
+        .collect();
+    locs.sort_unstable(); // the wire demands non-descending
+    Ok((rows, locs))
 }
 
 /// Per-file churn sums over the per-unit ledger plus the co-change

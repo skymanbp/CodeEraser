@@ -171,5 +171,15 @@ entry_globs = [
 # import line (Data.IntMap for the depth-chain contract) and its
 # import-region block re-partnered from Graph.hs/Scan.hs to
 # Docdup.hs, netting one block out. Measured after cargo fmt.
+# 166 -> 165 (v0.6 P1, the 2.14.0 verdict face): the soft-zone batch
+# first grew +3 (the widened ceilingSetters lambda table became a
+# literal twin of thresholdSetters — repaid at the MECHANISM, the
+# effectiveRatchet record-from-lookups precedent, -2), kept one
+# honest remainder (the 5-key ceilings registry in score/knobs.rs
+# rhymes with t3f.rs's frozen-vocabulary tables — folding product
+# wire vocabulary into a test instrument would be the wrong
+# coupling, +1), and then the two E01 wall splits (CE/Verdict/Knobs,
+# VerdictKnobProps) dissolved two import-region twins (-2).
+# Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 166
+budget = 165

@@ -52,6 +52,11 @@ module CE.Verdict.Cost
   , tolDen
   , tolAbs
   , sizeCeil
+  , sizeHard
+  , sizePMax
+  , softLineK
+  , softMin
+  , softMax
   , cocCeil
   , deadIndegCeil
   , violCost
@@ -91,11 +96,43 @@ tolDen = 100
 tolAbs :: Integer
 tolAbs = 10
 
--- | Size-axis violation ceiling: file lines over this count as a
--- violation (metricCode 0). The dogfood number (plan §4.1) — the
--- same 300 the scan gate warns at.
+-- | Size-axis soft-line FALLBACK: when the baseline carries no
+-- softLine (pre-v0.6 file, or no judgedLoc to derive from), the
+-- graded zone opens here (plan §4.1's 300; plan v2.6 §A). Before
+-- v0.6 this was the binary violation ceiling.
 sizeCeil :: Integer
 sizeCeil = 300
+
+-- | The hard line H (plan §4.1's 750), reaching the core for the
+-- first time in v0.6: the convex zone denominator (H − S). The
+-- deny semantics stay Rust-side (scan fail tier, guard budget);
+-- here it only scales the curve.
+sizeHard :: Integer
+sizeHard = 750
+
+-- | P_max: the axis-0 penalty of a file AT the hard line, in the
+-- same violation units the other axes count in — one hard-line
+-- file weighs like ten old binary violations. The curve keeps the
+-- same quadratic past H (monotone, no kink), so P_max is the
+-- at-the-line value, not a cap.
+sizePMax :: Integer
+sizePMax = 10
+
+-- | k: the multiplicative-MAD exponent in the soft-line derivation
+-- S = clamp(median·r^k, [softMin, softMax]) (plan v2.6 §B).
+-- Calibrated over self + requests + ripgrep (v0.6 P2): k=2 lands S
+-- within ±6% of the historical 300 on this repo's judged set.
+softLineK :: Integer
+softLineK = 2
+
+-- | The §B clamp fence: however the repo's distribution leans, the
+-- soft line stays inside [200, 500]. Structural constants, not
+-- knobs — the fence is what makes the relative line safe to trust.
+softMin :: Integer
+softMin = 200
+
+softMax :: Integer
+softMax = 500
 
 -- | Complexity-axis violation ceiling: cognitive complexity over
 -- this counts (metricCode 1) — plan §4.1's CoC 15.

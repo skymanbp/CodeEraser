@@ -23,6 +23,7 @@ import qualified ScanProps
 import qualified StructureProps
 import qualified TrendProps
 import qualified VerdictProps
+import qualified VerdictKnobProps
 import qualified VerdictWireProps
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
@@ -80,6 +81,7 @@ main = do
       , TrendProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
+      , VerdictKnobProps.battery
       ]
   unless (and results) exitFailure
 

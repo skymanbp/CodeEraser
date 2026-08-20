@@ -141,6 +141,9 @@ fn knob_default_drift_gate() {
         reply["knobs"],
         serde_json::json!({
             "sizeCeil": t.file_lines_warn, "cocCeil": t.cognitive_warn,
+            // the v0.6 zone trio (2.14.0): H mirrors ce.toml's fail
+            // line; P_max and k have no config default and pin here
+            "sizeHard": t.file_lines_fail, "sizePMax": 10, "softLineK": 2,
             "deadIndegCeil": 0, "rewriteNum": 50, "rewriteDen": 100,
             "cochangeFloor": 2, "violCost": 10, "defaultWeight": 1,
             "scoreScale": 1000, "tolNum": 102, "tolDen": 100, "tolAbs": 10,

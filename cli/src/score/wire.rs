@@ -43,6 +43,10 @@ pub struct Request {
     /// is the core's. None = the condition is not evaluated, which
     /// keeps the ce check/baseline road byte-identical.
     pub dedup: Option<[u64; 2]>,
+    /// The judged-language file-LOC multiset (2.14.0, plan v2.6 §B):
+    /// values only, non-descending — what the core derives the soft
+    /// line from AT ESTABLISH. Empty = no derivable S.
+    pub judged_loc: Vec<u64>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -91,6 +95,7 @@ impl Request {
             thresholds: Vec::new(),
             tolerance: Vec::new(),
             dedup: Some([blocks, budget]),
+            judged_loc: Vec::new(),
         }
     }
 }
@@ -120,6 +125,7 @@ pub fn body(r: &Request) -> Value {
     if let Some(pair) = r.dedup {
         o["dedup"] = json!(pair);
     }
+    o["judgedLoc"] = json!(r.judged_loc);
     o
 }
 

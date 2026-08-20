@@ -21,6 +21,7 @@ import CE.Clone.Cost (tsedDen, tsedNum)
 import CE.Docdup.Cost (jaccardDen, jaccardNum)
 import CE.Graph.Cost (sccFloor)
 import qualified CE.Verdict.Cost as Cost
+import CE.Verdict.Soft (zonePenalty)
 
 -- | The validated fact tables (row shapes enforced by CE.Verdict's
 -- boundary contract before anything reaches here).
@@ -37,6 +38,9 @@ data Facts = Facts
 
 data ScoreKnobs = ScoreKnobs
   { sSizeCeil :: Integer
+  , sSizeHard :: Integer
+  , sSizePMax :: Integer
+  , sSoftK :: Integer
   , sCocCeil :: Integer
   , sCloneNum :: Integer
   , sCloneDen :: Integer
@@ -55,6 +59,9 @@ scoreBound :: ScoreKnobs
 scoreBound =
   ScoreKnobs
     { sSizeCeil = Cost.sizeCeil
+    , sSizeHard = Cost.sizeHard
+    , sSizePMax = Cost.sizePMax
+    , sSoftK = Cost.softLineK
     , sCocCeil = Cost.cocCeil
     , sCloneNum = tsedNum
     , sCloneDen = tsedDen
@@ -77,9 +84,9 @@ scoreBound =
 -- (the M5-close warn repayment: seven guarded comprehensions in one
 -- body read as CC 17; the table now carries names, the predicates
 -- carry the decisions).
-penalties :: ScoreKnobs -> Facts -> [(Integer, Integer)]
-penalties k f =
-  [ (0, sizeOver k f)
+penalties :: ScoreKnobs -> Maybe Integer -> Facts -> [(Integer, Integer)]
+penalties k soft f =
+  [ (0, sizeZone k soft f)
   , (1, cocOver k f)
   , (2, cloneHits k f)
   , (3, dupHits k f)
@@ -91,8 +98,17 @@ penalties k f =
 count :: [()] -> Integer
 count = toInteger . length
 
-sizeOver :: ScoreKnobs -> Facts -> Integer
-sizeOver k f = count [() | [_, 0, v] <- fCont f, v > sSizeCeil k]
+-- | Axis 0 under the plan-v2.6 soft zone: exact-Rational convex
+-- penalties summed across every metricCode-0 row, floored ONCE at
+-- the axis boundary so the axes wire rows stay Integer. `soft` is
+-- the baseline's committed S (Nothing = pre-v0.6 baseline, or no
+-- derivable distribution) falling back to the sSizeCeil knob — the
+-- old binary line becomes the zone's opening edge, never a cliff.
+sizeZone :: ScoreKnobs -> Maybe Integer -> Facts -> Integer
+sizeZone k soft f =
+  floor (sum [zonePenalty s (sSizeHard k) (sSizePMax k) v | [_, 0, v] <- fCont f])
+ where
+  s = maybe (sSizeCeil k) id soft
 
 cocOver :: ScoreKnobs -> Facts -> Integer
 cocOver k f = count [() | [_, 1, v] <- fCont f, v > sCocCeil k]

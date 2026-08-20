@@ -35,6 +35,8 @@ guard.mode\tExplicit hook tier for every rule class: observe / warn / ask / deny
 dedup.budget\tOnly-shrink clone-block budget; `ce dedup --check` fails when the repo exceeds it
 graph.entry_globs\tExtra liveness roots for the deadcode judgment, beyond the mechanical entry conventions
 score.weights\tPer-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default
+score.size_penalty_max\tSoft-zone curve: the size-axis penalty of a file AT the hard line (plan v2.6; default 10)
+score.soft_line_k\tRelative soft line: the multiplicative-MAD exponent k in S = clamp(median*r^k, [200,500]) (default 2)
 score.dead_indeg_ceil\tDeadcode axis: a file at or below this in-degree (and unreachable) counts as orphaned
 score.rewrite_num\tChurn axis rewrite-share threshold, ratio numerator (cross-multiplied)
 score.rewrite_den\tChurn axis rewrite-share threshold, ratio denominator

@@ -46,6 +46,8 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | key | default | meaning |
 |---|---|---|
 | `weights` | *(absent)* | Per-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default |
+| `size_penalty_max` | *(absent)* | Soft-zone curve: the size-axis penalty of a file AT the hard line (plan v2.6; default 10) |
+| `soft_line_k` | *(absent)* | Relative soft line: the multiplicative-MAD exponent k in S = clamp(median*r^k, [200,500]) (default 2) |
 | `dead_indeg_ceil` | *(absent)* | Deadcode axis: a file at or below this in-degree (and unreachable) counts as orphaned |
 | `rewrite_num` | *(absent)* | Churn axis rewrite-share threshold, ratio numerator (cross-multiplied) |
 | `rewrite_den` | *(absent)* | Churn axis rewrite-share threshold, ratio denominator |

@@ -9,7 +9,7 @@
 -- first ADR-008 step; thresholds/tolerance from P4). The pure
 -- score/ratchet checks stay in VerdictProps; the scaffold lives in
 -- WireHarness (the P3 tenth-bite repayment).
-module VerdictWireProps (battery) where
+module VerdictWireProps (battery, wireReq, replyObj) where
 
 import CE.Verdict (respond)
 import CE.Verdict.Cost (verdictNodeCap)
@@ -24,10 +24,7 @@ battery =
     [ ("ablating any join leg moves the candidate census", ablation)
     , ("ratchet idempotence: newBaseline fed back judges nothing", idempotent)
     , ("refusals name the offender with code and message", refusals)
-    , ("ceilings override moves the score and echoes in knobs", ceilingKnob)
-    , ("thresholds/tolerance rows move the verdict and echo", thresholdKnob)
     , ("an over-cap request degrades to a reply that FAILS", degradedFails)
-    , ("the dedup pair fails over budget and passes at it", dedupBudget)
     ]
 
 -- | A wire request whose candidates cover merge, delete and hotspot;
@@ -127,10 +124,29 @@ refusals =
       -- and a zero denominator each refuse by name
       refused (simReq [[0, 1, 3, 50, 100]]) "unknown sim kind"
     , refused (simReq [[0, 1, 0, 50, 0]]) "zero denominator"
-    , -- the ceilings table (ADR-008 first step) refuses by name too
-      refused (ceilReq [[2, 300]]) "unknown ceiling axis"
+    , -- the ceilings table (ADR-008 first step) refuses by name too;
+      -- 99 is the stably-unknown probe (the StructureProps lesson:
+      -- 2.14.0 made the old max+1 code 2 legal — a moving boundary
+      -- must not be frozen here)
+      refused (ceilReq [[99, 300]]) "unknown ceiling axis"
     , refused (ceilReq [[0, 0]]) "ceiling below 1"
     , refused (ceilReq [[1, 15], [0, 300]]) "not strictly ascending"
+    , -- the 2.14.0 judgedLoc multiset: non-descending, u64 values
+      refused (setKey "judgedLoc" (toJSON [300, 200 :: Integer]) base) "not non-descending"
+    , refused (setKey "judgedLoc" (toJSON [-1 :: Integer]) base) "outside u64"
+    , -- a stored softLine of 0 is no line at all — refused by name
+      refused
+        ( setKey
+            "baseline"
+            ( object
+                [ "continuous" .= ([] :: [Value])
+                , "discrete" .= ([] :: [Integer])
+                , "softLine" .= (0 :: Integer)
+                ]
+            )
+            base
+        )
+        "outside 1..u64"
     , -- the P4 tables: each judges by CODE (the generalized grammar)
       refused (thrReq [[7, 1]]) "unknown threshold knob"
     , refused (thrReq [[2, 0]]) "zero denominator"
@@ -158,76 +174,6 @@ refusals =
       (toJSON ([[0, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]] :: [[Integer]]))
       (setKey "pos" (toJSON [[1, 0, 0, 0, 1, 0 :: Integer]]) base)
   refused = refusedBy respond
-
--- | ADR-008 first step, driven through the REAL respond: a size row
--- at 310 violates the default 300 ceiling and is clean under a
--- requested 400 — the score must move — and the reply echoes the
--- EFFECTIVE knobs both times (the round trip the Rust client
--- asserts; an absent ceilings table echoes the defaults).
-ceilingKnob :: Bool
-ceilingKnob = case (run Nothing, run (Just [[0, 400]])) of
-  (Just (s0, k0), Just (s1, k1)) ->
-    s0 /= s1 && k0 == (Number 300, Number 15) && k1 == (Number 400, Number 15)
-  _ -> False
- where
-  run :: Maybe [[Integer]] -> Maybe (Value, (Value, Value))
-  run ceil = do
-    o <- replyObj (maybe id (setKey "ceilings" . toJSON) ceil sized)
-    s <- KM.lookup "score" o
-    (,) s <$> ((,) <$> echo o "sizeCeil" <*> echo o "cocCeil")
-  sized = setKey "continuous" (toJSON [[0, 0, 310 :: Integer]]) (wireReq [] [] [] [])
-
-echo :: Object -> String -> Maybe Value
-echo o k = do
-  Object ks <- KM.lookup "knobs" o
-  KM.lookup (Key.fromString k) ks
-
--- | ADR-008 P4 through the REAL respond: a scoreScale row (code 6)
--- halves the opening value and echoes; a tolerance row zeroing the
--- +abs leg (code 2) turns a within-tolerance ceiling bust (310 over
--- a 300 baseline: tolerated = max(306, 310) = 310) into
--- ratchet.fail (tolerated collapses to 306), with the leg echoed.
-thresholdKnob :: Bool
-thresholdKnob = scaleMoves && tolFlips
- where
-  sized = setKey "continuous" (toJSON [[0, 0, 310 :: Integer]]) (wireReq [] [] [] [])
-  scaleMoves = case (run Nothing, run (Just [[6, 500]])) of
-    (Just (s0, e0), Just (s1, e1)) ->
-      s0 /= s1 && e0 == Number 1000 && e1 == Number 500
-    _ -> False
-  run :: Maybe [[Integer]] -> Maybe (Value, Value)
-  run rows = do
-    o <- replyObj (maybe id (setKey "thresholds" . toJSON) rows sized)
-    (,) <$> KM.lookup "score" o <*> echo o "scoreScale"
-  based =
-    setKey
-      "baseline"
-      (object ["continuous" .= [[0, 0, 300 :: Integer]], "discrete" .= ([] :: [Integer])])
-      sized
-  tolFlips = case (fails Nothing, fails (Just [[2, 0]])) of
-    (Just (False, _), Just (True, e)) -> e == Number 0
-    _ -> False
-  fails :: Maybe [[Integer]] -> Maybe (Bool, Value)
-  fails rows = do
-    o <- replyObj (maybe id (setKey "tolerance" . toJSON) rows based)
-    Object rat <- KM.lookup "ratchet" o
-    Bool f <- KM.lookup "fail" rat
-    e <- echo o "tolAbs"
-    pure (f, e)
-
--- | ADR-008 P2 through the REAL respond: the [blocks, budget] pair
--- answers through the fail bit — one over budget fails, at budget
--- passes; the absent case is every OTHER check in this battery
--- (none sends the pair, none fails on it).
-dedupBudget :: Bool
-dedupBudget = failAt [146, 145] == Just True && failAt [145, 145] == Just False
- where
-  failAt :: [Integer] -> Maybe Bool
-  failAt pair = do
-    o <- replyObj (setKey "dedup" (toJSON pair) (wireReq [] [] [] []))
-    Object rat <- KM.lookup "ratchet" o
-    Bool f <- KM.lookup "fail" rat
-    pure f
 
 -- | ADR-008 P1 through the REAL respond: one node past the cap
 -- degrades to a complete reply whose ratchet.fail is TRUE — a gate
