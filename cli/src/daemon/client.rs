@@ -3,6 +3,7 @@
 //! (version skew) the old daemon exits and one respawn round brings
 //! up a daemon from THIS binary.
 
+use super::auth;
 use super::proto::{DAEMON_PROTO, Request, Response, socket_name};
 use anyhow::{Context, Result, bail};
 use interprocess::local_socket::traits::Stream as _;
@@ -20,36 +21,38 @@ const RETRY_DELAY: Duration = Duration::from_millis(100);
 /// detached 30-min daemon per invocation dir, locking the exe).
 pub fn request_if_running(root: &Path, req: &Request) -> Result<Response> {
     let mut conn = BufReader::new(try_connect(root)?);
-    match hello(&mut conn)? {
+    match hello(&mut conn, root)? {
         Response::HelloOk { .. } => round_trip(&mut conn, req),
         other => bail!("incompatible daemon: {other:?}"),
     }
 }
 
-/// One request/response round-trip, lazily starting the daemon.
+/// One round-trip, lazily starting the daemon. Either recoverable
+/// hello outcome gets exactly one more round: a skew restart
+/// (respawn from this binary) or an unauthorized refusal (a fresh
+/// daemon mints its token moments after the bind this client raced).
 pub fn request(root: &Path, req: &Request) -> Result<Response> {
     let mut conn = connect_or_spawn(root)?;
-    match hello(&mut conn)? {
-        Response::HelloOk { .. } => {}
-        Response::Restart { reason } => {
-            // old daemon exited; one respawn round from this binary
-            drop(conn);
-            conn = connect_or_spawn(root)?;
-            match hello(&mut conn)? {
-                Response::HelloOk { .. } => {}
-                other => bail!("daemon still incompatible after restart ({reason}): {other:?}"),
+    for retry in [false, true] {
+        match hello(&mut conn, root)? {
+            Response::HelloOk { .. } => return round_trip(&mut conn, req),
+            Response::Restart { .. } if !retry => conn = connect_or_spawn(root)?,
+            Response::Error { ref message } if !retry && message.starts_with("unauthorized") => {
+                std::thread::sleep(RETRY_DELAY); // let the fresh token land
+                conn = BufReader::new(try_connect(root)?);
             }
+            other => bail!("hello failed: {other:?}"),
         }
-        other => bail!("unexpected hello reply: {other:?}"),
     }
-    round_trip(&mut conn, req)
+    unreachable!("the second round returned or bailed")
 }
 
-fn hello(conn: &mut BufReader<Stream>) -> Result<Response> {
+fn hello(conn: &mut BufReader<Stream>, root: &Path) -> Result<Response> {
     round_trip(
         conn,
         &Request::Hello {
             proto: DAEMON_PROTO.into(),
+            token: auth::read(root),
         },
     )
 }

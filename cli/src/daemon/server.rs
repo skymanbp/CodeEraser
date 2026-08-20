@@ -5,14 +5,18 @@
 //! proves), exits after 30 min idle or on a version-skew hello.
 //! Wire contract: contracts/DAEMON.md + the daemon_proto goldens.
 
+mod replies;
+
+use super::auth;
 use super::coldstart;
 use super::judge::Judge;
 use super::proto::{DAEMON_PROTO, Request, Response, major, socket_name};
 use anyhow::{Context, Result};
 use interprocess::local_socket::traits::ListenerExt;
 use interprocess::local_socket::{GenericNamespaced, ListenerOptions, Stream, ToNsName};
+use replies::{dedup_reply, probe_reply};
 use std::io::{BufRead, BufReader, Write};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
@@ -39,6 +43,9 @@ pub fn serve(root: &Path) -> Result<()> {
         .name(ns)
         .create_sync()
         .with_context(|| format!("bind {name} (another daemon already serving this root?)"))?;
+    // after the bind on purpose: the bind is the singleton race, and
+    // a loser minting first would lock clients out of the winner
+    let token = auth::establish(&root)?;
     let start = Instant::now();
     touch(start);
     spawn_idle_watchdog(start);
@@ -54,7 +61,7 @@ pub fn serve(root: &Path) -> Result<()> {
             }
         };
         touch(start);
-        match handle(stream, &root, start, &mut judge) {
+        match handle(stream, &root, start, &mut judge, &token) {
             Ok(true) => {}
             Ok(false) => return Ok(()), // shutdown or skew exit
             Err(e) => eprintln!("ce daemon: connection: {e}"),
@@ -82,9 +89,19 @@ fn spawn_idle_watchdog(start: Instant) {
 }
 
 /// Returns Ok(false) when the daemon must stop (shutdown / skew).
-fn handle(stream: Stream, root: &Path, start: Instant, judge: &mut Judge) -> Result<bool> {
+/// Only a token-bearing hello unlocks a connection (1.1.0): before
+/// it, every other line gets the unauthorized refusal and the
+/// CONNECTION closes — the daemon itself lives on.
+fn handle(
+    stream: Stream,
+    root: &Path,
+    start: Instant,
+    judge: &mut Judge,
+    token: &str,
+) -> Result<bool> {
     let mut reader = BufReader::new(stream);
     let mut buf = Vec::new();
+    let mut authed = false;
     loop {
         buf.clear();
         if reader.read_until(b'\n', &mut buf)? == 0 {
@@ -109,10 +126,57 @@ fn handle(stream: Stream, root: &Path, start: Instant, judge: &mut Judge) -> Res
             }
         };
         touch(start);
+        match gate(&mut reader, &req, token, &mut authed)? {
+            Flow::Next => continue,
+            Flow::CloseConn => return Ok(true), // connection only
+            Flow::ExitDaemon => return Ok(false),
+            Flow::Dispatch => {}
+        }
         if !dispatch(&mut reader, root, start, judge, req)? {
             return Ok(false);
         }
     }
+}
+
+/// What the front door decided about one parsed line.
+enum Flow {
+    Dispatch,
+    Next,
+    CloseConn,
+    ExitDaemon,
+}
+
+/// The 1.1.0 front door: a hello negotiates (token before major) and
+/// flips `authed`; any other line before an authed hello is refused
+/// with the connection closed — the daemon itself lives on.
+fn gate(
+    reader: &mut BufReader<Stream>,
+    req: &Request,
+    expected: &str,
+    authed: &mut bool,
+) -> Result<Flow> {
+    if let Request::Hello { proto, token: sent } = req {
+        let (resp, verdict) = hello_reply(proto, sent, expected);
+        reply(reader.get_mut(), &resp)?;
+        return Ok(match verdict {
+            Hello::Authed => {
+                *authed = true;
+                Flow::Next
+            }
+            Hello::Refused => Flow::CloseConn,
+            Hello::Skew => Flow::ExitDaemon,
+        });
+    }
+    if *authed {
+        return Ok(Flow::Dispatch);
+    }
+    reply(
+        reader.get_mut(),
+        &Response::Error {
+            message: auth::UNAUTHORIZED.into(),
+        },
+    )?;
+    Ok(Flow::CloseConn)
 }
 
 /// Build the reply per request; the bool = keep serving.
@@ -124,7 +188,14 @@ fn dispatch(
     req: Request,
 ) -> Result<bool> {
     let (resp, keep) = match req {
-        Request::Hello { proto } => hello_reply(&proto),
+        // every hello (first or repeated) is consumed by handle();
+        // this arm is unreachable and exists for match exhaustiveness
+        Request::Hello { .. } => (
+            Response::Error {
+                message: "hello is negotiated per connection".into(),
+            },
+            true,
+        ),
         Request::Ping => (
             Response::Pong {
                 uptime_ms: start.elapsed().as_millis() as u64,
@@ -148,15 +219,33 @@ fn dispatch(
     Ok(keep)
 }
 
-/// Version skew → restart reply and stop; the client respawns a
-/// daemon from its own (newer) binary.
-fn hello_reply(proto: &str) -> (Response, bool) {
+/// What one hello line did to the connection.
+enum Hello {
+    Authed,
+    Refused,
+    Skew,
+}
+
+/// Token BEFORE major: a tokenless line must not be able to exit the
+/// daemon through a faked skew — that is an unauthenticated kill. A
+/// real newer-major client reads the token file first, so the
+/// restart-respawn chain still runs; on skew the daemon exits and
+/// the client respawns one from its own (newer) binary.
+fn hello_reply(proto: &str, sent: &str, expected: &str) -> (Response, Hello) {
+    if sent != expected {
+        return (
+            Response::Error {
+                message: auth::UNAUTHORIZED.into(),
+            },
+            Hello::Refused,
+        );
+    }
     if major(proto) != major(DAEMON_PROTO) {
         return (
             Response::Restart {
                 reason: format!("proto {proto} vs daemon {DAEMON_PROTO}"),
             },
-            false,
+            Hello::Skew,
         );
     }
     (
@@ -164,93 +253,11 @@ fn hello_reply(proto: &str) -> (Response, bool) {
             proto: DAEMON_PROTO.into(),
             version: env!("CARGO_PKG_VERSION").into(),
         },
-        true,
+        Hello::Authed,
     )
 }
 
-fn dedup_reply(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>) -> Response {
-    match run_dedup(root, min_tokens, min_distinct) {
-        Ok(report) => {
-            coldstart::mark_ready();
-            Response::DedupReport { report }
-        }
-        Err(e) => Response::Error {
-            message: format!("{e:#}"),
-        },
-    }
-}
-
-fn probe_reply(root: &Path, file_path: &str, content: &str) -> Response {
-    if !coldstart::index_ready(root) {
-        return Response::Error {
-            message: "index cold start: first build in progress".into(),
-        };
-    }
-    let t0 = Instant::now();
-    match run_probe(root, file_path, content) {
-        Ok(matches) => Response::ProbeReport {
-            matches,
-            elapsed_ms: t0.elapsed().as_millis() as u64,
-        },
-        Err(e) => Response::Error {
-            message: format!("{e:#}"),
-        },
-    }
-}
-
-/// Cheap by design (ADR-004): opens the index read-path only, never
-/// refreshes; unknown language probes report no matches.
-fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::Value> {
-    use crate::dedup::{Params, index::Index, pairs, probe};
-    use crate::scan::lang::Lang;
-    let path = Path::new(file_path);
-    let Some(lang) = Lang::from_path(path) else {
-        return Ok(serde_json::json!([]));
-    };
-    if lang.grammar().is_none() {
-        return Ok(serde_json::json!([]));
-    }
-    // Same containment authority as the FourClass leg: the path rides
-    // an unauthenticated socket, and one outside the served root is
-    // not ours to judge — its raw spelling would also become a
-    // self-exclusion key that excludes nothing.
-    if crate::scan::walk::contained(root, file_path).is_none() {
-        return Ok(serde_json::json!([]));
-    }
-    // canonicalize before stripping: `root` is canonical (serve()),
-    // and on Windows that is the \\?\ verbatim form — a plain
-    // absolute file_path never strip-matches it, which silently
-    // killed probe self-exclusion (caught by the observe-feed golden
-    // diverging across CI platforms). A not-yet-existing file can't
-    // canonicalize — and can't be in the index either, so the raw
-    // fallback is safe. The SPELLING then goes through the one
-    // rel_str throat (M5-close review: this was the third copy).
-    let canon = std::fs::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
-    let rel = crate::scan::walk::rel_str(root, &canon);
-    let p = Params::default();
-    let idx = Index::open(&root.join(".ce/index.db"), p)?;
-    let f = pairs::Filter {
-        min_tokens: p.guarantee(),
-        min_distinct: pairs::DEFAULT_MIN_DISTINCT,
-    };
-    let target = probe::Target {
-        rel: &rel,
-        content: content.as_bytes(),
-        lang,
-    };
-    let matches = probe::probe(&idx, root, target, p, f)?;
-    Ok(serde_json::to_value(matches)?)
-}
-
-fn run_dedup(
-    root: &Path,
-    min_tokens: Option<usize>,
-    min_distinct: Option<usize>,
-) -> Result<serde_json::Value> {
-    let db: Option<PathBuf> = None; // daemon always uses <root>/.ce/index.db
-    let (found, summary) = crate::dedup::analyze(root, db, min_tokens, min_distinct)?;
-    crate::dedup::report_json(&found, &summary)
-}
+// Reply builders (dedup/probe) live in replies.rs — dogfood split.
 
 fn reply(stream: &mut Stream, resp: &Response) -> Result<()> {
     let line = serde_json::to_string(resp)?;

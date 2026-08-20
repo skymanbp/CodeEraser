@@ -15,6 +15,9 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0.104"
 clap = { version = "4", features = ["derive"] }
+# daemon token entropy (auth.rs) — already in the tree transitively,
+# so this adds no new build node
+getrandom = "0.3"
 ignore = "0.4.33"
 interprocess = "2.4.3"
 # 0.38+ pulls libsqlite3-sys 0.38 whose build.rs needs unstable

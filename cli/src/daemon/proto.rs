@@ -9,15 +9,23 @@ use std::path::Path;
 /// Daemon protocol version — independent of the ce-core handshake
 /// proto (contracts/VERSIONING.md governs both). 0.2.0 added the
 /// four-class forwarding; 1.0.0 = the M4 content finalization stamp,
-/// aligned with the handshake proto (no shape change).
-pub const DAEMON_PROTO: &str = "1.0.0";
+/// aligned with the handshake proto (no shape change); 1.1.0 adds
+/// the additive hello.token (auth.rs — a pre-1.1.0 line still
+/// parses, and gets the unauthorized refusal).
+pub const DAEMON_PROTO: &str = "1.1.0";
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Request {
-    /// First line on every connection.
+    /// First line on every connection — and since 1.1.0 the ONLY
+    /// line an unauthorized connection gets to send: `token` must
+    /// match the served root's .ce/daemon.token (auth.rs), checked
+    /// BEFORE the major so a tokenless skew line cannot exit the
+    /// daemon at will.
     Hello {
         proto: String,
+        #[serde(default, skip_serializing_if = "String::is_empty")]
+        token: String,
     },
     Ping,
     /// Run the dedup pipeline on the daemon's project root.

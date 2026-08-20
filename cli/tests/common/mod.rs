@@ -12,6 +12,7 @@
 #![allow(unused_imports)]
 
 pub mod audit;
+pub mod daemon;
 pub mod gates;
 pub mod gitio;
 pub mod hooks;
@@ -19,7 +20,7 @@ pub mod ladder;
 // One brace, not five `pub use` lines: the per-line form made this
 // index a byte-shaped twin of eval_support/mod.rs the moment a fifth
 // entry joined, and a module index is not something to clone.
-pub use {audit::*, gates::*, gitio::*, hooks::*, ladder::*};
+pub use {audit::*, daemon::*, gates::*, gitio::*, hooks::*, ladder::*};
 
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
@@ -233,66 +234,5 @@ pub fn build_index(dir: &Path) {
     assert!(out.status.success(), "seed dedup failed");
 }
 
-/// Spawn the real `ce daemon` for `root` and wait until it answers a
-/// ping. Tests must NEVER go through the lazy-spawning
-/// `client::request`: it respawns current_exe(), which inside a test
-/// harness is the TEST binary — libtest then treats the `daemon` arg
-/// as a name filter and runs `*_daemon` tests NESTED, wiping shared
-/// tmp dirs and double-serving sockets mid-test (the Windows-CI
-/// cold-start flake class). `request_if_running` never spawns; a
-/// connect failure is a loud test failure, not silent process spray.
-/// Daemon stderr is inherited so CI logs show its cold-start lines.
-pub fn spawn_daemon_ready(root: &Path) -> Child {
-    use codeeraser::daemon::{client, proto::Request};
-    let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
-        .arg("daemon")
-        .arg(root)
-        .env("CE_DAEMON_IDLE_SECS", "120")
-        .stdin(Stdio::null())
-        .stdout(Stdio::null())
-        .stderr(Stdio::inherit())
-        .spawn()
-        .expect("spawn ce daemon");
-    for _ in 0..50 {
-        std::thread::sleep(std::time::Duration::from_millis(100));
-        if client::request_if_running(root, &Request::Ping).is_ok() {
-            return child;
-        }
-    }
-    let _ = child.kill();
-    let _ = child.wait(); // reap — no zombie on the panic path
-    panic!("daemon never came up");
-}
-
-/// Ask the daemon for `dir` to shut down (ignore errors — may be
-/// gone). Never the lazy-spawning path: spawning a daemon in order to
-/// shut it down would be absurd, and in a test harness it sprays
-/// nested test-binary processes (see spawn_daemon_ready).
-pub fn shutdown_daemon(dir: &Path) {
-    use codeeraser::daemon::{client, proto::Request};
-    let _ = client::request_if_running(dir, &Request::Shutdown);
-}
-
-/// Clean daemon shutdown (Bye asserted) then reaped exit — the
-/// shared tail of every daemon e2e case.
-pub fn shutdown_and_wait(root: &Path, child: Child, what: &str) {
-    use codeeraser::daemon::{client, proto::Request, proto::Response};
-    match client::request_if_running(root, &Request::Shutdown).expect("shutdown") {
-        Response::Bye => {}
-        other => panic!("expected bye, got {other:?}"),
-    }
-    wait_exit(child, what);
-}
-
-/// Wait ~5s for `child` to exit; kill it and panic on timeout.
-pub fn wait_exit(mut child: Child, what: &str) {
-    for _ in 0..50 {
-        if let Ok(Some(_)) = child.try_wait() {
-            return;
-        }
-        std::thread::sleep(std::time::Duration::from_millis(100));
-    }
-    let _ = child.kill();
-    let _ = child.wait(); // reap — no zombie on the panic path
-    panic!("{what} did not exit");
-}
+// Daemon e2e machinery (spawn/raw-line/shutdown/wait) lives in
+// daemon.rs — split at the 300-line dogfood wall.

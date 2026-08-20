@@ -13,8 +13,15 @@ use serde_json::json;
 
 fn requests() -> Vec<Request> {
     vec![
+        // the pre-1.1.0 line: token defaults empty and is skipped on
+        // serialize, so the old golden bytes still hold
         Request::Hello {
             proto: "1.0.0".into(),
+            token: String::new(),
+        },
+        Request::Hello {
+            proto: "1.1.0".into(),
+            token: "a3f2".into(),
         },
         Request::Ping,
         Request::Dedup {
@@ -135,8 +142,8 @@ fn wire_shapes_are_frozen() {
     // (Dedup appears twice to pin the null-optional shape).
     assert_eq!(
         requests().len(),
-        7,
-        "request battery: 6 variants + the None-Dedup shape"
+        8,
+        "request battery: 6 variants + the None-Dedup and tokenless-hello shapes"
     );
     assert_eq!(replies().len(), 8, "reply battery covers all 8 variants");
     freeze(requests(), req_tag, "daemon/requests.ndjson");

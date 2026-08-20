@@ -10,23 +10,32 @@
 - 传输：本地 socket（Windows named pipe / Unix domain socket，
   `interprocess` GenericNamespaced）。socket 名 =
   `ce-daemon-<fnv1a(canonicalized root) 十六进制 16 位>`
-  （`cli/src/daemon/proto.rs::socket_name`）——每项目根一个 daemon，
-  凭据即本地用户（ADR-003）。
+  （`cli/src/daemon/proto.rs::socket_name`）——每项目根一个 daemon。
+- 凭据（1.1.0，`daemon/auth.rs`）：socket 名可推导，连接本身不设防；
+  真正的门是 `hello.token` 必须等于 `<root>/.ce/daemon.token`（每次
+  serve 在 bind 后新铸；Unix 0600，Windows 继承项目目录 ACL）。能力
+  边界 = 能读项目目录——daemon 每条应答都派生自项目自身内容，文件
+  系统放行的人在这里学不到新东西，拒绝的人连 probe/shutdown 都到
+  不了。未认证行 → `error{unauthorized}` 且**连接**关闭，daemon 存续。
 - 消息：NDJSON，一行一条；serde 外部 tag `type`，snake_case
-  （`{"type":"hello","proto":"1.0.0"}`）。
+  （`{"type":"hello","proto":"1.1.0","token":"…"}`）。
 - 每连接可承载多条请求（server.rs `handle` 循环）；解析失败回
   `error` 行并**继续**本连接，绝不崩连接。
-- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **1.0.0**），
-  与 ce↔ce-core 的 handshake proto（VERSIONING.md §1）**相互独立**。
+- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **1.1.0**：
+  加性 `hello.token`，1.0.0 行仍可解析、得 unauthorized 拒绝），与
+  ce↔ce-core 的 handshake proto（VERSIONING.md §1）**相互独立**。
 
 ## 2. 生命周期
 
 - **懒启动**：客户端 `client::request` 连接失败时从自身二进制 respawn；
   测试必须走 `request_if_running`（永不 spawn——嵌套测试二进制风险，
   common/mod.rs 注记）。
-- **协商**：每连接首条应为 `hello{proto}`。major 相符 →
-  `hello_ok{proto,version}`；major 不符 → `restart{reason}` 且 daemon
-  **退出**——客户端从自己（更新的）二进制重启一个。
+- **协商**：每连接首条必须为 `hello{proto,token}`，token **先于**
+  major 校验——否则一条无凭证的假 skew 就能随意退出 daemon（未认证
+  击杀）。token 不符 → `error{unauthorized}` 且连接关闭；major 不符 →
+  `restart{reason}` 且 daemon **退出**——客户端从自己（更新的）二进制
+  重启一个。客户端在 unauthorized 上重读 token 文件再试**一轮**
+  （刚 spawn 的 daemon 在 bind 后毫秒级才落盘新 token）。
 - **空闲退出**：30 分钟无活动（`CE_DAEMON_IDLE_SECS` 仅测试可调）；
   watchdog 读 lock-free 时间戳，卡住的请求挡不住它。
 - **shutdown** → `bye` 后退出。
@@ -38,7 +47,7 @@
 
 | Request | 语义 | 正常应答 |
 |---|---|---|
-| `hello{proto}` | 版本协商，连接首条 | `hello_ok{proto,version}` / `restart{reason}` |
+| `hello{proto,token}` | 凭证 + 版本协商，连接首条（token 缺省=空，必被拒） | `hello_ok{proto,version}` / `error{unauthorized}` / `restart{reason}` |
 | `ping` | 活性 | `pong{uptime_ms}` |
 | `dedup{min_tokens?,min_distinct?}` | 对 daemon 根跑 dedup 管线 | `dedup_report{report}` |
 | `probe{file_path,content}` | M3 廉价门：即将写入内容的 T1/T2 证实匹配（排除自身路径，零刷新） | `probe_report{matches,elapsed_ms}` |
@@ -70,5 +79,6 @@
 ```
 cd cli && cargo test --test daemon_proto        # 形状漂移门
 cd cli && cargo test --test daemon_e2e          # 活体生命周期
+cd cli && cargo test --test daemon_auth         # 1.1.0 凭证门
 cd cli && cargo test --test concurrent_writers  # v1.7 收敛契约
 ```

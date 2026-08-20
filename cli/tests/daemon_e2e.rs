@@ -157,33 +157,23 @@ fn fourclass_reports_cross_file_relocation() {
 }
 
 /// Version skew: a wrong-major hello gets `restart` and the daemon
-/// exits so the client can respawn a fresh binary.
+/// exits so the client can respawn a fresh binary. The hello carries
+/// the REAL token — since 1.1.0 the token gates the restart path
+/// too, or any local user could exit the daemon with a faked skew
+/// (that refusal is daemon_auth.rs's battery).
 #[test]
 fn version_skew_restarts_daemon() {
     let root = project_dir("daemon-skew");
     let child = common::spawn_daemon_ready(&root);
-    // raw connection with a bad-major hello (client::request would
+    // raw line with a bad-major hello (client::request would
     // auto-respawn; here we watch the exit itself)
-    use interprocess::local_socket::traits::Stream as _;
-    use interprocess::local_socket::{GenericNamespaced, Stream, ToNsName};
-    use std::io::{BufRead, BufReader, Write};
-    let ns = codeeraser::daemon::proto::socket_name(&root)
-        .to_ns_name::<GenericNamespaced>()
-        .expect("name");
-    let mut conn = BufReader::new(Stream::connect(ns).expect("connect"));
-    writeln!(
-        conn.get_mut(),
-        "{}",
-        serde_json::to_string(&Request::Hello {
-            proto: "999.0.0".into()
-        })
-        .expect("ser")
-    )
-    .expect("write");
-    conn.get_mut().flush().expect("flush");
-    let mut reply = String::new();
-    conn.read_line(&mut reply).expect("read");
-    let resp: Response = serde_json::from_str(reply.trim()).expect("parse");
+    let resp = common::raw_daemon_line(
+        &root,
+        &Request::Hello {
+            proto: "999.0.0".into(),
+            token: codeeraser::daemon::auth::read(&root),
+        },
+    );
     assert!(matches!(resp, Response::Restart { .. }), "got {resp:?}");
     common::wait_exit(child, "daemon on version skew");
 }

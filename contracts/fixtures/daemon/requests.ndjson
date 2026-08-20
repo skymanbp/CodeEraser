@@ -1,4 +1,5 @@
 {"type":"hello","proto":"1.0.0"}
+{"type":"hello","proto":"1.1.0","token":"a3f2"}
 {"type":"ping"}
 {"type":"dedup","min_tokens":50,"min_distinct":7}
 {"type":"dedup","min_tokens":null,"min_distinct":null}

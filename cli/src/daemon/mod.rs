@@ -3,6 +3,7 @@
 //! M2 scope: ping + dedup probe; the M3 guard adds its cheap-check
 //! endpoints on this same channel.
 
+pub mod auth;
 pub mod client;
 pub mod coldstart;
 pub mod judge;
