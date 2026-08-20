@@ -23,14 +23,16 @@
 //! reader sees what the graph refuses to know (decision 5:
 //! symbol-level indegree stays out while call edges are off).
 
-use super::load::graph_rows;
+mod flags;
+
+use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
 use crate::config::Config;
 use crate::corelink::Link;
 use crate::dedup;
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 pub const VERDICT_NAMES: [&str; 4] = [
@@ -106,15 +108,7 @@ pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     let nodes = nodes::nodes_of(&files, &edges);
     let ids = nodes::ids(&nodes);
     let rows: Vec<Value> = nodes.iter().map(|n| node_row(n, &config)).collect();
-    let mut wire: BTreeSet<[i64; 4]> = edges
-        .iter()
-        .filter(|e| e.kind != super::wire::EDGE_ASSET)
-        .map(|e| {
-            let s = ids[&(e.src.as_str(), "")] as i64;
-            let d = ids[&(e.dst_path.as_str(), e.dst_unit.as_str())] as i64;
-            [s, d, e.kind, e.rung]
-        })
-        .collect();
+    let mut wire = edge_wire(&edges, &ids)?;
     nodes::contain(&nodes, &ids, &mut wire);
     Ok(GraphWire {
         nodes,
@@ -122,6 +116,34 @@ pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
         edges: wire,
         unresolved_sites,
     })
+}
+
+/// Cached edges → wire rows, asset edges excluded by kind (design §4
+/// Markdown row). Both endpoints resolve through the dense id map
+/// with a NAMED refusal: `ids[..]` on a DB-sourced path panicked on
+/// index skew, and a skewed cache row is an error to report, never a
+/// crash (the deadcode/lockstep wire-index class, DB-fact form).
+pub fn edge_wire(
+    edges: &[GraphEdge],
+    ids: &BTreeMap<(&str, &str), usize>,
+) -> Result<BTreeSet<[i64; 4]>> {
+    edges
+        .iter()
+        .filter(|e| e.kind != super::wire::EDGE_ASSET)
+        .map(|e| {
+            let of = |path: &str, unit: &str| {
+                ids.get(&(path, unit))
+                    .map(|&i| i as i64)
+                    .with_context(|| format!("edge endpoint {path} not a node — index skew"))
+            };
+            Ok([
+                of(&e.src, "")?,
+                of(&e.dst_path, &e.dst_unit)?,
+                e.kind,
+                e.rung,
+            ])
+        })
+        .collect()
 }
 
 /// [lang, kind, flags] — only file nodes carry entry flags.
@@ -132,70 +154,11 @@ fn node_row(n: &Node, config: &Config) -> Value {
         .map(|l| l as i64)
         .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
     let flags = if n.kind == super::wire::GRAN_FILE {
-        flags_of(&n.path, config)
+        flags::flags_of(&n.path, config)
     } else {
         0
     };
     json!([lang, n.kind, flags])
-}
-
-/// Mechanical entry conventions (module header); bit 0 (exported)
-/// stays unset at file granularity — public-ness is a symbol fact
-/// (3l re-review: Haskell module export lists included — a header's
-/// exports node is symbol-level, same stance as the five launch
-/// languages). Main.hs is cabal's executable main-is convention —
-/// nothing imports a main module, exactly like main.rs.
-fn flags_of(path: &str, config: &Config) -> i64 {
-    let base = path.rsplit('/').next().unwrap_or(path);
-    let mut f = 0i64;
-    if matches!(
-        base,
-        "main.rs" | "main.go" | "__main__.py" | "build.rs" | "Main.hs"
-    ) || ["src/bin/", "examples/", "benches/", "cmd/"]
-        .iter()
-        .any(|p| path.starts_with(p))
-    {
-        f |= 1 << 1;
-    }
-    if is_test(path, base) {
-        f |= 1 << 2;
-    }
-    if config
-        .graph
-        .entry_globs
-        .iter()
-        .any(|g| glob_hit(g, path, base))
-    {
-        f |= 1 << 3;
-    }
-    if matches!(base, "README.md" | "CLAUDE.md")
-        || (path.starts_with("docs/") && matches!(base, "index.md" | "README.md"))
-    {
-        f |= 1 << 5;
-    }
-    f
-}
-
-/// Spec.hs is the cabal test-suite main-is convention (hspec/stack
-/// templates) — the test root nothing imports, like _test.go.
-fn is_test(path: &str, base: &str) -> bool {
-    base.ends_with("_test.go")
-        || base.ends_with(".test.ts")
-        || (base.starts_with("test_") && base.ends_with(".py"))
-        || base == "Spec.hs"
-        || path.starts_with("tests/")
-        || path.contains("/tests/")
-        || path.contains("/__tests__/")
-}
-
-/// entry_globs matching: an exact path, a `dir/` prefix, or a
-/// `*.ext` basename pattern — the declarative subset the config
-/// documents (full glob syntax is not promised).
-fn glob_hit(glob: &str, path: &str, base: &str) -> bool {
-    if let Some(ext) = glob.strip_prefix("*.") {
-        return base.ends_with(&format!(".{ext}"));
-    }
-    glob == path || glob == base || (glob.ends_with('/') && path.starts_with(glob))
 }
 
 /// One graph.request over the open core link; a missing capability

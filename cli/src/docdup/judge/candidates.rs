@@ -7,10 +7,12 @@
 //! through the ONE doc_facts throat for exactly the files that host
 //! candidates.
 
+mod runs;
+
 use crate::dedup::candidates::{HOT_GROUP_CAP, LSH_SHAPE};
 use crate::dedup::{index::Index, minhash};
-use crate::docdup::{self, spec};
 use anyhow::{Context, Result, ensure};
+use runs::runs_for;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
@@ -37,18 +39,34 @@ pub fn live_rows(idx: &Index) -> Result<Vec<SegRow>> {
             Ok((head, r.get::<_, Vec<u8>>(4)?))
         },
     )?;
-    Ok(rows
-        .into_iter()
-        .map(|((path, kind, start_line, end_line), blob)| SegRow {
-            path,
-            kind,
-            start_line,
-            end_line,
-            set: blob
-                .chunks_exact(8)
-                .map(|c| u64::from_le_bytes(c.try_into().expect("8-byte chunk")))
-                .collect(),
+    rows.into_iter()
+        .map(|((path, kind, start_line, end_line), blob)| {
+            let set =
+                shingle_set(&blob).with_context(|| format!("{path}:{start_line} docsegs row"))?;
+            Ok(SegRow {
+                path,
+                kind,
+                start_line,
+                end_line,
+                set,
+            })
         })
+        .collect()
+}
+
+/// Decode one docsegs shingle blob (u64 LE rows): `chunks_exact`
+/// silently DROPS a truncated tail, and fewer shingles = fewer
+/// candidates = silently missed duplication — so a non-whole row
+/// shape is refused by name (review 2026-08-19, codex lane).
+fn shingle_set(blob: &[u8]) -> Result<Vec<u64>> {
+    let rows = blob.chunks_exact(8);
+    ensure!(
+        rows.remainder().is_empty(),
+        "shingle blob is {} bytes — not whole u64 rows",
+        blob.len()
+    );
+    Ok(rows
+        .map(|c| u64::from_le_bytes(c.try_into().expect("8 bytes")))
         .collect())
 }
 
@@ -130,98 +148,16 @@ fn group_pairs<'v>(
     added
 }
 
-/// Exact verbatim runs for the candidate set: shingle SEQUENCES are
-/// re-derived per hosting file through the product doc_facts throat
-/// (the cache stores only the deduped set), then each pair's longest
-/// common contiguous run is measured by seed-extension.
-fn runs_for(
-    root: &Path,
-    segs: &[SegRow],
-    cand: BTreeSet<(usize, usize)>,
-) -> Result<Vec<(usize, usize, u64)>> {
-    let mut seqs: BTreeMap<usize, Vec<u64>> = BTreeMap::new();
-    let mut by_file: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
-    for &(a, b) in &cand {
-        for i in [a, b] {
-            by_file.entry(&segs[i].path).or_default().push(i);
-        }
-    }
-    for (path, ids) in by_file {
-        let (text, lang) = crate::dedup::walked_text(root, path)?;
-        let facts = docdup::doc_facts(&text, lang);
-        for i in ids {
-            let s = &segs[i];
-            let fact = facts
-                .segs
-                .iter()
-                .find(|f| (f.kind, f.start_line, f.end_line) == (s.kind, s.start_line, s.end_line))
-                .with_context(|| {
-                    format!(
-                        "{path}:{} — disk drifted from the docsegs cache",
-                        s.start_line
-                    )
-                })?;
-            // same-source counterfactual in the product path: the
-            // re-derived set must equal the cached one byte for byte
-            ensure!(
-                fact.shingles == s.set,
-                "{path}:{}: re-derived shingle set differs from the cache",
-                s.start_line
-            );
-            seqs.insert(i, docdup::shingle::shingle_seq(&fact.words));
-        }
-    }
-    Ok(cand
-        .into_iter()
-        .map(|(a, b)| (a, b, run_words(&seqs[&a], &seqs[&b])))
-        .collect())
-}
-
-/// Longest common contiguous shingle run in WORDS (R shingles span
-/// R + DOC_SHINGLE − 1 words), by seed-extension: start only where a
-/// run cannot extend left, walk right — each maximal run is measured
-/// exactly once. This is the product's own computation; the oracle's
-/// independent DP is what D2 checks it against.
-fn run_words(a: &[u64], b: &[u64]) -> u64 {
-    let mut pos: BTreeMap<u64, Vec<usize>> = BTreeMap::new();
-    for (j, &y) in b.iter().enumerate() {
-        pos.entry(y).or_default().push(j);
-    }
-    let mut best = 0usize;
-    for (i, &x) in a.iter().enumerate() {
-        for &j in pos.get(&x).map_or(&Vec::new(), |v| v) {
-            if i > 0 && j > 0 && a[i - 1] == b[j - 1] {
-                continue; // not a run start; counted from its start
-            }
-            let n = a[i..]
-                .iter()
-                .zip(&b[j..])
-                .take_while(|(x2, y2)| x2 == y2)
-                .count();
-            best = best.max(n);
-        }
-    }
-    if best == 0 {
-        0
-    } else {
-        (best + spec::DOC_SHINGLE - 1) as u64
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    /// The run measure against hand-derived cases: disjoint, full
-    /// overlap, and an interior run — in words, not shingles.
+    /// A truncated cache blob is refused, never silently shortened
+    /// (the whole-row decode is what every docdup run already rides).
     #[test]
-    fn run_words_measures_maximal_runs_in_words() {
-        assert_eq!(run_words(&[1, 2, 3], &[4, 5, 6]), 0);
-        let k = spec::DOC_SHINGLE as u64;
-        assert_eq!(run_words(&[1, 2, 3], &[1, 2, 3]), 3 + k - 1);
-        assert_eq!(run_words(&[9, 1, 2, 8], &[7, 1, 2, 6]), 2 + k - 1);
-        // repeated values: extension must not double-count seeds
-        assert_eq!(run_words(&[5, 5, 5], &[5, 5]), 2 + k - 1);
+    fn truncated_shingle_blob_is_refused_not_shortened() {
+        let err = shingle_set(&[0; 17]).expect_err("truncated").to_string();
+        assert!(err.contains("17 bytes"), "{err}");
     }
 
     /// Hot groups chain instead of skipping (D4) and the union dedups

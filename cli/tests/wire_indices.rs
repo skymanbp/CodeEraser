@@ -56,6 +56,34 @@ fn a_pair_index_in_range_names_its_file() {
     assert_eq!(v["relocations"][0]["to"], "a.rs");
 }
 
+/// The DB-fact form of the same class: the graph wire resolves edge
+/// endpoints through the dense id map, and an edge whose source is
+/// not a node (index skew — a cache written by a broken or newer ce)
+/// was `ids[..]` — a panic on data. It must be an error naming the
+/// path. In range, the row resolves; skewed, it refuses.
+#[test]
+fn a_skewed_edge_endpoint_is_a_named_error_not_a_panic() {
+    use codeeraser::graph::deadcode::edge_wire;
+    use codeeraser::graph::load::GraphEdge;
+    use codeeraser::graph::nodes::{ids, nodes_of};
+    let edge_from = |src: &str| GraphEdge {
+        src: src.into(),
+        dst_path: "a.rs".into(),
+        dst_unit: String::new(),
+        kind: 0,
+        rung: 1,
+        granularity: 0,
+    };
+    let files = vec!["a.rs".to_string()];
+    let good = edge_from("a.rs");
+    let nodes = nodes_of(&files, std::slice::from_ref(&good));
+    let id_map = ids(&nodes);
+    assert_eq!(edge_wire(&[good], &id_map).expect("in range").len(), 1);
+    // ghost.rs: never walked, never a dst — no node exists for it
+    let err = edge_wire(&[edge_from("ghost.rs")], &id_map).expect_err("skewed source");
+    assert!(err.to_string().contains("ghost.rs"), "{err}");
+}
+
 /// Past the end, it reports null instead of panicking. `&pairs[idx]`
 /// is what a mismatched or hostile ce-core reaches, and the daemon
 /// carries no unwind guard.

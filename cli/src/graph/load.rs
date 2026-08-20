@@ -66,6 +66,13 @@ pub(crate) fn t4<A: Col, B: Col, C: Col, D: Col>(
 
 pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
     let conn = idx.raw();
+    // ONE read snapshot for one graph: as three autocommit statements
+    // each read took its own WAL snapshot, so a convergent writer
+    // (ADR-003) landing between them could hand the edge query a
+    // source file the files query never saw — and the wire build
+    // indexes nodes by source (review 2026-08-19, codex lane).
+    let txn = conn.unchecked_transaction()?;
+    let conn = &*txn;
     let files = rows(conn, "SELECT path FROM files ORDER BY path", |r| r.get(0))?;
     let edges = rows(
         conn,
@@ -93,5 +100,6 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
         [],
         |r| r.get(0),
     )?;
+    txn.finish()?; // read-only: closing the snapshot, nothing to write
     Ok((files, edges, unresolved))
 }

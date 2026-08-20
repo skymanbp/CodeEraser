@@ -27,6 +27,9 @@ pub(super) struct WalkIndex {
     pub resolve_key: i64,
 }
 
+/// Reads go through walk::read_surviving: a mid-walk deletion is a
+/// skip and the next run converges (the survival rule scan and graph
+/// already walk under); an unreadable file that EXISTS still aborts.
 pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) -> Result<WalkIndex> {
     let mut out = WalkIndex {
         live: BTreeSet::new(),
@@ -45,13 +48,15 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
         let rel = walk::rel_str(root, &path);
         if store::is_resolver_config(&path) {
-            configs.push((rel, tokens::fnv1a(&std::fs::read(&path)?)));
+            configs.extend(walk::read_surviving(&path)?.map(|b| (rel, tokens::fnv1a(&b))));
             continue;
         }
         let Some(lang) = Lang::from_path(&path) else {
             continue;
         };
-        let src = std::fs::read(&path)?;
+        let Some(src) = walk::read_surviving(&path)? else {
+            continue; // vanished mid-walk: not live this pass
+        };
         lang_fact(lang, &rel, &src, &mut md_facts);
         if idx.refresh_file(&rel, &src, lang, Params::default())? {
             out.dirty.insert(rel.clone());
@@ -108,7 +113,9 @@ pub(super) fn load_streams(
         let Some((path, lang)) = lang_path(root, rel) else {
             continue;
         };
-        let src = std::fs::read(&path)?;
+        let Some(src) = walk::read_surviving(&path)? else {
+            continue;
+        };
         if idx.refresh_file(rel, &src, lang, p)? {
             changed.insert(rel.clone());
         }
