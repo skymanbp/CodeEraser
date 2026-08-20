@@ -96,6 +96,17 @@ ensure_core() {
     fi
     if [ -z "$corepin" ] || [ -z "$data" ]; then return 0; fi
     coretgt="$data/ce-core$ext"
+    # A pin EXISTS for this platform, so BIND ce to the pinned path
+    # instead of leaving its resolver free. Removing a mismatching
+    # core (below) or failing to fetch one used to leave the resolver
+    # walking on to a PATH `ce-core` — unverified, and the exact
+    # "tampered core hiding behind a PATH ce-core" this header
+    # forbids. Pointing at an absent file degrades honestly: the
+    # judgment families report a handshake miss, which is what a
+    # missing verified core IS. An explicit CE_CORE_BIN wins (source
+    # installs pick their own core deliberately).
+    CE_CORE_BIN="${CE_CORE_BIN:-$coretgt}"
+    export CE_CORE_BIN
     if [ -x "$coretgt" ]; then
         if [ "$(sha_of "$coretgt")" = "$corepin" ]; then
             return 0

@@ -14,6 +14,8 @@
 #                  notice OFF stdout (the hook stream is JSON only)
 #   7 stale core : a MISMATCHING ce-core already on disk is refused and
 #                  REMOVED, not left behind for ce's resolver
+#   8 core bind  : with a pin in force ce is BOUND to the pinned core
+#                  path, never free to fall through to a PATH ce-core
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
 
@@ -166,4 +168,21 @@ err=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest7.env" \
 case "$err" in *"REFUSING on-disk ce-core"*) ;; *) fail 7 "stale core not refused: $err" ;; esac
 [ ! -f "$work/data7/ce-core$ext" ] || fail 7 "mismatching ce-core left in place"
 
-echo "bootstrap_e2e: PASS (8 states, key=$key)"
+# --- state 8: with a core pin in force, ce is BOUND to the pinned
+# path. Removing a bad core (state 7) or failing to fetch one used to
+# leave ce's resolver free to walk on to a PATH `ce-core` — unverified,
+# the very substitution the header forbids. Airgapped so no download
+# can rescue it, and an unverified ce-core planted on PATH as the
+# thing that must NOT be picked; `ce doctor` names the core it tried.
+mkdir -p "$work/pathcore" "$work/data8"
+cp "$CE_BIN" "$work/pathcore/ce-core$ext"   # the unverified core to REFUSE
+cp "$CE_BIN" "$work/data8/$payload"         # a VERIFIED ce, so ensure_core runs
+out=$(PATH="$work/pathcore:$PATH" CE_MANIFEST_FILE="$work/manifest7.env" \
+      CE_AIRGAPPED=1 CLAUDE_PLUGIN_DATA="$work/data8" \
+      sh "$STARTER" doctor . 2>&1) || true
+case "$out" in
+    *"data8/ce-core"*) ;;
+    *) fail 8 "ce resolved a core other than the pinned path: $out" ;;
+esac
+
+echo "bootstrap_e2e: PASS (9 states, key=$key)"

@@ -210,6 +210,13 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     if lang.grammar().is_none() {
         return Ok(serde_json::json!([]));
     }
+    // Same containment authority as the FourClass leg: the path rides
+    // an unauthenticated socket, and one outside the served root is
+    // not ours to judge — its raw spelling would also become a
+    // self-exclusion key that excludes nothing.
+    if crate::scan::walk::contained(root, file_path).is_none() {
+        return Ok(serde_json::json!([]));
+    }
     // canonicalize before stripping: `root` is canonical (serve()),
     // and on Windows that is the \\?\ verbatim form — a plain
     // absolute file_path never strip-matches it, which silently
