@@ -107,6 +107,7 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — wire 契约与 SemVer 规则
 - [docs/RELEASE.md](docs/RELEASE.md) — 两段式发版 runbook
 - [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 七轴语义（S0–S6）
+- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — 计划 v2.6 尺寸软区间+拆分 ROI 契约（v0.6 实现）
 
 ## 架构
 
