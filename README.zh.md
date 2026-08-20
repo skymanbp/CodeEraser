@@ -14,9 +14,11 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚀 **v0.7.0 已发布——尺寸顾问收口成环。** 安装包、
+🚀 **v0.7.1 已发布——尺寸顾问收口成环。** 安装包、
 [crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
-[codeeraser.dev](https://codeeraser.dev) 官网均已上线。本周期：
+[codeeraser.dev](https://codeeraser.dev) 官网均已上线（0.7.1 为补丁
+版：Windows 安装器改为开门即提权，不再在 Program Files 目标上写入
+失败）。本周期：
 拆分顾问按**全额**计缝价——被切断的引用、被切穿的克隆块、跨缝的
 共变对，逐项按外语料标定的价目入账；渐进区的位置→档位映射接线于
 显式 `[guard] zone_tiers` 之后（默认仍只记台账：没有误报记录就

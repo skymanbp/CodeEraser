@@ -3,7 +3,7 @@ name:               ce-core
 -- tracks the product version (one release train with cli/Cargo.toml;
 -- pinned by cli's version_mirrors_move_with_the_crate) — the 0.0.1
 -- era shipped a v0.2.0 asset that self-reported 0.0.1
-version:            0.7.0
+version:            0.7.1
 synopsis:           CodeEraser judgment core (NDJSON envelope + judgment types)
 license:            Apache-2.0
 author:             skymanbp

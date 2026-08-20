@@ -18,9 +18,11 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.7.0 released — the size advisory closes its loop.**
+🚀 **v0.7.1 released — the size advisory closes its loop.**
 Installers, [crates.io](https://crates.io/crates/codeeraser),
-the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live.
+the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live
+(0.7.1 is a patch: the Windows installer now asks for elevation up
+front instead of failing on a Program Files target).
 This cycle: the split advisory prices a seam's FULL cost — severed
 references, cut clone blocks and crossing co-change pairs, each at a
 corpus-calibrated price — the graded zone's position→tier map is
