@@ -18,10 +18,15 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.3.0 released — all planned milestones (M0–M8) shipped.**
-Installers, [crates.io](https://crates.io/crates/codeeraser), the npm
-pointer and [codeeraser.dev](https://codeeraser.dev) are live; the
-next cycle starts from real-world trial feedback.
+🚀 **v0.5.0 released — all planned milestones (M0–M8) shipped, plus a
+hardening cycle.** Installers, [crates.io](https://crates.io/crates/codeeraser),
+the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live.
+This cycle: the daemon's credential gate hardened end to end (a
+dual-lane external review, all findings closed), the size gates
+extended to common front-end/script extensions (size-only, never
+judged), structure axis 3 recalibrated to count directories (a
+declared score migration), and the plan-v2.6 size soft-zone +
+split-ROI contract locked for v0.6.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 This repository gates itself with its own scanner, clone ratchet,
@@ -80,7 +85,7 @@ same pins automatically and refuses a mismatching download out loud.
 
 | Command | What it reports / judges |
 |---|---|
-| `ce scan` | size / complexity / readability metrics, core-graded |
+| `ce scan` | size / complexity / readability metrics, core-graded; the size-only arm also gates js/css/html/vue/svelte/sh/yml |
 | `ce dedup` | T1/T2 clone blocks (winnowing index); `--check` gates the budget |
 | `ce clone` | T3 near-miss clones (tree edit distance) |
 | `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |

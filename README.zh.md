@@ -14,10 +14,13 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚀 **v0.3.0 已发布——全部既定里程碑（M0–M8）交付完毕。**
-安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包
-与 [codeeraser.dev](https://codeeraser.dev) 官网均已上线；下一周期
-从真实试用反馈启动。
+🚀 **v0.5.0 已发布——全部既定里程碑（M0–M8）交付完毕，外加一轮
+加固周期。** 安装包、[crates.io](https://crates.io/crates/codeeraser)、
+npm 指针包与 [codeeraser.dev](https://codeeraser.dev) 官网均已上线。
+本周期：daemon 凭证门端到端加固（双路外部评审，发现全数关闭）、
+尺寸门扩展至前端/脚本常用扩展（仅计尺寸，永不入判决）、结构轴 3
+改按目录计数（已声明的分数迁移）、计划 v2.6 尺寸软区间+拆分 ROI
+契约锁定（v0.6 实现）。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。
 本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）都用
@@ -73,7 +76,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 
 | 命令 | 报告 / 判决内容 |
 |---|---|
-| `ce scan` | 尺寸 / 复杂度 / 可读性度量，核内分级 |
+| `ce scan` | 尺寸 / 复杂度 / 可读性度量，核内分级；纯尺寸臂另门禁 js/css/html/vue/svelte/sh/yml |
 | `ce dedup` | T1/T2 克隆块（winnowing 索引）；`--check` 门控预算 |
 | `ce clone` | T3 近似克隆（树编辑距离） |
 | `ce docdup` | 文档重复（段落、注释、docstring） |
