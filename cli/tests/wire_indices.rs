@@ -29,6 +29,7 @@ fn batch_with(relocations: Vec<Relocation>, suspicions: Vec<(usize, String)>) ->
         relocations,
         suspicions,
         degraded: None,
+        link_failed: false,
     }
 }
 

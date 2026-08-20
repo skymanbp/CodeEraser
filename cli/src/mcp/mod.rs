@@ -87,15 +87,12 @@ fn tool_call(root: &Path, params: &Value) -> Result<Value> {
 }
 
 /// Subpaths stay inside the served root — an MCP client must not
-/// walk arbitrary directories through us.
+/// walk arbitrary directories through us. The test itself lives in
+/// scan::walk beside the other path-vocabulary rules, so the daemon's
+/// socket surface answers to the same authority.
 fn resolve(root: &Path, sub: Option<&str>) -> PathBuf {
     let Some(sub) = sub.filter(|s| !s.is_empty()) else {
         return root.to_path_buf();
     };
-    let joined = root.join(sub);
-    let canon_root = std::fs::canonicalize(root).unwrap_or_else(|_| root.to_path_buf());
-    match std::fs::canonicalize(&joined) {
-        Ok(c) if c.starts_with(&canon_root) => joined,
-        _ => root.to_path_buf(),
-    }
+    crate::scan::walk::contained(root, sub).unwrap_or_else(|| root.to_path_buf())
 }

@@ -79,7 +79,17 @@ pub fn init(root: &Path) {
 /// `ce dedup`) since.
 pub fn index_ready(root: &Path) -> bool {
     match INDEX_STATE.load(Ordering::Acquire) {
-        INDEX_READY => true,
+        // READY is a CACHE of a cross-process fact, not the fact: the
+        // db is wiped out of process on any schema/tokenizer/GRAPH_REV
+        // change, so a pinned hook binary and a `cargo install`ed one
+        // wipe each other on every run — and a stale READY answered
+        // every probe matches=0, the silent-clean this module opens by
+        // forbidding. Re-consult the stamp; a false one falls back.
+        INDEX_READY if full_build_done(root) => true,
+        INDEX_READY => {
+            INDEX_STATE.store(INDEX_UNKNOWN, Ordering::Release);
+            false
+        }
         INDEX_BUILDING => false,
         _ => {
             let ready = full_build_done(root);

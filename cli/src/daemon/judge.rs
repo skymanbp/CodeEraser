@@ -28,12 +28,8 @@ impl Judge {
         root: &Path,
         pairs: &[(Option<String>, Option<String>)],
     ) -> serde_json::Value {
-        // ONE index space. A pair index in the core's reply is a
-        // coordinate into what we SENT, and load_pair drops pairs
-        // (non-language, unreadable, `git show` failure) — resolving
-        // those indices against the UNFILTERED list named the wrong
-        // file for every pair after a drop, with degraded: null
-        // vouching for the report.
+        // ONE index space: reply indices point into what we SENT, and
+        // load_pair DROPS pairs — the unfiltered list misnamed them.
         let kept: Vec<(session::PathPair, (String, String, Lang))> = pairs
             .iter()
             .filter_map(|p| {
@@ -50,9 +46,11 @@ impl Judge {
             })
             .collect();
         let batch = classify_batch(&inputs, self.link_mut());
-        if batch.degraded.is_some() {
+        // Keyed on the LINK, not on getting a verdict: a core refusing
+        // via its own work budget is HEALTHY, killing it cost a retry.
+        if batch.link_failed {
             self.note_failure();
-        } else {
+        } else if batch.degraded.is_none() {
             self.failures = 0;
         }
         session::report_json(&batch, &sent)
@@ -100,6 +98,9 @@ pub(crate) fn core_bin() -> Option<String> {
 /// Before = HEAD content, after = working tree; a side with no path
 /// (created/deleted) is empty. Pairs outside the supported languages
 /// (or unreadable) are skipped — they carry no classifiable lines.
+///
+/// The after path comes off the unauthenticated DAEMON SOCKET, so it
+/// is CONFINED before any read (fail-closed); git confines the before.
 fn load_pair(
     root: &Path,
     before: Option<&str>,
@@ -112,7 +113,7 @@ fn load_pair(
     };
     let after_text = match after {
         None => String::new(),
-        Some(p) => std::fs::read_to_string(root.join(p)).ok()?,
+        Some(p) => std::fs::read_to_string(crate::scan::walk::contained(root, p)?).ok()?,
     };
     Some((before_text, after_text, lang))
 }

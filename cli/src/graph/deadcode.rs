@@ -257,21 +257,19 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
 }
 
 /// A degraded judgment is a visible event (A9f): one observe-feed
-/// line, same contract as the guard/audit producers.
+/// line, through the SAME writer as the guard/audit producers. It
+/// used to keep its own copy of the append and stamped none of the
+/// feed's contract fields — `hook` where every sibling writes `event`,
+/// and no schema / session_id / ts_ms — so the M4 evaluation set
+/// counted a line it could not partition, from a producer its golden
+/// does not describe (review 2026-08-19). Session is None honestly:
+/// `ce deadcode` runs in a terminal, like `ce precommit`.
 fn observe(root: &Path, reason: &str) {
-    let line = json!({"hook": "deadcode", "degraded": true, "reason": reason});
-    let path = root.join(".ce/observe.ndjson");
-    if let Some(dir) = path.parent() {
-        let _ = std::fs::create_dir_all(dir);
-    }
-    if let Ok(mut f) = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&path)
-    {
-        use std::io::Write;
-        let _ = writeln!(f, "{line}");
-    }
+    crate::hookio::observe_append(
+        root,
+        None,
+        json!({"event": "deadcode", "degraded": true, "reason": reason}),
+    );
 }
 
 #[cfg(test)]

@@ -41,6 +41,8 @@ pub struct BatchClassification {
     pub suspicions: Vec<(usize, String)>,
     /// None = the cross-file pass ran (or nothing needed asking).
     pub degraded: Option<String>,
+    /// Did the LINK fail, or did the core ANSWER without a verdict?
+    pub link_failed: bool, // stated, not inferred: the restart budget keys on it
 }
 
 pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchClassification {
@@ -48,41 +50,43 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
         .iter()
         .map(|p| classify(p.before, p.after, p.lang))
         .collect();
-    let done = |pairs, degraded| BatchClassification {
+    let done = |pairs, degraded, link_failed| BatchClassification {
         pairs,
         relocations: Vec::new(),
         suspicions: Vec::new(),
         degraded,
+        link_failed,
     };
     let Some(link) = link else {
-        return done(pairs, Some("no_link".into()));
+        return done(pairs, Some("no_link".into()), false); // link_mut counted it
     };
     if !link.has("fourclass/2") {
-        return done(pairs, Some("no_capability".into()));
+        return done(pairs, Some("no_capability".into()), false); // alive, wrong family
     }
     let sent = leftovers(inputs, &pairs);
     if sent
         .iter()
         .all(|(rem, add)| rem.is_empty() && add.is_empty())
     {
-        return done(pairs, None);
+        return done(pairs, None, false);
     }
     match link.request("fourclass", request_body(inputs, &sent)) {
-        Err(e) => done(pairs, Some(e)),
+        Err(e) => done(pairs, Some(e), true), // the link itself
         // A degraded reply (bucket cap) may carry the partial blocks
         // the core still derived — applying them would be partial L2
         // behind a flag, breaking the header's pure-L1 promise. The
         // reason is checked BEFORE merge on purpose (attack review
         // 2026-08-11 F3: the old order merged first).
         Ok(reply) => match reply["reason"].as_str() {
-            Some(r) => done(pairs, Some(r.to_string())),
+            Some(r) => done(pairs, Some(r.to_string()), false), // it ANSWERED
             None => match merge(&reply, inputs, &sent, &mut pairs) {
-                Err(e) => done(pairs, Some(e)),
+                Err(e) => done(pairs, Some(e), false), // live link, bad delta
                 Ok(relocations) => BatchClassification {
                     pairs,
                     relocations,
                     suspicions: suspicions_of(&reply),
                     degraded: None,
+                    link_failed: false,
                 },
             },
         },
@@ -267,9 +271,7 @@ fn relocations_of(reply: &Value, inputs: &[PairInput]) -> Result<Vec<Relocation>
     for b in reply["blocks"].as_array().ok_or("reply: blocks missing")? {
         let from_pair = b[0].as_u64().ok_or("block: from pair")? as usize;
         let to_pair = b[2].as_u64().ok_or("block: to pair")? as usize;
-        // .get, like merge() twenty lines up: a slice index straight
-        // off the wire panics the DAEMON, which owns this call and has
-        // no catch_unwind — one bad reply drops every client
+        // .get, like merge(): a wire index as a slice subscript panics
         let from = inputs.get(from_pair).ok_or("block: from pair out of range")?;
         let to = inputs.get(to_pair).ok_or("block: to pair out of range")?;
         let from_units = units::segments(from.before, from.lang);

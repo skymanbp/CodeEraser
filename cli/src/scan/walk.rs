@@ -142,6 +142,15 @@ pub fn in_scope(root: &Path, path: &Path, extra_excludes: &[String]) -> bool {
     !ignored_by(&root, ".gitignore", &rel) && !ignored_by(&root, ".ceignore", &rel)
 }
 
+/// `root/rel` confined to `root` — None when it escapes. The ONE
+/// containment authority: an ABSOLUTE `rel` replaces root outright in
+/// a join and `../` walks out, which the MCP surface has checked
+/// since M7 and the daemon's unauthenticated socket did not.
+pub fn contained(root: &Path, rel: &str) -> Option<PathBuf> {
+    let joined = root.join(rel);
+    canon(&joined).starts_with(canon(root)).then_some(joined)
+}
+
 /// Canonicalize for prefix comparison; a not-yet-created file borrows
 /// its parent's canonical form so drive-letter case cannot split it.
 fn canon(p: &Path) -> PathBuf {
