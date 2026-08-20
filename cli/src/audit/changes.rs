@@ -12,11 +12,16 @@
 //!   * base — `git -C sub diff` prints repo-root-relative paths, so a
 //!     `ce.toml` anchored in a monorepo package compared `pkg/app/a.rs`
 //!     against dedup's `a.rs`. `--relative` rebases AND scopes.
-//!   * spelling — `core.quotePath` (git's default) C-quotes any
-//!     non-ASCII path; disabled at the ONE runner in churn::git.
+//!   * spelling — git C-quotes "unusual" paths. `core.quotePath=false`
+//!     (churn::git) exempts the non-ASCII half ONLY; control chars,
+//!     `"` and `\` stay quoted whatever that setting says, which the
+//!     first fix here missed. `-z` is the whole answer: NUL-terminated
+//!     records, never quoted — the idiom fourclass::session already
+//!     used, now on the enforcement side too.
 //!   * rows — a rename is ONE column, `old => new`; `--no-renames`
 //!     splits it into rows whose paths are real.
 
+use std::io::Read as _;
 use std::path::Path;
 
 /// Files above this count 0 lines (still entering the changed set —
@@ -32,6 +37,13 @@ const READ_CAP: u64 = 4 << 20;
 /// the guard's own observe feed back in as user entropy.
 fn ce_owned(path: &str) -> bool {
     path.split('/').any(|c| c == ".ce")
+}
+
+/// The `-z` record stream both legs read: NUL-separated, empties
+/// dropped. One iterator because the two loops around it were
+/// byte-shaped twins the moment they both stopped using `lines()`.
+fn records(text: &str) -> impl Iterator<Item = &str> {
+    text.split('\0').filter(|r| !r.is_empty())
 }
 
 /// The diff base: `HEAD`, or git's empty tree when HEAD is unborn.
@@ -55,13 +67,15 @@ pub fn base_rev(root: &Path) -> Option<String> {
 /// path vocabulary. Git computes the arithmetic itself, so this leg
 /// reads nothing and needs no scope filter beyond `.ce/`.
 pub fn diff(root: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
-    let mut args = vec!["diff", "--numstat", "--relative", "--no-renames"];
+    let mut args = vec!["diff", "--numstat", "--relative", "--no-renames", "-z"];
     args.extend_from_slice(tail);
     let text = crate::churn::git(root, &args).ok()?;
     let mut net = 0i64;
     let mut files = Vec::new();
-    for line in text.lines() {
-        let mut cols = line.split('\t');
+    // `added\tdeleted\tpath`, the path RAW: splitn(3) keeps a tab
+    // inside the name out of the separator's reach.
+    for rec in records(&text) {
+        let mut cols = rec.splitn(3, '\t');
         let (Some(a), Some(d), Some(path)) = (cols.next(), cols.next(), cols.next()) else {
             continue; // one malformed row must not void the whole audit
         };
@@ -90,11 +104,14 @@ pub fn diff(root: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
 /// can never match a dedup block, so the scope costs the gate nothing
 /// — it only stops the audit paying for what it cannot use.
 pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)> {
-    let text = crate::churn::git(root, &["ls-files", "--others", "--exclude-standard"]).ok()?;
+    let args = ["ls-files", "--others", "--exclude-standard", "-z"];
+    let text = crate::churn::git(root, &args).ok()?;
     let mut net = 0i64;
     let mut files = Vec::new();
-    for line in text.lines() {
-        let path = line.trim().replace('\\', "/");
+    // raw paths again: a newline inside one no longer ends the record
+    // early, as `lines()` let it
+    for rec in records(&text) {
+        let path = rec.replace('\\', "/");
         let full = root.join(&path);
         if path.is_empty()
             || ce_owned(&path)
@@ -112,12 +129,23 @@ pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)>
 /// Lines of a file ce would index, 0 for anything unreadable, binary,
 /// or past the read cap — the numstat `-` stance, applied to a leg
 /// that has to open the file to know.
+///
+/// The cap is enforced by the READ, not by a metadata check beforehand:
+/// a stat-then-read pair is a race a growing file wins (and a symlink
+/// or /dev/zero has no useful size at all), so the reader itself is
+/// bounded and an over-cap file counts 0 rather than being trusted.
 fn line_count(path: &Path) -> i64 {
-    match std::fs::metadata(path) {
-        Ok(m) if m.len() > READ_CAP => 0,
-        _ => std::fs::read_to_string(path)
-            .map(|s| s.lines().count() as i64)
-            .unwrap_or(0),
+    let Ok(file) = std::fs::File::open(path) else {
+        return 0;
+    };
+    let mut buf = Vec::new();
+    // cap + 1: reading one byte past tells us it was truncated
+    if file.take(READ_CAP + 1).read_to_end(&mut buf).is_err() || buf.len() as u64 > READ_CAP {
+        return 0;
+    }
+    match String::from_utf8(buf) {
+        Ok(text) => text.lines().count() as i64,
+        Err(_) => 0, // binary: counted as a changed file, zero lines
     }
 }
 
@@ -133,5 +161,23 @@ mod tests {
         assert!(ce_owned("vendor/pkg/.ce/index.db"));
         assert!(!ce_owned("src/.certs/key.rs"), "prefix of a name is not it");
         assert!(!ce_owned("a.rs"));
+    }
+
+    /// The `-z` record grammar, pinned where a filesystem cannot go:
+    /// Windows refuses to create a tab-bearing path, but git happily
+    /// emits one from a tree object, and `core.quotePath=false` does
+    /// NOT unquote it — only -z does. A `splitn(3)` keeps that tab
+    /// inside the path instead of reading it as a third separator.
+    #[test]
+    fn a_numstat_record_keeps_tabs_inside_the_path() {
+        let rec = "1\t0\tweird\tname.rs";
+        let mut cols = rec.splitn(3, '\t');
+        assert_eq!(cols.next(), Some("1"));
+        assert_eq!(cols.next(), Some("0"));
+        assert_eq!(
+            cols.next(),
+            Some("weird\tname.rs"),
+            "the path is whatever follows the two counts, tabs and all"
+        );
     }
 }

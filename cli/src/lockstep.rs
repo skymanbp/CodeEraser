@@ -57,7 +57,14 @@ pub fn lockstep_scores<P, E: Ord>(
         let (ws, counts) = parse(&reply)?;
         c0 += counts[0];
         c1 += counts[1];
-        rows.extend(ws.into_iter().map(|(i, j, e)| (order[i], order[j], e)));
+        // `order[i]` on a CORE-supplied rank: request endpoints are
+        // contract-checked (Clone.hs, Docdup.hs), the reply's were not.
+        for (i, j, e) in ws {
+            let (Some(&a), Some(&b)) = (order.get(i), order.get(j)) else {
+                anyhow::bail!("{} reply: endpoint rank {i}/{j} out of range", fam.kind);
+            };
+            rows.push((a, b, e));
+        }
         requests += 1;
     }
     rows.sort_unstable();

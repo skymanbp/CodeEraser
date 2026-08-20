@@ -134,13 +134,15 @@ pub fn print(r: &Report, as_json: bool) {
 }
 
 fn name(s: &candidates::SegRow) -> String {
-    format!(
-        "{}:{}-{} {}",
-        s.path,
-        s.start_line,
-        s.end_line,
-        crate::docdup::spec::KIND_NAMES[s.kind as usize]
-    )
+    // .get, not a subscript: `kind` is a stored db column, and a
+    // stale or corrupt `.ce/index.db` carrying a kind past this
+    // side's vocabulary would abort a report rather than name the
+    // row (the deadcode VERDICT_NAMES sibling, same class).
+    let kind = crate::docdup::spec::KIND_NAMES
+        .get(s.kind as usize)
+        .copied()
+        .unwrap_or("kind?");
+    format!("{}:{}-{} {}", s.path, s.start_line, s.end_line, kind)
 }
 
 #[cfg(test)]
