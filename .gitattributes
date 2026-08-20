@@ -9,3 +9,13 @@
 # \r-poison them (the M5-3a lesson, second application). Pin LF.
 *.sh text eol=lf
 manifest.env text eol=lf
+
+# GitHub linguist (v0.5.0 cleanup batch): the language bar measures
+# the PRODUCT — test batteries and frozen contract fixtures are
+# scaffolding, excluded symmetrically on both language sides; the
+# website is documentation. The judgment core is Haskell, the
+# measurement plumbing Rust (ADR-001/002) — stats should say so.
+cli/tests/** linguist-vendored
+core/test/** linguist-vendored
+contracts/** linguist-vendored
+site/** linguist-documentation

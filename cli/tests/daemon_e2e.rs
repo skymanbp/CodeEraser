@@ -1,15 +1,17 @@
 //! Daemon end-to-end: lazy start via the client, ping round-trip,
-//! dedup probe over the socket, clean shutdown. Uses the real `ce`
-//! binary (CARGO_BIN_EXE) and a throwaway project root so parallel
-//! test runs get distinct socket names.
+//! dedup probe over the socket, clean shutdown, version skew — and
+//! the 1.1.0 connection authorization (folded in from
+//! daemon_auth.rs at the v0.5.0 test consolidation). Uses the real
+//! `ce` binary (CARGO_BIN_EXE) and a throwaway project root so
+//! parallel test runs get distinct socket names.
 
-use codeeraser::daemon::client;
-use codeeraser::daemon::proto::{Request, Response};
+use codeeraser::daemon::proto::{DAEMON_PROTO, Request, Response};
+use codeeraser::daemon::{auth, client};
 use std::path::Path;
 use std::time::{Duration, Instant};
 
 mod common;
-use common::{seed_clone_pair, tmp as project_dir};
+use common::{raw_daemon_line, seed_clone_pair, tmp as project_dir};
 
 /// ADR-003 cold start: a repo whose index was never built must never
 /// get a silent empty ProbeReport — that reply is indistinguishable
@@ -167,13 +169,52 @@ fn version_skew_restarts_daemon() {
     let child = common::spawn_daemon_ready(&root);
     // raw line with a bad-major hello (client::request would
     // auto-respawn; here we watch the exit itself)
-    let resp = common::raw_daemon_line(
+    let resp = raw_daemon_line(
         &root,
         &Request::Hello {
             proto: "999.0.0".into(),
-            token: codeeraser::daemon::auth::read(&root),
+            token: auth::read(&root),
         },
     );
     assert!(matches!(resp, Response::Restart { .. }), "got {resp:?}");
     common::wait_exit(child, "daemon on version skew");
+}
+
+fn is_unauthorized(resp: &Response) -> bool {
+    matches!(resp, Response::Error { message } if message.starts_with("unauthorized"))
+}
+
+/// The 1.1.0 gate: the socket name is a hash of the project root —
+/// guessable — so the capability is READING .ce/daemon.token
+/// (owner-only on Unix; the project dir's ACL on Windows). A wrong
+/// token and a tokenless request both get the refusal with the
+/// CONNECTION closed and the daemon alive.
+#[test]
+fn the_token_gates_the_connection_and_the_daemon_survives_refusals() {
+    let root = project_dir("daemon-auth");
+    let child = common::spawn_daemon_ready(&root);
+
+    // a request BEFORE any hello: refused, connection closed
+    let r = raw_daemon_line(&root, &Request::Ping);
+    assert!(is_unauthorized(&r), "tokenless ping must be refused: {r:?}");
+
+    // a hello with the WRONG token: refused
+    let r = raw_daemon_line(
+        &root,
+        &Request::Hello {
+            proto: DAEMON_PROTO.into(),
+            token: "not-the-token".into(),
+        },
+    );
+    assert!(is_unauthorized(&r), "wrong token must be refused: {r:?}");
+
+    // the minted token is on disk, fresh for this serve
+    assert_eq!(auth::read(&root).len(), 64, "32 random bytes, hex");
+
+    // the real client reads the same file and gets through — the
+    // refusals above closed CONNECTIONS, never the daemon
+    let r = client::request_if_running(&root, &Request::Ping).expect("authed ping");
+    assert!(matches!(r, Response::Pong { .. }), "got {r:?}");
+
+    common::shutdown_and_wait(&root, child, "daemon after auth battery");
 }
