@@ -205,6 +205,15 @@ pub fn run_precommit(root: &Path) -> ExitCode {
 /// v1 approximation of "newly added duplication" (exact split = M4).
 /// None = the dedup pipeline itself failed: DEGRADED, stamped in the
 /// observe entry, never conflated with "no duplicates" (A9f).
+///
+/// Cost stance, unified 2026-08-19 (user ruling: one standard,
+/// quality first): an ENFORCEMENT leg pays for its own verdict —
+/// in-process, budgeted (PERF-BUDGET.md Stop row: warm ~0.5 s of the
+/// ~0.7 s e2e) — while an INFORMATIONAL leg never pays a spawn
+/// (fourclass_report above). Routing this through Request::Dedup was
+/// MEASURED a wash (721 vs 723 ms median: the daemon recomputes
+/// analyze per request); a real win needs daemon-side result caching
+/// with invalidation, ledgered in the 2026-08-19 review record.
 fn touched_duplicates(root: &Path, changed: &[String]) -> Option<Vec<String>> {
     let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
     // a set, not a Vec scan: blocks × changed was O(B·C) string

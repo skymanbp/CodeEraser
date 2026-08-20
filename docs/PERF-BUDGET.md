@@ -129,6 +129,22 @@ boot 表逐串匹配），GRAPH_REV 3 全量重解析。
 | `ce dedup .`（冷，REV 5 全量重建，`.ce/` 删除后计时同链） | 2.72 s | 与 REV 3 先例 2.68 s 同量级，属性探针无感 |
 | `ce deadcode .`（暖索引 + 判决往返） | 1.56 s | 733 kept 边、0 dead、615 未解析 |
 
+## Stop 审计预算（立行 2026-08-19，release，自仓 278 文件，非静默机，n=5 手测）
+
+口径：`ce audit --hook` e2e = 信封解析 + diff/ls-files 两 git 腿 + 进程内
+dedup（占大头）+ four-class（request_if_running，daemon 缺席即降级字段）
++ observe 落账。成本立场（用户拍板统一）：**执法腿为自己的判决付费、
+信息腿绝不付 spawn**——此前 audit 无预算行即双标的另一半。Request::Dedup
+路由实测打平（721 vs 723 ms 中位：daemon 逐请求重算 analyze），撤案；
+真提速需 daemon 端结果缓存+失效设计（2026-08-19 评审档挂账）。
+
+| 项 | 预算 | 实测 | 状态 |
+|---|---|---|---|
+| `ce audit --hook` e2e（暖索引） | median < 1.5 s | median 721 ms（5 跑 707–958） | ✅ |
+| 同上（冷索引） | < 5 s | 3.06 s（2026-08-19 评审 PoC，git-archive 副本） | ✅ |
+| 分解：dedup 管线单独（暖） | —（记录） | median 469 ms | 记录 |
+| 分解：git 腿 + 落账（precommit 空 staged） | —（记录） | median 80 ms | 记录 |
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。
