@@ -11,9 +11,12 @@
   / `ce deadcode --check` / `ce docdup --check`，加 `ce doctor`。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
-- 版本四处一致：`cli/Cargo.toml`、`core/ce-core.cabal`、
-  `plugin/.claude-plugin/plugin.json`、`gui/src-tauri/tauri.conf.json`
-  （版本镜像门在测试电池里，drift 即红）。
+- 版本五处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch
+  输入也对它校验）、`core/ce-core.cabal`、`plugin/.claude-plugin/
+  plugin.json`、`gui/src-tauri/tauri.conf.json`、`gui/src-tauri/
+  Cargo.toml`（版本镜像门在测试电池里，drift 即红；两个 Cargo.lock
+  由 --locked 兜住）；握手 golden `contracts/fixtures/handshake/
+  hello-ok.ndjson` 的 version 回显同批重钉。
 - 守卫档位有变 → CHANGELOG 按既有先例格式记 FPR 依据。
 - **判决语义有变（轴语义/阈值/量纲）→ release notes 必须声明分数迁移**
   （先例：v0.5.0 的轴 3 目录计数修正案——同一仓库结构分会变）。
@@ -23,15 +26,18 @@
 1. GitHub Actions → `release` workflow → Run workflow，输入裸版本号
    （如 `0.5.0`，不带 v）。版本输入与 crate 不符会在首步拒绝。
 2. 三平台并行构建 `ce` + `ce-core` + GUI 实包（NSIS/AppImage/dmg），
-   十资产 + `SHA256SUMS` 上传为 **draft** Release。
+   九工件 + `SHA256SUMS` 共十资产上传为 **draft** Release。
 3. 本地抽验：下载任一平台二进制 `sha256sum -c` 对 SHA256SUMS。
 
 ## 2. 第二段：pin → tag → publish
 
 1. 把 draft 的 SHA256SUMS 逐值写进 `plugin/bin/manifest.env`
-   （六 pin：三平台 ce + 三平台 ce-core），提交并推 main，CI 绿。
+   （六 pin：三平台 ce + 三平台 ce-core），并同批翻 `CE_MANIFEST_VERSION`
+   与 `CE_BASE_URL`（tag 腿断言前者 == tag；后者 URL 内嵌 tag，忘翻即
+   下载 404）——八行齐动，提交并推 main，CI 绿。
 2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**
-   后 publish（不重建）；`verify-publish` 任务复核十资产 + 校验和。
+   后 publish（不重建）；`verify-publish` 复核十资产（九工件对拍
+   SHA256SUMS，六二进制对拍 manifest pin）。
 3. Release notes：功能面 + 分数迁移声明（如适用）+ 未签名明示
    （0.x 无代码签名，SHA256 链路承重——ADR-007/R1 立场）。
 

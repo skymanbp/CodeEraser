@@ -32,7 +32,9 @@ survivors self 490 / requests 128 / ripgrep 6,201 / cobra 1,158 / zod 21,740
 `pairs_sha256` 五 digest = 抽样册 `pool_digests` 锚链；min_reported 地板
 53 / 18 / 617 / 63 / 3,253。
 
-**抽样**（`t3-sample-v1.json`，`ce.eval-t3-sample/1.0.0`；门 `eval_t3_sample`）：
+**抽样**（`t3-sample-v1.json`，`ce.eval-t3-sample/1.0.0`；原门 `eval_t3_sample`
+随 v0.5.0 瘦身退役，工件保留，完整性腿迁入
+`eval_t3_precision::t3_sample_verifies`）：
 main 100 + backup 20×4，配额 ts 44 / rs 24 / go 17 / py 15（最大余数 ∝ 池
 21,750 / 6,676 / 1,161 / 130），哈希序无 RNG。
 
@@ -61,14 +63,18 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 段 self 114 / requests 98 / ripgrep 251 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
 verbatim_floor 50、DOC_LINE_CAP 200、license 头 5 行豁免、SEGCAP 8192。
 
-**oracle**（`docdup-oracle-*-v1.json`，`ce.eval-docdup-oracle/1.0.0`；门
-`eval_docdup_oracle`）：live 段全对枚举整数交叉 Jaccard ≥80/100 ∨ verbatim ≥50，
+**oracle**（`docdup-oracle-*-v1.json`，`ce.eval-docdup-oracle/1.0.0`；原门
+`eval_docdup_oracle` 随 v0.5.0 瘦身退役，工件保留，活读者 =
+`eval_docdup_precision` 直读冻结 oracle JSON 做 D2 回声断言）：live 段全对
+枚举整数交叉 Jaccard ≥80/100 ∨ verbatim ≥50，
 oracle 对 self 4 / requests 4 / ripgrep 8 / cobra 8 / zod 8 = **32**。
 
-**普查**（`docdup-sample-v1.json`，`ce.eval-docdup-sample/1.0.0`；门
-`eval_docdup_sample`）：32 全量普查零选择（勘误：报告地板人口 30<100 抽样算术
-不可能）；by_kind comment 17 / docstring 8 / md_para 7；population =
-report_floor 23 + margin 9。census v2 = v1 的严格子集（retired 15 对冻结存证）。
+**普查**（`docdup-sample-v1.json`，`ce.eval-docdup-sample/1.0.0`；原门
+`eval_docdup_sample` 随 v0.5.0 瘦身退役，冻结件保留、由
+`eval_docdup_precision` 活读）：32 全量普查零选择（勘误：报告地板人口
+30<100 抽样算术不可能）；by_kind comment 17 / docstring 8 / md_para 7；
+population = report_floor 23 + margin 9。census v2 = v1 的严格子集
+（retired 15 对冻结存证）。
 
 **精度 = 达标线 B 修正案**（`docdup-precision-*-v1.json`，
 `ce.eval-docdup-precision/1.0.0`，生成于 `0b13d4b`；门 `eval_docdup_precision`）：
@@ -102,7 +108,8 @@ DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0�
   pre_haskell_members_survive_every_generation` 断言其为每个后继基线的真子集。
   预算 97→149 双笔具名（+13 generation / +39 表族，`ce.toml` 历史段；本行
   3l 勘误——本册曾记 150/+40，权威数是 fmt 后量得的 149/+39）；churn
-  台账重放改按工件冻结语言域比对（五语言白名单，`eval_churn_ledger`）。
+  台账重放改按工件冻结语言域比对（五语言白名单，`eval_churn_ledger`——
+  已退役，见上节）。
   CoC 立场登记册 =
   [coc-haskell-divergences.md](../contracts/coc-haskell-divergences.md)
   （D0 无外部 oracle 起十三条），机检半身 = `coc_haskell` 电池 + 五语言等价对拍。
@@ -151,13 +158,13 @@ M5 收口欠账清算、3m recall 仪器 B、审查热修+CI 门补全、ADR-008
 
 ```
 cd cli && cargo test --test eval_t3_universe --test eval_t3_candidates \
-  --test eval_t3_sample --test eval_t3_precision --test eval_t3_recall \
-  --test eval_docdup_universe --test eval_docdup_oracle \
-  --test eval_docdup_sample --test eval_docdup_precision \
-  --test eval_churn_ledger --test baseline_bridge --test core_size_gate \
-  --test core_wire
+  --test eval_t3_precision --test eval_docdup_universe \
+  --test eval_docdup_precision --test baseline_bridge \
+  --test core_size_gate --test core_wire
 ```
 
 外部四语料需本地 `.ce-eval/` 克隆（tip 见上表，CI 门 `rev-parse` 复核 RM19）；
-冻结件重生成：生成器已随 M7.5 退役，先 `git checkout <父提交> -- cli/tests/<仪器>`
-复活再跑（EVAL-SET.md 再生成节同律），diff 为空即完整复现。
+冻结件重生成：生成器已随 M7.5 退役、五条整件门（t3_sample/t3_recall/
+docdup_oracle/docdup_sample/churn_ledger）随 v0.5.0 加码批退役——均先
+`git checkout <父提交> -- cli/tests/<仪器>` 复活再跑（EVAL-SET.md 再生成节
+同律），diff 为空即完整复现。

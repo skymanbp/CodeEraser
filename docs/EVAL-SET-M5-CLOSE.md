@@ -49,7 +49,8 @@ ripgrep 排除（similarity-rs="(future)" 官方 --supported 输出）、self �
 425、cobra 1,124 vs 9,205）；修后 not_candidate 桶**清零**。
 
 **冻结 = `t3-recall-{zod,requests,cobra}-v1.json`**（`ce.eval-t3-recall/1.0.0`；
-门 `eval_t3_recall` 信封重放+封闭词表+回归地板+覆盖清单封闭）：recall_raw
+冻结件与门 `eval_t3_recall` 已随 v0.5.0 瘦身退役，全档在 git 历史——原门=
+信封重放+封闭词表+回归地板+覆盖清单封闭）：recall_raw
 zod **3/6=0.50** / requests **67/425=0.158** / cobra **1417/9205=0.154**；
 recall_incremental 0.0 / 0.058 / 0.083（触发器 <0.50 书面处置=本节即处置：
 增量低因 T3 域与对照物测度轴不同，见下）。**miss 100% 机械归因且全部定义性**：
@@ -103,9 +104,10 @@ hs_boot 各按其记录管线对工具链重导出集合比对——**首跑即�
 **默认值**——proto 2.3.0 加性 minor，request 行偏斜 fixture 纪律照旧）；
 Rust 侧 `score::run` 经 `Config::load` 单咽喉发
 `[[0,file_lines_warn],[1,cognitive_warn]]`，应答 `knobs` 回显生效值、
-`wire::judge` 断言往返。**漂移门 = `core_wire::ceilings_default_drift_gate`**：
-空表回显 == `Thresholds::default()`（300/15）——Cost.hs 默认与 ce.toml
-默认在同一条断言相会，任一侧独动即红（此前两常量互为无检镜像）。
+`wire::judge` 断言往返。**漂移门 = `core_wire::knob_default_drift_gate`**
+（P4 后由 ceilings 对泛化为全 knob 面）：空表回显 == `Thresholds::default()`
+（300/15）——Cost.hs 默认与 ce.toml 默认在同一条断言相会，任一侧独动即红
+（此前两常量互为无检镜像）。
 Haskell 权威 = `ceilingsOffence` 域检（axis>1/值<1/降序拒绝，VerdictProps
 +3 具名探针）+ `effectiveKnobs`（scoreBound 覆盖式）+ `ceilingKnob` 性质
 （真 respond 驱动：310 尺寸行默认 300 下受罚、请求 400 下净，回显双态钉）。

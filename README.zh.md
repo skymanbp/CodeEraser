@@ -40,7 +40,7 @@ aarch64-macos）、三个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg—�
 `ce-core` 放它旁边——判决类子命令经解析链的兄弟腿自动找到它，
 零旗标零环境变量。
 
-**Claude Code 插件（一条命令）。** `/plugin marketplace add
+**Claude Code 插件。** `/plugin marketplace add
 skymanbp/CodeEraser`，再 `/plugin install codeeraser`——引导脚本自动
 下载并按 SHA256 pin 校验两个二进制。
 

@@ -1,6 +1,6 @@
 # CodeEraser — 项目级指令（Claude Code 每次会话加载）
 
-## 当前状态：M0–M8 全交付，v0.6.0 已发布（2026-08-20）；计划 v2.6 尺寸顾问全案落地（wire 2.14.0）：轴 0 梯度化（分数迁移 818→809 已声明）、相对软线 S 冻入基线（自仓 303，k=2 五语料标定）、`ce structure --split-candidates` 拆分 ROI 面 + 无缝自动豁免、guard zone observe 台账（feed 0.5.0）；设计册 docs/reference/size-advisory.md 含 P2/P4 as-built 实录
+## 当前状态：M0–M8 全交付，v0.6.0 已发布（2026-08-20）；计划 v2.6 尺寸顾问全案落地（wire 2.14.0）：轴 0 梯度化（分数迁移 818→809 已声明）、相对软线 S 冻入基线（自仓 294，k=2 五语料标定；具名重立即重算，以 ce-baseline.json 为准）、`ce structure --split-candidates` 拆分 ROI 面 + 无缝自动豁免、guard zone observe 台账（feed 0.5.0）；设计册 docs/reference/size-advisory.md 含 P2/P4 as-built 实录
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。
@@ -20,8 +20,9 @@
      不由 scan 退出码强制；复杂度四项（params/cyclomatic/cognitive/nesting）**无 fail 档**。
    - 真正把文件摁在 300 附近的是 **ADR-006 逐文件棘轮**（单次增长 ≤ max(+2%, +10)，
      `ce check --fail-under 800`）与 **dedup 预算**（只降不升）—— 两者都是硬门。
-   - 扫描语言集 = `py/ts/tsx/rs/go/md/hs`。**`.js/.css/.sh/.yml` 不在其中**：GUI 的
-     JS 因此长期无门并漏出过缺陷，现由 `gui/tests/lens_invariant.js` 单独一条 CI 腿兜住。
-     补语言臂（给 js/css/sh 加 size-only 臂）仍是**开放选项**，未决。
+   - **判决**语言集 = `py/ts/tsx/rs/go/md/hs`；v0.5.0 起 scan 另有**纯尺寸臂**（js/mjs/cjs/jsx、
+     css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml）——只进 scan 尺寸门 + guard 硬预算 +
+     棘轮，永不进判决族（边界权威 = `Lang::scan_only`/`judged_path`，cli/src/scan/lang.rs）。GUI 的
+     JS 语义另由 `gui/tests/lens_invariant.js` 一条 CI 腿覆盖。
 4. **禁止堆叠式编辑**：更新文档/代码时就地修改，不做"追加新段落覆盖旧段落"式打补丁 ——
    这正是本项目要消灭的行为。

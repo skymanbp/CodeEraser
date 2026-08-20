@@ -126,7 +126,7 @@ audit + CI gates are the backstop.
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
 - [docs/RELEASE.md](docs/RELEASE.md) — the two-phase release runbook
 - [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 axis semantics (S0–S6)
-- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — the plan-v2.6 size soft-zone + split-ROI contract (ships in v0.6)
+- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — the plan-v2.6 size soft-zone + split-ROI contract (shipped in v0.6.0)
 
 ## Architecture
 

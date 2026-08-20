@@ -85,9 +85,10 @@
   形状**；`dedup_report.report`、`probe_report.matches`、
   `four_class_report.report` 三个嵌套载荷是 `serde_json::Value` 直通，
   其内部键**不在**本门覆盖内（fixture 里的载荷是示意占位）。各自的
-  权威与钉点：dedup report = `dedup::report_json`（observe golden +
-  daemon_e2e 消费）、fourclass report = `fourclass::session` 形状
-  （hook e2e 断言）、probe matches = probe.rs 报告形（guard 电池）。
+  权威与钉点：dedup report = `dedup::report_json`（report_schema
+  golden `fixtures/dedup-report/` + daemon_e2e 消费）、fourclass
+  report = `fourclass::session` 形状（daemon_e2e 断言 + wire_indices
+  索引钉）、probe matches = probe.rs 报告形（guard 电池）。
 
 ## 5. 复跑
 

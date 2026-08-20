@@ -1,6 +1,6 @@
 # CodeEraser 开发计划
 
-> **版本** v2.6 · 2026-08-20 · 状态：🔒 已由 cc-memory 锁定 · **M0–M8 全交付，v0.4.0 已发布（2026-08-19）**
+> **版本** v2.6 · 2026-08-20 · 状态：🔒 已由 cc-memory 锁定 · **M0–M8 全交付，v0.6.0 已发布（2026-08-20）**
 > 本文件是本仓库唯一权威计划。修改流程：改本文件 → 重新 ccm 锁定 → 才能动代码。
 > v1.0→v1.3 经两轮攻击评审收口（记录见 docs/reviews/（已清理，全档在 git 历史））；v1.4 增补 ADR-008 + 判定属性电池；v1.5 = M5-3 拆 3A/3B + 验收门修订（十项拍板：reviews/2026-08-13-m5-3-dedup-instruments.md（git 历史） §12）；v1.6 = M5-3A recall 门修正案；v1.7 = ADR-003 收敛式多写者修正案（两案均用户拍板 2026-08-14，全档见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md)）；v1.8 = ADR-008 细则（判决/测量分界+四片契约，三拍板 2026-08-17：reviews/2026-08-17-adr-008-policy-dsl.md（git 历史））；v1.9 = M6 并入结构管理器（structure/1 树尺度熵判决=GUI 首屏数据面，两拍板 2026-08-17：reviews/2026-08-17-m6-structure-manager.md（git 历史））；v2.0 = M6 收口修正案（用户拍板 2026-08-17：趋势面板+删除候选浏览移 M7——趋势需历史存储设计、删候浏览宜与发布后反馈同批；Linux/macOS 实包归 M7 Releases 自动化，M6 以 Windows 实包+三平台编译门收口）；v2.1 = M7 签名后置修正案（用户拍板 2026-08-17：0.x 不购证书/账号，README 明示未签名 + SHA256 校验链路承重，签名/公证后置 post-1.0；M7 章程四拍板与切片 P1→P2→P3→P4→P6：reviews/2026-08-17-m7-release-track.md（git 历史））；v2.2 = M8 成长轨立册（用户五条+三拍板 2026-08-17：IP=软著+商标〔发明专利落选→P6 零专利时序约束；商标宜先于 P6 提交防抢注〕、全量文档对齐+生成器门控、i18n en 默认+zh 查表切换、GitHub 可见度；契约正文=reviews/2026-08-17-m8-growth-track.md（git 历史））；v2.3 = M7.5 清理批修正案（用户三拍板 2026-08-18 ccm #1152：休眠评估仪器深度瘦身走 [EVAL-SET.md](EVAL-SET.md) 修正案〔CI 活门全保、复核链交 git 历史〕+ trend/1 趋势判决入核=Haskell 合约内抬占比、语言分工边界不动；P6 前置执行）；v2.4 = 收口记账修正案（2026-08-19：M7/M8 收口标注、签名裁定统一为"不做"、guard 第 3 级 as-built=observe、分发行更新为已公开——纯记录性同步，零架构变更）；v2.5 = 尺寸门语言臂修正案（用户拍板 2026-08-20：前端/脚本常用扩展 js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml 入 **scan 尺寸门 + guard 硬预算 + score/棘轮（纯 size 事实）**，**永不进** index/clone/graph/docdup/fourclass/churn/structure——判决语义零变动〔S2 混语轴若计入 css 会把正常前端目录误判混语〕；`Lang` 追加式扩展，wire 语言码不重排，谓词 `Lang::scan_only`/`judged_path` 为唯一边界权威；起因 = GUI 的 .js 长期无门漏缺陷，评审 2026-08-19 在册）；v2.6 = 尺寸软区间+拆分 ROI 修正案（用户拍板 2026-08-20 A+B+C 全采纳、契约先行实现留 v0.6：A 软区间凸罚替换 warn/fail 双档悬崖〔硬线 750 不变，分数迁移一次并负发版声明义务〕+ B 基线锚定相对软线 S=clamp(median+k·MAD(log-LOC),[200,500])〔冻结时计算防自指漂移〕+ C 拆分 ROI 顾问面〔无可行缝 ROI<1 → 自动豁免带 why；判决/排名入核 = Haskell 占比第二叉首弹〕；设计册 [reference/size-advisory.md](reference/size-advisory.md)；痛点实证 = v0.5.0 评审周 6 拆分/3 删注释/299 停车在册）。
 > 本文件行数以锁定时为棘轮上界：只准变短，不准变长；更新必须就地改写。
@@ -59,7 +59,7 @@
 
 | 模块 | 检查项 | 默认阈值（出处经核实） | 里程碑 |
 |---|---|---|---|
-| `size` | 文件 LOC；函数长度；参数个数 | 文件 300 警告 / 750 阻断（ESLint max-lines=300；Sonar S104=750）；函数 50/75（ESLint=50；Sonar S138=75）；参数 5（Pylint）。尺寸门语言臂（v2.5）：js/jsx/css/scss/less/html/vue/svelte/sh/yml 仅入本模块 + guard 硬预算 + 棘轮，不入任何判决族。v2.6（已拍板，实现=v0.6）：300/750 双档演进为软区间+相对软线+拆分 ROI，契约见 [reference/size-advisory.md](reference/size-advisory.md) | M1 |
+| `size` | 文件 LOC；函数长度；参数个数 | 文件 300 警告 / 750 阻断（ESLint max-lines=300；Sonar S104=750）；函数 50/75（ESLint=50；Sonar S138=75）；参数 5（Pylint）。尺寸门语言臂（v2.5）：js/jsx/css/scss/less/html/vue/svelte/sh/yml 仅入本模块 + guard 硬预算 + 棘轮，不入任何判决族。v2.6（as-built v0.6.0）：scan 双档不变；score size 轴改软区间凸罚（S=基线 softLine，缺则回落 300；H=750）+ `ce structure --split-candidates` 顾问面，契约见 [reference/size-advisory.md](reference/size-advisory.md) | M1 |
 | `complexity` | Cognitive Complexity 主判罚；Cyclomatic 辅助 | CoC 15（Sonar S3776）；CC 10–15（Sonar S1541=10 / lizard=15）。证据边界如实声明：ESEM 2020 元分析中 CoC 仅在理解耗时（r=0.54）与主观评分轴有支持，正确率轴无支持（r=−0.13 CI 跨零）；arXiv 2303.07722 中 CC 略优于 CoC。选 CoC 主判罚的理由是其对嵌套的惩罚正对准"堆叠"形态，而非"已证明的可维护性代理" | M1 |
 | `readability` | 命名规范、嵌套深度、注释密度 | 不用 Maintainability Index 作主分（van Deursen 批判：1994 系数从未重标定、与 LOC 共线）。主判罚永远 = LOC + CoC + 重复率 | M1 |
 | `clone` | 跨文件 T1/T2（热路径）；T3 near-miss（冷路径）；**不承诺 T4**（arXiv 2606.25272：SOTA 在 T4 全线退化） | T1/T2 min-tokens 50（jscpd 默认）；T3 TSED 0.85（定义与阈值仓内自定义并文档化——2026-08-13 拍板②；对照物读出值作分歧入册不改数） | M2/M5-3 |
@@ -84,10 +84,10 @@ PostToolUse 不能阻断工具执行，但可反馈；强制阻断点 = PreToolU
 
 | Hook | 职责（与 ADR-004 混合强制点一致） |
 |---|---|
-| `PreToolUse`（`Edit\|Write`） | 只做**无需 AST 的廉价检查**：路径排除、目标文件当前 LOC 预算、单次写入体积、`new_string` 片段对指纹索引的 T1/T2 探针。超限 → `permissionDecision:"deny"/"ask"` + 指回既有 `file:line`。不做 AST diff（避免重放 Edit 落盘语义这一隐藏子系统，评审 A2a） |
+| `PreToolUse`（`Edit\|Write`） | 只做**无需 AST 的廉价检查**：路径排除、目标文件当前 LOC 预算、`new_string` 片段对指纹索引的 T1/T2 探针。超限 → `permissionDecision:"deny"/"ask"` + 指回既有 `file:line`。不做 AST diff（避免重放 Edit 落盘语义这一隐藏子系统，评审 A2a） |
 | `PostToolUse`（`Edit\|Write`）/ `FileChanged` | **退役（裁定 2026-08-19）**——官方语义不能阻断只能反馈，深判职责由 Stop 审计（git diff 净效果）与 CI 门承担；再加一层反馈面即上下文熵源（B4 立场） |
 | `Stop` | 本轮净效果审计（基于 **git diff**，因此对 Bash/`>>` 写入同样生效）：净 LOC、新增重复块、（M4 起）四分类汇总。引入净冗余而声称完成 → `decision:"block"` 要求返工 |
-| `SessionStart` | 引导二进制（见 §5.9）；注入 guard 健康状态一行（daemon 是否存活、索引 freshness、上会话降级计数） |
+| `SessionStart` | 引导二进制（见 §5.9）；注入 guard 健康状态一行（daemon 是否存活、索引 freshness、guard 档位；降级计数归 `ce doctor`，§5.9-5） |
 | `UserPromptSubmit`（可选） | 廉价启发式标记本轮意图（更新 vs 新增），仅作 §4.3 的可选辅助信号，非判定前提 |
 
 **诚实边界（A2b）**：PreToolUse 是**行为塑形层，不是安全边界**——agent 可用
@@ -149,7 +149,7 @@ L0 = `git diff --numstat -M -C --find-copies-harder`（零自研）；L1 = L0 + 
 └────────────────────────────────────┼───────────────────────┘
               named pipe(Win)/UDS ─► ▼
 ┌ ce daemon (同一 Rust 二进制, per-project, 懒启动) ─────────┐
-│ 指纹索引(SQLite WAL, 唯一写者) · git 历史抽取 · 文件监听   │
+│ 指纹索引(SQLite WAL, 多写收敛) · git 历史抽取 · 文件监听   │
 │ 子进程: ce-core (Haskell) ↕ NDJSON over stdio(均长驻)      │
 │   判决层: 规则引擎(hlint 式双层) · 四分类(L2) · TSED       │
 │   依赖图/三信号 join · 评分与棘轮                          │
@@ -158,7 +158,7 @@ L0 = `git diff --numstat -M -C --find-copies-harder`（零自研）；L1 = L0 + 
 
 **职责边界（B1 采纳后）**：延迟敏感的热路径（PreToolUse 廉价检查、索引探针）完全在
 Rust 进程内完成，不跨语言；**一切"判决"**（四分类 L2、规则引擎、评分、棘轮、图分析、
-TSED）在 Haskell——这些全部位于放宽预算的路径上（PostToolUse 异步 / Stop 秒级 / 批扫），
+TSED）在 Haskell——这些全部位于放宽预算的路径上（Stop 秒级 / 批扫），
 Haskell 承重且不背 1s 预算。
 
 ### 架构决策记录（ADR，偏离须先改本文件）
@@ -189,7 +189,7 @@ GUI 由 Tauri 覆盖。Go 无以上任何优势。
   **禁止 Haskell DLL**（GHC #16429/#23644 未解决；`foreign export`+DllMain 官方警告冻结）。
 
 **ADR-004 强制点 = 混合（B3a 采纳，替代 v1.0 的 PreToolUse 独担）。**
-PreToolUse 只做无需 AST 的廉价检查（见 §4.2）；AST 深判在 PostToolUse/FileChanged
+PreToolUse 只做无需 AST 的廉价检查（见 §4.2）；AST 深判在 Stop 审计
 （已落盘全文，无需重放 Edit 语义）；强制力 = PreToolUse（廉价规则）+ Stop（深判结果）。
 否决"PreToolUse 独担"：需自建与 Claude Code 逐字节等价的 Edit 落盘语义重放器（unique
 匹配、replace_all、空白/CRLF 归一化），任何偏差 = 判定错文件；且 `new_string` 片段常含
@@ -206,7 +206,7 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
 **ADR-006 棘轮语义（B5 修复）。**
 - **连续型指标**（文件 LOC、函数 CoC）：per-file/per-function ceiling = 基线值；
   超 ceiling 即 fail，低于 ceiling 自动收紧到新值。修 bug 需要加行时：ceiling 有
-  单次编辑 +2% 或 +10 行（取大）的容差，容差消耗计入 Stop 汇总。
+  单次编辑 +2% 或 +10 行（取大）的容差，容差消耗计入 `ce check` 棘轮行。
 - **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；
   新增成员即 fail，移除成员自动收基线。
 - 与 `--fail-under` 合成：有基线的仓库以棘轮为主门，`--fail-under` 为下限保险；
@@ -267,7 +267,7 @@ CodeEraser/
 | **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |
 | **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |
 | **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |
-| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205，`eval_t3_recall`）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |
+| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |
 | **M5-3B** 深度去冗·判决 | 三信号 join、`score`+棘轮（`check`/`baseline` 子命令归此）、Haskell 语言支持**全套**（size+CC+CoC+注释域 + graph 阶梯按 M5-2f 每 rung fixture 纪律；先决 = tree-sitter-haskell 0.26 ABI 可得性 spike——拍板⑧） | 3 周 ± | join 不设数值门（验收 = 诚实包 + 图腿缺席发 null 绝不编造——拍板④）；score 敏感性电池绿（非空性 + 互异性双前置）；本仓库自身跑通棘轮入 CI；Haskell 阶梯每 rung fixture 全绿（grammar 不可得 ⇒ size-only 落回并公开记录，CoC 与阶梯顺延） |
 | **M6** GUI+结构管理器（**已收口 2026-08-17，v2.0 修正案**） | structure/1 家族（树尺度熵判决：C 自参照地板+A 声明覆盖、七轴 S0-S6、判决全 Haskell 测量复用 Rust——设计册 reviews/2026-08-17-m6-structure-manager.md（git 历史） 四切片）+ `ce structure` JSON 树报告 + Tauri 可视化（树图首屏消费同一 schema） | 3–4 周 | 熵原语过穷举参照电池 ✓；每轴 F16 非真空前置 ✓；每片反事实杠杆+golden 手算 ✓；对 10 万 LOC 仓库**从冷启动 scan 到首屏** < 60s、已扫描报告打开 < 3s（实测 zod 71.6k 冷 8.36s/暖 2.66s，[PERF-BUDGET.md](PERF-BUDGET.md) M6 节）✓；Windows 实包（NSIS）+三平台编译门 ✓（Linux/macOS 实件=M7） |
 | **M7** 发布（**已收口 2026-08-18**） | marketplace 上架、未签名明示（签名/公证裁定不做——2026-08-19，见 ADR-007/R1）、Releases 自动化（**含 Linux/macOS 实包**——v2.0）、完整 MCP（只读报告面——章程拍板③）、许可证合规（NOTICE/第三方 MIT 署名清单——D1-7）、文档、**GUI 二期：趋势面板+删除候选浏览**（v2.0 移入）、**M7.5 清理批（v2.3，P6 前置）：休眠评估仪器深度瘦身走 EVAL-SET 修正案 + trend/1 趋势判决入核（Haskell 合约内抬占比——2026-08-18 拍板 ccm #1152）** | 1–2 周 | 陌生机器一条命令可用 ✓；二进制 SHA256 校验链路端到端验证 ✓；**仓库转公开前全历史审计**（历史内 cli/memory/memory.db 三处 blob〔64780b9/e296178/d3f48df〕必须 filter-repo 清除、transcript、密钥、路径泄漏——D2-7）✓；文档过 `docdup` 自检 ✓；默认档位切换依据（各规则 FPR 数据）发布在 CHANGELOG ✓；M7.5 后 CI 活门集合零缺员（普查测试级二分实证）✓ |

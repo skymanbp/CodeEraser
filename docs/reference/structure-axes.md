@@ -9,11 +9,11 @@
 
 | 轴 | 信号 | 事实源（测量侧，Rust） |
 |---|---|---|
-| S0 路径几何 | 深度分布集中度、扇出失衡（定标基尼）、超长/超深路径计数 | walk 树形聚合 |
+| S0 路径几何 | 深度超顶（depth > 8）、单目录扇出超顶（subdirs+files > 30）——两谓词两旋钮，绝对上限非分布判定 | walk 树形聚合 |
 | S1 命名一致性 | 每兄弟集的命名模式熵（case/分隔符/前缀族）——**名不过线**，只过模式码分布 | walk 文件名 |
 | S2 正交性/模块度 | 目录内 vs 目录间引用密度（fileRefs 触点为单一事实基） | graph 边表 |
 | S3 漂移错位 | 持有错位文件的**目录**计数（修正案①）；文件级谓词不变：outside ≥ min 且 > 2×inside | graph 边表 |
-| S4 文档基建 | 大分类目录（top-k 扇出）README/配置存在性；约定位掩码 | walk + entry_globs 同款约定 |
+| S4 文档基建 | 文件数 ≥ bigDirFloor（默认 8，旋钮 6）的目录须有 README；根目录须有可识别配置；约定位掩码（1=README，2=config） | walk + entry_globs 同款约定 |
 | S5 文档新鲜度 | md 节引用目标在文档最后一改之后的变更次数 | churn 窗口 + md 阶梯 |
 | S6 冗余/孤儿卷积 | dedup 块数、deadcode 判决按目录卷积（--deep 才上线） | dedup/deadcode 判决 |
 

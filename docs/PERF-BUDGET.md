@@ -187,9 +187,11 @@ blame 代价见 3h 节，空表=诚实缺席非零主张）。
 | 同上，clean 路径（无判定输出，静默） | —（无预算） | median 70 / p95 81 ms | 记录 |
 | 冷首呼（懒起 daemon + 首连 + 判定） | —（降级档兜底，ADR-003） | 213 ms | 记录 |
 
-复跑：`cargo test --release --test perf_budget -- --ignored --nocapture`
-（合成语料确定性生成；M2 收口大仓复测时用真实仓库再录一列；
-hook e2e = `hook_e2e_p95_under_1s`）。
+复跑：`perf_budget.rs` 已随 M7.5 封册退役——复现本表需先
+`git checkout 0c7c936^ -- cli/tests/perf_budget.rs` 从 git 历史复活仪器
+（EVAL-SET.md 再生成节同法），再 `cargo test --release --test perf_budget
+-- --ignored --nocapture`（合成语料确定性生成；hook e2e =
+`hook_e2e_p95_under_1s`）。
 
 补充口径：
 

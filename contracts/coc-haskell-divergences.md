@@ -2,7 +2,7 @@
 
 > S3776（Sonar Cognitive Complexity v1.7）从未命名任何 Haskell 构造，也不存在
 > 实现了 CoC 的 Haskell 外部工具——**"无外部 oracle"本身是本册第一条分歧（D0）**，
-> 诚实的归因就是缺席（plan `:281-282` 逐条归因条款）。下表每条都是**立场**：
+> 诚实的归因就是缺席（plan `:282-283` 逐条归因条款）。下表每条都是**立场**：
 > 引白皮书最近似条款 + 记录我们的裁定 + 指向执行它的电池行
 > （[cli/tests/coc_haskell.rs](../cli/tests/coc_haskell.rs)，表即登记册的机检半身；
 > 表格 kind 全部实探自 tree-sitter-haskell 0.23.1，探针记录 2026-08-14 两轮）。
