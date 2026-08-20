@@ -143,8 +143,8 @@ fn source_roots(scope: &Scope) -> Vec<String> {
 /// CPython 3.13 public top-level stdlib modules — machine-generated
 /// from `sys.stdlib_module_names` (2026-08-12), never hand-typed.
 /// A missing name degrades to Unresolved (precision-safe), visible
-/// in the ledger, and is repaid by regenerating this list. pub: the
-/// regen_tables drift check re-derives it from the toolchain.
+/// in the ledger, and is repaid by regenerating this list (the
+/// one-shot regen_tables drift check retired to git history).
 pub const STDLIB: &str = "\
 abc antigravity argparse array ast asyncio atexit base64 bdb binascii
 bisect builtins bz2 cProfile calendar cmath cmd code codecs codeop collections

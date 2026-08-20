@@ -35,7 +35,6 @@ pub use t3c::*;
 pub use t3f::*;
 pub use universe::*;
 
-use codeeraser::fourclass::batch::PairInput;
 use codeeraser::scan::lang::Lang;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -104,41 +103,6 @@ pub fn by_id<'a>(doc: &'a Value, key: &str) -> HashMap<&'a str, &'a Value> {
 /// Commit-slice/labels/baseline docs all key their rows by sha.
 pub fn by_sha(doc: &Value) -> HashMap<&str, &Value> {
     by_field(doc, "commits", "sha")
-}
-
-/// Ground-truth pairs for a commit: the reviewed labels row when one
-/// exists, else the slice prelabels (zero moved marks — nothing to
-/// review, labels equal prelabels verbatim).
-pub fn gt_pairs<'a>(slice_row: &'a Value, labels: &HashMap<&str, &'a Value>) -> &'a Vec<Value> {
-    let sha = slice_row["sha"].as_str().expect("sha");
-    let row = labels.get(sha).copied().unwrap_or(slice_row);
-    row["pairs"].as_array().expect("pairs")
-}
-
-/// File content at `rev`, empty for the created/deleted side.
-pub fn file_at(rev: &str, path: Option<&str>) -> String {
-    match path {
-        None => String::new(),
-        Some(p) => git_run(&["show", &format!("{rev}:{p}")], false),
-    }
-}
-
-/// The classification language of a slice pair, from its extension.
-pub fn pair_lang(pair: &Value) -> Lang {
-    let path = pair["after"]
-        .as_str()
-        .or(pair["before"].as_str())
-        .expect("pair has a side");
-    lang_of(path.rsplit('.').next().expect("extension"))
-}
-
-/// Both sides of a slice pair at `sha` (before side from `sha^`).
-pub fn pair_contents(sha: &str, pair: &Value) -> (String, String) {
-    let base = format!("{sha}^");
-    (
-        file_at(&base, pair["before"].as_str()),
-        file_at(sha, pair["after"].as_str()),
-    )
 }
 
 /// The canonical path of a contracts/eval document, derived from its

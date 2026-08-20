@@ -59,29 +59,6 @@ pub fn delta_moved<'a>(
     out
 }
 
-/// The L2-over-L1 delta as (side, file) -> sorted line list. Side
-/// "out" keys the before path, "in" the after path.
-pub fn delta_lines(
-    texts: &Texts,
-    l1: &BatchClassification,
-    l2: &BatchClassification,
-) -> BTreeMap<FileKey, Vec<usize>> {
-    let mut out: BTreeMap<FileKey, Vec<usize>> = BTreeMap::new();
-    for (i, m) in delta_moved(l1, l2) {
-        let gp = &texts[i].2;
-        let (side, path) = if m.removed {
-            ("out", gp["before"].as_str().expect("before"))
-        } else {
-            ("in", gp["after"].as_str().expect("after"))
-        };
-        out.entry((side.into(), path.into()))
-            .or_default()
-            .push(m.line);
-    }
-    out.values_mut().for_each(|v| v.sort_unstable());
-    out
-}
-
 /// Everything re-derivable from the committed rows (CI gate re-runs).
 pub fn summarize(rows: &[Value], ledger: &[Value]) -> Value {
     let mut sums: BTreeMap<&str, u64> = BTreeMap::new();

@@ -23,9 +23,10 @@ use std::rc::Rc;
 
 pub mod go;
 pub mod hs;
-// pub: the regen_tables drift check re-derives the BOOT table from
-// the toolchain (M5-close audit D8 — reproducible regeneration)
-pub mod hs_boot;
+// hs.rs consumes its BOOT table; the regen_tables drift check that
+// once re-derived it retired with the one-shot instruments (git
+// history), taking the pub with it
+mod hs_boot;
 pub mod md;
 pub mod py;
 pub mod rs;

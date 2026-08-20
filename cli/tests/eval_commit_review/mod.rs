@@ -1,13 +1,13 @@
 //! Mechanical partition machinery for the commit-slice ground truth
-//! (see eval_commit_labels.rs for the semantics). The per-item review
-//! record is corpus-specific DATA and lives in self.json /
-//! requests.json (data as data — as Rust consts the parallel tables
-//! read as clone blocks to our own dedup ratchet); every entry there
-//! was verified against the raw diff it describes. The machinery
-//! here is corpus-neutral.
+//! (semantics: the retired commit-labels battery, git history). The
+//! per-item review record is corpus-specific DATA and lives in
+//! self.json / requests.json (data as data — as Rust consts the
+//! parallel tables read as clone blocks to our own dedup ratchet);
+//! every entry there was verified against the raw diff it describes.
+//! The machinery here is corpus-neutral.
 //!
-//! Compiled independently by eval_commit_labels and eval_l2, each
-//! using a subset — the unused remainder is expected.
+//! Compiled by eval_l2, which uses a subset — the unused remainder
+//! is expected.
 #![allow(dead_code)]
 
 use crate::eval_support::{BodyLine, commit_color_diff, walk_color_diff};
@@ -39,11 +39,10 @@ fn tables_for(corpus: Option<&str>) -> &'static Value {
         .1
 }
 
-/// The ACTIVE corpus's review record (corpus() pins external window
-/// ends via git — not a per-row cost) — the generators' view.
+/// The ACTIVE corpus's review record — the generators' view.
 fn tables() -> &'static Value {
     static NAME: OnceLock<Option<String>> = OnceLock::new();
-    let name = NAME.get_or_init(|| crate::eval_support::corpus().name);
+    let name = NAME.get_or_init(crate::eval_support::corpus_name);
     tables_for(name.as_deref())
 }
 
@@ -66,10 +65,6 @@ fn rows_for<'a>(key: &str, sha: &'a str) -> impl Iterator<Item = &'static Value>
 }
 
 pub type PerFile = HashMap<String, u64>;
-
-pub fn total(m: &PerFile) -> u64 {
-    m.values().sum()
-}
 
 #[derive(Default)]
 pub struct SideBuckets {
@@ -174,17 +169,6 @@ pub fn apply_corrections(sha: &str, p: &mut Partition) -> Vec<Value> {
     applied
 }
 
-/// The corrections' per-file line counts for one side of one commit.
-pub fn per_file_corrections(sha: &str, added: bool) -> PerFile {
-    rows_for("corrections", sha)
-        .filter(|r| (r["added"] == true) == added)
-        .map(|r| {
-            let file = r["file"].as_str().expect("file").to_string();
-            (file, r["lines"].as_u64().expect("lines"))
-        })
-        .collect()
-}
-
 /// Project a record's review rows for one sha: carry `fields`
 /// through, split the comma-joined units — the one shape both
 /// registers share.
@@ -203,10 +187,6 @@ fn project(t: &'static Value, key: &str, sha: &str, fields: &[&str]) -> Vec<Valu
         .collect()
 }
 
-pub fn units_for(sha: &str) -> Vec<Value> {
-    project(tables(), "relocated_units", sha, &["to"])
-}
-
 /// The named corpus's unit register (CI-gate view — see tables_for).
 pub fn units_in(corpus: Option<&str>, sha: &str) -> Vec<Value> {
     project(tables_for(corpus), "relocated_units", sha, &["to"])
@@ -219,12 +199,6 @@ pub fn units_in(corpus: Option<&str>, sha: &str) -> Vec<Value> {
 /// (side, file, 1-based line).
 pub fn below_floor_for(sha: &str) -> Vec<(String, String, usize)> {
     below_floor(rows_for("below_floor", sha), sha)
-}
-
-/// Same register, resolved BY corpus name — the CI gates' view
-/// (they iterate every frozen corpus regardless of CE_SLICE_*).
-pub fn below_floor_in(corpus: Option<&str>, sha: &str) -> Vec<(String, String, usize)> {
-    below_floor(rows_of(tables_for(corpus), "below_floor", sha), sha)
 }
 
 fn below_floor<'a>(
@@ -251,10 +225,6 @@ fn below_floor<'a>(
 /// The reviewed source->destination edge layer (M5-1c-iii): one row
 /// per (from file, to file) edge with the units that rode it. Units
 /// absent from every edge row are arrival-level GT only.
-pub fn edges_for(sha: &str) -> Vec<Value> {
-    project(tables(), "relocation_edges", sha, &["from", "to"])
-}
-
 /// The named corpus's edge register (CI-gate view — see tables_for).
 pub fn edges_in(corpus: Option<&str>, sha: &str) -> Vec<Value> {
     project(tables_for(corpus), "relocation_edges", sha, &["from", "to"])

@@ -15,21 +15,6 @@ use codeeraser::scan::lang::Lang;
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
-/// Closed audit truth vocabulary (design §9.2). `boilerplate` and
-/// `t1t2` are deliberately single classes: folding either into
-/// `unrelated` hides exactly what the calibration run found.
-pub const T3_TRUTHS: [&str; 6] = [
-    "clone",
-    "variant",
-    "boilerplate",
-    "unrelated",
-    "t1t2",
-    "generated",
-];
-
-/// The clone-row edit axis (an ablation axis, not decoration).
-pub const T3_EDITS: [&str; 5] = ["rename", "reorder", "insert", "type_sub", "control_tweak"];
-
 /// Identity fields every derived row must echo verbatim (G4).
 pub const T3_IDENTITY: [&str; 10] = [
     "corpus", "lang", "band", "source", "a_path", "a_key", "a_nth", "b_path", "b_key", "b_nth",

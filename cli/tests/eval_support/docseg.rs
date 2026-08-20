@@ -8,9 +8,6 @@ use codeeraser::docdup::{self, exempt, spec};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
-/// Oracle emission floor: J >= 30/100 (decided — instruments §9.6).
-pub const JACCARD_UNIVERSE_FLOOR: (u64, u64) = (30, 100);
-
 /// Report floor: J >= 80/100, pre-registered (§9.6 jaccardNum/Den)
 /// BEFORE the judge exists — the sample instrument tallies its
 /// population bands with this pair, and when CE.Docdup.Cost lands
@@ -25,32 +22,10 @@ pub const DOCDUP_IDENTITY: [&str; 10] = [
     "corpus", "tip", "a_path", "a_kind", "a_start", "a_end", "b_path", "b_kind", "b_start", "b_end",
 ];
 
-/// Closed audit truth vocabulary (instruments §9.5 C2). paraphrase is
-/// single-listed by design: docdup is lexical, so reworded
-/// duplication is a designed-in miss for the judge — the class exists
-/// so the audit can SAY so instead of folding it away. The 2026-08-14
-/// census audit found its seat EMPTY: at J >= 0.30 rewording has
-/// already collapsed the shingle overlap, so the miss class lives
-/// entirely below the oracle floor — recorded, not manufactured.
-pub const DOCDUP_TRUTHS: [&str; 8] = [
-    "redundant",
-    "paraphrase",
-    "license",
-    "skeleton",
-    "tabular",
-    "quoted",
-    "deliberate_xref",
-    "unrelated",
-];
-
 /// The docdup family's mount into the ONE review registry.
 pub fn docdup_review_doc(corpus: &str) -> Value {
     super::review_of("docdup", corpus)
 }
-
-/// F31 cost bound: a corpus with more live segments than this is
-/// WITHHELD with a written reason, never silently downsampled.
-pub const DOCDUP_ORACLE_SEGCAP: usize = 8192;
 
 pub fn docdup_constants() -> Value {
     json!({

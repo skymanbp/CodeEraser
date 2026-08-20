@@ -150,21 +150,6 @@ pub fn assert_nonzero_seats(counts: &BTreeMap<String, u64>, seats: &[&str], what
     }
 }
 
-/// site_gaps/unit_gaps: a REQUIRED field on every audit table — an
-/// absent sweep is indistinguishable from a sweep that found nothing,
-/// so the shape itself carries the "looked, found none" claim. One
-/// checker for every audit family.
-pub fn assert_gaps_accounted(corpus: &str, doc: &Value, key: &str) {
-    let gaps = doc[key]
-        .as_array()
-        .unwrap_or_else(|| panic!("{corpus}: {key} missing (empty allowed, absent not)"));
-    for gap in gaps {
-        let well_formed = gap["path"].as_str().is_some_and(|p| !p.is_empty())
-            && gap["note"].as_str().is_some_and(|n| n.len() >= 10);
-        assert!(well_formed, "{corpus}: malformed {key} row {gap}");
-    }
-}
-
 /// Does `check` panic on this doc? The G9 counterfactual primitive
 /// every tamper battery runs on.
 pub fn doc_refused(doc: &Value, check: &dyn Fn(&Value)) -> bool {
@@ -210,27 +195,6 @@ pub fn each_audited_row<'a>(
         let (rank, s) = bijective_row(corpus, row, &sampled, &mut seen);
         f(rank, row, s);
     }
-}
-
-/// One audit table's whole frame: embedded corpus name, rows
-/// extracted, this corpus's sample selected, bijection walked — the
-/// calling family's closure checks row content only (the frame
-/// itself was the last shape the ratchet caught the two audit
-/// families sharing).
-pub fn check_audit_frame<'a>(
-    corpus: &str,
-    doc: &'a Value,
-    sample_rows: &'a [Value],
-    f: impl FnMut(&'a str, &'a Value, &'a Value),
-) {
-    assert_eq!(
-        doc["corpus"].as_str(),
-        Some(corpus),
-        "{corpus}: embedded name"
-    );
-    let audited = doc["rows"].as_array().expect("rows");
-    let sampled = of_corpus(sample_rows, corpus);
-    each_audited_row(corpus, audited, &sampled, f);
 }
 
 /// (corpus name, pinned tree OID). Self unless CE_SLICE_REPO points
