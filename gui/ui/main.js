@@ -70,6 +70,7 @@ async function scan() {
       root: $("root").value,
       deep: $("deep").checked,
       days,
+      split: $("split").checked,
     });
     if (selId >= report.tree.length) selId = 0;
     render();
@@ -113,8 +114,31 @@ function render() {
   report.tree.forEach((n, i) => {
     if (i > 0) children[n.parent].push(i);
   });
+  renderSplit();
   redrawStructure();
   showDetail(selId);
+}
+
+// The split-ROI advisory rows (v0.7, plan v2.7 ③): the SAME priced
+// verdicts `ce structure --split-candidates` prints — a candidate
+// names its seam line and unit, an exemption its machine-written
+// why in numbers. Rendering only; nothing is priced here.
+function renderSplit() {
+  const p = $("splitpanel");
+  p.hidden = !report.split;
+  if (!report.split) return;
+  const cand = report.splitCandidates.map(
+    (c) =>
+      `<div class="row">✂ <b>${esc(c.path)}</b> — ${esc(tr("seamAfter"))} L${c.afterLine}` +
+      ` (${esc(c.unit)}) · +${c.benefitMilli}‰ / −${c.costMilli}‰</div>`,
+  );
+  const ex = report.sizeExempt.map(
+    (e) =>
+      `<div class="row zero">${esc(e.path)} — ${esc(tr("cohesive"))}` +
+      ` (${e.benefitMilli}‰ / ${e.costMilli}‰)</div>`,
+  );
+  p.innerHTML =
+    `<b>${esc(tr("splitTitle"))}</b>` + (cand.join("") + ex.join("") || esc(tr("none")));
 }
 
 // Subtree weight = every file under the node (+1 keeps empty dirs

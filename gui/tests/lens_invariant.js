@@ -2,8 +2,9 @@
 // the gate on what that rule is allowed to hide. It loads the REAL
 // gui/ui/structree.js under DOM stubs and walks it over a fixture
 // shaped to hit every chain boundary (contracts/fixtures/structure/
-// gui-lens.json), because gui/ui/*.js is outside the scanner's
-// language set and had no gate of its own.
+// gui-lens.json). gui/ui/*.js rides only the size-only scan arm
+// (v0.5.0) — never the judgment families — so the lens SEMANTICS
+// need this gate of their own.
 //
 // The invariant: a fold may swallow a pass-through directory, never a
 // directory with findings. Folding on SHAPE alone hid 8 findings

@@ -113,7 +113,10 @@ T1/T2 duplicate writes and hard-budget breaches (a write leaving a
 file past 750 lines) — **deny by default**; everything else observes
 until it has its own false-positive record (ledger in
 [CHANGELOG.md](CHANGELOG.md)). An explicit `[guard] mode` in `ce.toml`
-overrides every class. Honest boundary: PreToolUse shapes behavior,
+overrides every class. The graded size zone between the soft line and
+the hard budget stays observe-only by default; `[guard] zone_tiers`
+opts a repo into the position→tier map (<25% observe / 25–75% warn /
+>75% ask). Honest boundary: PreToolUse shapes behavior,
 it is not a security wall — shell writes bypass it, and the Stop
 audit + CI gates are the backstop.
 

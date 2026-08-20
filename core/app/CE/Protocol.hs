@@ -26,6 +26,13 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.15.0 = the ROI-pricing minor (plan v2.7 ②, v0.7): the split
+-- advisory's two priced legs — structure.request gains the OPTIONAL
+-- `seamClones` [file, start, end] block spans and `seamChurn`
+-- [file, a, b] co-change pairs (both legal only beside seamFiles,
+-- absent = that leg unpriced), knobs 17/18 (roiCloneMilli /
+-- roiChurnMilli); the reply shape is unchanged — both legs fold
+-- into costMilli.
 -- 2.14.0 = the size-advisory minor (plan v2.6, v0.6): ONE additive
 -- minor for both faces the release ships together. verdict/1 —
 -- graded axis 0 (the soft-zone curve; a declared score migration),
@@ -81,7 +88,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.14.0"
+proto = "2.15.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

@@ -39,12 +39,19 @@ pub struct Request {
 }
 
 /// files [fileId, total] / units [fileId, unit, start, end] /
-/// refs [fileId, from, to] — one named triple (clippy's
-/// type-complexity line agrees with the wire doc here).
+/// refs [fileId, from, to] / clones [fileId, start, end] /
+/// churn [fileId, a, b] — one named bundle (clippy's
+/// type-complexity line agrees with the wire doc here). The two
+/// v1.1 tables (2.15.0) price a seam's cut clone blocks and its
+/// crossing co-change pairs. The MEASUREMENT (seams.rs) assembles
+/// this same type in place — one shape, no mirror struct.
+#[derive(Default, Clone)]
 pub struct SeamTables {
     pub files: Vec<[u64; 2]>,
     pub units: Vec<[u64; 4]>,
     pub refs: Vec<[u64; 3]>,
+    pub clones: Vec<[u64; 3]>,
+    pub churn: Vec<[u64; 3]>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -98,6 +105,8 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         body["seamFiles"] = json!(s.files);
         body["seamUnits"] = json!(s.units);
         body["seamRefs"] = json!(s.refs);
+        body["seamClones"] = json!(s.clones);
+        body["seamChurn"] = json!(s.churn);
     }
     let reply = link
         .request("structure", body)

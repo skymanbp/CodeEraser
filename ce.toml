@@ -190,5 +190,16 @@ entry_globs = [
 # point), the bilingual advisory loops, and StructureArgs growing
 # against its arg-struct siblings. Past family faces cost +13/+17;
 # this one rides an existing family for +5. Measured after fmt.
+# 170 -> 174 (v0.7, the ROI v1.1 pricing legs): +4 after repayment.
+# The batch first minted 16 (caught by the bridge equality) and
+# repaid 12 at the mechanism — SeamFacts derives Default and EMBEDS
+# wire::SeamTables (the mirror-struct twin dissolved into one
+# shape), Split.hs's unitRow/cloneRow share spanOffence and
+# refRow/churnRow share pairRow (one contract checker per row
+# class), SplitProps's two fixtures read through one judgedAs.
+# What remains is the named family-boilerplate class again: the
+# Request/SeamTables Vec-row field runs re-chaining inside wire.rs,
+# the SplitProps battery header against its ScanProps/StructureProps
+# siblings, and the knobTable at 19 rows. Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 170
+budget = 174

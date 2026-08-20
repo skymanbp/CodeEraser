@@ -1,16 +1,16 @@
 {"proto":"2.1.0","type":"graph.request","id":1,"nodes":[],"edges":[],"pos":[]}
-{"counts":{"edges":0,"kept":0,"nodes":0},"cycles":[],"dead":[],"degraded":false,"id":1,"pos":[],"proto":"2.14.0","type":"graph.result"}
+{"counts":{"edges":0,"kept":0,"nodes":0},"cycles":[],"dead":[],"degraded":false,"id":1,"pos":[],"proto":"2.15.0","type":"graph.result"}
 {"proto":"2.1.0","type":"graph.request","id":2,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,2,0,1]],"pos":[]}
-{"code":"contract","id":2,"message":"edge 0: endpoint out of range","proto":"2.14.0","type":"error"}
+{"code":"contract","id":2,"message":"edge 0: endpoint out of range","proto":"2.15.0","type":"error"}
 {"proto":"2.1.0","type":"graph.request","id":3,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,1,0,1],[0,1,0,1]],"pos":[]}
-{"code":"contract","id":3,"message":"edge 1: not strictly ascending","proto":"2.14.0","type":"error"}
+{"code":"contract","id":3,"message":"edge 1: not strictly ascending","proto":"2.15.0","type":"error"}
 {"proto":"2.1.0","type":"graph.request","id":4,"nodes":[[0,0,0]],"edges":[],"pos":[3]}
-{"code":"contract","id":4,"message":"pos 0: index out of range","proto":"2.14.0","type":"error"}
+{"code":"contract","id":4,"message":"pos 0: index out of range","proto":"2.15.0","type":"error"}
 {"proto":"2.1.0","type":"graph.request","id":5,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,1,0]],"pos":[]}
-{"code":"contract","id":5,"message":"edge 0: malformed row (need [src,dst,kind,rung])","proto":"2.14.0","type":"error"}
+{"code":"contract","id":5,"message":"edge 0: malformed row (need [src,dst,kind,rung])","proto":"2.15.0","type":"error"}
 {"proto":"2.1.0","type":"graph.request","id":6,"nodes":[],"edges":"nope","pos":[]}
-{"code":"bad_request","id":6,"message":"graph: Error in $.edges: parsing [] failed, expected Array, but encountered String","proto":"2.14.0","type":"error"}
+{"code":"bad_request","id":6,"message":"graph: Error in $.edges: parsing [] failed, expected Array, but encountered String","proto":"2.15.0","type":"error"}
 {"proto":"2.1.0","type":"graph.request","id":7,"nodes":[[0,0,2],[0,0,0],[0,0,0],[0,0,1],[0,0,0],[0,0,1],[0,0,0],[0,0,0]],"edges":[[0,1,0,1],[2,5,0,2],[3,4,0,1],[6,7,0,3],[7,6,0,1]],"pos":[0,1,6]}
-{"counts":{"edges":5,"kept":5,"nodes":8},"cycles":[[0,[6,7]]],"dead":[[2,1],[3,2],[4,3],[5,4],[6,3],[7,3]],"degraded":false,"id":7,"pos":[[0,0,1,6,1,1],[1,1,0,5,1,1],[6,1,1,0,2,0]],"proto":"2.14.0","type":"graph.result"}
+{"counts":{"edges":5,"kept":5,"nodes":8},"cycles":[[0,[6,7]]],"dead":[[2,1],[3,2],[4,3],[5,4],[6,3],[7,3]],"degraded":false,"id":7,"pos":[[0,0,1,6,1,1],[1,1,0,5,1,1],[6,1,1,0,2,0]],"proto":"2.15.0","type":"graph.result"}
 {"proto":"2.1.0","type":"graph.request","id":8,"nodes":[[0,0,2],[0,0,0]],"edges":[[0,1,0,5]],"pos":[1]}
-{"counts":{"edges":1,"kept":1,"nodes":2},"cycles":[],"dead":[],"degraded":false,"id":8,"pos":[[1,1,0,0,1,1]],"proto":"2.14.0","type":"graph.result"}
+{"counts":{"edges":1,"kept":1,"nodes":2},"cycles":[],"dead":[],"degraded":false,"id":8,"pos":[[1,1,0,0,1,1]],"proto":"2.15.0","type":"graph.result"}

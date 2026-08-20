@@ -80,6 +80,11 @@ pub const TOOLS: &[Tool] = &[
                 "integer",
                 "judge the S5 doc-staleness axis over this window",
             ),
+            (
+                "split",
+                "boolean",
+                "price the split-ROI advisory for files past the soft line",
+            ),
         ],
         run: structure,
     },
@@ -210,11 +215,11 @@ fn structure(root: &Path, a: &Value) -> Result<String> {
     let d = a["days"]
         .as_u64()
         .map(|v| u32::try_from(v).unwrap_or(u32::MAX).max(1));
-    // the split advisory stays off the MCP face in v0.6 (deliberate:
-    // the contract names the CLI face; the read-only tool surface
-    // grows only with its own decision — booklet as-built note)
+    // the split advisory joins the MCP face in v0.7 (plan v2.7 ③):
+    // same report schema, same rows the CLI prints
+    let split = a["split"].as_bool().unwrap_or(false);
     doc(
-        crate::structure::judge::run(root, None, &core(), (deep, d, false)),
+        crate::structure::judge::run(root, None, &core(), (deep, d, split)),
         crate::structure::judge::report_json,
     )
 }

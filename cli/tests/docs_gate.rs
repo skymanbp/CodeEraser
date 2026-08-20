@@ -32,6 +32,7 @@ thresholds.cyclomatic_warn\tWarn past this cyclomatic complexity
 thresholds.cognitive_warn\tWarn past this cognitive complexity
 thresholds.nesting_warn\tWarn past this block-nesting depth
 guard.mode\tExplicit hook tier for every rule class: observe / warn / ask / deny; unset = per-class route defaults (deny for the two FPR-promoted classes, observe otherwise). Any other value is a typo, not a tier: it resolves to observe and the SessionStart line, `ce doctor` and the observe feed all name it, so a mistyped mode can never look armed
+guard.zone_tiers\tArm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed
 dedup.budget\tOnly-shrink clone-block budget; `ce dedup --check` fails when the repo exceeds it
 graph.entry_globs\tExtra liveness roots for the deadcode judgment, beyond the mechanical entry conventions
 score.weights\tPer-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default

@@ -50,16 +50,23 @@ where
 
 /// One full structure judgment — the same road `ce structure` drives.
 #[tauri::command]
-async fn structure_report(root: String, deep: bool, days: Option<u32>) -> Result<Value, String> {
+async fn structure_report(
+    root: String,
+    deep: bool,
+    days: Option<u32>,
+    split: bool,
+) -> Result<Value, String> {
     use codeeraser::structure::judge;
     judged(move |c| {
         Ok(judge::report_json(&judge::run(
             Path::new(&root),
             None,
             c,
-            // the split advisory is the CLI's face in v0.6; the GUI
-            // candidate screen adopts it with its own design pass
-            (deep, days, false),
+            // split = the v0.7 advisory face (plan v2.7 ③): the same
+            // priced rows the CLI prints, opt-in per scan (the seam
+            // measurement rides dedup + churn and is not first-screen
+            // freight)
+            (deep, days, split),
         )?))
     })
     .await

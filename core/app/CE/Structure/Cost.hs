@@ -22,6 +22,8 @@ module CE.Structure.Cost
   , seamPMax
   , roiRefMilli
   , roiPhiMilli
+  , roiCloneMilli
+  , roiChurnMilli
   , structNodeCap
   ) where
 
@@ -120,6 +122,18 @@ roiRefMilli = 250
 
 roiPhiMilli :: Integer
 roiPhiMilli = 500
+
+-- | v1.1 prices (plan v2.7 ②, knob codes 17 / 18): a seam CUTTING
+-- THROUGH a T1/T2 clone block splits one coherent duplicate span
+-- over two files — dearer than one severed reference; a seam
+-- crossing a unit co-change pair (two units the churn window edits
+-- together) makes every future such edit a two-file edit. Values
+-- from the v0.7 external-corpora calibration (booklet §v1.1).
+roiCloneMilli :: Integer
+roiCloneMilli = 500
+
+roiChurnMilli :: Integer
+roiChurnMilli = 150
 
 -- | Node ceiling (the verdictRowCap magnitude anchor): over-cap
 -- answers a complete degraded reply that FAILS (the P1 posture).

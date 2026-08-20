@@ -109,6 +109,7 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     {
         reasons.push(reason(file_path, ms));
     }
+    let mut zone = None;
     let sized = cfg.as_ref().and_then(|c| budget::sized_write(root, c, env));
     if let (Some(c), Some(lines)) = (cfg.as_ref(), sized) {
         if let Some(why) = budget::budget_breach(c, env, lines) {
@@ -117,22 +118,47 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
                 reasons.push(why);
             }
         } else {
-            // sub-H writes: the v2.6 zone observer (feed-only)
-            budget::zone_log(root, c, env, &mode, lines);
+            // sub-H writes: the zone observer, plus the v2.7 ①
+            // OPT-IN tier map (default stays feed-only)
+            zone = budget::zone_assess(root, c, env, &mode, lines);
         }
     }
-    emit_reasons(&mode, reasons, &broken);
+    emit_reasons(&mode, reasons, zone, &broken);
     ExitCode::SUCCESS
 }
 
-/// Fired reasons → one decision line. A BROKEN ce.toml still fails
-/// open (a typo must never brick an edit) but no longer fails
-/// SILENT: when a rule fires anyway, the decision surfaces as a
-/// visible warn naming the config error instead of vanishing into
-/// observe (review C2: deny→observe with zero operator signal; the
-/// health line carries the same error at SessionStart). Split from
-/// decide() at the E01 line.
-fn emit_reasons(mode: &str, mut reasons: Vec<String>, broken: &Option<String>) {
+/// Fired reasons → one decision line, at the STRONGEST tier among
+/// the rules that fired: the two promoted classes carry the class
+/// mode, the zone rule (v2.7 ①, opt-in) its own mapped tier — a
+/// zone warn never rides a deny-class escalator, nor the reverse.
+/// A BROKEN ce.toml still fails open (a typo must never brick an
+/// edit) but not SILENT: the decision surfaces as a visible warn
+/// naming the config error (review C2). Split from decide() at the
+/// E01 line.
+fn emit_reasons(
+    mode: &str,
+    class_reasons: Vec<String>,
+    zone: Option<(&'static str, String)>,
+    broken: &Option<String>,
+) {
+    let rank = |t: &str| {
+        crate::config::TIERS
+            .iter()
+            .position(|x| *x == t)
+            .unwrap_or(0)
+    };
+    let mut tier = if class_reasons.is_empty() {
+        "observe"
+    } else {
+        mode
+    };
+    let mut reasons = class_reasons;
+    if let Some((zt, why)) = zone {
+        if rank(zt) > rank(tier) {
+            tier = zt;
+        }
+        reasons.push(why);
+    }
     if reasons.is_empty() {
         return;
     }
@@ -142,7 +168,7 @@ fn emit_reasons(mode: &str, mut reasons: Vec<String>, broken: &Option<String>) {
         ));
         emit_decision("warn", &reasons.join(" "));
     } else {
-        emit_decision(mode, &reasons.join(" "));
+        emit_decision(tier, &reasons.join(" "));
     }
 }
 

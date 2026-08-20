@@ -29,6 +29,7 @@
     <section class="bar">
       <label><input id="deep" type="checkbox" /> <span data-i18n="deep"></span></label>
       <label><span data-i18n="days"></span> <input id="days" type="number" min="1" data-i18n-ph="off" /></label>
+      <label><input id="split" type="checkbox" /> <span data-i18n="split"></span></label>
       <button id="scan" data-i18n="scan"></button>
     </section>
     <section id="summary" hidden>
@@ -45,6 +46,7 @@
         <button data-v="tree" data-i18n="viewTree"></button>
       </div>
     </section>
+    <section id="splitpanel" hidden></section>
     <main>
       <svg id="treemap" preserveAspectRatio="none"></svg>
       <div id="structree" hidden></div>

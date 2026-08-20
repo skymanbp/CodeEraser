@@ -18,6 +18,7 @@ battery :: IO Bool
 battery =
   runChecks
     [ ("the fixture seam prices to the hand-computed digit", fixtureJudged)
+    , ("the v1.1 legs price to the hand-computed digit", pricedJudged)
     , ("every split knob is a live lever", knobLevers)
     , ("split refusals name the offender", refusals)
     , ("the reply keys exist exactly when seamFiles rode", exactlyWhenSent)
@@ -49,18 +50,41 @@ base =
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond
 
-fixtureJudged :: Bool
-fixtureJudged = case replyObj wireReq of
+-- | ONE reply-shape judge both fixtures (and the priced levers)
+-- read through: the two advisory arrays equal the hand-computed
+-- rows, or the check fails.
+judgedAs :: Value -> [[Integer]] -> [[Integer]] -> Bool
+judgedAs req cands exempts = case replyObj req of
   Nothing -> False
   Just o ->
-    field o "splitCandidates" == Just (toJSON [[0, 0, 3086, 750 :: Integer]])
-      && field o "sizeExempt" == Just (toJSON [[1, 0, 0 :: Integer]])
+    field o "splitCandidates" == Just (toJSON cands)
+      && field o "sizeExempt" == Just (toJSON exempts)
+
+-- | Also the 2.14.0-compat regression: with the clone/churn tables
+-- ABSENT, both v1.1 legs price at zero and the old cost stands.
+fixtureJudged :: Bool
+fixtureJudged = judgedAs wireReq [[0, 0, 3086, 750]] [[1, 0, 0]]
+
+-- | v2.7 ② full pricing, hand-computed: one clone span [260, 300]
+-- straddles the seam line 270 (260 <= 270 < 300) and one co-change
+-- pair (0, 1) crosses the seam — cost = 250 ref + 500 clone + 150
+-- churn + 500 φ = 1400; benefit 3086 unchanged.
+pricedReq :: Value
+pricedReq =
+  setKey "seamClones" (toJSON [[0, 260, 300 :: Integer]]) $
+    setKey "seamChurn" (toJSON [[0, 0, 1 :: Integer]]) wireReq
+
+pricedJudged :: Bool
+pricedJudged = judgedAs pricedReq [[0, 0, 3086, 1400]] [[1, 0, 0]]
 
 -- | One override per new code, each moving the fixture's verdict:
 -- 12 (S=560: the file leaves the zone, benefit 0 -> exempt),
 -- 13 (H=600: steeper curve, benefit floor(1000·10·(250/300)²)=6944),
 -- 14 (P=20: benefit doubles to 6172), 15 (ref 3000: cost 3500 >
--- benefit -> exempt), 16 (φ 4000: cost 4250 -> exempt).
+-- benefit -> exempt), 16 (φ 4000: cost 4250 -> exempt); the two
+-- v2.7 price knobs lever on the PRICED fixture (base cost 1400):
+-- 17 (clone 3000: cost 3900 -> exempt), 18 (churn 2500: cost 3750
+-- -> exempt).
 knobLevers :: Bool
 knobLevers =
   and
@@ -69,6 +93,8 @@ knobLevers =
     , probe [[14, 20]] (\c _ -> c == Just (toJSON [[0, 0, 6172, 750 :: Integer]]))
     , probe [[15, 3000]] (\c e -> c == Just (toJSON emptyRows) && e == Just (toJSON [[0, 3086, 3500], [1, 0, 0 :: Integer]]))
     , probe [[16, 4000]] (\c e -> c == Just (toJSON emptyRows) && e == Just (toJSON [[0, 3086, 4250], [1, 0, 0 :: Integer]]))
+    , priced [[17, 3000]] [[0, 3086, 3900], [1, 0, 0 :: Integer]]
+    , priced [[18, 2500]] [[0, 3086, 3750], [1, 0, 0 :: Integer]]
     ]
  where
   emptyRows = [] :: [[Integer]]
@@ -76,6 +102,7 @@ knobLevers =
   probe rows check = case replyObj (setKey "knobs" (toJSON (rows :: [[Integer]])) wireReq) of
     Nothing -> False
     Just o -> check (field o "splitCandidates") (field o "sizeExempt")
+  priced rows = judgedAs (setKey "knobs" (toJSON (rows :: [[Integer]])) pricedReq) []
 
 refusals :: Bool
 refusals =
@@ -89,14 +116,20 @@ refusals =
     , refused (refs [[0, 0, 0]]) "self reference"
     , refused (refs [[0, 0, 9]]) "unit out of range"
     , refused (refs [[2, 0, 1]]) "file out of range"
+    , refused (edged "seamClones" [[0, 0, 40]]) "bad span"
+    , refused (edged "seamClones" [[0, 10, 600]]) "span past the file total"
+    , refused (edged "seamClones" [[2, 10, 40]]) "file out of range"
+    , refused (edged "seamChurn" [[0, 1, 1]]) "pair not ascending"
+    , refused (edged "seamChurn" [[0, 0, 9]]) "unit out of range"
     ]
  where
   files rows = setKey "seamFiles" (toJSON (rows :: [[Integer]])) base
   units rows =
     setKey "seamUnits" (toJSON (rows :: [[Integer]])) $
       setKey "seamFiles" (toJSON [[0, 550 :: Integer]]) base
-  refs rows =
-    setKey "seamRefs" (toJSON (rows :: [[Integer]])) $
+  refs rows = edged "seamRefs" rows
+  edged key rows =
+    setKey key (toJSON (rows :: [[Integer]])) $
       setKey "seamUnits" (toJSON [[0, 0, 10, 270], [0, 1, 280, 540 :: Integer]]) $
         setKey "seamFiles" (toJSON [[0, 550 :: Integer]]) base
   refused = refusedBy respond

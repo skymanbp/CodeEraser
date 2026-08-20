@@ -12,6 +12,12 @@ use std::process::{Child, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.15.0 = the ROI-pricing minor (plan v2.7 ②, v0.7): the split
+/// advisory's two priced legs — structure.request gains the optional
+/// `seamClones` block spans and `seamChurn` co-change pairs (legal
+/// only beside seamFiles; absent = that leg unpriced), knobs 17/18
+/// (roiCloneMilli / roiChurnMilli); the reply shape is unchanged —
+/// both legs fold into costMilli.
 /// 2.14.0 = the size-advisory minor (plan v2.6, v0.6, one additive
 /// minor for both faces): verdict/1 grades axis 0 on the soft-zone
 /// curve (declared score migration), gains judgedLoc + ceilings
@@ -53,7 +59,7 @@ use std::process::{Child, Command, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.14.0";
+pub const PROTO: &str = "2.15.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

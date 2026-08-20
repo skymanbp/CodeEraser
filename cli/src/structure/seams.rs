@@ -10,17 +10,22 @@ use crate::fourclass::units;
 use crate::scan::lang::Lang;
 use crate::scan::metrics::FileMetrics;
 use anyhow::Result;
-use std::path::Path;
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::{Path, PathBuf};
 
 /// The measured facts plus the name ledger the reply relabels with.
+/// The wire rows live in a `wire::SeamTables` directly — the same
+/// type the request carries, so measurement and codec cannot hold
+/// two spellings of one shape (the ratchet flagged the mirror).
+#[derive(Default)]
 pub struct SeamFacts {
     /// (repo-relative path, total lines), index = wire fileId.
     pub files: Vec<(String, u64)>,
     /// Per file: (unit name, end line), index = wire unitId.
     pub unit_names: Vec<Vec<(String, u64)>>,
-    pub file_rows: Vec<[u64; 2]>,
-    pub unit_rows: Vec<[u64; 4]>,
-    pub ref_rows: Vec<[u64; 3]>,
+    /// The five request tables, assembled in place; the clone and
+    /// churn legs (v2.7 ②) reuse family facts, never re-derived.
+    pub tables: super::wire::SeamTables,
 }
 
 /// Mention names shorter than this are noise, not references (`new`,
@@ -28,15 +33,20 @@ pub struct SeamFacts {
 /// floor, recorded in the booklet.
 const NAME_FLOOR: usize = 3;
 
-/// Assemble the three seam tables over the judged files past `soft`.
-pub fn seam_facts(root: &Path, files: &[FileMetrics], soft: u64) -> Result<SeamFacts> {
-    let mut out = SeamFacts {
-        files: Vec::new(),
-        unit_names: Vec::new(),
-        file_rows: Vec::new(),
-        unit_rows: Vec::new(),
-        ref_rows: Vec::new(),
-    };
+/// Churn window for the co-change leg — the §4.1 two-week anchor the
+/// churn family reports by default; a measurement constant, not a
+/// wire knob (prices are the knobs).
+const CHURN_WINDOW_DAYS: u32 = 14;
+
+/// Assemble the five seam tables over the judged files past `soft`.
+pub fn seam_facts(
+    root: &Path,
+    db: Option<PathBuf>,
+    files: &[FileMetrics],
+    soft: u64,
+) -> Result<SeamFacts> {
+    let mut out = SeamFacts::default();
+    let mut key_maps: Vec<BTreeMap<String, u64>> = Vec::new();
     for f in files {
         let Some(lang) = Lang::judged_path(Path::new(&f.path)) else {
             continue;
@@ -48,14 +58,123 @@ pub fn seam_facts(root: &Path, files: &[FileMetrics], soft: u64) -> Result<SeamF
             continue; // mid-walk deletion: the file left the universe
         };
         let text = String::from_utf8_lossy(&bytes);
-        let tops = top_level(&units::segments(&text, lang));
+        let all = units::segments(&text, lang);
+        let tops = top_level(&all);
         let fid = out.files.len() as u64;
-        out.file_rows.push([fid, f.total_lines as u64]);
+        out.tables.files.push([fid, f.total_lines as u64]);
         out.files.push((f.path.clone(), f.total_lines as u64));
+        key_maps.push(key_map(&all, &tops));
         push_units(&mut out, fid, &tops, f.total_lines as u64);
         push_refs(&mut out, fid, &tops, &text);
     }
+    push_clones(&mut out, root, db)?;
+    push_churn(&mut out, root, &key_maps);
     Ok(out)
+}
+
+/// T1/T2 clone-block spans inside the seam files, off the SAME index
+/// the dedup family judges from — [fileId, start, end] rows for the
+/// core's cut price (a seam through a block splits one duplicate
+/// span over two files).
+fn push_clones(out: &mut SeamFacts, root: &Path, db: Option<PathBuf>) -> Result<()> {
+    if out.files.is_empty() {
+        return Ok(());
+    }
+    let ids: BTreeMap<&str, (u64, u64)> = out
+        .files
+        .iter()
+        .enumerate()
+        .map(|(i, (p, total))| (p.as_str(), (i as u64, *total)))
+        .collect();
+    let (found, _stats) = crate::dedup::analyze(root, db, None, None)?;
+    let mut rows = BTreeSet::new();
+    for b in &found.blocks {
+        let sides = [
+            (&b.a_file, b.a_start, b.a_end),
+            (&b.b_file, b.b_start, b.b_end),
+        ];
+        for (f, s, e) in sides {
+            if let Some(&(fid, total)) = ids.get(f.as_str()) {
+                let (s, e) = ((s as u64).max(1), (e as u64).min(total));
+                if s <= e {
+                    rows.insert([fid, s, e]);
+                }
+            }
+        }
+    }
+    out.tables.clones = rows.into_iter().collect();
+    Ok(())
+}
+
+/// Unit co-change pairs off the churn family's own commit ledger
+/// over the window — [fileId, a, b] rows, a < b, distinct. Ledger
+/// keys are joined onto the CURRENT snapshot's top-level units
+/// (key-level; renamed units drop out honestly), and a tree without
+/// git history prices the leg at zero rather than failing the
+/// advisory.
+fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<String, u64>]) {
+    if out.files.is_empty() {
+        return;
+    }
+    let ids: BTreeMap<&str, u64> = out
+        .files
+        .iter()
+        .enumerate()
+        .map(|(i, (p, _))| (p.as_str(), i as u64))
+        .collect();
+    let mut pairs = BTreeSet::new();
+    for sha in seam_commits(root, &out.files).unwrap_or_default() {
+        let mut touched: BTreeMap<u64, BTreeSet<u64>> = BTreeMap::new();
+        for row in crate::churn::commit_ledger(root, &sha) {
+            if let Some(&fid) = ids.get(row.path.as_str())
+                && let Some(&top) = key_maps[fid as usize].get(&row.key)
+            {
+                touched.entry(fid).or_default().insert(top);
+            }
+        }
+        for (fid, tops) in touched {
+            for (i, &a) in tops.iter().enumerate() {
+                for &b in tops.iter().skip(i + 1) {
+                    pairs.insert([fid, a, b]);
+                }
+            }
+        }
+    }
+    out.tables.churn = pairs.into_iter().collect();
+}
+
+/// Window commits touching any seam file (narrowed at git, so the
+/// per-commit ledger classify only runs where a seam could care).
+fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {
+    let since = format!("{CHURN_WINDOW_DAYS} days ago");
+    let mut args = vec![
+        "log",
+        "--since",
+        &since,
+        "--first-parent",
+        "--no-merges",
+        "--format=%H",
+        "--",
+    ];
+    args.extend(files.iter().map(|(p, _)| p.as_str()));
+    let stdout = crate::churn::git(root, &args)?;
+    Ok(stdout.split_whitespace().map(str::to_string).collect())
+}
+
+/// Current-snapshot unit key -> owning top-level unit index — the
+/// churn-ledger join surface (key-level; the ledger's nth caveat is
+/// inherited, and the advisory face tolerates the proxy).
+fn key_map(all: &[units::Unit], tops: &[units::Unit]) -> BTreeMap<String, u64> {
+    let mut m = BTreeMap::new();
+    for u in all {
+        let owner = tops
+            .iter()
+            .position(|t| t.start_line <= u.start_line && u.end_line <= t.end_line);
+        if let Some(t) = owner {
+            m.entry(u.key.clone()).or_insert(t as u64);
+        }
+    }
+    m
 }
 
 /// Outermost, non-overlapping, start-ordered units: a nested helper
@@ -81,7 +200,8 @@ fn push_units(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], total: u64) {
     let mut names = Vec::new();
     for (i, u) in tops.iter().enumerate() {
         let end = (u.end_line as u64).min(total);
-        out.unit_rows
+        out.tables
+            .units
             .push([fid, i as u64, u.start_line as u64, end]);
         let name = u.key.split('/').next().unwrap_or("").to_string();
         names.push((name, end));
@@ -107,7 +227,7 @@ fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str) {
                 continue;
             }
             if mentions(body, name) {
-                out.ref_rows.push([fid, i as u64, j as u64]);
+                out.tables.refs.push([fid, i as u64, j as u64]);
             }
         }
     }
@@ -146,17 +266,11 @@ mod tests {
             "fn alpha_one() { 1 }\nfn beta_two() { alpha_one() }\nfn ab() { beta_two_x() }\n";
         let tops = top_level(&units::segments(text, crate::scan::lang::Lang::Rust));
         assert_eq!(tops.len(), 3, "three top-level units");
-        let mut out = SeamFacts {
-            files: Vec::new(),
-            unit_names: Vec::new(),
-            file_rows: Vec::new(),
-            unit_rows: Vec::new(),
-            ref_rows: Vec::new(),
-        };
+        let mut out = SeamFacts::default();
         push_refs(&mut out, 0, &tops, text);
         // beta_two mentions alpha_one; ab's beta_two_x is NOT a
         // word-bounded beta_two (identifier tail) — no edge
-        assert_eq!(out.ref_rows, vec![[0, 1, 0]]);
+        assert_eq!(out.tables.refs, vec![[0, 1, 0]]);
         assert!(!mentions("xalpha_one()", "alpha_one"), "left bound");
     }
 }

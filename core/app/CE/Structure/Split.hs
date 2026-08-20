@@ -20,20 +20,26 @@ import Data.List (maximumBy)
 import Data.Ord (comparing)
 import Data.Ratio ((%))
 
--- | Boundary contract for the three seam tables, in request order.
+-- | Boundary contract for the five seam tables, in request order.
 -- Files are dense (id == index); units are dense PER FILE, spans
 -- inside the file's total, strictly ordered and non-overlapping;
--- refs name in-range distinct units of their file.
-splitOffence :: [[Integer]] -> [[Integer]] -> [[Integer]] -> Maybe String
-splitOffence files units refs =
+-- refs and churn pairs name in-range distinct units of their file;
+-- clone spans sit inside their file's total (v2.7 ② tables).
+splitOffence :: [[Integer]] -> SeamTables -> Maybe String
+splitOffence files (units, refs, clones, churn) =
   asum
     [ asum (zipWith fileRow [0 :: Int ..] files)
     , asum (zipWith (unitRow files) [0 :: Int ..] units)
     , unitsOrdered units
-    , asum (zipWith (refRow (unitCounts files units)) [0 :: Int ..] refs)
+    , asum (zipWith (refRow counts) [0 :: Int ..] refs)
     , ascendingOn "seamRefs" id refs
+    , asum (zipWith (cloneRow files) [0 :: Int ..] clones)
+    , ascendingOn "seamClones" id clones
+    , asum (zipWith (churnRow counts) [0 :: Int ..] churn)
+    , ascendingOn "seamChurn" id churn
     ]
  where
+  counts = unitCounts files units
   fileRow i row = case row of
     [fid, total]
       | fid /= toInteger i -> Just ("seamFiles " <> show i <> ": index mismatch")
@@ -41,22 +47,63 @@ splitOffence files units refs =
       | otherwise -> Nothing
     _ -> Just ("seamFiles " <> show i <> ": malformed row (need [file,total])")
 
--- | One unit row: file in range, span 1-based, ordered, and inside
--- the file's total. Density and overlap are the table-level pass.
+-- | (units, refs, clones, churn) — the four unit-and-edge tables
+-- ride as ONE bundle so every consumer names the same shape.
+type SeamTables = ([[Integer]], [[Integer]], [[Integer]], [[Integer]])
+
+-- | The one total per dense file id — seamFiles has exactly one row
+-- per id, so the comprehension yields one value; sum keeps callers
+-- total without a partial head.
+fileTotal :: [[Integer]] -> Integer -> Integer
+fileTotal files f = sum [t | [f', t] <- files, f' == f]
+
+-- | The shared span contract: in-range file, 1-based ordered span
+-- inside the file's total — seamUnits and seamClones both speak it
+-- (ONE checker, so the two tables cannot drift on what a span is).
+spanOffence :: [[Integer]] -> String -> (Integer, Integer, Integer) -> Maybe String
+spanOffence files lbl (f, s, e)
+  | f < 0 || f >= toInteger (length files) = Just (lbl <> "file out of range")
+  | s < 1 || e < s = Just (lbl <> "bad span")
+  | e > fileTotal files f = Just (lbl <> "span past the file total")
+  | otherwise = Nothing
+
+-- | One unit row: the span contract on [file, unit, start, end].
+-- Density and overlap are the table-level pass.
 unitRow :: [[Integer]] -> Int -> [Integer] -> Maybe String
 unitRow files i row = case row of
-  [f, _, s, e]
-    | f < 0 || f >= toInteger (length files) -> Just (lbl <> "file out of range")
-    | s < 1 || e < s -> Just (lbl <> "bad span")
-    | e > totalOf f -> Just (lbl <> "span past the file total")
-    | otherwise -> Nothing
+  [f, _, s, e] -> spanOffence files lbl (f, s, e)
   _ -> Just (lbl <> "malformed row (need [file,unit,start,end])")
  where
   lbl = "seamUnits " <> show i <> ": "
-  -- f is range-checked above and seamFiles is dense (one row per
-  -- id), so the comprehension yields exactly one total; sum keeps
-  -- the function total without a partial head
-  totalOf f = sum [t | [f', t] <- files, f' == f]
+
+-- | One clone-block span (v2.7 ②): the T1/T2 block a seam must not
+-- cut unpriced — the same span contract on [file, start, end].
+cloneRow :: [[Integer]] -> Int -> [Integer] -> Maybe String
+cloneRow files i row = case row of
+  [f, s, e] -> spanOffence files lbl (f, s, e)
+  _ -> Just (lbl <> "malformed row (need [file,start,end])")
+ where
+  lbl = "seamClones " <> show i <> ": "
+
+-- | The shared pair contract: distinct in-range units of one file,
+-- plus each table's own relation — refs refuse self edges, churn
+-- pairs must ascend (an unordered pair has one spelling).
+pairRow ::
+  [(Integer, Integer)] -> String -> (Integer -> Integer -> Maybe String) -> Int -> [Integer] -> Maybe String
+pairRow counts name rel i row = case row of
+  [f, a, b]
+    | Just n <- lookup f counts ->
+        if any (< 0) [a, b] || any (>= n) [a, b]
+          then Just (lbl <> "unit out of range")
+          else (lbl <>) <$> rel a b
+    | otherwise -> Just (lbl <> "file out of range")
+  _ -> Just (lbl <> "malformed row (need [file,a,b])")
+ where
+  lbl = name <> " " <> show i <> ": "
+
+churnRow :: [(Integer, Integer)] -> Int -> [Integer] -> Maybe String
+churnRow counts =
+  pairRow counts "seamChurn" (\a b -> if a >= b then Just "pair not ascending" else Nothing)
 
 -- | Per-file density (unit == running index within its file) and
 -- span order (strictly ascending, non-overlapping) in ONE fold that
@@ -79,16 +126,8 @@ unitsOrdered = go (0 :: Int) (-1) (-1) 0
   go i _ _ _ _ = Just ("seamUnits " <> show i <> ": malformed row")
 
 refRow :: [(Integer, Integer)] -> Int -> [Integer] -> Maybe String
-refRow counts i row = case row of
-  [f, a, b]
-    | Just n <- lookup f counts ->
-        if a < 0 || b < 0 || a >= n || b >= n
-          then Just (lbl <> "unit out of range")
-          else if a == b then Just (lbl <> "self reference") else Nothing
-    | otherwise -> Just (lbl <> "file out of range")
-  _ -> Just (lbl <> "malformed row (need [file,from,to])")
- where
-  lbl = "seamRefs " <> show i <> ": "
+refRow counts =
+  pairRow counts "seamRefs" (\a b -> if a == b then Just "self reference" else Nothing)
 
 unitCounts :: [[Integer]] -> [[Integer]] -> [(Integer, Integer)]
 unitCounts files units =
@@ -101,10 +140,10 @@ unitCounts files units =
 -- (cost is never 0: phi >= 1 by the knob rule) — else an exemption
 -- row carrying the best seam's numbers (0/0 when the file has no
 -- seam at all: a single unit cannot be split).
-splitRows :: Knobs -> [[Integer]] -> [[Integer]] -> [[Integer]] -> ([[Integer]], [[Integer]])
-splitRows k files units refs = foldl' step ([], []) files
+splitRows :: Knobs -> [[Integer]] -> SeamTables -> ([[Integer]], [[Integer]])
+splitRows k files tables = foldl' step ([], []) files
  where
-  step (cands, exempts) [fid, total] = case seams k fid total units refs of
+  step (cands, exempts) [fid, total] = case seams k (fid, total) tables of
     [] -> (cands, exempts <> [[fid, 0, 0]])
     priced ->
       let (u, b, c) = maximumBy (comparing (\(_, b', c') -> b' % c')) priced
@@ -114,9 +153,12 @@ splitRows k files units refs = foldl' step ([], []) files
   step acc _ = acc
 
 -- | Every seam of one file as (afterUnit, benefitMilli, costMilli).
-seams :: Knobs -> Integer -> Integer -> [[Integer]] -> [[Integer]] -> [(Integer, Integer, Integer)]
-seams k fid total units refs =
-  [ (u, benefit end, cost u)
+-- Cost (v2.7 ② full pricing): severed references × ref price, cut
+-- clone blocks (span straddling the seam line) × clone price,
+-- crossing co-change pairs × churn price, plus the flat φ.
+seams :: Knobs -> (Integer, Integer) -> SeamTables -> [(Integer, Integer, Integer)]
+seams k (fid, total) (units, refs, clones, churn) =
+  [ (u, benefit end, cost u end)
   | ([_, u, _, end], _) <- zip mine (drop 1 mine)
   ]
  where
@@ -124,5 +166,10 @@ seams k fid total units refs =
   p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)
   benefit end =
     max 0 (floor (1000 * (p total - p end - p (total - end))))
-  crossing u = length [() | [f, a, b] <- refs, f == fid, (a <= u) /= (b <= u)]
-  cost u = toInteger (crossing u) * kRoiRefMilli k + kRoiPhiMilli k
+  cross rows u = toInteger (length [() | [f, a, b] <- rows, f == fid, (a <= u) /= (b <= u)])
+  cut line = toInteger (length [() | [f, s, e] <- clones, f == fid, s <= line, line < e])
+  cost u end =
+    cross refs u * kRoiRefMilli k
+      + cut end * kRoiCloneMilli k
+      + cross churn u * kRoiChurnMilli k
+      + kRoiPhiMilli k

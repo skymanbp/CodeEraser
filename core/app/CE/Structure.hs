@@ -17,11 +17,12 @@
 -- defaults, and the reply echoes the effective set whole.
 module CE.Structure (respond) where
 
-import CE.Structure.Axes (Facts (..), Knobs (..), axes, bound, entropyRows, findings)
+import CE.Structure.Axes (Facts (..), Knobs (kScale, kViolCost), axes, entropyRows, findings)
 import CE.Structure.Cost (structNodeCap)
 import CE.Structure.Declared (declaredRows)
+import CE.Structure.Knobs (effective, knobTable, knobsOffence)
 import CE.Structure.Split (splitOffence, splitRows)
-import CE.Wire (Family (..), applyRows, ascendingOn, respondWith)
+import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -40,12 +41,15 @@ data StructReq = StructReq
   -- ^ Both Maybe, not defaulted: an absent table means its axis is
   -- not judged, an empty one that it judged clean — the churn-table
   -- honesty (absence is spoken, never zero-filled).
-  , -- the split-ROI advisory tables (plan v2.6 §C, 2.14.0
-    -- additive): seamFiles is the presence anchor — the two reply
-    -- keys exist exactly when it rides; units/refs default empty
+  , -- the split-ROI advisory tables (plan v2.6 §C 2.14.0, clones/
+    -- churn v2.7 ② 2.15.0 — all additive): seamFiles is the
+    -- presence anchor — the two reply keys exist exactly when it
+    -- rides; the four unit/edge tables default empty
     reqSeamFiles :: Maybe [[Integer]]
   , reqSeamUnits :: [[Integer]]
   , reqSeamRefs :: [[Integer]]
+  , reqSeamClones :: [[Integer]]
+  , reqSeamChurn :: [[Integer]]
   , reqKnobs :: [[Integer]]
   }
 
@@ -63,7 +67,15 @@ instance FromJSON StructReq where
       <*> o .:? "seamFiles"
       <*> o .:? "seamUnits" .!= []
       <*> o .:? "seamRefs" .!= []
+      <*> o .:? "seamClones" .!= []
+      <*> o .:? "seamChurn" .!= []
       <*> o .:? "knobs" .!= []
+
+-- | The four unit/edge tables as ONE bundle — the same tuple
+-- CE.Structure.Split consumes on both its faces (offence + rows).
+seamTables :: StructReq -> ([[Integer]], [[Integer]], [[Integer]], [[Integer]])
+seamTables req =
+  (reqSeamUnits req, reqSeamRefs req, reqSeamClones req, reqSeamChurn req)
 
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
@@ -75,13 +87,9 @@ respond proto =
       , -- the seam tables count toward the same cap (C15: a declared
         -- cap that misses a request dimension walks it uncapped)
         famOverCap = \req ->
-          toInteger
-            ( length (reqNodes req)
-                + maybe 0 length (reqSeamFiles req)
-                + length (reqSeamUnits req)
-                + length (reqSeamRefs req)
-            )
-            > structNodeCap
+          let (u, r, c, h) = seamTables req
+              seamRows = maybe 0 length (reqSeamFiles req) + sum (map length [u, r, c, h])
+           in toInteger (length (reqNodes req) + seamRows) > structNodeCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req (effective []) True
       , famJudged = \req -> reply proto req (effective (reqKnobs req)) False
@@ -102,7 +110,7 @@ violation req =
               ]
           | (spec@(_, nm, _), proj, rows) <- dirTables
           ]
-        <> [ splitOffence sf (reqSeamUnits req) (reqSeamRefs req)
+        <> [ splitOffence sf (seamTables req)
            | Just sf <- [reqSeamFiles req]
            ]
         <> [knobsOffence (reqKnobs req)]
@@ -187,47 +195,8 @@ dirRow n (arity, name, extra) i row = case row of
  where
   label = name <> " " <> show i <> ": "
 
-knobsOffence :: [[Integer]] -> Maybe String
-knobsOffence rows =
-  asum [asum (zipWith one [0 :: Int ..] rows), ascendingOn "knob" (take 1) rows]
- where
-  one i row = case row of
-    [code, v]
-      | code < 0 || code > 16 -> Just (label <> "unknown structure knob")
-      | v < 1 -> Just (label <> "knob below 1")
-      | otherwise -> Nothing
-    _ -> Just (label <> "malformed row (need [code,value])")
-   where
-    label = "knob " <> show i <> ": "
-
--- | ONE knob authority: (code, getter, setter) — the effective fold
--- and the reply's echo read the SAME table, so a knob cannot exist
--- in one direction only (the weights lesson, designed in).
-knobTable :: [(Integer, Knobs -> Integer, Integer -> Knobs -> Knobs)]
-knobTable =
-  [ (0, kDepthCeil, \v k -> k {kDepthCeil = v})
-  , (1, kFanoutCeil, \v k -> k {kFanoutCeil = v})
-  , (2, kNamingMin, \v k -> k {kNamingMin = v})
-  , (3, kNamingCeil, \v k -> k {kNamingCeil = v})
-  , (4, kMixRefFloor, \v k -> k {kMixRefFloor = v})
-  , (5, kMisplaceMin, \v k -> k {kMisplaceMin = v})
-  , (6, kBigDirFloor, \v k -> k {kBigDirFloor = v})
-  , (7, kViolCost, \v k -> k {kViolCost = v})
-  , (8, kScale, \v k -> k {kScale = v})
-  , (9, kDupMin, \v k -> k {kDupMin = v})
-  , (10, kDeadMin, \v k -> k {kDeadMin = v})
-  , (11, kStaleMin, \v k -> k {kStaleMin = v})
-  , (12, kSeamSoft, \v k -> k {kSeamSoft = v})
-  , (13, kSeamHard, \v k -> k {kSeamHard = v})
-  , (14, kSeamPMax, \v k -> k {kSeamPMax = v})
-  , (15, kRoiRefMilli, \v k -> k {kRoiRefMilli = v})
-  , (16, kRoiPhiMilli, \v k -> k {kRoiPhiMilli = v})
-  ]
-
--- | Knob rows over the Cost defaults (the effectiveKnobs pattern):
--- absent rows keep the defaults; the fold grammar is CE.Wire's.
-effective :: [[Integer]] -> Knobs
-effective rows = applyRows [(c, s) | (c, _, s) <- knobTable] rows bound
+-- knobsOffence / knobTable / effective live in CE.Structure.Knobs
+-- (E01 split at the 300-line wall, the CE.Verdict.Knobs precedent).
 
 -- | The judged reply: five to seven axis rows (the two conditional
 -- axes join when their tables rode the wire), the Score.hs fold at
@@ -280,7 +249,7 @@ reply proto req k degraded =
   splitKeys = case (if degraded then Nothing else reqSeamFiles req) of
     Nothing -> []
     Just sf ->
-      let (cands, exempts) = splitRows k sf (reqSeamUnits req) (reqSeamRefs req)
+      let (cands, exempts) = splitRows k sf (seamTables req)
        in ["splitCandidates" .= cands, "sizeExempt" .= exempts]
   pens = axes k facts
   raw = sum [p * kViolCost k | (_, p) <- pens]

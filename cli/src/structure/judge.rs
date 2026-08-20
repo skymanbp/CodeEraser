@@ -85,6 +85,7 @@ pub fn run(
     let seam_facts = if split {
         Some(super::seams::seam_facts(
             root,
+            db.clone(),
             &files,
             committed_soft(root),
         )?)
@@ -238,10 +239,12 @@ fn assemble(
     } else {
         None
     };
+    // ONE shape end to end: the measurement assembled a SeamTables
+    // in place; only the ref rows re-sort here (the wire demands
+    // strict ascent independent of the walk order).
     let seams = seam_facts.as_ref().map(|sf| wire::SeamTables {
-        files: sf.file_rows.clone(),
-        units: sf.unit_rows.clone(),
-        refs: sorted_refs(&sf.ref_rows),
+        refs: sorted_refs(&sf.tables.refs),
+        ..sf.tables.clone()
     });
     Ok(wire::Request {
         nodes: rows::node_rows(t),

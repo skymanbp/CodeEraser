@@ -100,7 +100,9 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 两类有 FPR 记录背书的规则——精确 T1/T2 重复写入与硬预算突破（写入使
 文件超过 750 行）——**默认 deny**；其余规则在拿到各自的误报记录前保持
 observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
-`[guard] mode` 显式声明可覆盖所有类别。诚实边界：PreToolUse 塑造行为，
+`[guard] mode` 显式声明可覆盖所有类别；软线与硬预算之间的渐进区
+默认只记台账，`[guard] zone_tiers` 显式声明才启用位置→档位映射
+（<25% observe / 25–75% warn / >75% ask）。诚实边界：PreToolUse 塑造行为，
 不是安全墙——shell 写入可绕过它，Stop 审计 + CI 门是兜底。
 
 ## 文档

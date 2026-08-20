@@ -84,34 +84,71 @@ pub(super) fn budget_log(root: &Path, env: &Envelope, mode: &str, lines: usize) 
     );
 }
 
-/// plan v2.6 §A, the OBSERVE leg (feed 0.5.0): a write landing
-/// INSIDE the graded zone (S, H] gets a `zone` line in every tier —
-/// no stdout, no enforcement (the only armed size line stays the
-/// hard budget at H). This feed IS the per-rule record the future
-/// zone→tier map must argue its FPR case from (§4.2: no record, no
-/// promotion eligibility). S = the committed baseline's frozen
-/// softLine, falling back to thresholds.file_lines_warn — the same
-/// fallback the score's size axis uses; a degenerate zone (H <= S,
-/// or no hard line) logs nothing rather than a made-up position.
-pub(super) fn zone_log(root: &Path, cfg: &Config, env: &Envelope, mode: &str, lines: usize) {
+/// plan v2.6 §A observe leg + the v2.7 ① OPT-IN tier map: a write
+/// landing INSIDE the graded zone (S, H] gets a `zone` feed line in
+/// every tier; with `[guard] zone_tiers` armed the position maps to
+/// a tier (<25% observe / 25–75% warn / >75% ask) and the firing
+/// returns (tier, reason) for the decision line — the DEFAULT stays
+/// observe-only (§4.2 FPR discipline). A zone warn rides the same
+/// per-session (rule, file) injection budget as the class warns;
+/// ask is enforcement and repeats. S = the committed baseline's
+/// frozen softLine, falling back to thresholds.file_lines_warn — the
+/// same fallback the score's size axis uses; a degenerate zone
+/// (H <= S, or no hard line) logs nothing rather than a made-up
+/// position.
+pub(super) fn zone_assess(
+    root: &Path,
+    cfg: &Config,
+    env: &Envelope,
+    mode: &str,
+    lines: usize,
+) -> Option<(&'static str, String)> {
     let cap = cfg.thresholds.file_lines_fail;
     let soft = committed_soft(root).unwrap_or(cfg.thresholds.file_lines_warn);
     if cap == 0 || cap <= soft || lines <= soft {
-        return;
+        return None;
     }
-    crate::hookio::observe_append(
-        root,
-        Some(&env.session_id),
-        serde_json::json!({
-            "event": "zone",
-            "file": env.tool_input.file_path,
-            "mode": mode,
-            "resulting_lines": lines,
-            "soft": soft,
-            "hard": cap,
-            "zone_permille": (lines - soft) * 1000 / (cap - soft),
-        }),
-    );
+    let permille = (lines - soft) * 1000 / (cap - soft);
+    let armed = cfg.guard.zone_tiers;
+    let tier = zone_tier(permille);
+    let file = &env.tool_input.file_path;
+    // the B4 suppression consults the feed BEFORE this event lands
+    // in it (the probe rule's ordering — a warn must not read its
+    // own fresh line as "already warned")
+    let seen = tier == "warn" && crate::hookio::already_warned(root, &env.session_id, "zone", file);
+    let mut line = serde_json::json!({
+        "event": "zone",
+        "file": file,
+        "mode": mode,
+        "resulting_lines": lines,
+        "soft": soft,
+        "hard": cap,
+        "zone_permille": permille,
+    });
+    if armed {
+        line["zone_tier"] = tier.into();
+    }
+    crate::hookio::observe_append(root, Some(&env.session_id), line);
+    if !armed || tier == "observe" || seen {
+        return None;
+    }
+    Some((
+        tier,
+        format!(
+            "ce: this write leaves {file} at {lines} lines, {permille}‰ into the \
+             graded zone ({soft}..{cap}); `ce structure --split-candidates` prices \
+             its best seam.",
+        ),
+    ))
+}
+
+/// The v2.6 §A map, wired v2.7 ① behind the ce.toml opt-in.
+fn zone_tier(permille: usize) -> &'static str {
+    match permille {
+        0..=249 => "observe",
+        250..=750 => "warn",
+        _ => "ask",
+    }
 }
 
 /// The frozen soft line, read off the committed ce-baseline.json —

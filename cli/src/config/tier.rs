@@ -20,6 +20,12 @@ pub struct Guard {
     /// Unset = the §4.2 route defaults, resolved per rule class by
     /// `tier` (step 2 landed 2026-08-11 — CHANGELOG).
     pub mode: Option<String>,
+    /// v2.7 ① (OPT-IN, default off): arm the graded-zone tier map —
+    /// a write landing <25% into (S, H] stays observe, 25–75%
+    /// injects a warn, >75% asks. The DEFAULT stays observe-only:
+    /// §4.2's FPR discipline gates any default flip on the zone
+    /// feed's own record, and this switch changes one repo only.
+    pub zone_tiers: bool,
 }
 
 /// §4.2 step-3 route default for the two promoted PreToolUse classes
@@ -82,11 +88,13 @@ mod tests {
     fn an_unknown_mode_degrades_to_observe_and_names_itself() {
         let declared = Guard {
             mode: Some("warn".into()),
+            zone_tiers: false,
         };
         assert_eq!(declared.tier(PROMOTED_DEFAULT), "warn");
         assert_eq!(Guard::default().tier("observe"), "observe");
         let typo = Guard {
             mode: Some("Deny".into()),
+            zone_tiers: false,
         };
         let got = typo.tier(PROMOTED_DEFAULT);
         assert!(got.starts_with("observe ("), "never enforces: {got}");

@@ -17,6 +17,11 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan
+/// v2.7 ①): present exactly when ce.toml arms the zone→tier map —
+/// the tier the mapped position resolved to, so the feed records
+/// what the armed rule DID, not only where the write landed.
+///
 /// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write
 /// landing inside the graded size zone (S, H] — soft/hard/position
 /// per line, the per-rule record any future zone→tier promotion
@@ -33,7 +38,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.5.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.6.0";
 
 /// Read the whole hook envelope from stdin and deserialize it.
 /// None = unreadable stdin or unparseable JSON — the caller treats
@@ -111,9 +116,11 @@ pub fn clip(reason: &str, budget_tokens: usize) -> String {
 /// §4.4 B4 session-level suppression: has this (rule, file) already
 /// FIRED for this session? The observe feed IS the accumulator the
 /// clause's "silently accumulate" half names — probe lines count only
-/// when matches > 0 (a clean probe never warned anyone). Any read or
-/// parse failure = not warned: fail open toward REPORTING, the
-/// opposite bias from enforcement fail-open.
+/// when matches > 0 (a clean probe never warned anyone), and zone
+/// lines only when an ARMED map produced a real tier (an observe-leg
+/// ledger line warned nobody either — v2.7 ①). Any read or parse
+/// failure = not warned: fail open toward REPORTING, the opposite
+/// bias from enforcement fail-open.
 pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> bool {
     if session.is_empty() {
         return false;
@@ -128,6 +135,7 @@ pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> boo
                 && v["event"] == rule
                 && v["file"] == file
                 && (rule != "probe" || v["matches"].as_u64().unwrap_or(0) > 0)
+                && (rule != "zone" || v["zone_tier"].as_str().is_some_and(|t| t != "observe"))
         })
 }
 

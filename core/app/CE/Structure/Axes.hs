@@ -55,13 +55,16 @@ data Knobs = Knobs
   , kDupMin :: Integer
   , kDeadMin :: Integer
   , kStaleMin :: Integer
-  , -- the split-ROI advisory's five (plan v2.6 §C, codes 12..16):
-    -- the zone triple S/H/P_max and the two milli cost prices
+  , -- the split-ROI advisory's seven (plan v2.6 §C codes 12..16,
+    -- v2.7 ② codes 17..18): the zone triple S/H/P_max and the
+    -- four milli cost prices (ref / phi / clone / churn)
     kSeamSoft :: Integer
   , kSeamHard :: Integer
   , kSeamPMax :: Integer
   , kRoiRefMilli :: Integer
   , kRoiPhiMilli :: Integer
+  , kRoiCloneMilli :: Integer
+  , kRoiChurnMilli :: Integer
   }
 
 bound :: Knobs
@@ -84,6 +87,8 @@ bound =
     , kSeamPMax = Cost.seamPMax
     , kRoiRefMilli = Cost.roiRefMilli
     , kRoiPhiMilli = Cost.roiPhiMilli
+    , kRoiCloneMilli = Cost.roiCloneMilli
+    , kRoiChurnMilli = Cost.roiChurnMilli
     }
 
 -- | Violation count per judged axis — 0 geometry / 1 naming /

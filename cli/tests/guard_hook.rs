@@ -127,6 +127,48 @@ fn a_zone_write_logs_position_and_emits_nothing() {
     shutdown_daemon(&dir);
 }
 
+/// v2.7 ①: with ce.toml's `[guard] zone_tiers` armed, the SAME zone
+/// positions map to tiers — 666‰ warns (25–75%), 888‰ asks (>75%),
+/// 222‰ still emits nothing — and every zone feed line records the
+/// mapped tier. The DEFAULT stays the previous test's feed-only
+/// behaviour; an armed warn also never rides the promoted classes'
+/// deny (the strongest-fired-tier rule).
+#[test]
+fn an_armed_zone_maps_position_to_tier() {
+    let dir = tmp("guard-zone-armed");
+    std::fs::write(dir.join("ce.toml"), "[guard]\nzone_tiers = true\n").expect("ce.toml");
+    let warn = common::expect_decision(
+        &dir,
+        &envelope(&dir, "Write", &"// filler\n".repeat(600)),
+        "allow",
+    );
+    assert!(warn.contains("666‰"), "position named: {warn}");
+    let ask = common::expect_decision(
+        &dir,
+        &envelope(&dir, "Write", &"// filler\n".repeat(700)),
+        "ask",
+    );
+    assert!(
+        ask.contains("split-candidates"),
+        "points at the advisory: {ask}"
+    );
+    let low = run_hook(&dir, &envelope(&dir, "Write", &"// filler\n".repeat(400)));
+    assert!(low.trim().is_empty(), "<25% stays observe: {low}");
+    let feed = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).expect("feed");
+    let tiers: Vec<String> = feed
+        .lines()
+        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+        .filter(|v| v["event"] == "zone")
+        .map(|v| v["zone_tier"].as_str().unwrap_or("?").to_string())
+        .collect();
+    assert_eq!(
+        tiers,
+        ["warn", "ask", "observe"],
+        "the feed records the mapped tier"
+    );
+    shutdown_daemon(&dir);
+}
+
 /// The budget rule shares the scanner's exclusion model, including
 /// directory-only patterns (attack review F10): a ce.toml glob, a
 /// ce.toml directory entry, and a root .gitignore directory entry

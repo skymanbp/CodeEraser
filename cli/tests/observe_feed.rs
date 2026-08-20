@@ -1,10 +1,10 @@
-//! Observe-feed contract (ce.observe/0.5.0): the NDJSON feed is the
+//! Observe-feed contract (ce.observe/0.6.0): the NDJSON feed is the
 //! M4 evaluation-set raw material, so its line shape is pinned by a
 //! golden. One deterministic run of every producer — probe, budget
-//! (§4.2 step 2), zone (plan v2.6 §A), stop audit, precommit —
-//! volatile fields normalized (ts_ms, elapsed_ms, absolute file
-//! path); key sets, schema/event tags, counts, mode, and degraded
-//! flags must match byte-for-byte.
+//! (§4.2 step 2), zone unarmed AND armed (plan v2.6 §A / v2.7 ①),
+//! stop audit, precommit — volatile fields normalized (ts_ms,
+//! elapsed_ms, absolute file path); key sets, schema/event tags,
+//! counts, mode, and degraded flags must match byte-for-byte.
 //! Bless flow: `CE_BLESS=1 cargo test --test observe_feed`.
 //!
 //! `session_id` is deliberately NOT normalized: the hook envelopes
@@ -54,6 +54,19 @@ fn feed_shape_matches_golden() {
     let mid = "// filler\n".repeat(400);
     let env3 = common::pretooluse_envelope(&dir, "Write", &mid);
     common::run_hook(&dir, &["probe", "--hook"], &env3);
+    // entries 6+7: the ARMED map (v2.7 ①): ce.toml opts in (keeping
+    // the seeded observe mode — the zone's tier is its own, not the
+    // class mode) and the same producer's zone line now carries the
+    // mapped zone_tier (0.6.0) — 666‰ -> warn, recorded in the
+    // feed, decided on stdout at the zone's OWN tier
+    std::fs::write(
+        dir.join("ce.toml"),
+        "[guard]\nmode = \"observe\"\nzone_tiers = true\n",
+    )
+    .expect("ce.toml");
+    let deep = "// filler\n".repeat(600);
+    let env4 = common::pretooluse_envelope(&dir, "Write", &deep);
+    common::run_hook(&dir, &["probe", "--hook"], &env4);
     common::shutdown_daemon(&dir);
     // entry 6: stop audit (staged b.rs = one touched duplicate)
     common::run_hook(

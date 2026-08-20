@@ -149,6 +149,18 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.15.0**（v0.7 拆分 ROI v1.1 价目，计划 v2.7 ②，2026-08-20）：
+> `structure.request` 加性可选两表 `seamClones=[[fileId,start,end]]`
+> （T1/T2 克隆块跨距——span 契约与 seamUnits 同一检查器）与
+> `seamChurn=[[fileId,a,b]]`（churn 窗口〔14 天〕单元共变对，a<b
+> 升序）；缺席=该腿零计价，2.14.0 请求原判逐字节不变（SplitProps
+> 兼容回归钉住）。缝价 cost 增两腿：切穿克隆块（跨距骑缝线）×
+> roiCloneMilli(500) + 跨缝共变对×roiChurnMilli(150)，回执形状不变
+> ——两腿并入 costMilli。knobs 码域 0..16 → **0..18**
+> （17=roiCloneMilli/18=roiChurnMilli），knob 回执 17 行 → **19 行**。
+> 测量侧：克隆跨距直读 dedup 索引、共变对直读 churn 提交台账（当前
+> 快照 key 联结）——两者均为既有家族事实的复用，绝不重推导；
+> SeamTables 一形两面（测量侧就地装配 wire 同型，无镜像结构）。
 
 ## 1. 信封（envelope）
 
@@ -159,7 +171,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.14.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.15.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -267,5 +279,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.14.0 | §1 所列两处常量 |
+| 协议 | 2.15.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |
