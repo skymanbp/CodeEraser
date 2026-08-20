@@ -237,7 +237,11 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
         serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
     for [idx, verdict] in dead {
         let node = nodes.get(idx).context("index out of range")?;
-        let name = VERDICT_NAMES[verdict.checked_sub(1).context("verdict 0")?];
+        // .get like the line above it: a verdict past the four this
+        // side knows about is a wire-version skew, not a panic
+        let name = *VERDICT_NAMES
+            .get(verdict.checked_sub(1).context("verdict 0")?)
+            .context("verdict out of range")?;
         if node.kind == super::wire::GRAN_FILE {
             let why = if verdict <= 2 {
                 "no kept in-edge and no entry flag"
