@@ -39,3 +39,10 @@ S6 体例一致（过线目录计 1）。
 
 > 分数迁移：修正案①改变同一仓库的结构分（先例：自仓 990→992），
 > 发版说明必须声明（docs/RELEASE.md §0）。
+
+## 拆分 ROI 顾问（v0.6，structure/1 扩展）
+
+`ce structure --split-candidates`：对越过冻结软线的判决文件逐一计
+价——最优缝（ROI≥1）或带数字的内聚豁免。契约与 as-built 实录见
+[size-advisory.md](size-advisory.md)；wire 形状见
+[contracts/VERSIONING.md](../../contracts/VERSIONING.md) 2.14.0 条。
