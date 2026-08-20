@@ -1,14 +1,62 @@
 {
   "_why": "A ce.structure-report tree shaped to hit every unary-chain boundary the two GUI lenses fold over, so gui/tests/lens_invariant.js can assert on it hermetically instead of on whatever this repository happens to look like today. Node 0 is a single-child ROOT (the case that used to cost the root its heat exemption and inflate the colour scale); node 1 carries findings while having exactly one child (the case that used to be folded away and rendered nowhere); node 2 is a genuinely empty pass-through the fold SHOULD still swallow; nodes 4 and 5 sit past depth 3 behind a chain, which is what the default-expansion seed and test have to agree about.",
-  "schema": "ce.structure-report/0.5.0",
+  "schema": "ce.structure-report/0.6.0",
   "score": 900,
   "scoreScale": 1000,
   "tree": [
-    { "name": ".", "parent": 0, "depth": 0, "subdirs": 1, "files": 0, "axes": [] },
-    { "name": "src", "parent": 0, "depth": 1, "subdirs": 1, "files": 9, "axes": [4] },
-    { "name": "src/a", "parent": 1, "depth": 2, "subdirs": 1, "files": 0, "axes": [] },
-    { "name": "src/a/b", "parent": 2, "depth": 3, "subdirs": 2, "files": 0, "axes": [] },
-    { "name": "src/a/b/c", "parent": 3, "depth": 4, "subdirs": 0, "files": 3, "axes": [2, 3] },
-    { "name": "src/a/b/d", "parent": 3, "depth": 4, "subdirs": 0, "files": 1, "axes": [] }
-  ]
+    {
+      "name": ".",
+      "parent": 0,
+      "depth": 0,
+      "subdirs": 1,
+      "files": 0,
+      "axes": []
+    },
+    {
+      "name": "src",
+      "parent": 0,
+      "depth": 1,
+      "subdirs": 1,
+      "files": 9,
+      "axes": [
+        4
+      ]
+    },
+    {
+      "name": "src/a",
+      "parent": 1,
+      "depth": 2,
+      "subdirs": 1,
+      "files": 0,
+      "axes": []
+    },
+    {
+      "name": "src/a/b",
+      "parent": 2,
+      "depth": 3,
+      "subdirs": 2,
+      "files": 0,
+      "axes": []
+    },
+    {
+      "name": "src/a/b/c",
+      "parent": 3,
+      "depth": 4,
+      "subdirs": 0,
+      "files": 3,
+      "axes": [
+        2,
+        3
+      ]
+    },
+    {
+      "name": "src/a/b/d",
+      "parent": 3,
+      "depth": 4,
+      "subdirs": 0,
+      "files": 1,
+      "axes": []
+    }
+  ],
+  "split": false
 }

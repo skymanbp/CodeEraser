@@ -70,6 +70,11 @@ pub struct StructureArgs {
     /// absent = the axis is honestly unjudged)
     #[arg(long)]
     days: Option<u32>,
+    /// Price a split for every judged file past the committed soft
+    /// line (plan v2.6 §C): the best seam with its ROI, or an
+    /// exemption whose numbers say why the file stays whole
+    #[arg(long)]
+    split_candidates: bool,
 }
 
 #[derive(clap::Args)]
@@ -122,7 +127,9 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
     family_cmd(
         a.judge,
         "structure",
-        move |r, db, c| codeeraser::structure::judge::run(r, db, c, a.deep, a.days),
+        move |r, db, c| {
+            codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))
+        },
         codeeraser::structure::judge::print,
     )
 }

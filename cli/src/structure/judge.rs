@@ -20,7 +20,10 @@ pub use super::report::{print, report_json};
 /// 0.5.0 (S4a): + tree [{id, parent, name, depth, subdirs, files,
 /// axes}] — the flat parent-linked rows the booklet §5 promised the
 /// GUI, per-node axes rolled from the findings.
-pub const SCHEMA_ID: &str = "ce.structure-report/0.5.0";
+/// 0.6.0 (v0.6 §C): + split (whether the advisory rode) and, only
+/// then, splitCandidates [{path, afterLine, unit, benefitMilli,
+/// costMilli}] + sizeExempt [{path, benefitMilli, costMilli}].
+pub const SCHEMA_ID: &str = "ce.structure-report/0.6.0";
 
 pub struct Report {
     pub score: i64,
@@ -50,6 +53,16 @@ pub struct Report {
     /// directory, per-node axis codes rolled from the findings —
     /// the GUI's first-screen data face.
     pub tree: Vec<TreeRow>,
+    /// The split-ROI advisory (v0.6 §C): None = not armed; rows are
+    /// relabelled with the paths and unit names this side kept.
+    pub split: Option<SplitReport>,
+}
+
+pub struct SplitReport {
+    /// (path, boundary line, unit name, benefitMilli, costMilli).
+    pub candidates: Vec<(String, u64, String, i64, i64)>,
+    /// (path, bestBenefitMilli, bestCostMilli); 0/0 = no seam.
+    pub exempt: Vec<(String, i64, i64)>,
 }
 
 pub struct TreeRow {
@@ -65,12 +78,20 @@ pub fn run(
     root: &Path,
     db: Option<PathBuf>,
     core: &str,
-    deep: bool,
-    days: Option<u32>,
+    (deep, days, split): (bool, Option<u32>, bool),
 ) -> Result<Report> {
     let (files, _findings, _summary) = crate::scan::analyze(root)?;
     let t = tree::build(&judged_paths(&files));
-    let req = assemble(root, db, core, &t, (deep, days))?;
+    let seam_facts = if split {
+        Some(super::seams::seam_facts(
+            root,
+            &files,
+            committed_soft(root),
+        )?)
+    } else {
+        None
+    };
+    let req = assemble(root, db, core, &t, (deep, days), &seam_facts)?;
     let reply = wire::judge(core, &req)?;
     let names = names_by_id(&t);
     // The boundary contract runs on the REQUEST side (Structure.hs
@@ -92,6 +113,10 @@ pub fn run(
         .find(|[c, _]| *c == 8)
         .map(|[_, v]| *v)
         .context("knob echo missing the scale row")?;
+    let split_report = seam_facts
+        .as_ref()
+        .map(|sf| split_relabel(sf, &reply))
+        .transpose()?;
     Ok(Report {
         score: reply.score,
         scale,
@@ -105,7 +130,54 @@ pub fn run(
         deep,
         days,
         tree,
+        split: split_report,
     })
+}
+
+/// The committed baseline's frozen soft line, falling back to the
+/// warn threshold — the SAME resolution the guard's zone observer
+/// uses, so the advisory and the hook agree on where the zone opens.
+fn committed_soft(root: &Path) -> u64 {
+    let stored = crate::score::baseline::read(root)
+        .ok()
+        .flatten()
+        .and_then(|doc| doc["softLine"].as_u64());
+    stored.unwrap_or_else(|| {
+        crate::config::Config::load(root)
+            .map(|c| c.thresholds.file_lines_warn as u64)
+            .unwrap_or(300)
+    })
+}
+
+/// Dense reply rows → named advisory rows, ids range-checked before
+/// any subscript (the findings/deviations lesson applied here from
+/// day one).
+fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<SplitReport> {
+    let n = sf.files.len() as i64;
+    let file = |id: i64| -> Result<usize> {
+        ensure!(
+            (0..n).contains(&id),
+            "split reply: file id {id} outside 0..{n}"
+        );
+        Ok(id as usize)
+    };
+    let mut candidates = Vec::new();
+    for &[fid, unit, benefit, cost] in &reply.split_candidates {
+        let f = file(fid)?;
+        let units = &sf.unit_names[f];
+        let u = usize::try_from(unit).ok().filter(|u| *u < units.len());
+        let (name, end) = match u {
+            Some(u) => (units[u].0.clone(), units[u].1),
+            None => anyhow::bail!("split reply: unit {unit} outside file {fid}"),
+        };
+        candidates.push((sf.files[f].0.clone(), end, name, benefit, cost));
+    }
+    let mut exempt = Vec::new();
+    for &[fid, benefit, cost] in &reply.size_exempt {
+        let f = file(fid)?;
+        exempt.push((sf.files[f].0.clone(), benefit, cost));
+    }
+    Ok(SplitReport { candidates, exempt })
 }
 
 /// Judged languages only (plan v2.5): letting the scan-only arm in
@@ -154,6 +226,7 @@ fn assemble(
     core: &str,
     t: &tree::Tree,
     (deep, days): (bool, Option<u32>),
+    seam_facts: &Option<super::seams::SeamFacts>,
 ) -> Result<wire::Request> {
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let stale_docs = match days {
@@ -165,6 +238,11 @@ fn assemble(
     } else {
         None
     };
+    let seams = seam_facts.as_ref().map(|sf| wire::SeamTables {
+        files: sf.file_rows.clone(),
+        units: sf.unit_rows.clone(),
+        refs: sorted_refs(&sf.ref_rows),
+    });
     Ok(wire::Request {
         nodes: rows::node_rows(t),
         patterns: rows::pattern_rows(t),
@@ -173,7 +251,18 @@ fn assemble(
         declared: rows::declared_rows(&cfg.structure.layout, t)?,
         stale_docs,
         redundancy,
+        seams,
     })
+}
+
+/// The wire demands strictly ascending ref rows; the measurement
+/// emits them file-then-unit ordered already, but dedup + sort here
+/// keeps the contract independent of that walk order.
+fn sorted_refs(rows: &[[u64; 3]]) -> Vec<[u64; 3]> {
+    let mut out: Vec<[u64; 3]> = rows.to_vec();
+    out.sort_unstable();
+    out.dedup();
+    out
 }
 
 fn names_by_id(t: &tree::Tree) -> Vec<String> {

@@ -58,6 +58,7 @@ structure.core	ce-core 可执行文件路径
 structure.db	索引数据库路径（默认 <root>/.ce/index.db）
 structure.deep	同时按目录卷积克隆块与死单元并判 S6 冗余轴（会跑去冗普查与存活判决；缺省 = 该轴诚实未判）
 structure.days	按此 git 窗口天数判 S5 文档陈旧轴（所引代码晚于文档最后编辑而变；缺省 = 该轴诚实未判）
+structure.split_candidates	为每个越过冻结软线的判决文件计一次拆分价（计划 v2.6 §C）：给出最优缝与 ROI，或以数字说明文件为何内聚的豁免
 trend	主线历史上的分数轨迹（M7-P4）：逐提交绝对检查分，缓存于索引，可重建
 trend.root	要分析的目录（默认当前目录）
 trend.core	ce-core 可执行文件路径

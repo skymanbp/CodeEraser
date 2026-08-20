@@ -20,6 +20,7 @@ module CE.Structure (respond) where
 import CE.Structure.Axes (Facts (..), Knobs (..), axes, bound, entropyRows, findings)
 import CE.Structure.Cost (structNodeCap)
 import CE.Structure.Declared (declaredRows)
+import CE.Structure.Split (splitOffence, splitRows)
 import CE.Wire (Family (..), applyRows, ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -39,6 +40,12 @@ data StructReq = StructReq
   -- ^ Both Maybe, not defaulted: an absent table means its axis is
   -- not judged, an empty one that it judged clean — the churn-table
   -- honesty (absence is spoken, never zero-filled).
+  , -- the split-ROI advisory tables (plan v2.6 §C, 2.14.0
+    -- additive): seamFiles is the presence anchor — the two reply
+    -- keys exist exactly when it rides; units/refs default empty
+    reqSeamFiles :: Maybe [[Integer]]
+  , reqSeamUnits :: [[Integer]]
+  , reqSeamRefs :: [[Integer]]
   , reqKnobs :: [[Integer]]
   }
 
@@ -53,6 +60,9 @@ instance FromJSON StructReq where
       <*> o .:? "declared" .!= []
       <*> o .:? "staleDocs"
       <*> o .:? "redundancy"
+      <*> o .:? "seamFiles"
+      <*> o .:? "seamUnits" .!= []
+      <*> o .:? "seamRefs" .!= []
       <*> o .:? "knobs" .!= []
 
 -- | The shared cascade with this family's bindings (CE.Wire).
@@ -62,7 +72,16 @@ respond proto =
     Family
       { famName = "structure"
       , famId = reqId
-      , famOverCap = \req -> toInteger (length (reqNodes req)) > structNodeCap
+      , -- the seam tables count toward the same cap (C15: a declared
+        -- cap that misses a request dimension walks it uncapped)
+        famOverCap = \req ->
+          toInteger
+            ( length (reqNodes req)
+                + maybe 0 length (reqSeamFiles req)
+                + length (reqSeamUnits req)
+                + length (reqSeamRefs req)
+            )
+            > structNodeCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req (effective []) True
       , famJudged = \req -> reply proto req (effective (reqKnobs req)) False
@@ -83,6 +102,9 @@ violation req =
               ]
           | (spec@(_, nm, _), proj, rows) <- dirTables
           ]
+        <> [ splitOffence sf (reqSeamUnits req) (reqSeamRefs req)
+           | Just sf <- [reqSeamFiles req]
+           ]
         <> [knobsOffence (reqKnobs req)]
     )
  where
@@ -171,7 +193,7 @@ knobsOffence rows =
  where
   one i row = case row of
     [code, v]
-      | code < 0 || code > 11 -> Just (label <> "unknown structure knob")
+      | code < 0 || code > 16 -> Just (label <> "unknown structure knob")
       | v < 1 -> Just (label <> "knob below 1")
       | otherwise -> Nothing
     _ -> Just (label <> "malformed row (need [code,value])")
@@ -195,6 +217,11 @@ knobTable =
   , (9, kDupMin, \v k -> k {kDupMin = v})
   , (10, kDeadMin, \v k -> k {kDeadMin = v})
   , (11, kStaleMin, \v k -> k {kStaleMin = v})
+  , (12, kSeamSoft, \v k -> k {kSeamSoft = v})
+  , (13, kSeamHard, \v k -> k {kSeamHard = v})
+  , (14, kSeamPMax, \v k -> k {kSeamPMax = v})
+  , (15, kRoiRefMilli, \v k -> k {kRoiRefMilli = v})
+  , (16, kRoiPhiMilli, \v k -> k {kRoiPhiMilli = v})
   ]
 
 -- | Knob rows over the Cost defaults (the effectiveKnobs pattern):
@@ -225,6 +252,7 @@ reply proto req k degraded =
     , "findings" .= findings k facts
     ]
       <> declaredKeys
+      <> splitKeys
       <> [ "fail" .= degraded
          , "knobs" .= [[c, g k] | (c, g, _) <- knobTable]
          , "degraded" .= degraded
@@ -246,6 +274,14 @@ reply proto req k degraded =
     Nothing -> []
     Just (divergence, deviations) ->
       ["divergence" .= divergence, "deviations" .= deviations]
+  -- the split-ROI keys exist exactly when seamFiles rode the wire
+  -- (the divergence precedent); a degraded reply drops them with
+  -- the rest of the facts
+  splitKeys = case (if degraded then Nothing else reqSeamFiles req) of
+    Nothing -> []
+    Just sf ->
+      let (cands, exempts) = splitRows k sf (reqSeamUnits req) (reqSeamRefs req)
+       in ["splitCandidates" .= cands, "sizeExempt" .= exempts]
   pens = axes k facts
   raw = sum [p * kViolCost k | (_, p) <- pens]
   score = max 0 (kScale k - raw `div` toInteger (length pens))

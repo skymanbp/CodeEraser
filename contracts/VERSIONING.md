@@ -122,6 +122,20 @@
 > 累加、轴口一次 floor，axes 行形不变）；S=基线 softLine，缺省回落
 > sizeCeil；H≤S 退化为旧二值（防除零，具名测试钉住）。knobsEcho
 > 12 键 → **15 键**（+sizeHard/sizePMax/softLineK）。
+> 同一 minor 的第二面（§C 拆分 ROI 顾问，structure/1 加性）：
+> `structure.request` 可选三表 `seamFiles=[[fileId,total]]`（密集
+> id、total≥1，**在场即判**——回执双键随发随在，divergence 先例）、
+> `seamUnits=[[fileId,unit,start,end]]`（每文件密集、跨距 1 基、严格
+> 有序不重叠、不出文件总长）、`seamRefs=[[fileId,from,to]]`（同文件
+> 单元提及边，from≠to，行严格升序）；三表计入 structNodeCap（C15）。
+> 回执 `splitCandidates=[[fileId,afterUnit,benefitMilli,costMilli]]`
+> （每文件至多一行=ROI 交叉相乘最大且 ≥1 的缝）与
+> `sizeExempt=[[fileId,bestBenefitMilli,bestCostMilli]]`（无可行缝；
+> 0/0=根本无缝）。定价 v1：benefit=软区间罚回收（与 verdict 同一
+> 曲线权威 CE.Verdict.Soft）、cost=跨缝提及边×roiRefMilli+roiPhiMilli；
+> 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
+> （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
+> knob 回执 12 行 → **17 行**。
 > **2.13.0**（M7.5b trend/1 第八判决家族，2026-08-18）：
 > `trend.request` `rows=[[ts,score,scale]]`（ts **次序不设限**——
 > 2026-08-20 评审 #9 放宽：最小二乘与次序无关，而 first-parent 历史

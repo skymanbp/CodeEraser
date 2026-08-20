@@ -57,8 +57,9 @@ async fn structure_report(root: String, deep: bool, days: Option<u32>) -> Result
             Path::new(&root),
             None,
             c,
-            deep,
-            days,
+            // the split advisory is the CLI's face in v0.6; the GUI
+            // candidate screen adopts it with its own design pass
+            (deep, days, false),
         )?))
     })
     .await

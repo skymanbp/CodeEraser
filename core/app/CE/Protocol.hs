@@ -26,6 +26,15 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.14.0 = the size-advisory minor (plan v2.6, v0.6): ONE additive
+-- minor for both faces the release ships together. verdict/1 —
+-- graded axis 0 (the soft-zone curve; a declared score migration),
+-- the `judgedLoc` multiset, ceilings codes 2..4 (H / P_max / k),
+-- and `newBaseline.softLine` (derived at establish, carried after).
+-- structure/1 — the split-ROI advisory: optional seamFiles /
+-- seamUnits / seamRefs tables in, `splitCandidates` + `sizeExempt`
+-- rows out exactly when seamFiles rode, knobs 12..16 (the zone
+-- triple + the two milli prices).
 -- 2.13.0 = the trend minor (M7.5b): the trend/1 family — the score
 -- trajectory's [ts, score, scale] rows in (any ts order since the
 -- 2026-08-20 #9 loosening — least squares is order-free), the exact-
@@ -72,7 +81,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.13.0"
+proto = "2.14.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

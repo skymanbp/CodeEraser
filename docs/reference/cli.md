@@ -195,13 +195,14 @@ Arguments:
   [ROOT]  Directory to analyze (default: current directory)
 
 Options:
-      --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
-      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
-      --db <DB>          Index database path (default: <root>/.ce/index.db)
-      --deep             Also roll clone blocks and dead units up per directory and judge the S6 redundancy axis (runs the dedup census and the liveness judgment; absent = the axis is honestly unjudged)
-      --days <DAYS>      Judge the S5 doc-staleness axis over this git window in days (docs whose referenced code changed after their last edit; absent = the axis is honestly unjudged)
-  -h, --help             Print help
+      --format <FORMAT>   [default: console] [possible values: console, json]
+      --lang <LANG>       Console language (wins over CE_LANG) [possible values: en, zh]
+      --core <CORE>       Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>           Index database path (default: <root>/.ce/index.db)
+      --deep              Also roll clone blocks and dead units up per directory and judge the S6 redundancy axis (runs the dedup census and the liveness judgment; absent = the axis is honestly unjudged)
+      --days <DAYS>       Judge the S5 doc-staleness axis over this git window in days (docs whose referenced code changed after their last edit; absent = the axis is honestly unjudged)
+      --split-candidates  Price a split for every judged file past the committed soft line (plan v2.6 §C): the best seam with its ROI, or an exemption whose numbers say why the file stays whole
+  -h, --help              Print help
 ```
 
 ## ce trend

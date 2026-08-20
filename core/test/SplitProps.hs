@@ -1,0 +1,111 @@
+-- aeson 2.x object keys are Key, not String; string literals for
+-- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
+{-# LANGUAGE OverloadedStrings #-}
+
+-- | The split-ROI advisory battery (plan v2.6 §C): the fixture is
+-- hand-computed to the digit — one two-unit file whose seam clears
+-- ROI 1, one single-unit file that exempts with 0/0 — then a lever
+-- per new knob (F16), the named refusals for each seam table, and
+-- the exactly-when-sent reply-key contract.
+module SplitProps (battery) where
+
+import CE.Structure (respond)
+import Data.Aeson
+import qualified Data.Aeson.KeyMap as KM
+import WireHarness (field, refusedBy, replyObjWith, runChecks, setKey)
+
+battery :: IO Bool
+battery =
+  runChecks
+    [ ("the fixture seam prices to the hand-computed digit", fixtureJudged)
+    , ("every split knob is a live lever", knobLevers)
+    , ("split refusals name the offender", refusals)
+    , ("the reply keys exist exactly when seamFiles rode", exactlyWhenSent)
+    ]
+
+-- | nodes = one root dir; seam tables as documented in the module
+-- header. Hand arithmetic (defaults S=300 H=750 P=10, ref 250 φ
+-- 500): p(550)=10·(250/450)² = 250/81; both halves (270, 280) are
+-- under S so the whole penalty comes back — benefit
+-- floor(1000·250/81) = 3086; one crossing ref -> cost 750; the
+-- single-unit file has no seam at all.
+wireReq :: Value
+wireReq =
+  setKey "seamFiles" (toJSON [[0, 550], [1, 400 :: Integer]]) $
+    setKey
+      "seamUnits"
+      (toJSON [[0, 0, 10, 270], [0, 1, 280, 540], [1, 0, 1, 390 :: Integer]])
+      $ setKey "seamRefs" (toJSON [[0, 0, 1 :: Integer]]) base
+
+base :: Value
+base =
+  object
+    [ "proto" .= ("2.13.0" :: String)
+    , "type" .= ("structure.request" :: String)
+    , "id" .= (1 :: Int)
+    , "nodes" .= [[0, 0, 0, 0, 2 :: Integer]]
+    ]
+
+replyObj :: Value -> Maybe Object
+replyObj = replyObjWith respond
+
+fixtureJudged :: Bool
+fixtureJudged = case replyObj wireReq of
+  Nothing -> False
+  Just o ->
+    field o "splitCandidates" == Just (toJSON [[0, 0, 3086, 750 :: Integer]])
+      && field o "sizeExempt" == Just (toJSON [[1, 0, 0 :: Integer]])
+
+-- | One override per new code, each moving the fixture's verdict:
+-- 12 (S=560: the file leaves the zone, benefit 0 -> exempt),
+-- 13 (H=600: steeper curve, benefit floor(1000·10·(250/300)²)=6944),
+-- 14 (P=20: benefit doubles to 6172), 15 (ref 3000: cost 3500 >
+-- benefit -> exempt), 16 (φ 4000: cost 4250 -> exempt).
+knobLevers :: Bool
+knobLevers =
+  and
+    [ probe [[12, 560]] (\c e -> c == Just (toJSON emptyRows) && exemptBest e)
+    , probe [[13, 600]] (\c _ -> c == Just (toJSON [[0, 0, 6944, 750 :: Integer]]))
+    , probe [[14, 20]] (\c _ -> c == Just (toJSON [[0, 0, 6172, 750 :: Integer]]))
+    , probe [[15, 3000]] (\c e -> c == Just (toJSON emptyRows) && e == Just (toJSON [[0, 3086, 3500], [1, 0, 0 :: Integer]]))
+    , probe [[16, 4000]] (\c e -> c == Just (toJSON emptyRows) && e == Just (toJSON [[0, 3086, 4250], [1, 0, 0 :: Integer]]))
+    ]
+ where
+  emptyRows = [] :: [[Integer]]
+  exemptBest e = e == Just (toJSON [[0, 0, 750], [1, 0, 0 :: Integer]])
+  probe rows check = case replyObj (setKey "knobs" (toJSON (rows :: [[Integer]])) wireReq) of
+    Nothing -> False
+    Just o -> check (field o "splitCandidates") (field o "sizeExempt")
+
+refusals :: Bool
+refusals =
+  and
+    [ refused (files [[1, 550]]) "index mismatch"
+    , refused (files [[0, 0]]) "total below 1"
+    , refused (units [[0, 0, 0, 40]]) "bad span"
+    , refused (units [[0, 0, 10, 600]]) "span past the file total"
+    , refused (units [[0, 1, 10, 40]]) "unit not dense from 0"
+    , refused (units [[0, 0, 10, 40], [0, 1, 30, 60]]) "spans overlap or descend"
+    , refused (refs [[0, 0, 0]]) "self reference"
+    , refused (refs [[0, 0, 9]]) "unit out of range"
+    , refused (refs [[2, 0, 1]]) "file out of range"
+    ]
+ where
+  files rows = setKey "seamFiles" (toJSON (rows :: [[Integer]])) base
+  units rows =
+    setKey "seamUnits" (toJSON (rows :: [[Integer]])) $
+      setKey "seamFiles" (toJSON [[0, 550 :: Integer]]) base
+  refs rows =
+    setKey "seamRefs" (toJSON (rows :: [[Integer]])) $
+      setKey "seamUnits" (toJSON [[0, 0, 10, 270], [0, 1, 280, 540 :: Integer]]) $
+        setKey "seamFiles" (toJSON [[0, 550 :: Integer]]) base
+  refused = refusedBy respond
+
+-- | Absence semantics (the divergence precedent): no seamFiles = no
+-- split keys at all — an absent advisory must not read as "judged
+-- clean and empty".
+exactlyWhenSent :: Bool
+exactlyWhenSent = case replyObj base of
+  Nothing -> False
+  Just o ->
+    not (KM.member "splitCandidates" o) && not (KM.member "sizeExempt" o)

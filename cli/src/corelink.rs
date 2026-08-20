@@ -12,6 +12,12 @@ use std::process::{Child, Command, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.14.0 = the size-advisory minor (plan v2.6, v0.6, one additive
+/// minor for both faces): verdict/1 grades axis 0 on the soft-zone
+/// curve (declared score migration), gains judgedLoc + ceilings
+/// codes 2..4 + newBaseline.softLine; structure/1 gains the
+/// split-ROI advisory (seam tables in, splitCandidates/sizeExempt
+/// out exactly when sent, knobs 12..16).
 /// 2.12.0 = the staleness-axis minor (M6 S3c): structure.request
 /// gains the optional `staleDocs` join rows (absent = axis 5
 /// unjudged) and knob 11 — the seven-axis face closes.
@@ -47,7 +53,7 @@ use std::process::{Child, Command, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.13.0";
+pub const PROTO: &str = "2.14.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

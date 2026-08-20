@@ -210,8 +210,11 @@ fn structure(root: &Path, a: &Value) -> Result<String> {
     let d = a["days"]
         .as_u64()
         .map(|v| u32::try_from(v).unwrap_or(u32::MAX).max(1));
+    // the split advisory stays off the MCP face in v0.6 (deliberate:
+    // the contract names the CLI face; the read-only tool surface
+    // grows only with its own decision — booklet as-built note)
     doc(
-        crate::structure::judge::run(root, None, &core(), deep, d),
+        crate::structure::judge::run(root, None, &core(), (deep, d, false)),
         crate::structure::judge::report_json,
     )
 }

@@ -33,6 +33,18 @@ pub struct Request {
     /// None = the table stays off the wire and axis 6 is honestly
     /// unjudged; Some(empty) = judged clean (absence vs zero).
     pub redundancy: Option<Vec<[u64; 3]>>,
+    /// The split-ROI seam tables (plan v2.6 §C, 2.14.0). None = the
+    /// advisory is not armed and the reply carries no split keys.
+    pub seams: Option<SeamTables>,
+}
+
+/// files [fileId, total] / units [fileId, unit, start, end] /
+/// refs [fileId, from, to] — one named triple (clippy's
+/// type-complexity line agrees with the wire doc here).
+pub struct SeamTables {
+    pub files: Vec<[u64; 2]>,
+    pub units: Vec<[u64; 4]>,
+    pub refs: Vec<[u64; 3]>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -51,6 +63,12 @@ pub struct Reply {
     /// with files, 1 = a declared bin owning none); empty when no
     /// layout is declared.
     pub deviations: Vec<[i64; 2]>,
+    /// [fileId, afterUnit, benefitMilli, costMilli] — at most one
+    /// viable seam per file; rows exist exactly when seams rode.
+    pub split_candidates: Vec<[i64; 4]>,
+    /// [fileId, bestBenefitMilli, bestCostMilli] — past the soft
+    /// line with no viable seam (0/0 = no seam at all).
+    pub size_exempt: Vec<[i64; 3]>,
 }
 
 /// One structure.request over one link.
@@ -76,6 +94,11 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     if let Some(rows) = &r.redundancy {
         body["redundancy"] = json!(rows);
     }
+    if let Some(s) = &r.seams {
+        body["seamFiles"] = json!(s.files);
+        body["seamUnits"] = json!(s.units);
+        body["seamRefs"] = json!(s.refs);
+    }
     let reply = link
         .request("structure", body)
         .map_err(anyhow::Error::msg)?;
@@ -90,6 +113,17 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         let div: Vec<i64> = crate::lockstep::reply_rows(&reply, "divergence")?;
         (div.first().copied(), rows(&reply, "deviations")?)
     };
+    // the split keys ride exactly when the seam tables did (the
+    // divergence precedent): decoding them on an unarmed request
+    // would hide the contract drift a missing key means
+    let (split_candidates, size_exempt) = if r.seams.is_some() {
+        (
+            crate::lockstep::reply_rows(&reply, "splitCandidates")?,
+            crate::lockstep::reply_rows(&reply, "sizeExempt")?,
+        )
+    } else {
+        (Vec::new(), Vec::new())
+    };
     Ok(Reply {
         axes: rows(&reply, "axes")?,
         score: reply["score"].as_i64().context("score")?,
@@ -98,5 +132,7 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         knobs: rows(&reply, "knobs")?,
         divergence,
         deviations,
+        split_candidates,
+        size_exempt,
     })
 }

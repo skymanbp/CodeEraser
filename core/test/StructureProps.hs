@@ -116,7 +116,7 @@ refusals =
       -- unknown-knob pair probes a stably-unknown 99 instead — the
       -- second face-growth made its probe legal and taught us not
       -- to freeze a moving boundary in a fixture)
-      refused (setKey "knobs" (toJSON [[12, 1 :: Integer]]) wireReq) "unknown structure knob"
+      refused (setKey "knobs" (toJSON [[17, 1 :: Integer]]) wireReq) "unknown structure knob"
     , refused (setKey "knobs" (toJSON [[3, 0 :: Integer]]) wireReq) "knob below 1"
     , refused (setKey "patterns" (toJSON [[1, 3, 4], [1, 0, 5 :: Integer]]) wireReq) "not strictly ascending"
     , refused (setKey "declared" (toJSON [[9, 1 :: Integer]]) wireReq) "declared 0: dir out of range"

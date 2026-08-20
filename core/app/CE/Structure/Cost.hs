@@ -17,6 +17,11 @@ module CE.Structure.Cost
   , dupMin
   , deadMin
   , staleMin
+  , seamSoft
+  , seamHard
+  , seamPMax
+  , roiRefMilli
+  , roiPhiMilli
   , structNodeCap
   ) where
 
@@ -88,6 +93,33 @@ deadMin = 1
 -- last edit is entropy in prose form (knob code 11).
 staleMin :: Integer
 staleMin = 1
+
+-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own
+-- copy of the zone triple — S/H/P_max — because the structure
+-- family must price a seam without a verdict/1 request in flight.
+-- Rust sends the SAME numbers it sends verdict/1 (the committed
+-- softLine + ce.toml), so the two families cannot disagree at
+-- default settings (knob code 12 / 13 / 14).
+seamSoft :: Integer
+seamSoft = 300
+
+seamHard :: Integer
+seamHard = 750
+
+seamPMax :: Integer
+seamPMax = 10
+
+-- | §C cost prices, in MILLI penalty-units (knob codes 15 / 16):
+-- each internal reference a seam severs costs roiRefMilli, and
+-- every new file costs the flat roiPhiMilli (the S0-fanout /
+-- mental-load overhead the booklet names φ). Defaults sized so a
+-- mid-zone file with a clean seam clears ROI 1 and one with 10+
+-- crossing references does not.
+roiRefMilli :: Integer
+roiRefMilli = 250
+
+roiPhiMilli :: Integer
+roiPhiMilli = 500
 
 -- | Node ceiling (the verdictRowCap magnitude anchor): over-cap
 -- answers a complete degraded reply that FAILS (the P1 posture).

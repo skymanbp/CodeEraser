@@ -181,5 +181,14 @@ entry_globs = [
 # coupling, +1), and then the two E01 wall splits (CE/Verdict/Knobs,
 # VerdictKnobProps) dissolved two import-region twins (-2).
 # Measured after cargo fmt.
+# 165 -> 170 (v0.6 P4, the split-ROI face on structure/1): +5 after
+# repayment — SplitKnobs was deleted outright (Split.hs consumes
+# Axes.Knobs, killing the record-shape twin) and the two advisory
+# json rows share one milli_row throat; what remains is the priced
+# family-boilerplate class: the knobTable triple table at 17 rows
+# self-chains two more windows (its one-authority design is the
+# point), the bilingual advisory loops, and StructureArgs growing
+# against its arg-struct siblings. Past family faces cost +13/+17;
+# this one rides an existing family for +5. Measured after fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 165
+budget = 170

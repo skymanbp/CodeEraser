@@ -23,6 +23,7 @@ import qualified ScanProps
 import qualified StructureProps
 import qualified TrendProps
 import qualified VerdictProps
+import qualified SplitProps
 import qualified VerdictKnobProps
 import qualified VerdictWireProps
 import qualified CE.Protocol as Protocol
@@ -82,6 +83,7 @@ main = do
       , VerdictProps.battery
       , VerdictWireProps.battery
       , VerdictKnobProps.battery
+      , SplitProps.battery
       ]
   unless (and results) exitFailure
 
