@@ -6,7 +6,7 @@
     "file": "<file>",
     "matches": 1,
     "mode": "observe",
-    "schema": "ce.observe/0.4.0",
+    "schema": "ce.observe/0.5.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -17,7 +17,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.4.0",
+    "schema": "ce.observe/0.5.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -26,9 +26,32 @@
     "file": "<file>",
     "mode": "observe",
     "resulting_lines": 751,
-    "schema": "ce.observe/0.4.0",
+    "schema": "ce.observe/0.5.0",
     "session_id": "t",
     "ts_ms": 0
+  },
+  {
+    "degraded": false,
+    "elapsed_ms": 0,
+    "event": "probe",
+    "file": "<file>",
+    "matches": 0,
+    "mode": "observe",
+    "schema": "ce.observe/0.5.0",
+    "session_id": "t",
+    "ts_ms": 0
+  },
+  {
+    "event": "zone",
+    "file": "<file>",
+    "hard": 750,
+    "mode": "observe",
+    "resulting_lines": 400,
+    "schema": "ce.observe/0.5.0",
+    "session_id": "t",
+    "soft": 300,
+    "ts_ms": 0,
+    "zone_permille": 222
   },
   {
     "changed_files": 1,
@@ -40,7 +63,7 @@
     },
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.4.0",
+    "schema": "ce.observe/0.5.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -51,7 +74,7 @@
     "event": "precommit",
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.4.0",
+    "schema": "ce.observe/0.5.0",
     "session_id": null,
     "ts_ms": 0
   }

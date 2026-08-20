@@ -100,6 +100,33 @@ fn budget_breach_denies_by_default() {
     assert!(reason.contains("751 lines"), "exact count named: {reason}");
 }
 
+/// plan v2.6 §A observe leg: a 400-line write sits inside the
+/// graded zone (soft fallback 300, hard 750 → 222‰) — the hook
+/// emits NOTHING (no enforcement below H) but the feed gains the
+/// 0.5.0 `zone` line with soft/hard/position; a small write logs no
+/// zone line at all.
+#[test]
+fn a_zone_write_logs_position_and_emits_nothing() {
+    let dir = tmp("guard-zone");
+    let mid = "// filler\n".repeat(400);
+    let out = run_hook(&dir, &envelope(&dir, "Write", &mid));
+    assert!(out.trim().is_empty(), "sub-H writes emit nothing: {out}");
+    let feed = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).expect("feed");
+    let last: serde_json::Value =
+        serde_json::from_str(feed.lines().last().expect("lines")).expect("json");
+    assert_eq!(last["event"], "zone", "{last}");
+    assert_eq!(last["soft"], 300, "fallback = file_lines_warn");
+    assert_eq!(last["hard"], 750);
+    assert_eq!(last["zone_permille"], 222, "(400-300)*1000/450");
+    let small = run_hook(&dir, &envelope(&dir, "Write", "// one line\n"));
+    assert!(small.trim().is_empty());
+    let feed2 = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).expect("feed");
+    let last2: serde_json::Value =
+        serde_json::from_str(feed2.lines().last().expect("lines")).expect("json");
+    assert_ne!(last2["event"], "zone", "a comfortable write logs no zone");
+    shutdown_daemon(&dir);
+}
+
 /// The budget rule shares the scanner's exclusion model, including
 /// directory-only patterns (attack review F10): a ce.toml glob, a
 /// ce.toml directory entry, and a root .gitignore directory entry

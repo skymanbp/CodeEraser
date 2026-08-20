@@ -17,6 +17,11 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write
+/// landing inside the graded size zone (S, H] — soft/hard/position
+/// per line, the per-rule record any future zone→tier promotion
+/// must argue its FPR case from.
+///
 /// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule
 /// keeps per-rule firing records for the step-3 decision at 1.0).
 ///
@@ -28,7 +33,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.4.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.5.0";
 
 /// Read the whole hook envelope from stdin and deserialize it.
 /// None = unreadable stdin or unparseable JSON — the caller treats

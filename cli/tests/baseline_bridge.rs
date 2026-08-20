@@ -57,7 +57,13 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
 /// cleanups are this tool's whole point and retire BY NAME, never
 /// silently. A listed id back in the baseline = a stale entry,
 /// refused — the ledger can only ever describe the present.
-const RETIRED: [(u64, &str); 7] = [
+const RETIRED: [(u64, &str); 8] = [
+    (
+        15941172437324464441,
+        "v0.6 P3: budget_breach's scope+size stanza folded into the \
+         shared sized_write throat — the zone observer would have been \
+         its second copy, which is exactly what the ratchet refuses",
+    ),
     (
         12069581799026901328,
         "v0.5.0 cleanup: the docdup/t3 audit assembly legs retired whole \

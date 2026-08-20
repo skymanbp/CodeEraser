@@ -109,10 +109,16 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     {
         reasons.push(reason(file_path, ms));
     }
-    if let Some((lines, why)) = cfg.and_then(|c| budget::budget_breach(root, &c, env)) {
-        budget::budget_log(root, env, &mode, lines);
-        if !budget_seen {
-            reasons.push(why);
+    let sized = cfg.as_ref().and_then(|c| budget::sized_write(root, c, env));
+    if let (Some(c), Some(lines)) = (cfg.as_ref(), sized) {
+        if let Some(why) = budget::budget_breach(c, env, lines) {
+            budget::budget_log(root, env, &mode, lines);
+            if !budget_seen {
+                reasons.push(why);
+            }
+        } else {
+            // sub-H writes: the v2.6 zone observer (feed-only)
+            budget::zone_log(root, c, env, &mode, lines);
         }
     }
     emit_reasons(&mode, reasons, &broken);

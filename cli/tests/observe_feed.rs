@@ -1,9 +1,10 @@
-//! Observe-feed contract (ce.observe/0.4.0): the NDJSON feed is the
+//! Observe-feed contract (ce.observe/0.5.0): the NDJSON feed is the
 //! M4 evaluation-set raw material, so its line shape is pinned by a
 //! golden. One deterministic run of every producer — probe, budget
-//! (§4.2 step 2), stop audit, precommit — volatile fields normalized (ts_ms,
-//! elapsed_ms, absolute file path); key sets, schema/event tags,
-//! counts, mode, and degraded flags must match byte-for-byte.
+//! (§4.2 step 2), zone (plan v2.6 §A), stop audit, precommit —
+//! volatile fields normalized (ts_ms, elapsed_ms, absolute file
+//! path); key sets, schema/event tags, counts, mode, and degraded
+//! flags must match byte-for-byte.
 //! Bless flow: `CE_BLESS=1 cargo test --test observe_feed`.
 //!
 //! `session_id` is deliberately NOT normalized: the hook envelopes
@@ -46,14 +47,21 @@ fn feed_shape_matches_golden() {
     let big = "// filler\n".repeat(751);
     let env2 = common::pretooluse_envelope(&dir, "Write", &big);
     common::run_hook(&dir, &["probe", "--hook"], &env2);
+    // entries 4+5: an IN-ZONE write (400 lines, soft fallback 300,
+    // hard 750 -> position 222‰) logs the 0.5.0 zone event — feed
+    // only, no enforcement; the producer must ride this golden run
+    // or it ships untested (the v0.6 map's own warning)
+    let mid = "// filler\n".repeat(400);
+    let env3 = common::pretooluse_envelope(&dir, "Write", &mid);
+    common::run_hook(&dir, &["probe", "--hook"], &env3);
     common::shutdown_daemon(&dir);
-    // entry 4: stop audit (staged b.rs = one touched duplicate)
+    // entry 6: stop audit (staged b.rs = one touched duplicate)
     common::run_hook(
         &dir,
         &["audit", "--hook"],
         &common::stop_envelope(&dir, false),
     );
-    // entry 5: precommit (observe mode reports but exits 0)
+    // entry 7: precommit (observe mode reports but exits 0)
     assert!(common::run_ce(&dir, &["precommit"]).status.success());
     common::assert_matches_golden(
         &normalized_feed(&dir),
