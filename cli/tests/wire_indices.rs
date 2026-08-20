@@ -23,7 +23,10 @@ fn empty_pair() -> Classification {
     }
 }
 
-fn batch_with(relocations: Vec<Relocation>, suspicions: Vec<(usize, String)>) -> BatchClassification {
+fn batch_with(
+    relocations: Vec<Relocation>,
+    suspicions: Vec<(usize, String)>,
+) -> BatchClassification {
     BatchClassification {
         pairs: vec![empty_pair()],
         relocations,

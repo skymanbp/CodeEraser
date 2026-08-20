@@ -79,7 +79,10 @@ pub fn run(
     // subscript a Vec with them — a negative wraps, a large one panics.
     let n = names.len() as i64;
     for &[d, _] in reply.findings.iter().chain(&reply.deviations) {
-        ensure!((0..n).contains(&d), "structure reply: dir id {d} outside 0..{n}");
+        ensure!(
+            (0..n).contains(&d),
+            "structure reply: dir id {d} outside 0..{n}"
+        );
     }
     let tree = tree_rows(&t, &names, &reply.findings);
     let findings = relabel(&names, &reply.findings);

@@ -32,9 +32,7 @@ impl Judge {
         // load_pair DROPS pairs — the unfiltered list misnamed them.
         let kept: Vec<(session::PathPair, (String, String, Lang))> = pairs
             .iter()
-            .filter_map(|p| {
-                load_pair(root, p.0.as_deref(), p.1.as_deref()).map(|t| (p.clone(), t))
-            })
+            .filter_map(|p| load_pair(root, p.0.as_deref(), p.1.as_deref()).map(|t| (p.clone(), t)))
             .collect();
         let sent: Vec<session::PathPair> = kept.iter().map(|(p, _)| p.clone()).collect();
         let inputs: Vec<PairInput> = kept

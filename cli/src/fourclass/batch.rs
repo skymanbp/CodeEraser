@@ -272,8 +272,8 @@ fn relocations_of(reply: &Value, inputs: &[PairInput]) -> Result<Vec<Relocation>
         let from_pair = b[0].as_u64().ok_or("block: from pair")? as usize;
         let to_pair = b[2].as_u64().ok_or("block: to pair")? as usize;
         // .get, like merge(): a wire index as a slice subscript panics
-        let from = inputs.get(from_pair).ok_or("block: from pair out of range")?;
-        let to = inputs.get(to_pair).ok_or("block: to pair out of range")?;
+        let from = inputs.get(from_pair).ok_or("block: from out of range")?;
+        let to = inputs.get(to_pair).ok_or("block: to out of range")?;
         let from_units = units::segments(from.before, from.lang);
         let to_units = units::segments(to.after, to.lang);
         for (fl, tl) in lines_of(&b[1])?.into_iter().zip(lines_of(&b[3])?) {
