@@ -84,7 +84,7 @@ axes k f =
   [ (0, count (geometry k f))
   , (1, count (naming k f))
   , (2, count (mixing k f))
-  , (3, misplaced k f)
+  , (3, count (misplacedDirs k f))
   , (4, count (docs k f))
   ]
     <> [(5, count (stale k rows)) | Just rows <- [fStaleDocs f]]
@@ -93,7 +93,12 @@ axes k f =
   count = toInteger . length
 
 -- | The sparse per-directory drill-down rows [dirId, axis] the GUI
--- tree colours by (misplacement is per-file and reports its dir).
+-- tree colours by. Every axis counts DIRECTORIES, axis 3 included
+-- (booklet amendment ①, 2026-08-19): the score folds all seven
+-- penalties into one sum at equal weight, and the one axis that
+-- counted files let a single junk drawer outweigh every other axis
+-- combined. Files stay the MEASURED unit (fFileRefs, the predicate
+-- below); the flagged directory is the judged unit, the S6 shape.
 findings :: Knobs -> Facts -> [[Integer]]
 findings k f =
   [ [d, axis]
@@ -160,18 +165,14 @@ touchesByDir f =
  where
   add (a, b) (c, d) = (a + c, b + d)
 
--- | Files whose reference neighbourhood lives elsewhere: outside
--- past the floor AND more than twice inside (the ratio is the
--- predicate's definition in v1). Counts ride the aggregated rows.
-misplaced :: Knobs -> Facts -> Integer
-misplaced k f = sum [n | (_, n) <- misplacedRows k f]
-
--- | The dirs those files report — the axis-3 findings leg the doc
--- promised but dropped (deduped: several fFileRefs rows per dir).
+-- | Directories holding misplaced files, deduped (several fFileRefs
+-- rows per dir) — ONE list feeding both faces of axis 3.
 misplacedDirs :: Knobs -> Facts -> [Integer]
 misplacedDirs k f = M.keys (M.fromList [(d, ()) | (d, _) <- misplacedRows k f])
 
--- | ONE predicate for both faces of axis 3 (count and location).
+-- | The per-FILE predicate: outside refs past the floor AND more
+-- than twice inside (the ratio is the predicate's definition in v1).
+-- Measured per file, judged per directory (amendment ①).
 misplacedRows :: Knobs -> Facts -> [(Integer, Integer)]
 misplacedRows k f =
   [ (d, n)
