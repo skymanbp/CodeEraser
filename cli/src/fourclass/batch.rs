@@ -49,7 +49,7 @@ pub struct BatchClassification {
 }
 
 pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchClassification {
-    let mut pairs: Vec<Classification> = inputs
+    let pairs: Vec<Classification> = inputs
         .iter()
         .map(|p| classify(p.before, p.after, p.lang))
         .collect();
@@ -82,10 +82,13 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
         // 2026-08-11 F3: the old order merged first).
         Ok(reply) => match reply["reason"].as_str() {
             Some(r) => done(pairs, Some(r.to_string()), false), // it ANSWERED
-            None => match merge(&reply, inputs, &sent, &mut pairs) {
+            // merge works on a COPY: a bad delta falls back to the
+            // UNTOUCHED pure-L1 pairs — the in-place form returned a
+            // half-merged result here (review 2026-08-20 #5)
+            None => match merge(&reply, inputs, &sent, &pairs) {
                 Err(e) => done(pairs, Some(e), false), // live link, bad delta
-                Ok(relocations) => BatchClassification {
-                    pairs,
+                Ok((merged, relocations)) => BatchClassification {
+                    pairs: merged,
                     relocations,
                     suspicions: suspicions_of(&reply),
                     degraded: None,

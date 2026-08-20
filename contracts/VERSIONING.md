@@ -109,8 +109,10 @@
 > 转合法——冻结移动边界是错法；改钉稳定未知码 99，精确 max+1 边界
 > 由电池随面同步持有。
 > **2.13.0**（M7.5b trend/1 第八判决家族，2026-08-18）：
-> `trend.request` `rows=[[ts,score,scale]]`（ts **非降序**——同秒提交
-> 合法常见〔rebase/脚本推送整批同秒〕，倒退才拒；scale>0、
+> `trend.request` `rows=[[ts,score,scale]]`（ts **次序不设限**——
+> 2026-08-20 评审 #9 放宽：最小二乘与次序无关，而 first-parent 历史
+> 合法携带回填/rebase 改期时间戳，原「倒退拒绝」误拒合法窗口，已
+> 退役〔纯放宽：原受理请求应答不变，golden 同步重生〕；scale>0、
 > 0≤score≤scale）+ 可选 `knobs`（码 0=minPoints 默认 3〔<2 拒绝〕、
 > 1=declineFloorMicro 默认 0=report-only）；应答=最小二乘斜率
 > `slopeMicroPerDay`（判决在核内全程 Data.Ratio 精确比较，回显整数为

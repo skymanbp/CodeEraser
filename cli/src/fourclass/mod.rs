@@ -26,7 +26,7 @@ use crate::scan::lang::Lang;
 use std::collections::HashSet;
 use units::Unit;
 
-#[derive(Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct FourClass {
     pub added_novel: usize,
     pub added_moved: usize,
@@ -36,7 +36,7 @@ pub struct FourClass {
 
 /// One moved line with its unit attribution. `unit` is the owning
 /// unit's key on the side the line sits on (None = file top level).
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MovedLine {
     pub line: usize, // 1-based, on its own side
     pub removed: bool,
@@ -46,11 +46,15 @@ pub struct MovedLine {
 /// 1-based changed-line indices from the underlying diff, both
 /// sides — the batch layer derives L1 leftovers from these without
 /// re-running the diff.
+#[derive(Clone, Debug)]
 pub struct ChangedLines {
     pub removed: Vec<usize>,
     pub added: Vec<usize>,
 }
 
+// Clone: the batch delta merges onto a COPY so its error path can
+// return the untouched pure-L1 result (review 2026-08-20 #5).
+#[derive(Clone, Debug)]
 pub struct Classification {
     pub counts: FourClass,
     pub moved: Vec<MovedLine>,

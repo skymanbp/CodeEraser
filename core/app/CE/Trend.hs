@@ -4,11 +4,14 @@
 
 -- | trend.request handler (M7.5b): the eighth judgment family — the
 -- score trajectory the Rust side measured over mainline history
--- comes in as [ts, score, scale] rows (ascending ts), the slope
--- verdict goes back. Judgment is exact-Rational (CE.Trend.Cost);
--- fewer rows than minPoints answers null — an absence, never a
--- fabricated flat. Measurement and report rendering stay in Rust;
--- commit hashes and paths never cross the wire (§5.9.2).
+-- comes in as [ts, score, scale] rows (any ts order: least squares
+-- is order-free, and first-parent histories legally carry backdated
+-- or rebased timestamps — review 2026-08-20 #9 retired the
+-- ts-descending refusal), the slope verdict goes back. Judgment is
+-- exact-Rational (CE.Trend.Cost); fewer rows than minPoints answers
+-- null — an absence, never a fabricated flat. Measurement and report
+-- rendering stay in Rust; commit hashes and paths never cross the
+-- wire (§5.9.2).
 module CE.Trend (respond) where
 
 import CE.Trend.Cost (knobTable, slopeMicroPerDay, trendRowCap, verdictOf)
@@ -42,24 +45,20 @@ respond proto =
       , famJudged = judged proto
       }
 
--- | First boundary-contract offender in request order; ts must be
--- NON-DESCENDING — ties are a legal, common shape (same-second
--- commits: rebases and scripted pushes), and the all-tied window
--- answers a null slope instead (Cost's zero-variance guard). Only a
--- backwards step is a broken window.
+-- | First boundary-contract offender in request order. Row ORDER is
+-- deliberately unconstrained: the math is order-free and git's
+-- first-parent order is topological, not chronological — demanding
+-- ascending ts rejected legal histories with rebased or backdated
+-- commits (review 2026-08-20 #9). Ties and shuffles alike are data;
+-- the all-tied window answers a null slope (Cost's zero-variance
+-- guard), never a refusal.
 violation :: TrendReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith rowShape [0 :: Int ..] (reqRows req))
-    , asum (zipWith tsStep [1 :: Int ..] (steps (reqRows req)))
     , asum (zipWith knobShape [0 :: Int ..] (reqKnobs req))
     , ascendingOn "knob" (take 1) (reqKnobs req)
     ]
- where
-  steps rows = zip rows (drop 1 rows)
-  tsStep i (p, c)
-    | take 1 c < take 1 p = Just ("row " <> show i <> ": ts descending")
-    | otherwise = Nothing
 
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of

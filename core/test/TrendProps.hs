@@ -24,6 +24,7 @@ battery =
     , ("a declared floor flips verdict and fail through respond", floorLever)
     , ("below minPoints the verdict is ABSENT, never a flat", absence)
     , ("trend refusals name the offender", refusals)
+    , ("row order is data, not contract: a shuffled window judges equal", orderFree)
     , ("an over-cap trend request degrades to a reply that FAILS", degradedFails)
     ]
 
@@ -111,13 +112,28 @@ refusals =
     [ refused (wireReq [[86400, 500]]) "malformed row (need [ts,score,scale])"
     , refused (wireReq [[86400, 500, 0]]) "non-positive scale"
     , refused (wireReq [[86400, 1001, 1000]]) "score outside 0..scale"
-    , refused (wireReq [[172800, 1, 2], [86400, 1, 2]]) "ts descending"
     , refused (knobReq [[2, 1]]) "unknown knob code"
     , refused (knobReq [[0, 1]]) "minPoints below 2"
     ]
  where
   knobReq ks = setKey "knobs" (toJSON (ks :: [[Integer]])) (wireReq [])
   refused = refusedBy respond
+
+-- | The retired ts-descending refusal, inverted into the property
+-- that retired it (review 2026-08-20 #9): least squares is order-
+-- free, and first-parent histories legally carry backdated commits —
+-- a shuffled window must judge identically to its sorted twin.
+orderFree :: Bool
+orderFree = case (run shuffled, run sorted) of
+  (Just d, Just a) -> d == a && fst3 d /= Null
+  _ -> False
+ where
+  sorted = [[86400, 900, 1000], [172800, 899, 1000], [259200, 898, 1000]]
+  shuffled = [[259200, 898, 1000], [86400, 900, 1000], [172800, 899, 1000]]
+  fst3 (x, _, _) = x
+  run rows = do
+    o <- replyObj (wireReq rows)
+    (,,) <$> field o "slopeMicroPerDay" <*> field o "verdict" <*> field o "fail"
 
 degradedFails :: Bool
 degradedFails = case replyObj (wireReq [[t, 1, 2] | t <- [0 .. trendRowCap]]) of

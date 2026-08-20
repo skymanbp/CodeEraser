@@ -167,5 +167,9 @@ entry_globs = [
 # member it already shares). Measured after cargo fmt.
 # 169 -> 167 (v0.5.0 cleanup batch): retiring the fifteen one-shot
 # evaluation instruments took two of their clone blocks with them.
+# 167 -> 166 (2026-08-20 review batch b): Structure.hs gained one
+# import line (Data.IntMap for the depth-chain contract) and its
+# import-region block re-partnered from Graph.hs/Scan.hs to
+# Docdup.hs, netting one block out. Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 167
+budget = 166

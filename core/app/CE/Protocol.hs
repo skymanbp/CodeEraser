@@ -27,7 +27,8 @@ import qualified Data.ByteString.Lazy as BL
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
 -- 2.13.0 = the trend minor (M7.5b): the trend/1 family — the score
--- trajectory's [ts, score, scale] rows in (ascending ts), the exact-
+-- trajectory's [ts, score, scale] rows in (any ts order since the
+-- 2026-08-20 #9 loosening — least squares is order-free), the exact-
 -- Rational least-squares slope verdict out with the two-knob echo
 -- (minPoints / declineFloorMicro); below minPoints answers null,
 -- and the fail bit trips only under a DECLARED floor.

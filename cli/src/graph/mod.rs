@@ -41,17 +41,24 @@ pub struct FileSites {
 /// scan walker's: .gitignore + .ceignore + built-ins + ce.toml;
 /// mid-walk deletions degrade inside walk::each_surviving).
 pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
-    let (_config, mut out) = walk::each_surviving(root, |path, lang, bytes| {
+    let (_config, rows) = walk::each_surviving(root, |path, lang, bytes| {
+        // the scan-only arm is sized by scan, never graphed — its
+        // rows would be all-empty noise on this face (plan v2.5;
+        // review 2026-08-20 #4, the throat check is in sites.rs)
+        if lang.scan_only() {
+            return Ok(None);
+        }
         // lossy on purpose: one stray non-UTF-8 file must not abort
         // the whole analysis (Opus review; matches the instrument,
         // which hashes exactly the text the detector saw)
         let text = String::from_utf8_lossy(&bytes);
-        Ok(FileSites {
+        Ok(Some(FileSites {
             path: crate::scan::walk::rel_str(root, path),
             lang,
             sites: sites::detect(&text, lang),
-        })
+        }))
     })?;
+    let mut out: Vec<FileSites> = rows.into_iter().flatten().collect();
     out.sort_by(|a, b| a.path.cmp(&b.path));
     Ok(out)
 }
@@ -159,6 +166,25 @@ mod tests {
             "lossy file still detected"
         );
         assert_eq!(by.get(&("markdown", "link")), Some(&1));
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// The scan-only arm never reaches this face: before plan v2.5's
+    /// boundary landed here, a grammarless .css/.js file fell through
+    /// to the MARKDOWN detector and invented link sites (review
+    /// 2026-08-20 #4).
+    #[test]
+    fn scan_only_files_are_neither_graphed_nor_md_fallback() {
+        let dir = crate::testutil::scratch("graph-scanonly");
+        let fixtures: [(&str, &[u8]); 2] = [
+            ("style.css", b"/* [x](./style.css) */ a { color: red }\n"),
+            ("app.js", b"// [doc](./app.js)\nconst x = 1;\n"),
+        ];
+        for (name, bytes) in fixtures {
+            std::fs::write(dir.join(name), bytes).expect(name);
+        }
+        let files = analyze(&dir).expect("analyze");
+        assert!(files.is_empty(), "no scan-only rows: {:?}", counts(&files));
         std::fs::remove_dir_all(&dir).ok();
     }
 }

@@ -52,6 +52,14 @@ pub fn detect(text: &str, lang: Lang) -> Vec<RawSite> {
 /// without a second parse. detect()'s output is byte-identical —
 /// the frozen universe and the eval drift gates stand on it (RG3).
 pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Unit>) {
+    // The scan-only arm (plan v2.5) carries no graph semantics and
+    // must not fall through to the markdown detector below — a .css
+    // file "detected" as markdown invented link sites on the
+    // standalone --sites face (review 2026-08-20 #4). Markdown stays
+    // the ONLY grammarless judged language.
+    if lang.scan_only() {
+        return (Vec::new(), Vec::new());
+    }
     let mut found = match lang.grammar() {
         Some(grammar) => code_sites(text, lang, grammar),
         None => md::detect(text),

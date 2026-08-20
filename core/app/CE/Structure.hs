@@ -25,6 +25,7 @@ import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
+import qualified Data.IntMap.Strict as IM
 
 data StructReq = StructReq
   { reqId :: Value
@@ -75,6 +76,7 @@ violation :: StructReq -> Maybe String
 violation req =
   asum
     ( asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
+        : depthChain (reqNodes req)
         : [ asum
               [ asum (zipWith (dirRow n spec) [0 :: Int ..] rows)
               , ascendingOn nm proj rows
@@ -118,8 +120,8 @@ violation req =
     _ -> Nothing
 
 -- | One dense node row: id == index, parent < id (root 0 loops to
--- itself), depth == parent depth + 1 checked by position — the
--- shape that makes the tree a tree by construction.
+-- itself); depth is chained against the parent row by depthChain —
+-- the shape that makes the tree a tree by construction.
 nodeRow :: Int -> [Integer] -> Maybe String
 nodeRow i row = case row of
   [nid, parent, depth, subdirs, files]
@@ -131,6 +133,22 @@ nodeRow i row = case row of
   _ -> Just (label <> "malformed row (need [id,parent,depth,subdirs,files])")
  where
   label = "node " <> show i <> ": "
+
+-- | depth == parent.depth + 1 for every non-root row. nodeRow's
+-- docstring CLAIMED this held by position, but nothing checked it —
+-- a forged depth (node row [1,0,999,0,1]) rode straight into the
+-- geometry axes and moved the score (review 2026-08-20 #6,
+-- reproduced by driving the core directly). Runs after the per-row
+-- pass in the asum, so every row here is already well-formed.
+depthChain :: [[Integer]] -> Maybe String
+depthChain rows = asum (zipWith step [1 :: Int ..] (drop 1 rows))
+ where
+  table = IM.fromList [(fromInteger nid, d) | [nid, _, d, _, _] <- rows]
+  step i row = case row of
+    [_, parent, depth, _, _]
+      | IM.lookup (fromInteger parent) table /= Just (depth - 1) ->
+          Just ("node " <> show i <> ": depth is not parent depth + 1")
+    _ -> Nothing
 
 -- | Shared shape for the dir-keyed tables — the table's identity
 -- travels as ONE spec tuple (arity, name, extra rule), which also

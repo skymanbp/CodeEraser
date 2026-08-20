@@ -103,6 +103,11 @@ refusals =
     [ refused (nodes [[0, 0, 0, 2, 3], [2, 0, 1, 0, 9]]) "index mismatch"
     , refused (nodes [[0, 1, 0, 2, 3]]) "root must self-loop"
     , refused (nodes [[0, 0, 0, 2, 3], [1, 1, 1, 0, 9]]) "parent not before child"
+    , -- the forged-depth probe (review 2026-08-20 #6): nodeRow's old
+      -- docstring claimed depth was checked by position; this row
+      -- rode a depth of 999 into the geometry axes and moved the
+      -- score before depthChain existed
+      refused (nodes [[0, 0, 0, 2, 3], [1, 0, 999, 0, 9]]) "depth is not parent depth + 1"
     , refused (setKey "patterns" (toJSON [[0, 7, 1 :: Integer]]) wireReq) "unknown pattern code"
     , refused (setKey "conventions" (toJSON [[0, 0 :: Integer]]) wireReq) "bits outside 1..3"
     , refused (setKey "fileRefs" (toJSON [[9, 0, 1, 1 :: Integer]]) wireReq) "dir out of range"
