@@ -29,6 +29,9 @@ gui/src-tauri/gen/
 *.log
 *.tmp
 scratch/
+# sidecar staging for the GUI bundle — release.yml creates it fresh in
+# CI; a local repro build must not leak binaries into the tree
+gui/src-tauri/binaries/
 
 # RCA -o joins outdir with the input's relative path; keep tool output out of fixtures
 contracts/fixtures/crosscheck/**/*.json

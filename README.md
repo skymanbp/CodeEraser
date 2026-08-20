@@ -18,11 +18,13 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.7.1 released — the size advisory closes its loop.**
+🚀 **v0.7.2 released — the size advisory closes its loop.**
 Installers, [crates.io](https://crates.io/crates/codeeraser),
 the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live
-(0.7.1 is a patch: the Windows installer now asks for elevation up
-front instead of failing on a Program Files target).
+(0.7.1/0.7.2 are installer patches: elevation is asked up front, and
+the Windows installer now puts the CLI on the machine PATH — the
+installer is the GUI+CLI superset, and the plugin reuses its
+binaries).
 This cycle: the split advisory prices a seam's FULL cost — severed
 references, cut clone blocks and crossing co-change pairs, each at a
 corpus-calibrated price — the graded zone's position→tier map is
@@ -39,21 +41,29 @@ pull requests and a weekly scheduled run).
 
 ## Install
 
-**Prebuilt (v0.2.0+, recommended).** Every
-[release](https://github.com/skymanbp/CodeEraser/releases) ships ten
-assets: `ce` **and** the `ce-core` judgment core for three platforms
-(x86_64-windows / x86_64-linux / aarch64-macos), three GUI installers
-(NSIS `setup.exe` / AppImage / dmg — each bundling the GUI with both
-binaries as sidecars), and `SHA256SUMS`. For the CLI: download
-`ce-<ver>-<platform>`, rename it `ce`, put it on PATH, and drop
-`ce-core-<ver>-<platform>` beside it as `ce-core` — judgment
-subcommands find it through the sibling leg of the resolver, no
-flags, no env vars.
+Install surfaces are layered: the **installer** is the GUI+CLI
+superset, the **plugin** the guard layer on any base, the rest CLI-only.
 
-**Claude Code plugin.** `/plugin marketplace add skymanbp/CodeEraser`,
-then `/plugin install codeeraser` — both binaries arrive SHA256-verified.
+**Installer (recommended).** Every
+[release](https://github.com/skymanbp/CodeEraser/releases) ships three
+GUI installers (NSIS `setup.exe` / AppImage / dmg), each bundling the
+GUI with `ce` **and** the `ce-core` judgment core as sidecars. On
+Windows (v0.7.2+) the installer asks for elevation and puts the
+install dir on the machine PATH — `ce` works from any terminal
+(AppImage/dmg users add the app dir to PATH themselves).
 
-**Cargo.** `cargo install codeeraser` builds `ce`; drop a `ce-core` beside it.
+**Claude Code plugin (the guard layer).** `/plugin marketplace add
+skymanbp/CodeEraser`, then `/plugin install codeeraser`. The starter
+resolves both binaries in three steps — verified local copy,
+SHA256-pinned download, PATH — so with the installer present it
+reuses those binaries instead of downloading a second copy.
+
+**CLI only.** Download `ce-<ver>-<platform>` and
+`ce-core-<ver>-<platform>` (x86_64-windows / x86_64-linux /
+aarch64-macos), rename them `ce` / `ce-core`, side by side on PATH —
+judgment subcommands find the core through the sibling resolver leg.
+Or `cargo install codeeraser` builds `ce` from source; drop a
+`ce-core` beside it. `SHA256SUMS` covers every asset.
 
 **From source.** Prerequisites: the pinned Rust toolchain
 (`cli/rust-toolchain.toml`) and GHC 9.14.1 + cabal for the core.

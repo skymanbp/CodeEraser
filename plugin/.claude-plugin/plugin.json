@@ -1,7 +1,7 @@
 {
   "name": "codeeraser",
   "description": "CodeEraser passive guard + erase skill: a winnowing clone index behind a per-project daemon intercepts T1/T2 duplicate writes at PreToolUse, audits net LOC + touched duplicates at Stop, and reports health at SessionStart; the erase skill walks findings to safe, re-gated deletions. Gradual modes observe/warn/ask/deny via ce.toml [guard]; every event feeds .ce/observe.ndjson. The starter resolves both binaries (ce + the ce-core judgment core) in three steps (ADR-007): a verified local copy, a SHA256-pinned download from GitHub Releases (plugin/bin/manifest.env), then PATH.",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "author": {
     "name": "skymanbp"
   },

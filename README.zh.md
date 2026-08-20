@@ -14,11 +14,11 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚀 **v0.7.1 已发布——尺寸顾问收口成环。** 安装包、
+🚀 **v0.7.2 已发布——尺寸顾问收口成环。** 安装包、
 [crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
-[codeeraser.dev](https://codeeraser.dev) 官网均已上线（0.7.1 为补丁
-版：Windows 安装器改为开门即提权，不再在 Program Files 目标上写入
-失败）。本周期：
+[codeeraser.dev](https://codeeraser.dev) 官网均已上线（0.7.1/0.7.2
+为安装器补丁：开门即提权，且 Windows 安装器把 CLI 写入机器
+PATH——安装包升格为 GUI+CLI 超集，插件直接复用其二进制）。本周期：
 拆分顾问按**全额**计缝价——被切断的引用、被切穿的克隆块、跨缝的
 共变对，逐项按外语料标定的价目入账；渐进区的位置→档位映射接线于
 显式 `[guard] zone_tiers` 之后（默认仍只记台账：没有误报记录就
@@ -32,22 +32,27 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 安装
 
-**预编译（v0.2.0 起，推荐）。** 每个
-[release](https://github.com/skymanbp/CodeEraser/releases) 发十件资产：
-三平台的 `ce` **与** `ce-core` 判决核（x86_64-windows / x86_64-linux /
-aarch64-macos）、三个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg——
-均内含 GUI 与两个二进制 sidecar）、`SHA256SUMS`。CLI 用法：下载
-`ce-<版本>-<平台>` 改名 `ce` 放 PATH，把 `ce-core-<版本>-<平台>` 改名
-`ce-core` 放它旁边——判决类子命令经解析链的兄弟腿自动找到它，
-零旗标零环境变量。
+安装面分层：**安装包**是超集（GUI + CLI 上 PATH），**插件**是叠在任
+一底座上的守卫钩子层，其余路线只装 CLI。
 
-**Claude Code 插件。** `/plugin marketplace add
-skymanbp/CodeEraser`，再 `/plugin install codeeraser`——引导脚本自动
-下载并按 SHA256 pin 校验两个二进制。
+**安装包（推荐）。** 每个
+[release](https://github.com/skymanbp/CodeEraser/releases) 发三个 GUI
+安装包（NSIS `setup.exe` / AppImage / dmg——均内含 GUI 与 `ce`、
+`ce-core` 两个二进制 sidecar）。Windows（v0.7.2 起）安装器开门即提
+权，并把安装目录写入机器 PATH——装完任意终端可直接用 `ce`，零额外
+步骤（AppImage/dmg 用户自行把应用目录加 PATH）。
 
-**Cargo。** `cargo install codeeraser` 从
-[crates.io](https://crates.io/crates/codeeraser) 构建 CLI（二进制名
-`ce`）；判决核 `ce-core` 从 Releases 下载或源码构建后放它旁边。
+**Claude Code 插件（守卫层）。** `/plugin marketplace add
+skymanbp/CodeEraser`，再 `/plugin install codeeraser`。引导脚本按三
+步解析二进制——本地已校验副本 → SHA256 钉扎下载 → PATH——装过安
+装包的机器直接复用其二进制，不再二次下载。
+
+**只要 CLI。** 从同一 release 下载 `ce-<版本>-<平台>`（三平台：
+x86_64-windows / x86_64-linux / aarch64-macos）改名 `ce` 放 PATH，
+把 `ce-core-<版本>-<平台>` 改名 `ce-core` 放它旁边——判决类子命令
+经解析链的兄弟腿自动找到它，零旗标零环境变量。或
+`cargo install codeeraser` 源码构建 `ce`，判决核另取放旁。
+`SHA256SUMS` 覆盖全部资产。
 
 **从源码。** 前置：钉版 Rust 工具链（`cli/rust-toolchain.toml`）与
 GHC 9.14.1 + cabal（判决核）。
