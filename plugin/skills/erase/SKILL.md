@@ -37,8 +37,10 @@ For every candidate pair or dead unit:
    matched span). Tool-reported similarity is a lead, not a verdict.
 2. Check callers/references: prefer deleting the copy with fewer
    references; re-point the survivors.
-3. Respect exemptions: an adjacent `ce:allow(<rule>) -- <why>` line or
-   a `.ceignore` entry means a human already ruled — skip it.
+3. Respect exemptions: a `.ceignore` entry means a human already
+   ruled — skip it. For docdup candidates the same is true of an
+   adjacent `ce:allow(docdup) -- <why>` line (the inline marker is
+   docdup-only; dedup/deadcode exemptions go through `.ceignore`).
 4. Dead code with an `entry_globs` match or exported surface may be a
    public API — confirm before removing.
 

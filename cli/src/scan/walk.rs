@@ -7,7 +7,10 @@ use ignore::overrides::OverrideBuilder;
 use std::path::{Path, PathBuf};
 
 /// Built-in excludes: lockfiles, minified/generated, vendored,
-/// snapshots, migrations (plan §4.1 category list).
+/// snapshots, migrations (plan §4.1 category list) — plus the secret
+/// globs plan §5.9-2 promises (.env / *.pem / id_* / *.key): privacy
+/// fails safe, so id_* over-matching a code file costs coverage,
+/// never leaks a key into the index.
 const BUILTIN_EXCLUDES: &[&str] = &[
     "!package-lock.json",
     "!yarn.lock",
@@ -27,6 +30,10 @@ const BUILTIN_EXCLUDES: &[&str] = &[
     "!build/",
     "!target/",
     "!dist-newstyle/",
+    "!.env",
+    "!*.pem",
+    "!id_*",
+    "!*.key",
 ];
 
 /// Config plus language-tagged candidate files — the shared opening
