@@ -43,6 +43,15 @@ pub struct Request {
     /// is the core's. None = the condition is not evaluated, which
     /// keeps the ce check/baseline road byte-identical.
     pub dedup: Option<[u64; 2]>,
+    /// batch-7 slice 1 (2.19.0): the PRE-filter per-block distinct
+    /// counts, riding beside the pair — the core re-derives the
+    /// admitted count with CE.Dedup.Cost.minDistinct and judges the
+    /// budget from ITS number; check() proves the local filter equal
+    /// against the echoed dedupBlocks. Empty = the pair-only road.
+    pub dedup_distinct: Vec<u64>,
+    /// The effective floor, sent only when the CLI overrode
+    /// --min-distinct (absent = the core default judges).
+    pub dedup_min_distinct: Option<u64>,
     /// The judged-language file-LOC multiset (2.14.0, plan v2.6 §B):
     /// values only, non-descending — what the core derives the soft
     /// line from AT ESTABLISH. Empty = no derivable S.
@@ -72,6 +81,10 @@ pub struct Reply {
     /// the one knob family that had no round trip until the panel
     /// caught the no-op golden covering for it.
     pub weights: Vec<[i64; 2]>,
+    /// The core's own admitted-block count (2.19.0), None when the
+    /// distinct rows did not ride — check() proves the local filter
+    /// equal against it.
+    pub dedup_blocks: Option<u64>,
     pub degraded: Option<String>,
 }
 
@@ -79,7 +92,7 @@ impl Request {
     /// The empty-tables request `ce dedup --check` sends (ADR-008
     /// P2): nothing to score, no baseline, just the pair — the
     /// reply's fail bit is the whole judgment.
-    pub fn dedup_only(blocks: u64, budget: u64) -> Self {
+    pub fn dedup_only(blocks: u64, budget: u64, distincts: Vec<u64>, floor: Option<u64>) -> Self {
         Request {
             files: Vec::new(),
             sim: Vec::new(),
@@ -95,6 +108,8 @@ impl Request {
             thresholds: Vec::new(),
             tolerance: Vec::new(),
             dedup: Some([blocks, budget]),
+            dedup_distinct: distincts,
+            dedup_min_distinct: floor,
             judged_loc: Vec::new(),
         }
     }
@@ -124,6 +139,12 @@ pub fn body(r: &Request) -> Value {
     }
     if let Some(pair) = r.dedup {
         o["dedup"] = json!(pair);
+    }
+    if !r.dedup_distinct.is_empty() {
+        o["dedupDistinct"] = json!(r.dedup_distinct);
+    }
+    if let Some(f) = r.dedup_min_distinct {
+        o["dedupMinDistinct"] = json!(f);
     }
     o["judgedLoc"] = json!(r.judged_loc);
     o
@@ -235,6 +256,7 @@ fn parse(v: &Value) -> Result<Reply> {
         new_baseline: crate::lockstep::reply_field(v, "newBaseline")?,
         knobs: rows(v, "knobs")?,
         weights: rows(v, "weights")?,
+        dedup_blocks: v["dedupBlocks"].as_u64(),
         degraded: degraded_of(v),
     })
 }

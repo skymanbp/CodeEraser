@@ -13,6 +13,7 @@
 -- graph family's 2a → 2g path, walked a third time.
 module CE.Verdict (respond) where
 
+import qualified CE.Dedup.Cost as DedupCost
 import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap)
 import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, judge)
 import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
@@ -61,6 +62,7 @@ rowTotal req =
     , length (reqThresholds req)
     , length (reqTolerance req)
     , maybe 0 length (reqDedup req)
+    , length (reqDedupDistinct req)
     , length (reqJudgedLoc req)
     ]
 
@@ -109,7 +111,15 @@ result proto parsed req =
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
         -- retired mirrors never had
-        "knobs" .= knobsEcho k rk jk
+        "knobs" .= knobsEcho k rk jk dedupFloor
+      , -- batch-7 slice 1 (2.19.0, additive): the core's OWN
+        -- admitted-block count from the distinct rows, null when the
+        -- rows did not ride (the trend null-absence stance) — the
+        -- client proves its filter equal against this, so the
+        -- printed report and the gated number can never silently
+        -- diverge
+        "dedupBlocks"
+          .= (if null (reqDedupDistinct req) then Nothing else Just dedupDerived)
       , -- the effective weight table 0..6 (review C3, 2.8.0
         -- additive): the one knob family that had no round trip —
         -- computed by the SAME lookup the score folded with
@@ -133,13 +143,27 @@ result proto parsed req =
   newSoft = effSoft
   r = ratchet rk base (reqCont req) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
-  -- the second ratchet's comparison lives HERE (ADR-008 P2): the
-  -- pair's shape is already validated, absent = not judged
-  dedupOver = case reqDedup req of
-    Just [blocks, budget] -> blocks > budget
-    _ -> False
+  (dedupFloor, dedupDerived, dedupOver) = dedupLeg req
   conds = failConditions r floorFail dedupOver
   failBit = any snd conds
+
+-- | The second ratchet's leg (ADR-008 P2, split from result at the
+-- E01 fn gate when 2.19.0 landed): the pair's shape is already
+-- validated, absent = not judged. Since 2.19.0 (batch-7 slice 1)
+-- the distinct rows, when they ride, make the core's OWN derivation
+-- the judged count — the client's claimed blocks is display, the
+-- derivation is the gate. Returns (effective floor, derived count,
+-- over-budget).
+dedupLeg :: VerdictReq -> (Integer, Integer, Bool)
+dedupLeg req = (floor', derived, over)
+ where
+  floor' = maybe DedupCost.minDistinct id (reqDedupFloor req)
+  derived = toInteger (length [d | d <- reqDedupDistinct req, d >= floor'])
+  over = case reqDedup req of
+    Just [blocks, budget]
+      | null (reqDedupDistinct req) -> blocks > budget
+      | otherwise -> derived > budget
+    _ -> False
 
 -- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):
 -- any held condition fails — over ceiling past tolerance, a new
@@ -218,7 +242,7 @@ tooLarge proto req =
             , "softLine" .= (Nothing :: Maybe Integer)
             ]
       , -- defaults: no judgment ran, so no override was applied
-        "knobs" .= knobsEcho scoreBound ratchetBound bound
+        "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct
       , "weights" .= effectiveWeights scoreBound []
       , "degraded" .= True
       , "reason" .= ("verdict_too_large" :: String)

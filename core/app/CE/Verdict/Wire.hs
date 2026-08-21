@@ -21,6 +21,8 @@ import CE.Verdict.Ratchet (Baseline (..))
 import CE.Verdict.Table
   ( ascendingBy
   , ceilingsOffence
+  , dedupDistinctOffence
+  , dedupOffence
   , label
   , table
   , thresholdsOffence
@@ -64,6 +66,16 @@ data VerdictReq = VerdictReq
     -- by `ce dedup --check` alone. Absent = the condition is not
     -- evaluated (the ce check road is untouched).
     reqDedup :: Maybe [Integer]
+  , -- batch-7 slice 1 (2.19.0, additive): the PRE-filter per-block
+    -- distinct counts, sent beside the pair by `ce dedup --check` —
+    -- the core re-derives the admitted block count with its own
+    -- diversity floor (CE.Dedup.Cost.minDistinct, override below)
+    -- and judges the budget from THAT; the reply's dedupBlocks lets
+    -- the client prove its filter equal. Values only, no text.
+    reqDedupDistinct :: [Integer]
+  , -- the effective floor when the CLI overrode --min-distinct;
+    -- absent = the core default judges (the trend-knob pattern).
+    reqDedupFloor :: Maybe Integer
   , -- plan v2.6 §B (2.14.0, additive): the JUDGED-language file-LOC
     -- multiset the soft line derives from at establish. Values
     -- only — no entities, no paths (§5.9.2); the size axis itself
@@ -90,6 +102,8 @@ instance FromJSON VerdictReq where
       <*> o .:? "thresholds" .!= []
       <*> o .:? "tolerance" .!= []
       <*> o .:? "dedup"
+      <*> o .:? "dedupDistinct" .!= []
+      <*> o .:? "dedupMinDistinct"
       <*> o .:? "judgedLoc" .!= []
 
 -- | First boundary-contract offender, if any. The row checkers are
@@ -119,6 +133,7 @@ violation parsed req =
     , toleranceOffence (reqTolerance req)
     , floorOffence (reqThresholds req) (reqFloor req)
     , dedupOffence (reqDedup req)
+    , dedupDistinctOffence (reqDedup req) (reqDedupDistinct req) (reqDedupFloor req)
     , judgedLocOffence (reqJudgedLoc req)
     ]
  where
@@ -251,19 +266,6 @@ floorOffence thrs (Just f)
   | otherwise = Nothing
  where
   scale = last (scoreScale : [v | [6, v] <- thrs])
-
--- | ADR-008 P2: the dedup budget pair is two in-range counts or
--- nothing — a malformed pair must never read as "under budget".
-dedupOffence :: Maybe [Integer] -> Maybe String
-dedupOffence Nothing = Nothing
-dedupOffence (Just row) = case row of
-  [blocks, budget]
-    | blocks < 0 || budget < 0 -> Just "dedup: negative field"
-    | blocks >= u64 || budget >= u64 -> Just "dedup: outside u64"
-    | otherwise -> Nothing
-  _ -> Just "dedup: malformed pair (need [blocks,budget])"
- where
-  u64 = 18446744073709551616
 
 -- | plan v2.6 §B: the judged-LOC multiset is values only,
 -- non-descending (duplicates are the POINT of a multiset — the

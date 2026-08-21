@@ -80,9 +80,12 @@ effectiveJoin k thrs =
 
 -- | Every configurable knob the judgment ran with, echoed so the
 -- client can assert the FULL round trip and the empty-table default
--- gate can kill every remaining mirror.
-knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Value
-knobsEcho k rk jk =
+-- gate can kill every remaining mirror. The dedup floor (batch-7
+-- slice 1, 2.19.0) arrives as its own parameter: it is effective
+-- per REQUEST (CLI --min-distinct override or CE.Dedup.Cost
+-- default), not a member of the three knob sets.
+knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Integer -> Value
+knobsEcho k rk jk dedupFloor =
   object
     [ "sizeCeil" .= sSizeCeil k
     , "sizeHard" .= sSizeHard k
@@ -99,5 +102,6 @@ knobsEcho k rk jk =
     , "tolNum" .= rTolNum rk
     , "tolDen" .= rTolDen rk
     , "tolAbs" .= rTolAbs rk
+    , "minDistinct" .= dedupFloor
     ]
 

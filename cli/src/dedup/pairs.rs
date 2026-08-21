@@ -92,6 +92,11 @@ pub struct Blocks {
     /// Blocks suppressed by the diversity floor — counted, never
     /// silent (override with --min-distinct).
     pub low_diversity_suppressed: usize,
+    /// Every PRE-filter block's distinct count, sorted (batch-7
+    /// slice 1): `ce dedup --check` ships these so the core
+    /// re-derives the admitted count with ITS floor
+    /// (CE.Dedup.Cost.minDistinct) and judges the budget from that.
+    pub distincts: Vec<u64>,
 }
 
 /// Report filters. `min_distinct` defaults to 7: across the fixture
@@ -106,6 +111,10 @@ pub struct Filter {
     pub min_distinct: usize,
 }
 
+// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice
+// 1): the authority is the core's, this copy filters the report and
+// the probe hot path, and `ce dedup --check` proves the two equal on
+// every gated run (reply.dedupBlocks vs the local count).
 pub const DEFAULT_MIN_DISTINCT: usize = 7;
 
 pub type Streams = BTreeMap<String, Vec<Token>>;
@@ -176,9 +185,12 @@ pub fn clone_blocks_near(
     );
     let near = ctx.near.into_iter().map(|r| to_block(r, streams)).collect();
     let before = blocks.len();
+    let mut distincts: Vec<u64> = blocks.iter().map(|b| b.distinct as u64).collect();
+    distincts.sort_unstable();
     blocks.retain(|b| b.distinct >= f.min_distinct);
     (
         Blocks {
+            distincts,
             low_diversity_suppressed: before - blocks.len(),
             groups: super::groups::group(&blocks),
             blocks,

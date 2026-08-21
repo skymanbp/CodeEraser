@@ -129,6 +129,8 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         // the dedup pair is `ce dedup --check`'s leg alone (P2) —
         // this road stays byte-identical
         dedup: None,
+        dedup_distinct: Vec::new(),
+        dedup_min_distinct: None,
         judged_loc,
         files: m.files,
     };

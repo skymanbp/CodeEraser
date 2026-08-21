@@ -27,6 +27,16 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.19.0 = the diversity-floor minor (M9 batch 7, slice 1):
+-- verdict.request gains the additive dedupDistinct rows (pre-filter
+-- per-block distinct counts, riding beside the 2.6.0 pair) and the
+-- optional dedupMinDistinct override -- the core re-derives the
+-- admitted block count with CE.Dedup.Cost.minDistinct (its FIRST
+-- dedup-family constant; the floor guarded a deny path from Rust
+-- alone) and judges the budget from ITS derivation; the reply's
+-- dedupBlocks (null when the rows did not ride) lets the client
+-- prove its filter equal, and the knobs echo grows minDistinct
+-- (16 keys).
 -- 2.18.0 = the RG9-repatriation minor (M9 batch 7, slice 4):
 -- graph.result splits its verdicts core-side — `dead` carries only
 -- file-granularity rows (the failing table, and erase's licence
@@ -111,7 +121,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.18.0"
+proto = "2.19.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

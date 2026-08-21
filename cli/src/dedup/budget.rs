@@ -11,17 +11,37 @@ use anyhow::Result;
 use std::path::Path;
 use std::process::ExitCode;
 
-pub fn check(root: &Path, blocks: usize, core: &str) -> Result<ExitCode> {
+pub fn check(
+    root: &Path,
+    blocks: usize,
+    distincts: &[u64],
+    floor_override: Option<usize>,
+    core: &str,
+) -> Result<ExitCode> {
     let cfg = Config::load(root).map_err(anyhow::Error::msg)?;
     let Some(budget) = cfg.dedup.budget else {
         anyhow::bail!("--check needs [dedup] budget in ce.toml");
     };
-    let req = crate::score::wire::Request::dedup_only(blocks as u64, budget as u64);
+    let req = crate::score::wire::Request::dedup_only(
+        blocks as u64,
+        budget as u64,
+        distincts.to_vec(),
+        floor_override.map(|f| f as u64),
+    );
     let reply = crate::score::wire::judge(core, &req)?;
     anyhow::ensure!(
         reply.degraded.is_none(),
         "dedup check: core degraded the judgment ({:?}) — refusing to gate on it",
         reply.degraded
+    );
+    // batch-7 slice 1: the core re-derived the admitted count with
+    // ITS floor and judged the budget from that — the printed report
+    // and the gated number must be the same number, proven here on
+    // every run (the scan-mirror ensure, dedup form)
+    anyhow::ensure!(
+        reply.dedup_blocks == Some(blocks as u64),
+        "core admitted {:?} blocks, the local filter kept {blocks} —          pairs.rs and CE.Dedup.Cost have drifted",
+        reply.dedup_blocks
     );
     if reply.fail {
         // attribute by the HELD names, never by construction-time

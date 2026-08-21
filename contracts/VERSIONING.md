@@ -149,6 +149,17 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`
+> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0
+> `dedup` 对同乘，值域 u64；无对而有行=具名拒绝）与可选
+> `dedupMinDistinct`（CLI --min-distinct 覆盖时才发，>=1；缺席=核默认判）。
+> 核以 **CE.Dedup.Cost.minDistinct=7**（首个 dedup 族核内常数；M2 标定
+> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）
+> 自导准入块数并**以自导数判预算**；应答加性 `dedupBlocks`（行未乘=null，
+> trend 缺席立场）供客户端逐跑证明本地过滤器等值（scan 镜像 ensure 的
+> dedup 形），knobs 回显 15 键 -> **16 键**（+minDistinct=生效地板）。
+> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销
+> （报告面继续免核——测量面契约不破）。
 > **2.18.0**（M9 批 7 片 4 RG9 回迁，2026-08-21）：`graph.result` 判决
 > 分流入核——`dead` 表只承载**文件粒度**行（判红表，亦是 erase class-0
 > 授权源），加性新表 `reported=[[i,verdict]]` 承载 package/section 判决
@@ -205,7 +216,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.18.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.19.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -322,5 +333,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.18.0 | §1 所列两处常量 |
+| 协议 | 2.19.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

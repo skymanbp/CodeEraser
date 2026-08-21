@@ -58,8 +58,17 @@ pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
     emit(opts.format, &found, &summary)?;
     if opts.check {
         // the R12 gate lives in budget.rs (split at the 300-line
-        // dogfood ceiling when the review-repair asserts landed)
-        return budget::check(root, summary.blocks, &opts.core);
+        // dogfood ceiling when the review-repair asserts landed);
+        // since 2.19.0 it ships the pre-filter distinct counts and
+        // the effective floor, and the CORE's derivation is the
+        // gated number (batch-7 slice 1)
+        return budget::check(
+            root,
+            summary.blocks,
+            &found.distincts,
+            opts.min_distinct,
+            &opts.core,
+        );
     }
     Ok(ExitCode::SUCCESS)
 }

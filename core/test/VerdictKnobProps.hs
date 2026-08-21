@@ -87,9 +87,26 @@ thresholdKnob = scaleMoves && tolFlips
 -- | ADR-008 P2 through the REAL respond: the [blocks, budget] pair
 -- answers through the fail bit — one over budget fails, at budget
 -- passes; the absent case is every OTHER check in this battery
--- (none sends the pair, none fails on it).
+-- (none sends the pair, none fails on it). Since 2.19.0 (batch-7
+-- slice 1) the distinct rows make the CORE's derivation the judged
+-- count: five values {3,6,7,9,20} admit exactly 3 at the default
+-- floor 7 (>= — the 7 counts), so a request CLAIMING 9 blocks
+-- against budget 3 still PASSES and one claiming 2 against budget 2
+-- still FAILS — the claim is display in both directions, the
+-- derivation gates. The floor override is a live lever — floor 4
+-- admits {6,7,9,20} = 4 and flips budget 3 to fail — and the
+-- reply's dedupBlocks carries the derivation. No rows = dedupBlocks
+-- null (the trend absence stance).
 dedupBudget :: Bool
-dedupBudget = failAt [146, 145] == Just True && failAt [145, 145] == Just False
+dedupBudget =
+  failAt [146, 145] == Just True
+    && failAt [145, 145] == Just False
+    && derived [9, 3] Nothing == Just (Bool False, Number 3)
+    && derived [9, 3] (Just 4) == Just (Bool True, Number 4)
+    && derived [2, 2] Nothing == Just (Bool True, Number 3)
+    && (replyObj (setKey "dedup" (toJSON [1, 1 :: Integer]) (wireReq [] [] [] []))
+          >>= KM.lookup "dedupBlocks")
+      == Just Null
  where
   failAt :: [Integer] -> Maybe Bool
   failAt pair = do
@@ -97,6 +114,16 @@ dedupBudget = failAt [146, 145] == Just True && failAt [145, 145] == Just False
     Object rat <- KM.lookup "ratchet" o
     Bool f <- KM.lookup "fail" rat
     pure f
+  derived :: [Integer] -> Maybe Integer -> Maybe (Value, Value)
+  derived pair floor' = do
+    let base =
+          setKey "dedupDistinct" (toJSON [3, 6, 7, 9, 20 :: Integer]) $
+            setKey "dedup" (toJSON pair) (wireReq [] [] [] [])
+    o <- replyObj (maybe id (setKey "dedupMinDistinct" . toJSON) floor' base)
+    Object rat <- KM.lookup "ratchet" o
+    f <- KM.lookup "fail" rat
+    db <- KM.lookup "dedupBlocks" o
+    pure (f, db)
 
 -- | plan v2.6 §B through the REAL respond: at establish the
 -- judgedLoc multiset {240,300,375} derives softLine 468 (the

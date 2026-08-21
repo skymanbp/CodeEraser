@@ -13,6 +13,8 @@ module CE.Verdict.Table
   , ceilingsOffence
   , thresholdsOffence
   , toleranceOffence
+  , dedupOffence
+  , dedupDistinctOffence
   ) where
 
 import Control.Applicative ((<|>))
@@ -118,3 +120,40 @@ toleranceOffence = knobTable "tolerance" 2 "unknown tolerance leg" judgeT
     | v < 0 = Just "negative field"
     | code <= 1 && v < 1 = Just "knob below 1"
     | otherwise = Nothing
+
+-- | ADR-008 P2: the dedup budget pair is two in-range counts or
+-- nothing — a malformed pair must never read as "under budget".
+dedupOffence :: Maybe [Integer] -> Maybe String
+dedupOffence Nothing = Nothing
+dedupOffence (Just row) = case row of
+  [blocks, budget]
+    | blocks < 0 || budget < 0 -> Just "dedup: negative field"
+    | blocks >= u64 || budget >= u64 -> Just "dedup: outside u64"
+    | otherwise -> Nothing
+  _ -> Just "dedup: malformed pair (need [blocks,budget])"
+ where
+  u64 = 18446744073709551616
+
+-- | batch-7 slice 1: the distinct rows are meaningless without the
+-- pair they re-derive, the override floor is meaningless without
+-- the rows it filters, and every count is a u64 — each mismatch
+-- refuses by name, never a silent half-judgment.
+dedupDistinctOffence :: Maybe [Integer] -> [Integer] -> Maybe Integer -> Maybe String
+dedupDistinctOffence pair rows floor' =
+  asum
+    [ if null rows || pair /= Nothing
+        then Nothing
+        else Just "dedupDistinct without the dedup pair"
+    , if floor' == Nothing || not (null rows)
+        then Nothing
+        else Just "dedupMinDistinct without dedupDistinct rows"
+    , case floor' of
+        Just f | f < 1 -> Just "dedupMinDistinct below 1"
+        _ -> Nothing
+    , asum
+        [ if d >= 0 && d < 18446744073709551616
+            then Nothing
+            else Just (label "dedupDistinct" i <> "outside u64")
+        | (i, d) <- zip [0 :: Int ..] rows
+        ]
+    ]
