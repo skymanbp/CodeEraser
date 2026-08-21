@@ -18,7 +18,7 @@
 -- (core/test/CloneProps.hs ≡ ReferenceTed).
 module CE.Clone (respond) where
 
-import CE.Clone.Cost (cloneDecides, pairCap, tsedDen, tsedNum, unitNodeCap)
+import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
 import CE.Wire (Family (..), ascendingOn, respondWith)
@@ -165,7 +165,9 @@ reply proto req scored (judged, pre) degraded =
           , "judged" .= judged
           , "prefiltered" .= pre
           ]
-    , "knobs" .= object ["tsedNum" .= tsedNum, "tsedDen" .= tsedDen]
+    , "knobs"
+        .= object
+          ["tsedNum" .= tsedNum, "tsedDen" .= tsedDen, "minUnitNodes" .= minUnitNodes]
     , "degraded" .= degraded
     ]
       <> ["reason" .= ("clone_too_large" :: String) | degraded]

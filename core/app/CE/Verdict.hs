@@ -14,7 +14,7 @@
 module CE.Verdict (respond) where
 
 import qualified CE.Dedup.Cost as DedupCost
-import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap)
+import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap, zoneAskPermille, zoneWarnPermille)
 import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, judge)
 import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
 import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
@@ -106,7 +106,14 @@ result proto parsed req =
         -- reaches the derivation
         "newBaseline"
           .= object
-            ["continuous" .= rNewCont r, "discrete" .= rNewDisc r, "softLine" .= newSoft]
+            [ "continuous" .= rNewCont r
+            , "discrete" .= rNewDisc r
+            , "softLine" .= newSoft
+            , -- batch-7 slice 5 (2.21.0, additive): the zone tier
+              -- cut points ride the baseline to the daemon-free
+              -- hook — core-authored, locally read
+              "zoneTiers" .= [zoneWarnPermille, zoneAskPermille]
+            ]
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the

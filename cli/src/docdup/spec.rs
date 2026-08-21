@@ -6,7 +6,11 @@
 use crate::scan::lang::Lang;
 
 /// Admission floor in words. Provenance: plan :68 (Lee et al.
-/// 2107.06499, verbatim lower bound 50 tokens).
+/// 2107.06499, verbatim lower bound 50 tokens). The declared MIRROR
+/// of CE.Docdup.Cost.minDocTokens since batch-7 slice 10: the
+/// authority is the core's, this copy gates segments before
+/// persistence, and the docdup reply's knob echo pins the two equal
+/// on every judged run.
 pub const MIN_DOC_TOKENS: usize = 50;
 
 /// License-header window: only a file's FIRST comment block starting

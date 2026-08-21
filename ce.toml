@@ -233,16 +233,22 @@ entry_globs = [
 # clone_t3 and docdup are each THE public face of their family —
 # two four-line invocations of the shared throat, same shape by
 # construction. Measured after cargo fmt.
-# 177 -> 180 (M9 batch 7, the Cost-module family face): +3. Adding
-# granFile and assetKind (slices 4/13 — two rules repatriated FROM
-# unnamed Rust branches) grew CE.Graph.Cost into winnowing range of
-# its three sibling Cost modules: under token normalization every
-# "name :: Integer / name = N / doc comment" stanza is the same
-# run, and the per-family Cost-constants module IS the ADR-008
-# convention (one ablation home per family — CE.Graph.Cost's own
-# header calls it the convention's source). The three blocks are
-# whole-module family-shape pairs (Docdup/Structure/Verdict Cost),
-# not copied logic; folding the four modules into one would trade a
-# priced face for a real coupling. Measured after fourmolu/fmt.
+# 177 -> 181 (M9 batch 7, the repatriation family faces): +4 across
+# one wave of constants moving core-side. Adding granFile and
+# assetKind (slices 4/13) grew CE.Graph.Cost into winnowing range
+# of its three sibling Cost modules (+3: whole-module family-shape
+# pairs — under token normalization every "name :: Integer / name =
+# N / doc comment" stanza is the same run, and the per-family
+# Cost-constants module IS the ADR-008 convention); slice 10's
+# minUnitNodes/minDocTokens then extended the same face two more
+# ways: the clone and docdup expected-echo LISTS became same-shape
+# data twins (the lockstep parse IS the shared mechanism, the
+# per-family name→value rows are irreducible data), and Clone/Cost
+# joined the Cost-module pairs — then cargo fmt's rewrap of the t3
+# list moved a block boundary and killed one twin, landing the wave
+# at +4 net (the ledger's own rule: the budget is only ever measured
+# on FORMATTED code). Zero copied logic in any of them; folding the
+# Cost modules or the echo tables would trade a priced face for a
+# real coupling.
 # Ratchet DOWN from here with every cleanup.
-budget = 180
+budget = 181

@@ -12,6 +12,12 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.21.0 = the pinned-floors minor (M9 batch 7, slices 5/10):
+/// newBaseline gains zoneTiers [warn, ask] (the guard tier map,
+/// core-authored, riding the committed baseline to the daemon-free
+/// hook); the clone echo gains minUnitNodes and the docdup echo
+/// minDocTokens — admission floors executed Rust-side pre-wire,
+/// now core-owned and mirror-pinned per judged run.
 /// 2.20.0 = the full-evidence minor (M9 batch 7, slices 12/13/15):
 /// asset-kind edge rows travel and the core drops them from
 /// liveness (CE.Graph.Cost.assetKind); the cochange table ships
@@ -92,7 +98,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.20.0";
+pub const PROTO: &str = "2.21.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

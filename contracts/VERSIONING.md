@@ -149,6 +149,14 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.21.0**（M9 批 7 片 5/10 钉底 minor，2026-08-21）：`newBaseline` 加性
+> `zoneTiers=[warn,ask]`（‰，CE.Verdict.Cost zoneWarnPermille=250/
+> zoneAskPermille=750）——guard 渐进区档位地图核著，经已提交基线文书
+> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位
+> 只在 `[guard] zone_tiers` 显式声明后生效）。clone knobs 回显加
+> `minUnitNodes`（CE.Clone.Cost=24）、docdup 回显加 `minDocTokens`
+> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前
+> （下地板行上线已议价并否决），权威入核、可消融、逐跑镜像钉等。
 > **2.20.0**（M9 批 7 片 12/13/15 全证据 minor，2026-08-21）：asset 类边行不再客户端预删——行上 wire，核在与 rung 同一推导式内
 > 按 **CE.Graph.Cost.assetKind=3** 排除出存活性（规则自此可消融可测试；
 > 反事实测试：翻 kind 即复活）。cochange 表整体上 wire（撤客户端 rank-20
@@ -222,7 +230,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.20.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.21.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -339,5 +347,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.20.0 | §1 所列两处常量 |
+| 协议 | 2.21.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

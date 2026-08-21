@@ -81,7 +81,14 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
 pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {
     let (rows, c): (Vec<[i64; 5]>, _) = crate::lockstep::parse_scores(
         reply,
-        &[("tsedNum", json!(TSED_NUM)), ("tsedDen", json!(TSED_DEN))],
+        &[
+            ("tsedNum", json!(TSED_NUM)),
+            ("tsedDen", json!(TSED_DEN)),
+            (
+                "minUnitNodes",
+                json!(crate::dedup::candidates::T3_MIN_NODES),
+            ),
+        ],
         "t3/wire.rs+candidates.rs vs Clone/Cost.hs",
         &["judged", "prefiltered"],
     )?;
@@ -120,7 +127,7 @@ mod tests {
         assert_eq!(body["pairs"], json!([[0, 1]]));
         let ok = json!({"scores": [[0, 1, 2, 3, 3]], "verdicts": [false],
             "counts": {"judged": 1, "prefiltered": 0},
-            "knobs": {"tsedNum": 85, "tsedDen": 100}, "degraded": false});
+            "knobs": {"tsedNum": 85, "tsedDen": 100, "minUnitNodes": 24}, "degraded": false});
         assert_eq!(
             parse_result(&ok).expect("well-formed").0,
             vec![(0, 1, (2, 3, 3, false))]

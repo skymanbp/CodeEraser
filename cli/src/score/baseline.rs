@@ -151,6 +151,10 @@ pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
         "continuous": new_baseline["continuous"],
         "discrete": new_baseline["discrete"],
         "softLine": new_baseline["softLine"],
+        // 2.21.0 (batch-7 slice 5): the zone tier cut points, the
+        // hook's core-authored map — exactly the key class this
+        // writer's own comment warns about dropping
+        "zoneTiers": new_baseline["zoneTiers"],
     });
     let path = path_for(root);
     // temp + rename, not a truncating write: a `ce baseline` killed

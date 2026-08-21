@@ -65,6 +65,7 @@ pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, 
             ("jaccardDen", json!(JACCARD_DEN)),
             ("shingleK", json!(DOC_SHINGLE)),
             ("verbatimFloor", json!(VERBATIM_FLOOR)),
+            ("minDocTokens", json!(crate::docdup::spec::MIN_DOC_TOKENS)),
         ],
         "judge/wire.rs vs Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
         &["judged", "jaccardDups"],
@@ -107,7 +108,7 @@ mod tests {
         let ok = json!({"scores": [[0, 1, 2, 4]], "verdicts": [false],
             "counts": {"judged": 1, "jaccardDups": 0},
             "knobs": {"jaccardNum": 80, "jaccardDen": 100, "shingleK": 5,
-                "verbatimFloor": 50},
+                "verbatimFloor": 50, "minDocTokens": 50},
             "degraded": false});
         assert_eq!(
             parse_result(&ok).expect("well-formed").0,

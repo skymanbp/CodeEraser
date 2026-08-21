@@ -110,7 +110,7 @@ pub(super) fn zone_assess(
     }
     let permille = (lines - soft) * 1000 / (cap - soft);
     let armed = cfg.guard.zone_tiers;
-    let tier = zone_tier(permille);
+    let tier = zone_tier(permille, committed_tiers(root));
     let file = &env.tool_input.file_path;
     // the B4 suppression consults the feed BEFORE this event lands
     // in it (the probe rule's ordering — a warn must not read its
@@ -142,13 +142,30 @@ pub(super) fn zone_assess(
     ))
 }
 
-/// The v2.6 §A map, wired v2.7 ① behind the ce.toml opt-in.
-fn zone_tier(permille: usize) -> &'static str {
-    match permille {
-        0..=249 => "observe",
-        250..=750 => "warn",
-        _ => "ask",
+/// The v2.6 §A map, wired v2.7 ① behind the ce.toml opt-in. Since
+/// 2.21.0 (batch-7 slice 5) the cut points are CORE-authored
+/// (CE.Verdict.Cost zoneWarnPermille/zoneAskPermille) and ride the
+/// committed baseline; the compiled pair is the declared mirror a
+/// pre-2.21 baseline falls back to.
+fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {
+    let (warn, ask) = tiers.unwrap_or((250, 750));
+    if permille < warn {
+        "observe"
+    } else if permille <= ask {
+        "warn"
+    } else {
+        "ask"
     }
+}
+
+/// The core-authored tier pair off the committed baseline (the
+/// committed_soft transport, second key): [warn, ask] permille,
+/// sane only when 0 < warn <= ask.
+fn committed_tiers(root: &Path) -> Option<(usize, usize)> {
+    let doc = crate::score::baseline::read(root).ok()??;
+    let warn = usize::try_from(doc["zoneTiers"][0].as_u64()?).ok()?;
+    let ask = usize::try_from(doc["zoneTiers"][1].as_u64()?).ok()?;
+    (warn >= 1 && warn <= ask).then_some((warn, ask))
 }
 
 /// The frozen soft line, read off the committed ce-baseline.json —

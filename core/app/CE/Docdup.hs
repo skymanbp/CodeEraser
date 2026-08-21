@@ -21,7 +21,9 @@
 module CE.Docdup (respond) where
 
 import CE.Docdup.Cost
-  ( docPairCap
+  (
+    minDocTokens,
+    docPairCap
   , docSetCap
   , dupDecides
   , dupVerdict
@@ -145,6 +147,7 @@ reply proto req scored dups degraded =
           , "jaccardDen" .= jaccardDen
           , "shingleK" .= shingleK
           , "verbatimFloor" .= verbatimFloor
+          , "minDocTokens" .= minDocTokens
           ]
     , "degraded" .= degraded
     ]

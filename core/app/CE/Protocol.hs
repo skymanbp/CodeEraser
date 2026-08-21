@@ -27,6 +27,16 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.21.0 = the pinned-floors minor (M9 batch 7, slices 5/10):
+-- verdict.result's newBaseline gains `zoneTiers` [warn, ask]
+-- permille (CE.Verdict.Cost zoneWarnPermille/zoneAskPermille) — the
+-- guard's graded-zone tier map rides the committed baseline to the
+-- daemon-free hook, core-authored and locally read; the clone knobs
+-- echo gains minUnitNodes (CE.Clone.Cost, = 24) and the docdup echo
+-- minDocTokens (CE.Docdup.Cost, = 50) — the two admission floors
+-- whose EXECUTION stays Rust-side pre-wire (shipping sub-floor rows
+-- was priced and declined), now core-owned, ablatable and pinned to
+-- their Rust mirrors on every judged run.
 -- 2.20.0 = the full-evidence minor (M9 batch 7, slices 12/13/15):
 -- asset-kind edge rows now TRAVEL and the core drops them from
 -- liveness itself (CE.Graph.Cost.assetKind, the same comprehension
@@ -131,7 +141,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.20.0"
+proto = "2.21.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

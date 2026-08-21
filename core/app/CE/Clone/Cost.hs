@@ -2,7 +2,7 @@
 -- else (the CE.Graph.Cost posture: ablation targets live in ONE
 -- module, so a dead knob has nowhere to hide).
 module CE.Clone.Cost
-  ( tsedNum
+  (minUnitNodes,  tsedNum
   , tsedDen
   , unitNodeCap
   , pairCap
@@ -29,6 +29,15 @@ tsedDen = 100
 -- typical min(depth, leaves) ≈ 16 one pair costs ≈ 256·256·16·16 ≈
 -- 1.7×10⁷ strict map updates — bounded work per pair, decided before
 -- any corpus measurement.
+-- | Admission floor for a T3 unit: below this many AST nodes a
+-- "clone" is a signature, not an implementation (batch-7 slice 10;
+-- the ceilings unitNodeCap/pairCap made the trip at M5-3a, this
+-- floor never did). Execution stays in Rust at candidate selection
+-- (sub-floor units are never paired, never cross); this constant is
+-- the authority the echo pins the Rust mirror to.
+minUnitNodes :: Integer
+minUnitNodes = 24
+
 unitNodeCap :: Integer
 unitNodeCap = 256
 

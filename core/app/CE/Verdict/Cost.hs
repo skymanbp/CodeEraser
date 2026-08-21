@@ -61,6 +61,8 @@ module CE.Verdict.Cost
   , deadIndegCeil
   , violCost
   , violCostNeutral
+  , zoneWarnPermille
+  , zoneAskPermille
   , defaultWeight
   , scoreScale
   , verdictNodeCap
@@ -160,6 +162,21 @@ deadIndegCeil = 0
 -- total is how a weight silently dies).
 violCost :: Integer
 violCost = 10
+
+-- | The graded-zone tier cut points, in permille of the (S, H]
+-- span (plan v2.7 (1), batch-7 slice 5): below warn = observe,
+-- [warn, ask] = warn, past ask = ask. They reach the PreToolUse
+-- hook through the committed baseline document (written beside
+-- softLine at establish — the hook is daemon-free by design, so a
+-- local file read is the honest transport); the map lived as bare
+-- Rust literals with no knob and no wire field before. The default
+-- STAYS observe-only until `[guard] zone_tiers` opts in — these
+-- numbers decide tiers only after the FPR discipline armed them.
+zoneWarnPermille :: Integer
+zoneWarnPermille = 250
+
+zoneAskPermille :: Integer
+zoneAskPermille = 750
 
 -- | The value of violCost at which the dial is a no-op — the fixed
 -- denominator that makes the default score exactly the weighted

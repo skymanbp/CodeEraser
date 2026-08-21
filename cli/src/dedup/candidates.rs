@@ -18,6 +18,10 @@ use std::path::Path;
 /// Admission floor in named nodes (§4.1): below this a "clone" is a
 /// signature, not an implementation — the t3-universe below_floor
 /// ledger, structurally invisible here.
+// The declared MIRROR of CE.Clone.Cost.minUnitNodes (batch-7 slice
+// 10): the authority is the core's; this copy selects candidates
+// before anything crosses, and the clone reply's knob echo pins the
+// two equal on every judged run.
 pub const T3_MIN_NODES: i64 = 24;
 
 /// The clone threshold as an integer ratio (§4.4, 0.85). The prunes

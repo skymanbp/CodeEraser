@@ -5,6 +5,7 @@ module CE.Docdup.Cost
   ( jaccardNum
   , jaccardDen
   , shingleK
+  , minDocTokens
   , verbatimFloor
   , docSetCap
   , docPairCap
@@ -62,6 +63,18 @@ docPairCap = 4096
 -- floor's VERDICT home here: the run lengths already ride each
 -- request row ([i,j,run] — F26), the texts never cross the wire
 -- (§5.9.2), and the knobs echo pins the Rust mirror to this number.
+-- | Admission floor for a documentation segment: below this many
+-- words the segment never enters the corpus (batch-7 slice 10 —
+-- the other half of the provenance verbatimFloor carries: plan :68,
+-- Lee et al. 2107.06499, verbatim lower bound 50 tokens). The
+-- EXECUTION stays in Rust before persistence (sub-floor segments
+-- have no row and never cross the wire — shipping them was priced
+-- and declined); this constant is the AUTHORITY the echo pins the
+-- Rust mirror to, so the recall floor is core-visible, ablatable
+-- and drift-detectable.
+minDocTokens :: Integer
+minDocTokens = 50
+
 verbatimFloor :: Integer
 verbatimFloor = 50
 
