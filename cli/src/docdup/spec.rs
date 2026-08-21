@@ -14,7 +14,11 @@ use crate::scan::lang::Lang;
 pub const MIN_DOC_TOKENS: usize = 50;
 
 /// License-header window: only a file's FIRST comment block starting
-/// at or above this line can be a license header. Decided.
+/// at or above this line can be a license header. The declared
+/// MIRROR of CE.Docdup.Cost.licHeadLines since batch-7 slice 9: the
+/// authority is the core's, this copy decides exemption before
+/// persistence, and the docdup reply's knob echo pins the two equal
+/// on every judged run.
 pub const LICENSE_HEAD_LINES: i64 = 5;
 
 /// Verbatim hard-hit floor in words (same provenance as

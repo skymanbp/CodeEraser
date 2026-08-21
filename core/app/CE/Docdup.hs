@@ -23,6 +23,7 @@ module CE.Docdup (respond) where
 import CE.Docdup.Cost
   (
     docLineCap,
+    licHeadLines,
     minDocTokens,
     docPairCap
   , docSetCap
@@ -150,6 +151,7 @@ reply proto req scored dups degraded =
           , "verbatimFloor" .= verbatimFloor
           , "minDocTokens" .= minDocTokens
           , "docLineCap" .= docLineCap
+          , "licHeadLines" .= licHeadLines
           ]
     , "degraded" .= degraded
     ]

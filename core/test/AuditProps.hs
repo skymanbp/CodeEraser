@@ -36,7 +36,7 @@ truthTable =
     && map judgeRow [[0, 0], [1, 0], [0, 1], [1, 1]] == [False, True, True, True]
 
 req :: [[Integer]] -> Value
-req = rowsRequest "2.24.0" "audit.request"
+req = rowsRequest "2.25.0" "audit.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req [[0, 0], [1, 0], [0, 1], [1, 1], [0, 0]]) of

@@ -37,7 +37,10 @@ pub struct Ledger {
 
 /// The exemption class of one admitted segment. License first (the
 /// narrower claim: only a file's FIRST comment block inside the head
-/// window), then the explicit inline allow.
+/// window), then the explicit inline allow. The window number's
+/// authority is CE.Docdup.Cost.licHeadLines (echo-pinned via
+/// spec.rs); the bare-marker rule's authority is the same module's
+/// written ruling (batch-7 slice 9).
 pub fn classify(seg: &RawSeg, first_comment: bool, ledger: &mut Ledger) -> i64 {
     if first_comment && seg.start_line <= LICENSE_HEAD_LINES && has_any(seg, &LICENSE_MARKERS) {
         ledger.license_header += 1;

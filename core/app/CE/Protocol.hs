@@ -28,6 +28,14 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.25.0 = the exemption-authority minor (M9 batch 7 slice 9):
+-- the docdup knobs echo gains licHeadLines (CE.Docdup.Cost, = 5 --
+-- the license-header window, mirror-pinned). Exemption EXECUTION
+-- stays Rust-side pre-persistence (an exempt segment has no row
+-- and never crosses the wire -- the minDocTokens stance); the
+-- marker string tables stay unpinned (the SKELETON_PREFIXES
+-- decision, drift guard DOCDUP_REV), and the bare-marker rule's
+-- authority is the Cost module's written ruling.
 -- 2.24.0 = the session-audit minor (M9 batch 7, slice 7): the
 -- tenth judgment family, audit/1 -- one [aTouched, bTouched] bit
 -- row per clone block (Rust's set-membership measurement), the core
@@ -170,7 +178,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.24.0"
+proto = "2.25.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

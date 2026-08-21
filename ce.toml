@@ -263,5 +263,10 @@ entry_globs = [
 # faces, the reply-tail face, and Props scaffolding faces -- the
 # same class the RowsReq promotion note banked for scan/trend, and
 # merging those faces would trade the ledger line for real coupling.
+# 185 -> 186 (M9 batch 7 slice 9): the licHeadLines echo-pin row
+# and the lengthened spec.rs mirror declaration grew two windows
+# back into chain range -- the echo-list data-twin / mirror-face
+# class the slice-10 booking named. Restructuring a data table to
+# dodge the counter would be writing code for the ratio; declined.
 # Ratchet DOWN from here with every cleanup.
-budget = 185
+budget = 186

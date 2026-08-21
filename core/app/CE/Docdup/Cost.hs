@@ -6,6 +6,7 @@ module CE.Docdup.Cost
   , jaccardDen
   , shingleK
   , docLineCap
+  , licHeadLines
   , minDocTokens
   , verbatimFloor
   , docSetCap
@@ -90,6 +91,25 @@ docLineCap = 200
 
 verbatimFloor :: Integer
 verbatimFloor = 50
+
+-- | License-header window in lines (batch-7 slice 9): only a
+-- file's FIRST comment block starting at or above this line can
+-- be a license header, and only then do the LICENSE_MARKERS
+-- excuse it from the corpus. Execution stays in Rust at
+-- segmentation (exemption is decided before persistence — an
+-- exempt segment has no row and never crosses the wire, the
+-- minDocTokens stance); this constant is the AUTHORITY the echo
+-- pins the Rust mirror to. The marker STRING tables
+-- (LICENSE_MARKERS, the ce:allow(docdup) marker) stay unpinned
+-- by the same decision as SKELETON_PREFIXES: the echo grammar is
+-- numeric and their drift guard is DOCDUP_REV. The bare-marker
+-- rule — an allow WITHOUT a ` -- <why>` tail exempts NOTHING
+-- and is ledgered as a violation (plan :79-80) — is part of
+-- the same ruling: it has no number to echo, so its authority is
+-- this written record plus the allow_missing_why count the
+-- report surfaces (2.22.0).
+licHeadLines :: Integer
+licHeadLines = 5
 
 -- | The Jaccard half of the duplication verdict, stated by the
 -- threshold's OWNER: dup ⇔ inter·jaccardDen ≥ jaccardNum·union.
