@@ -12,8 +12,12 @@ use anyhow::Result;
 use serde_json::Value;
 use std::path::Path;
 
-pub fn scan(root: &Path) -> Result<Value> {
-    let (files, findings, summary) = crate::scan::analyze(root)?;
+/// Judged like its siblings (batch-7 slice 8): the scan face used
+/// to read the mirror with no core link — the one unguarded copy of
+/// a rule the core owns; analyze_judged carries the drift ensure to
+/// every surface.
+pub fn scan(root: &Path, core: &str) -> Result<Value> {
+    let (files, findings, summary, _fail) = crate::scan::analyze_judged(root, core)?;
     Ok(serde_json::from_str(&crate::scan::report_string(
         &files, &findings, summary,
     )?)?)

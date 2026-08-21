@@ -230,9 +230,10 @@ pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
 /// over the SCAN set (the v2.5 scan-only arm stays size-gated), and
 /// the judged-language LOC multiset the core derives the soft line
 /// from — two universes on purpose, the boundary being
-/// Lang::judged_path (the ONE v2.5 authority).
+/// Lang::judged_path (the ONE v2.5 authority). Measurement only —
+/// no scan verdict is consumed here (batch-7 slice 8).
 fn size_facts(root: &Path) -> Result<(Vec<[u64; 3]>, Vec<u64>)> {
-    let (files, _findings, _summary) = scan::analyze(root)?;
+    let (_config, files) = scan::measure(root)?;
     let mut rows: Vec<[u64; 3]> = files.iter().flat_map(baseline::continuous_rows).collect();
     rows.sort_unstable();
     // a fingerprint collision would silently merge two entities —

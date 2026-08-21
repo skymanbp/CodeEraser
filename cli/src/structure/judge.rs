@@ -80,7 +80,9 @@ pub fn run(
     core: &str,
     (deep, days, split): (bool, Option<u32>, bool),
 ) -> Result<Report> {
-    let (files, _findings, _summary) = crate::scan::analyze(root)?;
+    // measurement only — the structure verdict is this family's own
+    // wire call below, never the scan mirror (batch-7 slice 8)
+    let (_config, files) = crate::scan::measure(root)?;
     let t = tree::build(&judged_paths(&files));
     let seam_facts = if split {
         Some(super::seams::seam_facts(

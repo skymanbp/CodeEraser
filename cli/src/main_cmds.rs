@@ -67,33 +67,32 @@ pub fn deadcode_cmd(
     match graph::deadcode::run(root, db, core) {
         Ok(report) => {
             print_deadcode(&report, json);
-            // --check (M5-close CI gate): the M5-2 acceptance row
-            // "本仓库 deadcode 发现全处置" was honored by discipline
-            // only — a finding must now be dispositioned or the gate
-            // is red, exactly the dedup --check shape. A DEGRADED
-            // reply judged nothing and its empty dead list must never
-            // read as green (clearance review: the score/mod stance —
-            // a gate that could not judge must never pass).
-            if check && report.degraded.is_some() {
-                eprintln!(
-                    "{}",
-                    line(
-                        "deadcode check: degraded ({}) — nothing was judged, refusing to pass",
-                        "deadcode check：已降级（{}）— 未判决任何内容，拒绝通过",
-                        &[&report.degraded.as_deref().unwrap_or("?")],
-                    )
-                );
-                return ExitCode::FAILURE;
-            }
-            if check && !report.dead.is_empty() {
-                eprintln!(
-                    "{}",
-                    line(
-                        "deadcode check: {} dead file(s) — disposition or entry_globs them",
-                        "deadcode check：{} 个死文件 — 请处置或加入 entry_globs",
-                        &[&report.dead.len()],
-                    )
-                );
+            // --check (M5-close CI gate): the DECISION is the core's
+            // fail bit since 2.18.0 (batch-7 slice 4) — any file-tier
+            // dead verdict, or a degraded run that judged nothing,
+            // fails; this arm only picks which message renders. The
+            // M5-2 acceptance row "本仓库 deadcode 发现全处置" was
+            // honored by discipline only before the gate existed.
+            if check && report.fail {
+                if report.degraded.is_some() {
+                    eprintln!(
+                        "{}",
+                        line(
+                            "deadcode check: degraded ({}) — nothing was judged, refusing to pass",
+                            "deadcode check：已降级（{}）— 未判决任何内容，拒绝通过",
+                            &[&report.degraded.as_deref().unwrap_or("?")],
+                        )
+                    );
+                } else {
+                    eprintln!(
+                        "{}",
+                        line(
+                            "deadcode check: {} dead file(s) — disposition or entry_globs them",
+                            "deadcode check：{} 个死文件 — 请处置或加入 entry_globs",
+                            &[&report.dead.len()],
+                        )
+                    );
+                }
                 return ExitCode::FAILURE;
             }
             ExitCode::SUCCESS

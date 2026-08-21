@@ -12,6 +12,14 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.18.0 = the RG9-repatriation minor (M9 batch 7, slice 4):
+/// graph.result splits its verdicts core-side — `dead` carries only
+/// file-granularity rows (the failing table, erase's licence
+/// source), the additive `reported` table carries package/section
+/// verdicts, and the additive `fail` bit names the zero-tolerance
+/// gate (degraded fails by itself, the P1 stance). The client keeps
+/// the split as a boundary contract: an aggregate in the failing
+/// table refuses as wire skew, never licenses a directory erase.
 /// 2.17.0 = the density-scoring minor (M9 batch 6): verdict/1 axes
 /// rows become bounded per-axis charges — floor(scale·v/(v+n)) over
 /// each axis's violation mass and opportunity count — and the score
@@ -71,7 +79,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.17.0";
+pub const PROTO: &str = "2.18.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

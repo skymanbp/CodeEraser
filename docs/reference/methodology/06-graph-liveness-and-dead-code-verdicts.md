@@ -139,13 +139,13 @@ trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
 ([Cost.hs:22-26](../../../core/app/CE/Graph/Cost.hs#L22)). The sizing anchor is ~20k nodes / ~60k edges
 per 100k LOC, so the caps carry roughly 6× headroom
 ([Cost.hs:15-21](../../../core/app/CE/Graph/Cost.hs#L15)). Over cap the core returns a **well-formed
-degraded result** with `dead = []`, `kept = 0`, `degraded = true`,
-`reason = "graph_too_large"` — never a truncated graph
-([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L57), [Graph.hs:145-163](../../../core/app/CE/Graph.hs#L145)).
+degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = true`,
+`reason = "graph_too_large"` and `fail = true` — a gate that could not judge never passes, said
+by the core itself since 2.18.0, and never a truncated graph
+([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L57), [Graph.hs:161-186](../../../core/app/CE/Graph.hs#L161)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:234-240](../../../cli/src/graph/deadcode.rs#L234)) and `ce deadcode --check` **fails**
-rather than reading an empty dead list as green
-([main_cmds.rs:76-86](../../../cli/src/main_cmds.rs#L76)).
+([deadcode.rs:261-267](../../../cli/src/graph/deadcode.rs#L261)) and `ce deadcode --check` relays the
+core's fail bit ([main_cmds.rs:70-90](../../../cli/src/main_cmds.rs#L70)).
 
 ### 5. Kept arcs and liveness
 
@@ -261,17 +261,23 @@ over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead
 
 Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 ([deadcode.rs:38-43](../../../cli/src/graph/deadcode.rs#L38),
-[deadcode.rs:205-207](../../../cli/src/graph/deadcode.rs#L205)) — and a code past the four this side
-knows is treated as wire-version skew, not a panic
-([deadcode.rs:202-204](../../../cli/src/graph/deadcode.rs#L202)). The `why` string is a two-way split on
-the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
+[deadcode.rs:196-202](../../../cli/src/graph/deadcode.rs#L196)) — and a code past the four this side
+knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
+split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
-([deadcode.rs:209-213](../../../cli/src/graph/deadcode.rs#L209)).
+([deadcode.rs:226-230](../../../cli/src/graph/deadcode.rs#L226)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
-separate `reported` list and are never called dead — aggregates are not code entities
-([deadcode.rs:208-221](../../../cli/src/graph/deadcode.rs#L208),
-[deadcode.rs:18-22](../../../cli/src/graph/deadcode.rs#L18)). Both lists, the counts, and
+separate `reported` table and are never called dead — aggregates are not code entities. Since
+proto 2.18.0 (batch-7 slice 4) the split is the CORE's: the reply partitions its verdicts on
+the node kind column it always received ([Graph.hs:127-156](../../../core/app/CE/Graph.hs#L127),
+`granFile` at [Cost.hs:55-66](../../../core/app/CE/Graph/Cost.hs#L55)), and carries the additive
+`fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
+contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
+arriving in `dead` refuses as wire skew, never a directory erase
+([deadcode.rs:217-225](../../../cli/src/graph/deadcode.rs#L217)); against a pre-2.18 core the
+absent bit falls back to the client's old conjunction, byte-identical
+([deadcode.rs:245-249](../../../cli/src/graph/deadcode.rs#L245)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
 ([report.rs:75-89](../../../cli/src/report.rs#L75)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported

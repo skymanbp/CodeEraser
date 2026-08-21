@@ -10,7 +10,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor) where
+module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -53,3 +53,14 @@ entryMask = 126
 -- see, not a code change.
 sccFloor :: Integer
 sccFloor = 2
+
+-- | The node kind whose dead verdicts FAIL (batch-7 slice 4, RG9:
+-- aggregates are not code entities — a package or section verdict
+-- is informational `reported`, never a failing `dead` row and never
+-- an erase licence). The kind vocabulary is the wire node row
+-- [lang, kind, flags]: 0 file / 1 package / 2 section
+-- (cli/src/graph/wire.rs GRAN_*). This split lived as an unnamed
+-- Rust branch before; a policy the core cannot see is a policy no
+-- ablation can price.
+granFile :: Integer
+granFile = 0

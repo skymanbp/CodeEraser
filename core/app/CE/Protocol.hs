@@ -27,6 +27,15 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.18.0 = the RG9-repatriation minor (M9 batch 7, slice 4):
+-- graph.result splits its verdicts core-side — `dead` carries only
+-- file-granularity rows (the failing table, and erase's licence
+-- source), the additive `reported` table carries package/section
+-- verdicts, and the additive `fail` bit names the zero-tolerance
+-- gate (any file-tier dead verdict; a degraded reply fails by
+-- itself, the verdict-family P1 stance). The kind column always
+-- crossed and was validated, then discarded — the split lived as an
+-- unnamed Rust branch no ablation could see.
 -- 2.17.0 = the density-scoring minor (M9 batch 6): verdict/1 axes
 -- rows become bounded per-axis CHARGES — floor(scale·v/(v+n)) over
 -- each axis's violation mass and opportunity count — and the score
@@ -102,7 +111,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.17.0"
+proto = "2.18.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

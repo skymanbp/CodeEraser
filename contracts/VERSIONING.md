@@ -149,6 +149,15 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.18.0**（M9 批 7 片 4 RG9 回迁，2026-08-21）：`graph.result` 判决
+> 分流入核——`dead` 表只承载**文件粒度**行（判红表，亦是 erase class-0
+> 授权源），加性新表 `reported=[[i,verdict]]` 承载 package/section 判决
+> （RG9：聚合不是代码实体，只报告不判死）；加性 `fail` 位为零容忍门具名
+> （任一文件级死判决即 fail；降级应答自带 fail=true——verdict 族 P1 立场）。
+> kind 列一直上 wire 且被校验，此前判后即弃——分流以 Rust 无名分支存在，
+> 消融不可见。客户端保留分流为边界契约：判红表混入聚合=按 wire skew
+> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧
+> 合取自算顶替（字节等价回退）。
 > **2.17.0**（M9 批 6 密度评分，2026-08-21）：`verdict/1` **纯值迁移**
 > （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界
 > 轴费** `floor(scale·v/(v+n))`（v=轴违规质量、n=轴机会数：尺寸/克隆/
@@ -196,7 +205,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.17.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.18.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -313,5 +322,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.17.0 | §1 所列两处常量 |
+| 协议 | 2.18.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

@@ -51,10 +51,11 @@ fn incoherent_threshold_ladder_is_refused_by_both_readers() {
     );
     let err = Config::load(&fx.dir).expect_err("fail 750 sits below warn 800");
     assert!(err.contains("file_lines_warn"), "{err}");
-    // the mirror's own surface (mcp scan tool, score measurement
-    // reuse) dies on the same config now, not just the wire path
-    let Err(err) = codeeraser::scan::analyze(&fx.dir) else {
-        panic!("the mirror must refuse the same config the wire path does");
+    // the shared measurement walk (score/structure reuse) dies on
+    // the same config, not just the wire path — measure() is where
+    // every scan surface loads ce.toml (batch-7 slice 8)
+    let Err(err) = codeeraser::scan::measure(&fx.dir) else {
+        panic!("the measurement walk must refuse the same config the wire path does");
     };
     assert!(err.to_string().contains("file_lines_warn"), "{err}");
     // fail 0 = "no hard line" stays legal at any warn line

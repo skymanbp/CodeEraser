@@ -130,7 +130,7 @@ fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Valu
     let core = common::core_bin();
     let a = serde_json::json!({});
     let row = |name: &'static str, text: String| (name, a.clone(), text);
-    let (files, findings, summary) = scan::analyze(dir).expect("scan");
+    let (files, findings, summary, _fail) = scan::analyze_judged(dir, &core).expect("scan");
     let (found, dsum) = dedup::analyze(dir, None, None, None).expect("dedup");
     let opts = score::Opts {
         db: None,

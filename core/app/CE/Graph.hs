@@ -15,7 +15,7 @@
 module CE.Graph (respond) where
 
 import CE.Graph.Build (Built (..), build)
-import CE.Graph.Cost (edgeCap, entryMask, minRung, nodeCap, sccFloor)
+import CE.Graph.Cost (edgeCap, entryMask, granFile, minRung, nodeCap, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
@@ -24,6 +24,8 @@ import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
+import qualified Data.IntSet as IS
+import Data.List (partition)
 
 -- | Wire shape (design brief §2): index = node identity, nothing
 -- text-shaped crosses. @unresolved@ is part of the family shape but
@@ -121,7 +123,18 @@ result proto req =
       [ "proto" .= proto
       , "type" .= ("graph.result" :: String)
       , "id" .= reqId req
-      , "dead" .= [[toInteger i, toInteger v] | (i, v) <- Dead.verdicts b entryMask flagses]
+      , -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
+        -- only file-granularity verdicts land in the FAILING dead
+        -- table; package/section verdicts are informational
+        -- `reported` rows. The kind column always crossed the wire
+        -- and was validated, then discarded — an unnamed Rust
+        -- branch held the policy instead.
+        "dead" .= [[toInteger i, toInteger v] | (i, v) <- deadRows]
+      , "reported" .= [[toInteger i, toInteger v] | (i, v) <- reportedRows]
+      , -- the zero-tolerance gate, named: any file-tier dead verdict
+        -- fails `ce deadcode --check` — the exit was synthesized
+        -- client-side before, where no ablation could see it
+        "fail" .= not (null deadRows)
       , "pos" .= Position.positions b entryMask flagses (reqPos req)
       , "cycles"
           .= [ toJSON [toJSON (toInteger i), toJSON (map toInteger ms)]
@@ -138,6 +151,9 @@ result proto req =
  where
   b = build minRung (length (reqNodes req)) (reqEdges req)
   flagses = [f | [_, _, f] <- reqNodes req]
+  fileIdx = IS.fromList [i | (i, [_, k, _]) <- zip [0 ..] (reqNodes req), k == granFile]
+  (deadRows, reportedRows) =
+    partition (\(i, _) -> IS.member i fileIdx) (Dead.verdicts b entryMask flagses)
 
 -- | Over-cap refusal: a well-formed degraded result, never a
 -- truncated graph. counts echoes what arrived (informational);
@@ -150,6 +166,11 @@ tooLarge proto req =
       , "type" .= ("graph.result" :: String)
       , "id" .= reqId req
       , "dead" .= ([] :: [Value])
+      , "reported" .= ([] :: [Value])
+      , -- a gate that could not judge must never pass (the verdict
+        -- family's P1 stance, applied here at 2.18.0): the degraded
+        -- reply fails by itself
+        "fail" .= True
       , "pos" .= ([] :: [Value])
       , "cycles" .= ([] :: [Value])
       , "counts"

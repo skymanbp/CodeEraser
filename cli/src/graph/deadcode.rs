@@ -52,6 +52,9 @@ pub struct Report {
     pub kept: u64,
     pub unresolved_sites: i64,
     pub degraded: Option<String>,
+    /// The core's gate bit (2.18.0): any file-tier dead verdict, or
+    /// a degraded run, fails — the exit is a relay, not a policy.
+    pub fail: bool,
 }
 
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
@@ -187,6 +190,17 @@ pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
     Ok(reply)
 }
 
+/// One core verdict row resolved to its node and name — shared by
+/// the dead and reported loops. A verdict past the four this side
+/// knows about is a wire-version skew, not a panic.
+fn named(nodes: &[Node], idx: usize, verdict: usize) -> Result<(&Node, &'static str)> {
+    let node = nodes.get(idx).context("index out of range")?;
+    let name = *VERDICT_NAMES
+        .get(verdict.checked_sub(1).context("verdict 0")?)
+        .context("verdict out of range")?;
+    Ok((node, name))
+}
+
 fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Report> {
     let mut report = Report {
         dead: Vec::new(),
@@ -195,31 +209,44 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
         kept: reply["counts"]["kept"].as_u64().unwrap_or(0),
         unresolved_sites,
         degraded: reply["reason"].as_str().map(str::to_string),
+        fail: false,
     };
     let dead: Vec<[usize; 2]> =
         serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
     for [idx, verdict] in dead {
-        let node = nodes.get(idx).context("index out of range")?;
-        // .get like the line above it: a verdict past the four this
-        // side knows about is a wire-version skew, not a panic
-        let name = *VERDICT_NAMES
-            .get(verdict.checked_sub(1).context("verdict 0")?)
-            .context("verdict out of range")?;
-        if node.kind == super::wire::GRAN_FILE {
-            let why = if verdict <= 2 {
-                "no kept in-edge and no entry flag"
-            } else {
-                "referenced only from dead code; no entry flag"
-            };
-            report.dead.push((node.path.clone(), name, why.to_string()));
-        } else if node.unit.is_empty() {
-            report.reported.push((node.path.clone(), name));
+        let (node, name) = named(nodes, idx, verdict)?;
+        // The RG9 split is the CORE's since 2.18.0; here it survives
+        // as a boundary contract, because erase's class-0 licence is
+        // minted from this list — an aggregate in the failing table
+        // is wire skew and must refuse, never license a directory.
+        anyhow::ensure!(
+            node.kind == super::wire::GRAN_FILE,
+            "core dead row {idx} is not file-granularity — wire skew"
+        );
+        let why = if verdict <= 2 {
+            "no kept in-edge and no entry flag"
         } else {
-            report
-                .reported
-                .push((format!("{}#{}", node.path, node.unit), name));
-        }
+            "referenced only from dead code; no entry flag"
+        };
+        report.dead.push((node.path.clone(), name, why.to_string()));
     }
+    // pre-2.18 core: no reported table — absent parses as empty
+    let reported: Vec<[usize; 2]> =
+        serde_json::from_value(reply["reported"].clone()).unwrap_or_default();
+    for [idx, verdict] in reported {
+        let (node, name) = named(nodes, idx, verdict)?;
+        let label = if node.unit.is_empty() {
+            node.path.clone()
+        } else {
+            format!("{}#{}", node.path, node.unit)
+        };
+        report.reported.push((label, name));
+    }
+    // pre-2.18 core: no fail bit on the wire — the client's own
+    // conjunction stands in, byte-identical to the old exit policy
+    report.fail = reply["fail"]
+        .as_bool()
+        .unwrap_or(report.degraded.is_some() || !report.dead.is_empty());
     Ok(report)
 }
 
@@ -241,6 +268,9 @@ fn observe(root: &Path, reason: &str) {
 
 #[cfg(test)]
 mod tests {
+    use super::super::nodes::Node;
+    use serde_json::json;
+
     /// The degradation loop closes: a stamped deadcode degradation
     /// is COUNTED by the same health surface `ce doctor` prints —
     /// asserted, not assumed (2h exit row).
@@ -251,5 +281,55 @@ mod tests {
         super::observe(&root, "graph_too_large");
         assert_eq!(crate::health::degraded_runs(&root), (1, 1));
         std::fs::remove_dir_all(&root).ok();
+    }
+
+    fn node(path: &str, unit: &str, kind: i64) -> Node {
+        Node {
+            path: path.into(),
+            unit: unit.into(),
+            kind,
+        }
+    }
+
+    /// The 2.18.0 split consumed whole (batch-7 slice 4, the fixture
+    /// the inventory found missing): reported rows label sections as
+    /// path#unit, the core's fail bit is relayed, and an aggregate
+    /// smuggled into the FAILING table refuses as wire skew — that
+    /// table licenses erase's class-0 rows and must never carry a
+    /// directory.
+    #[test]
+    fn reported_rows_and_fail_bit_consume_and_skew_refuses() {
+        let nodes = vec![
+            node("a.rs", "", super::super::wire::GRAN_FILE),
+            node("docs/x.md", "Intro", super::super::wire::GRAN_SECTION),
+            node("pkg", "", super::super::wire::GRAN_PACKAGE),
+        ];
+        let reply = json!({
+            "dead": [[0, 1]], "reported": [[1, 3], [2, 1]],
+            "fail": true, "counts": {"kept": 7}
+        });
+        let r = super::consume(&reply, &nodes, 0).expect("consume");
+        assert_eq!(
+            r.dead,
+            vec![(
+                "a.rs".into(),
+                "unref_private",
+                "no kept in-edge and no entry flag".into()
+            )]
+        );
+        assert_eq!(
+            r.reported,
+            vec![
+                ("docs/x.md#Intro".into(), "unreach_private"),
+                ("pkg".into(), "unref_private"),
+            ]
+        );
+        assert!(r.fail && r.kept == 7);
+        let skew = json!({"dead": [[2, 1]], "counts": {}});
+        let err = super::consume(&skew, &nodes, 0).expect_err("aggregate in dead");
+        assert!(err.to_string().contains("wire skew"), "{err}");
+        // pre-2.18 core: no fail bit — the old conjunction stands in
+        let old = json!({"dead": [[0, 1]], "counts": {}});
+        assert!(super::consume(&old, &nodes, 0).expect("old core").fail);
     }
 }

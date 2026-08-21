@@ -2,7 +2,8 @@
 //! Since ADR-008 P3 the LEVEL judgment is the core's (scan/1, the
 //! graded verdict table); measurement and report rendering stay
 //! here, and the local evaluate() binding survives as the pinned
-//! mirror the whole-report ensure proves equal on every gate run.
+//! mirror the whole-report ensure proves equal on every judged run
+//! — CLI gate, MCP tool and GUI face alike since batch-7 slice 8.
 
 pub mod ast;
 pub mod functions;
@@ -26,26 +27,7 @@ pub enum Format {
 }
 
 pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
-    let (config, files) = measured(root)?;
-    let rows = report::rows_of(&files);
-    let grades = wire::grade_rows(&config.thresholds)?;
-    let wire_rows: Vec<[u64; 2]> = rows.iter().map(|r| [r.code, r.value as u64]).collect();
-    let (levels, fail) = wire::judge(core, &wire_rows, &grades)?;
-    let findings = report::findings_from(&rows, &levels, &grades);
-    // ADR-008 P3 drift ensure: the report is built from the CORE's
-    // levels; the pinned mirror must reproduce it whole or the run
-    // dies loudly — formula drift named, never a silently forked
-    // verdict (the mcp/score surfaces read the mirror, so this is
-    // what keeps them equal to the gate by proof)
-    let mirror: Vec<report::Finding> = files
-        .iter()
-        .flat_map(|f| report::evaluate(f, &config.thresholds))
-        .collect();
-    anyhow::ensure!(
-        findings == mirror,
-        "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
-    );
-    let summary = report::summarize(&files, &findings);
+    let (files, findings, summary, fail) = analyze_judged(root, core)?;
     match format {
         Format::Console => report::print_console(&findings, &summary),
         Format::Json => println!("{}", report_string(&files, &findings, summary)?),
@@ -57,25 +39,47 @@ pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
     })
 }
 
-/// Measurement alone — the walk every scan surface shares.
-fn measured(root: &Path) -> Result<(crate::config::Config, Vec<FileMetrics>)> {
+/// Measurement alone — the walk every scan surface shares; the score
+/// and structure families reuse it for their LOC/tree facts without
+/// ever touching a verdict.
+pub fn measure(root: &Path) -> Result<(crate::config::Config, Vec<FileMetrics>)> {
     walk::each_surviving(root, |path, language, src| {
         measure_file(src, path, root, language)
     })
 }
 
-/// Library entry shared by the MCP server and the score family's
-/// measurement reuse: measure and evaluate through the MIRROR
-/// binding without printing anything (no core link on these
-/// auxiliary surfaces; the gate's ensure proves the mirror equal).
-pub fn analyze(root: &Path) -> Result<(Vec<FileMetrics>, Vec<report::Finding>, report::Summary)> {
-    let (config, files) = measured(root)?;
-    let findings: Vec<_> = files
+/// The one judged scan entry every verdict-bearing surface shares —
+/// the CLI gate, the MCP tool and the GUI face alike (batch-7 slice
+/// 8: the retired mirror-only analyze() made the pinned mirror the
+/// SOLE authority on the auxiliary surfaces, guarded only when the
+/// gate happened to run). Levels come from the core (scan/1); the
+/// ADR-008 P3 drift ensure then proves the pinned mirror equal on
+/// EVERY surface, or the run dies loudly — formula drift named,
+/// never a silently forked verdict.
+type Judged = (
+    Vec<FileMetrics>,
+    Vec<report::Finding>,
+    report::Summary,
+    bool,
+);
+
+pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
+    let (config, files) = measure(root)?;
+    let rows = report::rows_of(&files);
+    let grades = wire::grade_rows(&config.thresholds)?;
+    let wire_rows: Vec<[u64; 2]> = rows.iter().map(|r| [r.code, r.value as u64]).collect();
+    let (levels, fail) = wire::judge(core, &wire_rows, &grades)?;
+    let findings = report::findings_from(&rows, &levels, &grades);
+    let mirror: Vec<report::Finding> = files
         .iter()
         .flat_map(|f| report::evaluate(f, &config.thresholds))
         .collect();
+    anyhow::ensure!(
+        findings == mirror,
+        "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
+    );
     let summary = report::summarize(&files, &findings);
-    Ok((files, findings, summary))
+    Ok((files, findings, summary, fail))
 }
 
 /// The scan report as its canonical JSON string (schema §7.1).

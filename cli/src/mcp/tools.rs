@@ -161,9 +161,11 @@ fn days(args: &Value, default: u32) -> u32 {
 // transport, never a second serializer) — a Value round-trip
 // re-orders keys and drops the pretty form, so these two stay on the
 // direct string faces; faces::scan/graph_sites serve the GUI's
-// Value-shaped consumption of the same documents.
+// Value-shaped consumption of the same documents. Since batch-7
+// slice 8 scan judges through the core like every verdict surface
+// (the byte pin survives: findings ≡ mirror by the drift ensure).
 fn scan(root: &Path, _a: &Value) -> Result<String> {
-    let (files, findings, summary) = crate::scan::analyze(root)?;
+    let (files, findings, summary, _fail) = crate::scan::analyze_judged(root, &core())?;
     crate::scan::report_string(&files, &findings, summary)
 }
 

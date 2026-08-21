@@ -104,10 +104,12 @@ pub async fn trend_report(
 /// twins were the ratchet's first bite on this file (the tauri
 /// macro's surface contract demands one fn per webview command, so
 /// the fn is minted by a macro instead of by hand); the second arm
-/// adds the days window the churn/join faces take. Measurement-only
-/// faces ignore the core argument on purpose: a missing core must
-/// not fail a face that never judges. check is report-only (faces
-/// charter): it never writes a baseline.
+/// adds the days window the churn/join faces take. The truly
+/// measurement-only faces (dedup, sites) ignore the core argument on
+/// purpose: a missing core must not fail a face that never judges —
+/// scan is NOT one of them (it grades, and since batch-7 slice 8 it
+/// judges through the core like every graded surface). check is
+/// report-only (faces charter): it never writes a baseline.
 macro_rules! face_cmd {
     ($name:ident, $tag:literal, $body:expr) => {
         #[tauri::command]
@@ -128,7 +130,7 @@ macro_rules! face_cmd {
 face_cmd!(dedup_report, "dedup", |r, _| codeeraser::faces::dedup(
     r, None
 ));
-face_cmd!(scan_report, "scan", |r, _| codeeraser::faces::scan(r));
+face_cmd!(scan_report, "scan", codeeraser::faces::scan);
 face_cmd!(
     sites_report,
     "sites",
