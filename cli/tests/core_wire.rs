@@ -55,6 +55,7 @@ fn wire_goldens_roundtrip() {
         "../contracts/fixtures/structure/golden.ndjson",
         "../contracts/fixtures/trend/golden.ndjson",
         "../contracts/fixtures/erase/golden.ndjson",
+        "../contracts/fixtures/audit/golden.ndjson",
     ] {
         for (n, (request, expected)) in fixture_pairs(file).into_iter().enumerate() {
             writeln!(stdin, "{request}").expect("write");
@@ -101,6 +102,7 @@ fn corelink_open_and_desync() {
         "structure/1",
         "trend/1",
         "erase/1",
+        "audit/1",
     ] {
         assert!(link.has(cap), "capability {cap} declared");
     }

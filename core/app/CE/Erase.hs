@@ -13,37 +13,18 @@
 module CE.Erase (respond) where
 
 import CE.Erase.Cost (eraseRowCap, judgeRow)
-import CE.Wire (RowsReq (..), rowsFamily)
+import CE.Wire (RowsReq (..), knoblessRows)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
-import Data.Foldable (asum)
 
--- | The shared cascade with this family's bindings (CE.Wire); the
--- request is the shared RowsReq — this family reads rows + knobs.
+-- | The shared knobless cascade with this family's bindings
+-- (CE.Wire.knoblessRows): per-class row shapes refused by name,
+-- any knob refused outright — v1 declares no codes, and an
+-- unknown knob silently dropped would present a tuned predicate
+-- as effective (the pinned-echo lesson, structure/wire.rs).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto =
-  rowsFamily
-    "erase"
-    (\req -> toInteger (length (rowsOf req)) > eraseRowCap)
-    violation
-    (degraded proto)
-    (judged proto)
-
--- | First boundary-contract offender in request order. Every row is
--- [class, w, x, y, z]; class field ranges are checked per class so a
--- malformed fact refuses by name instead of judging as "unsafe". Any
--- knob row is refused outright — v1 declares no codes, and an
--- unknown knob silently dropped would present a tuned predicate as
--- effective (the pinned-echo lesson, structure/wire.rs).
-violation :: RowsReq -> Maybe String
-violation req =
-  asum
-    [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
-    , asum (zipWith noKnob [0 :: Int ..] (knobsOf req))
-    ]
- where
-  noKnob i _ = Just ("knob " <> show i <> ": erase/1 declares no knob codes")
+respond proto = knoblessRows "erase" eraseRowCap rowShape (degraded proto) (judged proto)
 
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of

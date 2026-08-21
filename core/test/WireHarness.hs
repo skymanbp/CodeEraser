@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey) where
+module WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -59,6 +59,25 @@ setKey _ _ v = v
 
 field :: Object -> String -> Maybe Value
 field o k = KM.lookup (Key.fromString k) o
+
+-- | The degraded-face posture every capped family shares: a
+-- refused request answers a COMPLETE reply that FAILS, with the
+-- named table EMPTY (a plan the core refused to judge licenses
+-- nothing) and its reason. Promoted when the audit battery
+-- reminted the erase battery's probe line for line.
+degradedFace ::
+  (String -> B8.ByteString -> Either e B8.ByteString) ->
+  Value ->
+  String ->
+  String ->
+  Bool
+degradedFace respond r tableKey reason = case replyObjWith respond r of
+  Just o ->
+    field o "degraded" == Just (Bool True)
+      && field o "fail" == Just (Bool True)
+      && field o tableKey == Just (toJSON ([] :: [Value]))
+      && field o "reason" == Just (toJSON reason)
+  Nothing -> False
 
 -- | A named contract refusal through a family's REAL respond — the
 -- fourth pasted copy of this predicate (structure joining scan and

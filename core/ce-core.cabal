@@ -22,6 +22,7 @@ executable ce-core
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
                       CE.Dedup.Cost, CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
+                      CE.Audit, CE.Audit.Cost,
                       CE.Scan, CE.Scan.Cost, CE.Structure,
                       CE.Structure.Axes, CE.Structure.Cost, CE.Structure.Split,
                       CE.Structure.Declared, CE.Structure.Entropy, CE.Structure.Knobs,
@@ -57,6 +58,7 @@ test-suite ce-core-test
                       CE.Graph.Position, CE.Clone, CE.Clone.Cost,
                       CE.Clone.Prefilter, CE.Clone.Ted,
                       CE.Dedup.Cost, CE.Docdup, CE.Docdup.Cost, CE.Docdup.Jaccard,
+                      CE.Audit, CE.Audit.Cost,
                       CE.Scan, CE.Scan.Cost, CE.Structure,
                       CE.Structure.Axes, CE.Structure.Cost, CE.Structure.Split,
                       CE.Structure.Declared, CE.Structure.Entropy, CE.Structure.Knobs,
@@ -67,7 +69,7 @@ test-suite ce-core-test
                       CE.Verdict.Table, CE.Verdict.Wire,
                       Reference, ReferenceGraph, GraphProps,
                       ReferenceTed, CloneProps, ReferenceJaccard,
-                      EntropyProps, JoinProps, ScanProps,
+                      AuditProps, EntropyProps, JoinProps, ScanProps,
                       StructureProps, TrendProps, EraseProps, VerdictProps,
                       VerdictWireProps, VerdictKnobProps, SplitProps, WireHarness
     build-depends:

@@ -37,6 +37,9 @@ instance FromJSON Hello where
 -- additive), likewise declared with its judgment.
 -- erase/1 = the deterministic-eraser predicate family (M9 batch 3,
 -- proto 2.16.0, additive), likewise declared with its judgment.
+-- audit/1 = the session/commit duplication verdict family (M9
+-- batch 7 slice 7, proto 2.24.0, additive), likewise declared with
+-- its judgment.
 capabilities :: [String]
 capabilities =
   [ "hello"
@@ -49,6 +52,7 @@ capabilities =
   , "structure/1"
   , "trend/1"
   , "erase/1"
+  , "audit/1"
   ]
 
 data Reply = Reply

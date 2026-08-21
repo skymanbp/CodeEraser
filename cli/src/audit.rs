@@ -1,6 +1,8 @@
-//! Stop audit v1 (M3): net LOC of the working tree vs HEAD plus
-//! duplicate blocks touching the changed files — deliberately NOT the
-//! four-way classification (that is M4). PreToolUse-gate discipline:
+//! Stop audit (M3 shape, judged over audit/1 since 2.24.0): net LOC
+//! of the working tree vs HEAD plus duplicate blocks touching the
+//! changed files — deliberately NOT the four-way classification
+//! (that is M4); the conviction and the zero-tolerance threshold are
+//! the core's (verdict.rs). PreToolUse-gate discipline:
 //! fail-open on any internal failure, every run appended to
 //! .ce/observe.ndjson. Stop hooks know exactly one enforcement shape
 //! (proven by the locally installed cc-enforcer): top-level
@@ -8,6 +10,7 @@
 //! changed lives in changes.rs (git's paths in ce's own vocabulary).
 
 mod changes;
+mod verdict;
 
 use crate::config::Config;
 use serde::Deserialize;
@@ -46,10 +49,11 @@ pub fn run_hook() -> ExitCode {
 }
 
 /// Shared head of the Stop audit and the pre-commit gate: guard mode,
-/// numstat over `diff`, touched duplicates (None = degraded, A9f) and
-/// the `event`-stamped observe entry (precommit must not masquerade
-/// as a Stop audit). Outer None = git could not answer: fail open.
-type Gathered = (String, i64, Vec<String>, Option<Vec<String>>);
+/// numstat over `diff`, the core's touched-duplicate verdict (None =
+/// degraded, A9f) and the `event`-stamped observe entry (precommit
+/// must not masquerade as a Stop audit). Outer None = git could not
+/// answer: fail open.
+type Gathered = (String, i64, Vec<String>, Option<verdict::Verdict>);
 fn gather(
     root: &Path,
     diff_tail: &[&str],
@@ -73,10 +77,17 @@ fn gather(
             changed.append(&mut files);
         }
     }
+    // nothing changed = judged clean without a spawn (INFORMATION
+    // never pays; the enforcement leg pays only when there is
+    // something to enforce)
     let dups = if changed.is_empty() {
-        Some(Vec::new())
+        Some(verdict::Verdict {
+            fail: false,
+            dups: 0,
+            shown: Vec::new(),
+        })
     } else {
-        touched_duplicates(root, &changed)
+        verdict::judge(root, &changed)
     };
     observe_log(
         root,
@@ -86,7 +97,7 @@ fn gather(
             session,
             net_loc,
             changed: changed.len(),
-            dups: dups.as_deref().map(<[String]>::len),
+            dups: dups.as_ref().map(|v| v.dups),
             fourclass,
             skipped: None, // this leg MEASURED — see AuditEvent::skipped
         },
@@ -109,14 +120,14 @@ fn audit(root: &Path, session: &str) -> ExitCode {
         return unmeasured_stop(root, session, None);
     };
     if mode == "deny"
-        && let Some(dups) = dups.as_deref()
-        && !dups.is_empty()
+        && let Some(v) = dups.as_ref()
+        && v.fail
     {
         let payload = serde_json::json!({
             "decision": "block",
             // §4.4 B4: the Stop summary rides its own 400-token budget
             "reason": crate::hookio::clip(
-                &reason(net_loc, dups),
+                &reason(net_loc, v),
                 crate::hookio::STOP_BUDGET_TOKENS,
             ),
         });
@@ -193,64 +204,40 @@ pub fn run_precommit(root: &Path) -> ExitCode {
         eprintln!("ce precommit: not a git repo (skipped)");
         return ExitCode::SUCCESS;
     };
-    let Some(dups) = dups.as_deref() else {
+    let Some(v) = dups.as_ref() else {
         // A9f: fail open but never silently — the human still gets
         // the staged summary the healthy path prints
         println!(
-            "ce precommit: {} staged file(s), net {net_loc:+} LOC — dedup index \
-             unavailable (DEGRADED: duplicate check skipped)",
+            "ce precommit: {} staged file(s), net {net_loc:+} LOC — duplicate \
+             verdict unavailable (DEGRADED: duplicate check skipped)",
             changed.len()
         );
         return ExitCode::SUCCESS;
     };
-    if dups.is_empty() {
+    if v.dups == 0 {
         println!(
             "ce precommit: {} staged file(s), net {net_loc:+} LOC, no touched duplicates",
             changed.len()
         );
         return ExitCode::SUCCESS;
     }
-    println!("{}", reason(net_loc, dups));
-    if mode == "deny" {
+    println!("{}", reason(net_loc, v));
+    if mode == "deny" && v.fail {
         return ExitCode::from(1);
     }
     ExitCode::SUCCESS
 }
 
-/// Duplicate blocks with at least one side in the changed set — the
-/// v1 approximation of "newly added duplication" (exact split = M4).
-/// None = the dedup pipeline itself failed: DEGRADED, stamped in the
-/// observe entry, never conflated with "no duplicates" (A9f).
-/// Cost stance, unified 2026-08-19: ENFORCEMENT pays for its verdict
-/// (budgeted — PERF-BUDGET.md Stop row), INFORMATION never pays a
-/// spawn (fourclass_report). Request::Dedup routing measured a wash.
-fn touched_duplicates(root: &Path, changed: &[String]) -> Option<Vec<String>> {
-    let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
-    // a set, not a Vec scan: blocks × changed was O(B·C) string
-    // compares on every Stop (~50 M on a large index)
-    let touched: std::collections::HashSet<&str> = changed.iter().map(String::as_str).collect();
-    Some(
-        found
-            .blocks
-            .iter()
-            .filter(|b| touched.contains(b.a_file.as_str()) || touched.contains(b.b_file.as_str()))
-            .take(10)
-            .map(|b| {
-                format!(
-                    "{}:{}-{} <-> {}:{}-{} ({} tokens)",
-                    b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.tokens
-                )
-            })
-            .collect(),
-    )
-}
-
-fn reason(net_loc: i64, dups: &[String]) -> String {
+/// The human-facing conviction line. Cost stance, unified
+/// 2026-08-19: ENFORCEMENT pays for its verdict (budgeted —
+/// PERF-BUDGET.md Stop row; since 2.24.0 that includes one audit/1
+/// spawn), INFORMATION never pays a spawn (fourclass_report).
+fn reason(net_loc: i64, v: &verdict::Verdict) -> String {
     format!(
         "ce audit: this session's edits leave {} duplicate block(s) touching \
          changed files (net {net_loc:+} LOC): {} — deduplicate before stopping.",
-        dups.len(),
-        dups.join("; ")
+        v.dups,
+        v.shown.join("; ")
     )
 }
 

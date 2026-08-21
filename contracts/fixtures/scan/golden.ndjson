@@ -1,10 +1,10 @@
 {"proto":"2.7.0","type":"scan.request","id":1,"rows":[[0,301],[1,50],[6,1],[0,800]]}
-{"counts":{"fails":1,"rows":4,"warns":2},"degraded":false,"fail":true,"grades":[[0,300,750],[1,50,75],[2,5,0],[3,15,0],[4,15,0],[5,4,0],[6,0,0]],"id":1,"levels":[1,0,1,2],"proto":"2.23.0","type":"scan.result"}
+{"counts":{"fails":1,"rows":4,"warns":2},"degraded":false,"fail":true,"grades":[[0,300,750],[1,50,75],[2,5,0],[3,15,0],[4,15,0],[5,4,0],[6,0,0]],"id":1,"levels":[1,0,1,2],"proto":"2.24.0","type":"scan.result"}
 {"proto":"2.7.0","type":"scan.request","id":2,"rows":[]}
-{"counts":{"fails":0,"rows":0,"warns":0},"degraded":false,"fail":false,"grades":[[0,300,750],[1,50,75],[2,5,0],[3,15,0],[4,15,0],[5,4,0],[6,0,0]],"id":2,"levels":[],"proto":"2.23.0","type":"scan.result"}
+{"counts":{"fails":0,"rows":0,"warns":0},"degraded":false,"fail":false,"grades":[[0,300,750],[1,50,75],[2,5,0],[3,15,0],[4,15,0],[5,4,0],[6,0,0]],"id":2,"levels":[],"proto":"2.24.0","type":"scan.result"}
 {"proto":"2.7.0","type":"scan.request","id":3,"rows":[[0,310]],"grades":[[0,400,750]]}
-{"counts":{"fails":0,"rows":1,"warns":0},"degraded":false,"fail":false,"grades":[[0,400,750],[1,50,75],[2,5,0],[3,15,0],[4,15,0],[5,4,0],[6,0,0]],"id":3,"levels":[0],"proto":"2.23.0","type":"scan.result"}
+{"counts":{"fails":0,"rows":1,"warns":0},"degraded":false,"fail":false,"grades":[[0,400,750],[1,50,75],[2,5,0],[3,15,0],[4,15,0],[5,4,0],[6,0,0]],"id":3,"levels":[0],"proto":"2.24.0","type":"scan.result"}
 {"proto":"2.7.0","type":"scan.request","id":4,"rows":[[7,1]]}
-{"code":"contract","id":4,"message":"row 0: unknown metric code","proto":"2.23.0","type":"error"}
+{"code":"contract","id":4,"message":"row 0: unknown metric code","proto":"2.24.0","type":"error"}
 {"proto":"2.7.0","type":"scan.request","id":5,"rows":[],"grades":[[0,400]]}
-{"code":"contract","id":5,"message":"grade 0: malformed row (need [code,warn,fail])","proto":"2.23.0","type":"error"}
+{"code":"contract","id":5,"message":"grade 0: malformed row (need [code,warn,fail])","proto":"2.24.0","type":"error"}

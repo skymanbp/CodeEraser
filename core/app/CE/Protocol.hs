@@ -9,6 +9,7 @@
 -- never a crash.
 module CE.Protocol (internalError, proto, respond) where
 
+import qualified CE.Audit as Audit
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
 import qualified CE.Erase as Erase
@@ -27,6 +28,14 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.24.0 = the session-audit minor (M9 batch 7, slice 7): the
+-- tenth judgment family, audit/1 -- one [aTouched, bTouched] bit
+-- row per clone block (Rust's set-membership measurement), the core
+-- answering WHICH rows convict (either side touched -- the
+-- deliberate v1 asymmetry) and whether the session may end
+-- (CE.Audit.Cost.dupTolerance = 0, knobless -- zero tolerance is
+-- not tunable). The Stop-audit and precommit emptiness tests were
+-- the last enforcement verdicts still resident in Rust.
 -- 2.23.0 = the raw-staleness minor (M9 batch 7, slice 11):
 -- structure.request gains the additive staleDocRows [dirId, docTs]
 -- (docTs 0 = doc unchanged in the window, the one sentinel; doc
@@ -161,7 +170,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.23.0"
+proto = "2.24.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -225,6 +234,7 @@ families =
   , ("structure.request", Structure.respond)
   , ("trend.request", Trend.respond)
   , ("erase.request", Erase.respond)
+  , ("audit.request", Audit.respond)
   ]
 
 -- | Every non-hello message must carry a proto with the server's

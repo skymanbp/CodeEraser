@@ -12,6 +12,7 @@ import CE.Docdup.Cost (docPairCap, docSetCap)
 import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
 import CE.Verdict.Ratchet (ratchetBound, tolerated)
+import qualified AuditProps
 import qualified CloneProps
 import qualified EntropyProps
 import qualified EraseProps
@@ -68,6 +69,7 @@ main = do
       , goldenPairs "structure/golden.ndjson"
       , goldenPairs "trend/golden.ndjson"
       , goldenPairs "erase/golden.ndjson"
+      , goldenPairs "audit/golden.ndjson"
       , structural
       , refusalProbes
       , docdupStructural
@@ -83,6 +85,7 @@ main = do
       , StructureProps.battery
       , TrendProps.battery
       , EraseProps.battery
+      , AuditProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
       , VerdictKnobProps.battery

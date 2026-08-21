@@ -11,7 +11,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), applyRows, ascendingOn, pick, respondWith, rowsFamily, notAscending) where
+module CE.Wire (Family (..), RowsReq (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -73,6 +73,35 @@ rowsFamily name overCap offence deg jud =
       , famDegraded = deg
       , famJudged = jud
       }
+
+-- | A KNOBLESS table family (erase/1, audit/1): rows
+-- shape-checked per index against a cap, and ANY knob row
+-- refused by name — the tunability refusal is a contract
+-- statement, not an oversight (a knob that loosened a safety or
+-- tolerance predicate would be a licence). Promoted when the
+-- tenth family (audit/1) reminted erase/1's violation shell
+-- verbatim — this module's own promotion rule.
+knoblessRows ::
+  String ->
+  Integer ->
+  (Int -> [Integer] -> Maybe String) ->
+  (RowsReq -> B8.ByteString) ->
+  (RowsReq -> B8.ByteString) ->
+  B8.ByteString ->
+  Either (Maybe Value, String, String) B8.ByteString
+knoblessRows name cap rowShape =
+  rowsFamily
+    name
+    (\req -> toInteger (length (rowsOf req)) > cap)
+    violation
+ where
+  violation req =
+    asum
+      [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
+      , asum (zipWith noKnob [0 :: Int ..] (knobsOf req))
+      ]
+  noKnob i _ =
+    Just ("knob " <> show i <> ": " <> name <> "/1 declares no knob codes")
 
 -- | decode → cap check (a complete degraded reply, never a
 -- truncated one) → boundary contract (error/contract naming the

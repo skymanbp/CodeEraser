@@ -12,6 +12,10 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.24.0 = the session-audit minor (M9 batch 7, slice 7): the
+/// tenth family audit/1 -- [aTouched, bTouched] bit rows per clone
+/// block; conviction (either side) and zero tolerance are the
+/// core's (CE.Audit.Cost), the Stop/precommit legs relaying fail.
 /// 2.23.0 = the raw-staleness minor (M9 batch 7, slice 11):
 /// structure.request gains staleDocRows [dirId, docTs] + the
 /// changed-target staleEdgeRows [docIdx, targetTs]; the S5 stale
@@ -109,7 +113,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.23.0";
+pub const PROTO: &str = "2.24.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

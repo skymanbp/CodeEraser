@@ -14,7 +14,7 @@ module EraseProps (battery) where
 import CE.Erase (respond)
 import CE.Erase.Cost (eraseRowCap, judgeRow)
 import Data.Aeson
-import WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
+import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
 
 battery :: IO Bool
 battery =
@@ -51,7 +51,7 @@ truthTable =
     ]
 
 req :: [[Integer]] -> Value
-req = rowsRequest "2.23.0" "erase.request"
+req = rowsRequest "2.24.0" "erase.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of
@@ -94,12 +94,6 @@ knobless =
     "knob 0: erase/1 declares no knob codes"
 
 degradedFails :: Bool
-degradedFails = case replyObjWith respond (req big) of
-  Just o ->
-    field o "degraded" == Just (Bool True)
-      && field o "fail" == Just (Bool True)
-      && field o "rows" == Just (toJSON ([] :: [[Integer]]))
-      && field o "reason" == Just (String "erase_too_large")
-  Nothing -> False
+degradedFails = degradedFace respond (req big) "rows" "erase_too_large"
  where
   big = replicate (fromInteger eraseRowCap + 1) [0, 1, 0, 0, 0]

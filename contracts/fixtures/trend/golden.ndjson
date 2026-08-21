@@ -1,10 +1,10 @@
 {"proto":"2.14.0","type":"trend.request","id":1,"rows":[[86400,900,1000],[172800,899,1000],[259200,898,1000]],"knobs":[[1,500]]}
-{"counts":{"rows":3},"degraded":false,"fail":true,"id":1,"knobs":[[0,3],[1,500]],"proto":"2.23.0","slopeMicroPerDay":-1000,"type":"trend.result","verdict":2}
+{"counts":{"rows":3},"degraded":false,"fail":true,"id":1,"knobs":[[0,3],[1,500]],"proto":"2.24.0","slopeMicroPerDay":-1000,"type":"trend.result","verdict":2}
 {"proto":"2.14.0","type":"trend.request","id":2,"rows":[[86400,900,1000],[172800,899,1000],[259200,898,1000]]}
-{"counts":{"rows":3},"degraded":false,"fail":false,"id":2,"knobs":[[0,3],[1,0]],"proto":"2.23.0","slopeMicroPerDay":-1000,"type":"trend.result","verdict":2}
+{"counts":{"rows":3},"degraded":false,"fail":false,"id":2,"knobs":[[0,3],[1,0]],"proto":"2.24.0","slopeMicroPerDay":-1000,"type":"trend.result","verdict":2}
 {"proto":"2.14.0","type":"trend.request","id":3,"rows":[[86400,500,1000],[172800,400,1000]]}
-{"counts":{"rows":2},"degraded":false,"fail":false,"id":3,"knobs":[[0,3],[1,0]],"proto":"2.23.0","slopeMicroPerDay":null,"type":"trend.result","verdict":null}
+{"counts":{"rows":2},"degraded":false,"fail":false,"id":3,"knobs":[[0,3],[1,0]],"proto":"2.24.0","slopeMicroPerDay":null,"type":"trend.result","verdict":null}
 {"proto":"2.14.0","type":"trend.request","id":4,"rows":[[259200,898,1000],[86400,900,1000],[172800,899,1000]]}
-{"counts":{"rows":3},"degraded":false,"fail":false,"id":4,"knobs":[[0,3],[1,0]],"proto":"2.23.0","slopeMicroPerDay":-1000,"type":"trend.result","verdict":2}
+{"counts":{"rows":3},"degraded":false,"fail":false,"id":4,"knobs":[[0,3],[1,0]],"proto":"2.24.0","slopeMicroPerDay":-1000,"type":"trend.result","verdict":2}
 {"proto":"2.14.0","type":"trend.request","id":5,"rows":[[86400,250,1000],[172800,500,1000],[259200,750,1000],[345600,1000,1000]],"knobs":[[0,4],[1,100000]]}
-{"counts":{"rows":4},"degraded":false,"fail":false,"id":5,"knobs":[[0,4],[1,100000]],"proto":"2.23.0","slopeMicroPerDay":250000,"type":"trend.result","verdict":0}
+{"counts":{"rows":4},"degraded":false,"fail":false,"id":5,"knobs":[[0,4],[1,100000]],"proto":"2.24.0","slopeMicroPerDay":250000,"type":"trend.result","verdict":0}
