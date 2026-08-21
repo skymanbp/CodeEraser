@@ -137,19 +137,27 @@ pub fn redundancy_rows(
         .collect())
 }
 
-/// The S5 staleness join: every markdown file's outgoing reference
-/// targets (the md ladder's own resolutions, file-granular via each
-/// node's path) against ONE windowed `git log` pass. A doc is stale
-/// when any target changed after the doc's own last change inside
-/// the window — a same-commit update of both is NOT stale (the doc
-/// kept up). Docs without references carry no total; absence of the
-/// whole table (no --days) leaves axis 5 unjudged.
+/// The raw S5 tables (2.23.0): [dirId, docTs] doc rows and
+/// [docIdx, targetTs] changed-target edges.
+pub type StaleTables = (Vec<[u64; 2]>, Vec<[u64; 2]>);
+
+/// The S5 staleness MEASUREMENT (batch-7 slice 11, 2.23.0): every
+/// markdown file's outgoing reference targets (the md ladder's own
+/// resolutions) against ONE windowed `git log` pass — shipped RAW.
+/// One doc row [dirId, docTs] per md file that has targets (docTs =
+/// the doc's newest window change, 0 = unchanged — the one
+/// sentinel); one edge row [docIdx, targetTs] per target that
+/// CHANGED in the window (an unchanged target can never make a doc
+/// stale, so it never ships). The stale PREDICATE — strict >, the
+/// same-commit tie, the existential — is the core's now
+/// (CE.Structure deriveStale). Docs without references carry no
+/// row; absence of the tables (no --days) leaves axis 5 unjudged.
 pub fn stale_doc_rows(
     root: &Path,
     db: Option<PathBuf>,
     t: &tree::Tree,
     days: u32,
-) -> Result<Vec<[u64; 3]>> {
+) -> Result<StaleTables> {
     let w = crate::graph::deadcode::build_wire(root, db)?;
     let mut targets: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
     for e in &w.edges {
@@ -160,26 +168,28 @@ pub fn stale_doc_rows(
         }
     }
     let newest = newest_in_window(root, days)?;
-    let mut per_dir: BTreeMap<usize, [u64; 2]> = BTreeMap::new();
+    // canonical wire order: non-descending dirId (doc identity is
+    // the row index; ties break on path, invisible on the wire)
+    let mut by_dir: Vec<(usize, &str, &BTreeSet<&str>)> = Vec::new();
     for (md, tgts) in &targets {
         let dir = tree::dir_of(t, md)
             .ok_or_else(|| anyhow::anyhow!("md node {md} outside the walked tree"))?;
-        let doc_last = newest.get(*md).copied();
-        let is_stale = tgts.iter().any(|tg| match (newest.get(*tg), doc_last) {
-            (Some(&tt), Some(dl)) => tt > dl,
-            (Some(_), None) => true,
-            (None, _) => false,
-        });
-        let e = per_dir.entry(dir).or_insert([0, 0]);
-        e[1] += 1;
-        if is_stale {
-            e[0] += 1;
+        by_dir.push((dir, md, tgts));
+    }
+    by_dir.sort();
+    let mut docs: Vec<[u64; 2]> = Vec::new();
+    let mut edges: Vec<[u64; 2]> = Vec::new();
+    for (dir, md, tgts) in by_dir {
+        let doc_ts = newest.get(md).copied().unwrap_or(0) as u64;
+        let idx = docs.len() as u64;
+        docs.push([dir as u64, doc_ts]);
+        for tg in tgts.iter() {
+            if let Some(&tt) = newest.get(*tg) {
+                edges.push([idx, tt as u64]);
+            }
         }
     }
-    Ok(per_dir
-        .into_iter()
-        .map(|(d, [s, n])| [d as u64, s, n])
-        .collect())
+    Ok((docs, edges))
 }
 
 /// Newest commit time per touched file inside the window, one git

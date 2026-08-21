@@ -12,6 +12,11 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.23.0 = the raw-staleness minor (M9 batch 7, slice 11):
+/// structure.request gains staleDocRows [dirId, docTs] + the
+/// changed-target staleEdgeRows [docIdx, targetTs]; the S5 stale
+/// predicate is the core's (deriveStale), the pre-judged staleDocs
+/// rows legal one more minor and yielding to the raw tables.
 /// 2.22.0 = the defect-sweep minor (M9 batch 7 close): the docdup
 /// echo gains docLineCap (mirror-pinned; the SKELETON_PREFIXES
 /// string table stays unpinned — numeric echo grammar, DOCDUP_REV
@@ -104,7 +109,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.22.0";
+pub const PROTO: &str = "2.23.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

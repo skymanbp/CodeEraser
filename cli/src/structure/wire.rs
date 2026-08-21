@@ -28,7 +28,9 @@ pub struct Request {
     pub declared: Vec<[u64; 2]>,
     /// The S5 staleness join (S3c): [dirId, stale, total] rows —
     /// same absence semantics as redundancy, driven by --days.
-    pub stale_docs: Option<Vec<[u64; 3]>>,
+    /// The raw S5 tables (2.23.0) — the predicate is the core's
+    /// (deriveStale); the type lives with its producer.
+    pub stale_docs: Option<super::rows::StaleTables>,
     /// The S6 rollup (S3b): [dirId, dupBlocks, deadUnits] rows.
     /// None = the table stays off the wire and axis 6 is honestly
     /// unjudged; Some(empty) = judged clean (absence vs zero).
@@ -123,8 +125,9 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     if !r.declared.is_empty() {
         body["declared"] = json!(r.declared);
     }
-    if let Some(rows) = &r.stale_docs {
-        body["staleDocs"] = json!(rows);
+    if let Some((docs, edges)) = &r.stale_docs {
+        body["staleDocRows"] = json!(docs);
+        body["staleEdgeRows"] = json!(edges);
     }
     if let Some(rows) = &r.redundancy {
         body["redundancy"] = json!(rows);

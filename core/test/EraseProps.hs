@@ -51,7 +51,7 @@ truthTable =
     ]
 
 req :: [[Integer]] -> Value
-req = rowsRequest "2.22.0" "erase.request"
+req = rowsRequest "2.23.0" "erase.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of

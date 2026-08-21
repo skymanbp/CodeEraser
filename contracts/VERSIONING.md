@@ -149,6 +149,13 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.23.0**（M9 批 7 片 11 原始陈旧表 minor，2026-08-21）：`structure.request`
+> 加性 `staleDocRows=[[dirId,docTs]]`（docTs=文档窗内最新变更，0=窗内
+> 未变——唯一哨兵；文档身份=行序，图节点纪律）与
+> `staleEdgeRows=[[docIdx,targetTs]]`（只载窗内变过的目标，
+> targetTs>=1）。S5 陈旧谓词（严格 >、同 commit 平局、存在量化）
+> 入核 deriveStale；预判 `staleDocs` 行保留一个 minor，原始表在场时
+> 让位。S5 是同一 wire 上唯一 Rust 预分类的轴（S2/S3 均发原始行）。
 > **2.22.0**（M9 批 7 收尾缺陷清扫 minor，2026-08-21）：docdup 回显加
 > `docLineCap`（CE.Docdup.Cost=200，超长行掩码帽，镜像钉等；
 > SKELETON_PREFIXES 字符串表不入钉——echo 文法是数字的，其漂移
@@ -237,7 +244,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.22.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.23.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -354,5 +361,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.22.0 | §1 所列两处常量 |
+| 协议 | 2.23.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

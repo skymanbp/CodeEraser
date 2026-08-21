@@ -250,5 +250,10 @@ entry_globs = [
 # on FORMATTED code). Zero copied logic in any of them; folding the
 # Cost modules or the echo tables would trade a priced face for a
 # real coupling.
+# 181 -> 182 (M9 batch 7 slice 11): the structure Request's new
+# stale_docs field grew its record scaffold back into chain range
+# of score/wire.rs — the M6-S3a named class re-carrying its price
+# (a generic cross-family record would trade this line for real
+# coupling; declined by standing stance). Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 181
+budget = 182

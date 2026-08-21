@@ -27,6 +27,16 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.23.0 = the raw-staleness minor (M9 batch 7, slice 11):
+-- structure.request gains the additive staleDocRows [dirId, docTs]
+-- (docTs 0 = doc unchanged in the window, the one sentinel; doc
+-- identity = row index) and staleEdgeRows [docIdx, targetTs]
+-- (changed targets only, targetTs >= 1) — the S5 stale PREDICATE
+-- (strict >, the same-commit tie, the existential over targets)
+-- moves into deriveStale, and the pre-judged staleDocs per-dir rows
+-- stay legal for one minor, yielding when the raw tables ride. S5
+-- was the one axis where Rust pre-classified while S2/S3 shipped
+-- raw rows on the same wire.
 -- 2.22.0 = the defect-sweep minor (M9 batch 7 close): the docdup
 -- echo gains docLineCap (CE.Docdup.Cost, = 200 — the overlong-line
 -- mask's cap, mirror-pinned; the SKELETON_PREFIXES string table
@@ -151,7 +161,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.22.0"
+proto = "2.23.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

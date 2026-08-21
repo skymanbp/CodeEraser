@@ -22,6 +22,7 @@ import CE.Structure.Cost (structNodeCap)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
 import CE.Structure.Split (splitOffence, splitRows)
+import qualified CE.Structure.Stale as Stale
 import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -37,6 +38,19 @@ data StructReq = StructReq
   , reqFileRefs :: [[Integer]]
   , reqDeclared :: [[Integer]]
   , reqStaleDocs :: Maybe [[Integer]]
+  -- ^ The PRE-JUDGED per-dir rows [dirId, stale, total] — legal for
+  -- one minor beside the raw tables below (2.23.0, batch-7 slice
+  -- 11); when both ride, the raw tables judge.
+  , -- the RAW staleness facts (2.23.0, additive): one row per md
+    -- doc that HAS reference targets — [dirId, docTs], docTs = the
+    -- doc's newest change inside the churn window, 0 = unchanged
+    -- (the one sentinel, documented); doc identity = row index
+    -- (dense by construction, the graph node discipline). Edges
+    -- [docIdx, targetTs] exist only for targets that CHANGED in the
+    -- window (targetTs >= 1) — an unchanged target can never make a
+    -- doc stale, so shipping it would be dead weight.
+    reqStaleDocRows :: Maybe [[Integer]]
+  , reqStaleEdges :: [[Integer]]
   , reqRedundancy :: Maybe [[Integer]]
   -- ^ Both Maybe, not defaulted: an absent table means its axis is
   -- not judged, an empty one that it judged clean — the churn-table
@@ -63,6 +77,8 @@ instance FromJSON StructReq where
       <*> o .:? "fileRefs" .!= []
       <*> o .:? "declared" .!= []
       <*> o .:? "staleDocs"
+      <*> o .:? "staleDocRows"
+      <*> o .:? "staleEdgeRows" .!= []
       <*> o .:? "redundancy"
       <*> o .:? "seamFiles"
       <*> o .:? "seamUnits" .!= []
@@ -113,10 +129,15 @@ violation req =
         <> [ splitOffence sf (seamTables req)
            | Just sf <- [reqSeamFiles req]
            ]
-        <> [knobsOffence (reqKnobs req)]
+        <> [ asum (zipWith (dirRow n Stale.docRowSpec) [0 :: Int ..] docRows)
+           , Stale.nonDescDir docRows
+           , Stale.edgesOffence (toInteger (length docRows)) (reqStaleEdges req)
+           , knobsOffence (reqKnobs req)
+           ]
     )
  where
   n = toInteger (length (reqNodes req))
+  docRows = concat (reqStaleDocRows req)
   dirTables =
     [ ((3, "pattern", patternOk), take 2, reqPatterns req)
     , ((2, "convention", convOk), take 1, reqConventions req)
@@ -237,7 +258,7 @@ reply proto req k degraded =
           (reqPatterns req)
           (reqConventions req)
           (reqFileRefs req)
-          (reqStaleDocs req)
+          (Stale.effectiveStale (reqStaleDocs req) (reqStaleDocRows req) (reqStaleEdges req))
           (reqRedundancy req)
   declaredKeys = case declaredRows (fNodes facts) (if degraded then [] else reqDeclared req) of
     Nothing -> []
