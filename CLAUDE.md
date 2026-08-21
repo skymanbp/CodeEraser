@@ -1,6 +1,6 @@
 # CodeEraser — 项目级指令（Claude Code 每次会话加载）
 
-## 当前状态：M0–M8 全交付；计划 v2.8 = M9 打磨与完整面（批 0 = v0.7.3 出货批进行中：spawn 全站点无窗化单咽喉 cli/src/proc.rs——GUI 弹窗风暴根修、裸 `ce` 印 help 退 0、trend 分批进度；批 1–7 = 审阅 113 条落地/方法学册/`ce erase` 两段式/GUI 完整化→v0.8.0/bench dashboard/实战检验/判决回迁第三弹，四拍板 2026-08-21 在册）；v0.7.0 尺寸顾问收环（wire 2.15.0，ROI v1.1 四腿价目+`[guard] zone_tiers` opt-in——FPR 纪律不破；设计册 docs/reference/size-advisory.md）；v0.7.1–v0.7.3=补丁版（perMachine 提权；installerHooks 把 CLI 上机器 PATH——路径走环境变量不入 PS 文本、注册表按原 value kind 就地写；ce.sh 钉扎命中的 PATH 副本先答，安装包=GUI+CLI 超集且插件真复用）
+## 当前状态：M0–M8 全交付；计划 v2.10 = M9 收口令执行中（批 0 已发 v0.7.3；批 1–5 已落 main——审阅 113 条落地/方法学册 11 篇/`ce erase` 两段式〔proto 2.16.0 第九族〕/GUI 七屏完整化/bench dashboard〔contracts/bench/bench.json 单源，README·官网·GUI 三面字节门控，per-tag 回放回填 v0.1.0–v0.7.3〕；待推：批 6 实战检验、批 7 判决回迁〔16 片清单在 memory/batch7-inventory.md，首三片 8→1→4〕、批 8 架构级全仓审查、批 9 全域优雅性终打磨〔v2.10 用户令 1.0 前置〕、终扫清欠账、终版 **v1.0.0** 一次收口不再中间发版）；v0.7.x 线已收：尺寸顾问收环（wire 2.15.0，ROI v1.1 四腿价目+`[guard] zone_tiers` opt-in——FPR 纪律不破）、三补丁版（perMachine 提权/CLI 上机器 PATH/插件复用钉扎命中副本/GUI 无窗化/裸 `ce` 印 help）
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。
