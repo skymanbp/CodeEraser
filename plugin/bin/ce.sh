@@ -56,7 +56,11 @@ fetch() { # $1=url $2=dest — file:// is the hermetic test transport
         # bounded on purpose: an unbounded body is written to disk
         # before the hash is ever computed, and a captive portal that
         # never finishes would hang the hook rather than fail it
-        *) curl -fsSL --proto '=https' --max-time 120 --max-filesize 104857600 -o "$2" "$1" ;;
+        # --proto guards the FIRST request; the bytes actually arrive
+        # over the redirect GitHub Releases always issues, and that leg
+        # is governed by --proto-redir — unset, it was whatever the
+        # installed curl defaulted to rather than a stated policy
+        *) curl -fsSL --proto '=https' --proto-redir '=https' \n                --max-time 120 --max-filesize 104857600 -o "$2" "$1" ;;
     esac
 }
 

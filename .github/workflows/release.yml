@@ -26,9 +26,18 @@ on:
 permissions:
   contents: read
 
+# One release operation at a time. Without this a dispatch and a tag
+# run could touch the same release concurrently; queued, never
+# cancelled — a half-finished publish is worse than a late one.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     if: github.event_name == 'workflow_dispatch'
+    env:
+      RELEASE_VERSION: ${{ inputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -54,9 +63,16 @@ jobs:
       - name: Version input must match the crate
         shell: bash
         run: |
+          # the input is bound through env, never spliced into this
+          # script's source: `${{ }}` substitutes BEFORE bash parses,
+          # so a value carrying a quote and $( ) would execute here
+          case "$RELEASE_VERSION" in
+            [0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "version input must be N.N.N, got: $RELEASE_VERSION"; exit 1 ;;
+          esac
           CRATE=$(grep -m1 '^version' cli/Cargo.toml | cut -d'"' -f2)
-          [ "$CRATE" = "${{ inputs.version }}" ] || {
-            echo "input ${{ inputs.version }} != cli/Cargo.toml $CRATE"; exit 1; }
+          [ "$CRATE" = "$RELEASE_VERSION" ] || {
+            echo "input $RELEASE_VERSION != cli/Cargo.toml $CRATE"; exit 1; }
       - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable branch, pinned 2026-08-19; version comes from cli/rust-toolchain.toml
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
         with:
@@ -144,7 +160,7 @@ jobs:
       - name: Stage versioned artifacts
         shell: bash
         run: |
-          VER="${{ inputs.version }}"
+          VER="$RELEASE_VERSION"
           KEY="${{ matrix.key }}"
           EXT="${{ matrix.ext }}"
           mkdir -p dist
@@ -177,6 +193,7 @@ jobs:
       contents: write # gh release create/upload
     env:
       GH_TOKEN: ${{ github.token }}
+      RELEASE_VERSION: ${{ inputs.version }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -187,12 +204,19 @@ jobs:
       - name: Checksums + draft release
         shell: bash
         run: |
-          VER="${{ inputs.version }}"
+          VER="$RELEASE_VERSION"
           cd dist
           sha256sum -- * > SHA256SUMS
           cat SHA256SUMS
           cd ..
           if gh release view "v$VER" >/dev/null 2>&1; then
+            # only a DRAFT may be re-uploaded. `gh release view`
+            # succeeds for published releases too, so a re-dispatch
+            # replaced shipped bytes with fresh non-reproducible ones
+            # and regenerated SHA256SUMS to match — invalidating every
+            # pin already in users' hands.
+            [ "$(gh release view "v$VER" --json isDraft -q .isDraft)" = "true" ] || {
+              echo "v$VER is already published — refusing to clobber its assets"; exit 1; }
             gh release upload "v$VER" dist/* --clobber
           else
             gh release create "v$VER" --draft \
@@ -202,14 +226,38 @@ jobs:
           fi
 
   verify-publish:
-    if: startsWith(github.ref, 'refs/tags/')
+    # The EVENT, not the ref shape. A workflow_dispatch aimed at a tag
+    # made all three job conditions true at once — build, draft and
+    # publish in one run, against the two-phase order this file's
+    # header commits to. The tag filter already lives in `on:`.
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write # gh release download/edit
+      checks: read # the CI gate below
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      # Publication was gated on nothing but byte integrity: this job
+      # and ci.yml fire on the SAME tag push as independent workflows,
+      # and a download + six hashes finishes long before a two-platform
+      # build+test matrix can report — so a fully red CI on the tagged
+      # commit published anyway. Wait for this commit's checks, and
+      # refuse on any conclusion that is not success.
+      - name: CI must be green on this commit
+        shell: bash
+        run: |
+          for _ in $(seq 1 60); do
+            runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs" \
+                     --jq '[.check_runs[] | select(.name != "'"${GITHUB_JOB}"'")]')
+            pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
+            bad=$(echo "$runs" | jq -r '[.[] | select(.conclusion != null and .conclusion != "success" and .conclusion != "neutral" and .conclusion != "skipped")] | map(.name + "=" + .conclusion) | join(", ")')
+            [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
+            [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
+            echo "waiting on $pending check(s)"; sleep 30
+          done
+          echo "checks did not settle in 30 min"; exit 1
       - name: Verify draft assets against manifest pins, then publish
         shell: bash
         run: |
@@ -218,8 +266,28 @@ jobs:
           . plugin/bin/manifest.env
           [ "$CE_MANIFEST_VERSION" = "$VER" ] || {
             echo "manifest version $CE_MANIFEST_VERSION != tag $VER"; exit 1; }
+          # the base URL embeds the tag too, and nothing checked it —
+          # a stale one publishes green and silently turns every
+          # pinned download into a 404, degrading the whole plugin
+          # to "PATH or nothing" (docs/RELEASE.md named this failure
+          # as a hand-maintained step; now it is a gate)
+          case "$CE_BASE_URL" in
+            */download/"$TAG") ;;
+            *) echo "base url $CE_BASE_URL does not end in /download/$TAG"; exit 1 ;;
+          esac
           mkdir dist && cd dist
-          gh release download "$TAG" --pattern '*'
+          # an explicit roster, not a wildcard: `--pattern '*'` made an
+          # unexpected asset a silent passenger, and `sha256sum -c`
+          # ignores files the list does not name
+          for a in "ce-$VER-x86_64-windows.exe" "ce-$VER-x86_64-linux" "ce-$VER-aarch64-macos" \
+                   "ce-core-$VER-x86_64-windows.exe" "ce-core-$VER-x86_64-linux" "ce-core-$VER-aarch64-macos" \
+                   "CodeEraser-$VER-x86_64-windows-setup.exe" "CodeEraser-$VER-x86_64-linux.AppImage" \
+                   "CodeEraser-$VER-aarch64-macos.dmg" SHA256SUMS; do
+            gh release download "$TAG" --pattern "$a"
+          done
+          extra=$(gh release view "$TAG" --json assets \
+                    --jq '[.assets[].name] | length')
+          [ "$extra" = "10" ] || { echo "release carries $extra assets, expected 10"; exit 1; }
           sha256sum -c SHA256SUMS
           check_pin() { # $1=envkey tail (PLATFORM_CE | PLATFORM_CECORE) $2=filename
             eval "pin=\${CE_SHA256_$1:-}"
@@ -234,4 +302,13 @@ jobs:
           check_pin X86_64_WINDOWS_CECORE "ce-core-$VER-x86_64-windows.exe"
           check_pin X86_64_LINUX_CECORE "ce-core-$VER-x86_64-linux"
           check_pin AARCH64_MACOS_CECORE "ce-core-$VER-aarch64-macos"
+          # The installers were the three assets with no committed
+          # pin, checked only against a SHA256SUMS generated by the
+          # same mutable draft — internal consistency, not provenance.
+          # They are also the highest-privilege artifact in the
+          # release (elevated, machine-PATH-writing), so they get the
+          # same out-of-band commitment as the binaries.
+          check_pin X86_64_WINDOWS_SETUP "CodeEraser-$VER-x86_64-windows-setup.exe"
+          check_pin X86_64_LINUX_APPIMAGE "CodeEraser-$VER-x86_64-linux.AppImage"
+          check_pin AARCH64_MACOS_DMG "CodeEraser-$VER-aarch64-macos.dmg"
           gh release edit "$TAG" --draft=false

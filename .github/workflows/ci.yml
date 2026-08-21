@@ -67,7 +67,13 @@ jobs:
         shell: bash
         working-directory: cli
         run: |
-          export CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
+          # split, not `export X=$(...)`: for a command word the exit
+          # status is export's (0), so a failing cabal list-bin under
+          # `set -e` exported an EMPTY value and the step marched on to
+          # die later on an opaque spawn failure
+          CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
+          [ -n "$CE_CORE_BIN" ] || { echo "cabal list-bin gave nothing"; exit 1; }
+          export CE_CORE_BIN
           cargo build --locked
           cargo test --locked
           cargo clippy --locked --all-targets -- -D warnings
@@ -203,7 +209,13 @@ jobs:
         shell: bash
         working-directory: cli
         run: |
-          export CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
+          # split, not `export X=$(...)`: for a command word the exit
+          # status is export's (0), so a failing cabal list-bin under
+          # `set -e` exported an EMPTY value and the step marched on to
+          # die later on an opaque spawn failure
+          CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
+          [ -n "$CE_CORE_BIN" ] || { echo "cabal list-bin gave nothing"; exit 1; }
+          export CE_CORE_BIN
           cargo build --locked
           cargo test --locked
       - name: Bootstrap chain e2e (macOS leg)
