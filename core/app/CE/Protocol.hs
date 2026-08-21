@@ -16,6 +16,7 @@ import qualified CE.Erase as Erase
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
+import CE.Protocol.Version (majorMatches, proto)
 import qualified CE.Scan as Scan
 import qualified CE.Structure as Structure
 import qualified CE.Trend as Trend
@@ -25,160 +26,6 @@ import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
-
--- | Protocol version spoken by this server (single source together
--- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 2.25.0 = the exemption-authority minor (M9 batch 7 slice 9):
--- the docdup knobs echo gains licHeadLines (CE.Docdup.Cost, = 5 --
--- the license-header window, mirror-pinned). Exemption EXECUTION
--- stays Rust-side pre-persistence (an exempt segment has no row
--- and never crosses the wire -- the minDocTokens stance); the
--- marker string tables stay unpinned (the SKELETON_PREFIXES
--- decision, drift guard DOCDUP_REV), and the bare-marker rule's
--- authority is the Cost module's written ruling.
--- 2.24.0 = the session-audit minor (M9 batch 7, slice 7): the
--- tenth judgment family, audit/1 -- one [aTouched, bTouched] bit
--- row per clone block (Rust's set-membership measurement), the core
--- answering WHICH rows convict (either side touched -- the
--- deliberate v1 asymmetry) and whether the session may end
--- (CE.Audit.Cost.dupTolerance = 0, knobless -- zero tolerance is
--- not tunable). The Stop-audit and precommit emptiness tests were
--- the last enforcement verdicts still resident in Rust.
--- 2.23.0 = the raw-staleness minor (M9 batch 7, slice 11):
--- structure.request gains the additive staleDocRows [dirId, docTs]
--- (docTs 0 = doc unchanged in the window, the one sentinel; doc
--- identity = row index) and staleEdgeRows [docIdx, targetTs]
--- (changed targets only, targetTs >= 1) — the S5 stale PREDICATE
--- (strict >, the same-commit tie, the existential over targets)
--- moves into deriveStale, and the pre-judged staleDocs per-dir rows
--- stay legal for one minor, yielding when the raw tables ride. S5
--- was the one axis where Rust pre-classified while S2/S3 shipped
--- raw rows on the same wire.
--- 2.22.0 = the defect-sweep minor (M9 batch 7 close): the docdup
--- echo gains docLineCap (CE.Docdup.Cost, = 200 — the overlong-line
--- mask's cap, mirror-pinned; the SKELETON_PREFIXES string table
--- stays unpinned by decision — the echo grammar is numeric and its
--- drift guard is DOCDUP_REV). Rust-side, same commit: entry bit 6
--- gains its producer (inline `ce:allow(deadcode) -- why`), the
--- docdup report surfaces the persisted exemption tallies, erase
--- class-2 rows carry the real coverage bit, the guard's broken-
--- config notice survives an empty reason set, and trend refuses a
--- reply echo without scoreScale by name.
--- 2.21.0 = the pinned-floors minor (M9 batch 7, slices 5/10):
--- verdict.result's newBaseline gains `zoneTiers` [warn, ask]
--- permille (CE.Verdict.Cost zoneWarnPermille/zoneAskPermille) — the
--- guard's graded-zone tier map rides the committed baseline to the
--- daemon-free hook, core-authored and locally read; the clone knobs
--- echo gains minUnitNodes (CE.Clone.Cost, = 24) and the docdup echo
--- minDocTokens (CE.Docdup.Cost, = 50) — the two admission floors
--- whose EXECUTION stays Rust-side pre-wire (shipping sub-floor rows
--- was priced and declined), now core-owned, ablatable and pinned to
--- their Rust mirrors on every judged run.
--- 2.20.0 = the full-evidence minor (M9 batch 7, slices 12/13/15):
--- asset-kind edge rows now TRAVEL and the core drops them from
--- liveness itself (CE.Graph.Cost.assetKind, the same comprehension
--- as the rung filter — Rust pre-dropped the rows the rule was
--- about); the cochange table ships whole (the client rank cut at 20
--- ran before the judge and before the relevance filter) at the
--- CONFIGURED floor; clone-pair language identity is the grammar,
--- not the extension string. Request/reply shapes unchanged — the
--- pact is that a client sending asset rows requires a core that
--- ignores them.
--- 2.19.0 = the diversity-floor minor (M9 batch 7, slice 1):
--- verdict.request gains the additive dedupDistinct rows (pre-filter
--- per-block distinct counts, riding beside the 2.6.0 pair) and the
--- optional dedupMinDistinct override -- the core re-derives the
--- admitted block count with CE.Dedup.Cost.minDistinct (its FIRST
--- dedup-family constant; the floor guarded a deny path from Rust
--- alone) and judges the budget from ITS derivation; the reply's
--- dedupBlocks (null when the rows did not ride) lets the client
--- prove its filter equal, and the knobs echo grows minDistinct
--- (16 keys).
--- 2.18.0 = the RG9-repatriation minor (M9 batch 7, slice 4):
--- graph.result splits its verdicts core-side — `dead` carries only
--- file-granularity rows (the failing table, and erase's licence
--- source), the additive `reported` table carries package/section
--- verdicts, and the additive `fail` bit names the zero-tolerance
--- gate (any file-tier dead verdict; a degraded reply fails by
--- itself, the verdict-family P1 stance). The kind column always
--- crossed and was validated, then discarded — the split lived as an
--- unnamed Rust branch no ablation could see.
--- 2.17.0 = the density-scoring minor (M9 batch 6): verdict/1 axes
--- rows become bounded per-axis CHARGES — floor(scale·v/(v+n)) over
--- each axis's violation mass and opportunity count — and the score
--- their weighted mean under the violCost dial (neutral at 10); the
--- zone curve turns C¹ linear past H. Row SHAPES are unchanged
--- (values-only migration, the 2.14.0 axis-0 precedent): two real
--- repositories field-measured at 0/1000 because raw mass summed
--- onto the bounded scale saturated the clamp.
--- 2.16.0 = the erase minor (M9 batch 3, plan v2.8 ②): the erase/1
--- family — the deterministic eraser's safety predicate. Dense
--- [class, w, x, y, z] fact rows in, [eraseable, reason] verdicts
--- out in request order; knobless by design (safety is not tunable),
--- paths never on the wire, degraded = fail with an empty table.
--- 2.15.0 = the ROI-pricing minor (plan v2.7 ②, v0.7): the split
--- advisory's two priced legs — structure.request gains the OPTIONAL
--- `seamClones` [file, start, end] block spans and `seamChurn`
--- [file, a, b] co-change pairs (both legal only beside seamFiles,
--- absent = that leg unpriced), knobs 17/18 (roiCloneMilli /
--- roiChurnMilli); the reply shape is unchanged — both legs fold
--- into costMilli.
--- 2.14.0 = the size-advisory minor (plan v2.6, v0.6): ONE additive
--- minor for both faces the release ships together. verdict/1 —
--- graded axis 0 (the soft-zone curve; a declared score migration),
--- the `judgedLoc` multiset, ceilings codes 2..4 (H / P_max / k),
--- and `newBaseline.softLine` (derived at establish, carried after).
--- structure/1 — the split-ROI advisory: optional seamFiles /
--- seamUnits / seamRefs tables in, `splitCandidates` + `sizeExempt`
--- rows out exactly when seamFiles rode, knobs 12..16 (the zone
--- triple + the two milli prices).
--- 2.13.0 = the trend minor (M7.5b): the trend/1 family — the score
--- trajectory's [ts, score, scale] rows in (any ts order since the
--- 2026-08-20 #9 loosening — least squares is order-free), the exact-
--- Rational least-squares slope verdict out with the two-knob echo
--- (minPoints / declineFloorMicro); below minPoints answers null,
--- and the fail bit trips only under a DECLARED floor.
--- 2.12.0 = the staleness-axis minor (M6 S3c, closing the seven-axis
--- face): structure.request gains the OPTIONAL `staleDocs`
--- [dirId, stale, total] join (same absence semantics) and knob 11
--- (staleMin); axis-5 rows appear exactly when the table rode.
--- 2.11.0 = the redundancy-axis minor (M6 S3b): structure.request
--- gains the OPTIONAL `redundancy` [dirId, dupBlocks, deadUnits]
--- rollup (absent = axis 6 not judged, empty = judged clean — the
--- churn-table honesty) and knobs 9/10 (dupMin/deadMin); the reply's
--- axes/findings carry code-6 rows only when the table rode.
--- 2.10.0 = the declared-layout minor (M6 S3a): structure.request
--- gains the additive `declared` [dirId, weight] rows (ce.toml's
--- [structure] layout, owner = deepest declared ancestor) and the
--- reply — ONLY when a layout is declared — the `divergence` χ² row
--- and the named `deviations` [dirId, kind] rows (0 = undeclared
--- territory holding files, 1 = a declared bin owning none).
--- 2.9.0 = the structure minor (M6 S2): the structure/1 family —
--- tree-scale fact tables in (dense nodes, pattern distributions,
--- convention bits, file reference splits), five judged axes, the
--- headline entropy rows and sparse findings out. 2.8.0 = the
--- review-repair minor (ADR-008 反审批): verdict replies
--- gain the effective `weights` table and the ratchet's held-name
--- `failed` list; floor validates against the effective scale;
--- self-pairs and same-pair duplicates refuse at the boundary; caps
--- cover the knob/grade tables. 2.7.0 = the scan-grading minor
--- (ADR-008 P3): the scan/1 family — measurement rows in, graded
--- levels and the fail bit out, the grade table echoed whole.
--- 2.6.0 = the ratchet-unification minor (ADR-008 P2):
--- verdict.request gains the additive `dedup` [blocks, budget] pair
--- and the fail table its dedup_budget row — the second ratchet's
--- comparison is the core's. 2.5.0 = the verdict-repatriation minor
--- (ADR-008 P1): clone/docdup replies gain per-row `verdicts` bits,
--- the docdup echo gains `verbatimFloor`, and the degraded verdict
--- reply carries ratchet.fail=true itself. 2.4.0 = verdict.request
--- `thresholds` + `tolerance` knob rows and the reply's FULL
--- effective-knob echo (ADR-008 P4): additive, absent fields parse
--- as no override. 2.3.0 = `ceilings` rows + the two-knob echo
--- (ADR-008 first step, M5 close); 2.2.0 = clone/1 + docdup/1 +
--- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
--- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
-proto :: String
-proto = "2.25.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -267,10 +114,6 @@ dispatch version env line
 familyReply :: Envelope -> Either (Maybe Value, String, String) B8.ByteString -> B8.ByteString
 familyReply env (Left (rid, code, message)) = errReply (rid <|> envId env) code message
 familyReply _ (Right bytes) = bytes
-
-majorMatches :: Maybe String -> Bool
-majorMatches Nothing = False
-majorMatches (Just v) = takeWhile (/= '.') v == takeWhile (/= '.') proto
 
 errReply :: Maybe Value -> String -> String -> B8.ByteString
 errReply requestId code message =

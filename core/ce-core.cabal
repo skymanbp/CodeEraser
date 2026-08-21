@@ -14,7 +14,7 @@ executable ce-core
     hs-source-dirs:   app
     autogen-modules:  Paths_ce_core
     other-modules:    Paths_ce_core,
-                      CE.Handshake, CE.Protocol, CE.FourClass,
+                      CE.Handshake, CE.Protocol, CE.Protocol.Version, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
                       CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,
@@ -50,7 +50,7 @@ test-suite ce-core-test
     hs-source-dirs:   app, test
     autogen-modules:  Paths_ce_core
     other-modules:    Paths_ce_core,
-                      CE.Handshake, CE.Protocol, CE.FourClass,
+                      CE.Handshake, CE.Protocol, CE.Protocol.Version, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
                       CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,

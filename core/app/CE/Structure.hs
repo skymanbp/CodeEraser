@@ -18,7 +18,8 @@
 module CE.Structure (respond) where
 
 import CE.Structure.Axes (Facts (..), Knobs (kScale, kViolCost), axes, entropyRows, findings)
-import CE.Structure.Cost (structNodeCap)
+import CE.Structure.Cost (structNodeCap, structViolCostNeutral)
+import CE.Verdict.Score (chargeAt)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
 import CE.Structure.Split (splitOffence, splitRows)
@@ -272,6 +273,15 @@ reply proto req k degraded =
     Just sf ->
       let (cands, exempts) = splitRows k sf (seamTables req)
        in ["splitCandidates" .= cands, "sizeExempt" .= exempts]
-  pens = axes k facts
+  -- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):
+  -- every axis penalty is a flagged-directory count, so each pairs
+  -- with the SAME opportunity — the directory total — and maps
+  -- through the verdict family's charge law. The raw-mass fold this
+  -- replaces is the exact shape the batch-6 field test retired
+  -- there: mean flagged count ~100 pinned the score at 0 and grew
+  -- linearly with repo size. Axis rows now carry CHARGES (‰ of
+  -- scale), the verdict-family grammar.
+  pens = [(c, chargeAt (kScale k) (fromInteger p) nDirs) | (c, p) <- axes k facts]
+  nDirs = toInteger (length (fNodes facts))
   raw = sum [p * kViolCost k | (_, p) <- pens]
-  score = max 0 (kScale k - raw `div` toInteger (length pens))
+  score = max 0 (kScale k - raw `div` (structViolCostNeutral * toInteger (length pens)))

@@ -149,6 +149,13 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.26.0**（M9 批 9 P9 单一密度律 minor，2026-08-21，用户拍板）：
+> `structure.result` 的 score 与 axes 行改走 verdict 族密度折算——
+> 每轴违规目录数 v 计费 floor(scale·v/(v+N))（N=目录总数），
+> 再过 violCost/structViolCostNeutral 表盘；轴行载费额（‰）非
+> 计数，findings 行不变。退役的质量法即批 6 在 verdict/1 杀掉的
+> 饱和形（均值 100 目录即 0 分且随仓规模线性恶化）。chargeAt 共享自
+> CE.Verdict.Score：一个定律两个评分族。
 > **2.25.0**（M9 批 7 片 9 豁免权威 minor，2026-08-21）：docdup 回显加
 > `licHeadLines`（CE.Docdup.Cost=5，许可证头窗口，镜像钉）。豁免
 > 执行留在 Rust 持久化前（豁免段无行不过线——minDocTokens 立场）；
@@ -258,7 +265,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.25.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.26.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -375,5 +382,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.25.0 | §1 所列两处常量 |
+| 协议 | 2.26.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

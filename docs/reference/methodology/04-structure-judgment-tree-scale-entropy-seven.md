@@ -203,41 +203,51 @@ Notes on the non-obvious ones:
 tree colours by — one list per axis, in axis order
 ([Axes.hs:119-128](../../../core/app/CE/Structure/Axes.hs#L119)).
 
-### 5. The fold: penalties to one score
+### 5. The fold: charges to one score
 
-The axis rows are `(code, count)` pairs; the score is a single equal-weight fold over the
-**judged** axis count ([Structure.hs:254-256](../../../core/app/CE/Structure.hs#L254)):
+Since proto 2.26.0 (M9 batch 9 P9, user ruling) the structure family runs the **same density
+law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
+opportunity every structure axis shares — the directory total `N` — and maps the odds
+through `chargeAt`, imported from [Score.hs](../../../core/app/CE/Verdict/Score.hs#L120)
+(one law, two families; [Structure.hs:246-258](../../../core/app/CE/Structure.hs#L246)):
 
 ```
-raw   = Σ_axes (penalty * violCost)
-score = max 0 (scale - raw `div` judgedAxisCount)
+charge_i = floor(scale * v_i / (v_i + N))
+raw      = Σ_axes (charge_i * violCost)
+score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))
 ```
 
-with `violCost = 10` (knob 7, [Cost.hs:73-74](../../../core/app/CE/Structure/Cost.hs#L73)) and
-`scale = 1000` (knob 8, [Cost.hs:77-78](../../../core/app/CE/Structure/Cost.hs#L77)). `div` is integer
-division — the fold truncates, and there is no float anywhere on the path.
-`judgedAxisCount` is 5, 6, or 7 depending on which optional tables rode
-([Axes.hs:99-110](../../../core/app/CE/Structure/Axes.hs#L99)). The same formula is the published
-contract in [structure-axes.md:20-22](../structure-axes.md#L20).
+with `violCost = 10` (knob 7, the family's strictness dial) and its structural neutral
+`structViolCostNeutral = 10` ([Cost.hs](../../../core/app/CE/Structure/Cost.hs#L73)): at the
+neutral default the fold is the plain mean of the bounded charges and cannot saturate.
+`scale = 1000` (knob 8). All arithmetic is exact `Rational` then integer `div` — no float
+anywhere on the path. `judgedAxisCount` is 5, 6, or 7 depending on which optional tables
+rode. The axis rows the reply carries are the **charges** (‰ of scale), the verdict-family
+grammar; the flagged directories themselves remain in `findings`, unchanged.
+
+The raw-mass fold this replaced (`scale - Σ(count*violCost) div axes`) was the exact shape
+the M9 batch-6 field test retired in verdict/1: a mean flagged count of 100 directories
+pinned the score at 0, and the same violation *rate* on a 10× repo cost 10× the penalty.
+Density is scale-free: same rate, same score.
 
 Worked end-to-end on the battery fixture — root (2 subdirs, 3 files, README+config), dir 1
 (9 files, 5 snake + 4 pascal, two files with 4 outside refs each, no README), dir 2 (6 files,
-uniform names), dir 3 (empty, depth 2) ([StructureProps.hs:30-39](../../../core/test/StructureProps.hs#L30)):
+uniform names), dir 3 (empty, depth 2), so `N = 4`
+([StructureProps.hs:30-40](../../../core/test/StructureProps.hs#L30)):
 
 ```
-axes    = [[0,0],[1,1],[2,1],[3,1],[4,1]]     -- S0 clean; S1..S4 each flag dir 1
-raw     = (0+1+1+1+1) * 10 = 40
-score   = 1000 - 40 `div` 5 = 992
-entropy = [[0,782],[1,916]]                   -- patterns [11,4]; dir files [3,9,6]
+axes    = [[0,0],[1,200],[2,200],[3,200],[4,200]]  -- v=1 at N=4: floor(1000/5)=200
+raw     = 800 * 10
+score   = 1000 - 8000 `div` (10*5) = 840
+entropy = [[0,782],[1,916]]                        -- patterns [11,4]; dir files [3,9,6]
 findings= [[1,1],[1,2],[1,3],[1,4]]
 ```
 
 asserted against the real `respond` at
-[StructureProps.hs:66-74](../../../core/test/StructureProps.hs#L66). Adding an empty `redundancy` table
-makes it six judged axes: `1000 - 40 div 6 = 994`
-([StructureProps.hs:163-176](../../../core/test/StructureProps.hs#L163)); both optional tables plus
-flagged rows give seven axes, `raw 70`, `1000 - 70 div 7 = 990`
-([StructureProps.hs:193-209](../../../core/test/StructureProps.hs#L193)).
+[StructureProps.hs:67-75](../../../core/test/StructureProps.hs#L67). Adding an empty `redundancy` table
+makes it six judged axes: `1000 - 8000 div 60 = 867`; both optional tables plus flagged rows
+give seven axes, charges `800+200+333`, `1000 - 13330 div 70 = 810`
+([StructureProps.hs:193-212](../../../core/test/StructureProps.hs#L193)).
 
 **Knob echo.** All 19 knobs (codes `0..18`) live in one authority table of
 `(code, getter, setter)` triples, so the effective fold and the reply's echo read the same rows

@@ -17,7 +17,7 @@
 | S5 文档新鲜度 | md 节引用目标在文档最后一改之后的变更次数 | churn 窗口 + md 阶梯 |
 | S6 冗余/孤儿卷积 | dedup 块数、deadcode 判决按目录卷积（--deep 才上线） | dedup/deadcode 判决 |
 
-- 评分：`score = kScale − Σ(penalty×violCost)/judgedAxisCount`
+- 评分（2.26.0 密度律）：`charge_i = floor(scale·v_i/(v_i+N))`（N=目录总数），`score = kScale − Σ(charge×violCost)/(neutral×judgedAxisCount)`；轴行载费额（‰）
   （`structViolCost=10`、`structScale=1000`；旋钮回执逐行 pin，
   漂移即错——「一个数字两个主人」拒绝）。
 - 熵实现：Shannon/KL 需对数=无理数不可精确判定，取有理判定式；
@@ -37,7 +37,7 @@ S6 体例一致（过线目录计 1）。
 （散得越广罚越多）；单目录文件爆炸 = S0 扇出 + S4 文档辖区；
 堆叠/克隆 = S6 与 dedup 辖区。
 
-> 分数迁移：修正案①改变同一仓库的结构分（先例：自仓 990→992），
+> 分数迁移：修正案①改变同一仓库的结构分（先例：自仓 990→992）；2.26.0 密度律再次迁移全部结构分（质量法退役，批 6 verdict 先例），
 > 发版说明必须声明（docs/RELEASE.md §0）。
 
 ## 拆分 ROI 顾问（v0.6，structure/1 扩展）

@@ -11,6 +11,7 @@
 module CE.Verdict.Score
   ( Facts (..)
   , ScoreKnobs (..)
+  , chargeAt
   , scoreBound
   , effectiveWeights
   , penalties
@@ -113,9 +114,16 @@ penalties k soft f =
 -- no opportunity table (churn without --days) — no evidence charges
 -- nothing, the honest-absence stance.
 charge :: ScoreKnobs -> Rational -> Integer -> Integer
-charge k v n
+charge k = chargeAt (sScoreScale k)
+
+-- | The scale-parameterized form — ONE density law, two scoring
+-- families: CE.Structure imports this (batch 9 P9, the Split→Soft
+-- precedent) so the structure fold can never re-diverge into the
+-- raw-mass shape the batch-6 field test retired.
+chargeAt :: Integer -> Rational -> Integer -> Integer
+chargeAt scale v n
   | n <= 0 || v <= 0 = 0
-  | otherwise = floor ((sScoreScale k % 1) * v / (v + n % 1))
+  | otherwise = floor ((scale % 1) * v / (v + n % 1))
 
 count :: [()] -> Integer
 count = toInteger . length

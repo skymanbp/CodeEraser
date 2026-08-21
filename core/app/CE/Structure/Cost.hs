@@ -13,6 +13,7 @@ module CE.Structure.Cost
   , misplaceMin
   , bigDirFloor
   , structViolCost
+  , structViolCostNeutral
   , structScale
   , dupMin
   , deadMin
@@ -68,10 +69,20 @@ misplaceMin = 3
 bigDirFloor :: Integer
 bigDirFloor = 8
 
--- | Per-mille cost of one violation in the structure score fold
--- (the Verdict violCost anchor).
+-- | Cost multiplier per unit of axis charge in the structure score
+-- fold (the Verdict violCost anchor) — the family's strictness
+-- dial since the 2.26.0 density fold.
 structViolCost :: Integer
 structViolCost = 10
+
+-- | The dial's neutral point (the CE.Verdict.Cost.violCostNeutral
+-- convention, batch 9 P9): at violCost == neutral the fold reduces
+-- to the plain mean of the bounded axis charges and the score
+-- cannot saturate; dialing above neutral is an explicit request
+-- for harsher scores. A structural constant of the fold, not a
+-- knob.
+structViolCostNeutral :: Integer
+structViolCostNeutral = 10
 
 -- | The structure score's opening value (per-mille scale).
 structScale :: Integer
