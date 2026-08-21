@@ -164,13 +164,19 @@ jobs:
       # The churn axis (score axis 5) needs the git-subprocess walk —
       # 216s measured locally at --days 14, so it runs on ONE matrix
       # leg instead of dying structurally on all of them (audit D5:
-      # opts.days was never set anywhere in CI).
+      # opts.days was never set anywhere in CI). NO floor here (user
+      # ruling 2026-08-21): the churn axis prices RECENT edits, so any
+      # legitimate large landing dips this leg below a copied floor
+      # for up to 14 days — drift-shaped, exactly what the base leg's
+      # floor comment says it must NOT bite on. Claims stay single:
+      # the base leg owns the 800 floor, this leg owns the churn
+      # measurement path plus the ratchet (still armed, still fatal).
       - name: Dogfood churn leg (ubuntu only)
         if: matrix.os == 'ubuntu-latest'
         shell: bash
         working-directory: cli
         run: |
-          cargo run --locked -- check .. --core "$(cd ../core && cabal list-bin ce-core)" --fail-under 800 --days 14
+          cargo run --locked -- check .. --core "$(cd ../core && cabal list-bin ce-core)" --days 14
 
       - name: Handshake smoke (ce doctor)
         shell: bash
