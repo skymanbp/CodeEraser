@@ -4,13 +4,13 @@
 -- REPORTED, never judged — the verdict pass does not read this list.
 module CE.Graph.Cycles (cycles) where
 
-import CE.Graph.Build (Built, sccList)
+import CE.Graph.Build (Built (..))
 
 -- | sccFloor is a parameter (Cost.sccFloor at the boundary) so the
 -- dead-knob test can move it.
 cycles :: Integer -> Built -> [(Int, [Int])]
 cycles sccFloor b =
   [ (i, members)
-  | (i, members) <- zip [0 ..] (sccList b)
+  | (i, members) <- zip [0 ..] (bScc b)
   , toInteger (length members) >= sccFloor
   ]

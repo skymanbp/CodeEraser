@@ -14,7 +14,7 @@
 -- knobs from CE.Graph.Cost — the only ablation targets.
 module CE.Graph (respond) where
 
-import CE.Graph.Build (Built (..), build)
+import CE.Graph.Build (Built (..), build, reachFrom)
 import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
@@ -135,7 +135,7 @@ result proto req =
         -- fails `ce deadcode --check` — the exit was synthesized
         -- client-side before, where no ablation could see it
         "fail" .= not (null deadRows)
-      , "pos" .= Position.positions b entryMask flagses (reqPos req)
+      , "pos" .= Position.positions b reach (reqPos req)
       , "cycles"
           .= [ toJSON [toJSON (toInteger i), toJSON (map toInteger ms)]
              | (i, ms) <- Cycles.cycles sccFloor b
@@ -151,9 +151,13 @@ result proto req =
  where
   b = build minRung assetKind (length (reqNodes req)) (reqEdges req)
   flagses = [f | [_, _, f] <- reqNodes req]
+  -- one reach per request (batch 9 P2): the entry knob binds to the
+  -- seed set here at the boundary — the posture Cost.hs declares —
+  -- and the computed set feeds the verdict AND the join surface.
+  reach = reachFrom b (Dead.entries entryMask flagses)
   fileIdx = IS.fromList [i | (i, [_, k, _]) <- zip [0 ..] (reqNodes req), k == granFile]
   (deadRows, reportedRows) =
-    partition (\(i, _) -> IS.member i fileIdx) (Dead.verdicts b entryMask flagses)
+    partition (\(i, _) -> IS.member i fileIdx) (Dead.verdicts b reach flagses)
 
 -- | Over-cap refusal: a well-formed degraded result, never a
 -- truncated graph. counts echoes what arrived (informational);

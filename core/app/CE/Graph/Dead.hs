@@ -7,7 +7,7 @@
 -- meet the entry mask seeds reachability and is never judged.
 module CE.Graph.Dead (entries, verdicts) where
 
-import CE.Graph.Build (Built (..), reachFrom)
+import CE.Graph.Build (Built (..))
 import Data.Bits (testBit, (.&.))
 import qualified Data.IntSet as IS
 import qualified Data.Set as S
@@ -31,14 +31,15 @@ deadTable =
   ]
 
 -- | [(idx, verdict)] ascending for every node outside the reach set.
-verdicts :: Built -> Integer -> [Integer] -> [(Int, Int)]
-verdicts b mask flagses =
+-- reach is computed once at the CE.Graph boundary and handed down —
+-- Position consumes the SAME set (batch 9 P2).
+verdicts :: Built -> IS.IntSet -> [Integer] -> [(Int, Int)]
+verdicts b reach flagses =
   [ (i, code (testBit f 0) (IS.member i referenced))
   | (i, f) <- zip [0 ..] flagses
   , not (IS.member i reach)
   ]
  where
-  reach = reachFrom b (entries mask flagses)
   referenced = IS.fromList [d | (_, d) <- S.toList (bArcs b)]
   code p r = case lookup (p, r) deadTable of
     Just c -> c

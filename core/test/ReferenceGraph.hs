@@ -11,8 +11,8 @@
 -- must never cost the app tree its 300-line gate).
 module ReferenceGraph (equivalence, arcsOf, edgeRows, reachB) where
 
-import CE.Graph.Build (build, sccList)
-import CE.Graph.Dead (verdicts)
+import CE.Graph.Build (Built (..), build, reachFrom)
+import CE.Graph.Dead (entries, verdicts)
 import CE.Graph.Position (positions)
 import Data.Bits (testBit)
 import Data.List (sort)
@@ -59,9 +59,9 @@ checkA code es
   arcs = arcsOf 4 code
   b = build 5 3 4 (edgeRows arcs)
   flagses = [if i `elem` es then 2 else 0 | i <- [0 .. 3]]
-  rows = positions b 2 flagses [0 .. 3]
+  rows = positions b (reachFrom b (entries 2 flagses)) [0 .. 3]
   reach = reachB arcs es
-  sccProd = S.fromList (map S.fromList (sccList b))
+  sccProd = S.fromList (map S.fromList (bScc b))
   sccWant = sccB 4 arcs
   rowsOK = and (zipWith rowOK [0 ..] rows)
   rowOK i [p, indeg, outdeg, _sccId, sccSize, reachIn] =
@@ -89,7 +89,7 @@ checkB code emask
   b = build 5 3 3 (edgeRows arcs)
   flagOf i = (if odd i then 1 else 0) + (if testBit emask i then 2 else 0)
   flagses = [flagOf i | i <- [0 .. 2]]
-  got = verdicts b 2 flagses
+  got = verdicts b (reachFrom b (entries 2 flagses)) flagses
   reach = reachB arcs [i | i <- [0 .. 2], testBit emask i]
   referenced = IS.fromList (map snd arcs)
   want =
