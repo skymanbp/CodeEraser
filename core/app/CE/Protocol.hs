@@ -77,19 +77,27 @@ internalError = errReply Nothing "internal"
 -- the score batch (M5-3i), each walking the declare-then-implement
 -- path the goldens pin. Five identical case arms once inflated
 -- dispatch to CC 19 (the M5-close warn repayment): the table IS the
--- dispatch, one arm total.
-families :: [(String, String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString)]
+-- dispatch — and since batch 9 P12 the hello's capability list is
+-- DERIVED from it (famCap), so a capability declared without a
+-- responder is unrepresentable, not merely undisciplined.
+data Fam = Fam
+  { famCap :: String
+  , famType :: String
+  , famRespond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+  }
+
+families :: [Fam]
 families =
-  [ ("fourclass.request", FourClass.respond)
-  , ("graph.request", Graph.respond)
-  , ("clone.request", Clone.respond)
-  , ("docdup.request", Docdup.respond)
-  , ("verdict.request", Verdict.respond)
-  , ("scan.request", Scan.respond)
-  , ("structure.request", Structure.respond)
-  , ("trend.request", Trend.respond)
-  , ("erase.request", Erase.respond)
-  , ("audit.request", Audit.respond)
+  [ Fam "fourclass/2" "fourclass.request" FourClass.respond
+  , Fam "graph/1" "graph.request" Graph.respond
+  , Fam "clone/1" "clone.request" Clone.respond
+  , Fam "docdup/1" "docdup.request" Docdup.respond
+  , Fam "verdict/1" "verdict.request" Verdict.respond
+  , Fam "scan/1" "scan.request" Scan.respond
+  , Fam "structure/1" "structure.request" Structure.respond
+  , Fam "trend/1" "trend.request" Trend.respond
+  , Fam "erase/1" "erase.request" Erase.respond
+  , Fam "audit/1" "audit.request" Audit.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's
@@ -99,11 +107,12 @@ families =
 -- reply (accept:false), which is richer than an error line.
 dispatch :: String -> Envelope -> B8.ByteString -> B8.ByteString
 dispatch version env line
-  | envType env == "hello" = Handshake.respond proto version line
+  | envType env == "hello" =
+      Handshake.respond proto ("hello" : map famCap families) version line
   | not (majorMatches (envProto env)) =
       errReply (envId env) "bad_request" ("proto missing or major-mismatched (server " <> proto <> ")")
-  | Just familyRespond <- lookup (envType env) families =
-      familyReply env (familyRespond proto line)
+  | (f : _) <- [f | f <- families, famType f == envType env] =
+      familyReply env (famRespond f proto line)
   | otherwise = errReply (envId env) "unknown_type" ("unsupported type: " <> envType env)
 
 -- | A family-level decode failure hands back rid = Nothing, but the

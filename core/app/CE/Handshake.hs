@@ -5,7 +5,9 @@
 -- | Hello semantics: SemVer negotiation (major must match) plus
 -- capability discovery. Envelope concerns — the proto constant,
 -- dispatch, error replies — live in "CE.Protocol", which passes
--- @proto@ in to keep the dependency one-directional.
+-- @proto@ AND the capability list in (batch 9 P12: the list is
+-- derived from the dispatch table, one table for both hats) to
+-- keep the dependency one-directional.
 module CE.Handshake (respond) where
 
 import Data.Aeson
@@ -21,8 +23,11 @@ instance FromJSON Hello where
   parseJSON = withObject "Hello" $ \o -> Hello <$> o .: "proto"
 
 -- | Informational discovery only — SemVer stays the sole authority
--- for accept/reject (contracts/VERSIONING.md §1).
--- | fourclass/2 = the anchor-width request shape (proto 2.0.0). An
+-- for accept/reject (contracts/VERSIONING.md §1). The list itself
+-- is derived in CE.Protocol from the dispatch table and threaded in
+-- (P12); the DECLARATION history stays here, with the hello reply
+-- it documents:
+-- fourclass/2 = the anchor-width request shape (proto 2.0.0). An
 -- old client probing fourclass/1 sees absence and degrades to L1
 -- loudly instead of sending the un-parseable two-element shape.
 -- graph/1 = the M5-2 graph family (proto 2.1.0, additive).
@@ -40,26 +45,12 @@ instance FromJSON Hello where
 -- audit/1 = the session/commit duplication verdict family (M9
 -- batch 7 slice 7, proto 2.24.0, additive), likewise declared with
 -- its judgment.
-capabilities :: [String]
-capabilities =
-  [ "hello"
-  , "fourclass/2"
-  , "graph/1"
-  , "clone/1"
-  , "docdup/1"
-  , "verdict/1"
-  , "scan/1"
-  , "structure/1"
-  , "trend/1"
-  , "erase/1"
-  , "audit/1"
-  ]
-
 data Reply = Reply
   { replyProto :: String
   , replyAccept :: Bool
   , replyReason :: Maybe String
   , replyVersion :: String
+  , replyCaps :: [String]
   }
 
 instance ToJSON Reply where
@@ -70,18 +61,18 @@ instance ToJSON Reply where
       , "server" .= ("ce-core" :: String)
       , "version" .= replyVersion r
       , "accept" .= replyAccept r
-      , "capabilities" .= capabilities
+      , "capabilities" .= replyCaps r
       ]
         <> maybe [] (\why -> ["reason" .= why]) (replyReason r)
 
 -- | Answer one hello line with one response line.
-respond :: String -> String -> B8.ByteString -> B8.ByteString
-respond proto version line = BL.toStrict . encode $ case eitherDecodeStrict line of
-  Left err -> Reply proto False (Just ("parse error: " <> err)) version
+respond :: String -> [String] -> String -> B8.ByteString -> B8.ByteString
+respond proto caps version line = BL.toStrict . encode $ case eitherDecodeStrict line of
+  Left err -> Reply proto False (Just ("parse error: " <> err)) version caps
   Right h
     | major (helloProto h) /= major proto ->
-        Reply proto False (Just ("incompatible proto: " <> helloProto h)) version
-    | otherwise -> Reply proto True Nothing version
+        Reply proto False (Just ("incompatible proto: " <> helloProto h)) version caps
+    | otherwise -> Reply proto True Nothing version caps
 
 major :: String -> String
 major = takeWhile (/= '.')
