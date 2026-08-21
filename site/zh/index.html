@@ -93,6 +93,18 @@
   <div class="card"><b>守卫钩子</b><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，停止时审计，会话开始报健康。</p></div>
 </div>
 
+<!-- bench:begin -->
+<h2>实测 · v0.7.3</h2>
+<div class="installs">
+<div class="install"><span class="k">hook 探针 p50</span><code>54 ms</code></div>
+<div class="install"><span class="k">全仓扫描 p50</span><code>516 ms</code></div>
+<div class="install"><span class="k">增量索引 p50 (warm)</span><code>496 ms</code></div>
+<div class="install"><span class="k">守卫误报（人裁 630 事件）</span><code>0.00 per 500 edits </code></div>
+<div class="install"><span class="k">docdup 判准（冻结黄金集）</span><code>17/17 scoped (100%) </code></div>
+</div>
+<p class="cap">每个数字由回放产生（cli/tests/bench.rs），单源 contracts/bench/bench.json——绝不手填。</p>
+<!-- bench:end -->
+
 <h2>内部构造</h2>
 <figure class="arch">
   <img src="/assets/architecture.svg" alt="架构图：仓库源由 Rust 前端度量（tree-sitter、winnowing 索引、引用图、churn、常驻 daemon），Haskell 核判决（结构熵、克隆、存活性、文档重复、棘轮分数），五张面孔渲染（终端、GUI、MCP、hooks、CI）" loading="lazy">

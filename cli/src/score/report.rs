@@ -5,8 +5,8 @@
 //! CE_LANG=zh picks whole Chinese lines; FAIL/pass stay English in
 //! both (exit-code vocabulary, not prose). JSON is never translated.
 
-use super::{Outcome, SCHEMA_ID};
 use crate::i18n::{line, t};
+use crate::score::model::{Outcome, SCHEMA_ID};
 use serde_json::json;
 
 /// The `--roast` easter egg: one verdict-flavored line per score

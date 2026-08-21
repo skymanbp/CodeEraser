@@ -94,6 +94,18 @@ ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pas
   <div class="card"><b>Guard hooks</b><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
 </div>
 
+<!-- bench:begin -->
+<h2>Measured · v0.7.3</h2>
+<div class="installs">
+<div class="install"><span class="k">hook probe p50</span><code>54 ms</code></div>
+<div class="install"><span class="k">full scan p50</span><code>516 ms</code></div>
+<div class="install"><span class="k">incremental index p50 (warm)</span><code>496 ms</code></div>
+<div class="install"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits </code></div>
+<div class="install"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%) </code></div>
+</div>
+<p class="cap">Every number is produced by replay (cli/tests/bench.rs) from one source, contracts/bench/bench.json — never hand-filled.</p>
+<!-- bench:end -->
+
 <h2>Under the hood</h2>
 <figure class="arch">
   <img src="/assets/architecture.svg" alt="Architecture: repository sources measured by the Rust frontend (tree-sitter, winnowing index, reference graph, churn, warm daemon), judged by the Haskell core (entropy, clones, liveness, doc duplication, ratcheted score), rendered by five faces (terminal, GUI, MCP, hooks, CI)" loading="lazy">

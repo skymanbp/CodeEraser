@@ -138,6 +138,7 @@ audit + CI gates are the backstop.
 - [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) — the locked plan; every milestone answers to it
 - [EVAL-SET](docs/EVAL-SET.md) — frozen evaluation universes, samples, audits and their gates
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — measured budgets and replay ledgers
+- [BENCH](docs/BENCH.md) — the bench dashboard: per-release latency series + frozen evaluation points, generated from `contracts/bench/bench.json` (replay-only; a CI gate refuses hand-filled surfaces)
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
 - [docs/RELEASE.md](docs/RELEASE.md) — the two-phase release runbook
 - [docs/reference/methodology.md](docs/reference/methodology.md) — **how every verdict is computed**: the math of each judgment family, one file per family, every formula and constant cited to the line that implements it

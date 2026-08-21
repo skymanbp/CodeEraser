@@ -121,6 +121,7 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 - [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) — 锁定计划；每个里程碑对它负责
 - [EVAL-SET](docs/EVAL-SET.md) — 冻结评估宇宙、抽样、审计及其门禁
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — 实测预算与重放台账
+- [BENCH](docs/BENCH.md) — bench 仪表盘：逐版本延迟系列 + 冻结评估点位，由 `contracts/bench/bench.json` 生成（只准回放；CI 门拒绝手填面）
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — wire 契约与 SemVer 规则
 - [docs/RELEASE.md](docs/RELEASE.md) — 两段式发版 runbook
 - [docs/reference/methodology.md](docs/reference/methodology.md) — **判决怎么算出来的**：每个判决族的数学实现，一族一篇，每条公式与常数都引到实现它的那一行

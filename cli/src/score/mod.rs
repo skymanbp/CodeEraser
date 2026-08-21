@@ -11,9 +11,11 @@
 
 pub mod baseline;
 pub mod knobs;
+pub mod model;
 pub mod report;
 pub mod wire;
 
+pub use model::{Outcome, SCHEMA_ID};
 pub use report::{print, report_json};
 
 use crate::graph::deadcode;
@@ -22,12 +24,6 @@ use crate::{churn, dedup, join, scan};
 use anyhow::Result;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::{Path, PathBuf};
-
-/// 0.2.0 (review C12): ratchet.fail grew degraded/dedup semantics
-/// at proto 2.5/2.6 and the ratchet object gains `failed` (held
-/// condition names) + top-level `scoreScale` — plan §7.1 demands
-/// the bump.
-pub const SCHEMA_ID: &str = "ce.check-report/0.2.0";
 
 pub struct Opts {
     pub db: Option<PathBuf>,
@@ -54,19 +50,6 @@ pub struct Opts {
     /// only this soft line and empty tables says exactly that — no
     /// ceilings to bust, no members to add, one fence for every point.
     pub pinned_soft: Option<u64>,
-}
-
-pub struct Outcome {
-    pub reply: wire::Reply,
-    pub files: usize,
-    pub sim_pairs: usize,
-    pub members: usize,
-    /// Distinct blocks that collapsed into an already-present member
-    /// id (same unit pair, second block) — reported, never silent.
-    pub collapsed: usize,
-    /// Intra-file block pairs the sim table cannot carry (u < v is
-    /// the wire contract); their members still enter the set.
-    pub skipped_self: usize,
 }
 
 /// The measurement half of a check run — everything read off the

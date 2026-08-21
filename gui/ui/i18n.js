@@ -8,6 +8,10 @@ const CE_I18N = {
   en: {
     tabStructure: "structure", tabTrend: "trend", tabCandidates: "candidates",
     tabScore: "score", tabErase: "erase", tabReports: "reports",
+    tabBench: "bench",
+    benchSeries: "latency series (p50/p95 ms, self repository, release builds)",
+    benchMetric: "metric", benchUnit: "cells are p50/p95 in ms; · = not measured at that version",
+    benchFrozen: "frozen evaluation points (value + sealed-ledger source)",
     deep: "deep (S6)", days: "days", scan: "scan", off: "off",
     commits: "commits", load: "load",
     resolvedTo: (p) => `resolved to ${p}`,
@@ -60,6 +64,10 @@ const CE_I18N = {
   zh: {
     tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选",
     tabScore: "分数", tabErase: "擦除", tabReports: "报告",
+    tabBench: "实测",
+    benchSeries: "延迟系列（p50/p95 毫秒，自仓，release 构建）",
+    benchMetric: "指标", benchUnit: "单元格为 p50/p95 毫秒；· = 该版本未测",
+    benchFrozen: "冻结评估点位（数值 + 封册出处）",
     deep: "深查 (S6)", days: "天数", scan: "扫描", off: "关",
     commits: "提交数", load: "加载",
     resolvedTo: (p) => `已锚定到 ${p}`,

@@ -330,16 +330,16 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
    counts as chips, row arrays as real tables ---- */
 #hub-chips { display: flex; gap: 12px; flex-wrap: wrap; color: var(--dim); font-size: 12px; align-self: center; }
 #hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#hub-tables h3 { font-size: 12px; color: var(--dim); letter-spacing: 0.06em; text-transform: uppercase; margin: 14px 0 6px; }
-#hub-tables h3 small { color: var(--faint); margin-left: 6px; }
-#hub-tables table {
+#hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: 12px; color: var(--dim); letter-spacing: 0.06em; text-transform: uppercase; margin: 14px 0 6px; }
+#hub-tables h3 small, #bench-series h3 small { color: var(--faint); margin-left: 6px; }
+#hub-tables table, #bench-series table {
   border-collapse: collapse;
   font-family: var(--mono);
   font-size: 12px;
   width: 100%;
   max-width: 1080px;
 }
-#hub-tables th {
+#hub-tables th, #bench-series th {
   text-align: left;
   color: var(--faint);
   font-weight: 400;
@@ -347,11 +347,11 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
   padding: 3px 12px 3px 0;
   border-bottom: 1px solid var(--line);
 }
-#hub-tables td {
+#hub-tables td, #bench-series td {
   padding: 3px 12px 3px 0;
   border-bottom: 1px solid var(--line);
   color: var(--dim);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-#hub-tables td:first-child { color: var(--ink); }
+#hub-tables td:first-child, #bench-series td:first-child { color: var(--ink); }

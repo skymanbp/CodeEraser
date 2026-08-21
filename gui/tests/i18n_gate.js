@@ -29,7 +29,7 @@ for (const m of html.matchAll(/data-i18n(?:-ph)?="([^"]+)"/g)) used.add(m[1]);
 // i18n.js included: axisName() consumes "axisNames" from inside the
 // table's own file, and a harvest that skips it calls that key dead
 for (const f of ["app.js", "structure.js", "structree.js", "trend.js", "candidates.js",
-                 "score.js", "erase.js", "reports.js", "i18n.js"]) {
+                 "score.js", "erase.js", "reports.js", "bench.js", "i18n.js"]) {
   for (const m of ui(f).matchAll(/\btr\(\s*"([^"]+)"/g)) used.add(m[1]);
 }
 

@@ -26,7 +26,8 @@ fn main() {
             commands::docdup_report,
             commands::check_report,
             commands::erase_preview,
-            commands::erase_apply
+            commands::erase_apply,
+            commands::bench_doc
         ])
         .run(tauri::generate_context!())
         .expect("tauri run");
