@@ -53,14 +53,10 @@ sha_of() {
 fetch() { # $1=url $2=dest — file:// is the hermetic test transport
     case "$1" in
         file://*) cp "${1#file://}" "$2" ;;
-        # bounded on purpose: an unbounded body is written to disk
-        # before the hash is ever computed, and a captive portal that
-        # never finishes would hang the hook rather than fail it
-        # --proto guards the FIRST request; the bytes actually arrive
-        # over the redirect GitHub Releases always issues, and that leg
-        # is governed by --proto-redir — unset, it was whatever the
-        # installed curl defaulted to rather than a stated policy
-        *) curl -fsSL --proto '=https' --proto-redir '=https' \n                --max-time 120 --max-filesize 104857600 -o "$2" "$1" ;;
+        # bounded on purpose (portals that never finish must fail the
+        # hook, not hang it); --proto-redir because --proto guards only
+        # the FIRST request and the bytes arrive over GitHub's redirect
+        *) curl -fsSL --proto '=https' --proto-redir '=https' --max-time 120 --max-filesize 104857600 -o "$2" "$1" ;;
     esac
 }
 
