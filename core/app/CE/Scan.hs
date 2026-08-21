@@ -15,50 +15,38 @@
 module CE.Scan (respond) where
 
 import CE.Scan.Cost (gradeTable, gradeWith, scanRowCap)
-import CE.Wire (Family (..), ascendingOn, respondWith)
+import CE.Wire (RowsReq (..), ascendingOn, rowsFamily)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 
-data ScanReq = ScanReq
-  { reqId :: Value
-  , reqRows :: [[Integer]]
-  , reqGrades :: [[Integer]]
-  }
-
-instance FromJSON ScanReq where
-  parseJSON = withObject "ScanReq" $ \o ->
-    ScanReq <$> o .: "id" <*> o .: "rows" <*> o .:? "grades" .!= []
 
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto =
-  respondWith
-    Family
-      { famName = "scan"
-      , famId = reqId
-      , -- grades count toward the cap too (review C15: the declared
-        -- ceiling missed the second request dimension)
-        famOverCap = \req ->
-          toInteger (length (reqRows req) + length (reqGrades req)) > scanRowCap
-      , famOffence = violation
-      , famDegraded = \req -> reply proto req [] True
-      , famJudged = \req ->
-          let eff = effective (reqGrades req)
-           in reply proto req (map (grade eff) (reqRows req)) False
-      }
+  rowsFamily
+    "scan"
+    -- grades count toward the cap too (review C15: the declared
+    -- ceiling missed the second request dimension)
+    (\req -> toInteger (length (rowsOf req) + length (gradesOf req)) > scanRowCap)
+    violation
+    (\req -> reply proto req [] True)
+    ( \req ->
+        let eff = effective (gradesOf req)
+         in reply proto req (map (grade eff) (rowsOf req)) False
+    )
 
 -- | First boundary-contract offender in request order (Clone.hs
 -- posture: the message names the violator deterministically); the
 -- ascending pass compares CODES alone (warn values legitimately
 -- vary), through CE.Wire's shared checker.
-violation :: ScanReq -> Maybe String
+violation :: RowsReq -> Maybe String
 violation req =
   asum
-    [ asum (zipWith rowShape [0 :: Int ..] (reqRows req))
-    , asum (zipWith gradeShape [0 :: Int ..] (reqGrades req))
-    , ascendingOn "grade" (take 1) (reqGrades req)
+    [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
+    , asum (zipWith gradeShape [0 :: Int ..] (gradesOf req))
+    , ascendingOn "grade" (take 1) (gradesOf req)
     ]
 
 rowShape :: Int -> [Integer] -> Maybe String
@@ -108,16 +96,16 @@ grade table row = case row of
 -- whole so the Rust client asserts the round trip (the P4 knob-echo
 -- pattern, table form). A degraded reply carries fail=true — a gate
 -- that could not judge must never pass, said by the core.
-reply :: String -> ScanReq -> [Integer] -> Bool -> B8.ByteString
+reply :: String -> RowsReq -> [Integer] -> Bool -> B8.ByteString
 reply proto req levels degraded =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("scan.result" :: String)
-    , "id" .= reqId req
+    , "id" .= rowsId req
     , "levels" .= levels
     , "counts"
         .= object
-          [ "rows" .= length (reqRows req)
+          [ "rows" .= length (rowsOf req)
           , "warns" .= count 1
           , "fails" .= count 2
           ]
@@ -126,7 +114,7 @@ reply proto req levels degraded =
       -- never validated, and an unvalidated table must not be
       -- presented as effective (review C14; the Verdict tooLarge
       -- posture)
-      "grades" .= [[c, w, f] | (c, (w, f)) <- effective (if degraded then [] else reqGrades req)]
+      "grades" .= [[c, w, f] | (c, (w, f)) <- effective (if degraded then [] else gradesOf req)]
     , "degraded" .= degraded
     ]
       <> ["reason" .= ("scan_too_large" :: String) | degraded]

@@ -11,6 +11,7 @@ module CE.Protocol (internalError, proto, respond) where
 
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
+import qualified CE.Erase as Erase
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
@@ -26,6 +27,11 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.16.0 = the erase minor (M9 batch 3, plan v2.8 ②): the erase/1
+-- family — the deterministic eraser's safety predicate. Dense
+-- [class, w, x, y, z] fact rows in, [eraseable, reason] verdicts
+-- out in request order; knobless by design (safety is not tunable),
+-- paths never on the wire, degraded = fail with an empty table.
 -- 2.15.0 = the ROI-pricing minor (plan v2.7 ②, v0.7): the split
 -- advisory's two priced legs — structure.request gains the OPTIONAL
 -- `seamClones` [file, start, end] block spans and `seamChurn`
@@ -88,7 +94,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.15.0"
+proto = "2.16.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
@@ -151,6 +157,7 @@ families =
   , ("scan.request", Scan.respond)
   , ("structure.request", Structure.respond)
   , ("trend.request", Trend.respond)
+  , ("erase.request", Erase.respond)
   ]
 
 -- | Every non-hello message must carry a proto with the server's

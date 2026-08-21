@@ -107,6 +107,7 @@ same pins automatically and refuses a mismatching download out loud.
 | `ce churn` / `ce join` | git-window churn; the three-signal join |
 | `ce structure` | tree-scale structure judgment (seven axes); `--split-candidates` prices the best seam of every file past the soft line — or writes its cohesion alibi |
 | `ce trend` | score trajectory over mainline history (cache rebuilds from git) |
+| `ce erase` | deterministic two-phase eraser: plans only provably-safe removals (dead files, verbatim doc twins, whole-unit T1 twins), dry-run default, `--apply` behind clean-worktree preconditions |
 | `ce check` / `ce baseline` | ADR-006 ratchet + score floor against `ce-baseline.json` |
 | `ce mcp` | read-only MCP server: every report above as a tool |
 | `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |

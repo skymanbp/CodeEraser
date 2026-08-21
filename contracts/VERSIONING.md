@@ -149,6 +149,21 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族
+> `erase/1` —— 确定性两段式擦除器的**安全谓词**（契约册
+> docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。
+> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，
+> 路径永不上 wire——Rust 按序回贴标签），class 冻结位 0=dead_file
+> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc
+> （w=verbatim 词数，x/y=两侧段词数，z=字节相等布尔）、2=t1_twin
+> （w=整单元覆盖，x=字节相等，y=副本文件已判死，z=语言未解析数）；
+> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。
+> `erase.result`：`rows=[[eraseable,reason]]` 按请求序，reason 冻结位
+> 0=eraseable/1=language_unresolved/2=not_full_segment/3=bytes_differ/
+> 4=copy_not_dead/5=unit_not_covered；`counts{rows,eraseable,advisory}`；
+> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被
+> 拒判的计划不授权任何擦除。fail 仅随 degraded（计划本身不设门；
+> 自仓零行门是 CLI `--check` 对本表的判读）。
 > **2.15.0**（v0.7 拆分 ROI v1.1 价目，计划 v2.7 ②，2026-08-20）：
 > `structure.request` 加性可选两表 `seamClones=[[fileId,start,end]]`
 > （T1/T2 克隆块跨距——span 契约与 seamUnits 同一检查器）与
@@ -171,7 +186,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.15.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.16.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -187,11 +202,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
-  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/1"]`；/2 = 2.0.0 的
-  锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
+  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/1","erase/1"]`；/2 =
+  2.0.0 的锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
-  trend/1 = M7.5b 趋势族，2.13.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  trend/1 = M7.5b 趋势族，2.13.0 声明；erase/1 = M9 批 3 擦除谓词族，2.16.0
+  声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -287,5 +303,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.15.0 | §1 所列两处常量 |
+| 协议 | 2.16.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

@@ -35,6 +35,8 @@ instance FromJSON Hello where
 -- additive), likewise declared with its judgment.
 -- trend/1 = the score-trajectory slope family (M7.5b, proto 2.13.0,
 -- additive), likewise declared with its judgment.
+-- erase/1 = the deterministic-eraser predicate family (M9 batch 3,
+-- proto 2.16.0, additive), likewise declared with its judgment.
 capabilities :: [String]
 capabilities =
   [ "hello"
@@ -46,6 +48,7 @@ capabilities =
   , "scan/1"
   , "structure/1"
   , "trend/1"
+  , "erase/1"
   ]
 
 data Reply = Reply

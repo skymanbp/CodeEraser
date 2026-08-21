@@ -149,8 +149,10 @@ jobs:
       # which is the point: the floor bites on collapse, not drift.
       # (Stale-margin fix, audit 2026-08-21.) Also the deadcode zero-dead
       # gate and the docdup zero-report gate (audit D6/D9: the
-      # "全处置" acceptance rows were discipline-only before).
-      - name: Dogfood (scan + dedup ratchet + check floor + deadcode + docdup)
+      # "全处置" acceptance rows were discipline-only before), and the
+      # erase zero-row gate (erase.md acceptance: this repository
+      # keeps itself clean — a non-empty self-plan is a red gate).
+      - name: Dogfood (scan + dedup ratchet + check floor + deadcode + docdup + erase)
         shell: bash
         working-directory: cli
         run: |
@@ -160,6 +162,7 @@ jobs:
           cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 800
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
+          cargo run --locked -- erase .. --core "$CORE_BIN" --check
 
       # The churn axis (score axis 5) needs the git-subprocess walk —
       # 216s measured locally at --days 14, so it runs on ONE matrix

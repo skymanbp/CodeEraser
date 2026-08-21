@@ -17,11 +17,15 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 /// One live cached segment — the judgment's unit of identity.
+/// `words` is the admitted post-strip word count (the cached column
+/// the erase planner's full-segment test divides by; verbatim runs
+/// are measured in the same unit, F26).
 pub struct SegRow {
     pub path: String,
     pub kind: i64,
     pub start_line: i64,
     pub end_line: i64,
+    pub words: i64,
     pub set: Vec<u64>,
 }
 
@@ -31,16 +35,17 @@ pub struct SegRow {
 pub fn live_rows(idx: &Index) -> Result<Vec<SegRow>> {
     let rows = crate::graph::load::rows(
         idx.raw(),
-        "SELECT f.path, d.kind, d.start_line, d.end_line, d.shingles
+        "SELECT f.path, d.kind, d.start_line, d.end_line, d.words, d.shingles
          FROM docsegs d JOIN files f ON f.id = d.file_id
          WHERE d.exempt = 0 ORDER BY f.path, d.start_line, d.kind",
         |r| {
-            let head: (String, i64, i64, i64) = (r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?);
-            Ok((head, r.get::<_, Vec<u8>>(4)?))
+            let head: (String, i64, i64, i64, i64) =
+                (r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?);
+            Ok((head, r.get::<_, Vec<u8>>(5)?))
         },
     )?;
     rows.into_iter()
-        .map(|((path, kind, start_line, end_line), blob)| {
+        .map(|((path, kind, start_line, end_line, words), blob)| {
             let set =
                 shingle_set(&blob).with_context(|| format!("{path}:{start_line} docsegs row"))?;
             Ok(SegRow {
@@ -48,6 +53,7 @@ pub fn live_rows(idx: &Index) -> Result<Vec<SegRow>> {
                 kind,
                 start_line,
                 end_line,
+                words,
                 set,
             })
         })

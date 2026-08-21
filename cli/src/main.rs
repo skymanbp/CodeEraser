@@ -6,6 +6,7 @@
 
 mod main_cli;
 mod main_cmds;
+mod main_erase;
 mod main_judge;
 mod main_lang;
 mod main_score;
@@ -81,6 +82,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Join(a) => main_judge::join_cmd(a),
         Cmd::Structure(a) => main_judge::structure_cmd(a),
         Cmd::Trend(a) => main_judge::trend_cmd(a),
+        Cmd::Erase(a) => main_erase::erase_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),
         Cmd::Dedup(a) => cmds::dedup_cmd(a),

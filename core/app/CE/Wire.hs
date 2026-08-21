@@ -1,3 +1,7 @@
+-- aeson 2.x object keys are Key, not String; string literals for
+-- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
+{-# LANGUAGE OverloadedStrings #-}
+
 -- | The judgment-family wire skeleton (ADR-008 P3 ratchet
 -- repayment: the sixth family recloned the respond cascade and the
 -- ascending checker for the third time — the repo's own dedup gate
@@ -7,11 +11,33 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), applyRows, ascendingOn, pick, respondWith, notAscending) where
+module CE.Wire (Family (..), RowsReq (..), applyRows, ascendingOn, pick, respondWith, rowsFamily, notAscending) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
+
+-- | The [[Integer]]-rows request the table families share: id, the
+-- fact rows, and both optional side tables — Trend/Erase read
+-- knobs, Scan reads grades, and each family ignores the key it does
+-- not own exactly as the envelope's unknown-field rule already
+-- demands (§1). Promoted here when the NINTH family (erase/1)
+-- minted the record + FromJSON pair verbatim for the third time —
+-- the scan/trend twins were a banked ledger class until then.
+data RowsReq = RowsReq
+  { rowsId :: Value
+  , rowsOf :: [[Integer]]
+  , knobsOf :: [[Integer]]
+  , gradesOf :: [[Integer]]
+  }
+
+instance FromJSON RowsReq where
+  parseJSON = withObject "RowsReq" $ \o ->
+    RowsReq
+      <$> o .: "id"
+      <*> o .: "rows"
+      <*> o .:? "knobs" .!= []
+      <*> o .:? "grades" .!= []
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family
@@ -23,6 +49,30 @@ data Family req = Family
   , famDegraded :: req -> B8.ByteString
   , famJudged :: req -> B8.ByteString
   }
+
+-- | The whole cascade for a RowsReq family — cap, offence, degraded
+-- and judged stay per-family ARGUMENTS (one authority per family),
+-- while the Family-literal plumbing lives once: after RowsReq
+-- landed, that literal was the last per-family clone the ratchet
+-- still charged the table families for.
+rowsFamily ::
+  String ->
+  (RowsReq -> Bool) ->
+  (RowsReq -> Maybe String) ->
+  (RowsReq -> B8.ByteString) ->
+  (RowsReq -> B8.ByteString) ->
+  B8.ByteString ->
+  Either (Maybe Value, String, String) B8.ByteString
+rowsFamily name overCap offence deg jud =
+  respondWith
+    Family
+      { famName = name
+      , famId = rowsId
+      , famOverCap = overCap
+      , famOffence = offence
+      , famDegraded = deg
+      , famJudged = jud
+      }
 
 -- | decode → cap check (a complete degraded reply, never a
 -- truncated one) → boundary contract (error/contract naming the

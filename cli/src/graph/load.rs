@@ -64,6 +64,21 @@ pub(crate) fn t4<A: Col, B: Col, C: Col, D: Col>(
     Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
 }
 
+/// Every path owning at least one unresolved site — the erase
+/// planner's trust boundary (erase.md: a dead-file row is refused
+/// while its LANGUAGE still carries unresolved sites; the scalar
+/// count travels with the deadcode report, this names the owners so
+/// the language fold is a fact, never a guess).
+pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
+    rows(
+        idx.raw(),
+        "SELECT DISTINCT f.path FROM sites s JOIN files f ON f.id = s.file_id
+         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id)
+         ORDER BY f.path",
+        |r| r.get(0),
+    )
+}
+
 pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
     let conn = idx.raw();
     // ONE read snapshot for one graph: as three autocommit statements

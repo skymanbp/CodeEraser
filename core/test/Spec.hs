@@ -14,6 +14,7 @@ import CE.Graph.Cost (edgeCap, nodeCap)
 import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified CloneProps
 import qualified EntropyProps
+import qualified EraseProps
 import qualified GraphProps
 import qualified JoinProps
 import qualified Reference
@@ -66,6 +67,7 @@ main = do
       , goldenPairs "scan/golden.ndjson"
       , goldenPairs "structure/golden.ndjson"
       , goldenPairs "trend/golden.ndjson"
+      , goldenPairs "erase/golden.ndjson"
       , structural
       , refusalProbes
       , docdupStructural
@@ -80,6 +82,7 @@ main = do
       , ScanProps.battery
       , StructureProps.battery
       , TrendProps.battery
+      , EraseProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
       , VerdictKnobProps.battery

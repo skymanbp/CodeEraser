@@ -95,6 +95,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce churn` / `ce join` | git 窗口变动；三信号联结 |
 | `ce structure` | 树尺度结构判决（七轴）；`--split-candidates` 为越线文件计最优缝价——或写下它的内聚豁免 |
 | `ce trend` | 主线历史分数轨迹（缓存可从 git 重建） |
+| `ce erase` | 确定性两段式擦除：只计划可证安全的消除（死文件、逐字文档孪生、整单元 T1 孪生），默认演练，`--apply` 有干净工作区前置 |
 | `ce check` / `ce baseline` | ADR-006 棘轮 + 分数地板（对 `ce-baseline.json`） |
 | `ce mcp` | 只读 MCP 服务器：上述每个报告都是一个工具 |
 | `ce doctor` / `ce eject` | 健康行；按项目完整卸载（默认 dry-run） |

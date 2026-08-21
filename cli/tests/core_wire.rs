@@ -54,6 +54,7 @@ fn wire_goldens_roundtrip() {
         "../contracts/fixtures/scan/golden.ndjson",
         "../contracts/fixtures/structure/golden.ndjson",
         "../contracts/fixtures/trend/golden.ndjson",
+        "../contracts/fixtures/erase/golden.ndjson",
     ] {
         for (n, (request, expected)) in fixture_pairs(file).into_iter().enumerate() {
             writeln!(stdin, "{request}").expect("write");
@@ -87,8 +88,8 @@ fn corelink_open_and_desync() {
     );
     // every declared family, one loop (fourclass/2 = M5-1c anchor
     // shape; graph/1 = M5-2a; clone/docdup/verdict = M5-3a; scan/1
-    // = ADR-008 P3; structure/1 = M6 S2; trend/1 = M7.5b) — the
-    // per-cap assert ladder tripped the self-ratchet at row eight
+    // = ADR-008 P3; structure/1 = M6 S2; trend/1 = M7.5b; erase/1 =
+    // M9 batch 3) — the assert ladder tripped the ratchet at row 8
     for cap in [
         "hello",
         "fourclass/2",
@@ -99,6 +100,7 @@ fn corelink_open_and_desync() {
         "scan/1",
         "structure/1",
         "trend/1",
+        "erase/1",
     ] {
         assert!(link.has(cap), "capability {cap} declared");
     }

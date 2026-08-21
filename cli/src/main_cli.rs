@@ -7,6 +7,7 @@
 //! main_lang::localize over the built Command.
 
 use crate::main_cmds::{DedupArgs, OutFormat};
+use crate::main_erase::EraseArgs;
 use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
 use clap::{Parser, Subcommand};
@@ -126,6 +127,9 @@ pub(crate) enum Cmd {
     /// Score trajectory over mainline history (M7-P4): per-commit
     /// absolute check score, cached in the index, rebuildable
     Trend(TrendArgs),
+    /// Deterministic two-phase eraser (M9): plan what is provably
+    /// safe to erase via the core's erase/1; dry-run by default
+    Erase(EraseArgs),
     /// ADR-006 gate (M5-3i): judge the repo against ce-baseline.json
     /// — ratchet OR --fail-under floor, either alone fails
     Check(CheckArgs),

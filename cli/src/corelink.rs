@@ -12,6 +12,11 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.16.0 = the erase minor (M9 batch 3, plan v2.8 ②): the erase/1
+/// family — the deterministic eraser's safety predicate. Dense
+/// [class, w, x, y, z] fact rows in, [eraseable, reason] verdicts
+/// out in request order; knobless by design (safety is not tunable),
+/// paths never on the wire, degraded = fail with an empty table.
 /// 2.15.0 = the ROI-pricing minor (plan v2.7 ②, v0.7): the split
 /// advisory's two priced legs — structure.request gains the optional
 /// `seamClones` block spans and `seamChurn` co-change pairs (legal
@@ -59,7 +64,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.15.0";
+pub const PROTO: &str = "2.16.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

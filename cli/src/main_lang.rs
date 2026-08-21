@@ -55,6 +55,9 @@ structure.split_candidates	为每个越过冻结软线的判决文件计一次�
 trend	主线历史上的分数轨迹（M7-P4）：逐提交绝对检查分，缓存于索引，可重建
 trend.commits	主线窗口：最新 N 个第一父提交
 trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部；GUI 传小批量以显示进度）
+erase	确定性两段式擦除（M9）：经核 erase/1 只计划可证安全消除的行；默认演练
+erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
+erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）
 check	ADR-006 门（M5-3i）：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负

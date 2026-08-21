@@ -18,7 +18,22 @@ ce check .          # the before-score and the current ratchet state
 Record the score line. Every deletion below must leave `ce check`
 passing; the score should not fall.
 
-## 1. Collect candidates (three signals, JSON faces)
+## 1. The deterministic pass FIRST — `ce erase`
+
+```sh
+ce erase .            # dry-run plan: what is PROVABLY safe to remove
+ce erase . --apply    # act on it (git repo + clean worktree required)
+```
+
+Three classes erase without judgment (dead files, verbatim doc
+duplicates, whole-unit byte-identical twins in dead files) — the tool
+plans them deterministically, applies behind preconditions, and
+proves its own convergence (contract: docs/reference/erase.md). Do
+NOT hand-delete anything the plan already covers. Everything it
+prints as `advisory` is YOUR half — that is where the judgment below
+begins.
+
+## 2. Collect the advisory candidates (three signals, JSON faces)
 
 ```sh
 ce dedup . --format json      # T1/T2 clone blocks
@@ -29,7 +44,7 @@ ce join . --days 14 --format json   # similarity × position × churn
 `ce join` ranks the strongest deletion candidates: high similarity,
 weak graph position, low churn. Start from the top of that list.
 
-## 2. Verify each candidate — no exceptions
+## 3. Verify each candidate — no exceptions
 
 For every candidate pair or dead unit:
 
@@ -44,14 +59,14 @@ For every candidate pair or dead unit:
 4. Dead code with an `entry_globs` match or exported surface may be a
    public API — confirm before removing.
 
-## 3. Delete in small batches, re-gate each batch
+## 4. Delete in small batches, re-gate each batch
 
 ```sh
 ce dedup . --check    # the clone budget must not grow
 <project test suite>  # the code must still work
 ```
 
-## 4. Prove convergence
+## 5. Prove convergence
 
 ```sh
 ce check .            # must pass; compare against the step-0 score

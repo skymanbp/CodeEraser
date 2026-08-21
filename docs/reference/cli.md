@@ -22,6 +22,7 @@ Commands:
   join       Three-signal join (M5-3h): similarity + graph position + per-unit churn, file and unit tiers (report-only until 3i)
   structure  Tree-scale structure judgment (M6): entropy, axes and findings via the core's structure/1 (report-only in S2)
   trend      Score trajectory over mainline history (M7-P4): per-commit absolute check score, cached in the index, rebuildable
+  erase      Deterministic two-phase eraser (M9): plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      ADR-006 gate (M5-3i): judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
   baseline   Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1)
   dedup      Detect T1/T2 clones via the winnowing fingerprint index (M2)
@@ -223,6 +224,26 @@ Options:
       --commits <COMMITS>  Mainline window: newest N first-parent commits [default: 30]
       --batch <BATCH>      Measure at most this many uncached commits per run (absent = all of them; the GUI passes small batches for progress)
   -h, --help               Print help
+```
+
+## ce erase
+
+```text
+Deterministic two-phase eraser (M9): plan what is provably safe to erase via the core's erase/1; dry-run by default
+
+Usage: ce erase [OPTIONS] [ROOT]
+
+Arguments:
+  [ROOT]  Directory to analyze (default: current directory)
+
+Options:
+      --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
+      --apply            Actually erase what the plan names (requires a git repository, a clean worktree, and unchanged targets; default is dry-run)
+      --check            Gate mode: exit 1 when the plan holds ANY eraseable row (the self-repo keeps itself clean)
+  -h, --help             Print help
 ```
 
 ## ce check

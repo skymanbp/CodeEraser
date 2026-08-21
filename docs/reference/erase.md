@@ -1,8 +1,10 @@
 # `ce erase` — the deterministic two-phase eraser (contract)
 
-> Status: contract-first (M9 batch 3, plan v2.8 ruling ②). The
+> Status: implemented (M9 batch 3, plan v2.8 ruling ②; wire face
+> `erase/1`, proto 2.16.0, predicate in CE.Erase.Cost). The
 > implementation answers to this file; divergence is a defect in one
-> of the two. Wire face: `erase/1`, one additive proto minor.
+> of the two. Acceptance is pinned by `cli/tests/erase_e2e.rs` and
+> the CI Dogfood `erase .. --check` self-gate.
 
 ## The ruling this implements
 

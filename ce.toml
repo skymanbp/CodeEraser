@@ -201,5 +201,26 @@ entry_globs = [
 # Request/SeamTables Vec-row field runs re-chaining inside wire.rs,
 # the SplitProps battery header against its ScanProps/StructureProps
 # siblings, and the knobTable at 19 rows. Measured after cargo fmt.
+# 174 -> 176 (M9 batch 3, the NINTH wire family erase/1): +2 after
+# repayment — the first family landing since the v0.6 floor left
+# only ~3 permille headroom, so the trend-era "+13 booked as the
+# family-face class" no longer fits and the class was repaid AT THE
+# MECHANISM instead: CE.Wire gains the shared RowsReq (id + rows +
+# both optional side tables) and Scan/Trend/Erase all decode
+# through it — the third family minting the record verbatim was the
+# promotion signal, and the banked scan/trend record twins
+# dissolved with it (-8); the Family-literal plumbing then followed
+# as rowsFamily, its bindings staying per-family arguments (-2).
+# Also repaid: EraseProps's truth table as two parallel data lists
+# (the per-case assertion line chained four windows), erase_e2e's
+# three named-refusal stanzas folded into one refuses() helper, and
+# the erase module's `super::` web re-rooted through model.rs (an
+# import cycle by the graph family's own axis-6 measure — the score
+# charged it before the ratchet could). What remains is the
+# irreducible one-authority core: each family's violation walker
+# and reply body, the EraseProps battery header against its
+# Scan/TrendProps siblings, EraseArgs against its arg-struct
+# siblings, and the e2e scaffold's internal twin. Measured after
+# cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 174
+budget = 176
