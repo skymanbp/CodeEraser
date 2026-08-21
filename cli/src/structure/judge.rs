@@ -189,8 +189,11 @@ fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<Sp
 }
 
 /// Judged languages only (plan v2.5): letting the scan-only arm in
-/// would change every axis — S2 would call a normal front-end dir
-/// (.ts beside .css) language-mixing, which is judgment drift.
+/// would change every axis the TREE feeds — geometry (S0), naming
+/// (S1), docs (S4) and both entropy rows all shift with the file
+/// population (S2 mixing reads pattern distributions, not file
+/// language — the old comment blamed the wrong axis; batch-7 defect
+/// sweep).
 fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
     files
         .iter()

@@ -189,12 +189,17 @@ bit 3  ce.toml [graph] entry_globs hit: exact path, dir/ prefix,
 bit 5  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md}  [flags.rs:38-42]
 ```
 
-([flags.rs:15-44](../../../cli/src/graph/deadcode/flags.rs#L15),
-[flags.rs:48-66](../../../cli/src/graph/deadcode/flags.rs#L48)). **Honest gap:** bits 4 and 6 are
-declared in `entryMask` but no producer in `cli/src` sets them — `flags_of` sets bits 1, 2, 3
-and 5 only, and bit 0 is never set at file granularity
-([flags.rs:9-14](../../../cli/src/graph/deadcode/flags.rs#L9)). The consequence is stated in the ladder
-itself: RG10's `unref_public` class cannot fire until symbol-level flags land
+([flags.rs:18-56](../../../cli/src/graph/deadcode/flags.rs#L18),
+[flags.rs:69-90](../../../cli/src/graph/deadcode/flags.rs#L69)). Bit 6 gained its producer in
+batch-7 slice 3: an inline `ce:allow(deadcode) -- <why>` anywhere in a file claims liveness —
+the docdup exemption discipline transplanted, a BARE marker claims nothing
+([flags.rs:51-67](../../../cli/src/graph/deadcode/flags.rs#L51)). **Honest gaps that remain:**
+bit 4 (dyn-referenced) has no producer, bit 0 is never set at file granularity
+([flags.rs:10-17](../../../cli/src/graph/deadcode/flags.rs#L10)), and declared Cargo `[[bin]]`
+targets and cabal `main-is` are parsed for the resolution ladder but not consulted by the
+entry policy — wiring them needs the package sweep in the flags path (ledgered, batch 8).
+The consequence of the bit-0 gap is stated in the ladder itself: RG10's `unref_public` class
+cannot fire until symbol-level flags land
 ([hs.rs:26-31](../../../cli/src/graph/ladder/hs.rs#L26)).
 
 Reachability is plain forward closure from the seeds over kept arcs

@@ -31,6 +31,10 @@ pub struct Counts {
     pub judged: u64,
     pub jaccard_dups: u64,
     pub dups: usize,
+    /// Exempted segments by class (batch-7 defect sweep): the
+    /// persisted classification, no longer silent in the report.
+    pub exempt_license: u64,
+    pub exempt_allow: u64,
 }
 
 /// The family metric block riding each reported pair (report::Pair
@@ -93,6 +97,7 @@ pub fn run_rows(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Rows> {
     let runs: BTreeMap<(usize, usize), u64> =
         cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
     let dups = reported_dups(&rows, &runs)?;
+    let (exempt_license, exempt_allow) = candidates::exempt_counts(&idx)?;
     let counts = Counts {
         segments: segs.len(),
         sent: cand.pairs.len() as u64,
@@ -101,6 +106,8 @@ pub fn run_rows(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Rows> {
         judged,
         jaccard_dups,
         dups: dups.len(),
+        exempt_license,
+        exempt_allow,
     };
     Ok((segs, dups, counts))
 }

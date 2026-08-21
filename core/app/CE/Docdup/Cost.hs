@@ -5,6 +5,7 @@ module CE.Docdup.Cost
   ( jaccardNum
   , jaccardDen
   , shingleK
+  , docLineCap
   , minDocTokens
   , verbatimFloor
   , docSetCap
@@ -74,6 +75,18 @@ docPairCap = 4096
 -- and drift-detectable.
 minDocTokens :: Integer
 minDocTokens = 50
+
+-- | Per-line word cap inside comment/docstring segments (batch-7
+-- defect sweep): an overlong line is masked as data/generated
+-- before shingling (md_para is exempt — prose legitimately writes
+-- one long line per paragraph). Execution stays in Rust at
+-- segmentation; this constant is the authority the echo pins the
+-- mirror to. The SKELETON_PREFIXES string table stays unpinned by
+-- decision: the echo grammar is numeric, and the table's drift
+-- guard is DOCDUP_REV (a semantic change there re-freezes the
+-- evaluation set by protocol).
+docLineCap :: Integer
+docLineCap = 200
 
 verbatimFloor :: Integer
 verbatimFloor = 50

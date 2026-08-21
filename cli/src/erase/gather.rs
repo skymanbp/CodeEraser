@@ -189,7 +189,13 @@ fn twin_candidates(
         out.push(Candidate {
             class: 2,
             facts: [
-                1,
+                // the REAL coverage bit, not a constant 1 (batch-7
+                // defect sweep): the pre-filter above makes it true
+                // by construction today, but a hard-coded claim left
+                // the core's reason-5 unit_not_covered unreachable —
+                // if the filter and this mint ever disagree, the
+                // core now refuses instead of licensing the erase
+                i64::from(!covered.is_empty()),
                 i64::from(eq),
                 i64::from(dead),
                 lang_count(lang_unres, tf),

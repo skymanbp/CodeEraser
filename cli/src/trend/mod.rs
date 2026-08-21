@@ -168,8 +168,14 @@ fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row
         commit: sha.to_string(),
         ts,
         score: r.score,
-        // the effective scale, never a /1000 literal (C17)
-        scale: r.knobs.get("scoreScale").copied().unwrap_or(1000),
+        // the effective scale, never a /1000 literal (C17) — and a
+        // NAMED refusal when the echo lacks it, matching the
+        // score-wire stance (batch-7 defect sweep: the silent 1000
+        // fallback could mis-scale a whole trajectory)
+        scale: *r
+            .knobs
+            .get("scoreScale")
+            .ok_or_else(|| anyhow::anyhow!("trend: reply echo missing scoreScale"))?,
         axes: r.axes.clone(),
     })
 }

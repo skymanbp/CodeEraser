@@ -27,6 +27,16 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.22.0 = the defect-sweep minor (M9 batch 7 close): the docdup
+-- echo gains docLineCap (CE.Docdup.Cost, = 200 — the overlong-line
+-- mask's cap, mirror-pinned; the SKELETON_PREFIXES string table
+-- stays unpinned by decision — the echo grammar is numeric and its
+-- drift guard is DOCDUP_REV). Rust-side, same commit: entry bit 6
+-- gains its producer (inline `ce:allow(deadcode) -- why`), the
+-- docdup report surfaces the persisted exemption tallies, erase
+-- class-2 rows carry the real coverage bit, the guard's broken-
+-- config notice survives an empty reason set, and trend refuses a
+-- reply echo without scoreScale by name.
 -- 2.21.0 = the pinned-floors minor (M9 batch 7, slices 5/10):
 -- verdict.result's newBaseline gains `zoneTiers` [warn, ask]
 -- permille (CE.Verdict.Cost zoneWarnPermille/zoneAskPermille) — the
@@ -141,7 +151,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.21.0"
+proto = "2.22.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

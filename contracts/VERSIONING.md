@@ -149,6 +149,13 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.22.0**（M9 批 7 收尾缺陷清扫 minor，2026-08-21）：docdup 回显加
+> `docLineCap`（CE.Docdup.Cost=200，超长行掩码帽，镜像钉等；
+> SKELETON_PREFIXES 字符串表不入钉——echo 文法是数字的，其漂移
+> 护栏为 DOCDUP_REV，书面定案入 Cost 注释）。同批 Rust 侧：入口
+> bit 6 得生产者（行内 `ce:allow(deadcode) -- why`，裸标记零主张）、
+> docdup 报告浮出已持久豁免计数、erase class-2 行携真实覆盖位、
+> guard 坏配置通知不再被空 reasons 吞、trend 缺 scoreScale 具名拒绝。
 > **2.21.0**（M9 批 7 片 5/10 钉底 minor，2026-08-21）：`newBaseline` 加性
 > `zoneTiers=[warn,ask]`（‰，CE.Verdict.Cost zoneWarnPermille=250/
 > zoneAskPermille=750）——guard 渐进区档位地图核著，经已提交基线文书
@@ -230,7 +237,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.21.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.22.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -347,5 +354,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.21.0 | §1 所列两处常量 |
+| 协议 | 2.22.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

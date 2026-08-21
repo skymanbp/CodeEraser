@@ -51,7 +51,11 @@ evidence instead of acting.
 
 1. a git repository (revert must be one `git checkout` away);
 2. a CLEAN worktree (`git status --porcelain` empty — an erase must
-   never be entangled with uncommitted work);
+   never be entangled with uncommitted work; the tool's OWN state
+   under `.ce/` is exempt from the check, because running the
+   planner is what creates it — ce's index is never "uncommitted
+   work", batch-7 defect sweep: the carve-out existed in code,
+   undocumented);
 3. every target file's content hash equal to the plan's (a file that
    moved since planning refuses by name — plans are not portable
    across edits);

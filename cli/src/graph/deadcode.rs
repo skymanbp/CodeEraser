@@ -110,7 +110,7 @@ pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     // verdicts stand on one id space by construction
     let nodes = nodes::nodes_of(&files, &edges);
     let ids = nodes::ids(&nodes);
-    let rows: Vec<Value> = nodes.iter().map(|n| node_row(n, &config)).collect();
+    let rows: Vec<Value> = nodes.iter().map(|n| node_row(root, n, &config)).collect();
     let mut wire = edge_wire(&edges, &ids)?;
     nodes::contain(&nodes, &ids, &mut wire);
     Ok(GraphWire {
@@ -152,14 +152,14 @@ pub fn edge_wire(
 }
 
 /// [lang, kind, flags] — only file nodes carry entry flags.
-fn node_row(n: &Node, config: &Config) -> Value {
+fn node_row(root: &Path, n: &Node, config: &Config) -> Value {
     // unknown extension = the sentinel code, NOT Python's 0 (RM15:
     // the two were indistinguishable on the wire before 3k)
     let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
         .map(|l| l as i64)
         .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
     let flags = if n.kind == super::wire::GRAN_FILE {
-        flags::flags_of(&n.path, config)
+        flags::flags_of(root, &n.path, config)
     } else {
         0
     };

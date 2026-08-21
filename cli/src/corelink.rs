@@ -12,6 +12,12 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.22.0 = the defect-sweep minor (M9 batch 7 close): the docdup
+/// echo gains docLineCap (mirror-pinned; the SKELETON_PREFIXES
+/// string table stays unpinned — numeric echo grammar, DOCDUP_REV
+/// guards it) alongside the Rust-side defect sweep (bit-6 producer,
+/// exemption tallies surfaced, real coverage bit, guard notice,
+/// trend named refusal).
 /// 2.21.0 = the pinned-floors minor (M9 batch 7, slices 5/10):
 /// newBaseline gains zoneTiers [warn, ask] (the guard tier map,
 /// core-authored, riding the committed baseline to the daemon-free
@@ -98,7 +104,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.21.0";
+pub const PROTO: &str = "2.22.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

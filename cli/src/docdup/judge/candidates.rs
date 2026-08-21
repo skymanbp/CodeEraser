@@ -29,6 +29,30 @@ pub struct SegRow {
     pub set: Vec<u64>,
 }
 
+/// The exempted segments by class, off the same cache — surfaced in
+/// the report counts since the batch-7 defect sweep: a license
+/// exemption used to be SILENT in `ce docdup` output even though
+/// the classification was persisted all along (the bare-marker
+/// rejections, allow_missing_why, are ledger-only and not persisted
+/// — surfacing them is a schema change, ledgered for batch 8).
+pub fn exempt_counts(idx: &Index) -> Result<(u64, u64)> {
+    let rows = crate::graph::load::rows(
+        idx.raw(),
+        "SELECT exempt, COUNT(*) FROM docsegs WHERE exempt != 0 GROUP BY exempt",
+        |r| Ok((r.get::<_, i64>(0)?, r.get::<_, i64>(1)?)),
+    )?;
+    let pick = |code: i64| {
+        rows.iter()
+            .find(|(c, _)| *c == code)
+            .map(|(_, n)| *n as u64)
+            .unwrap_or(0)
+    };
+    Ok((
+        pick(crate::docdup::exempt::EXEMPT_LICENSE),
+        pick(crate::docdup::exempt::EXEMPT_ALLOW),
+    ))
+}
+
 /// Every LIVE admitted segment in identity order, straight off the
 /// docsegs cache (exempt segments are outside the corpus by
 /// definition — the D6 zero-survival claim is structural here).

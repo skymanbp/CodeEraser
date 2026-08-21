@@ -171,7 +171,11 @@ fn emit_reasons(
         }
         reasons.push(why);
     }
-    if reasons.is_empty() {
+    // a broken ce.toml is a visible degradation (A9f) even when no
+    // rule fired — the early return used to swallow the notice
+    // exactly when it was the ONLY thing to say (batch-7 defect
+    // sweep)
+    if reasons.is_empty() && broken.is_none() {
         return;
     }
     if let Some(e) = broken {

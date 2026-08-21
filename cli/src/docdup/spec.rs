@@ -36,6 +36,8 @@ pub const DOC_SHINGLE: usize = 5;
 /// data/generated/code, masked with an overlong_line ledger count.
 /// md_para is exempt: markdown legitimately writes one long prose
 /// line per paragraph.
+// The declared MIRROR of CE.Docdup.Cost.docLineCap (batch-7 defect
+// sweep), pinned by the reply echo on every judged run.
 pub const DOC_LINE_CAP: usize = 200;
 
 /// Segment kinds as frozen position codes (the wire.rs edge-code
