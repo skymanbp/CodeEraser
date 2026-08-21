@@ -28,7 +28,6 @@ mod flags;
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
 use crate::config::Config;
-use crate::corelink::Link;
 use crate::dedup;
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
@@ -172,19 +171,13 @@ fn node_row(root: &Path, n: &Node, config: &Config) -> Value {
 /// a non-degraded reply MUST answer every requested index — a short
 /// pos table would silently starve the join, so it refuses here.
 pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
-    let (mut link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
-    if !link.has("graph/1") {
-        bail!("ce-core offers no graph/1 capability — upgrade the core");
-    }
+    let mut link = crate::lockstep::open_family(core, "graph/1")?;
     let body = json!({
         "nodes": w.rows,
         "edges": w.edges.iter().collect::<Vec<_>>(),
         "pos": pos,
     });
     let reply = link.request("graph", body).map_err(anyhow::Error::msg)?;
-    if reply["type"] != json!("graph.result") {
-        bail!("core replied {}: {reply}", reply["type"]);
-    }
     let rows = reply["pos"].as_array().map(Vec::len).unwrap_or(0);
     if reply["degraded"] != json!(true) && rows != pos.len() {
         bail!("graph.result answered {rows} of {} pos rows", pos.len());

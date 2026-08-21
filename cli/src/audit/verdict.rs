@@ -8,7 +8,6 @@
 //! a VISIBLE degraded skip (A9f) — a missing core can never block a
 //! session, and can never silently pass one either.
 
-use crate::corelink::Link;
 use serde_json::{Value, json};
 use std::collections::HashSet;
 use std::path::Path;
@@ -46,10 +45,10 @@ pub fn judge(root: &Path, changed: &[String]) -> Option<Verdict> {
         })
         .collect();
     let bin = crate::daemon::judge::core_bin()?;
-    let (mut link, _hello) = Link::open(&bin).ok()?;
-    if !link.has("audit/1") {
-        return None; // pre-2.24 core: degrade visibly, never re-judge locally
-    }
+    // .ok()? folds both failure legs — no spawnable core, or a
+    // pre-2.24 core without the capability — into the callers'
+    // visible degraded skip; local re-judging stays forbidden
+    let mut link = crate::lockstep::open_family(&bin, "audit/1").ok()?;
     let reply = link.request("audit", json!({ "rows": rows })).ok()?;
     consume(&reply, &found.blocks)
 }

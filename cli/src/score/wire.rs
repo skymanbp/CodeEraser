@@ -5,7 +5,7 @@
 //! and score come back raw; Rust never recomputes them (ADR-008).
 
 use crate::score::knobs;
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
@@ -157,9 +157,6 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     let reply = link
         .request("verdict", body(r))
         .map_err(anyhow::Error::msg)?;
-    if reply["type"] != json!("verdict.result") {
-        bail!("core replied {}: {reply}", reply["type"]);
-    }
     let reply = parse(&reply)?;
     // round trip: every knob row sent must be the one judged with
     // (a degraded reply never judged — it echoes the defaults, and

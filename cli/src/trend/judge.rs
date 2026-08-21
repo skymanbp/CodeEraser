@@ -6,8 +6,7 @@
 //! declares them (the ceilings/27b9bc2 pattern).
 
 use super::Row;
-use crate::corelink::Link;
-use anyhow::{Result, bail};
+use anyhow::Result;
 use serde_json::{Value, json};
 use std::path::Path;
 
@@ -34,10 +33,7 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
     if let Some(floor) = cfg.trend.decline_floor_micro {
         knobs.push([1, floor as i64]);
     }
-    let (mut link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
-    if !link.has("trend/1") {
-        bail!("ce-core offers no trend/1 capability — upgrade the core");
-    }
+    let mut link = crate::lockstep::open_family(core, "trend/1")?;
     let mut body = json!({
         "rows": rows.iter().map(|r| json!([r.ts, r.score, r.scale])).collect::<Vec<_>>(),
     });
@@ -45,9 +41,6 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
         body["knobs"] = json!(knobs);
     }
     let reply = link.request("trend", body).map_err(anyhow::Error::msg)?;
-    if reply["type"] != json!("trend.result") {
-        bail!("core replied {}: {reply}", reply["type"]);
-    }
     Ok(Judgment {
         slope_micro_per_day: reply["slopeMicroPerDay"].as_i64(),
         verdict: reply["verdict"].as_i64(),

@@ -8,7 +8,7 @@
 //! whole handshake.
 
 use crate::erase::model::Candidate;
-use anyhow::{Context, Result, bail, ensure};
+use anyhow::{Context, Result, ensure};
 use serde_json::json;
 
 /// One erase.request over the open core link; degraded refused (the
@@ -29,9 +29,6 @@ pub fn judge(core: &str, cands: &[Candidate]) -> Result<Vec<(bool, i64)>> {
     let reply = link
         .request("erase", json!({ "rows": rows }))
         .map_err(anyhow::Error::msg)?;
-    if reply["type"] != json!("erase.result") {
-        bail!("core replied {}: {reply}", reply["type"]);
-    }
     crate::lockstep::refuse_degraded(&reply, "erase/wire.rs vs CE.Erase.Cost")?;
     let verdicts: Vec<[i64; 2]> = crate::lockstep::reply_rows(&reply, "rows")?;
     ensure!(
