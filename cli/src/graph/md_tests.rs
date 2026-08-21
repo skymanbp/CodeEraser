@@ -90,12 +90,22 @@ fn link_kinds_and_specs() {
     );
 }
 
+/// ONE matched angle-bracket pair is stripped so the spec can match
+/// scope.files (kept whole, `<guide.md#setup>` matched nothing and
+/// lost the edge); an UNmatched `<` is no pair and stays verbatim.
+#[test]
+fn angle_bracket_destination_unwraps() {
+    let text = "[x](<guide.md#setup>) [y](<unclosed)\n";
+    let want = [("link", "guide.md#setup"), ("link", "<unclosed")];
+    assert_eq!(kinds_specs(text), want.map(|(k, s)| (k, s.to_string())));
+}
+
 /// Anti-invention, STRICT (2b exit criterion): every spec is a
 /// verbatim substring of its source line — including ref_def, whose
 /// first draft synthesized a spec and weakened this very test.
 #[test]
 fn specs_are_line_substrings() {
-    let text = "intro [a](./a.md) and <https://x.example>\n[id]: ./target.md \"title\"\n[![b](i.png)](./l.md)\n";
+    let text = "intro [a](./a.md) and <https://x.example>\n[id]: ./target.md \"title\"\n[![b](i.png)](./l.md)\n[x](<guide.md#setup>)\n";
     let lines: Vec<&str> = text.lines().collect();
     let found = detect(text);
     assert!(!found.is_empty());

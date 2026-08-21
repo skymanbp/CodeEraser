@@ -192,7 +192,13 @@ fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::O
                 "ce.toml exclude {glob}: write the glob without '!' (entries are exclusions already)"
             ));
         }
-        let g = format!("!{glob}");
+        // '\' is an ESCAPE here and candidates are '/'-spelled
+        // (rel_str), so a Windows-written `src\generated\*.rs`
+        // compiled to a pattern matching NOTHING — silent no-op on
+        // this project's primary platform. Normalized, not refused
+        // like the '!' above: '/' is the one canonical spelling here
+        // and the separator reading is what the author meant.
+        let g = format!("!{}", glob.replace('\\', "/"));
         builder
             .add(&g)
             .map_err(|e| format!("ce.toml exclude {glob}: {e}"))?;

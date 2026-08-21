@@ -22,6 +22,10 @@
 #                  pin is bound instead of fetched
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
+# This suite's whole subject is the PIN resolution chain; an ambient
+# CE_CORE_BIN outranks the pin inside ce and silently rebinds state 8's
+# core (a dev shell exporting it made the suite red only there).
+unset CE_CORE_BIN
 
 CE_BIN=$1
 [ -f "$CE_BIN" ] || CE_BIN="$1.exe"
@@ -123,7 +127,12 @@ out=$(CE_MANIFEST_FILE="$work/manifest4.env" \
 [ -f "$work/data4/ce-core$ext" ] || fail 4 "verified ce-core not placed as plain sibling"
 [ "$(sha_of "$work/data4/ce-core$ext")" = "$corepin" ] || fail 4 "placed ce-core sha drifted"
 
-# --- state 5: tampered core refuses as loudly as a tampered ce -------
+# --- state 5: a tampered core DOWNLOAD refuses the artifact loudly and
+# then DEGRADES (audit #419): exit 1 here used to take every hook down
+# for a component no hook consults, while the on-disk branch already
+# refused-and-continued. Still loud, nothing placed, ce still answers -
+# CE_CORE_BIN stays bound to the absent verified path, so judgment
+# families report a handshake miss instead of an unverified PATH core.
 cat >"$work/manifest5.env" <<EOF
 CE_MANIFEST_VERSION="0.0.0-test"
 CE_BASE_URL="file:///nonexistent"
@@ -131,10 +140,12 @@ CE_SHA256_${envkey}_CE="$pin"
 CE_SHA256_${envkey}_CECORE="1111111111111111111111111111111111111111111111111111111111111111"
 EOF
 rc=0
-err=$(CE_MANIFEST_FILE="$work/manifest5.env" \
+out=$(CE_MANIFEST_FILE="$work/manifest5.env" \
       CE_BOOTSTRAP_BASE_URL="file://$work/src" \
-      CLAUDE_PLUGIN_DATA="$work/data5" sh "$STARTER" --version 2>&1 >/dev/null) || rc=$?
-[ "$rc" -ne 0 ] || fail 5 "tampered ce-core did not refuse (rc=0)"
+      CLAUDE_PLUGIN_DATA="$work/data5" sh "$STARTER" --version 2>"$work/err5") || rc=$?
+err=$(cat "$work/err5")
+[ "$rc" -eq 0 ] || fail 5 "the guard must survive a bad core download (rc=$rc)"
+[ "$out" = "$want" ] || fail 5 "ce did not run degraded: $out"
 case "$err" in *"REFUSING downloaded ce-core"*) ;; *) fail 5 "core refusal not loud: $err" ;; esac
 [ ! -f "$work/data5/ce-core$ext" ] || fail 5 "tampered ce-core was placed"
 

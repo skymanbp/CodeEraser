@@ -1,7 +1,13 @@
 //! Clone extraction, SIGMOD'03 two-phase: shared fingerprints are
-//! candidate ANCHORS only; every anchor pair is verified by exact
-//! bidirectional extension over the two normalized token streams, and
-//! only maximal runs of >= t tokens are reported. Replaces the round-1
+//! candidate ANCHORS only; every anchor pair this module ENUMERATES
+//! is verified by exact bidirectional extension over the two
+//! normalized token streams, and only maximal runs of >= t tokens
+//! are reported.
+//! Enumeration is not exhaustive above HOT_CAP: a hot hash group is
+//! walked as an adjacent chain, so the non-adjacent pairs inside it
+//! are never verified and any block only they would witness is not
+//! reported. That is a recall bound, and it is counted, not silent —
+//! one `hot_chained` tick per chained group. Replaces the round-1
 //! line-merge heuristic whose flat-sort chaining both fragmented
 //! boilerplate-dense regions and built pathological blocks
 //! (DEDUP-CALIBRATION.md).

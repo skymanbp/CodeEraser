@@ -82,7 +82,7 @@ pub struct TrendArgs {
     #[command(flatten)]
     judge: JudgeArgs,
     /// Mainline window: newest N first-parent commits
-    #[arg(long, default_value_t = 30)]
+    #[arg(long, default_value_t = codeeraser::trend::DEFAULT_COMMITS)]
     commits: usize,
     /// Measure at most this many uncached commits per run (absent =
     /// all of them; the GUI passes small batches for progress)
@@ -94,29 +94,63 @@ pub struct TrendArgs {
 /// unpack JudgeArgs, run with (root, db, core), print with as_json.
 /// structure/join were already shape twins and `ce trend` would have
 /// been the third — the P4 ratchet caught the stanza; it now exists
-/// once and each command is its one-line library call.
+/// once (in family_checked below) and each command is its one-line
+/// library call.
 fn family_cmd<R>(
     j: JudgeArgs,
     name: &str,
     run: impl FnOnce(&Path, Option<PathBuf>, &str) -> anyhow::Result<R>,
     print: impl FnOnce(&R, bool),
 ) -> ExitCode {
+    family_checked(j, name, run, print, |_| None)
+}
+
+/// family_cmd plus the veto seat (the emit/emit_checked pairing, one
+/// level up): a family whose report carries a fail bit gets an exit
+/// code for it WITHOUT re-growing the unpack stanza above.
+fn family_checked<R>(
+    j: JudgeArgs,
+    name: &str,
+    run: impl FnOnce(&Path, Option<PathBuf>, &str) -> anyhow::Result<R>,
+    print: impl FnOnce(&R, bool),
+    veto: impl FnOnce(&R) -> Option<String>,
+) -> ExitCode {
     let as_json = json(j.format);
-    emit(
+    emit_checked(
         name,
         || run(&or_cwd(j.root), j.db, &j.core),
         |r| print(r, as_json),
+        veto,
     )
 }
 
 /// `ce trend` (M7-P4): the score trajectory over mainline history —
 /// cached in the index db, rebuildable from git at will.
 pub fn trend_cmd(a: TrendArgs) -> ExitCode {
-    family_cmd(
+    family_checked(
         a.judge,
         "trend",
         move |r, db, c| codeeraser::trend::run(r, db, c, a.commits, a.batch),
         codeeraser::trend::print,
+        // declaring [trend] decline_floor_micro armed a fail bit that
+        // NO exit code read: the console printed `-> FAIL` and the
+        // process still exited 0, so a CI leg watching the trajectory
+        // passed a declining one. The core owns the verdict; this is
+        // the throat for it (the dedup --check shape).
+        |r| {
+            r.judgment.fail.then(|| {
+                // "?" rather than a defaulted 0: an unjudged slope
+                // cannot arm the bit, and a fabricated number would
+                // be the report lying about why it failed
+                let slope = r.judgment.slope_micro_per_day;
+                codeeraser::i18n::line(
+                    "slope {} micro-permille/day is under the declared \
+                     [trend] decline_floor_micro",
+                    "斜率 {} 微千分比/日 低于所声明的 [trend] decline_floor_micro",
+                    &[&slope.map_or("?".to_string(), |s| s.to_string())],
+                )
+            })
+        },
     )
 }
 

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser 工作原理——确定性判决，十一个家族</title>
+<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十一个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=2">
+<style>
+/* 页面局部样式：工作原理页的版式。调色板 token 来自 style.css。 */
+.lede { padding: 44px 0 8px; }
+.lede h1 {
+  font-family: var(--mono); font-size: clamp(1.7rem, 4.4vw, 2.4rem);
+  color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
+}
+.lede p { font-size: 1.05rem; color: var(--muted); margin-top: 16px; max-width: 40em; }
+.lede p em { color: var(--verm); font-style: normal; font-weight: 600; }
+.lede p strong { color: var(--text); font-weight: 600; }
+.lede p code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
+
+.fam {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 12px; padding: 18px 20px; margin: 14px 0;
+}
+.fam h3 {
+  font-family: var(--mono); font-size: 1rem; font-weight: 600;
+  color: var(--paper); letter-spacing: -0.01em; line-height: 1.5;
+}
+.fam h3 .n { color: var(--amber); margin-right: 10px; }
+.fam h3 a { color: var(--paper); }
+.fam h3 a:hover { color: var(--teal); }
+.fam .job { font-size: 0.93rem; color: var(--muted); margin: 8px 0 12px; }
+.fam .job code, .fam .note code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
+.fam pre {
+  background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto;
+  font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text);
+}
+.fam pre + pre { margin-top: 8px; }
+.fam .note { font-size: 0.86rem; color: var(--muted); margin-top: 12px; }
+
+ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; list-style: none; }
+ul.consts li {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+  background: var(--ink-1); border: 1px solid var(--panel-edge);
+  border-radius: 6px; padding: 3px 9px;
+}
+ul.consts li b { color: var(--teal); font-weight: 600; }
+
+.tablewrap { overflow-x: auto; margin: 14px 0 4px; }
+table.ladder { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 26em; }
+table.ladder th, table.ladder td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--panel-edge); }
+table.ladder th {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber);
+}
+table.ladder td { color: var(--muted); vertical-align: top; }
+table.ladder td:first-child, table.ladder td code { font-family: var(--mono); color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <img src="/icon-256.png" alt="">
+  <span class="name">CodeEraser</span>
+  <nav>
+    <a href="/how/">English</a>
+    <a href="/zh/">总览</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="lede">
+  <h1>工作原理</h1>
+  <p>CodeEraser 用<em>确定性</em>计算去审计语言模型的非确定性产出。模型往一个长命仓库里写代码，
+  会漂向堆叠而不是编辑——同一个函数实现两遍、同一条事实在第三个文件里重述一次、一次更新以追加的
+  形式落地。顺手的做法是再拉一个模型来审计这份漂移。本项目的承诺正好相反。</p>
+  <p>下面每一条判决都是对树上实测事实的算术：token 指纹、树编辑距离、图入度、git 窗口计数，
+  以及针对<strong>写下来的</strong>阈值所做的整数与有理数比较。证据与判决之间没有任何采样温度，
+  判决层里没有浮点数，回路里没有模型。同一棵树在任何机器、任何时刻都产出同样的字节；因此关于代码
+  健康度的分歧靠重跑那个数、读它指向的 <code>file:line</code> 来收场。</p>
+  <p>下文每节都是短版。完整推导——每个常数都追溯到实现它的源码行——在
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，
+  本页每个小标题都直接链进去。</p>
+</section>
+
+<figure class="arch">
+  <img src="/assets/methodology.svg" alt="三条泳道：Rust 侧的实测事实（token 指纹 k=25 w=26、后序 AST 树、引用图、git 窗口、LOC 多重集、文档 shingle），Haskell 侧的判决计算及其公式（winnowing 保证 t=50、TSED 85/100、精确 Jaccard 80/100、软线 S=clamp(floor(m*r^k),[200,500])、软区凸罚、存活性闭包、熵与卡方散度、最小二乘斜率、分数折叠），以及门（ADR-006 棘轮、离散棘轮、dedup 预算、--fail-under 地板、守卫档位阶梯）" loading="lazy">
+  <figcaption>度量、判决、把门。泳道 1 在 Rust 侧抽取事实；泳道 2 在 Haskell 侧用图上所示公式把
+  它们变成判决；泳道 3 决定退出码。图上每一个数字都是下文各节引用的常数。</figcaption>
+</figure>
+
+<h2>十一个判决家族</h2>
+
+<div class="fam">
+  <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
+  <p class="job">找出精确与参数化的重复 token 段：改名的变量、换掉的常量算克隆，改掉的语法不算。</p>
+  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
+  <p class="note">任何长度至少为 <code>t</code> 的归一化公共 token 子串，必然包含
+  <code>t - k + 1 = w</code> 个连续 k-gram——即一整个完整窗口；而窗口最小值的选取只依赖该窗口
+  内部的内容，所以两份拷贝必选出同一个最小值。因此<strong>必然至少共享一个指纹</strong>：这是
+  Schleimer 等人 SIGMOD'03 的 no-miss 下界，作为正确性契约而非估计。滚动哈希是 Rabin-Karp，
+  <code>h = (h - t[i-k]*top)*BASE + t[i]</code>，跑在 FNV-1a 叶子哈希之上。</p>
+  <ul class="consts">
+    <li><b>kgram</b> 25</li>
+    <li><b>window</b> 26</li>
+    <li><b>保证阈 t</b> 50</li>
+    <li><b>BASE</b> 1_000_003</li>
+    <li><b>HOT_CAP</b> 64</li>
+    <li><b>DEFAULT_MIN_DISTINCT</b> 7</li>
+    <li><b>近似带</b> 25 &lt;= len &lt; 50</li>
+    <li><b>TOKENIZER_REV</b> 2</li>
+    <li><b>schema</b> ce.dedup-report/0.5.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">02</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">T3 近似克隆——树编辑距离（TSED）</a></h3>
+  <p class="job">判决两个 AST 结构上几乎相同、但 token 流并不相同的单元——被改形、被重写的拷贝。</p>
+  <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
+clone      ⇔ TSED &gt;= 0.85</pre>
+  <pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den &gt;= num * mx  where mx = max n1 n2</pre>
+  <p class="note"><code>ted</code> 是单位代价的 Zhang-Shasha（删 = 插 = 1，kind 码相同时
+  relabel = 0，否则 1），恒为整数，所以比较是精确的交叉相乘，边界两侧都可判定：在
+  <code>max = 100</code> 时 <code>ted 15</code> 是克隆、<code>ted 16</code> 不是。两条<em>可证
+  可采纳</em>的 O(1) 预筛在任何 TED 之前就砍掉候选对——对 <code>q ∈ {min(n1,n2), I}</code> 有
+  <code>q · tsedDen &lt; tsedNum · max</code>，其中 <code>I = Σ_label min(c1, c2)</code>——而预筛
+  用的正是判决将要用的那个 85/100，这个同一性恰恰就是它可采纳的原因。</p>
+  <ul class="consts">
+    <li><b>tsedNum</b> 85</li>
+    <li><b>tsedDen</b> 100</li>
+    <li><b>T3_MIN_NODES</b> 24</li>
+    <li><b>unitNodeCap</b> 256</li>
+    <li><b>pairCap</b> 4096</li>
+    <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
+    <li><b>HOT_GROUP_CAP</b> 64</li>
+    <li><b>schema</b> ce.clone-report/0.2.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">03</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">文档重复——shingling + MinHash/LSH</a></h3>
+  <p class="job">判定两段文档文本——markdown 段落、注释块、docstring——是否互为近似重复。</p>
+  <pre>dupDecidesWith num den inter union  =  inter * den &gt;= num * union
+
+dupVerdictWith (num, den, vfloor) inter union run
+  =  dupDecidesWith num den inter union  ||  run &gt;= vfloor</pre>
+  <p class="note">生产绑定为 <code>(80, 100, 50)</code>：Jaccard 达到 0.80（整数精确判定），
+  <em>或者</em>存在至少 50 词的逐字连续段。<code>inter</code> 与 <code>union</code> 由核自己
+  从升序去重的 shingle 集合算出——过 wire 的是原始计数、绝不是比值，否则"复核发生在 Haskell"
+  就是一句空话。MinHash/LSH 只是粗筛，且无 RNG：置换下标本身就是盐。<code>R</code> 个 shingle
+  的连续段横跨 <code>R + k - 1</code> 个词。</p>
+  <ul class="consts">
+    <li><b>jaccardNum</b> 80</li>
+    <li><b>jaccardDen</b> 100</li>
+    <li><b>DOC_SHINGLE</b> 5</li>
+    <li><b>MIN_DOC_TOKENS</b> 50</li>
+    <li><b>VERBATIM_FLOOR</b> 50</li>
+    <li><b>DOC_LINE_CAP</b> 200</li>
+    <li><b>LICENSE_HEAD_LINES</b> 5</li>
+    <li><b>DOC_SET_CAP</b> 8192</li>
+    <li><b>DOC_PAIR_CAP</b> 4096</li>
+    <li><b>DOCDUP_REV</b> 3</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">结构判决——树尺度熵，七条判轴</a></h3>
+  <p class="job">判的是树而不是文件：目录几何、命名分布、引用局部性、文档覆盖、文档陈旧、冗余。</p>
+  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
+perMille r      = floor (r * 1000)</pre>
+  <pre>raw   = Σ_axes (penalty * violCost)
+score = max 0 (scale - raw `div` judgedAxisCount)</pre>
+  <p class="note">Shannon 熵与 KL 散度需要对数——无理数，因而不可精确判定——所以本家族改为发布
+  同族中在有理数下封闭的成员：Tsallis-2 多样性与 χ² f-散度，全程跑在 <code>Data.Ratio</code> 上。
+  若某个 bin 参考质量为 0 而观测质量非 0，χ² 返回 <code>Nothing</code>：那是一次拒绝而不是一个零，
+  报告会点名那些目录。每条判轴的罚分都是<em>目录</em>计数；<code>judgedAxisCount</code> 依可选
+  事实表是否上 wire 取 5、6 或 7。</p>
+  <ul class="consts">
+    <li><b>violCost</b> 10</li>
+    <li><b>scale</b> 1000</li>
+    <li><b>depthCeil</b> 8</li>
+    <li><b>fanoutCeil</b> 30</li>
+    <li><b>namingMin</b> 5</li>
+    <li><b>namingCeil</b> 600‰</li>
+    <li><b>mixRefFloor</b> 5</li>
+    <li><b>misplaceMin</b> 3</li>
+    <li><b>bigDirFloor</b> 8</li>
+    <li><b>staleMin</b> 1</li>
+    <li><b>dupMin</b> 1</li>
+    <li><b>deadMin</b> 1</li>
+    <li><b>structNodeCap</b> 524288</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">评分与 ADR-006 棘轮</a></h3>
+  <p class="job">把七条判轴折叠成一个 0–1000 的分数，并对着一份只准收紧的基线银行把门。</p>
+  <pre>raw     = sum_i (w_i * p_i * violCost)
+wTotal  = sum_i w_i                            -- derived, never a literal
+score   = max 0 (scoreScale - raw `div` wTotal)</pre>
+  <pre>p(x) = 0                              if x &lt;= S
+     = pMax                           if H &lt;= S          -- degenerate fallback
+     = pMax * ((x - S) / (H - S))^2   otherwise
+
+m = median(x)
+r = median( max(x/m, m/x) )                    -- &gt;= 1 by construction
+S = clamp(floor(m * r^k), [softMin, softMax])</pre>
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+
+added   = current \ baseline        -- non-empty =&gt; fail
+removed = baseline \ current        -- informational; drives the shrink</pre>
+  <p class="note">判轴 0 是唯一一条不是计数的轴：对文件尺寸的凸罚，精确 <code>Rational</code>，
+  越过硬线之后仍单调上升——<code>pMax</code> 是<em>落在</em> <code>H</code> 上的取值，不是上限。
+  软线 <code>S</code> 是仓库自身冻结 LOC 分布的一个统计量，即把
+  <code>S = clamp(median + k·MAD, …)</code> 改写成乘性形式，从而全程不取对数；它只在 establish
+  时导出，随后冻进基线。fail 位是四个<em>具名</em>条件的析取——<code>ratchet_over</code>、
+  <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>——回包同时带回究竟
+  是哪几个成立。</p>
+  <ul class="consts">
+    <li><b>scoreScale</b> 1000</li>
+    <li><b>violCost</b> 10</li>
+    <li><b>defaultWeight</b> 1</li>
+    <li><b>sizeHard H</b> 750</li>
+    <li><b>sizePMax</b> 10</li>
+    <li><b>softLineK</b> 2</li>
+    <li><b>[softMin, softMax]</b> [200, 500]</li>
+    <li><b>sizeCeil 回退</b> 300</li>
+    <li><b>cocCeil</b> 15</li>
+    <li><b>deadIndegCeil</b> 0</li>
+    <li><b>rewriteNum/Den</b> 50/100</li>
+    <li><b>sccFloor</b> 2</li>
+    <li><b>tolNum/tolDen</b> 102/100</li>
+    <li><b>tolAbs</b> 10</li>
+    <li><b>两腿交点</b> 500</li>
+    <li><b>verdictNodeCap</b> 131072</li>
+    <li><b>verdictRowCap</b> 524288</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">图存活性与死代码判决</a></h3>
+  <p class="job">只回答一个问题——哪些文件是任何活物都够不着的？——在一张节点身份即行下标、
+  wire 上没有任何文本的引用图上作答。</p>
+  <pre>arcs  = { (s,d) | [s,d,_kind,rung] ∈ edges,  rung &lt;= minRung }
+reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
+  <pre>public     = testBit flags 0
+referenced = indeg &gt;= 1 over kept arcs
+judged     = i ∉ reach
+code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
+  <p class="note">四个码，结构上互相隔离，使"已导出但无人引用的 API"永远不会塌进普通的 dead：
+  <code>1 unref_private</code>、<code>2 unref_public</code>、<code>3 unreach_private</code>、
+  <code>4 unreach_public</code>。解析从不猜：一个 site 按本语言的梯级依次向上走，第一个产出
+  <em>恰好一个</em>在域候选的梯级胜出；多于一个即 <code>Unresolved</code>，而
+  <code>External</code> 是正确的终局答案、不是漏判。环只报不判——没有入口种子的环岛仅凭可达性
+  就已判死，无需特例。import 边精度实测 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着
+  ≥ 0.90 的门；样本在任何解析器存在之前就已冻结。</p>
+  <ul class="consts">
+    <li><b>minRung</b> 5</li>
+    <li><b>entryMask</b> 126（bits 1–6）</li>
+    <li><b>sccFloor</b> 2</li>
+    <li><b>nodeCap</b> 131072</li>
+    <li><b>edgeCap</b> 524288</li>
+    <li><b>GRAPH_REV</b> 7</li>
+    <li><b>tsconfig extends</b> ≤ 8 跳</li>
+    <li><b>精度门</b> ≥ 0.90</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">三信号 join</a></h3>
+  <p class="job">把相似度 × 图位置 × 变动史合成四个候选码之一——然后刻意拒绝据此行动。</p>
+  <pre>(1, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
+(2, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
+(3, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
+  <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen &gt;= total * rewriteNum
+cochangeHot = cochange &gt;= cochangeFloor
+legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
+  <p class="note">优先级是<em>数据</em>而不是守卫顺序：第一行"required 位全部成立且 forbidden 位
+  全部为空"的规则胜出，否则码为 0。把顺序做成数据，正是让性质电池能够证伪它——把表旋转一下再判
+  同一行，答案必须翻转。每条会 gate 的规则都要求 graph 位，所以掩码 5（图腿缺席）只可能带码 0：
+  缺一条图腿就拒绝 gate，而不是假装入度为 0。join 产出的是<em>候选</em>；fail 位里不出现任何
+  verdict 码，<code>ce join</code> 恒以成功退出。</p>
+  <ul class="consts">
+    <li><b>rewriteNum/Den</b> 50/100</li>
+    <li><b>cochangeFloor</b> 2</li>
+    <li><b>entryMask</b> 126</li>
+    <li><b>legSim</b> 1</li>
+    <li><b>legGraph</b> 2</li>
+    <li><b>legChurn</b> 4</li>
+    <li><b>COCHANGE_FILE_CAP</b> 20</li>
+    <li><b>schema</b> ce.join-report/0.1.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">08</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">拆分 ROI 缝价（四条腿）</a></h3>
+  <p class="job">用一个数而不是一句口号回答"这个长文件值不值得拆、从哪儿拆"——它是<strong>建议</strong>，
+  永不进结构分数、也永不进 fail 位。</p>
+  <pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
+
+costMilli(u)    = crossRefs(u)      * roiRefMilli
+                + cutClones(end_u)  * roiCloneMilli
+                + crossChurn(u)     * roiChurnMilli
+                + roiPhiMilli
+
+viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without division</pre>
+  <p class="note">收益是拆分退回来的那部分软区罚分，算在<em>与判决家族同一条</em>凸曲线上——直接
+  import 而不是重新推一遍；因为 <code>p</code> 是凸的且 <code>p(0) = 0</code>，故超可加，所以
+  那个方括号非负。最佳缝的选取是对 ROI 的精确有理数 argmax，用交叉相乘的 <code>b % c</code> 比较。
+  一个有 <code>n</code> 个顶层单元的文件产出 <code>n - 1</code> 条缝。长而内聚会得到一条<em>带
+  数字的</em>豁免，长而可拆则得到一条切割线。</p>
+  <ul class="consts">
+    <li><b>seamSoft S</b> 300</li>
+    <li><b>seamHard H</b> 750</li>
+    <li><b>seamPMax</b> 10</li>
+    <li><b>roiRefMilli</b> 250</li>
+    <li><b>roiCloneMilli</b> 500</li>
+    <li><b>roiChurnMilli</b> 150</li>
+    <li><b>roiPhiMilli</b> 500</li>
+    <li><b>NAME_FLOOR</b> 3</li>
+    <li><b>CHURN_WINDOW_DAYS</b> 14</li>
+    <li><b>knob 码</b> 12–18</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">09</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/09-edit-four-classification-update-supervision.md">编辑四分类（更新监督）</a></h3>
+  <p class="job">把每一次被监督的编辑归约成逐文件对的四个整数计数——matched / novel / moved /
+  deleted——从而让"这次更新是堆上去的，不是改上去的"成为一次测量。</p>
+  <pre>siteOpens s n  =  n * movedCost + s  &lt;  n * plainCost
+
+destFloor      =  least n with siteOpens siteCostCross n   =  2</pre>
+  <pre>accepted   = isStart &amp;&amp; distinctEvidence &gt;= destFloor &amp;&amp; anchored
+anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
+  <p class="note">跨文件证据下限是<em>推出来的</em>而不是调出来的：<code>siteCostCross = 2</code>
+  使单条跨文件行恰好打平（<code>1*1 + 2 = 3 = 1*3</code>），而打平不开站，于是
+  <code>destFloor</code> 求值为 2——那个平局<em>就是</em>巧合拒斥本身。唯一一个"拍板而非推导"的
+  常数是 <code>anchorFloor = 19</code>：在双语料影子消融里，被凭空发明出来的站点其最宽锚点实测
+  16 个 alnum 字符，而最细的真实锚点是 19，故 19 是那个"杀掉全部实测巧合、同时保住全部实测真站"
+  窗口的上沿。L2 的 delta 只在一个方向上单调——普通行可以被改判为 moved，反向绝不可以。</p>
+  <ul class="consts">
+    <li><b>movedCost</b> 1</li>
+    <li><b>plainCost</b> 3</li>
+    <li><b>siteCostWithin</b> 0</li>
+    <li><b>siteCostCross</b> 2</li>
+    <li><b>destFloor</b> 2</li>
+    <li><b>anchorFloor</b> 19</li>
+    <li><b>MAX_D</b> 3000</li>
+    <li><b>MAX_BRIDGE</b> 7</li>
+    <li><b>bucketCap</b> 64</li>
+    <li><b>stackingNovelFloor</b> 20</li>
+    <li><b>stackingRatio</b> 10</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">10</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">分数轨迹——趋势斜率判决</a></h3>
+  <p class="job">对仓库历史只回答一个问题：check 分数在涨、在平、还是在跌，每天跌多少。</p>
+  <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
+y_i   = (score_i * 1000000) % scale_i
+
+slope = (n * Σ(x_i*y_i) - Σx_i * Σy_i) / (n * Σ(x_i²) - (Σx_i)²)</pre>
+  <pre>slope &lt; -band  → 2  (degrading)
+slope &gt;  band  → 0  (improving)
+otherwise      → 1  (flat)        where band = floorMicro</pre>
+  <p class="note">这里的 <code>%</code> 是 <code>Data.Ratio</code> 的精确比构造子，不是取模；
+  <code>y</code> 把每次提交重新归一到固定的 10⁶ 满量程网格上，使不同 <code>scoreScale</code> 下
+  测得的行可以通约。行序被刻意不加约束——最小二乘与顺序无关，而 first-parent 序是拓扑序而非
+  时间序，所以 rebase 过的提交是合法输入。低于 <code>minPoints</code>、或时间戳方差为零时，斜率是
+  <code>Nothing</code>——是缺席，不是编造出来的"持平"——且 fail 位保持 false。在默认地板 0 下，
+  "下滑"可以被报出来但不能判负。</p>
+  <ul class="consts">
+    <li><b>minPoints</b> 3（knob 0）</li>
+    <li><b>declineFloorMicro</b> 0（knob 1）</li>
+    <li><b>行 + knob 上限</b> 4096</li>
+    <li><b>满量程网格</b> 10⁶</li>
+    <li><b>schema</b> ce.trend-report/0.2.0</li>
+  </ul>
+</div>
+
+<h2>FPR 纪律——一条规则凭什么获得 deny 的资格</h2>
+
+<div class="fam">
+  <h3><span class="n">11</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md">FPR 纪律与守卫档位阶梯</a></h3>
+  <p class="job">一道架在非确定性写手之上的确定性门：守卫挂在 <code>Write|Edit</code> 的
+  <code>PreToolUse</code> 上，用精确算术回答每一次待落盘的写——而一条规则类只有先付清代价，
+  才有资格执法。</p>
+  <pre>TIERS = ["observe", "warn", "ask", "deny"]
+PROMOTED_DEFAULT = "deny"</pre>
+  <div class="tablewrap">
+  <table class="ladder">
+    <thead><tr><th>档位</th><th>permissionDecision</th><th>效果</th></tr></thead>
+    <tbody>
+      <tr><td>observe</td><td><em>无——打印前即返回</em></td><td>只写一行 feed，不注入任何文本</td></tr>
+      <tr><td>warn</td><td><code>allow</code></td><td>编辑照常落盘，理由作为可见告警浮出</td></tr>
+      <tr><td>ask</td><td><code>ask</code></td><td>弹给用户确认</td></tr>
+      <tr><td>deny</td><td><code>deny</code></td><td>写被拒，理由指向已存在的 <code>file:line</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">确定性是靠<em>重放这次写</em>而不是估计它买来的：<code>resulting_lines</code>
+  算出精确的写后行数；任何本来就会失败的工具调用——文件不存在、非 <code>replace_all</code> 的
+  匹配不唯一——都返回 <code>None</code>，规则保持沉默。门永远不去判决一次落不了盘的写。无法识别的
+  <code>[guard] mode</code> 会解析成 <code>observe (ce.toml ERROR: …)</code> 字符串而不是原样透传，
+  因为一个透传的拼写错误曾经把所有执法路径全部解除武装，而会话横幅仍在打印"已武装"。</p>
+  <p class="note"><strong>为什么不能直接把一条规则类设成 deny。</strong>这道阶梯是写进计划的
+  <em>路线</em>，所以默认既不能永远停在 <code>warn</code>、也不能一上来就是 <code>deny</code>。
+  准入是定量的：M3 验收判据是<strong>500 次真实正常编辑中误拦 ≤ 1 次</strong>，且明确不许拿
+  <code>N=1</code> 的演示充数；M4 主门是<strong>500 次真实正常编辑上 FPR ≤ 1%</strong>，评估集须在
+  实现之前预注册冻结，≥ 200 个编辑样本，≥ 50% 取自真实 agent 记录。样本纯度是门的一部分：只有
+  observe 模式与无守卫时期的会话可被采样，守卫已经介入过的编辑必须排除——否则 FPR 会被守卫自己的
+  塑形效应压低，deny 准入就成了自我背书。到今天为止只有两类付清了：T1/T2 精确重复写入，以及
+  <code>文件 &gt; 750 行</code>的硬预算突破。<em>其余每一条规则都因为没有自己的记录而停在
+  observe。</em></p>
+  <p class="note">在册的重放把 git 线性历史当作真实编辑流——先探测、后落盘，跑在
+  <code>t = 50</code> 与 <code>min_distinct = 7</code> 这两个出厂默认档上：<strong>630 个事件、
+  35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>。那 35 个自仓块全部仲裁为真阳并已被清理，
+  克隆块预算同步下棘 251 → 211 → 209 → 205 → 202。</p>
+  <pre>cap      = thresholds.file_lines_fail          // default 750
+breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
+
+permille = (lines - S) * 1000 / (H - S)
+0   ..= 249  →  observe
+250 ..= 750  →  warn
+751 ..       →  ask</pre>
+  <p class="note">区内档位映射就是把同一套纪律用在自己身上：<code>[guard] zone_tiers</code>
+  <strong>默认关闭</strong>，所以区规则只写 feed、不注入任何东西。它还没有自己的 FPR 台账，
+  因此默认不执法——<code>zone</code> 这个 feed 事件的存在意义，恰恰就是"将来任何一次区→档位的
+  提档必须据以论证 FPR 的那份逐规则记录"。告警按 (规则, 文件, 会话) 限一次并按 token 预算裁剪；
+  执法不限流，因为一次 deny 不是上下文膨胀。</p>
+  <ul class="consts">
+    <li><b>file_lines_warn S</b> 300</li>
+    <li><b>file_lines_fail H</b> 750</li>
+    <li><b>zone_tiers</b> false</li>
+    <li><b>FPR 门</b> ≤ 1% / 500 次编辑</li>
+    <li><b>WARN_BUDGET_TOKENS</b> 200</li>
+    <li><b>STOP_BUDGET_TOKENS</b> 400</li>
+    <li><b>CHARS_PER_TOKEN</b> 4</li>
+    <li><b>feed schema</b> ce.observe/0.6.0</li>
+  </ul>
+</div>
+
+<h2>两条诚实边界</h2>
+<p class="trust"><code>PreToolUse</code> 是一层<strong>行为塑形</strong>，<strong>不是安全边界</strong>——
+agent 可以用 <code>Bash: echo &gt;&gt;</code> 或 <code>sed -i</code> 绕过它；兜底是跑在
+<code>git diff</code> 上、与写入工具无关的 <code>Stop</code> 审计，加上 CI 门。而这个 hook 是
+刻意<strong>fail-open</strong> 的：任何内部失败都放行该次编辑，降级的那次运行落进 observe feed，
+而不是被悄悄读成"没有重复"。这两条都不是"以后再补"的缺口——它们都写进了计划，因为一道对自己
+覆盖范围撒谎的门，比一道如实声明覆盖范围的门更糟。</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法论</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
+  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，
+     许可证不授予商标权。© 2026 skymanbp。</p>
+</footer>
+
+</div>
+</body>
+</html>

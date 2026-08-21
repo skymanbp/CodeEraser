@@ -138,6 +138,7 @@ fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Valu
         days: None,
         floor: None,
         establish: false,
+        pinned_soft: None,
     };
     vec![
         row(

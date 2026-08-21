@@ -36,8 +36,11 @@ pub struct BaselineArgs {
 
 /// The shared judge-and-print head of both commands — root, output
 /// mode, wire options, one score::run (the ratchet caught the second
-/// copy of this shape growing).
+/// copy of this shape growing). `name` is the command's own, so a
+/// failure says `ce baseline:` when that is what ran; the folded head
+/// used to print `ce check:` for both.
 fn judged(
+    name: &str,
     judge: JudgeArgs,
     days: Option<u32>,
     floor: Option<u32>,
@@ -51,6 +54,9 @@ fn judged(
         days,
         floor,
         establish,
+        // both commands judge the committed baseline (or a true
+        // re-establish); only trend pins a soft line without one
+        pinned_soft: None,
     };
     match score::run(&root, opts) {
         Ok(o) => {
@@ -60,7 +66,7 @@ fn judged(
             }
             Ok((root, o))
         }
-        Err(err) => Err(fail("check", err)),
+        Err(err) => Err(fail(name, err)),
     }
 }
 
@@ -70,7 +76,7 @@ fn judged(
 /// could not judge must never pass", said by the core), so the old
 /// `|| degraded` disjunct here retired as re-derived policy.
 pub fn check_cmd(a: CheckArgs) -> ExitCode {
-    match judged(a.judge, a.days, a.fail_under, false, a.roast) {
+    match judged("check", a.judge, a.days, a.fail_under, false, a.roast) {
         Err(code) => code,
         Ok((_root, o)) => {
             if o.reply.fail {
@@ -91,7 +97,7 @@ pub fn check_cmd(a: CheckArgs) -> ExitCode {
 /// facts become the floor — growth accepted DELIBERATELY.
 pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
     let accepted = std::env::var("CE_ACCEPT_BASELINE").as_deref() == Ok("1");
-    let (root, o) = match judged(a.judge, a.days, None, accepted, false) {
+    let (root, o) = match judged("baseline", a.judge, a.days, None, accepted, false) {
         Err(code) => return code,
         Ok(pair) => pair,
     };
@@ -123,13 +129,16 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
         return ExitCode::FAILURE;
     }
     match score::baseline::write(&root, &o.reply.new_baseline) {
-        Ok(()) => {
+        // the RESOLVED path, not the bare constant: a floor is a
+        // per-project fact and the operator must see which project
+        // just got one
+        Ok(path) => {
             println!(
                 "{}",
                 codeeraser::i18n::line(
                     "baseline written: {}",
                     "基线已写入：{}",
-                    &[&score::baseline::BASELINE_FILE],
+                    &[&path.display()],
                 )
             );
             ExitCode::SUCCESS

@@ -35,6 +35,36 @@ impl Default for Thresholds {
     }
 }
 
+impl Thresholds {
+    /// The ladder must climb, or the warn arm is unreachable. ONE
+    /// predicate for the two readers of these keys: scan/wire.rs
+    /// refused `fail < warn` and the report.rs mirror judged on
+    /// silently, so `ce scan` exited 2 on a ce.toml the MCP scan tool
+    /// served a full report from. `fail == 0` is the published "no
+    /// hard line" (CE.Scan.Cost.gradeTable), never a low line.
+    pub fn ladder_fault(&self) -> Option<String> {
+        [
+            (
+                self.file_lines_warn,
+                self.file_lines_fail,
+                "file_lines_warn/file_lines_fail",
+            ),
+            (
+                self.fn_lines_warn,
+                self.fn_lines_fail,
+                "fn_lines_warn/fn_lines_fail",
+            ),
+        ]
+        .into_iter()
+        .find(|&(warn, fail, _)| fail != 0 && fail < warn)
+        .map(|(warn, fail, keys)| {
+            format!(
+                "ce.toml [thresholds] {keys}: the fail line {fail} sits below the warn line {warn}"
+            )
+        })
+    }
+}
+
 // The guard tier is POLICY, not schema: it validates the declared
 // value and renders its own degradation, and three surfaces have to
 // agree on both. Re-exported so every existing `config::Guard` /
@@ -143,14 +173,30 @@ pub fn env_secs(var: &str, default_secs: u64) -> std::time::Duration {
 }
 
 impl Config {
-    /// Load `ce.toml` from `root`; absent file = defaults.
+    /// Load `ce.toml` for `root`; absent file = defaults.
+    ///
+    /// The file is looked for at the project ANCHOR above `root`, not
+    /// at `root` itself: `ce check cli` used to judge with an empty
+    /// config and an empty ratchet — green by having no rules — while
+    /// the project's own ce.toml sat one level up. The path the caller
+    /// named still bounds what is walked; only the declaration follows
+    /// the project (crate::root, and see its note on why the ascent
+    /// lives at the state throats rather than inside every family).
     pub fn load(root: &Path) -> Result<Self, String> {
-        let path = root.join("ce.toml");
+        let path = crate::root::project_root(root).join("ce.toml");
         if !path.is_file() {
             return Ok(Self::default());
         }
         let text =
             std::fs::read_to_string(&path).map_err(|e| format!("read {}: {e}", path.display()))?;
-        toml::from_str(&text).map_err(|e| format!("parse {}: {e}", path.display()))
+        let cfg: Self =
+            toml::from_str(&text).map_err(|e| format!("parse {}: {e}", path.display()))?;
+        // Refused at the LOAD throat, the one both threshold readers
+        // pass through — a guard on only the wire path let the
+        // auxiliary surfaces judge with a ladder the gate rejects.
+        match cfg.thresholds.ladder_fault() {
+            Some(fault) => Err(fault),
+            None => Ok(cfg),
+        }
     }
 }

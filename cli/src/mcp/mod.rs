@@ -11,33 +11,84 @@ mod tools;
 
 use anyhow::Result;
 use serde_json::{Value, json};
-use std::io::{BufRead, Write};
+use std::io::{BufRead, Read, Write};
 use std::path::{Path, PathBuf};
 
+/// Longest frame we will buffer. Requests on this surface carry a
+/// subpath and a few scalars — never file contents — so 1 MiB is
+/// already absurd headroom; without a ceiling a client that never
+/// sends a newline streams stdin straight into our heap. A frame that
+/// hits the cap cannot be resynchronized (its tail is still arriving
+/// mid-object), so we refuse it and stop, the way the daemon closes an
+/// over-cap connection rather than parsing the remainder as a new line
+/// (daemon/server/conn.rs, read_line_capped's over-cap arm).
+const FRAME_MAX: u64 = 1 << 20;
+
 pub fn serve(root: &Path) -> Result<()> {
-    let root = root.to_path_buf();
     let stdin = std::io::stdin();
     let mut stdout = std::io::stdout();
-    for line in stdin.lock().lines() {
-        let line = line?;
-        if line.trim().is_empty() {
+    serve_stream(root, stdin.lock(), &mut stdout)
+}
+
+/// The stdio loop over any transport, so the frame rules below are
+/// reachable from a unit test instead of only from a real stdin.
+fn serve_stream(root: &Path, mut input: impl BufRead, out: &mut impl Write) -> Result<()> {
+    let mut buf = Vec::new();
+    loop {
+        buf.clear();
+        let n = (&mut input).take(FRAME_MAX).read_until(b'\n', &mut buf)?;
+        if n == 0 {
+            return Ok(()); // stdin closed
+        }
+        if !buf.ends_with(b"\n") && n as u64 == FRAME_MAX {
+            let text = format!("frame exceeds the {FRAME_MAX}-byte ceiling");
+            emit(out, &error(Value::Null, -32600, &text))?;
+            return Ok(());
+        }
+        // bytes first, lossy second: `Lines` surfaced one stray non-UTF-8
+        // byte as an InvalidData error that `?` propagated, so a single
+        // bad byte on stdin killed the whole server. A malformed frame is
+        // the same 坏行 class as bad JSON — answer it, keep serving; the
+        // daemon transport already ruled this way (conn.rs:35).
+        let decoded = String::from_utf8_lossy(&buf);
+        let line = decoded.trim();
+        if line.is_empty() {
             continue;
         }
-        let Ok(msg) = serde_json::from_str::<Value>(&line) else {
-            continue; // not JSON: ignore, keep serving
+        let reply = match serde_json::from_str::<Value>(line) {
+            Ok(msg) => handle(root, &msg),
+            // JSON-RPC 2.0 §5.1: an unparseable frame is -32700, not
+            // silence. Dropping it left a client whose frame got mangled
+            // in transit blocking forever on an id we never answered.
+            Err(e) => Some(error(Value::Null, -32700, &format!("parse error: {e}"))),
         };
-        if let Some(reply) = handle(&root, &msg) {
-            writeln!(stdout, "{reply}")?;
-            stdout.flush()?;
+        if let Some(reply) = reply {
+            emit(out, &reply)?;
         }
     }
+}
+
+fn emit(out: &mut impl Write, frame: &Value) -> Result<()> {
+    writeln!(out, "{frame}")?;
+    out.flush()?;
     Ok(())
 }
 
-/// Notifications (no id) get no reply; unknown methods get an error.
+fn error(id: Value, code: i32, message: &str) -> Value {
+    json!({"jsonrpc": "2.0", "id": id, "error": {"code": code, "message": message}})
+}
+
+/// Genuine notifications (no id) get no reply; everything CARRYING an
+/// id gets one. The id is read FIRST because reading `method` first
+/// made a frame with a good id and a missing or non-string method
+/// return None — the client blocks on that id forever, while an
+/// unknown *string* method already got its -32601. Silence there was
+/// an oversight, and JSON-RPC 2.0 §4.2 calls it -32600.
 fn handle(root: &Path, msg: &Value) -> Option<Value> {
-    let method = msg["method"].as_str()?;
     let id = msg.get("id").filter(|v| !v.is_null())?.clone();
+    let Some(method) = msg["method"].as_str() else {
+        return Some(error(id, -32600, "invalid request: no string \"method\""));
+    };
     let result = match method {
         "initialize" => initialize_result(),
         "tools/list" => tools_list(),
@@ -54,10 +105,8 @@ fn handle(root: &Path, msg: &Value) -> Option<Value> {
             }
         },
         _ => {
-            return Some(json!({
-                "jsonrpc": "2.0", "id": id,
-                "error": {"code": -32601, "message": format!("method not found: {method}")}
-            }));
+            let text = format!("method not found: {method}");
+            return Some(error(id, -32601, &text));
         }
     };
     Some(json!({"jsonrpc": "2.0", "id": id, "result": result}))
@@ -95,4 +144,90 @@ fn resolve(root: &Path, sub: Option<&str>) -> PathBuf {
         return root.to_path_buf();
     };
     crate::scan::walk::contained(root, sub).unwrap_or_else(|| root.to_path_buf())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{FRAME_MAX, serve_stream};
+    use serde_json::Value;
+    use std::io::Cursor;
+    use std::path::Path;
+
+    /// The frames the loop wrote back for one canned stdin. `.` as the
+    /// root is safe: no method exercised here reaches the filesystem.
+    fn run(input: &[u8]) -> Vec<Value> {
+        let mut out = Vec::new();
+        serve_stream(Path::new("."), Cursor::new(input.to_vec()), &mut out)
+            .expect("a malformed frame must not end the loop with an error");
+        String::from_utf8(out)
+            .unwrap()
+            .lines()
+            .map(|l| serde_json::from_str(l).expect("every frame we write is JSON"))
+            .collect()
+    }
+
+    fn code(frame: &Value) -> i64 {
+        frame["error"]["code"].as_i64().expect("an error frame")
+    }
+
+    /// Serve `input`, then assert how many frames came back and what
+    /// the first one's error code was — the opening three lines of
+    /// every error probe below. Written out at each site they were one
+    /// clone block (dedup gate, this batch); `why` keeps each probe's
+    /// own reason for the count it demands.
+    fn served(input: &[u8], frames: usize, first: i64, why: &str) -> Vec<Value> {
+        let out = run(input);
+        assert_eq!(out.len(), frames, "{why}: {out:?}");
+        assert_eq!(code(&out[0]), first);
+        out
+    }
+
+    #[test]
+    fn unparseable_frame_answers_parse_error() {
+        let why = "dropping it silently strands the client";
+        let out = served(b"{ this is not json\n", 1, -32700, why);
+        assert!(out[0]["id"].is_null(), "id is unknowable, so it is null");
+    }
+
+    /// The defect this closes: `method` was read before `id`, so these
+    /// two frames returned None and the id was never answered.
+    #[test]
+    fn id_without_usable_method_answers_invalid_request() {
+        let frames = b"{\"jsonrpc\":\"2.0\",\"id\":7}\n{\"id\":8,\"method\":42}\n";
+        let out = served(frames, 2, -32600, "both ids must come back");
+        assert_eq!((code(&out[0]), &out[0]["id"]), (-32600, &Value::from(7)));
+        assert_eq!((code(&out[1]), &out[1]["id"]), (-32600, &Value::from(8)));
+    }
+
+    /// Silence is still correct where JSON-RPC demands it: no id, no
+    /// reply — including for a notification that is itself malformed.
+    #[test]
+    fn frames_without_an_id_stay_silent() {
+        let out = run(
+            b"{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n\
+                        {\"jsonrpc\":\"2.0\",\"id\":null,\"method\":\"nope\"}\n\
+                        {\"jsonrpc\":\"2.0\"}\n",
+        );
+        assert!(out.is_empty(), "notifications got {} replies", out.len());
+    }
+
+    /// One stray byte used to reach `line?` as InvalidData and kill the
+    /// server, taking every later frame with it.
+    #[test]
+    fn invalid_utf8_frame_does_not_kill_the_loop() {
+        let frames = b"{\"id\":1,\xff\n{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}\n";
+        let why = "the frame after the bad byte must be served";
+        let out = served(frames, 2, -32700, why);
+        assert!(out[1]["result"]["tools"].is_array(), "id 2 answered");
+    }
+
+    /// Without a ceiling this line is buffered whole; with one it is
+    /// refused, and serving stops because its tail cannot be told apart
+    /// from a fresh frame.
+    #[test]
+    fn newline_free_flood_is_refused_at_the_ceiling() {
+        let mut input = vec![b'x'; FRAME_MAX as usize + 8];
+        input.extend_from_slice(b"\n{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"tools/list\"}\n");
+        served(&input, 1, -32600, "the tail must not be parsed as a frame");
+    }
 }

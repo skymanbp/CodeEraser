@@ -210,12 +210,18 @@ pub fn dedup_cmd(a: DedupArgs) -> ExitCode {
 }
 
 /// The three hook entries share one contract: --hook or nothing.
+///
+/// The usage error exits 1, NOT 2: exit 2 IS the hook protocol's DENY
+/// (PreToolUse blocks the call and feeds stderr to the model), so a
+/// `ce` too old to know `--hook` — the version skew a machine-PATH
+/// install makes routine — answered every probe with a hard deny
+/// whose reason was a usage string. 2 stays reserved for a verdict.
 pub fn hook_cmd(hook: bool, name: &str, run: fn() -> ExitCode) -> ExitCode {
     if hook {
         run()
     } else {
         eprintln!("ce {name}: only --hook mode exists in M3");
-        ExitCode::from(2)
+        ExitCode::FAILURE
     }
 }
 
@@ -249,6 +255,12 @@ pub fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
 /// status line, the A9f degraded-run counter from the observe feed,
 /// then the ce-core handshake (which sets the exit code, as in M0).
 pub fn doctor(core: &str, root: &Path) -> ExitCode {
+    // Every fact below hangs off the project ANCHOR above the given
+    // path (ce.toml, baseline, .ce/index.db — root.rs), so `ce doctor
+    // cli` reported the enclosing project while printing nothing that
+    // said so. Resolve once and NAME it: a silent re-root is the half
+    // of that defect the operator pays for.
+    let root = &codeeraser::root::project_root(root);
     println!(
         "ce {} (proto {})",
         env!("CARGO_PKG_VERSION"),
@@ -257,9 +269,9 @@ pub fn doctor(core: &str, root: &Path) -> ExitCode {
     println!(
         "{}",
         line(
-            "project: {}",
-            "项目：{}",
-            &[&codeeraser::health::doctor_line(root)],
+            "project: {} {}",
+            "项目：{} {}",
+            &[&root.display(), &codeeraser::health::doctor_line(root)],
         )
     );
     let (degraded, total) = codeeraser::health::degraded_runs(root);

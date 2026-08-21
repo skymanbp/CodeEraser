@@ -15,7 +15,7 @@ use crate::fourclass::units::{self, Unit};
 use crate::scan::metrics::FileMetrics;
 use anyhow::{Context, Result};
 use serde_json::{Value, json};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Where the committed baseline lives (betterer convention).
 pub const BASELINE_FILE: &str = "ce-baseline.json";
@@ -111,11 +111,21 @@ pub fn continuous_rows(f: &FileMetrics) -> Vec<[u64; 3]> {
     rows
 }
 
+/// The committed baseline's path for `root`: the project ANCHOR's
+/// copy, never a fresh one beside a subdirectory. A ratchet is a
+/// per-project fact, and `ce check cli` reading no baseline made the
+/// gate pass by having nothing to compare (the empty-ratchet green).
+/// `ce baseline cli` writing one would have been worse: a second
+/// floor no gate reads and no eject removes.
+pub fn path_for(root: &Path) -> PathBuf {
+    crate::root::project_root(root).join(BASELINE_FILE)
+}
+
 /// The baseline file as a verbatim JSON value: None = no baseline
 /// yet (the core judges in establish mode). The bytes under
 /// "continuous"/"discrete" go on the wire untouched.
 pub fn read(root: &Path) -> Result<Option<Value>> {
-    let path = root.join(BASELINE_FILE);
+    let path = path_for(root);
     if !path.exists() {
         return Ok(None);
     }
@@ -132,17 +142,27 @@ pub fn read(root: &Path) -> Result<Option<Value>> {
 /// from named keys, so a key it does not name would be silently
 /// dropped on every re-establish — the v0.6 map called this the
 /// single easiest thing to miss.
-pub fn write(root: &Path, new_baseline: &Value) -> Result<()> {
+/// Returns the path written, so the caller can NAME it: the success
+/// line used to print the bare constant, which said nothing about
+/// which directory just gained a floor.
+pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
     let doc = json!({
         "schema": SCHEMA_ID,
         "continuous": new_baseline["continuous"],
         "discrete": new_baseline["discrete"],
         "softLine": new_baseline["softLine"],
     });
-    let path = root.join(BASELINE_FILE);
-    std::fs::write(&path, format!("{}\n", serde_json::to_string_pretty(&doc)?))
-        .with_context(|| path.display().to_string())?;
-    Ok(())
+    let path = path_for(root);
+    // temp + rename, not a truncating write: a `ce baseline` killed
+    // mid-write (Ctrl-C, CI timeout) left a torn ce-baseline.json that
+    // failed every later `ce check` — and the PreToolUse budget rule
+    // reads the same file, where a parse error silently substitutes a
+    // different soft line with no trace in the feed.
+    let tmp = path.with_extension("json.tmp");
+    std::fs::write(&tmp, format!("{}\n", serde_json::to_string_pretty(&doc)?))
+        .with_context(|| tmp.display().to_string())?;
+    std::fs::rename(&tmp, &path).with_context(|| path.display().to_string())?;
+    Ok(path)
 }
 
 #[cfg(test)]

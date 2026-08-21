@@ -107,7 +107,7 @@ dedupBudget = failAt [146, 145] == Just True && failAt [145, 145] == Just False
 softLineWire :: Bool
 softLineWire = case (bare, established) of
   (Just (s0, Null), Just (s1, Number 468)) ->
-    s0 /= s1 && (carried >>= soft) == Just (Number 468)
+    s0 /= s1 && (carried >>= soft) == Just (Number 468) && atTheCap
   _ -> False
  where
   sized = setKey "continuous" (toJSON [[0, 0, 550 :: Integer]]) (wireReq [] [] [] [])
@@ -126,4 +126,11 @@ softLineWire = case (bare, established) of
   soft o = do
     Object nb <- KM.lookup "newBaseline" o
     KM.lookup "softLine" nb
+  -- the live side of the code-4 allocation fence (VerdictWireProps
+  -- refuses 1e9): AT the cap the exponent must still set the line —
+  -- (5/4)^1024 saturates the [200,500] clamp — so a cap trimmed too
+  -- far shows up here as a refusal, not as a quietly narrowed knob
+  atTheCap =
+    (replyObj (setKey "ceilings" (toJSON [[4, 1024 :: Integer]]) locReq) >>= soft)
+      == Just (Number 500)
 

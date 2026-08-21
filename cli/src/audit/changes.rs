@@ -46,6 +46,17 @@ fn records(text: &str) -> impl Iterator<Item = &str> {
     text.split('\0').filter(|r| !r.is_empty())
 }
 
+/// The judged-language gate, now shared by BOTH legs. It lived on the
+/// untracked leg alone, so one `.js` file counted 0 net LOC while
+/// untracked and its full numstat the moment it was committed — the
+/// same file, two net-LOC universes, told apart by nothing but its git
+/// status, inside the ledger the deny promotion is argued from.
+/// Extension-only, so a `&str` is the whole input: no `root.join`, no
+/// stat — the paths git already handed back are enough.
+fn judged(rel: &str) -> bool {
+    crate::scan::lang::Lang::judged_path(Path::new(rel)).is_some()
+}
+
 /// The diff base: `HEAD`, or git's empty tree when HEAD is unborn.
 /// A brand-new project — this product's headline scenario — has no
 /// HEAD until its first commit, and `diff HEAD` then fails outright,
@@ -55,6 +66,14 @@ fn records(text: &str) -> impl Iterator<Item = &str> {
 /// asked of git rather than hard-coded because it differs between
 /// sha1 and sha256 repositories. None = not a git repo.
 pub fn base_rev(root: &Path) -> Option<String> {
+    // Repo-existence is its own question, asked FIRST. It used to be
+    // inferred from the fallback, and `hash-object` needs no
+    // repository — it answers the empty-tree id outside one, exit 0.
+    // So every Stop in a non-repo directory looked like a repo whose
+    // diff had failed: `.ce/` created there and a `degraded: true`
+    // line written into the promotion ledger for a degradation that
+    // never happened.
+    crate::churn::git(root, &["rev-parse", "--git-dir"]).ok()?;
     if crate::churn::git(root, &["rev-parse", "--verify", "-q", "HEAD"]).is_ok() {
         return Some("HEAD".into());
     }
@@ -63,30 +82,39 @@ pub fn base_rev(root: &Path) -> Option<String> {
         .map(|s| s.trim().to_string())
 }
 
+/// One `-z` numstat record — `added\tdeleted\tpath`, the path RAW, so
+/// `splitn(3)` keeps a tab inside the name out of the separator's
+/// reach. None = a malformed row (one must not void the whole audit)
+/// or a path outside the judged universe.
+fn numstat_row(rec: &str) -> Option<(i64, String)> {
+    let mut cols = rec.splitn(3, '\t');
+    let (a, d, path) = (cols.next()?, cols.next()?, cols.next()?);
+    let path = path.replace('\\', "/");
+    if ce_owned(&path) || !judged(&path) {
+        return None;
+    }
+    // '-' marks binary files: count the file, skip the arithmetic
+    let net = match (a.parse::<i64>(), d.parse::<i64>()) {
+        (Ok(a), Ok(d)) => a - d,
+        _ => 0,
+    };
+    Some((net, path))
+}
+
 /// numstat over `tail` (the caller's base rev, or `--cached`) in ce's
 /// path vocabulary. Git computes the arithmetic itself, so this leg
-/// reads nothing and needs no scope filter beyond `.ce/`.
+/// still reads nothing — but it now answers in the SAME judged
+/// universe `untracked` does (see `judged`). Only `walk::in_scope`
+/// stays untracked-only: it canonicalizes, and a row here may name a
+/// file the diff DELETED, which has no path left to canonicalize.
 pub fn diff(root: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
     let mut args = vec!["diff", "--numstat", "--relative", "--no-renames", "-z"];
     args.extend_from_slice(tail);
     let text = crate::churn::git(root, &args).ok()?;
     let mut net = 0i64;
     let mut files = Vec::new();
-    // `added\tdeleted\tpath`, the path RAW: splitn(3) keeps a tab
-    // inside the name out of the separator's reach.
-    for rec in records(&text) {
-        let mut cols = rec.splitn(3, '\t');
-        let (Some(a), Some(d), Some(path)) = (cols.next(), cols.next(), cols.next()) else {
-            continue; // one malformed row must not void the whole audit
-        };
-        let path = path.replace('\\', "/");
-        if ce_owned(&path) {
-            continue;
-        }
-        // '-' marks binary files: count the file, skip the arithmetic
-        if let (Ok(a), Ok(d)) = (a.parse::<i64>(), d.parse::<i64>()) {
-            net += a - d;
-        }
+    for (n, path) in records(&text).filter_map(numstat_row) {
+        net += n;
         files.push(path);
     }
     Some((net, files))
@@ -97,12 +125,13 @@ pub fn diff(root: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
 /// shell write leaves behind.
 ///
 /// Scoped through the SAME exclusion model every other whole-tree
-/// reader uses (the language gate then `walk::in_scope`), unlike the
-/// diff leg above: here every listed file is READ to count its lines,
-/// so an un-ignored `node_modules/` or a stray multi-GB csv turned
-/// every Stop into a full-tree read. A file ce would never index also
-/// can never match a dedup block, so the scope costs the gate nothing
-/// — it only stops the audit paying for what it cannot use.
+/// reader uses: the language gate (shared with the diff leg since the
+/// universe split) and then `walk::in_scope`, which only this leg
+/// pays for — here every listed file is READ to count its lines, so
+/// an un-ignored `node_modules/` or a stray multi-GB csv turned every
+/// Stop into a full-tree read. A file ce would never index also can
+/// never match a dedup block, so the scope costs the gate nothing —
+/// it only stops the audit paying for what it cannot use.
 pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)> {
     let args = ["ls-files", "--others", "--exclude-standard", "-z"];
     let text = crate::churn::git(root, &args).ok()?;
@@ -113,11 +142,12 @@ pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)>
     for rec in records(&text) {
         let path = rec.replace('\\', "/");
         let full = root.join(&path);
-        // judged_path: the scan-only arm (plan v2.5) never enters
-        // the Stop audit's changed-file universe
+        // `judged`: the scan-only arm (plan v2.5) never enters the
+        // Stop audit's changed-file universe — through the shared
+        // predicate now, so the two legs cannot drift apart again
         if path.is_empty()
             || ce_owned(&path)
-            || crate::scan::lang::Lang::judged_path(&full).is_none()
+            || !judged(&path)
             || !crate::scan::walk::in_scope(root, &full, excludes)
         {
             continue;
@@ -181,5 +211,28 @@ mod tests {
             Some("weird\tname.rs"),
             "the path is whatever follows the two counts, tabs and all"
         );
+        assert_eq!(
+            numstat_row(rec),
+            Some((1, String::from("weird\tname.rs"))),
+            "and the row parser keeps it too"
+        );
+    }
+
+    /// The two legs answer in ONE universe. Every row here is one git
+    /// would print for a real file: without the judged gate on this
+    /// leg, `app.js` and `ce.toml` counted their full numstat once
+    /// committed and exactly 0 while untracked.
+    #[test]
+    fn numstat_rows_share_the_untracked_legs_judged_universe() {
+        assert_eq!(numstat_row("11\t0\ta.rs"), Some((11, "a.rs".into())));
+        assert_eq!(
+            numstat_row("-\t-\ta.rs"),
+            Some((0, "a.rs".into())),
+            "binary"
+        );
+        assert_eq!(numstat_row("3\t2\tapp.js"), None, "scan-only arm");
+        assert_eq!(numstat_row("3\t2\tce.toml"), None, "no language at all");
+        assert_eq!(numstat_row("1\t0\t.ce/observe.ndjson"), None, "ce's own");
+        assert_eq!(numstat_row("1\t0"), None, "malformed rows still skip");
     }
 }

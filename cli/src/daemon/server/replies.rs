@@ -58,7 +58,17 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     // a token-gated but root-scoped socket, and one outside the served
     // root is not ours to judge — its raw spelling would also become
     // a self-exclusion key that excludes nothing.
-    if crate::scan::walk::contained(root, file_path).is_none() {
+    let Some(joined) = crate::scan::walk::contained(root, file_path) else {
+        return Ok(serde_json::json!([]));
+    };
+    // The SAME exclusion model the budget rule honours. This leg had
+    // only containment, so a write into vendor/ or migrations/, or to
+    // a path a human deliberately listed in .ceignore, could be DENIED
+    // as a duplicate while the sibling rule on the identical write
+    // correctly stayed silent — and the FPR record the deny tier rests
+    // on replayed no excluded-path targets at all.
+    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
+    if !crate::scan::walk::in_scope(root, &joined, &cfg.exclude) {
         return Ok(serde_json::json!([]));
     }
     // canonicalize before stripping: `root` is canonical (serve()),

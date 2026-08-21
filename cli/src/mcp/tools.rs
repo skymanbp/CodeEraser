@@ -100,7 +100,10 @@ pub const TOOLS: &[Tool] = &[
         desc: "Score trajectory over mainline git history (ce.trend-report schema; \
                points cache in the index, rebuildable from history).",
         extra: &[
-            ("commits", "integer", "mainline window size (default 10)"),
+            // the number here is pinned to trend::DEFAULT_COMMITS by
+            // the test below — help prose that drifts from the code
+            // is how this face came to answer 10 while the CLI said 30
+            ("commits", "integer", "mainline window size (default 30)"),
             ("batch", "integer", "max uncached commits measured per call"),
         ],
         run: trend,
@@ -129,14 +132,22 @@ fn core() -> String {
     crate::daemon::judge::core_bin().unwrap_or_else(|| "ce-core".into())
 }
 
-/// The window asked for, or the default. `as u32` TRUNCATED:
-/// `days = 4294967296` became 0 and judged a zero-day window.
-fn days(args: &Value, default: u32) -> u32 {
-    args["days"]
+/// A count arg, or the default — ONE guard for every window. `as u32`
+/// TRUNCATED (`days = 4294967296` became 0 and judged a zero-day
+/// window) and `commits` took `as usize` bare beside it, so a zero
+/// there judged an EMPTY history: absent, unparsable, oversized and
+/// zero all mean the default now.
+fn count(args: &Value, key: &str, default: usize) -> usize {
+    args[key]
         .as_u64()
-        .and_then(|v| u32::try_from(v).ok())
+        .and_then(|v| usize::try_from(v).ok())
         .filter(|&v| v > 0)
         .unwrap_or(default)
+}
+
+fn days(args: &Value, default: u32) -> u32 {
+    let v = count(args, "days", default as usize);
+    u32::try_from(v).unwrap_or(default)
 }
 
 fn scan(root: &Path, _a: &Value) -> Result<String> {
@@ -233,16 +244,46 @@ fn check(root: &Path, _a: &Value) -> Result<String> {
             days: None,
             floor: None,
             establish: false,
+            pinned_soft: None,
         },
     )?;
     Ok(crate::score::report_json(&o).to_string())
 }
 
 fn trend(root: &Path, a: &Value) -> Result<String> {
-    let commits = a["commits"].as_u64().map_or(10, |v| v as usize);
-    let batch = a["batch"].as_u64().map(|v| v as usize);
+    let commits = count(a, "commits", crate::trend::DEFAULT_COMMITS);
+    // absent = measure every uncached commit, but a PRESENT batch of 0
+    // measured NOTHING and left `pending` pinned for a GUI polling it
+    let batch = a["batch"]
+        .as_u64()
+        .map(|v| usize::try_from(v).unwrap_or(usize::MAX).max(1));
     doc(
         crate::trend::run(root, None, &core(), commits, batch),
         crate::trend::report_json,
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The trend window has ONE default (trend::DEFAULT_COMMITS): this
+    /// face answered 10 while clap and the GUI answered 30, and the
+    /// tools/list prose said 10 too. Both halves are pinned here.
+    #[test]
+    fn trend_window_default_is_the_shared_one() {
+        let d = crate::trend::DEFAULT_COMMITS;
+        let row = TOOLS
+            .iter()
+            .find(|t| t.name == "trend")
+            .and_then(|t| t.extra.iter().find(|(n, ..)| *n == "commits"))
+            .expect("the trend tool declares a commits arg");
+        assert!(row.2.contains(&d.to_string()), "tools/list says: {}", row.2);
+        assert_eq!(count(&json!({}), "commits", d), d, "absent = the default");
+        assert_eq!(
+            count(&json!({"commits": 0}), "commits", d),
+            d,
+            "0 is no window"
+        );
+    }
 }

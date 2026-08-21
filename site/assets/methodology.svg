@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" role="img"
+     aria-label="CodeEraser methodology: lane one measures facts (token fingerprints k=25 w=26, AST trees, reference graph, git windows, LOC multisets, doc shingles), lane two judges them with exact integer and rational formulas (winnowing guarantee t=50, TSED 85/100, Jaccard 80/100, soft line S=clamp(median times r^k,[200,500]), the convex soft-zone penalty, liveness closure, chi-squared divergence, least-squares slope, the score fold), lane three gates on the ratchet, the dedup budget, the fail-under floor and the FPR tier ladder">
+  <!-- Self-painted ground, same vocabulary as architecture.svg: the diagram
+       carries its own dark panel so it reads identically on GitHub light/dark
+       and on codeeraser.dev. Every number below is cited to a file:line in
+       docs/reference/methodology/. -->
+  <defs>
+    <marker id="m-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#57c7a8"/>
+    </marker>
+    <marker id="m-verm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e4574a"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="1198" height="818" rx="18" fill="#10141d" stroke="#2a3347"/>
+
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', monospace">
+    <text x="30" y="48" font-size="19" font-weight="600" fill="#f4efe6">CodeEraser — measure, judge, gate</text>
+    <text x="30" y="70" font-size="11" fill="#8593ad">no model sits between the evidence and the verdict · every threshold is an integer or exact rational comparison · same tree in, same bytes out</text>
+
+    <!-- ===================== LANE 1 — MEASURE (Rust) ===================== -->
+    <g>
+      <rect x="28" y="100" width="316" height="638" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="100" width="4" height="638" rx="2" fill="#d9a35b"/>
+      <text x="48" y="130" font-size="13" font-weight="600" fill="#d9a35b">1 · measured facts</text>
+      <text x="328" y="130" font-size="10" letter-spacing="1.5" fill="#8593ad" text-anchor="end">RUST</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="44" y="146" width="284" height="78" rx="8"/>
+        <rect x="44" y="242" width="284" height="78" rx="8"/>
+        <rect x="44" y="338" width="284" height="78" rx="8"/>
+        <rect x="44" y="434" width="284" height="78" rx="8"/>
+        <rect x="44" y="530" width="284" height="78" rx="8"/>
+        <rect x="44" y="626" width="284" height="78" rx="8"/>
+      </g>
+
+      <g font-size="11.5" fill="#cdd6e4">
+        <text x="58" y="168">token fingerprints</text>
+        <text x="58" y="264">AST trees, postorder</text>
+        <text x="58" y="360">reference graph</text>
+        <text x="58" y="456">git windows</text>
+        <text x="58" y="552">LOC multisets</text>
+        <text x="58" y="648">documentation shingles</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="58" y="186">k-gram k = 25, window w = 26</text>
+        <text x="58" y="204">FNV-1a leaf hash, BASE = 1 000 003</text>
+
+        <text x="58" y="282">lab[i] kind code, lld[i] leftmost leaf</text>
+        <text x="58" y="300">min 24 named nodes, unit cap 256</text>
+
+        <text x="58" y="378">frozen site kinds, ladder rungs 1..5</text>
+        <text x="58" y="396">kept arcs deduped on (src, dst)</text>
+
+        <text x="58" y="474">appended / rewrote lines per unit</text>
+        <text x="58" y="492">co-change pairs; seam window 14 days</text>
+
+        <text x="58" y="570">judged-language file LOC values</text>
+        <text x="58" y="588">median m, multiplicative MAD r</text>
+
+        <text x="58" y="666">word 5-grams, floor 50 words</text>
+        <text x="58" y="684">MinHash 128 perms, 32 bands x 4 rows</text>
+      </g>
+    </g>
+
+    <!-- ===================== LANE 2 — JUDGE (Haskell) ===================== -->
+    <g>
+      <rect x="392" y="100" width="416" height="638" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="392" y="100" width="4" height="638" rx="2" fill="#e4574a"/>
+      <text x="412" y="130" font-size="13" font-weight="600" fill="#e4574a">2 · judgment computations</text>
+      <text x="792" y="130" font-size="10" letter-spacing="1.5" fill="#8593ad" text-anchor="end">HASKELL</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="408" y="146" width="384" height="56" rx="8"/>
+        <rect x="408" y="210" width="384" height="56" rx="8"/>
+        <rect x="408" y="274" width="384" height="56" rx="8"/>
+        <rect x="408" y="338" width="384" height="56" rx="8"/>
+        <rect x="408" y="402" width="384" height="56" rx="8"/>
+        <rect x="408" y="466" width="384" height="56" rx="8"/>
+        <rect x="408" y="530" width="384" height="56" rx="8"/>
+        <rect x="408" y="594" width="384" height="56" rx="8"/>
+        <rect x="408" y="658" width="384" height="56" rx="8"/>
+      </g>
+
+      <g font-size="11" fill="#cdd6e4">
+        <text x="422" y="167">winnowing no-miss guarantee</text>
+        <text x="422" y="231">T3 clone verdict — TSED</text>
+        <text x="422" y="295">doc duplication — exact Jaccard</text>
+        <text x="422" y="359">soft line, per repository</text>
+        <text x="422" y="423">size penalty — convex soft zone</text>
+        <text x="422" y="487">dead-code liveness</text>
+        <text x="422" y="551">structure entropy and divergence</text>
+        <text x="422" y="615">score trajectory — least squares</text>
+        <text x="422" y="679">the fold — one 0..1000 score</text>
+      </g>
+      <g font-size="10.5" fill="#57c7a8">
+        <text x="422" y="187">t = window + kgram - 1 = 26 + 25 - 1 = 50</text>
+        <text x="422" y="251">(max(n1,n2) - ted) * 100 &gt;= 85 * max(n1,n2)</text>
+        <text x="422" y="315">inter * 100 &gt;= 80 * union  ||  run &gt;= 50 words</text>
+        <text x="422" y="379">S = clamp(floor(m * r^k), [200, 500]),  k = 2</text>
+        <text x="422" y="443">p(x) = 10 * ((x - S) / (750 - S))^2,  x &gt; S</text>
+        <text x="422" y="507">reach = closure from flags .&amp;. 126 != 0</text>
+        <text x="422" y="571">1 - sum (c/N)^2   ·   sum (p - q)^2 / q</text>
+        <text x="422" y="635">slope = (n*Sxy - Sx*Sy) / (n*Sxx - Sx^2)</text>
+        <text x="422" y="699">max 0 (1000 - sum(w*p*10) `div` sum(w))</text>
+      </g>
+    </g>
+
+    <!-- ===================== LANE 3 — GATE ===================== -->
+    <g>
+      <rect x="856" y="100" width="316" height="638" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="856" y="100" width="4" height="638" rx="2" fill="#57c7a8"/>
+      <text x="876" y="130" font-size="13" font-weight="600" fill="#57c7a8">3 · gates</text>
+      <text x="1156" y="130" font-size="10" letter-spacing="1.5" fill="#8593ad" text-anchor="end">EXIT CODE</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="872" y="146" width="284" height="88" rx="8"/>
+        <rect x="872" y="258" width="284" height="88" rx="8"/>
+        <rect x="872" y="370" width="284" height="88" rx="8"/>
+        <rect x="872" y="482" width="284" height="88" rx="8"/>
+        <rect x="872" y="594" width="284" height="88" rx="8"/>
+      </g>
+
+      <g font-size="11.5" fill="#cdd6e4">
+        <text x="886" y="169">ADR-006 continuous ratchet</text>
+        <text x="886" y="281">discrete ratchet</text>
+        <text x="886" y="393">dedup budget</text>
+        <text x="886" y="505">--fail-under floor</text>
+        <text x="886" y="617">guard tier ladder</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="886" y="191">tolerated(c) = max(c*102 div 100, c + 10)</text>
+        <text x="886" y="209">v &gt; tolerated(bv)  =&gt;  ratchet_over</text>
+        <text x="886" y="227">new ceiling = min(v, bv); legs cross at 500</text>
+
+        <text x="886" y="303">added = current \ baseline</text>
+        <text x="886" y="321">non-empty  =&gt;  discrete_added</text>
+        <text x="886" y="339">removed = baseline \ current, shrinks it</text>
+
+        <text x="886" y="415">blocks &gt; budget  =&gt;  dedup_budget</text>
+        <text x="886" y="433">only-shrink; sent by ce dedup --check</text>
+        <text x="886" y="451">absent pair = axis not judged</text>
+
+        <text x="886" y="527">score &lt; reqFloor  =&gt;  floor</text>
+        <text x="886" y="545">ce check . --fail-under 800</text>
+        <text x="886" y="563">exit 1 turns the pipeline red</text>
+
+        <text x="886" y="639">observe -&gt; warn -&gt; ask -&gt; deny</text>
+        <text x="886" y="657">deny admission = FPR &lt;= 1% / 500 edits</text>
+        <text x="886" y="675">no FPR record  =&gt;  stays observe</text>
+      </g>
+    </g>
+
+    <!-- ===================== FLOW ===================== -->
+    <g stroke-width="1.6" fill="none">
+      <path d="M344 419 H386" stroke="#57c7a8" marker-end="url(#m-teal)"/>
+      <path d="M808 419 H850" stroke="#e4574a" marker-end="url(#m-verm)"/>
+    </g>
+    <text x="365" y="408" font-size="9" fill="#8593ad" text-anchor="middle">facts</text>
+    <text x="829" y="408" font-size="9" fill="#8593ad" text-anchor="middle">verdicts</text>
+
+    <text x="600" y="772" font-size="10.5" fill="#8593ad" text-anchor="middle">fail = ratchet_over || discrete_added || floor || dedup_budget — four named conditions, and the reply says which ones held</text>
+    <text x="600" y="792" font-size="10.5" fill="#8593ad" text-anchor="middle">no floating point in the judgment layer: every ratio is cross-multiplied, every order statistic is an exact Rational</text>
+  </g>
+</svg>

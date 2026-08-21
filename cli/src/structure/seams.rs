@@ -46,7 +46,7 @@ pub fn seam_facts(
     soft: u64,
 ) -> Result<SeamFacts> {
     let mut out = SeamFacts::default();
-    let mut key_maps: Vec<BTreeMap<String, u64>> = Vec::new();
+    let mut key_maps: Vec<BTreeMap<(String, i64), u64>> = Vec::new();
     for f in files {
         let Some(lang) = Lang::judged_path(Path::new(&f.path)) else {
             continue;
@@ -108,11 +108,11 @@ fn push_clones(out: &mut SeamFacts, root: &Path, db: Option<PathBuf>) -> Result<
 
 /// Unit co-change pairs off the churn family's own commit ledger
 /// over the window — [fileId, a, b] rows, a < b, distinct. Ledger
-/// keys are joined onto the CURRENT snapshot's top-level units
-/// (key-level; renamed units drop out honestly), and a tree without
-/// git history prices the leg at zero rather than failing the
-/// advisory.
-fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<String, u64>]) {
+/// rows join on the ledger's OWN (key, nth) identity; unmatched rows
+/// (renames, top level) drop rather than fold onto occurrence 0, and
+/// a tree without git history prices the leg at zero rather than
+/// failing the advisory.
+fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, i64), u64>]) {
     if out.files.is_empty() {
         return;
     }
@@ -127,7 +127,7 @@ fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<String, u64
         let mut touched: BTreeMap<u64, BTreeSet<u64>> = BTreeMap::new();
         for row in crate::churn::commit_ledger(root, &sha) {
             if let Some(&fid) = ids.get(row.path.as_str())
-                && let Some(&top) = key_maps[fid as usize].get(&row.key)
+                && let Some(&top) = key_maps[fid as usize].get(&(row.key.clone(), row.nth))
             {
                 touched.entry(fid).or_default().insert(top);
             }
@@ -161,17 +161,17 @@ fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {
     Ok(stdout.split_whitespace().map(str::to_string).collect())
 }
 
-/// Current-snapshot unit key -> owning top-level unit index — the
-/// churn-ledger join surface (key-level; the ledger's nth caveat is
-/// inherited, and the advisory face tolerates the proxy).
-fn key_map(all: &[units::Unit], tops: &[units::Unit]) -> BTreeMap<String, u64> {
+/// Current-snapshot (unit key, nth) -> owning top-level unit index:
+/// the churn-ledger join surface at the ledger's FULL identity, nth
+/// off the same `with_nth` throat the ledger took it from.
+fn key_map(all: &[units::Unit], tops: &[units::Unit]) -> BTreeMap<(String, i64), u64> {
     let mut m = BTreeMap::new();
-    for u in all {
+    for (u, nth) in units::with_nth(all) {
         let owner = tops
             .iter()
             .position(|t| t.start_line <= u.start_line && u.end_line <= t.end_line);
         if let Some(t) = owner {
-            m.entry(u.key.clone()).or_insert(t as u64);
+            m.insert((u.key.clone(), nth), t as u64);
         }
     }
     m
@@ -272,5 +272,16 @@ mod tests {
         // word-bounded beta_two (identifier tail) — no edge
         assert_eq!(out.tables.refs, vec![[0, 1, 0]]);
         assert!(!mentions("xalpha_one()", "alpha_one"), "left bound");
+    }
+
+    /// Two same-key methods in one file: only the ledger's nth tells
+    /// them apart, and a key-only map billed impl B's churn to impl A.
+    #[test]
+    fn churn_join_map_keys_same_key_units_by_nth() {
+        let text = "impl A {\n    fn add(&self) { 1 }\n}\nimpl B {\n    fn add(&self) { 2 }\n}\n";
+        let all = units::segments(text, crate::scan::lang::Lang::Rust);
+        let m = key_map(&all, &top_level(&all));
+        assert_eq!(m.get(&("add/1".to_string(), 0)), Some(&0));
+        assert_eq!(m.get(&("add/1".to_string(), 1)), Some(&1));
     }
 }

@@ -31,13 +31,18 @@ struct Envelope {
 
 /// Entry point for `ce audit --hook`. Never fails outward.
 pub fn run_hook() -> ExitCode {
-    let Some(env) = crate::hookio::read_envelope::<Envelope>() else {
+    let Some((env, root)) =
+        crate::hookio::gated_envelope("Stop", |e: &Envelope| (&e.hook_event_name, &e.cwd))
+    else {
         return ExitCode::SUCCESS;
     };
-    if env.hook_event_name != "Stop" || env.stop_hook_active || env.cwd.is_empty() {
-        return ExitCode::SUCCESS;
+    // The loop guard skips the AUDIT, not the RECORD: a session whose
+    // only Stop landed here used to leave no line at all, which reads
+    // to the ledger exactly like a session the hook never ran in.
+    if env.stop_hook_active {
+        return unmeasured_stop(&root, &env.session_id, Some("loop_guard"));
     }
-    audit(&crate::hookio::project_root(&env.cwd), &env.session_id)
+    audit(&root, &env.session_id)
 }
 
 /// Shared head of the Stop audit and the pre-commit gate: guard mode,
@@ -83,15 +88,16 @@ fn gather(
             changed: changed.len(),
             dups: dups.as_deref().map(<[String]>::len),
             fourclass,
+            skipped: None, // this leg MEASURED — see AuditEvent::skipped
         },
     );
     Some((mode, net_loc, changed, dups))
 }
 
 fn audit(root: &Path, session: &str) -> ExitCode {
-    // Not a git repo: nothing to audit, and no `.ce/` written here.
+    // Not a git repo: nothing to audit, but the skip is RECORDED.
     let Some(base) = changes::base_rev(root) else {
-        return ExitCode::SUCCESS;
+        return unmeasured_stop(root, session, Some("no_git"));
     };
     let Some((mode, net_loc, _, dups)) = gather(
         root,
@@ -100,7 +106,7 @@ fn audit(root: &Path, session: &str) -> ExitCode {
         Some(session),
         Some(fourclass_report(root)),
     ) else {
-        return degraded_stop(root, session);
+        return unmeasured_stop(root, session, None);
     };
     if mode == "deny"
         && let Some(dups) = dups.as_deref()
@@ -119,11 +125,18 @@ fn audit(root: &Path, session: &str) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-/// git resolved the base but not the diff: a real degradation the
-/// feed has to SAY. A Stop that writes nothing reads to the M4
-/// ledger exactly like a clean one — and that ledger is the stated
-/// gate for promoting this audit to deny.
-fn degraded_stop(root: &Path, session: &str) -> ExitCode {
+/// Every Stop that produces NO measurement, said in the feed instead
+/// of passing silently: a Stop that writes nothing reads to the M4
+/// ledger exactly like a clean one, and that ledger — counted per
+/// SESSION (D2-2) — is the stated gate for promoting this audit to
+/// deny. `skipped` names which kind: Some(why) = an early return, the
+/// audit never ran; None = git resolved the base but not the diff, a
+/// real degradation (A9f). Anchor-gated, because an anchorless cwd
+/// must not get a `.ce/` planted in it (changes::base_rev's lesson).
+fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) -> ExitCode {
+    if !crate::root::is_anchored(root) {
+        return ExitCode::SUCCESS;
+    }
     let mode = crate::config::tier_of(&Config::load(root), "observe");
     observe_log(
         root,
@@ -133,8 +146,10 @@ fn degraded_stop(root: &Path, session: &str) -> ExitCode {
             session: Some(session),
             net_loc: 0,
             changed: 0,
-            dups: None, // stamps degraded: true
+            // measuring nothing != failing to measure: only the latter
+            dups: skipped.map(|_| 0),
             fourclass: None,
+            skipped,
         },
     );
     ExitCode::SUCCESS
@@ -161,6 +176,8 @@ fn fourclass_report(root: &Path) -> serde_json::Value {
 /// pre-commit mode: STAGED changes only; blocks the commit (exit 1)
 /// when guard mode is deny and staged files touch duplicate blocks.
 /// Unlike the hooks this prints for humans — it runs in a terminal.
+/// The count is the JUDGED staged set (`changes::diff`'s universe):
+/// a staged `.css` can never match a dedup block either.
 pub fn run_precommit(root: &Path) -> ExitCode {
     // session = None honestly: `ce precommit` runs in a terminal, no
     // session owns it — the M4 sampler excludes non-session events.
@@ -253,6 +270,13 @@ struct AuditEvent<'a> {
     /// M4 informational four-class report (Stop only; absent on the
     /// precommit path).
     fourclass: Option<serde_json::Value>,
+    /// WRITER CONTRACT — OPTIONAL, additive: present only on a
+    /// stop_audit line whose audit measured NOTHING, where the
+    /// net_loc / changed_files / dup_blocks zeros are placeholders,
+    /// not findings. A reader counting session coverage counts the
+    /// line; one summing LOC drops it FIRST. Values: "loop_guard"
+    /// (a prior Stop already blocked), "no_git" (no repo to diff).
+    skipped: Option<&'a str>,
 }
 
 fn observe_log(root: &Path, ev: AuditEvent) {
@@ -264,6 +288,9 @@ fn observe_log(root: &Path, ev: AuditEvent) {
         "degraded": ev.dups.is_none(),
         "dup_blocks": ev.dups.unwrap_or(0),
     });
+    if let Some(why) = ev.skipped {
+        line["skipped"] = serde_json::json!(why);
+    }
     if let Some(fc) = ev.fourclass {
         line["fourclass"] = fc;
     }

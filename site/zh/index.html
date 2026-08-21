@@ -20,6 +20,7 @@
   <img src="/icon-256.png" alt="">
   <span class="name">CodeEraser</span>
   <nav>
+    <a href="/zh/how/">原理</a>
     <a href="/">English</a>
     <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">下载</a>
@@ -99,10 +100,11 @@
 </figure>
 
 <h2>信任锚</h2>
-<p class="trust">六个 CLI 与判决核二进制（三平台 × ce / ce-core）以 SHA256 钉扎在
-<code>plugin/bin/manifest.env</code>，发布前逐一校验；全部发布资产——含 GUI 安装包——
-均由可离线核对的 <code>SHA256SUMS</code> 覆盖。代码签名被刻意排除在设计外——哈希链
-就是永久信任锚。度量在 Rust，判决在 Haskell，本仓库每次提交都用自己的工具给自己把门。</p>
+<p class="trust">全部九个发布二进制——三平台 × ce / ce-core，v0.7.3 起再加三个 GUI
+安装包——都以 SHA256 钉扎在 <code>plugin/bin/manifest.env</code>；tag 阶段逐 pin 校验、
+等被打标提交的 CI 全绿、拒绝任何计划外资产，然后才发布。<code>SHA256SUMS</code> 覆盖
+全集可离线核对。代码签名被刻意排除在设计外——哈希链就是永久信任锚。度量在 Rust，
+判决在 Haskell，本仓库每次提交都用自己的工具给自己把门。</p>
 
 <footer class="site">
   <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·

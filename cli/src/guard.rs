@@ -62,6 +62,16 @@ pub fn run_hook() -> ExitCode {
         return ExitCode::SUCCESS;
     }
     let root = crate::hookio::project_root(&env.cwd);
+    // No anchor anywhere up the chain = no project here. Probing and
+    // logging anyway planted `.ce/` and lazily spawned a 30-minute
+    // daemon (with a full winnowing index of the subtree) in whatever
+    // directory an agent happened to stop in — a home dir, a drive
+    // root. The Stop audit has taken this stance since its first
+    // review ("not a git repo: nothing to audit, and no .ce written
+    // here"); the probe hook now takes the same one.
+    if !crate::root::is_anchored(&root) {
+        return ExitCode::SUCCESS;
+    }
     decide(&root, &env)
 }
 
@@ -72,11 +82,13 @@ pub fn run_hook() -> ExitCode {
 fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let loaded = Config::load(root);
     let broken = loaded.as_ref().err().cloned();
+    // ONE renderer for the tier, the same every other surface uses
+    // (audit, health). The local map_or_else stamped a bare "observe"
+    // into the feed when ce.toml would not parse — byte-identical to
+    // a deliberate observe, which is exactly the drift tier_of exists
+    // to prevent, on the one surface that collects the FPR record.
+    let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);
     let cfg = loaded.ok();
-    let mode = cfg.as_ref().map_or_else(
-        || "observe".to_string(),
-        |c| c.guard.tier(crate::config::PROMOTED_DEFAULT),
-    );
     let file_path = &env.tool_input.file_path;
     let content = if env.tool_name == "Write" {
         &env.tool_input.content
@@ -189,9 +201,15 @@ fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serd
         content: content.to_string(),
     };
     match client::request(root, &req) {
-        Ok(Response::ProbeReport { matches, .. }) => {
-            Some(matches.as_array().cloned().unwrap_or_default())
-        }
+        // Only a real array is a verified answer. `unwrap_or_default`
+        // collapsed null / an object / a string into Some(vec![]) —
+        // "a healthy probe with no duplicates" — laundering a
+        // malformed report into an allow. Any other shape is the
+        // degraded None this function's own contract names.
+        Ok(Response::ProbeReport {
+            matches: serde_json::Value::Array(list),
+            ..
+        }) => Some(list),
         _ => None,
     }
 }

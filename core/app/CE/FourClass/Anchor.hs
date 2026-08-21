@@ -47,11 +47,20 @@ buildRuns :: (Pair -> [[Entry]]) -> [Pair] -> RunMap
 buildRuns side ps =
   M.fromList [((pIdx p, r), run) | p <- ps, (r, run) <- zip [0 ..] (side p)]
 
+-- Cons + one reverse, never `flip (++)`: fromListWith applies the
+-- combiner as `f new old`, so the flipped append built `old ++ [new]`
+-- — a left-nested chain whose first traversal costs the SQUARE of the
+-- bucket size, paid before the bucket cap can even measure the bucket
+-- (overWork forces the spine). A deleted lockfile contributing 1e5
+-- identical line hashes burned ~1e10 list steps ahead of the degrade
+-- it was supposed to trigger. Cons is O(1); the reverse restores the
+-- run order the old code preserved, so accepted blocks are unchanged.
 buildIx :: RunMap -> M.Map Word64 [Occ]
 buildIx rm =
-  M.fromListWith
-    (flip (++))
-    [(h, [Occ p r i]) | ((p, r), run) <- M.toList rm, (i, (_, h, _)) <- zip [0 ..] run]
+  M.map reverse $
+    M.fromListWith
+      (++)
+      [(h, [Occ p r i]) | ((p, r), run) <- M.toList rm, (i, (_, h, _)) <- zip [0 ..] run]
 
 -- | All accepted blocks plus whether the bucket cap tripped.
 sites :: [Pair] -> ([Block], Bool)

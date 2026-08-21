@@ -4,11 +4,14 @@
 //! family. Hooks are FAIL-OPEN — intake errors surface as None and
 //! the caller exits 0.
 
-// Root anchoring is its own concern (two anchor kinds, one with a
-// target that must resolve) — re-exported so every hookio::
-// project_root caller keeps its path.
-mod anchor;
-pub use anchor::project_root;
+// Root anchoring moved to crate::root when the CLI, MCP and GUI
+// needed the same ascent (they were re-rooting per typed path, the
+// defect the hooks had already fixed). One implementation, re-exported
+// here so every hookio::project_root caller keeps its path — the
+// hooks' envelope cwd is a &str, so this face keeps that shape.
+pub fn project_root(cwd: &str) -> std::path::PathBuf {
+    crate::root::project_root(Path::new(cwd))
+}
 
 use std::path::Path;
 
@@ -40,14 +43,55 @@ use std::path::Path;
 /// one session or ten.
 pub const OBSERVE_SCHEMA: &str = "ce.observe/0.6.0";
 
-/// Read the whole hook envelope from stdin and deserialize it.
-/// None = unreadable stdin or unparseable JSON — the caller treats
-/// that as "not for me" and exits 0 (fail-open).
+/// How much envelope the hooks take from stdin. A bare `read_to_string`
+/// bounds nothing: an oversized payload is materialized whole, and a
+/// writer that never closes parks the PreToolUse path — budgeted at
+/// p95 < 1 s — until the harness kills it. Same cap and same stance as
+/// the audit's untracked leg (`audit::changes::READ_CAP`, "an unbounded
+/// read is an availability hole"); 4 MiB clears the biggest thing an
+/// envelope legitimately carries, a Write's whole file body.
+const ENVELOPE_CAP: u64 = 4 << 20;
+
+/// The hooks' shared intake gate: envelope in, event name checked,
+/// cwd non-empty, root resolved. The stanza grew a copy per hook and
+/// the dedup gate refused the third — the drift was a class, so the
+/// gate is a throat. `base` projects (event, cwd) out of the hook's
+/// own envelope type — a closure, because a trait needed one
+/// byte-identical impl block per hook and the gate refused THOSE as
+/// clones too. None = not for this hook: exit 0.
+pub fn gated_envelope<T: serde::de::DeserializeOwned>(
+    event: &str,
+    base: impl Fn(&T) -> (&str, &str),
+) -> Option<(T, std::path::PathBuf)> {
+    let env = read_envelope::<T>()?;
+    let (got, cwd) = base(&env);
+    if got != event || cwd.is_empty() {
+        return None;
+    }
+    let root = project_root(base(&env).1);
+    Some((env, root))
+}
+
+/// Read the hook envelope from stdin and deserialize it.
+/// None = unreadable stdin, over-cap payload, or unparseable JSON —
+/// the caller treats that as "not for me" and exits 0 (fail-open).
 pub fn read_envelope<T: serde::de::DeserializeOwned>() -> Option<T> {
+    parse_envelope(std::io::stdin().lock())
+}
+
+/// The bounded intake, split off only so a test can hand it an
+/// over-cap reader. Over cap takes the existing fail-open None, never
+/// a truncated parse: a hook that cannot see the whole envelope must
+/// not judge on a prefix of it.
+fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Option<T> {
     use std::io::Read as _;
-    let mut raw = String::new();
-    std::io::stdin().read_to_string(&mut raw).ok()?;
-    serde_json::from_str(&raw).ok()
+    let mut raw = Vec::new();
+    // cap + 1: reading one byte past tells us it was truncated
+    src.take(ENVELOPE_CAP + 1).read_to_end(&mut raw).ok()?;
+    if raw.len() as u64 > ENVELOPE_CAP {
+        return None;
+    }
+    serde_json::from_slice(&raw).ok()
 }
 
 /// Append one entry to `<root>/.ce/observe.ndjson` (the untainted M4
@@ -113,6 +157,36 @@ pub fn clip(reason: &str, budget_tokens: usize) -> String {
     format!("{}{MARK}", &reason[..cut])
 }
 
+/// How much of the append-only feed a suppression query reads. The
+/// question is per-SESSION and the session's own lines are always at
+/// the end, so the whole file was never the answer — it was the cost:
+/// `read_to_string` + a JSON parse per line, twice per Write/Edit, on
+/// the PreToolUse path budgeted at p95 < 1 s, growing linearly with
+/// project history forever. A window bounds that cost without
+/// touching the ledger: the feed stays append-only (its promotion
+/// record must not rotate away), and 1 MiB is ~4000 entries at this
+/// repo's measured 245 B/line — several sessions deep.
+const FEED_WINDOW: u64 = 1 << 20;
+
+/// The last `cap` bytes of a file, starting at a line boundary (a
+/// window that opens mid-line would hand a truncated fragment to the
+/// JSON parser, which drops it — quietly losing one entry).
+fn tail(path: &Path, cap: u64) -> std::io::Result<String> {
+    use std::io::{Read, Seek, SeekFrom};
+    let mut f = std::fs::File::open(path)?;
+    let len = f.metadata()?.len();
+    if len <= cap {
+        let mut all = String::new();
+        f.read_to_string(&mut all)?;
+        return Ok(all);
+    }
+    f.seek(SeekFrom::Start(len - cap))?;
+    let mut buf = Vec::new();
+    f.read_to_end(&mut buf)?;
+    let start = buf.iter().position(|b| *b == b'\n').map_or(0, |i| i + 1);
+    Ok(String::from_utf8_lossy(&buf[start..]).into_owned())
+}
+
 /// §4.4 B4 session-level suppression: has this (rule, file) already
 /// FIRED for this session? The observe feed IS the accumulator the
 /// clause's "silently accumulate" half names — probe lines count only
@@ -125,7 +199,7 @@ pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> boo
     if session.is_empty() {
         return false;
     }
-    let Ok(feed) = std::fs::read_to_string(root.join(".ce/observe.ndjson")) else {
+    let Ok(feed) = tail(&root.join(".ce/observe.ndjson"), FEED_WINDOW) else {
         return false;
     };
     feed.lines()
@@ -142,6 +216,19 @@ pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> boo
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The intake is bounded: an envelope under the cap still parses,
+    /// one over it takes the fail-open None instead of being
+    /// materialized whole. Without the cap the over-cap case parses
+    /// fine and this asserts nothing — that WAS the hole.
+    #[test]
+    fn envelope_intake_is_capped() {
+        let small: Option<serde_json::Value> = parse_envelope(&br#"{"pad":"x"}"#[..]);
+        assert_eq!(small.expect("under cap parses")["pad"], "x");
+        let huge = format!(r#"{{"pad":"{}"}}"#, "x".repeat(ENVELOPE_CAP as usize));
+        let over: Option<serde_json::Value> = parse_envelope(huge.as_bytes());
+        assert!(over.is_none(), "over-cap envelope must fail open");
+    }
 
     /// B4 acceptance half 1: the clip is identity under budget, caps
     /// at budget with the on-disk pointer over it, and never splits a

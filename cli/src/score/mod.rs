@@ -41,6 +41,19 @@ pub struct Opts {
     /// facts become the new floor wholesale) — the CE_ACCEPT_BASELINE
     /// path; the committed file is otherwise read verbatim.
     pub establish: bool,
+    /// Establish, but against a FIXED soft line instead of one
+    /// derived from this snapshot. Since 2.14.0 a null baseline does
+    /// two things at once: it empties the ratchet AND makes the core
+    /// derive the size soft line from the same LOC multiset it is
+    /// judging — self-reference the size-advisory contract forbids
+    /// ("a bloat commit must not move its own goalpost"; the re-anchor
+    /// is CE_ACCEPT_BASELINE, by name). One caller needs the first
+    /// meaning without the second: `ce trend` measures every
+    /// historical commit this way, and a fence recomputed per point
+    /// made the whole trajectory incomparable. A baseline carrying
+    /// only this soft line and empty tables says exactly that — no
+    /// ceilings to bust, no members to add, one fence for every point.
+    pub pinned_soft: Option<u64>,
 }
 
 pub struct Outcome {
@@ -118,10 +131,12 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         cochange: cochange_t,
         continuous,
         discrete: m.members,
-        baseline: if opts.establish {
-            serde_json::Value::Null
-        } else {
-            baseline::read(root)?.unwrap_or(serde_json::Value::Null)
+        baseline: match (opts.establish, opts.pinned_soft) {
+            (true, Some(soft)) => serde_json::json!({
+                "continuous": [], "discrete": [], "softLine": soft,
+            }),
+            (true, None) => serde_json::Value::Null,
+            (false, _) => baseline::read(root)?.unwrap_or(serde_json::Value::Null),
         },
         floor: opts.floor,
         ceilings: knobs::ceiling_rows(&cfg.thresholds, &cfg.score),

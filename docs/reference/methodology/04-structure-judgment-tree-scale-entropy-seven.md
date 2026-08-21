@@ -1,0 +1,285 @@
+## Structure judgment — tree-scale entropy, seven axes
+
+The `structure/1` family judges the *tree*, not the file: directory geometry, naming
+distributions, reference locality, documentation coverage, and — when the deep tables ride
+the wire — doc staleness and redundancy rollups. Rust measures and re-labels; Haskell
+decides. Names never cross the wire — the request's vocabulary is dense directory ids,
+codes and counts ([Structure.hs:12-15](../../../core/app/CE/Structure.hs#L12)). Only the *judged*
+language set enters the tree; the size-gate-only language arm is excluded, or S2 would call
+a normal front-end directory language-mixed ([structure-axes.md:26-27](../structure-axes.md#L26)).
+
+### 1. The entropy primitive: exact rationals, no logarithms
+
+Shannon entropy and KL divergence require logarithms — irrational, therefore not exactly
+decidable, and banned along with every float by the core's integer discipline. The family
+therefore publishes the rational-closed members of the same families
+([Entropy.hs:1-15](../../../core/app/CE/Structure/Entropy.hs#L1)): Tsallis-2 entropy (= Gini–Simpson
+diversity) and the χ² f-divergence. All arithmetic runs over `Data.Ratio`
+([Entropy.hs:23](../../../core/app/CE/Structure/Entropy.hs#L23)).
+
+**Tsallis-2 diversity** over a count vector, `N = Σc`
+([Entropy.hs:28-34](../../../core/app/CE/Structure/Entropy.hs#L28)):
+
+```
+tsallis2 cs = 1 - Σ (c/N)^2        -- and = 0 when N == 0
+```
+
+**Normalized** against the `n`-bin maximum `1 - 1/n` (attained exactly on the uniform
+distribution), where `n` = the number of *nonzero* bins
+([Entropy.hs:39-44](../../../core/app/CE/Structure/Entropy.hs#L39)):
+
+```
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)     -- n > 1
+tsallis2Norm cs = 0                           -- n <= 1  (nothing to normalize)
+```
+
+**χ² divergence** of observed counts against reference counts, paired by bin position, with
+`p = o/Σo` and `q = r/Σr` ([Entropy.hs:54-65](../../../core/app/CE/Structure/Entropy.hs#L54)):
+
+```
+chi2 pairs = Σ_{r > 0} (p - q)^2 / q
+```
+
+with four boundary arms, in evaluation order
+([Entropy.hs:55-59](../../../core/app/CE/Structure/Entropy.hs#L55)):
+
+| condition | result | reading |
+|---|---|---|
+| `Σo == 0 && Σr == 0` | `Just 0` | nothing diverges from nothing |
+| `Σr == 0` | `Nothing` | no reference to judge against |
+| any bin with `r == 0 && o > 0` | `Nothing` | observed mass on a zero-reference bin — divergence is infinite there |
+| `Σo == 0` | `Just 1` | equals `Σ q` over the support |
+
+`Nothing` is a refusal, not a zero: the A-layer names those directories instead of collapsing
+them into a number ([Entropy.hs:48-52](../../../core/app/CE/Structure/Entropy.hs#L48),
+[structure-axes.md:23-25](../structure-axes.md#L23)).
+
+**Publishing scale.** Every exact rational reaches the wire through one deterministic
+truncation ([Entropy.hs:69-70](../../../core/app/CE/Structure/Entropy.hs#L69)):
+
+```
+perMille r = floor (r * 1000)
+```
+
+The algebra is proved against pair *enumeration* by an exhaustive reference battery — e.g.
+`tsallis2Norm (replicate n 2) == 1`, `tsallis2Norm [5] == 0`, `chi2 [(1,0),(0,1)] == Nothing`,
+`chi2 [(0,1),(0,3)] == Just 1`, `chi2 [(3,2),(1,2)] == Just (1/4)`
+([EntropyProps.hs:85-103](../../../core/test/EntropyProps.hs#L85)).
+
+**Headline entropy rows.** The reply carries exactly two, both normalized Tsallis-2 in
+per-mille ([Axes.hs:217-225](../../../core/app/CE/Structure/Axes.hs#L217)):
+
+- row `0` — the *global* naming distribution: pattern counts summed by pattern code over every
+  directory;
+- row `1` — the file-count distribution across directories, zero-file directories filtered out.
+
+### 2. The self-referential floor
+
+The phrase names the mode in which the family runs with **no external template**: the seven
+axes and the two entropy rows read nothing but the tree's own fact tables, so the tree is
+judged against itself. The only in-tree definition of the term is the config comment at
+[config.rs:91-97](../../../cli/src/config.rs#L91) — "the OPTIONAL layout template the χ² divergence
+judges against. Absent = the self-referential floor alone (row C)". *Caveat for the reader:*
+the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in the tree — the
+booklet was distilled into `structure-axes.md` and its full text lives only in git history
+([structure-axes.md:3-6](../structure-axes.md#L3)). No other definition of "row C"
+or of "self-referential floor" exists in the repository (verified by grep this run: the only
+other hit is an unrelated test fixture).
+
+Mechanically the floor is a shape guarantee: the A-layer keys `divergence` and `deviations`
+exist **only** when the request declares a layout; an undeclared request answers the S2 shape
+byte for byte ([Structure.hs:207-211](../../../core/app/CE/Structure.hs#L207),
+[Declared.hs:16-23](../../../core/app/CE/Structure/Declared.hs#L16)), and the battery asserts both keys
+absent on the undeclared fixture ([StructureProps.hs:143-151](../../../core/test/StructureProps.hs#L143)).
+
+### 3. Declaration coverage — the χ² overlay (S3a A-layer)
+
+`ce.toml`'s `[structure.layout]` maps directory paths to relative weights `>= 1`; `"."` is the
+root and, under deepest-owner semantics, the catch-all bin
+([config.rs:98-102](../../../cli/src/config.rs#L98), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
+sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
+`weight >= 1`, and strict ascent by `dirId`
+([Structure.hs:124](../../../core/app/CE/Structure.hs#L124),
+[Structure.hs:147-149](../../../core/app/CE/Structure.hs#L147),
+[Structure.hs:186-196](../../../core/app/CE/Structure.hs#L186)).
+
+Ownership resolves by depth, never by guess. Ids are dense and parents precede children, so one
+left fold suffices: a directory owns itself when declared, otherwise it inherits its parent's
+owner; the root has no fallback ([Declared.hs:49-56](../../../core/app/CE/Structure/Declared.hs#L49)).
+Observed mass is the file count folded onto owners
+([Declared.hs:27-30](../../../core/app/CE/Structure/Declared.hs#L27)):
+
+```
+ownedBy[o]  = Σ { files(i) : owner(i) == o }
+bins        = [ (ownedBy[d], w) | (d, w) <- declared ]     -- observed vs reference
+divergence  = [ perMille (chi2 bins) ]                     -- one row, or []
+```
+
+Two deviation kinds are emitted instead of, or alongside, the number
+([Declared.hs:31-35](../../../core/app/CE/Structure/Declared.hs#L31)):
+
+| row | kind | meaning |
+|---|---|---|
+| `[dirId, 0]` | unowned | directory holds files (`files > 0`) but no declared ancestor owns it |
+| `[dirId, 1]` | empty | declared bin that owns zero files — an expectation with no reality |
+
+If **any** unowned directory exists, `divergence` is `[]` — the whole number is withheld and the
+kind-0 rows say where the undeclared mass sits
+([Declared.hs:36-39](../../../core/app/CE/Structure/Declared.hs#L36)). When every file is owned, the
+weights are already validated `>= 1`, so `chi2`'s zero-reference arm is unreachable and the
+`maybe` merely keeps the call total ([Declared.hs:40-42](../../../core/app/CE/Structure/Declared.hs#L40)).
+Deviation rows are emitted sorted ([Declared.hs:24](../../../core/app/CE/Structure/Declared.hs#L24)).
+
+Worked example on the battery fixture, every digit hand-checked
+([StructureProps.hs:131-161](../../../core/test/StructureProps.hs#L131)): declared `[(0,1),(1,2),(2,3)]`,
+owned file counts `(3, 9, 6)` of 18 → `p = (1/6, 1/2, 1/3)`, `q = (1/6, 1/3, 1/2)`,
+`χ² = (1/6)²/(1/3) + (1/6)²/(1/2) = 5/36` → `138‰`. Weights `(1,3,2)` match the tree exactly →
+`0`. Declaring dir 1 alone leaves root and dir 2 unowned → `divergence = []`, deviations
+`[[0,0],[2,0]]`.
+
+### 4. The seven axes
+
+Each axis is one named predicate over the validated fact tables, owning its knob(s), so the
+perturbation battery has a lever per row ([Axes.hs:1-7](../../../core/app/CE/Structure/Axes.hs#L1)).
+S0–S4 are always judged; 5 and 6 are judged **exactly when** their fact table rode the wire —
+absent table (`Nothing`) means unjudged, empty table (`Just []`) means judged clean
+([Axes.hs:36-42](../../../core/app/CE/Structure/Axes.hs#L36),
+[Axes.hs:107-108](../../../core/app/CE/Structure/Axes.hs#L107)).
+
+Every axis penalty is a count of **directories**, axis 3 included — booklet amendment ①
+(user decision 2026-08-19, effective v0.5.0). Before it, S3 counted files, and one junk drawer
+of 500 misplaced files could drive the whole structure score to 0 and drown the other six
+axes; files remain the *measured* unit, the directory is the *judged* unit
+([Axes.hs:112-118](../../../core/app/CE/Structure/Axes.hs#L112),
+[structure-axes.md:29-38](../structure-axes.md#L29)). The migration moved this
+repo's own score 990 → 992 ([structure-axes.md:40-42](../structure-axes.md#L40)).
+
+| axis | fact row | predicate | knobs (code, default) |
+|---|---|---|---|
+| **S0** geometry | `[id,parent,depth,subdirs,files]` | `depth > depthCeil \|\| subdirs + files > fanoutCeil` | 0 `depthCeil=8`, 1 `fanoutCeil=30` |
+| **S1** naming | `[dirId,patternCode,count]` | `Σcs >= namingMin && perMille (tsallis2Norm cs) > namingCeil` | 2 `namingMin=5`, 3 `namingCeil=600` |
+| **S2** mixing | `[dirId,inside,outside,count]` | `ins + outs >= mixRefFloor && outs > ins` | 4 `mixRefFloor=5` |
+| **S3** misplacement | `[dirId,inside,outside,count]` | per file `outside >= misplaceMin && outside > 2*inside`, then dedup to dirs | 5 `misplaceMin=3` |
+| **S4** documentation | `[id,…,files]` + `[dirId,bits]` | `(files >= bigDirFloor && even bits) \|\| (id == 0 && bits < 2)` | 6 `bigDirFloor=8` |
+| **S5** staleness | `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
+| **S6** redundancy | `[dirId,dupBlocks,deadUnits]` | `dupBlocks >= dupMin \|\| deadUnits >= deadMin` | 9 `dupMin=1`, 10 `deadMin=1` |
+
+Sources: predicates [Axes.hs:134-145](../../../core/app/CE/Structure/Axes.hs#L134),
+[Axes.hs:147-152](../../../core/app/CE/Structure/Axes.hs#L147),
+[Axes.hs:156-165](../../../core/app/CE/Structure/Axes.hs#L156),
+[Axes.hs:171-183](../../../core/app/CE/Structure/Axes.hs#L171),
+[Axes.hs:187-199](../../../core/app/CE/Structure/Axes.hs#L187),
+[Axes.hs:203-211](../../../core/app/CE/Structure/Axes.hs#L203); constants
+[Cost.hs:34](../../../core/app/CE/Structure/Cost.hs#L34), [Cost.hs:39](../../../core/app/CE/Structure/Cost.hs#L39),
+[Cost.hs:45](../../../core/app/CE/Structure/Cost.hs#L45), [Cost.hs:51](../../../core/app/CE/Structure/Cost.hs#L51),
+[Cost.hs:57](../../../core/app/CE/Structure/Cost.hs#L57), [Cost.hs:64](../../../core/app/CE/Structure/Cost.hs#L64),
+[Cost.hs:69](../../../core/app/CE/Structure/Cost.hs#L69), [Cost.hs:87](../../../core/app/CE/Structure/Cost.hs#L87),
+[Cost.hs:91](../../../core/app/CE/Structure/Cost.hs#L91), [Cost.hs:97](../../../core/app/CE/Structure/Cost.hs#L97);
+knob codes [Knobs.hs:31-52](../../../core/app/CE/Structure/Knobs.hs#L31).
+
+Notes on the non-obvious ones:
+
+- **S1** builds its per-directory count vector by grouping the pattern rows on `dirId`
+  ([Axes.hs:164-165](../../../core/app/CE/Structure/Axes.hs#L164)); only pattern *codes* are judged —
+  names never enter. Codes are bounded `0..6` by the boundary contract
+  ([Structure.hs:134-138](../../../core/app/CE/Structure.hs#L134)). `600‰` "tolerates one odd name in a
+  convention-following set and flags a genuine style mix"
+  ([Cost.hs:48-51](../../../core/app/CE/Structure/Cost.hs#L48)).
+- **S2** uses *one basis on both sides* — per-file touch counts, never edges-vs-touches. Each
+  `fileRefs` row contributes `(inside * count, outside * count)`, summed per directory
+  ([Axes.hs:179-183](../../../core/app/CE/Structure/Axes.hs#L179)).
+- **S3**'s `> 2*inside` ratio is part of the predicate's definition in v1, not a separate knob
+  ([Cost.hs:61-64](../../../core/app/CE/Structure/Cost.hs#L61),
+  [Axes.hs:191-199](../../../core/app/CE/Structure/Axes.hs#L191)). Directories are deduped via a map's
+  key set ([Axes.hs:188](../../../core/app/CE/Structure/Axes.hs#L188)).
+- **S4** convention bits are a mask: `1 = README`, `2 = config`; `even bits` means the README bit
+  is clear, and the root additionally owes a recognized config
+  ([Axes.hs:201-211](../../../core/app/CE/Structure/Axes.hs#L201)). Bits are constrained to `1..3` at the
+  boundary ([Structure.hs:139-142](../../../core/app/CE/Structure.hs#L139)).
+- **S6** never re-derives duplication or dead code: it convolves the per-file families' verdicts
+  to the tree scale ([Axes.hs:138-139](../../../core/app/CE/Structure/Axes.hs#L138)).
+
+**Drill-down.** The same predicate lists feed the sparse `[dirId, axis]` finding rows the GUI
+tree colours by — one list per axis, in axis order
+([Axes.hs:119-128](../../../core/app/CE/Structure/Axes.hs#L119)).
+
+### 5. The fold: penalties to one score
+
+The axis rows are `(code, count)` pairs; the score is a single equal-weight fold over the
+**judged** axis count ([Structure.hs:254-256](../../../core/app/CE/Structure.hs#L254)):
+
+```
+raw   = Σ_axes (penalty * violCost)
+score = max 0 (scale - raw `div` judgedAxisCount)
+```
+
+with `violCost = 10` (knob 7, [Cost.hs:73-74](../../../core/app/CE/Structure/Cost.hs#L73)) and
+`scale = 1000` (knob 8, [Cost.hs:77-78](../../../core/app/CE/Structure/Cost.hs#L77)). `div` is integer
+division — the fold truncates, and there is no float anywhere on the path.
+`judgedAxisCount` is 5, 6, or 7 depending on which optional tables rode
+([Axes.hs:99-110](../../../core/app/CE/Structure/Axes.hs#L99)). The same formula is the published
+contract in [structure-axes.md:20-22](../structure-axes.md#L20).
+
+Worked end-to-end on the battery fixture — root (2 subdirs, 3 files, README+config), dir 1
+(9 files, 5 snake + 4 pascal, two files with 4 outside refs each, no README), dir 2 (6 files,
+uniform names), dir 3 (empty, depth 2) ([StructureProps.hs:30-39](../../../core/test/StructureProps.hs#L30)):
+
+```
+axes    = [[0,0],[1,1],[2,1],[3,1],[4,1]]     -- S0 clean; S1..S4 each flag dir 1
+raw     = (0+1+1+1+1) * 10 = 40
+score   = 1000 - 40 `div` 5 = 992
+entropy = [[0,782],[1,916]]                   -- patterns [11,4]; dir files [3,9,6]
+findings= [[1,1],[1,2],[1,3],[1,4]]
+```
+
+asserted against the real `respond` at
+[StructureProps.hs:66-74](../../../core/test/StructureProps.hs#L66). Adding an empty `redundancy` table
+makes it six judged axes: `1000 - 40 div 6 = 994`
+([StructureProps.hs:163-176](../../../core/test/StructureProps.hs#L163)); both optional tables plus
+flagged rows give seven axes, `raw 70`, `1000 - 70 div 7 = 990`
+([StructureProps.hs:193-209](../../../core/test/StructureProps.hs#L193)).
+
+**Knob echo.** All 19 knobs (codes `0..18`) live in one authority table of
+`(code, getter, setter)` triples, so the effective fold and the reply's echo read the same rows
+and a knob cannot exist in one direction only
+([Knobs.hs:29-52](../../../core/app/CE/Structure/Knobs.hs#L29)); rows outside `0..18` or with value `< 1`
+are refused by name ([Knobs.hs:20-25](../../../core/app/CE/Structure/Knobs.hs#L20)). `ce.toml` is the
+source, `Cost.hs` the defaults ([Cost.hs:1-6](../../../core/app/CE/Structure/Cost.hs#L1)), and the reply
+echoes the full effective set ([Structure.hs:226](../../../core/app/CE/Structure.hs#L226)). Codes `12..18`
+(`seamSoft=300`, `seamHard=750`, `seamPMax=10`, `roiRefMilli=250`, `roiPhiMilli=500`,
+`roiCloneMilli=500`, `roiChurnMilli=150` —
+[Cost.hs:106-136](../../../core/app/CE/Structure/Cost.hs#L106)) belong to the split-ROI advisory, not to
+any axis, and never enter this fold.
+
+### 6. Preconditions the fold assumes
+
+The score above is only meaningful because the boundary contract runs first, in request order,
+and returns the *first* offender by name ([Structure.hs:102-117](../../../core/app/CE/Structure.hs#L102)):
+
+- node rows are dense and tree-shaped: `id == index`, no negative fields, root self-loops at
+  depth 0, `parent < id` for every non-root row
+  ([Structure.hs:155-165](../../../core/app/CE/Structure.hs#L155));
+- `depth == parent.depth + 1` is *checked*, not assumed. It was previously only claimed in a
+  docstring, and a forged row `[1,0,999,0,1]` rode straight into the geometry axis and moved the
+  score (review 2026-08-20 #6) ([Structure.hs:167-181](../../../core/app/CE/Structure.hs#L167),
+  probe at [StructureProps.hs:106-110](../../../core/test/StructureProps.hs#L106));
+- every dir-keyed table shares one checker — arity, non-negativity, `dirId < |nodes|`, a
+  per-table extra rule, and strict ascent
+  ([Structure.hs:120-127](../../../core/app/CE/Structure.hs#L120),
+  [Structure.hs:186-196](../../../core/app/CE/Structure.hs#L186)). Extra rules: pattern code `<= 6` and
+  count `>= 1`; convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`;
+  staleDocs `total >= 1` and `stale <= total`
+  ([Structure.hs:129-150](../../../core/app/CE/Structure.hs#L129)).
+
+**Over-cap.** `structNodeCap = 524288` ([Cost.hs:138-141](../../../core/app/CE/Structure/Cost.hs#L138)).
+Node rows *and* the seam tables count against the same cap — a declared cap that misses a
+request dimension walks that dimension uncapped
+([Structure.hs:87-92](../../../core/app/CE/Structure.hs#L87)). Over-cap answers a **complete degraded
+reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
+are both true and `reason` is `structure_too_large`
+([Structure.hs:229-249](../../../core/app/CE/Structure.hs#L229),
+[StructureProps.hs:221-230](../../../core/test/StructureProps.hs#L221)). Note the consequence of the
+empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
+not evidence of health in a degraded reply. In the non-degraded case `fail` equals `degraded`,
+i.e. always false: S2 is report-only, and the CLI gates nothing on this score
+([Structure.hs:205-207](../../../core/app/CE/Structure.hs#L205)).

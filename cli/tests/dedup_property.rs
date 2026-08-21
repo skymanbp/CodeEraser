@@ -62,7 +62,9 @@ proptest! {
                 }
             }
             // reap after every op so deletions interleave with upserts
-            incr.remove_missing(&model.keys().cloned().collect()).expect("reap");
+            let seen = incr.indexed_paths().expect("snapshot");
+            incr.remove_missing(&model.keys().cloned().collect(), &seen)
+                .expect("reap");
         }
         let mut full = Index::open(&dir.join("full.db"), p).expect("open full");
         for (name, src) in &model {

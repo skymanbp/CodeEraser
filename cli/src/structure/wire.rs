@@ -36,6 +36,14 @@ pub struct Request {
     /// The split-ROI seam tables (plan v2.6 §C, 2.14.0). None = the
     /// advisory is not armed and the reply carries no split keys.
     pub seams: Option<SeamTables>,
+    /// Knob rows for the core's table (codes per Structure/Knobs.hs).
+    /// This channel was DEAD in Rust: the request never carried a
+    /// `knobs` key, so the core priced every seam at its built-in
+    /// 300/750 while the measurement selected seam files by the
+    /// committed soft line — two different numbers, and Cost.hs's
+    /// "the two families cannot disagree" comment was false as built.
+    /// The measurement's own S and H now ride codes 12/13.
+    pub knobs: Vec<[u64; 2]>,
 }
 
 /// files [fileId, total] / units [fileId, unit, start, end] /
@@ -78,6 +86,26 @@ pub struct Reply {
     pub size_exempt: Vec<[i64; 3]>,
 }
 
+/// Pin the echo the way every sibling family does (scan compares the
+/// whole grade table, verdict asserts each sent knob round-trips,
+/// trend pins the row count). structure decoded the table and read
+/// one code — so a 2.14.0 core silently dropping seamClones/seamChurn
+/// under the unknown-field rule answered with two of four legs
+/// unpriced, no error, no degraded flag. The full table is a free
+/// minor-version fingerprint; sent rows must echo.
+fn pinned_echo(reply: &serde_json::Value, sent: &[[u64; 2]]) -> Result<Vec<[i64; 2]>> {
+    let echoed: Vec<[i64; 2]> = crate::lockstep::reply_rows(reply, "knobs")?;
+    for pair in sent.iter().map(|[c, v]| [*c as i64, *v as i64]) {
+        ensure!(
+            echoed.contains(&pair),
+            "structure reply echo missing knob {}={} — a core minor too old for this request?",
+            pair[0],
+            pair[1]
+        );
+    }
+    Ok(echoed)
+}
+
 /// One structure.request over one link.
 pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     ensure!(
@@ -108,11 +136,15 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         body["seamClones"] = json!(s.clones);
         body["seamChurn"] = json!(s.churn);
     }
+    if !r.knobs.is_empty() {
+        body["knobs"] = json!(r.knobs);
+    }
     let reply = link
         .request("structure", body)
         .map_err(anyhow::Error::msg)?;
     crate::lockstep::refuse_degraded(&reply, "structure/wire.rs vs Structure/Cost.hs")?;
     let rows = crate::lockstep::reply_rows::<Vec<[i64; 2]>>;
+    let echoed = pinned_echo(&reply, &r.knobs)?;
     // the A-layer keys exist exactly when a layout was declared —
     // a missing key on a declared request (or the reverse) is
     // contract drift, surfaced by the decode throat's named error
@@ -138,7 +170,7 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         score: reply["score"].as_i64().context("score")?,
         entropy: rows(&reply, "entropy")?,
         findings: rows(&reply, "findings")?,
-        knobs: rows(&reply, "knobs")?,
+        knobs: echoed,
         divergence,
         deviations,
         split_candidates,

@@ -49,6 +49,11 @@ impl Instance {
 
 pub struct Index {
     conn: Connection,
+    /// The wipe generation this handle opened under (None on a
+    /// pre-epoch database). Every durable claim about "this index"
+    /// is only true while the generation still holds — see
+    /// schema::mark_full_build.
+    opened_at: Option<i64>,
 }
 
 /// Switch to WAL, tolerating the racing-creators deadlock: two fresh
@@ -93,7 +98,8 @@ impl Index {
         ensure_wal(&conn)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
         schema::ensure_cache_key(&conn, p)?;
-        Ok(Self { conn })
+        let opened_at = schema::epoch(&conn)?;
+        Ok(Self { conn, opened_at })
     }
 
     /// Refresh one file; returns false when the stored content hash
@@ -160,7 +166,20 @@ impl Index {
     /// whenever a concurrent writer landed between them, and the busy
     /// handler is not consulted for that case. Also one transaction,
     /// not per-row autocommit (one fsync per file).
-    pub fn remove_missing(&mut self, live: &BTreeSet<String>) -> Result<usize> {
+    /// `seen` bounds the deletion to what THIS run's walk could have
+    /// seen: `live` is a snapshot taken by a filesystem walk that
+    /// finished before this lock was taken, so a file created after
+    /// the walk — indexed and committed by a concurrent writer — is
+    /// absent from `live` through no fault of its own. Deleting it
+    /// cascaded that writer's fingerprints, sites and edges, made its
+    /// report silently miss the file, and the next `ce check` then
+    /// reddened on a "removed" member. Only rows whose path was
+    /// walkable when this run started are this run's to reap.
+    pub fn remove_missing(
+        &mut self,
+        live: &BTreeSet<String>,
+        seen: &BTreeSet<String>,
+    ) -> Result<usize> {
         let tx = self
             .conn
             .transaction_with_behavior(TransactionBehavior::Immediate)?;
@@ -170,13 +189,21 @@ impl Index {
             .collect::<rusqlite::Result<_>>()?;
         let mut removed = 0;
         for (id, path) in paths {
-            if !live.contains(&path) {
+            if !live.contains(&path) && seen.contains(&path) {
                 tx.execute("DELETE FROM files WHERE id = ?1", (id,))?;
                 removed += 1;
             }
         }
         tx.commit()?;
         Ok(removed)
+    }
+
+    /// Every indexed path, read BEFORE a walk starts — the "what this
+    /// run may reap" snapshot remove_missing is bounded by.
+    pub fn indexed_paths(&self) -> Result<BTreeSet<String>> {
+        let mut stmt = self.conn.prepare("SELECT path FROM files")?;
+        let rows = stmt.query_map([], |r| r.get::<_, String>(0))?;
+        Ok(rows.collect::<rusqlite::Result<_>>()?)
     }
 
     /// Indexed file count (SessionStart health line). Since v4 this
@@ -190,7 +217,7 @@ impl Index {
     /// Coldstart completeness stamp + probe — the meta lifecycle
     /// lives in schema.rs; these are the Index-typed doors.
     pub fn mark_full_build(&mut self) -> Result<()> {
-        schema::mark_full_build(&self.conn)
+        schema::mark_full_build(&self.conn, self.opened_at)
     }
 
     pub fn full_build_done(&self) -> Result<bool> {
@@ -263,6 +290,30 @@ impl Index {
     }
 }
 
+/// READ-ONLY index facts for diagnostics: `(indexed files, cache key
+/// still current)`. Never rebuilds, never stamps, never wipes.
+///
+/// `Index::open` is the wrong door for a status line: its
+/// `schema::ensure_cache_key` WIPES the database on any revision
+/// mismatch, so `ce doctor` and the SessionStart line destroyed the
+/// index they were reporting on — and a mixed-revision pair of `ce`
+/// binaries on one tree (a SHA-pinned hook one beside a `cargo
+/// install`ed terminal one) wiped each other's work every session
+/// while both printed a healthy-looking count. A diagnostic must not
+/// mutate the state it reports (health.rs's own stance); a stale key
+/// is REPORTED here and repaired by the next dedup, which owns it.
+pub fn peek(db_path: &Path, p: Params) -> Result<(i64, bool)> {
+    let conn =
+        Connection::open(db_path).with_context(|| format!("peek index {}", db_path.display()))?;
+    // WAL readers do not block on writers, but a rollback-journal or
+    // pre-WAL file would: a status line must not cry "unreadable"
+    // merely because a dedup run holds the lock.
+    conn.pragma_update(None, "busy_timeout", 2000)?;
+    let current = schema::schema_current(&conn, p)?;
+    let files = conn.query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?;
+    Ok((files, current))
+}
+
 fn insert_fps(
     tx: &rusqlite::Transaction<'_>,
     file_id: i64,
@@ -286,4 +337,35 @@ fn insert_fps(
         ))?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A revision-skewed index is REPORTED stale and left intact —
+    /// twice, because the defect this pins was a diagnostic that
+    /// repaired what it measured: the same read through `Index::open`
+    /// wipes the row and then answers "0 files, current".
+    #[test]
+    fn peek_reports_a_stale_key_and_wipes_nothing() {
+        let dir = crate::testutil::scratch("peek");
+        let db = dir.join(".ce/index.db");
+        let p = Params::default();
+        drop(Index::open(&db, p).expect("open"));
+        let raw = Connection::open(&db).expect("raw");
+        raw.execute(
+            "INSERT INTO files (path, content_hash, token_count, has_tokens)
+             VALUES ('a.rs', 1, 0, 1)",
+            [],
+        )
+        .expect("row");
+        // exactly what a sibling binary of another revision presents
+        raw.execute("UPDATE meta SET v = v + 1 WHERE k = 'tokenizer_rev'", [])
+            .expect("skew");
+        drop(raw);
+        assert_eq!(peek(&db, p).expect("peek"), (1, false), "stale, intact");
+        assert_eq!(peek(&db, p).expect("peek"), (1, false), "still intact");
+        std::fs::remove_dir_all(&dir).ok();
+    }
 }

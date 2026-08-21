@@ -153,8 +153,13 @@ fn zone_tier(permille: usize) -> &'static str {
 
 /// The frozen soft line, read off the committed ce-baseline.json —
 /// the hook's one channel to the §B fence (daemon-free by design,
-/// so a plain local read is the honest transport).
+/// so a plain local read is the honest transport). Bounded >= 1 the
+/// way the core bounds it: a zero the core would refuse must fall to
+/// the warn threshold here too, or the zone opens on every file
+/// (same guard as structure::judge::committed_soft, its twin).
 fn committed_soft(root: &Path) -> Option<usize> {
     let doc = crate::score::baseline::read(root).ok()??;
-    usize::try_from(doc["softLine"].as_u64()?).ok()
+    usize::try_from(doc["softLine"].as_u64()?)
+        .ok()
+        .filter(|s| *s >= 1)
 }

@@ -124,6 +124,14 @@ pub fn collect(root: &Path, segs: &[SegRow]) -> Result<Cand> {
 
 /// All-pairs under the hot cap, adjacent chains above it (counted);
 /// returns how many pairs this source contributed.
+///
+/// The chain is a RECALL BOUND, stated the way pairs.rs states its
+/// own: above HOT_GROUP_CAP only the n-1 adjacent pairs of a bucket
+/// ever reach the judge, so a duplicate pair that shares this bucket
+/// and nothing else is never judged and never reported. It is a
+/// bound, not a leak: every chained bucket ticks `hot_bands` /
+/// `hot_shingles`, and the D4 alternative — dropping the bucket
+/// whole — zeroed detection exactly when duplication was highest.
 fn group_pairs<'v>(
     groups: impl Iterator<Item = &'v Vec<usize>>,
     hot: &mut u64,

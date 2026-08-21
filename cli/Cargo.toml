@@ -34,6 +34,9 @@ tree-sitter-haskell = "0.23.1"
 tree-sitter-python = "0.25.0"
 tree-sitter-rust = "0.24.2"
 tree-sitter-typescript = "0.23.2"
+# docdup word hashing: NFC + General_Category=Mark test, so canonically
+# equivalent prose cannot hash two ways (docdup/shingle.rs)
+unicode-normalization = "0.1.25"
 
 [profile.release]
 strip = true

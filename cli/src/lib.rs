@@ -20,6 +20,7 @@ pub mod lockstep;
 pub mod mcp;
 pub mod proc;
 pub mod report;
+pub mod root;
 pub mod scan;
 pub mod score;
 pub mod structure;

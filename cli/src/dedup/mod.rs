@@ -76,16 +76,35 @@ pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index
 
 /// The ONE spelling of the default index location (a third caller —
 /// trend — would have grown a third copy of the join).
+///
+/// The default hangs off the project ANCHOR above `root`, so a run
+/// pointed at a subdirectory shares the project's one index instead of
+/// minting a second `.ce/` there. Five such strays existed in this
+/// very repository (core/, cli/, gui/src-tauri/, and two deeper),
+/// invisible because the .gitignore rule was unanchored too. An
+/// explicit `--db` still wins verbatim — that is the escape hatch for
+/// a deliberately separate index.
 pub(crate) fn index_db_path(root: &Path, db: Option<PathBuf>) -> PathBuf {
-    db.unwrap_or_else(|| root.join(".ce/index.db"))
+    db.unwrap_or_else(|| crate::root::project_root(root).join(".ce/index.db"))
 }
 
 /// The walkidx read + index.rs text conversion, verbatim — ONE decode
 /// for every judgment-side re-read (t3 trees, docdup sequences): a
 /// different decode here would judge text the cache never saw.
+///
+/// A file that VANISHES between the index refresh and this re-read
+/// aborts the judgment BY NAME, deliberately not the walk's skip
+/// rule: at index time a vanished file simply is not live, but here
+/// its cached rows already seeded candidates, and silently dropping
+/// them would report "no duplication" for a file this run never
+/// examined — the silent-clean class this product forbids. The named
+/// abort costs a re-run, which converges; the window is the
+/// microseconds after the same command's own refresh.
 pub fn walked_text(root: &Path, path: &str) -> Result<(String, crate::scan::lang::Lang)> {
     use anyhow::Context;
-    let bytes = std::fs::read(root.join(path)).with_context(|| path.to_string())?;
+    let full = root.join(path);
+    let bytes = crate::scan::walk::read_surviving(&full)?
+        .with_context(|| format!("{path}: vanished mid-judgment — re-run to converge"))?;
     let lang = crate::scan::lang::Lang::from_path(Path::new(path))
         .with_context(|| format!("{path}: no lang"))?;
     Ok((String::from_utf8_lossy(&bytes).into_owned(), lang))
@@ -103,8 +122,9 @@ pub fn analyze(
     let db_path = index_db_path(root, db);
     let p = Params::default();
     let mut idx = index::Index::open(&db_path, p)?;
+    let seen = idx.indexed_paths()?;
     let walked = walkidx::index_all(root, &config, &mut idx)?;
-    let removed = idx.remove_missing(&walked.live)?;
+    let removed = idx.remove_missing(&walked.live, &seen)?;
     let mut instances = idx.all_instances()?;
     let streams = walkidx::load_streams(root, &pairs::candidate_files(&instances), &mut idx, p)?;
     if !streams.1.is_empty() {

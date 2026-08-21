@@ -13,7 +13,10 @@
 //! the link (url) AND the image (img) instead of one mislabeled
 //! site. Indented code blocks are NOT modeled (block context is
 //! list-sensitive); their rare link-shaped content stays a site and
-//! surfaces in the audit rather than silently.
+//! surfaces in the audit rather than silently. ONE angle-bracket
+//! pair around a destination is stripped (CommonMark); percent
+//! escapes are NOT decoded (slugify drops punctuation instead of
+//! encoding it), so those anchors degrade to file level, not a guess.
 
 use super::sites::RawSite;
 
@@ -224,7 +227,14 @@ fn bracket_site(line: &str, start: usize, lineno: usize, out: &mut Vec<RawSite>)
     match bytes.get(close + 1) {
         Some(b'(') => {
             if let Some(end) = find_from(line, close + 2, b')') {
-                let target = line[close + 2..end].split_whitespace().next().unwrap_or("");
+                // CommonMark's ONE optional angle-bracket pair: kept
+                // verbatim, `<guide.md#setup>` matched no scope.files
+                // entry and the ladder lost the edge to OutOfScope
+                let run = line[close + 2..end].trim_start();
+                let target = match run.strip_prefix('<').and_then(|r| r.split_once('>')) {
+                    Some((dest, _)) => dest,
+                    None => run.split_whitespace().next().unwrap_or(""),
+                };
                 if !target.is_empty() {
                     out.push(RawSite::md(label, lineno, target.to_string()));
                 }

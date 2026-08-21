@@ -138,11 +138,16 @@ pub fn run(
 /// The committed baseline's frozen soft line, falling back to the
 /// warn threshold — the SAME resolution the guard's zone observer
 /// uses, so the advisory and the hook agree on where the zone opens.
-fn committed_soft(root: &Path) -> u64 {
+/// The stored value is bounded the way the CORE bounds it
+/// (baseline.softLine must be >= 1): `Some(0)` short-circuited the
+/// fallback and made every file with any lines at all "past the soft
+/// line" — a baseline the core would refuse still drove the advisory.
+pub(crate) fn committed_soft(root: &Path) -> u64 {
     let stored = crate::score::baseline::read(root)
         .ok()
         .flatten()
-        .and_then(|doc| doc["softLine"].as_u64());
+        .and_then(|doc| doc["softLine"].as_u64())
+        .filter(|s| *s >= 1);
     stored.unwrap_or_else(|| {
         crate::config::Config::load(root)
             .map(|c| c.thresholds.file_lines_warn as u64)
@@ -246,6 +251,21 @@ fn assemble(
         refs: sorted_refs(&sf.tables.refs),
         ..sf.tables.clone()
     });
+    // The seam pricing judges against the SAME numbers the
+    // measurement selected seam files by: the committed soft line
+    // (codes 12) and the config's hard line (13). Sending nothing let
+    // the core price at its built-in 300/750 while seams.rs gated on
+    // committed_soft — with this repo's frozen 304 the two disagreed
+    // on every file in 301..=304, and on a wide-distribution corpus
+    // (S clamped to 500) the ROI inflated ~2.8x.
+    let knobs = if seams.is_some() {
+        vec![
+            [12, committed_soft(root)],
+            [13, cfg.thresholds.file_lines_fail as u64],
+        ]
+    } else {
+        Vec::new()
+    };
     Ok(wire::Request {
         nodes: rows::node_rows(t),
         patterns: rows::pattern_rows(t),
@@ -255,6 +275,7 @@ fn assemble(
         stale_docs,
         redundancy,
         seams,
+        knobs,
     })
 }
 

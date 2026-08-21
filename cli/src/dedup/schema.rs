@@ -23,7 +23,7 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// graph_rev in the key. v8: edges.via_reexport (the §4 R5
 /// amendment's mark). ALTERs fold into CREATE — the wipe model
 /// has no migration path to alter along.
-const SCHEMA_VERSION: i64 = 8;
+const SCHEMA_VERSION: i64 = 9; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS trend;
@@ -88,10 +88,39 @@ fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
     for (k, v) in meta_entries(p) {
         stmt.execute((k, v))?;
     }
+    stmt.execute(("epoch", new_epoch()))?;
     Ok(())
 }
 
-fn schema_current(conn: &Connection, p: Params) -> Result<bool> {
+/// A generation stamp for one wipe. The cache key protects against a
+/// STALE database; the epoch protects against a database that was
+/// wiped UNDER a run in flight — a mixed-revision pair (a SHA-pinned
+/// hook binary and a `cargo install`ed terminal one) wipes each other
+/// routinely, and the writer noticed nothing: the files it had already
+/// indexed were gone, everything it wrote afterwards landed under the
+/// wiper's key, and it then stamped full_build over the result. Not
+/// cryptographic — it only has to differ from the previous wipe's.
+fn new_epoch() -> i64 {
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_nanos() as i64)
+        .unwrap_or(0);
+    nanos ^ ((std::process::id() as i64) << 40)
+}
+
+/// The database's current generation, or None on a pre-epoch file.
+pub(crate) fn epoch(conn: &Connection) -> Result<Option<i64>> {
+    conn.query_row("SELECT v FROM meta WHERE k = 'epoch'", [], |r| r.get(0))
+        .map(Some)
+        .or_else(ignore_no_rows)
+        .map_err(Into::into)
+}
+
+/// Whether the stored schema version AND cache key already match this
+/// binary's. `pub(crate)` for index::peek — the diagnostics need the
+/// verdict WITHOUT ensure_cache_key's wipe, and a second copy of
+/// SCHEMA_VERSION over in index.rs would drift the day this one bumps.
+pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {
     let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     Ok(version == SCHEMA_VERSION && meta_matches(conn, p)?)
 }
@@ -142,7 +171,21 @@ pub(crate) fn ignore_no_rows(e: rusqlite::Error) -> rusqlite::Result<Option<i64>
 /// completeness fact (idempotent upsert; additive meta key, absent =
 /// never completed; a bare row count was a per-process premise the
 /// clearance review retired).
-pub(crate) fn mark_full_build(conn: &rusqlite::Connection) -> anyhow::Result<()> {
+///
+/// Refuses when the database was wiped out from under this run: the
+/// stamp asserts "a full analyze completed on THIS database", and
+/// after a concurrent wipe that sentence is false — coldstart reads
+/// the stamp, answers READY, and probes then report matches=0 against
+/// a truncated index (the silent-clean class its own header forbids).
+/// A named error costs the caller a rebuild; the stamp cost a wrong
+/// answer that survived until the file's bytes changed.
+pub(crate) fn mark_full_build(
+    conn: &rusqlite::Connection,
+    opened_at: Option<i64>,
+) -> anyhow::Result<()> {
+    if epoch(conn)? != opened_at {
+        anyhow::bail!("index was rebuilt by another process mid-run — not stamping full_build");
+    }
     conn.execute(
         "INSERT INTO meta (k, v) VALUES ('full_build', 1)
          ON CONFLICT(k) DO UPDATE SET v = 1",

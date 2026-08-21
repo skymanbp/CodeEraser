@@ -16,16 +16,21 @@ use std::sync::OnceLock;
 
 /// `key<TAB>zh` per line. Keys: `ce` = root about, `ce.lang` = the
 /// global flag, `<cmd>` = a subcommand's about, `<cmd>.<arg id>` =
-/// an arg's help.
+/// an arg's help, and `judge.<arg id>` = the shared JudgeArgs flag
+/// set's ONE authority, consulted when the command names no key of
+/// its own (see zh_help).
 const ZH_TSV: &str = "\
 ce	CodeEraser — 消除 LLM 引入的代码与文档熵
 ce.lang	控制台语言（优先于 CE_LANG）
+judge.root	要分析的目录（默认当前目录）
+judge.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
+judge.db	索引数据库路径（默认 <root>/.ce/index.db）
 doctor	环境与项目健康：ce-core 握手、项目状态行、降级计数（绝不启动守护进程）
-doctor.core	ce-core 可执行文件路径
+doctor.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 doctor.root	要报告的项目根（默认当前目录）
 scan	度量尺寸 / 复杂度 / 可读性指标（M1 模块；自 ADR-008 P3 起由核分级）
 scan.path	要扫描的目录（默认当前目录）
-scan.core	ce-core 可执行文件路径
+scan.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 churn	时间维度指标：追加对重写、窗口改动、共变对（M4；仅报告，供 M5 联判）
 churn.root	仓库根（默认当前目录）
 churn.days	历史窗口天数
@@ -35,47 +40,26 @@ graph.sites	列出引用站点
 deadcode	在缓存引用图上判决存活性（M5-2h）：阶梯的边，Haskell 核的四路判决
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
-deadcode.core	ce-core 可执行文件路径
+deadcode.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 deadcode.check	任一文件级死判落地即退出 1（M5-2「全处置」验收行的 CI 自食门）
 clone	T3 近似克隆判决（M5-3）：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
-clone.root	要分析的目录（默认当前目录）
-clone.core	ce-core 可执行文件路径
-clone.db	索引数据库路径（默认 <root>/.ce/index.db）
 clone.units	改为列出单元宇宙而非判决
 docdup	文档重复判决（M5-3g）：对缓存活段经核 docdup/1 精确 Jaccard
-docdup.root	要分析的目录（默认当前目录）
-docdup.core	ce-core 可执行文件路径
-docdup.db	索引数据库路径（默认 <root>/.ce/index.db）
 docdup.check	任一重复被报告即退出 1（CI 自食门 — 计划 §7.5 docdup 条款，M5 收口起代码兑现）
 join	三信号联判（M5-3h）：相似度 + 图位置 + 单元改动，文件与单元两层（3i 前仅报告）
-join.root	要分析的目录（默认当前目录）
-join.core	ce-core 可执行文件路径
-join.db	索引数据库路径（默认 <root>/.ce/index.db）
 join.days	改动窗口天数
 structure	树尺度结构判决（M6）：熵、判轴与发现，经核 structure/1（S2 阶段仅报告）
-structure.root	要分析的目录（默认当前目录）
-structure.core	ce-core 可执行文件路径
-structure.db	索引数据库路径（默认 <root>/.ce/index.db）
 structure.deep	同时按目录卷积克隆块与死单元并判 S6 冗余轴（会跑去冗普查与存活判决；缺省 = 该轴诚实未判）
 structure.days	按此 git 窗口天数判 S5 文档陈旧轴（所引代码晚于文档最后编辑而变；缺省 = 该轴诚实未判）
 structure.split_candidates	为每个越过冻结软线的判决文件计一次拆分价（计划 v2.6 §C）：给出最优缝与 ROI，或以数字说明文件为何内聚的豁免
 trend	主线历史上的分数轨迹（M7-P4）：逐提交绝对检查分，缓存于索引，可重建
-trend.root	要分析的目录（默认当前目录）
-trend.core	ce-core 可执行文件路径
-trend.db	索引数据库路径（默认 <root>/.ce/index.db）
 trend.commits	主线窗口：最新 N 个第一父提交
 trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部；GUI 传小批量以显示进度）
 check	ADR-006 门（M5-3i）：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负
-check.root	要分析的目录（默认当前目录）
-check.core	ce-core 可执行文件路径
-check.db	索引数据库路径（默认 <root>/.ce/index.db）
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负
 check.roast	在控制台判决后附一行毒舌评语（彩蛋）
 baseline	把核的 newBaseline 落盘为 ce-baseline.json（无 CE_ACCEPT_BASELINE=1 时违规集只准缩）
-baseline.root	要分析的目录（默认当前目录）
-baseline.core	ce-core 可执行文件路径
-baseline.db	索引数据库路径（默认 <root>/.ce/index.db）
 baseline.days	改动窗口天数（省略 = 改动表保持为空）
 dedup	经 winnowing 指纹索引检测 T1/T2 克隆（M2）
 dedup.path	要索引的目录（默认当前目录）
@@ -83,7 +67,7 @@ dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
 dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50）
 dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，出自 M2 校准；0 关闭）
 dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（M2 评审 R12；自 ADR-008 P2 起比较即核的判决）
-dedup.core	ce-core 可执行文件路径（仅 --check 咨询）
+dedup.core	ce-core 可执行文件路径（仅 --check 咨询；默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 daemon	前台运行按项目守护进程（ADR-003）；通常由 `ce ping` / 钩子探针惰启
 daemon.root	要服务的项目根
 ping	经项目守护进程往返一次 ping（会惰启它）
@@ -107,6 +91,24 @@ fn zh_map() -> &'static HashMap<&'static str, &'static str> {
     static MAP: OnceLock<HashMap<&'static str, &'static str>> = OnceLock::new();
     MAP.get_or_init(|| ZH_TSV.lines().filter_map(|l| l.split_once('\t')).collect())
 }
+
+/// One arg's zh help: the command's own key, else the shared
+/// `judge.<id>` fallback. JudgeArgs is flattened into SEVEN commands
+/// and the table carried a private copy of each of its three help
+/// lines per command — twenty-one strings, and every copy of --core
+/// had dropped the resolution order (CE_CORE_BIN, sibling, PATH) the
+/// English derive states once. The `<cmd>.core` keys that remain are
+/// independent clap declarations, not copies of this set, so they
+/// keep their own row.
+fn zh_help(m: &HashMap<&'static str, &'static str>, cmd: &str, id: &str) -> Option<&'static str> {
+    m.get(format!("{cmd}.{id}").as_str())
+        .or_else(|| m.get(format!("judge.{id}").as_str()))
+        .copied()
+}
+
+/// The shared-arg keys, in the fallback's own resolution order.
+#[cfg(test)]
+const SHARED_ARGS: [&str; 3] = ["root", "core", "db"];
 
 /// Swap every about/help to zh off the lookup. Each subcommand is
 /// touched exactly once (clap re-appends on mutation, so a second
@@ -132,8 +134,7 @@ pub(crate) fn localize(mut cmd: clap::Command) -> clap::Command {
                 sc = sc.about(*zh);
             }
             for id in &args {
-                if let Some(zh) = m.get(format!("{name}.{id}").as_str()) {
-                    let zh: &'static str = zh;
+                if let Some(zh) = zh_help(m, &name, id) {
                     sc = sc.mut_arg(id.as_str(), |a| a.help(zh));
                 }
             }
@@ -148,11 +149,23 @@ mod tests {
     use super::*;
     use clap::CommandFactory;
 
+    /// A `judge.<id>` key is alive exactly when some command's arg
+    /// RESOLVES through it — declares the id and names no key of its
+    /// own. A fallback nobody reaches is as dead as a stranded
+    /// per-command key, and the two-way rule may not have a hole.
+    fn falls_back(cmd: &clap::Command, m: &HashMap<&'static str, &'static str>, id: &str) -> bool {
+        cmd.get_subcommands().any(|sc| {
+            !m.contains_key(format!("{}.{id}", sc.get_name()).as_str())
+                && sc.get_arguments().any(|a| a.get_id().as_str() == id)
+        })
+    }
+
     /// The charter's G3 acceptance for this face: the zh lookup is
     /// complete in BOTH directions — a subcommand or helped arg
-    /// without a zh entry is red (missing key), and a key naming a
-    /// node that no longer exists is red too (dead key), so a flag
-    /// rename cannot silently strand its translation.
+    /// without a zh entry is red (missing key, now via the SAME
+    /// resolution localize uses), and a key naming a node that no
+    /// longer exists is red too (dead key), so a flag rename cannot
+    /// silently strand its translation.
     #[test]
     fn zh_lookup_is_complete_and_alive() {
         let cmd = crate::main_cli::Cli::command();
@@ -170,10 +183,18 @@ mod tests {
                     continue; // format carries no help by design
                 }
                 assert!(
-                    m.contains_key(format!("{name}.{id}").as_str()),
+                    zh_help(m, name, id).is_some(),
                     "arg {name}.{id} has no zh help"
                 );
             }
+        }
+        for id in SHARED_ARGS {
+            let k = format!("judge.{id}");
+            assert!(m.contains_key(k.as_str()), "shared arg {k} has no zh help");
+            assert!(
+                falls_back(&cmd, m, id),
+                "dead key {k}: nobody resolves to it"
+            );
         }
         for k in m.keys() {
             if matches!(*k, "ce" | "ce.lang") {
@@ -181,6 +202,9 @@ mod tests {
             }
             match k.split_once('.') {
                 None => assert!(cmd.find_subcommand(k).is_some(), "dead key {k}"),
+                // the fallback names no subcommand; its own liveness
+                // is the SHARED_ARGS loop above
+                Some(("judge", _)) => {}
                 Some((c, a)) => {
                     let sc = cmd
                         .find_subcommand(c)

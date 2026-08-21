@@ -20,6 +20,7 @@
   <img src="/icon-256.png" alt="">
   <span class="name">CodeEraser</span>
   <nav>
+    <a href="/how/">How it works</a>
     <a href="/zh/">中文</a>
     <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Download</a>
@@ -100,10 +101,11 @@ ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pas
 </figure>
 
 <h2>Trust anchor</h2>
-<p class="trust">The six CLI &amp; core binaries (three platforms × ce / ce-core) are pinned
-by SHA256 in <code>plugin/bin/manifest.env</code> and verified before publish; every
-release asset — GUI installers included — is covered by a <code>SHA256SUMS</code> you can
-check offline. Code signing is deliberately out of scope — the hash chain is the permanent
+<p class="trust">All nine release binaries — three platforms × ce / ce-core, plus the three
+GUI installers since v0.7.3 — are pinned by SHA256 in <code>plugin/bin/manifest.env</code>;
+the tag phase verifies every pin, waits for a green CI on the tagged commit, and refuses
+an unexpected asset before anything publishes. <code>SHA256SUMS</code> covers the set for
+offline checking. Code signing is deliberately out of scope — the hash chain is the permanent
 anchor. Measurement lives in Rust, judgment in Haskell, and this repository gates itself
 with its own tool on every commit.</p>
 

@@ -85,8 +85,10 @@ daemon 冷启动 vs 外部写者收敛（coldstart 竞态注记转为按构造�
 M6 GUI 直写同库自此有据（风险 R1 解除）。
 
 **CI 门补全批（审计 D5/D6/D7/D8/D9 响应）**：①`ce check --fail-under 800`
-入双平台 dogfood（floor 腿活化；800=实测 866–872 带下 66‰ 塌方地板，
-决定值非推导值）；churn 腿（--days 14，axis 5 活=实测 2 hit）实测 215.8s
+入双平台 dogfood（floor 腿活化；800=当时实测 866–872 带下 66‰ 塌方地板，
+决定值非推导值——v0.6 分数迁移后带移至 ~806–813，地板蓄意不动：余量
+~6–13‰ 正是「塌方才咬、漂移不咬」的本意，2026-08-21 审计随实）；churn 腿
+（--days 14，axis 5 活=实测 2 hit）实测 215.8s
 ⇒ 仅 ubuntu 一腿承担（成本有界诚实覆盖非全平台结构性死亡）。
 ②`ce deadcode --check`/`ce docdup --check` 新旗入 CI（emit_checked 单咽喉
 =dedup --check 同形；deadcode_e2e 红绿双向钉：孤儿必红、entry_globs 处置

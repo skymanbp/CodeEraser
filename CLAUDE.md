@@ -19,7 +19,9 @@
    - `ce scan` 只在 **FAIL** 档退 1 —— 文件 >750 行、函数 >75 行。**300/50 是 WARN**，
      不由 scan 退出码强制；复杂度四项（params/cyclomatic/cognitive/nesting）**无 fail 档**。
    - 真正把文件摁在 300 附近的是 **ADR-006 逐文件棘轮**（单次增长 ≤ max(+2%, +10)，
-     `ce check --fail-under 800`）与 **dedup 预算**（只降不升）—— 两者都是硬门。
+     `ce check --fail-under 800`）与 **dedup 预算**——两者都是硬门。预算「只降不升」
+     指**无声不升**：每次上调必须在 ce.toml 注释块入账（那里是预算台账的正册，
+     历史 143→174 的每一步都在册各有其偿），无账上调即违规。
    - **判决**语言集 = `py/ts/tsx/rs/go/md/hs`；v0.5.0 起 scan 另有**纯尺寸臂**（js/mjs/cjs/jsx、
      css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml）——只进 scan 尺寸门 + guard 硬预算 +
      棘轮，永不进判决族（边界权威 = `Lang::scan_only`/`judged_path`，cli/src/scan/lang.rs）。GUI 的

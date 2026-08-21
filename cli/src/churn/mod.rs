@@ -9,7 +9,7 @@
 //!    append-heavy growth next to untouched twins.
 //! 2. windowed churn (GitClear's signal): of the lines added inside
 //!    the window, how many no longer survive at HEAD (blame
-//!    author-time), churn = 1 - survival.
+//!    committer-time), churn = 1 - survival.
 //! 3. co-change pairs: files repeatedly changing in the same commits.
 //!
 //! M5-3h: attribution is a per-unit LEDGER keyed (path, unit key,
@@ -23,11 +23,22 @@
 //! in the window shifts nth for its survivors (the member-id caveat,
 //! 2026-08-13-m5-3-dedup-algorithms.md §7.2) — recorded, not masked.
 //!
+//! Recorded basis, beside that caveat: the window has exactly ONE
+//! clock on BOTH sides — COMMITTER time. window_commits selects with
+//! `git log --since`, which is committer-dated, so survival dates
+//! blame lines the same way. The author-time filter it replaced
+//! disagreed with its own numerator: a rebased or cherry-picked
+//! commit carries an old author date and a fresh committer date, so
+//! `--since` counted its lines as window additions while the
+//! survivor pass threw every one of them out — churn biased upward
+//! by construction, worst on exactly the histories that rebase most.
+//!
 //! Report-only in M4 (no thresholds, no gating); numbers feed the
 //! M5 three-signal join. Report shapes live in report.rs (the 300
 //! dogfood gate split).
 
 mod report;
+mod survival;
 
 pub use report::{Report, UnitRow, print_console, report_json};
 
@@ -66,7 +77,7 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
     Ok(Report {
         commits: shas.len(),
         units: sorted_rows(ledger),
-        surviving: survival(root, days, &touched)?,
+        surviving: survival::survival(root, days, &touched)?,
         cochange: top_pairs(pair_counts),
         skipped_large,
     })
@@ -193,28 +204,6 @@ fn count_cochange(
             *counts.entry(key).or_default() += 1;
         }
     }
-}
-
-/// Lines at HEAD blame-dated inside the window, over the touched set.
-fn survival(root: &Path, days: u32, touched: &[String]) -> Result<usize> {
-    let cutoff = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .context("clock")?
-        .as_secs()
-        .saturating_sub(u64::from(days) * 86_400);
-    let mut surviving = 0usize;
-    for file in touched {
-        let Ok(out) = git(root, &["blame", "--line-porcelain", "HEAD", "--", file]) else {
-            continue; // deleted since: zero survivors by definition
-        };
-        surviving += out
-            .lines()
-            .filter_map(|l| l.strip_prefix("author-time "))
-            .filter_map(|t| t.trim().parse::<u64>().ok())
-            .filter(|&t| t >= cutoff)
-            .count();
-    }
-    Ok(surviving)
 }
 
 fn top_pairs(counts: HashMap<(String, String), usize>) -> Vec<(String, String, usize)> {

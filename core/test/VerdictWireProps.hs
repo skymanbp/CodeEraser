@@ -113,9 +113,35 @@ idempotent = case reply (req Null) >>= KM.lookup "newBaseline" of
     Object inner <- KM.lookup "ratchet" o
     KM.lookup (Key.fromString sub) inner
 
+-- | The knob families' by-CODE refusals — ceilings (the ADR-008
+-- first step) and the P4 threshold/tolerance tables. Every probe is
+-- ONE motion: override the key with a single [[code, value]] row and
+-- expect a named refusal, so the rows are data — spelled out as
+-- calls they were three pasted stanzas the dedup gate counted as
+-- clones. Two rows carry their own reason: 99 is the stably unknown
+-- ceiling axis (the StructureProps lesson — 2.14.0 made the old
+-- max+1 code legal, and a moving boundary must not be frozen here),
+-- and code 4 is an EXPONENT reaching `spread ^ k` in CE.Verdict.Soft
+-- before the clamp, where an unbounded value kills the process on
+-- allocation instead of answering.
+knobProbes :: [(String, Integer, Integer, String)]
+knobProbes =
+  [ ("ceilings", 99, 300, "unknown ceiling axis")
+  , ("ceilings", 0, 0, "ceiling below 1")
+  , ("ceilings", 4, 1000000000, "soft-line exponent above")
+  , ("thresholds", 7, 1, "unknown threshold knob")
+  , ("thresholds", 2, 0, "zero denominator")
+  , ("thresholds", 5, 0, "knob below 1")
+  , ("tolerance", 3, 1, "unknown tolerance leg")
+  , ("tolerance", 1, 0, "knob below 1")
+  ]
+
 refusals :: Bool
-refusals =
-  and
+refusals = and (map knob knobProbes <> shaped)
+ where
+  knob (k, code, v, want) = refused (setKey k (toJSON [[code, v]]) base) want
+  -- the probes whose payload is not one knob row: a shape each
+  shaped =
     [ refused (setKey "discrete" (toJSON [9, 7 :: Integer]) base) "not strictly ascending"
     , refused (setKey "tier" (toJSON [[1, 0 :: Integer]]) base) "index mismatch"
     , refused posReq "unit-tier node"
@@ -124,49 +150,29 @@ refusals =
       -- and a zero denominator each refuse by name
       refused (simReq [[0, 1, 3, 50, 100]]) "unknown sim kind"
     , refused (simReq [[0, 1, 0, 50, 0]]) "zero denominator"
-    , -- the ceilings table (ADR-008 first step) refuses by name too;
-      -- 99 is the stably-unknown probe (the StructureProps lesson:
-      -- 2.14.0 made the old max+1 code 2 legal — a moving boundary
-      -- must not be frozen here)
-      refused (ceilReq [[99, 300]]) "unknown ceiling axis"
-    , refused (ceilReq [[0, 0]]) "ceiling below 1"
-    , refused (ceilReq [[1, 15], [0, 300]]) "not strictly ascending"
+    , -- the ascending law is over the ceilings TABLE, not over one row
+      refused (setKey "ceilings" (toJSON [[1, 15], [0, 300 :: Integer]]) base) "not strictly ascending"
     , -- the 2.14.0 judgedLoc multiset: non-descending, u64 values
       refused (setKey "judgedLoc" (toJSON [300, 200 :: Integer]) base) "not non-descending"
-    , refused (setKey "judgedLoc" (toJSON [-1 :: Integer]) base) "outside u64"
-    , -- a stored softLine of 0 is no line at all — refused by name
-      refused
-        ( setKey
-            "baseline"
-            ( object
-                [ "continuous" .= ([] :: [Value])
-                , "discrete" .= ([] :: [Integer])
-                , "softLine" .= (0 :: Integer)
-                ]
-            )
-            base
-        )
-        "outside 1..u64"
-    , -- the P4 tables: each judges by CODE (the generalized grammar)
-      refused (thrReq [[7, 1]]) "unknown threshold knob"
-    , refused (thrReq [[2, 0]]) "zero denominator"
-    , refused (thrReq [[5, 0]]) "knob below 1"
-    , refused (tolReq [[3, 1]]) "unknown tolerance leg"
-    , refused (tolReq [[1, 0]]) "knob below 1"
     , -- the P2 dedup pair refuses by name too — a malformed pair
       -- must never read as "under budget"
       refused (setKey "dedup" (toJSON [1 :: Integer]) base) "malformed pair"
     , refused (setKey "dedup" (toJSON [-1, 5 :: Integer]) base) "negative field"
+    , refused (setKey "judgedLoc" (toJSON [-1 :: Integer]) base) "outside u64"
+    , -- a stored softLine of 0 is no line at all — refused by name
+      refused (setKey "baseline" storedZero base) "outside 1..u64"
     ]
- where
+  storedZero =
+    object
+      [ "continuous" .= ([] :: [Value])
+      , "discrete" .= ([] :: [Integer])
+      , "softLine" .= (0 :: Integer)
+      ]
   simReq rows =
     setKey
       "tier"
       (toJSON ([[0, 0], [1, 0]] :: [[Integer]]))
       (setKey "sim" (toJSON (rows :: [[Integer]])) base)
-  ceilReq rows = setKey "ceilings" (toJSON (rows :: [[Integer]])) base
-  thrReq rows = setKey "thresholds" (toJSON (rows :: [[Integer]])) base
-  tolReq rows = setKey "tolerance" (toJSON (rows :: [[Integer]])) base
   base = wireReq [] [] [] []
   posReq =
     setKey

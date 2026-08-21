@@ -98,7 +98,8 @@ fn incremental_equals_full_rebuild() {
     let b2 = format!("{}{}", rust_fn(2), rust_fn(9));
     put(&mut incr, "b.rs", &b2);
     let live: BTreeSet<String> = ["a.rs".into(), "b.rs".into()].into();
-    incr.remove_missing(&live).expect("reap");
+    let seen = incr.indexed_paths().expect("snapshot");
+    incr.remove_missing(&live, &seen).expect("reap");
 
     let (_db, mut full) = open_idx("incr-full-b", "full.db");
     put(&mut full, "a.rs", &rust_fn(1));
@@ -231,7 +232,8 @@ fn removed_file_is_purged() {
     put(&mut idx, "a.rs", &rust_fn(1));
     put(&mut idx, "b.rs", &rust_fn(2));
     let live: BTreeSet<String> = ["a.rs".into()].into();
-    assert_eq!(idx.remove_missing(&live).expect("reap"), 1);
+    let seen = idx.indexed_paths().expect("snapshot");
+    assert_eq!(idx.remove_missing(&live, &seen).expect("reap"), 1);
     let left = idx.all_instances().expect("instances");
     assert!(left.iter().all(|i| i.file == "a.rs"), "cascade must purge");
     assert!(!left.is_empty());

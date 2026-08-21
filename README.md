@@ -139,8 +139,10 @@ audit + CI gates are the backstop.
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — measured budgets and replay ledgers
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — the wire contract and its SemVer rules
 - [docs/RELEASE.md](docs/RELEASE.md) — the two-phase release runbook
+- [docs/reference/methodology.md](docs/reference/methodology.md) — **how every verdict is computed**: the math of each judgment family, one file per family, every formula and constant cited to the line that implements it
 - [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 axis semantics (S0–S6)
 - [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — the size soft-zone + split-ROI contract (shipped in v0.6.0; four-leg seam pricing in v0.7.0)
+- [docs/reference/erase.md](docs/reference/erase.md) — the deterministic two-phase eraser contract (M9): what may be erased, what only advised, and why
 
 ## Architecture
 

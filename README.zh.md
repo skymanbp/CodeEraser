@@ -122,8 +122,10 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — 实测预算与重放台账
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) — wire 契约与 SemVer 规则
 - [docs/RELEASE.md](docs/RELEASE.md) — 两段式发版 runbook
+- [docs/reference/methodology.md](docs/reference/methodology.md) — **判决怎么算出来的**：每个判决族的数学实现，一族一篇，每条公式与常数都引到实现它的那一行
 - [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 七轴语义（S0–S6）
 - [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — 尺寸软区间+拆分 ROI 契约（v0.6 实现；v0.7 补齐四腿缝价）
+- [docs/reference/erase.md](docs/reference/erase.md) — 确定性两段式擦除契约（M9）：什么可擦、什么只能建议、以及为什么
 
 ## 架构
 

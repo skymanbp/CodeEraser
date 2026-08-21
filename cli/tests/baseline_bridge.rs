@@ -21,6 +21,7 @@ fn opts(db: Option<PathBuf>, floor: Option<u32>) -> Opts {
         days: None,
         floor,
         establish: false,
+        pinned_soft: None,
     }
 }
 

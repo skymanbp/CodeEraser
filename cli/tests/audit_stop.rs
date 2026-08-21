@@ -53,6 +53,12 @@ fn broken_index_degrades_visibly_not_silently() {
     assert_eq!(line["dup_blocks"], 0);
 }
 
+/// The loop guard passes silently on stdout — but SILENT is not
+/// ABSENT: the skip leaves a feed line naming itself, because a
+/// session whose only Stop lands here used to be indistinguishable
+/// from one the hook never ran in, inside the ledger D2-2 counts
+/// session coverage from. The zeros are placeholders; `skipped` says
+/// so by name.
 #[test]
 fn loop_guard_and_clean_tree_stay_silent() {
     let dir = tmp("audit-loop");
@@ -60,6 +66,10 @@ fn loop_guard_and_clean_tree_stay_silent() {
     // a prior Stop already blocked (loop guard), then a clean tree
     let out = common::run_hook(&dir, &["audit", "--hook"], &envelope(&dir, true));
     assert!(out.trim().is_empty(), "loop guard passes: {out}");
+    let line = common::last_observe(&dir);
+    assert_eq!(line["event"], "stop_audit");
+    assert_eq!(line["skipped"], "loop_guard");
+    assert_eq!(line["degraded"], false, "nothing degraded; nothing ran");
     git(&dir, &["commit", "-qm", "b"]);
     let out2 = common::run_hook(&dir, &["audit", "--hook"], &envelope(&dir, false));
     assert!(out2.trim().is_empty(), "clean tree passes: {out2}");

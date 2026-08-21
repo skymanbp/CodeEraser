@@ -3,12 +3,15 @@
 //! client parks its own thread and never the accept loop (review
 //! 2026-08-20 #3 — before this, a connection that sent no newline
 //! stalled every other request). Requests are still handled one at a
-//! time: conn.rs serializes dispatch on the judge lock; cross-process
-//! convergence is the idempotent-write contract concurrent_writers
-//! proves. Exits after 30 min idle or on a version-skew hello. Wire
-//! contract: contracts/DAEMON.md + the daemon_proto goldens.
+//! time: dispatch.rs builds every reply under the judge lock and
+//! releases it before conn.rs writes; cross-process convergence is
+//! the idempotent-write contract concurrent_writers proves. Exits
+//! after 30 min idle or on a version-skew hello. Wire contract:
+//! contracts/DAEMON.md + the daemon_proto goldens.
 
 mod conn;
+mod dispatch;
+mod idle;
 mod replies;
 
 use super::auth;
@@ -31,7 +34,10 @@ fn idle_max() -> Duration {
 /// Live connection-thread ceiling: every parked connection costs one
 /// thread, and an unauthed local prober must not grow that without
 /// bound. At the cap a new connection is dropped on accept — an
-/// honest connection error at the client, never a queue.
+/// honest connection error at the client, never a queue. A cap alone
+/// was a hole and not a bound: silent peers held their slots for the
+/// daemon's whole life and every later hook was the one dropped, so
+/// idle.rs puts a deadline on the silence.
 const MAX_CONNS: u32 = 64;
 
 static LAST_ACTIVITY_MS: AtomicU64 = AtomicU64::new(0);
@@ -41,7 +47,7 @@ pub(super) fn touch(start: Instant) {
 }
 
 /// What every connection thread shares. The judge mutex doubles as
-/// the request-serialization lock (conn::dispatch).
+/// the request-serialization lock (dispatch::build).
 pub(super) struct Shared {
     pub(super) root: PathBuf,
     pub(super) start: Instant,
@@ -50,7 +56,7 @@ pub(super) struct Shared {
 }
 
 /// Serve until idle timeout, shutdown request, or version skew (the
-/// latter two exit from the connection thread — conn::exit_daemon).
+/// latter two exit from the connection thread — dispatch::exit_daemon).
 pub fn serve(root: &Path) -> Result<()> {
     let root = std::fs::canonicalize(root).with_context(|| format!("root {}", root.display()))?;
     let name = socket_name(&root);

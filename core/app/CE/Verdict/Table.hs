@@ -70,10 +70,28 @@ weightsOffence rows =
 -- the v0.6 zone knobs — hard line H (2), P_max (3), soft-line
 -- exponent k (4). A value below 1 would violate every unit by fiat
 -- (and a zero H or P_max would kill the curve).
+--
+-- Code 4 is the one ceiling that is an EXPONENT, not a line: it
+-- reaches `m * spread ^ k` in CE.Verdict.Soft BEFORE the
+-- [softMin, softMax] clamp, so an unbounded value never returns a
+-- contract error — the process dies allocating the intermediate
+-- Rational (review 2026-08-20 finding #3: a wire-supplied 1e9 asks
+-- for a multi-gigabyte numerator). judgedLoc is validated under
+-- 2^64, so k <= softKMax keeps that intermediate under 2^(64·1024),
+-- kilobytes rather than gigabytes, while leaving the knob ~500x its
+-- calibrated default of 2 — far past where any spread the clamp
+-- cares about has already saturated it.
 ceilingsOffence :: [[Integer]] -> Maybe String
-ceilingsOffence = knobTable "ceilings" 4 "unknown ceiling axis" low
+ceilingsOffence = knobTable "ceilings" 4 "unknown ceiling axis" judgeC
  where
-  low _ v = if v < 1 then Just "ceiling below 1" else Nothing
+  judgeC code v
+    | v < 1 = Just "ceiling below 1"
+    | code == 4 && v > softKMax = Just ("soft-line exponent above " <> show softKMax)
+    | otherwise = Nothing
+
+-- | The allocation fence on ceiling code 4 — see ceilingsOffence.
+softKMax :: Integer
+softKMax = 1024
 
 -- | Thresholds rows [knob, value], codes 0..6 (the wire-doc order).
 -- A zero rewrite denominator (code 2) makes the churn

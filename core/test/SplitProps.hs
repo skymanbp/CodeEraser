@@ -19,6 +19,7 @@ battery =
   runChecks
     [ ("the fixture seam prices to the hand-computed digit", fixtureJudged)
     , ("the v1.1 legs price to the hand-computed digit", pricedJudged)
+    , ("a cap-shaped seam request still answers", scaledJudged)
     , ("every split knob is a live lever", knobLevers)
     , ("split refusals name the offender", refusals)
     , ("the reply keys exist exactly when seamFiles rode", exactlyWhenSent)
@@ -76,6 +77,26 @@ pricedReq =
 
 pricedJudged :: Bool
 pricedJudged = judgedAs pricedReq [[0, 0, 3086, 1400]] [[1, 0, 0]]
+
+-- | The complexity regression (review 2026-08-20 #1/#2), asserted
+-- structurally and not by a clock: the priced fixture repeated over
+-- 10000 files must answer 10000 rows with the SAME hand-computed
+-- 3086/1400 — the per-file numbers cannot depend on how many files
+-- rode. 60002 rows is an eighth of structNodeCap, and the pre-fix
+-- pricer rescanned seamUnits per file plus the whole
+-- refs/clones/churn table per seam (and re-walked the candidate list
+-- per append), so this request answered in list steps counted in the
+-- billions — i.e. the suite hangs instead of failing an assertion.
+scaledJudged :: Bool
+scaledJudged = judgedAs scaledReq [[i, 0, 3086, 1400] | i <- ids] []
+ where
+  ids = [0 .. 9999 :: Integer]
+  scaledReq =
+    setKey "seamFiles" (toJSON [[i, 550] | i <- ids]) $
+      setKey "seamUnits" (toJSON (concat [[[i, 0, 10, 270], [i, 1, 280, 540]] | i <- ids])) $
+        setKey "seamRefs" (toJSON [[i, 0, 1] | i <- ids]) $
+          setKey "seamClones" (toJSON [[i, 260, 300] | i <- ids]) $
+            setKey "seamChurn" (toJSON [[i, 0, 1] | i <- ids]) base
 
 -- | One override per new code, each moving the fixture's verdict:
 -- 12 (S=560: the file leaves the zone, benefit 0 -> exempt),

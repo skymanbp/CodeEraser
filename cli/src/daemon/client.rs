@@ -4,7 +4,7 @@
 //! up a daemon from THIS binary.
 
 use super::auth;
-use super::proto::{DAEMON_PROTO, Request, Response, socket_name};
+use super::proto::{DAEMON_PROTO, Request, Response, major, socket_name};
 use anyhow::{Context, Result, bail, ensure};
 use interprocess::local_socket::traits::Stream as _;
 use interprocess::local_socket::{GenericNamespaced, Stream, ToNsName};
@@ -18,13 +18,27 @@ const RETRY_DELAY: Duration = Duration::from_millis(100);
 /// One round-trip ONLY IF the daemon is already up — never spawns.
 /// `ce doctor` uses this: a diagnostic must not mutate the state it
 /// reports (attack review 2026-08-07: doctor's warm-up ping left a
-/// detached 30-min daemon per invocation dir, locking the exe).
+/// detached 30-min daemon per invocation dir, locking the exe). It
+/// may still RETIRE a daemon whose hello it refuses to trust
+/// (refuse_stale) — leaving an unauthenticated one serving is the
+/// worse mutation, and no diagnostic reads through it either way.
 /// One unauthorized retry, same window as `request`: eject's
 /// shutdown raced a freshly bound daemon's token write, gave up on
 /// the refusal, and removed .ce out from under a live daemon
 /// (review 2026-08-20 #7).
 pub fn request_if_running(root: &Path, req: &Request) -> Result<Response> {
     negotiate(root, req, false)
+}
+
+/// Does anyone still hold this root's socket? A connect that is
+/// REFUSED is the only proof the daemon is gone — a failed request
+/// is not, because the very race the header names (a fresh daemon
+/// minting its token under our shutdown) fails the request while the
+/// daemon lives. `ce eject` asks before deleting .ce, and the
+/// connection is dropped at once, so the daemon's slot is freed on
+/// the next read.
+pub fn is_running(root: &Path) -> bool {
+    try_connect(root).is_ok()
 }
 
 /// A HelloOk is only trusted when the replied proto is not OLDER
@@ -63,14 +77,7 @@ fn negotiate(root: &Path, req: &Request, lazy: bool) -> Result<Response> {
         match hello(&mut conn, root)? {
             Response::HelloOk { ref proto, .. } if stale(proto) => {
                 if !lazy {
-                    // forward only the shutdown eject needs to retire
-                    // it; anything else refuses to trust that reply
-                    if matches!(req, Request::Shutdown) {
-                        return round_trip(&mut conn, req);
-                    }
-                    bail!(
-                        "stale daemon (proto {proto} vs {DAEMON_PROTO}); any ce command replaces it"
-                    );
+                    return refuse_stale(&mut conn, req, proto);
                 }
                 ensure!(
                     !retry,
@@ -90,6 +97,26 @@ fn negotiate(root: &Path, req: &Request, lazy: bool) -> Result<Response> {
         }
     }
     unreachable!("the second round returned or bailed")
+}
+
+/// The non-lazy path's answer to a HelloOk it will not trust. It
+/// forwards the shutdown eject needs to retire the daemon — and,
+/// for anything else, sends that shutdown ITSELF on the same
+/// precedent: reporting alone left a daemon whose hello checks NO
+/// credential (every pre-1.1.0 one) serving each later caller until
+/// some lazy client happened by, and `ce doctor` — the diagnostic
+/// that meets it first — is exactly this path. Same major only: a
+/// cross-major daemon owes us `restart`, and its `shutdown` word is
+/// not ours to assume. The shutdown's own outcome is moot; the bail
+/// reports the staleness either way, so the caller still sees it.
+fn refuse_stale(conn: &mut BufReader<Stream>, req: &Request, proto: &str) -> Result<Response> {
+    if matches!(req, Request::Shutdown) {
+        return round_trip(conn, req);
+    }
+    if major(proto) == major(DAEMON_PROTO) {
+        let _ = round_trip(conn, &Request::Shutdown);
+    }
+    bail!("stale daemon (proto {proto} vs {DAEMON_PROTO}); any ce command replaces it")
 }
 
 fn hello(conn: &mut BufReader<Stream>, root: &Path) -> Result<Response> {
@@ -187,7 +214,68 @@ fn unset_stdio_inheritance() {}
 
 #[cfg(test)]
 mod tests {
-    use super::stale;
+    use super::{Request, request_if_running, socket_name, stale};
+    use interprocess::local_socket::traits::ListenerExt;
+    use interprocess::local_socket::{GenericNamespaced, ListenerOptions, ToNsName};
+    use std::io::{BufRead, BufReader, Write};
+    use std::path::Path;
+
+    /// A scripted pre-1.1.0 daemon: it answers ONE hello with `proto`
+    /// (checking no credential, as such a daemon does), then records
+    /// every further line and answers each with a bye. The handle
+    /// yields the recorded lines once the client drops the socket.
+    fn stub_daemon(root: &Path, proto: &str) -> std::thread::JoinHandle<Vec<String>> {
+        let ns = socket_name(root)
+            .to_ns_name::<GenericNamespaced>()
+            .expect("name");
+        let listener = ListenerOptions::new().name(ns).create_sync().expect("bind");
+        let hello_ok = format!(r#"{{"type":"hello_ok","proto":"{proto}","version":"stub"}}"#);
+        std::thread::spawn(move || {
+            let stream = listener.incoming().next().expect("conn").expect("accept");
+            let mut conn = BufReader::new(stream);
+            let mut lines: Vec<String> = Vec::new();
+            let mut first = true;
+            loop {
+                let mut got = String::new();
+                if conn.read_line(&mut got).unwrap_or(0) == 0 {
+                    return lines;
+                }
+                let reply = if first {
+                    hello_ok.as_str()
+                } else {
+                    r#"{"type":"bye"}"#
+                };
+                writeln!(conn.get_mut(), "{reply}").expect("write");
+                conn.get_mut().flush().expect("flush");
+                if !first {
+                    lines.push(got.trim().to_string()); // post-hello only
+                }
+                first = false;
+            }
+        })
+    }
+
+    /// The non-lazy path must RETIRE the daemon whose HelloOk it
+    /// refuses to trust, not just report it: `ce doctor` rides this
+    /// path, and reporting alone left an unauthenticated pre-1.1.0
+    /// daemon serving until a lazy client happened by (review
+    /// 2026-08-20 #1). The staleness still reaches the caller.
+    #[test]
+    fn non_lazy_retires_the_stale_daemon_it_refuses_to_trust() {
+        let root = crate::testutil::scratch("client-stale");
+        let stub = stub_daemon(&root, "1.0.0");
+        let err = request_if_running(&root, &Request::Ping).expect_err("stale is refused");
+        assert!(
+            err.to_string().contains("stale daemon"),
+            "the caller still sees the staleness: {err}"
+        );
+        let sent = stub.join().expect("stub thread");
+        assert_eq!(sent.len(), 1, "one line follows the hello: {sent:?}");
+        assert!(
+            sent[0].contains("shutdown"),
+            "the same-major stale daemon is asked to leave: {sent:?}"
+        );
+    }
 
     /// The staleness ordering the HelloOk trust check rides on: an
     /// older minor (1.0 predates the credential gate) and garbage

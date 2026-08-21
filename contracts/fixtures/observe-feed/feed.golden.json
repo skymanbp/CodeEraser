@@ -78,7 +78,7 @@
     "zone_tier": "warn"
   },
   {
-    "changed_files": 2,
+    "changed_files": 1,
     "degraded": false,
     "dup_blocks": 1,
     "event": "stop_audit",
@@ -86,7 +86,7 @@
       "degraded": "daemon_unavailable"
     },
     "mode": "observe",
-    "net_loc": 12,
+    "net_loc": 11,
     "schema": "ce.observe/0.6.0",
     "session_id": "t",
     "ts_ms": 0

@@ -85,10 +85,12 @@ data="${CLAUDE_PLUGIN_DATA:-}"
 
 # ce-core rides the same pin flow (from v0.2.0): placed as a plain
 # `ce-core` sibling in the data dir — exactly where ce's resolver
-# probes — BEFORE ce execs. A fetch failure degrades (hooks never
-# need the core; judgment families report their own handshake miss),
-# but a pin mismatch refuses as loudly as ce's own: a tampered core
-# must not hide behind a PATH ce-core.
+# probes — BEFORE ce execs. EVERY core failure degrades, none dies:
+# hooks never need the core (judgment families report their own
+# handshake miss), so killing the starter over it takes the guard
+# down for a component the guard does not use. A pin mismatch still
+# refuses the artifact as loudly as ce's own and keeps NOTHING —
+# a tampered core must not hide behind a PATH ce-core.
 ensure_core() {
     corepin=""
     if [ "$key" != "unsupported" ]; then
@@ -144,7 +146,16 @@ ensure_core() {
         echo "codeeraser: REFUSING downloaded ce-core — SHA256 mismatch for $coreurl" >&2
         echo "codeeraser: expected $corepin" >&2
         echo "codeeraser: actual   $coregot" >&2
-        exit 1
+        # Refuse the artifact, then DEGRADE — the on-disk mismatch
+        # branch above already takes exactly this stance and this one
+        # did not. `exit 1` here killed the starter before it ever
+        # exec'd, so one tampered (or merely stale-CDN) core blocked
+        # every hook on the machine for a component no hook consults.
+        # Nothing was placed, and CE_CORE_BIN is already bound to the
+        # now-absent verified path, so ce's resolver still cannot walk
+        # on to an unverified PATH ce-core: the judgment families
+        # report a handshake miss, which is the truth.
+        return 0
     fi
     chmod +x "$coretmp"
     mv -f "$coretmp" "$coretgt"

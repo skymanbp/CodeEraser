@@ -200,18 +200,26 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   **run 分组**（run 结构=对齐产物，Rust 侧产出），hash = fnv1a(trim)，宽 =
   trim 后 alnum 计数（行事实，Cost.anchorFloor 的判定输入）；`dup` =
   after 侧新出现重复的**顶层具名单元**键哈希（堆叠证据，符号知识留在 Rust，
-  仅哈希过线——ADR-002 A6）；`i` 为**稠密 0 基文件对位置**（与发送方批内文件对
-  数组共同索引；1.0.0 定稿明确——攻击评审 F9：接收方按位置回查，稀疏 id 不受支持，
-  跨匹配要求 `i` 不同）。
+  仅哈希过线——ADR-002 A6）；`i` 为**不透明的文件对键**：批内唯一、由客户端选定，
+  接收方只拿它当 Map/Set 键，**绝不按它下标回查**（`CE/FourClass/Wire.hs:31` 的
+  pIdx 自述 "an opaque pair index"；重复 `i` 由 `CE.FourClass.violation` 判
+  `error/contract`——Anchor 的 (pair,run) 图会静默丢掉重复者的 run；跨匹配要求
+  `i` 不同）。批内合法地**稀疏**——发送方在滤掉空对**之前**取下标
+  （`cli/src/fourclass/batch.rs:194-204`，enumerate 先于 filter）；旧文"稠密 0 基
+  文件对位置"两侧实现从未成立，2026-08-20 就地更正（纯勘误，wire 字节不变）。
   within-first 前置（同对 add∩rem 必空）由 core 在边界校验，违反 → `error/contract`。
 - `fourclass.result`：`{"id","moved":[[i,出行,入行]],"blocks":[[源i,源行,宿i,宿行]],
   "suspicions":[[i,规则名]],"degraded"(,"reason"∈{bucket_cap})}`——moved 为单调
   重分类 delta；blocks 为 ≥2 行站点证据（扩展/归因行只进 moved 不进 blocks）；
   suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,flags]],"edges":
-  [[src,dst,kind,rung]],"unresolved":[[lang,kind,reason,count]],"pos":[idx]}`——
-  稠密 0 基索引即节点身份，**无文本形物过线**（ADR-002 A6）；节点行三元组、
-  边严格升序且去重、端点与 pos 越界 → `error/contract`（边界契约由 core 机检）；
+  [[src,dst,kind,rung]],"pos":[idx]}`——稠密 0 基索引即节点身份，**无文本形物
+  过线**（ADR-002 A6）；节点行三元组、边严格升序且去重、端点与 pos 越界 →
+  `error/contract`（边界契约由 core 机检）；未解析站点计数**不过线、留在客户端**
+  （`unresolved_sites` 只进 Rust 侧报告与摘要行，判决从不消费）——旧文曾列的
+  `"unresolved":[[lang,kind,reason,count]]` 两侧都不发不解析：请求体 =
+  `{nodes,edges,pos}`（`cli/src/graph/deadcode.rs:174-178`），`GraphReq` 无此字段
+  （`core/app/CE/Graph.hs:33-46`），2026-08-20 就地删除，wire 字节不变；
   超 `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
   "reason":"graph_too_large"`（绝不截断）。
 - `graph.result`（语义 M5-2g 落地，穷举参照 harness 见 core/test/）：

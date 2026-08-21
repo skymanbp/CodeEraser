@@ -57,3 +57,4 @@ contracts/fixtures/crosscheck/**/*.json
 # cc-memory anchors its own root now (>= v2.6.0); if it ever regresses, the
 # stray dir must show up as untracked noise, not vanish.
 /memory/
+.gstack/

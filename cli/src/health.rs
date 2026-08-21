@@ -7,7 +7,7 @@
 use crate::config::Config;
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
-use crate::dedup::{Params, index::Index};
+use crate::dedup::{Params, index};
 use serde::Deserialize;
 use std::path::Path;
 use std::process::ExitCode;
@@ -22,13 +22,12 @@ struct Envelope {
 
 /// Entry point for `ce health --hook`. Never fails outward.
 pub fn run_hook() -> ExitCode {
-    let Some(env) = crate::hookio::read_envelope::<Envelope>() else {
+    let gate =
+        crate::hookio::gated_envelope("SessionStart", |e: &Envelope| (&e.hook_event_name, &e.cwd));
+    let Some((_env, root)) = gate else {
         return ExitCode::SUCCESS;
     };
-    if env.hook_event_name != "SessionStart" || env.cwd.is_empty() {
-        return ExitCode::SUCCESS;
-    }
-    let line = status_line(&crate::hookio::project_root(&env.cwd));
+    let line = status_line(&root);
     let payload = serde_json::json!({
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",
@@ -73,8 +72,18 @@ fn index_summary(root: &Path) -> String {
     if !db.exists() {
         return "absent (first dedup/probe builds it)".into();
     }
-    match Index::open(&db, Params::default()).and_then(|i| i.file_count()) {
-        Ok(n) => format!("{n} files"),
+    // index::peek, never Index::open: the latter runs
+    // schema::ensure_cache_key, which WIPES the database on any
+    // revision mismatch — so this status line (and `ce doctor`, and
+    // every SessionStart) rebuilt the index it claimed to be merely
+    // reporting on, and two `ce` binaries of different revisions on
+    // one tree destroyed each other's work at every session start
+    // while both printed a healthy count. A diagnostic must not
+    // mutate the state it reports: the rebuild is the next dedup's,
+    // and staleness is said out loud here instead (A9f).
+    match index::peek(&db, Params::default()) {
+        Ok((n, true)) => format!("{n} files"),
+        Ok((n, false)) => format!("{n} files (stale — next dedup rebuilds it)"),
         Err(_) => "unreadable (degraded — deep checks off until rebuilt)".into(),
     }
 }
