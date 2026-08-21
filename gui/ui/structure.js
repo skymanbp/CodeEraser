@@ -1,59 +1,17 @@
-// CodeEraser GUI glue (M6 S4a structure screen + M7-P4 tab shell +
-// M8-G3a i18n). This file RENDERS the report document — every number
-// it shows was judged in the core and measured in the codeeraser
-// crate; nothing is derived here beyond layout geometry. Labels come
-// from i18n.js (tr / axis names); `invoke`, `$`, `esc`, `row`,
-// `setStatus`, `posInt` and `redrawers` are the shared globals the
-// sibling screens use.
+// CodeEraser GUI — the structure screen (split from main.js at the
+// repo's own soft line, batch 4). RENDERS the report document —
+// every number it shows was judged in the core and measured in the
+// codeeraser crate; nothing is derived here beyond layout geometry.
+// Shares `report`/`children`/`selId` with structree.js (the tree
+// lens) and consumes the shell globals from app.js.
 "use strict";
-
-const invoke = window.__TAURI__.core.invoke;
-const $ = (id) => document.getElementById(id);
-
-// Per-screen redraw hooks: switching back to a tab re-renders its
-// SVG, because a chart drawn (or resized) while its view was hidden
-// measured a 0×0 rect and holds no usable geometry.
-const redrawers = {};
 
 let report = null;
 let children = [];
 let selId = 0;
 
-function tabs() {
-  const all = document.querySelectorAll("#tabs .tab");
-  all.forEach((b) =>
-    b.addEventListener("click", () => {
-      all.forEach((x) => x.classList.toggle("on", x === b));
-      document.querySelectorAll(".view").forEach((v) => {
-        v.hidden = v.id !== "view-" + b.dataset.tab;
-      });
-      redrawers[b.dataset.tab]?.();
-    }));
-}
-
-// One status line for all three screens; long errors ellipsize in
-// CSS, so the full text rides on the tooltip.
-function setStatus(text, isErr) {
-  const s = $("status");
-  s.className = isErr ? "err" : "";
-  s.textContent = text;
-  s.title = isErr ? text : "";
-}
-
-// Number inputs guard here, not just in the HTML min attribute —
-// typed garbage or a negative would otherwise reach the backend as a
-// deserialization error. Invalid → fallback (null = axis unjudged).
-function posInt(value, min, fallback) {
-  const n = Math.floor(Number(value));
-  return Number.isFinite(n) && n >= min ? n : fallback;
-}
-
-async function boot() {
-  applyStaticI18n();
-  $("lang").addEventListener("click", toggleLang);
+function bootStructure() {
   i18nRefreshers.push(() => report && render());
-  $("root").value = await invoke("default_root").catch(() => "");
-  tabs();
   $("scan").addEventListener("click", scan);
   $("root").addEventListener("keydown", (e) => e.key === "Enter" && scan());
   // redrawStructure (structree.js) routes to the active lens
@@ -272,15 +230,6 @@ function drawRect(id, x, y, wd, ht, label) {
   }
 }
 
-// The alarm ramp: 0 findings = calm panel green-grey; the four hot
-// stops sit on even lightness steps so adjacent counts stay
-// separable (capped at 4 — beyond that it is simply the hot end).
-// LEGEND_STOPS mirrors it for the summary legend.
-const LEGEND_STOPS = ["#222932", "#61332a", "#93402f", "#c2503d", "#e8705a"];
-function heat(findings) {
-  return LEGEND_STOPS[Math.min(findings, LEGEND_STOPS.length - 1)];
-}
-
 function selectNode(id, rect) {
   selId = id;
   $("treemap").querySelectorAll("rect.sel").forEach((r) => r.classList.remove("sel"));
@@ -304,13 +253,3 @@ function showDetail(id) {
   }
   $("detail").innerHTML = rows.join("");
 }
-
-// BOTH sides escaped. The key is an i18n literal at almost every call
-// site, but not all of them — trend.js builds one from report data —
-// and an asymmetry that holds only by convention is one call site away
-// from being false.
-const row = (k, v) => `<div class="row">${esc(String(k))}: <b>${esc(String(v))}</b></div>`;
-const esc = (s) =>
-  s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-
-boot();

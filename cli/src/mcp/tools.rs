@@ -150,6 +150,18 @@ fn days(args: &Value, default: u32) -> u32 {
     u32::try_from(v).unwrap_or(default)
 }
 
+// Every adapter body below is one call into crate::faces — the ONE
+// JSON face per family both machine surfaces consume (batch 4 lifted
+// the bodies there when the GUI backend was about to copy them; the
+// P4 cross-surface-shell precedent). This file keeps only the MCP
+// concerns: the catalog table, arg parsing, and stringification.
+
+// scan and graph_sites are the two STRING-native library faces, and
+// mcp_precommit byte-pins this catalog to them (the catalog is a
+// transport, never a second serializer) — a Value round-trip
+// re-orders keys and drops the pretty form, so these two stay on the
+// direct string faces; faces::scan/graph_sites serve the GUI's
+// Value-shaped consumption of the same documents.
 fn scan(root: &Path, _a: &Value) -> Result<String> {
     let (files, findings, summary) = crate::scan::analyze(root)?;
     crate::scan::report_string(&files, &findings, summary)
@@ -157,12 +169,11 @@ fn scan(root: &Path, _a: &Value) -> Result<String> {
 
 fn check_duplication(root: &Path, a: &Value) -> Result<String> {
     let min = a["min_tokens"].as_u64().map(|v| v as usize);
-    let (found, summary) = crate::dedup::analyze(root, None, min, None)?;
-    Ok(crate::dedup::report_json(&found, &summary)?.to_string())
+    Ok(crate::faces::dedup(root, min)?.to_string())
 }
 
 fn churn(root: &Path, a: &Value) -> Result<String> {
-    Ok(crate::churn::report_json(&crate::churn::run(root, days(a, 14))?).to_string())
+    Ok(crate::faces::churn(root, days(a, 14))?.to_string())
 }
 
 fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
@@ -171,27 +182,17 @@ fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
 
 /// The plain judged faces (no extra knobs) share ONE adapter body —
 /// the census caught their three shells chaining into clone blocks;
-/// the shell now exists once and thin per-name fns satisfy the
-/// table's fn-pointer field.
+/// the shell exists once and thin per-name fns satisfy the table's
+/// fn-pointer field (the pre-batch-4 banked shape, now over faces).
 fn judged(root: &Path, which: &str) -> Result<String> {
     let core = core();
-    Ok(match which {
-        "deadcode" => {
-            crate::report::deadcode_json(&crate::graph::deadcode::run(root, None, &core)?)
-                .to_string()
-        }
-        "clone" => crate::report::envelope(
-            (crate::dedup::t3::SCHEMA_ID, "clones"),
-            &crate::dedup::t3::run(root, None, &core)?,
-        )
-        .to_string(),
-        "docdup" => crate::report::envelope(
-            (crate::docdup::judge::SCHEMA_ID, "dups"),
-            &crate::docdup::judge::run(root, None, &core)?,
-        )
-        .to_string(),
+    let doc = match which {
+        "deadcode" => crate::faces::deadcode(root, &core)?,
+        "clone" => crate::faces::clone_t3(root, &core)?,
+        "docdup" => crate::faces::docdup(root, &core)?,
         other => anyhow::bail!("not a plain judged face: {other}"),
-    })
+    };
+    Ok(doc.to_string())
 }
 
 fn deadcode(root: &Path, _a: &Value) -> Result<String> {
@@ -206,17 +207,8 @@ fn docdup(root: &Path, _a: &Value) -> Result<String> {
     judged(root, "docdup")
 }
 
-/// run → report_json → String, the arg-carrying faces' shared tail
-/// (the P4 ratchet caught structure/trend growing token twins of it).
-fn doc<T>(r: anyhow::Result<T>, to_json: impl FnOnce(&T) -> Value) -> Result<String> {
-    Ok(to_json(&r?).to_string())
-}
-
 fn join(root: &Path, a: &Value) -> Result<String> {
-    doc(
-        crate::join::run(root, None, &core(), days(a, 14)),
-        crate::join::report_json,
-    )
+    Ok(crate::faces::join(root, &core(), days(a, 14))?.to_string())
 }
 
 fn structure(root: &Path, a: &Value) -> Result<String> {
@@ -229,25 +221,11 @@ fn structure(root: &Path, a: &Value) -> Result<String> {
     // the split advisory joins the MCP face in v0.7 (plan v2.7 ③):
     // same report schema, same rows the CLI prints
     let split = a["split"].as_bool().unwrap_or(false);
-    doc(
-        crate::structure::judge::run(root, None, &core(), (deep, d, split)),
-        crate::structure::judge::report_json,
-    )
+    Ok(crate::faces::structure(root, &core(), (deep, d, split))?.to_string())
 }
 
 fn check(root: &Path, _a: &Value) -> Result<String> {
-    let o = crate::score::run(
-        root,
-        crate::score::Opts {
-            db: None,
-            core: core(),
-            days: None,
-            floor: None,
-            establish: false,
-            pinned_soft: None,
-        },
-    )?;
-    Ok(crate::score::report_json(&o).to_string())
+    Ok(crate::faces::check(root, &core())?.to_string())
 }
 
 fn trend(root: &Path, a: &Value) -> Result<String> {
@@ -257,10 +235,7 @@ fn trend(root: &Path, a: &Value) -> Result<String> {
     let batch = a["batch"]
         .as_u64()
         .map(|v| usize::try_from(v).unwrap_or(usize::MAX).max(1));
-    doc(
-        crate::trend::run(root, None, &core(), commits, batch),
-        crate::trend::report_json,
-    )
+    Ok(crate::faces::trend(root, &core(), commits, batch)?.to_string())
 }
 
 #[cfg(test)]

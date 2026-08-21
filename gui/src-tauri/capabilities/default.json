@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "main window may invoke the two report commands",
+  "description": "main window may invoke the report-family commands, the erase preview/apply pair, and listen for ce-task progress events",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": ["core:default", "core:event:default"]
 }

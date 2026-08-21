@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- CodeEraser GUI (M6 S4a structure screen + M7-P4 trend and
-     deletion-candidate screens + M8-G3a i18n): renders the report
+     deletion-candidate screens + M8-G3a i18n + M9 batch 4: score,
+     erase and diagnostics-hub screens): renders the report
      documents and nothing else — no framework, no build step,
      judgment zero-leak into JS (webview layer is rendering glue by
      user ruling). Labels come from i18n.js (en default, zh switch);
@@ -16,10 +17,14 @@
   <header>
     <span id="brand"><img src="icon.png" alt="" />CodeEraser<span class="tm">.</span></span>
     <input id="root" type="text" spellcheck="false" />
+    <span id="rootecho"></span>
     <nav id="tabs">
       <button class="tab on" data-tab="structure" data-i18n="tabStructure"></button>
+      <button class="tab" data-tab="score" data-i18n="tabScore"></button>
+      <button class="tab" data-tab="erase" data-i18n="tabErase"></button>
       <button class="tab" data-tab="trend" data-i18n="tabTrend"></button>
       <button class="tab" data-tab="candidates" data-i18n="tabCandidates"></button>
+      <button class="tab" data-tab="reports" data-i18n="tabReports"></button>
     </nav>
     <button id="lang" title="English / 中文"></button>
     <span id="status"></span>
@@ -55,6 +60,32 @@
     </main>
   </div>
 
+  <div id="view-score" class="view" hidden>
+    <section class="bar">
+      <button id="check-load" data-i18n="load"></button>
+    </section>
+    <main class="col">
+      <div id="check-hero"></div>
+      <div class="stat" id="check-axes"></div>
+      <section id="check-ratchet"></section>
+      <div id="check-named"></div>
+      <div class="empty" id="empty-score" data-i18n="emptyScore"></div>
+    </main>
+  </div>
+
+  <div id="view-erase" class="view" hidden>
+    <section class="bar">
+      <button id="erase-preview" data-i18n="erasePreview"></button>
+      <button id="erase-apply" class="danger" hidden data-i18n="eraseApply"></button>
+      <div class="stat" id="erase-summary"></div>
+    </section>
+    <main class="col">
+      <div id="erase-rows"></div>
+      <pre id="erase-diff" hidden></pre>
+      <div class="empty" id="empty-erase" data-i18n="emptyErase"></div>
+    </main>
+  </div>
+
   <div id="view-trend" class="view" hidden>
     <section class="bar">
       <label><span data-i18n="commits"></span> <input id="trend-commits" type="number" min="2" value="30" /></label>
@@ -80,10 +111,27 @@
     </main>
   </div>
 
+  <div id="view-reports" class="view" hidden>
+    <section class="bar">
+      <select id="hub-family"></select>
+      <label id="hub-days-wrap" hidden><span data-i18n="days"></span> <input id="hub-days" type="number" min="1" value="14" /></label>
+      <button id="hub-load" data-i18n="load"></button>
+      <div class="stat" id="hub-chips"></div>
+    </section>
+    <main class="col">
+      <div id="hub-tables"></div>
+      <div class="empty" id="empty-reports" data-i18n="emptyReports"></div>
+    </main>
+  </div>
+
   <script src="i18n.js" defer></script>
-  <script src="main.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="structure.js" defer></script>
   <script src="structree.js" defer></script>
   <script src="trend.js" defer></script>
   <script src="candidates.js" defer></script>
+  <script src="score.js" defer></script>
+  <script src="erase.js" defer></script>
+  <script src="reports.js" defer></script>
 </body>
 </html>

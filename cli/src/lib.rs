@@ -10,6 +10,7 @@ pub mod dedup;
 pub mod docdup;
 pub mod eject;
 pub mod erase;
+pub mod faces;
 pub mod fourclass;
 pub mod graph;
 pub mod guard;

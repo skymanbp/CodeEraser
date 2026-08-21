@@ -222,5 +222,16 @@ entry_globs = [
 # Scan/TrendProps siblings, EraseArgs against its arg-struct
 # siblings, and the e2e scaffold's internal twin. Measured after
 # cargo fmt.
+# 176 -> 177 (M9 batch 4, the GUI's complete face): +1 after
+# repayment. The batch first grew +12 — ten hand-written tauri
+# command fns chaining (repaid at the mechanism: face_cmd! mints
+# the fn scaffold once), the erase preview/apply twin (repaid: one
+# erase_task head), the MCP thin shells re-chaining when the faces
+# rewire dropped the judged() dispatcher (repaid: the dispatcher
+# restored over faces), and faces.rs's envelope twin (repaid: one
+# enveloped throat). What remains is the ONE irreducible pair:
+# clone_t3 and docdup are each THE public face of their family —
+# two four-line invocations of the shared throat, same shape by
+# construction. Measured after cargo fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 176
+budget = 177
