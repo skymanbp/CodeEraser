@@ -20,10 +20,10 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 🚀 **v0.7.3 released — the size advisory closes its loop.**
 Installers, [crates.io](https://crates.io/crates/codeeraser), the npm
-pointer and [codeeraser.dev](https://codeeraser.dev) are live (0.7.1
-through 0.7.3 are installer patches: elevation up front, the CLI put on
-the machine PATH without disturbing the registry value it edits, and a
-plugin that really reuses a pin-identical binary instead of fetching).
+pointer and [codeeraser.dev](https://codeeraser.dev) are live (0.7.1–
+0.7.3 are patch releases: elevation up front, the CLI on the machine
+PATH with its registry value kind intact, plugin reuse of pin-identical
+binaries, no console flashes under the GUI, and bare `ce` answers help).
 This cycle: the split advisory prices a seam's FULL cost — severed
 references, cut clone blocks and crossing co-change pairs, each at a
 corpus-calibrated price — the graded zone's position→tier map is

@@ -37,7 +37,6 @@ use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
 use std::collections::HashMap;
 use std::path::Path;
-use std::process::Command;
 
 /// Commits with more changed files than this are skipped for pair
 /// counting (quadratic) and reported, never silently dropped.
@@ -238,28 +237,12 @@ fn show(root: &Path, sha: &str, path: &str, parent: bool) -> Option<String> {
     git(root, &["show", &rev]).ok()
 }
 
-/// The ONE product-side git runner (pub(crate) since M6 S3c: the
-/// structure staleness join reuses it rather than growing a second
-/// copy — the gitio lesson from the test side, applied here). The
-/// error carries git's own stderr: a bare "failed" cost the trend
+/// This family's face over proc::git_output (pub(crate) since M6
+/// S3c: the structure staleness join reuses it). Its stance: the
+/// error carries git's own stderr — a bare "failed" cost the trend
 /// battery a debugging cycle and would reach users via failed[].
 pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
-    let out = Command::new("git")
-        .arg("-C")
-        .arg(root)
-        // core.quotePath (git's DEFAULT) C-quotes non-ASCII paths, and
-        // every consumer joins git's answer against ce's own rel_str
-        // spelling — a quoted path matches nothing and fails SILENTLY
-        // (the Stop deny gate skipped CJK filenames; the staleness
-        // join called those docs fresh). Fixed at the ONE runner;
-        // fourclass::session is already immune via -z.
-        .args(["-c", "core.quotePath=false"])
-        .args(args)
-        // No caller feeds git input and `hash-object --stdin` wants
-        // EOF; inheriting a hook's stdin would let git block on it.
-        .stdin(std::process::Stdio::null())
-        .output()
-        .context("git")?;
+    let out = crate::proc::git_output(root, args).context("git")?;
     if !out.status.success() {
         let err = String::from_utf8_lossy(&out.stderr);
         anyhow::bail!("git {args:?} failed: {}", err.trim());

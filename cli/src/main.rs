@@ -37,10 +37,19 @@ fn parse_localized() -> Cli {
     if codeeraser::i18n::zh() {
         cmd = main_lang::localize(cmd);
     }
-    match Cli::from_arg_matches(&cmd.get_matches()) {
-        Ok(cli) => cli,
+    let matches = match cmd.clone().try_get_matches() {
+        Ok(m) => m,
+        // A bare `ce` is a question, not a mistake (v0.7.3): the old
+        // stderr + exit-2 usage error rendered as a red PowerShell
+        // NativeCommandError wall. Overview help on stdout, exit 0;
+        // real usage errors keep clap's own loud exit.
+        Err(e) if e.kind() == clap::error::ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand => {
+            let _ = cmd.print_help();
+            std::process::exit(0);
+        }
         Err(e) => e.exit(),
-    }
+    };
+    Cli::from_arg_matches(&matches).unwrap_or_else(|e| e.exit())
 }
 
 /// Analysis-family dispatch (the metric/judgment subcommands); hands

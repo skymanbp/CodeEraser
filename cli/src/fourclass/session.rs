@@ -33,18 +33,13 @@ pub fn commit_pairs(root: &Path, sha: &str) -> Option<Vec<PathPair>> {
     )
 }
 
-/// Run git in `root`, returning stdout on success — the ONE git
-/// spawner for the session/judge family (the self-ratchet caught the
-/// fourth copy of this shape). stdin is always the null device: no
-/// caller feeds input, and `hash-object --stdin` wants EOF.
+/// This family's face over proc::git_output: stdout on success,
+/// None on any failure (a missing repo is a report shape here, not
+/// an error). quotePath=false rides along from the shared runner —
+/// a no-op for this family's -z consumers, whose paths are already
+/// literal.
 pub(crate) fn git_stdout(root: &Path, args: &[&str]) -> Option<String> {
-    let out = std::process::Command::new("git")
-        .arg("-C")
-        .arg(root)
-        .args(args)
-        .stdin(std::process::Stdio::null())
-        .output()
-        .ok()?;
+    let out = crate::proc::git_output(root, args).ok()?;
     out.status
         .success()
         .then(|| String::from_utf8_lossy(&out.stdout).into_owned())

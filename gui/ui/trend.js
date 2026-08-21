@@ -24,12 +24,22 @@ async function loadTrend(batch) {
   $("trend-more").disabled = true;
   setStatus(batch === null ? tr("measuring") : tr("measuringMore"), false);
   try {
-    trendReport = await invoke("trend_report", {
-      root: $("root").value,
-      commits,
-      batch,
-    });
-    renderTrend();
+    // Load (batch=null) measures in TREND_BATCH slices, rendering
+    // after each — the old monolithic call froze for minutes
+    // (v0.7.3). A slice that shrinks nothing stops the walk: failed
+    // commits never leave pending, and renderTrend lists them.
+    let prev = Infinity;
+    do {
+      trendReport = await invoke("trend_report", {
+        root: $("root").value,
+        commits,
+        batch: batch === null ? TREND_BATCH : batch,
+      });
+      renderTrend();
+      setStatus(`${tr("measured")} ${trendReport.rows.length} · ${tr("pending")} ${trendReport.pending}`, false);
+      if (trendReport.pending >= prev) break;
+      prev = trendReport.pending;
+    } while (batch === null && trendReport.pending > 0);
     setStatus(trendReport.schema, false);
   } catch (e) {
     setStatus(String(e), true);

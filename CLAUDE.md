@@ -1,6 +1,6 @@
 # CodeEraser — 项目级指令（Claude Code 每次会话加载）
 
-## 当前状态：M0–M8 全交付，v0.7.3 已发布（2026-08-21）；计划 v2.7 收尾批落地（wire 2.15.0）：拆分 ROI v1.1 四腿价目（跨缝引用 250/切穿克隆块 500/跨缝共变对 150/φ500，外语料标定实录在册）、guard 区内档位映射 opt-in 接线（`[guard] zone_tiers`，默认恒 observe——FPR 纪律不破，feed 0.6.0 记映射档）、MCP/GUI split 面补齐；相对软线随具名重立重算（现值恒以 ce-baseline.json 为准）；设计册 docs/reference/size-advisory.md 含 P2/P4/v1.1 as-built 实录；v0.7.1–v0.7.3=安装器补丁（perMachine 提权；installerHooks 把 CLI 上机器 PATH——路径走环境变量不入 PS 文本、注册表按原 value kind 就地写；ce.sh 钉扎命中的 PATH 副本先答，安装包=GUI+CLI 超集且插件真复用）
+## 当前状态：M0–M8 全交付；计划 v2.8 = M9 打磨与完整面（批 0 = v0.7.3 出货批进行中：spawn 全站点无窗化单咽喉 cli/src/proc.rs——GUI 弹窗风暴根修、裸 `ce` 印 help 退 0、trend 分批进度；批 1–7 = 审阅 113 条落地/方法学册/`ce erase` 两段式/GUI 完整化→v0.8.0/bench dashboard/实战检验/判决回迁第三弹，四拍板 2026-08-21 在册）；v0.7.0 尺寸顾问收环（wire 2.15.0，ROI v1.1 四腿价目+`[guard] zone_tiers` opt-in——FPR 纪律不破；设计册 docs/reference/size-advisory.md）；v0.7.1–v0.7.3=补丁版（perMachine 提权；installerHooks 把 CLI 上机器 PATH——路径走环境变量不入 PS 文本、注册表按原 value kind 就地写；ce.sh 钉扎命中的 PATH 副本先答，安装包=GUI+CLI 超集且插件真复用）
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。

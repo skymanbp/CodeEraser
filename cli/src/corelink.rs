@@ -8,7 +8,7 @@ mod pipe;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::io::Write;
-use std::process::{Child, Command, Stdio};
+use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
@@ -205,7 +205,7 @@ pub fn resolve_core(core: &str) -> String {
 
 fn spawn(core: &str) -> Result<Child, String> {
     let effective = resolve_core(core);
-    Command::new(&effective)
+    crate::proc::command(&effective)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()

@@ -144,7 +144,7 @@ fn try_connect(root: &Path) -> Result<Stream> {
 fn spawn_daemon(root: &Path) -> Result<()> {
     unset_stdio_inheritance();
     let exe = std::env::current_exe().context("current_exe")?;
-    std::process::Command::new(exe)
+    crate::proc::command(exe)
         .arg("daemon")
         .arg(root)
         .stdin(std::process::Stdio::null())

@@ -18,6 +18,7 @@ pub mod i18n;
 pub mod join;
 pub mod lockstep;
 pub mod mcp;
+pub mod proc;
 pub mod report;
 pub mod scan;
 pub mod score;
