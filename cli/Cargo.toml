@@ -2,7 +2,7 @@
 # crates.io name `ce` is squatted (2021, no bin); ripgrep pattern instead:
 # package `codeeraser`, binary `ce` (name-check 2026-08-07, cc-memory decision)
 name = "codeeraser"
-version = "0.7.2"
+version = "0.7.3"
 edition = "2024"
 description = "CodeEraser — erase LLM-induced code & document entropy"
 license = "Apache-2.0"

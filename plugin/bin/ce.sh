@@ -1,14 +1,14 @@
 #!/bin/sh
 # CodeEraser plugin starter (ADR-007 unique distribution path). The
 # plugin repo ships only this script; the real `ce` binary resolves in
-# order: (1) a copy in CLAUDE_PLUGIN_DATA whose SHA256 matches the pin
-# in bin/manifest.env, (2) a fresh download verified against that pin
-# and placed atomically, (3) `ce` on PATH (air-gapped preview stance —
-# also the only path while pins are empty). A pin mismatch REFUSES the
-# artifact loudly and never executes or keeps it; it does not silently
-# fall through to PATH, so a tampered download cannot hide behind a
-# locally installed binary. Hooks stay fail-open (R3): "no binary
-# anywhere" reports one line and exits 0 instead of blocking a session.
+# order: (1) a copy in CLAUDE_PLUGIN_DATA *or on PATH* whose SHA256
+# matches the pin in bin/manifest.env — since v0.7.3 the installer
+# leaves one on PATH and a byte-identical fetch is pure waste; (2) a
+# fresh download verified against that pin, placed atomically; (3) an
+# UNVERIFIED PATH `ce` (air-gapped stance, also the only path while
+# pins are empty, and it says so out loud). A pin mismatch REFUSES the
+# artifact loudly and keeps nothing, so a tampered one cannot hide
+# behind a local copy. Fail-open (R3): no binary => one line, exit 0.
 #
 # EVERY human line here goes to STDERR. The plan's hook protocol is
 # `exit 2 + stderr` OR `exit 0 + {"hookSpecificOutput":…}`, and this
@@ -96,6 +96,12 @@ ensure_core() {
     fi
     if [ -z "$corepin" ] || [ -z "$data" ]; then return 0; fi
     coretgt="$data/ce-core$ext"
+    # Same rule as ce below: a PATH ce-core that MATCHES the pin is the
+    # artifact the download would place (the installer leaves one), so
+    # it BECOMES the bind target. Unmatched PATH cores stay refused —
+    # e2e state 8 is the standing guard on that.
+    pathcore=$(command -v ce-core 2>/dev/null || true)
+    [ -n "$pathcore" ] && [ "$(sha_of "$pathcore" 2>/dev/null)" = "$corepin" ] && coretgt="$pathcore"
     # A pin EXISTS for this platform, so BIND ce to the pinned path
     # instead of leaving its resolver free. Removing a mismatching
     # core (below) or failing to fetch one used to leave the resolver
@@ -159,10 +165,14 @@ if ! have_hasher; then
 fi
 
 target="$data/ce-$CE_MANIFEST_VERSION-$key$ext"
-if [ -x "$target" ] && [ "$(sha_of "$target")" = "$pin" ]; then
+# One rule, two places: whichever pin-identical copy already exists
+# answers — the installer leaves one on PATH, and the same bytes are
+# not worth fetching twice. Unmatched ones still face verification.
+for cand in "$target" "$(command -v ce 2>/dev/null || true)"; do
+    [ -n "$cand" ] && [ -x "$cand" ] && [ "$(sha_of "$cand" 2>/dev/null)" = "$pin" ] || continue
     ensure_core
-    exec "$target" "$@"
-fi
+    exec "$cand" "$@"
+done
 
 if [ -n "${CE_AIRGAPPED:-}" ]; then
     # Manual-placement mode: never download; a stale/absent copy just

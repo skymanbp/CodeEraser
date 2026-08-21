@@ -18,13 +18,12 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.7.2 released — the size advisory closes its loop.**
-Installers, [crates.io](https://crates.io/crates/codeeraser),
-the npm pointer and [codeeraser.dev](https://codeeraser.dev) are live
-(0.7.1/0.7.2 are installer patches: elevation is asked up front, and
-the Windows installer now puts the CLI on the machine PATH — the
-installer is the GUI+CLI superset, and the plugin reuses its
-binaries).
+🚀 **v0.7.3 released — the size advisory closes its loop.**
+Installers, [crates.io](https://crates.io/crates/codeeraser), the npm
+pointer and [codeeraser.dev](https://codeeraser.dev) are live (0.7.1
+through 0.7.3 are installer patches: elevation up front, the CLI put on
+the machine PATH without disturbing the registry value it edits, and a
+plugin that really reuses a pin-identical binary instead of fetching).
 This cycle: the split advisory prices a seam's FULL cost — severed
 references, cut clone blocks and crossing co-change pairs, each at a
 corpus-calibrated price — the graded zone's position→tier map is
@@ -54,9 +53,10 @@ install dir on the machine PATH — `ce` works from any terminal
 
 **Claude Code plugin (the guard layer).** `/plugin marketplace add
 skymanbp/CodeEraser`, then `/plugin install codeeraser`. The starter
-resolves both binaries in three steps — verified local copy,
-SHA256-pinned download, PATH — so with the installer present it
-reuses those binaries instead of downloading a second copy.
+resolves both binaries by pin: whichever copy — local or **on PATH** —
+already matches the SHA256 answers first (v0.7.3; the installer leaves
+one there, and a byte-identical fetch is waste), then a pinned
+download, then an unverified PATH binary that says so out loud.
 
 **CLI only.** Download `ce-<ver>-<platform>` and
 `ce-core-<ver>-<platform>` (x86_64-windows / x86_64-linux /

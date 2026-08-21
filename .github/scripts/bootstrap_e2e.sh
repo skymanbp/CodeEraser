@@ -16,6 +16,10 @@
 #                  REMOVED, not left behind for ce's resolver
 #   8 core bind  : with a pin in force ce is BOUND to the pinned core
 #                  path, never free to fall through to a PATH ce-core
+#   9 path reuse : a PATH ce that MATCHES the pin answers with nothing
+#                  downloaded and no unverified notice (v0.7.3)
+#  10 core reuse : state 8's mirror — a PATH ce-core that MATCHES the
+#                  pin is bound instead of fetched
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
 
@@ -139,10 +143,15 @@ case "$err" in *"REFUSING downloaded ce-core"*) ;; *) fail 5 "core refusal not l
 # must be the decision JSON alone; a human line printed there made the
 # whole stream unparseable and the project's own readers (which parse
 # the ENTIRE stdout) dropped the decision silently ------------------
+# The pin here is deliberately BOGUS. From v0.7.3 a PATH ce whose sha
+# matches the pin is reused instead of downloaded (state 9), and this
+# state's PATH copy IS the pinned artifact byte-for-byte — with the
+# real pin the starter would take the verified leg and this state
+# would stop exercising the failed-download degrade it is named for.
 cat >"$work/manifest6.env" <<EOF
 CE_MANIFEST_VERSION="0.0.0-test"
 CE_BASE_URL="file:///nonexistent"
-CE_SHA256_${envkey}_CE="$pin"
+CE_SHA256_${envkey}_CE="2222222222222222222222222222222222222222222222222222222222222222"
 EOF
 out=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest6.env" \
       CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
@@ -185,4 +194,49 @@ case "$out" in
     *) fail 8 "ce resolved a core other than the pinned path: $out" ;;
 esac
 
-echo "bootstrap_e2e: PASS (9 states, key=$key)"
+# --- state 9: a PATH ce whose sha MATCHES the pin is REUSED, never
+# re-downloaded (v0.7.3). The installer puts ce on the machine PATH,
+# so fetching a byte-identical second copy is pure waste. The proof is
+# negative on BOTH sides, because stdout alone cannot tell this leg
+# from the unverified fallback: nothing lands in the data dir, and the
+# "pin unverified" notice run_path_ce always prints never appears.
+mkdir -p "$work/data9"
+: >"$work/out9"
+err=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest1.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data9" sh "$STARTER" --version 2>&1 >"$work/out9") || true
+out=$(cat "$work/out9")
+[ "$out" = "$want" ] || fail 9 "verified PATH ce answered '$out' not '$want'"
+[ -z "$err" ] || fail 9 "verified leg was not silent (that is the unverified one): $err"
+placed=$(ls "$work/data9" | wc -l)
+[ "$placed" -eq 0 ] || fail 9 "a second copy was fetched despite a pin-identical PATH ce"
+
+# --- state 10: the mirror of state 8. There an UNVERIFIED PATH
+# ce-core had to be refused; here a PATH ce-core that MATCHES the pin
+# is accepted and bound, so the installer's core is reused too.
+# Airgapped, and the data dir holds no core, so only the PATH one can
+# answer — `ce doctor` names the core it actually reached.
+mkdir -p "$work/pathcore10" "$work/data10"
+cp "$CE_BIN" "$work/pathcore10/ce-core$ext"
+core10=$(sha_of "$work/pathcore10/ce-core$ext")
+cp "$CE_BIN" "$work/data10/$payload"
+cat >"$work/manifest10.env" <<EOF
+CE_MANIFEST_VERSION="0.0.0-test"
+CE_BASE_URL="file:///nonexistent"
+CE_SHA256_${envkey}_CE="$pin"
+CE_SHA256_${envkey}_CECORE="$core10"
+EOF
+out=$(PATH="$work/pathcore10:$PATH" CE_MANIFEST_FILE="$work/manifest10.env" \
+      CE_AIRGAPPED=1 CLAUDE_PLUGIN_DATA="$work/data10" \
+      sh "$STARTER" doctor . 2>&1) || true
+# Read exactly like state 8, inverted: when the bind target is the
+# absent data-dir core, doctor says "cannot start <data>/ce-core".
+# Its ABSENCE is the proof the PATH core was bound instead — the
+# stand-in core is ce itself, so a successful spawn prints ce's own
+# output and never names a path.
+case "$out" in
+    *"data10/ce-core"*) fail 10 "pin-identical PATH ce-core was not reused: $out" ;;
+esac
+[ ! -f "$work/data10/ce-core$ext" ] || fail 10 "a core was placed despite a verified PATH one"
+
+echo "bootstrap_e2e: PASS (11 states, key=$key)"

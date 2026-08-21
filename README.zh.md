@@ -14,11 +14,12 @@ LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数�
 
 ## 状态
 
-🚀 **v0.7.2 已发布——尺寸顾问收口成环。** 安装包、
+🚀 **v0.7.3 已发布——尺寸顾问收口成环。** 安装包、
 [crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
-[codeeraser.dev](https://codeeraser.dev) 官网均已上线（0.7.1/0.7.2
-为安装器补丁：开门即提权，且 Windows 安装器把 CLI 写入机器
-PATH——安装包升格为 GUI+CLI 超集，插件直接复用其二进制）。本周期：
+[codeeraser.dev](https://codeeraser.dev) 官网均已上线（0.7.1–0.7.3
+为安装器补丁：开门即提权；Windows 安装器把 CLI 写入机器 PATH 且不
+动它所编辑的注册表值类型；插件如今真的复用钉扎命中的二进制而非另
+取一份）。本周期：
 拆分顾问按**全额**计缝价——被切断的引用、被切穿的克隆块、跨缝的
 共变对，逐项按外语料标定的价目入账；渐进区的位置→档位映射接线于
 显式 `[guard] zone_tiers` 之后（默认仍只记台账：没有误报记录就
@@ -43,9 +44,11 @@ PATH——安装包升格为 GUI+CLI 超集，插件直接复用其二进制）�
 步骤（AppImage/dmg 用户自行把应用目录加 PATH）。
 
 **Claude Code 插件（守卫层）。** `/plugin marketplace add
-skymanbp/CodeEraser`，再 `/plugin install codeeraser`。引导脚本按三
-步解析二进制——本地已校验副本 → SHA256 钉扎下载 → PATH——装过安
-装包的机器直接复用其二进制，不再二次下载。
+skymanbp/CodeEraser`，再 `/plugin install codeeraser`。引导脚本按钉扎
+解析二进制：**本地副本或 PATH 上任一 SHA256 命中钉扎值的**先答——安
+装包正好在 PATH 留了一份，字节相同的二次下载纯属浪费——再是钉扎下
+载，最后才是会自报未校验的 PATH 兜底（v0.7.3 起；校验门槛未降，未
+命中的 PATH 二进制照走下载校验）。
 
 **只要 CLI。** 从同一 release 下载 `ce-<版本>-<平台>`（三平台：
 x86_64-windows / x86_64-linux / aarch64-macos）改名 `ce` 放 PATH，
