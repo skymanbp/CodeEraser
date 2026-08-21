@@ -14,7 +14,7 @@ import Data.Version (showVersion)
 import qualified Paths_ce_core as Meta
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
-import System.IO (BufferMode (BlockBuffering, LineBuffering), Handle, hSetBinaryMode, hSetBuffering, stderr, stdin, stdout)
+import System.IO (BufferMode (LineBuffering), Handle, hSetBinaryMode, hSetBuffering, stderr, stdin, stdout)
 
 -- one source — the .cabal version, via the cabal-generated module
 -- (a second literal here is how a v0.2.0 asset self-reported 0.0.1)
