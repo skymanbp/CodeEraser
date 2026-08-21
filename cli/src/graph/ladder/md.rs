@@ -9,9 +9,16 @@
 //! (ResolvedSection { slug: None }). R3 reference links substitute
 //! the in-file definition (CommonMark: labels case-fold and the
 //! FIRST definition wins — spec, not a guess) and rerun the chain
-//! relabeled rung 3; an unused definition is External — the design's
-//! ledger-visible exclusion, because a definition that renders
-//! nothing must not keep its target alive. R4 a bare fragment is an
+//! relabeled rung 3; an unused definition is deliberately EXCLUDED
+//! from liveness — a definition that renders nothing must not keep
+//! its target alive (user decision D3) — and rides the External
+//! outcome for ledger visibility even when its target is in-corpus
+//! and resolvable: a borrowed category, named here so it cannot
+//! read as a resolution fact (batch-7 slice 16; the edge-mark
+//! migration that would let the core own this rule is dispositioned
+//! post-1.0 — it needs an outcome→edge-kind channel that does not
+//! exist, for a rule that can only demote reachable to
+//! unref_private). R4 a bare fragment is an
 //! in-file section claim taken AS WRITTEN, never validated: raw-HTML
 //! anchors (`<h3 name=…>`) are legal GitHub targets we do not model
 //! (the audited FAQ.md #complete row) — validating against ATX-only

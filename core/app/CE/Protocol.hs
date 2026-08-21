@@ -27,6 +27,16 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.20.0 = the full-evidence minor (M9 batch 7, slices 12/13/15):
+-- asset-kind edge rows now TRAVEL and the core drops them from
+-- liveness itself (CE.Graph.Cost.assetKind, the same comprehension
+-- as the rung filter — Rust pre-dropped the rows the rule was
+-- about); the cochange table ships whole (the client rank cut at 20
+-- ran before the judge and before the relevance filter) at the
+-- CONFIGURED floor; clone-pair language identity is the grammar,
+-- not the extension string. Request/reply shapes unchanged — the
+-- pact is that a client sending asset rows requires a core that
+-- ignores them.
 -- 2.19.0 = the diversity-floor minor (M9 batch 7, slice 1):
 -- verdict.request gains the additive dedupDistinct rows (pre-filter
 -- per-block distinct counts, riding beside the 2.6.0 pair) and the
@@ -121,7 +131,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.19.0"
+proto = "2.20.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

@@ -233,5 +233,16 @@ entry_globs = [
 # clone_t3 and docdup are each THE public face of their family —
 # two four-line invocations of the shared throat, same shape by
 # construction. Measured after cargo fmt.
+# 177 -> 180 (M9 batch 7, the Cost-module family face): +3. Adding
+# granFile and assetKind (slices 4/13 — two rules repatriated FROM
+# unnamed Rust branches) grew CE.Graph.Cost into winnowing range of
+# its three sibling Cost modules: under token normalization every
+# "name :: Integer / name = N / doc comment" stanza is the same
+# run, and the per-family Cost-constants module IS the ADR-008
+# convention (one ablation home per family — CE.Graph.Cost's own
+# header calls it the convention's source). The three blocks are
+# whole-module family-shape pairs (Docdup/Structure/Verdict Cost),
+# not copied logic; folding the four modules into one would trade a
+# priced face for a real coupling. Measured after fourmolu/fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 177
+budget = 180

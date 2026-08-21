@@ -10,7 +10,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile) where
+module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -64,3 +64,13 @@ sccFloor = 2
 -- ablation can price.
 granFile :: Integer
 granFile = 0
+
+-- | The edge kind that NEVER counts as a reference (batch-7 slice
+-- 13, design 4 Markdown row: an image link renders bytes, it does
+-- not make its target reachable code). The kind vocabulary is the
+-- wire edge row [src, dst, kind, rung]: 0 import / 1 doc-link /
+-- 2 doc-ref / 3 asset (cli/src/graph/wire.rs EDGE_*). Rust used to
+-- drop these rows before the wire, where no ablation and no cut
+-- table could see the rule.
+assetKind :: Integer
+assetKind = 3

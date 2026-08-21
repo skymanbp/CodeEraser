@@ -121,18 +121,20 @@ pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     })
 }
 
-/// Cached edges → wire rows, asset edges excluded by kind (design §4
-/// Markdown row). Both endpoints resolve through the dense id map
-/// with a NAMED refusal: `ids[..]` on a DB-sourced path panicked on
-/// index skew, and a skewed cache row is an error to report, never a
-/// crash (the deadcode/lockstep wire-index class, DB-fact form).
+/// Cached edges → wire rows — EVERY kind travels since 2.20.0
+/// (batch-7 slice 13): the asset exclusion is the core's liveness
+/// rule now (CE.Graph.Cost.assetKind), applied where the cut table
+/// and the ablation battery can see it; pre-dropping the rows here
+/// hid the rule from both. Both endpoints resolve through the dense
+/// id map with a NAMED refusal: `ids[..]` on a DB-sourced path
+/// panicked on index skew, and a skewed cache row is an error to
+/// report, never a crash (the deadcode/lockstep wire-index class).
 pub fn edge_wire(
     edges: &[GraphEdge],
     ids: &BTreeMap<(&str, &str), usize>,
 ) -> Result<BTreeSet<[i64; 4]>> {
     edges
         .iter()
-        .filter(|e| e.kind != super::wire::EDGE_ASSET)
         .map(|e| {
             let of = |path: &str, unit: &str| {
                 ids.get(&(path, unit))

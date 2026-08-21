@@ -30,7 +30,7 @@ const TREE: &[(&str, &str)] = &[
     // undefined use, and two definitions the masking must erase
     (
         "docs/index.md",
-        "# Index\n\nSee [g][spec], [g2][SPEC] and [missing][ghost].\n\n[spec]: ../guide.md\n[dead]: ./unref.md\n\n```text\n[fence]: ../guide.md\n```\n\n<!-- [cmt]: ../guide.md -->\n",
+        "# Index\n\nSee [g][spec], [g2][SPEC] and [missing][ghost].\n\n[spec]: ../guide.md\n[dead]: ./unref.md\n[idle]: ../src/app.py\n\n```text\n[fence]: ../guide.md\n```\n\n<!-- [cmt]: ../guide.md -->\n",
     ),
     ("src/app.py", "x = 1\n"),
     ("assets/logo.svg", "<svg/>\n"),
@@ -77,6 +77,12 @@ fn md_cases() -> Vec<Case> {
         (m, "ref_link", ix, "cmt", no(Reason::OutOfScope)),
         (m, "ref_def", ix, "../guide.md", ok(gd, 3)),
         (m, "ref_def", ix, "./unref.md", ext(5)),
+        // the VERDICT-relevant unused case (batch-7 slice 16): the
+        // target EXISTS in scope and would resolve — the deliberate
+        // exclusion is what this row pins, so deleting the unused
+        // arm cannot pass by falling through to OutOfScope like the
+        // ./unref.md row above would
+        (m, "ref_def", ix, "../src/app.py", ext(5)),
         // R1: doc→doc, doc→code (a #L fragment on a code target is a
         // view detail, dropped), a directory reference (the audited
         // fourclass row), a miss, and the site-root refusal

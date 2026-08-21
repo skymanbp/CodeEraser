@@ -15,7 +15,7 @@ module GraphProps (battery) where
 
 import CE.Graph (respond)
 import CE.Graph.Build (build, sccList)
-import CE.Graph.Cost (entryMask, minRung, sccFloor)
+import CE.Graph.Cost (assetKind, entryMask, minRung, sccFloor)
 import CE.Graph.Cycles (cycles)
 import CE.Graph.Dead (verdicts)
 import Data.Aeson (Value (..), encode, object, (.=))
@@ -32,7 +32,8 @@ battery = do
   c <- check "dead set anti-monotone in minRung (200 seeded graphs)" (allGraphs rungMono)
   d <- check "SCC lists partition the vertex set (200 seeded graphs)" (allGraphs sccPartition)
   e <- check "shuffled edge table is refused (200 seeded graphs)" (allGraphs shuffledRefused)
-  pure (a && b && c && d && e)
+  f <- check "an asset-kind edge never keeps its target alive" assetNeverAlive
+  pure (a && b && c && d && e && f)
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -54,8 +55,19 @@ deadKnobs =
   rows = [[0, 1, 0, 5], [2, 3, 0, 1], [3, 2, 0, 1]]
   base = judged minRung entryMask sccFloor
   judged r m f =
-    let b = build r 6 rows
+    let b = build r assetKind 6 rows
      in (length (verdicts b m flagses), length (cycles f b))
+
+-- | batch-7 slice 13 (2.20.0): the rows now travel and the CORE
+-- drops them — an entry linking a file ONLY through an asset-kind
+-- edge leaves it dead, and flipping the kind to import revives it
+-- (the counterfactual that proves the constant is a live lever; no
+-- test asserted the exclusion anywhere while Rust held it).
+assetNeverAlive :: Bool
+assetNeverAlive = deadWith assetKind == [1] && deadWith 0 == []
+ where
+  deadWith kind =
+    map fst (verdicts (build minRung assetKind 2 [[0, 1, kind, 1]]) entryMask [2, 0])
 
 -- | 200 seeded graphs: (n, arcs with rungs, flags per node).
 allGraphs :: ((Int, [(Int, Int, Integer)], [Integer]) -> Bool) -> Bool
@@ -85,7 +97,7 @@ rowsOf arcs = sort [[toInteger a, toInteger b, 0, r] | (a, b, r) <- arcs]
 
 deadIdx :: Integer -> Integer -> Int -> [(Int, Int, Integer)] -> [Integer] -> IS.IntSet
 deadIdx r m n arcs flagses =
-  IS.fromList (map fst (verdicts (build r n (rowsOf arcs)) m flagses))
+  IS.fromList (map fst (verdicts (build r assetKind n (rowsOf arcs)) m flagses))
 
 -- | More entry bits => more roots => the dead set can only shrink.
 maskMono :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
@@ -104,7 +116,7 @@ sccPartition :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
 sccPartition (n, arcs, _) =
   sort (concat sccs) == [0 .. n - 1] && all mutual sccs
  where
-  sccs = sccList (build 5 n (rowsOf arcs))
+  sccs = sccList (build 5 assetKind n (rowsOf arcs))
   plain = [(a, b) | (a, b, _) <- arcs]
   mutual ms = and [IS.member j (reachB plain [i]) | i <- ms, j <- ms]
 

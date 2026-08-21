@@ -78,13 +78,26 @@ pub fn print_console(r: &Report, days: u32) {
             &[&r.surviving, &added, &churned],
         )
     );
-    for (a, b, n) in &r.cochange {
+    // display cut only — the report struct and the wire carry the
+    // full table (batch-7 slice 12); the remainder is counted out
+    // loud, never silently absent
+    for (a, b, n) in r.cochange.iter().take(20) {
         println!(
             "{}",
             line(
                 "co-change x{}: {} <-> {}",
                 "共变 x{}：{} <-> {}",
                 &[n, a, b]
+            )
+        );
+    }
+    if r.cochange.len() > 20 {
+        println!(
+            "{}",
+            line(
+                "co-change: {} more pairs below the display cut",
+                "共变：另有 {} 对低于显示截断",
+                &[&(r.cochange.len() - 20)]
             )
         );
     }

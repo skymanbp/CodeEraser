@@ -15,7 +15,7 @@
 module CE.Graph (respond) where
 
 import CE.Graph.Build (Built (..), build)
-import CE.Graph.Cost (edgeCap, entryMask, granFile, minRung, nodeCap, sccFloor)
+import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
@@ -149,7 +149,7 @@ result proto req =
       , "degraded" .= False
       ]
  where
-  b = build minRung (length (reqNodes req)) (reqEdges req)
+  b = build minRung assetKind (length (reqNodes req)) (reqEdges req)
   flagses = [f | [_, _, f] <- reqNodes req]
   fileIdx = IS.fromList [i | (i, [_, k, _]) <- zip [0 ..] (reqNodes req), k == granFile]
   (deadRows, reportedRows) =

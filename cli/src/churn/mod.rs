@@ -74,11 +74,21 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
             }
         }
     }
+    // the wire floor follows the CONFIGURED knob when one is set
+    // (batch-7 slice 12: the hardcoded >= 2 silently withheld
+    // count-1 pairs from a core configured to judge them); default 2
+    // = the core's cochangeFloor default, so the default table is
+    // byte-identical
+    let floor = crate::config::Config::load(root)
+        .ok()
+        .and_then(|c| c.score.cochange_floor)
+        .map(|f| f as usize)
+        .unwrap_or(2);
     Ok(Report {
         commits: shas.len(),
         units: sorted_rows(ledger),
         surviving: survival::survival(root, days, &touched)?,
-        cochange: top_pairs(pair_counts),
+        cochange: top_pairs(pair_counts, floor),
         skipped_large,
     })
 }
@@ -206,14 +216,23 @@ fn count_cochange(
     }
 }
 
-fn top_pairs(counts: HashMap<(String, String), usize>) -> Vec<(String, String, usize)> {
+/// Every pair at or over the floor, count-descending — NO rank cut
+/// (batch-7 slice 12: `truncate(20)` ran before the judge and before
+/// the relevance filter, so 75% of the judge's evidence budget went
+/// to rows the score path discarded anyway and a real hotspot could
+/// rank 21st; the honest guard is the core's verdictRowCap, which
+/// degrades whole rather than dropping rows). The CONSOLE keeps its
+/// own display cut in report.rs — that one is rendering.
+fn top_pairs(
+    counts: HashMap<(String, String), usize>,
+    floor: usize,
+) -> Vec<(String, String, usize)> {
     let mut pairs: Vec<(String, String, usize)> = counts
         .into_iter()
-        .filter(|(_, n)| *n >= 2)
+        .filter(|(_, n)| *n >= floor)
         .map(|((a, b), n)| (a, b, n))
         .collect();
     pairs.sort_by(|x, y| y.2.cmp(&x.2).then_with(|| (&x.0, &x.1).cmp(&(&y.0, &y.1))));
-    pairs.truncate(20);
     pairs
 }
 

@@ -12,6 +12,13 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.20.0 = the full-evidence minor (M9 batch 7, slices 12/13/15):
+/// asset-kind edge rows travel and the core drops them from
+/// liveness (CE.Graph.Cost.assetKind); the cochange table ships
+/// whole at the configured floor (no client rank cut); clone-pair
+/// language identity is the grammar, not the extension string.
+/// Shapes unchanged — sending asset rows requires a core that
+/// ignores them.
 /// 2.19.0 = the diversity-floor minor (M9 batch 7, slice 1):
 /// verdict.request gains additive dedupDistinct rows + the optional
 /// dedupMinDistinct override; the core re-derives the admitted count
@@ -85,7 +92,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.19.0";
+pub const PROTO: &str = "2.20.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

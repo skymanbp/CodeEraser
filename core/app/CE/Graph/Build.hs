@@ -25,15 +25,19 @@ data Built = Built
   }
 
 -- | minRung is a parameter (Cost.minRung at the boundary) so the
--- dead-knob test can move it.
-build :: Integer -> Int -> [[Integer]] -> Built
-build minR n rows = Built n (S.size arcs) arcs g
+-- dead-knob test can move it; the asset-kind exclusion (batch-7
+-- slice 13) lives in the SAME comprehension as the rung filter —
+-- the kind column always crossed and was discarded here while Rust
+-- pre-dropped the rows the rule was about.
+build :: Integer -> Integer -> Int -> [[Integer]] -> Built
+build minR asset n rows = Built n (S.size arcs) arcs g
  where
   arcs =
     S.fromList
       [ (fromInteger s, fromInteger d)
-      | [s, d, _kind, rung] <- rows
+      | [s, d, kind, rung] <- rows
       , rung <= minR
+      , kind /= asset
       ]
   g = G.buildG (0, n - 1) (S.toList arcs)
 

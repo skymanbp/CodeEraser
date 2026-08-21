@@ -126,7 +126,16 @@ fn admitted(idx: &Index) -> Result<Vec<Unit>> {
         .map(|f| {
             let key = (f.path.clone(), f.key.clone(), f.nth);
             let (start_line, end_line) = spans[&key];
-            let lang = f.path.rsplit('.').next().unwrap_or("").to_string();
+            // the GRAMMAR, not the extension string (batch-7 slice
+            // 15): raw extensions split one language into buckets —
+            // a byte-identical copy from a.ts into b.mts scored
+            // TED 0 and was dropped by the cross-language gate
+            // before the judge ever saw it. Units only exist for
+            // indexed (judged) files, so from_path resolves; the
+            // raw-extension fallback keeps totality honest.
+            let lang = crate::scan::lang::Lang::from_path(std::path::Path::new(&f.path))
+                .map(|l| l.name().to_string())
+                .unwrap_or_else(|| f.path.rsplit('.').next().unwrap_or("").to_string());
             Unit {
                 path: f.path,
                 key: f.key,
