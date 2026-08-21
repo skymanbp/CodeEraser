@@ -142,12 +142,12 @@ jobs:
       # (exit 1 on fail-level findings), its own clone ratchet
       # (R12: blocks must not exceed the ce.toml [dedup] budget), the
       # ADR-006 baseline gate WITH its floor leg live (M5-close audit
-      # D5: --fail-under 800 = collapse floor, decided not derived.
-      # Derived against the pre-v0.6 866-872 band (66‰ headroom); the
-      # v0.6 axis-0 migration moved the band to ~806-813 and the floor
-      # was DELIBERATELY left at 800 — real headroom is now ~6-13‰,
-      # which is the point: the floor bites on collapse, not drift.
-      # (Stale-margin fix, audit 2026-08-21.) Also the deadcode zero-dead
+      # D5: the floor is a collapse floor, decided not derived. 800
+      # held ~6-13‰ of headroom over the v0.6-era 806-813 band; the
+      # proto-2.17.0 density scoring (M9 batch 6) re-priced the self
+      # score to 953, and the floor re-anchors at 950 to keep the
+      # SAME bite — it fires on collapse, not drift.
+      # Also the deadcode zero-dead
       # gate and the docdup zero-report gate (audit D6/D9: the
       # "全处置" acceptance rows were discipline-only before), and the
       # erase zero-row gate (erase.md acceptance: this repository
@@ -159,7 +159,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan .. --core "$CORE_BIN"
           cargo run --locked -- dedup .. --check --core "$CORE_BIN"
-          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 800
+          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 950
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check

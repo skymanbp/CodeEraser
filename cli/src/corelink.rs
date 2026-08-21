@@ -12,6 +12,13 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.17.0 = the density-scoring minor (M9 batch 6): verdict/1 axes
+/// rows become bounded per-axis charges — floor(scale·v/(v+n)) over
+/// each axis's violation mass and opportunity count — and the score
+/// their weighted mean under the violCost dial (neutral at 10); the
+/// zone curve turns C¹ linear past H. Row shapes unchanged
+/// (values-only migration, the 2.14.0 precedent): two real repos
+/// field-measured at 0/1000 under the old mass-sum clamp.
 /// 2.16.0 = the erase minor (M9 batch 3, plan v2.8 ②): the erase/1
 /// family — the deterministic eraser's safety predicate. Dense
 /// [class, w, x, y, z] fact rows in, [eraseable, reason] verdicts
@@ -64,7 +71,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.16.0";
+pub const PROTO: &str = "2.17.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

@@ -27,6 +27,14 @@ import qualified Data.ByteString.Lazy as BL
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.17.0 = the density-scoring minor (M9 batch 6): verdict/1 axes
+-- rows become bounded per-axis CHARGES — floor(scale·v/(v+n)) over
+-- each axis's violation mass and opportunity count — and the score
+-- their weighted mean under the violCost dial (neutral at 10); the
+-- zone curve turns C¹ linear past H. Row SHAPES are unchanged
+-- (values-only migration, the 2.14.0 axis-0 precedent): two real
+-- repositories field-measured at 0/1000 because raw mass summed
+-- onto the bounded scale saturated the clamp.
 -- 2.16.0 = the erase minor (M9 batch 3, plan v2.8 ②): the erase/1
 -- family — the deterministic eraser's safety predicate. Dense
 -- [class, w, x, y, z] fact rows in, [eraseable, reason] verdicts
@@ -94,7 +102,7 @@ import qualified Data.ByteString.Lazy as BL
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.16.0"
+proto = "2.17.0"
 
 -- | Checked before any JSON parse, so a hostile oversized line is
 -- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):

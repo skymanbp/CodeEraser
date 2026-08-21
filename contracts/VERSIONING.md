@@ -149,6 +149,16 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.17.0**（M9 批 6 密度评分，2026-08-21）：`verdict/1` **纯值迁移**
+> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界
+> 轴费** `floor(scale·v/(v+n))`（v=轴违规质量、n=轴机会数：尺寸/克隆/
+> 文档重复按文件数、复杂度按函数数、死码与循环按图节点数、churn 按
+> 窗口内实体数；n=0 零费=诚实缺席），score=各轴费在 violCost 表盘下的
+> 加权均值（`violCostNeutral=10` 时恰为加权均值，结构性不可饱和；
+> 上调 violCost 属显式选择）。区间罚曲线过硬线 H 改 **C¹ 线性延伸**
+> （H 处斜率相接，仍单调恒收费，但平方不出契约域 (S,H]）。动因=
+> 批 6 实战：两真实仓库在旧「裸质量线性入有界分再钳 0」聚合下齐测
+> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。
 > **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族
 > `erase/1` —— 确定性两段式擦除器的**安全谓词**（契约册
 > docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。
@@ -186,7 +196,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.16.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.17.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
@@ -303,5 +313,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `cli/rust-toolchain.toml` |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.16.0 | §1 所列两处常量 |
+| 协议 | 2.17.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

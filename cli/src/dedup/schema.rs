@@ -23,7 +23,9 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// graph_rev in the key. v8: edges.via_reexport (the §4 R5
 /// amendment's mark). ALTERs fold into CREATE — the wipe model
 /// has no migration path to alter along.
-const SCHEMA_VERSION: i64 = 9; // 9: trend rows carry their measuring toolchain
+/// v10: density scoring (proto 2.17.0) re-prices every cached trend
+/// score — a mixed-regime trajectory would fabricate a slope.
+const SCHEMA_VERSION: i64 = 10; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS trend;

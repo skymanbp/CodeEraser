@@ -60,6 +60,7 @@ module CE.Verdict.Cost
   , cocCeil
   , deadIndegCeil
   , violCost
+  , violCostNeutral
   , defaultWeight
   , scoreScale
   , verdictNodeCap
@@ -112,9 +113,11 @@ sizeHard = 750
 
 -- | P_max: the axis-0 penalty of a file AT the hard line, in the
 -- same violation units the other axes count in — one hard-line
--- file weighs like ten old binary violations. The curve keeps the
--- same quadratic past H (monotone, no kink), so P_max is the
--- at-the-line value, not a cap.
+-- file weighs like ten old binary violations. Past H the curve
+-- continues LINEARLY at the slope it reached (C¹, monotone, no
+-- kink — Soft.zonePenalty): P_max is the at-the-line value, not a
+-- cap, but the quadratic never leaves its contracted (S,H] domain
+-- (the M9 batch-6 saturation lesson).
 sizePMax :: Integer
 sizePMax = 10
 
@@ -146,13 +149,24 @@ cocCeil = 15
 deadIndegCeil :: Integer
 deadIndegCeil = 0
 
--- | Per-mille cost of one weighted violation in the score fold:
--- score = 1000 - sum(w_i * p_i * violCost) / wTotal, floored at 0.
--- wTotal is DERIVED from the effective weights, never a literal
--- (the destFloor convention — a hand-typed total is how a weight
--- silently dies).
+-- | The global strictness dial in the score fold:
+-- score = scale - sum(w_i * charge_i * violCost) / (violCostNeutral
+-- * wTotal), floored at 0. charge_i is the axis's bounded per-mille
+-- density (Score.charge), so at the neutral default the score is
+-- the plain weighted mean of the axis charges and can never
+-- saturate; a repo declaring viol_cost above neutral asks for
+-- harsher scores by choice. wTotal is DERIVED from the effective
+-- weights, never a literal (the destFloor convention — a hand-typed
+-- total is how a weight silently dies).
 violCost :: Integer
 violCost = 10
+
+-- | The value of violCost at which the dial is a no-op — the fixed
+-- denominator that makes the default score exactly the weighted
+-- mean of the axis charges. A structural constant, deliberately NOT
+-- a knob: two dials on one ratio is one dial and a trap.
+violCostNeutral :: Integer
+violCostNeutral = 10
 
 -- | Weight of an axis the request's weights table does not name.
 -- Equal weights are the decided opening stance (decision ⑦); the

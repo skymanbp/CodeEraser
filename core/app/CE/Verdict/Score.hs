@@ -22,6 +22,7 @@ import CE.Docdup.Cost (jaccardDen, jaccardNum)
 import CE.Graph.Cost (sccFloor)
 import qualified CE.Verdict.Cost as Cost
 import CE.Verdict.Soft (zonePenalty)
+import Data.Ratio ((%))
 
 -- | The validated fact tables (row shapes enforced by CE.Verdict's
 -- boundary contract before anything reaches here).
@@ -76,37 +77,59 @@ scoreBound =
     , sScoreScale = Cost.scoreScale
     }
 
--- | Violation count per axis — 0 size / 1 complexity / 2 clone /
--- 3 docdup / 4 deadcode / 5 churn / 6 graph_cycle (decision ⑦; the
--- separate axisCodes constant was a dead export, M5-close review
--- LOW). Every axis is one NAMED predicate function owning exactly
--- one knob, so the per-axis perturbation battery has a lever per row
--- (the M5-close warn repayment: seven guarded comprehensions in one
--- body read as CC 17; the table now carries names, the predicates
--- carry the decisions).
+-- | Per-axis CHARGE in per-mille of the scale — 0 size / 1
+-- complexity / 2 clone / 3 docdup / 4 deadcode / 5 churn /
+-- 6 graph_cycle (decision ⑦). Each axis pairs a violation MASS with
+-- its OPPORTUNITY count and maps the odds through v/(v+n) — bounded
+-- below the scale, strictly monotone in v (two repos with different
+-- mass always differ before the floor), scale-free across repo
+-- sizes, exact Rational throughout. The M9 batch-6 field test is
+-- why: raw mass summed onto the bounded scale zeroed BOTH real
+-- repositories measured (10176‰ and 4325‰ of size mass alike), the
+-- exact dead-field saturation this project was founded against.
+-- Every axis is still one NAMED predicate owning exactly one knob,
+-- so the per-axis perturbation battery has a lever per row.
 penalties :: ScoreKnobs -> Maybe Integer -> Facts -> [(Integer, Integer)]
 penalties k soft f =
-  [ (0, sizeZone k soft f)
-  , (1, cocOver k f)
-  , (2, cloneHits k f)
-  , (3, dupHits k f)
-  , (4, deadFiles k f)
-  , (5, churnHeavy k f)
-  , (6, cycleMembers k f)
+  [ (code, charge k v n)
+  | (code, v, n) <-
+      [ (0, sizeMass k soft f, files)
+      , (1, cnt (cocOver k f), functions)
+      , (2, cnt (cloneHits k f), files)
+      , (3, cnt (dupHits k f), files)
+      , (4, cnt (deadFiles k f), nodes)
+      , (5, cnt (churnHeavy k f), churned)
+      , (6, cnt (cycleMembers k f), nodes)
+      ]
   ]
+ where
+  cnt = fromInteger :: Integer -> Rational
+  files = count [() | [_, 0, _] <- fCont f]
+  functions = count [() | [_, 1, _] <- fCont f]
+  nodes = toInteger (length (fPos f))
+  churned = toInteger (length (fChurn f))
+
+-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means
+-- no opportunity table (churn without --days) — no evidence charges
+-- nothing, the honest-absence stance.
+charge :: ScoreKnobs -> Rational -> Integer -> Integer
+charge k v n
+  | n <= 0 || v <= 0 = 0
+  | otherwise = floor ((sScoreScale k % 1) * v / (v + n % 1))
 
 count :: [()] -> Integer
 count = toInteger . length
 
--- | Axis 0 under the plan-v2.6 soft zone: exact-Rational convex
--- penalties summed across every metricCode-0 row, floored ONCE at
--- the axis boundary so the axes wire rows stay Integer. `soft` is
--- the baseline's committed S (Nothing = pre-v0.6 baseline, or no
+-- | Axis-0 violation mass under the plan-v2.6 soft zone: the exact-
+-- Rational zone penalties summed across every metricCode-0 row (in
+-- P_max units — one hard-line file weighs P_max old violations, so
+-- the mass shares the counting axes' scale). `soft` is the
+-- baseline's committed S (Nothing = pre-v0.6 baseline, or no
 -- derivable distribution) falling back to the sSizeCeil knob — the
 -- old binary line becomes the zone's opening edge, never a cliff.
-sizeZone :: ScoreKnobs -> Maybe Integer -> Facts -> Integer
-sizeZone k soft f =
-  floor (sum [zonePenalty s (sSizeHard k) (sSizePMax k) v | [_, 0, v] <- fCont f])
+sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational
+sizeMass k soft f =
+  sum [zonePenalty s (sSizeHard k) (sSizePMax k) v | [_, 0, v] <- fCont f]
  where
   s = maybe (sSizeCeil k) id soft
 
@@ -144,14 +167,19 @@ effWeight k weights code = case [w | [c, w] <- weights, c == code] of
 effectiveWeights :: ScoreKnobs -> [[Integer]] -> [[Integer]]
 effectiveWeights k weights = [[c, effWeight k weights c] | c <- [0 .. 6]]
 
--- | (perMille, total violation count) under the effective weights;
--- wTotal = sum of effective weights (derived); validation refuses an
--- all-zero weight table, so the divisor is never 0.
+-- | (perMille, total charge) under the effective weights; wTotal =
+-- sum of effective weights (derived); validation refuses an all-zero
+-- weight table, so the divisor is never 0. violCost is the global
+-- strictness dial: at its neutral default (Cost.violCostNeutral) the
+-- weighted mean of the bounded axis charges lands as-is and the
+-- `max 0` is unreachable (every charge < scale); a repo dialing
+-- violCost above neutral asks for harsher scores and may saturate —
+-- by explicit choice, never by construction.
 score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)
 score k weights pens = (perMille, totalViol)
  where
   weighted = [(effWeight k weights code, p) | (code, p) <- pens]
   wTotal = sum (map fst weighted)
   raw = sum [w * p * sViolCost k | (w, p) <- weighted]
-  perMille = max 0 (sScoreScale k - raw `div` wTotal)
+  perMille = max 0 (sScoreScale k - raw `div` (Cost.violCostNeutral * wTotal))
   totalViol = sum (map snd pens)

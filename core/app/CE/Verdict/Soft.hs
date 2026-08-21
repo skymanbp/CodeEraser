@@ -42,16 +42,24 @@ softLine kExp lo hi locs = case sort [x | x <- locs, x > 0] of
     spread = medianR (sort [max (x / m) (m / x) | x <- sorted])
 
 -- | p(x) for one file: 0 at or under the soft line; the convex
--- curve pMax·((x−s)/(h−s))² past it — the SAME expression past the
--- hard line too (monotone, no kink; the deny at H is the guard's
--- job, and a score that stopped charging past the wall would reward
--- growth). Degenerate h <= s falls back to the pre-v0.6 binary
--- (x > s costs pMax flat): a misdeclared hard line must not divide
--- by zero or flip the curve's sign.
+-- curve pMax·((x−s)/(h−s))² on the zone (s,h]; past the hard line
+-- the C¹ LINEAR continuation pMax·(1 + 2(x−h)/(h−s)) — the slope at
+-- h⁻ is 2·pMax/(h−s) and the linear arm keeps it exactly, so the
+-- curve is monotone with no kink and never stops charging (a score
+-- that stopped at the wall would reward growth), but no longer
+-- grows quadratically outside the contracted domain: the M9 batch-6
+-- field test measured two ordinary real repositories at 0/1000
+-- because the extrapolated square summed past ten times the whole
+-- scale (cc-memory axis 0 = 10176‰, one 4802-line file charging
+-- like 95 hard-line files). size-advisory.md §A prices only (S,H];
+-- the deny AT the wall is the guard's job. Degenerate h <= s falls
+-- back to the pre-v0.6 binary (x > s costs pMax flat): a
+-- misdeclared hard line must not divide by zero or flip the sign.
 zonePenalty :: Integer -> Integer -> Integer -> Integer -> Rational
 zonePenalty s h pMax x
   | x <= s = 0
   | h <= s = pMax % 1
-  | otherwise = (pMax % 1) * step * step
+  | x <= h = (pMax % 1) * step * step
+  | otherwise = (pMax % 1) * (1 + 2 * ((x - h) % (h - s)))
  where
   step = (x - s) % (h - s)

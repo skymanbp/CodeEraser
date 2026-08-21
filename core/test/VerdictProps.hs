@@ -32,15 +32,18 @@ check name ok = do
   putStrLn ((if ok then "ok   " else "FAIL ") <> name)
   pure ok
 
--- | The score fixture: per axis 0..6 the penalties are
--- 1,2,3,4,5,6,17, each axis with one row EXACTLY on its threshold so
--- a +1 knob probe has a boundary to flip. fPos is written
+-- | The score fixture, refit for the density scoring (M9 batch 6):
+-- per axis the (mass, opportunity) odds land the seven charges at
+-- 685/500/750/800/269/181/366‰ — pairwise distinct, every axis with
+-- one row EXACTLY on its threshold so a +1 knob probe has a boundary
+-- to flip, and every charge at least 66‰ off the weighted mean 433:
+-- a +1 weight bump moves the floored score by about
+-- (charge − mean)/29, so a charge parked within the ±29 integer-div
+-- granularity of the mean moves NOTHING (the axis-5 461-vs-486
+-- failure that forced this refit — the same mean trap the count-era
+-- fixture documented, one representation later). fPos is written
 -- node-ascending (16 = the near-dead row only the deadIndegCeil
--- probe counts). The cycle axis carries 17, not 7: with 1..7 the
--- weighted MEAN landed exactly on penalty 5, and a +1 weight at the
--- mean moves nothing — pairwise-distinct penalties alone do not
--- prevent one axis SITTING on the mean, so the fixture keeps the
--- mean off every penalty (all seven bumps verified to move).
+-- probe counts; 7 dead rows; 11 cycle members).
 facts :: Facts
 facts =
   Facts
@@ -55,17 +58,17 @@ facts =
         ]
     , fPos =
         [[16, 1, 0, 16, 1, 0]]
-          <> [[u, 0, 0, u, 1, 0] | u <- [17 .. 21]]
-          <> [[u, 1, 1, 50, 2, 1] | u <- [22 .. 38]]
+          <> [[u, 0, 0, u, 1, 0] | u <- [17 .. 23]]
+          <> [[u, 1, 1, 50, 2, 1] | u <- [24 .. 34]]
     , fChurn =
-        -- five clearly rewrite-heavy, one exactly at 50/100, one under
-        [[u, 30, 10, 0, 0] | u <- [39 .. 43]]
-          <> [[44, 20, 20, 0, 0], [45, 1, 50, 0, 0]]
-    , -- 450 lines: the graded axis 0 (v0.6 soft zone, fallback
-      -- S=300) charges floor(10·(150/450)²·…)=floor(10/9)=1 — the
-      -- old 400 rounded to ZERO under the curve and voided the
-      -- nonzero precondition
-      fCont = [[0, 0, 450], [1, 1, 20], [2, 1, 30]]
+        -- one clearly rewrite-heavy, one exactly at 50/100 (the
+        -- rewriteNum boundary), seven under
+        [[39, 30, 10, 0, 0], [40, 20, 20, 0, 0]]
+          <> [[u, 1, 50, 0, 0] | u <- [41 .. 47]]
+    , -- 510 lines: the graded axis 0 (v0.6 soft zone, fallback
+      -- S=300) masses 10·(210/450)² = 98/45 — inside the zone, and
+      -- far enough in that the charge clears the mean margin
+      fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30]]
     }
 
 battWeights :: [[Integer]]
@@ -141,16 +144,21 @@ softDerive =
     ]
 
 -- | p at the edges and past them, exactly: 0 at S, P_max at H, 2.5
--- at midzone, quadratic past H (no cap — growth past the wall keeps
--- costing), and the degenerate H<=S falls back to flat P_max
--- instead of dividing by zero.
+-- at midzone; past H the C¹ LINEAR arm (still costing — growth past
+-- the wall is never free — but no quadratic outside the contracted
+-- (S,H] domain: the batch-6 saturation lesson). 1200 = H + 450
+-- prices 10·(1+2) = 30; one step past H adds exactly the slope
+-- 2·P_max/(H−S) the quadratic reached AT H (no kink); and the
+-- degenerate H<=S falls back to flat P_max instead of dividing by
+-- zero.
 zoneCurve :: Bool
 zoneCurve =
   and
     [ zonePenalty 300 750 10 300 == 0
     , zonePenalty 300 750 10 525 == 5 % 2
     , zonePenalty 300 750 10 750 == 10
-    , zonePenalty 300 750 10 1200 == 40
+    , zonePenalty 300 750 10 1200 == 30
+    , zonePenalty 300 750 10 751 - zonePenalty 300 750 10 750 == 2 * 10 % 450
     , zonePenalty 300 300 10 400 == 10
     , zonePenalty 300 200 10 400 == 10
     ]

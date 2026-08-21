@@ -1,12 +1,12 @@
 {"proto":"2.2.0","type":"docdup.request","id":1,"sets":[[1,2,3],[2,3,4]],"pairs":[[0,1,0]]}
-{"counts":{"jaccardDups":0,"judged":1,"pairs":1,"sets":2},"degraded":false,"id":1,"knobs":{"jaccardDen":100,"jaccardNum":80,"shingleK":5,"verbatimFloor":50},"proto":"2.16.0","scores":[[0,1,2,4]],"type":"docdup.result","verdicts":[false]}
+{"counts":{"jaccardDups":0,"judged":1,"pairs":1,"sets":2},"degraded":false,"id":1,"knobs":{"jaccardDen":100,"jaccardNum":80,"shingleK":5,"verbatimFloor":50},"proto":"2.17.0","scores":[[0,1,2,4]],"type":"docdup.result","verdicts":[false]}
 {"proto":"2.2.0","type":"docdup.request","id":2,"sets":[],"pairs":[]}
-{"counts":{"jaccardDups":0,"judged":0,"pairs":0,"sets":0},"degraded":false,"id":2,"knobs":{"jaccardDen":100,"jaccardNum":80,"shingleK":5,"verbatimFloor":50},"proto":"2.16.0","scores":[],"type":"docdup.result","verdicts":[]}
+{"counts":{"jaccardDups":0,"judged":0,"pairs":0,"sets":0},"degraded":false,"id":2,"knobs":{"jaccardDen":100,"jaccardNum":80,"shingleK":5,"verbatimFloor":50},"proto":"2.17.0","scores":[],"type":"docdup.result","verdicts":[]}
 {"proto":"2.2.0","type":"docdup.request","id":3,"sets":[[3,1,2]],"pairs":[]}
-{"code":"contract","id":3,"message":"set 0: not strictly ascending","proto":"2.16.0","type":"error"}
+{"code":"contract","id":3,"message":"set 0: not strictly ascending","proto":"2.17.0","type":"error"}
 {"proto":"2.2.0","type":"docdup.request","id":4,"sets":[[1,1,2]],"pairs":[]}
-{"code":"contract","id":4,"message":"set 0: not strictly ascending","proto":"2.16.0","type":"error"}
+{"code":"contract","id":4,"message":"set 0: not strictly ascending","proto":"2.17.0","type":"error"}
 {"proto":"2.2.0","type":"docdup.request","id":5,"sets":[[1]],"pairs":[[0,1,0]]}
-{"code":"contract","id":5,"message":"pair 0: endpoint out of range","proto":"2.16.0","type":"error"}
+{"code":"contract","id":5,"message":"pair 0: endpoint out of range","proto":"2.17.0","type":"error"}
 {"proto":"2.5.0","type":"docdup.request","id":6,"sets":[[1,2,3],[4,5,6],[1,2,3,4],[1,2,3,4,5]],"pairs":[[0,1,50],[0,2,0],[2,3,0]]}
-{"counts":{"jaccardDups":1,"judged":3,"pairs":3,"sets":4},"degraded":false,"id":6,"knobs":{"jaccardDen":100,"jaccardNum":80,"shingleK":5,"verbatimFloor":50},"proto":"2.16.0","scores":[[0,1,0,6],[0,2,3,4],[2,3,4,5]],"type":"docdup.result","verdicts":[true,false,true]}
+{"counts":{"jaccardDups":1,"judged":3,"pairs":3,"sets":4},"degraded":false,"id":6,"knobs":{"jaccardDen":100,"jaccardNum":80,"shingleK":5,"verbatimFloor":50},"proto":"2.17.0","scores":[[0,1,0,6],[0,2,3,4],[2,3,4,5]],"type":"docdup.result","verdicts":[true,false,true]}

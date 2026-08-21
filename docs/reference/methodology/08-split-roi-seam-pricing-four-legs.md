@@ -48,15 +48,20 @@ verdict family judges with** — `CE.Verdict.Soft.zonePenalty`, imported directl
 re-derived [Split.hs:2-5,24,202](../../../core/app/CE/Structure/Split.hs#L2):
 
 ```
-p(x) = 0                          if x <= S
-p(x) = P_max · ((x − S)/(H − S))²  otherwise
+p(x) = 0                              if x <= S
+p(x) = P_max · ((x − S)/(H − S))²      if S < x <= H
+p(x) = P_max · (1 + 2(x − H)/(H − S))  if x > H     -- C¹ linear arm (proto 2.17.0)
 ```
 
-[Soft.hs:51-57](../../../core/app/CE/Verdict/Soft.hs#L51). The curve is convex, exact `Rational`, and
-keeps charging past `H` (monotone, no kink — the deny at `H` is the guard's job, and a score
-that stopped charging past the wall would reward growth)
-[Soft.hs:44-49](../../../core/app/CE/Verdict/Soft.hs#L44). A degenerate `H <= S` falls back to the
-pre-v0.6 binary `p = P_max` flat [Soft.hs:54](../../../core/app/CE/Verdict/Soft.hs#L54).
+[Soft.hs:59-66](../../../core/app/CE/Verdict/Soft.hs#L59). The curve is convex on the zone, exact
+`Rational`, and keeps charging past `H` — since proto 2.17.0 linearly, at exactly the slope the
+quadratic reached at the wall (monotone, no kink; the deny at `H` is the guard's job, and a
+score that stopped charging past the wall would reward growth — but the quadratic never leaves
+its contracted `(S,H]` domain: the M9 batch-6 saturation lesson)
+[Soft.hs:44-58](../../../core/app/CE/Verdict/Soft.hs#L44). For seam pricing this means the size
+benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. A degenerate
+`H <= S` falls back to the pre-v0.6 binary `p = P_max` flat
+[Soft.hs:61](../../../core/app/CE/Verdict/Soft.hs#L61).
 
 ```
 benefitMilli(u) = max 0 (floor (1000 · (p(total) − p(end_u) − p(total − end_u))))
