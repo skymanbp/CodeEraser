@@ -64,8 +64,12 @@ jobs:
         shell: bash
         run: |
           # the input is bound through env, never spliced into this
-          # script's source: `${{ }}` substitutes BEFORE bash parses,
-          # so a value carrying a quote and $( ) would execute here
+          # script's source: a curly-brace expression substitutes
+          # BEFORE bash parses, so a value carrying a quote and a
+          # command substitution would execute here (and the previous
+          # version of THIS comment proved the point — the literal
+          # expression delimiters inside it were themselves parsed,
+          # invalidating the whole workflow file)
           case "$RELEASE_VERSION" in
             [0-9]*.[0-9]*.[0-9]*) ;;
             *) echo "version input must be N.N.N, got: $RELEASE_VERSION"; exit 1 ;;
