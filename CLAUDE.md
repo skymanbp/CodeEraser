@@ -1,6 +1,6 @@
 # CodeEraser — 项目级指令（Claude Code 每次会话加载）
 
-## 当前状态：M0–M8 全交付；计划 v2.10 = M9 收口令执行中（批 0 已发 v0.7.3；批 1–5 已落 main——审阅 113 条落地/方法学册 11 篇/`ce erase` 两段式〔proto 2.16.0 第九族〕/GUI 七屏完整化/bench dashboard〔contracts/bench/bench.json 单源，README·官网·GUI 三面字节门控，per-tag 回放回填 v0.1.0–v0.7.3〕；待推：批 6 实战检验、批 7 判决回迁〔16 片清单在 memory/batch7-inventory.md，首三片 8→1→4〕、批 8 架构级全仓审查、批 9 全域优雅性终打磨〔v2.10 用户令 1.0 前置〕、终扫清欠账、终版 **v1.0.0** 一次收口不再中间发版）；v0.7.x 线已收：尺寸顾问收环（wire 2.15.0，ROI v1.1 四腿价目+`[guard] zone_tiers` opt-in——FPR 纪律不破）、三补丁版（perMachine 提权/CLI 上机器 PATH/插件复用钉扎命中副本/GUI 无窗化/裸 `ce` 印 help）
+## 当前状态：M0–M8 全交付；计划 v2.10 = M9 收口令执行中（批 0 已发 v0.7.3；批 1–5 已落 main——审阅 113 条落地/方法学册 11 篇/`ce erase` 两段式〔proto 2.16.0 第九族〕/GUI 七屏完整化/bench dashboard〔contracts/bench/bench.json 单源，README·官网·GUI 三面字节门控，per-tag 回放回填 v0.1.0–v0.7.3〕；批 6 实战检验已落〔两真仓案例册 docs/FIELD-TEST.md + 密度评分根修 2.17.0，CI 地板 950〕；批 7 判决回迁已收口〔16 片=12 落线+4 书面处置，proto 2.18.0→2.25.0：RG9/多样性地板/全证据/钉地板/缺陷扫/原始陈旧表/audit 第十族/豁免权威；清单+处置横幅在 memory/batch7-inventory.md〕；批 8 架构全审已落。57-agent 八维+逐条双段对抗：40 发现→2 实（锚门收喉 hookio+工具链钉上根）+36 拒驳处置，台账 memory/batch8-review.md〃；待推：批 9 全域优雅性终打磨〔v2.10 用户令 1.0 前置〕、终扫清欠账、终版 **v1.0.0** 一次收口不再中间发版）；v0.7.x 线已收：尺寸顾问收环（wire 2.15.0，ROI v1.1 四腿价目+`[guard] zone_tiers` opt-in——FPR 纪律不破）、三补丁版（perMachine 提权/CLI 上机器 PATH/插件复用钉扎命中副本/GUI 无窗化/裸 `ce` 印 help）
 
 - 唯一权威计划：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)，
   已通过 cc-memory (ccm) 锁定为项目 PLAN。推进任何里程碑前先读它。

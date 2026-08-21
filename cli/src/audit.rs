@@ -142,12 +142,10 @@ fn audit(root: &Path, session: &str) -> ExitCode {
 /// SESSION (D2-2) — is the stated gate for promoting this audit to
 /// deny. `skipped` names which kind: Some(why) = an early return, the
 /// audit never ran; None = git resolved the base but not the diff, a
-/// real degradation (A9f). Anchor-gated, because an anchorless cwd
-/// must not get a `.ce/` planted in it (changes::base_rev's lesson).
+/// real degradation (A9f). Every root here came through the throat
+/// (hookio::gated_envelope), which anchors — an anchorless cwd never
+/// reaches this function since batch-8 moved the gate there.
 fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) -> ExitCode {
-    if !crate::root::is_anchored(root) {
-        return ExitCode::SUCCESS;
-    }
     let mode = crate::config::tier_of(&Config::load(root), "observe");
     observe_log(
         root,

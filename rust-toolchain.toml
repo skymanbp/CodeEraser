@@ -1,0 +1,8 @@
+# Toolchain lock per DEVELOPMENT_PLAN.md §6 M0 (Rust stable, pinned).
+# Lives at the REPO ROOT (batch-8 review): rustup resolves the nearest
+# file walking up, so one pin covers BOTH workspaces — cli/ and
+# gui/src-tauri/. A cli/-scoped copy left the GUI compiling on
+# whatever stable the runner resolved that day.
+[toolchain]
+channel = "1.94.1"
+components = ["rustfmt", "clippy"]

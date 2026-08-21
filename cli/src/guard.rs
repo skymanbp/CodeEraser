@@ -53,23 +53,18 @@ struct ToolInput {
     replace_all: bool,
 }
 
-/// Entry point for `ce probe --hook`. Never fails outward.
+/// Entry point for `ce probe --hook`. Never fails outward. The
+/// (event, cwd, root, anchor) policy is the throat's
+/// (hookio::gated_envelope — batch-8: the anchor rule was a class
+/// drifting one copy per hook); only the tool-name filter is this
+/// hook's own.
 pub fn run_hook() -> ExitCode {
-    let Some(env) = crate::hookio::read_envelope::<Envelope>() else {
+    let Some((env, root)) =
+        crate::hookio::gated_envelope("PreToolUse", |e: &Envelope| (&e.hook_event_name, &e.cwd))
+    else {
         return ExitCode::SUCCESS;
     };
-    if env.hook_event_name != "PreToolUse" || !matches!(env.tool_name.as_str(), "Write" | "Edit") {
-        return ExitCode::SUCCESS;
-    }
-    let root = crate::hookio::project_root(&env.cwd);
-    // No anchor anywhere up the chain = no project here. Probing and
-    // logging anyway planted `.ce/` and lazily spawned a 30-minute
-    // daemon (with a full winnowing index of the subtree) in whatever
-    // directory an agent happened to stop in — a home dir, a drive
-    // root. The Stop audit has taken this stance since its first
-    // review ("not a git repo: nothing to audit, and no .ce written
-    // here"); the probe hook now takes the same one.
-    if !crate::root::is_anchored(&root) {
+    if !matches!(env.tool_name.as_str(), "Write" | "Edit") {
         return ExitCode::SUCCESS;
     }
     decide(&root, &env)

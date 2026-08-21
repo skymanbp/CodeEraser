@@ -1,4 +1,0 @@
-# Toolchain lock per DEVELOPMENT_PLAN.md §6 M0 (Rust stable, pinned)
-[toolchain]
-channel = "1.94.1"
-components = ["rustfmt", "clippy"]

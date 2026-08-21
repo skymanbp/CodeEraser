@@ -53,12 +53,19 @@ pub const OBSERVE_SCHEMA: &str = "ce.observe/0.6.0";
 const ENVELOPE_CAP: u64 = 4 << 20;
 
 /// The hooks' shared intake gate: envelope in, event name checked,
-/// cwd non-empty, root resolved. The stanza grew a copy per hook and
-/// the dedup gate refused the third — the drift was a class, so the
-/// gate is a throat. `base` projects (event, cwd) out of the hook's
-/// own envelope type — a closure, because a trait needed one
-/// byte-identical impl block per hook and the gate refused THOSE as
-/// clones too. None = not for this hook: exit 0.
+/// cwd non-empty, root resolved — and ANCHORED. The stanza grew a
+/// copy per hook and the dedup gate refused the third — the drift
+/// was a class, so the gate is a throat. `base` projects (event,
+/// cwd) out of the hook's own envelope type — a closure, because a
+/// trait needed one byte-identical impl block per hook and the gate
+/// refused THOSE as clones too. None = not for this hook: exit 0.
+///
+/// The anchor rule is a class policy too (batch-8 review): it lived
+/// as one local copy in guard, another in audit, and NO copy in
+/// health — the one hook whose lazy daemon spawn plants `.ce/` and
+/// a full winnowing index in whatever directory a session happened
+/// to start in (a home dir, a drive root). No anchor anywhere up
+/// the chain = no project here: every hook stays inert.
 pub fn gated_envelope<T: serde::de::DeserializeOwned>(
     event: &str,
     base: impl Fn(&T) -> (&str, &str),
@@ -69,6 +76,9 @@ pub fn gated_envelope<T: serde::de::DeserializeOwned>(
         return None;
     }
     let root = project_root(base(&env).1);
+    if !crate::root::is_anchored(&root) {
+        return None;
+    }
     Some((env, root))
 }
 

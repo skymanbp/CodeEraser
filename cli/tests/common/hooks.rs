@@ -59,10 +59,15 @@ pub fn stop_envelope(dir: &Path, stop_hook_active: bool) -> String {
 
 /// Run a `ce` hook subcommand with the envelope piped to stdin.
 /// Hooks are fail-open, so the exit must be 0; returns stdout.
+/// CE_DAEMON_IDLE_SECS rides the hook so the daemon it LAZILY spawns
+/// inherits the 2-minute test idle window (batch-8 salvage: an
+/// assertion failure between spawn and shutdown_daemon used to leak
+/// a 30-minute daemon holding the target exe against the linker).
 pub fn run_hook(dir: &Path, args: &[&str], stdin: &str) -> String {
     use std::io::Write as _;
     let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
         .args(args)
+        .env("CE_DAEMON_IDLE_SECS", "120")
         .current_dir(dir)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
