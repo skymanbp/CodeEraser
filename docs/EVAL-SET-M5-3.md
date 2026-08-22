@@ -59,7 +59,7 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
-`b70909e`，DOCDUP_REV **4**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
+`90cbdb8`，DOCDUP_REV **4**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
 （2026-08-21，M9 批 1），按 EVAL-SET.md 复活协议重冻结——五语料逐文件字段与
 summary 零漂移实证，precision 32 行普查同证）；门 `eval_docdup_universe`）：live
 段 self 114 / requests 98 / ripgrep 251 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
@@ -79,7 +79,7 @@ population = report_floor 23 + margin 9。census v2 = v1 的严格子集
 （retired 15 对冻结存证）。
 
 **精度 = 达标线 B 修正案**（`docdup-precision-*-v1.json`，
-`ce.eval-docdup-precision/1.0.0`，生成于 `0b13d4b`；门 `eval_docdup_precision`）：
+`ce.eval-docdup-precision/1.0.0`，生成于 `90cbdb8`；门 `eval_docdup_precision`）：
 D3 scoped **17/17** correct（ripgrep 7 + cobra 4 + zod 6）+ docstring **6/6**
 （self 3 + requests 3，不设门）+ not_reported 9 台账化；D1 oracle 召回
 self 3/3、requests 3/3、ripgrep 7/7、cobra 4/4、zod 6/6 全 100%（硬门 0.99）；

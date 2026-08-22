@@ -24,16 +24,16 @@ non-deterministic output, and an eraser that guesses would forfeit it.
 | verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss; the survivor is chosen deterministically, never judged "better" |
 | whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical AND whose copy is itself graph-dead | delete the dead copy | the narrow intersection of the clone and liveness verdicts — a cross-function clone with live references has NO deterministic-safe erase, and this contract says so instead of pretending |
 
-Everything else — T2 (renamed) clones, T3 near-misses, live
-duplicates, structural findings — is *named* by the plan as
-`advisory: no deterministic-safe erase` rows. Erasing those requires
-judgment about which copy is canonical and how references move; that
-is an editor's job (human or agent), and the plan hands them the
-evidence instead of acting.
+The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
+from those families that fail the core predicate remain non-eraseable
+plan rows; the sole named aggregate `out_of_class` advisory is
+`t1t2_block_no_whole_unit`. T3 and structural findings are outside
+the plan surface and never appear.
 
 ## Two phases
 
-**`ce erase [root]`** (the plan — default, always read-only):
+**`ce erase [root]`** (the plan — default, read-only with respect to
+user files; it may create or refresh the `.ce/` cache):
 
 1. runs the source families exactly as their own commands do (same
    caches, same cores, same knobs);
@@ -45,7 +45,8 @@ evidence instead of acting.
    provenance (family, member/segment id, evidence `file:line`) and a
    content hash of the target file;
 4. prints the advisory rows (what it will NOT touch, and why);
-5. exits 0 with no filesystem effect of any kind.
+5. exits 0 without changing user files; the `.ce/` cache may have
+   been created or refreshed.
 
 **`ce erase --apply`** additionally requires, in order:
 
@@ -63,8 +64,8 @@ evidence instead of acting.
    must be GONE — a survivor fails the command loudly (convergence is
    part of apply, not a suggestion);
 5. an append-only record in `.ce/erase-log.ndjson`: ts, class,
-   file/span, provenance, plan hash — the audit trail `ce doctor` can
-   count and the dashboard can render.
+   file/span, provenance, plan hash — an audit file for human review
+   alongside git's recovery path; no CLI or GUI surface renders it today.
 
 ## Boundaries
 
@@ -81,8 +82,9 @@ evidence instead of acting.
 
 ## Acceptance (the gate this feature must pass)
 
-- plan-then-apply on a fixture tree erases the three classes and the
-  re-run proves zero surviving source verdicts;
+- plan-then-apply on a fixture tree erases two dead files and one
+  verbatim-doc span; `t1_twin` is exercised only as a non-eraseable
+  plan row, and the re-run proves zero surviving source verdicts;
 - a dirty worktree, a drifted file hash, and a non-repo root each
   refuse BY NAME without touching anything;
 - an advisory row (live T2 clone) is never planned;

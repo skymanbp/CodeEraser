@@ -66,7 +66,7 @@ Or `cargo install codeeraser` builds `ce` from source; drop a
 `ce-core` beside it. `SHA256SUMS` covers every asset.
 
 **From source.** Prerequisites: the pinned Rust toolchain
-(`cli/rust-toolchain.toml`) and GHC 9.14.1 + cabal for the core.
+(`rust-toolchain.toml` at the repository root) and GHC 9.14.1 + cabal for the core.
 
 ```sh
 # the judgment core (ce-core)
@@ -109,7 +109,7 @@ same pins automatically and refuses a mismatching download out loud.
 | `ce trend` | score trajectory over mainline history (cache rebuilds from git) |
 | `ce erase` | deterministic two-phase eraser: plans only provably-safe removals (dead files, verbatim doc twins, whole-unit T1 twins), dry-run default, `--apply` behind clean-worktree preconditions |
 | `ce check` / `ce baseline` | ADR-006 ratchet + score floor against `ce-baseline.json` |
-| `ce mcp` | read-only MCP server: every report above as a tool |
+| `ce mcp` | read-only MCP server: 11 report tools; erase plans and doctor are not exposed |
 | `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |
 
 Console reports and `--help` speak English by default and Chinese

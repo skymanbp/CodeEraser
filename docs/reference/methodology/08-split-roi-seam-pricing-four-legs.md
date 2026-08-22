@@ -123,14 +123,14 @@ at proto `2.15.0`
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
 [seams.rs:212-234](../../../cli/src/structure/seams.rs#L212),
-[size-advisory.md:91-94](../size-advisory.md#L92). Word-boundedness is
+[size-advisory.md:92-95](../size-advisory.md#L93). Word-boundedness is
 identifier-char adjacency on both sides
 [seams.rs:236-254](../../../cli/src/structure/seams.rs#L236). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
 [seams.rs:226](../../../cli/src/structure/seams.rs#L226). Documented limitation: short names and
 in-string mentions will count an edge; the advisory face is non-binding, so this is tolerated
-[size-advisory.md:92-94](../size-advisory.md#L93).
+[size-advisory.md:93-95](../size-advisory.md#L94).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
 (`crate::dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
@@ -148,7 +148,7 @@ a tree without git history prices the leg at zero rather than failing the adviso
 `CHURN_WINDOW_DAYS = 14` — the §4.1 two-week anchor, and deliberately a **measurement
 constant, not a wire knob** (the prices are the knobs)
 [seams.rs:36-39](../../../cli/src/structure/seams.rs#L36),
-[size-advisory.md:118](../size-advisory.md#L118).
+[size-advisory.md:119](../size-advisory.md#L119).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
 booklet names φ [Cost.hs:114-119](../../../core/app/CE/Structure/Cost.hs#L114). Defaults were sized so
@@ -159,26 +159,26 @@ a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing referen
 
 The v1.1 legs were calibrated by recompiling the `Cost.hs` price points and replaying
 `--split-candidates` over corpora, comparing candidate/exemption flips and best-seam movement
-[size-advisory.md:106-109](../size-advisory.md#L106).
+[size-advisory.md:107-110](../size-advisory.md#L107).
 
 - `roiCloneMilli = 500` (= 2 × ref): swept `{250, 500, 1000}` over four external corpora / 86
   candidates. Zero candidate flips across the fourfold price range — the price is a
   *seam-steering* term, not a candidate killer — with exactly one best-seam move per price
   point, each in the correct direction (cobra's `command_test` moves its seam off the clone
   block at the 1000 price point)
-  [size-advisory.md:110-113](../size-advisory.md#L110).
+  [size-advisory.md:111-114](../size-advisory.md#L111).
 - `roiChurnMilli = 150` (= 0.6 × ref, reflecting that historical correlation is weaker
   evidence than in-situ code coupling): swept `{150, 300, 600}` on the self repo only —
   external corpora tips are frozen outside the 14-day window, so their churn leg is honestly
   zero and only a live window can be calibrated. Zero label flips over the fourfold range,
   with cost scaling verified linear (`graph_ladder` 800 → 1100 → 1700)
-  [size-advisory.md:114-117](../size-advisory.md#L114).
+  [size-advisory.md:115-118](../size-advisory.md#L115).
 
 Self-repo first run at the `S = 294` calibration: `graph_ladder.rs` got a real seam after line
 318 (2120‰ benefit against 500‰ cost, ROI 4.2); `DEVELOPMENT_PLAN.md` and `main_cmds.rs` got
 machine-written cohesion exemptions (11‰ vs 500‰ and 0‰ vs 2000‰); `cli.md` crossed the line
 by one notch (507‰ vs 500‰) and flipped to a candidate
-[size-advisory.md:98-102](../size-advisory.md#L98).
+[size-advisory.md:99-103](../size-advisory.md#L99).
 
 ### The ROI auto-exemption
 
@@ -198,7 +198,7 @@ what lets the Rust side write the machine-generated *why*
 [Split.hs:6-8,180-183](../../../core/app/CE/Structure/Split.hs#L6). This is the advisory's answer to
 "big projects have naturally long files": long-and-cohesive is an exemption **with numbers
 attached**, long-and-splittable gets a cut line
-[size-advisory.md:52-54](../size-advisory.md#L52). Relabelling back to names
+[size-advisory.md:53-55](../size-advisory.md#L53). Relabelling back to names
 happens only in Rust, with every dense id range-checked before it is used as a subscript
 [judge.rs:156-181](../../../cli/src/structure/judge.rs#L156); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
@@ -226,7 +226,7 @@ computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#
 
 The design contract §C lists two benefit terms and one cost term that the **as-built code does
 not implement**: benefit "dedup budget effect" and "hot/cold unit isolation", and cost
-"baseline re-key noise" [size-advisory.md:45-47](../size-advisory.md#L45). The
+"baseline re-key noise" [size-advisory.md:46-48](../size-advisory.md#L46). The
 shipped benefit is the soft-zone recovery term alone
 [Split.hs:202-203](../../../core/app/CE/Structure/Split.hs#L202) and the shipped cost is exactly the
 four legs above [Split.hs:207-211](../../../core/app/CE/Structure/Split.hs#L207). No constant for

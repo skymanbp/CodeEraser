@@ -4251,7 +4251,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../size-advisory.md",
-    "line": 92,
+    "line": 93,
     "text": "v1 用**单元名跨缝词界提及**作「被切断的内引用」的可测代理（≥3 字"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:36": {
@@ -4271,7 +4271,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:39": {
     "target": "../size-advisory.md",
-    "line": 93,
+    "line": 94,
     "text": "符噪声地板，词界判定钉在单测）。诚实局限：短名/字符串内提及会"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:4": {
@@ -4306,7 +4306,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:45": {
     "target": "../size-advisory.md",
-    "line": 118,
+    "line": 119,
     "text": "- 窗口 = 14 天（§4.1 双周锚），测量常数非 wire 旋钮。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:46": {
@@ -4321,12 +4321,12 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:48": {
     "target": "../size-advisory.md",
-    "line": 106,
+    "line": 107,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:49": {
     "target": "../size-advisory.md",
-    "line": 110,
+    "line": 111,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:5": {
@@ -4336,12 +4336,12 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:50": {
     "target": "../size-advisory.md",
-    "line": 114,
+    "line": 115,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:51": {
     "target": "../size-advisory.md",
-    "line": 98,
+    "line": 99,
     "text": "- **自仓首跑实证**（S=294 口径复核 2026-08-20）：graph_ladder.rs"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:52": {
@@ -4366,7 +4366,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:56": {
     "target": "../size-advisory.md",
-    "line": 52,
+    "line": 53,
     "text": "- **区内仲裁**：过 S 而无可行缝（所有候选 ROI<1 = 高内聚长文件）"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:57": {
@@ -4426,7 +4426,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:67": {
     "target": "../size-advisory.md",
-    "line": 45,
+    "line": 46,
     "text": "- 收益 B = 渐进区罚分回收 + dedup 预算效应 + 热/冷单元隔离。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:68": {

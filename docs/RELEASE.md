@@ -7,8 +7,8 @@
 
 ## 0. 前置门（全绿才允许起步）
 
-- 五腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 800`
-  / `ce deadcode --check` / `ce docdup --check`，加 `ce doctor`。
+- 六腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 950`
+  / `ce deadcode --check` / `ce docdup --check` / `ce erase --check`，加 `ce doctor`。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
 - 版本五处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch
@@ -32,12 +32,12 @@
 ## 2. 第二段：pin → tag → publish
 
 1. 把 draft 的 SHA256SUMS 逐值写进 `plugin/bin/manifest.env`
-   （六 pin：三平台 ce + 三平台 ce-core），并同批翻 `CE_MANIFEST_VERSION`
+   （九 pin：三平台 ce + 三平台 ce-core + 三平台 GUI 安装包），并同批翻 `CE_MANIFEST_VERSION`
    与 `CE_BASE_URL`（tag 腿断言前者 == tag；后者 URL 内嵌 tag，忘翻即
-   下载 404）——八行齐动，提交并推 main，CI 绿。
+   下载 404）——十一行齐动，提交并推 main，CI 绿。
 2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**
    后 publish（不重建）；`verify-publish` 复核十资产（九工件对拍
-   SHA256SUMS，六二进制对拍 manifest pin）。
+   SHA256SUMS，九工件对拍 manifest pin）。
 3. Release notes：功能面 + 分数迁移声明（如适用）+ 未签名明示
    （0.x 无代码签名，SHA256 链路承重——ADR-007/R1 立场）。
 

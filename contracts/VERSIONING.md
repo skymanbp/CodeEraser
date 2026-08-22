@@ -285,7 +285,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
-  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/1","erase/1"]`；/2 =
+  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/1","erase/1","audit/1"]`；/2 =
   2.0.0 的锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
@@ -317,14 +317,16 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `error/contract`（边界契约由 core 机检）；未解析站点计数**不过线、留在客户端**
   （`unresolved_sites` 只进 Rust 侧报告与摘要行，判决从不消费）——旧文曾列的
   `"unresolved":[[lang,kind,reason,count]]` 两侧都不发不解析：请求体 =
-  `{nodes,edges,pos}`（`cli/src/graph/deadcode.rs:174-178`），`GraphReq` 无此字段
+  `{nodes,edges,pos}`（`cli/src/graph/deadcode.rs:190-196`），`GraphReq` 无此字段
   （`core/app/CE/Graph.hs:33-46`），2026-08-20 就地删除，wire 字节不变；
   超 `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
   "reason":"graph_too_large"`（绝不截断）。
 - `graph.result`（语义 M5-2g 落地，穷举参照 harness 见 core/test/）：
-  `{"id","dead":[[idx,verdict]],"pos":[[idx,indeg,outdeg,sccId,sccSize,reachIn]],
-  "cycles":[[sccId,[idx]]],"counts":{"nodes","edges","kept"},
-  "degraded"(,"reason"∈{graph_too_large})}`——verdict ∈ {1 unref_private,
+  `{"id","dead":[[idx,verdict]],"reported":[[idx,verdict]],"fail",
+  "pos":[[idx,indeg,outdeg,sccId,sccSize,reachIn]],"cycles":[[sccId,[idx]]],
+  "counts":{"nodes","edges","kept"},"degraded"(,"reason"∈{graph_too_large})}`——
+  `dead` 只承载文件粒度判决，`reported` 承载 package/section 聚合判决；非降级时
+  `fail` 当且仅当 `dead` 非空，降级应答恒 true。两表 verdict ∈ {1 unref_private,
   2 unref_public, 3 unreach_private, 4 unreach_public}（入度×可达两轴 + 公私隔离）；
   判定旋钮全在 `CE.Graph.Cost`：`minRung`(=5，边计为引用的 rung 上限)、
   `entryMask`(=126，flags 位 1-6 为入口根；位 0 exported 有意不入——公私是判决轴
@@ -359,7 +361,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 
 - **major 不同 = 拒绝**：应答 `accept:false` + `reason`，调用方报错退出。
 - minor/patch 不同 = 接受（新字段走"忽略未知字段"规则）。
-- 破坏性变更（删字段/改语义）必须 bump major，并同步更新两侧实现 + fixtures。
+- **schema 不兼容变更**（删字段/改字段形状）必须 bump major，并同步更新两侧实现 +
+  fixtures；major 不同按上条拒绝。
+- **分数语义迁移**（轴语义/阈值/量纲）可随 minor，但 release notes 必须声明
+  score migration。
 - **信封常数变更**（行字节预检、错误码/reason 词汇扩充）：放宽 = minor（旧客户端
   照常工作），收紧 = major；变更必须在 §1 就地改写并注明日期与依据（2.1.0 的
   32 MiB 放宽为首例）。
@@ -383,7 +388,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 
 | 组件 | 锁定 | 载体 |
 |---|---|---|
-| Rust | 1.94.1 | `cli/rust-toolchain.toml` |
+| Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
 | 协议 | 2.27.0 | §1 所列两处常量 |
