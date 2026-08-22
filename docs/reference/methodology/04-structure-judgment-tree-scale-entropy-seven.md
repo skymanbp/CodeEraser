@@ -1,4 +1,6 @@
-## Structure judgment — tree-scale entropy, seven axes
+# Structure judgment — tree-scale entropy, seven axes
+
+[index](../methodology.md) · [← 03 Documentation duplication — shingling + MinHash/LSH](03-documentation-duplication-shingling-minhash.md) · [→ 05 Scoring and the ADR-006 ratchet](05-scoring-and-the-adr-006-ratchet.md)
 
 The `structure/1` family judges the *tree*, not the file: directory geometry, naming
 distributions, reference locality, documentation coverage, and — when the deep tables ride

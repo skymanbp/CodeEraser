@@ -1,4 +1,6 @@
-## Score trajectory — the trend slope verdict
+# Score trajectory — the trend slope verdict
+
+[index](../methodology.md) · [← 09 Edit four-classification (update supervision)](09-edit-four-classification-update-supervision.md) · [→ 11 FPR discipline and the guard tier ladder](11-fpr-discipline-and-the-guard-tier-ladder.md)
 
 The eighth judgment family answers one question about a repository's history: is the check score going up, flat, or down, and by how much per day. Rust measures the trajectory; Haskell judges it. Rust computes no policy — sign, floor, and the fail bit all come back on the wire ([judge.rs:3-5](../../../cli/src/trend/judge.rs#L3)).
 

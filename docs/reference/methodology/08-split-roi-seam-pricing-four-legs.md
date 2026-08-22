@@ -1,4 +1,6 @@
-## Split-ROI seam pricing (four legs)
+# Split-ROI seam pricing (four legs)
+
+[index](../methodology.md) · [← 07 The three-signal join](07-the-three-signal-join.md) · [→ 09 Edit four-classification (update supervision)](09-edit-four-classification-update-supervision.md)
 
 The split-ROI advisory answers one question per oversized file with a number instead of a
 slogan: *is this file worth splitting, and where?* It is an **advisory**, not a gate — it

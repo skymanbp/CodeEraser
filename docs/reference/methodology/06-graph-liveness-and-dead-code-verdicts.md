@@ -1,4 +1,6 @@
-## Graph liveness and dead-code verdicts
+# Graph liveness and dead-code verdicts
+
+[index](../methodology.md) · [← 05 Scoring and the ADR-006 ratchet](05-scoring-and-the-adr-006-ratchet.md) · [→ 07 The three-signal join](07-the-three-signal-join.md)
 
 The `deadcode` family answers one question — *which files does nothing live reach?* — by
 building a **reference graph** over dense node indices in Rust and handing the whole graph to

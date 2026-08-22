@@ -1,4 +1,6 @@
-## The three-signal join
+# The three-signal join
+
+[index](../methodology.md) · [← 06 Graph liveness and dead-code verdicts](06-graph-liveness-and-dead-code-verdicts.md) · [→ 08 Split-ROI seam pricing (four legs)](08-split-roi-seam-pricing-four-legs.md)
 
 Similarity says two entities look alike. Graph position says whether anything points at them. Churn says whether they are being maintained twice. None of the three is a verdict on its own; the join is the deterministic rule that turns a triple of legs into one of four codes — and then declines to act on it.
 

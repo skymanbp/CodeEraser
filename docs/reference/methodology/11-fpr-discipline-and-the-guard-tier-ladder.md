@@ -1,4 +1,6 @@
-## FPR discipline and the guard tier ladder
+# FPR discipline and the guard tier ladder
+
+[index](../methodology.md) · [← 10 Score trajectory — the trend slope verdict](10-score-trajectory-the-trend-slope-verdict.md) · [→ 12 Deterministic erase — the safety predicate](12-deterministic-erase-the-safety-predicate.md)
 
 ### The thesis: a deterministic gate over a nondeterministic writer
 

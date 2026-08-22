@@ -1,4 +1,6 @@
-## Edit four-classification (update supervision)
+# Edit four-classification (update supervision)
+
+[index](../methodology.md) · [← 08 Split-ROI seam pricing (four legs)](08-split-roi-seam-pricing-four-legs.md) · [→ 10 Score trajectory — the trend slope verdict](10-score-trajectory-the-trend-slope-verdict.md)
 
 Every edit CodeEraser supervises is reduced to four integer counts per file pair: **matched** (unchanged — never enumerated, it is the diff's complement), **novel** (added, no provenance), **moved** (added or removed with provenance on the other side), **deleted** (removed, no destination). The split is `FourClass { added_novel, added_moved, removed_deleted, removed_moved }` ([mod.rs:29](../../../cli/src/fourclass/mod.rs#L29)) — matched lines are exactly the lines the diff did not report, so the four-class ledger is closed by construction over the changed set.
 

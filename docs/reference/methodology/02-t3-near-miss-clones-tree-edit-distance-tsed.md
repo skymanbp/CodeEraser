@@ -1,4 +1,6 @@
-## T3 near-miss clones — Tree Edit Distance (TSED)
+# T3 near-miss clones — Tree Edit Distance (TSED)
+
+[index](../methodology.md) · [← 01 T1/T2 clone detection — winnowing fingerprint index](01-t1-t2-clone-detection-winnowing-fingerprint.md) · [→ 03 Documentation duplication — shingling + MinHash/LSH](03-documentation-duplication-shingling-minhash.md)
 
 T1/T2 clone detection reports *exact* and *parameterized* duplicate token runs. T3 covers the near-miss case: two units whose ASTs are structurally almost the same but whose token streams are not. The judgment is an exact tree edit distance under a fixed normalization, computed in the Haskell core, with the Rust side restricted to parsing, candidate selection, and transport.
 

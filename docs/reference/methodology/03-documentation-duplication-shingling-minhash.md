@@ -1,4 +1,6 @@
-## Documentation duplication — shingling + MinHash/LSH
+# Documentation duplication — shingling + MinHash/LSH
+
+[index](../methodology.md) · [← 02 T3 near-miss clones — Tree Edit Distance (TSED)](02-t3-near-miss-clones-tree-edit-distance-tsed.md) · [→ 04 Structure judgment — tree-scale entropy, seven axes](04-structure-judgment-tree-scale-entropy-seven.md)
 
 The docdup family answers one question: are two blocks of *documentation text* — markdown paragraphs, comment blocks, docstrings — near-duplicates of each other? The computation is split across the language boundary the project's ADRs fix: Rust extracts, shingles, and coarse-filters; Haskell owns every threshold and issues every verdict. The Rust side keeps a pinned mirror of the core's constants purely so drift is an error rather than a silent score.
 

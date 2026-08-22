@@ -1,4 +1,6 @@
-## Scoring and the ADR-006 ratchet
+# Scoring and the ADR-006 ratchet
+
+[index](../methodology.md) · [← 04 Structure judgment — tree-scale entropy, seven axes](04-structure-judgment-tree-scale-entropy-seven.md) · [→ 06 Graph liveness and dead-code verdicts](06-graph-liveness-and-dead-code-verdicts.md)
 
 Everything in this section is computed in `ce-core` (Haskell), from the fact tables that arrive over the `verdict.request` wire. It is pure integer/`Rational` arithmetic — no floating point, no logarithms — so the same request always yields the same verdict.
 
