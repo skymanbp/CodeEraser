@@ -36,7 +36,7 @@
 
 - **懒启动**：客户端 `client::request` 连接失败时从自身二进制 respawn；
   测试必须走 `request_if_running`（永不 spawn——嵌套测试二进制风险，
-  common/mod.rs 注记）。
+  common/daemon.rs::spawn_daemon_ready 注记）。
 - **协商**：每连接首条必须为 `hello{proto,token}`，token **先于**
   major 校验——否则一条无凭证的假 skew 就能随意退出 daemon（未认证
   击杀）。token 不符 → `error{unauthorized}` 且连接关闭；major 不符 →

@@ -270,7 +270,9 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 ```
 
 - `proto`：协议版本，当前 **2.27.0**（单一来源：`cli/src/corelink.rs::PROTO`
-  与 `core/app/CE/Protocol.hs::proto`，两处必须一致，由共享 fixture 钉住）。
+  与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
+  fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
+  的 PROTO 断言焊住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
   `{"proto","type":"error","id":<回显|null>,"code","message"}`，

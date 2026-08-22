@@ -116,7 +116,6 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 [Axes.hs:58-67](../../../core/app/CE/Structure/Axes.hs#L58) and are bound to the `Cost.hs` defaults
 [Axes.hs:85-91](../../../core/app/CE/Structure/Axes.hs#L85). The wire carries them as knob codes
 12–18; the golden fixture pins `[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]`
-at proto `2.15.0`
 [golden.ndjson:22](../../../contracts/fixtures/structure/golden.ndjson#L22).
 
 **Leg 1 — severed references.** The honest v1 proxy: true intra-file symbol co-reference

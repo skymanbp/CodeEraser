@@ -41,7 +41,7 @@ AppImage/dmg 用户自行把应用目录加入 PATH。
 ```sh
 # 判决核（ce-core）
 cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
-cargo install --path cli   # CLI（二进制名：ce）
+cd .. && cargo install --path cli   # CLI（二进制名：ce）
 ```
 
 核解析全线一条链：`CE_CORE_BIN` → 运行中二进制旁的 `ce-core` 兄弟 →

@@ -177,7 +177,9 @@ GUI 由 Tauri 覆盖。Go 无以上任何优势。
 **ADR-003 进程模型（A3 拆分后）。**
 - hook 触发 = 短命 `ce` 进程；重活委托给 **per-project daemon**（同一二进制 `ce daemon`，
   首次使用懒启动，空闲 30 min 自动退出）。
-- 通道：Windows named pipe / Unix domain socket，管道名 = 项目路径哈希，凭据即本用户。
+- 通道：Windows named pipe / Unix domain socket，管道名 = 项目路径哈希；连接本身不设防，
+  凭据 = `<root>/.ce/daemon.token`（每次 serve 在 bind 之后重铸——能力边界 = 读得到项目
+  即可连；契约与协议版本见 contracts/DAEMON.md，daemon proto 1.1.0 起）。
 - 索引=**收敛式多写者缓存**（v1.7，审计实证唯一写者从未成立）：写路径全内容门控+幂等+IMMEDIATE 锁内自检，WAL 逐事务串行 ⇒ 并发写者对静止树收敛于串行序终态（验收=`concurrent_writers` 双进程电池）；
   daemon 角色=性能（热缓存+探针热路径）非正确性，M6 GUI 直写同库有据。
 - 版本 skew：连接握手带协议版本，不匹配 → daemon 自杀重启（新二进制路径由客户端传入）。

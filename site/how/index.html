@@ -194,14 +194,18 @@ dupVerdictWith (num, den, vfloor) inter union run
 tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
 perMille r      = floor (r * 1000)</pre>
-  <pre>raw   = Σ_axes (penalty * violCost)
-score = max 0 (scale - raw `div` judgedAxisCount)</pre>
+  <pre>charge_i = floor (scale * v_i / (v_i + N))   -- v = flagged dirs, N = dir total
+raw      = Σ_axes (charge_i * violCost)
+score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
   <p class="note">Shannon entropy and KL divergence need logarithms — irrational, therefore
   not exactly decidable — so the family publishes the rational-closed members of the same
   families instead: Tsallis-2 diversity and the χ² f-divergence, all over
   <code>Data.Ratio</code>. A χ² with observed mass on a zero-reference bin returns
   <code>Nothing</code>, a refusal rather than a zero: the report names those directories.
-  Every axis penalty is a count of <em>directories</em>; <code>judgedAxisCount</code> is 5,
+  Each axis's violation mass <code>v</code> is its flagged-<em>directory</em> count, charged
+  through the verdict family's density law into ‰ of scale — the axis rows carry charges,
+  not counts, folded through <code>structViolCostNeutral = 10</code>;
+  <code>judgedAxisCount</code> is 5,
   6 or 7 depending on which optional fact tables rode the wire.</p>
   <ul class="consts">
     <li><b>violCost</b> 10</li>
@@ -226,10 +230,11 @@ score = max 0 (scale - raw `div` judgedAxisCount)</pre>
   baseline that is only allowed to tighten.</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
 wTotal  = sum_i w_i                            -- derived, never a literal
-score   = max 0 (scoreScale - raw `div` wTotal)</pre>
+score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
   <pre>p(x) = 0                              if x &lt;= S
      = pMax                           if H &lt;= S          -- degenerate fallback
-     = pMax * ((x - S) / (H - S))^2   otherwise
+     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
+     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm
 
 m = median(x)
 r = median( max(x/m, m/x) )                    -- &gt;= 1 by construction

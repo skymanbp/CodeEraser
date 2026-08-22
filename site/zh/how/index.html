@@ -178,12 +178,15 @@ dupVerdictWith (num, den, vfloor) inter union run
 tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
 perMille r      = floor (r * 1000)</pre>
-  <pre>raw   = Σ_axes (penalty * violCost)
-score = max 0 (scale - raw `div` judgedAxisCount)</pre>
+  <pre>charge_i = floor(scale * v_i / (v_i + N))   -- N = 目录总数
+raw      = Σ_axes (charge_i * violCost)
+score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
   <p class="note">Shannon 熵与 KL 散度需要对数——无理数，因而不可精确判定——所以本家族改为发布
   同族中在有理数下封闭的成员：Tsallis-2 多样性与 χ² f-散度，全程跑在 <code>Data.Ratio</code> 上。
   若某个 bin 参考质量为 0 而观测质量非 0，χ² 返回 <code>Nothing</code>：那是一次拒绝而不是一个零，
-  报告会点名那些目录。每条判轴的罚分都是<em>目录</em>计数；<code>judgedAxisCount</code> 依可选
+  报告会点名那些目录。每条判轴的违规质量 <code>v</code> 是被点名的<em>目录</em>计数，再经与判决族
+  同一条密度律折算成 ‰ of scale——判轴行携带的是 charge 而非计数，除数另带
+  <code>structViolCostNeutral = 10</code>；<code>judgedAxisCount</code> 依可选
   事实表是否上 wire 取 5、6 或 7。</p>
   <ul class="consts">
     <li><b>violCost</b> 10</li>
@@ -207,10 +210,11 @@ score = max 0 (scale - raw `div` judgedAxisCount)</pre>
   <p class="job">把七条判轴折叠成一个 0–1000 的分数，并对着一份只准收紧的基线银行把门。</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
 wTotal  = sum_i w_i                            -- derived, never a literal
-score   = max 0 (scoreScale - raw `div` wTotal)</pre>
+score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
   <pre>p(x) = 0                              if x &lt;= S
      = pMax                           if H &lt;= S          -- degenerate fallback
-     = pMax * ((x - S) / (H - S))^2   otherwise
+     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
+     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ 线性臂
 
 m = median(x)
 r = median( max(x/m, m/x) )                    -- &gt;= 1 by construction

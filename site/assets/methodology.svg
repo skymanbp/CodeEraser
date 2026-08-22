@@ -98,11 +98,11 @@
         <text x="422" y="251">(max(n1,n2) - ted) * 100 &gt;= 85 * max(n1,n2)</text>
         <text x="422" y="315">inter * 100 &gt;= 80 * union  ||  run &gt;= 50 words</text>
         <text x="422" y="379">S = clamp(floor(m * r^k), [200, 500]),  k = 2</text>
-        <text x="422" y="443">p(x) = 10 * ((x - S) / (750 - S))^2,  x &gt; S</text>
+        <text x="422" y="443">p(x) = 10 * ((x - S) / (750 - S))^2,  S &lt; x &lt;= 750; linear past 750</text>
         <text x="422" y="507">reach = closure from flags .&amp;. 126 != 0</text>
         <text x="422" y="571">1 - sum (c/N)^2   ·   sum (p - q)^2 / q</text>
         <text x="422" y="635">slope = (n*Sxy - Sx*Sy) / (n*Sxx - Sx^2)</text>
-        <text x="422" y="699">max 0 (1000 - sum(w*p*10) `div` sum(w))</text>
+        <text x="422" y="699">max 0 (1000 - sum(w*p*10) `div` (10 * sum(w)))</text>
       </g>
     </g>
 

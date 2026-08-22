@@ -171,7 +171,9 @@ function trendPoint(r) {
     `<h2>${esc(r.commit.slice(0, 12))}</h2>`,
     row(tr("date"), new Date(r.ts * 1000).toISOString().slice(0, 19).replace("T", " ")),
     row(tr("score"), `${r.score} / ${r.scale}`),
-    row(tr("axes"), r.axes.map(([c, p]) => `${axisName(c)}:${p}`).join("  ") || tr("none")),
+    // score-verdict axis codes, NOT the structure vocabulary — same
+    // mislabel score.js already corrected by using checkAxisNames
+    row(tr("axes"), r.axes.map(([c, p]) => `${tr("checkAxisNames")[c] ?? c}:${p}`).join("  ") || tr("none")),
   ].join("");
 }
 

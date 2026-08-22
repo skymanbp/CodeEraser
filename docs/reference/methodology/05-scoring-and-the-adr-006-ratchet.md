@@ -104,7 +104,7 @@ ADR-006 makes the ratchet the primary gate for a repository that has a baseline 
 | `ratchet_over` | the over list is non-empty |
 | `discrete_added` | the added set is non-empty |
 | `floor` | `score < reqFloor` — the `--fail-under` value, when supplied ([Verdict.hs:135](../../../core/app/CE/Verdict.hs#L135)) |
-| `dedup_budget` | the request carried a `[blocks, budget]` pair and `blocks > budget` ([Verdict.hs:138-140](../../../core/app/CE/Verdict.hs#L138)) |
+| `dedup_budget` | the request carried a `[blocks, budget]` pair and the judged count exceeds `budget` — since proto 2.19.0 that count is the core's own derivation from the shipped `distinct` rows, falling back to the client's `blocks` only when they are absent ([Verdict.hs:165-174](../../../core/app/CE/Verdict.hs#L165)) |
 
 `fail = any` of them, and the reply also carries the list of the names that held, so a consumer attributes the failure by name rather than by reconstructing the conjunction ([Verdict.hs:141-142](../../../core/app/CE/Verdict.hs#L141), [Verdict.hs:96-99](../../../core/app/CE/Verdict.hs#L96)). The `removed` and `toleranceDrawn` lists are reported but never contribute to the fail bit. Note also that `dedup_budget` is only judged when the pair is present — `ce dedup --check` sends it, the `ce check` path does not ([Verdict.hs:146-148](../../../core/app/CE/Verdict.hs#L146)).
 

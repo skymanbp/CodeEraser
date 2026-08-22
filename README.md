@@ -37,7 +37,7 @@ On Windows (v0.7.2+) the installer asks for elevation and puts the install dir o
 from any terminal (AppImage/dmg users add the app dir to PATH themselves).
 
 **Claude Code plugin (the guard layer).** `/plugin marketplace add skymanbp/CodeEraser`, then `/plugin install codeeraser`.
-The starter resolves both binaries by pin: a matching local or PATH copy first (v0.7.3; the installer leaves one on PATH), then a pinned download,
+The starter resolves both binaries by pin: a matching local or PATH copy first (since v0.7.3; the installer leaves one on PATH), then a pinned download,
 then an unverified PATH binary that says so out loud.
 
 **CLI only.** Download `ce-<ver>-<platform>` and `ce-core-<ver>-<platform>` (x86_64-windows / x86_64-linux / aarch64-macos), rename them
@@ -49,7 +49,7 @@ with `cargo install codeeraser` and place a `ce-core` beside it. `SHA256SUMS` co
 ```sh
 # the judgment core (ce-core)
 cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
-cargo install --path cli   # the CLI
+cd .. && cargo install --path cli   # the CLI
 ```
 
 Core resolution is one chain everywhere: `CE_CORE_BIN` → a `ce-core` sibling of the running binary → PATH; an explicit `--core <path>` always wins.

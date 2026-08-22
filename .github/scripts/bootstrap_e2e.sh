@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its six states with the just-built
+# drives plugin/bin/ce.sh through its eleven states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
