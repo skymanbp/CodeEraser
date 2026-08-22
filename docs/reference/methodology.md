@@ -61,3 +61,4 @@ does not get an exemption from the rule it argues for.
 | 9 | [Edit four-classification (update supervision)](methodology/09-edit-four-classification-update-supervision.md) | matched / novel / moved / deleted |
 | 10 | [Score trajectory — the trend slope verdict](methodology/10-score-trajectory-the-trend-slope-verdict.md) | the score trajectory's slope |
 | 11 | [FPR discipline and the guard tier ladder](methodology/11-fpr-discipline-and-the-guard-tier-ladder.md) | which rule class may deny, and on what record |
+| 12 | [Deterministic erase — the safety predicate](methodology/12-deterministic-erase-the-safety-predicate.md) | what is provably safe to delete |

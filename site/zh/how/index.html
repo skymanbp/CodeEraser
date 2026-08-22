@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CodeEraser 工作原理——确定性判决，十一个家族</title>
-<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十一个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
+<title>CodeEraser 工作原理——确定性判决，十二个家族</title>
+<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十二个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
 <link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
@@ -97,7 +97,7 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   它们变成判决；泳道 3 决定退出码。图上每一个数字都是下文各节引用的常数。</figcaption>
 </figure>
 
-<h2>十一个判决家族</h2>
+<h2>十二个判决家族</h2>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -447,6 +447,24 @@ permille = (lines - S) * 1000 / (H - S)
     <li><b>STOP_BUDGET_TOKENS</b> 400</li>
     <li><b>CHARS_PER_TOKEN</b> 4</li>
     <li><b>feed schema</b> ce.observe/0.6.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">确定性擦除——安全谓词</a></h3>
+  <p class="job">判决擦除计划的行，覆盖三个可证明安全的类——<code>dead_file</code>、
+  <code>verbatim_doc</code> 与 <code>t1_twin</code>；其余行都以具名 reason code 拒绝。</p>
+  <pre>class  = 0 dead_file | 1 verbatim_doc | 2 t1_twin
+reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
+         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered</pre>
+  <p class="note">Rust 从三个来源家族组装整数事实；Haskell 执行固定的首个失败谓词。
+  超过上限的降级应答不授权任何擦除，而安全谓词没有可调旋钮。</p>
+  <ul class="consts">
+    <li><b>类别数</b> 3</li>
+    <li><b>理由代码数</b> 6</li>
+    <li><b>eraseRowCap</b> 4096</li>
+    <li><b>proto</b> 2.16.0</li>
+    <li><b>wire</b> erase/1</li>
   </ul>
 </div>
 

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How CodeEraser works — deterministic judgment, eleven families</title>
-<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: eleven judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
+<title>How CodeEraser works — deterministic judgment, twelve families</title>
+<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: twelve judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
 <link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
@@ -104,7 +104,7 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   on the diagram is a constant cited in the methodology sections below.</figcaption>
 </figure>
 
-<h2>The eleven judgment families</h2>
+<h2>The twelve judgment families</h2>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -495,6 +495,26 @@ permille = (lines - S) * 1000 / (H - S)
     <li><b>STOP_BUDGET_TOKENS</b> 400</li>
     <li><b>CHARS_PER_TOKEN</b> 4</li>
     <li><b>feed schema</b> ce.observe/0.6.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">Deterministic erase — the safety predicate</a></h3>
+  <p class="job">Judges erase-plan rows for three provable classes — <code>dead_file</code>,
+  <code>verbatim_doc</code>, and <code>t1_twin</code> — and refuses every unsafe
+  row with a named reason code.</p>
+  <pre>class  = 0 dead_file | 1 verbatim_doc | 2 t1_twin
+reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
+         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered</pre>
+  <p class="note">Rust assembles integer facts from the three source families;
+  Haskell applies the fixed first-failure predicate. A degraded over-cap reply
+  authorizes nothing, and the safety surface has no knobs.</p>
+  <ul class="consts">
+    <li><b>classes</b> 3</li>
+    <li><b>reason codes</b> 6</li>
+    <li><b>eraseRowCap</b> 4096</li>
+    <li><b>proto</b> 2.16.0</li>
+    <li><b>wire</b> erase/1</li>
   </ul>
 </div>
 
