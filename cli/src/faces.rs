@@ -109,3 +109,11 @@ pub fn erase_plan(root: &Path, core: &str) -> Result<Value> {
         root, None, core,
     )?))
 }
+
+/// The graph canvas document (batch 9 P18): ONE deadcode-family
+/// judgment answers verdicts AND position — the assembly and the
+/// file-tier projection live in graph::canvas. Read-only like every
+/// face.
+pub fn graph_canvas(root: &Path, core: &str) -> Result<Value> {
+    crate::graph::canvas::run(root, core)
+}

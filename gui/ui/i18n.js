@@ -8,7 +8,7 @@ const CE_I18N = {
   en: {
     tabStructure: "structure", tabTrend: "trend", tabCandidates: "candidates",
     tabScore: "score", tabErase: "erase", tabReports: "reports",
-    tabBench: "bench",
+    tabBench: "bench", tabGraph: "graph",
     benchSeries: "latency series (p50/p95 ms, self repository, release builds)",
     benchMetric: "metric", benchUnit: "cells are p50/p95 in ms; · = not measured at that version",
     benchFrozen: "frozen evaluation points (value + sealed-ledger source)",
@@ -62,9 +62,13 @@ const CE_I18N = {
     emptyStructure: "point the field above at a repository, then scan — map and tree render the same judgment",
     emptyTrend: "load to measure the score trajectory over mainline history",
     emptyCandidates: "load to join the three deletion signals over this repository",
+    emptyGraph: "load to draw the file reference graph — dead files and cycles from the same judgment the CLI prints",
+    graphCounts: (f, e, d, c) => `${f} files, ${e} edges — ${d} dead, ${c} cycles`, graphAlive: "alive",
+    graphInOut: (i, o) => `${i} in / ${o} out`, graphCycleOf: (n) => `in a cycle of ${n} files`,
+    graphUnresolved: (n) => `${n} unresolved sites — the graph refuses to know them`,
   },
   zh: {
-    tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选",
+    tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选", tabGraph: "引用图",
     tabScore: "分数", tabErase: "擦除", tabReports: "报告",
     tabBench: "实测",
     benchSeries: "延迟系列（p50/p95 毫秒，自仓，release 构建）",
@@ -119,6 +123,10 @@ const CE_I18N = {
     emptyStructure: "在上方输入仓库路径，点扫描——热图与树状渲染同一份判决",
     emptyTrend: "点加载，测量主线历史上的分数轨迹",
     emptyCandidates: "点加载，对本仓库联结三路删除信号",
+    emptyGraph: "点加载绘制文件引用图——死文件与环来自 CLI 打印的同一次判决",
+    graphCounts: (f, e, d, c) => `${f} 文件，${e} 边——${d} 死，${c} 环`, graphAlive: "存活",
+    graphInOut: (i, o) => `入 ${i} / 出 ${o}`, graphCycleOf: (n) => `处于 ${n} 文件环`,
+    graphUnresolved: (n) => `${n} 个未解析点位——图拒绝臆测它们`,
   },
 };
 

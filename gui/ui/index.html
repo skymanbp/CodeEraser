@@ -1,11 +1,8 @@
 <!doctype html>
-<!-- CodeEraser GUI (M6 S4a structure screen + M7-P4 trend and
-     deletion-candidate screens + M8-G3a i18n + M9 batch 4: score,
-     erase and diagnostics-hub screens): renders the report
-     documents and nothing else — no framework, no build step,
-     judgment zero-leak into JS (webview layer is rendering glue by
-     user ruling). Labels come from i18n.js (en default, zh switch);
-     data-i18n marks every static label. -->
+<!-- CodeEraser GUI: renders the report documents and nothing else —
+     no framework, no build step, judgment zero-leak into JS (webview
+     layer is rendering glue by user ruling). Labels come from i18n.js
+     (en default, zh switch); data-i18n marks every static label. -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -26,6 +23,7 @@
       <button class="tab" data-tab="erase" data-i18n="tabErase"></button>
       <button class="tab" data-tab="trend" data-i18n="tabTrend"></button>
       <button class="tab" data-tab="candidates" data-i18n="tabCandidates"></button>
+      <button class="tab" data-tab="graph" data-i18n="tabGraph"></button>
       <button class="tab" data-tab="reports" data-i18n="tabReports"></button>
       <button class="tab" data-tab="bench" data-i18n="tabBench"></button>
     </nav>
@@ -114,6 +112,17 @@
     </main>
   </div>
 
+  <div id="view-graph" class="view" hidden>
+    <section class="bar">
+      <button id="graph-load" data-i18n="load"></button>
+    </section>
+    <main>
+      <canvas id="graphcanvas"></canvas>
+      <aside id="graph-detail"></aside>
+      <div class="empty" id="empty-graph" data-i18n="emptyGraph"></div>
+    </main>
+  </div>
+
   <div id="view-reports" class="view" hidden>
     <section class="bar">
       <select id="hub-family"></select>
@@ -144,6 +153,7 @@
   <script src="structree.js" defer></script>
   <script src="trend.js" defer></script>
   <script src="candidates.js" defer></script>
+  <script src="graph.js" defer></script>
   <script src="score.js" defer></script>
   <script src="erase.js" defer></script>
   <script src="reports.js" defer></script>

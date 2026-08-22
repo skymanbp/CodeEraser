@@ -24,6 +24,7 @@ fn main() {
             commands::deadcode_report,
             commands::clone_report,
             commands::docdup_report,
+            commands::graphcanvas_report,
             commands::check_report,
             commands::erase_preview,
             commands::erase_apply,

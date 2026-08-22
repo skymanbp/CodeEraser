@@ -259,3 +259,5 @@
   background: linear-gradient(to right, var(--data) 0 var(--b), transparent var(--b) 100%),
     linear-gradient(to right, var(--data-soft) 0 var(--c), transparent var(--c) 100%);
 }
+/* ---- graph canvas (batch 9 P18): sizing rides `main canvas` in style.css ---- */
+#graphcanvas.pick { cursor: pointer; } /* hover names a node */

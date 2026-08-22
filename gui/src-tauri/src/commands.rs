@@ -139,6 +139,11 @@ face_cmd!(
 face_cmd!(deadcode_report, "deadcode", codeeraser::faces::deadcode);
 face_cmd!(clone_report, "clone", codeeraser::faces::clone_t3);
 face_cmd!(docdup_report, "docdup", codeeraser::faces::docdup);
+face_cmd!(
+    graphcanvas_report,
+    "graphcanvas",
+    codeeraser::faces::graph_canvas
+);
 face_cmd!(check_report, "check", codeeraser::faces::check);
 face_cmd!(churn_report, "churn", days: |r, _c, d| codeeraser::faces::churn(r, d));
 face_cmd!(join_report, "join", days: codeeraser::faces::join);

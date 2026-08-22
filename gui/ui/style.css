@@ -177,7 +177,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 
 /* ---- main canvas + detail aside (shared) ---- */
 main { flex: 1; display: flex; min-height: 0; position: relative; }
-main svg { flex: 1; height: 100%; }
+main svg, main canvas { flex: 1; height: 100%; min-width: 0; }
 main aside {
   width: var(--aside-w);
   border-left: 1px solid var(--line);

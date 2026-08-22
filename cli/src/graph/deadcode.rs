@@ -66,12 +66,20 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
 /// degraded observe over a wire already in hand — boundaries
 /// holding the one snapshot call this, never a second measurement.
 pub fn judge_report(root: &Path, core: &str, w: &GraphWire) -> Result<Report> {
-    let reply = judge(core, w, &[])?;
+    Ok(judged(root, core, w, &[])?.0)
+}
+
+/// The same half-door, answering position rows too — the canvas
+/// face (batch 9 P18) needs the verdicts AND the pos table from the
+/// ONE judgment; returning the raw reply beside the Report keeps
+/// consume private and the observe in one owner.
+pub fn judged(root: &Path, core: &str, w: &GraphWire, pos: &[i64]) -> Result<(Report, Value)> {
+    let reply = judge(core, w, pos)?;
     let report = consume(&reply, &w.nodes, w.unresolved_sites)?;
     if let Some(reason) = &report.degraded {
         observe(root, reason);
     }
-    Ok(report)
+    Ok((report, reply))
 }
 
 // The report's JSON face lives in report.rs (deadcode_json) with the
