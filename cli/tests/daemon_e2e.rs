@@ -256,8 +256,5 @@ fn the_token_gates_the_connection_and_the_daemon_survives_refusals() {
 
     // the real client reads the same file and gets through — the
     // refusals above closed CONNECTIONS, never the daemon
-    let r = client::request_if_running(&root, &Request::Ping).expect("authed ping");
-    assert!(matches!(r, Response::Pong { .. }), "got {r:?}");
-
-    common::shutdown_and_wait(&root, child, "daemon after auth battery");
+    common::assert_alive_then_shutdown(&root, child, "daemon after auth battery");
 }

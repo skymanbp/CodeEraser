@@ -9,6 +9,7 @@
 //! after 30 min idle or on a version-skew hello. Wire contract:
 //! contracts/DAEMON.md + the daemon_proto goldens.
 
+mod bind;
 mod conn;
 mod dispatch;
 mod idle;
@@ -19,8 +20,8 @@ use super::coldstart;
 use super::judge::Judge;
 use super::proto::socket_name;
 use anyhow::{Context, Result};
+use interprocess::local_socket::Stream;
 use interprocess::local_socket::traits::ListenerExt;
-use interprocess::local_socket::{GenericNamespaced, ListenerOptions, Stream, ToNsName};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
@@ -60,14 +61,7 @@ pub(super) struct Shared {
 pub fn serve(root: &Path) -> Result<()> {
     let root = std::fs::canonicalize(root).with_context(|| format!("root {}", root.display()))?;
     let name = socket_name(&root);
-    let ns = name
-        .clone()
-        .to_ns_name::<GenericNamespaced>()
-        .context("socket name")?;
-    let listener = ListenerOptions::new()
-        .name(ns)
-        .create_sync()
-        .with_context(|| format!("bind {name} (another daemon already serving this root?)"))?;
+    let listener = bind::bind(&name)?;
     // after the bind on purpose: the bind is the singleton race, and
     // a loser minting first would lock clients out of the winner
     let token = auth::establish(&root)?;

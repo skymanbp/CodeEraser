@@ -76,6 +76,16 @@ pub fn shutdown_daemon(dir: &Path) {
     let _ = client::request_if_running(dir, &Request::Shutdown);
 }
 
+/// The daemon must still ANSWER (it survived whatever the test threw
+/// at it), then take the clean shutdown — the shared tail of the
+/// refusal-and-survival cases (auth refusals, second-bind refusal).
+pub fn assert_alive_then_shutdown(root: &Path, child: Child, what: &str) {
+    use codeeraser::daemon::{client, proto::Request, proto::Response};
+    let r = client::request_if_running(root, &Request::Ping).expect("ping the survivor");
+    assert!(matches!(r, Response::Pong { .. }), "got {r:?}");
+    shutdown_and_wait(root, child, what);
+}
+
 /// Clean daemon shutdown (Bye asserted) then reaped exit — the
 /// shared tail of every daemon e2e case.
 pub fn shutdown_and_wait(root: &Path, child: Child, what: &str) {
