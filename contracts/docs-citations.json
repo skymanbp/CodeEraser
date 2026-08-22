@@ -1491,7 +1491,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:10": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 180,
+    "line": 183,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:100": {
@@ -1591,7 +1591,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:12": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 167,
+    "line": 170,
     "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:13": {
@@ -1606,7 +1606,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:15": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 84,
+    "line": 87,
     "text": "fn visible(line: &str, mask: &[bool]) -> String {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:16": {
@@ -1741,7 +1741,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:4": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 55,
+    "line": 58,
     "text": "fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:40": {
@@ -1796,7 +1796,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:5": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 65,
+    "line": 68,
     "text": "if !cur.is_empty() && no != last + 1 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:50": {
@@ -1851,7 +1851,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:6": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 98,
+    "line": 101,
     "text": "fn paragraph_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:60": {
@@ -1906,7 +1906,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:7": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 109,
+    "line": 112,
     "text": "fn html_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:70": {
@@ -1961,7 +1961,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:8": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 117,
+    "line": 120,
     "text": "fn bare_marker(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:80": {
@@ -2016,7 +2016,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:9": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 139,
+    "line": 142,
     "text": "fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:90": {
@@ -3036,7 +3036,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:116": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 226,
+    "line": 230,
     "text": "let dead: Vec<[usize; 2]> ="
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:117": {
@@ -3061,7 +3061,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:120": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 245,
+    "line": 249,
     "text": "// pre-2.18 core: no reported table — absent parses as empty"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:121": {
@@ -3536,7 +3536,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 261,
+    "line": 265,
     "text": ".unwrap_or(report.degraded.is_some() || !report.dead.is_empty());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
@@ -3721,7 +3721,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:28": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 83,
+    "line": 86,
     "text": "let rows: Vec<[i64; 6]> = serde_json::from_value(reply[\"pos\"].clone()).context(\"pos rows\")?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:29": {
@@ -3776,7 +3776,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:38": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 154,
+    "line": 157,
     "text": "\"a\": u.a, \"b\": u.b, \"tokens\": u.tokens,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:39": {
@@ -3796,7 +3796,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:41": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 134,
+    "line": 137,
     "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
@@ -3841,7 +3841,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 101,
+    "line": 104,
     "text": "fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report) -> Vec<FileRow> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
@@ -3896,7 +3896,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 107,
+    "line": 110,
     "text": "(b.b_file.clone(), b.a_file.clone())"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
@@ -4066,32 +4066,32 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:90": {
     "target": "../../../cli/src/main_judge.rs",
-    "line": 174,
+    "line": 175,
     "text": "codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:91": {
     "target": "../../../cli/src/main_judge.rs",
-    "line": 104,
+    "line": 105,
     "text": "family_checked(j, name, run, print, |_| None)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:92": {
     "target": "../../../cli/src/main_judge.rs",
-    "line": 202,
+    "line": 203,
     "text": "/// emit plus a veto: a --check style gate turns a printed report"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:93": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 228,
+    "line": 231,
     "text": "\"{}\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:94": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 64,
-    "text": "let pos_req: Vec<i64> = deadcode::file_nodes(&w).iter().map(|&(i, _)| i).collect();"
+    "line": 68,
+    "text": "let degraded = (reply[\"degraded\"].as_bool() == Some(true))"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:95": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 219,
+    "line": 222,
     "text": "\"{}\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:96": {

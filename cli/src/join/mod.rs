@@ -63,7 +63,10 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     drop(idx);
     let pos_req: Vec<i64> = deadcode::file_nodes(&w).iter().map(|&(i, _)| i).collect();
     let reply = deadcode::judge(core, &w, &pos_req)?;
-    let degraded = reply["reason"].as_str().map(str::to_string);
+    // Degrade reads the wire's boolean, not reason presence (the C9
+    // discipline; same throat shape as deadcode::consume).
+    let degraded = (reply["degraded"].as_bool() == Some(true))
+        .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
     let posmap = pos_map(&reply, &w)?;
     let ch = churn::run(root, days)?;
     Ok(Report {

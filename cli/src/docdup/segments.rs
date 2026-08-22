@@ -29,10 +29,13 @@ pub struct RawSeg {
     pub lines: Vec<SegLine>,
 }
 
-/// The line counts md extraction sheds without segments: indented
-/// code (NOT modeled — md.rs:14-16) and HTML-markup lines (the
-/// 2026-08-14 attainment-line-B amendment, ccm #842) — the ledger
-/// keeps both visible instead of silent.
+/// Md extraction's visibility ledger — two different fates. `html`
+/// lines are SHED (markup never reaches a segment); `indented` lines
+/// are counted but KEPT: indented code is deliberately not modeled
+/// (block context is list-sensitive — graph/md.rs:14-16), so those
+/// lines stay prose and this count keeps that approximation visible
+/// instead of silent (2026-08-14 attainment-line-B amendment, ccm
+/// #842).
 #[derive(Default)]
 pub struct MdShed {
     pub indented: u64,

@@ -129,8 +129,10 @@ overrides every class. The graded size zone between the soft line and
 the hard budget stays observe-only by default; `[guard] zone_tiers`
 opts a repo into the position→tier map (<25% observe / 25–75% warn /
 >75% ask). Honest boundary: PreToolUse shapes behavior,
-it is not a security wall — shell writes bypass it, and the Stop
-audit + CI gates are the backstop.
+it is not a security wall — shell writes bypass it. The backstop is
+layered by what each leg measures: the Stop audit re-judges net LOC
+and touched duplicates, and the CI gates carry the hard size wall
+and the ratchet.
 
 ## Documentation
 

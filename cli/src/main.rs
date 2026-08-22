@@ -48,9 +48,19 @@ fn parse_localized() -> Cli {
             let _ = cmd.print_help();
             std::process::exit(0);
         }
-        Err(e) => e.exit(),
+        Err(e) => usage_exit(e),
     };
-    Cli::from_arg_matches(&matches).unwrap_or_else(|e| e.exit())
+    Cli::from_arg_matches(&matches).unwrap_or_else(|e| usage_exit(e))
+}
+
+/// Clap's usage exit 2 is also the PreToolUse deny code — the hook
+/// lane (R3 fail-open) prints and exits 1: loud, never blocking.
+fn usage_exit(e: clap::Error) -> ! {
+    if std::env::args().any(|a| a == "--hook") {
+        let _ = e.print();
+        std::process::exit(1);
+    }
+    e.exit()
 }
 
 /// Analysis-family dispatch (the metric/judgment subcommands); hands

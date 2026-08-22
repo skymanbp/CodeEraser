@@ -146,7 +146,7 @@ degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = tru
 by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L57), [Graph.hs:161-186](../../../core/app/CE/Graph.hs#L161)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:261-267](../../../cli/src/graph/deadcode.rs#L261)) and `ce deadcode --check` relays the
+([deadcode.rs:265-271](../../../cli/src/graph/deadcode.rs#L265)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:70-90](../../../cli/src/main_cmds.rs#L70)).
 
 ### 5. Kept arcs and liveness
@@ -272,7 +272,7 @@ Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
-([deadcode.rs:226-230](../../../cli/src/graph/deadcode.rs#L226)).
+([deadcode.rs:230-234](../../../cli/src/graph/deadcode.rs#L230)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
@@ -284,7 +284,7 @@ contract, because the failing table is what licenses `ce erase`'s dead-file rows
 arriving in `dead` refuses as wire skew, never a directory erase
 ([deadcode.rs:217-225](../../../cli/src/graph/deadcode.rs#L217)); against a pre-2.18 core the
 absent bit falls back to the client's old conjunction, byte-identical
-([deadcode.rs:245-249](../../../cli/src/graph/deadcode.rs#L245)). Both lists, the counts, and
+([deadcode.rs:249-253](../../../cli/src/graph/deadcode.rs#L249)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
 ([report.rs:75-89](../../../cli/src/report.rs#L75)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported

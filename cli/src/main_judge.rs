@@ -1,8 +1,9 @@
-//! Judgment-family subcommand bodies (`ce clone`, `ce docdup`) —
-//! split from main_cmds.rs when the docdup family pushed it over the
-//! repo's own 300-line gate, with the shared flag set factored the
-//! same day the ratchet caught DocdupArgs re-growing CloneArgs
-//! field-for-field.
+//! Judgment-family subcommand bodies (`ce clone`, `ce docdup`,
+//! `ce trend`, `ce structure`, `ce join`) — split from main_cmds.rs
+//! when the docdup family pushed it over the repo's own 300-line
+//! gate, with the shared flag set factored the same day the ratchet
+//! caught DocdupArgs re-growing CloneArgs field-for-field; the other
+//! three families moved in as they grew the same JudgeArgs shape.
 
 use crate::main_cmds::{OutFormat, fail, json, or_cwd};
 use codeeraser::{dedup, docdup, join};

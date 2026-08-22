@@ -220,7 +220,11 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
         nodes: nodes.len(),
         kept: reply["counts"]["kept"].as_u64().unwrap_or(0),
         unresolved_sites,
-        degraded: reply["reason"].as_str().map(str::to_string),
+        // The wire's degraded BIT is authoritative (the C9 read-the-
+        // real-boolean discipline, contracts/VERSIONING.md); reason
+        // is its text, not its signal.
+        degraded: (reply["degraded"].as_bool() == Some(true))
+            .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string()),
         fail: false,
     };
     let dead: Vec<[usize; 2]> =
