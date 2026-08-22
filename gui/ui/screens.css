@@ -6,60 +6,60 @@
 /* ---- structure summary strip ---- */
 #summary {
   display: flex;
-  gap: 26px;
+  gap: var(--s5);
   align-items: baseline;
-  padding: 10px 14px;
+  padding: var(--s2) var(--s4);
   border-bottom: 1px solid var(--line);
   font-variant-numeric: tabular-nums;
 }
-#summary .stat { color: var(--dim); font-size: 13px; }
-#summary .stat small { color: var(--faint); margin-left: 5px; }
+#summary .stat { color: var(--ink-mid); font-size: var(--t-sm); }
+#summary .stat small { color: var(--ink-min); margin-left: var(--s1); }
 /* chips: the flex gap is the inter-pair separator (HTML collapses a
    two-space join), values carry the weight, zero axes recede */
-#entropy, #axes { display: flex; gap: 14px; }
+#entropy, #axes { display: flex; gap: var(--s4); }
 #entropy b, #axes b { color: var(--ink); font-weight: 600; }
-#axes .zero, #axes .zero b { color: var(--faint); }
-#score { font-size: 24px; font-weight: 650; color: var(--ink); }
+#axes .zero, #axes .zero b { color: var(--ink-min); }
+#score { font-size: var(--t-xl); font-weight: 600; color: var(--ink); font-family: var(--face-display); }
 #scorebar {
   width: 120px;
   height: 4px;
-  margin-top: 3px;
-  border-radius: 2px;
+  margin-top: var(--s1);
+  border-radius: var(--r-sm);
   background: var(--line);
   overflow: hidden;
 }
-#scorefill { height: 100%; border-radius: 2px; background: var(--accent-hi); }
-#legend { margin-left: auto; display: flex; gap: 3px; align-items: center; }
+#scorefill { height: 100%; border-radius: var(--r-sm); background: var(--accent-hi); }
+#legend { margin-left: auto; display: flex; gap: var(--s1); align-items: center; }
 #legend i {
   width: 12px;
   height: 12px;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   display: inline-block;
   box-shadow: inset 0 0 0 1px rgba(221, 227, 236, 0.16);
 }
-#legend span { margin-left: 6px; font-size: 12px; color: var(--faint); }
+#legend span { margin-left: var(--s2); font-size: var(--t-xs); color: var(--ink-min); font-family: var(--face-small); }
 
 /* ---- structure view switch (map | tree) — lives in the summary
    row beside the legend it swaps under; same family as #tabs, but
    no brand underline: vermilion stays the brand channel ---- */
 #vswitch {
-  margin-left: 18px;
+  margin-left: var(--s4);
   display: flex;
   align-self: center;
   background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--r-md);
   padding: 2px;
   gap: 2px;
 }
 #vswitch button {
   background: none;
   border: 0;
-  color: var(--dim);
-  border-radius: 4px;
-  padding: 0 12px;
-  height: calc(var(--ctl-h) - 8px);
-  font-size: 12.5px;
+  color: var(--ink-low);
+  border-radius: var(--r-sm);
+  padding: 0 var(--s3);
+  height: calc(var(--ctl-h) - var(--s2));
+  font-size: var(--t-sm);
 }
 #vswitch button:hover { color: var(--ink); }
 #vswitch button.on {
@@ -74,9 +74,9 @@
   flex: 1;
   overflow-y: auto;
   scrollbar-gutter: stable; /* expand/collapse must not shift columns */
-  padding: 0 12px 8px;
+  padding: 0 var(--s3) var(--s2);
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: var(--t-sm);
 }
 /* grid, not flex: own / subtree / files line up as columns down the
    whole list. The reading cap sits on the ROWS, not the pane, so the
@@ -99,9 +99,9 @@
   /* the 3px left rail is the subtree-heat channel; square on the
      rail side so rows fuse into one scannable column */
   border-left: 3px solid transparent;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
   cursor: pointer;
-  color: var(--dim);
+  color: var(--ink-mid);
 }
 /* background-color, never the shorthand: it would wipe the guides */
 .trow:hover { background-color: var(--panel); }
@@ -114,12 +114,13 @@
   z-index: 1;
   background-color: var(--bg);
   background-image: none;
-  color: var(--faint);
-  font-size: 11px;
+  color: var(--ink-min);
+  font-size: var(--t-xs);
+  font-family: var(--face-small);
   cursor: default;
 }
 .trow.thead:hover { background-color: var(--bg); }
-.trow .tw { text-align: center; color: var(--dim); user-select: none; }
+.trow .tw { text-align: center; color: var(--ink-low); user-select: none; }
 .trow .tname {
   color: var(--ink);
   /* truncate, never reflow — the row title holds the full path */
@@ -127,39 +128,39 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.trow .tname .tags { font-style: normal; color: var(--faint); font-size: 11px; margin-left: 8px; }
+.trow .tname .tags { font-style: normal; color: var(--ink-min); font-size: var(--t-xs); margin-left: var(--s2); }
 .trow .fchip {
   justify-self: center;
   min-width: 22px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: var(--r-pill);
   padding: 1px 6px;
-  font-size: 11px;
+  font-size: var(--t-xs);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   /* the ring keeps own=1 (the darkest fill) visible on the panel */
   box-shadow: inset 0 0 0 1px rgba(221, 227, 236, 0.22);
 }
 .trow .fchip:empty { box-shadow: none; }
-.trow .fchip:empty::before { content: "·"; color: var(--faint); }
+.trow .fchip:empty::before { content: "·"; color: var(--ink-min); }
 .trow.thead .fchip { box-shadow: none; min-width: 0; padding: 0; font-weight: 400; }
 .trow .tsub,
 .trow .tmeta {
   justify-self: end;
-  color: var(--dim);
-  font-size: 11.5px;
+  color: var(--ink-low);
+  font-size: var(--t-xs);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.trow .tmeta { color: var(--faint); }
+.trow .tmeta { color: var(--ink-min); }
 
 /* ---- treemap ---- */
 #treemap rect { stroke: var(--bg); stroke-width: 1.5; cursor: pointer; }
-#treemap rect:hover { stroke: var(--dim); }
+#treemap rect:hover { stroke: var(--ink-low); }
 #treemap rect.sel { stroke: var(--focus); stroke-width: 2; }
 #treemap text {
   fill: var(--ink);
-  font-size: 11px;
+  font-size: var(--t-xs);
   pointer-events: none;
   font-family: var(--mono);
   /* halo: label legibility decoupled from tile lightness, so the hot
@@ -176,53 +177,54 @@
 #trendchart .trendline { fill: none; stroke: var(--accent-hi); stroke-width: 2; }
 #trendchart .trendarea { fill: rgba(63, 116, 171, 0.12); stroke: none; }
 #trendchart .trendpt { fill: var(--ink); cursor: pointer; transition: r 0.12s; }
-#trendchart .trendpt:hover { fill: var(--dim); r: 6px; }
+#trendchart .trendpt:hover { fill: var(--ink-low); r: 6px; }
 /* "latest" is marked structurally (a ring), keeping teal for focus */
 #trendchart .trendpt.end { stroke: var(--accent-hi); stroke-width: 2; }
 #trendchart .axis {
-  fill: var(--faint);
-  font-size: 11px;
-  font-family: var(--mono);
+  fill: var(--ink-min);
+  font-size: var(--t-xs);
+  font-family: var(--face-small);
   font-variant-numeric: tabular-nums;
 }
 #trendchart .tick { text-anchor: end; }
 #trendchart .endlabel {
   fill: var(--ink);
-  font-size: 12px;
+  font-size: var(--t-sm);
   font-weight: 600;
   font-family: var(--mono);
 }
-.bigscore { font-size: 24px; font-weight: 650; color: var(--ink); margin-bottom: 10px; }
-.bigscore small { font-size: 13px; color: var(--faint); font-weight: 400; }
+.bigscore { font-size: var(--t-xl); font-weight: 600; color: var(--ink); margin-bottom: var(--s2); font-family: var(--face-display); }
+.bigscore small { font-size: var(--t-sm); color: var(--ink-min); font-weight: 400; }
 
 /* ---- candidate browser ---- */
 #cand-list {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 14px;
+  padding: var(--s2) var(--s4);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--t-sm);
+  color: var(--ink-mid);
 }
 #cand-list h2 {
-  font-size: 11px;
+  font-size: var(--t-xs);
   font-weight: 600;
-  color: var(--dim);
+  color: var(--ink-low);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin: 14px 0 7px;
+  margin: var(--s4) 0 var(--s2);
   padding-left: 12px; /* headings sit on the row-text rail */
 }
 #cand-list .cand {
   position: relative;
   overflow: hidden;
   display: flex;
-  gap: 10px;
+  gap: var(--s2);
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: var(--s2);
   border: 1px solid var(--line);
   border-left: 2px solid var(--line);
-  border-radius: var(--radius);
-  margin-bottom: 4px;
+  border-radius: var(--r-md);
+  margin-bottom: var(--s1);
   cursor: pointer;
 }
 /* the magnitude bar: --w is tokens/section-max, set inline by
@@ -239,9 +241,9 @@
 #cand-list .cand.sel { border-left-color: var(--focus); }
 #cand-list .cand .pair { flex: 1; overflow-wrap: anywhere; }
 #cand-list .cand b { color: var(--ink); font-weight: 600; }
-#cand-list .cand .dir { color: var(--faint); font-weight: 400; }
+#cand-list .cand .dir { color: var(--ink-min); font-weight: 400; }
 #cand-list .cand > span:last-child {
-  color: var(--dim);
+  color: var(--ink-mid);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -250,15 +252,15 @@
 /* ---- score screen (batch 4): the check verdict as a hero — the
    verdict pill is semantic state (ok/bad), separate from brand and
    from the alarm ramp; numbers stay tabular ---- */
-main.col { flex-direction: column; overflow-y: auto; padding: 14px; gap: 12px; }
+main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: var(--s3); }
 #check-hero { font-variant-numeric: tabular-nums; }
-#check-hero #check-score { font-size: 42px; font-weight: 650; color: var(--ink); }
-#check-hero small { font-size: 15px; color: var(--faint); margin-left: 6px; }
+#check-hero #check-score { font-size: var(--t-hero); font-weight: 600; color: var(--ink); font-family: var(--face-display); letter-spacing: var(--ls-hero); font-variant-numeric: proportional-nums lining-nums; }
+#check-hero small { font-size: var(--t-lg); color: var(--ink-min); margin-left: var(--s2); }
 #check-hero .verdict {
-  margin-left: 14px;
-  padding: 2px 10px;
-  border-radius: 10px;
-  font-size: 12px;
+  margin-left: var(--s4);
+  padding: 2px var(--s2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-xs);
   font-weight: 600;
   vertical-align: middle;
 }
@@ -267,90 +269,91 @@ main.col { flex-direction: column; overflow-y: auto; padding: 14px; gap: 12px; }
 #check-hero #check-bar {
   width: 320px;
   height: 5px;
-  margin-top: 8px;
-  border-radius: 2px;
+  margin-top: var(--s2);
+  border-radius: var(--r-sm);
   background: var(--line);
   overflow: hidden;
 }
 #check-hero #check-bar div { height: 100%; background: var(--accent-hi); }
-#check-axes { display: flex; gap: 14px; color: var(--dim); font-size: 13px; }
+#check-axes { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); }
 #check-axes b { color: var(--ink); }
-#check-axes .zero, #check-axes .zero b { color: var(--faint); }
-#check-ratchet { font-size: 13px; color: var(--dim); max-width: 420px; }
-#check-ratchet > b { color: var(--ink); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+#check-axes .zero, #check-axes .zero b { color: var(--ink-min); }
+#check-ratchet { font-size: var(--t-sm); color: var(--ink-mid); max-width: 420px; }
+#check-ratchet > b { color: var(--ink); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; }
 #check-ratchet .row b { font-variant-numeric: tabular-nums; }
-#check-named { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+#check-named { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-mid); }
 .row.bad { color: var(--err); }
 
 /* ---- erase screen (batch 4): plan rows read as a ledger — the
    kill mark is semantic (will act), advisory rows recede; the diff
    is the CLI's unified diff verbatim in mono ---- */
-#erase-summary { display: flex; gap: 14px; color: var(--dim); font-size: 13px; align-self: center; }
+#erase-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
 #erase-summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
 #erase-summary .ok b { color: var(--focus); }
-#erase-summary .zero, #erase-summary .zero b { color: var(--faint); }
+#erase-summary .zero, #erase-summary .zero b { color: var(--ink-min); }
 .erow {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto;
   grid-template-areas: "i path class" ". reason reason" ". prov prov";
-  gap: 0 8px;
-  padding: 6px 10px;
+  gap: 0 var(--s2);
+  padding: var(--s2);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  margin-bottom: 4px;
+  border-radius: var(--r-md);
+  margin-bottom: var(--s1);
   font-family: var(--mono);
-  font-size: 12px;
-  color: var(--dim);
+  font-size: var(--t-sm);
+  color: var(--ink-mid);
 }
 .erow i { grid-area: i; font-style: normal; text-align: center; }
 .erow.kill i { color: var(--err); }
 .erow b { grid-area: path; color: var(--ink); overflow-wrap: anywhere; }
-.erow em { grid-area: class; font-style: normal; color: var(--faint); font-size: 11px; }
+.erow em { grid-area: class; font-style: normal; color: var(--ink-min); font-size: var(--t-xs); }
 .erow > span { grid-area: reason; }
 .erow.kill > span { color: var(--err); }
-.erow small { grid-area: prov; color: var(--faint); overflow-wrap: anywhere; }
+.erow small { grid-area: prov; color: var(--ink-min); overflow-wrap: anywhere; }
 .erow.adv { opacity: 0.85; }
 #erase-diff {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--t-sm);
   line-height: 1.5;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 10px 12px;
+  border-radius: var(--r-md);
+  padding: var(--s2) var(--s3);
   overflow: auto;
   max-height: 45vh;
   white-space: pre;
-  color: var(--dim);
+  color: var(--ink-mid);
 }
 button.danger { border-color: var(--err); color: var(--err); }
 button.danger:hover { background: rgba(224, 138, 130, 0.12); }
 
 /* ---- diagnostics hub (batch 4): the document rendered as itself —
    counts as chips, row arrays as real tables ---- */
-#hub-chips { display: flex; gap: 12px; flex-wrap: wrap; color: var(--dim); font-size: 12px; align-self: center; }
+#hub-chips { display: flex; gap: var(--s3); flex-wrap: wrap; color: var(--ink-low); font-size: var(--t-xs); align-self: center; }
 #hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: 12px; color: var(--dim); letter-spacing: 0.06em; text-transform: uppercase; margin: 14px 0 6px; }
-#hub-tables h3 small, #bench-series h3 small { color: var(--faint); margin-left: 6px; }
+#hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
+#hub-tables h3 small, #bench-series h3 small { color: var(--ink-min); margin-left: var(--s2); }
 #hub-tables table, #bench-series table {
   border-collapse: collapse;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--t-sm);
   width: 100%;
   max-width: 1080px;
 }
 #hub-tables th, #bench-series th {
   text-align: left;
-  color: var(--faint);
+  color: var(--ink-min);
   font-weight: 400;
-  font-size: 11px;
-  padding: 3px 12px 3px 0;
+  font-size: var(--t-xs);
+  font-family: var(--face-small);
+  padding: var(--s1) var(--s3) var(--s1) 0;
   border-bottom: 1px solid var(--line);
 }
 #hub-tables td, #bench-series td {
-  padding: 3px 12px 3px 0;
+  padding: var(--s1) var(--s3) var(--s1) 0;
   border-bottom: 1px solid var(--line);
-  color: var(--dim);
+  color: var(--ink-mid);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }

@@ -6,30 +6,26 @@
    keyboard/focus + selection channel, and the alarm ramp in main.js
    stays the one semantic channel for findings density. Three screens
    share this shell: header (brand + root + tabs), a per-view control
-   bar, a main canvas with a detail aside. */
+   bar, a main canvas with a detail aside. Magnitudes come from
+   tokens.css (faces, type, space, ink); this file owns only the
+   ground/chrome/semantic colours and their uses. */
 :root {
   --bg: #12151a;
   --panel: #1a1f27;
   --panel-2: #222834;
-  --ink: #dde3ec;
-  --dim: #8b95a7;
-  --faint: #7b8598; /* 4.9:1 on --bg — ticks and hints stay AA-legible */
   --line: #2b323e;
   --brand: #e4574a;
   --accent: #33608f;
   --accent-hi: #3f74ab;
   --focus: #57c7a8;
   --err: #e08a82;
-  --ctl-h: 30px;
-  --radius: 6px;
-  --mono: "Cascadia Mono", Consolas, monospace;
 }
 * { box-sizing: border-box; margin: 0; }
 html, body { height: 100%; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font: 14px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font: var(--t-md)/var(--lh-md) var(--face-text);
   display: flex;
   flex-direction: column;
 }
@@ -45,18 +41,18 @@ button { cursor: pointer; transition: background 0.12s, color 0.12s, border-colo
 /* ---- header: brand · root · tabs · lang · status ---- */
 header {
   display: flex;
-  gap: 10px;
+  gap: var(--s2);
   align-items: center;
-  padding: 9px 14px;
+  padding: var(--s2) var(--s4);
   border-bottom: 1px solid var(--line);
   background: var(--panel);
 }
 #brand {
   display: flex;
-  gap: 7px;
+  gap: var(--s2);
   align-items: center;
   color: var(--ink);
-  font-size: 13px;
+  font-size: var(--t-sm);
   font-weight: 600;
   letter-spacing: 0.04em;
   white-space: nowrap;
@@ -71,18 +67,19 @@ header input[type="text"] {
   background: var(--bg);
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0 10px;
+  border-radius: var(--r-md);
+  padding: 0 var(--s2);
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: var(--t-sm);
 }
 header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 /* the anchoring echo: where the typed root actually resolved (batch
    4) — quiet metadata, full path on the tooltip */
 #rootecho {
   max-width: 200px;
-  color: var(--faint);
-  font-size: 11.5px;
+  color: var(--ink-min);
+  font-size: var(--t-xs);
+  font-family: var(--face-small);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -91,50 +88,50 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   display: flex;
   background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--r-md);
   padding: 2px;
   gap: 2px;
 }
 #tabs .tab {
   position: relative;
   background: none;
-  color: var(--dim);
+  color: var(--ink-low);
   border: 0;
-  border-radius: 4px;
-  padding: 0 14px;
-  height: calc(var(--ctl-h) - 6px);
+  border-radius: var(--r-sm);
+  padding: 0 var(--s4);
+  height: calc(var(--ctl-h) - var(--s2));
 }
 #tabs .tab:hover { color: var(--ink); }
 #tabs .tab.on { background: var(--panel-2); color: var(--ink); }
 #tabs .tab.on::after {
   content: "";
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: var(--s3);
+  right: var(--s3);
   bottom: 2px;
   height: 2px;
-  border-radius: 1px;
+  border-radius: var(--r-sm);
   background: var(--brand);
 }
 #lang {
   background: none;
-  color: var(--dim);
+  color: var(--ink-low);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--r-md);
   height: var(--ctl-h);
-  padding: 0 10px;
-  font-size: 12.5px;
+  padding: 0 var(--s2);
+  font-size: var(--t-sm);
 }
-#lang:hover { color: var(--ink); border-color: var(--dim); }
+#lang:hover { color: var(--ink); border-color: var(--ink-low); }
 #status {
   /* fixed column: a status text sized to itself would shove the tab
      strip sideways on every screen switch and mid-run swap */
   flex: 0 0 230px;
-  color: var(--dim);
+  color: var(--ink-low);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12.5px;
+  font-size: var(--t-sm);
   text-align: right;
 }
 #status.err { color: var(--err); }
@@ -143,12 +140,12 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 .view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .bar {
   display: flex;
-  gap: 14px;
+  gap: var(--s4);
   align-items: center;
-  padding: 8px 14px;
+  padding: var(--s2) var(--s4);
   border-bottom: 1px solid var(--line);
 }
-.bar label { color: var(--dim); display: flex; gap: 6px; align-items: center; }
+.bar label { color: var(--ink-low); display: flex; gap: var(--s2); align-items: center; }
 .bar input[type="checkbox"] { accent-color: var(--accent-hi); }
 .bar input[type="number"] {
   width: 64px;
@@ -156,7 +153,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   background: var(--panel);
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--r-md);
   padding: 0 8px;
   font-variant-numeric: tabular-nums;
 }
@@ -165,7 +162,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   background: var(--accent);
   color: var(--ink);
   border: 0;
-  border-radius: var(--radius);
+  border-radius: var(--r-md);
   height: var(--ctl-h);
   padding: 0 20px;
   font-weight: 600;
@@ -177,29 +174,29 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 main { flex: 1; display: flex; min-height: 0; position: relative; }
 main svg { flex: 1; height: 100%; }
 main aside {
-  width: 340px;
+  width: var(--aside-w);
   border-left: 1px solid var(--line);
-  padding: 14px;
+  padding: var(--s4);
   overflow-y: auto;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--t-sm);
 }
 main aside h2 {
-  font-size: 12px;
-  margin-bottom: 10px;
+  font-size: var(--t-sm);
+  margin-bottom: var(--s2);
   color: var(--ink);
   overflow-wrap: anywhere;
 }
-main aside .row { padding: 3px 0; color: var(--dim); overflow-wrap: anywhere; }
+main aside .row { padding: var(--s1) 0; color: var(--ink-mid); overflow-wrap: anywhere; }
 main aside .row b { color: var(--ink); font-weight: 600; }
 .empty {
   position: absolute;
-  inset: 0 340px 0 0; /* skip the aside so the hint centers on the canvas */
+  inset: 0 var(--aside-w) 0 0; /* skip the aside so the hint centers on the canvas */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--faint);
-  font-size: 13px;
+  color: var(--ink-min);
+  font-size: var(--t-sm);
   pointer-events: none;
 }
 
@@ -208,10 +205,10 @@ main aside .row b { color: var(--ink); font-weight: 600; }
 ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: var(--line);
-  border-radius: 5px;
+  border-radius: var(--r-sm);
   border: 2px solid var(--bg);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-min); }
 
 @media (prefers-reduced-motion: reduce) {
   button, #trendchart .trendpt { transition: none; }

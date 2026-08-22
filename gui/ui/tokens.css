@@ -1,0 +1,33 @@
+/* CodeEraser GUI — the token system (batch 9 P3): one authority for
+   every magnitude the two stylesheets once spread as ad-hoc literals.
+   Faces are optical-size tokens, type is six integer steps, space is
+   a 4px grid, ink is a four-step ramp with the AA floor held at the
+   bottom. Ground/chrome/semantic colours carry over unchanged in
+   style.css — this file owns faces, type, space and ink only. */
+:root {
+  /* faces — optical size is a token, not a guess */
+  --face-display: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --face-text:    "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --face-small:   "Segoe UI Variable Small", "Segoe UI", system-ui, sans-serif;
+  --mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
+
+  /* type: six steps, all integers, no half-pixels */
+  --t-hero: 40px; --lh-hero: 1.05; --ls-hero: -0.02em;
+  --t-xl:   28px; --lh-xl:   1.10; --ls-xl:   -0.015em;
+  --t-lg:   18px; --lh-lg:   1.30;
+  --t-md:   14px; --lh-md:   1.45;
+  --t-sm:   13px; --lh-sm:   1.40;
+  --t-xs:   11px; --lh-xs:   1.35; --ls-xs: 0.02em;
+
+  /* space: 4px grid */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  --ctl-h: 32px; /* was 30 — on-grid, a real 32px target */
+  --aside-w: 340px;
+  --r-sm: 4px; --r-md: 6px; --r-pill: 999px;
+
+  /* ink: four steps, the AA floor held at the bottom */
+  --ink:     #e6ebf3; /* 14.9:1  titles, values               */
+  --ink-mid: #aab4c4; /*  8.7:1  body/row/table text          */
+  --ink-low: #8b95a7; /*  6.1:1  labels, captions (old --dim) */
+  --ink-min: #7b8598; /*  4.9:1  ticks, axis, disabled (old --faint) */
+}
