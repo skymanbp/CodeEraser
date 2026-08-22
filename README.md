@@ -18,20 +18,18 @@ read-only MCP report surface, pre-commit, and CI exit codes.
 
 ## Status
 
-🚀 **v0.7.3 released — the size advisory closes its loop.**
-Installers, [crates.io](https://crates.io/crates/codeeraser), the npm
-pointer and [codeeraser.dev](https://codeeraser.dev) are live (0.7.1–
-0.7.3 are patch releases: elevation up front, the CLI on the machine
-PATH with its registry value kind intact, plugin reuse of pin-identical
-binaries, no console flashes under the GUI, and bare `ce` answers help).
-This cycle: the split advisory prices a seam's FULL cost — severed
-references, cut clone blocks and crossing co-change pairs, each at a
-corpus-calibrated price — the graded zone's position→tier map is
-wired behind an explicit `[guard] zone_tiers` opt-in (the default
-stays observe-only: no false-positive record, no promotion), and the
-advisory joins the MCP tool surface and the GUI structure screen.
-The soft line stays relative and re-derives at every named baseline
-re-establish; `ce-baseline.json` is the one authority.
+🏁 **v1.0.0 — complete.** Every milestone of the locked plan is
+delivered and the final sweep is clean: the two-lane audit's 113
+findings reconciled (81 fixed, 29 dispositioned in writing, 3
+refutations standing), 716 documentation claims re-verified against
+the tree, and every number on the site either produced by replay or
+retaken from real output. Installers,
+[crates.io](https://crates.io/crates/codeeraser), the npm pointer
+and [codeeraser.dev](https://codeeraser.dev) are live. Scores under
+1.0.0 are **not comparable** with 0.7.3 — the density-law and
+cycle-axis migrations are declared in the release notes, and a floor
+calibrated against a pre-1.0 band needs a named
+`CE_ACCEPT_BASELINE=1` re-establish.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 This repository gates itself with its own scanner, clone ratchet,

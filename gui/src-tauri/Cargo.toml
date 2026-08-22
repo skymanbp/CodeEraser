@@ -6,7 +6,7 @@
 # packaging leg brings the platform deps.
 [package]
 name = "ce-gui"
-version = "0.7.3"
+version = "1.0.0"
 edition = "2021"
 
 [build-dependencies]
