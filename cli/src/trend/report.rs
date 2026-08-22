@@ -53,14 +53,14 @@ fn print_console(r: &Report) {
 /// The judgment + window summary lines (split at the 50-line fn gate).
 fn print_verdict_tail(r: &Report) {
     let j = &r.judgment;
+    // per-mille of the score scale per day: the rows above print
+    // score/scale, so the slope reads in the same currency (batch 9
+    // P15) — the JSON keeps slopeMicroPerDay verbatim
     let slope = j
         .slope_micro_per_day
         .map(|s| {
-            line(
-                " (slope {} micro-permille/day)",
-                "（斜率 {} 微千分比/日）",
-                &[&s],
-            )
+            let pm = format!("{:.1}", s as f64 / 1000.0);
+            line(" (slope {}‰/day)", "（斜率 {}‰/日）", &[&pm])
         })
         .unwrap_or_default();
     let fail_tail = if j.fail { " -> FAIL" } else { "" };

@@ -179,12 +179,11 @@ pub struct DedupArgs {
     #[arg(long)]
     min_tokens: Option<usize>,
     /// Diversity floor: suppress blocks with fewer unique tokens
-    /// (default 7, from the M2 calibration; 0 disables)
+    /// (default 7, from measured calibration; 0 disables)
     #[arg(long)]
     min_distinct: Option<usize>,
     /// Only-shrink ratchet: exit 1 when clone blocks exceed the
-    /// ce.toml [dedup] budget (M2 review R12; the comparison is the
-    /// core's verdict since ADR-008 P2)
+    /// ce.toml [dedup] budget (the comparison is the core's verdict)
     #[arg(long)]
     check: bool,
     /// Path to the ce-core executable, consulted by --check alone
@@ -219,7 +218,7 @@ pub fn hook_cmd(hook: bool, name: &str, run: fn() -> ExitCode) -> ExitCode {
     if hook {
         run()
     } else {
-        eprintln!("ce {name}: only --hook mode exists in M3");
+        eprintln!("ce {name}: pass --hook — this command reads a hook envelope on stdin");
         ExitCode::FAILURE
     }
 }

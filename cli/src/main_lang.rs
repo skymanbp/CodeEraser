@@ -28,62 +28,62 @@ judge.db	索引数据库路径（默认 <root>/.ce/index.db）
 doctor	环境与项目健康：ce-core 握手、项目状态行、降级计数（绝不启动守护进程）
 doctor.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 doctor.root	要报告的项目根（默认当前目录）
-scan	度量尺寸 / 复杂度 / 可读性指标（M1 模块；自 ADR-008 P3 起由核分级）
+scan	度量尺寸 / 复杂度 / 可读性指标；级别由核分级
 scan.path	要扫描的目录（默认当前目录）
 scan.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
-churn	时间维度指标：追加对重写、窗口改动、共变对（M4；仅报告，供 M5 联判）
+churn	时间维度指标：追加对重写、窗口改动、共变对（仅报告；联判消费之）
 churn.root	仓库根（默认当前目录）
 churn.days	历史窗口天数
 graph	依赖图子系统：--sites 列出引用站点（不做解析）；存活性判决在 `ce deadcode`
 graph.root	要分析的目录（默认当前目录）
 graph.sites	列出引用站点
-deadcode	在缓存引用图上判决存活性（M5-2h）：阶梯的边，Haskell 核的四路判决
+deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
 deadcode.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
-deadcode.check	任一文件级死判落地即退出 1（M5-2「全处置」验收行的 CI 自食门）
-clone	T3 近似克隆判决（M5-3）：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
+deadcode.check	任一文件级死判落地即退出 1
+clone	T3 近似克隆判决：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
 clone.units	改为列出单元宇宙而非判决
-docdup	文档重复判决（M5-3g）：对缓存活段经核 docdup/1 精确 Jaccard
-docdup.check	任一重复被报告即退出 1（CI 自食门 — 计划 §7.5 docdup 条款，M5 收口起代码兑现）
-join	三信号联判（M5-3h）：相似度 + 图位置 + 单元改动，文件与单元两层（3i 前仅报告）
+docdup	文档重复判决：对缓存活段经核 docdup/1 精确 Jaccard
+docdup.check	任一重复被报告即退出 1（CI 自食门）
+join	三信号联判：相似度 + 图位置 + 单元改动，文件与单元两层（仅报告）
 join.days	改动窗口天数
-structure	树尺度结构判决（M6）：熵、判轴与发现，经核 structure/1（S2 阶段仅报告）
+structure	树尺度结构判决：熵、判轴与发现，经核 structure/1（仅报告）
 structure.deep	同时按目录卷积克隆块与死单元并判 S6 冗余轴（会跑去冗普查与存活判决；缺省 = 该轴诚实未判）
 structure.days	按此 git 窗口天数判 S5 文档陈旧轴（所引代码晚于文档最后编辑而变；缺省 = 该轴诚实未判）
-structure.split_candidates	为每个越过冻结软线的判决文件计一次拆分价（计划 v2.6 §C）：给出最优缝与 ROI，或以数字说明文件为何内聚的豁免
-trend	主线历史上的分数轨迹（M7-P4）：逐提交绝对检查分，缓存于索引，可重建
+structure.split_candidates	为每个越过冻结软线的判决文件计一次拆分价：给出最优缝与 ROI，或以数字说明文件为何内聚的豁免
+trend	主线历史上的分数轨迹：逐提交绝对检查分，缓存于索引，可重建
 trend.commits	主线窗口：最新 N 个第一父提交
 trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部；GUI 传小批量以显示进度）
-erase	确定性两段式擦除（M9）：经核 erase/1 只计划可证安全消除的行；默认演练
+erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）
-check	ADR-006 门（M5-3i）：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负
+check	棘轮门：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负
 check.roast	在控制台判决后附一行毒舌评语（彩蛋）
 baseline	把核的 newBaseline 落盘为 ce-baseline.json（无 CE_ACCEPT_BASELINE=1 时违规集只准缩）
 baseline.days	改动窗口天数（省略 = 改动表保持为空）
-dedup	经 winnowing 指纹索引检测 T1/T2 克隆（M2）
+dedup	经 winnowing 指纹索引检测 T1/T2 克隆
 dedup.path	要索引的目录（默认当前目录）
 dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
 dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50）
-dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，出自 M2 校准；0 关闭）
-dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（M2 评审 R12；自 ADR-008 P2 起比较即核的判决）
+dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，实测校准；0 关闭）
+dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（比较即核的判决）
 dedup.core	ce-core 可执行文件路径（仅 --check 咨询；默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
-daemon	前台运行按项目守护进程（ADR-003）；通常由 `ce ping` / 钩子探针惰启
+daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰启
 daemon.root	要服务的项目根
 ping	经项目守护进程往返一次 ping（会惰启它）
 ping.root	项目根（默认当前目录）
 probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定
-probe.hook	钩子模式（M3 唯一模式）
+probe.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 audit	Stop 审计 v1：净行数 + 触及改动文件的重复块（仅 deny 档拦停）
-audit.hook	钩子模式（M3 唯一模式）
+audit.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 health	SessionStart 健康行 + 守护进程预热
-health.hook	钩子模式（M3 唯一模式）
+health.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 precommit	pre-commit 门：暂存净行数 + 触及的重复（deny 档触重即退出 1）
 precommit.root	仓库根（默认当前目录）
-mcp	stdio 上的 MCP 服务器：每个判决家族的只读报告面（M7-P2）
+mcp	stdio 上的 MCP 服务器：每个判决家族的只读报告面
 mcp.root	工具作用的项目根（默认当前目录）
 eject	卸载项目状态：.ce/、基线、钉扎件（默认试运行）
 eject.root	要卸载的项目根（默认当前目录）

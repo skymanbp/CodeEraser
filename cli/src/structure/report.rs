@@ -165,13 +165,19 @@ fn print_findings_tail(r: &Report) {
 /// sides of the price; an exemption is the machine-written why —
 /// cohesive length is legitimate, and the numbers say so.
 fn print_split(s: &super::judge::SplitReport) {
+    // ROI leads: it is the quantity the core's verdict is made on
+    // (viable iff benefit >= cost), with the operands as its receipt
+    // — and those are absolute milli-penalty prices, not ratios, so
+    // the ‰ glyph comes off them (batch 9 P15; the χ² divergence
+    // above keeps ‰, where it is literally a per-mille ratio)
+    let roi = |b: i64, c: i64| format!("{:.1}x", b as f64 / c as f64);
     for (path, after, unit, b, c) in &s.candidates {
         println!(
             "{}",
             line(
-                "split {}: seam after line {} ({}) — recover {}‰ vs cost {}‰",
-                "拆分 {}：缝在 {} 行后（{}）— 回收 {}‰ 对成本 {}‰",
-                &[path, after, unit, b, c],
+                "split {}: seam after line {} ({}) — ROI {} (recover {} vs cost {})",
+                "拆分 {}：缝在 {} 行后（{}）— ROI {}（回收 {} 对成本 {}）",
+                &[path, after, unit, &roi(*b, *c), b, c],
             )
         );
     }
@@ -184,8 +190,8 @@ fn print_split(s: &super::judge::SplitReport) {
         println!(
             "{}",
             line(
-                "size-exempt {}: {} ({}‰ vs {}‰)",
-                "尺寸豁免 {}：{}（{}‰ 对 {}‰）",
+                "size-exempt {}: {} (recover {} vs cost {})",
+                "尺寸豁免 {}：{}（回收 {} 对成本 {}）",
                 &[path, &why, b, c],
             )
         );

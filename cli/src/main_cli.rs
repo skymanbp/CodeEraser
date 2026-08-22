@@ -3,8 +3,10 @@
 //! the doc comments exactly as it always did — zero tokens, so the
 //! dedup ratchet sees no per-item attribute scaffolding (the
 //! attribute-per-variant first draft minted 24 twin blocks and the
-//! repo's own gate refused it). Chinese arrives at runtime through
-//! main_lang::localize over the built Command.
+//! repo's own gate refused it). Help text answers only what a reader
+//! can act on (batch 9 P5): what a command measures or judges,
+//! whether it can fail the build, and what it costs — never a plan
+//! coordinate the user cannot resolve.
 
 use crate::main_cmds::{DedupArgs, OutFormat};
 use crate::main_erase::EraseArgs;
@@ -59,8 +61,8 @@ pub(crate) enum Cmd {
         /// Project root to report on (default: current directory)
         root: Option<PathBuf>,
     },
-    /// Measure size / complexity / readability metrics (M1 modules;
-    /// levels graded by the core since ADR-008 P3)
+    /// Measure size / complexity / readability metrics; levels
+    /// graded by the core
     Scan {
         /// Directory to scan (default: current directory)
         path: Option<PathBuf>,
@@ -72,7 +74,7 @@ pub(crate) enum Cmd {
         core: String,
     },
     /// Time-dimension metrics: append vs rewrite, windowed churn,
-    /// co-change pairs (M4; report-only, feeds the M5 join)
+    /// co-change pairs (report-only; the join consumes them)
     Churn {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,
@@ -93,8 +95,8 @@ pub(crate) enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
-    /// Judge liveness over the cached reference graph (M5-2h): the
-    /// ladder's edges, the Haskell core's four-way verdicts
+    /// Judge liveness over the cached reference graph: the ladder's
+    /// edges, the core's four-way verdicts
     Deadcode {
         /// Directory to judge (default: current directory)
         root: Option<PathBuf>,
@@ -107,39 +109,38 @@ pub(crate) enum Cmd {
         core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
-        /// Exit 1 when any file-tier dead verdict lands (the CI
-        /// dogfood gate for the M5-2 full-disposition acceptance row)
+        /// Exit 1 when any file-tier dead verdict lands
         #[arg(long)]
         check: bool,
     },
-    /// T3 near-miss clone judgment (M5-3): TED via the core's
-    /// clone/1; --units lists the cached unit universe instead
+    /// T3 near-miss clone judgment: tree edit distance via the
+    /// core's clone/1; --units lists the cached unit universe instead
     Clone(CloneArgs),
-    /// Documentation-duplication judgment (M5-3g): exact Jaccard via
-    /// the core's docdup/1 over the cached live segments
+    /// Documentation-duplication judgment: exact Jaccard via the
+    /// core's docdup/1 over the cached live segments
     Docdup(DocdupArgs),
-    /// Three-signal join (M5-3h): similarity + graph position +
-    /// per-unit churn, file and unit tiers (report-only until 3i)
+    /// Three-signal join: similarity + graph position + per-unit
+    /// churn, file and unit tiers (report-only)
     Join(JoinArgs),
-    /// Tree-scale structure judgment (M6): entropy, axes and
-    /// findings via the core's structure/1 (report-only in S2)
+    /// Tree-scale structure judgment: entropy, axes and findings via
+    /// the core's structure/1 (report-only)
     Structure(StructureArgs),
-    /// Score trajectory over mainline history (M7-P4): per-commit
-    /// absolute check score, cached in the index, rebuildable
+    /// Score trajectory over mainline history: per-commit absolute
+    /// check score, cached in the index, rebuildable
     Trend(TrendArgs),
-    /// Deterministic two-phase eraser (M9): plan what is provably
-    /// safe to erase via the core's erase/1; dry-run by default
+    /// Deterministic two-phase eraser: plan what is provably safe to
+    /// erase via the core's erase/1; dry-run by default
     Erase(EraseArgs),
-    /// ADR-006 gate (M5-3i): judge the repo against ce-baseline.json
-    /// — ratchet OR --fail-under floor, either alone fails
+    /// The ratchet gate: judge the repo against ce-baseline.json —
+    /// ratchet OR --fail-under floor, either alone fails
     Check(CheckArgs),
     /// Persist the core's newBaseline as ce-baseline.json (the
     /// violation set only shrinks without CE_ACCEPT_BASELINE=1)
     Baseline(BaselineArgs),
-    /// Detect T1/T2 clones via the winnowing fingerprint index (M2)
+    /// Detect T1/T2 clones via the winnowing fingerprint index
     Dedup(DedupArgs),
-    /// Run the per-project daemon in the foreground (ADR-003);
-    /// normally lazy-started by `ce ping` / hook probes
+    /// Run the per-project daemon in the foreground; normally
+    /// lazy-started by `ce ping` / hook probes
     Daemon {
         /// Project root to serve
         root: PathBuf,
@@ -152,20 +153,20 @@ pub(crate) enum Cmd {
     /// PreToolUse cheap gate: read the hook envelope on stdin, probe
     /// the daemon, emit a permission decision per ce.toml [guard]
     Probe {
-        /// Hook mode (the only mode in M3)
+        /// Hook mode: read the JSON envelope on stdin (required)
         #[arg(long)]
         hook: bool,
     },
     /// Stop audit v1: net LOC + duplicate blocks touching changed
     /// files (blocks the stop only in deny mode)
     Audit {
-        /// Hook mode (the only mode in M3)
+        /// Hook mode: read the JSON envelope on stdin (required)
         #[arg(long)]
         hook: bool,
     },
     /// SessionStart health line + daemon warm-up
     Health {
-        /// Hook mode (the only mode in M3)
+        /// Hook mode: read the JSON envelope on stdin (required)
         #[arg(long)]
         hook: bool,
     },
@@ -176,7 +177,7 @@ pub(crate) enum Cmd {
         root: Option<PathBuf>,
     },
     /// MCP server over stdio: the read-only report face of every
-    /// judgment family (M7-P2)
+    /// judgment family
     Mcp {
         /// Project root the tools operate on (default: current directory)
         root: Option<PathBuf>,

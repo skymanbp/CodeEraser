@@ -163,6 +163,10 @@ pub fn print(r: &Report, as_json: bool) {
             "docdup {a} <-> {b}  J {inter}/{union} verbatim {verbatim}",
             "文档重复 {a} <-> {b}  J {inter}/{union} 逐字 {verbatim}",
         ),
+        crate::i18n::t(
+            "{dups} duplicate pair(s) over {segments} live segment(s) — {judged} judged, {jaccard_dups} by Jaccard",
+            "{dups} 对文档重复 / {segments} 个活段 — 判决 {judged}，其中 Jaccard 命中 {jaccard_dups}",
+        ),
     );
 }
 

@@ -41,8 +41,7 @@ pub struct CloneArgs {
 pub struct DocdupArgs {
     #[command(flatten)]
     judge: JudgeArgs,
-    /// Exit 1 when any duplication is reported (the CI dogfood gate —
-    /// plan §7.5's docdup clause, honored in code since M5 close)
+    /// Exit 1 when any duplication is reported (the CI dogfood gate)
     #[arg(long)]
     check: bool,
 }
@@ -71,8 +70,8 @@ pub struct StructureArgs {
     #[arg(long)]
     days: Option<u32>,
     /// Price a split for every judged file past the committed soft
-    /// line (plan v2.6 §C): the best seam with its ROI, or an
-    /// exemption whose numbers say why the file stays whole
+    /// line: the best seam with its ROI, or an exemption whose
+    /// numbers say why the file stays whole
     #[arg(long)]
     split_candidates: bool,
 }
@@ -133,21 +132,31 @@ pub fn trend_cmd(a: TrendArgs) -> ExitCode {
         move |r, db, c| codeeraser::trend::run(r, db, c, a.commits, a.batch),
         codeeraser::trend::print,
         // declaring [trend] decline_floor_micro armed a fail bit that
-        // NO exit code read: the console printed `-> FAIL` and the
-        // process still exited 0, so a CI leg watching the trajectory
-        // passed a declining one. The core owns the verdict; this is
-        // the throat for it (the dedup --check shape).
+        // NO exit code read: the console printed `-> FAIL` and exited
+        // 0, so a CI leg watching the trajectory passed a declining
+        // one. The core owns the verdict; this is its exit-code
+        // throat (the dedup --check shape). "?" over a defaulted 0: a
+        // fabricated number would be the report lying about why it
+        // failed — and the floor prints as its VALUE in ‰/day of the
+        // score scale, not as a ce.toml key name (batch 9 P15).
         |r| {
             r.judgment.fail.then(|| {
-                // "?" rather than a defaulted 0: an unjudged slope
-                // cannot arm the bit, and a fabricated number would
-                // be the report lying about why it failed
-                let slope = r.judgment.slope_micro_per_day;
+                let pm = |v: i64| format!("{:.1}", v as f64 / 1000.0);
+                let floor = r
+                    .judgment
+                    .knobs
+                    .iter()
+                    .find(|[c, _]| *c == 1)
+                    .map(|[_, v]| *v);
                 codeeraser::i18n::line(
-                    "slope {} micro-permille/day is under the declared \
-                     [trend] decline_floor_micro",
-                    "斜率 {} 微千分比/日 低于所声明的 [trend] decline_floor_micro",
-                    &[&slope.map_or("?".to_string(), |s| s.to_string())],
+                    "score falls {}‰/day, past the declared {}‰/day decline floor",
+                    "分数每日下跌 {}‰，越过声明的每日 {}‰ 下行地板",
+                    &[
+                        &r.judgment
+                            .slope_micro_per_day
+                            .map_or("?".to_string(), |s| pm(-s)),
+                        &floor.map_or("?".to_string(), pm),
+                    ],
                 )
             })
         },

@@ -245,6 +245,10 @@ pub fn print(r: &Report, as_json: bool) {
             "clone {a} <-> {b}  ted {ted} (nodes {n1}/{n2})",
             "克隆 {a} <-> {b}  ted {ted}（节点 {n1}/{n2}）",
         ),
+        crate::i18n::t(
+            "{clones} near-miss clone pair(s) over {units} unit(s) — {judged} judged, {prefiltered} provably below threshold",
+            "{clones} 对近似克隆 / {units} 个单元 — 判决 {judged}，可证低于阈值预滤 {prefiltered}",
+        ),
     );
 }
 

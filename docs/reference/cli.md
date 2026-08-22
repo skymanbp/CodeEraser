@@ -13,26 +13,26 @@ Usage: ce [OPTIONS] <COMMAND>
 
 Commands:
   doctor     Environment + project health: ce-core handshake, project status line, degradation counter (never starts the daemon)
-  scan       Measure size / complexity / readability metrics (M1 modules; levels graded by the core since ADR-008 P3)
-  churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (M4; report-only, feeds the M5 join)
+  scan       Measure size / complexity / readability metrics; levels graded by the core
+  churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them)
   graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); liveness lives under `ce deadcode`
-  deadcode   Judge liveness over the cached reference graph (M5-2h): the ladder's edges, the Haskell core's four-way verdicts
-  clone      T3 near-miss clone judgment (M5-3): TED via the core's clone/1; --units lists the cached unit universe instead
-  docdup     Documentation-duplication judgment (M5-3g): exact Jaccard via the core's docdup/1 over the cached live segments
-  join       Three-signal join (M5-3h): similarity + graph position + per-unit churn, file and unit tiers (report-only until 3i)
-  structure  Tree-scale structure judgment (M6): entropy, axes and findings via the core's structure/1 (report-only in S2)
-  trend      Score trajectory over mainline history (M7-P4): per-commit absolute check score, cached in the index, rebuildable
-  erase      Deterministic two-phase eraser (M9): plan what is provably safe to erase via the core's erase/1; dry-run by default
-  check      ADR-006 gate (M5-3i): judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
+  deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts
+  clone      T3 near-miss clone judgment: tree edit distance via the core's clone/1; --units lists the cached unit universe instead
+  docdup     Documentation-duplication judgment: exact Jaccard via the core's docdup/1 over the cached live segments
+  join       Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only)
+  structure  Tree-scale structure judgment: entropy, axes and findings via the core's structure/1 (report-only)
+  trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable
+  erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
+  check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
   baseline   Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1)
-  dedup      Detect T1/T2 clones via the winnowing fingerprint index (M2)
-  daemon     Run the per-project daemon in the foreground (ADR-003); normally lazy-started by `ce ping` / hook probes
+  dedup      Detect T1/T2 clones via the winnowing fingerprint index
+  daemon     Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
   ping       Round-trip a ping through the project daemon (lazy-starts it)
   probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard]
   audit      Stop audit v1: net LOC + duplicate blocks touching changed files (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
   precommit  pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched)
-  mcp        MCP server over stdio: the read-only report face of every judgment family (M7-P2)
+  mcp        MCP server over stdio: the read-only report face of every judgment family
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
   help       Print this message or the help of the given subcommand(s)
 
@@ -61,7 +61,7 @@ Options:
 ## ce scan
 
 ```text
-Measure size / complexity / readability metrics (M1 modules; levels graded by the core since ADR-008 P3)
+Measure size / complexity / readability metrics; levels graded by the core
 
 Usage: ce scan [OPTIONS] [PATH]
 
@@ -78,7 +78,7 @@ Options:
 ## ce churn
 
 ```text
-Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (M4; report-only, feeds the M5 join)
+Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them)
 
 Usage: ce churn [OPTIONS] [ROOT]
 
@@ -112,7 +112,7 @@ Options:
 ## ce deadcode
 
 ```text
-Judge liveness over the cached reference graph (M5-2h): the ladder's edges, the Haskell core's four-way verdicts
+Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts
 
 Usage: ce deadcode [OPTIONS] [ROOT]
 
@@ -124,14 +124,14 @@ Options:
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --check            Exit 1 when any file-tier dead verdict lands (the CI dogfood gate for the M5-2 full-disposition acceptance row)
+      --check            Exit 1 when any file-tier dead verdict lands
   -h, --help             Print help
 ```
 
 ## ce clone
 
 ```text
-T3 near-miss clone judgment (M5-3): TED via the core's clone/1; --units lists the cached unit universe instead
+T3 near-miss clone judgment: tree edit distance via the core's clone/1; --units lists the cached unit universe instead
 
 Usage: ce clone [OPTIONS] [ROOT]
 
@@ -150,7 +150,7 @@ Options:
 ## ce docdup
 
 ```text
-Documentation-duplication judgment (M5-3g): exact Jaccard via the core's docdup/1 over the cached live segments
+Documentation-duplication judgment: exact Jaccard via the core's docdup/1 over the cached live segments
 
 Usage: ce docdup [OPTIONS] [ROOT]
 
@@ -162,14 +162,14 @@ Options:
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
-      --check            Exit 1 when any duplication is reported (the CI dogfood gate — plan §7.5's docdup clause, honored in code since M5 close)
+      --check            Exit 1 when any duplication is reported (the CI dogfood gate)
   -h, --help             Print help
 ```
 
 ## ce join
 
 ```text
-Three-signal join (M5-3h): similarity + graph position + per-unit churn, file and unit tiers (report-only until 3i)
+Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only)
 
 Usage: ce join [OPTIONS] [ROOT]
 
@@ -188,7 +188,7 @@ Options:
 ## ce structure
 
 ```text
-Tree-scale structure judgment (M6): entropy, axes and findings via the core's structure/1 (report-only in S2)
+Tree-scale structure judgment: entropy, axes and findings via the core's structure/1 (report-only)
 
 Usage: ce structure [OPTIONS] [ROOT]
 
@@ -202,14 +202,14 @@ Options:
       --db <DB>           Index database path (default: <root>/.ce/index.db)
       --deep              Also roll clone blocks and dead units up per directory and judge the S6 redundancy axis (runs the dedup census and the liveness judgment; absent = the axis is honestly unjudged)
       --days <DAYS>       Judge the S5 doc-staleness axis over this git window in days (docs whose referenced code changed after their last edit; absent = the axis is honestly unjudged)
-      --split-candidates  Price a split for every judged file past the committed soft line (plan v2.6 §C): the best seam with its ROI, or an exemption whose numbers say why the file stays whole
+      --split-candidates  Price a split for every judged file past the committed soft line: the best seam with its ROI, or an exemption whose numbers say why the file stays whole
   -h, --help              Print help
 ```
 
 ## ce trend
 
 ```text
-Score trajectory over mainline history (M7-P4): per-commit absolute check score, cached in the index, rebuildable
+Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable
 
 Usage: ce trend [OPTIONS] [ROOT]
 
@@ -229,7 +229,7 @@ Options:
 ## ce erase
 
 ```text
-Deterministic two-phase eraser (M9): plan what is provably safe to erase via the core's erase/1; dry-run by default
+Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
 
 Usage: ce erase [OPTIONS] [ROOT]
 
@@ -249,7 +249,7 @@ Options:
 ## ce check
 
 ```text
-ADR-006 gate (M5-3i): judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
+The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
 
 Usage: ce check [OPTIONS] [ROOT]
 
@@ -289,7 +289,7 @@ Options:
 ## ce dedup
 
 ```text
-Detect T1/T2 clones via the winnowing fingerprint index (M2)
+Detect T1/T2 clones via the winnowing fingerprint index
 
 Usage: ce dedup [OPTIONS] [PATH]
 
@@ -301,8 +301,8 @@ Options:
       --lang <LANG>                  Console language (wins over CE_LANG) [possible values: en, zh]
       --db <DB>                      Index database path (default: <path>/.ce/index.db)
       --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50)
-      --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from the M2 calibration; 0 disables)
-      --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (M2 review R12; the comparison is the core's verdict since ADR-008 P2)
+      --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from measured calibration; 0 disables)
+      --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (the comparison is the core's verdict)
       --core <CORE>                  Path to the ce-core executable, consulted by --check alone (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help                         Print help
 ```
@@ -310,7 +310,7 @@ Options:
 ## ce daemon
 
 ```text
-Run the per-project daemon in the foreground (ADR-003); normally lazy-started by `ce ping` / hook probes
+Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
 
 Usage: ce daemon [OPTIONS] <ROOT>
 
@@ -345,7 +345,7 @@ PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a
 Usage: ce probe [OPTIONS]
 
 Options:
-      --hook         Hook mode (the only mode in M3)
+      --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
   -h, --help         Print help
 ```
@@ -358,7 +358,7 @@ Stop audit v1: net LOC + duplicate blocks touching changed files (blocks the sto
 Usage: ce audit [OPTIONS]
 
 Options:
-      --hook         Hook mode (the only mode in M3)
+      --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
   -h, --help         Print help
 ```
@@ -371,7 +371,7 @@ SessionStart health line + daemon warm-up
 Usage: ce health [OPTIONS]
 
 Options:
-      --hook         Hook mode (the only mode in M3)
+      --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
   -h, --help         Print help
 ```
@@ -394,7 +394,7 @@ Options:
 ## ce mcp
 
 ```text
-MCP server over stdio: the read-only report face of every judgment family (M7-P2)
+MCP server over stdio: the read-only report face of every judgment family
 
 Usage: ce mcp [OPTIONS] [ROOT]
 

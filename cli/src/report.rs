@@ -37,14 +37,18 @@ pub fn print_doc(as_json: bool, doc: impl FnOnce() -> serde_json::Value, console
 
 /// Print one family's report: the JSON envelope `{schema, <key>,
 /// counts}` under --format json, otherwise one templated line per
-/// hit plus the counts flattened as `key value` pairs. The hit line
-/// is a `{field}` template over the pair's serialized fields — the
-/// family contributes DATA, never another print function.
+/// hit plus a summary SENTENCE over the counts — both `{field}`
+/// templates, so the family contributes DATA, never another print
+/// function. Counters the sentence omits still print in the raw
+/// `k n` form after it (never silently absent, batch 9 P6) — the
+/// raw tail shrinks as the sentence grows, and a new counter can
+/// never vanish.
 pub fn emit<M: Serialize, C: Serialize>(
     head: (&str, &str),
     r: &Report<M, C>,
     as_json: bool,
     template: &str,
+    summary: &str,
 ) {
     if as_json {
         println!("{}", envelope(head, r));
@@ -58,13 +62,19 @@ pub fn emit<M: Serialize, C: Serialize>(
         );
     }
     let v = serde_json::to_value(&r.counts).expect("counts");
-    let parts: Vec<String> = v
+    let rest: Vec<String> = v
         .as_object()
         .expect("counts object")
         .iter()
+        .filter(|(k, _)| !summary.contains(&format!("{{{k}}}")))
         .map(|(k, n)| format!("{k} {n}"))
         .collect();
-    println!("{key}: {}", parts.join(", "));
+    let tail = if rest.is_empty() {
+        String::new()
+    } else {
+        format!(" | {}", rest.join(", "))
+    };
+    println!("{key}: {}{tail}", render(summary, &v));
 }
 
 /// The deadcode report as its wire JSON document — one serialization
