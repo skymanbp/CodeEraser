@@ -10,7 +10,7 @@
 module CloneProps (battery) where
 
 import CE.Clone.Cost (cloneDecides, cloneDecidesWith, tsedDen, tsedNum)
-import CE.Clone.Prefilter (provablyBelow)
+import CE.Clone.Prefilter (histo, provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
 import Data.Array.Unboxed (listArray)
 import qualified Data.IntMap.Strict as IM
@@ -60,7 +60,7 @@ type T = ([Int], [Int])
 
 toTree :: T -> Tree
 toTree (labs, llds) =
-  Tree (listArray (0, length labs - 1) labs) (listArray (0, length llds - 1) llds) (length labs)
+  Tree (listArray (0, length labs - 1) labs) (listArray (0, length llds - 1) llds) (length labs) (histo labs)
 
 zs :: T -> T -> Integer
 zs a b = ted (toTree a) (toTree b)

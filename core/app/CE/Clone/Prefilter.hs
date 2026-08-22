@@ -13,24 +13,34 @@
 -- A pair failing `q·tsedDen ≥ tsedNum·max` for q = min(n1,n2) or
 -- q = I therefore provably cannot reach the threshold whatever TED
 -- computes — "below" is a judgment, never a guess.
-module CE.Clone.Prefilter (labelInter, provablyBelow) where
+module CE.Clone.Prefilter (histo, labelInter, provablyBelow, provablyBelowH) where
 
 import CE.Clone.Cost (tsedDen, tsedNum)
 import qualified Data.IntMap.Strict as IM
 
--- | I = Σ_label min(c1,c2) over two label lists (request-local dense
--- codes, so IntMap keys fit).
-labelInter :: [Int] -> [Int] -> Integer
-labelInter a b = sum (IM.elems (IM.intersectionWith min (histo a) (histo b)))
- where
-  histo = IM.fromListWith (+) . map (\l -> (l, 1))
+-- | Label histogram — a property of one TREE, not of a pair;
+-- exported so decode can attach it to its tree (batch 9 P11).
+histo :: [Int] -> IM.IntMap Integer
+histo = IM.fromListWith (+) . map (\l -> (l, 1))
 
--- | True ⇔ the pair is provably below the clone threshold: the O(1)
--- size corollary first, then the O(#labels) intersection bound.
-provablyBelow :: [Int] -> [Int] -> Bool
-provablyBelow a b =
-  below (fromIntegral (min n1 n2)) || below (labelInter a b)
+-- | I = Σ_label min(c1,c2) over two label lists.
+labelInter :: [Int] -> [Int] -> Integer
+labelInter a b = interH (histo a) (histo b)
+
+interH :: IM.IntMap Integer -> IM.IntMap Integer -> Integer
+interH x y = sum (IM.elems (IM.intersectionWith min x y))
+
+-- | True ⇔ provably below the clone threshold — the O(1) size
+-- corollary, then the intersection bound — from each operand's
+-- (size, histogram), handed over instead of rebuilt per pair (P11).
+provablyBelowH :: (Int, IM.IntMap Integer) -> (Int, IM.IntMap Integer) -> Bool
+provablyBelowH (n1, h1) (n2, h2) =
+  below (fromIntegral (min n1 n2)) || below (interH h1 h2)
  where
-  (n1, n2) = (length a, length b)
   mx = fromIntegral (max n1 n2)
   below q = q * tsedDen < tsedNum * mx
+
+-- | The list face of the same predicate (the cloneDecidesWith
+-- posture: one formula, two faces); CloneProps asserts through this.
+provablyBelow :: [Int] -> [Int] -> Bool
+provablyBelow a b = provablyBelowH (length a, histo a) (length b, histo b)

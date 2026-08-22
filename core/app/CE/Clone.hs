@@ -19,11 +19,11 @@
 module CE.Clone (respond) where
 
 import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
-import CE.Clone.Prefilter (provablyBelow)
+import CE.Clone.Prefilter (histo, provablyBelowH)
 import CE.Clone.Ted (Tree (..), ted)
 import CE.Wire (Family (..), ascendingOn, respondWith)
 import Data.Aeson
-import Data.Array.Unboxed (elems, listArray)
+import Data.Array.Unboxed (listArray)
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
@@ -67,6 +67,7 @@ decodeTree t =
     { tLab = listArray (0, length (wLab t) - 1) (wLab t)
     , tLld = listArray (0, length (wLld t) - 1) (wLld t)
     , tSize = length (wLab t)
+    , tHisto = histo (wLab t)
     }
 
 -- | First boundary-contract offender in request order (Graph.hs
@@ -131,7 +132,7 @@ judge trees ps = foldr step ([], 0, 0) ps
  where
   arr = IM.fromList (zip [0 ..] trees)
   step [i, j] (rows, judged, pre)
-    | provablyBelow (elems (tLab a)) (elems (tLab b)) = (rows, judged, pre + 1)
+    | provablyBelowH (tSize a, tHisto a) (tSize b, tHisto b) = (rows, judged, pre + 1)
     | otherwise =
         ( ( [fromIntegral i, fromIntegral j, d, size a, size b]
           , cloneDecides d (size a) (size b)

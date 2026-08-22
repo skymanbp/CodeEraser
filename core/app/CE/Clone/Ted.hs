@@ -20,11 +20,16 @@ import qualified Data.IntMap.Strict as IM
 import Data.List (sort)
 
 -- | One decoded tree: postorder labels and leftmost-leaf indices as
--- O(1) unboxed lookups plus the node count.
+-- O(1) unboxed lookups plus the node count. tHisto is the label
+-- histogram — a property of the tree, not of any pair — attached
+-- lazily at decode so the prefilter reads it once per OPERAND while
+-- a tree whose pairs are all decided by the O(1) size corollary
+-- never forces it (batch 9 P11). ted itself never reads it.
 data Tree = Tree
   { tLab :: UArray Int Int
   , tLld :: UArray Int Int
   , tSize :: Int
+  , tHisto :: IM.IntMap Integer
   }
 
 -- | Tree edit distance. The empty tree is total-function territory
