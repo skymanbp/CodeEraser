@@ -80,20 +80,29 @@ function render() {
 // The split-ROI advisory rows (v0.7, plan v2.7 ③): the SAME priced
 // verdicts `ce structure --split-candidates` prints — a candidate
 // names its seam line and unit, an exemption its machine-written
-// why in numbers. Rendering only; nothing is priced here.
+// why in numbers. Rendering only; nothing is priced here. ROI leads
+// because it is the quantity the core's verdict is made on; the
+// milli operands ride the tooltip as the receipt (batch 9 P14).
 function renderSplit() {
   const p = $("splitpanel");
   p.hidden = !report.split;
   if (!report.split) return;
+  const bar = (b, c) => {
+    const m = Math.max(b, c) || 1;
+    return `<span class="roibar" style="--b:${((100 * b) / m).toFixed(1)}%;--c:${((100 * c) / m).toFixed(1)}%" title="${b} / ${c} milli"></span>`;
+  };
   const cand = report.splitCandidates.map(
     (c) =>
       `<div class="row">✂ <b>${esc(c.path)}</b> — ${esc(tr("seamAfter"))} L${c.afterLine}` +
-      ` (${esc(c.unit)}) · +${c.benefitMilli}‰ / −${c.costMilli}‰</div>`,
+      ` (${esc(c.unit)}) · <b>ROI ${(c.benefitMilli / c.costMilli).toFixed(1)}×</b>${bar(c.benefitMilli, c.costMilli)}</div>`,
   );
   const ex = report.sizeExempt.map(
     (e) =>
-      `<div class="row zero">${esc(e.path)} — ${esc(tr("cohesive"))}` +
-      ` (${e.benefitMilli}‰ / ${e.costMilli}‰)</div>`,
+      `<div class="row zero">${esc(e.path)} — ` +
+      // costMilli === 0 is the core's [fid,0,0] no-seam row (a single
+      // unit cannot be split); it must never reach the division
+      `${esc(e.costMilli === 0 ? tr("noSeam") : tr("cohesiveRoi", (e.benefitMilli / e.costMilli).toFixed(1)))}` +
+      `${bar(e.benefitMilli, e.costMilli)}</div>`,
   );
   p.innerHTML =
     `<b>${esc(tr("splitTitle"))}</b>` + (cand.join("") + ex.join("") || esc(tr("none")));

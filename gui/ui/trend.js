@@ -138,20 +138,6 @@ function drawTrend() {
   };
   svg.appendChild(xcap(rows[0], "start", padL));
   if (rows.length > 1) svg.appendChild(xcap(rows[rows.length - 1], "end", width - pad));
-  // area under the line first (a fill, not a mark — it reads the
-  // trajectory's body without adding a second data channel), then
-  // the line over it
-  if (rows.length > 1) {
-    const base = pad + (height - 2 * pad);
-    const area = document.createElementNS(ns, "polygon");
-    area.setAttribute(
-      "points",
-      rows.map((r, i) => `${x(i)},${y(r)}`).join(" ") +
-        ` ${x(rows.length - 1)},${base} ${x(0)},${base}`,
-    );
-    area.setAttribute("class", "trendarea");
-    svg.appendChild(area);
-  }
   const line = document.createElementNS(ns, "polyline");
   line.setAttribute("points", rows.map((r, i) => `${x(i)},${y(r)}`).join(" "));
   line.setAttribute("class", "trendline");

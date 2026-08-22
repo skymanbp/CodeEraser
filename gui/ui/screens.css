@@ -177,7 +177,6 @@
 #trendchart { max-height: 460px; align-self: flex-start; }
 #trendchart .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
 #trendchart .trendline { fill: none; stroke: var(--data); stroke-width: 2; }
-#trendchart .trendarea { fill: var(--data-soft); stroke: none; }
 #trendchart .trendpt { fill: var(--ink); cursor: pointer; transition: r 0.12s; }
 #trendchart .trendpt:hover { fill: var(--ink-low); r: 6px; }
 /* "latest" is marked structurally (a ring), keeping teal for focus */
@@ -251,3 +250,12 @@
 }
 #cand-list .err { color: var(--err); }
 
+/* ---- split-ROI bar (batch 9 P14): benefit and cost as two
+   magnitude fills on one track, in the data channel — the ratio is
+   printed, the operands ride the title tooltip ---- */
+.roibar {
+  display: inline-block; width: 96px; height: 4px;
+  margin-left: var(--s2); vertical-align: middle; border-radius: var(--r-pill);
+  background: linear-gradient(to right, var(--data) 0 var(--b), transparent var(--b) 100%),
+    linear-gradient(to right, var(--data-soft) 0 var(--c), transparent var(--c) 100%);
+}
