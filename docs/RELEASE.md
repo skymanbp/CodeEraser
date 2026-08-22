@@ -45,9 +45,16 @@
 
 - **crates.io**：`cd cli && cargo publish`（token 由用户本机配置，
   永不入库/入对话）。
-- **npm 指针**：`d:/Projects/codeeraser-npm-placeholder` 仓 bump
-  version 后 `npm publish`（指针包只转发 Releases，无二进制）。
-- **官网**：`site/` 更新版本引用后 Cloudflare Pages 部署。
+- **npm 指针**：指针包（package.json + README，只转发 Releases、无
+  二进制）bump version 后 `npm publish`——账户 2FA 需用户在交互终端
+  完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。
+- **官网**：Cloudflare Pages **手动部署**（无 GitHub 集成）。`.secret`
+  里是造币母 token（无 Pages 权限，验证 active 但 /accounts 为空是
+  正常态）：用它 POST /user/tokens 铸 1 小时临时 token（权限组
+  `Pages Write`，账户 ef6ce0a8b2c4ba8529b41aa6fd5b4f45），临时 token
+  进 `CLOUDFLARE_API_TOKEN` 跑 `npx wrangler pages deploy site
+  --project-name codeeraser`，完毕 DELETE /user/tokens/<id> 销毁；
+  任何 token 值不落对话/不落库。
 - **marketplace**：清单随 main 走，无独立发布步。
 - 记账：CLAUDE.md 状态行 + ccm 发版记录。
 

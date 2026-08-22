@@ -92,12 +92,12 @@ The plugin intercepts at PreToolUse (cheap probes) and audits at Stop. Since the
 ## Evaluation dashboard
 
 <!-- bench:begin -->
-### Latest-version latency · v0.7.3
+### Latest-version latency · v1.0.0
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 2065 | 602 | 2752 | 496 | 657 | 54 | 516 |
-| p95 ms | 2113 | 613 | 2775 | 543 | 724 | 79 | 2598 |
+| p50 ms | 1449 | 844 | 4456 | 687 | 893 | 41 | 771 |
+| p95 ms | 1469 | 847 | 4739 | 723 | 1079 | 50 | 960 |
 
 ### Frozen evaluation points
 
