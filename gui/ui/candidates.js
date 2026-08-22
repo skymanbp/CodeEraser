@@ -76,7 +76,7 @@ function renderCandidates() {
   $("empty-candidates").hidden = true;
   const parts = [];
   parts.push(`<h2>${tr("pairsHead", joinDoc.files.length, joinDoc.days, joinDoc.commits)}</h2>`);
-  if (joinDoc.degraded) parts.push(`<p class="err">${esc(tr("degraded", joinDoc.degraded))}</p>`);
+  if (joinDoc.degraded) parts.push(`<div class="notice"><b>${esc(tr("degradedRun"))}</b><small>${esc(tr("degraded", joinDoc.degraded))}</small></div>`);
   const fMax = maxOf(joinDoc.files, (f) => f.tokens);
   joinDoc.files.forEach((f, i) => {
     parts.push(

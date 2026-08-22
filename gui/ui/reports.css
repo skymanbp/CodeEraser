@@ -1,0 +1,136 @@
+/* CodeEraser GUI — the report screens' styles (split from
+   screens.css at the repo's own 300-line gate when the P4 channel
+   work landed): score hero, erase ledger, diagnostics hub, and the
+   shared degraded notice. screens.css keeps the visualization
+   screens (structure summary/tree/treemap, trend chart, candidate
+   browser); same contract in both — the alarm ramp painted by
+   main.js is the one semantic channel, teal is selection/focus
+   only, vermilion is brand only. */
+
+/* ---- score screen (batch 4): the check verdict as a hero — the
+   verdict pill is semantic state (ok/bad), separate from brand and
+   from the alarm ramp; numbers stay tabular ---- */
+main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: var(--s3); }
+#check-hero { font-variant-numeric: tabular-nums; }
+#check-hero #check-score { font-size: var(--t-hero); font-weight: 600; color: var(--ink); font-family: var(--face-display); letter-spacing: var(--ls-hero); font-variant-numeric: proportional-nums lining-nums; }
+#check-hero small { font-size: var(--t-lg); color: var(--ink-min); margin-left: var(--s2); }
+#check-hero .verdict {
+  margin-left: var(--s4);
+  padding: 2px var(--s2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  vertical-align: middle;
+}
+#check-hero .verdict.ok { background: rgba(79, 157, 122, 0.16); color: var(--ok); }
+#check-hero .verdict.bad { background: rgba(224, 138, 130, 0.16); color: var(--err); }
+#check-hero #check-bar {
+  width: 320px;
+  height: 5px;
+  margin-top: var(--s2);
+  border-radius: var(--r-sm);
+  background: var(--line);
+  overflow: hidden;
+}
+#check-hero #check-bar div { height: 100%; background: var(--data); }
+#check-axes { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); }
+#check-axes b { color: var(--ink); }
+#check-axes .zero, #check-axes .zero b { color: var(--ink-min); }
+#check-ratchet { font-size: var(--t-sm); color: var(--ink-mid); max-width: 420px; }
+#check-ratchet > b { color: var(--ink); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; }
+#check-ratchet .row b { font-variant-numeric: tabular-nums; }
+#check-named { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-mid); }
+.row.bad { color: var(--err); }
+
+/* ---- erase screen (batch 4): plan rows read as a ledger — the
+   kill mark is semantic (will act), advisory rows recede; the diff
+   is the CLI's unified diff verbatim in mono ---- */
+#erase-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
+#erase-summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
+#erase-summary .ok b { color: var(--ok); }
+#erase-summary .zero, #erase-summary .zero b { color: var(--ink-min); }
+.erow {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  grid-template-areas: "i path class" ". reason reason" ". prov prov";
+  gap: 0 var(--s2);
+  padding: var(--s2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  margin-bottom: var(--s1);
+  font-family: var(--mono);
+  font-size: var(--t-sm);
+  color: var(--ink-mid);
+}
+.erow.kill { border-left: 3px solid var(--err); border-radius: 0 var(--r-md) var(--r-md) 0; }
+.erow i { grid-area: i; font-style: normal; text-align: center; }
+.erow.kill i { color: var(--err); }
+.erow b { grid-area: path; color: var(--ink); overflow-wrap: anywhere; }
+.erow em { grid-area: class; font-style: normal; color: var(--ink-min); font-size: var(--t-xs); }
+.erow > span { grid-area: reason; }
+.erow small { grid-area: prov; color: var(--ink-min); overflow-wrap: anywhere; }
+.erow.adv { opacity: 0.85; }
+#erase-diff {
+  font-family: var(--mono);
+  font-size: var(--t-sm);
+  line-height: 1.5;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s2) var(--s3);
+  overflow: auto;
+  max-height: 45vh;
+  white-space: pre;
+  color: var(--ink-mid);
+}
+button.danger { border-color: var(--err); color: var(--err); }
+button.danger:hover { background: rgba(224, 138, 130, 0.12); }
+
+/* ---- diagnostics hub (batch 4): the document rendered as itself —
+   counts as chips, row arrays as real tables ---- */
+#hub-chips { display: flex; gap: var(--s3); flex-wrap: wrap; color: var(--ink-low); font-size: var(--t-xs); align-self: center; }
+#hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
+#hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
+#hub-tables h3 small, #bench-series h3 small { color: var(--ink-min); margin-left: var(--s2); }
+#hub-tables table, #bench-series table {
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: var(--t-sm);
+  width: 100%;
+  max-width: 1080px;
+}
+#hub-tables th, #bench-series th {
+  text-align: left;
+  color: var(--ink-min);
+  font-weight: 400;
+  font-size: var(--t-xs);
+  font-family: var(--face-small);
+  padding: var(--s1) var(--s3) var(--s1) 0;
+  border-bottom: 1px solid var(--line);
+}
+#hub-tables td, #bench-series td {
+  padding: var(--s1) var(--s3) var(--s1) 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-mid);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+#hub-tables td:first-child, #bench-series td:first-child { color: var(--ink); }
+
+/* ---- degraded notice (batch 9 P4): a run that judged nothing is
+   the loudest thing a measurement tool can say - a named component
+   at the top of the view, never one coloured line among many ---- */
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  border-left: 3px solid var(--err);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: color-mix(in srgb, var(--err) 10%, transparent);
+  font-size: var(--t-sm);
+  color: var(--ink);
+}
+.notice b { font-weight: 600; }
+.notice small { color: var(--ink-low); font-size: var(--t-xs); }

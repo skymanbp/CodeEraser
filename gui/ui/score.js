@@ -34,7 +34,8 @@ function renderCheck() {
   // fail/pass stays English in both languages — it is the exit-code
   // vocabulary, not prose (the CLI console holds the same line)
   const verdict = rt.fail ? "FAIL" : "pass";
-  $("check-hero").innerHTML =
+  const notice = d.degraded ? `<div class="notice"><b>${esc(tr("degradedRun"))}</b><small>${esc(String(d.degraded))}</small></div>` : "";
+  $("check-hero").innerHTML = notice +
     `<span id="check-score">${d.score}</span><small>/ ${scale}</small>` +
     `<span class="verdict ${rt.fail ? "bad" : "ok"}">${verdict}</span>` +
     `<div id="check-bar"><div style="width:${(100 * d.score) / scale}%"></div></div>`;
@@ -57,7 +58,7 @@ function renderCheck() {
     `<b>${esc(tr("ratchet"))}</b>` +
     regs.map(([k, v]) => row(k, v)).join("") +
     row(tr("candidates"), d.candidates.length) +
-    (d.degraded ? `<div class="row bad">${esc(tr("degradedRun"))}</div>` : "");
+    "";
   // `failed` is the ratchet's NAMED register (the dense over rows are
   // wire identities, not prose) — the actionable half of the verdict
   $("check-named").innerHTML = (rt.failed || [])

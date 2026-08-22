@@ -15,10 +15,14 @@
   --panel-2: #222834;
   --line: #2b323e;
   --brand: #e4574a;
-  --accent: #33608f;
-  --accent-hi: #3f74ab;
+  --accent: #3a6da0;      /* 3.38:1 vs --bg - clears 1.4.11 */
+  --accent-hi: #477fb8;   /* hover step, 4.35:1 */
+  --on-accent: #eef2f8;   /* button label - 4.82:1 on --accent */
   --focus: #57c7a8;
   --err: #e08a82;
+  --ok: #4f9d7a;        /* pass/success - 5.60:1 on --bg; teal stays focus-only */
+  --data: #7f93ad;      /* magnitude ink - the quantity you read, not the button you press */
+  --data-soft: rgba(127, 147, 173, 0.18); /* magnitude fill - composites over any row ground */
 }
 * { box-sizing: border-box; margin: 0; }
 html, body { height: 100%; }
@@ -160,7 +164,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 .bar input[type="number"]:focus { border-color: var(--focus); outline: none; }
 .bar button {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--on-accent);
   border: 0;
   border-radius: var(--r-md);
   height: var(--ctl-h);

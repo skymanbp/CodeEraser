@@ -1,7 +1,9 @@
-/* CodeEraser GUI — the three screens' visualization styles (split
-   from style.css, which keeps the shared shell). Same contract: the
-   alarm ramp painted by main.js is the one semantic channel; teal is
-   selection/focus only; vermilion is brand only. */
+/* CodeEraser GUI — the visualization screens' styles (split from
+   style.css, which keeps the shared shell; the report screens moved
+   to reports.css at the repo's own 300-line gate): structure
+   summary/tree/treemap, trend chart, candidate browser. Same
+   contract: the alarm ramp painted by main.js is the one semantic
+   channel; teal is selection/focus only; vermilion is brand only. */
 
 /* ---- structure summary strip ---- */
 #summary {
@@ -28,7 +30,7 @@
   background: var(--line);
   overflow: hidden;
 }
-#scorefill { height: 100%; border-radius: var(--r-sm); background: var(--accent-hi); }
+#scorefill { height: 100%; border-radius: var(--r-sm); background: var(--data); }
 #legend { margin-left: auto; display: flex; gap: var(--s1); align-items: center; }
 #legend i {
   width: 12px;
@@ -174,12 +176,12 @@
 /* ---- trend chart ---- */
 #trendchart { max-height: 460px; align-self: flex-start; }
 #trendchart .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
-#trendchart .trendline { fill: none; stroke: var(--accent-hi); stroke-width: 2; }
-#trendchart .trendarea { fill: rgba(63, 116, 171, 0.12); stroke: none; }
+#trendchart .trendline { fill: none; stroke: var(--data); stroke-width: 2; }
+#trendchart .trendarea { fill: var(--data-soft); stroke: none; }
 #trendchart .trendpt { fill: var(--ink); cursor: pointer; transition: r 0.12s; }
 #trendchart .trendpt:hover { fill: var(--ink-low); r: 6px; }
 /* "latest" is marked structurally (a ring), keeping teal for focus */
-#trendchart .trendpt.end { stroke: var(--accent-hi); stroke-width: 2; }
+#trendchart .trendpt.end { stroke: var(--data); stroke-width: 2; }
 #trendchart .axis {
   fill: var(--ink-min);
   font-size: var(--t-xs);
@@ -228,13 +230,13 @@
   cursor: pointer;
 }
 /* the magnitude bar: --w is tokens/section-max, set inline by
-   candidates.js — geometry over a printed number, no ranking */
+   candidates.js — geometry over a printed number, no ranking, painted in the data channel so hover cannot flip its polarity */
 #cand-list .cand::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--w, 0);
-  background: var(--panel);
+  background: var(--data-soft);
 }
 #cand-list .cand > * { position: relative; }
 #cand-list .cand:hover { background: var(--panel-2); }
@@ -249,112 +251,3 @@
 }
 #cand-list .err { color: var(--err); }
 
-/* ---- score screen (batch 4): the check verdict as a hero — the
-   verdict pill is semantic state (ok/bad), separate from brand and
-   from the alarm ramp; numbers stay tabular ---- */
-main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: var(--s3); }
-#check-hero { font-variant-numeric: tabular-nums; }
-#check-hero #check-score { font-size: var(--t-hero); font-weight: 600; color: var(--ink); font-family: var(--face-display); letter-spacing: var(--ls-hero); font-variant-numeric: proportional-nums lining-nums; }
-#check-hero small { font-size: var(--t-lg); color: var(--ink-min); margin-left: var(--s2); }
-#check-hero .verdict {
-  margin-left: var(--s4);
-  padding: 2px var(--s2);
-  border-radius: var(--r-pill);
-  font-size: var(--t-xs);
-  font-weight: 600;
-  vertical-align: middle;
-}
-#check-hero .verdict.ok { background: rgba(87, 199, 168, 0.14); color: var(--focus); }
-#check-hero .verdict.bad { background: rgba(224, 138, 130, 0.16); color: var(--err); }
-#check-hero #check-bar {
-  width: 320px;
-  height: 5px;
-  margin-top: var(--s2);
-  border-radius: var(--r-sm);
-  background: var(--line);
-  overflow: hidden;
-}
-#check-hero #check-bar div { height: 100%; background: var(--accent-hi); }
-#check-axes { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); }
-#check-axes b { color: var(--ink); }
-#check-axes .zero, #check-axes .zero b { color: var(--ink-min); }
-#check-ratchet { font-size: var(--t-sm); color: var(--ink-mid); max-width: 420px; }
-#check-ratchet > b { color: var(--ink); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; }
-#check-ratchet .row b { font-variant-numeric: tabular-nums; }
-#check-named { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-mid); }
-.row.bad { color: var(--err); }
-
-/* ---- erase screen (batch 4): plan rows read as a ledger — the
-   kill mark is semantic (will act), advisory rows recede; the diff
-   is the CLI's unified diff verbatim in mono ---- */
-#erase-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
-#erase-summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#erase-summary .ok b { color: var(--focus); }
-#erase-summary .zero, #erase-summary .zero b { color: var(--ink-min); }
-.erow {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr) auto;
-  grid-template-areas: "i path class" ". reason reason" ". prov prov";
-  gap: 0 var(--s2);
-  padding: var(--s2);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  margin-bottom: var(--s1);
-  font-family: var(--mono);
-  font-size: var(--t-sm);
-  color: var(--ink-mid);
-}
-.erow i { grid-area: i; font-style: normal; text-align: center; }
-.erow.kill i { color: var(--err); }
-.erow b { grid-area: path; color: var(--ink); overflow-wrap: anywhere; }
-.erow em { grid-area: class; font-style: normal; color: var(--ink-min); font-size: var(--t-xs); }
-.erow > span { grid-area: reason; }
-.erow.kill > span { color: var(--err); }
-.erow small { grid-area: prov; color: var(--ink-min); overflow-wrap: anywhere; }
-.erow.adv { opacity: 0.85; }
-#erase-diff {
-  font-family: var(--mono);
-  font-size: var(--t-sm);
-  line-height: 1.5;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  padding: var(--s2) var(--s3);
-  overflow: auto;
-  max-height: 45vh;
-  white-space: pre;
-  color: var(--ink-mid);
-}
-button.danger { border-color: var(--err); color: var(--err); }
-button.danger:hover { background: rgba(224, 138, 130, 0.12); }
-
-/* ---- diagnostics hub (batch 4): the document rendered as itself —
-   counts as chips, row arrays as real tables ---- */
-#hub-chips { display: flex; gap: var(--s3); flex-wrap: wrap; color: var(--ink-low); font-size: var(--t-xs); align-self: center; }
-#hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
-#hub-tables h3 small, #bench-series h3 small { color: var(--ink-min); margin-left: var(--s2); }
-#hub-tables table, #bench-series table {
-  border-collapse: collapse;
-  font-family: var(--mono);
-  font-size: var(--t-sm);
-  width: 100%;
-  max-width: 1080px;
-}
-#hub-tables th, #bench-series th {
-  text-align: left;
-  color: var(--ink-min);
-  font-weight: 400;
-  font-size: var(--t-xs);
-  font-family: var(--face-small);
-  padding: var(--s1) var(--s3) var(--s1) 0;
-  border-bottom: 1px solid var(--line);
-}
-#hub-tables td, #bench-series td {
-  padding: var(--s1) var(--s3) var(--s1) 0;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink-mid);
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
-}
-#hub-tables td:first-child, #bench-series td:first-child { color: var(--ink); }
