@@ -80,6 +80,7 @@ main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: va
   padding: var(--s2) var(--s3);
   overflow: auto;
   max-height: 45vh;
+  max-width: 1080px; /* the tables' measure (batch 9 P17) */
   white-space: pre;
   color: var(--ink-mid);
 }
@@ -116,6 +117,15 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
   overflow-wrap: anywhere;
 }
 #hub-tables td:first-child, #bench-series td:first-child { color: var(--ink); }
+
+/* ---- typed columns + sticky heads (batch 9 P17): digits align right,
+   headers stick on --bg (the page ground, no card) — the tree's idiom ---- */
+#hub-tables .num, #bench-series .num { text-align: right; }
+#hub-tables thead th, #bench-series thead th {
+  position: sticky; top: 0; z-index: 1; background: var(--bg);
+}
+#hub-tables tbody tr:hover td, #bench-series tbody tr:hover td { background: var(--panel); }
+#bench-series td small { font-size: var(--t-xs); color: var(--ink-min); }
 
 /* ---- degraded notice (batch 9 P4): a run that judged nothing is
    the loudest thing a measurement tool can say - a named component

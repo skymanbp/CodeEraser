@@ -129,8 +129,9 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
 #lang:hover { color: var(--ink); border-color: var(--ink-low); }
 #status {
   /* fixed column: a status text sized to itself would shove the tab
-     strip sideways on every screen switch and mid-run swap */
-  flex: 0 0 230px;
+     strip sideways on every screen switch and mid-run swap (it may shrink, never grow - batch 9 P17) */
+  flex: 0 1 230px;
+  min-width: 0;
   color: var(--ink-low);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -186,16 +187,18 @@ main aside {
   font-size: var(--t-sm);
 }
 main aside h2 {
-  font-size: var(--t-sm);
-  margin-bottom: var(--s2);
+  font: 600 var(--t-lg)/var(--lh-lg) var(--face-text);
   color: var(--ink);
+  padding-bottom: var(--s2);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--s3);
   overflow-wrap: anywhere;
 }
 main aside .row { padding: var(--s1) 0; color: var(--ink-mid); overflow-wrap: anywhere; }
 main aside .row b { color: var(--ink); font-weight: 600; }
 .empty {
   position: absolute;
-  inset: 0 var(--aside-w) 0 0; /* skip the aside so the hint centers on the canvas */
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,6 +206,7 @@ main aside .row b { color: var(--ink); font-weight: 600; }
   font-size: var(--t-sm);
   pointer-events: none;
 }
+main:has(aside) .empty { right: var(--aside-w); } /* skip the aside so the hint centers on the canvas */
 
 /* ---- chrome-wide quiet scrollbars (WebView2) ---- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }

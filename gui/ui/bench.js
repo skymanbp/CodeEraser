@@ -15,10 +15,11 @@ let benchDoc = null;
       benchDoc = d;
       renderBench();
     })
-    .catch(() => {});
+    .catch((e) => setStatus(String(e), true));
 })();
 
 function renderBench() {
+  $("empty-bench").hidden = true;
   const d = benchDoc;
   const versions = [...new Set(d.rows.map((r) => r.version))];
   const metrics = [...new Set(d.rows.map((r) => r.metric))];
@@ -29,18 +30,17 @@ function renderBench() {
   $("bench-series").innerHTML =
     `<h3>${esc(tr("benchSeries"))}</h3>` +
     `<table><thead><tr><th>${esc(tr("benchMetric"))}</th>` +
-    versions.map((v) => `<th>v${esc(v)}</th>`).join("") +
+    versions.map((v) => `<th class="num">v${esc(v)}</th>`).join("") +
     `</tr></thead><tbody>` +
     metrics
       .map(
         (m) =>
           `<tr><td>${esc(m)}</td>` +
-          versions.map((v) => `<td>${cell(m, v)}</td>`).join("") +
+          versions.map((v) => `<td class="num">${cell(m, v)}</td>`).join("") +
           `</tr>`,
       )
       .join("") +
-    `</tbody></table>` +
-    `<div class="row zero">${esc(tr("benchUnit"))}</div>`;
+    `</tbody></table>`;
   $("bench-frozen").innerHTML =
     `<h3>${esc(tr("benchFrozen"))}</h3>` +
     d.frozen

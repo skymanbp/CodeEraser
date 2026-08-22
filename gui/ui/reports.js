@@ -77,18 +77,19 @@ const HUB_ROW_CAP = 400;
 
 function hubTable([name, rows]) {
   const cols = Object.keys(rows[0]).filter((c) => typeof rows[0][c] !== "object").slice(0, 5);
+  const num = (c) => (typeof rows[0][c] === "number" ? ' class="num"' : "");
   const body = rows
     .slice(0, HUB_ROW_CAP)
     .map(
       (r) =>
-        `<tr>${cols.map((c) => `<td>${esc(String(r[c] ?? ""))}</td>`).join("")}</tr>`,
+        `<tr>${cols.map((c) => `<td${num(c)}>${esc(String(r[c] ?? ""))}</td>`).join("")}</tr>`,
     )
     .join("");
   const capNote =
     rows.length > HUB_ROW_CAP ? `<div class="row zero">${esc(tr("rowsCapped", HUB_ROW_CAP, rows.length))}</div>` : "";
   return (
     `<h3>${esc(name)} <small>${rows.length}</small></h3>` +
-    `<table><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>` +
+    `<table><thead><tr>${cols.map((c) => `<th${num(c)}>${esc(c)}</th>`).join("")}</tr></thead>` +
     `<tbody>${body}</tbody></table>` +
     capNote
   );
