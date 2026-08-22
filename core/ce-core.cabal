@@ -30,7 +30,7 @@ executable ce-core
                       CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
-                      CE.Verdict.Table, CE.Verdict.Wire
+                      CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -66,7 +66,7 @@ test-suite ce-core-test
                       CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
-                      CE.Verdict.Table, CE.Verdict.Wire,
+                      CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows,
                       Reference, ReferenceGraph, GraphProps,
                       ReferenceTed, CloneProps, ReferenceJaccard,
                       AuditProps, EntropyProps, JoinProps, ScanProps,

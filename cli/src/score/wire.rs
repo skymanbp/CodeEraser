@@ -56,6 +56,9 @@ pub struct Request {
     /// values only, non-descending — what the core derives the soft
     /// line from AT ESTABLISH. Empty = no derivable S.
     pub judged_loc: Vec<u64>,
+    /// Markdown/documentation file indices in the same `files` universe.
+    /// Empty preserves the pre-2.27 cycle-axis semantics.
+    pub doc_files: Vec<i64>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -111,6 +114,7 @@ impl Request {
             dedup_distinct: distincts,
             dedup_min_distinct: floor,
             judged_loc: Vec::new(),
+            doc_files: Vec::new(),
         }
     }
 }
@@ -147,6 +151,9 @@ pub fn body(r: &Request) -> Value {
         o["dedupMinDistinct"] = json!(f);
     }
     o["judgedLoc"] = json!(r.judged_loc);
+    if !r.doc_files.is_empty() {
+        o["docFiles"] = json!(r.doc_files);
+    }
     o
 }
 

@@ -135,6 +135,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         dedup_distinct: Vec::new(),
         dedup_min_distinct: None,
         judged_loc,
+        doc_files: doc_file_indices(&m.files),
         files: m.files,
     };
     let reply = wire::judge(&opts.core, &req)?;
@@ -146,6 +147,18 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         skipped_self: m.skipped_self,
         reply,
     })
+}
+
+fn doc_file_indices(files: &[String]) -> Vec<i64> {
+    files
+        .iter()
+        .enumerate()
+        .filter_map(|(i, path)| {
+            (crate::scan::lang::Lang::from_path(Path::new(path))
+                == Some(crate::scan::lang::Lang::Markdown))
+            .then_some(i as i64)
+        })
+        .collect()
 }
 
 /// Graph judgment + the degraded refusal in one leg (split from run

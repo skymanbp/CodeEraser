@@ -192,7 +192,9 @@ fn unique_line(target: &[String], text: &str) -> Option<usize> {
         .filter(|(_, line)| line.trim() == text)
         .map(|(i, _)| i + 1)
         .collect();
-    (matches.len() == 1).then_some(matches[0])
+    // then, not then_some: then_some evaluates matches[0] eagerly and
+    // panics on an empty match set — the vanished path needs the None
+    (matches.len() == 1).then(|| matches[0])
 }
 
 fn ledger_errors(root: &Path, citations: &[Citation], ledger: &Ledger) -> Vec<String> {

@@ -276,5 +276,13 @@ entry_globs = [
 # family IS the public face of its family; a shared data table or a
 # fused family would trade this line for real coupling), declined as
 # before. Measured after cargo fmt.
+# 187 -> 188 (M9 batch 9 P8 / plan v2.12): the docFiles cycle-axis
+# property extended VerdictProps' battery list by one check row,
+# pushing the JoinProps<->VerdictProps check/battery SCAFFOLD pair
+# over the chain threshold -- the banked Props-scaffolding face
+# class (the +3 residue note above names it). Every Props file
+# carries the same two-function harness shell on purpose; a shared
+# harness module would trade fifteen test files' independence for
+# this one ledger line. Declined, booked. Measured after fmt.
 # Ratchet DOWN from here with every cleanup.
-budget = 187
+budget = 188

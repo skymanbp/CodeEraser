@@ -2376,8 +2376,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:65": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 120,
-    "text": "-- families: CE.Structure imports this (batch 9 P9, the Split→Soft"
+    "line": 126,
+    "text": "chargeAt :: Integer -> Rational -> Integer -> Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:66": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -2507,7 +2507,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 92,
-    "text": "-- so the per-axis perturbation battery has a lever per row."
+    "text": "-- repositories measured (10176‰ and 4325‰ of size mass alike), the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:10": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
@@ -2532,7 +2532,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:14": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 149,
-    "text": "count [() | [_, _, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
+    "text": ""
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:15": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2546,8 +2546,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:17": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 153,
-    "text": ""
+    "line": 164,
+    "text": "cycleMembers :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:18": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
@@ -2557,22 +2557,22 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:19": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 141,
-    "text": "where"
+    "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:2": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 115,
-    "text": "-- nothing, the honest-absence stance."
+    "text": ""
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:20": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 144,
-    "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
+    "text": "where"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:21": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 151,
-    "text": "dupHits :: ScoreKnobs -> Facts -> Integer"
+    "text": "cloneHits k f ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:22": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2587,7 +2587,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:24": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 161,
-    "text": "cycleMembers :: ScoreKnobs -> Facts -> Integer"
+    "text": "churnHeavy k f ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:25": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2597,17 +2597,17 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:26": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 167,
-    "text": "-- was the only knob family without a round trip; a fold-local"
+    "text": "[ ()"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:27": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 116,
-    "text": "]"
+    "text": "\"zoneTiers\" .= [zoneWarnPermille, zoneAskPermille]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:28": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 178,
-    "text": "-- | (perMille, total charge) under the effective weights; wTotal ="
+    "text": "-- was the only knob family without a round trip; a fold-local"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:29": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2636,8 +2636,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:33": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 170,
-    "text": "effWeight k weights code = case [w | [c, w] <- weights, c == code] of"
+    "line": 197,
+    "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:34": {
     "target": "../../../core/app/CE/Verdict.hs",
@@ -2647,7 +2647,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:35": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 192,
-    "text": "candidates :: Knobs -> VerdictReq -> [[Integer]]"
+    "text": "-- score reads, so the two judgments share one authority."
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:36": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2672,7 +2672,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:4": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 136,
-    "text": "-- derivable distribution) falling back to the sSizeCeil knob — the"
+    "text": "-- P_max units — one hard-line file weighs P_max old violations, so"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:40": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2702,7 +2702,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:45": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 115,
-    "text": "-- nothing, the honest-absence stance."
+    "text": ""
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:46": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
@@ -2747,12 +2747,12 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:53": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 130,
-    "text": ", -- the effective weight table 0..6 (review C3, 2.8.0"
+    "text": ".= (if null (reqDedupDistinct req) then Nothing else Just dedupDerived)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:54": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 111,
-    "text": "churned = toInteger (length (fChurn f))"
+    "text": "files = count [() | [_, 0, _] <- fCont f]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:55": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2762,7 +2762,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:56": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 101,
-    "text": "\"failed\" .= [name | (name, True) <- conds]"
+    "text": "-- instead of by construction-time coincidence"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:57": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -2782,7 +2782,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:6": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 139,
-    "text": "sizeMass k soft f ="
+    "text": "-- derivable distribution) falling back to the sSizeCeil knob — the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:60": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
@@ -2872,22 +2872,22 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 149,
-    "text": "Just b -> bSoft b"
+    "text": "Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 135,
-    "text": "]"
+    "text": ", \"degraded\" .= False"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 138,
-    "text": "rk = effectiveRatchet (reqTolerance req)"
+    "text": "k = effectiveKnobs (reqCeilings req) (reqThresholds req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 141,
-    "text": "(perMille, _viol) = score k (reqWeights req) pens"
+    "text": "pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req))"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:8": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -2897,17 +2897,17 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:80": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 96,
-    "text": ", \"toleranceDrawn\" .= rDrawn r"
+    "text": ", \"over\" .= rOver r"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 146,
-    "text": "-- judge with the same S"
+    "text": "-- baseline freezes, so the establishing run and every later run"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 58,
-    "text": "}"
+    "text": ", sViolCost :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
@@ -2936,8 +2936,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:9": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 143,
-    "text": ""
+    "line": 154,
+    "text": "dupHits :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:1": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -3637,7 +3637,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:12": {
     "target": "../../../core/app/CE/Verdict/Wire.hs",
     "line": 143,
-    "text": "-- repayment: the old per-row list scan re-derived that index and"
+    "text": ", asum (zipWith discEntry [0 :: Int ..] (reqDisc req))"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:13": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -3687,17 +3687,17 @@
   "docs/reference/methodology/07-the-three-signal-join.md:21": {
     "target": "../../../core/app/CE/Verdict/Wire.hs",
     "line": 152,
-    "text": "| u /= toInteger i -> Just (\"tier \" <> show i <> \": index mismatch\")"
+    "text": ", dedupDistinctOffence (reqDedup req) (reqDedupDistinct req) (reqDedupFloor req)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 214,
-    "text": "let a = map.id_of(&b.a_file, b.a_start, b.a_end);"
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 194,
-    "text": "continue;"
+    "text": ""
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
     "target": "../../../core/test/JoinProps.hs",
@@ -3762,7 +3762,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:35": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 168,
-    "text": "derived = toInteger (length [d | d <- reqDedupDistinct req, d >= floor'])"
+    "text": "floor' = maybe DedupCost.minDistinct id (reqDedupFloor req)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:36": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -3787,7 +3787,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:4": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 161,
-    "text": "-- the judged count — the client's claimed blocks is display, the"
+    "text": "-- the distinct rows, when they ride, make the core's OWN derivation"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:40": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -3802,17 +3802,17 @@
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 276,
-    "text": ".map(|(u, (rw, ap))| [u, rw, ap, rw + ap, 0])"
+    "text": ""
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 176,
-    "text": "-- any held condition fails — over ceiling past tolerance, a new"
+    "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 281,
-    "text": "coch.insert([x.min(y), x.max(y), *n as i64]);"
+    "text": "if let Some(&i) = idx.get(u.path.as_str()) {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -4022,12 +4022,12 @@
   "docs/reference/methodology/07-the-three-signal-join.md:82": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 161,
-    "text": "-- the judged count — the client's claimed blocks is display, the"
+    "text": "-- the distinct rows, when they ride, make the core's OWN derivation"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:83": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 86,
-    "text": ", \"type\" .= (\"verdict.result\" :: String)"
+    "text": "[ \"proto\" .= proto"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:84": {
     "target": "../../../cli/src/score/wire.rs",
@@ -4037,12 +4037,12 @@
   "docs/reference/methodology/07-the-three-signal-join.md:85": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 149,
-    "text": "Just b -> bSoft b"
+    "text": "Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:86": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 141,
-    "text": "(perMille, _viol) = score k (reqWeights req) pens"
+    "text": "pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req))"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:87": {
     "target": "../../../cli/src/score/report.rs",
@@ -4097,7 +4097,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:96": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 168,
-    "text": "}"
+    "text": "/// gate that could not judge must never pass\")."
   },
   "docs/reference/methodology/07-the-three-signal-join.md:97": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -4242,7 +4242,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.26.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.27.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5787,7 +5787,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 231,
-    "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
+    "text": "> 上调 violCost 属显式选择）。区间罚曲线过硬线 H 改 **C¹ 线性延伸**"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -5822,7 +5822,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:36": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 240,
-    "text": "> `erase.result`：`rows=[[eraseable,reason]]` 按请求序，reason 冻结位"
+    "text": "> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:37": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -5842,7 +5842,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 234,
-    "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
+    "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
     "target": "../../../cli/src/erase/apply.rs",
@@ -5877,7 +5877,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 237,
-    "text": "> （w=verbatim 词数，x/y=两侧段词数，z=字节相等布尔）、2=t1_twin"
+    "text": "> docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -5902,7 +5902,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 234,
-    "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
+    "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
     "target": "../../../cli/src/erase/gather.rs",

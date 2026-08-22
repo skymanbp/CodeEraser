@@ -208,7 +208,7 @@ tree colours by — one list per axis, in axis order
 Since proto 2.26.0 (M9 batch 9 P9, user ruling) the structure family runs the **same density
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
-through `chargeAt`, imported from [Score.hs](../../../core/app/CE/Verdict/Score.hs#L120)
+through `chargeAt`, imported from [Score.hs:126](../../../core/app/CE/Verdict/Score.hs#L126)
 (one law, two families; [Structure.hs:246-258](../../../core/app/CE/Structure.hs#L246)):
 
 ```

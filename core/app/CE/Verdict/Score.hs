@@ -24,6 +24,7 @@ import CE.Graph.Cost (sccFloor)
 import qualified CE.Verdict.Cost as Cost
 import CE.Verdict.Soft (zonePenalty)
 import Data.Ratio ((%))
+import qualified Data.IntSet as IS
 
 -- | The validated fact tables (row shapes enforced by CE.Verdict's
 -- boundary contract before anything reaches here).
@@ -36,6 +37,8 @@ data Facts = Facts
   -- ^ [u,rewrite,append,added,survived]
   , fCont :: [[Integer]]
   -- ^ [u,metricCode,value]
+  , fDocFiles :: [Integer]
+  -- ^ file-universe indices whose language is documentation
   }
 
 data ScoreKnobs = ScoreKnobs
@@ -100,7 +103,7 @@ penalties k soft f =
       , (3, cnt (dupHits k f), files)
       , (4, cnt (deadFiles k f), nodes)
       , (5, cnt (churnHeavy k f), churned)
-      , (6, cnt (cycleMembers k f), nodes)
+      , (6, cnt (cycleMembers k f), nodes - toInteger (length (fDocFiles f)))
       ]
   ]
  where
@@ -159,7 +162,15 @@ churnHeavy k f =
   count [() | [_, rw, ap, _, _] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]
 
 cycleMembers :: ScoreKnobs -> Facts -> Integer
-cycleMembers k f = count [() | [_, _, _, _, size, _] <- fPos f, size >= sCycleFloor k]
+cycleMembers k f =
+  count
+    [ ()
+    | [u, _, _, _, size, _] <- fPos f
+    , size >= sCycleFloor k
+    , IS.notMember (fromInteger u) docs
+    ]
+ where
+  docs = IS.fromList (map fromInteger (fDocFiles f))
 
 -- | One axis's effective weight: wire rows [axisCode, numerator]
 -- override; unlisted axes weigh sDefaultWeight. ONE lookup, two

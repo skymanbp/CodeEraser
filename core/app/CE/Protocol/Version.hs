@@ -7,6 +7,11 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.27.0 = the code-only cycle-axis minor (M9 batch 9 P8, plan v2.12):
+-- verdict.request gains additive docFiles, the ascending file-universe
+-- indices of Markdown files; absent/empty preserves the old charge, while
+-- cycle mass and opportunity exclude documentation only. Liveness/deadcode
+-- semantics are unchanged; ADR-008 keeps this rule in Haskell.
 -- 2.26.0 = the one-density-law minor (M9 batch 9 P9, the user's
 -- ruling): structure.result's score and axes rows move to the
 -- verdict family's density fold -- each axis's flagged-directory
@@ -168,7 +173,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.26.0"
+proto = "2.27.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

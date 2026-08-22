@@ -10,7 +10,7 @@
 module VerdictProps (battery) where
 
 import qualified CE.Verdict.Ratchet as R
-import CE.Verdict.Score (Facts (..), ScoreKnobs (..), penalties, score, scoreBound)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), chargeAt, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine, zonePenalty)
 import Data.List (nub)
 import Data.Ratio ((%))
@@ -25,7 +25,8 @@ battery = do
   e <- check "tolerance-over sets shrink as tolAbs grows (inclusion)" overMono
   f <- check "the soft line derives by order statistics and clamps both ends" softDerive
   g <- check "the zone curve is hand-exact, monotone past H, degenerate-safe" zoneCurve
-  pure (and [a, b, c, d, e, f, g])
+  h <- check "docFiles narrows cycle mass and opportunity; absent preserves charge" docFilesCycle
+  pure (and [a, b, c, d, e, f, g, h])
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -69,6 +70,7 @@ facts =
       -- S=300) masses 10·(210/450)² = 98/45 — inside the zone, and
       -- far enough in that the charge clears the mean margin
       fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30]]
+    , fDocFiles = []
     }
 
 battWeights :: [[Integer]]
@@ -162,3 +164,16 @@ zoneCurve =
     , zonePenalty 300 300 10 400 == 10
     , zonePenalty 300 200 10 400 == 10
     ]
+
+docFilesCycle :: Bool
+docFilesCycle =
+  axis6 (penalties scoreBound Nothing noDocs) == chargeAt scale 2 3
+    && axis6 (penalties scoreBound Nothing oneDoc) == chargeAt scale 1 2
+    && axis6 (penalties scoreBound Nothing noDocs) == axis6 (penalties scoreBound Nothing absent)
+ where
+  scale = sScoreScale scoreBound
+  cycleFacts docs = Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs
+  noDocs = cycleFacts []
+  oneDoc = cycleFacts [0]
+  absent = cycleFacts []
+  axis6 = maybe (-1) id . lookup 6

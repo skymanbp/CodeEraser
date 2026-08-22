@@ -12,6 +12,9 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.27.0 = the code-only cycle-axis minor (M9 batch 9 P8, plan v2.12):
+/// verdict.request gains additive docFiles, the ascending Markdown-file
+/// indices; absent/empty preserves the old charge and Haskell owns the rule.
 /// 2.26.0 = the one-density-law minor (M9 batch 9 P9): structure
 /// score + axes rows move to the verdict density fold
 /// (chargeAt shared from CE.Verdict.Score); axis rows carry
@@ -120,7 +123,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.26.0";
+pub const PROTO: &str = "2.27.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

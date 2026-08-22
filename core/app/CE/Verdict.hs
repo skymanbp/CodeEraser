@@ -64,6 +64,7 @@ rowTotal req =
     , maybe 0 length (reqDedup req)
     , length (reqDedupDistinct req)
     , length (reqJudgedLoc req)
+    , length (reqDocFiles req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -137,7 +138,7 @@ result proto parsed req =
   k = effectiveKnobs (reqCeilings req) (reqThresholds req)
   rk = effectiveRatchet (reqTolerance req)
   jk = effectiveJoin k (reqThresholds req)
-  pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req))
+  pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req))
   (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id parsed
   -- the soft line judging THIS run: the committed one, or (only at
