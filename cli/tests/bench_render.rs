@@ -8,16 +8,8 @@
 mod bench_support;
 mod common;
 
+use bench_support::render::{doc, latest, measured, rows_with, s};
 use serde_json::Value;
-
-fn doc() -> Value {
-    let text = std::fs::read_to_string(bench_support::bench_path()).expect("bench.json");
-    serde_json::from_str(&text).expect("bench.json parses")
-}
-
-fn s<'a>(v: &'a Value, k: &str) -> &'a str {
-    v[k].as_str().unwrap_or("")
-}
 
 /// docs/BENCH.md, whole file.
 fn render_md(d: &Value) -> String {
@@ -32,43 +24,29 @@ fn render_md(d: &Value) -> String {
          ## Latency series (self repository)\n\n\
          | version | metric | p50 ms | p95 ms | n | host | measured |\n|---|---|---|---|---|---|---|\n",
     );
-    for r in d["rows"].as_array().expect("rows") {
-        out.push_str(&format!(
-            "| {} | {} | {} | {} | {} | {} | {}{} |\n",
+    out.push_str(&rows_with(d, "rows", |r| {
+        format!(
+            "| {} | {} | {} | {} | {} | {} | {} |\n",
             s(r, "version"),
             s(r, "metric"),
             r["p50"],
             r["p95"],
             r["n"],
             s(r, "host"),
-            s(r, "measured_at"),
-            if r["dirty"] == Value::Bool(true) {
-                " (dirty)"
-            } else {
-                ""
-            },
-        ));
-    }
+            measured(r),
+        )
+    }));
     out.push_str("\n## Frozen evaluation points\n\n| metric | value | source |\n|---|---|---|\n");
-    for f in d["frozen"].as_array().expect("frozen") {
-        out.push_str(&format!(
+    out.push_str(&rows_with(d, "frozen", |f| {
+        format!(
             "| {} | {} | {} |\n",
             s(f, "metric"),
             s(f, "value"),
             s(f, "source"),
-        ));
-    }
+        )
+    }));
     out.push_str("\nPer-point detail, freeze dates and epoch clauses live in the JSON itself.\n");
     out
-}
-
-/// The newest series version present (rows are sorted by version).
-fn latest(d: &Value) -> &str {
-    d["rows"]
-        .as_array()
-        .and_then(|r| r.last())
-        .map(|r| s(r, "version"))
-        .unwrap_or("")
 }
 
 fn latest_p50(d: &Value, metric: &str) -> String {

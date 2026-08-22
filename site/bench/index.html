@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser evaluation dashboard — replayed records</title>
+<meta name="description" content="Complete CodeEraser latency history and frozen accuracy, recall, precision and false-positive evaluation records, rendered from one benchmark contract.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/bench/">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/bench/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=2">
+<style>
+header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }
+.page-head { padding: 44px 0 8px; }
+.page-head h1 { font-family: var(--mono); font-size: 2rem; color: var(--paper); }
+.page-head p { color: var(--muted); max-width: 48em; margin-top: 12px; }
+.tablewrap { overflow-x: auto; }
+.data-table { margin: 16px 0 32px; }
+.data-table table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.82rem; }
+.data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
+.data-table th { color: var(--amber); font-family: var(--mono); }
+.data-table td { color: var(--muted); }
+.data-table td code { color: var(--text); font-family: var(--mono); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <img src="/icon-256.png" alt="">
+  <span class="name">CodeEraser</span>
+  <nav>
+    <a href="/">Overview</a>
+    <a href="/stack/">Stack</a>
+    <a href="/how/">How it works</a>
+    <a href="/zh/bench/">中文</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="page-head">
+  <h1>Evaluation dashboard</h1>
+  <p>The latency series records every measured release row. Accuracy, recall,
+  precision and false-positive results remain frozen where their ledgers require
+  human arbitration or retired comparators; their source column names that boundary.</p>
+  <p>This page owns no measured value. The block below is regenerated from
+  <code>contracts/bench/bench.json</code> and byte-compared by the test suite.</p>
+</section>
+
+<!-- bench:begin -->
+<h2>Latency by version</h2>
+<div class="term data-table"><div class="tablewrap"><table><thead><tr><th>version</th><th>metric</th><th>p50 ms</th><th>p95 ms</th><th>n</th><th>host</th><th>measured</th></tr></thead><tbody>
+<tr><td><code>0.1.0</code></td><td><code>check_warm</code></td><td>1098</td><td>1140</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.1.0</code></td><td><code>deadcode_warm</code></td><td>426</td><td>446</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.1.0</code></td><td><code>dedup_cold</code></td><td>2363</td><td>2420</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.1.0</code></td><td><code>dedup_warm</code></td><td>315</td><td>339</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.1.0</code></td><td><code>docdup_warm</code></td><td>533</td><td>636</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.1.0</code></td><td><code>hook_probe</code></td><td>40</td><td>52</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.1.0</code></td><td><code>scan</code></td><td>456</td><td>2291</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>check_warm</code></td><td>1549</td><td>1590</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>deadcode_warm</code></td><td>543</td><td>558</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>dedup_cold</code></td><td>3136</td><td>3219</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>dedup_warm</code></td><td>505</td><td>608</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>docdup_warm</code></td><td>636</td><td>663</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>hook_probe</code></td><td>39</td><td>55</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.2.0</code></td><td><code>scan</code></td><td>544</td><td>2572</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>check_warm</code></td><td>1343</td><td>1365</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>deadcode_warm</code></td><td>495</td><td>526</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>dedup_cold</code></td><td>2824</td><td>2889</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>dedup_warm</code></td><td>440</td><td>461</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>docdup_warm</code></td><td>576</td><td>598</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>hook_probe</code></td><td>33</td><td>35</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.3.0</code></td><td><code>scan</code></td><td>484</td><td>2276</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>check_warm</code></td><td>1364</td><td>1400</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>deadcode_warm</code></td><td>555</td><td>573</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>dedup_cold</code></td><td>3122</td><td>3166</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>dedup_warm</code></td><td>450</td><td>481</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>docdup_warm</code></td><td>587</td><td>744</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>hook_probe</code></td><td>34</td><td>36</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.4.0</code></td><td><code>scan</code></td><td>512</td><td>2358</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>check_warm</code></td><td>1440</td><td>1522</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>deadcode_warm</code></td><td>490</td><td>513</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>dedup_cold</code></td><td>2909</td><td>3021</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>dedup_warm</code></td><td>434</td><td>464</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>docdup_warm</code></td><td>542</td><td>548</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>hook_probe</code></td><td>41</td><td>64</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.5.0</code></td><td><code>scan</code></td><td>480</td><td>2416</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>check_warm</code></td><td>1410</td><td>1449</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>deadcode_warm</code></td><td>702</td><td>865</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>dedup_cold</code></td><td>3759</td><td>3840</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>dedup_warm</code></td><td>565</td><td>579</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>docdup_warm</code></td><td>833</td><td>879</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>hook_probe</code></td><td>43</td><td>56</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.6.0</code></td><td><code>scan</code></td><td>530</td><td>2896</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>check_warm</code></td><td>1404</td><td>1514</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>deadcode_warm</code></td><td>518</td><td>541</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>dedup_cold</code></td><td>3746</td><td>3913</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>dedup_warm</code></td><td>481</td><td>542</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>docdup_warm</code></td><td>603</td><td>653</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>hook_probe</code></td><td>41</td><td>57</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.0</code></td><td><code>scan</code></td><td>536</td><td>2526</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>check_warm</code></td><td>1917</td><td>2100</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>deadcode_warm</code></td><td>553</td><td>575</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>dedup_cold</code></td><td>2718</td><td>2798</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>dedup_warm</code></td><td>487</td><td>551</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>docdup_warm</code></td><td>691</td><td>698</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>hook_probe</code></td><td>59</td><td>73</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.1</code></td><td><code>scan</code></td><td>587</td><td>2098</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>check_warm</code></td><td>1571</td><td>1650</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>deadcode_warm</code></td><td>532</td><td>565</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>dedup_cold</code></td><td>2977</td><td>3017</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>dedup_warm</code></td><td>503</td><td>555</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>docdup_warm</code></td><td>635</td><td>652</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>hook_probe</code></td><td>58</td><td>128</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.2</code></td><td><code>scan</code></td><td>573</td><td>1994</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>check_warm</code></td><td>2065</td><td>2113</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>deadcode_warm</code></td><td>602</td><td>613</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>dedup_cold</code></td><td>2752</td><td>2775</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>dedup_warm</code></td><td>496</td><td>543</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>docdup_warm</code></td><td>657</td><td>724</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>hook_probe</code></td><td>54</td><td>79</td><td>30</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+<tr><td><code>0.7.3</code></td><td><code>scan</code></td><td>516</td><td>2598</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
+</tbody></table></div></div>
+<h2>Frozen evaluation points</h2>
+<div class="term data-table"><div class="tablewrap"><table><thead><tr><th>metric</th><th>value</th><th>source</th></tr></thead><tbody>
+<tr><td><code>docdup_d3_precision</code></td><td>17/17 scoped (100%)</td><td><code>docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json</code></td></tr>
+<tr><td><code>docdup_d1_recall</code></td><td>100%</td><td><code>docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json</code></td></tr>
+<tr><td><code>t3_precision</code></td><td>61 answered / 0 wrong (1.000)</td><td><code>docs/EVAL-SET-M5-3.md:41-47 + contracts/eval/t3-precision-*-v1.json</code></td></tr>
+<tr><td><code>graph_precision</code></td><td>overall gate &gt;= 0.90 held</td><td><code>docs/EVAL-SET.md:280-292 + contracts/eval/graph-precision-*-v1.json</code></td></tr>
+<tr><td><code>fourclass_fpr</code></td><td>0/600 flagged (gate &lt;= 1%)</td><td><code>contracts/eval/fpr-fourclass-v1.json + docs/EVAL-SET.md:131-140</code></td></tr>
+<tr><td><code>guard_fpr_per500</code></td><td>0.00 per 500 edits</td><td><code>docs/FPR-REPLAY.md:16-36</code></td></tr>
+<tr><td><code>l2_moved_recall</code></td><td>547/547 cross-file moved lines</td><td><code>docs/EVAL-SET.md:97-129 + contracts/eval/commit-l2*-v1.json</code></td></tr>
+<tr><td><code>dedup_recall_vs_jscpd</code></td><td>cobra 106/109 raw -&gt; 106/106 attributed</td><td><code>contracts/fixtures/crosscheck/DEDUP-CALIBRATION.md:96-137</code></td></tr>
+<tr><td><code>t3_recall_vs_similarity</code></td><td>zod 0.50 / requests 0.158 / cobra 0.154 (raw)</td><td><code>docs/EVAL-SET-M5-CLOSE.md:38-63</code></td></tr>
+</tbody></table></div><p class="cap">Series rows come from release-build replay; frozen points retain their ledger source. Full freeze notes remain in bench.json.</p></div>
+<!-- bench:end -->
+
+<p class="trust">Method and epoch details: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/BENCH.md">docs/BENCH.md</a>. Machine source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/bench/bench.json">contracts/bench/bench.json</a>.</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/">Overview</a> · <a href="/stack/">Tech stack</a> · <a href="/how/">How it works</a></p>
+  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the license does not grant trademark rights. © 2026 skymanbp.</p>
+</footer>
+
+</div>
+</body>
+</html>

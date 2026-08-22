@@ -1,3 +1,5 @@
+mod docs_consts_stack;
+
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};

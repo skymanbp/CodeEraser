@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css?v=2">
+<style>header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }</style>
 </head>
 <body>
 <div class="wrap">
@@ -21,6 +22,8 @@
   <span class="name">CodeEraser</span>
   <nav>
     <a href="/how/">How it works</a>
+    <a href="/stack/">Stack</a>
+    <a href="/bench/">Benchmarks</a>
     <a href="/zh/">中文</a>
     <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Download</a>
@@ -106,12 +109,14 @@ note: 102 blocks collapsed into existing members, 57 intra-file pairs off the si
 </div>
 <p class="cap">Every number is produced by replay (cli/tests/bench.rs) from one source, contracts/bench/bench.json — never hand-filled.</p>
 <!-- bench:end -->
+<p><a href="/bench/">Complete evaluation dashboard →</a></p>
 
 <h2>Under the hood</h2>
 <figure class="arch">
   <img src="/assets/architecture.svg" alt="Architecture: repository sources measured by the Rust frontend (tree-sitter, winnowing index, reference graph, churn, warm daemon), judged by the Haskell core (entropy, clones, liveness, doc duplication, ratcheted score), rendered by five faces (terminal, GUI, MCP, hooks, CI)" loading="lazy">
   <figcaption>Measurement in Rust, judgment in Haskell — one wire, one report schema per family, five faces.</figcaption>
 </figure>
+<p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>
 
 <h2>Trust anchor</h2>
 <p class="trust">All nine release binaries — three platforms × ce / ce-core, plus the three

@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1120" role="img"
+     aria-label="CodeEraser stack: Rust measurement, an NDJSON wire, Haskell judgment, product faces, and the release pin chain">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#57c7a8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="1178" height="1118" rx="18" fill="#10141d" stroke="#2a3347"/>
+
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', monospace">
+    <text x="30" y="48" font-size="19" font-weight="600" fill="#f4efe6">CodeEraser — component stack</text>
+    <text x="30" y="70" font-size="11" fill="#8593ad">measurement stops before policy · one versioned wire · judgment stays in the core</text>
+
+    <g>
+      <rect x="28" y="94" width="1124" height="300" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="94" width="4" height="300" rx="2" fill="#d9a35b"/>
+      <text x="50" y="122" font-size="14" font-weight="600" fill="#d9a35b">MEASUREMENT PLANE · cli/ · Rust</text>
+      <text x="1128" y="122" font-size="10" text-anchor="end" fill="#8593ad">SOURCE FACTS, NO PRODUCT VERDICT</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="140" width="530" height="104" rx="8"/>
+        <rect x="598" y="140" width="534" height="104" rx="8"/>
+        <rect x="48" y="260" width="530" height="112" rx="8"/>
+        <rect x="598" y="260" width="534" height="112" rx="8"/>
+      </g>
+
+      <g font-size="12" font-weight="600" fill="#cdd6e4">
+        <text x="66" y="164">tree-sitter + judged language boundary</text>
+        <text x="616" y="164">winnowing fingerprint index</text>
+        <text x="66" y="284">per-project lazy daemon</text>
+        <text x="616" y="284">reference, history and erase facts</text>
+      </g>
+      <g font-size="10" fill="#8593ad">
+        <text x="66" y="185">judged: Python · TypeScript · TSX · Rust · Go</text>
+        <text x="66" y="202">Markdown · Haskell (Markdown is grammar-less)</text>
+        <text x="66" y="224">scan-only: JS · CSS · HTML · Vue · Svelte · Shell · YAML</text>
+
+        <text x="616" y="185">normalized token fingerprints → SQLite WAL</text>
+        <text x="616" y="202">content-hash incremental invalidation per file</text>
+        <text x="616" y="224">convergent multi-writer cache; daemon is an optimization</text>
+
+        <text x="66" y="305">named pipe on Windows · Unix domain socket elsewhere</text>
+        <text x="66" y="322">project-root identity · minted auth token</text>
+        <text x="66" y="339">pre-hello and post-hello silence deadlines</text>
+        <text x="66" y="356">warm index + long-lived ce-core child</text>
+
+        <text x="616" y="305">resolver ladder: relative · alias · package · re-export</text>
+        <text x="616" y="322">Markdown file/section anchors · unresolved-site ledger</text>
+        <text x="616" y="339">git churn window · score facts · structure seam facts</text>
+        <text x="616" y="356">erase gather: graph death · byte equality · full coverage</text>
+      </g>
+    </g>
+
+    <path d="M590 394 V416" stroke="#57c7a8" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="28" y="422" width="1124" height="184" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="422" width="4" height="184" rx="2" fill="#57c7a8"/>
+      <text x="50" y="450" font-size="14" font-weight="600" fill="#57c7a8">THE WIRE · contracts/ · NDJSON over stdio</text>
+      <text x="1128" y="450" font-size="10" text-anchor="end" fill="#8593ad">ONE LINE PER ENVELOPE</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="468" width="252" height="116" rx="8"/>
+        <rect x="320" y="468" width="508" height="116" rx="8"/>
+        <rect x="848" y="468" width="284" height="116" rx="8"/>
+      </g>
+      <g font-size="12" font-weight="600" fill="#cdd6e4">
+        <text x="66" y="492">envelope + negotiation</text>
+        <text x="338" y="492">capability discovery</text>
+        <text x="866" y="492">compatibility evidence</text>
+      </g>
+      <g font-size="10" fill="#8593ad">
+        <text x="66" y="513">proto 2.27.0 · SemVer</text>
+        <text x="66" y="530">major mismatch refuses</text>
+        <text x="66" y="547">minor fields are additive</text>
+        <text x="66" y="564">normalized integer fact rows</text>
+
+        <text x="338" y="513">hello discovery</text>
+        <text x="338" y="530">ten judgment families: fourclass · graph · clone · docdup · verdict</text>
+        <text x="338" y="547">scan · structure · trend · erase · audit</text>
+        <text x="338" y="564">each family has request/result shapes and bounded refusal</text>
+
+        <text x="866" y="513">shared golden fixtures</text>
+        <text x="866" y="530">Rust client replay in CI</text>
+        <text x="866" y="547">Haskell core replay in CI</text>
+        <text x="866" y="564">byte-stable reports across faces</text>
+      </g>
+    </g>
+
+    <path d="M590 606 V628" stroke="#57c7a8" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="28" y="634" width="1124" height="242" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="634" width="4" height="242" rx="2" fill="#e4574a"/>
+      <text x="50" y="662" font-size="14" font-weight="600" fill="#e4574a">JUDGMENT CORE · core/ · Haskell · GHC 9.14.1</text>
+      <text x="1128" y="662" font-size="10" text-anchor="end" fill="#8593ad">PURE VERDICT FUNCTIONS</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="680" width="344" height="172" rx="8"/>
+        <rect x="412" y="680" width="344" height="172" rx="8"/>
+        <rect x="776" y="680" width="356" height="172" rx="8"/>
+      </g>
+      <g font-size="12" font-weight="600" fill="#cdd6e4">
+        <text x="66" y="704">score and structure</text>
+        <text x="430" y="704">liveness, clones and erase</text>
+        <text x="794" y="704">proof pressure</text>
+      </g>
+      <g font-size="10" fill="#8593ad">
+        <text x="66" y="726">seven structure axes + exact entropy arithmetic</text>
+        <text x="66" y="744">density scoring over violation / opportunity facts</text>
+        <text x="66" y="762">ADR-006 continuous + discrete shrink-only ratchet</text>
+        <text x="66" y="780">split-ROI seam price: refs · units · clones · churn</text>
+        <text x="66" y="798">trend slope and graded scan verdicts</text>
+        <text x="66" y="816">cycle axis excludes the declared document universe</text>
+
+        <text x="430" y="726">SCC, reachability and file-level liveness verdicts</text>
+        <text x="430" y="744">T3 tree-edit-distance clone decision</text>
+        <text x="430" y="762">exact docdup verdict over shingle-set facts</text>
+        <text x="430" y="780">three-signal join and audit conviction tables</text>
+        <text x="430" y="798">knobless erase safety predicate</text>
+        <text x="430" y="816">degraded erase replies authorize no row</text>
+
+        <text x="794" y="726">fixed-seed and exhaustive reference batteries</text>
+        <text x="794" y="744">knob perturbation proves each policy input is live</text>
+        <text x="794" y="762">golden request/reply replay for every family</text>
+        <text x="794" y="780">integer / Rational comparisons; no sampling loop</text>
+        <text x="794" y="798">fail bits, reason tables and counts returned together</text>
+        <text x="794" y="816">the same verdict rows feed every product face</text>
+      </g>
+    </g>
+
+    <path d="M590 876 V898" stroke="#57c7a8" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="28" y="904" width="1124" height="184" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="904" width="4" height="184" rx="2" fill="#57c7a8"/>
+      <text x="50" y="932" font-size="14" font-weight="600" fill="#57c7a8">FACES · ONE REPORT SHAPE, MULTIPLE WORKFLOWS</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="950" width="196" height="76" rx="8"/>
+        <rect x="264" y="950" width="196" height="76" rx="8"/>
+        <rect x="480" y="950" width="196" height="76" rx="8"/>
+        <rect x="696" y="950" width="196" height="76" rx="8"/>
+        <rect x="912" y="950" width="220" height="76" rx="8"/>
+      </g>
+      <g font-size="11.5" font-weight="600" fill="#cdd6e4">
+        <text x="64" y="974">terminal</text>
+        <text x="280" y="974">Tauri GUI</text>
+        <text x="496" y="974">read-only MCP</text>
+        <text x="712" y="974">Claude Code hooks</text>
+        <text x="928" y="974">CI gate</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="64" y="994">console + JSON schemas</text>
+        <text x="64" y="1010">English / Chinese rows</text>
+        <text x="280" y="994">eight screens</text>
+        <text x="280" y="1010">rendering only</text>
+        <text x="496" y="994">report tools</text>
+        <text x="496" y="1010">no baseline writes</text>
+        <text x="712" y="994">PreToolUse · Stop</text>
+        <text x="712" y="1010">SessionStart health</text>
+        <text x="928" y="994">pass · violation · internal</text>
+        <text x="928" y="1010">ratchet + explicit floor 950</text>
+      </g>
+
+      <line x1="48" y1="1050" x2="1132" y2="1050" stroke="#2a3347"/>
+      <text x="590" y="1073" text-anchor="middle" font-size="10.5" fill="#d9a35b">release trust chain under every shipped asset: draft bytes → SHA256SUMS → committed pins → tag verifies, never rebuilds</text>
+    </g>
+  </g>
+</svg>

@@ -9,6 +9,8 @@
 
 #![allow(dead_code)] // shared across the bench targets; each binary uses its slice
 
+pub mod render;
+
 use serde_json::{Value, json};
 use std::path::Path;
 use std::process::Command;

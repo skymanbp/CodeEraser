@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser 技术栈——度量、wire、判决与产品面</title>
+<meta name="description" content="CodeEraser 技术栈及其实现与门禁：Rust 度量、一条 NDJSON wire、Haskell 判决、五个报告面。">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/stack/">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/stack/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=2">
+<style>header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <img src="/icon-256.png" alt="">
+  <span class="name">CodeEraser</span>
+  <nav>
+    <a href="/zh/">概览</a>
+    <a href="/zh/how/">原理</a>
+    <a href="/zh/bench/">实测</a>
+    <a href="/stack/">English</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="pitch">
+    <h1>技术栈</h1>
+    <p class="tag">度量在 Rust，判决在 Haskell，中间只有一条版本化 wire。
+    这是 ADR-002 划下、由 ADR-008 继续压实的边界：解析、抽取、索引止于策略之前；
+    分数、棘轮与授权留在核内。</p>
+    <div class="installs">
+      <div class="install"><span class="k">判决核</span><code>GHC <span data-const="ghc">9.14.1</span></code></div>
+      <div class="install"><span class="k">wire</span><code>NDJSON · proto <span data-const="proto">2.27.0</span> · SemVer 协商</code></div>
+      <div class="install"><span class="k">证据</span><code><a href="/zh/bench/">打开完整评估仪表盘</a></code></div>
+    </div>
+  </div>
+</section>
+
+<figure class="arch">
+  <img src="/assets/stack.svg" alt="CodeEraser 详细技术栈：Rust 度量面、NDJSON wire 与十个判决族、Haskell 判决核、五个产品面，以及 SHA256 发布钉扎链" loading="eager">
+  <figcaption>组件地图。每个框都对应 <code>cli/</code>、<code>core/</code>、
+  <code>gui/</code>、<code>plugin/</code>、<code>contracts/</code> 或发布工作流中的实现边界。</figcaption>
+</figure>
+
+<h2>靠什么守住诚实</h2>
+<div class="grid">
+  <div class="card"><b>项目给自己把门</b><p>每次 push，<code>ci.yml</code> 都在本仓运行六条产品腿：scan、dedup 棘轮、地板 <code><span data-const="ci-floor">950</span></code> 的 check、deadcode、docdup 与 erase。</p></div>
+  <div class="card"><b>棘轮只缩不涨</b><p>ADR-006 把逐文件上限与离散违规集冻结在 <code>ce-baseline.json</code>。增长必须具名重立；日常清理会自动收紧基线银行。</p></div>
+  <div class="card"><b>文档各有权威</b><p><code>docs_gate.rs</code> 从二进制生成 CLI 与配置参考。引文、导航和常数测试检查方法学；所有 benchmark 表面由同一 JSON 合约逐字节门控。</p></div>
+  <!-- bench-stack:begin -->
+<div class="card"><b>误报纪律</b><p>判定层: <code>0/600 flagged (gate &lt;= 1%)</code>; 写入探针: <code>0/630 误报</code>. 其余规则保持 observe。每次晋级都须写入 CHANGELOG 台账。</p></div>
+<!-- bench-stack:end -->
+  <div class="card"><b>擦除是确定性的</b><p><code>erase/gather.rs</code> 组装事实；<code>CE.Erase</code> 只授权满足安全谓词的行。应用前逐目标验哈希，落笔后重跑来源家族——幸存判决响亮失败；没有 LLM 负责重写。</p></div>
+  <div class="card"><b>发布分成两段</b><p><code>release.yml</code> 先为 draft 工件计哈希，再由提交的 pins 绑定这些字节。tag 作业下载同一批工件，检查 CI 与每个 pin，全程不重建。</p></div>
+  <div class="card"><b>方法可以逐行检查</b><p>十二册方法学把每条公式链接到实现它的 <code>file:line</code>。<code>docs_citations.rs</code> 查引文台账；<code>docs_nav.rs</code> 查册集与导航。</p></div>
+  <div class="card"><b>Haskell 真正承重</b><p>只有核能计算分数与棘轮判决、授权 erase 行、决定 cycle 轴成员。属性电池会扰动这些判决，并以参考实现对拍小规模情形。</p></div>
+</div>
+
+<p class="trust">边界见
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/DEVELOPMENT_PLAN.md">ADR-002 与 ADR-008</a>；
+  wire 见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/VERSIONING.md">contracts/VERSIONING.md</a>；
+  判决公式见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">方法学索引</a>。
+</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/zh/">概览</a> · <a href="/zh/how/">原理</a> · <a href="/zh/bench/">评估仪表盘</a></p>
+  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
+</footer>
+
+</div>
+</body>
+</html>

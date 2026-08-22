@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser tech stack — measurement, wire, judgment, faces</title>
+<meta name="description" content="The CodeEraser stack, traced to its implementation and gates: Rust measurement, one NDJSON wire, Haskell judgment, and five report faces.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/stack/">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/stack/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=2">
+<style>header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <img src="/icon-256.png" alt="">
+  <span class="name">CodeEraser</span>
+  <nav>
+    <a href="/">Overview</a>
+    <a href="/how/">How it works</a>
+    <a href="/bench/">Benchmarks</a>
+    <a href="/zh/stack/">中文</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="pitch">
+    <h1>The tech stack</h1>
+    <p class="tag">Measurement lives in Rust. Judgment lives in Haskell. One
+    versioned wire connects them. This is the boundary set by ADR-002 and kept
+    load-bearing by ADR-008: parsing, extraction and indexing stop before policy;
+    score, ratchet and authorization stay in the core.</p>
+    <div class="installs">
+      <div class="install"><span class="k">core</span><code>GHC <span data-const="ghc">9.14.1</span></code></div>
+      <div class="install"><span class="k">wire</span><code>NDJSON · proto <span data-const="proto">2.27.0</span> · SemVer negotiation</code></div>
+      <div class="install"><span class="k">evidence</span><code><a href="/bench/">Open the complete evaluation dashboard</a></code></div>
+    </div>
+  </div>
+</section>
+
+<figure class="arch">
+  <img src="/assets/stack.svg" alt="Detailed CodeEraser stack: the Rust measurement plane, NDJSON wire and ten judgment families, Haskell judgment core, five product faces, and the SHA256 release pin chain" loading="eager">
+  <figcaption>The component map. Every box names an implementation boundary found in
+  <code>cli/</code>, <code>core/</code>, <code>gui/</code>, <code>plugin/</code>,
+  <code>contracts/</code>, or the release workflows.</figcaption>
+</figure>
+
+<h2>What holds it honest</h2>
+<div class="grid">
+  <div class="card"><b>It gates itself</b><p>On every push, <code>ci.yml</code> runs six product legs over this repository: scan, dedup ratchet, check at floor <code><span data-const="ci-floor">950</span></code>, deadcode, docdup and erase.</p></div>
+  <div class="card"><b>The ratchet only shrinks</b><p>ADR-006 freezes per-file ceilings and discrete violation sets in <code>ce-baseline.json</code>. Growth needs a named re-establish; ordinary cleanup tightens the bank.</p></div>
+  <div class="card"><b>Documentation has owners</b><p><code>docs_gate.rs</code> generates CLI and configuration references from the binary. Citation, navigation and constant tests check the methodology. Benchmark surfaces are byte-gated from one JSON contract.</p></div>
+  <!-- bench-stack:begin -->
+<div class="card"><b>False-positive discipline</b><p>classifier: <code>0/600 flagged (gate &lt;= 1%)</code>; write probe: <code>0/630 false positives</code>. Every other class stays observe. Each promotion is recorded in the CHANGELOG ledger.</p></div>
+<!-- bench-stack:end -->
+  <div class="card"><b>Erase is deterministic</b><p><code>erase/gather.rs</code> assembles facts; <code>CE.Erase</code> authorizes only rows that satisfy the safety predicate. Apply verifies every target hash first, then re-runs the source families — a surviving verdict fails loudly. No LLM writes a replacement.</p></div>
+  <div class="card"><b>Release has two phases</b><p><code>release.yml</code> hashes draft assets, then committed pins bind those bytes. The tag job downloads the same assets, checks CI and every pin, and publishes without rebuilding.</p></div>
+  <div class="card"><b>The method is inspectable</b><p>The twelve-booklet methodology links every formula to its implementing <code>file:line</code>. <code>docs_citations.rs</code> checks the ledger; <code>docs_nav.rs</code> checks the booklet set and navigation.</p></div>
+  <div class="card"><b>Haskell carries decisions</b><p>The core alone computes score and ratchet verdicts, authorizes erase rows, and decides cycle-axis membership. Property batteries perturb those decisions and compare small cases with reference implementations.</p></div>
+</div>
+
+<p class="trust">Trace the boundary in
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/DEVELOPMENT_PLAN.md">ADR-002 and ADR-008</a>,
+  the wire in <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/VERSIONING.md">contracts/VERSIONING.md</a>,
+  and the verdict formulas in <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">the methodology index</a>.
+</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/">Overview</a> · <a href="/how/">How it works</a> · <a href="/bench/">Evaluation dashboard</a></p>
+  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the license does not grant trademark rights. © 2026 skymanbp.</p>
+</footer>
+
+</div>
+</body>
+</html>

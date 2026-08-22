@@ -6,59 +6,37 @@
 
 <img src="docs/assets/gui-structure.png" alt="GUI 结构树图与分数——判决本仓库自身" width="740">
 
-LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数被实现两遍、
-同一个事实写在三处、更新以追加的方式到来、文件只增不减。CodeEraser
-在写入的当下对抗这种漂移——Rust CLI + Tauri GUI 前端，Haskell 判决核，
-以 Claude Code 插件形态提供 PreToolUse/Stop 拦截，并通过只读 MCP
-报告面、pre-commit 与 CI 退出码接入任何 agent 工作流。
+LLM 在长期项目上会漂移出堆叠与打补丁的习性：同一个函数被实现两遍、同一个事实写在三处、更新以追加的方式到来、文件只增不减。
+CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、Haskell 判决核、Claude Code hooks、只读 MCP、pre-commit 与 CI。
 
 ## 状态
 
-🚀 **v0.7.3 已发布——尺寸顾问收口成环。** 安装包、
-[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
-[codeeraser.dev](https://codeeraser.dev) 官网均已上线（0.7.1–0.7.3
-为补丁版：开门即提权；CLI 上机器 PATH 且注册表值类型不动；插件真
-复用钉扎命中的二进制；GUI 下子进程不再闪控制台黑窗；裸 `ce` 直接
-答 help 而非报错）。本周期：
-拆分顾问按**全额**计缝价——被切断的引用、被切穿的克隆块、跨缝的
-共变对，逐项按外语料标定的价目入账；渐进区的位置→档位映射接线于
-显式 `[guard] zone_tiers` 之后（默认仍只记台账：没有误报记录就
-没有晋升）；顾问面同批入驻 MCP 工具面与 GUI 结构屏。相对软线随
-每次具名重立重算，`ce-baseline.json` 是唯一权威。
+🏁 **v1.0.0——已完成。** 锁定计划的全部里程碑均已交付，终扫已清：双车道审查的 113 条发现全部对账
+（81 条修复，29 条书面处置，3 条反证成立），716 条文档声明重新对树核验，网站上的每个数字要么由回放生成，
+要么从真实输出重取。安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
+[codeeraser.dev](https://codeeraser.dev) 均已上线。1.0.0 的分数与 0.7.3 **不可比较**——密度定律与 cycle 轴迁移已在发布说明中声明；
+按 1.0 之前区间校准的地板需要具名 `CE_ACCEPT_BASELINE=1` 重立。
 
-锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。
-本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）都用
-自己的扫描器、克隆棘轮、基线与死码/文档重复检查门禁自身（吃自己的
-狗粮）。
+锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）
+都用自己的扫描器、克隆棘轮、基线与死码/文档重复检查门禁自身。
 
 ## 安装
 
-安装面分层：**安装包**是超集（GUI + CLI 上 PATH），**插件**是叠在任
-一底座上的守卫钩子层，其余路线只装 CLI。
+安装面分层：**安装包**是超集（GUI + CLI 上 PATH），**插件**是叠在任一底座上的守卫钩子层，其余路线只装 CLI。
 
-**安装包（推荐）。** 每个
-[release](https://github.com/skymanbp/CodeEraser/releases) 发三个 GUI
-安装包（NSIS `setup.exe` / AppImage / dmg——均内含 GUI 与 `ce`、
-`ce-core` 两个二进制 sidecar）。Windows（v0.7.2 起）安装器开门即提
-权，并把安装目录写入机器 PATH——装完任意终端可直接用 `ce`，零额外
-步骤（AppImage/dmg 用户自行把应用目录加 PATH）。
+**安装包（推荐）。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发三个 GUI 安装包
+（NSIS `setup.exe` / AppImage / dmg，均内含 GUI、`ce` 与 `ce-core` sidecar）。Windows（v0.7.2 起）安装器提权并写入机器 PATH；
+AppImage/dmg 用户自行把应用目录加入 PATH。
 
-**Claude Code 插件（守卫层）。** `/plugin marketplace add
-skymanbp/CodeEraser`，再 `/plugin install codeeraser`。引导脚本按钉扎
-解析二进制：**本地副本或 PATH 上任一 SHA256 命中钉扎值的**先答——安
-装包正好在 PATH 留了一份，字节相同的二次下载纯属浪费——再是钉扎下
-载，最后才是会自报未校验的 PATH 兜底（v0.7.3 起；校验门槛未降，未
-命中的 PATH 二进制照走下载校验）。
+**Claude Code 插件（守卫层）。** `/plugin marketplace add skymanbp/CodeEraser`，再 `/plugin install codeeraser`。
+引导脚本按 pin 解析：先取本地或 PATH 上的 SHA256 命中副本，再钉扎下载，最后才是会自报未校验的 PATH 兜底
+（v0.7.3 起；未命中的 PATH 二进制仍走下载校验）。
 
-**只要 CLI。** 从同一 release 下载 `ce-<版本>-<平台>`（三平台：
-x86_64-windows / x86_64-linux / aarch64-macos）改名 `ce` 放 PATH，
-把 `ce-core-<版本>-<平台>` 改名 `ce-core` 放它旁边——判决类子命令
-经解析链的兄弟腿自动找到它，零旗标零环境变量。或
-`cargo install codeeraser` 源码构建 `ce`，判决核另取放旁。
-`SHA256SUMS` 覆盖全部资产。
+**只要 CLI。** 从同一 release 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`
+（x86_64-windows / x86_64-linux / aarch64-macos），改名后并排放 PATH；判决命令经兄弟腿找到核。
+也可 `cargo install codeeraser` 构建 `ce`，再把 `ce-core` 放旁边；`SHA256SUMS` 覆盖全部资产。
 
-**从源码。** 前置：钉版 Rust 工具链（`cli/rust-toolchain.toml`）与
-GHC 9.14.1 + cabal（判决核）。
+**从源码。** 前置：钉版 Rust 工具链（仓根 `rust-toolchain.toml`）与 GHC 9.14.1 + cabal（判决核）。
 
 ```sh
 # 判决核（ce-core）
@@ -97,7 +75,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce trend` | 主线历史分数轨迹（缓存可从 git 重建） |
 | `ce erase` | 确定性两段式擦除：只计划可证安全的消除（死文件、逐字文档孪生、整单元 T1 孪生），默认演练，`--apply` 有干净工作区前置 |
 | `ce check` / `ce baseline` | ADR-006 棘轮 + 分数地板（对 `ce-baseline.json`） |
-| `ce mcp` | 只读 MCP 服务器：上述每个报告都是一个工具 |
+| `ce mcp` | 只读 MCP 服务器：11 个报告工具；不暴露 erase 计划与 doctor |
 | `ce doctor` / `ce eject` | 健康行；按项目完整卸载（默认 dry-run） |
 
 控制台报告与 `--help` 默认英文，`--lang zh`（或 `CE_LANG=zh`，旗标
@@ -113,33 +91,65 @@ observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 `[guard] mode` 显式声明可覆盖所有类别；软线与硬预算之间的渐进区
 默认只记台账，`[guard] zone_tiers` 显式声明才启用位置→档位映射
 （<25% observe / 25–75% warn / >75% ask）。诚实边界：PreToolUse 塑造行为，
-不是安全墙——shell 写入可绕过它，Stop 审计 + CI 门是兜底。
+不是安全墙——shell 写入可绕过它。兜底按各腿所测内容分工：Stop 重新判决
+净 LOC 与涉改重复，CI 门负责硬尺寸墙与棘轮。
+
+## 内部构造 / 技术栈
+
+![详细技术栈：Rust 度量、版本化 wire、Haskell 判决、产品面与发布 pin 链](docs/assets/stack.svg)
+
+Rust 负责面对源码的工作：tree-sitter 解析、SQLite WAL 指纹索引、解析阶梯、
+git 窗口、逐项目懒启动 daemon 与事实组装。事实只经一条 SemVer 协商的
+NDJSON wire 过界。Haskell 负责产品判决：分数与棘轮、图存活性与 cycle
+成员、克隆/文档重复、拆分缝价与 erase 授权。终端、Tauri GUI、只读 MCP、
+Claude Code hooks 与 CI 渲染或执行的是同一批报告形状。
+
+- push 工作流运行六条自门禁产品腿，含显式分数地板；本仓就是常设 dogfood fixture。
+- ADR-006 上限与违规集存于 `ce-baseline.json`；清理会收紧，增长必须显式重立。
+- CLI/配置参考由生成器产出；十二册方法学的引文、导航与中英常数均由机器检查。
+- 守卫规则只有在自己的误报记录写入 [CHANGELOG.md](CHANGELOG.md) 后才能晋级 deny；无记录者保持 observe。
+- `ce erase` 组装确定性事实，再由 Haskell 安全谓词授权删除；从不让模型重写代码。
+- 发布分两段：hash 来自 draft 工件，pin 提交进树，tag 校验同一批字节且不重建。
+
+[网站技术栈](https://codeeraser.dev/zh/stack/) · [判决方法学](docs/reference/methodology.md) · [wire 契约](contracts/VERSIONING.md)
+
+## 评估仪表盘
+
+<!-- bench:begin -->
+### 最新版本延迟 · v0.7.3
+
+| percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| p50 ms | 2065 | 602 | 2752 | 496 | 657 | 54 | 516 |
+| p95 ms | 2113 | 613 | 2775 | 543 | 724 | 79 | 2598 |
+
+### 冻结评估点
+
+| 指标 | 值 | 来源 |
+|---|---|---|
+| `docdup_d3_precision` | 17/17 scoped (100%) | `docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json` |
+| `docdup_d1_recall` | 100% | `docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json` |
+| `t3_precision` | 61 answered / 0 wrong (1.000) | `docs/EVAL-SET-M5-3.md:41-47 + contracts/eval/t3-precision-*-v1.json` |
+| `graph_precision` | overall gate >= 0.90 held | `docs/EVAL-SET.md:280-292 + contracts/eval/graph-precision-*-v1.json` |
+| `fourclass_fpr` | 0/600 flagged (gate <= 1%) | `contracts/eval/fpr-fourclass-v1.json + docs/EVAL-SET.md:131-140` |
+| `guard_fpr_per500` | 0.00 per 500 edits | `docs/FPR-REPLAY.md:16-36` |
+| `l2_moved_recall` | 547/547 cross-file moved lines | `docs/EVAL-SET.md:97-129 + contracts/eval/commit-l2*-v1.json` |
+| `dedup_recall_vs_jscpd` | cobra 106/109 raw -> 106/106 attributed | `contracts/fixtures/crosscheck/DEDUP-CALIBRATION.md:96-137` |
+| `t3_recall_vs_similarity` | zod 0.50 / requests 0.158 / cobra 0.154 (raw) | `docs/EVAL-SET-M5-CLOSE.md:38-63` |
+
+所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。 [完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
+<!-- bench:end -->
 
 ## 文档
 
+- [技术栈](https://codeeraser.dev/zh/stack/) · [评估仪表盘](https://codeeraser.dev/zh/bench/) — 网站组件地图与完整生成记录
 - [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md) — 由二进制与配置 schema 生成；漂移即 CI 门变红
-- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) — 锁定计划；每个里程碑对它负责
-- [EVAL-SET](docs/EVAL-SET.md) — 冻结评估宇宙、抽样、审计及其门禁
+- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [FIELD-TEST](docs/FIELD-TEST.md) — 锁定计划、冻结评估设计与真实仓发现
 - [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — 实测预算与重放台账
-- [BENCH](docs/BENCH.md) — bench 仪表盘：逐版本延迟系列 + 冻结评估点位，由 `contracts/bench/bench.json` 生成（只准回放；CI 门拒绝手填面）
-- [FIELD-TEST](docs/FIELD-TEST.md) — 真实仓库全家桶实战：什么饱和了、什么扛住了、以及由此逼出的密度评分修正（proto 2.17.0）
-- [contracts/VERSIONING.md](contracts/VERSIONING.md) — wire 契约与 SemVer 规则
-- [docs/RELEASE.md](docs/RELEASE.md) — 两段式发版 runbook
-- [docs/reference/methodology.md](docs/reference/methodology.md) — **判决怎么算出来的**：每个判决族的数学实现，一族一篇，每条公式与常数都引到实现它的那一行
-- [docs/reference/structure-axes.md](docs/reference/structure-axes.md) — structure/1 七轴语义（S0–S6）
-- [docs/reference/size-advisory.md](docs/reference/size-advisory.md) — 尺寸软区间+拆分 ROI 契约（v0.6 实现；v0.7 补齐四腿缝价）
-- [docs/reference/erase.md](docs/reference/erase.md) — 确定性两段式擦除契约（M9）：什么可擦、什么只能建议、以及为什么
-
-## 架构
-
-![从仓库到判决：Rust 度量、Haskell 判决、五张面孔渲染](docs/assets/architecture.svg)
-
-| 层 | 语言 | 职责 |
-|---|---|---|
-| 核（`core/`） | Haskell | 判决：规则、裁定、评分棘轮、图存活性、TSED、结构熵 |
-| 前端（`cli/`） | Rust | 解析（tree-sitter）、winnowing 索引、CLI、daemon、GUI 后端、hooks、MCP |
-| GUI（`gui/`） | Rust + 原生 JS | Tauri 壳，消费与 CLI 同一份报告 schema |
-| 插件（`plugin/`） | 清单 + hooks + sh 引导 | 钉版二进制引导、拦截（marketplace 清单在仓根 `.claude-plugin/`） |
+- [BENCH](docs/BENCH.md) — 逐版本延迟与冻结评估点，由 `contracts/bench/bench.json` 生成
+- [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md) — wire SemVer 与两段式发布 runbook
+- [docs/reference/methodology.md](docs/reference/methodology.md) — 每个判决的数学实现，一族一册，公式与常数逐条引到实现行
+- [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) — 聚焦行为契约
 
 ## 许可证
 

@@ -172,7 +172,7 @@ jobs:
       # legitimate large landing dips this leg below a copied floor
       # for up to 14 days — drift-shaped, exactly what the base leg's
       # floor comment says it must NOT bite on. Claims stay single:
-      # the base leg owns the 800 floor, this leg owns the churn
+      # the base leg owns the score floor, this leg owns the churn
       # measurement path plus the ratchet (still armed, still fatal).
       - name: Dogfood churn leg (ubuntu only)
         if: matrix.os == 'ubuntu-latest'
