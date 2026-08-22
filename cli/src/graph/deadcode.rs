@@ -57,8 +57,16 @@ pub struct Report {
 }
 
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
-    let w = build_wire(root, db)?;
-    let reply = judge(core, &w, &[])?;
+    let (idx, db_path) = dedup::refreshed_index(root, db)?;
+    let w = wire_of(root, &idx, &db_path)?;
+    judge_report(root, core, &w)
+}
+
+/// The judgment half-door (batch 9 P10): judge + consume + the
+/// degraded observe over a wire already in hand — boundaries
+/// holding the one snapshot call this, never a second measurement.
+pub fn judge_report(root: &Path, core: &str, w: &GraphWire) -> Result<Report> {
+    let reply = judge(core, w, &[])?;
     let report = consume(&reply, &w.nodes, w.unresolved_sites)?;
     if let Some(reason) = &report.degraded {
         observe(root, reason);
@@ -94,9 +102,10 @@ pub fn file_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
         .collect()
 }
 
-pub fn build_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
-    let (idx, db_path) = dedup::refreshed_index(root, db)?;
-    let (files, edges, unresolved_sites) = graph_rows(&idx)?;
+/// The measurement half-door (batch 9 P10): the graph request from
+/// an index the command boundary already refreshed and opened.
+pub fn wire_of(root: &Path, idx: &dedup::index::Index, db_path: &Path) -> Result<GraphWire> {
+    let (files, edges, unresolved_sites) = graph_rows(idx)?;
     if files.is_empty() {
         bail!(
             "empty index at {} — nothing was walked; wrong root?",

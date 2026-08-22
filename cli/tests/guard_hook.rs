@@ -7,7 +7,7 @@
 use std::path::Path;
 
 mod common;
-use common::{rust_fn, shutdown_daemon, tmp};
+use common::{rust_fn, tmp};
 
 /// Project with a.rs indexed; guard mode written to ce.toml.
 fn seed_project(dir: &Path, mode: &str) {
@@ -38,9 +38,7 @@ fn warn_mode_allows_with_reason() {
 
 fn silent_probe_observe(dir: &Path, content: &str) -> serde_json::Value {
     let env = envelope(dir, "Write", content);
-    let line = common::silent_hook_observe(dir, &["probe", "--hook"], &env, "probe");
-    shutdown_daemon(dir);
-    line
+    common::silent_hook_observe(dir, &["probe", "--hook"], &env, "probe")
 }
 
 #[test]
@@ -72,7 +70,8 @@ fn malformed_envelope_fails_open_everywhere() {
 fn probe_failure_is_stamped_degraded() {
     let dir = tmp("guard-degraded");
     seed_project(&dir, "deny");
-    shutdown_daemon(&dir); // next probe respawns against the bad db
+    // no daemon survives a hook run (P13), so the probe below
+    // respawns against the corrupted db by construction
     common::corrupt_index(&dir);
     let line = silent_probe_observe(&dir, &rust_fn(1));
     assert_eq!(line["degraded"], true, "stamped, not silent");
@@ -124,7 +123,6 @@ fn a_zone_write_logs_position_and_emits_nothing() {
     let last2: serde_json::Value =
         serde_json::from_str(feed2.lines().last().expect("lines")).expect("json");
     assert_ne!(last2["event"], "zone", "a comfortable write logs no zone");
-    shutdown_daemon(&dir);
 }
 
 /// v2.7 ①: with ce.toml's `[guard] zone_tiers` armed, the SAME zone
@@ -166,7 +164,6 @@ fn an_armed_zone_maps_position_to_tier() {
         ["warn", "ask", "observe"],
         "the feed records the mapped tier"
     );
-    shutdown_daemon(&dir);
 }
 
 /// The budget rule shares the scanner's exclusion model, including
@@ -186,7 +183,6 @@ fn budget_respects_the_exclusion_model() {
         let out = run_hook(&dir, &env);
         assert!(out.trim().is_empty(), "{rel} is excluded: {out}");
     }
-    shutdown_daemon(&dir);
 }
 
 /// b.rs Edit envelope with a chosen old_string (new_string fixed at
@@ -238,7 +234,6 @@ fn budget_counts_the_applied_edit() {
             }
         }
     }
-    shutdown_daemon(&dir);
 }
 
 #[test]
@@ -256,6 +251,5 @@ fn clean_content_and_foreign_tools_stay_silent() {
     })
     .to_string();
     let out2 = run_hook(&dir, &bash);
-    shutdown_daemon(&dir);
     assert!(out2.trim().is_empty(), "foreign tool ignored: {out2}");
 }

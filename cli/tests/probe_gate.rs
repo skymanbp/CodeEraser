@@ -101,6 +101,7 @@ fn probe_over_daemon_socket() {
         }
         other => panic!("expected probe report, got {other:?}"),
     }
-    common::shutdown_daemon(&root);
-    common::wait_exit(child, "daemon");
+    // the shared explicit-daemon teardown, Bye asserted — this site
+    // was the one weaker hand-rolled copy (batch 9 P13)
+    common::shutdown_and_wait(&root, child, "daemon");
 }

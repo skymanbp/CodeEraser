@@ -73,13 +73,23 @@ pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
     Ok(ExitCode::SUCCESS)
 }
 
+/// One command boundary's measurement: blocks + their open index + its path (P10).
+pub type Snapshot = (pairs::Blocks, index::Index, PathBuf);
+
+/// Measure ONCE and thread values — each multi-family leg re-ran the whole
+/// walk before (structure --deep paid it three times, the erase gather four).
+pub fn snapshot(root: &Path, db: Option<PathBuf>) -> Result<Snapshot> {
+    let (found, _summary) = analyze(root, db.clone(), None, None)?;
+    let db_path = index_db_path(root, db);
+    let idx = index::Index::open(&db_path, Params::default())?;
+    Ok((found, idx, db_path))
+}
+
 /// Refresh the index for `root` and open it — the one opening every
 /// cached-graph consumer (deadcode, `ce clone --units`) walks; the
 /// path rides back for error messages that name the database.
 pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index, PathBuf)> {
-    analyze(root, db.clone(), None, None)?;
-    let db_path = index_db_path(root, db);
-    let idx = index::Index::open(&db_path, Params::default())?;
+    let (_found, idx, db_path) = snapshot(root, db)?;
     Ok((idx, db_path))
 }
 

@@ -11,7 +11,7 @@ use crate::scan::lang::Lang;
 use crate::scan::metrics::FileMetrics;
 use anyhow::Result;
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 /// The measured facts plus the name ledger the reply relabels with.
 /// The wire rows live in a `wire::SeamTables` directly — the same
@@ -38,12 +38,13 @@ const NAME_FLOOR: usize = 3;
 /// wire knob (prices are the knobs).
 const CHURN_WINDOW_DAYS: u32 = 14;
 
-/// Assemble the five seam tables over the judged files past `soft`.
+/// Assemble the five seam tables over the judged files past `soft`;
+/// the clone leg reads the command boundary's one snapshot (P10).
 pub fn seam_facts(
     root: &Path,
-    db: Option<PathBuf>,
     files: &[FileMetrics],
     soft: u64,
+    found: &crate::dedup::pairs::Blocks,
 ) -> Result<SeamFacts> {
     let mut out = SeamFacts::default();
     let mut key_maps: Vec<BTreeMap<(String, i64), u64>> = Vec::new();
@@ -67,7 +68,7 @@ pub fn seam_facts(
         push_units(&mut out, fid, &tops, f.total_lines as u64);
         push_refs(&mut out, fid, &tops, &text);
     }
-    push_clones(&mut out, root, db)?;
+    push_clones(&mut out, found);
     push_churn(&mut out, root, &key_maps);
     Ok(out)
 }
@@ -76,9 +77,9 @@ pub fn seam_facts(
 /// the dedup family judges from — [fileId, start, end] rows for the
 /// core's cut price (a seam through a block splits one duplicate
 /// span over two files).
-fn push_clones(out: &mut SeamFacts, root: &Path, db: Option<PathBuf>) -> Result<()> {
+fn push_clones(out: &mut SeamFacts, found: &crate::dedup::pairs::Blocks) {
     if out.files.is_empty() {
-        return Ok(());
+        return;
     }
     let ids: BTreeMap<&str, (u64, u64)> = out
         .files
@@ -86,7 +87,6 @@ fn push_clones(out: &mut SeamFacts, root: &Path, db: Option<PathBuf>) -> Result<
         .enumerate()
         .map(|(i, (p, total))| (p.as_str(), (i as u64, *total)))
         .collect();
-    let (found, _stats) = crate::dedup::analyze(root, db, None, None)?;
     let mut rows = BTreeSet::new();
     for b in &found.blocks {
         let sides = [
@@ -103,7 +103,6 @@ fn push_clones(out: &mut SeamFacts, root: &Path, db: Option<PathBuf>) -> Result<
         }
     }
     out.tables.clones = rows.into_iter().collect();
-    Ok(())
 }
 
 /// Unit co-change pairs off the churn family's own commit ledger

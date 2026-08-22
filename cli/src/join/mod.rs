@@ -57,8 +57,10 @@ pub struct Report {
 }
 
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Report> {
-    let (found, _summary) = dedup::analyze(root, db.clone(), None, None)?;
-    let w = deadcode::build_wire(root, db)?;
+    // one snapshot (batch 9 P10): blocks and wire from ONE walk
+    let (found, idx, db_path) = dedup::snapshot(root, db)?;
+    let w = deadcode::wire_of(root, &idx, &db_path)?;
+    drop(idx);
     let pos_req: Vec<i64> = deadcode::file_nodes(&w).iter().map(|&(i, _)| i).collect();
     let reply = deadcode::judge(core, &w, &pos_req)?;
     let degraded = reply["reason"].as_str().map(str::to_string);

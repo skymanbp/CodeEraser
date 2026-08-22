@@ -67,8 +67,11 @@ struct Measured {
 }
 
 fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
-    let (found, _summary) = dedup::analyze(root, opts.db.clone(), None, None)?;
-    let w = deadcode::build_wire(root, opts.db.clone())?;
+    // one snapshot (batch 9 P10): blocks and wire come from ONE
+    // walk — build_wire's second full measurement is retired
+    let (found, snap, db_path) = dedup::snapshot(root, opts.db.clone())?;
+    let w = deadcode::wire_of(root, &snap, &db_path)?;
+    drop(snap);
     let fnodes = deadcode::file_nodes(&w);
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
     let posmap = judged_positions(&opts.core, &w, &pos_req)?;

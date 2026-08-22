@@ -84,17 +84,23 @@ pub fn run(
     // wire call below, never the scan mirror (batch-7 slice 8)
     let (_config, files) = crate::scan::measure(root)?;
     let t = tree::build(&judged_paths(&files));
+    // ONE snapshot for every leg (batch 9 P10): blocks + index
+    // measured once, the graph wire from that same index — the "ONE
+    // walk" the module doc promises, structural now.
+    let (found, idx, db_path) = crate::dedup::snapshot(root, db)?;
+    let w = crate::graph::deadcode::wire_of(root, &idx, &db_path)?;
+    drop(idx);
     let seam_facts = if split {
         Some(super::seams::seam_facts(
             root,
-            db.clone(),
             &files,
             committed_soft(root),
+            &found,
         )?)
     } else {
         None
     };
-    let req = assemble(root, db, core, &t, (deep, days), &seam_facts)?;
+    let req = assemble(root, core, &t, (deep, days), &seam_facts, (&w, &found))?;
     let reply = wire::judge(core, &req)?;
     let names = names_by_id(&t);
     // The boundary contract runs on the REQUEST side (Structure.hs
@@ -230,22 +236,26 @@ fn tree_rows(t: &tree::Tree, names: &[String], findings: &[[i64; 2]]) -> Vec<Tre
 /// from run() when the third optional table pushed it past the
 /// repo's own function gate). The two axis switches travel as ONE
 /// pair — they are one decision ("which optional axes ride"), and
-/// the param gate agrees.
+/// the param gate agrees; the snapshot pair (wire, blocks) travels
+/// the same way — it is one measurement (batch 9 P10).
 fn assemble(
     root: &Path,
-    db: Option<PathBuf>,
     core: &str,
     t: &tree::Tree,
     (deep, days): (bool, Option<u32>),
     seam_facts: &Option<super::seams::SeamFacts>,
+    (w, found): (
+        &crate::graph::deadcode::GraphWire,
+        &crate::dedup::pairs::Blocks,
+    ),
 ) -> Result<wire::Request> {
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let stale_docs = match days {
-        Some(d) => Some(rows::stale_doc_rows(root, db.clone(), t, d)?),
+        Some(d) => Some(rows::stale_doc_rows(root, w, t, d)?),
         None => None,
     };
     let redundancy = if deep {
-        Some(rows::redundancy_rows(root, db.clone(), core, t)?)
+        Some(rows::redundancy_rows(root, core, w, found, t)?)
     } else {
         None
     };
@@ -275,7 +285,7 @@ fn assemble(
         nodes: rows::node_rows(t),
         patterns: rows::pattern_rows(t),
         conventions: rows::convention_rows(t),
-        file_refs: rows::file_ref_rows(root, db, t)?,
+        file_refs: rows::file_ref_rows(w, t)?,
         declared: rows::declared_rows(&cfg.structure.layout, t)?,
         stale_docs,
         redundancy,

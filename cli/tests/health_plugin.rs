@@ -27,8 +27,6 @@ fn health_reports_mode_index_and_warm_daemon() {
     })
     .to_string();
     let out = common::run_hook(&dir, &["health", "--hook"], &envelope);
-    // shut the warmed daemon down before asserting on the line
-    common::shutdown_daemon(&dir);
     let v: serde_json::Value = serde_json::from_str(out.trim()).expect("json");
     let ctx = v["hookSpecificOutput"]["additionalContext"]
         .as_str()

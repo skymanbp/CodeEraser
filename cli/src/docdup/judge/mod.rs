@@ -84,7 +84,13 @@ pub type Rows = (Vec<candidates::SegRow>, Vec<(usize, usize, Doc)>, Counts);
 /// strings drop — one judgment, two faces, never a re-derivation.
 pub fn run_rows(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Rows> {
     let (idx, _db_path) = crate::dedup::refreshed_index(root, db)?;
-    let segs = candidates::live_rows(&idx)?;
+    rows_of(root, &idx, core)
+}
+
+/// The same judgment from an index the command boundary already
+/// refreshed and opened (batch 9 P10) — the erase gather's leg.
+pub fn rows_of(root: &Path, idx: &crate::dedup::index::Index, core: &str) -> Result<Rows> {
+    let segs = candidates::live_rows(idx)?;
     let cand = candidates::collect(root, &segs)?;
     // the family's lockstep bindings, inline: this judge is thin
     // enough that a separate fn was pure scaffolding (bite 17 tail)
@@ -97,7 +103,7 @@ pub fn run_rows(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Rows> {
     let runs: BTreeMap<(usize, usize), u64> =
         cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
     let dups = reported_dups(&rows, &runs)?;
-    let (exempt_license, exempt_allow) = candidates::exempt_counts(&idx)?;
+    let (exempt_license, exempt_allow) = candidates::exempt_counts(idx)?;
     let counts = Counts {
         segments: segs.len(),
         sent: cand.pairs.len() as u64,

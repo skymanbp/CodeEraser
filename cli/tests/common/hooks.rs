@@ -33,12 +33,12 @@ pub fn pretooluse_envelope_at(dir: &Path, rel: &str, tool: &str, content: &str) 
     .to_string()
 }
 
-/// Run `ce probe --hook`, shut the daemon down, assert the decision
-/// tier, and hand back the reason for content asserts — the one home
-/// for the decision-JSON shape every guard test would otherwise copy.
+/// Run `ce probe --hook`, assert the decision tier, and hand back
+/// the reason for content asserts — the one home for the
+/// decision-JSON shape every guard test would otherwise copy.
+/// Teardown is run_hook's (batch 9 P13), not a per-helper step.
 pub fn expect_decision(dir: &Path, envelope: &str, want: &str) -> String {
     let out = run_hook(dir, &["probe", "--hook"], envelope);
-    shutdown_daemon(dir);
     let v: serde_json::Value = serde_json::from_str(out.trim()).expect("decision json");
     assert_eq!(v["hookSpecificOutput"]["permissionDecision"], want);
     v["hookSpecificOutput"]["permissionDecisionReason"]
@@ -59,10 +59,11 @@ pub fn stop_envelope(dir: &Path, stop_hook_active: bool) -> String {
 
 /// Run a `ce` hook subcommand with the envelope piped to stdin.
 /// Hooks are fail-open, so the exit must be 0; returns stdout.
-/// CE_DAEMON_IDLE_SECS rides the hook so the daemon it LAZILY spawns
-/// inherits the 2-minute test idle window (batch-8 salvage: an
-/// assertion failure between spawn and shutdown_daemon used to leak
-/// a 30-minute daemon holding the target exe against the linker).
+/// The daemon a hook LAZILY spawns dies here too, BEFORE any assert
+/// can panic (batch 9 P13): teardown lives where the daemon is
+/// born, so no test can leak one against the linker — the batch-8
+/// salvage (CE_DAEMON_IDLE_SECS=120, kept as a second fence) only
+/// shortened that leak to two minutes on the panic path.
 pub fn run_hook(dir: &Path, args: &[&str], stdin: &str) -> String {
     use std::io::Write as _;
     let mut child = Command::new(env!("CARGO_BIN_EXE_ce"))
@@ -81,6 +82,9 @@ pub fn run_hook(dir: &Path, args: &[&str], stdin: &str) -> String {
         .write_all(stdin.as_bytes())
         .expect("write envelope");
     let out = child.wait_with_output().expect("wait");
+    // best-effort and inert for daemon-free hooks (request_if_running
+    // never spawns); before the assert so a red test cannot leak
+    shutdown_daemon(dir);
     assert!(out.status.success(), "hook must always exit 0 (fail-open)");
     String::from_utf8_lossy(&out.stdout).to_string()
 }

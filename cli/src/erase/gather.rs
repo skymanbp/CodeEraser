@@ -23,19 +23,21 @@ pub struct Gathered {
 type UnitSpans = BTreeMap<String, Vec<(String, i64, i64)>>;
 
 /// All three measurement legs in family order: deadcode (graph),
-/// docdup (verbatim pairs), dedup (whole-unit T1 twins).
+/// docdup (verbatim pairs), dedup (whole-unit T1 twins) — all off
+/// ONE snapshot (batch 9 P10: this boundary used to pay the full
+/// measurement four times, once per leg plus its own index open).
 pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gathered> {
-    let dead = deadcode_leg(root, db.clone(), core)?;
-    let (idx, _) = crate::dedup::refreshed_index(root, db.clone())?;
+    let (found, idx, db_path) = crate::dedup::snapshot(root, db)?;
+    let w = crate::graph::deadcode::wire_of(root, &idx, &db_path)?;
+    let dead = deadcode_leg(root, core, &w)?;
     let lang_unres = lang_unresolved(&idx)?;
     let units = units_by_path(&idx)?;
+    let (segs, dups, _) = crate::docdup::judge::rows_of(root, &idx, core)?;
     drop(idx);
     let mut cache = TextCache::new(root);
     let mut cands = dead_candidates(&dead, &lang_unres);
-    let (segs, dups, _) = crate::docdup::judge::run_rows(root, db.clone(), core)?;
     cands.extend(doc_candidates(&segs, &dups, &mut cache)?);
     let mut out_of_class = BTreeMap::new();
-    let (found, _) = crate::dedup::analyze(root, db, None, None)?;
     let dead_paths: BTreeSet<&str> = dead.dead.iter().map(|(p, _, _)| p.as_str()).collect();
     cands.extend(twin_candidates(
         &found.blocks,
@@ -64,10 +66,10 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
 /// as a fact (the deadcode --check posture, main_cmds.rs).
 fn deadcode_leg(
     root: &Path,
-    db: Option<PathBuf>,
     core: &str,
+    w: &crate::graph::deadcode::GraphWire,
 ) -> Result<crate::graph::deadcode::Report> {
-    let r = crate::graph::deadcode::run(root, db, core)?;
+    let r = crate::graph::deadcode::judge_report(root, core, w)?;
     if let Some(reason) = &r.degraded {
         bail!("deadcode leg degraded ({reason}) — an erase plan cannot stand on it");
     }

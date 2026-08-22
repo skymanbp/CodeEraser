@@ -8,7 +8,7 @@
 use super::{edges, tree};
 use anyhow::{Context, Result};
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 pub fn node_rows(t: &tree::Tree) -> Vec<[u64; 5]> {
     t.dirs
@@ -50,10 +50,13 @@ pub fn convention_rows(t: &tree::Tree) -> Vec<[u64; 2]> {
 /// The cached reference graph adapted into aggregated
 /// [dirId, inside, outside, count] rows — graph nodes that never
 /// entered the walked tree (a universe mismatch) are an error by
-/// name, never a guess.
-pub fn file_ref_rows(root: &Path, db: Option<PathBuf>, t: &tree::Tree) -> Result<Vec<[u64; 4]>> {
-    let w = crate::graph::deadcode::build_wire(root, db)?;
-    let fnodes = crate::graph::deadcode::file_nodes(&w);
+/// name, never a guess. The wire arrives from the command
+/// boundary's one snapshot (batch 9 P10).
+pub fn file_ref_rows(
+    w: &crate::graph::deadcode::GraphWire,
+    t: &tree::Tree,
+) -> Result<Vec<[u64; 4]>> {
+    let fnodes = crate::graph::deadcode::file_nodes(w);
     let mut file_dirs = Vec::with_capacity(fnodes.len());
     let mut index_of: BTreeMap<i64, usize> = BTreeMap::new();
     for (slot, &(i, p)) in fnodes.iter().enumerate() {
@@ -92,12 +95,12 @@ pub fn file_ref_rows(root: &Path, db: Option<PathBuf>, t: &tree::Tree) -> Result
 /// exists — drop --deep).
 pub fn redundancy_rows(
     root: &Path,
-    db: Option<PathBuf>,
     core: &str,
+    w: &crate::graph::deadcode::GraphWire,
+    found: &crate::dedup::pairs::Blocks,
     t: &tree::Tree,
 ) -> Result<Vec<[u64; 3]>> {
     let mut dup: BTreeMap<usize, u64> = BTreeMap::new();
-    let (found, _stats) = crate::dedup::analyze(root, db.clone(), None, None)?;
     for b in &found.blocks {
         let mut dirs = BTreeSet::new();
         for f in [b.a_file.as_str(), b.b_file.as_str()] {
@@ -111,7 +114,7 @@ pub fn redundancy_rows(
             *dup.entry(d).or_insert(0) += 1;
         }
     }
-    let dead_report = crate::graph::deadcode::run(root, db, core)?;
+    let dead_report = crate::graph::deadcode::judge_report(root, core, w)?;
     if let Some(reason) = &dead_report.degraded {
         anyhow::bail!("liveness degraded ({reason}) — refusing a fake-zero S6 rollup");
     }
@@ -154,11 +157,10 @@ pub type StaleTables = (Vec<[u64; 2]>, Vec<[u64; 2]>);
 /// row; absence of the tables (no --days) leaves axis 5 unjudged.
 pub fn stale_doc_rows(
     root: &Path,
-    db: Option<PathBuf>,
+    w: &crate::graph::deadcode::GraphWire,
     t: &tree::Tree,
     days: u32,
 ) -> Result<StaleTables> {
-    let w = crate::graph::deadcode::build_wire(root, db)?;
     let mut targets: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
     for e in &w.edges {
         let s = &w.nodes[e[0] as usize];

@@ -67,7 +67,6 @@ fn feed_shape_matches_golden() {
     let deep = "// filler\n".repeat(600);
     let env4 = common::pretooluse_envelope(&dir, "Write", &deep);
     common::run_hook(&dir, &["probe", "--hook"], &env4);
-    common::shutdown_daemon(&dir);
     // entry 6: stop audit (staged b.rs = one touched duplicate)
     common::run_hook(
         &dir,
