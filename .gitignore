@@ -58,3 +58,15 @@ contracts/fixtures/crosscheck/**/*.json
 # stray dir must show up as untracked noise, not vanish.
 /memory/
 .gstack/
+
+# === Claude Code session-discipline files (local, NOT versioned) ===
+# User decision 2026-08-23: CLAUDE.md (project card / session
+# instructions) and .claude/ (per-machine Claude Code + cc-enforcer
+# config) are development-machine state, untracked from the public
+# repo. They remain in git HISTORY before this decision — judged
+# publishable by the M7 pre-public full-history audit; purging would
+# rewrite every release tag and break the pin chain. NOTE: the
+# repo-root .claude-plugin/ is NOT ignored — it is the public
+# marketplace manifest `claude plugin marketplace add` resolves.
+/CLAUDE.md
+/.claude/

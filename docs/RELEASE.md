@@ -57,7 +57,7 @@
   --project-name codeeraser`，完毕 DELETE /user/tokens/<id> 销毁；
   任何 token 值不落对话/不落库。
 - **marketplace**：清单随 main 走，无独立发布步。
-- 记账：CLAUDE.md 状态行 + ccm 发版记录。
+- 记账：CLAUDE.md 状态行（本地项目卡，2026-08-23 起不入库）+ ccm 发版记录。
 
 ## 4. 回归口径
 
