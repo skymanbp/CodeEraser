@@ -19,6 +19,12 @@ skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
 1. `/plugin marketplace add skymanbp/CodeEraser`
 2. `/plugin install codeeraser@codeeraser`
 
+v1.0.1 起 **Windows 安装包装机时自动跑这两步**（检测到 Claude Code 才动手，
+失败一律降级为提示行；`gui/src-tauri/windows/hooks.nsh` 是权威实现）——
+手动路径留给 AppImage/dmg/纯 CLI 底座。本地开发 clone 则注册**仓根目录**
+为 marketplace（`claude plugin marketplace add <repo根>`）；注册 `plugin/`
+子目录是 9f86d58 之前的旧位，清单已不在那里，会以 cache-miss 静默掉钩。
+
 `ce` 与判决核 `ce-core` 两个真身均由 `bin/ce.sh` 三级解析（ADR-007）：
 已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（六枚：三平台 ×
 双二进制）从 GitHub Releases 下载并校验 → PATH 兜底。源码安装

@@ -34,9 +34,12 @@ the **plugin** the guard layer on any base, the rest CLI-only.
 **Installer (recommended).** Every [release](https://github.com/skymanbp/CodeEraser/releases) ships three GUI installers
 (NSIS `setup.exe` / AppImage / dmg), each bundling the GUI with `ce` **and** the `ce-core` judgment core as sidecars.
 On Windows (v0.7.2+) the installer asks for elevation and puts the install dir on the machine PATH — `ce` works
-from any terminal (AppImage/dmg users add the app dir to PATH themselves).
+from any terminal (AppImage/dmg users add the app dir to PATH themselves). Since v1.0.1 the Windows installer
+also probes for Claude Code and wires the plugin below by itself — one install is the whole product, and
+uninstall removes exactly the registration it added (never one you made yourself).
 
-**Claude Code plugin (the guard layer).** `/plugin marketplace add skymanbp/CodeEraser`, then `/plugin install codeeraser`.
+**Claude Code plugin (the guard layer).** `/plugin marketplace add skymanbp/CodeEraser`, then `/plugin install codeeraser`
+(the Windows installer runs these two for you when it finds Claude Code; AppImage/dmg/CLI installs run them once by hand).
 The starter resolves both binaries by pin: a matching local or PATH copy first (since v0.7.3; the installer leaves one on PATH), then a pinned download,
 then an unverified PATH binary that says so out loud.
 

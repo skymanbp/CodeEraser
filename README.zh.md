@@ -25,10 +25,11 @@ CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、
 安装面分层：**安装包**是超集（GUI + CLI 上 PATH），**插件**是叠在任一底座上的守卫钩子层，其余路线只装 CLI。
 
 **安装包（推荐）。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发三个 GUI 安装包
-（NSIS `setup.exe` / AppImage / dmg，均内含 GUI、`ce` 与 `ce-core` sidecar）。Windows（v0.7.2 起）安装器提权并写入机器 PATH；
-AppImage/dmg 用户自行把应用目录加入 PATH。
+（NSIS `setup.exe` / AppImage / dmg，均内含 GUI、`ce` 与 `ce-core` sidecar）。Windows（v0.7.2 起）安装器提权并写入机器 PATH（AppImage/dmg 用户自行加）；
+v1.0.1 起还会探测 Claude Code 并自动接入下述插件——装一次即整个产品，卸载只拆它自己添加的注册。
 
-**Claude Code 插件（守卫层）。** `/plugin marketplace add skymanbp/CodeEraser`，再 `/plugin install codeeraser`。
+**Claude Code 插件（守卫层）。** `/plugin marketplace add skymanbp/CodeEraser`，再 `/plugin install codeeraser`
+（Windows 安装包检测到 Claude Code 时替你跑这两步；AppImage/dmg/纯 CLI 路线手动跑一次）。
 引导脚本按 pin 解析：先取本地或 PATH 上的 SHA256 命中副本，再钉扎下载，最后才是会自报未校验的 PATH 兜底
 （v0.7.3 起；未命中的 PATH 二进制仍走下载校验）。
 
