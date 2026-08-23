@@ -15,13 +15,14 @@ judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception
 
 ## Status
 
-🏁 **v1.0.0 — complete.** Every milestone of the locked plan is delivered and the final sweep is clean:
-the two-lane audit's 113 findings reconciled (81 fixed, 29 dispositioned in writing, 3 refutations standing),
-716 documentation claims re-verified against the tree, and every number on the site either produced by replay
-or retaken from real output. Installers, [crates.io](https://crates.io/crates/codeeraser), the npm pointer and
-[codeeraser.dev](https://codeeraser.dev) are live. Scores under 1.0.0 are **not comparable** with 0.7.3 —
-the density-law and cycle-axis migrations are declared in the release notes, and a floor calibrated against a
-pre-1.0 band needs a named `CE_ACCEPT_BASELINE=1` re-establish.
+🏁 **v1.0.1 — released.** v1.0.0 delivered every milestone of the locked plan with a clean final sweep
+(113 audit findings reconciled, 716 documentation claims re-verified, every number on the site produced by
+replay or retaken from real output); v1.0.1 is distribution maintenance — the Windows installer now wires
+the Claude Code plugin itself — with no judgment changes, so scores stay comparable with 1.0.0. Installers,
+[crates.io](https://crates.io/crates/codeeraser), the npm pointer and [codeeraser.dev](https://codeeraser.dev)
+are live at 1.0.1. Scores under 1.0.x are **not comparable** with 0.7.3 — the density-law and cycle-axis
+migrations are declared in the v1.0.0 release notes, and a floor calibrated against a pre-1.0 band needs a
+named `CE_ACCEPT_BASELINE=1` re-establish.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md). This repository gates itself with its own scanner,
 clone ratchet, baseline and deadcode/docdup checks on every push to `main` (plus pull requests and a weekly scheduled run).
@@ -95,12 +96,12 @@ The plugin intercepts at PreToolUse (cheap probes) and audits at Stop. Since the
 ## Evaluation dashboard
 
 <!-- bench:begin -->
-### Latest-version latency · v1.0.0
+### Latest-version latency · v1.0.1
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1449 | 844 | 4456 | 687 | 893 | 41 | 771 |
-| p95 ms | 1469 | 847 | 4739 | 723 | 1079 | 50 | 960 |
+| p50 ms | 1616 | 856 | 3252 | 665 | 1073 | 68 | 785 |
+| p95 ms | 1645 | 877 | 3374 | 679 | 1085 | 93 | 2995 |
 
 ### Frozen evaluation points
 

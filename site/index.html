@@ -43,7 +43,7 @@
       <div class="install"><span class="k">Cargo</span>
         <code>cargo install codeeraser</code></div>
       <div class="install"><span class="k">Claude Code</span>
-        <code>/plugin marketplace add skymanbp/CodeEraser</code></div>
+        <code>/plugin marketplace add skymanbp/CodeEraser, then /plugin install codeeraser</code></div>
     </div>
   </div>
 </section>
@@ -51,8 +51,8 @@
 <div class="term">
   <div class="bar"><i></i><i></i><i></i></div>
   <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 950/1000</span> | axes 0:35 1:0 2:119 3:0 4:0 5:0 6:200 | 51 candidates
-ratchet: 0 added, 0 removed, 0 over, 19 tolerance drawn -&gt; <span class="s">pass</span>
+<span class="s">check score 951/1000</span> | axes 0:34 1:0 2:116 3:0 4:0 5:0 6:197 | 51 candidates
+ratchet: 0 added, 0 removed, 0 over, 5 tolerance drawn -&gt; <span class="s">pass</span>
 note: 102 blocks collapsed into existing members, 57 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
   <p class="cap">Real output — CodeEraser judging its own repository. The ratchet only shrinks:
@@ -99,11 +99,11 @@ note: 102 blocks collapsed into existing members, 57 intra-file pairs off the si
 </div>
 
 <!-- bench:begin -->
-<h2>Measured · v1.0.0</h2>
+<h2>Measured · v1.0.1</h2>
 <div class="installs">
-<div class="install"><span class="k">hook probe p50</span><code>41 ms</code></div>
-<div class="install"><span class="k">full scan p50</span><code>771 ms</code></div>
-<div class="install"><span class="k">incremental index p50 (warm)</span><code>687 ms</code></div>
+<div class="install"><span class="k">hook probe p50</span><code>68 ms</code></div>
+<div class="install"><span class="k">full scan p50</span><code>785 ms</code></div>
+<div class="install"><span class="k">incremental index p50 (warm)</span><code>665 ms</code></div>
 <div class="install"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits </code></div>
 <div class="install"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%) </code></div>
 </div>

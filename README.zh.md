@@ -11,11 +11,11 @@ CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、
 
 ## 状态
 
-🏁 **v1.0.0——已完成。** 锁定计划的全部里程碑均已交付，终扫已清：双车道审查的 113 条发现全部对账
-（81 条修复，29 条书面处置，3 条反证成立），716 条文档声明重新对树核验，网站上的每个数字要么由回放生成，
-要么从真实输出重取。安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
-[codeeraser.dev](https://codeeraser.dev) 均已上线。1.0.0 的分数与 0.7.3 **不可比较**——密度定律与 cycle 轴迁移已在发布说明中声明；
-按 1.0 之前区间校准的地板需要具名 `CE_ACCEPT_BASELINE=1` 重立。
+🏁 **v1.0.1——已发布。** v1.0.0 交付锁定计划全部里程碑并完成终扫（113 条审查发现对账、716 条文档声明
+重核、官网每个数字由回放生成或从真实输出重取）；v1.0.1 是分发面维护——Windows 安装器自动接入
+Claude Code 插件——判决零变更，分数与 1.0.0 完全可比。安装包、[crates.io](https://crates.io/crates/codeeraser)、
+npm 指针包与 [codeeraser.dev](https://codeeraser.dev) 均已上线 1.0.1。1.0.x 的分数与 0.7.3 **不可比较**——
+密度定律与 cycle 轴迁移已在 v1.0.0 发布说明中声明；按 1.0 之前区间校准的地板需要具名 `CE_ACCEPT_BASELINE=1` 重立。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）
 都用自己的扫描器、克隆棘轮、基线与死码/文档重复检查门禁自身。
@@ -117,12 +117,12 @@ Claude Code hooks 与 CI 渲染或执行的是同一批报告形状。
 ## 评估仪表盘
 
 <!-- bench:begin -->
-### 最新版本延迟 · v1.0.0
+### 最新版本延迟 · v1.0.1
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1449 | 844 | 4456 | 687 | 893 | 41 | 771 |
-| p95 ms | 1469 | 847 | 4739 | 723 | 1079 | 50 | 960 |
+| p50 ms | 1616 | 856 | 3252 | 665 | 1073 | 68 | 785 |
+| p95 ms | 1645 | 877 | 3374 | 679 | 1085 | 93 | 2995 |
 
 ### 冻结评估点
 

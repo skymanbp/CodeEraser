@@ -21,8 +21,8 @@
   },
   "docs/reference/methodology.md:5": {
     "target": "../../README.md",
-    "line": 151,
-    "text": ""
+    "line": 156,
+    "text": "The boundary is concrete: Rust emits measured facts; Haskell returns the decisions."
   },
   "docs/reference/methodology.md:6": {
     "target": "../DEVELOPMENT_PLAN.md",
