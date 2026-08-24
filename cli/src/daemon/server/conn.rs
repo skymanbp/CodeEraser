@@ -190,7 +190,6 @@ fn hello_reply(proto: &str, sent: &str, expected: &str) -> (Response, Hello) {
     (
         Response::HelloOk {
             proto: DAEMON_PROTO.into(),
-            version: env!("CARGO_PKG_VERSION").into(),
         },
         Hello::Authed,
     )

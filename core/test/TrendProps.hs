@@ -115,7 +115,7 @@ boundaries =
     && map (`verdictOf` 0) [0, 5000] == [1, 1]
 
 wireReq :: [[Integer]] -> Value
-wireReq = rowsRequest "2.13.0" "trend.request"
+wireReq = rowsRequest "3.0.0" "trend.request"
 
 -- | The fixture shape every probe speaks: one commit per day at
 -- scale 1000, scores as given. Shuffled or tied-timestamp windows

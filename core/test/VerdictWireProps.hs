@@ -32,7 +32,7 @@ battery =
 wireReq :: [[Integer]] -> [[Integer]] -> [[Integer]] -> [[Integer]] -> Value
 wireReq sim pos churn coch =
   object
-    [ "proto" .= ("2.2.0" :: String)
+    [ "proto" .= ("3.0.0" :: String)
     , "type" .= ("verdict.request" :: String)
     , "id" .= (1 :: Int)
     , "sim" .= sim
@@ -57,7 +57,7 @@ wPos =
   , [4, 1, 0, 4, 1, 1]
   , [5, 1, 0, 4, 1, 1]
   ]
-wChurn = [[4, 30, 10, 0, 0], [5, 30, 10, 0, 0]]
+wChurn = [[4, 30, 10], [5, 30, 10]]
 wCoch = [[4, 5, 3]]
 
 replyObj :: Value -> Maybe Object

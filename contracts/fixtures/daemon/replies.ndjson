@@ -1,4 +1,4 @@
-{"type":"hello_ok","proto":"1.0.0","version":"0.0.1"}
+{"type":"hello_ok","proto":"1.0.0"}
 {"type":"restart","reason":"major skew: client 2.0.0 vs daemon 1.0.0"}
 {"type":"pong","uptime_ms":12}
 {"type":"dedup_report","report":{"blocks":[],"groups":[]}}

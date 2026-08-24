@@ -50,7 +50,6 @@ fn replies() -> Vec<Response> {
     vec![
         Response::HelloOk {
             proto: "1.0.0".into(),
-            version: "0.0.1".into(),
         },
         Response::Restart {
             reason: "major skew: client 2.0.0 vs daemon 1.0.0".into(),

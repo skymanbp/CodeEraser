@@ -28,7 +28,9 @@
   每连接一线程（静默连接只占住自己，卡不住 accept 循环；线程上限
   64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
   纪律不变。
-- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **1.1.0**：
+- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **2.0.0**：
+  `hello_ok` 砍去无读者的 `version` 字段〔I 轮 D8，2026-08-24，用户拍板
+  「现在就删」；删字段 = major，1.x 客户端得 `restart` 后自 respawn〕；1.1.0 =
   加性 `hello.token`，1.0.0 行仍可解析、得 unauthorized 拒绝），与
   ce↔ce-core 的 handshake proto（VERSIONING.md §1）**相互独立**。
 
@@ -62,7 +64,7 @@
 
 | Request | 语义 | 正常应答 |
 |---|---|---|
-| `hello{proto,token}` | 凭证 + 版本协商，连接首条（token 缺省=空，必被拒） | `hello_ok{proto,version}` / `error{unauthorized}` / `restart{reason}` |
+| `hello{proto,token}` | 凭证 + 版本协商，连接首条（token 缺省=空，必被拒） | `hello_ok{proto}` / `error{unauthorized}` / `restart{reason}` |
 | `ping` | 活性 | `pong{uptime_ms}` |
 | `dedup{min_tokens?,min_distinct?}` | 对 daemon 根跑 dedup 管线 | `dedup_report{report}` |
 | `probe{file_path,content}` | M3 廉价门：即将写入内容的 T1/T2 证实匹配（排除自身路径，零刷新） | `probe_report{matches,elapsed_ms}` |

@@ -105,7 +105,7 @@ roleKnob =
 -- | One 3-column row beside a 4-column row refuses by name — a
 -- mixed table has no single judgment basis (2.28.0).
 mixedRefused :: Bool
-mixedRefused = case respond "2.1.0" req of
+mixedRefused = case respond "3.0.0" req of
   Left (_, code, msg) -> code == "contract" && msg == "node rows: mixed arity"
   Right _ -> False
  where
@@ -133,7 +133,7 @@ confRides =
     && confidence [[5, 0, 0]] 5 == 1
  where
   deadOf req = do
-    Right bytes <- pure (respond "2.1.0" req)
+    Right bytes <- pure (respond "3.0.0" req)
     Object o <- decodeStrict bytes
     KM.lookup "dead" o
 
@@ -146,7 +146,7 @@ unresRefused =
     , refusedMsg (Just [[4, 0, 1], [0, 0, 1]]) "unres 1: not strictly ascending"
     ]
  where
-  refusedMsg unres want = case respond "2.1.0" (graphReq unres) of
+  refusedMsg unres want = case respond "3.0.0" (graphReq unres) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 
@@ -223,7 +223,7 @@ shuffledRefused (n, arcs, _) =
     _ -> True
  where
   sortedRows = rowsOf arcs
-  refused rows = case respond "2.1.0" (req rows) of
+  refused rows = case respond "3.0.0" (req rows) of
     Left (_, code, msg) -> code == "contract" && "not strictly ascending" `isInfixOf` msg
     Right _ -> False
   req rows =

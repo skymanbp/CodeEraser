@@ -34,7 +34,7 @@ data Facts = Facts
   , fPos :: [[Integer]]
   -- ^ [u,indeg,outdeg,sccId,sccSize,reachIn]
   , fChurn :: [[Integer]]
-  -- ^ [u,rewrite,append,added,survived]
+  -- ^ [u,rewrite,append] (3.0.0: the constant added / unmeasured survived left)
   , fCont :: [[Integer]]
   -- ^ [u,metricCode,value]
   , fDocFiles :: [Integer]
@@ -159,7 +159,7 @@ deadFiles k f = count [() | [_, indeg, _, _, _, 0] <- fPos f, indeg <= sDeadInde
 
 churnHeavy :: ScoreKnobs -> Facts -> Integer
 churnHeavy k f =
-  count [() | [_, rw, ap, _, _] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]
+  count [() | [_, rw, ap] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]
 
 cycleMembers :: ScoreKnobs -> Facts -> Integer
 cycleMembers k f =

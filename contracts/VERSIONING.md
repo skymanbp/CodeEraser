@@ -149,6 +149,13 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **3.0.0**（churn 行裁列 **major**，I 轮 D3，2026-08-24，用户拍板「现在就删」）：`verdict.request` 的 `churn` 表由五列 `[u,rewrite,append,added,survived]` **收窄为三列**
+> `[u,rewrite,append]`——第 4 列恒等于 rewrite+append、第 5 列恒为 0（per-entity 存活从未测量），
+> core 自 M5-3i 起两列全弃读（`Score.churnHeavy` / `Verdict.churnMap` 只解 rw/ap）；删列 = 请求形状
+> 破坏性变更，按 §2 升 major：两侧实现 + 三个 core 测试 harness 的 proto 字面量 + **全十族 golden**
+> 同批重生（请求行 proto 一律改写为 3.0.0；回复行经核机器再生，与旧回复除 proto/server 字串外
+> 逐字节相同——判决面零变化的亲证）；「留+记愿望单」落选（用户裁）。同批 daemon 协议独立升
+> **2.0.0**（`hello_ok` 砍无读者的 `version` 字段，见 [DAEMON.md](DAEMON.md)）。
 > **2.33.0**（join 格深化 minor，H4，2026-08-24，用户拍板）：①verdictTable 增**严重度**列
 > （delete 3 > merge 2 > hotspot 1，表数据、电池可置换）；②candidates 行**加宽为六列**
 > [u,v,code,reasonBits,legsMask,**confidence**]——腿一致性置信 = 在场且有据的腿数
@@ -309,7 +316,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.33.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **3.0.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -433,5 +440,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.33.0 | §1 所列两处常量 |
-| daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |
+| 协议 | 3.0.0 | §1 所列两处常量 |
+| daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

@@ -271,9 +271,9 @@ fn size_facts(root: &Path) -> Result<(Vec<[u64; 3]>, Vec<u64>)> {
 }
 
 /// Per-file churn sums over the per-unit ledger plus the co-change
-/// table. survived is 0 = not-claimed (per-entity survival is not
-/// tracked; nothing reads it in 3i).
-pub(crate) type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);
+/// table. Three columns since 3.0.0 (I round D3): the constant added
+/// and the never-measured survived rode unread by the core, and left.
+pub(crate) type ChurnTables = (Vec<[i64; 3]>, Vec<[i64; 3]>);
 
 fn churn_rows(root: &Path, days: u32, idx: &HashMap<&str, i64>) -> Result<ChurnTables> {
     let ch = churn::run(root, days)?;
@@ -294,7 +294,7 @@ pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> Chur
     }
     let churn_t = per_file
         .into_iter()
-        .map(|(u, (rw, ap))| [u, rw, ap, rw + ap, 0])
+        .map(|(u, (rw, ap))| [u, rw, ap])
         .collect();
     let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();
     for (a, b, n) in &ch.cochange {

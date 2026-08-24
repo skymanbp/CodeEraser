@@ -145,7 +145,7 @@ violation parsed req =
     , table "sim" (simRow n) 2 (reqSim req)
     , asum (zipWith (posRow unitTier n) [0 :: Int ..] (reqPos req))
         <|> ascendingBy "pos" 1 (reqPos req)
-    , table "churn" (nodeRow n 5) 1 (reqChurn req)
+    , table "churn" (nodeRow n 3) 1 (reqChurn req)
     , table "cochange" (pairRow n 3) 2 (reqCochange req)
     , table "continuous" contRow 2 (reqCont req)
     , asum (zipWith discEntry [0 :: Int ..] (reqDisc req))

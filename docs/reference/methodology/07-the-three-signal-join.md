@@ -62,7 +62,7 @@ At **tier U** this leg is `null` by design, not by omission: import-granularity 
 
 ### Leg 3 — churn
 
-Per side the leg is `(appended, rewrote)` line counts over the window ([Join.hs:60-61](../../../core/app/CE/Verdict/Join.hs#L62), [churn_unit.rs:33-37](../../../cli/src/join/churn_unit.rs#L33)). At tier F they are summed from the per-unit ledger so the report totals and the join legs come from one bookkeeping ([mod.rs:137-145](../../../cli/src/join/mod.rs#L167)); the wire row is `[u, rewrote, appended, rewrote + appended, 0]` ([score/mod.rs:274-277](../../../cli/src/score/mod.rs#L276)), decoded back as `(appended, rewrote)` at [Verdict.hs:176](../../../core/app/CE/Verdict.hs#L166). A pair's co-change count is a separate table, `[u, v, count]` ([score/mod.rs:278-282](../../../cli/src/score/mod.rs#L289)).
+Per side the leg is `(appended, rewrote)` line counts over the window ([Join.hs:60-61](../../../core/app/CE/Verdict/Join.hs#L62), [churn_unit.rs:33-37](../../../cli/src/join/churn_unit.rs#L33)). At tier F they are summed from the per-unit ledger so the report totals and the join legs come from one bookkeeping ([mod.rs:137-145](../../../cli/src/join/mod.rs#L167)); the wire row is `[u, rewrote, appended]` — three columns since proto 3.0.0, when the constant fourth (`rewrote + appended`) and the never-measured fifth (`survived`, always 0) were cut ([score/mod.rs:273-276](../../../cli/src/score/mod.rs#L276)), decoded back as `(appended, rewrote)` at [Verdict.hs:176](../../../core/app/CE/Verdict.hs#L166). A pair's co-change count is a separate table, `[u, v, count]` ([score/mod.rs:278-282](../../../cli/src/score/mod.rs#L289)).
 
 ```
 total      = appended_a + rewrote_a + appended_b + rewrote_b

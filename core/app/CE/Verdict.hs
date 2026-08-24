@@ -213,7 +213,7 @@ candidates jk req =
       [ (u, Pos indeg reachIn 0 sccId)
       | [u, indeg, _outdeg, sccId, _sccSize, reachIn] <- reqPos req
       ]
-  churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap, _, _] <- reqChurn req]
+  churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap] <- reqChurn req]
   cochMap = M.fromList [((u, v), c) | [u, v, c] <- reqCochange req]
   legsOf row = case row of
     [u, v, kind, num, den] ->

@@ -11,8 +11,12 @@ use std::path::Path;
 /// four-class forwarding; 1.0.0 = the M4 content finalization stamp,
 /// aligned with the handshake proto (no shape change); 1.1.0 adds
 /// the additive hello.token (auth.rs — a pre-1.1.0 line still
-/// parses, and gets the unauthorized refusal).
-pub const DAEMON_PROTO: &str = "1.1.0";
+/// parses, and gets the unauthorized refusal); 2.0.0 (I round D8,
+/// 2026-08-24, the user's "delete it now") drops hello_ok.version —
+/// no client ever read it (the negotiation rides `proto`; the binary
+/// a respawn needs is the client's own) — and a removed field is a
+/// major, so a 1.x client meets `restart` and respawns.
+pub const DAEMON_PROTO: &str = "2.0.0";
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
@@ -55,7 +59,6 @@ pub enum Request {
 pub enum Response {
     HelloOk {
         proto: String,
-        version: String,
     },
     /// Version skew: the daemon exits after this reply; the client
     /// respawns a fresh daemon from its own binary.

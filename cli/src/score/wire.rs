@@ -22,7 +22,7 @@ pub struct Request {
     pub files: Vec<String>,
     pub sim: Vec<[i64; 5]>,
     pub pos: Vec<[i64; 6]>,
-    pub churn: Vec<[i64; 5]>,
+    pub churn: Vec<[i64; 3]>,
     pub cochange: Vec<[i64; 3]>,
     pub continuous: Vec<[u64; 3]>,
     pub discrete: Vec<u64>,

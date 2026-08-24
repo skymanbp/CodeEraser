@@ -3872,7 +3872,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 276,
-    "text": "pub(crate) type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);"
+    "text": "pub(crate) type ChurnTables = (Vec<[i64; 3]>, Vec<[i64; 3]>);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../core/app/CE/Verdict.hs",
@@ -4317,7 +4317,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.33.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"3.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5801,7 +5801,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 263,
+    "line": 270,
     "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -5856,12 +5856,12 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 266,
+    "line": 273,
     "text": "> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 272,
+    "line": 279,
     "text": "> （H 处斜率相接，仍单调恒收费，但平方不出契约域 (S,H]）。动因="
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:41": {
@@ -5916,7 +5916,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 269,
+    "line": 276,
     "text": "> 窗口内实体数；n=0 零费=诚实缺席），score=各轴费在 violCost 表盘下的"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
@@ -5936,7 +5936,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 266,
+    "line": 273,
     "text": "> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

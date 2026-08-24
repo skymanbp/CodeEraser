@@ -64,8 +64,8 @@ facts =
     , fChurn =
         -- one clearly rewrite-heavy, one exactly at 50/100 (the
         -- rewriteNum boundary), seven under
-        [[39, 30, 10, 0, 0], [40, 20, 20, 0, 0]]
-          <> [[u, 1, 50, 0, 0] | u <- [41 .. 47]]
+        [[39, 30, 10], [40, 20, 20]]
+          <> [[u, 1, 50] | u <- [41 .. 47]]
     , -- 510 lines: the graded axis 0 (v0.6 soft zone, fallback
       -- S=300) masses 10·(210/450)² = 98/45 — inside the zone, and
       -- far enough in that the charge clears the mean margin
