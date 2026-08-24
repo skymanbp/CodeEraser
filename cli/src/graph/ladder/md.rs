@@ -11,14 +11,13 @@
 //! FIRST definition wins — spec, not a guess) and rerun the chain
 //! relabeled rung 3; an unused definition is deliberately EXCLUDED
 //! from liveness — a definition that renders nothing must not keep
-//! its target alive (user decision D3) — and rides the External
-//! outcome for ledger visibility even when its target is in-corpus
-//! and resolvable: a borrowed category, named here so it cannot
-//! read as a resolution fact (batch-7 slice 16; the edge-mark
-//! migration that would let the core own this rule is dispositioned
-//! post-1.0 — it needs an outcome→edge-kind channel that does not
-//! exist, for a rule that can only demote reachable to
-//! unref_private). R4 a bare fragment is an
+//! its target alive (user decision D3). Since 2.29.0 (H1 slice 16,
+//! the executed post-1.0 disposition) the exclusion is the CORE's:
+//! an in-scope unused definition resolves and travels as an INERT
+//! edge (EDGE_REFDEF_UNUSED) that liveness drops beside the asset
+//! kind, and an unresolvable one is an ordinary miss — the borrowed
+//! External category retired with the channel that replaced it
+//! (Outcome::ResolvedInert). R4 a bare fragment is an
 //! in-file section claim taken AS WRITTEN, never validated: raw-HTML
 //! anchors (`<h3 name=…>`) are legal GitHub targets we do not model
 //! (the audited FAQ.md #complete row) — validating against ATX-only
@@ -150,19 +149,28 @@ fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {
 }
 
 /// A definition site: used ⇒ its target resolves like a link (the
-/// ref_link edge simply duplicates it); unused ⇒ External (module
-/// header). A duplicate label's later definition is inert under
-/// first-wins, so it lands in the unused arm.
+/// ref_link edge simply duplicates it); unused ⇒ the target still
+/// resolves but travels INERT (H1 slice 16, 2.29.0) — the core owns
+/// the liveness exclusion, and an unresolvable unused definition is
+/// an ordinary miss now, never the borrowed External category. A
+/// duplicate label's later definition is inert under first-wins, so
+/// it lands in the unused arm.
 fn ref_def(from: &str, spec: &str, scope: &Scope) -> Outcome {
     let table = refs(from, scope);
     let (defs, used) = (&table.0, &table.1);
     let live = defs
         .iter()
         .any(|(label, t)| t == spec && used.contains(label));
+    let resolved = relabel(link(from, spec, scope));
     if live {
-        relabel(link(from, spec, scope))
-    } else {
-        Outcome::External { rung: 5 }
+        return resolved;
+    }
+    match resolved {
+        Outcome::Resolved { path, rung } | Outcome::ResolvedSection { path, rung, .. } => {
+            Outcome::ResolvedInert { path, rung }
+        }
+        Outcome::ResolvedPackage { dir, rung } => Outcome::ResolvedInert { path: dir, rung },
+        other => other,
     }
 }
 

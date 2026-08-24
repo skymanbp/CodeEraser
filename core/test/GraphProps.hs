@@ -15,7 +15,7 @@ module GraphProps (battery) where
 
 import CE.Graph (respond)
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, entryMask, minRung, roleBits, sccFloor)
+import CE.Graph.Cost (assetKind, entryMask, minRung, refdefKind, roleBits, sccFloor)
 import CE.Graph.Cycles (cycles)
 import CE.Graph.Dead (deriveFlags, entries, verdicts)
 import Data.Aeson (Value (..), encode, object, (.=))
@@ -32,7 +32,7 @@ battery = do
   c <- check "dead set anti-monotone in minRung (200 seeded graphs)" (allGraphs rungMono)
   d <- check "SCC lists partition the vertex set (200 seeded graphs)" (allGraphs sccPartition)
   e <- check "shuffled edge table is refused (200 seeded graphs)" (allGraphs shuffledRefused)
-  f <- check "an asset-kind edge never keeps its target alive" assetNeverAlive
+  f <- check "no inert-kind edge keeps its target alive (asset, unused ref-def)" inertNeverAlive
   g <- check "roles derive the entry bits through the table (2.28.0)" rolesDerive
   h <- check "the role table is a live knob (a dropped row empties the seeds)" roleKnob
   i <- check "mixed node-row arity refused" mixedRefused
@@ -58,20 +58,21 @@ deadKnobs =
   rows = [[0, 1, 0, 5], [2, 3, 0, 1], [3, 2, 0, 1]]
   base = judged minRung entryMask sccFloor
   judged r m f =
-    let b = build r assetKind 6 rows
+    let b = build r [assetKind, refdefKind] 6 rows
         reach = reachFrom b (entries m flagses)
      in (length (verdicts b reach flagses), length (cycles f b))
 
--- | batch-7 slice 13 (2.20.0): the rows now travel and the CORE
--- drops them — an entry linking a file ONLY through an asset-kind
--- edge leaves it dead, and flipping the kind to import revives it
--- (the counterfactual that proves the constant is a live lever; no
--- test asserted the exclusion anywhere while Rust held it).
-assetNeverAlive :: Bool
-assetNeverAlive = deadWith assetKind == [1] && deadWith 0 == []
+-- | batch-7 slice 13 (2.20.0) generalized at H1 slice 16: the rows
+-- travel and the CORE drops them — an entry linking a file ONLY
+-- through an inert-kind edge (asset, unused ref-def) leaves it
+-- dead, and flipping the kind to import revives it (the
+-- counterfactual that proves each constant is a live lever).
+inertNeverAlive :: Bool
+inertNeverAlive =
+  all (\k -> deadWith k == [1]) [assetKind, refdefKind] && deadWith 0 == []
  where
   deadWith kind =
-    let b = build minRung assetKind 2 [[0, 1, kind, 1]]
+    let b = build minRung [assetKind, refdefKind] 2 [[0, 1, kind, 1]]
      in map fst (verdicts b (reachFrom b (entries entryMask [2, 0])) [2, 0])
 
 -- | 2.28.0 (batch-7 slice 3): every role row lands on its declared
@@ -143,7 +144,7 @@ deadIdx :: Integer -> Integer -> Int -> [(Int, Int, Integer)] -> [Integer] -> IS
 deadIdx r m n arcs flagses =
   IS.fromList (map fst (verdicts b (reachFrom b (entries m flagses)) flagses))
  where
-  b = build r assetKind n (rowsOf arcs)
+  b = build r [assetKind, refdefKind] n (rowsOf arcs)
 
 -- | More entry bits => more roots => the dead set can only shrink.
 maskMono :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
@@ -162,7 +163,7 @@ sccPartition :: (Int, [(Int, Int, Integer)], [Integer]) -> Bool
 sccPartition (n, arcs, _) =
   sort (concat sccs) == [0 .. n - 1] && all mutual sccs
  where
-  sccs = bScc (build 5 assetKind n (rowsOf arcs))
+  sccs = bScc (build 5 [assetKind, refdefKind] n (rowsOf arcs))
   plain = [(a, b) | (a, b, _) <- arcs]
   mutual ms = and [IS.member j (reachB plain [i]) | i <- ms, j <- ms]
 

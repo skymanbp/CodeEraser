@@ -43,14 +43,15 @@ edgesOffence nDocs = asum . zipWith edgeOk [0 :: Int ..]
       | otherwise -> Nothing
     _ -> Just ("staleEdgeRows " <> show i <> ": malformed row (need [docIdx,targetTs])")
 
--- | The axis-5 fact table the judging machinery consumes: the raw
--- tables JUDGE when they ride — the per-dir [dirId, stale, total]
--- rows derive HERE, in the core — and the pre-judged staleDocs
--- table stays legal for one minor, yielding to them.
-effectiveStale :: Maybe [[Integer]] -> Maybe [[Integer]] -> [[Integer]] -> Maybe [[Integer]]
-effectiveStale preJudged rawDocs edges = case rawDocs of
-  Nothing -> preJudged
-  Just docs -> Just (deriveStale docs edges)
+-- | The axis-5 fact table the judging machinery consumes: the
+-- per-dir [dirId, stale, total] rows derive HERE, in the core, from
+-- the raw tables. The pre-judged staleDocs arm retired at 2.29.0 —
+-- its 2.23.0 one-minor grace long expired, Rust stopped producing
+-- the key the day the raw tables landed, and a legacy key now
+-- falls to the §1 unknown-field rule (ignored; axis 5 is unjudged
+-- without raw rows).
+effectiveStale :: Maybe [[Integer]] -> [[Integer]] -> Maybe [[Integer]]
+effectiveStale rawDocs edges = fmap (`deriveStale` edges) rawDocs
 
 -- | The S5 predicate, repatriated: a doc is stale iff SOME changed
 -- target moved after the doc's own last window change — strict >,

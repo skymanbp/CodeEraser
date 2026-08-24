@@ -97,6 +97,13 @@ data VerdictReq = VerdictReq
     -- of documentation-language files; absent/empty preserves old cycle
     -- scoring semantics.
     reqDocFiles :: [Integer]
+  , -- H1 slice 2 (2.29.0, additive): the judged-language set as a
+    -- Lang-code bitmask — batch-7 dispositioned the PREDICATE to
+    -- Rust (the boundary authority) and promised the SET as an
+    -- echo-pinned knob; 0 = not declared (an old client or the
+    -- dedup-only road). The echo makes the set core-visible and
+    -- drift-detectable; no judgment consumes it yet.
+    reqJudgedMask :: Integer
   }
 
 instance FromJSON VerdictReq where
@@ -121,6 +128,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "dedupMinDistinct"
       <*> o .:? "judgedLoc" .!= []
       <*> o .:? "docFiles" .!= []
+      <*> o .:? "judgedMask" .!= 0
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -152,6 +160,7 @@ violation parsed req =
     , dedupDistinctOffence (reqDedup req) (reqDedupDistinct req) (reqDedupFloor req)
     , judgedLocOffence (reqJudgedLoc req)
     , docFilesOffence n (reqDocFiles req)
+    , if reqJudgedMask req < 0 then Just "judgedMask: negative" else Nothing
     ]
  where
   n = toInteger (length (reqTier req))

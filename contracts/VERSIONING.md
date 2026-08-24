@@ -149,6 +149,14 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.29.0**（H1 三件 minor，ADR-008 批 7 后续，2026-08-24，用户拍板）：
+> ① verdict knobs 回声加 `judgedMask`（判决语言集 Lang 码位掩码，客户端声明、每判必钉；
+> 谓词本体仍在 Rust——片 2 承诺的回声钉件；0=未声明）。② 未用 Markdown 引用定义改为解析后以
+> **边种 5**（`EDGE_REFDEF_UNUSED`）过线，core 第二个惰性边种（`refdefKind` 伴 `assetKind`）
+> 排除于存活——片 16 借道新建的 Outcome 通道执行；不可解析的未用定义自此为普通 miss，
+> 借用 External 类退役；GRAPH_REV 升 8。③ 预判 `staleDocs` 臂退役：2.23.0 一个 minor 宽限早过，
+> 旧键按 §1 未知字段规则被忽略，axis 5 仅由 raw 表判决——**行为变化**：仍发旧键的 2.22
+> 客户端自此 axis 5 不判（发 raw 表的 2.23+ 客户端字节不变）。
 > **2.28.0**（ADR-008 批 7 片 3 主体 entry-roles minor，2026-08-24，用户拍板）：
 > `graph.request` 节点行接受加性第 4 列 role 事实位（0 具名 main / 1 可执行目录 / 2 测试惯例 /
 > 3 entry glob / 4 文档入口 / 5 ce:allow 声明 / 6 清单声明构建目标）；role→entry 位表 =
@@ -275,7 +283,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.28.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.29.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -399,5 +407,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.28.0 | §1 所列两处常量 |
+| 协议 | 2.29.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

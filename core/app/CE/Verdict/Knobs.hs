@@ -84,8 +84,8 @@ effectiveJoin k thrs =
 -- slice 1, 2.19.0) arrives as its own parameter: it is effective
 -- per REQUEST (CLI --min-distinct override or CE.Dedup.Cost
 -- default), not a member of the three knob sets.
-knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Integer -> Value
-knobsEcho k rk jk dedupFloor =
+knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Integer -> Integer -> Value
+knobsEcho k rk jk dedupFloor judgedMask =
   object
     [ "sizeCeil" .= sSizeCeil k
     , "sizeHard" .= sSizeHard k
@@ -103,5 +103,9 @@ knobsEcho k rk jk dedupFloor =
     , "tolDen" .= rTolDen rk
     , "tolAbs" .= rTolAbs rk
     , "minDistinct" .= dedupFloor
+    , -- H1 slice 2 (2.29.0): the judged-language set as declared by
+      -- the client — a pin, not a core default (the table's
+      -- authority is Rust's scan_only column); 0 = not declared.
+      "judgedMask" .= judgedMask
     ]
 

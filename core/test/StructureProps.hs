@@ -192,30 +192,38 @@ redundancyAxis =
   probeAt rows key = replyObj (redAt rows) >>= \o -> field o key
   field' k o = field o k
 
--- | S3c, the same absence-vs-zero ladder as redundancyAxis, by
--- hand (density base 800): empty table = six axes with [5,0],
--- 1000 − 8000 div 60 = 867; dir 1 one stale doc of two = axis 5
--- charge 200, sum 1000, score 834, findings gain [1,5] (after
--- [1,4], before any axis-6 row); staleMin 2 releases it back to
--- 867 (F16); both optional tables together = seven axes, sum
--- 800+200+333 = 1333, score 1000 − 13330 div 70 = 810. Refusals
--- ride the shared dir-table loop with the two stale-specific rules.
+-- | S3c on the RAW road (2.29.0 — the pre-judged staleDocs arm
+-- retired): empty raw table = six axes with [5,0], 1000 − 8000
+-- div 60 = 867; dir 1 with two docs and ONE changed-later target
+-- (doc ts 5 < target ts 7; the ts-9 doc has no changed target)
+-- derives [1,1,2] = axis 5 charge 200, sum 1000, score 834,
+-- findings gain [1,5]; staleMin 2 releases it back to 867 (F16);
+-- both optional tables together = seven axes, score 810. The
+-- LEGACY staleDocs key alone judges nothing (§1 unknown-field
+-- rule) — the retirement's own probe. Refusals ride the raw-table
+-- validators.
 staleAxis :: Bool
 staleAxis =
   and
-    [ staleAt [] "score" == Just (toJSON (867 :: Integer))
-    , staleAt flagged "score" == Just (toJSON (834 :: Integer))
-    , staleAt flagged "findings" == Just (toJSON (baseFindings <> [[1, 5]]))
+    [ staleAt ([], []) "score" == Just (toJSON (867 :: Integer))
+    , staleAt flaggedRaw "score" == Just (toJSON (834 :: Integer))
+    , staleAt flaggedRaw "findings" == Just (toJSON (baseFindings <> [[1, 5]]))
     , fmap (`field` "score") (replyObj (setKey "knobs" (toJSON [[11, 2 :: Integer]]) staleReq))
         == Just (Just (toJSON (867 :: Integer)))
     , fmap (`field` "score") (replyObj bothReq) == Just (Just (toJSON (810 :: Integer)))
-    , refusedBy respond (staleReqAt [[1, 3, 2]]) "stale above total"
-    , refusedBy respond (staleReqAt [[1, 0, 0]]) "total below 1"
+    , -- ignored ≡ absent: the legacy key must change NOTHING
+      (replyObj (setKey "staleDocs" (toJSON [[1, 1, 2 :: Integer]]) wireReq) >>= \o -> field o "score")
+        == (replyObj wireReq >>= \o -> field o "score")
+    , refusedBy respond (staleReqAt ([[9, 5]], [])) "dir out of range"
+    , refusedBy respond (staleReqAt ([[1, 5]], [[0, 0]])) "targetTs below 1"
+    , refusedBy respond (staleReqAt ([[1, 5]], [[7, 3]])) "docIdx out of range"
     ]
  where
-  flagged = [[1, 1, 2 :: Integer]]
-  staleReq = staleReqAt flagged
-  staleReqAt rows = setKey "staleDocs" (toJSON (rows :: [[Integer]])) wireReq
+  flaggedRaw = ([[1, 5], [1, 9]], [[0, 7]])
+  staleReq = staleReqAt flaggedRaw
+  staleReqAt (docs, edges) =
+    setKey "staleEdgeRows" (toJSON (edges :: [[Integer]])) $
+      setKey "staleDocRows" (toJSON (docs :: [[Integer]])) wireReq
   staleAt rows key = replyObj (staleReqAt rows) >>= \o -> field o key
   bothReq =
     setKey "redundancy" (toJSON [[1, 1, 0], [2, 0, 1 :: Integer]]) staleReq

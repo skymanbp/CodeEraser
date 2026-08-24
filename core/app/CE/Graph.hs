@@ -15,7 +15,7 @@
 module CE.Graph (respond) where
 
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, roleBits, sccFloor)
+import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, refdefKind, roleBits, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
@@ -163,7 +163,7 @@ result proto req =
       , "degraded" .= False
       ]
  where
-  b = build minRung assetKind (length (reqNodes req)) (reqEdges req)
+  b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)
   -- the roles column judges when it rides (2.28.0, batch-7 slice 3):
   -- a 4-column row's entry bits derive through Cost.roleBits and the
   -- legacy flags column yields; a 3-column row keeps its sent bits.

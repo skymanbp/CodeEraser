@@ -7,6 +7,17 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.29.0 = the H1 triple minor (ADR-008 follow-ons, 2026-08-24):
+-- ① the verdict knobs echo gains judgedMask — the judged-language
+-- set as a Lang-code bitmask, client-declared and pinned per run
+-- (batch-7 slice 2's promised knob; the predicate stays Rust's;
+-- 0 = not declared). ② the unused Markdown reference definition
+-- resolves and travels as edge kind 5, the SECOND liveness-inert
+-- kind (CE.Graph.Cost.refdefKind beside assetKind) — slice 16
+-- executed through the Outcome channel it was waiting on. ③ the
+-- pre-judged staleDocs arm retired: the 2.23.0 one-minor grace
+-- long expired, a legacy key falls to the §1 unknown-field rule,
+-- and axis 5 judges from the raw tables alone.
 -- 2.28.0 = the entry-roles minor (ADR-008 batch-7 slice 3 main
 -- body): graph.request node rows accept an additive 4th column of
 -- role FACTS (0 named main, 1 executable dir, 2 test convention,
@@ -182,7 +193,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.28.0"
+proto = "2.29.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

@@ -6,7 +6,7 @@
 //! collision anchor that lands a section edge, or a fenced
 //! definition that resolves anything, is the red condition.
 
-use codeeraser::graph::ladder::Reason;
+use codeeraser::graph::ladder::{Outcome, Reason};
 use codeeraser::scan::lang::Lang;
 
 mod common;
@@ -69,20 +69,21 @@ fn md_cases() -> Vec<Case> {
         (m, ln, rm, "./guide.md#hidden", secf(gd, 2)),
         // R3: substitution (case-folded), undefined, and the two
         // masked definitions that must not exist; a used definition
-        // site resolves its target, an unused one is External
+        // site resolves its target, an unused one travels INERT
         (m, "ref_link", ix, "spec", ok(gd, 3)),
         (m, "ref_link", ix, "SPEC", ok(gd, 3)),
         (m, "ref_link", ix, "ghost", no(Reason::OutOfScope)),
         (m, "ref_link", ix, "fence", no(Reason::OutOfScope)),
         (m, "ref_link", ix, "cmt", no(Reason::OutOfScope)),
         (m, "ref_def", ix, "../guide.md", ok(gd, 3)),
-        (m, "ref_def", ix, "./unref.md", ext(5)),
-        // the VERDICT-relevant unused case (batch-7 slice 16): the
-        // target EXISTS in scope and would resolve — the deliberate
-        // exclusion is what this row pins, so deleting the unused
-        // arm cannot pass by falling through to OutOfScope like the
-        // ./unref.md row above would
-        (m, "ref_def", ix, "../src/app.py", ext(5)),
+        // an unresolvable unused definition is an ordinary miss now
+        // (2.29.0) — the borrowed External category retired
+        (m, "ref_def", ix, "./unref.md", no(Reason::OutOfScope)),
+        // the VERDICT-relevant unused case (batch-7 slice 16,
+        // executed at H1): the in-scope target resolves and travels
+        // INERT — the core owns the liveness exclusion, and this row
+        // pins the channel end to end
+        (m, "ref_def", ix, "../src/app.py", inert("src/app.py", 3)),
         // R1: doc→doc, doc→code (a #L fragment on a code target is a
         // view detail, dropped), a directory reference (the audited
         // fourclass row), a miss, and the site-root refusal
@@ -94,6 +95,15 @@ fn md_cases() -> Vec<Case> {
         (m, ln, rm, "./missing.md", no(Reason::OutOfScope)),
         (m, ln, rm, "/guide.md", no(Reason::OutOfScope)),
     ]
+}
+
+/// The inert outcome (H1 slice 16) — single consumer, so the alias
+/// lives here rather than in the shared helper set.
+fn inert(path: &str, rung: u8) -> Outcome {
+    Outcome::ResolvedInert {
+        path: path.into(),
+        rung,
+    }
 }
 
 #[test]

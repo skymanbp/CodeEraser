@@ -12,6 +12,17 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.29.0 = the H1 triple minor (ADR-008 follow-ons, 2026-08-24):
+/// ① the verdict knobs echo gains judgedMask — the judged-language
+/// set as a Lang-code bitmask, declared by this client and pinned
+/// per run (batch-7 slice 2's promised knob; the predicate stays
+/// Rust's). ② the unused Markdown reference definition resolves and
+/// travels as EDGE_REFDEF_UNUSED, the SECOND liveness-inert kind
+/// the core drops (slice 16 executed; an unresolvable unused def is
+/// an ordinary miss now, the borrowed External category retired;
+/// GRAPH_REV 8). ③ the pre-judged staleDocs arm retired — its
+/// 2.23.0 one-minor grace long expired; a legacy key falls to the
+/// §1 unknown-field rule and axis 5 judges from raw tables alone.
 /// 2.28.0 = the entry-roles minor (ADR-008 batch-7 slice 3 main
 /// body): graph.request node rows accept an additive 4th column of
 /// role FACTS (0 named main, 1 executable dir, 2 test convention,
@@ -132,7 +143,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.28.0";
+pub const PROTO: &str = "2.29.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

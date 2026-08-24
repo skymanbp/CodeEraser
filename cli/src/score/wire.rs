@@ -59,6 +59,12 @@ pub struct Request {
     /// Markdown/documentation file indices in the same `files` universe.
     /// Empty preserves the pre-2.27 cycle-axis semantics.
     pub doc_files: Vec<i64>,
+    /// The judged-language set as a Lang-code bitmask (H1 slice 2,
+    /// 2.29.0): batch-7 dispositioned the PREDICATE to Rust and
+    /// promised the SET as an echo-pinned knob — this is that knob.
+    /// 0 = not declared (the dedup-only road); the echo pins the
+    /// round trip so the core can see and ablate the set.
+    pub judged_mask: i64,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -115,6 +121,7 @@ impl Request {
             dedup_min_distinct: floor,
             judged_loc: Vec::new(),
             doc_files: Vec::new(),
+            judged_mask: 0,
         }
     }
 }
@@ -151,6 +158,9 @@ pub fn body(r: &Request) -> Value {
         o["dedupMinDistinct"] = json!(f);
     }
     o["judgedLoc"] = json!(r.judged_loc);
+    if r.judged_mask != 0 {
+        o["judgedMask"] = json!(r.judged_mask);
+    }
     if !r.doc_files.is_empty() {
         o["docFiles"] = json!(r.doc_files);
     }
@@ -176,6 +186,14 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         assert_echo(&knobs::TOLERANCE_KEYS, &r.tolerance, &reply.knobs)?;
         let dw = *reply.knobs.get("defaultWeight").context("defaultWeight")?;
         assert_weights(&r.weights, &reply.weights, dw)?;
+        if r.judged_mask != 0 {
+            let echoed = *reply.knobs.get("judgedMask").context("judgedMask")?;
+            anyhow::ensure!(
+                echoed == r.judged_mask,
+                "core echoed judgedMask={echoed}, ce sent {}",
+                r.judged_mask
+            );
+        }
     }
     Ok(reply)
 }

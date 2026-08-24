@@ -90,7 +90,7 @@ other hit is an unrelated test fixture).
 
 Mechanically the floor is a shape guarantee: the A-layer keys `divergence` and `deviations`
 exist **only** when the request declares a layout; an undeclared request answers the S2 shape
-byte for byte ([Structure.hs:207-211](../../../core/app/CE/Structure.hs#L207),
+byte for byte ([Structure.hs:207-211](../../../core/app/CE/Structure.hs#L199),
 [Declared.hs:16-23](../../../core/app/CE/Structure/Declared.hs#L16)), and the battery asserts both keys
 absent on the undeclared fixture ([StructureProps.hs:143-151](../../../core/test/StructureProps.hs#L143)).
 
@@ -101,7 +101,7 @@ root and, under deepest-owner semantics, the catch-all bin
 ([config.rs:98-102](../../../cli/src/config.rs#L98), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
 sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
-([Structure.hs:124](../../../core/app/CE/Structure.hs#L124),
+([Structure.hs:124](../../../core/app/CE/Structure.hs#L122),
 [Structure.hs:147-149](../../../core/app/CE/Structure.hs#L147),
 [Structure.hs:186-196](../../../core/app/CE/Structure.hs#L186)).
 
@@ -184,7 +184,7 @@ Notes on the non-obvious ones:
 - **S1** builds its per-directory count vector by grouping the pattern rows on `dirId`
   ([Axes.hs:164-165](../../../core/app/CE/Structure/Axes.hs#L164)); only pattern *codes* are judged —
   names never enter. Codes are bounded `0..6` by the boundary contract
-  ([Structure.hs:134-138](../../../core/app/CE/Structure.hs#L134)). `600‰` "tolerates one odd name in a
+  ([Structure.hs:134-138](../../../core/app/CE/Structure.hs#L132)). `600‰` "tolerates one odd name in a
   convention-following set and flags a genuine style mix"
   ([Cost.hs:48-51](../../../core/app/CE/Structure/Cost.hs#L48)).
 - **S2** uses *one basis on both sides* — per-file touch counts, never edges-vs-touches. Each
@@ -211,7 +211,7 @@ Since proto 2.26.0 (M9 batch 9 P9, user ruling) the structure family runs the **
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
 through `chargeAt`, imported from [Score.hs:126](../../../core/app/CE/Verdict/Score.hs#L126)
-(one law, two families; [Structure.hs:246-258](../../../core/app/CE/Structure.hs#L246)):
+(one law, two families; [Structure.hs:246-258](../../../core/app/CE/Structure.hs#L238)):
 
 ```
 charge_i = floor(scale * v_i / (v_i + N))
@@ -257,7 +257,7 @@ and a knob cannot exist in one direction only
 ([Knobs.hs:29-52](../../../core/app/CE/Structure/Knobs.hs#L29)); rows outside `0..18` or with value `< 1`
 are refused by name ([Knobs.hs:20-25](../../../core/app/CE/Structure/Knobs.hs#L20)). `ce.toml` is the
 source, `Cost.hs` the defaults ([Cost.hs:1-6](../../../core/app/CE/Structure/Cost.hs#L1)), and the reply
-echoes the full effective set ([Structure.hs:226](../../../core/app/CE/Structure.hs#L226)). Codes `12..18`
+echoes the full effective set ([Structure.hs:226](../../../core/app/CE/Structure.hs#L218)). Codes `12..18`
 (`seamSoft=300`, `seamHard=750`, `seamPMax=10`, `roiRefMilli=250`, `roiPhiMilli=500`,
 `roiCloneMilli=500`, `roiChurnMilli=150` —
 [Cost.hs:106-136](../../../core/app/CE/Structure/Cost.hs#L106)) belong to the split-ROI advisory, not to
@@ -266,7 +266,7 @@ any axis, and never enter this fold.
 ### 6. Preconditions the fold assumes
 
 The score above is only meaningful because the boundary contract runs first, in request order,
-and returns the *first* offender by name ([Structure.hs:102-117](../../../core/app/CE/Structure.hs#L102)):
+and returns the *first* offender by name ([Structure.hs:102-117](../../../core/app/CE/Structure.hs#L100)):
 
 - node rows are dense and tree-shaped: `id == index`, no negative fields, root self-loops at
   depth 0, `parent < id` for every non-root row
@@ -277,21 +277,22 @@ and returns the *first* offender by name ([Structure.hs:102-117](../../../core/a
   probe at [StructureProps.hs:106-110](../../../core/test/StructureProps.hs#L106));
 - every dir-keyed table shares one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
-  ([Structure.hs:120-127](../../../core/app/CE/Structure.hs#L120),
+  ([Structure.hs:120-127](../../../core/app/CE/Structure.hs#L118),
   [Structure.hs:186-196](../../../core/app/CE/Structure.hs#L186)). Extra rules: pattern code `<= 6` and
-  count `>= 1`; convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`;
-  staleDocs `total >= 1` and `stale <= total`
+  count `>= 1`; convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`
+  (the pre-judged staleDocs rules retired with their table at 2.29.0 — the raw
+  `staleDocRows`/`staleEdgeRows` validators own staleness now)
   ([Structure.hs:129-150](../../../core/app/CE/Structure.hs#L129)).
 
 **Over-cap.** `structNodeCap = 524288` ([Cost.hs:138-141](../../../core/app/CE/Structure/Cost.hs#L138)).
 Node rows *and* the seam tables count against the same cap — a declared cap that misses a
 request dimension walks that dimension uncapped
-([Structure.hs:87-92](../../../core/app/CE/Structure.hs#L87)). Over-cap answers a **complete degraded
+([Structure.hs:87-92](../../../core/app/CE/Structure.hs#L85)). Over-cap answers a **complete degraded
 reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
 are both true and `reason` is `structure_too_large`
-([Structure.hs:229-249](../../../core/app/CE/Structure.hs#L229),
-[StructureProps.hs:221-230](../../../core/test/StructureProps.hs#L221)). Note the consequence of the
+([Structure.hs:229-249](../../../core/app/CE/Structure.hs#L221),
+[StructureProps.hs:221-230](../../../core/test/StructureProps.hs#L229)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. In the non-degraded case `fail` equals `degraded`,
 i.e. always false: S2 is report-only, and the CLI gates nothing on this score
-([Structure.hs:205-207](../../../core/app/CE/Structure.hs#L205)).
+([Structure.hs:205-207](../../../core/app/CE/Structure.hs#L197)).

@@ -21,7 +21,7 @@ exactly the line the hook uses.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:246-253](../../../core/app/CE/Structure.hs#L246).
+[Structure.hs:246-253](../../../core/app/CE/Structure.hs#L238).
 
 ### Seam enumeration and best-seam selection
 

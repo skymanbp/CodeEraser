@@ -10,7 +10,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind, roleBits) where
+module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -88,3 +88,11 @@ assetKind = 3
 -- conventions were.
 roleBits :: [(Integer, Integer)]
 roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1)]
+-- | The unused-reference-definition edge kind (H1 slice 16,
+-- 2.29.0): the second liveness-inert kind beside assetKind — a
+-- definition that renders nothing must not keep its target alive
+-- (user decision D3), and since this minor the rule is executed
+-- HERE, in the same comprehension as the rung filter, where the
+-- ablation battery can flip it.
+refdefKind :: Integer
+refdefKind = 5

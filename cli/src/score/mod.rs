@@ -137,6 +137,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         judged_loc,
         doc_files: doc_file_indices(&m.files),
         files: m.files,
+        judged_mask: crate::scan::lang::Lang::judged_mask(),
     };
     let reply = wire::judge(&opts.core, &req)?;
     Ok(Outcome {

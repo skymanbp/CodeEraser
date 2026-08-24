@@ -32,19 +32,20 @@ data Built = Built
   }
 
 -- | minRung is a parameter (Cost.minRung at the boundary) so the
--- dead-knob test can move it; the asset-kind exclusion (batch-7
--- slice 13) lives in the SAME comprehension as the rung filter —
--- the kind column always crossed and was discarded here while Rust
--- pre-dropped the rows the rule was about.
-build :: Integer -> Integer -> Int -> [[Integer]] -> Built
-build minR asset n rows = Built n (S.size arcs) arcs g sccs
+-- dead-knob test can move it; the liveness-INERT kinds (asset since
+-- batch-7 slice 13, the unused ref-def since H1 slice 16) ride one
+-- list in the SAME comprehension as the rung filter — the kind
+-- column always crossed and was discarded here while Rust
+-- pre-dropped the rows each rule was about.
+build :: Integer -> [Integer] -> Int -> [[Integer]] -> Built
+build minR inert n rows = Built n (S.size arcs) arcs g sccs
  where
   arcs =
     S.fromList
       [ (fromInteger s, fromInteger d)
       | [s, d, kind, rung] <- rows
       , rung <= minR
-      , kind /= asset
+      , kind `notElem` inert
       ]
   g = G.buildG (0, n - 1) (S.toList arcs)
   sccs = [sort (flatten t) | t <- G.scc g]

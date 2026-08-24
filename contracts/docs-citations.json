@@ -526,7 +526,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:46": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 104,
+    "line": 118,
     "text": "pub fn grammar(self) -> Option<tree_sitter::Language> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:47": {
@@ -2106,7 +2106,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:16": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 207,
+    "line": 199,
     "text": "-- keeps the checker under the repo's own param gate."
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:17": {
@@ -2136,18 +2136,18 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:21": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 124,
+    "line": 122,
     "text": ": [ asum"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:22": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 147,
-    "text": ", ((3, \"staleDocs\", staleOk), take 1, concat (reqStaleDocs req))"
+    "text": "noExtra _ = Nothing"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:23": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 186,
-    "text": "where"
+    "text": "-- pass in the asum, so every row here is already well-formed."
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:24": {
     "target": "../../../core/app/CE/Structure/Declared.hs",
@@ -2321,7 +2321,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:55": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 134,
+    "line": 132,
     "text": ", Stale.nonDescDir docRows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:56": {
@@ -2362,7 +2362,7 @@
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:62": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 139,
-    "text": "where"
+    "text": "docRows = concat (reqStaleDocRows req)"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:63": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
@@ -2381,7 +2381,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:66": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 246,
+    "line": 238,
     "text": "<> splitKeys"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:67": {
@@ -2426,7 +2426,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:74": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 226,
+    "line": 218,
     "text": "-- and the sparse findings — plus the FULL effective knob echo."
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:75": {
@@ -2436,18 +2436,18 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:76": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 102,
+    "line": 100,
     "text": "{ famName = \"structure\""
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:77": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 155,
-    "text": "_ -> Nothing"
+    "text": "| otherwise -> Nothing"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:78": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 167,
-    "text": "| otherwise -> Nothing"
+    "text": "-- itself); depth is chained against the parent row by depthChain —"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:79": {
     "target": "../../../core/test/StructureProps.hs",
@@ -2461,18 +2461,18 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:80": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 120,
+    "line": 118,
     "text": "violation req ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:81": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 186,
-    "text": "where"
+    "text": "-- pass in the asum, so every row here is already well-formed."
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:82": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 129,
-    "text": "]"
+    "text": "| Just sf <- [reqSeamFiles req]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:83": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
@@ -2481,22 +2481,22 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:84": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 87,
+    "line": 85,
     "text": "<*> o .:? \"seamClones\" .!= []"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:85": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 229,
+    "line": 221,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:86": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 221,
+    "line": 229,
     "text": "setKey \"redundancy\" (toJSON [[1, 1, 0], [2, 0, 1 :: Integer]]) staleReq"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:87": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 205,
+    "line": 197,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:9": {
@@ -2946,7 +2946,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:10": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 176,
+    "line": 186,
     "text": "// v2.5) is never indexed — if either ever arrives, the honest"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:100": {
@@ -2976,7 +2976,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:105": {
     "target": "../../../core/app/CE/Graph/Build.hs",
-    "line": 41,
+    "line": 42,
     "text": "where"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:106": {
@@ -2986,7 +2986,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:107": {
     "target": "../../../core/app/CE/Graph/Build.hs",
-    "line": 44,
+    "line": 45,
     "text": "[ (fromInteger s, fromInteger d)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:108": {
@@ -3276,37 +3276,37 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:32": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 66,
+    "line": 65,
     "text": "let (path, frag) = match spec.split_once('#') {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:33": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 101,
-    "text": "rung: 4,"
+    "text": "},"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:34": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 119,
-    "text": "} else {"
+    "text": "Outcome::Unresolved(Reason::OutOfScope)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:35": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 137,
-    "text": "slug,"
+    "text": "rung: 2,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:36": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 85,
-    "text": "};"
+    "text": "}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:37": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 45,
+    "line": 44,
     "text": "use std::rc::Rc;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:38": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 53,
+    "line": 52,
     "text": "_ => Outcome::Unresolved(Reason::Unsupported),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:39": {
@@ -3357,21 +3357,21 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:47": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 266,
-    "text": "}"
+    "text": "fn atx_heading(trimmed: &str) -> Option<&str> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:48": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 240,
-    "text": "for (_, line, mask) in content_lines(text) {"
+    "text": "crate::dedup::tokens::fnv1a(&buf)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:49": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 126,
+    "line": 125,
     "text": "fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 85,
+    "line": 89,
     "text": "\"import\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3396,12 +3396,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:54": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 59,
+    "line": 76,
     "text": "Outcome::ResolvedVia { path, rung } => (path, String::new(), rung, GRAN_FILE, 1),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:55": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 219,
+    "line": 227,
     "text": "unresolved => unresolved,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:56": {
@@ -3421,13 +3421,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:59": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 55,
+    "line": 60,
     "text": "fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:6": {
     "target": "../../../cli/src/graph/store.rs",
     "line": 48,
-    "text": "pub const GRAPH_REV: i64 = 7;"
+    "text": "/// 8 = the inert ref-def edge (H1 slice 16, 2.29.0): an unused"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:60": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -3436,7 +3436,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:61": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 30,
+    "line": 35,
     "text": "pub const GRAN_FILE: i64 = 0;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:62": {
@@ -3661,7 +3661,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:12": {
     "target": "../../../core/app/CE/Verdict/Wire.hs",
-    "line": 143,
+    "line": 151,
     "text": ", asum (zipWith discEntry [0 :: Int ..] (reqDisc req))"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:13": {
@@ -3711,18 +3711,18 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:21": {
     "target": "../../../core/app/CE/Verdict/Wire.hs",
-    "line": 152,
+    "line": 160,
     "text": ", dedupDistinctOffence (reqDedup req) (reqDedupDistinct req) (reqDedupFloor req)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 214,
-    "text": "}"
+    "text": "pairs.insert((a.min(bb), a.max(bb)));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 194,
-    "text": ""
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
     "target": "../../../core/test/JoinProps.hs",
@@ -3827,7 +3827,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 276,
-    "text": ""
+    "text": "type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../core/app/CE/Verdict.hs",
@@ -3836,7 +3836,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 281,
+    "line": 282,
     "text": "if let Some(&i) = idx.get(u.path.as_str()) {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
@@ -4121,7 +4121,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:96": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 168,
+    "line": 169,
     "text": "/// gate that could not judge must never pass\")."
   },
   "docs/reference/methodology/07-the-three-signal-join.md:97": {
@@ -4267,7 +4267,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.28.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.29.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4301,7 +4301,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:4": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 246,
+    "line": 238,
     "text": "<> splitKeys"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:40": {
@@ -5811,7 +5811,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 237,
+    "line": 245,
     "text": "> 上调 violCost 属显式选择）。区间罚曲线过硬线 H 改 **C¹ 线性延伸**"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -5846,7 +5846,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:36": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 246,
+    "line": 254,
     "text": "> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:37": {
@@ -5866,7 +5866,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 240,
+    "line": 248,
     "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -5901,7 +5901,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 243,
+    "line": 251,
     "text": "> docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
@@ -5926,7 +5926,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 240,
+    "line": 248,
     "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

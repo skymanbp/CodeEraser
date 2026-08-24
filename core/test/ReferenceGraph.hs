@@ -57,7 +57,7 @@ checkA code es
       Just ("passA code=" <> show code <> " entries=" <> show es)
  where
   arcs = arcsOf 4 code
-  b = build 5 3 4 (edgeRows arcs)
+  b = build 5 [3, 5] 4 (edgeRows arcs)
   flagses = [if i `elem` es then 2 else 0 | i <- [0 .. 3]]
   rows = positions b (reachFrom b (entries 2 flagses)) [0 .. 3]
   reach = reachB arcs es
@@ -86,7 +86,7 @@ checkB code emask
       Just ("passB code=" <> show code <> " entryMask=" <> show emask)
  where
   arcs = arcsOf 3 code
-  b = build 5 3 3 (edgeRows arcs)
+  b = build 5 [3, 5] 3 (edgeRows arcs)
   flagOf i = (if odd i then 1 else 0) + (if testBit emask i then 2 else 0)
   flagses = [flagOf i | i <- [0 .. 2]]
   got = verdicts b (reachFrom b (entries 2 flagses)) flagses

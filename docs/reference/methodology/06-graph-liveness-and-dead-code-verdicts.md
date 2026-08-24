@@ -23,8 +23,8 @@ site, and where the specifier lives, is a frozen table per language
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
 grammar and scans line-wise ([spec.rs:97-99](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
-([store.rs:85-96](../../../cli/src/graph/store.rs#L85)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:48](../../../cli/src/graph/store.rs#L48), currently `7`).
+([store.rs:85-96](../../../cli/src/graph/store.rs#L89)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:48](../../../cli/src/graph/store.rs#L48), currently `8`).
 
 ### 2. The resolution ladder
 
@@ -37,7 +37,7 @@ picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported`
 ([ladder/mod.rs:47-58](../../../cli/src/graph/ladder/mod.rs#L47)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:176-179](../../../cli/src/graph/ladder/mod.rs#L176)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:176-179](../../../cli/src/graph/ladder/mod.rs#L186)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -45,7 +45,7 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 | Python | leading-dot relative; *n* dots climb *n−1* levels ([py.rs:37-48](../../../cli/src/graph/ladder/py.rs#L37)) | absolute dotted path over source roots ([py.rs:60-78](../../../cli/src/graph/ladder/py.rs#L60)) | `__init__.py` longest-prefix degradation ([py.rs:109-120](../../../cli/src/graph/ladder/py.rs#L109)) | stdlib table or pyproject dep ⇒ External ([py.rs:123-130](../../../cli/src/graph/ladder/py.rs#L123)) | — (structurally empty: the detector never opens dynamic imports, [py.rs:14-16](../../../cli/src/graph/ladder/py.rs#L14)) |
 | Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([rs.rs:76-90](../../../cli/src/graph/ladder/rs.rs#L76)) | `use crate::…` from covering crate roots ([rs_use.rs:69-73](../../../cli/src/graph/ladder/rs_use.rs#L69)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([rs_use.rs:74-88](../../../cli/src/graph/ladder/rs_use.rs#L74), [rs_use.rs:100-117](../../../cli/src/graph/ladder/rs_use.rs#L100)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([rs_use.rs:14](../../../cli/src/graph/ladder/rs_use.rs#L14), [rs_use.rs:159-192](../../../cli/src/graph/ladder/rs_use.rs#L159)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([rs_use.rs:124-151](../../../cli/src/graph/ladder/rs_use.rs#L124)) |
 | Go | longest in-scope `go.mod` module prefix ([go.rs:44-71](../../../cli/src/graph/ladder/go.rs#L44)) | importer's module `replace` directives ([go.rs:85-110](../../../cli/src/graph/ladder/go.rs#L85)) | stdlib table, or a dotted first segment with no local match ⇒ External ([go.rs:150-156](../../../cli/src/graph/ladder/go.rs#L150)) | — | — |
-| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:66-81](../../../cli/src/graph/ladder/md.rs#L66), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme, `/x` or `//x` ⇒ External ([md.rs:45](../../../cli/src/graph/ladder/md.rs#L45), [md.rs:53-58](../../../cli/src/graph/ladder/md.rs#L53)) |
+| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:66-81](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme, `/x` or `//x` ⇒ External ([md.rs:45](../../../cli/src/graph/ladder/md.rs#L44), [md.rs:53-58](../../../cli/src/graph/ladder/md.rs#L52)) |
 | Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:61-77](../../../cli/src/graph/ladder/hs.rs#L61)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:137-147](../../../cli/src/graph/ladder/hs.rs#L137)) | — | — | — |
 
 Numeric details that are policy, not taste:
@@ -63,7 +63,7 @@ Numeric details that are policy, not taste:
   dropped ([md.rs:266-276](../../../cli/src/graph/ladder/md.rs#L266)); duplicates take `-N` suffixes in
   document order ([md.rs:240-244](../../../cli/src/graph/ladder/md.rs#L240)). Anything but exactly one
   slug match degrades to a file-level edge, never invents a section
-  ([md.rs:126-132](../../../cli/src/graph/ladder/md.rs#L126)).
+  ([md.rs:126-132](../../../cli/src/graph/ladder/md.rs#L125)).
 - The external tables are machine-generated, never hand-typed: CPython 3.13
   `sys.stdlib_module_names` ([py.rs:143-147](../../../cli/src/graph/ladder/py.rs#L143)), Go 1.26.4
   `go list std` minus `internal/`/`vendor/` ([go.rs:158-163](../../../cli/src/graph/ladder/go.rs#L158)),
@@ -73,12 +73,12 @@ Numeric details that are policy, not taste:
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
   ([rs_use.rs:145-148](../../../cli/src/graph/ladder/rs_use.rs#L145),
-  [wire.rs:59](../../../cli/src/graph/wire.rs#L59)).
+  [wire.rs:59](../../../cli/src/graph/wire.rs#L76)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the only
 target-content facts a ladder consults are the Markdown slug set and the Rust `pub use`
 surface, and each is folded into a hash that is a resolve-key input
-([md.rs:219-226](../../../cli/src/graph/ladder/md.rs#L219),
+([md.rs:219-226](../../../cli/src/graph/ladder/md.rs#L227),
 [rs_reexport.rs:162-177](../../../cli/src/graph/ladder/rs_reexport.rs#L162)). Both hashes are pinned by
 a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ([md_tests.rs:12-31](../../../cli/src/graph/ladder/md_tests.rs#L12),
@@ -87,11 +87,11 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:55-72](../../../cli/src/graph/wire.rs#L55)). Edge kinds
+ledger-visible as sites *without* edges ([wire.rs:55-72](../../../cli/src/graph/wire.rs#L60)). Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4` ([wire.rs:23-27](../../../cli/src/graph/wire.rs#L23)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
-([wire.rs:30-32](../../../cli/src/graph/wire.rs#L30)).
+([wire.rs:30-32](../../../cli/src/graph/wire.rs#L35)).
 
 Node identity is the pair `(path, unit)` over a `BTreeSet` of every walked file plus every edge
 target, so the id assignment is a function of the graph and the wire bytes are shuffle-proof
@@ -219,7 +219,7 @@ symbol-level flags land
 ([hs.rs:26-31](../../../cli/src/graph/ladder/hs.rs#L26)).
 
 Reachability is plain forward closure from the seeds over kept arcs
-([Build.hs:41-42](../../../core/app/CE/Graph/Build.hs#L41)):
+([Build.hs:41-42](../../../core/app/CE/Graph/Build.hs#L42)):
 
 ```
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
@@ -232,7 +232,7 @@ reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
 
 Every SCC in `Data.Graph` order, members ascending, is a deterministic function of the sorted
 arc set; **singletons are included** so the id space covers every vertex
-([Build.hs:44-49](../../../core/app/CE/Graph/Build.hs#L44)). The cycle *report* applies the floor
+([Build.hs:44-49](../../../core/app/CE/Graph/Build.hs#L45)). The cycle *report* applies the floor
 downstream: an SCC is reported iff `|members| ≥ sccFloor`
 ([Cycles.hs:11-16](../../../core/app/CE/Graph/Cycles.hs#L11)) with `sccFloor = 2`, i.e. only true
 multi-node cycles — a self-loop singleton stays unreported, and widening to self-loops is a

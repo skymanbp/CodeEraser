@@ -37,7 +37,7 @@ Token hashing is FNV-1a over those bytes: `h = 0xcbf29ce484222325`, then per byt
 
 Normalization semantics are versioned: `TOKENIZER_REV = 2` ([tokens.rs:20](../../../cli/src/dedup/tokens.rs#L20)) is stored in the index meta table and a mismatch wipes the database, so fingerprints from an older tokenizer can never mix with new ones ([schema.rs:123](../../../cli/src/dedup/schema.rs#L123), [schema.rs:130](../../../cli/src/dedup/schema.rs#L130)–[151](../../../cli/src/dedup/schema.rs#L151)).
 
-Languages without a grammar (`Lang::grammar() == None` — Markdown and the scan-only arm, [lang.rs:104](../../../cli/src/scan/lang.rs#L104)–[114](../../../cli/src/scan/lang.rs#L114)) produce an empty token vector and therefore **zero** fingerprint rows ([index.rs:125](../../../cli/src/dedup/index.rs#L125)–[134](../../../cli/src/dedup/index.rs#L134)). Fingerprints exist for Python, TypeScript, TSX, Rust, Go, and Haskell.
+Languages without a grammar (`Lang::grammar() == None` — Markdown and the scan-only arm, [lang.rs:104](../../../cli/src/scan/lang.rs#L118)–[114](../../../cli/src/scan/lang.rs#L114)) produce an empty token vector and therefore **zero** fingerprint rows ([index.rs:125](../../../cli/src/dedup/index.rs#L125)–[134](../../../cli/src/dedup/index.rs#L134)). Fingerprints exist for Python, TypeScript, TSX, Rust, Go, and Haskell.
 
 ### 2. k-gram rolling hash
 

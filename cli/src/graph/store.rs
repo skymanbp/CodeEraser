@@ -45,7 +45,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// R5 amendment (2026-08-18, user-ratified): `pub use` binds ≤1 hop
 /// to the DEFINITION file with the via_reexport mark — ladder-only
 /// plus one additive edges column (schema v8 wipes the db anyway).
-pub const GRAPH_REV: i64 = 7;
+/// 8 = the inert ref-def edge (H1 slice 16, 2.29.0): an unused
+/// reference definition's in-scope target now travels as
+/// EDGE_REFDEF_UNUSED and the CORE excludes it from liveness — a
+/// new stored edge-kind code, so cached sweeps re-run.
+pub const GRAPH_REV: i64 = 8;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

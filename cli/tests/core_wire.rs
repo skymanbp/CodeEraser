@@ -156,6 +156,8 @@ fn knob_default_drift_gate() {
             // pairs.rs, and the per-run dedupBlocks ensure in
             // budget.rs are the three legs holding the one floor
             "minDistinct": codeeraser::dedup::pairs::DEFAULT_MIN_DISTINCT,
+            // H1 slice 2 (2.29.0): 0 = not declared on this knobless request
+            "judgedMask": 0,
         }),
         "core Cost.hs defaults drifted from the pinned knob face"
     );

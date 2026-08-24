@@ -111,7 +111,23 @@ type FlipCase = (
 /// reds on; and a `#[path]`-mounted file alive with no entry_globs
 /// at all (GRAPH_REV 5 — the gate that keeps the ce.toml exemption
 /// retirement safe against a ladder regression).
-const FLIP_CASES: [FlipCase; 3] = [
+const FLIP_CASES: [FlipCase; 4] = [
+    (
+        "deadcode-inertdef",
+        &[
+            ("ce.toml", "[graph]\nentry_globs = [\"main.md\"]\n"),
+            ("main.md", "# M\n\n[def]: ./note.md\n"),
+            ("note.md", "# Note\n"),
+        ],
+        (
+            "main.md",
+            "# M\n\nSee [the note][def].\n\n[def]: ./note.md\n",
+        ),
+        [
+            "an unused reference definition must not keep its target alive",
+            "using the definition must revive the target",
+        ],
+    ),
     (
         "deadcode-checkflag",
         &[

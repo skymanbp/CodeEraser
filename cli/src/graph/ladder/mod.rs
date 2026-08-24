@@ -93,6 +93,16 @@ pub enum Outcome {
         path: String,
         rung: Rung,
     },
+    /// Resolved to an in-scope target that must NOT count as a
+    /// reference (H1 slice 16, 2.29.0): the unused reference
+    /// definition — user decision D3 made it ledger-visible, and
+    /// this variant is the outcome→edge-kind channel that lets the
+    /// edge TRAVEL (EDGE_REFDEF_UNUSED) while the CORE owns the
+    /// liveness exclusion (inert kinds beside assetKind).
+    ResolvedInert {
+        path: String,
+        rung: Rung,
+    },
     /// Outside the corpus by design (registry dep, node_modules).
     External {
         rung: Rung,

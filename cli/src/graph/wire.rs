@@ -25,6 +25,11 @@ pub const EDGE_DOC_LINK: i64 = 1;
 pub const EDGE_DOC_REF: i64 = 2;
 pub const EDGE_ASSET: i64 = 3;
 pub const EDGE_CONTAIN: i64 = 4;
+/// The unused reference definition's edge (H1 slice 16, 2.29.0):
+/// resolves, travels, and the CORE excludes it from liveness beside
+/// the asset kind — user decision D3 as a wire fact instead of a
+/// borrowed External outcome.
+pub const EDGE_REFDEF_UNUSED: i64 = 5;
 
 /// Frozen granularity codes.
 pub const GRAN_FILE: i64 = 0;
@@ -53,6 +58,18 @@ pub fn edges(site: &CachedSite, scope: &Scope) -> Vec<EdgeRow> {
 /// In-corpus outcomes only. dst_unit "" is the file or package node;
 /// a slugless section outcome is the file-level anchor degrade.
 fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
+    // the inert arm first (H1 slice 16): kind is FORCED — an unused
+    // definition's target identity rides, its reference-ness does not
+    if let Outcome::ResolvedInert { path, rung } = outcome {
+        return vec![EdgeRow {
+            kind: EDGE_REFDEF_UNUSED,
+            dst_path: path,
+            dst_unit: String::new(),
+            rung: i64::from(rung),
+            granularity: GRAN_FILE,
+            via_reexport: 0,
+        }];
+    }
     let (dst_path, dst_unit, rung, granularity, via) = match outcome {
         Outcome::Resolved { path, rung } => (path, String::new(), rung, GRAN_FILE, 0),
         // §4 R5 amendment: same file-level edge, the hop recorded
@@ -68,6 +85,10 @@ fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
             slug: None,
             rung,
         } => (path, String::new(), rung, GRAN_FILE, 0),
+        // the early arm above consumed this variant; the compiler
+        // still wants it named here (the dispatch.rs exhaustiveness
+        // posture)
+        Outcome::ResolvedInert { .. } => unreachable!("handled by the inert arm above"),
         Outcome::External { .. } | Outcome::Unresolved(_) => return Vec::new(),
     };
     vec![EdgeRow {

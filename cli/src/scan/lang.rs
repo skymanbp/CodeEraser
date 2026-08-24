@@ -90,6 +90,20 @@ impl Lang {
         Self::from_path(path).filter(|l| !l.scan_only())
     }
 
+    /// The judged-language set as a wire bitmask (H1 slice 2,
+    /// 2.29.0): bit = Lang wire code, set = judged. The boundary
+    /// AUTHORITY stays this table's scan_only column (CLAUDE.md
+    /// names it); the mask only makes the set core-visible and
+    /// drift-detectable through the verdict knobs echo. The wire
+    /// sentinel is excluded: from_path never produces it, so it is
+    /// in no population S derives from.
+    pub fn judged_mask() -> i64 {
+        LANGS
+            .iter()
+            .filter(|&&(l, ..)| l != Lang::LangUnknown && !l.scan_only())
+            .fold(0, |m, &(l, ..)| m | (1 << (l as i64)))
+    }
+
     /// The plan v2.5 boundary predicate: a scan-only language enters
     /// the scan (size gates), the guard's hard budget and the score
     /// ratchet — and NEVER the dedup index, the graph, or any
@@ -135,6 +149,9 @@ mod tests {
             assert!(!l.name().is_empty()); // row() is total
             assert_eq!(l.scan_only(), l as i64 > 7, "boundary = the sentinel");
         }
+        // the seven judged languages, bits 0..6 — the echo-pinned
+        // mask is a pure summary of the scan_only column
+        assert_eq!(Lang::judged_mask(), 0b111_1111);
         let js = Path::new("a.js");
         assert_eq!(Lang::from_path(js), Some(Lang::JavaScript));
         assert_eq!(Lang::judged_path(js), None, "sized, never judged");

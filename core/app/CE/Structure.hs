@@ -38,11 +38,10 @@ data StructReq = StructReq
   , reqConventions :: [[Integer]]
   , reqFileRefs :: [[Integer]]
   , reqDeclared :: [[Integer]]
-  , reqStaleDocs :: Maybe [[Integer]]
-  -- ^ The PRE-JUDGED per-dir rows [dirId, stale, total] — legal for
-  -- one minor beside the raw tables below (2.23.0, batch-7 slice
-  -- 11); when both ride, the raw tables judge.
-  , -- the RAW staleness facts (2.23.0, additive): one row per md
+  , -- the RAW staleness facts (2.23.0, additive; the pre-judged
+    -- staleDocs table's one-minor grace expired and its arm retired
+    -- at 2.29.0 — a legacy key is ignored per the §1 unknown-field
+    -- rule): one row per md
     -- doc that HAS reference targets — [dirId, docTs], docTs = the
     -- doc's newest change inside the churn window, 0 = unchanged
     -- (the one sentinel, documented); doc identity = row index
@@ -77,7 +76,6 @@ instance FromJSON StructReq where
       <*> o .:? "conventions" .!= []
       <*> o .:? "fileRefs" .!= []
       <*> o .:? "declared" .!= []
-      <*> o .:? "staleDocs"
       <*> o .:? "staleDocRows"
       <*> o .:? "staleEdgeRows" .!= []
       <*> o .:? "redundancy"
@@ -144,15 +142,9 @@ violation req =
     , ((2, "convention", convOk), take 1, reqConventions req)
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
     , ((2, "declared", declOk), take 1, reqDeclared req)
-    , ((3, "staleDocs", staleOk), take 1, concat (reqStaleDocs req))
     , ((3, "redundancy", noExtra), take 1, concat (reqRedundancy req))
     ]
   noExtra _ = Nothing
-  staleOk row = case row of
-    [_, s, total] | total < 1 -> Just "total below 1"
-                  | s > total -> Just "stale above total"
-                  | otherwise -> Nothing
-    _ -> Nothing
   patternOk row = case row of
     [_, code, count] | code > 6 -> Just "unknown pattern code"
                      | count < 1 -> Just "count below 1"
@@ -259,7 +251,7 @@ reply proto req k degraded =
           (reqPatterns req)
           (reqConventions req)
           (reqFileRefs req)
-          (Stale.effectiveStale (reqStaleDocs req) (reqStaleDocRows req) (reqStaleEdges req))
+          (Stale.effectiveStale (reqStaleDocRows req) (reqStaleEdges req))
           (reqRedundancy req)
   declaredKeys = case declaredRows (fNodes facts) (if degraded then [] else reqDeclared req) of
     Nothing -> []

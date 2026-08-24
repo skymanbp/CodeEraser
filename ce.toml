@@ -289,5 +289,10 @@ entry_globs = [
 # ratchet called it; repaid at the mechanism (FLIP_CASES table-drive
 # in deadcode_e2e -- the stanzas became rows) and the fold retired
 # one standing member with it. Measured after cargo fmt.
+# 187 -> 188 (H1 triple, 2.29.0): the EDGE_REFDEF_UNUSED constant
+# block grew graph/wire.rs's frozen-code face into winnowing range
+# of docdup/spec.rs's constant face -- the priced Cost-constants
+# face class (the 177/181 bookings named it); restructuring a code
+# table to dodge the counter is declined by standing stance.
 # Ratchet DOWN from here with every cleanup.
-budget = 187
+budget = 188
