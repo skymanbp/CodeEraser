@@ -18,7 +18,8 @@ use std::path::Path;
 pub struct TsOptions {
     /// Directory the baseUrl points at, repo-relative ("" = root).
     pub base_dir: Option<String>,
-    /// (pattern, targets, anchor_dir) — order preserved.
+    /// (pattern, targets) — order preserved; the anchor lives in
+    /// `paths_anchor` below.
     pub paths: Vec<(String, Vec<String>)>,
     /// Anchor for `paths` targets: base_dir when baseUrl is set,
     /// else the directory of the config that declared paths.

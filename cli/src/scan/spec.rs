@@ -87,7 +87,7 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
 
 static PYTHON: LangSpec = LangSpec {
     fn_kinds: &["function_definition"],
-    param_list_kinds: &["parameters", "lambda_parameters"],
+    param_list_kinds: &["parameters"],
     cc_kinds: &[
         "if_statement",
         "elif_clause",

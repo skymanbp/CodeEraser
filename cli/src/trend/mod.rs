@@ -124,7 +124,8 @@ pub fn run(
     })
 }
 
-/// Newest `n` first-parent commits of HEAD: (full sha, author time).
+/// Newest `n` first-parent commits of HEAD: (full sha, committer
+/// time — %ct, the clock the cache keys by).
 fn mainline(root: &Path, n: usize) -> Result<Vec<(String, i64)>> {
     let out = churn::git(
         root,
@@ -261,7 +262,7 @@ fn cached(conn: &rusqlite::Connection, stamp: &str) -> Result<HashMap<String, Ro
 
 /// Idempotent insert (ADR-003 v1.7): the key is an immutable commit
 /// hash and the value is deterministic under the db's cache key —
-/// rev changes wipe the table — so IGNORE converges, never clobbers.
+/// rev changes wipe the table — so re-landing a row converges.
 fn put(conn: &rusqlite::Connection, r: &Row, stamp: &str) -> Result<()> {
     // REPLACE, not IGNORE: the primary key is the commit, and a row
     // left by another toolchain is exactly the one this run just

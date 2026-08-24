@@ -161,7 +161,7 @@ fn external_rung(spec: &str) -> Outcome {
 /// missing name degrades to Unresolved (precision-safe), visible in
 /// the ledger, and is repaid by regenerating this list (the one-shot
 /// regen_tables drift check retired to git history).
-pub const STD: &str = "\
+const STD: &str = "\
 archive/tar archive/zip bufio bytes cmp compress/bzip2 compress/flate
 compress/gzip compress/lzw compress/zlib container/heap container/list
 container/ring context crypto crypto/aes crypto/cipher crypto/des crypto/dsa

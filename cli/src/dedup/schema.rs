@@ -14,7 +14,7 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// tables (the index is a cache — rebuilding is always safe).
 /// v7 (M7-P4): the trend table — score points ride the SAME wipe as
 /// the fingerprints because a measurement-rev bump breaks their
-/// comparability (trend.rs header). v6 (M5 close): idx_edge_site —
+/// comparability (trend/mod.rs header). v6 (M5 close): idx_edge_site —
 /// edges was the only cascade child with no FK-key index, so every
 /// per-file sites delete full-scanned the edge table (review MED).
 /// v5 (M5-3b): `symbols.nth` + UNIQUE identity (F2), the unitsig

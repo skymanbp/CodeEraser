@@ -1,10 +1,9 @@
 //! ADR-008 P4 knob plumbing: the DECLARED mapping tables between
 //! ce.toml keys, verdict.request wire codes and the reply's echo
 //! keys — code IS the array index (the wire numbers every table
-//! 0..n densely), so each registry is a plain name list and the
-//! three consumers (row assembly here, the round-trip assertion in
-//! wire::judge, the default drift gate in tests/core_wire.rs) share
-//! it with zero scattered literals. The ceilings axis mapping used
+//! 0..n densely), so each registry is a plain name list and its two
+//! consumers (row assembly here, the round-trip assertion in
+//! wire::judge) share it with zero scattered literals. The ceilings axis mapping used
 //! to live as one inline expression in run() — the "size ceiling IS
 //! file_lines_warn" semantics now has a named home.
 

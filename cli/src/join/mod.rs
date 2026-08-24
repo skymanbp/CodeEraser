@@ -2,9 +2,9 @@
 //! blocks), graph position (the SAME wire deadcode judges, answered
 //! through graph.result's pos rows), and per-unit window churn —
 //! joined into file-tier and unit-tier rows. REPORT-ONLY: the
-//! verdict lattice (CE/Verdict/Join.hs, design §6.3) exists and is
-//! battery-tested, but its wire hookup is 3i; nothing here
-//! thresholds or gates.
+//! verdict lattice (CE/Verdict/Join.hs, design §6.3) judges these
+//! same legs on the verdict/1 wire via `ce check` (M5-3i); nothing
+//! here thresholds or gates.
 //!
 //! Tier F (files) carries all three legs and is what the lattice
 //! will gate. Tier U (units) carries similarity + churn only; its
@@ -43,7 +43,7 @@ pub struct FileRow {
     pub churn_a: churn_unit::Lines,
     pub churn_b: churn_unit::Lines,
     /// None = the pair is outside the churn report's co-change table
-    /// (top 20, count >= 2) — unknown-small, not zero.
+    /// (below the configured cochange floor) — unknown-small, not zero.
     pub cochange: Option<usize>,
 }
 
@@ -230,8 +230,8 @@ fn print_unit_tail(r: &Report) {
     println!(
         "{}",
         line(
-            "join {}d window: {} file pairs, {} unit rows, {} commits (report-only; verdict lattice lands in 3i)",
-            "联判 {} 天窗口：{} 文件对，{} 单元行，{} 提交（仅报告；判决格 3i 落地）",
+            "join {}d window: {} file pairs, {} unit rows, {} commits (report-only; the verdict lattice judges via ce check)",
+            "联判 {} 天窗口：{} 文件对，{} 单元行，{} 提交（仅报告；判决格经 ce check 判决）",
             &[&r.days, &r.files.len(), &r.units.len(), &r.commits],
         )
     );

@@ -109,7 +109,7 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<Ra
 
 fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawSite>) {
     match &kind.via {
-        Specifier::Field(field) | Specifier::FieldIfPresent(field) => {
+        Specifier::Field(field) => {
             if let Some(spec) = field_text(node, src, field) {
                 out.push(site(kind.label, node, spec));
             }

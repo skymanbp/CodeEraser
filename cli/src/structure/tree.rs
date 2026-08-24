@@ -34,16 +34,11 @@ pub struct Tree {
 /// Name-pattern codes, index = wire code (frozen positions, the
 /// wire.rs edge-code discipline). Classification looks at the file
 /// STEM (up to the first dot); the style vocabulary covers the
-/// conventions the scanned ecosystems actually use.
-pub const PATTERNS: [&str; 7] = [
-    "lower_snake", // parse_result, mod, lib
-    "lower_kebab", // my-file
-    "camel",       // parseResult
-    "pascal",      // ParseResult, Main
-    "upper_snake", // README, CHANGELOG, MAX_LIMIT
-    "digit_led",   // 2026-08-17-notes
-    "other",       // mixed separators, unicode, empty
-];
+/// conventions the scanned ecosystems actually use. Codes 0..6 =
+/// lower_snake / lower_kebab / camel / pascal / upper_snake /
+/// digit_led / other — dense positions on the wire; the label
+/// STRINGS never travel and had no reader anywhere (the sweep's one
+/// clean kill), so the vocabulary lives here as prose.
 pub const PATTERN_COUNT: usize = 7;
 
 /// Convention bits (S4): bit 0 = a README.* lives here, bit 1 = a

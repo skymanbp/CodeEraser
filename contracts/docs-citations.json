@@ -3206,7 +3206,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:2": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 53,
+    "line": 52,
     "text": "pub fn sites(lang: Lang) -> &'static [SiteKind] {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:20": {
@@ -3316,7 +3316,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:4": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 97,
+    "line": 96,
     "text": "// Markdown scans line-wise in graph/md.rs (no grammar); the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:40": {
@@ -3326,12 +3326,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:41": {
     "target": "../../../cli/src/graph/roots.rs",
-    "line": 29,
+    "line": 30,
     "text": "/// chain the ladder must refuse (depth > 8 / cycle / non-string"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:42": {
     "target": "../../../cli/src/graph/roots.rs",
-    "line": 49,
+    "line": 50,
     "text": "for _ in 0..8 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:43": {
@@ -3647,7 +3647,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:1": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 6,
-    "text": "//! battery-tested, but its wire hookup is 3i; nothing here"
+    "text": "//! same legs on the verdict/1 wire via `ce check` (M5-3i); nothing"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:10": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -5126,7 +5126,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:2": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 128,
+    "line": 129,
     "text": "fn mainline(root: &Path, n: usize) -> Result<Vec<(String, i64)>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:20": {
@@ -5181,7 +5181,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:3": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 150,
+    "line": 151,
     "text": "fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:30": {
@@ -5291,7 +5291,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:5": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 164,
+    "line": 165,
     "text": "if let Some(reason) = &r.degraded {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:50": {
@@ -5336,7 +5336,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 172,
+    "line": 173,
     "text": "// NAMED refusal when the echo lacks it, matching the"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
@@ -5351,7 +5351,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:9": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 259,
+    "line": 260,
     "text": "Ok(map)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:1": {

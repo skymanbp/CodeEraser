@@ -15,11 +15,10 @@ use crate::scan::lang::Lang;
 
 /// How to pull the specifier string out of a matched node.
 pub enum Specifier {
-    /// Text of `child_by_field_name(field)`, quotes trimmed.
+    /// Text of `child_by_field_name(field)`, quotes trimmed — a
+    /// node without the field is simply not a site (so TS
+    /// `export … from "x"` matches and a plain export does not).
     Field(&'static str),
-    /// Like Field, but the node is only a site when the field exists
-    /// (TS `export … from "x"` vs a plain export).
-    FieldIfPresent(&'static str),
     /// Text of the `name` field, but only when the node has NO
     /// `body` field — `mod foo;` is a reference to another file,
     /// `mod foo { … }` defines it inline and references nothing.
@@ -73,7 +72,7 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
             SiteKind {
                 node: "export_statement",
                 label: "export_from",
-                via: Specifier::FieldIfPresent("source"),
+                via: Specifier::Field("source"),
             },
         ],
         Lang::Rust => &[

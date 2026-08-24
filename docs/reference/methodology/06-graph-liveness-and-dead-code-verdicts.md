@@ -19,9 +19,9 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:53-102](../../../cli/src/graph/spec.rs#L53)), so the site universe (the precision denominator)
+([spec.rs:53-102](../../../cli/src/graph/spec.rs#L52)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:97-99](../../../cli/src/graph/spec.rs#L97)). The ten frozen site
+grammar and scans line-wise ([spec.rs:97-99](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
 ([store.rs:85-96](../../../cli/src/graph/store.rs#L85)) — positions, not names, so reordering is a
 `GRAPH_REV` bump ([store.rs:48](../../../cli/src/graph/store.rs#L48), currently `7`).
@@ -51,8 +51,8 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 Numeric details that are policy, not taste:
 
 - The tsconfig `extends` chain is bounded at **8** hops with a cycle check; exceeding it is
-  `config_depth`, never a guess ([roots.rs:29-30](../../../cli/src/graph/roots.rs#L29),
-  [roots.rs:49](../../../cli/src/graph/roots.rs#L49)).
+  `config_depth`, never a guess ([roots.rs:29-30](../../../cli/src/graph/roots.rs#L30),
+  [roots.rs:49](../../../cli/src/graph/roots.rs#L50)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
   ([py.rs:134-141](../../../cli/src/graph/ladder/py.rs#L134)); within one root, package-before-module is
   CPython's own finder order and therefore **not** ambiguity — only cross-root disagreement is

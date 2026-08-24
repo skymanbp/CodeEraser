@@ -179,8 +179,8 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
 }
 
 /// `ce join` (M5-3h): assemble the three signal legs — similarity,
-/// graph position, per-unit churn — report-only until the verdict
-/// lattice's wire hookup (3i).
+/// graph position, per-unit churn — report-only; the verdict lattice
+/// judges them on the verdict/1 wire via `ce check` (M5-3i).
 pub fn join_cmd(a: JoinArgs) -> ExitCode {
     family_cmd(
         a.judge,
