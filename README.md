@@ -74,7 +74,7 @@ The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins aut
 
 | Command | What it reports / judges |
 |---|---|
-| `ce scan` | size / complexity / readability metrics, core-graded; the size-only arm also gates js/css/html/vue/svelte/sh/yml |
+| `ce scan` | size / complexity / readability metrics, core-graded against the file's own lines (global or `[[rules.class]]`); the size-only arm also gates js/css/html/vue/svelte/sh/yml |
 | `ce dedup` | T1/T2 clone blocks (winnowing index); `--check` gates the budget |
 | `ce clone` | T3 near-miss clones (tree edit distance) |
 | `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |
@@ -92,6 +92,22 @@ Console reports and `--help` speak English by default and Chinese under `--lang 
 ## Guard (Claude Code plugin)
 
 The plugin intercepts at PreToolUse (cheap probes) and audits at Stop. Since the 1.0 tier switch, the two FPR-gated rule classes — exact T1/T2 duplicate writes and hard-budget breaches (a write leaving a file past its hard line: 750 by default, or the line its `[[rules.class]]` declares) — **deny by default**; everything else observes until it has its own false-positive record (ledger in [CHANGELOG.md](CHANGELOG.md)). An explicit `[guard] mode` in `ce.toml` overrides every class. The graded size zone between the soft line and the hard budget stays observe-only by default; `[guard] zone_tiers` opts a repo into the position→tier map (<25% observe / 25–75% warn / >75% ask). Honest boundary: PreToolUse shapes behavior, it is not a security wall — shell writes bypass it. The Stop audit re-judges net LOC and touched duplicates; CI carries the hard size wall and ratchet.
+
+## Path classes (`[[rules.class]]`)
+
+Generated code, vendored trees and test fixtures rarely deserve the same size and complexity lines as the code you write by hand. A path class in `ce.toml` gives one glob set its own lines — the first declared class whose globs match owns the file, and a file no class matches keeps the global table:
+
+```toml
+[[rules.class]]
+name  = "vendored"
+globs = ["third_party/**", "**/*.pb.rs"]   # the exclude list's own glob dialect
+[rules.class.knobs]
+file_lines_warn = 600
+file_lines_fail = 1200                       # this class's hard line
+cognitive_warn  = 25
+```
+
+Three faces read that one line and cannot disagree: the score's size and complexity axes (wire proto 3.1.0 — a continuous row carries its class index and a `classKnobs` table rides beside the rows, while the baseline stays three columns, so a class is a charging parameter and never a ratchet fact), the `ce scan` ladder (proto 3.2.0 — `rowClasses` and `gradeOverrides` ride beside the rows and the reply echoes them), and the PreToolUse hard budget (no wire at all — the hook resolves the file's table locally). Class names and globs never cross the wire; only the class index and its knobs do (ADR-008). At most 64 classes, and a class whose fail line sits below its warn line is refused at load like the global ladder. A repository that declares no class — this one included — judges byte for byte as before; declaring one moves the lines its files are measured against, so scores across that switch are **not comparable**. Keys: [ce.toml reference](docs/reference/ce-toml.md) · charging law: [methodology 05](docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md).
 
 ## Evaluation dashboard
 
@@ -145,6 +161,7 @@ same report shapes.
 
 - The push workflow runs the six self-hosting product gates, including the explicit score floor; this repository is the standing dogfood fixture.
 - ADR-006 ceilings and violation sets live in `ce-baseline.json`; cleanup tightens them, while growth needs an explicit re-establish.
+- A path class in `ce.toml` (`[[rules.class]]`) hands one glob set its own size and complexity lines; the score, the `ce scan` ladder and the PreToolUse hard budget read the file's own line, and class names and globs never cross the wire.
 - CLI/config references are generated, and the twelve-booklet methodology has machine-checked citations, navigation and EN/ZH constants.
 - A guard class moves to deny only after its own false-positive record is entered in [CHANGELOG.md](CHANGELOG.md); unqualified classes remain observe.
 - `ce erase` gathers deterministic facts and lets the Haskell safety predicate authorize removals; it never asks a model to rewrite code.

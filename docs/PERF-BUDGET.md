@@ -187,11 +187,11 @@ blame 代价见 3h 节，空表=诚实缺席非零主张）。
 | 同上，clean 路径（无判定输出，静默） | —（无预算） | median 70 / p95 81 ms | 记录 |
 | 冷首呼（懒起 daemon + 首连 + 判定） | —（降级档兜底，ADR-003） | 213 ms | 记录 |
 
-复跑：`perf_budget.rs` 已随 M7.5 封册退役——复现本表需先
-`git checkout 0c7c936^ -- cli/tests/perf_budget.rs` 从 git 历史复活仪器
-（EVAL-SET.md 再生成节同法），再 `cargo test --release --test perf_budget
--- --ignored --nocapture`（合成语料确定性生成；hook e2e =
-`hook_e2e_p95_under_1s`）。
+复跑：`perf_budget.rs` 已随 M7.5 封册退役——按 EVAL-SET.md「再生成」节的复活律**连同同代支撑**
+复活、跑毕重退役：`git checkout 0c7c936^ -- cli/tests/perf_budget.rs cli/tests/common`，再
+`cargo test --release --test perf_budget -- --ignored --nocapture`（合成语料确定性生成；hook e2e =
+`hook_e2e_p95_under_1s`），跑毕 `git rm -f cli/tests/perf_budget.rs && git checkout HEAD -- cli/tests/common`
+（退役仪器留在树里会进下一次门：dedup 预算与棘轮都计其块与行）。
 
 补充口径：
 

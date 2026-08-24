@@ -167,6 +167,9 @@
 > 往返；无表 = 无键，旧回复字节不变）；④`newBaseline` **永三列**（类是本 run 收费参数，非棘轮
 > 事实）；⑤ce.toml 侧 `[[rules.class]]`：name/globs 仅本地（§5.9.2），globset 与 exclude 同方言，
 > 声明序首中，classCap 64，逐类 ladder_fault 于 load 咽喉；无声明仓库的 wire 字节不变（C1）。
+> **声明一个类 = 分数迁移**（§2 发版声明义务同款）：类线一经声明，该类文件的轴 0（sizeMass 的 S/H）
+> 与轴 1（cocOver 上限）换线收费，分数与声明前**不可比**；未声明 `[[rules.class]]` 的仓库判决与
+> wire 字节均不变，分数序列照旧可比。
 > 反事实证表 C1–C9 = core/test/ClassProps.hs + cli 侧 config_contract / scan::classes 电池。
 > **3.0.0**（churn 行裁列 **major**，I 轮 D3，2026-08-24，用户拍板「现在就删」）：`verdict.request` 的 `churn` 表由五列 `[u,rewrite,append,added,survived]` **收窄为三列**
 > `[u,rewrite,append]`——第 4 列恒等于 rewrite+append、第 5 列恒为 0（per-entity 存活从未测量），
@@ -353,11 +356,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
-  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/1","erase/1","audit/1"]`；/2 =
+  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
-  trend/1 = M7.5b 趋势族，2.13.0 声明；erase/1 = M9 批 3 擦除谓词族，2.16.0
+  trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
   声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
@@ -379,14 +382,14 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   "suspicions":[[i,规则名]],"degraded"(,"reason"∈{bucket_cap})}`——moved 为单调
   重分类 delta；blocks 为 ≥2 行站点证据（扩展/归因行只进 moved 不进 blocks）；
   suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
-- `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,flags]],"edges":
-  [[src,dst,kind,rung]],"pos":[idx]}`——稠密 0 基索引即节点身份，**无文本形物
-  过线**（ADR-002 A6）；节点行三元组、边严格升序且去重、端点与 pos 越界 →
-  `error/contract`（边界契约由 core 机检）；未解析站点计数**不过线、留在客户端**
-  （`unresolved_sites` 只进 Rust 侧报告与摘要行，判决从不消费）——旧文曾列的
-  `"unresolved":[[lang,kind,reason,count]]` 两侧都不发不解析：请求体 =
-  `{nodes,edges,pos}`（`cli/src/graph/deadcode.rs:190-196`），`GraphReq` 无此字段
-  （`core/app/CE/Graph.hs:33-46`），2026-08-20 就地删除，wire 字节不变；
+- `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,flags,role]],"edges":
+  [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]]}`——稠密 0 基索引即
+  节点身份，**无文本形物过线**（ADR-002 A6）；节点行四元组（role 列 2.28.0 加性、Rust 恒发；
+  三列旧行仍合法，同表混排两种列宽拒 `node rows: mixed arity`）、边严格升序且去重、端点与
+  pos 越界 → `error/contract`（边界契约由 core 机检）；`unres` 是 2.32.0 起的可选按语言站点
+  台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
+  两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
+  `cli/src/graph/deadcode.rs` `GraphWire`，核侧 `core/app/CE/Graph.hs` `GraphReq`）；
   超 `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
   "reason":"graph_too_large"`（绝不截断）。
 - `graph.result`（语义 M5-2g 落地，穷举参照 harness 见 core/test/）：
@@ -419,8 +422,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta，
     2.8.0 起并回生效 `weights` 表与 `ratchet.failed` 持名条件表；
     `degraded.reason ∈ {verdict_too_large}`。
-  - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]]}`
-    （码 0..6，主体名/路径不过线）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
+  - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],
+    "naming":[[lang,style,upper,under,test]]}`（码 0..6，主体名/路径不过线；naming 自 2.30.0
+    由 ce 恒发、与码 6 行逐位对齐，core 容其缺席）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
+    + 规则包两键（3.2.0）：`rowClasses`（与 rows 逐位对齐的 classId）与 `gradeOverrides`
+    `[[classId,code,warn,fail]]`（码 ∈ {0,1,4}，回复原样回显）
     （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）；result 回
     `{"levels":[0|1|2 逐行],"counts":{rows,warns,fails},"fail",生效 "grades" 全表}`；
     `degraded.reason ∈ {scan_too_large}` 且自带 fail=true。
@@ -443,11 +449,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `wire-errors` 错误应答），Rust（`cli/tests/core_wire.rs`）与 Haskell
   （`core/test/Spec.hs`）**逐字节**共同消费——同一份文件，防两侧实现漂移。
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
-- **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a）**：2.2.0 翻批只重写
-  22 条 reply 行；既有 19 条 request 行**有意留在 2.1.0**——它们是"minor 偏斜
+- **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；3.0.0 重锚）**：2.2.0 翻批只重写
+  reply 行、request 行留在 2.1.0；3.0.0 裁列时全部 request 行随 major 机器重写为 3.0.0，
+  此后**有意留在 3.0.0**（今日 91 行，server 恒答 3.2.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
-  request 用当前 proto。
+  request 用当前 proto（3.1.0/3.2.0 的规则包样本即如此）。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。

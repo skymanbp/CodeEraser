@@ -19,12 +19,12 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:53-102](../../../cli/src/graph/spec.rs#L52)), so the site universe (the precision denominator)
+([spec.rs:52-101](../../../cli/src/graph/spec.rs#L52)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:97-99](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
+grammar and scans line-wise ([spec.rs:96](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
-([store.rs:85-96](../../../cli/src/graph/store.rs#L89)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:48](../../../cli/src/graph/store.rs#L48), currently `8`).
+([store.rs:85-99](../../../cli/src/graph/store.rs#L85)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:52](../../../cli/src/graph/store.rs#L52), currently `8`).
 
 ### 2. The resolution ladder
 
@@ -37,7 +37,7 @@ picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported`
 ([ladder/mod.rs:47-58](../../../cli/src/graph/ladder/mod.rs#L47)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:176-179](../../../cli/src/graph/ladder/mod.rs#L186)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:185-188](../../../cli/src/graph/ladder/mod.rs#L185)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -45,14 +45,14 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 | Python | leading-dot relative; *n* dots climb *n−1* levels ([py.rs:37-48](../../../cli/src/graph/ladder/py.rs#L37)) | absolute dotted path over source roots ([py.rs:60-78](../../../cli/src/graph/ladder/py.rs#L60)) | `__init__.py` longest-prefix degradation ([py.rs:109-120](../../../cli/src/graph/ladder/py.rs#L109)) | stdlib table or pyproject dep ⇒ External ([py.rs:123-130](../../../cli/src/graph/ladder/py.rs#L123)) | — (structurally empty: the detector never opens dynamic imports, [py.rs:14-16](../../../cli/src/graph/ladder/py.rs#L14)) |
 | Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([rs.rs:76-90](../../../cli/src/graph/ladder/rs.rs#L76)) | `use crate::…` from covering crate roots ([rs_use.rs:69-73](../../../cli/src/graph/ladder/rs_use.rs#L69)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([rs_use.rs:74-88](../../../cli/src/graph/ladder/rs_use.rs#L74), [rs_use.rs:100-117](../../../cli/src/graph/ladder/rs_use.rs#L100)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([rs_use.rs:14](../../../cli/src/graph/ladder/rs_use.rs#L14), [rs_use.rs:159-192](../../../cli/src/graph/ladder/rs_use.rs#L159)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([rs_use.rs:124-151](../../../cli/src/graph/ladder/rs_use.rs#L124)) |
 | Go | longest in-scope `go.mod` module prefix ([go.rs:44-71](../../../cli/src/graph/ladder/go.rs#L44)) | importer's module `replace` directives ([go.rs:85-110](../../../cli/src/graph/ladder/go.rs#L85)) | stdlib table, or a dotted first segment with no local match ⇒ External ([go.rs:150-156](../../../cli/src/graph/ladder/go.rs#L150)) | — | — |
-| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:66-81](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme, `/x` or `//x` ⇒ External ([md.rs:45](../../../cli/src/graph/ladder/md.rs#L44), [md.rs:53-58](../../../cli/src/graph/ladder/md.rs#L52)) |
+| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:66-81](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:51](../../../cli/src/graph/ladder/md.rs#L51), [md.rs:59-64](../../../cli/src/graph/ladder/md.rs#L59)) |
 | Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:61-77](../../../cli/src/graph/ladder/hs.rs#L61)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:137-147](../../../cli/src/graph/ladder/hs.rs#L137)) | — | — | — |
 
 Numeric details that are policy, not taste:
 
 - The tsconfig `extends` chain is bounded at **8** hops with a cycle check; exceeding it is
   `config_depth`, never a guess ([roots.rs:29-30](../../../cli/src/graph/roots.rs#L30),
-  [roots.rs:49](../../../cli/src/graph/roots.rs#L50)).
+  [roots.rs:50-53](../../../cli/src/graph/roots.rs#L50)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
   ([py.rs:134-141](../../../cli/src/graph/ladder/py.rs#L134)); within one root, package-before-module is
   CPython's own finder order and therefore **not** ambiguity — only cross-root disagreement is
@@ -60,10 +60,10 @@ Numeric details that are policy, not taste:
 - A Go directory counts as an importable package only while it *directly* holds an in-scope
   non-`_test.go` file ([go.rs:122-140](../../../cli/src/graph/ladder/go.rs#L122)).
 - GitHub slugging: lowercase, keep alphanumerics/`_`/`-`, spaces→hyphens, everything else
-  dropped ([md.rs:266-276](../../../cli/src/graph/ladder/md.rs#L266)); duplicates take `-N` suffixes in
+  dropped ([md.rs:278-291](../../../cli/src/graph/ladder/md.rs#L278)); duplicates take `-N` suffixes in
   document order ([md.rs:240-244](../../../cli/src/graph/ladder/md.rs#L240)). Anything but exactly one
   slug match degrades to a file-level edge, never invents a section
-  ([md.rs:126-132](../../../cli/src/graph/ladder/md.rs#L125)).
+  ([md.rs:123-133](../../../cli/src/graph/ladder/md.rs#L123)).
 - The external tables are machine-generated, never hand-typed: CPython 3.13
   `sys.stdlib_module_names` ([py.rs:143-147](../../../cli/src/graph/ladder/py.rs#L143)), Go 1.26.4
   `go list std` minus `internal/`/`vendor/` ([go.rs:158-163](../../../cli/src/graph/ladder/go.rs#L158)),
@@ -73,12 +73,12 @@ Numeric details that are policy, not taste:
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
   ([rs_use.rs:145-148](../../../cli/src/graph/ladder/rs_use.rs#L145),
-  [wire.rs:59](../../../cli/src/graph/wire.rs#L76)).
+  [wire.rs:75-76](../../../cli/src/graph/wire.rs#L75)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the only
 target-content facts a ladder consults are the Markdown slug set and the Rust `pub use`
 surface, and each is folded into a hash that is a resolve-key input
-([md.rs:219-226](../../../cli/src/graph/ladder/md.rs#L227),
+([md.rs:231-241](../../../cli/src/graph/ladder/md.rs#L231),
 [rs_reexport.rs:162-177](../../../cli/src/graph/ladder/rs_reexport.rs#L162)). Both hashes are pinned by
 a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ([md_tests.rs:12-31](../../../cli/src/graph/ladder/md_tests.rs#L12),
@@ -91,7 +91,7 @@ ledger-visible as sites *without* edges ([wire.rs:55-72](../../../cli/src/graph/
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4` ([wire.rs:23-27](../../../cli/src/graph/wire.rs#L23)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
-([wire.rs:30-32](../../../cli/src/graph/wire.rs#L35)).
+([wire.rs:34-37](../../../cli/src/graph/wire.rs#L34)).
 
 Node identity is the pair `(path, unit)` over a `BTreeSet` of every walked file plus every edge
 target, so the id assignment is a function of the graph and the wire bytes are shuffle-proof
@@ -103,9 +103,12 @@ and dangling doc refs as packages ([nodes.rs:20-23](../../../cli/src/graph/nodes
 
 Two transformations happen on the way to the wire:
 
-1. **Asset edges are dropped by kind** — an image reference is not a reference for liveness
-   purposes ([deadcode.rs:132](../../../cli/src/graph/deadcode.rs#L156)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:134-138](../../../cli/src/graph/deadcode.rs#L158)).
+1. **Asset edges are inert by kind, in the core** — an image reference is not a reference for
+   liveness purposes; since 2.20.0 every edge kind travels and the exclusion is the core's own rule,
+   `assetKind` ([Cost.hs:68-76](../../../core/app/CE/Graph/Cost.hs#L68)) filtered where the arc set is
+   built ([Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
+   ([deadcode.rs:180-184](../../../cli/src/graph/deadcode.rs#L180)). An endpoint that is not a node
+   is a *named error*, never a panic ([deadcode.rs:195-199](../../../cli/src/graph/deadcode.rs#L195)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory, at `rung 1` because containment is a fact, not a resolution mechanism, and must
    survive every rung ceiling ([nodes.rs:61-83](../../../cli/src/graph/nodes.rs#L61)). A repo-root
@@ -115,8 +118,8 @@ Two transformations happen on the way to the wire:
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
-never saw ([load.rs:70-75](../../../cli/src/graph/load.rs#L70)). `unresolved_sites` is the count of sites
-with no edge row ([load.rs:97-102](../../../cli/src/graph/load.rs#L99)) and travels with the report so
+never saw ([load.rs:88-94](../../../cli/src/graph/load.rs#L88)). `unresolved_sites` is the count of sites
+with no edge row ([load.rs:116-121](../../../cli/src/graph/load.rs#L116)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:22-24](../../../cli/src/graph/deadcode.rs#L23)).
 
@@ -126,15 +129,15 @@ the reader sees what the graph refuses to know
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
 deterministic ([Graph.hs:69-85](../../../core/app/CE/Graph.hs#L76)):
 
-- node rows are exactly 3 fields, all `≥ 0` ([Graph.hs:87-94](../../../core/app/CE/Graph.hs#L99));
+- node rows are 3 fields (legacy) or 4 (with the 2.28.0 role column), one arity per table, all `≥ 0` ([Graph.hs:128-138](../../../core/app/CE/Graph.hs#L128));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
-  ([Graph.hs:96-104](../../../core/app/CE/Graph.hs#L138));
+  ([Graph.hs:140-148](../../../core/app/CE/Graph.hs#L140));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Graph.hs:74](../../../core/app/CE/Graph.hs#L81), [Wire.hs:44-47](../../../core/app/CE/Wire.hs#L62));
+  ([Graph.hs:84](../../../core/app/CE/Graph.hs#L84), [Wire.hs:139-144](../../../core/app/CE/Wire.hs#L139));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
-  ([Graph.hs:76-80](../../../core/app/CE/Graph.hs#L84),
-  [Graph.hs:109-112](../../../core/app/CE/Graph.hs#L151)).
+  ([Graph.hs:85-90](../../../core/app/CE/Graph.hs#L85),
+  [Graph.hs:153-156](../../../core/app/CE/Graph.hs#L153)).
 
 Oversize protection is by row count, not bytes (the envelope precheck is relaxed for the
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
@@ -144,16 +147,16 @@ per 100k LOC, so the caps carry roughly 6× headroom
 degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = true`,
 `reason = "graph_too_large"` and `fail = true` — a gate that could not judge never passes, said
 by the core itself since 2.18.0, and never a truncated graph
-([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L61), [Graph.hs:161-186](../../../core/app/CE/Graph.hs#L189)).
+([Graph.hs:227-250](../../../core/app/CE/Graph.hs#L227), [Graph.hs:227-250](../../../core/app/CE/Graph.hs#L227)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:265-271](../../../cli/src/graph/deadcode.rs#L338)) and `ce deadcode --check` relays the
+([deadcode.rs:349-363](../../../cli/src/graph/deadcode.rs#L349)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:70-90](../../../cli/src/main_cmds.rs#L70)).
 
 ### 5. Kept arcs and liveness
 
 The kept arc set is the rung-filtered, `(src,dst)`-deduplicated edge list — kind multiplicity
 between one pair is *not* extra evidence of reference, so indegree counts distinct arcs
-([Build.hs:1-7](../../../core/app/CE/Graph/Build.hs#L1), [Build.hs:29-38](../../../core/app/CE/Graph/Build.hs#L29)):
+([Build.hs:1-7](../../../core/app/CE/Graph/Build.hs#L1), [Build.hs:40-51](../../../core/app/CE/Graph/Build.hs#L40)):
 
 ```
 arcs  = { (s,d) | [s,d,_kind,rung] ∈ edges,  rung ≤ minRung }
@@ -179,13 +182,13 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 ([Cost.hs:43-46](../../../core/app/CE/Graph/Cost.hs#L43)).
 
 Only file nodes carry entry facts; section and package rows get `0`
-([deadcode.rs:177-197](../../../cli/src/graph/deadcode.rs#L210)). Since proto **2.28.0**
+([deadcode.rs:210-228](../../../cli/src/graph/deadcode.rs#L210)). Since proto **2.28.0**
 (batch-7 slice 3 main body) the node row carries a 4th column of **role facts**, and the
 category membership Rust used to fuse into the flags column is decided by the core's
 **role table** `roleBits` ([Graph/Cost.hs:89-90](../../../core/app/CE/Graph/Cost.hs#L89)):
 a 4-column row's entry bits derive through `deriveFlags`
 ([Dead.hs:53-55](../../../core/app/CE/Graph/Dead.hs#L53), applied at
-[Graph.hs:182-185](../../../core/app/CE/Graph.hs#L219)), the legacy flags column yields, and a
+[Graph.hs:219-222](../../../core/app/CE/Graph.hs#L219)), the legacy flags column yields, and a
 table mixing the two arities refuses by name. The Rust producer measures:
 
 ```
@@ -219,7 +222,7 @@ symbol-level flags land
 ([hs.rs:26-31](../../../cli/src/graph/ladder/hs.rs#L26)).
 
 Reachability is plain forward closure from the seeds over kept arcs
-([Build.hs:41-42](../../../core/app/CE/Graph/Build.hs#L42)):
+([Build.hs:53-58](../../../core/app/CE/Graph/Build.hs#L53)):
 
 ```
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
@@ -232,7 +235,7 @@ reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
 
 Every SCC in `Data.Graph` order, members ascending, is a deterministic function of the sorted
 arc set; **singletons are included** so the id space covers every vertex
-([Build.hs:44-49](../../../core/app/CE/Graph/Build.hs#L45)). The cycle *report* applies the floor
+([Build.hs:51](../../../core/app/CE/Graph/Build.hs#L51)). The cycle *report* applies the floor
 downstream: an SCC is reported iff `|members| ≥ sccFloor`
 ([Cycles.hs:11-16](../../../core/app/CE/Graph/Cycles.hs#L11)) with `sccFloor = 2`, i.e. only true
 multi-node cycles — a self-loop singleton stays unreported, and widening to self-loops is a
@@ -251,7 +254,7 @@ The per-node join surface, computed only for the requested `pos` indices, is
 [Position.hs:13-32](../../../core/app/CE/Graph/Position.hs#L13)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
-([deadcode.rs:183-186](../../../cli/src/graph/deadcode.rs#L216)).
+([deadcode.rs:244-247](../../../cli/src/graph/deadcode.rs#L244)).
 
 ### 7. The four-way verdict
 
@@ -282,25 +285,25 @@ over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead
 
 Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 ([deadcode.rs:39-44](../../../cli/src/graph/deadcode.rs#L39),
-[deadcode.rs:220-226](../../../cli/src/graph/deadcode.rs#L269)) — and a code past the four this side
+[deadcode.rs:266-275](../../../cli/src/graph/deadcode.rs#L266)) — and a code past the four this side
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
-([deadcode.rs:230-234](../../../cli/src/graph/deadcode.rs#L279)).
+([deadcode.rs:309-313](../../../cli/src/graph/deadcode.rs#L309)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
 proto 2.18.0 (batch-7 slice 4) the split is the CORE's: the reply partitions its verdicts on
-the node kind column it always received ([Graph.hs:127-156](../../../core/app/CE/Graph.hs#L155),
+the node kind column it always received ([Graph.hs:212-214](../../../core/app/CE/Graph.hs#L212),
 `granFile` at [Cost.hs:55-66](../../../core/app/CE/Graph/Cost.hs#L55)), and carries the additive
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
 arriving in `dead` refuses as wire skew, never a directory erase
-([deadcode.rs:217-225](../../../cli/src/graph/deadcode.rs#L266)); against a pre-2.18 core the
+([deadcode.rs:301-308](../../../cli/src/graph/deadcode.rs#L301)); against a pre-2.18 core the
 absent bit falls back to the client's old conjunction, byte-identical
-([deadcode.rs:249-253](../../../cli/src/graph/deadcode.rs#L305)). Both lists, the counts, and
+([deadcode.rs:333-337](../../../cli/src/graph/deadcode.rs#L333)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
-([report.rs:75-89](../../../cli/src/report.rs#L75)). The design's *"no entry rule ⇒ every doc trivially
+([report.rs:85-99](../../../cli/src/report.rs#L85)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
 ([deadcode.rs:13-15](../../../cli/src/graph/deadcode.rs#L13)).
 
@@ -324,7 +327,7 @@ The M5-2 row sets four criteria: import-edge precision **≥ 0.90** on a 100-sit
 spanning the five launch languages; `unreferenced_public` as its own report class, not folded
 into dead; every finding in this repository dispositioned; and the core's judgment-invariant
 property battery in CI
-([DEVELOPMENT_PLAN.md:268](../../DEVELOPMENT_PLAN.md#L268)). The gate is coded at `0.90`,
+([DEVELOPMENT_PLAN.md:270](../../DEVELOPMENT_PLAN.md#L270)). The gate is coded at `0.90`,
 applied overall and per corpus **where the in-corpus ground-truth denominator reaches 5**
 ([eval_graph_precision.rs:85](../../../cli/tests/eval_graph_precision.rs#L85),
 [eval_graph_precision.rs:88-96](../../../cli/tests/eval_graph_precision.rs#L88),

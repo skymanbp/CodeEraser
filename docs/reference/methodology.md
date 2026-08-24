@@ -16,7 +16,7 @@ verdict. Nothing here asks a model what it thinks of your code. A
 disagreement about code health is settled by re-running the number and
 reading the `file:line` it points at, not by a second opinion; that is
 why the judgment layer is a pure function of measured facts and why the
-size hard line stays an absolute 750 lines while the soft line is a
+size hard line is a declared line — 750 by default, or the `file_lines_fail` a `[[rules.class]]` declares for the paths it owns — while the soft line is a
 statistic of the repository's own frozen distribution
 ([DEVELOPMENT_PLAN.md:61](../DEVELOPMENT_PLAN.md#L61),
 [size-advisory.md:26-30](size-advisory.md#L26)).

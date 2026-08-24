@@ -44,8 +44,10 @@
 
 ## 复现
 
-仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——先
-`git checkout <退役前提交> -- cli/tests/fpr_replay.rs` 复活，再：
+仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」
+节的复活律**连同同代支撑**复活、跑毕重退役（其 `common::git_out` 已于 9e05f53 出仓，单取仪器
+文件对今日支撑编译不过）：`git checkout 0c7c936^ -- cli/tests/fpr_replay.rs cli/tests/common`，
+跑下列命令，再 `git rm -f cli/tests/fpr_replay.rs && git checkout HEAD -- cli/tests/common`：
 
 - 自仓：`cargo test --release --test fpr_replay -- --ignored --nocapture`
 - 外部仓：`CE_FPR_REPO=<path> cargo test --release --test fpr_replay -- --ignored --nocapture`

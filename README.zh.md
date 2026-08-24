@@ -66,7 +66,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 
 | 命令 | 报告 / 判决内容 |
 |---|---|
-| `ce scan` | 尺寸 / 复杂度 / 可读性度量，核内分级；纯尺寸臂另门禁 js/css/html/vue/svelte/sh/yml |
+| `ce scan` | 尺寸 / 复杂度 / 可读性度量，核内按文件自己的线（全局或 `[[rules.class]]`）分级；纯尺寸臂另门禁 js/css/html/vue/svelte/sh/yml |
 | `ce dedup` | T1/T2 克隆块（winnowing 索引）；`--check` 门控预算 |
 | `ce clone` | T3 近似克隆（树编辑距离） |
 | `ce docdup` | 文档重复（段落、注释、docstring） |
@@ -87,13 +87,37 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 
 插件在 PreToolUse 拦截（廉价探针）、在 Stop 审计。自 1.0 档位切换起，
 两类有 FPR 记录背书的规则——精确 T1/T2 重复写入与硬预算突破（写入使
-文件超过 750 行）——**默认 deny**；其余规则在拿到各自的误报记录前保持
+文件超过其硬线：默认 750 行，或其 `[[rules.class]]` 声明的那条）——**默认 deny**；其余规则在拿到各自的误报记录前保持
 observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
 `[guard] mode` 显式声明可覆盖所有类别；软线与硬预算之间的渐进区
 默认只记台账，`[guard] zone_tiers` 显式声明才启用位置→档位映射
 （<25% observe / 25–75% warn / >75% ask）。诚实边界：PreToolUse 塑造行为，
 不是安全墙——shell 写入可绕过它。兜底按各腿所测内容分工：Stop 重新判决
 净 LOC 与涉改重复，CI 门负责硬尺寸墙与棘轮。
+
+## 路径类（`[[rules.class]]`）
+
+生成代码、vendored 树与测试 fixture 很少配得上手写代码那一套尺寸与复杂度线。`ce.toml` 里的路径类
+让一组 glob 拥有自己的线——声明序中第一个 glob 命中的类认领该文件，谁都不命中的文件沿用全局表：
+
+```toml
+[[rules.class]]
+name  = "vendored"
+globs = ["third_party/**", "**/*.pb.rs"]   # 与 exclude 列表同一套 glob 方言
+[rules.class.knobs]
+file_lines_warn = 600
+file_lines_fail = 1200                       # 该类自己的硬线
+cognitive_warn  = 25
+```
+
+三面同读这一条线、彼此不可能打架：分数的尺寸与复杂度轴（wire proto 3.1.0——连续行携类下标、
+`classKnobs` 表伴行过线，而基线永远三列，所以类是本次收费参数、绝非棘轮事实）、`ce scan` 阶梯
+（proto 3.2.0——`rowClasses` 与 `gradeOverrides` 伴行过线、回复原样回显）、PreToolUse 硬预算
+（零 wire——钩子在本地解析文件自己的表）。类名与 glob 永不过线，过线的只有类下标与 knobs
+（ADR-008）。至多 64 类；fail 线低于 warn 线的类在加载时被拒，与全局阶梯同律。未声明任何类的
+仓库——含本仓——判决逐字节不变；一旦声明，文件被量的线就变了，跨这道开关的分数**不可比较**。
+键位见 [ce.toml 参考](docs/reference/ce-toml.md)，收费定律见
+[方法学 05](docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md)。
 
 ## 内部构造 / 技术栈
 
@@ -107,6 +131,7 @@ Claude Code hooks 与 CI 渲染或执行的是同一批报告形状。
 
 - push 工作流运行六条自门禁产品腿，含显式分数地板；本仓就是常设 dogfood fixture。
 - ADR-006 上限与违规集存于 `ce-baseline.json`；清理会收紧，增长必须显式重立。
+- `ce.toml` 的 `[[rules.class]]` 为一组 glob 声明自己的尺寸与复杂度线：分数、`ce scan` 阶梯与 PreToolUse 硬预算读的都是文件自己那条；类名与 glob 永不过线。
 - CLI/配置参考由生成器产出；十二册方法学的引文、导航与中英常数均由机器检查。
 - 守卫规则只有在自己的误报记录写入 [CHANGELOG.md](CHANGELOG.md) 后才能晋级 deny；无记录者保持 observe。
 - `ce erase` 组装确定性事实，再由 Haskell 安全谓词授权删除；从不让模型重写代码。

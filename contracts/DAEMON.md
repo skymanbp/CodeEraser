@@ -48,8 +48,9 @@
   `request_if_running`（doctor/eject/audit）同享这一轮重试——eject
   曾撞上该窗口后把 .ce 从活 daemon 脚下删走。
 - **回执校验（2026-08-20 #1）**：客户端**不盲信 `hello_ok`**——回执
-  `proto` 旧于自身（同 major、低 minor，如仍在跑的 1.0.x 旧进程：
-  它无视 token 字段、不查任何凭证）即判 stale：`request` 令其
+  `proto` 旧于自身（同 major、低 minor；判据 = `client.rs::stale` 的 major.minor 比较，
+  `refuse_stale` 只对同 major 者代发 shutdown。daemon 2.0.0 起 1.x 旧进程走 major 不符的
+  重启路而非本条；2.0.0 为 2.x 首版，本条今日无实例、是前瞻契约）即判 stale：`request` 令其
   shutdown 后 respawn 一轮；`request_if_running` 只放行 Shutdown
   （eject 仍可令其退役），其余请求报错拒信。
 - **空闲退出**：30 分钟无活动（`CE_DAEMON_IDLE_SECS` 仅测试可调）；

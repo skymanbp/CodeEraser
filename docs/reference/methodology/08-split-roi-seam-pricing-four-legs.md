@@ -15,20 +15,22 @@ A file enters the seam tables only if it is in the **judged** language set and s
 exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and files with
 `total_lines <= soft` are skipped [seams.rs:51-56](../../../cli/src/structure/seams.rs#L51). The
 `soft` passed in is the *committed* line — `softLine` from `ce-baseline.json`, falling back
-to `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:145-156](../../../cli/src/structure/judge.rs#L145) — so the advisory opens the zone at
-exactly the line the hook uses.
+to the *global* `thresholds.file_lines_warn`, falling back to `300`
+[judge.rs:157-168](../../../cli/src/structure/judge.rs#L157) — so wherever a baseline is
+committed the advisory opens the zone at exactly the line the hook uses; without one they part for
+a classed file, whose hook reads its class's warn line (plan v2.13 ① P4) while the advisory stays
+class-blind.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:246-253](../../../core/app/CE/Structure.hs#L238).
+[Structure.hs:260-267](../../../core/app/CE/Structure.hs#L260).
 
 ### Seam enumeration and best-seam selection
 
 Units on the wire are the **top-level** spans only: outermost, non-overlapping,
 start-ordered, so a nested helper always lands on its holder's side of every seam
 [seams.rs:183-197](../../../cli/src/structure/seams.rs#L183). Each unit's `end` is clamped to the
-file total [seams.rs:202-205](../../../cli/src/structure/seams.rs#L202).
+file total [seams.rs:201](../../../cli/src/structure/seams.rs#L201).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
 list against its own tail, so a file with `n` top-level units yields `n − 1` seams and a
@@ -78,13 +80,17 @@ from producing a negative benefit.
 
 The zone triple is the advisory's own copy of `S/H/P_max`, so the structure family can price
 a seam without a `verdict/1` request in flight; Rust sends the same numbers it sends
-`verdict/1` [Cost.hs:99-104](../../../core/app/CE/Structure/Cost.hs#L99):
+`verdict/1` for an unclassed tree — the advisory is **class-blind**: since proto 3.1.0 `verdict/1`
+measures a classed row against its `[[rules.class]]` lines, while knobs 12 and 13 ride once,
+tree-wide, off the committed soft line and the global `file_lines_fail`
+[judge.rs:282-283](../../../cli/src/structure/judge.rs#L282)
+[Cost.hs:110-115](../../../core/app/CE/Structure/Cost.hs#L110):
 
 | knob | code | default | source |
 |---|---|---|---|
-| `seamSoft` (S) | 12 | `300` | [Cost.hs:105-106](../../../core/app/CE/Structure/Cost.hs#L105) |
-| `seamHard` (H) | 13 | `750` | [Cost.hs:108-109](../../../core/app/CE/Structure/Cost.hs#L108) |
-| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:111-112](../../../core/app/CE/Structure/Cost.hs#L111) |
+| `seamSoft` (S) | 12 | `300` | [Cost.hs:116-117](../../../core/app/CE/Structure/Cost.hs#L116) |
+| `seamHard` (H) | 13 | `750` | [Cost.hs:119-120](../../../core/app/CE/Structure/Cost.hs#L119) |
+| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:122-123](../../../core/app/CE/Structure/Cost.hs#L122) |
 
 ### Cost: the four priced legs
 
@@ -107,10 +113,10 @@ index by the `lookupGE s` / `lookupLT e` pair
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:120-121](../../../core/app/CE/Structure/Cost.hs#L120) | word-bounded mention edges [seams.rs:215-234](../../../cli/src/structure/seams.rs#L215) |
-| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:132-133](../../../core/app/CE/Structure/Cost.hs#L132) | T1/T2 dedup block spans [seams.rs:79-107](../../../cli/src/structure/seams.rs#L79) |
-| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:135-136](../../../core/app/CE/Structure/Cost.hs#L135) | 14-day commit ledger [seams.rs:115-144](../../../cli/src/structure/seams.rs#L115) |
-| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:123-124](../../../core/app/CE/Structure/Cost.hs#L123) | flat, no measurement |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:131-132](../../../core/app/CE/Structure/Cost.hs#L131) | word-bounded mention edges [seams.rs:215-234](../../../cli/src/structure/seams.rs#L215) |
+| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:143-144](../../../core/app/CE/Structure/Cost.hs#L143) | T1/T2 dedup block spans [seams.rs:79-107](../../../cli/src/structure/seams.rs#L79) |
+| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:146-147](../../../core/app/CE/Structure/Cost.hs#L146) | 14-day commit ledger [seams.rs:115-144](../../../cli/src/structure/seams.rs#L115) |
+| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:134-135](../../../core/app/CE/Structure/Cost.hs#L134) | flat, no measurement |
 
 All seven knobs (zone triple + four prices) ride the `Knobs` record
 [Axes.hs:58-67](../../../core/app/CE/Structure/Axes.hs#L58) and are bound to the `Cost.hs` defaults
@@ -127,7 +133,7 @@ identifier-char adjacency on both sides
 [seams.rs:236-254](../../../cli/src/structure/seams.rs#L236). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
-[seams.rs:226](../../../cli/src/structure/seams.rs#L226). Documented limitation: short names and
+[seams.rs:225](../../../cli/src/structure/seams.rs#L225). Documented limitation: short names and
 in-string mentions will count an edge; the advisory face is non-binding, so this is tolerated
 [size-advisory.md:93-95](../size-advisory.md#L94).
 
@@ -135,7 +141,7 @@ in-string mentions will count an edge; the advisory face is non-binding, so this
 (`crate::dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
 through a `BTreeSet` [seams.rs:89-105](../../../cli/src/structure/seams.rs#L89). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
-reference [Cost.hs:126-131](../../../core/app/CE/Structure/Cost.hs#L126).
+reference [Cost.hs:137-142](../../../core/app/CE/Structure/Cost.hs#L137).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent
@@ -150,9 +156,9 @@ constant, not a wire knob** (the prices are the knobs)
 [size-advisory.md:119](../size-advisory.md#L119).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
-booklet names φ [Cost.hs:114-119](../../../core/app/CE/Structure/Cost.hs#L114). Defaults were sized so
+booklet names φ [Cost.hs:125-135](../../../core/app/CE/Structure/Cost.hs#L125). Defaults were sized so
 a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing references does not
-[Cost.hs:117-119](../../../core/app/CE/Structure/Cost.hs#L117).
+[Cost.hs:128-130](../../../core/app/CE/Structure/Cost.hs#L128).
 
 ### Price calibration (as-built)
 
@@ -199,9 +205,9 @@ what lets the Rust side write the machine-generated *why*
 attached**, long-and-splittable gets a cut line
 [size-advisory.md:53-55](../size-advisory.md#L53). Relabelling back to names
 happens only in Rust, with every dense id range-checked before it is used as a subscript
-[judge.rs:156-181](../../../cli/src/structure/judge.rs#L160); candidates surface as
+[judge.rs:173-199](../../../cli/src/structure/judge.rs#L173); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
-end line [judge.rs:171-180](../../../cli/src/structure/judge.rs#L175).
+end line [judge.rs:183-191](../../../cli/src/structure/judge.rs#L183).
 
 ### Input validation
 

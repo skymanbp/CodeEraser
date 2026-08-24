@@ -2,7 +2,7 @@
 
 [index](../methodology.md) · [← 08 Split-ROI seam pricing (four legs)](08-split-roi-seam-pricing-four-legs.md) · [→ 10 Score trajectory — the trend slope verdict](10-score-trajectory-the-trend-slope-verdict.md)
 
-Every edit CodeEraser supervises is reduced to four integer counts per file pair: **matched** (unchanged — never enumerated, it is the diff's complement), **novel** (added, no provenance), **moved** (added or removed with provenance on the other side), **deleted** (removed, no destination). The split is `FourClass { added_novel, added_moved, removed_deleted, removed_moved }` ([model.rs:12](../../../cli/src/fourclass/model.rs#L12)) — matched lines are exactly the lines the diff did not report, so the four-class ledger is closed by construction over the changed set.
+Every edit CodeEraser supervises is reduced to four integer counts per file pair: **matched** (unchanged — never enumerated, it is the diff's complement), **novel** (added, no provenance), **moved** (added or removed with provenance on the other side), **deleted** (removed, no destination). The split is `FourClass { added_novel, added_moved, removed_deleted, removed_moved }` ([model.rs:13-18](../../../cli/src/fourclass/model.rs#L13)) — matched lines are exactly the lines the diff did not report, so the four-class ledger is closed by construction over the changed set.
 
 The design intent is recorded in plan §4.3 ([DEVELOPMENT_PLAN.md:107](../../DEVELOPMENT_PLAN.md#L107)): a difftastic-inspired but self-implemented **integer** cost model, from which a cross-file evidence floor of ≥2 lines is *derived* rather than tuned, plus a decided anchor requirement of one ≥19-alnum evidence line ([DEVELOPMENT_PLAN.md:109-112](../../DEVELOPMENT_PLAN.md#L109)).
 
@@ -42,7 +42,7 @@ All of it is four constants ([Cost.hs:1-6](../../../core/app/CE/FourClass/Cost.h
 | constant | value | source |
 |---|---|---|
 | `movedCost` (m) — explain a line as moved | `1` | [Cost.hs:19](../../../core/app/CE/FourClass/Cost.hs#L19) |
-| `plainCost` (v) — leave a line novel/deleted | `3` | [Cost.hs:22](../../../core/app/CE/FourClass/Cost.hs#L22) |
+| `plainCost` (v) — leave a line novel/deleted | `3` | [Cost.hs:23](../../../core/app/CE/FourClass/Cost.hs#L23) |
 | `siteCostWithin` — open a relocation site inside one pair | `0` | [Cost.hs:28](../../../core/app/CE/FourClass/Cost.hs#L28) |
 | `siteCostCross` — open a site across two pairs | `2` | [Cost.hs:35](../../../core/app/CE/FourClass/Cost.hs#L35) |
 
@@ -59,7 +59,7 @@ Two consequences, both theorems rather than thresholds:
 - `siteCostWithin = 0` ⇒ `1*1 + 0 < 1*3`, so **any single matching line opens a within-file site** — which is exactly L1's unfloored rule ([Cost.hs:25-26](../../../core/app/CE/FourClass/Cost.hs#L25)).
 - `siteCostCross = 2` ⇒ a single cross line gives `1*1 + 2 = 3 = 1*3`, a tie, which does not open. So `destFloor`, defined as the least `n` with `siteOpens siteCostCross n` ([Cost.hs:50-53](../../../core/app/CE/FourClass/Cost.hs#L50)), evaluates to **2**. That tie *is* the coincidence rejection ([Cost.hs:30-33](../../../core/app/CE/FourClass/Cost.hs#L30)).
 
-The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens 2 1)` ([Spec.hs:124-125](../../../core/test/Spec.hs#L124)), and perturbing the site cost moves the floor — `s ∈ {0,2,4,6}` ⇒ floor `{1,2,3,4}` ([Spec.hs:129](../../../core/test/Spec.hs#L129)).
+The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens 2 1)` ([Spec.hs:130-131](../../../core/test/Spec.hs#L130)), and perturbing the site cost moves the floor — `s ∈ {0,2,4,6}` ⇒ floor `{1,2,3,4}` ([Spec.hs:132-135](../../../core/test/Spec.hs#L132)).
 
 ### Line-evidence floor plus the anchor-line requirement
 
@@ -110,7 +110,7 @@ with `stackingNovelFloor = 20` ([Verdict.hs:24](../../../core/app/CE/FourClass/V
 
 Recorded FPR effect of this scoping on the real-edit corpus: `contracts/eval/fpr-fourclass-v1.json` flagged 8/600 before, 0/600 after ([stacking.rs:16-21](../../../cli/src/fourclass/stacking.rs#L16); corroborated at [EVAL-SET.md:138](../../EVAL-SET.md#L138)).
 
-Note the rule checks only that *some* unit was newly duplicated — it does not verify that the novel mass sits inside that unit. The output is `(pair index, "stacking")` ([Verdict.hs:35](../../../core/app/CE/FourClass/Verdict.hs#L35)); the report renders it as `{"file": …, "kind": …}` ([session.rs:135-139](../../../cli/src/fourclass/session.rs#L135)).
+Note the rule checks only that *some* unit was newly duplicated — it does not verify that the novel mass sits inside that unit. The output is `(pair index, "stacking")` ([Verdict.hs:36](../../../core/app/CE/FourClass/Verdict.hs#L36)); the report renders it as `{"file": …, "kind": …}` ([session.rs:135-139](../../../cli/src/fourclass/session.rs#L135)).
 
 The other §4.3 rules — novel-vs-repository similarity as duplicate-implementation suspicion, and MinHash paragraph similarity as restatement suspicion ([DEVELOPMENT_PLAN.md:121-125](../../DEVELOPMENT_PLAN.md#L121)) — are not implemented in this module; `CE.FourClass.Verdict` exports exactly one rule ([Verdict.hs:1-2](../../../core/app/CE/FourClass/Verdict.hs#L1)).
 
@@ -141,13 +141,13 @@ The delta is monotone in one direction only: `removed_deleted → removed_moved`
 | core answered with a `reason` (e.g. `bucket_cap`) | that reason ([batch.rs:83-84](../../../cli/src/fourclass/batch.rs#L83)) | false |
 | core answered, delta failed validation | the merge error ([batch.rs:89](../../../cli/src/fourclass/batch.rs#L89)) | false |
 
-`link_failed` is stated rather than inferred because the restart budget keys on it ([batch.rs:48](../../../cli/src/fourclass/batch.rs#L48)). A degraded reply may carry partial blocks; the reason is checked **before** merge on purpose, since applying them would be partial L2 behind a flag ([batch.rs:79-84](../../../cli/src/fourclass/batch.rs#L79)). Capability `fourclass/2` is the anchor-width request shape (proto 2.0.0); a client probing `fourclass/1` sees absence and degrades to L1 loudly rather than sending the un-parseable two-element shape ([Handshake.hs:25-27](../../../core/app/CE/Handshake.hs#L25), [Handshake.hs:41](../../../core/app/CE/Handshake.hs#L41)).
+`link_failed` is stated rather than inferred because the restart budget keys on it ([batch.rs:48](../../../cli/src/fourclass/batch.rs#L48)). A degraded reply may carry partial blocks; the reason is checked **before** merge on purpose, since applying them would be partial L2 behind a flag ([batch.rs:79-84](../../../cli/src/fourclass/batch.rs#L79)). Capability `fourclass/2` is the anchor-width request shape (proto 2.0.0); a client probing `fourclass/1` sees absence and degrades to L1 loudly rather than sending the un-parseable two-element shape ([Handshake.hs:30-32](../../../core/app/CE/Handshake.hs#L30), [Handshake.hs:30-32](../../../core/app/CE/Handshake.hs#L30)).
 
 ### Boundary checks
 
 The reply is an answer, not an authority ([delta.rs:4-5](../../../cli/src/fourclass/batch/delta.rs#L4)):
 
-- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:17-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:56](../../../cli/src/fourclass/batch.rs#L56)).
+- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:17-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:85-87](../../../cli/src/fourclass/batch.rs#L85)).
 - **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:12-16](../../../cli/src/fourclass/batch/delta.rs#L13), [delta.rs:57-59](../../../cli/src/fourclass/batch/delta.rs#L58)).
 - **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:99-101](../../../cli/src/fourclass/batch/delta.rs#L100), [session.rs:113-123](../../../cli/src/fourclass/session.rs#L113)).
 - **The core machine-checks two preconditions** at its boundary ([FourClass.hs:31-44](../../../core/app/CE/FourClass.hs#L31)): no duplicate pair index (Anchor's run maps key on `(pair, run)`, so `M.fromList` would silently drop an earlier duplicate's runs), and **within-first** — no leftover added hash of a pair may occur among that same pair's leftover removed hashes. Within-first is L1's within-file consumption rule seen from the judgment side; verifying its consequence turns a cross-language assumption into a checked contract ([FourClass.hs:3-6](../../../core/app/CE/FourClass.hs#L3)).
