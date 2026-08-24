@@ -67,7 +67,14 @@ module CE.Verdict.Cost
   , scoreScale
   , verdictNodeCap
   , verdictRowCap
+  , classCap
   ) where
+
+-- | The rulepack fence (plan v2.13 ①, 3.1.0): a class id on a
+-- continuous row or in the classKnobs table is bounded below this.
+-- A fence, not a quota — the softKMax stance.
+classCap :: Integer
+classCap = 64
 
 -- | Co-change count that counts as entangled — the churn report's
 -- own table floor (pairs enter it at count >= 2), so the lattice

@@ -7,6 +7,16 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 3.1.0 = the rulepack minor (plan v2.13 ①, I round P1+P2,
+-- 2026-08-24): verdict.request continuous rows may carry a 4th
+-- column, the file's path CLASS (1-based declaration index of the
+-- first [[rules.class]] match, 0 = none; one arity per table, mixed
+-- refuses) beside the additive classKnobs table [[classId, code,
+-- value]] — the ceilings' own codes 0/1/2 under a class, judged as
+-- a Map with the global line as fallback. The reply echoes the
+-- table exactly when it rode; the ratchet sees the three-column
+-- prefix alone, so the baseline stays three columns. An unclassed
+-- request is byte-identical to the legacy road.
 -- 3.0.0 = the churn-column MAJOR (I round D3, 2026-08-24, the
 -- user's "delete it now"): verdict.request churn rows narrow from
 -- five columns to three [u, rewrite, append] — the 4th was the
@@ -230,7 +240,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "3.0.0"
+proto = "3.1.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

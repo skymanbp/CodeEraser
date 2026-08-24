@@ -18,7 +18,7 @@ import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap, zoneAsk
 import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, confidence, judge, severities)
 import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
 import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
-import CE.Verdict.Score (Facts (..), ScoreKnobs (..), effectiveWeights, penalties, score, scoreBound)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, effectiveWeights, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
 import Data.Aeson
@@ -65,6 +65,7 @@ rowTotal req =
     , length (reqDedupDistinct req)
     , length (reqJudgedLoc req)
     , length (reqDocFiles req)
+    , length (reqClassKnobs req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -81,9 +82,8 @@ baselineRows _ = 0
 -- fails (plan: "两者任一 fail 即 fail").
 result :: String -> Either String (Maybe Baseline) -> VerdictReq -> B8.ByteString
 result proto parsed req =
-  BL.toStrict . encode $
-    object
-      [ "proto" .= proto
+  BL.toStrict . encode . object $
+    [ "proto" .= proto
       , "type" .= ("verdict.result" :: String)
       , "id" .= reqId req
       , "candidates" .= candidates jk req
@@ -124,11 +124,16 @@ result proto parsed req =
         "weights" .= effectiveWeights k (reqWeights req)
       , "degraded" .= False
       ]
+      -- the class rows echo exactly when they rode (3.1.0): the
+      -- client asserts the round trip; a legacy reply keeps its bytes
+      <> ["classKnobs" .= reqClassKnobs req | not (null (reqClassKnobs req))]
  where
   k = effectiveKnobs (reqCeilings req) (reqThresholds req)
   rk = effectiveRatchet (reqTolerance req)
   jk = effectiveJoin k (reqThresholds req)
-  pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req))
+  -- the class rows fold into ONE Map here, once per judgment (3.1.0)
+  facts = Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) (classKnobsOf (reqClassKnobs req))
+  pens = penalties k effSoft facts
   (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id parsed
   -- the soft line judging THIS run: the committed one, or (only at
@@ -139,7 +144,10 @@ result proto parsed req =
     Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)
     Just b -> bSoft b
   newSoft = effSoft
-  r = ratchet rk base (reqCont req) (reqDisc req)
+  -- the class column is a charging parameter, never a ratchet fact
+  -- (plan v2.13 ①): the ratchet judges the identity-and-value
+  -- prefix alone, so the baseline it writes stays three columns
+  r = ratchet rk base (map (take 3) (reqCont req)) (reqDisc req)
   floorFail = maybe False (perMille <) (reqFloor req)
   (dedupFloor, dedupDerived, dedupOver) = dedupLeg req
   conds = failConditions r floorFail dedupOver

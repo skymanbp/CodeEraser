@@ -10,7 +10,7 @@
 module VerdictProps (battery) where
 
 import qualified CE.Verdict.Ratchet as R
-import CE.Verdict.Score (Facts (..), ScoreKnobs (..), chargeAt, penalties, score, scoreBound)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), chargeAt, classKnobsOf, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine, zonePenalty)
 import Data.List (nub)
 import Data.Ratio ((%))
@@ -71,6 +71,7 @@ facts =
       -- far enough in that the charge clears the mean margin
       fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30]]
     , fDocFiles = []
+    , fClassKnobs = classKnobsOf []
     }
 
 battWeights :: [[Integer]]
@@ -172,7 +173,8 @@ docFilesCycle =
     && axis6 (penalties scoreBound Nothing noDocs) == axis6 (penalties scoreBound Nothing absent)
  where
   scale = sScoreScale scoreBound
-  cycleFacts docs = Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs
+  cycleFacts docs =
+    Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs (classKnobsOf [])
   noDocs = cycleFacts []
   oneDoc = cycleFacts [0]
   absent = cycleFacts []

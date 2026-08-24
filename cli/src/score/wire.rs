@@ -24,7 +24,14 @@ pub struct Request {
     pub pos: Vec<[i64; 6]>,
     pub churn: Vec<[i64; 3]>,
     pub cochange: Vec<[i64; 3]>,
-    pub continuous: Vec<[u64; 3]>,
+    /// [entity, code, value, classId] — the class column rides the
+    /// wire only when `classed` (3.1.0, plan v2.13 ①): a repo with no
+    /// [[rules.class]] sends the three-column row it always did, so
+    /// its bytes never move; a classed repo sends every row four
+    /// wide (the core refuses a mixed table). The identity prefix
+    /// stays (entity, code) either way — the ratchet never sees the
+    /// column, and the baseline stays three columns forever.
+    pub continuous: Vec<[u64; 4]>,
     pub discrete: Vec<u64>,
     pub baseline: Value,
     pub floor: Option<u32>,
@@ -65,6 +72,12 @@ pub struct Request {
     /// 0 = not declared (the dedup-only road); the echo pins the
     /// round trip so the core can see and ablate the set.
     pub judged_mask: i64,
+    /// The rulepack channel (3.1.0): `classed` = any class declared,
+    /// so every continuous row rides four wide; `class_knobs` =
+    /// [classId, code, value], the ceilings codes 0/1/2 under a class
+    /// (score::knobs::class_knob_rows), empty = no override rides.
+    pub classed: bool,
+    pub class_knobs: Vec<[i64; 3]>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -95,6 +108,9 @@ pub struct Reply {
     /// the one knob family that had no round trip until the panel
     /// caught the no-op golden covering for it.
     pub weights: Vec<[i64; 2]>,
+    /// The class knob rows the core judged with (3.1.0), echoed
+    /// exactly when they rode — empty on a legacy reply.
+    pub class_knobs: Vec<[i64; 3]>,
     /// The core's own admitted-block count (2.19.0), None when the
     /// distinct rows did not ride — check() proves the local filter
     /// equal against it.
@@ -114,6 +130,8 @@ impl Request {
             churn: Vec::new(),
             cochange: Vec::new(),
             continuous: Vec::new(),
+            classed: false,
+            class_knobs: Vec::new(),
             discrete: Vec::new(),
             baseline: Value::Null,
             floor: None,
@@ -132,17 +150,27 @@ impl Request {
 }
 
 pub fn body(r: &Request) -> Value {
+    // the class column rides only on a classed run — a legacy
+    // request is the three-column row, byte for byte (3.1.0 C1)
+    let continuous: Vec<Vec<u64>> = r
+        .continuous
+        .iter()
+        .map(|row| row[..if r.classed { 4 } else { 3 }].to_vec())
+        .collect();
     let mut o = json!({
         "sim": r.sim,
         "pos": r.pos,
         "tier": (0..r.files.len()).map(|u| [u as i64, 0]).collect::<Vec<_>>(),
         "churn": r.churn,
         "cochange": r.cochange,
-        "continuous": r.continuous,
+        "continuous": continuous,
         "discrete": r.discrete,
         "baseline": r.baseline,
         "floor": r.floor,
     });
+    if !r.class_knobs.is_empty() {
+        o["classKnobs"] = json!(r.class_knobs);
+    }
     // the four knob tables ride one loop — table-driven at the
     // assembly site too, not just in the core's evaluator
     for (key, rows) in [
@@ -191,6 +219,14 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         assert_echo(&knobs::TOLERANCE_KEYS, &r.tolerance, &reply.knobs)?;
         let dw = *reply.knobs.get("defaultWeight").context("defaultWeight")?;
         assert_weights(&r.weights, &reply.weights, dw)?;
+        // the class rows echo whole (3.1.0): a table the core judged
+        // with must be the one this side sent, row for row
+        anyhow::ensure!(
+            reply.class_knobs == r.class_knobs,
+            "core judged with classKnobs {:?}, ce sent {:?}",
+            reply.class_knobs,
+            r.class_knobs
+        );
         if r.judged_mask != 0 {
             let echoed = *reply.knobs.get("judgedMask").context("judgedMask")?;
             anyhow::ensure!(
@@ -284,6 +320,12 @@ fn parse(v: &Value) -> Result<Reply> {
         new_baseline: crate::lockstep::reply_field(v, "newBaseline")?,
         knobs: rows(v, "knobs")?,
         weights: rows(v, "weights")?,
+        // absent on a legacy reply (the key rides only when rows did)
+        class_knobs: if v["classKnobs"].is_null() {
+            Vec::new()
+        } else {
+            rows(v, "classKnobs")?
+        },
         dedup_blocks: v["dedupBlocks"].as_u64(),
         degraded: degraded_of(v),
     })
@@ -298,5 +340,33 @@ fn degraded_of(v: &Value) -> Option<String> {
         Some(v["reason"].as_str().unwrap_or("degraded").to_string())
     } else {
         None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// C1 at the assembly site: an unclassed request is the legacy
+    /// three-column row with no classKnobs key at all; a classed one
+    /// sends every row four wide and the knob table beside it.
+    #[test]
+    fn class_column_and_knob_table_ride_only_when_classed() {
+        let mut r = Request::dedup_only(0, 0, Vec::new(), None);
+        r.continuous = vec![[7, 0, 310, 1], [9, 1, 20, 0]];
+        let legacy = body(&r);
+        assert_eq!(legacy["continuous"], json!([[7, 0, 310], [9, 1, 20]]));
+        assert!(
+            legacy.get("classKnobs").is_none(),
+            "no key on the legacy road"
+        );
+        r.classed = true;
+        r.class_knobs = vec![[1, 0, 400]];
+        let classed = body(&r);
+        assert_eq!(
+            classed["continuous"],
+            json!([[7, 0, 310, 1], [9, 1, 20, 0]])
+        );
+        assert_eq!(classed["classKnobs"], json!([[1, 0, 400]]));
     }
 }

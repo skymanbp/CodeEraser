@@ -10,8 +10,10 @@
 -- size/complexity ceilings are the plan §4.1 dogfood numbers.
 module CE.Verdict.Score
   ( Facts (..)
+  , ClassKnobs
   , ScoreKnobs (..)
   , chargeAt
+  , classKnobsOf
   , scoreBound
   , effectiveWeights
   , penalties
@@ -23,11 +25,14 @@ import CE.Docdup.Cost (jaccardDen, jaccardNum)
 import CE.Graph.Cost (sccFloor)
 import qualified CE.Verdict.Cost as Cost
 import CE.Verdict.Soft (zonePenalty)
+import qualified Data.Map.Strict as M
 import Data.Ratio ((%))
 import qualified Data.IntSet as IS
 
 -- | The validated fact tables (row shapes enforced by CE.Verdict's
--- boundary contract before anything reaches here).
+-- boundary contract before anything reaches here). Continuous rows
+-- are read by PREFIX throughout (3.1.0): a legacy three-column row
+-- and a classed four-column row take the same patterns.
 data Facts = Facts
   { fSim :: [[Integer]]
   -- ^ [u,v,simKind,num,den]
@@ -36,10 +41,29 @@ data Facts = Facts
   , fChurn :: [[Integer]]
   -- ^ [u,rewrite,append] (3.0.0: the constant added / unmeasured survived left)
   , fCont :: [[Integer]]
-  -- ^ [u,metricCode,value]
+  -- ^ [u,metricCode,value] or, classed (3.1.0), [u,metricCode,value,classId]
   , fDocFiles :: [Integer]
   -- ^ file-universe indices whose language is documentation
+  , fClassKnobs :: ClassKnobs
+  -- ^ (classId, code) -> value: the ceilings codes 0/1/2 under a class (3.1.0)
   }
+
+-- | The class overrides as ONE Map, built once per judgment from the
+-- wire rows (plan v2.13 ①): the wire's row order is a validation
+-- fact and never a judgment fact (ClassProps pins the permutation).
+-- Lookup falls back to the global reading, so an unclassed row — or
+-- a class with no row for that code — judges exactly as before.
+type ClassKnobs = M.Map (Integer, Integer) Integer
+
+classKnobsOf :: [[Integer]] -> ClassKnobs
+classKnobsOf rows = M.fromList [((c, code), v) | [c, code, v] <- rows]
+
+-- | A continuous row's class: the 4th column when it rides, 0 (the
+-- global table) on a legacy three-column row.
+classOf :: [Integer] -> Integer
+classOf row = case drop 3 row of
+  (c : _) -> c
+  [] -> 0
 
 data ScoreKnobs = ScoreKnobs
   { sSizeCeil :: Integer
@@ -108,8 +132,10 @@ penalties k soft f =
   ]
  where
   cnt = fromInteger :: Integer -> Rational
-  files = count [() | [_, 0, _] <- fCont f]
-  functions = count [() | [_, 1, _] <- fCont f]
+  -- opportunity counts by metric-code prefix: a classed row is one
+  -- file / one function exactly like its legacy shape
+  files = count [() | (_ : 0 : _) <- fCont f]
+  functions = count [() | (_ : 1 : _) <- fCont f]
   nodes = toInteger (length (fPos f))
   churned = toInteger (length (fChurn f))
 
@@ -138,14 +164,26 @@ count = toInteger . length
 -- baseline's committed S (Nothing = pre-v0.6 baseline, or no
 -- derivable distribution) falling back to the sSizeCeil knob — the
 -- old binary line becomes the zone's opening edge, never a cliff.
+-- A classed row (3.1.0) takes its class's own opening edge (code 0)
+-- and hard line (code 2) where declared — the charge law itself is
+-- untouched; only the two lines the row is measured against move.
 sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational
 sizeMass k soft f =
-  sum [zonePenalty s (sSizeHard k) (sSizePMax k) v | [_, 0, v] <- fCont f]
+  sum
+    [ zonePenalty (line 0 s) (line 2 (sSizeHard k)) (sSizePMax k) v
+    | row@(_ : 0 : v : _) <- fCont f
+    , let line code g = M.findWithDefault g (classOf row, code) (fClassKnobs f)
+    ]
  where
   s = maybe (sSizeCeil k) id soft
 
 cocOver :: ScoreKnobs -> Facts -> Integer
-cocOver k f = count [() | [_, 1, v] <- fCont f, v > sCocCeil k]
+cocOver k f =
+  count
+    [ ()
+    | row@(_ : 1 : v : _) <- fCont f
+    , v > M.findWithDefault (sCocCeil k) (classOf row, 1) (fClassKnobs f)
+    ]
 
 cloneHits :: ScoreKnobs -> Facts -> Integer
 cloneHits k f =

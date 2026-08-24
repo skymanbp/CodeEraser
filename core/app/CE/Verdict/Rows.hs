@@ -14,7 +14,7 @@ module CE.Verdict.Rows
   , judgedLocOffence
   ) where
 
-import CE.Verdict.Cost (scoreScale)
+import CE.Verdict.Cost (classCap, scoreScale)
 import CE.Verdict.Table (ascendingBy, label)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
@@ -76,12 +76,19 @@ posRow unitTier n i row = case row of
 -- the ratchet joins current-vs-baseline on (u, code) across runs,
 -- and a tier index shifts whenever a file lands 鈥?so u here is
 -- range-checked against u64, never against the node universe.
+-- Three columns, or four with the rulepack class (3.1.0, plan v2.13
+-- ①): the class is bounded by the fence here, and the TABLE keeps
+-- one arity (Table.uniformArity at the boundary — the graph/1
+-- node-row precedent), so a half-classed table refuses instead of
+-- being read two ways at once.
 contRow :: String -> Int -> [Integer] -> Maybe String
 contRow name i row = case row of
-  [u, code, v]
-    | any (< 0) [u, code, v] -> Just (label name i <> "negative field")
+  (u : code : _ : rest)
+    | length rest > 1 -> Just (label name i <> "malformed row")
+    | any (< 0) row -> Just (label name i <> "negative field")
     | u >= 18446744073709551616 -> Just (label name i <> "outside u64")
     | code > 6 -> Just (label name i <> "unknown metric code")
+    | any (>= classCap) rest -> Just (label name i <> "class beyond the fence")
     | otherwise -> Nothing
   _ -> Just (label name i <> "malformed row")
 

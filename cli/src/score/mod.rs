@@ -109,13 +109,15 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         None => (Vec::new(), Vec::new()),
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let (continuous, judged_loc) = size_facts(root)?;
+    let (continuous, judged_loc, classed) = size_facts(root)?;
     let req = wire::Request {
         sim: m.sim,
         pos: m.pos,
         churn: churn_t,
         cochange: cochange_t,
         continuous,
+        classed,
+        class_knobs: knobs::class_knob_rows(&cfg.rules),
         discrete: m.members,
         baseline: match (opts.establish, opts.pinned_soft) {
             (true, Some(soft)) => serde_json::json!({
@@ -242,7 +244,11 @@ fn member_set(root: &Path, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) 
 /// double-emitting a file. pub: the 3j gate test asserts per-file
 /// coverage through this same throat.
 pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
-    Ok(size_facts(root)?.0)
+    Ok(size_facts(root)?
+        .0
+        .into_iter()
+        .map(|[u, c, v, _]| [u, c, v])
+        .collect())
 }
 
 /// One walk, both size facts (plan v2.6 §B): the continuous rows
@@ -250,10 +256,23 @@ pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
 /// the judged-language LOC multiset the core derives the soft line
 /// from — two universes on purpose, the boundary being
 /// Lang::judged_path (the ONE v2.5 authority). Measurement only —
-/// no scan verdict is consumed here (batch-7 slice 8).
-fn size_facts(root: &Path) -> Result<(Vec<[u64; 3]>, Vec<u64>)> {
-    let (_config, files) = scan::measure(root)?;
-    let mut rows: Vec<[u64; 3]> = files.iter().flat_map(baseline::continuous_rows).collect();
+/// no scan verdict is consumed here (batch-7 slice 8). Each row's
+/// fourth column is the file's rulepack class (3.1.0: first declared
+/// match, 0 = none), assigned HERE where the path is still known;
+/// the flag says whether any class was declared at all.
+fn size_facts(root: &Path) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
+    let (config, files) = scan::measure(root)?;
+    let classes =
+        scan::classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
+    let mut rows: Vec<[u64; 4]> = files
+        .iter()
+        .flat_map(|f| {
+            let class = classes.class_of(&f.path);
+            baseline::continuous_rows(f)
+                .into_iter()
+                .map(move |[u, c, v]| [u, c, v, class])
+        })
+        .collect();
     rows.sort_unstable();
     // a fingerprint collision would silently merge two entities —
     // refuse loudly instead (never observed; FNV64 over short paths)
@@ -267,7 +286,7 @@ fn size_facts(root: &Path) -> Result<(Vec<[u64; 3]>, Vec<u64>)> {
         .map(|f| f.total_lines as u64)
         .collect();
     locs.sort_unstable(); // the wire demands non-descending
-    Ok((rows, locs))
+    Ok((rows, locs, classes.declared()))
 }
 
 /// Per-file churn sums over the per-unit ledger plus the co-change

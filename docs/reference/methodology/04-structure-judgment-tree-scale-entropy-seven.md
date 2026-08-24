@@ -80,7 +80,7 @@ per-mille ([Axes.hs:217-225](../../../core/app/CE/Structure/Axes.hs#L217)):
 The phrase names the mode in which the family runs with **no external template**: the seven
 axes and the two entropy rows read nothing but the tree's own fact tables, so the tree is
 judged against itself. The only in-tree definition of the term is the config comment at
-[config.rs:91-97](../../../cli/src/config.rs#L91) — "the OPTIONAL layout template the χ² divergence
+[config.rs:96-102](../../../cli/src/config.rs#L96) — "the OPTIONAL layout template the χ² divergence
 judges against. Absent = the self-referential floor alone (row C)". *Caveat for the reader:*
 the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in the tree — the
 booklet was distilled into `structure-axes.md` and its full text lives only in git history
@@ -98,7 +98,7 @@ absent on the undeclared fixture ([StructureProps.hs:143-151](../../../core/test
 
 `ce.toml`'s `[structure.layout]` maps directory paths to relative weights `>= 1`; `"."` is the
 root and, under deepest-owner semantics, the catch-all bin
-([config.rs:98-102](../../../cli/src/config.rs#L98), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
+([config.rs:103-107](../../../cli/src/config.rs#L103), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
 sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
 ([Structure.hs:124](../../../core/app/CE/Structure.hs#L122),
@@ -210,7 +210,7 @@ tree colours by — one list per axis, in axis order
 Since proto 2.26.0 (M9 batch 9 P9, user ruling) the structure family runs the **same density
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
-through `chargeAt`, imported from [Score.hs:126](../../../core/app/CE/Verdict/Score.hs#L126)
+through `chargeAt`, imported from [Score.hs:152](../../../core/app/CE/Verdict/Score.hs#L152)
 (one law, two families; [Structure.hs:246-258](../../../core/app/CE/Structure.hs#L238)):
 
 ```

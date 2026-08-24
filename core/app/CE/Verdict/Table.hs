@@ -15,10 +15,14 @@ module CE.Verdict.Table
   , toleranceOffence
   , dedupOffence
   , dedupDistinctOffence
+  , uniformArity
+  , classKnobsOffence
   ) where
 
+import CE.Verdict.Cost (classCap)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
+import Data.List (nub)
 
 label :: String -> Int -> String
 label name i = name <> " " <> show i <> ": "
@@ -38,6 +42,31 @@ ascendingBy name k rows =
 table :: String -> (String -> Int -> [Integer] -> Maybe String) -> Int -> [[Integer]] -> Maybe String
 table name rowCheck idWidth rows =
   asum (zipWith (rowCheck name) [0 :: Int ..] rows) <|> ascendingBy name idWidth rows
+
+-- | One arity per table (3.1.0): a row set mixing widths would be
+-- read two ways at once — refused by name, the graph/1 precedent.
+uniformArity :: String -> [[Integer]] -> Maybe String
+uniformArity name rows = case nub (map length rows) of
+  (_ : _ : _) -> Just (name <> " rows: mixed arity")
+  _ -> Nothing
+
+-- | The rulepack's knob rows [classId, code, value] (3.1.0, plan
+-- v2.13 ①): a class from 1 below the fence (class 0 IS the global
+-- table, which has the ceilings channel already), a code in the
+-- ceilings' own 0..2, a value at or above 1 — (classId, code)
+-- strictly ascending. The ceilingsOffence reading, one class
+-- dimension wider; no new code was minted.
+classKnobsOffence :: [[Integer]] -> Maybe String
+classKnobsOffence = table "classKnobs" one 2
+ where
+  one nm i row = case row of
+    [c, code, v]
+      | c < 1 -> Just (label nm i <> "class 0 has no override channel")
+      | c >= classCap -> Just (label nm i <> "class beyond the fence")
+      | code < 0 || code > 2 -> Just (label nm i <> "unknown class knob code")
+      | v < 1 -> Just (label nm i <> "knob below 1")
+      | otherwise -> Nothing
+    _ -> Just (label nm i <> "malformed row (need [class,code,value])")
 
 -- | [code, value] rows, code-bounded, judged per code — generalized
 -- for P4 (the thresholds table judges denominators and divisor

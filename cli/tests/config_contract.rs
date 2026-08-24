@@ -66,3 +66,53 @@ fn incoherent_threshold_ladder_is_refused_by_both_readers() {
     .expect("ce.toml");
     Config::load(&fx.dir).expect("no hard line is coherent");
 }
+
+/// The rulepack's load throat (plan v2.13 ①): a class ladder is
+/// judged on its EFFECTIVE lines through the same predicate the
+/// global table answers to (C8), the fence refuses a 65th class, a
+/// twice-declared name refuses, and serde names a missing key — every
+/// refusal loud, never a class that silently matches nothing.
+#[test]
+fn rulepack_classes_refuse_at_the_load_throat() {
+    let fx = common::fixture("config-contract-classes", &[("src/a.rs", "fn a() {}\n")]);
+    let load = |toml: &str| {
+        std::fs::write(fx.dir.join("ce.toml"), toml).expect("ce.toml");
+        Config::load(&fx.dir)
+    };
+    let class = |name: &str, knobs: &str| {
+        format!(
+            "[[rules.class]]\nname = \"{name}\"\nglobs = [\"cli/tests/**\"]\n[rules.class.knobs]\n{knobs}\n"
+        )
+    };
+    // C8: a class warn line above the INHERITED global hard line
+    let err = load(&class("tests", "file_lines_warn = 800")).expect_err("800 > the global 750");
+    assert!(
+        err.contains("tests") && err.contains("file_lines_warn"),
+        "{err}"
+    );
+    // the same class with its own hard line climbs, and loads
+    let cfg = load(&class(
+        "tests",
+        "file_lines_warn = 800\nfile_lines_fail = 900",
+    ))
+    .expect("coherent");
+    assert_eq!(
+        cfg.rules.class[0]
+            .effective(&cfg.thresholds)
+            .file_lines_fail,
+        900
+    );
+    let err = load(&(class("tests", "") + &class("tests", ""))).expect_err("declared twice");
+    assert!(err.contains("declared twice"), "{err}");
+    let err = load("[[rules.class]]\nglobs = [\"x/**\"]\n").expect_err("name is required");
+    assert!(err.contains("name"), "{err}");
+    let err = load("[[rules.class]]\nname = \"empty\"\nglobs = []\n").expect_err("no globs");
+    assert!(err.contains("no globs"), "{err}");
+    let many: String = (0..65).map(|i| class(&format!("c{i}"), "")).collect();
+    let err = load(&many).expect_err("the fence");
+    assert!(err.contains("fence"), "{err}");
+    assert!(
+        load(&many[..many.len() - class("c64", "").len()]).is_ok(),
+        "64 classes load"
+    );
+}

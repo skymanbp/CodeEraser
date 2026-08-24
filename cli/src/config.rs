@@ -72,6 +72,11 @@ impl Thresholds {
 mod tier;
 pub use tier::{Guard, PROMOTED_DEFAULT, TIERS, tier_of};
 
+// The rulepack (plan v2.13 ①) is its own module for the same reason:
+// the class ladder and the fence are policy judged at load.
+mod rules;
+pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, RulesCfg};
+
 /// Dedup ratchet (M2 review R12): `ce dedup --check` fails when the
 /// repo's clone-block count exceeds this only-shrink budget.
 #[derive(Debug, Clone, Default, Deserialize)]
@@ -158,6 +163,9 @@ pub struct Config {
     pub score: ScoreCfg,
     pub structure: StructureCfg,
     pub trend: TrendCfg,
+    /// Path classes with their own size/complexity knobs (plan v2.13
+    /// ①, `[[rules.class]]`); absent = one global table, wire unchanged.
+    pub rules: RulesCfg,
 }
 
 /// Seconds from an env TEST SEAM, else the shipped default — the one
@@ -194,7 +202,11 @@ impl Config {
         // Refused at the LOAD throat, the one both threshold readers
         // pass through — a guard on only the wire path let the
         // auxiliary surfaces judge with a ladder the gate rejects.
-        match cfg.thresholds.ladder_fault() {
+        match cfg
+            .thresholds
+            .ladder_fault()
+            .or_else(|| cfg.rules.fault(&cfg.thresholds))
+        {
             Some(fault) => Err(fault),
             None => Ok(cfg),
         }

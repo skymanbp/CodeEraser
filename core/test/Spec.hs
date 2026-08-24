@@ -13,6 +13,7 @@ import CE.FourClass.Cost (anchorFloor, destFloor, siteOpens)
 import CE.Graph.Cost (edgeCap, nodeCap)
 import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified AuditProps
+import qualified ClassProps
 import qualified CloneProps
 import qualified EntropyProps
 import qualified EraseProps
@@ -90,6 +91,7 @@ main = do
       , VerdictWireProps.battery
       , VerdictKnobProps.battery
       , SplitProps.battery
+      , ClassProps.battery
       ]
   unless (and results) exitFailure
 

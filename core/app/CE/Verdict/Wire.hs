@@ -32,12 +32,14 @@ import CE.Verdict.Rows
 import CE.Verdict.Table
   ( ascendingBy
   , ceilingsOffence
+  , classKnobsOffence
   , dedupDistinctOffence
   , dedupOffence
   , label
   , table
   , thresholdsOffence
   , toleranceOffence
+  , uniformArity
   , weightsOffence
   )
 import Control.Applicative ((<|>))
@@ -104,6 +106,13 @@ data VerdictReq = VerdictReq
     -- dedup-only road). The echo makes the set core-visible and
     -- drift-detectable; no judgment consumes it yet.
     reqJudgedMask :: Integer
+  , -- plan v2.13 ① (3.1.0, additive): the rulepack's knob rows
+    -- [classId, code, value] — the ceilings codes 0/1/2 (sizeCeil /
+    -- cocCeil / sizeHard) under a class; the continuous rows carry
+    -- the class as their 4th column. Class names and globs never
+    -- cross (§5.9.2). Absent = [] = every row judges on the global
+    -- lines, byte-identical to the legacy road.
+    reqClassKnobs :: [[Integer]]
   }
 
 instance FromJSON VerdictReq where
@@ -129,6 +138,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "judgedLoc" .!= []
       <*> o .:? "docFiles" .!= []
       <*> o .:? "judgedMask" .!= 0
+      <*> o .:? "classKnobs" .!= []
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -148,6 +158,7 @@ violation parsed req =
     , table "churn" (nodeRow n 3) 1 (reqChurn req)
     , table "cochange" (pairRow n 3) 2 (reqCochange req)
     , table "continuous" contRow 2 (reqCont req)
+        <|> uniformArity "continuous" (reqCont req)
     , asum (zipWith discEntry [0 :: Int ..] (reqDisc req))
     , ascendingBy "discrete" 1 (map pure (reqDisc req))
     , either Just (const Nothing) parsed
@@ -155,6 +166,9 @@ violation parsed req =
     , ceilingsOffence (reqCeilings req)
     , thresholdsOffence (reqThresholds req)
     , toleranceOffence (reqTolerance req)
+    , -- the rulepack's knob rows (3.1.0): the ceilings grammar one
+      -- class dimension wider, judged before the floor like its kin
+      classKnobsOffence (reqClassKnobs req)
     , floorOffence (reqThresholds req) (reqFloor req)
     , dedupOffence (reqDedup req)
     , dedupDistinctOffence (reqDedup req) (reqDedupDistinct req) (reqDedupFloor req)

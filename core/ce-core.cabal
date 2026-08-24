@@ -71,7 +71,8 @@ test-suite ce-core-test
                       ReferenceTed, CloneProps, ReferenceJaccard,
                       AuditProps, EntropyProps, JoinProps, ScanProps,
                       StructureProps, TrendProps, EraseProps, VerdictProps,
-                      VerdictWireProps, VerdictKnobProps, SplitProps, WireHarness
+                      VerdictWireProps, VerdictKnobProps, SplitProps, WireHarness,
+                      ClassProps
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

@@ -7,7 +7,7 @@
 //! to live as one inline expression in run() — the "size ceiling IS
 //! file_lines_warn" semantics now has a named home.
 
-use crate::config::{ScoreCfg, Thresholds};
+use crate::config::{RulesCfg, ScoreCfg, Thresholds};
 use anyhow::{Context, Result};
 
 /// Score axes by NAME, index = wire axis code (decision ⑦ order):
@@ -54,6 +54,34 @@ pub fn ceiling_rows(t: &Thresholds, s: &ScoreCfg) -> Vec<[i64; 2]> {
     }
     if let Some(k) = s.soft_line_k {
         out.push([4, k as i64]);
+    }
+    out
+}
+
+/// The rulepack's knob rows [classId, code, value] (plan v2.13 ①,
+/// 3.1.0): each declared class's overrides on the ceilings codes
+/// 0 / 1 / 2 — the sizeCeil / cocCeil / sizeHard shadows, no new
+/// code minted — under its 1-based declaration index, leaving
+/// (classId, code)-ascending as the wire demands. A class hard line
+/// of 0 sends no code-2 row (the global reading: 0 = no hard line,
+/// and the core refuses a ceiling below 1); the two warn lines send
+/// whatever was declared, so a nonsense 0 refuses loudly instead of
+/// vanishing.
+pub fn class_knob_rows(rules: &RulesCfg) -> Vec<[i64; 3]> {
+    let mut out = Vec::new();
+    for (i, c) in rules.class.iter().enumerate() {
+        let id = i as i64 + 1;
+        let k = &c.knobs;
+        let declared = [
+            (0, k.file_lines_warn),
+            (1, k.cognitive_warn),
+            (2, k.file_lines_fail.filter(|h| *h >= 1)),
+        ];
+        out.extend(
+            declared
+                .iter()
+                .filter_map(|&(code, v)| v.map(|v| [id, code, v as i64])),
+        );
     }
     out
 }
@@ -129,5 +157,35 @@ mod tests {
         assert_eq!(weight_rows(&cfg).expect("known name"), vec![[2, 5]]);
         cfg.weights.insert("bogus".into(), 1);
         assert!(weight_rows(&cfg).is_err(), "unknown axis name refuses");
+    }
+
+    /// The class rows are the ceilings codes under a class index,
+    /// (class, code)-ascending: an absent knob sends nothing, a hard
+    /// line of 0 sends nothing (no hard line), a warn line of 0 still
+    /// rides — the core's refusal is the loud reading.
+    #[test]
+    fn class_knob_rows_shadow_the_ceiling_codes_in_order() {
+        use crate::config::{ClassCfg, ClassKnobs};
+        let class = |w: Option<usize>, h: Option<usize>, c: Option<usize>| ClassCfg {
+            name: "x".into(),
+            globs: vec!["**".into()],
+            knobs: ClassKnobs {
+                file_lines_warn: w,
+                file_lines_fail: h,
+                cognitive_warn: c,
+            },
+        };
+        let rules = RulesCfg {
+            class: vec![
+                class(Some(400), Some(0), None),
+                class(None, Some(900), Some(20)),
+                class(Some(0), None, None),
+            ],
+        };
+        assert_eq!(
+            class_knob_rows(&rules),
+            vec![[1, 0, 400], [2, 1, 20], [2, 2, 900], [3, 0, 0]]
+        );
+        assert!(class_knob_rows(&RulesCfg::default()).is_empty());
     }
 }

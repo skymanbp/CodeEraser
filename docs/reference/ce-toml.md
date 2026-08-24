@@ -73,3 +73,9 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | `min_points` | *(absent)* | History points required before a slope is judged |
 | `decline_floor_micro` | *(absent)* | Decline floor in micro-per-mille per day; declaring it arms the trend fail bit |
 
+## [rules]
+
+| key | default | meaning |
+|---|---|---|
+| `class` | *(absent)* | Path classes with their own size and complexity lines (plan v2.13): an array of tables, each with a local `name`, its `globs` (the exclude list's dialect; the first declared match owns a path, an unmatched path keeps the global table) and `knobs` — `file_lines_warn`, `file_lines_fail`, `cognitive_warn`; an absent knob inherits the global line. At most 64 classes, each class's ladder must climb, and only a class's index and knobs ever cross the wire. Enabling classes changes what the score judges a file against — scores are not comparable across that switch |
+

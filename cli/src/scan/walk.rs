@@ -184,24 +184,38 @@ fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::O
             .map_err(|e| format!("builtin glob {glob}: {e}"))?;
     }
     for glob in extra {
-        // ce.toml lists positive globs to exclude; Override semantics
-        // need the leading '!' for exclusion. A user-written '!' would
-        // double-negate into a silent no-op — reject it loudly.
-        if glob.starts_with('!') {
-            return Err(format!(
-                "ce.toml exclude {glob}: write the glob without '!' (entries are exclusions already)"
-            ));
-        }
-        // '\' is an ESCAPE here and candidates are '/'-spelled
-        // (rel_str), so a Windows-written `src\generated\*.rs`
-        // compiled to a pattern matching NOTHING — silent no-op on
-        // this project's primary platform. Normalized, not refused
-        // like the '!' above: '/' is the one canonical spelling here
-        // and the separator reading is what the author meant.
-        let g = format!("!{}", glob.replace('\\', "/"));
-        builder
-            .add(&g)
-            .map_err(|e| format!("ce.toml exclude {glob}: {e}"))?;
+        add_user_glob(&mut builder, glob, true, "exclude")?;
     }
     builder.build().map_err(|e| format!("excludes: {e}"))
+}
+
+/// One user-written glob into an override set — the two rules every
+/// ce.toml glob reader shares (exclude, and the rulepack's classes in
+/// scan::classes; a second copy is what the dedup gate refuses):
+/// a leading '!' is refused, because an exclude entry is an exclusion
+/// already and a class entry an inclusion already, so a user '!'
+/// would double-negate into a silent no-op; and '\' normalizes to
+/// '/', because '\' is an ESCAPE in this syntax while candidates are
+/// '/'-spelled (rel_str) — a Windows-written `src\generated\*.rs`
+/// compiled to a pattern matching NOTHING on this project's primary
+/// platform. Normalized, not refused: the separator reading is what
+/// the author meant. `exclude` selects the direction.
+pub(crate) fn add_user_glob(
+    builder: &mut OverrideBuilder,
+    glob: &str,
+    exclude: bool,
+    what: &str,
+) -> Result<(), String> {
+    if glob.starts_with('!') {
+        let already = if exclude { "exclusions" } else { "inclusions" };
+        return Err(format!(
+            "ce.toml {what} {glob}: write the glob without '!' (entries are {already} already)"
+        ));
+    }
+    let g = glob.replace('\\', "/");
+    let g = if exclude { format!("!{g}") } else { g };
+    builder
+        .add(&g)
+        .map(|_| ())
+        .map_err(|e| format!("ce.toml {what} {glob}: {e}"))
 }

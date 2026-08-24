@@ -57,28 +57,8 @@ pub fn judge_pairs(
     let mut sim = Vec::new();
     score::sim_rows(blocks, &idx, &mut sim);
     let (churn_t, cochange_t) = score::churn_tables(ch, &idx);
-    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let req = wire::Request {
-        sim,
-        pos: score::pos_rows(&files, posmap),
-        churn: churn_t,
-        cochange: cochange_t,
-        continuous: Vec::new(),
-        discrete: Vec::new(),
-        baseline: serde_json::Value::Null,
-        floor: None,
-        ceilings: score::knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
-        weights: score::knobs::weight_rows(&cfg.score)?,
-        thresholds: score::knobs::threshold_rows(&cfg.score),
-        tolerance: score::knobs::tolerance_rows(&cfg.score),
-        dedup: None,
-        dedup_distinct: Vec::new(),
-        dedup_min_distinct: None,
-        judged_loc: Vec::new(),
-        doc_files: score::doc_file_indices(&files),
-        files,
-        judged_mask: crate::scan::lang::Lang::judged_mask(),
-    };
+    let pos = score::pos_rows(&files, posmap);
+    let req = request(root, files, sim, pos, (churn_t, cochange_t))?;
     let reply = wire::judge(core, &req)?;
     let sev: HashMap<i64, i64> = reply.join_severity.iter().map(|&[c, s]| (c, s)).collect();
     let mut pairs = HashMap::new();
@@ -109,5 +89,43 @@ pub fn judge_pairs(
     Ok(Judged {
         pairs,
         degraded: reply.degraded,
+    })
+}
+
+/// The join road's verdict request (split from judge_pairs at the
+/// E01 hard line when the 3.1.0 class channel joined the record):
+/// the three legs' tables plus ce.toml's knob rows; the score-side
+/// tables ride empty — so the class channel has no payload on this
+/// road by construction — and their axes are ignored.
+fn request(
+    root: &std::path::Path,
+    files: Vec<String>,
+    sim: Vec<[i64; 5]>,
+    pos: Vec<[i64; 6]>,
+    (churn, cochange): score::ChurnTables,
+) -> Result<wire::Request> {
+    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
+    Ok(wire::Request {
+        sim,
+        pos,
+        churn,
+        cochange,
+        continuous: Vec::new(),
+        classed: false,
+        class_knobs: Vec::new(),
+        discrete: Vec::new(),
+        baseline: serde_json::Value::Null,
+        floor: None,
+        ceilings: score::knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
+        weights: score::knobs::weight_rows(&cfg.score)?,
+        thresholds: score::knobs::threshold_rows(&cfg.score),
+        tolerance: score::knobs::tolerance_rows(&cfg.score),
+        dedup: None,
+        dedup_distinct: Vec::new(),
+        dedup_min_distinct: None,
+        judged_loc: Vec::new(),
+        doc_files: score::doc_file_indices(&files),
+        files,
+        judged_mask: crate::scan::lang::Lang::judged_mask(),
     })
 }
