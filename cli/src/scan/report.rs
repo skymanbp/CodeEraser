@@ -99,9 +99,9 @@ pub fn findings_from(rows: &[Row], levels: &[u8], grades: &[[u64; 3]]) -> Vec<Fi
 /// Threshold evaluation — since ADR-008 P3 a MIRROR of the core's
 /// graded verdict table (CE.Scan.Cost), not an authority: `ce scan`
 /// builds its findings from the wire's levels and proves this
-/// binding equal per run (the whole-report ensure); the auxiliary
-/// surfaces (mcp scan tool, the score family's measurement reuse,
-/// report_schema) keep reading it locally.
+/// binding equal per run (the whole-report ensure) on every judged
+/// surface — CLI, MCP and GUI alike; the score family's measurement
+/// reuse and report_schema keep reading it locally.
 pub fn evaluate(file: &FileMetrics, t: &Thresholds) -> Vec<Finding> {
     let mut out = Vec::new();
     check_file(file, t, &mut out);

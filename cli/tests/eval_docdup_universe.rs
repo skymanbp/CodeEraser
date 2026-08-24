@@ -15,25 +15,8 @@ mod eval_support;
 use eval_support::*;
 use std::collections::BTreeMap;
 
-const METHOD: &str = "document-segment universe of the pinned tree: every in-scope \
-    file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off \
-    the detector's ONE mask (fence, HTML-comment and inline-code text is invisible \
-    by construction), comment blocks merged by column adjacency, Python docstrings \
-    via the host-body convention — with the four-route exemption ledger: license \
-    headers and well-formed inline allows exempt whole segments, skeleton template \
-    rows strip line-level, and the two structurally-zero routes state why in \
-    constants.route_notes. docstring is nonzero only where Python exists \
-    (requests); indented md code blocks are not modeled and ride the \
-    indented_code_lines gap counter. Frozen before any docdup judge exists. \
-    DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout \
-    (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on \
-    the stable plateau and k+1 already loses a true pair.";
-
 const FAMILY: UniverseFamily = UniverseFamily {
     family: "docdup-segments",
-    schema: "ce.eval-docdup-segments/1.0.0",
-    method: METHOD,
-    row: docdup_row,
     constants: docdup_constants,
     summarize: docdup_summarize,
 };

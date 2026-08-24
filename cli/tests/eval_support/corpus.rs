@@ -5,34 +5,6 @@
 //! (tip/base pinning, Corpus struct, SELF_UNIVERSE_TIP) retired with
 //! the one-shot generators that read it (git history, 0c7c936 wave).
 
-/// The active corpus name: None = this repository (the frozen self
-/// slice). CE_SLICE_REPO (see colordiff::git_run) retargets at an
-/// external corpus and then requires CE_SLICE_NAME (doc suffix) —
-/// an unnamed corpus would overwrite the frozen self docs. The
-/// retired CE_SLICE_TIP/BASE knobs are refused out loud: a silent
-/// no-op would let a hand-run believe its window was pinned.
-pub fn corpus_name() -> Option<String> {
-    let get = |k: &str| std::env::var(k).ok().filter(|v| !v.trim().is_empty());
-    assert!(
-        get("CE_SLICE_TIP").is_none() && get("CE_SLICE_BASE").is_none(),
-        "CE_SLICE_TIP/BASE retired with the window machinery (git history)"
-    );
-    let name = get("CE_SLICE_NAME");
-    if get("CE_SLICE_REPO").is_none() {
-        assert!(
-            name.is_none(),
-            "CE_SLICE_NAME makes no sense without CE_SLICE_REPO"
-        );
-        return None;
-    }
-    assert!(
-        name.is_some(),
-        "CE_SLICE_REPO needs a non-empty CE_SLICE_NAME: an unnamed \
-         corpus would overwrite the frozen self slice"
-    );
-    name
-}
-
 /// Every committed slice doc paired with its `family` sibling. The
 /// sibling MUST exist — a slice without its labels/baseline is an
 /// unfinished freeze, and a gate that skips it would go silently
@@ -99,22 +71,6 @@ pub fn gate_docs(
 /// `prefix` (and ends -v1.json), sorted — the ONE enumeration every
 /// doc-family gate consumes (the dedup ratchet caught this loop's
 /// third verbatim copy; the throat is the fix, not the third copy).
-/// The built ce-core binary path (generators that spawn the product
-/// driver need the PATH; link consumers use core_link).
-pub fn core_bin() -> String {
-    std::env::var("CE_CORE_BIN").expect(
-        "CE_CORE_BIN is unset — build the core and export it:\n  \
-         cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
-    )
-}
-
-/// The live ce-core link every L2-family generator drives.
-pub fn core_link() -> codeeraser::corelink::Link {
-    codeeraser::corelink::Link::open(&core_bin())
-        .expect("ce-core link")
-        .0
-}
-
 pub fn frozen_docs(prefix: &str) -> Vec<String> {
     let mut out = Vec::new();
     for entry in std::fs::read_dir("../contracts/eval").expect("eval dir") {

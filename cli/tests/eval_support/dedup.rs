@@ -1,18 +1,17 @@
 //! T3-universe instrument shared surface (M5-3b, design vol.3 §9.2):
-//! the pre-registered sizeband constants, the per-file row derivation
-//! and the materialized-index leg — ONE binding for the generator
+//! the pre-registered sizeband constants and the per-file row
+//! derivation — ONE binding for the universe gate
 //! (eval_t3_universe.rs) and its self-repo drift gate, so the frozen
 //! doc and the recheck can never diverge on what a row means. Facts
 //! flow through the SAME throats the product writer uses:
 //! `sites::detect_with_units` + `units::with_nth` for symbols (the
 //! store::refresh_graph pair), `unitcache::unit_facts` for units.
 
-use codeeraser::dedup::{refreshed_index, unitcache};
+use codeeraser::dedup::unitcache;
 use codeeraser::fourclass::units;
 use codeeraser::graph::sites;
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::Path;
 
 /// Pre-registered sizeband bounds in NAMED nodes (design §9.2:
 /// S:24-60, M:61-200, L:>200; below 24 is the below_floor ledger —
@@ -103,53 +102,4 @@ pub fn t3_summarize(files: &[Value]) -> Value {
     }
     json!({"files": files.len(), "total_symbols": symbols, "symbols_by": symbols_by,
            "total_units": units, "units_by": units_by, "bands_by": bands_by})
-}
-
-/// Indexed ⊆ walked (an indexed phantom is a scope leak), every
-/// walked-but-unindexed path is provably product-invisible (hidden,
-/// or excluded by the product's own scope test — the instrument scope
-/// is deliberately wider: the frozen universe keeps .github/*.md
-/// while the product walk hides dot paths), and every indexed file's
-/// cached unit count equals its frozen row.
-fn check_indexed_subset(
-    corpus: &str,
-    root: &Path,
-    walked: &[super::WalkedFile],
-    doc: &Value,
-    idx: &codeeraser::dedup::index::Index,
-) {
-    let (indexed, _, _) = codeeraser::graph::load::graph_rows(idx).expect("graph rows");
-    let walked_set: BTreeSet<&str> = walked.iter().map(|(p, _, _)| p.as_str()).collect();
-    for path in &indexed {
-        assert!(
-            walked_set.contains(path.as_str()),
-            "{corpus}: indexed phantom {path}"
-        );
-    }
-    let indexed_set: BTreeSet<&str> = indexed.iter().map(String::as_str).collect();
-    for (path, _, _) in walked {
-        let visible = indexed_set.contains(path.as_str())
-            || path.starts_with('.')
-            || path.contains("/.")
-            || !codeeraser::scan::walk::in_scope(root, &root.join(path), &[]);
-        assert!(
-            visible,
-            "{corpus}: {path} silently missing from the product index"
-        );
-    }
-    let mut per_file: BTreeMap<String, u64> = BTreeMap::new();
-    for u in unitcache::unit_rows(idx).expect("unit rows") {
-        *per_file.entry(u.path).or_insert(0) += 1;
-    }
-    for row in doc["files"].as_array().expect("files") {
-        let path = row["path"].as_str().expect("path");
-        if !indexed_set.contains(path) {
-            continue;
-        }
-        assert_eq!(
-            per_file.get(path).copied().unwrap_or(0),
-            row["units"].as_u64().expect("units"),
-            "{corpus}: {path}: cached units != frozen units"
-        );
-    }
 }

@@ -1,19 +1,12 @@
-//! The frozen-universe instrument skeleton — ONE binding for the
-//! slice (eval_graph.rs) and t3 (eval_t3_universe.rs) families: the
-//! pinned-tree walker, the nine-key doc envelope, the gate opening
-//! and the working-tree drift walk. Extracted when the repo's own
-//! ratchet caught the second family re-instantiating the first's
-//! skeleton token for token (the twelfth bite) — each family keeps
-//! only its row/summary semantics.
+//! The frozen-universe gate skeleton — ONE binding for the slice
+//! (eval_graph.rs) and t3 (eval_t3_universe.rs) families: the doc
+//! stem, the gate opening, the nine-key envelope checks and the
+//! working-tree drift walk. The generator half (tree walker, doc
+//! assembly) retired with the one-shot instruments (git history;
+//! resurrection takes cli/tests/eval_support at the same commit).
 
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
-
-use super::classify_path;
-
-/// One walked file: repo-relative path, lang code, and the text the
-/// detectors see (utf8-lossy of the git blob).
-pub type WalkedFile = (String, &'static str, String);
 
 /// The doc stem of one corpus in a family: "graph-slice-zod" /
 /// "graph-slice" (self). Shared by generators and cross-family
@@ -23,104 +16,6 @@ pub fn doc_stem(family: &str, name: &Option<String>) -> String {
         Some(n) => format!("{family}-{n}"),
         None => family.into(),
     }
-}
-
-/// The instrument walk of one pinned tree in the CE_SLICE_REPO-
-/// selected corpus — the single-corpus generators' entry.
-pub fn walk_tree(tip: &str) -> (Vec<WalkedFile>, BTreeMap<&'static str, u64>) {
-    let repo = std::env::var("CE_SLICE_REPO").ok();
-    walk_tree_in(repo.as_deref(), tip)
-}
-
-/// The walk with an explicit repository — the multi-corpus pool walk
-/// reads several pinned corpora inside one process and cannot ride
-/// the env var (the graph-sample precedent). ONE walker for every
-/// universe family (a second walk could freeze two different trees
-/// under one tip).
-pub fn walk_tree_in(
-    repo: Option<&str>,
-    tip: &str,
-) -> (Vec<WalkedFile>, BTreeMap<&'static str, u64>) {
-    let mut files = Vec::new();
-    let mut excluded: BTreeMap<&'static str, u64> = BTreeMap::new();
-    // -z: NUL-terminated, unquoted — non-ASCII paths must not arrive
-    // shell-escaped (core.quotePath would corrupt them). --full-tree:
-    // the tests run with cwd cli/, and without it ls-tree emits
-    // cwd-relative paths while `show rev:path` resolves from the repo
-    // root (the M5-1c-ii lesson, recurred on the slice's first run).
-    let listing = super::git_in(
-        repo,
-        &["ls-tree", "-r", "--full-tree", "--name-only", "-z", tip],
-    );
-    for path in listing.split('\0').filter(|p| !p.is_empty()) {
-        match classify_path(path) {
-            Ok(code) => {
-                let text = super::git_in(repo, &["show", &format!("{tip}:{path}")]);
-                files.push((path.to_string(), code, text));
-            }
-            Err(category) => *excluded.entry(category).or_insert(0) += 1,
-        }
-    }
-    files.sort_by(|a, b| a.0.cmp(&b.0));
-    (files, excluded)
-}
-
-/// The parts one instrument derives its own way; the envelope around
-/// them is shared.
-pub struct UniverseParts {
-    pub constants: Value,
-    pub summary: Value,
-    pub excluded: BTreeMap<&'static str, u64>,
-    pub files: Vec<Value>,
-}
-
-/// Rows + envelope parts from one walk. The per-family inputs are the
-/// row builder, the frozen constants and the scorer; the walk→rows→
-/// summary assembly is shared shape (the ratchet caught it aligned
-/// across both generators).
-pub fn universe_parts(
-    walked: &[WalkedFile],
-    excluded: BTreeMap<&'static str, u64>,
-    row: impl Fn(&str, &str, &str) -> Value,
-    constants: Value,
-    summarize: fn(&[Value]) -> Value,
-) -> UniverseParts {
-    let files: Vec<Value> = walked.iter().map(|(p, c, t)| row(p, c, t)).collect();
-    UniverseParts {
-        constants,
-        summary: summarize(&files),
-        excluded,
-        files,
-    }
-}
-
-/// Assemble one frozen-universe doc — nine keys, one binding (the doc
-/// shape is a cross-family contract: the t3 gate anchors path→sha256
-/// straight into its slice sibling).
-pub fn universe_doc(
-    schema: &str,
-    method: &str,
-    name: &Option<String>,
-    tip: &str,
-    p: UniverseParts,
-) -> Value {
-    json!({
-        "schema": schema,
-        "corpus": {"name": name, "tip": tip},
-        "scope": {"extensions": super::SCOPE_EXTS, "excludes": super::SCOPE_EXCLUDES},
-        "constants": p.constants,
-        "generated_from": super::generated_from(),
-        "method": method,
-        "summary": p.summary,
-        "excluded": p.excluded,
-        "files": p.files,
-    })
-}
-
-/// Write a frozen-universe doc to its family-derived path.
-pub fn write_universe(family: &str, name: &Option<String>, doc: &Value) {
-    let path = super::eval_doc(&doc_stem(family, name));
-    super::write_doc(&path, doc, &format!("{path} written"));
 }
 
 /// The shared opening of every universe gate: iterate the frozen docs

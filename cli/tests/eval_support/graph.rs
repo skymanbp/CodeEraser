@@ -1,14 +1,12 @@
-//! Graph-instrument shared surface: the frozen scope classifier,
-//! corpus selection and corpus set — ONE binding for the slice
-//! instrument (eval_graph.rs) and the precision instrument
-//! (eval_graph_precision.rs), so the two can never drift apart on
-//! what "in scope" means (the throat-drift shape this support tree
-//! exists to prevent).
+//! Graph-instrument shared surface: the frozen corpus set, scope
+//! constants and the audit/precision gate primitives — ONE binding
+//! for the universe gate (eval_graph.rs) and the precision
+//! instrument (eval_graph_precision.rs), so the two can never
+//! drift apart. The scope classifier and corpus selection retired
+//! with the one-shot generators (git history).
 
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
-
-use super::git_run;
 
 /// Two string fields of every row under `key`, as a map — the shape
 /// every graph doc keys its rows by (rank→truth, path→sha256).
@@ -66,8 +64,8 @@ pub fn bijective_row<'a>(
 }
 
 /// Frozen graph-universe scope: canonical extensions only (variant
-/// suffixes stay out on every corpus — the COMMIT_SCOPE argument:
-/// one frozen scope keeps corpora comparable), minus machine-local
+/// suffixes stay out on every corpus: one frozen scope keeps
+/// corpora comparable), minus machine-local
 /// memory/. The crosscheck fixture islands are deliberately IN scope
 /// even though ce.toml excludes them from the product walk: their
 /// imports have no in-corpus target, so they are the designed-in
@@ -85,37 +83,6 @@ pub const FROZEN_CORPORA: [Option<&str>; 5] = [
     Some("ripgrep"),
     Some("zod"),
 ];
-
-/// The self universe: pinned at the commit holding the CURRENT
-/// detector, so regeneration is reproducible regardless of later
-/// history. A detector change bumps this pin and re-freezes the
-/// slice (design RG3 — first fired by the M5-2b-iii hardening batch,
-/// which replaced the 2b-i pin eb5fe24).
-pub const GRAPH_SELF_TIP: &str = "60f73e3bea7681721a2f572e64788948a17830f6";
-
-/// Scope test for one tree path: Ok(lang code) or the itemized
-/// exclusion category the slice doc reports.
-pub fn classify_path(path: &str) -> Result<&'static str, &'static str> {
-    if SCOPE_EXCLUDES.iter().any(|p| path.starts_with(p)) {
-        return Err("excluded_prefix");
-    }
-    let name = path.rsplit('/').next().unwrap_or(path);
-    let Some((stem, ext)) = name.rsplit_once('.') else {
-        return Err("other_extension");
-    };
-    if stem.is_empty() {
-        return Err("other_extension"); // dotfiles (.gitignore, …)
-    }
-    match ext {
-        "go" => Ok("go"),
-        "md" => Ok("md"),
-        "py" => Ok("py"),
-        "rs" => Ok("rs"),
-        "ts" => Ok("ts"),
-        "tsx" | "mts" | "cts" | "markdown" => Err("variant_extension"),
-        _ => Err("other_extension"),
-    }
-}
 
 /// Non-path truth verdicts (design §5 vocabulary). Everything else
 /// must be a repo-relative "path" or "path#unit".
@@ -195,22 +162,4 @@ pub fn each_audited_row<'a>(
         let (rank, s) = bijective_row(corpus, row, &sampled, &mut seen);
         f(rank, row, s);
     }
-}
-
-/// (corpus name, pinned tree OID). Self unless CE_SLICE_REPO points
-/// elsewhere; external corpora must name themselves and pin their
-/// tip (rev-parsed to a full OID — a movable rev would make the doc
-/// unreproducible).
-pub fn graph_corpus() -> (Option<String>, String) {
-    let get = |k: &str| std::env::var(k).ok().filter(|v| !v.trim().is_empty());
-    if std::env::var("CE_SLICE_REPO").is_err() {
-        return (None, GRAPH_SELF_TIP.into());
-    }
-    let name = get("CE_GRAPH_NAME").expect("CE_SLICE_REPO needs CE_GRAPH_NAME");
-    let tip = get("CE_GRAPH_TIP").expect("CE_SLICE_REPO needs CE_GRAPH_TIP (pinned universe)");
-    let full = git_run(
-        &["rev-parse", "--verify", &format!("{tip}^{{commit}}")],
-        false,
-    );
-    (Some(name), full.trim().to_string())
 }

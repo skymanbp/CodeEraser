@@ -17,21 +17,8 @@ mod eval_support;
 use eval_support::*;
 use std::collections::BTreeMap;
 
-const METHOD: &str = "unit universe of the pinned tree: every in-scope file \
-    inventoried with its symbols identity count (the detect_with_units + \
-    with_nth throat the graph store writes) and its code-unit count by \
-    named-node sizeband (the unitcache::unit_facts throat the unitsig \
-    cache writes; markdown carries zero units by design — text \
-    duplication is docdup's domain). below_floor units are structurally \
-    invisible to the T3 candidate pass, so candidate recall is an upper \
-    bound. Frozen before any candidate generator or TED judge exists; \
-    sizeband constants pre-registered before any measurement.";
-
 const FAMILY: UniverseFamily = UniverseFamily {
     family: "t3-universe",
-    schema: "ce.eval-t3-universe/1.0.0",
-    method: METHOD,
-    row: t3_row,
     constants: t3_constants,
     summarize: t3_summarize,
 };

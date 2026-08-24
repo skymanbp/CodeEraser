@@ -5,26 +5,9 @@
 //! carry unit ownership in MovedLine but never appear in blocks; the
 //! gate caught mark_ready, whose whole body arrived via extension,
 //! unnamed under blocks-only naming).
-#![allow(dead_code)]
 
 use crate::eval_commit_review as review;
-use crate::eval_l2_parts::delta_moved;
-use codeeraser::fourclass::batch::BatchClassification;
 use serde_json::Value;
-
-/// Unit keys attributed to the L2-over-L1 delta lines themselves.
-pub fn moved_units(l1: &BatchClassification, l2: &BatchClassification) -> Vec<String> {
-    let mut out: Vec<String> = Vec::new();
-    for (_, m) in delta_moved(l1, l2) {
-        if let Some(u) = &m.unit
-            && !out.contains(u)
-        {
-            out.push(u.clone());
-        }
-    }
-    out.sort();
-    out
-}
 
 /// Every unit key a committed row names, either through a block
 /// relocation end or a delta line's own attribution.

@@ -102,14 +102,6 @@ pub fn trend(root: &Path, core: &str, commits: usize, batch: Option<usize>) -> R
     )?))
 }
 
-/// The erase PLAN document (dry-run by definition); the apply road is
-/// erase::apply_plan and stays outside this read-only layer.
-pub fn erase_plan(root: &Path, core: &str) -> Result<Value> {
-    Ok(crate::erase::render::report_json(&crate::erase::plan(
-        root, None, core,
-    )?))
-}
-
 /// The graph canvas document (batch 9 P18): ONE deadcode-family
 /// judgment answers verdicts AND position — the assembly and the
 /// file-tier projection live in graph::canvas. Read-only like every

@@ -1,11 +1,9 @@
-//! t3-candidates shared surface (M5-3c): the frozen constants, the
-//! corpus→candidate-pass runner and the pool digest — ONE binding for
-//! the candidate instrument (eval_t3_candidates.rs) and the sample's
-//! integrity gate (t3_sample_verifies in eval_t3_precision.rs since
-//! the v0.5.0 consolidation), so the frozen pair universe and the
-//! sample drawn from it can never disagree about what a pair is.
+//! t3-candidates shared surface (M5-3c): the frozen constants both
+//! the candidate instrument (eval_t3_candidates.rs) and the
+//! sample's integrity gate (t3_sample_verifies in
+//! eval_t3_precision.rs) read. The corpus resolver (Anchored)
+//! retired with the one-shot generators (git history).
 
-use codeeraser::dedup::candidates::{self, Candidates};
 use serde_json::{Value, json};
 
 /// Frozen constants of the t3-candidates family — the numeric knobs
@@ -39,16 +37,4 @@ pub fn t3c_constants(corpus: &str) -> Value {
         "hot_group_cap": c::HOT_GROUP_CAP,
         "min_reported_pairs": floor,
     })
-}
-
-/// One corpus resolved end to end: frozen candidates doc → pinned
-/// tip → live candidate pass, digest-anchored before a single pair
-/// is consumed. The start line of every 3c/3f consumer (the sample
-/// generator and the audit assembly both walked this verbatim until
-/// the ratchet paired them).
-pub struct Anchored {
-    pub corpus: String,
-    pub tip: String,
-    pub repo: Option<String>,
-    pub candidates: Candidates,
 }

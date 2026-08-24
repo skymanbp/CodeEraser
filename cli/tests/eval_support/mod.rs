@@ -4,14 +4,11 @@
 //! the exact defect class this project exists to stop.
 //!
 //! Each integration-test binary compiles this module independently and
-//! uses a different subset, so the unused remainder is expected —
-//! including the colordiff re-export in binaries that never touch
-//! colored diffs.
+//! uses a different subset, so the unused remainder is expected.
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
 pub mod auditgen;
-pub mod colordiff;
 pub mod corpus;
 pub mod dedup;
 pub mod docseg;
@@ -23,7 +20,6 @@ pub mod t3c;
 pub mod t3f;
 pub mod universe;
 pub use auditgen::*;
-pub use colordiff::*;
 pub use corpus::*;
 pub use dedup::*;
 pub use docseg::*;
@@ -38,7 +34,6 @@ pub use universe::*;
 use codeeraser::scan::lang::Lang;
 use serde_json::Value;
 use std::collections::HashMap;
-use std::path::Path;
 
 /// Manifest lang codes and file extensions share one vocabulary.
 pub fn lang_of(code: &str) -> Lang {
@@ -135,36 +130,4 @@ pub fn anchor_to_labels(s: &Value, labels: &Value, bf_key: &str) -> (u64, u64) {
     assert_eq!(bf, lbf, "below-floor register anchor");
     let gt = s["cross_gt_out"].as_u64().unwrap() + s["cross_gt_in"].as_u64().unwrap();
     (gt, bf)
-}
-
-/// The local eval-payload directory (eval_extract output).
-pub fn out_dir() -> std::path::PathBuf {
-    std::path::PathBuf::from(std::env::var("CE_EVAL_OUT").unwrap_or_else(|_| "../.ce-eval".into()))
-}
-
-/// Write a generated contracts/eval document (pretty + trailing
-/// newline) and announce it.
-pub fn write_doc(path: &str, doc: &Value, done: &str) {
-    std::fs::write(path, serde_json::to_string_pretty(doc).expect("ser") + "\n").expect(path);
-    println!("{done}");
-}
-
-/// The source revision an eval doc was generated from — a committed
-/// replay result is evidence only when bound to the code that
-/// produced it (attack review F1). By convention the doc lands in
-/// the CHILD of this commit (EVAL-SET.md), so `dirty` normally
-/// covers only the doc files themselves.
-pub fn generated_from() -> Value {
-    let git = |args: &[&str]| -> String {
-        let out = std::process::Command::new("git")
-            .args(args)
-            .output()
-            .expect("git");
-        String::from_utf8_lossy(&out.stdout).trim().to_string()
-    };
-    serde_json::json!({
-        "commit": git(&["rev-parse", "HEAD"]),
-        "dirty": !git(&["status", "--porcelain"]).is_empty(),
-        "ce": env!("CARGO_PKG_VERSION"),
-    })
 }

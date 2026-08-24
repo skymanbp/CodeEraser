@@ -6,7 +6,7 @@
 //! map to languages, the threshold itself) stay with the family.
 
 use serde_json::Value;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 /// Cross-corpus aggregation of one precision family.
 #[derive(Default)]

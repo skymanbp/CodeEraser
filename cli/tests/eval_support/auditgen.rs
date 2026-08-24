@@ -6,8 +6,7 @@
 //! walk and its coverage/tamper drivers retired with the one-shot
 //! audit instruments (git history, 0c7c936 wave).
 
-use serde_json::{Value, json};
-use std::collections::BTreeMap;
+use serde_json::Value;
 
 /// Every frozen review table of every audit family, mounted by name
 /// (include_str! makes a missing corpus a compile error — a whole
@@ -106,20 +105,4 @@ pub fn identity_hash(domain: &str, row: &Value, fields: &[&str]) -> String {
         })
         .collect();
     super::content_sha(&format!("{domain}|{}", parts.join("|")))
-}
-
-/// The frozen-sample doc envelope every sample generator writes:
-/// schema, both hash domains, provenance, method, then the family's
-/// own body fields merged on top.
-pub fn sample_doc(schema: &str, domains: (&str, &str), method: &str, body: Value) -> Value {
-    let mut doc = json!({
-        "schema": schema,
-        "domains": {"rank": domains.0, "audit": domains.1},
-        "generated_from": super::generated_from(),
-        "method": method,
-    });
-    for (k, v) in body.as_object().expect("body").clone() {
-        doc[k] = v;
-    }
-    doc
 }

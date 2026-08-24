@@ -4,8 +4,6 @@
 //! gates that run git, and a shallow clone refuses loudly instead of
 //! passing vacuously (CI checks out fetch-depth: 0 for exactly this).
 
-use super::git_in;
-
 pub fn require_full_history() {
     let shallow = git_in(Some(".."), &["rev-parse", "--is-shallow-repository"]);
     assert_eq!(
@@ -120,4 +118,21 @@ pub fn assert_subtree_postdates(anchor: &str, subtree: &str) {
         );
     }
     assert!(any, "{subtree}: empty subtree makes the gate vacuous");
+}
+
+/// Run git in `repo` (None = the enclosing repository), success AND
+/// empty stderr asserted — a git warning on the success path is a
+/// silently degraded result (the retired slice generators' lesson).
+/// Lives here since the 2026-08-24 cleanup: the provenance gates and
+/// graph_provenance's ladder-freshness leg are its last consumers.
+pub fn git_in(repo: Option<&str>, args: &[&str]) -> String {
+    let mut cmd = std::process::Command::new("git");
+    if let Some(repo) = repo {
+        cmd.arg("-C").arg(repo);
+    }
+    let out = cmd.args(args).output().expect("git");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(out.status.success(), "git {args:?}: {stderr}");
+    assert!(stderr.trim().is_empty(), "git {args:?} warned: {stderr}");
+    String::from_utf8_lossy(&out.stdout).into_owned()
 }

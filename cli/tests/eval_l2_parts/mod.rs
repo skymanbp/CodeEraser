@@ -1,62 +1,16 @@
-//! Scoring machinery shared by the L2 bar (eval_l2.rs) and the
-//! ablation shadow (eval_ablation.rs): batch runs, the L2-over-L1
-//! delta, per-file cross GT via the labels machinery (cross.rs),
-//! extras ledger.
-#![allow(dead_code)]
-
-pub mod cross;
-// Re-exported so consumers keep the flat parts:: paths; each test
-// binary compiles this module separately and uses its own subset.
-#[allow(unused_imports)]
-pub use cross::{CrossGt, cross_gt, cross_rows, extras_ledger, gt_pred};
+//! Scoring machinery for the L2 bar (eval_l2.rs): the committed-row
+//! summary, its cross fold and the labels-row predicate (the batch
+//! delta and per-file GT builders retired with the ablation shadow,
+//! git history).
 
 use crate::eval_support::u64s;
-use codeeraser::fourclass::MovedLine;
-use codeeraser::fourclass::batch::BatchClassification;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
-
-pub type Texts = Vec<(String, String, Value)>;
-pub type FileKey = (String, String); // (side, file)
 
 /// Whether a labels row records any cross-file moved lines.
 pub fn has_cross(row: Option<&&Value>) -> bool {
     let n = |l: &&Value, k: &str| l["cross_file"][k].as_u64().unwrap();
     row.map(|l| n(l, "out") + n(l, "in") > 0).unwrap_or(false)
-}
-
-/// The side's text for a (side, file) key within one batch.
-pub fn side_text<'a>(texts: &'a Texts, side: &str, file: &str) -> &'a str {
-    texts
-        .iter()
-        .find_map(|(before, after, gp)| {
-            if side == "out" && gp["before"].as_str() == Some(file) {
-                Some(before.as_str())
-            } else if side == "in" && gp["after"].as_str() == Some(file) {
-                Some(after.as_str())
-            } else {
-                None
-            }
-        })
-        .unwrap_or_else(|| panic!("{side} {file} not in batch"))
-}
-
-/// (pair index, moved line) present in l2 but not in l1 — the
-/// shared substrate of the per-file delta and the unit naming.
-pub fn delta_moved<'a>(
-    l1: &'a BatchClassification,
-    l2: &'a BatchClassification,
-) -> Vec<(usize, &'a MovedLine)> {
-    let mut out = Vec::new();
-    for (i, (a, b)) in l1.pairs.iter().zip(&l2.pairs).enumerate() {
-        let base: Vec<(usize, bool)> = a.moved.iter().map(|m| (m.line, m.removed)).collect();
-        for m in &b.moved {
-            if !base.contains(&(m.line, m.removed)) {
-                out.push((i, m));
-            }
-        }
-    }
-    out
 }
 
 /// Everything re-derivable from the committed rows (CI gate re-runs).
@@ -121,4 +75,9 @@ fn add_cross(c: &Value, add: &mut impl FnMut(&'static str, u64)) {
     if w > 0 {
         add("below_floor_lines", w);
     }
+}
+
+/// A cross row's (gt, pred) counts.
+pub fn gt_pred(c: &Value) -> (u64, u64) {
+    (c["gt"].as_u64().unwrap(), c["pred"].as_u64().unwrap())
 }

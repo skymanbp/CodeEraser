@@ -6,14 +6,7 @@
 
 use codeeraser::docdup::{self, exempt, spec};
 use serde_json::{Value, json};
-use std::collections::{BTreeMap, BTreeSet};
-
-/// Report floor: J >= 80/100, pre-registered (§9.6 jaccardNum/Den)
-/// BEFORE the judge exists — the sample instrument tallies its
-/// population bands with this pair, and when CE.Docdup.Cost lands
-/// (3g judge batch) the wire's knobs echo holds the product to the
-/// same two integers.
-pub const JACCARD_REPORT_FLOOR: (u64, u64) = (80, 100);
+use std::collections::BTreeMap;
 
 /// The frozen pair identity every docdup instrument echoes verbatim
 /// (D5): the segment geometry IS the identity — spans were frozen by
