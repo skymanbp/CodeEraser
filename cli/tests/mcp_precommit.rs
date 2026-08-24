@@ -184,7 +184,7 @@ fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Valu
         ),
         row(
             "structure",
-            structure::judge::report_json(
+            structure::report::report_json(
                 &structure::judge::run(dir, None, &core, (false, None, false)).expect("structure"),
             )
             .to_string(),

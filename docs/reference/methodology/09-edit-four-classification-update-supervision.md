@@ -2,7 +2,7 @@
 
 [index](../methodology.md) · [← 08 Split-ROI seam pricing (four legs)](08-split-roi-seam-pricing-four-legs.md) · [→ 10 Score trajectory — the trend slope verdict](10-score-trajectory-the-trend-slope-verdict.md)
 
-Every edit CodeEraser supervises is reduced to four integer counts per file pair: **matched** (unchanged — never enumerated, it is the diff's complement), **novel** (added, no provenance), **moved** (added or removed with provenance on the other side), **deleted** (removed, no destination). The split is `FourClass { added_novel, added_moved, removed_deleted, removed_moved }` ([mod.rs:29](../../../cli/src/fourclass/mod.rs#L29)) — matched lines are exactly the lines the diff did not report, so the four-class ledger is closed by construction over the changed set.
+Every edit CodeEraser supervises is reduced to four integer counts per file pair: **matched** (unchanged — never enumerated, it is the diff's complement), **novel** (added, no provenance), **moved** (added or removed with provenance on the other side), **deleted** (removed, no destination). The split is `FourClass { added_novel, added_moved, removed_deleted, removed_moved }` ([model.rs:12](../../../cli/src/fourclass/model.rs#L12)) — matched lines are exactly the lines the diff did not report, so the four-class ledger is closed by construction over the changed set.
 
 The design intent is recorded in plan §4.3 ([DEVELOPMENT_PLAN.md:107](../../DEVELOPMENT_PLAN.md#L107)): a difftastic-inspired but self-implemented **integer** cost model, from which a cross-file evidence floor of ≥2 lines is *derived* rather than tuned, plus a decided anchor requirement of one ≥19-alnum evidence line ([DEVELOPMENT_PLAN.md:109-112](../../DEVELOPMENT_PLAN.md#L109)).
 
@@ -12,7 +12,7 @@ Judgment (which lines correspond) is Haskell; alignment, diff, and symbol attrib
 
 ### L1: within-file classification
 
-`classify` hashes each line with `DefaultHasher` ([mod.rs:110-120](../../../cli/src/fourclass/mod.rs#L110)), runs a self-contained Myers line diff, then classifies each changed line by content lookup against the opposite side:
+`classify` hashes each line with `DefaultHasher` ([model.rs:93](../../../cli/src/fourclass/model.rs#L93)), runs a self-contained Myers line diff, then classifies each changed line by content lookup against the opposite side:
 
 ```
 removed line i is MOVED  iff significant(a[i]) && a[i].trim() ∈ added_sig
@@ -20,18 +20,18 @@ added   line j is MOVED  iff significant(b[j]) && b[j].trim() ∈ removed_sig
 otherwise removed → deleted, added → novel
 ```
 
-([mod.rs:80-95](../../../cli/src/fourclass/mod.rs#L80); the opposite-side sets are built over trimmed content at [mod.rs:139-145](../../../cli/src/fourclass/mod.rs#L139)).
+([model.rs:63](../../../cli/src/fourclass/model.rs#L63); the opposite-side sets are built over trimmed content at [model.rs:122](../../../cli/src/fourclass/model.rs#L122)).
 
 Two properties are load-bearing:
 
 - **Whitespace-insensitive matching.** Comparison is on `.trim()`, matching git's `--color-moved-ws=allow-indentation-change` ([mod.rs:5-8](../../../cli/src/fourclass/mod.rs#L5)).
-- **Significance.** `significant(line) = line.chars().any(char::is_alphanumeric)` ([mod.rs:127-129](../../../cli/src/fourclass/mod.rs#L127)). Blank and pure-punctuation lines carry no move identity and can never be classified moved — they land in novel/deleted. This is the ground-truth convention (labels-v1), and the same function is the single source for eval tooling.
+- **Significance.** `significant(line) = line.chars().any(char::is_alphanumeric)` ([model.rs:110](../../../cli/src/fourclass/model.rs#L110)). Blank and pure-punctuation lines carry no move identity and can never be classified moved — they land in novel/deleted. This is the ground-truth convention (labels-v1), and the same function is the single source for eval tooling.
 
 Sides are marked independently, so `added_moved` and `removed_moved` need not balance ([mod.rs:8-10](../../../cli/src/fourclass/mod.rs#L8)).
 
 Each moved line is attributed to the innermost unit containing it — `owner` picks the minimum-span unit ([units.rs:162-167](../../../cli/src/fourclass/units.rs#L162)). Unit keys are `name/arity` for code ([units.rs:39-43](../../../cli/src/fourclass/units.rs#L39)) and heading text for Markdown ([units.rs:114-135](../../../cli/src/fourclass/units.rs#L114)). Non-function named units (Rust `const_item`, `static_item`, `struct_item`, `enum_item`, `trait_item`, `mod_item`; Python `class_definition`; TS/TSX class/interface/enum declarations) are registered only for relocation reporting, not for the M1 function metrics ([kinds.rs:14-36](../../../cli/src/fourclass/kinds.rs#L14)). Rust `impl_item` gets a typed key `impl Foo` / `impl Advisor for Foo` ([kinds.rs:46-51](../../../cli/src/fourclass/kinds.rs#L46), [units.rs:95-110](../../../cli/src/fourclass/units.rs#L95)) so that methods of different impls are not seen as top-level.
 
-A unit is reported **relocated intact** when it exists on both sides and *every* changed line inside either span is a move: `rm + ad > 0 && moved_of(true, key) == rm && moved_of(false, key) == ad` ([mod.rs:182](../../../cli/src/fourclass/mod.rs#L182)).
+A unit is reported **relocated intact** when it exists on both sides and *every* changed line inside either span is a move: `rm + ad > 0 && moved_of(true, key) == rm && moved_of(false, key) == ad` ([model.rs:165](../../../cli/src/fourclass/model.rs#L165)).
 
 **Diff degradation.** The Myers search is bounded by `MAX_D = 3000` ([diff.rs:20](../../../cli/src/fourclass/diff.rs#L20)); beyond it the trimmed window is reported wholesale changed, which over-counts novel/deleted but never invents a move, and sets `degraded` ([diff.rs:38-45](../../../cli/src/fourclass/diff.rs#L38)). The one-side-empty case (pure creation/deletion) bypasses the bound entirely because its minimal script is exact by construction ([diff.rs:36-40](../../../cli/src/fourclass/diff.rs#L36)).
 
@@ -67,7 +67,7 @@ The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens
 
 1. **Block start.** `isStart` — position 0 on either side, or unequal predecessor hashes ([Anchor.hs:119-122](../../../core/app/CE/FourClass/Anchor.hs#L119)). Each maximal block is therefore discovered exactly once; interior positions fail the test. Block length `n` is the common prefix of the two tails ([Anchor.hs:123](../../../core/app/CE/FourClass/Anchor.hs#L123)).
 2. **Distinct-content floor.** `distinctEvidence = |{ hash(line) : line ∈ evidence }| >= destFloor` ([Anchor.hs:111](../../../core/app/CE/FourClass/Anchor.hs#L111), [Anchor.hs:125](../../../core/app/CE/FourClass/Anchor.hs#L125)). Counting *distinct content values*, not lines: one common line repeated twice is a single piece of evidence, and length alone let `[x,x]` matched against `[x,x]` clear the floor ([Anchor.hs:100-103](../../../core/app/CE/FourClass/Anchor.hs#L100)).
-3. **Anchor line.** `anchored = any (\(_,_,w) -> w >= anchorFloor) evidence` with `anchorFloor = 19` ([Anchor.hs:126](../../../core/app/CE/FourClass/Anchor.hs#L126), [Cost.hs:63-64](../../../core/app/CE/FourClass/Cost.hs#L63)). `w` is the line's **alnum width**: alphanumeric characters of the trimmed content, measured by the Rust aligner and shipped as a line fact ([mod.rs:135-137](../../../cli/src/fourclass/mod.rs#L135), [Wire.hs:36-39](../../../core/app/CE/FourClass/Wire.hs#L36)).
+3. **Anchor line.** `anchored = any (\(_,_,w) -> w >= anchorFloor) evidence` with `anchorFloor = 19` ([Anchor.hs:126](../../../core/app/CE/FourClass/Anchor.hs#L126), [Cost.hs:63-64](../../../core/app/CE/FourClass/Cost.hs#L63)). `w` is the line's **alnum width**: alphanumeric characters of the trimmed content, measured by the Rust aligner and shipped as a line fact ([model.rs:118](../../../cli/src/fourclass/model.rs#L118), [Wire.hs:36-39](../../../core/app/CE/FourClass/Wire.hs#L36)).
 
 `anchorFloor` is the one constant that is **decided, not derived**. Its recorded basis ([Cost.hs:56-62](../../../core/app/CE/FourClass/Cost.hs#L56)): in the dual-corpus shadow ablation the invented station's widest anchor measured 16 and the thinnest real anchor 19, so every threshold in 17..19 kills all measured coincidences while keeping every measured real site; 19 is the top of that window. The aggregate form was rejected — `7+16=23` would re-admit the invention. The failing shape it exists to reject: two short distinct lines (`Timeout,` + `TooManyRedirects,`) cleared the old floor on a pure-reformat commit and invented a station ([Anchor.hs:104-107](../../../core/app/CE/FourClass/Anchor.hs#L104)).
 
@@ -128,7 +128,7 @@ L2 must prove incremental gain over L1 or the ladder falls back to L1 ([DEVELOPM
 
 **L1 is the IR producer, not a modified engine.** L2 runs L1 per pair unchanged, ships only the leftovers (significant lines L1 called novel/deleted) as `[line, fnv1a(trim), alnum_width]` grouped into runs, and applies a monotone delta ([batch.rs:1-6](../../../cli/src/fourclass/batch.rs#L1), [batch.rs:128-146](../../../cli/src/fourclass/batch.rs#L128)). Single-pair batches with no link are bitwise L1 ([batch.rs:5-6](../../../cli/src/fourclass/batch.rs#L5)).
 
-The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:68-70](../../../core/app/CE/FourClass/Wire.hs#L68), [delta.rs:60-66](../../../cli/src/fourclass/batch/delta.rs#L60)). L2 can therefore only reclassify plain lines as moved, never the reverse.
+The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:68-70](../../../core/app/CE/FourClass/Wire.hs#L68), [delta.rs:60-66](../../../cli/src/fourclass/batch/delta.rs#L61)). L2 can therefore only reclassify plain lines as moved, never the reverse.
 
 **Every fallback returns the pure-L1 result with a named reason** ([batch.rs:8-10](../../../cli/src/fourclass/batch.rs#L8)):
 
@@ -147,11 +147,11 @@ The delta is monotone in one direction only: `removed_deleted → removed_moved`
 
 The reply is an answer, not an authority ([delta.rs:4-5](../../../cli/src/fourclass/batch/delta.rs#L4)):
 
-- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:17-20](../../../cli/src/fourclass/batch/delta.rs#L17), [batch.rs:56](../../../cli/src/fourclass/batch.rs#L56)).
-- **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:12-16](../../../cli/src/fourclass/batch/delta.rs#L12), [delta.rs:57-59](../../../cli/src/fourclass/batch/delta.rs#L57)).
-- **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:99-101](../../../cli/src/fourclass/batch/delta.rs#L99), [session.rs:113-123](../../../cli/src/fourclass/session.rs#L113)).
+- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:17-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:56](../../../cli/src/fourclass/batch.rs#L56)).
+- **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:12-16](../../../cli/src/fourclass/batch/delta.rs#L13), [delta.rs:57-59](../../../cli/src/fourclass/batch/delta.rs#L58)).
+- **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:99-101](../../../cli/src/fourclass/batch/delta.rs#L100), [session.rs:113-123](../../../cli/src/fourclass/session.rs#L113)).
 - **The core machine-checks two preconditions** at its boundary ([FourClass.hs:31-44](../../../core/app/CE/FourClass.hs#L31)): no duplicate pair index (Anchor's run maps key on `(pair, run)`, so `M.fromList` would silently drop an earlier duplicate's runs), and **within-first** — no leftover added hash of a pair may occur among that same pair's leftover removed hashes. Within-first is L1's within-file consumption rule seen from the judgment side; verifying its consequence turns a cross-language assumption into a checked contract ([FourClass.hs:3-6](../../../core/app/CE/FourClass.hs#L3)).
-- **Blocks are unit-attributed line by line**, not head-line only: one block can span several units, and head-line attribution left 7 of 35 registered units unnamed ([delta.rs:88-93](../../../cli/src/fourclass/batch/delta.rs#L88)).
+- **Blocks are unit-attributed line by line**, not head-line only: one block can span several units, and head-line attribution left 7 of 35 registered units unnamed ([delta.rs:88-93](../../../cli/src/fourclass/batch/delta.rs#L89)).
 
 ### Session scope
 

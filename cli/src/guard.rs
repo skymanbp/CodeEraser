@@ -12,46 +12,11 @@ mod budget;
 use crate::config::Config;
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
-use serde::Deserialize;
+use envelope::Envelope;
 use std::path::Path;
 use std::process::ExitCode;
 
-#[derive(Deserialize)]
-struct Envelope {
-    #[serde(default)]
-    hook_event_name: String,
-    #[serde(default)]
-    tool_name: String,
-    #[serde(default)]
-    cwd: String,
-    /// Claude Code stamps this on every hook event. Carried into the
-    /// observe feed (schema: hookio::OBSERVE_SCHEMA) because the M4
-    /// evaluation set is partitioned BY SESSION — both the D2-2 count
-    /// and the D2-1 purity rule are unanswerable without it.
-    #[serde(default)]
-    session_id: String,
-    #[serde(default)]
-    tool_input: ToolInput,
-}
-
-#[derive(Deserialize, Default)]
-struct ToolInput {
-    #[serde(default)]
-    file_path: String,
-    /// Write payloads carry `content`; Edit payloads carry
-    /// `new_string` (captured contract) — the added text either way.
-    #[serde(default)]
-    content: String,
-    #[serde(default)]
-    new_string: String,
-    /// Edit-only (captured contract): what `new_string` replaces, and
-    /// whether every occurrence is replaced — enough to apply the
-    /// edit in memory for an exact post-write line count.
-    #[serde(default)]
-    old_string: String,
-    #[serde(default)]
-    replace_all: bool,
-}
+mod envelope;
 
 /// Entry point for `ce probe --hook`. Never fails outward. The
 /// (event, cwd, root, anchor) policy is the throat's

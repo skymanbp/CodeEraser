@@ -11,8 +11,8 @@
 
 mod delta;
 
+use super::model::{Classification, classify, significant};
 use super::stacking::dup_units;
-use super::{Classification, classify, significant};
 use crate::corelink::Link;
 use crate::dedup::tokens::fnv1a;
 use crate::scan::lang::Lang;

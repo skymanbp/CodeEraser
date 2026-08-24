@@ -3,7 +3,7 @@
 //! thresholds.file_lines_fail? Exact arithmetic on the applied edit,
 //! daemon-free, scan-scope only.
 
-use super::Envelope;
+use super::envelope::Envelope;
 use crate::config::Config;
 use std::path::Path;
 

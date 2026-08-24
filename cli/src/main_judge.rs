@@ -174,7 +174,7 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
         move |r, db, c| {
             codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))
         },
-        codeeraser::structure::judge::print,
+        codeeraser::structure::report::print,
     )
 }
 

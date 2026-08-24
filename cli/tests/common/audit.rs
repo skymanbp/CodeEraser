@@ -4,7 +4,8 @@
 //! audit_stop.rs and both wanted the same seed-and-assert throat.
 #![allow(dead_code)]
 
-use super::{commit_all, git, rust_fn, seed_git_clone_repo, seed_sources, tmp};
+use super::fixtures::{commit_all, rust_fn, seed_git_clone_repo, seed_sources, tmp};
+use super::gitio::git;
 use std::path::{Path, PathBuf};
 
 /// Audit once, expect a Stop block whose reason names `needle`.

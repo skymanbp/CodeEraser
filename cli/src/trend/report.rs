@@ -4,9 +4,34 @@
 //! i18n::line — English bytes stay identical under the default,
 //! CE_LANG=zh picks whole Chinese lines. JSON is never translated.
 
-use super::{Report, SCHEMA_ID, judge};
+use super::judge;
+use super::judge::Row;
 use crate::i18n::line;
 use serde_json::{Value, json};
+
+/// JSON output schema id; bump on shape change (plan §7.1) — the
+/// report owns its own schema stamp.
+/// 0.2.0 (M7.5b): the report carries the core's trend/1 judgment.
+/// 0.3.0 (2.31.0): the judgment carries trend/2's cliff and
+/// declineRun shape facts beside the robust slope.
+pub const SCHEMA_ID: &str = "ce.trend-report/0.3.0";
+
+#[derive(Debug)]
+pub struct Report {
+    /// Mainline commits found inside the requested window.
+    pub window: usize,
+    /// Measured rows, oldest first (chart order).
+    pub rows: Vec<Row>,
+    /// Window commits still unmeasured after this batch (includes
+    /// this run's failures — they retry next run).
+    pub pending: usize,
+    /// (short sha, reason) for commits that refused to measure this
+    /// run — reported, never silently absent.
+    pub failed: Vec<(String, String)>,
+    /// The core's trend/2 judgment over the window (M7.5b; robust
+    /// since 2.31.0).
+    pub judgment: judge::Judgment,
+}
 
 pub fn report_json(r: &Report) -> Value {
     json!({

@@ -3922,11 +3922,11 @@
   "docs/reference/methodology/07-the-three-signal-join.md:52": {
     "target": "../../../cli/src/churn/mod.rs",
     "line": 218,
-    "text": ""
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:53": {
-    "target": "../../../cli/src/churn/mod.rs",
-    "line": 54,
+    "target": "../../../cli/src/churn/report.rs",
+    "line": 14,
     "text": "pub(crate) const COCHANGE_FILE_CAP: usize = 20;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:54": {
@@ -4287,7 +4287,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:3": {
     "target": "../../../cli/src/structure/judge.rs",
     "line": 145,
-    "text": ""
+    "text": "tree,"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:30": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
@@ -4436,12 +4436,12 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:57": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 156,
+    "line": 160,
     "text": ".flatten()"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:58": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 171,
+    "line": 175,
     "text": "let file = |id: i64| -> Result<usize> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:59": {
@@ -4520,8 +4520,8 @@
     "text": "-- (cost is never 0: phi >= 1 by the knob rule) — else an exemption"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:1": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 29,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 12,
     "text": "#[derive(Clone, Debug, Default, PartialEq, Eq)]"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:10": {
@@ -4556,7 +4556,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:105": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
-    "line": 17,
+    "line": 18,
     "text": "/// per-side set makes both violations the same named error. The copy"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:106": {
@@ -4566,17 +4566,17 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:107": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
-    "line": 12,
+    "line": 13,
     "text": "/// Apply the delta ONTO A COPY. A returned line MUST be one of the"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:108": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
-    "line": 57,
+    "line": 58,
     "text": "if !unconsumed.remove(&l) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:109": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
-    "line": 99,
+    "line": 100,
     "text": "// .get, like merge(): a wire index as a slice subscript panics"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:11": {
@@ -4601,7 +4601,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:113": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
-    "line": 88,
+    "line": 89,
     "text": "/// Unit-attribute each block LINE BY LINE — from/to lines correspond"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:114": {
@@ -4655,8 +4655,8 @@
     "text": "fn typed_key("
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:17": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 182,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 165,
     "text": "if rm + ad > 0 && moved_of(true, &bu.key) == rm && moved_of(false, &au.key) == ad {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:18": {
@@ -4790,8 +4790,8 @@
     "text": "anchorFloor :: Int"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:41": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 135,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 118,
     "text": "pub fn alnum_width(line: &str) -> usize {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:42": {
@@ -4835,8 +4835,8 @@
     "text": "if !significant(t) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:5": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 110,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 93,
     "text": "fn hash_lines(lines: &[&str]) -> Vec<u64> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:50": {
@@ -4890,8 +4890,8 @@
     "text": "phase2 :: [Pair] -> [Block] -> S.Set Mark"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:6": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 80,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 63,
     "text": "for &i in &d.removed {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:60": {
@@ -4945,8 +4945,8 @@
     "text": "verdicts = suspicions [(p, sigLeft pAdd inMarks p, sigLeft pRem outMarks p) | p <- ps]"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:7": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 139,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 122,
     "text": "fn sig_contents<'s>(lines: &[&'s str], changed: &[usize]) -> HashSet<&'s str> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:70": {
@@ -5055,8 +5055,8 @@
     "text": "pub fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:9": {
-    "target": "../../../cli/src/fourclass/mod.rs",
-    "line": 127,
+    "target": "../../../cli/src/fourclass/model.rs",
+    "line": 110,
     "text": "pub fn significant(line: &str) -> bool {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:90": {
@@ -5071,7 +5071,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:92": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
-    "line": 60,
+    "line": 61,
     "text": "if removed {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:93": {
@@ -5166,7 +5166,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:2": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 132,
+    "line": 106,
     "text": "fn mainline(root: &Path, n: usize) -> Result<Vec<(String, i64)>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:20": {
@@ -5216,17 +5216,17 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:29": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 68,
+    "line": 79,
     "text": "\"trend {name} points at row {idx} of {} — index drift\","
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:3": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 154,
+    "line": 128,
     "text": "fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:30": {
     "target": "../../../cli/src/trend/report.rs",
-    "line": 90,
+    "line": 115,
     "text": "fn print_shape_facts(r: &Report) {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:31": {
@@ -5256,7 +5256,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:36": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 116,
+    "line": 127,
     "text": "pub fn verdict_str(j: &Judgment) -> &'static str {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:37": {
@@ -5276,12 +5276,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:4": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 103,
+    "line": 77,
     "text": "let soft = crate::structure::judge::committed_soft(root);"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:40": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 39,
+    "line": 50,
     "text": "if let Some(mp) = cfg.trend.min_points {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:41": {
@@ -5291,37 +5291,37 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:42": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 86,
+    "line": 97,
     "text": "fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:43": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 45,
+    "line": 56,
     "text": "let mut link = crate::lockstep::open_family(core, \"trend/2\")?;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:44": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 32,
+    "target": "../../../cli/src/trend/report.rs",
+    "line": 17,
     "text": "pub const SCHEMA_ID: &str = \"ce.trend-report/0.3.0\";"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:45": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 39,
+    "line": 32,
     "text": "pub const DEFAULT_COMMITS: usize = 30;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:5": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 168,
+    "line": 142,
     "text": "if let Some(reason) = &r.degraded {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 176,
+    "line": 150,
     "text": "// NAMED refusal when the echo lacks it, matching the"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 47,
+    "line": 58,
     "text": "\"rows\": rows.iter().map(|r| json!([r.ts, r.score, r.scale])).collect::<Vec<_>>(),"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:8": {
@@ -5336,7 +5336,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:1": {
     "target": "../../../cli/src/guard.rs",
-    "line": 61,
+    "line": 26,
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:10": {
@@ -5346,12 +5346,12 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:11": {
     "target": "../../../cli/src/guard.rs",
-    "line": 197,
+    "line": 162,
     "text": "fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serde_json::Value>> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:12": {
     "target": "../../../cli/src/guard.rs",
-    "line": 279,
+    "line": 244,
     "text": "\"matches\": ev.matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:13": {
@@ -5361,22 +5361,22 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:14": {
     "target": "../../../cli/src/guard.rs",
-    "line": 241,
+    "line": 206,
     "text": "let decision = match mode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:15": {
     "target": "../../../cli/src/guard.rs",
     "line": 246,
-    "text": "};"
+    "text": "}),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:16": {
     "target": "../../../cli/src/guard.rs",
     "line": 111,
-    "text": ");"
+    "text": "mode: &str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:17": {
     "target": "../../../cli/src/guard.rs",
-    "line": 271,
+    "line": 236,
     "text": "crate::hookio::observe_append("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:18": {
@@ -5391,13 +5391,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:2": {
     "target": "../../../cli/src/guard.rs",
-    "line": 78,
+    "line": 43,
     "text": "let loaded = Config::load(root);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:20": {
     "target": "../../../cli/src/guard.rs",
     "line": 90,
-    "text": "} else {"
+    "text": "reasons.push(why);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:21": {
     "target": "../../../cli/src/health.rs",
@@ -5412,11 +5412,11 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:23": {
     "target": "../../../cli/src/guard.rs",
     "line": 156,
-    "text": "};"
+    "text": "}"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:24": {
     "target": "../../../cli/src/guard.rs",
-    "line": 177,
+    "line": 142,
     "text": "reasons.push(format!("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:25": {
@@ -5455,8 +5455,8 @@
     "text": "//! Every probed event is appended to <root>/.ce/observe.ndjson in ALL"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:31": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 27,
+    "target": "../../../cli/src/guard/envelope.rs",
+    "line": 16,
     "text": "/// Claude Code stamps this on every hook event. Carried into the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:32": {
@@ -5606,7 +5606,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:59": {
     "target": "../../../cli/src/guard.rs",
-    "line": 100,
+    "line": 65,
     "text": "|rule| !enforced && crate::hookio::already_warned(root, &env.session_id, rule, file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:6": {
@@ -5627,7 +5627,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
     "target": "../../../cli/src/guard.rs",
     "line": 103,
-    "text": "root,"
+    "text": "/// the rules that fired: the two promoted classes carry the class"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5651,7 +5651,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
     "target": "../../../cli/src/guard.rs",
-    "line": 190,
+    "line": 155,
     "text": "crate::hookio::clip(reason, crate::hookio::WARN_BUDGET_TOKENS)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:68": {

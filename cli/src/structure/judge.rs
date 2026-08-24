@@ -5,11 +5,15 @@
 //! the names this side kept (§5.9.2). Report-only until a score
 //! floor lands (S3+): the CLI gates nothing here.
 
-use super::{rows, tree, wire};
+// single-path module imports on purpose: the reference ladder
+// resolves them to the sibling FILES, so the graph sees the true
+// dependencies instead of a parent-hub cycle (headroom sprint,
+// 2026-08-24 — this module family was the cycle axis's own finding)
+use super::rows;
+use super::tree;
+use super::wire;
 use anyhow::{Context, Result, ensure};
 use std::path::{Path, PathBuf};
-
-pub use super::report::{print, report_json};
 
 /// JSON output schema id; bump on shape change (plan §7.1). This is
 /// the ONE schema the CLI report and the S4 GUI tree share.

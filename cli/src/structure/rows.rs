@@ -5,7 +5,8 @@
 //! declared layout, the S6 rollup. Names resolve to dense ids on
 //! this side and never cross (§5.9.2); judging stays in the core.
 
-use super::{edges, tree};
+use super::edges;
+use super::tree;
 use anyhow::{Context, Result};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;

@@ -6,7 +6,7 @@
 //! The clock basis and why it changed are recorded in the churn
 //! module header, beside the nth caveat — one statement, not two.
 
-use super::git;
+use super::gitio::git;
 use anyhow::{Context, Result};
 use std::path::Path;
 

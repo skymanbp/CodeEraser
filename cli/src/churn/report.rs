@@ -3,8 +3,15 @@
 //! landed. Totals are METHODS over the ledger, never stored fields —
 //! the conservation-by-construction half of the ledger design.
 
-use super::COCHANGE_FILE_CAP;
 use crate::i18n::line;
+
+/// Commits with more changed files than this are skipped for pair
+/// counting (quadratic) and reported, never silently dropped. The
+/// report prints the cap beside the skip count it explains, so this
+/// leaf owns the binding and the measurement (mod.rs) reads the
+/// SAME one — the parent-hub import was a module cycle the graph
+/// axis itself billed (headroom sprint, 2026-08-24).
+pub(crate) const COCHANGE_FILE_CAP: usize = 20;
 
 /// One ledger row: lines the window added inside this unit. `key` ""
 /// (with nth 0) is the file's top level — `owner()` found no

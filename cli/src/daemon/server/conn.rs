@@ -6,7 +6,9 @@
 //! preserving the ADR-003 one-at-a-time discipline the serial accept
 //! loop used to provide.
 
-use super::{Shared, dispatch, idle, touch};
+use super::dispatch;
+use super::idle;
+use super::state::{Shared, touch};
 use crate::daemon::auth;
 use crate::daemon::proto::{DAEMON_PROTO, Request, Response, major};
 use anyhow::Result;

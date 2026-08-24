@@ -3,7 +3,7 @@
 //! from conn.rs (which keeps the front door) when the reply had to be
 //! built strictly BEFORE the socket write — see `build`.
 
-use super::Shared;
+use super::state::Shared;
 use crate::daemon::judge::Judge;
 use crate::daemon::proto::{Request, Response};
 

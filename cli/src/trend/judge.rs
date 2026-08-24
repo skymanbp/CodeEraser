@@ -8,10 +8,21 @@
 //! structure-family stance). Knob rows ride only when ce.toml
 //! declares them (the ceilings/27b9bc2 pattern).
 
-use super::Row;
 use anyhow::Result;
+use serde::Serialize;
 use serde_json::{Value, json};
 use std::path::Path;
+
+/// One measured trajectory point — built by mod.rs, judged over this
+/// wire leg, rendered by the report faces.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct Row {
+    pub commit: String,
+    pub ts: i64,
+    pub score: i64,
+    pub scale: i64,
+    pub axes: Vec<[i64; 2]>,
+}
 
 /// The core's judgment over the window, relayed verbatim: absent
 /// slope/verdict = below minPoints (unjudged, not flat); fail is

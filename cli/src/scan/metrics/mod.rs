@@ -4,10 +4,11 @@ pub mod cognitive;
 pub mod cyclo;
 pub mod naming;
 pub mod size;
+pub mod walk;
 
-use super::spec::LangSpec;
+pub use walk::own_nodes;
+
 use serde::Serialize;
-use tree_sitter::Node;
 
 #[derive(Debug, Serialize)]
 pub struct FnMetrics {
@@ -37,22 +38,4 @@ pub struct FileMetrics {
     pub total_lines: usize,
     pub comment_lines: usize,
     pub functions: Vec<FnMetrics>,
-}
-
-/// Pre-order nodes of a function subtree, excluding nested standalone
-/// function units (they are measured as their own units; the shared
-/// is_unit_node predicate keeps this in lockstep with extraction).
-pub fn own_nodes<'t>(fn_node: Node<'t>, spec: &LangSpec) -> Vec<Node<'t>> {
-    let mut out = Vec::new();
-    let mut stack = vec![fn_node];
-    while let Some(node) = stack.pop() {
-        let nested_standalone =
-            node.id() != fn_node.id() && crate::scan::functions::is_unit_node(node, spec);
-        if nested_standalone {
-            continue;
-        }
-        out.push(node);
-        stack.extend(crate::scan::ast::children(node).into_iter().rev());
-    }
-    out
 }

@@ -21,15 +21,8 @@ pub use report::{print, report_json};
 use crate::score;
 use crate::{churn, dedup};
 use anyhow::{Context, Result};
-use serde::Serialize;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-
-/// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.2.0 (M7.5b): the report carries the core's trend/1 judgment.
-/// 0.3.0 (2.31.0): the judgment carries trend/2's cliff and
-/// declineRun shape facts beside the robust slope.
-pub const SCHEMA_ID: &str = "ce.trend-report/0.3.0";
 
 /// The mainline window every face defaults to. It was a `30` literal
 /// in clap and a `10` literal in the MCP adapter, so one project
@@ -58,31 +51,12 @@ CREATE TABLE trend (
 );
 ";
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-pub struct Row {
-    pub commit: String,
-    pub ts: i64,
-    pub score: i64,
-    pub scale: i64,
-    pub axes: Vec<[i64; 2]>,
-}
-
-#[derive(Debug)]
-pub struct Report {
-    /// Mainline commits found inside the requested window.
-    pub window: usize,
-    /// Measured rows, oldest first (chart order).
-    pub rows: Vec<Row>,
-    /// Window commits still unmeasured after this batch (includes
-    /// this run's failures — they retry next run).
-    pub pending: usize,
-    /// (short sha, reason) for commits that refused to measure this
-    /// run — reported, never silently absent.
-    pub failed: Vec<(String, String)>,
-    /// The core's trend/2 judgment over the window (M7.5b; robust
-    /// since 2.31.0).
-    pub judgment: judge::Judgment,
-}
+// Row lives with the wire leg and Report with the faces since the
+// headroom sprint (children importing them THROUGH this hub made
+// the family a module cycle the graph axis itself billed); the
+// re-exports keep every outside path where it always was.
+pub use judge::Row;
+pub use report::Report;
 
 /// Measure up to `batch` (None = all) uncached mainline commits of
 /// the newest `commits`, persist them, hand the window to the core's

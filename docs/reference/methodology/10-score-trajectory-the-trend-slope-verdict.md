@@ -6,7 +6,7 @@ The eighth judgment family answers one question about a repository's history: is
 
 ### Measurement — what becomes a row
 
-The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:132](../../../cli/src/trend/mod.rs#L132)). Each uncached commit is scored in a detached temp worktree against the committed soft line rather than one re-derived per point ([mod.rs:154](../../../cli/src/trend/mod.rs#L154), the soft pin from [mod.rs:103](../../../cli/src/trend/mod.rs#L103)). Rows are cached in `.ce/index.db` stamped with the measuring toolchain ([mod.rs:57](../../../cli/src/trend/mod.rs#L168)) and reversed to oldest-first for chart order before judgment ([mod.rs:119](../../../cli/src/trend/mod.rs#L176)) — a presentation choice only; the judged view below sorts for itself. Only `[ts, score, scale]` triples cross the wire — no commit hashes, no paths ([judge.rs:47](../../../cli/src/trend/judge.rs#L47)).
+The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:132](../../../cli/src/trend/mod.rs#L106)). Each uncached commit is scored in a detached temp worktree against the committed soft line rather than one re-derived per point ([mod.rs:154](../../../cli/src/trend/mod.rs#L128), the soft pin from [mod.rs:103](../../../cli/src/trend/mod.rs#L77)). Rows are cached in `.ce/index.db` stamped with the measuring toolchain ([mod.rs:57](../../../cli/src/trend/mod.rs#L142)) and reversed to oldest-first for chart order before judgment ([mod.rs:119](../../../cli/src/trend/mod.rs#L150)) — a presentation choice only; the judged view below sorts for itself. Only `[ts, score, scale]` triples cross the wire — no commit hashes, no paths ([judge.rs:47](../../../cli/src/trend/judge.rs#L58)).
 
 ### Boundary contract
 
@@ -52,7 +52,7 @@ Two facts about the sorted walk ride beside the slope, each naming a commit by *
 - `cliff = [i, drop]` — the steepest single-step fall between consecutive points: the request index of the LATER point and the drop in micro units. The first occurrence wins a tie; a monotone rise has no cliff (`null`). A fall between same-second commits counts — the drop is a fact about scores, not about time ([Cost.hs:102](../../../core/app/CE/Trend/Cost.hs#L102)).
 - `declineRun = [i, k]` — the longest run of consecutive strictly-falling steps: the request index of the run's FIRST point and the number of points in the run. The first run wins a length tie; no falling step, no run ([Cost.hs:121](../../../core/app/CE/Trend/Cost.hs#L121)).
 
-Both are facts, not verdicts: no knob arms them, and they cannot fail a gate. On the Rust side the indices are fenced against the rows actually sent — an index past the request is core drift, refused before anything renders a commit name from it ([judge.rs:68](../../../cli/src/trend/judge.rs#L68)) — and the console names the commit behind each one ([report.rs:90](../../../cli/src/trend/report.rs#L90)).
+Both are facts, not verdicts: no knob arms them, and they cannot fail a gate. On the Rust side the indices are fenced against the rows actually sent — an index past the request is core drift, refused before anything renders a commit name from it ([judge.rs:68](../../../cli/src/trend/judge.rs#L79)) — and the console names the commit behind each one ([report.rs:90](../../../cli/src/trend/report.rs#L115)).
 
 ### minPoints — absence, never a fabricated flat
 
@@ -78,7 +78,7 @@ slope >  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro
 ```
 
-([Cost.hs:139](../../../core/app/CE/Trend/Cost.hs#L139)). The band is **inclusive**: at slope `-1000`, floor `999` says degrading but floor `1000` says flat ([TrendProps.hs:112](../../../core/test/TrendProps.hs#L112)). With the default floor `0` the band collapses to the single point zero, so the raw sign is the report. Console words for the three codes plus the unjudged case are rendering only ([judge.rs:116](../../../cli/src/trend/judge.rs#L116)).
+([Cost.hs:139](../../../core/app/CE/Trend/Cost.hs#L139)). The band is **inclusive**: at slope `-1000`, floor `999` says degrading but floor `1000` says flat ([TrendProps.hs:112](../../../core/test/TrendProps.hs#L112)). With the default floor `0` the band collapses to the single point zero, so the raw sign is the report. Console words for the three codes plus the unjudged case are rendering only ([judge.rs:116](../../../cli/src/trend/judge.rs#L127)).
 
 **Fail arming** is a separate decision made at the reply, not in the classifier:
 
@@ -94,8 +94,8 @@ The degraded path fails unconditionally, and echoes the **default** knob table r
 
 The slope and the cliff's drop are judged exactly and only *displayed* rounded: `round` is round-half-even, and the verdict compared the exact values — no client re-derives them ([Trend.hs:135](../../../core/app/CE/Trend.hs#L135)).
 
-On the Rust side, knobs ride the wire only when `ce.toml` declares them — `[trend] min_points` → code `0`, `decline_floor_micro` → code `1`, both `Option` ([judge.rs:39](../../../cli/src/trend/judge.rs#L39), [config.rs:134](../../../cli/src/config.rs#L134)). The effective-knob echo is verified, not trusted: exactly two rows must come back, and every knob the request sent must echo the value it sent, or the report errors out ([judge.rs:86](../../../cli/src/trend/judge.rs#L86)). A missing `trend/2` capability or a non-`trend.result` reply is an error, never a silently unjudged report ([judge.rs:45](../../../cli/src/trend/judge.rs#L45)). Report schema id: `ce.trend-report/0.3.0` ([mod.rs:32](../../../cli/src/trend/mod.rs#L32)).
+On the Rust side, knobs ride the wire only when `ce.toml` declares them — `[trend] min_points` → code `0`, `decline_floor_micro` → code `1`, both `Option` ([judge.rs:39](../../../cli/src/trend/judge.rs#L50), [config.rs:134](../../../cli/src/config.rs#L134)). The effective-knob echo is verified, not trusted: exactly two rows must come back, and every knob the request sent must echo the value it sent, or the report errors out ([judge.rs:86](../../../cli/src/trend/judge.rs#L97)). A missing `trend/2` capability or a non-`trend.result` reply is an error, never a silently unjudged report ([judge.rs:45](../../../cli/src/trend/judge.rs#L56)). Report schema id: `ce.trend-report/0.3.0` ([report.rs:17](../../../cli/src/trend/report.rs#L17)).
 
 ### Not found in source
 
-Since trend/2 the judgment window IS bounded — `tsWindow = 512` — but the prose should not conflate it with the `4096`-row wire cap: rows past the window still cross, count, and refuse offenders; they are simply outside the judged view. The window's *default breadth* is a separate constant again: `DEFAULT_COMMITS = 30`, shared by every face ([mod.rs:39](../../../cli/src/trend/mod.rs#L39)) — before it existed the clap face carried a `30` literal and the MCP adapter a `10`.
+Since trend/2 the judgment window IS bounded — `tsWindow = 512` — but the prose should not conflate it with the `4096`-row wire cap: rows past the window still cross, count, and refuse offenders; they are simply outside the judged view. The window's *default breadth* is a separate constant again: `DEFAULT_COMMITS = 30`, shared by every face ([mod.rs:39](../../../cli/src/trend/mod.rs#L32)) — before it existed the clap face carried a `30` literal and the MCP adapter a `10`.

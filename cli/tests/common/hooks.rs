@@ -7,7 +7,7 @@
 use std::path::Path;
 use std::process::{Command, Stdio};
 
-use super::shutdown_daemon;
+use super::daemon::shutdown_daemon;
 
 /// PreToolUse envelope per the captured contract: Write carries
 /// `content`, Edit carries `new_string`.

@@ -37,21 +37,24 @@
 //! M5 three-signal join. Report shapes live in report.rs (the 300
 //! dogfood gate split).
 
+mod gitio;
 mod report;
 mod survival;
 
+// the leaf owns the face; this re-export keeps every outside
+// caller's path (crate::churn::git) where it always was
+pub(crate) use gitio::git;
 pub use report::{Report, UnitRow, print_console, report_json};
+// the cap prints beside the skip count it explains, so the report
+// leaf owns the binding and the measurement reads the SAME one
+use report::COCHANGE_FILE_CAP;
 
 use crate::fourclass::session;
 use crate::fourclass::units::{self, Unit};
 use crate::scan::lang::Lang;
-use anyhow::{Context, Result};
+use anyhow::Result;
 use std::collections::HashMap;
 use std::path::Path;
-
-/// Commits with more changed files than this are skipped for pair
-/// counting (quadratic) and reported, never silently dropped.
-pub(crate) const COCHANGE_FILE_CAP: usize = 20;
 
 /// (path, unit key, nth) → (appended, rewrote) line counts.
 type Ledger = HashMap<(String, String, i64), (usize, usize)>;
@@ -243,17 +246,4 @@ fn show(root: &Path, sha: &str, path: &str, parent: bool) -> Option<String> {
         format!("{sha}:{path}")
     };
     git(root, &["show", &rev]).ok()
-}
-
-/// This family's face over proc::git_output (pub(crate) since M6
-/// S3c: the structure staleness join reuses it). Its stance: the
-/// error carries git's own stderr — a bare "failed" cost the trend
-/// battery a debugging cycle and would reach users via failed[].
-pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
-    let out = crate::proc::git_output(root, args).context("git")?;
-    if !out.status.success() {
-        let err = String::from_utf8_lossy(&out.stderr);
-        anyhow::bail!("git {args:?} failed: {}", err.trim());
-    }
-    Ok(String::from_utf8_lossy(&out.stdout).into_owned())
 }

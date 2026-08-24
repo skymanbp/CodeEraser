@@ -199,9 +199,9 @@ what lets the Rust side write the machine-generated *why*
 attached**, long-and-splittable gets a cut line
 [size-advisory.md:53-55](../size-advisory.md#L53). Relabelling back to names
 happens only in Rust, with every dense id range-checked before it is used as a subscript
-[judge.rs:156-181](../../../cli/src/structure/judge.rs#L156); candidates surface as
+[judge.rs:156-181](../../../cli/src/structure/judge.rs#L160); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
-end line [judge.rs:171-180](../../../cli/src/structure/judge.rs#L171).
+end line [judge.rs:171-180](../../../cli/src/structure/judge.rs#L175).
 
 ### Input validation
 

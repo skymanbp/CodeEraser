@@ -319,4 +319,8 @@ entry_globs = [
 # validator or probe row LOOK different to dodge the counter is
 # declined by standing stance. Measured after fmt. Ratchet DOWN
 # from here with every cleanup.
-budget = 193
+# 193 -> 191 (headroom sprint, 2026-08-24): the guard-envelope
+# leaf move dissolved three standing chains (audit/guard/health
+# faces) and cost one (the envelope serde pair) -- net down two,
+# and the gate itself said ratchet down. Down needs no defence.
+budget = 191

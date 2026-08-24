@@ -4,7 +4,8 @@
 //! Every wire index and line is checked against what THIS side sent
 //! — the reply is an answer, not an authority.
 
-use super::super::{Classification, MovedLine, units};
+use super::super::model::{Classification, MovedLine};
+use super::super::units;
 use super::{PairInput, Relocation, Side};
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
@@ -128,7 +129,7 @@ fn relocations_of(reply: &Value, inputs: &[PairInput]) -> Result<Vec<Relocation>
 mod tests {
     use super::super::PairInput;
     use super::*;
-    use crate::fourclass::{ChangedLines, FourClass};
+    use crate::fourclass::model::{ChangedLines, FourClass};
     use crate::scan::lang::Lang;
     use serde_json::json;
 

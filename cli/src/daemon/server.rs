@@ -14,6 +14,7 @@ mod conn;
 mod dispatch;
 mod idle;
 mod replies;
+mod state;
 
 use super::auth;
 use super::coldstart;
@@ -22,8 +23,9 @@ use super::proto::socket_name;
 use anyhow::{Context, Result};
 use interprocess::local_socket::Stream;
 use interprocess::local_socket::traits::ListenerExt;
-use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
+use state::{Shared, touch};
+use std::path::Path;
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
@@ -40,21 +42,6 @@ fn idle_max() -> Duration {
 /// daemon's whole life and every later hook was the one dropped, so
 /// idle.rs puts a deadline on the silence.
 const MAX_CONNS: u32 = 64;
-
-static LAST_ACTIVITY_MS: AtomicU64 = AtomicU64::new(0);
-
-pub(super) fn touch(start: Instant) {
-    LAST_ACTIVITY_MS.store(start.elapsed().as_millis() as u64, Ordering::Relaxed);
-}
-
-/// What every connection thread shares. The judge mutex doubles as
-/// the request-serialization lock (dispatch::build).
-pub(super) struct Shared {
-    pub(super) root: PathBuf,
-    pub(super) start: Instant,
-    pub(super) token: String,
-    pub(super) judge: Mutex<Judge>,
-}
 
 /// Serve until idle timeout, shutdown request, or version skew (the
 /// latter two exit from the connection thread — dispatch::exit_daemon).
@@ -126,7 +113,7 @@ fn spawn_idle_watchdog(start: Instant) {
     std::thread::spawn(move || {
         loop {
             std::thread::sleep(max.min(Duration::from_secs(60)));
-            let last = LAST_ACTIVITY_MS.load(Ordering::Relaxed);
+            let last = state::last_activity_ms();
             let now = start.elapsed().as_millis() as u64;
             if now.saturating_sub(last) > max.as_millis() as u64 {
                 eprintln!("ce daemon: idle {max:?} exceeded, exiting");

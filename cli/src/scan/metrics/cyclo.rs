@@ -2,7 +2,7 @@
 //! definition: if / loops / case / short-circuit operators). Alignment
 //! targets: lizard (TS/Py), rust-code-analysis (Rust), gocyclo (Go).
 
-use super::own_nodes;
+use super::walk::own_nodes;
 use crate::scan::ast::{self, operator_text};
 use crate::scan::spec::LangSpec;
 use tree_sitter::Node;

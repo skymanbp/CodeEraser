@@ -74,7 +74,7 @@ pub fn join(root: &Path, core: &str, days: u32) -> Result<Value> {
 }
 
 pub fn structure(root: &Path, core: &str, knobs: (bool, Option<u32>, bool)) -> Result<Value> {
-    Ok(crate::structure::judge::report_json(
+    Ok(crate::structure::report::report_json(
         &crate::structure::judge::run(root, None, core, knobs)?,
     ))
 }

@@ -58,7 +58,7 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
 /// cleanups are this tool's whole point and retire BY NAME, never
 /// silently. A listed id back in the baseline = a stale entry,
 /// refused — the ledger can only ever describe the present.
-const RETIRED: [(u64, &str); 8] = [
+const RETIRED: [(u64, &str); 11] = [
     (
         15941172437324464441,
         "v0.6 P3: budget_breach's scope+size stanza folded into the \
@@ -94,6 +94,18 @@ const RETIRED: [(u64, &str); 8] = [
     (
         11980760446779025474,
         "M7.5 deep-thin: dormant generator/replay halves excised (EVAL-SET amendment)",
+    ),
+    (
+        14078978657527709474,
+        "headroom sprint 2026-08-24: the guard hook-envelope moved to its own leaf, dissolving the audit/guard/health face chains this member rode",
+    ),
+    (
+        14752821476017908148,
+        "headroom sprint 2026-08-24: the guard hook-envelope moved to its own leaf, dissolving the audit/guard/health face chains this member rode",
+    ),
+    (
+        18322300311120329557,
+        "headroom sprint 2026-08-24: the guard hook-envelope moved to its own leaf, dissolving the audit/guard/health face chains this member rode",
     ),
 ];
 
