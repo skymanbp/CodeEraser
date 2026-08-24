@@ -84,7 +84,10 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let mut zone = None;
     let sized = cfg.as_ref().and_then(|c| budget::sized_write(root, c, env));
     if let (Some(c), Some(lines)) = (cfg.as_ref(), sized) {
-        if let Some(why) = budget::budget_breach(c, env, lines) {
+        // the lines THIS file is measured against: its class's, or
+        // the global table (plan v2.13 ① P4)
+        let t = budget::lines_for(root, c, file_path);
+        if let Some(why) = budget::budget_breach(&t, env, lines) {
             budget::budget_log(root, env, &mode, lines);
             if !budget_seen {
                 reasons.push(why);
@@ -92,7 +95,7 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
         } else {
             // sub-H writes: the zone observer, plus the v2.7 ①
             // OPT-IN tier map (default stays feed-only)
-            zone = budget::zone_assess(root, c, env, &mode, lines);
+            zone = budget::zone_assess(root, &budget::ZoneLines::of(&t, c), env, &mode, lines);
         }
     }
     emit_reasons(&mode, reasons, zone, &broken);

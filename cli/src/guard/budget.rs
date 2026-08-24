@@ -4,8 +4,43 @@
 //! daemon-free, scan-scope only.
 
 use super::envelope::Envelope;
-use crate::config::Config;
+use crate::config::{Config, Thresholds};
 use std::path::Path;
+
+/// The lines THIS write is measured against (plan v2.13 ① P4, zero
+/// wire): the file's class's effective table, the global one for
+/// class 0 — the same reading the scan gate and the score take, so
+/// the hook denies at exactly the line the CI wall would fail at.
+/// The classes compile per hook run (one override set per class —
+/// the exclude set's own cost, which in_scope already pays). A class
+/// glob that will not compile falls to the global table: the exclude
+/// list's own stance (in_scope answers "not ours" on the same
+/// failure), and `ce scan`/`ce check` refuse that config out loud.
+pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {
+    let rel = crate::scan::walk::rel_str(root, Path::new(path));
+    match crate::scan::classes::Classes::compile(root, &cfg.rules) {
+        Ok(classes) => classes.thresholds_for(cfg, &rel),
+        Err(_) => cfg.thresholds.clone(),
+    }
+}
+
+/// The graded zone's two lines and its arming, resolved once per
+/// write from the file's own table (P4) and ce.toml's opt-in.
+pub(super) struct ZoneLines {
+    pub cap: usize,
+    pub warn: usize,
+    pub armed: bool,
+}
+
+impl ZoneLines {
+    pub(super) fn of(t: &Thresholds, cfg: &Config) -> Self {
+        ZoneLines {
+            cap: t.file_lines_fail,
+            warn: t.file_lines_warn,
+            armed: cfg.guard.zone_tiers,
+        }
+    }
+}
 
 /// Scope + exact post-write size — ONE measurement feeding both the
 /// hard-budget rule and the v2.6 zone observer (a second copy of
@@ -23,9 +58,10 @@ pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<u
     resulting_lines(env)
 }
 
-/// The write would leave the file past the hard budget.
-pub(super) fn budget_breach(cfg: &Config, env: &Envelope, lines: usize) -> Option<String> {
-    let cap = cfg.thresholds.file_lines_fail;
+/// The write would leave the file past ITS hard budget — the file's
+/// class line, or the global one (lines_for).
+pub(super) fn budget_breach(t: &Thresholds, env: &Envelope, lines: usize) -> Option<String> {
+    let cap = t.file_lines_fail;
     // cap 0 = no hard line exists (the P3 grade-table contract) —
     // without this the hook read 0 as "every write breaches"
     if cap == 0 || lines <= cap {
@@ -92,24 +128,25 @@ pub(super) fn budget_log(root: &Path, env: &Envelope, mode: &str, lines: usize) 
 /// observe-only (§4.2 FPR discipline). A zone warn rides the same
 /// per-session (rule, file) injection budget as the class warns;
 /// ask is enforcement and repeats. S = the committed baseline's
-/// frozen softLine, falling back to thresholds.file_lines_warn — the
-/// same fallback the score's size axis uses; a degenerate zone
-/// (H <= S, or no hard line) logs nothing rather than a made-up
-/// position.
+/// frozen softLine, falling back to the file's warn line (its class's
+/// since P4, else thresholds.file_lines_warn) — the same fallback the
+/// score's size axis uses; H is the file's hard line likewise; a
+/// degenerate zone (H <= S, or no hard line) logs nothing rather
+/// than a made-up position.
 pub(super) fn zone_assess(
     root: &Path,
-    cfg: &Config,
+    z: &ZoneLines,
     env: &Envelope,
     mode: &str,
     lines: usize,
 ) -> Option<(&'static str, String)> {
-    let cap = cfg.thresholds.file_lines_fail;
-    let soft = committed_soft(root).unwrap_or(cfg.thresholds.file_lines_warn);
+    let cap = z.cap;
+    let soft = committed_soft(root).unwrap_or(z.warn);
     if cap == 0 || cap <= soft || lines <= soft {
         return None;
     }
     let permille = (lines - soft) * 1000 / (cap - soft);
-    let armed = cfg.guard.zone_tiers;
+    let armed = z.armed;
     let tier = zone_tier(permille, committed_tiers(root));
     let file = &env.tool_input.file_path;
     // the B4 suppression consults the feed BEFORE this event lands

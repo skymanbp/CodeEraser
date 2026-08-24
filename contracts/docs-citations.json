@@ -5406,12 +5406,12 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:11": {
     "target": "../../../cli/src/guard.rs",
-    "line": 162,
+    "line": 165,
     "text": "fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serde_json::Value>> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:12": {
     "target": "../../../cli/src/guard.rs",
-    "line": 244,
+    "line": 247,
     "text": "\"matches\": ev.matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:13": {
@@ -5421,22 +5421,22 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:14": {
     "target": "../../../cli/src/guard.rs",
-    "line": 206,
+    "line": 209,
     "text": "let decision = match mode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:15": {
     "target": "../../../cli/src/guard.rs",
-    "line": 246,
+    "line": 249,
     "text": "}),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:16": {
     "target": "../../../cli/src/guard.rs",
-    "line": 111,
+    "line": 114,
     "text": "mode: &str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:17": {
     "target": "../../../cli/src/guard.rs",
-    "line": 236,
+    "line": 239,
     "text": "crate::hookio::observe_append("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:18": {
@@ -5456,7 +5456,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:20": {
     "target": "../../../cli/src/guard.rs",
-    "line": 90,
+    "line": 93,
     "text": "reasons.push(why);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:21": {
@@ -5471,12 +5471,12 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:23": {
     "target": "../../../cli/src/guard.rs",
-    "line": 156,
+    "line": 159,
     "text": "}"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:24": {
     "target": "../../../cli/src/guard.rs",
-    "line": 142,
+    "line": 145,
     "text": "reasons.push(format!("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:25": {
@@ -5506,7 +5506,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:3": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 50,
+    "line": 86,
     "text": "if env.tool_name == \"Write\" {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:30": {
@@ -5561,7 +5561,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:4": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 63,
+    "line": 99,
     "text": "let applied = match (t.replace_all, on_disk.matches(&old).count()) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:40": {
@@ -5571,13 +5571,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:41": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 17,
+    "line": 52,
     "text": "pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:42": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 27,
-    "text": "pub(super) fn budget_breach(cfg: &Config, env: &Envelope, lines: usize) -> Option<String> {"
+    "line": 63,
+    "text": "pub(super) fn budget_breach(t: &Thresholds, env: &Envelope, lines: usize) -> Option<String> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:43": {
     "target": "../ce-toml.md",
@@ -5586,88 +5586,88 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:44": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 30,
+    "line": 66,
     "text": "// without this the hook read 0 as \"every write breaches\""
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:45": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 72,
+    "line": 108,
     "text": "/// Budget firings get their own feed line (accounting for the §4.2"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:46": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 72,
+    "text": "of {cap} (plan §4.1). Split the file instead of growing it.\","
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:47": {
     "target": "../../../cli/src/hookio.rs",
     "line": 33,
     "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:47": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 107,
-    "text": "let soft = committed_soft(root).unwrap_or(cfg.thresholds.file_lines_warn);"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:48": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 155,
+    "line": 192,
     "text": "\"warn\""
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:49": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 155,
+    "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:5": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 84,
+    "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:50": {
     "target": "../ce-toml.md",
     "line": 17,
     "text": "| `file_lines_warn` | `300` | Warn once a source file passes this line count |"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:5": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 48,
-    "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:50": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 108,
-    "text": "if cap == 0 || cap <= soft || lines <= soft {"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:51": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 146,
+    "line": 183,
     "text": "/// 2.21.0 (batch-7 slice 5) the cut points are CORE-authored"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:52": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 146,
+    "text": "return None;"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:53": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 24,
     "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:53": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:54": {
     "target": "../ce-toml.md",
     "line": 31,
     "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:54": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 128,
-    "text": "if armed {"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:55": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 128,
+    "line": 165,
     "text": "if armed {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:56": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 128,
+    "text": "/// observe-only (§4.2 FPR discipline). A zone warn rides the same"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
     "target": "../../../cli/src/hookio.rs",
     "line": 23,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 24,
     "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:59": {
     "target": "../../../cli/src/hookio.rs",
     "line": 28,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:59": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 65,
-    "text": "|rule| !enforced && crate::hookio::already_warned(root, &env.session_id, rule, file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:6": {
     "target": "../../../cli/src/config/tier.rs",
@@ -5675,29 +5675,29 @@
     "text": "pub fn tier(&self, route_default: &str) -> String {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:60": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 116,
-    "text": "// in it (the probe rule's ordering — a warn must not read its"
+    "target": "../../../cli/src/guard.rs",
+    "line": 65,
+    "text": "|rule| !enforced && crate::hookio::already_warned(root, &env.session_id, rule, file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:61": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 116,
+    "text": "\"file\": env.tool_input.file_path,"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
     "target": "../../../cli/src/hookio.rs",
     "line": 198,
     "text": "}"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
     "target": "../../../cli/src/guard.rs",
     "line": 103,
-    "text": "/// the rules that fired: the two promoted classes carry the class"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 118,
-    "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
+    "text": "}"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:64": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 190,
-    "text": "f.read_to_string(&mut all)?;"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 118,
+    "text": "\"resulting_lines\": lines,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:65": {
     "target": "../../../cli/src/hookio.rs",
@@ -5710,14 +5710,14 @@
     "text": "/// context entropy source. The plan writes budgets in tokens; the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 155,
-    "text": "crate::hookio::clip(reason, crate::hookio::WARN_BUDGET_TOKENS)"
+    "target": "../../../cli/src/hookio.rs",
+    "line": 147,
+    "text": "/// context entropy source. The plan writes budgets in tokens; the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:68": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 44,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.6.0\";"
+    "target": "../../../cli/src/guard.rs",
+    "line": 155,
+    "text": "/// clip marker points at the observe feed, where the full record"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:69": {
     "target": "../../../cli/src/hookio.rs",
@@ -5728,6 +5728,11 @@
     "target": "../../../cli/src/config/tier.rs",
     "line": 47,
     "text": "///"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:70": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 18,
+    "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:8": {
     "target": "../../../cli/src/config/tier.rs",

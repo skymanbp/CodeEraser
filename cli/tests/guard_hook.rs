@@ -185,6 +185,42 @@ fn budget_respects_the_exclusion_model() {
     }
 }
 
+/// The rulepack's hook half (plan v2.13 ① P4, zero wire): the hard
+/// budget a write is measured against is the FILE'S class line. The
+/// same 800-line write passes inside a class whose hard line sits at
+/// 900 and denies outside it on the global 750; 901 lines deny inside
+/// too, and the reason names the class's own line.
+#[test]
+fn budget_honors_the_files_class_line() {
+    let dir = tmp("guard-budget-class");
+    std::fs::write(
+        dir.join("ce.toml"),
+        "[[rules.class]]\nname = \"gen\"\nglobs = [\"gen/**\"]\n[rules.class.knobs]\nfile_lines_fail = 900\n",
+    )
+    .expect("ce.toml");
+    for rel in ["gen", "src"] {
+        std::fs::create_dir_all(dir.join(rel)).expect("mkdir");
+    }
+    let at = |rel: &str, n: usize| {
+        common::pretooluse_envelope_at(&dir, rel, "Write", &"// filler\n".repeat(n))
+    };
+    let out = run_hook(&dir, &at("gen/big.rs", 800));
+    assert!(
+        out.trim().is_empty(),
+        "800 lines inside the 900-line class pass: {out}"
+    );
+    let reason = common::expect_decision(&dir, &at("src/big.rs", 800), "deny");
+    assert!(
+        reason.contains("of 750"),
+        "the global line outside the class: {reason}"
+    );
+    let reason = common::expect_decision(&dir, &at("gen/huge.rs", 901), "deny");
+    assert!(
+        reason.contains("of 900"),
+        "the class's own line inside it: {reason}"
+    );
+}
+
 /// b.rs Edit envelope with a chosen old_string (new_string fixed at
 /// four lines) — shared by the applied-edit and semantics tests.
 fn edit_envelope(dir: &Path, old: &str) -> String {

@@ -6,18 +6,18 @@
 
 The guard sits on `PreToolUse` for `Write|Edit` ([guard.rs:61](../../../cli/src/guard.rs#L26)) and answers one question per pending write with exact arithmetic, never with a model. Two rule classes fire there: a T1/T2 duplicate-write probe against the fingerprint index, and a hard-budget breach computed locally ([guard.rs:78-82](../../../cli/src/guard.rs#L43)).
 
-Determinism is bought by *replaying the write* rather than estimating it. `resulting_lines` computes the exact post-write line count — `Write` is its own payload (`content.lines().count()`, [budget.rs:50-52](../../../cli/src/guard/budget.rs#L50)); `Edit` is the payload applied to the on-disk file under Edit's own semantics: CRLF-normalized, and a non-`replace_all` edit requires a **unique** match, matching the real tool's rejection of ambiguity ([budget.rs:63-68](../../../cli/src/guard/budget.rs#L63)). Any case where the tool call would fail on its own — missing file, empty or absent `old_string`, ambiguous match — returns `None` and the rule stays silent ([budget.rs:48-68](../../../cli/src/guard/budget.rs#L48)). The gate never judges a write that will not land.
+Determinism is bought by *replaying the write* rather than estimating it. `resulting_lines` computes the exact post-write line count — `Write` is its own payload (`content.lines().count()`, [budget.rs:86-88](../../../cli/src/guard/budget.rs#L86)); `Edit` is the payload applied to the on-disk file under Edit's own semantics: CRLF-normalized, and a non-`replace_all` edit requires a **unique** match, matching the real tool's rejection of ambiguity ([budget.rs:99-104](../../../cli/src/guard/budget.rs#L99)). Any case where the tool call would fail on its own — missing file, empty or absent `old_string`, ambiguous match — returns `None` and the rule stays silent ([budget.rs:84-104](../../../cli/src/guard/budget.rs#L84)). The gate never judges a write that will not land.
 
 The same discipline is applied to the *policy* value, not only the measurement. `Guard::tier` is total by construction: an unrecognized `[guard] mode` resolves to an `observe (ce.toml ERROR: unknown guard mode …)` string rather than being passed through verbatim ([tier.rs:56-65](../../../cli/src/config/tier.rs#L56)), because a pass-through typo previously disarmed every enforcement path while `SessionStart` still printed the mode as armed ([tier.rs:47-55](../../../cli/src/config/tier.rs#L47)). A load failure renders through the same single throat, `tier_of` ([tier.rs:71-79](../../../cli/src/config/tier.rs#L71)), so a broken config can never print byte-identically to a deliberate `observe`.
 
 Two honesty boundaries bound the thesis, and both are written into the plan:
 
 - `PreToolUse` is a **behavior-shaping layer, not a security boundary** — an agent can bypass it with `Bash: echo >>` or `sed -i`; the backstop is the `Stop` audit over `git diff` (write-tool agnostic) plus the CI gate ([DEVELOPMENT_PLAN.md:92-94](../../DEVELOPMENT_PLAN.md#L92)).
-- The hook is **fail-open**: any internal failure allows the edit, and the degraded run lands in the observe feed ([guard.rs:4-8](../../../cli/src/guard.rs#L4)); a probe that cannot reach the daemon returns `None`, which is logged as `degraded` rather than treated as "no duplicates" ([guard.rs:197-215](../../../cli/src/guard.rs#L162), [guard.rs:279](../../../cli/src/guard.rs#L244)).
+- The hook is **fail-open**: any internal failure allows the edit, and the degraded run lands in the observe feed ([guard.rs:4-8](../../../cli/src/guard.rs#L4)); a probe that cannot reach the daemon returns `None`, which is logged as `degraded` rather than treated as "no duplicates" ([guard.rs:197-215](../../../cli/src/guard.rs#L165), [guard.rs:279](../../../cli/src/guard.rs#L247)).
 
 ### The tier ladder
 
-Four tiers, and nothing else is a tier: `TIERS = ["observe", "warn", "ask", "deny"]` ([tier.rs:40](../../../cli/src/config/tier.rs#L40)). They map onto Claude Code's decision JSON at one emission point ([guard.rs:241-256](../../../cli/src/guard.rs#L206)):
+Four tiers, and nothing else is a tier: `TIERS = ["observe", "warn", "ask", "deny"]` ([tier.rs:40](../../../cli/src/config/tier.rs#L40)). They map onto Claude Code's decision JSON at one emission point ([guard.rs:241-256](../../../cli/src/guard.rs#L209)):
 
 | tier | `permissionDecision` | effect |
 |---|---|---|
@@ -26,7 +26,7 @@ Four tiers, and nothing else is a tier: `TIERS = ["observe", "warn", "ask", "den
 | `ask` | `ask` | user is prompted |
 | `deny` | `deny` | write is refused, reason points at the existing `file:line` |
 
-A mistyped mode falls through the same `match` to no output ([guard.rs:246](../../../cli/src/guard.rs#L246)) — it can never enforce — while the degraded string still rides the observe feed's `mode` field ([guard.rs:111](../../../cli/src/guard.rs#L111), [guard.rs:271-284](../../../cli/src/guard.rs#L236)) and the health line.
+A mistyped mode falls through the same `match` to no output ([guard.rs:249](../../../cli/src/guard.rs#L249)) — it can never enforce — while the degraded string still rides the observe feed's `mode` field ([guard.rs:114](../../../cli/src/guard.rs#L114), [guard.rs:271-284](../../../cli/src/guard.rs#L239)) and the health line.
 
 Tier resolution is per rule class, not global: an explicit `[guard] mode` overrides every class; otherwise the §4.2 route default for that class applies ([tier.rs:42-48](../../../cli/src/config/tier.rs#L42)). The route default for the two promoted `PreToolUse` classes is a single constant read by both `guard.rs` and `health.rs`, so the enforced tier and the reported tier cannot drift:
 
@@ -34,9 +34,9 @@ Tier resolution is per rule class, not global: an explicit `[guard] mode` overri
 PROMOTED_DEFAULT = "deny"     // tier.rs:36
 ```
 
-([tier.rs:36](../../../cli/src/config/tier.rs#L36); consumed at [guard.rs:90](../../../cli/src/guard.rs#L90) and [health.rs:62](../../../cli/src/health.rs#L62)). Everything else routes to `observe` — explicitly because it has no FPR record of its own, which is the entry requirement below ([DEVELOPMENT_PLAN.md:101-103](../../DEVELOPMENT_PLAN.md#L101)).
+([tier.rs:36](../../../cli/src/config/tier.rs#L36); consumed at [guard.rs:93](../../../cli/src/guard.rs#L93) and [health.rs:62](../../../cli/src/health.rs#L62)). Everything else routes to `observe` — explicitly because it has no FPR record of its own, which is the entry requirement below ([DEVELOPMENT_PLAN.md:101-103](../../DEVELOPMENT_PLAN.md#L101)).
 
-When several rules fire on one write, the decision line is emitted at the **strongest** tier among them, ranked by index in `TIERS` (unknown values rank 0 = `observe`): class rules carry the class mode, the zone rule carries its own mapped tier, so a zone warn never rides a deny-class escalator ([guard.rs:156-173](../../../cli/src/guard.rs#L156)). A broken `ce.toml` overrides the computed tier down to a visible `warn` that names the parse error ([guard.rs:177-184](../../../cli/src/guard.rs#L142)).
+When several rules fire on one write, the decision line is emitted at the **strongest** tier among them, ranked by index in `TIERS` (unknown values rank 0 = `observe`): class rules carry the class mode, the zone rule carries its own mapped tier, so a zone warn never rides a deny-class escalator ([guard.rs:159-176](../../../cli/src/guard.rs#L159)). A broken `ce.toml` overrides the computed tier down to a visible `warn` that names the parse error ([guard.rs:177-184](../../../cli/src/guard.rs#L145)).
 
 ### The FPR gate that promotes a class
 
@@ -68,14 +68,14 @@ Stated boundary: the replay instrument `cli/tests/fpr_replay.rs` was retired wit
 
 ### The hard-budget rule
 
-Scope is decided **before** any disk read — language arm, then exclude walk — so the hook never pays an unbounded read for a file it is about to declare out of scope ([budget.rs:17-24](../../../cli/src/guard/budget.rs#L17)). The rule then fires iff:
+Scope is decided **before** any disk read — language arm, then exclude walk — so the hook never pays an unbounded read for a file it is about to declare out of scope ([budget.rs:52-59](../../../cli/src/guard/budget.rs#L52)). The rule then fires iff:
 
 ```
 cap = thresholds.file_lines_fail          // default 750
 breach  ⇔  cap != 0 ∧ lines > cap
 ```
 
-([budget.rs:27-33](../../../cli/src/guard/budget.rs#L27); default `file_lines_fail = 750`, [ce-toml.md:18](../ce-toml.md#L18)). The `cap == 0` guard is load-bearing: it encodes "no hard line exists" per the P3 grade-table contract, where a naive comparison read `0` as "every write breaches" ([budget.rs:30-32](../../../cli/src/guard/budget.rs#L30)). Every firing gets its own `budget` feed line in **every** tier, because the step-3 decision at 1.0 needs per-rule records ([budget.rs:72-85](../../../cli/src/guard/budget.rs#L72)) — the feed's `budget` event was added in schema `0.4.0` for exactly that reason ([hookio.rs:33-34](../../../cli/src/hookio.rs#L33)).
+([budget.rs:63-69](../../../cli/src/guard/budget.rs#L63); default `file_lines_fail = 750`, [ce-toml.md:18](../ce-toml.md#L18)). Since the rulepack's hook slice (plan v2.13 ① P4) the line is the **file's own**: `lines_for` compiles the declared `[[rules.class]]` set once per hook run and takes the class's effective table, the global one for class 0 — the same reading the scan gate and the score take, so the hook denies at exactly the line the CI wall would fail at ([budget.rs:66-81](../../../cli/src/guard/budget.rs#L66)); the graded zone reads its H and its warn fallback from the same table. The `cap == 0` guard is load-bearing: it encodes "no hard line exists" per the P3 grade-table contract, where a naive comparison read `0` as "every write breaches" ([budget.rs:108-110](../../../cli/src/guard/budget.rs#L108)). Every firing gets its own `budget` feed line in **every** tier, because the step-3 decision at 1.0 needs per-rule records ([budget.rs:72-85](../../../cli/src/guard/budget.rs#L72)) — the feed's `budget` event was added in schema `0.4.0` for exactly that reason ([hookio.rs:33-34](../../../cli/src/hookio.rs#L33)).
 
 ### `zone_tiers`: the opt-in position-to-tier map
 
@@ -87,7 +87,7 @@ H = thresholds.file_lines_fail                                     // default 75
 permille = (lines - S) * 1000 / (H - S)
 ```
 
-([budget.rs:107-111](../../../cli/src/guard/budget.rs#L107); `S` is read off the committed `ce-baseline.json` via `committed_soft`, [budget.rs:155-160](../../../cli/src/guard/budget.rs#L155); `file_lines_warn = 300`, [ce-toml.md:17](../ce-toml.md#L17)). A degenerate zone — `H == 0` (no hard line), `H <= S`, or `lines <= S` — logs nothing rather than fabricating a position ([budget.rs:108-110](../../../cli/src/guard/budget.rs#L108)).
+([budget.rs:192-196](../../../cli/src/guard/budget.rs#L192); `S` is read off the committed `ce-baseline.json` via `committed_soft`, [budget.rs:155-160](../../../cli/src/guard/budget.rs#L155); `file_lines_warn = 300`, [ce-toml.md:17](../ce-toml.md#L17)). A degenerate zone — `H == 0` (no hard line), `H <= S`, or `lines <= S` — logs nothing rather than fabricating a position ([budget.rs:183-185](../../../cli/src/guard/budget.rs#L183)).
 
 The map is a three-way partition on that per-mille ([budget.rs:146-152](../../../cli/src/guard/budget.rs#L146)):
 
@@ -99,7 +99,7 @@ The map is a three-way partition on that per-mille ([budget.rs:146-152](../../..
 
 At the default `S = 300`, `H = 750` (so `H - S = 450`), integer division puts the boundaries at `lines >= 413` for `warn` and `lines >= 638` for `ask` — derived from the constants above, not stated in the source.
 
-The switch is **off by default** and changes one repo only: `[guard] zone_tiers`, default `false` ([tier.rs:24-28](../../../cli/src/config/tier.rs#L24), [ce-toml.md:31](../ce-toml.md#L31)). Disarmed, the zone is feed-only — a `zone` line is written in every tier and `zone_assess` returns `None`, injecting nothing ([budget.rs:128-134](../../../cli/src/guard/budget.rs#L128)). Armed, the resolved tier is additionally stamped as `zone_tier` on the feed line, so the record says what the rule *did*, not only where the write landed ([budget.rs:128-130](../../../cli/src/guard/budget.rs#L128), [hookio.rs:23-26](../../../cli/src/hookio.rs#L23)).
+The switch is **off by default** and changes one repo only: `[guard] zone_tiers`, default `false` ([tier.rs:24-28](../../../cli/src/config/tier.rs#L24), [ce-toml.md:31](../ce-toml.md#L31)). Disarmed, the zone is feed-only — a `zone` line is written in every tier and `zone_assess` returns `None`, injecting nothing ([budget.rs:165-171](../../../cli/src/guard/budget.rs#L165)). Armed, the resolved tier is additionally stamped as `zone_tier` on the feed line, so the record says what the rule *did*, not only where the write landed ([budget.rs:128-130](../../../cli/src/guard/budget.rs#L128), [hookio.rs:23-26](../../../cli/src/hookio.rs#L23)).
 
 The default stays `observe` for one reason, written at the declaration site: §4.2's FPR discipline gates any default flip on the zone feed's own record ([tier.rs:24-28](../../../cli/src/config/tier.rs#L24)), and the `zone` event exists precisely as "the per-rule record any future zone→tier promotion must argue its FPR case from" ([hookio.rs:28-31](../../../cli/src/hookio.rs#L28)). The rule class has no FPR ledger yet, therefore it does not enforce by default — the same admission test the two promoted classes had to pass.
 
@@ -107,7 +107,7 @@ The default stays `observe` for one reason, written at the declaration site: §4
 
 An anti-bloat tool must not itself become a context entropy source (§4.4 B4). Two mechanisms:
 
-- **Per-(rule, file, session) suppression.** A warn fires once per session per file per rule; the observe feed *is* the accumulator, consulted **before** the current event lands in it so a warn cannot read its own fresh line as "already warned" ([guard.rs:100-106](../../../cli/src/guard.rs#L65), [budget.rs:116-118](../../../cli/src/guard/budget.rs#L116), [hookio.rs:198-214](../../../cli/src/hookio.rs#L198)). Suppression is skipped entirely when `mode ∈ {deny, ask}` — enforcement is not context bloat and repeats every time it holds ([guard.rs:103-105](../../../cli/src/guard.rs#L103)); an armed zone `ask` likewise repeats, only `warn` is budgeted ([budget.rs:118](../../../cli/src/guard/budget.rs#L118)). Counting is conservative in the reporting direction: a clean probe line (`matches == 0`) and an unarmed zone line (`zone_tier` absent or `observe`) never count as "already warned", and any read or parse failure returns "not warned" — fail open toward *reporting*, the opposite bias from enforcement's fail-open ([hookio.rs:190-214](../../../cli/src/hookio.rs#L190)).
-- **Token clip at the single emission throat.** `WARN_BUDGET_TOKENS = 200`, `STOP_BUDGET_TOKENS = 400`, converted to chars by one declared measurement constant `CHARS_PER_TOKEN = 4` ([hookio.rs:141-143](../../../cli/src/hookio.rs#L141)); the clip is char-boundary safe and appends `… (clipped; full report in .ce/observe.ndjson)`, pointing at the full on-disk record ([hookio.rs:147-158](../../../cli/src/hookio.rs#L147), applied at [guard.rs:190-192](../../../cli/src/guard.rs#L155)).
+- **Per-(rule, file, session) suppression.** A warn fires once per session per file per rule; the observe feed *is* the accumulator, consulted **before** the current event lands in it so a warn cannot read its own fresh line as "already warned" ([guard.rs:100-106](../../../cli/src/guard.rs#L65), [budget.rs:116-118](../../../cli/src/guard/budget.rs#L116), [hookio.rs:198-214](../../../cli/src/hookio.rs#L198)). Suppression is skipped entirely when `mode ∈ {deny, ask}` — enforcement is not context bloat and repeats every time it holds ([guard.rs:103-105](../../../cli/src/guard.rs#L103)); an armed zone `ask` likewise repeats, only `warn` is budgeted ([budget.rs:118](../../../cli/src/guard/budget.rs#L118)). Counting is conservative in the reporting direction: a clean probe line (`matches == 0`) and an unarmed zone line (`zone_tier` absent or `observe`) never count as "already warned", and any read or parse failure returns "not warned" — fail open toward *reporting*, the opposite bias from enforcement's fail-open ([hookio.rs:141-165](../../../cli/src/hookio.rs#L141)).
+- **Token clip at the single emission throat.** `WARN_BUDGET_TOKENS = 200`, `STOP_BUDGET_TOKENS = 400`, converted to chars by one declared measurement constant `CHARS_PER_TOKEN = 4` ([hookio.rs:147-149](../../../cli/src/hookio.rs#L147)); the clip is char-boundary safe and appends `… (clipped; full report in .ce/observe.ndjson)`, pointing at the full on-disk record ([hookio.rs:147-158](../../../cli/src/hookio.rs#L147), applied at [guard.rs:190-192](../../../cli/src/guard.rs#L155)).
 
-The feed schema is a versioned contract pinned by a golden fixture, bumped on any shape change: `ce.observe/0.6.0` ([hookio.rs:44](../../../cli/src/hookio.rs#L44)), with the `zone_tier` key added at `0.6.0`, the `zone` event at `0.5.0`, the `budget` event at `0.4.0`, and `session_id` at `0.2.0` ([hookio.rs:18-43](../../../cli/src/hookio.rs#L18)). That versioning is what makes the FPR ledger replayable across releases rather than a claim about a build nobody can reconstruct.
+The feed schema is a versioned contract pinned by a golden fixture, bumped on any shape change: `ce.observe/0.6.0` ([hookio.rs:18](../../../cli/src/hookio.rs#L18)), with the `zone_tier` key added at `0.6.0`, the `zone` event at `0.5.0`, the `budget` event at `0.4.0`, and `session_id` at `0.2.0` ([hookio.rs:18-43](../../../cli/src/hookio.rs#L18)). That versioning is what makes the FPR ledger replayable across releases rather than a claim about a build nobody can reconstruct.
