@@ -4,12 +4,12 @@
 //! family. Hooks are FAIL-OPEN — intake errors surface as None and
 //! the caller exits 0.
 
-// Root anchoring moved to crate::root when the CLI, MCP and GUI
-// needed the same ascent (they were re-rooting per typed path, the
-// defect the hooks had already fixed). One implementation, re-exported
-// here so every hookio::project_root caller keeps its path — the
-// hooks' envelope cwd is a &str, so this face keeps that shape.
-pub fn project_root(cwd: &str) -> std::path::PathBuf {
+// Root anchoring lives in crate::root (one ascent for the CLI, MCP,
+// GUI and the hooks alike); this is the hooks' own door to it — the
+// envelope cwd arrives as a &str, so the door keeps that shape.
+// Private: gated_envelope below is its only caller (no caller outside
+// this file remains, so there is no path to keep open).
+fn project_root(cwd: &str) -> std::path::PathBuf {
     crate::root::project_root(Path::new(cwd))
 }
 

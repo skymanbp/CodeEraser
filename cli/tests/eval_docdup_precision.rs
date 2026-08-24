@@ -10,8 +10,11 @@
 //! mapping, parts::CORRECT_TRUTHS); the D3 gate covers md_para +
 //! comment_block (decision ④), docstring rows publish ungated.
 //!
-//! Generate (per corpus; corpora under .ce-eval/corpora; CE_CORE_BIN):
-//!   cargo test --release --test eval_docdup_precision -- --ignored --nocapture
+//! Regenerate — the `--ignored` generator half retired in 0c7c936
+//! (M7.5a); revive it with its coeval support (EVAL-SET.md「再生成」):
+//!   git checkout 0c7c936^ -- cli/tests/eval_docdup_precision.rs cli/tests/eval_support
+//!   cargo test --release --test eval_docdup_precision -- --ignored --nocapture   # per corpus; corpora under .ce-eval/corpora; CE_CORE_BIN
+//!   git checkout HEAD -- cli/tests/eval_docdup_precision.rs cli/tests/eval_support
 
 mod eval_support;
 #[path = "eval_docdup_precision_parts/mod.rs"]

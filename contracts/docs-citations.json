@@ -5062,7 +5062,7 @@
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:89": {
     "target": "../../../cli/src/fourclass/batch.rs",
     "line": 128,
-    "text": "pub fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {"
+    "text": "fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:9": {
     "target": "../../../cli/src/fourclass/model.rs",

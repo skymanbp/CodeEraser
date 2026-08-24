@@ -206,8 +206,8 @@ impl Index {
         Ok(rows.collect::<rusqlite::Result<_>>()?)
     }
 
-    /// Indexed file count (SessionStart health line). Since v4 this
-    /// includes zero-fingerprint Markdown rows — they ARE indexed.
+    /// Indexed file count; the health line does NOT read it (it goes
+    /// through index::peek without opening) — dedup_index's contract does.
     pub fn file_count(&self) -> Result<i64> {
         Ok(self
             .conn

@@ -8,9 +8,11 @@
 //! sibling: one pinned tip, one tree, two frozen views of it. The
 //! family skeleton is eval_support/family.rs.
 //!
-//! Generate (per corpus; external corpora via CE_SLICE_REPO +
-//! CE_GRAPH_NAME + CE_GRAPH_TIP; release for an admissible PERF line):
-//!   cargo test --release --test eval_t3_universe -- --ignored --nocapture
+//! Regenerate — the `--ignored` generator half retired in 0c7c936
+//! (M7.5a); revive it with its coeval support (EVAL-SET.md「再生成」):
+//!   git checkout 0c7c936^ -- cli/tests/eval_t3_universe.rs cli/tests/eval_support
+//!   cargo test --release --test eval_t3_universe -- --ignored --nocapture   # per corpus: CE_SLICE_REPO + CE_GRAPH_NAME + CE_GRAPH_TIP; release for an admissible PERF line
+//!   git checkout HEAD -- cli/tests/eval_t3_universe.rs cli/tests/eval_support
 
 mod eval_support;
 

@@ -123,9 +123,9 @@ pub type Side = Vec<Run>;
 
 /// Per pair: the significant changed lines L1 left novel/deleted,
 /// grouped into runs, as (1-based line, fnv1a of the trimmed
-/// content). Public so eval and contract tests can assert the exact
-/// request content.
-pub fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {
+/// content). Private since the eval instruments that asserted the
+/// exact request retired (0c7c936): classify_batch is its one reader.
+fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {
     inputs
         .iter()
         .zip(pairs)
@@ -187,11 +187,11 @@ fn side_runs(text: &str, changed: &[usize], moved: &[usize]) -> Side {
     runs
 }
 
-/// Public so the ablation's block-level equivalence gate can replay
-/// the EXACT wire request and compare the shadow's site decomposition
-/// against the core's reply blocks (Codex review 2026-08-11 F1: the
-/// moved-map equivalence alone cannot pin block boundaries).
-pub fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
+/// The wire request over the leftover runs. Was public for the
+/// retired eval_ablation's block-level equivalence replay (v0.5.0,
+/// EVAL-SET.md); classify_batch is its one reader today, so the face
+/// is private — a revival re-opens it together with the instrument.
+fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
     let pairs: Vec<Value> = sent
         .iter()
         .enumerate()

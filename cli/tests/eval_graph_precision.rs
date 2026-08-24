@@ -5,10 +5,10 @@
 //! ancestry in graph_provenance.rs), so the resolver never chooses
 //! its own denominator.
 //!
-//! Generate (per corpus; external corpora via CE_SLICE_REPO +
-//! CE_GRAPH_NAME + CE_GRAPH_TIP; re-blessing a grown wrong/missed
-//! ledger needs CE_ACCEPT_GRAPH=1):
-//!   cargo test --test eval_graph_precision -- --ignored --nocapture
+//! Regenerate — the `--ignored` generator half retired in 0c7c936 (M7.5a); revive it with its coeval support (EVAL-SET.md「再生成」):
+//!   git checkout 0c7c936^ -- cli/tests/eval_graph_precision.rs cli/tests/eval_support
+//!   cargo test --test eval_graph_precision -- --ignored --nocapture   # per corpus: CE_SLICE_REPO + CE_GRAPH_NAME + CE_GRAPH_TIP; CE_ACCEPT_GRAPH=1 re-blesses a grown wrong/missed ledger
+//!   git checkout HEAD -- cli/tests/eval_graph_precision.rs cli/tests/eval_support
 
 // mounted for ladder::Fixture only — the ratchet caught Mat cloning
 // its shape once the sweep memo joined both (C2)

@@ -7,9 +7,11 @@
 //! TED judge exists; the judge inherits this denominator, it never
 //! chooses it (RM2).
 //!
-//! Generate (per corpus; external corpora via CE_SLICE_REPO +
-//! CE_GRAPH_NAME + CE_GRAPH_TIP):
-//!   cargo test --release --test eval_t3_candidates -- --ignored --nocapture
+//! Regenerate — the `--ignored` generator half retired in 0c7c936
+//! (M7.5a); revive it with its coeval support (EVAL-SET.md「再生成」):
+//!   git checkout 0c7c936^ -- cli/tests/eval_t3_candidates.rs cli/tests/eval_support
+//!   cargo test --release --test eval_t3_candidates -- --ignored --nocapture   # per corpus: CE_SLICE_REPO + CE_GRAPH_NAME + CE_GRAPH_TIP
+//!   git checkout HEAD -- cli/tests/eval_t3_candidates.rs cli/tests/eval_support
 
 mod eval_support;
 

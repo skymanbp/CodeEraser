@@ -14,7 +14,7 @@
 //!    no cross moves;
 //! 4. monotonicity + L1 identity — L2 >= L1 on moved with conserved
 //!    sums per pair (asserted at generation), and single-pair batches
-//!    reproduce l1-v1.json on all 200 samples (separate ignored test);
+//!    reproduce l1-v1.json on all 200 samples (a generation-time leg);
 //! 5. extras ledger — every predicted-above-GT file itemized with
 //!    line content (GT's blocks-mode floor under-marks sub-block
 //!    moves; an allowance in bulk would be a hole, a ledger is not);
@@ -23,13 +23,17 @@
 //! 7. cost-model sensitivity — pinned Haskell-side (Spec.hs
 //!    costModel: the floor tracks the site cost).
 //!
-//! M5-1c: corpus-aware throughout — CE_SLICE_* retargets generation,
-//! the gate covers every FROZEN corpus (requests pending: EVAL-SET),
-//! the coincidence table derives from each labels doc's corrections
-//! (verified set-equal to the old hardcoded self table).
+//! M5-1c: corpus-aware throughout — the gate covers every FROZEN
+//! corpus (requests pending: EVAL-SET), the coincidence table derives
+//! from each labels doc's corrections (verified set-equal to the old
+//! hardcoded self table).
 //!
-//! Run: CE_CORE_BIN=$(cd core && cabal list-bin ce-core) \
-//!      cargo test --test eval_l2 -- --ignored --nocapture
+//! Run (the CI gate — no core, no git): cargo test --test eval_l2
+//! Regenerate — the `--ignored` generator half retired in 0c7c936
+//! (M7.5a); revive it with its coeval support (EVAL-SET.md「再生成」):
+//!   git checkout 0c7c936^ -- cli/tests/eval_l2.rs cli/tests/eval_support
+//!   CE_CORE_BIN=$(cd core && cabal list-bin ce-core) cargo test --test eval_l2 -- --ignored --nocapture   # CE_SLICE_* retargets the corpus
+//!   git checkout HEAD -- cli/tests/eval_l2.rs cli/tests/eval_support
 
 mod eval_commit_review;
 mod eval_l2_parts;

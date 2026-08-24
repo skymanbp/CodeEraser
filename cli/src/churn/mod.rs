@@ -97,8 +97,8 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
 }
 
 /// One commit's ledger rows through the SAME classify_commit throat
-/// run() folds over — the eval instrument's product surface (the
-/// 40-commit hand-audited ledger replays exactly this).
+/// run() folds over — the split-ROI seam pricer's live reader
+/// (structure::seams); the retired eval_churn_ledger replayed it too.
 pub fn commit_ledger(root: &Path, sha: &str) -> Vec<UnitRow> {
     let pairs = session::commit_pairs(root, sha).unwrap_or_default();
     let mut ledger = Ledger::new();
@@ -138,10 +138,10 @@ fn window_commits(root: &Path, days: u32) -> Result<Vec<String>> {
 }
 
 /// The one before/after fetch for a commit's pair: after path, both
-/// texts, the language. classify_commit and the conservation
-/// instrument read the same bytes through this, so the two can never
-/// diverge on what a commit changed. None = deletion, non-language
-/// file, or an unreadable after side.
+/// texts, the language. classify_commit reads through this; it stays
+/// pub for the RETIRED conservation instrument (eval_churn_ledger,
+/// v0.5.0 — a revival per EVAL-SET.md「再生成」reads the same bytes).
+/// None = deletion, non-language file, or an unreadable after side.
 pub fn pair_texts<'p>(
     root: &Path,
     sha: &str,

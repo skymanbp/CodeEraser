@@ -44,10 +44,10 @@ pub const HOT_GROUP_CAP: usize = super::pairs::HOT_CAP;
 /// Candidate source labels in bit order: bit i of a pair's `sources`
 /// byte means SOURCES[i] found it. One table — the generators' bit
 /// assignment and the sample's label lookup can never drift apart.
-/// s5 (bit 4) is the M5-close exhaustive source and PRODUCT-ONLY:
-/// the frozen t3-candidates epoch re-derives collect() by digest, so
-/// s5 lives in extend_exhaustive at the `ce clone` seam — frozen
-/// docs can never carry bit 4.
+/// No in-tree reader since the sample generators retired (0c7c936):
+/// the table is the revival base the frozen docs' labels compile
+/// against (EVAL-SET.md「再生成」). s5 (bit 4) is the M5-close
+/// exhaustive source and PRODUCT-ONLY — frozen docs never carry bit 4.
 pub const SOURCES: [&str; 5] = ["s1", "s2", "s3", "s4", "s5"];
 
 /// One admitted unit; its position in Candidates::units is its id.
@@ -69,8 +69,8 @@ pub struct PairRow {
     pub sources: u8,
 }
 
-/// Every count the pipeline sheds anywhere — published, never silent
-/// (the low_diversity_suppressed discipline).
+/// Every count the pipeline sheds anywhere — published, never silent;
+/// the write-only ones are the frozen docs' summary rows (revival base).
 #[derive(Default)]
 pub struct Tally {
     pub raw_by: BTreeMap<String, u64>,
