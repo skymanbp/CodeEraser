@@ -72,6 +72,7 @@ fn print_verdict_tail(r: &Report) {
             &[&judge::verdict_str(j), &slope, &fail_tail],
         )
     );
+    print_shape_facts(r);
     println!(
         "{}",
         line(
@@ -80,4 +81,38 @@ fn print_verdict_tail(r: &Report) {
             &[&r.window, &r.rows.len(), &r.pending],
         )
     );
+}
+
+/// The trend/2 shape facts, rendered with the commit each request
+/// index points at — judge::judge fenced the indices against the
+/// rows it sent, so the lookup is total here (the #{} fallback only
+/// guards hand-built reports in tests).
+fn print_shape_facts(r: &Report) {
+    let name = |idx: i64| {
+        r.rows
+            .get(idx as usize)
+            .map(|row| row.commit[..12].to_string())
+            .unwrap_or_else(|| format!("#{idx}"))
+    };
+    if let Some([idx, drop]) = r.judgment.cliff {
+        let pm = format!("{:.1}", drop as f64 / 1000.0);
+        println!(
+            "{}",
+            line(
+                "trend cliff: -{}‰ into {}",
+                "趋势断崖：-{}‰ 落在 {}",
+                &[&pm, &name(idx)],
+            )
+        );
+    }
+    if let Some([start, count]) = r.judgment.decline_run {
+        println!(
+            "{}",
+            line(
+                "trend decline run: {} commits from {}",
+                "趋势持续下行：{} 个提交，起于 {}",
+                &[&count, &name(start)],
+            )
+        );
+    }
 }

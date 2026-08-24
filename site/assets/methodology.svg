@@ -90,7 +90,7 @@
         <text x="422" y="423">size penalty — convex soft zone</text>
         <text x="422" y="487">dead-code liveness</text>
         <text x="422" y="551">structure entropy and divergence</text>
-        <text x="422" y="615">score trajectory — least squares</text>
+        <text x="422" y="615">score trajectory — Theil-Sen</text>
         <text x="422" y="679">the fold — one 0..1000 score</text>
       </g>
       <g font-size="10.5" fill="#57c7a8">

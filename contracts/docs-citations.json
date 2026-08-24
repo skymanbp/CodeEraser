@@ -4267,7 +4267,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.30.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.31.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5071,288 +5071,228 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:1": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 3,
-    "text": "//! Rust computes no policy here: sign, floor and the fail bit all"
+    "line": 5,
+    "text": "//! order this side sent; hashes never cross, §5.9.2). Rust computes"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:10": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 115,
-    "text": "let mut rows: Vec<Row> = shas.iter().filter_map(|(s, _)| have.remove(s)).collect();"
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 64,
+    "text": "knobShape i row = case row of"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:11": {
-    "target": "../../../cli/src/trend/judge.rs",
-    "line": 42,
-    "text": "}"
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 49,
+    "text": ", ascendingOn \"knob\" (take 1) (knobsOf req)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:12": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 12,
-    "text": "-- null — an absence, never a fabricated flat. Measurement and report"
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 247,
+    "text": "orderFree = case (run shuffled, run sorted) of"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:13": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 55,
-    "text": "| score < 0 || score > scale -> Just (label <> \"score outside 0..scale\")"
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 36,
+    "text": "trendRowCap = 4096"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:14": {
     "target": "../../../core/app/CE/Trend.hs",
-    "line": 64,
+    "line": 66,
     "text": "| code < 0 || code > 1 -> Just (label <> \"unknown knob code\")"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:15": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 74,
-    "text": "-- must not gate (unlike a degraded reply, where judgment was DENIED"
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 4,
+    "text": "-- entropy/χ² stance — no floating point ever crosses a verdict)."
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:16": {
-    "target": "../../../core/app/CE/Trend.hs",
+    "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 60,
-    "text": ""
+    "text": "[ (i, ts % 86400, (score * 1000000) % scale)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:17": {
-    "target": "../../../core/app/CE/Wire.hs",
-    "line": 56,
-    "text": "-- and judged stay per-family ARGUMENTS (one authority per family),"
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 72,
+    "text": "slopeMicroPerDay :: [(Integer, Rational, Rational)] -> Maybe Rational"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:18": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 48,
-    "text": "]"
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 86,
+    "text": "median :: [Rational] -> Rational"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:19": {
     "target": "../../../core/test/TrendProps.hs",
-    "line": 126,
+    "line": 246,
     "text": "orderFree :: Bool"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:2": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 129,
+    "line": 132,
     "text": "fn mainline(root: &Path, n: usize) -> Result<Vec<(String, i64)>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:20": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 41,
-    "text": "-- guard), never a refusal."
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 79,
+    "text": "collinear = all probe [-1000, 0, 777]"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:21": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 28,
-    "text": "trendRowCap :: Integer"
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 43,
+    "text": "tsRef rows = case slopes of"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:22": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 25,
+    "line": 32,
     "text": "-- | Row ceiling: one row per mainline commit — 4096 covers a decade"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:23": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 1,
-    "text": "-- | The trend-family knobs and the slope mathematics (M7.5b): the"
+    "line": 46,
+    "text": "tsWindow = 512"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:24": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 47,
-    "text": "xs = [ts % 86400 | (ts, _, _) <- rows]"
+    "line": 55,
+    "text": "judgedView rows = drop (length sorted - tsWindow) sorted"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:25": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 57,
-    "text": "-- | One day apart, one per-mille drop = -1000 micro-per-mille/day:"
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 139,
+    "text": ", \"counts\" .= object [\"rows\" .= length (rowsOf req), \"judged\" .= jJudged j]"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:26": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 43,
-    "text": "| otherwise = Just ((nR * sxy - sx * sy) / den)"
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 200,
+    "text": "windowed ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:27": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 49,
-    "text": "sx = sum xs"
+    "line": 102,
+    "text": "cliffOf view = case falls of"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:28": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 42,
-    "text": "| n < 2 || den == 0 = Nothing"
+    "line": 121,
+    "text": "declineRunOf view = snd (foldl step (Nothing, Nothing) (steps view))"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:29": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 33,
-    "text": "-- score_i * 10^6 / scale_i micro-per-mille. Nothing when the system"
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 68,
+    "text": "\"trend {name} points at row {idx} of {} — index drift\","
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:3": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 151,
+    "line": 154,
     "text": "fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:30": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 31,
-    "text": "-- | Second derivation: slope = Σ(x-x̄)(y-ȳ) / Σ(x-x̄)² — different"
+    "target": "../../../cli/src/trend/report.rs",
+    "line": 90,
+    "text": "fn print_shape_facts(r: &Report) {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:31": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 23,
-    "text": "knobTable = [(0, 3), (1, 0)]"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:32": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 94,
-    "text": "reply proto req Judgment{jEffective = knobTable, jVerdict = Nothing, jSlope = Nothing, jDegraded = True}"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:33": {
-    "target": "../../../core/app/CE/Wire.hs",
-    "line": 79,
-    "text": "-- | A KNOBLESS table family (erase/1, audit/1): rows"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:34": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 97,
-    "text": "-- arity line its five sibling families hold (Structure's Knobs"
+    "text": "enough = toInteger (length (rowsOf req)) >= minPoints"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:32": {
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 221,
+    "text": "absence = case replyObj (wireReq [[86400, 500, 1000], [172800, 400, 1000]]) of"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:33": {
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 68,
+    "text": "| code == 0 && v < 2 -> Just (label <> \"minPoints below 2\")"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:34": {
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 139,
+    "text": "verdictOf floorMicro slope"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:35": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 85,
-    "text": "| toInteger (length rows) < minPoints = Nothing"
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 112,
+    "text": "boundaries ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:36": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 94,
-    "text": "-- | Absence is one posture, three doors: below minPoints, and an"
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 116,
+    "text": "pub fn verdict_str(j: &Judgment) -> &'static str {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:37": {
     "target": "../../../core/app/CE/Trend.hs",
-    "line": 79,
-    "text": "where"
+    "line": 137,
+    "text": ", \"fail\" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:38": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 23,
-    "text": "knobTable = [(0, 3), (1, 0)]"
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 140,
+    "text": "floorLever = case (run Nothing, run (Just 500), run (Just 5000)) of"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:39": {
     "target": "../../../core/app/CE/Trend.hs",
-    "line": 95,
-    "text": ""
+    "line": 135,
+    "text": ", \"cliff\" .= fmap (\\(i, d) -> [i, round d]) (jCliff j)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:4": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 100,
+    "line": 103,
     "text": "let soft = crate::structure::judge::committed_soft(root);"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:40": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 61,
-    "text": "verdictOf :: Integer -> Rational -> Integer"
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 39,
+    "text": "if let Some(mp) = cfg.trend.min_points {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:41": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 62,
-    "text": "map (`verdictOf` (-1000)) [0, 999, 1000] == [2, 2, 1]"
+    "target": "../../../cli/src/config.rs",
+    "line": 134,
+    "text": "/// Trend-family knobs (M7.5b; trend/2 since 2.31.0): both OPTIONAL — absent ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:42": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 57,
-    "text": "-- the band = 1 (flat). With the default floor 0 the band is the"
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 86,
+    "text": "fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:43": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 92,
-    "text": "}"
+    "line": 45,
+    "text": "let mut link = crate::lockstep::open_family(core, \"trend/2\")?;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:44": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 118,
-    "text": ", \"fail\" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))"
+    "target": "../../../cli/src/trend/mod.rs",
+    "line": 32,
+    "text": "pub const SCHEMA_ID: &str = \"ce.trend-report/0.3.0\";"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:45": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 7,
-    "text": "--   1 declineFloorMicro  micro-per-mille per day; the fail bit trips"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:46": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 76,
-    "text": "floorLever :: Bool"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:47": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 102,
-    "text": ", jVerdict :: Maybe Integer"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:48": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 123,
-    "text": "<> [\"reason\" .= (\"trend_too_large\" :: String) | jDegraded j]"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:49": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 116,
-    "text": ", \"slopeMicroPerDay\" .= fmap (round :: Rational -> Integer) (jSlope j)"
+    "target": "../../../cli/src/trend/mod.rs",
+    "line": 39,
+    "text": "pub const DEFAULT_COMMITS: usize = 30;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:5": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 165,
+    "line": 168,
     "text": "if let Some(reason) = &r.degraded {"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:50": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 120,
-    "text": ", \"counts\" .= object [\"rows\" .= length (rowsOf req)]"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:51": {
-    "target": "../../../cli/src/trend/judge.rs",
-    "line": 30,
-    "text": "if let Some(mp) = cfg.trend.min_points {"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:52": {
-    "target": "../../../cli/src/config.rs",
-    "line": 139,
-    "text": "#[derive(Debug, Clone, Default, Deserialize)]"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:53": {
-    "target": "../../../cli/src/config.rs",
-    "line": 134,
-    "text": "/// Trend-family knobs (M7.5b, trend/1): both OPTIONAL — absent ="
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:54": {
-    "target": "../../../cli/src/trend/judge.rs",
-    "line": 64,
-    "text": "for [code, want] in sent {"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:55": {
-    "target": "../../../cli/src/trend/judge.rs",
-    "line": 44,
-    "text": "Ok(Judgment {"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:56": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 30,
-    "text": "pub const SCHEMA_ID: &str = \"ce.trend-report/0.2.0\";"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:57": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 32,
-    "text": "/// The mainline window every face defaults to. It was a `30` literal"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 173,
+    "line": 176,
     "text": "// NAMED refusal when the echo lacks it, matching the"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 41,
-    "text": "pub const TREND_SCHEMA: &str = \""
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 47,
+    "text": "\"rows\": rows.iter().map(|r| json!([r.ts, r.score, r.scale])).collect::<Vec<_>>(),"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:8": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 226,
-    "text": "}"
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 44,
+    "text": "violation :: RowsReq -> Maybe String"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:9": {
-    "target": "../../../cli/src/trend/mod.rs",
-    "line": 260,
-    "text": "Ok(map)"
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 53,
+    "text": "rowShape i row = case row of"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:1": {
     "target": "../../../cli/src/guard.rs",
@@ -5811,7 +5751,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 251,
+    "line": 257,
     "text": "> 上调 violCost 属显式选择）。区间罚曲线过硬线 H 改 **C¹ 线性延伸**"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -5846,7 +5786,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:36": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 260,
+    "line": 266,
     "text": "> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:37": {
@@ -5866,7 +5806,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 254,
+    "line": 260,
     "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -5901,7 +5841,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 257,
+    "line": 263,
     "text": "> docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
@@ -5926,7 +5866,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 254,
+    "line": 260,
     "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

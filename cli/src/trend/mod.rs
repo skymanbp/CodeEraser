@@ -27,7 +27,9 @@ use std::path::{Path, PathBuf};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
 /// 0.2.0 (M7.5b): the report carries the core's trend/1 judgment.
-pub const SCHEMA_ID: &str = "ce.trend-report/0.2.0";
+/// 0.3.0 (2.31.0): the judgment carries trend/2's cliff and
+/// declineRun shape facts beside the robust slope.
+pub const SCHEMA_ID: &str = "ce.trend-report/0.3.0";
 
 /// The mainline window every face defaults to. It was a `30` literal
 /// in clap and a `10` literal in the MCP adapter, so one project
@@ -77,13 +79,14 @@ pub struct Report {
     /// (short sha, reason) for commits that refused to measure this
     /// run — reported, never silently absent.
     pub failed: Vec<(String, String)>,
-    /// The core's trend/1 slope verdict over the window (M7.5b).
+    /// The core's trend/2 judgment over the window (M7.5b; robust
+    /// since 2.31.0).
     pub judgment: judge::Judgment,
 }
 
 /// Measure up to `batch` (None = all) uncached mainline commits of
 /// the newest `commits`, persist them, hand the window to the core's
-/// trend/1 judgment, and return the report.
+/// trend/2 judgment, and return the report.
 pub fn run(
     root: &Path,
     db: Option<PathBuf>,

@@ -131,7 +131,7 @@ pub struct StructureCfg {
     pub layout: std::collections::BTreeMap<String, u32>,
 }
 
-/// Trend-family knobs (M7.5b, trend/1): both OPTIONAL — absent =
+/// Trend-family knobs (M7.5b; trend/2 since 2.31.0): both OPTIONAL — absent =
 /// the core's own defaults (minPoints 3, floor 0 = report-only; the
 /// knob rows ride the wire only when declared, the ceilings/27b9bc2
 /// pattern). decline_floor_micro is micro-per-mille per day; a

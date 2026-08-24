@@ -95,7 +95,7 @@ families =
   , Fam "verdict/1" "verdict.request" Verdict.respond
   , Fam "scan/1" "scan.request" Scan.respond
   , Fam "structure/1" "structure.request" Structure.respond
-  , Fam "trend/1" "trend.request" Trend.respond
+  , Fam "trend/2" "trend.request" Trend.respond
   , Fam "erase/1" "erase.request" Erase.respond
   , Fam "audit/1" "audit.request" Audit.respond
   ]

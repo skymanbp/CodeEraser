@@ -2,19 +2,21 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | trend.request handler (M7.5b): the eighth judgment family — the
--- score trajectory the Rust side measured over mainline history
--- comes in as [ts, score, scale] rows (any ts order: least squares
--- is order-free, and first-parent histories legally carry backdated
+-- | trend.request handler (M7.5b; trend/2 since 2.31.0): the score
+-- trajectory the Rust side measured over mainline history comes in
+-- as [ts, score, scale] rows (any ts order: the judged view sorts
+-- by timestamp, and first-parent histories legally carry backdated
 -- or rebased timestamps — review 2026-08-20 #9 retired the
--- ts-descending refusal), the slope verdict goes back. Judgment is
+-- ts-descending refusal); back go the Theil-Sen slope verdict, the
+-- steepest single-step cliff and the longest decline run — the two
+-- shape facts named by REQUEST INDEX so the client can point at the
+-- commit without a hash ever crossing (§5.9.2). Judgment is
 -- exact-Rational (CE.Trend.Cost); fewer rows than minPoints answers
--- null — an absence, never a fabricated flat. Measurement and report
--- rendering stay in Rust; commit hashes and paths never cross the
--- wire (§5.9.2).
+-- null — an absence, never a fabricated flat. Measurement and
+-- report rendering stay in Rust.
 module CE.Trend (respond) where
 
-import CE.Trend.Cost (knobTable, slopeMicroPerDay, trendRowCap, verdictOf)
+import CE.Trend.Cost (cliffOf, declineRunOf, judgedView, knobTable, slopeMicroPerDay, trendRowCap, verdictOf)
 import CE.Wire (RowsReq (..), ascendingOn, pick, rowsFamily)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -33,12 +35,12 @@ respond proto =
     (judged proto)
 
 -- | First boundary-contract offender in request order. Row ORDER is
--- deliberately unconstrained: the math is order-free and git's
--- first-parent order is topological, not chronological — demanding
--- ascending ts rejected legal histories with rebased or backdated
--- commits (review 2026-08-20 #9). Ties and shuffles alike are data;
--- the all-tied window answers a null slope (Cost's zero-variance
--- guard), never a refusal.
+-- deliberately unconstrained: the judged view sorts by timestamp,
+-- and git's first-parent order is topological, not chronological —
+-- demanding ascending ts rejected legal histories with rebased or
+-- backdated commits (review 2026-08-20 #9). Ties and shuffles alike
+-- are data; the all-tied window answers a null slope (no
+-- ts-distinct pair), never a refusal — its falls still report.
 violation :: RowsReq -> Maybe String
 violation req =
   asum
@@ -75,15 +77,25 @@ knobShape i row = case row of
 -- by the cap and fail=true says so).
 judged :: String -> RowsReq -> B8.ByteString
 judged proto req =
-  reply proto req Judgment{jEffective = effective, jVerdict = verdict, jSlope = slope, jDegraded = False}
+  reply
+    proto
+    req
+    Judgment
+      { jEffective = effective
+      , jVerdict = verdict
+      , jSlope = slope
+      , jCliff = if enough then cliffOf view else Nothing
+      , jRun = if enough then declineRunOf view else Nothing
+      , jJudged = length view
+      , jDegraded = False
+      }
  where
   effective = [(c, pick (knobsOf req) c d) | (c, d) <- knobTable]
   minPoints = pick (knobsOf req) 0 3
   floorMicro = pick (knobsOf req) 1 0
-  rows = [(t, s, sc) | [t, s, sc] <- rowsOf req]
-  slope
-    | toInteger (length rows) < minPoints = Nothing
-    | otherwise = slopeMicroPerDay rows
+  view = judgedView (rowsOf req)
+  enough = toInteger (length (rowsOf req)) >= minPoints
+  slope = if enough then slopeMicroPerDay view else Nothing
   verdict = verdictOf floorMicro <$> slope
 
 -- | Over-cap: a complete degraded reply that FAILS, echoing the
@@ -91,7 +103,7 @@ judged proto req =
 -- effective (the scan C14 posture).
 degraded :: String -> RowsReq -> B8.ByteString
 degraded proto req =
-  reply proto req Judgment{jEffective = knobTable, jVerdict = Nothing, jSlope = Nothing, jDegraded = True}
+  reply proto req Judgment{jEffective = knobTable, jVerdict = Nothing, jSlope = Nothing, jCliff = Nothing, jRun = Nothing, jJudged = 0, jDegraded = True}
 
 -- | One judgment, four payloads — the record keeps reply at the
 -- arity line its five sibling families hold (Structure's Knobs
@@ -101,12 +113,17 @@ data Judgment = Judgment
   { jEffective :: [(Integer, Integer)]
   , jVerdict :: Maybe Integer
   , jSlope :: Maybe Rational
+  , jCliff :: Maybe (Integer, Rational)
+  , jRun :: Maybe (Integer, Integer)
+  , jJudged :: Int
   , jDegraded :: Bool
   }
 
--- | The trend.result object: exact-Rational slope display-rounded
--- (round-half-even; the verdict compared the EXACT value and no
--- client re-derives it), fail = degraded or an armed decline floor.
+-- | The trend.result object: exact-Rational slope and cliff drop
+-- display-rounded (round-half-even; the verdict compared the EXACT
+-- values and no client re-derives them), fail = degraded or an
+-- armed decline floor. cliff = [laterReqIdx, dropMicro], declineRun
+-- = [startReqIdx, points]; counts.judged names the tsWindow cut.
 reply :: String -> RowsReq -> Judgment -> B8.ByteString
 reply proto req j =
   BL.toStrict . encode . object $
@@ -115,9 +132,11 @@ reply proto req j =
     , "id" .= rowsId req
     , "slopeMicroPerDay" .= fmap (round :: Rational -> Integer) (jSlope j)
     , "verdict" .= jVerdict j
+    , "cliff" .= fmap (\(i, d) -> [i, round d]) (jCliff j)
+    , "declineRun" .= fmap (\(i, n) -> [i, n]) (jRun j)
     , "fail" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))
     , "knobs" .= [[c, v] | (c, v) <- jEffective j]
-    , "counts" .= object ["rows" .= length (rowsOf req)]
+    , "counts" .= object ["rows" .= length (rowsOf req), "judged" .= jJudged j]
     , "degraded" .= jDegraded j
     ]
       <> ["reason" .= ("trend_too_large" :: String) | jDegraded j]

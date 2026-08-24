@@ -149,6 +149,12 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.31.0**（trend/2 深化 minor，H2，2026-08-24，用户拍板）：趋势家族能力名升 **trend/2**——
+> ①斜率估计量由最小二乘换 **Theil-Sen**（成对斜率中位数，exact Rational）——**行为变化**入册：
+> 同一窗口可得不同答案；一个野点可拽动均值、拽不动中位数，TrendProps 钉住两估计量符号相反的
+> counterfactual。②回复增列 `cliff`=[后点请求索引, 跌落 micro] 与 `declineRun`=[起点请求索引,
+> 点数] 两形状事实（索引过线、hash 永不过线，§5.9.2），低于 minPoints 时与斜率同缺席。③判决窗口
+> 封顶 `tsWindow`=512 个最近点（130,816 对成对斜率实测 ~150 ms 端到端），`counts.judged` 具名切口。
 > **2.30.0**（fn-naming facts minor，ADR-008 批 7 片 14，2026-08-24，用户拍板）：scan.request
 > 增列对齐 `naming` facts 表（`[lang, style, upper, under, test]`，每 code-6 行一行；facts 在场时
 > code-6 行 value 必须为 0——判决不再过线）；conforms 判决迁 `CE.Scan.Cost`：godoc 下划线豁免
@@ -289,7 +295,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.30.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.31.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -413,5 +419,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.30.0 | §1 所列两处常量 |
+| 协议 | 2.31.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

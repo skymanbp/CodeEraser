@@ -411,24 +411,30 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
   <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
 y_i   = (score_i * 1000000) % scale_i
 
-slope = (n * Σ(x_i*y_i) - Σx_i * Σy_i) / (n * Σ(x_i²) - (Σx_i)²)</pre>
+slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre>
   <pre>slope &lt; -band  → 2  (degrading)
 slope &gt;  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro</pre>
   <p class="note"><code>%</code> here is <code>Data.Ratio</code>'s exact-ratio
   constructor, not modulo; <code>y</code> renormalizes every commit onto a fixed 10⁶
   full-scale grid so rows measured under different <code>scoreScale</code> values are
-  commensurable. Row order is deliberately unconstrained — least squares is order-free,
-  and first-parent order is topological rather than chronological, so rebased commits are
-  legal input. Below <code>minPoints</code>, or with zero timestamp variance, the slope is
-  <code>Nothing</code> — absence, never a fabricated flat — and the fail bit stays false.
-  With the default floor 0, degrading can be reported and cannot fail.</p>
+  commensurable. The slope is the median of pairwise slopes (trend/2): one wild point —
+  a broken commit that still measured — drags a least-squares mean anywhere and cannot
+  move the median past its neighbors. Row order is deliberately unconstrained — the
+  judged view sorts by timestamp and caps at the tsWindow most recent points, so rebased
+  commits are legal input. The steepest single-step fall ships as <code>cliff</code> and
+  the longest strictly-falling run as <code>declineRun</code>, each naming its commit by
+  request index — hashes never cross. Below <code>minPoints</code>, or with no
+  timestamp-distinct pair, the slope is <code>Nothing</code> — absence, never a
+  fabricated flat — and the fail bit stays false. With the default floor 0, degrading
+  can be reported and cannot fail.</p>
   <ul class="consts">
     <li><b>minPoints</b> 3 (knob 0)</li>
     <li><b>declineFloorMicro</b> 0 (knob 1)</li>
     <li><b>row + knob cap</b> 4096</li>
+    <li><b>tsWindow</b> 512</li>
     <li><b>full-scale grid</b> 10⁶</li>
-    <li><b>schema</b> ce.trend-report/0.2.0</li>
+    <li><b>schema</b> ce.trend-report/0.3.0</li>
   </ul>
 </div>
 

@@ -1,8 +1,11 @@
-//! trend/1 wire leg (M7.5b): hand the measured trajectory to the
-//! core and relay its slope verdict — the eighth judgment family.
-//! Rust computes no policy here: sign, floor and the fail bit all
-//! come back on the wire (ADR-008), and no verdict mirror is built
-//! (the structure-family stance). Knob rows ride only when ce.toml
+//! trend/2 wire leg (M7.5b; the robust estimator since 2.31.0):
+//! hand the measured trajectory to the core and relay its judgment
+//! — the Theil-Sen slope verdict plus the two shape facts, cliff
+//! and decline run, each naming a commit by REQUEST INDEX (the row
+//! order this side sent; hashes never cross, §5.9.2). Rust computes
+//! no policy here: sign, floor and the fail bit all come back on
+//! the wire (ADR-008), and no verdict mirror is built (the
+//! structure-family stance). Knob rows ride only when ce.toml
 //! declares them (the ceilings/27b9bc2 pattern).
 
 use super::Row;
@@ -17,6 +20,12 @@ use std::path::Path;
 pub struct Judgment {
     pub slope_micro_per_day: Option<i64>,
     pub verdict: Option<i64>,
+    /// [request index of the LATER point, drop in micro units] —
+    /// the steepest single-step fall of the judged window (trend/2).
+    pub cliff: Option<[i64; 2]>,
+    /// [request index of the run's FIRST point, points in the run]
+    /// — the longest strictly-falling run (trend/2).
+    pub decline_run: Option<[i64; 2]>,
     pub fail: bool,
     pub knobs: Vec<[i64; 2]>,
 }
@@ -33,7 +42,7 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
     if let Some(floor) = cfg.trend.decline_floor_micro {
         knobs.push([1, floor as i64]);
     }
-    let mut link = crate::lockstep::open_family(core, "trend/1")?;
+    let mut link = crate::lockstep::open_family(core, "trend/2")?;
     let mut body = json!({
         "rows": rows.iter().map(|r| json!([r.ts, r.score, r.scale])).collect::<Vec<_>>(),
     });
@@ -41,12 +50,32 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
         body["knobs"] = json!(knobs);
     }
     let reply = link.request("trend", body).map_err(anyhow::Error::msg)?;
-    Ok(Judgment {
+    let j = Judgment {
         slope_micro_per_day: reply["slopeMicroPerDay"].as_i64(),
         verdict: reply["verdict"].as_i64(),
+        cliff: opt_pair(&reply["cliff"])?,
+        decline_run: opt_pair(&reply["declineRun"])?,
         fail: reply["fail"] == json!(true),
         knobs: parse_knobs(&reply["knobs"], &knobs)?,
-    })
+    };
+    // the shape facts point INTO the request this side just sent —
+    // an index past it is core drift, refused before anything
+    // renders a commit name from it
+    for (name, pair) in [("cliff", j.cliff), ("declineRun", j.decline_run)] {
+        if let Some([idx, _]) = pair {
+            anyhow::ensure!(
+                idx >= 0 && (idx as usize) < rows.len(),
+                "trend {name} points at row {idx} of {} — index drift",
+                rows.len()
+            );
+        }
+    }
+    Ok(j)
+}
+
+/// Null -> None, [i, v] -> Some — anything else is a wire error.
+fn opt_pair(v: &Value) -> Result<Option<[i64; 2]>> {
+    Ok(serde_json::from_value(v.clone())?)
 }
 
 /// The effective-knob echo, refused on drift from the request's own
@@ -75,6 +104,8 @@ pub fn judgment_json(j: &Judgment) -> Value {
     json!({
         "slopeMicroPerDay": j.slope_micro_per_day,
         "verdict": j.verdict,
+        "cliff": j.cliff,
+        "declineRun": j.decline_run,
         "fail": j.fail,
         "knobs": j.knobs,
     })

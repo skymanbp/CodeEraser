@@ -375,22 +375,26 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
   <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
 y_i   = (score_i * 1000000) % scale_i
 
-slope = (n * Σ(x_i*y_i) - Σx_i * Σy_i) / (n * Σ(x_i²) - (Σx_i)²)</pre>
+slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre>
   <pre>slope &lt; -band  → 2  (degrading)
 slope &gt;  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro</pre>
   <p class="note">这里的 <code>%</code> 是 <code>Data.Ratio</code> 的精确比构造子，不是取模；
   <code>y</code> 把每次提交重新归一到固定的 10⁶ 满量程网格上，使不同 <code>scoreScale</code> 下
-  测得的行可以通约。行序被刻意不加约束——最小二乘与顺序无关，而 first-parent 序是拓扑序而非
-  时间序，所以 rebase 过的提交是合法输入。低于 <code>minPoints</code>、或时间戳方差为零时，斜率是
+  测得的行可以通约。斜率取成对斜率的<b>中位数</b>（trend/2）：一个野点——测出来的坏提交——能把最小二乘的均值
+  拽到任何地方，却拽不动中位数半步。行序被刻意不加约束——判决视图按时间戳排序，
+  并封顶在 tsWindow 个最近点上，所以 rebase 过的提交是合法输入。最陡的单步跌落以
+  <code>cliff</code> 过线、最长的连续下跌以 <code>declineRun</code> 过线，各自用请求索引指认
+  提交——hash 永不过线。低于 <code>minPoints</code>、或没有任何时间戳相异的点对时，斜率是
   <code>Nothing</code>——是缺席，不是编造出来的"持平"——且 fail 位保持 false。在默认地板 0 下，
   "下滑"可以被报出来但不能判负。</p>
   <ul class="consts">
     <li><b>minPoints</b> 3（knob 0）</li>
     <li><b>declineFloorMicro</b> 0（knob 1）</li>
     <li><b>行 + knob 上限</b> 4096</li>
+    <li><b>tsWindow</b> 512</li>
     <li><b>满量程网格</b> 10⁶</li>
-    <li><b>schema</b> ce.trend-report/0.2.0</li>
+    <li><b>schema</b> ce.trend-report/0.3.0</li>
   </ul>
 </div>
 

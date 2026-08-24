@@ -7,6 +7,13 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.31.0 = the trend/2 minor (H2, 2026-08-24): the slope estimator
+-- becomes Theil-Sen — median of pairwise slopes, exact Rational; a
+-- wild point drags a mean anywhere and cannot move a median past
+-- its neighbors (a RECORDED behavior change; the capability name
+-- says so — trend/2). The reply grows cliff and declineRun (shape
+-- facts by request index) and counts.judged: the judgment window
+-- caps at tsWindow = 512 recent points (~150 ms measured).
 -- 2.30.0 = the fn-naming facts minor (ADR-008 batch-7 slice 14,
 -- 2026-08-24): scan.request grows the aligned naming facts table —
 -- [lang, style, upper, under, test], one row per code-6 row, whose
@@ -201,7 +208,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.30.0"
+proto = "2.31.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

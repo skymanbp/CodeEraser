@@ -294,5 +294,17 @@ entry_globs = [
 # of docdup/spec.rs's constant face -- the priced Cost-constants
 # face class (the 177/181 bookings named it); restructuring a code
 # table to dodge the counter is declined by standing stance.
-# Ratchet DOWN from here with every cleanup.
-budget = 188
+# 188 -> 190 (H2 trend/2, 2.31.0): two face-class members. (a) the
+# Judgment record's new cliff/declineRun field block (trend/judge.rs)
+# chained with score/wire.rs's Reply record -- the record-face class
+# (two families' wire records rhyme by design; restructuring a record
+# to dodge the counter is declined by the H1 stance). (b) the
+# fieldsOf import lengthened TrendProps' harness-import line into
+# chain range of EraseProps' -- one more member pair of the banked
+# Props-scaffolding face class (the 187/188 P8 booking names it).
+# The REAL duplication the gate flagged alongside these was repaid
+# at the mechanism first: the probe-local reply-projector do-blocks
+# became WireHarness.fieldsOf, and the fixture literals a daily
+# builder -- two windows dissolved before these two were booked.
+# Measured after fmt. Ratchet DOWN from here with every cleanup.
+budget = 190

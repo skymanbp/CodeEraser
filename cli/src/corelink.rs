@@ -12,6 +12,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.31.0 = the trend/2 minor (H2, 2026-08-24): the slope
+/// estimator becomes Theil-Sen — the median of pairwise slopes,
+/// exact Rational; one wild point drags a least-squares mean
+/// anywhere and cannot move a median past its neighbors (a RECORDED
+/// behavior change: the same window may answer differently, and the
+/// capability name says so — trend/2). The reply grows two shape
+/// facts named by request index (cliff = steepest single-step fall,
+/// declineRun = longest strictly-falling run) and counts.judged:
+/// the judgment window caps at tsWindow = 512 recent points, the
+/// O(n²) pair set measured ~150 ms end to end.
 /// 2.30.0 = the fn-naming facts minor (ADR-008 batch-7 slice 14,
 /// 2026-08-24): scan.request grows the aligned `naming` facts table
 /// — [lang, style, upper, under, test], one row per code-6 row,
@@ -153,7 +163,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.30.0";
+pub const PROTO: &str = "2.31.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

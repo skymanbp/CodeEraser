@@ -89,7 +89,8 @@ fn corelink_open_and_desync() {
     );
     // every declared family, one loop (fourclass/2 = M5-1c anchor
     // shape; graph/1 = M5-2a; clone/docdup/verdict = M5-3a; scan/1
-    // = ADR-008 P3; structure/1 = M6 S2; trend/1 = M7.5b; erase/1 =
+    // = ADR-008 P3; structure/1 = M6 S2; trend/1 = M7.5b (trend/2
+    // at 2.31.0: the robust estimator); erase/1 =
     // M9 batch 3) — the assert ladder tripped the ratchet at row 8
     for cap in [
         "hello",
@@ -100,7 +101,7 @@ fn corelink_open_and_desync() {
         "verdict/1",
         "scan/1",
         "structure/1",
-        "trend/1",
+        "trend/2",
         "erase/1",
         "audit/1",
     ] {

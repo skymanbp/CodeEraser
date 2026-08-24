@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey) where
+module WireHarness (degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, setKey) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -52,6 +52,18 @@ replyObjWith respond r = do
   bytes <- either (const Nothing) Just (respond coreVersion (BL.toStrict (encode r)))
   Object o <- decodeStrict bytes
   pure o
+
+-- | Several reply fields in one read — the probe-local "reply, then
+-- project a tuple" do-blocks kept recloning this walk (the dedup
+-- gate caught its author again at trend/2).
+fieldsOf ::
+  (String -> B8.ByteString -> Either e B8.ByteString) ->
+  Value ->
+  [String] ->
+  Maybe [Maybe Value]
+fieldsOf respond r ks = do
+  o <- replyObjWith respond r
+  pure (map (field o) ks)
 
 setKey :: String -> Value -> Value -> Value
 setKey k v (Object o) = Object (KM.insert (Key.fromString k) v o)
