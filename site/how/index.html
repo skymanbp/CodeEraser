@@ -292,9 +292,12 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   producing <em>exactly one</em> in-scope candidate wins; more than one is
   <code>Unresolved</code>, and <code>External</code> is a correct terminal answer, not a
   miss. Cycles are reported, never judged — a cyclic island with no entry seed is dead by
-  reachability alone. Import-edge precision measured <strong>38/40 = 0.95</strong> across
-  five pinned corpora against a ≥ 0.90 gate, on a sample frozen before any resolver
-  existed.</p>
+  reachability alone. Since 2.32.0 each dead row carries a confidence column judged from
+  the per-language site ledger the request ships — 0 unvouched (the language still has
+  unresolved sites), 1 vacuous, 2 vouched — the erase family's trust boundary, executed
+  by the family that owns the ledger. Import-edge precision measured
+  <strong>38/40 = 0.95</strong> across five pinned corpora against a ≥ 0.90 gate, on a
+  sample frozen before any resolver existed.</p>
   <ul class="consts">
     <li><b>minRung</b> 5</li>
     <li><b>entryMask</b> 126 (bits 1–6)</li>
@@ -516,14 +519,18 @@ permille = (lines - S) * 1000 / (H - S)
   <p class="job">Judges erase-plan rows for three provable classes — <code>dead_file</code>,
   <code>verbatim_doc</code>, and <code>t1_twin</code> — and refuses every unsafe
   row with a named reason code.</p>
-  <pre>class  = 0 dead_file | 1 verbatim_doc | 2 t1_twin
+  <pre>class  = 0 dead_file (superseded) | 1 verbatim_doc | 2 t1_twin
+         3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered</pre>
   <p class="note">Rust assembles integer facts from the three source families;
-  Haskell applies the fixed first-failure predicate. A degraded over-cap reply
-  authorizes nothing, and the safety surface has no knobs.</p>
+  Haskell applies the fixed first-failure predicate. Since 2.32.0 the dead-file
+  family rides class 3 — its trust fact is the graph family's own per-row
+  confidence, refused only when unvouched — while class 0 keeps judging unchanged
+  for the grace window. A degraded over-cap reply authorizes nothing, and the
+  safety surface has no knobs.</p>
   <ul class="consts">
-    <li><b>classes</b> 3</li>
+    <li><b>classes</b> 4</li>
     <li><b>reason codes</b> 6</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>since proto</b> 2.16.0</li>

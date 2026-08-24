@@ -149,6 +149,14 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.32.0**（deadcode 置信 minor，H3，2026-08-24，用户拍板）：①graph.request 可携按语言点位
+> 台账 `unres`=[[lang, 未解析数, 总数]]（判决集内、计数自洽、严格升序）；台账在场时每条 dead 行
+> 增第三列**置信**——0 未担保 / 1 空担保 / 2 已担保（`CE.Graph.Cost.confidence`；擦除家族的信任
+> 边界改由持有台账的 graph 家族亲判）；无台账的旧请求两列 dead 行字节不变。②erase 家族增
+> **class 3**（dead_file 置信路：fact 1 = graph 亲判置信，仅 0 拒绝、理由码仍为 1
+> language_unresolved）；class 0 依 staleDocs 纪律**被取代**——宽限窗内照旧判决，后续 minor 退役；
+> 其 golden 中作"unknown class"样本的旧请求自此合法改答边界拒绝（行为变化入册）。③deadcode
+> 报告 schema 升 0.2.0（dead 行带 confidence 列）。
 > **2.31.0**（trend/2 深化 minor，H2，2026-08-24，用户拍板）：趋势家族能力名升 **trend/2**——
 > ①斜率估计量由最小二乘换 **Theil-Sen**（成对斜率中位数，exact Rational）——**行为变化**入册：
 > 同一窗口可得不同答案；一个野点可拽动均值、拽不动中位数，TrendProps 钉住两估计量符号相反的
@@ -295,7 +303,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.31.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.32.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -419,5 +427,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.31.0 | §1 所列两处常量 |
+| 协议 | 2.32.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

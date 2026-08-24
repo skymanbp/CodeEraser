@@ -43,11 +43,13 @@ truthTable =
     , [1, 60, 60, 61, 1], [1, 60, 60, 60, 0]
     , [2, 1, 1, 1, 0], [2, 0, 1, 1, 0], [2, 1, 0, 1, 0]
     , [2, 1, 1, 0, 0], [2, 1, 1, 1, 3]
+    , [3, 1, 0, 0, 0], [3, 2, 1, 0, 0], [3, 4, 2, 0, 0]
     ]
   wants =
     [ (True, 0), (True, 0), (False, 1)
     , (True, 0), (False, 2), (False, 2), (False, 3)
     , (True, 0), (False, 5), (False, 3), (False, 4), (False, 1)
+    , (False, 1), (True, 0), (True, 0)
     ]
 
 req :: [[Integer]] -> Value
@@ -78,7 +80,9 @@ mixed = case replyObjWith respond (req rows) of
 refusals :: Bool
 refusals =
   and
-    [ refusedBy respond (req [[3, 0, 0, 0, 0]]) "row 0: unknown class"
+    [ refusedBy respond (req [[4, 0, 0, 0, 0]]) "row 0: unknown class"
+    , refusedBy respond (req [[3, 0, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
+    , refusedBy respond (req [[3, 1, 3, 0, 0]]) "row 0: confidence outside 0..2"
     , refusedBy respond (req [[0, 1, -1, 0, 0]]) "row 0: negative fact"
     , refusedBy respond (req [[0, 5, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
     , refusedBy respond (req [[1, 60, 60, 60, 2]]) "row 0: bytesEqual not a boolean"

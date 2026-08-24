@@ -7,6 +7,15 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.32.0 = the deadcode-confidence minor (H3, 2026-08-24): the
+-- graph request may ship the per-language site ledger ("unres":
+-- [[lang, unresolvedSites, totalSites]]); each dead row then grows
+-- a confidence column — 0 unvouched / 1 vacuous / 2 vouched
+-- (CE.Graph.Cost.confidence, the erase trust boundary executed by
+-- the ledger's owner). Erase gains class 3 (dead_file, confidence
+-- road; refused only at 0); class 0 superseded, judged unchanged
+-- for the grace window. Legacy graph requests keep two-column dead
+-- rows, byte-identical.
 -- 2.31.0 = the trend/2 minor (H2, 2026-08-24): the slope estimator
 -- becomes Theil-Sen — median of pairwise slopes, exact Rational; a
 -- wild point drags a mean anywhere and cannot move a median past
@@ -208,7 +217,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.31.0"
+proto = "2.32.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

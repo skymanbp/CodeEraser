@@ -20,7 +20,7 @@ fn core_bin() -> String {
 }
 
 fn dead_set(r: &deadcode::Report) -> Vec<(String, &'static str)> {
-    r.dead.iter().map(|(n, v, _)| (n.clone(), *v)).collect()
+    r.dead.iter().map(|d| (d.path.clone(), d.verdict)).collect()
 }
 
 #[test]

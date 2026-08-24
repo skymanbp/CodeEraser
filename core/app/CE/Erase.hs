@@ -29,11 +29,12 @@ respond proto = knoblessRows "erase" eraseRowCap rowShape (degraded proto) (judg
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of
   [cls, w, x, y, z]
-    | cls < 0 || cls > 2 -> Just (label <> "unknown class")
+    | cls < 0 || cls > 3 -> Just (label <> "unknown class")
     | any (< 0) [w, x, y, z] -> Just (label <> "negative fact")
-    | cls == 0 && (w < 1 || w > 4) -> Just (label <> "dead verdict outside 1..4")
+    | (cls == 0 || cls == 3) && (w < 1 || w > 4) -> Just (label <> "dead verdict outside 1..4")
     | cls == 1 && z > 1 -> Just (label <> "bytesEqual not a boolean")
     | cls == 2 && any (> 1) [w, x, y] -> Just (label <> "coverage/equality/death not booleans")
+    | cls == 3 && x > 2 -> Just (label <> "confidence outside 0..2")
     | otherwise -> Nothing
   _ -> Just (label <> "malformed row (need [class,w,x,y,z])")
  where

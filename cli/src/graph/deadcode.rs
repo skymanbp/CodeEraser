@@ -45,8 +45,8 @@ pub const VERDICT_NAMES: [&str; 4] = [
 
 #[derive(Debug)]
 pub struct Report {
-    /// (name, verdict name, why) — file nodes only.
-    pub dead: Vec<(String, &'static str, String)>,
+    /// File-tier dead verdicts with their trust column.
+    pub dead: Vec<DeadRow>,
     /// Section/package verdicts: reported, never called dead.
     pub reported: Vec<(String, &'static str)>,
     pub nodes: usize,
@@ -97,6 +97,23 @@ pub struct GraphWire {
     pub rows: Vec<Value>,
     pub edges: BTreeSet<[i64; 4]>,
     pub unresolved_sites: i64,
+    /// The per-language site ledger [[lang, unresolved, total]],
+    /// langs ascending (2.32.0, H3) — the core judges each dead
+    /// row's confidence from it.
+    pub unres: Vec<[i64; 3]>,
+}
+
+/// One file-tier dead verdict with its trust column (2.32.0, H3):
+/// conf is the core's per-row confidence — 0 unvouched (the file's
+/// language still carries unresolved sites), 1 vacuous (no site of
+/// that language exists), 2 vouched. None only on a legacy reply
+/// whose request carried no ledger.
+#[derive(Debug)]
+pub struct DeadRow {
+    pub path: String,
+    pub verdict: &'static str,
+    pub why: String,
+    pub conf: Option<i64>,
 }
 
 /// The file-tier slice of the wire's dense assignment: (index, path)
@@ -115,7 +132,7 @@ pub fn file_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
 /// The measurement half-door (batch 9 P10): the graph request from
 /// an index the command boundary already refreshed and opened.
 pub fn wire_of(root: &Path, idx: &dedup::index::Index, db_path: &Path) -> Result<GraphWire> {
-    let (files, edges, unresolved_sites) = graph_rows(idx)?;
+    let (files, edges, unresolved_sites, sites) = graph_rows(idx)?;
     if files.is_empty() {
         bail!(
             "empty index at {} — nothing was walked; wrong root?",
@@ -141,7 +158,23 @@ pub fn wire_of(root: &Path, idx: &dedup::index::Index, db_path: &Path) -> Result
         rows,
         edges: wire,
         unresolved_sites,
+        unres: lang_ledger(&sites),
     })
+}
+
+/// Per-path site counts folded to the wire's per-language ledger —
+/// BTreeMap keys make the langs ascending, the shape the core's
+/// duplicate-free validation demands.
+fn lang_ledger(sites: &[(String, i64, i64)]) -> Vec<[i64; 3]> {
+    let mut by_lang: BTreeMap<i64, [i64; 2]> = BTreeMap::new();
+    for (path, total, unres) in sites {
+        if let Some(l) = crate::scan::lang::Lang::from_path(Path::new(path)) {
+            let e = by_lang.entry(l as i64).or_insert([0, 0]);
+            e[0] += unres;
+            e[1] += total;
+        }
+    }
+    by_lang.iter().map(|(&l, &[u, t])| [l, u, t]).collect()
 }
 
 /// Cached edges → wire rows — EVERY kind travels since 2.20.0
@@ -205,6 +238,7 @@ pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
         "nodes": w.rows,
         "edges": w.edges.iter().collect::<Vec<_>>(),
         "pos": pos,
+        "unres": w.unres,
     });
     let reply = link.request("graph", body).map_err(anyhow::Error::msg)?;
     let rows = reply["pos"].as_array().map(Vec::len).unwrap_or(0);
@@ -212,6 +246,21 @@ pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
         bail!("graph.result answered {rows} of {} pos rows", pos.len());
     }
     Ok(reply)
+}
+
+/// Console tag for the trust column — rendering only, the codes
+/// are the core's (CE.Graph.Cost.confidence).
+pub fn conf_word(conf: Option<i64>) -> &'static str {
+    use crate::i18n::t;
+    match conf {
+        Some(0) => t(
+            " [unvouched: unresolved sites in this language]",
+            "〔未担保：该语言尚有未解析点位〕",
+        ),
+        Some(1) => t(" [vacuous]", "〔空担保〕"),
+        Some(2) => t(" [vouched]", "〔已担保〕"),
+        _ => "",
+    }
 }
 
 /// One core verdict row resolved to its node and name — shared by
@@ -239,9 +288,15 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
             .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string()),
         fail: false,
     };
-    let dead: Vec<[usize; 2]> =
-        serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
-    for [idx, verdict] in dead {
+    // two-column rows on the legacy road, three when the ledger
+    // rode (2.32.0) — arity is the road, not noise
+    let dead: Vec<Vec<i64>> = serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
+    for row in dead {
+        let (idx, verdict, conf) = match row[..] {
+            [i, v] => (i as usize, v as usize, None),
+            [i, v, c] => (i as usize, v as usize, Some(c)),
+            _ => anyhow::bail!("dead row of arity {} — wire skew", row.len()),
+        };
         let (node, name) = named(nodes, idx, verdict)?;
         // The RG9 split is the CORE's since 2.18.0; here it survives
         // as a boundary contract, because erase's class-0 licence is
@@ -256,7 +311,12 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
         } else {
             "referenced only from dead code; no entry flag"
         };
-        report.dead.push((node.path.clone(), name, why.to_string()));
+        report.dead.push(DeadRow {
+            path: node.path.clone(),
+            verdict: name,
+            why: why.to_string(),
+            conf,
+        });
     }
     // pre-2.18 core: no reported table — absent parses as empty
     let reported: Vec<[usize; 2]> =
@@ -275,6 +335,14 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
     report.fail = reply["fail"]
         .as_bool()
         .unwrap_or(report.degraded.is_some() || !report.dead.is_empty());
+    for d in &report.dead {
+        if let Some(c) = d.conf {
+            anyhow::ensure!(
+                (0..=2).contains(&c),
+                "confidence {c} outside 0..2 — wire skew"
+            );
+        }
+    }
     Ok(report)
 }
 
@@ -332,18 +400,23 @@ mod tests {
             node("docs/x.md", "Intro", super::super::wire::GRAN_SECTION),
             node("pkg", "", super::super::wire::GRAN_PACKAGE),
         ];
+        // the confidence road: a 3-column dead row carries the
+        // trust column, a 2-column (legacy) row answers None below
         let reply = json!({
-            "dead": [[0, 1]], "reported": [[1, 3], [2, 1]],
+            "dead": [[0, 1, 2]], "reported": [[1, 3], [2, 1]],
             "fail": true, "counts": {"kept": 7}
         });
         let r = super::consume(&reply, &nodes, 0).expect("consume");
+        assert_eq!(r.dead.len(), 1);
+        let d = &r.dead[0];
         assert_eq!(
-            r.dead,
-            vec![(
-                "a.rs".into(),
+            (d.path.as_str(), d.verdict, d.why.as_str(), d.conf),
+            (
+                "a.rs",
                 "unref_private",
-                "no kept in-edge and no entry flag".into()
-            )]
+                "no kept in-edge and no entry flag",
+                Some(2)
+            )
         );
         assert_eq!(
             r.reported,

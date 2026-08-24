@@ -35,10 +35,10 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
     let (segs, dups, _) = crate::docdup::judge::rows_of(root, &idx, core)?;
     drop(idx);
     let mut cache = TextCache::new(root);
-    let mut cands = dead_candidates(&dead, &lang_unres);
+    let mut cands = dead_candidates(&dead)?;
     cands.extend(doc_candidates(&segs, &dups, &mut cache)?);
     let mut out_of_class = BTreeMap::new();
-    let dead_paths: BTreeSet<&str> = dead.dead.iter().map(|(p, _, _)| p.as_str()).collect();
+    let dead_paths: BTreeSet<&str> = dead.dead.iter().map(|d| d.path.as_str()).collect();
     cands.extend(twin_candidates(
         &found.blocks,
         &units,
@@ -78,9 +78,10 @@ fn deadcode_leg(
 
 /// Unresolved-site owners folded to per-language counts (keyed by
 /// the language's wire code — Lang itself carries no Ord on
-/// purpose) — the trust boundary fact class-0/2 rows carry
-/// (erase.md: a language with unresolved sites cannot vouch for its
-/// dead verdicts).
+/// purpose) — the trust fact class-2 twin rows still carry: a twin
+/// row is not a graph dead row, so no core confidence exists for it
+/// (the H3 scope line). The dead-file road consumes the core's
+/// confidence column instead since 2.32.0.
 fn lang_unresolved(idx: &crate::dedup::index::Index) -> Result<BTreeMap<i64, i64>> {
     let mut by_lang = BTreeMap::new();
     for p in crate::graph::load::unresolved_paths(idx)? {
@@ -97,24 +98,27 @@ fn lang_count(map: &BTreeMap<i64, i64>, path: &str) -> i64 {
         .unwrap_or(0)
 }
 
-fn dead_candidates(
-    dead: &crate::graph::deadcode::Report,
-    lang_unres: &BTreeMap<i64, i64>,
-) -> Vec<Candidate> {
+/// Class-3 rows (2.32.0, H3): the trust fact is the graph family's
+/// OWN per-row confidence — a reply without the column means the
+/// ledger never rode, refused by name, never defaulted.
+fn dead_candidates(dead: &crate::graph::deadcode::Report) -> Result<Vec<Candidate>> {
     dead.dead
         .iter()
-        .map(|(path, verdict, why)| {
+        .map(|d| {
             let code = 1 + crate::graph::deadcode::VERDICT_NAMES
                 .iter()
-                .position(|v| v == verdict)
+                .position(|v| *v == d.verdict)
                 .unwrap_or(0) as i64;
-            Candidate {
-                class: 0,
-                facts: [code, lang_count(lang_unres, path), 0, 0],
-                path: path.clone(),
+            let conf = d
+                .conf
+                .context("dead row carries no confidence — the graph ledger did not ride")?;
+            Ok(Candidate {
+                class: 3,
+                facts: [code, conf, 0, 0],
+                path: d.path.clone(),
                 span: None,
-                provenance: format!("deadcode: {verdict} — {why}"),
-            }
+                provenance: format!("deadcode: {} — {}", d.verdict, d.why),
+            })
         })
         .collect()
 }

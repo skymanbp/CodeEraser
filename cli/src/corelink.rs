@@ -12,6 +12,17 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.32.0 = the deadcode-confidence minor (H3, 2026-08-24): the
+/// graph request may ship the per-language site ledger
+/// ("unres": [[lang, unresolvedSites, totalSites]]) and each dead
+/// row then grows a confidence column judged by the core — 0
+/// unvouched / 1 vacuous / 2 vouched (CE.Graph.Cost.confidence,
+/// the erase trust boundary executed by the ledger's owner). The
+/// erase family gains class 3 (dead_file, confidence road: fact 1
+/// is the core's confidence, refused only at 0); class 0 is
+/// superseded, judged unchanged for the grace window — its
+/// unknown-class specimen in the goldens legally re-answers as a
+/// bounds refusal. Legacy graph requests keep two-column dead rows.
 /// 2.31.0 = the trend/2 minor (H2, 2026-08-24): the slope
 /// estimator becomes Theil-Sen — the median of pairwise slopes,
 /// exact Rational; one wild point drags a least-squares mean
@@ -163,7 +174,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.31.0";
+pub const PROTO: &str = "2.32.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

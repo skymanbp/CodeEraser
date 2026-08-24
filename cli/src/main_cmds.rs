@@ -110,13 +110,18 @@ fn print_deadcode(r: &graph::deadcode::Report, json: bool) {
         println!("{}", codeeraser::report::deadcode_json(r));
         return;
     }
-    for (name, verdict, why) in &r.dead {
+    for d in &r.dead {
         println!(
             "{}",
             line(
-                "dead: {}  {}  ({})",
-                "死件：{}  {}（{}）",
-                &[name, verdict, why],
+                "dead: {}  {}  ({}){}",
+                "死件：{}  {}（{}）{}",
+                &[
+                    &d.path,
+                    &d.verdict,
+                    &d.why,
+                    &graph::deadcode::conf_word(d.conf)
+                ],
             )
         );
     }

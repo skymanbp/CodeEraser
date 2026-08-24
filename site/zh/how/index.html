@@ -268,7 +268,9 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <code>4 unreach_public</code>。解析从不猜：一个 site 按本语言的梯级依次向上走，第一个产出
   <em>恰好一个</em>在域候选的梯级胜出；多于一个即 <code>Unresolved</code>，而
   <code>External</code> 是正确的终局答案、不是漏判。环只报不判——没有入口种子的环岛仅凭可达性
-  就已判死，无需特例。import 边精度实测 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着
+  就已判死，无需特例。自 2.32.0 起，每条死件行带一列置信——由请求携带的按语言点位台账判出：
+  0 未担保（该语言尚有未解析点位）、1 空担保、2 已担保——这是擦除家族的信任边界，由持有台账的
+  家族亲自执行。import 边精度实测 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着
   ≥ 0.90 的门；样本在任何解析器存在之前就已冻结。</p>
   <ul class="consts">
     <li><b>minRung</b> 5</li>
@@ -462,15 +464,18 @@ permille = (lines - S) * 1000 / (H - S)
 
 <div class="fam">
   <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">确定性擦除——安全谓词</a></h3>
-  <p class="job">判决擦除计划的行，覆盖三个可证明安全的类——<code>dead_file</code>、
+  <p class="job">判决擦除计划的行，覆盖三个可证明安全的家族——<code>dead_file</code>、
   <code>verbatim_doc</code> 与 <code>t1_twin</code>；其余行都以具名 reason code 拒绝。</p>
-  <pre>class  = 0 dead_file | 1 verbatim_doc | 2 t1_twin
+  <pre>class  = 0 dead_file (superseded) | 1 verbatim_doc | 2 t1_twin
+         3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered</pre>
   <p class="note">Rust 从三个来源家族组装整数事实；Haskell 执行固定的首个失败谓词。
-  超过上限的降级应答不授权任何擦除，而安全谓词没有可调旋钮。</p>
+  自 2.32.0 起死件家族改走 class 3——其信任事实是 graph 家族亲判的逐行置信，仅在未担保时
+  拒绝；class 0 在宽限窗内照旧判决。超过上限的降级应答不授权任何擦除，而安全谓词没有可调
+  旋钮。</p>
   <ul class="consts">
-    <li><b>类别数</b> 3</li>
+    <li><b>类别数</b> 4</li>
     <li><b>理由代码数</b> 6</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>入 wire 版本</b> 2.16.0</li>

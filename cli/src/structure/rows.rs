@@ -119,7 +119,8 @@ pub fn redundancy_rows(
         anyhow::bail!("liveness degraded ({reason}) — refusing a fake-zero S6 rollup");
     }
     let mut dead: BTreeMap<usize, u64> = BTreeMap::new();
-    for (name, _verdict, _why) in &dead_report.dead {
+    for row in &dead_report.dead {
+        let name = &row.path;
         // dead rows are file nodes by Report contract; a name the
         // walked tree cannot place is a universe mismatch, an error
         // by name (the file_ref_rows posture), never a guess

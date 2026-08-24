@@ -40,7 +40,7 @@ pub fn document(w: &GraphWire, report: &Report, pos: &HashMap<String, Pos>) -> V
     let dead: BTreeMap<&str, (&str, &str)> = report
         .dead
         .iter()
-        .map(|(p, v, why)| (p.as_str(), (*v, why.as_str())))
+        .map(|d| (d.path.as_str(), (d.verdict, d.why.as_str())))
         .collect();
     let rows: Vec<Value> = files
         .iter()
@@ -149,13 +149,15 @@ mod tests {
             rows: vec![],
             edges,
             unresolved_sites: 7,
+            unres: vec![],
         };
         let report = Report {
-            dead: vec![(
-                "b.rs".into(),
-                "unref_private",
-                "no kept in-edge and no entry flag".into(),
-            )],
+            dead: vec![crate::graph::deadcode::DeadRow {
+                path: "b.rs".into(),
+                verdict: "unref_private",
+                why: "no kept in-edge and no entry flag".into(),
+                conf: Some(2),
+            }],
             reported: vec![],
             nodes: 4,
             kept: 3,

@@ -104,8 +104,8 @@ and dangling doc refs as packages ([nodes.rs:20-23](../../../cli/src/graph/nodes
 Two transformations happen on the way to the wire:
 
 1. **Asset edges are dropped by kind** — an image reference is not a reference for liveness
-   purposes ([deadcode.rs:132](../../../cli/src/graph/deadcode.rs#L139)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:134-138](../../../cli/src/graph/deadcode.rs#L141)).
+   purposes ([deadcode.rs:132](../../../cli/src/graph/deadcode.rs#L156)). An endpoint that is not a node
+   is a *named error*, never a panic ([deadcode.rs:134-138](../../../cli/src/graph/deadcode.rs#L158)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory, at `rung 1` because containment is a fact, not a resolution mechanism, and must
    survive every rung ceiling ([nodes.rs:61-83](../../../cli/src/graph/nodes.rs#L61)). A repo-root
@@ -124,17 +124,17 @@ the reader sees what the graph refuses to know
 
 `graph.request` carries `nodes: [[lang, kind, flags]]`, `edges: [[src, dst, kind, rung]]`, and
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
-deterministic ([Graph.hs:69-85](../../../core/app/CE/Graph.hs#L69)):
+deterministic ([Graph.hs:69-85](../../../core/app/CE/Graph.hs#L76)):
 
-- node rows are exactly 3 fields, all `≥ 0` ([Graph.hs:87-94](../../../core/app/CE/Graph.hs#L88));
+- node rows are exactly 3 fields, all `≥ 0` ([Graph.hs:87-94](../../../core/app/CE/Graph.hs#L99));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
-  ([Graph.hs:96-104](../../../core/app/CE/Graph.hs#L110));
+  ([Graph.hs:96-104](../../../core/app/CE/Graph.hs#L138));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Graph.hs:74](../../../core/app/CE/Graph.hs#L74), [Wire.hs:44-47](../../../core/app/CE/Wire.hs#L46));
+  ([Graph.hs:74](../../../core/app/CE/Graph.hs#L81), [Wire.hs:44-47](../../../core/app/CE/Wire.hs#L46));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
-  ([Graph.hs:76-80](../../../core/app/CE/Graph.hs#L77),
-  [Graph.hs:109-112](../../../core/app/CE/Graph.hs#L123)).
+  ([Graph.hs:76-80](../../../core/app/CE/Graph.hs#L84),
+  [Graph.hs:109-112](../../../core/app/CE/Graph.hs#L151)).
 
 Oversize protection is by row count, not bytes (the envelope precheck is relaxed for the
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
@@ -144,9 +144,9 @@ per 100k LOC, so the caps carry roughly 6× headroom
 degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = true`,
 `reason = "graph_too_large"` and `fail = true` — a gate that could not judge never passes, said
 by the core itself since 2.18.0, and never a truncated graph
-([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L57), [Graph.hs:161-186](../../../core/app/CE/Graph.hs#L161)).
+([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L61), [Graph.hs:161-186](../../../core/app/CE/Graph.hs#L189)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:265-271](../../../cli/src/graph/deadcode.rs#L277)) and `ce deadcode --check` relays the
+([deadcode.rs:265-271](../../../cli/src/graph/deadcode.rs#L338)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:70-90](../../../cli/src/main_cmds.rs#L70)).
 
 ### 5. Kept arcs and liveness
@@ -179,13 +179,13 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 ([Cost.hs:43-46](../../../core/app/CE/Graph/Cost.hs#L43)).
 
 Only file nodes carry entry facts; section and package rows get `0`
-([deadcode.rs:177-197](../../../cli/src/graph/deadcode.rs#L177)). Since proto **2.28.0**
+([deadcode.rs:177-197](../../../cli/src/graph/deadcode.rs#L210)). Since proto **2.28.0**
 (batch-7 slice 3 main body) the node row carries a 4th column of **role facts**, and the
 category membership Rust used to fuse into the flags column is decided by the core's
 **role table** `roleBits` ([Graph/Cost.hs:89-90](../../../core/app/CE/Graph/Cost.hs#L89)):
 a 4-column row's entry bits derive through `deriveFlags`
 ([Dead.hs:53-55](../../../core/app/CE/Graph/Dead.hs#L53), applied at
-[Graph.hs:182-185](../../../core/app/CE/Graph.hs#L182)), the legacy flags column yields, and a
+[Graph.hs:182-185](../../../core/app/CE/Graph.hs#L219)), the legacy flags column yields, and a
 table mixing the two arities refuses by name. The Rust producer measures:
 
 ```
@@ -251,7 +251,7 @@ The per-node join surface, computed only for the requested `pos` indices, is
 [Position.hs:13-32](../../../core/app/CE/Graph/Position.hs#L13)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
-([deadcode.rs:183-186](../../../cli/src/graph/deadcode.rs#L183)).
+([deadcode.rs:183-186](../../../cli/src/graph/deadcode.rs#L216)).
 
 ### 7. The four-way verdict
 
@@ -282,29 +282,43 @@ over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead
 
 Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 ([deadcode.rs:39-44](../../../cli/src/graph/deadcode.rs#L39),
-[deadcode.rs:220-226](../../../cli/src/graph/deadcode.rs#L220)) — and a code past the four this side
+[deadcode.rs:220-226](../../../cli/src/graph/deadcode.rs#L269)) — and a code past the four this side
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
-([deadcode.rs:230-234](../../../cli/src/graph/deadcode.rs#L230)).
+([deadcode.rs:230-234](../../../cli/src/graph/deadcode.rs#L279)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
 proto 2.18.0 (batch-7 slice 4) the split is the CORE's: the reply partitions its verdicts on
-the node kind column it always received ([Graph.hs:127-156](../../../core/app/CE/Graph.hs#L127),
+the node kind column it always received ([Graph.hs:127-156](../../../core/app/CE/Graph.hs#L155),
 `granFile` at [Cost.hs:55-66](../../../core/app/CE/Graph/Cost.hs#L55)), and carries the additive
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
 arriving in `dead` refuses as wire skew, never a directory erase
-([deadcode.rs:217-225](../../../cli/src/graph/deadcode.rs#L217)); against a pre-2.18 core the
+([deadcode.rs:217-225](../../../cli/src/graph/deadcode.rs#L266)); against a pre-2.18 core the
 absent bit falls back to the client's old conjunction, byte-identical
-([deadcode.rs:249-253](../../../cli/src/graph/deadcode.rs#L249)). Both lists, the counts, and
+([deadcode.rs:249-253](../../../cli/src/graph/deadcode.rs#L305)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
 ([report.rs:75-89](../../../cli/src/report.rs#L75)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
 ([deadcode.rs:13-15](../../../cli/src/graph/deadcode.rs#L13)).
 
-### 8. Acceptance
+### 8. The dead-row confidence (2.32.0)
+
+Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Graph.hs:107](../../../core/app/CE/Graph.hs#L107)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:198](../../../core/app/CE/Graph.hs#L198)):
+
+```
+0  unvouched — the language still carries unresolved sites: "nothing
+   references this" assumed none of those sites lands in-corpus
+1  vacuous   — no site of that language ever existed (an absent
+   ledger row reads (0, 0))
+2  vouched   — a fully resolved reference population
+```
+
+([Cost.hs:102](../../../core/app/CE/Graph/Cost.hs#L102)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:122](../../../cli/src/graph/load.rs#L122), [deadcode.rs:168](../../../cli/src/graph/deadcode.rs#L168)), fences every returned index and bounds the column ([deadcode.rs:341](../../../cli/src/graph/deadcode.rs#L341)), and renders the trust word beside each dead file ([deadcode.rs:253](../../../cli/src/graph/deadcode.rs#L253)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphProps.hs:127](../../../core/test/GraphProps.hs#L127)).
+
+### 9. Acceptance
 
 The M5-2 row sets four criteria: import-edge precision **≥ 0.90** on a 100-site manual audit
 spanning the five launch languages; `unreferenced_public` as its own report class, not folded

@@ -15,7 +15,7 @@
 module CE.Graph (respond) where
 
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, refdefKind, roleBits, sccFloor)
+import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, granFile, minRung, nodeCap, refdefKind, roleBits, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
@@ -28,15 +28,18 @@ import qualified Data.IntSet as IS
 import Data.List (partition)
 
 -- | Wire shape (design brief §2): index = node identity, nothing
--- text-shaped crosses. @unresolved@ is part of the family shape but
--- carries no validation obligation — it is the honest ledger, not an
--- input to judgment (§1 unknown-field rule). Absent @pos@ = counts
--- only.
+-- text-shaped crosses. Absent @pos@ = counts only. The optional
+-- @unres@ table (2.32.0, H3) is the per-language site ledger
+-- [[lang, unresolvedSites, totalSites]] — unlike the old scalar
+-- (which stayed an unvalidated honest ledger under the §1 rule),
+-- this one IS an input to judgment: each dead row grows a
+-- confidence column derived from its node's language.
 data GraphReq = GraphReq
   { reqId :: Value
   , reqNodes :: [[Integer]]
   , reqEdges :: [[Integer]]
   , reqPos :: [Integer]
+  , reqUnres :: Maybe [[Integer]]
   }
 
 instance FromJSON GraphReq where
@@ -46,6 +49,7 @@ instance FromJSON GraphReq where
       <*> o .: "nodes"
       <*> o .: "edges"
       <*> o .:? "pos" .!= []
+      <*> o .:? "unres"
 
 -- | The shared cascade with this family's bindings (CE.Wire —
 -- decode error prefix, caps, offence, replies all byte-identical to
@@ -56,8 +60,11 @@ respond proto =
     Family
       { famName = "graph"
       , famId = reqId
-      , famOverCap = \req ->
-          toInteger (length (reqNodes req)) > nodeCap
+      , -- the unres ledger counts toward a cap too (the scan C15
+        -- discipline: every request dimension is priced) — validation
+        -- bounds it to seven rows, but the cap must not need that
+        famOverCap = \req ->
+          toInteger (length (reqNodes req) + length (unresRows req)) > nodeCap
             || toInteger (length (reqEdges req)) > edgeCap
       , famOffence = violation
       , famDegraded = tooLarge proto
@@ -81,11 +88,32 @@ violation req =
       -- the reply larger than the request without limit; strictly
       -- ascending indices in [0, n) cannot exceed nodeCap rows)
       ascendingOn "pos" id ps
+    , asum (zipWith unresRow [0 :: Int ..] us)
+    , -- ascending langs: duplicate-free, so the confidence lookup's
+      -- first match is the only match
+      ascendingOn "unres" (take 1) us
     ]
  where
   n = fromIntegral (length (reqNodes req))
   es = reqEdges req
   ps = reqPos req
+  us = unresRows req
+
+-- | The unres table as sent, [] when absent — the cap's and the
+-- validator's view; road selection stays on reqUnres's Maybe.
+unresRows :: GraphReq -> [[Integer]]
+unresRows = maybe [] id . reqUnres
+
+unresRow :: Int -> [Integer] -> Maybe String
+unresRow i row = case row of
+  [lang, unres, total]
+    | lang < 0 || lang > 6 -> Just (label <> "lang outside the judged set")
+    | unres < 0 || total < 0 -> Just (label <> "negative count")
+    | unres > total -> Just (label <> "unresolved above total")
+    | otherwise -> Nothing
+  _ -> Just (label <> "malformed row (need [lang,unresolved,total])")
+ where
+  label = "unres " <> show i <> ": "
 
 -- | Node rows must share one arity — 3 columns (legacy flags) or 4
 -- (with the 2.28.0 roles column): a mixed table has no single
@@ -143,7 +171,7 @@ result proto req =
         -- `reported` rows. The kind column always crossed the wire
         -- and was validated, then discarded — an unnamed Rust
         -- branch held the policy instead.
-        "dead" .= [[toInteger i, toInteger v] | (i, v) <- deadRows]
+        "dead" .= [deadOut i v | (i, v) <- deadRows]
       , "reported" .= [[toInteger i, toInteger v] | (i, v) <- reportedRows]
       , -- the zero-tolerance gate, named: any file-tier dead verdict
         -- fails `ce deadcode --check` — the exit was synthesized
@@ -164,6 +192,15 @@ result proto req =
       ]
  where
   b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)
+  -- the confidence column rides exactly when the ledger rode
+  -- (2.32.0): legacy requests keep two-column dead rows,
+  -- byte-identical
+  deadOut i v = case reqUnres req of
+    Nothing -> [toInteger i, toInteger v]
+    Just unres -> [toInteger i, toInteger v, confidence unres (langOf i)]
+  langOf i
+    | ((l : _) : _) <- drop i (reqNodes req) = l
+    | otherwise = error "dead index inside the node table by construction"
   -- the roles column judges when it rides (2.28.0, batch-7 slice 3):
   -- a 4-column row's entry bits derive through Cost.roleBits and the
   -- legacy flags column yields; a 3-column row keeps its sent bits.

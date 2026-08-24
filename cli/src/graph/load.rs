@@ -79,7 +79,9 @@ pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     )
 }
 
-pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
+pub fn graph_rows(
+    idx: &Index,
+) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Vec<(String, i64, i64)>)> {
     let conn = idx.raw();
     // ONE read snapshot for one graph: as three autocommit statements
     // each read took its own WAL snapshot, so a convergent writer
@@ -115,6 +117,19 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64)> {
         [],
         |r| r.get(0),
     )?;
+    // per-path (total, unresolved) site counts — the graph family's
+    // trust ledger (2.32.0, H3): folded to per-language rows at the
+    // wire, judged into each dead row's confidence by the core. Read
+    // inside the SAME snapshot as the edges it vouches about.
+    let sites = rows(
+        conn,
+        "SELECT f.path, COUNT(*),
+                SUM(CASE WHEN NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id)
+                    THEN 1 ELSE 0 END)
+         FROM sites s JOIN files f ON f.id = s.file_id
+         GROUP BY f.path ORDER BY f.path",
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+    )?;
     txn.finish()?; // read-only: closing the snapshot, nothing to write
-    Ok((files, edges, unresolved))
+    Ok((files, edges, unresolved, sites))
 }

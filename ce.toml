@@ -307,4 +307,16 @@ entry_globs = [
 # became WireHarness.fieldsOf, and the fixture literals a daily
 # builder -- two windows dissolved before these two were booked.
 # Measured after fmt. Ratchet DOWN from here with every cleanup.
-budget = 190
+# 190 -> 193 (H3 deadcode-confidence, 2.32.0): three members of
+# already-banked uniform-by-design face classes. (a) unresRow
+# (Graph.hs) rhymes with gradeShape (Scan.hs) -- the refusal-by-name
+# validator case face every table family shares on purpose. (b)
+# Erase.hs's grown rowShape closer chained with Trend.hs's -- the
+# validator-scaffold tail face. (c) EraseProps' class-3 truth rows
+# and refusal lines chained with their own neighbours -- the Props
+# data-row face (parallel lists chosen deliberately over per-case
+# assertions, that file's own header says why). Making any one
+# validator or probe row LOOK different to dodge the counter is
+# declined by standing stance. Measured after fmt. Ratchet DOWN
+# from here with every cleanup.
+budget = 193

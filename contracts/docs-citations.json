@@ -3026,7 +3026,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:114": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 183,
+    "line": 216,
     "text": "// unknown extension = the sentinel code, NOT Python's 0 (RM15:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:115": {
@@ -3061,17 +3061,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:120": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 220,
+    "line": 269,
     "text": "fn named(nodes: &[Node], idx: usize, verdict: usize) -> Result<(&Node, &'static str)> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:121": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 230,
+    "line": 279,
     "text": "dead: Vec::new(),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:122": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 127,
+    "line": 155,
     "text": "| p < 0 || p >= n = Just (\"pos \" <> show i <> \": index out of range\")"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:123": {
@@ -3081,13 +3081,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:124": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 217,
+    "line": 266,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:125": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 249,
-    "text": "// is wire skew and must refuse, never license a directory."
+    "line": 305,
+    "text": "anyhow::ensure!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:126": {
     "target": "../../../cli/src/report.rs",
@@ -3100,14 +3100,14 @@
     "text": "//! (CE.Graph.Cost.roleBits), this side only measures. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:128": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 268,
-    "text": "| **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |"
+    "target": "../../../core/app/CE/Graph.hs",
+    "line": 107,
+    "text": "unresRow :: Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:129": {
-    "target": "../../../cli/tests/eval_graph_precision.rs",
-    "line": 85,
-    "text": "eval_support::assert_corpus_precision(&key, (c, w), in_truth, 0.90, \"G2\");"
+    "target": "../../../core/app/CE/Graph.hs",
+    "line": 198,
+    "text": "deadOut i v = case reqUnres req of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:13": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3115,54 +3115,54 @@
     "text": "fn esm_rewrite(dir: &str, spec: &str, scope: &Scope) -> Option<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:130": {
+    "target": "../../../core/app/CE/Graph/Cost.hs",
+    "line": 102,
+    "text": "confidence :: [[Integer]] -> Integer -> Integer"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
+    "target": "../../../cli/src/graph/load.rs",
+    "line": 122,
+    "text": "// wire, judged into each dead row's confidence by the core. Read"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:132": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 168,
+    "text": "fn lang_ledger(sites: &[(String, i64, i64)]) -> Vec<[i64; 3]> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:133": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 341,
+    "text": "(0..=2).contains(&c),"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:134": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 253,
+    "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
+    "target": "../../../core/test/GraphProps.hs",
+    "line": 127,
+    "text": "confRides :: Bool"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 268,
+    "text": "| **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
+    "target": "../../../cli/tests/eval_graph_precision.rs",
+    "line": 85,
+    "text": "eval_support::assert_corpus_precision(&key, (c, w), in_truth, 0.90, \"G2\");"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../cli/tests/eval_graph_precision.rs",
     "line": 88,
     "text": "const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
     "target": "../../../cli/tests/eval_support/precision.rs",
     "line": 38,
     "text": "pub fn assert_corpus_precision(key: &str, answered: (u64, u64), denom: u64, gate: f64, tag: &str) {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:132": {
-    "target": "../../../cli/tests/eval_support/precision.rs",
-    "line": 43,
-    "text": "let p = c as f64 / (c + w) as f64;"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:133": {
-    "target": "../../../cli/tests/eval_support/precision.rs",
-    "line": 65,
-    "text": "let overall = agg.correct as f64 / (agg.correct + agg.wrong) as f64;"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:134": {
-    "target": "../../../contracts/eval/graph-precision-zod-v1.json",
-    "line": 509,
-    "text": "\"in_corpus_truths\": 22,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
-    "target": "../../../contracts/eval/graph-precision-ripgrep-v1.json",
-    "line": 434,
-    "text": "\"in_corpus_truths\": 10,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
-    "target": "../../../contracts/eval/graph-precision-v1.json",
-    "line": 333,
-    "text": "\"in_corpus_truths\": 4,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
-    "target": "../../../contracts/eval/graph-precision-requests-v1.json",
-    "line": 284,
-    "text": "\"in_corpus_truths\": 3,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
-    "target": "../../../contracts/eval/graph-precision-cobra-v1.json",
-    "line": 237,
-    "text": "\"in_corpus_truths\": 1,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
-    "target": "../../../cli/tests/eval_graph_precision.rs",
-    "line": 1,
-    "text": "//! M5-2h precision instrument: the frozen 100-site sample, resolved"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:14": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3170,11 +3170,51 @@
     "text": "let hits = distinct_hits(&cands, scope.files);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:140": {
+    "target": "../../../cli/tests/eval_support/precision.rs",
+    "line": 43,
+    "text": "let p = c as f64 / (c + w) as f64;"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:141": {
+    "target": "../../../cli/tests/eval_support/precision.rs",
+    "line": 65,
+    "text": "let overall = agg.correct as f64 / (agg.correct + agg.wrong) as f64;"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:142": {
+    "target": "../../../contracts/eval/graph-precision-zod-v1.json",
+    "line": 509,
+    "text": "\"in_corpus_truths\": 22,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:143": {
+    "target": "../../../contracts/eval/graph-precision-ripgrep-v1.json",
+    "line": 434,
+    "text": "\"in_corpus_truths\": 10,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:144": {
+    "target": "../../../contracts/eval/graph-precision-v1.json",
+    "line": 333,
+    "text": "\"in_corpus_truths\": 4,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:145": {
+    "target": "../../../contracts/eval/graph-precision-requests-v1.json",
+    "line": 284,
+    "text": "\"in_corpus_truths\": 3,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:146": {
+    "target": "../../../contracts/eval/graph-precision-cobra-v1.json",
+    "line": 237,
+    "text": "\"in_corpus_truths\": 1,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:147": {
+    "target": "../../../cli/tests/eval_graph_precision.rs",
+    "line": 1,
+    "text": "//! M5-2h precision instrument: the frozen 100-site sample, resolved"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:148": {
     "target": "../../../cli/tests/eval_graph_precision.rs",
     "line": 93,
     "text": "total: 100,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:141": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:149": {
     "target": "../../../cli/src/main_cmds.rs",
     "line": 87,
     "text": "eprintln!("
@@ -3461,12 +3501,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:66": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 139,
+    "line": 156,
     "text": "Ok(GraphWire {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:67": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 141,
+    "line": 158,
     "text": "rows,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:68": {
@@ -3492,7 +3532,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:71": {
     "target": "../../../cli/src/graph/load.rs",
     "line": 97,
-    "text": "ORDER BY f.path, e.dst_path, e.dst_unit, e.kind, e.rung\","
+    "text": "FROM edges e JOIN sites s ON s.id = e.site_id"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:72": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -3501,22 +3541,22 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:73": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 69,
+    "line": 76,
     "text": "-- ordering errors, so the ascending pass only ever compares"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:74": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 88,
+    "line": 99,
     "text": "ps = reqPos req"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:75": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 110,
+    "line": 138,
     "text": "label = \"node \" <> show i <> \": \""
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 74,
+    "line": 81,
     "text": "[ mixedArity (reqNodes req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
@@ -3526,12 +3566,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 77,
+    "line": 84,
     "text": ", ascendingOn \"edge\" id es"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:79": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 123,
+    "line": 151,
     "text": "-- tenth ratchet bite promoted it to the shared skeleton)."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:8": {
@@ -3551,18 +3591,18 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:82": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 57,
+    "line": 61,
     "text": "{ famName = \"graph\""
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:83": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 161,
+    "line": 189,
     "text": ", \"kept\" .= bKept b"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 277,
-    "text": ".unwrap_or(report.degraded.is_some() || !report.dead.is_empty());"
+    "line": 338,
+    "text": "for d in &report.dead {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
     "target": "../../../cli/src/main_cmds.rs",
@@ -3616,7 +3656,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:94": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 177,
+    "line": 210,
     "text": "/// [lang, kind, legacyFlags, roles] — only file nodes carry entry"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:95": {
@@ -3631,7 +3671,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:97": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 182,
+    "line": 219,
     "text": "effectiveFlags :: [Integer] -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:98": {
@@ -4267,7 +4307,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.31.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.32.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5651,7 +5691,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:11": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 31,
+    "line": 42,
     "text": "judgeRow :: [Integer] -> (Bool, Integer)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:12": {
@@ -5661,12 +5701,12 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:13": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 32,
+    "line": 43,
     "text": "judgeRow [0, _verdict, langUnresolved, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:14": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 32,
+    "line": 43,
     "text": "judgeRow [0, _verdict, langUnresolved, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:15": {
@@ -5676,22 +5716,22 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:16": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 35,
+    "line": 46,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:17": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 122,
+    "line": 126,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:18": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 35,
+    "line": 46,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:19": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 35,
+    "line": 46,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:2": {
@@ -5701,163 +5741,163 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:20": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 35,
+    "line": 46,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:21": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 39,
+    "line": 50,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:22": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 156,
+    "line": 160,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:23": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 39,
+    "line": 50,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:24": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 39,
+    "line": 50,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:25": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 56,
+    "text": "judgeRow [3, _verdict, conf, _, _]"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:26": {
+    "target": "../../../core/app/CE/Erase.hs",
+    "line": 37,
+    "text": "| cls == 3 && x > 2 -> Just (label <> \"confidence outside 0..2\")"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:27": {
+    "target": "../../../cli/src/erase/gather.rs",
+    "line": 114,
+    "text": ".context(\"dead row carries no confidence — the graph ledger did not ride\")?;"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:28": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 16,
+    "text": "--                  confidence exists for it — the H3 scope line)"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:29": {
     "target": "../../../cli/src/erase/model.rs",
     "line": 14,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:26": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 32,
-    "text": "judgeRow [0, _verdict, langUnresolved, _, _]"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:27": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 32,
-    "text": "judgeRow [0, _verdict, langUnresolved, _, _]"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:28": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 39,
-    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:29": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 35,
-    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 257,
-    "text": "> 上调 violCost 属显式选择）。区间罚曲线过硬线 H 改 **C¹ 线性延伸**"
+    "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 35,
-    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
+    "line": 43,
+    "text": "judgeRow [0, _verdict, langUnresolved, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:31": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 39,
-    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
+    "line": 43,
+    "text": "judgeRow [0, _verdict, langUnresolved, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:32": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 39,
+    "line": 50,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:33": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 28,
-    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
+    "line": 46,
+    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:34": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 28,
-    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
+    "line": 46,
+    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:35": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 22,
-    "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
+    "line": 50,
+    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:36": {
-    "target": "../../../contracts/VERSIONING.md",
-    "line": 266,
-    "text": "> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc"
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 50,
+    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:37": {
-    "target": "../../../cli/src/erase/wire.rs",
-    "line": 29,
-    "text": "let reply = link"
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 39,
+    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:38": {
-    "target": "../../../cli/src/lockstep.rs",
-    "line": 103,
-    "text": "/// A degraded reply to a client-sized request means the Rust cap"
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 39,
+    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:39": {
-    "target": "../../../cli/src/erase/apply.rs",
-    "line": 39,
-    "text": "/// Contract order, each refusal by name, nothing written before all"
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 33,
+    "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 260,
-    "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
+    "text": "> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
+    "target": "../../../contracts/VERSIONING.md",
+    "line": 266,
+    "text": "> （H 处斜率相接，仍单调恒收费，但平方不出契约域 (S,H]）。动因="
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:41": {
+    "target": "../../../cli/src/erase/wire.rs",
+    "line": 29,
+    "text": "let reply = link"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:42": {
+    "target": "../../../cli/src/lockstep.rs",
+    "line": 103,
+    "text": "/// A degraded reply to a client-sized request means the Rust cap"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:43": {
+    "target": "../../../cli/src/erase/apply.rs",
+    "line": 39,
+    "text": "/// Contract order, each refusal by name, nothing written before all"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 45,
     "text": "fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:41": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 64,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:42": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 84,
     "text": "let mut cache = crate::erase::gather::TextCache::new(root);"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:43": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 18,
     "text": "/// Preconditions + writes + audit log. Returns the applied count."
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:48": {
     "target": "../../../cli/src/erase/mod.rs",
     "line": 53,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 11,
-    "text": "-- Reason codes are frozen positions too — the advisory face names"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
-    "target": "../../../contracts/VERSIONING.md",
-    "line": 263,
-    "text": "> docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 1,
-    "text": "-- | The erase-family predicate (M9 batch 3, docs/reference/erase.md):"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:48": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 28,
-    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 31,
-    "text": "judgeRow :: [Integer] -> (Bool, Integer)"
+    "line": 22,
+    "text": "-- Reason codes are frozen positions too — the advisory face names"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:5": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -5866,8 +5906,28 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
+    "line": 263,
+    "text": "> 窗口内实体数；n=0 零费=诚实缺席），score=各轴费在 violCost 表盘下的"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 1,
+    "text": "-- | The erase-family predicate (M9 batch 3, docs/reference/erase.md):"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:52": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 39,
+    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:53": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 42,
+    "text": "judgeRow :: [Integer] -> (Bool, Integer)"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
+    "target": "../../../contracts/VERSIONING.md",
     "line": 260,
-    "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
+    "text": "> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
     "target": "../../../cli/src/erase/gather.rs",
@@ -5881,12 +5941,12 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:8": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 122,
+    "line": 126,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:9": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 156,
+    "line": 160,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   }
 }

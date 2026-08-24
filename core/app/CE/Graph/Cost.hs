@@ -10,7 +10,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits) where
+module CE.Graph.Cost (confidence, nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -88,6 +88,23 @@ assetKind = 3
 -- conventions were.
 roleBits :: [(Integer, Integer)]
 roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1)]
+-- | The dead-row confidence (H3, 2.32.0): how far the dead node's
+-- OWN language can vouch for its verdict, judged from the request's
+-- per-language site ledger [[lang, unresolvedSites, totalSites]].
+-- Codes: 0 unvouched — the language still carries unresolved sites,
+-- so "nothing references this" assumed no in-corpus lands (the
+-- erase.md trust boundary, executed HERE since this minor); 1
+-- vacuous — no site of that language ever existed, an absence of
+-- evidence stated apart from evidence of absence; 2 vouched — a
+-- fully resolved reference population. An absent language row reads
+-- (0, 0): vacuous. Validation bounds and orders the ledger, so the
+-- first match is the only match.
+confidence :: [[Integer]] -> Integer -> Integer
+confidence unres lang = case [(u, t) | [l, u, t] <- unres, l == lang] of
+  ((u, _) : _) | u > 0 -> 0
+  ((_, t) : _) | t > 0 -> 2
+  _ -> 1
+
 -- | The unused-reference-definition edge kind (H1 slice 16,
 -- 2.29.0): the second liveness-inert kind beside assetKind — a
 -- definition that renders nothing must not keep its target alive

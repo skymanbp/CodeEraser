@@ -85,9 +85,11 @@ pub fn emit<M: Serialize, C: Serialize>(
 pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
     use serde_json::json;
     json!({
-        "schema": "ce.deadcode-report/0.1.0",
-        "dead": r.dead.iter().map(|(n, v, w)| {
-            json!({"name": n, "verdict": v, "why": w})
+        // 0.2.0 (2.32.0, H3): dead rows carry the confidence
+        // column (null on a legacy reply without the ledger)
+        "schema": "ce.deadcode-report/0.2.0",
+        "dead": r.dead.iter().map(|d| {
+            json!({"name": d.path, "verdict": d.verdict, "why": d.why, "confidence": d.conf})
         }).collect::<Vec<_>>(),
         "reported": r.reported.iter().map(|(n, v)| {
             json!({"name": n, "verdict": v})

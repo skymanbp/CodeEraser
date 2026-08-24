@@ -15,10 +15,12 @@ module GraphProps (battery) where
 
 import CE.Graph (respond)
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, entryMask, minRung, refdefKind, roleBits, sccFloor)
+import CE.Graph.Cost (assetKind, confidence, entryMask, minRung, refdefKind, roleBits, sccFloor)
 import CE.Graph.Cycles (cycles)
 import CE.Graph.Dead (deriveFlags, entries, verdicts)
-import Data.Aeson (Value (..), encode, object, (.=))
+import Data.Aeson (Value (..), decodeStrict, encode, object, toJSON, (.=))
+import qualified Data.Aeson.KeyMap as KM
+import qualified Data.ByteString.Char8 as B8
 import Data.Bits (xor)
 import qualified Data.ByteString.Lazy as BL
 import Data.List (isInfixOf, sort)
@@ -36,7 +38,9 @@ battery = do
   g <- check "roles derive the entry bits through the table (2.28.0)" rolesDerive
   h <- check "the role table is a live knob (a dropped row empties the seeds)" roleKnob
   i <- check "mixed node-row arity refused" mixedRefused
-  pure (a && b && c && d && e && f && g && h && i)
+  j <- check "the confidence column rides exactly when the ledger does" confRides
+  k <- check "unres refusals name the offender" unresRefused
+  pure (a && b && c && d && e && f && g && h && i && j && k)
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -113,6 +117,50 @@ mixedRefused = case respond "2.1.0" req of
         , "edges" .= ([] :: [Value])
         , "pos" .= ([] :: [Value])
         ]
+
+-- | Three entry-less file nodes, all dead (unref_private): lang 0
+-- fully resolved -> vouched 2; lang 4 with unresolved sites ->
+-- unvouched 0; lang 6 absent from the ledger -> vacuous 1. The SAME
+-- request without the ledger answers two-column rows — the legacy
+-- road is byte-shaped, not merely value-equal. The kernel rule is
+-- pinned beside the wire: (0,0) is vacuous, not vouched.
+confRides :: Bool
+confRides =
+  deadOf (graphReq (Just [[0, 0, 3], [4, 2, 9]]))
+    == Just (toJSON ([[0, 1, 2], [1, 1, 0], [2, 1, 1]] :: [[Integer]]))
+    && deadOf (graphReq Nothing) == Just (toJSON ([[0, 1], [1, 1], [2, 1]] :: [[Integer]]))
+    && map (confidence [[0, 0, 3], [4, 2, 9]]) [0, 4, 6] == [2, 0, 1]
+    && confidence [[5, 0, 0]] 5 == 1
+ where
+  deadOf req = do
+    Right bytes <- pure (respond "2.1.0" req)
+    Object o <- decodeStrict bytes
+    KM.lookup "dead" o
+
+unresRefused :: Bool
+unresRefused =
+  and
+    [ refusedMsg (Just [[7, 0, 0]]) "unres 0: lang outside the judged set"
+    , refusedMsg (Just [[0, 4, 3]]) "unres 0: unresolved above total"
+    , refusedMsg (Just [[0, 1]]) "unres 0: malformed row (need [lang,unresolved,total])"
+    , refusedMsg (Just [[4, 0, 1], [0, 0, 1]]) "unres 1: not strictly ascending"
+    ]
+ where
+  refusedMsg unres want = case respond "2.1.0" (graphReq unres) of
+    Left (_, code, msg) -> code == "contract" && msg == want
+    Right _ -> False
+
+-- | The confRides fixture request: three entry-less file nodes of
+-- langs 0/4/6, no edges; the ledger rides when given.
+graphReq :: Maybe [[Integer]] -> B8.ByteString
+graphReq unres =
+  BL.toStrict . encode . object $
+    [ "id" .= (1 :: Int)
+    , "nodes" .= ([[0, 0, 0], [4, 0, 0], [6, 0, 0]] :: [[Integer]])
+    , "edges" .= ([] :: [Value])
+    , "pos" .= ([] :: [Value])
+    ]
+      <> maybe [] (\u -> ["unres" .= u]) unres
 
 -- | 200 seeded graphs: (n, arcs with rungs, flags per node).
 allGraphs :: ((Int, [(Int, Int, Integer)], [Integer]) -> Bool) -> Bool
