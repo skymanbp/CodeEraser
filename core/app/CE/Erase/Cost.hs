@@ -3,12 +3,11 @@
 -- Rust's measurement (byte equality, word counts, coverage, liveness
 -- lookups arrive as integer facts); WHICH rows are safe is judgment
 -- and lives here (ADR-008). Classes are frozen positions:
---   0 dead_file    graph file-tier dead; refused while its language
---                  still carries unresolved sites (a verdict that
---                  assumed no in-corpus lands is not a deletion
---                  licence). SUPERSEDED at 2.32.0 by class 3 — kept
---                  judging unchanged for the grace window (the
---                  staleDocs discipline), retire in a later minor
+--   0 (retired)   was dead_file on the local-count road; superseded
+--                  at 2.32.0 by class 3 and RETIRED at 4.0.0 once
+--                  the grace window closed. The position stays
+--                  frozen and is refused by name — renumbering the
+--                  survivors would move three other frozen codes
 --   1 verbatim_doc docdup pair; safe only as FULL-segment byte-equal
 --   2 t1_twin      whole-unit T1 twin whose copy's file is dead
 --                  (its language-trust fact stays the local count:
@@ -40,9 +39,6 @@ eraseRowCap = 4096
 -- in a fixed order names the refusal; a malformed class never
 -- reaches here (famOffence refused it by name).
 judgeRow :: [Integer] -> (Bool, Integer)
-judgeRow [0, _verdict, langUnresolved, _, _]
-  | langUnresolved /= 0 = (False, 1)
-  | otherwise = (True, 0)
 judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]
   | verbatim < wordsA || verbatim < wordsB = (False, 2)
   | bytesEqual /= 1 = (False, 3)

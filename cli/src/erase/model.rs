@@ -12,11 +12,14 @@ use std::collections::BTreeMap;
 pub const SCHEMA_ID: &str = "ce.erase-plan/0.1.0";
 
 /// Frozen class positions — the wire's `class` field (erase/1).
-/// Class 3 is dead_file on the CONFIDENCE road (2.32.0, H3): same
-/// candidate family, its trust fact now the graph family's own
-/// per-row confidence; class 0 is superseded, judged unchanged for
-/// the grace window.
-pub const CLASS_NAMES: [&str; 4] = ["dead_file", "verbatim_doc", "t1_twin", "dead_file"];
+/// Class 3 is dead_file on the CONFIDENCE road (2.32.0, H3): its
+/// trust fact is the graph family's own per-row confidence. Class 0
+/// was the same candidate family on the local-count road; it was
+/// superseded at 2.32.0 and RETIRED at 4.0.0 when the grace window
+/// closed. Its position stays frozen and never renders — the core
+/// refuses a class-0 row by name, and renumbering the survivors
+/// would move three other frozen codes to save one array slot.
+pub const CLASS_NAMES: [&str; 4] = ["(retired)", "verbatim_doc", "t1_twin", "dead_file"];
 
 /// Frozen reason positions — the wire's `reason` field (erase/1).
 pub const REASON_NAMES: [&str; 6] = [

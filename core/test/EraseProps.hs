@@ -38,22 +38,23 @@ truthTable =
     && and (zipWith (\r v -> judgeRow r == v) facts wants)
  where
   facts =
-    [ [0, 1, 0, 0, 0], [0, 4, 0, 0, 0], [0, 2, 7, 0, 0]
-    , [1, 60, 60, 60, 1], [1, 59, 60, 60, 1]
+    -- class 0 is absent by construction (4.0.0): the row shape
+    -- refuses it upstream, so no judgeRow case can be written for
+    -- it -- `refusals` below is where its retirement is asserted.
+    [ [1, 60, 60, 60, 1], [1, 59, 60, 60, 1]
     , [1, 60, 60, 61, 1], [1, 60, 60, 60, 0]
     , [2, 1, 1, 1, 0], [2, 0, 1, 1, 0], [2, 1, 0, 1, 0]
     , [2, 1, 1, 0, 0], [2, 1, 1, 1, 3]
     , [3, 1, 0, 0, 0], [3, 2, 1, 0, 0], [3, 4, 2, 0, 0]
     ]
   wants =
-    [ (True, 0), (True, 0), (False, 1)
-    , (True, 0), (False, 2), (False, 2), (False, 3)
+    [ (True, 0), (False, 2), (False, 2), (False, 3)
     , (True, 0), (False, 5), (False, 3), (False, 4), (False, 1)
     , (False, 1), (True, 0), (True, 0)
     ]
 
 req :: [[Integer]] -> Value
-req = rowsRequest "3.0.0" "erase.request"
+req = rowsRequest "4.0.0" "erase.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of
@@ -66,9 +67,12 @@ mixed = case replyObjWith respond (req rows) of
       && (counts o "rows" == Just 4)
   Nothing -> False
  where
+  -- the two dead_file rows ride class 3 since 4.0.0 retired class
+  -- 0; confidence 2 (vouched) and 0 (unvouched) reproduce exactly
+  -- the verdicts the local-count road gave them
   rows =
-    [ [0, 3, 0, 0, 0]
-    , [0, 1, 12, 0, 0]
+    [ [3, 3, 2, 0, 0]
+    , [3, 1, 0, 0, 0]
     , [1, 80, 80, 80, 1]
     , [2, 1, 0, 1, 0]
     ]
@@ -81,23 +85,28 @@ refusals :: Bool
 refusals =
   and
     [ refusedBy respond (req [[4, 0, 0, 0, 0]]) "row 0: unknown class"
+    , -- K2: the retired class is refused BY NAME, not folded into
+      -- "unknown class" -- a client still sending it learns which
+      -- road replaced it (2.32.0's class 3), and no class-0 row can
+      -- ever be judged again
+      refusedBy respond (req [[0, 1, 0, 0, 0]]) "row 0: retired class 0"
     , refusedBy respond (req [[3, 0, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
     , refusedBy respond (req [[3, 1, 3, 0, 0]]) "row 0: confidence outside 0..2"
-    , refusedBy respond (req [[0, 1, -1, 0, 0]]) "row 0: negative fact"
-    , refusedBy respond (req [[0, 5, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
+    , refusedBy respond (req [[3, 1, -1, 0, 0]]) "row 0: negative fact"
+    , refusedBy respond (req [[3, 5, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
     , refusedBy respond (req [[1, 60, 60, 60, 2]]) "row 0: bytesEqual not a boolean"
     , refusedBy respond (req [[2, 2, 1, 1, 0]]) "row 0: coverage/equality/death not booleans"
-    , refusedBy respond (req [[0, 1, 0, 0]]) "row 0: malformed row"
+    , refusedBy respond (req [[3, 1, 0, 0]]) "row 0: malformed row"
     ]
 
 knobless :: Bool
 knobless =
   refusedBy
     respond
-    (setKey "knobs" (toJSON [[0 :: Integer, 1]]) (req [[0, 1, 0, 0, 0]]))
+    (setKey "knobs" (toJSON [[0 :: Integer, 1]]) (req [[3, 1, 0, 0, 0]]))
     "knob 0: erase/1 declares no knob codes"
 
 degradedFails :: Bool
 degradedFails = degradedFace respond (req big) "rows" "erase_too_large"
  where
-  big = replicate (fromInteger eraseRowCap + 1) [0, 1, 0, 0, 0]
+  big = replicate (fromInteger eraseRowCap + 1) [3, 1, 0, 0, 0]

@@ -41,7 +41,7 @@ battery =
 wireReq :: Value
 wireReq =
   object
-    [ "proto" .= ("3.0.0" :: String)
+    [ "proto" .= ("4.0.0" :: String)
     , "type" .= ("structure.request" :: String)
     , "id" .= (1 :: Int)
     , "nodes"

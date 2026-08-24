@@ -149,6 +149,16 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **4.0.0**（erase class 0 退役 **major**，K 轮步 2，2026-08-24，用户拍板 v2.14）：`erase.request` 的 class 0
+> （dead_file 本地计数路）自 2.32.0 被 class 3 取代、Rust 同 minor 起不再铸行，宽限窗至此关闭——**离开判决集**，
+> 其冻结位保留并**按名拒绝**（`row i: retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)`），而非折进
+> 「unknown class」：仍在发它的客户端由此得知接替它的是哪条路。位不重编——重编会为省一个数组槽而移动另外三个冻结码，
+> `CLASS_NAMES` 改留 `(retired)` 占位（二义的两个 dead_file 同死）。纯裁除故走 major。**同批未做**：graph 节点行的
+> pre-2.28 legacy flags 列本拟同批退役，实测拦下——flags 位 0（exported）是公私判决轴，符号表给可见性第一个真生产者
+> 之前删列会让 `unref_public`/`unreach_public` 连夹具都无法表达（对拍实证：旧 golden 含码 2/4，删列重生成后归零），
+> 故顺延至符号表落地后的 minor。反事实：K2 = class 0 行按名被拒（fixtures/erase pair 8）、K4 = 未受影响九族回复
+> 除 proto 串外逐字节相同（98 对机器重生成后逐行对拍，仅 erase 两行按等价迁至 class 3、wire-errors 两条错误文案
+> 内嵌 server 版本串）。请求行随 major 机器重写为 4.0.0（3.0.0 先例，§3）；核电池请求侧 proto 同步 19 处。
 > **3.2.0**（规则包 scan 旁表 minor，I 轮 P3，2026-08-24，用户拍板 v2.13 ①）：`scan.request` 加性两键——
 > `rowClasses=[classId…]` 与 rows **位置对齐**（长度必等、每项 < 64；缺席 = 全行走全局表）与
 > `gradeOverrides=[[classId,code,warn,fail]]`（classId ≥ 1、code 0..6、阶梯同 grades 文法〔fail 0 = 无硬线、
@@ -305,8 +315,8 @@
 > `erase/1` —— 确定性两段式擦除器的**安全谓词**（契约册
 > docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。
 > `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，
-> 路径永不上 wire——Rust 按序回贴标签），class 冻结位 0=dead_file
-> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc
+> 路径永不上 wire——Rust 按序回贴标签），class 冻结位 0=**已退役**（4.0.0，
+> 按名拒绝；曾为 dead_file 本地计数路）、1=verbatim_doc
 > （w=verbatim 词数，x/y=两侧段词数，z=字节相等布尔）、2=t1_twin
 > （w=整单元覆盖，x=字节相等，y=副本文件已判死，z=语言未解析数）；
 > **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。
@@ -466,5 +476,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 3.2.0 | §1 所列两处常量 |
+| 协议 | 4.0.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

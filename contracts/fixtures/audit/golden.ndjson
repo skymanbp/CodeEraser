@@ -1,8 +1,8 @@
-{"id":1,"proto":"3.0.0","rows":[[0,0],[1,0],[0,1],[1,1],[0,0]],"type":"audit.request"}
-{"counts":{"dups":3,"rows":5},"degraded":false,"dups":[1,2,3],"fail":true,"id":1,"proto":"3.2.0","type":"audit.result"}
-{"id":2,"proto":"3.0.0","rows":[[0,0],[0,0]],"type":"audit.request"}
-{"counts":{"dups":0,"rows":2},"degraded":false,"dups":[],"fail":false,"id":2,"proto":"3.2.0","type":"audit.result"}
-{"id":3,"proto":"3.0.0","rows":[[2,0]],"type":"audit.request"}
-{"code":"contract","id":3,"message":"row 0: touched bit not a boolean","proto":"3.2.0","type":"error"}
-{"id":4,"knobs":[[0,1]],"proto":"3.0.0","rows":[[0,0]],"type":"audit.request"}
-{"code":"contract","id":4,"message":"knob 0: audit/1 declares no knob codes","proto":"3.2.0","type":"error"}
+{"id":1,"proto":"4.0.0","rows":[[0,0],[1,0],[0,1],[1,1],[0,0]],"type":"audit.request"}
+{"counts":{"dups":3,"rows":5},"degraded":false,"dups":[1,2,3],"fail":true,"id":1,"proto":"4.0.0","type":"audit.result"}
+{"id":2,"proto":"4.0.0","rows":[[0,0],[0,0]],"type":"audit.request"}
+{"counts":{"dups":0,"rows":2},"degraded":false,"dups":[],"fail":false,"id":2,"proto":"4.0.0","type":"audit.result"}
+{"id":3,"proto":"4.0.0","rows":[[2,0]],"type":"audit.request"}
+{"code":"contract","id":3,"message":"row 0: touched bit not a boolean","proto":"4.0.0","type":"error"}
+{"id":4,"knobs":[[0,1]],"proto":"4.0.0","rows":[[0,0]],"type":"audit.request"}
+{"code":"contract","id":4,"message":"knob 0: audit/1 declares no knob codes","proto":"4.0.0","type":"error"}

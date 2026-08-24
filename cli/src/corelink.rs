@@ -12,6 +12,18 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 4.0.0 = erase class 0 retires (plan v2.14, K round step 2,
+/// 2026-08-24). Superseded by class 3 at 2.32.0 and unemitted by
+/// this client ever since, it now leaves the judged set; its
+/// frozen POSITION stays and is refused by name, because
+/// renumbering the survivors would move three other frozen codes.
+/// Pure subtraction, hence the major.
+/// The graph node row's pre-2.28 legacy flags column was to retire
+/// in the same breath and does NOT: flags bit 0 (exported) is the
+/// public/private judgment axis, and until the symbol table gives
+/// visibility its first real producer, dropping the column would
+/// leave `unref_public` and `unreach_public` inexpressible even to
+/// a fixture. It retires the minor AFTER symbols land.
 /// 3.2.0 = the rulepack's scan minor (plan v2.13 ①, I round P3,
 /// 2026-08-24): scan.request may carry `rowClasses` (each row's
 /// path class, aligned to rows — absent = every row on the global
@@ -210,7 +222,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "3.2.0";
+pub const PROTO: &str = "4.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

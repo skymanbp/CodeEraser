@@ -330,4 +330,10 @@ entry_globs = [
 # validator became the condition-table ladderShape (the unresRow
 # rhyme booked at 190 -> 193 (a)). The gate itself said ratchet
 # down. Down needs no defence.
-budget = 186
+# 186 -> 185 (K round step 2, erase class 0 retires at 4.0.0):
+# the retired class took its judgeRow clause, its three truth-
+# table rows and the class-0 probes with it, dissolving one
+# standing chain. A subtraction, not a restructuring -- down
+# needs no defence, and this line records it rather than
+# leaving the counter quietly slack.
+budget = 185
