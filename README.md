@@ -115,12 +115,12 @@ Three faces read that one line and cannot disagree: the score's size and complex
 ## Evaluation dashboard
 
 <!-- bench:begin -->
-### Latest-version latency · v1.0.1
+### Latest-version latency · v1.1.0
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1616 | 856 | 3252 | 665 | 1073 | 68 | 785 |
-| p95 ms | 1645 | 877 | 3374 | 679 | 1085 | 93 | 2995 |
+| p50 ms | 1402 | 699 | 3675 | 554 | 871 | 43 | 728 |
+| p95 ms | 1439 | 769 | 3709 | 567 | 899 | 55 | 2869 |
 
 ### Frozen evaluation points
 

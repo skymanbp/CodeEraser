@@ -95,6 +95,13 @@
 | 1.0.1 | docdup_warm | 1073 | 1085 | 3 | windows/x86_64/16cpu | 2026-08-23 |
 | 1.0.1 | hook_probe | 68 | 93 | 30 | windows/x86_64/16cpu | 2026-08-23 |
 | 1.0.1 | scan | 785 | 2995 | 5 | windows/x86_64/16cpu | 2026-08-23 |
+| 1.1.0 | check_warm | 1402 | 1439 | 3 | windows/x86_64/16cpu | 2026-08-24 |
+| 1.1.0 | deadcode_warm | 699 | 769 | 3 | windows/x86_64/16cpu | 2026-08-24 |
+| 1.1.0 | dedup_cold | 3675 | 3709 | 3 | windows/x86_64/16cpu | 2026-08-24 |
+| 1.1.0 | dedup_warm | 554 | 567 | 5 | windows/x86_64/16cpu | 2026-08-24 |
+| 1.1.0 | docdup_warm | 871 | 899 | 3 | windows/x86_64/16cpu | 2026-08-24 |
+| 1.1.0 | hook_probe | 43 | 55 | 30 | windows/x86_64/16cpu | 2026-08-24 |
+| 1.1.0 | scan | 728 | 2869 | 5 | windows/x86_64/16cpu | 2026-08-24 |
 
 ## Frozen evaluation points
 
