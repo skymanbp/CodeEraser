@@ -99,7 +99,7 @@ newDisc = current                   -- verbatim, not intersected
 
 ### Composing the fail bit
 
-ADR-006 makes the ratchet the primary gate for a repository that has a baseline and `--fail-under` a floor underneath it; either alone fails ([DEVELOPMENT_PLAN.md:213-214](../../DEVELOPMENT_PLAN.md#L213)). As built, the fail bit is the disjunction of four **named** conditions ([Verdict.hs:179-185](../../../core/app/CE/Verdict.hs#L179)):
+ADR-006 makes the ratchet the primary gate for a repository that has a baseline and `--fail-under` a floor underneath it; either alone fails ([DEVELOPMENT_PLAN.md:217-218](../../DEVELOPMENT_PLAN.md#L217)). As built, the fail bit is the disjunction of four **named** conditions ([Verdict.hs:179-185](../../../core/app/CE/Verdict.hs#L179)):
 
 | name | holds when |
 |---|---|
