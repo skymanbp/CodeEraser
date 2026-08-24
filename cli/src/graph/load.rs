@@ -79,9 +79,11 @@ pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     )
 }
 
-pub fn graph_rows(
-    idx: &Index,
-) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Vec<(String, i64, i64)>)> {
+/// One row per site-owning file: (path, total sites, unresolved
+/// sites) — the trust ledger raw material (2.32.0, H3).
+pub type PathSites = Vec<(String, i64, i64)>;
+
+pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, PathSites)> {
     let conn = idx.raw();
     // ONE read snapshot for one graph: as three autocommit statements
     // each read took its own WAL snapshot, so a convergent writer

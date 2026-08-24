@@ -112,11 +112,11 @@ pub fn judge(
 /// with it), and the caller reserves the grade table's rows. The
 /// walk that prices code-6 rows is the walk that slices the facts
 /// — alignment by construction.
-fn chunk_plan<'a>(
-    rows: &'a [[u64; 2]],
-    naming: &'a [[i64; 5]],
-    budget: usize,
-) -> Vec<(&'a [[u64; 2]], &'a [[i64; 5]])> {
+/// One chunk: its measurement rows and the naming facts aligned
+/// to the chunk's code-6 rows.
+type Chunk<'a> = (&'a [[u64; 2]], &'a [[i64; 5]]);
+
+fn chunk_plan<'a>(rows: &'a [[u64; 2]], naming: &'a [[i64; 5]], budget: usize) -> Vec<Chunk<'a>> {
     let mut out = Vec::new();
     let (mut row0, mut fact0, mut facts, mut weight) = (0usize, 0usize, 0usize, 0usize);
     for (i, row) in rows.iter().enumerate() {

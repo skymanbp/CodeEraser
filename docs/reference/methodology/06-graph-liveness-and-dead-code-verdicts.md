@@ -116,7 +116,7 @@ Two transformations happen on the way to the wire:
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
 never saw ([load.rs:70-75](../../../cli/src/graph/load.rs#L70)). `unresolved_sites` is the count of sites
-with no edge row ([load.rs:97-102](../../../cli/src/graph/load.rs#L97)) and travels with the report so
+with no edge row ([load.rs:97-102](../../../cli/src/graph/load.rs#L99)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:22-24](../../../cli/src/graph/deadcode.rs#L23)).
 
@@ -316,7 +316,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:102](../../../core/app/CE/Graph/Cost.hs#L102)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:122](../../../cli/src/graph/load.rs#L122), [deadcode.rs:168](../../../cli/src/graph/deadcode.rs#L168)), fences every returned index and bounds the column ([deadcode.rs:341](../../../cli/src/graph/deadcode.rs#L341)), and renders the trust word beside each dead file ([deadcode.rs:253](../../../cli/src/graph/deadcode.rs#L253)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphProps.hs:127](../../../core/test/GraphProps.hs#L127)).
+([Cost.hs:102](../../../core/app/CE/Graph/Cost.hs#L102)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:122](../../../cli/src/graph/load.rs#L124), [deadcode.rs:168](../../../cli/src/graph/deadcode.rs#L168)), fences every returned index and bounds the column ([deadcode.rs:341](../../../cli/src/graph/deadcode.rs#L341)), and renders the trust word beside each dead file ([deadcode.rs:253](../../../cli/src/graph/deadcode.rs#L253)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphProps.hs:127](../../../core/test/GraphProps.hs#L127)).
 
 ### 9. Acceptance
 

@@ -3121,7 +3121,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 122,
+    "line": 124,
     "text": "// wire, judged into each dead row's confidence by the core. Read"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:132": {
@@ -3531,7 +3531,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:71": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 97,
+    "line": 99,
     "text": "FROM edges e JOIN sites s ON s.id = e.site_id"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:72": {
