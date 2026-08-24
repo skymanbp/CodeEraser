@@ -31,7 +31,7 @@ normalized IR; the **judgment** side is Haskell (`ce-core`) — the rule
 engine, the four-classification, TSED, graph analysis, scoring and the
 ratchet — and turns those facts into verdicts
 ([DEVELOPMENT_PLAN.md:158-161](../DEVELOPMENT_PLAN.md#L158),
-[README.md:156](../../README.md#L156)). The boundary has a one-line
+[README.md:159](../../README.md#L159)). The boundary has a one-line
 test, from ADR-008: if a rule needs source text or line-level content to
 cross the wire, it is measurement and stays in Rust
 ([DEVELOPMENT_PLAN.md:229](../DEVELOPMENT_PLAN.md#L229)). So read each

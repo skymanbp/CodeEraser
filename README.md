@@ -15,14 +15,17 @@ judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception
 
 ## Status
 
-🏁 **v1.0.1 — released.** v1.0.0 delivered every milestone of the locked plan with a clean final sweep
+🏁 **v1.1.0 — released.** v1.0.0 delivered every milestone of the locked plan with a clean final sweep
 (113 audit findings reconciled, 716 documentation claims re-verified, every number on the site produced by
-replay or retaken from real output); v1.0.1 is distribution maintenance — the Windows installer now wires
-the Claude Code plugin itself — with no judgment changes, so scores stay comparable with 1.0.0. Installers,
-[crates.io](https://crates.io/crates/codeeraser), the npm pointer and [codeeraser.dev](https://codeeraser.dev)
-are live at 1.0.1. Scores under 1.0.x are **not comparable** with 0.7.3 — the density-law and cycle-axis
-migrations are declared in the v1.0.0 release notes, and a floor calibrated against a pre-1.0 band needs a
-named `CE_ACCEPT_BASELINE=1` re-establish.
+replay or retaken from real output); v1.0.1 was distribution maintenance (the Windows installer wires the
+Claude Code plugin itself); v1.1.0 lands the path rulepack — `[[rules.class]]` gives a glob-matched class
+its own size and complexity lines, read alike by the score (wire proto 3.1.0), the `ce scan` ladder (3.2.0)
+and the guard hook — behind two wire majors (ce↔core 3.0.0, daemon 2.0.0) that dropped never-measured
+columns. Installers, [crates.io](https://crates.io/crates/codeeraser), the npm pointer and
+[codeeraser.dev](https://codeeraser.dev) are live at 1.1.0. A repository that declares no class — this one
+included — scores exactly as under 1.0.x; declaring one moves the lines its files are measured against, so
+scores across that switch are **not comparable**, and a floor calibrated before it needs a named
+`CE_ACCEPT_BASELINE=1` re-establish (as 1.0.x scores already were against 0.7.3).
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md). This repository gates itself with its own scanner,
 clone ratchet, baseline and deadcode/docdup checks on every push to `main` (plus pull requests and a weekly scheduled run).

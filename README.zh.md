@@ -11,11 +11,14 @@ CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、
 
 ## 状态
 
-🏁 **v1.0.1——已发布。** v1.0.0 交付锁定计划全部里程碑并完成终扫（113 条审查发现对账、716 条文档声明
-重核、官网每个数字由回放生成或从真实输出重取）；v1.0.1 是分发面维护——Windows 安装器自动接入
-Claude Code 插件——判决零变更，分数与 1.0.0 完全可比。安装包、[crates.io](https://crates.io/crates/codeeraser)、
-npm 指针包与 [codeeraser.dev](https://codeeraser.dev) 均已上线 1.0.1。1.0.x 的分数与 0.7.3 **不可比较**——
-密度定律与 cycle 轴迁移已在 v1.0.0 发布说明中声明；按 1.0 之前区间校准的地板需要具名 `CE_ACCEPT_BASELINE=1` 重立。
+🏁 **v1.1.0——已发布。** v1.0.0 交付锁定计划全部里程碑并完成终扫（113 条审查发现对账、716 条文档声明
+重核、官网每个数字由回放生成或从真实输出重取）；v1.0.1 是分发面维护（Windows 安装器自动接入 Claude Code
+插件）；v1.1.0 带来路径规则包——`[[rules.class]]` 让 glob 命中的类拥有自己的尺寸与复杂度线，分数（wire proto
+3.1.0）、`ce scan` 阶梯（3.2.0）与守卫钩子同读一条线——并随两次 wire 断代（ce↔core 3.0.0、daemon 2.0.0）
+删去从未测量的列。安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
+[codeeraser.dev](https://codeeraser.dev) 均已上线 1.1.0。未声明任何类的仓库（含本仓）分数与 1.0.x 完全一致；
+一旦声明类，文件被量的线就变了，跨这道开关的分数**不可比较**，此前校准的地板需要具名
+`CE_ACCEPT_BASELINE=1` 重立（1.0.x 对 0.7.3 亦然）。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）
 都用自己的扫描器、克隆棘轮、基线与死码/文档重复检查门禁自身。
