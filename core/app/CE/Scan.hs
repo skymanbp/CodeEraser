@@ -17,32 +17,52 @@
 module CE.Scan (respond) where
 
 import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
-import CE.Wire (RowsReq (..), ascendingOn, rowsFamily)
+import CE.Wire (RowsReq (..), Rulepack (..), ascendingOn, rowsFamily)
 import Data.Aeson
+import qualified Data.Map.Strict as M
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
+import Control.Applicative ((<|>))
 import Data.Foldable (asum)
+import Data.List (find)
 import Data.Maybe (fromMaybe)
+-- the rulepack fence is ONE number for every family that carries a
+-- class id (the verdict family minted it at 3.1.0)
+import CE.Verdict.Cost (classCap)
 
 
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto =
-  rowsFamily
-    "scan"
-    -- grades and naming facts count toward the cap too (review
-    -- C15: the declared ceiling missed the second request
-    -- dimension; the third arrived with 2.30.0)
-    ( \req ->
-        toInteger (length (rowsOf req) + length (gradesOf req) + length (namingRows req))
-          > scanRowCap
-    )
-    violation
-    (\req -> reply proto req [] True)
-    ( \req ->
-        let eff = effective (gradesOf req)
-         in reply proto req (map (grade eff) (withFacts (namingOf req) (rowsOf req))) False
-    )
+  rowsFamily "scan" overCap violation (\req -> reply proto req [] True) (judged proto)
+
+-- | Every request dimension counts toward the cap (review C15: the
+-- declared ceiling missed the second dimension; the third arrived
+-- with 2.30.0, the fourth and fifth with the 3.2.0 rulepack tables).
+overCap :: RowsReq -> Bool
+overCap req = toInteger (sum dims) > scanRowCap
+ where
+  rp = rulepackOf req
+  dims =
+    [ length (rowsOf req)
+    , length (gradesOf req)
+    , length (namingRows req)
+    , length (overridesOf rp)
+    , maybe 0 length (rowClassesOf rp)
+    ]
+
+-- | Every row through the ONE graded table — its class's line where
+-- the class overrides that code (3.2.0), else the global effective
+-- line — with the code-6 values derived from the facts when they
+-- ride.
+judged :: String -> RowsReq -> B8.ByteString
+judged proto req = reply proto req (zipWith (grade eff over) classes rows) False
+ where
+  rp = rulepackOf req
+  eff = effective (gradesOf req)
+  over = M.fromList [((c, code), (w, f)) | [c, code, w, f] <- overridesOf rp]
+  classes = fromMaybe (repeat 0) (rowClassesOf rp)
+  rows = withFacts (namingOf req) (rowsOf req)
 
 -- | The naming table as sent, [] when absent — the cap's view; road
 -- selection stays on namingOf's Maybe.
@@ -73,6 +93,7 @@ violation req =
     , asum (zipWith gradeShape [0 :: Int ..] (gradesOf req))
     , ascendingOn "grade" (take 1) (gradesOf req)
     , namingBattery req
+    , classBattery req
     ]
 
 -- | The naming-facts table's own contract (2.30.0): aligned 1:1
@@ -98,6 +119,35 @@ namingBattery req = case namingOf req of
   preJudged i row = case row of
     [6, v] | v /= 0 -> Just ("row " <> show i <> ": pre-judged fn-naming value (naming facts ride)")
     _ -> Nothing
+
+-- | The rulepack channel's own contract (3.2.0): a class column
+-- aligned 1:1 with the rows, every class below the fence; override
+-- rows [classId, code, warn, fail] from class 1 below the fence
+-- (class 0 IS the global table, which `grades` already overrides),
+-- a known code, a coherent ladder — the gradeShape reading, one
+-- class dimension wider — and (classId, code) strictly ascending.
+classBattery :: RowsReq -> Maybe String
+classBattery req =
+  (rowClassesOf rp >>= aligned)
+    <|> asum (zipWith overrideShape [0 :: Int ..] (overridesOf rp))
+    <|> ascendingOn "gradeOverride" (take 2) (overridesOf rp)
+ where
+  rp = rulepackOf req
+  n = length (rowsOf req)
+  aligned cs
+    | length cs /= n = Just ("rowClasses: " <> show (length cs) <> " classes for " <> show n <> " rows")
+    | otherwise = fence <$> find (\(_, c) -> c < 0 || c >= classCap) (zip [0 :: Int ..] cs)
+  fence (i, _) = "rowClasses " <> show (i :: Int) <> ": class beyond the fence"
+
+overrideShape :: Int -> [Integer] -> Maybe String
+overrideShape i row = case row of
+  (c : rest@[_, _, _])
+    | c < 1 -> Just (label <> "class 0 has no override channel")
+    | c >= classCap -> Just (label <> "class beyond the fence")
+    | otherwise -> ladderShape label rest
+  _ -> Just (label <> "malformed row (need [class,code,warn,fail])")
+ where
+  label = "gradeOverride " <> show i <> ": "
 
 namingShape :: Int -> [Integer] -> Maybe String
 namingShape i row = case row of
@@ -128,15 +178,22 @@ rowShape i row = case row of
 -- user's own choice, which gradeWith honors on both sides of the
 -- mirror.
 gradeShape :: Int -> [Integer] -> Maybe String
-gradeShape i row = case row of
-  [code, warn, failLine]
-    | code < 0 || code > 6 -> Just (label <> "unknown metric code")
-    | warn < 0 || failLine < 0 -> Just (label <> "negative field")
-    | failLine /= 0 && failLine < warn -> Just (label <> "fail line below warn")
-    | otherwise -> Nothing
+gradeShape i = ladderShape ("grade " <> show i <> ": ")
+
+-- | One [code, warn, fail] ladder under a caller's label — the grade
+-- table's rows and (3.2.0) the tail of every override row read
+-- through the same predicate: the first held fault, by name.
+ladderShape :: String -> [Integer] -> Maybe String
+ladderShape label row = case row of
+  [code, warn, failLine] ->
+    (label <>) . snd
+      <$> find
+        fst
+        [ (code < 0 || code > 6, "unknown metric code")
+        , (warn < 0 || failLine < 0, "negative field")
+        , (failLine /= 0 && failLine < warn, "fail line below warn")
+        ]
   _ -> Just (label <> "malformed row (need [code,warn,fail])")
- where
-  label = "grade " <> show i <> ": "
 
 -- | The effective grade table: every default row, overridden per
 -- code by the request (the effectiveKnobs pattern — absent rows
@@ -148,9 +205,18 @@ effective overrides =
  where
   pick c dflt = last (dflt : [(w, f) | [c', w, f] <- overrides, c' == c])
 
-grade :: [(Integer, (Integer, Integer))] -> [Integer] -> Integer
-grade table row = case row of
-  [code, v] | Just wf <- lookup code table -> gradeWith wf v
+-- | One row against its class's line where the class overrides that
+-- code (3.2.0), else the global effective line — a Map lookup with
+-- the global pair as the default, so class 0 and an unoverridden
+-- code both judge exactly as before.
+grade ::
+  [(Integer, (Integer, Integer))] ->
+  M.Map (Integer, Integer) (Integer, Integer) ->
+  Integer ->
+  [Integer] ->
+  Integer
+grade table over cls row = case row of
+  [code, v] | Just wf <- lookup code table -> gradeWith (M.findWithDefault wf (cls, code) over) v
   _ -> error "row shape enforced by violation"
 
 -- | levels ride positionally; the effective grade table is echoed
@@ -179,5 +245,10 @@ reply proto req levels degraded =
     , "degraded" .= degraded
     ]
       <> ["reason" .= ("scan_too_large" :: String) | degraded]
+      -- the override table echoes exactly when it rode and was judged
+      -- with (3.2.0): the client asserts the round trip; a legacy or
+      -- degraded reply keeps its byte shape
+      <> ["gradeOverrides" .= overrides | not degraded && not (null overrides)]
  where
+  overrides = overridesOf (rulepackOf req)
   count l = length (filter (== l) levels)

@@ -11,7 +11,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -30,7 +30,22 @@ data RowsReq = RowsReq
   , knobsOf :: [[Integer]]
   , gradesOf :: [[Integer]]
   , namingOf :: Maybe [[Integer]]
+  , rulepackOf :: Rulepack
   }
+
+-- | scan/1's rulepack channel (3.2.0), read off the SAME object: each
+-- row's path class, aligned to rows (absent = every row on the
+-- global table), and the per-class grade lines
+-- [classId, code, warn, fail]. Its own record so the channel's two
+-- keys travel as one fact — a family that ignores them ignores one.
+data Rulepack = Rulepack
+  { rowClassesOf :: Maybe [Integer]
+  , overridesOf :: [[Integer]]
+  }
+
+instance FromJSON Rulepack where
+  parseJSON = withObject "Rulepack" $ \o ->
+    Rulepack <$> o .:? "rowClasses" <*> o .:? "gradeOverrides" .!= []
 
 instance FromJSON RowsReq where
   parseJSON = withObject "RowsReq" $ \o ->
@@ -40,6 +55,7 @@ instance FromJSON RowsReq where
       <*> o .:? "knobs" .!= []
       <*> o .:? "grades" .!= []
       <*> o .:? "naming"
+      <*> parseJSON (Object o)
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family

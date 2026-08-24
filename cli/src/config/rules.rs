@@ -35,24 +35,31 @@ pub struct ClassCfg {
     pub knobs: ClassKnobs,
 }
 
-/// Absent = inherit the global [thresholds] value. On the wire these
-/// are the ceilings table's own codes 0 / 1 / 2 (sizeCeil / cocCeil /
-/// sizeHard) with a class dimension — no new code was minted.
+/// Absent = inherit the global [thresholds] value. The score reads
+/// the first three as the ceilings table's own codes 0 / 1 / 2
+/// (sizeCeil / cocCeil / sizeHard) with a class dimension — no new
+/// code was minted; the scan ladder (P3, 3.2.0) reads all five as
+/// per-class grade overrides on its codes 0 / 1 / 4.
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct ClassKnobs {
     pub file_lines_warn: Option<usize>,
     pub file_lines_fail: Option<usize>,
     pub cognitive_warn: Option<usize>,
+    pub fn_lines_warn: Option<usize>,
+    pub fn_lines_fail: Option<usize>,
 }
 
 impl ClassCfg {
     /// The class's effective table: its overrides over the global one.
     pub fn effective(&self, global: &Thresholds) -> Thresholds {
+        let k = &self.knobs;
         Thresholds {
-            file_lines_warn: self.knobs.file_lines_warn.unwrap_or(global.file_lines_warn),
-            file_lines_fail: self.knobs.file_lines_fail.unwrap_or(global.file_lines_fail),
-            cognitive_warn: self.knobs.cognitive_warn.unwrap_or(global.cognitive_warn),
+            file_lines_warn: k.file_lines_warn.unwrap_or(global.file_lines_warn),
+            file_lines_fail: k.file_lines_fail.unwrap_or(global.file_lines_fail),
+            cognitive_warn: k.cognitive_warn.unwrap_or(global.cognitive_warn),
+            fn_lines_warn: k.fn_lines_warn.unwrap_or(global.fn_lines_warn),
+            fn_lines_fail: k.fn_lines_fail.unwrap_or(global.fn_lines_fail),
             ..global.clone()
         }
     }

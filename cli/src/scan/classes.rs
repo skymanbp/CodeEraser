@@ -48,6 +48,21 @@ impl Classes {
             .position(|m| matches!(m.matched(path, false), ignore::Match::Whitelist(_)))
             .map_or(0, |i| i as u64 + 1)
     }
+
+    /// The threshold table `rel` is measured against locally (P3,
+    /// 3.2.0): its class's effective lines, or the global table for
+    /// class 0 — the same reading the core takes from gradeOverrides,
+    /// so the scan's pinned mirror keeps proving the wire equal.
+    pub fn thresholds_for(
+        &self,
+        cfg: &crate::config::Config,
+        rel: &str,
+    ) -> crate::config::Thresholds {
+        match self.class_of(rel) {
+            0 => cfg.thresholds.clone(),
+            c => cfg.rules.class[c as usize - 1].effective(&cfg.thresholds),
+        }
+    }
 }
 
 #[cfg(test)]

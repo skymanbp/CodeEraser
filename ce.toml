@@ -323,4 +323,11 @@ entry_globs = [
 # leaf move dissolved three standing chains (audit/guard/health
 # faces) and cost one (the envelope serde pair) -- net down two,
 # and the gate itself said ratchet down. Down needs no defence.
-budget = 191
+# 191 -> 186 (I round P3 scan rulepack, 3.2.0): five standing
+# chains dissolved by two structural moves -- ScanProps' battery
+# split into its base and rulepack tables (four Props-scaffolding
+# members with Audit/Split/Structure/Trend), and the grade ladder's
+# validator became the condition-table ladderShape (the unresRow
+# rhyme booked at 190 -> 193 (a)). The gate itself said ratchet
+# down. Down needs no defence.
+budget = 186

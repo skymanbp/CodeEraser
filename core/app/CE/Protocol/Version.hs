@@ -7,6 +7,15 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 3.2.0 = the rulepack's scan minor (plan v2.13 ①, I round P3,
+-- 2026-08-24): scan.request may carry rowClasses (each row's path
+-- class, aligned to rows; absent = every row on the global table)
+-- and gradeOverrides [[classId, code, warn, fail]] — the grades
+-- grammar one class dimension wider, (classId, code) ascending,
+-- class 0 refused (the global table has its own channel). A classed
+-- row grades on its class's line where one rides, else the global
+-- effective line; the override table echoes exactly when it rode.
+-- Both tables count toward the cap. Unclassed = byte-identical.
 -- 3.1.0 = the rulepack minor (plan v2.13 ①, I round P1+P2,
 -- 2026-08-24): verdict.request continuous rows may carry a 4th
 -- column, the file's path CLASS (1-based declaration index of the
@@ -240,7 +249,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "3.1.0"
+proto = "3.2.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

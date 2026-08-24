@@ -149,6 +149,14 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **3.2.0**（规则包 scan 旁表 minor，I 轮 P3，2026-08-24，用户拍板 v2.13 ①）：`scan.request` 加性两键——
+> `rowClasses=[classId…]` 与 rows **位置对齐**（长度必等、每项 < 64；缺席 = 全行走全局表）与
+> `gradeOverrides=[[classId,code,warn,fail]]`（classId ≥ 1、code 0..6、阶梯同 grades 文法〔fail 0 = 无硬线、
+> fail ≥ warn〕、(classId,code) 严格升序；仅非空时发）；core 按 (class,code) 查表回落全局有效表，
+> `grades` 回显仍为全局表，`gradeOverrides` 到场且非 degraded 时原样回显（客户端断言往返）；两表计入
+> scanRowCap；chunk 切分时类列随行同切。ce.toml 侧 `[[rules.class]].knobs` 增 `fn_lines_warn` /
+> `fn_lines_fail`（P3 两键）；Rust 镜像 evaluate 按文件类取有效阈值，每判对拍恒等式覆盖到类。
+> 无声明仓库 wire 字节不变。
 > **3.1.0**（规则包 DSL v1 minor，I 轮 P1+P2，2026-08-24，用户拍板 v2.13 ①）：①`verdict.request` 的
 > `continuous` 行可携第 4 列 **classId**——`[u_fp, metricCode, value, classId]`，路径类的 1 基声明
 > 序号，0 = 默认类；全表单 arity，混排拒 `continuous rows: mixed arity`；classId < 64（栅栏 classCap）；
@@ -327,7 +335,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **3.1.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **3.2.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -451,5 +459,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 3.1.0 | §1 所列两处常量 |
+| 协议 | 3.2.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

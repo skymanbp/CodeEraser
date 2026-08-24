@@ -173,6 +173,10 @@ mod tests {
                 file_lines_warn: w,
                 file_lines_fail: h,
                 cognitive_warn: c,
+                // the scan-only fn lines (P3) never reach the score
+                // rows — declared here to prove exactly that
+                fn_lines_warn: Some(80),
+                fn_lines_fail: Some(90),
             },
         };
         let rules = RulesCfg {

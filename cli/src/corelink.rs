@@ -12,6 +12,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 3.2.0 = the rulepack's scan minor (plan v2.13 ①, I round P3,
+/// 2026-08-24): scan.request may carry `rowClasses` (each row's
+/// path class, aligned to rows — absent = every row on the global
+/// table) and `gradeOverrides` [[classId, code, warn, fail]] (the
+/// class's own ladder on codes 0/1/4; the grades grammar one class
+/// dimension wider, (classId, code) ascending); the core grades a
+/// classed row on its class's line where one rides, else the global
+/// effective line, and echoes the override table exactly when it
+/// rode. Both tables count toward the cap; the class column chunks
+/// with its rows. An unclassed repo's bytes are unchanged.
 /// 3.1.0 = the rulepack minor (plan v2.13 ①, I round P1+P2,
 /// 2026-08-24): verdict.request continuous rows may carry a 4th
 /// column, the file's path CLASS (1-based declaration index of the
@@ -200,7 +210,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "3.1.0";
+pub const PROTO: &str = "3.2.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

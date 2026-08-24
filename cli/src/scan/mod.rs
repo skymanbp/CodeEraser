@@ -81,11 +81,24 @@ pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
         .flat_map(|f| &f.functions)
         .map(|f| f.naming)
         .collect();
-    let (levels, fail) = wire::judge(core, &wire_rows, &grades, &naming)?;
-    let findings = report::findings_from(&rows, &levels, &grades);
+    // The rulepack channel (3.2.0): each row's class, assigned here
+    // where its path is still known, beside the per-class overrides;
+    // an unclassed repo sends neither and its bytes never move.
+    let classes = classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
+    let row_classes: Vec<u64> = rows.iter().map(|r| classes.class_of(&r.file)).collect();
+    let overrides = wire::class_grade_rows(&config.rules, &config.thresholds);
+    let req = wire::ScanRequest {
+        rows: &wire_rows,
+        grades: &grades,
+        naming: &naming,
+        row_classes: classes.declared().then_some(row_classes.as_slice()),
+        overrides: &overrides,
+    };
+    let (levels, fail) = wire::judge(core, &req)?;
+    let findings = report::findings_from(&rows, &levels, &grades, (&row_classes, &overrides));
     let mirror: Vec<report::Finding> = files
         .iter()
-        .flat_map(|f| report::evaluate(f, &config.thresholds))
+        .flat_map(|f| report::evaluate(f, &classes.thresholds_for(&config, &f.path)))
         .collect();
     anyhow::ensure!(
         findings == mirror,

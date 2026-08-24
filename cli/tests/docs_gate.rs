@@ -51,7 +51,7 @@ score.tol_abs\tRatchet absolute leg: or by this many lines, whichever is larger
 structure.layout\tDeclared directory weights the divergence axis judges against; keys are root-relative directories, \".\" the catch-all bin
 trend.min_points\tHistory points required before a slope is judged
 trend.decline_floor_micro\tDecline floor in micro-per-mille per day; declaring it arms the trend fail bit
-rules.class	Path classes with their own size and complexity lines (plan v2.13): an array of tables, each with a local `name`, its `globs` (the exclude list's dialect; the first declared match owns a path, an unmatched path keeps the global table) and `knobs` — `file_lines_warn`, `file_lines_fail`, `cognitive_warn`; an absent knob inherits the global line. At most 64 classes, each class's ladder must climb, and only a class's index and knobs ever cross the wire. Enabling classes changes what the score judges a file against — scores are not comparable across that switch
+rules.class	Path classes with their own size and complexity lines (plan v2.13): an array of tables, each with a local `name`, its `globs` (the exclude list's dialect; the first declared match owns a path, an unmatched path keeps the global table) and `knobs` — `file_lines_warn`, `file_lines_fail`, `cognitive_warn`, `fn_lines_warn`, `fn_lines_fail`; an absent knob inherits the global line. The score reads the first three, the scan ladder all five. At most 64 classes, each class's ladder must climb, and only a class's index and knobs ever cross the wire. Enabling classes changes what the score judges a file against — scores are not comparable across that switch
 ";
 
 const GEN_BANNER: &str = "<!-- GENERATED — do not edit. \

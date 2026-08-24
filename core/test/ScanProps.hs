@@ -16,16 +16,24 @@ import Data.Aeson
 import WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
 
 battery :: IO Bool
-battery =
-  runChecks
-    [ ("grade boundaries: both lines, both directions", boundaries)
-    , ("levels ride positionally through the real respond", positional)
-    , ("a grade override flips the named row's level and echoes", overrideLever)
-    , ("scan refusals name the offender with code and message", refusals)
-    , ("the facts road derives fn-naming, exemption gated on Go", factsRoad)
-    , ("naming refusals: alignment, shape, the pre-judged value", namingRefusals)
-    , ("an over-cap scan request degrades to a reply that FAILS", degradedFails)
-    ]
+battery = do
+  base <-
+    runChecks
+      [ ("grade boundaries: both lines, both directions", boundaries)
+      , ("levels ride positionally through the real respond", positional)
+      , ("a grade override flips the named row's level and echoes", overrideLever)
+      , ("scan refusals name the offender with code and message", refusals)
+      , ("the facts road derives fn-naming, exemption gated on Go", factsRoad)
+      , ("naming refusals: alignment, shape, the pre-judged value", namingRefusals)
+      , ("an over-cap scan request degrades to a reply that FAILS", degradedFails)
+      ]
+  -- the rulepack channel (3.2.0), its own table
+  rulepack <-
+    runChecks
+      [ ("a class line moves ITS rows' level, the global row's not, and echoes", classLever)
+      , ("class refusals: alignment, the fence, class 0, the ladder, the order", classRefusals)
+      ]
+  pure (base && rulepack)
 
 -- | The SHIPPED comparison at the file-lines row (300/750): clean at
 -- the line, warn one past it, warn AT the hard line, fail one past
@@ -124,6 +132,47 @@ namingRefusals =
     ]
  where
   ref naming rows = refusedBy respond (setKey "naming" (toJSON (naming :: [[Integer]])) (wireReq rows))
+
+-- | The P3 counterfactual (plan v2.13 ①): two identical 60-line
+-- fn rows, one in class 1 whose fn line sits at 80, one on the
+-- global table — the classed row grades clean, the global one warns;
+-- the override table echoes when it rode and is absent when it did
+-- not; and a class column alone (no override) judges like the
+-- global table.
+classLever :: Bool
+classLever =
+  levels classed == Just (toJSON [0, 1 :: Integer])
+    && echo classed == Just (toJSON over)
+    && levels unclassed == Just (toJSON [1, 1 :: Integer])
+    && echo unclassed == Nothing
+ where
+  over = [[1, 1, 80, 90 :: Integer]]
+  unclassed = setKey "rowClasses" (toJSON [1, 0 :: Integer]) classRows
+  classed = setKey "gradeOverrides" (toJSON over) unclassed
+  levels r = replyObj r >>= \o -> field o "levels"
+  echo r = replyObj r >>= \o -> field o "gradeOverrides"
+
+classRows :: Value
+classRows = wireReq [[1, 60], [1, 60]]
+
+-- | Every refusal the rulepack channel can earn, by name: a class
+-- column that does not align, a class at the fence (both tables),
+-- class 0 in the override table, an incoherent override ladder, a
+-- malformed override, and a disordered table.
+classRefusals :: Bool
+classRefusals = all (uncurry (refusedBy respond)) probes
+ where
+  probes =
+    [ (classes [1], "rowClasses: 1 classes for 2 rows")
+    , (classes [64, 0], "rowClasses 0: class beyond the fence")
+    , (over [[0, 1, 80, 90]], "class 0 has no override channel")
+    , (over [[64, 1, 80, 90]], "class beyond the fence")
+    , (over [[1, 1, 80, 70]], "gradeOverride 0: fail line below warn")
+    , (over [[1, 1, 80]], "malformed row (need [class,code,warn,fail])")
+    , (over [[2, 0, 400, 750], [1, 0, 400, 750]], "gradeOverride 1: not strictly ascending")
+    ]
+  classes cs = setKey "rowClasses" (toJSON (cs :: [Integer])) classRows
+  over os = setKey "gradeOverrides" (toJSON (os :: [[Integer]])) classRows
 
 -- | P1 posture on the new family: one row past the cap degrades to
 -- a complete reply whose fail bit is TRUE.

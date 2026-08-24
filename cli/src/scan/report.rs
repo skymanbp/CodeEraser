@@ -78,19 +78,37 @@ pub fn rows_of(files: &[FileMetrics]) -> Vec<Row> {
 
 /// Findings from the CORE's positional levels (ADR-008 P3): level 0
 /// rows vanish, 1 = warn, 2 = fail; the displayed limit comes from
-/// the echoed grade table by (code, level) — the same effective set
-/// the core judged with.
-pub fn findings_from(rows: &[Row], levels: &[u8], grades: &[[u64; 3]]) -> Vec<Finding> {
+/// the echoed grade table by (code, level) — or, for a classed row
+/// whose class overrides that code (3.2.0), from the override row —
+/// the same effective set the core judged with.
+pub fn findings_from(
+    rows: &[Row],
+    levels: &[u8],
+    grades: &[[u64; 3]],
+    (row_classes, overrides): (&[u64], &[[u64; 4]]),
+) -> Vec<Finding> {
+    let line_of = |i: usize, code: u64, l: u8| -> u64 {
+        let pick = |warn: u64, fail: u64| if l == 2 { fail } else { warn };
+        let class = row_classes.get(i).copied().unwrap_or(0);
+        overrides
+            .iter()
+            .find(|o| o[0] == class && o[1] == code)
+            .map_or(
+                pick(grades[code as usize][1], grades[code as usize][2]),
+                |o| pick(o[2], o[3]),
+            )
+    };
     rows.iter()
         .zip(levels.iter().copied())
-        .filter(|&(_, l)| l > 0)
-        .map(|(r, l)| Finding {
+        .enumerate()
+        .filter(|&(_, (_, l))| l > 0)
+        .map(|(i, (r, l))| Finding {
             file: r.file.clone(),
             line: r.line,
             rule: RULES[r.code as usize],
             level: if l == 2 { Level::Fail } else { Level::Warn },
             value: r.value,
-            threshold: grades[r.code as usize][if l == 2 { 2 } else { 1 }] as usize,
+            threshold: line_of(i, r.code, l) as usize,
             subject: r.subject.clone(),
         })
         .collect()
