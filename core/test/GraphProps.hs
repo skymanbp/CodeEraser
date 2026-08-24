@@ -15,9 +15,9 @@ module GraphProps (battery) where
 
 import CE.Graph (respond)
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, entryMask, minRung, sccFloor)
+import CE.Graph.Cost (assetKind, entryMask, minRung, roleBits, sccFloor)
 import CE.Graph.Cycles (cycles)
-import CE.Graph.Dead (entries, verdicts)
+import CE.Graph.Dead (deriveFlags, entries, verdicts)
 import Data.Aeson (Value (..), encode, object, (.=))
 import Data.Bits (xor)
 import qualified Data.ByteString.Lazy as BL
@@ -33,7 +33,10 @@ battery = do
   d <- check "SCC lists partition the vertex set (200 seeded graphs)" (allGraphs sccPartition)
   e <- check "shuffled edge table is refused (200 seeded graphs)" (allGraphs shuffledRefused)
   f <- check "an asset-kind edge never keeps its target alive" assetNeverAlive
-  pure (a && b && c && d && e && f)
+  g <- check "roles derive the entry bits through the table (2.28.0)" rolesDerive
+  h <- check "the role table is a live knob (a dropped row empties the seeds)" roleKnob
+  i <- check "mixed node-row arity refused" mixedRefused
+  pure (a && b && c && d && e && f && g && h && i)
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -70,6 +73,45 @@ assetNeverAlive = deadWith assetKind == [1] && deadWith 0 == []
   deadWith kind =
     let b = build minRung assetKind 2 [[0, 1, kind, 1]]
      in map fst (verdicts b (reachFrom b (entries entryMask [2, 0])) [2, 0])
+
+-- | 2.28.0 (batch-7 slice 3): every role row lands on its declared
+-- bit — the named-main, executable-dir and declared-target roles all
+-- on bit 1, test/glob/doc/allow on theirs — and a combined mask ORs.
+rolesDerive :: Bool
+rolesDerive =
+  and
+    [ deriveFlags roleBits 1 == 2
+    , deriveFlags roleBits 2 == 2
+    , deriveFlags roleBits 4 == 4
+    , deriveFlags roleBits 8 == 8
+    , deriveFlags roleBits 16 == 32
+    , deriveFlags roleBits 32 == 64
+    , deriveFlags roleBits 64 == 2
+    , deriveFlags roleBits (1 + 4 + 64) == 6
+    ]
+
+-- | Dropping the named-main row from the table must empty the entry
+-- set that role seeded — the dead-knob discipline applied to DATA.
+roleKnob :: Bool
+roleKnob =
+  entries entryMask [deriveFlags roleBits 1] == [0]
+    && null (entries entryMask [deriveFlags [(0, 0)] 1])
+
+-- | One 3-column row beside a 4-column row refuses by name — a
+-- mixed table has no single judgment basis (2.28.0).
+mixedRefused :: Bool
+mixedRefused = case respond "2.1.0" req of
+  Left (_, code, msg) -> code == "contract" && msg == "node rows: mixed arity"
+  Right _ -> False
+ where
+  req =
+    BL.toStrict . encode $
+      object
+        [ "id" .= (1 :: Int)
+        , "nodes" .= ([[0, 0, 0], [0, 0, 0, 0]] :: [[Integer]])
+        , "edges" .= ([] :: [Value])
+        , "pos" .= ([] :: [Value])
+        ]
 
 -- | 200 seeded graphs: (n, arcs with rungs, flags per node).
 allGraphs :: ((Int, [(Int, Int, Integer)], [Integer]) -> Bool) -> Bool

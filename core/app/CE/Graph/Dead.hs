@@ -5,10 +5,10 @@
 -- Codes: 1 unref_private, 2 unref_public, 3 unreach_private,
 -- 4 unreach_public — 1 + public + 2*referenced. A node whose flags
 -- meet the entry mask seeds reachability and is never judged.
-module CE.Graph.Dead (entries, verdicts) where
+module CE.Graph.Dead (deriveFlags, entries, verdicts) where
 
 import CE.Graph.Build (Built (..))
-import Data.Bits (testBit, (.&.))
+import Data.Bits (bit, testBit, (.&.), (.|.))
 import qualified Data.IntSet as IS
 import qualified Data.Set as S
 
@@ -44,3 +44,12 @@ verdicts b reach flagses =
   code p r = case lookup (p, r) deadTable of
     Just c -> c
     Nothing -> error "deadTable is total over (Bool, Bool) by construction"
+
+-- | Entry bits from role facts through a role table (2.28.0,
+-- batch-7 slice 3): the OR of the mapped flag bits for every role
+-- bit set. The table is a parameter (Cost.roleBits at the CE.Graph
+-- boundary) so the props battery can perturb a row and watch the
+-- entry set move — the dead-knob discipline.
+deriveFlags :: [(Integer, Integer)] -> Integer -> Integer
+deriveFlags table roles =
+  foldr (.|.) 0 [bit (fromInteger b) | (r, b) <- table, testBit roles (fromInteger r)]

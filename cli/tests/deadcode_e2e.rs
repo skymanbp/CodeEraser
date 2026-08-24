@@ -94,12 +94,25 @@ fn check_flips_on(tag: &str, tree: &[(&str, &str)], rewrite: (&str, &str), why: 
     gate(why[1], true);
 }
 
-/// The CI gate flag fires BOTH ways: a dead orphan makes `--check`
-/// exit 1; dispositioning it through entry_globs turns the same
-/// tree green.
-#[test]
-fn check_flag_reds_on_dead_and_greens_on_disposition() {
-    check_flips_on(
+/// One red→green flip case of the --check gate.
+type FlipCase = (
+    &'static str,
+    &'static [(&'static str, &'static str)],
+    (&'static str, &'static str),
+    [&'static str; 2],
+);
+
+/// The gate's red→green flips as ONE table (the ratchet caught the
+/// fourth check_flips_on stanza chaining against the third — the
+/// stanzas became rows, the P6 discipline): a dead orphan
+/// dispositioned through entry_globs; the slice-3 defect fix
+/// (2.28.0) — a tool binary the manifest declares via [[bin]] path
+/// is a root, where undeclared it is exactly the orphan the gate
+/// reds on; and a `#[path]`-mounted file alive with no entry_globs
+/// at all (GRAPH_REV 5 — the gate that keeps the ce.toml exemption
+/// retirement safe against a ladder regression).
+const FLIP_CASES: [FlipCase; 3] = [
+    (
         "deadcode-checkflag",
         &[
             ("ce.toml", "[graph]\nentry_globs = [\"root.ts\"]\n"),
@@ -115,16 +128,24 @@ fn check_flag_reds_on_dead_and_greens_on_disposition() {
             "an undispositioned orphan must red",
             "a dispositioned tree must pass",
         ],
-    );
-}
-
-/// A `#[path]`-mounted file is ALIVE with no per-file entry_globs at
-/// all (GRAPH_REV 5) — the gate that keeps the ce.toml exemption
-/// retirement safe against a ladder regression: the same tree reds
-/// as an orphan without the attribute and greens on the mount alone.
-#[test]
-fn path_mount_alone_keeps_its_target_alive() {
-    check_flips_on(
+    ),
+    (
+        "deadcode-declaredbin",
+        &[
+            ("Cargo.toml", "[package]\nname='db'"),
+            ("src/main.rs", "fn main() {}\n"),
+            ("src/tools/gen.rs", "pub fn g() {}\n"),
+        ],
+        (
+            "Cargo.toml",
+            "[package]\nname='db'\n[[bin]]\nname='gen'\npath='src/tools/gen.rs'\n",
+        ),
+        [
+            "an undeclared tool binary must red as dead",
+            "the declared [[bin]] path alone must green it",
+        ],
+    ),
+    (
         "deadcode-pathmount",
         &[
             ("ce.toml", "[graph]\nentry_globs = [\"src/lib.rs\"]\n"),
@@ -137,5 +158,12 @@ fn path_mount_alone_keeps_its_target_alive() {
             "without the attribute the target is an orphan and must red",
             "the #[path] mount alone must keep the target alive",
         ],
-    );
+    ),
+];
+
+#[test]
+fn check_gate_flips_red_to_green_across_dispositions() {
+    for (tag, tree, rewrite, why) in FLIP_CASES {
+        check_flips_on(tag, tree, rewrite, why);
+    }
 }

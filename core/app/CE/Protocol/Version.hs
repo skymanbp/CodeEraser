@@ -7,6 +7,15 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.28.0 = the entry-roles minor (ADR-008 batch-7 slice 3 main
+-- body): graph.request node rows accept an additive 4th column of
+-- role FACTS (0 named main, 1 executable dir, 2 test convention,
+-- 3 entry glob, 4 doc entry, 5 ce:allow claim, 6 declared build
+-- target); the role→entry-bit table is CE.Graph.Cost.roleBits, the
+-- legacy flags column yields wherever the roles ride, and a table
+-- mixing the two arities refuses. Role 6 closes the slice-3 defect:
+-- a declared [[bin]] path / cabal main-is target is a root, where
+-- before only the name conventions were.
 -- 2.27.0 = the code-only cycle-axis minor (M9 batch 9 P8, plan v2.12):
 -- verdict.request gains additive docFiles, the ascending file-universe
 -- indices of Markdown files; absent/empty preserves the old charge, while
@@ -173,7 +182,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.27.0"
+proto = "2.28.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

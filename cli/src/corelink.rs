@@ -12,6 +12,15 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.28.0 = the entry-roles minor (ADR-008 batch-7 slice 3 main
+/// body): graph.request node rows accept an additive 4th column of
+/// role FACTS (0 named main, 1 executable dir, 2 test convention,
+/// 3 entry glob, 4 doc entry, 5 ce:allow claim, 6 declared build
+/// target); the role→entry-bit table is CE.Graph.Cost.roleBits and
+/// the legacy flags column yields wherever the roles ride (rows one
+/// arity — mixed refuses). Role 6 closes the slice-3 defect: a
+/// declared [[bin]] path / cabal main-is target is a root, where
+/// before only name conventions were.
 /// 2.27.0 = the code-only cycle-axis minor (M9 batch 9 P8, plan v2.12):
 /// verdict.request gains additive docFiles, the ascending Markdown-file
 /// indices; absent/empty preserves the old charge and Haskell owns the rule.
@@ -123,7 +132,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.27.0";
+pub const PROTO: &str = "2.28.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

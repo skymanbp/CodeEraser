@@ -20,6 +20,9 @@ use std::path::Path;
 #[derive(Clone)]
 pub struct Stanza {
     pub roots: Vec<String>,
+    /// The stanza's main-is file, verbatim (relative to each source
+    /// root) — the declared-target role's cabal leg (2.28.0).
+    pub main_is: Option<String>,
 }
 
 /// Clone: the sweep memo hands out per-config parses once and
@@ -72,7 +75,10 @@ fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], i: usize) -
     if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() && !trimmed.starts_with("--") {
         *live = HEADS.contains(&head_word(trimmed).as_str());
         if *live {
-            out.stanzas.push(Stanza { roots: Vec::new() });
+            out.stanzas.push(Stanza {
+                roots: Vec::new(),
+                main_is: None,
+            });
         }
         return i + 1;
     }
@@ -111,6 +117,7 @@ fn finish(out: &mut Cabal, dir: &str) {
     if out.stanzas.is_empty() {
         out.stanzas.push(Stanza {
             roots: vec![dir.to_string()],
+            main_is: None,
         });
     }
     for s in &mut out.stanzas {
@@ -149,6 +156,7 @@ fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String], live: boo
                 }
             }
         }
+        "main-is" if live => set_main(out, values),
         "build-depends" => {
             for entry in values.iter().flat_map(|v| v.split(',')) {
                 let name = dep_name(entry);
@@ -158,6 +166,16 @@ fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String], live: boo
             }
         }
         _ => {}
+    }
+}
+
+/// The stanza main-is value (2.28.0): the first collected value
+/// wins — cabal main-is is a single filename. Split from consume
+/// so the match arms stay calls (the repo cognitive gate caught the
+/// inlined form at CoC 16).
+fn set_main(out: &mut Cabal, values: &[String]) {
+    if let Some(stanza) = out.stanzas.last_mut() {
+        stanza.main_is = values.first().cloned();
     }
 }
 
@@ -225,6 +243,9 @@ mod tests {
             c.deps,
             ["aeson", "array", "base", "bytestring", "containers"]
         );
+        // the self cabal's main-is facts, pinned with the rest (2.28.0)
+        let mains: Vec<Option<&str>> = c.stanzas.iter().map(|s| s.main_is.as_deref()).collect();
+        assert_eq!(mains, [Some("Main.hs"), Some("Spec.hs")]);
     }
 
     fn parse_str(text: &str) -> super::Cabal {

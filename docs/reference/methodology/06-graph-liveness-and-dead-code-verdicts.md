@@ -104,8 +104,8 @@ and dangling doc refs as packages ([nodes.rs:20-23](../../../cli/src/graph/nodes
 Two transformations happen on the way to the wire:
 
 1. **Asset edges are dropped by kind** — an image reference is not a reference for liveness
-   purposes ([deadcode.rs:132](../../../cli/src/graph/deadcode.rs#L132)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:134-138](../../../cli/src/graph/deadcode.rs#L134)).
+   purposes ([deadcode.rs:132](../../../cli/src/graph/deadcode.rs#L139)). An endpoint that is not a node
+   is a *named error*, never a panic ([deadcode.rs:134-138](../../../cli/src/graph/deadcode.rs#L141)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory, at `rung 1` because containment is a fact, not a resolution mechanism, and must
    survive every rung ceiling ([nodes.rs:61-83](../../../cli/src/graph/nodes.rs#L61)). A repo-root
@@ -118,7 +118,7 @@ convergent writer landing between them could hand the edge query a source file t
 never saw ([load.rs:70-75](../../../cli/src/graph/load.rs#L70)). `unresolved_sites` is the count of sites
 with no edge row ([load.rs:97-102](../../../cli/src/graph/load.rs#L97)) and travels with the report so
 the reader sees what the graph refuses to know
-([deadcode.rs:22-24](../../../cli/src/graph/deadcode.rs#L22)).
+([deadcode.rs:22-24](../../../cli/src/graph/deadcode.rs#L23)).
 
 ### 4. Boundary contract and caps
 
@@ -126,15 +126,15 @@ the reader sees what the graph refuses to know
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
 deterministic ([Graph.hs:69-85](../../../core/app/CE/Graph.hs#L69)):
 
-- node rows are exactly 3 fields, all `≥ 0` ([Graph.hs:87-94](../../../core/app/CE/Graph.hs#L87));
+- node rows are exactly 3 fields, all `≥ 0` ([Graph.hs:87-94](../../../core/app/CE/Graph.hs#L88));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
-  ([Graph.hs:96-104](../../../core/app/CE/Graph.hs#L96));
+  ([Graph.hs:96-104](../../../core/app/CE/Graph.hs#L110));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
   ([Graph.hs:74](../../../core/app/CE/Graph.hs#L74), [Wire.hs:44-47](../../../core/app/CE/Wire.hs#L44));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
-  ([Graph.hs:76-80](../../../core/app/CE/Graph.hs#L76),
-  [Graph.hs:109-112](../../../core/app/CE/Graph.hs#L109)).
+  ([Graph.hs:76-80](../../../core/app/CE/Graph.hs#L77),
+  [Graph.hs:109-112](../../../core/app/CE/Graph.hs#L123)).
 
 Oversize protection is by row count, not bytes (the envelope precheck is relaxed for the
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
@@ -146,7 +146,7 @@ degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = tru
 by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:57-59](../../../core/app/CE/Graph.hs#L57), [Graph.hs:161-186](../../../core/app/CE/Graph.hs#L161)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:265-271](../../../cli/src/graph/deadcode.rs#L265)) and `ce deadcode --check` relays the
+([deadcode.rs:265-271](../../../cli/src/graph/deadcode.rs#L277)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:70-90](../../../cli/src/main_cmds.rs#L70)).
 
 ### 5. Kept arcs and liveness
@@ -178,30 +178,44 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 `unref_public` rather than as plain dead or as silence
 ([Cost.hs:43-46](../../../core/app/CE/Graph/Cost.hs#L43)).
 
-Only file nodes carry flags; section and package rows get `0`
-([deadcode.rs:156-160](../../../cli/src/graph/deadcode.rs#L156)). The Rust producer sets:
+Only file nodes carry entry facts; section and package rows get `0`
+([deadcode.rs:177-197](../../../cli/src/graph/deadcode.rs#L177)). Since proto **2.28.0**
+(batch-7 slice 3 main body) the node row carries a 4th column of **role facts**, and the
+category membership Rust used to fuse into the flags column is decided by the core's
+**role table** `roleBits` ([Graph/Cost.hs:89-90](../../../core/app/CE/Graph/Cost.hs#L89)):
+a 4-column row's entry bits derive through `deriveFlags`
+([Dead.hs:53-55](../../../core/app/CE/Graph/Dead.hs#L53), applied at
+[Graph.hs:182-185](../../../core/app/CE/Graph.hs#L182)), the legacy flags column yields, and a
+table mixing the two arities refuses by name. The Rust producer measures:
 
 ```
-bit 1  base ∈ {main.rs, main.go, __main__.py, build.rs, Main.hs}
-       or path starts with src/bin/, examples/, benches/, cmd/     [flags.rs:18-25]
-bit 2  base ends _test.go | .test.ts | (test_*.py) | == Spec.hs,
-       or path starts tests/ or contains /tests/ | /__tests__/     [flags.rs:27-29, 48-56]
-bit 3  ce.toml [graph] entry_globs hit: exact path, dir/ prefix,
-       or *.ext basename (full glob syntax is not promised)        [flags.rs:30-37, 61-66]
-bit 5  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md}  [flags.rs:38-42]
+role 0  base ∈ {main.rs, main.go, __main__.py, build.rs, Main.hs}   [flags.rs:49-54]
+role 1  path starts with src/bin/, examples/, benches/, cmd/        [flags.rs:55-60]
+role 2  base ends _test.go | .test.ts | (test_*.py) | == Spec.hs,
+        or path starts tests/ or contains /tests/ | /__tests__/     [flags.rs:115-124]
+role 3  ce.toml [graph] entry_globs hit: exact path, dir/ prefix,
+        or *.ext basename (full glob syntax is not promised)        [flags.rs:128-133]
+role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md}
+role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
+        claims nothing — the docdup exemption discipline)           [flags.rs:102-113]
+role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
+        and conventional targets via crate_roots, cabal main-is
+        through each stanza's source roots                          [targets.rs:21-70, 75-101]
 ```
 
-([flags.rs:18-56](../../../cli/src/graph/deadcode/flags.rs#L18),
-[flags.rs:69-90](../../../cli/src/graph/deadcode/flags.rs#L69)). Bit 6 gained its producer in
-batch-7 slice 3: an inline `ce:allow(deadcode) -- <why>` anywhere in a file claims liveness —
-the docdup exemption discipline transplanted, a BARE marker claims nothing
-([flags.rs:51-67](../../../cli/src/graph/deadcode/flags.rs#L51)). **Honest gaps that remain:**
-bit 4 (dyn-referenced) has no producer, bit 0 is never set at file granularity
-([flags.rs:10-17](../../../cli/src/graph/deadcode/flags.rs#L10)), and declared Cargo `[[bin]]`
-targets and cabal `main-is` are parsed for the resolution ladder but not consulted by the
-entry policy — wiring them needs the package sweep in the flags path (ledgered, batch 8).
-The consequence of the bit-0 gap is stated in the ladder itself: RG10's `unref_public` class
-cannot fire until symbol-level flags land
+([flags.rs:19-25](../../../cli/src/graph/deadcode/flags.rs#L19),
+[flags.rs:46-85](../../../cli/src/graph/deadcode/flags.rs#L46)). The role→bit landing is the
+core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6. **Role 6 closes
+a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
+before only the name conventions were — the discovery is nearest-manifest per walked directory
+([targets.rs:75-101](../../../cli/src/graph/deadcode/targets.rs#L75),
+[targets.rs:52-66](../../../cli/src/graph/deadcode/targets.rs#L52)). The legacy flags column is still
+produced bit-identically to the pre-2.28 semantics
+([flags.rs:33-43](../../../cli/src/graph/deadcode/flags.rs#L33)) and retires next minor.
+**Honest gaps that remain:** bit 4 (dyn-referenced) has no producer, and bit 0 is never set at
+file granularity ([flags.rs:1-11](../../../cli/src/graph/deadcode/flags.rs#L1)). The consequence
+of the bit-0 gap is stated in the ladder itself: RG10's `unref_public` class cannot fire until
+symbol-level flags land
 ([hs.rs:26-31](../../../cli/src/graph/ladder/hs.rs#L26)).
 
 Reachability is plain forward closure from the seeds over kept arcs
@@ -267,8 +281,8 @@ table is the authority and the arithmetic is the mnemonic. The result is `[(i, c
 over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead.hs#L33)).
 
 Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
-([deadcode.rs:38-43](../../../cli/src/graph/deadcode.rs#L38),
-[deadcode.rs:196-202](../../../cli/src/graph/deadcode.rs#L196)) — and a code past the four this side
+([deadcode.rs:39-44](../../../cli/src/graph/deadcode.rs#L39),
+[deadcode.rs:220-226](../../../cli/src/graph/deadcode.rs#L220)) — and a code past the four this side
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*

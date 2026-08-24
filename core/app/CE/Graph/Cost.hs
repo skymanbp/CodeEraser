@@ -10,7 +10,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind) where
+module CE.Graph.Cost (nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind, roleBits) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -74,3 +74,17 @@ granFile = 0
 -- table could see the rule.
 assetKind :: Integer
 assetKind = 3
+
+-- | The role→entry-bit table (2.28.0, batch-7 slice 3 main body):
+-- graph node rows may carry a 4th column of role FACTS, and the
+-- category membership Rust used to fuse into the flags column lands
+-- on the entry bits HERE — data an ablation can perturb row by row.
+-- Role bits: 0 named main, 1 executable dir, 2 test convention,
+-- 3 entry glob, 4 doc entry, 5 ce:allow claim, 6 declared build
+-- target. Flag bits per entryMask above; roles 0, 1 and 6 share
+-- bit 1 (all three are "an executable the build knows about"), and
+-- role 6 is the slice-3 defect fix — a declared [[bin]] path or
+-- cabal main-is target is a root, where before only the name
+-- conventions were.
+roleBits :: [(Integer, Integer)]
+roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1)]

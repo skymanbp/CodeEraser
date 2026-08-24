@@ -6,10 +6,11 @@
 //! (graph_too_large) lands in the observe feed so doctor/health
 //! count it (A9f).
 //!
-//! Entry flags are mechanical conventions plus user config:
-//! main-shaped files and executable directories (bit 1), test
-//! conventions (bit 2), ce.toml [graph] entry_globs (bit 3), and the
-//! doc entries README.md / CLAUDE.md / docs indexes (bit 5). The
+//! Entry standing is measured as ROLE FACTS since 2.28.0 (batch-7
+//! slice 3): named mains, executable dirs, test conventions, ce.toml
+//! [graph] entry_globs, doc entries, allow claims and declared build
+//! targets — the role→entry-bit table is the core's
+//! (CE.Graph.Cost.roleBits), this side only measures. The
 //! design's "no entry rule = every doc trivially dies" stance is
 //! deliberate: an unlinked doc IS reported. Asset edges never count
 //! as references (design §4 Markdown row); a package node gets
@@ -24,6 +25,7 @@
 //! symbol-level indegree stays out while call edges are off).
 
 mod flags;
+mod targets;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
@@ -126,7 +128,12 @@ pub fn wire_of(root: &Path, idx: &dedup::index::Index, db_path: &Path) -> Result
     // verdicts stand on one id space by construction
     let nodes = nodes::nodes_of(&files, &edges);
     let ids = nodes::ids(&nodes);
-    let rows: Vec<Value> = nodes.iter().map(|n| node_row(root, n, &config)).collect();
+    let file_set: BTreeSet<String> = files.iter().cloned().collect();
+    let declared = targets::Declared::gather(root, &file_set);
+    let rows: Vec<Value> = nodes
+        .iter()
+        .map(|n| node_row(root, n, &config, &declared))
+        .collect();
     let mut wire = edge_wire(&edges, &ids)?;
     nodes::contain(&nodes, &ids, &mut wire);
     Ok(GraphWire {
@@ -167,19 +174,24 @@ pub fn edge_wire(
         .collect()
 }
 
-/// [lang, kind, flags] — only file nodes carry entry flags.
-fn node_row(root: &Path, n: &Node, config: &Config) -> Value {
+/// [lang, kind, legacyFlags, roles] — only file nodes carry entry
+/// facts. The roles column is the 2.28.0 authority (the core derives
+/// the entry bits through its role table); the legacy column is the
+/// pre-2.28 bits verbatim, yields to the roles wherever a 2.28 core
+/// judges, and retires next minor.
+fn node_row(root: &Path, n: &Node, config: &Config, declared: &targets::Declared) -> Value {
     // unknown extension = the sentinel code, NOT Python's 0 (RM15:
     // the two were indistinguishable on the wire before 3k)
     let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
         .map(|l| l as i64)
         .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
-    let flags = if n.kind == super::wire::GRAN_FILE {
-        flags::flags_of(root, &n.path, config)
+    let (flags, roles) = if n.kind == super::wire::GRAN_FILE {
+        let r = flags::roles_of(root, &n.path, config, declared);
+        (flags::legacy_flags(r), r)
     } else {
-        0
+        (0, 0)
     };
-    json!([lang, n.kind, flags])
+    json!([lang, n.kind, flags, roles])
 }
 
 /// One graph.request over the open core link; a missing capability

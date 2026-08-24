@@ -15,7 +15,7 @@
 module CE.Graph (respond) where
 
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, sccFloor)
+import CE.Graph.Cost (assetKind, edgeCap, entryMask, granFile, minRung, nodeCap, roleBits, sccFloor)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
@@ -71,7 +71,8 @@ respond proto =
 violation :: GraphReq -> Maybe String
 violation req =
   asum
-    [ asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
+    [ mixedArity (reqNodes req)
+    , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , asum (zipWith (edgeRow n) [0 :: Int ..] es)
     , ascendingOn "edge" id es
     , asum (zipWith (posRow n) [0 :: Int ..] ps)
@@ -86,12 +87,25 @@ violation req =
   es = reqEdges req
   ps = reqPos req
 
+-- | Node rows must share one arity — 3 columns (legacy flags) or 4
+-- (with the 2.28.0 roles column): a mixed table has no single
+-- judgment basis and refuses by name before any row is judged.
+mixedArity :: [[Integer]] -> Maybe String
+mixedArity rows = case map length rows of
+  [] -> Nothing
+  (w : ws)
+    | all (== w) ws -> Nothing
+    | otherwise -> Just "node rows: mixed arity"
+
 nodeRow :: Int -> [Integer] -> Maybe String
 nodeRow i row = case row of
   [lang, kind, flags]
     | any (< 0) [lang, kind, flags] -> Just (label <> "negative field")
     | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [lang,kind,flags])")
+  [lang, kind, flags, roles]
+    | any (< 0) [lang, kind, flags, roles] -> Just (label <> "negative field")
+    | otherwise -> Nothing
+  _ -> Just (label <> "malformed row (need [lang,kind,flags] or [lang,kind,flags,roles])")
  where
   label = "node " <> show i <> ": "
 
@@ -150,14 +164,25 @@ result proto req =
       ]
  where
   b = build minRung assetKind (length (reqNodes req)) (reqEdges req)
-  flagses = [f | [_, _, f] <- reqNodes req]
+  -- the roles column judges when it rides (2.28.0, batch-7 slice 3):
+  -- a 4-column row's entry bits derive through Cost.roleBits and the
+  -- legacy flags column yields; a 3-column row keeps its sent bits.
+  flagses = map effectiveFlags (reqNodes req)
   -- one reach per request (batch 9 P2): the entry knob binds to the
   -- seed set here at the boundary — the posture Cost.hs declares —
   -- and the computed set feeds the verdict AND the join surface.
   reach = reachFrom b (Dead.entries entryMask flagses)
-  fileIdx = IS.fromList [i | (i, [_, k, _]) <- zip [0 ..] (reqNodes req), k == granFile]
+  fileIdx = IS.fromList [i | (i, _ : k : _) <- zip [0 ..] (reqNodes req), k == granFile]
   (deadRows, reportedRows) =
     partition (\(i, _) -> IS.member i fileIdx) (Dead.verdicts b reach flagses)
+
+-- | The judged flags of one node row: sent bits (3 columns) or bits
+-- derived from the role facts (4 columns — the legacy column
+-- yields). Other shapes cannot reach here: violation refused them.
+effectiveFlags :: [Integer] -> Integer
+effectiveFlags [_, _, f] = f
+effectiveFlags [_, _, _, r] = Dead.deriveFlags roleBits r
+effectiveFlags _ = 0
 
 -- | Over-cap refusal: a well-formed degraded result, never a
 -- truncated graph. counts echoes what arrived (informational);
