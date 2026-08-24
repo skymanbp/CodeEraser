@@ -232,6 +232,11 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   时导出，随后冻进基线。fail 位是四个<em>具名</em>条件的析取——<code>ratchet_over</code>、
   <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>——回包同时带回究竟
   是哪几个成立。</p>
+  <p class="note">自规则包起（proto 3.1.0），连续行可带第四列——该文件的<em>路径类</em>，即首个 glob
+  命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无——旁边是加性的
+  <code>classKnobs</code> 表，码域就是 ceilings 自己的 <code>0 / 1 / 2</code>。带类的行按其类声明的
+  软线、硬线与 CoC 上限收费，类未声明处回落到全局线；收费定律本身分毫未动。棘轮只读三列前缀，
+  所以类是本次收费参数、永远不是基线事实。类名与 glob 留在客户端：过线的只有下标与 knobs。</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
@@ -434,20 +439,21 @@ PROMOTED_DEFAULT = "deny"</pre>
   实现之前预注册冻结，≥ 200 个编辑样本，≥ 50% 取自真实 agent 记录。样本纯度是门的一部分：只有
   observe 模式与无守卫时期的会话可被采样，守卫已经介入过的编辑必须排除——否则 FPR 会被守卫自己的
   塑形效应压低，deny 准入就成了自我背书。到今天为止只有两类付清了：T1/T2 精确重复写入，以及
-  <code>文件 &gt; 750 行</code>的硬预算突破。<em>其余每一条规则都因为没有自己的记录而停在
+  <code>文件 &gt; 自己那条硬线</code>的硬预算突破——默认 750，或该文件的 <code>[[rules.class]]</code>
+  所声明的那条，于是钩子拒的位置正是 CI 墙会红的位置。<em>其余每一条规则都因为没有自己的记录而停在
   observe。</em></p>
   <p class="note">在册的重放把 git 线性历史当作真实编辑流——先探测、后落盘，跑在
   <code>t = 50</code> 与 <code>min_distinct = 7</code> 这两个出厂默认档上：<strong>630 个事件、
   35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>。那 35 个自仓块全部仲裁为真阳并已被清理，
   克隆块预算同步下棘 251 → 211 → 209 → 205 → 202。</p>
-  <pre>cap      = thresholds.file_lines_fail          // default 750
+  <pre>cap      = lines_for(file).file_lines_fail     // 文件自身的类表；class 0 用全局默认 750
 breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
 
 permille = (lines - S) * 1000 / (H - S)
 0   ..= 249  →  observe
 250 ..= 750  →  warn
 751 ..       →  ask</pre>
-  <p class="note">区内档位映射就是把同一套纪律用在自己身上：<code>[guard] zone_tiers</code>
+  <p class="note">区的 <code>S</code> 回退与 <code>H</code> 同样取自文件自己那张表。区内档位映射就是把同一套纪律用在自己身上：<code>[guard] zone_tiers</code>
   <strong>默认关闭</strong>，所以区规则只写 feed、不注入任何东西。它还没有自己的 FPR 台账，
   因此默认不执法——<code>zone</code> 这个 feed 事件的存在意义，恰恰就是"将来任何一次区→档位的
   提档必须据以论证 FPR 的那份逐规则记录"。告警按 (规则, 文件, 会话) 限一次并按 token 预算裁剪；

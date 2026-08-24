@@ -254,6 +254,14 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   fail bit is a disjunction of four <em>named</em> conditions —
   <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
   <code>dedup_budget</code> — and the reply carries the list of names that held.</p>
+  <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column —
+  the file's <em>path class</em>, the 1-based index of the first <code>[[rules.class]]</code>
+  whose globs match, <code>0</code> for none — beside an additive <code>classKnobs</code> table
+  whose codes are the ceilings' own <code>0 / 1 / 2</code>. A classed row is charged against its
+  class's soft line, hard line and CoC ceiling and falls back to the global line wherever the
+  class declares none; the charge law itself is untouched. The ratchet reads only the
+  three-column prefix, so a class is a charging parameter for this run and never a baseline
+  fact. Names and globs stay on the client: only the index and its knobs cross.</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
@@ -484,7 +492,9 @@ PROMOTED_DEFAULT = "deny"</pre>
   sampled and edits the guard already intervened in are excluded, otherwise FPR is biased
   downward by the guard's own shaping and the deny admission becomes self-certifying.
   Exactly two classes have paid — T1/T2 exact duplicate write, and hard-budget breach at
-  <code>file &gt; 750 lines</code>. <em>Every other rule stays at observe for want of its
+  <code>file &gt; its hard line</code> — 750 by default, or the line the file's
+  <code>[[rules.class]]</code> declares, so the hook denies exactly where the CI wall fails.
+  <em>Every other rule stays at observe for want of its
   own record.</em></p>
   <p class="note">The recorded replay treats git linear history as a real edit stream —
   probe first, then apply, at the shipped default knobs <code>t = 50</code> and
@@ -492,14 +502,15 @@ PROMOTED_DEFAULT = "deny"</pre>
   arbitration → 0.00 per 500</strong>. The 35 self-repo blocks arbitrated as true
   positives and were remediated, stepping the clone-block budget 251 → 211 → 209 → 205 →
   202 in lockstep.</p>
-  <pre>cap      = thresholds.file_lines_fail          // default 750
+  <pre>cap      = lines_for(file).file_lines_fail     // the file's class table; 750 for class 0
 breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
 
 permille = (lines - S) * 1000 / (H - S)
 0   ..= 249  →  observe
 250 ..= 750  →  warn
 751 ..       →  ask</pre>
-  <p class="note">The graded-zone map is the same discipline applied to itself:
+  <p class="note">The graded zone reads its <code>S</code> fallback and its <code>H</code> off the
+  same per-file table as the hard budget. The map is the same discipline applied to itself:
   <code>[guard] zone_tiers</code> is <strong>off by default</strong>, so the zone rule is
   feed-only and injects nothing. It has no FPR ledger of its own yet, therefore it does
   not enforce — the <code>zone</code> feed event exists precisely as the per-rule record

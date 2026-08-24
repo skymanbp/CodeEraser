@@ -93,7 +93,7 @@ note: 102 blocks collapsed into existing members, 57 intra-file pairs off the si
   <div class="card"><b>ce deadcode</b><p>Liveness verdicts on a cached reference graph: no kept in-edge, no entry flag — dead, and the gate says so.</p></div>
   <div class="card"><b>ce docdup</b><p>Duplicated prose across docs and comments, judged by exact Jaccard over live segments.</p></div>
   <div class="card"><b>ce structure</b><p>Tree-scale entropy: layout divergence, doc staleness, redundancy axes over the whole repository.</p></div>
-  <div class="card"><b>ce scan</b><p>Size, complexity and readability per file and function — the classic metrics, core-graded.</p></div>
+  <div class="card"><b>ce scan</b><p>Size, complexity and readability per file and function — the classic metrics, core-graded against the global table or the file's own <code>[[rules.class]]</code> lines.</p></div>
   <div class="card"><b>ce trend</b><p>Your score across mainline history — cached per commit, rebuildable, honest about direction.</p></div>
   <div class="card"><b>Guard hooks</b><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
 </div>
