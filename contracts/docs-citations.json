@@ -21,7 +21,7 @@
   },
   "docs/reference/methodology.md:5": {
     "target": "../../README.md",
-    "line": 159,
+    "line": 172,
     "text": "NDJSON wire. Haskell owns product decisions: score and ratchet"
   },
   "docs/reference/methodology.md:6": {

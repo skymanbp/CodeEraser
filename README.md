@@ -13,6 +13,19 @@ the same fact written in three places, updates that arrive as appends, files tha
 CodeEraser fights that drift at the moment of writing — a Rust CLI + Tauri GUI in front of a Haskell
 judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception, a read-only MCP report surface, pre-commit, and CI exit codes.
 
+## What CodeEraser does
+
+1. **It refuses a duplicate before it exists.** A write that would leave an exact T1/T2 clone in the tree is denied at PreToolUse — the interception happens at writing time, not in a report you read afterwards.
+2. **It refuses a file past its hard line.** A write that leaves a file over 750 lines — or over the line that file's `[[rules.class]]` declares — is denied the same way.
+3. **It finds documentation written twice.** Repeated paragraphs, comments and docstrings anywhere in the tree, with `--check` turning the finding into a CI exit code.
+4. **It finds the clones that editing disguised.** Near-miss blocks are matched by tree edit distance over syntax, so a renamed and re-ordered copy still answers for itself.
+5. **It finds what nothing reaches.** A file-level reference graph carries four-way liveness verdicts and cycle membership: dead code and dead documents are named, not guessed at.
+6. **It erases only what is provably safe.** Dead files, verbatim document twins and whole-unit exact clones — planned first, applied only from a clean worktree, and never by asking a model to rewrite your code.
+7. **It prices the seam before you split.** Every file past the soft line gets its best split seam costed, or a written cohesion alibi for why it should be left whole.
+8. **It scores the whole tree and holds a floor that only tightens.** Seven structural axes produce one score; `ce check --fail-under` gates it, and per-file ceilings from the accepted baseline can be tightened by cleanup but never loosened silently.
+9. **It watches the trajectory, not just today.** Score history over mainline commits, git-window churn, and a three-signal join that puts churn, duplication and liveness in one verdict.
+10. **It reports through the surfaces you already use.** Terminal, GUI, read-only MCP server, Claude Code hooks, pre-commit and CI exit codes — every one of them rendering the same verdicts from the same core.
+
 ## Status
 
 🏁 **v1.1.0 — released.** v1.0.0 delivered every milestone of the locked plan with a clean final sweep
