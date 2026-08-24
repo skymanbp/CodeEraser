@@ -7,6 +7,14 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.30.0 = the fn-naming facts minor (ADR-008 batch-7 slice 14,
+-- 2026-08-24): scan.request grows the aligned naming facts table —
+-- [lang, style, upper, under, test], one row per code-6 row, whose
+-- value must then be 0 (the verdict never crosses) — and the
+-- convention judgment lands in CE.Scan.Cost.conforms: the godoc
+-- underscore exemption gated on Go's own lang code with go vet's
+-- prefix boundary (Testing_helper and the mixedCaps leak both
+-- dead). Legacy road (no naming key) byte-identical.
 -- 2.29.0 = the H1 triple minor (ADR-008 follow-ons, 2026-08-24):
 -- ① the verdict knobs echo gains judgedMask — the judged-language
 -- set as a Lang-code bitmask, client-declared and pinned per run
@@ -193,7 +201,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.29.0"
+proto = "2.30.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

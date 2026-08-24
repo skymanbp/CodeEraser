@@ -12,6 +12,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.30.0 = the fn-naming facts minor (ADR-008 batch-7 slice 14,
+/// 2026-08-24): scan.request grows the aligned `naming` facts table
+/// — [lang, style, upper, under, test], one row per code-6 row,
+/// whose value must then be 0 (the verdict never crosses) — and the
+/// convention judgment moves to CE.Scan.Cost.conforms. The godoc
+/// underscore exemption is gated on Go's own lang code with go
+/// vet's prefix boundary, killing the two defects the Rust
+/// predicate carried (Testing_helper exempted; the exemption
+/// leaking to every mixedCaps language). Legacy road (no naming
+/// key) byte-identical; naming.rs stays as the pinned mirror.
 /// 2.29.0 = the H1 triple minor (ADR-008 follow-ons, 2026-08-24):
 /// ① the verdict knobs echo gains judgedMask — the judged-language
 /// set as a Lang-code bitmask, declared by this client and pinned
@@ -143,7 +153,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.29.0";
+pub const PROTO: &str = "2.30.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

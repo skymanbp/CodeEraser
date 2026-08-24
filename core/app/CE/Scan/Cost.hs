@@ -8,11 +8,12 @@
 -- max-args=5, Sonar S3776 CoC=15, lizard CC=15). ce.toml is the
 -- source, these are the DEFAULTS (the 27b9bc2 pattern), and the
 -- reply's grade echo pins the Rust mirror.
-module CE.Scan.Cost (gradeTable, gradeWith, scanRowCap) where
+module CE.Scan.Cost (conforms, goLang, gradeTable, gradeWith, scanRowCap) where
 
 -- | Codes are frozen positions (the wire.rs edge-code discipline):
 --   0 file-lines   1 fn-lines   2 fn-params   3 cyclomatic
---   4 cognitive    5 nesting    6 fn-naming (value 0/1, warn 0)
+--   4 cognitive    5 nesting    6 fn-naming (value 0/1, warn 0;
+--   derived from the naming facts when they ride — conforms below)
 gradeTable :: [(Integer, Integer, Integer)]
 gradeTable =
   [ (0, 300, 750)
@@ -42,3 +43,25 @@ gradeWith (warn, failLine) v
 -- never pass).
 scanRowCap :: Integer
 scanRowCap = 524288
+
+-- | The fn-naming judgment (2.30.0, ADR-008 batch-7 slice 14): the
+-- convention verdict over the five wire facts [lang, style, upper,
+-- under, test] — style 1 (snake) forbids uppercase, style 2
+-- (mixedCaps) forbids underscores except the go-vet test-name
+-- shapes, and that exemption is gated on Go's OWN lang code: the
+-- same facts under TypeScript or Haskell stay a violation (the
+-- leak the Rust-side predicate carried). Style 0 = no convention
+-- (Markdown, non-identifier subjects). Shape is enforced by
+-- Scan.hs's validator; cli scan/metrics/naming.rs::conforms is the
+-- pinned mirror the whole-report ensure proves equal.
+conforms :: [Integer] -> Bool
+conforms row = case row of
+  [lang, style, upper, under, test]
+    | style == 1 -> upper == 0
+    | style == 2 -> under == 0 || (lang == goLang && test == 1)
+    | otherwise -> True
+  _ -> error "naming shape enforced by violation"
+
+-- | Go's frozen Lang wire code (cli scan/lang.rs LANGS order).
+goLang :: Integer
+goLang = 4

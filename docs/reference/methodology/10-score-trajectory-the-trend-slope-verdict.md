@@ -18,7 +18,7 @@ Before any arithmetic, the first offender in request order is named and the requ
 
 - row must be exactly `[ts, score, scale]`, with `ts >= 0`, `scale > 0`, and `0 <= score <= scale` ([Trend.hs:64-70](../../../core/app/CE/Trend.hs#L64));
 - knob must be `[code, value]` with `code ∈ {0, 1}`, `value >= 0`, and — for `code == 0` — `value >= 2` ([Trend.hs:74-81](../../../core/app/CE/Trend.hs#L74));
-- knob codes must be strictly ascending ([Trend.hs:60](../../../core/app/CE/Trend.hs#L60), [Wire.hs:54-61](../../../core/app/CE/Wire.hs#L54)).
+- knob codes must be strictly ascending ([Trend.hs:60](../../../core/app/CE/Trend.hs#L60), [Wire.hs:54-61](../../../core/app/CE/Wire.hs#L56)).
 
 Row **order is deliberately unconstrained**: least squares is order-free, and first-parent order is topological rather than chronological, so rebased or backdated commits are legal input ([Trend.hs:48-54](../../../core/app/CE/Trend.hs#L48)). The property `orderFree` pins that a shuffled window judges identically to its sorted twin ([TrendProps.hs:126-136](../../../core/test/TrendProps.hs#L126)).
 
@@ -49,7 +49,7 @@ It is `Nothing` — underdetermined, not zero — when `n < 2` or `den == 0` ([C
 
 ### minPoints — absence, never a fabricated flat
 
-`minPoints` is knob code `0`, default `3` ([Cost.hs:23](../../../core/app/CE/Trend/Cost.hs#L23), resolved at [Trend.hs:94](../../../core/app/CE/Trend.hs#L94) via last-match-wins `pick` at [Wire.hs:77-78](../../../core/app/CE/Wire.hs#L77)). Below it the slope is not computed at all:
+`minPoints` is knob code `0`, default `3` ([Cost.hs:23](../../../core/app/CE/Trend/Cost.hs#L23), resolved at [Trend.hs:94](../../../core/app/CE/Trend.hs#L94) via last-match-wins `pick` at [Wire.hs:77-78](../../../core/app/CE/Wire.hs#L79)). Below it the slope is not computed at all:
 
 ```haskell
 slope

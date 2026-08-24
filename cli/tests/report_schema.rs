@@ -29,6 +29,7 @@ fn sample() -> Vec<FileMetrics> {
             cognitive: 1,
             max_nesting: 1,
             name_ok: false,
+            naming: [0, 1, 1, 0, 0],
         }],
     }]
 }

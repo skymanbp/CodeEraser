@@ -67,8 +67,20 @@ pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
     let (config, files) = measure(root)?;
     let rows = report::rows_of(&files);
     let grades = wire::grade_rows(&config.thresholds)?;
-    let wire_rows: Vec<[u64; 2]> = rows.iter().map(|r| [r.code, r.value as u64]).collect();
-    let (levels, fail) = wire::judge(core, &wire_rows, &grades)?;
+    // The facts road (2.30.0, ADR-008 slice 14): the fn-naming
+    // verdict never crosses — every code-6 row carries 0, and its
+    // naming facts ride the aligned table (one row per function, in
+    // the same files×functions order rows_of walks the code-6 rows).
+    let wire_rows: Vec<[u64; 2]> = rows
+        .iter()
+        .map(|r| [r.code, if r.code == 6 { 0 } else { r.value as u64 }])
+        .collect();
+    let naming: Vec<[i64; 5]> = files
+        .iter()
+        .flat_map(|f| &f.functions)
+        .map(|f| f.naming)
+        .collect();
+    let (levels, fail) = wire::judge(core, &wire_rows, &grades, &naming)?;
     let findings = report::findings_from(&rows, &levels, &grades);
     let mirror: Vec<report::Finding> = files
         .iter()
@@ -117,7 +129,7 @@ fn measure_file(src: Vec<u8>, path: &Path, root: &Path, language: Lang) -> Resul
         .parse(&src, None)
         .with_context(|| format!("parse {}", path.display()))?;
     out.comment_lines = metrics::size::comment_lines(tree.root_node(), sp);
-    out.functions = measure_functions(tree.root_node(), &src, sp);
+    out.functions = measure_functions(tree.root_node(), &src, sp, language);
     Ok(out)
 }
 
@@ -125,13 +137,16 @@ fn measure_functions(
     root: tree_sitter::Node<'_>,
     src: &[u8],
     sp: &spec::LangSpec,
+    language: Lang,
 ) -> Vec<FnMetrics> {
     functions::extract(root, src, sp)
         .into_iter()
         .map(|unit| {
             let cog = metrics::cognitive::measure(unit.node, src, sp);
+            let naming = metrics::naming::facts(language, sp.name_style, &unit.name);
             FnMetrics {
-                name_ok: metrics::naming::conforms(sp.name_style, &unit.name),
+                name_ok: metrics::naming::conforms(naming),
+                naming,
                 name: unit.name,
                 start_line: unit.start_line,
                 end_line: unit.end_line,

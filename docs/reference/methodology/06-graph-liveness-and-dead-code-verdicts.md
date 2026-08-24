@@ -130,7 +130,7 @@ deterministic ([Graph.hs:69-85](../../../core/app/CE/Graph.hs#L69)):
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
   ([Graph.hs:96-104](../../../core/app/CE/Graph.hs#L110));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Graph.hs:74](../../../core/app/CE/Graph.hs#L74), [Wire.hs:44-47](../../../core/app/CE/Wire.hs#L44));
+  ([Graph.hs:74](../../../core/app/CE/Graph.hs#L74), [Wire.hs:44-47](../../../core/app/CE/Wire.hs#L46));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
   ([Graph.hs:76-80](../../../core/app/CE/Graph.hs#L77),

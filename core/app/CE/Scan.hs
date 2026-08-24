@@ -3,23 +3,26 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | scan.request handler (ADR-008 P3): decode measurement rows
--- [code, value] plus optional grade overrides [code, warn, fail],
--- enforce the row cap (over-cap = a complete degraded reply that
--- FAILS — the P1 posture), machine-check the boundary contract in
--- request order — then grade every row through the ONE graded
--- verdict table. Levels return positionally (row i answers level i)
--- and the fail bit is the exit-code semantic: any level-2 row.
--- Measurement and report rendering stay in Rust; only codes and
--- values cross the wire — subjects, names and paths never do
--- (§5.9.2 index privacy).
+-- [code, value] plus optional grade overrides [code, warn, fail]
+-- and the optional naming-facts table (2.30.0, aligned to the
+-- code-6 rows), enforce the row cap (over-cap = a complete degraded
+-- reply that FAILS — the P1 posture), machine-check the boundary
+-- contract in request order — then grade every row through the ONE
+-- graded verdict table, deriving each code-6 value from its facts
+-- when they ride. Levels return positionally (row i answers level
+-- i) and the fail bit is the exit-code semantic: any level-2 row.
+-- Measurement and report rendering stay in Rust; only codes, values
+-- and name-shape facts cross the wire — subjects, names and paths
+-- never do (§5.9.2 index privacy).
 module CE.Scan (respond) where
 
-import CE.Scan.Cost (gradeTable, gradeWith, scanRowCap)
+import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
 import CE.Wire (RowsReq (..), ascendingOn, rowsFamily)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
+import Data.Maybe (fromMaybe)
 
 
 -- | The shared cascade with this family's bindings (CE.Wire).
@@ -27,15 +30,37 @@ respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.By
 respond proto =
   rowsFamily
     "scan"
-    -- grades count toward the cap too (review C15: the declared
-    -- ceiling missed the second request dimension)
-    (\req -> toInteger (length (rowsOf req) + length (gradesOf req)) > scanRowCap)
+    -- grades and naming facts count toward the cap too (review
+    -- C15: the declared ceiling missed the second request
+    -- dimension; the third arrived with 2.30.0)
+    ( \req ->
+        toInteger (length (rowsOf req) + length (gradesOf req) + length (namingRows req))
+          > scanRowCap
+    )
     violation
     (\req -> reply proto req [] True)
     ( \req ->
         let eff = effective (gradesOf req)
-         in reply proto req (map (grade eff) (rowsOf req)) False
+         in reply proto req (map (grade eff) (withFacts (namingOf req) (rowsOf req))) False
     )
+
+-- | The naming table as sent, [] when absent — the cap's view; road
+-- selection stays on namingOf's Maybe.
+namingRows :: RowsReq -> [[Integer]]
+namingRows = fromMaybe [] . namingOf
+
+-- | The facts road (2.30.0): each code-6 row's effective value is
+-- the conforms verdict over its aligned facts row — derived HERE,
+-- by the judgment's owner; the legacy road (no naming key) keeps
+-- judging the 0/1 the client sent, byte-identically.
+withFacts :: Maybe [[Integer]] -> [[Integer]] -> [[Integer]]
+withFacts Nothing rows = rows
+withFacts (Just naming) rows = go naming rows
+ where
+  go _ [] = []
+  go ns (row : rest) = case (row, ns) of
+    ([6, _], n : ns') -> [6, if conforms n then 0 else 1] : go ns' rest
+    _ -> row : go ns rest
 
 -- | First boundary-contract offender in request order (Clone.hs
 -- posture: the message names the violator deterministically); the
@@ -47,7 +72,43 @@ violation req =
     [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
     , asum (zipWith gradeShape [0 :: Int ..] (gradesOf req))
     , ascendingOn "grade" (take 1) (gradesOf req)
+    , namingBattery req
     ]
+
+-- | The naming-facts table's own contract (2.30.0): aligned 1:1
+-- with the code-6 rows in request order, each row the five shape
+-- facts — and the verdict provably absent from the wire: a code-6
+-- row must carry value 0 when facts ride (the staleDocs lesson,
+-- inverted before shipping this time: one judgment, one road).
+namingBattery :: RowsReq -> Maybe String
+namingBattery req = case namingOf req of
+  Nothing -> Nothing
+  Just naming ->
+    asum
+      [ counts naming
+      , asum (zipWith namingShape [0 :: Int ..] naming)
+      , asum (zipWith preJudged [0 :: Int ..] (rowsOf req))
+      ]
+ where
+  counts naming
+    | length naming /= fnRows =
+        Just ("naming: " <> show (length naming) <> " rows for " <> show fnRows <> " fn-naming rows")
+    | otherwise = Nothing
+  fnRows = length [() | (6 : _) <- rowsOf req]
+  preJudged i row = case row of
+    [6, v] | v /= 0 -> Just ("row " <> show i <> ": pre-judged fn-naming value (naming facts ride)")
+    _ -> Nothing
+
+namingShape :: Int -> [Integer] -> Maybe String
+namingShape i row = case row of
+  [lang, style, upper, under, test]
+    | lang < 0 || lang > 6 -> Just (label <> "lang outside the judged set")
+    | style < 0 || style > 2 -> Just (label <> "unknown style")
+    | any (`notElem` [0, 1]) [upper, under, test] -> Just (label <> "non-boolean fact")
+    | otherwise -> Nothing
+  _ -> Just (label <> "malformed row (need [lang,style,upper,under,test])")
+ where
+  label = "naming " <> show i <> ": "
 
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of

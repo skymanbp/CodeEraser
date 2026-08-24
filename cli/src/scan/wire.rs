@@ -6,8 +6,9 @@
 //! core's gradeTable holds the DEFAULTS, and the level judgment
 //! never happens here — report.rs::evaluate is a pinned mirror for
 //! the auxiliary surfaces, proven equal by scan::run's whole-report
-//! ensure on every gate run). Only codes and values cross the wire;
-//! subjects, names and paths never do (§5.9.2 index privacy).
+//! ensure on every gate run). Only codes, values and name-shape
+//! facts cross the wire; subjects, names and paths never do
+//! (§5.9.2 index privacy).
 
 use crate::config::Thresholds;
 use anyhow::{Context, Result, ensure};
@@ -61,13 +62,22 @@ pub fn grade_rows(t: &Thresholds) -> Result<Vec<[u64; 3]>> {
 /// positionally per chunk and concatenate, the fail bit ORs, the
 /// echoed grade table must be the one this side sent every time, and
 /// a degraded reply to a chunk-sized request is a cap-mirror drift
-/// error, never a judgment.
-pub fn judge(core: &str, rows: &[[u64; 2]], grades: &[[u64; 3]]) -> Result<(Vec<u8>, bool)> {
+/// error, never a judgment. The naming facts table (2.30.0) rides
+/// aligned: each chunk carries the facts of ITS code-6 rows.
+pub fn judge(
+    core: &str,
+    rows: &[[u64; 2]],
+    grades: &[[u64; 3]],
+    naming: &[[i64; 5]],
+) -> Result<(Vec<u8>, bool)> {
     let mut link = crate::lockstep::open_family(core, CAP)?;
     let (mut levels, mut fail) = (Vec::new(), false);
-    for chunk in rows.chunks(SCAN_ROW_CAP) {
+    for (chunk, facts) in chunk_plan(rows, naming, SCAN_ROW_CAP - grades.len()) {
         let reply = link
-            .request("scan", json!({"rows": chunk, "grades": grades}))
+            .request(
+                "scan",
+                json!({"rows": chunk, "grades": grades, "naming": facts}),
+            )
             .map_err(anyhow::Error::msg)?;
         ensure!(
             reply["degraded"] == json!(false),
@@ -92,6 +102,34 @@ pub fn judge(core: &str, rows: &[[u64; 2]], grades: &[[u64; 3]]) -> Result<(Vec<
         fail |= reply["fail"].as_bool().context("fail")?;
     }
     Ok((levels, fail))
+}
+
+/// Greedy chunk split whose budget counts EVERY request dimension
+/// the core's cap counts (the C15 lesson made structural — the old
+/// rows-only `chunks(SCAN_ROW_CAP)` left no room for the grade
+/// table, so the first chunk of a cap-sized tree degraded): a row
+/// pays 1, a code-6 row pays 2 (its aligned naming fact travels
+/// with it), and the caller reserves the grade table's rows. The
+/// walk that prices code-6 rows is the walk that slices the facts
+/// — alignment by construction.
+fn chunk_plan<'a>(
+    rows: &'a [[u64; 2]],
+    naming: &'a [[i64; 5]],
+    budget: usize,
+) -> Vec<(&'a [[u64; 2]], &'a [[i64; 5]])> {
+    let mut out = Vec::new();
+    let (mut row0, mut fact0, mut facts, mut weight) = (0usize, 0usize, 0usize, 0usize);
+    for (i, row) in rows.iter().enumerate() {
+        let w = 1 + usize::from(row[0] == 6);
+        if weight + w > budget && weight > 0 {
+            out.push((&rows[row0..i], &naming[fact0..fact0 + facts]));
+            (row0, fact0, facts, weight) = (i, fact0 + facts, 0, 0);
+        }
+        weight += w;
+        facts += usize::from(row[0] == 6);
+    }
+    out.push((&rows[row0..], &naming[fact0..]));
+    out
 }
 
 #[cfg(test)]
@@ -123,5 +161,23 @@ mod tests {
             ..Thresholds::default()
         };
         grade_rows(&unlined).expect("fail 0 = no hard line is coherent");
+    }
+
+    /// The chunk budget pays 1 per row + 1 per riding naming fact,
+    /// so chunk + grades always fits the core's cap: with budget 3,
+    /// [plain, code-6, plain, code-6] splits after the first code-6
+    /// row (1+2), and each facts slice follows its own rows.
+    #[test]
+    fn chunk_plan_counts_every_request_dimension() {
+        let rows = [[0u64, 1], [6, 0], [0, 2], [6, 0]];
+        let naming = [[4i64, 2, 0, 1, 1], [1, 2, 0, 1, 1]];
+        let plan = chunk_plan(&rows, &naming, 3);
+        assert_eq!(
+            plan,
+            vec![(&rows[..2], &naming[..1]), (&rows[2..], &naming[1..])]
+        );
+        // an empty scan still sends ONE (empty, legal) request
+        let empty: (&[[u64; 2]], &[[i64; 5]]) = (&[], &[]);
+        assert_eq!(chunk_plan(&[], &[], 3), vec![empty]);
     }
 }

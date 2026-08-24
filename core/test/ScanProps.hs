@@ -22,6 +22,8 @@ battery =
     , ("levels ride positionally through the real respond", positional)
     , ("a grade override flips the named row's level and echoes", overrideLever)
     , ("scan refusals name the offender with code and message", refusals)
+    , ("the facts road derives fn-naming, exemption gated on Go", factsRoad)
+    , ("naming refusals: alignment, shape, the pre-judged value", namingRefusals)
     , ("an over-cap scan request degrades to a reply that FAILS", degradedFails)
     ]
 
@@ -85,6 +87,43 @@ refusals =
  where
   gradeReq gs = setKey "grades" (toJSON (gs :: [[Integer]])) (wireReq [])
   refused = refusedBy respond
+
+-- | The 2.30.0 counterfactual ON THE WIRE: identical facts
+-- (mixedCaps, underscore, go-vet test shape) are exempt under Go's
+-- lang code and a warn under TypeScript's — the leak the Rust-side
+-- predicate carried; snake facts judge on the uppercase bit; an
+-- empty facts table beside function-free rows is legal; and the
+-- legacy road (no naming key) still judges the sent 0/1.
+factsRoad :: Bool
+factsRoad =
+  and
+    [ run [[4, 2, 0, 1, 1]] [[6, 0]] == Just (toJSON [0 :: Integer])
+    , run [[1, 2, 0, 1, 1]] [[6, 0]] == Just (toJSON [1 :: Integer])
+    , run [[0, 1, 1, 0, 0]] [[6, 0]] == Just (toJSON [1 :: Integer])
+    , run [] [[0, 301]] == Just (toJSON [1 :: Integer])
+    , (replyObj (wireReq [[6, 1]]) >>= \o -> field o "levels") == Just (toJSON [1 :: Integer])
+    ]
+ where
+  run naming rows =
+    replyObj (setKey "naming" (toJSON (naming :: [[Integer]])) (wireReq rows))
+      >>= \o -> field o "levels"
+
+-- | Every refusal the naming table can earn, named: a facts row
+-- with no code-6 row to bind to, the judged-set and style and
+-- boolean fences, the malformed shape, and a code-6 row that tried
+-- to carry the verdict past the facts.
+namingRefusals :: Bool
+namingRefusals =
+  and
+    [ ref [[4, 2, 0, 1, 1]] [] "naming: 1 rows for 0 fn-naming rows"
+    , ref [[7, 2, 0, 1, 1]] [[6, 0]] "naming 0: lang outside the judged set"
+    , ref [[4, 3, 0, 1, 1]] [[6, 0]] "naming 0: unknown style"
+    , ref [[4, 2, 2, 1, 1]] [[6, 0]] "naming 0: non-boolean fact"
+    , ref [[4, 2, 0, 1]] [[6, 0]] "malformed row (need [lang,style,upper,under,test])"
+    , ref [[4, 2, 0, 1, 1]] [[6, 1]] "row 0: pre-judged fn-naming value"
+    ]
+ where
+  ref naming rows = refusedBy respond (setKey "naming" (toJSON (naming :: [[Integer]])) (wireReq rows))
 
 -- | P1 posture on the new family: one row past the cap degrades to
 -- a complete reply whose fail bit is TRUE.

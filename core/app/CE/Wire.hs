@@ -18,10 +18,10 @@ import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
 
 -- | The [[Integer]]-rows request the table families share: id, the
--- fact rows, and both optional side tables — Trend/Erase read
--- knobs, Scan reads grades, and each family ignores the key it does
--- not own exactly as the envelope's unknown-field rule already
--- demands (§1). Promoted here when the NINTH family (erase/1)
+-- fact rows, and the optional side tables — Trend/Erase read knobs,
+-- Scan reads grades and naming facts (2.30.0), and each family
+-- ignores the keys it does not own exactly as the envelope's
+-- unknown-field rule already demands (§1). Promoted here when the NINTH family (erase/1)
 -- minted the record + FromJSON pair verbatim for the third time —
 -- the scan/trend twins were a banked ledger class until then.
 data RowsReq = RowsReq
@@ -29,6 +29,7 @@ data RowsReq = RowsReq
   , rowsOf :: [[Integer]]
   , knobsOf :: [[Integer]]
   , gradesOf :: [[Integer]]
+  , namingOf :: Maybe [[Integer]]
   }
 
 instance FromJSON RowsReq where
@@ -38,6 +39,7 @@ instance FromJSON RowsReq where
       <*> o .: "rows"
       <*> o .:? "knobs" .!= []
       <*> o .:? "grades" .!= []
+      <*> o .:? "naming"
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family

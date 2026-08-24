@@ -19,8 +19,15 @@ pub struct FnMetrics {
     pub cyclomatic: u32,
     pub cognitive: u32,
     pub max_nesting: u32,
-    /// Name conforms to the language's convention (readability §4.1).
+    /// Name conforms to the language's convention (readability §4.1)
+    /// — the pinned mirror's verdict; the core judges the same from
+    /// the facts below, and the whole-report ensure holds them equal.
     pub name_ok: bool,
+    /// The five naming facts bound for the wire ([lang, style,
+    /// upper, under, test] — naming::facts). Skipped: wire shape,
+    /// not report vocabulary (schema §7.1 unchanged).
+    #[serde(skip)]
+    pub naming: [i64; 5],
 }
 
 #[derive(Debug, Serialize)]

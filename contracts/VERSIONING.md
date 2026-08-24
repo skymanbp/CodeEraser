@@ -149,6 +149,12 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.30.0**（fn-naming facts minor，ADR-008 批 7 片 14，2026-08-24，用户拍板）：scan.request
+> 增列对齐 `naming` facts 表（`[lang, style, upper, under, test]`，每 code-6 行一行；facts 在场时
+> code-6 行 value 必须为 0——判决不再过线）；conforms 判决迁 `CE.Scan.Cost`：godoc 下划线豁免
+> 仅限 Go 自己的 lang 码，前缀边界按 go vet 规则——`Testing_helper` 不再豁免、豁免不再漏到
+> TS/Haskell 等一切 mixedCaps 语言（Rust 谓词的两处缺陷同死；naming.rs 降为钉住的镜像）。
+> 旧路（无 naming 键）字节不变。
 > **2.29.0**（H1 三件 minor，ADR-008 批 7 后续，2026-08-24，用户拍板）：
 > ① verdict knobs 回声加 `judgedMask`（判决语言集 Lang 码位掩码，客户端声明、每判必钉；
 > 谓词本体仍在 Rust——片 2 承诺的回声钉件；0=未声明）。② 未用 Markdown 引用定义改为解析后以
@@ -283,7 +289,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.29.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.30.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -407,5 +413,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.29.0 | §1 所列两处常量 |
+| 协议 | 2.30.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

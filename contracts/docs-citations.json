@@ -3521,7 +3521,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 44,
+    "line": 46,
     "text": "{ famName :: String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
@@ -4267,7 +4267,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.29.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.30.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5111,7 +5111,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:17": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 54,
+    "line": 56,
     "text": "-- and judged stay per-family ARGUMENTS (one authority per family),"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:18": {
@@ -5201,7 +5201,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:33": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 77,
+    "line": 79,
     "text": "-- | A KNOBLESS table family (erase/1, audit/1): rows"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:34": {
@@ -5811,7 +5811,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 245,
+    "line": 251,
     "text": "> 上调 violCost 属显式选择）。区间罚曲线过硬线 H 改 **C¹ 线性延伸**"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -5846,7 +5846,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:36": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 254,
+    "line": 260,
     "text": "> （w=死判决 1..4，x=该文件语言的未解析站点数）、1=verbatim_doc"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:37": {
@@ -5866,7 +5866,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 248,
+    "line": 254,
     "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -5901,7 +5901,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 251,
+    "line": 257,
     "text": "> docs/reference/erase.md；ADR-008：字节归测量、可擦性归判决）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
@@ -5926,7 +5926,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 248,
+    "line": 254,
     "text": "> 0/1000（轴 0 达 10176‰），区分度全失。knob 面与回执行数不变。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
