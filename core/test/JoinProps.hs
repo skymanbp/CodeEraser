@@ -22,7 +22,9 @@ battery = do
   f <- check "reason bit 0 never fires (deliberately absent)" bitZeroSilent
   g <- check "reason ledger pinned on the delete and guard fixtures" ledgerPinned
   h <- check "reorder: rotating the verdict table flips the both-row" reorder
-  pure (and [a, b, c, d, e, f, g, h])
+  i <- check "severity is table data: delete > merge > hotspot, pinned" severityPinned
+  j <- check "confidence counts agreeing LEGS, present and held alike" confidenceCounts
+  pure (and [a, b, c, d, e, f, g, h, i, j])
 
 check :: String -> Bool -> IO Bool
 check name ok = do
@@ -178,12 +180,30 @@ priority = verdictOf bothRow == 1
 -- row judged under a rotated copy of the production table flips
 -- merge -> hotspot. Guard order used to hide exactly this from
 -- every battery (the census counts classes, not ranks).
+-- | The severity face is data (2.33.0): the ranking the report
+-- sorts by is pinned HERE, beside the permutable table it reads
+-- from.
+severityPinned :: Bool
+severityPinned = severities == [(1, 2), (2, 3), (3, 1)]
+
+-- | Two-leg agreement vs three: the merge fixture with a silent
+-- churn leg counts 2; light the cochange bit and it counts 3; a
+-- unit-tier row (no graph leg) with only similarity held counts 1.
+confidenceCounts :: Bool
+confidenceCounts =
+  confidence (legSim + legGraph + legChurn) (bits [1, 2, 3, 4]) == 2
+    && confidence (legSim + legGraph + legChurn) (bits [1, 2, 3, 4, 7]) == 3
+    && confidence (legSim + legChurn) (bits [1]) == 1
+ where
+  bits :: [Int] -> Integer
+  bits = sum . map ((2 :: Integer) ^)
+
 reorder :: Bool
 reorder = v == 3
  where
   rotated =
-    [row | row@(c, _, _) <- verdictTable, c == 3]
-      <> [row | row@(c, _, _) <- verdictTable, c /= 3]
+    [row | row@(c, _, _, _) <- verdictTable, c == 3]
+      <> [row | row@(c, _, _, _) <- verdictTable, c /= 3]
   (v, _, _) = judgeWith rotated bound bothRow
 
 bitZeroSilent :: Bool

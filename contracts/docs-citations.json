@@ -2601,8 +2601,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:27": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 116,
-    "text": "\"zoneTiers\" .= [zoneWarnPermille, zoneAskPermille]"
+    "line": 119,
+    "text": "\"dedupBlocks\""
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:28": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2646,7 +2646,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:35": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 192,
+    "line": 199,
     "text": "-- score reads, so the two judgments share one authority."
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:36": {
@@ -2746,7 +2746,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:53": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 130,
+    "line": 120,
     "text": ".= (if null (reqDedupDistinct req) then Nothing else Just dedupDerived)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:54": {
@@ -2761,7 +2761,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:56": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 101,
+    "line": 104,
     "text": "-- instead of by construction-time coincidence"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:57": {
@@ -2871,22 +2871,22 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 149,
+    "line": 139,
     "text": "Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 135,
+    "line": 125,
     "text": ", \"degraded\" .= False"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 165,
+    "line": 155,
     "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 141,
+    "line": 131,
     "text": "pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req))"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:8": {
@@ -2896,12 +2896,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:80": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 96,
+    "line": 99,
     "text": ", \"over\" .= rOver r"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 146,
+    "line": 136,
     "text": "-- baseline freezes, so the establishing run and every later run"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
@@ -3687,12 +3687,17 @@
   "docs/reference/methodology/07-the-three-signal-join.md:1": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 6,
-    "text": "//! same legs on the verdict/1 wire via `ce check` (M5-3i); nothing"
+    "text": "//! H4: one judgment, two faces — before that this face printed raw"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:10": {
     "target": "../../../cli/src/join/churn_unit.rs",
     "line": 169,
     "text": "let crossing = map.id_of(\"x.rs\", 4, 7);"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:100": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 39,
+    "text": "/// One Tier F row: a similar file pair with all three legs."
   },
   "docs/reference/methodology/07-the-three-signal-join.md:11": {
     "target": "../../../cli/src/score/wire.rs",
@@ -3706,12 +3711,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:13": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 59,
+    "line": 61,
     "text": ", lGraphB :: Maybe Pos"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:14": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 133,
+    "line": 160,
     "text": "simOver = case kind of"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:15": {
@@ -3736,13 +3741,13 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:19": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 78,
+    "line": 80,
     "text": "-- | The Cost binding the wire boundary passes. The similarity"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:2": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 26,
-    "text": "pub const SCHEMA_ID: &str = \"ce.join-report/0.1.0\";"
+    "text": ""
   },
   "docs/reference/methodology/07-the-three-signal-join.md:20": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -3766,42 +3771,42 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 47,
+    "line": 49,
     "text": "mergeRow :: Legs"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:25": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 59,
+    "line": 61,
     "text": "-- | Same-SCC referenced pair (merge cannot fire), docdup-kind sim"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:26": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 41,
+    "line": 43,
     "text": "data Pos = Pos"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:27": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 28,
+    "line": 33,
     "text": "/// Graph position of one file: [indeg, outdeg, sccId, sccSize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:28": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 86,
+    "line": 113,
     "text": "let rows: Vec<[i64; 6]> = serde_json::from_value(reply[\"pos\"].clone()).context(\"pos rows\")?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:29": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 136,
+    "line": 163,
     "text": "pair = (,) <$> lGraphA l <*> lGraphB l"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:3": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 121,
+    "line": 148,
     "text": "judge :: Knobs -> Legs -> (Integer, Integer, Integer)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:30": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 140,
+    "line": 167,
     "text": "bothRef = maybe False (\\(a, b) -> pIndeg a >= 1 && pIndeg b >= 1) pair"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:31": {
@@ -3821,12 +3826,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:34": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 36,
+    "line": 38,
     "text": "-- | One side's graph position (the Position.hs row minus its echoed"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:35": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 168,
+    "line": 158,
     "text": "floor' = maybe DedupCost.minDistinct id (reqDedupFloor req)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:36": {
@@ -3841,17 +3846,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:38": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 157,
+    "line": 187,
     "text": "\"a\": u.a, \"b\": u.b, \"tokens\": u.tokens,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:39": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 60,
+    "line": 62,
     "text": ", lChurnA :: (Integer, Integer)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:4": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 161,
+    "line": 151,
     "text": "-- the distinct rows, when they ride, make the core's OWN derivation"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:40": {
@@ -3861,27 +3866,27 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:41": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 137,
+    "line": 167,
     "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 276,
-    "text": "type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);"
+    "text": "pub(crate) type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 176,
+    "line": 166,
     "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 282,
+    "line": 289,
     "text": "if let Some(&i) = idx.get(u.path.as_str()) {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 148,
+    "line": 175,
     "text": "(apA, rwA) = lChurnA l"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:46": {
@@ -3906,7 +3911,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 104,
+    "line": 131,
     "text": "fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report) -> Vec<FileRow> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
@@ -3936,17 +3941,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:55": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 45,
+    "line": 50,
     "text": "/// None = the pair is outside the churn report's co-change table"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:56": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 51,
+    "line": 53,
     "text": "-- honestly lack it. lCochange is Maybe: Nothing = the pair sits"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:57": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 152,
+    "line": 179,
     "text": "cochangeHot = maybe False (>= kCochangeFloor k) (lCochange l)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:58": {
@@ -3961,13 +3966,13 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 110,
+    "line": 137,
     "text": "(b.b_file.clone(), b.a_file.clone())"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 113,
-    "text": "verdictTable :: [(Integer, [Int], [Int])]"
+    "text": "-- public-guard(6) clear names that one flank non-public — RG10"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:61": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -3977,7 +3982,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:62": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 153,
-    "text": "code = case [c | (c, req, forb) <- table, all (testBit reasons) req, not (any (testBit reasons) forb)] of"
+    "text": "-- two travel together so a two-leg firing can never hide."
   },
   "docs/reference/methodology/07-the-three-signal-join.md:63": {
     "target": "../../../core/test/JoinProps.hs",
@@ -3986,12 +3991,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:64": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 181,
+    "line": 201,
     "text": "reorder :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:65": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 157,
+    "line": 184,
     "text": "reasons ="
   },
   "docs/reference/methodology/07-the-three-signal-join.md:66": {
@@ -4001,17 +4006,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:67": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 161,
+    "line": 188,
     "text": "[ (1 :: Int, simOver)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:68": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 162,
+    "line": 189,
     "text": ", (2, graphBoth)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:69": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 163,
+    "line": 190,
     "text": ", (3, bothRef)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:7": {
@@ -4021,27 +4026,27 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:70": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 164,
+    "line": 191,
     "text": ", (4, sccDistinct)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:71": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 165,
+    "line": 192,
     "text": ", (5, deadFlank)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:72": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 166,
+    "line": 193,
     "text": ", (6, publicGuard)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:73": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 167,
+    "line": 194,
     "text": ", (7, cochangeHot)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:74": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 168,
+    "line": 195,
     "text": ", (8, rewriteHot)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:75": {
@@ -4051,7 +4056,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:76": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 108,
+    "line": 110,
     "text": "-- copy and watches a crafted pair flip. delete's row is EXACTLY the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:77": {
@@ -4061,12 +4066,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:78": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 96,
+    "line": 98,
     "text": "legSim, legGraph, legChurn :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:79": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 156,
+    "line": 183,
     "text": "legsMask = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:8": {
@@ -4086,43 +4091,43 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:82": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 161,
+    "line": 151,
     "text": "-- the distinct rows, when they ride, make the core's OWN derivation"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:83": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 86,
-    "text": "[ \"proto\" .= proto"
+    "target": "../../../cli/src/score/wire.rs",
+    "line": 74,
+    "text": "pub candidates: Vec<[i64; 6]>,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:84": {
-    "target": "../../../cli/src/score/wire.rs",
-    "line": 54,
-    "text": "pub dedup_min_distinct: Option<u64>,"
+    "target": "../../../core/app/CE/Verdict/Join.hs",
+    "line": 135,
+    "text": "legBits :: [(Integer, [Int])]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:85": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 149,
-    "text": "Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)"
+    "target": "../../../core/app/CE/Verdict/Join.hs",
+    "line": 142,
+    "text": "confidence :: Integer -> Integer -> Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:86": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 141,
-    "text": "pens = penalties k effSoft (Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req))"
+    "target": "../../../core/test/JoinProps.hs",
+    "line": 192,
+    "text": "confidenceCounts :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:87": {
-    "target": "../../../cli/src/score/report.rs",
-    "line": 76,
-    "text": "\"check score {}/{} | axes {} | {} candidates\","
+    "target": "../../../core/test/JoinProps.hs",
+    "line": 186,
+    "text": "severityPinned :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:88": {
-    "target": "../../../cli/src/score/report.rs",
-    "line": 50,
-    "text": "\"candidates\": r.candidates,"
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 90,
+    "text": ", -- the verdict table's severity face (2.33.0, H4): shipped"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:89": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 59,
-    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Report> {"
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 136,
+    "text": "-- baseline freezes, so the establishing run and every later run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:9": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -4130,49 +4135,54 @@
     "text": "None => UnitId {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:90": {
-    "target": "../../../cli/src/main_judge.rs",
-    "line": 175,
-    "text": "codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))"
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 128,
+    "text": "k = effectiveKnobs (reqCeilings req) (reqThresholds req)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:91": {
-    "target": "../../../cli/src/main_judge.rs",
-    "line": 105,
-    "text": "family_checked(j, name, run, print, |_| None)"
+    "target": "../../../cli/src/score/report.rs",
+    "line": 76,
+    "text": "line("
   },
   "docs/reference/methodology/07-the-three-signal-join.md:92": {
-    "target": "../../../cli/src/main_judge.rs",
-    "line": 203,
-    "text": "/// emit plus a veto: a --check style gate turns a printed report"
+    "target": "../../../cli/src/score/report.rs",
+    "line": 50,
+    "text": "\"candidates\": r.candidates,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:93": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 231,
-    "text": "\"{}\","
+    "target": "../../../cli/src/join/verdicts.rs",
+    "line": 40,
+    "text": "pub fn judge_pairs("
   },
   "docs/reference/methodology/07-the-three-signal-join.md:94": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 68,
+    "line": 83,
     "text": "let degraded = (reply[\"degraded\"].as_bool() == Some(true))"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:95": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 222,
-    "text": "\"{}\","
+    "line": 276,
+    "text": "\"join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:96": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 70,
+    "text": "pub units: Vec<churn_unit::UnitRow>,"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:97": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 222,
+    "text": "}"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:98": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 169,
     "text": "/// gate that could not judge must never pass\")."
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:97": {
+  "docs/reference/methodology/07-the-three-signal-join.md:99": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 6,
     "text": "-- against the OWNING family's threshold (clone 85/100, docdup"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:98": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 39,
-    "text": "pub blocks: usize,"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:1": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4307,7 +4317,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.32.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"2.33.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5791,7 +5801,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 257,
+    "line": 263,
     "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -5846,12 +5856,12 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 260,
+    "line": 266,
     "text": "> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 266,
+    "line": 272,
     "text": "> （H 处斜率相接，仍单调恒收费，但平方不出契约域 (S,H]）。动因="
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:41": {
@@ -5906,7 +5916,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 263,
+    "line": 269,
     "text": "> 窗口内实体数；n=0 零费=诚实缺席），score=各轴费在 violCost 表盘下的"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
@@ -5926,7 +5936,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 260,
+    "line": 266,
     "text": "> （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

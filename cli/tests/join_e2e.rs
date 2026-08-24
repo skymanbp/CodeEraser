@@ -100,9 +100,25 @@ fn three_legs_assemble_on_both_tiers() {
     // the JSON form declares itself and never fabricates a unit-tier
     // graph leg: null plus the R6 caveat on every unit row
     let doc = join::report_json(&r);
-    assert_eq!(doc["schema"], "ce.join-report/0.1.0");
+    assert_eq!(doc["schema"], "ce.join-report/0.2.0");
     for row in doc["units"].as_array().expect("units") {
         assert!(row["graph"].is_null(), "unit graph leg is null: {row}");
         assert_eq!(row["caveat"], join::churn_unit::GRAPH_CAVEAT);
+    }
+    // the judgment road (2.33.0): every non-self file pair carries
+    // the core's verdict with its severity rank and leg-agreement
+    // confidence — the fixture's pair is similar and both-alive, so
+    // the lattice answers merge_candidate with all three legs heard
+    for f in &r.files {
+        if f.a == f.b {
+            continue; // the wire's u < v contract: self-pairs carry no row
+        }
+        assert_eq!(f.verdict, Some("merge_candidate"), "{} <-> {}", f.a, f.b);
+        assert_eq!(f.severity, Some(2));
+        assert!(
+            f.confidence == Some(2) || f.confidence == Some(3),
+            "legs present and held: {:?}",
+            f.confidence
+        );
     }
 }

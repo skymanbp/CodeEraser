@@ -9,7 +9,10 @@ use crate::score::wire;
 /// at proto 2.5/2.6 and the ratchet object gains `failed` (held
 /// condition names) + top-level `scoreScale` — plan §7.1 demands
 /// the bump.
-pub const SCHEMA_ID: &str = "ce.check-report/0.2.0";
+/// 0.3.0 (2.33.0, H4): candidate rows widen to six columns (the
+/// leg-agreement confidence) and `joinSeverity` ships the verdict
+/// table's severity face.
+pub const SCHEMA_ID: &str = "ce.check-report/0.3.0";
 
 pub struct Outcome {
     pub reply: wire::Reply,

@@ -314,9 +314,9 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <h3><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">The three-signal join</a></h3>
   <p class="job">Combines similarity × graph position × churn into one of four candidate
   codes — and then deliberately declines to act on it.</p>
-  <pre>(1, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
-(2, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
-(3, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
+  <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
+(2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
+(3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
   <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen &gt;= total * rewriteNum
 cochangeHot = cochange &gt;= cochangeFloor
 legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
@@ -324,9 +324,13 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
   bits all hold and whose forbidden bits all stay clear wins, else code 0. Making the
   order data is what lets the property battery falsify it by rotating the table. Every
   gating row requires the graph bit, so a mask of 5 (graph leg absent) can only carry code
-  0 — a missing graph leg refuses to gate rather than pretending indegree 0. The join
-  produces <em>candidates</em>; no verdict code appears in the fail bit, and
-  <code>ce join</code> always exits success.</p>
+  0 — a missing graph leg refuses to gate rather than pretending indegree 0. Since
+  2.33.0 every candidate row carries a leg-agreement <em>confidence</em> — how many
+  present legs contributed a held condition — and the table's severity face ships once
+  as <code>joinSeverity</code>; <code>ce join</code> judges its pairs over the SAME
+  verdict/1 road the check gate uses. The join still produces <em>candidates</em>; no
+  verdict code appears in the fail bit, and <code>ce join</code> always exits
+  success.</p>
   <ul class="consts">
     <li><b>rewriteNum/Den</b> 50/100</li>
     <li><b>cochangeFloor</b> 2</li>
@@ -335,7 +339,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legGraph</b> 2</li>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
-    <li><b>schema</b> ce.join-report/0.1.0</li>
+    <li><b>schema</b> ce.join-report/0.2.0</li>
   </ul>
 </div>
 

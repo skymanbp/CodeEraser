@@ -12,6 +12,15 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 2.33.0 = the join-lattice minor (H4, 2026-08-24): the verdict
+/// table gains a SEVERITY column (delete 3 > merge 2 > hotspot 1,
+/// data the battery permutes), candidate rows widen to six columns
+/// with the leg-agreement CONFIDENCE (how many present legs
+/// corroborate — the attribution table CE.Verdict.Join.legBits),
+/// and the reply ships the (code, severity) face once as
+/// joinSeverity. ce join judges its pairs over the SAME verdict/1
+/// road ce check gates with — one judgment, two faces; its exit
+/// stays report-only.
 /// 2.32.0 = the deadcode-confidence minor (H3, 2026-08-24): the
 /// graph request may ship the per-language site ledger
 /// ("unres": [[lang, unresolvedSites, totalSites]]) and each dead
@@ -174,7 +183,7 @@ use std::process::{Child, Stdio};
 /// minor (M5-3a). 2.1.0 = graph/1 (M5-2a). 2.0.0 was the M5-1c-iii
 /// anchor-width request shape (a breaking change, major per §2);
 /// 1.0.0 was the M4 content finalization freeze.
-pub const PROTO: &str = "2.32.0";
+pub const PROTO: &str = "2.33.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

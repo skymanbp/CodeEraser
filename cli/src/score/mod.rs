@@ -150,7 +150,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     })
 }
 
-fn doc_file_indices(files: &[String]) -> Vec<i64> {
+pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
     files
         .iter()
         .enumerate()
@@ -181,7 +181,7 @@ fn judged_positions(
     join::pos_map(&reply, w)
 }
 
-fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 6]> {
+pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 6]> {
     files
         .iter()
         .enumerate()
@@ -196,7 +196,7 @@ fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 
 /// File pairs with at least one verified block, kind 0 (t1t2) at the
 /// exact-run ratio — deduplicated, ascending, u < v (self pairs are
 /// counted out, the wire cannot carry them).
-fn sim_rows(
+pub(crate) fn sim_rows(
     blocks: &[dedup::pairs::Block],
     idx: &HashMap<&str, i64>,
     out: &mut Vec<[i64; 5]>,
@@ -273,10 +273,17 @@ fn size_facts(root: &Path) -> Result<(Vec<[u64; 3]>, Vec<u64>)> {
 /// Per-file churn sums over the per-unit ledger plus the co-change
 /// table. survived is 0 = not-claimed (per-entity survival is not
 /// tracked; nothing reads it in 3i).
-type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);
+pub(crate) type ChurnTables = (Vec<[i64; 5]>, Vec<[i64; 3]>);
 
 fn churn_rows(root: &Path, days: u32, idx: &HashMap<&str, i64>) -> Result<ChurnTables> {
     let ch = churn::run(root, days)?;
+    Ok(churn_tables(&ch, idx))
+}
+
+/// The churn wire tables from a report already in hand — the join
+/// face measures churn once for display AND judgment (2.33.0, H4;
+/// the P10 one-measurement stance).
+pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {
     let mut per_file: BTreeMap<i64, (i64, i64)> = BTreeMap::new();
     for u in &ch.units {
         if let Some(&i) = idx.get(u.path.as_str()) {
@@ -295,5 +302,5 @@ fn churn_rows(root: &Path, days: u32, idx: &HashMap<&str, i64>) -> Result<ChurnT
             coch.insert([x.min(y), x.max(y), *n as i64]);
         }
     }
-    Ok((churn_t, coch.into_iter().collect()))
+    (churn_t, coch.into_iter().collect())
 }

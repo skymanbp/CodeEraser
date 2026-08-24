@@ -15,7 +15,7 @@ module CE.Verdict (respond) where
 
 import qualified CE.Dedup.Cost as DedupCost
 import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap, zoneAskPermille, zoneWarnPermille)
-import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, judge)
+import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, confidence, judge, severities)
 import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
 import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), effectiveWeights, penalties, score, scoreBound)
@@ -87,6 +87,9 @@ result proto parsed req =
       , "type" .= ("verdict.result" :: String)
       , "id" .= reqId req
       , "candidates" .= candidates jk req
+      , -- the verdict table's severity face (2.33.0, H4): shipped
+        -- once, ranked with — the number is the core's
+        "joinSeverity" .= [[c, s] | (c, s) <- severities]
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
       , "ratchet"
@@ -101,20 +104,7 @@ result proto parsed req =
               -- instead of by construction-time coincidence
               "failed" .= [name | (name, True) <- conds]
             ]
-      , -- softLine (2.14.0, plan v2.6 §B): derived from judgedLoc at
-        -- establish, carried verbatim otherwise — the re-anchor is
-        -- CE_ACCEPT_BASELINE by construction, because only establish
-        -- reaches the derivation
-        "newBaseline"
-          .= object
-            [ "continuous" .= rNewCont r
-            , "discrete" .= rNewDisc r
-            , "softLine" .= newSoft
-            , -- batch-7 slice 5 (2.21.0, additive): the zone tier
-              -- cut points ride the baseline to the daemon-free
-              -- hook — core-authored, locally read
-              "zoneTiers" .= [zoneWarnPermille, zoneAskPermille]
-            ]
+      , "newBaseline" .= newBaselineObj r newSoft
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
@@ -186,13 +176,31 @@ failConditions r floorFail dedupOver =
   , ("dedup_budget", dedupOver)
   ]
 
+-- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived
+-- from judgedLoc at establish, carried verbatim otherwise — the
+-- re-anchor is CE_ACCEPT_BASELINE by construction, because only
+-- establish reaches the derivation. zoneTiers (batch-7 slice 5,
+-- 2.21.0, additive): the zone tier cut points ride the baseline to
+-- the daemon-free hook — core-authored, locally read. Split from
+-- result when the 2.33.0 severity face pushed it past the 75-line
+-- hard line the repo dogfoods.
+newBaselineObj :: Ratcheted -> Maybe Integer -> Value
+newBaselineObj r newSoft =
+  object
+    [ "continuous" .= rNewCont r
+    , "discrete" .= rNewDisc r
+    , "softLine" .= newSoft
+    , "zoneTiers" .= [zoneWarnPermille, zoneAskPermille]
+    ]
+
 -- | Join-candidate rows, one per sim row (split from result at the
 -- E01 line — the leg maps are the candidates' concern alone). The
 -- effective Join knobs arrive from the same thresholds table the
 -- score reads, so the two judgments share one authority.
 candidates :: Knobs -> VerdictReq -> [[Integer]]
 candidates jk req =
-  [ [u, v, code, bits, mask]
+  [ -- the 6th column is the leg-agreement confidence (2.33.0, H4)
+    [u, v, code, bits, mask, confidence mask bits]
   | row@(u : v : _) <- reqSim req
   , let (code, mask, bits) = judge jk (legsOf row)
   ]
@@ -229,6 +237,9 @@ tooLarge proto req =
       , "type" .= ("verdict.result" :: String)
       , "id" .= reqId req
       , "candidates" .= ([] :: [Value])
+      , -- constants, not client input — the degraded reply may
+        -- still speak them (the C14 defaults posture)
+        "joinSeverity" .= [[c, s] | (c, s) <- severities]
       , "score" .= (0 :: Int)
       , "axes" .= ([] :: [Value])
       , "ratchet"

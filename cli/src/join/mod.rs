@@ -1,16 +1,18 @@
 //! `ce join` (M5-3h): the three-signal assembly — similarity (clone
 //! blocks), graph position (the SAME wire deadcode judges, answered
 //! through graph.result's pos rows), and per-unit window churn —
-//! joined into file-tier and unit-tier rows. REPORT-ONLY: the
-//! verdict lattice (CE/Verdict/Join.hs, design §6.3) judges these
-//! same legs on the verdict/1 wire via `ce check` (M5-3i); nothing
-//! here thresholds or gates.
+//! joined into file-tier and unit-tier rows, each file pair judged
+//! by the SAME verdict/1 lattice `ce check` gates with (2.33.0,
+//! H4: one judgment, two faces — before that this face printed raw
+//! legs only). Still report-only at the EXIT: candidates inform,
+//! the fail bit never reads them, and nothing here thresholds.
 //!
 //! Tier F (files) carries all three legs and is what the lattice
 //! will gate. Tier U (units) carries similarity + churn only; its
 //! graph leg is null by design (churn_unit::GRAPH_CAVEAT).
 
 pub mod churn_unit;
+pub mod verdicts;
 
 use crate::churn;
 use crate::dedup::{self, pairs::Block};
@@ -23,7 +25,10 @@ use std::collections::{BTreeMap, HashMap};
 use std::path::{Path, PathBuf};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.join-report/0.1.0";
+/// 0.2.0 (2.33.0, H4): file rows carry the core's join verdict —
+/// name, severity, leg-agreement confidence, legsMask, reasons —
+/// from the SAME verdict/1 judgment `ce check` gates with.
+pub const SCHEMA_ID: &str = "ce.join-report/0.2.0";
 
 /// Graph position of one file: [indeg, outdeg, sccId, sccSize,
 /// reachIn] (the Position.hs row minus its echoed index). None =
@@ -45,6 +50,16 @@ pub struct FileRow {
     /// None = the pair is outside the churn report's co-change table
     /// (below the configured cochange floor) — unknown-small, not zero.
     pub cochange: Option<usize>,
+    /// The core's verdict for this pair (2.33.0, H4) — rendering
+    /// vocabulary for verdict/1's candidate row. None for self-pairs
+    /// (the wire's u < v contract cannot carry them — the same
+    /// "intra-file pairs off the sim table" class the check report
+    /// counts) and when the judgment degraded.
+    pub verdict: Option<&'static str>,
+    /// The verdict's severity rank from the core's table face.
+    pub severity: Option<i64>,
+    /// Leg-agreement confidence: how many present legs corroborate.
+    pub confidence: Option<i64>,
 }
 
 #[derive(Debug)]
@@ -69,10 +84,22 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
         .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
     let posmap = pos_map(&reply, &w)?;
     let ch = churn::run(root, days)?;
+    // the judgment leg (2.33.0, H4): the same verdict/1 road the
+    // check gate uses, over this run's own measurement
+    let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;
+    let degraded = degraded.or(judged.degraded);
+    let mut files = file_rows(&found.blocks, &posmap, &ch);
+    for f in &mut files {
+        if let Some(v) = judged.pairs.get(&(f.a.clone(), f.b.clone())) {
+            f.verdict = Some(v.verdict);
+            f.severity = Some(v.severity);
+            f.confidence = Some(v.confidence);
+        }
+    }
     Ok(Report {
         days,
         commits: ch.commits,
-        files: file_rows(&found.blocks, &posmap, &ch),
+        files,
         units: churn_unit::rows(root, &found.blocks, &ch),
         degraded,
     })
@@ -130,6 +157,9 @@ fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report
             b,
             blocks,
             tokens,
+            verdict: None,
+            severity: None,
+            confidence: None,
         })
         .collect()
 }
@@ -171,8 +201,8 @@ fn print_console(r: &Report) {
         println!(
             "{}",
             line(
-                "join {} <-> {}: {} blocks / {} tokens | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {}",
-                "联判 {} <-> {}：{} 块 / {} tokens | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {}",
+                "join {} <-> {}: {} blocks / {} tokens | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {} | {}",
+                "联判 {} <-> {}：{} 块 / {} tokens | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {} | {}",
                 &[
                     &f.a,
                     &f.b,
@@ -185,11 +215,24 @@ fn print_console(r: &Report) {
                     &f.churn_b.appended,
                     &f.churn_b.rewrote,
                     &f.cochange.map_or_else(|| "-".into(), |n| n.to_string()),
+                    &verdict_str(f),
                 ],
             )
         );
     }
     print_unit_tail(r);
+}
+
+/// Console tail for a row's core verdict — rendering only, codes
+/// and ranks are the core's (2.33.0, H4). A self-pair is named in
+/// the check report's own vocabulary: the wire's u < v contract
+/// cannot carry it, so no candidate row exists to relay.
+fn verdict_str(f: &FileRow) -> String {
+    match (f.verdict, f.severity, f.confidence) {
+        (Some(v), Some(s), Some(c)) => format!("{v} (sev {s}, conf {c})"),
+        _ if f.a == f.b => "self-pair (off the sim table)".into(),
+        _ => "unjudged".into(),
+    }
 }
 
 /// The unit rows + degraded note + window summary (split at the
@@ -230,8 +273,8 @@ fn print_unit_tail(r: &Report) {
     println!(
         "{}",
         line(
-            "join {}d window: {} file pairs, {} unit rows, {} commits (report-only; the verdict lattice judges via ce check)",
-            "联判 {} 天窗口：{} 文件对，{} 单元行，{} 提交（仅报告；判决格经 ce check 判决）",
+            "join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)",
+            "联判 {} 天窗口：{} 文件对，{} 单元行，{} 提交（判决出自 check 判决格；退出码仍仅报告）",
             &[&r.days, &r.files.len(), &r.units.len(), &r.commits],
         )
     );

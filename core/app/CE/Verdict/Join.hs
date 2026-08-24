@@ -19,8 +19,10 @@ module CE.Verdict.Join
   , Legs (..)
   , Knobs (..)
   , bound
+  , confidence
   , judge
   , judgeWith
+  , severities
   , verdictTable
   , legSim
   , legGraph
@@ -109,13 +111,38 @@ legChurn = 4
 -- old deleteReady: at most one flank can be dead (deadV needs indeg
 -- 0 on x and >= 1 on its partner), so dead-flank(5) held with
 -- public-guard(6) clear names that one flank non-public — RG10
--- stays in the CONDITION, never a post-filter.
-verdictTable :: [(Integer, [Int], [Int])]
+-- stays in the CONDITION, never a post-filter. The SEVERITY column
+-- (2.33.0, H4) ranks what firing costs the reader: delete proposes
+-- destruction (3), merge proposes surgery (2), a hotspot is an
+-- advisory (1), report_only is 0 by absence — data, so the battery
+-- can permute it and the report ranks by the core's number, never
+-- its own.
+verdictTable :: [(Integer, Integer, [Int], [Int])]
 verdictTable =
-  [ (1, [1, 2, 3, 4], []) -- merge: sim + graph + both referenced + distinct sccs
-  , (2, [1, 2, 5], [6]) -- delete: sim + graph + dead flank, RG10 clear
-  , (3, [1, 2, 7, 8], []) -- churn_hotspot: sim + graph + cochange + rewrite
+  [ (1, 2, [1, 2, 3, 4], []) -- merge: sim + graph + both referenced + distinct sccs
+  , (2, 3, [1, 2, 5], [6]) -- delete: sim + graph + dead flank, RG10 clear
+  , (3, 1, [1, 2, 7, 8], []) -- churn_hotspot: sim + graph + cochange + rewrite
   ]
+
+-- | The (code, severity) face of the table — the reply ships it
+-- once, and the Rust faces rank with the core's numbers.
+severities :: [(Integer, Integer)]
+severities = [(c, s) | (c, s, _, _) <- verdictTable]
+
+-- | Which reason bits each leg can hold — the attribution TABLE
+-- (lattice-table form). Agreement counts LEGS, not bits: one loud
+-- leg cannot outvote the others' silence.
+legBits :: [(Integer, [Int])]
+legBits = [(legSim, [1]), (legGraph, [2, 3, 4, 5, 6]), (legChurn, [7, 8])]
+
+-- | Leg-agreement confidence (2.33.0, H4): of the legs PRESENT,
+-- how many contributed at least one held condition — 1..3 in
+-- practice (the sim leg exists because the pair does). The same
+-- count rides report_only rows: what evidence there was, stated.
+confidence :: Integer -> Integer -> Integer
+confidence legsMask reasons =
+  toInteger
+    (length [() | (leg, bits) <- legBits, legsMask .&. leg /= 0, any (testBit reasons) bits])
 
 -- | (verdict, legsMask, reasonBits) under the production table.
 judge :: Knobs -> Legs -> (Integer, Integer, Integer)
@@ -124,7 +151,7 @@ judge = judgeWith verdictTable
 -- | The bit meanings live as the per-bit table in CE.Verdict.Cost;
 -- bits record which conditions HELD, the table concludes, and the
 -- two travel together so a two-leg firing can never hide.
-judgeWith :: [(Integer, [Int], [Int])] -> Knobs -> Legs -> (Integer, Integer, Integer)
+judgeWith :: [(Integer, Integer, [Int], [Int])] -> Knobs -> Legs -> (Integer, Integer, Integer)
 judgeWith table k l = (code, legsMask, reasons)
  where
   (kind, num, den) = lSim l
@@ -150,7 +177,7 @@ judgeWith table k l = (code, legsMask, reasons)
   total = apA + rwA + apB + rwB
   rewriteHot = total > 0 && (rwA + rwB) * kRewriteDen k >= total * kRewriteNum k
   cochangeHot = maybe False (>= kCochangeFloor k) (lCochange l)
-  code = case [c | (c, req, forb) <- table, all (testBit reasons) req, not (any (testBit reasons) forb)] of
+  code = case [c | (c, _, req, forb) <- table, all (testBit reasons) req, not (any (testBit reasons) forb)] of
     (c : _) -> c
     [] -> 0
   legsMask = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn

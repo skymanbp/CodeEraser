@@ -149,6 +149,12 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **2.33.0**（join 格深化 minor，H4，2026-08-24，用户拍板）：①verdictTable 增**严重度**列
+> （delete 3 > merge 2 > hotspot 1，表数据、电池可置换）；②candidates 行**加宽为六列**
+> [u,v,code,reasonBits,legsMask,**confidence**]——腿一致性置信 = 在场且有据的腿数
+> （归属表 `legBits`：sim={1}, graph={2..6}, churn={7,8}）——**行变化入册**（五列消费者需随升）；
+> ③回复一次性携 `joinSeverity`=[[code,severity]] 表面；④`ce join` 改经与 `ce check` 同一条
+> verdict/1 路取判决（一判两面），退出码仍仅报告；check 报告 schema 升 0.3.0、join 报告 0.2.0。
 > **2.32.0**（deadcode 置信 minor，H3，2026-08-24，用户拍板）：①graph.request 可携按语言点位
 > 台账 `unres`=[[lang, 未解析数, 总数]]（判决集内、计数自洽、严格升序）；台账在场时每条 dead 行
 > 增第三列**置信**——0 未担保 / 1 空担保 / 2 已担保（`CE.Graph.Cost.confidence`；擦除家族的信任
@@ -303,7 +309,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **2.32.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **2.33.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -427,5 +433,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 2.32.0 | §1 所列两处常量 |
+| 协议 | 2.33.0 | §1 所列两处常量 |
 | daemon 协议 | 1.1.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

@@ -48,6 +48,7 @@ pub fn report_json(o: &Outcome) -> serde_json::Value {
         "scoreScale": r.knobs.get("scoreScale"),
         "axes": r.axes,
         "candidates": r.candidates,
+        "joinSeverity": r.join_severity,
         "ratchet": {
             "added": r.added, "removed": r.removed, "over": r.over,
             "toleranceDrawn": r.tolerance_drawn, "fail": r.fail,

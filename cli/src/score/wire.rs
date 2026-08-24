@@ -69,7 +69,12 @@ pub struct Request {
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
 pub struct Reply {
-    pub candidates: Vec<[i64; 5]>,
+    /// [u, v, code, reasons, legsMask, confidence] — the 6th column
+    /// is the leg-agreement confidence (2.33.0, H4).
+    pub candidates: Vec<[i64; 6]>,
+    /// The verdict table's (code, severity) face, shipped once
+    /// (2.33.0) — the faces rank with the core's numbers.
+    pub join_severity: Vec<[i64; 2]>,
     pub score: i64,
     pub axes: Vec<[i64; 2]>,
     pub added: Vec<u64>,
@@ -267,6 +272,7 @@ fn parse(v: &Value) -> Result<Reply> {
     let r = ratchet_of(&crate::lockstep::reply_field(v, "ratchet")?)?;
     Ok(Reply {
         candidates: rows(v, "candidates")?,
+        join_severity: rows(v, "joinSeverity")?,
         score: v["score"].as_i64().context("score")?,
         axes: rows(v, "axes")?,
         added: r.added,

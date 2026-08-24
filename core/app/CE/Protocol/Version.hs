@@ -7,6 +7,12 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 2.33.0 = the join-lattice minor (H4, 2026-08-24): the verdict
+-- table gains a SEVERITY column (delete 3 > merge 2 > hotspot 1,
+-- table data), candidate rows widen to six columns with the
+-- leg-agreement CONFIDENCE (legs present AND held — legBits), and
+-- the reply ships the (code, severity) face once as joinSeverity.
+-- The join face judges over the same road the check gate uses.
 -- 2.32.0 = the deadcode-confidence minor (H3, 2026-08-24): the
 -- graph request may ship the per-language site ledger ("unres":
 -- [[lang, unresolvedSites, totalSites]]); each dead row then grows
@@ -217,7 +223,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "2.32.0"
+proto = "2.33.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

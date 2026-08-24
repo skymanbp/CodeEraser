@@ -287,17 +287,19 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 <div class="fam">
   <h3><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">三信号 join</a></h3>
   <p class="job">把相似度 × 图位置 × 变动史合成四个候选码之一——然后刻意拒绝据此行动。</p>
-  <pre>(1, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
-(2, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
-(3, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
+  <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
+(2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
+(3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
   <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen &gt;= total * rewriteNum
 cochangeHot = cochange &gt;= cochangeFloor
 legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
   <p class="note">优先级是<em>数据</em>而不是守卫顺序：第一行"required 位全部成立且 forbidden 位
   全部为空"的规则胜出，否则码为 0。把顺序做成数据，正是让性质电池能够证伪它——把表旋转一下再判
   同一行，答案必须翻转。每条会 gate 的规则都要求 graph 位，所以掩码 5（图腿缺席）只可能带码 0：
-  缺一条图腿就拒绝 gate，而不是假装入度为 0。join 产出的是<em>候选</em>；fail 位里不出现任何
-  verdict 码，<code>ce join</code> 恒以成功退出。</p>
+  缺一条图腿就拒绝 gate，而不是假装入度为 0。自 2.33.0 起每条候选行带一列腿一致性<em>置信</em>
+  ——在场且有据的腿数——表的严重度面以 <code>joinSeverity</code> 一次性过线；
+  <code>ce join</code> 的判决出自与 check 门同一条 verdict/1 路。join 产出的仍是<em>候选</em>；
+  fail 位里不出现任何 verdict 码，<code>ce join</code> 恒以成功退出。</p>
   <ul class="consts">
     <li><b>rewriteNum/Den</b> 50/100</li>
     <li><b>cochangeFloor</b> 2</li>
@@ -306,7 +308,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legGraph</b> 2</li>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
-    <li><b>schema</b> ce.join-report/0.1.0</li>
+    <li><b>schema</b> ce.join-report/0.2.0</li>
   </ul>
 </div>
 
