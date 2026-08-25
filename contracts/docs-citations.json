@@ -3001,12 +3001,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:100": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 19,
+    "line": 20,
     "text": "pub(super) const ROLE_ENTRY_NAMED: i64 = 1;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:101": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 46,
+    "line": 32,
     "text": "pub(super) fn roles_of(root: &Path, path: &str, config: &Config, declared: &Declared) -> i64 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:102": {
@@ -3021,13 +3021,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:104": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 33,
-    "text": "const LEGACY: [(i64, u32); 6] = ["
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:105": {
-    "target": "../../../cli/src/graph/deadcode/flags.rs",
     "line": 1,
     "text": "//! Entry-role measurement for file nodes (split from deadcode.rs at"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:105": {
+    "target": "../../../cli/src/graph/symwire.rs",
+    "line": 1,
+    "text": "//! The export surface on the wire (plan v2.14, proto 4.1.0): which"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:106": {
     "target": "../../../cli/src/graph/ladder/hs.rs",
@@ -3166,8 +3166,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:130": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 108,
-    "text": "unresRow :: Int -> [Integer] -> Maybe String"
+    "line": 107,
+    "text": "where"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -3201,7 +3201,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
     "target": "../../../core/test/GraphWireProps.hs",
-    "line": 49,
+    "line": 52,
     "text": "confRides :: Bool"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
@@ -3411,7 +3411,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:39": {
     "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 61,
+    "line": 64,
     "text": "let rel = format!(\"{}.hs\", spec.replace('.', \"/\"));"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:4": {
@@ -3421,7 +3421,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:40": {
     "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 137,
+    "line": 140,
     "text": "fn external_rung(spec: &str, owner: Option<&Cabal>) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:41": {
@@ -3616,17 +3616,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 129,
-    "text": "nodeRow :: Int -> [Integer] -> Maybe String"
+    "line": 118,
+    "text": "-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 141,
-    "text": "edgeRow :: Integer -> Int -> [Integer] -> Maybe String"
+    "line": 135,
+    "text": "nonNegative row = if any (< 0) row then Just \"negative field\" else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 60,
+    "line": 59,
     "text": ", tableOffence \"edge\" id (edgeRow n) es"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:79": {
@@ -3641,12 +3641,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:80": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 61,
+    "line": 60,
     "text": ", -- ascending pos is also the reply BOUND (M5-close review MED:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:81": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 154,
+    "line": 140,
     "text": "posRow :: Integer -> Int -> Integer -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:82": {
@@ -3661,12 +3661,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 125,
+    "line": 123,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 125,
+    "line": 123,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:86": {
@@ -3727,7 +3727,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:96": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 216,
-    "text": "/// [lang, kind, legacyFlags, roles] — only file nodes carry entry"
+    "text": "/// [lang, kind, roles] — only file nodes carry entry facts. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:97": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
@@ -3741,7 +3741,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:99": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 117,
+    "line": 116,
     "text": "declaredBits :: [Integer] -> Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:1": {
@@ -4382,7 +4382,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"4.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"5.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5871,7 +5871,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 317,
+    "line": 333,
     "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -5921,12 +5921,12 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:39": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 326,
+    "line": 342,
     "text": "> （H 处斜率相接，仍单调恒收费，但平方不出契约域 (S,H]）。动因="
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 317,
+    "line": 333,
     "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -5976,7 +5976,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 322,
+    "line": 338,
     "text": "> 文档重复按文件数、复杂度按函数数、死码与循环按图节点数、churn 按"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:5": {
@@ -6001,7 +6001,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:53": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 314,
+    "line": 330,
     "text": "> （任一文件级死判决即 fail；降级应答自带 fail=true——verdict 族 P1 立场）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

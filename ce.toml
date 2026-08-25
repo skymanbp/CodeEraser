@@ -376,4 +376,20 @@ entry_globs = [
 #     which is the class saying it is irreducible. Stopped there:
 #     restructuring further to move the counter is writing code for
 #     the ratio, which this ledger forbids two entries above.
-budget = 187
+# 187 -> 186 (K round step 3d, the legacy flags column retires at
+# 5.0.0): the node row lost its second arm, its three validators
+# collapsed onto one shape, and Contract.hs grew a SELF-clone plus two
+# rhymes with Trend (+2, 189). Repaid at the mechanism again --
+# CE.Wire.rowCheck is the row-level envelope under tableOffence's
+# table-level one (width, then the checks, both wearing the same
+# "<table> <i>: " label; the malformed string stays the CALLER's, so
+# "malformed row" and "malformed knob" both survive verbatim). All
+# three rhymes died and one standing chain went with them.
+# NOT swept: ~40 sibling validators across 14 core modules share the
+# same envelope, and several already factored a family-local label
+# helper (Scan's `label name i`, Split's `lbl`, Verdict/Rows' `label
+# nm i`). None of them failed anything; refactoring a site that is
+# not failing is the while-I-am-here edit the minimum-change rule
+# forbids, so rowCheck is available to them and this line records
+# that they were left alone on purpose.
+budget = 186

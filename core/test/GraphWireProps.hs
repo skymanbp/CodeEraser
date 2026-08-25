@@ -24,7 +24,7 @@ import WireHarness (runChecks)
 battery :: IO Bool
 battery =
   runChecks
-    [ ("mixed node-row arity refused", mixedRefused)
+    [ ("a wrong-width node row is malformed, by row index", malformedNode)
     , ("the confidence column rides exactly when the ledger does", confRides)
     , ("unres refusals name the offender", unresRefused)
     , ("K9: the export surface moves the CODE and never the dead set", exportRides)
@@ -32,10 +32,13 @@ battery =
     , ("symbol refusals name the offender", symRefused)
     ]
 
--- mixed table has no single judgment basis (2.28.0).
-mixedRefused :: Bool
-mixedRefused = case respond "4.1.0" req of
-  Left (_, code, msg) -> code == "contract" && msg == "node rows: mixed arity"
+-- | The pre-5.0.0 four-column row. It used to make this table "mixed
+-- arity"; with one legal arity it is simply the second row that is
+-- wrong, and the refusal says which one.
+malformedNode :: Bool
+malformedNode = case respond "5.0.0" req of
+  Left (_, code, msg) ->
+    code == "contract" && msg == "node 1: malformed row (need [lang,kind,roles])"
   Right _ -> False
  where
   req = fixtureReq [[0, 0, 0], [0, 0, 0, 0]] []
@@ -58,7 +61,7 @@ confRides =
 -- a verdict out of the wire rather than out of Dead.verdicts.
 deadOf :: B8.ByteString -> Maybe Value
 deadOf req = do
-  Right bytes <- pure (respond "4.1.0" req)
+  Right bytes <- pure (respond "5.0.0" req)
   Object o <- decodeStrict bytes
   KM.lookup "dead" o
 
@@ -71,7 +74,7 @@ unresRefused =
     , refusedMsg (Just [[4, 0, 1], [0, 0, 1]]) "unres 1: not strictly ascending"
     ]
  where
-  refusedMsg unres want = case respond "4.1.0" (graphReq unres) of
+  refusedMsg unres want = case respond "5.0.0" (graphReq unres) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 
@@ -97,7 +100,7 @@ exportRides =
 -- | K5: absence and emptiness are one road, not two — the whole
 -- reply, byte for byte, is what a pre-4.1.0 client already got.
 emptyIsAbsent :: Bool
-emptyIsAbsent = respond "4.1.0" (symReq (Just [])) == respond "4.1.0" (symReq Nothing)
+emptyIsAbsent = respond "5.0.0" (symReq (Just [])) == respond "5.0.0" (symReq Nothing)
 
 symRefused :: Bool
 symRefused =
@@ -109,7 +112,7 @@ symRefused =
     , refusedSym [[0, 1], [0, 1]] "symbol 1: not strictly ascending"
     ]
  where
-  refusedSym syms want = case respond "4.1.0" (symReq (Just syms)) of
+  refusedSym syms want = case respond "5.0.0" (symReq (Just syms)) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 

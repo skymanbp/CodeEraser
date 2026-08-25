@@ -11,7 +11,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending, tableOffence) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableOffence) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -148,6 +148,25 @@ notAscending what i (prev, cur)
 -- grades (take 1), the whole row for clone pairs and graph edges
 -- (id). One zipWith, five call sites: the review-repair batch's own
 -- ratchet bite was the projection lambda cloning across families.
+-- | One row's whole contract: the right width, then the checks a
+-- well-formed row must pass, both wearing the same "<table> <i>: "
+-- label. tableOffence below shares the table-level envelope; this is
+-- the row-level one under it, and the clone gate named it when
+-- graph/1's node row lost its second arm and its three validators
+-- collapsed onto one shape.
+--
+-- The malformed message is the CALLER's whole string, not a template:
+-- families say "malformed row (need [..])" and "malformed knob (need
+-- [..])", and the wording is each family's contract, not this
+-- skeleton's to normalize.
+rowCheck ::
+  String -> String -> Int -> ([Integer] -> Maybe String) -> Int -> [Integer] -> Maybe String
+rowCheck what malformed width checks i row
+  | length row /= width = Just (label <> malformed)
+  | otherwise = fmap (label <>) (checks row)
+ where
+  label = what <> " " <> show i <> ": "
+
 -- | One table's whole contract: every row well shaped in request
 -- order, then the table strictly ascending. Nine modules held this
 -- exact two-step fold — the clone gate named it the moment graph/1

@@ -91,9 +91,9 @@ result proto req =
   langOf i
     | ((l : _) : _) <- drop i (reqNodes req) = l
     | otherwise = error "dead index inside the node table by construction"
-  -- the roles column judges when it rides (2.28.0, batch-7 slice 3):
-  -- a 4-column row's entry bits derive through Cost.roleBits and the
-  -- legacy flags column yields; a 3-column row keeps its sent bits.
+  -- entry bits derive from the ROLE facts through Cost.roleBits
+  -- (2.28.0, batch-7 slice 3); the pre-2.28 legacy flags column it
+  -- used to yield to retired at 5.0.0, so there is one road left.
   -- Since 4.1.0 the export surface ORs the public bit in on top.
   -- Absent (or empty) symbols table => empty set => every flag word
   -- is what it was, so such a request answers byte-for-byte as
@@ -111,12 +111,10 @@ result proto req =
   (deadRows, reportedRows) =
     partition (\(i, _) -> IS.member i fileIdx) (Dead.verdicts b reach flagses)
 
--- | Sent bits (3 columns) or bits derived from the role facts
--- (4 columns — the legacy column yields). Other shapes cannot reach
--- here: violation refused them.
+-- | Entry bits derived from a row's role facts. Other shapes cannot
+-- reach here: the contract refused them.
 declaredBits :: [Integer] -> Integer
-declaredBits [_, _, f] = f
-declaredBits [_, _, _, r] = Dead.deriveFlags roleBits r
+declaredBits [_, _, r] = Dead.deriveFlags roleBits r
 declaredBits _ = 0
 
 -- | Over-cap refusal: a well-formed degraded result, never a

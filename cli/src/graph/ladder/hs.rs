@@ -24,11 +24,14 @@
 //! six corpora.
 //!
 //! R6/RG10 re-review (3l exit row): a module's export list is a
-//! symbol-level fact (AST-probed: header/exports), and the file-tier
-//! exported bit stays unset for Haskell exactly as for the five
-//! launch languages (deadcode.rs flags_of) — RG10's unref_public
-//! class cannot fire for .hs until symbol-level flags land; recorded
-//! stance, no new mechanism.
+//! symbol-level fact (AST-probed: header/exports), so the file-tier
+//! role measurement never carried it (deadcode/flags.rs roles_of) and
+//! RG10's unref_public class could not fire for .hs. That was a
+//! recorded stance, not a permanent one: the visibility slice reads
+//! the export list where it lives (fourclass/visibility.rs
+//! haskell_exported) and 4.1.0's symbols table carries it to the
+//! core, so the class fires for .hs on the same terms as every other
+//! judged language.
 
 use super::hs_boot::BOOT;
 use super::{Outcome, Reason, Scope};

@@ -3,11 +3,12 @@
 //! main body) this side measures ROLE FACTS — named main, executable
 //! dir, test convention, entry glob, doc entry, allow claim, declared
 //! build target — and the entry DECISION is the core's role table
-//! (CE.Graph.Cost.roleBits). The legacy flags column is still
-//! produced bit-identically to the pre-2.28 semantics and yields to
-//! the roles column wherever a 2.28 core judges; it retires next
-//! minor. Bit 0 (exported) stays unset at file granularity —
-//! public-ness is a symbol fact (3l re-review).
+//! (CE.Graph.Cost.roleBits). The pre-2.28 legacy flags column this
+//! module also produced retired at 5.0.0, once the symbols table
+//! gave visibility a producer; nothing here measures bit 0, because
+//! bit 0 is not a file fact — public-ness is a symbol fact (3l
+//! re-review), and it now reaches the core through the export
+//! surface (graph/symwire.rs) rather than through this column.
 
 use super::targets::Declared;
 use crate::config::Config;
@@ -23,21 +24,6 @@ pub(super) const ROLE_GLOB: i64 = 1 << 3;
 pub(super) const ROLE_DOC: i64 = 1 << 4;
 pub(super) const ROLE_ALLOW: i64 = 1 << 5;
 pub(super) const ROLE_DECLARED: i64 = 1 << 6;
-
-/// (role, legacy flag bit): the transitional fold legacy_flags
-/// applies — the pre-2.28 bit semantics verbatim, so an old core
-/// judging the legacy column behaves exactly as before this minor.
-/// ROLE_DECLARED is deliberately absent: its entry standing is NEW
-/// and core-side only (the slice-3 defect fix — a declared
-/// [[bin]] path earned no root while a stray main.rs did).
-const LEGACY: [(i64, u32); 6] = [
-    (ROLE_ENTRY_NAMED, 1),
-    (ROLE_ENTRY_DIR, 1),
-    (ROLE_TEST, 2),
-    (ROLE_GLOB, 3),
-    (ROLE_DOC, 5),
-    (ROLE_ALLOW, 6),
-];
 
 /// Role facts of one file node. Main.hs is cabal's executable
 /// main-is convention — nothing imports a main module, exactly like
@@ -81,16 +67,6 @@ pub(super) fn roles_of(root: &Path, path: &str, config: &Config, declared: &Decl
         r |= ROLE_DECLARED;
     }
     r
-}
-
-/// The legacy flags column: the LEGACY fold, nothing else.
-pub(super) fn legacy_flags(roles: i64) -> i64 {
-    LEGACY.iter().fold(
-        0,
-        |f, &(role, bit)| {
-            if roles & role != 0 { f | (1 << bit) } else { f }
-        },
-    )
 }
 
 /// `ce:allow(deadcode) -- <why>` anywhere in the file claims
@@ -165,31 +141,7 @@ mod tests {
             assert_eq!(allow_claim(&root, name), want, "{name}");
             let r = roles_of(&root, name, &cfg, &none);
             assert_eq!(r & ROLE_ALLOW != 0, want, "{name}");
-            assert_eq!(legacy_flags(r) & (1 << 6) != 0, want, "{name}");
         }
         std::fs::remove_dir_all(&root).ok();
-    }
-
-    /// The legacy fold reproduces the pre-2.28 bits per role — one
-    /// row per mapping, plus the declared role folding to NOTHING
-    /// (its entry standing is core-side only).
-    #[test]
-    fn legacy_fold_is_the_pre_228_bits() {
-        let rows = [
-            (ROLE_ENTRY_NAMED, 1 << 1),
-            (ROLE_ENTRY_DIR, 1 << 1),
-            (ROLE_TEST, 1 << 2),
-            (ROLE_GLOB, 1 << 3),
-            (ROLE_DOC, 1 << 5),
-            (ROLE_ALLOW, 1 << 6),
-            (ROLE_DECLARED, 0),
-        ];
-        for (role, want) in rows {
-            assert_eq!(legacy_flags(role), want, "role {role}");
-        }
-        assert_eq!(
-            legacy_flags(ROLE_ENTRY_NAMED | ROLE_TEST | ROLE_DECLARED),
-            (1 << 1) | (1 << 2),
-        );
     }
 }

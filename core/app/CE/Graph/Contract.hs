@@ -15,7 +15,7 @@
 -- wrong, never just that something was wrong.
 module CE.Graph.Contract (GraphReq (..), symRows, unresRows, violation) where
 
-import CE.Wire (tableOffence)
+import CE.Wire (rowCheck, tableOffence)
 import Data.Aeson
 import Data.Foldable (asum)
 
@@ -55,8 +55,7 @@ instance FromJSON GraphReq where
 violation :: GraphReq -> Maybe String
 violation req =
   asum
-    [ mixedArity (reqNodes req)
-    , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
+    [ asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , tableOffence "edge" id (edgeRow n) es
     , -- ascending pos is also the reply BOUND (M5-close review MED:
       -- pos escaped the declared caps — a repeated-index list made
@@ -96,57 +95,44 @@ symRows = maybe [] id . reqSymbols
 -- checked — a bit this core does not read today is a bit a later one
 -- may, and refusing it would freeze the word.
 symRow :: Integer -> Int -> [Integer] -> Maybe String
-symRow n i row = case row of
-  [node, vis]
-    | node < 0 || vis < 0 -> Just (label <> "negative field")
-    | node >= n -> Just (label <> "node out of range")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [node,visibility])")
+symRow n = rowCheck "symbol" "malformed row (need [node,visibility])" 2 fields
  where
-  label = "symbol " <> show i <> ": "
+  fields [node, vis]
+    | node < 0 || vis < 0 = Just "negative field"
+    | node >= n = Just "node out of range"
+  fields _ = Nothing
 
 unresRow :: Int -> [Integer] -> Maybe String
-unresRow i row = case row of
-  [lang, unres, total]
-    | lang < 0 || lang > 6 -> Just (label <> "lang outside the judged set")
-    | unres < 0 || total < 0 -> Just (label <> "negative count")
-    | unres > total -> Just (label <> "unresolved above total")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [lang,unresolved,total])")
+unresRow = rowCheck "unres" "malformed row (need [lang,unresolved,total])" 3 fields
  where
-  label = "unres " <> show i <> ": "
+  fields [lang, unres, total]
+    | lang < 0 || lang > 6 = Just "lang outside the judged set"
+    | unres < 0 || total < 0 = Just "negative count"
+    | unres > total = Just "unresolved above total"
+  fields _ = Nothing
 
--- | Node rows must share one arity — 3 columns (legacy flags) or 4
--- (with the 2.28.0 roles column): a mixed table has no single
--- judgment basis and refuses by name before any row is judged.
-mixedArity :: [[Integer]] -> Maybe String
-mixedArity rows = case map length rows of
-  [] -> Nothing
-  (w : ws)
-    | all (== w) ws -> Nothing
-    | otherwise -> Just "node rows: mixed arity"
-
+-- | One node row: [lang, kind, roles]. ONE arity since 5.0.0 — the
+-- pre-2.28 legacy flags column retired, so a wrong-width row is
+-- simply malformed and the table-level "mixed arity" refusal has
+-- nothing left to say. The three columns mean lang, granularity and
+-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,
+-- and the arity is reused deliberately — a major forbids any
+-- cross-version conversation at the envelope, which is exactly what
+-- makes reuse safe (VERSIONING §2).
 nodeRow :: Int -> [Integer] -> Maybe String
-nodeRow i row = case row of
-  [lang, kind, flags]
-    | any (< 0) [lang, kind, flags] -> Just (label <> "negative field")
-    | otherwise -> Nothing
-  [lang, kind, flags, roles]
-    | any (< 0) [lang, kind, flags, roles] -> Just (label <> "negative field")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [lang,kind,flags] or [lang,kind,flags,roles])")
- where
-  label = "node " <> show i <> ": "
+nodeRow = rowCheck "node" "malformed row (need [lang,kind,roles])" 3 nonNegative
 
 edgeRow :: Integer -> Int -> [Integer] -> Maybe String
-edgeRow n i row = case row of
-  [src, dst, kind, rung]
-    | any (< 0) [src, dst, kind, rung] -> Just (label <> "negative field")
-    | src >= n || dst >= n -> Just (label <> "endpoint out of range")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [src,dst,kind,rung])")
+edgeRow n = rowCheck "edge" "malformed row (need [src,dst,kind,rung])" 4 fields
  where
-  label = "edge " <> show i <> ": "
+  fields row@[src, dst, _, _]
+    | Just m <- nonNegative row = Just m
+    | src >= n || dst >= n = Just "endpoint out of range"
+  fields _ = Nothing
+
+-- | The check nearly every row shares: no field may be negative.
+nonNegative :: [Integer] -> Maybe String
+nonNegative row = if any (< 0) row then Just "negative field" else Nothing
 
 -- notAscending moved to CE.Wire (its birthplace was here — the
 -- tenth ratchet bite promoted it to the shared skeleton).

@@ -213,24 +213,24 @@ pub fn edge_wire(
         .collect()
 }
 
-/// [lang, kind, legacyFlags, roles] — only file nodes carry entry
-/// facts. The roles column is the 2.28.0 authority (the core derives
-/// the entry bits through its role table); the legacy column is the
-/// pre-2.28 bits verbatim, yields to the roles wherever a 2.28 core
-/// judges, and retires next minor.
+/// [lang, kind, roles] — only file nodes carry entry facts. The
+/// roles column is the 2.28.0 authority (the core derives the entry
+/// bits through its role table, where an ablation can perturb them);
+/// the pre-2.28 legacy flags column that used to sit between kind
+/// and roles retired at 5.0.0, computed and sent for seven minors
+/// after the last core stopped reading it.
 fn node_row(root: &Path, n: &Node, config: &Config, declared: &targets::Declared) -> Value {
     // unknown extension = the sentinel code, NOT Python's 0 (RM15:
     // the two were indistinguishable on the wire before 3k)
     let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
         .map(|l| l as i64)
         .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
-    let (flags, roles) = if n.kind == super::wire::GRAN_FILE {
-        let r = flags::roles_of(root, &n.path, config, declared);
-        (flags::legacy_flags(r), r)
+    let roles = if n.kind == super::wire::GRAN_FILE {
+        flags::roles_of(root, &n.path, config, declared)
     } else {
-        (0, 0)
+        0
     };
-    json!([lang, n.kind, flags, roles])
+    json!([lang, n.kind, roles])
 }
 
 /// One graph.request over the open core link; a missing capability

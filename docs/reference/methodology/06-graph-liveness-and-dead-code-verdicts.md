@@ -46,7 +46,7 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 | Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([rs.rs:76-90](../../../cli/src/graph/ladder/rs.rs#L76)) | `use crate::…` from covering crate roots ([rs_use.rs:69-73](../../../cli/src/graph/ladder/rs_use.rs#L69)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([rs_use.rs:74-88](../../../cli/src/graph/ladder/rs_use.rs#L74), [rs_use.rs:100-117](../../../cli/src/graph/ladder/rs_use.rs#L100)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([rs_use.rs:14](../../../cli/src/graph/ladder/rs_use.rs#L14), [rs_use.rs:159-192](../../../cli/src/graph/ladder/rs_use.rs#L159)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([rs_use.rs:124-151](../../../cli/src/graph/ladder/rs_use.rs#L124)) |
 | Go | longest in-scope `go.mod` module prefix ([go.rs:44-71](../../../cli/src/graph/ladder/go.rs#L44)) | importer's module `replace` directives ([go.rs:85-110](../../../cli/src/graph/ladder/go.rs#L85)) | stdlib table, or a dotted first segment with no local match ⇒ External ([go.rs:150-156](../../../cli/src/graph/ladder/go.rs#L150)) | — | — |
 | Markdown | relative join; a directory holding in-scope files is a package ([md.rs:65-80](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:51](../../../cli/src/graph/ladder/md.rs#L51), [md.rs:59-64](../../../cli/src/graph/ladder/md.rs#L59)) |
-| Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:61-77](../../../cli/src/graph/ladder/hs.rs#L61)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:137-147](../../../cli/src/graph/ladder/hs.rs#L137)) | — | — | — |
+| Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:64-80](../../../cli/src/graph/ladder/hs.rs#L64)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:140-150](../../../cli/src/graph/ladder/hs.rs#L140)) | — | — | — |
 
 Numeric details that are policy, not taste:
 
@@ -129,15 +129,15 @@ the reader sees what the graph refuses to know
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
 deterministic ([Contract.hs:51-72](../../../core/app/CE/Graph/Contract.hs#L51)):
 
-- node rows are 3 fields (legacy) or 4 (with the 2.28.0 role column), one arity per table, all `≥ 0` ([Contract.hs:129-139](../../../core/app/CE/Graph/Contract.hs#L129));
+- node rows are exactly 3 fields — `[lang, kind, roles]`, all `≥ 0`; ONE arity since 5.0.0 retired the pre-2.28 legacy flags column, so a wrong-width row is malformed and says which row ([Contract.hs:118-133](../../../core/app/CE/Graph/Contract.hs#L118));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
-  ([Contract.hs:141-149](../../../core/app/CE/Graph/Contract.hs#L141));
+  ([Contract.hs:135-143](../../../core/app/CE/Graph/Contract.hs#L135));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Contract.hs:60](../../../core/app/CE/Graph/Contract.hs#L60), [Wire.hs:139-144](../../../core/app/CE/Wire.hs#L139));
+  ([Contract.hs:59](../../../core/app/CE/Graph/Contract.hs#L59), [Wire.hs:139-144](../../../core/app/CE/Wire.hs#L139));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
-  ([Contract.hs:61-65](../../../core/app/CE/Graph/Contract.hs#L61),
-  [Contract.hs:154-157](../../../core/app/CE/Graph/Contract.hs#L154)).
+  ([Contract.hs:60-64](../../../core/app/CE/Graph/Contract.hs#L60),
+  [Contract.hs:140-143](../../../core/app/CE/Graph/Contract.hs#L140)).
 
 Oversize protection is by row count, not bytes (the envelope precheck is relaxed for the
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
@@ -147,7 +147,7 @@ per 100k LOC, so the caps carry roughly 6× headroom
 degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = true`,
 `reason = "graph_too_large"` and `fail = true` — a gate that could not judge never passes, said
 by the core itself since 2.18.0, and never a truncated graph
-([Graph.hs:125-148](../../../core/app/CE/Graph.hs#L125), [Graph.hs:125-148](../../../core/app/CE/Graph.hs#L125)).
+([Graph.hs:123-146](../../../core/app/CE/Graph.hs#L123), [Graph.hs:123-146](../../../core/app/CE/Graph.hs#L123)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:356-370](../../../cli/src/graph/deadcode.rs#L356)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:78-98](../../../cli/src/main_cmds.rs#L78)).
@@ -186,10 +186,11 @@ Only file nodes carry entry facts; section and package rows get `0`
 (batch-7 slice 3 main body) the node row carries a 4th column of **role facts**, and the
 category membership Rust used to fuse into the flags column is decided by the core's
 **role table** `roleBits` ([Graph/Cost.hs:98-99](../../../core/app/CE/Graph/Cost.hs#L98)):
-a 4-column row's entry bits derive through `deriveFlags`
+the row's entry bits derive through `deriveFlags`
 ([Dead.hs:76-78](../../../core/app/CE/Graph/Dead.hs#L76), applied at
-[Graph.hs:117-120](../../../core/app/CE/Graph.hs#L117)), the legacy flags column yields, and a
-table mixing the two arities refuses by name. The Rust producer measures:
+[Graph.hs:116-118](../../../core/app/CE/Graph.hs#L116)). Until 5.0.0 a legacy flags
+column sat between `kind` and `roles` and yielded to them; it is gone, and a
+wrong-width row now refuses by row index rather than as a mixed table. The Rust producer measures:
 
 ```
 role 0  base ∈ {main.rs, main.go, __main__.py, build.rs, Main.hs}   [flags.rs:49-54]
@@ -206,20 +207,26 @@ role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
         through each stanza's source roots                          [targets.rs:21-70, 75-101]
 ```
 
-([flags.rs:19-25](../../../cli/src/graph/deadcode/flags.rs#L19),
-[flags.rs:46-85](../../../cli/src/graph/deadcode/flags.rs#L46)). The role→bit landing is the
+([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
+[flags.rs:32-71](../../../cli/src/graph/deadcode/flags.rs#L32)). The role→bit landing is the
 core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6. **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
 ([targets.rs:75-101](../../../cli/src/graph/deadcode/targets.rs#L75),
-[targets.rs:52-66](../../../cli/src/graph/deadcode/targets.rs#L52)). The legacy flags column is still
-produced bit-identically to the pre-2.28 semantics
-([flags.rs:33-43](../../../cli/src/graph/deadcode/flags.rs#L33)) and retires next minor.
-**Honest gaps that remain:** bit 4 (dyn-referenced) has no producer, and bit 0 is never set at
-file granularity ([flags.rs:1-11](../../../cli/src/graph/deadcode/flags.rs#L1)). The consequence
-of the bit-0 gap is stated in the ladder itself: RG10's `unref_public` class cannot fire until
-symbol-level flags land
-([hs.rs:26-31](../../../cli/src/graph/ladder/hs.rs#L26)).
+[targets.rs:52-66](../../../cli/src/graph/deadcode/targets.rs#L52)). The legacy flags column this
+module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
+2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
+absence had blocked the subtraction.
+**Honest gaps that remain:** bit 4 (dyn-referenced) has no producer — dynamic reference
+construction is an open set that grows with each language version, so no enumeration of it can
+be called complete (plan v2.14 K8).
+
+Bit 0 was the other one, and it closed at 4.1.0. Nothing at file granularity ever measured it,
+because public-ness is not a file fact ([flags.rs:1-11](../../../cli/src/graph/deadcode/flags.rs#L1));
+it now reaches the core through the `symbols` export surface
+([symwire.rs:1-27](../../../cli/src/graph/symwire.rs#L1)), so `unref_public` and `unreach_public`
+fire for the first time — including for Haskell, whose export list the visibility slice reads
+where it lives ([hs.rs:26-34](../../../cli/src/graph/ladder/hs.rs#L26)).
 
 Reachability is plain forward closure from the seeds over kept arcs
 ([Build.hs:53-58](../../../core/app/CE/Graph/Build.hs#L53)):
@@ -309,7 +316,7 @@ dies"* stance is deliberate: an unlinked doc **is** reported
 
 ### 8. The dead-row confidence (2.32.0)
 
-Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Contract.hs:108](../../../core/app/CE/Graph/Contract.hs#L108)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:88](../../../core/app/CE/Graph.hs#L88)):
+Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Contract.hs:107](../../../core/app/CE/Graph/Contract.hs#L107)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:88](../../../core/app/CE/Graph.hs#L88)):
 
 ```
 0  unvouched — the language still carries unresolved sites: "nothing
@@ -319,7 +326,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:111](../../../core/app/CE/Graph/Cost.hs#L111)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:159](../../../cli/src/graph/load.rs#L159), [deadcode.rs:174](../../../cli/src/graph/deadcode.rs#L174)), fences every returned index and bounds the column ([deadcode.rs:348](../../../cli/src/graph/deadcode.rs#L348)), and renders the trust word beside each dead file ([deadcode.rs:260](../../../cli/src/graph/deadcode.rs#L260)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:49](../../../core/test/GraphWireProps.hs#L49)).
+([Cost.hs:111](../../../core/app/CE/Graph/Cost.hs#L111)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:159](../../../cli/src/graph/load.rs#L159), [deadcode.rs:174](../../../cli/src/graph/deadcode.rs#L174)), fences every returned index and bounds the column ([deadcode.rs:348](../../../cli/src/graph/deadcode.rs#L348)), and renders the trust word beside each dead file ([deadcode.rs:260](../../../cli/src/graph/deadcode.rs#L260)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:52](../../../core/test/GraphWireProps.hs#L52)).
 
 ### 9. Acceptance
 

@@ -149,6 +149,22 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **5.0.0**（graph 节点行 legacy flags 列裁除 **major**，K 轮步 3d，2026-08-25）：节点行降为
+> `[lang, kind, roles]` **单一元**——pre-2.28 的 flags 列离场。它自 2.28.0 roles 列成为权威后又被
+> 生产、上线、丢弃了七个 minor；4.0.0 想同批砍掉却被实测拦下（flags 位 0 是公私判决轴，可见性无生产者时删列会让
+> `unref_public`/`unreach_public` 连夹具都无法表达），4.1.0 的 `symbols` 表补上那个生产者，此条遂解锁。
+> **档位**：§2 写死「schema 不兼容变更（删字段/改字段形状）必须 bump major」，删列正是改行形状，故 major——
+> 计划原写 minor，2026-08-25 按本仓自己的规则修正（v2.14 就地记账）。代价为零：4.x 全程未发布（v1.1.0 出货 3.2.0）。
+> **三列同元不同义**是有意为之：新三列 = lang/粒度/角色事实，旧三列 = lang/粒度/flags；major 在信封处拒绝一切
+> 跨版本对话，那道拒绝正是使元数复用安全的机制，故 K1 由「按行元拒」改为「按 major 拒」。表级
+> `node rows: mixed arity` 拒绝随之退役——只剩一种合法元数时，宽窄不对的行就是 malformed，且按**行下标**点名。
+> Rust 侧 `flags::legacy_flags` 与 `LEGACY` 折叠表一并删除，随之退役的还有 `legacy_fold_is_the_pre_228_bits`
+> 一条测试与 allow-claim 测试里的一行断言（电池名集差实测：Rust −1/+0，核 −1/+1 同一探针改口径）。
+> 反事实：**语义保持**——夹具 pair 7 把同一批事实改走各自的通道（节点 0 的入口身份走 roles 0→flag 位 1，
+> 节点 3/5 的导出面走 `symbols`），回复与 4.1.0 **逐字段相同**（dead 表码 1/2/3/4 齐全、pos、cycles、counts 皆同），
+> 证明这是裁除而非语义迁移；99 对金样中 199 行改动、193 行只动 proto 字段，另 6 行 = 三条我方重塑的请求
+> （pair 7/11/12）+ pair 13 的新 malformed 文案 + 两条内嵌 server 版本串的错误文案。
+> 请求行随 major 机器重写为 5.0.0；核电池请求侧 proto 同步 16 处。
 > **4.1.0**（导出面 minor，K 轮步 3c，2026-08-25，用户三度交本代理裁断 v2.14 K7）：`graph.request` 加性一键——
 > `symbols=[[node,visibility]]`，node < 节点数、visibility ≥ 0、**严格升序**（该表是去重的 (节点, 可见性) 集合，
 > 重复行=生产者丢了集合语义，按名拒 `symbol i: not strictly ascending`）。core 按 `Cost.exportVisBit`
@@ -163,7 +179,7 @@
 > 2 行是不匹配文案内嵌的 server 版本串；核电池另有一腿直接比 `respond` 两次的字节）、K6 = 请求体无任何字符串叶子
 > （`cli/tests/graph_export_surface.rs`，结构性断言而非按本夹具的路径列举）、K9 = 导出节点判 2 而其邻居仍判 1，
 > 且死集合不动（`fixtures/graph` pair 16 + 核电池 `exportRides`）；两个旋钮各有反事实腿（读错可见性位=无面、
-> 置 entryMask 内的位=该节点变入口而离开判决集）。请求行随 minor 机器重写为 4.1.0；核电池请求侧 proto 同步 11 处。
+> 置 entryMask 内的位=该节点变入口而离开判决集）。请求行随 minor 机器重写为 4.1.0；核电池请求侧 proto 同步 19 处（Haskell 字面量 11 + Spec.hs 内嵌请求 8；`9.0.0` 的外来 major 探针不动）。
 > **4.0.0**（erase class 0 退役 **major**，K 轮步 2，2026-08-24，用户拍板 v2.14）：`erase.request` 的 class 0
 > （dead_file 本地计数路）自 2.32.0 被 class 3 取代、Rust 同 minor 起不再铸行，宽限窗至此关闭——**离开判决集**，
 > 其冻结位保留并**按名拒绝**（`row i: retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)`），而非折进
@@ -407,11 +423,16 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   "suspicions":[[i,规则名]],"degraded"(,"reason"∈{bucket_cap})}`——moved 为单调
   重分类 delta；blocks 为 ≥2 行站点证据（扩展/归因行只进 moved 不进 blocks）；
   suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
-- `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,flags,role]],"edges":
-  [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]]}`——稠密 0 基索引即
-  节点身份，**无文本形物过线**（ADR-002 A6）；节点行四元组（role 列 2.28.0 加性、Rust 恒发；
-  三列旧行仍合法，同表混排两种列宽拒 `node rows: mixed arity`）、边严格升序且去重、端点与
-  pos 越界 → `error/contract`（边界契约由 core 机检）；`unres` 是 2.32.0 起的可选按语言站点
+- `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
+  [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]],
+  "symbols":[[node,visibility]]}`——稠密 0 基索引即
+  节点身份，**无文本形物过线**（ADR-002 A6）；节点行**三元组、单一合法元数**（5.0.0 起：
+  pre-2.28 的 flags 列裁除，宽窄不对的行按**行下标**报 `node i: malformed row (need
+  [lang,kind,roles])`；表级 `node rows: mixed arity` 随之退役）、边严格升序且去重、端点与
+  pos 越界 → `error/contract`（边界契约由 core 机检）；`symbols` 是 4.1.0 起的可选导出面
+  表——去重的 (节点, 可见性) 对、严格升序，核按 `Cost.exportVisBit` 读出导出节点并按
+  `Cost.publicFlagBit` 或上 flags 位 0，判决码 2/4 由此首次可达；缺席或空表 = 字节不变。
+  `unres` 是 2.32.0 起的可选按语言站点
   台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
   两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
   `cli/src/graph/deadcode.rs` `GraphWire`，核侧 `core/app/CE/Graph.hs` `GraphReq`）；
@@ -491,5 +512,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 4.1.0 | §1 所列两处常量 |
+| 协议 | 5.0.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |
