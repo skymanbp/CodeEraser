@@ -21,8 +21,9 @@
 - score 侧：size 轴由二值改梯度 = **分数迁移一次**，发版声明义务
   （[RELEASE.md](../RELEASE.md) §0，修正案①先例）。
 - guard 侧 as-built：v0.6 落 observe 台账（`zone` 事件，S<行数≤H
-  每写一记）；v0.7（计划 v2.7 ①）接线位置→档位映射（<25% observe
-  / 25–75% warn / >75% ask / >H deny）——`ce.toml [guard]
+  每写一记）；v0.7 **已接线**位置→档位映射（<25% observe
+  / 25–75% warn / >75% ask / >H deny），且切点由**核授权**随基线下发
+  （`zoneWarnPermille=250` / `zoneAskPermille=750`）——`ce.toml [guard]
   zone_tiers` 显式声明才启用，默认恒 observe，默认翻档仍以台账攒出
   的各档 FPR 记录为准（§6 同款）；武装后台账行加记映射档
   （feed 0.6.0）。
@@ -41,15 +42,18 @@
 
 - 对所有超过软线 S 的判决文件计算 Split Advisory（包括 `x > H`，继续按
   线性臂定价）：
-  - 缝候选 = 单元边界 × 文件内共引聚类 × 克隆块边界 × 单元
-    co-change（churn 既有事实）。
-  - 收益 B = 渐进区罚分回收 + dedup 预算效应 + 热/冷单元隔离。
-  - 成本 C = 被切断的内引用数（=新增跨文件耦合面）+ 每新文件固定
-    开销 φ（S0 扇出、心智负担）+ 基线重键噪声。
+  - 缝候选 = **单元边界**：每个有后继的顶层单元之后的那道间隙，n 个单元
+    出 n−1 道缝。共引 / 克隆块 / co-change **只进缝价，不产生候选缝**——
+    没有聚类步骤。
+  - 收益 B = **渐进区罚分回收**，as-built 唯一一项（dedup 预算效应与
+    热/冷单元隔离仍未实现，册 08 §「Not found in source」在册）。
+  - 成本 C = 被切断的内引用数 × `roiRefMilli` + 切穿克隆块数 ×
+    `roiCloneMilli` + 跨缝共变对数 × `roiChurnMilli` + 每新文件固定开销
+    φ（`roiPhiMilli`）。「基线重键噪声」未实现。
   - `ROI = B/C`（有理数）。
-- 面：`ce structure --split-candidates`——top-N 文件 × 最优缝 ×
-  ROI（硬预算规则簇现位于 `cli/src/guard/budget.rs`；具体缝位与 ROI
-  以当次树的命令输出为准）。
+- 面：`ce structure --split-candidates`——**每个越过软线的判决文件各一行**
+  （最优缝 × ROI，或豁免），不做 top-N 截断（硬预算规则簇现位于
+  `cli/src/guard/budget.rs`；具体缝位与 ROI 以当次树的命令输出为准）。
 - **区内仲裁**：过 S 而无可行缝（所有候选 ROI<1 = 高内聚长文件）
   → **自动豁免并落机器生成的 why**——「大项目文件天然长」的正面
   回答：长而内聚 = 豁免有据，长而可拆 = 给出刀口。
@@ -93,9 +97,9 @@
   v1 用**单元名跨缝词界提及**作「被切断的内引用」的可测代理（≥3 字
   符噪声地板，词界判定钉在单测）。诚实局限：短名/字符串内提及会
   计边——顾问面非强制面，可容。
-- **面**：`ce structure --split-candidates`（CLI）；MCP `structure`
-  工具的 `split` 参数与 GUI 结构屏拆分面板 v0.7（计划 v2.7 ③）
-  补齐——v0.6 蓄意不带，工具面扩张各随其自己的决策批。
+- **面**：`ce structure --split-candidates`（CLI）、MCP `structure` 工具的
+  `split` 参数、GUI 结构屏拆分面板——**三面 as-built 齐备**（v0.7 补齐；
+  v0.6 蓄意不带，工具面扩张各随其自己的决策批）。
 - **自仓首跑实证**（S=294 口径复核 2026-08-20）：graph_ladder.rs
   得真缝（318 行后，回收 2120‰ 对 500‰，ROI 4.2）；
   DEVELOPMENT_PLAN.md 与 main_cmds.rs 拿到机器写的内聚豁免（11‰

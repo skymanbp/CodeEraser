@@ -59,12 +59,6 @@ docSetCap = 8192
 docPairCap :: Integer
 docPairCap = 4096
 
--- | Verbatim hard-hit floor in words. Same provenance as the Rust
--- mirror it now owns (spec.rs VERBATIM_FLOOR: plan :68, Lee et al.
--- 2107.06499, verbatim lower bound 50 tokens). ADR-008 P1 moves the
--- floor's VERDICT home here: the run lengths already ride each
--- request row ([i,j,run] — F26), the texts never cross the wire
--- (§5.9.2), and the knobs echo pins the Rust mirror to this number.
 -- | Admission floor for a documentation segment: below this many
 -- words the segment never enters the corpus (batch-7 slice 10 —
 -- the other half of the provenance verbatimFloor carries: plan :68,
@@ -89,6 +83,12 @@ minDocTokens = 50
 docLineCap :: Integer
 docLineCap = 200
 
+-- | Verbatim hard-hit floor in words. Same provenance as the Rust
+-- mirror it now owns (spec.rs VERBATIM_FLOOR: plan :68, Lee et al.
+-- 2107.06499, verbatim lower bound 50 tokens). ADR-008 P1 moves the
+-- floor's VERDICT home here: the run lengths already ride each
+-- request row ([i,j,run] — F26), the texts never cross the wire
+-- (§5.9.2), and the knobs echo pins the Rust mirror to this number.
 verbatimFloor :: Integer
 verbatimFloor = 50
 

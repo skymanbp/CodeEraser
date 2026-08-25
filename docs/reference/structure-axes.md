@@ -10,21 +10,25 @@
 | 轴 | 信号 | 事实源（测量侧，Rust） |
 |---|---|---|
 | S0 路径几何 | 深度超顶（depth > 8）、单目录扇出超顶（subdirs+files > 30）——两谓词两旋钮，绝对上限非分布判定 | walk 树形聚合 |
-| S1 命名一致性 | 每兄弟集的命名模式熵（case/分隔符/前缀族）——**名不过线**，只过模式码分布 | walk 文件名 |
+| S1 命名一致性 | 每兄弟集的命名模式熵（case/分隔符/数字打头——分类器只有这三维，**无前缀族**）——**名不过线**，只过模式码分布 | walk 文件名 |
 | S2 正交性/模块度 | 目录内 vs 目录间引用密度（fileRefs 触点为单一事实基） | graph 边表 |
 | S3 漂移错位 | 持有错位文件的**目录**计数（修正案①）；文件级谓词不变：outside ≥ min 且 > 2×inside | graph 边表 |
-| S4 文档基建 | 文件数 ≥ bigDirFloor（默认 8，旋钮 6）的目录须有 README；根目录须有可识别配置；约定位掩码（1=README，2=config） | walk + entry_globs 同款约定 |
-| S5 文档新鲜度 | md 节引用目标在文档最后一改之后的变更次数 | churn 窗口 + md 阶梯 |
+| S4 文档基建 | 文件数 ≥ bigDirFloor（默认 8，旋钮 6）的目录须有 README；根目录须有可识别配置；约定位掩码（1=README，2=config） | walk + tree.rs 自有的 8 个配置基名表（与 entry_globs 无关，那是图族的存活根表）|
+| S5 文档新鲜度 | 每目录的**陈旧文档数**：某个引用目标晚于该 md **文件**自身最后一改即陈旧（存在量词 + 严格 >，同提交不算）| churn 窗口 + md 阶梯 |
 | S6 冗余/孤儿卷积 | dedup 块数、deadcode 判决按目录卷积（--deep 才上线） | dedup/deadcode 判决 |
 
-- 评分（2.26.0 密度律）：`charge_i = floor(scale·v_i/(v_i+N))`（N=目录总数），`score = kScale − Σ(charge×violCost)/(neutral×judgedAxisCount)`；轴行载费额（‰）
+- 评分（2.26.0 密度律）：`charge_i = floor(scale·v_i/(v_i+N))`（N=目录总数），`score = max 0 (kScale − Σ(charge×violCost) div (neutral×judgedAxisCount))`（整数 div、且钳到 0；册 04 §5 为准）；轴行载费额（‰）
   （`structViolCost=10`、`structScale=1000`；旋钮回执逐行 pin，
   漂移即错——「一个数字两个主人」拒绝）。
 - 熵实现：Shannon/KL 需对数=无理数不可精确判定，取有理判定式；
-  观测质量落在参照零质量 bin 上 = Nothing，由 S3 指名偏差行承接，
-  绝不塌成 0。
+  落在任何已声明 bin 之外的观测质量 → `divergence` 整体撤回（`[]`），
+  由 kind-0 偏差行指名，绝不塌成 0。`chi2` 自身的零参照 `Nothing` 臂在
+  这条路上**不可达**（权重已校验 ≥ 1），撤回由 `Declared.hs` 的 `unowned`
+  驱动——两件事，先前这里写成了一件。
 - 语言口径：只有**判决语言集**入树（plan v2.5：尺寸门语言臂不入
-  structure——否则 S2 会把正常前端目录判混语）。
+  structure——否则 S0 几何 / S1 命名 / S4 文档与两行熵都会随文件总体漂移。
+  **不是**「S2 会判混语」：S2 读的是引用触点分布、压根没有语言项，
+  那句话在批 7 缺陷扫时已由 Rust 侧就地更正）。。
 
 ## 修正案①（用户拍板 2026-08-19，v0.5.0 起生效）
 

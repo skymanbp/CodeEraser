@@ -29,7 +29,7 @@ a degraded reply drops them with the rest of the facts
 
 Units on the wire are the **top-level** spans only: outermost, non-overlapping,
 start-ordered, so a nested helper always lands on its holder's side of every seam
-[seams.rs:183-197](../../../cli/src/structure/seams.rs#L183). Each unit's `end` is clamped to the
+[seams.rs:182-196](../../../cli/src/structure/seams.rs#L182). Each unit's `end` is clamped to the
 file total [seams.rs:201](../../../cli/src/structure/seams.rs#L201).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
@@ -132,10 +132,10 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 **Leg 1 — severed references.** The honest v1 proxy: true intra-file symbol co-reference
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
-[seams.rs:212-234](../../../cli/src/structure/seams.rs#L212),
+[seams.rs:214-233](../../../cli/src/structure/seams.rs#L214),
 [size-advisory.md:92-95](../size-advisory.md#L92). Word-boundedness is
 identifier-char adjacency on both sides
-[seams.rs:236-254](../../../cli/src/structure/seams.rs#L236). Names shorter than `NAME_FLOOR = 3` are
+[seams.rs:235-253](../../../cli/src/structure/seams.rs#L235). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
 [seams.rs:225](../../../cli/src/structure/seams.rs#L225). Documented limitation: short names and
@@ -143,7 +143,7 @@ in-string mentions will count an edge; the advisory face is non-binding, so this
 [size-advisory.md:94-95](../size-advisory.md#L94).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
-(`crate::dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
+(`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
 through a `BTreeSet` [seams.rs:89-105](../../../cli/src/structure/seams.rs#L89). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
 reference [Cost.hs:141-146](../../../core/app/CE/Structure/Cost.hs#L141).
@@ -217,7 +217,7 @@ end line [judge.rs:183-191](../../../cli/src/structure/judge.rs#L183).
 ### Input validation
 
 The five seam tables are boundary-checked before any pricing, in request order
-[Split.hs:47-59](../../../core/app/CE/Structure/Split.hs#L47): file ids dense (`id == index`) with
+[Split.hs:47-56](../../../core/app/CE/Structure/Split.hs#L47): file ids dense (`id == index`) with
 `total >= 1` [Split.hs:63-68](../../../core/app/CE/Structure/Split.hs#L63); units dense per file from
 0, spans strictly ascending and non-overlapping, checked in one fold carrying
 `(file, previousEnd, expectedNextUnit)`
@@ -227,7 +227,7 @@ The five seam tables are boundary-checked before any pricing, in request order
 [Split.hs:142-144](../../../core/app/CE/Structure/Split.hs#L142) and churn pairs must ascend, so an
 unordered pair has exactly one spelling
 [Split.hs:118-120](../../../core/app/CE/Structure/Split.hs#L118); all three edge tables must arrive in
-ascending canonical order [Split.hs:53,56,58](../../../core/app/CE/Structure/Split.hs#L53).
+ascending canonical order [Split.hs:53,54,55](../../../core/app/CE/Structure/Split.hs#L53).
 
 Every quantity above is exact integer or `Rational` arithmetic — no floating point enters the
 computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8).

@@ -7,8 +7,10 @@ distributions, reference locality, documentation coverage, and — when the deep
 the wire — doc staleness and redundancy rollups. Rust measures and re-labels; Haskell
 decides. Names never cross the wire — the request's vocabulary is dense directory ids,
 codes and counts ([Structure.hs:12-15](../../../core/app/CE/Structure.hs#L12)). Only the *judged*
-language set enters the tree; the size-gate-only language arm is excluded, or S2 would call
-a normal front-end directory language-mixed ([structure-axes.md:26-27](../structure-axes.md#L26)).
+language set enters the tree; the size-gate-only language arm is excluded, or the file
+population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
+NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
+has no language term at all ([judge.rs:201-206](../../../cli/src/structure/judge.rs#L201)) ([structure-axes.md:26-27](../structure-axes.md#L26)).
 
 ### 1. The entropy primitive: exact rationals, no logarithms
 
@@ -52,9 +54,12 @@ with four boundary arms, in evaluation order
 | any bin with `r == 0 && o > 0` | `Nothing` | observed mass on a zero-reference bin — divergence is infinite there |
 | `Σo == 0` | `Just 1` | equals `Σ q` over the support |
 
-`Nothing` is a refusal, not a zero: the A-layer names those directories instead of collapsing
-them into a number ([Entropy.hs:48-52](../../../core/app/CE/Structure/Entropy.hs#L48),
-[structure-axes.md:23-25](../structure-axes.md#L23)).
+`Nothing` is a refusal, not a zero. On the DECLARED road it is also unreachable — weights are
+validated `>= 1`, so no reference bin can be zero — and what actually withholds the number
+there is `Declared.hs`'s own `unowned` list, which drops `divergence` to `[]` and names the
+directories instead (§3 below states the mechanism correctly; the stance is the same either
+way, the trigger is not) ([Entropy.hs:48-52](../../../core/app/CE/Structure/Entropy.hs#L48),
+[Declared.hs:40-42](../../../core/app/CE/Structure/Declared.hs#L40)).
 
 **Publishing scale.** Every exact rational reaches the wire through one deterministic
 truncation ([Entropy.hs:69-70](../../../core/app/CE/Structure/Entropy.hs#L69)):
@@ -85,8 +90,9 @@ judges against. Absent = the self-referential floor alone (row C)". *Caveat for 
 the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in the tree — the
 booklet was distilled into `structure-axes.md` and its full text lives only in git history
 ([structure-axes.md:3-6](../structure-axes.md#L3)). No other definition of "row C"
-or of "self-referential floor" exists in the repository (verified by grep this run: the only
-other hit is an unrelated test fixture).
+or of "self-referential floor" exists in the repository (verified by grep this run: the only other hit in tracked source is
+[hs_boot.rs:237](../../../cli/src/graph/ladder/hs_boot.rs#L237), a Haskell module list where
+"Arrow Control.Category" spells the substring by accident).
 
 Mechanically the floor is a shape guarantee: the A-layer keys `divergence` and `deviations`
 exist **only** when the request declares a layout; an undeclared request answers the S2 shape
@@ -149,12 +155,14 @@ absent table (`Nothing`) means unjudged, empty table (`Just []`) means judged cl
 [Axes.hs:107-108](../../../core/app/CE/Structure/Axes.hs#L107)).
 
 Every axis penalty is a count of **directories**, axis 3 included — booklet amendment ①
-(user decision 2026-08-19, effective v0.5.0). Before it, S3 counted files, and one junk drawer
-of 500 misplaced files could drive the whole structure score to 0 and drown the other six
-axes; files remain the *measured* unit, the directory is the *judged* unit
+(user decision 2026-08-19, effective v0.5.0). Before it, S3 counted files, and one junk drawer could drive the whole structure score to 0
+and drown the other six axes (the illustration's "500 files" is a doc-side figure with no
+fixture behind it; under today's density law a charge is bounded by `scale`, so no single
+axis can zero the score at all); files remain the *measured* unit, the directory is the *judged* unit
 ([Axes.hs:112-118](../../../core/app/CE/Structure/Axes.hs#L112),
-[structure-axes.md:29-38](../structure-axes.md#L29)). The migration moved this
-repo's own score 990 → 992 ([structure-axes.md:40-42](../structure-axes.md#L40)).
+[structure-axes.md:29-38](../structure-axes.md#L29)). The migration moved this repo's own score 990 → 992 under the THEN-current raw-mass fold;
+2.26.0's density fold re-migrated every structure score again, so neither figure describes
+the score today ([structure-axes.md:40-42](../structure-axes.md#L40)).
 
 | axis | fact row | predicate | knobs (code, default) |
 |---|---|---|---|
@@ -163,7 +171,7 @@ repo's own score 990 → 992 ([structure-axes.md:40-42](../structure-axes.md#L40
 | **S2** mixing | `[dirId,inside,outside,count]` | `ins + outs >= mixRefFloor && outs > ins` | 4 `mixRefFloor=5` |
 | **S3** misplacement | `[dirId,inside,outside,count]` | per file `outside >= misplaceMin && outside > 2*inside`, then dedup to dirs | 5 `misplaceMin=3` |
 | **S4** documentation | `[id,…,files]` + `[dirId,bits]` | `(files >= bigDirFloor && even bits) \|\| (id == 0 && bits < 2)` | 6 `bigDirFloor=8` |
-| **S5** staleness | `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
+| **S5** staleness | wire `[dirId,docTs]` + `[docIdx,targetTs]`, core-derived into `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
 | **S6** redundancy | `[dirId,dupBlocks,deadUnits]` | `dupBlocks >= dupMin \|\| deadUnits >= deadMin` | 9 `dupMin=1`, 10 `deadMin=1` |
 
 Sources: predicates [Axes.hs:134-145](../../../core/app/CE/Structure/Axes.hs#L134),
@@ -207,7 +215,8 @@ tree colours by — one list per axis, in axis order
 
 ### 5. The fold: charges to one score
 
-Since proto 2.26.0 (M9 batch 9 P9, user ruling) the structure family runs the **same density
+Since contract 2.26.0 (M9 batch 9 P9, user ruling — a VERSIONING entry, not a proto
+version; the protocol is far past it) the structure family runs the **same density
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
 through `chargeAt`, imported from [Score.hs:152](../../../core/app/CE/Verdict/Score.hs#L152)
@@ -220,7 +229,8 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))
 ```
 
 with `violCost = 10` (knob 7, the family's strictness dial) and its structural neutral
-`structViolCostNeutral = 10` ([Cost.hs](../../../core/app/CE/Structure/Cost.hs#L73)): at the
+`structViolCostNeutral = 10` ([Cost.hs:75-76](../../../core/app/CE/Structure/Cost.hs#L75),
+[Cost.hs:84-85](../../../core/app/CE/Structure/Cost.hs#L84)): at the
 neutral default the fold is the plain mean of the bounded charges and cannot saturate.
 `scale = 1000` (knob 8). All arithmetic is exact `Rational` then integer `div` — no float
 anywhere on the path. `judgedAxisCount` is 5, 6, or 7 depending on which optional tables
@@ -275,10 +285,12 @@ and returns the *first* offender by name ([Structure.hs:100-115](../../../core/a
   docstring, and a forged row `[1,0,999,0,1]` rode straight into the geometry axis and moved the
   score (review 2026-08-20 #6) ([Structure.hs:178-192](../../../core/app/CE/Structure.hs#L178),
   probe at [StructureProps.hs:108-112](../../../core/test/StructureProps.hs#L108));
-- every dir-keyed table shares one checker — arity, non-negativity, `dirId < |nodes|`, a
+- the five `dirTables` share one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
   ([Structure.hs:118-125](../../../core/app/CE/Structure.hs#L118),
-  [Structure.hs:194-207](../../../core/app/CE/Structure.hs#L194)). Extra rules: pattern code `<= 6` and
+  [Structure.hs:194-207](../../../core/app/CE/Structure.hs#L194)); `staleDocRows` shares the
+  ROW checker but orders **non-descending**, because one directory holds many docs
+  ([Stale.hs:26-29](../../../core/app/CE/Structure/Stale.hs#L26)). Extra rules: pattern code `<= 6` and
   count `>= 1`; convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`
   (the pre-judged staleDocs rules retired with their table at 2.29.0 — the raw
   `staleDocRows`/`staleEdgeRows` validators own staleness now)
@@ -293,6 +305,8 @@ are both true and `reason` is `structure_too_large`
 ([Structure.hs:218-238](../../../core/app/CE/Structure.hs#L218),
 [StructureProps.hs:231-241](../../../core/test/StructureProps.hs#L231)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
-not evidence of health in a degraded reply. In the non-degraded case `fail` equals `degraded`,
+not evidence of health in a degraded reply. No `ce structure` user ever sees that 1000: the CLI
+turns a degraded reply into an error before rendering ([wire.rs:148](../../../cli/src/structure/wire.rs#L148)),
+so the number matters to a second client of the protocol, not to this one's console. In the non-degraded case `fail` equals `degraded`,
 i.e. always false: S2 is report-only, and the CLI gates nothing on this score
 ([Structure.hs:216-218](../../../core/app/CE/Structure.hs#L216)).
