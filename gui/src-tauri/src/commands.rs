@@ -127,8 +127,12 @@ macro_rules! face_cmd {
     };
 }
 
+// BOTH report thresholds ride since the face widened (K step 7):
+// the screen pins neither, so the core's defaults answer — but a
+// call site that named only min_tokens is exactly the silent pin
+// the widening exists to make impossible
 face_cmd!(dedup_report, "dedup", |r, _| codeeraser::faces::dedup(
-    r, None
+    r, None, None
 ));
 face_cmd!(scan_report, "scan", codeeraser::faces::scan);
 face_cmd!(
@@ -171,13 +175,16 @@ face_cmd!(join_report, "join", days: codeeraser::faces::join);
 /// `core.handshake` rather than an error the webview would show as a
 /// red status line with no detail. No task() bracket either — this
 /// is the face a user reaches for WHEN something is wrong, and it
-/// must not depend on the event plumbing being healthy.
+/// must not depend on the event plumbing being healthy. It routes
+/// through faces like every sibling: reaching health::doctor directly
+/// worked, and made this module's opening claim ("every family face
+/// routes through codeeraser::faces") false for exactly one screen —
+/// which is how the two machine surfaces drift apart in the first
+/// place. The face cannot fail, so the map_err arm is unreachable by
+/// construction and stays only because the signature is shared.
 #[tauri::command]
 pub fn doctor_report(root: String) -> Result<Value, String> {
-    Ok(codeeraser::health::doctor::document(
-        Path::new(&root),
-        &core_path(),
-    ))
+    codeeraser::faces::doctor(Path::new(&root), &core_path()).map_err(|e| format!("{e:#}"))
 }
 
 /// The bench dashboard document, compiled in at build time — the
