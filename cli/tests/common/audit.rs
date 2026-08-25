@@ -9,12 +9,44 @@ use super::gitio::git;
 use std::path::{Path, PathBuf};
 
 /// Audit once, expect a Stop block whose reason names `needle`.
+///
+/// An empty stdout is diagnosed, not merely reported. The audit fails
+/// OPEN by charter, so an unusable ce-core produces silence — and the
+/// bare `expect("block json")` then said `EOF while parsing a value`,
+/// which reads as a broken assertion rather than a missing core. That
+/// misreport cost two sessions chasing a phantom flake: the runs that
+/// were green had CE_CORE_BIN exported, the runs that were red found
+/// a stale ce-core on PATH whose proto no longer matched. The feed
+/// the audit just wrote carries the answer, so it is read here.
 pub fn assert_stop_blocks(dir: &Path, needle: &str) {
     let out = super::run_hook(dir, &["audit", "--hook"], &super::stop_envelope(dir, false));
-    let v: serde_json::Value = serde_json::from_str(out.trim()).expect("block json");
+    let v: serde_json::Value = serde_json::from_str(out.trim()).unwrap_or_else(|e| {
+        panic!(
+            "no Stop block to parse ({e}). The audit {}. \
+             Raw stdout: {out:?}",
+            match degraded_bit(dir) {
+                Some(true) =>
+                    "DEGRADED — its ce-core was unreachable or \
+                               spoke a different proto; export CE_CORE_BIN \
+                               at the core you just built",
+                Some(false) => "measured and chose not to block",
+                None => "left no observe entry at all",
+            }
+        )
+    });
     assert_eq!(v["decision"], "block");
     let reason = v["reason"].as_str().expect("reason");
     assert!(reason.contains(needle), "reason names {needle}: {reason}");
+}
+
+/// The `degraded` bit of the last stop_audit line in the project's
+/// observe feed — the audit's own record of whether it could judge.
+fn degraded_bit(dir: &Path) -> Option<bool> {
+    let log = std::fs::read_to_string(dir.join(".ce/observe.ndjson")).ok()?;
+    log.lines()
+        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+        .rfind(|j| j["event"] == "stop_audit")?["degraded"]
+        .as_bool()
 }
 
 /// The observe entry a SILENT Stop audit leaves behind.

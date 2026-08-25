@@ -11,6 +11,7 @@
 //! created — the defect this module inherits the fix for.
 
 use crate::corelink;
+use crate::i18n::line;
 use serde_json::{Value, json};
 use std::path::Path;
 
@@ -50,4 +51,56 @@ pub fn document(root: &Path, core: &str) -> Value {
             "error": error,
         },
     })
+}
+
+/// The console RENDERING of the document above, moved here from
+/// main_cmds.rs (K step 8) when that file passed its own 300-line
+/// gate: a renderer belongs beside the measurement it renders, which
+/// is the whole reason this module exists. Returns the lines to print
+/// and the handshake bit, so the caller owns the exit code and stdout
+/// / stderr split without this function knowing about either.
+pub fn console(d: &Value) -> (Vec<String>, bool) {
+    let s = |p: &str, k: &str| d[p][k].as_str().unwrap_or("?").to_string();
+    let mut out = vec![
+        format!("ce {} (proto {})", s("ce", "version"), s("ce", "proto")),
+        line(
+            "project: {} [ce {} | guard: {} | index: {} | daemon: {}]",
+            "项目：{} 〔ce {} | 守卫：{} | 索引：{} | daemon：{}〕",
+            &[
+                &d["root"].as_str().unwrap_or("?"),
+                &s("ce", "version"),
+                &d["guard"].as_str().unwrap_or("?"),
+                &d["index"].as_str().unwrap_or("?"),
+                &d["daemon"].as_str().unwrap_or("?"),
+            ],
+        ),
+        line(
+            "degraded runs (observe feed): {} of {} entries",
+            "降级运行（observe 流水）：{} / {} 条",
+            &[
+                &d["degradedRuns"]["degraded"],
+                &d["degradedRuns"]["entries"],
+            ],
+        ),
+    ];
+    let ok = d["core"]["handshake"] == json!(true);
+    if ok {
+        out.push(format!(
+            "ce-core {} (proto {})",
+            s("core", "version"),
+            s("core", "proto")
+        ));
+        // OK/FAILED is this diagnostic's own verdict, not the
+        // exit-code vocabulary `check` borrows FAIL/pass from — a
+        // reader of an otherwise Chinese report has no reason to
+        // know either English word
+        out.push(line("handshake: OK", "握手：正常", &[]));
+    } else {
+        out.push(line(
+            "handshake: FAILED — {}",
+            "握手：失败 — {}",
+            &[&d["core"]["error"].as_str().unwrap_or("?")],
+        ));
+    }
+    (out, ok)
 }

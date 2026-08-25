@@ -58,8 +58,24 @@ pub fn graph_cmd(root: &Path, sites: bool, json: bool) -> ExitCode {
         // failure. The usable form goes to stdout and the exit is
         // clean; --format is named here because it is inert without
         // --sites, which was the second half of the same puzzle.
-        println!("ce graph --sites [--format json]   list the reference sites");
-        println!("ce deadcode                        judge liveness over them");
+        // the two forms are the SAME ascii on both roads, so the
+        // column padding survives translation untouched
+        println!(
+            "{}",
+            line(
+                "ce graph --sites [--format json]   list the reference sites",
+                "ce graph --sites [--format json]   列出引用站点",
+                &[],
+            )
+        );
+        println!(
+            "{}",
+            line(
+                "ce deadcode                        judge liveness over them",
+                "ce deadcode                        在其上判决存活性",
+                &[],
+            )
+        );
         return ExitCode::SUCCESS;
     }
     graph::run_sites(root, json)
@@ -232,7 +248,17 @@ pub fn hook_cmd(hook: bool, name: &str, run: fn() -> ExitCode) -> ExitCode {
     if hook {
         run()
     } else {
-        eprintln!("ce {name}: pass --hook — this command reads a hook envelope on stdin");
+        // exit 1 (not 0) is the point of the arm above: a harness that
+        // forgot --hook must not read as ALLOW. So this stays a
+        // failure and only the WORDS join the switch.
+        eprintln!(
+            "{}",
+            line(
+                "ce {}: pass --hook — this command reads a hook envelope on stdin",
+                "ce {}：请传 --hook — 本命令自 stdin 读取钩子信封",
+                &[&name],
+            )
+        );
         ExitCode::FAILURE
     }
 }
@@ -286,46 +312,19 @@ pub fn doctor(core: &str, root: &Path, as_json: bool) -> ExitCode {
             false => ExitCode::from(2),
         };
     }
-    let s = |p: &str, k: &str| d[p][k].as_str().unwrap_or("?").to_string();
-    println!("ce {} (proto {})", s("ce", "version"), s("ce", "proto"));
-    println!(
-        "{}",
-        line(
-            "project: {} [ce {} | guard: {} | index: {} | daemon: {}]",
-            "项目：{} 〔ce {} | 守卫：{} | 索引：{} | daemon：{}〕",
-            &[
-                &d["root"].as_str().unwrap_or("?"),
-                &s("ce", "version"),
-                &d["guard"].as_str().unwrap_or("?"),
-                &d["index"].as_str().unwrap_or("?"),
-                &d["daemon"].as_str().unwrap_or("?"),
-            ],
-        )
-    );
-    println!(
-        "{}",
-        line(
-            "degraded runs (observe feed): {} of {} entries",
-            "降级运行（observe 流水）：{} / {} 条",
-            &[
-                &d["degradedRuns"]["degraded"],
-                &d["degradedRuns"]["entries"],
-            ],
-        )
-    );
-    if d["core"]["handshake"] == serde_json::json!(true) {
-        println!(
-            "ce-core {} (proto {})",
-            s("core", "version"),
-            s("core", "proto")
-        );
-        println!("handshake: OK");
+    // the renderer lives beside the measurement (health::doctor);
+    // this owns only what a console face owns — which stream each
+    // line takes, and the exit code
+    let (lines, ok) = codeeraser::health::doctor::console(&d);
+    let (last, head) = lines.split_last().expect("console yields the verdict");
+    for l in head {
+        println!("{l}");
+    }
+    if ok {
+        println!("{last}");
         return ExitCode::SUCCESS;
     }
-    eprintln!(
-        "handshake: FAILED — {}",
-        d["core"]["error"].as_str().unwrap_or("?")
-    );
+    eprintln!("{last}");
     ExitCode::from(2)
 }
 

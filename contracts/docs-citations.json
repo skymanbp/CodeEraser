@@ -3306,8 +3306,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:151": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 95,
-    "text": "eprintln!("
+    "line": 114,
+    "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:16": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3701,7 +3701,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:87": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 78,
+    "line": 94,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:88": {

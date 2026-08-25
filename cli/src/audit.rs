@@ -10,9 +10,11 @@
 //! changed lives in changes.rs (git's paths in ce's own vocabulary).
 
 mod changes;
+mod observe;
 mod verdict;
 
 use crate::config::Config;
+use observe::{AuditEvent, observe_log};
 use serde::Deserialize;
 use std::path::Path;
 use std::process::ExitCode;
@@ -199,24 +201,24 @@ pub fn run_precommit(root: &Path) -> ExitCode {
         None,
         None, // four-class is a Stop concern; precommit stays v1
     ) else {
-        eprintln!("ce precommit: not a git repo (skipped)");
+        eprintln!(
+            "{}",
+            crate::i18n::line(
+                "ce precommit: not a git repo (skipped)",
+                "ce precommit：不是 git 仓库（跳过）",
+                &[],
+            )
+        );
         return ExitCode::SUCCESS;
     };
     let Some(v) = dups.as_ref() else {
         // A9f: fail open but never silently — the human still gets
         // the staged summary the healthy path prints
-        println!(
-            "ce precommit: {} staged file(s), net {net_loc:+} LOC — duplicate \
-             verdict unavailable (DEGRADED: duplicate check skipped)",
-            changed.len()
-        );
+        println!("{}", staged_summary(changed.len(), net_loc, true));
         return ExitCode::SUCCESS;
     };
     if v.dups == 0 {
-        println!(
-            "ce precommit: {} staged file(s), net {net_loc:+} LOC, no touched duplicates",
-            changed.len()
-        );
+        println!("{}", staged_summary(changed.len(), net_loc, false));
         return ExitCode::SUCCESS;
     }
     println!("{}", reason(net_loc, v));
@@ -226,58 +228,39 @@ pub fn run_precommit(root: &Path) -> ExitCode {
     ExitCode::SUCCESS
 }
 
+/// The staged-summary line both healthy exits print. One body, two
+/// tails: written apart they were a token twin by this repo's own
+/// gate. The `+` sign flag is pre-rendered because the bilingual
+/// switch fills plain `{}` holes only — the en bytes are unchanged.
+fn staged_summary(changed: usize, net_loc: i64, degraded: bool) -> String {
+    let net = format!("{net_loc:+}");
+    if degraded {
+        return crate::i18n::line(
+            "ce precommit: {} staged file(s), net {} LOC — duplicate \
+             verdict unavailable (DEGRADED: duplicate check skipped)",
+            "ce precommit：{} 个暂存文件，净 {} 行 — 重复判决不可用\
+             （已降级：重复检查已跳过）",
+            &[&changed, &net],
+        );
+    }
+    crate::i18n::line(
+        "ce precommit: {} staged file(s), net {} LOC, no touched duplicates",
+        "ce precommit：{} 个暂存文件，净 {} 行，未触及重复块",
+        &[&changed, &net],
+    )
+}
+
 /// The human-facing conviction line. Cost stance, unified
 /// 2026-08-19: ENFORCEMENT pays for its verdict (budgeted —
 /// PERF-BUDGET.md Stop row; since 2.24.0 that includes one audit/1
 /// spawn), INFORMATION never pays a spawn (fourclass_report).
 fn reason(net_loc: i64, v: &verdict::Verdict) -> String {
-    format!(
+    let net = format!("{net_loc:+}");
+    crate::i18n::line(
         "ce audit: this session's edits leave {} duplicate block(s) touching \
-         changed files (net {net_loc:+} LOC): {} — deduplicate before stopping.",
-        v.dups,
-        v.shown.join("; ")
+         changed files (net {} LOC): {} — deduplicate before stopping.",
+        "ce audit：本会话的编辑留下 {} 个触及改动文件的重复块\
+         （净 {} 行）：{} — 停止前请先去重。",
+        &[&v.dups, &net, &v.shown.join("; ")],
     )
-}
-
-/// One Stop-audit / precommit observe entry. A struct rather than
-/// positional parameters: the old signature was already past the
-/// scan's fn-params limit of 5.
-struct AuditEvent<'a> {
-    event: &'a str,
-    mode: &'a str,
-    /// None for `ce precommit` — see the call site.
-    session: Option<&'a str>,
-    net_loc: i64,
-    changed: usize,
-    /// None = the dedup pipeline failed (A9f degraded), never
-    /// flattened into "zero duplicates".
-    dups: Option<usize>,
-    /// M4 informational four-class report (Stop only; absent on the
-    /// precommit path).
-    fourclass: Option<serde_json::Value>,
-    /// WRITER CONTRACT — OPTIONAL, additive: present only on a
-    /// stop_audit line whose audit measured NOTHING, where the
-    /// net_loc / changed_files / dup_blocks zeros are placeholders,
-    /// not findings. A reader counting session coverage counts the
-    /// line; one summing LOC drops it FIRST. Values: "loop_guard"
-    /// (a prior Stop already blocked), "no_git" (no repo to diff).
-    skipped: Option<&'a str>,
-}
-
-fn observe_log(root: &Path, ev: AuditEvent) {
-    let mut line = serde_json::json!({
-        "event": ev.event,
-        "mode": ev.mode,
-        "net_loc": ev.net_loc,
-        "changed_files": ev.changed,
-        "degraded": ev.dups.is_none(),
-        "dup_blocks": ev.dups.unwrap_or(0),
-    });
-    if let Some(why) = ev.skipped {
-        line["skipped"] = serde_json::json!(why);
-    }
-    if let Some(fc) = ev.fourclass {
-        line["fourclass"] = fc;
-    }
-    crate::hookio::observe_append(root, ev.session, line);
 }

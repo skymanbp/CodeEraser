@@ -44,7 +44,23 @@ fn parse_localized() -> Cli {
         // stderr + exit-2 usage error rendered as a red PowerShell
         // NativeCommandError wall. Overview help on stdout, exit 0;
         // real usage errors keep clap's own loud exit.
-        Err(e) if e.kind() == clap::error::ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand => {
+        //
+        // BOTH kinds mean "no subcommand was named". clap raises
+        // DisplayHelpOnMissingArgumentOrSubcommand only when argv is
+        // EMPTY (arg_required_else_help), so the moment the documented
+        // `--lang zh` selector rode along, the identical question came
+        // back as MissingSubcommand and fell to the exit-2 arm: the zh
+        // reader was the one user the v0.7.3 fix never reached, and
+        // CE_LANG=zh (argv still empty) exited 0 for the same question
+        // — two selectors the charter calls equivalent, disagreeing.
+        // A typo is InvalidSubcommand, a third kind, and stays loud.
+        Err(e)
+            if matches!(
+                e.kind(),
+                clap::error::ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand
+                    | clap::error::ErrorKind::MissingSubcommand
+            ) =>
+        {
             let _ = cmd.print_help();
             std::process::exit(0);
         }
