@@ -22,6 +22,7 @@ mod model;
 pub mod session;
 pub mod stacking;
 pub mod units;
+pub mod visibility;
 
 // the L1 judgment lives in model.rs since the headroom sprint (the
 // batch/delta children importing it THROUGH this hub made the

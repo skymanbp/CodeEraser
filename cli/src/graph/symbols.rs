@@ -14,24 +14,29 @@ pub struct SymbolRow {
     pub nth: i64,
     pub start_line: i64,
     pub end_line: i64,
+    /// The declaration's own visibility bits (fourclass::visibility);
+    /// bit 0 is the public/private axis the graph's verdict codes
+    /// have always meant.
+    pub vis: i64,
 }
 
 /// Every cached symbol, deterministically ordered by identity.
 pub fn symbol_rows(idx: &Index) -> Result<Vec<SymbolRow>> {
     Ok(super::load::rows(
         idx.raw(),
-        "SELECT f.path, s.key, s.nth, s.start_line, s.end_line
+        "SELECT f.path, s.key, s.nth, s.start_line, s.end_line, s.flags
          FROM symbols s JOIN files f ON f.id = s.file_id
          ORDER BY f.path, s.key, s.nth",
-        super::load::t5,
+        super::load::t6,
     )?
     .into_iter()
-    .map(|(path, key, nth, start_line, end_line)| SymbolRow {
+    .map(|(path, key, nth, start_line, end_line, vis)| SymbolRow {
         path,
         key,
         nth,
         start_line,
         end_line,
+        vis,
     })
     .collect())
 }

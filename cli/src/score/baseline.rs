@@ -95,6 +95,10 @@ pub fn continuous_rows(f: &FileMetrics) -> Vec<[u64; 3]> {
             key: format!("{}/{}", m.name, m.params),
             start_line: m.start_line,
             end_line: m.end_line,
+            // these Units exist only to run the with_nth throat over
+            // the scan's spans; visibility never enters a baseline
+            // entity key, so reading it here would be dead work
+            vis: 0,
         })
         .collect();
     for (u, nth) in units::with_nth(&fn_units) {

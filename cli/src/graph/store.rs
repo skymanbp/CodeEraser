@@ -49,7 +49,13 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// reference definition's in-scope target now travels as
 /// EDGE_REFDEF_UNUSED and the CORE excludes it from liveness — a
 /// new stored edge-kind code, so cached sweeps re-run.
-pub const GRAPH_REV: i64 = 8;
+/// 9 = symbols.flags stops being reserved (plan v2.14): the column
+/// now stores the declaration's own visibility bits instead of a
+/// constant 0. The MEANING of a stored value changed, which is
+/// exactly what this counter is for — without the bump every index
+/// built before today would keep answering "private" for every
+/// symbol, silently, and no gate would see it.
+pub const GRAPH_REV: i64 = 9;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -122,17 +128,26 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
     tx.execute("DELETE FROM symbols WHERE file_id = ?1", (file_id,))?;
     tx.execute("DELETE FROM sites WHERE file_id = ?1", (file_id,))?;
     let (found, segments) = crate::graph::sites::detect_with_units(text, lang);
-    // flags stay 0 until the wire build (2g) computes the bit set —
-    // storing a guess would be inventing entry-point facts
+    // flags carry the declaration's OWN visibility bits since the
+    // v2.14 producer landed (fourclass::visibility) — a local
+    // syntactic fact, never a guess. The column was reserved and zero
+    // until one existed, which is why nothing read it before.
     let mut sym = tx.prepare(
         "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags)
-         VALUES (?1, ?2, ?3, ?4, ?5, 0)",
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
     )?;
     // nth comes from the ONE assignment throat (units::with_nth) the
     // unitsig cache also calls; the UNIQUE(file_id, key, nth) index
     // makes any future divergence loud, not silent
     for (u, nth) in crate::fourclass::units::with_nth(&segments) {
-        sym.execute((file_id, &u.key, nth, u.start_line as i64, u.end_line as i64))?;
+        sym.execute((
+            file_id,
+            &u.key,
+            nth,
+            u.start_line as i64,
+            u.end_line as i64,
+            u.vis,
+        ))?;
     }
     let mut site = tx.prepare(
         "INSERT INTO sites (file_id, kind, line, spec, owner) VALUES (?1, ?2, ?3, ?4, ?5)",

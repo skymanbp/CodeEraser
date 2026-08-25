@@ -3471,7 +3471,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 85,
+    "line": 91,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3526,8 +3526,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:6": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 52,
-    "text": "pub const GRAPH_REV: i64 = 8;"
+    "line": 58,
+    "text": "pub const GRAPH_REV: i64 = 9;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:60": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -4656,7 +4656,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:11": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 162,
+    "line": 170,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:110": {
@@ -4706,12 +4706,12 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:12": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 39,
+    "line": 44,
     "text": ".map(|f| Unit {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:13": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 114,
+    "line": 121,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:14": {
@@ -4726,7 +4726,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:16": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 95,
+    "line": 102,
     "text": "fn typed_key("
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:17": {

@@ -3,6 +3,7 @@
 //! Markdown segments on ATX headings; lines outside any unit belong
 //! to the file's top level.
 
+use super::visibility;
 use crate::scan::ast;
 use crate::scan::functions;
 use crate::scan::lang::Lang;
@@ -10,12 +11,16 @@ use crate::scan::spec;
 
 /// One alignment unit, owned (no tree lifetime): `key` is the
 /// cross-version identity (name + arity for code, heading text for
-/// Markdown), spans are 1-based inclusive line ranges.
+/// Markdown), spans are 1-based inclusive line ranges, and `vis`
+/// carries the declaration's OWN visibility bits (visibility.rs) —
+/// read here because this is where the declaration node is still in
+/// hand, and persisted as `symbols.flags`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Unit {
     pub key: String,
     pub start_line: usize,
     pub end_line: usize,
+    pub vis: i64,
 }
 
 pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
@@ -40,6 +45,7 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
             key: format!("{}/{}", f.name, f.params),
             start_line: f.start_line,
             end_line: f.end_line,
+            vis: visibility::bits(f.node, src, lang),
         })
         .collect();
     units.extend(extra_units(tree.root_node(), src, lang));
@@ -60,10 +66,10 @@ fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
         if let Some(key) = named_key(node, src, kinds) {
-            out.push(unit_at(node, key));
+            out.push(unit_at(node, key, visibility::bits(node, src, lang)));
         }
         if let Some(key) = typed_key(node, src, typed) {
-            out.push(unit_at(node, key));
+            out.push(unit_at(node, key, visibility::bits(node, src, lang)));
         }
         for i in 0..node.child_count() {
             if let Some(child) = node.child(i as u32) {
@@ -74,11 +80,12 @@ fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
     out
 }
 
-fn unit_at(node: tree_sitter::Node, key: String) -> Unit {
+fn unit_at(node: tree_sitter::Node, key: String, vis: i64) -> Unit {
     Unit {
         key,
         start_line: node.start_position().row + 1,
         end_line: node.end_position().row + 1,
+        vis,
     }
 }
 
@@ -125,6 +132,7 @@ fn markdown_segments(text: &str) -> Vec<Unit> {
                 key: t.trim_matches('#').trim().to_string(),
                 start_line: i + 1,
                 end_line: i + 1,
+                vis: visibility::MARKDOWN_VIS,
             });
         }
     }
