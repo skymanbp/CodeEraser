@@ -37,6 +37,9 @@ use crate::dedup::index::Index;
 use anyhow::Result;
 use std::collections::{BTreeMap, BTreeSet};
 
+/// The site kind a Rust `mod x;` is recorded under (store::KINDS).
+const MOD_DECL: &str = "mod_decl";
+
 /// One file→declaration reference. `key` is the declaration's own
 /// unit key (its identity in the symbols table), `vis` its
 /// visibility bits — the public/private axis the graph's verdict
@@ -93,10 +96,14 @@ pub fn symbol_edges(idx: &Index) -> Result<Vec<SymEdge>> {
     let txn = idx.raw().unchecked_transaction()?;
     let conn = &*txn;
     let decls = declarations(conn)?;
+    let modules = module_names(conn)?;
     let bindings = candidates(conn)?;
     txn.finish()?; // read-only: closing the snapshot, nothing to write
     let mut out = BTreeSet::new();
     for (src, dst_path, target) in bindings {
+        if modules.get(&dst_path).is_some_and(|m| m.contains(&target)) {
+            continue; // a module, named by the file that holds it
+        }
         for d in decls.get(&dst_path).into_iter().flatten() {
             if declared_name(&d.key) == Some(target.as_str()) {
                 out.insert(SymEdge {
@@ -111,21 +118,64 @@ pub fn symbol_edges(idx: &Index) -> Result<Vec<SymEdge>> {
     Ok(out.into_iter().collect())
 }
 
+/// Read a `(path, value)` projection and group it by file. Both
+/// per-file tables below are exactly this fold, and the clone gate
+/// said so on the first draft — the difference between them is the
+/// projection and the collection, not the procedure.
+fn grouped<T, C: Default + Extend<T>>(
+    conn: &rusqlite::Connection,
+    sql: &str,
+    row: impl FnMut(&rusqlite::Row<'_>) -> rusqlite::Result<(String, T)>,
+) -> Result<BTreeMap<String, C>> {
+    let mut out: BTreeMap<String, C> = BTreeMap::new();
+    for (path, value) in super::load::rows(conn, sql, row)? {
+        out.entry(path).or_default().extend([value]);
+    }
+    Ok(out)
+}
+
 /// Declarations by declaring file. Overloads are kept apart: a TS
 /// signature pair lands `f/1` and `f/2`, and an import of `f`
 /// references both — the overload set IS what the name denotes.
 fn declarations(conn: &rusqlite::Connection) -> Result<BTreeMap<String, Vec<Decl>>> {
-    let mut by_file: BTreeMap<String, Vec<Decl>> = BTreeMap::new();
-    let read: Vec<(String, String, i64)> = super::load::rows(
+    grouped(
         conn,
         "SELECT f.path, s.key, s.flags FROM symbols s JOIN files f ON f.id = s.file_id
          ORDER BY f.path, s.key, s.nth",
-        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
-    )?;
-    for (path, key, vis) in read {
-        by_file.entry(path).or_default().push(Decl { key, vis });
-    }
-    Ok(by_file)
+        |r| {
+            Ok((
+                r.get(0)?,
+                Decl {
+                    key: r.get(1)?,
+                    vis: r.get(2)?,
+                },
+            ))
+        },
+    )
+}
+
+/// The names a file itself declares to be MODULES, by file.
+///
+/// A Rust `mod x;` is an import site in its own right — the graph
+/// already resolved it to the file holding x's code — AND units.rs
+/// records it as a named unit, because kinds::extra lists `mod_item`
+/// for the relocation register. So a bound name can land on it: the
+/// K10 site audit found 71 of 754 edges pointing at a `mod` statement
+/// instead of at code, every one a `use crate::a::{b, ..}` whose leaf
+/// `b` is a submodule. That is the module case the necessary
+/// condition exists to refuse, and refusing it needs no new storage —
+/// the file's own mod_decl sites already say which names are modules.
+fn module_names(conn: &rusqlite::Connection) -> Result<BTreeMap<String, BTreeSet<String>>> {
+    // the code comes from store::KINDS, the single owner of these
+    // frozen positions; it is an internal integer from a fixed table,
+    // never anything a repo under analysis can influence, so reading
+    // it into the SQL cannot carry a value the table did not mint
+    let sql = format!(
+        "SELECT f.path, s.spec FROM sites s JOIN files f ON f.id = s.file_id
+         WHERE s.kind = {}",
+        super::store::kind_code(MOD_DECL)?
+    );
+    grouped(conn, &sql, |r| Ok((r.get(0)?, r.get(1)?)))
 }
 
 /// Candidate bindings: the citing file, the file the ladder

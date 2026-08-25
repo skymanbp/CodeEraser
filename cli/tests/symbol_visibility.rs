@@ -170,12 +170,16 @@ fn indexed_sites_carry_their_import_bindings() {
     }
 }
 
-/// The corpus the join is measured on. Two files carry the refusals:
+/// The corpus the join is measured on. Three refusals ride in it:
 /// `other.rs` declares the same name at a DIFFERENT arity — so a
 /// lookup that ignored which file the ladder resolved to shows up as
-/// an extra row instead of deduplicating into silence — and
-/// `refuser.rs` both binds the MODULE (which declares no such name)
-/// and speaks `open_door` through a path, binding nothing.
+/// an extra row instead of deduplicating into silence; `refuser.rs`
+/// both binds a MODULE the target does not declare and speaks
+/// `open_door` through a path, binding nothing; and `api.rs` declares
+/// `pub mod inner;` beside a real item, so a use tree naming both
+/// must mint the item and refuse the submodule. That last one is the
+/// K10 site audit's finding — 71 of 754 edges on this repo pointed at
+/// a `mod` statement instead of at code.
 const EDGE_FIXTURE: &str = "\
 --- Cargo.toml
 [package]
@@ -204,16 +208,28 @@ use crate::helpers;
 pub fn ring() {
     crate::helpers::open_door();
 }
+--- src/api.rs
+pub mod inner;
+
+pub struct Marker;
+--- src/api/inner.rs
+pub fn deep() {
+    let _ = 4;
+}
 --- src/main.rs
+mod api;
 mod helpers;
 mod other;
 mod refuser;
+use crate::api::{Marker, inner};
 use crate::helpers::{Gate, open_door, shut_door as bolt};
 
 fn main() {
     open_door();
     bolt();
     let _ = Gate { n: 0 };
+    let _ = Marker;
+    inner::deep();
 }
 ";
 
@@ -235,6 +251,8 @@ fn a_symbol_edge_needs_a_binding_that_hits_a_declaration() {
     // the struct rides its bare key (units.rs keys extra kinds
     // without an arity)
     let want: Vec<(String, String, String)> = [
+        // the item beside the submodule mints; `inner` does not
+        ("src/main.rs", "src/api.rs", "Marker"),
         ("src/main.rs", "src/helpers.rs", "Gate"),
         ("src/main.rs", "src/helpers.rs", "open_door/0"),
         ("src/main.rs", "src/helpers.rs", "shut_door/0"),

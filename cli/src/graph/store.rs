@@ -112,7 +112,11 @@ const KINDS: &[&str] = &[
     "url",
 ];
 
-fn kind_code(label: &str) -> Result<i64> {
+/// The frozen code for one site kind. `pub(crate)` since the symbol
+/// join asks it for `mod_decl`: KINDS is the single owner of these
+/// positions, so a consumer looks the code up here rather than
+/// spelling the integer where the table cannot see it drift.
+pub(crate) fn kind_code(label: &str) -> Result<i64> {
     KINDS
         .iter()
         .position(|k| *k == label)
