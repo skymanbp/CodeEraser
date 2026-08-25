@@ -7,6 +7,23 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 4.1.0 = the export-surface minor (plan v2.14, K round step 3c,
+-- 2026-08-24): graph.request accepts the additive `symbols` table —
+-- deduped [node, visibility] pairs, ascending, saying which files
+-- declare something and how visibly. A node it names as exporting
+-- carries flag bit 0, the public/private axis Dead.deadTable has
+-- always split on and that no producer could set ("bit 0 stays
+-- unset at file granularity, public-ness is a symbol fact",
+-- cli/src/graph/deadcode/flags.rs:9), so verdict codes 2 and 4 —
+-- unref_public, unreach_public — become reachable for the first
+-- time. The bit sits OUTSIDE entryMask on purpose: an export
+-- surface is a verdict axis, never an entry claim (RG10), so it can
+-- change which code a dead node reports and can never change which
+-- nodes are dead. Absent or empty table = the same bytes as before.
+-- The `symEdges` table planned beside it does NOT ride: its
+-- precision was audited (683/683) but a dead verdict spends recall,
+-- and import bindings hold ~23% of it — full-path calls and method
+-- calls are not import sites (plan v2.14 K7).
 -- 4.0.0 = erase class 0 retires (plan v2.14, K round step 2,
 -- 2026-08-24). Superseded by class 3 at 2.32.0 and unemitted by
 -- the client ever since, it leaves the judged set; its frozen
@@ -261,7 +278,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- verdict/1 in ONE additive minor (M5-3a); 2.1.0 = graph/1
 -- (M5-2a); 2.0.0 = the M5-1c-iii anchor shape.
 proto :: String
-proto = "4.0.0"
+proto = "4.1.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

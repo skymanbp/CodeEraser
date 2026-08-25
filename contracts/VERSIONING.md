@@ -149,6 +149,21 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **4.1.0**（导出面 minor，K 轮步 3c，2026-08-25，用户三度交本代理裁断 v2.14 K7）：`graph.request` 加性一键——
+> `symbols=[[node,visibility]]`，node < 节点数、visibility ≥ 0、**严格升序**（该表是去重的 (节点, 可见性) 集合，
+> 重复行=生产者丢了集合语义，按名拒 `symbol i: not strictly ascending`）。core 按 `Cost.exportVisBit`
+> 读出导出节点、按 `Cost.publicFlagBit` 或上 flags 位 0——那正是 `Dead.deadTable` 一直在分的公私判决轴，
+> 而它**从来没有过生产者**（`cli/src/graph/deadcode/flags.rs:9`：文件粒度永不置位，公开性是符号事实）。
+> 判决码 2/4（`unref_public`/`unreach_public`）自此首次可达。该位**故意在 entryMask 之外**：导出面是判决轴、
+> 不是入口主张（RG10），故它只改死节点报哪个码，永不改哪些节点死。缺席**与空表同路**（`symRows` 只喂 [] ），
+> 字节与 4.0.0 客户端所得相同。表另计 `symCap`。**同批未做**：原计划并列的 `symEdges` 不上线——K10 审计量的是
+> 精度（683/683），而「无引用」吃的是召回，实测自仓 import 绑定只覆盖 1064 条 Rust 导出声明中的 170 条
+> （补模块跳转到 248 条，~23%），漏掉的是全路径调用与方法调用（皆非 import 点位）。详见 DEVELOPMENT_PLAN v2.14 K7。
+> 反事实：K5 = 无符号表/空符号表与 4.0.0 逐字节相同（99 对机器重生成后逐行对拍：195 改动行中 193 行只动 proto 字段、
+> 2 行是不匹配文案内嵌的 server 版本串；核电池另有一腿直接比 `respond` 两次的字节）、K6 = 请求体无任何字符串叶子
+> （`cli/tests/graph_export_surface.rs`，结构性断言而非按本夹具的路径列举）、K9 = 导出节点判 2 而其邻居仍判 1，
+> 且死集合不动（`fixtures/graph` pair 16 + 核电池 `exportRides`）；两个旋钮各有反事实腿（读错可见性位=无面、
+> 置 entryMask 内的位=该节点变入口而离开判决集）。请求行随 minor 机器重写为 4.1.0；核电池请求侧 proto 同步 11 处。
 > **4.0.0**（erase class 0 退役 **major**，K 轮步 2，2026-08-24，用户拍板 v2.14）：`erase.request` 的 class 0
 > （dead_file 本地计数路）自 2.32.0 被 class 3 取代、Rust 同 minor 起不再铸行，宽限窗至此关闭——**离开判决集**，
 > 其冻结位保留并**按名拒绝**（`row i: retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)`），而非折进
@@ -476,5 +491,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 4.0.0 | §1 所列两处常量 |
+| 协议 | 4.1.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

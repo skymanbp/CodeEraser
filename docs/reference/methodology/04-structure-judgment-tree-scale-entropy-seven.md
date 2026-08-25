@@ -90,7 +90,7 @@ other hit is an unrelated test fixture).
 
 Mechanically the floor is a shape guarantee: the A-layer keys `divergence` and `deviations`
 exist **only** when the request declares a layout; an undeclared request answers the S2 shape
-byte for byte ([Structure.hs:221-225](../../../core/app/CE/Structure.hs#L221),
+byte for byte ([Structure.hs:218-222](../../../core/app/CE/Structure.hs#L218),
 [Declared.hs:16-23](../../../core/app/CE/Structure/Declared.hs#L16)), and the battery asserts both keys
 absent on the undeclared fixture ([StructureProps.hs:143-151](../../../core/test/StructureProps.hs#L143)).
 
@@ -102,8 +102,8 @@ root and, under deepest-owner semantics, the catch-all bin
 sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
 ([Structure.hs:122](../../../core/app/CE/Structure.hs#L122),
-[Structure.hs:161-164](../../../core/app/CE/Structure.hs#L161),
-[Structure.hs:197-210](../../../core/app/CE/Structure.hs#L197)).
+[Structure.hs:158-161](../../../core/app/CE/Structure.hs#L158),
+[Structure.hs:194-207](../../../core/app/CE/Structure.hs#L194)).
 
 Ownership resolves by depth, never by guess. Ids are dense and parents precede children, so one
 left fold suffices: a directory owns itself when declared, otherwise it inherits its parent's
@@ -177,14 +177,14 @@ Sources: predicates [Axes.hs:134-145](../../../core/app/CE/Structure/Axes.hs#L13
 [Cost.hs:57](../../../core/app/CE/Structure/Cost.hs#L57), [Cost.hs:64](../../../core/app/CE/Structure/Cost.hs#L64),
 [Cost.hs:69](../../../core/app/CE/Structure/Cost.hs#L69), [Cost.hs:107-108](../../../core/app/CE/Structure/Cost.hs#L107),
 [Cost.hs:95-96](../../../core/app/CE/Structure/Cost.hs#L95), [Cost.hs:101-102](../../../core/app/CE/Structure/Cost.hs#L101);
-knob codes [Knobs.hs:31-52](../../../core/app/CE/Structure/Knobs.hs#L31).
+knob codes [Knobs.hs:30-51](../../../core/app/CE/Structure/Knobs.hs#L30).
 
 Notes on the non-obvious ones:
 
 - **S1** builds its per-directory count vector by grouping the pattern rows on `dirId`
   ([Axes.hs:164-165](../../../core/app/CE/Structure/Axes.hs#L164)); only pattern *codes* are judged —
   names never enter. Codes are bounded `0..6` by the boundary contract
-  ([Structure.hs:148-152](../../../core/app/CE/Structure.hs#L148)). `600‰` "tolerates one odd name in a
+  ([Structure.hs:145-149](../../../core/app/CE/Structure.hs#L145)). `600‰` "tolerates one odd name in a
   convention-following set and flags a genuine style mix"
   ([Cost.hs:48-51](../../../core/app/CE/Structure/Cost.hs#L48)).
 - **S2** uses *one basis on both sides* — per-file touch counts, never edges-vs-touches. Each
@@ -197,7 +197,7 @@ Notes on the non-obvious ones:
 - **S4** convention bits are a mask: `1 = README`, `2 = config`; `even bits` means the README bit
   is clear, and the root additionally owes a recognized config
   ([Axes.hs:201-211](../../../core/app/CE/Structure/Axes.hs#L201)). Bits are constrained to `1..3` at the
-  boundary ([Structure.hs:153-156](../../../core/app/CE/Structure.hs#L153)).
+  boundary ([Structure.hs:150-153](../../../core/app/CE/Structure.hs#L150)).
 - **S6** never re-derives duplication or dead code: it convolves the per-file families' verdicts
   to the tree scale ([Axes.hs:138-139](../../../core/app/CE/Structure/Axes.hs#L138)).
 
@@ -211,7 +211,7 @@ Since proto 2.26.0 (M9 batch 9 P9, user ruling) the structure family runs the **
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
 through `chargeAt`, imported from [Score.hs:152](../../../core/app/CE/Verdict/Score.hs#L152)
-(one law, two families; [Structure.hs:268-279](../../../core/app/CE/Structure.hs#L268)):
+(one law, two families; [Structure.hs:265-276](../../../core/app/CE/Structure.hs#L265)):
 
 ```
 charge_i = floor(scale * v_i / (v_i + N))
@@ -254,10 +254,10 @@ give seven axes, charges `800+200+333`, `1000 - 13330 div 70 = 810`
 **Knob echo.** All 19 knobs (codes `0..18`) live in one authority table of
 `(code, getter, setter)` triples, so the effective fold and the reply's echo read the same rows
 and a knob cannot exist in one direction only
-([Knobs.hs:29-52](../../../core/app/CE/Structure/Knobs.hs#L29)); rows outside `0..18` or with value `< 1`
-are refused by name ([Knobs.hs:20-25](../../../core/app/CE/Structure/Knobs.hs#L20)). `ce.toml` is the
+([Knobs.hs:28-51](../../../core/app/CE/Structure/Knobs.hs#L28)); rows outside `0..18` or with value `< 1`
+are refused by name ([Knobs.hs:19-24](../../../core/app/CE/Structure/Knobs.hs#L19)). `ce.toml` is the
 source, `Cost.hs` the defaults ([Cost.hs:1-6](../../../core/app/CE/Structure/Cost.hs#L1)), and the reply
-echoes the full effective set ([Structure.hs:240](../../../core/app/CE/Structure.hs#L240)). Codes `12..18`
+echoes the full effective set ([Structure.hs:237](../../../core/app/CE/Structure.hs#L237)). Codes `12..18`
 (`seamSoft=300`, `seamHard=750`, `seamPMax=10`, `roiRefMilli=250`, `roiPhiMilli=500`,
 `roiCloneMilli=500`, `roiChurnMilli=150` —
 [Cost.hs:110-147](../../../core/app/CE/Structure/Cost.hs#L110)) belong to the split-ROI advisory, not to
@@ -270,19 +270,19 @@ and returns the *first* offender by name ([Structure.hs:100-115](../../../core/a
 
 - node rows are dense and tree-shaped: `id == index`, no negative fields, root self-loops at
   depth 0, `parent < id` for every non-root row
-  ([Structure.hs:166-179](../../../core/app/CE/Structure.hs#L166));
+  ([Structure.hs:163-176](../../../core/app/CE/Structure.hs#L163));
 - `depth == parent.depth + 1` is *checked*, not assumed. It was previously only claimed in a
   docstring, and a forged row `[1,0,999,0,1]` rode straight into the geometry axis and moved the
-  score (review 2026-08-20 #6) ([Structure.hs:181-195](../../../core/app/CE/Structure.hs#L181),
+  score (review 2026-08-20 #6) ([Structure.hs:178-192](../../../core/app/CE/Structure.hs#L178),
   probe at [StructureProps.hs:108-112](../../../core/test/StructureProps.hs#L108));
 - every dir-keyed table shares one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
   ([Structure.hs:118-125](../../../core/app/CE/Structure.hs#L118),
-  [Structure.hs:197-210](../../../core/app/CE/Structure.hs#L197)). Extra rules: pattern code `<= 6` and
+  [Structure.hs:194-207](../../../core/app/CE/Structure.hs#L194)). Extra rules: pattern code `<= 6` and
   count `>= 1`; convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`
   (the pre-judged staleDocs rules retired with their table at 2.29.0 — the raw
   `staleDocRows`/`staleEdgeRows` validators own staleness now)
-  ([Structure.hs:140-164](../../../core/app/CE/Structure.hs#L140)).
+  ([Structure.hs:137-161](../../../core/app/CE/Structure.hs#L137)).
 
 **Over-cap.** `structNodeCap = 524288` ([Cost.hs:149-152](../../../core/app/CE/Structure/Cost.hs#L149)).
 Node rows *and* the seam tables count against the same cap — a declared cap that misses a
@@ -290,9 +290,9 @@ request dimension walks that dimension uncapped
 ([Structure.hs:102-107](../../../core/app/CE/Structure.hs#L102)). Over-cap answers a **complete degraded
 reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
 are both true and `reason` is `structure_too_large`
-([Structure.hs:221-241](../../../core/app/CE/Structure.hs#L221),
+([Structure.hs:218-238](../../../core/app/CE/Structure.hs#L218),
 [StructureProps.hs:231-241](../../../core/test/StructureProps.hs#L231)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. In the non-degraded case `fail` equals `degraded`,
 i.e. always false: S2 is report-only, and the CLI gates nothing on this score
-([Structure.hs:219-221](../../../core/app/CE/Structure.hs#L219)).
+([Structure.hs:216-218](../../../core/app/CE/Structure.hs#L216)).

@@ -17,7 +17,7 @@
 module CE.Scan (respond) where
 
 import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
-import CE.Wire (RowsReq (..), Rulepack (..), ascendingOn, rowsFamily)
+import CE.Wire (RowsReq (..), Rulepack (..), rowsFamily, tableOffence)
 import Data.Aeson
 import qualified Data.Map.Strict as M
 import qualified Data.ByteString.Char8 as B8
@@ -90,8 +90,7 @@ violation :: RowsReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
-    , asum (zipWith gradeShape [0 :: Int ..] (gradesOf req))
-    , ascendingOn "grade" (take 1) (gradesOf req)
+    , tableOffence "grade" (take 1) gradeShape (gradesOf req)
     , namingBattery req
     , classBattery req
     ]
@@ -129,8 +128,7 @@ namingBattery req = case namingOf req of
 classBattery :: RowsReq -> Maybe String
 classBattery req =
   (rowClassesOf rp >>= aligned)
-    <|> asum (zipWith overrideShape [0 :: Int ..] (overridesOf rp))
-    <|> ascendingOn "gradeOverride" (take 2) (overridesOf rp)
+    <|> tableOffence "gradeOverride" (take 2) overrideShape (overridesOf rp)
  where
   rp = rulepackOf req
   n = length (rowsOf req)

@@ -35,7 +35,7 @@ import CE.Docdup.Cost
   , verbatimFloor
   )
 import CE.Docdup.Jaccard (interUnion)
-import CE.Wire (Family (..), ascendingOn, respondWith)
+import CE.Wire (Family (..), respondWith, tableOffence)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -76,11 +76,10 @@ violation :: DocdupReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith setShape [0 :: Int ..] ss)
-    , asum (zipWith (pairRow (length ss)) [0 :: Int ..] ps)
     , -- ascend on the (i,j) IDENTITY PREFIX, not the whole row
       -- (review C10: [[0,1,0],[0,1,60]] was lexicographically
       -- ascending and judged the same pair twice with two bits)
-      ascendingOn "pair" (take 2) ps
+      tableOffence "pair" (take 2) (pairRow (length ss)) ps
     ]
  where
   ss = reqSets req

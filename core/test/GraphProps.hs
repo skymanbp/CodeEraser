@@ -2,7 +2,7 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The graph judgment's knob ablation and fixed-seed property
+-- | The graph JUDGMENT's knob ablation and fixed-seed property
 -- battery (plan §7.3 as amended v1.4). Dead-knob: perturbing each
 -- CE.Graph.Cost knob — minRung, entryMask, sccFloor — must move a
 -- verdict/report count on the fixture, the fuck-u-code dead-field
@@ -11,41 +11,35 @@
 -- rejection, over 200 graphs from a fixed-seed LCG — a seeded
 -- generator samples what enumeration cannot afford (n > 4), and no
 -- RNG enters a byte-determinism contract.
+-- The request contract it answers under lives in GraphWireProps.
 module GraphProps (battery) where
 
 import CE.Graph (respond)
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, confidence, entryMask, minRung, refdefKind, roleBits, sccFloor)
+import CE.Graph.Cost (assetKind, entryMask, exportVisBit, minRung, publicFlagBit, refdefKind, roleBits, sccFloor)
 import CE.Graph.Cycles (cycles)
-import CE.Graph.Dead (deriveFlags, entries, verdicts)
-import Data.Aeson (Value (..), decodeStrict, encode, object, toJSON, (.=))
-import qualified Data.Aeson.KeyMap as KM
-import qualified Data.ByteString.Char8 as B8
+import CE.Graph.Dead (deriveFlags, entries, exportedNodes, verdicts, withExport)
+import Data.Aeson (Value (..), encode, object, (.=))
 import Data.Bits (xor)
 import qualified Data.ByteString.Lazy as BL
-import Data.List (isInfixOf, sort)
 import qualified Data.IntSet as IS
+import Data.List (isInfixOf, sort)
 import ReferenceGraph (reachB)
+import WireHarness (runChecks)
 
 battery :: IO Bool
-battery = do
-  a <- check "dead knobs all live (minRung / entryMask / sccFloor)" deadKnobs
-  b <- check "dead set anti-monotone in entryMask (200 seeded graphs)" (allGraphs maskMono)
-  c <- check "dead set anti-monotone in minRung (200 seeded graphs)" (allGraphs rungMono)
-  d <- check "SCC lists partition the vertex set (200 seeded graphs)" (allGraphs sccPartition)
-  e <- check "shuffled edge table is refused (200 seeded graphs)" (allGraphs shuffledRefused)
-  f <- check "no inert-kind edge keeps its target alive (asset, unused ref-def)" inertNeverAlive
-  g <- check "roles derive the entry bits through the table (2.28.0)" rolesDerive
-  h <- check "the role table is a live knob (a dropped row empties the seeds)" roleKnob
-  i <- check "mixed node-row arity refused" mixedRefused
-  j <- check "the confidence column rides exactly when the ledger does" confRides
-  k <- check "unres refusals name the offender" unresRefused
-  pure (a && b && c && d && e && f && g && h && i && j && k)
-
-check :: String -> Bool -> IO Bool
-check name ok = do
-  putStrLn ((if ok then "ok   " else "FAIL ") <> name)
-  pure ok
+battery =
+  runChecks
+    [ ("dead knobs all live (minRung / entryMask / sccFloor)", deadKnobs)
+    , ("dead set anti-monotone in entryMask (200 seeded graphs)", allGraphs maskMono)
+    , ("dead set anti-monotone in minRung (200 seeded graphs)", allGraphs rungMono)
+    , ("SCC lists partition the vertex set (200 seeded graphs)", allGraphs sccPartition)
+    , ("shuffled edge table is refused (200 seeded graphs)", allGraphs shuffledRefused)
+    , ("no inert-kind edge keeps its target alive (asset, unused ref-def)", inertNeverAlive)
+    , ("roles derive the entry bits through the table (2.28.0)", rolesDerive)
+    , ("the role table is a live knob (a dropped row empties the seeds)", roleKnob)
+    , ("both export knobs are live (visibility bit, flag bit)", exportKnobs)
+    ]
 
 -- | Fixture: entry 0 -> 1 over a rung-5 edge, an unreachable
 -- 2-cycle (2,3), two isolated nodes (4,5). Every knob perturbation
@@ -103,66 +97,24 @@ roleKnob =
     && null (entries entryMask [deriveFlags [(0, 0)] 1])
 
 -- | One 3-column row beside a 4-column row refuses by name — a
--- mixed table has no single judgment basis (2.28.0).
-mixedRefused :: Bool
-mixedRefused = case respond "4.0.0" req of
-  Left (_, code, msg) -> code == "contract" && msg == "node rows: mixed arity"
-  Right _ -> False
- where
-  req =
-    BL.toStrict . encode $
-      object
-        [ "id" .= (1 :: Int)
-        , "nodes" .= ([[0, 0, 0], [0, 0, 0, 0]] :: [[Integer]])
-        , "edges" .= ([] :: [Value])
-        , "pos" .= ([] :: [Value])
-        ]
-
--- | Three entry-less file nodes, all dead (unref_private): lang 0
--- fully resolved -> vouched 2; lang 4 with unresolved sites ->
--- unvouched 0; lang 6 absent from the ledger -> vacuous 1. The SAME
--- request without the ledger answers two-column rows — the legacy
--- road is byte-shaped, not merely value-equal. The kernel rule is
--- pinned beside the wire: (0,0) is vacuous, not vouched.
-confRides :: Bool
-confRides =
-  deadOf (graphReq (Just [[0, 0, 3], [4, 2, 9]]))
-    == Just (toJSON ([[0, 1, 2], [1, 1, 0], [2, 1, 1]] :: [[Integer]]))
-    && deadOf (graphReq Nothing) == Just (toJSON ([[0, 1], [1, 1], [2, 1]] :: [[Integer]]))
-    && map (confidence [[0, 0, 3], [4, 2, 9]]) [0, 4, 6] == [2, 0, 1]
-    && confidence [[5, 0, 0]] 5 == 1
- where
-  deadOf req = do
-    Right bytes <- pure (respond "4.0.0" req)
-    Object o <- decodeStrict bytes
-    KM.lookup "dead" o
-
-unresRefused :: Bool
-unresRefused =
+-- | Both export knobs move the answer. Reading a visibility bit the
+-- rows do not carry names no surface; setting a FLAG bit inside
+-- entryMask does something else entirely — node 0 becomes an entry
+-- and leaves the judged set — which is exactly why bit 0, outside
+-- the mask, is the only bit an export surface may set (RG10).
+exportKnobs :: Bool
+exportKnobs =
   and
-    [ refusedMsg (Just [[7, 0, 0]]) "unres 0: lang outside the judged set"
-    , refusedMsg (Just [[0, 4, 3]]) "unres 0: unresolved above total"
-    , refusedMsg (Just [[0, 1]]) "unres 0: malformed row (need [lang,unresolved,total])"
-    , refusedMsg (Just [[4, 0, 1], [0, 0, 1]]) "unres 1: not strictly ascending"
+    [ codesWith exportVisBit publicFlagBit == [(0, 2), (1, 1)]
+    , codesWith 1 publicFlagBit == [(0, 1), (1, 1)]
+    , codesWith exportVisBit 2 == [(1, 1)]
     ]
  where
-  refusedMsg unres want = case respond "4.0.0" (graphReq unres) of
-    Left (_, code, msg) -> code == "contract" && msg == want
-    Right _ -> False
+  b = build minRung [assetKind, refdefKind] 2 []
+  codesWith visBit flagBit = verdicts b (reachFrom b (entries entryMask fs)) fs
+   where
+    fs = [withExport flagBit (exportedNodes visBit [[0, 1]]) i 0 | i <- [0, 1]]
 
--- | The confRides fixture request: three entry-less file nodes of
--- langs 0/4/6, no edges; the ledger rides when given.
-graphReq :: Maybe [[Integer]] -> B8.ByteString
-graphReq unres =
-  BL.toStrict . encode . object $
-    [ "id" .= (1 :: Int)
-    , "nodes" .= ([[0, 0, 0], [4, 0, 0], [6, 0, 0]] :: [[Integer]])
-    , "edges" .= ([] :: [Value])
-    , "pos" .= ([] :: [Value])
-    ]
-      <> maybe [] (\u -> ["unres" .= u]) unres
-
--- | 200 seeded graphs: (n, arcs with rungs, flags per node).
 allGraphs :: ((Int, [(Int, Int, Integer)], [Integer]) -> Bool) -> Bool
 allGraphs prop = all (prop . graphAt) [1 .. 200 :: Int]
 
@@ -223,7 +175,7 @@ shuffledRefused (n, arcs, _) =
     _ -> True
  where
   sortedRows = rowsOf arcs
-  refused rows = case respond "4.0.0" (req rows) of
+  refused rows = case respond "4.1.0" (req rows) of
     Left (_, code, msg) -> code == "contract" && "not strictly ascending" `isInfixOf` msg
     Right _ -> False
   req rows =

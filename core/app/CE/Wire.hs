@@ -11,7 +11,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending, tableOffence) where
 
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
@@ -148,6 +148,18 @@ notAscending what i (prev, cur)
 -- grades (take 1), the whole row for clone pairs and graph edges
 -- (id). One zipWith, five call sites: the review-repair batch's own
 -- ratchet bite was the projection lambda cloning across families.
+-- | One table's whole contract: every row well shaped in request
+-- order, then the table strictly ascending. Nine modules held this
+-- exact two-step fold — the clone gate named it the moment graph/1
+-- added a fifth table — and it earns its place here the same way
+-- ascendingOn did one line below (the tenth ratchet bite promoted
+-- that one). Order is preserved deliberately: shape errors must
+-- surface before ordering errors, so the ascending pass only ever
+-- compares rows it can compare.
+tableOffence :: (Ord b) => String -> (a -> b) -> (Int -> a -> Maybe String) -> [a] -> Maybe String
+tableOffence what proj row rows =
+  asum [asum (zipWith row [0 :: Int ..] rows), ascendingOn what proj rows]
+
 ascendingOn :: (Ord b) => String -> (a -> b) -> [a] -> Maybe String
 ascendingOn what proj rows =
   asum

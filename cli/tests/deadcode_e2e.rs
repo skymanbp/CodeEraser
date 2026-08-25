@@ -47,9 +47,19 @@ fn verdicts_come_back_with_names() {
     // root.ts (entry glob), used.ts (imported), README.md (doc
     // entry), docs/note.md (doc-linked) live; the orphan module and
     // the unlinked doc die — "no entry rule = every doc trivially
-    // dies" is the design stance, pinned here
+    // dies" is the design stance, pinned here.
+    //
+    // The CODES split since 4.1.0, and this pair is why the export
+    // surface earns its place: `# Lost` is a heading, and a heading
+    // is an anchor any document may link to, so the file offers a
+    // public surface nothing consumes — unref_public, the verdict
+    // that was structurally unreachable until the symbols table gave
+    // bit 0 a producer. `export {};` names nothing, so orphan.ts has
+    // no surface and stays private. Note what did NOT move: the same
+    // two files are dead, and the gate's exit is unchanged — an
+    // export surface is a verdict axis, never an entry claim (RG10).
     let want = vec![
-        ("docs/lost.md".to_string(), "unref_private"),
+        ("docs/lost.md".to_string(), "unref_public"),
         ("orphan.ts".to_string(), "unref_private"),
     ];
     assert_eq!(dead_set(&first), want, "the exact dead set");

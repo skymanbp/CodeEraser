@@ -17,7 +17,7 @@
 module CE.Trend (respond) where
 
 import CE.Trend.Cost (cliffOf, declineRunOf, judgedView, knobTable, slopeMicroPerDay, trendRowCap, verdictOf)
-import CE.Wire (RowsReq (..), ascendingOn, pick, rowsFamily)
+import CE.Wire (RowsReq (..), pick, rowsFamily, tableOffence)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -45,8 +45,7 @@ violation :: RowsReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
-    , asum (zipWith knobShape [0 :: Int ..] (knobsOf req))
-    , ascendingOn "knob" (take 1) (knobsOf req)
+    , tableOffence "knob" (take 1) knobShape (knobsOf req)
     ]
 
 rowShape :: Int -> [Integer] -> Maybe String

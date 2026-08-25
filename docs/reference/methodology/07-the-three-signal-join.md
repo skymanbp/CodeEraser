@@ -54,7 +54,7 @@ deadFlank   = deadV a b || deadV b a
 publicGuard = (deadV x y) && testBit (flags x) 0, for either orientation
 ```
 
-([Join.hs:167-174](../../../core/app/CE/Verdict/Join.hs#L167)), with `entryMask = 126` reused from the graph family ([Graph/Cost.hs:47-48](../../../core/app/CE/Graph/Cost.hs#L47)) — bits 1..6 (main, test, entry-glob, dyn-referenced, doc-entry, `ce:allow(deadcode)`), bit 0 (exported) deliberately excluded ([Graph/Cost.hs:36-46](../../../core/app/CE/Graph/Cost.hs#L36)).
+([Join.hs:167-174](../../../core/app/CE/Verdict/Join.hs#L167)), with `entryMask = 126` reused from the graph family ([Graph/Cost.hs:56-57](../../../core/app/CE/Graph/Cost.hs#L56)) — bits 1..6 (main, test, entry-glob, dyn-referenced, doc-entry, `ce:allow(deadcode)`), bit 0 (exported) deliberately excluded ([Graph/Cost.hs:36-46](../../../core/app/CE/Graph/Cost.hs#L36)).
 
 Note that "partner still alive" (`indeg y >= 1`) is inside the definition of a dead flank, so at most one side of a pair can be dead. Bit 0 of `flags` is exported-ness, and it is only ever a *guard* (RG10), never an argument for a verdict ([Verdict/Cost.hs:20-23](../../../core/app/CE/Verdict/Cost.hs#L20)). On the current file-granularity wire the flags field is structurally `0` — entry-ness rides `reachIn` instead, and exported-ness is a symbol fact — so `publicGuard` is dormant in production and live only in the lattice's battery ([Join.hs:38-42](../../../core/app/CE/Verdict/Join.hs#L38), [Verdict.hs:216-223](../../../core/app/CE/Verdict.hs#L216), [Verdict/Cost.hs:39-43](../../../core/app/CE/Verdict/Cost.hs#L39)).
 

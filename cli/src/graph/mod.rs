@@ -24,6 +24,7 @@ pub mod spec;
 pub mod store;
 pub mod symbols;
 pub mod symedges;
+pub mod symwire;
 pub mod wire;
 
 use crate::scan::lang::Lang;

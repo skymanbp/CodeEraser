@@ -344,4 +344,36 @@ entry_globs = [
 # what the frozen site universe measures; restructuring the table to
 # dodge the counter would be writing code for the ratio. Declined,
 # booked -- the same family-face class the trend and audit rows took.
-budget = 186
+# 186 -> 185 -> 187 (K round step 3c, the export surface at 4.1.0),
+# two movements, both recorded because only one of them is a raise:
+#   -1 REPAID AT THE MECHANISM: the symbols table gave graph/1 a
+#     FIFTH validated table and its violation cascade grew long
+#     enough to rhyme with two more siblings (+3 measured, 189).
+#     Every family repeated the same two-step fold -- each row well
+#     shaped, then the whole table ascending -- so it was promoted to
+#     CE.Wire.tableOffence and swept through all nine holders (Clone,
+#     Docdup, Scan x2, Structure, Structure/Knobs, Structure/Split
+#     x3, Trend, Graph/Contract x4). ascendingOn's own promotion
+#     precedent, one bite later. Two standing chains dissolved
+#     (Graph<->Structure, Scan<->Trend) against one remaining
+#     (Graph/Contract<->Trend: each family still names its OWN
+#     tables, the per-family authority this ledger already fences).
+#     The 99 cross-language golden pairs stayed byte-identical across
+#     all twelve families -- that is what says the sweep changed no
+#     behaviour.
+#   +2 A RAISE, and here is its defence: GraphProps.hs reached 311
+#     lines and core_size_gate holds .hs files at the E01 300 line,
+#     so the file HAD to split (GraphProps = judgment, GraphWireProps
+#     = request contract -- the seam VerdictProps/VerdictWireProps
+#     already sit on). A new props module's head then rhymes with two
+#     siblings: the Props-scaffolding class this ledger booked once
+#     before at 191 -> 186. Two repayments were tried and measured,
+#     not assumed -- folding GraphProps onto WireHarness.runChecks
+#     (the sixth `check` copy retired) and re-seaming exportKnobs
+#     into the judgment half where it semantically belongs. The
+#     count held at 187 through both; the rhyme merely changed
+#     partners (StructureProps/TrendProps -> AuditProps/SplitProps),
+#     which is the class saying it is irreducible. Stopped there:
+#     restructuring further to move the counter is writing code for
+#     the ratio, which this ledger forbids two entries above.
+budget = 187

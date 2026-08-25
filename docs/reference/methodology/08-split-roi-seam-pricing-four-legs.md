@@ -23,7 +23,7 @@ class-blind.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:260-267](../../../core/app/CE/Structure.hs#L260).
+[Structure.hs:257-264](../../../core/app/CE/Structure.hs#L257).
 
 ### Seam enumeration and best-seam selection
 
@@ -34,16 +34,16 @@ file total [seams.rs:201](../../../cli/src/structure/seams.rs#L201).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
 list against its own tail, so a file with `n` top-level units yields `n − 1` seams and a
-single-unit file yields none [Split.hs:196-211](../../../core/app/CE/Structure/Split.hs#L196). Seam
+single-unit file yields none [Split.hs:193-208](../../../core/app/CE/Structure/Split.hs#L193). Seam
 `u` cuts the file at line `end_u` into a prefix of `end_u` lines and a suffix of
 `total − end_u` lines.
 
 Each seam is priced to a triple `(u, benefitMilli, costMilli)`. Selection is the exact
 rational argmax over ROI, compared by cross-multiplied `b % c` rather than division —
 `maximumBy (comparing (\(_, b', c') -> b' % c'))`
-[Split.hs:180](../../../core/app/CE/Structure/Split.hs#L180). Cost is never zero because φ ≥ 1 by the
+[Split.hs:177](../../../core/app/CE/Structure/Split.hs#L177). Cost is never zero because φ ≥ 1 by the
 knob rule, so the ratio is always defined
-[Split.hs:161-163](../../../core/app/CE/Structure/Split.hs#L161).
+[Split.hs:158-160](../../../core/app/CE/Structure/Split.hs#L158).
 
 ### Benefit: soft-zone penalty recovered
 
@@ -71,7 +71,7 @@ benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. 
 benefitMilli(u) = max 0 (floor (1000 · (p(total) − p(end_u) − p(total − end_u))))
 ```
 
-[Split.hs:202-203](../../../core/app/CE/Structure/Split.hs#L202). The `1000·` converts penalty units
+[Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199). The `1000·` converts penalty units
 to milli — milli is the one published scale
 [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8). Because `p` is convex with `p(0) = 0`, it
 is superadditive, so the bracket is non-negative for any well-formed zone triple; the
@@ -101,15 +101,15 @@ costMilli(u) = crossRefs(u)  · roiRefMilli
              + roiPhiMilli
 ```
 
-[Split.hs:207-211](../../../core/app/CE/Structure/Split.hs#L207). Three counting legs plus one flat
+[Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). Three counting legs plus one flat
 leg. Both crossing legs charge through one helper — `crossings` folds every edge `(a,b)` into a
 difference map `[(min a b, +1), (max a b, -1)]` and running-sums it, so a seam `u` is charged
 iff `min <= u < max`, exactly "one endpoint at or before `u`"
-([Split.hs:218-221](../../../core/app/CE/Structure/Split.hs#L218), read per seam by `charge`'s
-`lookupLE` at [Split.hs:240-241](../../../core/app/CE/Structure/Split.hs#L240)). The clone leg uses a line-level
+([Split.hs:215-218](../../../core/app/CE/Structure/Split.hs#L215), read per seam by `charge`'s
+`lookupLE` at [Split.hs:237-238](../../../core/app/CE/Structure/Split.hs#L237)). The clone leg uses a line-level
 straddle instead: block `[s,e)` is cut iff `s <= line && line < e`, mapped onto the seam-line
 index by the `lookupGE s` / `lookupLT e` pair
-([Split.hs:227-233](../../../core/app/CE/Structure/Split.hs#L227)).
+([Split.hs:228-230](../../../core/app/CE/Structure/Split.hs#L228)).
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
@@ -188,9 +188,9 @@ by one notch (507‰ vs 500‰) and flipped to a candidate
 ### The ROI auto-exemption
 
 Viability is `ROI >= 1`, evaluated without division as `b >= c`
-[Split.hs:181](../../../core/app/CE/Structure/Split.hs#L181),
+[Split.hs:178](../../../core/app/CE/Structure/Split.hs#L178),
 [Split.hs:7](../../../core/app/CE/Structure/Split.hs#L7). The fold produces exactly one row per file,
-into one of three shapes [Split.hs:177-184](../../../core/app/CE/Structure/Split.hs#L177):
+into one of three shapes [Split.hs:174-181](../../../core/app/CE/Structure/Split.hs#L174):
 
 | condition | row | table |
 |---|---|---|
@@ -213,16 +213,16 @@ end line [judge.rs:183-191](../../../cli/src/structure/judge.rs#L183).
 
 The five seam tables are boundary-checked before any pricing, in request order
 [Split.hs:47-59](../../../core/app/CE/Structure/Split.hs#L47): file ids dense (`id == index`) with
-`total >= 1` [Split.hs:66-71](../../../core/app/CE/Structure/Split.hs#L66); units dense per file from
+`total >= 1` [Split.hs:63-68](../../../core/app/CE/Structure/Split.hs#L63); units dense per file from
 0, spans strictly ascending and non-overlapping, checked in one fold carrying
 `(file, previousEnd, expectedNextUnit)`
-[Split.hs:128-143](../../../core/app/CE/Structure/Split.hs#L128); `seamUnits` and `seamClones` share
+[Split.hs:125-140](../../../core/app/CE/Structure/Split.hs#L125); `seamUnits` and `seamClones` share
 **one** span checker so the two tables cannot drift on what a span is
-[Split.hs:79-85](../../../core/app/CE/Structure/Split.hs#L79); ref edges refuse self-edges
-[Split.hs:145-147](../../../core/app/CE/Structure/Split.hs#L145) and churn pairs must ascend, so an
+[Split.hs:76-82](../../../core/app/CE/Structure/Split.hs#L76); ref edges refuse self-edges
+[Split.hs:142-144](../../../core/app/CE/Structure/Split.hs#L142) and churn pairs must ascend, so an
 unordered pair has exactly one spelling
-[Split.hs:121-123](../../../core/app/CE/Structure/Split.hs#L121); all three edge tables must arrive in
-ascending canonical order [Split.hs:54,56,58](../../../core/app/CE/Structure/Split.hs#L54).
+[Split.hs:118-120](../../../core/app/CE/Structure/Split.hs#L118); all three edge tables must arrive in
+ascending canonical order [Split.hs:53,56,58](../../../core/app/CE/Structure/Split.hs#L53).
 
 Every quantity above is exact integer or `Rational` arithmetic — no floating point enters the
 computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8).
@@ -233,6 +233,6 @@ The design contract §C lists two benefit terms and one cost term that the **as-
 not implement**: benefit "dedup budget effect" and "hot/cold unit isolation", and cost
 "baseline re-key noise" [size-advisory.md:46-48](../size-advisory.md#L46). The
 shipped benefit is the soft-zone recovery term alone
-[Split.hs:202-203](../../../core/app/CE/Structure/Split.hs#L202) and the shipped cost is exactly the
-four legs above [Split.hs:207-211](../../../core/app/CE/Structure/Split.hs#L207). No constant for
+[Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199) and the shipped cost is exactly the
+four legs above [Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). No constant for
 either omitted term exists in `Cost.hs`.

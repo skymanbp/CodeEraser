@@ -21,7 +21,7 @@ module CE.Clone (respond) where
 import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (histo, provablyBelowH)
 import CE.Clone.Ted (Tree (..), ted)
-import CE.Wire (Family (..), ascendingOn, respondWith)
+import CE.Wire (Family (..), respondWith, tableOffence)
 import Data.Aeson
 import Data.Array.Unboxed (listArray)
 import qualified Data.ByteString.Char8 as B8
@@ -77,8 +77,7 @@ violation :: CloneReq -> Maybe String
 violation req =
   asum
     [ asum (zipWith treeShape [0 :: Int ..] ts)
-    , asum (zipWith (pairRow (length ts)) [0 :: Int ..] ps)
-    , ascendingOn "pair" id ps
+    , tableOffence "pair" id (pairRow (length ts)) ps
     ]
  where
   ts = reqTrees req

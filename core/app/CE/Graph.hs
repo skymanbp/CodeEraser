@@ -2,54 +2,27 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | graph.request handler: decode, enforce the node/edge caps (the
--- real oversize guard — the envelope byte precheck is relaxed for
--- the trusted same-machine child, 2026-08-12 decision),
--- machine-check the boundary contract (node rows are
--- [lang,kind,flags] and edge rows [src,dst,kind,rung], endpoints and
--- pos indices in range, edges strictly ascending hence
--- duplicate-free) — then judge. The M5-2a stub refused here; M5-2g
--- replaced exactly that refusal with the computation, which lives
--- behind the exhaustive reference harness (core/test/) and takes its
--- knobs from CE.Graph.Cost — the only ablation targets.
+-- | graph.request judgment: take a request the boundary contract has
+-- already vouched for (CE.Graph.Contract) and answer it. The M5-2a
+-- stub refused here; M5-2g replaced exactly that refusal with the
+-- computation, which lives behind the exhaustive reference harness
+-- (core/test/) and takes its knobs from CE.Graph.Cost — the only
+-- ablation targets. Decode and contract checking moved out at the
+-- 300-line dogfood wall when the 4.1.0 symbol table arrived.
 module CE.Graph (respond) where
 
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, granFile, minRung, nodeCap, refdefKind, roleBits, sccFloor)
+import CE.Graph.Contract (GraphReq (..), symRows, unresRows, violation)
+import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exportVisBit, granFile, minRung, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
-import CE.Wire (Family (..), ascendingOn, respondWith)
+import CE.Wire (Family (..), respondWith)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
-import Data.Foldable (asum)
 import qualified Data.IntSet as IS
 import Data.List (partition)
-
--- | Wire shape (design brief §2): index = node identity, nothing
--- text-shaped crosses. Absent @pos@ = counts only. The optional
--- @unres@ table (2.32.0, H3) is the per-language site ledger
--- [[lang, unresolvedSites, totalSites]] — unlike the old scalar
--- (which stayed an unvalidated honest ledger under the §1 rule),
--- this one IS an input to judgment: each dead row grows a
--- confidence column derived from its node's language.
-data GraphReq = GraphReq
-  { reqId :: Value
-  , reqNodes :: [[Integer]]
-  , reqEdges :: [[Integer]]
-  , reqPos :: [Integer]
-  , reqUnres :: Maybe [[Integer]]
-  }
-
-instance FromJSON GraphReq where
-  parseJSON = withObject "GraphReq" $ \o ->
-    GraphReq
-      <$> o .: "id"
-      <*> o .: "nodes"
-      <*> o .: "edges"
-      <*> o .:? "pos" .!= []
-      <*> o .:? "unres"
 
 -- | The shared cascade with this family's bindings (CE.Wire —
 -- decode error prefix, caps, offence, replies all byte-identical to
@@ -66,94 +39,11 @@ respond proto =
         famOverCap = \req ->
           toInteger (length (reqNodes req) + length (unresRows req)) > nodeCap
             || toInteger (length (reqEdges req)) > edgeCap
+            || toInteger (length (symRows req)) > symCap
       , famOffence = violation
       , famDegraded = tooLarge proto
       , famJudged = result proto
       }
-
--- | First boundary-contract offender, if any — checked in request
--- order so the message is deterministic. Shape errors surface before
--- ordering errors, so the ascending pass only ever compares
--- well-formed four-tuples (list Ord is lexicographic).
-violation :: GraphReq -> Maybe String
-violation req =
-  asum
-    [ mixedArity (reqNodes req)
-    , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
-    , asum (zipWith (edgeRow n) [0 :: Int ..] es)
-    , ascendingOn "edge" id es
-    , asum (zipWith (posRow n) [0 :: Int ..] ps)
-    , -- ascending pos is also the reply BOUND (M5-close review MED:
-      -- pos escaped the declared caps — a repeated-index list made
-      -- the reply larger than the request without limit; strictly
-      -- ascending indices in [0, n) cannot exceed nodeCap rows)
-      ascendingOn "pos" id ps
-    , asum (zipWith unresRow [0 :: Int ..] us)
-    , -- ascending langs: duplicate-free, so the confidence lookup's
-      -- first match is the only match
-      ascendingOn "unres" (take 1) us
-    ]
- where
-  n = fromIntegral (length (reqNodes req))
-  es = reqEdges req
-  ps = reqPos req
-  us = unresRows req
-
--- | The unres table as sent, [] when absent — the cap's and the
--- validator's view; road selection stays on reqUnres's Maybe.
-unresRows :: GraphReq -> [[Integer]]
-unresRows = maybe [] id . reqUnres
-
-unresRow :: Int -> [Integer] -> Maybe String
-unresRow i row = case row of
-  [lang, unres, total]
-    | lang < 0 || lang > 6 -> Just (label <> "lang outside the judged set")
-    | unres < 0 || total < 0 -> Just (label <> "negative count")
-    | unres > total -> Just (label <> "unresolved above total")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [lang,unresolved,total])")
- where
-  label = "unres " <> show i <> ": "
-
--- | Node rows must share one arity — 3 columns (legacy flags) or 4
--- (with the 2.28.0 roles column): a mixed table has no single
--- judgment basis and refuses by name before any row is judged.
-mixedArity :: [[Integer]] -> Maybe String
-mixedArity rows = case map length rows of
-  [] -> Nothing
-  (w : ws)
-    | all (== w) ws -> Nothing
-    | otherwise -> Just "node rows: mixed arity"
-
-nodeRow :: Int -> [Integer] -> Maybe String
-nodeRow i row = case row of
-  [lang, kind, flags]
-    | any (< 0) [lang, kind, flags] -> Just (label <> "negative field")
-    | otherwise -> Nothing
-  [lang, kind, flags, roles]
-    | any (< 0) [lang, kind, flags, roles] -> Just (label <> "negative field")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [lang,kind,flags] or [lang,kind,flags,roles])")
- where
-  label = "node " <> show i <> ": "
-
-edgeRow :: Integer -> Int -> [Integer] -> Maybe String
-edgeRow n i row = case row of
-  [src, dst, kind, rung]
-    | any (< 0) [src, dst, kind, rung] -> Just (label <> "negative field")
-    | src >= n || dst >= n -> Just (label <> "endpoint out of range")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [src,dst,kind,rung])")
- where
-  label = "edge " <> show i <> ": "
-
--- notAscending moved to CE.Wire (its birthplace was here — the
--- tenth ratchet bite promoted it to the shared skeleton).
-
-posRow :: Integer -> Int -> Integer -> Maybe String
-posRow n i p
-  | p < 0 || p >= n = Just ("pos " <> show i <> ": index out of range")
-  | otherwise = Nothing
 
 -- | The judged result. Knobs are the CE.Graph.Cost constants;
 -- everything else is a function of the request, and the aeson
@@ -204,7 +94,15 @@ result proto req =
   -- the roles column judges when it rides (2.28.0, batch-7 slice 3):
   -- a 4-column row's entry bits derive through Cost.roleBits and the
   -- legacy flags column yields; a 3-column row keeps its sent bits.
-  flagses = map effectiveFlags (reqNodes req)
+  -- Since 4.1.0 the export surface ORs the public bit in on top.
+  -- Absent (or empty) symbols table => empty set => every flag word
+  -- is what it was, so such a request answers byte-for-byte as
+  -- before (K5).
+  flagses =
+    [ Dead.withExport publicFlagBit exported i (declaredBits row)
+    | (i, row) <- zip [0 ..] (reqNodes req)
+    ]
+  exported = Dead.exportedNodes exportVisBit (symRows req)
   -- one reach per request (batch 9 P2): the entry knob binds to the
   -- seed set here at the boundary — the posture Cost.hs declares —
   -- and the computed set feeds the verdict AND the join surface.
@@ -213,13 +111,13 @@ result proto req =
   (deadRows, reportedRows) =
     partition (\(i, _) -> IS.member i fileIdx) (Dead.verdicts b reach flagses)
 
--- | The judged flags of one node row: sent bits (3 columns) or bits
--- derived from the role facts (4 columns — the legacy column
--- yields). Other shapes cannot reach here: violation refused them.
-effectiveFlags :: [Integer] -> Integer
-effectiveFlags [_, _, f] = f
-effectiveFlags [_, _, _, r] = Dead.deriveFlags roleBits r
-effectiveFlags _ = 0
+-- | Sent bits (3 columns) or bits derived from the role facts
+-- (4 columns — the legacy column yields). Other shapes cannot reach
+-- here: violation refused them.
+declaredBits :: [Integer] -> Integer
+declaredBits [_, _, f] = f
+declaredBits [_, _, _, r] = Dead.deriveFlags roleBits r
+declaredBits _ = 0
 
 -- | Over-cap refusal: a well-formed degraded result, never a
 -- truncated graph. counts echoes what arrived (informational);

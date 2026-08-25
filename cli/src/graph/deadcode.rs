@@ -101,6 +101,10 @@ pub struct GraphWire {
     /// langs ascending (2.32.0, H3) — the core judges each dead
     /// row's confidence from it.
     pub unres: Vec<[i64; 3]>,
+    /// The export surface [[nodeIdx, visibility]] (4.1.0): which
+    /// files declare something and how visibly. The core reads the
+    /// public bit off it (graph/symwire.rs).
+    pub symbols: BTreeSet<[i64; 2]>,
 }
 
 /// One file-tier dead verdict with its trust column (2.32.0, H3):
@@ -153,12 +157,14 @@ pub fn wire_of(root: &Path, idx: &dedup::index::Index, db_path: &Path) -> Result
         .collect();
     let mut wire = edge_wire(&edges, &ids)?;
     nodes::contain(&nodes, &ids, &mut wire);
+    let symbols = super::symwire::export_surface(idx, &ids)?;
     Ok(GraphWire {
         nodes,
         rows,
         edges: wire,
         unresolved_sites,
         unres: lang_ledger(&sites),
+        symbols,
     })
 }
 
@@ -239,6 +245,7 @@ pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
         "edges": w.edges.iter().collect::<Vec<_>>(),
         "pos": pos,
         "unres": w.unres,
+        "symbols": w.symbols.iter().collect::<Vec<_>>(),
     });
     let reply = link.request("graph", body).map_err(anyhow::Error::msg)?;
     let rows = reply["pos"].as_array().map(Vec::len).unwrap_or(0);

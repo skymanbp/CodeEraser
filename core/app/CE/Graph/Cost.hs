@@ -10,7 +10,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (confidence, nodeCap, edgeCap, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits) where
+module CE.Graph.Cost (confidence, nodeCap, edgeCap, symCap, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits, exportVisBit, publicFlagBit) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -24,6 +24,15 @@ nodeCap = 131072
 
 edgeCap :: Integer
 edgeCap = 524288
+
+-- | Cap for the symbol table (4.1.0). Sizing anchor: the 100k-LOC
+-- brief measures ~20k file nodes, and the table is DEDUPED to
+-- (node, visibility) pairs, so it cannot exceed two rows per node —
+-- this cap is four times that ceiling and exists so an oversize
+-- request degrades by name instead of by exhaustion, like its
+-- siblings above.
+symCap :: Integer
+symCap = 131072
 
 -- | Which rungs count as references: an edge resolved at rung
 -- <= minRung is a reference claim. The Rust ladder never guesses
@@ -113,3 +122,25 @@ confidence unres lang = case [(u, t) | [l, u, t] <- unres, l == lang] of
 -- ablation battery can flip it.
 refdefKind :: Integer
 refdefKind = 5
+
+-- | Which `symbols` visibility bit means "exported" (4.1.0). The
+-- visibility word is a MEASURED fact — a local syntactic property of
+-- the declaration (`pub` / `export` / a leading underscore), read in
+-- the file that declares it — and which of its bits counts as an
+-- export surface is the judgment, so it lives here where an ablation
+-- can move it. Producer: cli/src/fourclass/visibility.rs.
+exportVisBit :: Integer
+exportVisBit = 0
+
+-- | Which node FLAG bit an export surface sets: bit 0, the
+-- public/private axis Dead.deadTable has always split on and that no
+-- producer could ever set — entry standing is measured per file, and
+-- "bit 0 stays unset at file granularity, public-ness is a symbol
+-- fact" is what cli/src/graph/deadcode/flags.rs:9 says. With the
+-- symbols table riding, a file that declares an exported symbol
+-- finally carries it, so verdict codes 2 and 4 (unref_public,
+-- unreach_public) become reachable for the first time. It is
+-- deliberately NOT in entryMask: an export surface is a verdict
+-- axis, never an entry claim (RG10).
+publicFlagBit :: Integer
+publicFlagBit = 0

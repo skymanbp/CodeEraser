@@ -10,12 +10,11 @@ module CE.Structure.Knobs
   ) where
 
 import CE.Structure.Axes (Knobs (..), bound)
-import CE.Wire (applyRows, ascendingOn)
-import Data.Foldable (asum)
+import CE.Wire (applyRows, tableOffence)
 
 knobsOffence :: [[Integer]] -> Maybe String
 knobsOffence rows =
-  asum [asum (zipWith one [0 :: Int ..] rows), ascendingOn "knob" (take 1) rows]
+  tableOffence "knob" (take 1) one rows
  where
   one i row = case row of
     [code, v]

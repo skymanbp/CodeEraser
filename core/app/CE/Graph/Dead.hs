@@ -5,7 +5,7 @@
 -- Codes: 1 unref_private, 2 unref_public, 3 unreach_private,
 -- 4 unreach_public — 1 + public + 2*referenced. A node whose flags
 -- meet the entry mask seeds reachability and is never judged.
-module CE.Graph.Dead (deriveFlags, entries, verdicts) where
+module CE.Graph.Dead (deriveFlags, entries, exportedNodes, verdicts, withExport) where
 
 import CE.Graph.Build (Built (..))
 import Data.Bits (bit, testBit, (.&.), (.|.))
@@ -44,6 +44,29 @@ verdicts b reach flagses =
   code p r = case lookup (p, r) deadTable of
     Just c -> c
     Nothing -> error "deadTable is total over (Bool, Bool) by construction"
+
+-- | The nodes a `symbols` table calls exported (4.1.0): rows are
+-- [node, visibility] and the bit that counts is a PARAMETER
+-- (Cost.exportVisBit at the CE.Graph boundary), so the knob test can
+-- move it and watch verdict codes shift — the same discipline
+-- deriveFlags's table follows. Rows the validator refused cannot
+-- reach here; a row of another shape contributes nothing rather than
+-- reading a number out of a shape it does not understand.
+exportedNodes :: Integer -> [[Integer]] -> IS.IntSet
+exportedNodes visBit rows =
+  IS.fromList
+    [fromInteger node | [node, vis] <- rows, testBit vis (fromInteger visBit)]
+
+-- | One node's flags with the export surface folded in. The bit is a
+-- parameter for the same reason (Cost.publicFlagBit), and it sits
+-- OUTSIDE entryMask on purpose: an export surface is the verdict
+-- axis deadTable splits on, never an entry claim (RG10). So this OR
+-- can change WHICH CODE a dead node reports and can never change
+-- which nodes are dead — the property the battery pins.
+withExport :: Integer -> IS.IntSet -> Int -> Integer -> Integer
+withExport flagBit exported i f
+  | IS.member i exported = f .|. bit (fromInteger flagBit)
+  | otherwise = f
 
 -- | Entry bits from role facts through a role table (2.28.0,
 -- batch-7 slice 3): the OR of the mapped flag bits for every role

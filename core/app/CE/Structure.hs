@@ -24,7 +24,7 @@ import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
 import CE.Structure.Split (splitOffence, splitRows)
 import qualified CE.Structure.Stale as Stale
-import CE.Wire (Family (..), ascendingOn, respondWith)
+import CE.Wire (Family (..), respondWith, tableOffence)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -119,10 +119,7 @@ violation req =
   asum
     ( asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
         : depthChain (reqNodes req)
-        : [ asum
-              [ asum (zipWith (dirRow n spec) [0 :: Int ..] rows)
-              , ascendingOn nm proj rows
-              ]
+        : [ tableOffence nm proj (dirRow n spec) rows
           | (spec@(_, nm, _), proj, rows) <- dirTables
           ]
         <> [ splitOffence sf (seamTables req)

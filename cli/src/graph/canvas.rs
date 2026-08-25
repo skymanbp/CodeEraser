@@ -150,6 +150,9 @@ mod tests {
             edges,
             unresolved_sites: 7,
             unres: vec![],
+            // the canvas draws the graph, it never reads the export
+            // surface — an empty table is this fixture's whole claim
+            symbols: Default::default(),
         };
         let report = Report {
             dead: vec![crate::graph::deadcode::DeadRow {

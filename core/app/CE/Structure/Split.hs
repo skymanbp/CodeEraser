@@ -22,7 +22,7 @@ module CE.Structure.Split
 
 import CE.Structure.Axes (Knobs (..))
 import CE.Verdict.Soft (zonePenalty)
-import CE.Wire (ascendingOn)
+import CE.Wire (tableOffence)
 import Data.Foldable (asum)
 import Data.List (maximumBy)
 import qualified Data.Map.Strict as M
@@ -50,12 +50,9 @@ splitOffence files (units, refs, clones, churn) =
     [ asum (zipWith fileRow [0 :: Int ..] files)
     , asum (zipWith (unitRow totals) [0 :: Int ..] units)
     , unitsOrdered units
-    , asum (zipWith (refRow counts) [0 :: Int ..] refs)
-    , ascendingOn "seamRefs" id refs
-    , asum (zipWith (cloneRow totals) [0 :: Int ..] clones)
-    , ascendingOn "seamClones" id clones
-    , asum (zipWith (churnRow counts) [0 :: Int ..] churn)
-    , ascendingOn "seamChurn" id churn
+    , tableOffence "seamRefs" id (refRow counts) refs
+    , tableOffence "seamClones" id (cloneRow totals) clones
+    , tableOffence "seamChurn" id (churnRow counts) churn
     ]
  where
   -- asum is lazy, so both maps are demanded only once every
