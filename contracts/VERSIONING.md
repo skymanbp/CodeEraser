@@ -149,6 +149,24 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **5.1.0**（规则包围栏 + per-class 棘轮容差 minor，K 轮步 4，2026-08-25，用户拍板 v2.14 ②）：
+> ①`verdict.request` 加性标量 `classDigest`——对 `[[rules.class]]` 规范化声明（名、**声明序**的 globs、旋钮）
+> 的指纹。名与 glob 仍永不过线（§5.9.2）：它们的哈希不是它们。编码为**长度前缀**（netstring 式 `tag:len:bytes`）
+> 而非分隔符——首版靠 fnv1a 的 NUL 分隔，自带的腿当场抓到碰撞：名 `a` 带 glob `b` 与名 `a glob b` 无 glob
+> 字节流全等（分隔符只能分隔不含它的东西，长度可以）。②`ce-baseline.json` 记录其天花板**在哪套规则包下立的**，
+> 核加持名 fail 条件 `class_digest`，判据是**朴素的 Maybe 不等**且是全的：两边皆无=同意；改了规则包=不同意；
+> 对着围栏之前的旧基线声明规则包=不同意；把基线记过的规则包删掉=也不同意。四种分歧要的是同一个答案：
+> 具名说出来，让人去具名重立一条地板。只有 establish 写 digest（`CE_ACCEPT_BASELINE=1` 走空基线路），
+> 故「同意一套新规则包」与「同意一条新地板」是同一个动作。③`classKnobs` 码域 0..2 → **0..3**，码 3 =
+> 该类自己的棘轮容差（行数**绝对值**，非比例——想要它的是 vendored 与夹具树，它们要的是零或固定额度，
+> 而大文件的百分比正是本旋钮要拿掉的白拿增长）。声明即**取代两条全局腿**，故 0 意味着一行都不许长、
+> 全局 max(+2%,+10) 救不了它（因为根本没被查询）。它是唯一「零有意义」的类旋钮，故表的取值下界**按码判**
+> 而非一刀切（码 0/1/2 是线，线为零是荒谬）。反事实：K11 = 无类声明仓 digest 缺席（**不是 null**）且 101 对
+> 金样中 199 改动行里 197 行只动 proto 字段、另 2 行是不匹配文案内嵌 server 版本串〔核电池另有一腿断言
+> newBaseline 无该键〕、K12 = 改规则包即 `failed=["class_digest"]` 而 `over` 为空——不是悄悄放松而是具名停下
+> 〔fixtures/verdict pair 16〕、K13 = establish 记下 digest 且棘轮行仍三列、K14 = 类容差 0 时长一行即 over
+> 且 allowed=天花板本身〔pair 17；全局 +10 腿够不着〕；另有 Rust 侧三腿钉指纹本身（声明序/名/glob/旋钮各一，
+> 「零旋钮」≠「无旋钮」，以及长度前缀的单射性）。请求行随 minor 机器重写为 5.1.0；核电池请求侧 proto 同步 22 处。
 > **5.0.0**（graph 节点行 legacy flags 列裁除 **major**，K 轮步 3d，2026-08-25）：节点行降为
 > `[lang, kind, roles]` **单一元**——pre-2.28 的 flags 列离场。它自 2.28.0 roles 列成为权威后又被
 > 生产、上线、丢弃了七个 minor；4.0.0 想同批砍掉却被实测拦下（flags 位 0 是公私判决轴，可见性无生产者时删列会让
@@ -467,6 +485,9 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用）；
     result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta，
     2.8.0 起并回生效 `weights` 表与 `ratchet.failed` 持名条件表；
+    5.1.0 起 request 并可携标量 `classDigest`（规则包声明的指纹）、`classKnobs` 码域加 3
+    （该类自己的棘轮容差，行数绝对值），`ratchet.failed` 加持名条件 `class_digest`，
+    `newBaseline` 在指纹到场时加键 `classDigest`（**缺席而非 null**——无类声明仓字节恒等）；
     `degraded.reason ∈ {verdict_too_large}`。
   - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],
     "naming":[[lang,style,upper,under,test]]}`（码 0..6，主体名/路径不过线；naming 自 2.30.0
@@ -512,5 +533,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 5.0.0 | §1 所列两处常量 |
+| 协议 | 5.1.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

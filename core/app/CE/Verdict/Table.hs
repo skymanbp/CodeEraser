@@ -19,7 +19,7 @@ module CE.Verdict.Table
   , classKnobsOffence
   ) where
 
-import CE.Verdict.Cost (classCap)
+import CE.Verdict.Cost (classCap, classTolCode)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (nub)
@@ -63,10 +63,17 @@ classKnobsOffence = table "classKnobs" one 2
     [c, code, v]
       | c < 1 -> Just (label nm i <> "class 0 has no override channel")
       | c >= classCap -> Just (label nm i <> "class beyond the fence")
-      | code < 0 || code > 2 -> Just (label nm i <> "unknown class knob code")
-      | v < 1 -> Just (label nm i <> "knob below 1")
+      | code < 0 || code > classTolCode -> Just (label nm i <> "unknown class knob code")
+      | v < floorFor code -> Just (label nm i <> "knob below " <> show (floorFor code))
       | otherwise -> Nothing
     _ -> Just (label nm i <> "malformed row (need [class,code,value])")
+  -- codes 0/1/2 are LINES and a line of zero is nonsense; the
+  -- tolerance (5.1.0) is an allowance, and zero allowance is its
+  -- whole point — a frozen fixture tree that may not grow by one
+  -- line. One bound for all of them would have to be the loosest,
+  -- which is how a nonsense ceiling gets in.
+  floorFor :: Integer -> Integer
+  floorFor code = if code == classTolCode then 0 else 1
 
 -- | [code, value] rows, code-bounded, judged per code — generalized
 -- for P4 (the thresholds table judges denominators and divisor

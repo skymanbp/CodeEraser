@@ -113,6 +113,9 @@ fn request(
         continuous: Vec::new(),
         classed: false,
         class_knobs: Vec::new(),
+        // the join reads the verdict table, never the ratchet — it
+        // sends no baseline, so there is nothing for a fence to guard
+        class_digest: None,
         discrete: Vec::new(),
         baseline: serde_json::Value::Null,
         floor: None,

@@ -72,10 +72,14 @@ pub fn class_knob_rows(rules: &RulesCfg) -> Vec<[i64; 3]> {
     for (i, c) in rules.class.iter().enumerate() {
         let id = i as i64 + 1;
         let k = &c.knobs;
+        // codes 0/1/2 shadow the ceilings table; code 3 is the class's
+        // own ratchet allowance (5.1.0) and is the one knob whose ZERO
+        // is meaningful, so it is not filtered like a line would be
         let declared = [
             (0, k.file_lines_warn),
             (1, k.cognitive_warn),
             (2, k.file_lines_fail.filter(|h| *h >= 1)),
+            (3, k.ratchet_tolerance),
         ];
         out.extend(
             declared
@@ -177,6 +181,7 @@ mod tests {
                 // rows — declared here to prove exactly that
                 fn_lines_warn: Some(80),
                 fn_lines_fail: Some(90),
+                ratchet_tolerance: None,
             },
         };
         let rules = RulesCfg {

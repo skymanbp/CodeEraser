@@ -12,6 +12,23 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 5.1.0 = the rulepack fence (plan v2.14 ②, K round step 4,
+/// 2026-08-25): verdict.request gains the scalar `classDigest`, a
+/// fingerprint of the normalized [[rules.class]] declaration (names,
+/// globs in declaration order, knobs); ce-baseline.json records the
+/// digest its ceilings were established under; and the fail table
+/// gains the named condition `class_digest`, which holds on plain
+/// Maybe inequality -- both absent agrees, a changed rulepack
+/// disagrees, and so does declaring one against a pre-fence baseline
+/// or removing one the baseline recorded. Only establish writes a
+/// digest, so agreeing to a new rulepack is the same named act as
+/// agreeing to a new floor. classKnobs gains code 3, a class's OWN
+/// ratchet allowance in lines: declared, it replaces both global legs,
+/// so 0 means a class may not grow by one line and the global
+/// max(+2%, +10) cannot rescue it. It is the only class knob whose
+/// zero is meaningful, which is why the table's value bound is judged
+/// per code. A repo declaring no class sends no digest and no class
+/// knobs and answers byte for byte as before.
 /// 5.0.0 = the legacy-flags subtraction (plan v2.14, K round step 3d,
 /// 2026-08-25): the graph node row loses the pre-2.28 flags column and
 /// becomes [lang, kind, roles] -- one arity, no legacy road. The
@@ -41,7 +58,7 @@ use std::process::{Child, Stdio};
 /// reader standing at the constant needs to know what today's number
 /// means -- what every past number meant is a ledger question, and the
 /// ledger has an address.
-pub const PROTO: &str = "5.0.0";
+pub const PROTO: &str = "5.1.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

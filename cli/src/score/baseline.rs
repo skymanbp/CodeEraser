@@ -150,7 +150,7 @@ pub fn read(root: &Path) -> Result<Option<Value>> {
 /// line used to print the bare constant, which said nothing about
 /// which directory just gained a floor.
 pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
-    let doc = json!({
+    let mut doc = json!({
         "schema": SCHEMA_ID,
         "continuous": new_baseline["continuous"],
         "discrete": new_baseline["discrete"],
@@ -160,6 +160,14 @@ pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
         // writer's own comment warns about dropping
         "zoneTiers": new_baseline["zoneTiers"],
     });
+    // 5.1.0: the rulepack fingerprint these ceilings were established
+    // under, written exactly when the core sent one. ABSENT, not
+    // null — a repo that declares no class must keep a
+    // byte-identical baseline file (K11), and a key holding null is
+    // not an absent key.
+    if let Some(d) = new_baseline.get("classDigest").filter(|v| !v.is_null()) {
+        doc["classDigest"] = d.clone();
+    }
     let path = path_for(root);
     // temp + rename, not a truncating write: a `ce baseline` killed
     // mid-write (Ctrl-C, CI timeout) left a torn ce-baseline.json that

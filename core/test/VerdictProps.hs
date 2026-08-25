@@ -125,8 +125,11 @@ overMono = all one [1 .. 60 :: Integer]
  where
   one i =
     let cont = [[u, 0, 100 + ((i * (u + 1) * 7) `mod` 40)] | u <- [0 .. 9]]
-        base = R.Baseline [[u, 0, 100] | u <- [0 .. 9]] [] Nothing
-        ids k = S.fromList [(u, c) | [u, c, _, _] <- R.rOver (R.ratchet k (Just base) cont [])]
+        base = R.Baseline [[u, 0, 100] | u <- [0 .. 9]] [] Nothing Nothing
+        -- no class declares an allowance here, so every row keeps
+        -- the global legs (5.1.0 signature, same judgment)
+        noClassTol _ = Nothing
+        ids k = S.fromList [(u, c) | [u, c, _, _] <- R.rOver (R.ratchet k noClassTol (Just base) cont [])]
         wide = R.ratchetBound {R.rTolAbs = R.rTolAbs R.ratchetBound + 15}
      in ids wide `S.isSubsetOf` ids R.ratchetBound
 

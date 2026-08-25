@@ -29,7 +29,7 @@ executable ce-core
                       CE.Structure.Declared, CE.Structure.Entropy, CE.Structure.Knobs,
                       CE.Structure.Stale,
                       CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire,
-                      CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
+                      CE.Verdict, CE.Verdict.Cost, CE.Verdict.Candidates, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows
     build-depends:
@@ -66,7 +66,7 @@ test-suite ce-core-test
                       CE.Structure.Declared, CE.Structure.Entropy, CE.Structure.Knobs,
                       CE.Structure.Stale,
                       CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire,
-                      CE.Verdict, CE.Verdict.Cost, CE.Verdict.Join,
+                      CE.Verdict, CE.Verdict.Cost, CE.Verdict.Candidates, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows,
                       Reference, ReferenceGraph, GraphWireProps, GraphProps,

@@ -15,9 +15,11 @@ module CE.Verdict (respond) where
 
 import qualified CE.Dedup.Cost as DedupCost
 import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap, zoneAskPermille, zoneWarnPermille)
-import CE.Verdict.Join (Knobs, Legs (..), Pos (..), bound, confidence, judge, severities)
+import CE.Verdict.Candidates (candidates)
+import CE.Verdict.Join (bound, severities)
 import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
 import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
+import CE.Verdict.Cost (classTolCode)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, effectiveWeights, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine)
 import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
@@ -72,7 +74,7 @@ rowTotal req =
 -- a malformed baseline contributes 0 and is refused by violation
 -- immediately after the cap admits the request.
 baselineRows :: Either String (Maybe Baseline) -> Int
-baselineRows (Right (Just (Baseline cont disc _))) = length cont + length disc
+baselineRows (Right (Just (Baseline cont disc _ _))) = length cont + length disc
 baselineRows _ = 0
 
 -- | The judged result: join candidates per sim row, the seven axes,
@@ -92,19 +94,8 @@ result proto parsed req =
         "joinSeverity" .= [[c, s] | (c, s) <- severities]
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
-      , "ratchet"
-          .= object
-            [ "added" .= rAdded r
-            , "removed" .= rRemoved r
-            , "over" .= rOver r
-            , "toleranceDrawn" .= rDrawn r
-            , "fail" .= failBit
-            , -- the HELD condition names (review C8, 2.8.0
-              -- additive): consumers attribute the fail bit by name
-              -- instead of by construction-time coincidence
-              "failed" .= [name | (name, True) <- conds]
-            ]
-      , "newBaseline" .= newBaselineObj r newSoft
+      , "ratchet" .= ratchetObj r conds
+      , "newBaseline" .= newBaselineObj r newSoft (reqClassDigest req)
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
@@ -145,13 +136,22 @@ result proto parsed req =
     Just b -> bSoft b
   newSoft = effSoft
   -- the class column is a charging parameter, never a ratchet fact
-  -- (plan v2.13 ①): the ratchet judges the identity-and-value
-  -- prefix alone, so the baseline it writes stays three columns
-  r = ratchet rk base (map (take 3) (reqCont req)) (reqDisc req)
+  -- (plan v2.13 ①): the rows arrive whole so a class may set its own
+  -- ALLOWANCE (5.1.0), and the baseline the ratchet writes back is
+  -- still three columns — an allowance is not a fact about the tree
+  r = ratchet rk classTol base (reqCont req) (reqDisc req)
+  classTol c = M.lookup (c, classTolCode) (classKnobsOf (reqClassKnobs req))
   floorFail = maybe False (perMille <) (reqFloor req)
   (dedupFloor, dedupDerived, dedupOver) = dedupLeg req
-  conds = failConditions r floorFail dedupOver
-  failBit = any snd conds
+  -- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were
+  -- established under against the one this run declares. Maybe
+  -- inequality is the whole rule and it is total — both absent
+  -- agrees; a changed rulepack disagrees, and so does declaring one
+  -- against a baseline that predates the fence, or removing one the
+  -- baseline recorded. Every disagreement wants the same answer: say
+  -- so by name, and make a human name the new floor.
+  digestDrift = maybe False ((/= reqClassDigest req) . bClassDigest) base
+  conds = failConditions r floorFail dedupOver digestDrift
 
 -- | The second ratchet's leg (ADR-008 P2, split from result at the
 -- E01 fn gate when 2.19.0 landed): the pair's shape is already
@@ -176,13 +176,31 @@ dedupLeg req = (floor', derived, over)
 -- discrete member, the --fail-under floor ("either alone fails"),
 -- or the dedup blocks-over-budget half (P2: `ce dedup --check`
 -- sends the pair; the ce check road never does).
-failConditions :: Ratcheted -> Bool -> Bool -> [(String, Bool)]
-failConditions r floorFail dedupOver =
+failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]
+failConditions r floorFail dedupOver digestDrift =
   [ ("ratchet_over", not (null (rOver r)))
   , ("discrete_added", not (null (rAdded r)))
   , ("floor", floorFail)
   , ("dedup_budget", dedupOver)
+  , ("class_digest", digestDrift)
   ]
+
+-- | The ratchet face: the delta, the gate bit, and the NAMES of the
+-- conditions that held (review C8, 2.8.0 additive) — consumers
+-- attribute a failure by name instead of by construction-time
+-- coincidence, which is the whole reason the rulepack fence (5.1.0)
+-- could become a fourth way to fail without any consumer guessing.
+-- Split from result at the E01 75-line function gate when it did.
+ratchetObj :: Ratcheted -> [(String, Bool)] -> Value
+ratchetObj r conds =
+  object
+    [ "added" .= rAdded r
+    , "removed" .= rRemoved r
+    , "over" .= rOver r
+    , "toleranceDrawn" .= rDrawn r
+    , "fail" .= any snd conds
+    , "failed" .= [name | (name, True) <- conds]
+    ]
 
 -- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived
 -- from judgedLoc at establish, carried verbatim otherwise — the
@@ -192,48 +210,20 @@ failConditions r floorFail dedupOver =
 -- the daemon-free hook — core-authored, locally read. Split from
 -- result when the 2.33.0 severity face pushed it past the 75-line
 -- hard line the repo dogfoods.
-newBaselineObj :: Ratcheted -> Maybe Integer -> Value
-newBaselineObj r newSoft =
-  object
+newBaselineObj :: Ratcheted -> Maybe Integer -> Maybe Integer -> Value
+newBaselineObj r newSoft digest =
+  object $
     [ "continuous" .= rNewCont r
     , "discrete" .= rNewDisc r
     , "softLine" .= newSoft
     , "zoneTiers" .= [zoneWarnPermille, zoneAskPermille]
     ]
-
--- | Join-candidate rows, one per sim row (split from result at the
--- E01 line — the leg maps are the candidates' concern alone). The
--- effective Join knobs arrive from the same thresholds table the
--- score reads, so the two judgments share one authority.
-candidates :: Knobs -> VerdictReq -> [[Integer]]
-candidates jk req =
-  [ -- the 6th column is the leg-agreement confidence (2.33.0, H4)
-    [u, v, code, bits, mask, confidence mask bits]
-  | row@(u : v : _) <- reqSim req
-  , let (code, mask, bits) = judge jk (legsOf row)
-  ]
- where
-  -- wire flags are structurally 0 at file granularity (entry-ness
-  -- rides reachIn; exported-ness is a symbol fact, R6) — the Pos
-  -- field stays for the lattice's RG10 guard and its battery
-  posMap =
-    M.fromList
-      [ (u, Pos indeg reachIn 0 sccId)
-      | [u, indeg, _outdeg, sccId, _sccSize, reachIn] <- reqPos req
-      ]
-  churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap] <- reqChurn req]
-  cochMap = M.fromList [((u, v), c) | [u, v, c] <- reqCochange req]
-  legsOf row = case row of
-    [u, v, kind, num, den] ->
-      Legs
-        { lSim = (kind, num, den)
-        , lGraphA = M.lookup u posMap
-        , lGraphB = M.lookup v posMap
-        , lChurnA = M.findWithDefault (0, 0) u churnMap
-        , lChurnB = M.findWithDefault (0, 0) v churnMap
-        , lCochange = M.lookup (u, v) cochMap
-        }
-    _ -> error "sim row shape enforced by violation"
+      -- the rulepack fingerprint this establish agrees to (5.1.0),
+      -- present exactly when a rulepack rode: only establish reaches
+      -- here, so recording it IS the named act the fence demands, and
+      -- a repo that declares no class keeps a baseline file and a
+      -- reply byte-identical to the pre-fence ones (K11)
+      <> ["classDigest" .= d | Just d <- [digest]]
 
 -- | Over-cap refusal: a well-formed degraded result with the FULL
 -- key set, never a truncated judgment.

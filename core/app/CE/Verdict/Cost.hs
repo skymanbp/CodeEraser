@@ -45,7 +45,8 @@
 --   bit 8 — rewriteHot: the window's rewrite share clears
 --           rewriteNum/rewriteDen (cross-multiplied).
 module CE.Verdict.Cost
-  ( cochangeFloor
+  ( classTolCode
+  , cochangeFloor
   , rewriteNum
   , rewriteDen
   , tolNum
@@ -105,6 +106,15 @@ tolDen = 100
 
 tolAbs :: Integer
 tolAbs = 10
+
+-- | The classKnobs code a class states its OWN ratchet tolerance
+-- under (5.1.0, plan v2.14 ②). Codes 0/1/2 shadow the ceilings
+-- table; this one shadows nothing — it is a fourth dimension, and it
+-- is the only class knob whose value 0 is meaningful (zero slack for
+-- a vendored tree or a frozen fixture), which is why the table's
+-- value bound is judged per code rather than once for all of them.
+classTolCode :: Integer
+classTolCode = 3
 
 -- | Size-axis soft-line FALLBACK: when the baseline carries no
 -- softLine (pre-v0.6 file, or no judgedLoc to derive from), the

@@ -18,13 +18,18 @@ import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 
 -- | A parsed ce-baseline.json: per-entity continuous ceilings
--- [u,metricCode,value], the discrete violation-fingerprint set, and
+-- [u,metricCode,value], the discrete violation-fingerprint set,
 -- (v0.6, plan v2.6 §B) the frozen soft line — Nothing on a
--- pre-v0.6 file, re-derived only at establish.
+-- pre-v0.6 file, re-derived only at establish — and (5.1.0, plan
+-- v2.14 ②) the rulepack FINGERPRINT the ceilings were established
+-- under. The digest is a scalar, not a rule: what it fences is the
+-- silent kind of loosening, where a glob edit moves every line and
+-- the baseline still looks agreed-to.
 data Baseline = Baseline
   { bCont :: [[Integer]]
   , bDisc :: [Integer]
   , bSoft :: Maybe Integer
+  , bClassDigest :: Maybe Integer
   }
 
 data RatchetKnobs = RatchetKnobs
@@ -48,12 +53,21 @@ data Ratcheted = Ratcheted
   , rNewDisc :: [Integer]
   }
 
--- | The single-edit ceiling allowance: max of the +2% leg (integer
--- div truncates DOWN — the conservative side, the "ties don't open"
--- stance) and the +10 leg. The legs cross at ceiling 500;
--- Spec.costModel pins one assertion on each side.
-tolerated :: RatchetKnobs -> Integer -> Integer
-tolerated k c = max (c * rTolNum k `div` rTolDen k) (c + rTolAbs k)
+-- | The single-edit ceiling allowance. Globally: max of the +2% leg
+-- (integer div truncates DOWN — the conservative side, the "ties
+-- don't open" stance) and the +10 leg; the legs cross at ceiling 500
+-- and Spec.costModel pins one assertion on each side.
+--
+-- A class that declares its own tolerance REPLACES both legs with an
+-- absolute allowance (5.1.0). Absolute, not proportional, on purpose:
+-- the classes that want this knob are vendored trees and fixtures,
+-- which want either zero slack or a fixed number of lines, and a
+-- percentage of a large file is exactly the unearned growth the plan
+-- objected to. t = 0 therefore means ANY growth is over — the global
+-- legs cannot rescue it, because they are not consulted.
+tolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer
+tolerated _ (Just t) c = c + t
+tolerated k Nothing c = max (c * rTolNum k `div` rTolDen k) (c + rTolAbs k)
 
 -- | Judge current facts against the baseline. Continuous: per
 -- (entity, metric) — value above tolerated(ceiling) is OVER; above
@@ -63,32 +77,51 @@ tolerated k c = max (c * rTolNum k `div` rTolDen k) (c + rTolAbs k)
 -- plain set difference both ways; the new set IS the current set —
 -- the only-shrink stance (new ⊆ old) is the CALLER's acceptance
 -- gate, not a fact this function may fake.
-ratchet :: RatchetKnobs -> Maybe Baseline -> [[Integer]] -> [Integer] -> Ratcheted
-ratchet _ Nothing cont disc = Ratcheted [] [] [] [] cont disc
-ratchet k (Just b) cont disc =
+ratchet ::
+  RatchetKnobs ->
+  (Integer -> Maybe Integer) ->
+  Maybe Baseline ->
+  [[Integer]] ->
+  [Integer] ->
+  Ratcheted
+ratchet _ _ Nothing cont disc = Ratcheted [] [] [] [] (map identity cont) disc
+ratchet k classTol (Just b) cont disc =
   Ratcheted
     { rOver =
         [ [u, c, v, allowed]
-        | ((u, c), (v, Just bv)) <- rows
-        , let allowed = tolerated k bv
+        | ((u, c), (v, Just _, allowed)) <- rows
         , v > allowed
         ]
     , rDrawn =
         [ [u, c, v - bv]
-        | ((u, c), (v, Just bv)) <- rows
+        | ((u, c), (v, Just bv, allowed)) <- rows
         , bv < v
-        , v <= tolerated k bv
+        , v <= allowed
         ]
     , rAdded = S.toAscList (curSet `S.difference` baseSet)
     , rRemoved = S.toAscList (baseSet `S.difference` curSet)
-    , rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv)) <- rows]
+    , rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]
     , rNewDisc = disc
     }
  where
   baseMap = M.fromList [((u, c), v) | [u, c, v] <- bCont b]
+  -- the class is read from the CURRENT row and spends only on the
+  -- allowance; the baseline stays three columns, so a class is a
+  -- charging parameter and never a ratchet fact (plan v2.13 ①)
   rows =
-    [ ((u, c), (v, M.lookup (u, c) baseMap))
-    | [u, c, v] <- cont
+    [ ((u, c), (v, mbv, maybe 0 (tolerated k (classTol cls)) mbv))
+    | (u : c : v : rest) <- cont
+    , let cls = classOf rest
+    , let mbv = M.lookup (u, c) baseMap
     ]
+  -- the 4th column when it rides, class 0 (the global table) when it
+  -- does not: an unclassed row keeps the global legs exactly
+  classOf (x : _) = x
+  classOf [] = 0
   curSet = S.fromList disc
   baseSet = S.fromList (bDisc b)
+
+-- | A row stripped to its ratchet identity and value: the class
+-- column, when it rides, is not part of what a baseline records.
+identity :: [Integer] -> [Integer]
+identity = take 3

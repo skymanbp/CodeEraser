@@ -78,6 +78,12 @@ pub struct Request {
     /// (score::knobs::class_knob_rows), empty = no override rides.
     pub classed: bool,
     pub class_knobs: Vec<[i64; 3]>,
+    /// The rulepack FINGERPRINT (5.1.0), None when no class is
+    /// declared. The baseline records the digest its ceilings were
+    /// established under, and the core fails by name when the two
+    /// disagree — so a glob edit stops being a silent way to move
+    /// every line at once (config::RulesCfg::digest).
+    pub class_digest: Option<u64>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -132,6 +138,7 @@ impl Request {
             continuous: Vec::new(),
             classed: false,
             class_knobs: Vec::new(),
+            class_digest: None,
             discrete: Vec::new(),
             baseline: Value::Null,
             floor: None,
@@ -147,6 +154,13 @@ impl Request {
             judged_mask: 0,
         }
     }
+}
+
+/// A table's rows, or None when it has none: an empty optional table
+/// and an absent one are the same wire fact, and the difference
+/// between them is a byte a legacy request never sent.
+fn some_rows<T: serde::Serialize>(rows: &[T]) -> Option<Value> {
+    (!rows.is_empty()).then(|| json!(rows))
 }
 
 pub fn body(r: &Request) -> Value {
@@ -168,11 +182,33 @@ pub fn body(r: &Request) -> Value {
         "baseline": r.baseline,
         "floor": r.floor,
     });
-    if !r.class_knobs.is_empty() {
-        o["classKnobs"] = json!(r.class_knobs);
+    // every key that rides CONDITIONALLY rides one table (the loop
+    // below already did this for the four knob tables; the ifs around
+    // it were the same statement written eight more times). Absent is
+    // not null and not []: a repo without a feature must send the
+    // bytes it sent before the feature existed, which is what every
+    // "absent = byte-identical" counterfactual in VERSIONING rests on.
+    let optional = [
+        ("classKnobs", some_rows(&r.class_knobs)),
+        // the fence rides whenever a rulepack is declared, even one
+        // whose knobs are all defaults: what it fences is the
+        // DECLARATION, and a class with no knobs still decides which
+        // files it owns
+        ("classDigest", r.class_digest.map(|d| json!(d))),
+        ("dedup", r.dedup.map(|p| json!(p))),
+        ("dedupDistinct", some_rows(&r.dedup_distinct)),
+        ("dedupMinDistinct", r.dedup_min_distinct.map(|f| json!(f))),
+        (
+            "judgedMask",
+            (r.judged_mask != 0).then(|| json!(r.judged_mask)),
+        ),
+        ("docFiles", some_rows(&r.doc_files)),
+    ];
+    for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
+        o[key] = value;
     }
-    // the four knob tables ride one loop — table-driven at the
-    // assembly site too, not just in the core's evaluator
+    // the four knob tables ride unconditionally, so they keep their
+    // own loop rather than pretending to be optional
     for (key, rows) in [
         ("ceilings", &r.ceilings),
         ("weights", &r.weights),
@@ -181,22 +217,7 @@ pub fn body(r: &Request) -> Value {
     ] {
         o[key] = json!(rows);
     }
-    if let Some(pair) = r.dedup {
-        o["dedup"] = json!(pair);
-    }
-    if !r.dedup_distinct.is_empty() {
-        o["dedupDistinct"] = json!(r.dedup_distinct);
-    }
-    if let Some(f) = r.dedup_min_distinct {
-        o["dedupMinDistinct"] = json!(f);
-    }
     o["judgedLoc"] = json!(r.judged_loc);
-    if r.judged_mask != 0 {
-        o["judgedMask"] = json!(r.judged_mask);
-    }
-    if !r.doc_files.is_empty() {
-        o["docFiles"] = json!(r.doc_files);
-    }
     o
 }
 

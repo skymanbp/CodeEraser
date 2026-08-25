@@ -116,14 +116,23 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
     // added∨over — the set re-interpretation retires, the counts
     // below are reporting
     if o.reply.fail {
+        // the core names which conditions held; counts alone would say
+        // "0 new member(s), 0 ceiling(s) busted" the day the rulepack
+        // fence (5.1.0) became a fourth way to fail, which tells an
+        // operator nothing about what to do next
         eprintln!(
             "{}",
             codeeraser::i18n::line(
-                "baseline: {} new member(s), {} ceiling(s) busted — both halves only \
-                 improve; set CE_ACCEPT_BASELINE=1 to re-establish from the current tree",
-                "baseline：新增成员 {} 个、突破天花板 {} 处 — 两半都只准改善；\
-                 设 CE_ACCEPT_BASELINE=1 方可按当前树重立",
-                &[&o.reply.added.len(), &o.reply.over.len()],
+                "baseline: refused by {} - {} new member(s), {} ceiling(s) busted; both \
+                 halves only improve, and a rulepack change needs a named floor. Set \
+                 CE_ACCEPT_BASELINE=1 to re-establish from the current tree",
+                "baseline：被 {} 拒绝 - 新增成员 {} 个、突破天花板 {} 处；两半都只准改善，\
+                 规则包变更亦须具名重立。设 CE_ACCEPT_BASELINE=1 方可按当前树重立",
+                &[
+                    &o.reply.failed.join(", "),
+                    &o.reply.added.len(),
+                    &o.reply.over.len(),
+                ],
             )
         );
         return ExitCode::FAILURE;

@@ -124,14 +124,24 @@ globs = ["third_party/**", "**/*.pb.rs"]   # 与 exclude 列表同一套 glob �
 file_lines_warn = 600
 file_lines_fail = 1200                       # 该类自己的硬线
 cognitive_warn  = 25
+ratchet_tolerance = 0                        # 该类一行都不许长
 ```
 
 三面同读这一条线、彼此不可能打架：分数的尺寸与复杂度轴（wire proto 3.1.0——连续行携类下标、
 `classKnobs` 表伴行过线，而基线永远三列，所以类是本次收费参数、绝非棘轮事实）、`ce scan` 阶梯
 （proto 3.2.0——`rowClasses` 与 `gradeOverrides` 伴行过线、回复原样回显）、PreToolUse 硬预算
 （零 wire——钩子在本地解析文件自己的表）。类名与 glob 永不过线，过线的只有类下标与 knobs
-（ADR-008）。至多 64 类；fail 线低于 warn 线的类在加载时被拒，与全局阶梯同律。未声明任何类的
-仓库——含本仓——判决逐字节不变；一旦声明，文件被量的线就变了，跨这道开关的分数**不可比较**。
+（ADR-008）。至多 64 类；fail 线低于 warn 线的类在加载时被拒，与全局阶梯同律。
+
+自 proto 5.1.0 起，类还可声明 `ratchet_tolerance`——它自己的 ADR-006 容差，单位是行数。一旦声明就
+**取代两条全局腿**，故 `0` 意味着该类一行都不许长、全局 `max(+2%, +10)` 救不了它——这正是 vendored 树
+与冻结夹具想要的设置，也正是让这类树别再花掉手写代码需要的增长额度的那一条。而既然改一个 glob 本可以
+一次挪动所有的线，基线自此记录它**在哪套规则包下立的指纹**：改名、改 glob、改旋钮、甚至只改声明顺序，
+`ce check` 都会**具名停下**（`class_digest`），而不是悄悄放松。同意一套新规则包与同意一条新地板是同一个
+动作——`CE_ACCEPT_BASELINE=1 ce baseline`，在 git 里看得见。
+
+未声明任何类的仓库——含本仓——判决逐字节不变、不发指纹、基线文件也不多一个键；一旦声明，文件被量的线
+就变了，跨这道开关的分数**不可比较**。
 键位见 [ce.toml 参考](docs/reference/ce-toml.md)，收费定律见
 [方法学 05](docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md)。
 

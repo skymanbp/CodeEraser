@@ -17,6 +17,7 @@ import CE.Verdict (respond)
 import CE.Verdict.Cost (classCap)
 import CE.Verdict.Score (Facts (..), classKnobsOf, penalties, scoreBound)
 import Data.Aeson
+import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import VerdictWireProps (replyObj, wireReq)
 import WireHarness (field, refusedBy, runChecks, setKey)
@@ -25,7 +26,8 @@ battery :: IO Bool
 battery = do
   pureHalf <- runChecks (zip pureNames [classLine, classCoc, classHard, fallback, permutation])
   wireHalf <- runChecks (zip wireNames [mixedArity, beyondFence, classZero, knobShape, threeColumnLaw, echo])
-  pure (pureHalf && wireHalf)
+  fence <- runChecks (zip fenceNames [fenceAbsent, fenceDrifts, fenceRecorded, classTolBinds])
+  pure (pureHalf && wireHalf && fence)
  where
   pureNames =
     [ "C2: a class's own warn line clears its rows' size charge"
@@ -41,6 +43,12 @@ battery = do
     , "the knob table refuses an unknown code, a zero value, a disorder"
     , "the class column never reaches the baseline"
     , "the class rows echo exactly when they rode"
+    ]
+  fenceNames =
+    [ "K11: no rulepack, no digest — absent, not null, in the newBaseline"
+    , "K12: a changed rulepack fails BY NAME, not by silent relaxation"
+    , "K13: establish records the digest, and the baseline stays three columns"
+    , "K14: a class tolerance of 0 refuses one line, and the global legs do not save it"
     ]
 
 -- | Size and complexity facts alone: classed rows and the knob rows,
@@ -110,13 +118,85 @@ classZero = refused (setKey "classKnobs" (toJSON [[0, 0, 400 :: Integer]]) base)
 knobShape :: Bool
 knobShape =
   and
-    [ refused (knobs [[1, 3, 5]]) "unknown class knob code"
+    [ refused (knobs [[1, 4, 5]]) "unknown class knob code"
     , refused (knobs [[1, 0, 0]]) "knob below 1"
     , refused (knobs [[2, 0, 5], [1, 0, 5]]) "not strictly ascending"
     , refused (knobs [[classCap, 0, 5]]) "class beyond the fence"
+    , -- code 3 is the ratchet allowance and ZERO is its whole point:
+      -- the per-code bound is what lets a line keep its floor of 1
+      -- while an allowance may be nothing at all
+      not (refused (knobs [[1, 3, 0]]) "knob below")
     ]
  where
   knobs rows = setKey "classKnobs" (toJSON (rows :: [[Integer]])) base
+
+-- | One key out of the reply's newBaseline object.
+newBaselineKey :: Value -> String -> Maybe Value
+newBaselineKey req k = case replyObj req of
+  Just o -> case field o "newBaseline" of
+    Just (Object nb) -> KM.lookup (Key.fromString k) nb
+    _ -> Nothing
+  Nothing -> Nothing
+
+-- | The reply's HELD fail-condition names.
+heldConditions :: Value -> Maybe Value
+heldConditions req = case replyObj req of
+  Just o -> case field o "ratchet" of
+    Just (Object rt) -> KM.lookup "failed" rt
+    _ -> Nothing
+  Nothing -> Nothing
+
+-- | K11: a repo that declares no rulepack sends no digest, and the
+-- newBaseline it gets back does not carry the key at all. Absent, not
+-- null: a key holding null is a byte a pre-fence baseline file never
+-- had, and this fence is not allowed to cost such a repo one byte.
+fenceAbsent :: Bool
+fenceAbsent =
+  newBaselineKey base "classDigest" == Nothing
+    && newBaselineKey (setKey "classDigest" Null base) "classDigest" == Nothing
+
+-- | K12: the ceilings were established under one rulepack and this
+-- run declares another. The point is not that it fails — it is that
+-- it fails BY NAME, so the operator learns which floor to re-name
+-- instead of watching every ceiling quietly move.
+fenceDrifts :: Bool
+fenceDrifts =
+  heldConditions drifted == Just (toJSON (["class_digest"] :: [String]))
+    && heldConditions agreed == Just (toJSON ([] :: [String]))
+ where
+  established d = setKey "baseline" (object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Integer]), "classDigest" .= (d :: Integer)])
+  drifted = established 111 (setKey "classDigest" (toJSON (222 :: Integer)) base)
+  agreed = established 111 (setKey "classDigest" (toJSON (111 :: Integer)) base)
+
+-- | K13: establish (no baseline) records the digest this run declares
+-- — the named act — while the ratchet rows it writes stay three
+-- columns, because a class is a charging parameter and never a fact.
+fenceRecorded :: Bool
+fenceRecorded =
+  newBaselineKey req "classDigest" == Just (toJSON (777 :: Integer))
+    && newBaselineKey req "continuous" == Just (toJSON [[0, 0, 310 :: Integer]])
+ where
+  req = setKey "classDigest" (toJSON (777 :: Integer)) (withCont [[0, 0, 310, 1]])
+
+-- | K14: class 1 declares a zero allowance and grows by one line —
+-- over. Class 2 declares none and grows by the same line — inside the
+-- global +10 leg, so merely drawn. The global legs do not rescue
+-- class 1, because a declared allowance replaces them rather than
+-- joining them.
+classTolBinds :: Bool
+classTolBinds = over == Just (toJSON [[0, 0, 301, 300 :: Integer]]) && drawn == Just (toJSON ([] :: [Value]))
+ where
+  req cls =
+    setKey "classKnobs" (toJSON [[1, 3, 0 :: Integer]]) $
+      setKey "baseline" (object ["continuous" .= [[0, 0, 300 :: Integer]], "discrete" .= ([] :: [Integer])]) $
+        withCont [[0, 0, 301, cls]]
+  ratchetKey r k = case replyObj r of
+    Just o -> case field o "ratchet" of
+      Just (Object rt) -> KM.lookup (Key.fromString k) rt
+      _ -> Nothing
+    Nothing -> Nothing
+  over = ratchetKey (req 1) "over"
+  drawn = ratchetKey (req 2) "over"
 
 -- | A classed request with no baseline establishes: the newBaseline
 -- it hands back carries the three-column prefix alone.

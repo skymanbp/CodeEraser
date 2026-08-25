@@ -113,6 +113,15 @@ data VerdictReq = VerdictReq
     -- cross (§5.9.2). Absent = [] = every row judges on the global
     -- lines, byte-identical to the legacy road.
     reqClassKnobs :: [[Integer]]
+  , -- plan v2.14 ② (5.1.0, additive): the rulepack FINGERPRINT — a
+    -- scalar over the normalized [[rules.class]] declaration (names,
+    -- globs in declaration order, knobs). Names and globs still never
+    -- cross (§5.9.2); a hash of them is not them. Absent = no class
+    -- declared. The baseline records the digest it was established
+    -- under, and a mismatch is a NAMED fail, so "edit a glob and every
+    -- ceiling quietly moves" becomes a hard stop instead of a
+    -- possibility.
+    reqClassDigest :: Maybe Integer
   }
 
 instance FromJSON VerdictReq where
@@ -139,6 +148,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "docFiles" .!= []
       <*> o .:? "judgedMask" .!= 0
       <*> o .:? "classKnobs" .!= []
+      <*> o .:? "classDigest"
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -205,7 +215,7 @@ parseBaseline :: Value -> Either String (Maybe Baseline)
 parseBaseline Null = Right Nothing
 parseBaseline v = case AT.parse bl v of
   AT.Error e -> Left ("baseline: " <> e)
-  AT.Success (cont, disc, soft) ->
+  AT.Success (cont, disc, soft, digest) ->
     case asum
       [ asum (zipWith contShape [0 :: Int ..] cont)
       , ascendingBy "baseline.continuous" 2 cont
@@ -213,10 +223,10 @@ parseBaseline v = case AT.parse bl v of
       , softShape soft
       ] of
       Just why -> Left why
-      Nothing -> Right (Just (Baseline cont disc soft))
+      Nothing -> Right (Just (Baseline cont disc soft digest))
  where
   bl = withObject "baseline" $ \o ->
-    (,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine"
+    (,,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine" <*> o .:? "classDigest"
   contShape i row = case row of
     [_, code, _]
       | any (< 0) row -> Just (label "baseline.continuous" i <> "negative field")

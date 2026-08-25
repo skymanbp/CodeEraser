@@ -22,7 +22,7 @@
   "docs/reference/methodology.md:5": {
     "target": "../../README.md",
     "line": 172,
-    "text": "NDJSON wire. Haskell owns product decisions: score and ratchet"
+    "text": "Rust owns source-facing work: tree-sitter parsing, the SQLite WAL"
   },
   "docs/reference/methodology.md:6": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -2526,7 +2526,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:13": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 158,
+    "line": 168,
     "text": "deadIndegCeil :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:14": {
@@ -2536,12 +2536,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:15": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 90,
+    "line": 91,
     "text": "rewriteNum :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:16": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 93,
+    "line": 94,
     "text": "rewriteDen :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:17": {
@@ -2591,7 +2591,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:25": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 198,
+    "line": 208,
     "text": "defaultWeight :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:26": {
@@ -2601,7 +2601,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:27": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 121,
+    "line": 112,
     "text": ", -- the effective weight table 0..6 (review C3, 2.8.0"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:28": {
@@ -2611,7 +2611,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:29": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 170,
+    "line": 180,
     "text": "violCost :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:3": {
@@ -2621,12 +2621,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:30": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 192,
+    "line": 202,
     "text": "violCostNeutral :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:31": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 206,
+    "line": 216,
     "text": "scoreScale :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:32": {
@@ -2641,22 +2641,22 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:34": {
     "target": "../../../core/app/CE/Verdict/Table.hs",
-    "line": 88,
+    "line": 95,
     "text": "weightsOffence :: [[Integer]] -> Maybe String"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:35": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 238,
+    "line": 228,
     "text": "-- | Over-cap refusal: a well-formed degraded result with the FULL"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:36": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 215,
+    "line": 225,
     "text": "verdictNodeCap :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:37": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 47,
+    "line": 49,
     "text": ""
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:38": {
@@ -2676,7 +2676,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:40": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 116,
+    "line": 126,
     "text": "-- | The hard line H (plan §4.1's 750), reaching the core for the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:41": {
@@ -2686,12 +2686,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:42": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 120,
+    "line": 130,
     "text": "sizeHard :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:43": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 123,
+    "line": 133,
     "text": "-- | P_max: the axis-0 penalty of a file AT the hard line, in the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:44": {
@@ -2721,17 +2721,17 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:49": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 133,
+    "line": 143,
     "text": "-- | k: the multiplicative-MAD exponent in the soft-line derivation"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:5": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 151,
+    "line": 161,
     "text": "cocCeil :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:50": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 140,
+    "line": 150,
     "text": "-- | The §B clamp fence: however the repo's distribution leans, the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:51": {
@@ -2746,7 +2746,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:53": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 139,
+    "line": 130,
     "text": "-- the soft line judging THIS run: the committed one, or (only at"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:54": {
@@ -2756,12 +2756,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:55": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 109,
+    "line": 119,
     "text": "-- | Size-axis soft-line FALLBACK: when the baseline carries no"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:56": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 187,
+    "line": 205,
     "text": "-- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:57": {
@@ -2771,7 +2771,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:58": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 134,
+    "line": 125,
     "text": "-- the class rows fold into ONE Map here, once per judgment (3.1.0)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:59": {
@@ -2796,8 +2796,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:62": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 150,
-    "text": "r = ratchet rk base (map (take 3) (reqCont req)) (reqDisc req)"
+    "line": 139,
+    "text": "-- (plan v2.13 ①): the rows arrive whole so a class may set its own"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:63": {
     "target": "../../../core/app/CE/Verdict/Table.hs",
@@ -2806,7 +2806,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:64": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 76,
+    "line": 77,
     "text": "classCap :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:65": {
@@ -2826,12 +2826,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:68": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 55,
-    "text": "tolerated :: RatchetKnobs -> Integer -> Integer"
+    "line": 56,
+    "text": "-- | The single-edit ceiling allowance. Globally: max of the +2% leg"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:69": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 100,
+    "line": 101,
     "text": "tolNum :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:7": {
@@ -2841,42 +2841,42 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:70": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 53,
-    "text": "-- stance) and the +10 leg. The legs cross at ceiling 500;"
+    "line": 56,
+    "text": "-- | The single-edit ceiling allowance. Globally: max of the +2% leg"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:71": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 96,
+    "line": 97,
     "text": "-- | ADR-006 continuous-ratchet tolerance: a ceiling may be exceeded"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:72": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 62,
+    "line": 76,
     "text": "-- saw adopt their value (bootstrap, not a violation). Discrete:"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:73": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 70,
+    "line": 90,
     "text": "{ rOver ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:74": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 76,
+    "line": 95,
     "text": ", rDrawn ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:75": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 43,
+    "line": 48,
     "text": "-- ^ [u,metricCode,drawn]: over the ceiling but inside tolerance —"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 84,
-    "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv)) <- rows]"
+    "line": 103,
+    "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 58,
+    "line": 72,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
@@ -2886,7 +2886,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 82,
+    "line": 101,
     "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:8": {
@@ -2896,23 +2896,23 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:80": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 93,
+    "line": 121,
     "text": "curSet = S.fromList disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 85,
+    "line": 104,
     "text": ", rNewDisc = disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 62,
+    "line": 76,
     "text": "-- saw adopt their value (bootstrap, not a violation). Discrete:"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 67,
-    "text": "ratchet _ Nothing cont disc = Ratcheted [] [] [] [] cont disc"
+    "line": 80,
+    "text": "ratchet ::"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:84": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
@@ -2927,11 +2927,11 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:86": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 179,
-    "text": "failConditions :: Ratcheted -> Bool -> Bool -> [(String, Bool)]"
+    "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:87": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 151,
+    "line": 144,
     "text": "floorFail = maybe False (perMille <) (reqFloor req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:88": {
@@ -2941,8 +2941,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:89": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 153,
-    "text": "conds = failConditions r floorFail dedupOver"
+    "line": 146,
+    "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:9": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2951,8 +2951,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:90": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 101,
-    "text": ", \"fail\" .= failBit"
+    "line": 97,
+    "text": ", \"ratchet\" .= ratchetObj r conds"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
     "target": "../../../core/app/CE/Verdict.hs",
@@ -2966,7 +2966,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 36,
+    "line": 41,
     "text": "ratchetBound :: RatchetKnobs"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
@@ -2986,7 +2986,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:97": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 46,
+    "line": 48,
     "text": "parsed = parseBaseline (reqBaseline req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:1": {
@@ -3821,12 +3821,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 218,
+    "line": 219,
     "text": "out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 198,
+    "line": 199,
     "text": "/// File pairs with at least one verified block, kind 0 (t1t2) at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
@@ -3890,8 +3890,8 @@
     "text": "-- | One side's graph position (the Position.hs row minus its echoed"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:35": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 216,
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 29,
     "text": "-- wire flags are structurally 0 at file granularity (entry-ness"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:36": {
@@ -3915,8 +3915,8 @@
     "text": ", lChurnA :: (Integer, Integer)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:4": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 204,
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 17,
     "text": "-- | Join-candidate rows, one per sim row (split from result at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:40": {
@@ -3931,17 +3931,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 292,
+    "line": 293,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 224,
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 37,
     "text": "churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap] <- reqChurn req]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 318,
+    "line": 319,
     "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
@@ -3951,17 +3951,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:46": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 90,
+    "line": 91,
     "text": "rewriteNum :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:47": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 93,
+    "line": 94,
     "text": "rewriteDen :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:48": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 82,
+    "line": 83,
     "text": "cochangeFloor :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:49": {
@@ -3996,7 +3996,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:54": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 80,
+    "line": 81,
     "text": "-- own table floor (pairs enter it at count >= 2), so the lattice"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:55": {
@@ -4150,13 +4150,13 @@
     "text": "c <- check \"legsMask honest: gated => 3 legs; graph-absent never gates\" legsHonest"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:82": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 210,
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 23,
     "text": "[ -- the 6th column is the leg-agreement confidence (2.33.0, H4)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:83": {
     "target": "../../../cli/src/score/wire.rs",
-    "line": 87,
+    "line": 93,
     "text": "pub candidates: Vec<[i64; 6]>,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:84": {
@@ -4181,13 +4181,13 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:88": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 92,
+    "line": 94,
     "text": "\"joinSeverity\" .= [[c, s] | (c, s) <- severities]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:89": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 179,
-    "text": "failConditions :: Ratcheted -> Bool -> Bool -> [(String, Bool)]"
+    "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:9": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -4196,8 +4196,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:90": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 153,
-    "text": "conds = failConditions r floorFail dedupOver"
+    "line": 146,
+    "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:91": {
     "target": "../../../cli/src/score/report.rs",
@@ -4236,7 +4236,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:98": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 167,
+    "line": 168,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:99": {
@@ -4382,7 +4382,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"5.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"5.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5872,7 +5872,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 333,
-    "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
+    "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -5922,12 +5922,12 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:39": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 342,
-    "text": "> （H 处斜率相接，仍单调恒收费，但平方不出契约域 (S,H]）。动因="
+    "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 333,
-    "text": "> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧"
+    "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -5977,7 +5977,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 338,
-    "text": "> 文档重复按文件数、复杂度按函数数、死码与循环按图节点数、churn 按"
+    "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:5": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -6002,7 +6002,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:53": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 330,
-    "text": "> （任一文件级死判决即 fail；降级应答自带 fail=true——verdict 族 P1 立场）。"
+    "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
     "target": "../../../cli/src/erase/gather.rs",
