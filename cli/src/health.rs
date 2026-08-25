@@ -88,12 +88,27 @@ fn index_summary(root: &Path) -> String {
     }
 }
 
+/// A feed line is degraded when its OWN bit says so, or when any
+/// producer nested inside it does. A Stop audit's top-level bit is
+/// the DEDUP leg's (`ev.dups.is_none()`, audit.rs) while the L2
+/// degradation lands a level down as `fourclass.degraded` — so the
+/// one the A9f promise is most about, ce-core unreachable, was the
+/// one `ce doctor` could not see. Scanning nested objects instead of
+/// naming `fourclass` covers the next producer too: choosing which
+/// keys to look at is how the hole opened.
+fn line_degraded(line: &serde_json::Value) -> bool {
+    let flag = |v: &serde_json::Value| v["degraded"] == serde_json::Value::Bool(true);
+    flag(line)
+        || line
+            .as_object()
+            .is_some_and(|o| o.values().any(|v| v.is_object() && flag(v)))
+}
+
 /// (degraded, total) entries in the project's observe feed — the A9f
-/// visibility counter surfaced by `ce doctor` (plan §5.9-5). Every
-/// producer (guard probe, Stop audit, precommit) stamps `degraded`,
-/// so this is a plain count. The total gives the lifetime frame: the
-/// feed is append-only, so the degraded count alone never returns to
-/// zero after one incident (attack-review finding).
+/// visibility counter surfaced by `ce doctor` (plan §5.9-5). The
+/// total gives the lifetime frame: the feed is append-only, so the
+/// degraded count alone never returns to zero after one incident
+/// (attack-review finding).
 pub fn degraded_runs(root: &Path) -> (usize, usize) {
     let Ok(log) = std::fs::read_to_string(root.join(".ce/observe.ndjson")) else {
         return (0, 0);
@@ -102,10 +117,7 @@ pub fn degraded_runs(root: &Path) -> (usize, usize) {
         .lines()
         .filter_map(|l| serde_json::from_str(l).ok())
         .collect();
-    let degraded = entries
-        .iter()
-        .filter(|j| j["degraded"] == serde_json::Value::Bool(true))
-        .count();
+    let degraded = entries.iter().filter(|j| line_degraded(j)).count();
     (degraded, entries.len())
 }
 
@@ -137,3 +149,7 @@ fn ping_line(ping: impl Fn(&Path) -> anyhow::Result<Response>, root: &Path, down
         _ => down.into(),
     }
 }
+
+#[cfg(test)]
+#[path = "health_tests.rs"]
+mod tests;

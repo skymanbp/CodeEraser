@@ -2,8 +2,12 @@
 //! long-lived child, never the short-lived hook's). Holds the
 //! corelink across requests with a restart budget: after
 //! MAX_FAILURES consecutive open/request failures the daemon stops
-//! retrying for its lifetime and reports degraded — visible,
-//! never a storm (R-L2-8).
+//! retrying for its lifetime and reports degraded — never a storm
+//! (R-L2-8). "Visible" means the REPORT's own degraded field, which
+//! reaches the observe feed and `ce doctor`: the stderr line below
+//! is written to a null handle whenever the daemon was lazily
+//! spawned (client.rs gives it Stdio::null), so it is a courtesy for
+//! a foreground daemon, never the channel the A9f promise rests on.
 
 use crate::corelink::Link;
 use crate::fourclass::batch::{PairInput, classify_batch};

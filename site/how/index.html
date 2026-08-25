@@ -338,8 +338,9 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
   present legs contributed a held condition — and the table's severity face ships once
   as <code>joinSeverity</code>; <code>ce join</code> judges its pairs over the SAME
   verdict/1 road the check gate uses. The join still produces <em>candidates</em>; no
-  verdict code appears in the fail bit, and <code>ce join</code> always exits
-  success.</p>
+  verdict code appears in the fail bit, so <code>ce join</code> never gates on
+  its own verdicts — it exits 0 unless the run itself fails, and a missing or
+  refusing core is a run failure (exit 2), not a quiet pass.</p>
   <ul class="consts">
     <li><b>rewriteNum/Den</b> 50/100</li>
     <li><b>cochangeFloor</b> 2</li>

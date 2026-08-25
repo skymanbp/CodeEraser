@@ -110,9 +110,13 @@ staleMin = 1
 -- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own
 -- copy of the zone triple — S/H/P_max — because the structure
 -- family must price a seam without a verdict/1 request in flight.
--- Rust sends the SAME numbers it sends verdict/1 (the committed
--- softLine + ce.toml), so the two families cannot disagree at
--- default settings (knob code 12 / 13 / 14).
+-- Rust sends the SAME numbers it sends verdict/1 — the committed
+-- softLine, ce.toml's file_lines_fail, and (6.1.0) score's
+-- size_penalty_max when one is declared — so the two families cannot
+-- disagree about the curve (knob code 12 / 13 / 14). Until 6.1.0
+-- only 12 and 13 rode: a repo declaring size_penalty_max got the
+-- declared P_max in its score and the default 10 in its advisory,
+-- and both halves looked right on their own.
 seamSoft :: Integer
 seamSoft = 300
 

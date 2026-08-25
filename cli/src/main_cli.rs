@@ -109,7 +109,9 @@ pub(crate) enum Cmd {
         core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
-        /// Exit 1 when any file-tier dead verdict lands
+        /// Exit 1 when any file-tier dead verdict lands, or when the
+        /// judgment itself degraded (a gate that could not judge
+        /// never passes)
         #[arg(long)]
         check: bool,
     },

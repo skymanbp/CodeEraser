@@ -277,11 +277,24 @@ fn assemble(
     // committed_soft — with this repo's frozen 304 the two disagreed
     // on every file in 301..=304, and on a wide-distribution corpus
     // (S clamped to 500) the ROI inflated ~2.8x.
+    // ... and code 14, P_max, whenever ce.toml declares one. Sending
+    // 12 and 13 alone was the same defect one knob further along: the
+    // advisory priced at the core's built-in 10 while `verdict/1` got
+    // the declared value through score::knobs::ceiling_rows code 3,
+    // so a repo setting `[score] size_penalty_max` had its two
+    // families disagree about the SAME curve — silently, since both
+    // answers are internally consistent. Absent stays absent: the
+    // core default judges, which is what keeps an undeclaring repo
+    // byte-identical.
     let knobs = if seams.is_some() {
-        vec![
+        let mut k = vec![
             [12, committed_soft(root)],
             [13, cfg.thresholds.file_lines_fail as u64],
-        ]
+        ];
+        if let Some(p) = cfg.score.size_penalty_max {
+            k.push([14, u64::from(p)]);
+        }
+        k
     } else {
         Vec::new()
     };

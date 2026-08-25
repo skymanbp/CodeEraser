@@ -284,7 +284,7 @@ and returns the *first* offender by name ([Structure.hs:100-115](../../../core/a
   `staleDocRows`/`staleEdgeRows` validators own staleness now)
   ([Structure.hs:137-161](../../../core/app/CE/Structure.hs#L137)).
 
-**Over-cap.** `structNodeCap = 524288` ([Cost.hs:149-152](../../../core/app/CE/Structure/Cost.hs#L149)).
+**Over-cap.** `structNodeCap = 524288` ([Cost.hs:153-156](../../../core/app/CE/Structure/Cost.hs#L153)).
 Node rows *and* the seam tables count against the same cap — a declared cap that misses a
 request dimension walks that dimension uncapped
 ([Structure.hs:102-107](../../../core/app/CE/Structure.hs#L102)). Over-cap answers a **complete degraded

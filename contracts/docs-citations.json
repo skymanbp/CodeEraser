@@ -2476,7 +2476,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:83": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 149,
+    "line": 153,
     "text": "-- | Node ceiling (the verdictRowCap magnitude anchor): over-cap"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:84": {
@@ -4291,8 +4291,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:16": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 282,
-    "text": "[12, committed_soft(root)],"
+    "line": 290,
+    "text": "let mut k = vec!["
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:17": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
@@ -4300,14 +4300,14 @@
     "text": "-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:18": {
-    "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 116,
-    "text": "seamSoft :: Integer"
+    "target": "../../../cli/tests/structure_knobs.rs",
+    "line": 66,
+    "text": "#[test]"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:19": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 119,
-    "text": "seamHard :: Integer"
+    "line": 120,
+    "text": "seamSoft :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:2": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4316,53 +4316,53 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:20": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 122,
-    "text": "seamPMax :: Integer"
+    "line": 123,
+    "text": "seamHard :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:21": {
+    "target": "../../../core/app/CE/Structure/Cost.hs",
+    "line": 126,
+    "text": "seamPMax :: Integer"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:22": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 204,
     "text": "cost u ="
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:22": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:23": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 215,
     "text": "crossings :: [(Integer, Integer)] -> M.Map Integer Integer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:23": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:24": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 237,
     "text": "charge :: M.Map Integer Integer -> Integer -> Integer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:24": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:25": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 228,
     "text": "straddle (s, e) = case (M.lookupGE s lineIx, M.lookupLT e lineIx) of"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:25": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:26": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 131,
+    "line": 135,
     "text": "roiRefMilli :: Integer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:26": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:27": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 215,
     "text": "let lines: Vec<&str> = text.lines().collect();"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:27": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:28": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 143,
+    "line": 147,
     "text": "roiCloneMilli :: Integer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:28": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:29": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 79,
     "text": "/// span over two files)."
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:29": {
-    "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 146,
-    "text": "roiChurnMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:3": {
     "target": "../../../cli/src/structure/judge.rs",
@@ -4370,54 +4370,54 @@
     "text": "pub(crate) fn committed_soft(root: &Path) -> u64 {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:30": {
+    "target": "../../../core/app/CE/Structure/Cost.hs",
+    "line": 150,
+    "text": "roiChurnMilli :: Integer"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:31": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 115,
     "text": "if out.files.is_empty() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:31": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:32": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 134,
+    "line": 138,
     "text": "roiPhiMilli :: Integer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:32": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
     "line": 58,
     "text": ", -- the split-ROI advisory's seven (plan v2.6 §C codes 12..16,"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:33": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
     "line": 85,
     "text": ", kSeamSoft = Cost.seamSoft"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
     "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:36": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 212,
     "text": "/// appears word-bounded inside `from`'s span — the measurable v1"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:36": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:37": {
     "target": "../size-advisory.md",
     "line": 92,
     "text": "- **共引代理**：真·文件内符号共引不存在于任何缓存（v0.6 映射实证）；"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:37": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:38": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 236,
     "text": "/// on either side."
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:38": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:39": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 31,
     "text": "/// Mention names shorter than this are noise, not references (`new`,"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:39": {
-    "target": "../../../cli/src/structure/seams.rs",
-    "line": 225,
-    "text": "if i == j || name.len() < NAME_FLOOR {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:4": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -4425,54 +4425,54 @@
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:40": {
+    "target": "../../../cli/src/structure/seams.rs",
+    "line": 225,
+    "text": "if i == j || name.len() < NAME_FLOOR {"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:41": {
     "target": "../size-advisory.md",
     "line": 94,
     "text": "符噪声地板，词界判定钉在单测）。诚实局限：短名/字符串内提及会"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:41": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:42": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 89,
     "text": ".collect();"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:42": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:43": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 137,
+    "line": 141,
     "text": "-- | v1.1 prices (plan v2.7 ②, knob codes 17 / 18): a seam CUTTING"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:43": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:44": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 148,
     "text": "let since = format!(\"{CHURN_WINDOW_DAYS} days ago\");"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:44": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:45": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 109,
     "text": "/// over the window — [fileId, a, b] rows, a < b, distinct. Ledger"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:45": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:46": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 36,
     "text": "/// Churn window for the co-change leg — the §4.1 two-week anchor the"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:46": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:47": {
     "target": "../size-advisory.md",
     "line": 119,
     "text": "- 窗口 = 14 天（§4.1 双周锚），测量常数非 wire 旋钮。"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:47": {
-    "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 125,
-    "text": "-- | §C cost prices, in MILLI penalty-units (knob codes 15 / 16):"
-  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:48": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 128,
-    "text": "-- mental-load overhead the booklet names φ). Defaults sized so a"
+    "line": 129,
+    "text": "-- | §C cost prices, in MILLI penalty-units (knob codes 15 / 16):"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:49": {
-    "target": "../size-advisory.md",
-    "line": 107,
-    "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
+    "target": "../../../core/app/CE/Structure/Cost.hs",
+    "line": 132,
+    "text": "-- mental-load overhead the booklet names φ). Defaults sized so a"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:5": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4481,53 +4481,53 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:50": {
     "target": "../size-advisory.md",
+    "line": 107,
+    "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:51": {
+    "target": "../size-advisory.md",
     "line": 111,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:51": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:52": {
     "target": "../size-advisory.md",
     "line": 115,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:52": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:53": {
     "target": "../size-advisory.md",
     "line": 99,
     "text": "- **自仓首跑实证**（S=294 口径复核 2026-08-20）：graph_ladder.rs"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:53": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:54": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 178,
     "text": "in if b >= c"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:54": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:55": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 7,
     "text": "-- either the best viable seam (ROI >= 1) or an exemption row whose"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:55": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:56": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 174,
     "text": "step (cs, es) [fid, total] = case seams k (slice fid) total of"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:56": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:57": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 6,
     "text": "-- × roiRefMilli + the flat roiPhiMilli per new file — and answer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:57": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:58": {
     "target": "../size-advisory.md",
     "line": 53,
     "text": "- **区内仲裁**：过 S 而无可行缝（所有候选 ROI<1 = 高内聚长文件）"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:58": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:59": {
     "target": "../../../cli/src/structure/judge.rs",
     "line": 173,
     "text": "fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<SplitReport> {"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:59": {
-    "target": "../../../cli/src/structure/judge.rs",
-    "line": 183,
-    "text": "for &[fid, unit, benefit, cost] in &reply.split_candidates {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:6": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4535,54 +4535,54 @@
     "text": "let end = (u.end_line as u64).min(total);"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:60": {
+    "target": "../../../cli/src/structure/judge.rs",
+    "line": 183,
+    "text": "for &[fid, unit, benefit, cost] in &reply.split_candidates {"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:61": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 47,
     "text": "splitOffence :: [[Integer]] -> SeamTables -> Maybe String"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:61": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:62": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 63,
     "text": "fileRow i row = case row of"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:62": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:63": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 125,
     "text": "unitsOrdered :: [[Integer]] -> Maybe String"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:63": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:64": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 76,
     "text": "spanOffence :: M.Map Integer Integer -> String -> (Integer, Integer, Integer) -> Maybe String"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:64": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:65": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 142,
     "text": "refRow :: M.Map Integer Integer -> Int -> [Integer] -> Maybe String"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:65": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:66": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 118,
     "text": "churnRow :: M.Map Integer Integer -> Int -> [Integer] -> Maybe String"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:66": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:67": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 53,
     "text": ", tableOffence \"seamRefs\" id (refRow counts) refs"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:67": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:68": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 8,
     "text": "-- numbers let the Rust side write the why. Everything is exact"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:68": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:69": {
     "target": "../size-advisory.md",
     "line": 46,
     "text": "- 收益 B = 渐进区罚分回收 + dedup 预算效应 + 热/冷单元隔离。"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:69": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 199,
-    "text": "p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:7": {
     "target": "../../../core/app/CE/Structure/Split.hs",
@@ -4590,6 +4590,11 @@
     "text": "seams :: Knobs -> Slice -> Integer -> [(Integer, Integer, Integer)]"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:70": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 199,
+    "text": "p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:71": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 204,
     "text": "cost u ="

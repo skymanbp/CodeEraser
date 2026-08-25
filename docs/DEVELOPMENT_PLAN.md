@@ -303,7 +303,7 @@ CodeEraser/
 |---|---|---|
 | R1 | Haskell/Windows 工具链 | GHC 9.14 LTS 锁版 + M0 实测依赖可解；CI 必含 windows-latest；stdio 全程 binary mode；禁 DLL；未签名二进制的 Defender/EDR 误报风险 → 签名裁定不做（2026-08-19），SHA256 链承重，README 明示 |
 | R2 | tree-sitter 语法 crate 漂移 | 核心锁 0.26.x、语法 crate 按 lockfile 钉住；升级走独立 PR + golden 全绿 |
-| R3 | hook 延迟劣化 → 用户关插件 | daemon + 增量索引；分解表预算进 CI；超时 fail-open 降级为 warn，降级**必须可见**（doctor/健康行/Stop 汇总——A9f） |
+| R3 | hook 延迟劣化 → 用户关插件 | daemon + 增量索引；分解表预算进 CI；超时 fail-open：探针不可达时**不输出任何决定**（guard.rs 的 reasons 为空即早返），该次运行以 degraded 记入 observe feed 并进 doctor 降级计数——A9f；「降级为 warn」只发生在 `ce.toml` 无法解析这一条路上 |
 | R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |
 | R5 | 竞品挤压（**触发器式**，A8） | 监测触发器：jscpd/desloppify 发布 diff 级 gating，或 Claude Code 内置类似能力 → 差异化收缩至三信号 join + 四分类，届时 M5 join 提前、热路径查重改评估复用竞品引擎 |
 | R6 | 双语言成本先于价值支付（B1） | Haskell 承重首战后移到 M4（判决层），M0 只付骨架+握手的最小成本；契约内容不提前冻结；core 不依赖跟随 GHC 版本发布的库（stan 教训） |

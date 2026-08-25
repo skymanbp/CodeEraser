@@ -305,7 +305,8 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
   缺一条图腿就拒绝 gate，而不是假装入度为 0。自 2.33.0 起每条候选行带一列腿一致性<em>置信</em>
   ——在场且有据的腿数——表的严重度面以 <code>joinSeverity</code> 一次性过线；
   <code>ce join</code> 的判决出自与 check 门同一条 verdict/1 路。join 产出的仍是<em>候选</em>；
-  fail 位里不出现任何 verdict 码，<code>ce join</code> 恒以成功退出。</p>
+  fail 位里不出现任何 verdict 码，故 <code>ce join</code> 从不拿自己的判决当门——
+  除非这一趟本身跑失败，否则退 0；核缺失或拒绝属跑失败（退 2），不是悄悄放行。</p>
   <ul class="consts">
     <li><b>rewriteNum/Den</b> 50/100</li>
     <li><b>cochangeFloor</b> 2</li>

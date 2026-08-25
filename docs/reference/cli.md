@@ -124,7 +124,7 @@ Options:
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --check            Exit 1 when any file-tier dead verdict lands
+      --check            Exit 1 when any file-tier dead verdict lands, or when the judgment itself degraded (a gate that could not judge never passes)
   -h, --help             Print help
 ```
 

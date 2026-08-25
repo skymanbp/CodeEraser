@@ -81,16 +81,21 @@ from producing a negative benefit.
 The zone triple is the advisory's own copy of `S/H/P_max`, so the structure family can price
 a seam without a `verdict/1` request in flight; Rust sends the same numbers it sends
 `verdict/1` for an unclassed tree — the advisory is **class-blind**: since proto 3.1.0 `verdict/1`
-measures a classed row against its `[[rules.class]]` lines, while knobs 12 and 13 ride once,
-tree-wide, off the committed soft line and the global `file_lines_fail`
-[judge.rs:282-283](../../../cli/src/structure/judge.rs#L282)
-[Cost.hs:110-115](../../../core/app/CE/Structure/Cost.hs#L110):
+measures a classed row against its `[[rules.class]]` lines, while knobs 12, 13 and 14 ride once,
+tree-wide, off the committed soft line, the global `file_lines_fail` and — since 6.1.0 —
+`score.size_penalty_max` when one is declared. That last one was the claim's own exception until
+then: only 12 and 13 rode, so a repo declaring `size_penalty_max` got the declared curve in its
+score and the core's built-in `P_max = 10` in its advisory, with both halves internally
+consistent and nothing anywhere disagreeing out loud
+([judge.rs:290-297](../../../cli/src/structure/judge.rs#L290),
+[Cost.hs:110-119](../../../core/app/CE/Structure/Cost.hs#L110),
+counterfactual at [structure_knobs.rs:66-77](../../../cli/tests/structure_knobs.rs#L66)):
 
 | knob | code | default | source |
 |---|---|---|---|
-| `seamSoft` (S) | 12 | `300` | [Cost.hs:116-117](../../../core/app/CE/Structure/Cost.hs#L116) |
-| `seamHard` (H) | 13 | `750` | [Cost.hs:119-120](../../../core/app/CE/Structure/Cost.hs#L119) |
-| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:122-123](../../../core/app/CE/Structure/Cost.hs#L122) |
+| `seamSoft` (S) | 12 | `300` | [Cost.hs:120-121](../../../core/app/CE/Structure/Cost.hs#L120) |
+| `seamHard` (H) | 13 | `750` | [Cost.hs:123-124](../../../core/app/CE/Structure/Cost.hs#L123) |
+| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:126-127](../../../core/app/CE/Structure/Cost.hs#L126) |
 
 ### Cost: the four priced legs
 
@@ -113,10 +118,10 @@ index by the `lookupGE s` / `lookupLT e` pair
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:131-132](../../../core/app/CE/Structure/Cost.hs#L131) | word-bounded mention edges [seams.rs:215-234](../../../cli/src/structure/seams.rs#L215) |
-| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:143-144](../../../core/app/CE/Structure/Cost.hs#L143) | T1/T2 dedup block spans [seams.rs:79-107](../../../cli/src/structure/seams.rs#L79) |
-| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:146-147](../../../core/app/CE/Structure/Cost.hs#L146) | 14-day commit ledger [seams.rs:115-144](../../../cli/src/structure/seams.rs#L115) |
-| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:134-135](../../../core/app/CE/Structure/Cost.hs#L134) | flat, no measurement |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:135-136](../../../core/app/CE/Structure/Cost.hs#L135) | word-bounded mention edges [seams.rs:215-234](../../../cli/src/structure/seams.rs#L215) |
+| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:147-148](../../../core/app/CE/Structure/Cost.hs#L147) | T1/T2 dedup block spans [seams.rs:79-107](../../../cli/src/structure/seams.rs#L79) |
+| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:150-151](../../../core/app/CE/Structure/Cost.hs#L150) | 14-day commit ledger [seams.rs:115-144](../../../cli/src/structure/seams.rs#L115) |
+| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:138-139](../../../core/app/CE/Structure/Cost.hs#L138) | flat, no measurement |
 
 All seven knobs (zone triple + four prices) ride the `Knobs` record
 [Axes.hs:58-67](../../../core/app/CE/Structure/Axes.hs#L58) and are bound to the `Cost.hs` defaults
@@ -141,7 +146,7 @@ in-string mentions will count an edge; the advisory face is non-binding, so this
 (`crate::dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
 through a `BTreeSet` [seams.rs:89-105](../../../cli/src/structure/seams.rs#L89). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
-reference [Cost.hs:137-142](../../../core/app/CE/Structure/Cost.hs#L137).
+reference [Cost.hs:141-146](../../../core/app/CE/Structure/Cost.hs#L141).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent
@@ -156,9 +161,9 @@ constant, not a wire knob** (the prices are the knobs)
 [size-advisory.md:119](../size-advisory.md#L119).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
-booklet names φ [Cost.hs:125-135](../../../core/app/CE/Structure/Cost.hs#L125). Defaults were sized so
+booklet names φ [Cost.hs:129-139](../../../core/app/CE/Structure/Cost.hs#L129). Defaults were sized so
 a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing references does not
-[Cost.hs:128-130](../../../core/app/CE/Structure/Cost.hs#L128).
+[Cost.hs:132-134](../../../core/app/CE/Structure/Cost.hs#L132).
 
 ### Price calibration (as-built)
 
