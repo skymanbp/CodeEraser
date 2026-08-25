@@ -28,8 +28,12 @@ const html = ui("index.html");
 for (const m of html.matchAll(/data-i18n(?:-ph|-title)?="([^"]+)"/g)) used.add(m[1]);
 // i18n.js included: axisName() consumes "axisNames" from inside the
 // table's own file, and a harvest that skips it calls that key dead
-for (const f of ["app.js", "structure.js", "structree.js", "trend.js", "candidates.js",
-                 "graph.js", "score.js", "erase.js", "reports.js", "bench.js", "i18n.js"]) {
+// The list is DISCOVERED, not written down: a hand-maintained list
+// of screens is one someone forgets to extend, and it fails in the
+// dangerous direction — a screen the harvest cannot see may use a
+// key that exists in en and not in zh, and this gate would still
+// call the table complete. Adding doctor.js is what surfaced it.
+for (const f of fs.readdirSync(path.join(root, "gui/ui")).filter((f) => f.endsWith(".js"))) {
   for (const m of ui(f).matchAll(/\btr\(\s*"([^"]+)"/g)) used.add(m[1]);
 }
 

@@ -26,6 +26,7 @@
       <button class="tab" data-tab="graph" data-i18n="tabGraph"></button>
       <button class="tab" data-tab="reports" data-i18n="tabReports"></button>
       <button class="tab" data-tab="bench" data-i18n="tabBench"></button>
+      <button class="tab" data-tab="doctor" data-i18n="tabDoctor"></button>
     </nav>
     <button id="lang" title="English / 中文"></button>
     <span id="status"></span>
@@ -150,6 +151,16 @@
     </main>
   </div>
 
+  <div id="view-doctor" class="view" hidden>
+    <section class="bar">
+      <button id="doctor-load" data-i18n="load"></button>
+    </section>
+    <main class="col">
+      <div id="doctor-body"></div>
+      <div class="empty" id="empty-doctor" data-i18n="emptyDoctor"></div>
+    </main>
+  </div>
+
   <script src="i18n.js" defer></script>
   <script src="app.js" defer></script>
   <script src="structure.js" defer></script>
@@ -161,5 +172,6 @@
   <script src="erase.js" defer></script>
   <script src="reports.js" defer></script>
   <script src="bench.js" defer></script>
+  <script src="doctor.js" defer></script>
 </body>
 </html>

@@ -58,6 +58,8 @@ pub(crate) enum Cmd {
         /// ce-core beside this binary, then PATH)
         #[arg(long, default_value = "ce-core")]
         core: String,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
         /// Project root to report on (default: current directory)
         root: Option<PathBuf>,
     },

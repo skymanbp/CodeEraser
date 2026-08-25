@@ -67,7 +67,7 @@ fn line(root: &Path, daemon: &str) -> String {
     )
 }
 
-fn index_summary(root: &Path) -> String {
+pub(crate) fn index_summary(root: &Path) -> String {
     let db = root.join(".ce/index.db");
     if !db.exists() {
         return "absent (first dedup/probe builds it)".into();
@@ -122,7 +122,7 @@ pub fn degraded_runs(root: &Path) -> (usize, usize) {
 }
 
 /// Non-spawning daemon probe for `ce doctor`.
-fn daemon_status(root: &Path) -> String {
+pub(crate) fn daemon_status(root: &Path) -> String {
     ping_line(
         |r| client::request_if_running(r, &Request::Ping),
         root,
@@ -149,6 +149,11 @@ fn ping_line(ping: impl Fn(&Path) -> anyhow::Result<Response>, root: &Path, down
         _ => down.into(),
     }
 }
+
+/// The doctor's facts as a DOCUMENT (K round step 6). Same
+/// measurement as the line above, one file down, so the console
+/// prose and the GUI screen can never disagree about a diagnostic.
+pub mod doctor;
 
 #[cfg(test)]
 #[path = "health_tests.rs"]

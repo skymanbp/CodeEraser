@@ -28,7 +28,8 @@ fn main() {
             commands::check_report,
             commands::erase_preview,
             commands::erase_apply,
-            commands::bench_doc
+            commands::bench_doc,
+            commands::doctor_report
         ])
         .run(tauri::generate_context!())
         .expect("tauri run");

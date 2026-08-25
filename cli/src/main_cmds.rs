@@ -5,7 +5,7 @@
 
 use clap::ValueEnum;
 use codeeraser::i18n::line;
-use codeeraser::{churn, corelink, daemon, dedup, graph, scan};
+use codeeraser::{churn, daemon, dedup, graph, scan};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -266,46 +266,67 @@ pub fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
 /// Environment + project health (plan §5.9-5): non-spawning project
 /// status line, the A9f degraded-run counter from the observe feed,
 /// then the ce-core handshake (which sets the exit code, as in M0).
-pub fn doctor(core: &str, root: &Path) -> ExitCode {
-    // Every fact below hangs off the project ANCHOR above the given
-    // path (ce.toml, baseline, .ce/index.db — root.rs), so `ce doctor
-    // cli` reported the enclosing project while printing nothing that
-    // said so. Resolve once and NAME it: a silent re-root is the half
-    // of that defect the operator pays for.
-    let root = &codeeraser::root::project_root(root);
-    println!(
-        "ce {} (proto {})",
-        env!("CARGO_PKG_VERSION"),
-        corelink::PROTO
-    );
+/// The console face of the doctor DOCUMENT (K round step 6): the
+/// facts are measured once, in health::doctor, and this renders
+/// them. The GUI screen and the MCP surface render the same object,
+/// so a diagnostic cannot say one thing here and another there.
+/// Every fact hangs off the project ANCHOR above the given path
+/// (ce.toml, baseline, .ce/index.db — root.rs), so `ce doctor cli`
+/// reports the enclosing project and NAMES it: a silent re-root is
+/// the half of that defect the operator pays for.
+pub fn doctor(core: &str, root: &Path, as_json: bool) -> ExitCode {
+    let d = codeeraser::health::doctor::document(root, core);
+    if as_json {
+        // the exit code still relays the handshake: a JSON face
+        // that always exits 0 would make `ce doctor --format json`
+        // the one diagnostic a script cannot gate on
+        println!("{d}");
+        return match d["core"]["handshake"] == serde_json::json!(true) {
+            true => ExitCode::SUCCESS,
+            false => ExitCode::from(2),
+        };
+    }
+    let s = |p: &str, k: &str| d[p][k].as_str().unwrap_or("?").to_string();
+    println!("ce {} (proto {})", s("ce", "version"), s("ce", "proto"));
     println!(
         "{}",
         line(
-            "project: {} {}",
-            "项目：{} {}",
-            &[&root.display(), &codeeraser::health::doctor_line(root)],
+            "project: {} [ce {} | guard: {} | index: {} | daemon: {}]",
+            "项目：{} 〔ce {} | 守卫：{} | 索引：{} | daemon：{}〕",
+            &[
+                &d["root"].as_str().unwrap_or("?"),
+                &s("ce", "version"),
+                &d["guard"].as_str().unwrap_or("?"),
+                &d["index"].as_str().unwrap_or("?"),
+                &d["daemon"].as_str().unwrap_or("?"),
+            ],
         )
     );
-    let (degraded, total) = codeeraser::health::degraded_runs(root);
     println!(
         "{}",
         line(
             "degraded runs (observe feed): {} of {} entries",
             "降级运行（observe 流水）：{} / {} 条",
-            &[&degraded, &total],
+            &[
+                &d["degradedRuns"]["degraded"],
+                &d["degradedRuns"]["entries"],
+            ],
         )
     );
-    match corelink::run(core) {
-        Ok(reply) => {
-            println!("ce-core {} (proto {})", reply.version, reply.proto);
-            println!("handshake: OK");
-            ExitCode::SUCCESS
-        }
-        Err(err) => {
-            eprintln!("handshake: FAILED — {err}");
-            ExitCode::from(2)
-        }
+    if d["core"]["handshake"] == serde_json::json!(true) {
+        println!(
+            "ce-core {} (proto {})",
+            s("core", "version"),
+            s("core", "proto")
+        );
+        println!("handshake: OK");
+        return ExitCode::SUCCESS;
     }
+    eprintln!(
+        "handshake: FAILED — {}",
+        d["core"]["error"].as_str().unwrap_or("?")
+    );
+    ExitCode::from(2)
 }
 
 fn fallible(name: &str, result: anyhow::Result<ExitCode>) -> ExitCode {

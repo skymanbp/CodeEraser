@@ -82,6 +82,10 @@ const CE_I18N = {
     joinVerdictNames: ["report_only", "merge", "delete", "churn_hotspot"],
     trustNames: ["unvouched — unresolved sites in this language", "vacuous", "vouched"],
     trust: "trust", byVerdict: "by verdict",
+    tabDoctor: "doctor", handshake: "handshake", project: "project",
+    guardTier: "guard tier", indexState: "index", daemonState: "daemon",
+    degradedRuns: "degraded runs", ofEntries: (n, t) => `${n} of ${t} feed entries`,
+    emptyDoctor: "load to read this machine's state — the same document `ce doctor` prints, and the daemon is asked without being started",
   },
   zh: {
     tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选", tabGraph: "引用图",
@@ -155,6 +159,10 @@ const CE_I18N = {
     joinVerdictNames: ["report_only", "merge", "delete", "churn_hotspot"],
     trustNames: ["未担保——该语言尚有未解析点位", "空担保", "已担保"],
     trust: "担保", byVerdict: "按判决",
+    tabDoctor: "体检", handshake: "握手", project: "项目",
+    guardTier: "守卫档位", indexState: "索引", daemonState: "daemon",
+    degradedRuns: "降级运行", ofEntries: (n, t) => `${n} / ${t} 条流水`,
+    emptyDoctor: "点加载读取本机状态——与 `ce doctor` 打印的是同一份文档，且探 daemon 不启动它",
   },
 };
 

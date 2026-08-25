@@ -103,7 +103,9 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
 /// Infrastructure dispatch: health, daemon, hooks, servers.
 fn infra(cmd: Cmd) -> ExitCode {
     match cmd {
-        Cmd::Doctor { core, root } => cmds::doctor(&core, &cmds::or_cwd(root)),
+        Cmd::Doctor { core, format, root } => {
+            cmds::doctor(&core, &cmds::or_cwd(root), json(format))
+        }
         Cmd::Probe { hook } => cmds::hook_cmd(hook, "probe", codeeraser::guard::run_hook),
         Cmd::Audit { hook } => cmds::hook_cmd(hook, "audit", codeeraser::audit::run_hook),
         Cmd::Health { hook } => cmds::hook_cmd(hook, "health", codeeraser::health::run_hook),

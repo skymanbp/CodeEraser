@@ -53,9 +53,10 @@ Arguments:
   [ROOT]  Project root to report on (default: current directory)
 
 Options:
-      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
-  -h, --help         Print help
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --format <FORMAT>  [default: console] [possible values: console, json]
+  -h, --help             Print help
 ```
 
 ## ce scan

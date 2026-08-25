@@ -164,6 +164,22 @@ pub async fn check_report(
 face_cmd!(churn_report, "churn", days: |r, _c, d| codeeraser::faces::churn(r, d));
 face_cmd!(join_report, "join", days: codeeraser::faces::join);
 
+/// The machine's own state (K round step 6) — the SAME document
+/// `ce doctor` renders, so two faces of a diagnostic cannot disagree
+/// about the machine they diagnose. It never fails outward: a core
+/// that will not answer IS the finding, and it rides the report's
+/// `core.handshake` rather than an error the webview would show as a
+/// red status line with no detail. No task() bracket either — this
+/// is the face a user reaches for WHEN something is wrong, and it
+/// must not depend on the event plumbing being healthy.
+#[tauri::command]
+pub fn doctor_report(root: String) -> Result<Value, String> {
+    Ok(codeeraser::health::doctor::document(
+        Path::new(&root),
+        &core_path(),
+    ))
+}
+
 /// The bench dashboard document, compiled in at build time — the
 /// shipped GUI shows the bench of its OWN release (single source:
 /// contracts/bench/bench.json; the renderers and CI gate live in
