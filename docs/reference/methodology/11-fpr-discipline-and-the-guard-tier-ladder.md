@@ -34,7 +34,7 @@ Tier resolution is per rule class, not global: an explicit `[guard] mode` overri
 PROMOTED_DEFAULT = "deny"     // tier.rs:36
 ```
 
-([tier.rs:36](../../../cli/src/config/tier.rs#L36); consumed at [guard.rs:50](../../../cli/src/guard.rs#L50) and [health.rs:62](../../../cli/src/health.rs#L62)). Everything else routes to `observe` — explicitly because it has no FPR record of its own, which is the entry requirement below ([DEVELOPMENT_PLAN.md:101-103](../../DEVELOPMENT_PLAN.md#L101)).
+([tier.rs:36](../../../cli/src/config/tier.rs#L36); consumed at [guard.rs:50](../../../cli/src/guard.rs#L50) and [health.rs:59](../../../cli/src/health.rs#L59)). Everything else routes to `observe` — explicitly because it has no FPR record of its own, which is the entry requirement below ([DEVELOPMENT_PLAN.md:101-103](../../DEVELOPMENT_PLAN.md#L101)).
 
 When several rules fire on one write, the decision line is emitted at the **strongest** tier among them, ranked by index in `TIERS` (unknown values rank 0 = `observe`): class rules carry the class mode, the zone rule carries its own mapped tier, so a zone warn never rides a deny-class escalator ([guard.rs:119-136](../../../cli/src/guard.rs#L119)). A broken `ce.toml` overrides the computed tier down to a visible `warn` that names the parse error ([guard.rs:144-148](../../../cli/src/guard.rs#L144)).
 

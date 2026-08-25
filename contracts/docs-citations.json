@@ -3776,12 +3776,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:10": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 169,
+    "line": 183,
     "text": "let crossing = map.id_of(\"x.rs\", 4, 7);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:100": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 267,
+    "line": 270,
     "text": "\"join graph leg degraded: {}\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:101": {
@@ -3796,7 +3796,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:103": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 44,
+    "line": 45,
     "text": "pub blocks: usize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:104": {
@@ -3861,7 +3861,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:2": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 28,
+    "line": 29,
     "text": "/// 0.2.0 (2.33.0, H4): file rows carry the core's join verdict —"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:20": {
@@ -3901,12 +3901,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:27": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 33,
+    "line": 34,
     "text": "/// Graph position of one file: [indeg, outdeg, sccId, sccSize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:28": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 112,
+    "line": 113,
     "text": "pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<String, Pos>> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:29": {
@@ -3961,13 +3961,13 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:38": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 20,
-    "text": "pub const GRAPH_CAVEAT: &str = \"graph leg is import-granularity; symbol-level indegree needs \\"
+    "line": 35,
+    "text": "pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:39": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 190,
-    "text": "\"caveat\": churn_unit::GRAPH_CAVEAT,"
+    "line": 193,
+    "text": "\"caveatCode\": churn_unit::GRAPH_NULL_IMPORT_GRANULARITY,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:4": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
@@ -3981,12 +3981,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:41": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 33,
+    "line": 46,
     "text": "#[derive(Debug, Clone, Copy, Default, Serialize, PartialEq, Eq)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 167,
+    "line": 168,
     "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
@@ -4026,7 +4026,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 134,
+    "line": 135,
     "text": "let key = if b.a_file <= b.b_file {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
@@ -4066,7 +4066,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:57": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 50,
+    "line": 51,
     "text": "/// None = the pair is outside the churn report's co-change table"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:58": {
@@ -4081,17 +4081,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 139,
+    "line": 140,
     "text": "let e = by_pair.entry(key).or_default();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 110,
+    "line": 124,
     "text": "/// unit-attributed, churn joined on the ledger identity. An absent"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:61": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 125,
+    "line": 139,
     "text": "let churn_of = |u: &UnitId| {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:62": {
@@ -4136,7 +4136,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:7": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 24,
+    "line": 37,
     "text": "#[derive(Debug, Clone, Serialize, PartialEq, Eq, Hash)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:70": {
@@ -4191,7 +4191,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:8": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 79,
+    "line": 93,
     "text": ".table(path)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:80": {
@@ -4246,7 +4246,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:9": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 89,
+    "line": 103,
     "text": "None => UnitId {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:90": {
@@ -4286,17 +4286,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:97": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 89,
+    "line": 90,
     "text": "let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:98": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 276,
+    "line": 279,
     "text": "\"join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:99": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 81,
+    "line": 82,
     "text": "// Degrade reads the wire's boolean, not reason presence (the C9"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:1": {
@@ -5536,7 +5536,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:21": {
     "target": "../../../cli/src/health.rs",
-    "line": 62,
+    "line": 59,
     "text": "let mode = crate::config::tier_of(&Config::load(root), crate::config::PROMOTED_DEFAULT);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:22": {

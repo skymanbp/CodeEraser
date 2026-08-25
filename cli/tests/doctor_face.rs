@@ -30,7 +30,11 @@ fn a_missing_core_is_a_finding_not_an_error() {
     // the project facts answer anyway — they never needed the core
     assert!(d["root"].as_str().is_some_and(|r| !r.is_empty()));
     assert!(d["guard"].as_str().is_some());
-    assert!(d["index"].as_str().is_some_and(|s| s.contains("absent")));
+    // a CODE since 0.2.0 (plan v2.15): 0 = absent. The prose that
+    // used to sit here belongs to each face now, in its own
+    // language, which is the whole point of the change.
+    assert_eq!(d["index"]["state"], 0);
+    assert_eq!(d["index"]["files"], serde_json::Value::Null);
     assert_eq!(d["degradedRuns"]["entries"], 0);
 }
 
@@ -44,11 +48,19 @@ fn the_console_line_is_built_from_the_document() {
     let d = doctor::document(&dir, &core);
     let out = common::run_ce(&dir, &["doctor", "--core", &core]);
     let text = String::from_utf8_lossy(&out.stdout).to_string();
-    for key in ["guard", "index", "daemon"] {
-        let want = d[key].as_str().expect(key);
+    // index and daemon carry CODES since 0.2.0 (plan v2.15), so a
+    // text comparison against the document is meaningless — and a
+    // stronger claim is available instead: the binary printed what
+    // `console()` renders from THIS object, line for line. Both
+    // sides are deterministic in a fresh tmp root (index absent, no
+    // daemon running), so no timing rides in the comparison.
+    let (want_lines, handshook) = doctor::console(&d);
+    assert!(handshook, "this leg runs with a real core");
+    for want in &want_lines {
         assert!(
             text.contains(want),
-            "console omits {key} = {want:?}\n{text}"
+            "console omits {want:?}
+{text}"
         );
     }
     assert!(text.contains(d["ce"]["version"].as_str().expect("version")));

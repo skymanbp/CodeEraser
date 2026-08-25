@@ -191,7 +191,11 @@ function candDetail(kind, i) {
     rows.push(`<h2>${esc(u.a.path)}#${esc(u.a.key)}~${u.a.nth} ↔ ${esc(u.b.path)}#${esc(u.b.key)}~${u.b.nth}</h2>`);
     rows.push(row(tr("tokens"), u.tokens));
     rows.push(row(tr("churnA"), churnStr(u.churn_a)), row(tr("churnB"), churnStr(u.churn_b)));
-    rows.push(row(tr("graphA"), u.caveat));
+    // the wire carries the CODE since ce.join-report/0.3.0 (plan
+    // v2.15); the words are this face's, which is what makes them
+    // translatable at all — an unknown code says so rather than
+    // rendering "undefined" over a fact that IS present
+    rows.push(row(tr("graphNull"), tr("graphNullWhy")[u.caveatCode] ?? tr("posNull")));
   } else {
     const b = dedupDoc.blocks[i];
     rows.push(`<h2>${tr("cloneBlock")}</h2>`);

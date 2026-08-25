@@ -9,7 +9,8 @@
 //!
 //! Tier F (files) carries all three legs and is what the lattice
 //! will gate. Tier U (units) carries similarity + churn only; its
-//! graph leg is null by design (churn_unit::GRAPH_CAVEAT).
+//! graph leg is null by design, with the reason riding as a CODE
+//! (churn_unit::GRAPH_NULL_IMPORT_GRANULARITY, plan v2.15).
 
 pub mod churn_unit;
 pub mod verdicts;
@@ -28,7 +29,7 @@ use std::path::{Path, PathBuf};
 /// 0.2.0 (2.33.0, H4): file rows carry the core's join verdict —
 /// name, severity, leg-agreement confidence, legsMask, reasons —
 /// from the SAME verdict/1 judgment `ce check` gates with.
-pub const SCHEMA_ID: &str = "ce.join-report/0.2.0";
+pub const SCHEMA_ID: &str = "ce.join-report/0.3.0";
 
 /// Graph position of one file: [indeg, outdeg, sccId, sccSize,
 /// reachIn] (the Position.hs row minus its echoed index). None =
@@ -187,7 +188,9 @@ pub fn report_json(r: &Report) -> Value {
             "a": u.a, "b": u.b, "tokens": u.tokens,
             "churn_a": u.churn_a, "churn_b": u.churn_b,
             "graph": Value::Null,
-            "caveat": churn_unit::GRAPH_CAVEAT,
+            // the CODE, not the sentence (plan v2.15): the reader
+            // that renders this row owns the words for it
+            "caveatCode": churn_unit::GRAPH_NULL_IMPORT_GRANULARITY,
         })).collect::<Vec<_>>(),
     })
 }

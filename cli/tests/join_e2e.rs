@@ -98,12 +98,17 @@ fn three_legs_assemble_on_both_tiers() {
     assert_tier_f(&r);
     assert_tier_u(&r);
     // the JSON form declares itself and never fabricates a unit-tier
-    // graph leg: null plus the R6 caveat on every unit row
+    // graph leg: null plus the R6 caveat CODE on every unit row
+    // (plan v2.15 — the sentence stopped riding the machine face)
     let doc = join::report_json(&r);
-    assert_eq!(doc["schema"], "ce.join-report/0.2.0");
+    assert_eq!(doc["schema"], "ce.join-report/0.3.0");
     for row in doc["units"].as_array().expect("units") {
         assert!(row["graph"].is_null(), "unit graph leg is null: {row}");
-        assert_eq!(row["caveat"], join::churn_unit::GRAPH_CAVEAT);
+        assert!(row["caveat"].is_null(), "the prose field is gone: {row}");
+        assert_eq!(
+            row["caveatCode"],
+            join::churn_unit::GRAPH_NULL_IMPORT_GRANULARITY
+        );
     }
     // the judgment road (2.33.0): every non-self file pair carries
     // the core's verdict with its severity rank and leg-agreement

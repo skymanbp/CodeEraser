@@ -54,8 +54,13 @@ function renderDoctor() {
       ? drow("ce-core", `${d.core.version} (proto ${d.core.proto})`)
       : drow("ce-core", d.core.error ?? tr("posNull"), true),
     drow(tr("guardTier"), d.guard),
-    drow(tr("indexState"), d.index),
-    drow(tr("daemonState"), d.daemon),
+    // codes since ce.doctor-report/0.2.0 (plan v2.15) — the sentence
+    // used to come off the wire in English, which is exactly the one
+    // place a lookup switch cannot reach. An unknown code renders as
+    // the code, never as "undefined": a state we cannot name is still
+    // a state, and the number is the honest thing to show.
+    drow(tr("indexState"), tr("indexWords", d.index.state, d.index.files), d.index.state >= 2),
+    drow(tr("daemonState"), tr("daemonWords", d.daemon.state, d.daemon.ms), d.daemon.state === 2),
     // the total frames the count: the feed is append-only, so a bare
     // degraded number never returns to zero and reads as a live alarm
     drow(tr("degradedRuns"), tr("ofEntries", dr.degraded, dr.entries), dr.degraded > 0),

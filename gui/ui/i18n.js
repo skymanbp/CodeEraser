@@ -49,6 +49,12 @@ const CE_I18N = {
     blockTokens: (b, t) => `${b} block${b === 1 ? "" : "s"} · ${t} tokens`,
     tokensOnly: (t) => `${t} tokens`, tokens: "tokens",
     graphA: "graph a", graphB: "graph b", churnA: "churn a", churnB: "churn b",
+    // the unit tier's graph leg and WHY it is null, keyed by the
+    // wire's caveat code (ce.join-report/0.3.0) — the sentence used
+    // to ride the wire in English, where no switch could reach it
+    graphNull: "graph", graphNullWhy: {
+      1: "null — import granularity has no unit nodes; symbol-level indegree needs R6",
+    },
     cochange: "co-change", belowTable: "below the report table",
     posNull: "null (unanswered)", cloneBlock: "clone block",
     entropyNames: ["naming", "dir spread"],
@@ -84,6 +90,20 @@ const CE_I18N = {
     trust: "trust", byVerdict: "by verdict",
     tabDoctor: "doctor", handshake: "handshake", project: "project",
     guardTier: "guard tier", indexState: "index", daemonState: "daemon",
+    // the doctor document carries CODES since ce.doctor-report/0.2.0
+    // (plan v2.15); an unknown code shows AS the code, because a state
+    // this table cannot name is still a state the reader should see
+    indexWords: (s, n) => [
+      "absent (first dedup/probe builds it)",
+      `${n} files`,
+      `${n} files (stale — next dedup rebuilds it)`,
+      "unreadable (degraded — deep checks off until rebuilt)",
+    ][s] ?? `state ${s}`,
+    daemonWords: (s, ms) => [
+      `warm (${ms} ms)`,
+      "not running (lazy-starts on first probe)",
+      "unreachable (DEGRADED: cheap checks only, guard fails open)",
+    ][s] ?? `state ${s}`,
     degradedRuns: "degraded runs", ofEntries: (n, t) => `${n} of ${t} feed entries`,
     emptyDoctor: "load to read this machine's state — the same document `ce doctor` prints, and the daemon is asked without being started",
   },
@@ -130,6 +150,9 @@ const CE_I18N = {
     blocksTokens: "块数 / token 数", blockTokens: (b, t) => `${b} 块 · ${t} tokens`,
     tokensOnly: (t) => `${t} tokens`, tokens: "token 数",
     graphA: "图位 a", graphB: "图位 b", churnA: "变动 a", churnB: "变动 b",
+    graphNull: "图位", graphNullWhy: {
+      1: "null——import 粒度没有单元节点；符号级入度需 R6 解锁",
+    },
     cochange: "共变", belowTable: "低于报告表阈值",
     posNull: "null（未作答）", cloneBlock: "克隆块",
     entropyNames: ["命名", "目录散布"],
@@ -161,6 +184,17 @@ const CE_I18N = {
     trust: "担保", byVerdict: "按判决",
     tabDoctor: "体检", handshake: "握手", project: "项目",
     guardTier: "守卫档位", indexState: "索引", daemonState: "daemon",
+    indexWords: (s, n) => [
+      "缺失（首次 dedup/probe 会建立）",
+      `${n} 个文件`,
+      `${n} 个文件（陈旧 — 下次 dedup 重建）`,
+      "不可读（已降级 — 重建前深检关闭）",
+    ][s] ?? `状态 ${s}`,
+    daemonWords: (s, ms) => [
+      `已预热（${ms} 毫秒）`,
+      "未运行（首次 probe 时惰性启动）",
+      "不可达（已降级：仅剩廉价检查，守卫失败开放）",
+    ][s] ?? `状态 ${s}`,
     degradedRuns: "降级运行", ofEntries: (n, t) => `${n} / ${t} 条流水`,
     emptyDoctor: "点加载读取本机状态——与 `ce doctor` 打印的是同一份文档，且探 daemon 不启动它",
   },

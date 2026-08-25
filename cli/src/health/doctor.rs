@@ -16,7 +16,7 @@ use serde_json::{Value, json};
 use std::path::Path;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.doctor-report/0.1.0";
+pub const SCHEMA_ID: &str = "ce.doctor-report/0.2.0";
 
 /// The whole diagnostic. Never returns an error: a core that will
 /// not answer IS the finding, and a doctor that fails outward tells
@@ -24,6 +24,8 @@ pub const SCHEMA_ID: &str = "ce.doctor-report/0.1.0";
 pub fn document(root: &Path, core: &str) -> Value {
     let root = crate::root::project_root(root);
     let (degraded, entries) = super::degraded_runs(&root);
+    let index = super::index_fact(&root);
+    let daemon = super::daemon_fact(&root);
     let (version, proto, handshake, error) = match corelink::run(core) {
         Ok(reply) => (Some(reply.version), Some(reply.proto), true, Value::Null),
         Err(e) => (None, None, false, json!(e)),
@@ -38,8 +40,10 @@ pub fn document(root: &Path, core: &str) -> Value {
             &crate::config::Config::load(&root),
             crate::config::PROMOTED_DEFAULT,
         ),
-        "index": super::index_summary(&root),
-        "daemon": super::daemon_status(&root),
+        // codes and counts, never sentences (plan v2.15): prose on
+        // the machine face is prose no face can translate
+        "index": {"state": index.0, "files": index.1},
+        "daemon": {"state": daemon.0, "ms": daemon.1},
         // the total frames the count: the feed is append-only, so a
         // degraded count alone never returns to zero after one
         // incident and reads as a live alarm forever
@@ -51,6 +55,23 @@ pub fn document(root: &Path, core: &str) -> Value {
             "error": error,
         },
     })
+}
+
+/// Read one `{state, <count>}` object back out of the document. The
+/// console renders from the DOCUMENT, not from a second measurement —
+/// that is the whole point of the document existing — so the facts
+/// come back through this narrow door rather than being re-probed.
+/// An unreadable state defaults to the WORST code, never to a healthy
+/// one: a diagnostic that cannot read itself must not report health.
+fn fact(v: &Value, count: &str) -> (i64, Option<i64>) {
+    (v["state"].as_i64().unwrap_or(3), v[count].as_i64())
+}
+
+fn ms_fact(v: &Value) -> (i64, Option<u128>) {
+    (
+        v["state"].as_i64().unwrap_or(2),
+        v["ms"].as_u64().map(u128::from),
+    )
 }
 
 /// The console RENDERING of the document above, moved here from
@@ -70,8 +91,8 @@ pub fn console(d: &Value) -> (Vec<String>, bool) {
                 &d["root"].as_str().unwrap_or("?"),
                 &s("ce", "version"),
                 &d["guard"].as_str().unwrap_or("?"),
-                &d["index"].as_str().unwrap_or("?"),
-                &d["daemon"].as_str().unwrap_or("?"),
+                &super::index_words(fact(&d["index"], "files")),
+                &super::daemon_words(ms_fact(&d["daemon"])),
             ],
         ),
         line(

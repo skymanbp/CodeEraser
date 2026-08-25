@@ -36,6 +36,30 @@ pub fn t(en: &'static str, zh_s: &'static str) -> &'static str {
     if zh() { zh_s } else { en }
 }
 
+/// One bilingual line chosen BY CODE — the shape plan v2.15 makes a
+/// standing pattern: measurement emits a frozen code and each face
+/// keeps a table of words for it. Written once here because the
+/// second instance of it (index states beside daemon states) was
+/// already a structural twin, and every future coded field would have
+/// been a third.
+///
+/// An out-of-range code takes the LAST row, which every table writes
+/// as its worst / unknown case: a state this table cannot name must
+/// never render as the healthy row at index 0.
+pub fn coded(
+    state: i64,
+    table: &[(&'static str, &'static str)],
+    args: &[&dyn std::fmt::Display],
+) -> String {
+    let (en, zh_t) = usize::try_from(state)
+        .ok()
+        .and_then(|i| table.get(i))
+        .or_else(|| table.last())
+        .copied()
+        .unwrap_or_default();
+    line(en, zh_t, args)
+}
+
 /// One bilingual console line: pick the template by language, fill
 /// `{}` holes left to right. Templates are DATA (the DSL stance) —
 /// the dual-`println!` branch form the first draft used was a

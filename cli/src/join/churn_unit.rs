@@ -5,8 +5,9 @@
 //! practices — then join the churn ledger on (path, key, nth). The
 //! graph leg at unit tier is null BY DESIGN: import granularity has
 //! no unit nodes (unit indegree is constant 0, design §6.2), so any
-//! number here would be fabricated; [`GRAPH_CAVEAT`] rides every
-//! emitted row instead.
+//! number here would be fabricated; [`GRAPH_NULL_IMPORT_GRANULARITY`]
+//! rides every emitted row instead, so absence can never read as zero
+//! indegree.
 
 use crate::churn;
 use crate::dedup::{self, pairs::Block};
@@ -15,11 +16,23 @@ use serde::Serialize;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-/// Why the unit tier's graph leg is null — printed on every row, so
-/// absence can never read as zero indegree.
-pub const GRAPH_CAVEAT: &str = "graph leg is import-granularity; symbol-level indegree needs \
-     R6 (independent 100-callsite audit >= 0.90, 2026-08-12-m5-2-graph-design.md) — \
-     not unlocked this milestone";
+/// Why the unit tier's graph leg is null, as a CODE rather than a
+/// sentence (plan v2.15). It used to be 200 characters of English
+/// prose riding every emitted row of the report JSON — which i18n.rs
+/// declares the machine face and never translates, so no lookup
+/// switch could reach it and a zh reader got English. The console
+/// meanwhile rendered the SAME fact from its own bilingual template
+/// ("graph null (R6 locked)"): one fact, two sources, one of them
+/// untranslatable. Measurement emits the code; each face owns the
+/// words, exactly as erase's reason codes 0..6 already work.
+///
+/// Frozen position, like every other verdict code here:
+///   1 import_granularity — import granularity has no unit nodes, so
+///     symbol-level indegree needs R6 (independent 100-callsite audit
+///     >= 0.90, 2026-08-12-m5-2-graph-design.md), not unlocked this
+///     milestone. There is no 0: a row without a reason would be the
+///     fabricated number this whole design refuses.
+pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq, Hash)]
 pub struct UnitId {
@@ -38,7 +51,8 @@ pub struct Lines {
 
 /// One Tier U row: a similar unit pair with its churn leg. The graph
 /// leg is deliberately NOT a field — it is null for every unit row,
-/// and the report prints [`GRAPH_CAVEAT`] in its place.
+/// and the report prints [`GRAPH_NULL_IMPORT_GRANULARITY`] in its
+/// place — the code, not a sentence (plan v2.15).
 #[derive(Debug, Serialize)]
 pub struct UnitRow {
     pub a: UnitId,
