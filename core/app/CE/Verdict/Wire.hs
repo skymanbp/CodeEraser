@@ -121,7 +121,7 @@ data VerdictReq = VerdictReq
     -- under, and a mismatch is a NAMED fail, so "edit a glob and every
     -- ceiling quietly moves" becomes a hard stop instead of a
     -- possibility.
-    reqClassDigest :: Maybe Integer
+    reqKnobsDigest :: Maybe Integer
   }
 
 instance FromJSON VerdictReq where
@@ -148,7 +148,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "docFiles" .!= []
       <*> o .:? "judgedMask" .!= 0
       <*> o .:? "classKnobs" .!= []
-      <*> o .:? "classDigest"
+      <*> o .:? "knobsDigest"
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -226,7 +226,7 @@ parseBaseline v = case AT.parse bl v of
       Nothing -> Right (Just (Baseline cont disc soft digest))
  where
   bl = withObject "baseline" $ \o ->
-    (,,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine" <*> o .:? "classDigest"
+    (,,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine" <*> o .:? "knobsDigest"
   contShape i row = case row of
     [_, code, _]
       | any (< 0) row -> Just (label "baseline.continuous" i <> "negative field")

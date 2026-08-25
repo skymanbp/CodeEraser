@@ -149,6 +149,22 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **6.0.0**（旋钮指纹拓宽 **major**，K 轮步 4b，2026-08-25）：5.1.0 的 `classDigest` 改名 `knobsDigest`
+> 并覆盖**整份解析后的 ce.toml**，而非仅 `[[rules.class]]` 一张表。起因是一轮 52-agent 五镜头对抗审查，
+> 发现**在一小时内**就把范围判错的地方指了出来，而且我第一手复现无误：
+> ①`[score] viol_cost = 0` 两行把一个仓从 **939/1000 FAIL 变成 1000/1000 pass**，而 axes 仍老实报着 `4:428` 的违规费；
+> ②`[score] tol_abs = 100000` 把 +280 行的增长从 `1 over -> FAIL` 变成 `0 over, 1 tolerance drawn -> pass`；
+> ③`exclude` glob 把文件连同它的棘轮行一起移出，无人喊停。三条都在挪与改 glob 同样的门，
+> 三条都没碰类表，三条都不要求任何人具名。**「挑哪几张表来围」正是这类漏洞的成因**，所以不再挑：
+> 标量 = fnv1a over 序列化后的 Config。它自动覆盖**还没有人添加的那个旋钮**，且只随**解析结果**变——
+> ce.toml 里的注释与键序不动它。配置等于出厂默认的仓仍然什么都不发（K11 不变）。
+> 判决条件随键改名 `knobs_digest`；**请求字段改名属 schema 变更，故按 §2 走 major**——与 5.0.0 同一把尺。
+> 反事实：五条 Rust 腿（出厂默认无指纹、两个绕过旋钮各自移动指纹且彼此不同、规则包四要素含声明序、
+> exclude glob、JSON 转义使值无法冒充结构）+ 核内 K11–K14 原样迁移；本仓自身是活演示——它有 ce.toml，
+> 指纹从无到有，`ce check` 当场报 `failed: ['ratchet_over','knobs_digest']`，具名重立后基线记下 `knobsDigest`。
+> 金样 203 行改动中 199 行由 proto 串与改名解释，另 4 行 = 2 条内嵌 server 版本串 + pair 16/17 逐字段核实
+> 只差改名与版本（改名改变了 aeson 的键序，故字符串级对拍不成立，需逐字段比）。
+> 请求行随 major 机器重写为 6.0.0；核电池请求侧 proto 同步 22 处。
 > **5.1.0**（规则包围栏 + per-class 棘轮容差 minor，K 轮步 4，2026-08-25，用户拍板 v2.14 ②）：
 > ①`verdict.request` 加性标量 `classDigest`——对 `[[rules.class]]` 规范化声明（名、**声明序**的 globs、旋钮）
 > 的指纹。名与 glob 仍永不过线（§5.9.2）：它们的哈希不是它们。编码为**长度前缀**（netstring 式 `tag:len:bytes`）
@@ -485,9 +501,9 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用）；
     result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta，
     2.8.0 起并回生效 `weights` 表与 `ratchet.failed` 持名条件表；
-    5.1.0 起 request 并可携标量 `classDigest`（规则包声明的指纹）、`classKnobs` 码域加 3
-    （该类自己的棘轮容差，行数绝对值），`ratchet.failed` 加持名条件 `class_digest`，
-    `newBaseline` 在指纹到场时加键 `classDigest`（**缺席而非 null**——无类声明仓字节恒等）；
+    5.1.0 起 request 并可携标量指纹与 `classKnobs` 码 3（该类自己的棘轮容差，行数绝对值）；
+    6.0.0 起该标量名 `knobsDigest`、覆盖**整份解析后的配置**，`ratchet.failed` 的持名条件为
+    `knobs_digest`，`newBaseline` 在指纹到场时加同名键（**缺席而非 null**——出厂默认配置的仓字节恒等）；
     `degraded.reason ∈ {verdict_too_large}`。
   - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],
     "naming":[[lang,style,upper,under,test]]}`（码 0..6，主体名/路径不过线；naming 自 2.30.0
@@ -533,5 +549,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 5.1.0 | §1 所列两处常量 |
+| 协议 | 6.0.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

@@ -9,11 +9,11 @@
 //! 2026-08-19).
 
 use super::Config;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// Passive-guard settings (plan §4.2, decision D-4 gradual rollout:
 /// observe → warn → ask → deny, promotion gated on measured FPR).
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Guard {
     /// Explicit global tier: "observe" | "warn" | "ask" | "deny".

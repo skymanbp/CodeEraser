@@ -165,8 +165,8 @@ pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
     // null — a repo that declares no class must keep a
     // byte-identical baseline file (K11), and a key holding null is
     // not an absent key.
-    if let Some(d) = new_baseline.get("classDigest").filter(|v| !v.is_null()) {
-        doc["classDigest"] = d.clone();
+    if let Some(d) = new_baseline.get("knobsDigest").filter(|v| !v.is_null()) {
+        doc["knobsDigest"] = d.clone();
     }
     let path = path_for(root);
     // temp + rename, not a truncating write: a `ce baseline` killed

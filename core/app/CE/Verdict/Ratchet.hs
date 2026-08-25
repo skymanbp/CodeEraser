@@ -29,7 +29,7 @@ data Baseline = Baseline
   { bCont :: [[Integer]]
   , bDisc :: [Integer]
   , bSoft :: Maybe Integer
-  , bClassDigest :: Maybe Integer
+  , bKnobsDigest :: Maybe Integer
   }
 
 data RatchetKnobs = RatchetKnobs

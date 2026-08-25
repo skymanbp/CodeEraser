@@ -42,7 +42,7 @@ wireReq =
 base :: Value
 base =
   object
-    [ "proto" .= ("5.1.0" :: String)
+    [ "proto" .= ("6.0.0" :: String)
     , "type" .= ("structure.request" :: String)
     , "id" .= (1 :: Int)
     , "nodes" .= [[0, 0, 0, 0, 2 :: Integer]]

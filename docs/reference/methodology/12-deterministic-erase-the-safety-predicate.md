@@ -10,13 +10,13 @@ three source families in their normal order, then sends those facts to
 `erase/1`; it does not select a winner or infer safety
 ([gather.rs:25-49](../../../cli/src/erase/gather.rs#L25)). The wire carries dense
 integer rows, with row order serving as identity and paths kept on the client
-([VERSIONING.md:333](../../../contracts/VERSIONING.md#L333)).
+([VERSIONING.md:349](../../../contracts/VERSIONING.md#L349)).
 
 ### 1. The row in, the verdict out
 
 The request shape is `rows=[[class,w,x,y,z]]`. The class is a frozen position;
 the remaining four cells are facts whose meaning depends on that class
-([VERSIONING.md:333-337](../../../contracts/VERSIONING.md#L333)). The client
+([VERSIONING.md:349-353](../../../contracts/VERSIONING.md#L349)). The client
 prepends the class to those four facts, sends the resulting five-integer row,
 and reads one `[eraseable, reason]` pair back for every candidate
 ([wire.rs:21-40](../../../cli/src/erase/wire.rs#L21)). Thus the measurement side
@@ -137,7 +137,7 @@ eraseable result ([Cost.hs:55](../../../core/app/CE/Erase/Cost.hs#L55)).
 The wire contract repeats that ceiling: an over-cap request returns a complete
 degraded reply with `fail:true` and an empty judgment table, so no row can be
 authorized from an over-cap computation
-([VERSIONING.md:342-344](../../../contracts/VERSIONING.md#L342)).
+([VERSIONING.md:358-360](../../../contracts/VERSIONING.md#L358)).
 
 The erase client treats degraded as an error rather than interpreting an empty
 table as “nothing to erase”: `wire.rs` calls `refuse_degraded` before decoding
@@ -174,7 +174,7 @@ There is no knob echo and no client-selectable threshold for this family. The
 core's own comment freezes the reason: “a knob that loosens "safe" would be a
 licence to guess” ([Cost.hs:25-26](../../../core/app/CE/Erase/Cost.hs#L25)). The
 versioned wire contract makes the same boundary explicit by rejecting knob
-rows as `error/contract` ([VERSIONING.md:338](../../../contracts/VERSIONING.md#L338)).
+rows as `error/contract` ([VERSIONING.md:354](../../../contracts/VERSIONING.md#L354)).
 
 ### 7. Not found in source
 
@@ -186,6 +186,6 @@ comments, where facts are measured, the predicate chooses safety, and
 “Guard” is the only explanatory label that is not a named wire field or a
 Haskell identifier here; it means the `|` conditions shown beside each class,
 not an additional rule ([Cost.hs:42-55](../../../core/app/CE/Erase/Cost.hs#L42),
-[VERSIONING.md:330-344](../../../contracts/VERSIONING.md#L330)). No other
+[VERSIONING.md:346-360](../../../contracts/VERSIONING.md#L346)). No other
 constant, class, reason, degraded behavior, or apply condition in this booklet
 is an inferred term: each is named in the source links above.

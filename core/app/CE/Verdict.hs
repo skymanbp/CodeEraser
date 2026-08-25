@@ -95,7 +95,7 @@ result proto parsed req =
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
       , "ratchet" .= ratchetObj r conds
-      , "newBaseline" .= newBaselineObj r newSoft (reqClassDigest req)
+      , "newBaseline" .= newBaselineObj r newSoft (reqKnobsDigest req)
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
@@ -150,7 +150,7 @@ result proto parsed req =
   -- against a baseline that predates the fence, or removing one the
   -- baseline recorded. Every disagreement wants the same answer: say
   -- so by name, and make a human name the new floor.
-  digestDrift = maybe False ((/= reqClassDigest req) . bClassDigest) base
+  digestDrift = maybe False ((/= reqKnobsDigest req) . bKnobsDigest) base
   conds = failConditions r floorFail dedupOver digestDrift
 
 -- | The second ratchet's leg (ADR-008 P2, split from result at the
@@ -182,7 +182,7 @@ failConditions r floorFail dedupOver digestDrift =
   , ("discrete_added", not (null (rAdded r)))
   , ("floor", floorFail)
   , ("dedup_budget", dedupOver)
-  , ("class_digest", digestDrift)
+  , ("knobs_digest", digestDrift)
   ]
 
 -- | The ratchet face: the delta, the gate bit, and the NAMES of the
@@ -223,7 +223,7 @@ newBaselineObj r newSoft digest =
       -- here, so recording it IS the named act the fence demands, and
       -- a repo that declares no class keeps a baseline file and a
       -- reply byte-identical to the pre-fence ones (K11)
-      <> ["classDigest" .= d | Just d <- [digest]]
+      <> ["knobsDigest" .= d | Just d <- [digest]]
 
 -- | Over-cap refusal: a well-formed degraded result with the FULL
 -- key set, never a truncated judgment.

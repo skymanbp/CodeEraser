@@ -32,7 +32,7 @@ battery =
 wireReq :: [[Integer]] -> [[Integer]] -> [[Integer]] -> [[Integer]] -> Value
 wireReq sim pos churn coch =
   object
-    [ "proto" .= ("5.1.0" :: String)
+    [ "proto" .= ("6.0.0" :: String)
     , "type" .= ("verdict.request" :: String)
     , "id" .= (1 :: Int)
     , "sim" .= sim

@@ -45,8 +45,8 @@ battery = do
     , "the class rows echo exactly when they rode"
     ]
   fenceNames =
-    [ "K11: no rulepack, no digest — absent, not null, in the newBaseline"
-    , "K12: a changed rulepack fails BY NAME, not by silent relaxation"
+    [ "K11: a default config sends no digest — absent, not null, in the newBaseline"
+    , "K12: a changed KNOB fails BY NAME, not by silent relaxation"
     , "K13: establish records the digest, and the baseline stays three columns"
     , "K14: a class tolerance of 0 refuses one line, and the global legs do not save it"
     ]
@@ -146,37 +146,42 @@ heldConditions req = case replyObj req of
     _ -> Nothing
   Nothing -> Nothing
 
--- | K11: a repo that declares no rulepack sends no digest, and the
--- newBaseline it gets back does not carry the key at all. Absent, not
--- null: a key holding null is a byte a pre-fence baseline file never
--- had, and this fence is not allowed to cost such a repo one byte.
+-- | K11: a repo whose config is the shipped default sends no digest,
+-- and the newBaseline it gets back does not carry the key at all.
+-- Absent, not null: a key holding null is a byte a pre-fence baseline
+-- file never had, and this fence is not allowed to cost such a repo
+-- one byte.
 fenceAbsent :: Bool
 fenceAbsent =
-  newBaselineKey base "classDigest" == Nothing
-    && newBaselineKey (setKey "classDigest" Null base) "classDigest" == Nothing
+  newBaselineKey base "knobsDigest" == Nothing
+    && newBaselineKey (setKey "knobsDigest" Null base) "knobsDigest" == Nothing
 
--- | K12: the ceilings were established under one rulepack and this
+-- | K12: the ceilings were established under one knob set and this
 -- run declares another. The point is not that it fails — it is that
--- it fails BY NAME, so the operator learns which floor to re-name
--- instead of watching every ceiling quietly move.
+-- it fails BY NAME with an EMPTY over table, so the operator learns
+-- which floor to re-name instead of watching every gate quietly move.
+-- The scope this pins is the whole config since 6.0.0, not the class
+-- table alone: `[score] viol_cost = 0` reached 1000/1000 through the
+-- narrow version of this fence and was measured doing it.
 fenceDrifts :: Bool
 fenceDrifts =
-  heldConditions drifted == Just (toJSON (["class_digest"] :: [String]))
+  heldConditions drifted == Just (toJSON (["knobs_digest"] :: [String]))
     && heldConditions agreed == Just (toJSON ([] :: [String]))
  where
-  established d = setKey "baseline" (object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Integer]), "classDigest" .= (d :: Integer)])
-  drifted = established 111 (setKey "classDigest" (toJSON (222 :: Integer)) base)
-  agreed = established 111 (setKey "classDigest" (toJSON (111 :: Integer)) base)
+  established d = setKey "baseline" (object ["continuous" .= ([] :: [Value]), "discrete" .= ([] :: [Integer]), "knobsDigest" .= (d :: Integer)])
+  drifted = established 111 (setKey "knobsDigest" (toJSON (222 :: Integer)) base)
+  agreed = established 111 (setKey "knobsDigest" (toJSON (111 :: Integer)) base)
 
 -- | K13: establish (no baseline) records the digest this run declares
 -- — the named act — while the ratchet rows it writes stay three
--- columns, because a class is a charging parameter and never a fact.
+-- columns, because a knob is a charging parameter and never a fact
+-- about the tree.
 fenceRecorded :: Bool
 fenceRecorded =
-  newBaselineKey req "classDigest" == Just (toJSON (777 :: Integer))
+  newBaselineKey req "knobsDigest" == Just (toJSON (777 :: Integer))
     && newBaselineKey req "continuous" == Just (toJSON [[0, 0, 310 :: Integer]])
  where
-  req = setKey "classDigest" (toJSON (777 :: Integer)) (withCont [[0, 0, 310, 1]])
+  req = setKey "knobsDigest" (toJSON (777 :: Integer)) (withCont [[0, 0, 310, 1]])
 
 -- | K14: class 1 declares a zero allowance and grows by one line —
 -- over. Class 2 declares none and grows by the same line — inside the

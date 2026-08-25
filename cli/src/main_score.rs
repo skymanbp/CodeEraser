@@ -127,7 +127,7 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
                  halves only improve, and a rulepack change needs a named floor. Set \
                  CE_ACCEPT_BASELINE=1 to re-establish from the current tree",
                 "baseline：被 {} 拒绝 - 新增成员 {} 个、突破天花板 {} 处；两半都只准改善，\
-                 规则包变更亦须具名重立。设 CE_ACCEPT_BASELINE=1 方可按当前树重立",
+                 旋钮变更亦须具名重立。设 CE_ACCEPT_BASELINE=1 方可按当前树重立",
                 &[
                     &o.reply.failed.join(", "),
                     &o.reply.added.len(),

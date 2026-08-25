@@ -83,7 +83,7 @@ pub struct Request {
     /// established under, and the core fails by name when the two
     /// disagree — so a glob edit stops being a silent way to move
     /// every line at once (config::RulesCfg::digest).
-    pub class_digest: Option<u64>,
+    pub knobs_digest: Option<u64>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -138,7 +138,7 @@ impl Request {
             continuous: Vec::new(),
             classed: false,
             class_knobs: Vec::new(),
-            class_digest: None,
+            knobs_digest: None,
             discrete: Vec::new(),
             baseline: Value::Null,
             floor: None,
@@ -194,7 +194,7 @@ pub fn body(r: &Request) -> Value {
         // whose knobs are all defaults: what it fences is the
         // DECLARATION, and a class with no knobs still decides which
         // files it owns
-        ("classDigest", r.class_digest.map(|d| json!(d))),
+        ("knobsDigest", r.knobs_digest.map(|d| json!(d))),
         ("dedup", r.dedup.map(|p| json!(p))),
         ("dedupDistinct", some_rows(&r.dedup_distinct)),
         ("dedupMinDistinct", r.dedup_min_distinct.map(|f| json!(f))),

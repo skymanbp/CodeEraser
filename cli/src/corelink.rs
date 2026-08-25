@@ -12,12 +12,30 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
+/// 6.0.0 = the fingerprint widens (plan v2.14 (2), K round step 4b,
+/// 2026-08-25): 5.1.0's `classDigest` becomes `knobsDigest` and covers
+/// the WHOLE parsed ce.toml, not the class table alone. An adversarial
+/// review found the first scope wrong within the hour and the finding
+/// reproduced first-party: `[score] viol_cost = 0` takes a repo from
+/// 939/1000 FAIL to 1000/1000 pass while the axes still report the
+/// violation, and `[score] tol_abs = 100000` turns a 280-line growth
+/// from "1 over -> FAIL" into "0 over, 1 tolerance drawn -> pass".
+/// Both move the gates a glob edit moves; neither touched the class
+/// table; neither asked anyone to name a floor. Choosing which tables
+/// to fence is how that happens, so nothing is chosen: the scalar is
+/// fnv1a over the serialized config, which covers the knob nobody has
+/// added yet and moves for none of the comments or key order in the
+/// file, because it fingerprints the PARSE. A repo whose config equals
+/// the shipped default still sends nothing. The fail condition renames
+/// with the key (`knobs_digest`), and the rename of a request field is
+/// a schema change, hence the major (VERSIONING section 2) -- the same
+/// rule 5.0.0 was measured against.
 /// 5.1.0 = the rulepack fence (plan v2.14 ②, K round step 4,
-/// 2026-08-25): verdict.request gains the scalar `classDigest`, a
+/// 2026-08-25): verdict.request gains the scalar `knobsDigest`, a
 /// fingerprint of the normalized [[rules.class]] declaration (names,
 /// globs in declaration order, knobs); ce-baseline.json records the
 /// digest its ceilings were established under; and the fail table
-/// gains the named condition `class_digest`, which holds on plain
+/// gains the named condition `knobs_digest`, which holds on plain
 /// Maybe inequality -- both absent agrees, a changed rulepack
 /// disagrees, and so does declaring one against a pre-fence baseline
 /// or removing one the baseline recorded. Only establish writes a
@@ -58,7 +76,7 @@ use std::process::{Child, Stdio};
 /// reader standing at the constant needs to know what today's number
 /// means -- what every past number meant is a ledger question, and the
 /// ledger has an address.
-pub const PROTO: &str = "5.1.0";
+pub const PROTO: &str = "6.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

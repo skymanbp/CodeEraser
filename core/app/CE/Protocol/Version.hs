@@ -7,12 +7,30 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
+-- 6.0.0 = the fingerprint widens (plan v2.14 (2), K round step 4b,
+-- 2026-08-25): 5.1.0's `classDigest` becomes `knobsDigest` and covers
+-- the WHOLE parsed ce.toml, not the class table alone. An adversarial
+-- review found the first scope wrong within the hour and the finding
+-- reproduced first-party: `[score] viol_cost = 0` takes a repo from
+-- 939/1000 FAIL to 1000/1000 pass while the axes still report the
+-- violation, and `[score] tol_abs = 100000` turns a 280-line growth
+-- from "1 over -> FAIL" into "0 over, 1 tolerance drawn -> pass".
+-- Both move the gates a glob edit moves; neither touched the class
+-- table; neither asked anyone to name a floor. Choosing which tables
+-- to fence is how that happens, so nothing is chosen: the scalar is
+-- fnv1a over the serialized config, which covers the knob nobody has
+-- added yet and moves for none of the comments or key order in the
+-- file, because it fingerprints the PARSE. A repo whose config equals
+-- the shipped default still sends nothing. The fail condition renames
+-- with the key (`knobs_digest`), and the rename of a request field is
+-- a schema change, hence the major (VERSIONING section 2) -- the same
+-- rule 5.0.0 was measured against.
 -- 5.1.0 = the rulepack fence (plan v2.14 ②, K round step 4,
--- 2026-08-25): verdict.request gains the scalar `classDigest`, a
+-- 2026-08-25): verdict.request gains the scalar `knobsDigest`, a
 -- fingerprint of the normalized [[rules.class]] declaration (names,
 -- globs in declaration order, knobs); ce-baseline.json records the
 -- digest its ceilings were established under; and the fail table
--- gains the named condition `class_digest`, which holds on plain
+-- gains the named condition `knobs_digest`, which holds on plain
 -- Maybe inequality -- both absent agrees, a changed rulepack
 -- disagrees, and so does declaring one against a pre-fence baseline
 -- or removing one the baseline recorded. Only establish writes a
@@ -55,7 +73,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- ledger has an address.
 
 proto :: String
-proto = "5.1.0"
+proto = "6.0.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

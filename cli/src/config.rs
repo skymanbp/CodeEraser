@@ -1,13 +1,13 @@
 //! ce.toml — declarative-only config (thresholds + excludes).
 //! Trust model per plan §5.9: no executable fields, ever.
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::path::Path;
 
 /// Thresholds; defaults from DEVELOPMENT_PLAN.md §4.1 (provenance:
 /// ESLint max-lines=300, Sonar S104=750/S138=75, ESLint fn=50,
 /// Pylint max-args=5, Sonar S3776 CoC=15, lizard CC=15).
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Thresholds {
     pub file_lines_warn: usize,
@@ -79,7 +79,7 @@ pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, RulesCfg};
 
 /// Dedup ratchet (M2 review R12): `ce dedup --check` fails when the
 /// repo's clone-block count exceeds this only-shrink budget.
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct DedupCfg {
     pub budget: Option<usize>,
@@ -88,7 +88,7 @@ pub struct DedupCfg {
 /// Graph/deadcode settings (M5-2h). entry_globs marks extra
 /// liveness roots beyond the mechanical conventions (main-shaped
 /// files, test conventions, doc entries) — flag bit 3 on the wire.
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct GraphCfg {
     pub entry_globs: Vec<String>,
@@ -98,7 +98,7 @@ pub struct GraphCfg {
 /// absent key sends no wire row and the core's Cost.hs default
 /// judges. Key names mirror the core knob names; the wire codes
 /// live in score::knobs as ONE declared table.
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct ScoreCfg {
     /// Per-axis weight numerators by axis NAME (size / complexity /
@@ -130,7 +130,7 @@ pub struct ScoreCfg {
 /// catch-all bin under deepest-owner semantics); values are
 /// relative weights >= 1. deny_unknown_fields from day one — the
 /// review C2 lesson, not a later retrofit.
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct StructureCfg {
     pub layout: std::collections::BTreeMap<String, u32>,
@@ -141,7 +141,7 @@ pub struct StructureCfg {
 /// knob rows ride the wire only when declared, the ceilings/27b9bc2
 /// pattern). decline_floor_micro is micro-per-mille per day; a
 /// declared floor is what arms the fail bit.
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct TrendCfg {
     pub min_points: Option<u32>,
@@ -151,7 +151,7 @@ pub struct TrendCfg {
 /// deny_unknown_fields everywhere (ADR-008 P4): a mistyped policy
 /// key used to be SILENTLY dropped — a config that looks live and
 /// does nothing is the exact failure mode this repo exists to fight.
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Config {
     pub thresholds: Thresholds,
@@ -181,6 +181,35 @@ pub fn env_secs(var: &str, default_secs: u64) -> std::time::Duration {
 }
 
 impl Config {
+    /// The KNOB FINGERPRINT (5.1.0 as knobsDigest, widened at 6.0.0),
+    /// or None when this repo declares nothing — a repo whose config
+    /// is the shipped default must keep the bytes it had before the
+    /// fence existed.
+    ///
+    /// The whole parsed config, not a chosen table. The first version
+    /// fingerprinted `[[rules.class]]` alone, and an adversarial
+    /// review found the scope wrong within the hour: two lines of
+    /// `[score]` — `viol_cost = 0` — pin the score at the scale, so
+    /// `ce check --fail-under 950` can never fail again, and
+    /// `tol_abs = 100000` erases the ratchet's own tolerance. Both
+    /// move the same gates a glob edit moves, neither touched the
+    /// class table, and neither asked anyone to name a floor. Picking
+    /// which tables to fence is how that happens; fingerprinting the
+    /// config is how it stops happening, including for the knob
+    /// nobody has added yet.
+    ///
+    /// Serialized JSON is the canonical form: it is deterministic
+    /// (struct field order), it escapes its own delimiters so no
+    /// value can be read as structure, and it covers a new field the
+    /// day the field is declared rather than the day someone
+    /// remembers to add it here. Comments and key order in ce.toml do
+    /// not move it, because it fingerprints the PARSE, not the file.
+    pub fn knobs_digest(&self) -> Option<u64> {
+        let declared = serde_json::to_vec(self).ok()?;
+        let shipped = serde_json::to_vec(&Config::default()).ok()?;
+        (declared != shipped).then(|| crate::score::baseline::fnv1a(&[&declared]))
+    }
+
     /// Load `ce.toml` for `root`; absent file = defaults.
     ///
     /// The file is looked for at the project ANCHOR above `root`, not
@@ -210,5 +239,125 @@ impl Config {
             Some(fault) => Err(fault),
             None => Ok(cfg),
         }
+    }
+}
+
+#[cfg(test)]
+mod knob_fingerprint {
+    use super::*;
+
+    fn with_class(name: &str, globs: &[&str], tol: Option<usize>) -> Config {
+        Config {
+            rules: RulesCfg {
+                class: vec![ClassCfg {
+                    name: name.into(),
+                    globs: globs.iter().map(|g| (*g).to_string()).collect(),
+                    knobs: ClassKnobs {
+                        ratchet_tolerance: tol,
+                        ..ClassKnobs::default()
+                    },
+                }],
+            },
+            ..Config::default()
+        }
+    }
+
+    /// A repo that declares nothing has no fingerprint. Absence is the
+    /// state the fence must leave untouched, byte for byte, and it is
+    /// what makes the fence free for everyone who never opted in.
+    #[test]
+    fn the_shipped_default_has_no_fingerprint() {
+        assert_eq!(Config::default().knobs_digest(), None);
+    }
+
+    /// The two knobs the adversarial review turned into a bypass. This
+    /// is the reason the fingerprint covers the whole config instead of
+    /// the class table: `viol_cost = 0` pins the score at the scale so
+    /// `--fail-under` can never fail, and `tol_abs` erases the
+    /// ratchet's tolerance. Neither touches [[rules.class]].
+    #[test]
+    fn the_score_knobs_that_bypassed_the_gates_move_it() {
+        let base = Config::default().knobs_digest();
+        let viol = Config {
+            score: ScoreCfg {
+                viol_cost: Some(0),
+                ..ScoreCfg::default()
+            },
+            ..Config::default()
+        };
+        let tol = Config {
+            score: ScoreCfg {
+                tol_abs: Some(100_000),
+                ..ScoreCfg::default()
+            },
+            ..Config::default()
+        };
+        assert_ne!(base, viol.knobs_digest(), "viol_cost");
+        assert_ne!(base, tol.knobs_digest(), "tol_abs");
+        assert_ne!(
+            viol.knobs_digest(),
+            tol.knobs_digest(),
+            "and from each other"
+        );
+    }
+
+    /// Everything a rulepack declaration can say still moves it —
+    /// including declaration ORDER, which is precedence, and a knob set
+    /// to zero, which is a claim and not an absence.
+    #[test]
+    fn the_rulepack_still_moves_it_in_every_part() {
+        let a = with_class("vendored", &["vendor/**"], None).knobs_digest();
+        assert!(a.is_some());
+        assert_ne!(a, with_class("vendor", &["vendor/**"], None).knobs_digest());
+        assert_ne!(
+            a,
+            with_class("vendored", &["vendor/*"], None).knobs_digest()
+        );
+        assert_ne!(
+            a,
+            with_class("vendored", &["vendor/**"], Some(0)).knobs_digest()
+        );
+        let two = |x: &str, y: &str| Config {
+            rules: RulesCfg {
+                class: [x, y]
+                    .iter()
+                    .map(|n| ClassCfg {
+                        name: (*n).into(),
+                        globs: vec![format!("{n}/**")],
+                        knobs: ClassKnobs::default(),
+                    })
+                    .collect(),
+            },
+            ..Config::default()
+        };
+        assert_ne!(
+            two("a", "b").knobs_digest(),
+            two("b", "a").knobs_digest(),
+            "declaration order IS precedence"
+        );
+    }
+
+    /// An exclude glob drops files from the walk, and with them their
+    /// ratchet rows — the third road the review found, fenced by the
+    /// same scalar as the first two.
+    #[test]
+    fn an_exclude_glob_moves_it() {
+        let excluded = Config {
+            exclude: vec!["vendor/**".into()],
+            ..Config::default()
+        };
+        assert_ne!(Config::default().knobs_digest(), excluded.knobs_digest());
+    }
+
+    /// No value can be read as structure: a name carrying the JSON the
+    /// encoding uses is escaped, not spliced. The class-only draft
+    /// separated fields with a NUL and its own test found the collision
+    /// immediately; serialized JSON has no such seam to exploit.
+    #[test]
+    fn a_name_cannot_impersonate_the_encoding() {
+        assert_ne!(
+            with_class("a", &["b"], None).knobs_digest(),
+            with_class("a\",\"globs\":[\"b", &[], None).knobs_digest(),
+        );
     }
 }

@@ -118,7 +118,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         continuous,
         classed,
         class_knobs: knobs::class_knob_rows(&cfg.rules),
-        class_digest: cfg.rules.digest(),
+        knobs_digest: cfg.knobs_digest(),
         discrete: m.members,
         baseline: match (opts.establish, opts.pinned_soft) {
             (true, Some(soft)) => serde_json::json!({
