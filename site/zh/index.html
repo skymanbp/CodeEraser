@@ -89,11 +89,14 @@
   <div class="card"><b>ce check</b><p>总门。七轴合成 0–1000 分，对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p></div>
   <div class="card"><b>ce dedup</b><p>winnowing 指纹的 T1/T2 克隆检测，克隆块预算只准往下棘。</p></div>
   <div class="card"><b>ce clone</b><p>T3 近似克隆：Haskell 核的树编辑距离判决，改名换形的拷贝一并抓。</p></div>
-  <div class="card"><b>ce deadcode</b><p>缓存引用图上的存活性判决：无保留入边、无入口声明——判死，门就红。</p></div>
+  <div class="card"><b>ce deadcode</b><p>缓存引用图上的存活性判决（图由 <code>ce graph --sites</code> 列出的站点建起）：无保留入边、无入口声明——判死，门就红。</p></div>
   <div class="card"><b>ce docdup</b><p>文档与注释里的重复散文，活段上的精确 Jaccard 判决。</p></div>
   <div class="card"><b>ce structure</b><p>树尺度结构熵：布局偏离、文档陈旧、冗余诸轴，整仓一览。</p></div>
   <div class="card"><b>ce scan</b><p>逐文件逐函数的尺寸、复杂度、可读性——经典指标，核分级；判的是全局表，或该文件自己那条 <code>[[rules.class]]</code> 线。</p></div>
   <div class="card"><b>ce trend</b><p>主线历史上的分数轨迹——逐提交缓存、可重建、方向诚实。</p></div>
+  <div class="card"><b>ce erase</b><p>确定性两段式擦除器：死文件、逐字重复的文档孪生、整单元精确克隆——先出计划，只在干净工作区上应用，且永不通过让模型重写代码来完成。</p></div>
+  <div class="card"><b>ce churn</b><p>git 窗口内的改动热度，逐单元归属——一个文件是在被重写，还是只在被追加。</p></div>
+  <div class="card"><b>ce join</b><p>三信号联判：把改动、重复与存活性折成一条判决，热的、重复的、已死的那个角落会自己报名。</p></div>
   <div class="card"><b>守卫钩子</b><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，停止时审计，会话开始报健康。</p></div>
 </div>
 

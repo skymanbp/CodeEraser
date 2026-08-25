@@ -1,19 +1,15 @@
+mod common;
+use common::repo_root;
+
 use std::collections::BTreeSet;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 #[derive(Clone, Debug)]
 struct Row {
     n: usize,
     title: String,
     file: String,
-}
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("docs_nav: cli has no repository parent")
-        .to_path_buf()
 }
 
 fn parse_row(line: &str) -> Row {

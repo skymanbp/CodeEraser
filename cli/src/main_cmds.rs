@@ -51,8 +51,16 @@ pub fn churn_cmd(root: &Path, days: u32, json: bool) -> ExitCode {
 
 pub fn graph_cmd(root: &Path, sites: bool, json: bool) -> ExitCode {
     if !sites {
-        eprintln!("ce graph: only --sites exists (deadcode is its own subcommand)");
-        return ExitCode::from(2);
+        // A bare `ce graph` is a question, not a mistake — the same
+        // reading v0.7.3 gave a bare `ce`. It used to answer on
+        // stderr with exit 2, which PowerShell repaints as a red
+        // NativeCommandError wall and every wrapper reads as a
+        // failure. The usable form goes to stdout and the exit is
+        // clean; --format is named here because it is inert without
+        // --sites, which was the second half of the same puzzle.
+        println!("ce graph --sites [--format json]   list the reference sites");
+        println!("ce deadcode                        judge liveness over them");
+        return ExitCode::SUCCESS;
     }
     graph::run_sites(root, json)
 }

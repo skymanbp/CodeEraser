@@ -1,36 +1,17 @@
 //! Machine-resolvable file:line citations for the methodology family.
+//! This half harvests citations and checks them structurally; the
+//! ledger half and the shapes both use live in docs_citations_parts.
 
-use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, BTreeSet};
+mod common;
+use common::repo_root;
+
+mod docs_citations_parts;
+
+use docs_citations_parts::{
+    Citation, assert_ledger, current_ledger, label_lines, lines, target_path,
+};
 use std::fs;
 use std::path::{Path, PathBuf};
-
-#[derive(Debug)]
-struct Citation {
-    citing: String,
-    citing_line: usize,
-    link: String,
-    target: String,
-    line: usize,
-    end: Option<usize>,
-    index: usize,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct LedgerEntry {
-    target: String,
-    line: usize,
-    text: String,
-}
-
-type Ledger = BTreeMap<String, LedgerEntry>;
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("cli/ has a parent")
-        .to_path_buf()
-}
 
 fn display_path(root: &Path, path: &Path) -> String {
     path.strip_prefix(root)
@@ -78,11 +59,19 @@ fn citations_in_file(root: &Path, path: &Path) -> Vec<Citation> {
             let after = &rest[open + 2..];
             let Some(close) = after.find(')') else { break };
             let link = &after[..close];
+            // the label is the bracketed half immediately before
+            // "](": scan back to its opening bracket
+            let head = &rest[..open];
+            let label = head
+                .rfind('[')
+                .map(|b| head[b + 1..].to_string())
+                .unwrap_or_default();
             if let Some((target, target_line, end)) = parse_anchor(link) {
                 index += 1;
                 out.push(Citation {
                     citing: citing.clone(),
                     citing_line: line_no + 1,
+                    label,
                     link: link.to_string(),
                     target: target.to_string(),
                     line: target_line,
@@ -103,19 +92,29 @@ fn all_citations(root: &Path) -> Vec<Citation> {
         .collect()
 }
 
-fn target_path(root: &Path, citation: &Citation) -> PathBuf {
-    root.join(&citation.citing)
-        .parent()
-        .expect("citing file parent")
-        .join(&citation.target)
-}
-
-fn lines(path: &Path) -> Vec<String> {
-    fs::read_to_string(path)
-        .unwrap_or_else(|e| panic!("cannot read target {}: {e}", path.display()))
-        .lines()
-        .map(str::to_string)
-        .collect()
+/// The label must agree with the anchor it links to (v2.14). The
+/// ledger pins the anchor's TEXT, so a stale label sailed through
+/// every bless — 28 of them had, across the corpus, each one telling
+/// a reader a line number the link does not go to. A range label may
+/// anchor at its start alone (the house convention), but any number
+/// it does state must match.
+fn label_errors(citation: &Citation, prefix: &str, errors: &mut Vec<String>) {
+    let Some((label_start, label_end)) = label_lines(&citation.label) else {
+        return;
+    };
+    if label_start != citation.line {
+        errors.push(format!(
+            "{prefix} -> label says L{label_start}, anchor goes to L{}",
+            citation.line
+        ));
+    }
+    if let (Some(le), Some(ae)) = (label_end, citation.end)
+        && le != ae
+    {
+        errors.push(format!(
+            "{prefix} -> label range ends L{le}, anchor ends L{ae}"
+        ));
+    }
 }
 
 fn structural_errors(root: &Path, citations: &[Citation]) -> Vec<String> {
@@ -137,6 +136,7 @@ fn structural_errors(root: &Path, citations: &[Citation]) -> Vec<String> {
                 citation.line, count
             ));
         }
+        label_errors(citation, &prefix, &mut errors);
         if let Some(end) = citation.end {
             if end < citation.line {
                 errors.push(format!(
@@ -152,128 +152,6 @@ fn structural_errors(root: &Path, citations: &[Citation]) -> Vec<String> {
         }
     }
     errors
-}
-
-fn key(citation: &Citation) -> String {
-    format!("{}:{}", citation.citing, citation.index)
-}
-
-fn current_ledger(root: &Path, citations: &[Citation]) -> Ledger {
-    citations
-        .iter()
-        .filter_map(|citation| {
-            let path = target_path(root, citation);
-            let target_lines = lines(&path);
-            target_lines.get(citation.line - 1).map(|text| {
-                (
-                    key(citation),
-                    LedgerEntry {
-                        target: citation.target.clone(),
-                        line: citation.line,
-                        text: text.trim().to_string(),
-                    },
-                )
-            })
-        })
-        .collect()
-}
-
-fn json(ledger: &Ledger) -> String {
-    format!(
-        "{}\n",
-        serde_json::to_string_pretty(ledger).expect("serialize citation ledger")
-    )
-}
-
-fn unique_line(target: &[String], text: &str) -> Option<usize> {
-    let matches: Vec<_> = target
-        .iter()
-        .enumerate()
-        .filter(|(_, line)| line.trim() == text)
-        .map(|(i, _)| i + 1)
-        .collect();
-    // then, not then_some: then_some evaluates matches[0] eagerly and
-    // panics on an empty match set — the vanished path needs the None
-    (matches.len() == 1).then(|| matches[0])
-}
-
-fn ledger_errors(root: &Path, citations: &[Citation], ledger: &Ledger) -> Vec<String> {
-    let mut errors = Vec::new();
-    let expected: BTreeSet<_> = citations.iter().map(key).collect();
-    let actual: BTreeSet<_> = ledger.keys().cloned().collect();
-    for missing in expected.difference(&actual) {
-        errors.push(format!("{missing}: missing ledger entry"));
-    }
-    for extra in actual.difference(&expected) {
-        errors.push(format!("{extra}: extra ledger entry"));
-    }
-    for citation in citations {
-        let Some(entry) = ledger.get(&key(citation)) else {
-            continue;
-        };
-        let path = target_path(root, citation);
-        if entry.target != citation.target {
-            errors.push(format!(
-                "{}: target changed: {} -> {}",
-                key(citation),
-                entry.target,
-                citation.target
-            ));
-            continue;
-        }
-        let target_lines = lines(&path);
-        let current = target_lines.get(citation.line - 1).map(|s| s.trim());
-        if current == Some(entry.text.as_str()) && citation.line == entry.line {
-            continue;
-        }
-        match unique_line(&target_lines, &entry.text) {
-            Some(line) if line != entry.line => {
-                errors.push(format!("{}: moved: now at L{line}", key(citation)));
-            }
-            _ => errors.push(format!(
-                "{}: vanished: semantic change needs a human",
-                key(citation)
-            )),
-        }
-    }
-    errors
-}
-
-fn assert_ledger(root: &Path, citations: &[Citation], current: &Ledger) {
-    let path = root.join("contracts/docs-citations.json");
-    if std::env::var("CE_BLESS").as_deref() == Ok("1") {
-        let rendered = json(current);
-        let status = match fs::read_to_string(&path) {
-            Ok(old) if old.replace("\r\n", "\n") == rendered => "unchanged",
-            Ok(_) => "changed",
-            Err(_) => "created",
-        };
-        fs::write(&path, rendered).expect("bless citation ledger");
-        println!(
-            "blessed {} citations at {} ({status})",
-            current.len(),
-            path.display()
-        );
-        return;
-    }
-    let saved = fs::read_to_string(&path).unwrap_or_else(|e| {
-        panic!(
-            "missing citation ledger {} ({e}); CE_BLESS=1 to create",
-            path.display()
-        )
-    });
-    let ledger: Ledger = serde_json::from_str(&saved).expect("parse citation ledger");
-    let errors = ledger_errors(root, citations, &ledger);
-    assert!(
-        errors.is_empty(),
-        "docs citation ledger errors:\n{}",
-        errors.join("\n")
-    );
-    assert_eq!(
-        saved.replace("\r\n", "\n"),
-        json(current),
-        "docs citation ledger drifted — CE_BLESS=1 to regenerate"
-    );
 }
 
 #[test]

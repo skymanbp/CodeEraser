@@ -20,10 +20,11 @@
 //! machine-generated tables get re-probed, never guessed).
 
 mod common;
+use common::repo_root;
 
 use serde_json::Value;
 use std::collections::{BTreeSet, HashMap};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 const HS_LICENSES: &[(&str, &str, &str)] = &[
     ("OneTuple", "0.4.3", "BSD-3-Clause"),
@@ -100,13 +101,6 @@ const HS_LICENSES: &[(&str, &str, &str)] = &[
 /// still emits its frozen HS_LICENSES row, so every platform
 /// regenerates the same union NOTICE.
 const HS_PLATFORM_ONLY: &[&str] = &["Win32"];
-
-fn repo_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("cli/ has a parent")
-        .to_path_buf()
-}
 
 /// Every third-party (name, version, license) in one workspace's
 /// resolved graph — the lockfile is the population, `license` the

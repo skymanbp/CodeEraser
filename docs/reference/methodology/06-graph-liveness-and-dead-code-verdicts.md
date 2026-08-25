@@ -45,13 +45,13 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 | Python | leading-dot relative; *n* dots climb *n−1* levels ([py.rs:37-48](../../../cli/src/graph/ladder/py.rs#L37)) | absolute dotted path over source roots ([py.rs:60-78](../../../cli/src/graph/ladder/py.rs#L60)) | `__init__.py` longest-prefix degradation ([py.rs:109-120](../../../cli/src/graph/ladder/py.rs#L109)) | stdlib table or pyproject dep ⇒ External ([py.rs:123-130](../../../cli/src/graph/ladder/py.rs#L123)) | — (structurally empty: the detector never opens dynamic imports, [py.rs:14-16](../../../cli/src/graph/ladder/py.rs#L14)) |
 | Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([rs.rs:76-90](../../../cli/src/graph/ladder/rs.rs#L76)) | `use crate::…` from covering crate roots ([rs_use.rs:69-73](../../../cli/src/graph/ladder/rs_use.rs#L69)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([rs_use.rs:74-88](../../../cli/src/graph/ladder/rs_use.rs#L74), [rs_use.rs:100-117](../../../cli/src/graph/ladder/rs_use.rs#L100)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([rs_use.rs:14](../../../cli/src/graph/ladder/rs_use.rs#L14), [rs_use.rs:159-192](../../../cli/src/graph/ladder/rs_use.rs#L159)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([rs_use.rs:124-151](../../../cli/src/graph/ladder/rs_use.rs#L124)) |
 | Go | longest in-scope `go.mod` module prefix ([go.rs:44-71](../../../cli/src/graph/ladder/go.rs#L44)) | importer's module `replace` directives ([go.rs:85-110](../../../cli/src/graph/ladder/go.rs#L85)) | stdlib table, or a dotted first segment with no local match ⇒ External ([go.rs:150-156](../../../cli/src/graph/ladder/go.rs#L150)) | — | — |
-| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:66-81](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:51](../../../cli/src/graph/ladder/md.rs#L51), [md.rs:59-64](../../../cli/src/graph/ladder/md.rs#L59)) |
+| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:65-80](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:51](../../../cli/src/graph/ladder/md.rs#L51), [md.rs:59-64](../../../cli/src/graph/ladder/md.rs#L59)) |
 | Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:61-77](../../../cli/src/graph/ladder/hs.rs#L61)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:137-147](../../../cli/src/graph/ladder/hs.rs#L137)) | — | — | — |
 
 Numeric details that are policy, not taste:
 
 - The tsconfig `extends` chain is bounded at **8** hops with a cycle check; exceeding it is
-  `config_depth`, never a guess ([roots.rs:29-30](../../../cli/src/graph/roots.rs#L30),
+  `config_depth`, never a guess ([roots.rs:30-31](../../../cli/src/graph/roots.rs#L30),
   [roots.rs:50-53](../../../cli/src/graph/roots.rs#L50)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
   ([py.rs:134-141](../../../cli/src/graph/ladder/py.rs#L134)); within one root, package-before-module is
@@ -87,7 +87,7 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:55-72](../../../cli/src/graph/wire.rs#L60)). Edge kinds
+ledger-visible as sites *without* edges ([wire.rs:60-93](../../../cli/src/graph/wire.rs#L60)). Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4` ([wire.rs:23-27](../../../cli/src/graph/wire.rs#L23)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
@@ -121,13 +121,13 @@ convergent writer landing between them could hand the edge query a source file t
 never saw ([load.rs:88-94](../../../cli/src/graph/load.rs#L88)). `unresolved_sites` is the count of sites
 with no edge row ([load.rs:116-121](../../../cli/src/graph/load.rs#L116)) and travels with the report so
 the reader sees what the graph refuses to know
-([deadcode.rs:22-24](../../../cli/src/graph/deadcode.rs#L23)).
+([deadcode.rs:23-25](../../../cli/src/graph/deadcode.rs#L23)).
 
 ### 4. Boundary contract and caps
 
 `graph.request` carries `nodes: [[lang, kind, flags]]`, `edges: [[src, dst, kind, rung]]`, and
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
-deterministic ([Graph.hs:69-85](../../../core/app/CE/Graph.hs#L76)):
+deterministic ([Graph.hs:74-95](../../../core/app/CE/Graph.hs#L74)):
 
 - node rows are 3 fields (legacy) or 4 (with the 2.28.0 role column), one arity per table, all `≥ 0` ([Graph.hs:128-138](../../../core/app/CE/Graph.hs#L128));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
@@ -150,7 +150,7 @@ by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:227-250](../../../core/app/CE/Graph.hs#L227), [Graph.hs:227-250](../../../core/app/CE/Graph.hs#L227)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:349-363](../../../cli/src/graph/deadcode.rs#L349)) and `ce deadcode --check` relays the
-core's fail bit ([main_cmds.rs:70-90](../../../cli/src/main_cmds.rs#L70)).
+core's fail bit ([main_cmds.rs:78-98](../../../cli/src/main_cmds.rs#L78)).
 
 ### 5. Kept arcs and liveness
 
@@ -319,7 +319,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:102](../../../core/app/CE/Graph/Cost.hs#L102)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:122](../../../cli/src/graph/load.rs#L124), [deadcode.rs:168](../../../cli/src/graph/deadcode.rs#L168)), fences every returned index and bounds the column ([deadcode.rs:341](../../../cli/src/graph/deadcode.rs#L341)), and renders the trust word beside each dead file ([deadcode.rs:253](../../../cli/src/graph/deadcode.rs#L253)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphProps.hs:127](../../../core/test/GraphProps.hs#L127)).
+([Cost.hs:102](../../../core/app/CE/Graph/Cost.hs#L102)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:122](../../../cli/src/graph/load.rs#L122), [deadcode.rs:168](../../../cli/src/graph/deadcode.rs#L168)), fences every returned index and bounds the column ([deadcode.rs:341](../../../cli/src/graph/deadcode.rs#L341)), and renders the trust word beside each dead file ([deadcode.rs:253](../../../cli/src/graph/deadcode.rs#L253)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphProps.hs:127](../../../core/test/GraphProps.hs#L127)).
 
 ### 9. Acceptance
 
@@ -353,4 +353,4 @@ the resolver cannot choose its own denominator
 with a per-language floor of 15 ([eval_graph_precision.rs:93-94](../../../cli/tests/eval_graph_precision.rs#L93)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
 `ce deadcode --check` exits non-zero on any dead file
-([main_cmds.rs:87-98](../../../cli/src/main_cmds.rs#L87)).
+([main_cmds.rs:95-106](../../../cli/src/main_cmds.rs#L95)).

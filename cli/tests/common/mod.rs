@@ -113,13 +113,20 @@ pub fn analyze(dir: &Path, blocks: usize, groups: usize) -> codeeraser::dedup::p
     found
 }
 
-/// Path of a golden fixture under contracts/fixtures.
-pub fn golden_path(name: &str) -> PathBuf {
+/// The repository root — cli/'s parent. Every gate that reads a
+/// tracked file starts here. It lived as seven private copies across
+/// the test binaries until the clone gate pointed at one pair; the
+/// class was all seven, so the definition moved here once.
+pub fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
         .expect("cli/ has a parent")
-        .join("contracts/fixtures")
-        .join(name)
+        .to_path_buf()
+}
+
+/// Path of a golden fixture under contracts/fixtures.
+pub fn golden_path(name: &str) -> PathBuf {
+    repo_root().join("contracts/fixtures").join(name)
 }
 
 /// CE_BLESS=1 regenerates the golden; otherwise byte-compare

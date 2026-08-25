@@ -128,7 +128,7 @@ L2 must prove incremental gain over L1 or the ladder falls back to L1 ([DEVELOPM
 
 **L1 is the IR producer, not a modified engine.** L2 runs L1 per pair unchanged, ships only the leftovers (significant lines L1 called novel/deleted) as `[line, fnv1a(trim), alnum_width]` grouped into runs, and applies a monotone delta ([batch.rs:1-6](../../../cli/src/fourclass/batch.rs#L1), [batch.rs:128-146](../../../cli/src/fourclass/batch.rs#L128)). Single-pair batches with no link are bitwise L1 ([batch.rs:5-6](../../../cli/src/fourclass/batch.rs#L5)).
 
-The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:68-70](../../../core/app/CE/FourClass/Wire.hs#L68), [delta.rs:60-66](../../../cli/src/fourclass/batch/delta.rs#L61)). L2 can therefore only reclassify plain lines as moved, never the reverse.
+The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:68-70](../../../core/app/CE/FourClass/Wire.hs#L68), [delta.rs:61-66](../../../cli/src/fourclass/batch/delta.rs#L61)). L2 can therefore only reclassify plain lines as moved, never the reverse.
 
 **Every fallback returns the pure-L1 result with a named reason** ([batch.rs:8-10](../../../cli/src/fourclass/batch.rs#L8)):
 
@@ -147,11 +147,11 @@ The delta is monotone in one direction only: `removed_deleted → removed_moved`
 
 The reply is an answer, not an authority ([delta.rs:4-5](../../../cli/src/fourclass/batch/delta.rs#L4)):
 
-- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:17-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:85-87](../../../cli/src/fourclass/batch.rs#L85)).
-- **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:12-16](../../../cli/src/fourclass/batch/delta.rs#L13), [delta.rs:57-59](../../../cli/src/fourclass/batch/delta.rs#L58)).
-- **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:99-101](../../../cli/src/fourclass/batch/delta.rs#L100), [session.rs:113-123](../../../cli/src/fourclass/session.rs#L113)).
+- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:18-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:85-87](../../../cli/src/fourclass/batch.rs#L85)).
+- **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:13-16](../../../cli/src/fourclass/batch/delta.rs#L13), [delta.rs:58-59](../../../cli/src/fourclass/batch/delta.rs#L58)).
+- **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:100-102](../../../cli/src/fourclass/batch/delta.rs#L100), [session.rs:113-123](../../../cli/src/fourclass/session.rs#L113)).
 - **The core machine-checks two preconditions** at its boundary ([FourClass.hs:31-44](../../../core/app/CE/FourClass.hs#L31)): no duplicate pair index (Anchor's run maps key on `(pair, run)`, so `M.fromList` would silently drop an earlier duplicate's runs), and **within-first** — no leftover added hash of a pair may occur among that same pair's leftover removed hashes. Within-first is L1's within-file consumption rule seen from the judgment side; verifying its consequence turns a cross-language assumption into a checked contract ([FourClass.hs:3-6](../../../core/app/CE/FourClass.hs#L3)).
-- **Blocks are unit-attributed line by line**, not head-line only: one block can span several units, and head-line attribution left 7 of 35 registered units unnamed ([delta.rs:88-93](../../../cli/src/fourclass/batch/delta.rs#L89)).
+- **Blocks are unit-attributed line by line**, not head-line only: one block can span several units, and head-line attribution left 7 of 35 registered units unnamed ([delta.rs:89-94](../../../cli/src/fourclass/batch/delta.rs#L89)).
 
 ### Session scope
 

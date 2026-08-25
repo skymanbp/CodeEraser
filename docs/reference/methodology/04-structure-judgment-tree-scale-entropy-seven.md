@@ -101,7 +101,7 @@ root and, under deepest-owner semantics, the catch-all bin
 ([config.rs:126-137](../../../cli/src/config.rs#L126), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
 sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
-([Structure.hs:124](../../../core/app/CE/Structure.hs#L122),
+([Structure.hs:122](../../../core/app/CE/Structure.hs#L122),
 [Structure.hs:161-164](../../../core/app/CE/Structure.hs#L161),
 [Structure.hs:197-210](../../../core/app/CE/Structure.hs#L197)).
 
@@ -266,7 +266,7 @@ any axis, and never enter this fold.
 ### 6. Preconditions the fold assumes
 
 The score above is only meaningful because the boundary contract runs first, in request order,
-and returns the *first* offender by name ([Structure.hs:102-117](../../../core/app/CE/Structure.hs#L100)):
+and returns the *first* offender by name ([Structure.hs:100-115](../../../core/app/CE/Structure.hs#L100)):
 
 - node rows are dense and tree-shaped: `id == index`, no negative fields, root self-loops at
   depth 0, `parent < id` for every non-root row
@@ -277,7 +277,7 @@ and returns the *first* offender by name ([Structure.hs:102-117](../../../core/a
   probe at [StructureProps.hs:108-112](../../../core/test/StructureProps.hs#L108));
 - every dir-keyed table shares one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
-  ([Structure.hs:120-127](../../../core/app/CE/Structure.hs#L118),
+  ([Structure.hs:118-125](../../../core/app/CE/Structure.hs#L118),
   [Structure.hs:197-210](../../../core/app/CE/Structure.hs#L197)). Extra rules: pattern code `<= 6` and
   count `>= 1`; convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`
   (the pre-judged staleDocs rules retired with their table at 2.29.0 — the raw
@@ -290,7 +290,7 @@ request dimension walks that dimension uncapped
 ([Structure.hs:102-107](../../../core/app/CE/Structure.hs#L102)). Over-cap answers a **complete degraded
 reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
 are both true and `reason` is `structure_too_large`
-([Structure.hs:229-249](../../../core/app/CE/Structure.hs#L221),
+([Structure.hs:221-241](../../../core/app/CE/Structure.hs#L221),
 [StructureProps.hs:231-241](../../../core/test/StructureProps.hs#L231)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. In the non-degraded case `fail` equals `degraded`,

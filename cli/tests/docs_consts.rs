@@ -1,3 +1,6 @@
+mod common;
+use common::repo_root;
+
 mod docs_consts_stack;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -18,13 +21,6 @@ struct Def {
 }
 
 type Families = BTreeMap<String, Vec<Chip>>;
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("cli/ has a parent")
-        .to_path_buf()
-}
 
 fn page(root: &Path, rel: &str) -> String {
     fs::read_to_string(root.join(rel)).unwrap_or_else(|e| panic!("read {rel}: {e}"))

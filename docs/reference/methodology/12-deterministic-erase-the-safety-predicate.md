@@ -30,10 +30,10 @@ come from the graph report and carry a verdict code plus the graph family's own
 per-row confidence (class 3 since 2.32.0)
 ([gather.rs:104-124](../../../cli/src/erase/gather.rs#L104)). Document candidates
 carry both segment word counts and the raw-slice equality bit
-([gather.rs:122-153](../../../cli/src/erase/gather.rs#L126)). T1-twin candidates
+([gather.rs:126-157](../../../cli/src/erase/gather.rs#L126)). T1-twin candidates
 carry whole-unit coverage, byte equality, copy-file liveness, and the locally
 folded per-language unresolved count
-([gather.rs:156-211](../../../cli/src/erase/gather.rs#L160)).
+([gather.rs:160-215](../../../cli/src/erase/gather.rs#L160)).
 
 ### 2. Four frozen class codes, three provable families
 
@@ -72,7 +72,7 @@ reported verbatim length and the two segment word counts; `bytesEqual` is the
 raw-slice equality bit ([Cost.hs:42-45](../../../core/app/CE/Erase/Cost.hs#L42)).
 The client chooses the path-lexicographically later segment as the candidate,
 then computes equality from the two inclusive line slices
-([gather.rs:122-151](../../../cli/src/erase/gather.rs#L126)).
+([gather.rs:126-155](../../../cli/src/erase/gather.rs#L126)).
 
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
@@ -91,7 +91,7 @@ not merely a high similarity score.
 ([Cost.hs:46-51](../../../core/app/CE/Erase/Cost.hs#L46)). Rust first finds a
 dedup block that covers at least one complete cached unit, then records the
 coverage bit, raw equality, whether the target file is graph-dead, and its
-language unresolved count ([gather.rs:156-211](../../../cli/src/erase/gather.rs#L160)).
+language unresolved count ([gather.rs:160-215](../../../cli/src/erase/gather.rs#L160)).
 
 **Predicate.** `judgeRow` evaluates those facts in source order: coverage must
 be `1`, bytes must be equal, the copy file must be dead, and unresolved sites

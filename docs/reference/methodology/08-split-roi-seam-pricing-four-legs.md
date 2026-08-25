@@ -128,14 +128,14 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
 [seams.rs:212-234](../../../cli/src/structure/seams.rs#L212),
-[size-advisory.md:92-95](../size-advisory.md#L93). Word-boundedness is
+[size-advisory.md:92-95](../size-advisory.md#L92). Word-boundedness is
 identifier-char adjacency on both sides
 [seams.rs:236-254](../../../cli/src/structure/seams.rs#L236). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
 [seams.rs:225](../../../cli/src/structure/seams.rs#L225). Documented limitation: short names and
 in-string mentions will count an edge; the advisory face is non-binding, so this is tolerated
-[size-advisory.md:93-95](../size-advisory.md#L94).
+[size-advisory.md:94-95](../size-advisory.md#L94).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
 (`crate::dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated

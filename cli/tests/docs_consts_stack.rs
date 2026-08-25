@@ -5,10 +5,16 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-fn root() -> PathBuf {
+/// The one member of the repo_root class that KEEPS a private copy:
+/// this file is compiled twice — as its own test target and as
+/// `mod docs_consts_stack` inside docs_consts.rs — so `mod common;`
+/// resolves to tests/docs_consts_stack/common.rs in the second mode
+/// and `crate::common` does not exist in the first. Neither spelling
+/// works in both, so the definition stays here with its reason.
+fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
-        .expect("cli has a parent")
+        .expect("cli/ has a parent")
         .to_path_buf()
 }
 
@@ -42,7 +48,7 @@ fn source_contains(root: &Path, rel: &str, needle: &str) {
 
 #[test]
 fn stack_page_constants_are_locked_and_resolvable() {
-    let root = root();
+    let root = repo_root();
     let en = constants(&root.join("site/stack/index.html"));
     let zh = constants(&root.join("site/zh/stack/index.html"));
     assert_eq!(en, zh, "stack EN/ZH numeric facts drifted");

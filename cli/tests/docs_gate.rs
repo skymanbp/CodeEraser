@@ -14,9 +14,9 @@
 //! tuple table would chain against HS_LICENSES under T2).
 
 mod common;
+use common::repo_root;
 
 use std::collections::BTreeSet;
-use std::path::PathBuf;
 
 /// Per-key prose, the only authored content. Key set is asserted
 /// equal to the schema both ways: an undocumented field and a dead
@@ -60,13 +60,6 @@ CI reddens when this file drifts from its regeneration. \
 Length rides the CLI surface (a machine-generated projection, the \
 hs_boot stance), so the scan's file-lines warn on the CLI page is an \
 accounted standing warn, not maintained prose over budget. -->";
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("cli/ has a parent")
-        .to_path_buf()
-}
 
 /// One `--help` face off the real binary, language pinned to en.
 fn help_of(sub: Option<&str>) -> String {

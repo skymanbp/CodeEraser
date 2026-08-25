@@ -3,17 +3,9 @@
 //! the health line must report guard mode, index size, and a warm
 //! daemon after its own warm-up ping.
 
-use std::path::{Path, PathBuf};
-
 mod common;
+use common::repo_root;
 use common::tmp;
-
-fn repo_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("cli/ has a parent")
-        .to_path_buf()
-}
 
 #[test]
 fn health_reports_mode_index_and_warm_daemon() {

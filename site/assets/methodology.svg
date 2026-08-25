@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" role="img"
-     aria-label="CodeEraser methodology: lane one measures facts (token fingerprints k=25 w=26, AST trees, reference graph, git windows, LOC multisets, doc shingles), lane two judges them with exact integer and rational formulas (winnowing guarantee t=50, TSED 85/100, Jaccard 80/100, soft line S=clamp(median times r^k,[200,500]), the convex soft-zone penalty, liveness closure, chi-squared divergence, least-squares slope, the score fold), lane three gates on the ratchet, the dedup budget, the fail-under floor and the FPR tier ladder">
+     aria-label="CodeEraser methodology: lane one measures facts (token fingerprints k=25 w=26, AST trees, reference graph, git windows, LOC multisets, doc shingles), lane two judges them with exact integer and rational formulas (winnowing guarantee t=50, TSED 85/100, Jaccard 80/100, soft line S=clamp(median times r^k,[200,500]), the convex soft-zone penalty, liveness closure, chi-squared divergence, the Theil-Sen median of pairwise slopes, the score fold), lane three gates on the ratchet, the dedup budget, the fail-under floor and the FPR tier ladder">
   <!-- Self-painted ground, same vocabulary as architecture.svg: the diagram
        carries its own dark panel so it reads identically on GitHub light/dark
        and on codeeraser.dev. Every number below is cited to a file:line in
@@ -101,7 +101,7 @@
         <text x="422" y="443">p(x) = 10 * ((x - S) / (750 - S))^2,  S &lt; x &lt;= 750; linear past 750</text>
         <text x="422" y="507">reach = closure from flags .&amp;. 126 != 0</text>
         <text x="422" y="571">1 - sum (c/N)^2   ·   sum (p - q)^2 / q</text>
-        <text x="422" y="635">slope = (n*Sxy - Sx*Sy) / (n*Sxx - Sx^2)</text>
+        <text x="422" y="635">slope = median { (sj - si) / (tj - ti) }</text>
         <text x="422" y="699">max 0 (1000 - sum(w*p*10) `div` (10 * sum(w)))</text>
       </g>
     </g>
