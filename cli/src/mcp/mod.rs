@@ -7,6 +7,7 @@
 //! ONE table (tools.rs) driving both tools/list and dispatch, so a
 //! listed-but-undispatchable tool is unrepresentable.
 
+mod adapters;
 mod tools;
 
 use anyhow::Result;

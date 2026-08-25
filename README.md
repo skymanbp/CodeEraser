@@ -100,7 +100,7 @@ The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins aut
 | `ce trend` | score trajectory over mainline history (cache rebuilds from git) |
 | `ce erase` | deterministic two-phase eraser: plans only provably-safe removals (dead files, verbatim doc twins, whole-unit T1 twins), dry-run default, `--apply` behind clean-worktree preconditions |
 | `ce check` / `ce baseline` | ADR-006 ratchet + score floor against `ce-baseline.json` |
-| `ce mcp` | read-only MCP server: 11 report tools; erase plans and doctor are not exposed |
+| `ce mcp` | read-only MCP server: 13 report tools, registered by the plugin itself. `erase` reaches the PLAN and nothing else — applying is a human act at the CLI or the GUI |
 | `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |
 
 Console reports and `--help` speak English by default and Chinese under `--lang zh` (or `CE_LANG=zh`; the flag wins). JSON output and the FAIL/pass vocabulary are never translated — they are the machine face. The GUI carries its own language toggle.

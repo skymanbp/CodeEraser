@@ -15,6 +15,12 @@ use anyhow::Result;
 use rusqlite::Transaction;
 use std::collections::{BTreeMap, BTreeSet};
 
+/// JSON output schema id for the unit-universe listing; bump on
+/// shape change (plan §7.1). It lives beside the rows rather than in
+/// the CLI command that used to print them, because the document is
+/// a family face now and the CLI is only one of its readers.
+pub const UNITS_SCHEMA_ID: &str = "ce.clone-units/0.1.0";
+
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one
 /// wipe lifecycle). `sig` = sorted shingle u64s LE; `hist` = sorted
 /// (kind u64, count u32) pairs LE.

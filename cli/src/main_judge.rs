@@ -262,37 +262,32 @@ pub fn clone_cmd(a: CloneArgs) -> ExitCode {
     }
     emit(
         "clone",
-        || clone_units(&or_cwd(j.root), j.db),
-        |rows| print_units(rows, as_json),
+        || codeeraser::faces::clone_units(&or_cwd(j.root)),
+        |doc| print_units(doc, as_json),
     )
 }
 
-fn clone_units(root: &Path, db: Option<PathBuf>) -> anyhow::Result<Vec<dedup::unitcache::UnitRow>> {
-    let (idx, _db_path) = dedup::refreshed_index(root, db)?;
-    let orphans = dedup::unitcache::identity_orphans(&idx)?;
-    anyhow::ensure!(
-        orphans == 0,
-        "{orphans} unitsig rows missing their symbols identity — nth throat drift"
-    );
-    dedup::unitcache::unit_rows(&idx)
-}
-
-fn print_units(rows: &[dedup::unitcache::UnitRow], json: bool) {
+/// The console face of the unit universe. The DOCUMENT is built in
+/// faces::clone_units — it used to be assembled here, which made it
+/// the one family document no machine surface could reach, and the
+/// `--units` MCP gap was that fact wearing a different hat.
+fn print_units(doc: &serde_json::Value, json: bool) {
     if json {
-        let doc = serde_json::json!({
-            "schema": "ce.clone-units/0.1.0",
-            "units": rows.iter().map(|u| serde_json::json!({
-                "path": u.path, "key": u.key, "nth": u.nth, "nodes": u.nodes,
-            })).collect::<Vec<_>>(),
-        });
         println!("{doc}");
         return;
     }
-    for u in rows {
-        println!("{}  {}#{}  {} nodes", u.path, u.key, u.nth, u.nodes);
+    let units = doc["units"].as_array().map(Vec::as_slice).unwrap_or(&[]);
+    for u in units {
+        println!(
+            "{}  {}#{}  {} nodes",
+            u["path"].as_str().unwrap_or("?"),
+            u["key"].as_str().unwrap_or("?"),
+            u["nth"],
+            u["nodes"]
+        );
     }
     println!(
         "{}",
-        codeeraser::i18n::line("clone units: {}", "克隆单元：{}", &[&rows.len()])
+        codeeraser::i18n::line("clone units: {}", "克隆单元：{}", &[&units.len()])
     );
 }

@@ -92,7 +92,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce trend` | 主线历史分数轨迹（缓存可从 git 重建） |
 | `ce erase` | 确定性两段式擦除：只计划可证安全的消除（死文件、逐字文档孪生、整单元 T1 孪生），默认演练，`--apply` 有干净工作区前置 |
 | `ce check` / `ce baseline` | ADR-006 棘轮 + 分数地板（对 `ce-baseline.json`） |
-| `ce mcp` | 只读 MCP 服务器：11 个报告工具；不暴露 erase 计划与 doctor |
+| `ce mcp` | 只读 MCP 服务器：13 个报告工具，由插件自己注册。`erase` 只到**计划**为止——执行是 CLI 或 GUI 上的人类动作 |
 | `ce doctor` / `ce eject` | 健康行；按项目完整卸载（默认 dry-run） |
 
 控制台报告与 `--help` 默认英文，`--lang zh`（或 `CE_LANG=zh`，旗标

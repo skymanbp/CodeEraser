@@ -81,9 +81,21 @@ fn mcp_initialize_and_list() {
             "join",
             "structure",
             "check",
+            "erase",
+            "doctor",
             "trend",
         ]
     );
+    // The write verbs stay absent BY NAME, not by nobody having added
+    // them: `erase` reaches the PLAN (read-only) and `apply` has no
+    // face at all, so a machine surface cannot delete on its own
+    // authority. This is the assertion that turns that into a rule.
+    for forbidden in ["erase_apply", "apply", "baseline", "establish"] {
+        assert!(
+            !names.contains(&forbidden),
+            "a write verb reached the read-only catalog: {forbidden}"
+        );
+    }
     s.finish();
 }
 
@@ -116,30 +128,35 @@ fn mcp_report_faces_match_library() {
     s.finish();
 }
 
-/// The eleven expected report strings, each produced through the
-/// public library face the MCP adapter claims to be a transport for —
-/// rows built by one closure so the builder cannot re-grow parallel
-/// row stanzas (the census caught two builders doing exactly that;
-/// the over-50-line length is that finding's why — the 50-line split
-/// WAS the twin-stanza clone, so one long builder is the honest
-/// shape). The trend row runs library-first on purpose: it seeds the
-/// cache, so the MCP call reads the same warm rows (the Summary
-/// refresh-counter lesson, applied to the trend cache).
+/// The expected report strings, each produced through the public
+/// library face the MCP adapter claims to be a transport for — rows
+/// built by one closure so the builder cannot re-grow parallel row
+/// stanzas (the census caught two builders doing exactly that). The
+/// split below is the repo's own seam, not an arbitrary halving:
+/// four families are MEASUREMENT-only and never open a core link
+/// (faces.rs says so where it takes the core argument and ignores
+/// it), the rest are judged. Splitting per ROW would recreate the
+/// twin-stanza clone this comment used to justify one long builder
+/// with; splitting along the seam does not.
 fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Value, String)> {
-    use codeeraser::{churn, dedup, docdup, graph, join, report, scan, score, structure, trend};
+    let mut rows = measured_reports(dir);
+    rows.extend(judged_reports(dir));
+    rows
+}
+
+type Row = (&'static str, serde_json::Value, String);
+
+fn no_args(name: &'static str, text: String) -> Row {
+    (name, serde_json::json!({}), text)
+}
+
+/// The four faces that never open a core link.
+fn measured_reports(dir: &std::path::Path) -> Vec<Row> {
+    use codeeraser::{churn, dedup, graph, scan};
     let core = common::core_bin();
-    let a = serde_json::json!({});
-    let row = |name: &'static str, text: String| (name, a.clone(), text);
+    let row = no_args;
     let (files, findings, summary, _fail) = scan::analyze_judged(dir, &core).expect("scan");
     let (found, dsum) = dedup::analyze(dir, None, None, None).expect("dedup");
-    let opts = score::Opts {
-        db: None,
-        core: core.clone(),
-        days: None,
-        floor: None,
-        establish: false,
-        pinned_soft: None,
-    };
     vec![
         row(
             "scan",
@@ -157,6 +174,25 @@ fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Valu
             "graph_sites",
             graph::sites_json(&graph::analyze(dir).expect("sites")),
         ),
+    ]
+}
+
+/// The faces that judge. The trend row runs library-first on purpose:
+/// it seeds the cache, so the MCP call reads the same warm rows (the
+/// Summary refresh-counter lesson, applied to the trend cache).
+fn judged_reports(dir: &std::path::Path) -> Vec<Row> {
+    use codeeraser::{dedup, docdup, graph, join, report, score, structure, trend};
+    let core = common::core_bin();
+    let row = no_args;
+    let opts = score::Opts {
+        db: None,
+        core: core.clone(),
+        days: None,
+        floor: None,
+        establish: false,
+        pinned_soft: None,
+    };
+    vec![
         row(
             "deadcode",
             report::deadcode_json(&graph::deadcode::run(dir, None, &core).expect("dead"))
@@ -194,11 +230,74 @@ fn library_reports(dir: &std::path::Path) -> Vec<(&'static str, serde_json::Valu
             score::report_json(&score::run(dir, opts).expect("check")).to_string(),
         ),
         row(
+            "erase",
+            codeeraser::erase::render::report_json(
+                &codeeraser::erase::plan(dir, None, &core).expect("erase plan"),
+            )
+            .to_string(),
+        ),
+        // doctor is deliberately absent from this parity list: it is
+        // the one face whose value is the MACHINE's state, so its
+        // document moves between two calls (the daemon warms, the
+        // observe feed grows) and a byte comparison would pin a clock.
+        // doctor_face.rs asserts its shape instead.
+        row(
             "trend",
             // commits=10 mirrors the MCP adapter's default exactly
             trend::report_json(&trend::run(dir, None, &core, 10, None).expect("trend")).to_string(),
         ),
     ]
+}
+
+/// The knob PARAMETERS, which are the other half of "the catalog is
+/// a transport": a tool that accepts a knob and ignores it is a
+/// transport that lies. `units` switches `clone` to the other
+/// document its own CLI flag produces, and `min_distinct` is the
+/// diversity floor the face could not receive at all until now.
+#[test]
+fn declared_knobs_reach_the_library() {
+    let dir = tmp("mcp-knobs");
+    common::seed_clone_pair(&dir);
+    codeeraser::dedup::analyze(&dir, None, None, None).expect("warm");
+    let mut s = McpSession::over(&dir);
+    let call = |s: &mut McpSession, id, name: &str, args: serde_json::Value| {
+        let got = s.ask(serde_json::json!({
+            "jsonrpc": "2.0", "id": id, "method": "tools/call",
+            "params": {"name": name, "arguments": args}
+        }));
+        assert_eq!(got["result"]["isError"], false, "{name}: {got}");
+        got["result"]["content"][0]["text"]
+            .as_str()
+            .expect("text")
+            .to_string()
+    };
+    let units = call(&mut s, 300, "clone", serde_json::json!({"units": true}));
+    assert_eq!(
+        units,
+        codeeraser::faces::clone_units(&dir)
+            .expect("units")
+            .to_string(),
+        "the units switch must reach the OTHER document, not the judgment"
+    );
+    let judged = call(&mut s, 301, "clone", serde_json::json!({}));
+    assert!(
+        judged != units,
+        "units:true and units:false answered the same document"
+    );
+    // an absurd diversity floor suppresses every block: if the knob
+    // were dropped the two answers would be identical
+    let wide = call(&mut s, 302, "check_duplication", serde_json::json!({}));
+    let narrow = call(
+        &mut s,
+        303,
+        "check_duplication",
+        serde_json::json!({"min_distinct": 100000}),
+    );
+    assert!(
+        wide != narrow,
+        "min_distinct was accepted and ignored — the catalog lied"
+    );
+    s.finish();
 }
 
 #[test]

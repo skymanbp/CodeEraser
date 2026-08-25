@@ -23,8 +23,12 @@ pub fn scan(root: &Path, core: &str) -> Result<Value> {
     )?)?)
 }
 
-pub fn dedup(root: &Path, min_tokens: Option<usize>) -> Result<Value> {
-    let (found, summary) = crate::dedup::analyze(root, None, min_tokens, None)?;
+/// Both report thresholds ride, not one: `min_distinct` is the
+/// DIVERSITY floor (`ce dedup --min-distinct`), and a face that
+/// accepted only `min_tokens` could not reproduce what the CLI
+/// prints — the caller was silently pinned to the core default.
+pub fn dedup(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<Value> {
+    let (found, summary) = crate::dedup::analyze(root, None, min_tokens, min_distinct)?;
     crate::dedup::report_json(&found, &summary)
 }
 
@@ -111,4 +115,44 @@ pub fn trend(root: &Path, core: &str, commits: usize, batch: Option<usize>) -> R
 /// face.
 pub fn graph_canvas(root: &Path, core: &str) -> Result<Value> {
     crate::graph::canvas::run(root, core)
+}
+
+/// The cached unit universe (`ce clone --units`): the document used
+/// to be built inline in the CLI's own command body, so it was the
+/// one family document no machine surface could reach. The identity
+/// assertion travels with it — a face that listed units without
+/// checking the unitsig/symbols agreement would hand out a universe
+/// nobody had checked.
+pub fn clone_units(root: &Path) -> Result<Value> {
+    let (idx, _db) = crate::dedup::refreshed_index(root, None)?;
+    let orphans = crate::dedup::unitcache::identity_orphans(&idx)?;
+    anyhow::ensure!(
+        orphans == 0,
+        "{orphans} unitsig rows missing their symbols identity — nth throat drift"
+    );
+    let rows = crate::dedup::unitcache::unit_rows(&idx)?;
+    Ok(serde_json::json!({
+        "schema": crate::dedup::unitcache::UNITS_SCHEMA_ID,
+        "units": rows.iter().map(|u| serde_json::json!({
+            "path": u.path, "key": u.key, "nth": u.nth, "nodes": u.nodes,
+        })).collect::<Vec<_>>(),
+    }))
+}
+
+/// The erase PLAN — dry-run by definition and by construction: this
+/// face reaches `erase::plan`, which is read-only, and there is no
+/// face for `apply_plan` at all. That absence is the charter, not an
+/// omission: a machine surface that could delete files on its own
+/// authority is the one thing an eraser must never ship.
+pub fn erase(root: &Path, core: &str) -> Result<Value> {
+    Ok(crate::erase::render::report_json(&crate::erase::plan(
+        root, None, core,
+    )?))
+}
+
+/// The machine's own state. Unlike every sibling it cannot fail: a
+/// core that will not answer IS the finding, and it rides inside the
+/// document (health::doctor).
+pub fn doctor(root: &Path, core: &str) -> Result<Value> {
+    Ok(crate::health::doctor::document(root, core))
 }

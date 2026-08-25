@@ -12,6 +12,12 @@ skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
 的发现引导成安全删除（先读全文、查引用、小批删、重跑门证收敛），
 用户说"清理重复/死码"时由 Claude 自动调用。
 
+MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），13 个工具随插件
+一起到位——装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
+由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
+`erase` 工具只到**计划**为止：`apply` 没有 face、也不会有——一个能凭自己
+的权限删文件的机器面，是橡皮擦唯一不能出的东西。
+
 ## 安装
 
 公开 marketplace 一键装（清单在仓根 `.claude-plugin/marketplace.json`）：

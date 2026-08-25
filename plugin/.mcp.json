@@ -1,0 +1,13 @@
+{
+  "_why": "The read-only report surface, registered so installing the plugin is the whole installation (the hooks and the reports arrive together). Plugin root, NOT .claude-plugin/ — only plugin.json lives there. `sh` in command with the path as its own argv element mirrors hooks/hooks.json: ${CLAUDE_PLUGIN_ROOT} substitutes in command/args/env for a stdio server, and this shape sidesteps every quoting question. ce.sh sends every human line to stderr, which MCP requires of stdout anyway. Tools arrive namespaced as mcp__plugin_codeeraser_reports__<tool>.",
+  "mcpServers": {
+    "reports": {
+      "command": "sh",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/bin/ce.sh",
+        "mcp",
+        "${CLAUDE_PROJECT_DIR}"
+      ]
+    }
+  }
+}
