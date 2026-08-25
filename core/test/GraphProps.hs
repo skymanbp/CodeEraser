@@ -175,7 +175,7 @@ shuffledRefused (n, arcs, _) =
     _ -> True
  where
   sortedRows = rowsOf arcs
-  refused rows = case respond "6.0.0" (req rows) of
+  refused rows = case respond "6.1.0" (req rows) of
     Left (_, code, msg) -> code == "contract" && "not strictly ascending" `isInfixOf` msg
     Right _ -> False
   req rows =

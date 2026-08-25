@@ -10,13 +10,13 @@ three source families in their normal order, then sends those facts to
 `erase/1`; it does not select a winner or infer safety
 ([gather.rs:25-49](../../../cli/src/erase/gather.rs#L25)). The wire carries dense
 integer rows, with row order serving as identity and paths kept on the client
-([VERSIONING.md:349](../../../contracts/VERSIONING.md#L349)).
+([VERSIONING.md:365](../../../contracts/VERSIONING.md#L365)).
 
 ### 1. The row in, the verdict out
 
 The request shape is `rows=[[class,w,x,y,z]]`. The class is a frozen position;
 the remaining four cells are facts whose meaning depends on that class
-([VERSIONING.md:349-353](../../../contracts/VERSIONING.md#L349)). The client
+([VERSIONING.md:365-369](../../../contracts/VERSIONING.md#L365)). The client
 prepends the class to those four facts, sends the resulting five-integer row,
 and reads one `[eraseable, reason]` pair back for every candidate
 ([wire.rs:21-40](../../../cli/src/erase/wire.rs#L21)). Thus the measurement side
@@ -69,18 +69,18 @@ any dead row is minted, so an incomplete graph judgment cannot become proof
 **Facts.** A class-1 row is
 `[1, verbatim, wordsA, wordsB, bytesEqual]`. The first three values are the
 reported verbatim length and the two segment word counts; `bytesEqual` is the
-raw-slice equality bit ([Cost.hs:42-45](../../../core/app/CE/Erase/Cost.hs#L42)).
+raw-slice equality bit ([Cost.hs:56-59](../../../core/app/CE/Erase/Cost.hs#L56)).
 The client chooses the path-lexicographically later segment as the candidate,
 then computes equality from the two inclusive line slices
 ([gather.rs:126-155](../../../cli/src/erase/gather.rs#L126)).
 
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
-([Cost.hs:43-44](../../../core/app/CE/Erase/Cost.hs#L43)). Passing both tests
+([Cost.hs:57-58](../../../core/app/CE/Erase/Cost.hs#L57)). Passing both tests
 returns `(True, 0)` ([Cost.hs:45](../../../core/app/CE/Erase/Cost.hs#L45)).
 
 **Guard.** A short verbatim run refuses with reason `2`; a byte mismatch refuses
-with reason `3` ([Cost.hs:43-44](../../../core/app/CE/Erase/Cost.hs#L43)). The
+with reason `3` ([Cost.hs:57-58](../../../core/app/CE/Erase/Cost.hs#L57)). The
 guard therefore licenses only a complete segment whose bytes are identical,
 not merely a high similarity score.
 
@@ -88,7 +88,7 @@ not merely a high similarity score.
 
 **Facts.** A class-2 row is
 `[2, unitCovered, bytesEqual, copyFileDead, langUnresolved]`
-([Cost.hs:46-51](../../../core/app/CE/Erase/Cost.hs#L46)). Rust first finds a
+([Cost.hs:60-65](../../../core/app/CE/Erase/Cost.hs#L60)). Rust first finds a
 dedup block that covers at least one complete cached unit, then records the
 coverage bit, raw equality, whether the target file is graph-dead, and its
 language unresolved count ([gather.rs:160-215](../../../cli/src/erase/gather.rs#L160)).
@@ -96,48 +96,51 @@ language unresolved count ([gather.rs:160-215](../../../cli/src/erase/gather.rs#
 **Predicate.** `judgeRow` evaluates those facts in source order: coverage must
 be `1`, bytes must be equal, the copy file must be dead, and unresolved sites
 must be `0`; only then is the row `(True, 0)`
-([Cost.hs:46-51](../../../core/app/CE/Erase/Cost.hs#L46)).
+([Cost.hs:60-65](../../../core/app/CE/Erase/Cost.hs#L60)).
 
 **Guard.** The first failed fact wins. Missing whole-unit coverage emits `5`, a
 byte mismatch emits `3`, a live copy emits `4`, and unresolved sites emit `1`
-([Cost.hs:46-51](../../../core/app/CE/Erase/Cost.hs#L46)). This is why a T1
+([Cost.hs:60-65](../../../core/app/CE/Erase/Cost.hs#L60)). This is why a T1
 block that crosses only part of a unit cannot become an erase authorization:
 the coverage fact is explicit and checked before the other evidence.
 
 #### Class 3 — `dead_file`, the confidence road (2.32.0)
 
-The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses only at 0 ([Cost.hs:52-54](../../../core/app/CE/Erase/Cost.hs#L52)). Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:34-37](../../../core/app/CE/Erase.hs#L34)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:114](../../../cli/src/erase/gather.rs#L114)). Class 0 keeps judging unchanged for the grace window (the staleDocs discipline) and retires in a later minor; the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:15](../../../core/app/CE/Erase/Cost.hs#L15)).
+The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:69-72](../../../core/app/CE/Erase/Cost.hs#L69)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:34-44](../../../core/app/CE/Erase/Cost.hs#L34)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:34-37](../../../core/app/CE/Erase.hs#L34)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:114](../../../cli/src/erase/gather.rs#L114)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:15](../../../core/app/CE/Erase/Cost.hs#L15)).
 
-### 3. The six reason codes
+### 3. The seven reason codes
 
-The advisory vocabulary is frozen at six positions in the client model
-([model.rs:21-29](../../../cli/src/erase/model.rs#L21)). The table records the
+The advisory vocabulary is frozen at seven positions in the client model
+([model.rs:25-37](../../../cli/src/erase/model.rs#L25)). The table records the
 meaning and the exact `judgeRow` condition that emits each code. Reason `0` is
-the successful verdict; the other five are refusals.
+the successful verdict; the other six are refusals. The domain only ever
+grows — position 6 arrived at 6.1.0 and nothing renumbered, because a frozen
+position that moves silently rewrites every plan a reader has already read.
 
 | position/name | meaning | condition in `judgeRow` |
 |---|---|---|
-| `0 eraseable` | every class-specific safety test passed | class 1 falls through after the full-segment and byte tests, class 2 after all four checks, class 3 after a non-zero confidence ([Cost.hs:42-54](../../../core/app/CE/Erase/Cost.hs#L42)) |
-| `1 language_unresolved` | the owning language still has unresolved graph sites | class 2: the final guard sees `langUnresolved /= 0`; class 3: the graph family's confidence is `0` ([Cost.hs:46-51](../../../core/app/CE/Erase/Cost.hs#L46), [Cost.hs:52-54](../../../core/app/CE/Erase/Cost.hs#L52)) |
-| `2 not_full_segment` | the reported verbatim run does not cover either segment | class 1: `verbatim < wordsA || verbatim < wordsB` ([Cost.hs:42-43](../../../core/app/CE/Erase/Cost.hs#L42)) |
-| `3 bytes_differ` | the candidate and its survivor are not byte-identical | class 1 or class 2: `bytesEqual /= 1` ([Cost.hs:42-48](../../../core/app/CE/Erase/Cost.hs#L42)) |
-| `4 copy_not_dead` | the T1 twin's target file is not graph-dead | class 2: `copyFileDead /= 1`; the catch-all malformed-row arm also refuses with this code ([Cost.hs:46-55](../../../core/app/CE/Erase/Cost.hs#L46)) |
-| `5 unit_not_covered` | the duplicate block does not cover a whole unit | class 2: `unitCovered /= 1` ([Cost.hs:46-47](../../../core/app/CE/Erase/Cost.hs#L46)) |
+| `0 eraseable` | every class-specific safety test passed | class 1 falls through after the full-segment and byte tests, class 2 after all four checks, class 3 after a non-public verdict and a non-zero confidence ([Cost.hs:56-72](../../../core/app/CE/Erase/Cost.hs#L56)) |
+| `1 language_unresolved` | the owning language still has unresolved graph sites | class 2: the final guard sees `langUnresolved /= 0`; class 3: the graph family's confidence is `0` ([Cost.hs:60-65](../../../core/app/CE/Erase/Cost.hs#L60), [Cost.hs:69-72](../../../core/app/CE/Erase/Cost.hs#L69)) |
+| `2 not_full_segment` | the reported verbatim run does not cover either segment | class 1: `verbatim < wordsA || verbatim < wordsB` ([Cost.hs:56-57](../../../core/app/CE/Erase/Cost.hs#L56)) |
+| `3 bytes_differ` | the candidate and its survivor are not byte-identical | class 1 or class 2: `bytesEqual /= 1` ([Cost.hs:56-62](../../../core/app/CE/Erase/Cost.hs#L56)) |
+| `6 public_surface` | the dead file is an EXPORT surface, and RG10 forbids acting on one | class 3: `verdict` is 2 `unref_public` or 4 `unreach_public`, tested before the confidence ([Cost.hs:69-70](../../../core/app/CE/Erase/Cost.hs#L69), table at [Cost.hs:43-44](../../../core/app/CE/Erase/Cost.hs#L43)) |
+| `4 copy_not_dead` | the T1 twin's target file is not graph-dead | class 2: `copyFileDead /= 1`; the catch-all malformed-row arm also refuses with this code ([Cost.hs:60-73](../../../core/app/CE/Erase/Cost.hs#L60)) |
+| `5 unit_not_covered` | the duplicate block does not cover a whole unit | class 2: `unitCovered /= 1` ([Cost.hs:60-61](../../../core/app/CE/Erase/Cost.hs#L60)) |
 
 The order in the table is operational, not descriptive. For a class-2 row with
 several bad facts, the first failing guard determines the one reason returned;
 there is no second pass that chooses a more convenient explanation
-([Cost.hs:38-40](../../../core/app/CE/Erase/Cost.hs#L38)). A row whose shape does
+([Cost.hs:52-54](../../../core/app/CE/Erase/Cost.hs#L52)). A row whose shape does
 not match any class is refused by the final catch-all rather than reaching an
-eraseable result ([Cost.hs:55](../../../core/app/CE/Erase/Cost.hs#L55)).
+eraseable result ([Cost.hs:73](../../../core/app/CE/Erase/Cost.hs#L73)).
 
 ### 4. Capacity and degraded replies
 
-`eraseRowCap` is `4096` ([Cost.hs:32-36](../../../core/app/CE/Erase/Cost.hs#L32)).
+`eraseRowCap` is `4096` ([Cost.hs:46-50](../../../core/app/CE/Erase/Cost.hs#L46)).
 The wire contract repeats that ceiling: an over-cap request returns a complete
 degraded reply with `fail:true` and an empty judgment table, so no row can be
 authorized from an over-cap computation
-([VERSIONING.md:358-360](../../../contracts/VERSIONING.md#L358)).
+([VERSIONING.md:374-376](../../../contracts/VERSIONING.md#L374)).
 
 The erase client treats degraded as an error rather than interpreting an empty
 table as “nothing to erase”: `wire.rs` calls `refuse_degraded` before decoding
@@ -172,9 +175,9 @@ survives; convergence is part of the operation's result
 
 There is no knob echo and no client-selectable threshold for this family. The
 core's own comment freezes the reason: “a knob that loosens "safe" would be a
-licence to guess” ([Cost.hs:25-26](../../../core/app/CE/Erase/Cost.hs#L25)). The
+licence to guess” ([Cost.hs:26-27](../../../core/app/CE/Erase/Cost.hs#L26)). The
 versioned wire contract makes the same boundary explicit by rejecting knob
-rows as `error/contract` ([VERSIONING.md:354](../../../contracts/VERSIONING.md#L354)).
+rows as `error/contract` ([VERSIONING.md:370](../../../contracts/VERSIONING.md#L370)).
 
 ### 7. Not found in source
 
@@ -182,10 +185,10 @@ This booklet uses the index's arrow phrase **facts → predicate → verdict** a
 reading aid. The three words are source vocabulary in the predicate module's
 comments, where facts are measured, the predicate chooses safety, and
 `judgeRow` returns the verdict pair
-([Cost.hs:1-5](../../../core/app/CE/Erase/Cost.hs#L1), [Cost.hs:38-41](../../../core/app/CE/Erase/Cost.hs#L38)).
+([Cost.hs:1-5](../../../core/app/CE/Erase/Cost.hs#L1), [Cost.hs:52-55](../../../core/app/CE/Erase/Cost.hs#L52)).
 “Guard” is the only explanatory label that is not a named wire field or a
 Haskell identifier here; it means the `|` conditions shown beside each class,
-not an additional rule ([Cost.hs:42-55](../../../core/app/CE/Erase/Cost.hs#L42),
-[VERSIONING.md:346-360](../../../contracts/VERSIONING.md#L346)). No other
+not an additional rule ([Cost.hs:56-69](../../../core/app/CE/Erase/Cost.hs#L56),
+[VERSIONING.md:362-376](../../../contracts/VERSIONING.md#L362)). No other
 constant, class, reason, degraded behavior, or apply condition in this booklet
 is an inferred term: each is named in the source links above.

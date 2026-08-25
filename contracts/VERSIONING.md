@@ -149,6 +149,22 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **6.1.0**（RG10 防火墙抵达会动手的两个面，加性 minor，K 轮步 5，2026-08-25）：
+> `CE.Graph.Dead` 把 dead 沿 indegree × reachability 分成四码，正是为了让
+> **「库的公开 API 无人引用」永远塌不成普通 dead**——RG10 是一个**判决码**，不是一条策略。
+> 4.1.0 给了 flag 位 0 生产者、判决码 2/4 首次能点火之后，**下游两个会照着这个判决动手的面
+> 仍在读它的旁边**：①`ce erase` 的 class 3 只看置信度（`judgeRow [3, _verdict, conf, _, _]`），
+> 于是一个 `unref_public` 文件成了可擦除行——**这一点被冻在契约夹具里**：erase golden 第 6 对
+> 原本答 `[[0,1],[1,0],[1,0]]`，即公开未引用 API「可擦」；②join 格的 `Candidates.hs` 合成
+> `pFlags = 0`，`publicGuard` 在生产态恒不点火，于是 `delete` 可以指着一个导出面提出。
+> 改法两片，都是加性：`verdict/1` 接受 `symbols` 表——**就是 graph/1 自 4.1.0 起载的那张
+> `[node, visibility]`**，只是改按 tier 宇宙下标；过线的是**原始可见性字**而非派生的 exported 列表，
+> 因为「哪一位算导出」是判决（`Graph.Cost.exportVisBit`），留在核里（ADR-008）。erase 理由码新增
+> 位置 **6 `public_surface`**——冻结码域只增不改号。**反事实**（K15）：不带表 = 带空表 = 旧路
+> 逐字节相同；导出**死侧**则 delete 退位且理由位 6 亮；导出**活侧**判决不动（否则守卫成了静音而非防火墙）；
+> 可见性字不含导出位则判决不动（决定权在**位**，不在这一行是否存在）。全族 golden 机器再生后
+> 104 行变化中 **103 行只差版本串**，唯一实变正是上面那对 erase golden。
+
 > **6.0.0**（旋钮指纹拓宽 **major**，K 轮步 4b，2026-08-25）：5.1.0 的 `classDigest` 改名 `knobsDigest`
 > 并覆盖**整份解析后的 ce.toml**，而非仅 `[[rules.class]]` 一张表。起因是一轮 52-agent 五镜头对抗审查，
 > 发现**在一小时内**就把范围判错的地方指了出来，而且我第一手复现无误：
@@ -498,7 +514,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     `degraded.reason ∈ {docdup_too_large}`。
   - `verdict/1`（判决落 score 批）：request 携三信号事实表 + `baseline` 原样字节
     （Rust 不解释，ADR-008 反抢跑），2.6.0 起并可携加性 `dedup`
-    `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用）；
+    `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用），6.1.0 起并可携
+    加性 `symbols`:`[[u,visibility]]`——**与 graph/1 同一张导出面表**，只改按 tier 宇宙
+    下标；核按 `Graph.Cost.exportVisBit` 读出导出集并给 `Pos.pFlags` 置 `publicFlagBit`，
+    join 格的 `publicGuard`（RG10）自此在生产态可点火；缺席或空表 = 字节不变；
     result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta，
     2.8.0 起并回生效 `weights` 表与 `ratchet.failed` 持名条件表；
     5.1.0 起 request 并可携标量指纹与 `classKnobs` 码 3（该类自己的棘轮容差，行数绝对值）；
@@ -549,5 +568,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 6.0.0 | §1 所列两处常量 |
+| 协议 | 6.1.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

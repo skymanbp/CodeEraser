@@ -25,6 +25,7 @@ battery =
     , ("ratchet idempotence: newBaseline fed back judges nothing", idempotent)
     , ("refusals name the offender with code and message", refusals)
     , ("an over-cap request degrades to a reply that FAILS", degradedFails)
+    , ("K15: the export surface guards the flank being deleted, and only it", publicGuard)
     ]
 
 -- | A wire request whose candidates cover merge, delete and hotspot;
@@ -32,7 +33,7 @@ battery =
 wireReq :: [[Integer]] -> [[Integer]] -> [[Integer]] -> [[Integer]] -> Value
 wireReq sim pos churn coch =
   object
-    [ "proto" .= ("6.0.0" :: String)
+    [ "proto" .= ("6.1.0" :: String)
     , "type" .= ("verdict.request" :: String)
     , "id" .= (1 :: Int)
     , "sim" .= sim
@@ -89,6 +90,27 @@ ablation = case candidateCensus (wireReq wSim wPos wChurn wCoch) of
   moved full v = case candidateCensus v of
     Just c -> c /= full
     Nothing -> False
+
+-- | K15 (6.1.0): RG10 on the verdict road. Pair (2,3) is a dead
+-- flank of a live partner -- what `delete` means -- and this wire
+-- could not say the flank was a public API until now. Five motions,
+-- one per way the guard can be wrong: absent equals empty, the
+-- legacy census stands, exporting the DEAD flank retires the delete,
+-- exporting the LIVE partner changes nothing (else the guard is a
+-- mute, not a firewall), and a visibility word WITHOUT the export
+-- bit leaves the verdict alone (the bit decides, not the row).
+publicGuard :: Bool
+publicGuard =
+  replyObj (probe Nothing) == replyObj (probe (Just []))
+    && census Nothing == Just [0, 1, 1, 1]
+    && census (Just [[2, 1]]) == Just [1, 1, 0, 1]
+    && census (Just [[3, 1]]) == Just [0, 1, 1, 1]
+    && census (Just [[2, 0]]) == Just [0, 1, 1, 1]
+ where
+  probe syms =
+    maybe id (setKey "symbols" . toJSON) (syms :: Maybe [[Integer]]) $
+      wireReq wSim wPos wChurn wCoch
+  census = candidateCensus . probe
 
 -- | Round trip: judge with no baseline, feed the returned
 -- newBaseline into the SAME facts — the ratchet must find nothing.

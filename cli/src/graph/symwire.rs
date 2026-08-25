@@ -27,7 +27,7 @@
 
 use crate::dedup::index::Index;
 use anyhow::{Context, Result};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 /// The `symbols` wire table: deduped `[nodeIdx, visibility]` pairs,
 /// ascending.
@@ -61,4 +61,30 @@ pub fn export_surface(
         Ok([*id as i64, vis])
     })
     .collect()
+}
+
+/// The same surface under the verdict family's universe (6.1.0):
+/// `verdict/1` keys files by position in the score road's `files`
+/// list, so the table is re-keyed — and re-keyed is all it is. The
+/// visibility word crosses untouched because which bit means
+/// "exported" is judgment (`CE.Graph.Cost.exportVisBit`); a
+/// pre-decided `Vec<u>` would move that call to the measurement
+/// side. Ascent comes free (node ids ascend and file nodes keep
+/// their order), and an owner that is not a file node is index
+/// skew, refused the way `export_surface` refuses its own miss.
+pub fn rekeyed(w: &super::deadcode::GraphWire, idx: &HashMap<&str, i64>) -> Result<Vec<[i64; 2]>> {
+    w.symbols
+        .iter()
+        .map(|&[node, vis]| {
+            let path = w
+                .nodes
+                .get(usize::try_from(node).unwrap_or(usize::MAX))
+                .map(|n| n.path.as_str())
+                .context("symbol row names a node outside the graph")?;
+            let u = idx
+                .get(path)
+                .with_context(|| format!("export surface owner {path} is not a file node"))?;
+            Ok([*u, vis])
+        })
+        .collect()
 }

@@ -22,13 +22,18 @@ pub const SCHEMA_ID: &str = "ce.erase-plan/0.1.0";
 pub const CLASS_NAMES: [&str; 4] = ["(retired)", "verbatim_doc", "t1_twin", "dead_file"];
 
 /// Frozen reason positions — the wire's `reason` field (erase/1).
-pub const REASON_NAMES: [&str; 6] = [
+/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file
+/// whose verdict is `unref_public` or `unreach_public` is refused by
+/// name, because the four-way dead code exists precisely so an
+/// exported API cannot be treated as plain dead.
+pub const REASON_NAMES: [&str; 7] = [
     "eraseable",
     "language_unresolved",
     "not_full_segment",
     "bytes_differ",
     "copy_not_dead",
     "unit_not_covered",
+    "public_surface",
 ];
 
 /// One candidate as measured: the dense facts the wire carries plus

@@ -84,6 +84,13 @@ pub struct Request {
     /// disagree — so a glob edit stops being a silent way to move
     /// every line at once (config::RulesCfg::digest).
     pub knobs_digest: Option<u64>,
+    /// The export surface (6.1.0): `[u, visibility]` in the `files`
+    /// universe, deduped and ascending — graph/1's `symbols` table
+    /// re-keyed, not re-judged. The raw visibility word travels so
+    /// that which bit means "exported" stays the core's call
+    /// (Graph.Cost.exportVisBit); the lattice's RG10 guard reads the
+    /// flag bit derived from it. Empty = the legacy road.
+    pub symbols: Vec<[i64; 2]>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -133,6 +140,7 @@ impl Request {
             files: Vec::new(),
             sim: Vec::new(),
             pos: Vec::new(),
+            symbols: Vec::new(),
             churn: Vec::new(),
             cochange: Vec::new(),
             continuous: Vec::new(),
@@ -203,6 +211,7 @@ pub fn body(r: &Request) -> Value {
             (r.judged_mask != 0).then(|| json!(r.judged_mask)),
         ),
         ("docFiles", some_rows(&r.doc_files)),
+        ("symbols", some_rows(&r.symbols)),
     ];
     for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
         o[key] = value;

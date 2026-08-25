@@ -88,9 +88,18 @@ fn plan_names_all_classes_and_is_deterministic() {
     seed(&dir);
     let core = core_bin();
     let p = erase::plan(&dir, None, &core).expect("plan");
-    assert_eq!(p.counts.eraseable, 3, "orphan + copy + doc2 span");
+    assert_eq!(p.counts.eraseable, 2, "orphan + doc2 span");
     assert!(row(&p, "dead_file", "orphan.md").eraseable);
-    assert!(row(&p, "dead_file", "copy.py").eraseable);
+    // copy.py declares `def compute_total(...)` — an export surface, so
+    // its dead verdict is unref_public and RG10 forbids acting on it
+    // (6.1.0). Before the firewall reached this face the plan proposed
+    // deleting a file whose public function nothing in the tree calls,
+    // which is the ordinary shape of a library. orphan.md declares
+    // nothing and stays eraseable, so the guard is a firewall and not
+    // a mute.
+    let copy = row(&p, "dead_file", "copy.py");
+    assert!(!copy.eraseable);
+    assert_eq!(copy.reason, "public_surface");
     let doc = row(&p, "verbatim_doc", "doc2.md");
     assert!(
         doc.eraseable && doc.span.is_some(),
@@ -138,14 +147,15 @@ fn apply_refuses_by_name_then_converges() {
     // a fresh plan applies, converges, and leaves the audit trail
     let plan = erase::plan(&dir, None, &core).expect("re-plan");
     let n = erase::apply_plan(&dir, None, &core, &plan).expect("apply");
-    assert_eq!(n, 3);
+    assert_eq!(n, 2);
     assert!(!dir.join("orphan.md").exists());
-    assert!(!dir.join("copy.py").exists());
+    // the export surface survives the apply, not just the plan (6.1.0)
+    assert!(dir.join("copy.py").exists(), "RG10 holds through apply");
     let doc2 = std::fs::read_to_string(dir.join("doc2.md")).expect("doc2");
     assert!(!doc2.contains("alpha beta gamma"), "span spliced out");
     assert!(doc2.contains("# second"), "the rest of the file survives");
     let log = std::fs::read_to_string(dir.join(".ce/erase-log.ndjson")).expect("log");
-    assert_eq!(log.lines().count(), 3, "one record per applied row");
+    assert_eq!(log.lines().count(), 2, "one record per applied row");
     assert!(log.lines().all(|l| l.contains("ce.erase-log/0.1.0")));
     let after = erase::plan(&dir, None, &core).expect("post-plan");
     assert_eq!(after.counts.eraseable, 0, "converged");

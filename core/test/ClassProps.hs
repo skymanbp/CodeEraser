@@ -160,7 +160,7 @@ fenceAbsent =
 -- run declares another. The point is not that it fails — it is that
 -- it fails BY NAME with an EMPTY over table, so the operator learns
 -- which floor to re-name instead of watching every gate quietly move.
--- The scope this pins is the whole config since 6.0.0, not the class
+-- The scope this pins is the whole config since 6.1.0, not the class
 -- table alone: `[score] viol_cost = 0` reached 1000/1000 through the
 -- narrow version of this fence and was measured doing it.
 fenceDrifts :: Bool

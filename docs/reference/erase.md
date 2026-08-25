@@ -1,7 +1,8 @@
 # `ce erase` — the deterministic two-phase eraser (contract)
 
 > Status: implemented (M9 batch 3, plan v2.8 ruling ②; wire face
-> `erase/1`, proto 2.16.0, predicate in CE.Erase.Cost). The
+> `erase/1`, introduced at proto 2.16.0, RG10 firewall at 6.1.0;
+> predicate in CE.Erase.Cost). The
 > implementation answers to this file; divergence is a defect in one
 > of the two. Acceptance is pinned by `cli/tests/erase_e2e.rs` and
 > the CI Dogfood `erase .. --check` self-gate.
@@ -20,7 +21,7 @@ non-deterministic output, and an eraser that guesses would forfeit it.
 
 | class | source verdict | the erase | why it is deterministic-safe |
 |---|---|---|---|
-| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) | delete the file | the graph verdict IS the safety proof: nothing in-corpus references it; the unresolved-site count must be zero for its language, else the row is refused (a verdict that assumed no in-corpus lands is not a deletion licence) |
+| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) and **private**: verdict 1 `unref_private` or 3 `unreach_private` | delete the file | the graph verdict IS the safety proof: nothing in-corpus references it; the unresolved-site count must be zero for its language, else the row is refused (a verdict that assumed no in-corpus lands is not a deletion licence). The PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — is refused by name as `public_surface` since 6.1.0: a library's exported API is unreferenced in-corpus by construction, so "nothing here calls it" is not evidence about its callers, and the four-way dead code exists precisely to keep the two apart (RG10) |
 | verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss; the survivor is chosen deterministically, never judged "better" |
 | whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical AND whose copy is itself graph-dead | delete the dead copy | the narrow intersection of the clone and liveness verdicts — a cross-function clone with live references has NO deterministic-safe erase, and this contract says so instead of pretending |
 

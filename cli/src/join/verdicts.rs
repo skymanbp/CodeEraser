@@ -58,7 +58,11 @@ pub fn judge_pairs(
     score::sim_rows(blocks, &idx, &mut sim);
     let (churn_t, cochange_t) = score::churn_tables(ch, &idx);
     let pos = score::pos_rows(&files, posmap);
-    let req = request(root, files, sim, pos, (churn_t, cochange_t))?;
+    // RG10's fact on this road too (6.1.0): `ce join` is the face
+    // that PRINTS a delete verdict, so leaving the export surface off
+    // it would keep the guard inert exactly where a reader acts on it
+    let symbols = crate::graph::symwire::rekeyed(w, &idx)?;
+    let req = request(root, files, sim, pos, symbols, (churn_t, cochange_t))?;
     let reply = wire::judge(core, &req)?;
     let sev: HashMap<i64, i64> = reply.join_severity.iter().map(|&[c, s]| (c, s)).collect();
     let mut pairs = HashMap::new();
@@ -102,12 +106,14 @@ fn request(
     files: Vec<String>,
     sim: Vec<[i64; 5]>,
     pos: Vec<[i64; 6]>,
+    symbols: Vec<[i64; 2]>,
     (churn, cochange): score::ChurnTables,
 ) -> Result<wire::Request> {
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     Ok(wire::Request {
         sim,
         pos,
+        symbols,
         churn,
         cochange,
         continuous: Vec::new(),

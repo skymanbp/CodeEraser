@@ -3755,6 +3755,16 @@
     "text": "let crossing = map.id_of(\"x.rs\", 4, 7);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:100": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 176,
+    "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:101": {
+    "target": "../../../core/app/CE/Verdict/Join.hs",
+    "line": 6,
+    "text": "-- against the OWNING family's threshold (clone 85/100, docdup"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:102": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 44,
     "text": "pub blocks: usize,"
@@ -3821,12 +3831,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 219,
+    "line": 227,
     "text": "out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 199,
+    "line": 207,
     "text": "/// File pairs with at least one verified block, kind 0 (t1t2) at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
@@ -3892,82 +3902,82 @@
   "docs/reference/methodology/07-the-three-signal-join.md:35": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
     "line": 29,
-    "text": "-- wire flags are structurally 0 at file granularity (entry-ness"
+    "text": "| row@(u : v : _) <- reqSim req"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:36": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 39,
-    "text": "--   bit 6 — publicGuard: a structurally delete-ready flank was"
+    "target": "../../../cli/src/graph/symwire.rs",
+    "line": 66,
+    "text": "/// The same surface under the verdict family's universe (6.1.0):"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:37": {
+    "target": "../../../core/test/VerdictWireProps.hs",
+    "line": 94,
+    "text": "-- | K15 (6.1.0): RG10 on the verdict road. Pair (2,3) is a dead"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:38": {
     "target": "../../../cli/src/join/churn_unit.rs",
     "line": 20,
     "text": "pub const GRAPH_CAVEAT: &str = \"graph leg is import-granularity; symbol-level indegree needs \\"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:38": {
+  "docs/reference/methodology/07-the-three-signal-join.md:39": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 190,
     "text": "\"caveat\": churn_unit::GRAPH_CAVEAT,"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:39": {
+  "docs/reference/methodology/07-the-three-signal-join.md:4": {
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 21,
+    "text": "-- | Join-candidate rows, one per sim row (split from result at the"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:40": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 62,
     "text": ", lChurnA :: (Integer, Integer)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:4": {
-    "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 17,
-    "text": "-- | Join-candidate rows, one per sim row (split from result at the"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:40": {
+  "docs/reference/methodology/07-the-three-signal-join.md:41": {
     "target": "../../../cli/src/join/churn_unit.rs",
     "line": 33,
     "text": "#[derive(Debug, Clone, Copy, Default, Serialize, PartialEq, Eq)]"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:41": {
+  "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 167,
     "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:42": {
+  "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 293,
+    "line": 301,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:43": {
+  "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 37,
+    "line": 51,
     "text": "churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap] <- reqChurn req]"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:44": {
+  "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 319,
+    "line": 327,
     "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:45": {
+  "docs/reference/methodology/07-the-three-signal-join.md:46": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 175,
     "text": "(apA, rwA) = lChurnA l"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:46": {
+  "docs/reference/methodology/07-the-three-signal-join.md:47": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 91,
     "text": "rewriteNum :: Integer"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:47": {
+  "docs/reference/methodology/07-the-three-signal-join.md:48": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 94,
     "text": "rewriteDen :: Integer"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:48": {
+  "docs/reference/methodology/07-the-three-signal-join.md:49": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 83,
     "text": "cochangeFloor :: Integer"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:49": {
-    "target": "../../../core/app/CE/Verdict/Knobs.hs",
-    "line": 69,
-    "text": "effectiveJoin :: ScoreKnobs -> [[Integer]] -> Knobs"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
@@ -3976,53 +3986,53 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
     "target": "../../../core/app/CE/Verdict/Knobs.hs",
+    "line": 69,
+    "text": "effectiveJoin :: ScoreKnobs -> [[Integer]] -> Knobs"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:51": {
+    "target": "../../../core/app/CE/Verdict/Knobs.hs",
     "line": 51,
     "text": ", (1, \\v k -> k {sRewriteNum = v})"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:51": {
+  "docs/reference/methodology/07-the-three-signal-join.md:52": {
     "target": "../../../core/app/CE/Verdict/Knobs.hs",
     "line": 96,
     "text": ", \"rewriteNum\" .= sRewriteNum k"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:52": {
+  "docs/reference/methodology/07-the-three-signal-join.md:53": {
     "target": "../../../cli/src/churn/mod.rs",
     "line": 218,
     "text": "}"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:53": {
+  "docs/reference/methodology/07-the-three-signal-join.md:54": {
     "target": "../../../cli/src/churn/report.rs",
     "line": 14,
     "text": "pub(crate) const COCHANGE_FILE_CAP: usize = 20;"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:54": {
+  "docs/reference/methodology/07-the-three-signal-join.md:55": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 81,
     "text": "-- own table floor (pairs enter it at count >= 2), so the lattice"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:55": {
+  "docs/reference/methodology/07-the-three-signal-join.md:56": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 50,
     "text": "/// None = the pair is outside the churn report's co-change table"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:56": {
+  "docs/reference/methodology/07-the-three-signal-join.md:57": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 53,
     "text": "-- honestly lack it. lCochange is Maybe: Nothing = the pair sits"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:57": {
+  "docs/reference/methodology/07-the-three-signal-join.md:58": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 179,
     "text": "cochangeHot = maybe False (>= kCochangeFloor k) (lCochange l)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:58": {
+  "docs/reference/methodology/07-the-three-signal-join.md:59": {
     "target": "../../../cli/src/join/churn_unit.rs",
     "line": 110,
     "text": "/// unit-attributed, churn joined on the ledger identity. An absent"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:59": {
-    "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 125,
-    "text": "let churn_of = |u: &UnitId| {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
@@ -4030,54 +4040,54 @@
     "text": "let e = by_pair.entry(key).or_default();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 125,
+    "text": "let churn_of = |u: &UnitId| {"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:61": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 120,
     "text": "verdictTable :: [(Integer, Integer, [Int], [Int])]"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:61": {
+  "docs/reference/methodology/07-the-three-signal-join.md:62": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 10,
     "text": "-- Verdict codes are the design table's own numbering:"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:62": {
+  "docs/reference/methodology/07-the-three-signal-join.md:63": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 180,
     "text": "code = case [c | (c, _, req, forb) <- table, all (testBit reasons) req, not (any (testBit reasons) forb)] of"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:63": {
+  "docs/reference/methodology/07-the-three-signal-join.md:64": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 24,
     "text": "h <- check \"reorder: rotating the verdict table flips the both-row\" reorder"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:64": {
+  "docs/reference/methodology/07-the-three-signal-join.md:65": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 201,
     "text": "reorder :: Bool"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:65": {
+  "docs/reference/methodology/07-the-three-signal-join.md:66": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 184,
     "text": "reasons ="
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:66": {
+  "docs/reference/methodology/07-the-three-signal-join.md:67": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 20,
     "text": "--   bit 0 — deliberately ABSENT (the entryMask bit-0 body style):"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:67": {
+  "docs/reference/methodology/07-the-three-signal-join.md:68": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 188,
     "text": "[ (1 :: Int, simOver)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:68": {
+  "docs/reference/methodology/07-the-three-signal-join.md:69": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 189,
     "text": ", (2, graphBoth)"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:69": {
-    "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 190,
-    "text": ", (3, bothRef)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:7": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -4086,53 +4096,53 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:70": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
+    "line": 190,
+    "text": ", (3, bothRef)"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:71": {
+    "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 191,
     "text": ", (4, sccDistinct)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:71": {
+  "docs/reference/methodology/07-the-three-signal-join.md:72": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 192,
     "text": ", (5, deadFlank)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:72": {
+  "docs/reference/methodology/07-the-three-signal-join.md:73": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 193,
     "text": ", (6, publicGuard)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:73": {
+  "docs/reference/methodology/07-the-three-signal-join.md:74": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 194,
     "text": ", (7, cochangeHot)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:74": {
+  "docs/reference/methodology/07-the-three-signal-join.md:75": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 195,
     "text": ", (8, rewriteHot)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:75": {
+  "docs/reference/methodology/07-the-three-signal-join.md:76": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 22,
     "text": "f <- check \"reason bit 0 never fires (deliberately absent)\" bitZeroSilent"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:76": {
+  "docs/reference/methodology/07-the-three-signal-join.md:77": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 110,
     "text": "-- copy and watches a crafted pair flip. delete's row is EXACTLY the"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:77": {
+  "docs/reference/methodology/07-the-three-signal-join.md:78": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 18,
     "text": "b <- check \"RG10 counterfactual: a public dead flank never deletes\" rg10"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:78": {
+  "docs/reference/methodology/07-the-three-signal-join.md:79": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 97,
     "text": "-- | legsMask bits: which signals were actually present."
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:79": {
-    "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 183,
-    "text": "legsMask = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:8": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -4141,53 +4151,53 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:80": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
+    "line": 183,
+    "text": "legsMask = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:81": {
+    "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 13,
     "text": "-- Nothing (unit tier — import granularity has no unit nodes) can"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:81": {
+  "docs/reference/methodology/07-the-three-signal-join.md:82": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 19,
     "text": "c <- check \"legsMask honest: gated => 3 legs; graph-absent never gates\" legsHonest"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:82": {
+  "docs/reference/methodology/07-the-three-signal-join.md:83": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 23,
+    "line": 27,
     "text": "[ -- the 6th column is the leg-agreement confidence (2.33.0, H4)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:83": {
+  "docs/reference/methodology/07-the-three-signal-join.md:84": {
     "target": "../../../cli/src/score/wire.rs",
-    "line": 93,
+    "line": 100,
     "text": "pub candidates: Vec<[i64; 6]>,"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:84": {
+  "docs/reference/methodology/07-the-three-signal-join.md:85": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 136,
     "text": "legBits = [(legSim, [1]), (legGraph, [2, 3, 4, 5, 6]), (legChurn, [7, 8])]"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:85": {
+  "docs/reference/methodology/07-the-three-signal-join.md:86": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
     "line": 142,
     "text": "confidence :: Integer -> Integer -> Integer"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:86": {
+  "docs/reference/methodology/07-the-three-signal-join.md:87": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 192,
     "text": "confidenceCounts :: Bool"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:87": {
+  "docs/reference/methodology/07-the-three-signal-join.md:88": {
     "target": "../../../core/test/JoinProps.hs",
     "line": 186,
     "text": "severityPinned :: Bool"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:88": {
+  "docs/reference/methodology/07-the-three-signal-join.md:89": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 94,
     "text": "\"joinSeverity\" .= [[c, s] | (c, s) <- severities]"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:89": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 179,
-    "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:9": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -4196,53 +4206,53 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:90": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 146,
-    "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
+    "line": 179,
+    "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:91": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 154,
+    "text": "conds = failConditions r floorFail dedupOver digestDrift"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:92": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 201,
+    "text": ", \"fail\" .= any snd conds"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md:93": {
     "target": "../../../cli/src/score/report.rs",
     "line": 76,
     "text": "line("
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:92": {
+  "docs/reference/methodology/07-the-three-signal-join.md:94": {
     "target": "../../../cli/src/score/report.rs",
     "line": 50,
     "text": "\"candidates\": r.candidates,"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:93": {
+  "docs/reference/methodology/07-the-three-signal-join.md:95": {
     "target": "../../../cli/src/join/verdicts.rs",
     "line": 40,
     "text": "pub fn judge_pairs("
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:94": {
+  "docs/reference/methodology/07-the-three-signal-join.md:96": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 89,
     "text": "let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:95": {
+  "docs/reference/methodology/07-the-three-signal-join.md:97": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 276,
     "text": "\"join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\","
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:96": {
+  "docs/reference/methodology/07-the-three-signal-join.md:98": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 81,
     "text": "// Degrade reads the wire's boolean, not reason presence (the C9"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md:97": {
+  "docs/reference/methodology/07-the-three-signal-join.md:99": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 267,
     "text": "\"join graph leg degraded: {}\","
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:98": {
-    "target": "../../../cli/src/score/mod.rs",
-    "line": 168,
-    "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md:99": {
-    "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 6,
-    "text": "-- against the OWNING family's threshold (clone 85/100, docdup"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:1": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4382,7 +4392,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:34": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5791,7 +5801,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:15": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 42,
+    "line": 56,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:16": {
@@ -5801,17 +5811,17 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:17": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 43,
+    "line": 57,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:18": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 45,
-    "text": "| otherwise = (True, 0)"
+    "text": ""
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:19": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 43,
+    "line": 57,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:2": {
@@ -5821,7 +5831,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:20": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 46,
+    "line": 60,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:21": {
@@ -5831,153 +5841,153 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:22": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 46,
+    "line": 60,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:23": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 46,
+    "line": 60,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:24": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 52,
-    "text": "judgeRow [3, _verdict, conf, _, _]"
+    "line": 69,
+    "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:25": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 34,
+    "text": "-- | The dead verdicts an erase plan may never act on (6.1.0): 2"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:26": {
     "target": "../../../core/app/CE/Erase.hs",
     "line": 34,
     "text": "| any (< 0) [w, x, y, z] -> Just (label <> \"negative fact\")"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:26": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:27": {
     "target": "../../../cli/src/erase/gather.rs",
     "line": 114,
     "text": ".context(\"dead row carries no confidence — the graph ledger did not ride\")?;"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:27": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:28": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 6,
+    "text": "--   0 (retired)   was dead_file on the local-count road; superseded"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:29": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 15,
     "text": "--                  confidence exists for it — the H3 scope line)"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:28": {
-    "target": "../../../cli/src/erase/model.rs",
-    "line": 21,
-    "text": "/// would move three other frozen codes to save one array slot."
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:29": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 42,
-    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 349,
+    "line": 365,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 46,
-    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
+    "target": "../../../cli/src/erase/model.rs",
+    "line": 25,
+    "text": "/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:31": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 52,
-    "text": "judgeRow [3, _verdict, conf, _, _]"
+    "line": 56,
+    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:32": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 42,
-    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
+    "line": 60,
+    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:33": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 42,
-    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
+    "line": 69,
+    "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:34": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 46,
-    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
+    "line": 56,
+    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:35": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 46,
-    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
+    "line": 56,
+    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:36": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 38,
-    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
+    "line": 69,
+    "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:37": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 55,
-    "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
+    "line": 43,
+    "text": "publicDeadVerdicts :: [Integer]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:38": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 32,
-    "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
+    "line": 60,
+    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:39": {
-    "target": "../../../contracts/VERSIONING.md",
-    "line": 358,
-    "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 60,
+    "text": "judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 349,
+    "line": 365,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 52,
+    "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:41": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 73,
+    "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:42": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 46,
+    "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:43": {
+    "target": "../../../contracts/VERSIONING.md",
+    "line": 374,
+    "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../cli/src/erase/wire.rs",
     "line": 29,
     "text": "let reply = link"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:41": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
     "target": "../../../cli/src/lockstep.rs",
     "line": 103,
     "text": "/// A degraded reply to a client-sized request means the Rust cap"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:42": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 39,
     "text": "/// Contract order, each refusal by name, nothing written before all"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:43": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 45,
     "text": "fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:48": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 64,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 84,
     "text": "let mut cache = crate::erase::gather::TextCache::new(root);"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:46": {
-    "target": "../../../cli/src/erase/apply.rs",
-    "line": 18,
-    "text": "/// Preconditions + writes + audit log. Returns the applied count."
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
-    "target": "../../../cli/src/erase/mod.rs",
-    "line": 53,
-    "text": "/// The destructive phase: preconditions + writes + audit log"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:48": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 25,
-    "text": "-- v1 has NO knobs: the safety predicate is not tunable — a knob that"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
-    "target": "../../../contracts/VERSIONING.md",
-    "line": 354,
-    "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:5": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -5985,23 +5995,43 @@
     "text": "let mut link = crate::lockstep::open_family(core, \"erase/1\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
+    "target": "../../../cli/src/erase/apply.rs",
+    "line": 18,
+    "text": "/// Preconditions + writes + audit log. Returns the applied count."
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
+    "target": "../../../cli/src/erase/mod.rs",
+    "line": 53,
+    "text": "/// The destructive phase: preconditions + writes + audit log"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:52": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 26,
+    "text": "-- v1 has NO knobs: the safety predicate is not tunable — a knob that"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:53": {
+    "target": "../../../contracts/VERSIONING.md",
+    "line": 370,
+    "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 1,
     "text": "-- | The erase-family predicate (M9 batch 3, docs/reference/erase.md):"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 38,
+    "line": 52,
     "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:52": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:56": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 42,
+    "line": 56,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:53": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:57": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 346,
+    "line": 362,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

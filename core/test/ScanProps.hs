@@ -46,7 +46,7 @@ boundaries =
     && map (gradeWith (0, 0)) [0, 1] == [0, 1]
 
 wireReq :: [[Integer]] -> Value
-wireReq = rowsRequest "6.0.0" "scan.request"
+wireReq = rowsRequest "6.1.0" "scan.request"
 
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond

@@ -122,6 +122,17 @@ data VerdictReq = VerdictReq
     -- ceiling quietly moves" becomes a hard stop instead of a
     -- possibility.
     reqKnobsDigest :: Maybe Integer
+  , -- plan v2.14 K15 (6.1.0, additive): the EXPORT SURFACE, the same
+    -- [node, visibility] table graph/1 has carried since 4.1.0, keyed
+    -- to the tier universe instead of the node universe. It exists so
+    -- RG10 can hold on THIS road: the lattice's publicGuard reads
+    -- flag bit 0, no producer ever set it here, and the guard was
+    -- inert in production while the graph face had the fact all
+    -- along. The raw visibility word crosses, never a derived
+    -- "exported" list — which bit means exported is judgment
+    -- (Graph.Cost.exportVisBit) and stays in the core. Absent = [] =
+    -- every flag word 0, byte-identical to the legacy road.
+    reqSymbols :: [[Integer]]
   }
 
 instance FromJSON VerdictReq where
@@ -149,6 +160,10 @@ instance FromJSON VerdictReq where
       <*> o .:? "judgedMask" .!= 0
       <*> o .:? "classKnobs" .!= []
       <*> o .:? "knobsDigest"
+      -- the export surface (6.1.0): absent is the legacy road, and
+      -- an empty table says the same thing an absent one does — no
+      -- file here declares an export, so no flag word carries bit 0
+      <*> o .:? "symbols" .!= []
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -184,6 +199,12 @@ violation parsed req =
     , dedupDistinctOffence (reqDedup req) (reqDedupDistinct req) (reqDedupFloor req)
     , judgedLocOffence (reqJudgedLoc req)
     , docFilesOffence n (reqDocFiles req)
+    , -- the export surface (6.1.0) is graph/1's symbols table under
+      -- another universe, so it is checked the way its kin are: two
+      -- non-negative fields, the node in range, and the WHOLE row
+      -- ascending — a deduped set, because two exported declarations
+      -- in one file are not two facts about that file
+      table "symbols" (nodeRow n 2) 2 (reqSymbols req)
     , if reqJudgedMask req < 0 then Just "judgedMask: negative" else Nothing
     ]
  where

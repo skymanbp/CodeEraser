@@ -61,6 +61,8 @@ struct Measured {
     idx: HashMap<String, i64>,
     sim: Vec<[i64; 5]>,
     pos: Vec<[i64; 6]>,
+    /// The export surface under this universe (6.1.0) — RG10's fact.
+    symbols: Vec<[i64; 2]>,
     members: Vec<u64>,
     collapsed: usize,
     skipped_self: usize,
@@ -86,6 +88,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     let (members, collapsed) = member_set(root, &found.blocks);
     Ok(Measured {
         pos: pos_rows(&files, &posmap),
+        symbols: crate::graph::symwire::rekeyed(&w, &idx)?,
         idx: idx.into_iter().map(|(k, v)| (k.to_string(), v)).collect(),
         files,
         sim,
@@ -113,6 +116,11 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     let req = wire::Request {
         sim: m.sim,
         pos: m.pos,
+        // the export surface (6.1.0): the candidates' RG10 guard has
+        // no other way to learn which flank is a public API, and a
+        // `delete` proposed for one is the exact false positive the
+        // four-way dead code was split to prevent
+        symbols: m.symbols,
         churn: churn_t,
         cochange: cochange_t,
         continuous,

@@ -22,12 +22,26 @@
 -- WHY a row is refused, never just that it was:
 --   0 eraseable / 1 language_unresolved / 2 not_full_segment
 --   3 bytes_differ / 4 copy_not_dead / 5 unit_not_covered
+--   6 public_surface (6.1.0) — the RG10 firewall reaching this face
 -- v1 has NO knobs: the safety predicate is not tunable — a knob that
 -- loosens "safe" would be a licence to guess (contract §boundaries).
 module CE.Erase.Cost (
   eraseRowCap,
   judgeRow,
+  publicDeadVerdicts,
 ) where
+
+-- | The dead verdicts an erase plan may never act on (6.1.0): 2
+-- unref_public and 4 unreach_public. CE.Graph.Dead splits dead along
+-- indegree × reachability precisely so "a library's exported-but-
+-- unreferenced API can never collapse into plain dead" — the RG10
+-- firewall is a verdict CODE, not a policy. Until 4.1.0 gave flag
+-- bit 0 a producer the two codes could not fire, and this face read
+-- past the code to the confidence alone; the moment they could fire,
+-- reading past them turned the firewall into a deletion proposal.
+-- Data, not a guard, so a battery can permute it.
+publicDeadVerdicts :: [Integer]
+publicDeadVerdicts = [2, 4]
 
 -- | Row ceiling: candidates are bounded by dead files + verbatim
 -- pairs + whole-unit twins; 4096 is far above any honest plan.
@@ -49,7 +63,11 @@ judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]
   | copyFileDead /= 1 = (False, 4)
   | langUnresolved /= 0 = (False, 1)
   | otherwise = (True, 0)
-judgeRow [3, _verdict, conf, _, _]
+-- a public surface is refused BEFORE the trust fact is weighed: no
+-- amount of confidence makes an exported API eraseable, so naming
+-- the categorical bar tells the reader more than naming the strength
+judgeRow [3, verdict, conf, _, _]
+  | verdict `elem` publicDeadVerdicts = (False, 6)
   | conf == 0 = (False, 1)
   | otherwise = (True, 0)
 judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase

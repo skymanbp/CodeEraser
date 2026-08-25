@@ -45,16 +45,24 @@ truthTable =
     , [1, 60, 60, 61, 1], [1, 60, 60, 60, 0]
     , [2, 1, 1, 1, 0], [2, 0, 1, 1, 0], [2, 1, 0, 1, 0]
     , [2, 1, 1, 0, 0], [2, 1, 1, 1, 3]
-    , [3, 1, 0, 0, 0], [3, 2, 1, 0, 0], [3, 4, 2, 0, 0]
+    , -- class 3 across the WHOLE dead domain x the trust fact
+      -- (6.1.0). The private codes 1 and 3 answer to confidence
+      -- alone as they always did; the public codes 2 and 4 are
+      -- refused whatever their confidence, because RG10 is a bar
+      -- and not a strength -- and the last row is the one that
+      -- names the order: unvouched AND public reports public.
+      [3, 1, 0, 0, 0], [3, 1, 2, 0, 0], [3, 3, 2, 0, 0]
+    , [3, 2, 2, 0, 0], [3, 4, 2, 0, 0], [3, 2, 0, 0, 0]
     ]
   wants =
     [ (True, 0), (False, 2), (False, 2), (False, 3)
     , (True, 0), (False, 5), (False, 3), (False, 4), (False, 1)
     , (False, 1), (True, 0), (True, 0)
+    , (False, 6), (False, 6), (False, 6)
     ]
 
 req :: [[Integer]] -> Value
-req = rowsRequest "6.0.0" "erase.request"
+req = rowsRequest "6.1.0" "erase.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of
