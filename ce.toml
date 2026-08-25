@@ -336,4 +336,12 @@ entry_globs = [
 # standing chain. A subtraction, not a restructuring -- down
 # needs no defence, and this line records it rather than
 # leaving the counter quietly slack.
-budget = 185
+# 185 -> 186 (K round step 3b, the bindings extractor's face): the
+# new module's case table rhymes with graph/sites.rs's own — both
+# enumerate (language, source sample, expected pairs), because both
+# read the same import syntax for adjacent facts. Folding them would
+# couple two modules' tests through one fixture corpus and change
+# what the frozen site universe measures; restructuring the table to
+# dodge the counter would be writing code for the ratio. Declined,
+# booked -- the same family-face class the trend and audit rows took.
+budget = 186
