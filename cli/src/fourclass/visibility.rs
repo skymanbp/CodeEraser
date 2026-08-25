@@ -157,14 +157,19 @@ mod tests {
             .collect()
     }
 
-    /// Each language's rule, one row per language: the SOURCE and the
-    /// expected (name, exported) pairs. Written as a table rather
-    /// than a test per language because a per-language assertion body
-    /// is a T2 clone chain by this repo's own measure — the same
-    /// reason EraseProps carries its truth table as data.
+    /// One language's rule as a row: the language, a source sample,
+    /// and the (name, exported) pairs it must produce. Named because
+    /// the tuple is the case grammar — spelling it inline is the
+    /// "very complex type" clippy refuses under -D warnings.
+    type VisCase<'a> = (Lang, &'a str, &'a [(&'a str, bool)]);
+
+    /// Each language's rule, one row per language. Written as a table
+    /// rather than a test per language because a per-language
+    /// assertion body is a T2 clone chain by this repo's own measure
+    /// — the same reason EraseProps carries its truth table as data.
     #[test]
     fn exported_bits_follow_each_language_declaration_rule() {
-        let cases: &[(Lang, &str, &[(&str, bool)])] = &[
+        let cases: &[VisCase] = &[
             (
                 Lang::Rust,
                 "pub fn open() {}\nfn shut() {}\npub(crate) fn near() {}\n",
