@@ -25,12 +25,16 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// has no migration path to alter along.
 /// v10: density scoring (proto 2.17.0) re-prices every cached trend
 /// score — a mixed-regime trajectory would fabricate a slope.
-const SCHEMA_VERSION: i64 = 10; // 9: trend rows carry their measuring toolchain
+/// v11 (plan v2.14): the `bindings` table — the names each import
+/// site brings into scope, the symbol-edge input that has no home in
+/// any existing table.
+const SCHEMA_VERSION: i64 = 11; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;
 DROP TABLE IF EXISTS unitsig;
+DROP TABLE IF EXISTS bindings;
 DROP TABLE IF EXISTS edges;
 DROP TABLE IF EXISTS sites;
 DROP TABLE IF EXISTS symbols;

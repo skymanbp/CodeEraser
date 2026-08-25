@@ -12,6 +12,7 @@
 //! folds never cut; a fragment cut mid-path is refused, never
 //! guessed shallow (ladder/rs.rs module header).
 
+use super::bindings::{self, Binding};
 use super::md;
 use super::spec::{SiteKind, Specifier, sites as site_table};
 use crate::fourclass::units;
@@ -28,6 +29,11 @@ pub struct RawSite {
     pub nth: usize,
     pub spec: String,
     pub owner: Option<String>,
+    /// The names this import brings into scope, read off the site's
+    /// own syntax (bindings.rs). CANDIDATES only — whether one names
+    /// a declaration of the target is the symbols lookup's call, not
+    /// this detector's (plan v2.14).
+    pub bindings: Vec<Binding>,
 }
 
 impl RawSite {
@@ -38,6 +44,9 @@ impl RawSite {
             nth: 0,
             spec,
             owner: None,
+            // markdown links name a section, which already travels as
+            // the edge's dst_unit — no import binds anything here
+            bindings: Vec::new(),
         }
     }
 }
@@ -86,16 +95,16 @@ pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Un
 fn code_sites(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<RawSite> {
     match ast::parse(text, &grammar) {
         None => Vec::new(),
-        Some(tree) => walk_sites(tree.root_node(), text.as_bytes(), site_table(lang)),
+        Some(tree) => walk_sites(tree.root_node(), text.as_bytes(), site_table(lang), lang),
     }
 }
 
-fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<RawSite> {
+fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind], lang: Lang) -> Vec<RawSite> {
     let mut out = Vec::new();
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
         if let Some(kind) = table.iter().find(|k| k.node == node.kind()) {
-            emit(node, src, kind, &mut out);
+            emit(node, src, kind, lang, &mut out);
         }
         // deterministic order: children pushed reversed => visited
         // in document order after the stack pop
@@ -107,24 +116,24 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<Ra
     out
 }
 
-fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawSite>) {
+fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, lang: Lang, out: &mut Vec<RawSite>) {
     match &kind.via {
         Specifier::Field(field) => {
             if let Some(spec) = field_text(node, src, field) {
-                out.push(site(kind.label, node, spec));
+                out.push(site(kind.label, node, spec, src, lang));
             }
         }
         Specifier::NameIfNoBody => {
             if node.child_by_field_name("body").is_none()
                 && let Some(spec) = field_text(node, src, "name")
             {
-                out.push(site(kind.label, node, spec));
+                out.push(site(kind.label, node, spec, src, lang));
             }
         }
         Specifier::EachImportTarget => {
             for child in children(node) {
                 if let Some(spec) = import_target(child, src) {
-                    out.push(site(kind.label, child, spec));
+                    out.push(site(kind.label, child, spec, src, lang));
                 }
             }
         }
@@ -141,13 +150,22 @@ fn import_target(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
     }
 }
 
-fn site(label: &'static str, node: tree_sitter::Node, spec: String) -> RawSite {
+fn site(
+    label: &'static str,
+    node: tree_sitter::Node,
+    spec: String,
+    src: &[u8],
+    lang: Lang,
+) -> RawSite {
     RawSite {
         kind: label,
         line: node.start_position().row + 1,
         nth: 0, // assigned centrally in detect()
         spec,
         owner: None,
+        // read HERE, where the node is still in hand: RawSite keeps
+        // no tree handle, so a later pass would have to re-parse
+        bindings: bindings::of_site(node, src, lang),
     }
 }
 

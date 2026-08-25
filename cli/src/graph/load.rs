@@ -79,6 +79,43 @@ pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     )
 }
 
+/// One import binding joined to the edge it rides: the citing file,
+/// the file the ladder resolved to, and both halves of the name.
+/// This is the symbol-edge join's input — the target name is what the
+/// resolved file's symbols table is asked for, and a miss means the
+/// name was a module or a re-export, not a declaration (plan v2.14).
+pub struct BindingEdge {
+    pub src: String,
+    pub dst_path: String,
+    pub local: String,
+    pub target: String,
+}
+
+/// Every candidate binding that rides a FILE-granularity edge,
+/// deterministically ordered. Package and section edges carry no
+/// declaration to name, so they are not joined.
+pub fn binding_edges(idx: &Index) -> Result<Vec<BindingEdge>> {
+    Ok(rows(
+        idx.raw(),
+        "SELECT f.path, e.dst_path, b.local, b.target
+         FROM bindings b
+         JOIN sites s ON s.id = b.site_id
+         JOIN edges e ON e.site_id = s.id
+         JOIN files f ON f.id = s.file_id
+         WHERE e.granularity = 0
+         ORDER BY f.path, e.dst_path, b.target, b.local",
+        t4,
+    )?
+    .into_iter()
+    .map(|(src, dst_path, local, target)| BindingEdge {
+        src,
+        dst_path,
+        local,
+        target,
+    })
+    .collect())
+}
+
 /// One row per site-owning file: (path, total sites, unresolved
 /// sites) — the trust ledger raw material (2.32.0, H3).
 pub type PathSites = Vec<(String, i64, i64)>;

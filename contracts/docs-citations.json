@@ -511,18 +511,18 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:43": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 68,
+    "line": 72,
     "text": "pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:44": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 130,
+    "line": 134,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:45": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 151,
-    "text": "}"
+    "text": "|r| r.get(0),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:46": {
     "target": "../../../cli/src/scan/lang.rs",
@@ -736,13 +736,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 47,
+    "line": 51,
     "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:85": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 53,
-    "text": ");"
+    "text": "file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:86": {
     "target": "../../../cli/src/dedup/index.rs",
@@ -786,18 +786,18 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:93": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 28,
-    "text": "const SCHEMA_VERSION: i64 = 10; // 9: trend rows carry their measuring toolchain"
+    "line": 31,
+    "text": "const SCHEMA_VERSION: i64 = 11; // 9: trend rows carry their measuring toolchain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:94": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 130,
+    "line": 134,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:95": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 135,
-    "text": "(\"graph_rev\", store::GRAPH_REV),"
+    "text": "["
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:96": {
     "target": "../../../cli/src/dedup/index.rs",
@@ -3181,7 +3181,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:133": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 122,
+    "line": 159,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:134": {
@@ -3471,7 +3471,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 91,
+    "line": 99,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3526,8 +3526,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:6": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 58,
-    "text": "pub const GRAPH_REV: i64 = 9;"
+    "line": 63,
+    "text": "pub const GRAPH_REV: i64 = 10;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:60": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -3596,12 +3596,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:72": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 88,
+    "line": 125,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:73": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 116,
+    "line": 153,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:74": {
