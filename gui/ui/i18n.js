@@ -66,6 +66,22 @@ const CE_I18N = {
     graphCounts: (f, e, d, c) => `${f} files, ${e} edges — ${d} dead, ${c} cycles`, graphAlive: "alive",
     graphInOut: (i, o) => `${i} in / ${o} out`, graphCycleOf: (n) => `in a cycle of ${n} files`,
     graphUnresolved: (n) => `${n} unresolved sites — the graph refuses to know them`,
+    // Judgment vocabulary (K round step 6). Every one of these labels
+    // names a number the core produced and this screen used to drop:
+    // the trend judgment, the join lattice's verdict/severity/legs,
+    // and the graph family's trust column.
+    verdict: "verdict", severity: "severity", legsAgree: "legs agreeing",
+    trendVerdictNames: ["improving", "flat", "degrading"],
+    unjudged: "unjudged — below minPoints",
+    slopePerDay: (p) => `${p}‰ / day`,
+    steepestDrop: "steepest single step", declineRun: "longest decline run",
+    dropAt: (d, i) => `−${d}‰ at point ${i}`,
+    runFrom: (i, n) => `${n} points from point ${i}`,
+    floorArmed: (f) => `fail under ${f}`, floorOff: "ratchet only — no floor armed",
+    floorHint: "score floor (blank = ratchet only, as the CLI defaults)",
+    joinVerdictNames: ["report_only", "merge", "delete", "churn_hotspot"],
+    trustNames: ["unvouched — unresolved sites in this language", "vacuous", "vouched"],
+    trust: "trust", byVerdict: "by verdict",
   },
   zh: {
     tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选", tabGraph: "引用图",
@@ -127,6 +143,18 @@ const CE_I18N = {
     graphCounts: (f, e, d, c) => `${f} 文件，${e} 边——${d} 死，${c} 环`, graphAlive: "存活",
     graphInOut: (i, o) => `入 ${i} / 出 ${o}`, graphCycleOf: (n) => `处于 ${n} 文件环`,
     graphUnresolved: (n) => `${n} 个未解析点位——图拒绝臆测它们`,
+    verdict: "判决", severity: "严重度", legsAgree: "佐证腿数",
+    trendVerdictNames: ["上行", "持平", "恶化"],
+    unjudged: "未判——低于最小点数",
+    slopePerDay: (p) => `${p}‰ / 日`,
+    steepestDrop: "最陡单步", declineRun: "最长连跌",
+    dropAt: (d, i) => `第 ${i} 点跌 ${d}‰`,
+    runFrom: (i, n) => `自第 ${i} 点起连跌 ${n} 点`,
+    floorArmed: (f) => `低于 ${f} 即判失败`, floorOff: "仅棘轮——未武装地板",
+    floorHint: "分数地板（留空 = 仅棘轮，与 CLI 默认一致）",
+    joinVerdictNames: ["report_only", "merge", "delete", "churn_hotspot"],
+    trustNames: ["未担保——该语言尚有未解析点位", "空担保", "已担保"],
+    trust: "担保", byVerdict: "按判决",
   },
 };
 
@@ -160,6 +188,12 @@ function applyStaticI18n() {
   });
   document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
     el.placeholder = tr(el.dataset.i18nPh);
+  });
+  // A tooltip is prose like any other: an untranslated `title` is the
+  // same leak the placeholder arm exists to prevent, and the i18n
+  // gate harvests this attribute for the same reason.
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+    el.title = tr(el.dataset.i18nTitle);
   });
   const btn = document.getElementById("lang");
   if (btn) btn.textContent = ceLang === "en" ? "中文" : "EN";

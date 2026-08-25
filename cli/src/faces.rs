@@ -81,14 +81,17 @@ pub fn structure(root: &Path, core: &str, knobs: (bool, Option<u32>, bool)) -> R
 
 /// Report-only: this face never writes a baseline (MCP charter ③;
 /// the GUI apply road goes through erase, never through establish).
-pub fn check(root: &Path, core: &str) -> Result<Value> {
+/// `floor` is the CLI's `--fail-under`, opt-in on every road — but a
+/// face that could not arm it could not reproduce the verdict CI
+/// prints, and the report now echoes which it judged under.
+pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
     let o = crate::score::run(
         root,
         crate::score::Opts {
             db: None,
             core: core.into(),
             days: None,
-            floor: None,
+            floor,
             establish: false,
             pinned_soft: None,
         },

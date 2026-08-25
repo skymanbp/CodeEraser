@@ -92,7 +92,11 @@ pub const TOOLS: &[Tool] = &[
         name: "check",
         desc: "ADR-006 baseline judgment: score, ratchet and axes (report only — \
                this surface never writes a baseline).",
-        extra: &[],
+        extra: &[(
+            "floor",
+            "integer",
+            "arm the --fail-under score floor; absent = the ratchet alone judges",
+        )],
         run: check,
     },
     Tool {
@@ -226,8 +230,15 @@ fn structure(root: &Path, a: &Value) -> Result<String> {
     Ok(crate::faces::structure(root, &core(), (deep, d, split))?.to_string())
 }
 
-fn check(root: &Path, _a: &Value) -> Result<String> {
-    Ok(crate::faces::check(root, &core())?.to_string())
+fn check(root: &Path, a: &Value) -> Result<String> {
+    // absent = the ratchet alone, the CLI's own default; a PRESENT
+    // value arms the same floor `--fail-under` does, so this surface
+    // can reproduce the verdict a pipeline prints rather than a
+    // weaker one that happens to agree most days
+    let floor = a["floor"]
+        .as_u64()
+        .map(|v| u32::try_from(v).unwrap_or(u32::MAX));
+    Ok(crate::faces::check(root, &core(), floor)?.to_string())
 }
 
 fn trend(root: &Path, a: &Value) -> Result<String> {

@@ -16,7 +16,7 @@ use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.graph-canvas/0.1.0";
+pub const SCHEMA_ID: &str = "ce.graph-canvas/0.2.0";
 
 /// The one-judgment assembly (P10 half-doors end to end): refreshed
 /// index → wire → judge with the full file-tier pos request →
@@ -35,12 +35,18 @@ pub fn run(root: &std::path::Path, core: &str) -> Result<Value> {
 /// The document: files in file_nodes order, edges as index pairs into
 /// that order, counts the header can print. Verdict/pos absence is
 /// null, never a fabricated zero (the join's own rule).
+///
+/// `conf` rides beside the verdict because the graph family's trust
+/// column (2.32.0) is part of the judgment, not decoration: the same
+/// number decides whether `ce erase` may act on the row at all, and a
+/// face that shows the verdict while hiding it shows the reader less
+/// than the console does.
 pub fn document(w: &GraphWire, report: &Report, pos: &HashMap<String, Pos>) -> Value {
     let files = file_nodes(w);
-    let dead: BTreeMap<&str, (&str, &str)> = report
+    let dead: BTreeMap<&str, (&str, &str, Option<i64>)> = report
         .dead
         .iter()
-        .map(|d| (d.path.as_str(), (d.verdict, d.why.as_str())))
+        .map(|d| (d.path.as_str(), (d.verdict, d.why.as_str(), d.conf)))
         .collect();
     let rows: Vec<Value> = files
         .iter()
@@ -48,8 +54,9 @@ pub fn document(w: &GraphWire, report: &Report, pos: &HashMap<String, Pos>) -> V
             let d = dead.get(p);
             json!({
                 "path": p,
-                "verdict": d.map(|&(v, _)| v),
-                "why": d.map(|&(_, w)| w),
+                "verdict": d.map(|&(v, _, _)| v),
+                "why": d.map(|&(_, w, _)| w),
+                "conf": d.and_then(|&(_, _, c)| c),
                 "pos": pos.get(p),
             })
         })
@@ -180,8 +187,12 @@ mod tests {
         assert_eq!(doc["counts"]["cycles"], 1);
         assert_eq!(doc["files"][0]["verdict"], Value::Null);
         assert_eq!(doc["files"][0]["pos"], json!([1, 2, 0, 1, 0]));
+        // a live file carries no trust column either: absence is null,
+        // never a fabricated 0, which on this scale means UNVOUCHED
+        assert_eq!(doc["files"][0]["conf"], Value::Null);
         assert_eq!(doc["files"][1]["verdict"], "unref_private");
         assert_eq!(doc["files"][1]["why"], "no kept in-edge and no entry flag");
+        assert_eq!(doc["files"][1]["conf"], 2);
         assert_eq!(doc["files"][1]["pos"], json!([2, 0, 4, 2, 1]));
         assert_eq!(doc["unresolvedSites"], 7);
         assert_eq!(doc["degraded"], Value::Null);

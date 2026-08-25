@@ -72,6 +72,15 @@ const pairHtml = (a, b) =>
 
 const barStyle = (v, max) => ` style="--w:${((100 * v) / (max || 1)).toFixed(1)}%"`;
 
+// The core's name for the pair, ranked by the core's OWN severity
+// (`joinSeverity`, shipped once at 2.33.0 so a face never invents an
+// order). This screen printed blocks and tokens and dropped the
+// verdict, leaving the reader to rank deletion candidates by size —
+// the one number the core does not judge on. Three ranks over the
+// existing palette; no colour is minted here.
+const verdictBadge = (v, sev) =>
+  v == null ? "" : `<span class="vpill ${sev >= 3 ? "bad" : sev >= 2 ? "mid" : "quiet"}">${esc(v)}</span>`;
+
 function renderCandidates() {
   $("empty-candidates").hidden = true;
   const parts = [];
@@ -82,7 +91,7 @@ function renderCandidates() {
     parts.push(
       `<div class="cand" data-kind="file" data-i="${i}"${barStyle(f.tokens, fMax)}>` +
       `<span class="pair">${pairHtml(f.a, f.b)}</span>` +
-      `<span>${tr("blockTokens", f.blocks, f.tokens)}</span></div>`
+      `<span>${verdictBadge(f.verdict, f.severity)}${tr("blockTokens", f.blocks, f.tokens)}</span></div>`
     );
   });
   parts.push(`<h2>${tr("unitPairs")} — ${joinDoc.units.length}</h2>`);
@@ -119,12 +128,32 @@ function renderCandidates() {
     row(tr("filePairs"), joinDoc.files.length),
     row(tr("unitPairs"), joinDoc.units.length),
     row(tr("cloneBlocks"), dedupDoc.blocks.length),
+    ...verdictCensus(joinDoc.files),
   ].join("");
   // a re-render (language toggle) puts the reader back where they were
   if (candSel) {
     markSelected(list);
     candDetail(candSel.kind, candSel.i);
   }
+}
+
+// How many pairs landed on each verdict, ordered by the core's own
+// severity where the rows carry one. Counting is not judging: every
+// name and every rank came off the wire.
+function verdictCensus(files) {
+  const tally = new Map();
+  for (const f of files) {
+    if (f.verdict == null) continue;
+    const cur = tally.get(f.verdict) ?? { n: 0, sev: f.severity ?? 0 };
+    cur.n += 1;
+    tally.set(f.verdict, cur);
+  }
+  if (!tally.size) return [];
+  return [`<div class="row zero"><span>${esc(tr("byVerdict"))}</span></div>`].concat(
+    [...tally.entries()]
+      .sort((a, b) => b[1].sev - a[1].sev || a[0].localeCompare(b[0]))
+      .map(([name, v]) => row(name, v.n)),
+  );
 }
 
 // The one place `.sel` moves: derived from candSel, never from the
@@ -149,6 +178,11 @@ function candDetail(kind, i) {
     const f = joinDoc.files[i];
     rows.push(`<h2>${esc(f.a)} ↔ ${esc(f.b)}</h2>`);
     rows.push(row(tr("blocksTokens"), `${f.blocks} / ${f.tokens}`));
+    // absent is honest absence, not report_only: a self-pair cannot
+    // cross the u < v wire, and a degraded judgment judged nothing
+    rows.push(row(tr("verdict"), f.verdict ?? tr("posNull")));
+    if (f.severity !== null) rows.push(row(tr("severity"), f.severity));
+    if (f.confidence !== null) rows.push(row(tr("legsAgree"), f.confidence));
     rows.push(row(tr("graphA"), pos(f.graph_a)), row(tr("graphB"), pos(f.graph_b)));
     rows.push(row(tr("churnA"), churnStr(f.churn_a)), row(tr("churnB"), churnStr(f.churn_b)));
     rows.push(row(tr("cochange"), f.cochange === null ? tr("belowTable") : f.cochange));

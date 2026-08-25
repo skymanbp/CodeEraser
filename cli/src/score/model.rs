@@ -12,7 +12,7 @@ use crate::score::wire;
 /// 0.3.0 (2.33.0, H4): candidate rows widen to six columns (the
 /// leg-agreement confidence) and `joinSeverity` ships the verdict
 /// table's severity face.
-pub const SCHEMA_ID: &str = "ce.check-report/0.3.0";
+pub const SCHEMA_ID: &str = "ce.check-report/0.4.0";
 
 pub struct Outcome {
     pub reply: wire::Reply,
@@ -25,4 +25,11 @@ pub struct Outcome {
     /// Intra-file block pairs the sim table cannot carry (u < v is
     /// the wire contract); their members still enter the set.
     pub skipped_self: usize,
+    /// The floor this run was judged under (`--fail-under`), echoed
+    /// so a consumer can tell "passed with a floor armed" from
+    /// "passed with none". Two faces of one gate disagreed on exactly
+    /// this: CI arms 950, the GUI could not arm anything, and the
+    /// same tree read pass in one and FAIL in the other with nothing
+    /// on screen to say why.
+    pub floor: Option<u32>,
 }

@@ -47,6 +47,11 @@ pub fn report_json(o: &Outcome) -> serde_json::Value {
         // unrecoverable for consumers (review C17)
         "scoreScale": r.knobs.get("scoreScale"),
         "axes": r.axes,
+        // the floor this run was armed with (null = ratchet only, the
+        // CLI's own default): a pass means a different thing on each
+        // side of it, and a face that hides which is showing a
+        // stronger verdict than the run produced
+        "floor": o.floor,
         "candidates": r.candidates,
         "joinSeverity": r.join_severity,
         "ratchet": {

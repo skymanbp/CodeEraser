@@ -170,6 +170,19 @@ fn floor_and_ratchet_fail_independently() {
     // direction 1: floor alone (the ratchet half is clean)
     let floored = score::run(&dir, opts(None, Some(1000))).expect("floored");
     assert!(floored.reply.fail, "the floor alone must fail");
+    // and the report SAYS which floor it judged under — a pass with
+    // none armed is a weaker claim than a pass with one, and the two
+    // faces of this gate disagreed for exactly that reason (K round
+    // step 6: CI armed 950, the GUI could arm nothing)
+    assert_eq!(
+        codeeraser::score::report_json(&floored)["floor"],
+        serde_json::json!(1000)
+    );
+    assert_eq!(
+        codeeraser::score::report_json(&est)["floor"],
+        serde_json::Value::Null,
+        "absent floor echoes null, never a fabricated 0"
+    );
     assert!(
         floored.reply.added.is_empty() && floored.reply.over.is_empty(),
         "ratchet half stayed clean: {:?}",

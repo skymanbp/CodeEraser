@@ -243,6 +243,21 @@
 #cand-list .cand .pair { flex: 1; overflow-wrap: anywhere; }
 #cand-list .cand b { color: var(--ink); font-weight: 600; }
 #cand-list .cand .dir { color: var(--ink-min); font-weight: 400; }
+/* the verdict pill (K round step 6): the core's own name for the pair,
+   ranked by the core's own severity. Three steps over the existing
+   palette — no colour is minted here, because a rank the core did not
+   ship would be this face inventing judgment. */
+#cand-list .cand .vpill {
+  margin-right: var(--s2);
+  padding: 1px var(--s2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+#cand-list .cand .vpill.bad { background: rgba(224, 138, 130, 0.16); color: var(--err); }
+#cand-list .cand .vpill.mid { background: var(--data-soft); color: var(--data); }
+#cand-list .cand .vpill.quiet { color: var(--ink-min); }
 #cand-list .cand > span:last-child {
   color: var(--ink-mid);
   white-space: nowrap;

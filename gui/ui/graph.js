@@ -175,8 +175,17 @@ function renderGraphAside(i) {
   }
   const f = d.files[i], p = f.pos;
   let html = `<h2>${esc(String(f.path))}</h2>`;
-  if (f.verdict != null) html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(String(f.why ?? ""))}</div>`;
-  else html += `<div class="row">${esc(tr("graphAlive"))}</div>`;
+  if (f.verdict != null) {
+    html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(String(f.why ?? ""))}</div>`;
+    // The trust column (2.32.0) the console prints beside the verdict
+    // and this pane dropped. The same number decides whether `ce
+    // erase` may act on the row, so a verdict shown without it is a
+    // stronger claim than the core made.
+    if (f.conf != null) {
+      const word = tr("trustNames")[f.conf] ?? String(f.conf);
+      html += `<div class="row ${f.conf === 0 ? "bad" : "zero"}"><span>${esc(tr("trust"))}</span>${esc(word)}</div>`;
+    }
+  } else html += `<div class="row">${esc(tr("graphAlive"))}</div>`;
   if (p != null) {
     html += `<div class="row">${esc(tr("graphInOut", p[0], p[1]))}</div>`;
     if (p[3] > 1) html += `<div class="row">${esc(tr("graphCycleOf", p[3]))}</div>`;

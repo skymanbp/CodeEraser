@@ -4,7 +4,7 @@
 // textContent — the literal string "undefined" on screen, silently.
 // main_lang.rs reddens on a missing OR dead key; this leg asserts the
 // same two properties over the real gui/ui files, harvesting usage
-// from index.html (data-i18n / data-i18n-ph) and every screen's
+// from index.html (data-i18n / data-i18n-ph / data-i18n-title) and every screen's
 // tr("...") calls.
 //
 // Usage: node gui/tests/i18n_gate.js   (exit 1 = a broken table)
@@ -25,7 +25,7 @@ const table = vm.runInContext("CE_I18N", sandbox);
 // Harvest every key the UI actually asks for.
 const used = new Set();
 const html = ui("index.html");
-for (const m of html.matchAll(/data-i18n(?:-ph)?="([^"]+)"/g)) used.add(m[1]);
+for (const m of html.matchAll(/data-i18n(?:-ph|-title)?="([^"]+)"/g)) used.add(m[1]);
 // i18n.js included: axisName() consumes "axisNames" from inside the
 // table's own file, and a harvest that skips it calls that key dead
 for (const f of ["app.js", "structure.js", "structree.js", "trend.js", "candidates.js",

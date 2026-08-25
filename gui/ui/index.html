@@ -63,12 +63,15 @@
 
   <div id="view-score" class="view" hidden>
     <section class="bar">
+      <label><span data-i18n="verdict"></span>
+        <input id="check-floor" type="number" min="0" placeholder="—" data-i18n-title="floorHint" /></label>
       <button id="check-load" data-i18n="load"></button>
     </section>
     <main class="col">
       <div id="check-hero"></div>
       <div class="stat" id="check-axes"></div>
       <section id="check-ratchet"></section>
+      <div id="check-candidates"></div>
       <div id="check-named"></div>
       <div class="empty" id="empty-score" data-i18n="emptyScore"></div>
     </main>

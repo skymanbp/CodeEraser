@@ -157,6 +157,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         members: req.discrete.len(),
         collapsed: m.collapsed,
         skipped_self: m.skipped_self,
+        floor: opts.floor,
         reply,
     })
 }

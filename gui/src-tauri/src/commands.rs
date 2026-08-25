@@ -144,7 +144,23 @@ face_cmd!(
     "graphcanvas",
     codeeraser::faces::graph_canvas
 );
-face_cmd!(check_report, "check", codeeraser::faces::check);
+/// The one face that takes an OPT-IN gate knob rather than a
+/// measurement window, so it does not fit either macro arm: `floor`
+/// is `--fail-under`, absent = the ratchet alone (the CLI's default).
+/// Without it this screen could not reproduce the verdict CI prints,
+/// and the two faces of one gate disagreed with nothing on screen to
+/// say why.
+#[tauri::command]
+pub async fn check_report(
+    win: tauri::Window,
+    root: String,
+    floor: Option<u32>,
+) -> Result<Value, String> {
+    task(win, "check", root, move |r, c| {
+        codeeraser::faces::check(r, c, floor)
+    })
+    .await
+}
 face_cmd!(churn_report, "churn", days: |r, _c, d| codeeraser::faces::churn(r, d));
 face_cmd!(join_report, "join", days: codeeraser::faces::join);
 

@@ -16,7 +16,14 @@ async function loadCheck() {
   $("check-load").disabled = true;
   setStatus(tr("judging"), false);
   try {
-    checkDoc = await invoke("check_report", { root: $("root").value });
+    // `--fail-under`, opt-in on every road — but CI arms 950 while
+    // this screen could arm nothing, so one tree read pass here and
+    // FAIL in the pipeline with nothing on screen to say why.
+    const floor = $("check-floor").value.trim();
+    checkDoc = await invoke("check_report", {
+      root: $("root").value,
+      floor: floor === "" ? null : posInt(floor, 0, 1000000),
+    });
     renderCheck();
     setStatus(checkDoc.schema, false);
   } catch (e) {
@@ -35,9 +42,14 @@ function renderCheck() {
   // vocabulary, not prose (the CLI console holds the same line)
   const verdict = rt.fail ? "FAIL" : "pass";
   const notice = d.degraded ? `<div class="notice"><b>${esc(tr("degradedRun"))}</b><small>${esc(String(d.degraded))}</small></div>` : "";
+  // which conditions this verdict could have failed on, said out loud:
+  // a pass with no floor armed is a weaker statement than a pass with
+  // one, and the reader is entitled to know which they are looking at
+  const floor = d.floor == null ? tr("floorOff") : tr("floorArmed", d.floor);
   $("check-hero").innerHTML = notice +
     `<span id="check-score">${d.score}</span><small>/ ${scale}</small>` +
     `<span class="verdict ${rt.fail ? "bad" : "ok"}">${verdict}</span>` +
+    `<small class="floor">${esc(floor)}</small>` +
     `<div id="check-bar"><div style="width:${(100 * d.score) / scale}%"></div></div>`;
   // the CHECK axes are the verdict family's seven (size…cycles), a
   // DIFFERENT vocabulary from structure's screen axes — the first
@@ -59,6 +71,20 @@ function renderCheck() {
     regs.map(([k, v]) => row(k, v)).join("") +
     row(tr("candidates"), d.candidates.length) +
     "";
+  // The join lattice's verdicts, reduced to a bare count until now.
+  // Name and order both come off the wire (`joinSeverity` is the
+  // core's own face); the only thing done here is tallying.
+  const sev = new Map((d.joinSeverity || []).map(([c, s]) => [c, s]));
+  const tally = new Map();
+  for (const [, , code] of d.candidates) tally.set(code, (tally.get(code) ?? 0) + 1);
+  const names = tr("joinVerdictNames");
+  $("check-candidates").innerHTML = tally.size
+    ? `<b>${esc(tr("byVerdict"))}</b>` +
+      [...tally.entries()]
+        .sort((a, b) => (sev.get(b[0]) ?? 0) - (sev.get(a[0]) ?? 0) || a[0] - b[0])
+        .map(([code, n]) => row(names[code] ?? String(code), n))
+        .join("")
+    : "";
   // `failed` is the ratchet's NAMED register (the dense over rows are
   // wire identities, not prose) — the actionable half of the verdict
   $("check-named").innerHTML = (rt.failed || [])

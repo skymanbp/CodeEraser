@@ -3786,7 +3786,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:101": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 176,
+    "line": 177,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:102": {
@@ -3876,12 +3876,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 227,
+    "line": 228,
     "text": "out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 207,
+    "line": 208,
     "text": "/// File pairs with at least one verified block, kind 0 (t1t2) at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
@@ -3991,7 +3991,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 301,
+    "line": 302,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
@@ -4001,7 +4001,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 327,
+    "line": 328,
     "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:46": {
@@ -4271,12 +4271,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:94": {
     "target": "../../../cli/src/score/report.rs",
-    "line": 76,
-    "text": "line("
+    "line": 79,
+    "text": "println!("
   },
   "docs/reference/methodology/07-the-three-signal-join.md:95": {
     "target": "../../../cli/src/score/report.rs",
-    "line": 50,
+    "line": 55,
     "text": "\"candidates\": r.candidates,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:96": {

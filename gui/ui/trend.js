@@ -67,10 +67,35 @@ function renderTrend() {
     row(tr("measured"), rows.length),
     row(tr("pending"), trendReport.pending),
   );
+  parts.push(...judgmentRows(trendReport.judgment));
   for (const [sha, why] of trendReport.failed) {
     parts.push(row(`${tr("failedPrefix")} ${sha}`, why));
   }
   $("trend-detail").innerHTML = parts.join("");
+}
+
+// The core's trend/2 judgment, which this screen used to drop whole:
+// the chart drew the points and said nothing about what the core made
+// of them. Absent slope/verdict is UNJUDGED (below minPoints), not
+// flat — the report's own distinction, so the label keeps it. cliff
+// and declineRun ride only when the window had enough points to have
+// them; they are [index, magnitude] pairs, printed as the core's
+// numbers with no arithmetic here beyond naming the index.
+function judgmentRows(j) {
+  if (!j) return [];
+  const out = [];
+  const name = j.verdict === null ? tr("unjudged") : tr("trendVerdictNames")[j.verdict] ?? String(j.verdict);
+  const bad = j.verdict === 2 || j.fail;
+  out.push(
+    `<div class="row"><span>${esc(tr("verdict"))}</span>` +
+    `<b class="verdict ${bad ? "bad" : "ok"}">${esc(name)}</b></div>`
+  );
+  if (j.slopeMicroPerDay !== null) {
+    out.push(row(tr("score"), tr("slopePerDay", (j.slopeMicroPerDay / 1000).toFixed(1))));
+  }
+  if (j.cliff) out.push(row(tr("steepestDrop"), tr("dropAt", (j.cliff[1] / 1000).toFixed(1), j.cliff[0])));
+  if (j.declineRun) out.push(row(tr("declineRun"), tr("runFrom", j.declineRun[0], j.declineRun[1])));
+  return out;
 }
 
 // The y-domain is data-driven with a 2%-of-scale span floor and 35%
