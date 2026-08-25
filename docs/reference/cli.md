@@ -24,14 +24,14 @@ Commands:
   trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
-  baseline   Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1)
+  baseline   Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1; a degraded judgment is never persisted)
   dedup      Detect T1/T2 clones via the winnowing fingerprint index
   daemon     Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
   ping       Round-trip a ping through the project daemon (lazy-starts it)
   probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard]
   audit      Stop audit v1: net LOC + duplicate blocks touching changed files (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
-  precommit  pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched)
+  precommit  pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — the one CI-facing gate that passes on a missing core
   mcp        MCP server over stdio: the read-only report face of every judgment family
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
   help       Print this message or the help of the given subcommand(s)
@@ -270,7 +270,7 @@ Options:
 ## ce baseline
 
 ```text
-Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1)
+Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1; a degraded judgment is never persisted)
 
 Usage: ce baseline [OPTIONS] [ROOT]
 
@@ -302,7 +302,7 @@ Options:
       --db <DB>                      Index database path (default: <path>/.ce/index.db)
       --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50)
       --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from measured calibration; 0 disables)
-      --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (the comparison is the core's verdict)
+      --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (the comparison is the core's verdict; a degraded judgment refuses to gate at all and exits 2)
       --core <CORE>                  Path to the ce-core executable, consulted by --check alone (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help                         Print help
 ```
@@ -379,7 +379,7 @@ Options:
 ## ce precommit
 
 ```text
-pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched)
+pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — the one CI-facing gate that passes on a missing core
 
 Usage: ce precommit [OPTIONS] [ROOT]
 

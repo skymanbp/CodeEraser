@@ -196,7 +196,8 @@ pub struct DedupArgs {
     #[arg(long)]
     min_distinct: Option<usize>,
     /// Only-shrink ratchet: exit 1 when clone blocks exceed the
-    /// ce.toml [dedup] budget (the comparison is the core's verdict)
+    /// ce.toml [dedup] budget (the comparison is the core's verdict;
+    /// a degraded judgment refuses to gate at all and exits 2)
     #[arg(long)]
     check: bool,
     /// Path to the ce-core executable, consulted by --check alone

@@ -137,7 +137,8 @@ pub(crate) enum Cmd {
     /// ratchet OR --fail-under floor, either alone fails
     Check(CheckArgs),
     /// Persist the core's newBaseline as ce-baseline.json (the
-    /// violation set only shrinks without CE_ACCEPT_BASELINE=1)
+    /// violation set only shrinks without CE_ACCEPT_BASELINE=1; a
+    /// degraded judgment is never persisted)
     Baseline(BaselineArgs),
     /// Detect T1/T2 clones via the winnowing fingerprint index
     Dedup(DedupArgs),
@@ -172,8 +173,10 @@ pub(crate) enum Cmd {
         #[arg(long)]
         hook: bool,
     },
-    /// pre-commit gate: staged net LOC + touched duplicates
-    /// (exit 1 in deny mode when duplicates are touched)
+    /// pre-commit gate: staged net LOC + touched duplicates (exit 1
+    /// in deny mode when duplicates are touched). FAIL-OPEN: with no
+    /// reachable ce-core it reports the skip and exits 0 — the one
+    /// CI-facing gate that passes on a missing core
     Precommit {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,
