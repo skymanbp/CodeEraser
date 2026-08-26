@@ -23,8 +23,8 @@ site, and where the specifier lives, is a frozen table per language
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
 grammar and scans line-wise ([spec.rs:96](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
-([store.rs:99-113](../../../cli/src/graph/store.rs#L99)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:63](../../../cli/src/graph/store.rs#L63), currently `10`).
+([store.rs:107-121](../../../cli/src/graph/store.rs#L107)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:70](../../../cli/src/graph/store.rs#L70), currently `10`).
 
 ### 2. The resolution ladder
 

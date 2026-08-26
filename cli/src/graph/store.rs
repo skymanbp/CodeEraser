@@ -12,9 +12,16 @@
 //! single atomic whole-tree refresh — each side self-checks via its
 //! own gate. A content refresh CASCADE-drops that file's old sites'
 //! edges while resolve_key stands still; re-resolving just that file
-//! is resolve_refreshed (phase 1.5). Every edge row flows through
-//! the one insert throat below, fed by the phase-2 sweep or the
-//! phase-1.5 refresh — both driven by the wire.rs ladder bridge.
+//! is resolve_refreshed (phase 1.5). The drop and its repair sit in
+//! DIFFERENT transactions, so the debt between them is a ROW, not
+//! process memory (`resolve_pending`, schema v13): the refresh that
+//! drops commits the debt in the same transaction, and any later
+//! sweep or phase-1.5 settles it — a run that dies in between (the
+//! v1.2.0 release-night daemon amputation, CI 32964681934) leaves a
+//! ledger entry the next run pays, never a silent permanent hole.
+//! Every edge row flows through the one insert throat below, fed by
+//! the phase-2 sweep or the phase-1.5 refresh — both driven by the
+//! wire.rs ladder bridge.
 
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
@@ -88,6 +95,7 @@ CREATE TABLE edges (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASC
   dst_path TEXT NOT NULL, dst_unit TEXT NOT NULL,
   kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL,
   via_reexport INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE resolve_pending (path TEXT PRIMARY KEY);
 CREATE INDEX idx_sym_file ON symbols(file_id, key);
 CREATE UNIQUE INDEX idx_sym_ident ON symbols(file_id, key, nth);
 CREATE INDEX idx_site_file ON sites(file_id);
@@ -139,6 +147,16 @@ pub(crate) fn kind_label(code: i64) -> Option<&'static str> {
 pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang) -> Result<()> {
     tx.execute("DELETE FROM symbols WHERE file_id = ?1", (file_id,))?;
     tx.execute("DELETE FROM sites WHERE file_id = ?1", (file_id,))?;
+    // the site delete above cascade-dropped this file's edges; their
+    // repair lives in a LATER transaction (phase 1.5 / the sweep), so
+    // the debt commits WITH the drop — a run that dies between the two
+    // leaves this row, and the next run settles it (module header)
+    tx.execute(
+        "INSERT INTO resolve_pending (path)
+         SELECT path FROM files WHERE id = ?1
+         ON CONFLICT(path) DO NOTHING",
+        (file_id,),
+    )?;
     let (found, segments) = crate::graph::sites::detect_with_units(text, lang);
     // flags carry the declaration's OWN visibility bits since the
     // v2.14 producer landed (fourclass::visibility) — a local
@@ -240,6 +258,9 @@ pub fn ensure_resolved(
     tx.execute("DELETE FROM edges", [])?;
     let sites = cached_sites(&tx)?;
     insert_edges(&tx, &sites, &mut resolve)?;
+    // the sweep just replayed EVERY file's edges, so it retires the
+    // whole debt ledger in the same commit
+    tx.execute("DELETE FROM resolve_pending", [])?;
     tx.execute(
         "INSERT INTO meta (k, v) VALUES ('resolve_key', ?1)
          ON CONFLICT(k) DO UPDATE SET v = ?1",
@@ -251,7 +272,9 @@ pub fn ensure_resolved(
 
 /// Phase 1.5 (module header contract): a content refresh cascade-
 /// dropped that file's edges while resolve_key stood still — re-
-/// resolve JUST the refreshed files' cached sites. IDEMPOTENT
+/// resolve the refreshed files' cached sites, UNIONED with the
+/// persisted debt ledger so an amputated earlier run's drop is paid
+/// here even when this run's own walk found nothing dirty. IDEMPOTENT
 /// (delete-then-insert in one lock): a CONCURRENT writer's phase-2
 /// sweep may have already attached edges to these very site rows and
 /// set resolve_key so our own sweep skipped — the old "callers pass
@@ -265,13 +288,20 @@ pub fn resolve_refreshed(
     dirty: &BTreeSet<String>,
     mut resolve: impl FnMut(&CachedSite) -> Vec<EdgeRow>,
 ) -> Result<()> {
-    if dirty.is_empty() {
-        return Ok(());
+    if dirty.is_empty() && !debt_standing(conn)? {
+        return Ok(()); // the every-warm-run fast path stays a read
     }
     let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    // the ledger re-read INSIDE the lock is authoritative; the peek
+    // above only spares the lock when there is provably nothing owed
+    let mut owed: BTreeSet<String> = tx
+        .prepare("SELECT path FROM resolve_pending")?
+        .query_map([], |r| r.get(0))?
+        .collect::<rusqlite::Result<_>>()?;
+    owed.extend(dirty.iter().cloned());
     let sites: Vec<CachedSite> = cached_sites(&tx)?
         .into_iter()
-        .filter(|s| dirty.contains(&s.file))
+        .filter(|s| owed.contains(&s.file))
         .collect();
     let mut del = tx.prepare("DELETE FROM edges WHERE site_id = ?1")?;
     for s in &sites {
@@ -279,8 +309,21 @@ pub fn resolve_refreshed(
     }
     drop(del);
     insert_edges(&tx, &sites, &mut resolve)?;
+    // every visible ledger row is in `owed` and was just resolved (a
+    // row whose file vanished resolves to nothing) — settled entire
+    tx.execute("DELETE FROM resolve_pending", [])?;
     tx.commit()?;
     Ok(())
+}
+
+/// Whether any committed refresh still owes a re-resolve — peeked
+/// without the write lock so the no-debt path never contends.
+fn debt_standing(conn: &Connection) -> Result<bool> {
+    Ok(conn.query_row(
+        "SELECT EXISTS(SELECT 1 FROM resolve_pending)",
+        [],
+        |r| r.get(0),
+    )?)
 }
 
 /// The single edge-insert throat shared by the phase-2 sweep and the

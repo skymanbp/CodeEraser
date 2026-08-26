@@ -58,9 +58,7 @@ fn two_phase_lifecycle() {
     assert_eq!(edge_count(&conn), 2, "skip touches nothing");
     assert!(ensure_resolved(&mut conn, 8, |_| Vec::new()).expect("refire"));
     assert_eq!(edge_count(&conn), 0, "key change replays from zero");
-    let tx = conn.transaction().expect("tx2");
-    refresh_graph(&tx, 1, "use crate::y;\n", Lang::Rust).expect("phase 1 again");
-    tx.commit().expect("commit2");
+    recommit(&mut conn, "use crate::y;\n");
     let sites: i64 = conn
         .query_row("SELECT COUNT(*) FROM sites", [], |r| r.get(0))
         .expect("sites");
@@ -70,6 +68,26 @@ fn two_phase_lifecycle() {
 fn edge_count(conn: &Connection) -> i64 {
     conn.query_row("SELECT COUNT(*) FROM edges", [], |r| r.get(0))
         .expect("edge count")
+}
+
+fn pending_count(conn: &Connection) -> i64 {
+    conn.query_row("SELECT COUNT(*) FROM resolve_pending", [], |r| r.get(0))
+        .expect("pending count")
+}
+
+/// One committed phase-1 re-refresh of file 1 — the shared arrange of
+/// the debt battery and the lifecycle battery's replacement stanza.
+fn recommit(conn: &mut Connection, text: &str) {
+    let tx = conn.transaction().expect("tx");
+    refresh_graph(&tx, 1, text, Lang::Rust).expect("refresh");
+    tx.commit().expect("commit");
+}
+
+/// The empty-dirty, ledger-driven phase 1.5 both debt legs end on,
+/// plus the retirement assertion they share.
+fn settle_and_expect_clear(conn: &mut Connection) {
+    resolve_refreshed(conn, &BTreeSet::new(), one_edge).expect("settle");
+    assert_eq!(pending_count(conn), 0, "settled debt retires by evidence");
 }
 
 fn one_edge(s: &CachedSite) -> Vec<EdgeRow> {
@@ -104,6 +122,59 @@ fn phase_15_is_idempotent_over_a_swept_file() {
         1,
         "phase 1.5 over a swept file must converge, not stack"
     );
+}
+
+/// The v1.2.0 release-night loss (CI run 32964681934), projected onto
+/// one connection so it is deterministic: a sweep lands edges and sets
+/// resolve_key; a content refresh then cascade-drops that file's edges
+/// (repair deferred to end-of-run) — and the process dies before phase
+/// 1.5 (daemon shutdown amputated the cold-start build). The NEXT run
+/// walks a clean tree (content hash matches → nothing dirty) and its
+/// sweep skips on the standing key, so without a persisted debt the
+/// hole is silent and permanent. The debt row must survive the death
+/// and be settled by that next run's empty-dirty phase 1.5.
+#[test]
+fn a_refresh_debt_survives_process_death_and_the_next_run_settles_it() {
+    let mut conn = seeded("mod alpha;\n");
+    assert!(ensure_resolved(&mut conn, 7, one_edge).expect("sweep"));
+    assert_eq!(edge_count(&conn), 1);
+    recommit(&mut conn, "mod alpha;\n");
+    assert_eq!(edge_count(&conn), 0, "the cascade dropped the edges");
+    // …process death here; the next run finds nothing dirty itself
+    assert!(!ensure_resolved(&mut conn, 7, one_edge).expect("skip"));
+    settle_and_expect_clear(&mut conn);
+    assert_eq!(edge_count(&conn), 1, "the persisted debt must be settled");
+}
+
+/// A firing sweep replays every file's edges, so it retires the whole
+/// debt ledger — orphan rows included — in the same commit.
+#[test]
+fn a_firing_sweep_retires_the_whole_debt_ledger() {
+    let mut conn = seeded("mod alpha;\n");
+    recommit(&mut conn, "mod alpha;\n");
+    conn.execute("INSERT INTO resolve_pending (path) VALUES ('gone.rs')", [])
+        .expect("orphan debt");
+    assert!(ensure_resolved(&mut conn, 9, one_edge).expect("sweep"));
+    assert_eq!(pending_count(&conn), 0, "sweep covered every file — ledger empty");
+}
+
+/// The load-bearing half of phase 1.5's settle-entire claim: a debt
+/// whose file has since been removed resolves to NOTHING and the row
+/// is still cleared — the ledger can never accumulate rows no run
+/// will ever settle (this drives resolve_refreshed itself, where the
+/// claim lives; the sweep test above retires orphans by a blanket
+/// delete and pins nothing about this branch).
+#[test]
+fn phase_15_settles_an_orphan_debt_to_nothing() {
+    let mut conn = seeded("mod alpha;\n");
+    // the seeding refresh booked its own (legitimate) debt for a.rs;
+    // retire it so the orphan is the ONLY row this leg settles
+    conn.execute("DELETE FROM resolve_pending", [])
+        .expect("isolate the orphan");
+    conn.execute("INSERT INTO resolve_pending (path) VALUES ('gone.rs')", [])
+        .expect("orphan debt");
+    settle_and_expect_clear(&mut conn);
+    assert_eq!(edge_count(&conn), 0, "a vanished file resolves to nothing");
 }
 
 /// The storage codes are frozen positions; an unregistered label

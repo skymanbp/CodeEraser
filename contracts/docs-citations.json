@@ -511,17 +511,17 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:43": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 84,
+    "line": 89,
     "text": "pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:44": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 146,
+    "line": 151,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:45": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 163,
+    "line": 168,
     "text": "|r| r.get(0),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:46": {
@@ -736,12 +736,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 56,
+    "line": 61,
     "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:85": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 58,
+    "line": 63,
     "text": "file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:86": {
@@ -786,17 +786,17 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:93": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 35,
-    "text": "const SCHEMA_VERSION: i64 = 12; // 9: trend rows carry their measuring toolchain"
+    "line": 39,
+    "text": "const SCHEMA_VERSION: i64 = 13; // 9: trend rows carry their measuring toolchain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:94": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 146,
+    "line": 151,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:95": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 147,
+    "line": 152,
     "text": "["
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:96": {
@@ -3556,7 +3556,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 99,
+    "line": 107,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3611,7 +3611,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:6": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 63,
+    "line": 70,
     "text": "pub const GRAPH_REV: i64 = 10;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:60": {

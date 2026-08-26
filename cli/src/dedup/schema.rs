@@ -32,9 +32,14 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// analyze result keyed by files-table digest + effective filter
 /// (rescache.rs); params and every algorithm rev already key the
 /// whole database above, so a rev bump wipes the slot with the rest.
-const SCHEMA_VERSION: i64 = 12; // 9: trend rows carry their measuring toolchain
+/// v13 (race root fix, CI 32964681934): `resolve_pending` — the
+/// edge-repair debt a content refresh commits alongside its cascade
+/// drop, so a run that dies before phase 1.5 leaves a ledger row the
+/// next run settles instead of a silent permanent edge hole.
+const SCHEMA_VERSION: i64 = 13; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
+DROP TABLE IF EXISTS resolve_pending;
 DROP TABLE IF EXISTS result_cache;
 DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;

@@ -80,7 +80,13 @@
     进程即刻退出，唯一长命调用者（GUI 的 doctor 探针）每次撞上卡死
     daemon 至多滞留一条停读线程，明记于此。懒启动另有
     **20 × 100 ms = 2 s** 的上线上限。
-- **shutdown** → `bye` 后退出。
+- **shutdown** → `bye` 后**即刻**退出——`bye` ⇒ 进程随即放手是承重
+  契约：eject 的有界拆除窗口与 stale/skew respawn 链都建立在它上面。
+  在途冷启首建被 shutdown **有意斩断**（join-on-exit 变体经三组 A/B
+  eject 复现否证后撤除，2026-08-26）；被斩（含 kill/断电）的窗口由库
+  内 `resolve_pending` 债务行兜底——掉边与记债同事务提交（index
+  schema v13），任一后续 run 的 sweep 或 phase-1.5 结清（v1.2.0 发版
+  夜 CI 32964681934 的永久缺边即无账本时的此调度）。
 - 冷启动索引在 bind **之后**起线程（抢 bind 失败的进程不建库）；
   写路径遵循 ADR-003 v1.7 收敛式多写者契约——daemon 是收敛写者
   **之一**（自身内部按**请求**串行：连接是并发线程，dispatch 过

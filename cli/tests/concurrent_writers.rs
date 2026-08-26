@@ -163,13 +163,18 @@ fn mutate(dir: &Path) {
 }
 
 /// The daemon's cold-start indexing OVERLAPPING an external writer on
-/// the same database. Honest coverage note (clearance review): the
-/// overlap is opportunistic, not forced — on a small habitat the cold
-/// build may finish before the external writer starts, in which case
-/// this leg pins re-run convergence only; the DETERMINISTIC
-/// interleaving mechanism is pinned by store_tests::
-/// phase_15_is_idempotent_over_a_swept_file, and both-exit-0 plus the
-/// digest equality hold under every schedule.
+/// the same database. Shutdown deliberately AMPUTATES a mid-flight
+/// build — `bye` ⇒ prompt death is a contract eject's bounded
+/// teardown and the stale-respawn chain both stand on (a join-on-exit
+/// variant was tried and refuted by three A/B eject repros,
+/// 2026-08-26) — so the honest claim is the convergent-cache one: an
+/// amputated build's committed refresh leaves a resolve_pending debt
+/// row (same transaction as the edge drop), and after ONE settling
+/// run the raced database equals the serial one (the v1.2.0 release-
+/// night loss, CI 32964681934, was this schedule with no ledger: the
+/// hole was silent and permanent). The deterministic mechanisms are
+/// pinned by store_tests::phase_15_is_idempotent_over_a_swept_file
+/// and the debt-ledger legs beside it.
 #[test]
 fn daemon_cold_start_races_an_external_writer_and_converges() {
     let want = serial_want("conc-dserial");
@@ -182,5 +187,10 @@ fn daemon_cold_start_races_an_external_writer_and_converges() {
     let external = common::run_ce(&root, &["dedup", "."]);
     assert!(external.status.success(), "external writer under daemon");
     common::shutdown_and_wait(&root, child, "conc daemon");
+    // the settling run: pays whatever debt an amputated build left
+    assert!(
+        common::run_ce(&root, &["dedup", "."]).status.success(),
+        "settling run"
+    );
     assert_converged(&root, &want, "daemon vs external writer");
 }
