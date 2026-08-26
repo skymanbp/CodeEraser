@@ -115,39 +115,52 @@ fn source_files(root: &Path, dir: &str, ext: &str) -> Vec<PathBuf> {
     out
 }
 
-/// The ONE walk-and-parse shell both languages share; the per-line
+/// The ONE walk-and-parse shell every grammar shares; the per-line
 /// grammar is the only thing that differs, so it is the parameter.
-fn defs_in(root: &Path, dir: &str, ext: &str, parse: fn(&str) -> Option<(&str, &str)>) -> Vec<Def> {
+fn defs_in(root: &Path, dir: &str, ext: &str, parse: fn(&str) -> Option<(String, String)>) -> Vec<Def> {
     source_files(root, dir, ext)
         .into_iter()
         .flat_map(|file| {
             let text = fs::read_to_string(&file).expect("read source file");
             text.lines()
                 .filter_map(parse)
-                .map(|(name, value)| Def {
-                    file: file.clone(),
-                    name: name.to_string(),
-                    value: value.to_string(),
-                })
+                .map(|(name, value)| Def { file: file.clone(), name, value })
                 .collect::<Vec<_>>()
         })
         .collect()
 }
 
-fn rust_line(line: &str) -> Option<(&str, &str)> {
+/// Shared `const NAME` prefix: (name, remainder of the line).
+fn rust_const(line: &str) -> Option<(&str, &str)> {
     let marker = line.find("const ")? + "const ".len();
     let rest = &line[marker..];
     let name_len = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))?;
-    let value = rest.split_once('=')?.1.trim().trim_end_matches(';').trim();
-    (!value.is_empty()).then_some((&rest[..name_len], value))
+    Some((&rest[..name_len], &rest[name_len..]))
 }
 
-fn haskell_line(line: &str) -> Option<(&str, &str)> {
+fn rust_line(line: &str) -> Option<(String, String)> {
+    let (name, rest) = rust_const(line)?;
+    let value = rest.split_once('=')?.1.trim().trim_end_matches(';').trim();
+    (!value.is_empty()).then(|| (name.to_string(), value.to_string()))
+}
+
+/// `const NAME: [T; N]` — the declared arity is itself a code fact,
+/// registered as `NAME.len` so a count chip binds to the array's type
+/// (collision routing) instead of number-hunting the array body.
+fn rust_arity(line: &str) -> Option<(String, String)> {
+    let (name, rest) = rust_const(line)?;
+    let arity = rest.split_once(": [")?.1.split_once(']')?.0.rsplit_once(';')?.1.trim();
+    (!arity.is_empty() && arity.bytes().all(|b| b.is_ascii_digit()))
+        .then(|| (format!("{name}.len"), arity.to_string()))
+}
+
+fn haskell_line(line: &str) -> Option<(String, String)> {
     let rest = line.trim_start();
     let name_len = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))?;
     let after = rest[name_len..].trim_start();
     let value = after.strip_prefix('=')?.trim();
-    (name_len > 0 && !value.is_empty()).then_some((&rest[..name_len], value))
+    (name_len > 0 && !value.is_empty())
+        .then(|| (rest[..name_len].to_string(), value.to_string()))
 }
 
 fn normalize(mut value: String) -> String {
@@ -176,7 +189,7 @@ fn first_number(value: &str) -> Option<String> {
 fn allowlist() -> BTreeSet<&'static str> {
     // "since proto": the erase family's wire BIRTH version — owned by
     // VERSIONING.md's 2.16.0 entry, not by any source binding
-    "kgram\nwindow\nguarantee t\nnear-miss band\nschema\nscale\nsizeHard H\n[softMin, softMax]\nsizeCeil fallback\nlegs cross at\ntsconfig extends\nprecision gate\nrewriteNum/Den\ntolNum/tolDen\nseamSoft S\nseamHard H\nseamPMax\nknob codes\ndestFloor\nrow + knob cap\nfull-scale grid\ndeclineFloorMicro\nfile_lines_warn S\nfile_lines_fail H\nzone_tiers\nFPR gate\nfeed schema\nclasses\nreason codes\nwire\nminPoints\nsince proto"
+    "kgram\nwindow\nguarantee t\nnear-miss band\nschema\nscale\nsizeHard H\n[softMin, softMax]\nsizeCeil fallback\nlegs cross at\ntsconfig extends\nprecision gate\nrewriteNum/Den\ntolNum/tolDen\nseamSoft S\nseamHard H\nseamPMax\nknob codes\ndestFloor\nrow + knob cap\nfull-scale grid\ndeclineFloorMicro\nfile_lines_warn S\nfile_lines_fail H\nzone_tiers\nFPR gate\nfeed schema\nwire\nminPoints\nsince proto"
         .lines()
         .collect()
 }
@@ -189,6 +202,8 @@ fn collision<'a>(family: &str, name: &'a str) -> (Option<&'static str>, &'a str)
         ("05", "violCost") => (Some("core/app/CE/Verdict/Cost.hs"), name),
         ("05" | "06", "sccFloor") => (Some("core/app/CE/Graph/Cost.hs"), name),
         ("06" | "07", "entryMask") => (Some("core/app/CE/Graph/Cost.hs"), name),
+        ("12", "classes") => (Some("cli/src/erase/model.rs"), "CLASS_NAMES.len"),
+        ("12", "reason codes") => (Some("cli/src/erase/model.rs"), "REASON_NAMES.len"),
         _ => (None, name),
     }
 }
@@ -215,6 +230,7 @@ fn value_for(def: &Def, defs: &[Def], seen: &mut BTreeSet<String>) -> Option<Str
 
 fn assert_sources(root: &Path, families: &Families) {
     let mut defs = defs_in(root, "cli/src", "rs", rust_line);
+    defs.extend(defs_in(root, "cli/src", "rs", rust_arity));
     defs.extend(defs_in(root, "core/app", "hs", haskell_line));
     let allow = allowlist();
     for (family, chips) in families {
