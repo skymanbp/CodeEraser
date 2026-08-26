@@ -14,7 +14,7 @@
 
 use super::index::Instance;
 use super::tokens::Token;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Above this group size, pairing switches from full pairwise
@@ -60,7 +60,7 @@ pub(crate) fn each_hash_pair<'a>(instances: &'a [Instance], mut f: impl FnMut(Gr
 }
 
 /// A verified maximal common token run, mapped back to lines.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Block {
     pub a_file: String,
     pub a_start: usize,
@@ -78,7 +78,7 @@ pub struct Block {
     pub distinct: usize,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Blocks {
     pub blocks: Vec<Block>,
     /// K-way families aggregated from `blocks` (attack-review R8).

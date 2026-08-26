@@ -12,11 +12,11 @@
 //! deduplicated view for humans and the M4 judgment layer.
 
 use super::pairs::Block;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 /// One occurrence of the cloned region: an exact endpoint line span.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Member {
     pub file: String,
     pub start: usize,
@@ -27,7 +27,7 @@ pub struct Member {
 /// spans are inclusive and coarser than token ranges, so a same-file
 /// pair whose two disjoint runs split one physical line still shows
 /// two members sharing that boundary line.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Group {
     pub members: Vec<Member>,
     /// Pairwise blocks aggregated into this family.

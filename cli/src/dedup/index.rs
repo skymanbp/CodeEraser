@@ -283,8 +283,10 @@ impl Index {
 
     /// The raw connection. Read surface for the graph domain
     /// (graph/load.rs); the writer whitelist is this module,
-    /// graph/store.rs, and trend/mod.rs (M7-P4 — its rows are keyed by
-    /// immutable commit hash, idempotent per ADR-003 v1.7).
+    /// graph/store.rs, trend/mod.rs (M7-P4 — its rows are keyed by
+    /// immutable commit hash, idempotent per ADR-003 v1.7), and
+    /// rescache.rs (K step 10 — a one-slot REPLACE of derived data,
+    /// last-writer-wins by design).
     pub(crate) fn raw(&self) -> &rusqlite::Connection {
         &self.conn
     }

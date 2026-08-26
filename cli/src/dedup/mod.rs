@@ -10,6 +10,7 @@ pub mod index;
 pub mod minhash;
 pub mod pairs;
 pub mod probe;
+mod rescache;
 pub(crate) mod schema;
 mod sources;
 pub mod struct_fp;
@@ -144,26 +145,71 @@ pub fn analyze(
     let seen = idx.indexed_paths()?;
     let walked = walkidx::index_all(root, &config, &mut idx)?;
     let removed = idx.remove_missing(&walked.live, &seen)?;
+    let filter = pairs::Filter {
+        min_tokens: min_tokens.unwrap_or(p.guarantee()),
+        min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),
+    };
+    // Result cache (rescache.rs): with no indexed content moved, the
+    // reload + matching phases re-derive byte-identical blocks at
+    // ~56% of the warm cost (measured; PERF-BUDGET.md). On a hit only
+    // the edge sweep still runs — a resolve_key can shift with no
+    // content change — and the full-build mark is already set over
+    // this very content by the run that stored the slot.
+    let digest = rescache::digest(idx.raw())?;
+    let found = match rescache::load(idx.raw(), digest, filter)? {
+        Some(found) => {
+            resolve_edges(&mut idx, root, &walked, &BTreeSet::new())?;
+            found
+        }
+        None => recompute(&mut idx, root, &walked, p, filter)?,
+    };
+    let summary = summarize(&found, &walked, removed, p, filter);
+    Ok((found, summary))
+}
+
+/// The miss path: instances + stream reload, edge sweep, full-build
+/// mark and block verification — then the slot is left describing
+/// THIS run's result, the invariant the hit path's freshness proof
+/// (digest match => same indexed content) rests on.
+fn recompute(
+    idx: &mut index::Index,
+    root: &Path,
+    walked: &walkidx::WalkIndex,
+    p: Params,
+    filter: pairs::Filter,
+) -> Result<pairs::Blocks> {
     let mut instances = idx.all_instances()?;
-    let streams = walkidx::load_streams(root, &pairs::candidate_files(&instances), &mut idx, p)?;
+    let streams = walkidx::load_streams(root, &pairs::candidate_files(&instances), idx, p)?;
     if !streams.1.is_empty() {
         // a file changed between refresh and stream load; the streams
         // were re-fed into the index, so re-fetch the instances to
         // keep offsets and streams consistent (attack-review D1)
         instances = idx.all_instances()?;
     }
-    resolve_edges(&mut idx, root, &walked, &streams.1)?;
+    resolve_edges(idx, root, walked, &streams.1)?;
     // completeness as a POSITIVE cross-process fact for coldstart —
     // this line only runs after every table of a FULL pass committed
     // (clearance review: a row count read a concurrent writer's
     // partial index as complete)
     idx.mark_full_build()?;
-    let filter = pairs::Filter {
-        min_tokens: min_tokens.unwrap_or(p.guarantee()),
-        min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),
-    };
     let found = pairs::clone_blocks(&instances, &streams.0, filter);
-    let summary = Summary {
+    // the digest is re-read: the D1 re-feed above can move file rows
+    // mid-run, and the slot must describe the state the blocks came from
+    rescache::store(idx.raw(), rescache::digest(idx.raw())?, filter, &found)?;
+    Ok(found)
+}
+
+/// Per-run summary: block facts ride `found`, refresh facts ride
+/// THIS run's walk — a served cache result must not replay the
+/// storing run's refreshed/removed counters.
+fn summarize(
+    found: &pairs::Blocks,
+    walked: &walkidx::WalkIndex,
+    removed: usize,
+    p: Params,
+    filter: pairs::Filter,
+) -> Summary {
+    Summary {
         // has_tokens files only: Markdown rows are graph cache, and
         // counting them would silently change dedup-report/0.5.0
         files: walked.tokenized,
@@ -178,8 +224,7 @@ pub fn analyze(
         window: p.window,
         min_tokens: filter.min_tokens,
         min_distinct: filter.min_distinct,
-    };
-    Ok((found, summary))
+    }
 }
 
 /// Phases 2 and 1.5 (design §3), AFTER every refresh of the run so

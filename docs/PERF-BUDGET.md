@@ -142,17 +142,35 @@ boot 表逐串匹配），GRAPH_REV 3 全量重解析。
 
 口径：e2e = 信封 + 两 git 腿 + 进程内 dedup（大头）+ four-class 降级字段 + observe。成本立场（拍板统一）：**执法腿为判决付费、信息腿绝不付 spawn**。
 Request::Dedup 路由实测打平（721 vs 723 ms，daemon 逐请求重算），撤案。此处原挂
-「真提速=结果缓存+失效」，**K 步 10 复核后按证退账而非兑现**：`Request::Dedup` 在
-生产面**零发送者**（grep 全仓：唯 dispatch.rs 接收、两 e2e/proto 测试自发；audit
-的 dedup 腿在进程内、GUI 与 MCP 走 faces 也在进程内），预算本身已达标
-（721 ms < 1.5 s ✅），给无人问津的请求加缓存与失效机是本仓死码门专职猎杀的那类
-代码。若日后有真实调用面（如 audit 改道 daemon），缓存失效键须以索引内容摘要为准
-（逐文件 content-hash 聚合），彼时另立预算行再动手。
+「真提速=结果缓存+失效」，**K 步 10 兑现（2026-08-25，用户拍板「能实现并利用起来
+就做」）——但层位从 daemon 挪到 `dedup::analyze` 咽喉**：daemon 层缓存只服务
+`Request::Dedup`（生产面零发送者，grep 全仓：唯 dispatch.rs 接收），是死码；而
+analyze 是全产品暖路的单一咽喉（audit Stop 腿、precommit、`ce check` 的 score
+腿、erase/structure/join/docdup/deadcode、GUI 与 MCP faces、daemon 两臂、CLI），
+一处缓存全员受益、零 wire 变更。实现 = `dedup/rescache.rs` 单槽结果缓存入
+index.db（schema v12），失效键按原设计钉 = files 表逐文件 content-hash 链式聚合
+摘要 + 生效 filter；params 与全部算法 rev 沿既有 meta 键整库 wipe，免费失效。
+命中路仍跑 refresh（变更检测本身）与边扫（resolve_key 可无内容漂移而变），summary
+的 refreshed/removed 按本次实况重建、绝不回放存储跑的值。
 
 | 项 | 预算 | 实测 | 状态 |
 |---|---|---|---|
 | `ce audit --hook` e2e 暖 / 冷 | median <1.5 s / <5 s | 721 ms（707–958）/ 3.06 s（评审 PoC） | ✅ |
 | 分解：dedup 单独（暖）/ git 腿 | —（记录） | 469 ms / 80 ms | 记录 |
+
+## K 步 10 结果缓存落地后（实测 2026-08-25，release，自仓 ~393 文件，用户会话活跃窗口，n=5）
+
+口径：analyze 相位打点（临时 eprintln，测后还原）实测暖态 ~555 ms 分摊 = refresh
+walk+hash ~255 / instances ~7 / **stream 重载 ~300** / 边扫 ~1 / **clone_blocks ~5**——
+可缓存段（后三相）占 56%。缓存落地后同窗同法复测；audit e2e 绝对值不与 2026-08-19
+的 721 ms 行直比（本窗工作树带 15 文件未提交差异，four_class 腿真跑 daemon+core），
+留档如下、判决内容经 rescache_face 双电池与毒饵反事实证与重算逐字节同判。
+
+| 项 | 预算 | 实测 | 状态 |
+|---|---|---|---|
+| `ce dedup .`（暖，命中） | —（记录） | 294 ms median（276–310），改前同窗 547–613 ms，−47% | 记录 |
+| `ce audit --hook` e2e（暖，本窗口径） | median <1.5 s | 1.26 s median（1.25–1.50） | ✅ |
+| schema v11→v12 wipe 首跑（冷重建） | —（一次性） | 3.76 s | 记录 |
 
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 

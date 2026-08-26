@@ -28,9 +28,14 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// v11 (plan v2.14): the `bindings` table — the names each import
 /// site brings into scope, the symbol-edge input that has no home in
 /// any existing table.
-const SCHEMA_VERSION: i64 = 11; // 9: trend rows carry their measuring toolchain
+/// v12 (K step 10, PERF ledger): `result_cache` — ONE memoized
+/// analyze result keyed by files-table digest + effective filter
+/// (rescache.rs); params and every algorithm rev already key the
+/// whole database above, so a rev bump wipes the slot with the rest.
+const SCHEMA_VERSION: i64 = 12; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
+DROP TABLE IF EXISTS result_cache;
 DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;
 DROP TABLE IF EXISTS unitsig;
@@ -58,6 +63,13 @@ CREATE TABLE fingerprints (
 CREATE INDEX idx_fp_hash ON fingerprints(hash);
 CREATE INDEX idx_fp_file ON fingerprints(file_id);
 CREATE TABLE meta (k TEXT PRIMARY KEY, v INTEGER NOT NULL);
+CREATE TABLE result_cache (
+  k INTEGER PRIMARY KEY CHECK (k = 1),
+  digest INTEGER NOT NULL,
+  min_tokens INTEGER NOT NULL,
+  min_distinct INTEGER NOT NULL,
+  blocks TEXT NOT NULL
+);
 ";
 
 /// Wipe-and-recreate unless both the schema version and the meta
