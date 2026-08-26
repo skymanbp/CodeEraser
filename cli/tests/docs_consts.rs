@@ -117,14 +117,23 @@ fn source_files(root: &Path, dir: &str, ext: &str) -> Vec<PathBuf> {
 
 /// The ONE walk-and-parse shell every grammar shares; the per-line
 /// grammar is the only thing that differs, so it is the parameter.
-fn defs_in(root: &Path, dir: &str, ext: &str, parse: fn(&str) -> Option<(String, String)>) -> Vec<Def> {
+fn defs_in(
+    root: &Path,
+    dir: &str,
+    ext: &str,
+    parse: fn(&str) -> Option<(String, String)>,
+) -> Vec<Def> {
     source_files(root, dir, ext)
         .into_iter()
         .flat_map(|file| {
             let text = fs::read_to_string(&file).expect("read source file");
             text.lines()
                 .filter_map(parse)
-                .map(|(name, value)| Def { file: file.clone(), name, value })
+                .map(|(name, value)| Def {
+                    file: file.clone(),
+                    name,
+                    value,
+                })
                 .collect::<Vec<_>>()
         })
         .collect()
@@ -149,7 +158,14 @@ fn rust_line(line: &str) -> Option<(String, String)> {
 /// (collision routing) instead of number-hunting the array body.
 fn rust_arity(line: &str) -> Option<(String, String)> {
     let (name, rest) = rust_const(line)?;
-    let arity = rest.split_once(": [")?.1.split_once(']')?.0.rsplit_once(';')?.1.trim();
+    let arity = rest
+        .split_once(": [")?
+        .1
+        .split_once(']')?
+        .0
+        .rsplit_once(';')?
+        .1
+        .trim();
     (!arity.is_empty() && arity.bytes().all(|b| b.is_ascii_digit()))
         .then(|| (format!("{name}.len"), arity.to_string()))
 }
@@ -159,8 +175,7 @@ fn haskell_line(line: &str) -> Option<(String, String)> {
     let name_len = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))?;
     let after = rest[name_len..].trim_start();
     let value = after.strip_prefix('=')?.trim();
-    (name_len > 0 && !value.is_empty())
-        .then(|| (rest[..name_len].to_string(), value.to_string()))
+    (name_len > 0 && !value.is_empty()).then(|| (rest[..name_len].to_string(), value.to_string()))
 }
 
 fn normalize(mut value: String) -> String {

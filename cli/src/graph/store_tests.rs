@@ -155,7 +155,11 @@ fn a_firing_sweep_retires_the_whole_debt_ledger() {
     conn.execute("INSERT INTO resolve_pending (path) VALUES ('gone.rs')", [])
         .expect("orphan debt");
     assert!(ensure_resolved(&mut conn, 9, one_edge).expect("sweep"));
-    assert_eq!(pending_count(&conn), 0, "sweep covered every file — ledger empty");
+    assert_eq!(
+        pending_count(&conn),
+        0,
+        "sweep covered every file — ledger empty"
+    );
 }
 
 /// The load-bearing half of phase 1.5's settle-entire claim: a debt

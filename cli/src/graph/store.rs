@@ -319,11 +319,11 @@ pub fn resolve_refreshed(
 /// Whether any committed refresh still owes a re-resolve — peeked
 /// without the write lock so the no-debt path never contends.
 fn debt_standing(conn: &Connection) -> Result<bool> {
-    Ok(conn.query_row(
-        "SELECT EXISTS(SELECT 1 FROM resolve_pending)",
-        [],
-        |r| r.get(0),
-    )?)
+    Ok(
+        conn.query_row("SELECT EXISTS(SELECT 1 FROM resolve_pending)", [], |r| {
+            r.get(0)
+        })?,
+    )
 }
 
 /// The single edge-insert throat shared by the phase-2 sweep and the
