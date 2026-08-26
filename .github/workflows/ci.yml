@@ -17,6 +17,14 @@ on:
   schedule:
     - cron: "0 3 * * 1" # weekly macOS coverage
 
+# A newer push to the same ref supersedes the in-flight run (billing:
+# rapid push trains used to bill every intermediate tree in full).
+# The event name is part of the group so a branch push can never
+# cancel the weekly schedule run, and tag refs are their own groups.
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
 jobs:
   build:
     permissions:
