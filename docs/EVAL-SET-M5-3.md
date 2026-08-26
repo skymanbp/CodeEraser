@@ -159,10 +159,9 @@ M5 收口欠账清算、3m recall 仪器 B、审查热修+CI 门补全、ADR-008
 ## 复跑
 
 ```
-cd cli && cargo test --test eval_t3_universe --test eval_t3_candidates \
-  --test eval_t3_precision --test eval_docdup_universe \
-  --test eval_docdup_precision --test baseline_bridge \
-  --test core_size_gate --test core_wire
+cd cli && cargo test --test it -- eval_t3_universe:: eval_t3_candidates:: \
+  eval_t3_precision:: eval_docdup_universe:: eval_docdup_precision:: \
+  baseline_bridge:: core_size_gate:: core_wire::
 ```
 
 外部四语料需本地 `.ce-eval/` 克隆（tip 见上表，CI 门 `rev-parse` 复核 RM19）；

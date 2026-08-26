@@ -180,7 +180,7 @@ emits (`1..5`) is admitted by default; lowering the constant is the ablation lev
 recall for certainty ([Cost.hs:37-42](../../../core/app/CE/Graph/Cost.hs#L37)). At the current value the
 filter is a no-op ceiling: the highest rung any ladder emits is 5 (TS R5, Markdown R5), and the
 per-ceiling trade is published instead by the `cut` table of the precision instrument
-([eval_graph_precision_parts/mod.rs](../../../cli/tests/eval_graph_precision_parts/mod.rs)).
+([eval_graph_precision_parts/mod.rs](../../../cli/tests/it/eval_graph_precision_parts/mod.rs)).
 
 **Entry roots.** A node seeds reachability iff `flags .&. entryMask ≠ 0`
 ([Dead.hs:17-18](../../../core/app/CE/Graph/Dead.hs#L17)), with `entryMask = 126` = bits 1–6
@@ -347,12 +347,12 @@ into dead; every finding in this repository dispositioned; and the core's judgme
 property battery in CI
 ([DEVELOPMENT_PLAN.md:274](../../DEVELOPMENT_PLAN.md#L274)). The gate is coded at `0.90`,
 applied overall and per corpus **where the in-corpus ground-truth denominator reaches 5**
-([eval_graph_precision.rs:85](../../../cli/tests/eval_graph_precision.rs#L85),
-[eval_graph_precision.rs:88-96](../../../cli/tests/eval_graph_precision.rs#L88),
-[precision.rs:38-48](../../../cli/tests/eval_support/precision.rs#L38)); precision is
+([eval_graph_precision.rs:83](../../../cli/tests/it/eval_graph_precision.rs#L83),
+[eval_graph_precision.rs:86-94](../../../cli/tests/it/eval_graph_precision.rs#L86),
+[precision.rs:38-48](../../../cli/tests/it/eval_support/precision.rs#L38)); precision is
 `correct / (correct + wrong)` over answered rows only
-([precision.rs:43](../../../cli/tests/eval_support/precision.rs#L43),
-[precision.rs:65](../../../cli/tests/eval_support/precision.rs#L65)).
+([precision.rs:43](../../../cli/tests/it/eval_support/precision.rs#L43),
+[precision.rs:65](../../../cli/tests/it/eval_support/precision.rs#L65)).
 
 Frozen results across the five pinned corpora (100 judged sites total):
 
@@ -367,8 +367,8 @@ Frozen results across the five pinned corpora (100 judged sites total):
 Aggregating by the same formula gives **38 / 40 = 0.95** overall, above the 0.90 contract. The
 sample universe and the audit ground truth were both frozen *before any resolver existed*, so
 the resolver cannot choose its own denominator
-([eval_graph_precision.rs:1-6](../../../cli/tests/eval_graph_precision.rs#L1)); the sample is 100 sites
-with a per-language floor of 15 ([eval_graph_precision.rs:93-94](../../../cli/tests/eval_graph_precision.rs#L93)).
+([eval_graph_precision.rs:1-6](../../../cli/tests/it/eval_graph_precision.rs#L1)); the sample is 100 sites
+with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
 `ce deadcode --check` exits non-zero on any dead file
 ([main_cmds.rs:124-130](../../../cli/src/main_cmds.rs#L124)).

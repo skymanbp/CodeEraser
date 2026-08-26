@@ -277,7 +277,7 @@ modulo-provenance 全同。CI 门：verify() 重哈希 + 拒重复 id、字面�
 审计序、配额↔行逐格且从 slice summary 经**同一分摊代码**重导、逐行宇宙绑定、
 反事实（篡改/重复必拒——断言非假设）。
 
-**精度审计 GT**（M5-2d，cli/tests/eval_graph_review/{五语料}.json；执行 = Opus
+**精度审计 GT**（M5-2d，cli/tests/it/eval_graph_review/{五语料}.json；执行 = Opus
 独立代理——用户委托 2026-08-12 镜像 M4-2c，装配 verbatim 判决不动）：100/100
 逐站在钉定 OID 读源、零失配零后备消耗；truth = path[#unit]/external/dynamic/
 ambiguous/none，why 全带指名机制；37 条 site_gaps（HTML 块引用、GFM 裸 URL、

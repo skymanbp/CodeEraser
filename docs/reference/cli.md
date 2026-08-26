@@ -1,4 +1,4 @@
-<!-- GENERATED — do not edit. Regenerate: CE_BLESS=1 cargo test --test docs_gate. CI reddens when this file drifts from its regeneration. Length rides the CLI surface (a machine-generated projection, the hs_boot stance), so the scan's file-lines warn on the CLI page is an accounted standing warn, not maintained prose over budget. -->
+<!-- GENERATED — do not edit. Regenerate: CE_BLESS=1 cargo test --test it docs_gate::. CI reddens when this file drifts from its regeneration. Length rides the CLI surface (a machine-generated projection, the hs_boot stance), so the scan's file-lines warn on the CLI page is an accounted standing warn, not maintained prose over budget. -->
 
 # `ce` command reference
 

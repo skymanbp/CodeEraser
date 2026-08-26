@@ -3300,27 +3300,27 @@
     "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:144": {
-    "target": "../../../cli/tests/eval_graph_precision.rs",
-    "line": 85,
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 83,
     "text": "eval_support::assert_corpus_precision(&key, (c, w), in_truth, 0.90, \"G2\");"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:145": {
-    "target": "../../../cli/tests/eval_graph_precision.rs",
-    "line": 88,
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 86,
     "text": "const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:146": {
-    "target": "../../../cli/tests/eval_support/precision.rs",
+    "target": "../../../cli/tests/it/eval_support/precision.rs",
     "line": 38,
     "text": "pub fn assert_corpus_precision(key: &str, answered: (u64, u64), denom: u64, gate: f64, tag: &str) {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:147": {
-    "target": "../../../cli/tests/eval_support/precision.rs",
+    "target": "../../../cli/tests/it/eval_support/precision.rs",
     "line": 43,
     "text": "let p = c as f64 / (c + w) as f64;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:148": {
-    "target": "../../../cli/tests/eval_support/precision.rs",
+    "target": "../../../cli/tests/it/eval_support/precision.rs",
     "line": 65,
     "text": "let overall = agg.correct as f64 / (agg.correct + agg.wrong) as f64;"
   },
@@ -3355,13 +3355,13 @@
     "text": "\"in_corpus_truths\": 1,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:154": {
-    "target": "../../../cli/tests/eval_graph_precision.rs",
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
     "line": 1,
     "text": "//! M5-2h precision instrument: the frozen 100-site sample, resolved"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:155": {
-    "target": "../../../cli/tests/eval_graph_precision.rs",
-    "line": 93,
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 91,
     "text": "total: 100,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:156": {
@@ -4405,8 +4405,8 @@
     "text": "-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:18": {
-    "target": "../../../cli/tests/structure_knobs.rs",
-    "line": 66,
+    "target": "../../../cli/tests/it/structure_knobs.rs",
+    "line": 65,
     "text": "#[test]"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:19": {
@@ -5717,7 +5717,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:43": {
     "target": "../../FPR-REPLAY.md",
     "line": 109,
-    "text": "lang: Lang::from_path(Path::new(&rel)).expect(\"lang\"),"
+    "text": "+++ fpr_replay.rs (revived, K round)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:44": {
     "target": "../../../cli/src/guard/budget.rs",

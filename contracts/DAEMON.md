@@ -2,7 +2,7 @@
 
 > M5-close 审计 R2/LOW 的偿清：daemon 协议 1.0.0 此前无契约册、无
 > golden——M6 GUI 是第二个客户端，无册的协议只能靠读源码对齐。本册 +
-> `contracts/fixtures/daemon/` 形状 golden（`cli/tests/daemon_proto.rs`
+> `contracts/fixtures/daemon/` 形状 golden（`cli/tests/it/daemon_proto.rs`
 > 重放）即漂移门：serde 改名/换 tag/字段重排在第二客户端失步**之前**变红。
 
 ## 1. 信封
@@ -114,7 +114,7 @@
   加性可选字段 = minor（旧客户端缺省解析）。
 - 形状唯一权威 = `proto.rs` 两枚 enum；本册**不抄写字段清单**
   （单源纪律，M5-close D7 先例）——golden 冻结每个变体的规范字节，
-  `cargo test --test daemon_proto`（CE_BLESS=1 蓄意重生成）守护。
+  `cargo test --test it daemon_proto::`（CE_BLESS=1 蓄意重生成）守护。
 - **覆盖边界（清零批审查注记）**：golden 冻结的是 enum 变体的**信封
   形状**；`dedup_report.report`、`probe_report.matches`、
   `four_class_report.report` 三个嵌套载荷是 `serde_json::Value` 直通，
@@ -127,8 +127,8 @@
 ## 5. 复跑
 
 ```
-cd cli && cargo test --test daemon_proto        # 形状漂移门
-cd cli && cargo test --test daemon_e2e          # 生命周期+凭证门+界读（daemon_auth 已并入）
-cd cli && cargo test --release --lib -- daemon::  # 凭证落盘/staleness/常数时间 单元层
-cd cli && cargo test --test concurrent_writers  # v1.7 收敛契约
+cd cli && cargo test --test it daemon_proto::        # 形状漂移门
+cd cli && cargo test --test it daemon_e2e::          # 生命周期+凭证门+界读（daemon_auth 已并入）
+cd cli && cargo test --release --lib -- daemon::     # 凭证落盘/staleness/常数时间 单元层
+cd cli && cargo test --test it concurrent_writers::  # v1.7 收敛契约
 ```

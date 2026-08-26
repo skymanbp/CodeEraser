@@ -39,7 +39,7 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 - rust-code-analysis-cli 0.0.25，`cargo install --locked`（CC：rust；
   不带 --locked 会因新依赖编译失败——安装须知）
 
-## CoC 规范原文钉定（cli/tests/sonar_whitepaper.rs 判分依据）
+## CoC 规范原文钉定（cli/tests/it/sonar_whitepaper.rs 判分依据）
 
 - SonarSource《Cognitive Complexity》白皮书 **v1.7（2023-08-29）**，
   <https://www.sonarsource.com/docs/CognitiveComplexity.pdf>，

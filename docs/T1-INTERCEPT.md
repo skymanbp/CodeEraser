@@ -78,6 +78,6 @@ degraded 仅 1 次（ce 重装瞬间探针连不上 daemon，fail-open 且如实
 # 拦截：临时仓 + util.py + ce.toml(deny) + git init 后
 claude -p --allowedTools "Write" < prompt.txt   # prompt 要求逐字写入 dup.py
 # 冷启动回归
-cargo test --test daemon_e2e cold_start
+cargo test --test it daemon_e2e::cold_start
 # census：扫 D:\Projects\*\.ce\observe.ndjson，按 0.2.0 行 distinct session_id 计数
 ```

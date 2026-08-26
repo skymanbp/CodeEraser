@@ -4,7 +4,7 @@
 > `erase/1`, introduced at proto 2.16.0, RG10 firewall at 6.1.0;
 > predicate in CE.Erase.Cost). The
 > implementation answers to this file; divergence is a defect in one
-> of the two. Acceptance is pinned by `cli/tests/erase_e2e.rs` and
+> of the two. Acceptance is pinned by `cli/tests/it/erase_e2e.rs` and
 > the CI Dogfood `erase .. --check` self-gate.
 
 ## The ruling this implements

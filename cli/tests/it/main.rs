@@ -1,0 +1,92 @@
+//! ONE integration-test crate (2026-08-26, user-ratified): 76 crate
+//! roots each relinked the full lib (bundled sqlite + six grammars),
+//! and the link bill dominated the CI test step. Every former root
+//! file is a module here; shared dirs (common/, eval_support/,
+//! bench_support/, *_parts/) are crate-level mods their consumers
+//! reach via `use crate::…`. corelink_deadline.rs alone stays a
+//! separate binary: it mutates process env, and module tests share
+//! one process with thread-level parallelism.
+mod audit_bypass;
+mod audit_stop;
+mod baseline_bridge;
+mod bench;
+mod bench_render;
+mod bench_render_dashboard;
+mod bench_support;
+mod churn;
+mod cli_bare;
+mod coc_haskell;
+mod coldstart_state;
+mod common;
+mod concurrent_writers;
+mod config_contract;
+mod core_size_gate;
+mod core_wire;
+mod daemon_conn_deadline;
+mod daemon_e2e;
+mod daemon_proto;
+mod daemon_singleton;
+mod deadcode_e2e;
+mod dedup_core;
+mod dedup_groups;
+mod dedup_index;
+mod dedup_pairs;
+mod dedup_property;
+mod dedup_provenance;
+mod divergence_stances;
+mod docs_citations;
+mod docs_citations_parts;
+mod docs_consts;
+mod docs_consts_stack;
+mod docs_gate;
+mod docs_nav;
+mod doctor_face;
+mod eject_e2e;
+mod erase_e2e;
+mod eval_commit_review;
+mod eval_docdup_precision;
+mod eval_docdup_universe;
+mod eval_graph;
+mod eval_graph_precision;
+mod eval_graph_precision_parts;
+mod eval_l2;
+mod eval_l2_parts;
+mod eval_l2_register;
+mod eval_labels;
+mod eval_support;
+mod eval_t3_candidates;
+mod eval_t3_precision;
+mod eval_t3_precision_parts;
+mod eval_t3_universe;
+mod fpr_fourclass;
+mod gate_e2e;
+mod graph_containment;
+mod graph_export_surface;
+mod graph_ladder;
+mod graph_ladder_md;
+mod graph_provenance;
+mod graph_wire;
+mod guard_hook;
+mod guard_novelty;
+mod health_plugin;
+mod hs_grammar_pin;
+mod index_epoch;
+mod join_e2e;
+mod mcp_precommit;
+mod metrics;
+mod notice_gate;
+mod observe_feed;
+mod probe_gate;
+mod progress_face;
+mod report_schema;
+mod rescache_face;
+mod root_anchor;
+mod sarif_face;
+mod scan_classes;
+mod site_counts;
+mod sonar_whitepaper;
+mod structure_knobs;
+mod symbol_visibility;
+mod trend_rebuild;
+mod wire_indices;
+mod zh_surface;

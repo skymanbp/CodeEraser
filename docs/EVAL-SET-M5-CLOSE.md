@@ -296,8 +296,8 @@ scale ⑫scan/1 能力断言+gate e2e（红绿过真核）；C19 裁定=fail==wa
 单线配置（修注释非收紧）。**棘轮第十一咬 +5 全偿 143==143**：C10 投影
 lambda 升 `CE.Wire.ascendingOn`（五站点横扫 Graph/Clone/Docdup/Scan）、
 第三份 CE_CORE_BIN expect 收 `common::core_bin`、红绿门段收
-`common::gate_red_green` 且两门并册 `tests/gate_e2e.rs`。
+`common::gate_red_green` 且两门并册 `tests/it/gate_e2e.rs`。
 
 ## 复跑
 
-本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test daemon_proto --test concurrent_writers` （清零批新门）。
+本册各节的重放命令与母册一致（见 [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) 复跑节）；另加 `cargo test --test it -- daemon_proto:: concurrent_writers::` （清零批新门）。

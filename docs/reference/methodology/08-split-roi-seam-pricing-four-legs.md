@@ -89,7 +89,7 @@ score and the core's built-in `P_max = 10` in its advisory, with both halves int
 consistent and nothing anywhere disagreeing out loud
 ([judge.rs:290-297](../../../cli/src/structure/judge.rs#L290),
 [Cost.hs:110-119](../../../core/app/CE/Structure/Cost.hs#L110),
-counterfactual at [structure_knobs.rs:66-77](../../../cli/tests/structure_knobs.rs#L66)):
+counterfactual at [structure_knobs.rs:65-76](../../../cli/tests/it/structure_knobs.rs#L65)):
 
 | knob | code | default | source |
 |---|---|---|---|

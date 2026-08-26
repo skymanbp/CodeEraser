@@ -223,8 +223,9 @@ blame 代价见 3h 节，空表=诚实缺席非零主张）。
 复跑：`perf_budget.rs` 已随 M7.5 封册退役——按 EVAL-SET.md「再生成」节的复活律**连同同代支撑**
 复活、跑毕重退役：`git checkout 0c7c936^ -- cli/tests/perf_budget.rs cli/tests/common`，再
 `cargo test --release --test perf_budget -- --ignored --nocapture`（合成语料确定性生成；hook e2e =
-`hook_e2e_p95_under_1s`），跑毕 `git rm -f cli/tests/perf_budget.rs && git checkout HEAD -- cli/tests/common`
-（退役仪器留在树里会进下一次门：dedup 预算与棘轮都计其块与行）。
+`hook_e2e_p95_under_1s`），跑毕 `git rm -f cli/tests/perf_budget.rs && git rm -rf cli/tests/common`
+（测试合并 2026-08-26 起 HEAD 的支撑住 `cli/tests/it/common`，复活的旧代 `cli/tests/common` 在
+HEAD 无对应物，退役即整目录移除；退役仪器留在树里会进下一次门：dedup 预算与棘轮都计其块与行）。
 
 补充口径：
 

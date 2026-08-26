@@ -12,7 +12,7 @@
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
 | Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（harness 已随 M7.5 封册退役，复跑从 git 历史复活；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
-| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
+| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/it/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -80,7 +80,7 @@ myMethod try-catch=9 / lambda 提嵌套=2（p.9）、toRegexp=20（p.19，
    "Ignore shorthand" 明示忽略 null-coalescing）；CC 保留计 `??`
    （真实分支路径）。
 
-立场钉死（`cli/tests/divergence_stances.rs`，计划 §6 M1 "分歧 case
+立场钉死（`cli/tests/it/divergence_stances.rs`，计划 §6 M1 "分歧 case
 显式收录不回避"）：装饰器（p.15）——ce 单位拆分模型（lizard 同型）下
 Sonar 的装饰器特例天然不适用，not_a_decorator Sonar 聚合=2 vs ce 单位
 和=1，分歧如实记录；`?.` CC/CoC 均不计（CoC 依 p.6，CC 为 M1 立场）；
