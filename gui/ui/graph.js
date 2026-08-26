@@ -126,7 +126,9 @@ function nodeRadius(file) {
 
 function drawNodes(ctx, map, colors) {
   graphDoc.files.forEach((file, i) => {
-    const p = map(gpos[i]), pos = file.pos, dead = file.verdict != null, cycle = pos && pos[3] > 1;
+    // `cycle` is the core's membership bit off the document (0.3.0);
+    // this screen never re-derives the SCC floor from pos[3]
+    const p = map(gpos[i]), dead = file.verdict != null, cycle = file.cycle === true;
     const radius = nodeRadius(file), fill = dead ? heat(4) : cycle ? heat(1) : colors["--panel-2"];
     const ring = dead ? heat(3) : cycle ? heat(2) : colors["--line"];
     ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, Math.PI * 2); ctx.fillStyle = fill; ctx.fill();
@@ -188,7 +190,7 @@ function renderGraphAside(i) {
   } else html += `<div class="row">${esc(tr("graphAlive"))}</div>`;
   if (p != null) {
     html += `<div class="row">${esc(tr("graphInOut", p[0], p[1]))}</div>`;
-    if (p[3] > 1) html += `<div class="row">${esc(tr("graphCycleOf", p[3]))}</div>`;
+    if (f.cycle === true) html += `<div class="row">${esc(tr("graphCycleOf", p[3]))}</div>`;
   }
   el.innerHTML = html;
 }
