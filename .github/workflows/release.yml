@@ -253,12 +253,18 @@ jobs:
       # SKIPPED is not success (K step 10). The old escape waved every
       # skipped or neutral check through, so a job accidentally
       # conditioned away — the failure mode an `if:` typo produces —
-      # published with nothing behind it. On a tag exactly two checks
-      # skip BY DESIGN: this workflow's own dispatch-phase jobs (the
-      # release build matrix, whose names carry the platform keys, and
-      # draft) — allowed by name below. Any other skipped or neutral
-      # check refuses with its name: the failure direction is a loud
-      # non-publish, never a silent publish.
+      # published with nothing behind it. On a tag exactly three
+      # checks skip BY DESIGN, allowed by their REAL surfaced names
+      # below (the v1.2.0 night lesson: a matrix job skipped by its
+      # `if:` collapses to ONE check named plainly `build`, never the
+      # platform-expanded names this list first imagined): this
+      # workflow's own dispatch-phase `build` and `draft`, and ci.yml's
+      # `build-macos`, which skips on plain branch pushes because the
+      # tag push re-runs CI with the real macOS leg — a run this gate
+      # still waits for and gates on. Only the skipped conclusion is
+      # excused: a failed run of any of these names refuses. Any other
+      # skipped or neutral check refuses with its name: the failure
+      # direction is a loud non-publish, never a silent publish.
       - name: CI must be green on this commit
         shell: bash
         run: |
@@ -269,8 +275,8 @@ jobs:
             bad=$(echo "$runs" | jq -r '[.[]
                     | select(.conclusion != null and .conclusion != "success")
                     | select((.conclusion == "skipped" and
-                              (.name == "draft" or (.name | startswith("build (") and
-                               test("x86_64-windows|x86_64-linux|aarch64-macos")))) | not)]
+                              (.name == "draft" or .name == "build"
+                               or .name == "build-macos")) | not)]
                   | map(.name + "=" + .conclusion) | join(", ")')
             [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
             [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
