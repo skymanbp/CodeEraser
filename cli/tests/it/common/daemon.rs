@@ -25,7 +25,12 @@ pub fn spawn_daemon_ready(root: &Path) -> Child {
         .stderr(Stdio::inherit())
         .spawn()
         .expect("spawn ce daemon");
-    for _ in 0..50 {
+    // 30 s, not 5: readiness is a liveness wait, not a latency claim,
+    // and inside the merged `it` crate a cold daemon start co-runs
+    // with the whole suite's thread pool — the old 5 s window blew
+    // once in 80 amplified loops (2026-08-26). A dead daemon still
+    // fails loudly, just later.
+    for _ in 0..300 {
         std::thread::sleep(std::time::Duration::from_millis(100));
         if client::request_if_running(root, &Request::Ping).is_ok() {
             return child;

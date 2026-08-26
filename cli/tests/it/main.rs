@@ -3,9 +3,12 @@
 //! and the link bill dominated the CI test step. Every former root
 //! file is a module here; shared dirs (common/, eval_support/,
 //! bench_support/, *_parts/) are crate-level mods their consumers
-//! reach via `use crate::…`. corelink_deadline.rs alone stays a
-//! separate binary: it mutates process env, and module tests share
-//! one process with thread-level parallelism.
+//! reach via `use crate::…`. Two files stay separate root binaries,
+//! each for a stated isolation need: corelink_deadline.rs mutates
+//! process env under thread-level parallelism, and
+//! daemon_conn_deadline.rs asserts wall-clock deadline behavior that
+//! this crate's co-scheduling stretches past its own budget (its
+//! header carries the loop-failure record).
 mod audit_bypass;
 mod audit_stop;
 mod baseline_bridge;
@@ -22,7 +25,6 @@ mod concurrent_writers;
 mod config_contract;
 mod core_size_gate;
 mod core_wire;
-mod daemon_conn_deadline;
 mod daemon_e2e;
 mod daemon_proto;
 mod daemon_singleton;

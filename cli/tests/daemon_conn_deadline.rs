@@ -5,14 +5,25 @@
 //! every slot for the daemon's whole life, every real hook was then
 //! dropped at accept, and the gate degraded to fail-open (review
 //! 2026-08-20).
+//!
+//! Alone in its binary (the corelink_deadline reasoning, wall-clock
+//! flavor): the cap test needs all 64 silent peers PARKED AT ONCE,
+//! and a peer only stays parked for the 5 s pre-hello budget — so the
+//! whole connect storm must land inside one deadline window. Inside
+//! the merged `it` crate the storm co-runs with 200 threads spawning
+//! daemons and indexing repos, the storm stretched past 5 s, early
+//! peers were swept before late ones connected, and the cap was never
+//! observably full (2/80 loop failures, 2026-08-26). Cargo runs test
+//! binaries sequentially, so a root binary is a quiet machine slice.
 
 use codeeraser::daemon::client;
 use codeeraser::daemon::proto::{Request, Response};
 use std::path::Path;
 use std::time::Duration;
 
-use crate::common;
-use crate::common::tmp as project_dir;
+#[path = "it/common/mod.rs"]
+mod common;
+use common::tmp as project_dir;
 
 /// server.rs's MAX_CONNS. Private there and unreachable from an
 /// integration test, so the capping loop below refuses to proceed if
