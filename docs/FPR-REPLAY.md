@@ -100,7 +100,7 @@ Edit 减 `old_string` 的自有匹配（基线探针仅首探命中才发；基�
 文件对今日支撑编译不过）：`git checkout 0c7c936^ -- cli/tests/fpr_replay.rs cli/tests/common`，
 跑下列命令，再 `git rm -f cli/tests/fpr_replay.rs && git checkout HEAD -- cli/tests/common`：
 
-K 轮实测两处同代垫片（复活后按此打上；第二片仅第二轮语义复测需要）：
+K 轮实测两处同代垫片（复活后按此打上；第一片 product mirror 仅第二轮新语义复测才打、第一轮出厂语义须留白；第二片 remove_missing 补 seen 参两轮都必打——今日签名为二参，缺之编译不过）：
 
 ```diff
 --- fpr_replay.rs (0c7c936^)

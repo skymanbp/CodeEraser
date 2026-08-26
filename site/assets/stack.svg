@@ -151,7 +151,7 @@
         <text x="928" y="974">CI gate</text>
       </g>
       <g font-size="9.5" fill="#8593ad">
-        <text x="64" y="994">console + JSON schemas</text>
+        <text x="64" y="994">console · JSON · SARIF</text>
         <text x="64" y="1010">English / Chinese rows</text>
         <text x="280" y="994">nine screens</text>
         <text x="280" y="1010">rendering only</text>

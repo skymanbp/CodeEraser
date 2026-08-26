@@ -429,7 +429,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **3.2.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **6.1.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -485,7 +485,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `unres` 是 2.32.0 起的可选按语言站点
   台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
   两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
-  `cli/src/graph/deadcode.rs` `GraphWire`，核侧 `core/app/CE/Graph.hs` `GraphReq`）；
+  `cli/src/graph/deadcode.rs` `GraphWire`，核侧 `core/app/CE/Graph/Contract.hs` `GraphReq`——4.1.0 符号表落地时随解码与边界校验自 `CE.Graph` 拆出）；
   超 `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
   "reason":"graph_too_large"`（绝不截断）。
 - `graph.result`（语义 M5-2g 落地，穷举参照 harness 见 core/test/）：
@@ -551,12 +551,14 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `wire-errors` 错误应答），Rust（`cli/tests/core_wire.rs`）与 Haskell
   （`core/test/Spec.hs`）**逐字节**共同消费——同一份文件，防两侧实现漂移。
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
-- **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；3.0.0 重锚）**：2.2.0 翻批只重写
-  reply 行、request 行留在 2.1.0；3.0.0 裁列时全部 request 行随 major 机器重写为 3.0.0，
-  此后**有意留在 3.0.0**（今日 91 行，server 恒答 3.2.0）——它们是"minor 偏斜
+- **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
+  reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
+  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **6.0.0**
+  （99 行，server 恒答 6.1.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
-  request 用当前 proto（3.1.0/3.2.0 的规则包样本即如此）。
+  request 沿用当前 major 锚（今日 6.0.0；唯 `handshake/hello-ok` 的握手 request 随
+  server 走 6.1.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。

@@ -53,9 +53,10 @@ uniformArity name rows = case nub (map length rows) of
 -- | The rulepack's knob rows [classId, code, value] (3.1.0, plan
 -- v2.13 ①): a class from 1 below the fence (class 0 IS the global
 -- table, which has the ceilings channel already), a code in the
--- ceilings' own 0..2, a value at or above 1 — (classId, code)
--- strictly ascending. The ceilingsOffence reading, one class
--- dimension wider; no new code was minted.
+-- ceilings' own 0..2 — joined at 5.1.0 by classTolCode = 3, the
+-- class's own ratchet allowance — the value floored per code
+-- below, (classId, code) strictly ascending. The ceilingsOffence
+-- reading, one class dimension wider.
 classKnobsOffence :: [[Integer]] -> Maybe String
 classKnobsOffence = table "classKnobs" one 2
  where

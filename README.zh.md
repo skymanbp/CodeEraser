@@ -11,7 +11,7 @@ CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、
 
 ## CodeEraser 做什么
 
-1. **在重复出现之前就拒绝它。** 一次会让树里留下 T1/T2 精确克隆的写入，在 PreToolUse 当场被拒——拦截发生在写入当下，而不是事后报告里的一行。
+1. **在重复出现之前就拒绝它。** 一次会**引入** T1/T2 精确克隆——被替换内容原本不携带的重复——的写入，在 PreToolUse 当场被拒；拦截发生在写入当下而不是事后报告里，且被拒的搬移会被告知能通过的次序。
 2. **拒绝越过硬线的文件。** 一次让文件超过 750 行——或超过它所属 `[[rules.class]]` 声明的那条线——的写入，同样当场被拒。
 3. **揪出写了两遍的文档。** 全树范围的重复段落、注释与 docstring，`--check` 把这个发现变成 CI 退出码。
 4. **揪出被改写掩饰过的克隆。** 近似块以语法树编辑距离比对，改了名、换了顺序的副本照样认领自己。
@@ -24,14 +24,19 @@ CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、
 
 ## 状态
 
-🏁 **v1.1.0——已发布。** v1.0.0 交付锁定计划全部里程碑并完成终扫（113 条审查发现对账、716 条文档声明
-重核、官网每个数字由回放生成或从真实输出重取）；v1.0.1 是分发面维护（Windows 安装器自动接入 Claude Code
-插件）；v1.1.0 带来路径规则包——`[[rules.class]]` 让 glob 命中的类拥有自己的尺寸与复杂度线，分数（wire proto
-3.1.0）、`ce scan` 阶梯（3.2.0）与守卫钩子同读一条线——并随两次 wire 断代（ce↔core 3.0.0、daemon 2.0.0）
-删去从未测量的列。安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
-[codeeraser.dev](https://codeeraser.dev) 均已上线 1.1.0。未声明任何类的仓库（含本仓）分数与 1.0.x 完全一致；
-一旦声明类，文件被量的线就变了，跨这道开关的分数**不可比较**，此前校准的地板需要具名
-`CE_ACCEPT_BASELINE=1` 重立（1.0.x 对 0.7.3 亦然）。
+🏁 **v1.2.0——已发布。** K 轮把 1.1.0 之后的欠账清单全数清偿。wire 越过三次断代（4.0.0 退役 erase 的
+class 0——冻结位保留、按名拒绝，5.0.0 退役 graph 遗留 flags 列、6.0.0 拓宽基线的配置指纹）并落地
+`symbols` 表——去重的 `[节点, 可见性]` 对，说出每个文件声明了什么、有多公开（可见性是声明自身的语法
+事实），正是 flags 位 0 从来没有过的那个生产者；导出面自此有了会照着它动手的下游：`unref_public` 上报、
+erase 拒绝把公开 API 计划掉的新理由码、join 格同读一位。基线现在给**整份** `ce.toml` 打指纹（`knobs_digest`）——任何配置改动都让
+`ce check` 具名停下而非无声挪线；类还可用 `ratchet_tolerance = 0` 冻结自身增长。守卫的重复写入规则经复活
+FPR 重放、以 2,761 个真实编辑事件重测，现在只拒**引入**重复的写入（[台账](docs/FPR-REPLAY.md)）。
+`ce scan` 与 `ce dedup` 学会 `--format sarif`（本仓自己的 CI 上传 GitHub code scanning），暖态分析走
+内容摘要键控的结果缓存（本仓实测 555→294 ms），daemon 客户端有了整场对话期限，长测量在 stderr 上报进度，
+GUI 添了第九屏（doctor）。此前：v1.1.0 = 路径规则包（`[[rules.class]]`）、v1.0.1 = 安装器接线、
+v1.0.0 = 锁定计划全部里程碑。安装包、[crates.io](https://crates.io/crates/codeeraser)、npm 指针包与
+[codeeraser.dev](https://codeeraser.dev) 均已上线 1.2.0。未声明任何类的仓库（含本仓）分数与 1.1.0 完全
+一致；一旦声明类，文件被量的线就变了，跨这道开关的分数**不可比较**，需要具名 `CE_ACCEPT_BASELINE=1` 重立。
 
 锁定计划即契约：[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)。本仓库对 `main` 的每次 push（外加 pull request 与每周定时跑）
 都用自己的扫描器、克隆棘轮、基线与死码/文档重复检查门禁自身。
@@ -82,8 +87,8 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 
 | 命令 | 报告 / 判决内容 |
 |---|---|
-| `ce scan` | 尺寸 / 复杂度 / 可读性度量，核内按文件自己的线（全局或 `[[rules.class]]`）分级；纯尺寸臂另门禁 js/css/html/vue/svelte/sh/yml |
-| `ce dedup` | T1/T2 克隆块（winnowing 索引）；`--check` 门控预算 |
+| `ce scan` | 尺寸 / 复杂度 / 可读性度量，核内按文件自己的线（全局或 `[[rules.class]]`）分级；纯尺寸臂另门禁 js/css/html/vue/svelte/sh/yml；`--format sarif` 把发现再编码给 code scanning |
+| `ce dedup` | T1/T2 克隆块（winnowing 索引）；`--check` 门控预算；暖态走内容摘要键控的结果缓存；`--format sarif` 把块作为 note 发出 |
 | `ce clone` | T3 近似克隆（树编辑距离） |
 | `ce docdup` | 文档重复（段落、注释、docstring） |
 | `ce graph --sites` / `ce deadcode` | 引用站点；存活性判决 |
@@ -104,9 +109,12 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 ## Guard（Claude Code 插件）
 
 插件在 PreToolUse 拦截（廉价探针）、在 Stop 审计。自 1.0 档位切换起，
-两类有 FPR 记录背书的规则——精确 T1/T2 重复写入与硬预算突破（写入使
+两类有 FPR 记录背书的规则——T1/T2 重复写入与硬预算突破（写入使
 文件超过其硬线：默认 750 行，或其 `[[rules.class]]` 声明的那条）——**默认 deny**；其余规则在拿到各自的误报记录前保持
-observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。`ce.toml` 的
+observe（台账见 [CHANGELOG.md](CHANGELOG.md)）。1.2.0 起重复写入规则只计**新引入**的重复：被替换内容
+本就携带的匹配（携预算内债块文件的全文重写、债块内部的编辑）保持沉默；拆到新文件的写入仍拒——写入瞬间
+复制与搬移无从分辨——且拒绝词会教出能通过的次序（先削源）。这次改动背后的 2,761 事件重放在
+[FPR-REPLAY.md](docs/FPR-REPLAY.md) 入账。`ce.toml` 的
 `[guard] mode` 显式声明可覆盖所有类别；软线与硬预算之间的渐进区
 默认只记台账，`[guard] zone_tiers` 显式声明才启用位置→档位映射
 （<25% observe / 25–75% warn / >75% ask）。诚实边界：PreToolUse 塑造行为，

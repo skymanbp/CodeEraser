@@ -15,7 +15,7 @@ judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception
 
 ## What CodeEraser does
 
-1. **It refuses a duplicate before it exists.** A write that would leave an exact T1/T2 clone in the tree is denied at PreToolUse — the interception happens at writing time, not in a report you read afterwards.
+1. **It refuses a duplicate before it exists.** A write that would *introduce* an exact T1/T2 clone — duplication the content being replaced did not already carry — is denied at PreToolUse; the interception happens at writing time, not in a report you read afterwards, and a denied move is told the ordering that passes.
 2. **It refuses a file past its hard line.** A write that leaves a file over 750 lines — or over the line that file's `[[rules.class]]` declares — is denied the same way.
 3. **It finds documentation written twice.** Repeated paragraphs, comments and docstrings anywhere in the tree, with `--check` turning the finding into a CI exit code.
 4. **It finds the clones that editing disguised.** Near-miss blocks are matched by tree edit distance over syntax, so a renamed and re-ordered copy still answers for itself.
@@ -28,17 +28,25 @@ judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception
 
 ## Status
 
-🏁 **v1.1.0 — released.** v1.0.0 delivered every milestone of the locked plan with a clean final sweep
-(113 audit findings reconciled, 716 documentation claims re-verified, every number on the site produced by
-replay or retaken from real output); v1.0.1 was distribution maintenance (the Windows installer wires the
-Claude Code plugin itself); v1.1.0 lands the path rulepack — `[[rules.class]]` gives a glob-matched class
-its own size and complexity lines, read alike by the score (wire proto 3.1.0), the `ce scan` ladder (3.2.0)
-and the guard hook — behind two wire majors (ce↔core 3.0.0, daemon 2.0.0) that dropped never-measured
-columns. Installers, [crates.io](https://crates.io/crates/codeeraser), the npm pointer and
-[codeeraser.dev](https://codeeraser.dev) are live at 1.1.0. A repository that declares no class — this one
-included — scores exactly as under 1.0.x; declaring one moves the lines its files are measured against, so
-scores across that switch are **not comparable**, and a floor calibrated before it needs a named
-`CE_ACCEPT_BASELINE=1` re-establish (as 1.0.x scores already were against 0.7.3).
+🏁 **v1.2.0 — released.** The K round cleared the post-1.1.0 debt inventory end to end. The wire crossed
+three majors (4.0.0 retired the superseded erase class 0 — its frozen slot kept and refused by name,
+5.0.0 retired the legacy graph flags column, 6.0.0 widened the baseline's config fingerprint) and landed
+the `symbols` table — deduped `[node, visibility]` pairs saying which files declare something and how
+visibly, the producer flag bit 0 never had, which finally lets the export surface be acted on:
+`unref_public` reporting, an erase reason that refuses to plan a public API away, and the join lattice
+reading the same bit. The baseline now fingerprints the **whole** `ce.toml` (`knobs_digest`), so any config edit stops
+`ce check` by name instead of quietly moving every line, and a class can freeze its own growth with
+`ratchet_tolerance = 0`. The guard's duplicate-write rule was re-measured by resurrecting the FPR replay
+over 2,761 real edit events and now denies only duplication a write *introduces*
+([ledger](docs/FPR-REPLAY.md)). `ce scan` and `ce dedup` learned `--format sarif` (this repository's own
+CI uploads to GitHub code scanning), warm analyze serves a digest-keyed result cache (555 → 294 ms
+measured here), the daemon client got a whole-conversation deadline, the long measurements paint stderr
+progress, and the GUI grew its ninth screen (doctor). Earlier: v1.1.0 = the path rulepack
+(`[[rules.class]]`), v1.0.1 = installer wiring, v1.0.0 = every milestone of the locked plan. Installers,
+[crates.io](https://crates.io/crates/codeeraser), the npm pointer and
+[codeeraser.dev](https://codeeraser.dev) are live at 1.2.0. A repository that declares no class — this one
+included — scores exactly as under 1.1.0; declaring one moves the lines its files are measured against,
+so scores across that switch are **not comparable** and need a named `CE_ACCEPT_BASELINE=1` re-establish.
 
 The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md). This repository gates itself with its own scanner,
 clone ratchet, baseline and deadcode/docdup checks on every push to `main` (plus pull requests and a weekly scheduled run).
@@ -90,8 +98,8 @@ The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins aut
 
 | Command | What it reports / judges |
 |---|---|
-| `ce scan` | size / complexity / readability metrics, core-graded against the file's own lines (global or `[[rules.class]]`); the size-only arm also gates js/css/html/vue/svelte/sh/yml |
-| `ce dedup` | T1/T2 clone blocks (winnowing index); `--check` gates the budget |
+| `ce scan` | size / complexity / readability metrics, core-graded against the file's own lines (global or `[[rules.class]]`); the size-only arm also gates js/css/html/vue/svelte/sh/yml; `--format sarif` re-encodes the findings for code scanning |
+| `ce dedup` | T1/T2 clone blocks (winnowing index); `--check` gates the budget; warm runs serve a digest-keyed result cache; `--format sarif` emits the blocks as notes |
 | `ce clone` | T3 near-miss clones (tree edit distance) |
 | `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |
 | `ce graph --sites` / `ce deadcode` | reference sites; liveness verdicts |
@@ -107,7 +115,7 @@ Console reports and `--help` speak English by default and Chinese under `--lang 
 
 ## Guard (Claude Code plugin)
 
-The plugin intercepts at PreToolUse (cheap probes) and audits at Stop. Since the 1.0 tier switch, the two FPR-gated rule classes — exact T1/T2 duplicate writes and hard-budget breaches (a write leaving a file past its hard line: 750 by default, or the line its `[[rules.class]]` declares) — **deny by default**; everything else observes until it has its own false-positive record (ledger in [CHANGELOG.md](CHANGELOG.md)). An explicit `[guard] mode` in `ce.toml` overrides every class. The graded size zone between the soft line and the hard budget stays observe-only by default; `[guard] zone_tiers` opts a repo into the position→tier map (<25% observe / 25–75% warn / >75% ask). Honest boundary: PreToolUse shapes behavior, it is not a security wall — shell writes bypass it. The Stop audit re-judges net LOC and touched duplicates; CI carries the hard size wall and ratchet.
+The plugin intercepts at PreToolUse (cheap probes) and audits at Stop. Since the 1.0 tier switch, the two FPR-gated rule classes — T1/T2 duplicate writes and hard-budget breaches (a write leaving a file past its hard line: 750 by default, or the line its `[[rules.class]]` declares) — **deny by default**; everything else observes until it has its own false-positive record (ledger in [CHANGELOG.md](CHANGELOG.md)). Since 1.2.0 the duplicate-write rule charges **novel** duplication only: matches the replaced content already carried (a full rewrite of a file holding budgeted blocks, an edit inside one) stay silent, a split to a new file still denies — copy and move are indistinguishable at the instant of the write — and the denial teaches the ordering that passes (trim the source first). The 2,761-event replay behind that change is ledgered in [FPR-REPLAY.md](docs/FPR-REPLAY.md). An explicit `[guard] mode` in `ce.toml` overrides every class. The graded size zone between the soft line and the hard budget stays observe-only by default; `[guard] zone_tiers` opts a repo into the position→tier map (<25% observe / 25–75% warn / >75% ask). Honest boundary: PreToolUse shapes behavior, it is not a security wall — shell writes bypass it. The Stop audit re-judges net LOC and touched duplicates; CI carries the hard size wall and ratchet.
 
 ## Path classes (`[[rules.class]]`)
 
@@ -126,7 +134,7 @@ ratchet_tolerance = 0                        # this class may not grow one line
 
 Three faces read that one line and cannot disagree: the score's size and complexity axes (wire proto 3.1.0 — a continuous row carries its class index and a `classKnobs` table rides beside the rows, while the baseline stays three columns, so a class is a charging parameter and never a ratchet fact), the `ce scan` ladder (proto 3.2.0 — `rowClasses` and `gradeOverrides` ride beside the rows and the reply echoes them), and the PreToolUse hard budget (no wire at all — the hook resolves the file's table locally). Class names and globs never cross the wire; only the class index and its knobs do (ADR-008). At most 64 classes, and a class whose fail line sits below its warn line is refused at load like the global ladder. Since proto 5.1.0 a class may also declare `ratchet_tolerance`, its own ADR-006 allowance in lines. Declared, it replaces both global legs, so `0` means the class may not grow by a single line and the global `max(+2%, +10)` cannot rescue it — the setting a vendored tree or a frozen fixture wants, and the one that stops such trees from spending the growth budget hand-written code needs. And because a config edit would otherwise move every line at once, the baseline records a **fingerprint of the whole `ce.toml`** it was established under: change a glob, a threshold, a score knob, an exclude — anything the parse holds — and `ce check` stops by name (`knobs_digest`) instead of quietly relaxing. Agreeing to a new configuration is the same named act as agreeing to a new floor — `CE_ACCEPT_BASELINE=1 ce baseline`, visible in git. It fingerprints the whole config rather than a chosen table because choosing is how the gap happens: an adversarial review of the first, class-only version found that `[score] viol_cost = 0` took a repo from 939/1000 failing to 1000/1000 passing while the axes still reported the violation. A repo whose config is the shipped default sends no fingerprint and keeps a baseline file without the key.
 
-A repository that declares no class — this one included — judges byte for byte as before, sends no fingerprint, and keeps a baseline file without the key; declaring one moves the lines its files are measured against, so scores across that switch are **not comparable**. Keys: [ce.toml reference](docs/reference/ce-toml.md) · charging law: [methodology 05](docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md).
+A repository that declares no class — this one included — judges byte for byte as before; declaring one moves the lines its files are measured against, so scores across that switch are **not comparable**. Keys: [ce.toml reference](docs/reference/ce-toml.md) · charging law: [methodology 05](docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md).
 
 ## Evaluation dashboard
 

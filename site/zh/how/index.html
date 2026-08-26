@@ -230,14 +230,16 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   越过硬线之后仍单调上升——<code>pMax</code> 是<em>落在</em> <code>H</code> 上的取值，不是上限。
   软线 <code>S</code> 是仓库自身冻结 LOC 分布的一个统计量，即把
   <code>S = clamp(median + k·MAD, …)</code> 改写成乘性形式，从而全程不取对数；它只在 establish
-  时导出，随后冻进基线。fail 位是四个<em>具名</em>条件的析取——<code>ratchet_over</code>、
-  <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>——回包同时带回究竟
-  是哪几个成立。</p>
+  时导出，随后冻进基线。fail 位是五个<em>具名</em>条件的析取——<code>ratchet_over</code>、
+  <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、
+  <code>knobs_digest</code>——回包同时带回究竟是哪几个成立。</p>
   <p class="note">自规则包起（proto 3.1.0），连续行可带第四列——该文件的<em>路径类</em>，即首个 glob
   命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无——旁边是加性的
-  <code>classKnobs</code> 表，码域就是 ceilings 自己的 <code>0 / 1 / 2</code>。带类的行按其类声明的
-  软线、硬线与 CoC 上限收费，类未声明处回落到全局线；收费定律本身分毫未动。棘轮只读三列前缀，
-  所以类是本次收费参数、永远不是基线事实。类名与 glob 留在客户端：过线的只有下标与 knobs。</p>
+  <code>classKnobs</code> 表，码域是 ceilings 自己的 <code>0 / 1 / 2</code> 加 <code>3</code>
+  （5.1.0）——该类自己的 ADR-006 棘轮容差（行数绝对值），也是唯一「零有意义」的类旋钮，故表的
+  取值下界按码分判。带类的行按其类声明的软线、硬线与 CoC 上限收费，类未声明处回落到全局线；
+  收费定律本身分毫未动。棘轮读第四列只为取该容差——声明即<em>取代</em>两条全局腿，<code>0</code>
+  意味任何增长皆超——写回的基线仍是三列，所以类是本次收费参数、永远不是基线事实。类名与 glob 留在客户端：过线的只有下标与 knobs。</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
@@ -263,7 +265,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <h3><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">图存活性与死代码判决</a></h3>
   <p class="job">只回答一个问题——哪些文件是任何活物都够不着的？——在一张节点身份即行下标、
   wire 上没有任何文本的引用图上作答。</p>
-  <pre>arcs  = { (s,d) | [s,d,_kind,rung] ∈ edges,  rung &lt;= minRung }
+  <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
   <pre>public     = testBit flags 0
 referenced = indeg &gt;= 1 over kept arcs
@@ -274,7 +276,9 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <code>4 unreach_public</code>。解析从不猜：一个 site 按本语言的梯级依次向上走，第一个产出
   <em>恰好一个</em>在域候选的梯级胜出；多于一个即 <code>Unresolved</code>，而
   <code>External</code> 是正确的终局答案、不是漏判。环只报不判——没有入口种子的环岛仅凭可达性
-  就已判死，无需特例。自 2.32.0 起，每条死件行带一列置信——由请求携带的按语言点位台账判出：
+  就已判死，无需特例。kind 列是公式的第二道过滤器、不是废柱：<code>inert</code> =
+  {3 资产, 5 未用 ref-def}——图片链接渲染字节、未用的引用定义什么也不渲染，都不算引用，
+  排除由核心亲自执行。自 2.32.0 起，每条死件行带一列置信——由请求携带的按语言点位台账判出：
   0 未担保（该语言尚有未解析点位）、1 空担保、2 已担保——这是擦除家族的信任边界，由持有台账的
   家族亲自执行。import 边精度实测 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着
   ≥ 0.90 的门；样本在任何解析器存在之前就已冻结。</p>
@@ -315,7 +319,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legGraph</b> 2</li>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
-    <li><b>schema</b> ce.join-report/0.2.0</li>
+    <li><b>schema</b> ce.join-report/0.3.0</li>
   </ul>
 </div>
 
@@ -444,6 +448,14 @@ PROMOTED_DEFAULT = "deny"</pre>
   <code>文件 &gt; 自己那条硬线</code>的硬预算突破——默认 750，或该文件的 <code>[[rules.class]]</code>
   所声明的那条，于是钩子拒的位置正是 CI 墙会红的位置。<em>其余每一条规则都因为没有自己的记录而停在
   observe。</em></p>
+  <p class="note"><strong>1.2.0 起，重复写入规则只计新引入的重复。</strong>K 轮把退役的重放仪器
+  复活，在 2,761 个真实编辑事件上重测——本仓全史加钉定的 <code>requests</code> 尾段——仲裁把
+  原始拦截分成三类：真实落地的重复引入、携带预算内债块文件上的复燃、以及拆叶/并叶中间态——正是
+  300 行纪律自己产出的「先写新叶后削宿主」次序。修法是减去<em>被替换</em>内容本就携带的匹配
+  （Write 替换盘上文件、Edit 替换 <code>old_string</code>）：携债重写保持沉默、真引入照拒；拆到
+  新文件的写在写入瞬间与复制无从分辨，所以仍拒——但拒绝词会教出能通过的次序（先削源）。两种口径
+  的最终比率都记在
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>。</p>
   <p class="note">在册的重放把 git 线性历史当作真实编辑流——先探测、后落盘，跑在
   <code>t = 50</code> 与 <code>min_distinct = 7</code> 这两个出厂默认档上：<strong>630 个事件、
   35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>。那 35 个自仓块全部仲裁为真阳并已被清理，
@@ -468,7 +480,7 @@ permille = (lines - S) * 1000 / (H - S)
     <li><b>WARN_BUDGET_TOKENS</b> 200</li>
     <li><b>STOP_BUDGET_TOKENS</b> 400</li>
     <li><b>CHARS_PER_TOKEN</b> 4</li>
-    <li><b>feed schema</b> ce.observe/0.6.0</li>
+    <li><b>feed schema</b> ce.observe/0.7.0</li>
   </ul>
 </div>
 
@@ -476,17 +488,20 @@ permille = (lines - S) * 1000 / (H - S)
   <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">确定性擦除——安全谓词</a></h3>
   <p class="job">判决擦除计划的行，覆盖三个可证明安全的家族——<code>dead_file</code>、
   <code>verbatim_doc</code> 与 <code>t1_twin</code>；其余行都以具名 reason code 拒绝。</p>
-  <pre>class  = 0 dead_file (superseded) | 1 verbatim_doc | 2 t1_twin
+  <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
          3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
-         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered</pre>
+         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
+         6 public_surface (6.1.0)</pre>
   <p class="note">Rust 从三个来源家族组装整数事实；Haskell 执行固定的首个失败谓词。
-  自 2.32.0 起死件家族改走 class 3——其信任事实是 graph 家族亲判的逐行置信，仅在未担保时
-  拒绝；class 0 在宽限窗内照旧判决。超过上限的降级应答不授权任何擦除，而安全谓词没有可调
-  旋钮。</p>
+  自 2.32.0 起死件家族改走 class 3，其信任事实是 graph 家族亲判的逐行置信；自 6.1.0 起公开死件
+  判决——2 unref_public / 4 unreach_public——在权衡置信<em>之前</em>即以 public_surface 拒绝，
+  导出的 API 无论担保多足都不可擦，此后未担保的置信才拒行。class 0 是同家族的本地计数老路，
+  已于 4.0.0 宽限窗关闭时退役：位置永久冻结、由核心按名拒绝。超过上限的降级应答不授权任何擦除，
+  而安全谓词没有可调旋钮。</p>
   <ul class="consts">
     <li><b>类别数</b> 4</li>
-    <li><b>理由代码数</b> 6</li>
+    <li><b>理由代码数</b> 7</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>入 wire 版本</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>

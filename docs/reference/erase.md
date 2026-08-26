@@ -83,9 +83,13 @@ user files; it may create or refresh the `.ce/` cache):
 
 ## Acceptance (the gate this feature must pass)
 
-- plan-then-apply on a fixture tree erases two dead files and one
-  verbatim-doc span; `t1_twin` is exercised only as a non-eraseable
-  plan row, and the re-run proves zero surviving source verdicts;
+- plan-then-apply on a fixture tree erases one dead file and one
+  verbatim-doc span, while the tree's second dead file (`copy.py`,
+  which declares an exported `def`) is refused by name as
+  `public_surface` — RG10 held at the acceptance gate through apply,
+  not only in the table above; `t1_twin` is exercised only as a
+  non-eraseable plan row, and the re-run proves zero surviving
+  source verdicts;
 - a dirty worktree, a drifted file hash, and a non-repo root each
   refuse BY NAME without touching anything;
 - an advisory row (live T2 clone) is never planned;

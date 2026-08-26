@@ -33,8 +33,9 @@
 
 1. 把 draft 的 SHA256SUMS 逐值写进 `plugin/bin/manifest.env`
    （九 pin：三平台 ce + 三平台 ce-core + 三平台 GUI 安装包），并同批翻 `CE_MANIFEST_VERSION`
-   与 `CE_BASE_URL`（tag 腿断言前者 == tag；后者 URL 内嵌 tag，忘翻即
-   下载 404）——十一行齐动，提交并推 main，CI 绿。
+   与 `CE_BASE_URL`（tag 腿两者都断言：前者 == tag，后者须以
+   `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
+   release.yml verify-publish 腿）——十一行齐动，提交并推 main，CI 绿。
 2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**
    后 publish（不重建）；`verify-publish` 复核十资产（九工件对拍
    SHA256SUMS，九工件对拍 manifest pin）。

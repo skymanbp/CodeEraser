@@ -89,7 +89,10 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
 ledger-visible as sites *without* edges ([wire.rs:60-93](../../../cli/src/graph/wire.rs#L60)). Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
-`EDGE_ASSET = 3`, `EDGE_CONTAIN = 4` ([wire.rs:23-27](../../../cli/src/graph/wire.rs#L23)); granularity
+`EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
+reference definition's in-scope target, which resolves and travels as an edge while the core
+excludes it from liveness beside the asset kind
+([wire.rs:23-32](../../../cli/src/graph/wire.rs#L23), [Cost.hs:117-124](../../../core/app/CE/Graph/Cost.hs#L117)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
 ([wire.rs:34-37](../../../cli/src/graph/wire.rs#L34)).
 
@@ -103,10 +106,14 @@ and dangling doc refs as packages ([nodes.rs:20-23](../../../cli/src/graph/nodes
 
 Two transformations happen on the way to the wire:
 
-1. **Asset edges are inert by kind, in the core** — an image reference is not a reference for
-   liveness purposes; since 2.20.0 every edge kind travels and the exclusion is the core's own rule,
-   `assetKind` ([Cost.hs:77-85](../../../core/app/CE/Graph/Cost.hs#L77)) filtered where the arc set is
-   built ([Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
+1. **Two edge kinds are liveness-inert, in the core** — an image reference is not a reference
+   for liveness purposes, and neither is an unused reference definition, which renders nothing and
+   must not keep its target alive (user decision D3); since 2.20.0 every edge kind travels and the
+   exclusion is the core's own rule — `assetKind`
+   ([Cost.hs:77-85](../../../core/app/CE/Graph/Cost.hs#L77)) since 2.20.0, `refdefKind`
+   ([Cost.hs:117-124](../../../core/app/CE/Graph/Cost.hs#L117)) since 2.29.0 — the two riding one
+   inert list into the same comprehension as the rung filter
+   ([Graph.hs:84](../../../core/app/CE/Graph.hs#L84), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
    ([deadcode.rs:193-197](../../../cli/src/graph/deadcode.rs#L193)). An endpoint that is not a node
    is a *named error*, never a panic ([deadcode.rs:208-212](../../../cli/src/graph/deadcode.rs#L208)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
@@ -125,7 +132,7 @@ the reader sees what the graph refuses to know
 
 ### 4. Boundary contract and caps
 
-`graph.request` carries `nodes: [[lang, kind, flags]]`, `edges: [[src, dst, kind, rung]]`, and
+`graph.request` carries `nodes: [[lang, kind, roles]]`, `edges: [[src, dst, kind, rung]]`, and
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
 deterministic ([Contract.hs:51-72](../../../core/app/CE/Graph/Contract.hs#L51)):
 
@@ -154,12 +161,15 @@ core's fail bit ([main_cmds.rs:104-124](../../../cli/src/main_cmds.rs#L104)).
 
 ### 5. Kept arcs and liveness
 
-The kept arc set is the rung-filtered, `(src,dst)`-deduplicated edge list — kind multiplicity
-between one pair is *not* extra evidence of reference, so indegree counts distinct arcs
-([Build.hs:1-7](../../../core/app/CE/Graph/Build.hs#L1), [Build.hs:40-51](../../../core/app/CE/Graph/Build.hs#L40)):
+The kept arc set is the rung-filtered, kind-filtered, `(src,dst)`-deduplicated edge list — the
+two liveness-inert kinds are dropped in the same comprehension as the rung filter, and kind
+multiplicity between one pair is *not* extra evidence of reference, so indegree counts distinct
+arcs ([Build.hs:1-7](../../../core/app/CE/Graph/Build.hs#L1), [Build.hs:40-51](../../../core/app/CE/Graph/Build.hs#L40),
+the inert list supplied at [Graph.hs:84](../../../core/app/CE/Graph.hs#L84)):
 
 ```
-arcs  = { (s,d) | [s,d,_kind,rung] ∈ edges,  rung ≤ minRung }
+inert = { assetKind = 3, refdefKind = 5 }
+arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung ≤ minRung,  kind ∉ inert }
 kept  = |arcs|
 G     = buildG (0, n-1) arcs        -- all n vertices; isolated ones are exactly the unreferenced
 ```
@@ -183,7 +193,8 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 
 Only file nodes carry entry facts; section and package rows get `0`
 ([deadcode.rs:223-241](../../../cli/src/graph/deadcode.rs#L223)). Since proto **2.28.0**
-(batch-7 slice 3 main body) the node row carries a 4th column of **role facts**, and the
+(batch-7 slice 3 main body) the node row's last column carries **role facts** — the third and
+last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:241](../../../cli/src/graph/deadcode.rs#L241)) — and the
 category membership Rust used to fuse into the flags column is decided by the core's
 **role table** `roleBits` ([Graph/Cost.hs:98-99](../../../core/app/CE/Graph/Cost.hs#L98)):
 the row's entry bits derive through `deriveFlags`

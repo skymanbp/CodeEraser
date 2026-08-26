@@ -52,7 +52,7 @@ file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒�
 
 默认档位 = §4.2 路线第 3 级（2026-08-17 1.0 档位切换生效，依据见根目录
 [CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
-（写后文件超过其硬线：默认 750，或其 `[[rules.class]]` 声明的那条——hook 与 CI 硬墙同读 `guard::budget::lines_for`）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
+（写后文件超过其硬线：默认 750，或其 `[[rules.class]]` 声明的那条——hook 经 `guard::budget::lines_for`、`ce scan` 直呼，两面同读 `scan::classes::Classes::thresholds_for` 那张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
 观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
 每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`——版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；

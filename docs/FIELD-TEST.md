@@ -56,9 +56,12 @@ ordering, CI floor re-anchored 800 → 950 at the same bite:
   in JSON manifests, not imported, so the reference graph cannot see
   them. The verdicts are honest under the declared model (each one
   says "no kept in-edge and no entry flag"), and `[graph]
-  entry_globs` in ce.toml is the existing remedy — but nothing hints
-  at it when the dead count is large. Ledgered for the batch-7 graph
-  slices (the inventory already carries the entry-bit gaps).
+  entry_globs` in ce.toml is the remedy. Shipped in K step 9: when at
+  least two files are dead and the dead share reaches half the tier —
+  repo A's exact shape — `ce deadcode` now prints the entry_globs
+  hint itself (cli/src/graph/deadcode/report.rs:78-88). A large but
+  minority dead set stays hint-free on purpose: hinting an exemption
+  knob at genuinely dead files would teach masking over deleting.
 - **`erase` stayed safe and honest.** On both repos the dry-run plan
   licensed at most one row and demoted everything else to advisory
   with named reasons. `language_unresolved` on a plain `.py` file
@@ -73,8 +76,11 @@ ordering, CI floor re-anchored 800 → 950 at the same bite:
 - **Split advisory on giants.** Under the linear arm the advisor
   prices real seams on the giants it used to call cohesive (repo B's
   largest doc: recover 28560 vs cost 6950 milli). The raw
-  milli-penalty units read awkwardly at that magnitude — a batch-9
-  polish candidate, display-only.
+  milli-penalty units read awkwardly at that magnitude — ledgered as
+  a batch-9 polish candidate, and shipped in batch 9 P15: the
+  advisory now leads with the ROI the core's verdict is made on and
+  the ‰ glyph came off the absolute operands
+  (cli/src/structure/report.rs:168-181).
 - **Latency held.** Cold `scan` 0.6s / `dedup` 2.0s on repo A;
   `trend --commits 8` 28s cold; every command answered without a
   window flash or a hang.

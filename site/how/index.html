@@ -252,17 +252,22 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   statistic of the repository's own frozen LOC distribution, the identity
   <code>S = clamp(median + k·MAD, …)</code> re-expressed multiplicatively so no logarithm
   is ever taken; it is derived only at establish and then frozen into the baseline. The
-  fail bit is a disjunction of four <em>named</em> conditions —
+  fail bit is a disjunction of five <em>named</em> conditions —
   <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
-  <code>dedup_budget</code> — and the reply carries the list of names that held.</p>
+  <code>dedup_budget</code>, <code>knobs_digest</code> — and the reply carries the
+  list of names that held.</p>
   <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column —
   the file's <em>path class</em>, the 1-based index of the first <code>[[rules.class]]</code>
   whose globs match, <code>0</code> for none — beside an additive <code>classKnobs</code> table
-  whose codes are the ceilings' own <code>0 / 1 / 2</code>. A classed row is charged against its
+  whose codes are the ceilings' own <code>0 / 1 / 2</code> plus <code>3</code> (5.1.0), the
+  class's own ADR-006 ratchet allowance in lines — the one knob whose value <code>0</code> is
+  meaningful, so the table's value floor is judged per code. A classed row is charged against its
   class's soft line, hard line and CoC ceiling and falls back to the global line wherever the
-  class declares none; the charge law itself is untouched. The ratchet reads only the
-  three-column prefix, so a class is a charging parameter for this run and never a baseline
-  fact. Names and globs stay on the client: only the index and its knobs cross.</p>
+  class declares none; the charge law itself is untouched. The ratchet reads the fourth column
+  only to pick that allowance — declared, it <em>replaces</em> both global legs, so <code>0</code>
+  means any growth is over — and writes a three-column baseline back, so a class is a charging
+  parameter for this run and never a baseline fact. Names and globs stay on the client: only the
+  index and its knobs cross.</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
@@ -288,7 +293,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <h3><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">Graph liveness and dead-code verdicts</a></h3>
   <p class="job">Answers one question — which files does nothing live reach? — over a
   reference graph whose node identity is the row index, with no text on the wire.</p>
-  <pre>arcs  = { (s,d) | [s,d,_kind,rung] ∈ edges,  rung &lt;= minRung }
+  <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
   <pre>public     = testBit flags 0
 referenced = indeg &gt;= 1 over kept arcs
@@ -301,7 +306,10 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   producing <em>exactly one</em> in-scope candidate wins; more than one is
   <code>Unresolved</code>, and <code>External</code> is a correct terminal answer, not a
   miss. Cycles are reported, never judged — a cyclic island with no entry seed is dead by
-  reachability alone. Since 2.32.0 each dead row carries a confidence column judged from
+  reachability alone. The kind column is the formula's second filter, not baggage:
+  <code>inert</code> = {3 asset, 5 unused ref-def} — an image link renders bytes and an unused
+  reference definition renders nothing, neither counts as a reference, and the exclusion is
+  executed by the core itself. Since 2.32.0 each dead row carries a confidence column judged from
   the per-language site ledger the request ships — 0 unvouched (the language still has
   unresolved sites), 1 vacuous, 2 vouched — the erase family's trust boundary, executed
   by the family that owns the ledger. Import-edge precision measured
@@ -349,7 +357,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legGraph</b> 2</li>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
-    <li><b>schema</b> ce.join-report/0.2.0</li>
+    <li><b>schema</b> ce.join-report/0.3.0</li>
   </ul>
 </div>
 
@@ -498,6 +506,19 @@ PROMOTED_DEFAULT = "deny"</pre>
   <code>[[rules.class]]</code> declares, so the hook denies exactly where the CI wall fails.
   <em>Every other rule stays at observe for want of its
   own record.</em></p>
+  <p class="note"><strong>Since 1.2.0 the duplicate-write rule charges novel duplication
+  only.</strong> The K-round replay resurrected the retired instrument over 2,761 real
+  edit events — this repository's full history plus the pinned <code>requests</code>
+  tail — and arbitration split the raw intercepts into genuine duplication landings,
+  re-fires on files already carrying budgeted blocks, and split/fold mid-states: the
+  write-first ordering of exactly the extract-to-a-leaf refactors a 300-line discipline
+  produces. The fix subtracts the matches the <em>replaced</em> content already carried
+  (Write replaces the on-disk file, Edit replaces <code>old_string</code>): a rewrite
+  that carries its debt is silent, an introduction still denies, and a split to a new
+  file — indistinguishable from a copy at the instant of the write — still denies while
+  the denial teaches the ordering that passes (trim the source first). Both framings of
+  the resulting rate are ledgered in
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>.</p>
   <p class="note">The recorded replay treats git linear history as a real edit stream —
   probe first, then apply, at the shipped default knobs <code>t = 50</code> and
   <code>min_distinct = 7</code>: <strong>630 events, 35 blocks, 0 false after
@@ -527,7 +548,7 @@ permille = (lines - S) * 1000 / (H - S)
     <li><b>WARN_BUDGET_TOKENS</b> 200</li>
     <li><b>STOP_BUDGET_TOKENS</b> 400</li>
     <li><b>CHARS_PER_TOKEN</b> 4</li>
-    <li><b>feed schema</b> ce.observe/0.6.0</li>
+    <li><b>feed schema</b> ce.observe/0.7.0</li>
   </ul>
 </div>
 
@@ -536,19 +557,24 @@ permille = (lines - S) * 1000 / (H - S)
   <p class="job">Judges erase-plan rows for three provable classes — <code>dead_file</code>,
   <code>verbatim_doc</code>, and <code>t1_twin</code> — and refuses every unsafe
   row with a named reason code.</p>
-  <pre>class  = 0 dead_file (superseded) | 1 verbatim_doc | 2 t1_twin
+  <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
          3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
-         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered</pre>
+         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
+         6 public_surface (6.1.0)</pre>
   <p class="note">Rust assembles integer facts from the three source families;
   Haskell applies the fixed first-failure predicate. Since 2.32.0 the dead-file
-  family rides class 3 — its trust fact is the graph family's own per-row
-  confidence, refused only when unvouched — while class 0 keeps judging unchanged
-  for the grace window. A degraded over-cap reply authorizes nothing, and the
-  safety surface has no knobs.</p>
+  family rides class 3, whose trust fact is the graph family's own per-row
+  confidence; since 6.1.0 a public dead verdict — 2 unref_public or 4
+  unreach_public — is refused as public_surface <em>before</em> that confidence
+  is weighed, so an exported API is never eraseable however well vouched, and
+  only then does an unvouched confidence refuse the row. Class 0, the same
+  family on the local-count road, retired at 4.0.0 when its grace window
+  closed: the position stays frozen and the core refuses it by name. A degraded
+  over-cap reply authorizes nothing, and the safety surface has no knobs.</p>
   <ul class="consts">
     <li><b>classes</b> 4</li>
-    <li><b>reason codes</b> 6</li>
+    <li><b>reason codes</b> 7</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>since proto</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>

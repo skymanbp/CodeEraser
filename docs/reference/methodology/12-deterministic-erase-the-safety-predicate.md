@@ -38,8 +38,8 @@ folded per-language unresolved count
 ### 2. Four frozen class codes, three provable families
 
 The class positions are part of the source contract: position `0` is
-`dead_file`, `1` is `verbatim_doc`, and `2` is `t1_twin`
-([Cost.hs:5-12](../../../core/app/CE/Erase/Cost.hs#L5)). Each class below is
+retired, `1` is `verbatim_doc`, `2` is `t1_twin`, and `3` is `dead_file`
+([Cost.hs:5-20](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:14-22](../../../cli/src/erase/model.rs#L14)). Each class below is
 written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
 

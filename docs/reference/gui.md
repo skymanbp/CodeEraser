@@ -85,4 +85,6 @@ the whole product. The Windows installer also detects Claude Code
 and wires the plugin. Building from source: `cargo build` in
 `gui/src-tauri/` (its own workspace — building the CLI does not
 build it, which is why CI carries dedicated GUI legs: build, clippy,
-fmt, and the two webview gates `lens_invariant.js` / `i18n_gate.js`).
+fmt, the two webview gates `lens_invariant.js` / `i18n_gate.js`, and
+`installer_wiring.js`, which pins the Claude Code wiring above
+against renames and moves).
