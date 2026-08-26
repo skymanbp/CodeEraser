@@ -95,7 +95,7 @@ The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins aut
 | `ce clone` | T3 near-miss clones (tree edit distance) |
 | `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |
 | `ce graph --sites` / `ce deadcode` | reference sites; liveness verdicts |
-| `ce churn` / `ce join` | git-window churn; the three-signal join |
+| `ce churn` / `ce join` | git-window churn; the three-signal join. Minutes, not seconds — a git subprocess per commit and a blame per touched file ([measured](docs/PERF-BUDGET.md)); both report progress on stderr as they go |
 | `ce structure` | tree-scale structure judgment (seven axes); `--split-candidates` prices the best seam of every file past the soft line — or writes its cohesion alibi |
 | `ce trend` | score trajectory over mainline history (cache rebuilds from git) |
 | `ce erase` | deterministic two-phase eraser: plans only provably-safe removals (dead files, verbatim doc twins, whole-unit T1 twins), dry-run default, `--apply` behind clean-worktree preconditions |
@@ -103,7 +103,7 @@ The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins aut
 | `ce mcp` | read-only MCP server: 13 report tools, registered by the plugin itself. `erase` reaches the PLAN and nothing else — applying is a human act at the CLI or the GUI |
 | `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |
 
-Console reports and `--help` speak English by default and Chinese under `--lang zh` (or `CE_LANG=zh`; the flag wins). JSON output and the FAIL/pass vocabulary are never translated — they are the machine face. The GUI carries its own language toggle.
+Console reports and `--help` speak English by default and Chinese under `--lang zh` (or `CE_LANG=zh`; the flag wins). JSON output and the FAIL/pass vocabulary are never translated — they are the machine face. The GUI carries its own language toggle. The long measurements (`churn`, `join`, `trend`) report progress on **stderr** in the same language, so stdout stays a clean pipe; it paints only when stderr is a terminal, and `CE_PROGRESS=1` / `=0` forces it either way.
 
 ## Guard (Claude Code plugin)
 

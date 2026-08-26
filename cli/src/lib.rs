@@ -21,6 +21,7 @@ pub mod join;
 pub mod lockstep;
 pub mod mcp;
 pub mod proc;
+pub mod progress;
 pub mod report;
 pub mod root;
 pub mod scan;

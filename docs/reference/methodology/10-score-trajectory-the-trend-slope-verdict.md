@@ -6,7 +6,7 @@ The eighth judgment family answers one question about a repository's history: is
 
 ### Measurement — what becomes a row
 
-The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:104](../../../cli/src/trend/mod.rs#L104)). Each uncached commit is scored in a detached temp worktree against the committed soft line rather than one re-derived per point ([mod.rs:125](../../../cli/src/trend/mod.rs#L125), the soft pin from [mod.rs:74](../../../cli/src/trend/mod.rs#L74)). Rows are cached in `.ce/index.db` stamped with the measuring toolchain ([mod.rs:72](../../../cli/src/trend/mod.rs#L72)) and reversed to oldest-first for chart order before judgment ([mod.rs:93](../../../cli/src/trend/mod.rs#L93)) — a presentation choice only; the judged view below sorts for itself. Only `[ts, score, scale]` triples cross the wire — no commit hashes, no paths ([judge.rs:57](../../../cli/src/trend/judge.rs#L57)).
+The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:111](../../../cli/src/trend/mod.rs#L111)). Each uncached commit is scored in a detached temp worktree against the committed soft line rather than one re-derived per point ([mod.rs:132](../../../cli/src/trend/mod.rs#L132), the soft pin from [mod.rs:74](../../../cli/src/trend/mod.rs#L74)). Rows are cached in `.ce/index.db` stamped with the measuring toolchain ([mod.rs:72](../../../cli/src/trend/mod.rs#L72)) and reversed to oldest-first for chart order before judgment ([mod.rs:100](../../../cli/src/trend/mod.rs#L100)) — a presentation choice only; the judged view below sorts for itself. Only `[ts, score, scale]` triples cross the wire — no commit hashes, no paths ([judge.rs:57](../../../cli/src/trend/judge.rs#L57)).
 
 ### Boundary contract
 

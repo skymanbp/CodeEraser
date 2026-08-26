@@ -79,7 +79,14 @@ pub fn run(
     let missing: Vec<&(String, i64)> = shas.iter().filter(|(s, _)| !have.contains_key(s)).collect();
     let mut failed = Vec::new();
     let mut measured = 0usize;
-    for (sha, ts) in missing.iter().take(batch.unwrap_or(usize::MAX)) {
+    // each uncached point is a full check in a detached temp worktree,
+    // so a cold cache is the slowest thing this binary does — and the
+    // one whose length the caller CHOOSES, with --batch. The counter
+    // is what makes that choice informed (plan v2.16).
+    let _span = crate::progress::span();
+    let todo = missing.len().min(batch.unwrap_or(usize::MAX));
+    for (n, (sha, ts)) in missing.iter().take(todo).enumerate() {
+        crate::progress::at(crate::progress::Phase::Measure, n, todo);
         match measure(root, core, sha, *ts, soft) {
             Ok(row) => {
                 put(idx.raw(), &row, &stamp)?;

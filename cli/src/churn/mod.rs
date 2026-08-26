@@ -60,12 +60,20 @@ use std::path::Path;
 type Ledger = HashMap<(String, String, i64), (usize, usize)>;
 
 pub fn run(root: &Path, days: u32) -> Result<Report> {
+    // three git subprocesses deep per commit, then one blame per
+    // touched file: 102 s for a ONE-day self window, 278.4 s for the
+    // default fourteen (PERF-BUDGET M5-3h). The span says so out loud
+    // on stderr while it runs (plan v2.16); it erases itself on the
+    // way out, including the `?` paths below.
+    let _span = crate::progress::span();
+    crate::progress::step(crate::progress::Phase::Window);
     let shas = window_commits(root, days)?;
     let mut ledger = Ledger::new();
     let mut pair_counts: HashMap<(String, String), usize> = HashMap::new();
     let mut skipped_large = 0usize;
     let mut touched: Vec<String> = Vec::new();
-    for sha in &shas {
+    for (n, sha) in shas.iter().enumerate() {
+        crate::progress::at(crate::progress::Phase::Commits, n, shas.len());
         let pairs = session::commit_pairs(root, sha).unwrap_or_default();
         classify_commit(root, sha, &pairs, &mut ledger);
         count_cochange(&pairs, &mut pair_counts, &mut skipped_large);

@@ -23,6 +23,11 @@ fn main() -> ExitCode {
     codeeraser::i18n::init(main_cli::lang_from_argv().as_deref());
     let cli = parse_localized();
     codeeraser::i18n::init(cli.lang.as_deref());
+    // this process is a console face — the only one that arms
+    // progress, which is how the MCP, GUI and daemon consumers of the
+    // same library stay silent without opting out (plan v2.16). After
+    // the language pin, because the phase words switch with it.
+    codeeraser::progress::arm();
     match analysis(cli.cmd) {
         Ok(code) => code,
         Err(cmd) => infra(*cmd),

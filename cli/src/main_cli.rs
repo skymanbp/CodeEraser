@@ -76,7 +76,9 @@ pub(crate) enum Cmd {
         core: String,
     },
     /// Time-dimension metrics: append vs rewrite, windowed churn,
-    /// co-change pairs (report-only; the join consumes them)
+    /// co-change pairs (report-only; the join consumes them). Costs
+    /// minutes on the default window — a git subprocess per commit
+    /// and a blame per touched file; progress rides stderr
     Churn {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,
@@ -124,13 +126,16 @@ pub(crate) enum Cmd {
     /// core's docdup/1 over the cached live segments
     Docdup(DocdupArgs),
     /// Three-signal join: similarity + graph position + per-unit
-    /// churn, file and unit tiers (report-only)
+    /// churn, file and unit tiers (report-only). Costs a churn window
+    /// plus a full index — minutes; progress rides stderr
     Join(JoinArgs),
     /// Tree-scale structure judgment: entropy, axes and findings via
     /// the core's structure/1 (report-only)
     Structure(StructureArgs),
     /// Score trajectory over mainline history: per-commit absolute
-    /// check score, cached in the index, rebuildable
+    /// check score, cached in the index, rebuildable. Each uncached
+    /// commit is a full check in a temp worktree — bound a cold run
+    /// with --batch; progress rides stderr
     Trend(TrendArgs),
     /// Deterministic two-phase eraser: plan what is provably safe to
     /// erase via the core's erase/1; dry-run by default

@@ -9,18 +9,13 @@
 mod common;
 
 use codeeraser::join;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 fn core_bin() -> String {
     std::env::var("CE_CORE_BIN").expect(
         "CE_CORE_BIN is unset — build the core and export it:\n  \
          cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)",
     )
-}
-
-fn commit(dir: &Path, msg: &str) {
-    common::git(dir, &["add", "."]);
-    common::git(dir, &["commit", "-qm", msg]);
 }
 
 /// Two commits of a real Cargo layout: without Cargo.toml the rs
@@ -36,12 +31,12 @@ fn fixture() -> PathBuf {
     std::fs::write(dir.join("src/main.rs"), "mod a;\nmod b;\nfn main() {}\n").expect("main.rs");
     std::fs::write(dir.join("src/a.rs"), common::rust_fn(1)).expect("a.rs");
     std::fs::write(dir.join("src/b.rs"), common::rust_fn(2)).expect("b.rs");
-    commit(&dir, "seed");
+    common::commit_all(&dir, "seed");
     let tweaked = common::rust_fn(1).replace("+ 7;", "+ 9;");
     std::fs::write(dir.join("src/a.rs"), tweaked).expect("a.rs tweak");
     let touched = format!("{}// touched\n", common::rust_fn(2));
     std::fs::write(dir.join("src/b.rs"), touched).expect("b.rs touch");
-    commit(&dir, "tweak + touch");
+    common::commit_all(&dir, "tweak + touch");
     dir
 }
 

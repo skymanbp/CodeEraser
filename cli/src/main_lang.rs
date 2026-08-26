@@ -31,7 +31,7 @@ doctor.root	要报告的项目根（默认当前目录）
 scan	度量尺寸 / 复杂度 / 可读性指标；级别由核分级
 scan.path	要扫描的目录（默认当前目录）
 scan.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
-churn	时间维度指标：追加对重写、窗口改动、共变对（仅报告；联判消费之）
+churn	时间维度指标：追加对重写、窗口改动、共变对（仅报告；联判消费之）。默认窗口需数分钟——逐提交一个 git 子进程、逐触及文件一次 blame；进度走 stderr
 churn.root	仓库根（默认当前目录）
 churn.days	历史窗口天数
 graph	依赖图子系统：--sites 列出引用站点（不做解析）；存活性判决在 `ce deadcode`
@@ -46,13 +46,13 @@ clone	T3 近似克隆判决：经核 clone/1 的树编辑距离；--units 改为
 clone.units	改为列出单元宇宙而非判决
 docdup	文档重复判决：对缓存活段经核 docdup/1 精确 Jaccard
 docdup.check	任一重复被报告即退出 1（CI 自食门）
-join	三信号联判：相似度 + 图位置 + 单元改动，文件与单元两层（仅报告）
+join	三信号联判：相似度 + 图位置 + 单元改动，文件与单元两层（仅报告）。代价 = 一个改动窗口加一次全量索引，需数分钟；进度走 stderr
 join.days	改动窗口天数
 structure	树尺度结构判决：熵、判轴与发现，经核 structure/1（仅报告）
 structure.deep	同时按目录卷积克隆块与死单元并判 S6 冗余轴（会跑去冗普查与存活判决；缺省 = 该轴诚实未判）
 structure.days	按此 git 窗口天数判 S5 文档陈旧轴（所引代码晚于文档最后编辑而变；缺省 = 该轴诚实未判）
 structure.split_candidates	为每个越过冻结软线的判决文件计一次拆分价：给出最优缝与 ROI，或以数字说明文件为何内聚的豁免
-trend	主线历史上的分数轨迹：逐提交绝对检查分，缓存于索引，可重建
+trend	主线历史上的分数轨迹：逐提交绝对检查分，缓存于索引，可重建。每个未缓存提交都是临时工作树里的一次完整 check——冷跑请用 --batch 限量；进度走 stderr
 trend.commits	主线窗口：最新 N 个第一父提交
 trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部；GUI 传小批量以显示进度）
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练

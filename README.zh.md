@@ -87,7 +87,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce clone` | T3 近似克隆（树编辑距离） |
 | `ce docdup` | 文档重复（段落、注释、docstring） |
 | `ce graph --sites` / `ce deadcode` | 引用站点；存活性判决 |
-| `ce churn` / `ce join` | git 窗口变动；三信号联结 |
+| `ce churn` / `ce join` | git 窗口变动；三信号联结。以分钟计而非秒——逐提交一个 git 子进程、逐触及文件一次 blame（[实测](docs/PERF-BUDGET.md)）；两者运行中在 stderr 上报进度 |
 | `ce structure` | 树尺度结构判决（七轴）；`--split-candidates` 为越线文件计最优缝价——或写下它的内聚豁免 |
 | `ce trend` | 主线历史分数轨迹（缓存可从 git 重建） |
 | `ce erase` | 确定性两段式擦除：只计划可证安全的消除（死文件、逐字文档孪生、整单元 T1 孪生），默认演练，`--apply` 有干净工作区前置 |
@@ -97,7 +97,9 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 
 控制台报告与 `--help` 默认英文，`--lang zh`（或 `CE_LANG=zh`，旗标
 优先）切换整行中文查表。JSON 输出与 FAIL/pass 词汇永不翻译——那是
-机器面。GUI 自带语言切换钮。
+机器面。GUI 自带语言切换钮。长测量（`churn`、`join`、`trend`）用同一
+语言在 **stderr** 上报进度，stdout 因而始终是干净管道；仅当 stderr 是
+终端才绘制，`CE_PROGRESS=1` / `=0` 可双向强制。
 
 ## Guard（Claude Code 插件）
 

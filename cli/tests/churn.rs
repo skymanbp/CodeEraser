@@ -6,41 +6,16 @@
 mod common;
 
 use codeeraser::churn;
-use std::path::Path;
 
-fn commit(dir: &Path, msg: &str) {
-    common::git(dir, &["add", "."]);
-    common::git(dir, &["commit", "-qm", msg]);
-}
-
-/// Fresh repo whose ROOT commit adds a.rs — the shared opening of
-/// both cases (and the F12 fixture shape: a parentless commit).
-fn seeded(name: &str) -> std::path::PathBuf {
-    let root = common::tmp(name);
-    common::git(&root, &["init", "-q"]);
-    std::fs::write(root.join("a.rs"), common::rust_fn(1)).expect("a.rs");
-    commit(&root, "seed");
-    root
-}
-
+/// The three-commit shape this battery asserts on lives in the
+/// fixtures leaf (common::seed_churn_history) since the progress
+/// face needed the same history: the comments describing what each
+/// commit contributes moved with it, and a second copy of the
+/// sequence here was the twin the dedup ratchet caught.
 #[test]
 fn churn_classifies_append_rewrite_cochange_and_survival() {
-    // commit 1 (root): one new function — pure append
-    let root = seeded("churn-e2e");
-
-    // commit 2: edit inside work_1 (rewrite) AND add a new file
-    // (append); a.rs + b.rs change together
-    let edited = common::rust_fn(1).replace("+ 7;", "+ 8;\n            total_1 += 1;");
-    std::fs::write(root.join("a.rs"), &edited).expect("a.rs edit");
-    std::fs::write(root.join("b.rs"), common::rust_fn(2)).expect("b.rs");
-    commit(&root, "edit + new");
-
-    // commit 3: touch both again — co-change count reaches 2 — and
-    // delete b.rs's function body (those added lines stop surviving)
-    std::fs::write(root.join("a.rs"), format!("{edited}\n// tail\n")).expect("a.rs tail");
-    std::fs::write(root.join("b.rs"), "// emptied\n").expect("b.rs emptied");
-    commit(&root, "entangle + churn");
-
+    let root = common::tmp("churn-e2e");
+    common::seed_churn_history(&root);
     assert_report(&churn::run(&root, 30).expect("churn"));
 }
 
@@ -50,7 +25,10 @@ fn churn_classifies_append_rewrite_cochange_and_survival() {
 /// and blame still counted every surviving root line.
 #[test]
 fn root_commit_additions_are_counted() {
-    let root = seeded("churn-root");
+    let root = common::tmp("churn-root");
+    common::git(&root, &["init", "-q"]);
+    std::fs::write(root.join("a.rs"), common::rust_fn(1)).expect("a.rs");
+    common::commit_all(&root, "seed");
     let r = churn::run(&root, 30).expect("churn");
     assert_eq!(r.commits, 1);
     assert!(r.added_in_window() > 0, "root additions counted");

@@ -60,6 +60,27 @@ pub fn commit_all(dir: &Path, msg: &str) {
     git(dir, &["commit", "-qm", msg]);
 }
 
+/// The three-commit history the churn batteries measure, and the one
+/// every long-measurement face reuses: a root commit adding a.rs; an
+/// edit INSIDE work_1 plus a new b.rs (one rewrite, one append, one
+/// co-change); a third touching both — a.rs gaining a top-level tail
+/// and b.rs losing its function body, so some window additions stop
+/// surviving. Shared because the progress face needs the same three
+/// phases to have work to do, and its own copy of this was a
+/// 121-token twin of churn.rs's that the dedup ratchet refused.
+pub fn seed_churn_history(dir: &Path) {
+    git(dir, &["init", "-q"]);
+    std::fs::write(dir.join("a.rs"), rust_fn(1)).expect("a.rs");
+    commit_all(dir, "seed");
+    let edited = rust_fn(1).replace("+ 7;", "+ 8;\n            total_1 += 1;");
+    std::fs::write(dir.join("a.rs"), &edited).expect("a.rs edit");
+    std::fs::write(dir.join("b.rs"), rust_fn(2)).expect("b.rs");
+    commit_all(dir, "edit + new");
+    std::fs::write(dir.join("a.rs"), format!("{edited}\n// tail\n")).expect("a.rs tail");
+    std::fs::write(dir.join("b.rs"), "// emptied\n").expect("b.rs emptied");
+    commit_all(dir, "entangle + churn");
+}
+
 /// Git repo with the T2 seed committed and b.rs (the clone) staged
 /// but uncommitted — the audit/precommit fixture shape.
 pub fn seed_git_clone_repo(dir: &Path, mode: &str) {

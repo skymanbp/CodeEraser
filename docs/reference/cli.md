@@ -14,14 +14,14 @@ Usage: ce [OPTIONS] <COMMAND>
 Commands:
   doctor     Environment + project health: ce-core handshake, project status line, degradation counter (never starts the daemon)
   scan       Measure size / complexity / readability metrics; levels graded by the core
-  churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them)
+  churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them). Costs minutes on the default window — a git subprocess per commit and a blame per touched file; progress rides stderr
   graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); liveness lives under `ce deadcode`
   deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts
   clone      T3 near-miss clone judgment: tree edit distance via the core's clone/1; --units lists the cached unit universe instead
   docdup     Documentation-duplication judgment: exact Jaccard via the core's docdup/1 over the cached live segments
-  join       Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only)
+  join       Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only). Costs a churn window plus a full index — minutes; progress rides stderr
   structure  Tree-scale structure judgment: entropy, axes and findings via the core's structure/1 (report-only)
-  trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable
+  trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable. Each uncached commit is a full check in a temp worktree — bound a cold run with --batch; progress rides stderr
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
   baseline   Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1; a degraded judgment is never persisted)
@@ -79,7 +79,7 @@ Options:
 ## ce churn
 
 ```text
-Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them)
+Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them). Costs minutes on the default window — a git subprocess per commit and a blame per touched file; progress rides stderr
 
 Usage: ce churn [OPTIONS] [ROOT]
 
@@ -170,7 +170,7 @@ Options:
 ## ce join
 
 ```text
-Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only)
+Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only). Costs a churn window plus a full index — minutes; progress rides stderr
 
 Usage: ce join [OPTIONS] [ROOT]
 
@@ -210,7 +210,7 @@ Options:
 ## ce trend
 
 ```text
-Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable
+Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable. Each uncached commit is a full check in a temp worktree — bound a cold run with --batch; progress rides stderr
 
 Usage: ce trend [OPTIONS] [ROOT]
 

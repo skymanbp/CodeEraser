@@ -18,7 +18,11 @@ pub(super) fn survival(root: &Path, days: u32, touched: &[String]) -> Result<usi
         .as_secs()
         .saturating_sub(u64::from(days) * 86_400);
     let mut surviving = 0usize;
-    for file in touched {
+    for (n, file) in touched.iter().enumerate() {
+        // the blame storm is the expensive half of the window (155 s
+        // of the first M5-3h measurement); it ticks per file so the
+        // second half of a churn run is not a second silence
+        crate::progress::at(crate::progress::Phase::Survival, n, touched.len());
         let Ok(out) = git(root, &["blame", "--line-porcelain", "HEAD", "--", file]) else {
             continue; // deleted since: zero survivors by definition
         };

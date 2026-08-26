@@ -3780,8 +3780,8 @@
     "text": "let crossing = map.id_of(\"x.rs\", 4, 7);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:100": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 270,
+    "target": "../../../cli/src/join/report.rs",
+    "line": 105,
     "text": "\"join graph leg degraded: {}\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:101": {
@@ -3796,7 +3796,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:103": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 45,
+    "line": 47,
     "text": "pub blocks: usize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:104": {
@@ -3861,7 +3861,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:2": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 29,
+    "line": 31,
     "text": "/// 0.2.0 (2.33.0, H4): file rows carry the core's join verdict —"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:20": {
@@ -3901,12 +3901,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:27": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 34,
+    "line": 36,
     "text": "/// Graph position of one file: [indeg, outdeg, sccId, sccSize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:28": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 113,
+    "line": 123,
     "text": "pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<String, Pos>> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:29": {
@@ -3965,8 +3965,8 @@
     "text": "pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:39": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 193,
+    "target": "../../../cli/src/join/report.rs",
+    "line": 28,
     "text": "\"caveatCode\": churn_unit::GRAPH_NULL_IMPORT_GRANULARITY,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:4": {
@@ -3986,7 +3986,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 168,
+    "line": 178,
     "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
@@ -4026,7 +4026,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 135,
+    "line": 145,
     "text": "let key = if b.a_file <= b.b_file {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
@@ -4046,12 +4046,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:53": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 80,
+    "line": 88,
     "text": "// the wire floor follows the CONFIGURED knob when one is set"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:54": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 222,
+    "line": 230,
     "text": "/// Every pair at or over the floor, count-descending — NO rank cut"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:55": {
@@ -4066,7 +4066,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:57": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 51,
+    "line": 53,
     "text": "/// None = the pair is outside the churn report's co-change table"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:58": {
@@ -4081,7 +4081,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 140,
+    "line": 150,
     "text": "let e = by_pair.entry(key).or_default();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
@@ -4286,17 +4286,17 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:97": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 90,
+    "line": 100,
     "text": "let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:98": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 279,
+    "target": "../../../cli/src/join/report.rs",
+    "line": 114,
     "text": "\"join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md:99": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 82,
+    "line": 91,
     "text": "// Degrade reads the wire's boolean, not reason presence (the C9"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:1": {
@@ -5301,7 +5301,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:2": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 104,
+    "line": 111,
     "text": "/// Newest `n` first-parent commits of HEAD: (full sha, committer"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:20": {
@@ -5356,7 +5356,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:3": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 125,
+    "line": 132,
     "text": "/// One commit's absolute score, judged in a detached temp worktree"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:30": {
@@ -5451,7 +5451,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 93,
+    "line": 100,
     "text": "rows.reverse(); // git log is newest-first; charts read oldest-first"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
