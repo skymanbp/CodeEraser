@@ -3111,7 +3111,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:116": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 251,
+    "line": 258,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:117": {
@@ -3141,17 +3141,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:121": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 39,
+    "line": 42,
     "text": "pub const VERDICT_NAMES: [&str; 4] = ["
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:122": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 273,
+    "line": 280,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:123": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 316,
+    "line": 327,
     "text": "let why = if verdict <= 2 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:124": {
@@ -3166,12 +3166,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:126": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 308,
+    "line": 319,
     "text": "// The RG9 split is the CORE's since 2.18.0; here it survives"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:127": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 340,
+    "line": 351,
     "text": "// pre-2.18 core: no fail bit on the wire — the client's own"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:128": {
@@ -3211,17 +3211,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:134": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 174,
+    "line": 181,
     "text": "fn lang_ledger(sites: &[(String, i64, i64)]) -> Vec<[i64; 3]> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 348,
+    "line": 359,
     "text": "(0..=2).contains(&c),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 260,
+    "line": 267,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
@@ -3596,12 +3596,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:68": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 186,
+    "line": 193,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:69": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 201,
+    "line": 208,
     "text": "let of = |path: &str, unit: &str| {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:7": {
@@ -3696,7 +3696,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:86": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 356,
+    "line": 367,
     "text": "/// A degraded judgment is a visible event (A9f): one observe-feed"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:87": {
@@ -3751,7 +3751,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:96": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 216,
+    "line": 223,
     "text": "/// [lang, kind, roles] — only file nodes carry entry facts. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:97": {

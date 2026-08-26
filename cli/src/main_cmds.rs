@@ -90,7 +90,7 @@ pub fn deadcode_cmd(
 ) -> ExitCode {
     match graph::deadcode::run(root, db, core) {
         Ok(report) => {
-            print_deadcode(&report, json);
+            graph::deadcode::print(&report, json);
             // --check (M5-close CI gate): the DECISION is the core's
             // fail bit since 2.18.0 (batch-7 slice 4) — any file-tier
             // dead verdict, or a degraded run that judged nothing,
@@ -122,72 +122,6 @@ pub fn deadcode_cmd(
             ExitCode::SUCCESS
         }
         Err(err) => fail("deadcode", err),
-    }
-}
-
-/// Section/package aggregates are reported, never called dead
-/// (decision 4); the unresolved-site count rides every summary — the
-/// verdicts assume none of those sites lands in-corpus, and the
-/// reader sees it.
-fn print_deadcode(r: &graph::deadcode::Report, json: bool) {
-    if json {
-        println!("{}", codeeraser::report::deadcode_json(r));
-        return;
-    }
-    for d in &r.dead {
-        println!(
-            "{}",
-            line(
-                "dead: {}  {}  ({}){}",
-                "死件：{}  {}（{}）{}",
-                &[
-                    &d.path,
-                    &d.verdict,
-                    &d.why,
-                    &graph::deadcode::conf_word(d.conf)
-                ],
-            )
-        );
-    }
-    for (name, verdict) in &r.reported {
-        println!(
-            "{}",
-            line(
-                "aggregate: {}  {}  (reported, never dead — decision 4)",
-                "聚合件：{}  {}（仅报告，永不判死 — 决议 4）",
-                &[name, verdict],
-            )
-        );
-    }
-    print_deadcode_tail(r);
-}
-
-/// The summary + degraded lines (split at the 50-line fn gate).
-fn print_deadcode_tail(r: &graph::deadcode::Report) {
-    println!(
-        "{}",
-        line(
-            "deadcode: {} nodes, {} kept edges, {} dead, {} aggregate reports, \
-             {} unresolved sites (verdicts assume none lands in-corpus)",
-            "死码：{} 节点，{} 保留边，{} 死件，{} 聚合报告，{} 未解析调用点（判决假设它们皆不落语料内）",
-            &[
-                &r.nodes,
-                &r.kept,
-                &r.dead.len(),
-                &r.reported.len(),
-                &r.unresolved_sites,
-            ],
-        )
-    );
-    if let Some(reason) = &r.degraded {
-        println!(
-            "{}",
-            line(
-                "degraded: {} (nothing was analyzed)",
-                "降级：{}（未分析任何内容）",
-                &[reason],
-            )
-        );
     }
 }
 

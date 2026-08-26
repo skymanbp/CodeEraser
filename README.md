@@ -163,7 +163,7 @@ Every value is generated from `contracts/bench/bench.json`; the test rejects han
 - [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — generated series and measured replay ledgers
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md) — wire SemVer and the two-phase release runbook
 - [docs/reference/methodology.md](docs/reference/methodology.md) — every verdict's math, one booklet per family, with formula and constant citations to implementation lines
-- [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) — focused behavior contracts
+- [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) · [GUI reference](docs/reference/gui.md) — focused behavior contracts
 
 ## Under the hood / tech stack
 

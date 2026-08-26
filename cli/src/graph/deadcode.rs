@@ -25,7 +25,10 @@
 //! symbol-level indegree stays out while call edges are off).
 
 mod flags;
+mod report;
 mod targets;
+
+pub use report::print;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
@@ -50,6 +53,10 @@ pub struct Report {
     /// Section/package verdicts: reported, never called dead.
     pub reported: Vec<(String, &'static str)>,
     pub nodes: usize,
+    /// File-tier nodes alone — `nodes` counts every granularity, so
+    /// the share of FILES dead (the plugin-shape signal the console
+    /// hint reads) needs its own denominator.
+    pub files: usize,
     pub kept: u64,
     pub unresolved_sites: i64,
     pub degraded: Option<String>,
@@ -286,6 +293,10 @@ fn consume(reply: &Value, nodes: &[Node], unresolved_sites: i64) -> Result<Repor
         dead: Vec::new(),
         reported: Vec::new(),
         nodes: nodes.len(),
+        files: nodes
+            .iter()
+            .filter(|n| n.kind == super::wire::GRAN_FILE)
+            .count(),
         kept: reply["counts"]["kept"].as_u64().unwrap_or(0),
         unresolved_sites,
         // The wire's degraded BIT is authoritative (the C9 read-the-

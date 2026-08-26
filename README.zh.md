@@ -205,7 +205,7 @@ Claude Code hooks 与 CI 渲染或执行的是同一批报告形状。
 - [BENCH](docs/BENCH.md) — 逐版本延迟与冻结评估点，由 `contracts/bench/bench.json` 生成
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md) — wire SemVer 与两段式发布 runbook
 - [docs/reference/methodology.md](docs/reference/methodology.md) — 每个判决的数学实现，一族一册，公式与常数逐条引到实现行
-- [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) — 聚焦行为契约
+- [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) — 聚焦行为契约
 
 ## 许可证
 

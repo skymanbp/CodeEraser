@@ -74,6 +74,50 @@ fn verdicts_come_back_with_names() {
     assert_eq!(dead_set(&rebuilt), want, "from-scratch rebuild identical");
 }
 
+/// The v2.16 K9 hint, both directions: a convention-loaded tree
+/// (nothing imports anything, no entry declared) names the
+/// entry_globs knob beside its dead list; a tree where death is the
+/// exception must NOT — one or two stray dead files are deletion
+/// candidates, and hinting an exemption knob at them would teach
+/// masking over deleting. Same binary, same console face, only the
+/// dead share differs.
+#[test]
+fn the_entry_globs_hint_follows_the_dead_share() {
+    let core = core_bin();
+    let plugin = common::fixture(
+        "deadcode-plugin-shape",
+        &[
+            ("cmd-a.ts", "export {};\n"),
+            ("cmd-b.ts", "export {};\n"),
+            ("cmd-c.ts", "export {};\n"),
+        ],
+    );
+    let out = common::run_ce(&plugin.dir, &["deadcode", ".", "--core", &core]);
+    let text = String::from_utf8_lossy(&out.stdout).to_string();
+    assert!(
+        text.contains("entry_globs") && text.contains("3 of 3 files"),
+        "a fully-dead tree must name the knob: {text}"
+    );
+    // minority death: one orphan among entry-kept siblings
+    let mixed = common::fixture(
+        "deadcode-minority-dead",
+        &[
+            ("ce.toml", "[graph]\nentry_globs = [\"root.ts\"]\n"),
+            ("root.ts", "import './used';\nimport './also';\n"),
+            ("used.ts", "export {};\n"),
+            ("also.ts", "export {};\n"),
+            ("orphan.ts", "export {};\n"),
+        ],
+    );
+    let out = common::run_ce(&mixed.dir, &["deadcode", ".", "--core", &core]);
+    let text = String::from_utf8_lossy(&out.stdout).to_string();
+    assert!(text.contains("orphan.ts"), "the orphan still dies: {text}");
+    assert!(
+        !text.contains("entry_globs"),
+        "a minority dead set must not hint the exemption knob: {text}"
+    );
+}
+
 /// A tree with nothing walkable must be an explicit error — a wrong
 /// root yielding a silent empty graph is the failure mode the exit
 /// row names.

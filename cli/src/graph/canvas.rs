@@ -170,6 +170,7 @@ mod tests {
             }],
             reported: vec![],
             nodes: 4,
+            files: 4,
             kept: 3,
             unresolved_sites: 7,
             degraded: None,
