@@ -7,6 +7,11 @@ edition = "2024"
 description = "CodeEraser — erase LLM-induced code & document entropy"
 license = "Apache-2.0"
 repository = "https://github.com/skymanbp/CodeEraser"
+# cargo-package tarball only (git/CI untouched): the integration tests
+# lean on repo-root contracts/ fixtures that never ship in the crate,
+# so for `cargo install` users they were 124 files of dead weight
+# (user decision 2026-08-26; measured via `cargo package --list`).
+exclude = ["tests/"]
 
 [[bin]]
 name = "ce"
