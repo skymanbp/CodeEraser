@@ -15,6 +15,16 @@ pub enum OutFormat {
     Json,
 }
 
+/// The two finding-shaped commands (scan, dedup) alone take the wide
+/// format — sarif in the help of a command whose report carries no
+/// physical locations would be a promise nothing renders.
+#[derive(Clone, Copy, ValueEnum)]
+pub enum FindingsFormat {
+    Console,
+    Json,
+    Sarif,
+}
+
 pub fn json(format: OutFormat) -> bool {
     matches!(format, OutFormat::Json)
 }
@@ -23,16 +33,16 @@ pub fn or_cwd(root: Option<PathBuf>) -> PathBuf {
     root.unwrap_or_else(|| PathBuf::from("."))
 }
 
-pub fn fmt(json: bool) -> scan::Format {
-    if json {
-        scan::Format::Json
-    } else {
-        scan::Format::Console
+pub fn findings_fmt(f: FindingsFormat) -> scan::Format {
+    match f {
+        FindingsFormat::Console => scan::Format::Console,
+        FindingsFormat::Json => scan::Format::Json,
+        FindingsFormat::Sarif => scan::Format::Sarif,
     }
 }
 
-pub fn scan_cmd(path: Option<PathBuf>, json: bool, core: &str) -> ExitCode {
-    fallible("scan", scan::run(&or_cwd(path), fmt(json), core))
+pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> ExitCode {
+    fallible("scan", scan::run(&or_cwd(path), findings_fmt(format), core))
 }
 
 pub fn churn_cmd(root: &Path, days: u32, json: bool) -> ExitCode {
@@ -132,8 +142,8 @@ pub fn deadcode_cmd(
 pub struct DedupArgs {
     /// Directory to index (default: current directory)
     path: Option<PathBuf>,
-    #[arg(long, value_enum, default_value_t = OutFormat::Console)]
-    format: OutFormat,
+    #[arg(long, value_enum, default_value_t = FindingsFormat::Console)]
+    format: FindingsFormat,
     /// Index database path (default: <path>/.ce/index.db)
     #[arg(long)]
     db: Option<PathBuf>,
@@ -158,7 +168,7 @@ pub struct DedupArgs {
 
 pub fn dedup_cmd(a: DedupArgs) -> ExitCode {
     let opts = dedup::RunOpts {
-        format: fmt(json(a.format)),
+        format: findings_fmt(a.format),
         db: a.db,
         min_tokens: a.min_tokens,
         min_distinct: a.min_distinct,

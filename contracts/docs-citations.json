@@ -206,8 +206,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:130": {
     "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 152,
-    "text": ""
+    "line": 162,
+    "text": "pub fn clone_blocks_near("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:131": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -301,12 +301,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:148": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 44,
+    "line": 45,
     "text": "pub min_distinct: Option<usize>,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:149": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 150,
+    "line": 151,
     "text": "min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:15": {
@@ -321,32 +321,32 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:151": {
     "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 152,
-    "text": ""
+    "line": 162,
+    "text": "pub fn clone_blocks_near("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:152": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 36,
+    "line": 37,
     "text": "pub const SCHEMA_ID: &str = \"ce.dedup-report/0.5.0\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:153": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 212,
+    "line": 213,
     "text": "Summary {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:154": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 149,
+    "line": 150,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:155": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 270,
+    "line": 263,
     "text": "#[derive(Serialize)]"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:156": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 265,
+    "target": "../../../cli/src/dedup/report.rs",
+    "line": 16,
     "text": "groups: &found.groups,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:157": {
@@ -671,13 +671,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:72": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 350,
+    "line": 279,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:73": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 334,
-    "text": "&s.min_tokens,"
+    "line": 226,
+    "text": "min_tokens: filter.min_tokens,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:74": {
     "target": "../../../cli/src/dedup/winnow.rs",
@@ -691,23 +691,23 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:76": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 361,
+    "line": 290,
     "text": "/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:77": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 365,
-    "text": "}"
+    "line": 293,
+    "text": "self.window + self.kgram - 1"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:78": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 368,
+    "line": 297,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:79": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 377,
-    "text": "}"
+    "line": 303,
+    "text": "window: 26,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:8": {
     "target": "../../../cli/src/scan/ast.rs",
@@ -716,22 +716,22 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:80": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 148,
+    "line": 149,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:81": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 146,
+    "line": 147,
     "text": "let walked = walkidx::index_all(root, &config, &mut idx)?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:82": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 53,
+    "line": 54,
     "text": "/// `min_tokens` lowers the report filter below the guarantee t for"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:83": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 56,
+    "line": 57,
     "text": "/// ratchet gate against ce.toml [dedup] budget."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
@@ -1316,7 +1316,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:69": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 361,
+    "line": 290,
     "text": "/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:7": {
@@ -1326,7 +1326,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:70": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 368,
+    "line": 297,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:71": {
@@ -3306,7 +3306,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:151": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 114,
+    "line": 124,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:16": {
@@ -3701,7 +3701,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:87": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 94,
+    "line": 104,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:88": {
@@ -3801,7 +3801,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:104": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 149,
+    "line": 150,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:105": {
@@ -5606,13 +5606,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:34": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 350,
+    "line": 279,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:35": {
     "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 113,
-    "text": ""
+    "line": 114,
+    "text": "// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:36": {
     "target": "../../FPR-REPLAY.md",

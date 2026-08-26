@@ -24,6 +24,7 @@ pub mod proc;
 pub mod progress;
 pub mod report;
 pub mod root;
+pub mod sarif;
 pub mod scan;
 pub mod score;
 pub mod structure;

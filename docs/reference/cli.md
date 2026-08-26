@@ -70,7 +70,7 @@ Arguments:
   [PATH]  Directory to scan (default: current directory)
 
 Options:
-      --format <FORMAT>  [default: console] [possible values: console, json]
+      --format <FORMAT>  [default: console] [possible values: console, json, sarif]
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help             Print help
@@ -298,7 +298,7 @@ Arguments:
   [PATH]  Directory to index (default: current directory)
 
 Options:
-      --format <FORMAT>              [default: console] [possible values: console, json]
+      --format <FORMAT>              [default: console] [possible values: console, json, sarif]
       --lang <LANG>                  Console language (wins over CE_LANG) [possible values: en, zh]
       --db <DB>                      Index database path (default: <path>/.ce/index.db)
       --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50)

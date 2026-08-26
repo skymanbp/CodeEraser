@@ -129,7 +129,7 @@ L0 = `git diff --numstat -M -C --find-copies-harder`（零自研）；L1 = L0 + 
 ### 4.4 CLI UX 与输出
 
 - 退出码：`0` 通过 / `1` 违规 / `2` 内部错误；`--fail-under <score>`（与棘轮合成语义见 ADR-006）。
-- 格式（as-built）：console、JSON 两种（`--format`）；SARIF/Markdown 退役（裁定 2026-08-19）。
+- 格式（as-built）：console、JSON 全命令，SARIF 限 scan/dedup 两个发现形命令（`--format sarif`，v2.14 复活、2026-08-25 落地：纯投影+CI 上传腿）；Markdown 维持退役（裁定 2026-08-19）。
 - 分工（as-built）：CLI 只出结构化事实（报告族 JSON + `ce mcp` 只读面 + erase skill 引导删除），解读归消费方 LLM。
 - **hook 输出 token 预算（B4，anti-bloat 工具不得自己成为上下文熵源）**：
   warn 注入 ≤ 200 tokens/事件；同一 `(rule, file)` 每会话只报一次，后续静默累积；

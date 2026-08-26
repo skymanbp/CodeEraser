@@ -2,8 +2,10 @@
 # macOS is 10x-metered, so it runs only on tags and the weekly schedule.
 name: ci
 
-# CI never writes anything back — said explicitly so the token the
-# third-party build scripts see is read-only whatever the repo default.
+# CI never writes repo CONTENTS back — said explicitly so the token
+# the third-party build scripts see is read-only whatever the repo
+# default. The build job alone adds security-events: write, which is
+# the SARIF upload lane (code-scanning alerts), not a contents write.
 permissions:
   contents: read
 
@@ -17,6 +19,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      security-events: write # the SARIF upload step below, nothing else
     strategy:
       fail-fast: false
       matrix:
@@ -192,6 +197,27 @@ jobs:
         working-directory: cli
         run: |
           cargo run --locked -- check .. --core "$(cd ../core && cabal list-bin ce-core)" --days 14
+
+      # The SARIF distribution face (plan v2.14: the revival's stated
+      # benefit IS this lane): the same judged scan findings the
+      # dogfood step just gated on, re-encoded and uploaded so the
+      # accepted-warn backlog is visible as code-scanning alerts with
+      # per-file history. Main-push only — fork PRs lack the token
+      # scope, and tags/schedule add nothing over the push that made
+      # them. Runs after the dogfood gate on purpose: a red tree
+      # fails the job before this step, so alerts always describe a
+      # tree the gates accepted.
+      - name: SARIF upload (scan findings -> code scanning)
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        working-directory: cli
+        run: cargo run --locked -- scan .. --core "$(cd ../core && cabal list-bin ce-core)" --format sarif > ../ce-scan.sarif
+      - name: SARIF upload (publish)
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: github/codeql-action/upload-sarif@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4, pinned 2026-08-25
+        with:
+          sarif_file: ce-scan.sarif
+          category: ce-scan
 
       - name: Handshake smoke (ce doctor)
         shell: bash

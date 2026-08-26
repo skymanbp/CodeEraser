@@ -25,6 +25,7 @@ use std::process::ExitCode;
 pub enum Format {
     Console,
     Json,
+    Sarif,
 }
 
 pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
@@ -32,6 +33,7 @@ pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
     match format {
         Format::Console => report::print_console(&findings, &summary),
         Format::Json => println!("{}", report_string(&files, &findings, summary)?),
+        Format::Sarif => println!("{}", report::sarif_string(&findings)?),
     }
     Ok(if fail {
         ExitCode::from(1)

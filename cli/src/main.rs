@@ -92,7 +92,7 @@ fn usage_exit(e: clap::Error) -> ! {
 /// dispatcher under the repo's own complexity gate as families grow.
 fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
     Ok(match cmd {
-        Cmd::Scan { path, format, core } => cmds::scan_cmd(path, json(format), &core),
+        Cmd::Scan { path, format, core } => cmds::scan_cmd(path, format, &core),
         Cmd::Churn { root, days, format } => {
             cmds::churn_cmd(&cmds::or_cwd(root), days, json(format))
         }

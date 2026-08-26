@@ -10,6 +10,7 @@ pub mod index;
 pub mod minhash;
 pub mod pairs;
 pub mod probe;
+mod report;
 mod rescache;
 pub(crate) mod schema;
 mod sources;
@@ -56,7 +57,7 @@ pub struct RunOpts {
 /// ratchet gate against ce.toml [dedup] budget.
 pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
     let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
-    emit(opts.format, &found, &summary)?;
+    report::emit(opts.format, &found, &summary)?;
     if opts.check {
         // the R12 gate lives in budget.rs (split at the 300-line
         // dogfood ceiling when the review-repair asserts landed);
@@ -257,15 +258,7 @@ fn resolve_edges(
     idx.resolve_refreshed(&dirty, &mut resolver)
 }
 
-/// The dedup report as a self-contained JSON value (daemon wire use).
-pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<serde_json::Value> {
-    Ok(serde_json::to_value(Report {
-        schema: SCHEMA_ID,
-        blocks: &found.blocks,
-        groups: &found.groups,
-        summary: s,
-    })?)
-}
+pub use report::report_json;
 
 #[derive(Serialize)]
 pub struct Summary {
@@ -281,70 +274,6 @@ pub struct Summary {
     window: usize,
     min_tokens: usize,
     min_distinct: usize,
-}
-
-#[derive(Serialize)]
-struct Report<'a> {
-    schema: &'static str,
-    blocks: &'a [pairs::Block],
-    groups: &'a [groups::Group],
-    summary: &'a Summary,
-}
-
-fn emit(format: Format, found: &pairs::Blocks, s: &Summary) -> Result<()> {
-    match format {
-        Format::Console => print_console(found, s),
-        Format::Json => {
-            let rep = Report {
-                schema: SCHEMA_ID,
-                blocks: &found.blocks,
-                groups: &found.groups,
-                summary: s,
-            };
-            println!("{}", serde_json::to_string_pretty(&rep)?);
-        }
-    }
-    Ok(())
-}
-
-/// The console face (split from emit at the 50-line fn gate when the
-/// bilingual lines landed, M8-G3b).
-fn print_console(found: &pairs::Blocks, s: &Summary) {
-    for b in &found.blocks {
-        println!(
-            "{}",
-            crate::i18n::line(
-                "dup {}:{}-{} <-> {}:{}-{} ({} tokens)",
-                "重复 {}:{}-{} <-> {}:{}-{}（{} tokens）",
-                &[
-                    &b.a_file, &b.a_start, &b.a_end, &b.b_file, &b.b_start, &b.b_end, &b.tokens,
-                ],
-            )
-        );
-    }
-    // named binding (not inline): the inline array made this call a
-    // T2 twin of the dup-line call above — the repo's own ratchet bit
-    // the pair the day it landed
-    let counts: [&dyn std::fmt::Display; 10] = [
-        &s.files,
-        &s.refreshed,
-        &s.removed,
-        &s.blocks,
-        &s.groups,
-        &s.min_tokens,
-        &s.min_distinct,
-        &s.low_diversity_suppressed,
-        &s.hot_chained,
-        &s.stale_skipped,
-    ];
-    println!(
-        "{}",
-        crate::i18n::line(
-            "indexed {} files ({} refreshed, {} removed) — {} clone blocks in {} groups (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped",
-            "已索引 {} 个文件（刷新 {}，移除 {}）— {} 个克隆块 / {} 组（最少 {} tokens，多样性 >= {}），抑制低多样性 {}，热链 {}，跳过陈旧 {}",
-            &counts,
-        )
-    );
 }
 
 /// Winnowing parameters. Guarantee threshold t = matches of at least

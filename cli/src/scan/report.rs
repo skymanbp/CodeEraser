@@ -231,6 +231,35 @@ pub fn summarize(files: &[FileMetrics], findings: &[Finding]) -> Summary {
     }
 }
 
+/// The SARIF face: the same judged finding list, ruleIds under
+/// `ce.scan/`, grades respelled in SARIF vocabulary (Fail carries
+/// the gate's exit-code meaning, hence "error"). The message reuses
+/// the console line's English body — SARIF is a machine face, never
+/// translated (i18n.rs charter).
+pub fn sarif_string(findings: &[Finding]) -> anyhow::Result<String> {
+    let results = findings
+        .iter()
+        .map(|f| {
+            crate::sarif::result(
+                &format!("ce.scan/{}", f.rule),
+                match f.level {
+                    Level::Fail => "error",
+                    Level::Warn => "warning",
+                },
+                &format!(
+                    "{} = {} (limit {}) [{}]",
+                    f.rule, f.value, f.threshold, f.subject
+                ),
+                crate::sarif::location(&f.file, f.line, f.line),
+                Vec::new(),
+            )
+        })
+        .collect();
+    Ok(serde_json::to_string_pretty(&crate::sarif::report(
+        results,
+    ))?)
+}
+
 pub fn print_console(findings: &[Finding], summary: &Summary) {
     for f in findings {
         // FAIL/warn are exit-code vocabulary — never translated

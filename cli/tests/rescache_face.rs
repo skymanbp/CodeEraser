@@ -8,7 +8,7 @@
 
 mod common;
 use common::fixtures::{rust_fn, seed_clone_pair, tmp};
-use common::run_ce;
+use common::gates::run_expect;
 
 /// Cold run, warm hit, and a fresh recompute after `.ce` is wiped:
 /// the judgment content (blocks + groups) is identical in all three,
@@ -19,14 +19,14 @@ use common::run_ce;
 fn served_and_recomputed_judgments_are_identical() {
     let dir = tmp("rescache-bytes");
     seed_clone_pair(&dir);
-    let first = report(&run_ce(&dir, &["dedup", ".", "--format", "json"]));
+    let first = report(&run_expect(&dir, &["dedup", ".", "--format", "json"]));
     assert!(
         first["blocks"].to_string().contains("a.rs"),
         "anti-vacuity: the seeded pair must be reported"
     );
-    let warm = report(&run_ce(&dir, &["dedup", ".", "--format", "json"]));
+    let warm = report(&run_expect(&dir, &["dedup", ".", "--format", "json"]));
     std::fs::remove_dir_all(dir.join(".ce")).expect("wipe .ce");
-    let fresh = report(&run_ce(&dir, &["dedup", ".", "--format", "json"]));
+    let fresh = report(&run_expect(&dir, &["dedup", ".", "--format", "json"]));
     for (label, other) in [("warm hit", &warm), ("fresh recompute", &fresh)] {
         assert_eq!(first["blocks"], other["blocks"], "{label}");
         assert_eq!(first["groups"], other["groups"], "{label}");
@@ -42,9 +42,8 @@ fn served_and_recomputed_judgments_are_identical() {
     );
 }
 
-fn report(out: &std::process::Output) -> serde_json::Value {
-    assert!(out.status.success());
-    serde_json::from_slice(&out.stdout).expect("report json")
+fn report(stdout: &str) -> serde_json::Value {
+    serde_json::from_str(stdout).expect("report json")
 }
 
 /// The next run after a content move reports the moved content —
@@ -53,13 +52,12 @@ fn report(out: &std::process::Output) -> serde_json::Value {
 fn a_new_clone_lands_in_the_very_next_report() {
     let dir = tmp("rescache-invalidate");
     seed_clone_pair(&dir);
-    let before = run_ce(&dir, &["dedup", ".", "--format", "json"]);
-    assert!(before.status.success());
-    assert!(!String::from_utf8_lossy(&before.stdout).contains("c.rs"));
+    let before = run_expect(&dir, &["dedup", ".", "--format", "json"]);
+    assert!(!before.contains("c.rs"));
     std::fs::write(dir.join("c.rs"), rust_fn(3)).expect("c.rs");
-    let after = run_ce(&dir, &["dedup", ".", "--format", "json"]);
+    let after = run_expect(&dir, &["dedup", ".", "--format", "json"]);
     assert!(
-        String::from_utf8_lossy(&after.stdout).contains("c.rs"),
+        after.contains("c.rs"),
         "the report must be current on the first run after the change"
     );
 }

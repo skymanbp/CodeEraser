@@ -8,7 +8,7 @@
 //! whether it can fail the build, and what it costs — never a plan
 //! coordinate the user cannot resolve.
 
-use crate::main_cmds::{DedupArgs, OutFormat};
+use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
 use crate::main_erase::EraseArgs;
 use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
@@ -68,8 +68,8 @@ pub(crate) enum Cmd {
     Scan {
         /// Directory to scan (default: current directory)
         path: Option<PathBuf>,
-        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
-        format: OutFormat,
+        #[arg(long, value_enum, default_value_t = FindingsFormat::Console)]
+        format: FindingsFormat,
         /// Path to the ce-core executable (default: CE_CORE_BIN, a
         /// ce-core beside this binary, then PATH)
         #[arg(long, default_value = "ce-core")]
