@@ -3,7 +3,7 @@
 //! its ceiling (the candidates_tests.rs precedent): the scripted
 //! stale daemons and the trust ordering they exercise.
 
-use super::{Request, request_if_running, socket_name, stale};
+use super::{Request, bounded, request_if_running, socket_name, stale};
 use interprocess::local_socket::traits::ListenerExt;
 use interprocess::local_socket::{GenericNamespaced, ListenerOptions, ToNsName};
 use std::io::{BufRead, BufReader, Write};
@@ -103,4 +103,41 @@ fn stale_orders_minors_and_distrusts_garbage() {
     assert!(stale("not-a-version"), "unparseable proto");
     assert!(!stale(super::DAEMON_PROTO), "current");
     assert!(!stale("2.99.0"), "newer same-major minor is additive");
+}
+
+/// The #85 close, measured: a daemon that accepts and then says
+/// NOTHING no longer parks the client forever. The deadline is
+/// passed straight to `bounded` — an env pin here would race the
+/// parallel tests reading the same process environment.
+#[test]
+fn a_silent_daemon_meets_the_deadline_not_forever() {
+    let root = crate::testutil::scratch("client-silent");
+    let ns = socket_name(&root)
+        .to_ns_name::<GenericNamespaced>()
+        .expect("name");
+    let listener = ListenerOptions::new().name(ns).create_sync().expect("bind");
+    // accept, then hold the connection open without one byte back
+    let hold = std::thread::spawn(move || {
+        let stream = listener.incoming().next().expect("conn").expect("accept");
+        std::thread::sleep(std::time::Duration::from_secs(5));
+        drop(stream);
+    });
+    let started = std::time::Instant::now();
+    let err = bounded(
+        &root,
+        &Request::Ping,
+        false,
+        std::time::Duration::from_millis(300),
+    )
+    .expect_err("silence must not be an answer");
+    assert!(
+        started.elapsed() < std::time::Duration::from_secs(3),
+        "the deadline bounded the wait: {:?}",
+        started.elapsed()
+    );
+    assert!(
+        err.to_string().contains("did not answer within"),
+        "the refusal names the deadline: {err}"
+    );
+    hold.join().expect("stub");
 }

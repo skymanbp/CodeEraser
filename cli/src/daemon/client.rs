@@ -15,6 +15,49 @@ use std::time::Duration;
 const SPAWN_RETRIES: u32 = 20;
 const RETRY_DELAY: Duration = Duration::from_millis(100);
 
+/// The client's whole-conversation deadline (audit #85, closed here
+/// after its "1.0 后再议"): connect, hello rounds and the request
+/// reply together. DAEMON.md recorded the asymmetry in so many words
+/// — the daemon bounds its peers and its core, and the CLIENT alone
+/// read forever, so a wedged daemon parked a PreToolUse hook
+/// indefinitely. Default 75 s = the daemon's own 60 s core deadline
+/// plus margin: the slowest legitimate reply is a four_class batch
+/// waiting on ce-core, and a client deadline under the server's
+/// would convert healthy slow judgments into false hangs.
+const CLIENT_DEADLINE: Duration = Duration::from_secs(75);
+
+fn deadline_from_env() -> Duration {
+    std::env::var("CE_CLIENT_DEADLINE_SECS")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .map(Duration::from_secs)
+        .unwrap_or(CLIENT_DEADLINE)
+}
+
+/// Run one whole negotiate on a worker thread that OWNS the
+/// connection, and give up at `deadline`. This shape — rather than a
+/// per-read timeout — because interprocess 2.4.3 exposes none for
+/// named pipes (only the discouraged PIPE_NOWAIT polling mode), and
+/// a bound on the conversation is what the hook actually needs. On
+/// expiry the worker stays parked on its read and dies with the
+/// process — every hook exits immediately after; the one long-lived
+/// caller (the GUI's doctor probe) leaks at most one parked thread
+/// per wedged-daemon event, which DAEMON.md now says out loud.
+fn bounded(root: &Path, req: &Request, lazy: bool, deadline: Duration) -> Result<Response> {
+    let (tx, rx) = std::sync::mpsc::channel();
+    let (root, req) = (root.to_path_buf(), req.clone());
+    std::thread::spawn(move || {
+        let _ = tx.send(negotiate(&root, &req, lazy));
+    });
+    rx.recv_timeout(deadline).unwrap_or_else(|_| {
+        bail!(
+            "daemon did not answer within {}s — a wedged daemon is replaced by \
+             `ce ping` after it exits, or killed by hand; CE_CLIENT_DEADLINE_SECS overrides",
+            deadline.as_secs()
+        )
+    })
+}
+
 /// One round-trip ONLY IF the daemon is already up — never spawns.
 /// `ce doctor` uses this: a diagnostic must not mutate the state it
 /// reports (attack review 2026-08-07: doctor's warm-up ping left a
@@ -27,7 +70,7 @@ const RETRY_DELAY: Duration = Duration::from_millis(100);
 /// the refusal, and removed .ce out from under a live daemon
 /// (review 2026-08-20 #7).
 pub fn request_if_running(root: &Path, req: &Request) -> Result<Response> {
-    negotiate(root, req, false)
+    bounded(root, req, false, deadline_from_env())
 }
 
 /// Does anyone still hold this root's socket? A connect that is
@@ -60,7 +103,7 @@ fn stale(theirs: &str) -> bool {
 /// (it answered our hello by its own rules, so it takes a shutdown)
 /// and the respawn round brings up one from this binary.
 pub fn request(root: &Path, req: &Request) -> Result<Response> {
-    negotiate(root, req, true)
+    bounded(root, req, true, deadline_from_env())
 }
 
 /// The one hello loop both entry points share (the dedup ratchet

@@ -18,7 +18,10 @@ use std::path::Path;
 /// major, so a 1.x client meets `restart` and respawns.
 pub const DAEMON_PROTO: &str = "2.0.0";
 
-#[derive(Debug, Serialize, Deserialize)]
+// Clone: the client's deadline wrapper moves the request into the
+// worker thread that owns the connection (plan v2.16-era #85 close);
+// plain data, zero wire meaning.
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Request {
     /// First line on every connection — and since 1.1.0 the ONLY
