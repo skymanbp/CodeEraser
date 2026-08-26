@@ -18,13 +18,33 @@ pub fn pretooluse_envelope(dir: &Path, tool: &str, content: &str) -> String {
 /// Same envelope with the target path chosen by the test (budget-rule
 /// coverage needs targets other than b.rs).
 pub fn pretooluse_envelope_at(dir: &Path, rel: &str, tool: &str, content: &str) -> String {
+    let input = if tool == "Write" {
+        serde_json::json!({"content": content})
+    } else {
+        serde_json::json!({"old_string": "x", "new_string": content, "replace_all": false})
+    };
+    envelope_shell(dir, rel, tool, input)
+}
+
+/// Edit envelope with the replaced span chosen by the test — the
+/// novel-duplication rule subtracts old_string's own matches, so
+/// batteries need to steer both sides of the replacement.
+pub fn pretooluse_edit_envelope(dir: &Path, rel: &str, old: &str, new: &str) -> String {
+    envelope_shell(
+        dir,
+        rel,
+        "Edit",
+        serde_json::json!({"old_string": old, "new_string": new, "replace_all": false}),
+    )
+}
+
+/// The one envelope scaffold (file_path/cwd spelling included) every
+/// PreToolUse battery rides; `input` arrives without file_path and
+/// gets it stamped here.
+fn envelope_shell(dir: &Path, rel: &str, tool: &str, mut input: serde_json::Value) -> String {
     let file = dir.join(rel).display().to_string().replace('\\', "/");
     let cwd = dir.display().to_string().replace('\\', "/");
-    let input = if tool == "Write" {
-        serde_json::json!({"file_path": file, "content": content})
-    } else {
-        serde_json::json!({"file_path": file, "old_string": "x", "new_string": content, "replace_all": false})
-    };
+    input["file_path"] = serde_json::json!(file);
     serde_json::json!({
         "session_id": "t", "transcript_path": "t", "cwd": cwd,
         "hook_event_name": "PreToolUse", "tool_name": tool,

@@ -4,9 +4,9 @@
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
-    "matches": 1,
+    "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -17,7 +17,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -26,7 +26,7 @@
     "file": "<file>",
     "mode": "observe",
     "resulting_lines": 751,
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -37,7 +37,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -47,7 +47,7 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 400,
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "soft": 300,
     "ts_ms": 0,
@@ -60,7 +60,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -70,7 +70,7 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 600,
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "soft": 300,
     "ts_ms": 0,
@@ -87,7 +87,7 @@
     },
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -98,7 +98,7 @@
     "event": "precommit",
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.6.0",
+    "schema": "ce.observe/0.7.0",
     "session_id": null,
     "ts_ms": 0
   }

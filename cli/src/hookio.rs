@@ -20,6 +20,14 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.7.0 re-defines `matches` on `probe` events (K step 11 novel-
+/// duplication semantics): the count of matches the REPLACED content
+/// did not already carry (guard::novel_matches), where it was the
+/// raw probe-match count before. No key changes shape; the bump
+/// marks the semantic break, because pre/post counts are not
+/// comparable as FPR raw material — and that material is this
+/// feed's whole job.
+///
 /// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan
 /// v2.7 ①): present exactly when ce.toml arms the zone→tier map —
 /// the tier the mapped position resolved to, so the feed records
@@ -41,7 +49,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.6.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.7.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a

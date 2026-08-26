@@ -5475,94 +5475,94 @@
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:10": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 4,
-    "text": "//! locally installed cc-enforcer hooks on this exact Claude Code"
+    "target": "../../../cli/src/config/tier.rs",
+    "line": 71,
+    "text": "pub fn tier_of(loaded: &Result<Config, String>, route_default: &str) -> String {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:11": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 164,
-    "text": "/// None = probe unavailable (degraded); Some(vec) = verified matches."
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 92,
+    "text": "**诚实边界（A2b）**：PreToolUse 是**行为塑形层，不是安全边界**——agent 可用"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:12": {
     "target": "../../../cli/src/guard.rs",
-    "line": 246,
+    "line": 287,
     "text": "\"degraded\": ev.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:13": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 164,
+    "text": "/// had is carried forward, not written anew. The baseline probe runs"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:14": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 249,
+    "text": "fn emit_decision(mode: &str, reason: &str) {"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:15": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 40,
     "text": "pub const TIERS: [&str; 4] = [\"observe\", \"warn\", \"ask\", \"deny\"];"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:14": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 208,
-    "text": "fn emit_decision(mode: &str, reason: &str) {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:15": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 213,
-    "text": "_ => return, // observe: log only, no output"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:16": {
     "target": "../../../cli/src/guard.rs",
-    "line": 245,
+    "line": 286,
     "text": "\"mode\": ev.mode,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:17": {
     "target": "../../../cli/src/guard.rs",
-    "line": 237,
+    "line": 278,
     "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:18": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 245,
+    "text": "}"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:19": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 237,
+    "text": "format!("
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:2": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 73,
+    "text": "if let Some(ms) = &matches"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:20": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 42,
     "text": "impl Guard {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:19": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:21": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 36,
     "text": "pub const PROMOTED_DEFAULT: &str = \"deny\";"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:2": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 78,
-    "text": "if let Some(ms) = &matches"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:20": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:22": {
     "target": "../../../cli/src/guard.rs",
     "line": 50,
     "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:21": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:23": {
     "target": "../../../cli/src/health.rs",
     "line": 59,
     "text": "let mode = crate::config::tier_of(&Config::load(root), crate::config::PROMOTED_DEFAULT);"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:22": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:24": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 101,
     "text": "3. 1.0（M7）：上述两类默认 `deny`；其余规则 as-built 默认 **observe**（无各自 FPR"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:23": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:25": {
     "target": "../../../cli/src/guard.rs",
     "line": 119,
-    "text": "let rank = |t: &str| {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:24": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 144,
-    "text": "if let Some(e) = broken {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:25": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 96,
-    "text": "**默认档位演进路线（A1，写死在此，不许默认永远 warn）**："
+    "text": "};"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:26": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 272,
-    "text": "| **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |"
+    "target": "../../../cli/src/guard.rs",
+    "line": 144,
+    "text": "} else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:27": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -5580,53 +5580,53 @@
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:3": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 86,
-    "text": "if env.tool_name == \"Write\" {"
+    "target": "../../../cli/src/guard.rs",
+    "line": 170,
+    "text": "let file_path = &env.tool_input.file_path;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:30": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 307,
+    "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:31": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 273,
+    "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:32": {
     "target": "../../../cli/src/guard.rs",
     "line": 7,
     "text": "//! Every probed event is appended to <root>/.ce/observe.ndjson in ALL"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:31": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:33": {
     "target": "../../../cli/src/guard/envelope.rs",
     "line": 16,
     "text": "/// Claude Code stamps this on every hook event. Carried into the"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:32": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:34": {
     "target": "../../../cli/src/hookio.rs",
     "line": 36,
-    "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
+    "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:33": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:35": {
     "target": "../../FPR-REPLAY.md",
-    "line": 7,
+    "line": 8,
     "text": "> 验收门（计划 §6 M3）：500 次真实正常编辑重放误拦 ≤ 1。"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:34": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:36": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 279,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:35": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:37": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 114,
     "text": "// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:36": {
-    "target": "../../FPR-REPLAY.md",
-    "line": 16,
-    "text": "| 语料 | 事件数 | 拦截 | 仲裁后误拦 | 折算 /500 |"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:37": {
-    "target": "../../FPR-REPLAY.md",
-    "line": 22,
-    "text": "## 自仓 35 条拦截仲裁（全真阳）"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:38": {
     "target": "../../FPR-REPLAY.md",
-    "line": 38,
+    "line": 39,
     "text": "## 重放捎带抓获的产品缺陷（已修）"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:39": {
@@ -5635,29 +5635,29 @@
     "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:4": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 99,
-    "text": "let applied = match (t.replace_all, on_disk.matches(&old).count()) {"
+    "target": "../../../cli/src/guard.rs",
+    "line": 240,
+    "text": "Moving it? Trim the source region first: the probe verifies \\"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:40": {
     "target": "../../FPR-REPLAY.md",
-    "line": 47,
+    "line": 98,
     "text": "仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:41": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 52,
-    "text": "pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<usize> {"
+    "target": "../../FPR-REPLAY.md",
+    "line": 55,
+    "text": "自仓全史 2274 事件 **505 拦截**（111.04/500）。按无序文件对分解 = 122 对首燃 +"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:42": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 63,
-    "text": "pub(super) fn budget_breach(t: &Thresholds, env: &Envelope, lines: usize) -> Option<String> {"
+    "target": "../../FPR-REPLAY.md",
+    "line": 3,
+    "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:43": {
-    "target": "../ce-toml.md",
-    "line": 18,
-    "text": "| `file_lines_fail` | `750` | Hard file budget: scan fails past it, and the guard refuses writes that would land past it |"
+    "target": "../../FPR-REPLAY.md",
+    "line": 109,
+    "text": "lang: Lang::from_path(Path::new(&rel)).expect(\"lang\"),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:44": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5670,14 +5670,14 @@
     "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:46": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 108,
-    "text": "/// Budget firings get their own feed line (accounting for the §4.2"
+    "target": "../ce-toml.md",
+    "line": 18,
+    "text": "| `file_lines_fail` | `750` | Hard file budget: scan fails past it, and the guard refuses writes that would land past it |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:47": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 33,
-    "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 19,
+    "text": "pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:48": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5695,9 +5695,9 @@
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:50": {
-    "target": "../ce-toml.md",
-    "line": 17,
-    "text": "| `file_lines_warn` | `300` | Warn once a source file passes this line count |"
+    "target": "../../../cli/src/hookio.rs",
+    "line": 33,
+    "text": "/// the tier the mapped position resolved to, so the feed records"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:51": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5710,14 +5710,14 @@
     "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:53": {
-    "target": "../../../cli/src/config/tier.rs",
-    "line": 24,
-    "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
+    "target": "../ce-toml.md",
+    "line": 17,
+    "text": "| `file_lines_warn` | `300` | Warn once a source file passes this line count |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:54": {
-    "target": "../ce-toml.md",
-    "line": 31,
-    "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 145,
+    "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:55": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5725,48 +5725,48 @@
     "text": "if armed {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:56": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 165,
-    "text": "if armed {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 23,
-    "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 24,
     "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
+    "target": "../ce-toml.md",
+    "line": 31,
+    "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 165,
+    "text": "if armed {"
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:59": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 28,
-    "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 165,
+    "text": "if armed {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:6": {
-    "target": "../../../cli/src/config/tier.rs",
-    "line": 56,
-    "text": "pub fn tier(&self, route_default: &str) -> String {"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 99,
+    "text": "let applied = match (t.replace_all, on_disk.matches(&old).count()) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:60": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 60,
-    "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
+    "target": "../../../cli/src/hookio.rs",
+    "line": 23,
+    "text": "/// 0.7.0 re-defines `matches` on `probe` events (K step 11 novel-"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:61": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 152,
-    "text": "// the B4 suppression consults the feed BEFORE this event lands"
+    "target": "../../../cli/src/config/tier.rs",
+    "line": 24,
+    "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 198,
-    "text": "}"
+    "line": 36,
+    "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
     "target": "../../../cli/src/guard.rs",
-    "line": 63,
+    "line": 58,
     "text": "let enforced = matches!(mode.as_str(), \"deny\" | \"ask\");"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:64": {
@@ -5776,35 +5776,50 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:65": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 200,
+    "line": 208,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:66": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 151,
-    "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
+    "target": "../../../cli/src/guard.rs",
+    "line": 63,
+    "text": "root,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 157,
-    "text": "pub fn clip(reason: &str, budget_tokens: usize) -> String {"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 155,
+    "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:68": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 154,
-    "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
+    "target": "../../../cli/src/hookio.rs",
+    "line": 200,
+    "text": "}"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:69": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 44,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.6.0\";"
+    "line": 159,
+    "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:7": {
-    "target": "../../../cli/src/config/tier.rs",
-    "line": 47,
-    "text": "///"
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 84,
+    "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:70": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 18,
+    "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:71": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 154,
+    "text": "}"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:72": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 52,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.7.0\";"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:73": {
     "target": "../../../cli/src/hookio.rs",
     "line": 18,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
@@ -5815,9 +5830,9 @@
     "text": "pub fn tier_of(loaded: &Result<Config, String>, route_default: &str) -> String {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:9": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 92,
-    "text": "**诚实边界（A2b）**：PreToolUse 是**行为塑形层，不是安全边界**——agent 可用"
+    "target": "../../../cli/src/config/tier.rs",
+    "line": 47,
+    "text": "///"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",

@@ -1,8 +1,9 @@
 # M3 FPR 重放验收记录（2026-08-07）
 
 > **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随
-> 休眠仪器整体退役（EVAL-SET.md 修正案），本册即 FPR 记录的最终账本；
-> 复核走 git 历史复活仪器（退役修正案提交的父 commit）。
+> 休眠仪器整体退役（EVAL-SET.md 修正案），本册即 FPR 记录的账本；
+> 复核走 git 历史复活仪器（退役修正案提交的父 commit）。K 轮复跑
+> （2026-08-26，见下节）延账一次并触发探针语义根修，跑毕仪器已复退役。
 
 > 验收门（计划 §6 M3）：500 次真实正常编辑重放误拦 ≤ 1。
 > 方法：`cli/tests/fpr_replay.rs`（`#[ignore]`，release 跑）——把 git
@@ -42,12 +43,113 @@
 跳过（probe.rs `load_candidate_streams`），daemon 探针请求不再因竞态
 失败。
 
+
+## K 轮复跑与探针语义根修（2026-08-26，v1.2.0 前）
+
+> 仲裁出处：用户授权下的**模型仲裁**（授权 2026-08-24，执行 2026-08-25/26），
+> 非人工记录；每条首燃判定均以 git 事实与今日检测器复核，方法见文末。
+
+仪器按「复现」节配方复活（两个同代垫片，样张见同节），语料与旋钮同 2026-08-07。
+
+**第一轮（出厂语义=全文探针）**：requests 尾段 487 事件 **0 拦截**（与原记录逐字同）；
+自仓全史 2274 事件 **505 拦截**（111.04/500）。按无序文件对分解 = 122 对首燃 +
+383 复燃；首燃逐对取**子提交状态**的两文件入临时夹具、以今日 `ce dedup` 终审：
+90 对重复真实落地（44 对至今仍在 186 预算台账），32 对仅存在于重放中间态——
+**全部是拆叶/并叶提交**（新叶先探、宿主未削；含 2 例并叶=被匹配文件同提交删除）。
+真机 hook 实测：暖索引下拆叶写 deny（172 tokens 命中）；本机生产台账 719 探 /
+170 degraded / 9 燃、零拆叶误拦。383 复燃 = 编辑携带既接受债块的文件被全文模型
+再拦——活 guard 对 Edit 只探 new_string 片段，不受此扰；Write 全文重写则同病，真尖边。
+
+**判定与拍板**：32 条中间态若计误拦 = 1.41% > §4.2 M4 门（≤1%）。用户拍板
+（2026-08-26）：**根修探针再复测**，不降档。
+
+**根修（`guard::novel_matches`）**：探针只报**新引入**的匹配——Write 减盘上旧全文、
+Edit 减 `old_string` 的自有匹配（基线探针仅首探命中才发；基线 degraded 减零——
+放行绝不骑在未答的问题上）；拦截词补搬移安全序（先削源后写目标，探针按当下磁盘
+验证候选流，实测放行）。observe feed `matches` 语义随之收窄为新引入数，schema
+0.6.0→0.7.0 具名断点。四腿电池 `cli/tests/guard_novelty.rs`（携债重写不新 /
+加孪生仍拦 / 编辑自替不新 / 拆叶仍拦且教序）——书写该电池时两度被新语义活拦，
+按共享咽喉消重后过门：工具第三次当场抓住作者本人。
+
+**第二轮（新语义，仪器同镜像）**：
+
+| 语料 | 事件 | 拦截 | 分解 | 折算 /500 |
+|---|---|---|---|---|
+| requests 尾段（同钉定） | 487 | 0 | — | 0.00 |
+| 自仓全史 | 2274 | 139 | 84 真引入 + 32 中间态搬移 + 23 延展复燃 | 见下 |
+
+- **84 真引入**：子状态经今日检测器复核确有跨文件重复的落地提交——工具该拦的。
+- **23 延展复燃**：编辑扩张/漂移了既有重复区，父版基线按构造不重叠——判真阳倾向入册。
+- **32 中间态搬移**：写先于削的拆叶/并叶。瞬时树内确有重复（探针未说谎），意图是
+  搬移——复制与搬移在写入瞬间**信息等价**，瞬时谓词不存在；处置 = 拦截词教安全序
+  （先削源即过），终态判决属 Stop 层（搬移完成后树内无重复，Stop 审计对此类天然
+  不误报）。
+- **门算术（双口径并记，不合成单一数字）**：按重放全文写模型计 32 条误拦 =
+  7.03/500（1.41%）；按活流口径（Edit 片段语义 + 安全序协议）本机 719 条生产
+  探针 0 条此类误拦 = 0.00/500。两类已晋级规则**维持 deny**（拍板走根修而非降档），
+  依据入 CHANGELOG。
+
+**多文件搬移仪器（清单 57 处置）**：无序对首燃/复燃分类 + 同提交 name-status
+交叉 + 子状态二文件夹具复核，即本节全部搬移测量的工作法；不另立常驻仪器
+（M7.5 休眠仪器退役律），复现法见下节。
+
 ## 复现
 
 仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」
 节的复活律**连同同代支撑**复活、跑毕重退役（其 `common::git_out` 已于 9e05f53 出仓，单取仪器
 文件对今日支撑编译不过）：`git checkout 0c7c936^ -- cli/tests/fpr_replay.rs cli/tests/common`，
 跑下列命令，再 `git rm -f cli/tests/fpr_replay.rs && git checkout HEAD -- cli/tests/common`：
+
+K 轮实测两处同代垫片（复活后按此打上；第二片仅第二轮语义复测需要）：
+
+```diff
+--- fpr_replay.rs (0c7c936^)
++++ fpr_replay.rs (revived, K round)
+@@ -128,6 +128,30 @@
+                 lang: Lang::from_path(Path::new(&rel)).expect("lang"),
+             };
+             let m = probe::probe(&idx, &shadow, target, p, f).expect("probe");
++            // product mirror (K step 11 novel-duplication semantics):
++            // a Write replaces the file, and matches the replaced
++            // content already had are carried, not introduced — for
++            // M events subtract the parent version's own matches
++            let m = if status == 'M' && !m.is_empty() {
++                let old = git_out(&repo, &["show", &format!("{parent}:{rel}")]);
++                let base_t = probe::Target {
++                    rel: &rel,
++                    content: &old,
++                    lang: Lang::from_path(Path::new(&rel)).expect("lang"),
++                };
++                let base = probe::probe(&idx, &shadow, base_t, p, f).expect("probe base");
++                m.into_iter()
++                    .filter(|x| {
++                        !base.iter().any(|b| {
++                            b.file == x.file
++                                && b.start_line <= x.end_line
++                                && x.start_line <= b.end_line
++                        })
++                    })
++                    .collect()
++            } else {
++                m
++            };
+             if !m.is_empty() {
+                 intercepts.push(format!(
+                     "{} {} -> {} ({} tok)",
+@@ -140,7 +164,11 @@
+             apply(&shadow, &mut idx, &repo, commit, &rel, p);
+             live.insert(rel);
+         }
+-        idx.remove_missing(&live).ok();
++        // same-generation shim: remove_missing grew a `seen` arg after
++        // the instrument retired (walkidx refresh split); the replay's
++        // seen set is simply what the index holds
++        let seen = idx.indexed_paths().expect("indexed_paths");
++        idx.remove_missing(&live, &seen).ok();
+     }
+     println!(
+         "replayed {events} edit events, {} intercepts:",
+```
 
 - 自仓：`cargo test --release --test fpr_replay -- --ignored --nocapture`
 - 外部仓：`CE_FPR_REPO=<path> cargo test --release --test fpr_replay -- --ignored --nocapture`

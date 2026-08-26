@@ -50,13 +50,8 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);
     let cfg = loaded.ok();
     let file_path = &env.tool_input.file_path;
-    let content = if env.tool_name == "Write" {
-        &env.tool_input.content
-    } else {
-        &env.tool_input.new_string
-    };
     let started = std::time::Instant::now();
-    let matches = probe_matches(root, file_path, content);
+    let matches = novel_matches(root, env);
     // B4 suppression consults the feed BEFORE this event lands in it;
     // it shapes the warn INJECTION only — deny/ask are enforcement,
     // not context bloat, and repeat every time they hold
@@ -161,6 +156,50 @@ fn clipped(reason: &str) -> String {
 // The hard-budget rule class lives in budget.rs (split at the
 // 300-line dogfood wall), where scope is judged BEFORE any read.
 
+/// The rule denies NEW duplication only (K step 11 root fix): the
+/// FPR replay measured the whole-content probe denying full-file
+/// rewrites of files that already carry budgeted blocks. Write
+/// replaces the on-disk file, Edit replaces `old_string` — a match
+/// whose source region overlaps a match the REPLACED content already
+/// had is carried forward, not written anew. The baseline probe runs
+/// only when the first probe matched (no unbounded read for a clean
+/// write), and a degraded baseline subtracts nothing: allowance must
+/// never ride an unanswered question, the same discipline as
+/// probe_matches' array check. None = degraded, as before.
+fn novel_matches(root: &Path, env: &Envelope) -> Option<Vec<serde_json::Value>> {
+    let file_path = &env.tool_input.file_path;
+    let content = if env.tool_name == "Write" {
+        &env.tool_input.content
+    } else {
+        &env.tool_input.new_string
+    };
+    let matches = probe_matches(root, file_path, content)?;
+    if matches.is_empty() {
+        return Some(matches);
+    }
+    let replaced = if env.tool_name == "Write" {
+        std::fs::read_to_string(file_path).unwrap_or_default()
+    } else {
+        env.tool_input.old_string.clone()
+    };
+    if replaced.is_empty() {
+        return Some(matches);
+    }
+    let base = probe_matches(root, file_path, &replaced).unwrap_or_default();
+    Some(matches.into_iter().filter(|m| !carried(m, &base)).collect())
+}
+
+/// Same source file, overlapping source region: the replaced content
+/// already matched it, so the new content merely carries it.
+fn carried(m: &serde_json::Value, base: &[serde_json::Value]) -> bool {
+    let span = |v: &serde_json::Value| (v["start_line"].as_u64(), v["end_line"].as_u64());
+    let (ms, me) = span(m);
+    base.iter().any(|b| {
+        let (bs, be) = span(b);
+        b["file"] == m["file"] && bs <= me && ms <= be
+    })
+}
+
 /// None = probe unavailable (degraded); Some(vec) = verified matches.
 fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serde_json::Value>> {
     let req = Request::Probe {
@@ -197,7 +236,9 @@ fn reason(file_path: &str, matches: &[serde_json::Value]) -> String {
         .collect();
     format!(
         "ce: content for {file_path} duplicates {} indexed region(s): {}. \
-         Reuse the existing implementation instead of re-writing it.",
+         Reuse the existing implementation instead of re-writing it. \
+         Moving it? Trim the source region first: the probe verifies \
+         against the current tree, and the same write then passes.",
         matches.len(),
         top.join("; ")
     )
