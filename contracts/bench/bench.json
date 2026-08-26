@@ -36,10 +36,11 @@
       "value": "0/600 flagged (gate <= 1%)"
     },
     {
+      "asof": "one-off K re-verify 2026-08-26 pre-v1.2.0 (model arbitration under user delegation of 2026-08-24, not a human record): requests tail 487 events 0 intercepts under the novel-introduction probe; self-history figures are dual-frame (7.03/500 replay-full-text vs 0.00/500 live-flow) and stay in the source doc, never merged into this value",
       "detail": "630 replayed write events (requests 400-commit tail + self history), 35 intercepts, 0 false after arbitration",
       "epoch": "arbitration of intercepts is a HUMAN step - a per-tag auto-series would fabricate it; one-off re-verify via the resurrected fpr_replay.rs only",
       "metric": "guard_fpr_per500",
-      "source": "docs/FPR-REPLAY.md:16-36",
+      "source": "docs/FPR-REPLAY.md:16-36 + :47-94",
       "value": "0.00 per 500 edits"
     },
     {
