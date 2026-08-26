@@ -139,12 +139,12 @@ A repository that declares no class — this one included — judges byte for by
 ## Evaluation dashboard
 
 <!-- bench:begin -->
-### Latest-version latency · v1.1.0
+### Latest-version latency · v1.2.0
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1402 | 699 | 3675 | 554 | 871 | 43 | 728 |
-| p95 ms | 1439 | 769 | 3709 | 567 | 899 | 55 | 2869 |
+| p50 ms | 1111 | 450 | 2958 | 267 | 621 | 34 | 586 |
+| p95 ms | 1131 | 462 | 2979 | 275 | 659 | 37 | 609 |
 
 ### Frozen evaluation points
 
