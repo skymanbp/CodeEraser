@@ -249,6 +249,16 @@ jobs:
       # build+test matrix can report — so a fully red CI on the tagged
       # commit published anyway. Wait for this commit's checks, and
       # refuse on any conclusion that is not success.
+      #
+      # SKIPPED is not success (K step 10). The old escape waved every
+      # skipped or neutral check through, so a job accidentally
+      # conditioned away — the failure mode an `if:` typo produces —
+      # published with nothing behind it. On a tag exactly two checks
+      # skip BY DESIGN: this workflow's own dispatch-phase jobs (the
+      # release build matrix, whose names carry the platform keys, and
+      # draft) — allowed by name below. Any other skipped or neutral
+      # check refuses with its name: the failure direction is a loud
+      # non-publish, never a silent publish.
       - name: CI must be green on this commit
         shell: bash
         run: |
@@ -256,7 +266,12 @@ jobs:
             runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs" \
                      --jq '[.check_runs[] | select(.name != "'"${GITHUB_JOB}"'")]')
             pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
-            bad=$(echo "$runs" | jq -r '[.[] | select(.conclusion != null and .conclusion != "success" and .conclusion != "neutral" and .conclusion != "skipped")] | map(.name + "=" + .conclusion) | join(", ")')
+            bad=$(echo "$runs" | jq -r '[.[]
+                    | select(.conclusion != null and .conclusion != "success")
+                    | select((.conclusion == "skipped" and
+                              (.name == "draft" or (.name | startswith("build (") and
+                               test("x86_64-windows|x86_64-linux|aarch64-macos")))) | not)]
+                  | map(.name + "=" + .conclusion) | join(", ")')
             [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
             [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
             echo "waiting on $pending check(s)"; sleep 30

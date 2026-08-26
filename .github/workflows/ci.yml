@@ -138,6 +138,17 @@ jobs:
       # "undefined", silently (audit 2026-08-21)
       - name: GUI i18n gate (both-directions completeness)
         run: node gui/tests/i18n_gate.js
+      # the installer's Claude Code wiring is exercised only when a
+      # human runs the NSIS bundle on a machine with Claude Code —
+      # which CI never is, and which is how the passive lane died for
+      # three days when 9f86d58 moved the marketplace manifest and the
+      # registration kept pointing at plugin/ (a silent cache miss).
+      # This leg pins the static half of that chain: every name and
+      # path the wiring script mentions must resolve against the
+      # repository it ships from. Full packaging stays a release-phase
+      # concern (the draft build compiles the real bundle).
+      - name: Installer wiring invariants
+        run: node gui/tests/installer_wiring.js
 
       # Dogfood (plan §7.5): this repo must pass its own scanner
       # (exit 1 on fail-level findings), its own clone ratchet
@@ -224,7 +235,14 @@ jobs:
           workspaces: |
             cli
             gui/src-tauri
-      - name: Rust build + test
+      # Same roster as the push matrix (K step 10): this leg used to
+      # run build+test only, so a macOS-only clippy lint, a formatting
+      # drift, a dogfood red or a webview-gate break surfaced at the
+      # worst possible moment — the release-tag run, which is the
+      # first time this leg fires after weeks of pushes. The v1.0.0
+      # release-night daemon corpse was exactly this class of late
+      # discovery. Weekly + tag cadence keeps the 10x billing shape.
+      - name: Rust build + test + lint
         shell: bash
         working-directory: cli
         run: |
@@ -237,10 +255,32 @@ jobs:
           export CE_CORE_BIN
           cargo build --locked
           cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo fmt --check
       - name: Bootstrap chain e2e (macOS leg)
         shell: bash
         run: bash .github/scripts/bootstrap_e2e.sh cli/target/debug/ce plugin/bin/ce.sh
-      - name: GUI build (macOS coverage)
+      - name: GUI build + lint (macOS coverage)
         shell: bash
         working-directory: gui/src-tauri
-        run: cargo build --locked
+        run: |
+          cargo build --locked
+          cargo clippy --locked -- -D warnings
+          cargo fmt --check
+      - name: GUI webview gates (macOS coverage)
+        shell: bash
+        run: |
+          node gui/tests/lens_invariant.js
+          node gui/tests/i18n_gate.js
+          node gui/tests/installer_wiring.js
+      - name: Dogfood (macOS coverage — the six self-gates)
+        shell: bash
+        working-directory: cli
+        run: |
+          CORE_BIN=$(cd ../core && cabal list-bin ce-core)
+          cargo run --locked -- scan .. --core "$CORE_BIN"
+          cargo run --locked -- dedup .. --check --core "$CORE_BIN"
+          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 950
+          cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
+          cargo run --locked -- docdup .. --core "$CORE_BIN" --check
+          cargo run --locked -- erase .. --core "$CORE_BIN" --check

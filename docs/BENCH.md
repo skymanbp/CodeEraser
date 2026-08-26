@@ -6,6 +6,13 @@
 > per release tag — each tag's OWN binaries, release builds only, fresh index per
 > cold run). Frozen points carry their sealed-ledger source; points that cannot
 > honestly become a per-version series say why in their epoch clause.
+>
+> The whole series is ONE machine — the host column repeats because it never
+> varies. That is a feature for the only comparison this table makes
+> (version-over-version on constant hardware) and a warning about the one it
+> cannot: none of these milliseconds transfer to other hardware, and no CI
+> runner replays them (PERF-BUDGET.md opens with why a shared runner cannot
+> host a latency budget).
 
 ## Latency series (self repository)
 

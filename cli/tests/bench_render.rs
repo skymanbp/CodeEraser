@@ -20,7 +20,14 @@ fn render_md(d: &Value) -> String {
          > measured by `cli/tests/bench.rs` (`bench_append` for a checkout, `bench_backfill`\n\
          > per release tag — each tag's OWN binaries, release builds only, fresh index per\n\
          > cold run). Frozen points carry their sealed-ledger source; points that cannot\n\
-         > honestly become a per-version series say why in their epoch clause.\n\n\
+         > honestly become a per-version series say why in their epoch clause.\n\
+         >\n\
+         > The whole series is ONE machine — the host column repeats because it never\n\
+         > varies. That is a feature for the only comparison this table makes\n\
+         > (version-over-version on constant hardware) and a warning about the one it\n\
+         > cannot: none of these milliseconds transfer to other hardware, and no CI\n\
+         > runner replays them (PERF-BUDGET.md opens with why a shared runner cannot\n\
+         > host a latency budget).\n\n\
          ## Latency series (self repository)\n\n\
          | version | metric | p50 ms | p95 ms | n | host | measured |\n|---|---|---|---|---|---|---|\n",
     );
