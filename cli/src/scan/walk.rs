@@ -6,11 +6,28 @@ use ignore::WalkBuilder;
 use ignore::overrides::OverrideBuilder;
 use std::path::{Path, PathBuf};
 
+/// The secret-file globs BOTH walks refuse — this measurement walk and
+/// the mention universe (mention/walk.rs) — one table of NAMES, so the
+/// privacy invariant plan §5.9-2 promises is spelled once (widened at
+/// plan v2.17 L round, S-A9). The reach differs by design: here the
+/// override set also prunes a matching DIRECTORY (a `.env/`
+/// virtualenv), while the mention walk tests file basenames only.
+/// Privacy fails safe: `id_*` or `*credentials*` over-matching a code
+/// file costs coverage, never leaks a key into the index.
+pub(crate) const SECRET_GLOBS: [&str; 8] = [
+    ".env*",
+    "*.pem",
+    "*.key",
+    "id_*",
+    ".npmrc",
+    ".pypirc",
+    ".netrc",
+    "*credentials*",
+];
+
 /// Built-in excludes: lockfiles, minified/generated, vendored,
-/// snapshots, migrations (plan §4.1 category list) — plus the secret
-/// globs plan §5.9-2 promises (.env / *.pem / id_* / *.key): privacy
-/// fails safe, so id_* over-matching a code file costs coverage,
-/// never leaks a key into the index.
+/// snapshots, migrations (plan §4.1 category list); the secret globs
+/// above join them in build_overrides.
 const BUILTIN_EXCLUDES: &[&str] = &[
     "!package-lock.json",
     "!yarn.lock",
@@ -30,10 +47,6 @@ const BUILTIN_EXCLUDES: &[&str] = &[
     "!build/",
     "!target/",
     "!dist-newstyle/",
-    "!.env",
-    "!*.pem",
-    "!id_*",
-    "!*.key",
 ];
 
 /// Config plus language-tagged candidate files — the shared opening
@@ -178,9 +191,14 @@ fn ignored_by(root: &Path, ignore_file: &str, rel: &Path) -> bool {
 
 fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::Override, String> {
     let mut builder = OverrideBuilder::new(root);
-    for glob in BUILTIN_EXCLUDES {
+    let secrets = SECRET_GLOBS.iter().map(|g| format!("!{g}"));
+    for glob in BUILTIN_EXCLUDES
+        .iter()
+        .map(|g| (*g).to_string())
+        .chain(secrets)
+    {
         builder
-            .add(glob)
+            .add(&glob)
             .map_err(|e| format!("builtin glob {glob}: {e}"))?;
     }
     for glob in extra {

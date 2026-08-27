@@ -99,8 +99,10 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Graph {
             root,
             sites,
+            mentions,
+            db,
             format,
-        } => cmds::graph_cmd(&cmds::or_cwd(root), sites, json(format)),
+        } => cmds::graph_cmd(&cmds::or_cwd(root), sites, mentions, db, json(format)),
         Cmd::Deadcode {
             root,
             db,

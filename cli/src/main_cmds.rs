@@ -59,7 +59,16 @@ pub fn churn_cmd(root: &Path, days: u32, json: bool) -> ExitCode {
     }
 }
 
-pub fn graph_cmd(root: &Path, sites: bool, json: bool) -> ExitCode {
+pub fn graph_cmd(
+    root: &Path,
+    sites: bool,
+    mentions: bool,
+    db: Option<PathBuf>,
+    json: bool,
+) -> ExitCode {
+    if mentions {
+        return codeeraser::mention::face::run(root, db, json);
+    }
     if !sites {
         // A bare `ce graph` is a question, not a mistake — the same
         // reading v0.7.3 gave a bare `ce`. It used to answer on
@@ -75,6 +84,14 @@ pub fn graph_cmd(root: &Path, sites: bool, json: bool) -> ExitCode {
             line(
                 "ce graph --sites [--format json]   list the reference sites",
                 "ce graph --sites [--format json]   列出引用站点",
+                &[],
+            )
+        );
+        println!(
+            "{}",
+            line(
+                "ce graph --mentions [--format json] refresh the mention universe",
+                "ce graph --mentions [--format json] 刷新提及语料宇宙",
                 &[],
             )
         );

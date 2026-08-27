@@ -41,9 +41,15 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// reach ~23% of the declarations a "no reference" claim needs, v2.14
 /// K7). Its DROP below stays ONE generation to sweep v11–v13 files
 /// and may go at v15; the wipe also clears trend, a release-notes item.
+/// The mention pair (`mention_files`/`mentions`, plan v2.17 piece (3))
+/// rides this wipe's DROP half only: it is created additively by its
+/// own pass (`IF NOT EXISTS`, so a v14 file gains it without a bump)
+/// and keyed by its own `mention_rev` meta row (mention/store.rs).
 const SCHEMA_VERSION: i64 = 14; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
+DROP TABLE IF EXISTS mentions;
+DROP TABLE IF EXISTS mention_files;
 DROP TABLE IF EXISTS resolve_pending;
 DROP TABLE IF EXISTS result_cache;
 DROP TABLE IF EXISTS trend;
@@ -111,6 +117,7 @@ fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
     tx.execute_batch(super::unitcache::UNITSIG_SCHEMA)?;
     tx.execute_batch(crate::docdup::DOCSEGS_SCHEMA)?;
     tx.execute_batch(crate::trend::TREND_SCHEMA)?;
+    tx.execute_batch(crate::mention::store::MENTION_SCHEMA)?;
     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
     let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
     for (k, v) in meta_entries(p) {

@@ -132,6 +132,17 @@ impl Lang {
     }
 }
 
+/// The mention tokenizer's `$` arm (sealed criterion §2, frozen beside
+/// the boundary predicate above because it is an extension table of
+/// the same kind): files of these extensions keep a `$`-carrying run
+/// WHOLE — `$ZodString` and `ZodString` are distinct identifiers in
+/// the JS family, and emitting the `$`-free piece would let each hide
+/// the other's death. Every other extension, and no extension, takes
+/// the union arm (shell `$name`, Haskell `f$g`). A `MENTION_REV` input.
+pub const MENTION_WHOLE_RUN_EXTS: [&str; 10] = [
+    "ts", "tsx", "mts", "cts", "js", "mjs", "cjs", "jsx", "vue", "svelte",
+];
+
 #[cfg(test)]
 mod tests {
     use super::*;

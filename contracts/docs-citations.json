@@ -511,17 +511,17 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:43": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 94,
+    "line": 100,
     "text": "pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:44": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 156,
+    "line": 163,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:45": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 173,
+    "line": 180,
     "text": "|r| r.get(0),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:46": {
@@ -736,22 +736,22 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 66,
+    "line": 72,
     "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:85": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 68,
+    "line": 74,
     "text": "file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:86": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 331,
+    "line": 332,
     "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:87": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 332,
+    "line": 333,
     "text": "let end = toks[f.start + p.kgram - 1].end_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:88": {
@@ -786,17 +786,17 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:93": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 44,
+    "line": 48,
     "text": "const SCHEMA_VERSION: i64 = 14; // 9: trend rows carry their measuring toolchain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:94": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 156,
+    "line": 163,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:95": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 157,
+    "line": 164,
     "text": "["
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:96": {
@@ -3366,7 +3366,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:156": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 124,
+    "line": 141,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:16": {
@@ -3781,7 +3781,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:90": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 104,
+    "line": 121,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:91": {

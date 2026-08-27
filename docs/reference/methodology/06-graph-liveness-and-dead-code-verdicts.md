@@ -157,7 +157,7 @@ by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:123-146](../../../core/app/CE/Graph.hs#L123), [Graph.hs:123-146](../../../core/app/CE/Graph.hs#L123)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:367-381](../../../cli/src/graph/deadcode.rs#L367)) and `ce deadcode --check` relays the
-core's fail bit ([main_cmds.rs:104-124](../../../cli/src/main_cmds.rs#L104)).
+core's fail bit ([main_cmds.rs:121-141](../../../cli/src/main_cmds.rs#L121)).
 
 ### 5. Kept arcs and liveness
 
@@ -371,4 +371,4 @@ the resolver cannot choose its own denominator
 with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
 `ce deadcode --check` exits non-zero on any dead file
-([main_cmds.rs:124-130](../../../cli/src/main_cmds.rs#L124)).
+([main_cmds.rs:141-147](../../../cli/src/main_cmds.rs#L141)).

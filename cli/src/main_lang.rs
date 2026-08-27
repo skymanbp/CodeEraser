@@ -34,9 +34,10 @@ scan.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制
 churn	时间维度指标：追加对重写、窗口改动、共变对（仅报告；联判消费之）。默认窗口需数分钟——逐提交一个 git 子进程、逐触及文件一次 blame；进度走 stderr
 churn.root	仓库根（默认当前目录）
 churn.days	历史窗口天数
-graph	依赖图子系统：--sites 列出引用站点（不做解析）；存活性判决在 `ce deadcode`
+graph	依赖图子系统：--sites 列出引用站点（不做解析）；--mentions 刷新提及语料宇宙并报其头部；存活性判决在 `ce deadcode`
 graph.root	要分析的目录（默认当前目录）
 graph.sites	列出引用站点
+graph.mentions	刷新提及语料宇宙（树中每个可能引用到名字的文本文件）并报告其内容
 deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）

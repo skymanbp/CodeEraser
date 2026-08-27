@@ -89,13 +89,21 @@ pub(crate) enum Cmd {
         format: OutFormat,
     },
     /// Dependency-graph subsystem: --sites lists reference sites
-    /// (resolution-free); liveness lives under `ce deadcode`
+    /// (resolution-free); --mentions refreshes the mention universe
+    /// and reports its header; liveness lives under `ce deadcode`
     Graph {
         /// Directory to analyze (default: current directory)
         root: Option<PathBuf>,
         /// List reference sites
         #[arg(long)]
         sites: bool,
+        /// Refresh the mention universe (every text file the tree
+        /// could reference a name from) and report what it holds
+        #[arg(long, conflicts_with = "sites")]
+        mentions: bool,
+        /// Index database path (default: <root>/.ce/index.db)
+        #[arg(long)]
+        db: Option<PathBuf>,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },

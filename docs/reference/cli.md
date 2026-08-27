@@ -15,7 +15,7 @@ Commands:
   doctor     Environment + project health: ce-core handshake, project status line, degradation counter (never starts the daemon)
   scan       Measure size / complexity / readability metrics; levels graded by the core
   churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them). Costs minutes on the default window — a git subprocess per commit and a blame per touched file; progress rides stderr
-  graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); liveness lives under `ce deadcode`
+  graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); --mentions refreshes the mention universe and reports its header; liveness lives under `ce deadcode`
   deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts
   clone      T3 near-miss clone judgment: tree edit distance via the core's clone/1; --units lists the cached unit universe instead
   docdup     Documentation-duplication judgment: exact Jaccard via the core's docdup/1 over the cached live segments
@@ -96,7 +96,7 @@ Options:
 ## ce graph
 
 ```text
-Dependency-graph subsystem: --sites lists reference sites (resolution-free); liveness lives under `ce deadcode`
+Dependency-graph subsystem: --sites lists reference sites (resolution-free); --mentions refreshes the mention universe and reports its header; liveness lives under `ce deadcode`
 
 Usage: ce graph [OPTIONS] [ROOT]
 
@@ -106,6 +106,8 @@ Arguments:
 Options:
       --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
       --sites            List reference sites
+      --mentions         Refresh the mention universe (every text file the tree could reference a name from) and report what it holds
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
       --format <FORMAT>  [default: console] [possible values: console, json]
   -h, --help             Print help
 ```

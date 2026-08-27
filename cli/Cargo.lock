@@ -176,6 +176,7 @@ dependencies = [
  "anyhow",
  "clap",
  "getrandom 0.3.4",
+ "globset",
  "ignore",
  "interprocess",
  "proptest",
