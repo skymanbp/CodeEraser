@@ -36,7 +36,12 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// edge-repair debt a content refresh commits alongside its cascade
 /// drop, so a run that dies before phase 1.5 leaves a ledger row the
 /// next run settles instead of a silent permanent edge hole.
-const SCHEMA_VERSION: i64 = 13; // 9: trend rows carry their measuring toolchain
+/// v14 (plan v2.17 L round piece (1)): the `bindings` table retired
+/// with the symbol-edge module (user ruling: delete — import bindings
+/// reach ~23% of the declarations a "no reference" claim needs, v2.14
+/// K7). Its DROP below stays ONE generation to sweep v11–v13 files
+/// and may go at v15; the wipe also clears trend, a release-notes item.
+const SCHEMA_VERSION: i64 = 14; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS resolve_pending;
@@ -44,7 +49,7 @@ DROP TABLE IF EXISTS result_cache;
 DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;
 DROP TABLE IF EXISTS unitsig;
-DROP TABLE IF EXISTS bindings;
+DROP TABLE IF EXISTS bindings; -- retired at v14: sweeps v11-v13 files, removable at v15
 DROP TABLE IF EXISTS edges;
 DROP TABLE IF EXISTS sites;
 DROP TABLE IF EXISTS symbols;

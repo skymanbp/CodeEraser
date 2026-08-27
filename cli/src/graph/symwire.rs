@@ -2,17 +2,19 @@
 //! files declare something, and how visibly. One projection of the
 //! symbols table, mapped onto the graph's dense node identity.
 //!
-//! Why this and not the symbol edges measured beside it: a symbol
-//! edge is high-precision evidence that a declaration IS referenced
-//! (the K10 site audit read 683 of them and found no known error
-//! class), but every "unreferenced" claim spends the OTHER quantity
-//! — recall — and import bindings hold ~23% of it on this repo,
-//! because `crate::graph::md::is_md_path(dst)` and
+//! Why this and not the symbol edges once measured beside it (retired
+//! at index schema v14, plan v2.17 L round, user ruling: delete): a
+//! symbol edge was high-precision evidence that a declaration IS
+//! referenced (the K10 site audit read 683 of them and found no known
+//! error class), but every "unreferenced" claim spends the OTHER
+//! quantity — recall — and import bindings held ~23% of it on this
+//! repo, because `crate::graph::md::is_md_path(dst)` and
 //! `idx.resolve_refreshed(..)` are not import sites. The export
 //! surface asks nothing of recall: whether a file declares an
 //! exported symbol is answerable exactly, and the unreferenced half
 //! stays where the ladder's full edge coverage already lives — the
-//! file graph.
+//! file graph (the per-file mention veto that replaces the edges is
+//! the L round's `unmentioned` table, not this one).
 //!
 //! What the core does with it (CE.Graph.effectiveFlags): a node named
 //! here as exporting something carries flag bit 0, the public/private

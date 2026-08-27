@@ -56,11 +56,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// reference definition's in-scope target now travels as
 /// EDGE_REFDEF_UNUSED and the CORE excludes it from liveness — a
 /// new stored edge-kind code, so cached sweeps re-run.
-/// 10 = sites persist their candidate BINDINGS (plan v2.14): the
-/// names each import brings into scope, read at detection where the
-/// node is still in hand. A new stored fact, so cached sweeps re-run
-/// rather than leaving every pre-today site with an empty binding set
-/// that would read as "this import names nothing".
+/// 10 = sites persisted their candidate BINDINGS (plan v2.14) — a
+/// stored fact retired again at index schema v14 together with the
+/// symbol-edge module (plan v2.17 L round piece (1), user ruling:
+/// delete); the schema bump wipes every database, which is why this
+/// counter did not have to move a second time for the removal.
 /// 9 = symbols.flags stops being reserved (plan v2.14): the column
 /// now stores the declaration's own visibility bits instead of a
 /// constant 0. The MEANING of a stored value changed, which is
@@ -89,8 +89,6 @@ CREATE TABLE symbols (id INTEGER PRIMARY KEY,
 CREATE TABLE sites (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT);
-CREATE TABLE bindings (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
-  local TEXT NOT NULL, target TEXT NOT NULL);
 CREATE TABLE edges (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
   dst_path TEXT NOT NULL, dst_unit TEXT NOT NULL,
   kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL,
@@ -99,7 +97,6 @@ CREATE TABLE resolve_pending (path TEXT PRIMARY KEY);
 CREATE INDEX idx_sym_file ON symbols(file_id, key);
 CREATE UNIQUE INDEX idx_sym_ident ON symbols(file_id, key, nth);
 CREATE INDEX idx_site_file ON sites(file_id);
-CREATE INDEX idx_binding_site ON bindings(site_id);
 CREATE INDEX idx_edge_dst ON edges(dst_path);
 CREATE INDEX idx_edge_site ON edges(site_id);
 ";
@@ -120,11 +117,12 @@ const KINDS: &[&str] = &[
     "url",
 ];
 
-/// The frozen code for one site kind. `pub(crate)` since the symbol
-/// join asks it for `mod_decl`: KINDS is the single owner of these
-/// positions, so a consumer looks the code up here rather than
-/// spelling the integer where the table cannot see it drift.
-pub(crate) fn kind_code(label: &str) -> Result<i64> {
+/// The frozen code for one site kind. KINDS is the single owner of
+/// these positions: the writer below looks a code up here rather than
+/// spelling an integer where the table cannot see it drift, and the
+/// bridge reads the inverse (`kind_label`). Private since the symbol
+/// join, its one outside caller, retired at schema v14.
+fn kind_code(label: &str) -> Result<i64> {
     KINDS
         .iter()
         .position(|k| *k == label)
@@ -182,8 +180,7 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
     write_sites(tx, file_id, &found)
 }
 
-/// Phase 1's site half: one row per site, plus its candidate bindings
-/// under the rowid that site just took. Split from refresh_graph at
+/// Phase 1's site half: one row per site. Split from refresh_graph at
 /// the E01 fn-length line.
 fn write_sites(
     tx: &Transaction<'_>,
@@ -193,8 +190,6 @@ fn write_sites(
     let mut site = tx.prepare(
         "INSERT INTO sites (file_id, kind, line, spec, owner) VALUES (?1, ?2, ?3, ?4, ?5)",
     )?;
-    let mut bind =
-        tx.prepare("INSERT INTO bindings (site_id, local, target) VALUES (?1, ?2, ?3)")?;
     for s in found {
         site.execute((
             file_id,
@@ -203,10 +198,6 @@ fn write_sites(
             &s.spec,
             s.owner.as_deref(),
         ))?;
-        let site_id = tx.last_insert_rowid();
-        for b in &s.bindings {
-            bind.execute((site_id, &b.local, &b.target))?;
-        }
     }
     Ok(())
 }

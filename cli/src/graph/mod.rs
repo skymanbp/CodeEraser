@@ -6,7 +6,6 @@
 //! jsonc) beside it; wire.rs bridges cached sites to edge rows for
 //! phase 2.
 
-pub mod bindings;
 pub mod cabal;
 pub mod canvas;
 pub mod cargo;
@@ -23,7 +22,6 @@ pub mod sites;
 pub mod spec;
 pub mod store;
 pub mod symbols;
-pub mod symedges;
 pub mod symwire;
 pub mod wire;
 

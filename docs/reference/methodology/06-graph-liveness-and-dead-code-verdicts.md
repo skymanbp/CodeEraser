@@ -23,7 +23,7 @@ site, and where the specifier lives, is a frozen table per language
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
 grammar and scans line-wise ([spec.rs:96](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
-([store.rs:107-121](../../../cli/src/graph/store.rs#L107)) — positions, not names, so reordering is a
+([store.rs:104-118](../../../cli/src/graph/store.rs#L104)) — positions, not names, so reordering is a
 `GRAPH_REV` bump ([store.rs:70](../../../cli/src/graph/store.rs#L70), currently `10`).
 
 ### 2. The resolution ladder
@@ -125,8 +125,8 @@ Two transformations happen on the way to the wire:
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
-never saw ([load.rs:125-131](../../../cli/src/graph/load.rs#L125)). `unresolved_sites` is the count of sites
-with no edge row ([load.rs:153-158](../../../cli/src/graph/load.rs#L153)) and travels with the report so
+never saw ([load.rs:88-94](../../../cli/src/graph/load.rs#L88)). `unresolved_sites` is the count of sites
+with no edge row ([load.rs:116-121](../../../cli/src/graph/load.rs#L116)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:23-25](../../../cli/src/graph/deadcode.rs#L23)).
 
@@ -337,7 +337,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:111](../../../core/app/CE/Graph/Cost.hs#L111)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:159](../../../cli/src/graph/load.rs#L159), [deadcode.rs:181](../../../cli/src/graph/deadcode.rs#L181)), fences every returned index and bounds the column ([deadcode.rs:359](../../../cli/src/graph/deadcode.rs#L359)), and renders the trust word beside each dead file ([deadcode.rs:267](../../../cli/src/graph/deadcode.rs#L267)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:52](../../../core/test/GraphWireProps.hs#L52)).
+([Cost.hs:111](../../../core/app/CE/Graph/Cost.hs#L111)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:122](../../../cli/src/graph/load.rs#L122), [deadcode.rs:181](../../../cli/src/graph/deadcode.rs#L181)), fences every returned index and bounds the column ([deadcode.rs:359](../../../cli/src/graph/deadcode.rs#L359)), and renders the trust word beside each dead file ([deadcode.rs:267](../../../cli/src/graph/deadcode.rs#L267)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:52](../../../core/test/GraphWireProps.hs#L52)).
 
 ### 9. Acceptance
 

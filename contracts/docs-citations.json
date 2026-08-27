@@ -511,17 +511,17 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:43": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 89,
+    "line": 94,
     "text": "pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:44": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 151,
+    "line": 156,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:45": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 168,
+    "line": 173,
     "text": "|r| r.get(0),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:46": {
@@ -736,12 +736,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 61,
+    "line": 66,
     "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:85": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 63,
+    "line": 68,
     "text": "file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:86": {
@@ -786,17 +786,17 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:93": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 39,
-    "text": "const SCHEMA_VERSION: i64 = 13; // 9: trend rows carry their measuring toolchain"
+    "line": 44,
+    "text": "const SCHEMA_VERSION: i64 = 14; // 9: trend rows carry their measuring toolchain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:94": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 151,
+    "line": 156,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:95": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 152,
+    "line": 157,
     "text": "["
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:96": {
@@ -3266,7 +3266,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 159,
+    "line": 122,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
@@ -3556,7 +3556,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 107,
+    "line": 104,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3696,12 +3696,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:75": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 125,
+    "line": 88,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 153,
+    "line": 116,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
@@ -4011,7 +4011,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:36": {
     "target": "../../../cli/src/graph/symwire.rs",
-    "line": 66,
+    "line": 68,
     "text": "/// The same surface under the verdict family's universe (6.1.0):"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:37": {
@@ -6006,7 +6006,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 365,
+    "line": 368,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -6061,7 +6061,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 365,
+    "line": 368,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -6086,7 +6086,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 374,
+    "line": 377,
     "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
@@ -6141,7 +6141,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 370,
+    "line": 373,
     "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
@@ -6161,7 +6161,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:58": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 362,
+    "line": 365,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
