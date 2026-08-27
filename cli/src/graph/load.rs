@@ -35,34 +35,27 @@ pub(crate) fn rows<T>(
         .collect::<rusqlite::Result<_>>()?)
 }
 
-/// Column-generic get-chains: under T2 normalization EVERY
-/// field-by-field row mapper is the same token stream, so the chain
+/// Column-generic tuple readers: under T2 normalization EVERY
+/// field-by-field row mapper is the same token stream, so the reader
 /// exists once per arity and each read surface keeps only its
-/// destructure→construct semantics (below the clone floor).
+/// destructure→construct semantics (below the clone floor). One
+/// macro rather than a get-chain per arity: the chain's bodies were
+/// themselves each other's clone once a fourth arity joined.
 /// `Col` is both shorthand and the token-shape breaker: four
 /// spelled-out FromSql bounds were themselves a 50-token run.
 pub(crate) trait Col: rusqlite::types::FromSql {}
 impl<T: rusqlite::types::FromSql> Col for T {}
 
-pub(crate) fn t5<A: Col, B: Col, C: Col, D: Col, E: Col>(
-    r: &rusqlite::Row<'_>,
-) -> rusqlite::Result<(A, B, C, D, E)> {
-    let head = t4(r)?;
-    Ok((head.0, head.1, head.2, head.3, r.get(4)?))
+macro_rules! row_tuple {
+    ($name:ident: $($t:ident $i:literal),+) => {
+        pub(crate) fn $name<$($t: Col),+>(r: &rusqlite::Row<'_>) -> rusqlite::Result<($($t,)+)> {
+            Ok(($(r.get($i)?,)+))
+        }
+    };
 }
-
-pub(crate) fn t6<A: Col, B: Col, C: Col, D: Col, E: Col, F: Col>(
-    r: &rusqlite::Row<'_>,
-) -> rusqlite::Result<(A, B, C, D, E, F)> {
-    let head = t5(r)?;
-    Ok((head.0, head.1, head.2, head.3, head.4, r.get(5)?))
-}
-
-pub(crate) fn t4<A: Col, B: Col, C: Col, D: Col>(
-    r: &rusqlite::Row<'_>,
-) -> rusqlite::Result<(A, B, C, D)> {
-    Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
-}
+row_tuple!(t4: A 0, B 1, C 2, D 3);
+row_tuple!(t6: A 0, B 1, C 2, D 3, E 4, F 5);
+row_tuple!(t7: A 0, B 1, C 2, D 3, E 4, F 5, G 6);
 
 /// Every path owning at least one unresolved site — the erase
 /// planner's trust boundary (erase.md: a dead-file row is refused

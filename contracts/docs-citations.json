@@ -1612,7 +1612,7 @@
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:16": {
     "target": "../../../cli/src/docdup/exempt.rs",
     "line": 1,
-    "text": "//! Four-way category exemption (plan :78-80, design vol.2 §5.2) as a"
+    "text": "//! Four-way category exemption (plan :74-76, design vol.2 §5.2) as a"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:17": {
     "target": "../../../cli/src/docdup/exempt.rs",
@@ -1656,7 +1656,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:24": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 67,
+    "line": 69,
     "text": "fn allow_has_why(seg: &RawSeg) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:25": {
@@ -1666,17 +1666,17 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:26": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 88,
+    "line": 87,
     "text": "for line in &seg.lines {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:27": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 93,
+    "line": 92,
     "text": "let opens = fence_line(&line.text);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:28": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 112,
+    "line": 111,
     "text": "fn fence_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:29": {
@@ -1691,7 +1691,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:30": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 119,
+    "line": 118,
     "text": "fn skeleton_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:31": {
@@ -1701,7 +1701,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:32": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 101,
+    "line": 100,
     "text": "} else if line.text.trim().chars().count() > DOC_LINE_CAP {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:33": {
@@ -3266,7 +3266,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 122,
+    "line": 115,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
@@ -3556,7 +3556,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 113,
+    "line": 118,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3611,8 +3611,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:6": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 79,
-    "text": "pub const GRAPH_REV: i64 = 11;"
+    "line": 84,
+    "text": "pub const GRAPH_REV: i64 = 12;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:60": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -3696,12 +3696,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:75": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 88,
+    "line": 81,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 116,
+    "line": 109,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
@@ -4776,7 +4776,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:11": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 170,
+    "line": 177,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:110": {
@@ -4826,12 +4826,12 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:12": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 44,
+    "line": 49,
     "text": ".map(|f| Unit {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:13": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 121,
+    "line": 127,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:14": {
@@ -4846,7 +4846,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:16": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 102,
+    "line": 108,
     "text": "fn typed_key("
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:17": {

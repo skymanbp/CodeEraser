@@ -76,7 +76,12 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// list holding a comment or an operator (differential in CHANGELOG)
 /// — so every cached symbols row is re-derived. The wire masks the
 /// word to bit 0 (graph/symwire.rs): the core sees the repairs alone.
-pub const GRAPH_REV: i64 = 11;
+/// 12 = `symbols.conv` (plan v2.17 L round piece (4)): the AST half of
+/// the convention-category word (mention/conv — test cfg, FFI,
+/// decorator registration, class membership, default export, ambient,
+/// dead-code allowance, other cfg) stored beside the visibility word;
+/// a new column and a new stored fact, so every row is re-derived.
+pub const GRAPH_REV: i64 = 12;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -94,7 +99,7 @@ CREATE TABLE symbols (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   key TEXT NOT NULL, nth INTEGER NOT NULL,
   start_line INTEGER NOT NULL, end_line INTEGER NOT NULL,
-  flags INTEGER NOT NULL);
+  flags INTEGER NOT NULL, conv INTEGER NOT NULL);
 CREATE TABLE sites (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT);
@@ -167,12 +172,14 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
     let (found, segments) = crate::graph::sites::detect_with_units(text, lang);
     // flags carry the declaration's OWN visibility word since the
     // v2.14 producer landed (fourclass::visibility; bits 0-2 since
-    // GRAPH_REV 11) — a local syntactic fact, never a guess. The
-    // column was reserved and zero until one existed, which is why
-    // nothing read it before; the wire reads bit 0 of it (symwire).
+    // GRAPH_REV 11) and conv the AST half of its convention word
+    // (mention::conv, GRAPH_REV 12) — local syntactic facts, never a
+    // guess. flags was reserved and zero until a producer existed,
+    // which is why nothing read it before; the wire reads bit 0 of it
+    // (symwire), and conv waits for the advisory table (piece (6)).
     let mut sym = tx.prepare(
-        "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+        "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags, conv)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
     )?;
     // nth comes from the ONE assignment throat (units::with_nth) the
     // unitsig cache also calls; the UNIQUE(file_id, key, nth) index
@@ -185,6 +192,7 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
             u.start_line as i64,
             u.end_line as i64,
             u.vis,
+            u.conv,
         ))?;
     }
     write_sites(tx, file_id, &found)

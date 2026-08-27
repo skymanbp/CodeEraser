@@ -17,22 +17,11 @@ pub(super) fn fns(src: &str, lang: Lang) -> Vec<(String, i64)> {
         .collect()
 }
 
-/// One case as one line: the source, then ` ⇒ `, then every unit the
-/// producer must find, in source order, as `name:bits` — `E` exported,
-/// `S` scope-exported, `R` restricted, `-` none. A string per case
-/// rather than a (source, table) tuple: a run of such tuples is this
-/// repo's most-rhyming token shape, and its own clone gate said so on
-/// the first draft of these tables.
+/// One case as one line (testutil::check_word_case): every unit as
+/// `name:bits` — `E` exported, `S` scope-exported, `R` restricted,
+/// `-` none.
 pub(super) fn check(lang: Lang, case: &str) {
-    let (src, want) = case.split_once(" ⇒ ").expect("case has ` ⇒ `");
-    let want: Vec<(String, i64)> = want
-        .split_whitespace()
-        .map(|unit| {
-            let (name, letters) = unit.split_once(':').expect("name:bits");
-            (name.to_string(), letters.chars().map(bit_of).sum())
-        })
-        .collect();
-    assert_eq!(fns(src, lang), want, "{src:?}");
+    crate::testutil::check_word_case(lang, case, fns, bit_of);
 }
 
 fn bit_of(letter: char) -> i64 {

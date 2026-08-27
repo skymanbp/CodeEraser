@@ -4,6 +4,7 @@
 //! to the file's top level.
 
 use super::visibility;
+use crate::mention::conv;
 use crate::scan::ast;
 use crate::scan::functions;
 use crate::scan::lang::Lang;
@@ -11,16 +12,19 @@ use crate::scan::spec;
 
 /// One alignment unit, owned (no tree lifetime): `key` is the
 /// cross-version identity (name + arity for code, heading text for
-/// Markdown), spans are 1-based inclusive line ranges, and `vis`
-/// carries the declaration's OWN visibility bits (visibility/) —
-/// read here because this is where the declaration node is still in
-/// hand, and persisted as `symbols.flags`.
+/// Markdown), spans are 1-based inclusive line ranges, and the two
+/// words carry the declaration's OWN facts — `vis` its visibility
+/// bits (visibility/), `conv` the AST half of its convention-category
+/// word (mention/conv) — read here because this is where the
+/// declaration node is still in hand, and persisted as `symbols.flags`
+/// and `symbols.conv`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Unit {
     pub key: String,
     pub start_line: usize,
     pub end_line: usize,
     pub vis: i64,
+    pub conv: i64,
 }
 
 pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
@@ -35,6 +39,7 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
         return Vec::new(); // no segmentation: everything is toplevel
     };
     let src = text.as_bytes();
+    let facts = conv::file_facts(tree.root_node(), src, lang);
     // Go receiver qualification ("(T) add") rides f.name from the
     // extraction root (scan::functions::name_of) — one throat for
     // metric names, these keys and the baseline entities (M5-close
@@ -46,17 +51,24 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
             start_line: f.start_line,
             end_line: f.end_line,
             vis: visibility::bits(f.node, src, lang),
+            conv: conv::ast_bits(f.node, src, lang, &facts),
         })
         .collect();
-    units.extend(extra_units(tree.root_node(), src, lang));
+    units.extend(extra_units(tree.root_node(), src, lang, &facts));
     units
 }
 
 /// Named non-function units (consts, types, …) from the kinds
 /// register — relocation reporting needs their names too; the M1
 /// function metrics do not, which is why this list lives in
-/// fourclass::kinds and not scan/spec.
-fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
+/// fourclass::kinds and not scan/spec. The named and typed kind
+/// tables are disjoint, so a node keys at most once.
+fn extra_units(
+    root: tree_sitter::Node,
+    src: &[u8],
+    lang: Lang,
+    facts: &conv::FileFacts,
+) -> Vec<Unit> {
     let kinds = super::kinds::extra(lang);
     let typed = super::kinds::typed(lang);
     let mut out = Vec::new();
@@ -65,11 +77,14 @@ fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
     }
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if let Some(key) = named_key(node, src, kinds) {
-            out.push(unit_at(node, key, visibility::bits(node, src, lang)));
-        }
-        if let Some(key) = typed_key(node, src, typed) {
-            out.push(unit_at(node, key, visibility::bits(node, src, lang)));
+        if let Some(key) = named_key(node, src, kinds).or_else(|| typed_key(node, src, typed)) {
+            out.push(Unit {
+                key,
+                start_line: node.start_position().row + 1,
+                end_line: node.end_position().row + 1,
+                vis: visibility::bits(node, src, lang),
+                conv: conv::ast_bits(node, src, lang, facts),
+            });
         }
         for i in 0..node.child_count() {
             if let Some(child) = node.child(i as u32) {
@@ -78,15 +93,6 @@ fn extra_units(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<Unit> {
         }
     }
     out
-}
-
-fn unit_at(node: tree_sitter::Node, key: String, vis: i64) -> Unit {
-    Unit {
-        key,
-        start_line: node.start_position().row + 1,
-        end_line: node.end_position().row + 1,
-        vis,
-    }
 }
 
 fn named_key(node: tree_sitter::Node, src: &[u8], kinds: &[&str]) -> Option<String> {
@@ -133,6 +139,7 @@ fn markdown_segments(text: &str) -> Vec<Unit> {
                 start_line: i + 1,
                 end_line: i + 1,
                 vis: visibility::MARKDOWN_VIS,
+                conv: 0, // a heading is outside the mention domain (RG9)
             });
         }
     }

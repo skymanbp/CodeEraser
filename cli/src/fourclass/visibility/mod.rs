@@ -163,8 +163,10 @@ fn go_exported(node: Node<'_>, src: &[u8]) -> bool {
     }
 }
 
-/// The parent chain, innermost first, ending at the file root.
-fn ancestors(node: Node<'_>) -> impl Iterator<Item = Node<'_>> {
+/// The parent chain, innermost first, ending at the file root (shared
+/// with the mention category word, mention/conv, which reads the same
+/// chain for enclosing classes, ambient blocks and Rust attributes).
+pub(crate) fn ancestors(node: Node<'_>) -> impl Iterator<Item = Node<'_>> {
     std::iter::successors(node.parent(), |n| n.parent())
 }
 

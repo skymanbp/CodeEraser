@@ -70,20 +70,13 @@ pub(super) fn roles_of(root: &Path, path: &str, config: &Config, declared: &Decl
 }
 
 /// `ce:allow(deadcode) -- <why>` anywhere in the file claims
-/// liveness — the docdup exemption discipline transplanted: a BARE
-/// marker without the ` -- why` tail claims NOTHING ("no why = a
-/// violation", plan :79). An unreadable file makes no claim. Full
-/// content scan per file node per run; the index already read every
-/// byte upstream, so the pages are warm.
+/// liveness — the one claim grammar (crate::allow: a bare marker
+/// claims NOTHING). An unreadable file makes no claim. Full content
+/// scan per file node per run; the index already read every byte
+/// upstream, so the pages are warm.
 fn allow_claim(root: &Path, path: &str) -> bool {
-    let Ok(text) = std::fs::read_to_string(root.join(path)) else {
-        return false;
-    };
-    text.match_indices("ce:allow(deadcode)").any(|(i, m)| {
-        text[i + m.len()..]
-            .trim_start_matches([' ', '\t'])
-            .starts_with("-- ")
-    })
+    std::fs::read_to_string(root.join(path))
+        .is_ok_and(|text| crate::allow::allow_claim(&text, "ce:allow(deadcode)"))
 }
 
 /// Spec.hs is the cabal test-suite main-is convention (hspec/stack

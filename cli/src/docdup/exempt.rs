@@ -1,4 +1,4 @@
-//! Four-way category exemption (plan :78-80, design vol.2 §5.2) as a
+//! Four-way category exemption (plan :74-76, design vol.2 §5.2) as a
 //! LEDGERED filter — every shed line or segment lands in a counter,
 //! never in silence (the low_diversity_suppressed discipline). Two of
 //! the four routes are structurally zero here and say so where the
@@ -51,7 +51,7 @@ pub fn classify(seg: &RawSeg, first_comment: bool, ledger: &mut Ledger) -> i64 {
             ledger.inline_allow += 1;
             return EXEMPT_ALLOW;
         }
-        // a bare marker exempts NOTHING (plan :79-80: no why = a
+        // a bare marker exempts NOTHING (plan :76: no why = a
         // violation); the segment stays live and the ledger says so
         ledger.allow_missing_why += 1;
     }
@@ -64,17 +64,16 @@ fn has_any(seg: &RawSeg, markers: &[&str]) -> bool {
         .any(|l| markers.iter().any(|m| l.text.contains(m)))
 }
 
+/// The one claim grammar (crate::allow), line by line: the why must
+/// share the marker's line.
 fn allow_has_why(seg: &RawSeg) -> bool {
-    seg.lines.iter().any(|l| {
-        l.text
-            .split_once(ALLOW_MARKER)
-            .and_then(|(_, tail)| tail.split_once("--"))
-            .is_some_and(|(_, why)| !why.trim().is_empty())
-    })
+    seg.lines
+        .iter()
+        .any(|l| crate::allow::allow_claim(&l.text, ALLOW_MARKER))
 }
 
 /// Line-level strip for comment/docstring segments: skeleton rows
-/// (plan :79 — the Google/Sphinx/JSDoc section vocabulary), fenced
+/// (plan :75 — the Google/Sphinx/JSDoc section vocabulary), fenced
 /// code regions (```/~~~ toggling, fence lines included — the F3
 /// "the judge sees prose" contract extended to documentation text
 /// wherever it lives) and overlong data/regex lines (DOC_LINE_CAP).

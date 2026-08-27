@@ -6,14 +6,18 @@
 //! and the danger runs one way only (a referenced name read as
 //! unmentioned). This module builds the corpus side: which files are
 //! looked at (walk.rs), what counts as a token (token.rs), and the two
-//! tables that hold the hashes (store.rs).
+//! tables that hold the hashes (store.rs) — and the declaration side's
+//! two readings (piece (4)): the name the veto judges (name.rs, §3.1)
+//! and the AST half of the category word (conv/, §3.2), the latter
+//! measured in `fourclass::units` and so inside `dedup::analyze`'s
+//! per-file refresh, where the declaration node is already in hand.
 //!
-//! The pass has its OWN entry — `refresh` below — and is not part of
-//! `dedup::analyze`: that function is the guard/audit hot path with a
-//! 1.5 s budget, and an unconditional read-and-tokenize of the whole
-//! tree would breach it. Only the consumers that carry the advisory
-//! (deadcode and its GUI/MCP faces) call it; the judged files are
-//! therefore read twice per such run, a measured and accepted cost.
+//! The corpus pass has its OWN entry — `refresh` below — and is not
+//! part of `dedup::analyze`: that function is the guard/audit hot path
+//! with a 1.5 s budget, and an unconditional read-and-tokenize of the
+//! whole tree would breach it. Only the consumers that carry the
+//! advisory (deadcode and its GUI/MCP faces) call it; the judged files
+//! are therefore read twice per such run, a measured and accepted cost.
 //!
 //! Consistency is per file, never per run: file M read at t₀ without
 //! `foo`, `foo` added at t₁, declaring file D read at t₂ ⇒ this run
@@ -21,7 +25,9 @@
 //! painted over.
 
 mod census;
+pub mod conv;
 pub mod face;
+pub mod name;
 pub mod store;
 #[cfg(test)]
 mod tests;

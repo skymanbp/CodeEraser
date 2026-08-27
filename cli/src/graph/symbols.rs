@@ -18,25 +18,30 @@ pub struct SymbolRow {
     /// bit 0 is the public/private axis the graph's verdict codes
     /// have always meant.
     pub vis: i64,
+    /// The AST half of its convention-category word (mention::conv).
+    pub conv: i64,
 }
 
 /// Every cached symbol, deterministically ordered by identity.
 pub fn symbol_rows(idx: &Index) -> Result<Vec<SymbolRow>> {
     Ok(super::load::rows(
         idx.raw(),
-        "SELECT f.path, s.key, s.nth, s.start_line, s.end_line, s.flags
+        "SELECT f.path, s.key, s.nth, s.start_line, s.end_line, s.flags, s.conv
          FROM symbols s JOIN files f ON f.id = s.file_id
          ORDER BY f.path, s.key, s.nth",
-        super::load::t6,
+        super::load::t7,
     )?
     .into_iter()
-    .map(|(path, key, nth, start_line, end_line, vis)| SymbolRow {
-        path,
-        key,
-        nth,
-        start_line,
-        end_line,
-        vis,
-    })
+    .map(
+        |(path, key, nth, start_line, end_line, vis, conv)| SymbolRow {
+            path,
+            key,
+            nth,
+            start_line,
+            end_line,
+            vis,
+            conv,
+        },
+    )
     .collect())
 }
