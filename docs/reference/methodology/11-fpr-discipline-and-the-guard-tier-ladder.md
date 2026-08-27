@@ -14,7 +14,7 @@ The same discipline is applied to the *policy* value, not only the measurement. 
 
 Two honesty boundaries bound the thesis, and both are written into the plan:
 
-- `PreToolUse` is a **behavior-shaping layer, not a security boundary** — an agent can bypass it with `Bash: echo >>` or `sed -i`; the backstop is the `Stop` audit over `git diff` (write-tool agnostic) plus the CI gate ([DEVELOPMENT_PLAN.md:92-94](../../DEVELOPMENT_PLAN.md#L92)).
+- `PreToolUse` is a **behavior-shaping layer, not a security boundary** — an agent can bypass it with `Bash: echo >>` or `sed -i`; the backstop is the `Stop` audit over `git diff` (write-tool agnostic) plus the CI gate ([DEVELOPMENT_PLAN.md:91-93](../../DEVELOPMENT_PLAN.md#L91)).
 - The hook is **fail-open**: any internal failure allows the edit, and the degraded run lands in the observe feed ([guard.rs:287-291](../../../cli/src/guard.rs#L287)); a probe that cannot reach the daemon returns `None`, which is logged as `degraded` rather than treated as "no duplicates" ([guard.rs:164-182](../../../cli/src/guard.rs#L164), [guard.rs:249](../../../cli/src/guard.rs#L249)).
 
 ### The tier ladder
@@ -36,21 +36,21 @@ Tier resolution is per rule class, not global: an explicit `[guard] mode` overri
 PROMOTED_DEFAULT = "deny"     // tier.rs:36
 ```
 
-([tier.rs:36](../../../cli/src/config/tier.rs#L36); consumed at [guard.rs:50](../../../cli/src/guard.rs#L50) and [health.rs:59](../../../cli/src/health.rs#L59)). Everything else routes to `observe` — explicitly because it has no FPR record of its own, which is the entry requirement below ([DEVELOPMENT_PLAN.md:101-103](../../DEVELOPMENT_PLAN.md#L101)).
+([tier.rs:36](../../../cli/src/config/tier.rs#L36); consumed at [guard.rs:50](../../../cli/src/guard.rs#L50) and [health.rs:59](../../../cli/src/health.rs#L59)). Everything else routes to `observe` — explicitly because it has no FPR record of its own, which is the entry requirement below ([DEVELOPMENT_PLAN.md:100-102](../../DEVELOPMENT_PLAN.md#L100)).
 
 When several rules fire on one write, the decision line is emitted at the **strongest** tier among them, ranked by index in `TIERS` (unknown values rank 0 = `observe`): class rules carry the class mode, the zone rule carries its own mapped tier, so a zone warn never rides a deny-class escalator ([guard.rs:119-136](../../../cli/src/guard.rs#L119)). A broken `ce.toml` overrides the computed tier down to a visible `warn` that names the parse error ([guard.rs:144-148](../../../cli/src/guard.rs#L144)).
 
 ### The FPR gate that promotes a class
 
-The ladder is a **route**, written into the plan so the default can neither stay at `warn` forever nor start at `deny` ([DEVELOPMENT_PLAN.md:273-280](../../DEVELOPMENT_PLAN.md#L273)):
+The ladder is a **route**, written into the plan so the default can neither stay at `warn` forever nor start at `deny` ([DEVELOPMENT_PLAN.md:272-279](../../DEVELOPMENT_PLAN.md#L272)):
 
 1. 0.x (M3–M4): default `warn`; `deny` exists as an opt-in capability.
 2. After the M4 FPR gate passes: **T1/T2 exact duplicate write** and **hard-budget breach (file > 750 lines)** promote to `ask`.
 3. 1.0 (M7): those two classes promote to `deny`; every other rule stays `observe` for want of its own FPR record. Each default change records its FPR evidence in the CHANGELOG.
 
-The gate itself is quantitative and appears in two places with two shapes. The M3 acceptance criterion is **≤ 1 mis-block in 500 real normal edits**, with `N=1` demonstrations explicitly disallowed ([DEVELOPMENT_PLAN.md:307](../../DEVELOPMENT_PLAN.md#L307)); the M4 main gate is **FPR ≤ 1% over 500 real normal edits**, on a pre-registered evaluation set frozen before implementation, ≥ 200 edit samples, ≥ 50% from real agent transcripts ([DEVELOPMENT_PLAN.md:273](../../DEVELOPMENT_PLAN.md#L273)). Risk register R4 states the admission rule flatly: **deny admission = the M4 FPR gate (≤ 1%)** ([DEVELOPMENT_PLAN.md:307](../../DEVELOPMENT_PLAN.md#L307)).
+The gate itself is quantitative and appears in two places with two shapes. The M3 acceptance criterion is **≤ 1 mis-block in 500 real normal edits**, with `N=1` demonstrations explicitly disallowed ([DEVELOPMENT_PLAN.md:307](../../DEVELOPMENT_PLAN.md#L307)); the M4 main gate is **FPR ≤ 1% over 500 real normal edits**, on a pre-registered evaluation set frozen before implementation, ≥ 200 edit samples, ≥ 50% from real agent transcripts ([DEVELOPMENT_PLAN.md:272](../../DEVELOPMENT_PLAN.md#L272)). Risk register R4 states the admission rule flatly: **deny admission = the M4 FPR gate (≤ 1%)** ([DEVELOPMENT_PLAN.md:307](../../DEVELOPMENT_PLAN.md#L307)).
 
-Sample purity is part of the gate, not an afterthought: only observe-mode sessions and pre-M3 no-guard sessions may be sampled, edits the guard already intervened in are excluded and the exclusion ratio reported — otherwise FPR is biased downward by the guard's own shaping and the deny admission becomes self-certifying ([DEVELOPMENT_PLAN.md:273](../../DEVELOPMENT_PLAN.md#L273)). This is why every probed event is appended to `<root>/.ce/observe.ndjson` in **all** modes ([guard.rs:7-8](../../../cli/src/guard.rs#L7)) and why the feed carries `session_id`: the evaluation set is partitioned by session, and neither the dogfood-session count nor the purity rule is answerable without it ([envelope.rs:16](../../../cli/src/guard/envelope.rs#L16), [hookio.rs:36-43](../../../cli/src/hookio.rs#L36)).
+Sample purity is part of the gate, not an afterthought: only observe-mode sessions and pre-M3 no-guard sessions may be sampled, edits the guard already intervened in are excluded and the exclusion ratio reported — otherwise FPR is biased downward by the guard's own shaping and the deny admission becomes self-certifying ([DEVELOPMENT_PLAN.md:272](../../DEVELOPMENT_PLAN.md#L272)). This is why every probed event is appended to `<root>/.ce/observe.ndjson` in **all** modes ([guard.rs:7-8](../../../cli/src/guard.rs#L7)) and why the feed carries `session_id`: the evaluation set is partitioned by session, and neither the dogfood-session count nor the purity rule is answerable without it ([envelope.rs:16](../../../cli/src/guard/envelope.rs#L16), [hookio.rs:36-43](../../../cli/src/hookio.rs#L36)).
 
 #### The recorded replay
 

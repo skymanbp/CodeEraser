@@ -30,7 +30,7 @@ wTotal  = sum_i w_i                       -- derived, never a literal
 score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
 ```
 
-`violCost = 10` ([Cost.hs:180-181](../../../core/app/CE/Verdict/Cost.hs#L180)), `violCostNeutral = 10` ([Cost.hs:202-203](../../../core/app/CE/Verdict/Cost.hs#L202)) and `scoreScale = 1000` ([Cost.hs:216-217](../../../core/app/CE/Verdict/Cost.hs#L216)) — i.e. the score is an integer per-mille value opening at 1000, polarity higher-is-better ([DEVELOPMENT_PLAN.md:71](../../DEVELOPMENT_PLAN.md#L71)). At the neutral default the score is exactly the weighted mean of the bounded axis charges, so the structural `max 0` is unreachable; `viol_cost` remains a live ce.toml dial — a repo declaring it above neutral asks for harsher scores and may saturate by that explicit choice ([Score.hs:235-242](../../../core/app/CE/Verdict/Score.hs#L235)). `div` is Haskell floor division. `wTotal` is summed from the effective weights rather than declared, so a weight can never be silently dropped from the divisor; validation refuses an all-zero weight table, making the divisor non-zero — that refusal lives in the boundary contract `CE.Verdict.Table.weightsOffence` ([Table.hs:96-101](../../../core/app/CE/Verdict/Table.hs#L96)), asserted there by the source comment.
+`violCost = 10` ([Cost.hs:180-181](../../../core/app/CE/Verdict/Cost.hs#L180)), `violCostNeutral = 10` ([Cost.hs:202-203](../../../core/app/CE/Verdict/Cost.hs#L202)) and `scoreScale = 1000` ([Cost.hs:216-217](../../../core/app/CE/Verdict/Cost.hs#L216)) — i.e. the score is an integer per-mille value opening at 1000, polarity higher-is-better ([DEVELOPMENT_PLAN.md:70](../../DEVELOPMENT_PLAN.md#L70)). At the neutral default the score is exactly the weighted mean of the bounded axis charges, so the structural `max 0` is unreachable; `viol_cost` remains a live ce.toml dial — a repo declaring it above neutral asks for harsher scores and may saturate by that explicit choice ([Score.hs:235-242](../../../core/app/CE/Verdict/Score.hs#L235)). `div` is Haskell floor division. `wTotal` is summed from the effective weights rather than declared, so a weight can never be silently dropped from the divisor; validation refuses an all-zero weight table, making the divisor non-zero — that refusal lives in the boundary contract `CE.Verdict.Table.weightsOffence` ([Table.hs:96-101](../../../core/app/CE/Verdict/Table.hs#L96)), asserted there by the source comment.
 
 An over-cap request never gets a partial judgment: it returns a fully-shaped degraded reply with `score = 0`, empty axes, and `fail = true` with reason `verdict_too_large` ([Verdict.hs:228-266](../../../core/app/CE/Verdict.hs#L228)). Caps are `verdictNodeCap = 131072` nodes and `verdictRowCap = 524288` rows ([Cost.hs:225-229](../../../core/app/CE/Verdict/Cost.hs#L225)), the row count summing every fact and knob table plus the baseline's rows ([Verdict.hs:49-74](../../../core/app/CE/Verdict.hs#L49)).
 
@@ -65,7 +65,7 @@ This is the identity `S = clamp(median + k·MAD, ...)` in log-LOC space, re-expr
 
 ### The continuous ratchet
 
-ADR-006 defines per-file/per-function ceilings on continuous metrics (file LOC, function CoC): the ceiling is the baseline value; exceeding it fails, and coming in under it tightens the ceiling automatically. A single edit is allowed `+2%` or `+10` lines, whichever is larger, and consumed tolerance is reported in the `ce check` ratchet line ([DEVELOPMENT_PLAN.md:205-212](../../DEVELOPMENT_PLAN.md#L205)).
+ADR-006 defines per-file/per-function ceilings on continuous metrics (file LOC, function CoC): the ceiling is the baseline value; exceeding it fails, and coming in under it tightens the ceiling automatically. A single edit is allowed `+2%` or `+10` lines, whichever is larger, and consumed tolerance is reported in the `ce check` ratchet line ([DEVELOPMENT_PLAN.md:204-211](../../DEVELOPMENT_PLAN.md#L204)).
 
 As built ([Ratchet.hs:68-70](../../../core/app/CE/Verdict/Ratchet.hs#L68)) the law has two arms — the row's class allowance first, the global legs only when the class declares none:
 
@@ -86,7 +86,7 @@ Tolerance is drawn per run against the *baseline* ceiling, and the new ceiling i
 
 ### The discrete ratchet
 
-For discrete violations (clone instances, deadcode symbols) the baseline is a **set** of violation fingerprints; a new member fails, a removed member shrinks the baseline ([DEVELOPMENT_PLAN.md:211-212](../../DEVELOPMENT_PLAN.md#L211)). The implementation is plain set difference both ways over `Data.Set`, with the results returned in ascending order ([Ratchet.hs:101-102](../../../core/app/CE/Verdict/Ratchet.hs#L101), [Ratchet.hs:121-122](../../../core/app/CE/Verdict/Ratchet.hs#L121)):
+For discrete violations (clone instances, deadcode symbols) the baseline is a **set** of violation fingerprints; a new member fails, a removed member shrinks the baseline ([DEVELOPMENT_PLAN.md:210-211](../../DEVELOPMENT_PLAN.md#L210)). The implementation is plain set difference both ways over `Data.Set`, with the results returned in ascending order ([Ratchet.hs:101-102](../../../core/app/CE/Verdict/Ratchet.hs#L101), [Ratchet.hs:121-122](../../../core/app/CE/Verdict/Ratchet.hs#L121)):
 
 ```
 added   = current \ baseline        -- non-empty => fail
@@ -100,7 +100,7 @@ newDisc = current                   -- verbatim, not intersected
 
 ### Composing the fail bit
 
-ADR-006 makes the ratchet the primary gate for a repository that has a baseline and `--fail-under` a floor underneath it; either alone fails ([DEVELOPMENT_PLAN.md:217-218](../../DEVELOPMENT_PLAN.md#L217)). As built, the fail bit is the disjunction of five **named** conditions ([Verdict.hs:179-186](../../../core/app/CE/Verdict.hs#L179)):
+ADR-006 makes the ratchet the primary gate for a repository that has a baseline and `--fail-under` a floor underneath it; either alone fails ([DEVELOPMENT_PLAN.md:216-217](../../DEVELOPMENT_PLAN.md#L216)). As built, the fail bit is the disjunction of five **named** conditions ([Verdict.hs:179-186](../../../core/app/CE/Verdict.hs#L179)):
 
 | name | holds when |
 |---|---|
