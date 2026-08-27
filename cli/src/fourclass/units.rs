@@ -12,7 +12,7 @@ use crate::scan::spec;
 /// One alignment unit, owned (no tree lifetime): `key` is the
 /// cross-version identity (name + arity for code, heading text for
 /// Markdown), spans are 1-based inclusive line ranges, and `vis`
-/// carries the declaration's OWN visibility bits (visibility.rs) —
+/// carries the declaration's OWN visibility bits (visibility/) —
 /// read here because this is where the declaration node is still in
 /// hand, and persisted as `symbols.flags`.
 #[derive(Debug, Clone, PartialEq, Eq)]

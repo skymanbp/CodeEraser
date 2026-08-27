@@ -4,6 +4,16 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
+## [Unreleased] — L 轮片 (2)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动）
+
+**无默认档位变更**。`symbols.flags` bit 0 是 erase reason 6 `public_surface` 与 join `publicGuard`
+的输入，其三处生产者缺陷按口径册 §4 修复；许可增量与一次口径收窄不可区分，故按 §4.2 铁律与晋级
+同门记依据（K27 差分 = 片 (1) 后二进制 vs 本修，fixture 语料逐文件；自仓差分表**具名为空**）：
+T3（TS，扩宽）恒等守卫下 zod 912f0f5 差分 83 行 0→1、0 行 1→0（16 文件，皆 `export const f = () =>`
+第三跳形）；H2/H4（Haskell，收窄）hsprobe2/3 差分 3 行 1→0（where 同名 ×1、class 缺省体/instance 体
+×2）；H5（Haskell，扩宽）hsprobe4/6/8/9 + `module M` 自再导出差分 6 行 0→1。存储字另加 bit 1/2
+（作用域导出/受限），wire 只发 bit 0（`symwire.rs` 掩码，十族 golden 逐字节不变）。
+
 ## [v1.2.0] — 2026-08-26（无默认档位变更；T1/T2 写入类规则语义收窄）
 
 **无默认档位变更；T1/T2 写入类的规则语义收窄为「只拦新引入的重复」**

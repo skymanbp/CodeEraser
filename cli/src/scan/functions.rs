@@ -56,8 +56,12 @@ fn unit<'t>(node: Node<'t>, src: &[u8], spec: &LangSpec) -> FnUnit<'t> {
 /// qualification lives HERE at the one extraction root so metric
 /// names, unit keys and continuous baseline entities agree by
 /// construction (M5-close review D4: a post-pass in fourclass let
-/// the baseline re-spell the key without it).
-fn name_of(node: Node<'_>, src: &[u8]) -> String {
+/// the baseline re-spell the key without it). Crate-visible because
+/// the TS visibility climb's identity guard compares a declarator's
+/// name against THIS spelling of the unit's name — the one producer
+/// of the key's name part, so the guard cannot drift from the key
+/// (plan v2.17 L round, criterion T3).
+pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
     if let Some(name) = node.child_by_field_name("name") {
         let base = text(name, src);
         return match receiver_type(node, src) {

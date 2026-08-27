@@ -8,8 +8,10 @@
 //! Asserting "no path appears in the body" would only pin the paths
 //! this fixture happens to hold, so the assertion is structural: no
 //! leaf of the request is a string at all. The second is the table
-//! itself — right node, right bits, and DEDUPED, because two public
-//! functions in one file are not two facts about that file.
+//! itself — right node, right bits, DEDUPED (two public functions in
+//! one file are not two facts about that file), and MASKED: the
+//! stored word carries scope and restriction bits since plan v2.17
+//! piece (2), and the wire shows bit 0 of it and nothing else.
 
 use crate::common;
 use codeeraser::dedup::{Params, index::Index};
@@ -18,8 +20,11 @@ use serde_json::{Value, json};
 use std::path::Path;
 
 /// A crate whose files split every way the table can: one exporting
-/// twice (the dedup case) plus a private item, one wholly private,
-/// one exporting a type only.
+/// twice (the dedup case) plus a `pub(crate)` item (stored bit 2, a
+/// wire row no different from `pub`) plus a private item, one wholly
+/// private, one exporting a type only, and the bin root with a `pub
+/// fn` inside a private `mod` (stored bit 0 without bit 1, a wire row
+/// no different from a top-level `pub`).
 const FIXTURE: &str = "\
 --- Cargo.toml
 [package]
@@ -33,6 +38,10 @@ pub fn open_door() {
 
 pub fn shut_door() {
     let _ = 2;
+}
+
+pub(crate) fn side_door() {
+    let _ = 5;
 }
 
 fn bolt() {
@@ -50,6 +59,12 @@ pub struct Gate {
 mod api;
 mod inner;
 mod kind;
+
+mod cellar {
+    pub fn trapdoor() {
+        let _ = 6;
+    }
+}
 
 fn main() {
     api::open_door();
@@ -132,7 +147,7 @@ fn no_name_of_any_kind_reaches_the_graph_request() {
     assert!(!w.symbols.is_empty(), "the fixture must exercise the table");
 }
 
-/// The table itself: one row per (file, visibility) the tree
+/// The table itself: one row per (file, MASKED visibility) the tree
 /// actually holds, addressed by node index.
 #[test]
 fn the_symbols_table_names_files_by_index_and_dedupes_them() {
@@ -146,15 +161,20 @@ fn the_symbols_table_names_files_by_index_and_dedupes_them() {
     };
     let got: Vec<[i64; 2]> = w.symbols.iter().copied().collect();
 
-    // api.rs exports twice and hides once: ONE exported row (deduped,
-    // not two) beside its private row. inner.rs is private only, and
-    // kind.rs exports a type — which is a declaration like any other.
+    // api.rs exports twice, once `pub(crate)`, and hides once: ONE
+    // exported row (deduped across `pub` and `pub(crate)` alike —
+    // stored words 3 and 7 both project to 1) beside its private row.
+    // inner.rs is private only; kind.rs exports a type — a declaration
+    // like any other; main.rs hides `main` and exports `trapdoor` from
+    // a private mod (stored 1, bit 1 clear — the same wire row a
+    // top-level `pub` would give).
     let mut want = vec![
         [at("src/api.rs"), 0],
         [at("src/api.rs"), 1],
         [at("src/inner.rs"), 0],
         [at("src/kind.rs"), 1],
         [at("src/main.rs"), 0],
+        [at("src/main.rs"), 1],
     ];
     want.sort_unstable(); // node ids follow path order; the set does not
     assert_eq!(got, want, "export surface");

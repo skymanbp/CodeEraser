@@ -222,7 +222,9 @@
 > 而它**从来没有过生产者**（`cli/src/graph/deadcode/flags.rs:9`：文件粒度永不置位，公开性是符号事实）。
 > 判决码 2/4（`unref_public`/`unreach_public`）自此首次可达。该位**故意在 entryMask 之外**：导出面是判决轴、
 > 不是入口主张（RG10），故它只改死节点报哪个码，永不改哪些节点死。缺席**与空表同路**（`symRows` 只喂 [] ），
-> 字节与 4.0.0 客户端所得相同。表另计 `symCap`。**同批未做**：原计划并列的 `symEdges` 不上线——K10 审计量的是
+> 字节与 4.0.0 客户端所得相同。表另计 `symCap`。**L 轮片 (2)（2026-08-27）起本表的 visibility 是存储字的 bit 0 投影**：
+> `symbols.flags` 另存 bit 1（作用域导出）与 bit 2（`pub(crate)` 族受限）供后续 `unmentioned` 表用，`symwire.rs`
+> 的 `SELECT DISTINCT … flags & 1` 在查询处掩码，本表字节与 `symCap` 定容皆不动（K34）。**同批未做**：原计划并列的 `symEdges` 不上线——K10 审计量的是
 > 精度（683/683），而「无引用」吃的是召回，实测自仓 import 绑定只覆盖 1064 条 Rust 导出声明中的 170 条
 > （补模块跳转到 248 条，~23%），漏掉的是全路径调用与方法调用（皆非 import 点位）。详见 DEVELOPMENT_PLAN v2.14 K7。
 > **L 轮终裁（2026-08-27，用户拍板 ①）：删**——`symedges.rs`/`bindings.rs` 与 index 的 `bindings` 表随 schema v14 退役

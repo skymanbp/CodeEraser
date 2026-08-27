@@ -23,8 +23,8 @@ site, and where the specifier lives, is a frozen table per language
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
 grammar and scans line-wise ([spec.rs:96](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
-([store.rs:104-118](../../../cli/src/graph/store.rs#L104)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:70](../../../cli/src/graph/store.rs#L70), currently `10`).
+([store.rs:113-127](../../../cli/src/graph/store.rs#L113)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:79](../../../cli/src/graph/store.rs#L79), currently `11`).
 
 ### 2. The resolution ladder
 
@@ -136,15 +136,15 @@ the reader sees what the graph refuses to know
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
 deterministic ([Contract.hs:51-72](../../../core/app/CE/Graph/Contract.hs#L51)):
 
-- node rows are exactly 3 fields — `[lang, kind, roles]`, all `≥ 0`; ONE arity since 5.0.0 retired the pre-2.28 legacy flags column, so a wrong-width row is malformed and says which row ([Contract.hs:118-133](../../../core/app/CE/Graph/Contract.hs#L118));
+- node rows are exactly 3 fields — `[lang, kind, roles]`, all `≥ 0`; ONE arity since 5.0.0 retired the pre-2.28 legacy flags column, so a wrong-width row is malformed and says which row ([Contract.hs:122-137](../../../core/app/CE/Graph/Contract.hs#L122));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
-  ([Contract.hs:135-143](../../../core/app/CE/Graph/Contract.hs#L135));
+  ([Contract.hs:139-147](../../../core/app/CE/Graph/Contract.hs#L139));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
   ([Contract.hs:59](../../../core/app/CE/Graph/Contract.hs#L59), [Wire.hs:139-144](../../../core/app/CE/Wire.hs#L139));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
   ([Contract.hs:60-64](../../../core/app/CE/Graph/Contract.hs#L60),
-  [Contract.hs:140-143](../../../core/app/CE/Graph/Contract.hs#L140)).
+  [Contract.hs:144-147](../../../core/app/CE/Graph/Contract.hs#L144)).
 
 Oversize protection is by row count, not bytes (the envelope precheck is relaxed for the
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
@@ -327,7 +327,7 @@ dies"* stance is deliberate: an unlinked doc **is** reported
 
 ### 8. The dead-row confidence (2.32.0)
 
-Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Contract.hs:107](../../../core/app/CE/Graph/Contract.hs#L107)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:88](../../../core/app/CE/Graph.hs#L88)):
+Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Contract.hs:111](../../../core/app/CE/Graph/Contract.hs#L111)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:88](../../../core/app/CE/Graph.hs#L88)):
 
 ```
 0  unvouched — the language still carries unresolved sites: "nothing

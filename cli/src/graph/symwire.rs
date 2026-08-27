@@ -28,18 +28,25 @@
 //! which nodes are dead.
 
 use crate::dedup::index::Index;
+use crate::fourclass::visibility::VIS_EXPORTED;
 use anyhow::{Context, Result};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 /// The `symbols` wire table: deduped `[nodeIdx, visibility]` pairs,
-/// ascending.
+/// ascending, the visibility MASKED to bit 0.
 ///
+/// The stored word is wider than the wire's copy (plan v2.17 L
+/// round): `symbols.flags` also holds scope-exported and restricted
+/// bits — stored facts for the `unmentioned` table, no verdict axis
+/// of this family — so the projection happens here, in the SELECT,
+/// and the core reads exactly the bit it read at 4.1.0 (K16/K34).
 /// DISTINCT at the query, a set at the collect: two declarations of
 /// equal visibility in one file are not two facts about that file's
-/// export surface, which is the same reason Build.hs dedups arcs —
-/// multiplicity is not extra evidence. That is also what keeps the
-/// table bounded at two rows per file rather than one per
-/// declaration (5149 symbols become 750 rows here at most).
+/// export surface, the same reason Build.hs dedups arcs. The mask is
+/// what makes that "two rows per file" rather than eight: `symCap` is
+/// sized for a file to appear at most twice (5149 symbols become 750
+/// rows here at most), and an unmasked word would let it appear once
+/// per distinct stored value.
 ///
 /// A symbol whose path is not a node is index skew, named the way
 /// `edge_wire` names a skewed endpoint: symbols reference files by
@@ -49,12 +56,13 @@ pub fn export_surface(
     idx: &Index,
     ids: &BTreeMap<(&str, &str), usize>,
 ) -> Result<BTreeSet<[i64; 2]>> {
-    super::load::rows(
-        idx.raw(),
-        "SELECT DISTINCT f.path, s.flags FROM symbols s JOIN files f ON f.id = s.file_id
-         ORDER BY f.path, s.flags",
-        |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)),
-    )?
+    let masked = format!(
+        "SELECT DISTINCT f.path, s.flags & {VIS_EXPORTED} FROM symbols s
+         JOIN files f ON f.id = s.file_id ORDER BY 1, 2"
+    );
+    super::load::rows(idx.raw(), &masked, |r| {
+        Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
+    })?
     .into_iter()
     .map(|(path, vis)| {
         let id = ids
@@ -68,10 +76,12 @@ pub fn export_surface(
 /// The same surface under the verdict family's universe (6.1.0):
 /// `verdict/1` keys files by position in the score road's `files`
 /// list, so the table is re-keyed — and re-keyed is all it is. The
-/// visibility word crosses untouched because which bit means
-/// "exported" is judgment (`CE.Graph.Cost.exportVisBit`); a
-/// pre-decided `Vec<u>` would move that call to the measurement
-/// side. Ascent comes free (node ids ascend and file nodes keep
+/// visibility crosses as `export_surface` projected it (bit 0 alone)
+/// because which bit means "exported" is judgment
+/// (`CE.Graph.Cost.exportVisBit`); a pre-decided `Vec<u>` would move
+/// that call to the measurement side, and the projection withholds
+/// only bits the core has no verdict axis for. Ascent comes free
+/// (node ids ascend and file nodes keep
 /// their order), and an owner that is not a file node is index
 /// skew, refused the way `export_surface` refuses its own miss.
 pub fn rekeyed(w: &super::deadcode::GraphWire, idx: &HashMap<&str, i64>) -> Result<Vec<[i64; 2]>> {

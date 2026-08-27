@@ -3251,7 +3251,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 107,
+    "line": 111,
     "text": "where"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
@@ -3556,7 +3556,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:5": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 104,
+    "line": 113,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:50": {
@@ -3611,8 +3611,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:6": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 70,
-    "text": "pub const GRAPH_REV: i64 = 10;"
+    "line": 79,
+    "text": "pub const GRAPH_REV: i64 = 11;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:60": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -3716,7 +3716,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:79": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 118,
+    "line": 122,
     "text": "-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:8": {
@@ -3726,7 +3726,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:80": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 135,
+    "line": 139,
     "text": "nonNegative row = if any (< 0) row then Just \"negative field\" else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:81": {
@@ -3746,7 +3746,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 140,
+    "line": 144,
     "text": "posRow :: Integer -> Int -> Integer -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
@@ -4011,7 +4011,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:36": {
     "target": "../../../cli/src/graph/symwire.rs",
-    "line": 68,
+    "line": 76,
     "text": "/// The same surface under the verdict family's universe (6.1.0):"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:37": {
@@ -6006,7 +6006,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 368,
+    "line": 370,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -6061,7 +6061,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 368,
+    "line": 370,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -6086,7 +6086,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 377,
+    "line": 379,
     "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
@@ -6141,7 +6141,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 373,
+    "line": 375,
     "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
@@ -6161,7 +6161,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:58": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 365,
+    "line": 367,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

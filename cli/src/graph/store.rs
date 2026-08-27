@@ -67,7 +67,16 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// exactly what this counter is for — without the bump every index
 /// built before today would keep answering "private" for every
 /// symbol, silently, and no gate would see it.
-pub const GRAPH_REV: i64 = 10;
+/// 11 = the visibility word widens and bit 0 is repaired (plan v2.17
+/// L round piece (2)): bits 1 (scope-exported) and 2 (restricted) are
+/// new stored facts, and bit 0 itself changes value for three shapes
+/// — a TS declarator-wrapped export the old two-hop rule stopped one
+/// hop short of (`export const f = () => {}`), a Haskell binding
+/// below top level sharing an exported name, and a Haskell export
+/// list holding a comment or an operator (differential in CHANGELOG)
+/// — so every cached symbols row is re-derived. The wire masks the
+/// word to bit 0 (graph/symwire.rs): the core sees the repairs alone.
+pub const GRAPH_REV: i64 = 11;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -156,10 +165,11 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
         (file_id,),
     )?;
     let (found, segments) = crate::graph::sites::detect_with_units(text, lang);
-    // flags carry the declaration's OWN visibility bits since the
-    // v2.14 producer landed (fourclass::visibility) — a local
-    // syntactic fact, never a guess. The column was reserved and zero
-    // until one existed, which is why nothing read it before.
+    // flags carry the declaration's OWN visibility word since the
+    // v2.14 producer landed (fourclass::visibility; bits 0-2 since
+    // GRAPH_REV 11) — a local syntactic fact, never a guess. The
+    // column was reserved and zero until one existed, which is why
+    // nothing read it before; the wire reads bit 0 of it (symwire).
     let mut sym = tx.prepare(
         "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",

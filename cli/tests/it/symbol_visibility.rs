@@ -10,11 +10,15 @@
 //! import binds, the binding→declaration join) retired with their
 //! modules at index schema v14 (plan v2.17 L round piece (1), user
 //! ruling: delete; the K10 precision audit stays on record in the
-//! plan). This is bit 0's only end-to-end leg, so it stays.
+//! plan). This is the stored word's only end-to-end leg, so it stays
+//! — and since piece (2) it reads the WHOLE word: a `pub fn` in a
+//! private `mod` stores bit 0 without bit 1 (K21), a `pub(crate)`
+//! item stores bit 2 on top. What the wire shows of that word is
+//! graph_export_surface.rs's question.
 
 use crate::common;
 use codeeraser::dedup::{Params, index::Index};
-use codeeraser::fourclass::visibility::VIS_EXPORTED;
+use codeeraser::fourclass::visibility::{VIS_EXPORTED, VIS_RESTRICTED, VIS_SCOPE_EXPORTED};
 use codeeraser::graph::symbols::symbol_rows;
 use std::path::{Path, PathBuf};
 
@@ -73,6 +77,16 @@ pub fn open_door() {
 fn shut_door() {
     let _ = 2;
 }
+
+pub(crate) fn side_door() {
+    let _ = 3;
+}
+
+mod cellar {
+    pub fn trapdoor() {
+        let _ = 4;
+    }
+}
 --- mod.py
 def public_call():
     return 1
@@ -85,22 +99,23 @@ def _private_call():
 #[test]
 fn indexed_symbols_carry_their_declared_visibility() {
     let rows = symbol_rows(&open(&indexed("symbol-visibility", VIS_FIXTURE))).expect("symbol rows");
-    let got: Vec<(String, String, bool)> = rows
-        .into_iter()
-        .map(|s| (s.path, s.key, s.vis & VIS_EXPORTED != 0))
-        .collect();
+    let got: Vec<(String, String, i64)> =
+        rows.into_iter().map(|s| (s.path, s.key, s.vis)).collect();
 
     // one row per expectation, not one assertion block per file
-    let want: &[(&str, &str, bool)] = &[
-        ("lib.rs", "open_door/0", true),
-        ("lib.rs", "shut_door/0", false),
-        ("mod.py", "public_call/0", true),
-        ("mod.py", "_private_call/0", false),
+    let open = VIS_EXPORTED | VIS_SCOPE_EXPORTED;
+    let want: &[(&str, &str, i64)] = &[
+        ("lib.rs", "open_door/0", open),
+        ("lib.rs", "shut_door/0", 0),
+        ("lib.rs", "side_door/0", open | VIS_RESTRICTED),
+        ("lib.rs", "trapdoor/0", VIS_EXPORTED),
+        ("mod.py", "public_call/0", open),
+        ("mod.py", "_private_call/0", 0),
     ];
-    for (file, key, exported) in want {
+    for (file, key, word) in want {
         assert!(
-            got.contains(&((*file).to_string(), (*key).to_string(), *exported)),
-            "{file}: {key} should read exported={exported}; got {got:?}"
+            got.contains(&((*file).to_string(), (*key).to_string(), *word)),
+            "{file}: {key} should store visibility {word}; got {got:?}"
         );
     }
 }

@@ -128,7 +128,7 @@ refdefKind = 5
 -- the declaration (`pub` / `export` / a leading underscore), read in
 -- the file that declares it — and which of its bits counts as an
 -- export surface is the judgment, so it lives here where an ablation
--- can move it. Producer: cli/src/fourclass/visibility.rs.
+-- can move it. Producer: cli/src/fourclass/visibility/.
 exportVisBit :: Integer
 exportVisBit = 0
 

@@ -92,8 +92,12 @@ symRows = maybe [] id . reqSymbols
 -- | One export-surface row: [node, visibility]. The node index is
 -- bounded like an edge endpoint; the visibility word is opaque bits
 -- (Cost.exportVisBit picks the one that judges), so only its sign is
--- checked — a bit this core does not read today is a bit a later one
--- may, and refusing it would freeze the word.
+-- checked. The openness sits one layer lower than it used to: the
+-- producer stores a wider word than it sends and masks the wire's
+-- copy to the one bit this core judges on (cli/src/graph/symwire.rs
+-- export_surface) — stored word open, wire projection closed — so a
+-- bit a later core wants arrives by widening that projection, not
+-- by loosening this row.
 symRow :: Integer -> Int -> [Integer] -> Maybe String
 symRow n = rowCheck "symbol" "malformed row (need [node,visibility])" 2 fields
  where

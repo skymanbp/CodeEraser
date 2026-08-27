@@ -28,8 +28,8 @@
 //! role measurement never carried it (deadcode/flags.rs roles_of) and
 //! RG10's unref_public class could not fire for .hs. That was a
 //! recorded stance, not a permanent one: the visibility slice reads
-//! the export list where it lives (fourclass/visibility.rs
-//! haskell_exported) and 4.1.0's symbols table carries it to the
+//! the export list where it lives (fourclass/visibility/hs.rs) and
+//! 4.1.0's symbols table carries it to the
 //! core, so the class fires for .hs on the same terms as every other
 //! judged language.
 
