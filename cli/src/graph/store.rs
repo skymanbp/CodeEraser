@@ -81,7 +81,12 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// decorator registration, class membership, default export, ambient,
 /// dead-code allowance, other cfg) stored beside the visibility word;
 /// a new column and a new stored fact, so every row is re-derived.
-pub const GRAPH_REV: i64 = 12;
+/// 13 = the `export_star` site kind (plan v2.17 L round piece (5)): a
+/// TS `export * from` / `export * as ns from` statement opens a site
+/// of its own label instead of `export_from`, the fact the `mounts`
+/// table's re-export bit reads (graph/mounts.rs) — a new stored kind
+/// code and a relabel of cached rows, so every site is re-detected.
+pub const GRAPH_REV: i64 = 13;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -129,14 +134,15 @@ const KINDS: &[&str] = &[
     "ref_link",
     "ref_def",
     "url",
+    "export_star",
 ];
 
 /// The frozen code for one site kind. KINDS is the single owner of
 /// these positions: the writer below looks a code up here rather than
 /// spelling an integer where the table cannot see it drift, and the
-/// bridge reads the inverse (`kind_label`). Private since the symbol
-/// join, its one outside caller, retired at schema v14.
-fn kind_code(label: &str) -> Result<i64> {
+/// bridge reads the inverse (`kind_label`). The one outside reader is
+/// the mounts producer (graph/mounts.rs), which selects sites by kind.
+pub(crate) fn kind_code(label: &str) -> Result<i64> {
     KINDS
         .iter()
         .position(|k| *k == label)

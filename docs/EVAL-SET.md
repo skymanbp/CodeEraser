@@ -258,7 +258,7 @@ Integer 化 + 两真实形状非降级回归钉。
 graph-slice\*-v1.json：self@60f73e3（**含 crosscheck 孤岛 = 设计内负对照**；
 2b-iii Opus 反审（reviews 档在 git 历史）加固后 RG3 首
 次点火换钉重冻结）、requests@8068356、ripgrep@3fce3b5、zod@912f0f5、
-cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。范围 = 五门正典扩展
+cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。**GRAPH_REV 13 起（2026-08-27）**：TS 星号再导出自 `export_from` 分出 `export_star`，只有 self 切片随活门重检改签；其余四册、样本与精度册保持 rev 13 前标签（星号形仍计在 `export_from` 内），冻结对冻结，跨册站点标签不再逐字可比。范围 = 五门正典扩展
 名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 + **测量
 前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门：summary
 从行重导、常数/范围/语料集钉死（删档即红）、档名↔内嵌名一致、五语言联合非零

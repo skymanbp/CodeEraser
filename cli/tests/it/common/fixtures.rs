@@ -21,6 +21,38 @@ pub fn tmp(name: &str) -> PathBuf {
     dir
 }
 
+/// Write a fixture DOCUMENT out as its tree: a line `--- <path>`
+/// opens one file, and everything until the next such line is its
+/// body. One document per fixture rather than a table of (path,
+/// source) pairs: the pair table is this repo's most-rhyming token
+/// shape — its own clone gate matched a six-entry one against two
+/// unrelated fixture tables — and a document also reads as the tree
+/// it makes. Shared by the symbol, export-surface and mounts legs
+/// (the third copy of the splitter was the gate's own verdict).
+pub fn write_doc(dir: &Path, doc: &str) {
+    let mut files: Vec<(&str, String)> = Vec::new();
+    for line in doc.lines() {
+        match line.strip_prefix("--- ") {
+            Some(path) => files.push((path.trim(), String::new())),
+            None => {
+                if let Some((_, body)) = files.last_mut() {
+                    body.push_str(line);
+                    body.push('\n');
+                }
+            }
+        }
+    }
+    for (rel, body) in files {
+        if let Some(parent) = Path::new(rel)
+            .parent()
+            .filter(|p| !p.as_os_str().is_empty())
+        {
+            std::fs::create_dir_all(dir.join(parent)).expect("mkdir fixture subdir");
+        }
+        std::fs::write(dir.join(rel), body).expect("write fixture file");
+    }
+}
+
 /// ~60 normalized tokens; `seed` renames identifiers and changes
 /// literals so pairs of outputs are T2 (not T1) clones clearing t=50.
 pub fn rust_fn(seed: u32) -> String {

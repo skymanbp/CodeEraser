@@ -382,7 +382,7 @@ fn observe(root: &Path, reason: &str) {
 
 #[cfg(test)]
 mod tests {
-    use super::super::nodes::Node;
+    use crate::testutil::node;
     use serde_json::json;
 
     /// The degradation loop closes: a stamped deadcode degradation
@@ -395,14 +395,6 @@ mod tests {
         super::observe(&root, "graph_too_large");
         assert_eq!(crate::health::degraded_runs(&root), (1, 1));
         std::fs::remove_dir_all(&root).ok();
-    }
-
-    fn node(path: &str, unit: &str, kind: i64) -> Node {
-        Node {
-            path: path.into(),
-            unit: unit.into(),
-            kind,
-        }
     }
 
     /// The 2.18.0 split consumed whole (batch-7 slice 4, the fixture

@@ -76,18 +76,43 @@ impl Package {
             }
         }
         for sub in ["src/bin", "tests", "examples", "benches"] {
-            let prefix = format!("{}/", roots::join_dir(&self.dir, sub));
-            out.extend(
-                files
-                    .iter()
-                    .filter(|f| {
-                        f.strip_prefix(&prefix)
-                            .is_some_and(|rest| rest.ends_with(".rs") && !rest.contains('/'))
-                    })
-                    .cloned(),
-            );
+            out.extend(self.direct_rs(files, sub));
         }
         out
+    }
+
+    /// The bin targets alone — declared [[bin]] paths, the default
+    /// main, the direct .rs children of src/bin: the roots nothing
+    /// outside the package can `use` (the mounts table's bit 1, sealed
+    /// criterion §4). tests/, examples/, benches/ and build.rs are
+    /// crate roots too but test-side facts, out of this set.
+    pub fn bin_roots(&self, files: &BTreeSet<String>) -> BTreeSet<String> {
+        let mut out: BTreeSet<String> = self
+            .bin_paths
+            .iter()
+            .map(String::as_str)
+            .chain(["src/main.rs"])
+            .filter_map(|target| roots::join_rel(&self.dir, target))
+            .filter(|cand| files.contains(cand))
+            .collect();
+        out.extend(self.direct_rs(files, "src/bin"));
+        out
+    }
+
+    /// The direct .rs children of one conventional auto-target dir.
+    fn direct_rs<'f>(
+        &self,
+        files: &'f BTreeSet<String>,
+        sub: &str,
+    ) -> impl Iterator<Item = String> + 'f {
+        let prefix = format!("{}/", roots::join_dir(&self.dir, sub));
+        files
+            .iter()
+            .filter(move |f| {
+                f.strip_prefix(&prefix)
+                    .is_some_and(|rest| rest.ends_with(".rs") && !rest.contains('/'))
+            })
+            .cloned()
     }
 
     /// The lib crate root — where `use <name>::…` from another

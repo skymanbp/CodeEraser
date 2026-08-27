@@ -13,38 +13,6 @@ use crate::graph::{cabal, cargo, roots};
 use std::collections::BTreeSet;
 use std::path::Path;
 
-/// Nearest *.cabal walking up from `from_dir` — the file name is
-/// package-specific, so this is a per-directory scan, unlike
-/// roots::nearest_up's fixed-name probe. Ties (several .cabal files
-/// in one directory) resolve to the lexicographic first for
-/// determinism.
-fn nearest_cabal(root: &Path, from_dir: &str) -> Option<String> {
-    let mut dir = from_dir;
-    loop {
-        if let Some(name) = cabal_in(root, dir) {
-            return Some(roots::join_dir(dir, &name));
-        }
-        if dir.is_empty() {
-            return None;
-        }
-        dir = dir.rfind('/').map_or("", |i| &dir[..i]);
-    }
-}
-
-fn cabal_in(root: &Path, dir: &str) -> Option<String> {
-    let entries = std::fs::read_dir(root.join(dir)).ok()?;
-    let mut names: Vec<String> = entries
-        .flatten()
-        .filter(|e| e.file_type().is_ok_and(|t| t.is_file()))
-        .filter_map(|e| {
-            let n = e.file_name().to_string_lossy().into_owned();
-            n.ends_with(".cabal").then_some(n)
-        })
-        .collect();
-    names.sort();
-    names.into_iter().next()
-}
-
 /// Declared executable/test mains (2.28.0): each stanza's main-is
 /// joined onto each of its source roots, kept only where the file is
 /// in the walked set — a main-is naming a missing file declares
@@ -79,7 +47,7 @@ impl Declared {
             if let Some(m) = roots::nearest_up(root, d, "Cargo.toml") {
                 manifests.insert(m);
             }
-            if let Some(m) = nearest_cabal(root, d) {
+            if let Some(m) = cabal::nearest(root, d) {
                 manifests.insert(m);
             }
         }
@@ -111,26 +79,20 @@ mod tests {
     #[test]
     fn declared_targets_come_from_the_manifests() {
         let root = crate::testutil::scratch("dc-targets");
-        std::fs::create_dir_all(root.join("src/tools")).unwrap();
-        std::fs::create_dir_all(root.join("hs/app")).unwrap();
-        std::fs::write(
-            root.join("Cargo.toml"),
-            "[package]\nname='t'\n[[bin]]\nname='gen'\npath='src/tools/gen.rs'\n",
-        )
-        .unwrap();
-        std::fs::write(
-            root.join("hs/x.cabal"),
-            "executable x\n  hs-source-dirs: app\n  main-is: Runner.hs\n",
-        )
-        .unwrap();
-        for f in ["src/tools/gen.rs", "src/tools/other.rs", "hs/app/Runner.hs"] {
-            std::fs::write(root.join(f), "").unwrap();
-        }
-        let files: BTreeSet<String> =
-            ["src/tools/gen.rs", "src/tools/other.rs", "hs/app/Runner.hs"]
-                .iter()
-                .map(|s| s.to_string())
-                .collect();
+        let sources = ["src/tools/gen.rs", "src/tools/other.rs", "hs/app/Runner.hs"];
+        let mut tree = vec![
+            (
+                "Cargo.toml",
+                "[package]\nname='t'\n[[bin]]\nname='gen'\npath='src/tools/gen.rs'\n",
+            ),
+            (
+                "hs/x.cabal",
+                "executable x\n  hs-source-dirs: app\n  main-is: Runner.hs\n",
+            ),
+        ];
+        tree.extend(sources.map(|f| (f, "")));
+        crate::testutil::write_tree(&root, &tree);
+        let files: BTreeSet<String> = sources.map(String::from).into();
         let d = Declared::gather(&root, &files);
         assert!(d.hit("src/tools/gen.rs"), "declared [[bin]] path");
         assert!(!d.hit("src/tools/other.rs"), "undeclared sibling");

@@ -19,12 +19,14 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:52-101](../../../cli/src/graph/spec.rs#L52)), so the site universe (the precision denominator)
+([spec.rs:59-115](../../../cli/src/graph/spec.rs#L59)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:96](../../../cli/src/graph/spec.rs#L96)). The ten frozen site
-kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url`
-([store.rs:118-132](../../../cli/src/graph/store.rs#L118)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:84](../../../cli/src/graph/store.rs#L84), currently `12`).
+grammar and scans line-wise ([spec.rs:110](../../../cli/src/graph/spec.rs#L110)). The eleven frozen site
+kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star`
+([store.rs:123-138](../../../cli/src/graph/store.rs#L123)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:89](../../../cli/src/graph/store.rs#L89), currently `13`); `export_star` (a TS
+`export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
+reads it as a re-export target.
 
 ### 2. The resolution ladder
 
@@ -215,7 +217,7 @@ role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
         claims nothing — the docdup exemption discipline)           [flags.rs:102-113]
 role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
         and conventional targets via crate_roots, cabal main-is
-        through each stanza's source roots                          [targets.rs:21-70, 75-101]
+        through each stanza's source roots                          [targets.rs:20-33, 43-70; cabal.rs:90-115]
 ```
 
 ([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
@@ -223,8 +225,8 @@ role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
 core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6. **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
-([targets.rs:75-101](../../../cli/src/graph/deadcode/targets.rs#L75),
-[targets.rs:52-66](../../../cli/src/graph/deadcode/targets.rs#L52)). The legacy flags column this
+([targets.rs:43-70](../../../cli/src/graph/deadcode/targets.rs#L43),
+[cabal.rs:90-115](../../../cli/src/graph/cabal.rs#L90)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.

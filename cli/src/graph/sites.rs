@@ -94,8 +94,13 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<Ra
     let mut out = Vec::new();
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if let Some(kind) = table.iter().find(|k| k.node == node.kind()) {
-            emit(node, src, kind, &mut out);
+        // one statement, one site: the first table entry that emits
+        // wins, so a TS `export *` lands under its star label and
+        // never also under the plain export_from one behind it
+        for kind in table.iter().filter(|k| k.node == node.kind()) {
+            if emit(node, src, kind, &mut out) {
+                break;
+            }
         }
         // deterministic order: children pushed reversed => visited
         // in document order after the stack pop
@@ -107,10 +112,19 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<Ra
     out
 }
 
-fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawSite>) {
+/// Whether the entry opened a site (or several) on this node.
+fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawSite>) -> bool {
+    let before = out.len();
     match &kind.via {
         Specifier::Field(field) => {
             if let Some(spec) = field_text(node, src, field) {
+                out.push(site(kind.label, node, spec));
+            }
+        }
+        Specifier::FieldIfStar(field) => {
+            if star_export(node)
+                && let Some(spec) = field_text(node, src, field)
+            {
                 out.push(site(kind.label, node, spec));
             }
         }
@@ -129,6 +143,15 @@ fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawS
             }
         }
     }
+    out.len() > before
+}
+
+/// `export * from …` carries a bare `*` token, `export * as ns from …`
+/// a `namespace_export` child; the `export_clause` forms carry neither.
+fn star_export(node: tree_sitter::Node) -> bool {
+    children(node)
+        .into_iter()
+        .any(|c| matches!(c.kind(), "*" | "namespace_export"))
 }
 
 /// Python `import a.b, c as d`: dotted_name children are targets;
@@ -169,113 +192,5 @@ fn node_text(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::detect;
-    use crate::scan::lang::Lang;
-
-    /// One table drives both checks per language: the expected
-    /// (kind, spec) sequence, and the anti-invention rule that every
-    /// spec is a substring of its STATEMENT WINDOW — the site line is
-    /// the statement head, and a multi-line TS import carries its
-    /// full specifier on a later line of the same statement (2c/2d
-    /// review F1: 14 frozen zod sites; rust only holds the per-line
-    /// form by accident of first-line truncation).
-    /// Pinned shapes: `mod foo { … }` is not a site, a plain export
-    /// is not a site, one site per Python import target, a
-    /// multi-line use keeps ONE site whose spec is the first-line
-    /// fragment (module header), a qualified/aliased Haskell import
-    /// keeps the bare module name, and `foreign import` is NOT a
-    /// site — its anon `import` token shares the kind name (the 3k
-    /// D11 collision class) but carries no module field.
-    /// (language, source, expected (kind, spec) sequence).
-    type Case = (Lang, &'static str, &'static [(&'static str, &'static str)]);
-
-    /// The per-language table, split from its assertion loop at the
-    /// E01 fn-length line.
-    fn cases() -> [Case; 5] {
-        [
-            (
-                Lang::Python,
-                "import a.b, c as d\nfrom .pkg import thing\n",
-                &[("import", "a.b"), ("import", "c"), ("import_from", ".pkg")],
-            ),
-            (
-                Lang::TypeScript,
-                "import { x } from \"./util\";\nimport {\n  a,\n  b,\n} from \"./multi\";\nexport { y } from './other';\nexport const z = 1;\n",
-                &[
-                    ("import", "./util"),
-                    ("import", "./multi"),
-                    ("export_from", "./other"),
-                ],
-            ),
-            (
-                Lang::Rust,
-                // the #[path] attribute emits NO site of its own — the
-                // remap is ladder-side (rs.rs path_attr), which is what
-                // keeps the frozen site universe standing across REV 5
-                "mod alpha;\n#[path = \"x.rs\"]\nmod beta { fn x() {} }\nuse crate::a::{b, c};\nuse crate::{\n    d,\n    e,\n};\n",
-                &[
-                    ("mod_decl", "alpha"),
-                    ("use", "crate::a::{b, c}"),
-                    ("use", "crate::{"),
-                ],
-            ),
-            (
-                Lang::Go,
-                "package main\n\nimport (\n\t\"fmt\"\n\t\"github.com/x/y\"\n)\n",
-                &[("import", "fmt"), ("import", "github.com/x/y")],
-            ),
-            (
-                Lang::Haskell,
-                "module Main where\n\nimport CE.Alpha\nimport qualified Data.Map as M\nimport Data.List (sort)\n\nforeign import ccall \"math.h sin\" c_sin :: Double -> Double\n",
-                &[
-                    ("import", "CE.Alpha"),
-                    ("import", "Data.Map"),
-                    ("import", "Data.List"),
-                ],
-            ),
-        ]
-    }
-
-    #[test]
-    fn per_language_kinds_specs_and_line_substrings() {
-        for (lang, text, want) in cases() {
-            let found = detect(text, lang);
-            let got: Vec<(&str, &str)> = found.iter().map(|s| (s.kind, s.spec.as_str())).collect();
-            assert_eq!(got, *want, "{lang:?}");
-            let lines: Vec<&str> = text.lines().collect();
-            let stray: Vec<&str> = found
-                .iter()
-                .filter(|s| {
-                    let end = (s.line + 15).min(lines.len());
-                    !lines[s.line - 1..end].iter().any(|l| l.contains(&s.spec))
-                })
-                .map(|s| s.spec.as_str())
-                .collect();
-            assert!(
-                stray.is_empty(),
-                "{lang:?}: specs not within their statement window: {stray:?}"
-            );
-        }
-    }
-
-    /// Self-ownership is filtered (Opus review): a `mod foo;` site's
-    /// one-line unit is the site itself, so its owner is None, while
-    /// a use inside a real function keeps its owner. Same-line sites
-    /// get distinct nth ordinals (unique identity for 2c sampling).
-    #[test]
-    fn owner_not_self_and_nth_ordinals() {
-        let text = "mod alpha;\nfn holder() {\n    use crate::x;\n}\n";
-        let found = detect(text, Lang::Rust);
-        assert_eq!(found[0].kind, "mod_decl");
-        assert_eq!(found[0].owner, None, "self-ownership must filter");
-        assert_eq!(found[1].kind, "use");
-        assert_eq!(found[1].owner.as_deref(), Some("holder/0"));
-        let two = detect("[a](./x.md) [b](./y.md)\n", Lang::Markdown);
-        assert_eq!(
-            two.iter().map(|s| s.nth).collect::<Vec<_>>(),
-            vec![0, 1],
-            "same-line sites need distinct ordinals"
-        );
-    }
-}
+#[path = "sites_tests.rs"]
+mod tests;

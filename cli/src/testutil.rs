@@ -3,7 +3,7 @@
 //! dedup ratchet caught join::churn_unit growing a second copy of
 //! deadcode's observe-test setup, so the scaffold became a throat.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// Fresh empty scratch dir keyed by tag + pid (parallel-test safe);
 /// callers remove it themselves when the assertion needs a clean end.
@@ -12,6 +12,29 @@ pub fn scratch(tag: &str) -> PathBuf {
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).expect("mkdir");
     dir
+}
+
+/// A scratch tree from (relative path, text) pairs, parents made —
+/// the manifest-and-file setup the target and mount facts read from
+/// disk, written once here rather than as a per-test mkdir/write run
+/// (the clone gate's next-most-rhyming shape after the tuple table).
+pub fn write_tree(root: &Path, files: &[(&str, &str)]) {
+    for (rel, text) in files {
+        let at = root.join(rel);
+        at.parent()
+            .map_or(Ok(()), std::fs::create_dir_all)
+            .and_then(|()| std::fs::write(&at, text))
+            .unwrap_or_else(|e| panic!("{rel}: {e}"));
+    }
+}
+
+/// A node literal for wire-side tests.
+pub fn node(path: &str, unit: &str, kind: i64) -> crate::graph::nodes::Node {
+    crate::graph::nodes::Node {
+        path: path.into(),
+        unit: unit.into(),
+        kind,
+    }
 }
 
 /// One per-declaration word case as one line: the source, then

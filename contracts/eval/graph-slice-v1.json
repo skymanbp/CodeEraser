@@ -1019,7 +1019,7 @@
       "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__mini__index.ts",
       "sha256": "455d93e660b61feec18cd4c31e2f394627546ae8ab31f9bacdab6318112ac31c",
       "sites": {
-        "export_from": 1,
+        "export_star": 1,
         "import": 1
       }
     },
@@ -1180,7 +1180,7 @@
       "py/import_from": 47,
       "rs/mod_decl": 102,
       "rs/use": 417,
-      "ts/export_from": 1,
+      "ts/export_star": 1,
       "ts/import": 12
     },
     "total_sites": 667

@@ -26,6 +26,13 @@ pub enum Specifier {
     /// One site per import target child (Python `import a.b, c as d`:
     /// each dotted_name / aliased_import name is its own site).
     EachImportTarget,
+    /// `Field`, but only for a STAR export — a `*` token or a
+    /// `namespace_export` child beside the source (`export * from`,
+    /// `export * as ns from`); an `export_clause` form is not one.
+    /// Listed ahead of the plain `Field` entry of the same node kind:
+    /// the walker takes the first entry that emits, so one statement
+    /// opens one site under the more specific label.
+    FieldIfStar(&'static str),
 }
 
 /// (tree-sitter node kind, stable doc/wire label, specifier source).
@@ -68,6 +75,13 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
                 node: "import_statement",
                 label: "import",
                 via: Specifier::Field("source"),
+            },
+            // the star form first (plan v2.17 L round piece (5)): a
+            // re-export target is the mounts table's bit 0
+            SiteKind {
+                node: "export_statement",
+                label: "export_star",
+                via: Specifier::FieldIfStar("source"),
             },
             SiteKind {
                 node: "export_statement",

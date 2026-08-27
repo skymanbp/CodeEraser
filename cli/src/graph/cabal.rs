@@ -1,18 +1,27 @@
 //! Cabal-file surface for the Haskell ladder (design §4 pattern:
 //! gomod.rs / roots.rs — one minimal parser per resolver config,
 //! bytes in resolve_key so answers cannot go stale). Only the facts
-//! the rungs consume are modeled: per-stanza `hs-source-dirs` (the R1
-//! root set) and the union of `build-depends` package names (the R2
-//! external gate). Stated boundaries, degrading to refusals never
-//! guesses: `common` stanza `import:` indirection is not followed
-//! (its roots simply do not contribute), cabal.project is not
-//! consulted (owner anchoring is directory-prefix), and conditional
-//! blocks (`if os(..)`) contribute their fields unconditionally —
-//! tag evaluation needs a build configuration we do not have (the Go
-//! //go:build precedent).
+//! the rungs and the mounts table consume are modeled: per-stanza
+//! `hs-source-dirs` (the R1 root set), the union of `build-depends`
+//! package names (the R2 external gate), and since plan v2.17 piece
+//! (5) the two package-privacy facts the sealed criterion §4 reads —
+//! whether a `library` stanza exists at all, and which modules are
+//! listed only under other-modules. Stated boundaries, degrading to
+//! refusals never guesses: `common` stanza `import:` indirection is
+//! not followed (its roots simply do not contribute), cabal.project
+//! is not consulted (owner anchoring is directory-prefix), and
+//! conditional blocks (`if os(..)`) contribute their fields
+//! unconditionally — tag evaluation needs a build configuration we do
+//! not have (the Go //go:build precedent). The layout walk itself is
+//! the `#[path]` child cabal_parse.rs; this file owns the types and
+//! the reads.
 
 use super::roots;
+use std::collections::BTreeSet;
 use std::path::Path;
+
+#[path = "cabal_parse.rs"]
+mod layout;
 
 /// One stanza's source roots, repo-relative ("" = repo root). A
 /// stanza that declares no hs-source-dirs gets the package directory
@@ -36,6 +45,14 @@ pub struct Cabal {
     pub stanzas: Vec<Stanza>,
     /// build-depends package names, union across every stanza.
     pub deps: Vec<String>,
+    /// Whether a `library` stanza exists — without one nothing in
+    /// the package is importable from outside it.
+    pub has_library: bool,
+    /// Modules under other-modules and under no exposed-modules:
+    /// declared, compiled, and private to their component.
+    pub hidden_modules: BTreeSet<String>,
+    exposed: BTreeSet<String>,
+    other: BTreeSet<String>,
 }
 
 /// Stanza headers that open a component with source dirs. `common`
@@ -50,235 +67,91 @@ pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
         dir: dir.clone(),
         stanzas: Vec::new(),
         deps: Vec::new(),
+        has_library: false,
+        hidden_modules: BTreeSet::new(),
+        exposed: BTreeSet::new(),
+        other: BTreeSet::new(),
     };
     let lines: Vec<&str> = text.lines().collect();
     // pre-2.0 top-level fields (before any header) are live
     let (mut i, mut live) = (0, true);
     while i < lines.len() {
-        i = step(&mut out, &mut live, &dir, &lines, i);
+        i = layout::step(&mut out, &mut live, &dir, &lines, i);
     }
-    finish(&mut out, &dir);
+    layout::finish(&mut out, &dir);
     Some(out)
 }
 
-/// One parser step — a stanza header, a field with its continuation
-/// block, or a line to skip; returns the next line index. A `common`
-/// or unknown header opens a DEAD region for hs-source-dirs: those
-/// reach components only through `import:` indirection (not
-/// modeled), and routing them to the previous stanza mis-attributed
-/// a common stanza's roots (M5-close review LOW). A column-0 COMMENT
-/// is not a header and must not toggle the region — the clearance
-/// review caught the first cut killing a live stanza's fields on a
-/// top-level `-- note` inside it.
-fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], i: usize) -> usize {
-    let trimmed = lines[i].trim();
-    if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() && !trimmed.starts_with("--") {
-        *live = HEADS.contains(&head_word(trimmed).as_str());
-        if *live {
-            out.stanzas.push(Stanza {
-                roots: Vec::new(),
-                main_is: None,
-            });
+/// Nearest *.cabal walking up from `from_dir` — the file name is
+/// package-specific, so this is a per-directory scan, unlike
+/// roots::nearest_up's fixed-name probe (`cargo::nearest` is the
+/// fixed-name twin). Ties (several .cabal files in one directory)
+/// resolve to the lexicographic first for determinism.
+pub fn nearest(root: &Path, from_dir: &str) -> Option<String> {
+    let mut dir = from_dir;
+    loop {
+        if let Some(name) = cabal_in(root, dir) {
+            return Some(roots::join_dir(dir, &name));
         }
-        return i + 1;
+        if dir.is_empty() {
+            return None;
+        }
+        dir = dir.rfind('/').map_or("", |i| &dir[..i]);
     }
-    let Some((field, first)) = split_field(trimmed) else {
-        return i + 1;
+}
+
+fn cabal_in(root: &Path, dir: &str) -> Option<String> {
+    let entries = std::fs::read_dir(root.join(dir)).ok()?;
+    let mut names: Vec<String> = entries
+        .flatten()
+        .filter(|e| e.file_type().is_ok_and(|t| t.is_file()))
+        .filter_map(|e| {
+            let n = e.file_name().to_string_lossy().into_owned();
+            n.ends_with(".cabal").then_some(n)
+        })
+        .collect();
+    names.sort();
+    names.into_iter().next()
+}
+
+impl Cabal {
+    /// Whether the package keeps `path` private (the mounts table's
+    /// bit 1): no library stanza at all (then every file of the
+    /// package, roots or not), or — with a library — the module the
+    /// file spells under ANY stanza root is a hidden one. Every root
+    /// is asked, not the first that prefixes the path: a stanza with
+    /// no hs-source-dirs roots at the package directory, an ancestor
+    /// of every other root, and stanza order is file order — so a
+    /// first-match read mis-spelled the library's modules whenever the
+    /// executable was written above it. Asking all roots is sound
+    /// because `hidden_modules` is a file-wide set and a shallower
+    /// root can only spell a name with a lowercase segment, never a
+    /// module name. A file under no root spells no module and is not
+    /// kept on this branch.
+    pub fn keeps_private(&self, path: &str) -> bool {
+        !self.has_library
+            || self
+                .stanzas
+                .iter()
+                .flat_map(|s| &s.roots)
+                .filter_map(|r| module_under(r, path))
+                .any(|m| self.hidden_modules.contains(&m))
+    }
+}
+
+/// The module name `path` spells under one source root: the path
+/// below the root, `/` → `.`, `.hs` dropped (ladder/hs.rs writes the
+/// same convention the other way round); None when the file is not
+/// below that root.
+fn module_under(root: &str, path: &str) -> Option<String> {
+    let below = if root.is_empty() {
+        path
+    } else {
+        path.strip_prefix(&format!("{root}/"))?
     };
-    let mut values = vec![first.to_string()];
-    let next = continuation(lines, i + 1, &mut values);
-    consume(out, dir, &field, &values, *live);
-    next
-}
-
-/// The field's continuation block: indented lines without a field
-/// colon (cabal layout — value blocks carry no `name:` shape).
-/// Comment lines inside the block are skipped — not values and not
-/// an end, so a comment between two dependency lines cannot eat the
-/// rest of the block.
-fn continuation(lines: &[&str], mut i: usize, values: &mut Vec<String>) -> usize {
-    while i < lines.len() && lines[i].starts_with([' ', '\t']) {
-        let next = lines[i].trim();
-        if next.is_empty() || split_field(next).is_some() {
-            break;
-        }
-        if !next.starts_with("--") {
-            values.push(next.to_string());
-        }
-        i += 1;
-    }
-    i
-}
-
-/// Degrade defaults: a file with no stanza headers at all (pre-2.0
-/// top-level layout) and a stanza with no hs-source-dirs both root
-/// at the package directory — cabal's own default of ".".
-fn finish(out: &mut Cabal, dir: &str) {
-    if out.stanzas.is_empty() {
-        out.stanzas.push(Stanza {
-            roots: vec![dir.to_string()],
-            main_is: None,
-        });
-    }
-    for s in &mut out.stanzas {
-        if s.roots.is_empty() {
-            s.roots.push(dir.to_string());
-        }
-    }
-    out.deps.sort();
-    out.deps.dedup();
-}
-
-/// Route one collected field into the surface. hs-source-dirs is
-/// per-STANZA and only lands while live (a common stanza's roots
-/// reach components only via import:, not modeled); build-depends is
-/// the file-wide UNION feeding the R2 external gate — a dependency
-/// declared in a `common` stanza IS declared in this file, so it
-/// accumulates regardless of the region (clearance review: the first
-/// cut starved hs.rs's gate for the common-deps + import layout).
-/// Fields outside any stanza (pre-2.0 top-level layout) fall to the
-/// LAST stanza if one exists, else are dropped — the empty-stanza
-/// default covers them.
-fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String], live: bool) {
-    match field {
-        "hs-source-dirs" if live => {
-            let Some(stanza) = out.stanzas.last_mut() else {
-                return;
-            };
-            for v in values.iter().flat_map(|v| v.split([',', ' ', '\t'])) {
-                if v.is_empty() {
-                    continue;
-                }
-                // "." is the package dir; an escape above the repo
-                // root is out of tree and contributes nothing
-                if let Some(joined) = roots::join_rel(dir, v) {
-                    stanza.roots.push(joined);
-                }
-            }
-        }
-        "main-is" if live => set_main(out, values),
-        "build-depends" => {
-            for entry in values.iter().flat_map(|v| v.split(',')) {
-                let name = dep_name(entry);
-                if !name.is_empty() {
-                    out.deps.push(name);
-                }
-            }
-        }
-        _ => {}
-    }
-}
-
-/// The stanza main-is value (2.28.0): the first collected value
-/// wins — cabal main-is is a single filename. Split from consume
-/// so the match arms stay calls (the repo cognitive gate caught the
-/// inlined form at CoC 16).
-fn set_main(out: &mut Cabal, values: &[String]) {
-    if let Some(stanza) = out.stanzas.last_mut() {
-        stanza.main_is = values.first().cloned();
-    }
-}
-
-/// First word, lowercased — cabal stanza/field names are
-/// case-insensitive, values are not.
-fn head_word(trimmed: &str) -> String {
-    trimmed
-        .split_whitespace()
-        .next()
-        .unwrap_or("")
-        .to_ascii_lowercase()
-}
-
-/// `Field-Name: rest` → (lowercased name, rest). None for lines that
-/// carry no field colon (continuation values, stanza names).
-fn split_field(trimmed: &str) -> Option<(String, &str)> {
-    let colon = trimmed.find(':')?;
-    let name = &trimmed[..colon];
-    if name.is_empty() || !name.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
-        return None;
-    }
-    Some((name.to_ascii_lowercase(), trimmed[colon + 1..].trim()))
-}
-
-/// "base >=4.19 && <5" → "base" (leading package-name prefix). A
-/// token that does not open with an alphanumeric is not a package
-/// name and yields nothing.
-fn dep_name(entry: &str) -> String {
-    let entry = entry.trim();
-    if !entry.starts_with(|c: char| c.is_ascii_alphanumeric()) {
-        return String::new();
-    }
-    entry
-        .find(|c: char| !(c.is_ascii_alphanumeric() || c == '-'))
-        .map_or(entry, |i| &entry[..i])
-        .to_string()
+    Some(below.strip_suffix(".hs")?.replace('/', "."))
 }
 
 #[cfg(test)]
-mod tests {
-    use super::parse;
-
-    /// The REAL core cabal is the self-corpus resolution anchor: two
-    /// stanzas (executable app; test-suite app+test — the multi-root
-    /// comma line), five deps through a multi-line build-depends
-    /// block. The 3l reconciliation stands on exactly this parse:
-    /// 176 hs sites = 78 in-corpus R1 edges + 80 declared-external
-    /// (base/containers/bytestring/array) + 18 aeson out-of-db.
-    #[test]
-    fn the_self_corpus_cabal_parses_to_its_known_facts() {
-        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent()
-            .expect("cli/ has a parent");
-        let c = parse(root, "core/ce-core.cabal").expect("parse");
-        assert_eq!(c.dir, "core");
-        let roots: Vec<&[String]> = c.stanzas.iter().map(|s| s.roots.as_slice()).collect();
-        assert_eq!(
-            roots,
-            [
-                ["core/app".to_string()].as_slice(),
-                ["core/app".to_string(), "core/test".to_string()].as_slice()
-            ]
-        );
-        assert_eq!(
-            c.deps,
-            ["aeson", "array", "base", "bytestring", "containers"]
-        );
-        // the self cabal's main-is facts, pinned with the rest (2.28.0)
-        let mains: Vec<Option<&str>> = c.stanzas.iter().map(|s| s.main_is.as_deref()).collect();
-        assert_eq!(mains, [Some("Main.hs"), Some("Spec.hs")]);
-    }
-
-    fn parse_str(text: &str) -> super::Cabal {
-        let dir = std::env::temp_dir().join(format!("ce-cabal-probe-{}", std::process::id()));
-        std::fs::create_dir_all(dir.join("pkg")).expect("mkdir");
-        std::fs::write(dir.join("pkg/x.cabal"), text).expect("write");
-        parse(&dir, "pkg/x.cabal").expect("parse")
-    }
-
-    /// The two dead-region boundary cases the clearance review drew
-    /// (both counterfactual against the first `live`-bit cut):
-    /// a column-0 comment INSIDE a live stanza must not open a dead
-    /// region, and a `common` stanza drops its roots but its
-    /// build-depends still join the file-wide union feeding R2.
-    #[test]
-    fn comments_keep_stanzas_live_and_common_deps_still_count() {
-        let c =
-            parse_str("library\n-- top-level note\n  hs-source-dirs: src\n  build-depends: base\n");
-        assert_eq!(c.stanzas[0].roots, ["pkg/src".to_string()]);
-        assert_eq!(c.deps, ["base"]);
-        let c = parse_str(
-            "common deps\n  hs-source-dirs: gen\n  build-depends: text\nlibrary\n  hs-source-dirs: src\n",
-        );
-        assert_eq!(c.stanzas.len(), 1, "common opens no stanza");
-        assert_eq!(
-            c.stanzas[0].roots,
-            ["pkg/src".to_string()],
-            "common roots dropped"
-        );
-        assert_eq!(
-            c.deps,
-            ["text"],
-            "common build-depends still declared in this file"
-        );
-    }
-}
+#[path = "cabal_tests.rs"]
+mod tests;

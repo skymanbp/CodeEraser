@@ -78,31 +78,7 @@ fn main() {
 /// repo's most-rhyming token shape and its own clone gate says so).
 fn indexed(name: &str) -> std::path::PathBuf {
     let dir = common::fixtures::tmp(name);
-    let mut current: Option<String> = None;
-    let mut body = String::new();
-    let flush = |rel: &Option<String>, body: &mut String| {
-        if let Some(rel) = rel {
-            let path = dir.join(rel);
-            if let Some(parent) = path.parent() {
-                std::fs::create_dir_all(parent).expect("mkdir fixture subdir");
-            }
-            std::fs::write(&path, &body).expect("write fixture file");
-        }
-        body.clear();
-    };
-    for line in FIXTURE.lines() {
-        match line.strip_prefix("--- ") {
-            Some(next) => {
-                flush(&current, &mut body);
-                current = Some(next.trim().to_string());
-            }
-            None => {
-                body.push_str(line);
-                body.push('\n');
-            }
-        }
-    }
-    flush(&current, &mut body);
+    common::fixtures::write_doc(&dir, FIXTURE);
     common::build_index(&dir);
     dir
 }
