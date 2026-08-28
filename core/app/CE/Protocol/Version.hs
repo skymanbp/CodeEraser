@@ -10,23 +10,21 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 6.1.0 = the RG10 firewall reaches the faces that act (plan v2.14
--- K15, K round step 5, 2026-08-25). CE.Graph.Dead splits dead along
--- indegree x reachability precisely so "a library's exported-but-
--- unreferenced API can never collapse into plain dead" -- the
--- firewall is a verdict CODE, not a policy. 4.1.0 gave flag bit 0 a
--- producer and the two public codes started firing; the two faces
--- DOWNSTREAM of that verdict were still reading past the code. The
--- erase plan judged class-3 rows on confidence alone, so a public
--- API became an eraseable row; the join lattice synthesized
--- pFlags = 0, so publicGuard could not forbid a `delete` on an
--- exported flank. Additively: `verdict/1` accepts `symbols`, the
--- same [node, visibility] table graph/1 has carried since 4.1.0,
--- re-keyed to the tier universe -- the RAW word, because which bit
--- means exported is judgment (Graph.Cost.exportVisBit) and stays
--- here; and erase reason code 6 `public_surface` joins a frozen
--- domain that only ever grows. Absent table, empty domain: a legacy
--- request answers byte for byte (K15).
+-- 6.2.0 = the symbol-level advisory reaches the wire (plan v2.17 L
+-- round piece (6), 2026-08-27). graph/1 accepts two ADDITIVE tables
+-- that travel together or not at all: `unmentioned` = [[node, vis,
+-- conv]], the declarations no other file of the corpus spells (the
+-- producer's negative mention instrument, hashes only, cli/src/
+-- mention), and `mounts` = [[node, private, total, bits]], every
+-- node's mount facts. The reply gains `exportUnmentioned` =
+-- [[node, vis, conv, code]] -- 0 public / 1 private / 2 restricted /
+-- 3 reexported, the folds of CE.Graph.Advisory -- when the request
+-- carried the table, or `unmentionedDropped` when the table exceeded
+-- its soft cap: an advisory that can never touch `dead`, `fail` or
+-- `degraded`, by construction. Absent tables: a legacy request
+-- answers byte for byte (K16); `symbols` still crosses masked to
+-- bit 0 (K34); `reqSymbols` now counts toward verdict/1's row cap
+-- (K47, the C15 discipline).
 -- The per-version change ledger lives in contracts/VERSIONING.md and
 -- nowhere else. It used to be mirrored here in English and a third
 -- time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -40,7 +38,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- ledger that documents a size gate is not exempt from it.
 
 proto :: String
-proto = "6.1.0"
+proto = "6.2.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

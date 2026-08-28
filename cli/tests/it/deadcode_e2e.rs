@@ -117,6 +117,57 @@ fn the_entry_globs_hint_follows_the_dead_share() {
     );
 }
 
+/// K43: the 0.3.0 document carries the advisory keys exactly when the
+/// road was asked — `ce deadcode`'s own run (Advisory::Yes) has
+/// `unmentioned` rows and the drop flag; a report projected from a
+/// wire built without the advisory has neither key, so "not asked" and
+/// "asked and clean" stay distinct in the document. The same fixture
+/// as verdicts_come_back_with_names: `orphan.ts` exports nothing, so
+/// its dead verdict stands beside an advisory table that names the
+/// unmentioned declarations of the live files.
+#[test]
+fn the_report_document_carries_the_advisory_only_when_asked() {
+    let dir = common::fixtures::tmp("deadcode-report-030");
+    common::fixtures::write_doc(
+        &dir,
+        "--- ce.toml\n[graph]\nentry_globs = [\"root.ts\"]\n\
+         --- root.ts\nimport './used';\n\
+         --- used.ts\nexport function usedButUnspoken() {}\n\
+         --- orphan.ts\nexport {};\n",
+    );
+    let core = core_bin();
+    let report = deadcode::run(&dir, None, &core).expect("run");
+    assert_eq!(
+        dead_set(&report).len(),
+        1,
+        "the orphan dies beside the advisory"
+    );
+    let asked = codeeraser::report::deadcode_json(&report);
+    assert_eq!(asked["schema"], "ce.deadcode-report/0.3.0");
+    assert_eq!(asked["unmentioned_dropped"], false);
+    let rows = asked["unmentioned"].as_array().expect("advisory rows");
+    assert_eq!(rows.len(), 1, "{asked}");
+    let cell = |k: &str| rows[0][k].as_str().map(str::to_string);
+    assert_eq!(
+        (cell("name"), cell("symbol"), cell("code")),
+        (
+            Some("used.ts".into()),
+            Some("usedButUnspoken".into()),
+            Some("public_unmentioned".into())
+        )
+    );
+    // the same tree judged off a wire built without the advisory
+    let (_idx, w) = common::graph_wire(&dir, deadcode::Advisory::No);
+    let quiet = codeeraser::report::deadcode_json(
+        &deadcode::judge_report(&dir, &core, &w).expect("judged"),
+    );
+    assert_eq!(quiet["schema"], "ce.deadcode-report/0.3.0");
+    assert!(
+        quiet.get("unmentioned").is_none() && quiet.get("unmentioned_dropped").is_none(),
+        "{quiet}"
+    );
+}
+
 /// A tree with nothing walkable must be an explicit error — a wrong
 /// root yielding a silent empty graph is the failure mode the exit
 /// row names.

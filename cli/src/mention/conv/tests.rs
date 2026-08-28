@@ -9,32 +9,18 @@
 //! Each case is one line (testutil::check_word_case) led by the
 //! declaring file's path — the language and the tokenizer arm both
 //! come from it, as in name.rs — then every in-domain unit in source
-//! order: `T` Test, `F` Ffi, `G` Registration, `M` Member, `D`
-//! DefaultExport, `A` Ambient, `L` Allow, `C` Cfg, `-` none. These
-//! are K37's producer-half witnesses: every AST-half category fires
-//! on an in-domain declaration. One table, not one per language: the
-//! clone gate reads a run of same-shaped `check(Lang, &[…])` blocks
-//! as one another's copies.
+//! order, spelled in the shared alphabet (`bit_of`, mod.rs): `T`
+//! Test, `F` Ffi, `G` Registration, `M` Member, `D` DefaultExport,
+//! `A` Ambient, `L` Allow, `C` Cfg, `-` none. These are K37's
+//! producer-half witnesses: every AST-half category fires on an
+//! in-domain declaration. One table, not one per language: the clone
+//! gate reads a run of same-shaped `check(Lang, &[…])` blocks as one
+//! another's copies.
 
 use super::*;
 use crate::fourclass::units;
 use crate::mention::name::mention_name;
 use std::path::Path;
-
-fn bit_of(letter: char) -> i64 {
-    match letter {
-        'T' => Conv::Test.bit(),
-        'F' => Conv::Ffi.bit(),
-        'G' => Conv::Registration.bit(),
-        'M' => Conv::Member.bit(),
-        'D' => Conv::DefaultExport.bit(),
-        'A' => Conv::Ambient.bit(),
-        'L' => Conv::Allow.bit(),
-        'C' => Conv::Cfg.bit(),
-        '-' => 0,
-        other => panic!("unknown bit letter {other:?}"),
-    }
-}
 
 fn conv_of(rel: &str, src: &str, lang: Lang) -> Vec<(String, i64)> {
     let mut units: Vec<_> = units::segments(src, lang)

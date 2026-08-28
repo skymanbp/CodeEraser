@@ -11,10 +11,13 @@
 -- request's spelling.
 --
 -- Every message here is golden-pinned text. A refusal is named by
--- table, row index and reason so a producer learns which row it got
--- wrong, never just that something was wrong.
-module CE.Graph.Contract (GraphReq (..), symRows, unresRows, violation) where
+-- table, row index and reason — or, for the one table-level offence
+-- (an advisory table arriving without its partner, 6.2.0), by table
+-- and reason — so a producer learns which row it got wrong, never
+-- just that something was wrong.
+module CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation) where
 
+import CE.Graph.Advisory (mountRow, unmentionedRow)
 import CE.Wire (rowCheck, tableOffence)
 import Data.Aeson
 import Data.Foldable (asum)
@@ -36,6 +39,13 @@ data GraphReq = GraphReq
     -- deduped [node, visibility] pairs saying which files declare
     -- something and how visibly. It is the producer bit 0 never had.
     reqSymbols :: Maybe [[Integer]]
+  , -- the two ADVISORY tables (6.2.0): `unmentioned` = [node, vis,
+    -- conv] rows nothing outside their file spells, and `mounts` =
+    -- [node, private, total, bits] for every node. They travel
+    -- together or not at all (the pairing refusal below); the reply
+    -- key they earn is CE.Graph.Advisory's, never a verdict.
+    reqUnmentioned :: Maybe [[Integer]]
+  , reqMounts :: Maybe [[Integer]]
   }
 
 instance FromJSON GraphReq where
@@ -47,15 +57,21 @@ instance FromJSON GraphReq where
       <*> o .:? "pos" .!= []
       <*> o .:? "unres"
       <*> o .:? "symbols"
+      <*> o .:? "unmentioned"
+      <*> o .:? "mounts"
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
 -- ordering errors, so the ascending pass only ever compares
--- well-formed four-tuples (list Ord is lexicographic).
+-- well-formed four-tuples (list Ord is lexicographic). The advisory
+-- pairing stands FIRST: a lone advisory table is a whole-request
+-- shape mistake, so it is named before any row of any table is —
+-- one message for that request, whatever else its rows hold.
 violation :: GraphReq -> Maybe String
 violation req =
   asum
-    [ asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
+    [ pairing (reqUnmentioned req) (reqMounts req)
+    , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , tableOffence "edge" id (edgeRow n) es
     , -- ascending pos is also the reply BOUND (M5-close review MED:
       -- pos escaped the declared caps — a repeated-index list made
@@ -69,6 +85,13 @@ violation req =
     , -- ascending langs: duplicate-free, so the confidence lookup's
       -- first match is the only match
       tableOffence "unres" (take 1) unresRow us
+    , -- ascending NODES (the `unres` projection, not the row): one
+      -- mounts row per node is what makes Advisory's lookup a map,
+      -- and under a whole-row projection a second row for one node
+      -- would pass as merely "later" (§4, F6-5)
+      tableOffence "mount" (take 1) (mountRow n) ms
+    , -- a deduped SET of (node, vis, conv) triples, like `symbols`
+      tableOffence "unmentioned" id (unmentionedRow n) ums
     ]
  where
   n = fromIntegral (length (reqNodes req))
@@ -76,11 +99,34 @@ violation req =
   ps = reqPos req
   us = unresRows req
   ss = symRows req
+  ms = mountRows req
+  ums = unmentionedRows req
+
+-- | The advisory tables are one fact in two halves: `unmentioned`
+-- without `mounts` would judge every row against [0,0,0] and call an
+-- `internal/` file public; `mounts` without `unmentioned` names
+-- nothing to judge. Four cells: both absent = legacy, both present =
+-- advisory, either alone = refused (§5.2).
+pairing :: Maybe a -> Maybe b -> Maybe String
+pairing (Just _) Nothing = Just "unmentioned: mounts table required alongside"
+pairing Nothing (Just _) = Just "mounts: unmentioned table required alongside"
+pairing _ _ = Nothing
 
 -- | The unres table as sent, [] when absent — the cap's and the
 -- validator's view; road selection stays on reqUnres's Maybe.
 unresRows :: GraphReq -> [[Integer]]
 unresRows = maybe [] id . reqUnres
+
+-- | The two advisory tables as sent, [] when absent — the caps' and
+-- the validators' view, twins of `unresRows`: a 6.2.0-blind client
+-- cannot send either key, so both contribute 0 to every cap sum and
+-- the legacy road is untouched by construction (§4, W3-F9). Road
+-- selection stays on reqUnmentioned's Maybe (CE.Graph advisoryKeys).
+unmentionedRows :: GraphReq -> [[Integer]]
+unmentionedRows = maybe [] id . reqUnmentioned
+
+mountRows :: GraphReq -> [[Integer]]
+mountRows = maybe [] id . reqMounts
 
 -- | The symbols table as sent, [] when absent — the cap's and the
 -- validator's view. Nothing selects a road on it: an empty table and

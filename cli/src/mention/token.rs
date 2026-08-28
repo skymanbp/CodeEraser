@@ -119,6 +119,30 @@ pub(super) fn fold(token: &str) -> String {
 /// not re-judged) — also stores its fold key.
 pub(super) const FOLD_MIN_CHARS: usize = 7;
 
+/// The declaration-side segment count of the fold gate (§2 Q1): a
+/// Rust name takes the fold's second chance only with ≥2 segments
+/// (`_` and camel boundaries; an all-caps run is one segment, so
+/// `HTTPServer` is two and `RULES` one) and ≥ FOLD_MIN_CHARS literal
+/// characters. A `MENTION_REV` input like the fold itself.
+pub(super) fn segments(name: &str) -> usize {
+    let mut count = 0;
+    for part in name.split('_').filter(|p| !p.is_empty()) {
+        let chars: Vec<char> = part.chars().collect();
+        count += 1;
+        for i in 1..chars.len() {
+            let (prev, cur) = (chars[i - 1], chars[i]);
+            let rises = cur.is_uppercase() && !prev.is_uppercase();
+            let caps_end = cur.is_uppercase()
+                && prev.is_uppercase()
+                && chars.get(i + 1).is_some_and(|n| n.is_lowercase());
+            if rises || caps_end {
+                count += 1;
+            }
+        }
+    }
+    count
+}
+
 /// The bundler de-duplication witness (K41): a run shaped `\w+$\d+`
 /// (`name$1`, rollup/esbuild deconflict suffixes) inside a `dist/`
 /// JavaScript file. The JS arm keeps such a run whole, so its base

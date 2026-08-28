@@ -7,6 +7,7 @@
 //! are FOUND, byte identity is what licenses deletion.
 
 use crate::erase::model::Candidate;
+use crate::graph::deadcode::{self, Advisory};
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result, bail};
 use std::collections::{BTreeMap, BTreeSet};
@@ -28,7 +29,9 @@ type UnitSpans = BTreeMap<String, Vec<(String, i64, i64)>>;
 /// measurement four times, once per leg plus its own index open).
 pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gathered> {
     let (found, idx, db_path) = crate::dedup::snapshot(root, db)?;
-    let w = crate::graph::deadcode::wire_of(root, &idx, &db_path)?;
+    // dead files license erase rows; the symbol advisory licenses
+    // nothing here (W4-F2), so the wire is built without it
+    let w = deadcode::wire_of(root, &idx, &db_path, Advisory::No)?;
     let dead = deadcode_leg(root, core, &w)?;
     let lang_unres = lang_unresolved(&idx)?;
     let units = units_by_path(&idx)?;

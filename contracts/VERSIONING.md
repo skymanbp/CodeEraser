@@ -149,6 +149,24 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **6.2.0**（符号层顾问两表，加性 minor，L 轮片 (6) / ccm 步 #6，2026-08-27，口径 = 封版 spec v9）：
+> `graph.request` 加性**两键同生同死**——`unmentioned = [[node, vis, conv]]`（声明文件的 node、
+> 可见性三位字、约定类别字；`id` 投影严格升序；一行 = 本文件里一组无他文件提及的声明域，其名载荷
+> `AdvisoryName` 留在 Rust 侧永不过线，K6 第三腿）与 `mounts = [[node, private, total, bits]]`
+> （全节点恒一行、`take 1` 投影升序、`private ≤ total`、bit 0 再导出目标 / bit 1 包私有）。配对检查
+> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /
+> `mounts: unmentioned table required alongside`；行级五条 `mount i: …` + 四条 `unmentioned i: …`
+> 具名拒绝；两表各自析取项计价（`mountCap` 131072、`unmentionedHardCap` 524288，节点净空不动）。
+> 回复加性 `exportUnmentioned = [[node, vis, conv, code]]`：`vis ∧ unmentionedVisMask(3) == 3` 且
+> `conv` 无 `exemptCategories`（0..10）任一位者出行；code 全序 **1 > 2 > 3 > 0**（`mountedPrivate ∨
+> pkgPrivate` ⇒ 1 private / vis bit 2 ⇒ 2 restricted / mounts bit 0 ⇒ 3 reexported / 否则 0 public；
+> `CE.Graph.Advisory` 具名谓词链，缺 mounts 行读作 `[0,0,0]`）；行数 > `unmentionedCap`（131072）⇒
+> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）：
+> 两键缺席 = 十键回复字节逐位不变；带表与不带表 dead 集相同；顾问表永不能把门翻红——超硬阀
+> `graph_too_large` 是唯一带 `fail` 的顾问路，本方生产者自限 131072 行不可达。`verdict/1` 的
+> `rowTotal` 补计 `symbols` 行（K47）。graph golden 新增六对（18–23：配对两拒、六节点四码齐出、
+> 空表、`private above total`、`malformed row`）。回复既非 degraded 又无 `exportUnmentioned`
+> ⇒ Rust 侧具名拒绝（前 6.2.0 核的合法 minor 偏斜不得读作「已问且干净」）。
 > **6.1.0**（RG10 防火墙抵达会动手的两个面，加性 minor，K 轮步 5，2026-08-25）：
 > `CE.Graph.Dead` 把 dead 沿 indegree × reachability 分成四码，正是为了让
 > **「库的公开 API 无人引用」永远塌不成普通 dead**——RG10 是一个**判决码**，不是一条策略。
@@ -434,7 +452,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **6.1.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **6.2.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -480,13 +498,20 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
   [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]],
-  "symbols":[[node,visibility]]}`——稠密 0 基索引即
-  节点身份，**无文本形物过线**（ADR-002 A6）；节点行**三元组、单一合法元数**（5.0.0 起：
+  "symbols":[[node,visibility]],"unmentioned":[[node,vis,conv]],
+  "mounts":[[node,private,total,bits]]}`——稠密 0 基索引即
+  节点身份，**无文本形物过线**（ADR-002 A6；6.2.0 的两张顾问表同律——候选名 `AdvisoryName`
+  留在 Rust 侧，过线的只有整数）；节点行**三元组、单一合法元数**（5.0.0 起：
   pre-2.28 的 flags 列裁除，宽窄不对的行按**行下标**报 `node i: malformed row (need
   [lang,kind,roles])`；表级 `node rows: mixed arity` 随之退役）、边严格升序且去重、端点与
   pos 越界 → `error/contract`（边界契约由 core 机检）；`symbols` 是 4.1.0 起的可选导出面
   表——去重的 (节点, 可见性) 对、严格升序，核按 `Cost.exportVisBit` 读出导出节点并按
   `Cost.publicFlagBit` 或上 flags 位 0，判决码 2/4 由此首次可达；缺席或空表 = 字节不变。
+  `unmentioned`/`mounts` 是 6.2.0 起的可选**顾问两表，同生同死**（只发其一 ⇒ `error/contract`
+  具名配对拒绝，占校验 asum 最前）：`unmentioned` 按 `id` 投影严格升序、每行 `[node, vis, conv]`；
+  `mounts` 全节点恒一行、`take 1` 投影升序、`private ≤ total`、bits bit 0 再导出目标 / bit 1
+  包私有；两表各自析取项计价（`mountCap` 131072 / `unmentionedHardCap` 524288），节点净空不动；
+  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。
   `unres` 是 2.32.0 起的可选按语言站点
   台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
   两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
@@ -559,11 +584,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **6.0.0**
-  （99 行，server 恒答 6.1.0）——它们是"minor 偏斜
+  （105 行，server 恒答 6.2.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 6.0.0；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 6.1.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
+  server 走 6.2.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -575,5 +600,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 6.1.0 | §1 所列两处常量 |
+| 协议 | 6.2.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

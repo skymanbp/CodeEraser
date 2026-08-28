@@ -68,6 +68,9 @@ rowTotal req =
     , length (reqJudgedLoc req)
     , length (reqDocFiles req)
     , length (reqClassKnobs req)
+    , -- the 6.1.0 export surface was the one table the cap missed
+      -- (K47, 6.2.0 — the same C15 debt a second time)
+      length (reqSymbols req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —

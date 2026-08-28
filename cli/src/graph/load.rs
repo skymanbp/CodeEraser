@@ -54,6 +54,7 @@ macro_rules! row_tuple {
     };
 }
 row_tuple!(t4: A 0, B 1, C 2, D 3);
+row_tuple!(t5: A 0, B 1, C 2, D 3, E 4);
 row_tuple!(t6: A 0, B 1, C 2, D 3, E 4, F 5);
 row_tuple!(t7: A 0, B 1, C 2, D 3, E 4, F 5, G 6);
 

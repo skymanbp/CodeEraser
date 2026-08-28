@@ -12,28 +12,18 @@
 module VerdictWireProps (battery, wireReq, replyObj) where
 
 import CE.Verdict (respond)
-import CE.Verdict.Cost (verdictNodeCap)
+import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import WireHarness (refusedBy, replyObjWith, runChecks, setKey)
-
-battery :: IO Bool
-battery =
-  runChecks
-    [ ("ablating any join leg moves the candidate census", ablation)
-    , ("ratchet idempotence: newBaseline fed back judges nothing", idempotent)
-    , ("refusals name the offender with code and message", refusals)
-    , ("an over-cap request degrades to a reply that FAILS", degradedFails)
-    , ("K15: the export surface guards the flank being deleted, and only it", publicGuard)
-    ]
 
 -- | A wire request whose candidates cover merge, delete and hotspot;
 -- the ablations empty one leg each and the census must move.
 wireReq :: [[Integer]] -> [[Integer]] -> [[Integer]] -> [[Integer]] -> Value
 wireReq sim pos churn coch =
   object
-    [ "proto" .= ("6.1.0" :: String)
+    [ "proto" .= ("6.2.0" :: String)
     , "type" .= ("verdict.request" :: String)
     , "id" .= (1 :: Int)
     , "sim" .= sim
@@ -63,6 +53,39 @@ wCoch = [[4, 5, 3]]
 
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond
+
+battery :: IO Bool
+battery =
+  runChecks
+    ( [ ("ablating any join leg moves the candidate census", ablation)
+      , ("ratchet idempotence: newBaseline fed back judges nothing", idempotent)
+      , ("refusals name the offender with code and message", refusals)
+      , ("an over-cap request degrades to a reply that FAILS", degradedFails)
+      , ("K15: the export surface guards the flank being deleted, and only it", publicGuard)
+      ]
+        -- the 6.2.0 leg joins by append, below the request scaffold: a
+        -- six-row check list opening a module is the token shape every
+        -- wire battery starts with, and the clone gate reads one more
+        -- as a copy of the others
+        <> [("K47: the export surface counts toward the ROW cap, both sides of it", rowCapCountsSymbols)]
+    )
+
+-- | K47 (6.2.0): `symbols` alone carries a request past verdictRowCap
+-- (a degraded reply that FAILS, by name), and at the cap exactly it
+-- does not. The cap precedes validation (CE.Verdict.respond), so the
+-- ballast rows need no valid content: the at-cap arm is refused for
+-- its content or judged — never degraded. Deleting the symbols term
+-- from rowTotal flips the over arm and this leg goes red.
+rowCapCountsSymbols :: Bool
+rowCapCountsSymbols =
+  reasonOf over == Just "verdict_too_large"
+    && (replyObj over >>= KM.lookup "degraded") == Just (Bool True)
+    && reasonOf atCap /= Just "verdict_too_large"
+ where
+  reasonOf r = replyObj r >>= KM.lookup "reason"
+  symbolsOnly n = setKey "symbols" (toJSON (replicate n [0, 0 :: Integer])) (wireReq [] [] [] [])
+  over = symbolsOnly (fromInteger verdictRowCap + 1)
+  atCap = symbolsOnly (fromInteger verdictRowCap)
 
 candidateCensus :: Value -> Maybe [Int]
 candidateCensus req = do

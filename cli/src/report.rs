@@ -83,11 +83,16 @@ pub fn emit<M: Serialize, C: Serialize>(
 /// shapes; a second copy in a consumer is the drift the ratchet
 /// bites).
 pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
+    use crate::graph::deadcode::UnmentionedFace;
     use serde_json::json;
-    json!({
-        // 0.2.0 (2.32.0, H3): dead rows carry the confidence
-        // column (null on a legacy reply without the ledger)
-        "schema": "ce.deadcode-report/0.2.0",
+    let mut doc = json!({
+        // 0.2.0 (2.32.0, H3): dead rows carry the confidence column
+        // (null on a legacy reply without the ledger); 0.3.0 (6.2.0):
+        // the `unmentioned` advisory rows and `unmentioned_dropped`,
+        // present exactly when the road was asked (K43) — a document
+        // from a road that never asked carries neither key, so
+        // "not asked", "asked and clean" and "dropped" stay distinct
+        "schema": "ce.deadcode-report/0.3.0",
         "dead": r.dead.iter().map(|d| {
             json!({"name": d.path, "verdict": d.verdict, "why": d.why, "confidence": d.conf})
         }).collect::<Vec<_>>(),
@@ -97,7 +102,22 @@ pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
         "counts": {"nodes": r.nodes, "kept_edges": r.kept},
         "unresolved_sites": r.unresolved_sites,
         "degraded": r.degraded,
-    })
+    });
+    if let Some(face) = &r.unmentioned {
+        let (rows, dropped) = match face {
+            UnmentionedFace::Rows(rows) => (rows.as_slice(), false),
+            UnmentionedFace::Dropped => (&[][..], true),
+        };
+        let obj = doc.as_object_mut().expect("json! object literal");
+        obj.insert(
+            "unmentioned".into(),
+            rows.iter()
+                .map(|a| json!({"name": a.name, "symbol": a.symbol, "line": a.line, "code": a.code, "why": a.why}))
+                .collect(),
+        );
+        obj.insert("unmentioned_dropped".into(), json!(dropped));
+    }
+    doc
 }
 
 /// The JSON half of emit as a value — the MCP report face returns

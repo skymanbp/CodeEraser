@@ -24,10 +24,12 @@
 //! reports a false unmentioned and the next converges. Stated, not
 //! painted over.
 
+pub mod candidates;
 mod census;
 pub mod conv;
 pub mod face;
 pub mod name;
+pub mod selfref;
 pub mod store;
 #[cfg(test)]
 mod tests;
@@ -38,6 +40,7 @@ mod tests_index;
 mod token;
 mod walk;
 
+pub use candidates::{AdvisoryName, Names, UNMENTIONED_SOFT_CAP};
 pub use census::Outside;
 
 use crate::dedup::index::Index;
@@ -54,7 +57,11 @@ use std::path::Path;
 ///     split's identifier side, the `$` arm and its extension table
 ///     (`MENTION_WHOLE_RUN_EXTS`, lower-cased lookup, no extension =
 ///     union), the digit-led drop, the fold filter set and the
-///     7-literal-character fold threshold;
+///     7-literal-character fold threshold, and the fold gate's
+///     segmenter (`_`/camel boundaries, an all-caps run one segment)
+///     with its 2-segment declaration-side threshold — frozen with
+///     the rev (spec §5.1) although it gates the declaration side
+///     and fills no stored row;
 ///   - walk.rs: every walker parameter, the nested-repository cut,
 ///     the file-symlink rule, the 4 MiB cap, the exclusion table
 ///     (shared secret globs + omni-mentioners), the binary rule;

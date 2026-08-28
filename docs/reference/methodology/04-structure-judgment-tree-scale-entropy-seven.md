@@ -10,7 +10,7 @@ codes and counts ([Structure.hs:12-15](../../../core/app/CE/Structure.hs#L12)). 
 language set enters the tree; the size-gate-only language arm is excluded, or the file
 population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
 NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
-has no language term at all ([judge.rs:201-206](../../../cli/src/structure/judge.rs#L201)) ([structure-axes.md:26-27](../structure-axes.md#L26)).
+has no language term at all ([judge.rs:206-211](../../../cli/src/structure/judge.rs#L206)) ([structure-axes.md:26-27](../structure-axes.md#L26)).
 
 ### 1. The entropy primitive: exact rationals, no logarithms
 

@@ -38,14 +38,17 @@
 //! (ladder/md.rs:75), so that shape is index skew and the unit leg
 //! witnesses its `[0,0,0]` row; `facts` keys itself by the walked set
 //! it reads from the index, never by node paths, so an `internal/`
-//! path on such a node could not earn it a bit either way.
+//! path on such a node could not earn it a bit either way. The code
+//! half of K30 — the same tree through the real core — is
+//! graph_mounts_codes.rs.
 
 use crate::common;
-use codeeraser::dedup::{Params, index::Index};
-use codeeraser::graph::deadcode;
+use codeeraser::dedup::index::Index;
+use codeeraser::graph::deadcode::{self, GraphWire};
 use codeeraser::graph::mounts::{self, MOUNT_PKG_PRIVATE, MOUNT_REEXPORTED};
 use codeeraser::graph::wire::GRAN_SECTION;
 use std::collections::{BTreeMap, BTreeSet};
+use std::path::PathBuf;
 
 const FIXTURE: &str = "\
 --- Cargo.toml
@@ -58,12 +61,15 @@ mod hidden;
 pub mod open;
 mod source;
 pub use crate::source::Thing;
+pub fn l_unspoken() {}
 --- src/hidden.rs
 pub fn h() {}
 --- src/open.rs
 pub fn o() {}
 --- src/source.rs
 pub struct Thing;
+pub fn s_unspoken() {}
+pub(crate) fn sr_unspoken() {}
 --- src/main.rs
 mod tool;
 pub mod shown;
@@ -78,10 +84,13 @@ fn main() {
     shown::s();
     twice::o();
 }
+pub fn m_unspoken() {}
 --- src/tool.rs
 pub(crate) fn t() {}
+pub(crate) fn t_unspoken() {}
 --- src/shown.rs
 pub fn s() {}
+pub fn sh_unspoken() {}
 --- src/bin/extra.rs
 fn main() {}
 --- tools/Cargo.toml
@@ -100,10 +109,16 @@ pub fn v() {}
 package main
 
 func main() {}
+
+func Unspoken() {}
 --- go/internal/x/x.go
 package x
+
+func XUnspoken() {}
 --- go/lib/lib.go
 package lib
+
+func LibUnspoken() {}
 --- ts/index.ts
 export * from './all';
 export * as ns from './space';
@@ -111,6 +126,7 @@ export { a } from './named';
 import './use';
 --- ts/all.ts
 export const all = 1;
+export function tsUnspoken() {}
 --- ts/space.ts
 export const sp = 1;
 --- ts/named.ts
@@ -143,13 +159,28 @@ library
 module A where
 
 import B
+
+aUnspoken :: Int
+aUnspoken = 1
 --- hs2/src/B.hs
 module B where
+
+bUnspoken :: Int
+bUnspoken = 1
 --- docs/note.md
 # Intro
 
 See [intro](./note.md#intro).
 ";
+
+/// The K30 tree indexed and wired on the road asked, with the index
+/// kept open for the facts leg — shared with the code half
+/// (graph_mounts_codes.rs).
+pub fn k30(tag: &str, advisory: deadcode::Advisory) -> (PathBuf, Index, GraphWire) {
+    let dir = common::indexed_doc(tag, FIXTURE);
+    let (idx, w) = common::graph_wire(&dir, advisory);
+    (dir, idx, w)
+}
 
 /// Expected `path privateMounts totalMounts bits` per file, one line
 /// per K30 cell, bits spelled as a set of letters — `R` (re-export
@@ -204,12 +235,7 @@ fn want_row(line: &str) -> (&str, [i64; 3]) {
 
 #[test]
 fn every_k30_cell_reads_its_row_from_a_real_index() {
-    let dir = common::fixtures::tmp("graph-mounts-k30");
-    common::fixtures::write_doc(&dir, FIXTURE);
-    common::build_index(&dir);
-    let db = dir.join(".ce/index.db");
-    let idx = Index::open(&db, Params::default()).expect("open index");
-    let w = deadcode::wire_of(&dir, &idx, &db).expect("graph wire");
+    let (dir, idx, w) = k30("graph-mounts-k30", deadcode::Advisory::No);
     let facts = mounts::facts(&dir, &idx).expect("mount facts");
     let rows = mounts::mount_rows(&w.nodes, &facts);
     assert_eq!(rows.len(), w.nodes.len(), "one row per node");

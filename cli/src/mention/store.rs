@@ -219,13 +219,27 @@ pub(super) fn capped(conn: &Connection, cap: usize) -> Result<usize> {
     )?)
 }
 
-/// Whether any walked file mentions this identity hash — the read the
-/// veto will stand on; here it serves the pass's own legs.
+/// Whether any walked file OTHER than `own_path` mentions this
+/// identity hash — the read the veto stands on (candidates.rs) and
+/// the pass's own legs use.
 pub fn mentioned_by_other(conn: &Connection, ident: i64, own_path: &str) -> Result<bool> {
-    Ok(conn.query_row(
+    elsewhere(conn, "ident_hash", ident, own_path)
+}
+
+/// The fold channel's second chance: any other file holds a token
+/// whose fold key is this hash.
+pub fn folded_by_other(conn: &Connection, folded: i64, own_path: &str) -> Result<bool> {
+    elsewhere(conn, "folded_hash", folded, own_path)
+}
+
+/// One cached statement per hash column: the veto asks this once per
+/// surviving declaration, thousands of times per run.
+fn elsewhere(conn: &Connection, column: &str, hash: i64, own_path: &str) -> Result<bool> {
+    let sql = format!(
         "SELECT EXISTS(SELECT 1 FROM mentions m JOIN mention_files f ON f.id = m.file_id
-         WHERE m.ident_hash = ?1 AND f.path <> ?2)",
-        (ident, own_path),
-        |r| r.get(0),
-    )?)
+         WHERE m.{column} = ?1 AND f.path <> ?2)"
+    );
+    Ok(conn
+        .prepare_cached(&sql)?
+        .query_row((hash, own_path), |r| r.get(0))?)
 }

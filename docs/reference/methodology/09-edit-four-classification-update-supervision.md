@@ -59,7 +59,7 @@ Two consequences, both theorems rather than thresholds:
 - `siteCostWithin = 0` ⇒ `1*1 + 0 < 1*3`, so **any single matching line opens a within-file site** — which is exactly L1's unfloored rule ([Cost.hs:25-26](../../../core/app/CE/FourClass/Cost.hs#L25)).
 - `siteCostCross = 2` ⇒ a single cross line gives `1*1 + 2 = 3 = 1*3`, a tie, which does not open. So `destFloor`, defined as the least `n` with `siteOpens siteCostCross n` ([Cost.hs:50-53](../../../core/app/CE/FourClass/Cost.hs#L50)), evaluates to **2**. That tie *is* the coincidence rejection ([Cost.hs:30-33](../../../core/app/CE/FourClass/Cost.hs#L30)).
 
-The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens 2 1)` ([Spec.hs:132-133](../../../core/test/Spec.hs#L132)), and perturbing the site cost moves the floor — `s ∈ {0,2,4,6}` ⇒ floor `{1,2,3,4}` ([Spec.hs:134-137](../../../core/test/Spec.hs#L134)).
+The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens 2 1)` ([Spec.hs:134-135](../../../core/test/Spec.hs#L134)), and perturbing the site cost moves the floor — `s ∈ {0,2,4,6}` ⇒ floor `{1,2,3,4}` ([Spec.hs:136-139](../../../core/test/Spec.hs#L136)).
 
 ### Line-evidence floor plus the anchor-line requirement
 

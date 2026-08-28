@@ -11,14 +11,16 @@
 -- 300-line dogfood wall when the 4.1.0 symbol table arrived.
 module CE.Graph (respond) where
 
+import qualified CE.Graph.Advisory as Advisory
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Contract (GraphReq (..), symRows, unresRows, violation)
-import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exportVisBit, granFile, minRung, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap)
+import CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation)
+import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exemptCategories, exportVisBit, granFile, minRung, mountCap, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap, unmentionedCap, unmentionedHardCap, unmentionedVisMask)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
 import CE.Wire (Family (..), respondWith)
 import Data.Aeson
+import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntSet as IS
@@ -35,11 +37,17 @@ respond proto =
       , famId = reqId
       , -- the unres ledger counts toward a cap too (the scan C15
         -- discipline: every request dimension is priced) — validation
-        -- bounds it to seven rows, but the cap must not need that
+        -- bounds it to seven rows, but the cap must not need that.
+        -- The two advisory tables (6.2.0) price their OWN disjuncts,
+        -- like `symbols`: folded into nodeCap they would halve the
+        -- node headroom, and an advisory that can degrade a request
+        -- (fail: true) would break the §0 iron rule.
         famOverCap = \req ->
           toInteger (length (reqNodes req) + length (unresRows req)) > nodeCap
             || toInteger (length (reqEdges req)) > edgeCap
             || toInteger (length (symRows req)) > symCap
+            || toInteger (length (unmentionedRows req)) > unmentionedHardCap
+            || toInteger (length (mountRows req)) > mountCap
       , famOffence = violation
       , famDegraded = tooLarge proto
       , famJudged = result proto
@@ -50,9 +58,8 @@ respond proto =
 -- KeyMap encodes keys sorted — deterministic bytes by construction.
 result :: String -> GraphReq -> B8.ByteString
 result proto req =
-  BL.toStrict . encode $
-    object
-      [ "proto" .= proto
+  BL.toStrict . encode . object $
+    [ "proto" .= proto
       , "type" .= ("graph.result" :: String)
       , "id" .= reqId req
       , -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
@@ -80,8 +87,9 @@ result proto req =
             ]
       , "degraded" .= False
       ]
+      <> advisoryKeys req
  where
-  b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)
+  (b, reach, deadRows, reportedRows) = liveness req
   -- the confidence column rides exactly when the ledger rode
   -- (2.32.0): legacy requests keep two-column dead rows,
   -- byte-identical
@@ -91,6 +99,27 @@ result proto req =
   langOf i
     | ((l : _) : _) <- drop i (reqNodes req) = l
     | otherwise = error "dead index inside the node table by construction"
+
+-- | The advisory keys ride exactly when the `unmentioned` table rode
+-- (6.2.0): a legacy request answers the ten keys byte for byte
+-- (K16). Past the soft cap the table is DROPPED and said so — the
+-- ten keys, `degraded` and `fail` among them, never move for an
+-- advisory (the §0 iron rule; the hard cap is famOverCap's).
+advisoryKeys :: GraphReq -> [Pair]
+advisoryKeys req = case reqUnmentioned req of
+  Nothing -> []
+  Just rows
+    | toInteger (length rows) > unmentionedCap ->
+        ["exportUnmentioned" .= ([] :: [Value]), "unmentionedDropped" .= True]
+    | otherwise ->
+        ["exportUnmentioned" .= Advisory.judge unmentionedVisMask exemptCategories (mountRows req) rows]
+
+-- | One build, one reach, the verdicts split by tier: the graph, its
+-- reach set, the file-tier dead rows and the reported aggregates.
+liveness :: GraphReq -> (Built, IS.IntSet, [(Int, Int)], [(Int, Int)])
+liveness req = (b, reach, deadRows, reportedRows)
+ where
+  b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)
   -- entry bits derive from the ROLE facts through Cost.roleBits
   -- (2.28.0, batch-7 slice 3); the pre-2.28 legacy flags column it
   -- used to yield to retired at 5.0.0, so there is one road left.

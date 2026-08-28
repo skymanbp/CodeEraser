@@ -53,6 +53,16 @@ pub fn write_doc(dir: &Path, doc: &str) {
     }
 }
 
+/// A fixture document written out under a fresh tmp dir and indexed
+/// by the real walk — the three lines every wire-reading leg opened
+/// with.
+pub fn indexed_doc(name: &str, doc: &str) -> PathBuf {
+    let dir = tmp(name);
+    write_doc(&dir, doc);
+    super::build_index(&dir);
+    dir
+}
+
 /// ~60 normalized tokens; `seed` renames identifiers and changes
 /// literals so pairs of outputs are T2 (not T1) clones clearing t=50.
 pub fn rust_fn(seed: u32) -> String {

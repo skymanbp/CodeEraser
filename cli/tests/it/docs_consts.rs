@@ -283,6 +283,30 @@ fn assert_sources(root: &Path, families: &Families) {
     }
 }
 
+/// K46: the producer's cut of the `unmentioned` table and the core's
+/// soft cap are ONE number, pinned source to source (neither is a
+/// page chip): a smaller Rust value would truncate silently, a larger
+/// one would resurrect a table the core drops.
+#[test]
+fn the_unmentioned_soft_cap_is_one_number_on_both_sides() {
+    let root = repo_root();
+    let one = |defs: Vec<Def>, name: &str| {
+        let found: Vec<&Def> = defs.iter().filter(|d| d.name == name).collect();
+        assert_eq!(found.len(), 1, "{name}: exactly one definition");
+        normalize(first_number(&found[0].value).expect("numeric value"))
+    };
+    assert_eq!(
+        one(
+            defs_in(&root, "cli/src", "rs", rust_line),
+            "UNMENTIONED_SOFT_CAP"
+        ),
+        one(
+            defs_in(&root, "core/app", "hs", haskell_line),
+            "unmentionedCap"
+        )
+    );
+}
+
 #[test]
 fn how_page_constant_chips_are_locked_and_resolvable() {
     let root = repo_root();

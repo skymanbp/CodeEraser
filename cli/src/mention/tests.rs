@@ -4,8 +4,25 @@
 //! cases pair one JS extension with one union extension over the SAME
 //! text, so the arm is the only thing that moves.
 
-use super::token::{FOLD_MIN_CHARS, dedup_suffixed, emit, fold, whole_run_only};
+use super::token::{FOLD_MIN_CHARS, dedup_suffixed, emit, fold, segments, whole_run_only};
 use super::walk::decode;
+
+/// The fold gate's segmenter, on its own frozen witnesses: `_`
+/// boundaries, a camel rise, an all-caps run as ONE segment (so
+/// `HTTPServer` is two and `RULES` one), a digit-led tail.
+#[test]
+fn the_segmenter_counts_underscore_and_camel_boundaries() {
+    for (name, want) in [
+        ("scan_row_cap", 3),
+        ("PyProject", 2),
+        ("HTTPServer", 2),
+        ("RULES", 1),
+        ("Level", 1),
+        ("_2abc_defg", 2),
+    ] {
+        assert_eq!(segments(name), want, "{name}");
+    }
+}
 
 fn toks(file: &str, text: &str) -> Vec<String> {
     let mut out = Vec::new();

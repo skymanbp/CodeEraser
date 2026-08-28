@@ -25,7 +25,10 @@ pub const SCHEMA_ID: &str = "ce.graph-canvas/0.3.0";
 /// delegates here, so the canvas road has one owner.
 pub fn run(root: &std::path::Path, core: &str) -> Result<Value> {
     let (idx, db_path) = crate::dedup::refreshed_index(root, None)?;
-    let w = super::deadcode::wire_of(root, &idx, &db_path)?;
+    // the canvas draws liveness and position; the symbol advisory is
+    // the deadcode face's (W4-F2: a road that cannot render it pays
+    // nothing for it)
+    let w = super::deadcode::wire_of(root, &idx, &db_path, super::deadcode::Advisory::No)?;
     drop(idx);
     let pos_req: Vec<i64> = file_nodes(&w).iter().map(|x| x.0).collect();
     let (report, reply) = super::deadcode::judged(root, core, &w, &pos_req)?;
@@ -197,8 +200,11 @@ mod tests {
             unresolved_sites: 7,
             unres: vec![],
             // the canvas draws the graph, it never reads the export
-            // surface — an empty table is this fixture's whole claim
+            // surface or the advisory — an empty table and the
+            // road-not-asked None are this fixture's whole claim
             symbols: Default::default(),
+            unmentioned: None,
+            mounts: None,
         };
         let report = Report {
             dead: vec![crate::graph::deadcode::DeadRow {
@@ -214,6 +220,7 @@ mod tests {
             unresolved_sites: 7,
             degraded: None,
             fail: true,
+            unmentioned: None,
         };
         (w, report)
     }

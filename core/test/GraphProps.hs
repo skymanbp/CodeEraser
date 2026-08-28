@@ -96,7 +96,6 @@ roleKnob =
   entries entryMask [deriveFlags roleBits 1] == [0]
     && null (entries entryMask [deriveFlags [(0, 0)] 1])
 
--- | One 3-column row beside a 4-column row refuses by name — a
 -- | Both export knobs move the answer. Reading a visibility bit the
 -- rows do not carry names no surface; setting a FLAG bit inside
 -- entryMask does something else entirely — node 0 becomes an entry
@@ -175,7 +174,7 @@ shuffledRefused (n, arcs, _) =
     _ -> True
  where
   sortedRows = rowsOf arcs
-  refused rows = case respond "6.1.0" (req rows) of
+  refused rows = case respond "6.2.0" (req rows) of
     Left (_, code, msg) -> code == "contract" && "not strictly ascending" `isInfixOf` msg
     Right _ -> False
   req rows =

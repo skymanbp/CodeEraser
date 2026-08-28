@@ -179,5 +179,23 @@ pub fn build_index(dir: &Path) {
     assert!(out.status.success(), "seed dedup failed");
 }
 
+/// Open the built index and assemble the graph wire from it, on the
+/// road asked — the prelude of every leg that reads the wire off a
+/// real tree (export surface, mounts, the advisory report); its third
+/// copy was the clone gate's.
+pub fn graph_wire(
+    dir: &Path,
+    advisory: codeeraser::graph::deadcode::Advisory,
+) -> (
+    codeeraser::dedup::index::Index,
+    codeeraser::graph::deadcode::GraphWire,
+) {
+    let db = dir.join(".ce/index.db");
+    let idx = codeeraser::dedup::index::Index::open(&db, codeeraser::dedup::Params::default())
+        .expect("open index");
+    let w = codeeraser::graph::deadcode::wire_of(dir, &idx, &db, advisory).expect("graph wire");
+    (idx, w)
+}
+
 // Daemon e2e machinery (spawn/raw-line/shutdown/wait) lives in
 // daemon.rs — split at the 300-line dogfood wall.

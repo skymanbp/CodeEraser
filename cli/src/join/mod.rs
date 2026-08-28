@@ -85,7 +85,9 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     crate::progress::step(crate::progress::Phase::Index);
     let (found, idx, db_path) = dedup::snapshot(root, db)?;
     crate::progress::step(crate::progress::Phase::Graph);
-    let w = deadcode::wire_of(root, &idx, &db_path)?;
+    // the join reads positions and the degraded bit alone: the
+    // symbol advisory has no seat in its lattice (W4-F17)
+    let w = deadcode::wire_of(root, &idx, &db_path, deadcode::Advisory::No)?;
     drop(idx);
     let pos_req: Vec<i64> = deadcode::file_nodes(&w).iter().map(|&(i, _)| i).collect();
     let reply = deadcode::judge(core, &w, &pos_req)?;

@@ -16,6 +16,7 @@
 
 mod go;
 mod hs;
+pub mod name;
 mod py;
 mod rs;
 #[cfg(test)]
@@ -103,8 +104,35 @@ pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i6
     }
 }
 
-fn text<'s>(node: Node<'_>, src: &'s [u8]) -> &'s str {
+/// A node's bytes as text — shared with the self-mention walk, whose
+/// own copy the clone gate paired with this one.
+pub(super) fn text<'s>(node: Node<'_>, src: &'s [u8]) -> &'s str {
     node.utf8_text(src).unwrap_or("")
+}
+
+/// The one letter alphabet the conv test tables spell their expected
+/// words in — a letter per category, `-` for none. ONE table for both
+/// halves: the AST-half and name-half batteries each kept a copy of
+/// this match until the clone gate paired them.
+#[cfg(test)]
+pub(super) fn bit_of(letter: char) -> i64 {
+    let category = match letter {
+        'm' => Conv::Main,
+        'T' => Conv::Test,
+        'F' => Conv::Ffi,
+        'G' => Conv::Registration,
+        'P' => Conv::Protocol,
+        'M' => Conv::Member,
+        'd' => Conv::MemberDispatch,
+        'a' => Conv::MemberApi,
+        'D' => Conv::DefaultExport,
+        'A' => Conv::Ambient,
+        'L' => Conv::Allow,
+        'C' => Conv::Cfg,
+        '-' => return 0,
+        other => panic!("unknown bit letter {other:?}"),
+    };
+    category.bit()
 }
 
 /// The node's parent when it is of `kind`.

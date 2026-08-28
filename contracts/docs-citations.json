@@ -2126,7 +2126,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:2": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 201,
+    "line": 206,
     "text": "/// Judged languages only (plan v2.5): letting the scan-only arm in"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:20": {
@@ -2601,7 +2601,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:18": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 64,
+    "line": 103,
     "text": "sccFloor = 2"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:19": {
@@ -2651,7 +2651,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:27": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 112,
+    "line": 115,
     "text": ", -- the effective weight table 0..6 (review C3, 2.8.0"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:28": {
@@ -2696,7 +2696,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:35": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 228,
+    "line": 231,
     "text": "-- | Over-cap refusal: a well-formed degraded result with the FULL"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:36": {
@@ -2796,7 +2796,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:53": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 130,
+    "line": 133,
     "text": "-- the soft line judging THIS run: the committed one, or (only at"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:54": {
@@ -2811,7 +2811,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:56": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 205,
+    "line": 208,
     "text": "-- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:57": {
@@ -2826,7 +2826,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:59": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 125,
+    "line": 128,
     "text": "-- the class rows fold into ONE Map here, once per judgment (3.1.0)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:6": {
@@ -2856,7 +2856,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:64": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 142,
+    "line": 145,
     "text": "r = ratchet rk classTol base (reqCont req) (reqDisc req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:65": {
@@ -3006,22 +3006,22 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 179,
+    "line": 182,
     "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:92": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 144,
+    "line": 147,
     "text": "floorFail = maybe False (perMille <) (reqFloor req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 163,
+    "line": 166,
     "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 146,
+    "line": 149,
     "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:95": {
@@ -3031,17 +3031,17 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:96": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 194,
+    "line": 197,
     "text": "ratchetObj :: Ratcheted -> [(String, Bool)] -> Value"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:97": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 97,
+    "line": 100,
     "text": ", \"ratchet\" .= ratchetObj r conds"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:98": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 174,
+    "line": 177,
     "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:99": {
@@ -3051,7 +3051,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:1": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 22,
+    "line": 25,
     "text": "-- | Wire shape (design brief §2): index = node identity, nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:10": {
@@ -3061,17 +3061,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:100": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 223,
+    "line": 269,
     "text": "/// [lang, kind, roles] — only file nodes carry entry facts. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:101": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 241,
+    "line": 287,
     "text": "}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:102": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 98,
+    "line": 137,
     "text": "roleBits :: [(Integer, Integer)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:103": {
@@ -3081,7 +3081,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:104": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 116,
+    "line": 145,
     "text": "declaredBits :: [Integer] -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:105": {
@@ -3146,7 +3146,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:116": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 59,
+    "line": 98,
     "text": "-- | Smallest SCC reported as a cycle: 2 = only true multi-node"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:117": {
@@ -3176,7 +3176,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:121": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 258,
+    "line": 299,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:122": {
@@ -3201,22 +3201,22 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:126": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 42,
+    "line": 44,
     "text": "pub const VERDICT_NAMES: [&str; 4] = ["
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:127": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 280,
+    "line": 351,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:128": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 327,
+    "line": 425,
     "text": "let why = if verdict <= 2 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:129": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 110,
+    "line": 139,
     "text": "fileIdx = IS.fromList [i | (i, _ : k : _) <- zip [0 ..] (reqNodes req), k == granFile]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:13": {
@@ -3226,17 +3226,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:130": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 64,
+    "line": 103,
     "text": "sccFloor = 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 319,
+    "line": 411,
     "text": "// The RG9 split is the CORE's since 2.18.0; here it survives"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:132": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 351,
+    "line": 377,
     "text": "// pre-2.18 core: no fail bit on the wire — the client's own"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:133": {
@@ -3251,27 +3251,27 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 111,
+    "line": 157,
     "text": "where"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 88,
+    "line": 96,
     "text": "deadOut i v = case reqUnres req of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 111,
+    "line": 150,
     "text": "confidence :: [[Integer]] -> Integer -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 115,
+    "line": 116,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 181,
+    "line": 227,
     "text": "fn lang_ledger(sites: &[(String, i64, i64)]) -> Vec<[i64; 3]> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:14": {
@@ -3281,12 +3281,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:140": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 359,
+    "line": 421,
     "text": "(0..=2).contains(&c),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:141": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 267,
+    "line": 338,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:142": {
@@ -3621,7 +3621,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:61": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 117,
+    "line": 156,
     "text": "-- | The unused-reference-definition edge kind (H1 slice 16,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:62": {
@@ -3651,17 +3651,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:67": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 77,
+    "line": 116,
     "text": "-- | The edge kind that NEVER counts as a reference (batch-7 slice"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:68": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 117,
+    "line": 156,
     "text": "-- | The unused-reference-definition edge kind (H1 slice 16,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:69": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 84,
+    "line": 122,
     "text": "b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:7": {
@@ -3676,12 +3676,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:71": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 193,
+    "line": 239,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:72": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 208,
+    "line": 254,
     "text": "let of = |path: &str, unit: &str| {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:73": {
@@ -3696,12 +3696,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:75": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 81,
+    "line": 82,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 109,
+    "line": 110,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
@@ -3711,12 +3711,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 51,
+    "line": 63,
     "text": "-- | First boundary-contract offender, if any — checked in request"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:79": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 122,
+    "line": 168,
     "text": "-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:8": {
@@ -3726,12 +3726,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:80": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 139,
+    "line": 185,
     "text": "nonNegative row = if any (< 0) row then Just \"negative field\" else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:81": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 59,
+    "line": 75,
     "text": ", tableOffence \"edge\" id (edgeRow n) es"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:82": {
@@ -3741,17 +3741,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:83": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 60,
+    "line": 76,
     "text": ", -- ascending pos is also the reply BOUND (M5-close review MED:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 144,
+    "line": 190,
     "text": "posRow :: Integer -> Int -> Integer -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 22,
+    "line": 24,
     "text": "nodeCap :: Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:86": {
@@ -3761,17 +3761,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:87": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 123,
+    "line": 152,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:88": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 123,
+    "line": 152,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:89": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 367,
+    "line": 458,
     "text": "/// A degraded judgment is a visible event (A9f): one observe-feed"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:9": {
@@ -3796,17 +3796,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:93": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 84,
+    "line": 122,
     "text": "b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:94": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 43,
+    "line": 82,
     "text": "minRung :: Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:95": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 37,
+    "line": 76,
     "text": "-- | Which rungs count as references: an edge resolved at rung"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:96": {
@@ -3816,17 +3816,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:97": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 56,
+    "line": 95,
     "text": "entryMask :: Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:98": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 47,
+    "line": 86,
     "text": "-- that drives deadcode FPR (design §2). Bits: 1 main, 2 test,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:99": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 52,
+    "line": 91,
     "text": "-- Bit 0 (exported) is deliberately absent: exported-ness is the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:1": {
@@ -3846,7 +3846,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:101": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 177,
+    "line": 179,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:102": {
@@ -3936,12 +3936,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 228,
+    "line": 230,
     "text": "out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 208,
+    "line": 210,
     "text": "/// File pairs with at least one verified block, kind 0 (t1t2) at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
@@ -3966,7 +3966,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:28": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 124,
+    "line": 126,
     "text": "pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<String, Pos>> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:29": {
@@ -3986,12 +3986,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:31": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 56,
+    "line": 95,
     "text": "entryMask :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:32": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 46,
+    "line": 85,
     "text": "-- | Which flag bits make a node an entry root — the single constant"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:33": {
@@ -4016,7 +4016,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:37": {
     "target": "../../../core/test/VerdictWireProps.hs",
-    "line": 94,
+    "line": 117,
     "text": "-- | K15 (6.1.0): RG10 on the verdict road. Pair (2,3) is a dead"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:38": {
@@ -4046,12 +4046,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 179,
+    "line": 181,
     "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 302,
+    "line": 304,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
@@ -4061,7 +4061,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 328,
+    "line": 330,
     "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:46": {
@@ -4086,7 +4086,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 146,
+    "line": 148,
     "text": "let key = if b.a_file <= b.b_file {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
@@ -4141,7 +4141,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 151,
+    "line": 153,
     "text": "let e = by_pair.entry(key).or_default();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
@@ -4311,22 +4311,22 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:90": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 94,
+    "line": 97,
     "text": "\"joinSeverity\" .= [[c, s] | (c, s) <- severities]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:91": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 179,
+    "line": 182,
     "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:92": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 154,
+    "line": 157,
     "text": "conds = failConditions r floorFail dedupOver digestDrift"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:93": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 201,
+    "line": 204,
     "text": ", \"fail\" .= any snd conds"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:94": {
@@ -4346,7 +4346,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:97": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 101,
+    "line": 103,
     "text": "let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:98": {
@@ -4356,7 +4356,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:99": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 92,
+    "line": 94,
     "text": "// Degrade reads the wire's boolean, not reason presence (the C9"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:1": {
@@ -4396,7 +4396,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:16": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 290,
+    "line": 295,
     "text": "let mut k = vec!["
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:17": {
@@ -4471,7 +4471,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:3": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 157,
+    "line": 162,
     "text": "pub(crate) fn committed_soft(root: &Path) -> u64 {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:30": {
@@ -4502,7 +4502,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.2.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:36": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4631,7 +4631,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:59": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 173,
+    "line": 178,
     "text": "fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<SplitReport> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:6": {
@@ -4641,7 +4641,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:60": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 183,
+    "line": 188,
     "text": "for &[fid, unit, benefit, cost] in &reply.split_candidates {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:61": {
@@ -4931,12 +4931,12 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:31": {
     "target": "../../../core/test/Spec.hs",
-    "line": 132,
+    "line": 134,
     "text": "a <- check \"cross floor derives to 2\" (destFloor == 2)"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:32": {
     "target": "../../../core/test/Spec.hs",
-    "line": 134,
+    "line": 136,
     "text": "c <-"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:33": {
@@ -5911,7 +5911,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:12": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 79,
+    "line": 82,
     "text": "/// Unresolved-site owners folded to per-language counts (keyed by"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:13": {
@@ -5926,7 +5926,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:15": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 64,
+    "line": 67,
     "text": "/// The graph family, degraded refused by name: an erase plan built"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:16": {
@@ -5936,7 +5936,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:17": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 126,
+    "line": 129,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:18": {
@@ -5951,7 +5951,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:2": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 25,
+    "line": 26,
     "text": "/// All three measurement legs in family order: deadcode (graph),"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:20": {
@@ -5966,7 +5966,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:22": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 160,
+    "line": 163,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:23": {
@@ -5996,7 +5996,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:28": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 114,
+    "line": 117,
     "text": ".context(\"dead row carries no confidence — the graph ledger did not ride\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:29": {
@@ -6006,7 +6006,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 370,
+    "line": 388,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -6061,7 +6061,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 370,
+    "line": 388,
     "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -6086,7 +6086,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 379,
+    "line": 397,
     "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
@@ -6141,7 +6141,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 375,
+    "line": 393,
     "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
@@ -6161,7 +6161,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:58": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 367,
+    "line": 385,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
@@ -6171,17 +6171,17 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:7": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 104,
+    "line": 107,
     "text": "fn dead_candidates(dead: &crate::graph::deadcode::Report) -> Result<Vec<Candidate>> {"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:8": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 126,
+    "line": 129,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:9": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 160,
+    "line": 163,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   }
 }

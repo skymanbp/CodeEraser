@@ -4,7 +4,41 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
-## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签）
+## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键）
+
+**片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
+全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
+`unmentioned=[[node,vis,conv]]`（`id` 投影升序）与 `mounts=[[node,private,total,bits]]`（全节点恒一行、`take 1` 投影）；
+只发其一 ⇒ 配对拒绝（`unmentioned: mounts table required alongside` / 反向），占 `violation` asum 最前；行级 5+4 条具名
+拒绝；两表**各自**析取项计价（`mountCap`=131072 / `unmentionedHardCap`=524288〔= 最大既有表 `edgeCap` 同阀，非软 cap 倍数〕，
+节点净空不动；本方生产者自限 131072 行下顾问表永不把门翻红，超硬阀只对缺陷/敌意客户端可达）。回复
+加性 `exportUnmentioned=[[node,vis,conv,code]]`（`vis∧3==3` 且 `conv` 无 0..10 任一位者出行；code 全序 1 private > 2
+restricted > 3 reexported > 0 public，`CE.Graph.Advisory` 具名谓词链 `mountedPrivate`/`pkgPrivate`/`reexported`，缺 mounts
+行读作 `[0,0,0]`）；> `unmentionedCap`(131072) 行 ⇒ `exportUnmentioned:[]` + `unmentionedDropped:true`（只在掉表时在场）。
+**铁律腿**：`AdvisoryProps` 十电池（K16 核半 / K19+K36 旋钮 / K33 七拒 + `total=0` + 131072/131073 + `nodeCap−|unres|`
+双向反事实 + 零行格 / K35 四格 / codeOrder 九节点矩阵〔含 1>2 碰撞格〕/ ironRule 五种表形 dead 集恒等）；`Verdict.hs rowTotal`
+补计 `symbols`（K47，`VerdictWireProps` 双向腿：仅 `symbols` 524289 行 ⇒ `verdict_too_large`、524288 行不降级）。Rust 生产者：`mention/candidates.rs`（域 = (文件, `mention_name`) 折叠、否决序 = 他文件提及 → 折叠门
+`segments≥2∧chars≥FOLD_MIN_CHARS` → 自文件具名区域〔Go 模板串 / TS 字符串与模板字面量 / Python doctest / Rust 宏定义与
+文档围栏块 / Haskell haddock 围栏〕→ conv = AST 半 | 名表半 | 路径半 | 文本半，`take UNMENTIONED_SOFT_CAP` 自限）、
+`mention/conv/name.rs`（名表半：Test 路径族 + `benches`/`examples` 仅限 Cargo 包内、Ambient `.d.ts` 族、Main py/hs、
+Protocol = Python unittest/xunit/pluggy/Django/反射前缀 + TS 文件名×导出名表 + Haskell `Paths_*`/hspec、Go 接收者 ⇒
+MemberApi/MemberDispatch、`ce:allow(unmentioned)`）、`selfref.rs`（tree-sitter 区域抽取，行注释节点含尾换行故末行 = `end.row−1`
+——首稿 split 案由此抓出；文件按索引侧同法 lossy 解码，杂字节不再清空自文件例外区与 allow 声明——对抗审查抓出）；`wire_of(root, idx, db, Advisory::{No,Yes})` 独家参数化（`ce deadcode`/GUI/MCP 走 Yes，`erase`/
+`join`/`score`/`structure`/canvas 走 No 各带 why），`request_body` 零行为提取为 `pub fn`（K6 三腿共用，`graph_export_surface.rs`
+手抄体删除；spec 写 `pub(crate)`，集成测试够不着，**勘误 ⑩** 记为 `pub`），`consume` 第四参名表 → `Report.unmentioned:
+Option<UnmentionedFace{Rows,Dropped}>`（K38 两腿各自具名拒绝：第一等式按封版后勘误 ⑨ 改「核出行 (node,vis,conv) 键集 ⊆
+生产者名表键集」= 查表即腿、第二腿值侧非空；对抗审查抓出首稿节点集 ensure 为恒真死码，已删；回复既非 degraded 又无
+`exportUnmentioned` ⇒ 具名拒绝——前 6.2.0 核合法偏斜不得读作「已问且干净」）；`ce.deadcode-report` **0.2.0→0.3.0** 加性两键
+`unmentioned`（行 `{name,symbol,line,code,why}`）/`unmentioned_dropped`，只在 Yes 路在场（K43）。it 腿：K6 双路 + K16
+(a)(b)(c1 全提及树空表 + c2 mounts 全节点)、K30 code 半（真核 14 行：六格矩阵 + 两碰撞格 + 再导出 + Go 两形 + TS 星 + cabal
+两事实）、K43、K46 `UNMENTIONED_SOFT_CAP`↔`unmentionedCap` 源对源一数、K31 分段器直接表（`PyProject`/`HTTPServer`/`RULES`）+
+e2e `PyProject`↔`pyproject` 折叠得救。**封版后勘误 ⑨**：K36「`exportVisBit` ∉ `exemptCategories`」字面不可满足（vis 字与
+conv 字异域），落码为「豁免只读 conv、vis 永不豁免」+ `11 ∉ exemptCategories`；K38 第一等式在核按掩码/豁免筛行后不可能相等，
+落码为键集查表。对抗审查 Workflow（6 镜头 23 条 → 14 确认〔去重 8 缺陷〕/ 9 驳回 / 0 存疑）全修：cap 注释改封版口径、K47 补腿、
+selfref lossy、K38 恒真 ensure 删除+两腿拆分+前 6.2.0 核拒绝、golden 20 补 code 0 行、ironRule/codeOrder 补格、分段器两腿、
+`MENTION_REV` 台账补分段器、`*.test.*` 任一出现位命中；E01 拆分：`wire_of`→`advisory::tables`、`Graph.hs result`→
+`advisoryKeys`/`liveness`、K30 code 半独立模块。**渲染面未动**（控制台/GUI/MCP 下钻 = 片 (7)），K23 四语料 + K45 性能腿 +
+方法学册 = 片 (8)。
 
 **片 (5) 无默认档位变更**。`mounts` 表生产者落地（`cli/src/graph/mounts.rs`：每节点 `[privateMounts, totalMounts, bits]`，
 全节点无条件一行；private/total 由 `mod_decl` 边 join 声明 `mod` 单元的存储可见性 bit 0；bits bit 0 = 再导出目标 = Rust

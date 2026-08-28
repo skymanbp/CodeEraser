@@ -92,7 +92,12 @@ pub fn run(
     // measured once, the graph wire from that same index — the "ONE
     // walk" the module doc promises, structural now.
     let (found, idx, db_path) = crate::dedup::snapshot(root, db)?;
-    let w = crate::graph::deadcode::wire_of(root, &idx, &db_path)?;
+    let w = crate::graph::deadcode::wire_of(
+        root,
+        &idx,
+        &db_path,
+        crate::graph::deadcode::Advisory::No,
+    )?;
     drop(idx);
     let seam_facts = if split {
         Some(super::seams::seam_facts(

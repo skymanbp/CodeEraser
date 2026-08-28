@@ -16,7 +16,7 @@ exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and file
 `total_lines <= soft` are skipped [seams.rs:51-56](../../../cli/src/structure/seams.rs#L51). The
 `soft` passed in is the *committed* line — `softLine` from `ce-baseline.json`, falling back
 to the *global* `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:157-168](../../../cli/src/structure/judge.rs#L157) — so wherever a baseline is
+[judge.rs:162-173](../../../cli/src/structure/judge.rs#L162) — so wherever a baseline is
 committed the advisory opens the zone at exactly the line the hook uses; without one they part for
 a classed file, whose hook reads its class's warn line (plan v2.13 ① P4) while the advisory stays
 class-blind.
@@ -87,7 +87,7 @@ tree-wide, off the committed soft line, the global `file_lines_fail` and — sin
 then: only 12 and 13 rode, so a repo declaring `size_penalty_max` got the declared curve in its
 score and the core's built-in `P_max = 10` in its advisory, with both halves internally
 consistent and nothing anywhere disagreeing out loud
-([judge.rs:290-297](../../../cli/src/structure/judge.rs#L290),
+([judge.rs:295-302](../../../cli/src/structure/judge.rs#L295),
 [Cost.hs:110-119](../../../core/app/CE/Structure/Cost.hs#L110),
 counterfactual at [structure_knobs.rs:65-76](../../../cli/tests/it/structure_knobs.rs#L65)):
 
@@ -210,9 +210,9 @@ what lets the Rust side write the machine-generated *why*
 attached**, long-and-splittable gets a cut line
 [size-advisory.md:53-55](../size-advisory.md#L53). Relabelling back to names
 happens only in Rust, with every dense id range-checked before it is used as a subscript
-[judge.rs:173-199](../../../cli/src/structure/judge.rs#L173); candidates surface as
+[judge.rs:178-204](../../../cli/src/structure/judge.rs#L178); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
-end line [judge.rs:183-191](../../../cli/src/structure/judge.rs#L183).
+end line [judge.rs:188-196](../../../cli/src/structure/judge.rs#L188).
 
 ### Input validation
 

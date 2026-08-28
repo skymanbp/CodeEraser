@@ -1,22 +1,26 @@
-//! The export surface from the tree to the wire (plan v2.14, proto
-//! 4.1.0): a declaration's `pub` becomes a `symbols` row against the
-//! graph's dense node identity, and nothing else about it travels.
+//! The export surface and the advisory tables from the tree to the
+//! wire (plan v2.14 proto 4.1.0; plan v2.17 L round piece (6), proto
+//! 6.2.0): a declaration's `pub` becomes a `symbols` row against the
+//! graph's dense node identity, and — on the advisory road alone — an
+//! unmentioned declaration becomes an `unmentioned` key beside every
+//! node's `mounts` row.
 //!
-//! Two legs, and they measure different risks. The first is K6, the
-//! ADR-008 clause the whole symbol slice hangs on — a symbol NAME is
-//! a text-shaped thing and text-shaped things never cross the wire.
-//! Asserting "no path appears in the body" would only pin the paths
-//! this fixture happens to hold, so the assertion is structural: no
-//! leaf of the request is a string at all. The second is the table
-//! itself — right node, right bits, DEDUPED (two public functions in
-//! one file are not two facts about that file), and MASKED: the
-//! stored word carries scope and restriction bits since plan v2.17
-//! piece (2), and the wire shows bit 0 of it and nothing else.
+//! Three legs, three risks. K6 is the ADR-008 clause the whole symbol
+//! slice hangs on — a symbol NAME is a text-shaped thing and
+//! text-shaped things never cross the wire — asserted structurally
+//! (no string leaf anywhere in the body), on both roads, with the
+//! advisory road's two tables required non-empty so the assertion
+//! cannot pass vacuously over an absent key. K16 is the legacy
+//! contract: the `Advisory::No` body is the five-key request byte for
+//! byte, and the advisory road only ADDS keys — including the empty
+//! half, where a tree whose every declaration is mentioned sends
+//! `unmentioned: []` beside a `mounts` table covering every node. The
+//! table leg is the export surface itself — right node, right bits,
+//! DEDUPED and MASKED to bit 0.
 
 use crate::common;
-use codeeraser::dedup::{Params, index::Index};
-use codeeraser::graph::deadcode;
-use serde_json::{Value, json};
+use codeeraser::graph::deadcode::{Advisory, GraphWire, request_body};
+use serde_json::Value;
 use std::path::Path;
 
 /// A crate whose files split every way the table can: one exporting
@@ -24,7 +28,8 @@ use std::path::Path;
 /// wire row no different from `pub`) plus a private item, one wholly
 /// private, one exporting a type only, and the bin root with a `pub
 /// fn` inside a private `mod` (stored bit 0 without bit 1, a wire row
-/// no different from a top-level `pub`).
+/// no different from a top-level `pub`). `shut_door` is spelled by no
+/// other file, so the advisory road always has a candidate here.
 const FIXTURE: &str = "\
 --- Cargo.toml
 [package]
@@ -72,15 +77,36 @@ fn main() {
 }
 ";
 
-/// Write the fixture document out and index it with the real walk —
-/// the same `--- <path>` document shape symbol_visibility.rs uses,
-/// for the same reason (a table of (path, source) pairs is this
-/// repo's most-rhyming token shape and its own clone gate says so).
-fn indexed(name: &str) -> std::path::PathBuf {
-    let dir = common::fixtures::tmp(name);
-    common::fixtures::write_doc(&dir, FIXTURE);
-    common::build_index(&dir);
-    dir
+/// Two files that spell each other's every declaration — the private
+/// ones included, because the veto has no bit-0 prefilter — so the
+/// advisory road has nothing to send and must say so with an empty
+/// table, never an absent key (K16 (c1)).
+const EVERYTHING_MENTIONED: &str = "\
+--- Cargo.toml
+[package]
+name = \"fixture\"
+version = \"0.1.0\"
+edition = \"2021\"
+--- src/main.rs
+mod api;
+
+fn main() {
+    api::open_door();
+}
+// bolt
+--- src/api.rs
+//! main api
+pub fn open_door() {}
+
+fn bolt() {}
+";
+
+/// The fixture document indexed by the real walk — the same
+/// `--- <path>` document shape symbol_visibility.rs uses, for the same
+/// reason (a table of (path, source) pairs is this repo's most-rhyming
+/// token shape and its own clone gate says so).
+fn indexed(name: &str, doc: &str) -> std::path::PathBuf {
+    common::indexed_doc(name, doc)
 }
 
 /// Every string leaf under `v`, keys excluded — an object's KEYS are
@@ -95,40 +121,99 @@ fn string_leaves(v: &Value, out: &mut Vec<String>) {
     }
 }
 
-fn wire(dir: &Path) -> deadcode::GraphWire {
-    let db = dir.join(".ce/index.db");
-    let idx = Index::open(&db, Params::default()).expect("open index");
-    deadcode::wire_of(dir, &idx, &db).expect("graph wire")
+fn wire(dir: &Path, advisory: Advisory) -> GraphWire {
+    common::graph_wire(dir, advisory).1
 }
 
-/// K6: the request body carries integers and nothing else. Built the
-/// way `judge` builds it, so a key added there without thinking lands
-/// in this assertion rather than in a release.
+fn keys(body: &Value) -> Vec<String> {
+    body.as_object()
+        .expect("request object")
+        .keys()
+        .cloned()
+        .collect()
+}
+
+/// K6: the request body carries integers and nothing else — on the
+/// legacy road and on the advisory road, whose two tables must be
+/// present and non-empty for the leaf assertion to mean anything.
 #[test]
 fn no_name_of_any_kind_reaches_the_graph_request() {
-    let w = wire(&indexed("export-surface-k6"));
-    let body = json!({
-        "nodes": w.rows,
-        "edges": w.edges.iter().collect::<Vec<_>>(),
-        "pos": Vec::<i64>::new(),
-        "unres": w.unres,
-        "symbols": w.symbols.iter().collect::<Vec<_>>(),
-    });
-    let mut found = Vec::new();
-    string_leaves(&body, &mut found);
-    assert!(
-        found.is_empty(),
-        "text crossed the wire (ADR-008 §5.9.2): {found:?}"
+    let dir = indexed("export-surface-k6", FIXTURE);
+    for advisory in [Advisory::No, Advisory::Yes] {
+        let w = wire(&dir, advisory);
+        let body = request_body(&w, &[]);
+        let mut found = Vec::new();
+        string_leaves(&body, &mut found);
+        assert!(
+            found.is_empty(),
+            "text crossed the wire (ADR-008 §5.9.2) under {advisory:?}: {found:?}"
+        );
+        assert!(!w.symbols.is_empty(), "the fixture must exercise the table");
+        if advisory == Advisory::Yes {
+            assert!(!body["unmentioned"].as_array().expect("table").is_empty());
+            assert!(!body["mounts"].as_array().expect("table").is_empty());
+            let names = w.unmentioned.as_ref().expect("names ride beside the keys");
+            assert!(
+                names.values().flatten().any(|n| n.symbol == "shut_door"),
+                "the candidate the fixture guarantees: {names:?}"
+            );
+        }
+    }
+}
+
+/// K16: the legacy body is the five keys and nothing else; the
+/// advisory road adds exactly two and leaves those five byte for byte
+/// (serde_json's Map is ordered, so removing the two keys from the
+/// advisory body must give the legacy body back).
+#[test]
+fn the_legacy_request_is_untouched_by_the_advisory_road() {
+    let dir = indexed("export-surface-k16", FIXTURE);
+    let legacy = request_body(&wire(&dir, Advisory::No), &[]);
+    assert_eq!(keys(&legacy), ["edges", "nodes", "pos", "symbols", "unres"]);
+    let mut advised = request_body(&wire(&dir, Advisory::Yes), &[]);
+    assert_eq!(
+        keys(&advised),
+        [
+            "edges",
+            "mounts",
+            "nodes",
+            "pos",
+            "symbols",
+            "unmentioned",
+            "unres"
+        ]
     );
-    assert!(!w.symbols.is_empty(), "the fixture must exercise the table");
+    let obj = advised.as_object_mut().expect("object");
+    obj.remove("mounts");
+    obj.remove("unmentioned");
+    assert_eq!(
+        advised.to_string(),
+        legacy.to_string(),
+        "five keys, same bytes"
+    );
+}
+
+/// K16 (c): a tree with nothing unmentioned sends the empty table —
+/// the key is present and `[]` — beside a mounts table with one row
+/// per node, never fewer.
+#[test]
+fn an_all_mentioned_tree_sends_an_empty_unmentioned_table_and_full_mounts() {
+    let dir = indexed("export-surface-empty", EVERYTHING_MENTIONED);
+    let w = wire(&dir, Advisory::Yes);
+    let body = request_body(&w, &[]);
+    assert_eq!(body["unmentioned"], serde_json::json!([]), "{body}");
+    assert_eq!(
+        body["mounts"].as_array().expect("mounts").len(),
+        body["nodes"].as_array().expect("nodes").len()
+    );
 }
 
 /// The table itself: one row per (file, MASKED visibility) the tree
 /// actually holds, addressed by node index.
 #[test]
 fn the_symbols_table_names_files_by_index_and_dedupes_them() {
-    let dir = indexed("export-surface-table");
-    let w = wire(&dir);
+    let dir = indexed("export-surface-table", FIXTURE);
+    let w = wire(&dir, Advisory::No);
     let at = |path: &str| {
         w.nodes
             .iter()
