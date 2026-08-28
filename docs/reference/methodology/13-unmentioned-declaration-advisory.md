@@ -23,25 +23,27 @@ The corpus that may spell a name is not the scan's file set: the scan's exclusio
 "what is measured", the veto needs "what could reference a name", so U is a walk of its
 own with every parameter frozen as a `MENTION_REV` input
 ([walk.rs:1-40](../../../cli/src/mention/walk.rs#L1), [mod.rs:60-78](../../../cli/src/mention/mod.rs#L60)):
-hidden files enter, `.git`/`.ce` are cut by name, a nested repository is cut whole,
+hidden files enter, `.git`/`.ce` are cut by name, a nested repository is cut whole (a path
+the root's `.gitmodules` declares is not nested — the suite rides at `cli/tests` that way since
+plan v2.18, and the declaration is tracked content),
 `.gitignore` and `.ceignore` are honoured and nothing else — not the walker's `.ignore`,
 not global or parent ignore files, and `.git` is not required, so one commit yields one
-U on any machine ([walk.rs:77-90](../../../cli/src/mention/walk.rs#L77)); the cut is one published predicate,
+U on any machine ([walk.rs:82-95](../../../cli/src/mention/walk.rs#L82)); the cut is one published predicate,
 `cut`, that the walk's entry filter, the census and the formula below all read
-([walk.rs:125-152](../../../cli/src/mention/walk.rs#L125)). Directory symlinks are not
+([walk.rs:131-183](../../../cli/src/mention/walk.rs#L131)). Directory symlinks are not
 followed; a file symlink is read through when its target is a regular file inside the
 root, identity being the canonical relative path, so a link and its target enter once
-([walk.rs:152-158](../../../cli/src/mention/walk.rs#L152),
-[walk.rs:183-207](../../../cli/src/mention/walk.rs#L183)). Files over 4 MiB are skipped and
-counted ([walk.rs:52](../../../cli/src/mention/walk.rs#L52)); the exclusion table is the
+([walk.rs:183-189](../../../cli/src/mention/walk.rs#L183),
+[walk.rs:214-238](../../../cli/src/mention/walk.rs#L214)). Files over 4 MiB are skipped and
+counted ([walk.rs:57](../../../cli/src/mention/walk.rs#L57)); the exclusion table is the
 scan's secret globs plus four omni-mentioners (`*.map`, `tags`, `TAGS`, `*.po`) — files
-whose purpose is to name every symbol ([walk.rs:57](../../../cli/src/mention/walk.rs#L57),
-[walk.rs:218-231](../../../cli/src/mention/walk.rs#L218)). Generated and vendored trees are
+whose purpose is to name every symbol ([walk.rs:62](../../../cli/src/mention/walk.rs#L62),
+[walk.rs:249-262](../../../cli/src/mention/walk.rs#L249)). Generated and vendored trees are
 NOT excluded: they are in U and outside the judged domain, which is the safe side.
 
 The binary rule is git's: a UTF-16 BOM decodes, otherwise a NUL in the first 8000 bytes
 skips the file; a later NUL keeps it, decoded lossily so one stray byte cannot lose a
-file's mentions ([walk.rs:238-250](../../../cli/src/mention/walk.rs#L238)). The consequence
+file's mentions ([walk.rs:262-274](../../../cli/src/mention/walk.rs#L262)). The consequence
 is stated, not hidden: PDF-disguised `.ai` assets whose first NUL falls past byte 8000
 are in U (zod holds eight, requests one), and §8 prices what they add.
 
@@ -55,10 +57,10 @@ exclusion table, the entries no regular file backs (deleted unstaged, a link to 
 directory), the size cap and the binary rule — each computed with the walk's own
 published predicate (`cut`, `excluded`, `FILE_CAP`, `decode`), never a second reading of
 it ([mention_universe.rs:32-62](../../../cli/tests/it/mention_universe.rs#L32),
-[mention_universe.rs:97-143](../../../cli/tests/it/mention_universe.rs#L97)). Every term is witnessed once on a scratch
+[mention_universe.rs:98-144](../../../cli/tests/it/mention_universe.rs#L98)). Every term is witnessed once on a scratch
 repository where the walk's count and the formula agree
-([mention_universe.rs:185-221](../../../cli/tests/it/mention_universe.rs#L185)); the self corpus is pinned in CI
-([mention_universe.rs:171](../../../cli/tests/it/mention_universe.rs#L171)); the four external corpora are pinned by the same
+([mention_universe.rs:210-246](../../../cli/tests/it/mention_universe.rs#L210)); the self corpus is pinned in CI
+([mention_universe.rs:196](../../../cli/tests/it/mention_universe.rs#L196)); the four external corpora are pinned by the same
 formula in the `--ignored` instrument leg, whose printed line carries every term so
 `listed − Σ terms = U` closes inside it (§8).
 
@@ -226,7 +228,7 @@ advisory road failed while the canvas drew (a pre-6.2.0 core), so "no advisory" 
 judged" never look alike ([graph.js:34-69](../../../gui/ui/graph.js#L34),
 [graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:80-90](../../../gui/ui/i18n.js#L80)).
 A projection gate pins that the symbol column survives the hub's generic table
-([hub_projection.js](../../../gui/tests/hub_projection.js)).
+([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
 ### 7. Residual risks, stated
 
@@ -269,7 +271,7 @@ the pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 627 (640 − 13 early-NUL) | rust | 2981 (1241) | 927 (31) | 31.1 % | 37 / 927 = 4.0 % | 37 / 2029 |
+| self @ this commit | 633 (646 − 13 early-NUL) | rust | 2993 (1244) | 932 (31) | 31.1 % | 37 / 932 = 4.0 % | 37 / 2036 |
 | | | haskell | 1283 (294) | 295 (2) | 23.0 % | 12 / 295 = 4.1 % | 12 / 988 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
 | requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
@@ -282,7 +284,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 31 / 1241 = 2.5 %, zod typescript
+operator reads for the public surface: self rust 31 / 1244 = 2.5 %, zod typescript
 197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
 TypeScript's is spoken — is why the census is reported per language and never as one
@@ -341,7 +343,7 @@ HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet wind
 0.54 s on the self corpus ([PERF-BUDGET.md:44](../../PERF-BUDGET.md#L44)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
-scratch repository ([mention_universe.rs:185-221](../../../cli/tests/it/mention_universe.rs#L185)); the self
+scratch repository ([mention_universe.rs:210-246](../../../cli/tests/it/mention_universe.rs#L210)); the self
 pre-registered zeros; the mentions face schema `ce.mentions-report/0.2.0` with its
 `rates` key ([face.rs:15](../../../cli/src/mention/face.rs#L15)) and the face run as a
 reader would — field names, the fold channel on a fixture, the console's nine holes in
@@ -350,5 +352,5 @@ counted on a synthetic tree with a collision told apart from a reference
 ([rates.rs:125-167](../../../cli/src/mention/rates.rs#L125)); the producer's cut flag; the 0.3.0 keys absent on every
 pass-No road and the row-key order on the console and in the GUI projection
 ([deadcode_e2e.rs](../../../cli/tests/it/deadcode_e2e.rs),
-[hub_projection.js](../../../gui/tests/hub_projection.js)); and the soft cap pinned equal
+[hub_projection.js](../../../cli/tests/gui/hub_projection.js)); and the soft cap pinned equal
 source-to-source between `candidates.rs` and `Cost.hs`.

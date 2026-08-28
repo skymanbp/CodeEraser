@@ -42,6 +42,10 @@ jobs:
           # commit ancestry (design G13); a shallow clone has no
           # ancestry to check and the test refuses it loudly
           fetch-depth: 0
+          # the suite is the cli/tests submodule (skymanbp/CodeEraser-tests,
+          # plan v2.18): without it cargo has no tests and the self-score
+          # would judge a tree without them
+          submodules: true
 
       # Haskell first: the Rust test step consumes the built ce-core
       # via CE_CORE_BIN (cross-language wire goldens) — without it the
@@ -145,18 +149,18 @@ jobs:
       # carries its own non-emptiness assertion.
       - name: GUI lens invariant
         shell: bash
-        run: node gui/tests/lens_invariant.js
+        run: node cli/tests/gui/lens_invariant.js
       # the zh table had no gate while the CLI's reddens on a missing
       # OR dead key — tr() renders an absent key as the literal string
       # "undefined", silently (audit 2026-08-21)
       - name: GUI i18n gate (both-directions completeness)
-        run: node gui/tests/i18n_gate.js
+        run: node cli/tests/gui/i18n_gate.js
       # the hub keeps a report row's first five scalar columns; the
       # advisory row of ce.deadcode-report/0.3.0 has exactly five and
       # the symbol is the fourth — K44 pins that the projection keeps
       # it (the Rust half pins the key order in deadcode_e2e)
       - name: GUI hub projection (K44)
-        run: node gui/tests/hub_projection.js
+        run: node cli/tests/gui/hub_projection.js
       # the installer's Claude Code wiring is exercised only when a
       # human runs the NSIS bundle on a machine with Claude Code —
       # which CI never is, and which is how the passive lane died for
@@ -167,7 +171,7 @@ jobs:
       # repository it ships from. Full packaging stays a release-phase
       # concern (the draft build compiles the real bundle).
       - name: Installer wiring invariants
-        run: node gui/tests/installer_wiring.js
+        run: node cli/tests/gui/installer_wiring.js
 
       # Dogfood (plan §7.5): this repo must pass its own scanner
       # (exit 1 on fail-level findings), its own clone ratchet
@@ -249,6 +253,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0 # graph_provenance.rs ancestry, same as above
+          submodules: true # cli/tests, same as above
       # The GHC toolchain itself is cached: macOS images ship no
       # preinstalled 9.14.1 (ubuntu/windows do), so every run used to
       # download the tarball from downloads.haskell.org — a single
@@ -310,10 +315,10 @@ jobs:
       - name: GUI webview gates (macOS coverage)
         shell: bash
         run: |
-          node gui/tests/lens_invariant.js
-          node gui/tests/i18n_gate.js
-          node gui/tests/hub_projection.js
-          node gui/tests/installer_wiring.js
+          node cli/tests/gui/lens_invariant.js
+          node cli/tests/gui/i18n_gate.js
+          node cli/tests/gui/hub_projection.js
+          node cli/tests/gui/installer_wiring.js
       - name: Dogfood (macOS coverage — the six self-gates)
         shell: bash
         working-directory: cli

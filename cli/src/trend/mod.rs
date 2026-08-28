@@ -15,6 +15,7 @@
 
 pub mod judge;
 mod report;
+mod worktree;
 
 pub use report::{print, report_json};
 
@@ -23,6 +24,7 @@ use crate::{churn, dedup};
 use anyhow::{Context, Result};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use worktree::Worktree;
 
 /// The mainline window every face defaults to. It was a `30` literal
 /// in clap and a `10` literal in the MCP adapter, so one project
@@ -163,52 +165,6 @@ fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row
             .ok_or_else(|| anyhow::anyhow!("trend: reply echo missing scoreScale"))?,
         axes: r.axes.clone(),
     })
-}
-
-/// A detached worktree that tears itself down. The name (which also
-/// names git's worktree metadata dir) is sha+pid+SEQ-unique: two
-/// threads of one process measuring the same sha — or two test repos
-/// whose seeded commits hash identically — must not race one path,
-/// and a crash-leaked dir stays `git worktree prune`-able.
-struct Worktree {
-    root: PathBuf,
-    path: PathBuf,
-}
-
-static WT_SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
-
-impl Worktree {
-    fn add(root: &Path, sha: &str) -> Result<Self> {
-        let seq = WT_SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-        let path = std::env::temp_dir().join(format!(
-            "ce-trend-{}-{}-{seq}",
-            &sha[..12],
-            std::process::id()
-        ));
-        let p = path.to_str().context("worktree path not utf8")?;
-        churn::git(root, &["worktree", "add", "--detach", p, sha])?;
-        Ok(Self {
-            root: root.to_path_buf(),
-            path,
-        })
-    }
-}
-
-impl Drop for Worktree {
-    fn drop(&mut self) {
-        // Drop cannot propagate, but a swallowed failure left BOTH
-        // residues silently: the tree (with its .ce) in the temp dir
-        // and the .git/worktrees metadata entry accumulating in the
-        // real repo. Fall back to a plain directory remove, prune the
-        // metadata, and say one line — a leak someone can see is
-        // prune-able; a silent one just grows.
-        let named = self.path.to_string_lossy().into_owned();
-        if churn::git(&self.root, &["worktree", "remove", "--force", &named]).is_err() {
-            let _ = std::fs::remove_dir_all(&self.path);
-            let _ = churn::git(&self.root, &["worktree", "prune"]);
-            eprintln!("ce trend: worktree {named} needed a filesystem teardown");
-        }
-    }
 }
 
 /// Rows measured by the CURRENT ce + ce-core pair. A row from another

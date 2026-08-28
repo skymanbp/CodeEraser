@@ -8,7 +8,12 @@
 //!   - a NESTED repository — any directory below the root holding a
 //!     `.git` entry, file or directory — is cut whole: it belongs to
 //!     its own U, and the walker would otherwise let the outer
-//!     `.gitignore` reach into it, which git never does;
+//!     `.gitignore` reach into it, which git never does. A path the
+//!     root's `.gitmodules` declares is the one exception: a submodule
+//!     checkout owns a `.git` file too, but it is part of THIS tree by
+//!     declaration (the test suite rides at `cli/tests` that way since
+//!     plan v2.18), and the declaration is tracked content, so one
+//!     commit still yields one U with or without the checkout;
 //!   - `.gitignore` and `.ceignore` are honoured and nothing else: not
 //!     `.ignore` (the walker's own default, off here), not the global,
 //!     exclude or parent ignore files; `.git` is not required, so one
@@ -43,7 +48,7 @@ use crate::scan::walk::{SECRET_GLOBS, contained, rel_str};
 use anyhow::{Context, Result};
 use globset::{Glob, GlobSet, GlobSetBuilder};
 use ignore::{DirEntry, WalkBuilder};
-use std::collections::HashSet;
+use std::collections::{BTreeSet, HashSet};
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 
@@ -76,6 +81,7 @@ enum Admit {
 
 pub(super) fn universe(root: &Path) -> Result<Universe> {
     let mut gate = Gate::open(root)?;
+    let (home, declared) = (root.to_path_buf(), declared_submodules(root));
     let walker = WalkBuilder::new(root)
         .hidden(false)
         .ignore(false)
@@ -86,7 +92,7 @@ pub(super) fn universe(root: &Path) -> Result<Universe> {
         .require_git(false)
         .follow_links(false)
         .add_custom_ignore_filename(".ceignore")
-        .filter_entry(|e| e.depth() == 0 || !is_cut(e))
+        .filter_entry(move |e| e.depth() == 0 || !is_cut(&home, &declared, e))
         .build();
     let mut out = Universe {
         files: Vec::new(),
@@ -125,29 +131,54 @@ pub(super) fn universe(root: &Path) -> Result<Universe> {
 const CUT_NAMES: [&str; 2] = [".git", ".ce"];
 
 /// The walker's entry filter: a cut name, or a directory that is a
-/// repository of its own (a `.git` file or directory inside it). Its
-/// parents were filtered before it, so the entry alone is asked.
-fn is_cut(e: &DirEntry) -> bool {
+/// repository of its own (a `.git` file or directory inside it) and
+/// not a declared submodule. Its parents were filtered before it, so
+/// the entry alone is asked.
+fn is_cut(root: &Path, declared: &BTreeSet<String>, e: &DirEntry) -> bool {
     let name = e.file_name().to_string_lossy();
     CUT_NAMES.contains(&name.as_ref())
-        || (e.file_type().is_some_and(|t| t.is_dir()) && owns_repo(e.path()))
+        || (e.file_type().is_some_and(|t| t.is_dir())
+            && owns_repo(e.path())
+            && !declared.contains(&rel_str(root, e.path())))
 }
 
 fn owns_repo(dir: &Path) -> bool {
     dir.join(".git").exists()
 }
 
+/// The paths the root's `.gitmodules` declares — read off the tracked
+/// file, never off git, so the exemption is the commit's own fact on
+/// any machine. No file = nothing declared; a line that is not
+/// `path = …` declares nothing.
+pub fn declared_submodules(root: &Path) -> BTreeSet<String> {
+    std::fs::read_to_string(root.join(".gitmodules"))
+        .unwrap_or_default()
+        .lines()
+        .filter_map(|l| l.trim().strip_prefix("path"))
+        .filter_map(|r| r.trim_start().strip_prefix('='))
+        .map(|p| p.trim().trim_end_matches('/').replace('\\', "/"))
+        .filter(|p| !p.is_empty())
+        .collect()
+}
+
 /// The same cut read off a path: `rel` has a cut-name component, or
 /// one of its prefixes — the entry itself included, since git lists
 /// a gitlink as the bare path `sub` and a nested repository as
-/// `sub/` — is a repository of its own. Published for the census
-/// (census.rs) and the K23 formula (tests/it/mention_universe.rs),
-/// so the walk's rule has one implementation.
+/// `sub/` — is a repository of its own and not a declared submodule.
+/// Published for the census (census.rs) and the K23 formula
+/// (tests/it/mention_universe.rs), so the walk's rule has one
+/// implementation.
 pub fn cut(root: &Path, rel: &str) -> bool {
+    let declared = declared_submodules(root);
     let mut dir = root.to_path_buf();
+    let mut prefix = String::new();
     rel.split('/').filter(|s| !s.is_empty()).any(|seg| {
         dir.push(seg);
-        CUT_NAMES.contains(&seg) || owns_repo(&dir)
+        if !prefix.is_empty() {
+            prefix.push('/');
+        }
+        prefix.push_str(seg);
+        CUT_NAMES.contains(&seg) || (owns_repo(&dir) && !declared.contains(&prefix))
     })
 }
 

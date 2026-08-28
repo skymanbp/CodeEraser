@@ -9,7 +9,7 @@
 
 - 六腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 950`
   / `ce deadcode --check` / `ce docdup --check` / `ce erase --check`，加 `ce doctor`。
-- `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core）+
+- `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core；`cli/tests` submodule 已 `update --init`）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
 - 版本五处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch
   输入也对它校验）、`core/ce-core.cabal`、`plugin/.claude-plugin/

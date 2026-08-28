@@ -6,7 +6,7 @@ The eighth judgment family answers one question about a repository's history: is
 
 ### Measurement — what becomes a row
 
-The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:111](../../../cli/src/trend/mod.rs#L111)). Each uncached commit is scored in a detached temp worktree against the committed soft line rather than one re-derived per point ([mod.rs:132](../../../cli/src/trend/mod.rs#L132), the soft pin from [mod.rs:74](../../../cli/src/trend/mod.rs#L74)). Rows are cached in `.ce/index.db` stamped with the measuring toolchain ([mod.rs:72](../../../cli/src/trend/mod.rs#L72)) and reversed to oldest-first for chart order before judgment ([mod.rs:100](../../../cli/src/trend/mod.rs#L100)) — a presentation choice only; the judged view below sorts for itself. Only `[ts, score, scale]` triples cross the wire — no commit hashes, no paths ([judge.rs:57](../../../cli/src/trend/judge.rs#L57)).
+The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:113](../../../cli/src/trend/mod.rs#L113)). Each uncached commit is scored in a detached temp worktree against the committed soft line rather than one re-derived per point ([mod.rs:134](../../../cli/src/trend/mod.rs#L134), the soft pin from [mod.rs:76](../../../cli/src/trend/mod.rs#L76)). Rows are cached in `.ce/index.db` stamped with the measuring toolchain ([mod.rs:75](../../../cli/src/trend/mod.rs#L75)) and reversed to oldest-first for chart order before judgment ([mod.rs:102](../../../cli/src/trend/mod.rs#L102)) — a presentation choice only; the judged view below sorts for itself. Only `[ts, score, scale]` triples cross the wire — no commit hashes, no paths ([judge.rs:57](../../../cli/src/trend/judge.rs#L57)).
 
 ### Boundary contract
 
@@ -98,4 +98,4 @@ On the Rust side, knobs ride the wire only when `ce.toml` declares them — `[tr
 
 ### Not found in source
 
-Since trend/2 the judgment window IS bounded — `tsWindow = 512` — but the prose should not conflate it with the `4096`-row wire cap: rows past the window still cross, count, and refuse offenders; they are simply outside the judged view. The window's *default breadth* is a separate constant again: `DEFAULT_COMMITS = 30`, shared by every face ([mod.rs:28](../../../cli/src/trend/mod.rs#L28)) — before it existed the clap face carried a `30` literal and the MCP adapter a `10`.
+Since trend/2 the judgment window IS bounded — `tsWindow = 512` — but the prose should not conflate it with the `4096`-row wire cap: rows past the window still cross, count, and refuse offenders; they are simply outside the judged view. The window's *default breadth* is a separate constant again: `DEFAULT_COMMITS = 30`, shared by every face ([mod.rs:30](../../../cli/src/trend/mod.rs#L30)) — before it existed the clap face carried a `30` literal and the MCP adapter a `10`.

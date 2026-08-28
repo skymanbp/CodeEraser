@@ -48,7 +48,7 @@ pub use rates::LangRates;
 // instruments (tests/it/mention_universe.rs, eval_mention.rs) count
 // with the walk's rules and never with a second reading of them —
 // two instruments reading one commit differently was the L7-F6 lesson
-pub use walk::{FILE_CAP, cut, decode, excluded};
+pub use walk::{FILE_CAP, cut, declared_submodules, decode, excluded};
 
 use crate::dedup::index::Index;
 use crate::dedup::tokens::fnv1a;

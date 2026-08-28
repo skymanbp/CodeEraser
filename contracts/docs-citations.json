@@ -5416,7 +5416,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:2": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 111,
+    "line": 113,
     "text": "/// Newest `n` first-parent commits of HEAD: (full sha, committer"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:20": {
@@ -5471,7 +5471,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:3": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 132,
+    "line": 134,
     "text": "/// One commit's absolute score, judged in a detached temp worktree"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:30": {
@@ -5526,7 +5526,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:4": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 74,
+    "line": 76,
     "text": "// ONE fence for the whole trajectory: the committed soft line, or"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:40": {
@@ -5556,17 +5556,17 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:45": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 28,
+    "line": 30,
     "text": "/// in clap and a `10` literal in the MCP adapter, so one project"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:5": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 72,
-    "text": "let idx = dedup::index::Index::open(&dedup::index_db_path(root, db), dedup::Params::default())?;"
+    "line": 75,
+    "text": "let stamp = toolchain_stamp(core)?;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 100,
+    "line": 102,
     "text": "rows.reverse(); // git log is newest-first; charts read oldest-first"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
@@ -6246,27 +6246,27 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:10": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 183,
+    "line": 214,
     "text": "excluded: &EXCLUDED,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:11": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 52,
+    "line": 57,
     "text": "pub const FILE_CAP: u64 = 4 * 1024 * 1024;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:12": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 57,
+    "line": 62,
     "text": "const OMNI_MENTIONERS: [&str; 4] = [\"*.map\", \"tags\", \"TAGS\", \"*.po\"];"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:13": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 218,
+    "line": 249,
     "text": "}"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:14": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 238,
+    "line": 262,
     "text": ""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:15": {
@@ -6276,17 +6276,17 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:16": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 97,
+    "line": 98,
     "text": "/// One listed entry, placed under the first rule that takes it."
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:17": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 185,
+    "line": 210,
     "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:18": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 171,
+    "line": 196,
     "text": "fn the_self_universe_is_gits_listing_minus_the_walks_own_rules() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:19": {
@@ -6407,7 +6407,7 @@
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 281,
-    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule）；具名后置束 M（评分/评测 12 + 产品小项 7）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫只变短；收口判定式 87/87 具名，台账 memory/frontier-2026-08-26 |"
+    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 7）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫只变短；收口判定式 87/87 具名，台账 memory/frontier-2026-08-26 |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
     "target": "../../../cli/src/mention/candidates.rs",
@@ -6571,7 +6571,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:7": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 77,
+    "line": 82,
     "text": "pub(super) fn universe(root: &Path) -> Result<Universe> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:70": {
@@ -6626,7 +6626,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:8": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 125,
+    "line": 131,
     "text": "const CUT_NAMES: [&str; 2] = [\".git\", \".ce\"];"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:80": {
@@ -6681,7 +6681,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:9": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 152,
+    "line": 183,
     "text": "}"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:90": {
@@ -6691,7 +6691,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:91": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 185,
+    "line": 210,
     "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:92": {

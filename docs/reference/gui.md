@@ -30,7 +30,7 @@ Two consequences worth naming:
   `ce.*-report` schema ids; report JSON is never translated
   (`cli/src/i18n.rs` charter), so the language toggle swaps this
   face's own word tables (`gui/ui/i18n.js`, en/zh key-for-key, gated
-  by `gui/tests/i18n_gate.js`) and never touches the data.
+  by `cli/tests/gui/i18n_gate.js`) and never touches the data.
 
 ## The nine screens
 

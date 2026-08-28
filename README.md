@@ -204,5 +204,10 @@ The boundary is concrete: Rust emits measured facts; Haskell returns the decisio
 Apache-2.0 — see [LICENSE](LICENSE). Third-party inventory: [NOTICE](NOTICE)
 (regenerated and gated byte-exact in CI by `cli/tests/it/notice_gate.rs`).
 
+The test suite lives in [skymanbp/CodeEraser-tests](https://github.com/skymanbp/CodeEraser-tests),
+mounted here as the `cli/tests` submodule — clone with `--recurse-submodules`
+(or `git submodule update --init`) before `cargo test`; the self-score keeps
+counting every file in it.
+
 "CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the
 license covers the code, not the name.

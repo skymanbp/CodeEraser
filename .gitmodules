@@ -1,0 +1,3 @@
+[submodule "cli/tests"]
+	path = cli/tests
+	url = https://github.com/skymanbp/CodeEraser-tests.git

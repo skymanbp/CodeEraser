@@ -4,7 +4,7 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
-## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽；步 #9 自仓可见性候选 38 行逐条处置，零 wire；步 #10 减法批 7 条 + 3 缺陷落码，dedup 预算 185→182 具名下调，零 wire）
+## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽；步 #9 自仓可见性候选 38 行逐条处置，零 wire；步 #10 减法批 7 条 + 3 缺陷落码，dedup 预算 185→182 具名下调，零 wire；步 #11 测试子仓 CodeEraser-tests submodule 挂 `cli/tests`，walk/trend/U 公式三处 submodule 语义，零 wire）
 
 **片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
 全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
@@ -89,6 +89,22 @@ code 1 `total > 0` 空真线、碰撞得救率分母改 unmentioned〔§0 条款
 `candidates_tests.rs` +35、`site/how` +33、`i18n.js` +27、`site/zh/how` +27、`walk.rs` +17、`advisory.rs` +15、`store.rs` +15、
 PERF-BUDGET +13、`zh_surface.rs` +12；新入表 7（`rates.rs`、`eval_mention.rs`、`eval_support/mention.rs`、`mention_universe.rs`、
 `mentions_face.rs`、册 13、`hub_projection.js`）；`ce dedup` 185 恒（行集对片 (4) 零差）、`ce scan` 0 fail、`ce check` 952。
+
+**步 #11 测试子仓：cli/tests + gui/tests 迁 public 子仓 skymanbp/CodeEraser-tests，主仓以 submodule 挂回 `cli/tests`，零 wire、无默认档位变更**
+（2026-08-28，ccm 步 #11；用户裁「测试不推远端／改 Haskell」经量化否决后立公开子仓）。历史用 `git filter-repo` 抽出（`--path cli/tests
+--path gui/tests --path-rename cli/tests/: --path-rename gui/tests/:gui/`，230 提交、135 文件，只改路径不改内容），子仓根 = 原 cli/tests，
+`gui/` = 原 gui/tests 四节点门（主仓路径 `cli/tests/gui/*.js`，脚本 root 由两级改三级上溯）。**分数继续含测试**（用户裁）由三处 submodule 语义保证：
+① mention walk 的「嵌套仓整体切出」学 `.gitmodules`——[walk.rs `declared_submodules`](cli/src/mention/walk.rs) 读**被跟踪的**声明文件，声明的
+路径是本树的（其 `.git` 文件不再当外来仓），「一提交一 U」在有无 checkout 时同样成立；`cut()` 同律，K23 公式 `mention_universe.rs` 改为**每仓各问
+git 两次**（根 + 每个已就位的声明 submodule，子仓列表加前缀、超仓的裸 gitlink 行跳过），自仓 U 627→633 = 原 627 + `.gitmodules` + 子仓 README/
+LICENSE/.gitignore + 新测试文件 `trend_submodule.rs`，`outside.nested` 0；册 13 §8 自仓行重取 rust 2993 (1244) / 932 (31) 31.1 %；② `ce trend` 的临时 worktree 把 gitlink 渲染成空目录，会让切换后每个提交少了测试而打分——
+`trend/worktree.rs`（自 mod.rs 拆出，283→239 行）按 `ls-tree -r` 的 160000 行给每个 gitlink 在超仓自己的 submodule checkout 上挂嵌套 worktree
+（`git -C <root>/<path> worktree add --detach <wt>/<path> <sha>`，离线、确定；未初始化 = 具名拒绝「not checked out」而非空树打分），Drop 先拆座再拆树；
+③ CI 两处 checkout `submodules: true`，八条 `node gui/tests/*.js` 改 `node cli/tests/gui/*.js`（release.yml 不动：矩阵只 build，crates.io `exclude = ["tests/"]`
+不动）。scan/dedup/graph 的 `ignore` 走查本就进入 submodule 目录（dedup 索引 403→404 文件 = 子仓 README.md；行集与步 #10 恒等 182）。子仓两条第一方腿：
+`mention_universe::a_declared_submodule_is_not_a_nested_repository`（声明路径及其下不切、未声明兄弟仍切、名切仍在）与 `trend_submodule` 双腿
+（seated 行 = 活 checkout 同钉软线判决、且 ≠ 挂载前一行；`deinit` 后具名拒绝）。ADR-006：四脚本文件实体换路径，基线具名重立；引文 13 标签重瞄 + 两处
+手瞄（册 10:9 trend `run`、册 13:46 walk 排除表）。子仓 README 写明「只在超仓内可跑」（44/80 白盒调库 API）。子仓 dedup 教训：两条新腿的「写文件 + git init + 首提交」三连与 fixtures/trend_rebuild 同韵（185 > 182 被门抓住）→ `common::init_and_commit` 一处、夹具复用 `seed_clone_pair`，行集回到 182 恒；夹具挂 `vendor/` 时活树同分 929（vendor 不进判决，实测）故挂 `suite/`。门：clippy 净、lib 212、it 215（3 ignored）、corelink 1/1、daemon 单跑 1/1、`ce check` **952**/1000、scan 0 fail、dedup/deadcode/docdup/erase --check 全 0、GUI 四脚本自新路径 8/8、docs_citations 重签后绿（台账 3 退 3 新 = trend stamp 钉文、册 13 walk 排除段、计划 281 行，按 HEAD 钉文逐条推）；棘轮具名重立（四脚本实体换路径、walk.rs +31、trend/worktree.rs 新）。子仓提交：a2cfe1e / 42de57e / 9550f77 于 skymanbp/CodeEraser-tests。
 
 **步 #10 减法批：勘察幸存 7 条 + 3 处真缺陷落码，零 wire、无默认档位变更**（2026-08-28，ccm 步 #10；v2.18 用户裁「rs 能否瘦身」）。勘察
 wf_9bba332a-39e 的 20 候选经 25 agent 逐条反驳后幸存 7 条，全落：**①** graph/ladder 三家私有 `relabel`（py `__init__` 降级 R3、go replace 改写
