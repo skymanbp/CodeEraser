@@ -45,7 +45,7 @@ pub fn run(root: &std::path::Path, core: &str) -> Result<Value> {
 /// with a third copy in the GUI: the dead-knob blind spot Cost.hs
 /// exists to prevent (a raised floor moved the core report and the
 /// score axis while the canvas kept counting two-node SCCs).
-pub struct FileCycles {
+struct FileCycles {
     pub files: BTreeSet<String>,
     pub count: usize,
 }
@@ -83,7 +83,7 @@ fn file_cycles(reply: &Value, w: &GraphWire) -> Result<FileCycles> {
 /// face that shows the verdict while hiding it shows the reader less
 /// than the console does. `cycle` is the core's membership bit so
 /// the GUI draws what the core reported instead of re-deriving it.
-pub fn document(
+fn document(
     w: &GraphWire,
     report: &Report,
     pos: &HashMap<String, Pos>,

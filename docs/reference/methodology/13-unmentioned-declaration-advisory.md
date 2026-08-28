@@ -13,7 +13,7 @@ the four-way verdicts: it never turns a gate red, never enters `ce erase`, and i
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
 [report.rs:53-58](../../../cli/src/graph/deadcode/report.rs#L53)). The plan calls it ADR-008
-step 3b ([DEVELOPMENT_PLAN.md:280](../../DEVELOPMENT_PLAN.md#L280)); the split follows
+step 3b ([DEVELOPMENT_PLAN.md:281](../../DEVELOPMENT_PLAN.md#L281)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
 
@@ -269,8 +269,8 @@ the pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 627 (640 − 13 early-NUL) | rust | 2927 (1249) | 950 (66) | 32.5 % | 37 / 950 = 3.9 % | 37 / 1953 |
-| | | haskell | 1284 (296) | 299 (4) | 23.3 % | 12 / 299 = 4.0 % | 12 / 985 |
+| self @ this commit | 630 (643 − 13 early-NUL) | rust | 2987 (1247) | 963 (44) | 32.2 % | 37 / 963 = 3.8 % | 37 / 2000 |
+| | | haskell | 1283 (294) | 297 (2) | 23.1 % | 12 / 297 = 4.0 % | 12 / 986 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
 | requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
 | ripgrep 3fce3b5 | 230 (237 − 7 early-NUL) | rust | 2501 (886) | 885 (47) | 35.4 % | 120 / 885 = 13.6 % | 120 / 1546 |
@@ -282,7 +282,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 66 / 1249 = 5.3 %, zod typescript
+operator reads for the public surface: self rust 44 / 1247 = 3.5 %, zod typescript
 197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
 TypeScript's is spoken — is why the census is reported per language and never as one

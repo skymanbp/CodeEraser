@@ -56,7 +56,7 @@ pub struct Report {
     /// The flat parent-linked tree (booklet §5): one row per walked
     /// directory, per-node axis codes rolled from the findings —
     /// the GUI's first-screen data face.
-    pub tree: Vec<TreeRow>,
+    pub(super) tree: Vec<TreeRow>,
     /// The split-ROI advisory (v0.6 §C): None = not armed; rows are
     /// relabelled with the paths and unit names this side kept.
     pub split: Option<SplitReport>,
@@ -69,7 +69,7 @@ pub struct SplitReport {
     pub exempt: Vec<(String, i64, i64)>,
 }
 
-pub struct TreeRow {
+pub(super) struct TreeRow {
     pub name: String,
     pub parent: usize,
     pub depth: u32,

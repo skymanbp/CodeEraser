@@ -18,7 +18,7 @@ use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 
 /// Where the committed baseline lives (betterer convention).
-pub const BASELINE_FILE: &str = "ce-baseline.json";
+const BASELINE_FILE: &str = "ce-baseline.json";
 
 pub const SCHEMA_ID: &str = "ce.baseline/1";
 
@@ -71,7 +71,7 @@ pub fn file_entity(path: &str) -> u64 {
 /// (metricCode 1): (path, key, nth) through the SAME with_nth
 /// ordering the unit caches persist — the fn identity a rename or
 /// move keeps honest.
-pub fn fn_entity(path: &str, key: &str, nth: i64) -> u64 {
+fn fn_entity(path: &str, key: &str, nth: i64) -> u64 {
     fnv1a(&[
         b"fn",
         path.as_bytes(),

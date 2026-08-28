@@ -48,7 +48,7 @@ pub fn run_hook() -> ExitCode {
 /// `doctor_line` twin that used to sit beside this one lost its last
 /// caller when that landed and was carried dead until plan v2.15 —
 /// invisible to the deadcode gate, which cannot see through `pub`.
-pub fn status_line(root: &Path) -> String {
+fn status_line(root: &Path) -> String {
     // Reported tier = what PreToolUse will actually do: the promoted
     // classes' route default (config::PROMOTED_DEFAULT) unless
     // ce.toml overrides. A config ERROR must not print

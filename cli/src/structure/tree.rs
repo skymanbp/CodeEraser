@@ -39,12 +39,12 @@ pub struct Tree {
 /// digit_led / other — dense positions on the wire; the label
 /// STRINGS never travel and had no reader anywhere (the sweep's one
 /// clean kill), so the vocabulary lives here as prose.
-pub const PATTERN_COUNT: usize = 7;
+const PATTERN_COUNT: usize = 7;
 
 /// Convention bits (S4): bit 0 = a README.* lives here, bit 1 = a
 /// recognized config basename lives here.
-pub const CONV_README: u8 = 1;
-pub const CONV_CONFIG: u8 = 2;
+const CONV_README: u8 = 1;
+const CONV_CONFIG: u8 = 2;
 
 /// Recognized config basenames — the presence FACT for the S4 axis
 /// (which directories carry their own configuration), not a policy.

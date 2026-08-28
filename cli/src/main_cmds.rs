@@ -33,7 +33,7 @@ pub fn or_cwd(root: Option<PathBuf>) -> PathBuf {
     root.unwrap_or_else(|| PathBuf::from("."))
 }
 
-pub fn findings_fmt(f: FindingsFormat) -> scan::Format {
+fn findings_fmt(f: FindingsFormat) -> scan::Format {
     match f {
         FindingsFormat::Console => scan::Format::Console,
         FindingsFormat::Json => scan::Format::Json,

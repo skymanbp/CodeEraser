@@ -21,19 +21,18 @@ pub const VERDICT_NAMES: [&str; 4] = [
 ];
 
 /// One pair's core verdict, keyed for the join rows.
-pub struct PairVerdict {
+pub(super) struct PairVerdict {
     pub verdict: &'static str,
     pub severity: i64,
     pub confidence: i64,
-    pub legs_mask: i64,
-    pub reasons: i64,
 }
 
-/// Everything the report needs from the judgment: per-pair verdicts
-/// plus the wire's own degraded note (a refused judgment reports,
+/// What the report reads from the judgment: per-pair verdicts (the
+/// reply's reasons/legs columns stay on the wire, unrendered since
+/// 2.33.0 — nothing on this face reads them) plus the degraded note (a refused judgment reports,
 /// never pretends report_only).
 pub struct Judged {
-    pub pairs: HashMap<(String, String), PairVerdict>,
+    pub(super) pairs: HashMap<(String, String), PairVerdict>,
     pub degraded: Option<String>,
 }
 
@@ -66,7 +65,7 @@ pub fn judge_pairs(
     let reply = wire::judge(core, &req)?;
     let sev: HashMap<i64, i64> = reply.join_severity.iter().map(|&[c, s]| (c, s)).collect();
     let mut pairs = HashMap::new();
-    for &[u, v, code, reasons, legs_mask, confidence] in &reply.candidates {
+    for &[u, v, code, _reasons, _legs_mask, confidence] in &reply.candidates {
         let path_of = |i: i64| -> Result<String> {
             usize::try_from(i)
                 .ok()
@@ -85,8 +84,6 @@ pub fn judge_pairs(
                 // the core's own report_only carries
                 severity: sev.get(&code).copied().unwrap_or(0),
                 confidence,
-                legs_mask,
-                reasons,
             },
         );
     }

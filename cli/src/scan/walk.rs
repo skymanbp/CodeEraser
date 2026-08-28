@@ -53,7 +53,7 @@ const BUILTIN_EXCLUDES: &[&str] = &[
 /// of every whole-tree analyzer (scan metrics, graph sites); the
 /// config rides along so callers needing thresholds do not load it
 /// twice.
-pub fn scoped_lang_files(
+fn scoped_lang_files(
     root: &Path,
 ) -> Result<
     (

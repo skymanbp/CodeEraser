@@ -89,7 +89,7 @@ pub fn sorted_rank(
 
 /// Pin every mirrored knob in a reply to its Rust copy — a drift is
 /// an error NAMING the owning module pair, never a silent score.
-pub fn pin_knobs(reply: &Value, expect: &[(&str, Value)], owners: &str) -> anyhow::Result<()> {
+fn pin_knobs(reply: &Value, expect: &[(&str, Value)], owners: &str) -> anyhow::Result<()> {
     for (key, want) in expect {
         anyhow::ensure!(
             reply["knobs"][*key] == *want,
@@ -148,7 +148,7 @@ pub fn reply_rows<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> a
 }
 
 /// The reply's score rows plus the named u64 counters, decoded once.
-pub fn scores_and_counts<R: serde::de::DeserializeOwned>(
+fn scores_and_counts<R: serde::de::DeserializeOwned>(
     reply: &Value,
     keys: &[&str],
 ) -> anyhow::Result<(Vec<R>, Vec<u64>)> {

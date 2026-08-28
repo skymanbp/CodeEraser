@@ -18,12 +18,12 @@ use std::path::Path;
 /// verdicts: which entry bits each role lands on is the core's
 /// roleBits table, where an ablation can perturb it.
 pub(super) const ROLE_ENTRY_NAMED: i64 = 1;
-pub(super) const ROLE_ENTRY_DIR: i64 = 1 << 1;
-pub(super) const ROLE_TEST: i64 = 1 << 2;
-pub(super) const ROLE_GLOB: i64 = 1 << 3;
-pub(super) const ROLE_DOC: i64 = 1 << 4;
+const ROLE_ENTRY_DIR: i64 = 1 << 1;
+const ROLE_TEST: i64 = 1 << 2;
+const ROLE_GLOB: i64 = 1 << 3;
+const ROLE_DOC: i64 = 1 << 4;
 pub(super) const ROLE_ALLOW: i64 = 1 << 5;
-pub(super) const ROLE_DECLARED: i64 = 1 << 6;
+const ROLE_DECLARED: i64 = 1 << 6;
 
 /// Role facts of one file node. Main.hs is cabal's executable
 /// main-is convention — nothing imports a main module, exactly like

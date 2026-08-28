@@ -27,6 +27,9 @@
    （如 `0.5.0`，不带 v）。版本输入与 crate 不符会在首步拒绝。
 2. 三平台并行构建 `ce` + `ce-core` + GUI 实包（NSIS/AppImage/dmg），
    九工件 + `SHA256SUMS` 共十资产上传为 **draft** Release。
+   **铁则（用户令 2026-08-28）**：任何渠道分发的二进制——Release 资产、
+   plugin manifest 所 pin 的下载物——只能来自本 workflow 的矩阵产物；
+   本地构建的二进制永不上传、永不 pin、永不作为「补位」放行。
 3. 本地抽验：下载任一平台二进制 `sha256sum -c` 对 SHA256SUMS。
 
 ## 2. 第二段：pin → tag → publish

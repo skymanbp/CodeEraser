@@ -53,7 +53,7 @@ impl Split {
 
 /// Where the veto stopped, by reason (module doc for `collision_saved`).
 #[derive(Debug, Default, PartialEq, Eq, serde::Serialize)]
-pub struct Vetoed {
+pub(super) struct Vetoed {
     /// Another file spells the name.
     pub other: usize,
     /// A Rust fold key spelled elsewhere (the second chance).
@@ -72,7 +72,7 @@ pub struct Vetoed {
 pub struct LangRates {
     pub declared: Split,
     pub unmentioned: Split,
-    pub vetoed: Vetoed,
+    pub(super) vetoed: Vetoed,
 }
 
 /// The census over the whole judged domain, keyed by the language's

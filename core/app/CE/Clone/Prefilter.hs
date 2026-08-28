@@ -13,7 +13,7 @@
 -- A pair failing `q·tsedDen ≥ tsedNum·max` for q = min(n1,n2) or
 -- q = I therefore provably cannot reach the threshold whatever TED
 -- computes — "below" is a judgment, never a guess.
-module CE.Clone.Prefilter (histo, labelInter, provablyBelow, provablyBelowH) where
+module CE.Clone.Prefilter (histo, provablyBelow, provablyBelowH) where
 
 import CE.Clone.Cost (tsedDen, tsedNum)
 import qualified Data.IntMap.Strict as IM
@@ -24,9 +24,6 @@ histo :: [Int] -> IM.IntMap Integer
 histo = IM.fromListWith (+) . map (\l -> (l, 1))
 
 -- | I = Σ_label min(c1,c2) over two label lists.
-labelInter :: [Int] -> [Int] -> Integer
-labelInter a b = interH (histo a) (histo b)
-
 interH :: IM.IntMap Integer -> IM.IntMap Integer -> Integer
 interH x y = sum (IM.elems (IM.intersectionWith min x y))
 

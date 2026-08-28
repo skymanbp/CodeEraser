@@ -129,9 +129,9 @@ pub fn arm() {
 /// caller appears. Spans nest: the inner one erases on the way out
 /// and the outer one repaints on its next tick.
 #[must_use = "a span erases the progress line when it drops"]
-pub struct Span;
+pub(crate) struct Span;
 
-pub fn span() -> Span {
+pub(crate) fn span() -> Span {
     Span
 }
 

@@ -9,7 +9,7 @@ use anyhow::{Context, Result};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
-pub const CAPABILITY: &str = "verdict/1";
+const CAPABILITY: &str = "verdict/1";
 
 /// One knob table: [code, value] rows, code-ascending (the shared
 /// wire grammar every knob family speaks).

@@ -90,7 +90,7 @@ pub struct DedupCfg {
 /// files, test conventions, doc entries) — flag bit 3 on the wire.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
-pub struct GraphCfg {
+pub(crate) struct GraphCfg {
     pub entry_globs: Vec<String>,
 }
 
@@ -132,7 +132,7 @@ pub struct ScoreCfg {
 /// review C2 lesson, not a later retrofit.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
-pub struct StructureCfg {
+pub(crate) struct StructureCfg {
     pub layout: std::collections::BTreeMap<String, u32>,
 }
 
@@ -143,7 +143,7 @@ pub struct StructureCfg {
 /// declared floor is what arms the fail bit.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
-pub struct TrendCfg {
+pub(crate) struct TrendCfg {
     pub min_points: Option<u32>,
     pub decline_floor_micro: Option<u64>,
 }
@@ -159,10 +159,10 @@ pub struct Config {
     pub exclude: Vec<String>,
     pub guard: Guard,
     pub dedup: DedupCfg,
-    pub graph: GraphCfg,
+    pub(crate) graph: GraphCfg,
     pub score: ScoreCfg,
-    pub structure: StructureCfg,
-    pub trend: TrendCfg,
+    pub(crate) structure: StructureCfg,
+    pub(crate) trend: TrendCfg,
     /// Path classes with their own size/complexity knobs (plan v2.13
     /// ①, `[[rules.class]]`); absent = one global table, wire unchanged.
     pub rules: RulesCfg,

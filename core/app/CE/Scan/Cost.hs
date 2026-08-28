@@ -8,7 +8,7 @@
 -- max-args=5, Sonar S3776 CoC=15, lizard CC=15). ce.toml is the
 -- source, these are the DEFAULTS (the 27b9bc2 pattern), and the
 -- reply's grade echo pins the Rust mirror.
-module CE.Scan.Cost (conforms, goLang, gradeTable, gradeWith, scanRowCap) where
+module CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap) where
 
 -- | Codes are frozen positions (the wire.rs edge-code discipline):
 --   0 file-lines   1 fn-lines   2 fn-params   3 cyclomatic

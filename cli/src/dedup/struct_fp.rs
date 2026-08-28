@@ -15,7 +15,7 @@ pub const STRUCT_REV: i64 = 2;
 /// Shingle width over the kind sequence. Decided, not derived
 /// (registered before any evaluation data existed — instruments
 /// publish the full cut table instead of tuning this silently).
-pub const STRUCT_SHINGLE: usize = 4;
+const STRUCT_SHINGLE: usize = 4;
 
 /// One named node of the pre-order walk: (start_line, end_line,
 /// kind code), 1-based inclusive lines — the unit spans in

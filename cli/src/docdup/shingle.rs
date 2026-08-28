@@ -53,9 +53,9 @@ pub fn shingle_set(words: &[u64]) -> Vec<u64> {
     shingle_set_k(words, DOC_SHINGLE)
 }
 
-/// The width-parameterized form — ONE throat so the instrument-side
-/// k-window measurement backing DOC_SHINGLE (spec.rs) runs the exact
-/// production shingling at k±1, never a re-implementation.
+/// The width-parameterized throat. It stays `pub` for the RETIRED
+/// k-window scout (eval_docdup_oracle, v0.5.0 — a revival per EVAL-SET.md
+/// 「再生成」 runs the exact production shingling at k±1, never a copy).
 pub fn shingle_set_k(words: &[u64], k: usize) -> Vec<u64> {
     let mut v = crate::dedup::winnow::kgram_hashes(words, k);
     v.sort_unstable();

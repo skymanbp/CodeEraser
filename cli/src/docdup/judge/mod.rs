@@ -62,7 +62,8 @@ pub fn is_dup(inter: u64, union: u64, verbatim: u64) -> bool {
 /// The whole judgment: refresh, live rows, coarse candidates, chunked
 /// docdup.requests, verdicts — rendered as the report's display pairs.
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
-    let (segs, dups, counts) = run_rows(root, db, core)?;
+    let (idx, _db_path) = crate::dedup::refreshed_index(root, db)?;
+    let (segs, dups, counts) = rows_of(root, &idx, core)?;
     let hits = dups
         .into_iter()
         .map(|(a, b, m)| crate::report::Pair {
@@ -77,15 +78,6 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
 /// The structured judgment: segment table, dup pairs as indices
 /// into it, counters.
 pub type Rows = (Vec<candidates::SegRow>, Vec<(usize, usize, Doc)>, Counts);
-
-/// The structured face of the SAME judgment: the live segment table
-/// plus the core-reported duplicate pairs as indices into it. The
-/// erase planner consumes the spans and word counts the display
-/// strings drop — one judgment, two faces, never a re-derivation.
-pub fn run_rows(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Rows> {
-    let (idx, _db_path) = crate::dedup::refreshed_index(root, db)?;
-    rows_of(root, &idx, core)
-}
 
 /// The same judgment from an index the command boundary already
 /// refreshed and opened (batch 9 P10) — the erase gather's leg.

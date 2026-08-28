@@ -4,7 +4,7 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
-## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽）
+## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽；步 #9 自仓可见性候选 38 行逐条处置，零 wire）
 
 **片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
 全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
@@ -89,6 +89,27 @@ code 1 `total > 0` 空真线、碰撞得救率分母改 unmentioned〔§0 条款
 `candidates_tests.rs` +35、`site/how` +33、`i18n.js` +27、`site/zh/how` +27、`walk.rs` +17、`advisory.rs` +15、`store.rs` +15、
 PERF-BUDGET +13、`zh_surface.rs` +12；新入表 7（`rates.rs`、`eval_mention.rs`、`eval_support/mention.rs`、`mention_universe.rs`、
 `mentions_face.rs`、册 13、`hub_projection.js`）；`ce dedup` 185 恒（行集对片 (4) 零差）、`ce scan` 0 fail、`ce check` 952。
+
+**步 #9 自仓「pub 但仅本文件用」候选逐条处置，零 wire、无默认档位变更**（2026-08-28，ccm 步 #9；O04）。K23 时估的 ~101 条是仪器前数字；
+顾问（步 #6–#8）落地后自仓实测 **38 行**（rust 36 + haskell 2；rust 出口未提及 67 / 1269），裁定流 wf_a0724240-731（9 判官 + 9 核验者，每行 grep
+全仓含 cfg(test)/it/GUI/核/契约）：**转私有 21**——health.rs `status_line`、dedup/struct_fp.rs `STRUCT_SHINGLE`、erase/apply.rs `LOG_SCHEMA`、
+visibility/py.rs `public_by_convention`、main_cmds.rs `findings_fmt`、graph/canvas.rs `FileCycles`（连带 `document` 同私有：collision blindness——
+`doctor::document` 同名遮住了它本该出的行）、deadcode/flags.rs `ROLE_ENTRY_DIR`/`ROLE_TEST`/`ROLE_GLOB`/`ROLE_DOC`/`ROLE_DECLARED`、lockstep.rs
+`pin_knobs`/`scores_and_counts`、scan/walk.rs `scoped_lang_files`、score/baseline.rs `BASELINE_FILE`/`fn_entity`、score/wire.rs `CAPABILITY`、
+structure/tree.rs `PATTERN_COUNT`/`CONV_README`/`CONV_CONFIG`、core Scan/Cost.hs `goLang` 出导出表；**pub(crate) 4**——config.rs `GraphCfg`/
+`StructureCfg`/`TrendCfg`（字段同缩，否则 `private_interfaces` 在 `-D warnings` 下红）、progress.rs `Span`+`span()`；**pub(super) 4**——unitcache.rs
+`FactRow`+`fact_rows`、join/verdicts.rs `PairVerdict`+`Judged.pairs`、structure/judge.rs `TreeRow`+`tree` 字段、mention/rates.rs `Vetoed`+`vetoed`
+字段（核验者纠正原「保留」）；**内联 1**——docdup/judge/mod.rs `run_rows` 折入 `run`；**删 1**——core Clone/Prefilter.hs `labelInter`（无读者，
+haddock 归 `interH`）；**保留具名 6**——churn `pair_texts`（1114aed 复活配方裁定）、unitcache `UnitFact`（`unit_facts` 返回类型，it 外部读者）、
+docdup `Cand`（再生成契约返回类型）、graph `FileSites`（`analyze` 返回类型）、mention/store `Tuned`（RAII 守卫已是最窄）、docdup/shingle.rs
+`shingle_set_k`（核验者纠正原「内联」：退役 k-window 探针的复活基，注释改为 pair_texts 式具名）；**转减法批 1**——structure/edges.rs `DirEdges`
+（核验者：只缩不删会把死字段 `inter/intra` 留在更窄的可见性里，随 v2.18 减法批整体退役）。编译级联即顾问的第二次判决：`PairVerdict` 缩窄后
+编译器暴露 `legs_mask`/`reasons` 自 2.33.0 起存而不读——删两字段（reply 列仍在 wire 上，`_reasons`/`_legs_mask` 具名弃用），模块注释改写。
+处置后自仓顾问 **38→13**：8 行 `restricted_unmentioned`（pub(crate)/pub(super) 仍带 VIS_EXPORTED，行改码不消行——只有去 pub 才消行，册 13 §3）
++ 5 行具名保留；rust 出口未提及 67→44 / 1247、haskell 4→2 / 294；dead 0 恒。册 13 §8 自仓行按本提交重取（U 630 = 643 − 13；rust 2987 (1247) /
+963 (44) 32.2 %、haskell 1283 (294) / 297 (2) 23.1 %；出口存活句 44 / 1247 = 3.5 %）。门：lib 211、it 全绿、core 全绿（Prefilter/Cost 导出表改）、
+`ce dedup` 185 行集零差（三块仅行号位移）、`ce scan` 0 fail。**教训**：一次「pub 仅本文件用」候选里藏着两种真相——名字被同名遮蔽（`document`）
+与从未被读的字段（`legs_mask`）——都要让编译器说话再记账，不靠顾问一家之言。
 
 **步 #8 提取面补强，无默认档位变更**（2026-08-28，ccm 步 #8；GRAPH_REV **13→14**，缓存键失配整库重建，发版说明义务归 #12）。
 八片全做不记限档。(O55/O29) `kinds::extra` 收 Go `type_spec`/`type_alias` 与 Haskell `data_type`/`newtype`/`type_synomym`/`class`/

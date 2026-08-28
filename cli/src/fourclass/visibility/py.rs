@@ -38,7 +38,7 @@ pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {
 
 /// The convention on one name: a leading underscore marks it
 /// internal, a dunder is protocol.
-pub(super) fn public_by_convention(name: &str) -> bool {
+fn public_by_convention(name: &str) -> bool {
     !name.starts_with('_') || name.starts_with("__") && name.ends_with("__")
 }
 

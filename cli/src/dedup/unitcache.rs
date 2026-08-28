@@ -140,7 +140,7 @@ pub fn unit_rows(idx: &super::index::Index) -> Result<Vec<UnitRow>> {
 /// generator's read surface (sig feeds the S4 MinHash source, hist
 /// feeds the §4.3 label-intersection prune). Inverse of
 /// sig_blob/hist_blob, one encode/decode pair in one file.
-pub struct FactRow {
+pub(super) struct FactRow {
     pub path: String,
     pub key: String,
     pub nth: i64,
@@ -150,7 +150,7 @@ pub struct FactRow {
 }
 
 /// Every cached unit's facts, deterministically ordered by identity.
-pub fn fact_rows(idx: &super::index::Index) -> Result<Vec<FactRow>> {
+pub(super) fn fact_rows(idx: &super::index::Index) -> Result<Vec<FactRow>> {
     let rows = crate::graph::load::rows(
         idx.raw(),
         "SELECT f.path, u.key, u.nth, u.nodes, u.sig, u.hist

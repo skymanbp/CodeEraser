@@ -13,7 +13,7 @@ use anyhow::{Context, Result, ensure};
 use std::path::Path;
 
 /// Bump-log: 0.1.0 = the M9 batch-3 landing shape.
-pub const LOG_SCHEMA: &str = "ce.erase-log/0.1.0";
+const LOG_SCHEMA: &str = "ce.erase-log/0.1.0";
 
 /// Preconditions + writes + audit log. Returns the applied count.
 pub(super) fn execute(root: &Path, plan: &Plan) -> Result<usize> {
