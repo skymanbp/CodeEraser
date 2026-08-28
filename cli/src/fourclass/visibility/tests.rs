@@ -24,6 +24,33 @@ pub(super) fn check(lang: Lang, case: &str) {
     crate::testutil::check_word_case(lang, case, fns, bit_of);
 }
 
+/// The same line shape over EVERY unit the register extracts (the
+/// named type forms beside the functions), keyed as stored — `fns`
+/// sees the functions alone.
+pub(super) fn check_units(lang: Lang, case: &str) {
+    let all = |src: &str, lang: Lang| {
+        // source order: the register walks its extras off a stack
+        let mut units = units::segments(src, lang);
+        units.sort_by(|a, b| (a.start_line, &a.key).cmp(&(b.start_line, &b.key)));
+        units.into_iter().map(|u| (u.key, u.vis)).collect()
+    };
+    crate::testutil::check_word_case(lang, case, all, bit_of);
+}
+
+/// L round step 8 (O55): Go's named type forms are units, read by the
+/// same initial-capital rule as a function, and a type declared inside
+/// a function body is still keyed (a local, like Rust's) — exported by
+/// its case alone (bit 0), never by its scope (bit 1: the step-8
+/// review found the Go arm storing both on a body-local `type`).
+#[test]
+fn go_type_forms_are_units_with_their_own_word() {
+    check_units(
+        Lang::Go,
+        "package p\ntype Pub struct{}\ntype priv = Pub\nfunc F() { type inner int; type Inner int } \
+         ⇒ Pub:ES priv:- F/0:ES Inner:E inner:-",
+    );
+}
+
 fn bit_of(letter: char) -> i64 {
     match letter {
         'E' => VIS_EXPORTED,
@@ -83,6 +110,34 @@ fn python_scope_bit_reads_defs_and_class_names() {
          class Pub:\n    def method(self):\n        pass\n    def _hidden(self):\n        pass\
          \n ⇒ top:ES inner:E method:E method:ES _hidden:-",
     );
+}
+
+/// L round step 8 (O56): a literal `__all__` is the module's export
+/// list — an underscore name it lists is exported, a public name it
+/// omits is not, `+=` unions, a tuple reads like a list; a method is
+/// never a module name so the convention keeps speaking for it; a
+/// dynamic `__all__` is unreadable and the convention answers. The
+/// step-8 review's three shapes are the unreadable half's load-bearing
+/// rows: a `.extend`, a guarded `+=`, an escaped or f-string entry
+/// each build the list dynamically, and reading the literal part alone
+/// had narrowed bit 0 on a name the module exports; a docstring
+/// mention falls the same (wider) way by design.
+#[test]
+fn python_all_is_the_module_export_list_when_literal() {
+    for case in [
+        "__all__ = [\"_hid\", \"Shown\"]\ndef _hid():\n    pass\ndef omitted():\n    pass\n\
+         class Shown:\n    def m(self):\n        pass\n    def _p(self):\n        pass\n\
+         __all__ += (\"late\",)\ndef late():\n    pass ⇒ _hid:ES omitted:- m:ES _p:- late:ES",
+        "__all__ = [n for n in dir()]\ndef open():\n    pass\ndef _shut():\n    pass ⇒ open:ES _shut:-",
+        "__all__ = other.__all__\ndef open():\n    pass ⇒ open:ES",
+        "__all__ = []\n__all__.extend([\"open\"])\ndef open():\n    pass\ndef _shut():\n    pass ⇒ open:ES _shut:-",
+        "__all__ = [\"base\"]\nif X:\n    __all__ += [\"cond\"]\ndef base():\n    pass\ndef cond():\n    pass ⇒ base:ES cond:ES",
+        "__all__ = [\"\\x66oo\"]\ndef foo():\n    pass\ndef _bar():\n    pass ⇒ foo:ES _bar:-",
+        "__all__ = [f\"h_{S}\"]\ndef h_x():\n    pass\ndef h_y():\n    pass ⇒ h_x:ES h_y:ES",
+        "\"\"\"see __all__\"\"\"\n__all__ = [\"a\"]\ndef a():\n    pass\ndef b():\n    pass ⇒ a:ES b:ES",
+    ] {
+        check(Lang::Python, case);
+    }
 }
 
 /// K26, bit 0: the guarded climb and the two hops, leg by leg. Every

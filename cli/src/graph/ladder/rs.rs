@@ -11,12 +11,17 @@
 //! use inside `#[cfg(test)] mod tests` means super IS the enclosing
 //! file); a self:: path in an inline module or matching no child
 //! resolves to the file ITSELF (the island red condition: intra-file
-//! references come home, never dangle). R4 bare head: builtin crates
-//! and declared dependencies (registry or out-of-scope path) ⇒
-//! External; an in-scope package matching by normalized name ('-' →
-//! '_') anchors at its lib root and the remaining segments descend
-//! its tree — the audit records the definition file, not the crate
-//! façade.
+//! references come home, never dangle); a bare head declared as a
+//! module in the site's own namespace is the same local tree (uniform
+//! paths — §4 amendment, plan v2.17 L round step 8, ruling ④), read
+//! before any crate name. R4 bare head: builtin crates and declared
+//! dependencies (registry or out-of-scope path) ⇒ External; an
+//! in-scope package matching by normalized name ('-' → '_') anchors at
+//! its lib root and the remaining segments descend its tree — the
+//! audit records the definition file, not the crate façade. A crate::
+//! walk that stops at BOTH roots of a lib+bin package (the same
+//! amendment) is settled by the root whose top level holds the next
+//! segment; neither or both still refuse.
 //!
 //! R5: `#[path = "…"]` remaps answer at R1 (pre-registered, the
 //! literal answers at R1): the attribute is read off the per-sweep
@@ -72,9 +77,10 @@ fn ctx_for(scope: &Scope, from: &str) -> std::rc::Rc<RsCtx> {
 }
 
 /// R1: an explicit `#[path]` remap wins outright; otherwise one
-/// child lookup — the shared throat all tree walks use.
+/// child lookup under the convention base — the shared throat all
+/// tree walks use.
 fn mod_rung(site: &Site, roots_set: &BTreeSet<String>, scope: &Scope) -> Outcome {
-    use super::rs_tree::{Child, child};
+    use super::rs_tree::{Child, child_in};
     if let Some(target) = path_attr(scope, site.from, site.line, site.spec) {
         let base = path_base(scope, site, roots_set);
         return match roots::join_rel(&base, &target) {
@@ -82,34 +88,47 @@ fn mod_rung(site: &Site, roots_set: &BTreeSet<String>, scope: &Scope) -> Outcome
             _ => Outcome::Unresolved(Reason::OutOfScope),
         };
     }
-    match child(site.from, site.spec, roots_set, scope.files) {
+    match child_in(&conv_base(scope, site, roots_set), site.spec, scope.files) {
         Child::One(path) => Outcome::Resolved { path, rung: 1 },
         Child::Both => Outcome::Unresolved(Reason::AmbiguousPaths),
         Child::None => Outcome::Unresolved(Reason::OutOfScope),
     }
 }
 
-/// The directory a `#[path]` literal resolves against (rustc
-/// reference, both habitats): file-level = the declaring file's OWN
-/// directory — never the convention child_dir, which would land one
-/// level too deep; inside inline modules the enclosing mod names
-/// become directories under the file's child_dir (own dir for
-/// mod-rs/crate roots, dir/<stem> otherwise — the SAME rule the
-/// convention walk uses, so the two habitats share one authority).
-fn path_base(scope: &Scope, site: &Site, roots_set: &BTreeSet<String>) -> String {
-    let parsed = super::rs_tree::cached_tree(scope, site.from);
-    let mods = match parsed.as_ref() {
-        Some((text, tree)) => super::rs_tree::inline_mods(tree, text, site.line.saturating_sub(1)),
+/// The bodied `mod` names enclosing `line`, outermost first — empty
+/// at file level or when the file does not parse.
+fn inline_mods_at(scope: &Scope, from: &str, line: usize) -> Vec<String> {
+    let parsed = super::rs_tree::cached_tree(scope, from);
+    match parsed.as_ref() {
+        Some((text, tree)) => super::rs_tree::inline_mods(tree, text, line.saturating_sub(1)),
         None => Vec::new(),
-    };
-    if mods.is_empty() {
+    }
+}
+
+/// The directory a convention `mod x;` mounts under (rustc reference,
+/// both habitats): the declarer's child_dir — own dir for mod-rs and
+/// crate roots, dir/<stem> otherwise — then one directory per
+/// enclosing bodied `mod`: `mod inner { mod deep; }` in src/lib.rs
+/// loads src/inner/deep.rs. ONE authority for the `#[path]` inline
+/// base and the convention lookup — until the step-8 review's
+/// counterexample the lookup read the file-level directory alone and
+/// mounted the inline declaration one level too shallow.
+fn conv_base(scope: &Scope, site: &Site, roots_set: &BTreeSet<String>) -> String {
+    let base = super::rs_tree::child_dir(site.from, roots_set);
+    inline_mods_at(scope, site.from, site.line)
+        .iter()
+        .fold(base, |b, m| roots::join_dir(&b, m))
+}
+
+/// The directory a `#[path]` literal resolves against: file-level =
+/// the declaring file's OWN directory — never the convention
+/// child_dir, which would land one level too deep; inside inline
+/// modules the convention base itself.
+fn path_base(scope: &Scope, site: &Site, roots_set: &BTreeSet<String>) -> String {
+    if inline_mods_at(scope, site.from, site.line).is_empty() {
         return roots::parent_dir(site.from);
     }
-    let mut base = super::rs_tree::child_dir(site.from, roots_set);
-    for m in mods {
-        base = roots::join_dir(&base, &m);
-    }
-    base
+    conv_base(scope, site, roots_set)
 }
 
 /// How many inline `mod x { … }` bodies enclose the site line —

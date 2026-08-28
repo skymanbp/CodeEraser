@@ -912,7 +912,7 @@
       "sha256": "a3351c3c12a86bf5ed211533875350bc4791e9327a685f8c19ba54343e471e26",
       "sites": {
         "import": 3,
-        "import_from": 24
+        "import_from": 25
       }
     },
     {
@@ -928,7 +928,7 @@
       "path": "contracts/fixtures/crosscheck/python/src__requests__structures.py",
       "sha256": "ba9460c39078f25e6f1d2a24ac941ac6f8d2ee97197fa8c8d0c262d8a1e67a02",
       "sites": {
-        "import_from": 4
+        "import_from": 5
       }
     },
     {
@@ -937,7 +937,7 @@
       "sha256": "b879cb3f671cf1c28e8ff9b2b02151bcdb8974b4820a514cfdd1f5a038443cd2",
       "sites": {
         "import": 12,
-        "import_from": 18
+        "import_from": 19
       }
     },
     {
@@ -1177,12 +1177,12 @@
       "md/ref_link": 1,
       "md/url": 5,
       "py/import": 21,
-      "py/import_from": 47,
+      "py/import_from": 50,
       "rs/mod_decl": 102,
       "rs/use": 417,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 667
+    "total_sites": 670
   }
 }

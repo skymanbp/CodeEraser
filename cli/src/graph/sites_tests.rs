@@ -27,20 +27,31 @@ type Case = (Lang, &'static str, &'static [(&'static str, &'static str)]);
 /// E01 fn-length line.
 fn cases() -> [Case; 5] {
     [
+        // `from __future__` is an `import_from` site on the literal
+        // module name (step 8, O27)
         (
             Lang::Python,
-            "import a.b, c as d\nfrom .pkg import thing\n",
-            &[("import", "a.b"), ("import", "c"), ("import_from", ".pkg")],
+            "from __future__ import annotations\nimport a.b, c as d\nfrom .pkg import thing\n",
+            &[
+                ("import_from", "__future__"),
+                ("import", "a.b"),
+                ("import", "c"),
+                ("import_from", ".pkg"),
+            ],
         ),
+        // `import fs = require("./b")` is an `import` site off the
+        // require clause; `import X = A.B.C` names a namespace and
+        // opens none (step 8, O26)
         (
             Lang::TypeScript,
-            "import { x } from \"./util\";\nimport {\n  a,\n  b,\n} from \"./multi\";\nexport { y } from './other';\nexport const z = 1;\nexport * from './all';\nexport * as ns from './space';\n",
+            "import { x } from \"./util\";\nimport {\n  a,\n  b,\n} from \"./multi\";\nexport { y } from './other';\nexport const z = 1;\nexport * from './all';\nexport * as ns from './space';\nimport fs = require(\"./req\");\nimport X = A.B.C;\nexport import Y = A.B;\n",
             &[
                 ("import", "./util"),
                 ("import", "./multi"),
                 ("export_from", "./other"),
                 ("export_star", "./all"),
                 ("export_star", "./space"),
+                ("import", "./req"),
             ],
         ),
         (
@@ -60,13 +71,16 @@ fn cases() -> [Case; 5] {
             "package main\n\nimport (\n\t\"fmt\"\n\t\"github.com/x/y\"\n)\n",
             &[("import", "fmt"), ("import", "github.com/x/y")],
         ),
+        // a `{-# SOURCE #-}` import keeps the bare module name — the
+        // ladder answers M.hs for it (step 8, O28)
         (
             Lang::Haskell,
-            "module Main where\n\nimport CE.Alpha\nimport qualified Data.Map as M\nimport Data.List (sort)\n\nforeign import ccall \"math.h sin\" c_sin :: Double -> Double\n",
+            "module Main where\n\nimport CE.Alpha\nimport qualified Data.Map as M\nimport Data.List (sort)\nimport {-# SOURCE #-} CE.Boot (x)\n\nforeign import ccall \"math.h sin\" c_sin :: Double -> Double\n",
             &[
                 ("import", "CE.Alpha"),
                 ("import", "Data.Map"),
                 ("import", "Data.List"),
+                ("import", "CE.Boot"),
             ],
         ),
     ]

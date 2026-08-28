@@ -1340,7 +1340,7 @@
     },
     {
       "bands": {
-        "below_floor": 2,
+        "below_floor": 3,
         "l": 0,
         "m": 4,
         "s": 5
@@ -1348,8 +1348,8 @@
       "lang": "go",
       "path": "contracts/fixtures/crosscheck/go/args.go",
       "sha256": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
-      "symbols": 11,
-      "units": 11
+      "symbols": 12,
+      "units": 12
     },
     {
       "bands": {
@@ -1392,16 +1392,16 @@
     },
     {
       "bands": {
-        "below_floor": 3,
+        "below_floor": 8,
         "l": 4,
         "m": 8,
-        "s": 7
+        "s": 8
       },
       "lang": "go",
       "path": "contracts/fixtures/crosscheck/go/completions.go",
       "sha256": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-      "symbols": 22,
-      "units": 22
+      "symbols": 28,
+      "units": 28
     },
     {
       "bands": {
@@ -1868,10 +1868,10 @@
   },
   "summary": {
     "bands_by": {
-      "go/below_floor": 9,
+      "go/below_floor": 15,
       "go/l": 6,
       "go/m": 15,
-      "go/s": 22,
+      "go/s": 23,
       "md/below_floor": 0,
       "md/l": 0,
       "md/m": 0,
@@ -1891,16 +1891,16 @@
     },
     "files": 141,
     "symbols_by": {
-      "go": 52,
+      "go": 59,
       "md": 127,
       "py": 126,
       "rs": 1824,
       "ts": 26
     },
-    "total_symbols": 2155,
-    "total_units": 2028,
+    "total_symbols": 2162,
+    "total_units": 2035,
     "units_by": {
-      "go": 52,
+      "go": 59,
       "md": 0,
       "py": 126,
       "rs": 1824,

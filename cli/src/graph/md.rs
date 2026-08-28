@@ -4,21 +4,28 @@
 //! `<http…>` autolinks, images and reference definitions ARE sites,
 //! so their later exclusion from the doc graph stays ledger-visible).
 //!
-//! Fence, inline-code and HTML-comment awareness implement the 2b
-//! RED condition: a link-shaped string inside any of them must not
-//! emit a site. Inline code pairs backtick RUNS of equal length
-//! (CommonMark), not single backticks — the Opus review caught the
-//! first draft masking nothing inside ``double`` spans. Nested
-//! brackets are depth-matched, so a badge `[![alt](img)](url)` emits
-//! the link (url) AND the image (img) instead of one mislabeled
-//! site. Indented code blocks are NOT modeled (block context is
-//! list-sensitive); their rare link-shaped content stays a site and
-//! surfaces in the audit rather than silently. ONE angle-bracket
-//! pair around a destination is stripped (CommonMark); percent
-//! escapes are NOT decoded (slugify drops punctuation instead of
-//! encoding it), so those anchors degrade to file level, not a guess.
+//! Fence, indented-code, inline-code and HTML-comment awareness
+//! implement the 2b RED condition: a link-shaped string inside any of
+//! them must not emit a site. The block and byte masks live in the
+//! `#[path]` child md_mask.rs — inline code pairs backtick RUNS of
+//! equal length (CommonMark), not single backticks (the Opus review
+//! caught the first draft masking nothing inside ``double`` spans),
+//! and indented code is modeled since plan v2.17 L round step 8
+//! (O57) on the conservative side: four columns where no paragraph is
+//! open, outside a list context. Nested brackets are depth-matched,
+//! so a badge `[![alt](img)](url)` emits the link (url) AND the image
+//! (img) instead of one mislabeled site. ONE angle-bracket pair
+//! around a destination is stripped (CommonMark); percent escapes are
+//! NOT decoded here — the spec stays a verbatim substring of its line
+//! (the anti-invention rule), and the ladder decodes the path and the
+//! fragment before its lookups (ladder/md_slug.rs).
 
 use super::sites::RawSite;
+pub(crate) use mask::merge_code_spans;
+use mask::{Blocks, comment_mask};
+
+#[path = "md_mask.rs"]
+mod mask;
 
 /// The ONE answer to "is this path a markdown document" — driven by
 /// the walker's own extension table (Lang::from_path), so `.markdown`
@@ -55,39 +62,21 @@ pub fn masked_content_lines(text: &str) -> Vec<(usize, &str, Vec<bool>)> {
     rows
 }
 
-/// Fence-aware, comment-masked walk of a document's content lines,
+/// Block-aware, comment-masked walk of a document's content lines,
 /// shared with the ladder's heading and definition scans — ONE
 /// masking implementation: the ladder resolving through a definition
 /// the detector refused to see would be the drift bug.
 pub(crate) fn content_lines(text: &str) -> Vec<(usize, &str, Vec<bool>)> {
-    let mut fence: Option<char> = None;
+    let mut blocks = Blocks::default();
     let mut in_comment = false;
     let mut out = Vec::new();
     for (i, line) in text.lines().enumerate() {
-        let t = line.trim_start();
-        if !in_comment && let Some(mark) = fence_marker(t) {
-            match fence {
-                // only the SAME marker closes the fence (``` inside
-                // a ~~~ block is content, and vice versa)
-                Some(open) if open == mark => fence = None,
-                Some(_) => {}
-                None => fence = Some(mark),
-            }
-            continue;
-        }
-        if fence.is_some() {
+        if blocks.skips(line, in_comment) {
             continue;
         }
         out.push((i + 1, line, comment_mask(line, &mut in_comment)));
     }
     out
-}
-
-/// Three-or-more backticks or tildes open/close a fence.
-fn fence_marker(trimmed: &str) -> Option<char> {
-    ['`', '~']
-        .into_iter()
-        .find(|&mark| trimmed.chars().take_while(|&c| c == mark).count() >= 3)
 }
 
 /// Sites on one content line: reference definitions first (they own
@@ -116,69 +105,6 @@ fn scan_line(line: &str, lineno: usize, mut mask: Vec<bool>, out: &mut Vec<RawSi
     }
 }
 
-/// Byte mask of `<!-- … -->` spans, stateful across lines.
-fn comment_mask(line: &str, in_comment: &mut bool) -> Vec<bool> {
-    let mut mask = vec![false; line.len()];
-    let mut i = 0;
-    while i < line.len() {
-        if *in_comment {
-            let end = line[i..].find("-->").map(|p| i + p + 3);
-            let stop = end.unwrap_or(line.len());
-            mask[i..stop].fill(true);
-            if end.is_some() {
-                *in_comment = false;
-            }
-            i = stop;
-        } else {
-            match line[i..].find("<!--") {
-                Some(p) => {
-                    *in_comment = true;
-                    i += p;
-                }
-                None => break,
-            }
-        }
-    }
-    mask
-}
-
-/// Inline-code spans pair backtick RUNS of equal length (CommonMark:
-/// a run of N backticks closes only against another run of N).
-fn merge_code_spans(line: &str, mask: &mut [bool]) {
-    let runs = backtick_runs(line);
-    let mut i = 0;
-    while i < runs.len() {
-        let (start, len) = runs[i];
-        match runs[i + 1..].iter().position(|&(_, l)| l == len) {
-            Some(offset) => {
-                let (close, _) = runs[i + 1 + offset];
-                mask[start..close + len].fill(true);
-                i += offset + 2;
-            }
-            None => i += 1,
-        }
-    }
-}
-
-/// (byte start, run length) of every maximal backtick run.
-fn backtick_runs(line: &str) -> Vec<(usize, usize)> {
-    let bytes = line.as_bytes();
-    let mut runs = Vec::new();
-    let mut i = 0;
-    while i < bytes.len() {
-        if bytes[i] == b'`' {
-            let start = i;
-            while i < bytes.len() && bytes[i] == b'`' {
-                i += 1;
-            }
-            runs.push((start, i - start));
-        } else {
-            i += 1;
-        }
-    }
-    runs
-}
-
 /// `[id]: target` at line start (CommonMark link reference
 /// definition), as (label, target). The site spec is the TARGET
 /// alone — a verbatim substring of the source line (2b exit
@@ -194,8 +120,9 @@ pub(crate) fn ref_definition(line: &str) -> Option<(&str, &str)> {
     (!target.is_empty()).then_some((&inner[..close], target))
 }
 
-/// Byte index of the ']' matching the '[' at `open`, depth-aware.
-fn matching_close(bytes: &[u8], open: usize) -> Option<usize> {
+/// Byte index of the ']' matching the '[' at `open`, depth-aware —
+/// shared with the ladder's rendered-heading reader (md_slug.rs).
+pub(crate) fn matching_close(bytes: &[u8], open: usize) -> Option<usize> {
     let mut depth = 0usize;
     for (i, b) in bytes.iter().enumerate().skip(open) {
         match b {

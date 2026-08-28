@@ -258,7 +258,7 @@ Integer 化 + 两真实形状非降级回归钉。
 graph-slice\*-v1.json：self@60f73e3（**含 crosscheck 孤岛 = 设计内负对照**；
 2b-iii Opus 反审（reviews 档在 git 历史）加固后 RG3 首
 次点火换钉重冻结）、requests@8068356、ripgrep@3fce3b5、zod@912f0f5、
-cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。**GRAPH_REV 13 起（2026-08-27）**：TS 星号再导出自 `export_from` 分出 `export_star`，只有 self 切片随活门重检改签；其余四册、样本与精度册保持 rev 13 前标签（星号形仍计在 `export_from` 内），冻结对冻结，跨册站点标签不再逐字可比。范围 = 五门正典扩展
+cobra@adbc881（TS/Go 复用 SOURCES.md 已钉 commit）。**GRAPH_REV 13 起（2026-08-27）**：TS 星号再导出自 `export_from` 分出 `export_star`，只有 self 切片随活门重检改签；其余四册、样本与精度册保持 rev 13 前标签（星号形仍计在 `export_from` 内），冻结对冻结，跨册站点标签不再逐字可比。**GRAPH_REV 14 起（2026-08-28，步 #8 提取面补强）**：站点标签零新增（`from __future__` 计 `import_from`、TS `import x = require()` 计 `import`），改的是存储事实与梯级——Go/Haskell 具名类型形入 symbols、Python `__all__`/`if TYPE_CHECKING:`/下划线模块、cabal `common` `import:`、md 渲染级 slug + HTML 锚 + 缩进码块 + 百分号解码、Rust 裸头本地模块 + lib/bin 根裁定 + `<name>/main.rs` 根；自仓同树站点 3519 恒、边 2430→2675；冻结册五行改签（生成器已退役，按门报出的 `right:` 值逐行改签、摘要由行重算）——graph-slice requests `models.py`/`structures.py`/`utils.py` `import_from` 各 +1（`from __future__`，py/import_from 47→50、站点 667→670）、t3-universe `go/args.go` 11→12 与 `completions.go` 22→28（`type` 形入单元，go 52→59、单元 2028→2035）、t3-candidates `admitted_by_lang.go` 43→44 / `units_admitted` 1409（活门只约束承认数对齐宇宙 s+m+l 档；对级字段仍是 0.0.1 快照，生成器已退役不重算），其余标签不动。范围 = 五门正典扩展
 名 − memory/；档载清单 + sha256 + 逐 (lang,kind) 站点计数 + 逐类排除 + **测量
 前写死的证伪常数**（min_per_lang=15、r0_share_trigger=0.80）。CI 门：summary
 从行重导、常数/范围/语料集钉死（删档即红）、档名↔内嵌名一致、五语言联合非零

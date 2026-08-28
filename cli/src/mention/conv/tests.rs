@@ -80,6 +80,15 @@ const CASES: &[&str] = &[
     "a.py class A:\n    @staticmethod\n    def m(self):\n        pass\n    class B:\n        pass\ndef free():\n    pass ⇒ A:- m:M B:M free:-",
     "a.py @app.register\nclass R:\n    pass\nclass Q:\n    @cli.command()\n    def run(self):\n        pass ⇒ R:G Q:- run:MG",
     "a.py class A:\n    def __init__(self):\n        pass\n    def go(self):\n        pass ⇒ A:- go:M",
+    // Python — the `if TYPE_CHECKING:` consequence is ambient (bare
+    // or qualified flag), and so is an `elif TYPE_CHECKING:` arm (the
+    // step-8 review's stub); the `else` arm, the arm before it and an
+    // unrelated `if` are live code (L round step 8, user ruling
+    // 2026-08-28).
+    "a.py if TYPE_CHECKING:\n    class Only:\n        pass\n    def tc():\n        pass\nelse:\n    def live():\n        pass\n\
+     if typing.TYPE_CHECKING:\n    def qual():\n        pass\nif DEBUG:\n    def dbg():\n        pass ⇒ Only:A tc:A live:- qual:A dbg:-",
+    "a.py if sys.version_info >= (3, 12):\n    def newpath():\n        pass\nelif TYPE_CHECKING:\n    class Stub:\n        pass\n\
+     else:\n    def old():\n        pass ⇒ newpath:- Stub:A old:-",
     // Haskell — the exported name hits its own binding, with or
     // without the C entity string, and a sibling binding is
     // untouched; infix definitions (``x `f` y``, `a --> b`) yield no
@@ -91,7 +100,7 @@ const CASES: &[&str] = &[
     // plain comment or a mismatched name does nothing; a method is in
     // the domain by its receiver-stripped name.
     "a.go package main\n\n//export Add\nfunc Add() {}\n\n//go:wasmexport add\nfunc add() {}\n\n// plain\nfunc plain() {}\n\n//export Other\nfunc Mismatch() {} ⇒ Add:F add:F plain:- Mismatch:-",
-    "a.go package p\n\n//export  Two\nfunc Two() {}\n\ntype T struct{}\n\nfunc (T) n() {} ⇒ Two:F n:-",
+    "a.go package p\n\n//export  Two\nfunc Two() {}\n\ntype T struct{}\n\nfunc (T) n() {} ⇒ Two:F T:- n:-",
 ];
 
 #[test]

@@ -4,7 +4,7 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
-## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键）
+## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽）
 
 **片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
 全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
@@ -89,6 +89,57 @@ code 1 `total > 0` 空真线、碰撞得救率分母改 unmentioned〔§0 条款
 `candidates_tests.rs` +35、`site/how` +33、`i18n.js` +27、`site/zh/how` +27、`walk.rs` +17、`advisory.rs` +15、`store.rs` +15、
 PERF-BUDGET +13、`zh_surface.rs` +12；新入表 7（`rates.rs`、`eval_mention.rs`、`eval_support/mention.rs`、`mention_universe.rs`、
 `mentions_face.rs`、册 13、`hub_projection.js`）；`ce dedup` 185 恒（行集对片 (4) 零差）、`ce scan` 0 fail、`ce check` 952。
+
+**步 #8 提取面补强，无默认档位变更**（2026-08-28，ccm 步 #8；GRAPH_REV **13→14**，缓存键失配整库重建，发版说明义务归 #12）。
+八片全做不记限档。(O55/O29) `kinds::extra` 收 Go `type_spec`/`type_alias` 与 Haskell `data_type`/`newtype`/`type_synomym`/`class`/
+`type_family`/`data_family`，visibility/hs.rs 出口表项 `T(..)`/`C(m)`/`type Fam`/`pattern P` 取头名——自仓 haskell declared 1242→1284
+（exported 274→296）、unmentioned 295→299（exported 4 恒）、vetoed other 947→985；cobra go 591 (468)→613 (481) / 394 (310)→403 (313)。
+(O56 + 拍板 ⑤) 新 visibility/py.rs：字面 `__all__`（`=`/`+=` 的 list/tuple 并集，任一非字面 ⇒ 约定）**收窄** bit 0 至所列名——Haskell
+出口表先例，与下划线约定同为收窄；读图工作流读者曾主张只放宽以保 erase reason 6，按 §4 原则句「导出机制命名本声明」取收窄并具名差分：
+requests exported 645→644 = `__init__.py:60 check_compatibility`；mounts.rs Python 臂 `py_private` 读下划线路径段（dunder 除外）；conv/py.rs
+`if TYPE_CHECKING:` 体（裸名或 `typing.` 限定、经 `consequence` 进入）⇒ `Ambient`——requests `_types.py:157` 判私有且豁免出顾问，requests
+顾问人口 16→14、unmentioned exported 432→431。(O26/O27) spec.rs `Specifier::Literal`：Python `future_import_statement` ⇒ `import_from
+"__future__"`（ladder/py.rs 具名 External 4：PEP 236 真模块而 public 名表不含），TS `import_require_clause` ⇒ `import`（`import X = A.B.C`
+书面豁免：命名空间别名，文件已由 `import * as A` 承载）；站点标签零新增，自仓站点 3519 恒。(O28) `{-# SOURCE #-}` 导入指向同名模块 `.hs`
+（boot 是同模块接口，非判决语言）：hs.rs 边界句 + sites_tests 例。(O05/O15) R6 侧门反事实两行 `searcher_lib::{searcher::Binary…}` ⇒ ok(门面,4)，
+计划书 :4 句改写。(O58) cabal_parse.rs `Region{Live,Common,Dead}` + `Walk.commons`，`import:` 经 `merge` 单喉合并 roots/exposed/other
+（common 可再 import、未知名不拉、common 内 main-is 不落、只靠 import 得根者不落 `.` 默认）；core/ce-core.cabal 无 common ⇒ 自仓差分空具名。
+(O57) 新 graph/md_mask.rs `Blocks`（围栏 + 缩进码块：四列且无开段落〔空行或围栏后〕且列表上下文外、注释内不开，保守侧具名）+ ladder/md_slug.rs
+（`render_text` 渲染级 slug：码段留内容、链接/图片取文本、内联 HTML 掉、`*` 掉、`_` 仅作定界时掉〔CommonMark 词内规则〕、反斜杠转义、尾空白
+修剪；`html_anchors` `<a name/id>`/`<h1..6 id/name>` 原样入集；`percent_decode` 路径与片段在 `#` 分裂后各自解码）；自仓 md 锚点差分空具名
+（1326 站点皆 `#Lnn` 行锚 ⇒ 文件级）。(R5 拓宽，拍板 ④，spec 勘误 ⑬) rs_use.rs `local_module`/`namespace_mod`（裸头先读站点命名空间里
+**声明**的 `mod H`：带体 ⇒ Resolved{本文件,3}，声明 ⇒ 经 mod 梯级挂载〔`#[path]` 仍胜〕再 descend rung 3；盘上有文件无声明不算模块）+
+`crate_walk`（lib+bin 两根终端由顶层定义/导入〔含私有 use〕首个未消费段的根裁定，`rs_reexport::owns`；皆有/皆无仍 `AmbiguousRoot`）+
+rs_tree `walk_hits`/`settle`/`mod_named`；**cargo.rs `auto_targets` 补 Cargo 自动发现第二形 `tests|examples|benches|src/bin/<name>/main.rs`**——
+差分抓出：无此项时 `tests/it/*.rs` 的覆盖根落到两兄弟根二进制，裁定把恰好也 `#[path]` 挂 `common` 的 `daemon_conn_deadline.rs` 记成 78 条假边，
+建模缺口不得变成错文件，先修根再裁。自仓同树差分（HEAD a033ce2 工作树，新旧二进制）：边 2430→2675（rung 1 419→507、rung 2 239→350、
+rung 3 219→260、`via_reexport=1` 0→5：`crate::config::ClassCfg`/`RulesCfg`→config/rules.rs、`crate::graph::deadcode::UnmentionedFace`→
+deadcode/advisory.rs、`crate::mention::UNMENTIONED_SOFT_CAP`→candidates.rs、`super::LangRates`→rates.rs）；deadcode `unresolved_sites`
+1089→844、`kept_edges` 1311→1488、dead 0→0、顾问行 37→37；ripgrep 顾问 41 恒（7 行转 `reexported_unmentioned`）、zod 197 恒，四语料
+① 预登记零全立，外部顾问总 258→257（cobra 4→5 = `doc/man_docs.go:84 GenManTreeOptions` 类型形入域）。测试 lib 210、it 全绿；
+`ce dedup` 185 恒（三处新克隆结构消除：cabal_tests 逐 stanza 串、md_tests spec 列、spec.rs `FUTURE_IMPORT`/`IMPORT_REQUIRE` 具名常量）。
+冻结册五行改签（生成器已退役，按门报出的 `right:` 值逐行改签、摘要由行重算，docs/EVAL-SET.md 同句）：graph-slice requests `models.py`/
+`structures.py`/`utils.py` `import_from` 各 +1（`from __future__`，py/import_from 47→50、站点 667→670），t3-universe `go/args.go` 11→12 与
+`completions.go` 22→28（`type` 形入单元，go 52→59、单元 2028→2035），t3-candidates `admitted_by_lang.go` 43→44（对级字段仍是快照）。`ce scan` 唯一 FAIL `graph_ladder.rs rust_cases` 89 行按梯级拆三
+（mount / walk / member）归 0 fail。ADR-006 棘轮具名重立（审查修法落定后 `CE_ACCEPT_BASELINE=1 ce baseline .`，`ce check` 951）：超 +10 者 22 文件——
+graph_ladder.rs 507→662、rs_use.rs 192→320、cabal_parse.rs 178→262、rs_reexport.rs 220→294、tests_hs.rs 159→227、visibility/hs.rs 92→153、
+visibility/tests.rs 165→220、ladder/md_tests.rs 31→77、cabal_tests.rs 144→187、spec.rs 115→146、conv/py.rs 56→87、mounts_tests.rs 146→176、
+rs_tree.rs 262→291、kinds.rs 51→77、md_tests.rs 120→140、rs.rs 151→170、mounts.rs 288→302、sites_tests.rs 115→129、cargo.rs 125→137、
+方法学册 06 377→388、册 13 341→354、CHANGELOG 253→304；新文件 visibility/py.rs 119 / md_mask.rs 179 / md_slug.rs 276。
+对抗审查 Workflow `wf_f9654713-030`（6 lens finders → 9 refuters）23 条：9 条经反驳者确认全修，14 条因 cap 未核者逐条处置（13 修 + 1 由生产者
+证实为真后修，零推翻）。修法：(1) rs.rs `conv_base` 单一权威——`mod inner { mod deep; }` 的约定查找与 `#[path]` 同读 child_dir + 内联 mod
+名（此前约定查找只读文件级目录，内联声明挂浅一层成错文件；PATH_TREE 加 conv/shallow 两行 + use 行）；(2) rs_use.rs 全局 `::foo::Bar` 形
+不再被同名本地模块劫持（`use_path` 带 global 位，rs_reexport `split` 保留空首段供 hop 走）、BUILTIN 名改在本地模块**之后**读（勘误 ⑬ ①
+字面：`test`/`alloc` 不在 extern prelude，`mod test; use test::Helper` 是模块）、R5 hop 站点取 `pub use` 自身行号而非 1（文件开头的 bodied
+mod 曾夺走 hop 命名空间；REEXPORT_TREE 门面加 shadow 块）；(3) rs_reexport `pubuse_hash` 折进 `owns` 所读的两项事实（私有 use 绑定名 +
+顶层项名），battery 翻两例加一例，册 06 :90 句改写；(4) visibility/py.rs `__all__` 顶层扫描未消费的任一拼写（`.extend`/守卫 `+=`/
+docstring 提及）⇒ 不可读走约定，f-string/转义项 ⇒ 不可读（5 例入表）；(5) md_mask 围栏关闭须同标记且 run ≥ 开栏长、`Blocks` 初态无开段落
+（文首缩进码块）；md_slug `html_anchors` 先并码段掩码、`_` 只在**成对**时掉（`_private_helper()`/`foo_` 保留）、`#\t` 标题、标题内
+`<!-- -->` 掉；(6) hs.rs `head` 首 `)` 截断（`(:^:)(..)` 读作类型算子）+ 关联族随类导出（`C(..)`/`C(Fam)`/`C(type DF)`）、kinds.rs
+`REDECLARING` 排除 `data_instance` 包裹的 `data_type`/`newtype`（每个实例曾多铸一行家族名）；(7) Go 函数体内 `type` 只留 bit 0；cabal 续行块内
+列 0 注释不再截断；conv/py.rs `elif TYPE_CHECKING:` 同 Ambient；册 13 §5 bit 1 补 Python 下划线路径臂、两处旧数字改 66/1249 = 5.3 % 与
+313/481 = 65.1 %。修后复测：四语料顾问行 5/14/41/197、边、未解析、census 逐行零差；自仓顾问 38 恒（一行仅行号位移）、dead 0、haskell census
+恒、rust declared 2972→2988 = 新增测试/函数；lib 211 + it 212（3 ignored）。
 
 **片 (5) 无默认档位变更**。`mounts` 表生产者落地（`cli/src/graph/mounts.rs`：每节点 `[privateMounts, totalMounts, bits]`，
 全节点无条件一行；private/total 由 `mod_decl` 边 join 声明 `mod` 单元的存储可见性 bit 0；bits bit 0 = 再导出目标 = Rust

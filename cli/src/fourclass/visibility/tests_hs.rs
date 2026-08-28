@@ -46,6 +46,74 @@ fn only_top_level_bindings_are_exported() {
     );
 }
 
+/// L round step 8 (O55/O29): the six named type forms are units, and
+/// the export list names them by their head — `T(..)` and `C(m)` name
+/// the type and the class, a bare `S` the synonym, `type Fam` under
+/// ExplicitNamespaces the family; the class method `m` inside `C(m)`
+/// names no top-level binding, and a form the list omits is not
+/// exported. Under a list-less header every top-level form is.
+#[test]
+fn type_forms_are_units_named_by_the_export_list_head() {
+    const BODY: &str = "data T = A\nnewtype N = N Int\ntype S = Int\nclass C a where\n  m :: a -> Int\n\
+                        type family Fam a\ndata family DF a\nm' :: Int\nm' = 1 ⇒ ";
+    for (header, want) in [
+        (
+            "module M (T(..), C(m), S, type Fam) where\n",
+            "T:ES N:- S:ES C:ES Fam:ES DF:- m'/0:-",
+        ),
+        (
+            "module M where\n",
+            "T:ES N:ES S:ES C:ES Fam:ES DF:ES m'/0:ES",
+        ),
+    ] {
+        super::tests::check_units(Lang::Haskell, &format!("{header}{BODY}{want}"));
+    }
+}
+
+/// The step-8 review's three export shapes: a type operator's
+/// `(:^:)(..)` / `type (:+:)(..)` entry names the operator (the member
+/// list used to stay attached and the operator read private) as the
+/// bare `((:%:))` always did; an associated family is exported with
+/// its class — through `C(..)` or a listed `C(Fam)`, never by `C`
+/// alone; and a `data`/`newtype instance` of a family mints no unit of
+/// its own — the grammar wraps the instance's `data_type`/`newtype`
+/// node in a `data_instance`, and the register used to key each as a
+/// second and third declaration of the family (the review's
+/// duplicate-row claim, confirmed by the producer before the fix).
+#[test]
+fn type_operators_associated_families_and_instances() {
+    const CLASS: &str = "class C a where\n  type Fam a\n  data DF a\n  m :: a -> Int ⇒ ";
+    for (header, want) in [
+        ("module A (C(..)) where\n", "C:ES Fam:ES DF:ES"),
+        ("module A (C(Fam)) where\n", "C:ES Fam:ES DF:-"),
+        ("module A (C(type DF, m)) where\n", "C:ES Fam:- DF:ES"),
+        ("module A (C) where\n", "C:ES Fam:- DF:-"),
+    ] {
+        super::tests::check_units(Lang::Haskell, &format!("{header}{CLASS}{want}"));
+    }
+    for (src, want) in [
+        (
+            "module R ((:^:)(..)) where\ndata (:^:) a b = N a b ⇒ ",
+            "(:^:):ES",
+        ),
+        (
+            "module P (type (:+:)(..)) where\ndata (:+:) a b = L a | R b ⇒ ",
+            "(:+:):ES",
+        ),
+        (
+            "module B ((:%:)) where\ndata (:%:) a b = N a b ⇒ ",
+            "(:%:):ES",
+        ),
+        (
+            "module N (n) where\ndata family DF a\nnewtype instance DF Bool = DFB Bool\n\
+             data instance DF Int = DFI Int\nn :: Int\nn = 1 ⇒ ",
+            "DF:- n/0:ES",
+        ),
+    ] {
+        super::tests::check_units(Lang::Haskell, &format!("{src}{want}"));
+    }
+}
+
 /// An entry qualified by the module's own name is the local binding;
 /// one under a foreign qualifier re-exports an import and names no
 /// local binding (GHC 9.10.3 rules both).

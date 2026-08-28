@@ -120,10 +120,14 @@ fn init_prefix(root: &str, dotted: &str, files: &BTreeSet<String>) -> Option<Str
 }
 
 /// R4: stdlib table or pyproject-declared dependency ⇒ External.
+/// `__future__` is a real stdlib module (PEP 236; listed by
+/// `sys.stdlib_module_names`) that the public-names table below
+/// filters out with every other underscore name, so its site (spec.rs
+/// `Literal`) is answered here by name.
 fn stdlib_or_deps(spec: &str, scope: &Scope) -> Outcome {
     let top = spec.split('.').next().unwrap_or(spec);
     let declared = roots::pyproject(scope.root).is_some_and(|p| p.deps.iter().any(|d| d == top));
-    if declared || STDLIB.split_whitespace().any(|m| m == top) {
+    if declared || top == "__future__" || STDLIB.split_whitespace().any(|m| m == top) {
         return Outcome::External { rung: 4 };
     }
     Outcome::Unresolved(Reason::OutOfScope)

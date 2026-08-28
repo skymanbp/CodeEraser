@@ -19,14 +19,17 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:59-115](../../../cli/src/graph/spec.rs#L59)), so the site universe (the precision denominator)
+([spec.rs:88-144](../../../cli/src/graph/spec.rs#L88)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:110](../../../cli/src/graph/spec.rs#L110)). The eleven frozen site
+grammar and scans line-wise ([spec.rs:141](../../../cli/src/graph/spec.rs#L141)). The eleven frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star`
-([store.rs:123-138](../../../cli/src/graph/store.rs#L123)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:89](../../../cli/src/graph/store.rs#L89), currently `13`); `export_star` (a TS
+([store.rs:130-145](../../../cli/src/graph/store.rs#L130)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:96](../../../cli/src/graph/store.rs#L96), currently `14`); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
-reads it as a re-export target.
+reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
+__future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
+an `import` site off its require clause ([spec.rs:42](../../../cli/src/graph/spec.rs#L42),
+[spec.rs:82](../../../cli/src/graph/spec.rs#L82)); the rev paid for the stored-fact and ladder changes.
 
 ### 2. The resolution ladder
 
@@ -44,11 +47,11 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
 | TS/TSX | relative + extension order `ts, tsx, d.ts, mts, cts` ([ts.rs:23](../../../cli/src/graph/ladder/ts.rs#L23), [ts.rs:29](../../../cli/src/graph/ladder/ts.rs#L29)) | ESM `.js`→`.ts` rewrite, only if the TS twin is in scope and the JS twin is absent on disk ([ts.rs:76-84](../../../cli/src/graph/ladder/ts.rs#L76)) | nearest tsconfig `paths`, then `baseUrl` join ([ts.rs:104-118](../../../cli/src/graph/ladder/ts.rs#L104)) | workspace member by `name` + `exports` subpath ([ts.rs:151-189](../../../cli/src/graph/ladder/ts.rs#L151)) | bare specifier in deps or under `node_modules/` ⇒ External ([ts.rs:223-238](../../../cli/src/graph/ladder/ts.rs#L223)) |
-| Python | leading-dot relative; *n* dots climb *n−1* levels ([py.rs:37-48](../../../cli/src/graph/ladder/py.rs#L37)) | absolute dotted path over source roots ([py.rs:60-78](../../../cli/src/graph/ladder/py.rs#L60)) | `__init__.py` longest-prefix degradation ([py.rs:109-120](../../../cli/src/graph/ladder/py.rs#L109)) | stdlib table or pyproject dep ⇒ External ([py.rs:123-130](../../../cli/src/graph/ladder/py.rs#L123)) | — (structurally empty: the detector never opens dynamic imports, [py.rs:14-16](../../../cli/src/graph/ladder/py.rs#L14)) |
-| Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([rs.rs:76-90](../../../cli/src/graph/ladder/rs.rs#L76)) | `use crate::…` from covering crate roots ([rs_use.rs:69-73](../../../cli/src/graph/ladder/rs_use.rs#L69)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([rs_use.rs:74-88](../../../cli/src/graph/ladder/rs_use.rs#L74), [rs_use.rs:100-117](../../../cli/src/graph/ladder/rs_use.rs#L100)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([rs_use.rs:14](../../../cli/src/graph/ladder/rs_use.rs#L14), [rs_use.rs:159-192](../../../cli/src/graph/ladder/rs_use.rs#L159)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([rs_use.rs:124-151](../../../cli/src/graph/ladder/rs_use.rs#L124)) |
+| Python | leading-dot relative; *n* dots climb *n−1* levels ([py.rs:37-48](../../../cli/src/graph/ladder/py.rs#L37)) | absolute dotted path over source roots ([py.rs:60-78](../../../cli/src/graph/ladder/py.rs#L60)) | `__init__.py` longest-prefix degradation ([py.rs:109-120](../../../cli/src/graph/ladder/py.rs#L109)) | stdlib table, `__future__` by name (a real module the public-names table omits, step 8), or pyproject dep ⇒ External ([py.rs:127-135](../../../cli/src/graph/ladder/py.rs#L127)) | — (structurally empty: the detector never opens dynamic imports, [py.rs:14-16](../../../cli/src/graph/ladder/py.rs#L14)) |
+| Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([rs.rs:82-96](../../../cli/src/graph/ladder/rs.rs#L82)); crate roots include Cargo's `<name>/main.rs` auto-discovery form since step 8 ([cargo.rs:109-128](../../../cli/src/graph/cargo.rs#L109)) | `use crate::…` from covering crate roots ([rs_use.rs:80-84](../../../cli/src/graph/ladder/rs_use.rs#L80)); a lib+bin package's two root terminals are settled by the root whose top level defines or imports the next segment, neither or both still refuse ([rs_use.rs:117-143](../../../cli/src/graph/ladder/rs_use.rs#L117)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([rs_use.rs:85-99](../../../cli/src/graph/ladder/rs_use.rs#L85), [rs_use.rs:212-229](../../../cli/src/graph/ladder/rs_use.rs#L212)); a bare head DECLARED as a module in the site's own namespace is read before any crate name — uniform paths, step 8 ([rs_use.rs:155-186](../../../cli/src/graph/ladder/rs_use.rs#L155)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([rs_use.rs:18](../../../cli/src/graph/ladder/rs_use.rs#L18), [rs_use.rs:284-317](../../../cli/src/graph/ladder/rs_use.rs#L284)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([rs_use.rs:236-263](../../../cli/src/graph/ladder/rs_use.rs#L236)); a uniform-path facade `pub use source::Thing` binds too, its hop reading the facade's own `mod source;` |
 | Go | longest in-scope `go.mod` module prefix ([go.rs:44-71](../../../cli/src/graph/ladder/go.rs#L44)) | importer's module `replace` directives ([go.rs:85-110](../../../cli/src/graph/ladder/go.rs#L85)) | stdlib table, or a dotted first segment with no local match ⇒ External ([go.rs:150-156](../../../cli/src/graph/ladder/go.rs#L150)) | — | — |
-| Markdown | relative join; a directory holding in-scope files is a package ([md.rs:65-80](../../../cli/src/graph/ladder/md.rs#L65), [md.rs:101-115](../../../cli/src/graph/ladder/md.rs#L101)) | anchor validated against the target's ATX slug set ([md.rs:119-133](../../../cli/src/graph/ladder/md.rs#L119)) | reference-link definition substituted, chain rerun relabeled ([md.rs:137-160](../../../cli/src/graph/ladder/md.rs#L137)) | bare fragment = in-file section claim, taken as written ([md.rs:85-97](../../../cli/src/graph/ladder/md.rs#L85)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:51](../../../cli/src/graph/ladder/md.rs#L51), [md.rs:59-64](../../../cli/src/graph/ladder/md.rs#L59)) |
-| Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:64-80](../../../cli/src/graph/ladder/hs.rs#L64)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:140-150](../../../cli/src/graph/ladder/hs.rs#L140)) | — | — | — |
+| Markdown | relative join, the path percent-decoded after the `#` split; a directory holding in-scope files is a package ([md.rs:67-98](../../../cli/src/graph/ladder/md.rs#L67), [md.rs:118-132](../../../cli/src/graph/ladder/md.rs#L118)) | anchor, percent-decoded, validated against the target's anchor set — rendered-text ATX slugs plus raw-HTML anchor ids ([md.rs:137-152](../../../cli/src/graph/ladder/md.rs#L137), [md_slug.rs:36-51](../../../cli/src/graph/ladder/md_slug.rs#L36)) | reference-link definition substituted, chain rerun relabeled ([md.rs:156-188](../../../cli/src/graph/ladder/md.rs#L156)) | bare fragment = in-file section claim, taken as written ([md.rs:102-116](../../../cli/src/graph/ladder/md.rs#L102)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:60](../../../cli/src/graph/ladder/md.rs#L60), [md.rs:68-73](../../../cli/src/graph/ladder/md.rs#L68)) |
+| Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:68-84](../../../cli/src/graph/ladder/hs.rs#L68)) — a stanza's roots include the `common` blocks it `import:`s ([cabal_parse.rs:177-207](../../../cli/src/graph/cabal_parse.rs#L177)), and an `import {-# SOURCE #-} M` answers `M.hs` like any import ([hs.rs:24-28](../../../cli/src/graph/ladder/hs.rs#L24)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:144-154](../../../cli/src/graph/ladder/hs.rs#L144)) | — | — | — |
 
 Numeric details that are policy, not taste:
 
@@ -56,35 +59,43 @@ Numeric details that are policy, not taste:
   `config_depth`, never a guess ([roots.rs:30-31](../../../cli/src/graph/roots.rs#L30),
   [roots.rs:50-53](../../../cli/src/graph/roots.rs#L50)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
-  ([py.rs:134-141](../../../cli/src/graph/ladder/py.rs#L134)); within one root, package-before-module is
+  ([py.rs:138-145](../../../cli/src/graph/ladder/py.rs#L138)); within one root, package-before-module is
   CPython's own finder order and therefore **not** ambiguity — only cross-root disagreement is
   ([py.rs:11-13](../../../cli/src/graph/ladder/py.rs#L11), [py.rs:70-77](../../../cli/src/graph/ladder/py.rs#L70)).
 - A Go directory counts as an importable package only while it *directly* holds an in-scope
   non-`_test.go` file ([go.rs:122-140](../../../cli/src/graph/ladder/go.rs#L122)).
 - GitHub slugging: lowercase, keep alphanumerics/`_`/`-`, spaces→hyphens, everything else
-  dropped ([md.rs:278-291](../../../cli/src/graph/ladder/md.rs#L278)); duplicates take `-N` suffixes in
-  document order ([md.rs:240-244](../../../cli/src/graph/ladder/md.rs#L240)). Anything but exactly one
-  slug match degrades to a file-level edge, never invents a section
-  ([md.rs:123-133](../../../cli/src/graph/ladder/md.rs#L123)).
+  dropped ([md_slug.rs:235-246](../../../cli/src/graph/ladder/md_slug.rs#L235)), applied to the heading's
+  RENDERED text — link and image syntax collapse to their text, code and emphasis delimiters drop,
+  inline HTML drops, escapes unescape ([md_slug.rs:79-102](../../../cli/src/graph/ladder/md_slug.rs#L79));
+  duplicates take `-N` suffixes in document order ([md_slug.rs:43-48](../../../cli/src/graph/ladder/md_slug.rs#L43)).
+  Raw-HTML anchors (`<a name=…>`, `<a id=…>`, `<h1..6 id=…>`) enter the set verbatim
+  ([md_slug.rs:198-219](../../../cli/src/graph/ladder/md_slug.rs#L198)); a fragment is percent-decoded
+  before the lookup ([md_slug.rs:251-275](../../../cli/src/graph/ladder/md_slug.rs#L251)); an indented
+  code block offers no heading and no site — four columns where no paragraph is open, outside a list
+  context ([md_mask.rs:22-64](../../../cli/src/graph/md_mask.rs#L22)). Anything but exactly one
+  match degrades to a file-level edge, never invents a section
+  ([md.rs:137-152](../../../cli/src/graph/ladder/md.rs#L137)).
 - The external tables are machine-generated, never hand-typed: CPython 3.13
-  `sys.stdlib_module_names` ([py.rs:143-147](../../../cli/src/graph/ladder/py.rs#L143)), Go 1.26.4
+  `sys.stdlib_module_names` ([py.rs:147-151](../../../cli/src/graph/ladder/py.rs#L147)), Go 1.26.4
   `go list std` minus `internal/`/`vendor/` ([go.rs:158-163](../../../cli/src/graph/ladder/go.rs#L158)),
   and GHC 9.14.1's global db — **43 packages, 1371 modules**
   ([hs_boot.rs:14-15](../../../cli/src/graph/ladder/hs_boot.rs#L14)). A missing name degrades to
   `Unresolved` (precision-safe), visible in the ledger.
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
-  ([rs_use.rs:145-148](../../../cli/src/graph/ladder/rs_use.rs#L145),
+  ([rs_use.rs:265-268](../../../cli/src/graph/ladder/rs_use.rs#L265),
   [wire.rs:75-76](../../../cli/src/graph/wire.rs#L75)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the only
-target-content facts a ladder consults are the Markdown slug set and the Rust `pub use`
-surface, and each is folded into a hash that is a resolve-key input
-([md.rs:231-241](../../../cli/src/graph/ladder/md.rs#L231),
-[rs_reexport.rs:162-177](../../../cli/src/graph/ladder/rs_reexport.rs#L162)). Both hashes are pinned by
+target-content facts a ladder consults are the Markdown anchor set and the Rust top-level
+surface (pub-use bindings, every top-level `use` binding, the item names — the crate
+rung's tie-break reads the last two), and each is folded into a hash that is a resolve-key input
+([md_slug.rs:19-27](../../../cli/src/graph/ladder/md_slug.rs#L19),
+[rs_reexport.rs:210-225](../../../cli/src/graph/ladder/rs_reexport.rs#L210)). Both hashes are pinned by
 a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ([md_tests.rs:12-31](../../../cli/src/graph/ladder/md_tests.rs#L12),
-[rs_reexport.rs:189-219](../../../cli/src/graph/ladder/rs_reexport.rs#L189)).
+[rs_reexport.rs:251-281](../../../cli/src/graph/ladder/rs_reexport.rs#L251)).
 
 ### 3. Edge extraction and node identity
 
@@ -227,7 +238,7 @@ core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6. 
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
 ([targets.rs:43-70](../../../cli/src/graph/deadcode/targets.rs#L43),
-[cabal.rs:90-115](../../../cli/src/graph/cabal.rs#L90)). The legacy flags column this
+[cabal.rs:91-116](../../../cli/src/graph/cabal.rs#L91)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.
@@ -240,7 +251,7 @@ because public-ness is not a file fact ([flags.rs:1-11](../../../cli/src/graph/d
 it now reaches the core through the `symbols` export surface
 ([symwire.rs:1-27](../../../cli/src/graph/symwire.rs#L1)), so `unref_public` and `unreach_public`
 fire for the first time — including for Haskell, whose export list the visibility slice reads
-where it lives ([hs.rs:26-34](../../../cli/src/graph/ladder/hs.rs#L26)).
+where it lives ([hs.rs:30-38](../../../cli/src/graph/ladder/hs.rs#L30)).
 
 Reachability is plain forward closure from the seeds over kept arcs
 ([Build.hs:53-58](../../../core/app/CE/Graph/Build.hs#L53)):

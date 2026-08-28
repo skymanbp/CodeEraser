@@ -89,16 +89,35 @@ const TREE: &[(&str, &str)] = &[
         "Cargo.toml",
         "[package]\nname = \"rootcrate\"\n\n[dependencies]\nserde = \"1\"\nhelper-lib = { path = \"crates/helper\" }\n\n[[bin]]\nname = \"gen\"\npath = \"tools/gen.rs\"\n",
     ),
-    ("src/lib.rs", "mod util;\n"),
+    // the lib root defines Shared and imports Deep; main.rs holds
+    // neither — the crate:: tie-break's two habitats (step 8); it
+    // declares `dual` (the E0761 double) but never `nest`
+    (
+        "src/lib.rs",
+        "mod util;\nmod dual;\npub struct Shared;\npub use util::helper::Deep;\n",
+    ),
     ("src/main.rs", "fn main() {}\n"),
     ("src/util.rs", "mod helper;\n"),
-    ("src/util/helper.rs", "\n"),
+    ("src/util/helper.rs", "pub struct Deep;\n"),
     ("src/nest/mod.rs", "mod deep;\n"),
     ("src/nest/deep.rs", "\n"),
     ("src/dual.rs", "\n"),
     ("src/dual/mod.rs", "\n"),
+    // a local module sharing its name with a member crate and with a
+    // builtin (step 8 review): the bare head reads the local module
+    // first, the global `::` form never does
+    ("src/shadow.rs", "mod helper_lib;\nmod test;\n"),
+    ("src/shadow/helper_lib.rs", "\n"),
+    ("src/shadow/test.rs", "\n"),
     ("tools/gen.rs", "mod gadget;\n"),
     ("tools/gadget.rs", "\n"),
+    // the `<name>/main.rs` auto-discovery form (step 8): a root of
+    // its own, so its modules mount in ITS directory and its
+    // `crate::` walks anchor at it, not at the package's src roots
+    ("tests/it/main.rs", "mod helper;\n"),
+    ("tests/it/helper.rs", "\n"),
+    ("src/bin/tool/main.rs", "mod part;\n"),
+    ("src/bin/tool/part.rs", "\n"),
     // Rust R4: hyphenated member name (code says helper_lib), a
     // duplicate-name pair, registry dep declared in root Cargo.toml
     ("crates/helper/Cargo.toml", "[package]\nname='helper-lib'"),
@@ -184,6 +203,9 @@ fn import_cases() -> Vec<Case> {
         (py, im, con, "pkg.sub.missing", ok("pkg/sub/__init__.py", 3)),
         (py, im, con, "os", ext(4)),
         (py, im, con, "os.path", ext(4)),
+        // the `from __future__` site (step 8, O27): a stdlib module
+        // the public-names table omits, answered by name
+        (py, "import_from", con, "__future__", ext(4)),
         (py, im, con, "requests", ext(4)),
         (py, im, con, "nosuch_pkg", no(Reason::OutOfScope)),
     ]
@@ -210,15 +232,16 @@ fn go_cases() -> Vec<Case> {
     ]
 }
 
-/// Rust rows — kind-dispatched: mod_decl builds the tree, use walks.
-fn rust_cases() -> Vec<Case> {
-    let (rs, md, us) = (Lang::Rust, "mod_decl", "use");
-    let (rlib, rutil, deep) = ("src/lib.rs", "src/util.rs", "src/nest/deep.rs");
-    let (nmod, tbin) = ("src/nest/mod.rs", "tools/gen.rs");
-    let (uh, hl) = ("src/util/helper.rs", "crates/helper/src/lib.rs");
+/// Rust rows, R1 — mod_decl builds the tree: root / mod.rs /
+/// 2018-subdir / [[bin]] / Cargo auto-target anchors, the E0761 double;
+/// #[path] is line-anchored — its battery sits below.
+fn rust_mount_cases() -> Vec<Case> {
+    // the three Rust tables bind their fixture files in three different
+    // shapes on purpose — identical headers read as clones
+    let (rs, md, us, tbin) = (Lang::Rust, "mod_decl", "use", "tools/gen.rs");
+    let (rlib, rutil, nmod) = ("src/lib.rs", "src/util.rs", "src/nest/mod.rs");
+    let (deep, uh) = ("src/nest/deep.rs", "src/util/helper.rs");
     vec![
-        // R1: root / mod.rs / 2018-subdir / [[bin]] anchors, the E0761
-        // double; #[path] is line-anchored — its battery sits below
         (rs, md, rlib, "util", ok("src/util.rs", 1)),
         (rs, md, rlib, "nest", ok(nmod, 1)),
         (rs, md, rutil, "helper", ok(uh, 1)),
@@ -226,6 +249,45 @@ fn rust_cases() -> Vec<Case> {
         (rs, md, tbin, "gadget", ok("tools/gadget.rs", 1)),
         (rs, md, rlib, "dual", no(Reason::AmbiguousPaths)),
         (rs, md, rlib, "pathed", no(Reason::OutOfScope)),
+        // Cargo auto-targets (step 8): tests/<name>/main.rs and
+        // src/bin/<name>/main.rs are roots, so their mod_decls mount
+        // and a crate:: walk from inside them comes home
+        (
+            rs,
+            md,
+            "tests/it/main.rs",
+            "helper",
+            ok("tests/it/helper.rs", 1),
+        ),
+        (
+            rs,
+            md,
+            "src/bin/tool/main.rs",
+            "part",
+            ok("src/bin/tool/part.rs", 1),
+        ),
+        (
+            rs,
+            us,
+            "tests/it/helper.rs",
+            "crate::helper",
+            ok("tests/it/helper.rs", 2),
+        ),
+    ]
+}
+
+/// Rust rows, R2–R3 — use walks inside the crate: crate:: paths and
+/// the bare / self / super heads.
+fn rust_walk_cases() -> Vec<Case> {
+    let (rs, us) = (Lang::Rust, "use");
+    let (rlib, rutil, nmod, deep) = (
+        "src/lib.rs",
+        "src/util.rs",
+        "src/nest/mod.rs",
+        "src/nest/deep.rs",
+    );
+    let (tbin, uh) = ("tools/gen.rs", "src/util/helper.rs");
+    vec![
         // R2: crate:: walks; a walk ending AT the root sees lib+main
         // and refuses; a folded fragment's pre-{ prefix is complete;
         // a hand-folded mid-path fragment is refused
@@ -233,20 +295,64 @@ fn rust_cases() -> Vec<Case> {
         (rs, us, deep, "crate::util::helper as h", ok(uh, 2)),
         (rs, us, rutil, "crate::nest::{", ok(nmod, 2)),
         (rs, us, rutil, "crate::missing", no(Reason::AmbiguousRoot)),
+        // the tie-break (step 8, ruling ④): the root that defines
+        // Shared answers; the root whose uniform-path `pub use`
+        // imports Deep answers AND binds one hop to the definition
+        (rs, us, rutil, "crate::Shared", ok(rlib, 2)),
+        (rs, us, deep, "crate::Deep", via(uh, 2)),
         (rs, us, tbin, "crate::gadget", ok("tools/gadget.rs", 2)),
         (rs, us, rutil, "crate::dual::x", no(Reason::AmbiguousPaths)),
         (rs, us, rutil, "foo::", no(Reason::OutOfScope)),
+        // R3 bare head (step 8, ruling ④): a module DECLARED in the
+        // site's own namespace is read before any crate name — a
+        // declaration mounts and descends, the E0761 double still
+        // refuses, and a head nothing declares there is a crate name
+        // (deep.rs declares no `mod util`; lib.rs declares no `mod
+        // nest` though nest/mod.rs sits on disk — a file is not a
+        // module until a declaration mounts it)
+        (rs, us, rlib, "util::helper::x", ok(uh, 3)),
+        (rs, us, rutil, "helper::thing", ok(uh, 3)),
+        (rs, us, nmod, "deep::x", ok(deep, 3)),
+        (rs, us, rlib, "dual::x", no(Reason::AmbiguousPaths)),
+        (rs, us, deep, "util::x", no(Reason::OutOfScope)),
+        (rs, us, rlib, "nest::deep::x", no(Reason::OutOfScope)),
         // R3: the island red condition — an intra-file self::
         // reference must come home to its own file, never dangle
         (rs, us, deep, "self::helpers", ok(deep, 3)),
         (rs, us, nmod, "self::deep", ok(deep, 3)),
         (rs, us, deep, "super::x", ok(nmod, 3)),
-        (rs, us, deep, "super::super::util", ok("src/util.rs", 3)),
         (rs, us, rutil, "super::super::x", no(Reason::OutOfScope)),
-        // R4: normalized member name, member-tree descent (the audit
-        // records the definition file, not the crate façade),
-        // duplicate pair, registry dep, nothing, builtin (order
-        // breaks table-tail cloning)
+        (rs, us, deep, "super::super::util", ok("src/util.rs", 3)),
+    ]
+}
+
+/// Rust rows, R4 — use walks that leave the crate: normalized member
+/// name, member-tree descent (the audit records the definition file,
+/// not the crate façade), duplicate pair, registry dep, nothing,
+/// builtin (order breaks table-tail cloning); then the shadow file
+/// (step 8 review): a declared local module wins a bare head over the
+/// member crate AND over a builtin name (`test` is no extern-prelude
+/// crate), the global `::` form reads neither.
+fn rust_member_cases() -> Vec<Case> {
+    let rs = Lang::Rust;
+    let (us, rlib, rutil, hl, sh) = (
+        "use",
+        "src/lib.rs",
+        "src/util.rs",
+        "crates/helper/src/lib.rs",
+        "src/shadow.rs",
+    );
+    vec![
+        (
+            rs,
+            us,
+            sh,
+            "helper_lib::x",
+            ok("src/shadow/helper_lib.rs", 3),
+        ),
+        (rs, us, sh, "::helper_lib::x", ok(hl, 4)),
+        (rs, us, sh, "test::Helper", ok("src/shadow/test.rs", 3)),
+        (rs, us, sh, "::std::fs", ext(4)),
         (rs, us, rutil, "helper_lib::x", ok(hl, 4)),
         (
             rs,
@@ -310,7 +416,9 @@ fn rungs_resolve_and_refuse() {
     let fx = fixture("ladder-rungs", TREE);
     let all = import_cases()
         .into_iter()
-        .chain(rust_cases())
+        .chain(rust_mount_cases())
+        .chain(rust_walk_cases())
+        .chain(rust_member_cases())
         .chain(go_cases())
         .chain(hs_cases());
     run_cases(&fx, all.collect());
@@ -363,6 +471,12 @@ fn inline_mod_super_comes_home() {
     assert_eq!(at("self::helper::x", 6), ok("src/lib.rs", 3));
     assert_eq!(at("super::util", 7), ok("src/util.rs", 3));
     assert_eq!(at("super::super::escape", 9), ok("src/lib.rs", 3));
+    // a bare head inside the inline module (step 8): the bodied
+    // `mod deep` declared in `tests` is in scope and stays in this
+    // file; the file-level `mod util;` is one namespace up, so the
+    // head falls to the crate rung and nothing declares it
+    assert_eq!(at("deep::x", 5), ok("src/lib.rs", 3));
+    assert_eq!(at("util::x", 5), no(Reason::OutOfScope));
 }
 
 /// `#[path = "…"]` remaps answer at R1 (design §4 Rust row, R5
@@ -382,11 +496,17 @@ const PATH_TREE: &[(&str, &str)] = &[
     ("Cargo.toml", "[package]\nname='pa'"),
     (
         "src/graph/md.rs",
-        "#[cfg(test)]\n#[path = \"md_tests.rs\"]\nmod tests;\n#[path = \"also.rs\"]\n#[cfg(test)]\nmod also;\n#[path = \"../up.rs\"]\nmod up;\n#[path = \"../../../out.rs\"]\nmod esc;\n#[path = \"nope.rs\"]\nmod nope;\n#[path = r\"also.rs\"]\nmod raw;\nmod inline {\n    #[path = \"md_tests.rs\"]\n    mod hidden;\n}\n",
+        "#[cfg(test)]\n#[path = \"md_tests.rs\"]\nmod tests;\n#[path = \"also.rs\"]\n#[cfg(test)]\nmod also;\n#[path = \"../up.rs\"]\nmod up;\n#[path = \"../../../out.rs\"]\nmod esc;\n#[path = \"nope.rs\"]\nmod nope;\n#[path = r\"also.rs\"]\nmod raw;\nmod inline {\n    #[path = \"md_tests.rs\"]\n    mod hidden;\n    mod conv;\n    mod shallow;\n    use conv::Thing;\n}\n",
     ),
     ("src/graph/md_tests.rs", "\n"),
     ("src/graph/also.rs", "\n"),
     ("src/graph/md/inline/md_tests.rs", "\n"),
+    // the convention habitat inside the inline mod (step 8 review):
+    // rustc loads md/inline/conv.rs, never the shallow decoy md/conv.rs,
+    // and a name with only the shallow file refuses
+    ("src/graph/md/inline/conv.rs", "pub struct Thing;\n"),
+    ("src/graph/md/conv.rs", "\n"),
+    ("src/graph/md/shallow.rs", "\n"),
     ("src/up.rs", "\n"),
     ("src/lib.rs", "mod graph;\n"),
     (
@@ -416,10 +536,14 @@ const REEXPORT_TREE: &[(&str, &str)] = &[
         "crates/searcher/Cargo.toml",
         "[package]\nname='searcher-lib'",
     ),
+    // the file OPENS with a bodied mod holding a same-named `uni` (step
+    // 8 review): the hop reads its namespace at the pub use's own line,
+    // never at line 1, so the file-level `mod uni;` answers
     (
         "crates/searcher/src/lib.rs",
-        "pub use crate::{searcher::{Binary, Config as Conf}, sink::*};\nuse crate::quiet::Hidden;\npub use crate::dup_a::Twice;\npub use crate::dup_b::Twice;\npub use crate::local::Local;\nmod searcher;\nmod sink;\nmod quiet;\nmod dup_a;\nmod dup_b;\nmod local;\npub struct Local;\n",
+        "mod shadow {\n    pub mod uni {\n        pub struct Uni;\n    }\n}\npub use crate::{searcher::{Binary, Config as Conf}, sink::*};\nuse crate::quiet::Hidden;\npub use crate::dup_a::Twice;\npub use crate::dup_b::Twice;\npub use crate::local::Local;\npub use uni::Uni;\nmod searcher;\nmod sink;\nmod quiet;\nmod dup_a;\nmod dup_b;\nmod local;\nmod uni;\npub struct Local;\n",
     ),
+    ("crates/searcher/src/uni.rs", "pub struct Uni;\n"),
     (
         "crates/searcher/src/searcher.rs",
         "pub struct Binary;\npub struct Config;\n",
@@ -458,6 +582,19 @@ fn reexport_binds_one_hop_to_the_definition() {
         ("searcher_lib::Local", ok(lib, 4)),
         // a private use re-exports nothing
         ("searcher_lib::Hidden", ok(lib, 4)),
+        // a uniform-path facade `pub use uni::Uni` binds too (step 8,
+        // ruling ④): the hop's bare head reads the facade's own
+        // `mod uni;` — before it the head fell to the crate rung and
+        // this row answered the facade
+        ("searcher_lib::Uni", via("crates/searcher/src/uni.rs", 4)),
+        // the R6 side door, guarded (step 8, O05/O15): a braced leaf
+        // carrying its own path segment is cut at the brace — the
+        // walk consumes the prefix alone, the facade file is the
+        // edge, and neither `searcher` nor `Binary` is ever read off
+        // the prefix file (the binder hops only on a prefix segment
+        // the walk left unconsumed, never on a braced one)
+        ("searcher_lib::{searcher::Binary, sink::Sink}", ok(lib, 4)),
+        ("searcher_lib::{searcher::Binary}", ok(lib, 4)),
     ];
     for (spec, want) in cases {
         let got = ladder::resolve(Lang::Rust, &site("use", "src/lib.rs", spec, 1), &scope);
@@ -499,9 +636,27 @@ fn path_attr_remaps_resolve_at_r1() {
         ),
         ("src/graph/mod.rs", "e", 6, ok("src/graph/deep/extra.rs", 1)),
         ("src/graph/mod.rs", "md", 1, ok("src/graph/md.rs", 1)),
+        // the convention lookup shares the inline base (step 8 review)
+        (
+            "src/graph/md.rs",
+            "conv",
+            18,
+            ok("src/graph/md/inline/conv.rs", 1),
+        ),
+        ("src/graph/md.rs", "shallow", 19, no(Reason::OutOfScope)),
     ];
     for (from, spec, line, want) in cases {
         let got = ladder::resolve(Lang::Rust, &site("mod_decl", from, spec, *line), &scope);
         assert_eq!(&got, want, "{from} {spec} @{line}");
     }
+    // the bare head declared in the inline mod mounts through the same
+    // base and descends from there
+    assert_eq!(
+        ladder::resolve(
+            Lang::Rust,
+            &site("use", "src/graph/md.rs", "conv::Thing", 20),
+            &scope
+        ),
+        ok("src/graph/md/inline/conv.rs", 3)
+    );
 }

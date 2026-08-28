@@ -86,7 +86,14 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// of its own label instead of `export_from`, the fact the `mounts`
 /// table's re-export bit reads (graph/mounts.rs) — a new stored kind
 /// code and a relabel of cached rows, so every site is re-detected.
-pub const GRAPH_REV: i64 = 13;
+/// 14 = the extraction-side widening (plan v2.17 L round step 8):
+/// Go and Haskell named type forms enter the symbols table
+/// (fourclass/kinds.rs), Python's `__all__` and `if TYPE_CHECKING:`
+/// are read into the visibility and convention words, a TS
+/// `import … = require()` and a Python `from __future__` open sites,
+/// and the Rust use ladder reads a bare head as a local module before
+/// a crate name — stored rows, stored words and edges all move.
+pub const GRAPH_REV: i64 = 14;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

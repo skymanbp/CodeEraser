@@ -6,15 +6,17 @@
 //! package names (the R2 external gate), and since plan v2.17 piece
 //! (5) the two package-privacy facts the sealed criterion §4 reads —
 //! whether a `library` stanza exists at all, and which modules are
-//! listed only under other-modules. Stated boundaries, degrading to
-//! refusals never guesses: `common` stanza `import:` indirection is
-//! not followed (its roots simply do not contribute), cabal.project
-//! is not consulted (owner anchoring is directory-prefix), and
-//! conditional blocks (`if os(..)`) contribute their fields
-//! unconditionally — tag evaluation needs a build configuration we do
-//! not have (the Go //go:build precedent). The layout walk itself is
-//! the `#[path]` child cabal_parse.rs; this file owns the types and
-//! the reads.
+//! listed only under other-modules. A `common` stanza's roots and
+//! module lists reach a component through its `import:` (plan v2.17
+//! L round step 8, O58 — before it the common block was a dead
+//! region and a package whose roots lived only there anchored every
+//! stanza at the package directory). Stated boundaries, degrading to
+//! refusals never guesses: cabal.project is not consulted (owner
+//! anchoring is directory-prefix), and conditional blocks (`if
+//! os(..)`) contribute their fields unconditionally — tag evaluation
+//! needs a build configuration we do not have (the Go //go:build
+//! precedent). The layout walk itself is the `#[path]` child
+//! cabal_parse.rs; this file owns the types and the reads.
 
 use super::roots;
 use std::collections::BTreeSet;
@@ -56,8 +58,8 @@ pub struct Cabal {
 }
 
 /// Stanza headers that open a component with source dirs. `common`
-/// is deliberately absent: its fields reach components only through
-/// `import:` indirection, which is not modeled (module header).
+/// is not one: its block reaches components through `import:`
+/// (cabal_parse.rs `Region::Common`).
 const HEADS: [&str; 4] = ["library", "executable", "test-suite", "benchmark"];
 
 pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
@@ -73,10 +75,9 @@ pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
         other: BTreeSet::new(),
     };
     let lines: Vec<&str> = text.lines().collect();
-    // pre-2.0 top-level fields (before any header) are live
-    let (mut i, mut live) = (0, true);
+    let (mut i, mut walk) = (0, layout::Walk::default());
     while i < lines.len() {
-        i = layout::step(&mut out, &mut live, &dir, &lines, i);
+        i = layout::step(&mut out, &mut walk, &dir, &lines, i);
     }
     layout::finish(&mut out, &dir);
     Some(out)

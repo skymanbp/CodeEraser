@@ -142,6 +142,7 @@ fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawS
                 }
             }
         }
+        Specifier::Literal(spec) => out.push(site(kind.label, node, spec.to_string())),
     }
     out.len() > before
 }

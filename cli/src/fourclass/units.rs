@@ -99,6 +99,13 @@ fn named_key(node: tree_sitter::Node, src: &[u8], kinds: &[&str]) -> Option<Stri
     if !kinds.contains(&node.kind()) {
         return None;
     }
+    // an instance of a family names the family, never a new type
+    if node
+        .parent()
+        .is_some_and(|p| super::kinds::REDECLARING.contains(&p.kind()))
+    {
+        return None;
+    }
     let name = node.child_by_field_name("name")?;
     Some(String::from_utf8_lossy(&src[name.byte_range()]).into_owned())
 }

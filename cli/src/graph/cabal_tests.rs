@@ -53,18 +53,21 @@ fn parse_str(tag: &str, text: &str) -> Cabal {
     parsed
 }
 
-/// The two dead-region boundary cases the clearance review drew
-/// (both counterfactual against the first `live`-bit cut):
-/// a column-0 comment INSIDE a live stanza must not open a dead
-/// region, and a `common` stanza drops its roots but its
+/// The two region boundary cases the clearance review drew (both
+/// counterfactual against the first `live`-bit cut): a column-0
+/// comment INSIDE a live stanza must not open a dead region — nor cut
+/// a field's continuation block short (the step-8 review: the module
+/// listed after it was silently dropped) — and a `common` stanza
+/// nobody imports lends its roots to no component while its
 /// build-depends still join the file-wide union feeding R2.
 #[test]
 fn comments_keep_stanzas_live_and_common_deps_still_count() {
     let c = parse_str(
         "note",
-        "library\n-- top-level note\n  hs-source-dirs: src\n  build-depends: base\n",
+        "library\n-- top-level note\n  hs-source-dirs: src\n  exposed-modules:\n    A\n-- inside the block\n    B\n  build-depends: base\n",
     );
     assert_eq!(c.stanzas[0].roots, ["pkg/src".to_string()]);
+    assert_eq!(c.exposed.iter().collect::<Vec<_>>(), ["A", "B"]);
     assert_eq!(c.deps, ["base"]);
     let c = parse_str(
         "common",
@@ -81,6 +84,46 @@ fn comments_keep_stanzas_live_and_common_deps_still_count() {
         ["text"],
         "common build-depends still declared in this file"
     );
+}
+
+/// `import:` (step 8, O58): a component takes the named common
+/// blocks' roots and module lists on top of its own fields, a common
+/// stanza can import an earlier one (the executable's `import: base`
+/// carries `shared`'s roots and the hidden `Util`), an unknown name
+/// pulls nothing, a `main-is` in a common lands nowhere, and a
+/// component whose roots come only from a common does NOT fall to the
+/// package-directory default. The imported other-module keeps its file
+/// through the privacy read.
+#[test]
+fn import_pulls_common_blocks_into_components_and_other_commons() {
+    let c = parse_str(
+        "import",
+        "common shared\n  hs-source-dirs: src\n  other-modules: Util\n  main-is: Nope.hs\n\
+         common base\n  import: shared\n  hs-source-dirs: gen\n  build-depends: text\n\
+         library\n  import: shared, missing\n  hs-source-dirs: lib\n  exposed-modules: A\n\
+         executable app\n  import: base\n  main-is: Main.hs\n",
+    );
+    // imported roots first, then the component's own; no `.` default —
+    // one joined string per stanza (the self-corpus test's slice
+    // shape rhymed with this under the clone gate)
+    let per_stanza: Vec<String> = c
+        .stanzas
+        .iter()
+        .map(|s| format!("{} main={:?}", s.roots.join(","), s.main_is))
+        .collect();
+    assert_eq!(
+        per_stanza,
+        [
+            "pkg/src,pkg/lib main=None",
+            "pkg/src,pkg/gen main=Some(\"Main.hs\")"
+        ],
+        "a common's main-is lands nowhere"
+    );
+    assert_eq!(c.deps, ["text"]);
+    assert!(c.has_library);
+    assert_eq!(c.hidden_modules.iter().collect::<Vec<_>>(), ["Util"]);
+    assert!(c.keeps_private("pkg/src/Util.hs"));
+    assert!(!c.keeps_private("pkg/lib/A.hs"));
 }
 
 /// The privacy facts (sealed criterion §4 bit 1): a library's

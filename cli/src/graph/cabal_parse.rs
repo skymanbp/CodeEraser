@@ -6,31 +6,54 @@
 //! MECHANICS.
 
 use super::{Cabal, HEADS, Stanza, roots};
+use std::collections::{BTreeMap, BTreeSet};
+
+/// Where the walk stands: in a component stanza (fields land on the
+/// last stanza), in a named `common` stanza (fields land on its block,
+/// pulled into components by `import:` — plan v2.17 L round step 8,
+/// O58; before it a common stanza was a dead region whose roots
+/// reached no component), or dead under an unknown or nameless
+/// header. A column-0 COMMENT is not a header and must not move the
+/// walk — the clearance review caught the first cut killing a live
+/// stanza's fields on a top-level `-- note` inside it.
+pub(super) enum Region {
+    Live,
+    Common(String),
+    Dead,
+}
+
+/// A common stanza's importable fields: its roots and the two module
+/// lists. build-depends is not held here — it is file-wide either way
+/// (`consume`).
+#[derive(Default, Clone)]
+struct Common {
+    roots: Vec<String>,
+    exposed: BTreeSet<String>,
+    other: BTreeSet<String>,
+}
+
+/// The walk's state: pre-2.0 top-level fields (before any header)
+/// are live, and the common blocks accumulate in file order.
+pub(super) struct Walk {
+    region: Region,
+    commons: BTreeMap<String, Common>,
+}
+
+impl Default for Walk {
+    fn default() -> Self {
+        Walk {
+            region: Region::Live,
+            commons: BTreeMap::new(),
+        }
+    }
+}
 
 /// One parser step — a stanza header, a field with its continuation
-/// block, or a line to skip; returns the next line index. A `common`
-/// or unknown header opens a DEAD region for hs-source-dirs: those
-/// reach components only through `import:` indirection (not
-/// modeled), and routing them to the previous stanza mis-attributed
-/// a common stanza's roots (M5-close review LOW). A column-0 COMMENT
-/// is not a header and must not toggle the region — the clearance
-/// review caught the first cut killing a live stanza's fields on a
-/// top-level `-- note` inside it.
-pub(super) fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], i: usize) -> usize {
+/// block, or a line to skip; returns the next line index.
+pub(super) fn step(out: &mut Cabal, walk: &mut Walk, dir: &str, lines: &[&str], i: usize) -> usize {
     let trimmed = lines[i].trim();
     if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() && !trimmed.starts_with("--") {
-        let head = head_word(trimmed);
-        *live = HEADS.contains(&head.as_str());
-        // the public library is the bare `library` header; a named
-        // one (`library internal-utils`) is an internal sublibrary,
-        // importable only inside its own package
-        out.has_library |= head == "library" && trimmed.split_whitespace().nth(1).is_none();
-        if *live {
-            out.stanzas.push(Stanza {
-                roots: Vec::new(),
-                main_is: None,
-            });
-        }
+        walk.region = open(out, trimmed);
         return i + 1;
     }
     let Some((field, first)) = split_field(trimmed) else {
@@ -38,24 +61,49 @@ pub(super) fn step(out: &mut Cabal, live: &mut bool, dir: &str, lines: &[&str], 
     };
     let mut values = vec![first.to_string()];
     let next = continuation(lines, i + 1, &mut values);
-    consume(out, dir, &field, &values, *live);
+    consume(out, walk, dir, &field, &values);
     next
+}
+
+/// The region a header opens. The public library is the bare
+/// `library` header; a named one (`library internal-utils`) is an
+/// internal sublibrary, importable only inside its own package. A
+/// `common` header without a name is a cabal error and opens nothing.
+fn open(out: &mut Cabal, trimmed: &str) -> Region {
+    let head = head_word(trimmed);
+    let name = trimmed.split_whitespace().nth(1);
+    out.has_library |= head == "library" && name.is_none();
+    if head == "common" {
+        return name.map_or(Region::Dead, |n| Region::Common(n.to_string()));
+    }
+    if !HEADS.contains(&head.as_str()) {
+        return Region::Dead;
+    }
+    out.stanzas.push(Stanza {
+        roots: Vec::new(),
+        main_is: None,
+    });
+    Region::Live
 }
 
 /// The field's continuation block: indented lines without a field
 /// colon (cabal layout — value blocks carry no `name:` shape).
-/// Comment lines inside the block are skipped — not values and not
-/// an end, so a comment between two dependency lines cannot eat the
-/// rest of the block.
+/// Comment lines inside the block are skipped at ANY indentation —
+/// cabal's lexer drops a `--` line wherever it stands, so a comment
+/// between two dependency lines is neither a value nor an end, and a
+/// column-0 one does not cut the block short either (the step-8
+/// review's counterexample: the values after it were silently lost).
 fn continuation(lines: &[&str], mut i: usize, values: &mut Vec<String>) -> usize {
-    while i < lines.len() && lines[i].starts_with([' ', '\t']) {
+    while i < lines.len() {
         let next = lines[i].trim();
-        if next.is_empty() || split_field(next).is_some() {
+        if next.starts_with("--") {
+            i += 1;
+            continue;
+        }
+        if !lines[i].starts_with([' ', '\t']) || next.is_empty() || split_field(next).is_some() {
             break;
         }
-        if !next.starts_with("--") {
-            values.push(next.to_string());
-        }
+        values.push(next.to_string());
         i += 1;
     }
     i
@@ -83,35 +131,32 @@ pub(super) fn finish(out: &mut Cabal, dir: &str) {
     out.hidden_modules = out.other.difference(&out.exposed).cloned().collect();
 }
 
-/// Route one collected field into the surface. hs-source-dirs is
-/// per-STANZA and only lands while live (a common stanza's roots
-/// reach components only via import:, not modeled); build-depends is
-/// the file-wide UNION feeding the R2 external gate — a dependency
+/// Route one collected field into the surface. build-depends is the
+/// file-wide UNION feeding the R2 external gate — a dependency
 /// declared in a `common` stanza IS declared in this file, so it
 /// accumulates regardless of the region (clearance review: the first
 /// cut starved hs.rs's gate for the common-deps + import layout).
-/// The two module lists are file-wide unions too, live stanzas only
-/// (a common stanza's modules reach a component the same unmodeled
-/// way its roots do). Fields outside any stanza (pre-2.0 top-level
-/// layout) fall to the LAST stanza if one exists, else are dropped —
-/// the empty-stanza default covers them.
-fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String], live: bool) {
+/// The three importable fields are collected into one block and
+/// landed where the walk stands (`merge`) — the same throat an
+/// `import:` lands a common block through, so a field written in a
+/// component and one pulled from a common cannot drift apart. Fields
+/// outside any stanza (pre-2.0 top-level layout) fall to the LAST
+/// stanza if one exists, else are dropped — the empty-stanza default
+/// covers them.
+fn consume(out: &mut Cabal, walk: &mut Walk, dir: &str, field: &str, values: &[String]) {
+    let mut block = Common::default();
     match field {
-        "hs-source-dirs" if live => {
-            let Some(stanza) = out.stanzas.last_mut() else {
-                return;
-            };
-            for v in words(values) {
-                // "." is the package dir; an escape above the repo
-                // root is out of tree and contributes nothing
-                if let Some(joined) = roots::join_rel(dir, v) {
-                    stanza.roots.push(joined);
-                }
-            }
+        // "." is the package dir; an escape above the repo root is
+        // out of tree and contributes nothing
+        "hs-source-dirs" => {
+            block.roots = words(values)
+                .filter_map(|v| roots::join_rel(dir, v))
+                .collect();
         }
-        "main-is" if live => set_main(out, values),
-        "exposed-modules" if live => out.exposed.extend(words(values).map(str::to_string)),
-        "other-modules" if live => out.other.extend(words(values).map(str::to_string)),
+        "exposed-modules" => block.exposed = words(values).map(str::to_string).collect(),
+        "other-modules" => block.other = words(values).map(str::to_string).collect(),
+        "import" => return import_commons(out, walk, values),
+        "main-is" => return set_main(out, walk, values),
         "build-depends" => {
             for entry in values.iter().flat_map(|v| v.split(',')) {
                 let name = dep_name(entry);
@@ -119,8 +164,45 @@ fn consume(out: &mut Cabal, dir: &str, field: &str, values: &[String], live: boo
                     out.deps.push(name);
                 }
             }
+            return;
         }
-        _ => {}
+        _ => return,
+    }
+    merge(out, walk, &block);
+}
+
+/// Land one block of importable fields where the walk stands: on the
+/// last component stanza (roots per stanza, module lists file-wide),
+/// on the open common stanza's block, or nowhere in a dead region.
+fn merge(out: &mut Cabal, walk: &mut Walk, block: &Common) {
+    match &walk.region {
+        Region::Live => {
+            if let Some(stanza) = out.stanzas.last_mut() {
+                stanza.roots.extend(block.roots.iter().cloned());
+            }
+            out.exposed.extend(block.exposed.iter().cloned());
+            out.other.extend(block.other.iter().cloned());
+        }
+        Region::Common(name) => {
+            let c = walk.commons.entry(name.clone()).or_default();
+            c.roots.extend(block.roots.iter().cloned());
+            c.exposed.extend(block.exposed.iter().cloned());
+            c.other.extend(block.other.iter().cloned());
+        }
+        Region::Dead => {}
+    }
+}
+
+/// `import: a, b` pulls each named common block in — into the
+/// component, or into another common stanza (cabal lets a common
+/// import an earlier one, so the pulled block is already transitively
+/// complete: definition-before-use is cabal's own rule). A name with
+/// no block is a cabal error and pulls nothing.
+fn import_commons(out: &mut Cabal, walk: &mut Walk, values: &[String]) {
+    for name in words(values) {
+        if let Some(block) = walk.commons.get(name).cloned() {
+            merge(out, walk, &block);
+        }
     }
 }
 
@@ -133,10 +215,12 @@ fn words(values: &[String]) -> impl Iterator<Item = &str> {
 }
 
 /// The stanza main-is value (2.28.0): the first collected value
-/// wins — cabal main-is is a single filename. Split from consume
-/// so the match arms stay calls (the repo cognitive gate caught the
-/// inlined form at CoC 16).
-fn set_main(out: &mut Cabal, values: &[String]) {
+/// wins — cabal main-is is a single filename, a component field
+/// only (a common stanza cannot carry one).
+fn set_main(out: &mut Cabal, walk: &Walk, values: &[String]) {
+    if !matches!(walk.region, Region::Live) {
+        return;
+    }
     if let Some(stanza) = out.stanzas.last_mut() {
         stanza.main_is = values.first().cloned();
     }

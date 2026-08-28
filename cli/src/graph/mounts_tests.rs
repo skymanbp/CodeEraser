@@ -83,6 +83,32 @@ fn go_privacy_reads_the_clause_and_the_path() {
     std::fs::remove_dir_all(&root).ok();
 }
 
+/// The Python arm (L round step 8): an underscore-led file stem or
+/// directory keeps the module, a dunder module is protocol, and a
+/// public path is open — the path alone, no manifest.
+#[test]
+fn python_privacy_reads_underscore_segments_of_the_path() {
+    let kept: Vec<&str> = [
+        "requests/_types.py",
+        "pkg/_internal/util.py",
+        "pkg/__init__.py",
+        "pkg/__main__.py",
+        "pkg/api.py",
+        "_scripts/run.py",
+    ]
+    .into_iter()
+    .filter(|p| py_private(p))
+    .collect();
+    assert_eq!(
+        kept,
+        [
+            "requests/_types.py",
+            "pkg/_internal/util.py",
+            "_scripts/run.py"
+        ]
+    );
+}
+
 /// The Rust arm's three outcomes: a virtual workspace manifest is not
 /// a package and keeps nothing (a stray file under it); no lib target
 /// keeps the whole package (a helper module included); a lib target
@@ -108,6 +134,8 @@ fn rust_privacy_is_nothing_the_whole_package_or_its_bin_roots() {
         "lib/src/lib.rs",
         "lib/src/main.rs",
         "lib/src/bin/extra.rs",
+        "lib/src/bin/nested/main.rs",
+        "lib/src/bin/nested/part.rs",
         "lib/src/tools/gen.rs",
         "lib/src/module.rs",
         "lib/tests/t.rs",
@@ -137,10 +165,12 @@ fn rust_privacy_is_nothing_the_whole_package_or_its_bin_roots() {
         [
             "lib/src/main.rs",
             "lib/src/bin/extra.rs",
+            "lib/src/bin/nested/main.rs",
             "lib/src/tools/gen.rs",
             "tool/src/main.rs",
             "tool/src/util.rs",
-        ]
+        ],
+        "a nested src/bin/<name>/main.rs is a bin root too (step 8); its module is not"
     );
     std::fs::remove_dir_all(&root).ok();
 }

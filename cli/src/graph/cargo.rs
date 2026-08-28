@@ -59,11 +59,15 @@ pub fn nearest(root: &Path, from_dir: &str) -> Option<Package> {
 
 impl Package {
     /// Crate roots of this package that are scope files: declared
-    /// [lib]/[[bin]] paths, the default targets, and the direct .rs
-    /// children of the conventional auto-target dirs. The deeper
-    /// auto-discovery form (src/bin/x/main.rs) is a documented recall
-    /// limit — an unmodeled root's mod decls land Unresolved, never
-    /// on a wrong file.
+    /// [lib]/[[bin]] paths, the default targets, and both
+    /// auto-discovery forms under the conventional target dirs — a
+    /// direct .rs child and a `<name>/main.rs` (Cargo's own rule).
+    /// The deeper form was a stated recall limit until plan v2.17 L
+    /// round step 8: with `tests/it/main.rs` unmodeled, the self
+    /// repo's `tests/it/*.rs` sites fell to the two sibling root
+    /// binaries as covering roots, and the crate rung's tie-break
+    /// (rs_use.rs) then answered a root that merely also mounts
+    /// `common` — a modeling gap must not become a wrong file.
     pub fn crate_roots(&self, files: &BTreeSet<String>) -> BTreeSet<String> {
         let mut out = BTreeSet::new();
         let declared = self.lib_path.iter().chain(&self.bin_paths);
@@ -76,13 +80,13 @@ impl Package {
             }
         }
         for sub in ["src/bin", "tests", "examples", "benches"] {
-            out.extend(self.direct_rs(files, sub));
+            out.extend(self.auto_targets(files, sub));
         }
         out
     }
 
     /// The bin targets alone — declared [[bin]] paths, the default
-    /// main, the direct .rs children of src/bin: the roots nothing
+    /// main, the auto-discovered src/bin targets: the roots nothing
     /// outside the package can `use` (the mounts table's bit 1, sealed
     /// criterion §4). tests/, examples/, benches/ and build.rs are
     /// crate roots too but test-side facts, out of this set.
@@ -95,12 +99,14 @@ impl Package {
             .filter_map(|target| roots::join_rel(&self.dir, target))
             .filter(|cand| files.contains(cand))
             .collect();
-        out.extend(self.direct_rs(files, "src/bin"));
+        out.extend(self.auto_targets(files, "src/bin"));
         out
     }
 
-    /// The direct .rs children of one conventional auto-target dir.
-    fn direct_rs<'f>(
+    /// Cargo's auto-discovered targets under one conventional dir:
+    /// a direct `<name>.rs` child, or a `<name>/main.rs` one level
+    /// down — never deeper, never another file in that directory.
+    fn auto_targets<'f>(
         &self,
         files: &'f BTreeSet<String>,
         sub: &str,
@@ -109,8 +115,14 @@ impl Package {
         files
             .iter()
             .filter(move |f| {
-                f.strip_prefix(&prefix)
-                    .is_some_and(|rest| rest.ends_with(".rs") && !rest.contains('/'))
+                f.strip_prefix(&prefix).is_some_and(|rest| {
+                    let mut segs = rest.split('/');
+                    match (segs.next(), segs.next(), segs.next()) {
+                        (Some(leaf), None, _) => leaf.ends_with(".rs"),
+                        (Some(_), Some("main.rs"), None) => true,
+                        _ => false,
+                    }
+                })
             })
             .cloned()
     }

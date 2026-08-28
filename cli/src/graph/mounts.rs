@@ -39,7 +39,7 @@ pub const MOUNT_REEXPORTED: i64 = 1;
 /// or an `internal/` segment; a Cargo package without a lib target
 /// (the whole package), else its bin roots; a cabal without a library
 /// stanza (the whole package), else a module listed only under
-/// other-modules.
+/// other-modules; a Python module path with an underscore-led segment.
 pub const MOUNT_PKG_PRIVATE: i64 = 1 << 1;
 
 /// The facts per walked file, keyed by path — what the graph and the
@@ -215,16 +215,30 @@ impl Manifests {
     }
 }
 
-/// bit 1 by language; the other judged languages have no package
-/// privacy the criterion reads (Python, TS, Markdown: 0).
+/// bit 1 by language; TS and Markdown have no package privacy the
+/// criterion reads (0).
 fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {
     let dir = roots::parent_dir(path);
     match Lang::judged_path(Path::new(path)) {
         Some(Lang::Go) => go_private(root, path),
         Some(Lang::Rust) => m.rust(root, &dir, files).is_some_and(|t| t.keeps(path)),
         Some(Lang::Haskell) => m.haskell(root, &dir).is_some_and(|c| c.keeps_private(path)),
+        Some(Lang::Python) => py_private(path),
         _ => false,
     }
+}
+
+/// The Python arm (plan v2.17 L round step 8, user ruling 2026-08-28):
+/// a module whose import path carries an underscore-led segment —
+/// `pkg/_types.py`, `pkg/_internal/x.py` — is private to its package
+/// by the language's own convention (PEP 8: an internal interface),
+/// the same clerical fact Go's `internal/` is; a dunder module
+/// (`__init__.py`, `__main__.py`) is protocol. The declaration's own
+/// name is the visibility word's business, never this bit's (§4).
+pub(crate) fn py_private(path: &str) -> bool {
+    path.trim_end_matches(".py")
+        .split('/')
+        .any(|seg| seg.starts_with('_') && !(seg.starts_with("__") && seg.ends_with("__")))
 }
 
 /// The Go arm: `package main` is never importable, and an `internal/`

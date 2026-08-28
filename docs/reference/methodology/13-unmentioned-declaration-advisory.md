@@ -157,14 +157,15 @@ the safe direction.
 ### 5. Visibility, mounts and the core's code
 
 The core reads two more integer facts per row. The visibility word is three bits: bit 0
-is "exported" ([visibility/mod.rs:67](../../../cli/src/fourclass/visibility/mod.rs#L67)), bit 1 that the enclosing scopes let the
-name out too ([visibility/mod.rs:69](../../../cli/src/fourclass/visibility/mod.rs#L69)), and bit 2 marks a restricted export
-(`pub(crate)` and kin) ([visibility/mod.rs:71](../../../cli/src/fourclass/visibility/mod.rs#L71)). The **mounts** table is one row per node —
+is "exported" ([visibility/mod.rs:69](../../../cli/src/fourclass/visibility/mod.rs#L69)), bit 1 that the enclosing scopes let the
+name out too ([visibility/mod.rs:71](../../../cli/src/fourclass/visibility/mod.rs#L71)), and bit 2 marks a restricted export
+(`pub(crate)` and kin) ([visibility/mod.rs:73](../../../cli/src/fourclass/visibility/mod.rs#L73)). The **mounts** table is one row per node —
 `[node, private, total, bits]` — computed for every node without exception: how many of
 the file's `mod` mounts are private, how many mounts it has, whether a façade re-exports
 it (a Rust `via_reexport` edge or a TS `export *` target — bit 0) and whether its own
 package keeps it private (Go `package main` / `internal/`, a Cargo package with no lib
-target, a cabal package with no library or a module only in `other-modules` — bit 1)
+target, a cabal package with no library or a module only in `other-modules`, a Python
+module whose path carries an underscore-led segment, dunders excepted — bit 1)
 ([mounts.rs:37-43](../../../cli/src/graph/mounts.rs#L37), [mounts.rs:61-90](../../../cli/src/graph/mounts.rs#L61),
 [mounts.rs:117-123](../../../cli/src/graph/mounts.rs#L117), [mounts.rs:220-239](../../../cli/src/graph/mounts.rs#L220)).
 
@@ -236,10 +237,18 @@ A projection gate pins that the symbol column survives the hub's generic table
 - **File granularity.** A `pub(crate)` accessor called only inside its own file is a true
   row (nothing else spells it) and an invitation to narrow it, not a dead symbol; the
   ledger in §8 shows 31 such rows across four corpora and no dead-code claim is made.
-- **Python module privacy is not a mount fact.** A class under `if TYPE_CHECKING:` in an
-  underscore-private module (requests `_types.py:157`) comes out `public` — the
-  visibility word reads the name, the mounts table has no Python arm. Ruled into the
-  extraction-reinforcement step (2026-08-28), not patched here.
+- **Python module privacy became a mount fact in step 8** (plan v2.17 L round, ruling ⑤
+  2026-08-28). The mounts table's Python arm reads underscore path segments
+  ([mounts.rs:236-245](../../../cli/src/graph/mounts.rs#L236)); a literal `__all__` (`=` / `+=`
+  of string lists or tuples, any non-literal form ⇒ the convention) narrows bit 0 to the
+  names it lists ([visibility/py.rs:27-37](../../../cli/src/fourclass/visibility/py.rs#L27)) — the
+  Haskell export-list precedent, and the same narrowing the underscore convention already
+  is: a helper the module's own export list omits is not public API, so the erase refusal
+  `public_surface` no longer holds it; a body under `if TYPE_CHECKING:` carries conv
+  `Ambient` ([conv/py.rs:57-70](../../../cli/src/mention/conv/py.rs#L57)). requests `_types.py:157`
+  now reads private and exempt and leaves the advisory; `__init__.py:60 check_compatibility`,
+  public by convention but absent from the module's `__all__`, leaves it too (exported
+  645 → 644, unmentioned-exported 432 → 431); the requests population is 16 → 14.
 - **Late-NUL binaries are in U** and lossily decoded (§1); their token cost is measured
   as its own column (§8), and the rule is not changed because git's own binary rule is
   the same 8,000 bytes.
@@ -261,9 +270,9 @@ the pin is the formula, the row is the reading.
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
 | self @ this commit | 627 (640 − 13 early-NUL) | rust | 2927 (1249) | 950 (66) | 32.5 % | 37 / 950 = 3.9 % | 37 / 1953 |
-| | | haskell | 1242 (274) | 295 (4) | 23.8 % | 12 / 295 = 4.1 % | 12 / 947 |
-| cobra adbc881 | 65 (66 − 1 early-NUL) | go | 591 (468) | 394 (310) | 66.7 % | 4 / 394 = 1.0 % | 4 / 187 |
-| requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (645) | 450 (432) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
+| | | haskell | 1284 (296) | 299 (4) | 23.3 % | 12 / 299 = 4.0 % | 12 / 985 |
+| cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
+| requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
 | ripgrep 3fce3b5 | 230 (237 − 7 early-NUL) | rust | 2501 (886) | 885 (47) | 35.4 % | 120 / 885 = 13.6 % | 120 / 1546 |
 | zod 912f0f5 | 536 (583 − 45 early-NUL − 1 excluded − 1 pattern-ignored) | typescript | 1944 (1127) | 353 (197) | 18.2 % | 107 / 353 = 30.3 % | 107 / 1530 |
 | | | tsx | 56 (37) | 12 (4) | 21.4 % | 8 / 12 = 66.7 % | 8 / 44 |
@@ -273,8 +282,8 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 65 / 1248 = 5.2 %, zod typescript
-197 / 1127 = 17.5 %, cobra 310 / 468 = 66.2 %. The spread across languages — two thirds
+operator reads for the public surface: self rust 66 / 1249 = 5.3 %, zod typescript
+197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
 TypeScript's is spoken — is why the census is reported per language and never as one
 number ([rates.rs:1-12](../../../cli/src/mention/rates.rs#L1)).
@@ -310,14 +319,18 @@ requests `setup`, `clean_proxy_environ`; zod `GET` ×3, `generateMetadata` ×2,
 `generateStaticParams` ×2. The FFI/macro rows have no corpus witness and are pinned by
 synthetic fixture instead ([conv/tests.rs:49-56](../../../cli/src/mention/conv/tests.rs#L49)).
 
-**Every external advisory row dispositioned** (258 rows: cobra 4, requests 16, ripgrep 41,
-zod 197 — the self rows are a plan step of their own): ten disposing agents each followed
-by an independent refuter re-running the search; 8 dispositions corrected, **0 rows where
-another file spelled the name** — the instrument's claim held on 258 / 258. Reading of
+**Every external advisory row dispositioned** (258 rows at the audit: cobra 4, requests 16,
+ripgrep 41, zod 197 — the self rows are a plan step of their own): ten disposing agents each
+followed by an independent refuter re-running the search; 8 dispositions corrected, **0 rows
+where another file spelled the name** — the instrument's claim held on 258 / 258. Reading of
 the rows: 218 public API surface, 2 loader-spelled (cobra's `Gt`/`Eq` reached through a
 `text/template` FuncMap keyed `gt`/`eq` in another file), 5 test-only, 31 restricted or
 private declarations used only in their own file or nowhere, 2 domain readings named in
-§7 (requests `_types.py:157`; ripgrep `matcher.rs:548`, a same-file-only `pub(crate)`).
+§7 (requests `_types.py:157`, resolved by step 8; ripgrep `matcher.rs:548`, a same-file-only
+`pub(crate)`). After step 8 the same instrument reads **257**: cobra 5 (`doc/man_docs.go:84
+GenManTreeOptions`, a type form that entered the symbols domain only then), requests 14 (§7),
+ripgrep 41 (7 of them now `reexported_unmentioned` through facades the widened ladder binds),
+zod 197.
 
 **Cost (K45)** — the mention pass is its own entry and not in `dedup::analyze`; the
 consumers that never ask must not pay. A/B medians, n = 9 interleaved on two identical

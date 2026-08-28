@@ -36,10 +36,11 @@
 //! table alone.
 //!
 //! Boundaries, stated rather than papered over:
-//!   - Python's `__all__` is not consulted: a module that re-exports
-//!     under a different name is judged by its declarations, so
-//!     `__all__`-only exports read as private. The bit is a floor,
-//!     never an invention.
+//!   - Python's `__all__` is consulted since L round step 8 (py.rs):
+//!     a literal list names the module's exports outright; a module
+//!     that builds `__all__` dynamically, or re-exports a name it does
+//!     not declare, is still judged by its declarations under the
+//!     underscore convention. The bit is a floor, never an invention.
 //!   - Haskell's export list is read from the module header when one
 //!     is present, lexed by the language's own comment rules
 //!     (hs_lex.rs); a header without a list exports every top-level
@@ -52,6 +53,7 @@
 
 mod hs;
 mod hs_lex;
+mod py;
 #[cfg(test)]
 mod tests;
 #[cfg(test)]
@@ -81,8 +83,8 @@ pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
     match lang {
         Lang::Rust => rust_bits(node, src),
         Lang::TypeScript | Lang::Tsx => ts::bits(node, src),
-        Lang::Python => word(python_public(node, src), python_scope_open(node, src)),
-        Lang::Go => word(go_exported(node, src), true),
+        Lang::Python => word(py::exported(node, src), py::scope_open(node, src)),
+        Lang::Go => word(go_exported(node, src), go_scope_open(node)),
         Lang::Haskell => word(hs::exported(node, src), true),
         _ => 0,
     }
@@ -133,27 +135,6 @@ fn rust_scope_open(node: Node<'_>, src: &[u8]) -> bool {
     })
 }
 
-/// Python: the convention IS the language's visibility rule — a
-/// leading underscore marks a name as internal. Dunder names
-/// (`__init__`) are protocol, not private.
-fn python_public(node: Node<'_>, src: &[u8]) -> bool {
-    match name_text(node, src) {
-        Some(name) => !name.starts_with('_') || name.starts_with("__") && name.ends_with("__"),
-        None => false,
-    }
-}
-
-/// Python's scope chain: a `def` inside a `def` is the outer one's
-/// local, and a method of a `_Private` class is as hidden as the
-/// class — public by the same convention at every enclosing class.
-fn python_scope_open(node: Node<'_>, src: &[u8]) -> bool {
-    ancestors(node).all(|a| match a.kind() {
-        "function_definition" => false,
-        "class_definition" => python_public(a, src),
-        _ => true,
-    })
-}
-
 /// Go: an identifier's first rune decides. Upper case is exported —
 /// the whole rule, checked on the declaration's own name.
 fn go_exported(node: Node<'_>, src: &[u8]) -> bool {
@@ -161,6 +142,19 @@ fn go_exported(node: Node<'_>, src: &[u8]) -> bool {
         Some(name) => name.chars().next().is_some_and(char::is_uppercase),
         None => false,
     }
+}
+
+/// Go's scope chain: a function body closes it — a `type` declared
+/// inside a func is visible to that body alone, whatever its case
+/// (the Rust and Python arms' reading of a body-local item; the
+/// step-8 review found the Go arm storing bit 1 on it).
+fn go_scope_open(node: Node<'_>) -> bool {
+    !ancestors(node).any(|a| {
+        matches!(
+            a.kind(),
+            "function_declaration" | "method_declaration" | "func_literal"
+        )
+    })
 }
 
 /// The parent chain, innermost first, ending at the file root (shared

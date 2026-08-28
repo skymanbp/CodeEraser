@@ -21,7 +21,11 @@
 //! likewise; PackageImports package qualifiers are invisible in the
 //! spec (the module field carries dots only) so such an import
 //! resolves as if unqualified — the extension appears in none of the
-//! six corpora.
+//! six corpora. An `import {-# SOURCE #-} M` resolves to `M.hs` like
+//! any other import (plan v2.17 L round step 8, O28): the `.hs-boot`
+//! it compiles against is the SAME module's interface stub, not a
+//! judged language (scan/lang.rs) and not a second declaration site,
+//! so the module file is the reference's one honest target.
 //!
 //! R6/RG10 re-review (3l exit row): a module's export list is a
 //! symbol-level fact (AST-probed: header/exports), so the file-tier

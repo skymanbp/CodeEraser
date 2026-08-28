@@ -23,7 +23,7 @@
   "schema": "ce.eval-t3-candidates/1.0.0",
   "summary": {
     "admitted_by_lang": {
-      "go": 43,
+      "go": 44,
       "py": 105,
       "rs": 1246,
       "ts": 14
@@ -75,7 +75,7 @@
       "ts/s": 5
     },
     "union_pairs": 21746,
-    "units_admitted": 1408,
+    "units_admitted": 1409,
     "unowned_dropped": 355
   }
 }

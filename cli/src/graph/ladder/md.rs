@@ -3,10 +3,12 @@
 //! linking file's directory; a directory holding in-scope files
 //! resolves as a package — the audited fourclass row: a tree
 //! reference collapsed to one file would be a guess. R2 validates a
-//! cross-file anchor against the target's ATX slug set by GitHub
-//! rules (lowercase, punctuation dropped, spaces to hyphens, -N
-//! duplicate suffixes); zero or multiple matches degrade to the file
-//! (ResolvedSection { slug: None }). R3 reference links substitute
+//! cross-file anchor, percent-decoded, against the target's anchor
+//! set (md_slug.rs: rendered-text slugs of the ATX headings by GitHub
+//! rules — lowercase, punctuation dropped, spaces to hyphens, -N
+//! duplicate suffixes — plus raw-HTML anchor ids verbatim); zero or
+//! multiple matches degrade to the file (ResolvedSection { slug:
+//! None }). R3 reference links substitute
 //! the in-file definition (CommonMark: labels case-fold and the
 //! FIRST definition wins — spec, not a guess) and rerun the chain
 //! relabeled rung 3; an unused definition is deliberately EXCLUDED
@@ -18,30 +20,37 @@
 //! kind, and an unresolvable one is an ordinary miss — the borrowed
 //! External category retired with the channel that replaced it
 //! (Outcome::ResolvedInert). R4 a bare fragment is an
-//! in-file section claim taken AS WRITTEN, never validated: raw-HTML
-//! anchors (`<h3 name=…>`) are legal GitHub targets we do not model
-//! (the audited FAQ.md #complete row) — validating against ATX-only
-//! slugs would refuse real anchors. R5 any URI scheme (http/https/
+//! in-file section claim taken AS WRITTEN, never validated: a claim
+//! on the linking document itself is an in-file edge whatever it
+//! names (the audited FAQ.md #complete row's raw-HTML anchor is one
+//! such — modeled for cross-file lookups since step 8, still not a
+//! reason to refuse an in-file claim). R5 any URI scheme (http/https/
 //! mailto per the design row) is External; site-root (/x) and
 //! protocol-relative (//x) forms are domain-relative in rendered
 //! contexts, never repo-relative.
 //!
-//! Honest limits: slugs are a char-level approximation of
-//! rendered-text slugging (markdown syntax inside a heading drifts
-//! the slug), and the heading walk is fence- and comment-aware but
-//! not indented-code-aware — every approximation failure degrades an
-//! anchor to file level, never invents a section. Cross-file
+//! Honest limits (plan v2.17 L round step 8, O57, closed four: the
+//! slug is the rendered heading's, the heading walk is
+//! indented-code-aware, raw-HTML anchors enter the set, percent
+//! escapes decode — md_slug.rs): what remains — setext headings,
+//! attribute forms the one-line tag reader does not parse — degrades
+//! an anchor to file level, never invents a section. Cross-file
 //! staleness is closed at the key (M5 close, repaying the 2f wiring
 //! debt): the ONLY target-content fact this ladder consults is the
-//! slug set (anchor() below), so every md file's slug_hash is a
+//! anchor set (anchor() below), so every md file's slug_hash is a
 //! resolve_key input — a heading edit anywhere shifts the key and
 //! the phase-2 sweep re-validates every anchor.
 
 use super::{Outcome, Reason, Scope};
 use crate::graph::md::{content_lines, detect, ref_definition};
 use crate::graph::roots;
+use slug::{percent_decode, slug_set};
 use std::collections::{BTreeMap, BTreeSet};
 use std::rc::Rc;
+
+#[path = "md_slug.rs"]
+mod slug;
+pub use slug::slug_hash;
 
 pub fn resolve(kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {
     match kind {
@@ -69,7 +78,9 @@ fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {
     if path.is_empty() {
         return fragment(from, frag);
     }
-    let Some(target) = roots::join_rel(&roots::parent_dir(from), path) else {
+    // decoded AFTER the split: an encoded `%23` is a literal `#` in
+    // the file name, never a fragment delimiter
+    let Some(target) = roots::join_rel(&roots::parent_dir(from), &percent_decode(path)) else {
         return Outcome::Unresolved(Reason::OutOfScope);
     };
     if scope.files.contains(&target) {
@@ -120,8 +131,9 @@ fn directory(target: String, scope: &Scope) -> Outcome {
     }
 }
 
-/// R2: the fragment against the target's ATX slug set; anything but
-/// exactly one match degrades to the file (slug: None).
+/// R2: the fragment, percent-decoded, against the target's anchor
+/// set; anything but exactly one match degrades to the file (slug:
+/// None).
 fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
     // per-sweep: one read + slug pass per TARGET file, not one per
     // anchored link pointing at it (review MED)
@@ -129,8 +141,9 @@ fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
         let text = std::fs::read_to_string(scope.root.join(&target)).unwrap_or_default();
         slug_set(&text)
     });
-    let hits = slugs.iter().filter(|s| *s == frag).count();
-    let slug = (hits == 1).then(|| frag.to_string());
+    let frag = percent_decode(frag);
+    let hits = slugs.iter().filter(|s| **s == frag).count();
+    let slug = (hits == 1).then_some(frag);
     Outcome::ResolvedSection {
         path: target,
         slug,
@@ -226,68 +239,6 @@ fn relabel(outcome: Outcome) -> Outcome {
         Outcome::External { .. } => Outcome::External { rung: 3 },
         unresolved => unresolved,
     }
-}
-
-/// The slug set folded to one resolve_key input (module header):
-/// order-sensitive on purpose — duplicate -N suffixes shift with
-/// order, and the set IS what anchor() consults.
-pub fn slug_hash(text: &str) -> u64 {
-    let mut buf = Vec::new();
-    for slug in slug_set(text) {
-        buf.extend_from_slice(slug.as_bytes());
-        buf.push(b'\n');
-    }
-    crate::dedup::tokens::fnv1a(&buf)
-}
-
-/// GitHub-slugged ATX headings in document order, -N suffixes for
-/// duplicates; fence- and comment-aware via the detector's walk.
-fn slug_set(text: &str) -> Vec<String> {
-    let mut seen: BTreeMap<String, usize> = BTreeMap::new();
-    let mut out = Vec::new();
-    for (_, line, mask) in content_lines(text) {
-        if mask.first().copied().unwrap_or(false) {
-            continue;
-        }
-        let Some(head) = atx_heading(line.trim_start()) else {
-            continue;
-        };
-        let base = slugify(head);
-        let n = seen.entry(base.clone()).or_insert(0usize);
-        let slug = if *n == 0 { base } else { format!("{base}-{n}") };
-        *n += 1;
-        out.push(slug);
-    }
-    out
-}
-
-/// ATX heading text: 1-6 leading #, then a space or the end; the
-/// space-separated closing sequence strips (CommonMark).
-fn atx_heading(trimmed: &str) -> Option<&str> {
-    let hashes = trimmed.chars().take_while(|&c| c == '#').count();
-    if hashes == 0 || hashes > 6 {
-        return None;
-    }
-    let rest = &trimmed[hashes..];
-    if !rest.is_empty() && !rest.starts_with(' ') {
-        return None;
-    }
-    Some(rest.trim().trim_end_matches('#').trim_end())
-}
-
-/// GitHub slug: lowercase, keep letters/digits/_/-, spaces become
-/// hyphens, everything else drops (verified against the audited
-/// Hangul, backtick and parenthesis ground-truth rows).
-fn slugify(text: &str) -> String {
-    let mut out = String::new();
-    for c in text.chars() {
-        if c.is_alphanumeric() || c == '_' || c == '-' {
-            out.extend(c.to_lowercase());
-        } else if c == ' ' {
-            out.push('-');
-        }
-    }
-    out
 }
 
 /// An RFC 3986 scheme head (or a protocol-relative // form) leaves

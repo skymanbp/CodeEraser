@@ -25,12 +25,13 @@ const SCOPED: [&str; 6] = [
 ];
 
 pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {
-    if ancestors(node).any(|a| SCOPED.contains(&a.kind())) {
-        return false;
-    }
     let Some(name) = name_text(node, src) else {
         return false;
     };
+    let owner = associated_class(node, src);
+    if owner.is_none() && ancestors(node).any(|a| SCOPED.contains(&a.kind())) {
+        return false;
+    }
     let root = root_of(node);
     let Some(header) = ast::named_children(root)
         .into_iter()
@@ -44,7 +45,43 @@ pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {
     let module = header.child_by_field_name("module").map(|m| text(m, src));
     hs_lex::entries(&hs_lex::strip_comments(&text(list, src)))
         .iter()
-        .any(|entry| names(entry, &name, module.as_deref()))
+        .any(|entry| {
+            names(entry, &name, module.as_deref())
+                || owner
+                    .as_deref()
+                    .is_some_and(|class| member_entry(entry, class, &name))
+        })
+}
+
+/// The class an associated `type`/`data` family is declared in — the
+/// one class member that is a unit (a method signature is none, a
+/// default body is a member binding): GHC exports an associated
+/// family with its class, through `C(..)` or a listed `C(Fam)`, so
+/// the class entry speaks for it (the step-8 review's counterexample
+/// read every such family as private).
+fn associated_class(node: Node<'_>, src: &[u8]) -> Option<String> {
+    if !matches!(node.kind(), "type_family" | "data_family") {
+        return None;
+    }
+    let class = ancestors(node).find(|a| a.kind() == "class")?;
+    name_text(class, src)
+}
+
+/// `C(..)` names every member of C; `C(Fam, m)` names the listed
+/// ones (an ExplicitNamespaces `type Fam` inside the list too).
+fn member_entry(entry: &str, class: &str, member: &str) -> bool {
+    let entry = entry.trim();
+    let Some(open) = entry.find('(') else {
+        return false;
+    };
+    if head(entry) != class || !entry.ends_with(')') {
+        return false;
+    }
+    let inner = &entry[open + 1..entry.len() - 1];
+    inner.trim() == ".."
+        || inner
+            .split(',')
+            .any(|m| m.trim().trim_start_matches("type ").trim() == member)
 }
 
 /// The abbreviated header `module Main(main) where`, as GHC 9.10.3
@@ -71,17 +108,41 @@ fn top_level_bindings<'a>(root: Node<'a>, src: &'a [u8]) -> impl Iterator<Item =
 /// binding) — or when it is `module M` for M this very module, which
 /// re-exports everything M defines. Layout is inert inside the list,
 /// so any whitespace may separate the keyword from the module name. A
-/// `T(..)` entry names a type's members, never a top-level binding.
+/// `T(..)` / `C(m)` entry names the type or class T / C (a unit since
+/// L round step 8) and never a top-level binding called `m`; an
+/// ExplicitNamespaces `type T` / `pattern P` entry names T / P.
 fn names(entry: &str, name: &str, module: Option<&str>) -> bool {
     let mut words = entry.split_whitespace();
     if words.next() == Some("module") {
         return module.is_some() && words.next() == module && words.next().is_none();
     }
-    let bare = unparen(entry);
+    let bare = unparen(head(entry));
     let local = module
         .and_then(|m| bare.strip_prefix(m)?.strip_prefix('.'))
         .unwrap_or(bare);
     local == unparen(name)
+}
+
+/// The entry's own name: a namespace keyword dropped, a trailing
+/// member list (`T(..)`, `C(m, n)`) cut. An operator entry opens with
+/// its paren and closes at the first `)` — parens are Haskell
+/// `special`, never part of a symbol — so a type operator's
+/// `(:^:)(..)` cuts to `(:^:)` and `(<+>)` stays whole for `unparen`
+/// (the step-8 review: the member list used to stay attached and an
+/// exported type operator read private).
+fn head(entry: &str) -> &str {
+    let entry = entry.trim();
+    let entry = ["type ", "pattern "]
+        .iter()
+        .find_map(|kw| entry.strip_prefix(kw))
+        .unwrap_or(entry)
+        .trim_start();
+    let cut = if entry.starts_with('(') {
+        entry.find(')').map(|i| i + 1)
+    } else {
+        entry.find('(')
+    };
+    cut.map_or(entry, |i| &entry[..i]).trim_end()
 }
 
 fn unparen(s: &str) -> &str {

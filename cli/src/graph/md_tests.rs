@@ -36,6 +36,20 @@ fn fences_and_code_spans_emit_nothing() {
     assert_eq!(kinds_specs(text), vec![]);
 }
 
+/// Indented code (step 8, O57): four columns at the document start or
+/// after a blank line open a block outside a list — its link-shaped
+/// content emits nothing and the block runs across blank lines; a
+/// list item's continuation paragraph indented the same way is prose;
+/// a lazy line without the blank continues its paragraph; a tab
+/// counts four; a fence close leaves no paragraph open, so an
+/// indented line right after it is code.
+#[test]
+fn indented_code_blocks_emit_nothing_outside_lists() {
+    let text = "    [top](./no.md)\nintro\n\n    [code](./no.md)\n\n    [still](./no.md)\nback [a](./a.md)\n- item\n\n    [prose](./b.md)\npara\n    [lazy](./c.md)\n\n\t[tab](./no.md)\n```\nx\n```\n    [after](./no.md)\n";
+    let specs: Vec<String> = kinds_specs(text).into_iter().map(|(_, s)| s).collect();
+    assert_eq!(specs, ["./a.md", "./b.md", "./c.md"]);
+}
+
 /// Opus review: single-backtick pairing masked nothing inside a
 /// ``double`` span — runs must pair by equal length (CommonMark).
 #[test]
@@ -44,11 +58,17 @@ fn multi_backtick_spans_are_masked() {
     assert_eq!(kinds_specs(text), vec![]);
 }
 
-/// A ``` inside an open ~~~ fence is content, not a closer.
+/// A ``` inside an open ~~~ fence is content, not a closer — and so
+/// is a ``` inside a ```` fence: only the same marker in a run at
+/// least as long closes (CommonMark; the step-8 review's leak).
 #[test]
 fn mismatched_fence_markers_do_not_close() {
-    let text = "~~~\n```\n[still fenced](./no.md)\n```\n~~~\n[out](./yes.md)\n";
-    assert_eq!(kinds_specs(text), vec![("link", "./yes.md".into())]);
+    for text in [
+        "~~~\n```\n[still fenced](./no.md)\n```\n~~~\n[out](./yes.md)\n",
+        "````\n```\n[still fenced](./no.md)\n```\n````\n[out](./yes.md)\n",
+    ] {
+        assert_eq!(kinds_specs(text), vec![("link", "./yes.md".into())]);
+    }
 }
 
 /// Opus review: HTML comments (single- and multi-line) are not

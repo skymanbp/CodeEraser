@@ -61,13 +61,19 @@ pub(crate) fn mod_item_at<'t>(
     row: usize,
     name: &str,
 ) -> Option<tree_sitter::Node<'t>> {
-    covering_chain(tree, row).into_iter().find(|c| {
-        c.kind() == "mod_item"
-            && c.start_position().row == row
-            && c.child_by_field_name("name")
-                .and_then(|n| n.utf8_text(src.as_bytes()).ok())
-                == Some(name)
-    })
+    covering_chain(tree, row)
+        .into_iter()
+        .find(|c| c.start_position().row == row && mod_named(*c, src, name))
+}
+
+/// Whether `node` is a `mod_item` declaring `name` — the one predicate
+/// the #[path] probe and the bare-head namespace read share.
+pub(crate) fn mod_named(node: tree_sitter::Node, src: &str, name: &str) -> bool {
+    node.kind() == "mod_item"
+        && node
+            .child_by_field_name("name")
+            .and_then(|n| n.utf8_text(src.as_bytes()).ok())
+            == Some(name)
 }
 
 /// `Some(target)` when `item` is `#[path = "target"]` — the value
@@ -101,15 +107,32 @@ pub(crate) fn walk_all(
     roots_set: &BTreeSet<String>,
     files: &BTreeSet<String>,
 ) -> (super::Outcome, usize) {
-    let mut hits: BTreeSet<(String, usize)> = BTreeSet::new();
-    for anchor in anchors {
-        match descend(&anchor, segs, roots_set, files) {
-            Ok(hit) => {
-                hits.insert(hit);
-            }
-            Err(reason) => return (super::Outcome::Unresolved(reason), 0),
-        }
+    match walk_hits(anchors, segs, roots_set, files) {
+        Ok(hits) => settle(hits, rung),
+        Err(reason) => (super::Outcome::Unresolved(reason), 0),
     }
+}
+
+/// The (terminal, consumed) pair every anchor's descent reaches —
+/// the walk's raw answer before `settle` folds it, kept apart so the
+/// crate rung can tie-break two same-package roots on the first
+/// unconsumed segment (rs_use.rs, step 8) instead of refusing.
+pub(crate) type Hits = BTreeSet<(String, usize)>;
+pub(crate) fn walk_hits(
+    anchors: Vec<String>,
+    segs: &[&str],
+    roots_set: &BTreeSet<String>,
+    files: &BTreeSet<String>,
+) -> Result<Hits, Reason> {
+    anchors
+        .into_iter()
+        .map(|anchor| descend(&anchor, segs, roots_set, files))
+        .collect()
+}
+
+/// Fold the hits: one terminal answers, none is out of scope, several
+/// distinct terminals refuse.
+pub(crate) fn settle(mut hits: Hits, rung: u8) -> (super::Outcome, usize) {
     let paths: BTreeSet<&str> = hits.iter().map(|(p, _)| p.as_str()).collect();
     match paths.len() {
         0 => (super::Outcome::Unresolved(Reason::OutOfScope), 0),
@@ -147,17 +170,23 @@ pub(crate) enum Child {
     None,
 }
 
-/// The child-module lookup throat: dir/name.rs | dir/name/mod.rs,
-/// both present is rustc's own E0761 ambiguity.
+/// The child-module lookup at the declarer's FILE-LEVEL child
+/// directory — the descent's step. A declaration inside a bodied
+/// `mod` mounts deeper (rs.rs `conv_base`), through `child_in`.
 pub(crate) fn child(
     file: &str,
     name: &str,
     roots_set: &BTreeSet<String>,
     files: &BTreeSet<String>,
 ) -> Child {
-    let dir = child_dir(file, roots_set);
-    let plain = roots::join_dir(&dir, &format!("{name}.rs"));
-    let modrs = roots::join_dir(&dir, &format!("{name}/mod.rs"));
+    child_in(&child_dir(file, roots_set), name, files)
+}
+
+/// The child-module lookup throat: dir/name.rs | dir/name/mod.rs,
+/// both present is rustc's own E0761 ambiguity.
+pub(crate) fn child_in(dir: &str, name: &str, files: &BTreeSet<String>) -> Child {
+    let plain = roots::join_dir(dir, &format!("{name}.rs"));
+    let modrs = roots::join_dir(dir, &format!("{name}/mod.rs"));
     match (files.contains(&plain), files.contains(&modrs)) {
         (true, true) => Child::Both,
         (true, false) => Child::One(plain),
