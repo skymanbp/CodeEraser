@@ -238,8 +238,8 @@ A projection gate pins that the symbol column survives the hub's generic table
   ledger in §8 shows 31 such rows across four corpora and no dead-code claim is made.
 - **Python module privacy is not a mount fact.** A class under `if TYPE_CHECKING:` in an
   underscore-private module (requests `_types.py:157`) comes out `public` — the
-  visibility word reads the name, the mounts table has no Python arm. Named for the
-  extraction-reinforcement step, not patched here.
+  visibility word reads the name, the mounts table has no Python arm. Ruled into the
+  extraction-reinforcement step (2026-08-28), not patched here.
 - **Late-NUL binaries are in U** and lossily decoded (§1); their token cost is measured
   as its own column (§8), and the rule is not changed because git's own binary rule is
   the same 8,000 bytes.

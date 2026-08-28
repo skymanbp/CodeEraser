@@ -65,7 +65,7 @@ zod 536 = 583 − 45 − 1 − 1）。
 `test` 单数四语料 0（自仓 22，只报）；ripgrep 包根 Test 规则恰四目录。**258 行外部顾问逐条处置**（Workflow 10 处置者 + 10
 推翻式核验者，8 条改判、**0 条 veto 缺陷**——仪器主张 258/258 成立）：218 公开 API 面、2 loader 拼写（cobra `Gt`/`Eq` 经
 `text/template` FuncMap `gt`/`eq`）、5 仅测试、31 限制/私有声明仅自文件用或无人用、2 条域读法入残余风险台账（requests
-`_types.py:157` `if TYPE_CHECKING:` 下划线模块类判 public——Python 模块私有非 mount 事实，具名交提取面补强步裁；ripgrep
+`_types.py:157` `if TYPE_CHECKING:` 下划线模块类判 public——Python 模块私有非 mount 事实，具名交提取面补强步——2026-08-28 用户裁**入 #8 一起做**；ripgrep
 `matcher.rs:548` 同文件 `pub(crate)` 属文件粒度设计）。**K45 双腿**（A/B 两棵 HEAD 树各自 `.ce/`，旧客户端 1f493df vs 本批，
 n=9 交错，静默窗）：`ce audit --hook` 1.186→0.954 s、`ce erase` 1.526→1.493 s、`ce check` 1.786→1.802 s（散布 1.729–1.928）——
 传否路零代价成立，PERF-BUDGET 立节。方法学册 **13**（`docs/reference/methodology/13-unmentioned-declaration-advisory.md`，
