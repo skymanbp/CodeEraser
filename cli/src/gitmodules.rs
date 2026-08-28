@@ -181,17 +181,32 @@ mod tests {
     fn the_reading_is_gits_own() {
         const CASES: [(&str, &[&str]); 12] = [
             ("[submodule \"s\"]\n\tpath = cli/tests\n", &["cli/tests"]),
-            ("[submodule \"s\"]\n\tpath = \"cli/tests\"\n", &["cli/tests"]),
-            ("[submodule \"s\"]\n\tpath = cli/tests # the suite\n", &["cli/tests"]),
-            ("[submodule \"s\"]\n\tpath = cli/tests ; note\n", &["cli/tests"]),
+            (
+                "[submodule \"s\"]\n\tpath = \"cli/tests\"\n",
+                &["cli/tests"],
+            ),
+            (
+                "[submodule \"s\"]\n\tpath = cli/tests # the suite\n",
+                &["cli/tests"],
+            ),
+            (
+                "[submodule \"s\"]\n\tpath = cli/tests ; note\n",
+                &["cli/tests"],
+            ),
             ("[SUBMODULE \"s\"]\n\tPath = cli/tests\n", &["cli/tests"]),
             ("[submodule \"s\"] path = cli/tests\n", &["cli/tests"]),
             ("[include]\n\tpath = ../elsewhere\n", &[]),
             ("[submodule \"a#b\"]\n\tpath = \"a#b\"\n", &["a#b"]),
             ("[submodule \"s\"]\n\tpath = \"a\\\\b\"\n", &["a/b"]),
-            ("[submodule \"s\"]\n\tpath = cli/\\\n\ttests\n", &["cli/\n\ttests"]),
+            (
+                "[submodule \"s\"]\n\tpath = cli/\\\n\ttests\n",
+                &["cli/\n\ttests"],
+            ),
             ("[submodule \"s\"]\n\tpath = a\t\tb  \n", &["a\t\tb"]),
-            ("[submodule \"s\"]\n\tpath = declared/\n\turl = x\n", &["declared"]),
+            (
+                "[submodule \"s\"]\n\tpath = declared/\n\turl = x\n",
+                &["declared"],
+            ),
         ];
         for (text, want) in CASES {
             let got: Vec<String> = parse(text).into_iter().collect();

@@ -238,10 +238,22 @@ mod tests {
             std::fs::write(repo.join(sub).join(".git"), "gitdir: ../realgit\n").expect("gitfile");
         }
         std::fs::write(repo.join("sub2/ce.toml"), "\n").expect("opt-out");
-        assert_eq!(project_root(&repo.join("sub")), repo, "declared: the parent's");
+        assert_eq!(
+            project_root(&repo.join("sub")),
+            repo,
+            "declared: the parent's"
+        );
         assert_eq!(project_root(&deep), repo, "…all the way down");
-        assert_eq!(project_root(&repo.join("foreign")), repo.join("foreign"), "undeclared escapes");
-        assert_eq!(project_root(&repo.join("sub2")), repo.join("sub2"), "own ce.toml opts out");
+        assert_eq!(
+            project_root(&repo.join("foreign")),
+            repo.join("foreign"),
+            "undeclared escapes"
+        );
+        assert_eq!(
+            project_root(&repo.join("sub2")),
+            repo.join("sub2"),
+            "own ce.toml opts out"
+        );
         std::fs::remove_file(repo.join("sub/.git")).expect("deinit");
         assert_eq!(project_root(&deep), repo, "checkout-invariant");
         std::fs::remove_dir_all(&dir).ok();
