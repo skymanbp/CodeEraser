@@ -97,10 +97,10 @@ Edit 减 `old_string` 的自有匹配（基线探针仅首探命中才发；基�
 
 仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」
 节的复活律**连同同代支撑**复活、跑毕重退役（其 `common::git_out` 已于 9e05f53 出仓，单取仪器
-文件对今日支撑编译不过）：`git checkout 0c7c936^ -- cli/tests/fpr_replay.rs cli/tests/common`，
-跑下列命令，再 `git rm -f cli/tests/fpr_replay.rs && git rm -rf cli/tests/common`
-（测试合并 2026-08-26 起 HEAD 的支撑住 `cli/tests/it/common`，复活的旧代 `cli/tests/common`
-在 HEAD 无对应物，退役即整目录移除，不再 checkout 回填）：
+文件对今日支撑编译不过）：`git show 0c7c936^:cli/tests/fpr_replay.rs > cli/tests/fpr_replay.rs && git archive 0c7c936^ cli/tests/common | tar -x`，
+跑下列命令，再 `rm -rf cli/tests/fpr_replay.rs cli/tests/common`
+（复活件在两个仓都是未跟踪文件：`cli/tests` 自 9bedcc4 起是 submodule，超仓索引里只有 gitlink 一行，对着
+submodule 路径 `git checkout <sha> -- <路径>` 会静默把 gitlink 换成历史 blob——退役必须是纯 `rm`，永不写索引）：
 
 K 轮实测两处同代垫片（复活后按此打上；第一片 product mirror 仅第二轮新语义复测才打、第一轮出厂语义须留白；第二片 remove_missing 补 seen 参两轮都必打——今日签名为二参，缺之编译不过）：
 

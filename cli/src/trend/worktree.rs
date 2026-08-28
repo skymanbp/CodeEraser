@@ -42,12 +42,12 @@ impl Worktree {
             path,
             seats: Vec::new(),
         };
-        for (rel, sub) in gitlinks(&wt.path)? {
+        for (rel, sub) in churn::gitlinks(&wt.path)? {
             let home = root.join(&rel);
             anyhow::ensure!(
                 home.join(".git").exists(),
-                "trend: submodule {rel} is not checked out under {} — `git submodule update --init` first",
-                root.display()
+                "trend: {}",
+                crate::gitmodules::refusal(&rel, root)
             );
             let seat = wt.path.join(&rel);
             let s = seat.to_str().context("seat path not utf8")?;
@@ -56,22 +56,6 @@ impl Worktree {
         }
         Ok(wt)
     }
-}
-
-/// The commit's gitlinks as (path, sha): the mode-160000 rows of
-/// `ls-tree -r HEAD`.
-fn gitlinks(wt: &Path) -> Result<Vec<(String, String)>> {
-    let out = churn::git(wt, &["ls-tree", "-r", "HEAD"])?;
-    Ok(out
-        .lines()
-        .filter_map(|l| {
-            let (meta, path) = l.split_once('\t')?;
-            let mut f = meta.split(' ');
-            (f.next()? == "160000").then_some(())?;
-            f.next()?;
-            Some((path.to_string(), f.next()?.to_string()))
-        })
-        .collect())
 }
 
 impl Drop for Worktree {

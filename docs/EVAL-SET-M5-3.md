@@ -167,5 +167,5 @@ cd cli && cargo test --test it -- eval_t3_universe:: eval_t3_candidates:: \
 外部四语料需本地 `.ce-eval/` 克隆（tip 见上表，CI 门 `rev-parse` 复核 RM19）；
 冻结件重生成：生成器已随 M7.5 退役、五条整件门（t3_sample/t3_recall/
 docdup_oracle/docdup_sample/churn_ledger）随 v0.5.0 加码批退役——均先
-`git checkout <父提交> -- cli/tests/<仪器> cli/tests/eval_support` 复活再跑（支撑须同代，EVAL-SET.md 再生成节
+`git show <父提交>:cli/tests/<仪器> > cli/tests/<仪器> && git archive <父提交> cli/tests/eval_support | tar -x` 复活再跑（支撑须同代且只读历史不写索引，EVAL-SET.md 再生成节
 同律），diff 为空即完整复现。

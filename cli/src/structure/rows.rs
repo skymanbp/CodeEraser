@@ -199,7 +199,11 @@ pub fn stale_doc_rows(
 /// Newest commit time per touched file inside the window, one git
 /// pass (churn's own runner — no second git throat). The \x01
 /// sentinel keeps an all-digit FILENAME from parsing as a commit
-/// time.
+/// time. Superproject history only: a file under a declared
+/// submodule never appears in this log (its pointer bump does), so a
+/// doc citing `cli/tests/…` can never be found stale by that target
+/// here — one-directional (a missed staleness, never a false alarm),
+/// named by `ce churn`'s report rather than widened onto this wire.
 fn newest_in_window(root: &Path, days: u32) -> Result<BTreeMap<String, i64>> {
     let since = format!("--since={days} days ago");
     let log = crate::churn::git(root, &["log", &since, "--format=%x01%ct", "--name-only"])?;

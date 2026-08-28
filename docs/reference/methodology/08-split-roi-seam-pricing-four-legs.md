@@ -29,8 +29,8 @@ a degraded reply drops them with the rest of the facts
 
 Units on the wire are the **top-level** spans only: outermost, non-overlapping,
 start-ordered, so a nested helper always lands on its holder's side of every seam
-[seams.rs:182-196](../../../cli/src/structure/seams.rs#L182). Each unit's `end` is clamped to the
-file total [seams.rs:201](../../../cli/src/structure/seams.rs#L201).
+[seams.rs:184-198](../../../cli/src/structure/seams.rs#L184). Each unit's `end` is clamped to the
+file total [seams.rs:203](../../../cli/src/structure/seams.rs#L203).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
 list against its own tail, so a file with `n` top-level units yields `n − 1` seams and a
@@ -118,7 +118,7 @@ index by the `lookupGE s` / `lookupLT e` pair
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:135-136](../../../core/app/CE/Structure/Cost.hs#L135) | word-bounded mention edges [seams.rs:215-234](../../../cli/src/structure/seams.rs#L215) |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:135-136](../../../core/app/CE/Structure/Cost.hs#L135) | word-bounded mention edges [seams.rs:217-236](../../../cli/src/structure/seams.rs#L217) |
 | cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:147-148](../../../core/app/CE/Structure/Cost.hs#L147) | T1/T2 dedup block spans [seams.rs:79-107](../../../cli/src/structure/seams.rs#L79) |
 | crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:150-151](../../../core/app/CE/Structure/Cost.hs#L150) | 14-day commit ledger [seams.rs:115-144](../../../cli/src/structure/seams.rs#L115) |
 | per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:138-139](../../../core/app/CE/Structure/Cost.hs#L138) | flat, no measurement |
@@ -132,13 +132,13 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 **Leg 1 — severed references.** The honest v1 proxy: true intra-file symbol co-reference
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
-[seams.rs:214-233](../../../cli/src/structure/seams.rs#L214),
+[seams.rs:216-235](../../../cli/src/structure/seams.rs#L216),
 [size-advisory.md:92-95](../size-advisory.md#L92). Word-boundedness is
 identifier-char adjacency on both sides
-[seams.rs:235-253](../../../cli/src/structure/seams.rs#L235). Names shorter than `NAME_FLOOR = 3` are
+[seams.rs:237-255](../../../cli/src/structure/seams.rs#L237). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
-[seams.rs:225](../../../cli/src/structure/seams.rs#L225). Documented limitation: short names and
+[seams.rs:227](../../../cli/src/structure/seams.rs#L227). Documented limitation: short names and
 in-string mentions will count an edge; the advisory face is non-binding, so this is tolerated
 [size-advisory.md:94-95](../size-advisory.md#L94).
 
@@ -151,7 +151,7 @@ reference [Cost.hs:141-146](../../../core/app/CE/Structure/Cost.hs#L141).
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent
 --no-merges`, path-limited to the seam files)
-[seams.rs:148-162](../../../cli/src/structure/seams.rs#L148), then each commit's ledger rows are
+[seams.rs:150-164](../../../cli/src/structure/seams.rs#L150), then each commit's ledger rows are
 joined onto the *current* snapshot's units at key level; renamed units drop out honestly, and
 a tree without git history prices the leg at zero rather than failing the advisory
 [seams.rs:109-144](../../../cli/src/structure/seams.rs#L109). The window constant is

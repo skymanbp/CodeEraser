@@ -114,16 +114,38 @@ pub fn each_surviving<T>(
     Ok((config, out))
 }
 
-/// Collect candidate files under `root`, honoring the exclusion model.
-pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, String> {
+/// The walker every measurement shares — the exclusion model in ONE
+/// builder, so `collect` and `Scope` cannot drift (they did: the
+/// scope test hand-rolled the model from the root ignore files and
+/// missed git's VCS boundary, nested ignore files and the hidden rule).
+fn builder(root: &Path, extra_excludes: &[String]) -> Result<WalkBuilder, String> {
     let overrides = build_overrides(root, extra_excludes)?;
-    let mut files = Vec::new();
-    let walker = WalkBuilder::new(root)
-        .add_custom_ignore_filename(".ceignore")
+    let mut b = WalkBuilder::new(root);
+    b.add_custom_ignore_filename(".ceignore")
         .overrides(overrides)
-        .hidden(true)
-        .build();
-    for entry in walker {
+        .hidden(true);
+    Ok(b)
+}
+
+/// Collect candidate files under `root`, honoring the exclusion model.
+/// A declared submodule the checkout has not seated (gitmodules.rs)
+/// refuses BY NAME first: its files are tree content a filesystem
+/// walk cannot see, so the walk would measure a tree missing them and
+/// `ce baseline` would persist the shrunken ratchet as an improvement
+/// — "a gate that could not judge must never pass" (ADR-008 P1). A
+/// declared path the exclusion model prunes anyway (`vendor/`) judges
+/// nothing seated or not, so it is not refused. `ce guard` never
+/// comes through here: a fail-open hook must not start refusing every
+/// write on a shallow clone.
+pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, String> {
+    let mut scope = Scope::new(root, extra_excludes)?;
+    for rel in crate::gitmodules::unseated(root) {
+        if scope.contains_dir(&rel) {
+            return Err(crate::gitmodules::refusal(&rel, root));
+        }
+    }
+    let mut files = Vec::new();
+    for entry in builder(root, extra_excludes)?.build() {
         let entry = entry.map_err(|e| format!("walk: {e}"))?;
         if entry.file_type().is_some_and(|t| t.is_file()) {
             files.push(entry.into_path());
@@ -133,33 +155,50 @@ pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, S
     Ok(files)
 }
 
-/// Scope test for one file (existing or about to be created),
-/// sharing collect()'s override set so the two cannot drift.
-/// Known boundary: nested .gitignore/.ceignore files are honored by
-/// the walk but not here — only the root-level ones apply, because a
-/// not-yet-created file cannot be found by walking. For the guard's
-/// budget rule that costs at most a spurious ask inside a
-/// nested-ignored directory, never a silently skipped in-scope file.
-pub fn in_scope(root: &Path, path: &Path, extra_excludes: &[String]) -> bool {
-    let root = canon(root);
-    let Ok(rel) = canon(path).strip_prefix(&root).map(Path::to_path_buf) else {
-        return false; // outside the project root: not ours to judge
-    };
-    let Ok(overrides) = build_overrides(&root, extra_excludes) else {
-        return false;
-    };
-    // Directory patterns ("!vendor/", "gen/") match the DIRECTORY, so
-    // the file itself and every ancestor must be tested — the walk
-    // prunes at the directory, a single direct-path probe does not
-    // (attack review 2026-08-11 F10).
-    let excluded = std::iter::successors(Some(rel.as_path()), |p| p.parent()).any(|p| {
-        !p.as_os_str().is_empty()
-            && matches!(overrides.matched(p, p != rel), ignore::Match::Ignore(_))
-    });
-    if excluded {
-        return false;
+/// The exclusion model asked of ONE path (existing or about to be
+/// created): the walk's own matcher, incremental (`ignore` 0.4.33
+/// `build_matchers`) — glob overrides, `.gitignore`/`.ceignore` in
+/// every ancestor directory, the hidden rule, and git's VCS boundary
+/// (a nested `.git`, file or directory, stops the outer `.gitignore`
+/// exactly as a traversal does). The hand-rolled predicate this
+/// replaced read the ROOT ignore files only, so the guard judged
+/// `cli/tests/…` under superproject rules the walk never applied
+/// there and hidden paths the walk never yields. Ancestor DIRECTORIES
+/// are read, never the file, so a not-yet-created path answers too.
+/// Built once per batch: the matcher caches per directory.
+pub struct Scope {
+    root: PathBuf,
+    matcher: ignore::IncrementalIgnore,
+}
+
+impl Scope {
+    pub fn new(root: &Path, extra_excludes: &[String]) -> Result<Self, String> {
+        let root = canon(root);
+        let matcher = builder(&root, extra_excludes)?
+            .build_matchers()
+            .pop()
+            .ok_or_else(|| "walk: no matcher for the root".to_string())?;
+        Ok(Self { root, matcher })
     }
-    !ignored_by(&root, ".gitignore", &rel) && !ignored_by(&root, ".ceignore", &rel)
+
+    /// `path` (absolute or root-relative) is one the walk would yield.
+    pub fn contains(&mut self, path: &Path) -> bool {
+        let full = canon(&self.root.join(path));
+        let Ok(rel) = full.strip_prefix(&self.root) else {
+            return false; // outside the project root: not ours to judge
+        };
+        !rel.as_os_str().is_empty() && !self.matcher.matched(rel, false).is_ignore()
+    }
+
+    /// A root-relative DIRECTORY the walk would descend into.
+    fn contains_dir(&mut self, rel: &str) -> bool {
+        !self.matcher.matched(rel, true).is_ignore()
+    }
+}
+
+/// One-shot `Scope` for the surfaces that ask about a single write.
+pub fn in_scope(root: &Path, path: &Path, extra_excludes: &[String]) -> bool {
+    Scope::new(root, extra_excludes).is_ok_and(|mut s| s.contains(path))
 }
 
 /// `root/rel` confined to `root` — None when it escapes. The ONE
@@ -178,15 +217,6 @@ fn canon(p: &Path) -> PathBuf {
         (Some(dir), Some(name)) => canon(dir).join(name),
         _ => p.to_path_buf(),
     })
-}
-
-fn ignored_by(root: &Path, ignore_file: &str, rel: &Path) -> bool {
-    let mut b = ignore::gitignore::GitignoreBuilder::new(root);
-    b.add(root.join(ignore_file));
-    b.build()
-        // parent-aware on purpose: "generated/" must cover its files
-        .map(|g| g.matched_path_or_any_parents(rel, false).is_ignore())
-        .unwrap_or(false)
 }
 
 fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::Override, String> {

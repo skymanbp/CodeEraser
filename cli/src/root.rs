@@ -32,14 +32,38 @@ pub fn project_root(given: &Path) -> PathBuf {
     let start = std::path::absolute(given).unwrap_or_else(|_| given.to_path_buf());
     let mut probe = start.as_path();
     loop {
-        if probe.join("ce.toml").is_file() || is_git_anchor(&probe.join(".git")) {
+        if probe.join("ce.toml").is_file() {
             return probe.to_path_buf();
+        }
+        if is_git_anchor(&probe.join(".git")) {
+            return match superproject_of(probe) {
+                Some(sup) => project_root(&sup),
+                None => probe.to_path_buf(),
+            };
         }
         match probe.parent() {
             Some(p) if !p.as_os_str().is_empty() => probe = p,
             _ => return given.to_path_buf(),
         }
     }
+}
+
+/// The enclosing anchor whose `.gitmodules` DECLARES `sub`, when one
+/// does. A declared submodule is part of its superproject by
+/// declaration — the same tracked answer the mention walk keeps
+/// (gitmodules.rs) — so its state throats resolve there, seated or
+/// not; an UNDECLARED nested repository (a vendored checkout, a
+/// `.git`-anchored fixture under target/tmp) keeps the 2026-08-21
+/// escape and roots at itself.
+fn superproject_of(sub: &Path) -> Option<PathBuf> {
+    let sup = sub
+        .ancestors()
+        .skip(1)
+        .find(|p| !p.as_os_str().is_empty() && is_anchored(p))?;
+    let rel = crate::scan::walk::rel_str(sup, sub);
+    crate::gitmodules::declared(sup)
+        .contains(&rel)
+        .then(|| sup.to_path_buf())
 }
 
 /// The resolved root plus the ascent, for surfaces that must SAY when
@@ -64,14 +88,20 @@ pub fn is_anchored(p: &Path) -> bool {
 /// A REAL git anchor: the `.git` DIRECTORY, or a worktree/submodule
 /// gitfile whose target actually resolves.
 ///
-/// PRECEDENCE, decided (audit 2026-08-21): the NEAREST anchor wins,
-/// even when a nested `.git` sits under an enclosing ce.toml — git's
-/// own stop-at-first-gitdir rule. A vendored checkout or submodule is
-/// its own project and escapes the outer guard policy BY THIS RULE;
-/// the outer project's Stop audit still sees its own tree, and eject
-/// treats a nested ce.toml the same way. Continuing the ascent past a
-/// `.git` was rejected because every `.git`-anchored test fixture
-/// under target/tmp would then re-root to this repository itself.
+/// PRECEDENCE, decided (audit 2026-08-21, refined 2026-08-28): the
+/// NEAREST anchor wins, even when a nested `.git` sits under an
+/// enclosing ce.toml — git's own stop-at-first-gitdir rule — with ONE
+/// refinement: a `.git`-only anchor the enclosing project's
+/// `.gitmodules` DECLARES is that project's (`superproject_of`; the
+/// test suite rides at `cli/tests` that way, and a guard rooted there
+/// once minted a tests-only index under default knobs), while a
+/// nested ce.toml still opts a submodule out. A vendored checkout or
+/// UNDECLARED nested repository is its own project and escapes the
+/// outer guard policy BY THIS RULE; the outer project's Stop audit
+/// still sees its own tree, and eject leaves an own-project alone.
+/// Continuing the ascent past EVERY `.git` was rejected because each
+/// `.git`-anchored test fixture under target/tmp would then re-root
+/// to this repository itself.
 ///
 /// Two rounds of this guard, two lessons. `.exists()` took any file of
 /// that name, so one Write re-rooted a whole subtree's hooks to a place
@@ -190,6 +220,30 @@ mod tests {
         std::fs::write(&gitfile, format!("gitdir: {}\n", real.display())).expect("absolute");
         assert!(is_git_anchor(&gitfile), "absolute targets resolve too");
 
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// A declared submodule roots at its superproject, seated or not
+    /// (the same answer before and after `git submodule update
+    /// --init`); an undeclared nested repository and a submodule
+    /// carrying its own ce.toml still root at themselves.
+    #[test]
+    fn a_declared_submodule_roots_at_its_superproject() {
+        let (dir, repo, deep) = anchored("submod", "sub/deep");
+        std::fs::create_dir_all(repo.join("realgit")).expect("mkdir");
+        let declare = "[submodule \"s\"]\n\tpath = sub\n[submodule \"t\"]\n\tpath = sub2\n";
+        std::fs::write(repo.join(".gitmodules"), declare).expect(".gitmodules");
+        for sub in ["sub", "foreign", "sub2"] {
+            std::fs::create_dir_all(repo.join(sub)).expect("mkdir");
+            std::fs::write(repo.join(sub).join(".git"), "gitdir: ../realgit\n").expect("gitfile");
+        }
+        std::fs::write(repo.join("sub2/ce.toml"), "\n").expect("opt-out");
+        assert_eq!(project_root(&repo.join("sub")), repo, "declared: the parent's");
+        assert_eq!(project_root(&deep), repo, "…all the way down");
+        assert_eq!(project_root(&repo.join("foreign")), repo.join("foreign"), "undeclared escapes");
+        assert_eq!(project_root(&repo.join("sub2")), repo.join("sub2"), "own ce.toml opts out");
+        std::fs::remove_file(repo.join("sub/.git")).expect("deinit");
+        assert_eq!(project_root(&deep), repo, "checkout-invariant");
         std::fs::remove_dir_all(&dir).ok();
     }
 }

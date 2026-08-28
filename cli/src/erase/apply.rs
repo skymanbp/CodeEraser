@@ -1,7 +1,8 @@
 //! The destructive phase's executor (erase.md §two-phases):
 //! preconditions in contract order — a git repository (revert is one
 //! checkout away), a CLEAN worktree (never entangled with
-//! uncommitted work), every target's bytes still the plan's — then
+//! uncommitted work), every target inside THAT repository (never
+//! below a gitlink), every target's bytes still the plan's — then
 //! the writes and the append-only audit record. The convergence
 //! re-plan lives in mod.rs (apply_plan), which calls DOWN into this
 //! executor — never the other way. Only files the plan named are
@@ -81,6 +82,7 @@ fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {
          be entangled with uncommitted work ({})",
         user_dirt.join(", ")
     );
+    inside_this_repository(root, targets)?;
     let mut cache = crate::erase::gather::TextCache::new(root);
     for r in targets {
         let now = crate::dedup::tokens::fnv1a(cache.text(&r.path)?.as_bytes());
@@ -92,6 +94,34 @@ fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {
         );
     }
     Ok(())
+}
+
+/// The repository ce VERIFIED and the subtree ce WRITES must be one:
+/// a target at or below a gitlink is another repository's file — the
+/// parent's clean status shows the child as one ` M sub` row at most,
+/// and its revert would be a checkout in the CHILD, outside this
+/// transaction's contract. Refused by name; the row stays planned and
+/// reported (the CI `--check` leg still sees it), so the removal is
+/// made in that repository by hand. HEAD's gitlinks are the on-disk
+/// answer here because the worktree was just proven clean.
+fn inside_this_repository(root: &Path, targets: &[&Row]) -> Result<()> {
+    let subs = crate::churn::gitlinks(root)?;
+    for r in targets {
+        if let Some((sub, _)) = subs.iter().find(|(s, _)| below(&r.path, s)) {
+            anyhow::bail!(
+                "{}: below the submodule {sub} — an erase writes only inside the \
+                 repository whose worktree it verified; remove it in {sub}'s own repository",
+                r.path
+            );
+        }
+    }
+    Ok(())
+}
+
+/// `path` is `sub` or under it — on a `/` boundary, so a `suitecase.md`
+/// is not below a submodule `suite` (both spellings are `rel_str`'s).
+fn below(path: &str, sub: &str) -> bool {
+    path == sub || path.strip_prefix(sub).is_some_and(|t| t.starts_with('/'))
 }
 
 /// Plan-ordered rows grouped per target file.
@@ -152,4 +182,17 @@ fn append_log(root: &Path, r: &Row, plan_hash: u64) -> Result<()> {
         .open(dir.join("erase-log.ndjson"))?;
     f.write_all(format!("{line}\n").as_bytes())?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    /// The boundary is a path component, not a prefix: an inert guard
+    /// on a `suite` submodule would let `suite/x.md` through, an over-
+    /// eager one would refuse `suitecase.md`.
+    #[test]
+    fn below_a_gitlink_is_a_component_boundary() {
+        for (path, want) in [("suite", true), ("suite/a/b.md", true), ("suitecase.md", false), ("othersuite/x.md", false)] {
+            assert_eq!(super::below(path, "suite"), want, "{path}");
+        }
+    }
 }

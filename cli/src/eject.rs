@@ -16,7 +16,17 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 pub fn run(root: &Path, yes: bool) -> ExitCode {
-    let targets = targets(root);
+    let (targets, nested) = targets(root);
+    for p in &nested {
+        println!(
+            "{}",
+            line(
+                "left to its own eject (nested project): {}",
+                "留给它自己的 eject（嵌套项目）：{}",
+                &[&p.display()]
+            )
+        );
+    }
     if targets.is_empty() {
         println!(
             "{}",
@@ -101,10 +111,11 @@ fn remove_all(targets: &[PathBuf]) -> ExitCode {
 
 /// Everything eject owns, existing entries only: the §5.9-4 list —
 /// .ce/ (the project's AND any stray below it), ce-baseline.json,
-/// pinned starter binaries (see `ours`).
-fn targets(root: &Path) -> Vec<PathBuf> {
+/// pinned starter binaries (see `ours`) — plus the nested projects
+/// the sweep stopped at, so the operator hears what stays.
+fn targets(root: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
     let anchor = crate::root::project_root(root);
-    let mut out = strays(&anchor);
+    let (mut out, nested) = strays(&anchor);
     let ce = anchor.join(".ce");
     if ce.exists() {
         out.insert(0, ce);
@@ -124,7 +135,7 @@ fn targets(root: &Path) -> Vec<PathBuf> {
             }
         }
     }
-    out
+    (out, nested)
 }
 
 /// Nested `.ce/` directories below the project root. Before the
@@ -133,11 +144,14 @@ fn targets(root: &Path) -> Vec<PathBuf> {
 /// invisible to `git status` behind an unanchored ignore rule, each
 /// holding file paths, symbol keys and an observe feed. An uninstall
 /// that leaves them behind is not the "full per-project uninstall"
-/// the README promises. A directory carrying its own `ce.toml` is a
-/// project in its own right and is left alone, along with the
-/// build/vendor trees no walk should enter.
-fn strays(anchor: &Path) -> Vec<PathBuf> {
-    let mut out = Vec::new();
+/// the README promises. A directory that is a project in its own
+/// right — its own `ce.toml`, or a real `.git` the enclosing project
+/// does not declare (root.rs, the ONE anchor predicate) — is left
+/// alone and named, along with the build/vendor trees no walk should
+/// enter; a DECLARED submodule is this project's, so a `.ce` a
+/// mis-rooted run minted inside it is a stray of ours and is swept.
+fn strays(anchor: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
+    let mut found = (Vec::new(), Vec::new());
     let mut queue = vec![anchor.to_path_buf()];
     while let Some(dir) = queue.pop() {
         let Ok(entries) = std::fs::read_dir(&dir) else {
@@ -153,17 +167,18 @@ fn strays(anchor: &Path) -> Vec<PathBuf> {
                 // first position — this walk reports only the strays
                 ".ce" => {
                     if dir != anchor {
-                        out.push(path);
+                        found.0.push(path);
                     }
                 }
                 ".git" | "target" | "node_modules" | "dist-newstyle" => {}
-                _ if path.join("ce.toml").is_file() => {}
+                _ if crate::root::project_root(&path) == path => found.1.push(path),
                 _ => queue.push(path),
             }
         }
     }
-    out.sort();
-    out
+    found.0.sort();
+    found.1.sort();
+    found
 }
 
 /// Ours = `ce-core[.exe]` or `ce-<version>-…` (versions open with a

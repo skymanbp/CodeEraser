@@ -102,6 +102,7 @@ fn gather(
             dups: dups.as_ref().map(|v| v.dups),
             fourclass,
             skipped: None, // this leg MEASURED — see AuditEvent::skipped
+            unmeasured: crate::gitmodules::unseated(root),
         },
     );
     Some((mode, net_loc, changed, dups))
@@ -161,6 +162,7 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) -> ExitCod
             dups: skipped.map(|_| 0),
             fourclass: None,
             skipped,
+            unmeasured: Vec::new(),
         },
     );
     ExitCode::SUCCESS

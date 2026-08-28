@@ -151,7 +151,7 @@ fn caps_and_face_identity_are_stated() {
     let doc = super::face::report_json(&super::Stats::default(), &Default::default());
     for needle in [
         "\"schema\":\"ce.mentions-report/0.2.0\"",
-        "\"mention_rev\":1",
+        "\"mention_rev\":2",
         "\"rates\":{}",
     ] {
         assert!(doc.contains(needle), "{needle} in {doc}");

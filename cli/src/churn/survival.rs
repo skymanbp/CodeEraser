@@ -24,7 +24,10 @@ pub(super) fn survival(root: &Path, days: u32, touched: &[String]) -> Result<usi
         // second half of a churn run is not a second silence
         crate::progress::at(crate::progress::Phase::Survival, n, touched.len());
         let Ok(out) = git(root, &["blame", "--line-porcelain", "HEAD", "--", file]) else {
-            continue; // deleted since: zero survivors by definition
+            // deleted since: zero survivors by definition (a path that
+            // became a gitlink would land here too, but never reaches
+            // `touched` — a gitlink pair has no judged extension)
+            continue;
         };
         surviving += surviving_lines(&out, cutoff);
     }

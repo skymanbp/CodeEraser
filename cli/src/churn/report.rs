@@ -32,6 +32,10 @@ pub struct Report {
     pub surviving: usize,
     pub cochange: Vec<(String, String, usize)>,
     pub skipped_large: usize,
+    /// Declared submodules holding judged files whose history is not
+    /// this repository's (mod.rs `unhistoried`) — the ledger's named
+    /// shortfall, never an unnamed exclusion.
+    pub submodules_without_history: Vec<String>,
 }
 
 impl Report {
@@ -52,7 +56,8 @@ pub fn report_json(r: &Report) -> serde_json::Value {
     let added = r.added_in_window();
     let churned = added.saturating_sub(r.surviving);
     serde_json::json!({
-        "schema": "ce.churn-report/0.1.0",
+        // 0.2.0: additive `submodules_without_file_history`
+        "schema": "ce.churn-report/0.2.0",
         "commits": r.commits,
         "append_lines": r.append_lines(),
         "rewrite_lines": r.rewrite_lines(),
@@ -63,6 +68,7 @@ pub fn report_json(r: &Report) -> serde_json::Value {
             .map(|(a, b, n)| serde_json::json!({"a": a, "b": b, "count": n}))
             .collect::<Vec<_>>(),
         "skipped_large_commits": r.skipped_large,
+        "submodules_without_file_history": r.submodules_without_history,
     })
 }
 
@@ -115,6 +121,16 @@ pub fn print_console(r: &Report, days: u32) {
                 "note: {} commit(s) above {} files skipped for pairing",
                 "注：{} 个提交超过 {} 文件上限，未参与配对",
                 &[&r.skipped_large, &COCHANGE_FILE_CAP],
+            )
+        );
+    }
+    if !r.submodules_without_history.is_empty() {
+        println!(
+            "{}",
+            line(
+                "note: no file history for declared submodule(s) {} — the ledger is the superproject's own history",
+                "注：声明的 submodule {} 无文件历史——账本只计超仓自身的历史",
+                &[&r.submodules_without_history.join(", ")],
             )
         );
     }

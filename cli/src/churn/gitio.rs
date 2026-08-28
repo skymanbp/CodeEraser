@@ -17,3 +17,22 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
     }
     Ok(String::from_utf8_lossy(&out.stdout).into_owned())
 }
+
+/// `HEAD`'s gitlinks as (path, sha): the mode-160000 rows of
+/// `ls-tree -r -z` — `-z` because every other list reader in the
+/// crate is literal (`-z`) and a C-quoted path would match nothing,
+/// silently (proc.rs). Trend seats them; erase refuses to write below
+/// them.
+pub(crate) fn gitlinks(repo: &Path) -> Result<Vec<(String, String)>> {
+    let out = git(repo, &["ls-tree", "-r", "-z", "HEAD"])?;
+    Ok(out
+        .split('\0')
+        .filter_map(|l| {
+            let (meta, path) = l.split_once('\t')?;
+            let mut f = meta.split(' ');
+            (f.next()? == "160000").then_some(())?;
+            f.next()?;
+            Some((path.to_string(), f.next()?.to_string()))
+        })
+        .collect())
+}

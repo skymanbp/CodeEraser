@@ -190,7 +190,7 @@ pub fn doctor_report(root: String) -> Result<Value, String> {
 /// The bench dashboard document, compiled in at build time — the
 /// shipped GUI shows the bench of its OWN release (single source:
 /// contracts/bench/bench.json; the renderers and CI gate live in
-/// cli/tests/bench*.rs). No filesystem read: the user's opened
+/// cli/tests/it/bench*.rs). No filesystem read: the user's opened
 /// project has nothing to do with CE's own benchmarks.
 #[tauri::command]
 pub fn bench_doc() -> Result<Value, String> {

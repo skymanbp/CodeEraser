@@ -43,7 +43,7 @@ mod survival;
 
 // the leaf owns the face; this re-export keeps every outside
 // caller's path (crate::churn::git) where it always was
-pub(crate) use gitio::git;
+pub(crate) use gitio::{git, gitlinks};
 pub use report::{Report, UnitRow, print_console, report_json};
 // the cap prints beside the skip count it explains, so the report
 // leaf owns the binding and the measurement reads the SAME one
@@ -90,18 +90,47 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
     // count-1 pairs from a core configured to judge them); default 2
     // = the core's cochangeFloor default, so the default table is
     // byte-identical
-    let floor = crate::config::Config::load(root)
-        .ok()
+    let config = crate::config::Config::load(root).ok();
+    let floor = config
+        .as_ref()
         .and_then(|c| c.score.cochange_floor)
         .map(|f| f as usize)
         .unwrap_or(2);
+    let excludes = config.map(|c| c.exclude).unwrap_or_default();
     Ok(Report {
         commits: shas.len(),
         units: sorted_rows(ledger),
         surviving: survival::survival(root, days, &touched)?,
         cochange: top_pairs(pair_counts, floor),
         skipped_large,
+        submodules_without_history: unhistoried(root, &excludes),
     })
+}
+
+/// The declared submodules whose judged files this window can never
+/// attribute: their history is the child repository's, and the
+/// superproject's `git log` shows only the pointer bumps, so a file
+/// under one takes no ledger row, no survival line and no co-change
+/// pair here. Named, not silent (the no-silent-caps discipline;
+/// trend REFUSES because a hollow trend row is a false trajectory,
+/// churn is report-only and degrades out loud) — and only where
+/// judged files actually live: a `vendor/x` mount judges nothing
+/// seated or not, so naming it would be a false shortfall.
+fn unhistoried(root: &Path, excludes: &[String]) -> Vec<String> {
+    let declared = crate::gitmodules::declared(root);
+    if declared.is_empty() {
+        return Vec::new();
+    }
+    let judged: Vec<String> = crate::scan::walk::collect(root, excludes)
+        .unwrap_or_default()
+        .iter()
+        .filter(|p| Lang::judged_path(p).is_some())
+        .map(|p| crate::scan::walk::rel_str(root, p))
+        .collect();
+    declared
+        .into_iter()
+        .filter(|s| judged.iter().any(|p| p.starts_with(&format!("{s}/"))))
+        .collect()
 }
 
 /// One commit's ledger rows through the SAME classify_commit throat

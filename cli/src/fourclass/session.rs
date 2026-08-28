@@ -3,7 +3,12 @@
 //! Cross-file relocations stay INFORMATIONAL until a multi-file FPR
 //! instrument exists (R-L2-4): claiming a move where there is
 //! duplication would hide duplication inside a health signal, so no
-//! deny path may lean on this report yet.
+//! deny path may lean on this report yet. Superproject-only by
+//! design: a declared submodule's edits reach the parent as ONE
+//! gitlink pair (`cli/tests`, no extension, never judged), so this
+//! informational report covers the parent tree; the enforcing Stop
+//! legs recurse into seated submodules (audit/changes.rs) and
+//! `commit_pairs` walks superproject shas the child's odb never holds.
 
 use super::batch::BatchClassification;
 use crate::scan::lang::Lang;

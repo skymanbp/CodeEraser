@@ -30,6 +30,14 @@ pub(super) struct AuditEvent<'a> {
     /// line; one summing LOC drops it FIRST. Values: "loop_guard"
     /// (a prior Stop already blocked), "no_git" (no repo to diff).
     pub skipped: Option<&'a str>,
+    /// WRITER CONTRACT — OPTIONAL, additive: the declared submodules
+    /// (gitmodules.rs) this audit could NOT measure because their
+    /// checkout is unseated, ce-root-relative. The line's numbers are
+    /// the parent's real measurement — PARTIAL, never `skipped` (that
+    /// field voids the whole line for a LOC-summing reader); a reader
+    /// judging a session's coverage treats a non-empty list as a
+    /// named shortfall, the audit's mirror of trend's by-name refusal.
+    pub unmeasured: Vec<String>,
 }
 
 pub(super) fn observe_log(root: &Path, ev: AuditEvent) {
@@ -43,6 +51,9 @@ pub(super) fn observe_log(root: &Path, ev: AuditEvent) {
     });
     if let Some(why) = ev.skipped {
         line["skipped"] = serde_json::json!(why);
+    }
+    if !ev.unmeasured.is_empty() {
+        line["unmeasured"] = serde_json::json!(ev.unmeasured);
     }
     if let Some(fc) = ev.fourclass {
         line["fourclass"] = fc;

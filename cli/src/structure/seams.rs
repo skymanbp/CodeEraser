@@ -144,6 +144,8 @@ fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, i6
 
 /// Window commits touching any seam file (narrowed at git, so the
 /// per-commit ledger classify only runs where a seam could care).
+/// Superproject history only, like rows.rs `newest_in_window`: a
+/// seam inside a declared submodule sees no commit of its own here.
 fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {
     let since = format!("{CHURN_WINDOW_DAYS} days ago");
     let mut args = vec![

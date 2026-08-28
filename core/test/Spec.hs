@@ -4,7 +4,7 @@
 
 -- | Base-only deterministic checks for the ce-core wire layer.
 -- The golden fixtures under contracts/fixtures/ are shared with the
--- Rust side (cli/tests/core_wire.rs): byte drift on either side
+-- Rust side (cli/tests/it/core_wire.rs): byte drift on either side
 -- reddens both suites.
 module Main (main) where
 

@@ -222,7 +222,8 @@ Apache-2.0 —— 见 [LICENSE](LICENSE)。第三方清单：[NOTICE](NOTICE)
 
 测试套件在 [skymanbp/CodeEraser-tests](https://github.com/skymanbp/CodeEraser-tests)，
 以 `cli/tests` submodule 挂回本仓——`cargo test` 前先 `--recurse-submodules` clone
-（或 `git submodule update --init`）；自仓分数继续计入其中每个文件。
+（或 `git submodule update --init`）——未就位前每条判决命令都按名拒绝（空的 `cli/tests`
+否则会被当成没有测试的树打分）；自仓分数继续计入其中每个文件。
 
 "CodeEraser"™ 为 skymanbp 商标。按 Apache-2.0 §6，
 许可证覆盖代码，不授予名称使用权。

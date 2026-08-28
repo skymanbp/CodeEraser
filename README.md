@@ -206,7 +206,9 @@ Apache-2.0 — see [LICENSE](LICENSE). Third-party inventory: [NOTICE](NOTICE)
 
 The test suite lives in [skymanbp/CodeEraser-tests](https://github.com/skymanbp/CodeEraser-tests),
 mounted here as the `cli/tests` submodule — clone with `--recurse-submodules`
-(or `git submodule update --init`) before `cargo test`; the self-score keeps
+(or `git submodule update --init`) before `cargo test`; until the checkout is
+seated every judging command refuses by name (an empty `cli/tests` would
+otherwise score as a tree without its tests), and the self-score keeps
 counting every file in it.
 
 "CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the

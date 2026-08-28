@@ -58,13 +58,20 @@ user files; it may create or refresh the `.ce/` cache):
    planner is what creates it — ce's index is never "uncommitted
    work", batch-7 defect sweep: the carve-out existed in code,
    undocumented);
-3. every target file's content hash equal to the plan's (a file that
+3. every target inside THIS repository's own subtree — a target below
+   a declared submodule (a gitlink in HEAD) refuses by name: the
+   worktree the command verified is the superproject's, and a file
+   under `cli/tests/` belongs to another repository's index and
+   history (plan v2.18 follow-up; the CI `--check` leg still plans it,
+   so a dead file in the suite is still reported — it is erased in the
+   suite's own repository);
+4. every target file's content hash equal to the plan's (a file that
    moved since planning refuses by name — plans are not portable
    across edits);
-4. after writing: the source family re-runs and the erased verdicts
+5. after writing: the source family re-runs and the erased verdicts
    must be GONE — a survivor fails the command loudly (convergence is
    part of apply, not a suggestion);
-5. an append-only record in `.ce/erase-log.ndjson`: ts, class,
+6. an append-only record in `.ce/erase-log.ndjson`: ts, class,
    file/span, provenance, plan hash — an audit file for human review
    alongside git's recovery path; no CLI or GUI surface renders it today.
 

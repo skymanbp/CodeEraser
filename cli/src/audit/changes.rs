@@ -101,16 +101,47 @@ fn numstat_row(rec: &str) -> Option<(i64, String)> {
     Some((net, path))
 }
 
+/// The seated declared submodules (gitmodules.rs) — one level, by
+/// declaration only. The superproject's `git diff`/`ls-files` report
+/// a submodule as ONE gitlink row (`0 0 cli/tests`, and no untracked
+/// file of the child at all), so a tracked edit or a brand-new clone
+/// inside it was invisible to both legs while `dedup::analyze` walked
+/// the very same files — the module's own defect class, two spellings
+/// of one universe (plan §4.2: the Stop audit is the backstop for
+/// Bash writes). Each seated child is asked the same question and its
+/// answer prefixed `{sub}/`, the ce-root spelling the block paths use.
+fn subs(root: &Path) -> Vec<String> {
+    crate::gitmodules::seated(root)
+}
+
 /// numstat over `tail` (the caller's base rev, or `--cached`) in ce's
-/// path vocabulary. Git computes the arithmetic itself, so this leg
-/// still reads nothing — but it now answers in the SAME judged
-/// universe `untracked` does (see `judged`). Only `walk::in_scope`
-/// stays untracked-only: it canonicalizes, and a row here may name a
-/// file the diff DELETED, which has no path left to canonicalize.
+/// path vocabulary — the root, then every seated submodule. Git
+/// computes the arithmetic itself, so this leg still reads nothing —
+/// but it answers in the SAME judged universe `untracked` does (see
+/// `judged`). Only the scope test stays untracked-only: it
+/// canonicalizes, and a row here may name a file the diff DELETED,
+/// which has no path left to canonicalize. `--cached` forwards to a
+/// child verbatim; a rev is the PARENT's HEAD-or-empty-tree and names
+/// nothing in the child's odb, so it is re-resolved per repository.
 pub fn diff(root: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
+    let (mut net, mut files) = numstat(root, tail)?;
+    for sub in subs(root) {
+        let home = root.join(&sub);
+        let child_tail = match tail {
+            ["--cached"] => String::from("--cached"),
+            _ => base_rev(&home)?,
+        };
+        let (n, f) = numstat(&home, &[child_tail.as_str()])?;
+        net += n;
+        files.extend(f.iter().map(|p| format!("{sub}/{p}")));
+    }
+    Some((net, files))
+}
+
+fn numstat(repo: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
     let mut args = vec!["diff", "--numstat", "--relative", "--no-renames", "-z"];
     args.extend_from_slice(tail);
-    let text = crate::churn::git(root, &args).ok()?;
+    let text = crate::churn::git(repo, &args).ok()?;
     let mut net = 0i64;
     let mut files = Vec::new();
     for (n, path) in records(&text).filter_map(numstat_row) {
@@ -126,34 +157,36 @@ pub fn diff(root: &Path, tail: &[&str]) -> Option<(i64, Vec<String>)> {
 ///
 /// Scoped through the SAME exclusion model every other whole-tree
 /// reader uses: the language gate (shared with the diff leg since the
-/// universe split) and then `walk::in_scope`, which only this leg
+/// universe split) and then the walk's `Scope`, which only this leg
 /// pays for — here every listed file is READ to count its lines, so
 /// an un-ignored `node_modules/` or a stray multi-GB csv turned every
 /// Stop into a full-tree read. A file ce would never index also can
 /// never match a dedup block, so the scope costs the gate nothing —
-/// it only stops the audit paying for what it cannot use.
+/// it only stops the audit paying for what it cannot use. The root,
+/// then every seated submodule (`subs`), the PARENT's scope applied
+/// to the child's paths: one ce root, one judgment.
 pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)> {
+    let mut scope = crate::scan::walk::Scope::new(root, excludes).ok()?;
     let args = ["ls-files", "--others", "--exclude-standard", "-z"];
-    let text = crate::churn::git(root, &args).ok()?;
     let mut net = 0i64;
     let mut files = Vec::new();
-    // raw paths again: a newline inside one no longer ends the record
-    // early, as `lines()` let it
-    for rec in records(&text) {
-        let path = rec.replace('\\', "/");
-        let full = root.join(&path);
-        // `judged`: the scan-only arm (plan v2.5) never enters the
-        // Stop audit's changed-file universe — through the shared
-        // predicate now, so the two legs cannot drift apart again
-        if path.is_empty()
-            || ce_owned(&path)
-            || !judged(&path)
-            || !crate::scan::walk::in_scope(root, &full, excludes)
-        {
-            continue;
+    let repos = std::iter::once(String::new()).chain(subs(root).into_iter().map(|s| s + "/"));
+    for prefix in repos {
+        let text = crate::churn::git(&root.join(&prefix), &args).ok()?;
+        // raw paths again: a newline inside one no longer ends the
+        // record early, as `lines()` let it
+        for rec in records(&text) {
+            let path = format!("{prefix}{}", rec.replace('\\', "/"));
+            let full = root.join(&path);
+            // `judged`: the scan-only arm (plan v2.5) never enters the
+            // Stop audit's changed-file universe — through the shared
+            // predicate now, so the two legs cannot drift apart again
+            if ce_owned(&path) || !judged(&path) || !scope.contains(&full) {
+                continue;
+            }
+            net += line_count(&full);
+            files.push(path);
         }
-        net += line_count(&full);
-        files.push(path);
     }
     Some((net, files))
 }

@@ -12,8 +12,10 @@
 //!     root's `.gitmodules` declares is the one exception: a submodule
 //!     checkout owns a `.git` file too, but it is part of THIS tree by
 //!     declaration (the test suite rides at `cli/tests` that way since
-//!     plan v2.18), and the declaration is tracked content, so one
-//!     commit still yields one U with or without the checkout;
+//!     plan v2.18; gitmodules.rs reads the declaration with git's own
+//!     grammar), and the declaration is tracked content, so one commit
+//!     still yields one U: a declared checkout that is not seated
+//!     REFUSES by name rather than letting U shrink to the walk;
 //!   - `.gitignore` and `.ceignore` are honoured and nothing else: not
 //!     `.ignore` (the walker's own default, off here), not the global,
 //!     exclude or parent ignore files; `.git` is not required, so one
@@ -80,8 +82,11 @@ enum Admit {
 }
 
 pub(super) fn universe(root: &Path) -> Result<Universe> {
+    if let Some(rel) = crate::gitmodules::unseated(root).first() {
+        anyhow::bail!("mentions: {}", crate::gitmodules::refusal(rel, root));
+    }
     let mut gate = Gate::open(root)?;
-    let (home, declared) = (root.to_path_buf(), declared_submodules(root));
+    let (home, declared) = (root.to_path_buf(), crate::gitmodules::declared(root));
     let walker = WalkBuilder::new(root)
         .hidden(false)
         .ignore(false)
@@ -146,21 +151,6 @@ fn owns_repo(dir: &Path) -> bool {
     dir.join(".git").exists()
 }
 
-/// The paths the root's `.gitmodules` declares — read off the tracked
-/// file, never off git, so the exemption is the commit's own fact on
-/// any machine. No file = nothing declared; a line that is not
-/// `path = …` declares nothing.
-pub fn declared_submodules(root: &Path) -> BTreeSet<String> {
-    std::fs::read_to_string(root.join(".gitmodules"))
-        .unwrap_or_default()
-        .lines()
-        .filter_map(|l| l.trim().strip_prefix("path"))
-        .filter_map(|r| r.trim_start().strip_prefix('='))
-        .map(|p| p.trim().trim_end_matches('/').replace('\\', "/"))
-        .filter(|p| !p.is_empty())
-        .collect()
-}
-
 /// The same cut read off a path: `rel` has a cut-name component, or
 /// one of its prefixes — the entry itself included, since git lists
 /// a gitlink as the bare path `sub` and a nested repository as
@@ -169,7 +159,7 @@ pub fn declared_submodules(root: &Path) -> BTreeSet<String> {
 /// (tests/it/mention_universe.rs), so the walk's rule has one
 /// implementation.
 pub fn cut(root: &Path, rel: &str) -> bool {
-    let declared = declared_submodules(root);
+    let declared = crate::gitmodules::declared(root);
     let mut dir = root.to_path_buf();
     let mut prefix = String::new();
     rel.split('/').filter(|s| !s.is_empty()).any(|seg| {

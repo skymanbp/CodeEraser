@@ -130,7 +130,7 @@ pub fn trend_cmd(a: TrendArgs) -> ExitCode {
         // failed — and the floor prints as its VALUE in ‰/day of the
         // score scale, not as a ce.toml key name (batch 9 P15).
         |r| {
-            r.judgment.fail.then(|| {
+            let declined = r.judgment.fail.then(|| {
                 let pm = |v: i64| format!("{:.1}", v as f64 / 1000.0);
                 let floor = r
                     .judgment
@@ -148,6 +148,20 @@ pub fn trend_cmd(a: TrendArgs) -> ExitCode {
                         &floor.map_or("?".to_string(), pm),
                     ],
                 )
+            });
+            // a point that REFUSED to measure (an unseated submodule,
+            // a worktree that would not add) reaches the console, the
+            // JSON and the GUI, and reached no exit code — the P15
+            // defect one seat over. Keyed on `failed`, never on
+            // `pending`: --batch and the GUI's slice walk leave
+            // pending > 0 by design, and a threshold would be policy.
+            declined.or_else(|| {
+                let (sha, why) = r.failed.first()?;
+                Some(codeeraser::i18n::line(
+                    "{} of {} window commits refused to measure: {} — {}",
+                    "窗口内 {} / {} 个提交拒绝测量：{} —— {}",
+                    &[&r.failed.len(), &r.window, sha, why],
+                ))
             })
         },
     )

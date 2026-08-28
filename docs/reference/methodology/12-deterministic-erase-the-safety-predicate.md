@@ -153,20 +153,20 @@ requires `degraded == false` and reports cap-mirror drift when it is not
 
 Applying a plan enters the executor only after it has collected the rows marked
 eraseable. The executor's precondition function is deliberately ordered
-([apply.rs:39-45](../../../cli/src/erase/apply.rs#L39)).
+([apply.rs:40-46](../../../cli/src/erase/apply.rs#L40)).
 
 1. **Repository identity.** `git rev-parse --show-toplevel` must succeed, and
    its canonical path must equal the supplied erase root
-   ([apply.rs:45-63](../../../cli/src/erase/apply.rs#L45)).
+   ([apply.rs:46-64](../../../cli/src/erase/apply.rs#L46)).
 2. **Worktree cleanliness.** `git status --porcelain` must succeed; after the
    `.ce` state directory is removed from the comparison, no user dirt may
-   remain ([apply.rs:64-83](../../../cli/src/erase/apply.rs#L64)).
+   remain ([apply.rs:65-84](../../../cli/src/erase/apply.rs#L65)).
 3. **Target identity.** Every target is read again and its FNV-1a content hash
    must equal the hash captured in the plan
-   ([apply.rs:84-93](../../../cli/src/erase/apply.rs#L84)).
+   ([apply.rs:86-95](../../../cli/src/erase/apply.rs#L86)).
 
 Only after all three checks does the executor write targets and append the
-audit records ([apply.rs:18-36](../../../cli/src/erase/apply.rs#L18)). The apply
+audit records ([apply.rs:19-37](../../../cli/src/erase/apply.rs#L19)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
 ([mod.rs:53-84](../../../cli/src/erase/mod.rs#L53)).

@@ -4171,7 +4171,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:54": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 230,
+    "line": 259,
     "text": "/// Every pair at or over the floor, count-descending — NO rank cut"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:55": {
@@ -4516,7 +4516,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:27": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 215,
+    "line": 217,
     "text": "let lines: Vec<&str> = text.lines().collect();"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:28": {
@@ -4566,7 +4566,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:36": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 214,
+    "line": 216,
     "text": "fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str) {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:37": {
@@ -4576,7 +4576,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:38": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 235,
+    "line": 237,
     "text": "/// Word-bounded containment: the name with no identifier character"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:39": {
@@ -4591,7 +4591,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:40": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 225,
+    "line": 227,
     "text": "if i == j || name.len() < NAME_FLOOR {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:41": {
@@ -4611,7 +4611,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:44": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 148,
+    "line": 150,
     "text": "let since = format!(\"{CHURN_WINDOW_DAYS} days ago\");"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:45": {
@@ -4641,7 +4641,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:5": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 182,
+    "line": 184,
     "text": "fn top_level(all: &[units::Unit]) -> Vec<units::Unit> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:50": {
@@ -4696,7 +4696,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:6": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 201,
+    "line": 203,
     "text": "let end = (u.end_line as u64).min(total);"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:60": {
@@ -4831,7 +4831,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:109": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 113,
+    "line": 118,
     "text": "// The index is the CORE's, so it is checked here rather than"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:11": {
@@ -4856,17 +4856,17 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:113": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 17,
+    "line": 22,
     "text": "pub fn head_pairs(root: &Path) -> Option<Vec<PathPair>> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:114": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 83,
+    "line": 88,
     "text": "Some('C') => {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:115": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 93,
+    "line": 98,
     "text": "// judged_path: the scan-only arm (plan v2.5) is size-gated,"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:116": {
@@ -5236,7 +5236,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:77": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 135,
+    "line": 140,
     "text": "let suspicions: Vec<serde_json::Value> = batch"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:78": {
@@ -6156,17 +6156,17 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:47": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 39,
+    "line": 40,
     "text": "/// Contract order, each refusal by name, nothing written before all"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:48": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 45,
+    "line": 46,
     "text": "fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 64,
+    "line": 65,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:5": {
@@ -6176,12 +6176,12 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 84,
+    "line": 86,
     "text": "let mut cache = crate::erase::gather::TextCache::new(root);"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 18,
+    "line": 19,
     "text": "/// Preconditions + writes + audit log. Returns the applied count."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:52": {
@@ -6246,53 +6246,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:10": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 214,
-    "text": "excluded: &EXCLUDED,"
+    "line": 134,
+    "text": "/// The names cut by name: the repository's own metadata and the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:11": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 57,
-    "text": "pub const FILE_CAP: u64 = 4 * 1024 * 1024;"
+    "line": 175,
+    "text": "/// A regular file, or a symlink whose target is a regular file inside"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:12": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 62,
-    "text": "const OMNI_MENTIONERS: [&str; 4] = [\"*.map\", \"tags\", \"TAGS\", \"*.po\"];"
+    "line": 187,
+    "text": "/// The identity pass: the exclusion table and the set of files already"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:13": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 249,
-    "text": "}"
+    "line": 59,
+    "text": "pub const FILE_CAP: u64 = 4 * 1024 * 1024;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:14": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 262,
-    "text": ""
+    "line": 64,
+    "text": "const OMNI_MENTIONERS: [&str; 4] = [\"*.map\", \"tags\", \"TAGS\", \"*.po\"];"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:15": {
-    "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 32,
-    "text": "pub struct Formula {"
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 241,
+    "text": "/// The universe's own exclusion table as one basename matcher — the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:16": {
-    "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 98,
-    "text": "/// One listed entry, placed under the first rule that takes it."
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 260,
+    "text": "/// The universe's text of one file, or None for a binary (skipped and"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:17": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 210,
-    "text": "fn the_formula_names_every_rule_the_walk_has() {"
+    "line": 33,
+    "text": "pub struct Formula {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:18": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 196,
-    "text": "fn the_self_universe_is_gits_listing_minus_the_walks_own_rules() {"
+    "line": 99,
+    "text": "/// One listed entry, placed under the first rule that takes it."
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:19": {
-    "target": "../../../cli/src/mention/token.rs",
-    "line": 29,
-    "text": "fn opens(c: char) -> bool {"
+    "target": "../../../cli/tests/it/mention_universe.rs",
+    "line": 209,
+    "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:2": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
@@ -6300,54 +6300,54 @@
     "text": "-- | The soft cap of the `unmentioned` table: above it the core still"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:20": {
+    "target": "../../../cli/tests/it/mention_universe.rs",
+    "line": 195,
+    "text": "fn the_self_universe_is_gits_listing_minus_the_walks_own_rules() {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:21": {
+    "target": "../../../cli/src/mention/token.rs",
+    "line": 29,
+    "text": "fn opens(c: char) -> bool {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:22": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 72,
     "text": "pub fn emit<'t>(text: &'t str, whole_run_only: bool, sink: &mut impl FnMut(&'t str)) {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:21": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:23": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 97,
     "text": "pub fn whole_run_only(rel: &str) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:22": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:24": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 92,
     "text": "/// The `$` arm's table lookup: extension lower-cased before the"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:23": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:25": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 109,
     "text": "pub fn fold(token: &str) -> String {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:24": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:26": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 274,
+    "line": 278,
     "text": "fn row_of(token: &str) -> store::Row {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:25": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:27": {
     "target": "../../../cli/src/mention/store.rs",
     "line": 32,
     "text": "pub const MENTION_SCHEMA: &str = \""
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:26": {
-    "target": "../../../cli/src/mention/mod.rs",
-    "line": 78,
-    "text": "pub const MENTION_REV: i64 = 1;"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:27": {
-    "target": "../../../cli/src/mention/mod.rs",
-    "line": 80,
-    "text": "/// Distinct tokens one file may store; the rest are clipped and"
-  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:28": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 243,
-    "text": "/// Tokens de-duplicated and written under the file's own hash. The"
+    "line": 82,
+    "text": "pub const MENTION_REV: i64 = 2;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:29": {
-    "target": "../../../cli/src/mention/name.rs",
-    "line": 30,
-    "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
+    "target": "../../../cli/src/mention/mod.rs",
+    "line": 84,
+    "text": "/// Distinct tokens one file may store; the rest are clipped and"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:3": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
@@ -6355,54 +6355,54 @@
     "text": "fn advisory(r: &Report) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:30": {
+    "target": "../../../cli/src/mention/mod.rs",
+    "line": 247,
+    "text": "/// Tokens de-duplicated and written under the file's own hash. The"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:31": {
+    "target": "../../../cli/src/mention/name.rs",
+    "line": 30,
+    "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:32": {
     "target": "../../../cli/src/mention/name.rs",
     "line": 63,
     "text": "fn single_token(rel: &str, name: &str) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:31": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:33": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 163,
     "text": "/// Every judged declaration with a mention name, folded to the"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:32": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:34": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 89,
     "text": "/// read is memoized per file in `texts`, so a file read for one name"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:33": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:35": {
     "target": "../../../cli/src/mention/store.rs",
     "line": 225,
     "text": "pub fn mentioned_by_other(conn: &Connection, ident: i64, own_path: &str) -> Result<bool> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:34": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:36": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 127,
     "text": "/// `HTTPServer` is two and `RULES` one) and ≥ FOLD_MIN_CHARS literal"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:35": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:37": {
     "target": "../../../cli/src/mention/store.rs",
     "line": 231,
     "text": "pub fn folded_by_other(conn: &Connection, folded: i64, own_path: &str) -> Result<bool> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:36": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:38": {
     "target": "../../../cli/src/mention/selfref.rs",
     "line": 71,
     "text": "fn regions(rel: &str, source: &str) -> Vec<String> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:37": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:39": {
     "target": "../../../cli/src/mention/selfref.rs",
     "line": 206,
     "text": "fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:38": {
-    "target": "../../../cli/src/mention/candidates.rs",
-    "line": 46,
-    "text": "pub type Names = BTreeMap<[i64; 3], Vec<AdvisoryName>>;"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:39": {
-    "target": "../../../cli/src/mention/candidates.rs",
-    "line": 115,
-    "text": "/// The table for the index's judged declarations, in wire order, cut"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -6411,53 +6411,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
     "target": "../../../cli/src/mention/candidates.rs",
+    "line": 46,
+    "text": "pub type Names = BTreeMap<[i64; 3], Vec<AdvisoryName>>;"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:41": {
+    "target": "../../../cli/src/mention/candidates.rs",
+    "line": 115,
+    "text": "/// The table for the index's judged declarations, in wire order, cut"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:42": {
+    "target": "../../../cli/src/mention/candidates.rs",
     "line": 52,
     "text": "pub const UNMENTIONED_SOFT_CAP: usize = 131_072;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:41": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:43": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 153,
     "text": "/// the §6 \"always the same batch\" promise), and whether any key fell"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:42": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:44": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 95,
     "text": "Some(Veto::Other) => {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:43": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:45": {
     "target": "../../../cli/src/mention/mod.rs",
     "line": 22,
     "text": "//! Consistency is per file, never per run: file M read at t₀ without"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:44": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:46": {
     "target": "../../../cli/src/mention/conv/mod.rs",
     "line": 34,
     "text": "pub enum Conv {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:45": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:47": {
     "target": "../../../cli/src/mention/conv/mod.rs",
     "line": 94,
     "text": "pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:46": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:48": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 29,
     "text": "const TEST_DIRS: [&str; 5] = [\"test\", \"tests\", \"spec\", \"__tests__\", \"testdata\"];"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:47": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:49": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 116,
     "text": "fn test_file(&mut self, rel: &str) -> bool {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:48": {
-    "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 33,
-    "text": "const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:49": {
-    "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 153,
-    "text": "pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:5": {
     "target": "../../../cli/src/mention/walk.rs",
@@ -6466,53 +6466,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:50": {
     "target": "../../../cli/src/mention/conv/name.rs",
+    "line": 33,
+    "text": "const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:51": {
+    "target": "../../../cli/src/mention/conv/name.rs",
+    "line": 153,
+    "text": "pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:52": {
+    "target": "../../../cli/src/mention/conv/name.rs",
     "line": 217,
     "text": "fn go_member(key: &str) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:51": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:53": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 169,
     "text": "pub fn text_bits(text: &str) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:52": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:54": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
     "line": 69,
     "text": "pub const VIS_EXPORTED: i64 = 1 << 0;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:53": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:55": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
     "line": 71,
     "text": "pub const VIS_SCOPE_EXPORTED: i64 = 1 << 1;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:54": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:56": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
     "line": 73,
     "text": "pub const VIS_RESTRICTED: i64 = 1 << 2;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:55": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:57": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 37,
     "text": "pub const MOUNT_REEXPORTED: i64 = 1;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:56": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:58": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 61,
     "text": "pub fn facts(root: &Path, idx: &Index) -> Result<MountFacts> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:57": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:59": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 117,
     "text": "pub fn mount_rows(nodes: &[Node], facts: &MountFacts) -> BTreeMap<i64, [i64; 3]> {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:58": {
-    "target": "../../../cli/src/graph/mounts.rs",
-    "line": 220,
-    "text": "fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:59": {
-    "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 60,
-    "text": "<*> o .:? \"unmentioned\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:6": {
     "target": "../../../cli/src/mention/mod.rs",
@@ -6520,186 +6520,196 @@
     "text": "/// Bump when ANY frozen input of the pass changes — the stored rows"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:60": {
+    "target": "../../../cli/src/graph/mounts.rs",
+    "line": 220,
+    "text": "fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:61": {
+    "target": "../../../core/app/CE/Graph/Contract.hs",
+    "line": 60,
+    "text": "<*> o .:? \"unmentioned\""
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:62": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
     "line": 105,
     "text": "-- | The advisory tables are one fact in two halves: `unmentioned`"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:61": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:63": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
     "line": 29,
     "text": "mountRow :: Integer -> Int -> [Integer] -> Maybe String"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:62": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:64": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
     "line": 61,
     "text": "judge :: Integer -> [Integer] -> [[Integer]] -> [[Integer]] -> [[Integer]]"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:63": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:65": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 194,
     "text": "unmentionedVisMask = 3"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:64": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:66": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 208,
     "text": "exemptCategories = [0 .. 10]"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:65": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:67": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
     "line": 80,
     "text": "code :: [Integer] -> Integer -> Integer"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:66": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:68": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 41,
     "text": "-- | Caps for the two advisory tables (6.2.0), each its own literal:"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:67": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:69": {
     "target": "../../../core/app/CE/Graph.hs",
     "line": 108,
     "text": "advisoryKeys :: GraphReq -> [Pair]"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:68": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:7": {
+    "target": "../../../cli/src/gitmodules.rs",
+    "line": 1,
+    "text": "//! The superproject's declared submodules — ONE reader of the tracked"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:70": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 152,
     "text": "> **6.2.0**（符号层顾问两表，加性 minor，L 轮片 (6) / ccm 步 #6，2026-08-27，口径 = 封版 spec v9）："
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:69": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:71": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 81,
     "text": "pub enum Advisory {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:7": {
-    "target": "../../../cli/src/mention/walk.rs",
-    "line": 82,
-    "text": "pub(super) fn universe(root: &Path) -> Result<Universe> {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:70": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:72": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 178,
     "text": "pub fn wire_of("
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:71": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:73": {
     "target": "../../../cli/src/graph/deadcode/advisory.rs",
     "line": 83,
     "text": "pub(super) fn consume("
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:72": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:74": {
     "target": "../../../cli/src/graph/deadcode/advisory.rs",
     "line": 31,
     "text": "pub struct AdvisoryRow {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:73": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:75": {
     "target": "../../../cli/src/report.rs",
     "line": 85,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:74": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:76": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
     "line": 53,
     "text": "fn advisory(r: &Report) {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:75": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:77": {
     "target": "../../../cli/src/mcp/tools.rs",
     "line": 78,
     "text": "tool!("
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:76": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:78": {
     "target": "../../../gui/ui/graph.js",
     "line": 34,
     "text": "async function loadGraph() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:77": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:79": {
     "target": "../../../gui/ui/graph.js",
     "line": 202,
     "text": "// The advisory's three states the rows cannot show for themselves:"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:78": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:8": {
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 84,
+    "text": "pub(super) fn universe(root: &Path) -> Result<Universe> {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:80": {
     "target": "../../../gui/ui/i18n.js",
     "line": 80,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:79": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:81": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 236,
     "text": "/// (`__init__.py`, `__main__.py`) is protocol. The declaration's own"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:8": {
-    "target": "../../../cli/src/mention/walk.rs",
-    "line": 131,
-    "text": "const CUT_NAMES: [&str; 2] = [\".git\", \".ce\"];"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:80": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:82": {
     "target": "../../../cli/src/fourclass/visibility/py.rs",
     "line": 27,
     "text": "pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:81": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:83": {
     "target": "../../../cli/src/mention/conv/py.rs",
     "line": 57,
     "text": "fn type_checking_only(node: Node<'_>, src: &[u8]) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:82": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:84": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 1,
     "text": "//! The K23 census (sealed criterion §0 clause 3, §7 K23): the veto is"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:83": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:85": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 48,
     "text": "fn measure(name: &str, root: &Path) -> (Formula, Ledger) {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:84": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:86": {
     "target": "../../../cli/tests/it/eval_support/mention.rs",
     "line": 146,
     "text": "pub fn ledger(root: &Path, files: &[String], decls: &Domain) -> Ledger {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:85": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:87": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 1,
     "text": "//! The K23 census (sealed criterion §0 clause 3, §7 K23): the veto is"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:86": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:88": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 71,
     "text": "// ① holds as pre-registered (L4-F3) on all five trees once the"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:87": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:89": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 36,
     "text": "const RIPGREP_TEST_DIRS: [&str; 4] = ["
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:88": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:9": {
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 90,
+    "text": "let walker = WalkBuilder::new(root)"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:90": {
     "target": "../../../cli/src/mention/conv/tests.rs",
     "line": 49,
     "text": "// wrapper, `doc(hidden)`, `proc_macro*`, the `extern` modifier, a"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:89": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:91": {
     "target": "../../PERF-BUDGET.md",
     "line": 176,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:9": {
-    "target": "../../../cli/src/mention/walk.rs",
-    "line": 183,
-    "text": "}"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:90": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:92": {
     "target": "../../PERF-BUDGET.md",
     "line": 44,
     "text": "| 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:91": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:93": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 210,
+    "line": 209,
     "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:92": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:94": {
     "target": "../../../cli/src/mention/face.rs",
     "line": 15,
     "text": "pub const SCHEMA_ID: &str = \"ce.mentions-report/0.2.0\";"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:93": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:95": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 125,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
