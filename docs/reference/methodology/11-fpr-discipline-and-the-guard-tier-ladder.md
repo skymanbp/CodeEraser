@@ -19,7 +19,7 @@ Two honesty boundaries bound the thesis, and both are written into the plan:
 
 ### The tier ladder
 
-Four tiers, and nothing else is a tier: `TIERS = ["observe", "warn", "ask", "deny"]` ([tier.rs:40](../../../cli/src/config/tier.rs#L40)). They map onto Claude Code's decision JSON at one emission point ([guard.rs:286-301](../../../cli/src/guard.rs#L286)):
+Four tiers, and nothing else is a tier: `TIERS = ["observe", "warn", "ask", "deny"]` ([tier.rs:40](../../../cli/src/config/tier.rs#L40)). They map onto Claude Code's decision JSON at one emission point ([guard.rs:247-264](../../../cli/src/guard.rs#L247)):
 
 | tier | `permissionDecision` | effect |
 |---|---|---|
@@ -79,7 +79,7 @@ cap = lines_for(file).file_lines_fail     // the file's class table; 750 for cla
 breach  ⇔  cap != 0 ∧ lines > cap
 ```
 
-([budget.rs:65-71](../../../cli/src/guard/budget.rs#L65); default `file_lines_fail = 750`, [ce-toml.md:18](../ce-toml.md#L18)). Since the rulepack's hook slice (plan v2.13 ① P4) the line is the **file's own**: `lines_for` compiles the declared `[[rules.class]]` set once per hook run and takes the class's effective table, the global one for class 0 — the same reading the scan gate and the score take, so the hook denies at exactly the line the CI wall would fail at ([budget.rs:19-25](../../../cli/src/guard/budget.rs#L19)); the graded zone reads its H and its warn fallback from the same table. The `cap == 0` guard is load-bearing: it encodes "no hard line exists" per the P3 grade-table contract, where a naive comparison read `0` as "every write breaches" ([budget.rs:143-145](../../../cli/src/guard/budget.rs#L143)). Every firing gets its own `budget` feed line in **every** tier, because the step-3 decision at 1.0 needs per-rule records ([budget.rs:214-227](../../../cli/src/guard/budget.rs#L214)) — the feed's `budget` event was added in schema `0.4.0` for exactly that reason ([hookio.rs:33-34](../../../cli/src/hookio.rs#L33)).
+([budget.rs:65-71](../../../cli/src/guard/budget.rs#L65); default `file_lines_fail = 750`, [ce-toml.md:18](../ce-toml.md#L18)). Since the rulepack's hook slice (plan v2.13 ① P4) the line is the **file's own**: `lines_for` compiles the declared `[[rules.class]]` set once per hook run and takes the class's effective table, the global one for class 0 — the same reading the scan gate and the score take, so the hook denies at exactly the line the CI wall would fail at ([budget.rs:19-25](../../../cli/src/guard/budget.rs#L19)); the graded zone reads its H and its warn fallback from the same table. The `cap == 0` guard is load-bearing: it encodes "no hard line exists" per the P3 grade-table contract, where a naive comparison read `0` as "every write breaches" ([budget.rs:143-145](../../../cli/src/guard/budget.rs#L143)). Every firing gets its own `budget` feed line in **every** tier, because the step-3 decision at 1.0 needs per-rule records ([budget.rs:214-219](../../../cli/src/guard/budget.rs#L214)) — the feed's `budget` event was added in schema `0.4.0` for exactly that reason ([hookio.rs:33-34](../../../cli/src/hookio.rs#L33)).
 
 ### `zone_tiers`: the opt-in position-to-tier map
 

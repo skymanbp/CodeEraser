@@ -151,6 +151,12 @@ jobs:
       # "undefined", silently (audit 2026-08-21)
       - name: GUI i18n gate (both-directions completeness)
         run: node gui/tests/i18n_gate.js
+      # the hub keeps a report row's first five scalar columns; the
+      # advisory row of ce.deadcode-report/0.3.0 has exactly five and
+      # the symbol is the fourth — K44 pins that the projection keeps
+      # it (the Rust half pins the key order in deadcode_e2e)
+      - name: GUI hub projection (K44)
+        run: node gui/tests/hub_projection.js
       # the installer's Claude Code wiring is exercised only when a
       # human runs the NSIS bundle on a machine with Claude Code —
       # which CI never is, and which is how the passive lane died for
@@ -306,6 +312,7 @@ jobs:
         run: |
           node gui/tests/lens_invariant.js
           node gui/tests/i18n_gate.js
+          node gui/tests/hub_projection.js
           node gui/tests/installer_wiring.js
       - name: Dogfood (macOS coverage — the six self-gates)
         shell: bash

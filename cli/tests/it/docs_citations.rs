@@ -94,8 +94,10 @@ fn all_citations(root: &Path) -> Vec<Citation> {
 /// every bless — 28 of them had, across the corpus, each one telling
 /// a reader a line number the link does not go to. A range label may
 /// anchor at its start alone (the house convention), but any number
-/// it does state must match.
-fn label_errors(citation: &Citation, prefix: &str, errors: &mut Vec<String>) {
+/// it does state must match — and a range end the anchor does not
+/// carry is still bounded by the target's length (a label `131-167`
+/// over a 165-line file blessed clean until the L round review).
+fn label_errors(citation: &Citation, count: usize, prefix: &str, errors: &mut Vec<String>) {
     let Some((label_start, label_end)) = label_lines(&citation.label) else {
         return;
     };
@@ -105,12 +107,14 @@ fn label_errors(citation: &Citation, prefix: &str, errors: &mut Vec<String>) {
             citation.line
         ));
     }
-    if let (Some(le), Some(ae)) = (label_end, citation.end)
-        && le != ae
-    {
-        errors.push(format!(
+    match (label_end, citation.end) {
+        (Some(le), Some(ae)) if le != ae => errors.push(format!(
             "{prefix} -> label range ends L{le}, anchor ends L{ae}"
-        ));
+        )),
+        (Some(le), None) if le > count => errors.push(format!(
+            "{prefix} -> label range ends L{le} past EOF (target has {count} lines)"
+        )),
+        _ => {}
     }
 }
 
@@ -133,7 +137,7 @@ fn structural_errors(root: &Path, citations: &[Citation]) -> Vec<String> {
                 citation.line, count
             ));
         }
-        label_errors(citation, &prefix, &mut errors);
+        label_errors(citation, count, &prefix, &mut errors);
         if let Some(end) = citation.end {
             if end < citation.line {
                 errors.push(format!(

@@ -57,7 +57,7 @@ p(x) = P_max · ((x − S)/(H − S))²      if S < x <= H
 p(x) = P_max · (1 + 2(x − H)/(H − S))  if x > H     -- C¹ linear arm (proto 2.17.0)
 ```
 
-[Soft.hs:59-66](../../../core/app/CE/Verdict/Soft.hs#L59). The curve is convex on the zone, exact
+[Soft.hs:59-65](../../../core/app/CE/Verdict/Soft.hs#L59). The curve is convex on the zone, exact
 `Rational`, and keeps charging past `H` — since proto 2.17.0 linearly, at exactly the slope the
 quadratic reached at the wall (monotone, no kink; the deny at `H` is the guard's job, and a
 score that stopped charging past the wall would reward growth — but the quadratic never leaves

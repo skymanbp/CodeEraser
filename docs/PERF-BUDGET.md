@@ -173,6 +173,19 @@ walk+hash ~255 / instances ~7 / **stream 重载 ~300** / 边扫 ~1 / **clone_blo
 | `ce audit --hook` e2e（暖，本窗口径） | median <1.5 s | 1.26 s median（1.25–1.50） | ✅ |
 | schema v11→v12 wipe 首跑（冷重建） | —（一次性） | 3.76 s | 记录 |
 
+## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）
+
+口径：mention pass 是自有入口、不在 `dedup::analyze` 内，五条传否路不得为顾问付费（spec S-A15/W3-F7/W4-F2）。
+A = 旧客户端（1f493df，L 轮前，graph/1 6.1.0）、B = 本批客户端，两者对同一新核（6.2.0，合法 minor 偏斜），
+各自一棵相同内容的 HEAD 树、各自索引（schema v13 vs v14）；每腿先各预热一次，再九轮 A/B 交错取中位数。
+同日早一窗（并发 20 代理跑 rg）测得 erase 散布 1.63–8.07 s，作废不列——噪声窗与静默窗不混列。
+
+| 项 | 预算 | 实测 A（旧） | 实测 B（本批） | 状态 |
+|---|---|---|---|---|
+| `ce audit --hook` e2e（Stop 信封，暖） | median <1.5 s | 1.186 s（1.145–1.256） | 0.954 s（0.936–1.091） | ✅ 不因本批变慢 |
+| `ce erase .`（plan，dry-run） | —（不变慢） | 1.526 s（1.451–1.676） | 1.493 s（1.427–1.673） | ✅ |
+| `ce check .`（暖索引） | —（不变慢） | 1.786 s（1.720–2.558） | 1.802 s（1.729–1.928） | ✅ 差 +0.9%，在散布内 |
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

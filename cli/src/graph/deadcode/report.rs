@@ -7,7 +7,9 @@
 //! the core's or the measurement's.
 
 use super::Report;
+use super::advisory::{ADVISORY_NAMES, UnmentionedFace};
 use crate::i18n::line;
+use crate::mention::UNMENTIONED_SOFT_CAP;
 
 /// Section/package aggregates are reported, never called dead
 /// (decision 4); the unresolved-site count rides every summary — the
@@ -38,7 +40,72 @@ pub fn print(r: &Report, json: bool) {
             )
         );
     }
+    advisory(r);
     tail(r);
+}
+
+/// The symbol-level advisory (6.2.0), rendered only when the road was
+/// asked: one line per unmentioned declaration with the core's code,
+/// a census by code, and the two states the rows alone cannot show —
+/// the producer's cut (the rows are a prefix) and the core's drop (no
+/// rows were judged). Advisories, never verdicts: nothing here moves
+/// the exit.
+fn advisory(r: &Report) {
+    let Some(face) = &r.unmentioned else {
+        return;
+    };
+    let UnmentionedFace::Rows { rows, cut } = face else {
+        println!(
+            "{}",
+            line(
+                "advisory: the core dropped the unmentioned table — more than {} candidate rows, none judged at symbol level",
+                "顾问：核已丢弃未提及表——候选行超过 {}，符号层一行未判",
+                &[&UNMENTIONED_SOFT_CAP],
+            )
+        );
+        return;
+    };
+    for a in rows {
+        println!(
+            "{}",
+            line(
+                "advisory: {}:{}  {}  {}  ({})",
+                "顾问：{}:{}  {}  {}（{}）",
+                &[&a.name, &a.line, &a.symbol, &a.code, &a.why],
+            )
+        );
+    }
+    let by_code = ADVISORY_NAMES.map(|c| rows.iter().filter(|a| a.code == c).count());
+    let files = rows
+        .iter()
+        .map(|a| a.name.as_str())
+        .collect::<std::collections::BTreeSet<_>>()
+        .len();
+    println!(
+        "{}",
+        line(
+            "advisory: {} unmentioned declaration(s) in {} file(s) — {} public, {} private, {} restricted, {} reexported; no other file spells them (an advisory, never a verdict)",
+            "顾问：{} 个未提及声明分布于 {} 个文件——公开 {}、私有 {}、受限 {}、再导出 {}；无他文件拼写其名（仅建议，永不判决）",
+            &[
+                &rows.len(),
+                &files,
+                &by_code[0],
+                &by_code[1],
+                &by_code[2],
+                &by_code[3]
+            ],
+        )
+    );
+    if *cut {
+        println!(
+            "{}",
+            line(
+                "advisory: the candidate table was cut at the producer's {}-row cap — the rows above are a prefix, the same prefix every run",
+                "顾问：候选表已在生产者侧 {} 行上限截断——以上各行是前缀，每次运行同一前缀",
+                &[&UNMENTIONED_SOFT_CAP],
+            )
+        );
+    }
 }
 
 /// The summary + degraded lines (split at the 50-line fn gate).

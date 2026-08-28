@@ -232,6 +232,21 @@ pub fn folded_by_other(conn: &Connection, folded: i64, own_path: &str) -> Result
     elsewhere(conn, "folded_hash", folded, own_path)
 }
 
+/// Every OTHER walked file spelling this identity hash — the K23
+/// census asks it only for a name declared in more than one file, to
+/// tell a mention saved by a reference from one saved by nothing but
+/// a same-name declaration elsewhere (the collision blindness §6
+/// records).
+pub fn mentioners(conn: &Connection, ident: i64, own_path: &str) -> Result<Vec<String>> {
+    Ok(conn
+        .prepare_cached(
+            "SELECT f.path FROM mentions m JOIN mention_files f ON f.id = m.file_id
+             WHERE m.ident_hash = ?1 AND f.path <> ?2",
+        )?
+        .query_map((ident, own_path), |r| r.get::<_, String>(0))?
+        .collect::<rusqlite::Result<_>>()?)
+}
+
 /// One cached statement per hash column: the veto asks this once per
 /// surviving declaration, thousands of times per run.
 fn elsewhere(conn: &Connection, column: &str, hash: i64, own_path: &str) -> Result<bool> {

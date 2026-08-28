@@ -1,6 +1,6 @@
 # Deterministic erase — the safety predicate
 
-[index](../methodology.md) · [← 11 FPR discipline and the guard tier ladder](11-fpr-discipline-and-the-guard-tier-ladder.md)
+[index](../methodology.md) · [← 11 FPR discipline and the guard tier ladder](11-fpr-discipline-and-the-guard-tier-ladder.md) · [→ 13 Unmentioned-declaration advisory — the mention veto](13-unmentioned-declaration-advisory.md)
 
 The erase family judges rows in an erase plan. Rust measures candidate facts and
 the Haskell core decides whether a row is deterministic-safe; the boundary is

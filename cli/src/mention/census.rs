@@ -43,7 +43,7 @@ pub(super) fn outside(root: &Path, conn: &Connection, live: &BTreeSet<String>) -
             out.oversize += 1;
         } else if std::fs::read(&path).is_ok_and(|b| walk::decode(&b).is_none()) {
             out.binary += 1;
-        } else if walk::in_nested_repo(root, rel) {
+        } else if walk::cut(root, rel) {
             out.nested += 1;
         } else {
             out.ignored += 1;

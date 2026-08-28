@@ -34,11 +34,16 @@
 
 use std::process::{Command, Output};
 
-/// A command shape under test, named as a reader would type it.
+/// A command shape under test, named as a reader would type it. The
+/// mention census road refreshes a mention pass over the repository,
+/// so it gets a scratch `--db` (`{db}`) and writes nothing into the
+/// tree — a road that ships unrendered in one language is exactly
+/// what this leg exists to refuse (L round review).
 const SHAPES: &[&[&str]] = &[
     &[],
     &["graph"],
     &["graph", "--sites"],
+    &["graph", "--mentions", "--db", "{db}"],
     &["precommit"],
     &["doctor"],
     &["probe"],
@@ -55,8 +60,15 @@ fn repo_root() -> std::path::PathBuf {
 }
 
 fn run(args: &[&str], zh: bool) -> Output {
+    let db = crate::common::tmp("zh-surface-db")
+        .join("index.db")
+        .to_string_lossy()
+        .into_owned();
     let mut c = Command::new(env!("CARGO_BIN_EXE_ce"));
-    c.current_dir(repo_root()).env_remove("CE_LANG").args(args);
+    c.current_dir(repo_root()).env_remove("CE_LANG").args(
+        args.iter()
+            .map(|a| if *a == "{db}" { db.as_str() } else { a }),
+    );
     if zh {
         c.env("CE_LANG", "zh");
     }

@@ -14,6 +14,7 @@ pub mod dedup;
 pub mod docseg;
 pub mod family;
 pub mod graph;
+pub mod mention;
 pub mod precision;
 pub mod provenance;
 pub mod t3c;

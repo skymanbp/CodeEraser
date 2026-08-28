@@ -1,24 +1,27 @@
 //! `ce graph --mentions`: the pass's own console/JSON face — report-
-//! only, the header counters and the convergence facts, so the
-//! universe is observable before any judgment consumes it (K39–K42
-//! are library legs; this is the operator's window on the same
-//! numbers).
+//! only, the header counters, the convergence facts and the K23
+//! per-language census of the veto, so the universe is observable
+//! before any judgment consumes it (K39–K42 are library legs; this is
+//! the operator's window on the same numbers).
 
+use super::LangRates;
 use crate::i18n::line;
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// The document's version identity — every report face carries one.
-pub const SCHEMA_ID: &str = "ce.mentions-report/0.1.0";
+/// 0.2.0: the `rates` census rides beside the header (additive).
+pub const SCHEMA_ID: &str = "ce.mentions-report/0.2.0";
 
 pub fn run(root: &Path, db: Option<PathBuf>, json: bool) -> ExitCode {
     match refreshed(root, db) {
-        Ok(stats) if json => {
-            println!("{}", report_json(&stats));
+        Ok((stats, rates)) if json => {
+            println!("{}", report_json(&stats, &rates));
             ExitCode::SUCCESS
         }
-        Ok(stats) => {
-            for l in console(&stats) {
+        Ok((stats, rates)) => {
+            for l in console(&stats).into_iter().chain(rates_console(&rates)) {
                 println!("{l}");
             }
             ExitCode::SUCCESS
@@ -31,16 +34,24 @@ pub fn run(root: &Path, db: Option<PathBuf>, json: bool) -> ExitCode {
 }
 
 /// The judged index first (the `outside` counters compare against
-/// its `files` table), then the mention pass over the same tree.
-fn refreshed(root: &Path, db: Option<PathBuf>) -> anyhow::Result<super::Stats> {
+/// its `files` table and the census reads its declarations), then
+/// the mention pass over the same tree, then the veto counted per
+/// language.
+fn refreshed(
+    root: &Path,
+    db: Option<PathBuf>,
+) -> anyhow::Result<(super::Stats, BTreeMap<&'static str, LangRates>)> {
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
-    super::refresh(root, &idx)
+    let stats = super::refresh(root, &idx)?;
+    let rates = super::rates::census(root, &idx)?;
+    Ok((stats, rates))
 }
 
-pub fn report_json(stats: &super::Stats) -> String {
+pub fn report_json(stats: &super::Stats, rates: &BTreeMap<&'static str, LangRates>) -> String {
     let mut doc = serde_json::to_value(stats).expect("stats serialize");
     doc["schema"] = serde_json::Value::String(SCHEMA_ID.to_string());
     doc["mention_rev"] = serde_json::Value::from(super::MENTION_REV);
+    doc["rates"] = serde_json::to_value(rates).expect("rates serialize");
     doc.to_string()
 }
 
@@ -98,4 +109,31 @@ fn console(s: &super::Stats) -> Vec<String> {
             &[&s.dist_js_dedup_runs],
         ),
     ]
+}
+
+/// One line per language (K23): the domain and its exported half,
+/// what survived the veto (its exported half), and where the veto
+/// stopped — with the collision-saved count beside `other`, the
+/// blindness stated as a number rather than a footnote.
+fn rates_console(rates: &BTreeMap<&'static str, LangRates>) -> Vec<String> {
+    rates
+        .iter()
+        .map(|(lang, r)| {
+            line(
+                "  {}: {} declared ({} exported) — {} unmentioned ({} exported); vetoed by another file {} (of which {} only by a same-name declaration), by fold {}, by the file's own exceptions {}",
+                "  {}：声明 {}（导出 {}）——未提及 {}（导出 {}）；他文件否决 {}（其中 {} 仅因同名声明得救），折叠否决 {}，自文件例外否决 {}",
+                &[
+                    lang,
+                    &r.declared.all,
+                    &r.declared.exported,
+                    &r.unmentioned.all,
+                    &r.unmentioned.exported,
+                    &r.vetoed.other,
+                    &r.vetoed.collision_saved,
+                    &r.vetoed.fold,
+                    &r.vetoed.self_text,
+                ],
+            )
+        })
+        .collect()
 }

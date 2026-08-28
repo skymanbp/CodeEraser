@@ -16,7 +16,7 @@ Commands:
   scan       Measure size / complexity / readability metrics; levels graded by the core
   churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them). Costs minutes on the default window — a git subprocess per commit and a blame per touched file; progress rides stderr
   graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); --mentions refreshes the mention universe and reports its header; liveness lives under `ce deadcode`
-  deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts
+  deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts, and the symbol-level advisory (declarations no other file spells — never a verdict)
   clone      T3 near-miss clone judgment: tree edit distance via the core's clone/1; --units lists the cached unit universe instead
   docdup     Documentation-duplication judgment: exact Jaccard via the core's docdup/1 over the cached live segments
   join       Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only). Costs a churn window plus a full index — minutes; progress rides stderr
@@ -115,7 +115,7 @@ Options:
 ## ce deadcode
 
 ```text
-Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts
+Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts, and the symbol-level advisory (declarations no other file spells — never a verdict)
 
 Usage: ce deadcode [OPTIONS] [ROOT]
 

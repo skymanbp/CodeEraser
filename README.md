@@ -19,7 +19,7 @@ judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception
 2. **It refuses a file past its hard line.** A write that leaves a file over 750 lines — or over the line that file's `[[rules.class]]` declares — is denied the same way.
 3. **It finds documentation written twice.** Repeated paragraphs, comments and docstrings anywhere in the tree, with `--check` turning the finding into a CI exit code.
 4. **It finds the clones that editing disguised.** Near-miss blocks are matched by tree edit distance over syntax, so a renamed and re-ordered copy still answers for itself.
-5. **It finds what nothing reaches.** A file-level reference graph carries four-way liveness verdicts and cycle membership: dead code and dead documents are named, not guessed at.
+5. **It finds what nothing reaches.** A file-level reference graph carries four-way liveness verdicts and cycle membership: dead code and dead documents are named, not guessed at. Beside the verdicts, a symbol-level advisory lists the declarations no other file in the tree spells — reported with a visibility code, never judged.
 6. **It erases only what is provably safe.** Dead files, verbatim document twins and whole-unit exact clones — planned first, applied only from a clean worktree, and never by asking a model to rewrite your code.
 7. **It prices the seam before you split.** Every file past the soft line gets its best split seam costed, or a written cohesion alibi for why it should be left whole.
 8. **It scores the whole tree and holds a floor that only tightens.** Seven structural axes produce one score; `ce check --fail-under` gates it, and per-file ceilings from the accepted baseline can be tightened by cleanup but never loosened silently.
@@ -189,7 +189,7 @@ same report shapes.
 - The push workflow runs the six self-hosting product gates, including the explicit score floor; this repository is the standing dogfood fixture.
 - ADR-006 ceilings and violation sets live in `ce-baseline.json`; cleanup tightens them, while growth needs an explicit re-establish.
 - A path class in `ce.toml` (`[[rules.class]]`) hands one glob set its own size and complexity lines; the score, the `ce scan` ladder and the PreToolUse hard budget read the file's own line, and class names and globs never cross the wire.
-- CLI/config references are generated, and the twelve-booklet methodology has machine-checked citations, navigation and EN/ZH constants.
+- CLI/config references are generated, and the thirteen-booklet methodology has machine-checked citations, navigation and EN/ZH constants.
 - A guard class moves to deny only after its own false-positive record is entered in [CHANGELOG.md](CHANGELOG.md); unqualified classes remain observe.
 - `ce erase` gathers deterministic facts and lets the Haskell safety predicate authorize removals; it never asks a model to rewrite code.
 - Release builds are two-phase: hashes come from draft assets, pins land in the tree, and the tag verifies those same bytes without rebuilding.

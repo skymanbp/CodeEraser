@@ -45,7 +45,7 @@ fn every_k30_cell_reads_its_code_from_the_real_core() {
     let names = w.unmentioned.as_ref().expect("names ride beside the keys");
     let mut got: BTreeMap<String, i64> = BTreeMap::new();
     for [node, vis, conv, code] in rows {
-        for n in &names[&[node, vis, conv]] {
+        for n in &names.names[&[node, vis, conv]] {
             assert!(
                 got.insert(n.symbol.clone(), code).is_none(),
                 "{} twice",

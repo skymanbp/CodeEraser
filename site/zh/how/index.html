@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CodeEraser 工作原理——确定性判决，十二个家族</title>
-<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十二个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
+<title>CodeEraser 工作原理——确定性判决，十三个家族</title>
+<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十三个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
 <link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
@@ -99,8 +99,8 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   它们变成判决；泳道 3 决定退出码。图上每一个数字都是下文各节引用的常数。</figcaption>
 </figure>
 
-<h2>十二个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b>十二</b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b>十</b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b>十三</b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态，不是判决。</p>
+<h2>十三个判决家族</h2>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b>十三</b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b>十</b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b>十三</b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态，不是判决。</p>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -505,6 +505,33 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>入 wire 版本</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">未提及声明顾问——提及否决</a></h3>
+  <p class="job">在 graph 家族的判决之侧，列出树中没有任何<em>他</em>文件拼写其名的已判决声明——
+  一件负向仪器：带可见性码上报，永不判决。</p>
+  <pre>veto  = another file spells it | fold (Rust, ≥2 segments ∧ ≥7 chars)
+        | the file's own exception regions spell it
+row   = [node, vis, conv]      (integers only — a name never rides the wire)
+emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
+code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
+  <p class="note">U 是自有的一次 walk——隐藏文件进入，<code>.git</code>/<code>.ce</code> 与嵌套仓库被整体裁掉，
+  只认 <code>.gitignore</code> 与 <code>.ceignore</code>——因此同一提交在任何机器上得到同一个 U，walk 的每个参数
+  都是 <code>MENTION_REV</code> 的输入。mentions 存的是 64 位哈希而非文本。Rust 抽取每条声明的提及名与类别词，
+  按最廉价者先问三个否决问题；Haskell 只读可见性词与 mounts 行——文件的 <code>mod</code> 挂载有几处私有、
+  是否有门面再导出、其包是否将其保私——并赋上面那条冻结全序。两表随 <code>graph.request</code> 同来同去：
+  不带两表的请求得到逐字节相同的十键应答，死集两种情形相同。超过 <code>unmentionedCap</code> 时核仍判图、
+  丢表并具名说明。顾问永不使门变红，永不进入 <code>ce erase</code>。</p>
+  <ul class="consts">
+    <li><b>MENTION_REV</b> 1</li>
+    <li><b>FOLD_MIN_CHARS</b> 7</li>
+    <li><b>unmentionedVisMask</b> 3</li>
+    <li><b>unmentionedCap</b> 131072</li>
+    <li><b>unmentionedHardCap</b> 524288</li>
+    <li><b>入 wire 版本</b> 6.2.0</li>
+    <li><b>wire</b> graph/1</li>
   </ul>
 </div>
 

@@ -51,39 +51,88 @@ pub type Names = BTreeMap<[i64; 3], Vec<AdvisoryName>>;
 /// larger one would resurrect a table the core drops.
 pub const UNMENTIONED_SOFT_CAP: usize = 131_072;
 
-/// One `(file, name)` of the domain before the veto.
-struct Decl {
+/// The table plus the one fact the table cannot carry about itself:
+/// whether the producer's cut removed rows. The core still answers
+/// normally on a cut table (that is the point of cutting upstream,
+/// §5.2), so a face that showed the rows alone would present a prefix
+/// as the whole — the renderer says it instead (K38's local line).
+#[derive(Debug, Default)]
+pub struct Unmentioned {
+    pub names: Names,
+    pub cut: bool,
+}
+
+/// One `(file, name)` of the domain before the veto — public through
+/// `rates::declarations` so the K23 instrument reads this domain.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Decl {
+    pub lang: Lang,
+    pub line: i64,
+    pub vis: i64,
+    pub conv: i64,
+}
+
+/// Where the veto stopped for one declaration — the reasons in the
+/// order asked, cheapest first (module doc). The census (rates.rs)
+/// counts them; the table only needs to know it stopped.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(super) enum Veto {
+    /// Another file of U holds the identity hash.
+    Other,
+    /// A Rust name past the fold gate has its fold key elsewhere.
+    Fold,
+    /// The declaring file's own exception regions spell it.
+    SelfText,
+}
+
+/// The veto for one declaration; `None` is unmentioned. The self-text
+/// read is memoized per file in `texts`, so a file read for one name
+/// serves every name it declares.
+pub(super) fn veto<'a>(
+    txn: &rusqlite::Connection,
+    root: &Path,
+    path: &'a str,
+    name: &str,
     lang: Lang,
-    line: i64,
-    vis: i64,
-    conv: i64,
+    texts: &mut BTreeMap<&'a str, SelfText>,
+) -> Result<Option<Veto>> {
+    if store::mentioned_by_other(txn, fnv1a(name.as_bytes()) as i64, path)? {
+        return Ok(Some(Veto::Other));
+    }
+    if lang == Lang::Rust
+        && segments(name) >= 2
+        && name.chars().count() >= FOLD_MIN_CHARS
+        && store::folded_by_other(txn, fnv1a(fold(name).as_bytes()) as i64, path)?
+    {
+        return Ok(Some(Veto::Fold));
+    }
+    let file = texts
+        .entry(path)
+        .or_insert_with(|| SelfText::read(root, path));
+    Ok(file.mentions(name).then_some(Veto::SelfText))
 }
 
 /// The table for the index's judged declarations, in wire order, cut
 /// at the soft cap by whole entries (a key never loses its names).
-pub fn unmentioned(root: &Path, idx: &Index, ids: &BTreeMap<(&str, &str), usize>) -> Result<Names> {
+pub fn unmentioned(
+    root: &Path,
+    idx: &Index,
+    ids: &BTreeMap<(&str, &str), usize>,
+) -> Result<Unmentioned> {
     let txn = idx.raw().unchecked_transaction()?;
     let decls = domain(&txn)?;
     let mut words = PathWords::new(root);
     let mut texts: BTreeMap<&str, SelfText> = BTreeMap::new();
     let mut out = Names::new();
     for ((path, name), d) in &decls {
-        if store::mentioned_by_other(&txn, fnv1a(name.as_bytes()) as i64, path)? {
+        if veto(&txn, root, path, name, d.lang, &mut texts)?.is_some() {
             continue;
         }
-        if d.lang == Lang::Rust
-            && segments(name) >= 2
-            && name.chars().count() >= FOLD_MIN_CHARS
-            && store::folded_by_other(&txn, fnv1a(fold(name).as_bytes()) as i64, path)?
-        {
-            continue;
-        }
+        // present: a veto that reached the self-text read it, and no
+        // veto means every reason was asked
         let file = texts
             .entry(path)
             .or_insert_with(|| SelfText::read(root, path));
-        if file.mentions(name) {
-            continue;
-        }
         let node = ids
             .get(&(path.as_str(), ""))
             .with_context(|| format!("declaring file {path} not a node — index skew"))?;
@@ -96,12 +145,24 @@ pub fn unmentioned(root: &Path, idx: &Index, ids: &BTreeMap<(&str, &str), usize>
             });
     }
     txn.finish()?; // read-only: closing the snapshot, nothing to write
-    Ok(out.into_iter().take(UNMENTIONED_SOFT_CAP).collect())
+    Ok(cut(out))
+}
+
+/// The producer's cut: the first `UNMENTIONED_SOFT_CAP` keys in wire
+/// order (the map's order, so the same rows survive run after run —
+/// the §6 "always the same batch" promise), and whether any key fell
+/// past it. Exactly the cap is not a cut.
+fn cut(all: Names) -> Unmentioned {
+    let cut = all.len() > UNMENTIONED_SOFT_CAP;
+    Unmentioned {
+        names: all.into_iter().take(UNMENTIONED_SOFT_CAP).collect(),
+        cut,
+    }
 }
 
 /// Every judged declaration with a mention name, folded to the
 /// `(file, name)` unit.
-fn domain(conn: &rusqlite::Connection) -> Result<BTreeMap<(String, String), Decl>> {
+pub(super) fn domain(conn: &rusqlite::Connection) -> Result<BTreeMap<(String, String), Decl>> {
     let rows: Vec<(String, String, i64, i64, i64)> = crate::graph::load::rows(
         conn,
         "SELECT f.path, s.key, s.start_line, s.flags, s.conv

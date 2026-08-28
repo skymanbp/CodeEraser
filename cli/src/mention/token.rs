@@ -44,7 +44,7 @@ fn ident_side(c: char) -> bool {
 }
 
 /// Every run of `text`, left to right, as slices of it.
-pub(super) fn runs(text: &str) -> impl Iterator<Item = &str> {
+pub fn runs(text: &str) -> impl Iterator<Item = &str> {
     let mut at = 0;
     std::iter::from_fn(move || {
         let (start, end) = next_run(text, at)?;
@@ -69,7 +69,7 @@ fn next_run(text: &str, from: usize) -> Option<(usize, usize)> {
 /// Feed every token of `text` to `sink`, duplicates included (the
 /// store de-duplicates per file). `whole_run_only` is the JS-family
 /// arm: it silences emitter (iii) alone.
-pub(super) fn emit<'t>(text: &'t str, whole_run_only: bool, sink: &mut impl FnMut(&'t str)) {
+pub fn emit<'t>(text: &'t str, whole_run_only: bool, sink: &mut impl FnMut(&'t str)) {
     for run in runs(text) {
         sink(run);
         pieces(run, ident_side, sink);
@@ -94,7 +94,7 @@ fn pieces<'t>(run: &'t str, keep: impl Fn(char) -> bool, sink: &mut impl FnMut(&
 /// arm (`Makefile`, `Dockerfile`, `.gitignore`) — both sentences are
 /// `MENTION_REV` inputs, or one commit would shard differently on two
 /// machines.
-pub(super) fn whole_run_only(rel: &str) -> bool {
+pub fn whole_run_only(rel: &str) -> bool {
     Path::new(rel)
         .extension()
         .and_then(|e| e.to_str())
@@ -106,7 +106,7 @@ pub(super) fn whole_run_only(rel: &str) -> bool {
 /// `$ZodString` folds to `zodstring` and can rescue a Rust
 /// `zod_string`. `$` is filtered HERE on purpose (the reference probe
 /// was silent on it, which would have let two machines disagree).
-pub(super) fn fold(token: &str) -> String {
+pub fn fold(token: &str) -> String {
     token
         .chars()
         .filter(|c| !matches!(c, '_' | '-' | '$'))
@@ -116,15 +116,17 @@ pub(super) fn fold(token: &str) -> String {
 
 /// A token this long — LITERAL characters, counted before the fold
 /// filters anything (`$ZodStr` is 7 and fills; its fold `zodstr` is
-/// not re-judged) — also stores its fold key.
-pub(super) const FOLD_MIN_CHARS: usize = 7;
+/// not re-judged) — also stores its fold key. `fold`, this and
+/// `segments` are public for the K23 instrument (tests/it/eval_support/
+/// mention.rs), which must ask the veto's own fold channel.
+pub const FOLD_MIN_CHARS: usize = 7;
 
 /// The declaration-side segment count of the fold gate (§2 Q1): a
 /// Rust name takes the fold's second chance only with ≥2 segments
 /// (`_` and camel boundaries; an all-caps run is one segment, so
 /// `HTTPServer` is two and `RULES` one) and ≥ FOLD_MIN_CHARS literal
 /// characters. A `MENTION_REV` input like the fold itself.
-pub(super) fn segments(name: &str) -> usize {
+pub fn segments(name: &str) -> usize {
     let mut count = 0;
     for part in name.split('_').filter(|p| !p.is_empty()) {
         let chars: Vec<char> = part.chars().collect();
@@ -147,7 +149,7 @@ pub(super) fn segments(name: &str) -> usize {
 /// (`name$1`, rollup/esbuild deconflict suffixes) inside a `dist/`
 /// JavaScript file. The JS arm keeps such a run whole, so its base
 /// name is never emitted; counting the shape makes that cost visible.
-pub(super) fn dedup_suffixed(run: &str) -> bool {
+pub fn dedup_suffixed(run: &str) -> bool {
     run.rsplit_once('$').is_some_and(|(base, digits)| {
         !base.is_empty() && !digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit())
     })

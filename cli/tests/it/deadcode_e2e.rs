@@ -119,22 +119,35 @@ fn the_entry_globs_hint_follows_the_dead_share() {
 
 /// K43: the 0.3.0 document carries the advisory keys exactly when the
 /// road was asked — `ce deadcode`'s own run (Advisory::Yes) has
-/// `unmentioned` rows and the drop flag; a report projected from a
-/// wire built without the advisory has neither key, so "not asked" and
-/// "asked and clean" stay distinct in the document. The same fixture
-/// as verdicts_come_back_with_names: `orphan.ts` exports nothing, so
-/// its dead verdict stands beside an advisory table that names the
-/// unmentioned declarations of the live files.
-#[test]
-fn the_report_document_carries_the_advisory_only_when_asked() {
-    let dir = common::fixtures::tmp("deadcode-report-030");
-    common::fixtures::write_doc(
-        &dir,
+/// `unmentioned` rows, the drop flag and the cut flag; a report
+/// projected from a wire built without the advisory has none of the
+/// three, so "not asked" and "asked and clean" stay distinct in the
+/// document. The same fixture as verdicts_come_back_with_names:
+/// `orphan.ts` exports nothing, so its dead verdict stands beside an
+/// advisory table that names the unmentioned declarations of the live
+/// files. K44's Rust half rides here too: the row's five keys in the
+/// order serde_json emits them (a BTreeMap — alphabetical), which is
+/// the order the GUI hub projects its first five columns from
+/// (gui/tests/hub_projection.js pins the JS half on the same five).
+/// The advisory fixture: `used.ts` is kept alive by the entry and
+/// exports a name nothing spells; with `orphan`, a dead file beside it.
+fn unspoken_tree(tag: &str, orphan: bool) -> std::path::PathBuf {
+    let dir = common::fixtures::tmp(tag);
+    let mut doc = String::from(
         "--- ce.toml\n[graph]\nentry_globs = [\"root.ts\"]\n\
          --- root.ts\nimport './used';\n\
-         --- used.ts\nexport function usedButUnspoken() {}\n\
-         --- orphan.ts\nexport {};\n",
+         --- used.ts\nexport function usedButUnspoken() {}\n",
     );
+    if orphan {
+        doc.push_str("--- orphan.ts\nexport {};\n");
+    }
+    common::fixtures::write_doc(&dir, &doc);
+    dir
+}
+
+#[test]
+fn the_report_document_carries_the_advisory_only_when_asked() {
+    let dir = unspoken_tree("deadcode-report-030", true);
     let core = core_bin();
     let report = deadcode::run(&dir, None, &core).expect("run");
     assert_eq!(
@@ -144,9 +157,14 @@ fn the_report_document_carries_the_advisory_only_when_asked() {
     );
     let asked = codeeraser::report::deadcode_json(&report);
     assert_eq!(asked["schema"], "ce.deadcode-report/0.3.0");
-    assert_eq!(asked["unmentioned_dropped"], false);
+    assert_eq!(
+        (&asked["unmentioned_dropped"], &asked["unmentioned_cut"]),
+        (&serde_json::json!(false), &serde_json::json!(false))
+    );
     let rows = asked["unmentioned"].as_array().expect("advisory rows");
     assert_eq!(rows.len(), 1, "{asked}");
+    let keys: Vec<&String> = rows[0].as_object().expect("row").keys().collect();
+    assert_eq!(keys, ["code", "line", "name", "symbol", "why"]);
     let cell = |k: &str| rows[0][k].as_str().map(str::to_string);
     assert_eq!(
         (cell("name"), cell("symbol"), cell("code")),
@@ -163,8 +181,40 @@ fn the_report_document_carries_the_advisory_only_when_asked() {
     );
     assert_eq!(quiet["schema"], "ce.deadcode-report/0.3.0");
     assert!(
-        quiet.get("unmentioned").is_none() && quiet.get("unmentioned_dropped").is_none(),
+        ["unmentioned", "unmentioned_dropped", "unmentioned_cut"]
+            .iter()
+            .all(|k| quiet.get(k).is_none()),
         "{quiet}"
+    );
+}
+
+/// K38's console half: the advisory renders as one line per row with
+/// the core's code word, a census line, and — on this small tree — no
+/// cut line and no drop line; the same run's exit stays the verdict's
+/// (an advisory never moves it), so `--check` reds on the orphan and
+/// not on the advisory, and a tree whose only finding is an advisory
+/// passes.
+#[test]
+fn the_console_renders_the_advisory_beside_the_verdicts() {
+    let dir = unspoken_tree("deadcode-console-advisory", false);
+    let core = core_bin();
+    let out = common::run_ce(&dir, &["deadcode", ".", "--core", &core, "--check"]);
+    let text = String::from_utf8_lossy(&out.stdout).to_string();
+    assert!(
+        text.contains("advisory: used.ts:1  usedButUnspoken  public_unmentioned  (no other file spells this exported name)"),
+        "{text}"
+    );
+    assert!(
+        text.contains("advisory: 1 unmentioned declaration(s) in 1 file(s) — 1 public, 0 private, 0 restricted, 0 reexported;"),
+        "{text}"
+    );
+    assert!(
+        !text.contains("cut at") && !text.contains("dropped"),
+        "a small tree is neither cut nor dropped: {text}"
+    );
+    assert!(
+        out.status.success(),
+        "an advisory alone never fails --check"
     );
 }
 

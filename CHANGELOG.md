@@ -4,7 +4,7 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
-## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键）
+## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键）
 
 **片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
 全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
@@ -28,7 +28,7 @@ MemberApi/MemberDispatch、`ce:allow(unmentioned)`）、`selfref.rs`（tree-sitt
 手抄体删除；spec 写 `pub(crate)`，集成测试够不着，**勘误 ⑩** 记为 `pub`），`consume` 第四参名表 → `Report.unmentioned:
 Option<UnmentionedFace{Rows,Dropped}>`（K38 两腿各自具名拒绝：第一等式按封版后勘误 ⑨ 改「核出行 (node,vis,conv) 键集 ⊆
 生产者名表键集」= 查表即腿、第二腿值侧非空；对抗审查抓出首稿节点集 ensure 为恒真死码，已删；回复既非 degraded 又无
-`exportUnmentioned` ⇒ 具名拒绝——前 6.2.0 核合法偏斜不得读作「已问且干净」）；`ce.deadcode-report` **0.2.0→0.3.0** 加性两键
+`exportUnmentioned` ⇒ 具名拒绝——前 6.2.0 核合法偏斜不得读作「已问且干净」）；`ce.deadcode-report` **0.2.0→0.3.0** 加性两键〔片 (7) 补第三键〕
 `unmentioned`（行 `{name,symbol,line,code,why}`）/`unmentioned_dropped`，只在 Yes 路在场（K43）。it 腿：K6 双路 + K16
 (a)(b)(c1 全提及树空表 + c2 mounts 全节点)、K30 code 半（真核 14 行：六格矩阵 + 两碰撞格 + 再导出 + Go 两形 + TS 星 + cabal
 两事实）、K43、K46 `UNMENTIONED_SOFT_CAP`↔`unmentionedCap` 源对源一数、K31 分段器直接表（`PyProject`/`HTTPServer`/`RULES`）+
@@ -37,8 +37,58 @@ conv 字异域），落码为「豁免只读 conv、vis 永不豁免」+ `11 ∉
 落码为键集查表。对抗审查 Workflow（6 镜头 23 条 → 14 确认〔去重 8 缺陷〕/ 9 驳回 / 0 存疑）全修：cap 注释改封版口径、K47 补腿、
 selfref lossy、K38 恒真 ensure 删除+两腿拆分+前 6.2.0 核拒绝、golden 20 补 code 0 行、ironRule/codeOrder 补格、分段器两腿、
 `MENTION_REV` 台账补分段器、`*.test.*` 任一出现位命中；E01 拆分：`wire_of`→`advisory::tables`、`Graph.hs result`→
-`advisoryKeys`/`liveness`、K30 code 半独立模块。**渲染面未动**（控制台/GUI/MCP 下钻 = 片 (7)），K23 四语料 + K45 性能腿 +
-方法学册 = 片 (8)。
+`advisoryKeys`/`liveness`、K30 code 半独立模块。
+
+**片 (7)+(8) 无默认档位变更**（2026-08-28，ccm 步 #7）。渲染面：`ce.deadcode-report` 0.3.0 加**第三键** `unmentioned_cut`
+（生产者在 `UNMENTIONED_SOFT_CAP` 处整对截断的事实，核看不见故只能本地说——K38 自限腿落为生产者单元腿：`candidates::cut`
+恰 cap 不截、cap+1 截且前缀恒同；131,073 节点 e2e 不可造，一个节点的 (vis,conv) 变体只有数种）；`Report.unmentioned` 三态
+`Rows{rows,cut}`/`Dropped`/`None`；控制台每行 `advisory: name:line  symbol  code  (why)` + 按码普查行 + 两条本地降级行
+（截断/掉表），中文同形；MCP `deadcode` 工具同文档（描述句补顾问）；GUI Graph 屏加载 `deadcode_report` 与画布并列、按路径
+join（渲染 join，非判决）：选中文件列出其未提及声明（行/符号/码词），根视图带全树按码普查 + 两条通知，悬停计数；i18n 五键 +
+`graphNullWhy[1]`/`emptyGraph` 重写（O09/O17）；K44 门 `gui/tests/hub_projection.js`（0.3.0 行过 `hubTable` 后 `symbol` 列仍在，
+CI 两平台接线）。语料面：`ce graph --mentions` 0.1.0→**0.2.0** 加性 `rates` 键 + 每语言一行控制台——K23 普查 `mention::rates`
+（`declared{all,exported}` / `unmentioned{all,exported}` / `vetoed{other,fold,self_text,**collision_saved**}`——末者 = 只因他
+文件同名声明得救者，§6 碰撞失明成数字）；`store::mentioners`；否决序抽为 `candidates::veto` 单喉供生产者与普查共用。**U 公式钉**
+（`tests/it/mention_universe.rs`）：git 在 `.gitignore` 单源下的列表（`--cached --others --exclude-per-directory=.gitignore`——
+walk 不读 `info/exclude`/`core.excludesFile`，本机排除文件不得移动 U）− walk 每条规则一项：按名剪除（`.git`/`.ce`）、嵌套仓
+（git 列作 `sub/` 一项）、tracked 而被 `.gitignore` 模式命中者（walk 读模式不读索引，`--ignored` 取）、排除表、盘上无常规文件
+者（已删未暂存/目录链接）、4 MiB、早 NUL——每项用 walk 自己发布的谓词（`mention::{cut,excluded,FILE_CAP,decode}`）算，
+`Formula` 八项在打印行内各成列（`listed − Σ = U` 行内自闭），scratch 仓逐形见证腿 + 自仓 CI 常钉 + 外部四语料 `--ignored`
+腿同式钉（自仓本树 627 = 640 − 13；cobra 65 = 66 − 1 / requests 118 = 130 − 7 − 5 / ripgrep 230 = 237 − 7 /
+zod 536 = 583 − 45 − 1 − 1）。
+**K23 仪器腿** `tests/it/eval_mention.rs` + `eval_support/mention.rs`（产品自己的 `token::{emit,runs,whole_run_only}` 与
+`rates::declarations` 域，一次运行出全部数——L7-F6 律）：`$` union 臂 ② 行成本两 U 列（zod 438/146、requests 449/3、ripgrep
+61/61、cobra 24/24、自仓 62/62，与封版 spec 参照列逐数相同）；① 顾问结果差**预登记 0 五树全成立**——仪器按生产者的三条否决通道（身份 / Rust 折叠 / 自文件例外区）两臂同问；只看身份
+通道曾示 zod 2 行（`ZodBase64URL` `schemas.ts:939` 与 `ZodExactOptional` `:2148`，裸名无他文件拼写而 `$` 孪生见于
+`core.mdx`/`wiki/optionality.md`），但两者在严格臂下亦被自文件字符串字面量 `$constructor("…")`（:943/:2155）否决——
+对抗审查抓出的假警，腿断言空并打印行；JS 臂连带 zod 624 / 444 / **0 域内**（自仓 8/5/0）；`$` run 形 2392/5416/119/10 与参照同；
+`test` 单数四语料 0（自仓 22，只报）；ripgrep 包根 Test 规则恰四目录。**258 行外部顾问逐条处置**（Workflow 10 处置者 + 10
+推翻式核验者，8 条改判、**0 条 veto 缺陷**——仪器主张 258/258 成立）：218 公开 API 面、2 loader 拼写（cobra `Gt`/`Eq` 经
+`text/template` FuncMap `gt`/`eq`）、5 仅测试、31 限制/私有声明仅自文件用或无人用、2 条域读法入残余风险台账（requests
+`_types.py:157` `if TYPE_CHECKING:` 下划线模块类判 public——Python 模块私有非 mount 事实，具名交提取面补强步裁；ripgrep
+`matcher.rs:548` 同文件 `pub(crate)` 属文件粒度设计）。**K45 双腿**（A/B 两棵 HEAD 树各自 `.ce/`，旧客户端 1f493df vs 本批，
+n=9 交错，静默窗）：`ce audit --hook` 1.186→0.954 s、`ce erase` 1.526→1.493 s、`ce check` 1.786→1.802 s（散布 1.729–1.928）——
+传否路零代价成立，PERF-BUDGET 立节。方法学册 **13**（`docs/reference/methodology/13-unmentioned-declaration-advisory.md`，
+全引文 file:line，含 §7 残余风险与 §8 验收表）+ 06 §4 净空散文按 `Cost.hs` 现注重写 + README 双语第 5 条补顾问句
++ 官网 how 页双语第 13 节（`.fam` 13：公式块 + 注 + chip `MENTION_REV`/`FOLD_MIN_CHARS`/`unmentionedVisMask`/
+`unmentionedCap`/`unmentionedHardCap` 各绑一处源常量，过 `docs_consts` 门）+ 册数十二→十三六处（how 标题/meta/h2/调和注、
+stack 卡、README 双语技术栈条，`site_counts` 门同改）；`contracts/docs-citations.json` +86 条册 13 钉锚，06 册 13 条引文随
+`deadcode.rs` 三处 hunk（+1/+3/±0）位移按序号重瞄后重签。**对抗审查 Workflow**（6 镜头 37 条 → 25 确认 / 11 推翻 / 1 核验者
+被 API 过滤、亲核成立）全修：U 公式四缺陷（`--exclude-standard` 连 `info/exclude`/`core.excludesFile` 一起读而 walk 不读 →
+`--exclude-per-directory=.gitignore` + `--ignored`；漏嵌套仓项且把 git 的 `sub/` 目录项当文件读；tracked 已删未暂存 `expect` panic；
+打印行缺 cut 项 → `Formula` 八项各成列 + scratch 仓逐形见证腿）；① 仅问身份通道 → 三通道两臂同问（zod 2 行假警归零）；
+`pkg_test_dir` 重述包根规则 → 单调前缀探针问产品自己的 `PathWords::bits`；`ce graph --mentions` 零测试 → `tests/it/mentions_face.rs`
+两腿（字段名 / 折叠通道 fixture / 中英九孔实数）+ `zh_surface` 形状（scratch `--db`）；GUI `Promise.all` 令顾问路承重（前 6.2.0 核
+使整图空白）→ `allSettled` 画布为准 + 顾问第三态通知 `advisoryUnavailable`（中英）；`walk::cut` 单谓词发布（walk 过滤器 / census /
+公式三处同读）；`rates.rs` 文档 0.64 %/14.9 % 归 X-1 全规则仿真、并列本层 65.8 %/16.0 %；册 13 五处语义（vis bit 1 具名、
+code 1 `total > 0` 空真线、碰撞得救率分母改 unmentioned〔§0 条款 3 第二数〕、自仓行按本提交重取、① 叙述反转）+ 五处引文重瞄
+（`rates.rs` 两处曾钉在 `}` 与 fixture 串上）；`docs_citations` 门新增标签尾行 past-EOF 检查——抓出 04/05/08/11 册 6 条旧标签
+（含 11 册「决策 JSON 发射点」误指 `observe_log`，改瞄 `emit_decision`）一并重瞄；CHANGELOG 头补第三键；gui.md「同一判决」改
+「第二次判决」。**ADR-006 具名重立**（`CE_ACCEPT_BASELINE=1 ce baseline .`，softLine 332 不动）：超 max(+2 %, +10) 者 15 文件——
+`graph.js` +79、`deadcode/report.rs` +67、`candidates.rs` +61、`deadcode_e2e.rs` +50、CHANGELOG +46、`face.rs` +38、
+`candidates_tests.rs` +35、`site/how` +33、`i18n.js` +27、`site/zh/how` +27、`walk.rs` +17、`advisory.rs` +15、`store.rs` +15、
+PERF-BUDGET +13、`zh_surface.rs` +12；新入表 7（`rates.rs`、`eval_mention.rs`、`eval_support/mention.rs`、`mention_universe.rs`、
+`mentions_face.rs`、册 13、`hub_projection.js`）；`ce dedup` 185 恒（行集对片 (4) 零差）、`ce scan` 0 fail、`ce check` 952。
 
 **片 (5) 无默认档位变更**。`mounts` 表生产者落地（`cli/src/graph/mounts.rs`：每节点 `[privateMounts, totalMounts, bits]`，
 全节点无条件一行；private/total 由 `mod_decl` 边 join 声明 `mod` 单元的存储可见性 bit 0；bits bit 0 = 再导出目标 = Rust

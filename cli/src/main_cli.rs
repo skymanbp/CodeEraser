@@ -108,7 +108,8 @@ pub(crate) enum Cmd {
         format: OutFormat,
     },
     /// Judge liveness over the cached reference graph: the ladder's
-    /// edges, the core's four-way verdicts
+    /// edges, the core's four-way verdicts, and the symbol-level
+    /// advisory (declarations no other file spells — never a verdict)
     Deadcode {
         /// Directory to judge (default: current directory)
         root: Option<PathBuf>,

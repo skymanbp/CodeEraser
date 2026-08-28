@@ -41,7 +41,7 @@ Two consequences worth naming:
 | **Erase** | `ce.erase-plan` + a rendered diff | the deterministic two-phase eraser's face: preview **is** the plan (eraseable rows with provenance, advisories with named reasons, the unified diff rendered from the hashed plan); Apply stays hidden until a preview exists |
 | **Trend** | `ce.trend-report` | score points over mainline history plus the core's trend judgment; "measure more" batches uncached commits so a cold cache fills at the reader's pace |
 | **Candidates** | `ce.join-report` + `ce.dedup-report` | the deletion-candidate browser: three-signal file pairs, unit pairs and clone blocks in document order — no ranking is derived here, and the per-row bar is geometry over a printed number |
-| **Graph** | `ce.graph-canvas` | the reference graph as a drawn map, file tier only; the layout is deterministic (the same document draws the same picture), dead files and cycle members ride the alarm ramp, node radius is degree |
+| **Graph** | `ce.graph-canvas` + `ce.deadcode-report` | the reference graph as a drawn map, file tier only; the layout is deterministic (the same document draws the same picture), dead files and cycle members ride the alarm ramp, node radius is degree. Selecting a file lists its **unmentioned declarations** — the symbol-level advisory of the deadcode report (6.2.0), line, name and the core's code word — and the aside's root view carries the whole-tree census by code plus the two states the rows cannot show (the producer's cut, the core's drop). The screen loads the deadcode report as a second judgment beside the canvas document and joins the two by file path: a rendering join on a shared string, never a verdict — two runs, so the join is best-effort by path rather than snapshot-identical — and the advisory keeps its one home in the report; when that road fails while the canvas drew (a pre-6.2.0 core), the aside says so in place of the rows |
 | **Reports** | the remaining families | the diagnostics hub: each family's document rendered generically — counts as chips, row arrays as tables — adding zero interpretation |
 | **Bench** | `contracts/bench/bench.json` | the compiled-in benchmark series, pivoted to one row per metric with a column per version; frozen points carry value **and** source |
 | **Doctor** | `ce.doctor-report` | this machine's state: ce-core handshake, guard tier, index freshness, daemon, degraded-run counter — probed without starting the daemon or rebuilding the index, so the diagnostic reports a state it did not create |
@@ -85,6 +85,8 @@ the whole product. The Windows installer also detects Claude Code
 and wires the plugin. Building from source: `cargo build` in
 `gui/src-tauri/` (its own workspace — building the CLI does not
 build it, which is why CI carries dedicated GUI legs: build, clippy,
-fmt, the two webview gates `lens_invariant.js` / `i18n_gate.js`, and
+fmt, the three webview gates `lens_invariant.js` / `i18n_gate.js` /
+`hub_projection.js` — the last pins that the diagnostics hub's
+five-column projection keeps the advisory row's symbol (K44) — and
 `installer_wiring.js`, which pins the Claude Code wiring above
 against renames and moves).

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How CodeEraser works — deterministic judgment, twelve families</title>
-<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: twelve judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
+<title>How CodeEraser works — deterministic judgment, thirteen families</title>
+<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: thirteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
 <link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
@@ -106,8 +106,8 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   on the diagram is a constant cited in the methodology sections below.</figcaption>
 </figure>
 
-<h2>The twelve judgment families</h2>
-<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b>twelve</b> booklets below, one per judgment whose math is worth its own derivation; <b>ten</b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b>thirteen</b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, and <code>doctor</code> answers with machine state, not a judgment.</p>
+<h2>The thirteen judgment families</h2>
+<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b>thirteen</b> booklets below, one per judgment whose math is worth its own derivation; <b>ten</b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b>thirteen</b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, and <code>doctor</code> answers with machine state, not a judgment.</p>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -578,6 +578,39 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>since proto</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">Unmentioned-declaration advisory — the mention veto</a></h3>
+  <p class="job">Lists, beside the graph family's verdicts, every judged declaration whose
+  name no <em>other</em> file in the tree spells — a negative instrument that reports
+  with a visibility code and never judges.</p>
+  <pre>veto  = another file spells it | fold (Rust, ≥2 segments ∧ ≥7 chars)
+        | the file's own exception regions spell it
+row   = [node, vis, conv]      (integers only — a name never rides the wire)
+emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
+code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
+  <p class="note">U is a walk of its own — hidden files enter, <code>.git</code>/<code>.ce</code>
+  and nested repositories are cut, only <code>.gitignore</code> and <code>.ceignore</code> are
+  honoured — so one commit yields one U on any machine, and every parameter of the walk is a
+  <code>MENTION_REV</code> input. The mentions store keeps 64-bit hashes, never text. Rust
+  extracts each declaration's mention name and category word and asks the three veto questions
+  cheapest first; Haskell reads only the visibility word and the mounts row — how many of the
+  file's <code>mod</code> mounts are private, whether a façade re-exports it, whether its own
+  package keeps it private — and assigns the frozen total order above. Both tables ride
+  <code>graph.request</code> together or not at all: a request without them gets the ten-key
+  reply byte for byte, and the dead set is the same either way. Past <code>unmentionedCap</code>
+  the core still judges the graph, drops the table and says so. The advisory never turns a gate
+  red and never enters <code>ce erase</code>.</p>
+  <ul class="consts">
+    <li><b>MENTION_REV</b> 1</li>
+    <li><b>FOLD_MIN_CHARS</b> 7</li>
+    <li><b>unmentionedVisMask</b> 3</li>
+    <li><b>unmentionedCap</b> 131072</li>
+    <li><b>unmentionedHardCap</b> 524288</li>
+    <li><b>since proto</b> 6.2.0</li>
+    <li><b>wire</b> graph/1</li>
   </ul>
 </div>
 

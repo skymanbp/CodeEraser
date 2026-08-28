@@ -303,7 +303,7 @@ request dimension walks that dimension uncapped
 reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
 are both true and `reason` is `structure_too_large`
 ([Structure.hs:218-238](../../../core/app/CE/Structure.hs#L218),
-[StructureProps.hs:231-241](../../../core/test/StructureProps.hs#L231)). Note the consequence of the
+[StructureProps.hs:231-240](../../../core/test/StructureProps.hs#L231)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. No `ce structure` user ever sees that 1000: the CLI
 turns a degraded reply into an error before rendering ([wire.rs:148](../../../cli/src/structure/wire.rs#L148)),

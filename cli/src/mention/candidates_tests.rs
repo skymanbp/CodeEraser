@@ -44,9 +44,10 @@ fn table(root: &std::path::Path) -> BTreeMap<String, (String, i64, i64, i64)> {
         .unmentioned
         .as_ref()
         .expect("the advisory road carries the table");
+    assert!(!names.cut, "a handful of candidates is never cut");
     assert!(w.mounts.as_ref().is_some_and(|m| m.len() == w.nodes.len()));
     let mut out = BTreeMap::new();
-    for (&[node, vis, conv], entries) in names {
+    for (&[node, vis, conv], entries) in &names.names {
         assert!(!entries.is_empty(), "a key without names");
         for n in entries {
             let path = w.nodes[node as usize].path.clone();
@@ -85,4 +86,38 @@ fn the_veto_reads_every_other_file_and_the_files_own_exceptions() {
     .collect();
     assert_eq!(got, want);
     std::fs::remove_dir_all(&root).ok();
+}
+
+/// K38's self-limit leg, at the producer: one key past the cap is a
+/// cut — the first `UNMENTIONED_SOFT_CAP` keys in map order survive
+/// (the same prefix every run) and the flag says rows fell; exactly
+/// the cap is the whole table and no cut. A real tree of 131,073
+/// distinct `[node, vis, conv]` keys would need on the order of a
+/// hundred thousand files (a node's `(vis, conv)` variety is a few
+/// categories, not thousands), so the leg drives the cut function on
+/// a synthetic map.
+#[test]
+fn the_producer_cuts_at_the_soft_cap_and_says_so() {
+    use super::{AdvisoryName, Names, UNMENTIONED_SOFT_CAP, Unmentioned, cut};
+    let synthetic = |keys: usize| -> Names {
+        (0..keys as i64)
+            .map(|i| {
+                let name = AdvisoryName {
+                    symbol: format!("s{i}"),
+                    line: 1,
+                };
+                ([i, 3, 0], vec![name])
+            })
+            .collect()
+    };
+    let Unmentioned { names, cut: over } = cut(synthetic(UNMENTIONED_SOFT_CAP + 1));
+    assert!(over);
+    assert_eq!(names.len(), UNMENTIONED_SOFT_CAP);
+    assert_eq!(
+        names.keys().next_back(),
+        Some(&[UNMENTIONED_SOFT_CAP as i64 - 1, 3, 0]),
+        "the prefix in key order, so a cut table is the same table every run"
+    );
+    let whole = cut(synthetic(UNMENTIONED_SOFT_CAP));
+    assert!(!whole.cut && whole.names.len() == UNMENTIONED_SOFT_CAP);
 }

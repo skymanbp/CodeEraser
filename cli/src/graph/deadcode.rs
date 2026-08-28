@@ -131,11 +131,12 @@ pub struct GraphWire {
     /// public bit off it (graph/symwire.rs).
     pub symbols: BTreeSet<[i64; 2]>,
     /// The `unmentioned` table (6.2.0) keyed `[node, vis, conv]` with
-    /// the names behind each key — the wire carries the KEYS, the
-    /// renderer reads the names; Some only under `Advisory::Yes`
-    /// (mention/candidates.rs builds it: keys ascending and deduped
-    /// by the map, every value non-empty by its one writer).
-    pub unmentioned: Option<crate::mention::Names>,
+    /// the names behind each key and the producer's cut flag — the
+    /// wire carries the KEYS, the renderer reads the names; Some only
+    /// under `Advisory::Yes` (mention/candidates.rs builds it: keys
+    /// ascending and deduped by the map, every value non-empty by its
+    /// one writer).
+    pub unmentioned: Option<crate::mention::Unmentioned>,
     /// The `mounts` table (6.2.0): node → [private, total, bits] for
     /// EVERY node (graph/mounts.rs builds it over the whole node
     /// list; the core reads a missing row as zeros, so none may be
@@ -328,7 +329,10 @@ pub fn request_body(w: &GraphWire, pos: &[i64]) -> Value {
         obj.insert("mounts".into(), json!(rows));
     }
     if let Some(u) = &w.unmentioned {
-        obj.insert("unmentioned".into(), json!(u.keys().collect::<Vec<_>>()));
+        obj.insert(
+            "unmentioned".into(),
+            json!(u.names.keys().collect::<Vec<_>>()),
+        );
     }
     body
 }
@@ -365,7 +369,7 @@ fn consume(
     reply: &Value,
     nodes: &[Node],
     unresolved_sites: i64,
-    names: Option<&crate::mention::Names>,
+    names: Option<&crate::mention::Unmentioned>,
 ) -> Result<Report> {
     // The wire's degraded BIT is authoritative (the C9 read-the-
     // real-boolean discipline, contracts/VERSIONING.md); reason

@@ -142,17 +142,20 @@ fn fold_filters_the_three_separators_and_the_gate_is_literal_length() {
 }
 
 /// The caps are explicit numbers of the pass and the face carries its
-/// schema id — the two facts the operator's window states.
+/// schema id — the two facts the operator's window states. 0.2.0
+/// added the per-language `rates` census (K23) beside the header.
 #[test]
 fn caps_and_face_identity_are_stated() {
     assert_eq!(super::FILE_TOKEN_CAP, 65_536);
     assert_eq!(super::TABLE_ROW_CAP, 4_194_304);
-    let doc = super::face::report_json(&super::Stats::default());
-    assert!(
-        doc.contains("\"schema\":\"ce.mentions-report/0.1.0\""),
-        "{doc}"
-    );
-    assert!(doc.contains("\"mention_rev\":1"), "{doc}");
+    let doc = super::face::report_json(&super::Stats::default(), &Default::default());
+    for needle in [
+        "\"schema\":\"ce.mentions-report/0.2.0\"",
+        "\"mention_rev\":1",
+        "\"rates\":{}",
+    ] {
+        assert!(doc.contains(needle), "{needle} in {doc}");
+    }
 }
 
 /// The binary rule: BOMs decode, an early NUL is git's verdict, a NUL

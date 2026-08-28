@@ -51,9 +51,12 @@ const CE_I18N = {
     graphA: "graph a", graphB: "graph b", churnA: "churn a", churnB: "churn b",
     // the unit tier's graph leg and WHY it is null, keyed by the
     // wire's caveat code (ce.join-report/0.3.0) — the sentence used
-    // to ride the wire in English, where no switch could reach it
+    // to ride the wire in English, where no switch could reach it.
+    // Since 6.2.0 the symbol level has a face of its own (the
+    // deadcode advisory on the graph screen); the join's graph leg is
+    // still file-tier, so the unit row stays null and says why.
     graphNull: "graph", graphNullWhy: {
-      1: "null — import granularity has no unit nodes; symbol-level indegree needs R6",
+      1: "null — the graph judges files, not units; a unit's symbol-level reading is the deadcode advisory on the graph screen, not an indegree",
     },
     cochange: "co-change", belowTable: "below the report table",
     posNull: "null (unanswered)", cloneBlock: "clone block",
@@ -68,10 +71,23 @@ const CE_I18N = {
     emptyStructure: "point the field above at a repository, then scan — map and tree render the same judgment",
     emptyTrend: "load to measure the score trajectory over mainline history",
     emptyCandidates: "load to join the three deletion signals over this repository",
-    emptyGraph: "load to draw the file reference graph — dead files and cycles from the same judgment the CLI prints",
+    emptyGraph: "load to draw the file reference graph — dead files and cycles from the canvas judgment, the unmentioned-declaration advisory from the deadcode report the CLI prints",
     graphCounts: (f, e, d, c) => `${f} files, ${e} edges — ${d} dead, ${c} cycles`, graphAlive: "alive",
     graphInOut: (i, o) => `${i} in / ${o} out`, graphCycleOf: (n) => `in a cycle of ${n} files`,
     graphUnresolved: (n) => `${n} unresolved sites — the graph refuses to know them`,
+    // the symbol-level advisory (ce.deadcode-report 0.3.0, plan v2.17
+    // L round): declarations no other file spells, by the core's code
+    advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? "" : "s"} in ${f} file${f === 1 ? "" : "s"} — advisory, never a verdict`,
+    advisoryHover: (n) => `${n} unmentioned`,
+    advisoryWords: {
+      public_unmentioned: "public — exported, spelled by no other file",
+      private_unmentioned: "private — reachable only inside its own package",
+      restricted_unmentioned: "restricted — visible to its crate alone",
+      reexported_unmentioned: "re-exported — reachable only through a façade",
+    },
+    advisoryDropped: "the core dropped the unmentioned table — over its row cap, nothing judged at symbol level",
+    advisoryCut: "the candidate table was cut at the producer's row cap — these rows are a prefix, the same prefix every run",
+    advisoryUnavailable: "the advisory road failed — the map is drawn, no symbol-level reading is shown",
     // Judgment vocabulary (K round step 6). Every one of these labels
     // names a number the core produced and this screen used to drop:
     // the trend judgment, the join lattice's verdict/severity/legs,
@@ -151,7 +167,7 @@ const CE_I18N = {
     tokensOnly: (t) => `${t} tokens`, tokens: "token 数",
     graphA: "图位 a", graphB: "图位 b", churnA: "变动 a", churnB: "变动 b",
     graphNull: "图位", graphNullWhy: {
-      1: "null——import 粒度没有单元节点；符号级入度需 R6 解锁",
+      1: "null——图判的是文件不是单元；单元的符号层读数是引用图屏的死码顾问，不是入度",
     },
     cochange: "共变", belowTable: "低于报告表阈值",
     posNull: "null（未作答）", cloneBlock: "克隆块",
@@ -166,10 +182,21 @@ const CE_I18N = {
     emptyStructure: "在上方输入仓库路径，点扫描——热图与树状渲染同一份判决",
     emptyTrend: "点加载，测量主线历史上的分数轨迹",
     emptyCandidates: "点加载，对本仓库联结三路删除信号",
-    emptyGraph: "点加载绘制文件引用图——死文件与环来自 CLI 打印的同一次判决",
+    emptyGraph: "点加载绘制文件引用图——死文件与环来自画布判决，未提及声明顾问来自 CLI 打印的 deadcode 报告",
     graphCounts: (f, e, d, c) => `${f} 文件，${e} 边——${d} 死，${c} 环`, graphAlive: "存活",
     graphInOut: (i, o) => `入 ${i} / 出 ${o}`, graphCycleOf: (n) => `处于 ${n} 文件环`,
     graphUnresolved: (n) => `${n} 个未解析点位——图拒绝臆测它们`,
+    advisoryHead: (n, f) => `${n} 个未提及声明分布于 ${f} 个文件——仅建议，永不判决`,
+    advisoryHover: (n) => `${n} 个未提及`,
+    advisoryWords: {
+      public_unmentioned: "公开——已导出，无他文件拼写其名",
+      private_unmentioned: "私有——只在自身包内可达",
+      restricted_unmentioned: "受限——仅对本 crate 可见",
+      reexported_unmentioned: "再导出——只经门面可达",
+    },
+    advisoryDropped: "核已丢弃未提及表——超出行上限，符号层一行未判",
+    advisoryCut: "候选表已在生产者侧行上限截断——以上各行是前缀，每次运行同一前缀",
+    advisoryUnavailable: "顾问路失败——图已绘出，不显示符号层读数",
     verdict: "判决", severity: "严重度", legsAgree: "佐证腿数",
     trendVerdictNames: ["上行", "持平", "恶化"],
     unjudged: "未判——低于最小点数",

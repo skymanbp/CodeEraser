@@ -88,10 +88,12 @@ pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
     let mut doc = json!({
         // 0.2.0 (2.32.0, H3): dead rows carry the confidence column
         // (null on a legacy reply without the ledger); 0.3.0 (6.2.0):
-        // the `unmentioned` advisory rows and `unmentioned_dropped`,
-        // present exactly when the road was asked (K43) — a document
-        // from a road that never asked carries neither key, so
-        // "not asked", "asked and clean" and "dropped" stay distinct
+        // the `unmentioned` advisory rows, `unmentioned_dropped` (the
+        // core dropped the table) and `unmentioned_cut` (the producer
+        // cut the candidate set, so the rows are a prefix), present
+        // exactly when the road was asked (K43) — a document from a
+        // road that never asked carries none of the three, so "not
+        // asked", "asked and clean", "cut" and "dropped" stay distinct
         "schema": "ce.deadcode-report/0.3.0",
         "dead": r.dead.iter().map(|d| {
             json!({"name": d.path, "verdict": d.verdict, "why": d.why, "confidence": d.conf})
@@ -104,9 +106,9 @@ pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
         "degraded": r.degraded,
     });
     if let Some(face) = &r.unmentioned {
-        let (rows, dropped) = match face {
-            UnmentionedFace::Rows(rows) => (rows.as_slice(), false),
-            UnmentionedFace::Dropped => (&[][..], true),
+        let (rows, dropped, cut) = match face {
+            UnmentionedFace::Rows { rows, cut } => (rows.as_slice(), false, *cut),
+            UnmentionedFace::Dropped => (&[][..], true, false),
         };
         let obj = doc.as_object_mut().expect("json! object literal");
         obj.insert(
@@ -116,6 +118,7 @@ pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
                 .collect(),
         );
         obj.insert("unmentioned_dropped".into(), json!(dropped));
+        obj.insert("unmentioned_cut".into(), json!(cut));
     }
     doc
 }

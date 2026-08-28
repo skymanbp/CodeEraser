@@ -29,6 +29,7 @@ mod census;
 pub mod conv;
 pub mod face;
 pub mod name;
+pub mod rates;
 pub mod selfref;
 pub mod store;
 #[cfg(test)]
@@ -37,11 +38,17 @@ mod tests;
 mod tests_caps;
 #[cfg(test)]
 mod tests_index;
-mod token;
+pub mod token;
 mod walk;
 
-pub use candidates::{AdvisoryName, Names, UNMENTIONED_SOFT_CAP};
+pub use candidates::{AdvisoryName, Names, UNMENTIONED_SOFT_CAP, Unmentioned};
 pub use census::Outside;
+pub use rates::LangRates;
+// the universe's own membership rules, published so the K23
+// instruments (tests/it/mention_universe.rs, eval_mention.rs) count
+// with the walk's rules and never with a second reading of them —
+// two instruments reading one commit differently was the L7-F6 lesson
+pub use walk::{FILE_CAP, cut, decode, excluded};
 
 use crate::dedup::index::Index;
 use crate::dedup::tokens::fnv1a;

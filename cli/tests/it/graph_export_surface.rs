@@ -154,7 +154,11 @@ fn no_name_of_any_kind_reaches_the_graph_request() {
             assert!(!body["mounts"].as_array().expect("table").is_empty());
             let names = w.unmentioned.as_ref().expect("names ride beside the keys");
             assert!(
-                names.values().flatten().any(|n| n.symbol == "shut_door"),
+                names
+                    .names
+                    .values()
+                    .flatten()
+                    .any(|n| n.symbol == "shut_door"),
                 "the candidate the fixture guarantees: {names:?}"
             );
         }

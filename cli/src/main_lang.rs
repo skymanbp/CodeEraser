@@ -38,7 +38,7 @@ graph	依赖图子系统：--sites 列出引用站点（不做解析）；--ment
 graph.root	要分析的目录（默认当前目录）
 graph.sites	列出引用站点
 graph.mentions	刷新提及语料宇宙（树中每个可能引用到名字的文本文件）并报告其内容
-deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决
+deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决，以及符号层顾问（无他文件拼写其名的声明——永不判决）
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
 deadcode.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）

@@ -11,7 +11,7 @@
 use super::super::mounts;
 use super::super::nodes::Node;
 use crate::dedup::index::Index;
-use crate::mention::{self, Names};
+use crate::mention::{self, Unmentioned};
 use anyhow::{Context, Result, bail, ensure};
 use serde_json::Value;
 use std::collections::BTreeMap;
@@ -36,10 +36,15 @@ pub struct AdvisoryRow {
     pub why: &'static str,
 }
 
-/// The three states the road can end in once asked.
+/// The states the road can end in once asked. `cut` is the
+/// producer's own fact (mention/candidates.rs): the rows are the
+/// judged prefix of a larger candidate set, and every face says so.
 #[derive(Debug)]
 pub enum UnmentionedFace {
-    Rows(Vec<AdvisoryRow>),
+    Rows {
+        rows: Vec<AdvisoryRow>,
+        cut: bool,
+    },
     /// The core judged the graph and dropped the table (soft cap).
     Dropped,
 }
@@ -54,7 +59,7 @@ pub(super) fn tables(
     idx: &Index,
     nodes: &[Node],
     ids: &BTreeMap<(&str, &str), usize>,
-) -> Result<(Names, BTreeMap<i64, [i64; 3]>)> {
+) -> Result<(Unmentioned, BTreeMap<i64, [i64; 3]>)> {
     mention::refresh(root, idx)?;
     let names = mention::candidates::unmentioned(root, idx, ids)?;
     // an empty entry would let `consume` render nothing for a row the
@@ -62,7 +67,7 @@ pub(super) fn tables(
     // and this says so without opening a hard-failure road here (the
     // release face is consume's own check, W8-F2)
     debug_assert!(
-        names.values().all(|v| !v.is_empty()),
+        names.names.values().all(|v| !v.is_empty()),
         "an unmentioned key with no names"
     );
     let facts = mounts::facts(root, idx)?;
@@ -78,7 +83,7 @@ pub(super) fn tables(
 pub(super) fn consume(
     reply: &Value,
     nodes: &[Node],
-    names: Option<&Names>,
+    names: Option<&Unmentioned>,
 ) -> Result<Option<UnmentionedFace>> {
     let Some(names) = names else {
         return Ok(None);
@@ -97,7 +102,10 @@ pub(super) fn consume(
     for row in rows {
         out.extend(named(row, nodes, names)?);
     }
-    Ok(Some(UnmentionedFace::Rows(out)))
+    Ok(Some(UnmentionedFace::Rows {
+        rows: out,
+        cut: names.cut,
+    }))
 }
 
 /// One core row named back. K38's two legs land on this lookup, each
@@ -108,9 +116,9 @@ pub(super) fn consume(
 fn named(
     [node, vis, conv, code]: [i64; 4],
     nodes: &[Node],
-    names: &Names,
+    names: &Unmentioned,
 ) -> Result<Vec<AdvisoryRow>> {
-    let entries = names.get(&[node, vis, conv]).with_context(|| {
+    let entries = names.names.get(&[node, vis, conv]).with_context(|| {
         format!("core advisory row [{node},{vis},{conv}] is outside the offered table — wire skew")
     })?;
     ensure!(
@@ -151,11 +159,11 @@ fn why_of(code: i64) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::mention::AdvisoryName;
+    use crate::mention::{AdvisoryName, Names};
     use crate::testutil::node;
     use serde_json::json;
 
-    fn names() -> Names {
+    fn names(cut: bool) -> Unmentioned {
         let mut m = Names::new();
         for (key, syms) in [([0, 3, 0], vec!["a", "b"]), ([1, 7, 0], vec!["c"])] {
             m.insert(
@@ -169,23 +177,24 @@ mod tests {
                     .collect(),
             );
         }
-        m
+        Unmentioned { names: m, cut }
     }
 
-    fn refusal(reply: &Value, n: &Names) -> String {
+    fn refusal(reply: &Value, n: &Unmentioned) -> String {
         let nodes = [node("a.rs", "", 0), node("b.rs", "", 0)];
         consume(reply, &nodes, Some(n))
             .expect_err("a refusal")
             .to_string()
     }
 
-    /// The three faces, and the refusals: the two K38 legs by their
-    /// own messages (a key the wire never offered; an offered key with
-    /// no names), and a judged reply with no advisory key at all.
+    /// The faces, and the refusals: the two K38 legs by their own
+    /// messages (a key the wire never offered; an offered key with no
+    /// names), and a judged reply with no advisory key at all. The
+    /// producer's cut rides through to the face unchanged.
     #[test]
     fn rows_name_back_and_the_mirror_legs_refuse_skew() {
         let nodes = [node("a.rs", "", 0), node("b.rs", "", 0)];
-        let n = names();
+        let n = names(false);
         assert!(consume(&json!({}), &nodes, None).unwrap().is_none());
         assert!(matches!(
             consume(
@@ -197,9 +206,11 @@ mod tests {
             Some(UnmentionedFace::Dropped)
         ));
         let reply = json!({"exportUnmentioned": [[0, 3, 0, 0], [1, 7, 0, 2]]});
-        let Some(UnmentionedFace::Rows(rows)) = consume(&reply, &nodes, Some(&n)).unwrap() else {
+        let Some(UnmentionedFace::Rows { rows, cut }) = consume(&reply, &nodes, Some(&n)).unwrap()
+        else {
             panic!("rows");
         };
+        assert!(!cut);
         let got: Vec<(&str, &str, i64, &str)> = rows
             .iter()
             .map(|r| (r.name.as_str(), r.symbol.as_str(), r.line, r.code))
@@ -212,15 +223,19 @@ mod tests {
                 ("b.rs", "c", 1, "restricted_unmentioned"),
             ]
         );
+        assert!(matches!(
+            consume(&reply, &nodes, Some(&names(true))).unwrap(),
+            Some(UnmentionedFace::Rows { cut: true, .. })
+        ));
         // degraded: no keys at all, an empty face
         assert!(matches!(
             consume(&json!({"degraded": true}), &nodes, Some(&n)).unwrap(),
-            Some(UnmentionedFace::Rows(r)) if r.is_empty()
+            Some(UnmentionedFace::Rows { rows, .. }) if rows.is_empty()
         ));
         let unoffered = json!({"exportUnmentioned": [[1, 3, 0, 0]]});
         assert!(refusal(&unoffered, &n).contains("outside the offered table"));
-        let mut empty = names();
-        empty.insert([1, 3, 0], Vec::new());
+        let mut empty = names(false);
+        empty.names.insert([1, 3, 0], Vec::new());
         assert!(refusal(&unoffered, &empty).contains("names no local candidate"));
         assert!(refusal(&json!({"degraded": false, "dead": []}), &n).contains("pre-6.2.0"));
     }

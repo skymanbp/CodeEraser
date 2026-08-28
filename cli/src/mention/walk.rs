@@ -45,9 +45,11 @@ use globset::{Glob, GlobSet, GlobSetBuilder};
 use ignore::{DirEntry, WalkBuilder};
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
 
-/// The single-file ceiling, judged on metadata in the loop below.
-pub(super) const FILE_CAP: u64 = 4 * 1024 * 1024;
+/// The single-file ceiling, judged on metadata in the loop below
+/// (published through the module root for the self-corpus pin).
+pub const FILE_CAP: u64 = 4 * 1024 * 1024;
 
 /// Files whose whole purpose is to name every symbol (measured list;
 /// minified bundles keep their export names and are exactly the
@@ -118,28 +120,34 @@ pub(super) fn universe(root: &Path) -> Result<Universe> {
     Ok(out)
 }
 
-/// `.git` / `.ce` by name, and any directory that is a repository of
-/// its own (a `.git` file or directory inside it).
+/// The names cut by name: the repository's own metadata and the
+/// product's own state (the observe feed would otherwise enter U).
+const CUT_NAMES: [&str; 2] = [".git", ".ce"];
+
+/// The walker's entry filter: a cut name, or a directory that is a
+/// repository of its own (a `.git` file or directory inside it). Its
+/// parents were filtered before it, so the entry alone is asked.
 fn is_cut(e: &DirEntry) -> bool {
-    let name = e.file_name();
-    if name == ".git" || name == ".ce" {
-        return true;
-    }
-    e.file_type().is_some_and(|t| t.is_dir()) && owns_repo(e.path())
+    let name = e.file_name().to_string_lossy();
+    CUT_NAMES.contains(&name.as_ref())
+        || (e.file_type().is_some_and(|t| t.is_dir()) && owns_repo(e.path()))
 }
 
 fn owns_repo(dir: &Path) -> bool {
     dir.join(".git").exists()
 }
 
-/// Whether `rel` lies under a directory the nested-repository cut
-/// removes — the census in mod.rs asks with the walk's own rule.
-pub(super) fn in_nested_repo(root: &Path, rel: &str) -> bool {
+/// The same cut read off a path: `rel` has a cut-name component, or
+/// one of its prefixes — the entry itself included, since git lists
+/// a gitlink as the bare path `sub` and a nested repository as
+/// `sub/` — is a repository of its own. Published for the census
+/// (census.rs) and the K23 formula (tests/it/mention_universe.rs),
+/// so the walk's rule has one implementation.
+pub fn cut(root: &Path, rel: &str) -> bool {
     let mut dir = root.to_path_buf();
-    let parts: Vec<&str> = rel.split('/').collect();
-    parts[..parts.len().saturating_sub(1)].iter().any(|seg| {
+    rel.split('/').filter(|s| !s.is_empty()).any(|seg| {
         dir.push(seg);
-        owns_repo(&dir)
+        CUT_NAMES.contains(&seg) || owns_repo(&dir)
     })
 }
 
@@ -163,7 +171,7 @@ fn is_file_like(root: &Path, e: &DirEntry, rel: &str) -> bool {
 /// duplicate. No descriptor stays open between two candidates.
 struct Gate {
     canon_root: PathBuf,
-    excluded: GlobSet,
+    excluded: &'static GlobSet,
     walked: HashSet<String>,
 }
 
@@ -172,7 +180,7 @@ impl Gate {
         Ok(Gate {
             canon_root: std::fs::canonicalize(root)
                 .with_context(|| format!("canonicalize {}", root.display()))?,
-            excluded: excluded_names()?,
+            excluded: &EXCLUDED,
             walked: HashSet::new(),
         })
     }
@@ -211,20 +219,29 @@ fn basename(rel: &str) -> &str {
 
 /// The universe's own exclusion table as one basename matcher — the
 /// same glob engine the walker uses, so `.env*` means here what it
-/// means in the scan's override set.
-fn excluded_names() -> Result<GlobSet> {
+/// means in the scan's override set. Built once: the two tables are
+/// literals, so a build failure is a programming error, not a run.
+static EXCLUDED: LazyLock<GlobSet> = LazyLock::new(|| {
     let mut b = GlobSetBuilder::new();
     for glob in SECRET_GLOBS.iter().chain(OMNI_MENTIONERS.iter()) {
-        b.add(Glob::new(glob).with_context(|| format!("mention exclude {glob}"))?);
+        b.add(Glob::new(glob).expect(glob));
     }
-    b.build().context("mention exclusion table")
+    b.build().expect("mention exclusion table")
+});
+
+/// Whether the exclusion table leaves `rel` out of U — the third of
+/// the walk's published rules (with `FILE_CAP` and `decode`), so the
+/// K23 pins subtract exactly what the walk subtracts.
+pub fn excluded(rel: &str) -> bool {
+    EXCLUDED.is_match(basename(rel))
 }
 
 /// The universe's text of one file, or None for a binary (skipped and
 /// counted by the caller): a UTF-16 BOM decodes, otherwise a NUL in
 /// the first 8000 bytes is git's binary verdict. Lossy on purpose —
-/// one stray byte must not lose a file's mentions.
-pub(super) fn decode(bytes: &[u8]) -> Option<String> {
+/// one stray byte must not lose a file's mentions. Published through
+/// the module root for the same pin as `FILE_CAP`.
+pub fn decode(bytes: &[u8]) -> Option<String> {
     match bytes {
         [0xFF, 0xFE, rest @ ..] => Some(utf16(rest, u16::from_le_bytes)),
         [0xFE, 0xFF, rest @ ..] => Some(utf16(rest, u16::from_be_bytes)),
