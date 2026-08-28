@@ -64,16 +64,47 @@ pub fn rows_of(files: &[FileMetrics]) -> Vec<Row> {
         };
         out.push(file_row(0, f.total_lines, 1, &f.path));
         for func in &f.functions {
-            let m = |code, value| file_row(code, value, func.start_line, &func.name);
-            out.push(m(1, func.lines));
-            out.push(m(2, func.params));
-            out.push(m(3, func.cyclomatic as usize));
-            out.push(m(4, func.cognitive as usize));
-            out.push(m(5, func.max_nesting as usize));
-            out.push(m(6, usize::from(!func.name_ok)));
+            for (i, value) in fn_values(func).into_iter().enumerate() {
+                out.push(file_row(i as u64 + 1, value, func.start_line, &func.name));
+            }
         }
     }
     out
+}
+
+/// A function's six metric values in code order 1..=6 — the ONE list
+/// rows_of and evaluate both walk (naming is boolean: 1 = one
+/// non-conforming name). The registry was spelled three ways in this
+/// file until the v2.18 survey folded it.
+fn fn_values(f: &FnMetrics) -> [usize; 6] {
+    [
+        f.lines,
+        f.params,
+        f.cyclomatic as usize,
+        f.cognitive as usize,
+        f.max_nesting as usize,
+        usize::from(!f.name_ok),
+    ]
+}
+
+/// The seven (warn, fail) ladders by metric code. fail 0 = no hard
+/// line exists — the published P3 contract (CE.Scan.Cost.gradeTable);
+/// the review panel caught this mirror reading 0 as "everything
+/// fails" while the core read "no line". An INCOHERENT ladder (fail <
+/// warn) never reaches here: Thresholds::ladder_fault refuses it at
+/// Config::load, the throat this mirror and wire.rs::grade_rows both
+/// read through — one config must not be refused by one reader and
+/// judged by the other. Naming's limit is 0.
+fn ladders(t: &Thresholds) -> [(usize, usize); 7] {
+    [
+        (t.file_lines_warn, t.file_lines_fail),
+        (t.fn_lines_warn, t.fn_lines_fail),
+        (t.params_warn, 0),
+        (t.cyclomatic_warn, 0),
+        (t.cognitive_warn, 0),
+        (t.nesting_warn, 0),
+        (0, 0),
+    ]
 }
 
 /// Findings from the CORE's positional levels (ADR-008 P3): level 0
@@ -121,85 +152,34 @@ pub fn findings_from(
 /// surface — CLI, MCP and GUI alike; the score family's measurement
 /// reuse and report_schema keep reading it locally.
 pub fn evaluate(file: &FileMetrics, t: &Thresholds) -> Vec<Finding> {
+    let ladders = ladders(t);
     let mut out = Vec::new();
-    check_file(file, t, &mut out);
+    let mut judge = |code: usize, value: usize, line: usize, subject: &str| {
+        let (warn, fail) = ladders[code];
+        let (level, threshold) = if fail > 0 && value > fail {
+            (Level::Fail, fail)
+        } else if value > warn {
+            (Level::Warn, warn)
+        } else {
+            return;
+        };
+        out.push(Finding {
+            file: file.path.clone(),
+            line,
+            rule: RULES[code],
+            level,
+            value,
+            threshold,
+            subject: subject.to_string(),
+        });
+    };
+    judge(0, file.total_lines, 1, &file.path);
     for f in &file.functions {
-        check_fn(&file.path, f, t, &mut out);
+        for (i, value) in fn_values(f).into_iter().enumerate() {
+            judge(i + 1, value, f.start_line, &f.name);
+        }
     }
     out
-}
-
-fn check_file(file: &FileMetrics, t: &Thresholds, out: &mut Vec<Finding>) {
-    let mk = |level, value, threshold| Finding {
-        file: file.path.clone(),
-        line: 1,
-        rule: "file-lines",
-        level,
-        value,
-        threshold,
-        subject: file.path.clone(),
-    };
-    // fail 0 = no hard line exists — the published P3 contract
-    // (CE.Scan.Cost.gradeTable); the review panel caught this mirror
-    // reading 0 as "everything fails" while the core read "no line".
-    // An INCOHERENT ladder (fail < warn) never reaches this arm:
-    // Thresholds::ladder_fault refuses it at Config::load, the throat
-    // this mirror and wire.rs::grade_rows both read through — one
-    // config must not be refused by one reader and judged by the other
-    if t.file_lines_fail > 0 && file.total_lines > t.file_lines_fail {
-        out.push(mk(Level::Fail, file.total_lines, t.file_lines_fail));
-    } else if file.total_lines > t.file_lines_warn {
-        out.push(mk(Level::Warn, file.total_lines, t.file_lines_warn));
-    }
-}
-
-fn check_fn(path: &str, f: &FnMetrics, t: &Thresholds, out: &mut Vec<Finding>) {
-    let mk = |rule, level, value: usize, threshold| Finding {
-        file: path.to_string(),
-        line: f.start_line,
-        rule,
-        level,
-        value,
-        threshold,
-        subject: f.name.clone(),
-    };
-    // fail 0 = no hard line (the check_file contract, same owner)
-    if t.fn_lines_fail > 0 && f.lines > t.fn_lines_fail {
-        out.push(mk("fn-lines", Level::Fail, f.lines, t.fn_lines_fail));
-    } else if f.lines > t.fn_lines_warn {
-        out.push(mk("fn-lines", Level::Warn, f.lines, t.fn_lines_warn));
-    }
-    if f.params > t.params_warn {
-        out.push(mk("fn-params", Level::Warn, f.params, t.params_warn));
-    }
-    if f.cyclomatic as usize > t.cyclomatic_warn {
-        out.push(mk(
-            "cyclomatic",
-            Level::Warn,
-            f.cyclomatic as usize,
-            t.cyclomatic_warn,
-        ));
-    }
-    if f.cognitive as usize > t.cognitive_warn {
-        out.push(mk(
-            "cognitive",
-            Level::Warn,
-            f.cognitive as usize,
-            t.cognitive_warn,
-        ));
-    }
-    if f.max_nesting as usize > t.nesting_warn {
-        out.push(mk(
-            "nesting",
-            Level::Warn,
-            f.max_nesting as usize,
-            t.nesting_warn,
-        ));
-    }
-    // Naming is boolean: value 1 = one non-conforming name, limit 0.
-    if !f.name_ok {
-        out.push(mk("fn-naming", Level::Warn, 1, 0));
-    }
 }
 
 /// JSON output schema id; bump on any shape change (plan §7.1: schema

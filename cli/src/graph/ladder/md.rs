@@ -156,7 +156,7 @@ fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
 fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {
     let table = refs(from, scope);
     match table.0.get(&fold(spec)) {
-        Some(target) => relabel(link(from, target, scope)),
+        Some(target) => link(from, target, scope).with_rung(3),
         None => Outcome::Unresolved(Reason::OutOfScope),
     }
 }
@@ -174,7 +174,7 @@ fn ref_def(from: &str, spec: &str, scope: &Scope) -> Outcome {
     let live = defs
         .iter()
         .any(|(label, t)| t == spec && used.contains(label));
-    let resolved = relabel(link(from, spec, scope));
+    let resolved = link(from, spec, scope).with_rung(3);
     if live {
         return resolved;
     }
@@ -225,20 +225,6 @@ fn fold(label: &str) -> String {
         .collect::<Vec<_>>()
         .join(" ")
         .to_lowercase()
-}
-
-fn relabel(outcome: Outcome) -> Outcome {
-    match outcome {
-        Outcome::Resolved { path, .. } => Outcome::Resolved { path, rung: 3 },
-        Outcome::ResolvedSection { path, slug, .. } => Outcome::ResolvedSection {
-            path,
-            slug,
-            rung: 3,
-        },
-        Outcome::ResolvedPackage { dir, .. } => Outcome::ResolvedPackage { dir, rung: 3 },
-        Outcome::External { .. } => Outcome::External { rung: 3 },
-        unresolved => unresolved,
-    }
 }
 
 /// An RFC 3986 scheme head (or a protocol-relative // form) leaves

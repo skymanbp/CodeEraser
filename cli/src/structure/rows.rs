@@ -73,9 +73,9 @@ pub fn file_ref_rows(
         .iter()
         .filter_map(|e| Some((*index_of.get(&e[0])?, *index_of.get(&e[1])?)))
         .collect();
-    let g = edges::aggregate(&pairs, &file_dirs, t.dirs.len());
+    let files = edges::aggregate(&pairs, &file_dirs);
     let mut counted: BTreeMap<[u64; 3], u64> = BTreeMap::new();
-    for (slot, io) in g.files.iter().enumerate() {
+    for (slot, io) in files.iter().enumerate() {
         if io[0] + io[1] > 0 {
             *counted
                 .entry([file_dirs[slot] as u64, io[0] as u64, io[1] as u64])

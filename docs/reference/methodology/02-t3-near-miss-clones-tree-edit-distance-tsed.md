@@ -78,7 +78,7 @@ No floats appear anywhere in core, because floats tie-break differently across p
 > `core clone verdict ({v}) disagrees with the pinned mirror at ted {ted} nodes {n1}/{n2} — formula drift (Clone/Cost.hs vs t3/mod.rs)`
 > ([t3/mod.rs:121-125](../../../cli/src/dedup/t3/mod.rs#L121))
 
-The threshold constants are additionally pinned by a knobs echo: the reply must carry `tsedNum`/`tsedDen` matching the Rust constants or the parse fails ([Clone.hs:168-170](../../../core/app/CE/Clone.hs#L168), [wire.rs:81-87](../../../cli/src/dedup/t3/wire.rs#L81); drift-refusal test at [wire.rs:135-137](../../../cli/src/dedup/t3/wire.rs#L135)).
+The threshold constants are additionally pinned by a knobs echo: the reply must carry `tsedNum`/`tsedDen` matching the Rust constants or the parse fails ([Clone.hs:168-170](../../../core/app/CE/Clone.hs#L168), [wire.rs:81-87](../../../cli/src/dedup/t3/wire.rs#L81); drift-refusal test at [wire.rs:129-131](../../../cli/src/dedup/t3/wire.rs#L129)).
 
 The threshold is proven *live* rather than merely present: over the exhaustive family, 85/100 admits a nonempty clone set and 75/100 admits strictly more ([CloneProps.hs:110-117](../../../core/test/CloneProps.hs#L110)).
 

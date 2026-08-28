@@ -29,9 +29,9 @@ use std::path::{Path, PathBuf};
 
 /// JSON output schema id; bump on shape change (plan §7.1).
 /// 0.3.0 (v2.15): unit rows dropped the Rust-cast GRAPH_CAVEAT
-/// prose; file rows carry the core's join verdict —
-/// name, severity, leg-agreement confidence, legsMask, reasons —
-/// from the SAME verdict/1 judgment `ce check` gates with.
+/// prose; file rows carry the core's join verdict — name, severity,
+/// leg-agreement confidence (the reply's legsMask/reasons stay on the
+/// wire, unrendered) — from the SAME verdict/1 judgment `ce check` gates with.
 pub const SCHEMA_ID: &str = "ce.join-report/0.3.0";
 
 /// Graph position of one file: [indeg, outdeg, sccId, sccSize,

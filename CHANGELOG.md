@@ -4,7 +4,7 @@
 > CHANGELOG 记录依据（FPR 数据）。”本册只记守卫档位变更；
 > 功能发布史见 GitHub Releases。
 
-## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽；步 #9 自仓可见性候选 38 行逐条处置，零 wire）
+## [Unreleased] — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽；步 #9 自仓可见性候选 38 行逐条处置，零 wire；步 #10 减法批 7 条 + 3 缺陷落码，dedup 预算 185→182 具名下调，零 wire）
 
 **片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
 全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
@@ -89,6 +89,25 @@ code 1 `total > 0` 空真线、碰撞得救率分母改 unmentioned〔§0 条款
 `candidates_tests.rs` +35、`site/how` +33、`i18n.js` +27、`site/zh/how` +27、`walk.rs` +17、`advisory.rs` +15、`store.rs` +15、
 PERF-BUDGET +13、`zh_surface.rs` +12；新入表 7（`rates.rs`、`eval_mention.rs`、`eval_support/mention.rs`、`mention_universe.rs`、
 `mentions_face.rs`、册 13、`hub_projection.js`）；`ce dedup` 185 恒（行集对片 (4) 零差）、`ce scan` 0 fail、`ce check` 952。
+
+**步 #10 减法批：勘察幸存 7 条 + 3 处真缺陷落码，零 wire、无默认档位变更**（2026-08-28，ccm 步 #10；v2.18 用户裁「rs 能否瘦身」）。勘察
+wf_9bba332a-39e 的 20 候选经 25 agent 逐条反驳后幸存 7 条，全落：**①** graph/ladder 三家私有 `relabel`（py `__init__` 降级 R3、go replace 改写
+R2、md 引用机器 R3）折为 `Outcome::with_rung(rung)` 一方法（`Unresolved` 穿透不改）；**②** `lockstep::parse_scores` 吸收两家 `parse_result` 的
+zip-and-shape 尾巴（第五参 `row: Fn(R, bool) -> (i, j, E)`，`verdict_bits` 随之转私有），t3/wire.rs 与 docdup/judge/wire.rs 各成一次调用；**③**
+mention/conv/{go,hs,ts}.rs 三个 ≤49 行的 AST 半折入 conv/mod.rs（145→250 行，三段 `// ---- <lang> (AST half) ----` 段注，函数改 `go_bits`/
+`hs_bits`/`ts_bits`/`foreign_exports` 私有）；**④** `fourclass::kinds::typed` 单行表退役——Rust `impl_item` 的 `impl Foo`/`impl Trait for Foo` 键由
+`units::impl_key` 直接产出（表从未长出第二行）；**⑤** structure/edges.rs `DirEdges` 退役——`aggregate(edges, file_dirs) -> Vec<[u32; 2]>` 只留 wire
+上的每文件 (inside, outside)，`inter`/`intra` 两表自 Axes.hs 起即无读者（「未判决的表是死货」），单测改一份手算几何；**⑥** scan/report.rs 三处
+并列的指标登记合一——`fn_values(&FnMetrics) -> [usize; 6]` + `ladders(&Thresholds) -> [(warn, fail); 7]`，`rows_of` 与 `evaluate` 同走一张表
+（fail 0 = 无硬线契约随表注释迁移；`check_file`/`check_fn` 删）；**⑦** main_judge.rs 两个无否决包装 `family_cmd`/`emit` 删，structure/join/clone
+调用点自己落 `|_| None`。三缺陷：**u64-LE 截断尾**——`unitcache::fact_rows` 的 `chunks_exact(8)`/`(12)` 静默丢尾（少 sig = 少候选 = 静默漏报），
+新 `whole_rows(blob, width)` 按名拒绝非整行 blob（docdup/judge/candidates.rs 自 2026-08-19 已守的同一规则搬到 dedup 侧）+ 单测三腿；
+`PairVerdict.legs_mask/.reasons` 已随步 #9 删；`DirEdges.inter/intra` 即 ⑤。附带：join/mod.rs SCHEMA_ID 注释误列 legsMask/reasons 为渲染项，
+改为「留在 wire 上未渲染」。**dedup 预算 185→182 具名下调**（ce.toml 台账入账；行集差 = 恰好两家 parse_result 尾〔t3/wire.rs:81-89/86-95 ↔
+judge/wire.rs:60-66/69-78〕+ `family_cmd`↔`family_checked`〔main_judge.rs:91-103 ↔ 106-115〕，零新行）。差分：四语料 deadcode 报告**字节恒等**
+（cobra 5 / requests 14 / ripgrep 41 / zod 197 顾问行，边/未解析/dead 零差）；自仓同树同库 HEAD 二进制 vs 新二进制逐家族报告字节对拍（结果见本段末）。
+**自仓顾问 13→0 不是本批所致，是准则如实工作**：步 #9 记账段在本册拼写了那 13 个符号名，md 在 mention 宇宙内、拼写即提及（9b 取样 11:15 早于
+该段写入 11:27）——文档提到的名字不再是「无人拼写」；HEAD 二进制在纯 HEAD 工作树上同为 0 行，册 13 §8 自仓行按本提交重取（U 627 = 640 − 13；rust 2981 (1241) / 927 (31) 31.1 %、haskell 1283 (294) / 295 (2) 23.0 %；出口存活句 31 / 1241 = 2.5 %）。对拍结果：自仓 scan/structure/clone/clone --units/docdup/check/deadcode/graph/graph --sites/dedup/erase/join 十二家族 + 四语料 scan/structure/clone --units/graph 各四家族，**28 路 stdout 全部字节恒等、退出码相同**（k10/bidiff.sh）。RM14 门抓出本批唯一的 pre-Haskell 成员退役（clone t3/wire.rs `parse_result/1` ↔ judge/wire.rs `parse_result/1`，两 dedup 行折成的同一成员）→ baseline_bridge.rs `RETIRED` 账本第 12 条具名。引文：14 标签重瞄（册 02/03/06/09/13）+ 册 09:32 改引 `units::impl_key`，台账重签 3 退 2 新（按 doc/target/text 多重集对拍，零无声重钉）。门：clippy `-D warnings` 净、lib 212、it 212（3 ignored）、corelink_deadline 1/1、daemon_conn_deadline 单跑 1/1、docs_citations 绿、`ce check` **952**/1000（地板 950）、`ce scan` 0 fail、`ce dedup` 182 = 预算、GUI 四脚本 8/8；core 未动。棘轮具名重立（超 +10）：mention/conv/mod.rs +105、dedup/unitcache.rs +32、graph/ladder/mod.rs +19、CHANGELOG.md +19；Rust 净 −70 行。**教训**：含引号的编辑脚本用 Write 落盘再 `python file` 跑，bash heredoc 会被噎住；自仓普查/顾问数字必须在记账段写完之后取。
 
 **步 #9 自仓「pub 但仅本文件用」候选逐条处置，零 wire、无默认档位变更**（2026-08-28，ccm 步 #9；O04）。K23 时估的 ~101 条是仪器前数字；
 顾问（步 #6–#8）落地后自仓实测 **38 行**（rust 36 + haskell 2；rust 出口未提及 67 / 1269），裁定流 wf_a0724240-731（9 判官 + 9 核验者，每行 grep

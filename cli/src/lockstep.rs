@@ -115,7 +115,7 @@ pub fn refuse_degraded(reply: &Value, mirrors: &str) -> anyhow::Result<()> {
 /// reported-set decision, one bit per score row in row order; scores
 /// stay raw for the instruments' cut tables), length-locked to the
 /// score rows they qualify — ONE decode throat for every family.
-pub fn verdict_bits(reply: &Value, rows: usize) -> anyhow::Result<Vec<bool>> {
+fn verdict_bits(reply: &Value, rows: usize) -> anyhow::Result<Vec<bool>> {
     use anyhow::Context;
     let bits: Vec<bool> = serde_json::from_value(reply["verdicts"].clone()).context("verdicts")?;
     anyhow::ensure!(
@@ -166,18 +166,24 @@ fn scores_and_counts<R: serde::de::DeserializeOwned>(
 }
 
 /// The whole family reply decode in ONE throat: pin the mirrored
-/// knobs, refuse degradation, decode rows plus the two named
-/// counters. A family's parse_result is one call with its own data.
-pub fn parse_scores<R: serde::de::DeserializeOwned>(
+/// knobs, refuse degradation, decode the score rows plus the two
+/// named counters, zip each row with the core's verdict bit and shape
+/// it with `row`. A family's parse_result is one call with its own
+/// data — the zip-and-shape tail was the two families' last clone
+/// pair (v2.18 subtraction batch).
+pub fn parse_scores<R: serde::de::DeserializeOwned, E>(
     reply: &Value,
     knobs: &[(&str, Value)],
     owners: &str,
     count_keys: &[&str],
-) -> anyhow::Result<(Vec<R>, [u64; 2])> {
+    row: impl Fn(R, bool) -> (usize, usize, E),
+) -> anyhow::Result<Scored<E>> {
     pin_knobs(reply, knobs, owners)?;
     refuse_degraded(reply, owners)?;
-    let (rows, c) = scores_and_counts(reply, count_keys)?;
-    Ok((rows, [c[0], c[1]]))
+    let (rows, c) = scores_and_counts::<R>(reply, count_keys)?;
+    let bits = verdict_bits(reply, rows.len())?;
+    let local = rows.into_iter().zip(bits).map(|(r, v)| row(r, v)).collect();
+    Ok((local, [c[0], c[1]]))
 }
 
 #[cfg(test)]

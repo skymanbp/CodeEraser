@@ -11,7 +11,7 @@ use super::struct_fp;
 use crate::fourclass::units;
 use crate::scan::ast;
 use crate::scan::lang::Lang;
-use anyhow::Result;
+use anyhow::{Result, ensure};
 use rusqlite::Transaction;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -161,28 +161,42 @@ pub(super) fn fact_rows(idx: &super::index::Index) -> Result<Vec<FactRow>> {
             Ok((head, r.get::<_, Vec<u8>>(4)?, r.get::<_, Vec<u8>>(5)?))
         },
     )?;
-    Ok(rows
-        .into_iter()
-        .map(|((path, key, nth, nodes), sig, hist)| FactRow {
-            path,
-            key,
-            nth,
-            nodes,
-            sig: sig
-                .chunks_exact(8)
-                .map(|c| u64::from_le_bytes(c.try_into().expect("8-byte chunk")))
-                .collect(),
-            hist: hist
-                .chunks_exact(12)
-                .map(|c| {
-                    (
-                        u64::from_le_bytes(c[..8].try_into().expect("8-byte label")),
-                        u32::from_le_bytes(c[8..].try_into().expect("4-byte count")),
-                    )
-                })
-                .collect(),
+    rows.into_iter()
+        .map(|((path, key, nth, nodes), sig, hist)| {
+            Ok(FactRow {
+                path,
+                key,
+                nth,
+                nodes,
+                sig: whole_rows(&sig, 8)?
+                    .map(|c| u64::from_le_bytes(c.try_into().expect("8-byte chunk")))
+                    .collect(),
+                hist: whole_rows(&hist, 12)?
+                    .map(|c| {
+                        (
+                            u64::from_le_bytes(c[..8].try_into().expect("8-byte label")),
+                            u32::from_le_bytes(c[8..].try_into().expect("4-byte count")),
+                        )
+                    })
+                    .collect(),
+            })
         })
-        .collect())
+        .collect()
+}
+
+/// Whole `width`-byte rows of a cached blob. `chunks_exact` silently
+/// DROPS a truncated tail, and fewer sigs/labels = fewer candidates =
+/// silently missed duplication — the docdup decoder's rule
+/// (judge/candidates.rs, review 2026-08-19); this side read the same
+/// shape unguarded until the v2.18 survey paired the two.
+fn whole_rows(blob: &[u8], width: usize) -> Result<std::slice::ChunksExact<'_, u8>> {
+    let rows = blob.chunks_exact(width);
+    ensure!(
+        rows.remainder().is_empty(),
+        "unitsig blob is {} bytes — not whole {width}-byte rows",
+        blob.len()
+    );
+    Ok(rows)
 }
 
 /// Count of unitsig rows with NO matching symbols row on
@@ -196,4 +210,22 @@ pub fn identity_orphans(idx: &super::index::Index) -> Result<i64> {
         [],
         |r| r.get(0),
     )?)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A blob that is not whole rows is refused by name, never
+    /// silently shortened; whole rows decode to exactly their count.
+    #[test]
+    fn a_truncated_blob_is_refused_not_shortened() {
+        let whole = sig_blob(&[7u64, 9].into_iter().collect());
+        assert_eq!(whole_rows(&whole, 8).expect("whole").count(), 2);
+        assert!(whole_rows(&whole[..whole.len() - 1], 8).is_err());
+        assert!(
+            whole_rows(&whole, 12).is_err(),
+            "16 bytes are not 12-byte rows"
+        );
+    }
 }

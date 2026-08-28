@@ -28,7 +28,7 @@ pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome {
         return outcome; // R2 (or its cross-root ambiguity)
     }
     if let Some(outcome) = absolute(spec, &roots_list, scope.files, init_prefix) {
-        return relabel(outcome, 3); // R3 __init__ degradation
+        return outcome.with_rung(3); // R3 __init__ degradation
     }
     stdlib_or_deps(spec, scope)
 }
@@ -74,13 +74,6 @@ fn absolute(
             rung: 2,
         }),
         _ => Some(Outcome::Unresolved(Reason::AmbiguousRoot)),
-    }
-}
-
-fn relabel(outcome: Outcome, rung: u8) -> Outcome {
-    match outcome {
-        Outcome::Resolved { path, .. } => Outcome::Resolved { path, rung },
-        other => other,
     }
 }
 

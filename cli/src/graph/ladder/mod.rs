@@ -110,6 +110,25 @@ pub enum Outcome {
     Unresolved(Reason),
 }
 
+impl Outcome {
+    /// The same answer at another rung; a refusal passes through
+    /// untouched. One method for py's `__init__` degradation, go's
+    /// replace rewrite and md's reference machinery — each kept a
+    /// private copy until the v2.18 survey paired them.
+    pub(super) fn with_rung(mut self, rung: Rung) -> Self {
+        match &mut self {
+            Self::Resolved { rung: r, .. }
+            | Self::ResolvedPackage { rung: r, .. }
+            | Self::ResolvedSection { rung: r, .. }
+            | Self::ResolvedVia { rung: r, .. }
+            | Self::ResolvedInert { rung: r, .. }
+            | Self::External { rung: r } => *r = rung,
+            Self::Unresolved(_) => {}
+        }
+        self
+    }
+}
+
 /// What a resolver may consult. Candidate targets MUST come from
 /// `files` (the frozen in-scope set); `configs` are the resolver
 /// config paths the walk collected (all in resolve_key, store.rs);

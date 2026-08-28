@@ -58,7 +58,7 @@ pub fn chunk_request<'s>(
 /// is the instruments' mirror). The rows zip with the core's
 /// per-row verdict bits — the reported set is the core's decision.
 pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, bool)>> {
-    let (rows, c): (Vec<[u64; 4]>, _) = crate::lockstep::parse_scores(
+    crate::lockstep::parse_scores(
         reply,
         &[
             ("jaccardNum", json!(JACCARD_NUM)),
@@ -74,15 +74,8 @@ pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, 
         ],
         "judge/wire.rs vs Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
         &["judged", "jaccardDups"],
-    )?;
-    let bits = crate::lockstep::verdict_bits(reply, rows.len())?;
-    Ok((
-        rows.into_iter()
-            .zip(bits)
-            .map(|([i, j, inter, union], v)| (i as usize, j as usize, (inter, union, v)))
-            .collect(),
-        c,
-    ))
+        |[i, j, inter, union]: [u64; 4], v| (i as usize, j as usize, (inter, union, v)),
+    )
 }
 
 /// This family's corelink bindings for the shared lockstep machine.

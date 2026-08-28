@@ -57,7 +57,7 @@ fn bridge_conserves_blocks_into_members_and_gates_agree() {
 /// cleanups are this tool's whole point and retire BY NAME, never
 /// silently. A listed id back in the baseline = a stale entry,
 /// refused — the ledger can only ever describe the present.
-const RETIRED: [(u64, &str); 11] = [
+const RETIRED: [(u64, &str); 12] = [
     (
         15941172437324464441,
         "v0.6 P3: budget_breach's scope+size stanza folded into the \
@@ -105,6 +105,10 @@ const RETIRED: [(u64, &str); 11] = [
     (
         18322300311120329557,
         "headroom sprint 2026-08-24: the guard hook-envelope moved to its own leaf, dissolving the audit/guard/health face chains this member rode",
+    ),
+    (
+        1045130446377401539,
+        "v2.18 subtraction batch 2026-08-28: the clone/docdup parse_result zip-and-shape tails moved INTO lockstep::parse_scores as its row shaper — the two families' last clone pair, one member",
     ),
 ];
 

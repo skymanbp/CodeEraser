@@ -136,10 +136,10 @@ read after it yields one false unmentioned that the next run converges away
 
 Every survivor carries a twelve-bit category word; bits 0–10 are *exemptions* (a reason
 the name is reached without being spelled), bit 11 is rendered and never exempts
-([conv/mod.rs:36-68](../../../cli/src/mention/conv/mod.rs#L36)). The AST half is stored at
+([conv/mod.rs:34-66](../../../cli/src/mention/conv/mod.rs#L34)). The AST half is stored at
 index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign export`, Go
 `//export`; `Registration` for a decorator; `Member`; `DefaultExport`; `Ambient`; Rust
-`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:96-105](../../../cli/src/mention/conv/mod.rs#L96)).
+`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:94-103](../../../cli/src/mention/conv/mod.rs#L94)).
 The name-table half is computed at wire time from the path, the name and the key: a test
 file by path component, a `benches`/`examples` component only under a Cargo package
 root, `conftest.py`/`Spec.hs`/`build.rs` and the `*_test.go` / `test_*.py` / `.test.` /
@@ -269,8 +269,8 @@ the pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 630 (643 − 13 early-NUL) | rust | 2987 (1247) | 963 (44) | 32.2 % | 37 / 963 = 3.8 % | 37 / 2000 |
-| | | haskell | 1283 (294) | 297 (2) | 23.1 % | 12 / 297 = 4.0 % | 12 / 986 |
+| self @ this commit | 627 (640 − 13 early-NUL) | rust | 2981 (1241) | 927 (31) | 31.1 % | 37 / 927 = 4.0 % | 37 / 2029 |
+| | | haskell | 1283 (294) | 295 (2) | 23.0 % | 12 / 295 = 4.1 % | 12 / 988 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
 | requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
 | ripgrep 3fce3b5 | 230 (237 − 7 early-NUL) | rust | 2501 (886) | 885 (47) | 35.4 % | 120 / 885 = 13.6 % | 120 / 1546 |
@@ -282,7 +282,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 44 / 1247 = 3.5 %, zod typescript
+operator reads for the public surface: self rust 31 / 1241 = 2.5 %, zod typescript
 197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
 TypeScript's is spoken — is why the census is reported per language and never as one

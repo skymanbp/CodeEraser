@@ -397,4 +397,11 @@ entry_globs = [
 # module, and the case-table rhyme booked at 185 -> 186 above went
 # with it. A subtraction, not a restructuring -- down needs no
 # defence; the bridge test's exact equality is what moved this line.
-budget = 185
+# 185 -> 182 (L round subtraction batch, v2.18 -- user ruling
+# 2026-08-28): the two family parse_result tails (t3/wire.rs vs
+# docdup/judge/wire.rs, two blocks) moved INTO lockstep::parse_scores
+# as its `row` shaper, and main_judge's no-veto family_cmd wrapper
+# (one block against family_checked) died -- its callers seat
+# `|_| None` themselves. Three subtractions, zero new rows: the
+# 185-row set minus exactly these three is the 182-row set.
+budget = 182

@@ -104,7 +104,7 @@ fn replace_rung(from: &str, spec: &str, mods: &[GoMod], scope: &Scope) -> Option
         format!("{new}/{rest}")
     };
     match module_rung(&rewritten, mods, scope) {
-        Some(outcome) => Some(relabel(outcome)),
+        Some(outcome) => Some(outcome.with_rung(2)),
         None => Some(external_rung(&rewritten)),
     }
 }
@@ -136,13 +136,6 @@ fn package(dir: String, scope: &Scope, rung: u8) -> Outcome {
         Outcome::ResolvedPackage { dir, rung }
     } else {
         Outcome::Unresolved(Reason::OutOfScope)
-    }
-}
-
-fn relabel(outcome: Outcome) -> Outcome {
-    match outcome {
-        Outcome::ResolvedPackage { dir, .. } => Outcome::ResolvedPackage { dir, rung: 2 },
-        other => other,
     }
 }
 

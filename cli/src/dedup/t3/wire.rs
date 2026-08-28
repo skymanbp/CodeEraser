@@ -79,7 +79,7 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
 /// core's per-row verdict bits (ADR-008 P1: the reported set is the
 /// core's decision — raw ted stays for the instruments' cut tables).
 pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {
-    let (rows, c): (Vec<[i64; 5]>, _) = crate::lockstep::parse_scores(
+    crate::lockstep::parse_scores(
         reply,
         &[
             ("tsedNum", json!(TSED_NUM)),
@@ -91,14 +91,8 @@ pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, 
         ],
         "t3/wire.rs+candidates.rs vs Clone/Cost.hs",
         &["judged", "prefiltered"],
-    )?;
-    let bits = crate::lockstep::verdict_bits(reply, rows.len())?;
-    let local = rows
-        .into_iter()
-        .zip(bits)
-        .map(|([i, j, ted, n1, n2], v)| (i as usize, j as usize, (ted, n1, n2, v)))
-        .collect();
-    Ok((local, c))
+        |[i, j, ted, n1, n2]: [i64; 5], v| (i as usize, j as usize, (ted, n1, n2, v)),
+    )
 }
 
 #[cfg(test)]

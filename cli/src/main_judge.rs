@@ -90,24 +90,13 @@ pub struct TrendArgs {
     batch: Option<usize>,
 }
 
-/// The one flag-unpack + emit stanza for plain report families:
-/// unpack JudgeArgs, run with (root, db, core), print with as_json.
-/// structure/join were already shape twins and `ce trend` would have
-/// been the third — the P4 ratchet caught the stanza; it now exists
-/// once (in family_checked below) and each command is its one-line
-/// library call.
-fn family_cmd<R>(
-    j: JudgeArgs,
-    name: &str,
-    run: impl FnOnce(&Path, Option<PathBuf>, &str) -> anyhow::Result<R>,
-    print: impl FnOnce(&R, bool),
-) -> ExitCode {
-    family_checked(j, name, run, print, |_| None)
-}
-
-/// family_cmd plus the veto seat (the emit/emit_checked pairing, one
-/// level up): a family whose report carries a fail bit gets an exit
-/// code for it WITHOUT re-growing the unpack stanza above.
+/// The one flag-unpack + emit stanza for report families: unpack
+/// JudgeArgs, run with (root, db, core), print with as_json, seat a
+/// veto (`|_| None` for a family with no fail bit). structure/join
+/// were shape twins and `ce trend` would have been the third — the
+/// P4 ratchet caught the stanza; it exists once, and the no-veto
+/// wrapper that once fronted it was itself a counted clone of this
+/// signature (v2.18 subtraction batch).
 fn family_checked<R>(
     j: JudgeArgs,
     name: &str,
@@ -168,13 +157,14 @@ pub fn trend_cmd(a: TrendArgs) -> ExitCode {
 /// aggregates to the core's structure/1, dense verdicts re-labelled
 /// with local names. Report-only until a score floor lands (S3+).
 pub fn structure_cmd(a: StructureArgs) -> ExitCode {
-    family_cmd(
+    family_checked(
         a.judge,
         "structure",
         move |r, db, c| {
             codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))
         },
         codeeraser::structure::report::print,
+        |_| None,
     )
 }
 
@@ -182,27 +172,20 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
 /// graph position, per-unit churn — report-only; the verdict lattice
 /// judges them on the verdict/1 wire via `ce check` (M5-3i).
 pub fn join_cmd(a: JoinArgs) -> ExitCode {
-    family_cmd(
+    family_checked(
         a.judge,
         "join",
         move |r, db, c| join::run(r, db, c, a.days),
         join::print,
+        |_| None,
     )
 }
 
 /// Run one family's judgment and print its report — the ONE
-/// run/print/fail shape every judgment command is.
-fn emit<R>(
-    name: &str,
-    run: impl FnOnce() -> anyhow::Result<R>,
-    print: impl FnOnce(&R),
-) -> ExitCode {
-    emit_checked(name, run, print, |_| None)
-}
-
-/// emit plus a veto: a --check style gate turns a printed report
-/// into exit 1 with a named reason — one throat for every checkable
-/// judgment family (the dedup --check shape).
+/// run/print/fail shape every judgment command is; the veto seat is
+/// how a --check style gate turns a printed report into exit 1 with
+/// a named reason (the dedup --check shape), `|_| None` for a family
+/// without one.
 fn emit_checked<R>(
     name: &str,
     run: impl FnOnce() -> anyhow::Result<R>,
@@ -254,16 +237,18 @@ pub fn clone_cmd(a: CloneArgs) -> ExitCode {
     let j = a.judge;
     let as_json = json(j.format);
     if !a.units {
-        return emit(
+        return emit_checked(
             "clone",
             || dedup::t3::run(&or_cwd(j.root), j.db, &j.core),
             |r| dedup::t3::print(r, as_json),
+            |_| None,
         );
     }
-    emit(
+    emit_checked(
         "clone",
         || codeeraser::faces::clone_units(&or_cwd(j.root)),
         |doc| print_units(doc, as_json),
+        |_| None,
     )
 }
 

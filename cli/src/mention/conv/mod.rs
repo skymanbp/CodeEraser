@@ -14,16 +14,14 @@
 //! Positions are frozen. Adding, removing or re-reading an AST-half
 //! producer is a GRAPH_REV bump; the name-table half moves freely.
 
-mod go;
-mod hs;
 pub mod name;
 mod py;
 mod rs;
 #[cfg(test)]
 mod tests;
-mod ts;
 
 use crate::fourclass::visibility::ancestors;
+use crate::scan::ast;
 use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
 use tree_sitter::Node;
@@ -86,7 +84,7 @@ pub struct FileFacts {
 pub fn file_facts(root: Node<'_>, src: &[u8], lang: Lang) -> FileFacts {
     FileFacts {
         foreign_exports: match lang {
-            Lang::Haskell => hs::foreign_exports(root, src),
+            Lang::Haskell => foreign_exports(root, src),
             _ => BTreeSet::new(),
         },
     }
@@ -96,10 +94,10 @@ pub fn file_facts(root: Node<'_>, src: &[u8], lang: Lang) -> FileFacts {
 pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i64 {
     match lang {
         Lang::Rust => rs::bits(node, src),
-        Lang::TypeScript | Lang::Tsx => ts::bits(node),
+        Lang::TypeScript | Lang::Tsx => ts_bits(node),
         Lang::Python => py::bits(node, src),
-        Lang::Go => go::bits(node, src),
-        Lang::Haskell => hs::bits(node, src, &facts.foreign_exports),
+        Lang::Go => go_bits(node, src),
+        Lang::Haskell => hs_bits(node, src, &facts.foreign_exports),
         _ => 0,
     }
 }
@@ -142,4 +140,111 @@ fn parent_of_kind<'t>(node: Node<'t>, kind: &str) -> Option<Node<'t>> {
 
 fn under(node: Node<'_>, kind: &str) -> bool {
     ancestors(node).any(|a| a.kind() == kind)
+}
+
+// ---- Go (AST half) ----
+
+// Go: `Ffi` from the directive comments cgo and the wasm target read
+// — `//export Name` must name this very function (cgo's own lexing:
+// the prefix `//export `, then the name with surrounding blanks
+// trimmed), `//go:wasmexport <symbol>` exports the function it
+// precedes under any symbol. Comments are siblings in tree-sitter-go,
+// so the directive is found in the comment run above the
+// declaration; the first non-comment sibling ends the run. Blank
+// lines do not end it, so the run is wider than cgo's doc group —
+// an over-exemption only, never a missed export.
+fn go_bits(node: Node<'_>, src: &[u8]) -> i64 {
+    let Some(name) = node.child_by_field_name("name") else {
+        return 0;
+    };
+    let name = text(name, src);
+    let mut prev = node.prev_sibling();
+    while let Some(c) = prev.filter(|c| c.kind() == "comment") {
+        let line = text(c, src);
+        let exported = line
+            .strip_prefix("//export ")
+            .is_some_and(|rest| rest.trim() == name);
+        if exported || line.starts_with("//go:wasmexport ") {
+            return Conv::Ffi.bit();
+        }
+        prev = c.prev_sibling();
+    }
+    0
+}
+
+// ---- Haskell (AST half) ----
+
+// Haskell: `Ffi`. `foreign export ccall hsAdd :: CInt -> CInt` is
+// its own top-level declaration whose `signature` names the binding
+// it exports; the bit lands on THAT binding (X-16), so the file's
+// exported names are gathered once (`foreign_exports`, read by
+// conv::file_facts before the units are walked) and each unit is
+// looked up by its own name. The C-side entity string (`"hs_mul"`)
+// is the foreign spelling and plays no part.
+fn foreign_exports(root: Node<'_>, src: &[u8]) -> BTreeSet<String> {
+    root.child_by_field_name("declarations")
+        .into_iter()
+        .flat_map(ast::named_children)
+        .filter(|d| d.kind() == "foreign_export")
+        .filter_map(|d| {
+            d.child_by_field_name("signature")?
+                .child_by_field_name("name")
+        })
+        .map(|n| text(n, src).to_string())
+        .collect()
+}
+
+/// The Haskell arm: the unit whose own name the file exports.
+fn hs_bits(node: Node<'_>, src: &[u8], exported: &BTreeSet<String>) -> i64 {
+    match node.child_by_field_name("name") {
+        Some(n) if exported.contains(text(n, src)) => Conv::Ffi.bit(),
+        _ => 0,
+    }
+}
+
+// ---- TS/TSX (AST half) ----
+
+// TS/TSX: three facts, each read off the tree the grammar actually
+// builds (probed on tree-sitter-typescript 0.23.2):
+//   - `Registration`: a decorator is a `decorator` child of the
+//     declaration (`@dec class A`, `export @dec class B`) or of its
+//     `export_statement` parent (`@dec export class C`) — the two
+//     spellings judge alike (L3-F7a), and a comment between decorator
+//     and name is just another child, never a hop.
+//   - `DefaultExport`: a NAMED function or class declaration whose
+//     `export_statement` carries the `default` keyword; an anonymous
+//     default export has no name to be mentioned by and is out of the
+//     domain already (`(anonymous)`).
+//   - `Ambient`: any `ambient_declaration` ancestor — the criterion's
+//     L5-F15 ruling that the container's shape is never the test,
+//     only the ancestor's presence (`declare class C {}` has no
+//     container at all).
+// Declaration kinds `export default` can name.
+const DEFAULTABLE: [&str; 3] = [
+    "function_declaration",
+    "generator_function_declaration",
+    "class_declaration",
+];
+
+fn ts_bits(node: Node<'_>) -> i64 {
+    let mut word = 0;
+    let export = parent_of_kind(node, "export_statement");
+    if has_child(node, "decorator") || export.is_some_and(|e| has_child(e, "decorator")) {
+        word |= Conv::Registration.bit();
+    }
+    if DEFAULTABLE.contains(&node.kind())
+        && node.child_by_field_name("name").is_some()
+        && export.is_some_and(|e| has_child(e, "default"))
+    {
+        word |= Conv::DefaultExport.bit();
+    }
+    if under(node, "ambient_declaration") {
+        word |= Conv::Ambient.bit();
+    }
+    word
+}
+
+/// Anonymous leaves (`default`) and named ones (`decorator`) alike.
+fn has_child(node: Node<'_>, kind: &str) -> bool {
+    ast::children(node).iter().any(|c| c.kind() == kind)
 }

@@ -61,8 +61,8 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
 /// Named non-function units (consts, types, …) from the kinds
 /// register — relocation reporting needs their names too; the M1
 /// function metrics do not, which is why this list lives in
-/// fourclass::kinds and not scan/spec. The named and typed kind
-/// tables are disjoint, so a node keys at most once.
+/// fourclass::kinds and not scan/spec. The named register and the
+/// Rust impl form are disjoint, so a node keys at most once.
 fn extra_units(
     root: tree_sitter::Node,
     src: &[u8],
@@ -70,14 +70,13 @@ fn extra_units(
     facts: &conv::FileFacts,
 ) -> Vec<Unit> {
     let kinds = super::kinds::extra(lang);
-    let typed = super::kinds::typed(lang);
     let mut out = Vec::new();
-    if kinds.is_empty() && typed.is_empty() {
+    if kinds.is_empty() {
         return out;
     }
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if let Some(key) = named_key(node, src, kinds).or_else(|| typed_key(node, src, typed)) {
+        if let Some(key) = named_key(node, src, kinds).or_else(|| impl_key(node, src, lang)) {
             out.push(Unit {
                 key,
                 start_line: node.start_position().row + 1,
@@ -110,22 +109,26 @@ fn named_key(node: tree_sitter::Node, src: &[u8], kinds: &[&str]) -> Option<Stri
     Some(String::from_utf8_lossy(&src[name.byte_range()]).into_owned())
 }
 
-/// Key for a typed-kind unit: `impl Foo`, or `impl Advisor for Foo`
-/// when the qualifier field is present (kinds::typed's why).
-fn typed_key(
-    node: tree_sitter::Node,
-    src: &[u8],
-    typed: &[(&str, &str, &str, &str)],
-) -> Option<String> {
-    let (_, field, qual_field, prefix) = typed.iter().find(|(k, ..)| *k == node.kind())?;
-    let name = node.child_by_field_name(field)?;
-    let text = String::from_utf8_lossy(&src[name.byte_range()]);
-    Some(match node.child_by_field_name(qual_field) {
-        Some(q) => format!(
-            "{prefix} {} for {text}",
-            String::from_utf8_lossy(&src[q.byte_range()])
-        ),
-        None => format!("{prefix} {text}"),
+/// Key for a Rust impl block: `impl Foo`, or `impl Advisor for Foo`
+/// when a trait is named. Impl blocks carry no `name` field — without
+/// a unit for them, methods of two different impls look top-level and
+/// their shared name/arity key becomes false stacking evidence (attack
+/// review 2026-08-11 F7); the trait keeps a type's inherent and trait
+/// impls distinct (the FPR replay caught the unqualified key colliding
+/// on exactly that shape). The one-row dispatch table this replaced
+/// never grew a second row (v2.18 subtraction batch).
+fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {
+    if lang != Lang::Rust || node.kind() != "impl_item" {
+        return None;
+    }
+    let field = |name| {
+        node.child_by_field_name(name)
+            .map(|n| String::from_utf8_lossy(&src[n.byte_range()]).into_owned())
+    };
+    let ty = field("type")?;
+    Some(match field("trait") {
+        Some(tr) => format!("impl {tr} for {ty}"),
+        None => format!("impl {ty}"),
     })
 }
 
