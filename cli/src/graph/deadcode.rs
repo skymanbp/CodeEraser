@@ -158,14 +158,26 @@ pub struct DeadRow {
 }
 
 /// The file-tier slice of the wire's dense assignment: (index, path)
-/// in node order — the join and the score assemble their pos
-/// requests and tier universes through this ONE selector (the
-/// ratchet caught the second copy growing).
+/// in node order, foreign readers included — the canvas draws the
+/// whole graph through this selector.
 pub fn file_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
+    files_where(w, |_| true)
+}
+
+/// The MEASURED file tier: the file nodes that are this tree's own —
+/// the join, the score and the structure family assemble their pos
+/// requests and tier universes through this ONE selector (the ratchet
+/// caught the second copy growing), so a foreign reader is never a
+/// row of a verdict here (plan v2.18 step #12).
+pub fn measured_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
+    files_where(w, |n| !n.foreign)
+}
+
+fn files_where(w: &GraphWire, keep: impl Fn(&Node) -> bool) -> Vec<(i64, &str)> {
     w.nodes
         .iter()
         .enumerate()
-        .filter(|(_, n)| n.kind == super::wire::GRAN_FILE)
+        .filter(|(_, n)| n.kind == super::wire::GRAN_FILE && keep(n))
         .map(|(i, n)| (i as i64, n.path.as_str()))
         .collect()
 }
@@ -191,11 +203,12 @@ pub fn wire_of(
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
     // identity assignment + containment live in the nodes.rs throat
     // (F19) — the M5-3 join consumes the SAME functions, so both
-    // verdicts stand on one id space by construction
-    let nodes = nodes::nodes_of(&files, &edges);
+    // verdicts stand on one id space by construction; the foreign
+    // mark is the index's own per-file fact (walk::Walked)
+    let nodes = nodes::nodes_of(&files, &edges, &idx.foreign_paths()?);
     let ids = nodes::ids(&nodes);
     let file_set: BTreeSet<String> = files.iter().cloned().collect();
-    let declared = targets::Declared::gather(root, &file_set);
+    let declared = targets::Declared::gather(root, &file_set, &config.graph.declared_roots());
     let rows: Vec<Value> = nodes
         .iter()
         .map(|n| node_row(root, n, &config, &declared))
@@ -267,7 +280,10 @@ pub fn edge_wire(
         .collect()
 }
 
-/// [lang, kind, roles] — only file nodes carry entry facts. The
+/// [lang, kind, roles] — only file nodes carry entry facts, with ONE
+/// exception since 6.3.0: a foreign node of ANY kind carries role 7
+/// alone (a submodule's package or section is a reader exactly like
+/// its files, and must never surface as a `reported` row here). The
 /// roles column is the 2.28.0 authority (the core derives the entry
 /// bits through its role table, where an ablation can perturb them);
 /// the pre-2.28 legacy flags column that used to sit between kind
@@ -279,7 +295,9 @@ fn node_row(root: &Path, n: &Node, config: &Config, declared: &targets::Declared
     let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
         .map(|l| l as i64)
         .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
-    let roles = if n.kind == super::wire::GRAN_FILE {
+    let roles = if n.foreign {
+        flags::ROLE_FOREIGN
+    } else if n.kind == super::wire::GRAN_FILE {
         flags::roles_of(root, &n.path, config, declared)
     } else {
         0

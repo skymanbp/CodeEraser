@@ -57,7 +57,9 @@ pub fn file_ref_rows(
     w: &crate::graph::deadcode::GraphWire,
     t: &tree::Tree,
 ) -> Result<Vec<[u64; 4]>> {
-    let fnodes = crate::graph::deadcode::file_nodes(w);
+    // the measured tier: a foreign reader has no directory in the
+    // walked (own) tree and is not this family's to place
+    let fnodes = crate::graph::deadcode::measured_nodes(w);
     let mut file_dirs = Vec::with_capacity(fnodes.len());
     let mut index_of: BTreeMap<i64, usize> = BTreeMap::new();
     for (slot, &(i, p)) in fnodes.iter().enumerate() {
@@ -167,7 +169,10 @@ pub fn stale_doc_rows(
     for e in &w.edges {
         let s = &w.nodes[e[0] as usize];
         let d = &w.nodes[e[1] as usize];
-        if s.path.ends_with(".md") && d.path != s.path {
+        // a foreign doc is READ (its links are edges) and never
+        // measured: its staleness is its own tree's, and it has no
+        // directory in this one to be placed in (plan v2.18 step #12)
+        if !s.foreign && s.path.ends_with(".md") && d.path != s.path {
             targets.entry(s.path.as_str()).or_default().insert(&d.path);
         }
     }

@@ -41,6 +41,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | key | default | meaning |
 |---|---|---|
 | `entry_globs` | *(absent)* | Extra liveness roots for the deadcode judgment, beyond the mechanical entry conventions |
+| `crate_roots` | *(absent)* | Rust crate roots of a tree whose manifest lives elsewhere (the test-suite submodule is a slice of the `cli` package): root-relative exact paths. A declared root mounts its `mod` children and anchors `crate::` paths like a manifest target, and is one for the deadcode entry role; a declared path that is not a walked Rust file is refused by name |
 
 ## [score]
 

@@ -77,6 +77,32 @@ pub fn resolve(given: &Path) -> (PathBuf, bool) {
     (root, !same)
 }
 
+/// The root that judges a WRITE at `target` from a session rooted at
+/// `session` (plan v2.18 step #12). An own path is the session's. A
+/// path a nested project owns — a declared submodule (a reader of
+/// this tree, measured by nobody here) or an undeclared nested
+/// repository (nobody's here) — is that project's, and only a project
+/// that opted in with a `ce.toml` of its own has a gate to judge
+/// with: the nearest one above the target answers, its own config,
+/// index and baseline; None = no gate there, the hook stays inert. A
+/// target the session root does not contain keeps the session's root
+/// (the walk's Scope then says it is not ours, as before).
+pub fn judging_root(session: &Path, target: &Path) -> Option<PathBuf> {
+    let full = std::path::absolute(target).unwrap_or_else(|_| target.to_path_buf());
+    let Ok(rel) = full.strip_prefix(session) else {
+        return Some(session.to_path_buf());
+    };
+    let rel = rel.to_string_lossy().replace('\\', "/");
+    match crate::gitmodules::owner(session, &crate::gitmodules::declared(session), &rel) {
+        crate::gitmodules::Owner::Own => Some(session.to_path_buf()),
+        _ => {
+            let own = project_root(full.parent()?);
+            (own != session && own.starts_with(session) && own.join("ce.toml").is_file())
+                .then_some(own)
+        }
+    }
+}
+
 /// Whether `p` itself carries an anchor — the discriminator between
 /// "this directory is a project" and "project_root fell back to what
 /// it was given". The guard uses it to stay INERT in anchorless
@@ -111,7 +137,7 @@ pub fn is_anchored(p: &Path) -> bool {
 /// than git itself: `gitdir: /nonexistent/garbage` passed here while
 /// `git rev-parse` answers "fatal: not a git repository". A pointer to
 /// nothing is not an anchor.
-fn is_git_anchor(p: &Path) -> bool {
+pub(crate) fn is_git_anchor(p: &Path) -> bool {
     if p.is_dir() {
         return true;
     }

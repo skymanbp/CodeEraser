@@ -88,10 +88,34 @@ pub struct DedupCfg {
 /// Graph/deadcode settings (M5-2h). entry_globs marks extra
 /// liveness roots beyond the mechanical conventions (main-shaped
 /// files, test conventions, doc entries) — flag bit 3 on the wire.
+/// crate_roots (plan v2.18 step #12) names the Rust crate roots of a
+/// tree whose manifest lives ELSEWHERE — the test-suite submodule is
+/// a slice of the `cli` package, and its `it/main.rs` is a cargo test
+/// target only in the superproject's Cargo.toml. A declared root is
+/// everything a manifest target is: the Rust ladder mounts its `mod`
+/// children in its own directory and anchors `crate::` paths there
+/// (ladder/rs.rs), and it is a declared build target for the entry
+/// role (deadcode/targets.rs, role 6). Root-relative exact paths,
+/// `/`-spelled; a tree with a manifest needs none.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub(crate) struct GraphCfg {
     pub entry_globs: Vec<String>,
+    pub crate_roots: Vec<String>,
+}
+
+impl GraphCfg {
+    /// The declared roots as the walk spells paths (`rel_str`): `/`
+    /// separators, no `./` head, no trailing slash — ONE normalizer
+    /// for the two readers (the resolver key and the target set).
+    pub(crate) fn declared_roots(&self) -> std::collections::BTreeSet<String> {
+        self.crate_roots
+            .iter()
+            .map(|r| r.replace('\\', "/"))
+            .map(|r| r.trim_start_matches("./").trim_end_matches('/').to_string())
+            .filter(|r| !r.is_empty())
+            .collect()
+    }
 }
 
 /// Verdict-family knobs (ADR-008 P4): every value is OPTIONAL — an
@@ -190,7 +214,7 @@ impl Config {
     /// fingerprinted `[[rules.class]]` alone, and an adversarial
     /// review found the scope wrong within the hour: two lines of
     /// `[score]` — `viol_cost = 0` — pin the score at the scale, so
-    /// `ce check --fail-under 950` can never fail again, and
+    /// `ce check --fail-under 940` can never fail again, and
     /// `tol_abs = 100000` erases the ratchet's own tolerance. Both
     /// move the same gates a glob edit moves, neither touched the
     /// class table, and neither asked anyone to name a floor. Picking

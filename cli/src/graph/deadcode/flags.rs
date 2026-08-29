@@ -24,6 +24,11 @@ const ROLE_GLOB: i64 = 1 << 3;
 const ROLE_DOC: i64 = 1 << 4;
 pub(super) const ROLE_ALLOW: i64 = 1 << 5;
 const ROLE_DECLARED: i64 = 1 << 6;
+/// A declared submodule's node (plan v2.18 step #12, wire 6.3.0): a
+/// READER of this tree, never its candidate — the core lands it on
+/// the entry bits, and this side measures none of its other roles
+/// (they would only cost the reads).
+pub(super) const ROLE_FOREIGN: i64 = 1 << 7;
 
 /// Role facts of one file node. Main.hs is cabal's executable
 /// main-is convention — nothing imports a main module, exactly like
@@ -107,7 +112,7 @@ mod tests {
     use std::collections::BTreeSet;
 
     fn no_targets() -> Declared {
-        Declared::gather(Path::new("."), &BTreeSet::new())
+        Declared::gather(Path::new("."), &BTreeSet::new(), &BTreeSet::new())
     }
 
     /// The allow-claim role (batch-7 slice 3), table-driven — the

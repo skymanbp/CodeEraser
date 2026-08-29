@@ -89,7 +89,10 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     // symbol advisory has no seat in its lattice (W4-F17)
     let w = deadcode::wire_of(root, &idx, &db_path, deadcode::Advisory::No)?;
     drop(idx);
-    let pos_req: Vec<i64> = deadcode::file_nodes(&w).iter().map(|&(i, _)| i).collect();
+    let pos_req: Vec<i64> = deadcode::measured_nodes(&w)
+        .iter()
+        .map(|&(i, _)| i)
+        .collect();
     let reply = deadcode::judge(core, &w, &pos_req)?;
     // Degrade reads the wire's boolean, not reason presence (the C9
     // discipline; same throat shape as deadcode::consume).

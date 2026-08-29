@@ -404,4 +404,14 @@ entry_globs = [
 # (one block against family_checked) died -- its callers seat
 # `|_| None` themselves. Three subtractions, zero new rows: the
 # 185-row set minus exactly these three is the 182-row set.
-budget = 182
+# 182 -> 65 (L round step #12, user ruling 2026-08-28: the test suite
+# submodule is a READER of this tree, never a measured part of it):
+# the 117 blocks that left are the suite's own -- the documentary
+# whitepaper tables and Props-shaped scaffolds every entry above
+# names as the test-side face class -- and they are measured now by
+# the submodule's own ledger (cli/tests/ce.toml, 119 at the split).
+# Zero new rows on this side: the 65-row set is the 182-row set with
+# the foreign-owned rows removed (row-set diff in the CHANGELOG entry).
+# Down needs no defence; this line records that the counter moved for
+# the ruling, not for a cleanup.
+budget = 65

@@ -1,9 +1,16 @@
 //! File discovery with the exclusion model (plan §4.1):
 //! .gitignore (via `ignore` crate) + .ceignore + built-in category
-//! defaults + ce.toml globs. Declarative only.
+//! defaults + ce.toml globs. Declarative only. Since plan v2.18 step
+//! #12 the walk also answers WHOSE each file is (gitmodules::owner):
+//! a declared submodule's files come back tagged `foreign` — read by
+//! the index for their references and mentions, measured by nobody
+//! here — and an undeclared nested repository is pruned before it is
+//! walked at all.
 
+use crate::gitmodules::Owner;
 use ignore::WalkBuilder;
 use ignore::overrides::OverrideBuilder;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 /// The secret-file globs BOTH walks refuse — this measurement walk and
@@ -50,9 +57,9 @@ const BUILTIN_EXCLUDES: &[&str] = &[
 ];
 
 /// Config plus language-tagged candidate files — the shared opening
-/// of every whole-tree analyzer (scan metrics, graph sites); the
+/// of every whole-tree MEASUREMENT (scan metrics, graph sites); the
 /// config rides along so callers needing thresholds do not load it
-/// twice.
+/// twice. Own files only: a foreign file is measured by its own tree.
 fn scoped_lang_files(
     root: &Path,
 ) -> Result<
@@ -65,7 +72,8 @@ fn scoped_lang_files(
     let config = crate::config::Config::load(root)?;
     let files = collect(root, &config.exclude)?
         .into_iter()
-        .filter_map(|p| crate::scan::lang::Lang::from_path(&p).map(|l| (p, l)))
+        .filter(|w| !w.foreign)
+        .filter_map(|w| crate::scan::lang::Lang::from_path(&w.path).map(|l| (w.path, l)))
         .collect();
     Ok((config, files))
 }
@@ -127,32 +135,91 @@ fn builder(root: &Path, extra_excludes: &[String]) -> Result<WalkBuilder, String
     Ok(b)
 }
 
+/// One walked file and whose it is. `foreign` = a declared submodule's
+/// (gitmodules::Owner::Foreign): the index reads it for the references
+/// and mentions it holds, and no measurement counts it — its own tree
+/// gates it. A nested repository nobody declared never reaches here.
+pub struct Walked {
+    pub path: PathBuf,
+    pub foreign: bool,
+}
+
 /// Collect candidate files under `root`, honoring the exclusion model.
 /// A declared submodule the checkout has not seated (gitmodules.rs)
-/// refuses BY NAME first: its files are tree content a filesystem
-/// walk cannot see, so the walk would measure a tree missing them and
-/// `ce baseline` would persist the shrunken ratchet as an improvement
-/// — "a gate that could not judge must never pass" (ADR-008 P1). A
-/// declared path the exclusion model prunes anyway (`vendor/`) judges
-/// nothing seated or not, so it is not refused. `ce guard` never
-/// comes through here: a fail-open hook must not start refusing every
-/// write on a shallow clone.
-pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, String> {
+/// refuses BY NAME first: its files are readers a filesystem walk
+/// cannot see, so the graph would judge this tree's files without the
+/// references those readers hold and the advisory would call their
+/// mentioned names unmentioned — "a gate that could not judge must
+/// never pass" (ADR-008 P1). A declared path the exclusion model
+/// prunes anyway (`vendor/`) reads nothing seated or not, so it is not
+/// refused. `ce guard` never comes through here: a fail-open hook must
+/// not start refusing every write on a shallow clone.
+pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<Walked>, String> {
     let mut scope = Scope::new(root, extra_excludes)?;
     for rel in crate::gitmodules::unseated(root) {
         if scope.contains_dir(&rel) {
             return Err(crate::gitmodules::refusal(&rel, root));
         }
     }
+    let mut owners = Owners::new(root);
+    let (home, declared) = (root.to_path_buf(), owners.declared.clone());
     let mut files = Vec::new();
-    for entry in builder(root, extra_excludes)?.build() {
+    for entry in builder(root, extra_excludes)?
+        // a nested repository is pruned at its door: its files are
+        // nobody's here, and walking them would only cost the reads
+        .filter_entry(move |e| {
+            e.depth() == 0
+                || !e.file_type().is_some_and(|t| t.is_dir())
+                || crate::gitmodules::owner(&home, &declared, &rel_str(&home, e.path()))
+                    != Owner::Cut
+        })
+        .build()
+    {
         let entry = entry.map_err(|e| format!("walk: {e}"))?;
         if entry.file_type().is_some_and(|t| t.is_file()) {
-            files.push(entry.into_path());
+            let foreign = match owners.of_file(entry.path()) {
+                Owner::Own => false,
+                Owner::Foreign => true,
+                Owner::Cut => continue, // pruned above; a race cannot re-admit it
+            };
+            files.push(Walked {
+                path: entry.into_path(),
+                foreign,
+            });
         }
     }
-    files.sort();
+    files.sort_by(|a, b| a.path.cmp(&b.path));
     Ok(files)
+}
+
+/// The owner rule memoized per DIRECTORY: `gitmodules::owner` stats a
+/// `.git` per path segment, and a file's answer is its directory's (a
+/// file never owns a repository, and a declared path is a directory),
+/// so one lookup per directory serves every file in it.
+struct Owners {
+    root: PathBuf,
+    declared: BTreeSet<String>,
+    memo: BTreeMap<PathBuf, Owner>,
+}
+
+impl Owners {
+    fn new(root: &Path) -> Self {
+        Self {
+            root: root.to_path_buf(),
+            declared: crate::gitmodules::declared(root),
+            memo: BTreeMap::new(),
+        }
+    }
+
+    fn of_file(&mut self, path: &Path) -> Owner {
+        let dir = path.parent().unwrap_or(path).to_path_buf();
+        if let Some(&o) = self.memo.get(&dir) {
+            return o;
+        }
+        let o = crate::gitmodules::owner(&self.root, &self.declared, &rel_str(&self.root, &dir));
+        self.memo.insert(dir, o);
+        o
+    }
 }
 
 /// The exclusion model asked of ONE path (existing or about to be
@@ -165,10 +232,15 @@ pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<PathBuf>, S
 /// `cli/tests/…` under superproject rules the walk never applied
 /// there and hidden paths the walk never yields. Ancestor DIRECTORIES
 /// are read, never the file, so a not-yet-created path answers too.
-/// Built once per batch: the matcher caches per directory.
+/// Built once per batch: the matcher caches per directory. The owner
+/// rule is asked too: a path under a declared submodule or a nested
+/// repository is one the walk would never MEASURE, so the guard stays
+/// inert on it — the submodule's own ce.toml (root.rs re-roots there)
+/// is the tree that budgets its writes.
 pub struct Scope {
     root: PathBuf,
     matcher: ignore::IncrementalIgnore,
+    declared: BTreeSet<String>,
 }
 
 impl Scope {
@@ -178,16 +250,25 @@ impl Scope {
             .build_matchers()
             .pop()
             .ok_or_else(|| "walk: no matcher for the root".to_string())?;
-        Ok(Self { root, matcher })
+        let declared = crate::gitmodules::declared(&root);
+        Ok(Self {
+            root,
+            matcher,
+            declared,
+        })
     }
 
-    /// `path` (absolute or root-relative) is one the walk would yield.
+    /// `path` (absolute or root-relative) is one the walk would yield
+    /// as this project's own.
     pub fn contains(&mut self, path: &Path) -> bool {
         let full = canon(&self.root.join(path));
         let Ok(rel) = full.strip_prefix(&self.root) else {
             return false; // outside the project root: not ours to judge
         };
-        !rel.as_os_str().is_empty() && !self.matcher.matched(rel, false).is_ignore()
+        !rel.as_os_str().is_empty()
+            && !self.matcher.matched(rel, false).is_ignore()
+            && crate::gitmodules::owner(&self.root, &self.declared, &rel_str(&self.root, &full))
+                == Owner::Own
     }
 
     /// A root-relative DIRECTORY the walk would descend into.

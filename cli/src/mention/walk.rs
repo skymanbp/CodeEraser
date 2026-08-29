@@ -6,7 +6,8 @@
 //!   - hidden files walk (`.github/` mentions count); `.git/` and
 //!     `.ce/` are cut by NAME (the observe feed would otherwise enter);
 //!   - a NESTED repository — any directory below the root holding a
-//!     `.git` entry, file or directory — is cut whole: it belongs to
+//!     real `.git` anchor (root.rs: the directory, or a gitfile whose
+//!     pointer resolves) — is cut whole: it belongs to
 //!     its own U, and the walker would otherwise let the outer
 //!     `.gitignore` reach into it, which git never does. A path the
 //!     root's `.gitmodules` declares is the one exception: a submodule
@@ -46,6 +47,7 @@
 //! NUL in the first 8000 bytes (git's rule) skips the file — a late
 //! NUL stays in U, exactly as `contracts/VERSIONING.md` does.
 
+use crate::gitmodules::Owner;
 use crate::scan::walk::{SECRET_GLOBS, contained, rel_str};
 use anyhow::{Context, Result};
 use globset::{Glob, GlobSet, GlobSetBuilder};
@@ -136,19 +138,16 @@ pub(super) fn universe(root: &Path) -> Result<Universe> {
 const CUT_NAMES: [&str; 2] = [".git", ".ce"];
 
 /// The walker's entry filter: a cut name, or a directory that is a
-/// repository of its own (a `.git` file or directory inside it) and
-/// not a declared submodule. Its parents were filtered before it, so
-/// the entry alone is asked.
+/// repository of its own and not a declared submodule — the owner
+/// rule the measurement walk reads too (gitmodules::owner: a declared
+/// prefix is Foreign and stays in U, an undeclared `.git` anchor is
+/// Cut). Its parents were filtered before it, so the entry alone is
+/// asked.
 fn is_cut(root: &Path, declared: &BTreeSet<String>, e: &DirEntry) -> bool {
     let name = e.file_name().to_string_lossy();
     CUT_NAMES.contains(&name.as_ref())
         || (e.file_type().is_some_and(|t| t.is_dir())
-            && owns_repo(e.path())
-            && !declared.contains(&rel_str(root, e.path())))
-}
-
-fn owns_repo(dir: &Path) -> bool {
-    dir.join(".git").exists()
+            && crate::gitmodules::owner(root, declared, &rel_str(root, e.path())) == Owner::Cut)
 }
 
 /// The same cut read off a path: `rel` has a cut-name component, or
@@ -159,17 +158,8 @@ fn owns_repo(dir: &Path) -> bool {
 /// (tests/it/mention_universe.rs), so the walk's rule has one
 /// implementation.
 pub fn cut(root: &Path, rel: &str) -> bool {
-    let declared = crate::gitmodules::declared(root);
-    let mut dir = root.to_path_buf();
-    let mut prefix = String::new();
-    rel.split('/').filter(|s| !s.is_empty()).any(|seg| {
-        dir.push(seg);
-        if !prefix.is_empty() {
-            prefix.push('/');
-        }
-        prefix.push_str(seg);
-        CUT_NAMES.contains(&seg) || (owns_repo(&dir) && !declared.contains(&prefix))
-    })
+    rel.split('/').any(|seg| CUT_NAMES.contains(&seg))
+        || crate::gitmodules::owner(root, &crate::gitmodules::declared(root), rel) == Owner::Cut
 }
 
 /// A regular file, or a symlink whose target is a regular file inside

@@ -25,6 +25,9 @@ pub(super) struct WalkIndex {
     pub tokenized: usize,
     pub dirty: BTreeSet<String>,
     pub resolve_key: i64,
+    /// ce.toml `[graph] crate_roots` ∩ live: the Rust ladder's declared
+    /// roots (a declaration naming a missing file declares nothing).
+    pub crate_roots: BTreeSet<String>,
 }
 
 /// Reads go through walk::read_surviving: a mid-walk deletion is a
@@ -37,6 +40,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         tokenized: 0,
         dirty: BTreeSet::new(),
         resolve_key: 0,
+        crate_roots: BTreeSet::new(),
     };
     let mut configs: Vec<(String, u64)> = Vec::new();
     // md slug sets are resolver INPUTS like config bytes (the anchor
@@ -45,7 +49,13 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     // repaying the 2f cross-file staleness debt). Key inputs only:
     // Scope.configs stays real config paths.
     let mut md_facts: Vec<(String, u64)> = Vec::new();
-    for path in walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)? {
+    // foreign files (a declared submodule's) enter the index too: the
+    // graph needs the references they hold and the advisory the names
+    // they spell — their `foreign` flag is what keeps every
+    // measurement (clone pairs, docdup, score rows) off them
+    for walk::Walked { path, foreign } in
+        walk::collect(root, &config.exclude).map_err(anyhow::Error::msg)?
+    {
         let rel = walk::rel_str(root, &path);
         if store::is_resolver_config(&path) {
             configs.extend(walk::read_surviving(&path)?.map(|b| (rel, tokens::fnv1a(&b))));
@@ -60,7 +70,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
             continue; // vanished mid-walk: not live this pass
         };
         lang_fact(lang, &rel, &src, &mut md_facts);
-        if idx.refresh_file(&rel, &src, lang, Params::default())? {
+        if idx.refresh_file(&rel, &src, lang, Params::default(), foreign)? {
             out.dirty.insert(rel.clone());
         }
         if lang.grammar().is_some() {
@@ -73,12 +83,38 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     // node_modules names) join like md slugs: the ladder stats them
     // but the walk can never carry them (clearance review MED — their
     // mutation previously never re-fired the sweep).
+    // the declared crate roots are a resolver INPUT like the manifests
+    // the walk collected, and hashed into the key so that editing the
+    // declaration re-fires the sweep. A root the walk did not see, or
+    // one that is no Rust file, is refused by name (the [structure]
+    // layout posture): silently dropping it would put the tree back
+    // in the false-dead shape the knob exists to end.
+    out.crate_roots = config.graph.declared_roots();
+    for r in &out.crate_roots {
+        anyhow::ensure!(
+            r.ends_with(".rs") && out.live.contains(r),
+            "[graph] crate_roots declares {r:?}, which is not a walked Rust file"
+        );
+    }
     let mut key_inputs = configs.clone();
+    key_inputs.push((
+        "ce.toml#graph.crate_roots".to_string(),
+        tokens::fnv1a(roots_bytes(&out.crate_roots).as_slice()),
+    ));
     key_inputs.extend(md_facts);
     key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live));
     out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)
+}
+
+/// The declared-root set as one byte string for the key (NUL-joined:
+/// a separator no path carries).
+fn roots_bytes(roots: &BTreeSet<String>) -> Vec<u8> {
+    roots
+        .iter()
+        .flat_map(|r| r.bytes().chain(std::iter::once(0)))
+        .collect()
 }
 
 /// Cross-file resolver INPUTS per language (split from index_all at
@@ -118,7 +154,11 @@ pub(super) fn load_streams(
         let Some(src) = walk::read_surviving(&path)? else {
             continue;
         };
-        if idx.refresh_file(rel, &src, lang, p)? {
+        // the re-feed keeps the owner the walk stamped: candidates
+        // are own files by construction (all_instances), and the flag
+        // is the index's fact, not this pass's to re-decide
+        let foreign = idx.is_foreign(rel)?;
+        if idx.refresh_file(rel, &src, lang, p, foreign)? {
             changed.insert(rel.clone());
         }
         out.insert(rel.clone(), tokens::stream(&src, lang)?);

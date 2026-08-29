@@ -45,7 +45,7 @@ impl Worktree {
         for (rel, sub) in churn::gitlinks(&wt.path)? {
             let home = root.join(&rel);
             anyhow::ensure!(
-                home.join(".git").exists(),
+                crate::gitmodules::seated_at(&home),
                 "trend: {}",
                 crate::gitmodules::refusal(&rel, root)
             );

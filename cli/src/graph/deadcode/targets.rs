@@ -7,7 +7,9 @@
 //! slice 3, defects a/b). Discovery is nearest-manifest from each
 //! walked directory, each manifest parsed once; the answer is a FACT
 //! (this path is a declared target) — the entry decision stays with
-//! the core's role table.
+//! the core's role table. A root ce.toml `[graph] crate_roots`
+//! declares (plan v2.18 step #12: a tree whose manifest lives
+//! elsewhere) is the same fact by declaration.
 
 use crate::graph::{cabal, cargo, roots};
 use std::collections::BTreeSet;
@@ -39,8 +41,13 @@ impl Declared {
     /// One pass over the walked set: nearest Cargo.toml and nearest
     /// .cabal per unique directory, each manifest's targets computed
     /// once. A manifest above the repo root is out of tree by
-    /// construction (nearest_up never leaves it).
-    pub(super) fn gather(root: &Path, files: &BTreeSet<String>) -> Self {
+    /// construction (nearest_up never leaves it). `declared` are the
+    /// ce.toml crate roots, kept where the file is walked.
+    pub(super) fn gather(
+        root: &Path,
+        files: &BTreeSet<String>,
+        declared: &BTreeSet<String>,
+    ) -> Self {
         let dirs: BTreeSet<String> = files.iter().map(|f| roots::parent_dir(f)).collect();
         let mut manifests = BTreeSet::new();
         for d in &dirs {
@@ -61,6 +68,7 @@ impl Declared {
                 out.extend(main_targets(&c, files));
             }
         }
+        out.extend(declared.intersection(files).cloned());
         Declared(out)
     }
 
@@ -75,11 +83,18 @@ mod tests {
 
     /// The slice-3 defect, red→green at the fact level: a declared
     /// [[bin]] path is a target, its undeclared sibling is not; a
-    /// cabal main-is lands the same way through its stanza roots.
+    /// cabal main-is lands the same way through its stanza roots; a
+    /// ce.toml-declared root is a target when walked and nothing
+    /// when it names a missing file.
     #[test]
     fn declared_targets_come_from_the_manifests() {
         let root = crate::testutil::scratch("dc-targets");
-        let sources = ["src/tools/gen.rs", "src/tools/other.rs", "hs/app/Runner.hs"];
+        let sources = [
+            "src/tools/gen.rs",
+            "src/tools/other.rs",
+            "hs/app/Runner.hs",
+            "it/main.rs",
+        ];
         let mut tree = vec![
             (
                 "Cargo.toml",
@@ -93,10 +108,21 @@ mod tests {
         tree.extend(sources.map(|f| (f, "")));
         crate::testutil::write_tree(&root, &tree);
         let files: BTreeSet<String> = sources.map(String::from).into();
-        let d = Declared::gather(&root, &files);
+        let d = Declared::gather(&root, &files, &BTreeSet::new());
         assert!(d.hit("src/tools/gen.rs"), "declared [[bin]] path");
         assert!(!d.hit("src/tools/other.rs"), "undeclared sibling");
         assert!(d.hit("hs/app/Runner.hs"), "cabal main-is through its root");
+        assert!(
+            !d.hit("it/main.rs"),
+            "a manifest-less main is no target by itself"
+        );
+        let declared = ["it/main.rs", "it/gone.rs"].map(String::from).into();
+        let d = Declared::gather(&root, &files, &declared);
+        assert!(d.hit("it/main.rs"), "declared in ce.toml and walked");
+        assert!(
+            !d.hit("it/gone.rs"),
+            "declared but missing declares nothing"
+        );
         std::fs::remove_dir_all(&root).ok();
     }
 }

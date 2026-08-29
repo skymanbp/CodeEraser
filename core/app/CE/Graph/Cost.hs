@@ -129,13 +129,16 @@ assetKind = 3
 -- on the entry bits HERE — data an ablation can perturb row by row.
 -- Role bits: 0 named main, 1 executable dir, 2 test convention,
 -- 3 entry glob, 4 doc entry, 5 ce:allow claim, 6 declared build
--- target. Flag bits per entryMask above; roles 0, 1 and 6 share
--- bit 1 (all three are "an executable the build knows about"), and
--- role 6 is the slice-3 defect fix — a declared [[bin]] path or
--- cabal main-is target is a root, where before only the name
--- conventions were.
+-- target, 7 foreign reader (6.3.0: a declared submodule's node — the
+-- one role a package or section row may carry). Flag bits per
+-- entryMask above; roles 0, 1 and 6 share bit 1 (all three are "an
+-- executable the build knows about"), role 7 shares bit 2 with the
+-- test convention (both are "someone else's code that reads ours":
+-- it seeds reachability and is never judged), and role 6 is the
+-- slice-3 defect fix — a declared [[bin]] path or cabal main-is
+-- target is a root, where before only the name conventions were.
 roleBits :: [(Integer, Integer)]
-roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1)]
+roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2)]
 -- | The dead-row confidence (H3, 2.32.0): how far the dead node's
 -- OWN language can vouch for its verdict, judged from the request's
 -- per-language site ledger [[lang, unresolvedSites, totalSites]].

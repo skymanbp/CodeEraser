@@ -21,19 +21,23 @@ use anyhow::Result;
 use rusqlite::Connection;
 
 /// Aggregate content digest over the refreshed files table, ordered
-/// by path: any addition, removal or content change moves it. Each
-/// row is chained through fnv1a with the running accumulator, so the
-/// fold is order-sensitive without duplicating the hash body. Sub-ms
-/// at hundreds of rows — the miss path pays noise.
+/// by path: any addition, removal, content change or owner flip
+/// moves it (a file that turns foreign leaves every pair it was in,
+/// under unchanged bytes). Each row is chained through fnv1a with the
+/// running accumulator, so the fold is order-sensitive without
+/// duplicating the hash body. Sub-ms at hundreds of rows — the miss
+/// path pays noise.
 pub(super) fn digest(conn: &Connection) -> Result<i64> {
-    let mut stmt = conn.prepare("SELECT path, content_hash FROM files ORDER BY path")?;
+    let mut stmt = conn.prepare("SELECT path, content_hash, owner FROM files ORDER BY path")?;
     let mut rows = stmt.query([])?;
-    let mut acc = tokens::fnv1a(b"rescache/1");
+    let mut acc = tokens::fnv1a(b"rescache/2");
     while let Some(row) = rows.next()? {
         let path: String = row.get(0)?;
         let hash: i64 = row.get(1)?;
+        let foreign: i64 = row.get(2)?;
         let mut buf = path.into_bytes();
         buf.extend_from_slice(&hash.to_le_bytes());
+        buf.push(foreign as u8);
         buf.extend_from_slice(&acc.to_le_bytes());
         acc = tokens::fnv1a(&buf);
     }

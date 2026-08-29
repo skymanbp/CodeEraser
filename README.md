@@ -208,8 +208,12 @@ The test suite lives in [skymanbp/CodeEraser-tests](https://github.com/skymanbp/
 mounted here as the `cli/tests` submodule — clone with `--recurse-submodules`
 (or `git submodule update --init`) before `cargo test`; until the checkout is
 seated every judging command refuses by name (an empty `cli/tests` would
-otherwise score as a tree without its tests), and the self-score keeps
-counting every file in it.
+otherwise judge this tree without the references its tests hold). The
+submodule is a **reader** of this tree, never a measured part of it: its
+files feed the graph's edges and the advisory's mention universe, while
+every size, score, clone and ratchet row is cut from this repository's own
+files alone — the suite passes the same six gates in CI under its own
+`ce.toml` and baseline.
 
 "CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the
 license covers the code, not the name.

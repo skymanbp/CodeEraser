@@ -34,6 +34,7 @@ pub fn node(path: &str, unit: &str, kind: i64) -> crate::graph::nodes::Node {
         path: path.into(),
         unit: unit.into(),
         kind,
+        foreign: false,
     }
 }
 

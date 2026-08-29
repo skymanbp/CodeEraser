@@ -36,9 +36,13 @@ pub struct SegRow {
 /// rejections, allow_missing_why, are ledger-only and not persisted
 /// — surfacing them is a schema change, ledgered for batch 8).
 pub fn exempt_counts(idx: &Index) -> Result<(u64, u64)> {
+    // an own file's exemptions only — a foreign README's license block
+    // is outside this tree's docdup domain like its live prose (step
+    // #12; the codex review found the count reading every owner)
     let rows = crate::graph::load::rows(
         idx.raw(),
-        "SELECT exempt, COUNT(*) FROM docsegs WHERE exempt != 0 GROUP BY exempt",
+        "SELECT d.exempt, COUNT(*) FROM docsegs d JOIN files f ON f.id = d.file_id
+         WHERE d.exempt != 0 AND f.owner = 0 GROUP BY d.exempt",
         |r| Ok((r.get::<_, i64>(0)?, r.get::<_, i64>(1)?)),
     )?;
     let pick = |code: i64| {
@@ -53,15 +57,16 @@ pub fn exempt_counts(idx: &Index) -> Result<(u64, u64)> {
     ))
 }
 
-/// Every LIVE admitted segment in identity order, straight off the
-/// docsegs cache (exempt segments are outside the corpus by
-/// definition — the D6 zero-survival claim is structural here).
+/// Every LIVE admitted segment of an OWN file in identity order,
+/// straight off the docsegs cache (exempt segments are outside the
+/// corpus by definition — the D6 zero-survival claim is structural
+/// here; a foreign file's prose is its own tree's to judge).
 pub fn live_rows(idx: &Index) -> Result<Vec<SegRow>> {
     let rows = crate::graph::load::rows(
         idx.raw(),
         "SELECT f.path, d.kind, d.start_line, d.end_line, d.words, d.shingles
          FROM docsegs d JOIN files f ON f.id = d.file_id
-         WHERE d.exempt = 0 ORDER BY f.path, d.start_line, d.kind",
+         WHERE d.exempt = 0 AND f.owner = 0 ORDER BY f.path, d.start_line, d.kind",
         |r| {
             let head: (String, i64, i64, i64, i64) =
                 (r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?);

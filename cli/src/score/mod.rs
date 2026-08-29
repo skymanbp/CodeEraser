@@ -76,7 +76,9 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // tables — the score reads positions and the export surface
     let w = deadcode::wire_of(root, &snap, &db_path, deadcode::Advisory::No)?;
     drop(snap);
-    let fnodes = deadcode::file_nodes(&w);
+    // the verdict universe is this tree's OWN files: a foreign reader
+    // seeds liveness in the graph above and owns no row down here
+    let fnodes = deadcode::measured_nodes(&w);
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
     let posmap = judged_positions(&opts.core, &w, &pos_req)?;
     let files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();

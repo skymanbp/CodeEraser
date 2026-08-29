@@ -44,7 +44,7 @@ pub fn judge_pairs(
     posmap: &HashMap<String, Pos>,
     ch: &crate::churn::Report,
 ) -> Result<Judged> {
-    let files: Vec<String> = deadcode::file_nodes(w)
+    let files: Vec<String> = deadcode::measured_nodes(w)
         .iter()
         .map(|&(_, p)| p.to_string())
         .collect();

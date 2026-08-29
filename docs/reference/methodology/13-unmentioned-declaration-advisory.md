@@ -23,11 +23,15 @@ The corpus that may spell a name is not the scan's file set: the scan's exclusio
 "what is measured", the veto needs "what could reference a name", so U is a walk of its
 own with every parameter frozen as a `MENTION_REV` input
 ([walk.rs:1-47](../../../cli/src/mention/walk.rs#L1), [mod.rs:60-82](../../../cli/src/mention/mod.rs#L60)):
-hidden files enter, `.git`/`.ce` are cut by name, a nested repository is cut whole (a path
-the root's `.gitmodules` declares is not nested — the suite rides at `cli/tests` that way since
-plan v2.18; one reader parses the declaration with git's own config grammar
+hidden files enter, `.git`/`.ce` are cut by name, and a nested repository is read off ONE
+owner predicate shared with the measurement walk and the guard's scope
+([gitmodules.rs:89-132](../../../cli/src/gitmodules.rs#L89)): a path the root's
+`.gitmodules` declares is **foreign** — in U, since it can spell a name, and never measured
+(plan v2.18 step #12: the suite rides at `cli/tests` that way, a reader of this tree and no
+part of its score); an undeclared nested repository is **cut** whole. One reader parses the
+declaration with git's own config grammar
 ([gitmodules.rs:1-23](../../../cli/src/gitmodules.rs#L1)), and a declared checkout that is not
-seated refuses by name rather than letting U shrink ([walk.rs:84-87](../../../cli/src/mention/walk.rs#L84))),
+seated refuses by name rather than letting U shrink ([walk.rs:84-87](../../../cli/src/mention/walk.rs#L84)),
 `.gitignore` and `.ceignore` are honoured and nothing else — not the walker's `.ignore`,
 not global or parent ignore files, and `.git` is not required, so one commit yields one
 U on any machine ([walk.rs:90-101](../../../cli/src/mention/walk.rs#L90)); the cut is one published predicate,
@@ -45,7 +49,7 @@ NOT excluded: they are in U and outside the judged domain, which is the safe sid
 
 The binary rule is git's: a UTF-16 BOM decodes, otherwise a NUL in the first 8000 bytes
 skips the file; a later NUL keeps it, decoded lossily so one stray byte cannot lose a
-file's mentions ([walk.rs:260-277](../../../cli/src/mention/walk.rs#L260)). The consequence
+file's mentions ([walk.rs:254-271](../../../cli/src/mention/walk.rs#L254)). The consequence
 is stated, not hidden: PDF-disguised `.ai` assets whose first NUL falls past byte 8000
 are in U (zod holds eight, requests one), and §8 prices what they add.
 
@@ -273,7 +277,7 @@ the pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 635 (648 − 13 early-NUL) | rust | 3044 (1257) | 953 (31) | 31.3 % | 40 / 953 = 4.2 % | 40 / 2065 |
+| self @ this commit | 640 (653 − 13 early-NUL) | rust | 2179 (1028) | 537 (0) | 24.6 % | 17 / 537 = 3.2 % | 17 / 1620 |
 | | | haskell | 1283 (294) | 295 (2) | 23.0 % | 12 / 295 = 4.1 % | 12 / 988 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
 | requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
@@ -286,7 +290,8 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 31 / 1257 = 2.5 %, zod typescript
+operator reads for the public surface: self rust 0 / 1028 = 0.0 % (the suite is a reader of
+this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
 TypeScript's is spoken — is why the census is reported per language and never as one

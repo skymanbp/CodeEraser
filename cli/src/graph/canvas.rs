@@ -162,33 +162,17 @@ fn file_edges(w: &GraphWire, files: &[(i64, &str)]) -> Vec<[usize; 2]> {
 #[cfg(test)]
 mod tests {
     use super::super::deadcode::{GraphWire, Report};
-    use super::super::nodes::Node;
     use super::super::wire::{GRAN_FILE, GRAN_PACKAGE, GRAN_SECTION};
     use super::*;
+    use crate::testutil::node;
 
     /// Two files, one section of a.rs, one package; b.rs judged dead.
     fn fixture() -> (GraphWire, Report) {
         let nodes = vec![
-            Node {
-                path: "a.rs".into(),
-                unit: "".into(),
-                kind: GRAN_FILE,
-            },
-            Node {
-                path: "b.rs".into(),
-                unit: "".into(),
-                kind: GRAN_FILE,
-            },
-            Node {
-                path: "a.rs".into(),
-                unit: "Intro".into(),
-                kind: GRAN_SECTION,
-            },
-            Node {
-                path: "pkg".into(),
-                unit: "".into(),
-                kind: GRAN_PACKAGE,
-            },
+            node("a.rs", "", GRAN_FILE),
+            node("b.rs", "", GRAN_FILE),
+            node("a.rs", "Intro", GRAN_SECTION),
+            node("pkg", "", GRAN_PACKAGE),
         ];
         let edges = [[2, 1, 0, 0], [0, 1, 5, 0], [3, 0, 0, 0], [2, 0, 0, 0]]
             .into_iter()

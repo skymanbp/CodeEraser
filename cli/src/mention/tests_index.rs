@@ -76,7 +76,7 @@ fn the_universe_is_the_same_set_with_and_without_a_git_directory() {
             ("keep.txt", b"graph_report\n"),
             ("ignored.txt", b"graph_report\n"),
             (".github/wf.yml", b"run: graph_report\n"),
-            ("sub/.git", b"gitdir: elsewhere\n"),
+            ("sub/.git/HEAD", b"ref: refs/heads/main\n"),
             ("sub/keep.txt", b"graph_report\n"),
         ],
     );

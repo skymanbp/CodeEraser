@@ -29,7 +29,7 @@ fn judged_files_outside_the_universe_are_counted_by_cause() {
             ("nul.py", b"x = 1\0\n"),
             (".gitignore", b"ignored.py\n"),
             ("ignored.py", b"y = 2\n"),
-            ("sub/.git", b"gitdir: elsewhere\n"),
+            ("sub/.git/HEAD", b"ref: refs/heads/main\n"),
             ("sub/nested.py", b"w = 4\n"),
             ("plain.py", b"z = 3\n"),
         ],
@@ -42,7 +42,7 @@ fn judged_files_outside_the_universe_are_counted_by_cause() {
         "plain.py",
     ] {
         let bytes = std::fs::read(dir.join(rel)).expect(rel);
-        idx.refresh_file(rel, &bytes, Lang::Python, Params::default())
+        idx.refresh_file(rel, &bytes, Lang::Python, Params::default(), false)
             .expect(rel);
     }
     let s = run(&dir, &idx);

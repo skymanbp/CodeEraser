@@ -82,21 +82,29 @@ pub fn export_surface(
 /// that call to the measurement side, and the projection withholds
 /// only bits the core has no verdict axis for. Ascent comes free
 /// (node ids ascend and file nodes keep
-/// their order), and an owner that is not a file node is index
-/// skew, refused the way `export_surface` refuses its own miss.
+/// their order); a FOREIGN owner is outside the verdict universe by
+/// design (deadcode::measured_nodes) and its row simply does not
+/// cross, while an own owner that is not a file node is index skew,
+/// refused the way `export_surface` refuses its own miss.
 pub fn rekeyed(w: &super::deadcode::GraphWire, idx: &HashMap<&str, i64>) -> Result<Vec<[i64; 2]>> {
     w.symbols
         .iter()
-        .map(|&[node, vis]| {
-            let path = w
+        .filter_map(|&[node, vis]| {
+            let owner = w
                 .nodes
                 .get(usize::try_from(node).unwrap_or(usize::MAX))
-                .map(|n| n.path.as_str())
-                .context("symbol row names a node outside the graph")?;
-            let u = idx
-                .get(path)
-                .with_context(|| format!("export surface owner {path} is not a file node"))?;
-            Ok([*u, vis])
+                .context("symbol row names a node outside the graph");
+            match owner {
+                Ok(n) if n.foreign => None,
+                Ok(n) => Some(
+                    idx.get(n.path.as_str())
+                        .map(|&u| [u, vis])
+                        .with_context(|| {
+                            format!("export surface owner {} is not a file node", n.path)
+                        }),
+                ),
+                Err(e) => Some(Err(e)),
+            }
         })
         .collect()
 }

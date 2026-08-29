@@ -103,23 +103,38 @@ impl Index {
     }
 
     /// Refresh one file; returns false when the stored content hash
-    /// already matches (nothing touched — the incremental fast path).
+    /// AND owner flag already match (nothing touched — the incremental
+    /// fast path; a `.gitmodules` edit that flips `foreign` under
+    /// unchanged bytes must not be read as "nothing changed").
     /// Concurrent-writer safe by idempotence (v1.7): the delete +
     /// reinsert rides one transaction keyed by content, so two
     /// writers of the same bytes commit the same rows in either
     /// order — the convergence leg the battery pins.
-    pub fn refresh_file(&mut self, rel: &str, src: &[u8], lang: Lang, p: Params) -> Result<bool> {
+    pub fn refresh_file(
+        &mut self,
+        rel: &str,
+        src: &[u8],
+        lang: Lang,
+        p: Params,
+        foreign: bool,
+    ) -> Result<bool> {
         let chash = tokens::fnv1a(src) as i64;
-        let stored: Option<i64> = self
+        let stored: Option<(i64, bool)> = self
             .conn
             .query_row(
-                "SELECT content_hash FROM files WHERE path = ?1",
+                "SELECT content_hash, owner FROM files WHERE path = ?1",
                 (rel,),
-                |r| r.get(0),
+                |r| Ok((r.get(0)?, r.get(1)?)),
             )
             .map(Some)
-            .or_else(schema::ignore_no_rows)?;
-        if stored == Some(chash) {
+            .or_else(|e| {
+                if e == rusqlite::Error::QueryReturnedNoRows {
+                    Ok(None)
+                } else {
+                    Err(e)
+                }
+            })?;
+        if stored == Some((chash, foreign)) {
             return Ok(false);
         }
         // Markdown (no grammar) enters `files` for the graph cache
@@ -134,14 +149,16 @@ impl Index {
         let fps = winnow::fingerprints(&hashes, p);
         let tx = self.conn.transaction()?;
         tx.execute(
-            "INSERT INTO files (path, content_hash, token_count, has_tokens)
-             VALUES (?1, ?2, ?3, ?4)
-             ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3, has_tokens = ?4",
+            "INSERT INTO files (path, content_hash, token_count, has_tokens, owner)
+             VALUES (?1, ?2, ?3, ?4, ?5)
+             ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3,
+                                             has_tokens = ?4, owner = ?5",
             (
                 rel,
                 chash,
                 toks.len() as i64,
                 i64::from(lang.grammar().is_some()),
+                i64::from(foreign),
             ),
         )?;
         let id: i64 = tx.query_row("SELECT id FROM files WHERE path = ?1", (rel,), |r| r.get(0))?;
@@ -201,7 +218,33 @@ impl Index {
     /// Every indexed path, read BEFORE a walk starts — the "what this
     /// run may reap" snapshot remove_missing is bounded by.
     pub fn indexed_paths(&self) -> Result<BTreeSet<String>> {
-        let mut stmt = self.conn.prepare("SELECT path FROM files")?;
+        self.paths_where("1")
+    }
+
+    /// The indexed paths a declared submodule owns (walk::Walked's
+    /// `foreign`): the graph reads them as readers and marks their
+    /// nodes so; no measurement counts them.
+    pub fn foreign_paths(&self) -> Result<BTreeSet<String>> {
+        self.paths_where("owner = 1")
+    }
+
+    /// The owner flag one indexed path carries (false for a path the
+    /// index does not hold).
+    pub fn is_foreign(&self, rel: &str) -> Result<bool> {
+        let flag: Option<i64> = self
+            .conn
+            .query_row("SELECT owner FROM files WHERE path = ?1", (rel,), |r| {
+                r.get(0)
+            })
+            .map(Some)
+            .or_else(schema::ignore_no_rows)?;
+        Ok(flag == Some(1))
+    }
+
+    fn paths_where(&self, cond: &str) -> Result<BTreeSet<String>> {
+        let mut stmt = self
+            .conn
+            .prepare(&format!("SELECT path FROM files WHERE {cond}"))?;
         let rows = stmt.query_map([], |r| r.get::<_, String>(0))?;
         Ok(rows.collect::<rusqlite::Result<_>>()?)
     }
@@ -246,7 +289,9 @@ impl Index {
     }
 
     /// Occurrences of the given hashes only (probe hot path) —
-    /// chunked to stay under SQLite's bind-parameter limit.
+    /// chunked to stay under SQLite's bind-parameter limit. Own files
+    /// only, like `all_instances`: a write that twins a foreign block
+    /// is not a clone THIS tree measures.
     pub fn instances_for_hashes(&self, hashes: &[u64]) -> Result<Vec<Instance>> {
         let mut rows: Vec<Instance> = Vec::new();
         for chunk in hashes.chunks(500) {
@@ -254,7 +299,7 @@ impl Index {
             let sql = format!(
                 "SELECT f.hash, fl.path, f.start_tok, f.start_line, f.end_line
                  FROM fingerprints f JOIN files fl ON fl.id = f.file_id
-                 WHERE f.hash IN ({marks})"
+                 WHERE fl.owner = 0 AND f.hash IN ({marks})"
             );
             let mut stmt = self.conn.prepare(&sql)?;
             let params = rusqlite::params_from_iter(chunk.iter().map(|h| *h as i64));
@@ -267,13 +312,17 @@ impl Index {
         Ok(rows)
     }
 
-    /// Every fingerprint occurrence, deterministically ordered.
+    /// Every fingerprint occurrence of an OWN file, deterministically
+    /// ordered — the clone measurement's universe; a foreign file's
+    /// fingerprints sit in the table for the fast path's sake and are
+    /// never a side of a pair.
     pub fn all_instances(&self) -> Result<Vec<Instance>> {
         let mut rows: Vec<Instance> = self
             .conn
             .prepare(
                 "SELECT f.hash, fl.path, f.start_tok, f.start_line, f.end_line
-                 FROM fingerprints f JOIN files fl ON fl.id = f.file_id",
+                 FROM fingerprints f JOIN files fl ON fl.id = f.file_id
+                 WHERE fl.owner = 0",
             )?
             .query_map([], Instance::from_row)?
             .collect::<rusqlite::Result<_>>()?;
@@ -358,8 +407,8 @@ mod tests {
         drop(Index::open(&db, p).expect("open"));
         let raw = Connection::open(&db).expect("raw");
         raw.execute(
-            "INSERT INTO files (path, content_hash, token_count, has_tokens)
-             VALUES ('a.rs', 1, 0, 1)",
+            "INSERT INTO files (path, content_hash, token_count, has_tokens, owner)
+             VALUES ('a.rs', 1, 0, 1, 0)",
             [],
         )
         .expect("row");

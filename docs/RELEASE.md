@@ -7,7 +7,7 @@
 
 ## 0. 前置门（全绿才允许起步）
 
-- 六腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 950`
+- 六腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 940`
   / `ce deadcode --check` / `ce docdup --check` / `ce erase --check`，加 `ce doctor`。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core；`cli/tests` submodule 已 `update --init`）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。

@@ -342,7 +342,7 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:155": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 263,
-    "text": "#[derive(Serialize)]"
+    "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:156": {
     "target": "../../../cli/src/dedup/report.rs",
@@ -512,17 +512,17 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:43": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 100,
-    "text": "pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {"
+    "text": "/// check — CI caught two autocommit rebuilds interleaving statement"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:44": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 163,
-    "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
+    "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:45": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 180,
-    "text": "|r| r.get(0),"
+    "text": "// a pre-meta database (or a foreign file) is a mismatch, not an"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:46": {
     "target": "../../../cli/src/scan/lang.rs",
@@ -537,12 +537,12 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:48": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 125,
-    "text": "// Markdown (no grammar) enters `files` for the graph cache"
+    "text": "\"SELECT content_hash, owner FROM files WHERE path = ?1\","
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:49": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 134,
-    "text": "let fps = winnow::fingerprints(&hashes, p);"
+    "text": "Err(e)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:5": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -552,12 +552,12 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:50": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 133,
-    "text": "let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();"
+    "text": "} else {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:51": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 134,
-    "text": "let fps = winnow::fingerprints(&hashes, p);"
+    "text": "Err(e)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:52": {
     "target": "../../../cli/src/dedup/winnow.rs",
@@ -672,7 +672,7 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:72": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 279,
-    "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
+    "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:73": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -692,22 +692,22 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:76": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 290,
-    "text": "/// Winnowing guarantee threshold t: every match of at least this"
+    "text": "impl Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:77": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 293,
-    "text": "self.window + self.kgram - 1"
+    "text": "pub fn guarantee(&self) -> usize {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:78": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 297,
-    "text": "impl Default for Params {"
+    "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:79": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 303,
-    "text": "window: 26,"
+    "text": "kgram: 25,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:8": {
     "target": "../../../cli/src/scan/ast.rs",
@@ -737,32 +737,32 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 72,
-    "text": "CREATE TABLE fingerprints ("
+    "text": "content_hash INTEGER NOT NULL,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:85": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 74,
-    "text": "file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,"
+    "text": "has_tokens INTEGER NOT NULL,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:86": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 332,
-    "text": "let start = toks[f.start].start_line;"
+    "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:87": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 333,
-    "text": "let end = toks[f.start + p.kgram - 1].end_line;"
+    "text": "/// The raw connection. Read surface for the graph domain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:88": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 112,
-    "text": "let chash = tokens::fnv1a(src) as i64;"
+    "text": "/// order — the convergence leg the battery pins."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:89": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 122,
-    "text": "if stored == Some(chash) {"
+    "text": "let stored: Option<(i64, bool)> = self"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:9": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -772,42 +772,42 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:90": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 125,
-    "text": "// Markdown (no grammar) enters `files` for the graph cache"
+    "text": "\"SELECT content_hash, owner FROM files WHERE path = ?1\","
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:91": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 135,
-    "text": "let tx = self.conn.transaction()?;"
+    "text": "}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:92": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 158,
-    "text": "tx.commit()?;"
+    "text": "chash,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:93": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 48,
-    "text": "const SCHEMA_VERSION: i64 = 14; // 9: trend rows carry their measuring toolchain"
+    "text": "/// v15 (plan v2.18 step #12): `files.owner` (0 own, 1 foreign — the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:94": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 163,
-    "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 6] {"
+    "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:95": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 164,
-    "text": "["
+    "text": "let version: i64 = conn.query_row(\"PRAGMA user_version\", [], |r| r.get(0))?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:96": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 266,
-    "text": "rows.sort();"
+    "text": "pub fn full_build_done(&self) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:97": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 280,
-    "text": "rows.sort();"
+    "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:98": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -1317,7 +1317,7 @@
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:69": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 290,
-    "text": "/// Winnowing guarantee threshold t: every match of at least this"
+    "text": "impl Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:7": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
@@ -1327,7 +1327,7 @@
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:70": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 297,
-    "text": "impl Default for Params {"
+    "text": ""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:71": {
     "target": "../../../cli/src/dedup/sources.rs",
@@ -1801,18 +1801,18 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:50": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 56,
-    "text": "/// Every LIVE admitted segment in identity order, straight off the"
+    "line": 60,
+    "text": "/// Every LIVE admitted segment of an OWN file in identity order,"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:51": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 87,
-    "text": "/// Decode one docsegs shingle blob (u64 LE rows): `chunks_exact`"
+    "line": 91,
+    "text": ""
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:52": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 130,
-    "text": "let sendable: Vec<usize> = (0..segs.len())"
+    "line": 134,
+    "text": "let mut buckets: BTreeMap<(usize, u64), Vec<usize>> = BTreeMap::new();"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:53": {
     "target": "../../../cli/src/docdup/judge/wire.rs",
@@ -1841,8 +1841,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:58": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 128,
-    "text": "let (perms, bands, rows_per) = LSH_SHAPE;"
+    "line": 132,
+    "text": "let mut cand: BTreeSet<(usize, usize)> = BTreeSet::new();"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:59": {
     "target": "../../../cli/src/dedup/minhash.rs",
@@ -1861,18 +1861,18 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:61": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 144,
-    "text": "let mut inverted: BTreeMap<u64, Vec<usize>> = BTreeMap::new();"
+    "line": 148,
+    "text": "tally.lsh_pairs = group_pairs(buckets.values(), &mut tally.hot_bands, &mut cand);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:62": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 180,
-    "text": "for (a, b) in pairs {"
+    "line": 184,
+    "text": "};"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:63": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 172,
-    "text": "let pairs: Vec<(usize, usize)> = if list.len() <= HOT_GROUP_CAP {"
+    "line": 176,
+    "text": "for list in groups {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:64": {
     "target": "../../../cli/src/dedup/candidates.rs",
@@ -1886,8 +1886,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:66": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 121,
-    "text": "/// LSH bucket pairs ∪ shared-shingle seed pairs, with hot groups"
+    "line": 125,
+    "text": ""
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:67": {
     "target": "../../../cli/src/docdup/judge/candidates/runs.rs",
@@ -2102,7 +2102,7 @@
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:15": {
     "target": "../../../cli/src/config.rs",
     "line": 126,
-    "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
+    "text": "#[serde(default, deny_unknown_fields)]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:16": {
     "target": "../structure-axes.md",
@@ -2137,7 +2137,7 @@
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:21": {
     "target": "../../../cli/src/config.rs",
     "line": 126,
-    "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
+    "text": "#[serde(default, deny_unknown_fields)]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:22": {
     "target": "../../../ce.toml",
@@ -3067,7 +3067,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:101": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 462,
-    "text": "/// A degraded judgment is a visible event (A9f): one observe-feed"
+    "text": "/// The informational table, labelled `path#unit` for sections; a"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:102": {
     "target": "../../../cli/src/main_cmds.rs",
@@ -3127,17 +3127,17 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:112": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 270,
-    "text": "/// [lang, kind, roles] — only file nodes carry entry facts. The"
+    "text": ".map(|&i| i as i64)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:113": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 288,
-    "text": "}"
+    "text": "/// bits through its role table, where an ablation can perturb them);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:114": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 137,
-    "text": "roleBits :: [(Integer, Integer)]"
+    "text": "-- it seeds reachability and is never judged), and role 6 is the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:115": {
     "target": "../../../core/app/CE/Graph/Dead.hs",
@@ -3157,17 +3157,17 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:118": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
     "line": 32,
-    "text": "pub(super) fn roles_of(root: &Path, path: &str, config: &Config, declared: &Declared) -> i64 {"
+    "text": ""
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:119": {
     "target": "../../../cli/src/graph/deadcode/targets.rs",
     "line": 43,
-    "text": "pub(super) fn gather(root: &Path, files: &BTreeSet<String>) -> Self {"
+    "text": "/// once. A manifest above the repo root is out of tree by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:12": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
     "line": 204,
-    "text": "// The sentinel is never walked, and the scan-only arm (plan"
+    "text": "Lang::Rust => rs::resolve(site, scope),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:120": {
     "target": "../../../cli/src/graph/cabal.rs",
@@ -3175,49 +3175,49 @@
     "text": "pub fn nearest(root: &Path, from_dir: &str) -> Option<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:121": {
+    "target": "../../../cli/src/graph/deadcode/targets.rs",
+    "line": 67,
+    "text": "} else if let Some(c) = cabal::parse(root, m) {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:122": {
+    "target": "../../../cli/src/graph/ladder/rs.rs",
+    "line": 79,
+    "text": "roots_set.extend(scope.crate_roots.iter().cloned());"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:123": {
+    "target": "../../../cli/src/config.rs",
+    "line": 111,
+    "text": "pub(crate) fn declared_roots(&self) -> std::collections::BTreeSet<String> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:124": {
+    "target": "../../../cli/src/dedup/walkidx.rs",
+    "line": 94,
+    "text": "anyhow::ensure!("
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:125": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
     "line": 1,
     "text": "//! Entry-role measurement for file nodes (split from deadcode.rs at"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:122": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:126": {
     "target": "../../../cli/src/graph/symwire.rs",
     "line": 1,
     "text": "//! The export surface on the wire (plan v2.14, proto 4.1.0): which"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:123": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:127": {
     "target": "../../../cli/src/graph/ladder/hs.rs",
     "line": 30,
     "text": "//! R6/RG10 re-review (3l exit row): a module's export list is a"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:124": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:128": {
     "target": "../../../core/app/CE/Graph/Build.hs",
     "line": 53,
     "text": "-- | Entry seeds plus everything they reach along kept arcs. G.dfs is"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:125": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:129": {
     "target": "../../../core/app/CE/Graph/Dead.hs",
     "line": 6,
     "text": "-- 4 unreach_public — 1 + public + 2*referenced. A node whose flags"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:126": {
-    "target": "../../../core/app/CE/Graph/Build.hs",
-    "line": 51,
-    "text": "sccs = [sort (flatten t) | t <- G.scc g]"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:127": {
-    "target": "../../../core/app/CE/Graph/Cycles.hs",
-    "line": 11,
-    "text": "cycles :: Integer -> Built -> [(Int, [Int])]"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:128": {
-    "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 98,
-    "text": "-- | Smallest SCC reported as a cycle: 2 = only true multi-node"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:129": {
-    "target": "../../../core/app/CE/Graph/Cycles.hs",
-    "line": 1,
-    "text": "-- | Cycle report (design §2): the SCCs at or above the floor, id ="
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:13": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3225,54 +3225,54 @@
     "text": "const EXTS: [&str; 5] = [\"ts\", \"tsx\", \"d.ts\", \"mts\", \"cts\"];"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:130": {
+    "target": "../../../core/app/CE/Graph/Build.hs",
+    "line": 51,
+    "text": "sccs = [sort (flatten t) | t <- G.scc g]"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
+    "target": "../../../core/app/CE/Graph/Cycles.hs",
+    "line": 11,
+    "text": "cycles :: Integer -> Built -> [(Int, [Int])]"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:132": {
+    "target": "../../../core/app/CE/Graph/Cost.hs",
+    "line": 98,
+    "text": "-- | Smallest SCC reported as a cycle: 2 = only true multi-node"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:133": {
+    "target": "../../../core/app/CE/Graph/Cycles.hs",
+    "line": 1,
+    "text": "-- | Cycle report (design §2): the SCCs at or above the floor, id ="
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:134": {
     "target": "../../../core/app/CE/Graph/Cycles.hs",
     "line": 3,
     "text": "-- Position's sccId agree by construction). RG9 stance: cycles are"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:131": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
     "target": "../../../core/app/CE/Graph/Position.hs",
     "line": 1,
     "text": "-- | Per-node join surface, computed only for the requested pos"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:132": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
     "target": "../../../core/app/CE/Graph/Position.hs",
     "line": 13,
     "text": ""
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:133": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 300,
-    "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
+    "text": "} else if n.kind == super::wire::GRAN_FILE {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:134": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../core/app/CE/Graph/Dead.hs",
     "line": 1,
     "text": "-- | The four-way verdict (design §2): dead splits along TWO axes —"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:135": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
     "target": "../../../core/app/CE/Graph/Dead.hs",
     "line": 20,
     "text": "-- | The four-way TABLE (ADR-008 lattice-table form): (public,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:136": {
-    "target": "../../../core/app/CE/Graph/Dead.hs",
-    "line": 5,
-    "text": "-- Codes: 1 unref_private, 2 unref_public, 3 unreach_private,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
-    "target": "../../../core/app/CE/Graph/Dead.hs",
-    "line": 33,
-    "text": "-- | [(idx, verdict)] ascending for every node outside the reach set."
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 44,
-    "text": "pub const VERDICT_NAMES: [&str; 4] = ["
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 355,
-    "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:14": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3280,54 +3280,54 @@
     "text": "return Outcome::Resolved { path, rung: 1 };"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:140": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 429,
-    "text": "let why = if verdict <= 2 {"
+    "target": "../../../core/app/CE/Graph/Dead.hs",
+    "line": 5,
+    "text": "-- Codes: 1 unref_private, 2 unref_public, 3 unreach_private,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:141": {
+    "target": "../../../core/app/CE/Graph/Dead.hs",
+    "line": 33,
+    "text": "-- | [(idx, verdict)] ascending for every node outside the reach set."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:142": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 44,
+    "text": "pub const VERDICT_NAMES: [&str; 4] = ["
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:143": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 355,
+    "text": "body"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:144": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 429,
+    "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:145": {
     "target": "../../../core/app/CE/Graph.hs",
     "line": 139,
     "text": "fileIdx = IS.fromList [i | (i, _ : k : _) <- zip [0 ..] (reqNodes req), k == granFile]"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:142": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:146": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 103,
     "text": "sccFloor = 2"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:143": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:147": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 415,
-    "text": "// The RG9 split is the CORE's since 2.18.0; here it survives"
+    "text": "degraded,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:144": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:148": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 381,
-    "text": "// pre-2.18 core: no fail bit on the wire — the client's own"
+    "text": "Ok((node, name))"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:145": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:149": {
     "target": "../../../cli/src/report.rs",
     "line": 85,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:146": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 13,
-    "text": "//! (CE.Graph.Cost.roleBits), this side only measures. The"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:147": {
-    "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 157,
-    "text": "where"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:148": {
-    "target": "../../../core/app/CE/Graph.hs",
-    "line": 96,
-    "text": "deadOut i v = case reqUnres req of"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:149": {
-    "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 150,
-    "text": "confidence :: [[Integer]] -> Integer -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:15": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3335,54 +3335,54 @@
     "text": "fn esm_rewrite(dir: &str, spec: &str, scope: &Scope) -> Option<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:150": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 13,
+    "text": "//! (CE.Graph.Cost.roleBits), this side only measures. The"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:151": {
+    "target": "../../../core/app/CE/Graph/Contract.hs",
+    "line": 157,
+    "text": "where"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:152": {
+    "target": "../../../core/app/CE/Graph.hs",
+    "line": 96,
+    "text": "deadOut i v = case reqUnres req of"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:153": {
+    "target": "../../../core/app/CE/Graph/Cost.hs",
+    "line": 150,
+    "text": "-- fully resolved reference population. An absent language row reads"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:154": {
     "target": "../../../cli/src/graph/load.rs",
     "line": 116,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:151": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:155": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 228,
-    "text": "fn lang_ledger(sites: &[(String, i64, i64)]) -> Vec<[i64; 3]> {"
+    "text": "rows,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:152": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:156": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 425,
-    "text": "(0..=2).contains(&c),"
+    "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:153": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:157": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 342,
-    "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
+    "text": "\"symbols\": w.symbols.iter().collect::<Vec<_>>(),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:154": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:158": {
     "target": "../../../core/test/GraphWireProps.hs",
     "line": 52,
     "text": "confRides :: Bool"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:155": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:159": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 274,
     "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:156": {
-    "target": "../../../cli/tests/it/eval_graph_precision.rs",
-    "line": 83,
-    "text": "eval_support::assert_corpus_precision(&key, (c, w), in_truth, 0.90, \"G2\");"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:157": {
-    "target": "../../../cli/tests/it/eval_graph_precision.rs",
-    "line": 86,
-    "text": "const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:158": {
-    "target": "../../../cli/tests/it/eval_support/precision.rs",
-    "line": 38,
-    "text": "pub fn assert_corpus_precision(key: &str, answered: (u64, u64), denom: u64, gate: f64, tag: &str) {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:159": {
-    "target": "../../../cli/tests/it/eval_support/precision.rs",
-    "line": 43,
-    "text": "let p = c as f64 / (c + w) as f64;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:16": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3390,54 +3390,74 @@
     "text": "let hits = distinct_hits(&cands, scope.files);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:160": {
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 83,
+    "text": "eval_support::assert_corpus_precision(&key, (c, w), in_truth, 0.90, \"G2\");"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:161": {
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 86,
+    "text": "const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:162": {
+    "target": "../../../cli/tests/it/eval_support/precision.rs",
+    "line": 38,
+    "text": "pub fn assert_corpus_precision(key: &str, answered: (u64, u64), denom: u64, gate: f64, tag: &str) {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:163": {
+    "target": "../../../cli/tests/it/eval_support/precision.rs",
+    "line": 43,
+    "text": "let p = c as f64 / (c + w) as f64;"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:164": {
     "target": "../../../cli/tests/it/eval_support/precision.rs",
     "line": 65,
     "text": "let overall = agg.correct as f64 / (agg.correct + agg.wrong) as f64;"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:161": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:165": {
     "target": "../../../contracts/eval/graph-precision-zod-v1.json",
     "line": 509,
     "text": "\"in_corpus_truths\": 22,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:162": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:166": {
     "target": "../../../contracts/eval/graph-precision-ripgrep-v1.json",
     "line": 434,
     "text": "\"in_corpus_truths\": 10,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:163": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:167": {
     "target": "../../../contracts/eval/graph-precision-v1.json",
     "line": 333,
     "text": "\"in_corpus_truths\": 4,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:164": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:168": {
     "target": "../../../contracts/eval/graph-precision-requests-v1.json",
     "line": 284,
     "text": "\"in_corpus_truths\": 3,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:165": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:169": {
     "target": "../../../contracts/eval/graph-precision-cobra-v1.json",
     "line": 237,
     "text": "\"in_corpus_truths\": 1,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:166": {
-    "target": "../../../cli/tests/it/eval_graph_precision.rs",
-    "line": 1,
-    "text": "//! M5-2h precision instrument: the frozen 100-site sample, resolved"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:167": {
-    "target": "../../../cli/tests/it/eval_graph_precision.rs",
-    "line": 91,
-    "text": "total: 100,"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:168": {
-    "target": "../../../cli/src/main_cmds.rs",
-    "line": 141,
-    "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:17": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
     "line": 151,
     "text": "fn workspace_rung(spec: &str, scope: &Scope) -> Option<Outcome> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:170": {
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 1,
+    "text": "//! M5-2h precision instrument: the frozen 100-site sample, resolved"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:171": {
+    "target": "../../../cli/tests/it/eval_graph_precision.rs",
+    "line": 91,
+    "text": "total: 100,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:172": {
+    "target": "../../../cli/src/main_cmds.rs",
+    "line": 141,
+    "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:18": {
     "target": "../../../cli/src/graph/ladder/ts.rs",
@@ -3477,7 +3497,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:24": {
     "target": "../../../cli/src/graph/ladder/rs.rs",
     "line": 82,
-    "text": "fn mod_rung(site: &Site, roots_set: &BTreeSet<String>, scope: &Scope) -> Outcome {"
+    "text": "}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:25": {
     "target": "../../../cli/src/graph/cargo.rs",
@@ -3747,7 +3767,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:73": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 156,
-    "text": "-- | The unused-reference-definition edge kind (H1 slice 16,"
+    "text": "((_, t) : _) | t > 0 -> 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:74": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -3757,22 +3777,22 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:75": {
     "target": "../../../cli/src/graph/nodes.rs",
     "line": 24,
-    "text": "pub fn nodes_of(files: &[String], edges: &[GraphEdge]) -> Vec<Node> {"
+    "text": "/// the wire bytes are shuffle-proof (G11). Kind reuses the wire"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
     "target": "../../../cli/src/graph/nodes.rs",
     "line": 111,
-    "text": "#[test]"
+    "text": "}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
     "target": "../../../cli/src/graph/nodes.rs",
     "line": 20,
-    "text": "/// granularity codes; PACKAGE is taken from the edges' STORED"
+    "text": "}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
     "target": "../../../cli/src/graph/nodes.rs",
     "line": 133,
-    "text": "#[test]"
+    "text": ".collect()"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:79": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
@@ -3787,7 +3807,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:80": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 156,
-    "text": "-- | The unused-reference-definition edge kind (H1 slice 16,"
+    "text": "((_, t) : _) | t > 0 -> 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:81": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -3802,22 +3822,22 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:83": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 240,
-    "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
+    "text": "/// duplicate-free validation demands."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 255,
-    "text": "let of = |path: &str, unit: &str| {"
+    "text": "/// rule now (CE.Graph.Cost.assetKind), applied where the cut table"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
     "target": "../../../cli/src/graph/nodes.rs",
     "line": 61,
-    "text": "/// Synthetic containment arcs: package node → every file under its"
+    "text": "super::wire::GRAN_FILE"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:86": {
     "target": "../../../cli/src/graph/nodes.rs",
     "line": 66,
-    "text": "// A package at the REPO ROOT has path \"\", and `format!(\"{}/\","
+    "text": "|| (kind == super::wire::GRAN_PACKAGE"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:87": {
     "target": "../../../cli/src/graph/load.rs",
@@ -3907,7 +3927,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:101": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 179,
-    "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:102": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -3997,12 +4017,12 @@
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 230,
-    "text": "out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));"
+    "text": "pairs.insert((a.min(bb), a.max(bb)));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 210,
-    "text": "/// File pairs with at least one verified block, kind 0 (t1t2) at the"
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
     "target": "../../../core/test/JoinProps.hs",
@@ -4027,7 +4047,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:28": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 126,
-    "text": "pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<String, Pos>> {"
+    "text": "/// index names a node in OUR dense assignment (F19: one id space),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:29": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -4107,12 +4127,12 @@
   "docs/reference/methodology/07-the-three-signal-join.md:42": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 181,
-    "text": "/// Per-file churn sums over the per-unit ledger — derived the same"
+    "text": ".collect()"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 304,
-    "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
@@ -4122,7 +4142,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 330,
-    "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
+    "text": ".map(|(u, (rw, ap))| [u, rw, ap])"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:46": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -4147,7 +4167,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:5": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 148,
-    "text": "let key = if b.a_file <= b.b_file {"
+    "text": "fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report) -> Vec<FileRow> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:50": {
     "target": "../../../core/app/CE/Verdict/Knobs.hs",
@@ -4172,7 +4192,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:54": {
     "target": "../../../cli/src/churn/mod.rs",
     "line": 259,
-    "text": "/// Every pair at or over the floor, count-descending — NO rank cut"
+    "text": "}"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:55": {
     "target": "../../../cli/src/churn/report.rs",
@@ -4202,7 +4222,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:6": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 153,
-    "text": "let e = by_pair.entry(key).or_default();"
+    "text": "} else {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:60": {
     "target": "../../../cli/src/join/churn_unit.rs",
@@ -4407,7 +4427,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:97": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 103,
-    "text": "let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;"
+    "text": "// the judgment leg (2.33.0, H4): the same verdict/1 road the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:98": {
     "target": "../../../cli/src/join/report.rs",
@@ -4417,7 +4437,7 @@
   "docs/reference/methodology/07-the-three-signal-join.md:99": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 94,
-    "text": "// Degrade reads the wire's boolean, not reason presence (the C9"
+    "text": ".map(|&(i, _)| i)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:1": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -4562,7 +4582,7 @@
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:35": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.2.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.3.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md:36": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5537,7 +5557,7 @@
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:41": {
     "target": "../../../cli/src/config.rs",
     "line": 139,
-    "text": "/// Trend-family knobs (M7.5b; trend/2 since 2.31.0): both OPTIONAL — absent ="
+    "text": "pub rewrite_num: Option<u32>,"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:42": {
     "target": "../../../cli/src/trend/judge.rs",
@@ -5602,17 +5622,17 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:12": {
     "target": "../../../cli/src/guard.rs",
     "line": 287,
-    "text": "\"degraded\": ev.matches.is_none(),"
+    "text": "root,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:13": {
     "target": "../../../cli/src/guard.rs",
     "line": 164,
-    "text": "/// had is carried forward, not written anew. The baseline probe runs"
+    "text": ""
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:14": {
     "target": "../../../cli/src/guard.rs",
     "line": 249,
-    "text": "fn emit_decision(mode: &str, reason: &str) {"
+    "text": "top.join(\"; \")"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:15": {
     "target": "../../../cli/src/config/tier.rs",
@@ -5622,27 +5642,27 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:16": {
     "target": "../../../cli/src/guard.rs",
     "line": 247,
-    "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
+    "text": "against the current tree, and the same write then passes.\","
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:17": {
     "target": "../../../cli/src/guard.rs",
     "line": 278,
-    "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
+    "text": "mode: &'a str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:18": {
     "target": "../../../cli/src/guard.rs",
     "line": 245,
-    "text": "}"
+    "text": "Reuse the existing implementation instead of re-writing it. \\"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:19": {
     "target": "../../../cli/src/guard.rs",
     "line": 237,
-    "text": "format!("
+    "text": "m[\"start_line\"],"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:2": {
     "target": "../../../cli/src/guard.rs",
     "line": 73,
-    "text": "if let Some(ms) = &matches"
+    "text": "session: &env.session_id,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:20": {
     "target": "../../../cli/src/config/tier.rs",
@@ -5657,7 +5677,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:22": {
     "target": "../../../cli/src/guard.rs",
     "line": 50,
-    "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
+    "text": "let broken = loaded.as_ref().err().cloned();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:23": {
     "target": "../../../cli/src/health.rs",
@@ -5672,12 +5692,12 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:25": {
     "target": "../../../cli/src/guard.rs",
     "line": 119,
-    "text": "};"
+    "text": ") {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:26": {
     "target": "../../../cli/src/guard.rs",
     "line": 144,
-    "text": "} else {"
+    "text": "}"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:27": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -5697,7 +5717,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:3": {
     "target": "../../../cli/src/guard.rs",
     "line": 170,
-    "text": "let file_path = &env.tool_input.file_path;"
+    "text": "/// had is carried forward, not written anew. The baseline probe runs"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:30": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -5732,7 +5752,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:36": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 279,
-    "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
+    "text": ""
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:37": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -5752,7 +5772,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:4": {
     "target": "../../../cli/src/guard.rs",
     "line": 240,
-    "text": "Moving it? Trim the source region first: the probe verifies \\"
+    "text": ")"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:40": {
     "target": "../../FPR-REPLAY.md",
@@ -5882,7 +5902,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
     "target": "../../../cli/src/guard.rs",
     "line": 58,
-    "text": "let enforced = matches!(mode.as_str(), \"deny\" | \"ask\");"
+    "text": "let file_path = &env.tool_input.file_path;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:64": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5897,7 +5917,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:66": {
     "target": "../../../cli/src/guard.rs",
     "line": 63,
-    "text": "root,"
+    "text": "// not context bloat, and repeat every time they hold"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5927,7 +5947,7 @@
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:71": {
     "target": "../../../cli/src/guard.rs",
     "line": 154,
-    "text": "}"
+    "text": ""
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:72": {
     "target": "../../../cli/src/hookio.rs",
@@ -6062,7 +6082,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 388,
-    "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
+    "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -6117,7 +6137,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 388,
-    "text": "> **2.19.0**（M9 批 7 片 1 多样性地板入核，2026-08-21）：`verdict.request`"
+    "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -6142,7 +6162,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 397,
-    "text": "> Rust 侧 DEFAULT_MIN_DISTINCT 降为**声明镜像**；探针热路径零新开销"
+    "text": "> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -6197,7 +6217,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 393,
-    "text": "> band：仲裁假阳 distinct<=6、真克隆>=7，deny 路径的 FPR 台账即按此数认证）"
+    "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -6217,7 +6237,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:58": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 385,
-    "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
+    "text": "> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
     "target": "../../../cli/src/erase/gather.rs",
@@ -6246,53 +6266,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:10": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 134,
-    "text": "/// The names cut by name: the repository's own metadata and the"
+    "line": 90,
+    "text": "let mut gate = Gate::open(root)?;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:11": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 175,
-    "text": "/// A regular file, or a symlink whose target is a regular file inside"
+    "line": 134,
+    "text": "}"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:12": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 187,
-    "text": "/// The identity pass: the exclusion table and the set of files already"
+    "line": 175,
+    "text": "}"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:13": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 59,
-    "text": "pub const FILE_CAP: u64 = 4 * 1024 * 1024;"
+    "line": 187,
+    "text": "}"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:14": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 64,
-    "text": "const OMNI_MENTIONERS: [&str; 4] = [\"*.map\", \"tags\", \"TAGS\", \"*.po\"];"
+    "line": 59,
+    "text": "/// The single-file ceiling, judged on metadata in the loop below"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:15": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 241,
-    "text": "/// The universe's own exclusion table as one basename matcher — the"
+    "line": 64,
+    "text": "/// minified bundles keep their export names and are exactly the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:16": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 260,
-    "text": "/// The universe's text of one file, or None for a binary (skipped and"
+    "line": 241,
+    "text": "});"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:17": {
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 254,
+    "text": "/// the module root for the same pin as `FILE_CAP`."
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:18": {
     "target": "../../../cli/tests/it/mention_universe.rs",
     "line": 33,
     "text": "pub struct Formula {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:18": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:19": {
     "target": "../../../cli/tests/it/mention_universe.rs",
     "line": 99,
     "text": "/// One listed entry, placed under the first rule that takes it."
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:19": {
-    "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 209,
-    "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:2": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
@@ -6301,53 +6321,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:20": {
     "target": "../../../cli/tests/it/mention_universe.rs",
+    "line": 209,
+    "text": "fn the_formula_names_every_rule_the_walk_has() {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:21": {
+    "target": "../../../cli/tests/it/mention_universe.rs",
     "line": 195,
     "text": "fn the_self_universe_is_gits_listing_minus_the_walks_own_rules() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:21": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:22": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 29,
     "text": "fn opens(c: char) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:22": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:23": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 72,
     "text": "pub fn emit<'t>(text: &'t str, whole_run_only: bool, sink: &mut impl FnMut(&'t str)) {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:23": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:24": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 97,
     "text": "pub fn whole_run_only(rel: &str) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:24": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:25": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 92,
     "text": "/// The `$` arm's table lookup: extension lower-cased before the"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:25": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:26": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 109,
     "text": "pub fn fold(token: &str) -> String {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:26": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:27": {
     "target": "../../../cli/src/mention/mod.rs",
     "line": 278,
     "text": "fn row_of(token: &str) -> store::Row {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:27": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:28": {
     "target": "../../../cli/src/mention/store.rs",
     "line": 32,
     "text": "pub const MENTION_SCHEMA: &str = \""
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:28": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:29": {
     "target": "../../../cli/src/mention/mod.rs",
     "line": 82,
     "text": "pub const MENTION_REV: i64 = 2;"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:29": {
-    "target": "../../../cli/src/mention/mod.rs",
-    "line": 84,
-    "text": "/// Distinct tokens one file may store; the rest are clipped and"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:3": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
@@ -6356,53 +6376,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:30": {
     "target": "../../../cli/src/mention/mod.rs",
+    "line": 84,
+    "text": "/// Distinct tokens one file may store; the rest are clipped and"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:31": {
+    "target": "../../../cli/src/mention/mod.rs",
     "line": 247,
     "text": "/// Tokens de-duplicated and written under the file's own hash. The"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:31": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:32": {
     "target": "../../../cli/src/mention/name.rs",
     "line": 30,
     "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:32": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:33": {
     "target": "../../../cli/src/mention/name.rs",
     "line": 63,
     "text": "fn single_token(rel: &str, name: &str) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:33": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:34": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 163,
-    "text": "/// Every judged declaration with a mention name, folded to the"
+    "text": "/// Every judged declaration of an OWN file with a mention name, folded"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:34": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:35": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 89,
     "text": "/// read is memoized per file in `texts`, so a file read for one name"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:35": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:36": {
     "target": "../../../cli/src/mention/store.rs",
     "line": 225,
     "text": "pub fn mentioned_by_other(conn: &Connection, ident: i64, own_path: &str) -> Result<bool> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:36": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:37": {
     "target": "../../../cli/src/mention/token.rs",
     "line": 127,
     "text": "/// `HTTPServer` is two and `RULES` one) and ≥ FOLD_MIN_CHARS literal"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:37": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:38": {
     "target": "../../../cli/src/mention/store.rs",
     "line": 231,
     "text": "pub fn folded_by_other(conn: &Connection, folded: i64, own_path: &str) -> Result<bool> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:38": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:39": {
     "target": "../../../cli/src/mention/selfref.rs",
     "line": 71,
     "text": "fn regions(rel: &str, source: &str) -> Vec<String> {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:39": {
-    "target": "../../../cli/src/mention/selfref.rs",
-    "line": 206,
-    "text": "fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -6410,54 +6430,54 @@
     "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 7）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫只变短；收口判定式 87/87 具名，台账 memory/frontier-2026-08-26 |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
+    "target": "../../../cli/src/mention/selfref.rs",
+    "line": 206,
+    "text": "fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:41": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 46,
     "text": "pub type Names = BTreeMap<[i64; 3], Vec<AdvisoryName>>;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:41": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:42": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 115,
     "text": "/// The table for the index's judged declarations, in wire order, cut"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:42": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:43": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 52,
     "text": "pub const UNMENTIONED_SOFT_CAP: usize = 131_072;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:43": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:44": {
     "target": "../../../cli/src/mention/candidates.rs",
     "line": 153,
     "text": "/// the §6 \"always the same batch\" promise), and whether any key fell"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:44": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:45": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 95,
     "text": "Some(Veto::Other) => {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:45": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:46": {
     "target": "../../../cli/src/mention/mod.rs",
     "line": 22,
     "text": "//! Consistency is per file, never per run: file M read at t₀ without"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:46": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:47": {
     "target": "../../../cli/src/mention/conv/mod.rs",
     "line": 34,
     "text": "pub enum Conv {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:47": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:48": {
     "target": "../../../cli/src/mention/conv/mod.rs",
     "line": 94,
     "text": "pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:48": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:49": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 29,
     "text": "const TEST_DIRS: [&str; 5] = [\"test\", \"tests\", \"spec\", \"__tests__\", \"testdata\"];"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:49": {
-    "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 116,
-    "text": "fn test_file(&mut self, rel: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:5": {
     "target": "../../../cli/src/mention/walk.rs",
@@ -6466,53 +6486,53 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:50": {
     "target": "../../../cli/src/mention/conv/name.rs",
+    "line": 116,
+    "text": "fn test_file(&mut self, rel: &str) -> bool {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:51": {
+    "target": "../../../cli/src/mention/conv/name.rs",
     "line": 33,
     "text": "const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:51": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:52": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 153,
     "text": "pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:52": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:53": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 217,
     "text": "fn go_member(key: &str) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:53": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:54": {
     "target": "../../../cli/src/mention/conv/name.rs",
     "line": 169,
     "text": "pub fn text_bits(text: &str) -> i64 {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:54": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:55": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
     "line": 69,
     "text": "pub const VIS_EXPORTED: i64 = 1 << 0;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:55": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:56": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
     "line": 71,
     "text": "pub const VIS_SCOPE_EXPORTED: i64 = 1 << 1;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:56": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:57": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
     "line": 73,
     "text": "pub const VIS_RESTRICTED: i64 = 1 << 2;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:57": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:58": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 37,
     "text": "pub const MOUNT_REEXPORTED: i64 = 1;"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:58": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:59": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 61,
     "text": "pub fn facts(root: &Path, idx: &Index) -> Result<MountFacts> {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:59": {
-    "target": "../../../cli/src/graph/mounts.rs",
-    "line": 117,
-    "text": "pub fn mount_rows(nodes: &[Node], facts: &MountFacts) -> BTreeMap<i64, [i64; 3]> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:6": {
     "target": "../../../cli/src/mention/mod.rs",
@@ -6521,195 +6541,200 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:60": {
     "target": "../../../cli/src/graph/mounts.rs",
+    "line": 117,
+    "text": "pub fn mount_rows(nodes: &[Node], facts: &MountFacts) -> BTreeMap<i64, [i64; 3]> {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:61": {
+    "target": "../../../cli/src/graph/mounts.rs",
     "line": 220,
     "text": "fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:61": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:62": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
     "line": 60,
     "text": "<*> o .:? \"unmentioned\""
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:62": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:63": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
     "line": 105,
     "text": "-- | The advisory tables are one fact in two halves: `unmentioned`"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:63": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:64": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
     "line": 29,
     "text": "mountRow :: Integer -> Int -> [Integer] -> Maybe String"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:64": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:65": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
     "line": 61,
     "text": "judge :: Integer -> [Integer] -> [[Integer]] -> [[Integer]] -> [[Integer]]"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:65": {
-    "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 194,
-    "text": "unmentionedVisMask = 3"
-  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:66": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 208,
-    "text": "exemptCategories = [0 .. 10]"
+    "line": 194,
+    "text": "-- and not a public-surface question. The ablation 1<<2 alone narrows"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:67": {
+    "target": "../../../core/app/CE/Graph/Cost.hs",
+    "line": 208,
+    "text": "-- word never exempts (K36 pins that a row with an empty category"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:68": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
     "line": 80,
     "text": "code :: [Integer] -> Integer -> Integer"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:68": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:69": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 41,
     "text": "-- | Caps for the two advisory tables (6.2.0), each its own literal:"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:69": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:7": {
+    "target": "../../../cli/src/gitmodules.rs",
+    "line": 89,
+    "text": "/// Who a root-relative path belongs to, read off the declarations and"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:70": {
     "target": "../../../core/app/CE/Graph.hs",
     "line": 108,
     "text": "advisoryKeys :: GraphReq -> [Pair]"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:7": {
-    "target": "../../../cli/src/gitmodules.rs",
-    "line": 1,
-    "text": "//! The superproject's declared submodules — ONE reader of the tracked"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:70": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:71": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 152,
-    "text": "> **6.2.0**（符号层顾问两表，加性 minor，L 轮片 (6) / ccm 步 #6，2026-08-27，口径 = 封版 spec v9）："
+    "text": "> **6.3.0**（外来读者角色，加性 minor，L 轮 v2.18 步 #12，2026-08-28，用户裁「子仓只当读者、不当被测者」）："
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:71": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:72": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 81,
     "text": "pub enum Advisory {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:72": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:73": {
     "target": "../../../cli/src/graph/deadcode.rs",
     "line": 178,
-    "text": "pub fn wire_of("
+    "text": ".iter()"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:73": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:74": {
     "target": "../../../cli/src/graph/deadcode/advisory.rs",
     "line": 83,
     "text": "pub(super) fn consume("
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:74": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:75": {
     "target": "../../../cli/src/graph/deadcode/advisory.rs",
     "line": 31,
     "text": "pub struct AdvisoryRow {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:75": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:76": {
     "target": "../../../cli/src/report.rs",
     "line": 85,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:76": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:77": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
     "line": 53,
     "text": "fn advisory(r: &Report) {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:77": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:78": {
     "target": "../../../cli/src/mcp/tools.rs",
     "line": 78,
     "text": "tool!("
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:78": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:79": {
     "target": "../../../gui/ui/graph.js",
     "line": 34,
     "text": "async function loadGraph() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:79": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:8": {
+    "target": "../../../cli/src/gitmodules.rs",
+    "line": 1,
+    "text": "//! The superproject's declared submodules — ONE reader of the tracked"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:80": {
     "target": "../../../gui/ui/graph.js",
     "line": 202,
     "text": "// The advisory's three states the rows cannot show for themselves:"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:8": {
-    "target": "../../../cli/src/mention/walk.rs",
-    "line": 84,
-    "text": "pub(super) fn universe(root: &Path) -> Result<Universe> {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:80": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:81": {
     "target": "../../../gui/ui/i18n.js",
     "line": 80,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:81": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:82": {
     "target": "../../../cli/src/graph/mounts.rs",
     "line": 236,
     "text": "/// (`__init__.py`, `__main__.py`) is protocol. The declaration's own"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:82": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:83": {
     "target": "../../../cli/src/fourclass/visibility/py.rs",
     "line": 27,
     "text": "pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:83": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:84": {
     "target": "../../../cli/src/mention/conv/py.rs",
     "line": 57,
     "text": "fn type_checking_only(node: Node<'_>, src: &[u8]) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:84": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:85": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 1,
     "text": "//! The K23 census (sealed criterion §0 clause 3, §7 K23): the veto is"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:85": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:86": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 48,
     "text": "fn measure(name: &str, root: &Path) -> (Formula, Ledger) {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:86": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:87": {
     "target": "../../../cli/tests/it/eval_support/mention.rs",
     "line": 146,
     "text": "pub fn ledger(root: &Path, files: &[String], decls: &Domain) -> Ledger {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:87": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:88": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 1,
     "text": "//! The K23 census (sealed criterion §0 clause 3, §7 K23): the veto is"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:88": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:89": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 71,
     "text": "// ① holds as pre-registered (L4-F3) on all five trees once the"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:89": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:9": {
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 84,
+    "text": "}"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:90": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 36,
     "text": "const RIPGREP_TEST_DIRS: [&str; 4] = ["
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:9": {
-    "target": "../../../cli/src/mention/walk.rs",
-    "line": 90,
-    "text": "let walker = WalkBuilder::new(root)"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:90": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:91": {
     "target": "../../../cli/src/mention/conv/tests.rs",
     "line": 49,
     "text": "// wrapper, `doc(hidden)`, `proc_macro*`, the `extern` modifier, a"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:91": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:92": {
     "target": "../../PERF-BUDGET.md",
     "line": 176,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:92": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:93": {
     "target": "../../PERF-BUDGET.md",
     "line": 44,
     "text": "| 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:93": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:94": {
     "target": "../../../cli/tests/it/mention_universe.rs",
     "line": 209,
     "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:94": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:95": {
     "target": "../../../cli/src/mention/face.rs",
     "line": 15,
     "text": "pub const SCHEMA_ID: &str = \"ce.mentions-report/0.2.0\";"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:95": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md:96": {
     "target": "../../../cli/src/mention/rates.rs",
     "line": 125,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"

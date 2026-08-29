@@ -35,28 +35,100 @@ pub fn declared(root: &Path) -> BTreeSet<String> {
     parse(&std::fs::read_to_string(root.join(".gitmodules")).unwrap_or_default())
 }
 
-/// Declared paths whose directory EXISTS but holds no entry — the shape
+/// Declared paths PRESENT but not checked out: the empty directory
 /// `git clone` without `--recurse-submodules` and `git submodule
-/// deinit` both leave, and the one a filesystem walk cannot tell from
-/// "no such files". A declared path missing altogether is a stale
-/// stanza, not an unseated checkout, and names nothing.
+/// deinit` both leave, and every other presence that is no checkout
+/// — a regular file at the path, a directory someone copied files
+/// into, a `.git` gitfile whose pointer resolves to nothing (the
+/// codex review of step #12 named all three; each was read as a
+/// foreign reader instead of refused by name). A declared path
+/// missing altogether is a stale stanza, not an unseated checkout,
+/// and names nothing.
 pub fn unseated(root: &Path) -> Vec<String> {
-    declared(root)
-        .into_iter()
-        .filter(|rel| {
-            std::fs::read_dir(root.join(rel)).is_ok_and(|mut entries| entries.next().is_none())
-        })
+    declared_where(root, |dir| dir.exists() && !seated_at(dir))
+}
+
+/// Declared paths whose checkout carries a REAL `.git` anchor —
+/// seated, so a nested git command can be asked of them.
+pub fn seated(root: &Path) -> Vec<String> {
+    declared_where(root, seated_at)
+}
+
+/// Seated declared submodules carrying a `ce.toml` of their own — the
+/// nested projects WITH A GATE. The hooks delegate to them (plan v2.18
+/// step #12): a write or a Stop under one of these is judged there,
+/// under its own config, index and baseline; a submodule without one
+/// is a reader here and measured by nobody.
+pub fn gated(root: &Path) -> Vec<String> {
+    declared_where(root, |dir| seated_at(dir) && dir.join("ce.toml").is_file())
+}
+
+/// A checkout sits at `dir`: its `.git` is a real anchor (root.rs — the
+/// directory, or a gitfile whose pointer resolves). The ONE seating
+/// test: the owner rule's Cut, trend's worktree seats and the three
+/// questions above all read it, so a `.git` that anchors nothing
+/// seats nothing anywhere (a `.exists()` here once seated a broken
+/// gitfile that git itself refuses).
+pub(crate) fn seated_at(dir: &Path) -> bool {
+    crate::root::is_git_anchor(&dir.join(".git"))
+}
+
+/// The declared paths the owner rule can reach — a declaration under
+/// an undeclared repository is cut with it and names nothing — whose
+/// checkout directory satisfies `keep`: the one filter the three
+/// seating questions above are asked through.
+fn declared_where(root: &Path, keep: impl Fn(&Path) -> bool) -> Vec<String> {
+    let declared = declared(root);
+    declared
+        .iter()
+        .filter(|rel| owner(root, &declared, rel) != Owner::Cut && keep(&root.join(rel)))
+        .cloned()
         .collect()
 }
 
-/// Declared paths whose checkout carries a `.git` entry — seated, so a
-/// nested git command can be asked of them. Seated proves seating, not
-/// health (a broken checkout leaves a `.git` file too).
-pub fn seated(root: &Path) -> Vec<String> {
-    declared(root)
-        .into_iter()
-        .filter(|rel| root.join(rel).join(".git").exists())
-        .collect()
+/// Who a root-relative path belongs to, read off the declarations and
+/// the `.git` anchors on the way down — the ONE predicate both walks
+/// and the guard's scope read (plan v2.18 step #12, user ruling
+/// 2026-08-28: a declared submodule is a READER of this tree, never a
+/// MEASURED part of it; an undeclared nested repository is nobody's
+/// here). The walk order is the segment order: the first prefix that
+/// is declared answers Foreign whether or not it is seated (an unseated
+/// one is refused upstream by name), and the first prefix that owns a
+/// real `.git` anchor without a declaration answers Cut — its files
+/// are neither measured nor read.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Owner {
+    /// This project's: measured, read, guarded.
+    Own,
+    /// A declared submodule's: read (mentions, graph edges), never
+    /// measured (no size, score, clone or ratchet row), never a
+    /// candidate of any verdict — the tree it belongs to gates it.
+    Foreign,
+    /// A nested repository nobody declared: cut whole.
+    Cut,
+}
+
+pub fn owner(root: &Path, declared: &BTreeSet<String>, rel: &str) -> Owner {
+    let mut dir = root.to_path_buf();
+    let mut prefix = String::new();
+    for seg in rel.split('/').filter(|s| !s.is_empty()) {
+        dir.push(seg);
+        if !prefix.is_empty() {
+            prefix.push('/');
+        }
+        prefix.push_str(seg);
+        if declared.contains(&prefix) {
+            return Owner::Foreign;
+        }
+        // a REAL anchor only (root.rs: the directory, or a gitfile
+        // whose pointer resolves) — a plain file named `.git` is what
+        // one Write creates and a broken checkout leaves, and neither
+        // makes the tree below it a repository of its own
+        if crate::root::is_git_anchor(&dir.join(".git")) {
+            return Owner::Cut;
+        }
+    }
+    Owner::Own
 }
 
 /// The one refusal sentence for an unseated submodule (trend spoke it
@@ -170,57 +242,4 @@ fn value_of(raw: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    /// Every spelling git reads, and the two it must not: one document
-    /// per case so the table is the grammar, not a loop over stanzas.
-    /// The newline-in-value and tab cases are `git config -f` 2.52's
-    /// own answers on this machine, byte for byte.
-    #[test]
-    fn the_reading_is_gits_own() {
-        const CASES: [(&str, &[&str]); 12] = [
-            ("[submodule \"s\"]\n\tpath = cli/tests\n", &["cli/tests"]),
-            (
-                "[submodule \"s\"]\n\tpath = \"cli/tests\"\n",
-                &["cli/tests"],
-            ),
-            (
-                "[submodule \"s\"]\n\tpath = cli/tests # the suite\n",
-                &["cli/tests"],
-            ),
-            (
-                "[submodule \"s\"]\n\tpath = cli/tests ; note\n",
-                &["cli/tests"],
-            ),
-            ("[SUBMODULE \"s\"]\n\tPath = cli/tests\n", &["cli/tests"]),
-            ("[submodule \"s\"] path = cli/tests\n", &["cli/tests"]),
-            ("[include]\n\tpath = ../elsewhere\n", &[]),
-            ("[submodule \"a#b\"]\n\tpath = \"a#b\"\n", &["a#b"]),
-            ("[submodule \"s\"]\n\tpath = \"a\\\\b\"\n", &["a/b"]),
-            (
-                "[submodule \"s\"]\n\tpath = cli/\\\n\ttests\n",
-                &["cli/\n\ttests"],
-            ),
-            ("[submodule \"s\"]\n\tpath = a\t\tb  \n", &["a\t\tb"]),
-            (
-                "[submodule \"s\"]\n\tpath = declared/\n\turl = x\n",
-                &["declared"],
-            ),
-        ];
-        for (text, want) in CASES {
-            let got: Vec<String> = parse(text).into_iter().collect();
-            assert_eq!(got, want, "{text:?}");
-        }
-    }
-
-    /// A full-line comment, a non-path key and a `]` inside the
-    /// subsection name declare nothing; two stanzas declare two.
-    #[test]
-    fn only_a_submodule_stanzas_path_declares() {
-        let text = "[submodule \"a]b\"]\n\t# path = ghost\n\tignore = all\n\turl = u\n\
-                    \tpath = one\n[submodule \"two\"]\n\tpath=two\n[core]\n\tpath = no\n";
-        let got: Vec<String> = parse(text).into_iter().collect();
-        assert_eq!(got, ["one", "two"]);
-    }
-}
+mod tests;

@@ -75,7 +75,8 @@ inertNeverAlive =
 
 -- | 2.28.0 (batch-7 slice 3): every role row lands on its declared
 -- bit — the named-main, executable-dir and declared-target roles all
--- on bit 1, test/glob/doc/allow on theirs — and a combined mask ORs.
+-- on bit 1, test/glob/doc/allow on theirs, the 6.3.0 foreign reader
+-- beside the test convention on bit 2 — and a combined mask ORs.
 rolesDerive :: Bool
 rolesDerive =
   and
@@ -86,6 +87,7 @@ rolesDerive =
     , deriveFlags roleBits 16 == 32
     , deriveFlags roleBits 32 == 64
     , deriveFlags roleBits 64 == 2
+    , deriveFlags roleBits 128 == 4
     , deriveFlags roleBits (1 + 4 + 64) == 6
     ]
 
@@ -174,7 +176,7 @@ shuffledRefused (n, arcs, _) =
     _ -> True
  where
   sortedRows = rowsOf arcs
-  refused rows = case respond "6.2.0" (req rows) of
+  refused rows = case respond "6.3.0" (req rows) of
     Left (_, code, msg) -> code == "contract" && "not strictly ascending" `isInfixOf` msg
     Right _ -> False
   req rows =

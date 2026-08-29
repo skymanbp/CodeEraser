@@ -136,12 +136,16 @@ impl Outcome {
 /// rewrite, read an in-scope candidate's own bytes to refine
 /// granularity (Md section slugs, R3 definition tables), or read a
 /// walk TERMINAL's own bytes for the one-hop re-export bind — never
-/// mint an in-scope candidate.
+/// mint an in-scope candidate. `crate_roots` are the declared Rust
+/// crate roots (ce.toml `[graph] crate_roots` ∩ files) the Rust ladder
+/// unions with the manifest's — a tree that is a slice of a package
+/// elsewhere has no manifest to read.
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
     pub configs: &'a [String],
     pub root: &'a Path,
     pub memo: &'a Memo,
+    pub crate_roots: &'a BTreeSet<String>,
 }
 
 /// The memo's slot table, aliased so the shape reads once.

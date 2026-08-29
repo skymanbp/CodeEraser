@@ -38,8 +38,13 @@ pub fn check(
     // ITS floor and judged the budget from that — the printed report
     // and the gated number must be the same number, proven here on
     // every run (the scan-mirror ensure, dedup form)
+    // null = no distinct rows rode (the core's null-absence stance,
+    // 2.19.0), which happens exactly when the walk found no block at
+    // all — so null reads as zero admitted, and a clean tree passes
+    // its own budget instead of failing as a drift (plan v2.18 step
+    // #12 found it: the first `--check` on a tree without clones)
     anyhow::ensure!(
-        reply.dedup_blocks == Some(blocks as u64),
+        reply.dedup_blocks.unwrap_or(0) == blocks as u64,
         "core admitted {:?} blocks, the local filter kept {blocks} —          pairs.rs and CE.Dedup.Cost have drifted",
         reply.dedup_blocks
     );

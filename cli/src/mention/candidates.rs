@@ -160,13 +160,16 @@ fn cut(all: Names) -> Unmentioned {
     }
 }
 
-/// Every judged declaration with a mention name, folded to the
-/// `(file, name)` unit.
+/// Every judged declaration of an OWN file with a mention name, folded
+/// to the `(file, name)` unit. A foreign file (a declared submodule's)
+/// is in U as a mentioner and never in the domain: its declarations
+/// are its own tree's to advise (plan v2.18 step #12).
 pub(super) fn domain(conn: &rusqlite::Connection) -> Result<BTreeMap<(String, String), Decl>> {
     let rows: Vec<(String, String, i64, i64, i64)> = crate::graph::load::rows(
         conn,
         "SELECT f.path, s.key, s.start_line, s.flags, s.conv
          FROM symbols s JOIN files f ON f.id = s.file_id
+         WHERE f.owner = 0
          ORDER BY f.path, s.start_line, s.key",
         crate::graph::load::t5,
     )?;

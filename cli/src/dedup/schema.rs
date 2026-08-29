@@ -45,7 +45,12 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// rides this wipe's DROP half only: it is created additively by its
 /// own pass (`IF NOT EXISTS`, so a v14 file gains it without a bump)
 /// and keyed by its own `mention_rev` meta row (mention/store.rs).
-const SCHEMA_VERSION: i64 = 14; // 9: trend rows carry their measuring toolchain
+/// v15 (plan v2.18 step #12): `files.owner` (0 own, 1 foreign — the
+/// word `foreign` itself is SQL's) — a declared submodule's
+/// file is indexed as a READER (its references and mentions count)
+/// and measured by nobody here; every clone/docdup/score read joins
+/// on the flag. The v14 `bindings` DROP has served its generation.
+const SCHEMA_VERSION: i64 = 15; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS mentions;
@@ -55,7 +60,6 @@ DROP TABLE IF EXISTS result_cache;
 DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;
 DROP TABLE IF EXISTS unitsig;
-DROP TABLE IF EXISTS bindings; -- retired at v14: sweeps v11-v13 files, removable at v15
 DROP TABLE IF EXISTS edges;
 DROP TABLE IF EXISTS sites;
 DROP TABLE IF EXISTS symbols;
@@ -67,7 +71,8 @@ CREATE TABLE files (
   path TEXT UNIQUE NOT NULL,
   content_hash INTEGER NOT NULL,
   token_count INTEGER NOT NULL,
-  has_tokens INTEGER NOT NULL
+  has_tokens INTEGER NOT NULL,
+  owner INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE fingerprints (
   hash INTEGER NOT NULL,

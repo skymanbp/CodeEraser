@@ -32,6 +32,12 @@ pub fn run_hook() -> ExitCode {
     if !matches!(env.tool_name.as_str(), "Write" | "Edit") {
         return ExitCode::SUCCESS;
     }
+    // the project that owns the TARGET judges it (root::judging_root):
+    // a nested project with a gate of its own, its own config and
+    // index; one without is nobody's here, and the hook stays inert
+    let Some(root) = crate::root::judging_root(&root, Path::new(&env.tool_input.file_path)) else {
+        return ExitCode::SUCCESS;
+    };
     decide(&root, &env)
 }
 

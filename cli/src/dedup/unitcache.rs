@@ -116,14 +116,16 @@ pub struct UnitRow {
     pub nodes: i64,
 }
 
-/// Every cached unit, deterministically ordered (the wire/freeze
-/// bytes downstream must be a function of the tree — G11 posture).
+/// Every cached unit of an OWN file, deterministically ordered (the
+/// wire/freeze bytes downstream must be a function of the tree — G11
+/// posture). A foreign file's units are cached with it and never
+/// listed or paired: a clone is a measurement (plan v2.18 step #12).
 pub fn unit_rows(idx: &super::index::Index) -> Result<Vec<UnitRow>> {
     Ok(crate::graph::load::rows(
         idx.raw(),
         "SELECT f.path, u.key, u.nth, u.nodes
          FROM unitsig u JOIN files f ON f.id = u.file_id
-         ORDER BY f.path, u.key, u.nth",
+         WHERE f.owner = 0 ORDER BY f.path, u.key, u.nth",
         crate::graph::load::t4,
     )?
     .into_iter()
@@ -149,13 +151,15 @@ pub(super) struct FactRow {
     pub hist: Vec<(u64, u32)>,
 }
 
-/// Every cached unit's facts, deterministically ordered by identity.
+/// Every OWN cached unit's facts, deterministically ordered by
+/// identity (the same owner line as unit_rows: the candidate
+/// generator never sees a foreign unit).
 pub(super) fn fact_rows(idx: &super::index::Index) -> Result<Vec<FactRow>> {
     let rows = crate::graph::load::rows(
         idx.raw(),
         "SELECT f.path, u.key, u.nth, u.nodes, u.sig, u.hist
          FROM unitsig u JOIN files f ON f.id = u.file_id
-         ORDER BY f.path, u.key, u.nth",
+         WHERE f.owner = 0 ORDER BY f.path, u.key, u.nth",
         |r| {
             let head: (String, String, i64, i64) = crate::graph::load::t4(r)?;
             Ok((head, r.get::<_, Vec<u8>>(4)?, r.get::<_, Vec<u8>>(5)?))

@@ -45,9 +45,32 @@ pub fn run_hook() -> ExitCode {
     // only Stop landed here used to leave no line at all, which reads
     // to the ledger exactly like a session the hook never ran in.
     if env.stop_hook_active {
-        return unmeasured_stop(&root, &env.session_id, Some("loop_guard"));
+        unmeasured_stop(&root, &env.session_id, Some("loop_guard"));
+        return ExitCode::SUCCESS;
     }
-    audit(&root, &env.session_id)
+    // the session root's own files, then every nested project with a
+    // gate of its own (plan v2.18 step #12): a seated submodule
+    // carrying a ce.toml is audited THERE — its git, its index, its
+    // budget — and its verdict rides this Stop under its mount name;
+    // a submodule without one is a reader here, measured by nobody
+    let mut reasons: Vec<String> = audit(&root, &env.session_id).into_iter().collect();
+    for mount in crate::gitmodules::gated(&root) {
+        if let Some(why) = audit(&root.join(&mount), &env.session_id) {
+            reasons.push(format!("{mount}: {why}"));
+        }
+    }
+    if !reasons.is_empty() {
+        let payload = serde_json::json!({
+            "decision": "block",
+            // §4.4 B4: the Stop summary rides its own 400-token budget
+            "reason": crate::hookio::clip(
+                &reasons.join(" "),
+                crate::hookio::STOP_BUDGET_TOKENS,
+            ),
+        });
+        println!("{payload}");
+    }
+    ExitCode::SUCCESS
 }
 
 /// Shared head of the Stop audit and the pre-commit gate: guard mode,
@@ -108,10 +131,14 @@ fn gather(
     Some((mode, net_loc, changed, dups))
 }
 
-fn audit(root: &Path, session: &str) -> ExitCode {
+/// One project's Stop audit: its observe line always, and the block
+/// reason when deny mode holds a failing verdict — the caller prints,
+/// so a gated submodule's verdict can ride the session's one Stop.
+fn audit(root: &Path, session: &str) -> Option<String> {
     // Not a git repo: nothing to audit, but the skip is RECORDED.
     let Some(base) = changes::base_rev(root) else {
-        return unmeasured_stop(root, session, Some("no_git"));
+        unmeasured_stop(root, session, Some("no_git"));
+        return None;
     };
     let Some((mode, net_loc, _, dups)) = gather(
         root,
@@ -120,23 +147,11 @@ fn audit(root: &Path, session: &str) -> ExitCode {
         Some(session),
         Some(fourclass_report(root)),
     ) else {
-        return unmeasured_stop(root, session, None);
+        unmeasured_stop(root, session, None);
+        return None;
     };
-    if mode == "deny"
-        && let Some(v) = dups.as_ref()
-        && v.fail
-    {
-        let payload = serde_json::json!({
-            "decision": "block",
-            // §4.4 B4: the Stop summary rides its own 400-token budget
-            "reason": crate::hookio::clip(
-                &reason(net_loc, v),
-                crate::hookio::STOP_BUDGET_TOKENS,
-            ),
-        });
-        println!("{payload}");
-    }
-    ExitCode::SUCCESS
+    let v = dups.as_ref()?;
+    (mode == "deny" && v.fail).then(|| reason(net_loc, v))
 }
 
 /// Every Stop that produces NO measurement, said in the feed instead
@@ -148,7 +163,7 @@ fn audit(root: &Path, session: &str) -> ExitCode {
 /// real degradation (A9f). Every root here came through the throat
 /// (hookio::gated_envelope), which anchors — an anchorless cwd never
 /// reaches this function since batch-8 moved the gate there.
-fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) -> ExitCode {
+fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) {
     let mode = crate::config::tier_of(&Config::load(root), "observe");
     observe_log(
         root,
@@ -165,7 +180,6 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) -> ExitCod
             unmeasured: Vec::new(),
         },
     );
-    ExitCode::SUCCESS
 }
 
 /// M4 four-class summary of the session's working-tree diff via the

@@ -68,10 +68,15 @@ type RsCtx = (Option<cargo::Package>, BTreeSet<String>);
 fn ctx_for(scope: &Scope, from: &str) -> std::rc::Rc<RsCtx> {
     scope.memo.cached("rs_ctx", &roots::parent_dir(from), || {
         let pkg = cargo::nearest(scope.root, &roots::parent_dir(from));
-        let roots_set = pkg
+        let mut roots_set = pkg
             .as_ref()
             .map(|p| p.crate_roots(scope.files))
             .unwrap_or_default();
+        // a declared root (ce.toml [graph] crate_roots) stands beside
+        // the manifest's: without one, a manifest-less `it/main.rs`
+        // would mount its children under it/main/ and anchor no
+        // `crate::` path at all
+        roots_set.extend(scope.crate_roots.iter().cloned());
         (pkg, roots_set)
     })
 }

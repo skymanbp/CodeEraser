@@ -230,15 +230,28 @@ role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
 role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
         and conventional targets via crate_roots, cabal main-is
         through each stanza's source roots                          [targets.rs:20-33, 43-70; cabal.rs:90-115]
+role 7  a declared submodule's node (index `files.owner` = 1; a
+        package or section under a foreign file's path), sent ALONE
+        — no other role is measured on a reader                     [flags.rs:31; deadcode.rs:296-300; nodes.rs:32-77]
 ```
 
 ([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
 [flags.rs:32-71](../../../cli/src/graph/deadcode/flags.rs#L32)). The role→bit landing is the
-core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6. **Role 6 closes
+core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, and role 7
+(6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
+reachability and it is never judged, the same standing a test file has. **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
 ([targets.rs:43-70](../../../cli/src/graph/deadcode/targets.rs#L43),
-[cabal.rs:91-116](../../../cli/src/graph/cabal.rs#L91)). The legacy flags column this
+[cabal.rs:91-116](../../../cli/src/graph/cabal.rs#L91)). A tree whose manifest lives
+elsewhere — the test-suite submodule is a slice of the `cli` package, its binaries cargo
+targets only in the superproject's Cargo.toml — declares its roots in `ce.toml [graph]
+crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for this role
+([targets.rs:67](../../../cli/src/graph/deadcode/targets.rs#L67)) and a crate root for the
+Rust ladder's `mod` and `crate::` rungs alike
+([rs.rs:79](../../../cli/src/graph/ladder/rs.rs#L79)), one normalizer serving both readers
+([config.rs:111](../../../cli/src/config.rs#L111)); a declared path the walk does not hold, or that
+is no Rust file, is refused by name ([walkidx.rs:94](../../../cli/src/dedup/walkidx.rs#L94)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.

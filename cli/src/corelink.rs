@@ -12,21 +12,17 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 6.2.0 = the symbol-level advisory reaches the wire (plan v2.17 L
-/// round piece (6), 2026-08-27). graph/1 accepts two ADDITIVE tables
-/// that travel together or not at all: `unmentioned` = [[node, vis,
-/// conv]], the declarations no other file of the corpus spells (the
-/// producer's negative mention instrument, hashes only, cli/src/
-/// mention), and `mounts` = [[node, private, total, bits]], every
-/// node's mount facts. The reply gains `exportUnmentioned` =
-/// [[node, vis, conv, code]] -- 0 public / 1 private / 2 restricted /
-/// 3 reexported, the folds of CE.Graph.Advisory -- when the request
-/// carried the table, or `unmentionedDropped` when the table exceeded
-/// its soft cap: an advisory that can never touch `dead`, `fail` or
-/// `degraded`, by construction. Absent tables: a legacy request
-/// answers byte for byte (K16); `symbols` still crosses masked to
-/// bit 0 (K34); `reqSymbols` now counts toward verdict/1's row cap
-/// (K47, the C15 discipline).
+/// 6.3.0 = the foreign reader role (plan v2.18 step #12, user ruling
+/// 2026-08-28: a declared submodule is a READER of the tree, never a
+/// MEASURED part of it). graph/1 node rows may carry role bit 7: the
+/// node -- file, package or section -- belongs to a declared
+/// submodule; the core lands it on the same entry bit as the test
+/// convention (its references seed reachability, it is never judged),
+/// and this side marks it from the index's own `files.owner` fact,
+/// measures none of its other roles, and keeps it out of every
+/// verdict universe (score, join, structure, clone pairs, docdup, the
+/// advisory domain). A tree without submodules sends no bit 7 and is
+/// judged byte for byte as before (K16).
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else. It used to be mirrored here in English and a third
 /// time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -38,7 +34,7 @@ use std::process::{Child, Stdio};
 /// question, and the ledger has an address. Four entries had stacked
 /// up here by 6.1.0 and pushed the file past its own ratchet: the
 /// ledger that documents a size gate is not exempt from it.
-pub const PROTO: &str = "6.2.0";
+pub const PROTO: &str = "6.3.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

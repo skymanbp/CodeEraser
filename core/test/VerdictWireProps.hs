@@ -23,7 +23,7 @@ import WireHarness (refusedBy, replyObjWith, runChecks, setKey)
 wireReq :: [[Integer]] -> [[Integer]] -> [[Integer]] -> [[Integer]] -> Value
 wireReq sim pos churn coch =
   object
-    [ "proto" .= ("6.2.0" :: String)
+    [ "proto" .= ("6.3.0" :: String)
     , "type" .= ("verdict.request" :: String)
     , "id" .= (1 :: Int)
     , "sim" .= sim
