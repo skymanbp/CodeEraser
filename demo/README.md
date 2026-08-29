@@ -54,7 +54,9 @@ as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
   runs identical in everything except the hooks.
 - **Gated** — the replay test in the test suite re-runs this driver and
   compares `out/` and the three embedded tables byte for byte, so a change in
-  any verdict's wording fails CI rather than leaving a stale picture here.
+  any verdict's wording fails CI rather than leaving a stale picture here. The
+  corpus and both READMEs are pinned to LF in `.gitattributes`, so a CRLF
+  checkout cannot move a marker.
 
 ## The seven moves, and what each one is
 

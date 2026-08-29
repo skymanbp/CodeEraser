@@ -10,6 +10,16 @@
 *.sh text eol=lf
 manifest.env text eol=lf
 
+# The demo corpus is byte-gated end to end (demo_replay): the seed tree
+# is written verbatim, steps.js cuts the seed at LF markers, and the
+# committed outputs plus the READMEs' generated blocks (demo / bench /
+# parity) are byte-compared with what this build produces — a CRLF
+# checkout on the Windows runner moved every marker (CI 33271753662).
+# Pin LF: the ndjson rule's third application.
+demo/** text eol=lf
+README.md text eol=lf
+README.zh.md text eol=lf
+
 # GitHub linguist (v0.5.0 cleanup batch): the language bar measures
 # the PRODUCT — test batteries and frozen contract fixtures are
 # scaffolding, excluded symmetrically on both language sides; the

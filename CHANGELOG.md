@@ -19,7 +19,7 @@ update（同一 apply 库入口）、插件 SessionStart 第二行通知（缓�
 命令、MCP 第十四工具 `update_check` 只到检查。传输 = curl（https、redirect 同守、限时限量）+ `file://` 测试缝（`CE_UPDATE_BASE`、
 `CE_UPDATE_TARGET_DIR`）；e2e 七腿 + 单元八腿；测试线束默认 `CE_UPDATE_CHECK=0`。三面等价门 `face_parity`：README 双语「能力 ×
 面」表由 clap 枚举 / Tauri 命令与屏 / MCP 目录 / hooks.json / plugin commands+skills 派生，每个派生面恰被一行认领、具名省略写在表内；
-demo 回放门 `demo_replay`：`demo/` 同一任务两跑只差 hook，七步真实判决，产出与三处嵌表逐字节门控。§5.9 网络承诺条改为两种可关网络行为。**daemon 离开根目录**（零 wire）：进程 cwd 在 Windows 上钉住目录，demo 回放在并行
+demo 回放门 `demo_replay`：`demo/` 同一任务两跑只差 hook，七步真实判决，产出与三处嵌表逐字节门控；demo 语料与两份 README 在 `.gitattributes` 钉 LF——Windows runner 的 autocrlf 检出曾把每个标记移位（CI 33271753662，ndjson 规则第三次应用）。§5.9 网络承诺条改为两种可关网络行为。**daemon 离开根目录**（零 wire）：进程 cwd 在 Windows 上钉住目录，demo 回放在并行
 测试套下撞到 eject 的 `bye` 先于退出完成、驱动 rm 即 EBUSY（Node rimraf 不重试顶层 EBUSY）；daemon 启动即 chdir 到系统临时目录并在
 serving 行写明，相对含路径的 `CE_CORE_BIN` 先绝对化；`daemon_cwd` 腿以 remove_dir 的 145/32 之别为证。
 
