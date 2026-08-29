@@ -26,7 +26,7 @@ pub const AXES: [&str; 7] = [
 /// Codes 2..4 are the v0.6 zone knobs (plan v2.6): the hard line H,
 /// P_max, and the soft-line exponent k.
 pub const CEILING_KEYS: [&str; 5] = ["sizeCeil", "cocCeil", "sizeHard", "sizePMax", "softLineK"];
-pub const THRESHOLD_KEYS: [&str; 7] = [
+pub const THRESHOLD_KEYS: [&str; 8] = [
     "deadIndegCeil",
     "rewriteNum",
     "rewriteDen",
@@ -34,6 +34,7 @@ pub const THRESHOLD_KEYS: [&str; 7] = [
     "violCost",
     "defaultWeight",
     "scoreScale",
+    "cycleFloor",
 ];
 pub const TOLERANCE_KEYS: [&str; 3] = ["tolNum", "tolDen", "tolAbs"];
 
@@ -72,14 +73,16 @@ pub fn class_knob_rows(rules: &RulesCfg) -> Vec<[i64; 3]> {
     for (i, c) in rules.class.iter().enumerate() {
         let id = i as i64 + 1;
         let k = &c.knobs;
-        // codes 0/1/2 shadow the ceilings table; code 3 is the class's
-        // own ratchet allowance (5.1.0) and is the one knob whose ZERO
-        // is meaningful, so it is not filtered like a line would be
+        // codes 0/1/2 shadow the ceilings table; codes 3 and 4 are the
+        // class's own ratchet allowances (5.1.0; 4 = the CoC-only one,
+        // 6.4.0) and are the knobs whose ZERO is meaningful, so they
+        // are not filtered like a line would be
         let declared = [
             (0, k.file_lines_warn),
             (1, k.cognitive_warn),
             (2, k.file_lines_fail.filter(|h| *h >= 1)),
             (3, k.ratchet_tolerance),
+            (4, k.cognitive_ratchet_tolerance),
         ];
         out.extend(
             declared
@@ -100,8 +103,11 @@ fn rows(values: &[Option<u32>]) -> Vec<[i64; 2]> {
         .collect()
 }
 
-/// Configured thresholds rows, THRESHOLD_KEYS order.
-pub fn threshold_rows(s: &ScoreCfg) -> Vec<[i64; 2]> {
+/// Configured thresholds rows, THRESHOLD_KEYS order. Code 7 is
+/// `[graph] scc_floor` (6.4.0, O59) — a `[graph]` key on the verdict
+/// wire on purpose: the cycle axis and the graph's cycle table must
+/// read ONE floor, and the floor lives where the graph is configured.
+pub fn threshold_rows(s: &ScoreCfg, scc_floor: Option<u32>) -> Vec<[i64; 2]> {
     rows(&[
         s.dead_indeg_ceil,
         s.rewrite_num,
@@ -110,6 +116,7 @@ pub fn threshold_rows(s: &ScoreCfg) -> Vec<[i64; 2]> {
         s.viol_cost,
         s.default_weight,
         s.score_scale,
+        scc_floor,
     ])
 }
 

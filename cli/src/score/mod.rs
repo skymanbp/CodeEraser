@@ -13,8 +13,10 @@ pub mod baseline;
 pub mod knobs;
 pub mod model;
 mod pinned;
+mod provenance;
 pub mod report;
 pub mod wire;
+pub(crate) mod wire_check;
 
 pub use model::{Outcome, SCHEMA_ID};
 pub use report::{print, report_json};
@@ -72,6 +74,10 @@ struct Measured {
     pos: Vec<[i64; 6]>,
     /// The export surface under this universe (6.1.0) — RG10's fact.
     symbols: Vec<[i64; 2]>,
+    /// Verdict-universe indices carrying a self-arc (6.4.0, O59) —
+    /// the graph reply's singleton cycles, non-empty only under
+    /// `[graph] scc_floor = 1`.
+    self_loops: Vec<i64>,
     members: Vec<u64>,
     collapsed: usize,
     skipped_self: usize,
@@ -89,7 +95,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // seeds liveness in the graph above and owns no row down here
     let fnodes = deadcode::measured_nodes(&w);
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
-    let posmap = judged_positions(&opts.core, &w, &pos_req)?;
+    let (posmap, loops) = judged_positions(&opts.core, &w, &pos_req)?;
     let files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();
     let idx: HashMap<&str, i64> = files
         .iter()
@@ -102,6 +108,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     Ok(Measured {
         pos: pos_rows(&files, &posmap),
         symbols: crate::graph::symwire::rekeyed(&w, &idx)?,
+        self_loops: deadcode::self_loop_rows(&w, &loops),
         idx: idx.into_iter().map(|(k, v)| (k.to_string(), v)).collect(),
         files,
         sim,
@@ -126,6 +133,15 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let (continuous, judged_loc, classed) = size_facts(root)?;
+    // the provenance table (6.4.0, O40): every file entity on disk
+    // under the scope that owns no row this run — the core answers
+    // which committed rows they explain (`ratchet.dropped`)
+    let measured: BTreeSet<u64> = continuous
+        .iter()
+        .filter(|r| r[1] == 0)
+        .map(|r| r[0])
+        .collect();
+    let present = provenance::present(root, &measured)?;
     let digest = cfg.knobs_digest();
     let baseline = match (opts.establish, opts.pinned_soft) {
         // the trend road (O34): the request's own identity under the
@@ -143,6 +159,10 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         // `delete` proposed for one is the exact false positive the
         // four-way dead code was split to prevent
         symbols: m.symbols,
+        present: Some(present),
+        // rides exactly at floor 1: the core requires it there and
+        // refuses it anywhere else (O59)
+        cycle_self_loops: (cfg.graph.scc_floor == Some(1)).then_some(m.self_loops),
         churn: churn_t,
         cochange: cochange_t,
         continuous,
@@ -154,7 +174,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         floor: opts.floor,
         ceilings: knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
         weights: knobs::weight_rows(&cfg.score)?,
-        thresholds: knobs::threshold_rows(&cfg.score),
+        thresholds: knobs::threshold_rows(&cfg.score, cfg.graph.scc_floor),
         tolerance: knobs::tolerance_rows(&cfg.score),
         // the dedup pair is `ce dedup --check`'s leg alone (P2) —
         // this road stays byte-identical
@@ -194,19 +214,24 @@ pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
 /// at the E01 warn line): a degraded reply judged nothing, and its
 /// empty pos table would silently drop every pos row downstream —
 /// the sibling of the deadcode --check hole (clearance review; "a
-/// gate that could not judge must never pass").
+/// gate that could not judge must never pass"). The second half is
+/// the reply's singleton cycles (6.4.0): node indices, re-keyed by
+/// the caller.
 fn judged_positions(
     core: &str,
     w: &deadcode::GraphWire,
     pos_req: &[i64],
-) -> Result<HashMap<String, join::Pos>> {
+) -> Result<(HashMap<String, join::Pos>, Vec<i64>)> {
     let reply = deadcode::judge(core, w, pos_req)?;
     anyhow::ensure!(
         reply["degraded"] != serde_json::json!(true),
         "graph judgment degraded ({}) — refusing to score on it",
         reply["reason"].as_str().unwrap_or("?")
     );
-    join::pos_map(&reply, w)
+    Ok((
+        join::pos_map(&reply, w)?,
+        deadcode::self_loop_nodes(&reply)?,
+    ))
 }
 
 pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 6]> {
@@ -290,11 +315,17 @@ fn size_facts(root: &Path) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
     let (config, files) = scan::measure(root)?;
     let classes =
         scan::classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
+    // entities are keyed to the PROJECT root (6.4.0, O40): `ce check
+    // cli` measures a scope, and its rows must be the ones the
+    // root-only baseline (O30) records for those files, or a scoped
+    // run would read every committed row as removed and every
+    // measured one as added
+    let keys = provenance::Keys::of(root);
     let mut rows: Vec<[u64; 4]> = files
         .iter()
         .flat_map(|f| {
             let class = classes.class_of(&f.path);
-            baseline::continuous_rows(f)
+            baseline::continuous_rows(f, &keys.key(&f.path))
                 .into_iter()
                 .map(move |[u, c, v]| [u, c, v, class])
         })

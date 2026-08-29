@@ -63,7 +63,7 @@ check	棘轮门：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under �
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负
 check.roast	在控制台判决后附一行毒舌评语（彩蛋）
-baseline	把核的 newBaseline 落盘为 ce-baseline.json，只在项目根。三种具名动作：无 — 违规集只准缩；CE_ACCEPT_FENCE=1 — 仅成立围栏条件（knobs_digest）时按声明旋钮重钉；CE_ACCEPT_BASELINE=1 — 按当前树重立，唯一能建立缺失文件的动作。降级判决绝不落盘
+baseline	把核的 newBaseline 落盘为 ce-baseline.json，只在项目根。三种具名动作：无 — 违规集只准缩；CE_ACCEPT_FENCE=1 — 仅成立围栏条件（knobs_digest、rows_dropped）时按声明旋钮重钉；CE_ACCEPT_BASELINE=1 — 按当前树重立，唯一能建立缺失文件的动作。降级判决绝不落盘
 baseline.days	改动窗口天数（省略 = 改动表保持为空）
 dedup	经 winnowing 指纹索引检测 T1/T2 克隆
 dedup.path	要索引的目录（默认当前目录）

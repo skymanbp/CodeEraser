@@ -13,30 +13,80 @@ module GraphWireProps (battery) where
 
 import CE.Graph (respond)
 import CE.Graph.Cost (confidence)
-import Data.Aeson (ToJSON, Value (..), decodeStrict, encode, object, toJSON, (.=))
+import Data.Aeson (Result (..), ToJSON, Value (..), decodeStrict, encode, fromJSON, object, toJSON, (.=))
 import Data.Aeson.Key (Key)
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (Pair)
+import Data.List (isInfixOf)
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import WireHarness (runChecks)
 
+-- | The contract's three faces in the module's own order: what is
+-- refused and by what name, which optional table selects which road,
+-- what the export surface does to a code.
 battery :: IO Bool
-battery =
-  runChecks
+battery = runChecks (refusals <> roads <> export)
+ where
+  refusals =
     [ ("a wrong-width node row is malformed, by row index", malformedNode)
-    , ("the confidence column rides exactly when the ledger does", confRides)
     , ("unres refusals name the offender", unresRefused)
-    , ("K9: the export surface moves the CODE and never the dead set", exportRides)
-    , ("K5: an empty symbols table is the same BYTES as none", emptyIsAbsent)
     , ("symbol refusals name the offender", symRefused)
     ]
+  roads =
+    [ ("the confidence column rides exactly when the ledger does", confRides)
+    , ("K5: an empty symbols table is the same BYTES as none", emptyIsAbsent)
+    , ("K52: sccFloor rides and echoes; at floor 1 a self-arc singleton is a cycle, a lone node is not", sccFloorRoad)
+    ]
+  export = [("K9: the export surface moves the CODE and never the dead set", exportRides)]
+
+-- | K52 (6.4.0, O59): three file nodes, node 0 with a self-arc. The
+-- shipped floor (absent) lists no cycle and echoes no `sccFloor`; at
+-- floor 1 the reply echoes the floor and lists node 0 alone (node 1
+-- has no arc; node 2 none either); floor 0 refuses by name. The
+-- verdict's cycleFloor reads the SAME number (VerdictWireProps K50).
+sccFloorRoad :: Bool
+sccFloorRoad =
+  cyclesOf (looped []) == Just []
+    && fmap (KM.member "sccFloor") (objOf (looped [])) == Just False
+    && cyclesOf (looped [floorOf 1]) == Just [[0]]
+    && (objOf (looped [floorOf 1]) >>= KM.lookup "sccFloor") == Just (toJSON (1 :: Int))
+    && refusedGraph (looped [floorOf 0]) "sccFloor: below 1"
+ where
+  floorOf n = "sccFloor" .= (n :: Int)
+  looped extra =
+    BL.toStrict . encode . object $
+      [ "id" .= (1 :: Int)
+      , "nodes" .= ([[0, 0, 0], [0, 0, 0], [0, 0, 0]] :: [[Integer]])
+      , "edges" .= ([[0, 0, 0, 0], [1, 2, 0, 0]] :: [[Integer]])
+      , "pos" .= ([] :: [Value])
+      ]
+        <> extra
+  refusedGraph req want = case respond "6.4.0" req of
+    Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
+    Right _ -> False
+
+-- | The whole reply object of one graph request.
+objOf :: B8.ByteString -> Maybe (KM.KeyMap Value)
+objOf req = do
+  Right bytes <- pure (respond "6.4.0" req)
+  Object o <- decodeStrict bytes
+  pure o
+
+-- | The member lists of the reply's cycle table, in reply order.
+cyclesOf :: B8.ByteString -> Maybe [[Integer]]
+cyclesOf req = do
+  o <- objOf req
+  v <- KM.lookup "cycles" o
+  case fromJSON v :: Result [(Integer, [Integer])] of
+    Success rows -> pure (map snd rows)
+    _ -> Nothing
 
 -- | The pre-5.0.0 four-column row. It used to make this table "mixed
 -- arity"; with one legal arity it is simply the second row that is
 -- wrong, and the refusal says which one.
 malformedNode :: Bool
-malformedNode = case respond "6.3.0" req of
+malformedNode = case respond "6.4.0" req of
   Left (_, code, msg) ->
     code == "contract" && msg == "node 1: malformed row (need [lang,kind,roles])"
   Right _ -> False
@@ -61,7 +111,7 @@ confRides =
 -- a verdict out of the wire rather than out of Dead.verdicts.
 deadOf :: B8.ByteString -> Maybe Value
 deadOf req = do
-  Right bytes <- pure (respond "6.3.0" req)
+  Right bytes <- pure (respond "6.4.0" req)
   Object o <- decodeStrict bytes
   KM.lookup "dead" o
 
@@ -74,7 +124,7 @@ unresRefused =
     , refusedMsg (Just [[4, 0, 1], [0, 0, 1]]) "unres 1: not strictly ascending"
     ]
  where
-  refusedMsg unres want = case respond "6.3.0" (graphReq unres) of
+  refusedMsg unres want = case respond "6.4.0" (graphReq unres) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 
@@ -100,7 +150,7 @@ exportRides =
 -- | K5: absence and emptiness are one road, not two — the whole
 -- reply, byte for byte, is what a pre-4.1.0 client already got.
 emptyIsAbsent :: Bool
-emptyIsAbsent = respond "6.3.0" (symReq (Just [])) == respond "6.3.0" (symReq Nothing)
+emptyIsAbsent = respond "6.4.0" (symReq (Just [])) == respond "6.4.0" (symReq Nothing)
 
 symRefused :: Bool
 symRefused =
@@ -112,7 +162,7 @@ symRefused =
     , refusedSym [[0, 1], [0, 1]] "symbol 1: not strictly ascending"
     ]
  where
-  refusedSym syms want = case respond "6.3.0" (symReq (Just syms)) of
+  refusedSym syms want = case respond "6.4.0" (symReq (Just syms)) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 

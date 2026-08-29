@@ -99,11 +99,14 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     let degraded = (reply["degraded"].as_bool() == Some(true))
         .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
     let posmap = pos_map(&reply, &w)?;
+    // the self-loop projection (6.4.0): the verdict road needs it at
+    // floor 1, and this face judges over the same graph reply
+    let loops = deadcode::self_loop_rows(&w, &deadcode::self_loop_nodes(&reply)?);
     let ch = churn::run(root, days)?;
     // the judgment leg (2.33.0, H4): the same verdict/1 road the
     // check gate uses, over this run's own measurement
     crate::progress::step(crate::progress::Phase::Assemble);
-    let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, &posmap, &ch)?;
+    let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, (&posmap, loops), &ch)?;
     let degraded = degraded.or(judged.degraded);
     let mut files = file_rows(&found.blocks, &posmap, &ch);
     for f in &mut files {

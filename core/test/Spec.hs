@@ -31,6 +31,7 @@ import qualified VerdictProps
 import qualified SplitProps
 import qualified VerdictKnobProps
 import qualified VerdictWireProps
+import qualified VerdictFenceProps
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import Data.Aeson (Value (..), decodeStrict)
@@ -93,6 +94,7 @@ main = do
       , AuditProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
+      , VerdictFenceProps.battery
       , VerdictKnobProps.battery
       , SplitProps.battery
       , ClassProps.battery
@@ -116,14 +118,14 @@ docdupStructural = do
   ints ns = B8.intercalate "," (map (B8.pack . show) ns)
   setCapReply =
     Protocol.respond coreVersion $
-      "{\"proto\":\"6.3.0\",\"type\":\"docdup.request\",\"id\":9,\"sets\":[["
+      "{\"proto\":\"6.4.0\",\"type\":\"docdup.request\",\"id\":9,\"sets\":[["
         <> ints [0 .. docSetCap]
         <> "]],\"pairs\":[]}"
   -- cap check precedes validation by design, so identical pair rows
   -- are fine here (never validated)
   pairCapReply =
     Protocol.respond coreVersion $
-      "{\"proto\":\"6.3.0\",\"type\":\"docdup.request\",\"id\":10,\"sets\":[[1,2]],\"pairs\":["
+      "{\"proto\":\"6.4.0\",\"type\":\"docdup.request\",\"id\":10,\"sets\":[[1,2]],\"pairs\":["
         <> B8.intercalate "," (replicate (fromInteger docPairCap + 1) "[0,0,0]")
         <> "]}"
 
@@ -210,19 +212,19 @@ structural = do
   i <- check "over-cap EDGES degrade too" (field edgeCapReply "reason" == Just "graph_too_large")
   pure (and [a, b, c, d, e, f, g, h, i])
  where
-  unknownReply = Protocol.respond coreVersion "{\"proto\":\"6.3.0\",\"type\":\"mystery\",\"id\":7}"
+  unknownReply = Protocol.respond coreVersion "{\"proto\":\"6.4.0\",\"type\":\"mystery\",\"id\":7}"
   oversizeReply = Protocol.respond coreVersion (B8.replicate 33554433 'x')
   majorReply = Protocol.respond coreVersion "{\"proto\":\"9.0.0\",\"type\":\"hello\"}"
   overCapReply =
     Protocol.respond coreVersion $
-      "{\"proto\":\"6.3.0\",\"type\":\"graph.request\",\"id\":3,\"nodes\":["
+      "{\"proto\":\"6.4.0\",\"type\":\"graph.request\",\"id\":3,\"nodes\":["
         <> B8.intercalate "," (replicate (fromInteger nodeCap + 1) "[0,0,0]")
         <> "],\"edges\":[],\"pos\":[]}"
   -- cap check precedes validation by design, so identical edge rows
   -- are fine here (never validated)
   edgeCapReply =
     Protocol.respond coreVersion $
-      "{\"proto\":\"6.3.0\",\"type\":\"graph.request\",\"id\":4,\"nodes\":[[0,0,0]],\"edges\":["
+      "{\"proto\":\"6.4.0\",\"type\":\"graph.request\",\"id\":4,\"nodes\":[[0,0,0]],\"edges\":["
         <> B8.intercalate "," (replicate (fromInteger edgeCap + 1) "[0,0,0,0]")
         <> "],\"pos\":[]}"
 
@@ -248,15 +250,15 @@ refusalProbes = do
   pure (and results)
  where
   probe (name, bytes, key, want) = check name (field bytes key == Just want)
-  badEnvReply = Protocol.respond coreVersion "{\"proto\":\"6.3.0\",\"id\":42}"
+  badEnvReply = Protocol.respond coreVersion "{\"proto\":\"6.4.0\",\"id\":42}"
   dupPosReply =
     Protocol.respond
       coreVersion
-      "{\"proto\":\"6.3.0\",\"type\":\"graph.request\",\"id\":5,\"nodes\":[[0,0,0],[0,0,0]],\"edges\":[],\"pos\":[1,1]}"
+      "{\"proto\":\"6.4.0\",\"type\":\"graph.request\",\"id\":5,\"nodes\":[[0,0,0],[0,0,0]],\"edges\":[],\"pos\":[1,1]}"
   dupPairReply =
     Protocol.respond
       coreVersion
-      "{\"proto\":\"6.3.0\",\"type\":\"fourclass.request\",\"id\":6,\"pairs\":[{\"i\":3,\"rem\":[],\"add\":[]},{\"i\":3,\"rem\":[],\"add\":[]}]}"
+      "{\"proto\":\"6.4.0\",\"type\":\"fourclass.request\",\"id\":6,\"pairs\":[{\"i\":3,\"rem\":[],\"add\":[]},{\"i\":3,\"rem\":[],\"add\":[]}]}"
 
 field :: B8.ByteString -> String -> Maybe Value
 field bytes key = do

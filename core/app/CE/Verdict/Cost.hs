@@ -46,6 +46,9 @@
 --           rewriteNum/rewriteDen (cross-multiplied).
 module CE.Verdict.Cost
   ( classTolCode
+  , classCocTolCode
+  , classKnobMaxCode
+  , classIdPastFence
   , cochangeFloor
   , rewriteNum
   , rewriteDen
@@ -71,11 +74,19 @@ module CE.Verdict.Cost
   , classCap
   ) where
 
--- | The rulepack fence (plan v2.13 ①, 3.1.0): a class id on a
--- continuous row or in the classKnobs table is bounded below this.
--- A fence, not a quota — the softKMax stance.
+-- | The rulepack fence (plan v2.13 ①, 3.1.0): the INCLUSIVE maximum
+-- class id on a continuous row, in the classKnobs table and in
+-- scan/1's two class tables — 64 declarations, ids 1..=64, the
+-- number the client's CLASS_CAP admits. A fence, not a quota — the
+-- softKMax stance. Since 6.4.0 (O38) the four readers spell the
+-- bound through ONE predicate: `>=` had been written four times and
+-- was wrong four times, refusing the 64th declared class on the
+-- wire after the config had admitted it.
 classCap :: Integer
 classCap = 64
+
+classIdPastFence :: Integer -> Bool
+classIdPastFence c = c > classCap
 
 -- | Co-change count that counts as entangled — the churn report's
 -- own table floor (pairs enter it at count >= 2), so the lattice
@@ -115,6 +126,20 @@ tolAbs = 10
 -- value bound is judged per code rather than once for all of them.
 classTolCode :: Integer
 classTolCode = 3
+
+-- | The cognitive-complexity sibling of classTolCode (6.4.0, O37).
+-- Declared, it REPLACES code 3 for metric 1 alone — the same
+-- override-with-fallback the class table already has against the
+-- global one — so a class may freeze its lines and still allow CoC
+-- growth, or the reverse. A request without it judges bit for bit
+-- as before: code 3 keeps its meaning for both metrics, which is
+-- what keeps every 6.0.0-anchored golden byte-identical.
+classCocTolCode :: Integer
+classCocTolCode = 4
+
+-- | The class knob code domain: 0..classKnobMaxCode.
+classKnobMaxCode :: Integer
+classKnobMaxCode = 4
 
 -- | Size-axis soft-line FALLBACK: when the baseline carries no
 -- softLine (pre-v0.6 file, or no judgedLoc to derive from), the

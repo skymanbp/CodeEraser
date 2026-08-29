@@ -72,6 +72,7 @@ facts =
       fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30]]
     , fDocFiles = []
     , fClassKnobs = classKnobsOf []
+    , fSelfLoops = []
     }
 
 battWeights :: [[Integer]]
@@ -128,8 +129,8 @@ overMono = all one [1 .. 60 :: Integer]
         base = R.Baseline [[u, 0, 100] | u <- [0 .. 9]] [] Nothing Nothing
         -- no class declares an allowance here, so every row keeps
         -- the global legs (5.1.0 signature, same judgment)
-        noClassTol _ = Nothing
-        ids k = S.fromList [(u, c) | [u, c, _, _] <- R.rOver (R.ratchet k noClassTol (Just base) cont [])]
+        noClassTol _ _ = Nothing
+        ids k = S.fromList [(u, c) | [u, c, _, _] <- R.rOver (R.ratchet k noClassTol Nothing (Just base) cont [])]
         wide = R.ratchetBound {R.rTolAbs = R.rTolAbs R.ratchetBound + 15}
      in ids wide `S.isSubsetOf` ids R.ratchetBound
 
@@ -177,7 +178,7 @@ docFilesCycle =
  where
   scale = sScoreScale scoreBound
   cycleFacts docs =
-    Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs (classKnobsOf [])
+    Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs (classKnobsOf []) []
   noDocs = cycleFacts []
   oneDoc = cycleFacts [0]
   absent = cycleFacts []

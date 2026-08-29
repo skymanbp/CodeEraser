@@ -4,7 +4,7 @@
 //! set, the baseline VERBATIM, and the floor. The reply's ratchet
 //! and score come back raw; Rust never recomputes them (ADR-008).
 
-use crate::score::knobs;
+use crate::score::wire_check;
 use anyhow::{Context, Result};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -39,7 +39,7 @@ pub struct Request {
     /// axes 0/1 (the 27b9bc2 road; config is the source, Cost.hs
     /// values are DEFAULTS), and the P4 trio — weights [axis, w]
     /// (the deliberate always-empty array retired; [score.weights]
-    /// drives it), thresholds codes 0..6, tolerance legs 0..2.
+    /// drives it), thresholds codes 0..7, tolerance legs 0..2.
     /// score::knobs owns every code registry.
     pub ceilings: KnobTable,
     pub weights: KnobTable,
@@ -91,6 +91,20 @@ pub struct Request {
     /// (Graph.Cost.exportVisBit); the lattice's RG10 guard reads the
     /// flag bit derived from it. Empty = the legacy road.
     pub symbols: Vec<[i64; 2]>,
+    /// The provenance table (6.4.0, O40): ascending file entities on
+    /// disk under the scope that own no continuous row this run —
+    /// the walk's own candidate set read with no ignore file and no
+    /// exclude (score::provenance), minus the measured set. Some on
+    /// every check road, an empty table included (the reply then
+    /// still answers `dropped`, which is how a pre-6.4.0 core is told
+    /// apart from a clean tree); None on the dedup-only and join
+    /// roads, which carry no baseline for it to be read against.
+    pub present: Option<Vec<u64>>,
+    /// The self-loop table (6.4.0, O59): verdict-universe indices
+    /// carrying an exact self-arc, projected from the graph reply's
+    /// singleton cycles. Rides exactly when `[graph] scc_floor = 1`
+    /// — the core requires it at cycleFloor 1 and refuses it elsewhere.
+    pub cycle_self_loops: Option<Vec<i64>>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -128,6 +142,13 @@ pub struct Reply {
     /// distinct rows did not ride — check() proves the local filter
     /// equal against it.
     pub dedup_blocks: Option<u64>,
+    /// The committed rows an exclusion explains (6.4.0, O40): [entity,
+    /// code, committed value] for every baseline row whose file is in
+    /// the `present` table and whose (entity, code) this run did not
+    /// measure. Some exactly when `present` rode (an empty table on a
+    /// clean tree); None on the roads that sent none. `rows_dropped`
+    /// is its fail name.
+    pub dropped: Option<Vec<[u64; 3]>>,
     pub degraded: Option<String>,
 }
 
@@ -141,6 +162,8 @@ impl Request {
             sim: Vec::new(),
             pos: Vec::new(),
             symbols: Vec::new(),
+            present: None,
+            cycle_self_loops: None,
             churn: Vec::new(),
             cochange: Vec::new(),
             continuous: Vec::new(),
@@ -212,6 +235,16 @@ pub fn body(r: &Request) -> Value {
         ),
         ("docFiles", some_rows(&r.doc_files)),
         ("symbols", some_rows(&r.symbols)),
+        // the two 6.4.0 tables ride as OPTIONS, not as some_rows: an
+        // empty present table is a fact (every candidate measured)
+        // the reply must answer, and an absent one is a road with no
+        // baseline; the self-loop table is required at floor 1 even
+        // when empty and refused anywhere else
+        ("present", r.present.as_ref().map(|p| json!(p))),
+        (
+            "cycleSelfLoops",
+            r.cycle_self_loops.as_ref().map(|l| json!(l)),
+        ),
     ];
     for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
         o[key] = value;
@@ -238,78 +271,14 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
         .request("verdict", body(r))
         .map_err(anyhow::Error::msg)?;
     let reply = parse(&reply)?;
-    // round trip: every knob row sent must be the one judged with
-    // (a degraded reply never judged — it echoes the defaults, and
-    // degradation already fails the check upstream). weights joined
-    // the pinned set at 2.8.0 (review C3: "pinned by the golden
-    // pair" was false — that pair sent the default weight).
-    if reply.degraded.is_none() {
-        assert_echo(&knobs::CEILING_KEYS, &r.ceilings, &reply.knobs)?;
-        assert_echo(&knobs::THRESHOLD_KEYS, &r.thresholds, &reply.knobs)?;
-        assert_echo(&knobs::TOLERANCE_KEYS, &r.tolerance, &reply.knobs)?;
-        let dw = *reply.knobs.get("defaultWeight").context("defaultWeight")?;
-        assert_weights(&r.weights, &reply.weights, dw)?;
-        // the class rows echo whole (3.1.0): a table the core judged
-        // with must be the one this side sent, row for row
-        anyhow::ensure!(
-            reply.class_knobs == r.class_knobs,
-            "core judged with classKnobs {:?}, ce sent {:?}",
-            reply.class_knobs,
-            r.class_knobs
-        );
-        if r.judged_mask != 0 {
-            let echoed = *reply.knobs.get("judgedMask").context("judgedMask")?;
-            anyhow::ensure!(
-                echoed == r.judged_mask,
-                "core echoed judgedMask={echoed}, ce sent {}",
-                r.judged_mask
-            );
-        }
-    }
+    // every invariant a reply must hold, degraded or not — the knob
+    // echoes, the fail/failed law, the fence policy, the newBaseline
+    // shape, the provenance answer (wire_check, O32 / 6.4.0)
+    wire_check::check_reply(r, &reply)?;
     Ok(reply)
 }
 
-/// Sent [axis, w] rows against the reply's effective weight table:
-/// every axis 0..6 must echo the sent override or the default — a
-/// dead or mis-indexed channel reddens here at every judged run.
-fn assert_weights(sent: &[[i64; 2]], echoed: &[[i64; 2]], default_w: i64) -> Result<()> {
-    anyhow::ensure!(
-        echoed.len() == 7,
-        "weights echo has {} axes, want 7",
-        echoed.len()
-    );
-    for (axis, row) in echoed.iter().enumerate() {
-        let want = sent
-            .iter()
-            .find(|[c, _]| *c == axis as i64)
-            .map(|[_, w]| *w)
-            .unwrap_or(default_w);
-        anyhow::ensure!(
-            row[0] == axis as i64 && row[1] == want,
-            "core weighted axis {axis} at {:?}, ce sent {want}",
-            row
-        );
-    }
-    Ok(())
-}
-
-/// Sent [code, value] rows against the reply's knob echo, names
-/// resolved through the SAME index-is-code registry that assembled
-/// them (score::knobs).
-fn assert_echo(keys: &[&str], sent: &[[i64; 2]], got: &BTreeMap<String, i64>) -> Result<()> {
-    for &[code, v] in sent {
-        let key = keys
-            .get(code as usize)
-            .with_context(|| format!("no echo key for knob code {code}"))?;
-        let echoed = got
-            .get(*key)
-            .with_context(|| format!("reply echo missing {key}"))?;
-        anyhow::ensure!(*echoed == v, "core judged with {key}={echoed}, ce sent {v}");
-    }
-    Ok(())
-}
-
-/// The ratchet sub-object's six fields, decoded once (split from
+/// The ratchet sub-object's seven fields, decoded once (split from
 /// parse() when the 2.8.0 `failed` row pushed it past the repo's
 /// own cyclomatic gate).
 struct RatchetEcho {
@@ -319,6 +288,7 @@ struct RatchetEcho {
     tolerance_drawn: Vec<[u64; 3]>,
     fail: bool,
     failed: Vec<String>,
+    dropped: Option<Vec<[u64; 3]>>,
 }
 
 fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
@@ -330,6 +300,13 @@ fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
         tolerance_drawn: rows(r, "toleranceDrawn")?,
         fail: r["fail"].as_bool().context("fail")?,
         failed: rows(r, "failed")?,
+        // absent on a pre-6.4.0 reply and on one whose request sent
+        // no present table — wire_check tells the two apart
+        dropped: if r["dropped"].is_null() {
+            None
+        } else {
+            Some(rows(r, "dropped")?)
+        },
     })
 }
 
@@ -347,6 +324,7 @@ fn parse(v: &Value) -> Result<Reply> {
         tolerance_drawn: r.tolerance_drawn,
         fail: r.fail,
         failed: r.failed,
+        dropped: r.dropped,
         new_baseline: crate::lockstep::reply_field(v, "newBaseline")?,
         knobs: rows(v, "knobs")?,
         weights: rows(v, "weights")?,

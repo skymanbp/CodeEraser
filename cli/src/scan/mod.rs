@@ -30,10 +30,10 @@ pub enum Format {
 }
 
 pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
-    let (files, findings, summary, fail) = analyze_judged(root, core)?;
+    let (files, findings, summary, fail, failed) = analyze_judged(root, core)?;
     match format {
-        Format::Console => report::print_console(&findings, &summary),
-        Format::Json => println!("{}", report_string(&files, &findings, summary)?),
+        Format::Console => report::print_console(&findings, &summary, &failed),
+        Format::Json => println!("{}", report_string(&files, &findings, summary, &failed)?),
         Format::Sarif => println!("{}", report::sarif_string(&findings)?),
     }
     Ok(if fail {
@@ -59,12 +59,15 @@ pub fn measure(root: &Path) -> Result<(crate::config::Config, Vec<FileMetrics>)>
 /// gate happened to run). Levels come from the core (scan/1); the
 /// ADR-008 P3 drift ensure then proves the pinned mirror equal on
 /// EVERY surface, or the run dies loudly — formula drift named,
-/// never a silently forked verdict.
+/// never a silently forked verdict. The last two are the fail bit and
+/// the conditions it is the disjunction of (6.4.0: `hard_line`, the
+/// config fence `knobs_digest`, `degraded`).
 type Judged = (
     Vec<FileMetrics>,
     Vec<report::Finding>,
     report::Summary,
     bool,
+    Vec<String>,
 );
 
 pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
@@ -90,14 +93,19 @@ pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
     let classes = classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
     let row_classes: Vec<u64> = rows.iter().map(|r| classes.class_of(&r.file)).collect();
     let overrides = wire::class_grade_rows(&config.rules, &config.thresholds);
+    // the fence (6.4.0, O33): the scan judges under the config the
+    // committed baseline was established with, or names the drift —
+    // a `[thresholds]` edit used to move the scan gate in silence
+    let fence = crate::score::baseline::fence_status(root, &config)?;
     let req = wire::ScanRequest {
         rows: &wire_rows,
         grades: &grades,
         naming: &naming,
         row_classes: classes.declared().then_some(row_classes.as_slice()),
         overrides: &overrides,
+        fence: fence.wire(),
     };
-    let (levels, fail) = wire::judge(core, &req)?;
+    let (levels, fail, failed) = wire::judge(core, &req)?;
     let findings = report::findings_from(&rows, &levels, &grades, (&row_classes, &overrides));
     let mirror: Vec<report::Finding> = files
         .iter()
@@ -108,7 +116,7 @@ pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
         "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
     );
     let summary = report::summarize(&files, &findings);
-    Ok((files, findings, summary, fail))
+    Ok((files, findings, summary, fail, failed))
 }
 
 /// The scan report as its canonical JSON string (schema §7.1).
@@ -116,12 +124,14 @@ pub fn report_string(
     files: &[FileMetrics],
     findings: &[report::Finding],
     summary: report::Summary,
+    failed: &[String],
 ) -> Result<String> {
     let rep = report::Report {
         schema: report::SCHEMA,
         files,
         findings,
         summary,
+        failed,
     };
     Ok(serde_json::to_string_pretty(&rep)?)
 }

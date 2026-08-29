@@ -49,8 +49,8 @@ fn days(args: &Value, default: u32) -> u32 {
 // slice 8 scan judges through the core like every verdict surface
 // (the byte pin survives: findings ≡ mirror by the drift ensure).
 pub(super) fn scan(root: &Path, _a: &Value) -> Result<String> {
-    let (files, findings, summary, _fail) = crate::scan::analyze_judged(root, &core())?;
-    crate::scan::report_string(&files, &findings, summary)
+    let (files, findings, summary, _fail, failed) = crate::scan::analyze_judged(root, &core())?;
+    crate::scan::report_string(&files, &findings, summary, &failed)
 }
 
 pub(super) fn check_duplication(root: &Path, a: &Value) -> Result<String> {

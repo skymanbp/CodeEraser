@@ -40,7 +40,7 @@ pub fn roast_line(o: &Outcome) {
 
 pub fn report_json(o: &Outcome) -> serde_json::Value {
     let r = &o.reply;
-    json!({
+    let mut doc = json!({
         "schema": SCHEMA_ID,
         "score": r.score,
         // the denominator is a knob since P4 — a bare score was
@@ -64,7 +64,13 @@ pub fn report_json(o: &Outcome) -> serde_json::Value {
             "collapsed": o.collapsed, "skippedSelf": o.skipped_self,
         },
         "degraded": r.degraded,
-    })
+    });
+    // the fifth register (0.5.0): an absent key is a reply that was
+    // never asked, never an empty answer
+    if let Some(d) = &r.dropped {
+        doc["ratchet"]["dropped"] = json!(d);
+    }
+    doc
 }
 
 pub fn print(o: &Outcome, as_json: bool) {

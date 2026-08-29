@@ -1,6 +1,6 @@
 // CodeEraser GUI — the score screen (batch 4): the ce.check-report
 // document as a face — hero score over the effective scale, the
-// seven verdict axes, and the ratchet's four registers. Rendering
+// seven verdict axes, and the ratchet's registers. Rendering
 // only: the verdict came from the core, the FAIL/pass vocabulary
 // stays machine-English exactly like the CLI's exit-code face.
 "use strict";
@@ -65,6 +65,9 @@ function renderCheck() {
     [tr("removed"), rt.removed.length],
     [tr("overCeiling"), rt.over.length],
     [tr("toleranceDrawn"), rt.toleranceDrawn.length],
+    // the fifth register (0.5.0): present exactly when the provenance
+    // table rode, so its absence is shown as absence, not as zero
+    ...(rt.dropped ? [[tr("dropped"), rt.dropped.length]] : []),
   ];
   $("check-ratchet").innerHTML =
     `<b>${esc(tr("ratchet"))}</b>` +

@@ -142,6 +142,10 @@ pub struct GraphWire {
     /// list; the core reads a missing row as zeros, so none may be
     /// missing); Some only under `Advisory::Yes`.
     pub mounts: Option<BTreeMap<i64, [i64; 3]>>,
+    /// `[graph] scc_floor` as declared (6.4.0, O59), sent as `sccFloor`
+    /// when Some — the verdict road sends the same number as threshold
+    /// code 7, so one config key drives both faces.
+    pub scc_floor: Option<u32>,
 }
 
 /// One file-tier dead verdict with its trust column (2.32.0, H3):
@@ -242,6 +246,7 @@ pub fn wire_of(
         symbols,
         unmentioned,
         mounts,
+        scc_floor: config.graph.scc_floor,
     })
 }
 
@@ -357,6 +362,12 @@ pub fn request_body(w: &GraphWire, pos: &[i64]) -> Value {
         "symbols": w.symbols.iter().collect::<Vec<_>>(),
     });
     let obj = body.as_object_mut().expect("json! object literal");
+    // the one `[graph] scc_floor` (6.4.0, O59): the core's cycle table
+    // and the verdict's cycle axis read the same floor, so a singleton
+    // SCC is a cycle on both faces or on neither; absent = the shipped 2
+    if let Some(f) = w.scc_floor {
+        obj.insert("sccFloor".into(), json!(f));
+    }
     if let Some(m) = &w.mounts {
         let rows: Vec<[i64; 4]> = m.iter().map(|(&n, &[p, t, b])| [n, p, t, b]).collect();
         obj.insert("mounts".into(), json!(rows));
@@ -368,6 +379,32 @@ pub fn request_body(w: &GraphWire, pos: &[i64]) -> Value {
         );
     }
     body
+}
+
+/// The node indices the graph reply lists as singleton cycles —
+/// non-empty only at `sccFloor` 1, where a lone node is a cycle
+/// exactly when it carries a self-arc (6.4.0, O59).
+pub fn self_loop_nodes(reply: &Value) -> Result<Vec<i64>> {
+    use anyhow::Context as _;
+    let rows: Vec<(i64, Vec<i64>)> =
+        serde_json::from_value(reply["cycles"].clone()).context("cycle rows")?;
+    Ok(rows
+        .into_iter()
+        .filter(|(_, m)| m.len() == 1)
+        .map(|(_, m)| m[0])
+        .collect())
+}
+
+/// Those nodes re-keyed to the verdict universe — the measured nodes'
+/// own order, so the table is ascending by construction; the score
+/// and join roads both send it as `cycleSelfLoops` at floor 1.
+pub fn self_loop_rows(w: &GraphWire, loops: &[i64]) -> Vec<i64> {
+    measured_nodes(w)
+        .iter()
+        .enumerate()
+        .filter(|(_, (n, _))| loops.contains(n))
+        .map(|(u, _)| u as i64)
+        .collect()
 }
 
 /// Console tag for the trust column — rendering only, the codes

@@ -59,8 +59,15 @@ pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<u
 }
 
 /// The write would leave the file past ITS hard budget — the file's
-/// class line, or the global one (lines_for).
-pub(super) fn budget_breach(t: &Thresholds, env: &Envelope, lines: usize) -> Option<String> {
+/// class line, or the global one (lines_for). `fence` is the note a
+/// drifted config earned (fenced): the reason says which budget it
+/// was judged against and why.
+pub(super) fn budget_breach(
+    t: &Thresholds,
+    env: &Envelope,
+    lines: usize,
+    fence: Option<&str>,
+) -> Option<String> {
     let cap = t.file_lines_fail;
     // cap 0 = no hard line exists (the P3 grade-table contract) —
     // without this the hook read 0 as "every write breaches"
@@ -69,9 +76,47 @@ pub(super) fn budget_breach(t: &Thresholds, env: &Envelope, lines: usize) -> Opt
     }
     Some(format!(
         "ce: this write leaves {} at {lines} lines, past the hard budget \
-         of {cap} (plan §4.1). Split the file instead of growing it.",
-        env.tool_input.file_path
+         of {cap} (plan §4.1). Split the file instead of growing it.{}",
+        env.tool_input.file_path,
+        fence.map_or(String::new(), |f| format!(" {f}"))
     ))
+}
+
+/// The config the hook judges budgets with (6.4.0, O33): the declared
+/// one when the tree is unfenced (no committed baseline — the fence
+/// arms with the file, nowhere else) or the fence matches; the
+/// SHIPPED defaults for the three budget inputs — thresholds, the
+/// exclude list, the classes — when the declared ce.toml drifted from
+/// the fenced baseline or the baseline cannot be read. A drifted
+/// config is an unverified document, and a guard that kept any part
+/// of it would let the edit that produced the drift choose its own
+/// budget (`file_lines_fail = 0` = no line; `exclude = ["src/**"]` =
+/// out of scope). `[guard]` mode and the tier arming stay as
+/// declared: a mode is not a budget, it prints in the status line,
+/// and loosening it is a visible act. The note names the fence for
+/// the deny reason.
+pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>) {
+    match crate::score::baseline::fence_status(root, &cfg) {
+        Ok(f) if !f.drifted() => (cfg, None),
+        Ok(_) => (
+            shipped_budgets(cfg),
+            Some("(ce.toml drifted from the fenced baseline: judged with the shipped budgets)"),
+        ),
+        Err(_) => (
+            shipped_budgets(cfg),
+            Some("(the committed baseline is unreadable: judged with the shipped budgets)"),
+        ),
+    }
+}
+
+/// The three budget inputs at their shipped values; everything else
+/// as declared.
+fn shipped_budgets(mut cfg: Config) -> Config {
+    let shipped = Config::default();
+    cfg.thresholds = shipped.thresholds;
+    cfg.exclude = shipped.exclude;
+    cfg.rules = shipped.rules;
+    cfg
 }
 
 /// Exact post-write line count: Write is the payload itself; Edit is

@@ -17,6 +17,7 @@
 module CE.Scan (respond) where
 
 import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
+import CE.Scan.Fence (Fence (..), drifted, fenceOffence, readFence)
 import CE.Wire (RowsReq (..), Rulepack (..), rowsFamily, tableOffence)
 import Data.Aeson
 import qualified Data.Map.Strict as M
@@ -25,10 +26,11 @@ import qualified Data.ByteString.Lazy as BL
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (find)
-import Data.Maybe (fromMaybe)
--- the rulepack fence is ONE number for every family that carries a
--- class id (the verdict family minted it at 3.1.0)
-import CE.Verdict.Cost (classCap)
+import Data.Maybe (fromMaybe, isJust)
+-- the rulepack fence is ONE predicate for every family that carries
+-- a class id (the verdict family minted it at 3.1.0; 6.4.0 spelled
+-- the inclusive bound once, O38)
+import CE.Verdict.Cost (classIdPastFence)
 
 
 -- | The shared cascade with this family's bindings (CE.Wire).
@@ -93,6 +95,7 @@ violation req =
     , tableOffence "grade" (take 1) gradeShape (gradesOf req)
     , namingBattery req
     , classBattery req
+    , fenceOffence (fenceOf req)
     ]
 
 -- | The naming-facts table's own contract (2.30.0): aligned 1:1
@@ -134,14 +137,14 @@ classBattery req =
   n = length (rowsOf req)
   aligned cs
     | length cs /= n = Just ("rowClasses: " <> show (length cs) <> " classes for " <> show n <> " rows")
-    | otherwise = fence <$> find (\(_, c) -> c < 0 || c >= classCap) (zip [0 :: Int ..] cs)
-  fence (i, _) = "rowClasses " <> show (i :: Int) <> ": class beyond the fence"
+    | otherwise = past <$> find (\(_, c) -> c < 0 || classIdPastFence c) (zip [0 :: Int ..] cs)
+  past (i, _) = "rowClasses " <> show (i :: Int) <> ": class beyond the fence"
 
 overrideShape :: Int -> [Integer] -> Maybe String
 overrideShape i row = case row of
   (c : rest@[_, _, _])
     | c < 1 -> Just (label <> "class 0 has no override channel")
-    | c >= classCap -> Just (label <> "class beyond the fence")
+    | classIdPastFence c -> Just (label <> "class beyond the fence")
     | otherwise -> ladderShape label rest
   _ -> Just (label <> "malformed row (need [class,code,warn,fail])")
  where
@@ -220,7 +223,13 @@ grade table over cls row = case row of
 -- | levels ride positionally; the effective grade table is echoed
 -- whole so the Rust client asserts the round trip (the P4 knob-echo
 -- pattern, table form). A degraded reply carries fail=true — a gate
--- that could not judge must never pass, said by the core.
+-- that could not judge must never pass, said by the core. Since
+-- 6.4.0 (O33) the fail bit is the disjunction of NAMED conditions
+-- and the names ride as `failed` exactly when `knobsFence` rode —
+-- `hard_line` (a row at the FAIL tier), `knobs_digest` (the fence
+-- pair disagrees), `degraded` (which stands alone, the verdict
+-- tooLarge posture: nothing else was judged). A legacy request
+-- keeps its bytes: the same bit, no names.
 reply :: String -> RowsReq -> [Integer] -> Bool -> B8.ByteString
 reply proto req levels degraded =
   BL.toStrict . encode . object $
@@ -234,7 +243,7 @@ reply proto req levels degraded =
           , "warns" .= count 1
           , "fails" .= count 2
           ]
-    , "fail" .= (degraded || count 2 > 0)
+    , "fail" .= any snd conds
     , -- a degraded reply echoes the DEFAULTS: its overrides were
       -- never validated, and an unvalidated table must not be
       -- presented as effective (review C14; the Verdict tooLarge
@@ -242,6 +251,7 @@ reply proto req levels degraded =
       "grades" .= [[c, w, f] | (c, (w, f)) <- effective (if degraded then [] else gradesOf req)]
     , "degraded" .= degraded
     ]
+      <> ["failed" .= [name | (name, True) <- conds] | isJust fence]
       <> ["reason" .= ("scan_too_large" :: String) | degraded]
       -- the override table echoes exactly when it rode and was judged
       -- with (3.2.0): the client asserts the round trip; a legacy or
@@ -250,3 +260,11 @@ reply proto req levels degraded =
  where
   overrides = overridesOf (rulepackOf req)
   count l = length (filter (== l) levels)
+  -- validated by fenceOffence before any reply is judged; the
+  -- degraded reply reads it too, and a malformed pair on that road
+  -- reads as unfenced — nothing was judged, `degraded` names why
+  fence = either (const Unfenced) id . readFence <$> fenceOf req
+  conds :: [(String, Bool)]
+  conds
+    | degraded = [("degraded", True)]
+    | otherwise = [("hard_line", count 2 > 0), ("knobs_digest", maybe False drifted fence)]

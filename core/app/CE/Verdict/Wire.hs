@@ -13,7 +13,6 @@
 module CE.Verdict.Wire
   ( VerdictReq (..)
   , violation
-  , parseBaseline
   ) where
 
 import CE.Verdict.Ratchet (Baseline (..))
@@ -26,6 +25,8 @@ import CE.Verdict.Rows
   , nodeRow
   , pairRow
   , posRow
+  , presentOffence
+  , selfLoopsOffence
   , simRow
   , tierRow
   )
@@ -35,7 +36,6 @@ import CE.Verdict.Table
   , classKnobsOffence
   , dedupDistinctOffence
   , dedupOffence
-  , label
   , table
   , thresholdsOffence
   , toleranceOffence
@@ -44,7 +44,6 @@ import CE.Verdict.Table
   )
 import Control.Applicative ((<|>))
 import Data.Aeson
-import qualified Data.Aeson.Types as AT
 import Data.Foldable (asum)
 import qualified Data.IntSet as IS
 
@@ -113,14 +112,15 @@ data VerdictReq = VerdictReq
     -- cross (§5.9.2). Absent = [] = every row judges on the global
     -- lines, byte-identical to the legacy road.
     reqClassKnobs :: [[Integer]]
-  , -- plan v2.14 ② (5.1.0, additive): the rulepack FINGERPRINT — a
-    -- scalar over the normalized [[rules.class]] declaration (names,
-    -- globs in declaration order, knobs). Names and globs still never
-    -- cross (§5.9.2); a hash of them is not them. Absent = no class
-    -- declared. The baseline records the digest it was established
-    -- under, and a mismatch is a NAMED fail, so "edit a glob and every
-    -- ceiling quietly moves" becomes a hard stop instead of a
-    -- possibility.
+  , -- plan v2.14 ② (5.1.0, widened at 6.0.0): the KNOB FINGERPRINT —
+    -- a scalar over the whole parsed ce.toml, every table and not
+    -- the class table alone (`[score] viol_cost = 0` moved every
+    -- gate through the narrow version and was measured doing it).
+    -- Names and globs still never cross (§5.9.2); a hash of them is
+    -- not them. Absent = the shipped default. The baseline records
+    -- the digest it was established under, and a mismatch is a NAMED
+    -- fail, so "edit a knob and every ceiling quietly moves" becomes
+    -- a hard stop instead of a possibility.
     reqKnobsDigest :: Maybe Integer
   , -- plan v2.14 K15 (6.1.0, additive): the EXPORT SURFACE, the same
     -- [node, visibility] table graph/1 has carried since 4.1.0, keyed
@@ -133,6 +133,19 @@ data VerdictReq = VerdictReq
     -- (Graph.Cost.exportVisBit) and stays in the core. Absent = [] =
     -- every flag word 0, byte-identical to the legacy road.
     reqSymbols :: [[Integer]]
+  , -- plan v2.18 step #14 (6.4.0, O40): the PROVENANCE table —
+    -- ascending file entities that exist under the scope but own no
+    -- continuous row this run. The ratchet reads a baseline row of
+    -- one as DROPPED (a named fail) where a vanished entity stays a
+    -- removal; only the client can see the disk, so only it can say
+    -- which. Absent = the legacy road; empty = every candidate was
+    -- measured (the reply still carries `dropped`, so an old core
+    -- is told apart from a clean one).
+    reqPresent :: Maybe [Integer]
+  , -- plan v2.18 step #14 (6.4.0, O59): the file indices carrying a
+    -- self-arc, required exactly at cycleFloor 1 (thresholds code 7)
+    -- and refused elsewhere — CE.Verdict.Rows.selfLoopsOffence.
+    reqSelfLoops :: Maybe [Integer]
   }
 
 instance FromJSON VerdictReq where
@@ -164,6 +177,8 @@ instance FromJSON VerdictReq where
       -- an empty table says the same thing an absent one does — no
       -- file here declares an export, so no flag word carries bit 0
       <*> o .:? "symbols" .!= []
+      <*> o .:? "present"
+      <*> o .:? "cycleSelfLoops"
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -206,6 +221,10 @@ violation parsed req =
       -- in one file are not two facts about that file
       table "symbols" (nodeRow n 2) 2 (reqSymbols req)
     , if reqJudgedMask req < 0 then Just "judgedMask: negative" else Nothing
+    , -- the 6.4.0 tables: provenance entities (u64, ascending) and
+      -- the self-loop set, whose presence is tied to the cycle floor
+      maybe Nothing presentOffence (reqPresent req)
+    , selfLoopsOffence n (reqThresholds req) (reqSelfLoops req)
     ]
  where
   n = toInteger (length (reqTier req))
@@ -216,58 +235,3 @@ violation parsed req =
   unitTier =
     IS.fromList
       [i | (i, [_, code]) <- zip [0 :: Int ..] (reqTier req), code /= 0]
-
--- | sim rows carry the ONE enum + ratio the module used to leave
--- unchecked (review MED: Join routed an out-of-enum kind to the
--- clone bar while Score scored it zero, and den = 0 made the
--- cross-multiplication vacuously true — a certain clone from 0/0).
--- | continuous entities are FINGERPRINTS (u64), not tier indexes:
--- the ratchet joins current-vs-baseline on (u, code) across runs,
--- and a tier index shifts whenever a file lands — so u here is
--- range-checked against u64, never against the node universe.
--- | The one reader of ce-baseline.json bytes: null = establish;
--- otherwise {continuous, discrete} with the same row discipline as
--- the live tables, plus (2.14.0, additive) the optional frozen
--- softLine — absent or null on a pre-v0.6 file, and the size axis
--- then falls back to the sizeCeil knob. Entities are NOT
--- range-checked against the tier universe — a baseline may outlive
--- the files it measured.
-parseBaseline :: Value -> Either String (Maybe Baseline)
-parseBaseline Null = Right Nothing
-parseBaseline v = case AT.parse bl v of
-  AT.Error e -> Left ("baseline: " <> e)
-  AT.Success (cont, disc, soft, digest) ->
-    case asum
-      [ asum (zipWith contShape [0 :: Int ..] cont)
-      , ascendingBy "baseline.continuous" 2 cont
-      , ascendingBy "baseline.discrete" 1 (map pure disc)
-      , softShape soft
-      ] of
-      Just why -> Left why
-      Nothing -> Right (Just (Baseline cont disc soft digest))
- where
-  bl = withObject "baseline" $ \o ->
-    (,,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine" <*> o .:? "knobsDigest"
-  contShape i row = case row of
-    [_, code, _]
-      | any (< 0) row -> Just (label "baseline.continuous" i <> "negative field")
-      | code > 6 -> Just (label "baseline.continuous" i <> "unknown metric code")
-      | otherwise -> Nothing
-    _ -> Just (label "baseline.continuous" i <> "malformed row")
-  softShape Nothing = Nothing
-  softShape (Just s)
-    | s < 1 || s >= 18446744073709551616 = Just "baseline.softLine: outside 1..u64"
-    | otherwise = Nothing
-
--- knob-table offences live in CE.Verdict.Table (the shared row
--- grammar), split from this module at the 300-line law.
-
--- | The floor is bounded by the EFFECTIVE score scale (review C7:
--- the 1000 literal survived scoreScale becoming a knob in the same
--- batch — a floor above the scale can never pass, and one above
--- every reachable score would fail forever undiagnosed; both refuse
--- by name now). The thresholds table is validated before this row
--- of the asum, so the [6, v] scan reads checked rows only.
--- | plan v2.6 §B: the judged-LOC multiset is values only,
--- non-descending (duplicates are the POINT of a multiset — the
--- strict ascendingBy would refuse two same-length files), in u64.

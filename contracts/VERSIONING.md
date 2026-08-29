@@ -149,6 +149,24 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **6.4.0**（围栏批，加性 minor，L 轮 v2.18 步 #14 片 (b)，2026-08-29；O32/O33/O37/O38/O40/O43/O59/O66）：
+> `verdict.request` 加性 `present=[u64…]`（严格升序；作用域内在盘、本次无连续行的文件实体——实体按**项目根**
+> 键控，走无 ignore 文件、无 exclude 的第二条 walk，内置排除/秘密表/隐藏规则/归属剪枝照旧）→ 回执
+> `ratchet.dropped=[[entity,code,committed]]`（`present` 上过线即在、空表亦答，降级面同）+ **第六具名 fail
+> 条件 `rows_dropped`**（排除藏起的文件其已提交行是「掉线」而非「移除」，仅 `CE_ACCEPT_FENCE=1` 可认领——写入
+> 不含这些行的基线）；`classKnobs` 码域 0..3 → **0..4**（4 = 仅 CoC 的棘轮容差：声明即对 metric 1 取代码 3，
+> 零有意义）；类 id 域 1..=**64**（64 自此在栏内、65 越栏——四处读者同一谓词 `classIdPastFence`）；
+> `thresholds` 码域 0..6 → **0..7**（7 = `cycleFloor`，与 `graph.request` 加性 `sccFloor` 同读一份
+> `[graph] scc_floor`，上过线才回显，≥1）+ 加性 `cycleSelfLoops=[idx…]`（cycleFloor 1 时**必须**在场、他处
+> 按名拒绝；带自环的单点 SCC 计入 cycle 轴）；每份回执（含降级）`newBaseline` 回显 `knobsDigest`、缺席 ⇔
+> 未发。`scan.request` 加性 `knobsFence`（`null` = 无基线未围；`[current,recorded]` 两摘要各可 null）→
+> 回执 `failed` 具名序 `hard_line, knobs_digest, degraded`（fence 上过线即在；`fail ⇔ failed ≠ []`）。
+> `graph.request` 加性 `sccFloor`（≥1 否则按名拒绝，上过线即回显；1 时单点 SCC 仅在自环时成环）。Rust 侧
+> `score/wire_check.rs` 对**每份**回执核 fail/failed 律、围栏策略（基线摘要 ≠ 声明 ⇔ `knobs_digest`）、摘要
+> 回显、newBaseline 形（写者要落盘的文档）、present ⇔ dropped（缺 dropped = 6.4.0 前的核，按名拒绝）；`ce scan`
+> 同围栏具名退 1、报告 0.2.0 `failed`；守卫在配置漂移或基线不可读时按**出厂** thresholds/exclude/classes 判预算
+> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`
+> 自文件推导 §3 三元组并对拍 Spec.hs 的清单。
 > **6.3.0**（外来读者角色，加性 minor，L 轮 v2.18 步 #12，2026-08-28，用户裁「子仓只当读者、不当被测者」）：
 > `graph.request` 节点行的 `roles` 得 **bit 7 = foreign**：该节点（文件、包或节）属于超仓 `.gitmodules`
 > 声明的 submodule。核侧 `roleBits` 把它落到与测试约定同一入口位（`(7, 2)`）——其引用播种可达性、
@@ -460,7 +478,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **6.3.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **6.4.0**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -592,11 +610,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **6.0.0**
-  （105 行，server 恒答 6.3.0）——它们是"minor 偏斜
+  （105 行，server 恒答 6.4.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 6.0.0；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 6.3.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
+  server 走 6.4.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -608,5 +626,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
-| 协议 | 6.3.0 | §1 所列两处常量 |
+| 协议 | 6.4.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

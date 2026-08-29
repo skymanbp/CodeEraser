@@ -428,4 +428,16 @@ entry_globs = [
 # main_judge.rs <-> main_score.rs, same pairs, shifted lines). Zero
 # new rows: the 63-row set is the 64-row set minus that pair -- the
 # row-set diff against the HEAD worktree is what moved this line.
-budget = 63
+# 63 -> 60 (L round step #14, piece (b), the 6.4.0 fence batch): three
+# rows left and none arrived. Docdup/Cost.hs <-> Verdict/Cost.hs (84
+# tokens) dissolved when the class knob table gained its fourth code
+# and the cost module's row table stopped rhyming with docdup's; the
+# two rows GraphWireProps.hs's seven-leg battery list held against
+# AuditProps.hs and SplitProps.hs (the (String, Bool) list shape the
+# normaliser reads as one) left when that battery was written as the
+# contract's three faces (refusals <> roads <> export). Two rows the
+# batch narrowed (Graph/Cost.hs and Structure/Cost.hs against
+# Verdict/Cost.hs, 111/169 -> 52 tokens) kept their pair. Zero new
+# rows: the 60-row set is the 63-row set minus those three -- the
+# row-set diff against the HEAD worktree is the CHANGELOG entry's.
+budget = 60

@@ -46,6 +46,8 @@ data Facts = Facts
   -- ^ file-universe indices whose language is documentation
   , fClassKnobs :: ClassKnobs
   -- ^ (classId, code) -> value: the ceilings codes 0/1/2 under a class (3.1.0)
+  , fSelfLoops :: [Integer]
+  -- ^ file-universe indices carrying a self-arc (6.4.0): a singleton SCC is a cycle only through one
   }
 
 -- | The class overrides as ONE Map, built once per judgment from the
@@ -199,16 +201,23 @@ churnHeavy :: ScoreKnobs -> Facts -> Integer
 churnHeavy k f =
   count [() | [_, rw, ap] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]
 
+-- | A pos row counts as a cycle member at or above the floor — and a
+-- SINGLETON only through its own arc (6.4.0, O59): every isolated
+-- file is a one-node SCC too, so at floor 1 the self-loop table is
+-- what separates a cycle from a lonely file. At the shipped floor
+-- (2) the size test alone decides, exactly as before.
 cycleMembers :: ScoreKnobs -> Facts -> Integer
 cycleMembers k f =
   count
     [ ()
     | [u, _, _, _, size, _] <- fPos f
     , size >= sCycleFloor k
+    , size > 1 || IS.member (fromInteger u) loops
     , IS.notMember (fromInteger u) docs
     ]
  where
   docs = IS.fromList (map fromInteger (fDocFiles f))
+  loops = IS.fromList (map fromInteger (fSelfLoops f))
 
 -- | One axis's effective weight: wire rows [axisCode, numerator]
 -- override; unlisted axes weigh sDefaultWeight. ONE lookup, two

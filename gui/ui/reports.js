@@ -63,6 +63,10 @@ function renderHub() {
       }
     } else if (Array.isArray(v) && v.length && typeof v[0] === "object") {
       tables.push([k, v]);
+    } else if (Array.isArray(v)) {
+      // a scalar list (scan's `failed`, 0.2.0): the names themselves
+      // are the fact, so they render whole; an empty list says so
+      chips.push([k === "failed" ? tr("scanFailed") : k, v.length ? v.join(", ") : "—"]);
     } else if (typeof v !== "object") {
       chips.push([k, v]);
     }

@@ -9,7 +9,7 @@
 -- first ADR-008 step; thresholds/tolerance from P4). The pure
 -- score/ratchet checks stay in VerdictProps; the scaffold lives in
 -- WireHarness (the P3 tenth-bite repayment).
-module VerdictWireProps (battery, wireReq, replyObj) where
+module VerdictWireProps (battery, wireReq, wPos, replyObj) where
 
 import CE.Verdict (respond)
 import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
@@ -23,7 +23,7 @@ import WireHarness (refusedBy, replyObjWith, runChecks, setKey)
 wireReq :: [[Integer]] -> [[Integer]] -> [[Integer]] -> [[Integer]] -> Value
 wireReq sim pos churn coch =
   object
-    [ "proto" .= ("6.3.0" :: String)
+    [ "proto" .= ("6.4.0" :: String)
     , "type" .= ("verdict.request" :: String)
     , "id" .= (1 :: Int)
     , "sim" .= sim
@@ -174,7 +174,7 @@ knobProbes =
   [ ("ceilings", 99, 300, "unknown ceiling axis")
   , ("ceilings", 0, 0, "ceiling below 1")
   , ("ceilings", 4, 1000000000, "soft-line exponent above")
-  , ("thresholds", 7, 1, "unknown threshold knob")
+  , ("thresholds", 8, 1, "unknown threshold knob")
   , ("thresholds", 2, 0, "zero denominator")
   , ("thresholds", 5, 0, "knob below 1")
   , ("tolerance", 3, 1, "unknown tolerance leg")

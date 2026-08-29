@@ -1,5 +1,5 @@
 {
-  "schema": "ce.scan-report/0.1.0",
+  "schema": "ce.scan-report/0.2.0",
   "files": [
     {
       "path": "src/sample.py",
@@ -37,5 +37,6 @@
     "functions": 1,
     "warns": 1,
     "fails": 0
-  }
+  },
+  "failed": []
 }

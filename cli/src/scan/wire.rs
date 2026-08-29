@@ -12,7 +12,7 @@
 
 use crate::config::{RulesCfg, Thresholds};
 use anyhow::{Context, Result, ensure};
-use serde_json::json;
+use serde_json::{Value, json};
 
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "scan/1";
@@ -102,6 +102,12 @@ pub struct ScanRequest<'a> {
     pub naming: &'a [[i64; 5]],
     pub row_classes: Option<&'a [u64]>,
     pub overrides: &'a [[u64; 4]],
+    /// The fence (6.4.0, O33): `knobsFence` as the core reads it —
+    /// null = no committed baseline (unfenced), `[current, recorded]`
+    /// = the two digests, each u64 or null (score::baseline::Fence).
+    /// Rides on EVERY scan request this side sends, so a core that
+    /// answers no `failed` is a pre-6.4.0 one, refused by name.
+    pub fence: Value,
 }
 
 /// Chunked scan judging over ONE link (review C5: the single-request
@@ -113,12 +119,16 @@ pub struct ScanRequest<'a> {
 /// chunk-sized request is a cap-mirror drift error, never a judgment.
 /// The naming facts and the row classes ride aligned: each chunk
 /// carries the facts of ITS code-6 rows and the classes of ITS rows.
-pub fn judge(core: &str, r: &ScanRequest) -> Result<(Vec<u8>, bool)> {
+/// The named conditions (6.4.0) union across chunks in the core's
+/// canonical order, and the fail bit is their disjunction.
+pub fn judge(core: &str, r: &ScanRequest) -> Result<(Vec<u8>, bool, Vec<String>)> {
     let mut link = crate::lockstep::open_family(core, CAP)?;
-    let (mut levels, mut fail) = (Vec::new(), false);
+    let (mut levels, mut held) = (Vec::new(), std::collections::BTreeSet::new());
     let reserved = r.grades.len() + r.overrides.len();
     for c in chunk_plan(r.rows, r.naming, SCAN_ROW_CAP - reserved) {
-        let mut body = json!({"rows": c.rows, "grades": r.grades, "naming": c.naming});
+        let mut body = json!({
+            "rows": c.rows, "grades": r.grades, "naming": c.naming, "knobsFence": r.fence,
+        });
         if let Some(classes) = r.row_classes {
             body["rowClasses"] = json!(&classes[c.span.clone()]);
         }
@@ -141,9 +151,36 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Vec<u8>, bool)> {
             c.rows.len()
         );
         levels.extend(chunk_levels);
-        fail |= reply["fail"].as_bool().context("fail")?;
+        held.extend(failed_of(&reply)?);
     }
-    Ok((levels, fail))
+    // the canonical order is the core's (CE.Scan conds), not the
+    // set's; a name outside the vocabulary is a wire drift
+    let failed: Vec<String> = ["hard_line", "knobs_digest", "degraded"]
+        .into_iter()
+        .filter(|n| held.contains(*n))
+        .map(String::from)
+        .collect();
+    ensure!(
+        failed.len() == held.len(),
+        "core named a condition outside the scan/1 vocabulary: {held:?}"
+    );
+    Ok((levels, !failed.is_empty(), failed))
+}
+
+/// One chunk's named conditions (6.4.0, O33). The key is required
+/// whenever `knobsFence` rode — this side always sends it — so a
+/// missing key is a pre-6.4.0 core, refused by name; and the bit
+/// must be their disjunction, or the reply is no verdict at all.
+fn failed_of(reply: &Value) -> Result<Vec<String>> {
+    let failed: Vec<String> = serde_json::from_value(reply["failed"].clone()).context(
+        "failed — a pre-6.4.0 core answers no named conditions; this ce needs scan/1 6.4.0",
+    )?;
+    let fail = reply["fail"].as_bool().context("fail")?;
+    ensure!(
+        fail != failed.is_empty(),
+        "core said fail={fail} with failed={failed:?} — the bit is the disjunction of the names"
+    );
+    Ok(failed)
 }
 
 /// Both tables the core judged with must be the ones this side sent

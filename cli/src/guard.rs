@@ -54,7 +54,9 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     // a deliberate observe, which is exactly the drift tier_of exists
     // to prevent, on the one surface that collects the FPR record.
     let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);
-    let cfg = loaded.ok();
+    // the budgets this hook judges with: the declared config, or the
+    // shipped ones while it drifts from the fenced baseline (O33)
+    let cfg = loaded.ok().map(|c| budget::fenced(root, c));
     let file_path = &env.tool_input.file_path;
     let started = std::time::Instant::now();
     let matches = novel_matches(root, env);
@@ -83,12 +85,14 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
         reasons.push(reason(file_path, ms));
     }
     let mut zone = None;
-    let sized = cfg.as_ref().and_then(|c| budget::sized_write(root, c, env));
-    if let (Some(c), Some(lines)) = (cfg.as_ref(), sized) {
+    let sized = cfg
+        .as_ref()
+        .and_then(|(c, _)| budget::sized_write(root, c, env));
+    if let (Some((c, fence)), Some(lines)) = (cfg.as_ref(), sized) {
         // the lines THIS file is measured against: its class's, or
         // the global table (plan v2.13 ① P4)
         let t = budget::lines_for(root, c, file_path);
-        if let Some(why) = budget::budget_breach(&t, env, lines) {
+        if let Some(why) = budget::budget_breach(&t, env, lines, *fence) {
             budget::budget_log(root, env, &mode, lines);
             if !budget_seen {
                 reasons.push(why);

@@ -12,17 +12,18 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 6.3.0 = the foreign reader role (plan v2.18 step #12, user ruling
-/// 2026-08-28: a declared submodule is a READER of the tree, never a
-/// MEASURED part of it). graph/1 node rows may carry role bit 7: the
-/// node -- file, package or section -- belongs to a declared
-/// submodule; the core lands it on the same entry bit as the test
-/// convention (its references seed reachability, it is never judged),
-/// and this side marks it from the index's own `files.owner` fact,
-/// measures none of its other roles, and keeps it out of every
-/// verdict universe (score, join, structure, clone pairs, docdup, the
-/// advisory domain). A tree without submodules sends no bit 7 and is
-/// judged byte for byte as before (K16).
+/// 6.4.0 = the fence batch (plan v2.18 step #14, piece (b)). verdict/1
+/// gains the provenance table `present` -- the file entities on disk
+/// under the scope that own no continuous row, read with no ignore
+/// file and no exclude because those are the roads being watched --
+/// answered as `ratchet.dropped` with the sixth fail name
+/// `rows_dropped`; class knob code 4 (a CoC-only ratchet allowance);
+/// threshold code 7 `cycleFloor` beside graph/1's `sccFloor` (one
+/// `[graph] scc_floor`, two faces) with `cycleSelfLoops` required at
+/// floor 1. scan/1 gains `knobsFence` (null = unfenced, [current,
+/// recorded] = the two digests) answered by `failed` in canonical
+/// order, and every reply echoes the digest, degraded ones too. A
+/// repo declaring none of it sends no byte and is judged as before.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else. It used to be mirrored here in English and a third
 /// time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -34,7 +35,7 @@ use std::process::{Child, Stdio};
 /// question, and the ledger has an address. Four entries had stacked
 /// up here by 6.1.0 and pushed the file past its own ratchet: the
 /// ledger that documents a size gate is not exempt from it.
-pub const PROTO: &str = "6.3.0";
+pub const PROTO: &str = "6.4.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

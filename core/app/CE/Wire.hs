@@ -14,6 +14,7 @@
 module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableOffence) where
 
 import Data.Aeson
+import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
 
@@ -31,6 +32,12 @@ data RowsReq = RowsReq
   , gradesOf :: [[Integer]]
   , namingOf :: Maybe [[Integer]]
   , rulepackOf :: Rulepack
+  , -- scan/1's fence channel (6.4.0, O33): the `knobsFence` value as
+    -- it rode — Nothing = the key never came (a client that read no
+    -- baseline: legacy bytes), Just Null = no committed baseline
+    -- (unfenced), Just [current, recorded] = the two digests to
+    -- compare. Three states, so absent and null are never one.
+    fenceOf :: Maybe Value
   }
 
 -- | scan/1's rulepack channel (3.2.0), read off the SAME object: each
@@ -56,6 +63,7 @@ instance FromJSON RowsReq where
       <*> o .:? "grades" .!= []
       <*> o .:? "naming"
       <*> parseJSON (Object o)
+      <*> pure (KM.lookup "knobsFence" o)
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family

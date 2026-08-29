@@ -41,7 +41,7 @@ pub fn judge_pairs(
     core: &str,
     w: &GraphWire,
     blocks: &[crate::dedup::pairs::Block],
-    posmap: &HashMap<String, Pos>,
+    (posmap, self_loops): (&HashMap<String, Pos>, Vec<i64>),
     ch: &crate::churn::Report,
 ) -> Result<Judged> {
     let files: Vec<String> = deadcode::measured_nodes(w)
@@ -61,7 +61,14 @@ pub fn judge_pairs(
     // that PRINTS a delete verdict, so leaving the export surface off
     // it would keep the guard inert exactly where a reader acts on it
     let symbols = crate::graph::symwire::rekeyed(w, &idx)?;
-    let req = request(root, files, sim, pos, symbols, (churn_t, cochange_t))?;
+    let req = request(
+        root,
+        files,
+        sim,
+        pos,
+        (symbols, self_loops),
+        (churn_t, cochange_t),
+    )?;
     let reply = wire::judge(core, &req)?;
     let sev: HashMap<i64, i64> = reply.join_severity.iter().map(|&[c, s]| (c, s)).collect();
     let mut pairs = HashMap::new();
@@ -103,7 +110,7 @@ fn request(
     files: Vec<String>,
     sim: Vec<[i64; 5]>,
     pos: Vec<[i64; 6]>,
-    symbols: Vec<[i64; 2]>,
+    (symbols, self_loops): (Vec<[i64; 2]>, Vec<i64>),
     (churn, cochange): score::ChurnTables,
 ) -> Result<wire::Request> {
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
@@ -111,6 +118,11 @@ fn request(
         sim,
         pos,
         symbols,
+        // no baseline rides this road, so there is no provenance to
+        // answer; the self-loop table rides at floor 1 like the check
+        // road's, because the cycle axis is judged here too
+        present: None,
+        cycle_self_loops: (cfg.graph.scc_floor == Some(1)).then_some(self_loops),
         churn,
         cochange,
         continuous: Vec::new(),
@@ -124,7 +136,7 @@ fn request(
         floor: None,
         ceilings: score::knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
         weights: score::knobs::weight_rows(&cfg.score)?,
-        thresholds: score::knobs::threshold_rows(&cfg.score),
+        thresholds: score::knobs::threshold_rows(&cfg.score, cfg.graph.scc_floor),
         tolerance: score::knobs::tolerance_rows(&cfg.score),
         dedup: None,
         dedup_distinct: Vec::new(),

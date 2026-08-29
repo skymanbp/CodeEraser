@@ -33,7 +33,50 @@ battery = do
       [ ("a class line moves ITS rows' level, the global row's not, and echoes", classLever)
       , ("class refusals: alignment, the fence, class 0, the ladder, the order", classRefusals)
       ]
-  pure (base && rulepack)
+  -- the fence channel (6.4.0), its own table
+  fence <-
+    runChecks
+      [ ("K51: knobsFence answers failed in canonical order, and its absence is a byte", fenceRoad)
+      ]
+  pure (base && rulepack && fence)
+
+-- | K51 (6.4.0, O33): the fence value rides as sent — null (no
+-- committed baseline) and a matching pair name nothing; a drifted
+-- pair (a null half included) names `knobs_digest`; a hard-line row
+-- beside a drift names both in the core's order; a request without
+-- the key answers no `failed` at all (the legacy bytes); a malformed
+-- value refuses by name; and the over-cap face names `degraded`
+-- alone. The fail bit is the disjunction of the names every time.
+fenceRoad :: Bool
+fenceRoad =
+  failedOf (fenced Null [[1, 50]]) == Just []
+    && failedOf (fenced (pair (Just 5) (Just 5)) [[1, 50]]) == Just []
+    && failedOf (fenced (pair Nothing Nothing) [[1, 50]]) == Just []
+    && failedOf (fenced (pair (Just 5) (Just 6)) [[1, 50]]) == Just ["knobs_digest"]
+    && failedOf (fenced (pair Nothing (Just 6)) [[1, 50]]) == Just ["knobs_digest"]
+    && failedOf (fenced (pair (Just 5) (Just 6)) [[0, 800]]) == Just ["hard_line", "knobs_digest"]
+    && failedOf (fenced Null [[0, 800]]) == Just ["hard_line"]
+    && failOf (fenced (pair (Just 5) (Just 6)) [[1, 50]]) == Just True
+    && failOf (fenced Null [[1, 50]]) == Just False
+    && fmap (field' "failed") (replyObj (wireReq [[1, 50]])) == Just Nothing
+    && refusedBy respond (fenced (toJSON [5 :: Integer]) [[1, 50]]) "knobsFence: malformed"
+    && failedOf (fenced Null [[0, 0] | _ <- [0 .. scanRowCap]]) == Just ["degraded"]
+ where
+  fenced v rows = setKey "knobsFence" v (wireReq rows)
+  pair a b = toJSON [a, b :: Maybe Integer]
+  field' k o = field o k
+  failedOf req = case replyObj req of
+    Just o -> case field o "failed" of
+      Just v -> case fromJSON v :: Result [String] of
+        Success names -> Just names
+        _ -> Nothing
+      Nothing -> Nothing
+    Nothing -> Nothing
+  failOf req = case replyObj req of
+    Just o -> case field o "fail" of
+      Just (Bool b) -> Just b
+      _ -> Nothing
+    Nothing -> Nothing
 
 -- | The SHIPPED comparison at the file-lines row (300/750): clean at
 -- the line, warn one past it, warn AT the hard line, fail one past
@@ -46,7 +89,7 @@ boundaries =
     && map (gradeWith (0, 0)) [0, 1] == [0, 1]
 
 wireReq :: [[Integer]] -> Value
-wireReq = rowsRequest "6.3.0" "scan.request"
+wireReq = rowsRequest "6.4.0" "scan.request"
 
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond
@@ -164,9 +207,9 @@ classRefusals = all (uncurry (refusedBy respond)) probes
  where
   probes =
     [ (classes [1], "rowClasses: 1 classes for 2 rows")
-    , (classes [64, 0], "rowClasses 0: class beyond the fence")
+    , (classes [65, 0], "rowClasses 0: class beyond the fence")
     , (over [[0, 1, 80, 90]], "class 0 has no override channel")
-    , (over [[64, 1, 80, 90]], "class beyond the fence")
+    , (over [[65, 1, 80, 90]], "class beyond the fence")
     , (over [[1, 1, 80, 70]], "gradeOverride 0: fail line below warn")
     , (over [[1, 1, 80]], "malformed row (need [class,code,warn,fail])")
     , (over [[2, 0, 400, 750], [1, 0, 400, 750]], "gradeOverride 1: not strictly ascending")

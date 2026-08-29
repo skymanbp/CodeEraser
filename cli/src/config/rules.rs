@@ -43,11 +43,11 @@ pub struct ClassCfg {
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct ClassKnobs {
-    pub file_lines_warn: Option<usize>,
-    pub file_lines_fail: Option<usize>,
-    pub cognitive_warn: Option<usize>,
-    pub fn_lines_warn: Option<usize>,
-    pub fn_lines_fail: Option<usize>,
+    pub file_lines_warn: Knob,
+    pub file_lines_fail: Knob,
+    pub cognitive_warn: Knob,
+    pub fn_lines_warn: Knob,
+    pub fn_lines_fail: Knob,
     /// The class's OWN ratchet allowance in lines (5.1.0, plan v2.14
     /// ②): declared, it replaces both global legs — a class with 0
     /// may not grow by a single line, and the global max(+2%, +10)
@@ -57,8 +57,20 @@ pub struct ClassKnobs {
     /// (vendored, fixtures) want zero or a fixed slack, and a
     /// percentage of a large file is the unearned growth this knob
     /// exists to take away.
-    pub ratchet_tolerance: Option<usize>,
+    pub ratchet_tolerance: Knob,
+    /// The cognitive-complexity sibling (6.4.0, O37): declared, it
+    /// replaces `ratchet_tolerance` for the fn-CoC rows ALONE — a
+    /// class may freeze its lines and still allow CoC growth, or the
+    /// reverse. Absent = `ratchet_tolerance` (then the global legs)
+    /// judges both metrics exactly as before; the wire carries it as
+    /// class knob code 4, so an undeclared repo sends no byte.
+    pub cognitive_ratchet_tolerance: Knob,
 }
+
+/// One class knob: a declared value, or absent — inherit. Named
+/// because every field of the table is one, and the table is read
+/// as a table (knobs.rs, wire.rs), never field by field.
+pub type Knob = Option<usize>;
 
 impl ClassCfg {
     /// The class's effective table: its overrides over the global one.

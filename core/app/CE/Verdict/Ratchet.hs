@@ -49,6 +49,10 @@ data Ratcheted = Ratcheted
   -- consumption is REPORTED (plan: it lands in the Stop summary).
   , rAdded :: [Integer]
   , rRemoved :: [Integer]
+  , rDropped :: [[Integer]]
+  -- ^ [u,metricCode,value] (6.4.0, O40): a baseline row whose entity
+  -- the client lists as PRESENT (on disk, under the scope) yet sent
+  -- no current row for — scope loss, named, never a silent removal.
   , rNewCont :: [[Integer]]
   , rNewDisc :: [Integer]
   }
@@ -73,19 +77,27 @@ tolerated k Nothing c = max (c * rTolNum k `div` rTolDen k) (c + rTolAbs k)
 -- (entity, metric) — value above tolerated(ceiling) is OVER; above
 -- the ceiling but tolerated is DRAWN tolerance; the new ceiling is
 -- min(value, old) (auto-tighten), and entities the baseline never
--- saw adopt their value (bootstrap, not a violation). Discrete:
--- plain set difference both ways; the new set IS the current set —
--- the only-shrink stance (new ⊆ old) is the CALLER's acceptance
--- gate, not a fact this function may fake.
+-- saw adopt their value (bootstrap, not a violation). A baseline
+-- row with no current row is a removal — unless its entity is in
+-- the client's PRESENT set (6.4.0, O40), in which case the file is
+-- on disk and simply stopped being measured (an exclude, a
+-- .ceignore line, a scope), and the row is DROPPED: named, failing,
+-- and gone from the new baseline only through a named act. Absent
+-- set = the legacy road. Discrete: plain set difference both ways;
+-- the new set IS the current set — the only-shrink stance (new ⊆
+-- old) is the CALLER's acceptance gate, not a fact this function
+-- may fake. The class allowance is asked per (class, metric):
+-- code 4 answers metric 1 where declared, code 3 otherwise (O37).
 ratchet ::
   RatchetKnobs ->
-  (Integer -> Maybe Integer) ->
+  (Integer -> Integer -> Maybe Integer) ->
+  Maybe [Integer] ->
   Maybe Baseline ->
   [[Integer]] ->
   [Integer] ->
   Ratcheted
-ratchet _ _ Nothing cont disc = Ratcheted [] [] [] [] (map identity cont) disc
-ratchet k classTol (Just b) cont disc =
+ratchet _ _ _ Nothing cont disc = Ratcheted [] [] [] [] [] (map identity cont) disc
+ratchet k classTol present (Just b) cont disc =
   Ratcheted
     { rOver =
         [ [u, c, v, allowed]
@@ -100,6 +112,13 @@ ratchet k classTol (Just b) cont disc =
         ]
     , rAdded = S.toAscList (curSet `S.difference` baseSet)
     , rRemoved = S.toAscList (baseSet `S.difference` curSet)
+    , rDropped =
+        [ [u, c, v]
+        | Just here <- [S.fromList <$> present]
+        , [u, c, v] <- bCont b
+        , S.member u here
+        , S.notMember (u, c) curKeys
+        ]
     , rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]
     , rNewDisc = disc
     }
@@ -109,7 +128,7 @@ ratchet k classTol (Just b) cont disc =
   -- allowance; the baseline stays three columns, so a class is a
   -- charging parameter and never a ratchet fact (plan v2.13 ①)
   rows =
-    [ ((u, c), (v, mbv, maybe 0 (tolerated k (classTol cls)) mbv))
+    [ ((u, c), (v, mbv, maybe 0 (tolerated k (classTol cls c)) mbv))
     | (u : c : v : rest) <- cont
     , let cls = classOf rest
     , let mbv = M.lookup (u, c) baseMap
@@ -120,6 +139,7 @@ ratchet k classTol (Just b) cont disc =
   classOf [] = 0
   curSet = S.fromList disc
   baseSet = S.fromList (bDisc b)
+  curKeys = S.fromList [(u, c) | (u : c : _) <- cont]
 
 -- | A row stripped to its ratchet identity and value: the class
 -- column, when it rides, is not part of what a baseline records.

@@ -25,6 +25,7 @@ import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntSet as IS
 import Data.List (partition)
+import Data.Maybe (fromMaybe)
 
 -- | The shared cascade with this family's bindings (CE.Wire —
 -- decode error prefix, caps, offence, replies all byte-identical to
@@ -75,9 +76,12 @@ result proto req =
         -- client-side before, where no ablation could see it
         "fail" .= not (null deadRows)
       , "pos" .= Position.positions b reach (reqPos req)
-      , "cycles"
+      , -- the floor is the request's where declared (6.4.0, O59),
+        -- the shipped constant otherwise — the same number the
+        -- verdict family reads as thresholds code 7
+        "cycles"
           .= [ toJSON [toJSON (toInteger i), toJSON (map toInteger ms)]
-             | (i, ms) <- Cycles.cycles sccFloor b
+             | (i, ms) <- Cycles.cycles (fromMaybe sccFloor (reqSccFloor req)) b
              ]
       , "counts"
           .= object
@@ -87,6 +91,9 @@ result proto req =
             ]
       , "degraded" .= False
       ]
+      -- the declared floor echoes exactly when it rode (6.4.0): the
+      -- unmentioned/mounts precedent, legacy bytes untouched
+      <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
       <> advisoryKeys req
  where
   (b, reach, deadRows, reportedRows) = liveness req

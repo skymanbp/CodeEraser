@@ -46,6 +46,11 @@ data GraphReq = GraphReq
     -- key they earn is CE.Graph.Advisory's, never a verdict.
     reqUnmentioned :: Maybe [[Integer]]
   , reqMounts :: Maybe [[Integer]]
+  , -- the cycle floor as declared (6.4.0, O59): the smallest SCC the
+    -- cycle table reports — `[graph] scc_floor` — absent = the
+    -- shipped Cost.sccFloor, echoed exactly when it rode. 1 admits a
+    -- self-loop singleton and never an isolated node (CE.Graph.Cycles).
+    reqSccFloor :: Maybe Integer
   }
 
 instance FromJSON GraphReq where
@@ -59,6 +64,7 @@ instance FromJSON GraphReq where
       <*> o .:? "symbols"
       <*> o .:? "unmentioned"
       <*> o .:? "mounts"
+      <*> o .:? "sccFloor"
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
@@ -71,6 +77,7 @@ violation :: GraphReq -> Maybe String
 violation req =
   asum
     [ pairing (reqUnmentioned req) (reqMounts req)
+    , sccFloorOffence (reqSccFloor req)
     , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , tableOffence "edge" id (edgeRow n) es
     , -- ascending pos is also the reply BOUND (M5-close review MED:
@@ -111,6 +118,14 @@ pairing :: Maybe a -> Maybe b -> Maybe String
 pairing (Just _) Nothing = Just "unmentioned: mounts table required alongside"
 pairing Nothing (Just _) = Just "mounts: unmentioned table required alongside"
 pairing _ _ = Nothing
+
+-- | A declared floor below 1 would report every node as a cycle
+-- (0) — refused by name, the same reading the client's load throat
+-- gives `scc_floor = 0`; the core refuses it too, fail closed for a
+-- foreign client.
+sccFloorOffence :: Maybe Integer -> Maybe String
+sccFloorOffence (Just f) | f < 1 = Just "sccFloor: below 1"
+sccFloorOffence _ = Nothing
 
 -- | The unres table as sent, [] when absent — the cap's and the
 -- validator's view; road selection stays on reqUnres's Maybe.

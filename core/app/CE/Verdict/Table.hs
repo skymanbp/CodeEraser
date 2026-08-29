@@ -19,7 +19,7 @@ module CE.Verdict.Table
   , classKnobsOffence
   ) where
 
-import CE.Verdict.Cost (classCap, classTolCode)
+import CE.Verdict.Cost (classIdPastFence, classKnobMaxCode, classTolCode)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (nub)
@@ -51,30 +51,32 @@ uniformArity name rows = case nub (map length rows) of
   _ -> Nothing
 
 -- | The rulepack's knob rows [classId, code, value] (3.1.0, plan
--- v2.13 ①): a class from 1 below the fence (class 0 IS the global
--- table, which has the ceilings channel already), a code in the
--- ceilings' own 0..2 — joined at 5.1.0 by classTolCode = 3, the
--- class's own ratchet allowance — the value floored per code
--- below, (classId, code) strictly ascending. The ceilingsOffence
--- reading, one class dimension wider.
+-- v2.13 ①): a class from 1 to the fence inclusive (class 0 IS the
+-- global table, which has the ceilings channel already), a code in
+-- the ceilings' own 0..2 — joined at 5.1.0 by classTolCode = 3, the
+-- class's own ratchet allowance, and at 6.4.0 by classCocTolCode =
+-- 4, its cognitive-complexity allowance — the value floored per
+-- code below, (classId, code) strictly ascending. The
+-- ceilingsOffence reading, one class dimension wider.
 classKnobsOffence :: [[Integer]] -> Maybe String
 classKnobsOffence = table "classKnobs" one 2
  where
   one nm i row = case row of
     [c, code, v]
       | c < 1 -> Just (label nm i <> "class 0 has no override channel")
-      | c >= classCap -> Just (label nm i <> "class beyond the fence")
-      | code < 0 || code > classTolCode -> Just (label nm i <> "unknown class knob code")
+      | classIdPastFence c -> Just (label nm i <> "class beyond the fence")
+      | code < 0 || code > classKnobMaxCode -> Just (label nm i <> "unknown class knob code")
       | v < floorFor code -> Just (label nm i <> "knob below " <> show (floorFor code))
       | otherwise -> Nothing
     _ -> Just (label nm i <> "malformed row (need [class,code,value])")
-  -- codes 0/1/2 are LINES and a line of zero is nonsense; the
-  -- tolerance (5.1.0) is an allowance, and zero allowance is its
-  -- whole point — a frozen fixture tree that may not grow by one
-  -- line. One bound for all of them would have to be the loosest,
-  -- which is how a nonsense ceiling gets in.
+  -- codes 0/1/2 are LINES and a line of zero is nonsense; the two
+  -- allowances (5.1.0 lines, 6.4.0 CoC) are allowances, and zero
+  -- allowance is their whole point — a frozen fixture tree that may
+  -- not grow by one line or one point. One bound for all of them
+  -- would have to be the loosest, which is how a nonsense ceiling
+  -- gets in.
   floorFor :: Integer -> Integer
-  floorFor code = if code == classTolCode then 0 else 1
+  floorFor code = if code >= classTolCode then 0 else 1
 
 -- | [code, value] rows, code-bounded, judged per code — generalized
 -- for P4 (the thresholds table judges denominators and divisor
@@ -132,13 +134,15 @@ ceilingsOffence = knobTable "ceilings" 4 "unknown ceiling axis" judgeC
 softKMax :: Integer
 softKMax = 1024
 
--- | Thresholds rows [knob, value], codes 0..6 (the wire-doc order).
--- A zero rewrite denominator (code 2) makes the churn
--- cross-multiplication vacuously true (the sim den==0 lesson); a
--- zero default weight (5) could zero the score divisor under an
--- empty weights table; a scale (6) below 1 leaves no score at all.
+-- | Thresholds rows [knob, value], codes 0..7 (the wire-doc order;
+-- 7 = cycleFloor since 6.4.0, O59). A zero rewrite denominator
+-- (code 2) makes the churn cross-multiplication vacuously true (the
+-- sim den==0 lesson); a zero default weight (5) could zero the
+-- score divisor under an empty weights table; a scale (6) below 1
+-- leaves no score at all; a cycle floor (7) below 1 would count
+-- every file as a cycle member.
 thresholdsOffence :: [[Integer]] -> Maybe String
-thresholdsOffence = knobTable "thresholds" 6 "unknown threshold knob" judgeT
+thresholdsOffence = knobTable "thresholds" 7 "unknown threshold knob" judgeT
  where
   judgeT code v
     | v < 0 = Just "negative field"

@@ -83,8 +83,12 @@ fn fn_entity(path: &str, key: &str, nth: i64) -> u64 {
 /// Continuous rows [entity, code, value] for one scanned file: its
 /// line count plus every function's cognitive complexity, nth
 /// assigned by the units::with_nth throat over the scan's own spans.
-pub fn continuous_rows(f: &FileMetrics) -> Vec<[u64; 3]> {
-    let mut rows = vec![[file_entity(&f.path), 0, f.total_lines as u64]];
+/// `key` is the entity's path as the baseline spells it — the
+/// PROJECT-root-relative one (6.4.0, O40; score::provenance::Keys),
+/// which is the scan's own `f.path` exactly when the scope is the
+/// project.
+pub fn continuous_rows(f: &FileMetrics, key: &str) -> Vec<[u64; 3]> {
+    let mut rows = vec![[file_entity(key), 0, f.total_lines as u64]];
     // m.name already carries the Go receiver qualification from the
     // extraction root (functions::name_of), so this composition and
     // the unit-cache keys agree by construction (M5-close review D4)
@@ -111,7 +115,7 @@ pub fn continuous_rows(f: &FileMetrics) -> Vec<[u64; 3]> {
             .position(|x| std::ptr::eq(x, u))
             .expect("with_nth walks the same slice");
         let m = &f.functions[idx];
-        rows.push([fn_entity(&f.path, &u.key, nth), 1, u64::from(m.cognitive)]);
+        rows.push([fn_entity(key, &u.key, nth), 1, u64::from(m.cognitive)]);
     }
     rows
 }
@@ -148,6 +152,46 @@ pub fn read(root: &Path) -> Result<Option<Value>> {
         path.display()
     );
     Ok(Some(doc))
+}
+
+/// The fence as the non-verdict roads read it (6.4.0, O33). No
+/// committed baseline = unfenced: the fence arms with the file and
+/// nowhere else, so every road judges with the declared config.
+/// Otherwise the digest this config declares beside the one the
+/// baseline recorded — absent key = None, the verdict road's own
+/// Maybe-equality (a repo at the shipped defaults declares None and
+/// recorded None). A present file that is not a baseline document is
+/// the O31 error, never a silent state.
+pub(crate) enum Fence {
+    Unfenced,
+    Fenced {
+        current: Option<u64>,
+        recorded: Option<u64>,
+    },
+}
+
+impl Fence {
+    pub(crate) fn drifted(&self) -> bool {
+        matches!(self, Fence::Fenced { current, recorded } if current != recorded)
+    }
+
+    /// The scan/1 `knobsFence` value: null unfenced, else the pair.
+    pub(crate) fn wire(&self) -> Value {
+        match self {
+            Fence::Unfenced => Value::Null,
+            Fence::Fenced { current, recorded } => json!([current, recorded]),
+        }
+    }
+}
+
+pub(crate) fn fence_status(root: &Path, cfg: &crate::config::Config) -> Result<Fence> {
+    Ok(match read(root)? {
+        None => Fence::Unfenced,
+        Some(doc) => Fence::Fenced {
+            current: cfg.knobs_digest(),
+            recorded: doc.get("knobsDigest").and_then(Value::as_u64),
+        },
+    })
 }
 
 /// Write the core's newBaseline back as the committed file, wrapped

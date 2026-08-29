@@ -12,9 +12,11 @@ module CE.Verdict.Rows
   , docFilesOffence
   , floorOffence
   , judgedLocOffence
+  , presentOffence
+  , selfLoopsOffence
   ) where
 
-import CE.Verdict.Cost (classCap, scoreScale)
+import CE.Verdict.Cost (classIdPastFence, scoreScale)
 import CE.Verdict.Table (ascendingBy, label)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
@@ -88,7 +90,7 @@ contRow name i row = case row of
     | any (< 0) row -> Just (label name i <> "negative field")
     | u >= 18446744073709551616 -> Just (label name i <> "outside u64")
     | code > 6 -> Just (label name i <> "unknown metric code")
-    | any (>= classCap) rest -> Just (label name i <> "class beyond the fence")
+    | any classIdPastFence rest -> Just (label name i <> "class beyond the fence")
     | otherwise -> Nothing
   _ -> Just (label name i <> "malformed row")
 
@@ -98,15 +100,48 @@ discEntry i x
   | otherwise = Nothing
 
 docFilesOffence :: Integer -> [Integer] -> Maybe String
-docFilesOffence n files =
+docFilesOffence = indexSet "docFiles"
+
+-- | An ascending SET of file-universe indices under one label:
+-- docFiles (2.27.0) and cycleSelfLoops (6.4.0) are one shape.
+indexSet :: String -> Integer -> [Integer] -> Maybe String
+indexSet name n files =
   asum
     [ asum (zipWith one [0 :: Int ..] files)
-    , ascendingBy "docFiles" 1 (map pure files)
+    , ascendingBy name 1 (map pure files)
     ]
  where
   one i u
-    | u < 0 || u >= n = Just (label "docFiles" i <> "node out of range")
+    | u < 0 || u >= n = Just (label name i <> "node out of range")
     | otherwise = Nothing
+
+-- | The provenance table (6.4.0, O40): ascending u64 file entities
+-- that exist under the scope but were not measured. A baseline row
+-- of one is DROPPED — a named fail — where a row of an entity that
+-- is simply gone stays a removal; the entities are the continuous
+-- table's own fingerprints, so the same u64 bound applies.
+presentOffence :: [Integer] -> Maybe String
+presentOffence rows =
+  asum (zipWith one [0 :: Int ..] rows) <|> ascendingBy "present" 1 (map pure rows)
+ where
+  one i x
+    | x < 0 || x >= 18446744073709551616 = Just (label "present" i <> "outside u64")
+    | otherwise = Nothing
+
+-- | The self-loop table (6.4.0, O59): the file indices whose node
+-- carries an exact self-arc, REQUIRED exactly when the cycle floor
+-- (thresholds code 7) is 1 — a singleton SCC is a cycle only through
+-- its own arc, and without the table floor 1 would count every
+-- isolated file — and refused at any other floor, where it means
+-- nothing. Present, it is an ascending index set like docFiles.
+selfLoopsOffence :: Integer -> [[Integer]] -> Maybe [Integer] -> Maybe String
+selfLoopsOffence n thrs loops = case (floorOne, loops) of
+  (True, Nothing) -> Just "cycleSelfLoops: required at cycleFloor 1"
+  (False, Just _) -> Just "cycleSelfLoops: only meaningful at cycleFloor 1"
+  (_, Just rows) -> indexSet "cycleSelfLoops" n rows
+  _ -> Nothing
+ where
+  floorOne = take 1 [v | [7, v] <- thrs] == [1]
 
 -- | The floor is bounded by the EFFECTIVE score scale (review C7:
 -- the 1000 literal survived scoreScale becoming a knob in the same

@@ -14,19 +14,23 @@
 module CE.Verdict (respond) where
 
 import qualified CE.Dedup.Cost as DedupCost
-import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap, zoneAskPermille, zoneWarnPermille)
+import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap)
 import CE.Verdict.Candidates (candidates)
 import CE.Verdict.Join (bound, severities)
 import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
-import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound)
-import CE.Verdict.Cost (classTolCode)
+import CE.Verdict.Ratchet (Baseline (..), ratchet, ratchetBound)
+import CE.Verdict.Cost (classCocTolCode, classTolCode)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, effectiveWeights, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine)
-import CE.Verdict.Wire (VerdictReq (..), parseBaseline, violation)
+import CE.Verdict.Baseline (parseBaseline)
+import CE.Verdict.Faces (digestKey, failConditions, newBaselineObj, ratchetObj)
+import CE.Verdict.Wire (VerdictReq (..), violation)
+import Control.Applicative ((<|>))
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
+import Data.Maybe (isJust)
 
 -- | Left = (id to echo, error code, message) for the dispatcher's
 -- error encoder; Right = the encoded verdict.result line. The
@@ -71,6 +75,9 @@ rowTotal req =
     , -- the 6.1.0 export surface was the one table the cap missed
       -- (K47, 6.2.0 — the same C15 debt a second time)
       length (reqSymbols req)
+    , -- the 6.4.0 tables: provenance (O40) and the self-loop set (O59)
+      maybe 0 length (reqPresent req)
+    , maybe 0 length (reqSelfLoops req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -97,13 +104,13 @@ result proto parsed req =
         "joinSeverity" .= [[c, s] | (c, s) <- severities]
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
-      , "ratchet" .= ratchetObj r conds
+      , "ratchet" .= ratchetObj (isJust (reqPresent req)) r conds
       , "newBaseline" .= newBaselineObj r newSoft (reqKnobsDigest req)
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
         -- retired mirrors never had
-        "knobs" .= knobsEcho k rk jk dedupFloor (reqJudgedMask req)
+        "knobs" .= knobsEcho k rk jk dedupFloor (reqJudgedMask req) (cycleRode req)
       , -- batch-7 slice 1 (2.19.0, additive): the core's OWN
         -- admitted-block count from the distinct rows, null when the
         -- rows did not ride (the trend null-absence stance) — the
@@ -126,7 +133,7 @@ result proto parsed req =
   rk = effectiveRatchet (reqTolerance req)
   jk = effectiveJoin k (reqThresholds req)
   -- the class rows fold into ONE Map here, once per judgment (3.1.0)
-  facts = Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) (classKnobsOf (reqClassKnobs req))
+  facts = Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) knobs (maybe [] id (reqSelfLoops req))
   pens = penalties k effSoft facts
   (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id parsed
@@ -142,8 +149,14 @@ result proto parsed req =
   -- (plan v2.13 ①): the rows arrive whole so a class may set its own
   -- ALLOWANCE (5.1.0), and the baseline the ratchet writes back is
   -- still three columns — an allowance is not a fact about the tree
-  r = ratchet rk classTol base (reqCont req) (reqDisc req)
-  classTol c = M.lookup (c, classTolCode) (classKnobsOf (reqClassKnobs req))
+  r = ratchet rk classTol (reqPresent req) base (reqCont req) (reqDisc req)
+  -- the class allowance by (class, metric) (6.4.0, O37): code 4
+  -- answers cognitive complexity where declared, code 3 otherwise —
+  -- so a request without code 4 judges exactly as it always did
+  classTol c metric =
+    (if metric == 1 then M.lookup (c, classCocTolCode) knobs else Nothing)
+      <|> M.lookup (c, classTolCode) knobs
+  knobs = classKnobsOf (reqClassKnobs req)
   floorFail = maybe False (perMille <) (reqFloor req)
   (dedupFloor, dedupDerived, dedupOver) = dedupLeg req
   -- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were
@@ -174,59 +187,10 @@ dedupLeg req = (floor', derived, over)
       | otherwise -> derived > budget
     _ -> False
 
--- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):
--- any held condition fails — over ceiling past tolerance, a new
--- discrete member, the --fail-under floor ("either alone fails"),
--- or the dedup blocks-over-budget half (P2: `ce dedup --check`
--- sends the pair; the ce check road never does).
-failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]
-failConditions r floorFail dedupOver digestDrift =
-  [ ("ratchet_over", not (null (rOver r)))
-  , ("discrete_added", not (null (rAdded r)))
-  , ("floor", floorFail)
-  , ("dedup_budget", dedupOver)
-  , ("knobs_digest", digestDrift)
-  ]
-
--- | The ratchet face: the delta, the gate bit, and the NAMES of the
--- conditions that held (review C8, 2.8.0 additive) — consumers
--- attribute a failure by name instead of by construction-time
--- coincidence, which is the whole reason the rulepack fence (5.1.0)
--- could become a fourth way to fail without any consumer guessing.
--- Split from result at the E01 75-line function gate when it did.
-ratchetObj :: Ratcheted -> [(String, Bool)] -> Value
-ratchetObj r conds =
-  object
-    [ "added" .= rAdded r
-    , "removed" .= rRemoved r
-    , "over" .= rOver r
-    , "toleranceDrawn" .= rDrawn r
-    , "fail" .= any snd conds
-    , "failed" .= [name | (name, True) <- conds]
-    ]
-
--- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived
--- from judgedLoc at establish, carried verbatim otherwise — the
--- re-anchor is CE_ACCEPT_BASELINE by construction, because only
--- establish reaches the derivation. zoneTiers (batch-7 slice 5,
--- 2.21.0, additive): the zone tier cut points ride the baseline to
--- the daemon-free hook — core-authored, locally read. Split from
--- result when the 2.33.0 severity face pushed it past the 75-line
--- hard line the repo dogfoods.
-newBaselineObj :: Ratcheted -> Maybe Integer -> Maybe Integer -> Value
-newBaselineObj r newSoft digest =
-  object $
-    [ "continuous" .= rNewCont r
-    , "discrete" .= rNewDisc r
-    , "softLine" .= newSoft
-    , "zoneTiers" .= [zoneWarnPermille, zoneAskPermille]
-    ]
-      -- the rulepack fingerprint this establish agrees to (5.1.0),
-      -- present exactly when a rulepack rode: only establish reaches
-      -- here, so recording it IS the named act the fence demands, and
-      -- a repo that declares no class keeps a baseline file and a
-      -- reply byte-identical to the pre-fence ones (K11)
-      <> ["knobsDigest" .= d | Just d <- [digest]]
+-- | Did the cycle floor ride (thresholds code 7)? Its echo and the
+-- self-loop table's admission both key on this one fact.
+cycleRode :: VerdictReq -> Bool
+cycleRode req = any ((== [7]) . take 1) (reqThresholds req)
 
 -- | Over-cap refusal: a well-formed degraded result with the FULL
 -- key set, never a truncated judgment.
@@ -245,24 +209,31 @@ tooLarge proto req =
       , "axes" .= ([] :: [Value])
       , "ratchet"
           .= object
-            [ "added" .= ([] :: [Value])
-            , "removed" .= ([] :: [Value])
-            , "over" .= ([] :: [Value])
-            , "toleranceDrawn" .= ([] :: [Value])
-            , -- ADR-008 P1: a gate that could not judge must never
-              -- pass, said by the CORE — the degraded reply carries
-              -- its own fail semantics; Rust relays, never re-derives
-              "fail" .= True
-            , "failed" .= (["degraded"] :: [String])
-            ]
+            ( [ "added" .= ([] :: [Value])
+              , "removed" .= ([] :: [Value])
+              , "over" .= ([] :: [Value])
+              , "toleranceDrawn" .= ([] :: [Value])
+              , -- ADR-008 P1: a gate that could not judge must never
+                -- pass, said by the CORE — the degraded reply carries
+                -- its own fail semantics; Rust relays, never re-derives
+                "fail" .= True
+              , "failed" .= (["degraded"] :: [String])
+              ]
+                -- `present` rode (6.4.0): the key answers here too, so
+                -- a reply without it is an older core, never a new one
+                -- that judged nothing
+                <> ["dropped" .= ([] :: [Value]) | isJust (reqPresent req)]
+            )
       , "newBaseline"
           .= object
-            [ "continuous" .= ([] :: [Value])
-            , "discrete" .= ([] :: [Value])
-            , "softLine" .= (Nothing :: Maybe Integer)
-            ]
+            ( [ "continuous" .= ([] :: [Value])
+              , "discrete" .= ([] :: [Value])
+              , "softLine" .= (Nothing :: Maybe Integer)
+              ]
+                <> digestKey (reqKnobsDigest req)
+            )
       , -- defaults: no judgment ran, so no override was applied
-        "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct 0
+        "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct 0 False
       , "weights" .= effectiveWeights scoreBound []
       , "degraded" .= True
       , "reason" .= ("verdict_too_large" :: String)

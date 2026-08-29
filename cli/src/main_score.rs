@@ -3,7 +3,7 @@
 //! baseline and fails on ratchet or floor; baseline persists the
 //! core's newBaseline under THREE named acts (plan v2.18 step #14):
 //! none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a
-//! held FENCE condition alone (knobs_digest) is accepted and the
+//! held FENCE condition alone (knobs_digest, rows_dropped) is accepted and the
 //! min-with-old floor re-pinned under the declared knobs; and
 //! CE_ACCEPT_BASELINE=1 — the wholesale re-establish, the current
 //! facts become the floor. A missing file is not a fourth, unnamed
@@ -41,9 +41,11 @@ pub struct BaselineArgs {
 }
 
 /// The fence conditions CE_ACCEPT_FENCE=1 may accept by name: the
-/// config fence. Anything else held — growth, a floor, a budget —
-/// still needs the wholesale act.
-const FENCE: [&str; 1] = ["knobs_digest"];
+/// config fence, and the rows an exclusion dropped (6.4.0, O40 —
+/// accepting writes the baseline without them, which is the act of
+/// owning the exclusion). Anything else held — growth, a floor, a
+/// budget — still needs the wholesale act.
+const FENCE: [&str; 2] = ["knobs_digest", "rows_dropped"];
 
 fn act(var: &str) -> bool {
     std::env::var(var).as_deref() == Ok("1")

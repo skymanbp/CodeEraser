@@ -17,9 +17,9 @@ use std::path::Path;
 /// a rule the core owns; analyze_judged carries the drift ensure to
 /// every surface.
 pub fn scan(root: &Path, core: &str) -> Result<Value> {
-    let (files, findings, summary, _fail) = crate::scan::analyze_judged(root, core)?;
+    let (files, findings, summary, _fail, failed) = crate::scan::analyze_judged(root, core)?;
     Ok(serde_json::from_str(&crate::scan::report_string(
-        &files, &findings, summary,
+        &files, &findings, summary, &failed,
     )?)?)
 }
 

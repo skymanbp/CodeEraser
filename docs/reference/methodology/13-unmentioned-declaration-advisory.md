@@ -179,8 +179,8 @@ module whose path carries an underscore-led segment, dunders excepted — bit 1)
 
 Both tables ride `graph.request` as optional keys that live and die together — one
 without the other is refused by name, first in the violation chain
-([Contract.hs:60-61](../../../core/app/CE/Graph/Contract.hs#L60),
-[Contract.hs:105-112](../../../core/app/CE/Graph/Contract.hs#L105)); each row is validated
+([Contract.hs:65-66](../../../core/app/CE/Graph/Contract.hs#L65),
+[Contract.hs:112-119](../../../core/app/CE/Graph/Contract.hs#L112)); each row is validated
 for width, sign, bound and `private ≤ total`
 ([Advisory.hs:29-48](../../../core/app/CE/Graph/Advisory.hs#L29)). The core then emits
 `exportUnmentioned = [[node, vis, conv, code]]` for every row whose visibility carries
@@ -204,9 +204,9 @@ judges the graph but drops the table and says so (`unmentionedDropped`), and the
 producer cuts at the same number so the two can never disagree — and `unmentionedHardCap`
 524,288 is the outer bound only a defective client reaches
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
-[Graph.hs:108-115](../../../core/app/CE/Graph.hs#L108)). The iron rule is two byte-level
+[Graph.hs:115-122](../../../core/app/CE/Graph.hs#L115)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:152-169](../../../contracts/VERSIONING.md#L152)).
+the same with or without them ([VERSIONING.md:170-187](../../../contracts/VERSIONING.md#L170)).
 
 ### 6. Rendering — one home, three faces
 
@@ -214,7 +214,7 @@ Only `ce deadcode` and the GUI/MCP deadcode faces ask for the advisory; the five
 consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, the canvas)
 pass `Advisory::No`, each with its reason at the call site
 ([deadcode.rs:81-84](../../../cli/src/graph/deadcode.rs#L81),
-[deadcode.rs:178-223](../../../cli/src/graph/deadcode.rs#L178)). The reply is consumed once:
+[deadcode.rs:182-227](../../../cli/src/graph/deadcode.rs#L182)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -232,7 +232,7 @@ by path since they are separate runs) and lists a selected file's rows with the
 root-level census and the notices — the two the document carries, and a third when the
 advisory road failed while the canvas drew (a pre-6.2.0 core), so "no advisory" and "not
 judged" never look alike ([graph.js:34-69](../../../gui/ui/graph.js#L34),
-[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:80-90](../../../gui/ui/i18n.js#L80)).
+[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:81-91](../../../gui/ui/i18n.js#L81)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 

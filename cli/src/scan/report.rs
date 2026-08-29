@@ -184,7 +184,9 @@ pub fn evaluate(file: &FileMetrics, t: &Thresholds) -> Vec<Finding> {
 
 /// JSON output schema id; bump on any shape change (plan §7.1: schema
 /// changes must bump the version — mechanism live since M0).
-pub const SCHEMA: &str = "ce.scan-report/0.1.0";
+/// 0.2.0 (6.4.0, O33): `failed`, the named conditions the exit code
+/// is the disjunction of — `hard_line`, `knobs_digest`, `degraded`.
+pub const SCHEMA: &str = "ce.scan-report/0.2.0";
 
 #[derive(Serialize)]
 pub struct Report<'a> {
@@ -192,6 +194,7 @@ pub struct Report<'a> {
     pub files: &'a [FileMetrics],
     pub findings: &'a [Finding],
     pub summary: Summary,
+    pub failed: &'a [String],
 }
 
 #[derive(Serialize)]
@@ -240,7 +243,7 @@ pub fn sarif_string(findings: &[Finding]) -> anyhow::Result<String> {
     ))?)
 }
 
-pub fn print_console(findings: &[Finding], summary: &Summary) {
+pub fn print_console(findings: &[Finding], summary: &Summary, failed: &[String]) {
     for f in findings {
         // FAIL/warn are exit-code vocabulary — never translated
         let tag = match f.level {
@@ -264,8 +267,15 @@ pub fn print_console(findings: &[Finding], summary: &Summary) {
             )
         );
     }
+    // the verdict word and the names it stands on (O33/O36): only when
+    // something held, so a passing line keeps its bytes
+    let verdict = if failed.is_empty() {
+        String::new()
+    } else {
+        format!(" -> FAIL{}", crate::report::fail_suffix(failed))
+    };
     println!(
-        "{}",
+        "{}{verdict}",
         crate::i18n::line(
             "scanned {} files / {} functions — {} warn, {} fail",
             "已扫描 {} 文件 / {} 函数 — {} warn，{} fail",

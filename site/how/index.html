@@ -252,9 +252,9 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   statistic of the repository's own frozen LOC distribution, the identity
   <code>S = clamp(median + k·MAD, …)</code> re-expressed multiplicatively so no logarithm
   is ever taken; it is derived only at establish and then frozen into the baseline. The
-  fail bit is a disjunction of five <em>named</em> conditions —
+  fail bit is a disjunction of six <em>named</em> conditions —
   <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
-  <code>dedup_budget</code>, <code>knobs_digest</code> — and the reply carries the
+  <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code> — and the reply carries the
   list of names that held; the console prints them after <code>FAIL</code> in that order.</p>
   <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column —
   the file's <em>path class</em>, the 1-based index of the first <code>[[rules.class]]</code>

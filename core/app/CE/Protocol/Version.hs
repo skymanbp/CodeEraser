@@ -10,16 +10,17 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 6.3.0 = the foreign reader role (plan v2.18 step #12, user ruling
--- 2026-08-28: a declared submodule is a READER of the tree, never a
--- MEASURED part of it). graph/1 node rows may carry role bit 7: the
--- node -- file, package or section -- belongs to a declared
--- submodule; roleBits lands it on the same entry bit as the test
--- convention (its references seed reachability, it is never judged),
--- and the Rust side marks it from the index's own `files.owner`
--- fact, measures none of its other roles, and keeps it out of every
--- verdict universe (score, join, structure, clone pairs, docdup, the
--- advisory domain). A tree without submodules sends no bit 7 and is
+-- 6.4.0 = the fence close-out batch (plan v2.18 step #14, piece
+-- (b)), additive on three families. verdict/1: class knob code 4
+-- `cognitive_ratchet_tolerance` replaces code 3 for CoC alone
+-- (O37); class ids 1..=64 are admitted, one predicate at four
+-- readers (O38); the `present` provenance table answers with
+-- `ratchet.dropped` and the sixth fail name `rows_dropped` (O40);
+-- thresholds code 7 `cycleFloor` with the `cycleSelfLoops` table
+-- required exactly at floor 1 (O59); the degraded reply echoes the
+-- request digest like the judged one (O43). scan/1: `knobsFence`
+-- rides and the reply names `failed` (O33). graph/1: `sccFloor`
+-- declared and echoed (O59). A request without the new keys is
 -- judged byte for byte as before (K16).
 -- The per-version change ledger lives in contracts/VERSIONING.md and
 -- nowhere else. It used to be mirrored here in English and a third
@@ -34,7 +35,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- ledger that documents a size gate is not exempt from it.
 
 proto :: String
-proto = "6.3.0"
+proto = "6.4.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

@@ -53,6 +53,9 @@ thresholdSetters =
   , (4, \v k -> k {sViolCost = v})
   , (5, \v k -> k {sDefaultWeight = v})
   , (6, \v k -> k {sScoreScale = v})
+  , -- the cycle floor (6.4.0, O59): ONE declared floor for the score's
+    -- cycle axis and the graph report's cycle table alike
+    (7, \v k -> k {sCycleFloor = v})
   ]
 
 -- | The tolerance legs by position (0 num / 1 den / 2 abs): a
@@ -84,9 +87,9 @@ effectiveJoin k thrs =
 -- slice 1, 2.19.0) arrives as its own parameter: it is effective
 -- per REQUEST (CLI --min-distinct override or CE.Dedup.Cost
 -- default), not a member of the three knob sets.
-knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Integer -> Integer -> Value
-knobsEcho k rk jk dedupFloor judgedMask =
-  object
+knobsEcho :: ScoreKnobs -> RatchetKnobs -> Knobs -> Integer -> Integer -> Bool -> Value
+knobsEcho k rk jk dedupFloor judgedMask cycleRode =
+  object $
     [ "sizeCeil" .= sSizeCeil k
     , "sizeHard" .= sSizeHard k
     , "sizePMax" .= sSizePMax k
@@ -108,4 +111,12 @@ knobsEcho k rk jk dedupFloor judgedMask =
       -- authority is Rust's scan_only column); 0 = not declared.
       "judgedMask" .= judgedMask
     ]
+      -- the cycle floor echoes exactly when code 7 rode (6.4.0):
+      -- a legacy reply keeps its bytes, and the degraded reply's
+      -- defaults echo omits it too
+      <> ["cycleFloor" .= sCycleFloor k | cycleRode]
+      -- the cycle floor echoes exactly when code 7 rode (6.4.0):
+      -- a legacy reply keeps its bytes, and the degraded reply's
+      -- defaults echo omits it too
+      <> ["cycleFloor" .= sCycleFloor k | cycleRode]
 

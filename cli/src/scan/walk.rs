@@ -127,11 +127,35 @@ pub fn each_surviving<T>(
 /// scope test hand-rolled the model from the root ignore files and
 /// missed git's VCS boundary, nested ignore files and the hidden rule).
 fn builder(root: &Path, extra_excludes: &[String]) -> Result<WalkBuilder, String> {
+    let mut b = bare(root, extra_excludes)?;
+    b.add_custom_ignore_filename(".ceignore");
+    Ok(b)
+}
+
+/// The exclusion model MINUS the ignore roads: built-in excludes, the
+/// secrets table, the user globs and the hidden rule. `builder` adds
+/// `.ceignore` on top (git's own files are the crate's defaults);
+/// the provenance walker adds nothing and turns git's off.
+fn bare(root: &Path, extra_excludes: &[String]) -> Result<WalkBuilder, String> {
     let overrides = build_overrides(root, extra_excludes)?;
     let mut b = WalkBuilder::new(root);
-    b.add_custom_ignore_filename(".ceignore")
-        .overrides(overrides)
-        .hidden(true);
+    b.overrides(overrides).hidden(true);
+    Ok(b)
+}
+
+/// The provenance walker (6.4.0, O40): the same tree, the same
+/// built-in excludes and secrets table, the same hidden rule and
+/// owner pruning — and NO ignore file and no ce.toml exclude,
+/// because those are the roads being watched: a file a `.ceignore`
+/// line or an `exclude` glob hid still exists, and the committed
+/// ratchet row it owned is dropped, not deleted.
+fn unignored(root: &Path) -> Result<WalkBuilder, String> {
+    let mut b = bare(root, &[])?;
+    b.ignore(false)
+        .git_ignore(false)
+        .git_global(false)
+        .git_exclude(false)
+        .parents(false);
     Ok(b)
 }
 
@@ -161,10 +185,25 @@ pub fn collect(root: &Path, extra_excludes: &[String]) -> Result<Vec<Walked>, St
             return Err(crate::gitmodules::refusal(&rel, root));
         }
     }
+    walk_files(root, builder(root, extra_excludes)?)
+}
+
+/// Every file on disk the exclusion model's non-ignore half admits
+/// (score::provenance): the unseated refusal is not asked — the
+/// table is a fact about the disk, and a walk that only reads paths
+/// judges nothing that a missing reader could change.
+pub fn collect_unignored(root: &Path) -> Result<Vec<Walked>, String> {
+    walk_files(root, unignored(root)?)
+}
+
+/// The walk loop both collectors share: owner pruning at a nested
+/// repository's door, the owner word per file, sorted output.
+fn walk_files(root: &Path, walker: WalkBuilder) -> Result<Vec<Walked>, String> {
+    let mut walker = walker;
     let mut owners = Owners::new(root);
     let (home, declared) = (root.to_path_buf(), owners.declared.clone());
     let mut files = Vec::new();
-    for entry in builder(root, extra_excludes)?
+    for entry in walker
         // a nested repository is pruned at its door: its files are
         // nobody's here, and walking them would only cost the reads
         .filter_entry(move |e| {

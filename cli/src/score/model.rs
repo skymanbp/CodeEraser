@@ -12,7 +12,11 @@ use crate::score::wire;
 /// 0.3.0 (2.33.0, H4): candidate rows widen to six columns (the
 /// leg-agreement confidence) and `joinSeverity` ships the verdict
 /// table's severity face.
-pub const SCHEMA_ID: &str = "ce.check-report/0.4.0";
+/// 0.5.0 (6.4.0, O40): `ratchet.dropped` — the committed rows an
+/// exclusion explains — present exactly when the provenance table
+/// rode (every check road; absent on a legacy core's reply, which
+/// judge() refuses anyway).
+pub const SCHEMA_ID: &str = "ce.check-report/0.5.0";
 
 pub struct Outcome {
     pub reply: wire::Reply,

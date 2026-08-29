@@ -46,7 +46,7 @@ legs =
 req :: [[Integer]] -> [Pair] -> Value
 req nodes extra =
   object
-    ( [ "proto" .= ("6.3.0" :: String)
+    ( [ "proto" .= ("6.4.0" :: String)
       , "type" .= ("graph.request" :: String)
       , "id" .= (1 :: Int)
       , "nodes" .= nodes
@@ -258,7 +258,7 @@ ownCaps =
 -- has no business being built for a cap check).
 lone :: Int -> B8.ByteString -> B8.ByteString -> B8.ByteString
 lone count row key =
-  "{\"proto\":\"6.3.0\",\"type\":\"graph.request\",\"id\":1,\"nodes\":[[0,0,0]],\"edges\":[],\"pos\":[],\""
+  "{\"proto\":\"6.4.0\",\"type\":\"graph.request\",\"id\":1,\"nodes\":[[0,0,0]],\"edges\":[],\"pos\":[],\""
     <> key
     <> "\":["
     <> B8.intercalate "," (replicate count row)
@@ -268,7 +268,7 @@ lone count row key =
 -- above are built as bytes, so this reads them as bytes).
 reason :: B8.ByteString -> Maybe Value
 reason raw = do
-  Right out <- pure (respond "6.3.0" raw)
+  Right out <- pure (respond "6.4.0" raw)
   Object o <- decodeStrict out
   field o "reason"
 

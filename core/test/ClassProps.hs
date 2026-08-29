@@ -26,7 +26,7 @@ battery :: IO Bool
 battery = do
   pureHalf <- runChecks (zip pureNames [classLine, classCoc, classHard, fallback, permutation])
   wireHalf <- runChecks (zip wireNames [mixedArity, beyondFence, classZero, knobShape, threeColumnLaw, echo])
-  fence <- runChecks (zip fenceNames [fenceAbsent, fenceDrifts, fenceRecorded, classTolBinds])
+  fence <- runChecks (zip fenceNames [fenceAbsent, fenceDrifts, fenceRecorded, classTolBinds, cocTolBinds])
   pure (pureHalf && wireHalf && fence)
  where
   pureNames =
@@ -49,12 +49,13 @@ battery = do
     , "K12: a changed KNOB fails BY NAME, not by silent relaxation"
     , "K13: establish records the digest, and the baseline stays three columns"
     , "K14: a class tolerance of 0 refuses one line, and the global legs do not save it"
+    , "K48: code 4 is the CoC-only allowance — it replaces code 3 for metric 1 alone, and zero binds"
     ]
 
 -- | Size and complexity facts alone: classed rows and the knob rows,
 -- folded the way CE.Verdict folds them.
 contFacts :: [[Integer]] -> [[Integer]] -> Facts
-contFacts rows knobs = Facts [] [] [] rows [] (classKnobsOf knobs)
+contFacts rows knobs = Facts [] [] [] rows [] (classKnobsOf knobs) []
 
 axis :: Integer -> Facts -> Integer
 axis code f = maybe (-1) id (lookup code (penalties scoreBound Nothing f))
@@ -110,7 +111,7 @@ mixedArity :: Bool
 mixedArity = refused (withCont [[0, 0, 310], [1, 1, 20, 0]]) "mixed arity"
 
 beyondFence :: Bool
-beyondFence = refused (withCont [[0, 0, 310, classCap]]) "class beyond the fence"
+beyondFence = refused (withCont [[0, 0, 310, classCap + 1]]) "class beyond the fence"
 
 classZero :: Bool
 classZero = refused (setKey "classKnobs" (toJSON [[0, 0, 400 :: Integer]]) base) "class 0"
@@ -118,10 +119,10 @@ classZero = refused (setKey "classKnobs" (toJSON [[0, 0, 400 :: Integer]]) base)
 knobShape :: Bool
 knobShape =
   and
-    [ refused (knobs [[1, 4, 5]]) "unknown class knob code"
+    [ refused (knobs [[1, 5, 5]]) "unknown class knob code"
     , refused (knobs [[1, 0, 0]]) "knob below 1"
     , refused (knobs [[2, 0, 5], [1, 0, 5]]) "not strictly ascending"
-    , refused (knobs [[classCap, 0, 5]]) "class beyond the fence"
+    , refused (knobs [[classCap + 1, 0, 5]]) "class beyond the fence"
     , -- code 3 is the ratchet allowance and ZERO is its whole point:
       -- the per-code bound is what lets a line keep its floor of 1
       -- while an allowance may be nothing at all
@@ -129,6 +130,35 @@ knobShape =
     ]
  where
   knobs rows = setKey "classKnobs" (toJSON (rows :: [[Integer]])) base
+
+-- | K48 (6.4.0, O37): two classed rows one over their committed
+-- value — entity 0's lines, entity 1's fn CoC. Code 3 alone freezes
+-- both; code 3 beside a code 4 of 5 frees the CoC row and keeps the
+-- lines frozen; code 4 alone at 0 freezes the CoC row while the
+-- lines keep the global +10 leg — the same override-with-fallback the
+-- class table already has against the global one, one metric deep.
+-- A request without code 4 judges as it did at 6.0.0 (the golden
+-- pairs are the byte proof; this leg is the value proof).
+cocTolBinds :: Bool
+cocTolBinds =
+  overKeys [[1, 3, 0]] == Just [(0, 0), (1, 1)]
+    && overKeys [[1, 3, 0], [1, 4, 5]] == Just [(0, 0)]
+    && overKeys [[1, 4, 0]] == Just [(1, 1)]
+    && not (refused (knobs [[1, 4, 0]]) "knob below")
+ where
+  knobs rows = setKey "classKnobs" (toJSON (rows :: [[Integer]])) grown
+  grown =
+    setKey "baseline" (object ["continuous" .= ([[0, 0, 300], [1, 1, 10]] :: [[Integer]]), "discrete" .= ([] :: [Integer])]) $
+      withCont [[0, 0, 301, 1], [1, 1, 11, 1]]
+  overKeys rows = case replyObj (knobs rows) of
+    Just o -> case field o "ratchet" of
+      Just (Object rt) -> case KM.lookup "over" rt of
+        Just v -> case fromJSON v :: Result [[Integer]] of
+          Success over -> Just [(u, c) | (u : c : _) <- over]
+          _ -> Nothing
+        Nothing -> Nothing
+      _ -> Nothing
+    Nothing -> Nothing
 
 -- | One key out of the reply's newBaseline object.
 newBaselineKey :: Value -> String -> Maybe Value

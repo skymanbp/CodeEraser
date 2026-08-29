@@ -102,9 +102,29 @@ pub struct DedupCfg {
 pub(crate) struct GraphCfg {
     pub entry_globs: Vec<String>,
     pub crate_roots: Vec<String>,
+    /// The cycle floor (6.4.0, O59): the smallest strongly connected
+    /// component that counts as a cycle — the ONE knob the graph's
+    /// cycle table (`sccFloor`) and the verdict's cycle axis
+    /// (`cycleFloor`, threshold code 7) both read, so a singleton SCC
+    /// is a cycle on both faces or on neither. Absent = the shipped 2
+    /// (a lone node is never a cycle); 1 counts a file exactly when
+    /// it carries a self-arc, and the verdict then needs the
+    /// self-loop table the graph reply projects. 0 is refused at load.
+    pub scc_floor: Option<u32>,
 }
 
 impl GraphCfg {
+    /// The load-throat refusal: a floor below 1 would call every
+    /// node a cycle (the core refuses it too, but a config mistake
+    /// must surface with the ce.toml key named, never as a wire
+    /// refusal — the ladder_fault stance).
+    pub(crate) fn fault(&self) -> Option<String> {
+        (self.scc_floor == Some(0)).then(|| {
+            "ce.toml [graph] scc_floor must be >= 1 (1 counts self-loops; the shipped floor is 2)"
+                .to_string()
+        })
+    }
+
     /// The declared roots as the walk spells paths (`rel_str`): `/`
     /// separators, no `./` head, no trailing slash — ONE normalizer
     /// for the two readers (the resolver key and the target set).
@@ -259,6 +279,7 @@ impl Config {
             .thresholds
             .ladder_fault()
             .or_else(|| cfg.rules.fault(&cfg.thresholds))
+            .or_else(|| cfg.graph.fault())
             .or_else(|| cfg.globs_fault(path.parent().unwrap_or(root)))
         {
             Some(fault) => Err(fault),
