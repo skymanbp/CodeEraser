@@ -57,7 +57,7 @@ fn status_line(root: &Path) -> String {
     // shows — through config::tier_of, the ONE renderer the Stop
     // audit now shares.
     let mode = crate::config::tier_of(&Config::load(root), crate::config::PROMOTED_DEFAULT);
-    i18n::line(
+    let status = i18n::line(
         "[ce {} | guard: {} | index: {} | daemon: {}]",
         "〔ce {} | 守卫：{} | 索引：{} | daemon：{}〕",
         &[
@@ -66,7 +66,14 @@ fn status_line(root: &Path) -> String {
             &index_words(index_fact(root)),
             &daemon_words(daemon_warmup(root)),
         ],
-    )
+    );
+    // the update notice rides as a second line only when a newer
+    // release exists (update::notice: cached a day, fail-open) — the
+    // status line above stays byte-identical on every other session
+    match crate::update::notice::session_notice() {
+        Some(notice) => format!("{status}\n{notice}"),
+        None => status,
+    }
 }
 
 /// The index's state as a CODE plus the count it measured (plan

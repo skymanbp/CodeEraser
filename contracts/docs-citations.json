@@ -21,8 +21,8 @@
   },
   "docs/reference/methodology.md:5": {
     "target": "../../README.md",
-    "line": 172,
-    "text": "- [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md) — wire SemVer and the two-phase release runbook"
+    "line": 168,
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the thirteen-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the bench block, the demo, the parity table, the NOTICE. This repository is its own first user — every push runs the six product gates on this tree."
   },
   "docs/reference/methodology.md:6": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -6201,7 +6201,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 410,
+    "line": 413,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -6256,7 +6256,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 410,
+    "line": 413,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -6281,7 +6281,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 419,
+    "line": 422,
     "text": "> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
@@ -6336,7 +6336,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 415,
+    "line": 418,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
@@ -6356,7 +6356,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:58": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 407,
+    "line": 410,
     "text": "> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {
@@ -6547,7 +6547,7 @@
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 286,
-    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 9〔步 #16 复核新入两条：Python `__all__` 再导出跳入 mounts `via_reexport` 臂、Haskell 选择子名并入类型单元的导入绑定与提及匹配〕）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实（**已落 2026-08-29**，片 (a)(b)(c)）；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫除新入场行外只变短（**已落 2026-08-29**，复扫例行随后经用户令退役）；收口判定式 87/87 具名（**复核 2026-08-29**：46 条已交付经 codex 四路只读审计逐条取证——35 落地 / 8 具名澄清 / 2 修补〔O42 类名出指纹、O43 注释〕/ 1 退役，41 条后置束计数与台账一致），台账 memory/frontier-2026-08-26；**v1.3.0 发版按用户令 2026-08-29 待 README 重构指示后再起**（前置门全绿、发布准备已就，见 CHANGELOG 步 #16 段） |"
+    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 9〔步 #16 复核新入两条：Python `__all__` 再导出跳入 mounts `via_reexport` 臂、Haskell 选择子名并入类型单元的导入绑定与提及匹配〕）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实（**已落 2026-08-29**，片 (a)(b)(c)）；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫除新入场行外只变短（**已落 2026-08-29**，复扫例行随后经用户令退役）；收口判定式 87/87 具名（**复核 2026-08-29**：46 条已交付经 codex 四路只读审计逐条取证——35 落地 / 8 具名澄清 / 2 修补〔O42 类名出指纹、O43 注释〕/ 1 退役，41 条后置束计数与台账一致），台账 memory/frontier-2026-08-26；**v2.20 三步（用户四令 2026-08-29）**：更新功能三面等价（`ce update` 检查 = 退出码 0/1/2、`--yes` 就地替换 ce + ce-core，pin 来自 tag 上已提交的 `manifest.env`——O83 逆转，信任锚 = pin 提交而非签名；插件/cargo 所有的副本按名拒绝并指出各自的更新命令；GUI 第十屏 update 同一文档同一 apply 入口；插件 SessionStart 通知缓存一天 + `/codeeraser:update`；MCP 第十四工具 `update_check` 只到检查；`ce.update-report/0.1.0`；e2e 经 `file://` 端点 + `CE_UPDATE_TARGET_DIR` 隔离）→ 三面等价表由代码派生（clap 枚举 / Tauri 命令与屏 / MCP 目录 / hooks.json / plugin commands+skills）并逐字节门控（`face_parity`，具名省略写在表内）→ README 双语九节重构 + 仓内 demo（`demo/`：同一任务两跑只差 hook，七步真实判决，`demo_replay` 门）+ 全量文档同步（文档三律：中英分立 / 精简 / 全量）；**v1.3.0 随后发四渠道**（发布令 2026-08-29 解除悬置） |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
     "target": "../../../cli/src/mention/selfref.rs",
@@ -6721,7 +6721,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:71": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 170,
+    "line": 173,
     "text": "> **6.3.0**（外来读者角色，加性 minor，L 轮 v2.18 步 #12，2026-08-28，用户裁「子仓只当读者、不当被测者」）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:72": {

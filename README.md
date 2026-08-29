@@ -8,135 +8,63 @@ English | **[中文](README.zh.md)**
 
 <img src="docs/assets/gui-structure.png" alt="The GUI's structure treemap and score, judging this repository" width="740">
 
-LLMs drift toward stacking and patching over long-lived work: the same function implemented twice,
-the same fact written in three places, updates that arrive as appends, files that only ever grow.
-CodeEraser fights that drift at the moment of writing — a Rust CLI + Tauri GUI in front of a Haskell
-judgment core, shipped as a Claude Code plugin with PreToolUse/Stop interception, a read-only MCP report surface, pre-commit, and CI exit codes.
+## What it is
 
-## What CodeEraser does
+Long-lived LLM-assisted codebases drift the same way: the same function implemented twice, the same paragraph pasted into three files, updates that arrive as appends, files that only ever grow. CodeEraser stops that drift at the moment of writing and gates it in CI. Rust measures — parsing, fingerprints, reference graphs, git windows — a Haskell core judges, and the terminal, a desktop GUI, a read-only MCP server, Claude Code hooks, pre-commit and CI exit codes all render the same verdicts from the same documents. No model is in the loop anywhere.
 
-1. **It refuses a duplicate before it exists.** A write that would *introduce* an exact T1/T2 clone — duplication the content being replaced did not already carry — is denied at PreToolUse; the interception happens at writing time, not in a report you read afterwards, and a denied move is told the ordering that passes.
-2. **It refuses a file past its hard line.** A write that leaves a file over 750 lines — or over the line that file's `[[rules.class]]` declares — is denied the same way.
-3. **It finds documentation written twice.** Repeated paragraphs, comments and docstrings anywhere in the tree, with `--check` turning the finding into a CI exit code.
-4. **It finds the clones that editing disguised.** Near-miss blocks are matched by tree edit distance over syntax, so a renamed and re-ordered copy still answers for itself.
-5. **It finds what nothing reaches.** A file-level reference graph carries four-way liveness verdicts and cycle membership: dead code and dead documents are named, not guessed at. Beside the verdicts, a symbol-level advisory lists the declarations no other file in the tree spells — reported with a visibility code, never judged.
-6. **It erases only what is provably safe.** Dead files, verbatim document twins and whole-unit exact clones — planned first, applied only from a clean worktree, and never by asking a model to rewrite your code.
-7. **It prices the seam before you split.** Every file past the soft line gets its best split seam costed, or a written cohesion alibi for why it should be left whole.
-8. **It scores the whole tree and holds a floor that only tightens.** Seven structural axes produce one score; `ce check --fail-under` gates it, and per-file ceilings from the accepted baseline can be tightened by cleanup but never loosened silently.
-9. **It watches the trajectory, not just today.** Score history over mainline commits, git-window churn, and a three-signal join that puts churn, duplication and liveness in one verdict.
-10. **It reports through the surfaces you already use.** Terminal, GUI, read-only MCP server, Claude Code hooks, pre-commit and CI exit codes — every one of them rendering the same verdicts from the same core.
+## Functions and scope
 
-## Status
+- **Function 1 — refuse a duplicate before it exists.** A write that would *introduce* an exact T1/T2 clone (duplication the replaced content did not already carry) is denied at PreToolUse, with the region it duplicates named and the ordering that passes taught.
+- **Function 2 — refuse a file past its hard line.** A write leaving a file over 750 lines — or over the line its `[[rules.class]]` declares — is denied the same way.
+- **Function 3 — find documentation written twice.** Repeated paragraphs, comments and docstrings across the tree; `--check` is a CI exit code.
+- **Function 4 — find the clones that editing disguised.** Near-miss blocks matched by tree edit distance over syntax, so a renamed, re-ordered copy still answers for itself.
+- **Function 5 — find what nothing reaches.** A file-level reference graph with four-way liveness verdicts and cycle membership, plus a symbol-level advisory of declarations no other file spells.
+- **Function 6 — erase only what is provably safe.** Dead files, verbatim document twins and whole-unit exact clones: planned first, applied from a clean worktree, never by asking a model to rewrite anything.
+- **Function 7 — price the seam before you split.** Every file past the soft line gets its best split seam costed, or a written cohesion alibi.
+- **Function 8 — score the tree and hold a floor that only tightens.** Seven axes fold into one score; per-file ceilings from the accepted baseline shrink with cleanup and never loosen silently.
+- **Function 9 — watch the trajectory.** Score history over mainline commits, git-window churn, and a three-signal join of churn, duplication and liveness.
+- **Function 10 — keep itself current.** `ce update` checks the latest release against the pins the release commit itself wrote, and replaces the binaries in place only after both pins verify.
 
-🏁 **v1.2.0 — released.** The K round cleared the post-1.1.0 debt inventory end to end. The wire crossed
-three majors (4.0.0 retired the superseded erase class 0 — its frozen slot kept and refused by name,
-5.0.0 retired the legacy graph flags column, 6.0.0 widened the baseline's config fingerprint) and landed
-the `symbols` table — deduped `[node, visibility]` pairs saying which files declare something and how
-visibly, the producer flag bit 0 never had, which finally lets the export surface be acted on:
-`unref_public` reporting, an erase reason that refuses to plan a public API away, and the join lattice
-reading the same bit. The baseline now fingerprints every **effective** knob in `ce.toml` (`knobs_digest`), so any config edit that changes a judgment stops
-`ce check` by name instead of quietly moving every line, and a class can freeze its own growth with
-`ratchet_tolerance = 0`. The guard's duplicate-write rule was re-measured by resurrecting the FPR replay
-over 2,761 real edit events and now denies only duplication a write *introduces*
-([ledger](docs/FPR-REPLAY.md)). `ce scan` and `ce dedup` learned `--format sarif` (this repository's own
-CI uploads to GitHub code scanning), warm analyze serves a digest-keyed result cache (555 → 294 ms
-measured here), the daemon client got a whole-conversation deadline, the long measurements paint stderr
-progress, and the GUI grew its ninth screen (doctor). Earlier: v1.1.0 = the path rulepack
-(`[[rules.class]]`), v1.0.1 = installer wiring, v1.0.0 = every milestone of the locked plan. Installers,
-[crates.io](https://crates.io/crates/codeeraser), the npm pointer and
-[codeeraser.dev](https://codeeraser.dev) are live at 1.2.0. A repository that declares no class — this one
-included — scores exactly as under 1.1.0; declaring one moves the lines its files are measured against,
-so scores across that switch are **not comparable** and need a named `CE_ACCEPT_BASELINE=1` re-establish.
+**Scope.** Judged languages: Python, TypeScript/TSX, Rust, Go, Haskell and Markdown (seven language codes over six tree-sitter grammars). Size-only arm: js/mjs/cjs/jsx, css/scss/less, html, vue, svelte, sh/bash, yml — they enter the size gates, the hard budget and the ratchet, never a semantic verdict. Faces: the `ce` CLI, the GUI (ten screens), the Claude Code plugin (three hooks, one skill, one command, fourteen read-only MCP tools), pre-commit and CI.
 
-The locked plan is the contract: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md). This repository gates itself with its own scanner,
-clone ratchet, baseline and deadcode/docdup checks on every push to `main` (plus pull requests and a weekly scheduled run).
+## How it works — and what is different about it
 
-## Install
+- **Interception at the instant of writing.** Every file's normalized tokens (identifiers → `ID`, literals → `LIT`, comments dropped) are winnowed with k = 25, w = 26, so any shared run of 50+ tokens is guaranteed a shared fingerprint. The fingerprints live in a SQLite WAL index kept by a lazy per-project daemon; the PreToolUse probe answers in 34 ms p50 / 37 ms p95, and the whole plugin chain in 0.50 s p95. The guard charges only *novel* duplication: matches the replaced content already carried are subtracted, which is why its false-positive rate over a 2,761-event replay is zero ([FPR-REPLAY](docs/FPR-REPLAY.md)).
+- **Two clone layers, one verdict owner.** T1/T2 is the hot path above. T3 is a cold path: structural fingerprints and MinHash/LSH (128 permutations, 32 bands × 4 rows) generate candidates under admissible pruning — no pair that could pass is dropped — and the Haskell core computes Zhang–Shasha tree edit distance and accepts at TSED ≥ 0.85, in exact integer arithmetic.
+- **Documentation duplication that survives rewording.** NFC-normalized words, 5-word shingles, MinHash/LSH candidates, then an exact Jaccard ≥ 0.80 or a 50-word verbatim run, judged in the core with exact rationals.
+- **Liveness that is named, not guessed.** Per-language resolution ladders (imports, re-exports, doc links, assets, package roots) feed a rung-filtered graph; SCCs, reachability from entry roots and a four-way verdict (unreferenced/unreachable × private/public) come back with a confidence code derived from the unresolved-site ledger. Beside it, the mention universe — every identifier in every text file, stored only as fnv1a64 hashes — yields the *unmentioned declaration* advisory, which never turns a gate red.
+- **Structure as a measured thing.** Seven axes (geometry, naming diversity, mixing, misplacement, conventions, stale docs, redundancy), Tsallis-2 entropy per directory, chi-squared divergence from a declared layout, and split-ROI pricing with four cost legs (crossing references, clone cuts, churn crossings, a new-file φ) or a cohesion alibi.
+- **A score that cannot be gamed by moving lines.** Each axis charges floor(1000·v/(v+n)) — violation mass over opportunity — and the weighted fold lands on 0–1000. The ADR-006 ratchet tightens every ceiling automatically; growth needs the tolerance max(+2 %, +10 lines) or a named re-establish (`CE_ACCEPT_BASELINE=1`); the baseline carries a digest of the *effective* config, so a knob edit stops `ce check` by name (`knobs_digest`) instead of moving every line. Six fail conditions, each named on the console.
+- **Time as a first-class signal.** Theil–Sen slope over the last 512 score points (a single wild point cannot drag a median); churn = added − surviving lines by blame; the join lattice combines similarity, graph position and churn into merge / delete / churn-hotspot with reason bits and confidence.
+- **Erase with a safety predicate, not a heuristic.** Three classes (verbatim doc twin, whole-unit T1 twin whose copy is dead, confident non-public dead file), seven frozen reason codes, a 4,096-row cap, and a convergence re-plan that fails if any applied verdict survives.
+- **Deterministic by construction.** No RNG or clock in any judgment; golden fixtures compared byte for byte; codes cross the wire, sentences stay in each face. Rust and Haskell meet on one SemVer-negotiated NDJSON wire (proto 6.4.0, ten families); policy is Haskell data (ADR-008), and configuration crosses as facts, never as names.
+- **A trust chain that reaches the updater.** Release builds are two-phase: draft assets are hashed, the pins land in `plugin/bin/manifest.env` in a commit, and only then the tag verifies the same bytes. The plugin starter, the installers and `ce update` all check against those pins.
 
-Install surfaces are layered: the **installer** is the GUI+CLI superset,
-the **plugin** the guard layer on any base, the rest CLI-only.
+## Before and after — one task, run twice
 
-**Installer (recommended).** Every [release](https://github.com/skymanbp/CodeEraser/releases) ships three GUI installers
-(NSIS `setup.exe` / AppImage / dmg), each bundling the GUI with `ce` **and** the `ce-core` judgment core as sidecars.
-On Windows (v0.7.2+) the installer asks for elevation and puts the install dir on the machine PATH — `ce` works
-from any terminal (AppImage/dmg users add the app dir to PATH themselves). Since v1.0.1 the Windows installer
-also probes for Claude Code and wires the plugin below by itself — one install is the whole product, and
-uninstall removes exactly the registration it added (never one you made yourself).
+The same coding task — *add discounts, a compact report, CSV and JSON output, money formatting in the API* — replayed by a scripted agent on two identical copies of [`demo/seed`](demo/seed/README.md), a small invoicing service in Python and TypeScript. The only variable is whether the PreToolUse guard and Stop audit sit in the loop. Every verdict below is the verbatim output of `ce`; both trees are then measured by the same six CI commands.
 
-**Claude Code plugin (the guard layer).** `/plugin marketplace add skymanbp/CodeEraser`, then `/plugin install codeeraser`
-(the Windows installer runs these two for you when it finds Claude Code; AppImage/dmg/CLI installs run them once by hand).
-The starter resolves both binaries by pin: a matching local or PATH copy first (since v0.7.3; the installer leaves one on PATH), then a pinned download,
-then an unverified PATH binary that says so out loud.
+<!-- demo:begin -->
+| | Without CodeEraser | With CodeEraser |
+|---|---|---|
+| Writes that landed | 7 of 7 | 5 of 7 |
+| Denied at PreToolUse | 0 | 2 |
+| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)` |
+| `ce check` score (ratchet) | 952/1000 (**FAIL**) | 979/1000 (**FAIL**) |
+| T1/T2 clone blocks (`ce dedup --check`, budget 0) | 4 (**FAIL**) | 2 (**FAIL**) |
+| near-miss clone pairs (`ce clone`) | 4 | 1 |
+| duplicated doc segments (`ce docdup --check`) | 1 (**FAIL**) | 1 (**FAIL**) |
+| dead files (`ce deadcode --check`) | 3 (**FAIL**) | 2 (**FAIL**) |
+| provably-safe removals planned (`ce erase --check`) | 1 | 1 |
+<!-- demo:end -->
 
-**CLI only.** Download `ce-<ver>-<platform>` and `ce-core-<ver>-<platform>` (x86_64-windows / x86_64-linux / aarch64-macos), rename them
-`ce` / `ce-core`, and put them side by side on PATH; judgment commands use the sibling resolver. Or install `ce`
-with `cargo install codeeraser` and place a `ce-core` beside it. `SHA256SUMS` covers every asset.
+![Without CodeEraser: seven writes land, and the measured tree carries four exact clones, a pasted paragraph and three dead files](demo/out/without-codeeraser.svg)
 
-**From source.** Prerequisites: the pinned Rust toolchain (`rust-toolchain.toml` at the repository root) and GHC 9.14.1 + cabal for the core.
+![With CodeEraser: two writes are denied at PreToolUse with the duplicated region named, the Stop audit refuses to end the turn, and the gates name the rest](demo/out/with-codeeraser.svg)
 
-```sh
-# the judgment core (ce-core)
-cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)
-cd .. && cargo install --path cli   # the CLI
-```
+The two writes that were denied are the two copies of an existing helper; the compact renderer that slipped past is the honest boundary — a full-file rewrite that copies its own blocks introduces nothing *novel* at write time, so the next layer, the Stop audit, refuses the turn, and the CI clone budget refuses the commit. Transcripts, SVGs and the JSON behind this table are generated by [`demo/run.js`](demo/README.md) and re-checked byte for byte in CI (`demo_replay`). The first real interception, recorded the day it happened: [T1-INTERCEPT](docs/T1-INTERCEPT.md).
 
-Core resolution is one chain everywhere: `CE_CORE_BIN` → a `ce-core` sibling of the running binary → PATH; an explicit `--core <path>` always wins.
-
-### Binaries — unsigned, verify checksums
-
-Release artifacts are built by the [release workflow](.github/workflows/release.yml) and pinned in `SHA256SUMS`.
-**They are not code-signed or notarized** (ruled out 2026-08-19); Windows SmartScreen and macOS Gatekeeper will warn.
-The permanent trust anchor is the checksum chain — after downloading:
-
-```sh
-sha256sum -c --ignore-missing SHA256SUMS
-```
-
-The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins automatically and refuses a mismatching download out loud. It verifies once per session: the verified path is stamped under `CLAUDE_PLUGIN_DATA`, later hooks exec through the stamp until the manifest or the binary changes, and SessionStart's `health` always re-verifies.
-
-## Commands
-
-| Command | What it reports / judges |
-|---|---|
-| `ce scan` | size / complexity / readability metrics, core-graded against the file's own lines (global or `[[rules.class]]`); the size-only arm also gates js/css/html/vue/svelte/sh/yml; `--format sarif` re-encodes the findings for code scanning |
-| `ce dedup` | T1/T2 clone blocks (winnowing index); `--check` gates the budget; warm runs serve a digest-keyed result cache; `--format sarif` emits the blocks as notes |
-| `ce clone` | T3 near-miss clones (tree edit distance) |
-| `ce docdup` | documentation duplication (paragraphs, comments, docstrings) |
-| `ce graph --sites` / `ce deadcode` | reference sites; liveness verdicts |
-| `ce churn` / `ce join` | git-window churn; the three-signal join. Minutes, not seconds — a git subprocess per commit and a blame per touched file ([measured](docs/PERF-BUDGET.md)); both report progress on stderr as they go |
-| `ce structure` | tree-scale structure judgment (seven axes); `--split-candidates` prices the best seam of every file past the soft line — or writes its cohesion alibi |
-| `ce trend` | score trajectory over mainline history (cache rebuilds from git) |
-| `ce erase` | deterministic two-phase eraser: plans only provably-safe removals (dead files, verbatim doc twins, whole-unit T1 twins), dry-run default, `--apply` behind clean-worktree preconditions |
-| `ce check` / `ce baseline` | ADR-006 ratchet + score floor against `ce-baseline.json`; `check` names the held conditions on its console line, `baseline` persists at the project root only and under a named act |
-| `ce mcp` | read-only MCP server: 13 report tools, registered by the plugin itself. `erase` reaches the PLAN and nothing else — applying is a human act at the CLI or the GUI |
-| `ce doctor` / `ce eject` | health line; full per-project uninstall (dry-run default) |
-
-Console reports and `--help` speak English by default and Chinese under `--lang zh` (or `CE_LANG=zh`; the flag wins). JSON output and the FAIL/pass vocabulary are never translated — they are the machine face. The GUI carries its own language toggle. The long measurements (`churn`, `join`, `trend`) report progress on **stderr** in the same language, so stdout stays a clean pipe; it paints only when stderr is a terminal, and `CE_PROGRESS=1` / `=0` forces it either way.
-
-## Guard (Claude Code plugin)
-
-The plugin intercepts at PreToolUse (cheap probes) and audits at Stop. Since the 1.0 tier switch, the two FPR-gated rule classes — T1/T2 duplicate writes and hard-budget breaches (a write leaving a file past its hard line: 750 by default, or the line its `[[rules.class]]` declares) — **deny by default**; everything else observes until it has its own false-positive record (ledger in [CHANGELOG.md](CHANGELOG.md)). Since 1.2.0 the duplicate-write rule charges **novel** duplication only: matches the replaced content already carried (a full rewrite of a file holding budgeted blocks, an edit inside one) stay silent, a split to a new file still denies — copy and move are indistinguishable at the instant of the write — and the denial teaches the ordering that passes (trim the source first). The 2,761-event replay behind that change is ledgered in [FPR-REPLAY.md](docs/FPR-REPLAY.md). An explicit `[guard] mode` in `ce.toml` overrides every class. The graded size zone between the soft line and the hard budget stays observe-only by default; `[guard] zone_tiers` opts a repo into the position→tier map (<25% observe / 25–75% warn / >75% ask). Honest boundary: PreToolUse shapes behavior, it is not a security wall — shell writes bypass it. The Stop audit re-judges net LOC and touched duplicates; CI carries the hard size wall and ratchet.
-
-## Path classes (`[[rules.class]]`)
-
-Generated code, vendored trees and test fixtures rarely deserve the same size and complexity lines as the code you write by hand. A path class in `ce.toml` gives one glob set its own lines — the first declared class whose globs match owns the file, and a file no class matches keeps the global table:
-
-```toml
-[[rules.class]]
-name  = "vendored"
-globs = ["third_party/**", "**/*.pb.rs"]   # the exclude list's own glob dialect
-[rules.class.knobs]
-file_lines_warn = 600
-file_lines_fail = 1200                       # this class's hard line
-cognitive_warn  = 25
-ratchet_tolerance = 0                        # this class may not grow one line
-```
-
-Three faces read that one line and cannot disagree: the score's size and complexity axes (wire proto 3.1.0 — a continuous row carries its class index and a `classKnobs` table rides beside the rows, while the baseline stays three columns, so a class is a charging parameter and never a ratchet fact), the `ce scan` ladder (proto 3.2.0 — `rowClasses` and `gradeOverrides` ride beside the rows and the reply echoes them), and the PreToolUse hard budget (no wire at all — the hook resolves the file's table locally). Class names and globs never cross the wire; only the class index and its knobs do (ADR-008). At most 64 classes, and a class whose fail line sits below its warn line is refused at load like the global ladder. Since proto 5.1.0 a class may also declare `ratchet_tolerance`, its own ADR-006 allowance in lines. Declared, it replaces both global legs, so `0` means the class may not grow by a single line and the global `max(+2%, +10)` cannot rescue it — the setting a vendored tree or a frozen fixture wants, and the one that stops such trees from spending the growth budget hand-written code needs. And because a config edit would otherwise move every line at once, the baseline records a **fingerprint of the whole `ce.toml`** it was established under — its canonical effective knob set, the values that differ from the shipped defaults, so a comment, a key order, a knob spelled at its default or an option nobody declared never moves it: change a glob, a threshold, a score knob, an exclude — anything the parse holds that changes a judgment — and `ce check` stops by name (`knobs_digest`) instead of quietly relaxing. Agreeing to a new configuration is its own named act — `CE_ACCEPT_FENCE=1 ce baseline` re-pins the same ceilings under the declared knobs and refuses if anything else held, so growth cannot hide behind a config edit — while `CE_ACCEPT_BASELINE=1` re-establishes from the current tree, the one act that creates a missing file; without either, `ce baseline` at the project root only lets the violation set shrink, and every refusal names the act it wants, visible in git. It fingerprints the whole config rather than a chosen table because choosing is how the gap happens: an adversarial review of the first, class-only version found that `[score] viol_cost = 0` took a repo from 939/1000 failing to 1000/1000 passing while the axes still reported the violation. A repo whose config is the shipped default sends no fingerprint and keeps a baseline file without the key — and so does one that spells the defaults out.
-
-A repository that declares no class — this one included — judges byte for byte as before; declaring one moves the lines its files are measured against, so scores across that switch are **not comparable**. Keys: [ce.toml reference](docs/reference/ce-toml.md) · charging law: [methodology 05](docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md).
-
-## Evaluation dashboard
+## Benchmark dashboard
 
 <!-- bench:begin -->
 ### Latest-version latency · v1.2.0
@@ -163,59 +91,96 @@ A repository that declares no class — this one included — judges byte for by
 Every value is generated from `contracts/bench/bench.json`; the test rejects hand edits to this block. [Full replay notes and per-version series](docs/BENCH.md) · [Complete website dashboard](https://codeeraser.dev/bench/)
 <!-- bench:end -->
 
-## Documentation
+Latency rows are release-build replays on one fixed host (Windows x86_64, 16 CPU) against this repository, so they compare version to version on that machine only. Precision and recall points are frozen with their evaluation ledgers ([EVAL-SET](docs/EVAL-SET.md)); comparators (jscpd, similarity-*) are named with the exact version measured.
 
-- [Tech stack](https://codeeraser.dev/stack/) · [evaluation dashboard](https://codeeraser.dev/bench/) — the website's component map and complete generated record
-- [CLI reference](docs/reference/cli.md) · [ce.toml reference](docs/reference/ce-toml.md) — generated from the binary and the config schema; a CI gate reddens on drift
-- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [FIELD-TEST](docs/FIELD-TEST.md) — locked plan, frozen evaluation design and real-repository findings
-- [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) — generated series and measured replay ledgers
-- [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md) — wire SemVer and the two-phase release runbook
-- [docs/reference/methodology.md](docs/reference/methodology.md) — every verdict's math, one booklet per family, with formula and constant citations to implementation lines
-- [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) · [GUI reference](docs/reference/gui.md) — focused behavior contracts
+## Install, run, update
 
-## Under the hood / tech stack
+**Installer.** Each [release](https://github.com/skymanbp/CodeEraser/releases) ships three GUI installers (NSIS `setup.exe` / AppImage / dmg) bundling the GUI, `ce` and the `ce-core` judgment core; the Windows installer puts the install dir on PATH and, when it finds Claude Code, wires the plugin below. The nine binaries plus `SHA256SUMS` are unsigned by decision — verify with `sha256sum -c --ignore-missing SHA256SUMS`.
+
+**Claude Code plugin.** `/plugin marketplace add skymanbp/CodeEraser`, then `/plugin install codeeraser`. The starter resolves `ce` and `ce-core` by pin: a matching local or PATH copy, then a pinned download, then an unverified PATH binary that says so.
+
+**CLI only.** Download `ce-<ver>-<platform>` and `ce-core-<ver>-<platform>` (x86_64-windows / x86_64-linux / aarch64-macos), rename them `ce` / `ce-core`, put them side by side on PATH — or `cargo install codeeraser` and place a `ce-core` beside it. Core resolution is one chain everywhere: `CE_CORE_BIN` → a `ce-core` sibling → PATH; `--core <path>` wins.
+
+**From source.** Pinned Rust toolchain (`rust-toolchain.toml`) and GHC 9.14.1 + cabal: `cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`, then `cargo install --path cli`.
+
+| Command | What it reports / judges |
+|---|---|
+| `ce scan` | size / complexity / readability metrics, graded against the file's own lines; `--format sarif` |
+| `ce dedup` | T1/T2 clone blocks; `--check` gates the budget; digest-keyed warm cache; `--format sarif` |
+| `ce clone` / `ce docdup` | T3 near-miss clones; documentation duplication |
+| `ce graph` / `ce deadcode` | reference sites and the mention universe; liveness verdicts + the symbol advisory |
+| `ce churn` / `ce join` / `ce trend` | git-window churn; the three-signal join; score trajectory (minutes, progress on stderr) |
+| `ce structure` | seven axes; `--split-candidates` prices the best seam of every file past the soft line |
+| `ce check` / `ce baseline` | the ADR-006 ratchet and score floor; `baseline` persists only at the root and under a named act |
+| `ce erase` | the deterministic two-phase eraser; dry-run default, `--apply` behind clean-worktree preconditions |
+| `ce update` | latest release vs this build, exit 0 / 1 / 2; `--yes` replaces `ce` + `ce-core` after both pins verify, `--installer` saves the verified GUI installer |
+| `ce doctor` / `ce eject` / `ce mcp` | machine state; per-project uninstall; the read-only MCP server |
+
+Console output and `--help` are English by default and Chinese under `--lang zh` (or `CE_LANG=zh`); JSON and the FAIL/pass vocabulary are never translated.
+
+**Updating.** `ce update` reads the latest tag and that tag's committed `manifest.env`; the verdict is the exit code, and `--yes` acts only where nothing else keeps a ledger of the binary. A copy the plugin bound is re-pinned by `/plugin update codeeraser`; a cargo install by `cargo install codeeraser`; the GUI app itself by the installer `--installer` saves. The plugin's SessionStart line announces a newer release once a day (`CE_UPDATE_CHECK=0` turns that off); the GUI has an update screen; `/codeeraser:update` runs the check from Claude Code.
+
+**Path classes.** `[[rules.class]]` in `ce.toml` gives one glob set its own size and complexity lines, a ratchet tolerance (`0` = may not grow), and the same line is read by the score, the `ce scan` ladder and the PreToolUse budget. Declaring a class moves the lines files are measured against, so scores across that switch are not comparable. Keys: [ce.toml reference](docs/reference/ce-toml.md).
+
+### Three faces, one product
+
+Every capability is claimed once in this table, the sets are derived from the code (clap's enum, the Tauri roster, the MCP catalog, `hooks.json`, `plugin/commands`, `plugin/skills`), and a CI gate (`face_parity`) refuses a face nobody wrote down or a claim nobody shipped. Deliberate omissions are rows, not silence.
+
+<!-- parity:begin -->
+| capability | CLI | GUI (screen · commands) | plugin (hooks · MCP · commands · skills) |
+|---|---|---|---|
+| size / complexity / readability metrics | `ce scan` | `reports`, `scan_report` | MCP `scan` |
+| T1/T2 clone blocks | `ce dedup` | `reports`, `dedup_report` | MCP `check_duplication` |
+| T3 near-miss clones | `ce clone` | `reports`, `clone_report` | MCP `clone` |
+| documentation duplication | `ce docdup` | `reports`, `docdup_report` | MCP `docdup` |
+| reference sites and the mention universe | `ce graph` | `reports`, `sites_report` | MCP `graph_sites` |
+| liveness verdicts + symbol advisory | `ce deadcode` | `graph`, `graphcanvas_report`, `deadcode_report` | MCP `deadcode` |
+| git-window churn | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
+| three-signal join | `ce join` | `candidates`, `join_report` | MCP `join` |
+| tree-scale structure (seven axes, split pricing) | `ce structure` | `structure`, `structure_report` | MCP `structure` |
+| score trajectory | `ce trend` | `trend`, `trend_report` | MCP `trend` |
+| score, ratchet and floor | `ce check` | `score`, `check_report` | MCP `check` |
+| baseline writes | `ce baseline` | — CLI only: a machine surface never writes a baseline | — |
+| erase plan | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
+| erase apply | `ce erase --apply` | `erase`, `erase_apply` | — no MCP face: applying is a human act |
+| machine state | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
+| update check | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
+| update apply | `ce update --yes` | `update`, `update_apply` | — the plugin's copy is re-pinned by `/plugin update codeeraser` |
+| write-time guard | `ce probe --hook` | — hooks are the plugin's face | hook `PreToolUse` |
+| stop audit / pre-commit | `ce audit --hook`, `ce precommit` | — hooks are the plugin's face | hook `Stop` |
+| session health line | `ce health --hook` | — hooks are the plugin's face | hook `SessionStart` |
+| project daemon | `ce daemon`, `ce ping` | — started lazily by every face | — |
+| read-only report server | `ce mcp` | — the plugin registers it | `.mcp.json` |
+| uninstall | `ce eject` | — CLI only | — |
+| bench dashboard | — compiled-in series; README and site carry the same block | `bench`, `bench_doc` | — |
+| root anchoring | — every command and hook anchors through `root` | `default_root`, `resolve_root` | — |
+<!-- parity:end -->
+
+## Tech stack, design and philosophy
 
 ![Detailed stack: Rust measurement, the versioned wire, Haskell judgment, product faces and the release pin chain](docs/assets/stack.svg)
 
-Rust owns source-facing work: tree-sitter parsing, the SQLite WAL
-fingerprint index, resolver ladders, git windows, the lazy project
-daemon, and fact gathering. Those facts cross one SemVer-negotiated
-NDJSON wire. Haskell owns product decisions: score and ratchet
-verdicts, graph liveness and cycle membership, clone/docdup decisions,
-split pricing, and erase authorization. The terminal, Tauri GUI,
-read-only MCP server, Claude Code hooks and CI render or enforce those
-same report shapes.
+- **Rust 1.94.1** (edition 2024): the `codeeraser` crate — tree-sitter 0.26 with six grammars, rusqlite 0.37 (bundled SQLite, WAL, index schema 15 / GRAPH_REV 15 / MENTION_REV 2), the `ignore` walker, `interprocess` named pipes / Unix sockets, clap, serde, sha2 for the updater's pins.
+- **Haskell (GHC 9.14.1, GHC2021, `-Wall -Werror`)**: `ce-core` — every judgment family (scan, verdict, clone, docdup, graph, structure, trend, erase, fourclass, audit), exact rationals, a frozen dependency graph.
+- **Tauri 2** GUI over the same crate, vanilla JavaScript in the webview, no build step; **NSIS / AppImage / dmg** bundles with `ce` and `ce-core` as sidecars.
+- **One wire.** ce ↔ core is NDJSON over stdio with SemVer negotiation (proto 6.4.0); the per-project daemon speaks its own protocol (2.0.0) over `interprocess`; a protocol-major skew is a named refusal, never a guess.
+- **Design rules.** ADR-001 Rust frontend · ADR-002 Haskell judges, never parses · ADR-003 lazy daemon, 30-minute idle exit, fail-open hooks · ADR-004 cheap PreToolUse, deep Stop, CI as backstop · ADR-005 two clone layers · ADR-006 shrink-only ratchet · ADR-007 pinned distribution · ADR-008 policy as Haskell data. The plan is the contract: [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md).
+- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the thirteen-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the bench block, the demo, the parity table, the NOTICE. This repository is its own first user — every push runs the six product gates on this tree.
 
-- The push workflow runs the six self-hosting product gates, including the explicit score floor; this repository is the standing dogfood fixture.
-- ADR-006 ceilings and violation sets live in `ce-baseline.json`; cleanup tightens them, growth needs the named re-establish (`CE_ACCEPT_BASELINE=1`), a configuration change its own narrower act (`CE_ACCEPT_FENCE=1`), and `ce check` names on its console line whichever conditions held.
-- A path class in `ce.toml` (`[[rules.class]]`) hands one glob set its own size and complexity lines; the score, the `ce scan` ladder and the PreToolUse hard budget read the file's own line, and class names and globs never cross the wire.
-- CLI/config references are generated, and the thirteen-booklet methodology has machine-checked citations, navigation and EN/ZH constants.
-- A guard class moves to deny only after its own false-positive record is entered in [CHANGELOG.md](CHANGELOG.md); unqualified classes remain observe.
-- `ce erase` gathers deterministic facts and lets the Haskell safety predicate authorize removals; it never asks a model to rewrite code.
-- Release builds are two-phase: hashes come from draft assets, pins land in the tree, and the tag verifies those same bytes without rebuilding.
+## Roadmap and known limits
 
-[Website stack page](https://codeeraser.dev/stack/) ·
-[verdict methodology](docs/reference/methodology.md) · [wire contract](contracts/VERSIONING.md)
+**Limits.** PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it — the Stop audit and CI are the backstops). Hooks fail open on internal errors and record the degradation. Semantic judgment covers the six grammars above; JSDoc and Rust `///` are comments, not docstrings; T4 clones are not promised. `churn`, `join` and `trend` are minute-scale. Binaries are unsigned. Judging this repository needs the `cli/tests` submodule seated (it is a reader of the tree, never a measured part). Scores are not comparable across a `[[rules.class]]` switch or across the v1.2.0 → v1.3.0 test-submodule move.
 
-The boundary is concrete: Rust emits measured facts; Haskell returns the decisions.
+**Roadmap.** The deferred bundles are named in the plan's K–L row: M (scoring and evaluation items, product small items), N (distribution — deb/rpm, provenance, marketplace channel, air-gapped flow) and four evidence gates that decide which guard classes may be promoted. Nothing is promoted without its own false-positive record.
+
+## Documentation
+
+- [CLI reference](docs/reference/cli.md) · [ce.toml reference](docs/reference/ce-toml.md) — generated from the binary and the config schema; drift reddens CI
+- [Methodology](docs/reference/methodology.md) (thirteen booklets, cited to implementation lines) · [structure axes](docs/reference/structure-axes.md) · [size advisory](docs/reference/size-advisory.md) · [erase contract](docs/reference/erase.md) · [GUI reference](docs/reference/gui.md) · [plugin](plugin/README.md) · [demo](demo/README.md)
+- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md)
+- [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md) — wire SemVer and the two-phase release runbook
+- Website: [codeeraser.dev](https://codeeraser.dev) · [how it works](https://codeeraser.dev/how/) · [stack](https://codeeraser.dev/stack/) · [bench](https://codeeraser.dev/bench/) <!-- ce:allow(docdup) -- the documentation links are one set, listed in both languages -->
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Third-party inventory: [NOTICE](NOTICE)
-(regenerated and gated byte-exact in CI by `cli/tests/it/notice_gate.rs`).
-
-The test suite lives in [skymanbp/CodeEraser-tests](https://github.com/skymanbp/CodeEraser-tests),
-mounted here as the `cli/tests` submodule — clone with `--recurse-submodules`
-(or `git submodule update --init`) before `cargo test`; until the checkout is
-seated every judging command refuses by name (an empty `cli/tests` would
-otherwise judge this tree without the references its tests hold). The
-submodule is a **reader** of this tree, never a measured part of it: its
-files feed the graph's edges and the advisory's mention universe, while
-every size, score, clone and ratchet row is cut from this repository's own
-files alone — the suite passes the same six gates in CI under its own
-`ce.toml` and baseline. The crate's unit tests ride there too (`unit/`, one
-file per `#[cfg(test)]` module, mounted back into its source file by
-`#[path]`), so the score here prices product code alone.
-
-"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the
-license covers the code, not the name.
+Apache-2.0 — see [LICENSE](LICENSE); third-party inventory in [NOTICE](NOTICE) (regenerated and gated in CI). The test suite lives in [skymanbp/CodeEraser-tests](https://github.com/skymanbp/CodeEraser-tests), mounted as the `cli/tests` submodule — clone with `--recurse-submodules`. "CodeEraser"™ is a trademark of skymanbp; per Apache-2.0 §6 the license covers the code, not the name.

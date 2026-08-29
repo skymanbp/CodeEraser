@@ -1,10 +1,10 @@
 # codeeraser plugin
 
-被动 guard 三钩（全部 fail-open，内部失败一律放行）+ 一个主动 skill：
+被动 guard 三钩（全部 fail-open，内部失败一律放行）+ 一个主动 skill + 一条命令：
 
 | hook | 命令 | 行为 |
 |---|---|---|
-| SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热 |
+| SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
 | PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入内容做 T1/T2 探针；按 `ce.toml [guard] mode` 决策 |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块；仅 deny 档拦停 |
 
@@ -12,11 +12,16 @@ skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
 的发现引导成安全删除（先读全文、查引用、小批删、重跑门证收敛），
 用户说"清理重复/死码"时由 Claude 自动调用。
 
-MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），13 个工具随插件
+命令：[`/codeeraser:update`](commands/update.md)——跑 `ce update` 并转述判定
+（退出码 0 最新 / 1 有更新 / 2 未知）。插件绑定的副本由清单 pin 决定，
+所以它的更新动作永远是 `/plugin update codeeraser`（新清单带新 pin，下一会话
+启动器重验重下载）；`ce update --yes` 只替换手工放置或安装包随附的副本。
+
+MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），14 个工具随插件
 一起到位——装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
 由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
 `erase` 工具只到**计划**为止：`apply` 没有 face、也不会有——一个能凭自己
-的权限删文件的机器面，是橡皮擦唯一不能出的东西。
+的权限删文件的机器面，是橡皮擦唯一不能出的东西；`update_check` 同理只到检查。
 
 ## 安装
 

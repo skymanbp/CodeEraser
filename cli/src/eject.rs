@@ -79,6 +79,10 @@ pub fn run(root: &Path, yes: bool) -> ExitCode {
 /// recreate the state being removed.
 fn released(root: &Path) -> bool {
     let shutdown = client::request_if_running(root, &Request::Shutdown);
+    if let Err(e) = &shutdown {
+        // the refusal above names the state; this names its cause
+        eprintln!("eject: shutdown request: {e:#}");
+    }
     matches!(shutdown, Ok(Response::Bye)) || !client::is_running(root)
 }
 

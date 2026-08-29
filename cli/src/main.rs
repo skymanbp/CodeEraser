@@ -10,6 +10,7 @@ mod main_erase;
 mod main_judge;
 mod main_lang;
 mod main_score;
+mod main_update;
 
 use codeeraser::daemon;
 use main_cli::{Cli, Cmd};
@@ -137,6 +138,11 @@ fn infra(cmd: Cmd) -> ExitCode {
         Cmd::Eject { root, yes } => codeeraser::eject::run(&cmds::or_cwd(root), yes),
         Cmd::Daemon { root } => cmds::serve_cmd("daemon", daemon::server::serve(&root)),
         Cmd::Ping { root } => cmds::ping_cmd(root),
+        Cmd::Update {
+            yes,
+            installer,
+            format,
+        } => main_update::update_cmd(yes, installer, format),
         _ => unreachable!("analysis() owns every other command"),
     }
 }

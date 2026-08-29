@@ -66,6 +66,10 @@
   销毁；任何 token 值不落对话/不落库/不打印。部署后按页 sha256
   对拍本地 `site/` 才算上线。
 - **marketplace**：清单随 main 走，无独立发布步。
+- **`ce update`**（v1.3.0 起）：装机自检读 `releases/latest` 的 tag 与**该 tag 上**的
+  `plugin/bin/manifest.env`——本 runbook「pin 提交先于 tag」的既有序正是它的信任锚，
+  无需另发任何东西。publish 后在任一旧版装机上 `ce update` 应退 1 并报新版本；
+  `ce update --yes` 落位后 `ce doctor` 握手同版；插件装机走 `/plugin update codeeraser`。
 - 记账：CLAUDE.md 状态行（本地项目卡，2026-08-23 起不入库）+ ccm 发版记录。
 
 ## 4. 回归口径

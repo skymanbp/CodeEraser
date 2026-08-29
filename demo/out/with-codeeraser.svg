@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="849" height="1318" viewBox="0 0 849 1318" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
+<title>the same task — with CodeEraser</title>
+<rect width="849" height="1318" rx="8" fill="#0d1117"/>
+<rect width="849" height="32" rx="8" fill="#161b22"/>
+<rect y="16" width="849" height="16" fill="#161b22"/>
+<circle cx="18" cy="16" r="5" fill="#ff5f57"/><circle cx="36" cy="16" r="5" fill="#febc2e"/><circle cx="54" cy="16" r="5" fill="#28c840"/>
+<text x="424.5" y="21" fill="#8b949e" text-anchor="middle">the same task — with CodeEraser</text>
+<text x="18" y="60" fill="#8b949e" xml:space="preserve">CodeEraser in the loop: PreToolUse guard + Stop audit, ce.toml [guard] mode = "deny"</text>
+<text x="18" y="79" fill="#d2a8ff" xml:space="preserve">agent&gt; Add discounts. I'll keep the rounding helpers local so the module is self-contained.</text>
+<text x="18" y="98" fill="#58a6ff" xml:space="preserve">$ Write invoicer/discount.py</text>
+<text x="18" y="117" fill="#ff7b72" xml:space="preserve">✗ PreToolUse deny — ce: content for &lt;work&gt;/invoicer/discount.py duplicates 1 indexed region(s):</text>
+<text x="18" y="136" fill="#ff7b72" xml:space="preserve">    invoicer/money.py:1-18 (89 tokens). Reuse the existing implementation instead of re-writing it.</text>
+<text x="18" y="155" fill="#ff7b72" xml:space="preserve">    Moving it? Trim the source region first: the probe verifies against the current tree, and the same</text>
+<text x="18" y="174" fill="#ff7b72" xml:space="preserve">    write then passes.</text>
+<text x="18" y="193" fill="#d2a8ff" xml:space="preserve">agent&gt; Add a compact report variant next to the existing renderer.</text>
+<text x="18" y="212" fill="#58a6ff" xml:space="preserve">$ Write invoicer/report.py</text>
+<text x="18" y="231" fill="#3fb950" xml:space="preserve">✓ landed (the guard had nothing to say)</text>
+<text x="18" y="250" fill="#d2a8ff" xml:space="preserve">agent&gt; Document discounts; open with the pricing rules so the page stands alone.</text>
+<text x="18" y="269" fill="#58a6ff" xml:space="preserve">$ Write docs/DISCOUNTS.md</text>
+<text x="18" y="288" fill="#3fb950" xml:space="preserve">✓ landed (the guard had nothing to say)</text>
+<text x="18" y="307" fill="#d2a8ff" xml:space="preserve">agent&gt; Add CSV export where the invoice already lives.</text>
+<text x="18" y="326" fill="#58a6ff" xml:space="preserve">$ Write invoicer/invoice.py</text>
+<text x="18" y="345" fill="#3fb950" xml:space="preserve">✓ landed (the guard had nothing to say)</text>
+<text x="18" y="364" fill="#d2a8ff" xml:space="preserve">agent&gt; Add a JSON renderer.</text>
+<text x="18" y="383" fill="#58a6ff" xml:space="preserve">$ Write invoicer/report_json.py</text>
+<text x="18" y="402" fill="#3fb950" xml:space="preserve">✓ landed (the guard had nothing to say)</text>
+<text x="18" y="421" fill="#d2a8ff" xml:space="preserve">agent&gt; Switch the CLI to JSON output.</text>
+<text x="18" y="440" fill="#58a6ff" xml:space="preserve">$ Write invoicer/cli.py</text>
+<text x="18" y="459" fill="#3fb950" xml:space="preserve">✓ landed (the guard had nothing to say)</text>
+<text x="18" y="478" fill="#d2a8ff" xml:space="preserve">agent&gt; Format money in the API handler without reaching into format.ts.</text>
+<text x="18" y="497" fill="#58a6ff" xml:space="preserve">$ Write web/api.ts</text>
+<text x="18" y="516" fill="#ff7b72" xml:space="preserve">✗ PreToolUse deny — ce: content for &lt;work&gt;/web/api.ts duplicates 1 indexed region(s): web/format.ts:4-15</text>
+<text x="18" y="535" fill="#ff7b72" xml:space="preserve">    (114 tokens). Reuse the existing implementation instead of re-writing it. Moving it? Trim the source</text>
+<text x="18" y="554" fill="#ff7b72" xml:space="preserve">    region first: the probe verifies against the current tree, and the same write then passes.</text>
+<text x="18" y="573" fill="#8b949e" xml:space="preserve">session over: 5 of 7 writes landed</text>
+<text x="18" y="592" fill="#58a6ff" xml:space="preserve">$ Stop hook → ce audit --hook</text>
+<text x="18" y="611" fill="#ff7b72" xml:space="preserve">✗ Stop block — ce audit: this session's edits leave 2 duplicate block(s) touching changed files (net</text>
+<text x="18" y="630" fill="#ff7b72" xml:space="preserve">    +105 LOC): invoicer/report.py:18-25 &lt;-&gt; invoicer/report.py:43-50 (61 tokens);</text>
+<text x="18" y="649" fill="#ff7b72" xml:space="preserve">    invoicer/report.py:28-31 &lt;-&gt; invoicer/report.py:52-55 (55 tokens) — deduplicate before stopping.</text>
+<text x="18" y="668" fill="#8b949e" xml:space="preserve">the tree, measured (the CI face):</text>
+<text x="18" y="687" fill="#58a6ff" xml:space="preserve">$ ce check .</text>
+<text x="18" y="706" fill="#ff7b72" xml:space="preserve">check score 979/1000 | axes 0:0 1:0 2:0 3:0 4:153 5:0 6:0 | 0 candidates</text>
+<text x="18" y="725" fill="#ff7b72" xml:space="preserve">ratchet: 2 added, 0 removed, 2 over, 0 tolerance drawn -&gt; FAIL (failed: ratchet_over, discrete_added)</text>
+<text x="18" y="744" fill="#ff7b72" xml:space="preserve">note: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table</text>
+<text x="18" y="763" fill="#58a6ff" xml:space="preserve">$ ce dedup . --check</text>
+<text x="18" y="782" fill="#ff7b72" xml:space="preserve">dup invoicer/report.py:18-25 &lt;-&gt; invoicer/report.py:43-50 (61 tokens)</text>
+<text x="18" y="801" fill="#ff7b72" xml:space="preserve">dup invoicer/report.py:28-31 &lt;-&gt; invoicer/report.py:52-55 (55 tokens)</text>
+<text x="18" y="820" fill="#ff7b72" xml:space="preserve">indexed 8 files (0 refreshed, 0 removed) — 2 clone blocks in 2 groups (min 50 tokens, distinct &gt;= 7), 0</text>
+<text x="18" y="839" fill="#ff7b72" xml:space="preserve">    low-diversity suppressed, 0 hot chained, 0 stale skipped</text>
+<text x="18" y="858" fill="#ff7b72" xml:space="preserve">dedup ratchet: 2 clone blocks &gt; budget 0 — new duplication must not land</text>
+<text x="18" y="877" fill="#58a6ff" xml:space="preserve">$ ce clone .</text>
+<text x="18" y="896" fill="#c9d1d9" xml:space="preserve">clone invoicer/report.py:render/1#0 &lt;-&gt; invoicer/report.py:render_compact/1#0  ted 0 (nodes 34/34)</text>
+<text x="18" y="915" fill="#c9d1d9" xml:space="preserve">clones: 1 near-miss clone pair(s) over 27 unit(s) — 3 judged, 0 provably below threshold | forest_units</text>
+<text x="18" y="934" fill="#c9d1d9" xml:space="preserve">    0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 3,</text>
+<text x="18" y="953" fill="#c9d1d9" xml:space="preserve">    s5_new 0, s5_pruned_label 42, s5_windowed 45, sent 3, survivors 3</text>
+<text x="18" y="972" fill="#58a6ff" xml:space="preserve">$ ce docdup . --check</text>
+<text x="18" y="991" fill="#ff7b72" xml:space="preserve">docdup docs/DISCOUNTS.md:3-10 md_para &lt;-&gt; docs/PRICING.md:3-10 md_para  J 98/98 verbatim 102</text>
+<text x="18" y="1010" fill="#ff7b72" xml:space="preserve">dups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0,</text>
+<text x="18" y="1029" fill="#ff7b72" xml:space="preserve">    exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1,</text>
+<text x="18" y="1048" fill="#ff7b72" xml:space="preserve">    seed_pairs 0, sent 1</text>
+<text x="18" y="1067" fill="#ff7b72" xml:space="preserve">docdup check: 1 reported duplication(s) — resolve or exempt them</text>
+<text x="18" y="1086" fill="#58a6ff" xml:space="preserve">$ ce deadcode . --check</text>
+<text x="18" y="1105" fill="#ff7b72" xml:space="preserve">dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1124" fill="#ff7b72" xml:space="preserve">dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites</text>
+<text x="18" y="1143" fill="#ff7b72" xml:space="preserve">    in this language]</text>
+<text x="18" y="1162" fill="#ff7b72" xml:space="preserve">deadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 5 unresolved sites (verdicts assume none</text>
+<text x="18" y="1181" fill="#ff7b72" xml:space="preserve">    lands in-corpus)</text>
+<text x="18" y="1200" fill="#ff7b72" xml:space="preserve">deadcode check: 2 dead file(s) — disposition or entry_globs them</text>
+<text x="18" y="1219" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
+<text x="18" y="1238" fill="#ff7b72" xml:space="preserve">@@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words)</text>
+<text x="18" y="1257" fill="#ff7b72" xml:space="preserve">    fnv1a64:fa6f7a63e41bfa36</text>
+<text x="18" y="1276" fill="#ff7b72" xml:space="preserve">erase plan: 1 eraseable, 2 advisory (dry-run; --apply to act)</text>
+<text x="18" y="1295" fill="#ff7b72" xml:space="preserve">erase check: 1 eraseable row(s) planned</text>
+</svg>

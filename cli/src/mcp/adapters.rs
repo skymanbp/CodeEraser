@@ -148,6 +148,13 @@ pub(super) fn doctor(root: &Path, _a: &Value) -> Result<String> {
     Ok(crate::faces::doctor(root, &core())?.to_string())
 }
 
+/// The one tool about the BINARY rather than the project: `path`
+/// rides its schema like every row's and is ignored, because the
+/// answer does not depend on which tree asked.
+pub(super) fn update_check(_root: &Path, _a: &Value) -> Result<String> {
+    Ok(crate::faces::update_check()?.to_string())
+}
+
 pub(super) fn trend(root: &Path, a: &Value) -> Result<String> {
     let commits = count(a, "commits", crate::trend::DEFAULT_COMMITS);
     // absent = measure every uncached commit, but a PRESENT batch of 0

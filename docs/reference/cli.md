@@ -34,6 +34,7 @@ Commands:
   precommit  pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — the one CI-facing gate that passes on a missing core
   mcp        MCP server over stdio: the read-only report face of every judgment family
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
+  update     Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -423,5 +424,20 @@ Options:
       --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
       --yes          Actually remove (default: dry run naming every target)
   -h, --help         Print help
+```
+
+## ce update
+
+```text
+Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
+
+Usage: ce update [OPTIONS]
+
+Options:
+      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --yes              Download and place the verified binaries (default: report only)
+      --installer        With --yes: also save the verified GUI installer to the temp dir and print its path (running it is your click)
+      --format <FORMAT>  [default: console] [possible values: console, json]
+  -h, --help             Print help
 ```
 

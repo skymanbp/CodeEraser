@@ -187,6 +187,34 @@ pub fn doctor_report(root: String) -> Result<Value, String> {
     codeeraser::faces::doctor(Path::new(&root), &core_path()).map_err(|e| format!("{e:#}"))
 }
 
+/// The update DOCUMENT — the same one `ce update` prints — off the
+/// blocking pool because it reads the network. No root: the question
+/// is about this build, not the opened project. The face cannot
+/// fail (an unreachable index rides inside the document).
+#[tauri::command]
+pub async fn update_check() -> Result<Value, String> {
+    tauri::async_runtime::spawn_blocking(|| {
+        codeeraser::faces::update_check().map_err(|e| format!("{e:#}"))
+    })
+    .await
+    .map_err(|e| e.to_string())?
+}
+
+/// The apply leg — the SAME library entry `ce update --yes` drives
+/// (one implementation, two faces): the check is re-measured here
+/// rather than trusted from the webview, both binaries are verified
+/// against the tag's pins before either is placed, and every refusal
+/// (a plugin's or cargo's copy, a pin mismatch) surfaces by name.
+#[tauri::command]
+pub async fn update_apply(installer: bool) -> Result<Value, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let doc = codeeraser::update::document();
+        codeeraser::update::apply::run(&doc, installer).map_err(|e| format!("{e:#}"))
+    })
+    .await
+    .map_err(|e| e.to_string())?
+}
+
 /// The bench dashboard document, compiled in at build time — the
 /// shipped GUI shows the bench of its OWN release (single source:
 /// contracts/bench/bench.json; the renderers and CI gate live in

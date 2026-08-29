@@ -32,6 +32,7 @@ pub mod scan;
 pub mod score;
 pub mod structure;
 pub mod trend;
+pub mod update;
 
 #[cfg(test)]
 #[path = "../tests/unit/testutil.rs"]

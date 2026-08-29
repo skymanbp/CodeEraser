@@ -50,7 +50,7 @@ use serde_json::{Map, Value};
 /// when the row is absent (`score::knobs::core_defaults`, pinned
 /// live against the core's echo), so "declared at the default" and
 /// "undeclared" serialize to the same leaf.
-pub(crate) fn effective_default() -> Config {
+fn effective_default() -> Config {
     Config {
         score: crate::score::knobs::core_defaults(),
         trend: TrendCfg::core(),

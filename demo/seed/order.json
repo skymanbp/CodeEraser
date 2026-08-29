@@ -1,0 +1,9 @@
+{
+  "number": "INV-1042",
+  "region": "US-CA",
+  "items": [
+    { "sku": "CH-01", "description": "Oak chair", "quantity": 4, "unit_price": "89.99" },
+    { "sku": "TB-07", "description": "Walnut table", "quantity": 1, "unit_price": "449.50" },
+    { "sku": "DL-02", "description": "Delivery", "quantity": 1, "unit_price": "35.00" }
+  ]
+}

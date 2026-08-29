@@ -1,8 +1,8 @@
-# The CodeEraser GUI — nine screens over one document set (reference)
+# The CodeEraser GUI — ten screens over one document set (reference)
 
 > Status: shipped in stages — three screens at v0.7.3, eight at
 > v1.0.0 (the graph screen closed M9), nine since the K round added
-> doctor. The implementation answers to this file;
+> doctor, ten since the L round added update. The implementation answers to this file;
 > divergence is a defect in one of the two. The screens live in
 > `gui/ui/*.js`, the Tauri backend in `gui/src-tauri/src/commands.rs`
 > — a separate cargo workspace from the CLI, with its own CI legs.
@@ -32,7 +32,7 @@ Two consequences worth naming:
   face's own word tables (`gui/ui/i18n.js`, en/zh key-for-key, gated
   by `cli/tests/gui/i18n_gate.js`) and never touches the data.
 
-## The nine screens
+## The ten screens
 
 | tab | document | what it shows |
 |---|---|---|
@@ -45,6 +45,7 @@ Two consequences worth naming:
 | **Reports** | the remaining families | the diagnostics hub: each family's document rendered generically — counts and name lists as chips (a scan's `failed` conditions among them), row arrays as tables — adding zero interpretation |
 | **Bench** | `contracts/bench/bench.json` | the compiled-in benchmark series, pivoted to one row per metric with a column per version; frozen points carry value **and** source |
 | **Doctor** | `ce.doctor-report` | this machine's state: ce-core handshake, guard tier, index freshness, daemon, degraded-run counter — probed without starting the daemon or rebuilding the index, so the diagnostic reports a state it did not create. A `parked daemon workers` row appears only when the count is non-zero (0.3.0): client conversations the deadline gave up on that have not returned — the read is cancelled at the deadline, so only a connect the kernel still holds can sit here |
+| **Update** | `ce.update-report` | this build against the latest release: the release index's newest tag, that tag's committed SHA256 pins (`plugin/bin/manifest.env` as the release commit wrote it), the install kind read off the binary's own location, and the one action it allows — codes on the wire, words in this face's tables. "Update now" appears only where the library would place anything (a copy placed by hand, or the installer bundle's sidecars) and re-measures before it acts; a copy the plugin or cargo owns names its own command instead. The optional installer box saves the verified GUI installer and shows its path — running it stays the reader's click |
 
 ## How a screen runs
 
@@ -73,9 +74,12 @@ surfacing by name. The full contract is [erase.md](erase.md).
   where the named re-establish discipline lives.
 - **No config writes.** `ce.toml` is edited by its owner, not by a
   settings panel.
-- **One write verb total.** Erase Apply is the single command that
-  touches user files, and it acts only on the plan the reader just
-  previewed, behind the preconditions above.
+- **One write verb on user files.** Erase Apply is the single command
+  that touches user files, and it acts only on the plan the reader
+  just previewed, behind the preconditions above. Update Apply is the
+  other write, and it never reaches the project: it replaces `ce` and
+  `ce-core` beside the app, only after both SHA256 pins verified, and
+  refuses a copy another package manager owns.
 
 ## Getting it
 

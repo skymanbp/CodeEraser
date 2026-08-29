@@ -124,6 +124,27 @@ const CE_I18N = {
     degradedRuns: "degraded runs", ofEntries: (n, t) => `${n} of ${t} feed entries`,
     parkedWorkers: "parked daemon workers (past the client deadline, not returned)",
     emptyDoctor: "load to read this machine's state — the same document `ce doctor` prints, and the daemon is asked without being started",
+    // the update document carries CODES like the doctor's (plan
+    // v2.15): install kind, verdict and action each render from a
+    // table here, and an unknown code shows AS the code
+    tabUpdate: "update", updateCheck: "check for updates", updateApply: "update now",
+    updateInstaller: "also save the verified GUI installer",
+    emptyUpdate: "check to compare this build against the latest release — the same document `ce update` prints; nothing is downloaded until you apply",
+    checking: "checking…", updating: "downloading and verifying…",
+    currentVersion: "this build", latestVersion: "latest release", installKind: "install",
+    updatePins: "pins (SHA-256, from the release commit)",
+    installWords: (s) => ["placed by hand", "installer bundle sidecar", "cargo install", "plugin starter's bound copy"][s] ?? `install ${s}`,
+    updateVerdictWords: (s) => ["up to date", "update available", "unknown"][s] ?? `verdict ${s}`,
+    updateActionWords: (s) => [
+      "nothing to do",
+      "update now replaces ce and ce-core in place (pins verified)",
+      "this copy is the plugin's: run /plugin update codeeraser in Claude Code",
+      "this copy is cargo's: run cargo install codeeraser",
+      "update now replaces ce and ce-core beside the app; tick the installer box to save the verified installer for the GUI app itself",
+    ][s] ?? `action ${s}`,
+    updateConfirm: (v) => `Update to ${v}? ce and ce-core are replaced in place after their SHA-256 pins verify; the previous copies are retired as .old.`,
+    updatePlaced: (v, list) => `updated to ${v}: placed ${list}`,
+    installerSaved: (p) => `installer saved (verified): ${p} — run it to update the GUI app`,
   },
   zh: {
     tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选", tabGraph: "引用图",
@@ -228,6 +249,24 @@ const CE_I18N = {
     degradedRuns: "降级运行", ofEntries: (n, t) => `${n} / ${t} 条流水`,
     parkedWorkers: "滞留的 daemon 工人线程（客户端期限已过仍未返回）",
     emptyDoctor: "点加载读取本机状态——与 `ce doctor` 打印的是同一份文档，且探 daemon 不启动它",
+    tabUpdate: "更新", updateCheck: "检查更新", updateApply: "立即更新",
+    updateInstaller: "同时保存已校验的 GUI 安装包",
+    emptyUpdate: "点检查把本构建与最新发布对比——与 `ce update` 打印的是同一份文档；应用前不下载任何东西",
+    checking: "检查中…", updating: "下载并校验中…",
+    currentVersion: "本构建", latestVersion: "最新发布", installKind: "安装方式",
+    updatePins: "pin（SHA-256，来自发布提交）",
+    installWords: (s) => ["手工放置", "安装包随附", "cargo 安装", "插件启动器绑定副本"][s] ?? `安装方式 ${s}`,
+    updateVerdictWords: (s) => ["已是最新", "有更新", "未知"][s] ?? `判定 ${s}`,
+    updateActionWords: (s) => [
+      "无需操作",
+      "立即更新会就地替换 ce 与 ce-core（按 pin 校验）",
+      "此副本属于插件：在 Claude Code 里运行 /plugin update codeeraser",
+      "此副本由 cargo 管理：运行 cargo install codeeraser",
+      "立即更新会在应用旁替换 ce 与 ce-core；勾选安装包即为 GUI 应用本体保存已校验的安装包",
+    ][s] ?? `操作 ${s}`,
+    updateConfirm: (v) => `更新到 ${v}？ce 与 ce-core 在 SHA-256 pin 校验通过后就地替换；旧副本改名为 .old 退役。`,
+    updatePlaced: (v, list) => `已更新到 ${v}：已放置 ${list}`,
+    installerSaved: (p) => `安装包已保存（已校验）：${p} — 运行它以更新 GUI 应用`,
   },
 };
 

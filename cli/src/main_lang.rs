@@ -89,6 +89,9 @@ mcp.root	工具作用的项目根（默认当前目录）
 eject	卸载项目状态：.ce/、基线、钉扎件（默认试运行）
 eject.root	要卸载的项目根（默认当前目录）
 eject.yes	真正移除（默认试运行并点名每个目标）
+update	检查新发布版本（退出码 0 已最新 / 1 有更新 / 2 未知）；--yes 就地替换 ce 与 ce-core，逐项对照发布提交自带的 SHA256 pin——插件或 cargo 所有的副本不动（各自有自己的更新路）
+update.yes	下载并落位已校验的二进制（默认只报告）
+update.installer	配合 --yes：另把已校验的 GUI 安装器存到临时目录并打印路径（运行它由你点击）
 ";
 
 fn zh_map() -> &'static HashMap<&'static str, &'static str> {

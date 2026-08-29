@@ -1,0 +1,11 @@
+# invoicer — the demo project's own CodeEraser configuration.
+# Everything below is the shipped default except the guard tier: the
+# demo wants every FPR-gated rule to DENY at PreToolUse so the "with
+# CodeEraser" run shows the interception rather than a ledger entry.
+[guard]
+mode = "deny"
+
+# The clone ratchet's budget: zero blocks. A fresh project starts clean
+# and `ce dedup --check` keeps it there.
+[dedup]
+budget = 0

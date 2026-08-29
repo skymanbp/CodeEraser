@@ -2,7 +2,7 @@
 # crates.io name `ce` is squatted (2021, no bin); ripgrep pattern instead:
 # package `codeeraser`, binary `ce` (name-check 2026-08-07, cc-memory decision)
 name = "codeeraser"
-version = "1.2.0"
+version = "1.3.0"
 edition = "2024"
 description = "CodeEraser — erase LLM-induced code & document entropy"
 license = "Apache-2.0"
@@ -40,6 +40,10 @@ interprocess = "2.4.3"
 rusqlite = { version = "0.37", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# the updater's pin check (update/apply.rs): the same SHA-256 ce.sh
+# asks sha256sum for — already in both lockfiles transitively, so no
+# new build node
+sha2 = "0.10"
 toml = "1.1.4"
 tree-sitter = "0.26.11"
 tree-sitter-go = "0.25.0"

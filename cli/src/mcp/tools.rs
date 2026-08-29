@@ -8,7 +8,7 @@
 
 use super::adapters::{
     check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, graph_sites,
-    join, scan, structure, trend,
+    join, scan, structure, trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -158,6 +158,14 @@ pub const TOOLS: &[Tool] = &[
             ("commits", "integer", "mainline window size (default 30)"),
             ("batch", "integer", "max uncached commits measured per call"),
         ]
+    ),
+    tool!(
+        "update_check",
+        update_check,
+        "Whether a newer CodeEraser release exists (ce.update-report schema): the \
+         latest tag, that tag's committed SHA256 pins, and the one action for this \
+         install. Reads the release index over the network; places nothing — \
+         applying is a human act at the CLI or the GUI."
     ),
 ];
 

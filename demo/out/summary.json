@@ -1,0 +1,64 @@
+{
+  "without": {
+    "landed": 7,
+    "denied": 0,
+    "stop": null,
+    "gates": {
+      "check": {
+        "rc": 1,
+        "out": "check score 952/1000 | axes 0:0 1:0 2:142 3:0 4:200 5:0 6:0 | 2 candidates\nratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)\nnote: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table"
+      },
+      "dedup": {
+        "rc": 1,
+        "out": "dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (89 tokens)\ndup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)\ndup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)\ndup web/api.ts:22-33 <-> web/format.ts:4-15 (114 tokens)\nindexed 9 files (0 refreshed, 0 removed) — 4 clone blocks in 4 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped\ndedup ratchet: 4 clone blocks > budget 0 — new duplication must not land"
+      },
+      "clone": {
+        "rc": 0,
+        "out": "clone invoicer/discount.py:scale_cents/3#0 <-> invoicer/money.py:scale_cents/3#0  ted 0 (nodes 40/40)\nclone invoicer/discount.py:to_cents/1#0 <-> invoicer/money.py:to_cents/1#0  ted 0 (nodes 43/43)\nclone invoicer/report.py:render/1#0 <-> invoicer/report.py:render_compact/1#0  ted 0 (nodes 34/34)\nclone web/api.ts:formatCents/2#0 <-> web/format.ts:formatCents/2#0  ted 1 (nodes 91/92)\nclones: 4 near-miss clone pair(s) over 32 unit(s) — 7 judged, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 6, s5_new 1, s5_pruned_label 59, s5_windowed 66, sent 7, survivors 6"
+      },
+      "docdup": {
+        "rc": 1,
+        "out": "docdup docs/DISCOUNTS.md:3-10 md_para <-> docs/PRICING.md:3-10 md_para  J 98/98 verbatim 102\ndups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1, seed_pairs 0, sent 1\ndocdup check: 1 reported duplication(s) — resolve or exempt them"
+      },
+      "deadcode": {
+        "rc": 1,
+        "out": "dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]\ndead: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]\ndead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]\nadvisory: invoicer/discount.py:23  apply_fixed  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/discount.py:18  apply_percent  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:10  Line  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:57  csv_rows  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:72  csv_summary  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:80  quote  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:86  to_csv  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:91  write_csv  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:13  body  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:47  compact_footer  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:38  compact_rows  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:22  footer  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:9  header  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:60  render_compact  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report_json.py:8  as_dict  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/tax.py:15  UnknownRegion  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/tax.py:19  rate_for  public_unmentioned  (no other file spells this exported name)\nadvisory: web/api.ts:13  PricedInvoice  public_unmentioned  (no other file spells this exported name)\nadvisory: web/api.ts:6  PricedLine  public_unmentioned  (no other file spells this exported name)\nadvisory: web/api.ts:33  toResponse  public_unmentioned  (no other file spells this exported name)\nadvisory: 20 unmentioned declaration(s) in 6 file(s) — 20 public, 0 private, 0 restricted, 0 reexported; no other file spells them (an advisory, never a verdict)\ndeadcode: 12 nodes, 16 kept edges, 3 dead, 0 aggregate reports, 6 unresolved sites (verdicts assume none lands in-corpus)\ndeadcode check: 3 dead file(s) — disposition or entry_globs them"
+      },
+      "erase": {
+        "rc": 1,
+        "out": "--- a/docs/PRICING.md\n+++ b/docs/PRICING.md\n@@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words) fnv1a64:fa6f7a63e41bfa36\n # Pricing rules\n \n-Every line item is priced in whole cents. A unit price arrives as a\n-decimal string, is converted once with round-half-up to cents, and is\n-never rounded again: the line total is the cent price multiplied by the\n-quantity, the subtotal is the plain sum of line totals, and the tax line\n-is computed on that subtotal with a single round-half-up at the end.\n-Rounding twice — once per line and once on the sum — is the classic\n-off-by-one-cent bug, and the code avoids it by keeping every intermediate\n-value as an integer number of cents.\n \n Tax rates are looked up by region code. An unknown region is an error,\n never a zero rate: a silently untaxed invoice is worse than a refused one.\nadvisory dead_file docs/DISCOUNTS.md: public_surface (deadcode: unref_public — no kept in-edge and no entry flag)\nadvisory dead_file invoicer/discount.py: public_surface (deadcode: unref_public — no kept in-edge and no entry flag)\nadvisory dead_file invoicer/report.py: public_surface (deadcode: unref_public — no kept in-edge and no entry flag)\nadvisory t1_twin web/format.ts: bytes_differ (dedup: T1 block twin at web/api.ts:22-33 (114 tokens), covers unit formatCents/2)\nadvisory t1t2_block_no_whole_unit: 2 finding(s) — no deterministic-safe erase; see the family command\nerase plan: 1 eraseable, 4 advisory (dry-run; --apply to act)\nerase check: 1 eraseable row(s) planned"
+      }
+    }
+  },
+  "with": {
+    "landed": 5,
+    "denied": 2,
+    "stop": "ce audit: this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC): invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens); invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens) — deduplicate before stopping.",
+    "gates": {
+      "check": {
+        "rc": 1,
+        "out": "check score 979/1000 | axes 0:0 1:0 2:0 3:0 4:153 5:0 6:0 | 0 candidates\nratchet: 2 added, 0 removed, 2 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)\nnote: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table"
+      },
+      "dedup": {
+        "rc": 1,
+        "out": "dup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)\ndup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)\nindexed 8 files (0 refreshed, 0 removed) — 2 clone blocks in 2 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped\ndedup ratchet: 2 clone blocks > budget 0 — new duplication must not land"
+      },
+      "clone": {
+        "rc": 0,
+        "out": "clone invoicer/report.py:render/1#0 <-> invoicer/report.py:render_compact/1#0  ted 0 (nodes 34/34)\nclones: 1 near-miss clone pair(s) over 27 unit(s) — 3 judged, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 3, s5_new 0, s5_pruned_label 42, s5_windowed 45, sent 3, survivors 3"
+      },
+      "docdup": {
+        "rc": 1,
+        "out": "docdup docs/DISCOUNTS.md:3-10 md_para <-> docs/PRICING.md:3-10 md_para  J 98/98 verbatim 102\ndups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1, seed_pairs 0, sent 1\ndocdup check: 1 reported duplication(s) — resolve or exempt them"
+      },
+      "deadcode": {
+        "rc": 1,
+        "out": "dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]\ndead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]\nadvisory: invoicer/invoice.py:10  Line  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:57  csv_rows  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:72  csv_summary  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:80  quote  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:86  to_csv  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/invoice.py:91  write_csv  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:13  body  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:47  compact_footer  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:38  compact_rows  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:22  footer  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:9  header  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report.py:60  render_compact  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/report_json.py:8  as_dict  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/tax.py:15  UnknownRegion  public_unmentioned  (no other file spells this exported name)\nadvisory: invoicer/tax.py:19  rate_for  public_unmentioned  (no other file spells this exported name)\nadvisory: web/api.ts:13  PricedInvoice  public_unmentioned  (no other file spells this exported name)\nadvisory: web/api.ts:6  PricedLine  public_unmentioned  (no other file spells this exported name)\nadvisory: web/api.ts:22  toResponse  public_unmentioned  (no other file spells this exported name)\nadvisory: 18 unmentioned declaration(s) in 5 file(s) — 18 public, 0 private, 0 restricted, 0 reexported; no other file spells them (an advisory, never a verdict)\ndeadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 5 unresolved sites (verdicts assume none lands in-corpus)\ndeadcode check: 2 dead file(s) — disposition or entry_globs them"
+      },
+      "erase": {
+        "rc": 1,
+        "out": "--- a/docs/PRICING.md\n+++ b/docs/PRICING.md\n@@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words) fnv1a64:fa6f7a63e41bfa36\n # Pricing rules\n \n-Every line item is priced in whole cents. A unit price arrives as a\n-decimal string, is converted once with round-half-up to cents, and is\n-never rounded again: the line total is the cent price multiplied by the\n-quantity, the subtotal is the plain sum of line totals, and the tax line\n-is computed on that subtotal with a single round-half-up at the end.\n-Rounding twice — once per line and once on the sum — is the classic\n-off-by-one-cent bug, and the code avoids it by keeping every intermediate\n-value as an integer number of cents.\n \n Tax rates are looked up by region code. An unknown region is an error,\n never a zero rate: a silently untaxed invoice is worse than a refused one.\nadvisory dead_file docs/DISCOUNTS.md: public_surface (deadcode: unref_public — no kept in-edge and no entry flag)\nadvisory dead_file invoicer/report.py: public_surface (deadcode: unref_public — no kept in-edge and no entry flag)\nadvisory t1t2_block_no_whole_unit: 2 finding(s) — no deterministic-safe erase; see the family command\nerase plan: 1 eraseable, 2 advisory (dry-run; --apply to act)\nerase check: 1 eraseable row(s) planned"
+      }
+    }
+  }
+}

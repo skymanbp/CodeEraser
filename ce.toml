@@ -18,6 +18,9 @@ exclude = ["contracts/fixtures/crosscheck/**"]
 "core" = 5
 "contracts" = 2
 "docs" = 2
+# the README's demo subject and its driver (L round, README restructure
+# 2026-08-29): a small tree, declared so it is not an undeclared bin
+"demo" = 1
 
 # Deadcode liveness roots beyond the mechanical conventions (M5-2h).
 # fixtures/ is test DATA measured by harnesses, not code with

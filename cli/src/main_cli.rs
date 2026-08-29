@@ -217,4 +217,19 @@ pub(crate) enum Cmd {
         #[arg(long)]
         yes: bool,
     },
+    /// Check for a newer release (exit 0 current / 1 available / 2
+    /// unknown); --yes replaces ce and ce-core in place, verified
+    /// against the release commit's own SHA256 pins — never a copy
+    /// the plugin or cargo owns (those name their own update)
+    Update {
+        /// Download and place the verified binaries (default: report only)
+        #[arg(long)]
+        yes: bool,
+        /// With --yes: also save the verified GUI installer to the
+        /// temp dir and print its path (running it is your click)
+        #[arg(long, requires = "yes")]
+        installer: bool,
+        #[arg(long, value_enum, default_value_t = OutFormat::Console)]
+        format: OutFormat,
+    },
 }

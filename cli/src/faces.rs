@@ -160,3 +160,14 @@ pub fn erase(root: &Path, core: &str) -> Result<Value> {
 pub fn doctor(root: &Path, core: &str) -> Result<Value> {
     Ok(crate::health::doctor::document(root, core))
 }
+
+/// Whether a newer release exists — the update DOCUMENT (the
+/// doctor's shape of charter: one measurement, every face renders
+/// it). Takes no root and no core: the question is about THIS
+/// binary. Read-only like every face — it reads the release index
+/// and the tag's committed pins and places nothing; the apply leg
+/// (`update::apply::run`) is a human act at the CLI or the GUI, the
+/// same line the erase plan draws.
+pub fn update_check() -> Result<Value> {
+    Ok(crate::update::document())
+}
