@@ -34,7 +34,7 @@ three majors (4.0.0 retired the superseded erase class 0 — its frozen slot kep
 the `symbols` table — deduped `[node, visibility]` pairs saying which files declare something and how
 visibly, the producer flag bit 0 never had, which finally lets the export surface be acted on:
 `unref_public` reporting, an erase reason that refuses to plan a public API away, and the join lattice
-reading the same bit. The baseline now fingerprints the **whole** `ce.toml` (`knobs_digest`), so any config edit stops
+reading the same bit. The baseline now fingerprints every **effective** knob in `ce.toml` (`knobs_digest`), so any config edit that changes a judgment stops
 `ce check` by name instead of quietly moving every line, and a class can freeze its own growth with
 `ratchet_tolerance = 0`. The guard's duplicate-write rule was re-measured by resurrecting the FPR replay
 over 2,761 real edit events and now denies only duplication a write *introduces*

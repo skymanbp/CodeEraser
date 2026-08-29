@@ -28,7 +28,7 @@ CodeEraser 在写入当下对抗这种漂移——Rust CLI + Tauri GUI 前端、
 class 0——冻结位保留、按名拒绝，5.0.0 退役 graph 遗留 flags 列、6.0.0 拓宽基线的配置指纹）并落地
 `symbols` 表——去重的 `[节点, 可见性]` 对，说出每个文件声明了什么、有多公开（可见性是声明自身的语法
 事实），正是 flags 位 0 从来没有过的那个生产者；导出面自此有了会照着它动手的下游：`unref_public` 上报、
-erase 拒绝把公开 API 计划掉的新理由码、join 格同读一位。基线现在给**整份** `ce.toml` 打指纹（`knobs_digest`）——任何配置改动都让
+erase 拒绝把公开 API 计划掉的新理由码、join 格同读一位。基线现在给 `ce.toml` 里每个**有效**旋钮打指纹（`knobs_digest`）——任何改变判决的配置改动都让
 `ce check` 具名停下而非无声挪线；类还可用 `ratchet_tolerance = 0` 冻结自身增长。守卫的重复写入规则经复活
 FPR 重放、以 2,761 个真实编辑事件重测，现在只拒**引入**重复的写入（[台账](docs/FPR-REPLAY.md)）。
 `ce scan` 与 `ce dedup` 学会 `--format sarif`（本仓自己的 CI 上传 GitHub code scanning），暖态分析走

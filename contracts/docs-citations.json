@@ -2556,7 +2556,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:102": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 63,
+    "line": 68,
     "text": "pub fn canonical(cfg: &Config) -> Value {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:103": {
@@ -2576,12 +2576,12 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:106": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 32,
+    "line": 33,
     "text": ", bKnobsDigest :: Maybe Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:107": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 115,
+    "line": 116,
     "text": ", rDropped ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:108": {
@@ -2626,7 +2626,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:115": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 83,
+    "line": 100,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:116": {
@@ -2641,7 +2641,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:118": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 41,
+    "line": 42,
     "text": "ratchetBound :: RatchetKnobs"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:119": {
@@ -2971,7 +2971,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:68": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 127,
+    "line": 128,
     "text": "-- the class is read from the CURRENT row and spends only on the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:69": {
@@ -2986,7 +2986,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:70": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 147,
+    "line": 148,
     "text": "identity = take 3"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:71": {
@@ -3016,7 +3016,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 72,
+    "line": 73,
     "text": "tolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
@@ -3026,7 +3026,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 60,
+    "line": 61,
     "text": "-- | The single-edit ceiling allowance. Globally: max of the +2% leg"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
@@ -3041,7 +3041,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:80": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 65,
+    "line": 66,
     "text": "-- A class that declares its own tolerance REPLACES both legs with an"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
@@ -3051,32 +3051,32 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 76,
+    "line": 77,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 102,
+    "line": 103,
     "text": "{ rOver ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:84": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 107,
+    "line": 108,
     "text": ", rDrawn ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:85": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 48,
+    "line": 49,
     "text": "-- ^ [u,metricCode,drawn]: over the ceiling but inside tolerance —"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:86": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 122,
+    "line": 123,
     "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:87": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 76,
+    "line": 77,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:88": {
@@ -3086,7 +3086,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:89": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 113,
+    "line": 114,
     "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:9": {
@@ -3096,22 +3096,22 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:90": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 140,
+    "line": 141,
     "text": "curSet = S.fromList disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 123,
+    "line": 124,
     "text": ", rNewDisc = disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:92": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 80,
+    "line": 81,
     "text": "-- saw adopt their value (bootstrap, not a violation). A baseline"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 91,
+    "line": 92,
     "text": "ratchet ::"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
@@ -4461,7 +4461,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:85": {
     "target": "../../../cli/src/score/wire.rs",
-    "line": 114,
+    "line": 116,
     "text": "pub candidates: Vec<[i64; 6]>,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:86": {
@@ -6547,7 +6547,7 @@
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 286,
-    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 7）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫除新入场行外只变短；收口判定式 87/87 具名，台账 memory/frontier-2026-08-26 |"
+    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 9〔步 #16 复核新入两条：Python `__all__` 再导出跳入 mounts `via_reexport` 臂、Haskell 选择子名并入类型单元的导入绑定与提及匹配〕）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实（**已落 2026-08-29**，片 (a)(b)(c)）；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫除新入场行外只变短（**已落 2026-08-29**，复扫例行随后经用户令退役）；收口判定式 87/87 具名（**复核 2026-08-29**：46 条已交付经 codex 四路只读审计逐条取证——35 落地 / 8 具名澄清 / 2 修补〔O42 类名出指纹、O43 注释〕/ 1 退役，41 条后置束计数与台账一致），台账 memory/frontier-2026-08-26；**v1.3.0 发版按用户令 2026-08-29 待 README 重构指示后再起**（前置门全绿、发布准备已就，见 CHANGELOG 步 #16 段） |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
     "target": "../../../cli/src/mention/selfref.rs",

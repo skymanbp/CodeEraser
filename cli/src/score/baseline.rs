@@ -227,11 +227,11 @@ pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
         // writer's own comment warns about dropping
         "zoneTiers": new_baseline["zoneTiers"],
     });
-    // 5.1.0: the rulepack fingerprint these ceilings were established
-    // under, written exactly when the core sent one. ABSENT, not
-    // null — a repo that declares no class must keep a
-    // byte-identical baseline file (K11), and a key holding null is
-    // not an absent key.
+    // 5.1.0: the knob fingerprint these ceilings were established
+    // under (the canonical effective set since O39), written exactly
+    // when the core sent one. ABSENT, not null — a repo that judges
+    // as the shipped default must keep a byte-identical baseline
+    // file (K11), and a key holding null is not an absent key.
     if let Some(d) = new_baseline.get("knobsDigest").filter(|v| !v.is_null()) {
         doc["knobsDigest"] = d.clone();
     }

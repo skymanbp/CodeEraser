@@ -30,7 +30,12 @@
 //!    classed repo's digest, while a class knob spelled at the global
 //!    line is kept: its default is inheritance, which is dynamic, not
 //!    a constant, and the declaration shadows every later global edit;
-//! 4. an object left empty says nothing — dropped.
+//! 4. an object left empty says nothing — dropped;
+//! 5. a class's `name` is a label — the uniqueness key at load and
+//!    the tag in error text, reaching no threshold, no wire field
+//!    and no rendered row — dropped, so a rename is silence (step
+//!    #16, O42's open half); declaration ORDER, which is
+//!    precedence, still counts through rule 3.
 //!
 //! What survives is hashed as JSON (serde_json's map is key-ordered,
 //! so the bytes are canonical); an empty survivor is no fingerprint
@@ -61,7 +66,19 @@ pub(crate) fn effective_default() -> Config {
 /// whose effective value differs from the shipped default, empty when
 /// the config judges as the shipped default does.
 pub fn canonical(cfg: &Config) -> Value {
-    let declared = serde_json::to_value(cfg).expect("Config serializes");
+    let mut declared = serde_json::to_value(cfg).expect("Config serializes");
+    // rule 5: the class name is a label, never a knob
+    if let Some(classes) = declared
+        .get_mut("rules")
+        .and_then(|r| r.get_mut("class"))
+        .and_then(Value::as_array_mut)
+    {
+        for class in classes {
+            if let Some(fields) = class.as_object_mut() {
+                fields.remove("name");
+            }
+        }
+    }
     let mut shipped = serde_json::to_value(effective_default()).expect("Config serializes");
     // every axis weighs the effective default weight unless named
     let weight = cfg

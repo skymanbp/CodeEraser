@@ -3,8 +3,9 @@
 > Generated from [contracts/bench/bench.json](../contracts/bench/bench.json) by
 > `cli/tests/it/bench_render.rs` (`CE_BLESS=1` to regenerate). Every series row was
 > measured by `cli/tests/it/bench.rs` (`bench_append` for a checkout, `bench_backfill`
-> per release tag — each tag's OWN binaries, release builds only, fresh index per
-> cold run). Frozen points carry their sealed-ledger source; points that cannot
+> per release tag — the tag's submodules seated, its OWN binaries, release builds
+> only, fresh index per cold run). Frozen points carry their sealed-ledger source;
+> points that cannot
 > honestly become a per-version series say why in their epoch clause.
 >
 > The whole series is ONE machine — the host column repeats because it never

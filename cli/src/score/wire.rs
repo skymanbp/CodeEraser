@@ -78,11 +78,13 @@ pub struct Request {
     /// (score::knobs::class_knob_rows), empty = no override rides.
     pub classed: bool,
     pub class_knobs: Vec<[i64; 3]>,
-    /// The rulepack FINGERPRINT (5.1.0), None when no class is
-    /// declared. The baseline records the digest its ceilings were
-    /// established under, and the core fails by name when the two
-    /// disagree — so a glob edit stops being a silent way to move
-    /// every line at once (config::RulesCfg::digest).
+    /// The knob FINGERPRINT (5.1.0 rulepack, the whole config since
+    /// 6.0.0, the canonical effective knob set since O39), None when
+    /// the config judges as the shipped default does. The baseline
+    /// records the digest its ceilings were established under, and
+    /// the core fails by name when the two disagree — so no config
+    /// edit is a silent way to move every line at once
+    /// (`Config::knobs_digest`, config/canonical.rs).
     pub knobs_digest: Option<u64>,
     /// The export surface (6.1.0): `[u, visibility]` in the `files`
     /// universe, deduped and ascending — graph/1's `symbols` table

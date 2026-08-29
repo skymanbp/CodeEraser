@@ -21,10 +21,11 @@ import qualified Data.Set as S
 -- [u,metricCode,value], the discrete violation-fingerprint set,
 -- (v0.6, plan v2.6 §B) the frozen soft line — Nothing on a
 -- pre-v0.6 file, re-derived only at establish — and (5.1.0, plan
--- v2.14 ②) the rulepack FINGERPRINT the ceilings were established
--- under. The digest is a scalar, not a rule: what it fences is the
--- silent kind of loosening, where a glob edit moves every line and
--- the baseline still looks agreed-to.
+-- v2.14 ②; the whole config since 6.0.0, its canonical effective
+-- knob set since O39) the knob FINGERPRINT the ceilings were
+-- established under. The digest is a scalar, not a rule: what it
+-- fences is the silent kind of loosening, where a config edit
+-- moves every line and the baseline still looks agreed-to.
 data Baseline = Baseline
   { bCont :: [[Integer]]
   , bDisc :: [Integer]
