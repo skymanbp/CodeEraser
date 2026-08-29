@@ -100,10 +100,12 @@ jobs:
           # artifacts above are reused: package's own verify build (the
           # one `cargo publish` runs) and the check both re-do only the
           # crate itself. It runs BEFORE the tests because the shared
-          # verify build rewrites target/debug/ce.exe, and the e2e legs
-          # leave lazily-started `ce daemon` processes holding that exe
-          # open — on Windows the rewrite then fails with "Access is
-          # denied" (runs 33227318755 / 33232925443, L step #15).
+          # verify build rewrites target/debug/ce.exe, and a lazily
+          # started `ce daemon` that outlived its test's teardown holds
+          # that exe open until its idle exit — on Windows the rewrite
+          # then fails with "Access is denied" (runs 33227318755 /
+          # 33232925443, L step #15; the e2e legs were blamed first —
+          # the census below named the real holder, step #16).
           CARGO_TARGET_DIR="$PWD/target" cargo package --locked --allow-dirty
           crate=$(ls target/package/codeeraser-*.crate)
           tar -xzf "$crate" -C target/package
@@ -211,10 +213,13 @@ jobs:
       # "全处置" acceptance rows were discipline-only before), and the
       # erase zero-row gate (erase.md acceptance: this repository
       # keeps itself clean — a non-empty self-plan is a red gate).
-      # Who still runs the binary before the relink (2026-08-29: this
-      # step rebuilds ce.exe after the GUI build, and Windows denied the
-      # uplift twice on af45fcf with every test green). Prints, never
-      # kills — the owner is what the fix has to name.
+      # Who still runs the binary before the relink. Prints, never
+      # kills: on 2026-08-29 it named the holder behind the "Access is
+      # denied" relink (af45fcf, twice, every test green) — a guard
+      # test's daemon at a DELEGATED submodule root, which the hook
+      # runner's teardown never asked (run 33262869599; fixed in the
+      # suite's shutdown_daemon). Kept standing so the next holder is
+      # named, not guessed.
       - name: Process census before the relink
         shell: bash
         run: |
@@ -358,10 +363,12 @@ jobs:
           # artifacts above are reused: package's own verify build (the
           # one `cargo publish` runs) and the check both re-do only the
           # crate itself. It runs BEFORE the tests because the shared
-          # verify build rewrites target/debug/ce.exe, and the e2e legs
-          # leave lazily-started `ce daemon` processes holding that exe
-          # open — on Windows the rewrite then fails with "Access is
-          # denied" (runs 33227318755 / 33232925443, L step #15).
+          # verify build rewrites target/debug/ce.exe, and a lazily
+          # started `ce daemon` that outlived its test's teardown holds
+          # that exe open until its idle exit — on Windows the rewrite
+          # then fails with "Access is denied" (runs 33227318755 /
+          # 33232925443, L step #15; the e2e legs were blamed first —
+          # the census below named the real holder, step #16).
           CARGO_TARGET_DIR="$PWD/target" cargo package --locked --allow-dirty
           crate=$(ls target/package/codeeraser-*.crate)
           tar -xzf "$crate" -C target/package
