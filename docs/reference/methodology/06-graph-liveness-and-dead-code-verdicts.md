@@ -379,7 +379,7 @@ The M5-2 row sets four criteria: import-edge precision **≥ 0.90** on a 100-sit
 spanning the five launch languages; `unreferenced_public` as its own report class, not folded
 into dead; every finding in this repository dispositioned; and the core's judgment-invariant
 property battery in CI
-([DEVELOPMENT_PLAN.md:278](../../DEVELOPMENT_PLAN.md#L278)). The gate is coded at `0.90`,
+([DEVELOPMENT_PLAN.md:279](../../DEVELOPMENT_PLAN.md#L279)). The gate is coded at `0.90`,
 applied overall and per corpus **where the in-corpus ground-truth denominator reaches 5**
 ([eval_graph_precision.rs:83](../../../cli/tests/it/eval_graph_precision.rs#L83),
 [eval_graph_precision.rs:86-94](../../../cli/tests/it/eval_graph_precision.rs#L86),

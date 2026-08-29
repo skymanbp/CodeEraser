@@ -4,7 +4,7 @@
 
 Every edit CodeEraser supervises is reduced to four integer counts per file pair: **matched** (unchanged — never enumerated, it is the diff's complement), **novel** (added, no provenance), **moved** (added or removed with provenance on the other side), **deleted** (removed, no destination). The split is `FourClass { added_novel, added_moved, removed_deleted, removed_moved }` ([model.rs:13-18](../../../cli/src/fourclass/model.rs#L13)) — matched lines are exactly the lines the diff did not report, so the four-class ledger is closed by construction over the changed set.
 
-The design intent is recorded in plan §4.3 ([DEVELOPMENT_PLAN.md:106](../../DEVELOPMENT_PLAN.md#L106)): a difftastic-inspired but self-implemented **integer** cost model, from which a cross-file evidence floor of ≥2 lines is *derived* rather than tuned, plus a decided anchor requirement of one ≥19-alnum evidence line ([DEVELOPMENT_PLAN.md:108-111](../../DEVELOPMENT_PLAN.md#L108)).
+The design intent is recorded in plan §4.3 ([DEVELOPMENT_PLAN.md:107](../../DEVELOPMENT_PLAN.md#L107)): a difftastic-inspired but self-implemented **integer** cost model, from which a cross-file evidence floor of ≥2 lines is *derived* rather than tuned, plus a decided anchor requirement of one ≥19-alnum evidence line ([DEVELOPMENT_PLAN.md:109-112](../../DEVELOPMENT_PLAN.md#L109)).
 
 ### Language split
 
@@ -112,11 +112,11 @@ Recorded FPR effect of this scoping on the real-edit corpus: `contracts/eval/fpr
 
 Note the rule checks only that *some* unit was newly duplicated — it does not verify that the novel mass sits inside that unit. The output is `(pair index, "stacking")` ([Verdict.hs:36](../../../core/app/CE/FourClass/Verdict.hs#L36)); the report renders it as `{"file": …, "kind": …}` ([session.rs:140-144](../../../cli/src/fourclass/session.rs#L140)).
 
-The other §4.3 rules — novel-vs-repository similarity as duplicate-implementation suspicion, and MinHash paragraph similarity as restatement suspicion ([DEVELOPMENT_PLAN.md:120-124](../../DEVELOPMENT_PLAN.md#L120)) — are not implemented in this module; `CE.FourClass.Verdict` exports exactly one rule ([Verdict.hs:1-2](../../../core/app/CE/FourClass/Verdict.hs#L1)).
+The other §4.3 rules — novel-vs-repository similarity as duplicate-implementation suspicion, and MinHash paragraph similarity as restatement suspicion ([DEVELOPMENT_PLAN.md:121-125](../../DEVELOPMENT_PLAN.md#L121)) — are not implemented in this module; `CE.FourClass.Verdict` exports exactly one rule ([Verdict.hs:1-2](../../../core/app/CE/FourClass/Verdict.hs#L1)).
 
 ### The L0 / L1 / L2 fallback ladder
 
-Plan §4.3 B3c defines three rungs, each the control group for the next ([DEVELOPMENT_PLAN.md:113-116](../../DEVELOPMENT_PLAN.md#L113)):
+Plan §4.3 B3c defines three rungs, each the control group for the next ([DEVELOPMENT_PLAN.md:114-117](../../DEVELOPMENT_PLAN.md#L114)):
 
 | rung | definition | measured on the eval corpus |
 |---|---|---|
@@ -124,7 +124,7 @@ Plan §4.3 B3c defines three rungs, each the control group for the next ([DEVELO
 | **L1** | L0 + function-boundary alignment (tree-sitter symbol table) | moved recall **62/62**, precision **100%**, 195/200 sample-exact ([EVAL-SET.md:66](../../EVAL-SET.md#L66)); on the whole-commit slice, cross-file recall **0/547** — a structural blind spot ([EVAL-SET.md:91-92](../../EVAL-SET.md#L91)) |
 | **L2** | cross-file provenance judgment (the integer cost model above); AST units used for attribution and the relocation register | cross-file recall **547/547** (366 out + 181 in), misses = 0; zero false cross-predictions on commits with no cross-move ground truth ([EVAL-SET.md:112](../../EVAL-SET.md#L112)) |
 
-L2 must prove incremental gain over L1 or the ladder falls back to L1 ([DEVELOPMENT_PLAN.md:116](../../DEVELOPMENT_PLAN.md#L116)).
+L2 must prove incremental gain over L1 or the ladder falls back to L1 ([DEVELOPMENT_PLAN.md:117](../../DEVELOPMENT_PLAN.md#L117)).
 
 **L1 is the IR producer, not a modified engine.** L2 runs L1 per pair unchanged, ships only the leftovers (significant lines L1 called novel/deleted) as `[line, fnv1a(trim), alnum_width]` grouped into runs, and applies a monotone delta ([batch.rs:1-6](../../../cli/src/fourclass/batch.rs#L1), [batch.rs:128-146](../../../cli/src/fourclass/batch.rs#L128)). Single-pair batches with no link are bitwise L1 ([batch.rs:5-6](../../../cli/src/fourclass/batch.rs#L5)).
 
@@ -161,4 +161,4 @@ Cross-file relocations remain **informational**: no deny path may lean on this r
 
 ### Constants not found
 
-Plan §4.3 refers to a similarity threshold for the duplicate-implementation rule and to MinHash paragraph similarity ([DEVELOPMENT_PLAN.md:120-124](../../DEVELOPMENT_PLAN.md#L120)); no such constant exists anywhere in `core/app/CE/FourClass/` or `cli/src/fourclass/`. Those rules live outside this module (the `clone`/`docdup` families), and their thresholds are not documented here.
+Plan §4.3 refers to a similarity threshold for the duplicate-implementation rule and to MinHash paragraph similarity ([DEVELOPMENT_PLAN.md:121-125](../../DEVELOPMENT_PLAN.md#L121)); no such constant exists anywhere in `core/app/CE/FourClass/` or `cli/src/fourclass/`. Those rules live outside this module (the `clone`/`docdup` families), and their thresholds are not documented here.

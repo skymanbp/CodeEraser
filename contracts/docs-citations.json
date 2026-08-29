@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md:1": {
     "target": "../DEVELOPMENT_PLAN.md",
-    "line": 60,
+    "line": 61,
     "text": "| `size` | 文件 LOC；函数长度；参数个数 | 文件 300 警告 / 750 阻断（ESLint max-lines=300；Sonar S104=750）；函数 50/75（ESLint=50；Sonar S138=75）；参数 5（Pylint）。尺寸门语言臂（v2.5）：js/jsx/css/scss/less/html/vue/svelte/sh/yml 仅入本模块 + guard 硬预算 + 棘轮，不入任何判决族。v2.6（as-built v0.6.0）：scan 双档不变；score size 轴改软区间凸罚（S=基线 softLine，缺则回落 300；H=750）+ `ce structure --split-candidates` 顾问面，契约见 [reference/size-advisory.md](reference/size-advisory.md) | M1 |"
   },
   "docs/reference/methodology.md:2": {
@@ -11,12 +11,12 @@
   },
   "docs/reference/methodology.md:3": {
     "target": "../DEVELOPMENT_PLAN.md",
-    "line": 169,
+    "line": 170,
     "text": "**ADR-002 Haskell 不拥有解析层；职责 = 判决层（2026-08-12 拍板细化：判定半落 Haskell）。**"
   },
   "docs/reference/methodology.md:4": {
     "target": "../DEVELOPMENT_PLAN.md",
-    "line": 157,
+    "line": 158,
     "text": "**职责边界（B1 采纳后）**：延迟敏感的热路径（PreToolUse 廉价检查、索引探针）完全在"
   },
   "docs/reference/methodology.md:5": {
@@ -26,12 +26,12 @@
   },
   "docs/reference/methodology.md:6": {
     "target": "../DEVELOPMENT_PLAN.md",
-    "line": 238,
+    "line": 239,
     "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:1": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 198,
+    "line": 199,
     "text": "**ADR-005 克隆检测两层；自研 winnowing 而非复用 jscpd（否决理由记录，B3b）。**"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:10": {
@@ -386,7 +386,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:2": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 202,
+    "line": 203,
     "text": "③避免 Node 运行时依赖。代价：自研索引正确性风险，用\"增量 ≡ 全量重建\"property 覆盖（§7）。"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:20": {
@@ -826,7 +826,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:1": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 63,
+    "line": 64,
     "text": "| `clone` | 跨文件 T1/T2（热路径）；T3 near-miss（冷路径）；**不承诺 T4**（arXiv 2606.25272：SOTA 在 T4 全线退化） | T1/T2 min-tokens 50（jscpd 默认）；T3 TSED 0.85（定义与阈值仓内自定义并文档化——2026-08-13 拍板②；对照物读出值作分歧入册不改数） | M2/M5-3 |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:10": {
@@ -911,7 +911,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:114": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 279,
+    "line": 280,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:115": {
@@ -926,7 +926,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:117": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 279,
+    "line": 280,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:118": {
@@ -936,7 +936,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:119": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 279,
+    "line": 280,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:12": {
@@ -961,7 +961,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:123": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 279,
+    "line": 280,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:124": {
@@ -991,7 +991,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:129": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 279,
+    "line": 280,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:13": {
@@ -2781,7 +2781,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:33": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 70,
+    "line": 71,
     "text": "评分极性全程统一\"越高越好\"。幽默评语彩蛋 as-built：`ce check --roast`（i18n 查表，2026-08-19）。"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:34": {
@@ -3011,7 +3011,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:75": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 204,
+    "line": 205,
     "text": "排除：后缀数组（构建不增量）、全仓 pairwise 树编辑、全仓 embedding。"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
@@ -3081,7 +3081,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:88": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 210,
+    "line": 211,
     "text": "- **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:89": {
@@ -3136,7 +3136,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:98": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 216,
+    "line": 217,
     "text": "- 与 `--fail-under` 合成：有基线的仓库以棘轮为主门，`--fail-under` 为下限保险；"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:99": {
@@ -3486,7 +3486,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:160": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 278,
+    "line": 279,
     "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:161": {
@@ -4996,7 +4996,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:117": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 120,
+    "line": 121,
     "text": "- novel 内容与仓库既有代码/段落结构指纹相似度超阈值 → **重复实现嫌疑**（主规则，"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:12": {
@@ -5041,7 +5041,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:2": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 106,
+    "line": 107,
     "text": "四分类：**matched / novel / moved / deleted**。借鉴 difftastic 代价模型思想但自研"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:20": {
@@ -5096,7 +5096,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:3": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 108,
+    "line": 109,
     "text": "**不识别 moved**——moved 恰是关键健康信号）：整数常数代价模型，跨文件开站成本推导出"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:30": {
@@ -5361,7 +5361,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:78": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 120,
+    "line": 121,
     "text": "- novel 内容与仓库既有代码/段落结构指纹相似度超阈值 → **重复实现嫌疑**（主规则，"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:79": {
@@ -5376,7 +5376,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:80": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 113,
+    "line": 114,
     "text": "**Fallback 阶梯（B3c，先易后难，各级都是上一级的对照组）**："
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:81": {
@@ -5406,7 +5406,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:86": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 116,
+    "line": 117,
     "text": "与搬迁登记）。M4 从 L0/L1 建立 baseline，L2 须证明相对 L1 的增量收益，不达标退 L1。"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md:87": {
@@ -5726,7 +5726,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:11": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 91,
+    "line": 92,
     "text": "**诚实边界（A2b）**：PreToolUse 是**行为塑形层，不是安全边界**——agent 可用"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:12": {
@@ -5796,7 +5796,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:24": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 100,
+    "line": 101,
     "text": "3. 1.0（M7）：上述两类默认 `deny`；其余规则 as-built 默认 **observe**（无各自 FPR"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:25": {
@@ -5811,17 +5811,17 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:27": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 277,
+    "line": 278,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:28": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 312,
+    "line": 313,
     "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:29": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 277,
+    "line": 278,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:3": {
@@ -5831,12 +5831,12 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:30": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 312,
+    "line": 313,
     "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:31": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 277,
+    "line": 278,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:32": {
@@ -6546,8 +6546,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 285,
-    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 7）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫只变短；收口判定式 87/87 具名，台账 memory/frontier-2026-08-26 |"
+    "line": 286,
+    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 7）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫除新入场行外只变短；收口判定式 87/87 具名，台账 memory/frontier-2026-08-26 |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
     "target": "../../../cli/src/mention/selfref.rs",

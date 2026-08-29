@@ -18,23 +18,23 @@ reading the `file:line` it points at, not by a second opinion; that is
 why the judgment layer is a pure function of measured facts and why the
 size hard line is a declared line — 750 by default, or the `file_lines_fail` a `[[rules.class]]` declares for the paths it owns — while the soft line is a
 statistic of the repository's own frozen distribution
-([DEVELOPMENT_PLAN.md:60](../DEVELOPMENT_PLAN.md#L60),
+([DEVELOPMENT_PLAN.md:61](../DEVELOPMENT_PLAN.md#L61),
 [size-advisory.md:26-30](size-advisory.md#L26)).
 
 ## How to read this
 
 Every section below is split the same way, along ADR-002
-([DEVELOPMENT_PLAN.md:169-174](../DEVELOPMENT_PLAN.md#L169)): the
+([DEVELOPMENT_PLAN.md:170-175](../DEVELOPMENT_PLAN.md#L170)): the
 **measurement** side is Rust — tree-sitter parsing, symbol and span
 extraction, the winnowing index, git history extraction — and emits a
 normalized IR; the **judgment** side is Haskell (`ce-core`) — the rule
 engine, the four-classification, TSED, graph analysis, scoring and the
 ratchet — and turns those facts into verdicts
-([DEVELOPMENT_PLAN.md:157-160](../DEVELOPMENT_PLAN.md#L157),
+([DEVELOPMENT_PLAN.md:158-161](../DEVELOPMENT_PLAN.md#L158),
 [README.md:172](../../README.md#L172)). The boundary has a one-line
 test, from ADR-008: if a rule needs source text or line-level content to
 cross the wire, it is measurement and stays in Rust
-([DEVELOPMENT_PLAN.md:238](../DEVELOPMENT_PLAN.md#L238)). So read each
+([DEVELOPMENT_PLAN.md:239](../DEVELOPMENT_PLAN.md#L239)). So read each
 section as *facts → predicate → verdict*: the formula and its constants
 are the contract, the knobs are echoed back in the report, and each is
 cited to the file and line that implements it. No number in this
