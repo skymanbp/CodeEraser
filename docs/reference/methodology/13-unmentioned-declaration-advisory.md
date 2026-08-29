@@ -222,7 +222,7 @@ the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
 three keys, present only when the road was asked: `unmentioned` rows of five scalars
 `{name, symbol, line, code, why}`, `unmentioned_dropped`, and `unmentioned_cut` — the
 producer's cut, which the core cannot see ([advisory.rs:31-50](../../../cli/src/graph/deadcode/advisory.rs#L31),
-[report.rs:85-124](../../../cli/src/report.rs#L85)). The console prints one line per row, a
+[report.rs:102-141](../../../cli/src/report.rs#L102)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
 ([report.rs:53-109](../../../cli/src/graph/deadcode/report.rs#L53)); the MCP `deadcode`
 tool returns the same document ([tools.rs:78-82](../../../cli/src/mcp/tools.rs#L78)); the GUI

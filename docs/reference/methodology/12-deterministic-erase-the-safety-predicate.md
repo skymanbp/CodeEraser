@@ -157,13 +157,13 @@ eraseable. The executor's precondition function is deliberately ordered
 
 1. **Repository identity.** `git rev-parse --show-toplevel` must succeed, and
    its canonical path must equal the supplied erase root
-   ([apply.rs:46-64](../../../cli/src/erase/apply.rs#L46)).
+   ([apply.rs:46-60](../../../cli/src/erase/apply.rs#L46)).
 2. **Worktree cleanliness.** `git status --porcelain` must succeed; after the
    `.ce` state directory is removed from the comparison, no user dirt may
-   remain ([apply.rs:65-84](../../../cli/src/erase/apply.rs#L65)).
+   remain ([apply.rs:61-81](../../../cli/src/erase/apply.rs#L61)).
 3. **Target identity.** Every target is read again and its FNV-1a content hash
    must equal the hash captured in the plan
-   ([apply.rs:86-95](../../../cli/src/erase/apply.rs#L86)).
+   ([apply.rs:82-91](../../../cli/src/erase/apply.rs#L82)).
 
 Only after all three checks does the executor write targets and append the
 audit records ([apply.rs:19-37](../../../cli/src/erase/apply.rs#L19)). The apply

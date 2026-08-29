@@ -232,7 +232,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <code>S = clamp(median + k·MAD, …)</code> 改写成乘性形式，从而全程不取对数；它只在 establish
   时导出，随后冻进基线。fail 位是五个<em>具名</em>条件的析取——<code>ratchet_over</code>、
   <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、
-  <code>knobs_digest</code>——回包同时带回究竟是哪几个成立。</p>
+  <code>knobs_digest</code>——回包同时带回究竟是哪几个成立，控制台按同一顺序把它们印在 <code>FAIL</code> 之后。</p>
   <p class="note">自规则包起（proto 3.1.0），连续行可带第四列——该文件的<em>路径类</em>，即首个 glob
   命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无——旁边是加性的
   <code>classKnobs</code> 表，码域是 ceilings 自己的 <code>0 / 1 / 2</code> 加 <code>3</code>

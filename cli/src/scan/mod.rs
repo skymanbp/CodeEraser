@@ -8,6 +8,7 @@
 pub mod ast;
 pub mod classes;
 pub mod functions;
+pub mod globs;
 pub mod lang;
 pub mod metrics;
 pub mod report;

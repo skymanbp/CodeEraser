@@ -255,7 +255,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   fail bit is a disjunction of five <em>named</em> conditions —
   <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
   <code>dedup_budget</code>, <code>knobs_digest</code> — and the reply carries the
-  list of names that held.</p>
+  list of names that held; the console prints them after <code>FAIL</code> in that order.</p>
   <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column —
   the file's <em>path class</em>, the 1-based index of the first <code>[[rules.class]]</code>
   whose globs match, <code>0</code> for none — beside an additive <code>classKnobs</code> table

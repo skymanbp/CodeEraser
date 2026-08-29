@@ -11,7 +11,7 @@
 //! surface (graph/symwire.rs) rather than through this column.
 
 use super::targets::Declared;
-use crate::config::Config;
+use crate::scan::globs::{self, Inclusions};
 use std::path::Path;
 
 /// Frozen role-bit positions (wire node row column 4). Facts, never
@@ -34,7 +34,7 @@ pub(super) const ROLE_FOREIGN: i64 = 1 << 7;
 /// main-is convention — nothing imports a main module, exactly like
 /// main.rs; the declared-target role covers the manifests' OWN
 /// declarations beside these name conventions.
-pub(super) fn roles_of(root: &Path, path: &str, config: &Config, declared: &Declared) -> i64 {
+pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: &Declared) -> i64 {
     let base = path.rsplit('/').next().unwrap_or(path);
     let mut r = 0i64;
     if matches!(
@@ -52,12 +52,7 @@ pub(super) fn roles_of(root: &Path, path: &str, config: &Config, declared: &Decl
     if is_test(path, base) {
         r |= ROLE_TEST;
     }
-    if config
-        .graph
-        .entry_globs
-        .iter()
-        .any(|g| glob_hit(g, path, base))
-    {
+    if globs::selected(entries, path) {
         r |= ROLE_GLOB;
     }
     if matches!(base, "README.md" | "CLAUDE.md")
@@ -94,16 +89,6 @@ fn is_test(path: &str, base: &str) -> bool {
         || path.starts_with("tests/")
         || path.contains("/tests/")
         || path.contains("/__tests__/")
-}
-
-/// entry_globs matching: an exact path, a `dir/` prefix, or a
-/// `*.ext` basename pattern — the declarative subset the config
-/// documents (full glob syntax is not promised).
-fn glob_hit(glob: &str, path: &str, base: &str) -> bool {
-    if let Some(ext) = glob.strip_prefix("*.") {
-        return base.ends_with(&format!(".{ext}"));
-    }
-    glob == path || glob == base || (glob.ends_with('/') && path.starts_with(glob))
 }
 
 #[cfg(test)]

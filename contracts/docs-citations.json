@@ -306,7 +306,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:149": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 151,
+    "line": 155,
     "text": "min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:15": {
@@ -315,46 +315,51 @@
     "text": "if is_literal(kind, spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:150": {
+    "target": "../../../cli/src/dedup/budget.rs",
+    "line": 21,
+    "text": "pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<()> {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:151": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 159,
     "text": "/// candidate source cannot disagree about what was verified; the"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:151": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:152": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 162,
     "text": "pub fn clone_blocks_near("
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:152": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 37,
-    "text": "pub const SCHEMA_ID: &str = \"ce.dedup-report/0.5.0\";"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:153": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 213,
+    "line": 217,
     "text": "Summary {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:154": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 150,
+    "line": 154,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:155": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 263,
-    "text": ""
+    "line": 150,
+    "text": "let seen = idx.indexed_paths()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:156": {
+    "target": "../../../cli/src/dedup/mod.rs",
+    "line": 263,
+    "text": "idx.resolve_refreshed(&dirty, &mut resolver)"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:157": {
     "target": "../../../cli/src/dedup/report.rs",
     "line": 16,
     "text": "groups: &found.groups,"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:157": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:158": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 102,
     "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:158": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:159": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 102,
     "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
@@ -671,12 +676,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:72": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 279,
+    "line": 283,
     "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:73": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 226,
+    "line": 230,
     "text": "min_tokens: filter.min_tokens,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:74": {
@@ -691,22 +696,22 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:76": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 290,
+    "line": 294,
     "text": "impl Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:77": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 293,
-    "text": "pub fn guarantee(&self) -> usize {"
+    "line": 301,
+    "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:78": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 297,
+    "line": 301,
     "text": ""
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:79": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 303,
+    "line": 307,
     "text": "kgram: 25,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:8": {
@@ -716,12 +721,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:80": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 149,
+    "line": 153,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:81": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 147,
+    "line": 151,
     "text": "let walked = walkidx::index_all(root, &config, &mut idx)?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:82": {
@@ -1316,7 +1321,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:69": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 290,
+    "line": 294,
     "text": "impl Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:7": {
@@ -1326,7 +1331,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:70": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 297,
+    "line": 301,
     "text": ""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:71": {
@@ -2101,8 +2106,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:15": {
     "target": "../../../cli/src/config.rs",
-    "line": 126,
-    "text": "#[serde(default, deny_unknown_fields)]"
+    "line": 150,
+    "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:16": {
     "target": "../structure-axes.md",
@@ -2136,8 +2141,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:21": {
     "target": "../../../cli/src/config.rs",
-    "line": 126,
-    "text": "#[serde(default, deny_unknown_fields)]"
+    "line": 150,
+    "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:22": {
     "target": "../../../ce.toml",
@@ -2540,34 +2545,89 @@
     "text": "jaccardNum :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:100": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 41,
-    "text": "ratchetBound :: RatchetKnobs"
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 166,
+    "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:101": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 1,
-    "text": "-- | Verdict-family constants — nothing but constants (the"
+    "target": "../../../cli/src/main_score.rs",
+    "line": 46,
+    "text": "const FENCE: [&str; 1] = [\"knobs_digest\"];"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:102": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 12,
-    "text": "-- Integer per the 2026-08-12 blocking decision ③ (the Anchor.hs"
+    "target": "../../../cli/src/main_score.rs",
+    "line": 162,
+    "text": "let fence_only = o.reply.failed.iter().all(|c| FENCE.contains(&c.as_str()));"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:103": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 9,
-    "text": "-- through CE.Verdict.Ratchet. The baseline crosses the wire VERBATIM"
+    "line": 149,
+    "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:104": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 32,
+    "text": ", bKnobsDigest :: Maybe Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:105": {
     "target": "../../../core/app/CE/Verdict.hs",
+    "line": 197,
+    "text": "ratchetObj :: Ratcheted -> [(String, Bool)] -> Value"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:106": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 100,
+    "text": ", \"ratchet\" .= ratchetObj r conds"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:107": {
+    "target": "../../../cli/src/report.rs",
     "line": 48,
-    "text": "parsed = parseBaseline (reqBaseline req)"
+    "text": "pub fn fail_suffix(failed: &[String]) -> String {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:108": {
+    "target": "../../../cli/src/score/report.rs",
+    "line": 93,
+    "text": "fn print_ratchet_tail(o: &Outcome) {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:109": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 177,
+    "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:11": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
     "line": 32,
     "text": "jaccardDen :: Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:110": {
+    "target": "../../../core/app/CE/Verdict/Score.hs",
+    "line": 87,
+    "text": "scoreBound :: ScoreKnobs"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:111": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 41,
+    "text": "ratchetBound :: RatchetKnobs"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:112": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 1,
+    "text": "-- | Verdict-family constants — nothing but constants (the"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:113": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 12,
+    "text": "-- Integer per the 2026-08-12 blocking decision ③ (the Anchor.hs"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:114": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 9,
+    "text": "-- through CE.Verdict.Ratchet. The baseline crosses the wire VERBATIM"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:115": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 48,
+    "text": "parsed = parseBaseline (reqBaseline req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:12": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2815,19 +2875,19 @@
     "text": "-- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:57": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 110,
-    "text": "-- | The classKnobs code a class states its OWN ratchet tolerance"
+    "target": "../../../cli/src/main_score.rs",
+    "line": 121,
+    "text": "pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:58": {
-    "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 56,
-    "text": "type ClassKnobs = M.Map (Integer, Integer) Integer"
+    "target": "../../../cli/src/main_score.rs",
+    "line": 174,
+    "text": "fn preflight(given: &Path) -> Result<(), ExitCode> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:59": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 128,
-    "text": "-- the class rows fold into ONE Map here, once per judgment (3.1.0)"
+    "target": "../../../cli/src/score/baseline.rs",
+    "line": 138,
+    "text": "pub fn read(root: &Path) -> Result<Option<Value>> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:6": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2835,54 +2895,54 @@
     "text": "cloneHits :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:60": {
+    "target": "../../../cli/src/score/baseline.rs",
+    "line": 163,
+    "text": "pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:61": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 110,
+    "text": "-- | The classKnobs code a class states its OWN ratchet tolerance"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:62": {
+    "target": "../../../core/app/CE/Verdict/Score.hs",
+    "line": 56,
+    "text": "type ClassKnobs = M.Map (Integer, Integer) Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:63": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 128,
+    "text": "-- the class rows fold into ONE Map here, once per judgment (3.1.0)"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:64": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 63,
     "text": "classOf :: [Integer] -> Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:61": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:65": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 170,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:62": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:66": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 180,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:63": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:67": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 108,
     "text": "-- the class is read from the CURRENT row and spends only on the"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:64": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:68": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 145,
     "text": "r = ratchet rk classTol base (reqCont req) (reqDisc req)"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:65": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:69": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 127,
     "text": "identity = take 3"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:66": {
-    "target": "../../../core/app/CE/Verdict/Table.hs",
-    "line": 48,
-    "text": "uniformArity :: String -> [[Integer]] -> Maybe String"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:67": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 77,
-    "text": "classCap :: Integer"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:68": {
-    "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 84,
-    "text": "contRow :: String -> Int -> [Integer] -> Maybe String"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:69": {
-    "target": "../../../core/app/CE/Verdict/Table.hs",
-    "line": 60,
-    "text": "classKnobsOffence :: [[Integer]] -> Maybe String"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:7": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -2890,54 +2950,54 @@
     "text": "tsedNum = 85"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:70": {
+    "target": "../../../core/app/CE/Verdict/Table.hs",
+    "line": 48,
+    "text": "uniformArity :: String -> [[Integer]] -> Maybe String"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:71": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 77,
+    "text": "classCap :: Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:72": {
+    "target": "../../../core/app/CE/Verdict/Rows.hs",
+    "line": 84,
+    "text": "contRow :: String -> Int -> [Integer] -> Maybe String"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:73": {
+    "target": "../../../core/app/CE/Verdict/Table.hs",
+    "line": 60,
+    "text": "classKnobsOffence :: [[Integer]] -> Maybe String"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:74": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 204,
     "text": "排除：后缀数组（构建不增量）、全仓 pairwise 树编辑、全仓 embedding。"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:71": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:75": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 68,
     "text": "tolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:72": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 101,
     "text": "tolNum :: Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:73": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 56,
     "text": "-- | The single-edit ceiling allowance. Globally: max of the +2% leg"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:74": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 97,
     "text": "-- | ADR-006 continuous-ratchet tolerance: a ceiling may be exceeded"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:75": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 61,
     "text": "-- A class that declares its own tolerance REPLACES both legs with an"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
-    "target": "../../../core/test/ClassProps.hs",
-    "line": 186,
-    "text": "-- | K14: class 1 declares a zero allowance and grows by one line —"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 76,
-    "text": "-- saw adopt their value (bootstrap, not a violation). Discrete:"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 90,
-    "text": "{ rOver ="
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 95,
-    "text": ", rDrawn ="
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:8": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -2945,54 +3005,54 @@
     "text": "tsedDen = 100"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:80": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 48,
-    "text": "-- ^ [u,metricCode,drawn]: over the ceiling but inside tolerance —"
+    "target": "../../../core/test/ClassProps.hs",
+    "line": 186,
+    "text": "-- | K14: class 1 declares a zero allowance and grows by one line —"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 103,
-    "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 72,
-    "text": "-- | Judge current facts against the baseline. Continuous: per"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 210,
-    "text": "- **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:84": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 101,
-    "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:85": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 121,
-    "text": "curSet = S.fromList disc"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:86": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 104,
-    "text": ", rNewDisc = disc"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:87": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 76,
     "text": "-- saw adopt their value (bootstrap, not a violation). Discrete:"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 90,
+    "text": "{ rOver ="
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 95,
+    "text": ", rDrawn ="
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:84": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 48,
+    "text": "-- ^ [u,metricCode,drawn]: over the ceiling but inside tolerance —"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:85": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 103,
+    "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:86": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 72,
+    "text": "-- | Judge current facts against the baseline. Continuous: per"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:87": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 210,
+    "text": "- **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:88": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 80,
-    "text": "ratchet ::"
+    "line": 101,
+    "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:89": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 3,
-    "text": "-- SET (new member = fail, removed member auto-shrinks). No baseline"
+    "line": 121,
+    "text": "curSet = S.fromList disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:9": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -3000,54 +3060,54 @@
     "text": "dupHits :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:90": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 104,
+    "text": ", rNewDisc = disc"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 76,
+    "text": "-- saw adopt their value (bootstrap, not a violation). Discrete:"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:92": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 80,
+    "text": "ratchet ::"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 3,
+    "text": "-- SET (new member = fail, removed member auto-shrinks). No baseline"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 130,
+    "text": "let baseline = match (opts.establish, opts.pinned_soft) {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:95": {
+    "target": "../../../cli/src/score/pinned.rs",
+    "line": 21,
+    "text": "pub(crate) fn baseline("
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:96": {
+    "target": "../../../cli/src/trend/mod.rs",
+    "line": 147,
+    "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:97": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 216,
     "text": "- 与 `--fail-under` 合成：有基线的仓库以棘轮为主门，`--fail-under` 为下限保险；"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:98": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 182,
     "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:92": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:99": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 147,
     "text": "floorFail = maybe False (perMille <) (reqFloor req)"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 166,
-    "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 149,
-    "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:95": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 32,
-    "text": ", bKnobsDigest :: Maybe Integer"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:96": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 197,
-    "text": "ratchetObj :: Ratcheted -> [(String, Bool)] -> Value"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:97": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 100,
-    "text": ", \"ratchet\" .= ratchetObj r conds"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:98": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 177,
-    "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:99": {
-    "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 87,
-    "text": "scoreBound :: ScoreKnobs"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:1": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
@@ -3066,7 +3126,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:101": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 462,
+    "line": 477,
     "text": "/// The informational table, labelled `path#unit` for sections; a"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:102": {
@@ -3126,12 +3186,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:112": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 270,
+    "line": 280,
     "text": ".map(|&i| i as i64)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:113": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 288,
+    "line": 298,
     "text": "/// bits through its role table, where an ablation can perturb them);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:114": {
@@ -3261,7 +3321,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 300,
+    "line": 315,
     "text": "} else if n.kind == super::wire::GRAN_FILE {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
@@ -3296,12 +3356,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:143": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 355,
+    "line": 370,
     "text": "body"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:144": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 429,
+    "line": 444,
     "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:145": {
@@ -3316,17 +3376,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:147": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 415,
+    "line": 430,
     "text": "degraded,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:148": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 381,
+    "line": 396,
     "text": "Ok((node, name))"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:149": {
     "target": "../../../cli/src/report.rs",
-    "line": 85,
+    "line": 102,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:15": {
@@ -3361,17 +3421,17 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:155": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 228,
+    "line": 238,
     "text": "rows,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:156": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 425,
+    "line": 440,
     "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:157": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 342,
+    "line": 357,
     "text": "\"symbols\": w.symbols.iter().collect::<Vec<_>>(),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:158": {
@@ -3821,12 +3881,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:83": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 240,
+    "line": 250,
     "text": "/// duplicate-free validation demands."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 255,
+    "line": 265,
     "text": "/// rule now (CE.Graph.Cost.assetKind), applied where the cut table"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
@@ -3926,8 +3986,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:101": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 179,
-    "text": "}"
+    "line": 193,
+    "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:102": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -3941,7 +4001,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:104": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 150,
+    "line": 154,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:105": {
@@ -4016,13 +4076,13 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:22": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 230,
-    "text": "pairs.insert((a.min(bb), a.max(bb)));"
+    "line": 244,
+    "text": "out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:23": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 210,
-    "text": "}"
+    "line": 224,
+    "text": "/// File pairs with at least one verified block, kind 0 (t1t2) at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:24": {
     "target": "../../../core/test/JoinProps.hs",
@@ -4131,8 +4191,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:43": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 304,
-    "text": "}"
+    "line": 318,
+    "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:44": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
@@ -4141,8 +4201,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:45": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 330,
-    "text": ".map(|(u, (rw, ap))| [u, rw, ap])"
+    "line": 331,
+    "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:46": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -5386,53 +5446,53 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:10": {
     "target": "../../../core/app/CE/Trend.hs",
+    "line": 44,
+    "text": "violation :: RowsReq -> Maybe String"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:11": {
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 52,
+    "text": "rowShape i row = case row of"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:12": {
+    "target": "../../../core/app/CE/Trend.hs",
     "line": 63,
     "text": "knobShape i row = case row of"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:11": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:13": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 48,
     "text": ", tableOffence \"knob\" (take 1) knobShape (knobsOf req)"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:12": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:14": {
     "target": "../../../core/test/TrendProps.hs",
     "line": 246,
     "text": "orderFree :: Bool"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:13": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:15": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 36,
     "text": "trendRowCap = 4096"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:14": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:16": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 141,
     "text": "<> [\"reason\" .= (\"trend_too_large\" :: String) | jDegraded j]"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:15": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:17": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 4,
     "text": "-- entropy/χ² stance — no floating point ever crosses a verdict)."
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:16": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:18": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 60,
     "text": "[ (i, ts % 86400, (score * 1000000) % scale)"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:17": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:19": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 72,
     "text": "slopeMicroPerDay :: [(Integer, Rational, Rational)] -> Maybe Rational"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:18": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 86,
-    "text": "median :: [Rational] -> Rational"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:19": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 91,
-    "text": "robustness = case replyObj (wireReq spiked) of"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:2": {
     "target": "../../../cli/src/trend/mod.rs",
@@ -5440,54 +5500,54 @@
     "text": "/// Newest `n` first-parent commits of HEAD: (full sha, committer"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:20": {
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 86,
+    "text": "median :: [Rational] -> Rational"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:21": {
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 91,
+    "text": "robustness = case replyObj (wireReq spiked) of"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:22": {
     "target": "../../../core/test/TrendProps.hs",
     "line": 79,
     "text": "collinear = all probe [-1000, 0, 777]"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:21": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:23": {
     "target": "../../../core/test/TrendProps.hs",
     "line": 43,
     "text": "tsRef rows = case slopes of"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:22": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:24": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 73,
     "text": "slopeMicroPerDay view"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:23": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:25": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 46,
     "text": "tsWindow = 512"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:24": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:26": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 55,
     "text": "judgedView rows = drop (length sorted - tsWindow) sorted"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:25": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:27": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 138,
     "text": ", \"counts\" .= object [\"rows\" .= length (rowsOf req), \"judged\" .= jJudged j]"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:26": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:28": {
     "target": "../../../core/test/TrendProps.hs",
     "line": 199,
     "text": "windowed :: Bool"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:27": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:29": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 102,
     "text": "cliffOf view = case falls of"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:28": {
-    "target": "../../../core/app/CE/Trend/Cost.hs",
-    "line": 121,
-    "text": "declineRunOf view = snd (foldl step (Nothing, Nothing) (steps view))"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:29": {
-    "target": "../../../cli/src/trend/judge.rs",
-    "line": 75,
-    "text": "for (name, pair) in [(\"cliff\", j.cliff), (\"declineRun\", j.decline_run)] {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:3": {
     "target": "../../../cli/src/trend/mod.rs",
@@ -5495,54 +5555,54 @@
     "text": "/// One commit's absolute score, judged in a detached temp worktree"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:30": {
+    "target": "../../../core/app/CE/Trend/Cost.hs",
+    "line": 121,
+    "text": "declineRunOf view = snd (foldl step (Nothing, Nothing) (steps view))"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:31": {
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 75,
+    "text": "for (name, pair) in [(\"cliff\", j.cliff), (\"declineRun\", j.decline_run)] {"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:32": {
     "target": "../../../cli/src/trend/report.rs",
     "line": 115,
     "text": "fn print_shape_facts(r: &Report) {"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:31": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:33": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 96,
     "text": "enough = toInteger (length (rowsOf req)) >= minPoints"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:32": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:34": {
     "target": "../../../core/test/TrendProps.hs",
     "line": 220,
     "text": "absence :: Bool"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:33": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:35": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 67,
     "text": "| code == 0 && v < 2 -> Just (label <> \"minPoints below 2\")"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:34": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:36": {
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 139,
     "text": "verdictOf floorMicro slope"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:35": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:37": {
     "target": "../../../core/test/TrendProps.hs",
     "line": 112,
     "text": "boundaries ="
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:36": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:38": {
     "target": "../../../cli/src/trend/judge.rs",
     "line": 127,
     "text": "pub fn verdict_str(j: &Judgment) -> &'static str {"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:37": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:39": {
     "target": "../../../core/app/CE/Trend.hs",
     "line": 136,
     "text": ", \"fail\" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:38": {
-    "target": "../../../core/test/TrendProps.hs",
-    "line": 139,
-    "text": "floorLever :: Bool"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:39": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 134,
-    "text": ", \"cliff\" .= fmap (\\(i, d) -> [i, round d]) (jCliff j)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:4": {
     "target": "../../../cli/src/trend/mod.rs",
@@ -5550,59 +5610,69 @@
     "text": "// ONE fence for the whole trajectory: the committed soft line, or"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:40": {
+    "target": "../../../core/test/TrendProps.hs",
+    "line": 139,
+    "text": "floorLever :: Bool"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:41": {
+    "target": "../../../core/app/CE/Trend.hs",
+    "line": 134,
+    "text": ", \"cliff\" .= fmap (\\(i, d) -> [i, round d]) (jCliff j)"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:42": {
     "target": "../../../cli/src/trend/judge.rs",
     "line": 49,
     "text": "let mut knobs: Vec<[i64; 2]> = Vec::new();"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:41": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:43": {
     "target": "../../../cli/src/config.rs",
-    "line": 139,
-    "text": "pub rewrite_num: Option<u32>,"
+    "line": 170,
+    "text": "pub(crate) struct TrendCfg {"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:42": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:44": {
     "target": "../../../cli/src/trend/judge.rs",
     "line": 97,
     "text": "fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:43": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:45": {
     "target": "../../../cli/src/trend/judge.rs",
     "line": 45,
     "text": "/// shape); a missing capability or a non-result reply is an error,"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:44": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:46": {
     "target": "../../../cli/src/trend/report.rs",
     "line": 17,
     "text": "pub const SCHEMA_ID: &str = \"ce.trend-report/0.3.0\";"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:45": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:47": {
     "target": "../../../cli/src/trend/mod.rs",
     "line": 30,
     "text": "/// in clap and a `10` literal in the MCP adapter, so one project"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:5": {
+    "target": "../../../cli/src/score/pinned.rs",
+    "line": 21,
+    "text": "pub(crate) fn baseline("
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
+    "target": "../../../cli/src/trend/mod.rs",
+    "line": 147,
+    "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
     "target": "../../../cli/src/trend/mod.rs",
     "line": 75,
     "text": "let stamp = toolchain_stamp(core)?;"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:6": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:8": {
     "target": "../../../cli/src/trend/mod.rs",
     "line": 102,
     "text": "rows.reverse(); // git log is newest-first; charts read oldest-first"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:7": {
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:9": {
     "target": "../../../cli/src/trend/judge.rs",
     "line": 57,
     "text": "let mut body = json!({"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:8": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 44,
-    "text": "violation :: RowsReq -> Maybe String"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:9": {
-    "target": "../../../core/app/CE/Trend.hs",
-    "line": 52,
-    "text": "rowShape i row = case row of"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:1": {
     "target": "../../../cli/src/guard.rs",
@@ -5751,7 +5821,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:36": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 279,
+    "line": 283,
     "text": ""
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:37": {
@@ -5760,14 +5830,14 @@
     "text": "// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:38": {
-    "target": "../../FPR-REPLAY.md",
-    "line": 39,
-    "text": "## 重放捎带抓获的产品缺陷（已修）"
+    "target": "../../../cli/src/dedup/budget.rs",
+    "line": 21,
+    "text": "pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<()> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:39": {
     "target": "../../FPR-REPLAY.md",
-    "line": 3,
-    "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
+    "line": 39,
+    "text": "## 重放捎带抓获的产品缺陷（已修）"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:4": {
     "target": "../../../cli/src/guard.rs",
@@ -5776,53 +5846,53 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:40": {
     "target": "../../FPR-REPLAY.md",
+    "line": 3,
+    "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:41": {
+    "target": "../../FPR-REPLAY.md",
     "line": 98,
     "text": "仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:41": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:42": {
     "target": "../../FPR-REPLAY.md",
     "line": 55,
     "text": "自仓全史 2274 事件 **505 拦截**（111.04/500）。按无序文件对分解 = 122 对首燃 +"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:42": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:43": {
     "target": "../../FPR-REPLAY.md",
     "line": 3,
     "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:43": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:44": {
     "target": "../../FPR-REPLAY.md",
     "line": 109,
     "text": "+++ fpr_replay.rs (revived, K round)"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:44": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:45": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 19,
     "text": "pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:45": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:46": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 65,
     "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:46": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:47": {
     "target": "../ce-toml.md",
     "line": 18,
     "text": "| `file_lines_fail` | `750` | Hard file budget: scan fails past it, and the guard refuses writes that would land past it |"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:47": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:48": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 19,
     "text": "pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:48": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:49": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 143,
     "text": "let cap = z.cap;"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:49": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 214,
-    "text": "fn committed_soft(root: &Path) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:5": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5830,49 +5900,49 @@
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:50": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 214,
+    "text": "fn committed_soft(root: &Path) -> Option<usize> {"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:51": {
     "target": "../../../cli/src/hookio.rs",
     "line": 33,
     "text": "/// the tier the mapped position resolved to, so the feed records"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:51": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:52": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 145,
     "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:52": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:53": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 187,
     "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:53": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:54": {
     "target": "../ce-toml.md",
     "line": 17,
     "text": "| `file_lines_warn` | `300` | Warn once a source file passes this line count |"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:54": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:55": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 145,
     "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:55": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:56": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 165,
     "text": "if armed {"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:56": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 24,
     "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
     "target": "../ce-toml.md",
     "line": 31,
     "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 165,
-    "text": "if armed {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:59": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5885,54 +5955,54 @@
     "text": "let applied = match (t.replace_all, on_disk.matches(&old).count()) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:60": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 165,
+    "text": "if armed {"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:61": {
     "target": "../../../cli/src/hookio.rs",
     "line": 23,
     "text": "/// 0.7.0 re-defines `matches` on `probe` events (K step 11 novel-"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:61": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
     "target": "../../../cli/src/config/tier.rs",
     "line": 24,
     "text": "/// a write landing <25% into (S, H] stays observe, 25–75%"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
     "target": "../../../cli/src/hookio.rs",
     "line": 36,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:64": {
     "target": "../../../cli/src/guard.rs",
     "line": 58,
     "text": "let file_path = &env.tool_input.file_path;"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:64": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:65": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 155,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:65": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:66": {
     "target": "../../../cli/src/hookio.rs",
     "line": 208,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:66": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
     "target": "../../../cli/src/guard.rs",
     "line": 63,
     "text": "// not context bloat, and repeat every time they hold"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:68": {
     "target": "../../../cli/src/guard/budget.rs",
     "line": 155,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:68": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:69": {
     "target": "../../../cli/src/hookio.rs",
     "line": 200,
     "text": "}"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:69": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 159,
-    "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:7": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5941,20 +6011,25 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:70": {
     "target": "../../../cli/src/hookio.rs",
+    "line": 159,
+    "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:71": {
+    "target": "../../../cli/src/hookio.rs",
     "line": 18,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:71": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:72": {
     "target": "../../../cli/src/guard.rs",
     "line": 154,
     "text": ""
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:72": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:73": {
     "target": "../../../cli/src/hookio.rs",
     "line": 52,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.7.0\";"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:73": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:74": {
     "target": "../../../cli/src/hookio.rs",
     "line": 18,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
@@ -6186,7 +6261,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:49": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 65,
+    "line": 61,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:5": {
@@ -6196,7 +6271,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:50": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 86,
+    "line": 82,
     "text": "let mut cache = crate::erase::gather::TextCache::new(root);"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:51": {
@@ -6626,7 +6701,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:76": {
     "target": "../../../cli/src/report.rs",
-    "line": 85,
+    "line": 102,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:77": {

@@ -420,4 +420,12 @@ entry_globs = [
 # blocks (dedup/t3 tests <-> docdup/judge tests), foreign now and
 # measured by the submodule's ledger (118 -> 119 there, the same row).
 # Zero new rows: the 64-row set is the 65-row set minus that pair.
-budget = 64
+# 64 -> 63 (L round step #14, the fence close-out): main_score.rs was
+# rewritten around the three named baseline acts and its `use` block
+# stopped rhyming with main_erase.rs's (main_erase.rs:6-13 <->
+# main_score.rs:8-15, the one row that left); the two other rows the
+# file carried only moved (join/verdicts.rs <-> score/mod.rs and
+# main_judge.rs <-> main_score.rs, same pairs, shifted lines). Zero
+# new rows: the 63-row set is the 64-row set minus that pair -- the
+# row-set diff against the HEAD worktree is what moved this line.
+budget = 63

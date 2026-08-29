@@ -56,6 +56,10 @@ pub struct RunOpts {
 /// only guaranteed at >= t). `check` turns the run into the R12
 /// ratchet gate against ce.toml [dedup] budget.
 pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
+    if opts.check {
+        // the ratchet road accepts the operating point or tighter only
+        budget::gate_filters(opts.min_tokens, opts.min_distinct)?;
+    }
     let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
     report::emit(opts.format, &found, &summary)?;
     if opts.check {

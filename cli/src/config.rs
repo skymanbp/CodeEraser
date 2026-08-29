@@ -259,10 +259,35 @@ impl Config {
             .thresholds
             .ladder_fault()
             .or_else(|| cfg.rules.fault(&cfg.thresholds))
+            .or_else(|| cfg.globs_fault(path.parent().unwrap_or(root)))
         {
             Some(fault) => Err(fault),
             None => Ok(cfg),
         }
+    }
+
+    /// Every ce.toml glob — the exclude list, each class's globs,
+    /// `[graph] entry_globs` — compiles at the load throat in the one
+    /// dialect (scan::globs), so a pattern the dialect would silently
+    /// drop or misread (a `#` comment, an escaped `\\`, a `!`) is a
+    /// named error with the fix in it before any reader judges.
+    fn globs_fault(&self, root: &Path) -> Option<String> {
+        use crate::scan::globs;
+        let mut b = ignore::overrides::OverrideBuilder::new(root);
+        let exclude = self
+            .exclude
+            .iter()
+            .find_map(|g| globs::add_user_glob(&mut b, g, true, "exclude").err());
+        let classes = || {
+            self.rules.class.iter().find_map(|c| {
+                let what = format!("[[rules.class]] {:?}", c.name);
+                globs::compile_inclusions(root, &c.globs, &what).err()
+            })
+        };
+        let entries = || {
+            globs::compile_inclusions(root, &self.graph.entry_globs, "[graph] entry_globs").err()
+        };
+        exclude.or_else(classes).or_else(entries)
     }
 }
 

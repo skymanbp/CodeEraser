@@ -23,8 +23,8 @@ Commands:
   structure  Tree-scale structure judgment: entropy, axes and findings via the core's structure/1 (report-only)
   trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable. Each uncached commit is a full check in a temp worktree — bound a cold run with --batch; progress rides stderr
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
-  check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
-  baseline   Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1; a degraded judgment is never persisted)
+  check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails, and the console names the held conditions; a subdirectory scopes the measurement (nothing is persisted)
+  baseline   Persist the core's newBaseline as ce-baseline.json, at the project root only. Three named acts: none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition alone (knobs_digest) is re-pinned under the declared knobs; CE_ACCEPT_BASELINE=1 — re-establish from the current tree, the one act that creates a missing file. A degraded judgment is never persisted
   dedup      Detect T1/T2 clones via the winnowing fingerprint index
   daemon     Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
   ping       Round-trip a ping through the project daemon (lazy-starts it)
@@ -252,7 +252,7 @@ Options:
 ## ce check
 
 ```text
-The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails
+The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails, and the console names the held conditions; a subdirectory scopes the measurement (nothing is persisted)
 
 Usage: ce check [OPTIONS] [ROOT]
 
@@ -273,7 +273,7 @@ Options:
 ## ce baseline
 
 ```text
-Persist the core's newBaseline as ce-baseline.json (the violation set only shrinks without CE_ACCEPT_BASELINE=1; a degraded judgment is never persisted)
+Persist the core's newBaseline as ce-baseline.json, at the project root only. Three named acts: none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition alone (knobs_digest) is re-pinned under the declared knobs; CE_ACCEPT_BASELINE=1 — re-establish from the current tree, the one act that creates a missing file. A degraded judgment is never persisted
 
 Usage: ce baseline [OPTIONS] [ROOT]
 
@@ -303,8 +303,8 @@ Options:
       --format <FORMAT>              [default: console] [possible values: console, json, sarif]
       --lang <LANG>                  Console language (wins over CE_LANG) [possible values: en, zh]
       --db <DB>                      Index database path (default: <path>/.ce/index.db)
-      --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50)
-      --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from measured calibration; 0 disables)
+      --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50; with --check: default or tighter only)
+      --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from measured calibration; 0 disables; with --check: default or tighter only)
       --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (the comparison is the core's verdict; a degraded judgment refuses to gate at all and exits 2)
       --core <CORE>                  Path to the ce-core executable, consulted by --check alone (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help                         Print help

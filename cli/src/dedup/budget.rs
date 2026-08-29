@@ -11,6 +11,38 @@ use anyhow::Result;
 use std::path::Path;
 use std::process::ExitCode;
 
+/// The `--check` road judges at the calibrated operating point
+/// (t = 50, diversity floor 7). An override may TIGHTEN a filter —
+/// more blocks admitted, a stricter gate — but never loosen it:
+/// `--min-distinct 40` drove this repository's own budget from 182
+/// to 0 with no clone repaid (k4 fence attack). Refused BEFORE any
+/// measurement or core contact, by name. Report-only runs, the MCP
+/// tool and the GUI keep both overrides free: calibration controls.
+pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<()> {
+    let t = super::Params::default().guarantee();
+    if let Some(m) = min_tokens.filter(|&m| m > t) {
+        anyhow::bail!(crate::i18n::line(
+            "--check judges at the calibrated operating point: --min-tokens {} is above {} and would admit fewer blocks (default or tighter only)",
+            "--check 按校准工作点判决：--min-tokens {} 高于 {}，会少收克隆块（只准默认或更紧）",
+            &[&m, &t],
+        ));
+    }
+    let d = super::pairs::DEFAULT_MIN_DISTINCT;
+    match min_distinct {
+        Some(0) => anyhow::bail!(crate::i18n::line(
+            "--check cannot judge without a diversity floor: --min-distinct 0 disables the floor the core's contract needs (default or tighter only)",
+            "--check 不能在无多样性地板下判决：--min-distinct 0 关闭了核契约所需的地板（只准默认或更紧）",
+            &[],
+        )),
+        Some(m) if m > d => anyhow::bail!(crate::i18n::line(
+            "--check judges at the calibrated operating point: --min-distinct {} is above {} and would suppress more blocks (default or tighter only)",
+            "--check 按校准工作点判决：--min-distinct {} 高于 {}，会多抑制克隆块（只准默认或更紧）",
+            &[&m, &d],
+        )),
+        _ => Ok(()),
+    }
+}
+
 pub fn check(
     root: &Path,
     blocks: usize,

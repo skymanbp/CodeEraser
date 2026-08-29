@@ -1,17 +1,17 @@
 //! The rulepack's MATCHING half (plan v2.13 ①): every measured path
 //! tries the declared classes in array order and the first match owns
 //! it — 1-based, 0 = the default class. Globs compile through the
-//! SAME override compiler the exclude list uses (walk::add_user_glob:
+//! SAME override compiler the exclude list uses (globs::add_user_glob:
 //! one dialect, the third-dialect refusal) as INCLUSION patterns.
 //! Paths and class names stay on this side of the wire (§5.9.2); the
 //! index is what rides.
 
 use crate::config::RulesCfg;
-use ignore::overrides::{Override, OverrideBuilder};
+use crate::scan::globs::{self, Inclusions};
 use std::path::Path;
 
 pub struct Classes {
-    matchers: Vec<Override>,
+    matchers: Vec<Inclusions>,
 }
 
 impl Classes {
@@ -21,11 +21,7 @@ impl Classes {
         let mut matchers = Vec::with_capacity(rules.class.len());
         for c in &rules.class {
             let what = format!("[[rules.class]] {:?}", c.name);
-            let mut b = OverrideBuilder::new(root);
-            for glob in &c.globs {
-                crate::scan::walk::add_user_glob(&mut b, glob, false, &what)?;
-            }
-            matchers.push(b.build().map_err(|e| format!("ce.toml {what}: {e}"))?);
+            matchers.push(globs::compile_inclusions(root, &c.globs, &what)?);
         }
         Ok(Classes { matchers })
     }
@@ -42,10 +38,9 @@ impl Classes {
     /// none does. A zero-hit class is legal — a clean tree may hold
     /// no generated file today — and never an error here.
     pub fn class_of(&self, rel: &str) -> u64 {
-        let path = Path::new(rel);
         self.matchers
             .iter()
-            .position(|m| matches!(m.matched(path, false), ignore::Match::Whitelist(_)))
+            .position(|m| globs::selected(m, rel))
             .map_or(0, |i| i as u64 + 1)
     }
 

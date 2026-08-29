@@ -8,7 +8,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 
 | key | default | meaning |
 |---|---|---|
-| `exclude` | *(absent)* | Extra exclude globs, added on top of the built-in defaults (plan §4.1) |
+| `exclude` | *(absent)* | Extra exclude globs, added on top of the built-in defaults (plan §4.1); gitignore syntax, `/` separators only — a `\` is an escape, a leading `!` or `#` is refused by name, `dir/` names a directory |
 
 ## [thresholds]
 
@@ -40,7 +40,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 
 | key | default | meaning |
 |---|---|---|
-| `entry_globs` | *(absent)* | Extra liveness roots for the deadcode judgment, beyond the mechanical entry conventions |
+| `entry_globs` | *(absent)* | Extra liveness roots for the deadcode judgment, beyond the mechanical entry conventions; the exclude list's dialect (`dir/` selects the directory's files; `src/**/*.ts` and every other pattern read as written) |
 | `crate_roots` | *(absent)* | Rust crate roots of a tree whose manifest lives elsewhere (the test-suite submodule is a slice of the `cli` package): root-relative exact paths. A declared root mounts its `mod` children and anchors `crate::` paths like a manifest target, and is one for the deadcode entry role; a declared path that is not a walked Rust file is refused by name |
 
 ## [score]
@@ -78,5 +78,5 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 
 | key | default | meaning |
 |---|---|---|
-| `class` | *(absent)* | Path classes with their own size and complexity lines (plan v2.13): an array of tables, each with a local `name`, its `globs` (the exclude list's dialect; the first declared match owns a path, an unmatched path keeps the global table) and `knobs` — `file_lines_warn`, `file_lines_fail`, `cognitive_warn`, `fn_lines_warn`, `fn_lines_fail`, `ratchet_tolerance`; an absent knob inherits the global line. The score reads the size and complexity three, the scan ladder the five lines, and `ratchet_tolerance` (5.1.0) is the class's own ADR-006 allowance in lines: declared, it replaces BOTH global legs, so `0` freezes the class at its current ceilings and the global `max(+2%, +10)` never applies. At most 64 classes, each class's ladder must climb, and only a class's index and knobs ever cross the wire. Since 6.0.0 the baseline records a fingerprint of the WHOLE parsed config — every table, not just this one; editing any knob fails `ce check` by name (`knobs_digest`) until `CE_ACCEPT_BASELINE=1 ce baseline` names the new floor, so neither a glob edit nor a `[score]` edit can move every line in silence. Enabling classes changes what the score judges a file against — scores are not comparable across that switch |
+| `class` | *(absent)* | Path classes with their own size and complexity lines (plan v2.13): an array of tables, each with a local `name`, its `globs` (the exclude list's dialect through the exclude list's own parser — gitignore syntax, `dir/` the directory's files; the first declared match owns a path, an unmatched path keeps the global table) and `knobs` — `file_lines_warn`, `file_lines_fail`, `cognitive_warn`, `fn_lines_warn`, `fn_lines_fail`, `ratchet_tolerance`; an absent knob inherits the global line. The score reads the size and complexity three, the scan ladder the five lines, and `ratchet_tolerance` (5.1.0) is the class's own ADR-006 allowance in lines: declared, it replaces BOTH global legs, so `0` freezes the class at its current ceilings and the global `max(+2%, +10)` never applies. At most 64 classes, each class's ladder must climb, and only a class's index and knobs ever cross the wire. Since 6.0.0 the baseline records a fingerprint of the WHOLE parsed config — every table, not just this one; editing any knob fails `ce check` by name (`knobs_digest`) until `CE_ACCEPT_FENCE=1 ce baseline` re-pins the same ceilings under the new config (refused when anything else held) or `CE_ACCEPT_BASELINE=1` names a new floor, so neither a glob edit nor a `[score]` edit can move every line in silence. Enabling classes changes what the score judges a file against — scores are not comparable across that switch |
 

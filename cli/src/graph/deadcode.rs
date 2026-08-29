@@ -201,6 +201,16 @@ pub fn wire_of(
         );
     }
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
+    // [graph] entry_globs compile ONCE, through the one ce.toml glob
+    // dialect (scan::globs; the hand-rolled three-form matcher retired
+    // in plan v2.18 step #14) — a pattern the dialect cannot read is a
+    // named error here, never a silent no-match
+    let entries = crate::scan::globs::compile_inclusions(
+        root,
+        &config.graph.entry_globs,
+        "[graph] entry_globs",
+    )
+    .map_err(anyhow::Error::msg)?;
     // identity assignment + containment live in the nodes.rs throat
     // (F19) — the M5-3 join consumes the SAME functions, so both
     // verdicts stand on one id space by construction; the foreign
@@ -211,7 +221,7 @@ pub fn wire_of(
     let declared = targets::Declared::gather(root, &file_set, &config.graph.declared_roots());
     let rows: Vec<Value> = nodes
         .iter()
-        .map(|n| node_row(root, n, &config, &declared))
+        .map(|n| node_row(root, n, &entries, &declared))
         .collect();
     let mut wire = edge_wire(&edges, &ids)?;
     nodes::contain(&nodes, &ids, &mut wire);
@@ -289,7 +299,12 @@ pub fn edge_wire(
 /// the pre-2.28 legacy flags column that used to sit between kind
 /// and roles retired at 5.0.0, computed and sent for seven minors
 /// after the last core stopped reading it.
-fn node_row(root: &Path, n: &Node, config: &Config, declared: &targets::Declared) -> Value {
+fn node_row(
+    root: &Path,
+    n: &Node,
+    entries: &crate::scan::globs::Inclusions,
+    declared: &targets::Declared,
+) -> Value {
     // unknown extension = the sentinel code, NOT Python's 0 (RM15:
     // the two were indistinguishable on the wire before 3k)
     let lang = crate::scan::lang::Lang::from_path(Path::new(&n.path))
@@ -298,7 +313,7 @@ fn node_row(root: &Path, n: &Node, config: &Config, declared: &targets::Declared
     let roles = if n.foreign {
         flags::ROLE_FOREIGN
     } else if n.kind == super::wire::GRAN_FILE {
-        flags::roles_of(root, &n.path, config, declared)
+        flags::roles_of(root, &n.path, entries, declared)
     } else {
         0
     };

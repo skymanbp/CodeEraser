@@ -96,7 +96,7 @@ Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 p
 | `ce structure` | 树尺度结构判决（七轴）；`--split-candidates` 为越线文件计最优缝价——或写下它的内聚豁免 |
 | `ce trend` | 主线历史分数轨迹（缓存可从 git 重建） |
 | `ce erase` | 确定性两段式擦除：只计划可证安全的消除（死文件、逐字文档孪生、整单元 T1 孪生），默认演练，`--apply` 有干净工作区前置 |
-| `ce check` / `ce baseline` | ADR-006 棘轮 + 分数地板（对 `ce-baseline.json`） |
+| `ce check` / `ce baseline` | ADR-006 棘轮 + 分数地板（对 `ce-baseline.json`）；`check` 在控制台行上逐名报出成立条件，`baseline` 只在项目根、且只在具名动作下持久化 |
 | `ce mcp` | 只读 MCP 服务器：13 个报告工具，由插件自己注册。`erase` 只到**计划**为止——执行是 CLI 或 GUI 上的人类动作 |
 | `ce doctor` / `ce eject` | 健康行；按项目完整卸载（默认 dry-run） |
 
@@ -147,8 +147,10 @@ ratchet_tolerance = 0                        # 该类一行都不许长
 **取代两条全局腿**，故 `0` 意味着该类一行都不许长、全局 `max(+2%, +10)` 救不了它——这正是 vendored 树
 与冻结夹具想要的设置，也正是让这类树别再花掉手写代码需要的增长额度的那一条。而既然改一处配置本可以一次挪动
 所有的线，基线记录它**在哪份 `ce.toml` 下立的指纹**：改 glob、改阈值、改分数旋钮、改 exclude——凡是解析结果
-里有的，`ce check` 都会**具名停下**（`knobs_digest`），而不是悄悄放松。同意一份新配置与同意一条新地板是
-同一个动作——`CE_ACCEPT_BASELINE=1 ce baseline`，在 git 里看得见。它给**整份配置**而不是某一张表打指纹，
+里有的，`ce check` 都会**具名停下**（`knobs_digest`），而不是悄悄放松。同意一份新配置是它自己的具名动作——
+`CE_ACCEPT_FENCE=1 ce baseline` 在声明的旋钮下重钉同一组上限，别的条件同时成立即拒绝（增长藏不进一次配置改动）；
+`CE_ACCEPT_BASELINE=1` 则从当前树整体重立，也是唯一会创建缺失文件的动作；两者都不给时，项目根上的 `ce baseline`
+只允许违规集收缩，每次拒绝都点名它要的动作，在 git 里看得见。它给**整份配置**而不是某一张表打指纹，
 因为「挑表」正是缺口的成因：对第一版（只围类表）的对抗审查实测发现，`[score] viol_cost = 0` 能把一个仓
 从 939/1000 不及格变成 1000/1000 及格，而轴上仍老实报着违规费。
 
@@ -168,7 +170,7 @@ NDJSON wire 过界。Haskell 负责产品判决：分数与棘轮、图存活性
 Claude Code hooks 与 CI 渲染或执行的是同一批报告形状。
 
 - push 工作流运行六条自门禁产品腿，含显式分数地板；本仓就是常设 dogfood fixture。
-- ADR-006 上限与违规集存于 `ce-baseline.json`；清理会收紧，增长必须显式重立。
+- ADR-006 上限与违规集存于 `ce-baseline.json`；清理会收紧，增长必须具名重立（`CE_ACCEPT_BASELINE=1`），改配置有它自己更窄的动作（`CE_ACCEPT_FENCE=1`）；`ce check` 在控制台行上逐名报出成立条件。
 - `ce.toml` 的 `[[rules.class]]` 为一组 glob 声明自己的尺寸与复杂度线：分数、`ce scan` 阶梯与 PreToolUse 硬预算读的都是文件自己那条；类名与 glob 永不过线。
 - CLI/配置参考由生成器产出；十三册方法学的引文、导航与中英常数均由机器检查。
 - 守卫规则只有在自己的误报记录写入 [CHANGELOG.md](CHANGELOG.md) 后才能晋级 deny；无记录者保持 observe。

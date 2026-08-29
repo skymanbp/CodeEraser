@@ -89,6 +89,9 @@ pub fn structure(root: &Path, core: &str, knobs: (bool, Option<u32>, bool)) -> R
 /// face that could not arm it could not reproduce the verdict CI
 /// prints, and the report now echoes which it judged under.
 pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
+    // the one read (O31): a face judges the document it read, and a
+    // file that is not a baseline is this face's named error too
+    let baseline = crate::score::baseline::read(root)?;
     let o = crate::score::run(
         root,
         crate::score::Opts {
@@ -98,6 +101,7 @@ pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
             floor,
             establish: false,
             pinned_soft: None,
+            baseline,
         },
     )?;
     Ok(crate::score::report_json(&o))

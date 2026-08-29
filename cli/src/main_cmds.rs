@@ -165,11 +165,13 @@ pub struct DedupArgs {
     #[arg(long)]
     db: Option<PathBuf>,
     /// Report threshold in normalized tokens (default: the
-    /// winnowing guarantee threshold, 50)
+    /// winnowing guarantee threshold, 50; with --check: default or
+    /// tighter only)
     #[arg(long)]
     min_tokens: Option<usize>,
     /// Diversity floor: suppress blocks with fewer unique tokens
-    /// (default 7, from measured calibration; 0 disables)
+    /// (default 7, from measured calibration; 0 disables; with
+    /// --check: default or tighter only)
     #[arg(long)]
     min_distinct: Option<usize>,
     /// Only-shrink ratchet: exit 1 when clone blocks exceed the

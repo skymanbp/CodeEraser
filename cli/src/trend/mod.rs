@@ -145,12 +145,17 @@ fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row
             floor: None,
             establish: true,         // no ratchet: an absolute score
             pinned_soft: Some(soft), // ...but ONE fence for every point
+            baseline: None,          // the pin builds its own (score::pinned)
         },
     )?;
     let r = &out.reply;
     if let Some(reason) = &r.degraded {
         anyhow::bail!("degraded: {reason}");
     }
+    // the pinned baseline is the request's own identity (O34), so a
+    // held condition here is the core's word against a broken pin —
+    // a failed measurement, by name, never a silently recorded point
+    anyhow::ensure!(!r.fail, "score verdict failed: {}", r.failed.join(", "));
     Ok(Row {
         commit: sha.to_string(),
         ts,

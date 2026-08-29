@@ -51,12 +51,8 @@ fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {
         "not a git repository — an erase must be one `git checkout` from revert"
     );
     let top = std::path::PathBuf::from(String::from_utf8_lossy(&top.stdout).trim());
-    let same = match (top.canonicalize(), root.canonicalize()) {
-        (Ok(a), Ok(b)) => a == b,
-        _ => false,
-    };
     ensure!(
-        same,
+        crate::root::same_dir(&top, root),
         "not a git repository at {} — git resolved an enclosing repository \
          at {} instead, and an erase never binds past its own root",
         root.display(),

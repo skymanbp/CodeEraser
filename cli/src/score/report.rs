@@ -88,9 +88,15 @@ pub fn print(o: &Outcome, as_json: bool) {
 }
 
 /// The ratchet / note / degraded lines (split at the 50-line fn gate).
+/// A FAIL names what held (report::fail_suffix, O36); pass bytes are
+/// the ones this line always printed.
 fn print_ratchet_tail(o: &Outcome) {
     let r = &o.reply;
-    let verdict = if r.fail { "FAIL" } else { "pass" };
+    let verdict = if r.fail {
+        format!("FAIL{}", crate::report::fail_suffix(&r.failed))
+    } else {
+        "pass".to_string()
+    };
     println!(
         "{}",
         line(

@@ -59,17 +59,17 @@ trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部�
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）
-check	棘轮门：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负
+check	棘轮门：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负；给子目录只限定测量范围（不落盘任何东西）
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负
 check.roast	在控制台判决后附一行毒舌评语（彩蛋）
-baseline	把核的 newBaseline 落盘为 ce-baseline.json（无 CE_ACCEPT_BASELINE=1 时违规集只准缩）
+baseline	把核的 newBaseline 落盘为 ce-baseline.json，只在项目根。三种具名动作：无 — 违规集只准缩；CE_ACCEPT_FENCE=1 — 仅成立围栏条件（knobs_digest）时按声明旋钮重钉；CE_ACCEPT_BASELINE=1 — 按当前树重立，唯一能建立缺失文件的动作。降级判决绝不落盘
 baseline.days	改动窗口天数（省略 = 改动表保持为空）
 dedup	经 winnowing 指纹索引检测 T1/T2 克隆
 dedup.path	要索引的目录（默认当前目录）
 dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
-dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50）
-dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，实测校准；0 关闭）
+dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50；配合 --check 只准默认或更紧）
+dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，实测校准；0 关闭；配合 --check 只准默认或更紧）
 dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（比较即核的判决）
 dedup.core	ce-core 可执行文件路径（仅 --check 咨询；默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰启

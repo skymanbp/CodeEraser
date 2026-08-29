@@ -206,15 +206,15 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
 **ADR-006 棘轮语义（B5 修复）。**
 - **连续型指标**（文件 LOC、函数 CoC）：per-file/per-function ceiling = 基线值；
   超 ceiling 即 fail，低于 ceiling 自动收紧到新值。修 bug 需要加行时：ceiling 有
-  单次编辑 +2% 或 +10 行（取大）的容差，容差消耗计入 `ce check` 棘轮行。具名重立（`CE_ACCEPT_BASELINE=1 ce baseline`）时，每个超容差上升的文件与每个新入表实体都必须在 CHANGELOG 该提交段逐个具名（文件、旧→新行数），无名即违规——靠纪律执行、不设门（2026-08-28 用户裁）。
+  单次编辑 +2% 或 +10 行（取大）的容差，容差消耗计入 `ce check` 棘轮行。具名重立（`CE_ACCEPT_BASELINE=1 ce baseline`）时，每个超容差上升的文件与每个新入表实体都必须在 CHANGELOG 该提交段逐个具名（文件、旧→新行数），无名即违规——靠纪律执行、不设门（2026-08-28 用户裁）。`ce baseline` 只在项目根持久化，缺基线不再无声建立——须 `CE_ACCEPT_BASELINE=1`（v2.18 步 #14 O30/O31）。
 - **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；
   新增成员即 fail，移除成员自动收基线。
 - **类围栏（v2.14，4.2.0 起）**：基线另存标量 `classDigest` = `[[rules.class]]` 规范化声明的哈希。
-  digest 不符 → 棘轮**硬拒**并要求具名重立（`CE_ACCEPT_BASELINE=1`）——规则集变更不得被无声吸收。
+  digest 不符 → 棘轮**硬拒**并要求具名动作——`CE_ACCEPT_FENCE=1` 只接受围栏条件、上限与旧值取 min（v2.18 步 #14 O35），`CE_ACCEPT_BASELINE=1` 整体重立——规则集变更不得被无声吸收。
   围栏在场时容差可按类声明（`ratchet_tolerance`，vendored/夹具可为 0=冻结）；棘轮行仍三列只记树事实，
   进基线的是指纹而非旋钮。缺省无 digest = 无类语义，未声明类的仓字节恒等。
 - 与 `--fail-under` 合成：有基线的仓库以棘轮为主门，`--fail-under` 为下限保险；
-  两者任一 fail 即 fail。`ce-baseline.json` 提交进仓库（betterer 范式）。
+  两者任一 fail 即 fail，控制台按核心序逐名报出成立条件（v2.18 步 #14 O36）。`ce-baseline.json` 提交进仓库（betterer 范式）。
 
 **ADR-007 插件工程约束（官方文档核实，2026-08-06）。**
 - 布局：`plugin/.claude-plugin/plugin.json`（省略 `version` 则 commit SHA 即版本；**显式
@@ -233,7 +233,7 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
 **ADR-008 策略即数据 = Haskell 规则 DSL（2026-08-12 拍板；细则 v1.8 三拍板 2026-08-17）。**
 判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以"位台账+判决表"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。
 Rust 解析 `ce.toml` 原样过 wire 不解释语义。四片：P4 配置面与表化→P1 判决权回迁（is_clone/verbatim 半边/degraded→FAIL）→P2 棘轮统一（budget 比较入 core）→P3 scan 分级入 core（scan 获 --core，PERF 超标单片回滚）。
-验收 = 产品判决面字节等价（上报集/退出码/报告行，golden 全绿）+每片反事实证表承重；wire 按 proto minor 加性演进。占比提升是副产品，禁止为占比写代码。全档：reviews/2026-08-17-adr-008-policy-dsl.md（git 历史）。**细则第二期 = 规则包 DSL v1 路径类分参（2026-08-24 拍板，v2.13）**：glob→classId 指派居 Rust 测量侧（globset 与 exclude 同方言），类尺求值居 Haskell（`classKnobs` 数据表，码域 = {0,1,2} ceilings 类影子）；类名与 glob 永不过线，线上只走整数（continuous 第 4 列 classId + classKnobs 三元组）；声明序首中、classCap 64、baseline 永三列；四片 P1→P4 与反事实证表 C1–C9 为验收正典（全文见 v2.13 banner 条）。**细则第三期 = 符号事实搭 import 绑定（2026-08-24 拍板，v2.14）**：符号的导出性是每文件**本地语法事实**（`pub`/`export`/`__all__`），指派居 Rust 测量侧；符号存活性求值居 Haskell（4.1.0 先上 `symbols` 一表派生文件层导出位，判决码域沿用 graph/1 四态不新造；步 3b 符号层顾问 = **v2.17 L 轮甲批**（口径对抗审查册 v9 **已封版 2026-08-27**——提及口径 / 约定式可达免疫 / 嵌套可见性三题定案，见 v2.17 banner 条；`symEdges` 终裁 = **删**，用户拍板 ①），缓议因由见 v2.14 K7 条）。判据仍是 §5.9.2 一票否决——符号**名**属文本形物故永不过线，线上只走下标；边只从 import 绑定派生，不由名字搜索铸造（R6 判例：同名匹配铸边精度 0.576，永久关闭不复议），且**须在目标文件的 symbols 表命中声明**方成符号边，否则退回文件级边（对抗验证 2026-08-24：语法无法分辨叶子是声明还是子模块/再导出，详见 v2.14 ① 条）。
+验收 = 产品判决面字节等价（上报集/退出码/报告行，golden 全绿）+每片反事实证表承重；wire 按 proto minor 加性演进。占比提升是副产品，禁止为占比写代码。全档：reviews/2026-08-17-adr-008-policy-dsl.md（git 历史）。**细则第二期 = 规则包 DSL v1 路径类分参（2026-08-24 拍板，v2.13）**：glob→classId 指派居 Rust 测量侧（与 exclude 同一解析器 `scan/globs.rs`，v2.18 步 #14 O42/O20 合一），类尺求值居 Haskell（`classKnobs` 数据表，码域 = {0,1,2} ceilings 类影子）；类名与 glob 永不过线，线上只走整数（continuous 第 4 列 classId + classKnobs 三元组）；声明序首中、classCap 64、baseline 永三列；四片 P1→P4 与反事实证表 C1–C9 为验收正典（全文见 v2.13 banner 条）。**细则第三期 = 符号事实搭 import 绑定（2026-08-24 拍板，v2.14）**：符号的导出性是每文件**本地语法事实**（`pub`/`export`/`__all__`），指派居 Rust 测量侧；符号存活性求值居 Haskell（4.1.0 先上 `symbols` 一表派生文件层导出位，判决码域沿用 graph/1 四态不新造；步 3b 符号层顾问 = **v2.17 L 轮甲批**（口径对抗审查册 v9 **已封版 2026-08-27**——提及口径 / 约定式可达免疫 / 嵌套可见性三题定案，见 v2.17 banner 条；`symEdges` 终裁 = **删**，用户拍板 ①），缓议因由见 v2.14 K7 条）。判据仍是 §5.9.2 一票否决——符号**名**属文本形物故永不过线，线上只走下标；边只从 import 绑定派生，不由名字搜索铸造（R6 判例：同名匹配铸边精度 0.576，永久关闭不复议），且**须在目标文件的 symbols 表命中声明**方成符号边，否则退回文件级边（对抗验证 2026-08-24：语法无法分辨叶子是声明还是子模块/再导出，详见 v2.14 ① 条）。
 
 ### 5.9 安全与隐私（A9，上市场的准入条件）
 

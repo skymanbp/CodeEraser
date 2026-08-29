@@ -126,18 +126,28 @@ pub fn path_for(root: &Path) -> PathBuf {
     crate::root::project_root(root).join(BASELINE_FILE)
 }
 
-/// The baseline file as a verbatim JSON value: None = no baseline
-/// yet (the core judges in establish mode). The bytes under
-/// "continuous"/"discrete" go on the wire untouched.
+/// The committed baseline as a verbatim JSON value: None = NO FILE
+/// (the core judges in establish mode — a road `ce baseline` refuses
+/// to take without the named act, main_score). A file that is
+/// present but not a baseline document — `null`, an array, an object
+/// without the two tables — is a named error, never None: a missing
+/// file and a broken one used to read the same, and the broken one
+/// then re-established the floor wholesale with nobody naming it
+/// (plan v2.18 step #14, O31). The bytes under "continuous"/
+/// "discrete" go on the wire untouched.
 pub fn read(root: &Path) -> Result<Option<Value>> {
     let path = path_for(root);
-    if !path.exists() {
+    if !path.is_file() {
         return Ok(None);
     }
     let text = std::fs::read_to_string(&path).with_context(|| path.display().to_string())?;
-    Ok(Some(
-        serde_json::from_str(&text).context("ce-baseline.json")?,
-    ))
+    let doc: Value = serde_json::from_str(&text).with_context(|| path.display().to_string())?;
+    anyhow::ensure!(
+        doc["continuous"].is_array() && doc["discrete"].is_array(),
+        "{}: not a baseline document (an object carrying the continuous and discrete tables)",
+        path.display()
+    );
+    Ok(Some(doc))
 }
 
 /// Write the core's newBaseline back as the committed file, wrapped
@@ -151,6 +161,18 @@ pub fn read(root: &Path) -> Result<Option<Value>> {
 /// line used to print the bare constant, which said nothing about
 /// which directory just gained a floor.
 pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
+    // a floor is persisted from the project root ALONE (O30): the CLI
+    // refuses a scoped `ce baseline pkg` before measuring, and this
+    // is the library's own refusal for every caller after it — a
+    // scoped measurement keys its rows below the scope and would
+    // overwrite the project's floor with a partial one
+    let anchor = crate::root::project_root(root);
+    anyhow::ensure!(
+        crate::root::same_dir(root, &anchor),
+        "baseline: {} is inside project {} — a baseline is a per-project fact, persisted from its root",
+        root.display(),
+        anchor.display()
+    );
     let mut doc = json!({
         "schema": SCHEMA_ID,
         "continuous": new_baseline["continuous"],

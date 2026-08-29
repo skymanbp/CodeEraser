@@ -150,11 +150,17 @@ pub(crate) enum Cmd {
     /// erase via the core's erase/1; dry-run by default
     Erase(EraseArgs),
     /// The ratchet gate: judge the repo against ce-baseline.json —
-    /// ratchet OR --fail-under floor, either alone fails
+    /// ratchet OR --fail-under floor, either alone fails, and the
+    /// console names the held conditions; a subdirectory scopes the
+    /// measurement (nothing is persisted)
     Check(CheckArgs),
-    /// Persist the core's newBaseline as ce-baseline.json (the
-    /// violation set only shrinks without CE_ACCEPT_BASELINE=1; a
-    /// degraded judgment is never persisted)
+    /// Persist the core's newBaseline as ce-baseline.json, at the
+    /// project root only. Three named acts: none — the violation set
+    /// may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition
+    /// alone (knobs_digest) is re-pinned under the declared knobs;
+    /// CE_ACCEPT_BASELINE=1 — re-establish from the current tree,
+    /// the one act that creates a missing file. A degraded judgment
+    /// is never persisted
     Baseline(BaselineArgs),
     /// Detect T1/T2 clones via the winnowing fingerprint index
     Dedup(DedupArgs),

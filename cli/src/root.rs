@@ -4,7 +4,7 @@
 //!
 //! The rule is one line: ascend from the given path to the NEAREST
 //! ancestor holding a `ce.toml` or a real `.git` (the path itself
-//! first); a tree with neither keeps what was given. That resolved
+//! first); a tree with neither keeps what was given, absolutized. That resolved
 //! root owns the per-project state — `ce.toml`, `ce-baseline.json`,
 //! `.ce/` — while the path the human typed stays the analysis SCOPE.
 //!
@@ -27,7 +27,10 @@ use std::path::{Path, PathBuf};
 /// The project root for a path a human named. Absolutized first: a
 /// relative `cli` has `parent() == Some("")`, which ends the walk
 /// before it tests a single ancestor — the documented contract said
-/// "nearest ancestor" while the code checked exactly one level.
+/// "nearest ancestor" while the code checked exactly one level. The
+/// anchorless fallback is that same absolute path, not the typed
+/// one: `resolve` compares the two, and a fallback of `.` against an
+/// absolute start read as an ascent that never happened (O30).
 pub fn project_root(given: &Path) -> PathBuf {
     let start = std::path::absolute(given).unwrap_or_else(|_| given.to_path_buf());
     let mut probe = start.as_path();
@@ -43,7 +46,7 @@ pub fn project_root(given: &Path) -> PathBuf {
         }
         match probe.parent() {
             Some(p) if !p.as_os_str().is_empty() => probe = p,
-            _ => return given.to_path_buf(),
+            _ => return start.to_path_buf(),
         }
     }
 }
@@ -75,6 +78,17 @@ pub fn resolve(given: &Path) -> (PathBuf, bool) {
         .map(|g| g == root)
         .unwrap_or(true);
     (root, !same)
+}
+
+/// Whether two paths name ONE directory on disk — canonical equality,
+/// the comparison erase::apply makes against git's toplevel and
+/// baseline::write makes against the project root (O30). Two paths
+/// that cannot both canonicalize are not the same directory.
+pub fn same_dir(a: &Path, b: &Path) -> bool {
+    match (a.canonicalize(), b.canonicalize()) {
+        (Ok(x), Ok(y)) => x == y,
+        _ => false,
+    }
 }
 
 /// The root that judges a WRITE at `target` from a session rooted at

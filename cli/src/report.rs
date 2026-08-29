@@ -35,6 +35,23 @@ pub fn print_doc(as_json: bool, doc: impl FnOnce() -> serde_json::Value, console
     }
 }
 
+/// The console's named-failure suffix (plan v2.18 step #14, O36):
+/// the held conditions VERBATIM in the core's own order (Verdict.hs
+/// failConditions — ratchet_over, discrete_added, floor,
+/// dedup_budget, knobs_digest; degraded on that road), never sorted
+/// or filtered, empty when nothing held so a pass line keeps its
+/// bytes. `ratchet: … -> FAIL` used to exit 1 without saying that
+/// `knobs_digest` alone was why; the JSON face always had the names.
+/// Housed here, not in a family: the score AND scan consoles print
+/// it, and scan importing score would be a module cycle the graph
+/// axis itself bills.
+pub fn fail_suffix(failed: &[String]) -> String {
+    if failed.is_empty() {
+        return String::new();
+    }
+    crate::i18n::line(" (failed: {})", "（失败条件：{}）", &[&failed.join(", ")])
+}
+
 /// Print one family's report: the JSON envelope `{schema, <key>,
 /// counts}` under --format json, otherwise one templated line per
 /// hit plus a summary SENTENCE over the counts — both `{field}`

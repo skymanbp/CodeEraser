@@ -12,6 +12,7 @@
 pub mod baseline;
 pub mod knobs;
 pub mod model;
+mod pinned;
 pub mod report;
 pub mod wire;
 
@@ -35,8 +36,16 @@ pub struct Opts {
     pub floor: Option<u32>,
     /// true = judge with a NULL baseline (re-establish: the current
     /// facts become the new floor wholesale) — the CE_ACCEPT_BASELINE
-    /// path; the committed file is otherwise read verbatim.
+    /// path; `baseline` below is otherwise what rides, verbatim.
     pub establish: bool,
+    /// The committed baseline, read ONCE by the caller and carried
+    /// in verbatim (plan v2.18 step #14, O31): `run` never touches
+    /// the disk for it, so the value judged is the value the
+    /// command's policy decided on — a file deleted between two
+    /// reads cannot turn a judgment into an unnamed establish. None
+    /// = no file, the core judges in establish mode. Unread when
+    /// `establish` is set.
+    pub baseline: Option<serde_json::Value>,
     /// Establish, but against a FIXED soft line instead of one
     /// derived from this snapshot. Since 2.14.0 a null baseline does
     /// two things at once: it empties the ratchet AND makes the core
@@ -117,6 +126,15 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let (continuous, judged_loc, classed) = size_facts(root)?;
+    let digest = cfg.knobs_digest();
+    let baseline = match (opts.establish, opts.pinned_soft) {
+        // the trend road (O34): the request's own identity under the
+        // pinned line — two empty tables and no digest were a false
+        // drift on every non-default commit (pinned.rs)
+        (true, Some(soft)) => pinned::baseline(&continuous, &m.members, soft, digest),
+        (true, None) => serde_json::Value::Null,
+        (false, _) => opts.baseline.clone().unwrap_or(serde_json::Value::Null),
+    };
     let req = wire::Request {
         sim: m.sim,
         pos: m.pos,
@@ -130,15 +148,9 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         continuous,
         classed,
         class_knobs: knobs::class_knob_rows(&cfg.rules),
-        knobs_digest: cfg.knobs_digest(),
+        knobs_digest: digest,
         discrete: m.members,
-        baseline: match (opts.establish, opts.pinned_soft) {
-            (true, Some(soft)) => serde_json::json!({
-                "continuous": [], "discrete": [], "softLine": soft,
-            }),
-            (true, None) => serde_json::Value::Null,
-            (false, _) => baseline::read(root)?.unwrap_or(serde_json::Value::Null),
-        },
+        baseline,
         floor: opts.floor,
         ceilings: knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
         weights: knobs::weight_rows(&cfg.score)?,
