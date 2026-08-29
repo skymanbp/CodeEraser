@@ -251,7 +251,7 @@ crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for t
 ([targets.rs:67](../../../cli/src/graph/deadcode/targets.rs#L67)) and a crate root for the
 Rust ladder's `mod` and `crate::` rungs alike
 ([rs.rs:79](../../../cli/src/graph/ladder/rs.rs#L79)), one normalizer serving both readers
-([config.rs:131](../../../cli/src/config.rs#L131)); a declared path the walk does not hold, or that
+([config.rs:79](../../../cli/src/config.rs#L79)); a declared path the walk does not hold, or that
 is no Rust file, is refused by name ([walkidx.rs:94](../../../cli/src/dedup/walkidx.rs#L94)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose

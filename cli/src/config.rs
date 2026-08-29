@@ -4,71 +4,14 @@
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
-/// Thresholds; defaults from DEVELOPMENT_PLAN.md §4.1 (provenance:
-/// ESLint max-lines=300, Sonar S104=750/S138=75, ESLint fn=50,
-/// Pylint max-args=5, Sonar S3776 CoC=15, lizard CC=15).
-#[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(default, deny_unknown_fields)]
-pub struct Thresholds {
-    pub file_lines_warn: usize,
-    pub file_lines_fail: usize,
-    pub fn_lines_warn: usize,
-    pub fn_lines_fail: usize,
-    pub params_warn: usize,
-    pub cyclomatic_warn: usize,
-    pub cognitive_warn: usize,
-    pub nesting_warn: usize,
-}
-
-impl Default for Thresholds {
-    fn default() -> Self {
-        Self {
-            file_lines_warn: 300,
-            file_lines_fail: 750,
-            fn_lines_warn: 50,
-            fn_lines_fail: 75,
-            params_warn: 5,
-            cyclomatic_warn: 15,
-            cognitive_warn: 15,
-            nesting_warn: 4,
-        }
-    }
-}
-
-impl Thresholds {
-    /// The ladder must climb, or the warn arm is unreachable. ONE
-    /// predicate for the two readers of these keys: scan/wire.rs
-    /// refused `fail < warn` and the report.rs mirror judged on
-    /// silently, so `ce scan` exited 2 on a ce.toml the MCP scan tool
-    /// served a full report from. `fail == 0` is the published "no
-    /// hard line" (CE.Scan.Cost.gradeTable), never a low line.
-    pub fn ladder_fault(&self) -> Option<String> {
-        [
-            (
-                self.file_lines_warn,
-                self.file_lines_fail,
-                "file_lines_warn/file_lines_fail",
-            ),
-            (
-                self.fn_lines_warn,
-                self.fn_lines_fail,
-                "fn_lines_warn/fn_lines_fail",
-            ),
-        ]
-        .into_iter()
-        .find(|&(warn, fail, _)| fail != 0 && fail < warn)
-        .map(|(warn, fail, keys)| {
-            format!(
-                "ce.toml [thresholds] {keys}: the fail line {fail} sits below the warn line {warn}"
-            )
-        })
-    }
-}
-
 // The guard tier is POLICY, not schema: it validates the declared
 // value and renders its own degradation, and three surfaces have to
 // agree on both. Re-exported so every existing `config::Guard` /
 // `config::PROMOTED_DEFAULT` path keeps working.
+// The size / complexity ladder, its provenance and its climb rule.
+mod thresholds;
+pub use thresholds::Thresholds;
+
 mod tier;
 pub use tier::{Guard, PROMOTED_DEFAULT, TIERS, tier_of};
 
@@ -76,6 +19,11 @@ pub use tier::{Guard, PROMOTED_DEFAULT, TIERS, tier_of};
 // the class ladder and the fence are policy judged at load.
 mod rules;
 pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, RulesCfg};
+
+// The knob fingerprint's canonical form (O39): the effective knob
+// set, computed generically over the serialized config.
+mod canonical;
+pub use canonical::canonical;
 
 /// Dedup ratchet (M2 review R12): `ce dedup --check` fails when the
 /// repo's clone-block count exceeds this only-shrink budget.
@@ -192,6 +140,18 @@ pub(crate) struct TrendCfg {
     pub decline_floor_micro: Option<u64>,
 }
 
+impl TrendCfg {
+    /// The core's own defaults as declared values (`CE.Trend.Cost`
+    /// minPoints 3, floor 0): the digest's effective default, pinned
+    /// live by core_wire's mirror gate against the trend echo.
+    pub(crate) fn core() -> Self {
+        Self {
+            min_points: Some(3),
+            decline_floor_micro: Some(0),
+        }
+    }
+}
+
 /// deny_unknown_fields everywhere (ADR-008 P4): a mistyped policy
 /// key used to be SILENTLY dropped — a config that looks live and
 /// does nothing is the exact failure mode this repo exists to fight.
@@ -225,10 +185,10 @@ pub fn env_secs(var: &str, default_secs: u64) -> std::time::Duration {
 }
 
 impl Config {
-    /// The KNOB FINGERPRINT (5.1.0 as knobsDigest, widened at 6.0.0),
-    /// or None when this repo declares nothing — a repo whose config
-    /// is the shipped default must keep the bytes it had before the
-    /// fence existed.
+    /// The KNOB FINGERPRINT (5.1.0 as knobsDigest, widened at 6.0.0,
+    /// canonical since O39), or None when this repo judges as the
+    /// shipped default does — such a repo keeps the bytes it had
+    /// before the fence existed.
     ///
     /// The whole parsed config, not a chosen table. The first version
     /// fingerprinted `[[rules.class]]` alone, and an adversarial
@@ -242,16 +202,19 @@ impl Config {
     /// config is how it stops happening, including for the knob
     /// nobody has added yet.
     ///
-    /// Serialized JSON is the canonical form: it is deterministic
-    /// (struct field order), it escapes its own delimiters so no
-    /// value can be read as structure, and it covers a new field the
-    /// day the field is declared rather than the day someone
-    /// remembers to add it here. Comments and key order in ce.toml do
-    /// not move it, because it fingerprints the PARSE, not the file.
+    /// The hashed bytes are the CANONICAL tree (config/canonical.rs):
+    /// the knobs whose effective value differs from the shipped
+    /// default, as key-ordered JSON — so comments, key order, a knob
+    /// spelled at its default and an optional knob nobody declared
+    /// all leave it alone, and no value can be read as structure. The
+    /// literal a fixed ce.toml hashes to is a compatibility surface
+    /// (it sits in downstream baselines), frozen in
+    /// config_contract::the_digest_of_a_fixed_declaration_is_frozen.
     pub fn knobs_digest(&self) -> Option<u64> {
-        let declared = serde_json::to_vec(self).ok()?;
-        let shipped = serde_json::to_vec(&Config::default()).ok()?;
-        (declared != shipped).then(|| crate::score::baseline::fnv1a(&[&declared]))
+        let tree = canonical(self);
+        let bytes = serde_json::to_vec(&tree).ok()?;
+        (tree != serde_json::Value::Object(Default::default()))
+            .then(|| crate::score::baseline::fnv1a(&[&bytes]))
     }
 
     /// Load `ce.toml` for `root`; absent file = defaults.

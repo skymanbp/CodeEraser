@@ -61,6 +61,9 @@ function renderDoctor() {
     // a state, and the number is the honest thing to show.
     drow(tr("indexState"), tr("indexWords", d.index.state, d.index.files), d.index.state >= 2),
     drow(tr("daemonState"), tr("daemonWords", d.daemon.state, d.daemon.ms), d.daemon.state === 2),
+    // 0.3.0: the client deadline's residue, a row only when non-zero —
+    // 0 in every healthy process, and a pre-0.3.0 document has no key
+    ...(d.daemon.parkedWorkers > 0 ? [drow(tr("parkedWorkers"), d.daemon.parkedWorkers, true)] : []),
     // the total frames the count: the feed is append-only, so a bare
     // degraded number never returns to zero and reads as a live alarm
     drow(tr("degradedRuns"), tr("ofEntries", dr.degraded, dr.entries), dr.degraded > 0),

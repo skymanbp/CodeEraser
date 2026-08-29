@@ -2106,7 +2106,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:15": {
     "target": "../../../cli/src/config.rs",
-    "line": 170,
+    "line": 118,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:16": {
@@ -2141,7 +2141,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:21": {
     "target": "../../../cli/src/config.rs",
-    "line": 170,
+    "line": 118,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md:22": {
@@ -2555,44 +2555,44 @@
     "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:102": {
+    "target": "../../../cli/src/config/canonical.rs",
+    "line": 63,
+    "text": "pub fn canonical(cfg: &Config) -> Value {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:103": {
     "target": "../../../cli/src/main_score.rs",
     "line": 48,
     "text": "const FENCE: [&str; 2] = [\"knobs_digest\", \"rows_dropped\"];"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:103": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:104": {
     "target": "../../../cli/src/main_score.rs",
     "line": 164,
     "text": "let fence_only = o.reply.failed.iter().all(|c| FENCE.contains(&c.as_str()));"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:104": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:105": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 162,
     "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:105": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:106": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 32,
     "text": ", bKnobsDigest :: Maybe Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:106": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:107": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 115,
     "text": ", rDropped ="
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:107": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:108": {
     "target": "../../../core/app/CE/Verdict/Faces.hs",
     "line": 30,
     "text": ", (\"rows_dropped\", not (null (rDropped r)))"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:108": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:109": {
     "target": "../../../cli/src/score/provenance.rs",
     "line": 57,
     "text": "pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>> {"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:109": {
-    "target": "../../../core/app/CE/Verdict/Faces.hs",
-    "line": 39,
-    "text": "ratchetObj :: Bool -> Ratcheted -> [(String, Bool)] -> Value"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:11": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
@@ -2600,59 +2600,74 @@
     "text": "jaccardDen :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:110": {
+    "target": "../../../core/app/CE/Verdict/Faces.hs",
+    "line": 39,
+    "text": "ratchetObj :: Bool -> Ratcheted -> [(String, Bool)] -> Value"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:111": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 107,
     "text": ", \"ratchet\" .= ratchetObj (isJust (reqPresent req)) r conds"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:111": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:112": {
     "target": "../../../cli/src/report.rs",
     "line": 48,
     "text": "pub fn fail_suffix(failed: &[String]) -> String {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:112": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:113": {
     "target": "../../../cli/src/score/report.rs",
     "line": 99,
     "text": "fn print_ratchet_tail(o: &Outcome) {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:113": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:114": {
     "target": "../../../core/app/CE/Verdict/Faces.hs",
     "line": 17,
     "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:114": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:115": {
+    "target": "../../../cli/src/config/canonical.rs",
+    "line": 83,
+    "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:116": {
+    "target": "../../../cli/src/score/knobs.rs",
+    "line": 41,
+    "text": "/// The core's cycle floor when none is declared"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:117": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 89,
     "text": "scoreBound :: ScoreKnobs"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:115": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:118": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 41,
     "text": "ratchetBound :: RatchetKnobs"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:116": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:119": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 1,
     "text": "-- | Verdict-family constants — nothing but constants (the"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:117": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 12,
-    "text": "-- Integer per the 2026-08-12 blocking decision ③ (the Anchor.hs"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:118": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 9,
-    "text": "-- through CE.Verdict.Ratchet. The baseline crosses the wire VERBATIM"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:119": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 52,
-    "text": "parsed = parseBaseline (reqBaseline req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:12": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 197,
     "text": "deadFiles :: ScoreKnobs -> Facts -> Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:120": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 12,
+    "text": "-- Integer per the 2026-08-12 blocking decision ③ (the Anchor.hs"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:121": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 9,
+    "text": "-- through CE.Verdict.Ratchet. The baseline crosses the wire VERBATIM"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:122": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 52,
+    "text": "parsed = parseBaseline (reqBaseline req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:13": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -3266,7 +3281,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:123": {
     "target": "../../../cli/src/config.rs",
-    "line": 131,
+    "line": 79,
     "text": "pub(crate) fn declared_roots(&self) -> std::collections::BTreeSet<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:124": {
@@ -5651,7 +5666,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:43": {
     "target": "../../../cli/src/config.rs",
-    "line": 190,
+    "line": 138,
     "text": "pub(crate) struct TrendCfg {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md:44": {
@@ -6186,7 +6201,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:3": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 406,
+    "line": 410,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:30": {
@@ -6241,7 +6256,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:4": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 406,
+    "line": 410,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:40": {
@@ -6266,7 +6281,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:44": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 415,
+    "line": 419,
     "text": "> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:45": {
@@ -6321,7 +6336,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:54": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 411,
+    "line": 415,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:55": {
@@ -6341,7 +6356,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:58": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 403,
+    "line": 407,
     "text": "> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:6": {

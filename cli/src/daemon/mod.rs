@@ -4,6 +4,7 @@
 //! endpoints on this same channel.
 
 pub mod auth;
+pub mod cancel;
 pub mod client;
 pub mod coldstart;
 pub mod judge;

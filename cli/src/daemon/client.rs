@@ -4,6 +4,7 @@
 //! up a daemon from THIS binary.
 
 use super::auth;
+use super::cancel::{Canceller, bounded_with};
 use super::proto::{DAEMON_PROTO, Request, Response, major, socket_name};
 use anyhow::{Context, Result, bail, ensure};
 use interprocess::local_socket::traits::Stream as _;
@@ -12,8 +13,8 @@ use std::io::{BufRead, BufReader, Write};
 use std::path::Path;
 use std::time::Duration;
 
-const SPAWN_RETRIES: u32 = 20;
-const RETRY_DELAY: Duration = Duration::from_millis(100);
+pub(super) const SPAWN_RETRIES: u32 = 20;
+pub(super) const RETRY_DELAY: Duration = Duration::from_millis(100);
 
 /// The client's whole-conversation deadline (audit #85, closed here
 /// after its "1.0 后再议"): connect, hello rounds and the request
@@ -39,23 +40,14 @@ fn deadline_from_env() -> Duration {
 /// per-read timeout — because interprocess 2.4.3 exposes none for
 /// named pipes (only the discouraged PIPE_NOWAIT polling mode), and
 /// a bound on the conversation is what the hook actually needs. On
-/// expiry the worker stays parked on its read and dies with the
-/// process — every hook exits immediately after; the one long-lived
-/// caller (the GUI's doctor probe) leaks at most one parked thread
-/// per wedged-daemon event, which DAEMON.md now says out loud.
+/// expiry the worker is TORN DOWN — the loop lives in `cancel.rs`
+/// beside the canceller it drives (O64): the blocked read is
+/// cancelled and the worker returns within its grace; only a connect
+/// the kernel is still holding has nothing to cancel, and that
+/// worker is detached by name and counted in the doctor's
+/// `parkedWorkers` gauge until it returns.
 fn bounded(root: &Path, req: &Request, lazy: bool, deadline: Duration) -> Result<Response> {
-    let (tx, rx) = std::sync::mpsc::channel();
-    let (root, req) = (root.to_path_buf(), req.clone());
-    std::thread::spawn(move || {
-        let _ = tx.send(negotiate(&root, &req, lazy));
-    });
-    rx.recv_timeout(deadline).unwrap_or_else(|_| {
-        bail!(
-            "daemon did not answer within {}s — a wedged daemon is replaced by \
-             `ce ping` after it exits, or killed by hand; CE_CLIENT_DEADLINE_SECS overrides",
-            deadline.as_secs()
-        )
-    })
+    bounded_with(root, req, lazy, deadline, Canceller::new())
 }
 
 /// One round-trip ONLY IF the daemon is already up — never spawns.
@@ -81,7 +73,7 @@ pub fn request_if_running(root: &Path, req: &Request) -> Result<Response> {
 /// connection is dropped at once, so the daemon's slot is freed on
 /// the next read.
 pub fn is_running(root: &Path) -> bool {
-    try_connect(root).is_ok()
+    try_connect(root, &Canceller::new()).is_ok()
 }
 
 /// A HelloOk is only trusted when the replied proto is not OLDER
@@ -110,11 +102,16 @@ pub fn request(root: &Path, req: &Request) -> Result<Response> {
 /// caught them growing as clones). Every recoverable outcome gets
 /// exactly one more round; `lazy` gates the respawn arms — the
 /// if-running path may reconnect but never bring a daemon up.
-fn negotiate(root: &Path, req: &Request, lazy: bool) -> Result<Response> {
+pub(super) fn negotiate(
+    root: &Path,
+    req: &Request,
+    lazy: bool,
+    cancel: &Canceller,
+) -> Result<Response> {
     let mut conn = if lazy {
-        connect_or_spawn(root)?
+        connect_or_spawn(root, cancel)?
     } else {
-        BufReader::new(try_connect(root)?)
+        BufReader::new(try_connect(root, cancel)?)
     };
     for retry in [false, true] {
         match hello(&mut conn, root)? {
@@ -128,13 +125,13 @@ fn negotiate(root: &Path, req: &Request, lazy: bool) -> Result<Response> {
                 );
                 round_trip(&mut conn, &Request::Shutdown)?;
                 std::thread::sleep(RETRY_DELAY); // let the old one die
-                conn = connect_or_spawn(root)?;
+                conn = connect_or_spawn(root, cancel)?;
             }
             Response::HelloOk { .. } => return round_trip(&mut conn, req),
-            Response::Restart { .. } if lazy && !retry => conn = connect_or_spawn(root)?,
+            Response::Restart { .. } if lazy && !retry => conn = connect_or_spawn(root, cancel)?,
             Response::Error { ref message } if !retry && message.starts_with("unauthorized") => {
                 std::thread::sleep(RETRY_DELAY); // let the fresh token land
-                conn = BufReader::new(try_connect(root)?);
+                conn = BufReader::new(try_connect(root, cancel)?);
             }
             other => bail!("hello failed: {other:?}"),
         }
@@ -184,15 +181,20 @@ fn round_trip(conn: &mut BufReader<Stream>, req: &Request) -> Result<Response> {
         .with_context(|| format!("bad daemon reply `{}`", reply.trim()))
 }
 
-fn connect_or_spawn(root: &Path) -> Result<BufReader<Stream>> {
-    if let Ok(s) = try_connect(root) {
+/// The spawn loop honours the deadline between attempts: a connect
+/// refused after the cancel fired is not retried for the rest of the
+/// budget — the refusal `register` raises then comes straight back.
+fn connect_or_spawn(root: &Path, cancel: &Canceller) -> Result<BufReader<Stream>> {
+    if let Ok(s) = try_connect(root, cancel) {
         return Ok(BufReader::new(s));
     }
     spawn_daemon(root)?;
     for _ in 0..SPAWN_RETRIES {
         std::thread::sleep(RETRY_DELAY);
-        if let Ok(s) = try_connect(root) {
-            return Ok(BufReader::new(s));
+        match try_connect(root, cancel) {
+            Ok(s) => return Ok(BufReader::new(s)),
+            Err(e) if cancel.fired() => return Err(e),
+            Err(_) => {}
         }
     }
     bail!(
@@ -202,11 +204,17 @@ fn connect_or_spawn(root: &Path) -> Result<BufReader<Stream>> {
     )
 }
 
-fn try_connect(root: &Path) -> Result<Stream> {
+/// The connect is announced before and the stream registered after,
+/// so the deadline always knows what the worker is blocked on; a
+/// deadline that passed during the connect refuses here.
+fn try_connect(root: &Path, cancel: &Canceller) -> Result<Stream> {
     let ns = socket_name(root)
         .to_ns_name::<GenericNamespaced>()
         .context("socket name")?;
-    Ok(Stream::connect(ns)?)
+    cancel.connecting();
+    let stream = Stream::connect(ns)?;
+    cancel.register(&stream)?;
+    Ok(stream)
 }
 
 /// Detached spawn of THIS binary as the daemon; losing the race to

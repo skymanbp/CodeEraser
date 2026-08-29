@@ -218,6 +218,10 @@
 > 三条都没碰类表，三条都不要求任何人具名。**「挑哪几张表来围」正是这类漏洞的成因**，所以不再挑：
 > 标量 = fnv1a over 序列化后的 Config。它自动覆盖**还没有人添加的那个旋钮**，且只随**解析结果**变——
 > ce.toml 里的注释与键序不动它。配置等于出厂默认的仓仍然什么都不发（K11 不变）。
+> （L 轮步 #14 O39 起，零 wire：哈希对象改为**规范树**——与出厂默认不同的**有效**旋钮集，`config/canonical.rs`
+> 四律：空叶即未声明、等于默认叶即默认（核默认由 `score::knobs::core_defaults` 镜像、经 core_wire 镜像门活钉）、
+> 数组整值比较且类对象内同律、空对象不计——故写成默认值的旋钮与没人声明过的可选项都不动它，一份固定声明的字面值
+> 冻结在 `config_contract::the_digest_of_a_fixed_declaration_is_frozen`；本仓与测试子仓的摘要因此各移一次，具名重立。）
 > 判决条件随键改名 `knobs_digest`；**请求字段改名属 schema 变更，故按 §2 走 major**——与 5.0.0 同一把尺。
 > 反事实：五条 Rust 腿（出厂默认无指纹、两个绕过旋钮各自移动指纹且彼此不同、规则包四要素含声明序、
 > exclude glob、JSON 转义使值无法冒充结构）+ 核内 K11–K14 原样迁移；本仓自身是活演示——它有 ce.toml，
@@ -577,7 +581,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     result 回判决四码 + `reasonBits`/`legsMask` 自陈 + 棘轮集合 delta，
     2.8.0 起并回生效 `weights` 表与 `ratchet.failed` 持名条件表；
     5.1.0 起 request 并可携标量指纹与 `classKnobs` 码 3（该类自己的棘轮容差，行数绝对值）；
-    6.0.0 起该标量名 `knobsDigest`、覆盖**整份解析后的配置**，`ratchet.failed` 的持名条件为
+    6.0.0 起该标量名 `knobsDigest`、覆盖**整份解析后的配置**（O39 起为其规范化有效旋钮集），`ratchet.failed` 的持名条件为
     `knobs_digest`，`newBaseline` 在指纹到场时加同名键（**缺席而非 null**——出厂默认配置的仓字节恒等）；
     `degraded.reason ∈ {verdict_too_large}`。
   - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],

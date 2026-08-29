@@ -122,6 +122,7 @@ const CE_I18N = {
       "unreachable (DEGRADED: cheap checks only, guard fails open)",
     ][s] ?? `state ${s}`,
     degradedRuns: "degraded runs", ofEntries: (n, t) => `${n} of ${t} feed entries`,
+    parkedWorkers: "parked daemon workers (past the client deadline, not returned)",
     emptyDoctor: "load to read this machine's state — the same document `ce doctor` prints, and the daemon is asked without being started",
   },
   zh: {
@@ -225,6 +226,7 @@ const CE_I18N = {
       "不可达（已降级：仅剩廉价检查，守卫失败开放）",
     ][s] ?? `状态 ${s}`,
     degradedRuns: "降级运行", ofEntries: (n, t) => `${n} / ${t} 条流水`,
+    parkedWorkers: "滞留的 daemon 工人线程（客户端期限已过仍未返回）",
     emptyDoctor: "点加载读取本机状态——与 `ce doctor` 打印的是同一份文档，且探 daemon 不启动它",
   },
 };

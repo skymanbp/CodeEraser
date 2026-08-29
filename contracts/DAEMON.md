@@ -76,9 +76,17 @@
     覆盖。K 步 10 兑现审计 #85 的「1.0 后再议」：此前三边只有这一边
     没期限，卡死的 daemon 把 PreToolUse 钩子无限期挂住。实现是工人线程
     持连接、主线程限时收（interprocess 2.4.3 对命名管道无读超时 API，
-    仅有弃用的 PIPE_NOWAIT 轮询）；超时后工人停在读上随进程退出——钩子
-    进程即刻退出，唯一长命调用者（GUI 的 doctor 探针）每次撞上卡死
-    daemon 至多滞留一条停读线程，明记于此。懒启动另有
+    仅有弃用的 PIPE_NOWAIT 轮询）。超时后主线程**拆除**工人（L 轮步 #14
+    O64，`daemon/cancel.rs`）：Unix 经复制的描述符 `shutdown` 套接字，工人
+    的读返回 0；Windows 对管道句柄 `CancelIoEx`（interprocess 以
+    `ReadFileEx` + 可唤醒等待读管道，故 `CancelSynchronousIo` 够不着），
+    因其只取消在途 I/O 而每 20 ms 重发；先置标志再取消、工人先登记流再
+    读标志，重连竞态由此闭合。宽限 = 工人自己的重试预算 20 × 100 ms +
+    500 ms = **2.5 s**，其内返回的应答作废；唯有内核仍持着的 `connect`
+    无物可取消——宽限过后按名**脱离**（错误文本带阶段），计入 doctor
+    文档 `daemon.parkedWorkers`（`ce.doctor-report/0.3.0` 加性键，健康
+    进程恒 0，控制台与 GUI 仅非零时渲染）。此前「GUI 的 doctor 探针每次
+    撞上卡死 daemon 至多滞留一条停读线程」的明记至此撤销。懒启动另有
     **20 × 100 ms = 2 s** 的上线上限。
 - **shutdown** → `bye` 后**即刻**退出——`bye` ⇒ 进程随即放手是承重
   契约：eject 的有界拆除窗口与 stale/skew respawn 链都建立在它上面。

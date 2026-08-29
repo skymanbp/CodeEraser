@@ -16,7 +16,7 @@ use serde_json::{Value, json};
 use std::path::Path;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.doctor-report/0.2.0";
+pub const SCHEMA_ID: &str = "ce.doctor-report/0.3.0";
 
 /// The whole diagnostic. Never returns an error: a core that will
 /// not answer IS the finding, and a doctor that fails outward tells
@@ -43,7 +43,15 @@ pub fn document(root: &Path, core: &str) -> Value {
         // codes and counts, never sentences (plan v2.15): prose on
         // the machine face is prose no face can translate
         "index": {"state": index.0, "files": index.1},
-        "daemon": {"state": daemon.0, "ms": daemon.1},
+        // 0.3.0 (O64): the client deadline's residue — workers the
+        // deadline detached that have not returned (a connect the
+        // kernel still holds); 0 in every healthy process, and the
+        // one leak the deadline could not close, counted by name
+        "daemon": {
+            "state": daemon.0,
+            "ms": daemon.1,
+            "parkedWorkers": crate::daemon::cancel::PARKED.load(std::sync::atomic::Ordering::SeqCst),
+        },
         // the total frames the count: the feed is append-only, so a
         // degraded count alone never returns to zero after one
         // incident and reads as a live alarm forever
@@ -104,6 +112,15 @@ pub fn console(d: &Value) -> (Vec<String>, bool) {
             ],
         ),
     ];
+    // rendered only when non-zero: a gauge that reads 0 in every
+    // healthy process is noise on the line and a finding otherwise
+    if let Some(parked) = d["daemon"]["parkedWorkers"].as_u64().filter(|n| *n > 0) {
+        out.push(line(
+            "parked daemon workers: {} (past the client deadline, not returned)",
+            "滞留的 daemon 工人线程：{} 条（客户端期限已过仍未返回）",
+            &[&parked],
+        ));
+    }
     let ok = d["core"]["handshake"] == json!(true);
     if ok {
         out.push(format!(

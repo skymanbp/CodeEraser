@@ -38,6 +38,35 @@ pub const THRESHOLD_KEYS: [&str; 8] = [
 ];
 pub const TOLERANCE_KEYS: [&str; 3] = ["tolNum", "tolDen", "tolAbs"];
 
+/// The core's cycle floor when none is declared
+/// (`CE.Graph.Cost.sccFloor`): the digest's effective default for
+/// `[graph] scc_floor`, pinned live by core_wire's mirror gate.
+pub const CORE_SCC_FLOOR: u32 = 2;
+
+/// The core's Cost.hs defaults as DECLARED values — the Rust mirror
+/// the knob digest's effective default reads (O39), so a knob spelled
+/// at its default fingerprints as silence does. A mirror, never a
+/// second judgment: the core keeps judging with its own constants
+/// whether or not a row rides, and core_wire::knob_default_drift_gate
+/// reddens the day this table and the core's echo disagree.
+pub fn core_defaults() -> ScoreCfg {
+    ScoreCfg {
+        weights: Default::default(),
+        size_penalty_max: Some(10),
+        soft_line_k: Some(2),
+        dead_indeg_ceil: Some(0),
+        rewrite_num: Some(50),
+        rewrite_den: Some(100),
+        cochange_floor: Some(2),
+        viol_cost: Some(10),
+        default_weight: Some(1),
+        score_scale: Some(1000),
+        tol_num: Some(102),
+        tol_den: Some(100),
+        tol_abs: Some(10),
+    }
+}
+
 /// The ceilings rows ce.toml speaks: codes 0/1 always (both have
 /// config defaults — the 27b9bc2 road), code 2 = the hard line H
 /// whenever one is declared (`file_lines_fail == 0` means "no hard
