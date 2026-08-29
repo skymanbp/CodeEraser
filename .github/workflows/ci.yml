@@ -211,6 +211,14 @@ jobs:
       # "全处置" acceptance rows were discipline-only before), and the
       # erase zero-row gate (erase.md acceptance: this repository
       # keeps itself clean — a non-empty self-plan is a red gate).
+      # Who still runs the binary before the relink (2026-08-29: this
+      # step rebuilds ce.exe after the GUI build, and Windows denied the
+      # uplift twice on af45fcf with every test green). Prints, never
+      # kills — the owner is what the fix has to name.
+      - name: Process census before the relink
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { \$_.CommandLine -like '*CodeEraser*' } | Select-Object ProcessId,ParentProcessId,Name,CreationDate,CommandLine | Format-List | Out-String -Width 400"; else ps -eo pid,ppid,etime,cmd | grep -i codeeraser | grep -v grep || true; fi
       - name: Dogfood (scan + dedup ratchet + check floor + deadcode + docdup + erase)
         shell: bash
         working-directory: cli
