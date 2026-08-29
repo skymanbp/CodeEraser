@@ -81,7 +81,9 @@ sha256sum -c --ignore-missing SHA256SUMS
 ```
 
 Claude Code 插件的引导脚本（`plugin/bin/ce.sh`）自动执行同一套 pin
-校验，对不匹配的下载响亮拒绝。
+校验，对不匹配的下载响亮拒绝；校验按会话一次——验证过的路径记在
+`CLAUDE_PLUGIN_DATA` 下的绑定戳，同会话后续 hook 直接经戳执行，清单或
+二进制更新即重验，SessionStart 的 `health` 每会话必验。
 
 ## 命令
 

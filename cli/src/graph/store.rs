@@ -93,7 +93,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// `import … = require()` and a Python `from __future__` open sites,
 /// and the Rust use ladder reads a bare head as a local module before
 /// a crate name — stored rows, stored words and edges all move.
-pub const GRAPH_REV: i64 = 14;
+/// 15 = the empty specifier is a site (plan v2.18 step 15, O60): a
+/// TS `import ""` / Go `import ""` keeps its site with an empty spec
+/// for the unresolved ledger (`Reason::Empty`) instead of being
+/// dropped at detection — stored site rows move.
+pub const GRAPH_REV: i64 = 15;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

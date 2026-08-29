@@ -23,8 +23,8 @@ site, and where the specifier lives, is a frozen table per language
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
 grammar and scans line-wise ([spec.rs:141](../../../cli/src/graph/spec.rs#L141)). The eleven frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star`
-([store.rs:130-145](../../../cli/src/graph/store.rs#L130)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:96](../../../cli/src/graph/store.rs#L96), currently `14`); `export_star` (a TS
+([store.rs:134-149](../../../cli/src/graph/store.rs#L134)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:100](../../../cli/src/graph/store.rs#L100), currently `15`); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -40,9 +40,11 @@ picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph
 (same lines). Every resolved edge stores the rung that answered it
 ([ladder/mod.rs:41](../../../cli/src/graph/ladder/mod.rs#L41)), which is what makes per-level precision
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
-AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported`
+AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported, Empty`
+(`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
+dispatcher before any rung could read the empty string as a name — O60, L round step #15)
 ([ladder/mod.rs:47-58](../../../cli/src/graph/ladder/mod.rs#L47)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:204-207](../../../cli/src/graph/ladder/mod.rs#L204)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:215-218](../../../cli/src/graph/ladder/mod.rs#L215)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -170,7 +172,7 @@ degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = tru
 by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:159-182](../../../core/app/CE/Graph.hs#L159), [Graph.hs:159-182](../../../core/app/CE/Graph.hs#L159)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:514-528](../../../cli/src/graph/deadcode.rs#L514)) and `ce deadcode --check` relays the
+([deadcode.rs:518-532](../../../cli/src/graph/deadcode.rs#L518)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:121-141](../../../cli/src/main_cmds.rs#L121)).
 
 ### 5. Kept arcs and liveness
@@ -338,7 +340,7 @@ Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
-([deadcode.rs:481-485](../../../cli/src/graph/deadcode.rs#L481)).
+([deadcode.rs:485-489](../../../cli/src/graph/deadcode.rs#L485)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
@@ -348,9 +350,10 @@ the node kind column it always received ([Graph.hs:146-148](../../../core/app/CE
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
 arriving in `dead` refuses as wire skew, never a directory erase
-([deadcode.rs:467-474](../../../cli/src/graph/deadcode.rs#L467)); against a pre-2.18 core the
-absent bit falls back to the client's old conjunction, byte-identical
-([deadcode.rs:433-437](../../../cli/src/graph/deadcode.rs#L433)). Both lists, the counts, and
+([deadcode.rs:471-478](../../../cli/src/graph/deadcode.rs#L471)); an absent `fail` bit or
+`reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
+core away, so the client's old fallback conjunction was unreachable and was retired (L round
+step #15, O62; [deadcode.rs:454-458](../../../cli/src/graph/deadcode.rs#L454)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
 ([report.rs:102-124](../../../cli/src/report.rs#L102)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
@@ -368,7 +371,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:150](../../../core/app/CE/Graph/Cost.hs#L150)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:242](../../../cli/src/graph/deadcode.rs#L242)), fences every returned index and bounds the column ([deadcode.rs:477](../../../cli/src/graph/deadcode.rs#L477)), and renders the trust word beside each dead file ([deadcode.rs:362](../../../cli/src/graph/deadcode.rs#L362)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:102](../../../core/test/GraphWireProps.hs#L102)).
+([Cost.hs:150](../../../core/app/CE/Graph/Cost.hs#L150)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:242](../../../cli/src/graph/deadcode.rs#L242)), fences every returned index and bounds the column ([deadcode.rs:481](../../../cli/src/graph/deadcode.rs#L481)), and renders the trust word beside each dead file ([deadcode.rs:362](../../../cli/src/graph/deadcode.rs#L362)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:102](../../../core/test/GraphWireProps.hs#L102)).
 
 ### 9. Acceptance
 
@@ -376,7 +379,7 @@ The M5-2 row sets four criteria: import-edge precision **≥ 0.90** on a 100-sit
 spanning the five launch languages; `unreferenced_public` as its own report class, not folded
 into dead; every finding in this repository dispositioned; and the core's judgment-invariant
 property battery in CI
-([DEVELOPMENT_PLAN.md:274](../../DEVELOPMENT_PLAN.md#L274)). The gate is coded at `0.90`,
+([DEVELOPMENT_PLAN.md:278](../../DEVELOPMENT_PLAN.md#L278)). The gate is coded at `0.90`,
 applied overall and per corpus **where the in-corpus ground-truth denominator reaches 5**
 ([eval_graph_precision.rs:83](../../../cli/tests/it/eval_graph_precision.rs#L83),
 [eval_graph_precision.rs:86-94](../../../cli/tests/it/eval_graph_precision.rs#L86),

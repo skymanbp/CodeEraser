@@ -92,9 +92,6 @@ jobs:
           [ -n "$CE_CORE_BIN" ] || { echo "cabal list-bin gave nothing"; exit 1; }
           export CE_CORE_BIN
           cargo build --locked
-          cargo test --locked
-          cargo clippy --locked --all-targets -- -D warnings
-          cargo fmt --check
           # The packaged crate must compile its own tests: cfg(test)
           # mounts tests/unit/** by #[path] (plan v2.18 step #13) and
           # `cargo publish`'s verify build never enables cfg(test), so
@@ -102,18 +99,26 @@ jobs:
           # tarball lacks. The build dir is shared so the dependency
           # artifacts above are reused: package's own verify build (the
           # one `cargo publish` runs) and the check both re-do only the
-          # crate itself.
+          # crate itself. It runs BEFORE the tests because the shared
+          # verify build rewrites target/debug/ce.exe, and the e2e legs
+          # leave lazily-started `ce daemon` processes holding that exe
+          # open — on Windows the rewrite then fails with "Access is
+          # denied" (runs 33227318755 / 33232925443, L step #15).
           CARGO_TARGET_DIR="$PWD/target" cargo package --locked --allow-dirty
           crate=$(ls target/package/codeeraser-*.crate)
           tar -xzf "$crate" -C target/package
           (cd "${crate%.crate}" && CARGO_TARGET_DIR="$OLDPWD/target" cargo check --locked --tests)
+          cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo fmt --check
 
-      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, eleven
+      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, fifteen
       # states (PATH fallback / fresh verified download / warm cache /
       # tampered refusal / pinned ce-core sibling placement / tampered
       # core refusal / failed-download degrade to PATH / mismatching
       # on-disk core refused / ce bound to the pinned path / pin-identical
-      # PATH ce reused / pin-identical PATH ce-core reused) with the
+      # PATH ce reused / pin-identical PATH ce-core reused / the four
+      # session-stamp laws of L round step #15 O52) with the
       # real debug ce as payload over file:// — hermetic on purpose;
       # the https transport is curl's contract.
       - name: Bootstrap chain e2e
@@ -337,9 +342,6 @@ jobs:
           [ -n "$CE_CORE_BIN" ] || { echo "cabal list-bin gave nothing"; exit 1; }
           export CE_CORE_BIN
           cargo build --locked
-          cargo test --locked
-          cargo clippy --locked --all-targets -- -D warnings
-          cargo fmt --check
           # The packaged crate must compile its own tests: cfg(test)
           # mounts tests/unit/** by #[path] (plan v2.18 step #13) and
           # `cargo publish`'s verify build never enables cfg(test), so
@@ -347,11 +349,18 @@ jobs:
           # tarball lacks. The build dir is shared so the dependency
           # artifacts above are reused: package's own verify build (the
           # one `cargo publish` runs) and the check both re-do only the
-          # crate itself.
+          # crate itself. It runs BEFORE the tests because the shared
+          # verify build rewrites target/debug/ce.exe, and the e2e legs
+          # leave lazily-started `ce daemon` processes holding that exe
+          # open — on Windows the rewrite then fails with "Access is
+          # denied" (runs 33227318755 / 33232925443, L step #15).
           CARGO_TARGET_DIR="$PWD/target" cargo package --locked --allow-dirty
           crate=$(ls target/package/codeeraser-*.crate)
           tar -xzf "$crate" -C target/package
           (cd "${crate%.crate}" && CARGO_TARGET_DIR="$OLDPWD/target" cargo check --locked --tests)
+          cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo fmt --check
       - name: Bootstrap chain e2e (macOS leg)
         shell: bash
         run: bash .github/scripts/bootstrap_e2e.sh cli/target/debug/ce plugin/bin/ce.sh

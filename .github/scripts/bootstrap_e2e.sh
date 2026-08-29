@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its eleven states with the just-built
+# drives plugin/bin/ce.sh through its fifteen states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -20,6 +20,16 @@
 #                  downloaded and no unverified notice (v0.7.3)
 #  10 core reuse : state 8's mirror — a PATH ce-core that MATCHES the
 #                  pin is bound instead of fetched
+#  11 stamp fast : a verified leg leaves a bound stamp, and the next
+#                  call answers through it with NO hashing — a poisoned
+#                  sha256sum/shasum on PATH is never heard (O52: the
+#                  per-hook chain cost 2 s on Windows)
+#  12 stamp stale: a binary newer than the stamp re-runs the full
+#                  chain — the poison is heard (R3 degrades to PATH
+#                  ce, never the bound copy), the real hasher re-stamps
+#  13 health     : SessionStart's `health` always verifies, stamp or
+#                  not (once per session)
+#  14 no stamp   : the unverified PATH leg never stamps
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
 # This suite's whole subject is the PIN resolution chain; an ambient
@@ -219,7 +229,9 @@ err=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest1.env" \
 out=$(cat "$work/out9")
 [ "$out" = "$want" ] || fail 9 "verified PATH ce answered '$out' not '$want'"
 [ -z "$err" ] || fail 9 "verified leg was not silent (that is the unverified one): $err"
-placed=$(ls "$work/data9" | wc -l)
+# the verified leg leaves its bound STAMP there (state 11), which is
+# not a copy: only ce-* files would be one
+placed=$(ls "$work/data9" | grep -vc '^bound-' || true)
 [ "$placed" -eq 0 ] || fail 9 "a second copy was fetched despite a pin-identical PATH ce"
 
 # --- state 10: the mirror of state 8. There an UNVERIFIED PATH
@@ -245,9 +257,79 @@ out=$(PATH="$work/pathcore10:$PATH" CE_MANIFEST_FILE="$work/manifest10.env" \
 # Its ABSENCE is the proof the PATH core was bound instead — the
 # stand-in core is ce itself, so a successful spawn prints ce's own
 # output and never names a path.
+# ...and the doctor must have reached its core section at all: an
+# empty or aborted run would pass the absence test vacuously
 case "$out" in
     *"data10/ce-core"*) fail 10 "pin-identical PATH ce-core was not reused: $out" ;;
+    *handshake*) ;;
+    *) fail 10 "doctor never reached the core section: $out" ;;
 esac
 [ ! -f "$work/data10/ce-core$ext" ] || fail 10 "a core was placed despite a verified PATH one"
 
-echo "bootstrap_e2e: PASS (11 states, key=$key)"
+# --- state 11: the bound stamp's fast path hashes NOTHING. State 1's
+# verified download left `bound-<version>.env` in data1; with a
+# poisoned hasher first on PATH (it screams on stderr and answers a
+# bogus hash) the fast path must still exec the bound copy silently —
+# the slow path would have refused on the bogus hash --------------
+mkdir -p "$work/poison"
+for h in sha256sum shasum; do
+    printf '#!/bin/sh\necho POISONED_HASHER >&2\necho "ffff  $1"\n' >"$work/poison/$h"
+    chmod +x "$work/poison/$h"
+done
+[ -f "$work/data1/bound-0.0.0-test.env" ] || fail 11 "verified leg left no stamp"
+: >"$work/out11"
+err=$(PATH="$work/poison:$PATH" CE_MANIFEST_FILE="$work/manifest1.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data1" sh "$STARTER" --version 2>&1 >"$work/out11") || true
+out=$(cat "$work/out11")
+[ "$out" = "$want" ] || fail 11 "stamped fast path answered '$out' not '$want'"
+case "$err" in *POISONED_HASHER*) fail 11 "the fast path hashed: $err" ;; esac
+[ -z "$err" ] || fail 11 "the fast path was not silent: $err"
+
+# --- state 12: a binary NEWER than the stamp is not trusted by it —
+# the full chain runs again and HEARS the poisoned hasher through
+# its effect: the candidate loop hashes with 2>/dev/null, so the
+# bogus hash disqualifies every copy, the download leg finds
+# nothing, and R3 degrades to PATH ce with the `pin unverified`
+# notice — the bound copy is never exec'd in silence -------------
+touch -t 203001010000 "$work/data1/$payload"
+rc=0
+out=$(PATH="$work/poison:$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest1.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data1" sh "$STARTER" --version 2>"$work/err12") || rc=$?
+err=$(cat "$work/err12")
+case "$err" in *"pin unverified"*) ;; *) fail 12 "a newer binary was trusted by the stamp: $err" ;; esac
+[ "$rc" -eq 0 ] && [ "$out" = "$want" ] || fail 12 "the R3 fallback did not run PATH ce (rc=$rc): '$out'"
+# with the real hasher back, the same call re-verifies and REWRITES
+# the stamp (a sentinel planted in the old one is gone afterwards)
+echo "# sentinel12" >>"$work/data1/bound-0.0.0-test.env"
+out=$(CE_MANIFEST_FILE="$work/manifest1.env" CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data1" sh "$STARTER" --version)
+[ "$out" = "$want" ] || fail 12 "re-verification answered '$out' not '$want'"
+! grep -q sentinel12 "$work/data1/bound-0.0.0-test.env" || fail 12 "the stamp was not rewritten"
+# and once the binary is no longer newer than the stamp, the fast
+# path is live again: the poison goes unheard
+touch -t 202001010000 "$work/data1/$payload"
+out=$(PATH="$work/poison:$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest1.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data1" sh "$STARTER" --version 2>"$work/err12b") || fail 12 "the fast path exec failed"
+err=$(cat "$work/err12b")
+[ -z "$err" ] && [ "$out" = "$want" ] || fail 12 "the fast path did not come back: $err '$out'"
+
+# --- state 13: `health` (the SessionStart hook) verifies every
+# session regardless of the stamp: the poison is heard (state 12's
+# same effect) even though the fast path would have been live -------
+rc=0
+err=$(PATH="$work/poison:$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest1.env" \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data1" sh "$STARTER" health --hook 2>&1 >/dev/null) || rc=$?
+case "$err" in *"pin unverified"*) ;; *) fail 13 "health took the fast path: $err" ;; esac
+[ "$rc" -eq 0 ] || fail 13 "health via the R3 fallback did not run (rc=$rc): $err"
+
+# --- state 14: the unverified PATH leg (state 0, empty pins) never
+# stamps — a stamp is a claim of verification -----------------------
+for s in "$work"/data0/bound-*; do
+    [ -e "$s" ] && fail 14 "the unverified leg left a stamp: $s"
+done
+
+echo "bootstrap_e2e: PASS (15 states, key=$key)"

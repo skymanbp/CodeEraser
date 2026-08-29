@@ -139,4 +139,6 @@ cd cli && cargo test --test it daemon_proto::        # 形状漂移门
 cd cli && cargo test --test it daemon_e2e::          # 生命周期+凭证门+界读（daemon_auth 已并入）
 cd cli && cargo test --release --lib -- daemon::     # 凭证落盘/staleness/常数时间 单元层
 cd cli && cargo test --test it concurrent_writers::  # v1.7 收敛契约
+cd cli && cargo test --test corelink_deadline        # §2 core 应答期限：不应答的核被收割（独占二进制：改进程 env）
+cd cli && cargo test --test daemon_conn_deadline     # §2 每连接静默期限 + 连接槽上限（独占二进制：64 静默 peer 须同窗）
 ```

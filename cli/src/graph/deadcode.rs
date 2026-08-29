@@ -448,11 +448,15 @@ fn consume(
         .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
     let dead = dead_rows(reply, nodes)?;
     let reported = reported_rows(reply, nodes)?;
-    // pre-2.18 core: no fail bit on the wire — the client's own
-    // conjunction stands in, byte-identical to the old exit policy
-    let fail = reply["fail"]
-        .as_bool()
-        .unwrap_or(degraded.is_some() || !dead.is_empty());
+    // the fail bit is the core's (2.18.0); the client's own
+    // conjunction stood in for a pre-2.18 core until L step #15
+    // (O62) — no such core passes a 3.0.0+ handshake, so a missing
+    // bit is wire skew, refused by name like every other absent key
+    let Some(fail) = reply["fail"].as_bool() else {
+        bail!(
+            "wire skew: graph reply carries no `fail` bit (a pre-2.18.0 core cannot reach this client)"
+        )
+    };
     Ok(Report {
         unmentioned: advisory::consume(reply, nodes, names)?,
         dead,
@@ -511,11 +515,12 @@ fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<DeadRow>> {
     Ok(dead)
 }
 
-/// The informational table, labelled `path#unit` for sections; a
-/// pre-2.18 core has none and the absent key parses as empty.
+/// The informational table, labelled `path#unit` for sections. The
+/// key is mandatory since 2.18.0; its absence parsed as empty for
+/// older cores until L step #15 (O62) retired that dead compat.
 fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<(String, &'static str)>> {
-    let rows: Vec<[usize; 2]> =
-        serde_json::from_value(reply["reported"].clone()).unwrap_or_default();
+    let rows: Vec<[usize; 2]> = serde_json::from_value(reply["reported"].clone())
+        .context("wire skew: graph reply carries no `reported` table (a pre-2.18.0 core cannot reach this client)")?;
     rows.into_iter()
         .map(|[idx, verdict]| {
             let (node, name) = named(nodes, idx, verdict)?;

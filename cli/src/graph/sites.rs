@@ -181,15 +181,21 @@ fn field_text(node: tree_sitter::Node, src: &[u8], field: &str) -> Option<String
 
 /// Node text as a spec string: quotes trimmed (string-literal
 /// specifiers), truncated at the first newline (see module header),
-/// whitespace-trimmed. None when empty — a degenerate specifier
-/// (`import ""`) drops the site; acceptable pre-resolution because
-/// nothing resolvable was referenced, and the 2f unresolved ledger
-/// is the honest home for such rows once resolution exists.
+/// whitespace-trimmed. A degenerate specifier (`import ""`) is KEPT
+/// as an empty spec: the site referenced nothing resolvable, and the
+/// unresolved ledger is its honest home — the ladder refuses it by
+/// name (`Reason::Empty`) instead of detection dropping it in
+/// silence (the promise this comment carried until L step #15, O60).
 fn node_text(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
     let raw = node.utf8_text(src).ok()?;
     let first = raw.split('\n').next().unwrap_or("");
-    let spec = first.trim().trim_matches(|c| c == '"' || c == '\'').trim();
-    (!spec.is_empty()).then(|| spec.to_string())
+    Some(
+        first
+            .trim()
+            .trim_matches(|c| c == '"' || c == '\'')
+            .trim()
+            .to_string(),
+    )
 }
 
 #[cfg(test)]

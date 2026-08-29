@@ -23,13 +23,13 @@
 
 | 先例 | 占据的位置 | 没做的（= 我们的空位） |
 |---|---|---|
-| [jscpd](https://github.com/kucherenko/jscpd) v5（Rust 引擎，自带 MCP/skill/SARIF；jscpd-rs 0.1.12 文档只称 "incremental detector facade"，无 diff/changed-files API） | Token 级 T1 查重 + 事后报告 | T3 near-miss；写入当轮强制拦截；结构度量（`--summary` 仅体量 + 复杂度估计） |
-| [desloppify](https://github.com/peteromallet/desloppify)（3k★） | 全库健康扫描 | "True incremental or diff-only scanning is not the supported model **yet**"（README 原文，复扫 2026-08-27 原句仍在；注意 yet——它可能补上，见 R5 触发器） |
-| [CodeScene](https://codescene.com/engineering-blog/codescene-ci-cd-quality-gates/) | PR 级 Code Health 门禁 | 商业闭源；不做写入时拦截 |
-| [colbymchenry/codegraph](https://github.com/colbymchenry/codegraph)（68k★） | 代码图谱喂 LLM 上下文 | 图谱项目均不做克隆/重复判定 |
-| [mizchi/similarity](https://github.com/mizchi/similarity)（TSED） | T3 跨文件相似检测（最近先例） | 无 gating（README 仅建议接 pre-commit/CI）、无插件面（仓内 `.mcp.json` 是自用配置）、文档查重仅实验性 `similarity-md` |
-| [fuck-u-code](https://github.com/Done-0/fuck-u-code)（7.3k★） | 快照式质量评分 + 幽默输出 | 重复检测仅文件内且正则实现；无时间维度 |
-| [betterer](https://github.com/phenomnomnominal/betterer) | ratchet 棘轮范式（JS 生态） | 无跨语言主导者 |
+| [jscpd](https://github.com/kucherenko/jscpd) v5.0.16（Rust；master 2026-08-19 合入 `--baseline`/`--fail-on-new-clones` 全树指纹 diff 门，未发版） | T1 查重 + 事后/提交时报告 | T3 near-miss；写入当轮拦截；结构度量（`--summary` 仅体量） |
+| [desloppify](https://github.com/peteromallet/desloppify)（3k★，停更 2026-05） | 全库健康扫描 | "True incremental or diff-only scanning is not the supported model **yet**"（README 原文，2026-08-29 仍在；见 R5） |
+| [CodeScene](https://codescene.com/engineering-blog/codescene-ci-cd-quality-gates/) | PR 级 Code Health 门；MCP 提交前 staged pass/fail（代理自调） | 商业闭源；不做写入时拦截 |
+| [colbymchenry/codegraph](https://github.com/colbymchenry/codegraph)（68.6k★） | 代码图谱喂 LLM | 不做克隆判定 |
+| [mizchi/similarity](https://github.com/mizchi/similarity)（TSED，停更 2026-04） | T3 跨文件相似 | 仅批扫门（`--fail-on-duplicates`）、无写入时拦截、无插件面、文档查重仅实验 |
+| [fuck-u-code](https://github.com/Done-0/fuck-u-code)（7.3k★） | 快照评分 + 幽默输出 | 重复仅文件内、签名正则；无时间维度 |
+| [betterer](https://github.com/phenomnomnominal/betterer)（停更 2024-12） | 棘轮范式（JS） | 无跨语言主导者 |
 
 **空位（调研 agent 逐 README 核对）：「每次编辑判定真修改 vs 堆叠新增」无人在做。**
 三个差异化判决：
@@ -222,7 +222,11 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
 - 安装拷贝进 `~/.claude/plugins/cache` → 禁止越界相对引用。
 - 二进制分发路径**唯一化（A9a）**：仓库 `bin/` 只放轻量启动脚本；真身二进制由
   SessionStart 从 GitHub Releases 下载到 `CLAUDE_PLUGIN_DATA`（跨版本保留），
-  **HTTPS + SHA256 pinned 在插件清单内**，校验失败拒绝执行并明示。三平台二进制
+  **HTTPS + SHA256 pinned 在插件清单内**，校验失败拒绝执行并明示；校验**按会话一次**——
+  已验证的绝对路径写入 `CLAUDE_PLUGIN_DATA` 下按清单版本命名的绑定戳，后续 hook 经戳直接
+  exec，清单或二进制比戳新即重走全链、SessionStart 的 `health` 恒全链；信任边界不变（戳与
+  二进制同目录同属主），省下的只是每 hook 两次 SHA256 与 ~15 次 fork（Windows 全链 2.0–2.3 s
+  → p95 0.50 s，O52，2026-08-29，PERF-BUDGET 全链注）。三平台二进制
   预期 8–19 MB/个（shellcheck 7.69 MB ~ hlint 18.99 MB 区间），不塞仓库。
   air-gapped 模式：允许用户手动放置二进制 + 本地校验。**二进制只出自 release.yml 三 OS 矩阵**（用户令 2026-08-28，RELEASE.md §1 铁则；本地构建物永不上传、永不 pin）。代码签名/公证**裁定不做**
   （2026-08-19，成本/收益不成立；有商业需求再议）——SHA256 链为永久信任锚，README 明示。
@@ -306,7 +310,7 @@ CodeEraser/
 | R2 | tree-sitter 语法 crate 漂移 | 核心锁 0.26.x、语法 crate 按 lockfile 钉住；升级走独立 PR + golden 全绿 |
 | R3 | hook 延迟劣化 → 用户关插件 | daemon + 增量索引；分解表预算进 CI；超时 fail-open：探针不可达时**不输出任何决定**（guard.rs 的 reasons 为空即早返），该次运行以 degraded 记入 observe feed 并进 doctor 降级计数——A9f；「降级为 warn」只发生在 `ce.toml` 无法解析这一条路上 |
 | R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |
-| R5 | 竞品挤压（**触发器式**，A8） | 监测触发器：jscpd/desloppify 发布 diff 级 gating，或 Claude Code 内置类似能力 → 差异化收缩至三信号 join + 四分类，届时 M5 join 提前、热路径查重改评估复用竞品引擎。**复扫 2026-08-27（v2.17 换版 plan-set 例行）：未击发**——jscpd 5.x README 与 jscpd-rs 0.1.12 无 diff/changed-files gating，desloppify 原句仍在，Claude Code 官方 changelog 无内置查重（仅社区 hook 方案与 issue #10170 功能请求） |
+| R5 | 竞品挤压（**触发器式**，A8） | 监测触发器：jscpd/desloppify 发布 diff 级 gating，或 Claude Code 内置类似能力 → 差异化收缩至三信号 join + 四分类，届时 M5 join 提前、热路径查重改评估复用竞品引擎。**复扫 2026-08-29（v2.18 步 #15 O11，67-agent 核验工作流 + 亲核 README）：击发，带两条保留**——① jscpd master 2026-08-19 合入 `--baseline`/`--fail-on-new-clones`/`--baseline-from-ref`（commit 251544b/4a72a70），CHANGELOG 仍在 Unreleased、最新发版 v5.0.16（2026-08-18）不含；② 触发器未点名的新入场 dupehound 已**发布**变更函数级 diff 门（`check` 退 1 + MCP `check_duplication`，同栈 winnowing），但不做写入时拦截；desloppify 原句仍在；Claude Code 2.1.251 无内置查重（#10170、#34535 均 closed not-planned）。后果条款（三信号 join 早已随 H 批交付，「M5 join 提前」已空；剩「热路径改评估复用竞品引擎」+「收缩」）**待用户裁定**，2026-08-29 以结构化提问上呈 |
 | R6 | 双语言成本先于价值支付（B1） | Haskell 承重首战后移到 M4（判决层），M0 只付骨架+握手的最小成本；契约内容不提前冻结；core 不依赖跟随 GHC 版本发布的库（stan 教训） |
 | R7 | "处处 deny"招致反感 | 默认档位演进路线写死在 §4.2，不是永久 warn 也不是上来就 deny；排除模型 M1 内置 |
 | R8 | 四分类（L2）不达标 | fallback 阶梯：退 L1（git+函数边界）仍可交付；deny 降级 ask 如实标注 |

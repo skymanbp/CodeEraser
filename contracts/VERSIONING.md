@@ -433,8 +433,9 @@
 > （任一文件级死判决即 fail；降级应答自带 fail=true——verdict 族 P1 立场）。
 > kind 列一直上 wire 且被校验，此前判后即弃——分流以 Rust 无名分支存在，
 > 消融不可见。客户端保留分流为边界契约：判红表混入聚合=按 wire skew
-> 具名拒绝，绝不授权目录擦除；对 2.18 前旧核，缺位 fail 由客户端按旧
-> 合取自算顶替（字节等价回退）。
+> 具名拒绝，绝不授权目录擦除；缺位 `fail` / `reported` 同为 wire skew
+> 按名拒绝——2.18 前旧核的「客户端按旧合取顶替」回退自 3.0.0 起已被握手
+> 挡在门外，L 轮 #15 O62 裁除该死兼容。
 > **2.17.0**（M9 批 6 密度评分，2026-08-21）：`verdict/1` **纯值迁移**
 > （行形状零变，2.14.0 轴 0 迁移先例）——axes 行由违规质量改为**有界
 > 轴费** `floor(scale·v/(v+n))`（v=轴违规质量、n=轴机会数：尺寸/克隆/
@@ -629,6 +630,6 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 |---|---|---|
 | Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
 | GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
-| 依赖快照 | cabal freeze | `core/cabal.project.freeze`（GHC 就绪后 `cabal freeze` 生成入库） |
+| 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
 | 协议 | 6.4.0 | §1 所列两处常量 |
 | daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

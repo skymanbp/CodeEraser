@@ -92,7 +92,7 @@ The permanent trust anchor is the checksum chain — after downloading:
 sha256sum -c --ignore-missing SHA256SUMS
 ```
 
-The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins automatically and refuses a mismatching download out loud.
+The Claude Code plugin's starter (`plugin/bin/ce.sh`) enforces the same pins automatically and refuses a mismatching download out loud. It verifies once per session: the verified path is stamped under `CLAUDE_PLUGIN_DATA`, later hooks exec through the stamp until the manifest or the binary changes, and SessionStart's `health` always re-verifies.
 
 ## Commands
 

@@ -10,6 +10,33 @@
 # artifact loudly and keeps nothing, so a tampered one cannot hide
 # behind a local copy. Fail-open (R3): no binary => one line, exit 0.
 #
+# VERIFICATION IS PER SESSION, NOT PER HOOK (L round step #15, O52).
+# The full chain above costs two SHA256 passes and a dozen forked
+# processes; on Windows every fork is ~80 ms, so the real-session
+# recording put the PreToolUse hook at 2.0–2.3 s wall — twice the
+# §4.2 p95 < 1 s budget — of which `ce probe` itself was 0.18 s.
+# So a successful verification leaves a BOUND STAMP in the data dir
+# (`bound-<manifest version>.env`: two `KEY=path` lines — the verified
+# ce, the verified core or empty), and every later call takes the fast
+# path below: read the stamp with builtins (never sourced — a stamp is
+# data, not code), test that neither binary nor the manifest is newer
+# than the stamp, exec. Zero forks before the exec. Anything that
+# could change the answer re-runs the full chain — a newer manifest
+# (a pin edit), a newer binary (a swap or an upgrade), a missing file,
+# and the SessionStart `health` hook always, so every session verifies
+# once; a bare invocation between sessions rides the last stamp. The
+# stamp is written only after EVERY pinned leg verified: a failed core
+# fetch leaves no stamp, so that hook and the next re-walk the chain
+# until the core lands (the honest degrade of ensure_core, each time).
+# `-nt` is strict, so an equal mtime passes: a download and its stamp
+# land in the same second on seconds-granular filesystems, and the
+# only swap that keeps a clock is a data-dir writer. The stamp sits in
+# the same directory as the verified copies and carries no more trust
+# than they do: an attacker who can rewrite the data dir with a
+# back-dated mtime could rewrite the pinned binary, this script or the
+# manifest just the same; the SHA256 chain guards the DOWNLOAD and the
+# swap, never the machine.
+#
 # EVERY human line here goes to STDERR. The plan's hook protocol is
 # `exit 2 + stderr` OR `exit 0 + {"hookSpecificOutput":…}`, and this
 # script always exec's into a hook whose stdout must be that JSON and
@@ -18,10 +45,40 @@
 # stdout) silently dropped the decision.
 set -u
 
-here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+# `${0%/*}` rather than `$(cd … && pwd)`: the fast path forks nothing.
+case $0 in */*) here=${0%/*} ;; *) here=. ;; esac
 # CE_MANIFEST_FILE is a test seam: the e2e battery points it at a
 # fixture manifest so the shipped pins stay inert during tests.
-. "${CE_MANIFEST_FILE:-$here/manifest.env}"
+manifest="${CE_MANIFEST_FILE:-$here/manifest.env}"
+. "$manifest"
+data="${CLAUDE_PLUGIN_DATA:-}"
+# The version names the stamp and the artifacts; an unset, empty or
+# odd one (a broken manifest) builds no stamp path at all — neither
+# read nor written — and the artifact names below stay well-formed.
+ver="${CE_MANIFEST_VERSION:-}"
+case "$ver" in
+    "" | *[!A-Za-z0-9._-]*) stamp="" ;;
+    *) stamp="$data/bound-$ver.env" ;;
+esac
+
+# ---- the fast path: a fresh stamp answers with builtins only ----
+if [ -n "$data" ] && [ -n "$stamp" ] && [ "${1:-}" != "health" ] && [ -f "$stamp" ] && [ ! "$manifest" -nt "$stamp" ]; then
+    BOUND_CE=""
+    BOUND_CORE=""
+    # exactly two lines, each `KEY=value`; any other shape is no stamp
+    if { IFS= read -r l1 && IFS= read -r l2 && ! IFS= read -r l3; } <"$stamp"; then
+        case "$l1" in "BOUND_CE="*) BOUND_CE=${l1#BOUND_CE=} ;; esac
+        case "$l2" in "BOUND_CORE="*) BOUND_CORE=${l2#BOUND_CORE=} ;; esac
+    fi
+    if [ -n "$BOUND_CE" ] && [ -x "$BOUND_CE" ] && [ ! "$BOUND_CE" -nt "$stamp" ] \
+        && { [ -z "$BOUND_CORE" ] || { [ -x "$BOUND_CORE" ] && [ ! "$BOUND_CORE" -nt "$stamp" ]; }; }; then
+        if [ -n "$BOUND_CORE" ]; then
+            CE_CORE_BIN="${CE_CORE_BIN:-$BOUND_CORE}"
+            export CE_CORE_BIN
+        fi
+        exec "$BOUND_CE" "$@"
+    fi
+fi
 
 plat_key() {
     case "$(uname -s)" in
@@ -81,7 +138,10 @@ pin=""
 if [ "$key" != "unsupported" ]; then
     eval "pin=\${CE_SHA256_$(echo "$key" | tr 'a-z-' 'A-Z_')_CE:-}"
 fi
-data="${CLAUDE_PLUGIN_DATA:-}"
+bound_core=""
+# 1 = every pinned leg verified (or has no pin): the only state a
+# stamp may record. ensure_core clears it on each of its degrades.
+core_ok=1
 
 # ce-core rides the same pin flow (from v0.2.0): placed as a plain
 # `ce-core` sibling in the data dir — exactly where ce's resolver
@@ -115,6 +175,7 @@ ensure_core() {
     # installs pick their own core deliberately).
     CE_CORE_BIN="${CE_CORE_BIN:-$coretgt}"
     export CE_CORE_BIN
+    bound_core="$coretgt"
     if [ -x "$coretgt" ]; then
         if [ "$(sha_of "$coretgt")" = "$corepin" ]; then
             return 0
@@ -126,10 +187,15 @@ ensure_core() {
         # only rejected a bad DOWNLOAD, so one prior file write pinned
         # an attacker's core into every later session.
         echo "codeeraser: REFUSING on-disk ce-core — SHA256 mismatch, removing $coretgt" >&2
+        # A sibling session that placed a GOOD core between this hash
+        # and this rm loses it too (its own run degrades once, the next
+        # run re-fetches); bounded and never runs an unverified core,
+        # so accepted rather than serialised (review 2026-08-29).
         rm -f "$coretgt"
     fi
+    core_ok=0
     if [ -n "${CE_AIRGAPPED:-}" ]; then return 0; fi
-    coreurl="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-core-$CE_MANIFEST_VERSION-$key$ext"
+    coreurl="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-core-$ver-$key$ext"
     # PID-suffixed: two sessions sharing one CLAUDE_PLUGIN_DATA used to
     # curl into the SAME path, and the interleaved bytes then failed the
     # hash — a security-grade "REFUSING" for a benign race, plus an
@@ -159,6 +225,18 @@ ensure_core() {
     fi
     chmod +x "$coretmp"
     mv -f "$coretmp" "$coretgt"
+    core_ok=1
+}
+
+# The stamp the fast path reads: written only on the VERIFIED legs
+# with every pinned component verified, never by run_path_ce. Atomic
+# (tmp + mv) because two sessions share one data dir. Plain
+# `KEY=path` lines: the reader never evaluates them.
+bind() { # $1 = the verified ce about to exec
+    [ -n "$data" ] && [ -n "$stamp" ] && [ "$core_ok" = 1 ] || return 0
+    mkdir -p "$data" 2>/dev/null || return 0
+    stamptmp="$stamp.$$"
+    printf "BOUND_CE=%s\nBOUND_CORE=%s\n" "$1" "$bound_core" > "$stamptmp" && mv -f "$stamptmp" "$stamp"
 }
 
 # No pin or no data dir: the download path is not configured — PATH ce.
@@ -175,13 +253,14 @@ if ! have_hasher; then
     run_path_ce "$@"
 fi
 
-target="$data/ce-$CE_MANIFEST_VERSION-$key$ext"
+target="$data/ce-$ver-$key$ext"
 # One rule, two places: whichever pin-identical copy already exists
 # answers — the installer leaves one on PATH, and the same bytes are
 # not worth fetching twice. Unmatched ones still face verification.
 for cand in "$target" "$(command -v ce 2>/dev/null || true)"; do
     [ -n "$cand" ] && [ -x "$cand" ] && [ "$(sha_of "$cand" 2>/dev/null)" = "$pin" ] || continue
     ensure_core
+    bind "$cand"
     exec "$cand" "$@"
 done
 
@@ -192,7 +271,7 @@ if [ -n "${CE_AIRGAPPED:-}" ]; then
 fi
 
 mkdir -p "$data"
-url="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-$CE_MANIFEST_VERSION-$key$ext"
+url="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-$ver-$key$ext"
 tmp="$target.download.$$" # PID-suffixed — see ensure_core
 if ! fetch "$url" "$tmp"; then
     rm -f "$tmp"
@@ -210,4 +289,5 @@ fi
 chmod +x "$tmp"
 mv -f "$tmp" "$target"
 ensure_core
+bind "$target"
 exec "$target" "$@"

@@ -34,7 +34,7 @@ ratchet — and turns those facts into verdicts
 [README.md:172](../../README.md#L172)). The boundary has a one-line
 test, from ADR-008: if a rule needs source text or line-level content to
 cross the wire, it is measurement and stays in Rust
-([DEVELOPMENT_PLAN.md:234](../DEVELOPMENT_PLAN.md#L234)). So read each
+([DEVELOPMENT_PLAN.md:238](../DEVELOPMENT_PLAN.md#L238)). So read each
 section as *facts → predicate → verdict*: the formula and its constants
 are the contract, the knobs are echoed back in the report, and each is
 cited to the file and line that implements it. No number in this

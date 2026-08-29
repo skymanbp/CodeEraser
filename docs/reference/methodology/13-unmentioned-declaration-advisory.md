@@ -13,7 +13,7 @@ the four-way verdicts: it never turns a gate red, never enters `ce erase`, and i
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
 [report.rs:53-58](../../../cli/src/graph/deadcode/report.rs#L53)). The plan calls it ADR-008
-step 3b ([DEVELOPMENT_PLAN.md:281](../../DEVELOPMENT_PLAN.md#L281)); the split follows
+step 3b ([DEVELOPMENT_PLAN.md:285](../../DEVELOPMENT_PLAN.md#L285)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
 
@@ -346,8 +346,8 @@ consumers that never ask must not pay. A/B medians, n = 9 interleaved on two ide
 HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet window:
 `ce audit --hook` 1.186 s → 0.954 s, `ce erase` (plan) 1.526 s → 1.493 s, `ce check`
 1.786 s → 1.802 s (spread 1.729–1.928) — no consumer slower
-([PERF-BUDGET.md:176-185](../../PERF-BUDGET.md#L176)). The pass itself: cold ≈ 1.95 s, warm ≈
-0.54 s on the self corpus ([PERF-BUDGET.md:44](../../PERF-BUDGET.md#L44)).
+([PERF-BUDGET.md:186-195](../../PERF-BUDGET.md#L186)). The pass itself: cold ≈ 1.95 s, warm ≈
+0.54 s on the self corpus ([PERF-BUDGET.md:54](../../PERF-BUDGET.md#L54)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
 scratch repository ([mention_universe.rs:209-245](../../../cli/tests/it/mention_universe.rs#L209)); the self

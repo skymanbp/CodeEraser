@@ -23,12 +23,22 @@
 | 2 | `ce` 冷启动（进程 + clap 解析 + 退出） | ≤ 100 ms | `ce --version` ×10：min 28.3 / median 30.3 / max 53.1 ms | ✅ M0 |
 | 3 | named pipe 连接 + 指纹探针往返（daemon 热态） | p95 ≤ 150 ms | ping ×100（101k LOC 仓）：median 0.27 / p95 0.50 / max 5.78 ms | ✅ M2 |
 | 4 | 判定组装 + stdout JSON 回传 | ≤ 50 ms | deny(含组装回传) 中位 64 vs clean(无输出) 中位 70 ms——边际成本埋没于运行噪声(≲10 ms) | ✅ M3 |
-| 合计 | PreToolUse 端到端 | **p95 < 1 s**（含 Defender/冷 daemon 余量） | ce 侧（行 2+3+4）：deny p95 69 / clean p95 81 ms；冷首呼(懒起 daemon) 213 ms。行 1 用实测 p95 303.7 加总 ≈ 0.39 s < 1 s | ce 侧 ✅ M3；全链待 0.x 预览实录 |
+| 合计 | PreToolUse 端到端 | **p95 < 1 s**（含 Defender/冷 daemon 余量） | ce 侧（行 2+3+4）：deny p95 69 / clean p95 81 ms；冷首呼(懒起 daemon) 213 ms。行 1 用实测 p95 303.7 加总 ≈ 0.39 s < 1 s。**全链实录（2026-08-29，见下注）**：修前 20 次 Write 中 13 次触发宿主 `Slow PreToolUse hooks` 告警 2016–2344 ms；`ce.sh` 改会话绑定戳后 min 322 / median 385 / **p95 502** / max 568 ms，告警 0 | ✅ 2026-08-29（全链 p95 0.50 s < 1 s） |
 
 > **行 1 注（2026-08-08 实测）**：PowerShell 形态 p95 303.7 ms **压线越过自身
 > 300 ms 预算**（60 次中 5 次 >300），但它是 `ce` 启动之前的**宿主开销**，CE 侧
 > 无法优化；总预算 p95 < 1 s 仍有 0.6 s 余量，故不列为阻塞项。cmd.exe 形态快
 > 一个数量级（p95 23.4 ms），说明该成本几乎全部是 PowerShell 自身启动。
+> **全链注（2026-08-29 实测，L 轮步 #15 O52）**：真 headless 会话（`claude -p`，
+> `--settings` 只启 codeeraser 插件，`--debug-file` + `-d hooks`），每条 assistant
+> 消息恰一次 Write，共 20 次；单次 = 宿主 `[Stall] tool_dispatch_start` 时戳 −
+> 该 assistant 消息落盘时戳 − 同行 `permissionDecisionMs`，两端都是宿主时钟。
+> 修前的根因不在 ce：`plugin/bin/ce.sh` 每次 hook 都重走全链——两次 SHA256 +
+> ~15 次 fork，Windows 每 fork 70–100 ms，单 wrapper 1.7 s，全链 2.0–2.3 s，
+> 宿主 ≥ 2000 ms 才打 `Slow PreToolUse hooks`（无逐 hook 起点标记，故取上式）。
+> 修法 = 校验按会话一次：已验证路径写入 `CLAUDE_PLUGIN_DATA/bound-<清单版本>.env`，
+> 后续 hook 经戳直接 exec（清单或二进制比戳新即重验，`health` 恒全链），单 wrapper
+> 0.21 s；信任边界不变（ADR-007）。`bootstrap_e2e.sh` 状态 11–14 钉住戳的四条律。
 > 口径：`<shell> -c exit` 的进程创建到退出，用 Stopwatch 计时，**不含** Claude
 > Code 在 fork 之前的内部开销 —— 那部分只能由 0.x 预览的真实会话实录覆盖，
 > 与 dogfood 验收同批完成。

@@ -55,6 +55,10 @@ pub enum Reason {
     ConfigDepth,
     OutOfScope,
     Unsupported,
+    /// A degenerate specifier (`import ""`): the site referenced
+    /// nothing, and says so in the ledger rather than vanishing at
+    /// detection (L step #15, O60).
+    Empty,
 }
 
 /// Terminal state of one site.
@@ -196,8 +200,15 @@ pub struct Site<'a> {
     pub line: usize,
 }
 
-/// Dispatch one site to its language ladder.
+/// Dispatch one site to its language ladder. An empty specifier is
+/// refused here by name before any ladder sees it — a bare-package
+/// rung or a package-root lookup would otherwise read `""` as a
+/// name; Markdown keeps its own reading of an empty target (a
+/// fragment link into the same document).
 pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
+    if site.spec.is_empty() && lang != Lang::Markdown {
+        return Outcome::Unresolved(Reason::Empty);
+    }
     match lang {
         Lang::TypeScript | Lang::Tsx => ts::resolve(site.from, site.spec, scope),
         Lang::Python => py::resolve(site.from, site.spec, scope),
