@@ -215,5 +215,5 @@ fn node_seg(kind: i64, node: Node<'_>, text: &str) -> RawSeg {
 }
 
 #[cfg(test)]
-#[path = "segments_tests.rs"]
+#[path = "../../tests/unit/docdup/segments_tests.rs"]
 mod tests;

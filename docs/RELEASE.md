@@ -7,7 +7,7 @@
 
 ## 0. 前置门（全绿才允许起步）
 
-- 六腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 940`
+- 六腿狗粮门：`ce scan` / `ce dedup --check` / `ce check --fail-under 946`
   / `ce deadcode --check` / `ce docdup --check` / `ce erase --check`，加 `ce doctor`。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core；`cli/tests` submodule 已 `update --init`）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
@@ -49,7 +49,10 @@
 ## 3. 发布后渠道
 
 - **crates.io**：`cd cli && cargo publish`（token 由用户本机配置，
-  永不入库/入对话）。
+  永不入库/入对话）。子仓 `cli/tests` 必须在座：包里带 `tests/unit/**`
+  （src 每个 `#[cfg(test)]` 的 `#[path]` 挂载目标，步 #13），缺了它下载者的
+  `cargo test` 编译即错——`it/unit_mounts.rs` 钉「声明 = 磁盘 = 打包」三集合，
+  CI 另解包跑 `cargo check --tests`。
 - **npm 指针**：指针包（package.json + README，只转发 Releases、无
   二进制）bump version 后 `npm publish`——账户 2FA 需用户在交互终端
   完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。

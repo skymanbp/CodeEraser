@@ -414,4 +414,10 @@ entry_globs = [
 # the foreign-owned rows removed (row-set diff in the CHANGELOG entry).
 # Down needs no defence; this line records that the counter moved for
 # the ruling, not for a cleanup.
-budget = 65
+# 65 -> 64 (L round step #13, user ruling 2026-08-28: every #[cfg(test)]
+# module under cli/src rides in the submodule too, mounted back by
+# `#[path]`): the one row that left is the pair between two unit-test
+# blocks (dedup/t3 tests <-> docdup/judge tests), foreign now and
+# measured by the submodule's ledger (118 -> 119 there, the same row).
+# Zero new rows: the 64-row set is the 65-row set minus that pair.
+budget = 64

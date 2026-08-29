@@ -196,5 +196,5 @@ pub(super) fn domain(conn: &rusqlite::Connection) -> Result<BTreeMap<(String, St
 }
 
 #[cfg(test)]
-#[path = "candidates_tests.rs"]
+#[path = "../../tests/unit/mention/candidates_tests.rs"]
 mod tests;

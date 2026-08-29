@@ -397,5 +397,5 @@ fn cached_sites(tx: &Transaction<'_>) -> Result<Vec<CachedSite>> {
 }
 
 #[cfg(test)]
-#[path = "store_tests.rs"]
+#[path = "../../tests/unit/graph/store_tests.rs"]
 mod tests;

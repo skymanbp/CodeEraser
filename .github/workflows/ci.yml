@@ -95,6 +95,18 @@ jobs:
           cargo test --locked
           cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
+          # The packaged crate must compile its own tests: cfg(test)
+          # mounts tests/unit/** by #[path] (plan v2.18 step #13) and
+          # `cargo publish`'s verify build never enables cfg(test), so
+          # only a check of the extracted tarball can see a mount the
+          # tarball lacks. The build dir is shared so the dependency
+          # artifacts above are reused: package's own verify build (the
+          # one `cargo publish` runs) and the check both re-do only the
+          # crate itself.
+          CARGO_TARGET_DIR="$PWD/target" cargo package --locked --allow-dirty
+          crate=$(ls target/package/codeeraser-*.crate)
+          tar -xzf "$crate" -C target/package
+          (cd "${crate%.crate}" && CARGO_TARGET_DIR="$OLDPWD/target" cargo check --locked --tests)
 
       # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, eleven
       # states (PATH fallback / fresh verified download / warm cache /
@@ -185,7 +197,10 @@ jobs:
       # #12 (2026-08-28) made the test suite a READER of this tree:
       # 120 files left the measured universe, the module-cycle share
       # among what remains rose, the self score re-priced 952 → 943
-      # and the floor re-anchors at 940 — same bite again.
+      # and the floor re-anchors at 940 — same bite again. Step #13
+      # (same day) moved every #[cfg(test)] module into the submodule
+      # too: 6.1k more lines left the universe, the cycle share fell,
+      # the self score re-priced 943 → 949 and the floor sits at 946.
       # Also the deadcode zero-dead
       # gate and the docdup zero-report gate (audit D6/D9: the
       # "全处置" acceptance rows were discipline-only before), and the
@@ -198,7 +213,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan .. --core "$CORE_BIN"
           cargo run --locked -- dedup .. --check --core "$CORE_BIN"
-          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 940
+          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 946
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check
@@ -208,7 +223,8 @@ jobs:
       # universe above and are measured by nobody there. What measures
       # them is the submodule's own ce.toml + baseline — the same six
       # gates, rooted at cli/tests (root resolution stops at its
-      # ce.toml). 978 at the split, floor 975: the same bite.
+      # ce.toml). 978 at the split, floor 975: the same bite; 987 once
+      # the crate's unit tests rode in as unit/ (step #13), floor 983.
       - name: Dogfood the test suite (its own ce.toml + baseline)
         shell: bash
         working-directory: cli
@@ -216,7 +232,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan tests --core "$CORE_BIN"
           cargo run --locked -- dedup tests --check --core "$CORE_BIN"
-          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 975
+          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 983
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check
@@ -324,6 +340,18 @@ jobs:
           cargo test --locked
           cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
+          # The packaged crate must compile its own tests: cfg(test)
+          # mounts tests/unit/** by #[path] (plan v2.18 step #13) and
+          # `cargo publish`'s verify build never enables cfg(test), so
+          # only a check of the extracted tarball can see a mount the
+          # tarball lacks. The build dir is shared so the dependency
+          # artifacts above are reused: package's own verify build (the
+          # one `cargo publish` runs) and the check both re-do only the
+          # crate itself.
+          CARGO_TARGET_DIR="$PWD/target" cargo package --locked --allow-dirty
+          crate=$(ls target/package/codeeraser-*.crate)
+          tar -xzf "$crate" -C target/package
+          (cd "${crate%.crate}" && CARGO_TARGET_DIR="$OLDPWD/target" cargo check --locked --tests)
       - name: Bootstrap chain e2e (macOS leg)
         shell: bash
         run: bash .github/scripts/bootstrap_e2e.sh cli/target/debug/ce plugin/bin/ce.sh
@@ -348,7 +376,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan .. --core "$CORE_BIN"
           cargo run --locked -- dedup .. --check --core "$CORE_BIN"
-          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 940
+          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 946
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check
@@ -358,7 +386,8 @@ jobs:
       # universe above and are measured by nobody there. What measures
       # them is the submodule's own ce.toml + baseline — the same six
       # gates, rooted at cli/tests (root resolution stops at its
-      # ce.toml). 978 at the split, floor 975: the same bite.
+      # ce.toml). 978 at the split, floor 975: the same bite; 987 once
+      # the crate's unit tests rode in as unit/ (step #13), floor 983.
       - name: Dogfood the test suite (macOS coverage)
         shell: bash
         working-directory: cli
@@ -366,7 +395,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan tests --core "$CORE_BIN"
           cargo run --locked -- dedup tests --check --core "$CORE_BIN"
-          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 975
+          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 983
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check

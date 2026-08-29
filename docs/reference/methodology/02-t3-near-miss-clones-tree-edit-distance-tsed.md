@@ -71,14 +71,14 @@ tsedDen = 100
 ```
 ([Cost.hs:21-25](../../../core/app/CE/Clone/Cost.hs#L21))
 
-No floats appear anywhere in core, because floats tie-break differently across platforms ([Cost.hs:16-18](../../../core/app/CE/Clone/Cost.hs#L16)). Since `ted` is always integral, the comparison is exact and the boundary is decidable in both directions: at `max = 100`, `ted 15` is a clone and `ted 16` is not ([t3/mod.rs:255-262](../../../cli/src/dedup/t3/mod.rs#L255), same pair asserted through the shipped Haskell binding at [CloneProps.hs:46-52](../../../core/test/CloneProps.hs#L46)).
+No floats appear anywhere in core, because floats tie-break differently across platforms ([Cost.hs:16-18](../../../core/app/CE/Clone/Cost.hs#L16)). Since `ted` is always integral, the comparison is exact and the boundary is decidable in both directions: at `max = 100`, `ted 15` is a clone and `ted 16` is not ([unit/dedup/t3.rs:5-9](../../../cli/tests/unit/dedup/t3.rs#L5), same pair asserted through the shipped Haskell binding at [CloneProps.hs:46-52](../../../core/test/CloneProps.hs#L46)).
 
 **Ownership (ADR-008 P1).** The verdict bit is computed by the threshold's owner — the core — and rides each score row over the wire; raw `ted`, `n1`, `n2` also cross so the instruments can recompute cut tables from one run ([Clone.hs:11-15](../../../core/app/CE/Clone.hs#L11), [Clone.hs:135-140](../../../core/app/CE/Clone.hs#L135), reply fields at [Clone.hs:159-160](../../../core/app/CE/Clone.hs#L159)). Rust's `is_clone` is a **mirror**, not an authority ([t3/mod.rs:138-147](../../../cli/src/dedup/t3/mod.rs#L138)), and every reported row is checked against it — disagreement kills the run by name:
 
 > `core clone verdict ({v}) disagrees with the pinned mirror at ted {ted} nodes {n1}/{n2} — formula drift (Clone/Cost.hs vs t3/mod.rs)`
 > ([t3/mod.rs:121-125](../../../cli/src/dedup/t3/mod.rs#L121))
 
-The threshold constants are additionally pinned by a knobs echo: the reply must carry `tsedNum`/`tsedDen` matching the Rust constants or the parse fails ([Clone.hs:168-170](../../../core/app/CE/Clone.hs#L168), [wire.rs:81-87](../../../cli/src/dedup/t3/wire.rs#L81); drift-refusal test at [wire.rs:129-131](../../../cli/src/dedup/t3/wire.rs#L129)).
+The threshold constants are additionally pinned by a knobs echo: the reply must carry `tsedNum`/`tsedDen` matching the Rust constants or the parse fails ([Clone.hs:168-170](../../../core/app/CE/Clone.hs#L168), [wire.rs:81-87](../../../cli/src/dedup/t3/wire.rs#L81); drift-refusal test at [unit/dedup/t3/wire.rs:30-32](../../../cli/tests/unit/dedup/t3/wire.rs#L30)).
 
 The threshold is proven *live* rather than merely present: over the exhaustive family, 85/100 admits a nonempty clone set and 75/100 admits strictly more ([CloneProps.hs:110-117](../../../core/test/CloneProps.hs#L110)).
 

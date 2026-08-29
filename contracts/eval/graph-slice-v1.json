@@ -181,9 +181,9 @@
     {
       "lang": "rs",
       "path": "cli/src/fourclass/diff.rs",
-      "sha256": "66e2bcb7b8a3d9ec547779cda81efa91e6cac4446ce195a41d3fbadde9f2ce22",
+      "sha256": "e11c43fd113a98aefaa3ce04c6a0a8fbcf3a6f9216c2d21ca21416964b6b8661",
       "sites": {
-        "use": 1
+        "mod_decl": 1
       }
     },
     {
@@ -214,9 +214,10 @@
     {
       "lang": "rs",
       "path": "cli/src/fourclass/stacking.rs",
-      "sha256": "5b96be3a98cb12a0e9cf4c6de5e8f57e9377d6da4856483fa26037e444537b6c",
+      "sha256": "621f0db4d5bda797173487064e8607c93409e4811a20d6b71fc8c5026bbd8772",
       "sites": {
-        "use": 6
+        "mod_decl": 1,
+        "use": 4
       }
     },
     {
@@ -1178,11 +1179,11 @@
       "md/url": 5,
       "py/import": 21,
       "py/import_from": 50,
-      "rs/mod_decl": 102,
-      "rs/use": 417,
+      "rs/mod_decl": 104,
+      "rs/use": 414,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 670
+    "total_sites": 669
   }
 }

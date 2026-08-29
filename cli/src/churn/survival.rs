@@ -50,5 +50,5 @@ fn surviving_lines(porcelain: &str, cutoff: u64) -> usize {
 }
 
 #[cfg(test)]
-#[path = "survival_tests.rs"]
+#[path = "../../tests/unit/churn/survival_tests.rs"]
 mod tests;

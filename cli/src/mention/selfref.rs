@@ -264,5 +264,5 @@ fn fenced(lines: &[String]) -> Vec<String> {
 }
 
 #[cfg(test)]
-#[path = "selfref_tests.rs"]
+#[path = "../../tests/unit/mention/selfref_tests.rs"]
 mod tests;

@@ -213,7 +213,9 @@ submodule is a **reader** of this tree, never a measured part of it: its
 files feed the graph's edges and the advisory's mention universe, while
 every size, score, clone and ratchet row is cut from this repository's own
 files alone — the suite passes the same six gates in CI under its own
-`ce.toml` and baseline.
+`ce.toml` and baseline. The crate's unit tests ride there too (`unit/`, one
+file per `#[cfg(test)]` module, mounted back into its source file by
+`#[path]`), so the score here prices product code alone.
 
 "CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the
 license covers the code, not the name.

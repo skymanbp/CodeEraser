@@ -154,5 +154,5 @@ fn module_under(root: &str, path: &str) -> Option<String> {
 }
 
 #[cfg(test)]
-#[path = "cabal_tests.rs"]
+#[path = "../../tests/unit/graph/cabal_tests.rs"]
 mod tests;

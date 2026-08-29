@@ -242,4 +242,5 @@ fn value_of(raw: &str) -> String {
 }
 
 #[cfg(test)]
+#[path = "../tests/unit/gitmodules/tests.rs"]
 mod tests;

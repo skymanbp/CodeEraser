@@ -287,16 +287,16 @@
     },
     {
       "bands": {
-        "below_floor": 4,
-        "l": 4,
-        "m": 5,
-        "s": 8
+        "below_floor": 5,
+        "l": 2,
+        "m": 2,
+        "s": 2
       },
       "lang": "rs",
       "path": "cli/src/fourclass/diff.rs",
-      "sha256": "66e2bcb7b8a3d9ec547779cda81efa91e6cac4446ce195a41d3fbadde9f2ce22",
-      "symbols": 21,
-      "units": 21
+      "sha256": "e11c43fd113a98aefaa3ce04c6a0a8fbcf3a6f9216c2d21ca21416964b6b8661",
+      "symbols": 11,
+      "units": 11
     },
     {
       "bands": {
@@ -339,16 +339,16 @@
     },
     {
       "bands": {
-        "below_floor": 1,
-        "l": 2,
-        "m": 2,
+        "below_floor": 2,
+        "l": 1,
+        "m": 1,
         "s": 5
       },
       "lang": "rs",
       "path": "cli/src/fourclass/stacking.rs",
-      "sha256": "5b96be3a98cb12a0e9cf4c6de5e8f57e9377d6da4856483fa26037e444537b6c",
-      "symbols": 10,
-      "units": 10
+      "sha256": "621f0db4d5bda797173487064e8607c93409e4811a20d6b71fc8c5026bbd8772",
+      "symbols": 9,
+      "units": 9
     },
     {
       "bands": {
@@ -1880,10 +1880,10 @@
       "py/l": 15,
       "py/m": 49,
       "py/s": 41,
-      "rs/below_floor": 578,
-      "rs/l": 134,
-      "rs/m": 507,
-      "rs/s": 605,
+      "rs/below_floor": 580,
+      "rs/l": 131,
+      "rs/m": 503,
+      "rs/s": 599,
       "ts/below_floor": 12,
       "ts/l": 6,
       "ts/m": 1,
@@ -1894,16 +1894,16 @@
       "go": 59,
       "md": 127,
       "py": 126,
-      "rs": 1824,
+      "rs": 1813,
       "ts": 26
     },
-    "total_symbols": 2162,
-    "total_units": 2035,
+    "total_symbols": 2151,
+    "total_units": 2024,
     "units_by": {
       "go": 59,
       "md": 0,
       "py": 126,
-      "rs": 1824,
+      "rs": 1813,
       "ts": 26
     }
   }

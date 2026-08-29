@@ -193,5 +193,5 @@ fn node_text(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
 }
 
 #[cfg(test)]
-#[path = "sites_tests.rs"]
+#[path = "../../tests/unit/graph/sites_tests.rs"]
 mod tests;

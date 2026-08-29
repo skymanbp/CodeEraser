@@ -22,7 +22,7 @@ declaration's name and category), Haskell decides which rows come out and with w
 The corpus that may spell a name is not the scan's file set: the scan's exclusions serve
 "what is measured", the veto needs "what could reference a name", so U is a walk of its
 own with every parameter frozen as a `MENTION_REV` input
-([walk.rs:1-47](../../../cli/src/mention/walk.rs#L1), [mod.rs:60-82](../../../cli/src/mention/mod.rs#L60)):
+([walk.rs:1-47](../../../cli/src/mention/walk.rs#L1), [mod.rs:63-85](../../../cli/src/mention/mod.rs#L63)):
 hidden files enter, `.git`/`.ce` are cut by name, and a nested repository is read off ONE
 owner predicate shared with the measurement walk and the guard's scope
 ([gitmodules.rs:89-132](../../../cli/src/gitmodules.rs#L89)): a path the root's
@@ -90,15 +90,15 @@ Two hashes are stored per distinct token: the fnv1a64 of the token, and — for 
 of at least seven literal characters — the fnv1a64 of its fold key (`_`, `-` and `$`
 filtered, lower-cased), a second chance for a Rust `zod_string` spelled `$ZodString`
 elsewhere ([token.rs:109-120](../../../cli/src/mention/token.rs#L109),
-[mod.rs:278-285](../../../cli/src/mention/mod.rs#L278)). No plaintext token enters the
+[mod.rs:281-288](../../../cli/src/mention/mod.rs#L281)). No plaintext token enters the
 database ([store.rs:32](../../../cli/src/mention/store.rs#L32)); the pass has its own
 version row and any change to a frozen input re-derives every row
-([mod.rs:82](../../../cli/src/mention/mod.rs#L82)). Two caps bound the store — 65,536
+([mod.rs:85](../../../cli/src/mention/mod.rs#L85)). Two caps bound the store — 65,536
 distinct tokens per file (a function of the bytes: the clip is final and the file's hash
 is stored) and 4,194,304 rows per table (a function of the whole store: a starved file
 gets neither rows nor hash and is retried every run) — and both are counted in the
-header the operator sees ([mod.rs:84-89](../../../cli/src/mention/mod.rs#L84),
-[mod.rs:247-275](../../../cli/src/mention/mod.rs#L247)).
+header the operator sees ([mod.rs:87-92](../../../cli/src/mention/mod.rs#L87),
+[mod.rs:250-278](../../../cli/src/mention/mod.rs#L250)).
 
 ### 3. The domain and the veto
 
@@ -144,10 +144,10 @@ read after it yields one false unmentioned that the next run converges away
 
 Every survivor carries a twelve-bit category word; bits 0–10 are *exemptions* (a reason
 the name is reached without being spelled), bit 11 is rendered and never exempts
-([conv/mod.rs:34-66](../../../cli/src/mention/conv/mod.rs#L34)). The AST half is stored at
+([conv/mod.rs:35-67](../../../cli/src/mention/conv/mod.rs#L35)). The AST half is stored at
 index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign export`, Go
 `//export`; `Registration` for a decorator; `Member`; `DefaultExport`; `Ambient`; Rust
-`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:94-103](../../../cli/src/mention/conv/mod.rs#L94)).
+`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:95-104](../../../cli/src/mention/conv/mod.rs#L95)).
 The name-table half is computed at wire time from the path, the name and the key: a test
 file by path component, a `benches`/`examples` component only under a Cargo package
 root, `conftest.py`/`Spec.hs`/`build.rs` and the `*_test.go` / `test_*.py` / `.test.` /
@@ -165,9 +165,9 @@ the safe direction.
 ### 5. Visibility, mounts and the core's code
 
 The core reads two more integer facts per row. The visibility word is three bits: bit 0
-is "exported" ([visibility/mod.rs:69](../../../cli/src/fourclass/visibility/mod.rs#L69)), bit 1 that the enclosing scopes let the
-name out too ([visibility/mod.rs:71](../../../cli/src/fourclass/visibility/mod.rs#L71)), and bit 2 marks a restricted export
-(`pub(crate)` and kin) ([visibility/mod.rs:73](../../../cli/src/fourclass/visibility/mod.rs#L73)). The **mounts** table is one row per node —
+is "exported" ([visibility/mod.rs:71](../../../cli/src/fourclass/visibility/mod.rs#L71)), bit 1 that the enclosing scopes let the
+name out too ([visibility/mod.rs:73](../../../cli/src/fourclass/visibility/mod.rs#L73)), and bit 2 marks a restricted export
+(`pub(crate)` and kin) ([visibility/mod.rs:75](../../../cli/src/fourclass/visibility/mod.rs#L75)). The **mounts** table is one row per node —
 `[node, private, total, bits]` — computed for every node without exception: how many of
 the file's `mod` mounts are private, how many mounts it has, whether a façade re-exports
 it (a Rust `via_reexport` edge or a TS `export *` target — bit 0) and whether its own
@@ -277,7 +277,7 @@ the pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 640 (653 − 13 early-NUL) | rust | 2179 (1028) | 537 (0) | 24.6 % | 17 / 537 = 3.2 % | 17 / 1620 |
+| self @ this commit | 706 (719 − 13 early-NUL) | rust | 1881 (1019) | 281 (0) | 14.9 % | 14 / 281 = 5.0 % | 14 / 1580 |
 | | | haskell | 1283 (294) | 295 (2) | 23.0 % | 12 / 295 = 4.1 % | 12 / 988 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
 | requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
@@ -326,7 +326,7 @@ leading, 119 trailing, 10 inner. The TEST rule's two pins hold: no external corp
 ([eval_mention.rs:36-41](../../../cli/tests/it/eval_mention.rs#L36)). Protocol-table hits:
 requests `setup`, `clean_proxy_environ`; zod `GET` ×3, `generateMetadata` ×2,
 `generateStaticParams` ×2. The FFI/macro rows have no corpus witness and are pinned by
-synthetic fixture instead ([conv/tests.rs:49-56](../../../cli/src/mention/conv/tests.rs#L49)).
+synthetic fixture instead ([conv/tests.rs:49-56](../../../cli/tests/unit/mention/conv/tests.rs#L49)).
 
 **Every external advisory row dispositioned** (258 rows at the audit: cobra 4, requests 16,
 ripgrep 41, zod 197 — the self rows are a plan step of their own): ten disposing agents each
@@ -356,7 +356,7 @@ pre-registered zeros; the mentions face schema `ce.mentions-report/0.2.0` with i
 reader would — field names, the fold channel on a fixture, the console's nine holes in
 both languages ([mentions_face.rs](../../../cli/tests/it/mentions_face.rs)); the census
 counted on a synthetic tree with a collision told apart from a reference
-([rates.rs:125-167](../../../cli/src/mention/rates.rs#L125)); the producer's cut flag; the 0.3.0 keys absent on every
+([unit/mention/rates.rs:12-53](../../../cli/tests/unit/mention/rates.rs#L12)); the producer's cut flag; the 0.3.0 keys absent on every
 pass-No road and the row-key order on the console and in the GUI projection
 ([deadcode_e2e.rs](../../../cli/tests/it/deadcode_e2e.rs),
 [hub_projection.js](../../../cli/tests/gui/hub_projection.js)); and the soft cap pinned equal

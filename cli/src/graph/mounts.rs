@@ -298,5 +298,5 @@ fn outside_block<'a>(line: &'a str, in_block: &mut bool) -> Option<&'a str> {
 }
 
 #[cfg(test)]
-#[path = "mounts_tests.rs"]
+#[path = "../../tests/unit/graph/mounts_tests.rs"]
 mod tests;

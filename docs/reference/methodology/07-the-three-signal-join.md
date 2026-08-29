@@ -25,7 +25,7 @@ At **tier U** the key is the triple `(path, key, nth)` — the unit identity ([c
 hit = argmin over units with (start_u <= span_start and span_end <= end_u) of (end_u - start_u)
 ```
 
-([churn_unit.rs:93-97](../../../cli/src/join/churn_unit.rs#L93)). A span no single unit contains is not split between neighbours; it falls to the file top level, `key = ""`, `nth = 0` ([churn_unit.rs:103-107](../../../cli/src/join/churn_unit.rs#L103)) — a refusal to guess, pinned by the test `crossing.key == ""` ([churn_unit.rs:183-184](../../../cli/src/join/churn_unit.rs#L183)).
+([churn_unit.rs:93-97](../../../cli/src/join/churn_unit.rs#L93)). A span no single unit contains is not split between neighbours; it falls to the file top level, `key = ""`, `nth = 0` ([churn_unit.rs:103-107](../../../cli/src/join/churn_unit.rs#L103)) — a refusal to guess, pinned by the test `crossing.key == ""` ([unit/join/churn_unit.rs:20-21](../../../cli/tests/unit/join/churn_unit.rs#L20)).
 
 On the wire the key is a pair of **dense file indices** `u < v` in the same index space the graph judgment uses ([wire.rs:19-23](../../../cli/src/score/wire.rs#L19)). The core rejects a non-ascending or out-of-range pair rather than reordering it (`"pair not ascending"`, `"endpoint out of range"` — [Rows.hs:36-37](../../../core/app/CE/Verdict/Rows.hs#L36)).
 

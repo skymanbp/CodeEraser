@@ -211,5 +211,5 @@ fn chunk_plan<'a>(rows: &'a [[u64; 2]], naming: &'a [[i64; 5]], budget: usize) -
 }
 
 #[cfg(test)]
-#[path = "wire_tests.rs"]
+#[path = "../../tests/unit/scan/wire_tests.rs"]
 mod tests;

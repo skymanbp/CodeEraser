@@ -1135,9 +1135,9 @@
     "text": "-- definition — clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max, integer"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:36": {
-    "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 255,
-    "text": "#[cfg(test)]"
+    "target": "../../../cli/tests/unit/dedup/t3.rs",
+    "line": 5,
+    "text": "#[test]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:37": {
     "target": "../../../core/test/CloneProps.hs",
@@ -1185,8 +1185,8 @@
     "text": "pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:45": {
-    "target": "../../../cli/src/dedup/t3/wire.rs",
-    "line": 129,
+    "target": "../../../cli/tests/unit/dedup/t3/wire.rs",
+    "line": 30,
     "text": "let mut drifted = ok;"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:46": {
@@ -1565,8 +1565,8 @@
     "text": "let run = *runs"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:113": {
-    "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 184,
+    "target": "../../../cli/tests/unit/docdup/judge.rs",
+    "line": 6,
     "text": "fn verdict_sits_exactly_on_the_threshold() {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:114": {
@@ -1585,8 +1585,8 @@
     "text": "-- | The estimator's shingle width, ECHOED not computed: sets arrive"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:117": {
-    "target": "../../../cli/src/docdup/judge/wire.rs",
-    "line": 116,
+    "target": "../../../cli/tests/unit/docdup/judge/wire.rs",
+    "line": 24,
     "text": "let mut drifted = ok;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:12": {
@@ -1775,8 +1775,8 @@
     "text": "pub fn shingle_seq(words: &[u64]) -> Vec<u64> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:46": {
-    "target": "../../../cli/src/docdup/shingle.rs",
-    "line": 121,
+    "target": "../../../cli/tests/unit/docdup/shingle.rs",
+    "line": 47,
     "text": "assert_eq!(shingle_seq(&w1).len(), 8 - DOC_SHINGLE + 1);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:47": {
@@ -3740,7 +3740,7 @@
     "text": "pub fn pubuse_hash(text: &str) -> u64 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:69": {
-    "target": "../../../cli/src/graph/ladder/md_tests.rs",
+    "target": "../../../cli/tests/unit/graph/ladder/md_tests.rs",
     "line": 12,
     "text": "fn hash_moves_exactly_when_the_consulted_projection_moves() {"
   },
@@ -3750,8 +3750,8 @@
     "text": "Literal(&'static str),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:70": {
-    "target": "../../../cli/src/graph/ladder/rs_reexport.rs",
-    "line": 251,
+    "target": "../../../cli/tests/unit/graph/ladder/rs_reexport.rs",
+    "line": 12,
     "text": "fn hash_moves_exactly_when_the_bound_surface_moves() {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:71": {
@@ -3780,9 +3780,9 @@
     "text": "/// the wire bytes are shuffle-proof (G11). Kind reuses the wire"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:76": {
-    "target": "../../../cli/src/graph/nodes.rs",
-    "line": 111,
-    "text": "}"
+    "target": "../../../cli/tests/unit/graph/nodes.rs",
+    "line": 70,
+    "text": "fn assignment_is_shuffle_proof() {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
     "target": "../../../cli/src/graph/nodes.rs",
@@ -3790,8 +3790,8 @@
     "text": "}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
-    "target": "../../../cli/src/graph/nodes.rs",
-    "line": 133,
+    "target": "../../../cli/tests/unit/graph/nodes.rs",
+    "line": 19,
     "text": ".collect()"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:79": {
@@ -3915,8 +3915,8 @@
     "text": "//! `ce join` (M5-3h): the three-signal assembly — similarity (clone"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:10": {
-    "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 183,
+    "target": "../../../cli/tests/unit/join/churn_unit.rs",
+    "line": 20,
     "text": "let crossing = map.id_of(\"x.rs\", 4, 7);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:100": {
@@ -6356,7 +6356,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:27": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 278,
+    "line": 281,
     "text": "fn row_of(token: &str) -> store::Row {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:28": {
@@ -6366,7 +6366,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:29": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 82,
+    "line": 85,
     "text": "pub const MENTION_REV: i64 = 2;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:3": {
@@ -6376,12 +6376,12 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:30": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 84,
+    "line": 87,
     "text": "/// Distinct tokens one file may store; the rest are clipped and"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:31": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 247,
+    "line": 250,
     "text": "/// Tokens de-duplicated and written under the file's own hash. The"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:32": {
@@ -6466,12 +6466,12 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:47": {
     "target": "../../../cli/src/mention/conv/mod.rs",
-    "line": 34,
+    "line": 35,
     "text": "pub enum Conv {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:48": {
     "target": "../../../cli/src/mention/conv/mod.rs",
-    "line": 94,
+    "line": 95,
     "text": "pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:49": {
@@ -6511,17 +6511,17 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:55": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 69,
+    "line": 71,
     "text": "pub const VIS_EXPORTED: i64 = 1 << 0;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:56": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 71,
+    "line": 73,
     "text": "pub const VIS_SCOPE_EXPORTED: i64 = 1 << 1;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:57": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 73,
+    "line": 75,
     "text": "pub const VIS_RESTRICTED: i64 = 1 << 2;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:58": {
@@ -6536,7 +6536,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:6": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 60,
+    "line": 63,
     "text": "/// Bump when ANY frozen input of the pass changes — the stored rows"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:60": {
@@ -6710,7 +6710,7 @@
     "text": "const RIPGREP_TEST_DIRS: [&str; 4] = ["
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:91": {
-    "target": "../../../cli/src/mention/conv/tests.rs",
+    "target": "../../../cli/tests/unit/mention/conv/tests.rs",
     "line": 49,
     "text": "// wrapper, `doc(hidden)`, `proc_macro*`, the `extern` modifier, a"
   },
@@ -6735,8 +6735,8 @@
     "text": "pub const SCHEMA_ID: &str = \"ce.mentions-report/0.2.0\";"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:96": {
-    "target": "../../../cli/src/mention/rates.rs",
-    "line": 125,
+    "target": "../../../cli/tests/unit/mention/rates.rs",
+    "line": 12,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
   }
 }

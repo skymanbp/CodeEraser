@@ -274,5 +274,5 @@ fn s5_bucket(
 }
 
 #[cfg(test)]
-#[path = "candidates_tests.rs"]
+#[path = "../../tests/unit/dedup/candidates_tests.rs"]
 mod tests;

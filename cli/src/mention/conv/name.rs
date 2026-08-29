@@ -229,5 +229,5 @@ fn go_member(key: &str) -> i64 {
 }
 
 #[cfg(test)]
-#[path = "name_tests.rs"]
+#[path = "../../../tests/unit/mention/conv/name_tests.rs"]
 mod tests;

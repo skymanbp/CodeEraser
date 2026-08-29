@@ -34,4 +34,5 @@ pub mod structure;
 pub mod trend;
 
 #[cfg(test)]
+#[path = "../tests/unit/testutil.rs"]
 pub(crate) mod testutil;

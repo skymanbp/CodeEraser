@@ -248,5 +248,5 @@ fn is_scheme(spec: &str) -> bool {
 }
 
 #[cfg(test)]
-#[path = "md_tests.rs"]
+#[path = "../../../tests/unit/graph/ladder/md_tests.rs"]
 mod tests;

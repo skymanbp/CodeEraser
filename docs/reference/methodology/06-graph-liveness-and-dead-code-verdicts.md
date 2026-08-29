@@ -94,8 +94,8 @@ rung's tie-break reads the last two), and each is folded into a hash that is a r
 ([md_slug.rs:19-27](../../../cli/src/graph/ladder/md_slug.rs#L19),
 [rs_reexport.rs:210-225](../../../cli/src/graph/ladder/rs_reexport.rs#L210)). Both hashes are pinned by
 a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
-([md_tests.rs:12-31](../../../cli/src/graph/ladder/md_tests.rs#L12),
-[rs_reexport.rs:251-281](../../../cli/src/graph/ladder/rs_reexport.rs#L251)).
+([md_tests.rs:12-31](../../../cli/tests/unit/graph/ladder/md_tests.rs#L12),
+[unit/graph/ladder/rs_reexport.rs:12-42](../../../cli/tests/unit/graph/ladder/rs_reexport.rs#L12)).
 
 ### 3. Edge extraction and node identity
 
@@ -112,10 +112,10 @@ codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
 Node identity is the pair `(path, unit)` over a `BTreeSet` of every walked file plus every edge
 target, so the id assignment is a function of the graph and the wire bytes are shuffle-proof
 ([nodes.rs:24-50](../../../cli/src/graph/nodes.rs#L24), asserted at
-[nodes.rs:111-127](../../../cli/src/graph/nodes.rs#L111)). Package-ness is read from the edge's *stored*
+[unit/graph/nodes.rs:70-86](../../../cli/tests/unit/graph/nodes.rs#L70)). Package-ness is read from the edge's *stored*
 granularity, never inferred from a target's absence — the old absence rule minted image assets
 and dangling doc refs as packages ([nodes.rs:20-23](../../../cli/src/graph/nodes.rs#L20),
-[nodes.rs:133-148](../../../cli/src/graph/nodes.rs#L133)).
+[unit/graph/nodes.rs:19-34](../../../cli/tests/unit/graph/nodes.rs#L19)).
 
 Two transformations happen on the way to the wire:
 

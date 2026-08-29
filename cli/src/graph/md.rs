@@ -201,5 +201,5 @@ fn find_from(line: &str, from: usize, needle: u8) -> Option<usize> {
 }
 
 #[cfg(test)]
-#[path = "md_tests.rs"]
+#[path = "../../tests/unit/graph/md_tests.rs"]
 mod tests;

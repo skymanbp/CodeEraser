@@ -209,5 +209,5 @@ pub(crate) fn daemon_words((state, ms): (i64, Option<u128>)) -> String {
 pub mod doctor;
 
 #[cfg(test)]
-#[path = "health_tests.rs"]
+#[path = "../tests/unit/health_tests.rs"]
 mod tests;

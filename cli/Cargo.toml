@@ -11,7 +11,13 @@ repository = "https://github.com/skymanbp/CodeEraser"
 # lean on repo-root contracts/ fixtures that never ship in the crate,
 # so for `cargo install` users they were 124 files of dead weight
 # (user decision 2026-08-26; measured via `cargo package --list`).
-exclude = ["tests/"]
+# tests/unit/ is the exception (plan v2.18 step #13): every
+# `#[cfg(test)]` module of src/ is mounted from there by `#[path]`, so
+# a tarball without it cannot compile its own `cargo test` — the
+# inventory gate (tests/it/unit_mounts.rs) holds the packaged set to
+# exactly the mounted files, and the publish needs the cli/tests
+# submodule seated (docs/RELEASE.md).
+exclude = ["tests/*", "!tests/unit/"]
 
 [[bin]]
 name = "ce"

@@ -160,7 +160,7 @@
         <text x="712" y="994">PreToolUse · Stop</text>
         <text x="712" y="1010">SessionStart health</text>
         <text x="928" y="994">pass · violation · internal</text>
-        <text x="928" y="1010">ratchet + explicit floor 940</text>
+        <text x="928" y="1010">ratchet + explicit floor 946</text>
       </g>
 
       <line x1="48" y1="1050" x2="1132" y2="1050" stroke="#2a3347"/>

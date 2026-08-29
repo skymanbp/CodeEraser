@@ -256,5 +256,5 @@ fn unset_stdio_inheritance() {
 fn unset_stdio_inheritance() {}
 
 #[cfg(test)]
-#[path = "client_tests.rs"]
+#[path = "../../tests/unit/daemon/client_tests.rs"]
 mod tests;

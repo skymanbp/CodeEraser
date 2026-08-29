@@ -33,10 +33,13 @@ pub mod rates;
 pub mod selfref;
 pub mod store;
 #[cfg(test)]
+#[path = "../../tests/unit/mention/tests.rs"]
 mod tests;
 #[cfg(test)]
+#[path = "../../tests/unit/mention/tests_caps.rs"]
 mod tests_caps;
 #[cfg(test)]
+#[path = "../../tests/unit/mention/tests_index.rs"]
 mod tests_index;
 pub mod token;
 mod walk;

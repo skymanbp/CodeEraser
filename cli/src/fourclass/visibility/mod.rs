@@ -55,8 +55,10 @@ mod hs;
 mod hs_lex;
 mod py;
 #[cfg(test)]
+#[path = "../../../tests/unit/fourclass/visibility/tests.rs"]
 mod tests;
 #[cfg(test)]
+#[path = "../../../tests/unit/fourclass/visibility/tests_hs.rs"]
 mod tests_hs;
 mod ts;
 
