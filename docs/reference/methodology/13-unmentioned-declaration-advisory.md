@@ -256,7 +256,7 @@ A projection gate pins that the symbol column survives the hub's generic table
   `Ambient` ([conv/py.rs:57-70](../../../cli/src/mention/conv/py.rs#L57)). requests `_types.py:157`
   now reads private and exempt and leaves the advisory; `__init__.py:60 check_compatibility`,
   public by convention but absent from the module's `__all__`, leaves it too (exported
-  645 → 644, unmentioned-exported 432 → 431); the requests population is 16 → 14.
+  645 → <!--ce:restate:survival:requests-8068356:declared-exported#paren-->644<!--/ce-->, unmentioned-exported 432 → <!--ce:restate:survival:requests-8068356:unmentioned-exported#paren-->431<!--/ce-->); the requests population is 16 → 14.
 - **Late-NUL binaries are in U** and lossily decoded (§1); their token cost is measured
   as its own column (§8), and the rule is not changed because git's own binary rule is
   the same 8,000 bytes.
@@ -292,9 +292,9 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 0 / 1102 = 0.0 % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1102<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
-197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
+<!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
 TypeScript's is spoken — is why the census is reported per language and never as one
 number ([rates.rs:1-12](../../../cli/src/mention/rates.rs#L1)).
