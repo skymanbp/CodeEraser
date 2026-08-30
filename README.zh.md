@@ -80,8 +80,8 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1101 | 994 | 4114 | 399 | 808 | 44 | 550 |
-| p95 ms | 1101 | 2201 | 5137 | 453 | 842 | 47 | 2494 |
+| p50 ms | 1078 | 923 | 4738 | 381 | 801 | 41 | 518 |
+| p95 ms | 1082 | 2093 | 4743 | 384 | 809 | 43 | 2428 |
 
 所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。 [完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->

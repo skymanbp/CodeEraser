@@ -80,8 +80,8 @@ scanned 9 files / 19 functions — 1 warn, 1 fail -> FAIL (failed: hard_line)
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1101 | 994 | 4114 | 399 | 808 | 44 | 550 |
-| p95 ms | 1101 | 2201 | 5137 | 453 | 842 | 47 | 2494 |
+| p50 ms | 1078 | 923 | 4738 | 381 | 801 | 41 | 518 |
+| p95 ms | 1082 | 2093 | 4743 | 384 | 809 | 43 | 2428 |
 
 Every value is generated from `contracts/bench/bench.json`; the test rejects hand edits to this block. [Full replay notes and per-version series](docs/BENCH.md) · [Complete website dashboard](https://codeeraser.dev/bench/)
 <!-- bench:end -->
