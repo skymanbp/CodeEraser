@@ -61,12 +61,12 @@ Over the k-gram hash array `g[0..m]` with `w = p.window`:
 
 A selected `Fingerprint { hash, start }` covers tokens `[start, start + kgram)` ([winnow.rs:10](../../../cli/src/dedup/winnow.rs#L10)–[15](../../../cli/src/dedup/winnow.rs#L15)).
 
-The two thresholds ([mod.rs:283](../../../cli/src/dedup/mod.rs#L283)–[230](../../../cli/src/dedup/mod.rs#L230), [winnow.rs:4](../../../cli/src/dedup/winnow.rs#L4)–[6](../../../cli/src/dedup/winnow.rs#L6)):
+The two thresholds ([mod.rs:284](../../../cli/src/dedup/mod.rs#L284)–[230](../../../cli/src/dedup/mod.rs#L230), [winnow.rs:4](../../../cli/src/dedup/winnow.rs#L4)–[6](../../../cli/src/dedup/winnow.rs#L6)):
 
-- **Guarantee threshold** `t = window + kgram - 1` ([mod.rs:294](../../../cli/src/dedup/mod.rs#L294)–[301](../../../cli/src/dedup/mod.rs#L301)). Any common substring of at least `t` normalized tokens contains at least `t - k + 1 = w` consecutive k-grams — one complete window — and since selection depends only on the contents of that window, both copies select the same minimum. Hence **≥ 1 shared fingerprint, always**. The positional dedup does not weaken this: it suppresses only a re-record of a position already emitted.
+- **Guarantee threshold** `t = window + kgram - 1` ([mod.rs:294](../../../cli/src/dedup/mod.rs#L294)–[302](../../../cli/src/dedup/mod.rs#L302)). Any common substring of at least `t` normalized tokens contains at least `t - k + 1 = w` consecutive k-grams — one complete window — and since selection depends only on the contents of that window, both copies select the same minimum. Hence **≥ 1 shared fingerprint, always**. The positional dedup does not weaken this: it suppresses only a re-record of a position already emitted.
 - **Noise threshold** `k = kgram`: no match shorter than `kgram` tokens can ever be reported, because a fingerprint is a whole k-gram.
 
-Defaults: `kgram = 25`, `window = 26`, so `t = 26 + 25 - 1 = 50` tokens — chosen to align with the jscpd min-tokens default ([mod.rs:301](../../../cli/src/dedup/mod.rs#L301)–[307](../../../cli/src/dedup/mod.rs#L307)). The report filter defaults to exactly `p.guarantee()` ([mod.rs:153](../../../cli/src/dedup/mod.rs#L153)–[151](../../../cli/src/dedup/mod.rs#L151)); lowering it with `--min-tokens` is a calibration mode, and detection below `t` is opportunistic rather than guaranteed ([mod.rs:54](../../../cli/src/dedup/mod.rs#L54)–[57](../../../cli/src/dedup/mod.rs#L57)).
+Defaults: `kgram = 25`, `window = 26`, so `t = 26 + 25 - 1 = 50` tokens — chosen to align with the jscpd min-tokens default ([mod.rs:302](../../../cli/src/dedup/mod.rs#L302)–[307](../../../cli/src/dedup/mod.rs#L307)). The report filter defaults to exactly `p.guarantee()` ([mod.rs:153](../../../cli/src/dedup/mod.rs#L153)–[151](../../../cli/src/dedup/mod.rs#L151)); lowering it with `--min-tokens` is a calibration mode, and detection below `t` is opportunistic rather than guaranteed ([mod.rs:54](../../../cli/src/dedup/mod.rs#L54)–[57](../../../cli/src/dedup/mod.rs#L57)).
 
 ### 4. The inverted index
 
@@ -99,7 +99,7 @@ The same-stream cap keeps the two ranges disjoint — periodic code reports adja
 
 Runs are then sorted into two sinks ([pairs.rs:248](../../../cli/src/dedup/pairs.rs#L248)–[242](../../../cli/src/dedup/pairs.rs#L242)): `len >= t` is a reportable run; `near_floor <= len < t` goes to the near-miss sink, which with the floor at `kgram` is exactly `25 <= len < 50` and is the T3 candidate source S1 ([pairs.rs:153](../../../cli/src/dedup/pairs.rs#L153)–[162](../../../cli/src/dedup/pairs.rs#L162)). `near_floor = usize::MAX` disables it ([pairs.rs:136](../../../cli/src/dedup/pairs.rs#L136)–[129](../../../cli/src/dedup/pairs.rs#L129)).
 
-Reportable runs are mapped to lines via the run's endpoint tokens: `a_start = sa[a0].start_line`, `a_end = sa[a0+len-1].end_line` ([pairs.rs:286](../../../cli/src/dedup/pairs.rs#L286)–[285](../../../cli/src/dedup/pairs.rs#L285)).
+Reportable runs are mapped to lines via the run's endpoint tokens: `a_start = sa[a0].start_line`, `a_end = sa[a0+len-1].end_line` ([pairs.rs:286](../../../cli/src/dedup/pairs.rs#L286)–[286](../../../cli/src/dedup/pairs.rs#L286)).
 
 Because periodic content yields one maximal run per offset, `dominant` drops any block whose **both** ranges sit inside a longer block of the same file pair: sort by descending `tokens`, keep a block only if no kept block contains it on both sides, then re-sort by `(a_file, a_start, b_file, b_start)` for a stable report order ([pairs.rs:207](../../../cli/src/dedup/pairs.rs#L207)–[216](../../../cli/src/dedup/pairs.rs#L216)).
 

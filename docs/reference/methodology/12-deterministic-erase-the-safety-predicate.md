@@ -77,7 +77,7 @@ then computes equality from the two inclusive line slices
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
 ([Cost.hs:57-58](../../../core/app/CE/Erase/Cost.hs#L57)). Passing both tests
-returns `(True, 0)` ([Cost.hs:45](../../../core/app/CE/Erase/Cost.hs#L45)).
+returns `(True, 0)` ([Cost.hs:46](../../../core/app/CE/Erase/Cost.hs#L46)).
 
 **Guard.** A short verbatim run refuses with reason `2`; a byte mismatch refuses
 with reason `3` ([Cost.hs:57-58](../../../core/app/CE/Erase/Cost.hs#L57)). The

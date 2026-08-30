@@ -92,7 +92,7 @@ code = case [c | (c, _, req, forb) <- table, all (testBit reasons) req, not (any
   []      -> 0
 ```
 
-([Join.hs:180-182](../../../core/app/CE/Verdict/Join.hs#L180)). Making the order data is what lets the battery falsify it: the `reorder` probe judges a crafted row with a rotated table and requires the answer to flip from merge to `3` ([JoinProps.hs:24](../../../core/test/JoinProps.hs#L24), [JoinProps.hs:200-206](../../../core/test/JoinProps.hs#L200)).
+([Join.hs:180-182](../../../core/app/CE/Verdict/Join.hs#L180)). Making the order data is what lets the battery falsify it: the `reorder` probe judges a crafted row with a rotated table and requires the answer to flip from merge to `3` ([JoinProps.hs:24](../../../core/test/JoinProps.hs#L24), [JoinProps.hs:201-206](../../../core/test/JoinProps.hs#L201)).
 
 **Reason bits** — the ledger of which conditions held, shipped alongside the code so a two-leg firing cannot hide ([Join.hs:184-198](../../../core/app/CE/Verdict/Join.hs#L184)):
 

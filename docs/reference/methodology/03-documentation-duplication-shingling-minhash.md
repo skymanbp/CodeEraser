@@ -59,7 +59,7 @@ Only the set is cached: `docsegs.shingles` is the sorted deduped `u64`s in littl
 
 ### 4. The MinHash/LSH coarse filter
 
-Only `exempt = 0` rows enter the corpus — exempt segments are structurally outside it, not filtered later ([candidates.rs:60-68](../../../cli/src/docdup/judge/candidates.rs#L60)). Blob decode refuses a non-whole-`u64` row shape by name rather than letting `chunks_exact` drop a truncated tail (fewer shingles would mean silently missed duplication) ([candidates.rs:91-105](../../../cli/src/docdup/judge/candidates.rs#L91)).
+Only `exempt = 0` rows enter the corpus — exempt segments are structurally outside it, not filtered later ([candidates.rs:60-68](../../../cli/src/docdup/judge/candidates.rs#L60)). Blob decode refuses a non-whole-`u64` row shape by name rather than letting `chunks_exact` drop a truncated tail (fewer shingles would mean silently missed duplication) ([candidates.rs:92-105](../../../cli/src/docdup/judge/candidates.rs#L92)).
 
 Segments with `set.len() > DOC_SET_CAP` are excluded from the candidate pass and tallied as `over_cap_segments`, `DOC_SET_CAP = 8192` ([candidates.rs:134-140](../../../cli/src/docdup/judge/candidates.rs#L134), [wire.rs:20](../../../cli/src/docdup/judge/wire.rs#L20)).
 
@@ -74,7 +74,7 @@ sig[i] = min over x in set of fnv1a(x.to_le_bytes() ++ (i as u32).to_le_bytes())
 
 **Seed pairs.** LSH is not the only source: an inverted index over every shingle hash contributes all pairs sharing at least one shingle, tallied separately as `seed_pairs` ([candidates.rs:148-154](../../../cli/src/docdup/judge/candidates.rs#L148)). The candidate set is the union of both sources, deduplicated as an ordered `(min, max)` `BTreeSet` ([candidates.rs:184-188](../../../cli/src/docdup/judge/candidates.rs#L184)).
 
-**Hot groups.** A bucket with `len() <= HOT_GROUP_CAP` pairs all-pairs; above the cap it contributes only the adjacent chain `list.windows(2)`, and the event is counted (`hot_bands` / `hot_shingles`) ([candidates.rs:176-183](../../../cli/src/docdup/judge/candidates.rs#L176)). `HOT_GROUP_CAP = pairs::HOT_CAP = 64` ([candidates.rs:42](../../../cli/src/dedup/candidates.rs#L42), [pairs.rs:27](../../../cli/src/dedup/pairs.rs#L27)). Chaining rather than skipping is the fix for a review finding that skipping hot groups drove detection to zero ([candidates.rs:125-128](../../../cli/src/docdup/judge/candidates.rs#L125)).
+**Hot groups.** A bucket with `len() <= HOT_GROUP_CAP` pairs all-pairs; above the cap it contributes only the adjacent chain `list.windows(2)`, and the event is counted (`hot_bands` / `hot_shingles`) ([candidates.rs:176-183](../../../cli/src/docdup/judge/candidates.rs#L176)). `HOT_GROUP_CAP = pairs::HOT_CAP = 64` ([candidates.rs:42](../../../cli/src/dedup/candidates.rs#L42), [pairs.rs:27](../../../cli/src/dedup/pairs.rs#L27)). Chaining rather than skipping is the fix for a review finding that skipping hot groups drove detection to zero ([candidates.rs:126-128](../../../cli/src/docdup/judge/candidates.rs#L126)).
 
 ### 5. The verbatim token floor
 

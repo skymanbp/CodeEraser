@@ -226,8 +226,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:134": {
     "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 285,
-    "text": ""
+    "line": 286,
+    "text": "fn to_block(run: (&str, usize, &str, usize, usize), streams: &Streams) -> Block {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:135": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -676,8 +676,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:72": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 283,
-    "text": ""
+    "line": 284,
+    "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:73": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -701,13 +701,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:77": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 301,
-    "text": ""
+    "line": 302,
+    "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:78": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 301,
-    "text": ""
+    "line": 302,
+    "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:79": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -876,13 +876,13 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:108": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 85,
-    "text": ""
+    "line": 86,
+    "text": "treeShape :: Int -> WireTree -> Maybe String"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:109": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 111,
-    "text": ""
+    "line": 112,
+    "text": "pairRow :: Int -> Int -> [Int] -> Maybe String"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:11": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
@@ -1046,8 +1046,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:19": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 66,
-    "text": ""
+    "line": 67,
+    "text": "-- | One keyroot-pair forest pass: fills the forest-distance table"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:2": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -1246,8 +1246,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:55": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 123,
-    "text": ""
+    "line": 124,
+    "text": "-- | Judge every pair: the admissible prefilter proves \"below"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:56": {
     "target": "../../../core/app/CE/Clone.hs",
@@ -1331,8 +1331,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:70": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 301,
-    "text": ""
+    "line": 302,
+    "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:71": {
     "target": "../../../cli/src/dedup/sources.rs",
@@ -1811,8 +1811,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:51": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 91,
-    "text": ""
+    "line": 92,
+    "text": "/// Decode one docsegs shingle blob (u64 LE rows): `chunks_exact`"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:52": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
@@ -1891,8 +1891,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:66": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 125,
-    "text": ""
+    "line": 126,
+    "text": "/// LSH bucket pairs ∪ shared-shingle seed pairs, with hot groups"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md:67": {
     "target": "../../../cli/src/docdup/judge/candidates/runs.rs",
@@ -2711,8 +2711,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:2": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 143,
-    "text": ""
+    "line": 144,
+    "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:20": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2731,8 +2731,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:23": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 22,
-    "text": ""
+    "line": 23,
+    "text": "import CE.Clone.Cost (tsedDen, tsedNum)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:24": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -2856,8 +2856,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:46": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 143,
-    "text": ""
+    "line": 144,
+    "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:47": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
@@ -3256,8 +3256,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:118": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 32,
-    "text": ""
+    "line": 33,
+    "text": "/// Role facts of one file node. Main.hs is cabal's executable"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:119": {
     "target": "../../../cli/src/graph/deadcode/targets.rs",
@@ -3361,8 +3361,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:137": {
     "target": "../../../core/app/CE/Graph/Position.hs",
-    "line": 13,
-    "text": ""
+    "line": 14,
+    "text": "positions :: Built -> IS.IntSet -> [Integer] -> [[Integer]]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -4361,8 +4361,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md:66": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 200,
-    "text": ""
+    "line": 201,
+    "text": "reorder :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md:67": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -5866,8 +5866,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:36": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 283,
-    "text": ""
+    "line": 284,
+    "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:37": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -6071,8 +6071,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:73": {
     "target": "../../../cli/src/guard.rs",
-    "line": 158,
-    "text": ""
+    "line": 159,
+    "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:74": {
     "target": "../../../cli/src/hookio.rs",
@@ -6146,8 +6146,8 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:19": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 45,
-    "text": ""
+    "line": 46,
+    "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md:2": {
     "target": "../../../cli/src/erase/gather.rs",

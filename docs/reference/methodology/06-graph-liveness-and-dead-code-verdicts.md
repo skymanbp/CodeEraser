@@ -220,26 +220,26 @@ column sat between `kind` and `roles` and yielded to them; it is gone, and a
 wrong-width row now refuses by row index rather than as a mixed table. The Rust producer measures:
 
 ```
-role 0  base ∈ {main.rs, main.go, __main__.py, build.rs, Main.hs}   [flags.rs:49-54]
-role 1  path starts with src/bin/, examples/, benches/, cmd/        [flags.rs:55-60]
+role 0  base ∈ {main.rs, main.go, __main__.py, build.rs, Main.hs}   [flags.rs:40-45]
+role 1  path starts with src/bin/, examples/, benches/, cmd/        [flags.rs:46-51]
 role 2  base ends _test.go | .test.ts | (test_*.py) | == Spec.hs,
-        or path starts tests/ or contains /tests/ | /__tests__/     [flags.rs:115-124]
+        or path starts tests/ or contains /tests/ | /__tests__/     [flags.rs:84-92]
 role 3  ce.toml [graph] entry_globs hit through the ONE ce.toml glob
         dialect (exclude / class / entry share it): exact path, bare
-        basename, dir/ (= dir/**), *.ext, and every pattern as written [globs.rs:33-84]
-role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md}
+        basename, dir/ (= dir/**), *.ext, and every pattern as written [globs.rs:33-89]
+role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md} [flags.rs:58-62]
 role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
-        claims nothing — the docdup exemption discipline)           [flags.rs:102-113]
+        claims nothing — the docdup exemption discipline)           [flags.rs:72-80]
 role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
         and conventional targets via crate_roots, cabal main-is
-        through each stanza's source roots                          [targets.rs:20-33, 43-70; cabal.rs:90-115]
+        through each stanza's source roots                          [targets.rs:18-35, 41-73; cabal.rs:91-116]
 role 7  a declared submodule's node (index `files.owner` = 1; a
         package or section under a foreign file's path), sent ALONE
         — no other role is measured on a reader                     [flags.rs:31; deadcode.rs:296-300; nodes.rs:32-77]
 ```
 
 ([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
-[flags.rs:32-71](../../../cli/src/graph/deadcode/flags.rs#L32)). The role→bit landing is the
+[flags.rs:33-70](../../../cli/src/graph/deadcode/flags.rs#L33)). The role→bit landing is the
 core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, and role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has. **Role 6 closes
@@ -302,7 +302,7 @@ therefore dead by reachability alone, without a special case.
 The per-node join surface, computed only for the requested `pos` indices, is
 `[idx, indeg, outdeg, sccId, sccSize, reachIn]`
 ([Position.hs:1-3](../../../core/app/CE/Graph/Position.hs#L1),
-[Position.hs:13-32](../../../core/app/CE/Graph/Position.hs#L13)); degrees count distinct kept arcs, and
+[Position.hs:14-32](../../../core/app/CE/Graph/Position.hs#L14)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
 ([deadcode.rs:338-341](../../../cli/src/graph/deadcode.rs#L338)).
