@@ -94,6 +94,18 @@ pub fn emit<M: Serialize, C: Serialize>(
     println!("{key}: {}{tail}", render(summary, &v));
 }
 
+/// The deadcode report's schema id. 0.2.0 (2.32.0, H3): dead rows
+/// carry the confidence column (null on a legacy reply without the
+/// ledger); 0.3.0 (6.2.0): the `unmentioned` advisory rows,
+/// `unmentioned_dropped` (the core dropped the table) and
+/// `unmentioned_cut` (the producer cut the candidate set, so the rows
+/// are a prefix), present exactly when the road was asked (K43) — a
+/// document from a road that never asked carries none of the three,
+/// so "not asked", "asked and clean", "cut" and "dropped" stay
+/// distinct. Named, not inline: the derived-fact registry (plan
+/// v2.21) scans cli/src for value-shaped ids.
+const DEADCODE_SCHEMA: &str = "ce.deadcode-report/0.3.0";
+
 /// The deadcode report as its wire JSON document — one serialization
 /// for the CLI's --format json and the MCP report face (lifted out
 /// of the binary at M7-P2 and housed with the other shared report
@@ -103,15 +115,7 @@ pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
     use crate::graph::deadcode::UnmentionedFace;
     use serde_json::json;
     let mut doc = json!({
-        // 0.2.0 (2.32.0, H3): dead rows carry the confidence column
-        // (null on a legacy reply without the ledger); 0.3.0 (6.2.0):
-        // the `unmentioned` advisory rows, `unmentioned_dropped` (the
-        // core dropped the table) and `unmentioned_cut` (the producer
-        // cut the candidate set, so the rows are a prefix), present
-        // exactly when the road was asked (K43) — a document from a
-        // road that never asked carries none of the three, so "not
-        // asked", "asked and clean", "cut" and "dropped" stay distinct
-        "schema": "ce.deadcode-report/0.3.0",
+        "schema": DEADCODE_SCHEMA,
         "dead": r.dead.iter().map(|d| {
             json!({"name": d.path, "verdict": d.verdict, "why": d.why, "confidence": d.conf})
         }).collect::<Vec<_>>(),

@@ -13,6 +13,12 @@ use crate::i18n::line;
 /// axis itself billed (headroom sprint, 2026-08-24).
 pub(crate) const COCHANGE_FILE_CAP: usize = 20;
 
+/// The report's schema id; 0.2.0: additive
+/// `submodules_without_file_history`. A named constant, not an inline
+/// literal: the derived-fact registry (plan v2.21) scans cli/src for
+/// value-shaped ids and every family names its own.
+const SCHEMA: &str = "ce.churn-report/0.2.0";
+
 /// One ledger row: lines the window added inside this unit. `key` ""
 /// (with nth 0) is the file's top level — `owner()` found no
 /// containing unit, which is a real place, not an error.
@@ -56,8 +62,7 @@ pub fn report_json(r: &Report) -> serde_json::Value {
     let added = r.added_in_window();
     let churned = added.saturating_sub(r.surviving);
     serde_json::json!({
-        // 0.2.0: additive `submodules_without_file_history`
-        "schema": "ce.churn-report/0.2.0",
+        "schema": SCHEMA,
         "commits": r.commits,
         "append_lines": r.append_lines(),
         "rewrite_lines": r.rewrite_lines(),

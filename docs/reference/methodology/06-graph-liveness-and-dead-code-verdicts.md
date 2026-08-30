@@ -355,7 +355,7 @@ arriving in `dead` refuses as wire skew, never a directory erase
 core away, so the client's old fallback conjunction was unreachable and was retired (L round
 step #15, O62; [deadcode.rs:454-458](../../../cli/src/graph/deadcode.rs#L454)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
-([report.rs:102-124](../../../cli/src/report.rs#L102)). The design's *"no entry rule ⇒ every doc trivially
+([report.rs:114-128](../../../cli/src/report.rs#L114)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
 ([deadcode.rs:13-15](../../../cli/src/graph/deadcode.rs#L13)).
 

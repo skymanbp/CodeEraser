@@ -36,6 +36,15 @@ gui.md 命令形例外句；VERSIONING 四面一文档 + `sccFloor` + `knobsFenc
 bench 中文表头（生成器 zh 支）；册 01/05/06/11/13 引文 54 条重瞄 + 册 13 §8 自仓行重取；demo 三注释与 README 「Gated」句；erase.md
 子仓句、size-advisory 围栏回落句；plugin README 引文、SKILL `ce:allow` 三读者、update 命令三处；`Cost.hs` 注释「唯一」→「两个」。
 
+**v2.21 S1+S2 无默认档位变更**（计划书 v2.21 修正案就地写入——ADR-009 文档事实派生 + archify 架构图，329 行不变；v1.3.0 顺延其后）。
+S1 bless 单读者（子仓）：`facts::blessing()` 是 `CE_BLESS` 的唯一读者（恰 "1"；`CE_BLESS=1 ∧ CI` 按名拒绝——bless 写、bless 不裁），
+六处读点（common 金样比对、bench_render、bench_render_dashboard、docs_citations_parts、face_parity、eval_support 再导出）改经它；
+`bless_guard` 三腿：源码普查（`CE_BLESS` 一读者、`CE_REFREEZE` 一读者 universe.rs）、workflows 永不拼写二者、子进程探针证 unset/0/1/CI
+四态；docs_consts_stack 私有 `repo_root` 与其陈旧「编译两次」理由删除（单 crate 后 `crate::common::repo_root` 即可）。S2 产品暴露（主仓，零
+wire、零 pub 放宽）：`churn/report.rs` 与 `report.rs` 的两处 inline schema id 提为具名 `const`（`ce.churn-report/0.2.0`、
+`ce.deadcode-report/0.3.0`），报告字节不变；册 06/13 两条 `report.rs` 引文随行移重瞄再签。**记账**：check 主 953 / 子 989 恒；dedup 60 / 119 恒；子仓基线具名重立——新入表
+it/bless_guard.rs、it/facts/mod.rs（it/main.rs、daemon_conn_deadline.rs 在容差内）；主仓基线具名重立——CHANGELOG.md 本段在容差内，无超容差文件。
+
 **片 (6) 无默认档位变更**。wire ce↔core **6.1.0→6.2.0**（加性 minor，三面原子：`corelink.rs::PROTO` + `Version.hs::proto` +
 全族 golden 机器再生，非 handshake 的 request 行按 §3 立场滞留 6.0.0——105 行）。`graph.request` 加性**两键同生同死**：
 `unmentioned=[[node,vis,conv]]`（`id` 投影升序）与 `mounts=[[node,private,total,bits]]`（全节点恒一行、`take 1` 投影）；
