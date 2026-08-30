@@ -266,10 +266,10 @@ CodeEraser/
 ├── docs/         # 本计划、协议文档、评审记录
 ├── demo/         # 仓内真实 demo：seed + Node 驱动 + 冻结产出（`demo_replay` 门）
 ├── site/         # 官网八页（codeeraser.dev；bench/stack 块由门生成，`scripts/deploy_site.js` 部署）
-├── scripts/      # 发布工具（deploy_site.js 等 Node 脚本，不进判决族）
+├── scripts/      # 发布工具（deploy_site.js / shoot_gui.js 等 Node 脚本，不进判决族）
 ├── .github/      # CI 与 release 工作流 + bootstrap e2e 脚本
 ├── .claude-plugin/ # marketplace 清单（plugin/ 注释所指的仓根清单）
-└── memory/       # cc-memory 本地状态（.gitignore 排除，不入库）
+└── .ccm/         # cc-memory 本地状态（原 memory/，插件 2026-08-30 改名；.gitignore 排除，不入库）
 ```
 
 ## 6. 里程碑（工期为单人 + agent 协作的粗估，标 ± 者不确定度高）
