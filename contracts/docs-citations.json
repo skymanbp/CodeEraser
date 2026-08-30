@@ -7788,8 +7788,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 81,
-    "end": 91,
+    "line": 89,
+    "end": 99,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {

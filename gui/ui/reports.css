@@ -14,6 +14,9 @@ main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: va
 #check-hero { font-variant-numeric: tabular-nums; }
 #check-hero #check-score { font-size: var(--t-hero); font-weight: 600; color: var(--ink); font-family: var(--face-display); letter-spacing: var(--ls-hero); font-variant-numeric: proportional-nums lining-nums; }
 #check-hero small { font-size: var(--t-lg); color: var(--ink-min); margin-left: var(--s2); }
+/* the score's name, sized as a caption so it cannot be misread as part
+   of the figure — the structure screen carries its twin */
+#check-hero .kind { font-size: var(--t-xs); color: var(--ink-min); }
 #check-hero .verdict {
   margin-left: var(--s4);
   padding: 2px var(--s2);

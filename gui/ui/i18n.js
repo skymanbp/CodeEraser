@@ -37,6 +37,14 @@ const CE_I18N = {
     trend: "trend", window: "window", measured: "measured", pending: "pending",
     failedPrefix: "failed", windowCommits: (n) => `${n} commits`,
     date: "date", score: "score", axes: "axes", none: "none",
+    // Two screens show a number out of 1000 and they are NOT the same
+    // measure: `ce structure` scores tree-scale entropy, `ce check`
+    // scores the gate over its own seven axes and carries the ratchet.
+    // The console has always named which is which ("structure score
+    // 832/1000" / "check score 953/1000"); the screens did not, and a
+    // reader moving between tabs had no way to tell them apart. Same
+    // words as the console, so the three faces agree.
+    scoreStructure: "structure score", scoreCheck: "check score",
     depth: "depth", subdirs: "subdirs", files: "files", findings: "findings",
     deviation: "deviation",
     undeclared: "undeclared territory", declaredEmpty: "declared but empty",
@@ -178,6 +186,8 @@ const CE_I18N = {
     trend: "趋势", window: "窗口", measured: "已测", pending: "待测",
     failedPrefix: "失败", windowCommits: (n) => `${n} 个提交`,
     date: "日期", score: "分数", axes: "判轴", none: "无",
+    // 与控制台同词（cli/src/structure/report.rs / score/report.rs）
+    scoreStructure: "结构分数", scoreCheck: "检查分数",
     depth: "深度", subdirs: "子目录", files: "文件", findings: "发现",
     deviation: "偏差",
     undeclared: "未声明领土", declaredEmpty: "已声明但为空",

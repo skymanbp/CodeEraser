@@ -46,8 +46,14 @@ function renderCheck() {
   // a pass with no floor armed is a weaker statement than a pass with
   // one, and the reader is entitled to know which they are looking at
   const floor = d.floor == null ? tr("floorOff") : tr("floorArmed", d.floor);
+  // the number is NAMED: the structure screen also shows a score out
+  // of 1000 and it is a different measure entirely (tree-scale entropy
+  // vs this gate's seven axes plus the ratchet). The console has always
+  // distinguished them — "check score" / "structure score" — and a
+  // reader moving between two tabs deserves the same courtesy
   $("check-hero").innerHTML = notice +
     `<span id="check-score">${d.score}</span><small>/ ${scale}</small>` +
+    `<small class="kind">${esc(tr("scoreCheck"))}</small>` +
     `<span class="verdict ${rt.fail ? "bad" : "ok"}">${verdict}</span>` +
     `<small class="floor">${esc(floor)}</small>` +
     `<div id="check-bar"><div style="width:${(100 * d.score) / scale}%"></div></div>`;

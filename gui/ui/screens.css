@@ -22,6 +22,10 @@
 #entropy b, #axes b { color: var(--ink); font-weight: 600; }
 #axes .zero, #axes .zero b { color: var(--ink-min); }
 #score { font-size: var(--t-xl); font-weight: 600; color: var(--ink); font-family: var(--face-display); }
+/* which score this is. A caption, not a competing number — the score
+   screen shows another figure out of 1000 and the two are different
+   measures, so the name rides quietly beside the digits. */
+#scorewrap .kind { display: block; margin: 0; font-size: var(--t-xs); color: var(--ink-min); }
 #scorebar {
   width: 120px;
   height: 4px;

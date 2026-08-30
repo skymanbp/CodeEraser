@@ -232,7 +232,7 @@ by path since they are separate runs) and lists a selected file's rows with the
 root-level census and the notices — the two the document carries, and a third when the
 advisory road failed while the canvas drew (a pre-6.2.0 core), so "no advisory" and "not
 judged" never look alike ([graph.js:34-69](../../../gui/ui/graph.js#L34),
-[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:81-91](../../../gui/ui/i18n.js#L81)).
+[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:89-99](../../../gui/ui/i18n.js#L89)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 

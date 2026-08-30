@@ -66,6 +66,13 @@
   --project-name codeeraser`，finally 里 DELETE /user/tokens/<id>
   销毁；任何 token 值不落对话/不落库/不打印。部署后按页 sha256
   对拍本地 `site/` 才算上线。
+- **官网截图**：首页三张 GUI 图是**生成物**，不是手摆的窗口——
+  `node scripts/shoot_gui.js --out site/assets` 用无头 Edge（即应用自己的
+  WebView2 引擎）跑真 `gui/ui`，喂的是 CLI 出的三份报告文档。`gui/ui`
+  一动就得重拍：`it/site_screenshots.rs` 五腿——按 git 祖先关系拒绝比界面旧的图、
+  整窗尺寸、alt 文本不得手抄数字、`contracts/gui-shots.json` 收据里的 schema
+  必须等于代码当下的三个 `SCHEMA_ID`（界面不动而报告形状动了的那条路）、
+  `site/assets/` 每个文件都得有门认领。重拍会一并重写收据。
 - **marketplace**：清单随 main 走，无独立发布步。
 - **`ce update`**（v1.3.0 起）：装机自检读 `releases/latest` 的 tag 与**该 tag 上**的
   `plugin/bin/manifest.env`——本 runbook「pin 提交先于 tag」的既有序正是它的信任锚，

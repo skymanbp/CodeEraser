@@ -54,7 +54,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 953/1000</span> | axes 0:58 1:0 2:79 3:0 4:0 5:0 6:196 | 33 candidates
+<span class="s">check score 953/1000</span> | axes 0:59 1:0 2:78 3:0 4:0 5:0 6:196 | 33 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -66,8 +66,8 @@ note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim
 <h2>See it work</h2>
 <div class="shots">
   <figure class="shot">
-    <img src="/assets/gui-structure.png" alt="CodeEraser GUI: squarified structure treemap of the CodeEraser repository, tiles heated by findings density, score 854/1000" loading="lazy">
-    <figcaption>The structure screen judging this repository: a squarified treemap, tiles heated by findings density, one ratcheted score.</figcaption>
+    <img src="/assets/gui-structure.png" alt="CodeEraser GUI: squarified structure treemap of the CodeEraser repository, tiles heated by findings density, with the run's score, entropy and axis chips above it" loading="lazy">
+    <figcaption>The structure screen judging this repository: a squarified treemap, tiles heated by findings density, and the <em>structure score</em> above it — tree-scale entropy, a different measure from the <em>check score</em> in the terminal above, which is the gate's own axes plus the ratchet.</figcaption>
   </figure>
   <figure class="shot">
     <img src="/assets/gui-tree.png" alt="CodeEraser GUI: structure tree view with subtree-heat rail, per-directory findings chips and inline axis tags" loading="lazy">
