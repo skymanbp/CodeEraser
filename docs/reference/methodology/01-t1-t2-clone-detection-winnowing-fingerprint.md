@@ -2,7 +2,7 @@
 
 [index](../methodology.md) · [→ 02 T3 near-miss clones — Tree Edit Distance (TSED)](02-t3-near-miss-clones-tree-edit-distance-tsed.md)
 
-The hot path is fixed by ADR-005: normalized token stream → winnowing/Rabin-Karp fingerprints over a SQLite inverted index, with the Schleimer et al. SIGMOD'03 no-miss lower bound as the correctness contract; the cold path (AST structural fingerprint → TSED, T3) is separate ([DEVELOPMENT_PLAN.md:199](../../DEVELOPMENT_PLAN.md#L199)–[202](../../DEVELOPMENT_PLAN.md#L203)). The whole computation is deterministic: the same bytes and the same `Params` produce the same fingerprint rows, the same anchor set, and the same blocks in the same order.
+The hot path is fixed by ADR-005: normalized token stream → winnowing/Rabin-Karp fingerprints over a SQLite inverted index, with the Schleimer et al. SIGMOD'03 no-miss lower bound as the correctness contract; the cold path (AST structural fingerprint → TSED, T3) is separate ([DEVELOPMENT_PLAN.md:199](../../DEVELOPMENT_PLAN.md#L199)–[203](../../DEVELOPMENT_PLAN.md#L203)). The whole computation is deterministic: the same bytes and the same `Params` produce the same fingerprint rows, the same anchor set, and the same blocks in the same order.
 
 Stages: parse → normalize to tokens → hash tokens → k-gram rolling hash → per-window minimum selection → index → anchor pairing → exact bidirectional extension → diversity floor.
 
