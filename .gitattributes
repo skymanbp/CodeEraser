@@ -30,7 +30,13 @@ core/test/** linguist-vendored
 contracts/** linguist-vendored
 site/** linguist-documentation
 
-# The derived-fact projection (plan v2.21, ADR-009) is byte-compared
-# by facts_projection.rs against what the registry renders with LF —
-# pin it like the goldens above.
-contracts/docs-facts.json text eol=lf
+# Documentation, the site and the contract JSON — the derived-fact
+# projection (ADR-009), the citation ledger, the eval records — are
+# read by gates that compare bytes: chips, generated blocks, the
+# citation renderer, the language gate, the facts projection (plan
+# v2.21 ⑧). LF on every checkout, on every platform; images stay
+# binary. (The ndjson goldens keep their own rule above.)
+contracts/**/*.json text eol=lf
+docs/** text eol=lf
+site/** text eol=lf
+*.png binary
