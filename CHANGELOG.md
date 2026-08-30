@@ -36,6 +36,20 @@ gui.md 命令形例外句；VERSIONING 四面一文档 + `sccFloor` + `knobsFenc
 bench 中文表头（生成器 zh 支）；册 01/05/06/11/13 引文 54 条重瞄 + 册 13 §8 自仓行重取；demo 三注释与 README 「Gated」句；erase.md
 子仓句、size-advisory 围栏回落句；plugin README 引文、SKILL `ce:allow` 三读者、update 命令三处；`Cost.hs` 注释「唯一」→「两个」。
 
+**v2.21 S5 无默认档位变更**（派生表 + 单 splicer + demo 写者）。子仓：`facts/block.rs` 一个标记块 splicer `splice(rel, marker, rendered)`
+（页外文本永不动、块字节比、`CE_BLESS=1` 经唯一读者重写、缺标记即拒绝、比对前 CRLF 归一——站点页 EOL 属性归 S9），bench_render（站点两页）/
+bench_render_dashboard（README ×2、bench ×2、stack ×2）/ face_parity（README ×2）三写者各自的「切—比—写」段退役改经它，路径改仓根相对；
+`facts::both_ways` 一个双向闭合助手（已发货未认领 / 已认领未发货同一句报）；`cli_table.rs` README CLI 载体表完备腿——首列 `ce <name>` 集合
+∪ 六条具名省略（daemon / ping / probe / audit / health / precommit，`name: why` 单字串）恒等于 clap 23 变体（`face_parity::cli_subcommands`
+共用），双语表同集；`layout_tree.rs` 计划书 §5.10 布局树两向闭合（画出的 = `git ls-files` 顶层目录 ∪ 具名 ignored `memory/`）。主仓：计划书
+§5.10 补画 `site/`、`scripts/`、`.github/`、`.claude-plugin/` 四行（329→333）；`demo/bless.js` 新文件 = demo 族的写者（把 `demo/out/summary*.md`
+拼进三处 `<!-- demo:begin/end -->`，与 run.js 同一 `EMBEDS`——run.js 改 `require.main` 守卫并导出，`--check` 仍是门）；MCP 工具表即等价表的
+`mcp:` 列（face_parity 已双向闭合，不另立）；`ce:allow(docdup)` 尾注今日不在任何生成块内，`trailer` 字段待首个载体。六新克隆块以结构消除
+（OMITTED 单字串、双向闭合助手），dedup 119 恒。**记账**：check 主 953 恒 / 子 986 恒；dedup 60 / 119 恒；子仓基线具名重立——新入表
+it/facts/block.rs、it/cli_table.rs、it/layout_tree.rs，超容差 it/facts/mod.rs 163→194（`both_ways` + block 挂载），bench_render /
+bench_render_dashboard / face_parity 净减；主仓基线具名重立——新入表 demo/bless.js（尺寸臂），DEVELOPMENT_PLAN.md 329→333、demo/run.js
+267→269、CHANGELOG.md 本段在容差内。
+
 **v2.21 S4 无默认档位变更**（计数与数词）。子仓 `it/facts/`：`form.rs` 自 mod.rs 拆出，新增两形 `#word`（1..=20 按面语言渲染数词，
 中文 2 恒作「两」——每个芯片都站在量词前）/ `#Word`（句首大写，中文同形；`resolve` 把 `#Word` 折回 `#word` 行，不是第二条事实），`#digits` 渲染千分逗号
 （README「4,096」）；`count.rs` 计数家族 20 条——linked：`axes`（`score::knobs::AXES`）、`langs`（`Lang::judged_mask` 置位数）、`erase_reasons` /

@@ -10,6 +10,7 @@
 //
 //   node demo/run.js            # run both, write demo/out/*
 //   node demo/run.js --check    # run both, fail if demo/out/* or an embedded README table would change
+//   node demo/bless.js          # after run.js: splice demo/out/summary*.md into the three README blocks
 //
 // Needs `ce` (CE_BIN or PATH) with a reachable ce-core (CE_CORE_BIN or a
 // sibling), git, and node. No packages.
@@ -264,4 +265,5 @@ function main() {
   process.exit(drift ? 1 : 0);
 }
 
-main();
+if (require.main === module) main();
+module.exports = { EMBEDS };
