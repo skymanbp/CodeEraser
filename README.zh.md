@@ -76,12 +76,12 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 <!-- vignettes:end -->
 
 <!-- bench:begin -->
-### 最新版本延迟 · v1.2.0
+### 最新版本延迟 · v1.3.0
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1111 | 450 | 2958 | 267 | 621 | 34 | 586 |
-| p95 ms | 1131 | 462 | 2979 | 275 | 659 | 37 | 609 |
+| p50 ms | 1101 | 994 | 4114 | 399 | 808 | 44 | 550 |
+| p95 ms | 1101 | 2201 | 5137 | 453 | 842 | 47 | 2494 |
 
 所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。 [完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->
