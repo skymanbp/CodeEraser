@@ -24,7 +24,7 @@ freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.r
 grammar and scans line-wise ([spec.rs:141](../../../cli/src/graph/spec.rs#L141)). The eleven frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star`
 ([store.rs:134-149](../../../cli/src/graph/store.rs#L134)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:100](../../../cli/src/graph/store.rs#L100), currently `15`); `export_star` (a TS
+`GRAPH_REV` bump ([store.rs:100](../../../cli/src/graph/store.rs#L100), currently <!--ce:ver:graph_rev#digits-->`15`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`

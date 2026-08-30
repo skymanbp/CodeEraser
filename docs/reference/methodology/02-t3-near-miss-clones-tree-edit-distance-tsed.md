@@ -146,7 +146,7 @@ Rust never builds an over-cap unit's tree ([t3/mod.rs:159-160](../../../cli/src/
 
 The boundary contract is machine-checked in request order, naming the first offender deterministically: empty tree, `lab`/`lld` length mismatch, `lld` out of range (`l < 0 || l > i`), root `lld /= 0` (i.e. a forest, not a single tree), negative label, and postorder reconstructibility — node `i`'s children must tile `[lld i .. i−1]` exactly, walking right to left ([Clone.hs:85-109](../../../core/app/CE/Clone.hs#L85)). Pair rows must be `[i, j]`, in range, non-self, and strictly ascending across the request ([Clone.hs:111-121](../../../core/app/CE/Clone.hs#L111), [Clone.hs:80](../../../core/app/CE/Clone.hs#L80)).
 
-Every pair that never reaches the wire lands in a named ledger, not in silence: `pairs_dropped_over_cap` and `pairs_dropped_forest`, with an over-cap endpoint claiming the pair first ([t3/mod.rs:198-215](../../../cli/src/dedup/t3/mod.rs#L198)), alongside `survivors`, `s5_*`, `sent`, `requests`, `prefiltered`, `judged`, `clones` ([t3/mod.rs:44-61](../../../cli/src/dedup/t3/mod.rs#L44)). Report schema id: `ce.clone-report/0.2.0` ([t3/mod.rs:20](../../../cli/src/dedup/t3/mod.rs#L20)).
+Every pair that never reaches the wire lands in a named ledger, not in silence: `pairs_dropped_over_cap` and `pairs_dropped_forest`, with an over-cap endpoint claiming the pair first ([t3/mod.rs:198-215](../../../cli/src/dedup/t3/mod.rs#L198)), alongside `survivors`, `s5_*`, `sent`, `requests`, `prefiltered`, `judged`, `clones` ([t3/mod.rs:44-61](../../../cli/src/dedup/t3/mod.rs#L44)). Report schema id: <!--ce:report:clone#schemaver-->`ce.clone-report/0.2.0`<!--/ce--> ([t3/mod.rs:20](../../../cli/src/dedup/t3/mod.rs#L20)).
 
 ### Recall-floor epoch discipline
 

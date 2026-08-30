@@ -29,3 +29,8 @@ cli/tests/** linguist-vendored
 core/test/** linguist-vendored
 contracts/** linguist-vendored
 site/** linguist-documentation
+
+# The derived-fact projection (plan v2.21, ADR-009) is byte-compared
+# by facts_projection.rs against what the registry renders with LF —
+# pin it like the goldens above.
+contracts/docs-facts.json text eol=lf

@@ -36,6 +36,22 @@ gui.md 命令形例外句；VERSIONING 四面一文档 + `sccFloor` + `knobsFenc
 bench 中文表头（生成器 zh 支）；册 01/05/06/11/13 引文 54 条重瞄 + 册 13 §8 自仓行重取；demo 三注释与 README 「Gated」句；erase.md
 子仓句、size-advisory 围栏回落句；plugin README 引文、SKILL `ce:allow` 三读者、update 命令三处；`Cost.hs` 注释「唯一」→「两个」。
 
+**v2.21 S3 无默认档位变更**（ADR-009 登记册 + 投影 + 芯片通道）。子仓 `it/facts/`：`mod.rs` 登记册（id 文法 `family:key#form`，S3 四形
+`#v` / `#vminor` / `#digits` / `#schemaver`；linked / scraped 双层，scraped 行必带 `debt`；`resolve` 未知 id 按名拒绝；`projection` 投影文档
+`ce.docs-facts/0.1.0`）；`ver.rs` 版本 / 修订 / 工具链（linked：`ver:ce`、`proto`、`daemon`、`anchor`、`pin` 与五个 `*_REV`；scraped：
+`tool:rust`、`ghc`、`edition`、`tree_sitter`（`#v` + `#vminor`）、`rusqlite`、`interprocess`、`tauri`、`ver:schema.index`）；`report.rs` 报告 id
+家族——扫描 cli/src 全部值形 `"ce.<name>/<ver>"` 字面量（20 族），与 LINKED（16 条 pub 路径，值必等）/ PRIVATE（4 条私有 const，scraped 带晋级句）
+两表双向闭合；`gate.rs` 两地板（ci.yml 每 job 同值，scraped）+ 两 dedup 预算（`Config::load`，linked）；`chip.rs` 行内芯片
+`<!--ce:id-->…<!--/ce-->`——按形字符类读极大 run，恰一 run 方可重写，零 / 多 / 畸形皆拒绝。三门：`facts_registry`（全部可解析、scraped 棘轮 15
+只降、源字面量断言 7 处：score/model.rs 与 gui/ui/score.js 注释、methodology.svg 文本节点、stack.svg 三值、Version.hs 镜像）、`facts_projection`
+（`contracts/docs-facts.json` 字节门，43 条事实，bless 写本地）、`facts_chips`（15 面 51 芯片各自渲染回自身、未登记文档不得含芯片、计划书描述语法只许在
+代码跨度内）；docs_consts_stack 的三个 `data-const` 改由登记册解析（三处 `source_contains` 退役）；fixture_contract 的 `ANCHOR` 迁登记册
+（`ver:anchor#v`），其 VERSIONING 五断言中三条交芯片、留两条计数句。主仓：README 双语各 13 芯片、DAEMON 2、VERSIONING 6、RELEASE 4、册
+01/02/03/06/07/10/11/13 共 11、站点首页双语各 1（行数零变）；三处陈旧 `950`（score/model.rs:35、gui/ui/score.js:19、methodology.svg:147）改 946
+并入源字面量断言；`.gitattributes` 钉 `contracts/docs-facts.json` LF。**记账**：check 主 953 恒 / 子 989→986（新文件入表）；dedup 60 / 119 恒；
+子仓基线具名重立——新入表 it/facts/{ver,report,gate,chip}.rs、it/facts_registry.rs、it/facts_projection.rs、it/facts_chips.rs，超容差
+it/facts/mod.rs 28→210（登记册本体）；主仓基线具名重立——CHANGELOG.md 本段在容差内。
+
 **v2.21 S1+S2 无默认档位变更**（计划书 v2.21 修正案就地写入——ADR-009 文档事实派生 + archify 架构图，329 行不变；v1.3.0 顺延其后）。
 S1 bless 单读者（子仓）：`facts::blessing()` 是 `CE_BLESS` 的唯一读者（恰 "1"；`CE_BLESS=1 ∧ CI` 按名拒绝——bless 写、bless 不裁），
 六处读点（common 金样比对、bench_render、bench_render_dashboard、docs_citations_parts、face_parity、eval_support 再导出）改经它；

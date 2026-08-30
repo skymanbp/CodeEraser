@@ -16,7 +16,7 @@ async function loadCheck() {
   $("check-load").disabled = true;
   setStatus(tr("judging"), false);
   try {
-    // `--fail-under`, opt-in on every road — but CI arms 950 while
+    // `--fail-under`, opt-in on every road — but CI arms 946 while
     // this screen could arm nothing, so one tree read pass here and
     // FAIL in the pipeline with nothing on screen to say why.
     const floor = $("check-floor").value.trim();

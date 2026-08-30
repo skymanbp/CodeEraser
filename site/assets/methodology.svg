@@ -144,7 +144,7 @@
         <text x="886" y="397">absent pair = axis not judged</text>
 
         <text x="886" y="455">score &lt; reqFloor  =&gt;  floor</text>
-        <text x="886" y="471">ce check . --fail-under 950</text>
+        <text x="886" y="471">ce check . --fail-under 946</text>
         <text x="886" y="487">exit 1 turns the pipeline red</text>
 
         <text x="886" y="545">digest of the whole parsed ce.toml</text>

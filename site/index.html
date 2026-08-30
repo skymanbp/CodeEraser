@@ -80,7 +80,7 @@ note: 98 blocks collapsed into existing members, 60 intra-file pairs off the sim
 <h2>Wire it in</h2>
 <div class="installs">
   <div class="install"><span class="k">CI gate</span>
-    <code>ce check . --fail-under 946&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
+    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->946<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
   <div class="install"><span class="k">pre-commit</span>
     <code>ce precommit&nbsp;&nbsp;# staged net LOC + touched duplicates</code></div>
   <div class="install"><span class="k">MCP</span>

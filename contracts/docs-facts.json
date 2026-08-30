@@ -1,0 +1,279 @@
+{
+  "facts": [
+    {
+      "id": "gate:dedup.main#digits",
+      "source": "ce.toml::[dedup] budget (config::Config::load)",
+      "tier": "linked",
+      "value": "60"
+    },
+    {
+      "id": "gate:dedup.tests#digits",
+      "source": "cli/tests/ce.toml::[dedup] budget (config::Config::load)",
+      "tier": "linked",
+      "value": "119"
+    },
+    {
+      "debt": "spelled on the ce check line of each CI job; promote = one workflow-level env var the jobs and the docs read",
+      "id": "gate:floor.main#digits",
+      "source": ".github/workflows/ci.yml::--fail-under (check ..)",
+      "tier": "scraped",
+      "value": "946"
+    },
+    {
+      "debt": "spelled on the ce check line of each CI job; promote = one workflow-level env var the jobs and the docs read",
+      "id": "gate:floor.tests#digits",
+      "source": ".github/workflows/ci.yml::--fail-under (check tests)",
+      "tier": "scraped",
+      "value": "983"
+    },
+    {
+      "id": "report:baseline#schemaver",
+      "source": "cli/src/score/baseline.rs (typed)",
+      "tier": "linked",
+      "value": "ce.baseline/1"
+    },
+    {
+      "id": "report:check#schemaver",
+      "source": "cli/src/score/model.rs (typed)",
+      "tier": "linked",
+      "value": "ce.check-report/0.5.0"
+    },
+    {
+      "debt": "churn::report is private; promote = re-export SCHEMA beside Report",
+      "id": "report:churn#schemaver",
+      "source": "cli/src/churn/report.rs",
+      "tier": "scraped",
+      "value": "ce.churn-report/0.2.0"
+    },
+    {
+      "id": "report:clone#schemaver",
+      "source": "cli/src/dedup/t3/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.clone-report/0.2.0"
+    },
+    {
+      "id": "report:clone-units#schemaver",
+      "source": "cli/src/dedup/unitcache.rs (typed)",
+      "tier": "linked",
+      "value": "ce.clone-units/0.1.0"
+    },
+    {
+      "debt": "report::DEADCODE_SCHEMA is private; promote = pub const",
+      "id": "report:deadcode#schemaver",
+      "source": "cli/src/report.rs",
+      "tier": "scraped",
+      "value": "ce.deadcode-report/0.3.0"
+    },
+    {
+      "id": "report:dedup#schemaver",
+      "source": "cli/src/dedup/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.dedup-report/0.5.0"
+    },
+    {
+      "id": "report:docdup#schemaver",
+      "source": "cli/src/docdup/judge/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.docdup-report/0.1.0"
+    },
+    {
+      "id": "report:doctor#schemaver",
+      "source": "cli/src/health/doctor.rs (typed)",
+      "tier": "linked",
+      "value": "ce.doctor-report/0.3.0"
+    },
+    {
+      "debt": "erase::apply::LOG_SCHEMA is private; promote = re-export beside SCHEMA_ID",
+      "id": "report:erase-log#schemaver",
+      "source": "cli/src/erase/apply.rs",
+      "tier": "scraped",
+      "value": "ce.erase-log/0.1.0"
+    },
+    {
+      "id": "report:erase-plan#schemaver",
+      "source": "cli/src/erase/model.rs (typed)",
+      "tier": "linked",
+      "value": "ce.erase-plan/0.1.0"
+    },
+    {
+      "id": "report:graph-canvas#schemaver",
+      "source": "cli/src/graph/canvas.rs (typed)",
+      "tier": "linked",
+      "value": "ce.graph-canvas/0.3.0"
+    },
+    {
+      "id": "report:join#schemaver",
+      "source": "cli/src/join/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.join-report/0.3.0"
+    },
+    {
+      "id": "report:mentions#schemaver",
+      "source": "cli/src/mention/face.rs (typed)",
+      "tier": "linked",
+      "value": "ce.mentions-report/0.2.0"
+    },
+    {
+      "id": "report:observe#schemaver",
+      "source": "cli/src/hookio.rs (typed)",
+      "tier": "linked",
+      "value": "ce.observe/0.7.0"
+    },
+    {
+      "id": "report:scan#schemaver",
+      "source": "cli/src/scan/report.rs (typed)",
+      "tier": "linked",
+      "value": "ce.scan-report/0.2.0"
+    },
+    {
+      "id": "report:sites#schemaver",
+      "source": "cli/src/graph/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.sites-report/0.1.0"
+    },
+    {
+      "id": "report:structure#schemaver",
+      "source": "cli/src/structure/judge.rs (typed)",
+      "tier": "linked",
+      "value": "ce.structure-report/0.6.0"
+    },
+    {
+      "debt": "trend::report is private; promote = re-export SCHEMA_ID beside Report",
+      "id": "report:trend#schemaver",
+      "source": "cli/src/trend/report.rs",
+      "tier": "scraped",
+      "value": "ce.trend-report/0.3.0"
+    },
+    {
+      "id": "report:update#schemaver",
+      "source": "cli/src/update/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.update-report/0.1.0"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:edition#digits",
+      "source": "cli/Cargo.toml::edition",
+      "tier": "scraped",
+      "value": "2024"
+    },
+    {
+      "debt": "the pin lives in the workflow alone; promote = one toolchain file CI and the docs both read",
+      "id": "tool:ghc#v",
+      "source": ".github/workflows/ci.yml::ghc-version",
+      "tier": "scraped",
+      "value": "9.14.1"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:interprocess#v",
+      "source": "cli/Cargo.toml::interprocess",
+      "tier": "scraped",
+      "value": "2.4.3"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:rusqlite#vminor",
+      "source": "cli/Cargo.toml::rusqlite",
+      "tier": "scraped",
+      "value": "0.37"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:rust#v",
+      "source": "rust-toolchain.toml::channel",
+      "tier": "scraped",
+      "value": "1.94.1"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:tauri#digits",
+      "source": "gui/src-tauri/Cargo.toml::tauri",
+      "tier": "scraped",
+      "value": "2"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:tree_sitter#v",
+      "source": "cli/Cargo.toml::tree-sitter",
+      "tier": "scraped",
+      "value": "0.26.11"
+    },
+    {
+      "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
+      "id": "tool:tree_sitter#vminor",
+      "source": "cli/Cargo.toml::tree-sitter",
+      "tier": "scraped",
+      "value": "0.26"
+    },
+    {
+      "id": "ver:anchor#v",
+      "source": "cli/tests/it/facts/ver.rs::ANCHOR",
+      "tier": "linked",
+      "value": "6.0.0"
+    },
+    {
+      "id": "ver:ce#v",
+      "source": "cli/Cargo.toml::version",
+      "tier": "linked",
+      "value": "1.3.0"
+    },
+    {
+      "id": "ver:daemon#v",
+      "source": "cli/src/daemon/proto.rs::DAEMON_PROTO",
+      "tier": "linked",
+      "value": "2.0.0"
+    },
+    {
+      "id": "ver:docdup_rev#digits",
+      "source": "cli/src/docdup/mod.rs::DOCDUP_REV",
+      "tier": "linked",
+      "value": "4"
+    },
+    {
+      "id": "ver:graph_rev#digits",
+      "source": "cli/src/graph/store.rs::GRAPH_REV",
+      "tier": "linked",
+      "value": "15"
+    },
+    {
+      "id": "ver:mention_rev#digits",
+      "source": "cli/src/mention/mod.rs::MENTION_REV",
+      "tier": "linked",
+      "value": "2"
+    },
+    {
+      "id": "ver:pin#v",
+      "source": "plugin/bin/manifest.env::CE_MANIFEST_VERSION (update::manifest::parse)",
+      "tier": "linked",
+      "value": "1.2.0"
+    },
+    {
+      "id": "ver:proto#v",
+      "source": "cli/src/corelink.rs::PROTO",
+      "tier": "linked",
+      "value": "6.4.0"
+    },
+    {
+      "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",
+      "id": "ver:schema.index#digits",
+      "source": "cli/src/dedup/schema.rs::SCHEMA_VERSION",
+      "tier": "scraped",
+      "value": "15"
+    },
+    {
+      "id": "ver:struct_rev#digits",
+      "source": "cli/src/dedup/struct_fp.rs::STRUCT_REV",
+      "tier": "linked",
+      "value": "2"
+    },
+    {
+      "id": "ver:tokenizer_rev#digits",
+      "source": "cli/src/dedup/tokens.rs::TOKENIZER_REV",
+      "tier": "linked",
+      "value": "2"
+    }
+  ],
+  "schema": "ce.docs-facts/0.1.0",
+  "scraped": 15
+}

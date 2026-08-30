@@ -35,7 +35,7 @@
 - **挪几行骗不过的分数。** 每轴计 floor(1000·v/(v+n))——违规质量除以机会数——加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`）；基线携带**有效**配置的摘要，改一个旋钮会让 `ce check` 具名停下（`knobs_digest`）而非挪动所有线。六个 fail 条件，逐名报在控制台。
 - **时间是一等信号。** 最近 512 个分数点上的 Theil–Sen 斜率（一个野点拽不动中位数）；变动 = 新增 − 按 blame 存活的行；联判格把相似度、图位置与变动合成 merge / delete / churn-hotspot，带理由位与置信。
 - **有安全谓词的擦除，不是启发式。** 三类（逐字文档孪生、副本已死的整单元 T1 孪生、置信的非公开死文件）、七个冻结理由码、4,096 行上限，以及任一已应用判决幸存即失败的收敛重规划。
-- **由构造保证的确定性。** 任何判决里没有随机数与时钟；golden 夹具逐字节比对；过线的是码，句子留在各自的面。Rust 与 Haskell 在一条 SemVer 协商的 NDJSON wire 上相接（proto 6.4.0，十个家族）；策略是 Haskell 数据（ADR-008），配置以事实过线，从不以名字。
+- **由构造保证的确定性。** 任何判决里没有随机数与时钟；golden 夹具逐字节比对；过线的是码，句子留在各自的面。Rust 与 Haskell 在一条 SemVer 协商的 NDJSON wire 上相接（proto <!--ce:ver:proto#v-->6.4.0<!--/ce-->，十个家族）；策略是 Haskell 数据（ADR-008），配置以事实过线，从不以名字。
 - **一直延伸到更新器的信任链。** 发布分两段：draft 工件被哈希，pin 以一次提交落进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节。插件启动器与 `ce update` 对照的是这些 pin；安装包则由 tag 腿在 Release 发布前对照同一批 pin 校验。
 
 ## 实际效果——同一任务，跑两遍
@@ -99,7 +99,7 @@
 
 **只要 CLI。** 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`（x86_64-windows / x86_64-linux / aarch64-macos），改名 `ce` / `ce-core` 并排放上 PATH——或 `cargo install codeeraser` 再把 `ce-core` 放旁边。核解析全线一条链：`CE_CORE_BIN` → 旁边的 `ce-core` → PATH；`--core <路径>` 最优先。
 
-**从源码。** 钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC 9.14.1 + cabal：`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cargo install --path cli`。
+**从源码。** 钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal：`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cargo install --path cli`。
 
 | 命令 | 报告 / 判决内容 |
 |---|---|
@@ -158,10 +158,10 @@
 
 ![详细技术栈：Rust 度量、版本化 wire、Haskell 判决、产品面与发布 pin 链](docs/assets/stack.svg)
 
-- **Rust 1.94.1**（edition 2024）：`codeeraser` crate——tree-sitter 0.26 与六套语法、rusqlite 0.37（内置 SQLite、WAL，索引 schema 15 / GRAPH_REV 15 / MENTION_REV 2）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
-- **Haskell（GHC 9.14.1，GHC2021，`-Wall -Werror`）**：`ce-core`——每个判决家族（scan、verdict、clone、docdup、graph、structure、trend、erase、fourclass、audit）、精确有理数、冻结的依赖图。
-- **Tauri 2** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
-- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto 6.4.0）；逐项目 daemon 在 `interprocess` 上讲自己的协议（2.0.0）；协议 major 偏斜是具名拒绝，从不猜。
+- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#digits-->2024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与六套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
+- **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`——每个判决家族（scan、verdict、clone、docdup、graph、structure、trend、erase、fourclass、audit）、精确有理数、冻结的依赖图。
+- **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
+- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.4.0<!--/ce-->）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.0.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
 - **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、十三册带机器核验引文的[方法学](docs/reference/methodology.md)、bench 块、demo、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑六道产品门。
 

@@ -28,7 +28,7 @@
   每连接一线程（静默连接只占住自己，卡不住 accept 循环；线程上限
   64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
   纪律不变。
-- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **2.0.0**：
+- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.0.0<!--/ce-->**：
   `hello_ok` 砍去无读者的 `version` 字段〔I 轮 D8，2026-08-24，用户拍板
   「现在就删」；删字段 = major，1.x 客户端得 `restart` 后自 respawn〕；1.1.0 =
   加性 `hello.token`，1.0.0 行仍可解析、得 unauthorized 拒绝），与
@@ -80,7 +80,7 @@
     期限短于服务端会把健康的慢判决误读成挂死），`CE_CLIENT_DEADLINE_SECS`
     覆盖。K 步 10 兑现审计 #85 的「1.0 后再议」：此前三边只有这一边
     没期限，卡死的 daemon 把 PreToolUse 钩子无限期挂住。实现是工人线程
-    持连接、主线程限时收（interprocess 2.4.3 对命名管道无读超时 API，
+    持连接、主线程限时收（interprocess <!--ce:tool:interprocess#v-->2.4.3<!--/ce--> 对命名管道无读超时 API，
     仅有弃用的 PIPE_NOWAIT 轮询）。超时后主线程**拆除**工人（L 轮步 #14
     O64，`daemon/cancel.rs`）：Unix 经复制的描述符 `shutdown` 套接字，工人
     的读返回 0；Windows 对管道句柄 `CancelIoEx`（interprocess 以

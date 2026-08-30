@@ -486,7 +486,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **6.4.0**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->6.4.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -617,7 +617,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
-  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **6.0.0**
+  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->6.0.0<!--/ce-->**
   （105 行，server 恒答 6.4.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
@@ -631,8 +631,8 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 
 | 组件 | 锁定 | 载体 |
 |---|---|---|
-| Rust | 1.94.1 | `rust-toolchain.toml`（仓库根） |
-| GHC | 9.14.1（LTS） | CI `ghc-version` + 本文件 |
+| Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
+| GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | 6.4.0 | §1 所列两处常量 |
-| daemon 协议 | 2.0.0 | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |
+| 协议 | <!--ce:ver:proto#v-->6.4.0<!--/ce--> | §1 所列两处常量 |
+| daemon 协议 | <!--ce:ver:daemon#v-->2.0.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

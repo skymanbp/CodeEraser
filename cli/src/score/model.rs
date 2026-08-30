@@ -32,7 +32,7 @@ pub struct Outcome {
     /// The floor this run was judged under (`--fail-under`), echoed
     /// so a consumer can tell "passed with a floor armed" from
     /// "passed with none". Two faces of one gate disagreed on exactly
-    /// this: CI arms 950, the GUI could not arm anything, and the
+    /// this: CI arms 946, the GUI could not arm anything, and the
     /// same tree read pass in one and FAIL in the other with nothing
     /// on screen to say why.
     pub floor: Option<u32>,

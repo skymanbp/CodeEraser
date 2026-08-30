@@ -7,9 +7,9 @@
 
 ## 0. 前置门（全绿才允许起步）
 
-- 两套六腿狗粮门：主树 `ce scan` / `ce dedup --check` / `ce check --fail-under 946`
+- 两套六腿狗粮门：主树 `ce scan` / `ce dedup --check` / <!--ce:gate:floor.main#digits-->`ce check --fail-under 946`<!--/ce-->
   / `ce deadcode --check` / `ce docdup --check` / `ce erase --check`，加 `ce doctor`；
-  `cli/tests` 子仓同六门（`ce <gate> tests`，`--fail-under 983`，子仓自带 ce.toml 与基线）。
+  `cli/tests` 子仓同六门（`ce <gate> tests`，<!--ce:gate:floor.tests#digits-->`--fail-under 983`<!--/ce-->，子仓自带 ce.toml 与基线）。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core；`cli/tests` submodule 已 `update --init`）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
 - 版本五处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch
@@ -37,7 +37,7 @@
 
 1. 把 draft 的 SHA256SUMS 逐值写进 `plugin/bin/manifest.env`
    （九 pin：三平台 ce + 三平台 ce-core + 三平台 GUI 安装包），并同批翻 `CE_MANIFEST_VERSION`
-   与 `CE_BASE_URL`（tag 腿两者都断言：前者 == 去 v 的版本号（tag `v1.3.0` ⇒ `1.3.0`），后者须以
+   与 `CE_BASE_URL`（tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.3.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.3.0`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
    release.yml verify-publish 腿）——十一行齐动，提交并推 main，CI 绿。
 2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**

@@ -33,7 +33,7 @@ Two levels of exclusion, both ledgered — every shed line or segment lands in a
 
 ### 3. Wordization and shingle construction
 
-A **word** is a maximal run of `char::is_alphanumeric()` characters — a combining mark (`General_Category=Mark`) does not end the run it sits on — lowercased and NFC-composed before hashing, so canonically equivalent spellings ("café" typed NFC or NFD) hash alike instead of yielding disjoint shingle sets ([shingle.rs:25-39](../../../cli/src/docdup/shingle.rs#L25), the one hash throat at [shingle.rs:44-47](../../../cli/src/docdup/shingle.rs#L44); `DOCDUP_REV` 4). A masked byte or any other non-alphanumeric character terminates the current word, as does end of line. Each word is hashed with the repo's one FNV-1a:
+A **word** is a maximal run of `char::is_alphanumeric()` characters — a combining mark (`General_Category=Mark`) does not end the run it sits on — lowercased and NFC-composed before hashing, so canonically equivalent spellings ("café" typed NFC or NFD) hash alike instead of yielding disjoint shingle sets ([shingle.rs:25-39](../../../cli/src/docdup/shingle.rs#L25), the one hash throat at [shingle.rs:44-47](../../../cli/src/docdup/shingle.rs#L44); `DOCDUP_REV` <!--ce:ver:docdup_rev#digits-->4<!--/ce-->). A masked byte or any other non-alphanumeric character terminates the current word, as does end of line. Each word is hashed with the repo's one FNV-1a:
 
 ```
 h = 0xcbf29ce484222325;  for each byte b:  h = (h XOR b) * 0x00000100000001b3   (wrapping u64)
@@ -55,7 +55,7 @@ Two derived objects, deliberately distinct:
 - `shingle_set` — `kgram_hashes` then `sort_unstable` + `dedup`: the sorted, deduplicated **Jaccard alphabet**, `|set| <= n` where `n = words.len()` ([shingle.rs:52-64](../../../cli/src/docdup/shingle.rs#L52)).
 - `shingle_seq` — the **unsorted** k-gram sequence, of length `n − DOC_SHINGLE + 1`, kept because verbatim runs need order ([shingle.rs:69-71](../../../cli/src/docdup/shingle.rs#L69), length asserted at [unit/docdup/shingle.rs:47](../../../cli/tests/unit/docdup/shingle.rs#L47)).
 
-Only the set is cached: `docsegs.shingles` is the sorted deduped `u64`s in little-endian ([mod.rs:32-37](../../../cli/src/docdup/mod.rs#L32), encoder at [mod.rs:117](../../../cli/src/docdup/mod.rs#L117)). `DOCDUP_REV = 4` sits in the meta cache key so a semantics change wipes stale rows ([mod.rs:22-28](../../../cli/src/docdup/mod.rs#L22)).
+Only the set is cached: `docsegs.shingles` is the sorted deduped `u64`s in little-endian ([mod.rs:32-37](../../../cli/src/docdup/mod.rs#L32), encoder at [mod.rs:117](../../../cli/src/docdup/mod.rs#L117)). <!--ce:ver:docdup_rev#digits-->`DOCDUP_REV = 4`<!--/ce--> sits in the meta cache key so a semantics change wipes stale rows ([mod.rs:22-28](../../../cli/src/docdup/mod.rs#L22)).
 
 ### 4. The MinHash/LSH coarse filter
 

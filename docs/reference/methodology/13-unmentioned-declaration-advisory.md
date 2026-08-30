@@ -353,7 +353,7 @@ HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet wind
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
 scratch repository ([mention_universe.rs:209-245](../../../cli/tests/it/mention_universe.rs#L209)); the self
-pre-registered zeros; the mentions face schema `ce.mentions-report/0.2.0` with its
+pre-registered zeros; the mentions face schema <!--ce:report:mentions#schemaver-->`ce.mentions-report/0.2.0`<!--/ce--> with its
 `rates` key ([face.rs:15](../../../cli/src/mention/face.rs#L15)) and the face run as a
 reader would — field names, the fold channel on a fixture, the console's nine holes in
 both languages ([mentions_face.rs](../../../cli/tests/it/mentions_face.rs)); the census
