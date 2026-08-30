@@ -30,25 +30,28 @@
 
 ## 实际效果——同一任务，跑两遍
 
-同一个编码任务——*加折扣、紧凑报表、CSV 与 JSON 输出、API 里的金额格式化*——由脚本化的 agent 在 [`demo/seed`](demo/seed/README.md)（一个 Python + TypeScript 的小型开票服务）的两份相同副本上重放，唯一变量是 PreToolUse 守卫与 Stop 审计是否在环内。下表每条判决都是 `ce` 的逐字输出；两棵树随后由同样六条 `ce` 命令度量。
+同一个编码任务——*加折扣、紧凑报表、CSV 与 JSON 输出、API 里的金额格式化*——由脚本化的 agent 在 [`demo/seed`](demo/seed/README.md)（一个 Python + TypeScript 的小型开票服务）的两份相同副本上重放，唯一变量是 PreToolUse 守卫与 Stop 审计是否在环内。种子树先被量过一遍，所以下表每一处发现都是这次任务写出来的。此后两条环各自跑到**自己**的终点——环内没有东西时也就没有东西会拒绝什么，于是那一条终止在最后一次写入。每条判决都是 `ce` 的逐字输出，两棵树由同样六条命令度量。
 
 <!-- demo:begin -->
 | | 不带 CodeEraser | 带 CodeEraser |
 |---|---|---|
+| 种子树，同样六道门实测：克隆块 · 文档孪生 · 死文件 | 0 · 0 · 0 | 0 · 0 · 0 |
 | 落地的写入 | 7 / 7 | 5 / 7 |
 | PreToolUse 当场拒绝 | 0 | 2 |
 | Stop 审计 | 不在环内 | **拦停** — `本会话的编辑留下 2 个触及改动文件的重复块（净 +105 行）` |
-| `ce check` 分数（棘轮） | 952/1000 (**FAIL**) | 979/1000 (**FAIL**) |
-| T1/T2 克隆块（`ce dedup --check`，预算 0） | 4 (**FAIL**) | 2 (**FAIL**) |
-| 近似克隆对（`ce clone`） | 4 | 1 |
-| 重复文档段（`ce docdup --check`） | 1 (**FAIL**) | 1 (**FAIL**) |
+| 审计点名的那处修复 | — | 写下之后，审计转为沉默 |
+| `ce erase --apply` | — | 移除 1 行：逐字文档孪生 |
+| `ce check` 分数（棘轮） | 952/1000 — **FAIL**: ratchet_over, discrete_added | 979/1000 — **FAIL**: ratchet_over |
+| T1/T2 克隆块（`ce dedup --check`，预算 0） | 4 (**FAIL**) | 0 (**pass**) |
+| 近似克隆对（`ce clone`） | 4 | 0 |
+| 重复文档段（`ce docdup --check`） | 1 (**FAIL**) | 0 (**pass**) |
 | 死文件（`ce deadcode --check`） | 3 (**FAIL**) | 2 (**FAIL**) |
-| 计划中的可证安全删除（`ce erase --check`） | 1 | 1 |
+| 仍待执行的可证安全删除（`ce erase --check`） | 1 (**FAIL**) | 0 (**pass**) |
 <!-- demo:end -->
 
-![带 CodeEraser：两次写入在 PreToolUse 被拒并指名所复制的区域，Stop 审计拒绝结束本轮，其余由门点名](demo/out/with-codeeraser.svg)
+![带 CodeEraser：两次写入在 PreToolUse 被拒并指名所复制的区域，Stop 审计随后拒绝结束本轮、点名溜过去的两个块，它要求的修复落地，擦除计划移除逐字文档孪生](demo/out/with-codeeraser.svg)
 
-被拒的两次写入是对既有 helper 的两份复制；溜过去的紧凑渲染器是有意留下的诚实边界——整文件重写复制的是自己的块，写入瞬间没有任何**新**重复，于是下两层——Stop 审计与 CI 克隆预算——把它接住。两份转录、两张 SVG 与表格背后的 JSON 由 [`demo/run.js`](demo/README.md) 生成，并在 CI 里逐字节复核（`demo_replay`）。第一次真实拦截的当日记录：[T1-INTERCEPT](docs/T1-INTERCEPT.md)。
+被拒的两次写入是对既有 helper 的复制。溜过去的紧凑渲染器是有意留下的诚实边界——整文件重写复制的是自己的块，写入瞬间没有任何**新**重复——而它恰恰是 Stop 审计据以拒绝结束本轮的东西，两个块都被点名；随之而来的那次修复，是全程唯一一次因为门要求、而非因为任务要求而写下的东西。仍然红着的，是只有人能定夺的部分：`invoicer/invoice.py` 93 行，对着容差后 61 行的天花板，棘轮把它留给一次具名重立，而不是悄悄吸收；另有两个文件无人引用——没人链接的新页面，以及 CLI 转投 JSON 之后不再导入的那个渲染器。两份转录、两张 SVG 与表格背后的 JSON 由 [`demo/run.js`](demo/README.md) 生成，并在 CI 里逐字节复核（`demo_replay`）。第一次真实拦截的当日记录：[T1-INTERCEPT](docs/T1-INTERCEPT.md)。
 
 <!-- bench:begin -->
 ### 最新版本延迟 · v1.2.0

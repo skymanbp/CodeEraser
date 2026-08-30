@@ -2,11 +2,16 @@
 "use strict";
 // The same task, run twice — once with no CodeEraser in the loop, once
 // with its PreToolUse guard and Stop audit in the loop — against
-// identical copies of demo/seed. Both trees are then measured by the
-// same six commands. Nothing here is transcribed by hand: every verdict
-// is the verbatim output of a `ce` subprocess, and the agent's moves are
-// the scripted sequence in steps.js (no LLM is in the loop, which is
-// what makes the two runs identical in everything except the hooks).
+// identical copies of demo/seed, which is measured first so the zeros
+// both runs start from are on the record. Each loop then runs to ITS
+// end: without the hooks nothing refuses anything, so it ends at the
+// last write; with them the audit refuses to end the turn, the repair
+// it names is written, and `ce erase --apply` removes what the plan
+// proves safe. Both trees are then measured by the same six commands.
+// Nothing here is transcribed by hand: every verdict is the verbatim
+// output of a `ce` subprocess, and the agent's moves are the scripted
+// sequence in steps.js (no LLM is in the loop, which is what makes the
+// two runs identical in everything except the hooks).
 //
 //   node demo/run.js            # run both, write demo/out/*
 //   node demo/run.js --check    # run both, fail if demo/out/* or an embedded README table would change
@@ -19,8 +24,9 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const cp = require("child_process");
-const { steps } = require("./steps");
+const { steps, repair } = require("./steps");
 const { renderSvg } = require("./render");
+const { summaryTable } = require("./table");
 
 const HERE = __dirname;
 const SEED = path.join(HERE, "seed");
@@ -63,8 +69,14 @@ function run(cmd, args, cwd, input, extra = {}) {
   return { out: (r.stdout || "") + (r.stderr || ""), rc: r.status };
 }
 
+// a fixed authorship makes every commit object reproducible: `ce erase
+// --apply` wants a clean worktree, so the demo commits, and a wall clock
+// in the tree would be one more thing that could differ between runs
+const WHEN = "2026-01-01T00:00:00+00:00";
+
 function git(cwd, ...args) {
-  return run("git", ["-c", "user.name=demo", "-c", "user.email=demo@example.com", "-c", "core.autocrlf=false", ...args], cwd);
+  const cfg = ["-c", "user.name=demo", "-c", "user.email=demo@example.com", "-c", "core.autocrlf=false"];
+  return run("git", [...cfg, ...args], cwd, undefined, { GIT_AUTHOR_DATE: WHEN, GIT_COMMITTER_DATE: WHEN });
 }
 
 /** A fresh copy of the seed, committed, with its baseline established. */
@@ -149,81 +161,72 @@ function measure(t, dir, summary) {
   }
 }
 
+/** eject shuts the daemon (Bye => it exits on its own clock), removes .ce/ */
+function ejectTree(dir) {
+  const e = run(CE, ["eject", ".", "--yes"], dir);
+  if (e.rc !== 0) throw new Error(`eject: ${e.out}`);
+}
+
+/** The seed under the same six gates — the zeros both runs start from, so
+ *  the table can say whether a finding was already there or was written. */
+function measureSeed(seed, work) {
+  const dir = path.join(work, "seed");
+  fs.mkdirSync(dir, { recursive: true });
+  seedTree(dir, seed);
+  const summary = { gates: {} };
+  measure([], dir, summary);
+  ejectTree(dir);
+  return summary;
+}
+
+/** The rest of the loop, once the audit has refused to end the turn: the
+ *  repair it named goes through the guard like any other write (removing
+ *  duplication is never refused, and the run asserts it), the audit is
+ *  asked again, and the tree is committed so `ce erase --apply` can act —
+ *  its preconditions are a git repository, a clean worktree, unchanged
+ *  targets. Nothing in the other run asks for any of this. */
+function converge(t, dir, seed, summary) {
+  if (!move(t, dir, repair(seed), true)) throw new Error("the repair was refused");
+  t.push({ kind: "cmd", text: "Stop hook → ce audit --hook" });
+  summary.stopAfterRepair = stopAudits(dir);
+  const still = summary.stopAfterRepair.en;
+  t.push(still ? { kind: "block", text: `Stop block — ${normalize(still, dir)}` } : { kind: "allow", text: "the turn may end" });
+  git(dir, "add", "-A");
+  git(dir, "commit", "-q", "-m", "the task, as the audit let it end");
+  const r = run(CE, ["erase", ".", "--apply"], dir);
+  if (r.rc !== 0) throw new Error(`erase --apply: ${r.out}`);
+  summary.gates.applied = { rc: r.rc, out: normalize(r.out, dir) };
+  t.push({ kind: "cmd", text: "ce erase . --apply" });
+  t.push({ kind: "out", text: summary.gates.applied.out.split("\n").pop() });
+}
+
 /** One complete run; returns {transcript, summary}. */
 function runOnce(seed, withCe, work) {
   const dir = path.join(work, withCe ? "with" : "without");
   fs.mkdirSync(dir, { recursive: true });
   seedTree(dir, seed);
   const t = [{ kind: "note", text: withCe ? "CodeEraser in the loop: PreToolUse guard + Stop audit, ce.toml [guard] mode = \"deny\"" : "No CodeEraser in the loop: every write lands" }];
-  const summary = { landed: 0, denied: 0, stop: null, gates: {} };
+  const summary = { landed: 0, denied: 0, stop: null, stopAfterRepair: null, gates: {} };
   for (const step of steps(seed)) {
     if (move(t, dir, step, withCe)) summary.landed += 1;
     else summary.denied += 1;
   }
   t.push({ kind: "note", text: `session over: ${summary.landed} of ${summary.landed + summary.denied} writes landed` });
-  if (withCe) {
+  if (!withCe) t.push({ kind: "note", text: "nothing refuses anything: the turn ends here" });
+  else {
     t.push({ kind: "cmd", text: "Stop hook → ce audit --hook" });
     summary.stop = stopAudits(dir);
     t.push(summary.stop.en ? { kind: "block", text: `Stop block — ${normalize(summary.stop.en, dir)}` } : { kind: "allow", text: "the turn may end" });
+    if (summary.stop.en) converge(t, dir, seed, summary);
   }
   t.push({ kind: "note", text: "the tree, measured (the CI face):" });
   measure(t, dir, summary);
-  // eject shuts the daemon (Bye => it exits on its own clock) and removes .ce/
-  const e = run(CE, ["eject", ".", "--yes"], dir);
-  if (e.rc !== 0) throw new Error(`eject: ${e.out}`);
+  ejectTree(dir);
   return { transcript: t, summary };
 }
 
 function transcriptText(lines) {
   return lines.map((l) => ({ cmd: "$ ", agent: "agent> ", deny: "✗ ", block: "✗ ", allow: "✓ " }[l.kind] || "") + l.text).join("\n") + "\n";
-}
-
-/** One number out of a gate's output, by the pattern its summary line carries. */
-function figure(s, name, re) {
-  const m = s.gates[name].out.match(re);
-  return m ? m[1] : "?";
-}
-
-/** The row labels of the comparison table, English and Chinese. */
-const LABELS = {
-  en: {
-    head: "| | Without CodeEraser | With CodeEraser |",
-    landed: "Writes that landed", denied: "Denied at PreToolUse", stop: "Stop audit", notInLoop: "not in the loop",
-    blocked: "**blocked** — ", mayEnd: "the turn may end", of: "of", fail: "**FAIL**", pass: "pass",
-    score: "`ce check` score (ratchet)", blocks: "T1/T2 clone blocks (`ce dedup --check`, budget 0)",
-    near: "near-miss clone pairs (`ce clone`)", docs: "duplicated doc segments (`ce docdup --check`)",
-    dead: "dead files (`ce deadcode --check`)", erase: "provably-safe removals planned (`ce erase --check`)",
-  },
-  zh: {
-    head: "| | 不带 CodeEraser | 带 CodeEraser |",
-    landed: "落地的写入", denied: "PreToolUse 当场拒绝", stop: "Stop 审计", notInLoop: "不在环内",
-    blocked: "**拦停** — ", mayEnd: "允许结束", of: "/", fail: "**FAIL**", pass: "pass",
-    score: "`ce check` 分数（棘轮）", blocks: "T1/T2 克隆块（`ce dedup --check`，预算 0）",
-    near: "近似克隆对（`ce clone`）", docs: "重复文档段（`ce docdup --check`）",
-    dead: "死文件（`ce deadcode --check`）", erase: "计划中的可证安全删除（`ce erase --check`）",
-  },
-};
-
-/** The comparison table the READMEs embed, from the two summaries. */
-function summaryTable(without, withCe, lang) {
-  const L = LABELS[lang];
-  const both = (f) => [f(without), f(withCe)];
-  const gate = (s, name) => (s.gates[name].rc === 0 ? L.pass : L.fail);
-  // the conviction clause alone: after the `ce audit:` prefix, before the
-  // colon that opens the block list (full-width in Chinese)
-  const stop = withCe.stop && withCe.stop[lang];
-  const rows = [
-    [L.landed, ...both((s) => `${s.landed} ${L.of} ${s.landed + s.denied}`)],
-    [L.denied, ...both((s) => String(s.denied))],
-    [L.stop, L.notInLoop, stop ? L.blocked + "`" + stop.replace(/^ce audit[:：]\s*/, "").split(/[:：]/)[0] + "`" : L.mayEnd],
-    [L.score, ...both((s) => `${figure(s, "check", /check score (\d+)\/1000/)}/1000 (${gate(s, "check")})`)],
-    [L.blocks, ...both((s) => `${figure(s, "dedup", /(\d+) clone blocks/)} (${gate(s, "dedup")})`)],
-    [L.near, ...both((s) => figure(s, "clone", /(\d+) near-miss/))],
-    [L.docs, ...both((s) => `${figure(s, "docdup", /(\d+) duplicate pair/)} (${gate(s, "docdup")})`)],
-    [L.dead, ...both((s) => `${figure(s, "deadcode", /(\d+) dead/)} (${gate(s, "deadcode")})`)],
-    [L.erase, ...both((s) => figure(s, "erase", /(\d+) eraseable/))],
-  ];
-  return [L.head, "|---|---|---|", ...rows.map((r) => `| ${r.join(" | ")} |`)].join("\n") + "\n";
 }
 
 /** The READMEs that embed a summary table between demo markers, and which one. */
@@ -248,18 +251,19 @@ function main() {
   const check = process.argv.includes("--check");
   const seed = readSeed();
   const work = fs.mkdtempSync(path.join(os.tmpdir(), "codeeraser-demo-"));
+  const start = measureSeed(seed, work);
   const without = runOnce(seed, false, work);
   const withCe = runOnce(seed, true, work);
-  if (process.argv.includes("--keep")) console.log(`demo: both trees kept under ${slashed(work)}`);
+  if (process.argv.includes("--keep")) console.log(`demo: all three trees kept under ${slashed(work)}`);
   else fs.rmSync(work, { recursive: true, force: true });
   const files = {
     "without-codeeraser.txt": transcriptText(without.transcript),
     "with-codeeraser.txt": transcriptText(withCe.transcript),
     "without-codeeraser.svg": renderSvg("the same task — without CodeEraser", without.transcript),
     "with-codeeraser.svg": renderSvg("the same task — with CodeEraser", withCe.transcript),
-    "summary.md": summaryTable(without.summary, withCe.summary, "en"),
-    "summary.zh.md": summaryTable(without.summary, withCe.summary, "zh"),
-    "summary.json": JSON.stringify({ without: without.summary, with: withCe.summary }, null, 2) + "\n",
+    "summary.md": summaryTable(start, without.summary, withCe.summary, "en"),
+    "summary.zh.md": summaryTable(start, without.summary, withCe.summary, "zh"),
+    "summary.json": JSON.stringify({ seed: start, without: without.summary, with: withCe.summary }, null, 2) + "\n",
   };
   fs.mkdirSync(OUT, { recursive: true });
   let drift = check ? embedDrift(files) : 0;

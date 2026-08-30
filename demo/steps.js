@@ -172,6 +172,34 @@ function apiWithLocalFormat(seed) {
     .replace("export function toResponse", `${fn.replace("export function", "function")}\n\nexport function toResponse`);
 }
 
+/** The compact variant that reuses the renderer instead of copying it: the
+ *  seed's report.py, plus a `render_compact` that differs from `render`
+ *  only where the two really differ (the rule above the totals). Built
+ *  from the seed like every other write, so it cannot drift from what
+ *  step 2 duplicated. */
+function dedupedRenderer(seed) {
+  return `${seed["invoicer/report.py"]}
+
+def render_compact(invoice: Invoice) -> str:
+    rows = footer(invoice)
+    rows[0] = "=" * WIDTH
+    return "\\n".join(header(invoice) + body(invoice) + rows)
+`;
+}
+
+/** The one write the agent makes because a gate asked for it rather than
+ *  because the task did: the Stop audit refuses to end the turn while the
+ *  two duplicate blocks it names are still there. Only the run with the
+ *  hooks in the loop ever gets here — nothing in the other run asks. */
+function repair(seed) {
+  return {
+    id: 8,
+    file: "invoicer/report.py",
+    say: "The Stop audit named two duplicate blocks — reuse the rows and footer already there.",
+    content: dedupedRenderer(seed),
+  };
+}
+
 /** The seven writes, in order. `say` is the agent's own one-line narration. */
 function steps(seed) {
   return [
@@ -185,4 +213,4 @@ function steps(seed) {
   ];
 }
 
-module.exports = { steps };
+module.exports = { steps, repair };

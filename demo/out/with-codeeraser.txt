@@ -23,29 +23,27 @@ $ Write web/api.ts
 session over: 5 of 7 writes landed
 $ Stop hook → ce audit --hook
 ✗ Stop block — ce audit: this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC): invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens); invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens) — deduplicate before stopping.
+agent> The Stop audit named two duplicate blocks — reuse the rows and footer already there.
+$ Write invoicer/report.py
+✓ landed (the guard had nothing to say)
+$ Stop hook → ce audit --hook
+✓ the turn may end
+$ ce erase . --apply
+erase applied: 1 row(s); audit trail in .ce/erase-log.ndjson
 the tree, measured (the CI face):
 $ ce check .
 check score 979/1000 | axes 0:0 1:0 2:0 3:0 4:153 5:0 6:0 | 0 candidates
-ratchet: 2 added, 0 removed, 2 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
-note: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table
+ratchet: 0 added, 0 removed, 1 over, 1 tolerance drawn -> FAIL (failed: ratchet_over)
 $ ce dedup . --check
-dup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)
-dup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)
-indexed 8 files (0 refreshed, 0 removed) — 2 clone blocks in 2 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped
-dedup ratchet: 2 clone blocks > budget 0 — new duplication must not land
+indexed 8 files (0 refreshed, 0 removed) — 0 clone blocks in 0 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped
 $ ce clone .
-clone invoicer/report.py:render/1#0 <-> invoicer/report.py:render_compact/1#0  ted 0 (nodes 34/34)
-clones: 1 near-miss clone pair(s) over 27 unit(s) — 3 judged, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 3, s5_new 0, s5_pruned_label 42, s5_windowed 45, sent 3, survivors 3
+clones: 0 near-miss clone pair(s) over 25 unit(s) — 1 judged, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 0, s5_new 1, s5_pruned_label 38, s5_windowed 39, sent 1, survivors 0
 $ ce docdup . --check
-docdup docs/DISCOUNTS.md:3-10 md_para <-> docs/PRICING.md:3-10 md_para  J 98/98 verbatim 102
-dups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1, seed_pairs 0, sent 1
-docdup check: 1 reported duplication(s) — resolve or exempt them
+dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0, seed_pairs 0, sent 0
 $ ce deadcode . --check
 dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
 dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]
 deadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 5 unresolved sites (verdicts assume none lands in-corpus)
 deadcode check: 2 dead file(s) — disposition or entry_globs them
 $ ce erase . --check
-@@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words) fnv1a64:fa6f7a63e41bfa36
-erase plan: 1 eraseable, 2 advisory (dry-run; --apply to act)
-erase check: 1 eraseable row(s) planned
+erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)

@@ -21,6 +21,7 @@ agent> Format money in the API handler without reaching into format.ts.
 $ Write web/api.ts
 ✓ landed
 session over: 7 of 7 writes landed
+nothing refuses anything: the turn ends here
 the tree, measured (the CI face):
 $ ce check .
 check score 952/1000 | axes 0:0 1:0 2:142 3:0 4:200 5:0 6:0 | 2 candidates
