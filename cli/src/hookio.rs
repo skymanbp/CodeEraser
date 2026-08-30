@@ -160,6 +160,18 @@ pub const WARN_BUDGET_TOKENS: usize = 200;
 pub const STOP_BUDGET_TOKENS: usize = 400;
 const CHARS_PER_TOKEN: usize = 4;
 
+/// The marker `clip` appends. A sentence a person reads, so it
+/// answers CE_LANG like the sentence it truncates; its own byte
+/// length is what the budget gives back, which is why the cut is
+/// computed from it. Named rather than inline so a test can assert
+/// the tail without picking a language.
+pub fn clip_mark() -> &'static str {
+    crate::i18n::t(
+        "… (clipped; full report in .ce/observe.ndjson)",
+        "…（已截断；完整记录见 .ce/observe.ndjson）",
+    )
+}
+
 /// Clip an injected reason to its token budget, on a char boundary,
 /// with a marker pointing at the on-disk full record.
 pub fn clip(reason: &str, budget_tokens: usize) -> String {
@@ -167,12 +179,12 @@ pub fn clip(reason: &str, budget_tokens: usize) -> String {
     if reason.len() <= cap {
         return reason.to_string();
     }
-    const MARK: &str = "… (clipped; full report in .ce/observe.ndjson)";
-    let mut cut = cap.saturating_sub(MARK.len());
+    let mark = clip_mark();
+    let mut cut = cap.saturating_sub(mark.len());
     while cut > 0 && !reason.is_char_boundary(cut) {
         cut -= 1;
     }
-    format!("{}{MARK}", &reason[..cut])
+    format!("{}{mark}", &reason[..cut])
 }
 
 /// How much of the append-only feed a suppression query reads. The

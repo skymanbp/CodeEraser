@@ -53,6 +53,28 @@
 
 被拒的两次写入是对既有 helper 的复制。溜过去的紧凑渲染器是有意留下的诚实边界——整文件重写复制的是自己的块，写入瞬间没有任何**新**重复——而它恰恰是 Stop 审计据以拒绝结束本轮的东西，两个块都被点名；随之而来的那次修复，是全程唯一一次因为门要求、而非因为任务要求而写下的东西。仍然红着的，是只有人能定夺的部分：`invoicer/invoice.py` 93 行，对着容差后 61 行的天花板，棘轮把它留给一次具名重立，而不是悄悄吸收；另有两个文件无人引用——没人链接的新页面，以及 CLI 转投 JSON 之后不再导入的那个渲染器。两份转录、两张 SVG 与表格背后的 JSON 由 [`demo/run.js`](demo/README.md) 生成，并在 CI 里逐字节复核（`demo_replay`）。第一次真实拦截的当日记录：[T1-INTERCEPT](docs/T1-INTERCEPT.md)。
 
+两个近景——第一个就是上表第 1 步；第二个在同一棵种子树上多加了一条 `ce.toml` 声明。
+
+<!-- vignettes:begin -->
+**抄来的辅助函数，在文件存在之前就被拒。** 上表第 1 步单独拿出来。理由点名这段内容重复了哪块区域、以及怎样排序才能通过——所以这是一条可执行的拒绝，不是一张否决票。
+
+```console
+$ Write invoicer/discount.py
+✗ ce：<work>/invoicer/discount.py 的内容与 1 处已索引区域重复：invoicer/money.py:1-18 (89 tokens)。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。
+```
+
+**一条线，两张嘴。** `ce.toml` 给 `invoicer/**` 定下 `file_lines_fail = 40`。写入时守卫拒绝会越线的那次写入，`ce scan` 用同一个数给同一棵树评级——一处声明，钩子与 CI 同读。
+
+```console
+$ Write invoicer/invoice.py
+✗ ce：这次写入会让 <work>/invoicer/invoice.py 达到 93 行，越过 40 行的硬预算（计划 §4.1）。请拆分文件，而不是继续让它长大。
+$ ce scan .
+FAIL invoicer/invoice.py:1 file-lines = 51（上限 40）[invoicer/invoice.py]
+warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
+已扫描 9 文件 / 19 函数 — 1 warn，1 fail -> FAIL（失败条件：hard_line）
+```
+<!-- vignettes:end -->
+
 <!-- bench:begin -->
 ### 最新版本延迟 · v1.2.0
 
@@ -86,7 +108,7 @@
 | `ce update` | 最新发布对比本构建，退出码 0 / 1 / 2；`--yes` 两枚 pin 都通过后替换 `ce` + `ce-core`，`--installer` 另存已校验的 GUI 安装包 |
 | `ce doctor` / `ce eject` / `ce mcp` | 本机状态；按项目卸载；只读 MCP 服务器 |
 
-控制台输出与 `--help` 默认英文，`--lang zh`（或 `CE_LANG=zh`）切中文；JSON 与 FAIL/pass 词汇永不翻译。`ce.toml` 里的 `[[rules.class]]` 给一组 glob 自己的尺寸与复杂度线和棘轮容差（`0` = 一行不许长），分数、`ce scan` 阶梯与 PreToolUse 预算读的是同一条线（[ce.toml 参考](docs/reference/ce-toml.md)）。
+控制台输出、`--help` 与钩子自己的拒绝语默认英文，`--lang zh`（或 `CE_LANG=zh`）切中文；JSON schema 与 FAIL/pass 词汇永不翻译。`ce.toml` 里的 `[[rules.class]]` 给一组 glob 自己的尺寸与复杂度线和棘轮容差（`0` = 一行不许长），分数、`ce scan` 阶梯与 PreToolUse 预算读的是同一条线（[ce.toml 参考](docs/reference/ce-toml.md)）。
 
 **更新。** 发布分两段——draft 工件被哈希，pin 提交进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节（[RELEASE](docs/RELEASE.md)）；插件启动器与 `ce update` 对照的是这些 pin，安装包则由 tag 腿在 Release 发布前对照同一批 pin 校验。`ce update` 读最新 tag 与该 tag 上已提交的 `manifest.env`；判定即退出码，`--yes` 只在没有别的账本管着这份二进制时动手。插件绑定的副本由 `/plugin update codeeraser` 重钉；cargo 安装由 `cargo install codeeraser`；GUI 应用本体由 `--installer` 保存的安装包更新。插件的 SessionStart 行每天通报一次新版本（`CE_UPDATE_CHECK=0` 关闭）；GUI 有更新屏；`/codeeraser:update` 在 Claude Code 里跑检查。
 

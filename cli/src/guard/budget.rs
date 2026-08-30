@@ -74,11 +74,11 @@ pub(super) fn budget_breach(
     if cap == 0 || lines <= cap {
         return None;
     }
-    Some(format!(
-        "ce: this write leaves {} at {lines} lines, past the hard budget \
-         of {cap} (plan §4.1). Split the file instead of growing it.{}",
-        env.tool_input.file_path,
-        fence.map_or(String::new(), |f| format!(" {f}"))
+    Some(super::say::over_budget(
+        &env.tool_input.file_path,
+        lines,
+        cap,
+        fence,
     ))
 }
 
@@ -98,13 +98,10 @@ pub(super) fn budget_breach(
 pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>) {
     match crate::score::baseline::fence_status(root, &cfg) {
         Ok(f) if !f.drifted() => (cfg, None),
-        Ok(_) => (
-            shipped_budgets(cfg),
-            Some("(ce.toml drifted from the fenced baseline: judged with the shipped budgets)"),
-        ),
+        Ok(_) => (shipped_budgets(cfg), Some(super::say::drifted())),
         Err(_) => (
             shipped_budgets(cfg),
-            Some("(the committed baseline is unreadable: judged with the shipped budgets)"),
+            Some(super::say::baseline_unreadable()),
         ),
     }
 }
@@ -216,11 +213,7 @@ pub(super) fn zone_assess(
     }
     Some((
         tier,
-        format!(
-            "ce: this write leaves {file} at {lines} lines, {permille}‰ into the \
-             graded zone ({soft}..{cap}); `ce structure --split-candidates` prices \
-             its best seam.",
-        ),
+        super::say::graded_zone(file, lines, permille, soft, cap),
     ))
 }
 

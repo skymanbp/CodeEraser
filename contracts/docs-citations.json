@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|b86dae35f09f2725|0": {
     "target": "../../README.md",
-    "line": 134,
+    "line": 156,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->thirteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the bench block, the demo, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
@@ -6534,30 +6534,30 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|0328fd60d100783a|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 213,
-    "end": 231,
+    "line": 212,
+    "end": 230,
     "text": "/// None = probe unavailable (degraded); Some(vec) = verified matches."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|36288e5d5436f6eb|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 257,
-    "end": 274,
+    "line": 249,
+    "end": 266,
     "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|42113203b8445fa4|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 80,
-    "end": 99,
+    "line": 81,
+    "end": 100,
     "text": "let mut reasons = Vec::new();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4644d41f5beb9e75|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 56,
+    "line": 57,
     "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4dc394b8a4de0542|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 282,
+    "line": 274,
     "text": "mode: &'a str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|526b9bbfd38078b6|0": {
@@ -6568,48 +6568,48 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|616767f83450e8a2|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 297,
+    "line": 289,
     "text": "\"degraded\": ev.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|75ba8e43bbd2ba6d|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 264,
+    "line": 256,
     "text": "_ => return, // observe: log only, no output"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|936605a46cb5f869|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 159,
-    "end": 163,
+    "line": 158,
+    "end": 162,
     "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|a858072dafe20007|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 26,
-    "end": 35,
+    "line": 27,
+    "end": 36,
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|ab386b0206e74c7e|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 65,
-    "end": 67,
+    "line": 66,
+    "end": 68,
     "text": "// not context bloat, and repeat every time they hold"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|bbbddea1d1329200|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 288,
-    "end": 302,
+    "line": 280,
+    "end": 294,
     "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|bd70e7be913080d0|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 123,
-    "end": 140,
+    "line": 124,
+    "end": 141,
     "text": ") {\nlet rank = |t: &str| {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|c1a8185a714ee541|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 63,
-    "end": 70,
+    "line": 64,
+    "end": 71,
     "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db6bfd272e069abc|0": {
@@ -6620,21 +6620,15 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e19eded611ac0eaf|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 169,
-    "end": 199,
+    "line": 168,
+    "end": 198,
     "text": "/// The rule denies NEW duplication only (K step 11 root fix): the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e3cae5ea62eb7092|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 149,
-    "end": 153,
+    "line": 150,
+    "end": 154,
     "text": "if let Some(e) = broken {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e9f23fe4890af0b7|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 250,
-    "end": 251,
-    "text": "Moving it? Trim the source region first: the probe verifies \\"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|1932d340806c453c|0": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -6644,8 +6638,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|40ff14cbd35248aa|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 190,
-    "end": 192,
+    "line": 187,
+    "end": 189,
     "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|48681a886ec2a600|0": {
@@ -6668,43 +6662,43 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|49f4f255016a7c4c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 200,
+    "line": 197,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|5879461f4eba0e7f|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 232,
-    "end": 241,
+    "line": 225,
+    "end": 234,
     "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|64374015c7e9b12d|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 259,
-    "end": 264,
+    "line": 252,
+    "end": 257,
     "text": "fn committed_soft(root: &Path) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|83b4c2721914357f|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 188,
-    "end": 193,
+    "line": 185,
+    "end": 190,
     "text": "let cap = z.cap;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 210,
-    "end": 216,
+    "line": 207,
+    "end": 213,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 210,
-    "end": 212,
+    "line": 207,
+    "end": 209,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|9d8c7a2bab92d81b|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 153,
-    "end": 166,
+    "line": 150,
+    "end": 163,
     "text": "/// Budget firings get their own feed line (accounting for the §4.2"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|c3a17e14adb4fbe0|0": {
@@ -6715,32 +6709,44 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|d3e01c9814558493|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 134,
-    "end": 149,
+    "line": 131,
+    "end": 146,
     "text": "let on_disk = std::fs::read_to_string(&t.file_path)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 129,
-    "end": 132,
+    "line": 126,
+    "end": 129,
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 129,
-    "end": 149,
+    "line": 126,
+    "end": 146,
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|fc6bb4e1a17bf3b8|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 197,
-    "end": 200,
+    "line": 194,
+    "end": 197,
     "text": "// the B4 suppression consults the feed BEFORE this event lands"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/envelope.rs|2c33cc85a000c037|0": {
     "target": "../../../cli/src/guard/envelope.rs",
     "line": 16,
     "text": "/// Claude Code stamps this on every hook event. Carried into the"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/say.rs|2ac7cf2af55c8a59|0": {
+    "target": "../../../cli/src/guard/say.rs",
+    "line": 26,
+    "end": 28,
+    "text": "Reuse the existing implementation instead of re-writing it. \\"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/say.rs|4cacfe52f94465d3|0": {
+    "target": "../../../cli/src/guard/say.rs",
+    "line": 1,
+    "end": 19,
+    "text": "//! Every sentence the PreToolUse guard speaks, in both languages."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/health.rs|d99915876390bb87|0": {
     "target": "../../../cli/src/health.rs",
@@ -6766,8 +6772,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 163,
-    "end": 176,
+    "line": 175,
+    "end": 188,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|754ce8b7872981c0|0": {
@@ -6778,8 +6784,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 220,
-    "end": 231,
+    "line": 232,
+    "end": 243,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
@@ -6802,8 +6808,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 208,
-    "end": 224,
+    "line": 220,
+    "end": 236,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {

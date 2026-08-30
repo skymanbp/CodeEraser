@@ -52,6 +52,28 @@ Transcripts as text: [without](out/without-codeeraser.txt) ·
 [with](out/with-codeeraser.txt) · the numbers as [JSON](out/summary.json) and
 as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
 
+## The close-ups
+
+The table answers *does it change the outcome*; the scenes in
+[`vignettes.js`](vignettes.js) answer *what does it look like* — one question
+each, played on their own copy of the seed and rendered into the READMEs'
+`vignettes` blocks ([en](out/vignettes.md) / [zh](out/vignettes.zh.md)). Each
+scene is asked once per language against the **same** tree, so the pair is one
+run translated rather than two runs that happened to agree, and every act
+declares the answer it must get: a probe against a tree whose index never got
+built degrades to `allow`, so without that assertion a refusal exhibit would
+quietly become a picture of the guard doing nothing — byte-gated in that state.
+No `agent>` narration appears in them, because steps.js writes its narration in
+English only and an English line in the Chinese README would be a translation
+gap dressed as a transcript.
+
+[`tree.js`](tree.js) holds what both drivers need — how a copy of the seed is
+made, committed and given a baseline, how the guard is asked, how a scratch
+path is kept out of a transcript. It is a shared file rather than a copied one
+for a reason this repo can state precisely: JavaScript rides the size-only arm
+here (`Lang::scan_only`), so a second copy of `seedTree` would have been
+invisible to every gate in this repository and visible to every reader of it.
+
 ## What is real and what is scripted
 
 - **Real** — every verdict. Each PreToolUse decision is the verbatim stdout of
@@ -70,8 +92,11 @@ as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
   audit's refusal: the run asserts the guard does not refuse it (removing
   duplication never should) and asserts the audit falls silent after it.
 - **Gated** — the replay test in the test suite re-runs this driver and
-  compares `out/` and the three embedded tables byte for byte, so a change in
+  compares `out/` and every marked README block byte for byte, so a change in
   any verdict's wording fails CI rather than leaving a stale picture here. The
+  block's marker is a column of run.js's `EMBEDS` table, which `--check` and
+  bless.js both walk: a new family of blocks needs no second checker, no second
+  writer and no new test. The
   corpus and both READMEs are pinned to LF in `.gitattributes`, so a CRLF
   checkout cannot move a marker.
 

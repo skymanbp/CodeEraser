@@ -8,6 +8,7 @@
 //! modes — the untainted M4 evaluation feed (plan D2-1).
 
 mod budget;
+mod say;
 
 use crate::config::Config;
 use crate::daemon::client;
@@ -147,9 +148,7 @@ fn emit_reasons(
         return;
     }
     if let Some(e) = broken {
-        reasons.push(format!(
-            "(ce.toml unreadable, guard degraded to observe: {e})"
-        ));
+        reasons.push(say::config_unreadable(e));
         emit_decision("warn", &reasons.join(" "));
     } else {
         emit_decision(tier, &reasons.join(" "));
@@ -244,14 +243,7 @@ fn reason(file_path: &str, matches: &[serde_json::Value]) -> String {
             )
         })
         .collect();
-    format!(
-        "ce: content for {file_path} duplicates {} indexed region(s): {}. \
-         Reuse the existing implementation instead of re-writing it. \
-         Moving it? Trim the source region first: the probe verifies \
-         against the current tree, and the same write then passes.",
-        matches.len(),
-        top.join("; ")
-    )
+    say::duplicate(file_path, matches.len(), &top.join("; "))
 }
 
 /// Decision JSON on stdout — the exact shape proven by cc-enforcer's
