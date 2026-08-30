@@ -103,12 +103,18 @@ function probe(dir, rel, content) {
   return { decision: v.permissionDecision, reason: v.permissionDecisionReason || "" };
 }
 
-/** The Stop audit's block reason, or null when it lets the turn end. */
-function stopAudit(dir) {
+/** The Stop audit's block reason in one language, or null when it lets the turn end. */
+function stopAudit(dir, lang) {
   const envelope = JSON.stringify({ session_id: "demo", transcript_path: "demo", cwd: slashed(dir), hook_event_name: "Stop", stop_hook_active: false });
-  const r = run(CE, ["audit", "--hook"], dir, envelope);
+  const r = run(CE, ["audit", "--hook"], dir, envelope, { CE_LANG: lang });
   const line = r.out.trim();
   return line ? JSON.parse(line).reason : null;
+}
+
+/** The audit is read-only, so it is asked once per language: each README's table
+ *  then quotes the verdict in its own language instead of the English one. */
+function stopAudits(dir) {
+  return { en: stopAudit(dir, "en"), zh: stopAudit(dir, "zh") };
 }
 
 /** Scratch paths never reach the transcript. */
@@ -157,8 +163,8 @@ function runOnce(seed, withCe, work) {
   t.push({ kind: "note", text: `session over: ${summary.landed} of ${summary.landed + summary.denied} writes landed` });
   if (withCe) {
     t.push({ kind: "cmd", text: "Stop hook → ce audit --hook" });
-    summary.stop = stopAudit(dir);
-    t.push(summary.stop ? { kind: "block", text: `Stop block — ${normalize(summary.stop, dir)}` } : { kind: "allow", text: "the turn may end" });
+    summary.stop = stopAudits(dir);
+    t.push(summary.stop.en ? { kind: "block", text: `Stop block — ${normalize(summary.stop.en, dir)}` } : { kind: "allow", text: "the turn may end" });
   }
   t.push({ kind: "note", text: "the tree, measured (the CI face):" });
   measure(t, dir, summary);
@@ -203,10 +209,13 @@ function summaryTable(without, withCe, lang) {
   const L = LABELS[lang];
   const both = (f) => [f(without), f(withCe)];
   const gate = (s, name) => (s.gates[name].rc === 0 ? L.pass : L.fail);
+  // the conviction clause alone: after the `ce audit:` prefix, before the
+  // colon that opens the block list (full-width in Chinese)
+  const stop = withCe.stop && withCe.stop[lang];
   const rows = [
     [L.landed, ...both((s) => `${s.landed} ${L.of} ${s.landed + s.denied}`)],
     [L.denied, ...both((s) => String(s.denied))],
-    [L.stop, L.notInLoop, withCe.stop ? L.blocked + "`" + withCe.stop.replace(/^ce audit: /, "").split(":")[0] + "`" : L.mayEnd],
+    [L.stop, L.notInLoop, stop ? L.blocked + "`" + stop.replace(/^ce audit[:：]\s*/, "").split(/[:：]/)[0] + "`" : L.mayEnd],
     [L.score, ...both((s) => `${figure(s, "check", /check score (\d+)\/1000/)}/1000 (${gate(s, "check")})`)],
     [L.blocks, ...both((s) => `${figure(s, "dedup", /(\d+) clone blocks/)} (${gate(s, "dedup")})`)],
     [L.near, ...both((s) => figure(s, "clone", /(\d+) near-miss/))],

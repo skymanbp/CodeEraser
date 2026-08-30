@@ -45,7 +45,9 @@ as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
 
 - **Real** — every verdict. Each PreToolUse decision is the verbatim stdout of
   `ce probe --hook` fed the envelope Claude Code sends for a `Write`; the Stop
-  line is `ce audit --hook`'s; every gate line is the command's own output,
+  line is `ce audit --hook`'s, asked once per language (`CE_LANG=en` and `zh` —
+  the audit is read-only) so each README's table quotes the verdict in its own
+  language; every gate line is the command's own output,
   path-normalized (`<work>`), with `advisory` and diff lines dropped and only
   the last 8 lines shown — the unclipped text is in [`out/summary.json`](out/summary.json).
 - **Scripted** — the agent's seven moves ([`steps.js`](steps.js)). No model is

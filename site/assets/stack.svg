@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1120" role="img"
      aria-label="CodeEraser stack: Rust measurement, an NDJSON wire, Haskell judgment, product faces, and the release pin chain">
+  <title>CodeEraser stack</title>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
       <path d="M0 0 L10 5 L0 10 z" fill="#57c7a8"/>

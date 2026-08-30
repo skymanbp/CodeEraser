@@ -33,7 +33,10 @@
   "with": {
     "landed": 5,
     "denied": 2,
-    "stop": "ce audit: this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC): invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens); invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens) — deduplicate before stopping.",
+    "stop": {
+      "en": "ce audit: this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC): invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens); invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens) — deduplicate before stopping.",
+      "zh": "ce audit：本会话的编辑留下 2 个触及改动文件的重复块（净 +105 行）：invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens); invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens) — 停止前请先去重。"
+    },
     "gates": {
       "check": {
         "rc": 1,
