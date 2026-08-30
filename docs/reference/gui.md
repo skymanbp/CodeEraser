@@ -48,13 +48,13 @@ Two consequences worth naming:
 | **Update** | `ce.update-report` | this build against the latest release: the release index's newest tag, that tag's committed SHA256 pins (`plugin/bin/manifest.env` as the release commit wrote it), the install kind read off the binary's own location, and the one action it allows — codes on the wire, words in this face's tables. "Update now" appears only where the library would place anything (a copy placed by hand, or the installer bundle's sidecars) and re-measures before it acts; a copy the plugin or cargo owns names its own command instead. The optional installer box saves the verified GUI installer and shows its path — running it stays the reader's click |
 
 Two screens show a number out of 1000 and they are **not** the same
-measure. `ce structure` scores tree-scale entropy; `ce check` scores the
-gate over a different seven axes and carries the ratchet and the floor.
-A repository routinely sits at 832 on one and 953 on the other, and
-neither is "the" score. The console has always named which is which, so
-both screens carry the console's own words in both languages rather than
-inventing a third vocabulary, and the homepage says the same beside its
-screenshot — naming them is the fix; they cannot be reconciled.
+measure: `ce structure` scores tree-scale entropy, `ce check` the gate's
+own seven axes plus the ratchet and the floor. The same repository
+scores differently on each, usually by a wide margin, and neither is
+"the" score. The console has always named which is which, so both
+screens carry the console's own words in both languages rather than
+inventing a third vocabulary, and the homepage says the same beside
+its screenshot — naming them is the fix; they cannot be reconciled.
 
 ## How a screen runs
 

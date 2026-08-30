@@ -72,7 +72,9 @@
   一动就得重拍：`it/site_screenshots.rs` 五腿——按 git 祖先关系拒绝比界面旧的图、
   整窗尺寸、alt 文本不得手抄数字、`contracts/gui-shots.json` 收据里的 schema
   必须等于代码当下的三个 `SCHEMA_ID`（界面不动而报告形状动了的那条路）、
-  `site/assets/` 每个文件都得有门认领。重拍会一并重写收据。
+  `site/assets/` 每个文件都得有门认领；`it/site_shoot_motion.rs` 第六腿守住
+  「取景器声明 `prefers-reduced-motion` × 应用应答它」这对耦合，少一半图就不再
+  可复现。重拍只在拍进 `site/assets` 时重写收据（`--out` 指仓外则不动它）。
 - **marketplace**：清单随 main 走，无独立发布步。
 - **`ce update`**（v1.3.0 起）：装机自检读 `releases/latest` 的 tag 与**该 tag 上**的
   `plugin/bin/manifest.env`——本 runbook「pin 提交先于 tag」的既有序正是它的信任锚，

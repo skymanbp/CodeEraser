@@ -15,7 +15,7 @@
 
 **两个分数各自具名。** `ce structure` 与 `ce check` 都给 0–1000 的分数，
 却不是同一把尺子：前者量树尺度的熵，后者量门自己的七轴并背着棘轮与地板。
-同一个仓库在两者上分别是 832 与 953，哪个都不是「那个分数」。控制台一直
+同一个仓库在两者上分别是 832 与 952，哪个都不是「那个分数」。控制台一直
 分得清（`structure score …` / `检查分数 …`），两块屏幕却都只印数字——读者
 在标签页之间一走，或在官网的终端块与截图之间一看，就无从分辨。现在两屏
 各自带上控制台的原词（en/zh 皆有，`gui/ui/i18n.js` 加 `scoreStructure` /
@@ -41,8 +41,22 @@ webview 会收到的那份：`ce structure --format json` 打印的是
 记在 RELEASE.md §3。测试侧 `git_out` 提到 `common/gitio.rs`（原址
 `history_recipes.rs` 退让，克隆行清零——由 `ce` 自己的写入守卫拦下）。
 
+**拍摄可复现**（发版前自查抓出）：同一份报告集连拍三次，`gui-tree.png`
+出三个不同摘要、`gui-candidates.png` 出两个——每张图都以点一个按钮开
+场，而 `gui/ui/style.css` 给按钮 0.12s 的背景过渡，两帧后按下快门就落在
+插值途中的随机一点。这不是观感问题：图不可复现，就没法再问「committed
+的这张还是不是当前的」——重拍永远不一样，而不一样永远不说明什么。修法
+用产品自己的开关：应用本就应答 `prefers-reduced-motion`，于是取景器用
+`Emulation.setEmulatedMedia` 声明它，过渡根本不开始。修后三连拍三张全部
+逐字节相同；`gui-candidates.png` 随之重拍（旧图正是拍在过渡途中的那张）。
+第六腿 `it/site_shoot_motion.rs` 守住这对耦合——CSS 规则与 CDP 调用分处
+两文件、各自失效都无声，删任一半即红（两侧都实测过）。同批修掉另一处：
+`--out` 指向仓外时 `shoot_gui.js` 仍改写 `contracts/gui-shots.json`，一次
+探针跑就让收据记上站点根本没有的那三张图的摘要；收据只在拍进
+`site/assets` 时才写。
+
 **记账**：版本 1.3.0→1.4.0 五处 + 两 Cargo.lock + hello-ok golden 回显 +
-`contracts/docs-facts.json` 投影一条。check 主仓 953 恒（地板 946）/ 子仓
+`contracts/docs-facts.json` 投影一条。check 主仓 953→952（地板 946）/ 子仓
 984 恒（地板 983）；dedup 主 60 / 子 119 恒。首页终端块两语随树重取
 （`site_roast` 门量了才写，两语一次取完）。棘轮具名重立一处：`CHANGELOG.md` 544→557 行，增量
 即本条发布说明，容差 +10 不够。cc-memory 插件把本地状态目录 `memory/`

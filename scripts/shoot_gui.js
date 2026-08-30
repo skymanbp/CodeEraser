@@ -1,12 +1,9 @@
 // Regenerate the three GUI screenshots the website shows by running the
 // product, the stance the homepage terminal block already takes
 // (cli/tests/it/site_roast.rs): a picture on the site is a REPORT.
-//
-// The three PNGs were posed by hand on 2026-08-22 and went stale in
-// silence — four separate ways at once, none of which anything could
-// notice, because nothing could re-derive them. The gate that now
-// holds them, cli/tests/it/site_screenshots.rs, names all four.
-//
+// The three PNGs were posed by hand on 2026-08-22 and went stale four
+// ways at once in silence, because nothing could re-derive them; the
+// gate that holds them, cli/tests/it/site_screenshots.rs, names all four.
 // The renderer is headless Edge — the SAME engine the shipped app draws
 // through, since Tauri on Windows is WebView2 — so these are the
 // product's own pixels. Only the `invoke` bridge has no browser
@@ -15,9 +12,8 @@
 //
 // Usage: node scripts/shoot_gui.js --out site/assets
 //        [--ce <path>] [--root <repo>] [--browser <exe>]
-//        [--save <dir>] [--reports <dir>]
-// `ce join` costs minutes on a large tree: `--save` keeps the three
-// documents a run produced, `--reports` shoots from a saved set again.
+//        [--save <dir>] [--reports <dir>]  (`ce join` costs minutes:
+// --save keeps a run's three documents, --reports shoots from them again.)
 "use strict";
 
 const { Devtools, devtoolsUrl } = require("./cdp.js");
@@ -30,9 +26,10 @@ const path = require("path");
 
 const REPO = path.resolve(__dirname, "..");
 const UI = path.join(REPO, "gui", "ui");
+const SITE = path.join(REPO, "site", "assets");
 
-// Every shot the site carries, in the order the homepage shows them.
-// `act` runs in the page; `until` is polled until it answers true.
+// Every shot the site carries, in homepage order. `act` runs in the
+// page; `until` is polled until it answers true.
 const SHOTS = [
   {
     name: "gui-structure",
@@ -54,9 +51,8 @@ const SHOTS = [
   },
 ];
 
-// The window the site's figures are cropped to. Matches the shipped
-// app's default window, so a reader comparing the picture to their own
-// screen sees the same proportions.
+// The window the site's figures are cropped to — the shipped app's own
+// default, so a reader comparing picture to screen sees one shape.
 const VIEW = { width: 1424, height: 892, deviceScaleFactor: 1, mobile: false };
 
 const MIME = {
@@ -72,10 +68,8 @@ function arg(flag, fallback) {
 }
 
 // Edge first, because it IS the engine the app ships on; Chrome speaks
-// the same protocol and is the fallback. The three platforms are all
-// probed rather than Windows alone: the gate that sends people here
-// runs on Linux and macOS too, and a remedy that only works on the
-// author's machine is not a remedy.
+// the same protocol and is the fallback. All three platforms are probed:
+// the gate that sends people here runs on Linux and macOS too.
 function browser() {
   const named = arg("--browser", null);
   if (named) return named;
@@ -104,9 +98,8 @@ function browser() {
 // The three documents the three screens render. Captured from the CLI
 // so the pictures show a judgment anyone can reproduce with the same
 // three commands, printed below for exactly that reason. `--save` is
-// `--reports`' twin: `ce join` takes minutes on a large tree, and a
-// re-shoot that only changes framing should not re-judge a repository
-// that has not moved.
+// `--reports`' twin: a re-shoot that only changes framing should not
+// re-judge a repository that has not moved.
 function reports(root) {
   const dir = arg("--reports", null);
   const read = (at, f) => JSON.parse(fs.readFileSync(path.join(at, f), "utf8"));
@@ -141,9 +134,9 @@ function reports(root) {
   return docs;
 }
 
-// Serve gui/ui over http. Not file://, because the shell keeps the
-// typed root in localStorage, which a file: origin refuses — the app
-// would boot into a different state than the one users see.
+// Serve gui/ui over http, not file://: the shell keeps the typed root in
+// localStorage, which a file: origin refuses — so the app would boot into
+// a state users never see.
 function serve() {
   const server = http.createServer((req, res) => {
     const rel = decodeURIComponent(req.url.split("?")[0]).replace(/^\/+/, "") || "index.html";
@@ -158,11 +151,10 @@ function serve() {
   return new Promise((ok) => server.listen(0, "127.0.0.1", () => ok(server)));
 }
 
-/// The webview bridge, installed before any page script runs. The
+/// The webview bridge, installed before any page script runs — the
 /// shell reads `default_root` during boot, so a stub added after
-/// navigation would already be too late. Anything the harness has no
-/// answer for REJECTS by name: a silent undefined would render a
-/// half-empty screen that still photographs.
+/// navigation is already too late. Anything the harness has no answer
+/// for REJECTS by name: a silent undefined photographs half a screen.
 function bridge(root, docs) {
   return `(() => {
     const ROOT = ${JSON.stringify(root)};
@@ -194,6 +186,14 @@ async function attach(profile, origin, root, docs) {
   await cdp.send("Page.enable");
   await cdp.send("Runtime.enable");
   await cdp.send("Emulation.setDeviceMetricsOverride", VIEW);
+  // Reduced motion, because the app already answers it (style.css:
+  // `button { transition: none }`). Every shot clicks a button, whose
+  // background transitions over 120ms; a capture two frames later
+  // landed at an arbitrary point along it, and gui-tree came out with
+  // a different digest on each of three runs off ONE report set.
+  await cdp.send("Emulation.setEmulatedMedia", {
+    features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+  });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", { source: bridge(root, docs) });
   await cdp.send("Page.navigate", { url: origin });
   await cdp.until(`document.readyState === "complete" && window.tr`, "the shell to boot");
@@ -205,7 +205,7 @@ async function capture(cdp, out) {
   for (const shot of SHOTS) {
     await cdp.eval(shot.act);
     await cdp.until(shot.until, shot.name);
-    // one frame for the SVG/CSS transition to settle
+    // two frames for layout and paint to land (transitions are off)
     await cdp.eval(`new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))`);
     const { data } = await cdp.send("Page.captureScreenshot", { format: "png" });
     const file = path.join(out, `${shot.name}.png`);
@@ -216,17 +216,18 @@ async function capture(cdp, out) {
 }
 
 /// The receipt: which report schemas these pictures show, and which
-/// bytes were actually shot.
-///
-/// Ancestry alone would not have caught the bug that started this: the
-/// candidates screen showed `ce.join-report/0.1.0` through two schema
-/// bumps without `gui/ui` changing once — the SHAPE a screen renders
-/// moved underneath a picture nobody re-took. The digests are what tie
-/// the receipt to the pixels; without them a schema bump could be
-/// answered by editing three strings here while the old picture stayed
-/// on the page.
+/// bytes were actually shot. Ancestry alone would not have caught the
+/// bug that started this — the candidates screen showed
+/// `ce.join-report/0.1.0` through two schema bumps without `gui/ui`
+/// changing once. The digests tie the receipt to the pixels; without
+/// them a schema bump could be answered by editing three strings here
+/// while the old picture stayed on the page.
 function receipt(docs, out) {
   const file = path.join(REPO, "contracts", "gui-shots.json");
+  if (out !== SITE) {
+    console.log(`  receipt untouched — ${path.relative(REPO, out)} is not what the site serves`);
+    return;
+  }
   const shots = {};
   for (const shot of SHOTS) {
     const png = fs.readFileSync(path.join(out, `${shot.name}.png`));
@@ -247,7 +248,7 @@ function receipt(docs, out) {
 }
 
 async function main() {
-  const out = path.resolve(arg("--out", path.join(REPO, "site", "assets")));
+  const out = path.resolve(arg("--out", SITE));
   const root = path.resolve(arg("--root", REPO));
   fs.mkdirSync(out, { recursive: true });
 
@@ -277,10 +278,9 @@ async function main() {
     // pictures it did not take
     receipt(docs, out);
   } finally {
-    // Cleanup must never throw. The browser keeps its profile mapped
-    // for a moment after it is killed, and an EBUSY raised here would
-    // REPLACE the real failure with a temp-directory complaint — which
-    // is exactly what hid the first shot timeout during development.
+    // Cleanup must never throw: the browser keeps its profile mapped for
+    // a moment after the kill, and an EBUSY raised here would REPLACE the
+    // real failure — which is exactly what hid the first shot timeout.
     proc.kill();
     server.close();
     for (let i = 0; i < 20; i++) {
