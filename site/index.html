@@ -118,8 +118,8 @@ note: 98 blocks collapsed into existing members, 60 intra-file pairs off the sim
 
 <h2>Under the hood</h2>
 <figure class="arch">
-  <img src="/assets/architecture.svg" alt="Architecture: repository sources measured by the Rust frontend (tree-sitter, winnowing index, reference graph, churn, warm daemon), judged by the Haskell core (entropy, clones, liveness, doc duplication, ratcheted score), rendered by five faces (terminal, GUI, MCP, hooks, CI)" loading="lazy">
-  <figcaption>Measurement in Rust, judgment in Haskell — one wire, one report schema per family, five faces.</figcaption>
+  <img src="/assets/architecture.en.svg" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of ten families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy">
+  <figcaption>Measurement in Rust, judgment in Haskell — one wire, one report schema per family, five faces. Rendered from <code>docs/diagrams/architecture.en.json</code>; every component cites its source files.</figcaption>
 </figure>
 <p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>
 

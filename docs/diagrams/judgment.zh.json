@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+      "title": "一个判决如何产生",
+      "quality_profile": "showcase",
+      "viewBox": [1000, 760],
+      "legend": {
+          "entries": {
+              "default": {
+                  "label": "数据流"
+              },
+              "emphasis": {
+                  "label": "热路径"
+              },
+              "security": {
+                  "label": "门判决"
+              },
+              "database": {
+                  "label": "报告存储"
+              }
+          }
+      }
+  },
+  "stages": [
+    {"label": "度量 · Rust"},
+    {"label": "判决 · Haskell"},
+    {"label": "交付"}
+  ],
+  "nodes": [
+    {"id": "units", "type": "backend", "label": "语法单元", "sublabel": "后序 AST · MinHash/LSH", "stage": 0, "row": 0, "width": 124},
+    {"id": "tokens", "type": "backend", "label": "token 指纹", "sublabel": "winnow k=25 w=26", "stage": 0, "row": 1, "width": 124},
+    {"id": "shingles", "type": "backend", "label": "文档 shingle", "sublabel": "5 词 · MinHash/LSH", "stage": 0, "row": 2, "width": 124},
+    {"id": "windows", "type": "backend", "label": "git 窗口", "sublabel": "变动 · 分数点", "stage": 0, "row": 3, "width": 124},
+    {"id": "refs", "type": "backend", "label": "引用图", "sublabel": "解析阶梯 · SCC · 提及", "stage": 0, "row": 4, "width": 124},
+    {"id": "score", "type": "backend", "label": "结构与分数", "sublabel": "七轴 · 0–1000 · 棘轮", "stage": 1, "row": 0, "width": 124, "tag": "scan/1 · structure/1 · verdict/1"},
+    {"id": "clones", "type": "backend", "label": "克隆判决", "sublabel": "T1/T2 精确 · T3 TSED ≥ 0.85", "stage": 1, "row": 1, "width": 124, "tag": "clone/1 · fourclass/2"},
+    {"id": "docdup", "type": "backend", "label": "文档重复", "sublabel": "Jaccard ≥ 0.80 · 50 词连续段", "stage": 1, "row": 2, "width": 124, "tag": "docdup/1"},
+    {"id": "trend", "type": "backend", "label": "轨迹与审计", "sublabel": "Theil–Sen · 联判格", "stage": 1, "row": 3, "width": 124, "tag": "trend/2 · audit/1"},
+    {"id": "liveness", "type": "backend", "label": "存活性与擦除", "sublabel": "四态判决 · 未被提及", "stage": 1, "row": 4, "width": 124, "tag": "graph/1 · erase/1"},
+    {"id": "gate", "type": "security", "label": "门", "sublabel": "退出码 · 六个 fail 条件", "stage": 2, "row": 0, "width": 124},
+    {"id": "reports", "type": "database", "label": "报告与顾问", "sublabel": "每家族一种 schema · 顾问", "stage": 2, "row": 2, "width": 124}
+  ],
+  "flows": [
+    {"id": "units-score", "from": "units", "to": "score", "label": "单元 · 尺寸"},
+    {"id": "units-clones", "from": "units", "to": "clones", "label": "T3 候选", "route": "vertical-channel", "channelX": 230, "labelSegment": 1, "labelDx": -25},
+    {"id": "tokens-clones", "from": "tokens", "to": "clones", "label": "k-gram", "variant": "emphasis", "labelAt": [195, 271]},
+    {"id": "shingles-docdup", "from": "shingles", "to": "docdup", "label": "shingle 集"},
+    {"id": "windows-trend", "from": "windows", "to": "trend", "label": "窗口 · 分数点"},
+    {"id": "refs-liveness", "from": "refs", "to": "liveness", "label": "边 · 提及"},
+    {"id": "score-gate", "from": "score", "to": "gate", "label": "分数 · 位", "variant": "security"},
+    {"id": "clones-reports", "from": "clones", "to": "reports", "label": "行", "variant": "emphasis", "route": "vertical-channel", "channelX": 422.5, "labelAt": [399, 271]},
+    {"id": "docdup-reports", "from": "docdup", "to": "reports", "label": "行", "labelAt": [399, 385]},
+    {"id": "trend-reports", "from": "trend", "to": "reports", "label": "行", "route": "vertical-channel", "channelX": 422.5, "labelAt": [399, 499]},
+    {"id": "liveness-reports", "from": "liveness", "to": "reports", "label": "行", "route": "vertical-channel", "channelX": 422.5, "labelAt": [399, 613]}
+  ]
+}

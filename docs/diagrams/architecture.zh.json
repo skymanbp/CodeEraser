@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+      "title": "CodeEraser 架构",
+      "quality_profile": "showcase",
+      "viewBox": [1440, 620],
+      "repository": {
+          "url": "https://github.com/skymanbp/CodeEraser",
+          "revision": "70e3deb884b287f00d34c43ef7018eca3a9d7e4f"
+      }
+  },
+  "components": [
+    {"id": "repo", "type": "external", "label": "仓库", "sublabel": "源码 · 文档 · git", "pos": [30, 280], "size": [140, 64]},
+    {"id": "scan", "type": "backend", "label": "解析与尺寸", "sublabel": "tree-sitter · 六套语法", "pos": [230, 280], "size": [150, 64], "sources": [{"path": "cli/src/scan/lang.rs"}, {"path": "cli/src/scan/ast.rs"}]},
+    {"id": "daemon", "type": "backend", "label": "常驻 daemon", "sublabel": "懒启动 · 逐项目", "pos": [480, 60], "size": [150, 64], "sources": [{"path": "cli/src/daemon/server.rs"}, {"path": "cli/src/daemon/coldstart.rs"}]},
+    {"id": "index", "type": "database", "label": "指纹索引", "sublabel": ".ce/index.db · SQLite WAL", "pos": [480, 170], "size": [150, 64], "sources": [{"path": "cli/src/dedup/winnow.rs"}, {"path": "cli/src/dedup/schema.rs"}]},
+    {"id": "graph", "type": "backend", "label": "引用图", "sublabel": "解析阶梯 · SCC · 提及", "pos": [480, 280], "size": [150, 64], "sources": [{"path": "cli/src/graph/sites.rs"}, {"path": "cli/src/mention/walk.rs"}]},
+    {"id": "churn", "type": "backend", "label": "git 窗口", "sublabel": "变动 · 分数点", "pos": [480, 390], "size": [150, 64], "sources": [{"path": "cli/src/churn/survival.rs"}, {"path": "cli/src/trend/mod.rs"}]},
+    {"id": "wire", "type": "messagebus", "label": "NDJSON wire", "sublabel": "proto 6.4.0 · 十个家族", "pos": [760, 280], "size": [150, 64], "sources": [{"path": "cli/src/corelink/pipe.rs"}, {"path": "core/app/CE/Protocol.hs"}, {"path": "contracts/VERSIONING.md"}]},
+    {"id": "judge", "type": "backend", "label": "判决核", "sublabel": "精确有理数 · 无时钟 · 无随机", "pos": [990, 170], "size": [160, 284], "sources": [{"path": "core/app/CE/Verdict/Score.hs"}, {"path": "core/app/CE/Clone/Ted.hs"}, {"path": "core/app/CE/Graph/Dead.hs"}]},
+    {"id": "policy", "type": "database", "label": "策略即数据", "sublabel": "ADR-008 · 阈值随 Haskell 发布", "pos": [990, 500], "size": [160, 64], "sources": [{"path": "core/app/CE/Clone/Cost.hs"}, {"path": "core/app/CE/Graph/Cost.hs"}, {"path": "core/app/CE/Verdict/Cost.hs"}]},
+    {"id": "cli", "type": "frontend", "label": "终端", "sublabel": "ce · 退出码", "pos": [1250, 60], "size": [150, 64], "sources": [{"path": "cli/src/main_cli.rs"}]},
+    {"id": "gui", "type": "frontend", "label": "GUI", "sublabel": "Tauri · 十屏", "pos": [1250, 170], "size": [150, 64], "sources": [{"path": "gui/src-tauri/src/commands.rs"}]},
+    {"id": "mcp", "type": "frontend", "label": "MCP 服务器", "sublabel": "十四个只读工具", "pos": [1250, 280], "size": [150, 64], "sources": [{"path": "cli/src/mcp/tools.rs"}]},
+    {"id": "hooks", "type": "security", "label": "Claude Code hooks", "sublabel": "PreToolUse · Stop", "pos": [1250, 390], "size": [150, 64], "sources": [{"path": "plugin/hooks/hooks.json"}, {"path": "cli/src/guard.rs"}]},
+    {"id": "ci", "type": "cloud", "label": "CI · pre-commit", "sublabel": "ce check --fail-under", "pos": [1250, 500], "size": [150, 64], "sources": [{"path": "cli/src/main_score.rs"}, {"path": ".github/workflows/ci.yml"}]}
+  ],
+  "boundaries": [
+    {"kind": "region", "label": "cli/ — Rust · 度量", "wraps": ["scan", "daemon", "index", "graph", "churn"], "pad": 30},
+    {"kind": "region", "label": "core/ — Haskell · 判决", "wraps": ["judge", "policy"], "pad": 30},
+    {"kind": "region", "label": "面 — 五种渲染", "wraps": ["cli", "gui", "mcp", "hooks", "ci"], "pad": 30}
+  ],
+  "connections": [
+    {"id": "repo-scan", "from": "repo", "to": "scan", "label": "文件", "variant": "emphasis"},
+    {"id": "repo-churn", "from": "repo", "to": "churn", "label": "git 日志", "fromSide": "bottom", "toSide": "left"},
+    {"id": "scan-index", "from": "scan", "to": "index", "label": "k-gram", "fromSide": "right", "toSide": "left", "labelSegment": 1},
+    {"id": "scan-graph", "from": "scan", "to": "graph", "label": "引用站点", "labelAt": [430, 340]},
+    {"id": "daemon-index", "from": "daemon", "to": "index", "label": "保温", "variant": "dashed", "labelDy": 24},
+    {"id": "index-wire", "from": "index", "to": "wire", "label": "尺寸 · 克隆", "fromSide": "right", "toSide": "left", "labelSegment": 1},
+    {"id": "graph-wire", "from": "graph", "to": "wire", "label": "边 · 提及", "labelDy": 13},
+    {"id": "churn-wire", "from": "churn", "to": "wire", "label": "窗口", "fromSide": "right", "toSide": "left", "labelSegment": 1},
+    {"id": "wire-judge", "from": "wire", "to": "judge", "label": "请求", "variant": "emphasis"},
+    {"id": "policy-judge", "from": "policy", "to": "judge", "label": "读取", "variant": "dashed"},
+    {"id": "judge-cli", "from": "judge", "to": "cli", "fromSide": "right", "toSide": "left"},
+    {"id": "judge-gui", "from": "judge", "to": "gui", "fromSide": "right", "toSide": "left"},
+    {"id": "judge-mcp", "from": "judge", "to": "mcp", "fromSide": "right", "toSide": "left"},
+    {"id": "judge-hooks", "from": "judge", "to": "hooks", "fromSide": "right", "toSide": "left"},
+    {"id": "judge-ci", "from": "judge", "to": "ci", "fromSide": "right", "toSide": "left"}
+  ]
+}

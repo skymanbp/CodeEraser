@@ -6,6 +6,8 @@
 
 <img src="docs/assets/gui-structure.png" alt="GUI 结构树图与分数——判决本仓库自身" width="740">
 
+![架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染——终端、GUI、MCP 服务器、Claude Code hooks、CI](docs/assets/architecture.zh.svg)
+
 ## 简介
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门。Rust 负责度量——解析、指纹、引用图、git 窗口；Haskell 核负责判决；终端、桌面 GUI、只读 MCP 服务器、Claude Code hooks、pre-commit 与 CI 退出码渲染的都是同一批文档里的同一批判决。全链路没有任何模型参与。
@@ -26,6 +28,8 @@
 **范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：`ce` CLI、GUI（<!--ce:count:screens#word-->十<!--/ce-->屏）、Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十四<!--/ce-->个只读 MCP 工具）、pre-commit 与 CI。
 
 ## 具体实现——以及它的不同之处
+
+![一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口与引用图；Haskell 判决结构与分数、克隆、文档重复、轨迹与审计、存活性与擦除——每行一个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
 
 - **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 34 ms / p95 37 ms，插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）在可容许剪枝下生成候选——能过线的对一个不丢——再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。

@@ -8,6 +8,8 @@ English | **[中文](README.zh.md)**
 
 <img src="docs/assets/gui-structure.png" alt="The GUI's structure treemap and score, judging this repository" width="740">
 
+![Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of ten families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces — terminal, GUI, MCP server, Claude Code hooks, CI](docs/assets/architecture.en.svg)
+
 ## What it is
 
 Long-lived LLM-assisted codebases drift the same way: the same function implemented twice, the same paragraph pasted into three files, updates that arrive as appends, files that only ever grow. CodeEraser stops that drift at the moment of writing and gates it in CI. Rust measures — parsing, fingerprints, reference graphs, git windows — a Haskell core judges, and the terminal, a desktop GUI, a read-only MCP server, Claude Code hooks, pre-commit and CI exit codes all render the same verdicts from the same documents. No model is in the loop anywhere.
@@ -28,6 +30,8 @@ Long-lived LLM-assisted codebases drift the same way: the same function implemen
 **Scope.** Judged languages: Python, TypeScript/TSX, Rust, Go, Haskell and Markdown (<!--ce:count:langs#word-->seven<!--/ce--> language codes over <!--ce:count:grammars#word-->six<!--/ce--> tree-sitter grammars). Size-only arm: js/mjs/cjs/jsx, css/scss/less, html/htm, vue, svelte, sh/bash, yml/yaml — they enter the size gates, the hard budget and the ratchet, never a semantic verdict. Faces: the `ce` CLI, the GUI (<!--ce:count:screens#word-->ten<!--/ce--> screens), the Claude Code plugin (<!--ce:count:hooks#word-->three<!--/ce--> hooks, <!--ce:count:skills#word-->one<!--/ce--> skill, <!--ce:count:commands#word-->one<!--/ce--> command, <!--ce:count:mcp_tools#word-->fourteen<!--/ce--> read-only MCP tools), pre-commit and CI.
 
 ## How it works — and what is different about it
+
+![How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows and the reference graph; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase — one wire family per row; the gate and the per-family reports deliver the verdicts](docs/assets/judgment.en.svg)
 
 - **Interception at the instant of writing.** Every file's normalized tokens (identifiers → `ID`, literals → `LIT`, comments dropped) are winnowed with k = 25, w = 26, so any shared run of 50+ tokens is guaranteed a shared fingerprint. The fingerprints live in a SQLite WAL index kept by a lazy per-project daemon; the PreToolUse probe answers in 34 ms p50 / 37 ms p95, and the whole plugin chain in 0.50 s p95. The guard charges only *novel* duplication: matches the replaced content already carried are subtracted, so on the live-stream reading it misfires on none of 719 production probes (0.00 per 500); the 2,761-event replay's full-file-write reading charges the 32 split-a-file intermediate states at 7.03 per 500 — both readings are ledgered in [FPR-REPLAY](docs/FPR-REPLAY.md).
 - **Two clone layers, one verdict owner.** T1/T2 is the hot path above. T3 is a cold path: structural fingerprints and MinHash/LSH (128 permutations, 32 bands × 4 rows) generate candidates under admissible pruning — no pair that could pass is dropped — and the Haskell core computes Zhang–Shasha tree edit distance and accepts at TSED ≥ 0.85, in exact integer arithmetic.

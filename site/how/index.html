@@ -100,6 +100,11 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
 </section>
 
 <figure class="arch">
+  <img src="/assets/judgment.en.svg" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows and the reference graph; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
+  <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves — an exit code or report rows — on the right.</figcaption>
+</figure>
+
+<figure class="arch">
   <img src="/assets/methodology.svg" alt="Three lanes: measured facts in Rust (token fingerprints k=25 w=26, AST postorder trees, the reference graph, git windows, LOC multisets, documentation shingles), judgment computations in Haskell with their formulas (winnowing guarantee t=50, TSED 85/100, exact Jaccard 80/100, the soft line S=clamp(floor(m*r^k),[200,500]), the convex soft-zone penalty, liveness closure, entropy and chi-squared divergence, the Theil-Sen median of pairwise slopes, the score fold), and the gates (ADR-006 ratchet, discrete ratchet, dedup budget, --fail-under floor, rulepack fence knobs_digest, guard tier ladder)" loading="lazy">
   <figcaption>Measure, judge, gate. Lane 1 extracts facts in Rust; lane 2 turns them into
   verdicts in Haskell with the formulas shown; lane 3 decides the exit code. Every number
