@@ -8,6 +8,11 @@
 > points that cannot
 > honestly become a per-version series say why in their epoch clause.
 >
+> Six of the seven metrics run against this repository. `hook_probe` does
+> not: it times `ce probe --hook` against a seeded two-file fixture rebuilt
+> identically for every tag, so the write-time probe stays comparable across
+> versions instead of tracking the tree's growth.
+>
 > The whole series is ONE machine — the host column repeats because it never
 > varies. That is a feature for the only comparison this table makes
 > (version-over-version on constant hardware) and a warning about the one it
