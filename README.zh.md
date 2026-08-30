@@ -23,11 +23,11 @@
 - **功能九：看轨迹。** 主线提交上的分数历史、git 窗口内的变动，以及把变动、重复与存活性合成一条判决的三信号联判。
 - **功能十：让自己保持最新。** `ce update` 拿最新发布与发布提交自己写下的 pin 对照，两枚 pin 都校验通过后才就地替换二进制。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（六套 tree-sitter 语法上的七个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html、vue、svelte、sh/bash、yml——进尺寸门、硬预算与棘轮，永不进语义判决。面：`ce` CLI、GUI（十屏）、Claude Code 插件（三钩、一 skill、一命令、十四个只读 MCP 工具）、pre-commit 与 CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（六套 tree-sitter 语法上的七个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：`ce` CLI、GUI（十屏）、Claude Code 插件（三钩、一 skill、一命令、十四个只读 MCP 工具）、pre-commit 与 CI。
 
 ## 具体实现——以及它的不同之处
 
-- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 34 ms / p95 37 ms，插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，这正是它在 2,761 事件重放上误报为零的原因（[FPR-REPLAY](docs/FPR-REPLAY.md)）。
+- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 34 ms / p95 37 ms，插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）在可容许剪枝下生成候选——能过线的对一个不丢——再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙——每个文本文件里的每个标识符，只以 fnv1a64 哈希存储——产出**未被提及的声明**顾问，它永不把门翻红。
@@ -36,11 +36,11 @@
 - **时间是一等信号。** 最近 512 个分数点上的 Theil–Sen 斜率（一个野点拽不动中位数）；变动 = 新增 − 按 blame 存活的行；联判格把相似度、图位置与变动合成 merge / delete / churn-hotspot，带理由位与置信。
 - **有安全谓词的擦除，不是启发式。** 三类（逐字文档孪生、副本已死的整单元 T1 孪生、置信的非公开死文件）、七个冻结理由码、4,096 行上限，以及任一已应用判决幸存即失败的收敛重规划。
 - **由构造保证的确定性。** 任何判决里没有随机数与时钟；golden 夹具逐字节比对；过线的是码，句子留在各自的面。Rust 与 Haskell 在一条 SemVer 协商的 NDJSON wire 上相接（proto 6.4.0，十个家族）；策略是 Haskell 数据（ADR-008），配置以事实过线，从不以名字。
-- **一直延伸到更新器的信任链。** 发布分两段：draft 工件被哈希，pin 以一次提交落进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节。插件启动器、安装包与 `ce update` 对照的都是这些 pin。
+- **一直延伸到更新器的信任链。** 发布分两段：draft 工件被哈希，pin 以一次提交落进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节。插件启动器与 `ce update` 对照的是这些 pin；安装包则由 tag 腿在 Release 发布前对照同一批 pin 校验。
 
 ## 实际效果——同一任务，跑两遍
 
-同一个编码任务——*加折扣、紧凑报表、CSV 与 JSON 输出、API 里的金额格式化*——由脚本化的 agent 在 [`demo/seed`](demo/seed/README.md)（一个 Python + TypeScript 的小型开票服务）的两份相同副本上重放。唯一变量是 PreToolUse 守卫与 Stop 审计是否在环内。下表每条判决都是 `ce` 的逐字输出；两棵树随后由同样六条 CI 命令度量。
+同一个编码任务——*加折扣、紧凑报表、CSV 与 JSON 输出、API 里的金额格式化*——由脚本化的 agent 在 [`demo/seed`](demo/seed/README.md)（一个 Python + TypeScript 的小型开票服务）的两份相同副本上重放。唯一变量是 PreToolUse 守卫与 Stop 审计是否在环内。下表每条判决都是 `ce` 的逐字输出；两棵树随后由同样六条 `ce` 命令度量。
 
 <!-- demo:begin -->
 | | 不带 CodeEraser | 带 CodeEraser |

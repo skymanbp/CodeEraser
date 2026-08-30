@@ -54,8 +54,11 @@ For every candidate pair or dead unit:
    references; re-point the survivors.
 3. Respect exemptions: a `.ceignore` entry means a human already
    ruled — skip it. For docdup candidates the same is true of an
-   adjacent `ce:allow(docdup) -- <why>` line (the inline marker is
-   docdup-only; dedup/deadcode exemptions go through `.ceignore`).
+   adjacent `ce:allow(docdup) -- <why>` line — one grammar
+   (`cli/src/allow.rs`), also read by deadcode (`ce:allow(deadcode)`
+   claims liveness for a whole file) and by the unmentioned advisory
+   (`ce:allow(unmentioned)`); a bare marker with no why claims
+   nothing, and dedup exemptions go through `.ceignore`.
 4. Dead code with an `entry_globs` match or exported surface may be a
    public API — confirm before removing.
 

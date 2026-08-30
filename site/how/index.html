@@ -260,12 +260,15 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   the file's <em>path class</em>, the 1-based index of the first <code>[[rules.class]]</code>
   whose globs match, <code>0</code> for none — beside an additive <code>classKnobs</code> table
   whose codes are the ceilings' own <code>0 / 1 / 2</code> plus <code>3</code> (5.1.0), the
-  class's own ADR-006 ratchet allowance in lines — the one knob whose value <code>0</code> is
-  meaningful, so the table's value floor is judged per code. A classed row is charged against its
+  class's own ADR-006 ratchet allowance in lines, and <code>4</code> (6.4.0), its own
+  cognitive-complexity allowance — the two knobs whose value <code>0</code> is meaningful, so the
+  table's value floor is judged per code. A classed row is charged against its
   class's soft line, hard line and CoC ceiling and falls back to the global line wherever the
   class declares none; the charge law itself is untouched. The ratchet reads the fourth column
-  only to pick that allowance — declared, it <em>replaces</em> both global legs, so <code>0</code>
-  means any growth is over — and writes a three-column baseline back, so a class is a charging
+  only to pick that allowance — asked per (class, metric), so code <code>4</code> answers cognitive
+  complexity where declared and code <code>3</code> answers the rest; declared, it <em>replaces</em>
+  both global legs, so <code>0</code> means any growth is over — and writes a three-column
+  baseline back, so a class is a charging
   parameter for this run and never a baseline fact. Names and globs stay on the client: only the
   index and its knobs cross.</p>
   <ul class="consts">
@@ -592,7 +595,9 @@ row   = [node, vis, conv]      (integers only — a name never rides the wire)
 emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
 code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   <p class="note">U is a walk of its own — hidden files enter, <code>.git</code>/<code>.ce</code>
-  and nested repositories are cut, only <code>.gitignore</code> and <code>.ceignore</code> are
+  are cut by name, an <em>undeclared</em> nested repository is cut whole while a path the root's
+  <code>.gitmodules</code> declares stays in U as foreign — it can spell a name, and is never
+  measured — only <code>.gitignore</code> and <code>.ceignore</code> are
   honoured — so one commit yields one U on any machine, and every parameter of the walk is a
   <code>MENTION_REV</code> input. The mentions store keeps 64-bit hashes, never text. Rust
   extracts each declaration's mention name and category word and asks the three veto questions

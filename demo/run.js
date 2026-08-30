@@ -9,7 +9,7 @@
 // what makes the two runs identical in everything except the hooks).
 //
 //   node demo/run.js            # run both, write demo/out/*
-//   node demo/run.js --check    # run both, fail if demo/out/* would change
+//   node demo/run.js --check    # run both, fail if demo/out/* or an embedded README table would change
 //
 // Needs `ce` (CE_BIN or PATH) with a reachable ce-core (CE_CORE_BIN or a
 // sibling), git, and node. No packages.

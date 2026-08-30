@@ -34,7 +34,7 @@
   [200, 500])`，按**判决语言集**在**基线冻结时**的分布计算——
   防自指漂移：膨胀提交不能挪自己的球门柱；重锚只随
   `CE_ACCEPT_BASELINE` 具名重立。
-- 硬线 `H` 默认 750 且**不随分布浮动**：§B 的相对逻辑只能放宽舒适区，永不挪 H；自规则包起（proto 3.1.0/3.2.0，计划 v2.13 ①）H **逐类可声明**——`ce.toml [[rules.class]]` 的 `knobs.file_lines_fail` 为该类路径改写 H，score 曲线、scan 阶梯与 PreToolUse 硬预算同读这一条线，未声明类的路径仍是 750。
+- 硬线 `H` 默认 750 且**不随分布浮动**：§B 的相对逻辑只能放宽舒适区，永不挪 H；自规则包起（proto 3.1.0/3.2.0，计划 v2.13 ①）H **逐类可声明**——`ce.toml [[rules.class]]` 的 `knobs.file_lines_fail` 为该类路径改写 H，score 曲线、scan 阶梯与 PreToolUse 硬预算同读这一条线，未声明类的路径仍是 750；旋钮指纹与已提交基线不符（或基线不可读）时，PreToolUse 钩子回落到出厂阈值/exclude/类表并在拒绝理由里点名围栏（6.4.0，`cli/src/guard/budget.rs` `fenced`），与 [ce-toml.md](ce-toml.md) 记的同一例外。
 - 先例：S1 命名轴已在核内做分布判定（归一化 Tsallis-2）；分位数是
   排序整数上的精确算术。
 

@@ -157,7 +157,8 @@ pub(crate) enum Cmd {
     /// Persist the core's newBaseline as ce-baseline.json, at the
     /// project root only. Three named acts: none — the violation set
     /// may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition
-    /// alone (knobs_digest) is re-pinned under the declared knobs;
+    /// alone (knobs_digest, rows_dropped) is re-pinned under the
+    /// declared knobs;
     /// CE_ACCEPT_BASELINE=1 — re-establish from the current tree,
     /// the one act that creates a missing file. A degraded judgment
     /// is never persisted

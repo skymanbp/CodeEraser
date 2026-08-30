@@ -42,7 +42,7 @@ deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判�
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
 deadcode.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
-deadcode.check	任一文件级死判落地即退出 1
+deadcode.check	任一文件级死判落地、或判决本身降级即退出 1（判不了的门永不通过）
 clone	T3 近似克隆判决：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
 clone.units	改为列出单元宇宙而非判决
 docdup	文档重复判决：对缓存活段经核 docdup/1 精确 Jaccard
@@ -70,7 +70,7 @@ dedup.path	要索引的目录（默认当前目录）
 dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
 dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50；配合 --check 只准默认或更紧）
 dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，实测校准；0 关闭；配合 --check 只准默认或更紧）
-dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（比较即核的判决）
+dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（比较即核的判决；判决降级则拒绝把门，退出 2）
 dedup.core	ce-core 可执行文件路径（仅 --check 咨询；默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰启
 daemon.root	要服务的项目根

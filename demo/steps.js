@@ -131,7 +131,7 @@ def write_csv(invoice: Invoice, path: str) -> None:
 `;
 }
 
-/** Step 5a — a JSON renderer, written fresh. */
+/** Step 5 — a JSON renderer, written fresh. */
 function jsonRenderer() {
   return `"""JSON rendering of a priced invoice."""
 
@@ -159,12 +159,12 @@ def render(invoice: Invoice) -> str:
 `;
 }
 
-/** Step 5b — the CLI switches to the JSON renderer; report.py stays behind. */
+/** Step 6 — the CLI switches to the JSON renderer; report.py stays behind. */
 function cliOnJson(seed) {
   return seed["invoicer/cli.py"].replace("from .report import render", "from .report_json import render");
 }
 
-/** Step 6 — the API formats money with a local copy of format.ts's function. */
+/** Step 7 — the API formats money with a local copy of format.ts's function. */
 function apiWithLocalFormat(seed) {
   const fn = between(seed["web/format.ts"], "export function formatCents", "\n\nexport function formatQuantity");
   return seed["web/api.ts"]

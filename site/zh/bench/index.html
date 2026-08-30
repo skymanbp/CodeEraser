@@ -51,7 +51,7 @@ header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }
 
 <!-- bench:begin -->
 <h2>逐版本延迟</h2>
-<div class="term data-table"><div class="tablewrap"><table><thead><tr><th>version</th><th>指标</th><th>p50 ms</th><th>p95 ms</th><th>n</th><th>主机</th><th>实测日期</th></tr></thead><tbody>
+<div class="term data-table"><div class="tablewrap"><table><thead><tr><th>版本</th><th>指标</th><th>p50 ms</th><th>p95 ms</th><th>n</th><th>主机</th><th>实测日期</th></tr></thead><tbody>
 <tr><td><code>0.1.0</code></td><td><code>check_warm</code></td><td>1098</td><td>1140</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
 <tr><td><code>0.1.0</code></td><td><code>deadcode_warm</code></td><td>426</td><td>446</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
 <tr><td><code>0.1.0</code></td><td><code>dedup_cold</code></td><td>2363</td><td>2420</td><td>3</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-21</td></tr>
@@ -152,7 +152,7 @@ header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }
 <tr><td><code>1.2.0</code></td><td><code>scan</code></td><td>586</td><td>609</td><td>5</td><td><code>windows/x86_64/16cpu</code></td><td>2026-08-26</td></tr>
 </tbody></table></div></div>
 <h2>冻结评估点</h2>
-<div class="term data-table"><div class="tablewrap"><table><thead><tr><th>指标</th><th>value</th><th>source</th></tr></thead><tbody>
+<div class="term data-table"><div class="tablewrap"><table><thead><tr><th>指标</th><th>值</th><th>来源</th></tr></thead><tbody>
 <tr><td><code>docdup_d3_precision</code></td><td>17/17 scoped (100%)</td><td><code>docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json</code></td></tr>
 <tr><td><code>docdup_d1_recall</code></td><td>100%</td><td><code>docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json</code></td></tr>
 <tr><td><code>t3_precision</code></td><td>61 answered / 0 wrong (1.000)</td><td><code>docs/EVAL-SET-M5-3.md:41-47 + contracts/eval/t3-precision-*-v1.json</code></td></tr>

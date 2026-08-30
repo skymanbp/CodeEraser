@@ -120,10 +120,10 @@ tolAbs = 10
 
 -- | The classKnobs code a class states its OWN ratchet tolerance
 -- under (5.1.0, plan v2.14 ②). Codes 0/1/2 shadow the ceilings
--- table; this one shadows nothing — it is a fourth dimension, and it
--- is the only class knob whose value 0 is meaningful (zero slack for
--- a vendored tree or a frozen fixture), which is why the table's
--- value bound is judged per code rather than once for all of them.
+-- table; this one shadows nothing — it is a fourth dimension whose
+-- value 0 is meaningful (zero slack for a vendored tree or a frozen
+-- fixture; its 6.4.0 CoC sibling below shares that), which is why the
+-- table's value bound is judged per code rather than once for all.
 classTolCode :: Integer
 classTolCode = 3
 

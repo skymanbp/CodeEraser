@@ -277,8 +277,10 @@ the pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 706 (719 − 13 early-NUL) | rust | 1881 (1019) | 281 (0) | 14.9 % | 14 / 281 = 5.0 % | 14 / 1580 |
-| | | haskell | 1283 (294) | 295 (2) | 23.0 % | 12 / 295 = 4.1 % | 12 / 988 |
+| self @ this commit | 764 (777 − 13 early-NUL) | rust | 2021 (1102) | 297 (0) | 14.7 % | 17 / 297 = 5.7 % | 17 / 1702 |
+| | | haskell | 1333 (309) | 307 (2) | 23.0 % | 14 / 307 = 4.6 % | 14 / 1026 |
+| | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
+| | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
 | requests 8068356 | 118 (130 − 7 excluded − 5 early-NUL) | python | 666 (644) | 450 (431) | 67.6 % | 18 / 450 = 4.0 % | 18 / 214 |
 | ripgrep 3fce3b5 | 230 (237 − 7 early-NUL) | rust | 2501 (886) | 885 (47) | 35.4 % | 120 / 885 = 13.6 % | 120 / 1546 |
@@ -290,7 +292,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust 0 / 1028 = 0.0 % (the suite is a reader of
+operator reads for the public surface: self rust 0 / 1102 = 0.0 % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 197 / 1127 = 17.5 %, cobra 313 / 481 = 65.1 %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

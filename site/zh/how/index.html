@@ -236,9 +236,11 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <p class="note">自规则包起（proto 3.1.0），连续行可带第四列——该文件的<em>路径类</em>，即首个 glob
   命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无——旁边是加性的
   <code>classKnobs</code> 表，码域是 ceilings 自己的 <code>0 / 1 / 2</code> 加 <code>3</code>
-  （5.1.0）——该类自己的 ADR-006 棘轮容差（行数绝对值），也是唯一「零有意义」的类旋钮，故表的
+  （5.1.0，该类自己的 ADR-006 棘轮容差，行数绝对值）与 <code>4</code>（6.4.0，该类自己的
+  认知复杂度容差）——这两个都是「零有意义」的类旋钮，故表的
   取值下界按码分判。带类的行按其类声明的软线、硬线与 CoC 上限收费，类未声明处回落到全局线；
-  收费定律本身分毫未动。棘轮读第四列只为取该容差——声明即<em>取代</em>两条全局腿，<code>0</code>
+  收费定律本身分毫未动。棘轮读第四列只为取该容差——按（类, 指标）分别取：声明了 <code>4</code>
+  号时它答认知复杂度，其余情形由 <code>3</code> 号作答；声明即<em>取代</em>两条全局腿，<code>0</code>
   意味任何增长皆超——写回的基线仍是三列，所以类是本次收费参数、永远不是基线事实。类名与 glob 留在客户端：过线的只有下标与 knobs。</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
@@ -517,7 +519,9 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
 row   = [node, vis, conv]      (integers only — a name never rides the wire)
 emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
 code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
-  <p class="note">U 是自有的一次 walk——隐藏文件进入，<code>.git</code>/<code>.ce</code> 与嵌套仓库被整体裁掉，
+  <p class="note">U 是自有的一次 walk——隐藏文件进入，<code>.git</code>/<code>.ce</code> 按名裁掉，
+  <em>未声明</em>的嵌套仓库被整体裁掉，而根的 <code>.gitmodules</code> 声明的路径是外来的——它能拼出名字，
+  故留在 U 里，但永不被度量；
   只认 <code>.gitignore</code> 与 <code>.ceignore</code>——因此同一提交在任何机器上得到同一个 U，walk 的每个参数
   都是 <code>MENTION_REV</code> 的输入。mentions 存的是 64 位哈希而非文本。Rust 抽取每条声明的提及名与类别词，
   按最廉价者先问三个否决问题；Haskell 只读可见性词与 mounts 行——文件的 <code>mod</code> 挂载有几处私有、

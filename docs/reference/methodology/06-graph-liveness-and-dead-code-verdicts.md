@@ -116,7 +116,7 @@ target, so the id assignment is a function of the graph and the wire bytes are s
 ([nodes.rs:24-50](../../../cli/src/graph/nodes.rs#L24), asserted at
 [unit/graph/nodes.rs:70-86](../../../cli/tests/unit/graph/nodes.rs#L70)). Package-ness is read from the edge's *stored*
 granularity, never inferred from a target's absence — the old absence rule minted image assets
-and dangling doc refs as packages ([nodes.rs:20-23](../../../cli/src/graph/nodes.rs#L20),
+and dangling doc refs as packages ([nodes.rs:25-28](../../../cli/src/graph/nodes.rs#L25),
 [unit/graph/nodes.rs:19-34](../../../cli/tests/unit/graph/nodes.rs#L19)).
 
 Two transformations happen on the way to the wire:
@@ -129,14 +129,14 @@ Two transformations happen on the way to the wire:
    ([Cost.hs:156-163](../../../core/app/CE/Graph/Cost.hs#L156)) since 2.29.0 — the two riding one
    inert list into the same comprehension as the rung filter
    ([Graph.hs:129](../../../core/app/CE/Graph.hs#L129), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
-   ([deadcode.rs:255-259](../../../cli/src/graph/deadcode.rs#L255)). An endpoint that is not a node
+   ([deadcode.rs:268-279](../../../cli/src/graph/deadcode.rs#L268)). An endpoint that is not a node
    is a *named error*, never a panic ([deadcode.rs:270-274](../../../cli/src/graph/deadcode.rs#L270)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory, at `rung 1` because containment is a fact, not a resolution mechanism, and must
-   survive every rung ceiling ([nodes.rs:61-83](../../../cli/src/graph/nodes.rs#L61)). A repo-root
+   survive every rung ceiling ([nodes.rs:88-111](../../../cli/src/graph/nodes.rs#L88)). A repo-root
    package has path `""`, and the naive `format!("{}/", "")` prefix `"/"` matched nothing —
    measured: a root `lib.go` imported by `cmd/main.go` was reported dead
-   ([nodes.rs:66-73](../../../cli/src/graph/nodes.rs#L66)).
+   ([nodes.rs:93-101](../../../cli/src/graph/nodes.rs#L93)).
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
@@ -305,7 +305,7 @@ The per-node join surface, computed only for the requested `pos` indices, is
 [Position.hs:13-32](../../../core/app/CE/Graph/Position.hs#L13)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
-([deadcode.rs:320-323](../../../cli/src/graph/deadcode.rs#L320)).
+([deadcode.rs:338-341](../../../cli/src/graph/deadcode.rs#L338)).
 
 ### 7. The four-way verdict
 
@@ -336,7 +336,7 @@ over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead
 
 Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 ([deadcode.rs:44-49](../../../cli/src/graph/deadcode.rs#L44),
-[deadcode.rs:381-416](../../../cli/src/graph/deadcode.rs#L381)) — and a code past the four this side
+[deadcode.rs:425-434](../../../cli/src/graph/deadcode.rs#L425)) — and a code past the four this side
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
@@ -371,7 +371,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:150](../../../core/app/CE/Graph/Cost.hs#L150)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:242](../../../cli/src/graph/deadcode.rs#L242)), fences every returned index and bounds the column ([deadcode.rs:481](../../../cli/src/graph/deadcode.rs#L481)), and renders the trust word beside each dead file ([deadcode.rs:362](../../../cli/src/graph/deadcode.rs#L362)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:102](../../../core/test/GraphWireProps.hs#L102)).
+([Cost.hs:150](../../../core/app/CE/Graph/Cost.hs#L150)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:242](../../../cli/src/graph/deadcode.rs#L242)), fences every returned index and bounds the column ([deadcode.rs:481](../../../cli/src/graph/deadcode.rs#L481)), and renders the trust word beside each dead file ([deadcode.rs:412](../../../cli/src/graph/deadcode.rs#L412)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:102](../../../core/test/GraphWireProps.hs#L102)).
 
 ### 9. Acceptance
 
@@ -379,7 +379,7 @@ The M5-2 row sets four criteria: import-edge precision **≥ 0.90** on a 100-sit
 spanning the five launch languages; `unreferenced_public` as its own report class, not folded
 into dead; every finding in this repository dispositioned; and the core's judgment-invariant
 property battery in CI
-([DEVELOPMENT_PLAN.md:279](../../DEVELOPMENT_PLAN.md#L279)). The gate is coded at `0.90`,
+([DEVELOPMENT_PLAN.md:280](../../DEVELOPMENT_PLAN.md#L280)). The gate is coded at `0.90`,
 applied overall and per corpus **where the in-corpus ground-truth denominator reaches 5**
 ([eval_graph_precision.rs:83](../../../cli/tests/it/eval_graph_precision.rs#L83),
 [eval_graph_precision.rs:86-94](../../../cli/tests/it/eval_graph_precision.rs#L86),

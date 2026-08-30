@@ -149,8 +149,8 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
-> **6.4.0 附注（零 wire，L 轮 v2.20 步 #16，2026-08-29）**：新增报告 schema `ce.update-report/0.1.0`——`ce update` /
-> GUI update 屏 / MCP `update_check` 三面一文档（`current` 含安装归属码 0..3、`platform`、`latest`、`pins`、`verdict` 0..2、
+> **6.4.0 附注（零 wire，L 轮 v2.20 步 #16，2026-08-29）**：新增报告 schema `ce.update-report/0.1.0`——`ce update`（CLI）/ GUI update 屏 /
+> 插件 SessionStart 通知 + `/codeeraser:update` / MCP `update_check`（只读）四面一文档（`current` 含安装归属码 0..3、`platform`、`latest`、`pins`、`verdict` 0..2、
 > `action` 0..4；码不载句，各面自持词表）；`--yes` 的落位回执 `{version, placed, sweptOld, installer}` 不设 schema（非报告面）。
 > **6.4.0**（围栏批，加性 minor，L 轮 v2.18 步 #14 片 (b)，2026-08-29；O32/O33/O37/O38/O40/O43/O59/O66）：
 > `verdict.request` 加性 `present=[u64…]`（严格升序；作用域内在盘、本次无连续行的文件实体——实体按**项目根**
@@ -533,7 +533,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
   [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]],
   "symbols":[[node,visibility]],"unmentioned":[[node,vis,conv]],
-  "mounts":[[node,private,total,bits]]}`——稠密 0 基索引即
+  "mounts":[[node,private,total,bits]],"sccFloor":u64}`——稠密 0 基索引即
   节点身份，**无文本形物过线**（ADR-002 A6；6.2.0 的两张顾问表同律——候选名 `AdvisoryName`
   留在 Rust 侧，过线的只有整数）；节点行**三元组、单一合法元数**（5.0.0 起：
   pre-2.28 的 flags 列裁除，宽窄不对的行按**行下标**报 `node i: malformed row (need
@@ -545,7 +545,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   具名配对拒绝，占校验 asum 最前）：`unmentioned` 按 `id` 投影严格升序、每行 `[node, vis, conv]`；
   `mounts` 全节点恒一行、`take 1` 投影升序、`private ≤ total`、bits bit 0 再导出目标 / bit 1
   包私有；两表各自析取项计价（`mountCap` 131072 / `unmentionedHardCap` 524288），节点净空不动；
-  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。
+  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。`sccFloor` 是 6.4.0 起的可选环底（与 `verdict` 的 `cycleFloor` 同读一份 `[graph] scc_floor`；≥1 否则按名拒绝，上过线即在 `graph.result` 回显）。
   `unres` 是 2.32.0 起的可选按语言站点
   台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
   两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
@@ -593,8 +593,8 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     由 ce 恒发、与码 6 行逐位对齐，core 容其缺席）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
     + 规则包两键（3.2.0）：`rowClasses`（与 rows 逐位对齐的 classId）与 `gradeOverrides`
     `[[classId,code,warn,fail]]`（码 ∈ {0,1,4}，回复原样回显）
-    （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）；result 回
-    `{"levels":[0|1|2 逐行],"counts":{rows,warns,fails},"fail",生效 "grades" 全表}`；
+    （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）+ 围栏键 `knobsFence`（6.4.0，ce 恒发：`null` = 无基线未围、`[current,recorded]` 两摘要各 u64 或 null）；result 回
+    `{"levels":[0|1|2 逐行],"counts":{rows,warns,fails},"fail",生效 "grades" 全表,"failed":[名…]}`（`failed` 具名序 `hard_line, knobs_digest, degraded`，`knobsFence` 上过线即在；`fail ⇔ failed ≠ []`）；
     `degraded.reason ∈ {scan_too_large}` 且自带 fail=true。
 
 ## 2. SemVer 协商规则

@@ -49,14 +49,20 @@ Two consequences worth naming:
 
 ## How a screen runs
 
-Every judgment button drives one Tauri command, and every command is
-the same shape: anchor the root (`codeeraser::root::project_root` —
-the GUI re-roots to the enclosing project and says so), resolve the
-core once (the CLI's own chain: `CE_CORE_BIN` → a `ce-core` sibling
-of the executable → PATH; the installers stage ce-core as exactly
-that sibling), run the library closure off the async runtime, and
-bracket it with `ce-task` events that the status bar renders. A
-missing core fails loudly by name, same as the CLI.
+Every judgment button drives one Tauri command, and every root-scoped
+judgment command is the same shape: anchor the root
+(`codeeraser::root::project_root` — the GUI re-roots to the enclosing
+project and says so), resolve the core once (the CLI's own chain:
+`CE_CORE_BIN` → a `ce-core` sibling of the executable → PATH; the
+installers stage ce-core as exactly that sibling), run the library
+closure off the async runtime, and bracket it with `ce-task` events
+that the status bar renders. A missing core fails loudly by name,
+same as the CLI. Three commands sit outside that shape by design:
+`doctor_report` runs unbracketed (the face a reader reaches for when
+the event plumbing may itself be broken), and the Update screen's
+`update_check` / `update_apply` take no root and resolve no core at
+all — the question they ask is about this build, not the opened
+project.
 
 The erase pair is the one road past `faces`, by design: the preview
 needs the typed `Plan` (to hash targets and render the diff from the

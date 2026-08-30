@@ -68,4 +68,4 @@ precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。
 
 > hooks 配置在会话启动时加载——安装/改档后重启会话生效
-> （contracts/fixtures/hook-payloads/README.md 的实测结论）。
+> （2026-08-07 hook payload 实采会话的实测结论）。

@@ -45,8 +45,9 @@ as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
 
 - **Real** — every verdict. Each PreToolUse decision is the verbatim stdout of
   `ce probe --hook` fed the envelope Claude Code sends for a `Write`; the Stop
-  line is `ce audit --hook`'s; every gate line is the command's own output.
-  Scratch paths are replaced by `<work>`; nothing else is edited.
+  line is `ce audit --hook`'s; every gate line is the command's own output,
+  path-normalized (`<work>`), with `advisory` and diff lines dropped and only
+  the last 8 lines shown — the unclipped text is in [`out/summary.json`](out/summary.json).
 - **Scripted** — the agent's seven moves ([`steps.js`](steps.js)). No model is
   in the loop. Each write is built from the seed alone, so no move depends on
   an earlier one having landed, and a refusal in one run cannot change what

@@ -62,9 +62,12 @@ user files; it may create or refresh the `.ce/` cache):
    a declared submodule (a gitlink in HEAD) refuses by name: the
    worktree the command verified is the superproject's, and a file
    under `cli/tests/` belongs to another repository's index and
-   history (plan v2.18 follow-up; the CI `--check` leg still plans it,
-   so a dead file in the suite is still reported — it is erased in the
-   suite's own repository);
+   history (plan v2.18 follow-up). Since a declared submodule is a
+   reader of this tree and never a measured part (plan v2.18 step #12),
+   the superproject's plan holds no row under it and this refusal is
+   defence in depth against a hand-built plan; a dead file in the suite
+   is reported and erased by the CI leg that runs `ce erase tests --check`
+   inside the suite's own repository;
 4. every target file's content hash equal to the plan's (a file that
    moved since planning refuses by name — plans are not portable
    across edits);

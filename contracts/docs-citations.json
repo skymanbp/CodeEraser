@@ -541,13 +541,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:48": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 125,
-    "text": "\"SELECT content_hash, owner FROM files WHERE path = ?1\","
+    "line": 140,
+    "text": "// Markdown (no grammar) enters `files` for the graph cache"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:49": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 134,
-    "text": "Err(e)"
+    "line": 149,
+    "text": "let fps = winnow::fingerprints(&hashes, p);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:5": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -556,13 +556,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:50": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 133,
-    "text": "} else {"
+    "line": 148,
+    "text": "let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:51": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 134,
-    "text": "Err(e)"
+    "line": 149,
+    "text": "let fps = winnow::fingerprints(&hashes, p);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:52": {
     "target": "../../../cli/src/dedup/winnow.rs",
@@ -741,33 +741,33 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:84": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 72,
-    "text": "content_hash INTEGER NOT NULL,"
+    "line": 77,
+    "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:85": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 74,
-    "text": "has_tokens INTEGER NOT NULL,"
+    "line": 85,
+    "text": "CREATE INDEX idx_fp_file ON fingerprints(file_id);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:86": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 332,
-    "text": ""
+    "line": 381,
+    "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:87": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 333,
-    "text": "/// The raw connection. Read surface for the graph domain"
+    "line": 382,
+    "text": "let end = toks[f.start + p.kgram - 1].end_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:88": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 112,
-    "text": "/// order — the convergence leg the battery pins."
+    "line": 121,
+    "text": "let chash = tokens::fnv1a(src) as i64;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:89": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 122,
-    "text": "let stored: Option<(i64, bool)> = self"
+    "line": 137,
+    "text": "if stored == Some((chash, foreign)) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:9": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -776,23 +776,23 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:90": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 125,
-    "text": "\"SELECT content_hash, owner FROM files WHERE path = ?1\","
+    "line": 139,
+    "text": "}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:91": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 135,
-    "text": "}"
+    "line": 150,
+    "text": "let tx = self.conn.transaction()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:92": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 158,
-    "text": "chash,"
+    "line": 175,
+    "text": "tx.commit()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:93": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 48,
-    "text": "/// v15 (plan v2.18 step #12): `files.owner` (0 own, 1 foreign — the"
+    "line": 53,
+    "text": "const SCHEMA_VERSION: i64 = 15; // 9: trend rows carry their measuring toolchain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:94": {
     "target": "../../../cli/src/dedup/schema.rs",
@@ -806,13 +806,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:96": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 266,
-    "text": "pub fn full_build_done(&self) -> Result<bool> {"
+    "line": 311,
+    "text": "rows.sort();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:97": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 280,
-    "text": ""
+    "line": 329,
+    "text": "rows.sort();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md:98": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -911,7 +911,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:114": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 280,
+    "line": 281,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:115": {
@@ -926,7 +926,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:117": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 280,
+    "line": 281,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:118": {
@@ -936,7 +936,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:119": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 280,
+    "line": 281,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:12": {
@@ -961,7 +961,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:123": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 280,
+    "line": 281,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:124": {
@@ -991,7 +991,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:129": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 280,
+    "line": 281,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md:13": {
@@ -2545,54 +2545,54 @@
     "text": "jaccardNum :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:100": {
+    "target": "../../../core/app/CE/Verdict/Faces.hs",
+    "line": 23,
+    "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:101": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 160,
     "text": "floorFail = maybe False (perMille <) (reqFloor req)"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:101": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:102": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 179,
     "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:102": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:103": {
     "target": "../../../cli/src/config/canonical.rs",
     "line": 68,
     "text": "pub fn canonical(cfg: &Config) -> Value {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:103": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:104": {
     "target": "../../../cli/src/main_score.rs",
     "line": 48,
     "text": "const FENCE: [&str; 2] = [\"knobs_digest\", \"rows_dropped\"];"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:104": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:105": {
     "target": "../../../cli/src/main_score.rs",
     "line": 164,
     "text": "let fence_only = o.reply.failed.iter().all(|c| FENCE.contains(&c.as_str()));"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:105": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:106": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 162,
     "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:106": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:107": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 33,
     "text": ", bKnobsDigest :: Maybe Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:107": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:108": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 116,
     "text": ", rDropped ="
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:108": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:109": {
     "target": "../../../core/app/CE/Verdict/Faces.hs",
     "line": 30,
     "text": ", (\"rows_dropped\", not (null (rDropped r)))"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:109": {
-    "target": "../../../cli/src/score/provenance.rs",
-    "line": 57,
-    "text": "pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:11": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
@@ -2600,54 +2600,54 @@
     "text": "jaccardDen :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:110": {
+    "target": "../../../cli/src/score/provenance.rs",
+    "line": 57,
+    "text": "pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>> {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:111": {
     "target": "../../../core/app/CE/Verdict/Faces.hs",
     "line": 39,
     "text": "ratchetObj :: Bool -> Ratcheted -> [(String, Bool)] -> Value"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:111": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:112": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 107,
     "text": ", \"ratchet\" .= ratchetObj (isJust (reqPresent req)) r conds"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:112": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:113": {
     "target": "../../../cli/src/report.rs",
     "line": 48,
     "text": "pub fn fail_suffix(failed: &[String]) -> String {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:113": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:114": {
     "target": "../../../cli/src/score/report.rs",
     "line": 99,
     "text": "fn print_ratchet_tail(o: &Outcome) {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:114": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:115": {
     "target": "../../../core/app/CE/Verdict/Faces.hs",
     "line": 17,
     "text": "-- | The ADR-006 fail conjunction as NAMED rows (ADR-008 table form):"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:115": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:116": {
     "target": "../../../cli/src/config/canonical.rs",
     "line": 100,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:116": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:117": {
     "target": "../../../cli/src/score/knobs.rs",
     "line": 41,
     "text": "/// The core's cycle floor when none is declared"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:117": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:118": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 89,
     "text": "scoreBound :: ScoreKnobs"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:118": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:119": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 42,
     "text": "ratchetBound :: RatchetKnobs"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:119": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 1,
-    "text": "-- | Verdict-family constants — nothing but constants (the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:12": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -2656,15 +2656,20 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:120": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 1,
+    "text": "-- | Verdict-family constants — nothing but constants (the"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:121": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 12,
     "text": "-- Integer per the 2026-08-12 blocking decision ③ (the Anchor.hs"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:121": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:122": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 9,
     "text": "-- through CE.Verdict.Ratchet. The baseline crosses the wire VERBATIM"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:122": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:123": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 52,
     "text": "parsed = parseBaseline (reqBaseline req)"
@@ -2945,39 +2950,39 @@
     "text": "-- | The classKnobs code a class states its OWN ratchet tolerance"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:63": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 130,
+    "text": "-- | The cognitive-complexity sibling of classTolCode (6.4.0, O37)."
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:64": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 58,
     "text": "type ClassKnobs = M.Map (Integer, Integer) Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:64": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:65": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 135,
     "text": "-- the class rows fold into ONE Map here, once per judgment (3.1.0)"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:65": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:66": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 65,
     "text": "classOf :: [Integer] -> Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:66": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:67": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 172,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:67": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:68": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 182,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:68": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:69": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 128,
     "text": "-- the class is read from the CURRENT row and spends only on the"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:69": {
-    "target": "../../../core/app/CE/Verdict.hs",
-    "line": 152,
-    "text": "r = ratchet rk classTol (reqPresent req) base (reqCont req) (reqDisc req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:7": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -2985,54 +2990,54 @@
     "text": "tsedNum = 85"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:70": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 152,
+    "text": "r = ratchet rk classTol (reqPresent req) base (reqCont req) (reqDisc req)"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:71": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 148,
     "text": "identity = take 3"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:71": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:72": {
     "target": "../../../core/app/CE/Verdict/Table.hs",
     "line": 48,
     "text": "uniformArity :: String -> [[Integer]] -> Maybe String"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:72": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:73": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 85,
     "text": "classCap :: Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:73": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:74": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
     "line": 86,
     "text": "contRow :: String -> Int -> [Integer] -> Maybe String"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:74": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:75": {
     "target": "../../../core/app/CE/Verdict/Table.hs",
     "line": 61,
     "text": "classKnobsOffence :: [[Integer]] -> Maybe String"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:75": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 205,
     "text": "排除：后缀数组（构建不增量）、全仓 pairwise 树编辑、全仓 embedding。"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:76": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 73,
     "text": "tolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:77": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
     "line": 112,
     "text": "tolNum :: Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:78": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 61,
     "text": "-- | The single-edit ceiling allowance. Globally: max of the +2% leg"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:79": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 108,
-    "text": "-- | ADR-006 continuous-ratchet tolerance: a ceiling may be exceeded"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:8": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -3040,54 +3045,54 @@
     "text": "tsedDen = 100"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:80": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 108,
+    "text": "-- | ADR-006 continuous-ratchet tolerance: a ceiling may be exceeded"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 66,
     "text": "-- A class that declares its own tolerance REPLACES both legs with an"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:81": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
     "target": "../../../core/test/ClassProps.hs",
     "line": 216,
     "text": "-- | K14: class 1 declares a zero allowance and grows by one line —"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:82": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 77,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:83": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:84": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 103,
     "text": "{ rOver ="
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:84": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:85": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 108,
     "text": ", rDrawn ="
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:85": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:86": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 49,
     "text": "-- ^ [u,metricCode,drawn]: over the ceiling but inside tolerance —"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:86": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:87": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 123,
     "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:87": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:88": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 77,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:88": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:89": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 211,
     "text": "- **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:89": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 114,
-    "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:9": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
@@ -3096,53 +3101,53 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:90": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 114,
+    "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 141,
     "text": "curSet = S.fromList disc"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:91": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:92": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 124,
     "text": ", rNewDisc = disc"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:92": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 81,
     "text": "-- saw adopt their value (bootstrap, not a violation). A baseline"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:93": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 92,
     "text": "ratchet ::"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:94": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:95": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
     "line": 3,
     "text": "-- SET (new member = fail, removed member auto-shrinks). No baseline"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:95": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:96": {
     "target": "../../../cli/src/score/mod.rs",
     "line": 146,
     "text": "let baseline = match (opts.establish, opts.pinned_soft) {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:96": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:97": {
     "target": "../../../cli/src/score/pinned.rs",
     "line": 21,
     "text": "pub(crate) fn baseline("
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:97": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:98": {
     "target": "../../../cli/src/trend/mod.rs",
     "line": 147,
     "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:98": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:99": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 217,
     "text": "- 与 `--fail-under` 合成：有基线的仓库以棘轮为主门，`--fail-under` 为下限保险；"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md:99": {
-    "target": "../../../core/app/CE/Verdict/Faces.hs",
-    "line": 23,
-    "text": "failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:1": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
@@ -3361,8 +3366,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:138": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 320,
-    "text": "} else if n.kind == super::wire::GRAN_FILE {"
+    "line": 338,
+    "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:139": {
     "target": "../../../core/app/CE/Graph/Dead.hs",
@@ -3396,8 +3401,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:144": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 381,
-    "text": "body"
+    "line": 425,
+    "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:145": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -3471,8 +3476,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:158": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 362,
-    "text": "\"symbols\": w.symbols.iter().collect::<Vec<_>>(),"
+    "line": 412,
+    "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:159": {
     "target": "../../../core/test/GraphWireProps.hs",
@@ -3486,7 +3491,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:160": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 279,
+    "line": 280,
     "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:161": {
@@ -3886,8 +3891,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:77": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 20,
-    "text": "}"
+    "line": 25,
+    "text": "/// granularity codes; PACKAGE is taken from the edges' STORED"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:78": {
     "target": "../../../cli/tests/unit/graph/nodes.rs",
@@ -3921,8 +3926,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:83": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 255,
-    "text": "/// duplicate-free validation demands."
+    "line": 268,
+    "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:84": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -3931,13 +3936,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:85": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 61,
-    "text": "super::wire::GRAN_FILE"
+    "line": 88,
+    "text": "/// Synthetic containment arcs: package node → every file under its"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:86": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 66,
-    "text": "|| (kind == super::wire::GRAN_PACKAGE"
+    "line": 93,
+    "text": "// A package at the REPO ROOT has path \"\", and `format!(\"{}/\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md:87": {
     "target": "../../../cli/src/graph/load.rs",
@@ -5731,18 +5736,18 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:12": {
     "target": "../../../cli/src/guard.rs",
-    "line": 291,
-    "text": "root,"
+    "line": 5,
+    "text": "//! build. FAIL-OPEN: any internal failure allows the edit — a guard"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:13": {
     "target": "../../../cli/src/guard.rs",
-    "line": 168,
-    "text": ""
+    "line": 213,
+    "text": "/// None = probe unavailable (degraded); Some(vec) = verified matches."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:14": {
     "target": "../../../cli/src/guard.rs",
-    "line": 253,
-    "text": "top.join(\"; \")"
+    "line": 297,
+    "text": "\"degraded\": ev.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:15": {
     "target": "../../../cli/src/config/tier.rs",
@@ -5751,28 +5756,28 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:16": {
     "target": "../../../cli/src/guard.rs",
-    "line": 251,
-    "text": "against the current tree, and the same write then passes.\","
+    "line": 257,
+    "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:17": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 264,
+    "text": "_ => return, // observe: log only, no output"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:18": {
     "target": "../../../cli/src/guard.rs",
     "line": 282,
     "text": "mode: &'a str,"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:18": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 249,
-    "text": "Reuse the existing implementation instead of re-writing it. \\"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:19": {
     "target": "../../../cli/src/guard.rs",
-    "line": 241,
-    "text": "m[\"start_line\"],"
+    "line": 288,
+    "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:2": {
     "target": "../../../cli/src/guard.rs",
-    "line": 75,
-    "text": "session: &env.session_id,"
+    "line": 80,
+    "text": "let mut reasons = Vec::new();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:20": {
     "target": "../../../cli/src/config/tier.rs",
@@ -5786,8 +5791,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:22": {
     "target": "../../../cli/src/guard.rs",
-    "line": 50,
-    "text": "let broken = loaded.as_ref().err().cloned();"
+    "line": 56,
+    "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:23": {
     "target": "../../../cli/src/health.rs",
@@ -5806,37 +5811,37 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:26": {
     "target": "../../../cli/src/guard.rs",
-    "line": 148,
-    "text": "}"
+    "line": 149,
+    "text": "if let Some(e) = broken {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:27": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 278,
-    "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
+    "line": 96,
+    "text": "**默认档位演进路线（A1，写死在此，不许默认永远 warn）**："
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:28": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 313,
-    "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
+    "line": 278,
+    "text": "| **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:29": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 278,
+    "line": 279,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:3": {
     "target": "../../../cli/src/guard.rs",
-    "line": 174,
-    "text": "/// had is carried forward, not written anew. The baseline probe runs"
+    "line": 169,
+    "text": "/// The rule denies NEW duplication only (K step 11 root fix): the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:30": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 313,
+    "line": 314,
     "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:31": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 278,
+    "line": 279,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:32": {
@@ -5851,8 +5856,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:34": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 36,
-    "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
+    "line": 44,
+    "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:35": {
     "target": "../../FPR-REPLAY.md",
@@ -5876,28 +5881,28 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:39": {
     "target": "../../FPR-REPLAY.md",
-    "line": 39,
-    "text": "## 重放捎带抓获的产品缺陷（已修）"
+    "line": 17,
+    "text": "| 语料 | 事件数 | 拦截 | 仲裁后误拦 | 折算 /500 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:4": {
     "target": "../../../cli/src/guard.rs",
-    "line": 244,
-    "text": ")"
+    "line": 250,
+    "text": "Moving it? Trim the source region first: the probe verifies \\"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:40": {
     "target": "../../FPR-REPLAY.md",
-    "line": 3,
-    "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
+    "line": 23,
+    "text": "## 自仓 35 条拦截仲裁（全真阳）"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:41": {
     "target": "../../FPR-REPLAY.md",
-    "line": 98,
-    "text": "仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」"
+    "line": 39,
+    "text": "## 重放捎带抓获的产品缺陷（已修）"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:42": {
     "target": "../../FPR-REPLAY.md",
-    "line": 55,
-    "text": "自仓全史 2274 事件 **505 拦截**（111.04/500）。按无序文件对分解 = 122 对首燃 +"
+    "line": 54,
+    "text": "**第一轮（出厂语义=全文探针）**：requests 尾段 487 事件 **0 拦截**（与原记录逐字同）；"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:43": {
     "target": "../../FPR-REPLAY.md",
@@ -5906,13 +5911,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:44": {
     "target": "../../FPR-REPLAY.md",
-    "line": 109,
-    "text": "+++ fpr_replay.rs (revived, K round)"
+    "line": 98,
+    "text": "仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:45": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 19,
-    "text": "pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {"
+    "line": 45,
+    "text": "/// Scope + exact post-write size — ONE measurement feeding both the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:46": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5931,8 +5936,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:49": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 188,
-    "text": "let cap = z.cap;"
+    "line": 72,
+    "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:5": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -5946,23 +5951,23 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:51": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 259,
-    "text": "fn committed_soft(root: &Path) -> Option<usize> {"
+    "line": 153,
+    "text": "/// Budget firings get their own feed line (accounting for the §4.2"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:52": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 33,
-    "text": "/// the tier the mapped position resolved to, so the feed records"
+    "line": 41,
+    "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:53": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 190,
-    "text": "if cap == 0 || cap <= soft || lines <= soft {"
+    "line": 188,
+    "text": "let cap = z.cap;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:54": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 232,
-    "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
+    "line": 259,
+    "text": "fn committed_soft(root: &Path) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:55": {
     "target": "../ce-toml.md",
@@ -5976,8 +5981,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:57": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 210,
-    "text": "if armed {"
+    "line": 232,
+    "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:58": {
     "target": "../../../cli/src/config/tier.rs",
@@ -5991,8 +5996,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:6": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 144,
-    "text": "let applied = match (t.replace_all, on_disk.matches(&old).count()) {"
+    "line": 134,
+    "text": "let on_disk = std::fs::read_to_string(&t.file_path)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:60": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -6006,8 +6011,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:62": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 23,
-    "text": "/// 0.7.0 re-defines `matches` on `probe` events (K step 11 novel-"
+    "line": 31,
+    "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:63": {
     "target": "../../../cli/src/config/tier.rs",
@@ -6021,13 +6026,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:65": {
     "target": "../../../cli/src/guard.rs",
-    "line": 60,
-    "text": "let file_path = &env.tool_input.file_path;"
+    "line": 63,
+    "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:66": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 200,
-    "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
+    "line": 197,
+    "text": "// the B4 suppression consults the feed BEFORE this event lands"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:67": {
     "target": "../../../cli/src/hookio.rs",
@@ -6051,8 +6056,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:70": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 200,
-    "text": "}"
+    "line": 220,
+    "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:71": {
     "target": "../../../cli/src/hookio.rs",
@@ -6061,8 +6066,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:72": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 18,
-    "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
+    "line": 163,
+    "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:73": {
     "target": "../../../cli/src/guard.rs",
@@ -6081,8 +6086,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:8": {
     "target": "../../../cli/src/config/tier.rs",
-    "line": 71,
-    "text": "pub fn tier_of(loaded: &Result<Config, String>, route_default: &str) -> String {"
+    "line": 56,
+    "text": "pub fn tier(&self, route_default: &str) -> String {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md:9": {
     "target": "../../../cli/src/config/tier.rs",
@@ -6547,7 +6552,7 @@
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:4": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 286,
-    "text": "| **K–L** 收口轨（K 轮 v2.14 **已交付 2026-08-26** 随 v1.2.0；K+1 CI 减重批 7dc391d→cd4ea86 用户拍板；**L 轮 v2.17 立项 2026-08-26，甲-1 封版 2026-08-27**） | 甲 步 3b 符号层顾问全链 + 乙 围栏收尾 19 条 + 丙 文档/记账/实录清欠 9 条（全文见 v2.18 banner 条）+ **v2.18 两步**：减法批（7 条 ≈116 行 + 3 缺陷，**已落 2026-08-28**）+ 测试子仓（cli/tests + gui/tests → skymanbp/CodeEraser-tests submodule，**已落 2026-08-28**）；具名后置束 M（评分/评测 12 + 产品小项 9〔步 #16 复核新入两条：Python `__all__` 再导出跳入 mounts `via_reexport` 臂、Haskell 选择子名并入类型单元的导入绑定与提及匹配〕）/ N（分发 20）/ 证据门 4 | 3–4 周 ± | 甲：口径对抗审查册**已封版**（v9，2026-08-27：九轮双把、第七至九轮核验者 Workflow 零 REFUTED、第九轮双把零 breaks；定案见 v2.17 banner 条）→ 片序 (1)→(8)：symEdges 退役（SCHEMA 14 wipe，**已落 dd20947**）→ 可见性三位字 + bit 0 三修 T3/H2+H4/H5（GRAPH_REV 11，wire 掩码 bit 0，K27 差分入 CHANGELOG，**已落 2026-08-27**）→ mentions 表（自有第二 walk + 三发射器分词 + 两加性表存 fnv1a64、`MENTION_REV` 1 自有版本行、自有入口 `ce graph --mentions`，K39–K42 四腿 + secrets 表八条加宽同表，**已落 2026-08-27**）→ conv 类别字列（`symbols.conv` 存 AST 半八位、名表半 wire 时算，`mention_name` 域抽取器 + `ce:allow` 解析合一 `crate::allow`，GRAPH_REV 12，K24/K25/K28/K37 生产者半，**已落 2026-08-27**）→ `mounts` 表生产者 + cabal 两字段 + TS `export_star` 站点（GRAPH_REV 13，冻结自仓切片一行改签，K30 生产者半 e2e 六格 + 再导出/Go/cabal/无 lib 包，R5 梯级召回界具名——用户裁同日入提取面补强步作梯级修正案〔见本条 v2.17 提取面补强句〕，**已落 2026-08-27**）→ graph/1 6.2.0 加性两表 `unmentioned`/`mounts`（`symbols` 不动、legacy 请求字节恒等）+ `export_unmentioned` golden 反事实（约定式可达名零误报腿 K33；`CE.Graph.Advisory` 自有类 + Rust 候选生产者 `mention/candidates` + report 0.3.0 三面原子，**已落 2026-08-27**）→ 渲染面 + K23 四语料 + K45 双腿 + 方法学册 13（0.3.0 第三键 `unmentioned_cut`、GUI 符号级下钻、`ce graph --mentions` 0.2.0 `rates` 普查、U 公式钉 + 258 行外部处置零 veto 缺陷，**已落 2026-08-28**）+ 自仓 101 条候选逐条处置；乙：19 条各一腿红/绿反事实（**已落 2026-08-29**，片 (a)(b)(c)）；丙：9 条就地改 + PreToolUse 全链实录数入 PERF-BUDGET + §2 复扫除新入场行外只变短（**已落 2026-08-29**，复扫例行随后经用户令退役）；收口判定式 87/87 具名（**复核 2026-08-29**：46 条已交付经 codex 四路只读审计逐条取证——35 落地 / 8 具名澄清 / 2 修补〔O42 类名出指纹、O43 注释〕/ 1 退役，41 条后置束计数与台账一致），台账 memory/frontier-2026-08-26；**v2.20 三步（用户四令 2026-08-29）**：更新功能三面等价（`ce update` 检查 = 退出码 0/1/2、`--yes` 就地替换 ce + ce-core，pin 来自 tag 上已提交的 `manifest.env`——O83 逆转，信任锚 = pin 提交而非签名；插件/cargo 所有的副本按名拒绝并指出各自的更新命令；GUI 第十屏 update 同一文档同一 apply 入口；插件 SessionStart 通知缓存一天 + `/codeeraser:update`；MCP 第十四工具 `update_check` 只到检查；`ce.update-report/0.1.0`；e2e 经 `file://` 端点 + `CE_UPDATE_TARGET_DIR` 隔离）→ 三面等价表由代码派生（clap 枚举 / Tauri 命令与屏 / MCP 目录 / hooks.json / plugin commands+skills）并逐字节门控（`face_parity`，具名省略写在表内）→ README 双语九节重构 + 仓内 demo（`demo/`：同一任务两跑只差 hook，七步真实判决，`demo_replay` 门）+ 全量文档同步（文档三律：中英分立 / 精简 / 全量）；**v1.3.0 随后发四渠道**（发布令 2026-08-29 解除悬置） |"
+    "text": "| **M9** 打磨与完整面（v2.8 立项 2026-08-21） | 批 **0** v0.7.3 出货批：spawn 全站点无窗化（单一 helper 统一 corelink/churn/fourclass/daemon 四站点——unified fix）+ 裸 `ce` 印 help 退 0 + trend 默认分批渲染进度，随后完整发版链；批 **1** 两车道审阅 113 条全量落地（台账=项目 memory `audit-2026-08-21-two-lane-findings.md`；CONFIRMED 33 优先、minors 全清、与后续批重叠项归并不重复干）+ 全 md 防漂移扫尾；批 **2** 方法学册 `docs/reference/methodology.md`（每判决族数学实现——winnowing 指纹/TSED/结构熵七轴/评分与棘轮/图存活性/三信号 join/ROI 缝价，公式逐条引 file:line 禁凭印象）+ 细节版原理图 + 官网 How-it-works 页 + README 挂链；批 **3** `ce erase` 两段式（契约册 `docs/reference/erase.md` 先行）；批 **4** GUI 完整化：全报告族入面、erase 预览-应用、长任务进度事件、root 选择器/记忆（装机版 CWD=安装目录之弊）、设计系统翻新（v2.9 起并入终版不单发）；批 **5** bench dashboard：`eval/` 回放 harness 产 `bench.json` 单源（延迟 P50/P95、精度、召回、FPR），per-tag 回填 + 官网/README/GUI 三面同源渲染；批 **6** 实战检验：≥2 真实仓库全家桶实测入案例册（反哺批 5 与缺陷修复）；批 **7** 判决回迁第三弹（盘点 Rust 内残余判决性逻辑→迁移清单→逐片入核，wire 按 proto minor 加性；禁止为占比写代码——ADR-008 纪律沿用）；批 **8** 架构级全仓代码审查（v2.10 用户令 1.0 前置：模块边界与依赖结构〔import SCC 清单为线索〕、wire 十族契约一致性、核模块架构、GUI/测试架构、错误处理与降级路径；多 agent+逐条对抗核验，修复或书面 disposition 不悬空）；批 **9** 全域优雅性终打磨（数学/算法/架构/GUI 再设计思考，含 GUI 美化挂账项；提案册先行，契约/门槛变更走拍板；**v2.11 增补**：GUI Graph 可视化收进本批 GUI 波——文件级引用图 canvas 视图+死码/环判决叠加，复用 deadcode 判决运行的 Rust 投影零 proto 变更，符号级下钻不入围，2026-08-21 拍板） | 分批推进 | 每批五门+CI 全绿；批 0 发 v0.7.3，批 1–9 落 main，终版 **v1.0.0** 走完整发版链收口（v2.9/v2.10）；erase 触碰用户文件必 dry-run 默认+干净工作区前置+补丁与判决同源可审计；dashboard 每个数字可由回放复现（禁手填）；回迁片产品判决面字节等价 golden 承重；FPR 纪律与 guard 档位 opt-in 不破；弹窗根修以 windowed 进程实测零弹窗验收（**已收口 2026-08-22**：批 0–9 + 终扫〔113 对账 81 修 29 处置、716 断言终核、截图/官网真值重取〕全清，v1.0.0 发版链走毕即项目收口） |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md:40": {
     "target": "../../../cli/src/mention/selfref.rs",
