@@ -105,7 +105,7 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
 </figure>
 
 <h2><!--ce:count:booklets#word-->十三<!--/ce-->个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十三<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十四<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态，不是判决。</p>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十三<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十四<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>update_check</code>——第十四个——拿本构建比对最新发布，这个面既无 wire 家族也无方法学册。</p>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -242,7 +242,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无——旁边是加性的
   <code>classKnobs</code> 表，码域是 ceilings 自己的 <code>0 / 1 / 2</code> 加 <code>3</code>
   （5.1.0，该类自己的 ADR-006 棘轮容差，行数绝对值）与 <code>4</code>（6.4.0，该类自己的
-  认知复杂度容差）——这两个都是「零有意义」的类旋钮，故表的
+  认知复杂度容差）——这两个都是取值 <code>0</code> 有意义的类旋钮，故表的
   取值下界按码分判。带类的行按其类声明的软线、硬线与 CoC 上限收费，类未声明处回落到全局线；
   收费定律本身分毫未动。棘轮读第四列只为取该容差——按（类, 指标）分别取：声明了 <code>4</code>
   号时它答认知复杂度，其余情形由 <code>3</code> 号作答；声明即<em>取代</em>两条全局腿，<code>0</code>
