@@ -19,11 +19,11 @@
 - **功能五：揪出没有人到达的东西。** 文件级引用图给出四态存活性判决与环成员，另有符号层顾问列出没有任何他文件拼写其名的声明。
 - **功能六：只擦除可证明安全的部分。** 死文件、逐字重复的文档孪生、整单元精确克隆：先出计划，在干净工作区上应用，从不让模型改写任何东西。
 - **功能七：动手拆分之前先给缝定价。** 每个越过软线的文件都得到最佳拆分缝的价格，或一份写明为何整体保留的内聚性辩词。
-- **功能八：给整棵树打分，守住一条只会收紧的地板。** 七条轴折成一个分数；来自已接受基线的逐文件上限随清理收紧，永不无声放松。
+- **功能八：给整棵树打分，守住一条只会收紧的地板。** <!--ce:count:axes#word-->七<!--/ce-->条轴折成一个分数；来自已接受基线的逐文件上限随清理收紧，永不无声放松。
 - **功能九：看轨迹。** 主线提交上的分数历史、git 窗口内的变动，以及把变动、重复与存活性合成一条判决的三信号联判。
 - **功能十：让自己保持最新。** `ce update` 拿最新发布与发布提交自己写下的 pin 对照，两枚 pin 都校验通过后才就地替换二进制。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（六套 tree-sitter 语法上的七个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：`ce` CLI、GUI（十屏）、Claude Code 插件（三钩、一 skill、一命令、十四个只读 MCP 工具）、pre-commit 与 CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：`ce` CLI、GUI（<!--ce:count:screens#word-->十<!--/ce-->屏）、Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十四<!--/ce-->个只读 MCP 工具）、pre-commit 与 CI。
 
 ## 具体实现——以及它的不同之处
 
@@ -31,11 +31,11 @@
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）在可容许剪枝下生成候选——能过线的对一个不丢——再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙——每个文本文件里的每个标识符，只以 fnv1a64 哈希存储——产出**未被提及的声明**顾问，它永不把门翻红。
-- **被度量的结构。** 七轴（几何、命名多样性、混杂、错位、约定、过期文档、冗余）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
-- **挪几行骗不过的分数。** 每轴计 floor(1000·v/(v+n))——违规质量除以机会数——加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`）；基线携带**有效**配置的摘要，改一个旋钮会让 `ce check` 具名停下（`knobs_digest`）而非挪动所有线。六个 fail 条件，逐名报在控制台。
+- **被度量的结构。** <!--ce:count:axes#word-->七<!--/ce-->轴（几何、命名多样性、混杂、错位、约定、过期文档、冗余）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
+- **挪几行骗不过的分数。** 每轴计 floor(1000·v/(v+n))——违规质量除以机会数——加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`）；基线携带**有效**配置的摘要，改一个旋钮会让 `ce check` 具名停下（`knobs_digest`）而非挪动所有线。<!--ce:count:fail_conditions#word-->六<!--/ce-->个 fail 条件，逐名报在控制台。
 - **时间是一等信号。** 最近 512 个分数点上的 Theil–Sen 斜率（一个野点拽不动中位数）；变动 = 新增 − 按 blame 存活的行；联判格把相似度、图位置与变动合成 merge / delete / churn-hotspot，带理由位与置信。
-- **有安全谓词的擦除，不是启发式。** 三类（逐字文档孪生、副本已死的整单元 T1 孪生、置信的非公开死文件）、七个冻结理由码、4,096 行上限，以及任一已应用判决幸存即失败的收敛重规划。
-- **由构造保证的确定性。** 任何判决里没有随机数与时钟；golden 夹具逐字节比对；过线的是码，句子留在各自的面。Rust 与 Haskell 在一条 SemVer 协商的 NDJSON wire 上相接（proto <!--ce:ver:proto#v-->6.4.0<!--/ce-->，十个家族）；策略是 Haskell 数据（ADR-008），配置以事实过线，从不以名字。
+- **有安全谓词的擦除，不是启发式。** <!--ce:count:erase_classes#word-->三<!--/ce-->类（逐字文档孪生、副本已死的整单元 T1 孪生、置信的非公开死文件）、<!--ce:count:erase_reasons#word-->七<!--/ce-->个冻结理由码、<!--ce:gate:erase.row_cap#digits-->4,096<!--/ce--> 行上限，以及任一已应用判决幸存即失败的收敛重规划。
+- **由构造保证的确定性。** 任何判决里没有随机数与时钟；golden 夹具逐字节比对；过线的是码，句子留在各自的面。Rust 与 Haskell 在一条 SemVer 协商的 NDJSON wire 上相接（proto <!--ce:ver:proto#v-->6.4.0<!--/ce-->，<!--ce:count:families#word-->十<!--/ce-->个家族）；策略是 Haskell 数据（ADR-008），配置以事实过线，从不以名字。
 - **一直延伸到更新器的信任链。** 发布分两段：draft 工件被哈希，pin 以一次提交落进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节。插件启动器与 `ce update` 对照的是这些 pin；安装包则由 tag 腿在 Release 发布前对照同一批 pin 校验。
 
 ## 实际效果——同一任务，跑两遍
@@ -93,7 +93,7 @@
 
 ## 安装、运行与更新
 
-**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发三个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`；Windows 安装包把安装目录写入 PATH，检测到 Claude Code 时自动接入下述插件。九个二进制与 `SHA256SUMS` 按裁定不签名——用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
+**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->三<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`；Windows 安装包把安装目录写入 PATH，检测到 Claude Code 时自动接入下述插件。<!--ce:count:binaries#word-->九<!--/ce-->个二进制与 `SHA256SUMS` 按裁定不签名——用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
 
 **Claude Code 插件。** `/plugin marketplace add skymanbp/CodeEraser`，再 `/plugin install codeeraser`。启动器按 pin 解析 `ce` 与 `ce-core`：先取命中的本地或 PATH 副本，再钉扎下载，最后才是会自报未校验的 PATH 二进制。
 
@@ -108,7 +108,7 @@
 | `ce clone` / `ce docdup` | T3 近似克隆；文档重复 |
 | `ce graph` / `ce deadcode` | 引用站点与提及宇宙；存活性判决 + 符号顾问 |
 | `ce churn` / `ce join` / `ce trend` | git 窗口变动；三信号联判；分数轨迹（以分钟计，stderr 报进度） |
-| `ce structure` | 七轴；`--split-candidates` 为每个越过软线的文件计最优缝价 |
+| `ce structure` | <!--ce:count:axes#word-->七<!--/ce-->轴；`--split-candidates` 为每个越过软线的文件计最优缝价 |
 | `ce check` / `ce baseline` | ADR-006 棘轮与分数地板；`baseline` 只在根、且只在具名动作下持久化 |
 | `ce erase` | 确定性两段式擦除；默认演练，`--apply` 有干净工作区前置 |
 | `ce update` | 最新发布对比本构建，退出码 0 / 1 / 2；`--yes` 两枚 pin 都通过后替换 `ce` + `ce-core`，`--installer` 另存已校验的 GUI 安装包 |
@@ -158,23 +158,23 @@
 
 ![详细技术栈：Rust 度量、版本化 wire、Haskell 判决、产品面与发布 pin 链](docs/assets/stack.svg)
 
-- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#digits-->2024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与六套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
+- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#digits-->2,024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与<!--ce:count:grammars#word-->六<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`——每个判决家族（scan、verdict、clone、docdup、graph、structure、trend、erase、fourclass、audit）、精确有理数、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
 - **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.4.0<!--/ce-->）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.0.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
-- **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、十三册带机器核验引文的[方法学](docs/reference/methodology.md)、bench 块、demo、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑六道产品门。
+- **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十三<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、bench 块、demo、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑<!--ce:count:gates#word-->六<!--/ce-->道产品门。
 
 ## 路线图与已知限制
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述六套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v1.2.0 → v1.3.0 测试子仓搬迁的分数不可比。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v1.2.0 → v1.3.0 测试子仓搬迁的分数不可比。
 
 **路线图。** 后置束在计划书 K–L 行具名：M（评分与评测项、产品小项）、N（分发——deb/rpm、来源证明、marketplace 渠道、air-gapped 流程）与四道决定守卫类能否晋级的证据门。没有自己的误报记录，什么都不晋级。
 
 ## 文档
 
 - [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)——由二进制与配置 schema 生成；漂移即 CI 变红
-- [方法学](docs/reference/methodology.md)（十三册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
+- [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十三<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
 - [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md)
 - [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)——wire SemVer 与两段式发布 runbook
 - 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [技术栈](https://codeeraser.dev/zh/stack/) · [实测](https://codeeraser.dev/zh/bench/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->

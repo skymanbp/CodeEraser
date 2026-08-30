@@ -99,8 +99,8 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   它们变成判决；泳道 3 决定退出码。图上每一个数字都是下文各节引用的常数。</figcaption>
 </figure>
 
-<h2>十三个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b>十三</b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b>十</b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b>十四</b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态，不是判决。</p>
+<h2><!--ce:count:booklets#word-->十三<!--/ce-->个判决家族</h2>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十三<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十四<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态，不是判决。</p>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -175,7 +175,7 @@ dupVerdictWith (num, den, vfloor) inter union run
 </div>
 
 <div class="fam">
-  <h3><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">结构判决——树尺度熵，七条判轴</a></h3>
+  <h3><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">结构判决——树尺度熵，<!--ce:count:axes#word-->七<!--/ce-->条判轴</a></h3>
   <p class="job">判的是树而不是文件：目录几何、命名分布、引用局部性、文档覆盖、文档陈旧、冗余。</p>
   <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
 tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
@@ -210,7 +210,7 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
 
 <div class="fam">
   <h3><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">评分与 ADR-006 棘轮</a></h3>
-  <p class="job">把七条判轴折叠成一个 0–1000 的分数，并对着一份只准收紧的基线银行把门。</p>
+  <p class="job">把<!--ce:count:axes#word-->七<!--/ce-->条判轴折叠成一个 0–1000 的分数，并对着一份只准收紧的基线银行把门。</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
 wTotal  = sum_i w_i                            -- derived, never a literal
 score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
@@ -230,7 +230,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   越过硬线之后仍单调上升——<code>pMax</code> 是<em>落在</em> <code>H</code> 上的取值，不是上限。
   软线 <code>S</code> 是仓库自身冻结 LOC 分布的一个统计量，即把
   <code>S = clamp(median + k·MAD, …)</code> 改写成乘性形式，从而全程不取对数；它只在 establish
-  时导出，随后冻进基线。fail 位是六个<em>具名</em>条件的析取——<code>ratchet_over</code>、
+  时导出，随后冻进基线。fail 位是<!--ce:count:fail_conditions#word-->六<!--/ce-->个<em>具名</em>条件的析取——<code>ratchet_over</code>、
   <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、
   <code>knobs_digest</code>、<code>rows_dropped</code>——回包同时带回究竟是哪几个成立，控制台按同一顺序把它们印在 <code>FAIL</code> 之后。</p>
   <p class="note">自规则包起（proto 3.1.0），连续行可带第四列——该文件的<em>路径类</em>，即首个 glob
@@ -273,7 +273,7 @@ reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
 referenced = indeg &gt;= 1 over kept arcs
 judged     = i ∉ reach
 code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
-  <p class="note">四个码，结构上互相隔离，使"已导出但无人引用的 API"永远不会塌进普通的 dead：
+  <p class="note"><!--ce:count:deadcode_codes#word-->四<!--/ce-->个码，结构上互相隔离，使"已导出但无人引用的 API"永远不会塌进普通的 dead：
   <code>1 unref_private</code>、<code>2 unref_public</code>、<code>3 unreach_private</code>、
   <code>4 unreach_public</code>。解析从不猜：一个 site 按本语言的梯级依次向上走，第一个产出
   <em>恰好一个</em>在域候选的梯级胜出；多于一个即 <code>Unresolved</code>，而
@@ -298,7 +298,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 
 <div class="fam">
   <h3><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">三信号 join</a></h3>
-  <p class="job">把相似度 × 图位置 × 变动史合成四个候选码之一——然后刻意拒绝据此行动。</p>
+  <p class="job">把相似度 × 图位置 × 变动史合成<!--ce:count:join_codes#word-->四<!--/ce-->个候选码之一——然后刻意拒绝据此行动。</p>
   <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
 (2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
 (3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
@@ -488,7 +488,7 @@ permille = (lines - S) * 1000 / (H - S)
 
 <div class="fam">
   <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">确定性擦除——安全谓词</a></h3>
-  <p class="job">判决擦除计划的行，覆盖三个可证明安全的家族——<code>dead_file</code>、
+  <p class="job">判决擦除计划的行，覆盖<!--ce:count:erase_classes#word-->三<!--/ce-->个可证明安全的家族——<code>dead_file</code>、
   <code>verbatim_doc</code> 与 <code>t1_twin</code>；其余行都以具名 reason code 拒绝。</p>
   <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
          3 dead_file (confidence road, 2.32.0)

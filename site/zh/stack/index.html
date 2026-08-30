@@ -51,7 +51,7 @@
 
 <h2>靠什么守住诚实</h2>
 <div class="grid">
-  <div class="card"><b>项目给自己把门</b><p>每次 push，<code>ci.yml</code> 都在本仓运行六条产品腿：scan、dedup 棘轮、地板 <code><span data-const="ci-floor">946</span></code> 的 check、deadcode、docdup 与 erase。</p></div>
+  <div class="card"><b>项目给自己把门</b><p>每次 push，<code>ci.yml</code> 都在本仓运行<!--ce:count:gates#word-->六<!--/ce-->条产品腿：scan、dedup 棘轮、地板 <code><span data-const="ci-floor">946</span></code> 的 check、deadcode、docdup 与 erase。</p></div>
   <div class="card"><b>棘轮只缩不涨</b><p>ADR-006 把逐文件上限与离散违规集冻结在 <code>ce-baseline.json</code>。增长必须具名重立；日常清理会自动收紧基线银行。</p></div>
   <div class="card"><b>尺寸线可按路径类声明</b><p><code>ce.toml</code> 的 <code>[[rules.class]]</code> 为一组 glob 声明自己的尺寸与复杂度线——5.1.0 起还可声明自己的棘轮容差——至多 64 类，声明序首中。分数、<code>ce scan</code> 阶梯与守卫钩子读的都是文件自己那条；类名与 glob 永不过线，过线的是类下标与 knobs（proto 3.1.0 / 3.2.0），外加整份解析配置的 <code>knobsDigest</code> 指纹（6.0.0；O39 起为规范形——与出厂默认不同的有效旋钮，写成默认值的旋钮与没人声明的可选项都不动它），仅当配置的判决异于出厂默认时随发。</p></div>
   <div class="card"><b>文档各有权威</b><p><code>docs_gate.rs</code> 从二进制生成 CLI 与配置参考。引文、导航和常数测试检查方法学；所有 benchmark 表面由同一 JSON 合约逐字节门控。</p></div>
@@ -60,7 +60,7 @@
 <!-- bench-stack:end -->
   <div class="card"><b>擦除是确定性的</b><p><code>erase/gather.rs</code> 组装事实；<code>CE.Erase</code> 只授权满足安全谓词的行。应用前逐目标验哈希，落笔后重跑来源家族——幸存判决响亮失败；没有 LLM 负责重写。</p></div>
   <div class="card"><b>发布分成两段</b><p><code>release.yml</code> 先为 draft 工件计哈希，再由提交的 pins 绑定这些字节。tag 作业下载同一批工件，检查 CI 与每个 pin，全程不重建。</p></div>
-  <div class="card"><b>方法可以逐行检查</b><p>十三册方法学把每条公式链接到实现它的 <code>file:line</code>。<code>docs_citations.rs</code> 查引文台账；<code>docs_nav.rs</code> 查册集与导航。</p></div>
+  <div class="card"><b>方法可以逐行检查</b><p><!--ce:count:booklets#word-->十三<!--/ce-->册方法学把每条公式链接到实现它的 <code>file:line</code>。<code>docs_citations.rs</code> 查引文台账；<code>docs_nav.rs</code> 查册集与导航。</p></div>
   <div class="card"><b>Haskell 真正承重</b><p>只有核能计算分数与棘轮判决、授权 erase 行、决定 cycle 轴成员。属性电池会扰动这些判决，并以参考实现对拍小规模情形。</p></div>
 </div>
 

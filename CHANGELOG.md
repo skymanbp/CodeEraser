@@ -36,6 +36,21 @@ gui.md 命令形例外句；VERSIONING 四面一文档 + `sccFloor` + `knobsFenc
 bench 中文表头（生成器 zh 支）；册 01/05/06/11/13 引文 54 条重瞄 + 册 13 §8 自仓行重取；demo 三注释与 README 「Gated」句；erase.md
 子仓句、size-advisory 围栏回落句；plugin README 引文、SKILL `ce:allow` 三读者、update 命令三处；`Cost.hs` 注释「唯一」→「两个」。
 
+**v2.21 S4 无默认档位变更**（计数与数词）。子仓 `it/facts/`：`form.rs` 自 mod.rs 拆出，新增两形 `#word`（1..=20 按面语言渲染数词，
+中文 2 恒作「两」——每个芯片都站在量词前）/ `#Word`（句首大写，中文同形；`resolve` 把 `#Word` 折回 `#word` 行，不是第二条事实），`#digits` 渲染千分逗号
+（README「4,096」）；`count.rs` 计数家族 20 条——linked：`axes`（`score::knobs::AXES`）、`langs`（`Lang::judged_mask` 置位数）、`erase_reasons` /
+`erase_classes`（`REASON_NAMES` / `CLASS_NAMES` 去 `(retired)`）、`join_codes` / `deadcode_codes`（两 `VERDICT_NAMES`）、`families`（hello-ok golden
+`capabilities` 减 hello）、`hooks`（hooks.json 事件键）、`skills` / `commands` / `booklets`（目录计数）、`binaries` / `platforms` / `installers`
+（manifest.env `CE_SHA256_*` 键经产品解析器）；scraped：`grammars`（`Lang::grammar` 的 `Some` 臂——TS 与 TSX 出自同一 crate，Cargo 依赖行会少数一）、
+`screens`（`data-tab`）、`mcp_tools`（`tool!(` 切片）、`fail_conditions`（Faces.hs 元组）、`gates`（ci.yml Dogfood 步的 `cargo run` 行）、
+`gate:erase.row_cap`（Erase/Cost.hs `eraseRowCap`）；scraped 棘轮 15→21 具名上调（六条新 scraped 计数各带晋级句——计划 ⑤ 例外）。芯片面**声明**语言
+不按路径猜（RELEASE / DAEMON / VERSIONING 是无 zh 标记的中文散文）：README 双语各 13→35、站点首页 1→5、how 0→10、stack 0→1 / 2、RELEASE 4→5
+（「六腿」）；how 页 `<title>` / `<meta>` 与 stack 页 `alt` 里的数词是属性值不能承载注释——入源字面量断言（7→13 处，按面语言渲染）。`site_counts.rs`
+退役（its words 表与 `tool!(` 切片即登记册的 `count:mcp_tools` / `count:booklets`）。方法学索引第 5 条引文锚在 README「Philosophy」整行，随两枚芯片改签。
+六个新克隆块以结构消除（`facts::read` 单读者、`between` 单切片、数词表改字串、BOOKLETS 改单字串——face_parity 惯例）。**记账**：check 主 953 恒 /
+子 986 恒；dedup 60 / 119 恒；子仓基线具名重立——新入表 it/facts/{form,count}.rs，退出 it/site_counts.rs，超容差 it/facts_registry.rs 84→129
+（六条站点字面量）；主仓基线具名重立——CHANGELOG.md 本段在容差内。
+
 **v2.21 S3 无默认档位变更**（ADR-009 登记册 + 投影 + 芯片通道）。子仓 `it/facts/`：`mod.rs` 登记册（id 文法 `family:key#form`，S3 四形
 `#v` / `#vminor` / `#digits` / `#schemaver`；linked / scraped 双层，scraped 行必带 `debt`；`resolve` 未知 id 按名拒绝；`projection` 投影文档
 `ce.docs-facts/0.1.0`）；`ver.rs` 版本 / 修订 / 工具链（linked：`ver:ce`、`proto`、`daemon`、`anchor`、`pin` 与五个 `*_REV`；scraped：

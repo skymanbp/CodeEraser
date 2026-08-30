@@ -89,7 +89,7 @@ note: 98 blocks collapsed into existing members, 60 intra-file pairs off the sim
 
 <h2>Judgment families</h2>
 <div class="grid">
-  <div class="card"><b>ce check</b><p>The gate. One 0–1000 score over seven axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p></div>
+  <div class="card"><b>ce check</b><p>The gate. One 0–1000 score over <!--ce:count:axes#word-->seven<!--/ce--> axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p></div>
   <div class="card"><b>ce dedup</b><p>T1/T2 clone detection via winnowing fingerprints, with a clone-block budget your repo can only ratchet down.</p></div>
   <div class="card"><b>ce clone</b><p>T3 near-clones judged by tree edit distance in the Haskell core — renamed and reshaped copies included.</p></div>
   <div class="card"><b>ce deadcode</b><p>Liveness verdicts on a cached reference graph (<code>ce graph --sites</code> lists the sites it is built from): no kept in-edge, no entry flag — dead, and the gate says so.</p></div>
@@ -124,7 +124,7 @@ note: 98 blocks collapsed into existing members, 60 intra-file pairs off the sim
 <p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>
 
 <h2>Trust anchor</h2>
-<p class="trust">All nine release binaries — three platforms × ce / ce-core, plus the three
+<p class="trust">All <!--ce:count:binaries#word-->nine<!--/ce--> release binaries — <!--ce:count:platforms#word-->three<!--/ce--> platforms × ce / ce-core, plus the <!--ce:count:installers#word-->three<!--/ce-->
 GUI installers since v0.7.3 — are pinned by SHA256 in <code>plugin/bin/manifest.env</code>;
 the tag phase verifies every pin, waits for a green CI on the tagged commit, and refuses
 an unexpected asset before anything publishes. <code>SHA256SUMS</code> covers the set for

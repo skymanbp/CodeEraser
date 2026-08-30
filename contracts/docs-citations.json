@@ -22,7 +22,7 @@
   "docs/reference/methodology.md:5": {
     "target": "../../README.md",
     "line": 168,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the thirteen-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the bench block, the demo, the parity table, the NOTICE. This repository is its own first user — every push runs the six product gates on this tree."
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->thirteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the bench block, the demo, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md:6": {
     "target": "../DEVELOPMENT_PLAN.md",

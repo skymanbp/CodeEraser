@@ -106,8 +106,8 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   on the diagram is a constant cited in the methodology sections below.</figcaption>
 </figure>
 
-<h2>The thirteen judgment families</h2>
-<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b>thirteen</b> booklets below, one per judgment whose math is worth its own derivation; <b>ten</b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b>fourteen</b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, and <code>doctor</code> answers with machine state, not a judgment.</p>
+<h2>The <!--ce:count:booklets#word-->thirteen<!--/ce--> judgment families</h2>
+<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->thirteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->ten<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->fourteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, and <code>doctor</code> answers with machine state, not a judgment.</p>
 
 <div class="fam">
   <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -190,7 +190,7 @@ dupVerdictWith (num, den, vfloor) inter union run
 </div>
 
 <div class="fam">
-  <h3><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, seven axes</a></h3>
+  <h3><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, <!--ce:count:axes#word-->seven<!--/ce--> axes</a></h3>
   <p class="job">Judges the tree rather than the file: directory geometry, naming
   distributions, reference locality, documentation coverage, doc staleness, redundancy.</p>
   <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
@@ -229,7 +229,7 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
 
 <div class="fam">
   <h3><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">Scoring and the ADR-006 ratchet</a></h3>
-  <p class="job">Folds seven axes into one 0–1000 score and gates it against a banked
+  <p class="job">Folds <!--ce:count:axes#word-->seven<!--/ce--> axes into one 0–1000 score and gates it against a banked
   baseline that is only allowed to tighten.</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
 wTotal  = sum_i w_i                            -- derived, never a literal
@@ -252,7 +252,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   statistic of the repository's own frozen LOC distribution, the identity
   <code>S = clamp(median + k·MAD, …)</code> re-expressed multiplicatively so no logarithm
   is ever taken; it is derived only at establish and then frozen into the baseline. The
-  fail bit is a disjunction of six <em>named</em> conditions —
+  fail bit is a disjunction of <!--ce:count:fail_conditions#word-->six<!--/ce--> <em>named</em> conditions —
   <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
   <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code> — and the reply carries the
   list of names that held; the console prints them after <code>FAIL</code> in that order.</p>
@@ -302,7 +302,7 @@ reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
 referenced = indeg &gt;= 1 over kept arcs
 judged     = i ∉ reach
 code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
-  <p class="note">Four codes, structurally separated so an exported-but-unreferenced API
+  <p class="note"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes, structurally separated so an exported-but-unreferenced API
   can never collapse into plain dead: <code>1 unref_private</code>,
   <code>2 unref_public</code>, <code>3 unreach_private</code>, <code>4 unreach_public</code>.
   Resolution never guesses: a site walks its language's rungs in order and the first rung
@@ -332,7 +332,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 
 <div class="fam">
   <h3><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">The three-signal join</a></h3>
-  <p class="job">Combines similarity × graph position × churn into one of four candidate
+  <p class="job">Combines similarity × graph position × churn into one of <!--ce:count:join_codes#word-->four<!--/ce--> candidate
   codes — and then deliberately declines to act on it.</p>
   <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
 (2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
@@ -557,7 +557,7 @@ permille = (lines - S) * 1000 / (H - S)
 
 <div class="fam">
   <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">Deterministic erase — the safety predicate</a></h3>
-  <p class="job">Judges erase-plan rows for three provable classes — <code>dead_file</code>,
+  <p class="job">Judges erase-plan rows for <!--ce:count:erase_classes#word-->three<!--/ce--> provable classes — <code>dead_file</code>,
   <code>verbatim_doc</code>, and <code>t1_twin</code> — and refuses every unsafe
   row with a named reason code.</p>
   <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin

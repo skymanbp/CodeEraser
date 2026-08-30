@@ -1,6 +1,125 @@
 {
   "facts": [
     {
+      "id": "count:axes#word",
+      "source": "cli/src/score/knobs.rs::AXES",
+      "tier": "linked",
+      "value": "7"
+    },
+    {
+      "id": "count:binaries#word",
+      "source": "plugin/bin/manifest.env::CE_SHA256_* (update::manifest::parse)",
+      "tier": "linked",
+      "value": "9"
+    },
+    {
+      "id": "count:booklets#word",
+      "source": "docs/reference/methodology/*.md",
+      "tier": "linked",
+      "value": "13"
+    },
+    {
+      "id": "count:commands#word",
+      "source": "plugin/commands/*.md",
+      "tier": "linked",
+      "value": "1"
+    },
+    {
+      "id": "count:deadcode_codes#word",
+      "source": "cli/src/graph/deadcode.rs::VERDICT_NAMES",
+      "tier": "linked",
+      "value": "4"
+    },
+    {
+      "id": "count:erase_classes#word",
+      "source": "cli/src/erase/model.rs::CLASS_NAMES (live names)",
+      "tier": "linked",
+      "value": "3"
+    },
+    {
+      "id": "count:erase_reasons#word",
+      "source": "cli/src/erase/model.rs::REASON_NAMES",
+      "tier": "linked",
+      "value": "7"
+    },
+    {
+      "debt": "a Haskell list read by line; promote = the names on the hello wire",
+      "id": "count:fail_conditions#word",
+      "source": "core/app/CE/Verdict/Faces.hs::failConditions",
+      "tier": "scraped",
+      "value": "6"
+    },
+    {
+      "id": "count:families#word",
+      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello)",
+      "tier": "linked",
+      "value": "10"
+    },
+    {
+      "debt": "promote = one gate list CI and the docs both read",
+      "id": "count:gates#word",
+      "source": ".github/workflows/ci.yml::Dogfood step (cargo run lines)",
+      "tier": "scraped",
+      "value": "6"
+    },
+    {
+      "debt": "Lang has no variant iterator; promote = Lang::judged() + grammar().is_some()",
+      "id": "count:grammars#word",
+      "source": "cli/src/scan/lang.rs::Lang::grammar (Some arms)",
+      "tier": "scraped",
+      "value": "6"
+    },
+    {
+      "id": "count:hooks#word",
+      "source": "plugin/hooks/hooks.json::hooks (events)",
+      "tier": "linked",
+      "value": "3"
+    },
+    {
+      "id": "count:installers#word",
+      "source": "plugin/bin/manifest.env::CE_SHA256_* (update::manifest::parse)",
+      "tier": "linked",
+      "value": "3"
+    },
+    {
+      "id": "count:join_codes#word",
+      "source": "cli/src/join/verdicts.rs::VERDICT_NAMES",
+      "tier": "linked",
+      "value": "4"
+    },
+    {
+      "id": "count:langs#word",
+      "source": "cli/src/scan/lang.rs::Lang::judged_mask (set bits)",
+      "tier": "linked",
+      "value": "7"
+    },
+    {
+      "debt": "mcp::tools is a private module; promote = a pub names() face",
+      "id": "count:mcp_tools#word",
+      "source": "cli/src/mcp/tools.rs::TOOLS (tool! rows)",
+      "tier": "scraped",
+      "value": "14"
+    },
+    {
+      "id": "count:platforms#word",
+      "source": "plugin/bin/manifest.env::CE_SHA256_* (update::manifest::parse)",
+      "tier": "linked",
+      "value": "3"
+    },
+    {
+      "debt": "the tab strip is HTML; promote = a tab roster the GUI and the registry both read",
+      "id": "count:screens#word",
+      "source": "gui/ui/index.html::data-tab",
+      "tier": "scraped",
+      "value": "10"
+    },
+    {
+      "id": "count:skills#word",
+      "source": "plugin/skills/* (directories)",
+      "tier": "linked",
+      "value": "1"
+    },
+    {
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
@@ -11,6 +130,13 @@
       "source": "cli/tests/ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
       "value": "119"
+    },
+    {
+      "debt": "a Haskell const read by line; promote = the cap on the hello wire",
+      "id": "gate:erase.row_cap#digits",
+      "source": "core/app/CE/Erase/Cost.hs::eraseRowCap",
+      "tier": "scraped",
+      "value": "4096"
     },
     {
       "debt": "spelled on the ce check line of each CI job; promote = one workflow-level env var the jobs and the docs read",
@@ -275,5 +401,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 15
+  "scraped": 21
 }
