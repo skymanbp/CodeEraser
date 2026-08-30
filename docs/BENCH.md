@@ -16,7 +16,7 @@
 > host a latency budget).
 >
 > One machine is not one machine-state. Re-measuring v1.2.0 — its own tree,
-> its own binaries — four days after its row was first taken came back 7-18 %
+> its own binaries — four days after its row was first taken came back 4-18 %
 > slower on every metric, which is wider than most deltas a reader would try
 > to read out of this table. So the series is replayed WHOLE, in one sitting,
 > whenever a release joins it: every row shares one measured date, and rows
