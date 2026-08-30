@@ -348,7 +348,7 @@ consumers that never ask must not pay. A/B medians, n = 9 interleaved on two ide
 HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet window:
 `ce audit --hook` 1.186 s → 0.954 s, `ce erase` (plan) 1.526 s → 1.493 s, `ce check`
 1.786 s → 1.802 s (spread 1.729–1.928) — no consumer slower
-([PERF-BUDGET.md:186-195](../../PERF-BUDGET.md#L186)). The pass itself: cold ≈ 1.95 s, warm ≈
+([PERF-BUDGET.md:188-197](../../PERF-BUDGET.md#L188)). The pass itself: cold ≈ 1.95 s, warm ≈
 0.54 s on the self corpus ([PERF-BUDGET.md:54](../../PERF-BUDGET.md#L54)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a

@@ -52,6 +52,8 @@
 | 单文件增量刷新（内容哈希门控 + 重插指纹） | < 200 ms | 2.50 ms | ✅ |
 | 参考：warm 全量 analyze（索引快路径 + 全配对） | —（无预算） | 701 ms | 记录 |
 | 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |
+| `ce deadcode` 端到端相位分解（自仓，暖，release，`.ce/index.db`；三连跑稳态取后两跑；临时探针实测后即回退，2026-08-30） | —（无预算，记录用） | **总 ≈1.70 s** = 判决索引刷新 `dedup::refreshed_index` **0.59–0.68 s** + 图装配（`graph_rows`/config/`nodes_of`/`node_row`/`Declared`）≈0.13 s + `edge_wire+contain` **0 ms** + `export_surface` **3 ms** + **`advisory::tables` 0.66–0.73 s**〔`mention::refresh` 0.32–0.39 s ∥ `candidates::unmentioned` 0.33–0.35 s ∥ `mounts::facts` 0.02 s〕+ 核往返 `judge+consume` **0.11 s** + 进程起停/打印 ≈0.20 s | 记录 |
+| ↳ 读法：v1.2.0→v1.3.0 的 deadcode 暖跑回归（bench 413→923 ms）**整体对应 `advisory::tables` 这一新增相位**，且该相位近似对半分——提及刷新一半、候选/否决一半。最大的单一相位是判决索引刷新（≈0.6 s），但它**非本轮新增**，每条 ce 命令都付。故「把提及宇宙那一遍优化掉」最多触及全命令的 ~9%（读+哈希 ≈0.15 s，见上一行 mtime 条），**不是大头，也拿不回 1.2.0 的基线** | —（无预算，记录用） | 结论：无单一大头可攻；上一行的 `mtime 门不采` 维持 | 记录 |
 
 ## M5-2e 图缓存预算（设计档 RG4，实测 2026-08-12，release，合成语料）
 
