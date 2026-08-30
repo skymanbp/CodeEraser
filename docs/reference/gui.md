@@ -36,8 +36,8 @@ Two consequences worth naming:
 
 | tab | document | what it shows |
 |---|---|---|
-| **Structure** | `ce.structure-report` | the tree-scale judgment as a treemap and a tree lens (two views over one report); per-directory findings ride the alarm ramp, and the split advisory is opt-in per scan |
-| **Score** | `ce.check-report` | hero score over the effective scale, the seven verdict axes, the ratchet's four registers (a fifth, `dropped`, when the provenance table rode — the committed rows an exclusion explains) — the FAIL/pass vocabulary stays machine-English, exactly like the CLI's exit-code face |
+| **Structure** | `ce.structure-report` | the tree-scale judgment as a treemap and a tree lens (two views over one report); per-directory findings ride the alarm ramp, and the split advisory is opt-in per scan. The score is captioned **structure score** — see the note below |
+| **Score** | `ce.check-report` | hero score over the effective scale, captioned **check score**, the seven verdict axes, the ratchet's four registers (a fifth, `dropped`, when the provenance table rode — the committed rows an exclusion explains) — the FAIL/pass vocabulary stays machine-English, exactly like the CLI's exit-code face |
 | **Erase** | `ce.erase-plan` + a rendered diff | the deterministic two-phase eraser's face: preview **is** the plan (eraseable rows with provenance, advisories with named reasons, the unified diff rendered from the hashed plan); Apply stays hidden until a preview exists |
 | **Trend** | `ce.trend-report` | score points over mainline history plus the core's trend judgment; "measure more" batches uncached commits so a cold cache fills at the reader's pace |
 | **Candidates** | `ce.join-report` + `ce.dedup-report` | the deletion-candidate browser: three-signal file pairs, unit pairs and clone blocks in document order — no ranking is derived here, and the per-row bar is geometry over a printed number |
@@ -46,6 +46,15 @@ Two consequences worth naming:
 | **Bench** | `contracts/bench/bench.json` | the compiled-in benchmark series, pivoted to one row per metric with a column per version; frozen points carry value **and** source |
 | **Doctor** | `ce.doctor-report` | this machine's state: ce-core handshake, guard tier, index freshness, daemon, degraded-run counter — probed without starting the daemon or rebuilding the index, so the diagnostic reports a state it did not create. A `parked daemon workers` row appears only when the count is non-zero (0.3.0): client conversations the deadline gave up on that have not returned — the read is cancelled at the deadline, so only a connect the kernel still holds can sit here |
 | **Update** | `ce.update-report` | this build against the latest release: the release index's newest tag, that tag's committed SHA256 pins (`plugin/bin/manifest.env` as the release commit wrote it), the install kind read off the binary's own location, and the one action it allows — codes on the wire, words in this face's tables. "Update now" appears only where the library would place anything (a copy placed by hand, or the installer bundle's sidecars) and re-measures before it acts; a copy the plugin or cargo owns names its own command instead. The optional installer box saves the verified GUI installer and shows its path — running it stays the reader's click |
+
+Two screens show a number out of 1000 and they are **not** the same
+measure. `ce structure` scores tree-scale entropy; `ce check` scores the
+gate over a different seven axes and carries the ratchet and the floor.
+A repository routinely sits at 832 on one and 953 on the other, and
+neither is "the" score. The console has always named which is which, so
+both screens carry the console's own words in both languages rather than
+inventing a third vocabulary, and the homepage says the same beside its
+screenshot — naming them is the fix; they cannot be reconciled.
 
 ## How a screen runs
 

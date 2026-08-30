@@ -57,6 +57,12 @@ contracts/fixtures/crosscheck/**/*.json
 # cc-memory anchors its own root now (>= v2.6.0); if it ever regresses, the
 # stray dir must show up as untracked noise, not vanish.
 /memory/
+# cc-memory is migrating memory/ -> .ccm/ (user, 2026-08-30). The rename
+# arrived mid-session and the new name matched no rule, so a `git add -A`
+# published 106 of these notes to a PUBLIC repo in 32b65f6; they are
+# untracked again in the commit that adds this line. Same anchoring
+# reason as above, and the same decision: handoff state is not content.
+/.ccm/
 .gstack/
 
 # === Claude Code session-discipline files (local, NOT versioned) ===
