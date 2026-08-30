@@ -109,7 +109,7 @@ function main(argv) {
   for (const [name, type] of DIAGRAMS) {
     for (const lang of LANGS) {
       const { receipt, html } = deliver(name, type, lang);
-      const svg = extractSvg(html);
+      const svg = extractSvg(html, lang);
       const spec = receipt.specification?.sha256 ?? "?";
       const art = receipt.artifact?.sha256 ?? "?";
       console.log(`${name}.${lang}: spec ${spec.slice(0, 12)} artifact ${art.slice(0, 12)} svg ${sha(svg).slice(0, 12)}`);

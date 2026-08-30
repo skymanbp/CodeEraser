@@ -164,7 +164,21 @@ function assertWellFormed(svg) {
   if (stack.length) throw new Error(`svg: unclosed <${stack.join("><")}>`);
 }
 
-export function extractSvg(html) {
+// Chrome archify writes itself, which no IR key reaches: the legend
+// heading is a literal in the viewer template (assets/template.html).
+// The zh twin is meant to be one language throughout, so the word is
+// mapped here — the only place that sees both the rendered markup and
+// the language that asked for it. A term the map does not carry stays
+// in English and the zh-chrome leg names it.
+const CHROME = { zh: { Legend: "图例" } };
+
+const chrome = (svg, lang) =>
+  Object.entries(CHROME[lang] ?? {}).reduce(
+    (s, [from, to]) => s.replaceAll(`>${from}</text>`, `>${to}</text>`),
+    svg,
+  );
+
+export function extractSvg(html, lang = "en") {
   const style = /<style>([\s\S]*?)<\/style>/.exec(html)?.[1];
   const htmlTag = /<html\b([^>]*)>/.exec(html)?.[1] ?? "";
   const start = html.indexOf("<svg", html.indexOf('class="diagram-container"'));
@@ -180,7 +194,8 @@ export function extractSvg(html) {
   }
   const svg = html.slice(start, end);
   const rootAttrs = Object.fromEntries([...htmlTag.matchAll(/([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]));
-  const out = assemble(clean(svg), rules(style).filter((r) => r.keyframes || KEEP.test(selector(r.prelude))), rootAttrs);
+  const built = assemble(clean(svg), rules(style).filter((r) => r.keyframes || KEEP.test(selector(r.prelude))), rootAttrs);
+  const out = chrome(built, lang);
   assertWellFormed(out);
   return out;
 }

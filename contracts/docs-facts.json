@@ -120,6 +120,13 @@
       "value": "1"
     },
     {
+      "debt": "a Haskell list read by line; promote = the axis roster on the structure wire",
+      "id": "count:structure_axes#word",
+      "source": "core/app/CE/Structure/Axes.hs::axes (count arms)",
+      "tier": "scraped",
+      "value": "7"
+    },
+    {
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
@@ -401,5 +408,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 21
+  "scraped": 22
 }
