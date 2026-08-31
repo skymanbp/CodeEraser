@@ -90,6 +90,26 @@ webview 会收到的那份：`ce structure --format json` 打印的是
 新名——一次 `git add -A` 曾把 106 份本地笔记推上公开仓（32b65f6），该
 提交已从 main 上撤出。
 
+**v1.3.1 发版 无默认档位变更**（两段式按 RELEASE.md §1–§3 走完）：draft run
+33340289362 出十资产（二进制只来自三 OS 矩阵）→ pin `plugin/bin/manifest.env`
+十一行 f43c099〔`ver:pin#v` 由清单派生，投影同批重 bless〕→ tag。**tag 首打的
+verify-publish 按超时拒发**：`checks did not settle in 30 min`——而本次谁都没错，
+`build-macos` 压根没出队。它只在 tag 与每周一的 schedule 上跑（ci.yml:311），
+故每次发版都是它的冷启动，而 GitHub 何时调度一台 macOS runner 不由本仓决定：
+拒发那一刻（00:19:39Z）它已排队 30.6 min 且**从未开工**，两条 push 腿则已绿了
+17.7 min。原预算是照着 v1.3.0 那次 macOS 腿「推送后 18m46s 跑完」定的——那量的是
+构建，而循环等的是排队。根修在 c167ab7：预算改按排队定（30 min → 2 h），且每条
+消息点名还没完成的腿（旧行只打个计数，拒发记录因此说不出缺的是谁；新过滤器对该
+commit 实跑打印 `build-macos(queued)`），runbook §2.2 同批写明「发布前先等 tag
+自己那次 CI」。tag 未挪：macOS 腿出队后三平台全绿，重跑该 job 即 publish 成功
+（2026-08-31T00:58:01Z，十资产）。12fa295 另把该注释里两个凭印象写下的数字
+（50 min / 40 min）改成实测的 30.6 / 17.7。渠道：GitHub Release 十资产、crates.io
+1.3.1（305 文件，含 93 份 `tests/unit/**`）、官网 20/20 逐字节对拍相同（HTML 剥掉
+Cloudflare 注入的那一条 beacon 后比；本次实测该 beacon 是 `<script type="module">`
+形，不是旧脚本假设的 `<script defer>`）。`ce update` 实网冒烟：读到 tag v1.3.1 与
+**该 tag 上**的 pin，ce / ce-core / installer 三值与 SHA256SUMS 相同，本机 1.3.1
+退 0。
+
 ## [v1.3.0] — 2026-08-30 — L 轮片 (2)+(3)+(4)+(5)+(6)+(7)+(8)（无默认档位变更；bit 0 生产者三修，erase reason 6 人口随之变动；secrets 排除表加宽，判决宇宙随之变动；`ce:allow` 解析合一，旧宽松形三收窄一放宽，自仓一段转活；TS 星号再导出自 `export_from` 分出 `export_star` 站点标签，冻结自仓切片一行改签；graph/1 **6.2.0** 加性两表 + `export_unmentioned` 顾问类，`ce deadcode` 报告 0.3.0 加性两键，片 (7)+(8) 第三键 `unmentioned_cut` + `ce graph --mentions` 报告 0.2.0 加性 `rates` 键；步 #8 提取面补强 GRAPH_REV 13→14，站点标签零新增、边与符号域拓宽；步 #9 自仓可见性候选 38 行逐条处置，零 wire；步 #10 减法批 7 条 + 3 缺陷落码，dedup 预算 185→182 具名下调，零 wire；步 #11 测试子仓 CodeEraser-tests submodule 挂 `cli/tests`，walk/trend/U 公式三处 submodule 语义，零 wire；步 #12 子仓只当读者不当被测者，wire **6.3.0** 节点角色 bit 7 foreign、索引 schema v15 `files.owner`、`[graph] crate_roots` 旋钮、嵌套项目自带 ce.toml 的守卫/审计委托，dedup 182→65 / check 943 地板 940；步 #13 单元测试亦迁子仓 `unit/`（`#[path]` 挂载），dedup 64 / check 949 地板 946，自仓分数与 1.2.0 不可比；步 #14 乙 围栏收尾片 (a) 七条零 wire——`ce dedup --check` 拒绝放宽、类 glob 与 exclude 同一解析器（启类仓库 `dir/` 读法切换、分数不可比）、`ce baseline` 只在根 + 三具名动作（缺基线须 `CE_ACCEPT_BASELINE=1`、`CE_ACCEPT_FENCE=1` 窄动作）、trend 恒等钉基线、控制台逐名报失败条件，dedup 64→63 / check 950 地板 946；片 (b) = wire **6.4.0** 围栏批——verdict 加性 `present`→`ratchet.dropped` + 第六 fail 条件 `rows_dropped`、classKnobs 码 4 仅 CoC 容差、thresholds 码 7 `cycleFloor` 与 graph `sccFloor` 同读 `[graph] scc_floor`、scan `knobsFence`→`failed`、守卫漂移按出厂预算、每份回执核自洽（wire_check）、报告 check 0.5.0 / scan 0.2.0、O66 夹具账本自推导，dedup 60 / check 951 地板 946；片 (c) = O39 旋钮摘要规范形〔有效旋钮集、默认即静默、一份声明字面值冻结、两仓摘要各移一次具名重立〕+ O64 客户端期限拆除〔shutdown / CancelIoEx、2.5 s 宽限、脱离计入 `ce.doctor-report/0.3.0` 加性 `daemon.parkedWorkers`〕，零 wire，dedup 60 / 119 恒；步 #15 丙批 O62/O65/O68/O69/O60/O52/O11 + CI 两修——`wire skew` 具名拒绝、空说明符站点 GRAPH_REV 14→15、`ce.sh` 会话绑定戳（全链 2.0–2.3 s → p95 0.50 s，e2e 15 态）、§2 变短 + 新入场行 + R5 击发裁「观察、路线不动」，零 wire，dedup 60 / 119 恒；步 #16 复核发版前置——46 条已交付 O## 经 codex 四路只读审计逐条取证 35 落地 / 8 具名澄清 / 2 修补〔O42 类名出指纹、O43 三处注释〕/ 1 退役，41 条后置束计数与台账一致、两条新入 M 轮产品小项，bench 回填 seat helper，CI Windows relink 尸案根修〔子仓收尸跟随委托根〕，零 wire，dedup 60 / 119 恒；步 #16–#19（v2.20，用户四令 2026-08-29）更新功能三面等价 + 三面等价门 + README 双语九节重构与仓内 demo + 全量文档同步，零 wire；**v2.21（用户三令 2026-08-29～30）** ADR-009 文档事实派生 S1–S9〔登记册 + 投影 contracts/docs-facts.json + 五通道各有门 + 引文改锚文本键 + bless 单读者〕 + archify 双语架构图两张 + README 双语 190→145 行瘦身 + demo 收敛弧 + guard 双语根修与 README 两景展览 + 站点八页〔首页终端块改测试生成〕，零 wire，2026-08-30 **四渠道齐发**——GitHub Release / crates.io / 官网 / npm）
 
 **步 #16–#19 无默认档位变更**。`ce update`（新子命令，零 wire）：检查 = 读 GitHub `releases/latest` 的 tag 与**该 tag 上已提交**的
