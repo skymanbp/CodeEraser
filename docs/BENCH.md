@@ -27,6 +27,15 @@
 > this table. So the series is replayed WHOLE, in one sitting, whenever a
 > release joins it: every row shares one measured date, and rows carrying
 > different dates are not comparable.
+>
+> A release joins only when there is something new to measure. One that ships
+> the same `cli/src` and `core/app` as its predecessor gets no row of its own:
+> replaying the whole series to add a duplicate measurement would publish that
+> drift under a new version number. So every surface printing these numbers
+> beside a version names the version MEASURED — never "the latest" — and says
+> so when the shipped release is a different one.
+
+The current release, v1.3.1, has no row of its own.
 
 ## Latency series (self repository)
 
