@@ -53,7 +53,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 951/1000</span> | 判轴 0:71 1:0 2:78 3:0 4:0 5:0 6:196 | 候选 33
+<span class="s">检查分数 950/1000</span> | 判轴 0:76 1:0 2:78 3:0 4:0 5:0 6:196 | 候选 33
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：13 块并入既有成员，21 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -73,7 +73,7 @@
 <tr><td>仍欠的删除</td><td class="was" data-run="不带 CodeEraser">1</td><td class="to" data-run="带 CodeEraser">0</td></tr>
 <tr><td>检查分数</td><td class="was" data-run="不带 CodeEraser">952</td><td class="to" data-run="带 CodeEraser">979</td></tr>
 </tbody></table></div>
-<p class="cap">同一个七步任务，两份完全相同的种子树；唯一的变量是写入时的守卫与 Stop 审计在不在环内。两次都仍以红色收场——但红的不是同一件事。</p>
+<p class="cap">同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。</p>
 <!-- scoreboard:end -->
 
 <h2>看它工作</h2>

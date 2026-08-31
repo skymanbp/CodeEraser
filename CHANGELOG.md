@@ -22,6 +22,53 @@ deadline=0 的竞态腿 `an_inert_canceller_arms_even_when_the_deadline_wins_the
 把该交错钉成必现——修前 100% 复现 CI 签名（27.6 ms、泛化拒绝、无 detached
 残留），修后确定性通过。断言未放宽、未加 sleep、未 ignore。
 
+**demo 从「渲染看到的」改为「断言必须看到的」**（指令彻查销 codex 审查债时，
+本地五维对抗审查在现状树上提 20 条，逐条回源码核实后的统一修法）。根因一个、
+面孔八张：demo 读的每条通道都按设计 fail-open——`ce probe --hook` 与
+`ce audit --hook` 永不向外失败（缺核、索引未建、ce.toml 坏、diff 降级一律回成
+沉默），`git` 退出码此前被丢弃，`ce erase --apply` 对任意行数（含 0）都退 0——
+于是工具悄悄降级的一次运行会渲染出与量到的运行形状相同的表，`bless` 随即冻住
+它：**字节门比对的是文件与它自己的生成器，看不出生成器说谎**（同 v1.3.2 教训）。
+唯一看得见的是一份不从自身输出派生的期望，故新增 `demo/expect.js` 作「本次运行
+必须观测到什么」的唯一所有者：恰两次拒绝且在第 1、7 步；守卫只能沉默或 `deny`
+（`ask` 与带警告的 allow 都会被叙述成「落地」，按名拒绝）；首审必须 block 且理由
+点名脚本化修复所答之事；修复后审计必须沉默**且量到了**——读它自己的
+`.ce/observe.ndjson`，`degraded`/`skipped` 两字段分开「满意」与「没量成」
+（audit/observe.rs 写者契约）；erase 恰好移除那一行具名文档孪生；六门只准退
+0 或 1（退 2 是崩溃，旧码渲染成一次 FAIL 发现）。十条负向探针验明期望真咬、
+健康形不误伤。`demo/README.md` 早写着「the run asserts the audit falls silent
+after it」而当时代码只记录不断言——**改代码兑现文档，不改文档迁就代码**。
+同批：`git()` 与同文件 `baseline`/`eject` 对齐，rc≠0 即就地 throw，并在 `run()`
+基础环境钉 `GIT_CONFIG_GLOBAL`（指向空文件——`os.devNull` 不行，git 在 Windows
+上直接拒 `\\.\nul`）+ `GIT_CONFIG_NOSYSTEM`，使贡献者全局配置到不了 demo 的任何
+一次 git（含 `ce` 自己 shell 出去的）：同树一次进程内 A/B 实测，`commit.gpgsign`
+为真且无密钥时无覆盖 rc 128、有覆盖 rc 0，投毒态下整条 demo 跑通（修前死在很远
+的下游、报「erase --apply: worktree not clean」）；`normalize()` 加擦
+`realpathSync.native` 两形（macOS /private/var 与 Windows 短名会把 mkdtemp 路径
+漏进字节门产物，而 macOS 腿只在 tag 上跑）。**读者面四处过度声称同批修**：
+①「唯一变量是守卫与审计在不在环内」漏说 with 那条环还跑 `ce erase --apply`，而
+记分牌五数有两个（重复文档段、仍欠的删除）正是它产出的——四面（README 双语、
+demo/README、生成的 cap 双语）改为点名第三件事；② 英文标签
+`writes refused before the file existed` 对两次拒绝之一不成立（第 7 步写的
+`web/api.ts` 在种子里已存在，是覆盖非创建；中文「文件落盘前」一直对），改为
+`before they reached disk`，README 首节同改；③ Markdown 记分牌此前不带「两次都
+仍以红色收场」而 HTML 形带——五行全是 with 列净胜，停在这里的读者会带走「有一边
+干净了」的错读，故两形同带；④ Stop 判决在表里被截到第一个冒号（其后是审计点名的
+证据）而 README 说「逐字输出」——截断处补 `…` 并在「真 vs 脚本」清单写明。另：
+分数行 pass/FAIL 改读 `ce check` 退出码而非只匹配散文（措辞漂移的失败此前渲染成
+pass）；`count` 同文件克隆收成一个所有者（js 在纯尺寸臂，这类克隆没有门看得见）。
+产出 `node demo/run.js --check` 逐字节相同。
+**ADR-006 具名（含补记两笔旧欠）**：本批越容差 `demo/tree.js` 88→124、
+`demo/table.js` 175→193、`demo/run.js` 234→246、`demo/README.md` 138→152，
+新入表 `demo/expect.js` 126 行、生成物 `demo/out/scoreboard.md` 与 `.zh.md` 各
+7→9。**补记**：`b7c9786` 曾把 `demo/table.js` 100→157 并新入表
+`demo/out/scoreboard.{md,zh.md,html,zh.html}`（7/7/9/9）而该段一个未具名；
+`fdd8a6a` 的 `demo/table.js` 157→175 与 `site/style.css` 132→171 只写在提交
+信息里，而规则（计划书 :210）指定的登记册是 CHANGELOG 该段——两笔在此补齐。
+**勘误**：v2.21 展览段把 README 双语上升写作 158→170，实测 **148→170**
+（`git show 991b42f~1:README.md | wc -l` = 148；同段上方那处 148→170 一直是对的，
+该段自相矛盾），已就地改正而非在此追加覆盖。
+
 ## [v1.3.2] — 2026-08-31 — 结项：路线图改写为永久立场
 
 **无默认档位变更；判决语义零变动，分数与 v1.3.0 / v1.3.1 完全可比**——`git
@@ -223,7 +270,7 @@ bench 中文表头（生成器 zh 支）；册 01/05/06/11/13 引文 54 条重�
 
 **v2.21 展览 无默认档位变更**（用户令「readme 可以放些小型展览……展示实际运行中可以期待的 ce 的表现」）。表回答「有没有改变结果」，展览回答「长什么样」：`demo/vignettes.js`（119 行）每景一问，各在自己的一份种子树上跑，每一行都是 `ce` 子进程的逐字输出。景一 = 上表第 1 步单独拿出（抄 `money.py` 的辅助函数，PreToolUse 当场拒绝并点名所复制的区域与能通过的次序）；景二 = 同一棵种子树上多加一条 `[[rules.class]] knobs = { file_lines_warn = 30, file_lines_fail = 40 }`，写入时守卫拒绝会越线的第 4 步，`ce scan` 用**同一个 40** 给同一棵树评级——一处声明，钩子与 CI 同读（设计时曾预测字段名为 `glob`/`file_lines_fail`，实测文法是 `name`/`globs`/`knobs`，且收紧硬线必须同时压 warn 线否则 `ladder_fault` 在载入处就拒：先量再写渲染器的又一次兑现）。两景各问两遍（en/zh）且落在**同一棵树**上，故双语是一次运行的翻译，而不是两次碰巧一致的运行。两条自守规则：① 每个 act 声明它必须得到的答案（`expect`），否则抛——冷索引下探针会降级为 `allow`，没有这条断言，一张「拒绝」展览会静默变成「守卫什么也没做」的照片，并被逐字节钉死在那个状态；② 不展示 agent 旁白（`steps.js` 只写英文，中文 README 里的英文 `agent>` 行是把翻译缺口装扮成转录），语境由景的标题承担。管道 `demo/tree.js`（88 行）自 run.js 抽出——run.js 282→**226** 净减——两条驱动器共用而非各持一份：JS 在本仓走纯尺寸臂（`Lang::scan_only`），一份 `seedTree` 的副本对本仓每一道门都不可见、对每一个读者都可见。门控走**既有通道**：`EMBEDS` 加一列标记名，`--check` 与 `bless.js` 同走这张表，故新增一族标记块**零新测试、零测试子仓改动**（`demo_replay.rs` 只改注释）；`bless.js` 的 replace 改函数式替换（console 块满是 `$`，字符串替换会把 `$&` / `$'` 读作模式）。README 双语各 +22 行（148→170，仍逐行同构）。教训：`pathlib.write_text` 在 Windows 上按默认换行写出，把两份钉了 LF 的 README 整份改成 CRLF，`demo:begin` 块随之匹配不上——编辑脚本一律 `newline=''`。
 
-**记账**：主仓 check 952→**953**（地板 946，判轴 4 由 5→0：guard 双减）、dedup **60** 恒、scan 0 fail、docdup 0；子仓 check **984**（地板 983）、dedup **119** 恒、scan 0 fail；lib 239 / it **298**（4 ignored）；clippy 0、fmt clean；GUI `cargo check` + `lens_invariant` 三腿绿；`demo/run.js --check` 逐字节相同。两仓基线**具名重立**（主仓 `hookio.rs` 246→248 与 README 双语 158→170 三处越容差；子仓 guard_say 新增 + guard_hook 拆分）。新增文件：`cli/src/guard/say.rs`、`demo/tree.js`、`demo/vignettes.js`、子仓 `it/guard_say.rs`。引文台账 1373→1374（1 注销 + 2 新增）。教训二：`cargo fmt` 会挪行，引文必须在 fmt **之后**才 bless——先 bless 后 fmt 让册 11 的 12 条 budget.rs 标签当场漂移。
+**记账**：主仓 check 952→**953**（地板 946，判轴 4 由 5→0：guard 双减）、dedup **60** 恒、scan 0 fail、docdup 0；子仓 check **984**（地板 983）、dedup **119** 恒、scan 0 fail；lib 239 / it **298**（4 ignored）；clippy 0、fmt clean；GUI `cargo check` + `lens_invariant` 三腿绿；`demo/run.js --check` 逐字节相同。两仓基线**具名重立**（主仓 `hookio.rs` 246→248 与 README 双语 148→170 三处越容差；子仓 guard_say 新增 + guard_hook 拆分）。新增文件：`cli/src/guard/say.rs`、`demo/tree.js`、`demo/vignettes.js`、子仓 `it/guard_say.rs`。引文台账 1373→1374（1 注销 + 2 新增）。教训二：`cargo fmt` 会挪行，引文必须在 fmt **之后**才 bless——先 bless 后 fmt 让册 11 的 12 条 budget.rs 标签当场漂移。
 
 **v2.21 demo 收敛弧 无默认档位变更**（用户提问「with/without 两列不都是 FAIL 吗」的根因修复）。诊断先于改动：种子树经六门实测**全 0**（`dedup`/`clone`/`docdup`/`deadcode`/`erase` 皆 rc 0），即两列里每一处发现都是任务写出来的；旧表两列同挂 5 个 FAIL 徽章，是**叙事截断**（演到 Stop 拦停即止，产品闭环的后半段没演）叠加**徽章淹没增量**（真差异 4→2 克隆、4→1 近似对、2 次当场拒都落在没徽章的行里）。修法 = 让每条环各自跑到自己的终点。① `demo/steps.js` 新增 `repair(seed)`：审计点名 `invoicer/report.py` 两个重复块后，agent 写下复用 `body`/`footer` 的 `render_compact`（与其他步同样由种子派生，不会与第 2 步所复制的内容漂移）；② `demo/run.js` 三阶段加长——`measureSeed` 第三棵树先量种子、`converge` 在拦停后走「修复经守卫（断言不被拒）→ 再问审计（实测转沉默）→ 提交 → `ce erase --apply`」、`measure` 挪到收敛之后；`git()` 钉 `GIT_AUTHOR_DATE`/`GIT_COMMITTER_DATE`（提交对象可复现，因 `--apply` 前置要干净工作区）；`ejectTree` 抽出；③ 表格渲染迁出到 `demo/table.js`（run.js 贴着棘轮天花板，与 `bless.js` 同因），新增三行——种子零、审计点名的修复、`ce erase --apply`——并把 `ce check` 行从裸 FAIL 改为**逐名列出 fail 条件**：不带 = `ratchet_over, discrete_added`，带 = `ratchet_over`（两次都红，但不是同一种红）。实测终局：不带 6 门 5 红；带 CodeEraser 走完闭环 4 绿 2 红——`dedup` 4→0、`clone` 4→0、`docdup` 1→0、`erase` 1→0 全转绿，仍红的两门都是**只有人能定夺**的：`invoicer/invoice.py` 93 行对着容差后 61 行的天花板（ADR-006 要一次具名重立），以及两个无人引用的文件（没人链接的新页面 + 第 6 步把 CLI 转投 JSON 后被孤立的 `report.py`）。README 双语与 `demo/README.md` 三处散文同批改写（第 8 步入表、诚实边界重述、两处红的成因）。教训：`ce eject` 按设计连 `ce-baseline.json` 一并删除（`cli/src/eject.rs:117`），故在已 eject 的树上量 `ce check` 会得到**无基线的假绿**——中途手测的「棘轮 0/0/0 pass」即由此而来，以带基线的 `measure()` 实测为准。引文 README:131→134 重渲。记账：`demo/README.md` 80→104、`demo/steps.js` 188→216 两处超容差**具名重立**；`demo/table.js` 为新增文件；`demo/run.js` 278→282 在容差内。
 

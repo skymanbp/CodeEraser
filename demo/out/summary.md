@@ -3,7 +3,7 @@
 | The seed, by the same six gates: clone blocks · doc twins · dead files | 0 · 0 · 0 | 0 · 0 · 0 |
 | Writes that landed | 7 of 7 | 5 of 7 |
 | Denied at PreToolUse | 0 | 2 |
-| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)` |
+| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)…` |
 | The repair the audit named | — | written, and the audit goes silent |
 | `ce erase --apply` | — | 1 row removed: the verbatim doc twin |
 | `ce check` score (ratchet) | 952/1000 — **FAIL**: ratchet_over, discrete_added | 979/1000 — **FAIL**: ratchet_over |

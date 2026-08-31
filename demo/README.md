@@ -4,6 +4,8 @@
 node demo/run.js            # run both, write demo/out/*
 node demo/run.js --check    # run both, fail if any committed output would change
 node demo/run.js --keep     # also leave all three scratch trees on disk to poke at
+                            # (kept trees are ejected: no .ce/, no baseline, so
+                            #  `ce check` there cannot re-render the ratchet row)
 ```
 
 Needs `ce` on PATH (or `CE_BIN=/path/to/ce`) with a reachable `ce-core`
@@ -12,8 +14,10 @@ Needs `ce` on PATH (or `CE_BIN=/path/to/ce`) with a reachable `ce-core`
 One coding task — *add discounts, a compact report, CSV and JSON output, and
 money formatting in the API* — run twice against identical copies of
 [`seed/`](seed/README.md), a small cent-exact invoicing service in Python and
-TypeScript. The only variable is whether CodeEraser's PreToolUse guard and
-Stop audit sit in the loop (`seed/ce.toml` says `[guard] mode = "deny"`).
+TypeScript. The only variable is whether CodeEraser is in the loop at all —
+its PreToolUse guard, its Stop audit, and, once the audit refuses, the
+`ce erase --apply` that acts on the plan the gates already named
+(`seed/ce.toml` says `[guard] mode = "deny"`).
 The seed is measured first, by those same six commands, so the table can say
 whether a finding was already there (it never is) or was written by the task.
 
@@ -29,7 +33,7 @@ what the plan proves safe. Both trees are then measured — the CI face.
 | The seed, by the same six gates: clone blocks · doc twins · dead files | 0 · 0 · 0 | 0 · 0 · 0 |
 | Writes that landed | 7 of 7 | 5 of 7 |
 | Denied at PreToolUse | 0 | 2 |
-| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)` |
+| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)…` |
 | The repair the audit named | — | written, and the audit goes silent |
 | `ce erase --apply` | — | 1 row removed: the verbatim doc twin |
 | `ce check` score (ratchet) | 952/1000 — **FAIL**: ratchet_over, discrete_added | 979/1000 — **FAIL**: ratchet_over |
@@ -92,14 +96,24 @@ invisible to every gate in this repository and visible to every reader of it.
   language; every gate line is the command's own output,
   path-normalized (`<work>`), with `advisory` and diff lines dropped and only
   the last 8 lines shown — the unclipped text is in [`out/summary.json`](out/summary.json).
-- **Scripted** — the agent's seven moves, and the repair the audit asks for
-  ([`steps.js`](steps.js)). No model is in the loop. Each write is built from
-  the seed alone, so no move depends on an earlier one having landed, and a
-  refusal in one run cannot change what the remaining moves do in the other.
-  Scripting them is what makes the two runs identical in everything except
-  the hooks. The repair is scripted the same way and reached only through the
-  audit's refusal: the run asserts the guard does not refuse it (removing
-  duplication never should) and asserts the audit falls silent after it.
+  In the comparison table the Stop verdict is quoted up to the colon that
+  opens its block list and marked `…` where it was cut; the sentence in full,
+  block list included, is in that same file.
+- **Scripted** — the agent's seven moves, the repair the audit asks for
+  ([`steps.js`](steps.js)), and the `ce erase --apply` that answers the plan's
+  own red gate. No model is in the loop. Each write is built from the seed
+  alone, so no move depends on an earlier one having landed, and a refusal in
+  one run cannot change what the remaining moves do in the other. Scripting
+  them is what makes the two runs identical in everything except CodeEraser.
+  The repair is scripted the same way and reached only through the audit's
+  refusal. What the run must observe at each of those points is declared in
+  [`expect.js`](expect.js) and thrown on there: two refusals and no third, a
+  guard answer that is silence or `deny` and never `ask`, a first audit that
+  blocks on the grounds the repair answers, a second that falls silent
+  *having measured* (its own feed says which), an erase that removes the one
+  named row, and gates that exit 0 or 1 and never crash. Every one of those
+  channels is fail-open, so without the declaration a degraded run would
+  render a table shaped exactly like a measured one.
 - **Gated** — the replay test in the test suite re-runs this driver and
   compares `out/` and every marked README block byte for byte, so a change in
   any verdict's wording fails CI rather than leaving a stale picture here. The

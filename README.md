@@ -8,7 +8,7 @@
 
 ## What it is
 
-Long-lived LLM-assisted codebases drift the same way: the same function implemented twice, the same paragraph pasted into three files, updates that arrive as appends, files that only ever grow. CodeEraser stops that drift at the moment of writing and gates it in CI, with no model in the loop anywhere. Two refusals happen at write time, before the file exists. A write that would *introduce* an exact T1/T2 clone — duplication the replaced content did not already carry — is denied at PreToolUse, with the region it duplicates named and the ordering that passes taught; a write leaving a file over 750 lines, or over the line its `[[rules.class]]` declares, is denied the same way. Everything else is a report or a gate: the Stop audit refuses the turn, the CI exit codes refuse the commit.
+Long-lived LLM-assisted codebases drift the same way: the same function implemented twice, the same paragraph pasted into three files, updates that arrive as appends, files that only ever grow. CodeEraser stops that drift at the moment of writing and gates it in CI, with no model in the loop anywhere. Two refusals happen at write time, before the content reaches disk. A write that would *introduce* an exact T1/T2 clone — duplication the replaced content did not already carry — is denied at PreToolUse, with the region it duplicates named and the ordering that passes taught; a write leaving a file over 750 lines, or over the line its `[[rules.class]]` declares, is denied the same way. Everything else is a report or a gate: the Stop audit refuses the turn, the CI exit codes refuse the commit.
 
 **Scope.** Judged languages: Python, TypeScript/TSX, Rust, Go, Haskell and Markdown (<!--ce:count:langs#word-->seven<!--/ce--> language codes over <!--ce:count:grammars#word-->six<!--/ce--> tree-sitter grammars). Size-only arm: js/mjs/cjs/jsx, css/scss/less, html/htm, vue, svelte, sh/bash, yml/yaml — they enter the size gates, the hard budget and the ratchet, never a semantic verdict. Faces: CLI · GUI (<!--ce:count:screens#word-->ten<!--/ce--> screens) · Claude Code plugin (<!--ce:count:hooks#word-->three<!--/ce--> hooks, <!--ce:count:skills#word-->one<!--/ce--> skill, <!--ce:count:commands#word-->one<!--/ce--> command, <!--ce:count:mcp_tools#word-->fourteen<!--/ce--> read-only MCP tools) · pre-commit · CI.
 
@@ -31,14 +31,16 @@ Long-lived LLM-assisted codebases drift the same way: the same function implemen
 <!-- scoreboard:begin -->
 | | Without CodeEraser | With CodeEraser |
 |---|---:|---:|
-| writes refused before the file existed | 0 | **2** |
+| writes refused before they reached disk | 0 | **2** |
 | duplicate clone blocks left behind | 4 | **0** |
 | duplicated doc segments | 1 | **0** |
 | removals still owed | 1 | **0** |
 | check score | 952 | **979** |
+
+One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.
 <!-- scoreboard:end -->
 
-The same coding task — *add discounts, a compact report, CSV and JSON output, money formatting in the API* — replayed by a scripted agent on two identical copies of [`demo/seed`](demo/seed/README.md), a small invoicing service in Python and TypeScript; the only variable is whether the PreToolUse guard and Stop audit sit in the loop. The seed is measured first, so every finding below was written by the task. Each loop then runs to *its* end — with nothing in the loop nothing refuses anything, so that one ends at the last write. Every verdict is the verbatim output of `ce`, and both trees are measured by the same six commands.
+The same coding task — *add discounts, a compact report, CSV and JSON output, money formatting in the API* — replayed by a scripted agent on two identical copies of [`demo/seed`](demo/seed/README.md), a small invoicing service in Python and TypeScript; the only variable is whether CodeEraser is in the loop at all — the PreToolUse guard, the Stop audit, and, once the audit refuses, the `ce erase --apply` that acts on the plan the gates already named. The seed is measured first, so every finding below was written by the task. Each loop then runs to *its* end — with nothing in the loop nothing refuses anything, so that one ends at the last write. Every verdict is the verbatim output of `ce`, and both trees are measured by the same six commands.
 
 <!-- demo:begin -->
 | | Without CodeEraser | With CodeEraser |
@@ -46,7 +48,7 @@ The same coding task — *add discounts, a compact report, CSV and JSON output, 
 | The seed, by the same six gates: clone blocks · doc twins · dead files | 0 · 0 · 0 | 0 · 0 · 0 |
 | Writes that landed | 7 of 7 | 5 of 7 |
 | Denied at PreToolUse | 0 | 2 |
-| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)` |
+| Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)…` |
 | The repair the audit named | — | written, and the audit goes silent |
 | `ce erase --apply` | — | 1 row removed: the verbatim doc twin |
 | `ce check` score (ratchet) | 952/1000 — **FAIL**: ratchet_over, discrete_added | 979/1000 — **FAIL**: ratchet_over |

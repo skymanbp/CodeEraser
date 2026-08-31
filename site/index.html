@@ -54,7 +54,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 951/1000</span> | axes 0:71 1:0 2:78 3:0 4:0 5:0 6:196 | 33 candidates
+<span class="s">check score 950/1000</span> | axes 0:76 1:0 2:78 3:0 4:0 5:0 6:196 | 33 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -68,13 +68,13 @@ note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim
 <div class="board"><table>
 <thead><tr><th></th><th>Without CodeEraser</th><th>With CodeEraser</th></tr></thead>
 <tbody>
-<tr><td>writes refused before the file existed</td><td class="was" data-run="Without CodeEraser">0</td><td class="to" data-run="With CodeEraser">2</td></tr>
+<tr><td>writes refused before they reached disk</td><td class="was" data-run="Without CodeEraser">0</td><td class="to" data-run="With CodeEraser">2</td></tr>
 <tr><td>duplicate clone blocks left behind</td><td class="was" data-run="Without CodeEraser">4</td><td class="to" data-run="With CodeEraser">0</td></tr>
 <tr><td>duplicated doc segments</td><td class="was" data-run="Without CodeEraser">1</td><td class="to" data-run="With CodeEraser">0</td></tr>
 <tr><td>removals still owed</td><td class="was" data-run="Without CodeEraser">1</td><td class="to" data-run="With CodeEraser">0</td></tr>
 <tr><td>check score</td><td class="was" data-run="Without CodeEraser">952</td><td class="to" data-run="With CodeEraser">979</td></tr>
 </tbody></table></div>
-<p class="cap">One seven-step task, two identical copies of the seed; the only variable is whether the write-time guard and the Stop audit are in the loop. Both runs still end red — not on the same things.</p>
+<p class="cap">One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.</p>
 <!-- scoreboard:end -->
 
 <h2>See it work</h2>

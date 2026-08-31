@@ -29,10 +29,23 @@ const COUNTS = {
   applied: ["applied", /erase applied: (\d+) row/],
 };
 
+/** One count out of a summary, by the name COUNTS files it under. Both
+ *  shapes below need it, so it has one owner rather than a copy in each
+ *  — a same-file clone js is on the size-only arm for, and therefore
+ *  one no gate here could have caught. */
+function count(s, key) {
+  return figure(s, COUNTS[key][0], COUNTS[key][1]);
+}
+
 /** The conviction clause alone: after the `ce audit:` prefix, before the
- *  colon that opens the block list (full-width in Chinese). */
+ *  colon that opens the block list (full-width in Chinese). What follows
+ *  that colon is the audit's evidence, so the cut is marked — the
+ *  READMEs promise the verdict verbatim, and an elision that does not
+ *  say it is one reads as the whole sentence. */
 function clause(reason) {
-  return reason.replace(/^ce audit[:：]\s*/, "").split(/[:：]/)[0];
+  const body = reason.replace(/^ce audit[:：]\s*/, "");
+  const head = body.split(/[:：]/)[0];
+  return head === body ? head : `${head}…`;
 }
 
 /** The fail conditions `ce check` named, or null when the ratchet passed.
@@ -79,12 +92,12 @@ const HEADLINE = {
     title: "The same task, run twice",
     without: "Without CodeEraser",
     withCe: "With CodeEraser",
-    refused: "writes refused before the file existed",
+    refused: "writes refused before they reached disk",
     blocks: "duplicate clone blocks left behind",
     docs: "duplicated doc segments",
     erase: "removals still owed",
     score: "check score",
-    cap: "One seven-step task, two identical copies of the seed; the only variable is whether the write-time guard and the Stop audit are in the loop. Both runs still end red — not on the same things.",
+    cap: "One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.",
   },
   zh: {
     title: "同一个任务，跑两遍",
@@ -95,7 +108,7 @@ const HEADLINE = {
     docs: "重复文档段",
     erase: "仍欠的删除",
     score: "检查分数",
-    cap: "同一个七步任务，两份完全相同的种子树；唯一的变量是写入时的守卫与 Stop 审计在不在环内。两次都仍以红色收场——但红的不是同一件事。",
+    cap: "同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。",
   },
 };
 
@@ -109,7 +122,6 @@ function heading(L) {
 
 /** The rows themselves, once. Both shapes below read this. */
 function headlineRows(without, withCe, L) {
-  const count = (s, key) => figure(s, COUNTS[key][0], COUNTS[key][1]);
   return [
     [L.refused, without.denied, withCe.denied],
     [L.blocks, count(without, "blocks"), count(withCe, "blocks")],
@@ -119,11 +131,14 @@ function headlineRows(without, withCe, L) {
   ];
 }
 
-/** Markdown, for the two READMEs. */
+/** Markdown, for the two READMEs. The caption rides with the numbers in
+ *  both shapes: five rows the with-column wins are exactly the reading a
+ *  reader who stops here would carry away, and what they would carry
+ *  away wrong is that either run came out clean. */
 function scoreboard(without, withCe, lang) {
   const L = HEADLINE[lang];
   const rows = headlineRows(without, withCe, L).map(([k, a, b]) => `| ${k} | ${a} | **${b}** |`);
-  return [heading(L), "|---|---:|---:|", ...rows].join("\n") + "\n";
+  return [heading(L), "|---|---:|---:|", ...rows, "", L.cap].join("\n") + "\n";
 }
 
 /** The same numbers as a table, for the two homepages. A comparison
@@ -150,7 +165,10 @@ function summaryTable(seed, without, withCe, lang) {
   const L = LABELS[lang];
   const both = (f) => [f(without), f(withCe)];
   const gate = (s, name) => (s.gates[name].rc === 0 ? L.pass : L.fail);
-  const count = (s, key) => figure(s, COUNTS[key][0], COUNTS[key][1]);
+  // the score row's verdict comes from the exit code, not from whether a
+  // prose pattern matched: a check whose wording drifts still fails, and
+  // reading only the prose would render that as a pass
+  const verdict = (s) => (s.gates.check.rc === 0 ? L.pass : failed(s) ? `${L.fail}: ${failed(s)}` : L.fail);
   const quoted = (reason) => L.blocked + "`" + clause(reason) + "`";
   const stop = withCe.stop && withCe.stop[lang];
   const after = withCe.stopAfterRepair && withCe.stopAfterRepair[lang];
@@ -162,7 +180,7 @@ function summaryTable(seed, without, withCe, lang) {
     [L.stop, L.notInLoop, stop ? quoted(stop) : L.mayEnd],
     [L.repaired, L.dash, after ? quoted(after) : L.auditSilent],
     [L.erased, L.dash, L.erasedVal(count(withCe, "applied"))],
-    [L.score, ...both((s) => `${count(s, "score")}/1000 — ${failed(s) ? `${L.fail}: ${failed(s)}` : L.pass}`)],
+    [L.score, ...both((s) => `${count(s, "score")}/1000 — ${verdict(s)}`)],
     [L.blocks, ...both((s) => `${count(s, "blocks")} (${gate(s, "dedup")})`)],
     [L.near, ...both((s) => count(s, "near"))],
     [L.docs, ...both((s) => `${count(s, "docs")} (${gate(s, "docdup")})`)],

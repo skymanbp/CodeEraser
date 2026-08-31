@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|ae06d5b3a10f2d28|0": {
     "target": "../../README.md",
-    "line": 164,
+    "line": 166,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->thirteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {

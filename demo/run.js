@@ -11,7 +11,11 @@
 // Nothing here is transcribed by hand: every verdict is the verbatim
 // output of a `ce` subprocess, and the agent's moves are the scripted
 // sequence in steps.js (no LLM is in the loop, which is what makes the
-// two runs identical in everything except the hooks). vignettes.js
+// two runs identical in everything except CodeEraser). What each of
+// those observations MUST be is declared in expect.js and thrown on
+// there: every channel this driver reads is fail-open, so a degraded
+// run would otherwise render a table shaped like a measured one and
+// bless would freeze it. vignettes.js
 // then builds the small single-question scenes the READMEs embed
 // beside this table; the scratch-tree plumbing both drive is tree.js.
 //
@@ -29,6 +33,7 @@ const { steps, repair } = require("./steps");
 const { renderSvg } = require("./render");
 const { summaryTable, scoreboard, scoreboardHtml } = require("./table");
 const { vignetteFiles } = require("./vignettes");
+const expect = require("./expect");
 const { CE, run, git, seedTree, probe, normalize, slashed, ejectTree } = require("./tree");
 
 const HERE = __dirname;
@@ -73,12 +78,14 @@ function stopAudits(dir) {
   return { en: stopAudit(dir, "en"), zh: stopAudit(dir, "zh") };
 }
 
-/** One agent move: narrate, ask the guard when it is in the loop, write. */
+/** One agent move: narrate, ask the guard when it is in the loop, hold
+ *  its answer to what this demo says it observes, write. */
 function move(t, dir, step, withCe) {
   t.push({ kind: "agent", text: `${step.say}` });
   t.push({ kind: "cmd", text: `Write ${step.file}` });
   const verdict = withCe ? probe(dir, step.file, step.content) : null;
-  if (verdict && verdict.decision === "deny") {
+  if (withCe) expect.guard(step, verdict);
+  if (verdict) {
     t.push({ kind: "deny", text: `PreToolUse deny — ${normalize(verdict.reason, dir)}` });
     return false;
   }
@@ -92,6 +99,7 @@ function move(t, dir, step, withCe) {
 function measure(t, dir, summary) {
   for (const args of GATES) {
     const r = run(CE, [...args], dir);
+    expect.gate(args, r);
     t.push({ kind: "cmd", text: `ce ${args.join(" ")}` });
     const out = normalize(r.out, dir);
     const lines = out.split("\n").filter((l) => !l.startsWith("advisory") && !/^[-+ ]/.test(l));
@@ -114,20 +122,22 @@ function measureSeed(seed, work) {
 
 /** The rest of the loop, once the audit has refused to end the turn: the
  *  repair it named goes through the guard like any other write (removing
- *  duplication is never refused, and the run asserts it), the audit is
- *  asked again, and the tree is committed so `ce erase --apply` can act —
- *  its preconditions are a git repository, a clean worktree, unchanged
- *  targets. Nothing in the other run asks for any of this. */
+ *  duplication is never refused, and expect.guard holds it to that), the
+ *  audit is asked again and must go silent HAVING MEASURED, and the tree
+ *  is committed so `ce erase --apply` can act — its preconditions are a
+ *  git repository, a clean worktree, unchanged targets. Nothing in the
+ *  other run asks for any of this, and nothing in the other run runs the
+ *  eraser. */
 function converge(t, dir, seed, summary) {
-  if (!move(t, dir, repair(seed), true)) throw new Error("the repair was refused");
+  move(t, dir, repair(seed), true);
   t.push({ kind: "cmd", text: "Stop hook → ce audit --hook" });
   summary.stopAfterRepair = stopAudits(dir);
-  const still = summary.stopAfterRepair.en;
-  t.push(still ? { kind: "block", text: `Stop block — ${normalize(still, dir)}` } : { kind: "allow", text: "the turn may end" });
+  expect.repairedAudit(summary.stopAfterRepair, dir);
+  t.push({ kind: "allow", text: "the turn may end" });
   git(dir, "add", "-A");
   git(dir, "commit", "-q", "-m", "the task, as the audit let it end");
   const r = run(CE, ["erase", ".", "--apply"], dir);
-  if (r.rc !== 0) throw new Error(`erase --apply: ${r.out}`);
+  expect.erased(r);
   summary.gates.applied = { rc: r.rc, out: normalize(r.out, dir) };
   t.push({ kind: "cmd", text: "ce erase . --apply" });
   t.push({ kind: "out", text: summary.gates.applied.out.split("\n").pop() });
@@ -144,13 +154,15 @@ function runOnce(seed, withCe, work) {
     if (move(t, dir, step, withCe)) summary.landed += 1;
     else summary.denied += 1;
   }
+  if (withCe) expect.refusals(summary.denied);
   t.push({ kind: "note", text: `session over: ${summary.landed} of ${summary.landed + summary.denied} writes landed` });
   if (!withCe) t.push({ kind: "note", text: "nothing refuses anything: the turn ends here" });
   else {
     t.push({ kind: "cmd", text: "Stop hook → ce audit --hook" });
     summary.stop = stopAudits(dir);
-    t.push(summary.stop.en ? { kind: "block", text: `Stop block — ${normalize(summary.stop.en, dir)}` } : { kind: "allow", text: "the turn may end" });
-    if (summary.stop.en) converge(t, dir, seed, summary);
+    expect.firstAudit(summary.stop);
+    t.push({ kind: "block", text: `Stop block — ${normalize(summary.stop.en, dir)}` });
+    converge(t, dir, seed, summary);
   }
   t.push({ kind: "note", text: "the tree, measured (the CI face):" });
   measure(t, dir, summary);

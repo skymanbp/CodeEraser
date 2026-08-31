@@ -11,10 +11,24 @@
 // invisible to every gate and visible to every reader.
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const cp = require("child_process");
+const { must } = require("./expect");
 
 const CE = process.env.CE_BIN || "ce";
+
+// The demo's git must answer to the demo alone. A contributor's global
+// or system config reaches every `git` this family runs — including the
+// ones `ce` itself shells out to — and one common setting is enough to
+// change the outcome: with `commit.gpgsign = true` and no key, both of
+// the demo's commits fail (measured: rc 128, "gpg failed to sign the
+// data"), leaving a staged, uncommitted tree. An empty config file
+// beats the host's (measured A/B in one tree: without it rc 128, with
+// it rc 0); os.devNull cannot stand in for it, because git rejects
+// `\\.\nul` outright on Windows.
+const GITCONFIG = path.join(os.tmpdir(), "ce-demo-gitconfig");
+fs.writeFileSync(GITCONFIG, "");
 
 function slashed(p) {
   return p.replace(/\\/g, "/");
@@ -22,7 +36,15 @@ function slashed(p) {
 
 /** Run one process to completion; never throws on a non-zero exit. */
 function run(cmd, args, cwd, input, extra = {}) {
-  const env = { ...process.env, CE_LANG: "en", CE_PROGRESS: "0", CE_DAEMON_IDLE_SECS: "60", ...extra };
+  const env = {
+    ...process.env,
+    CE_LANG: "en",
+    CE_PROGRESS: "0",
+    CE_DAEMON_IDLE_SECS: "60",
+    GIT_CONFIG_GLOBAL: GITCONFIG,
+    GIT_CONFIG_NOSYSTEM: "1",
+    ...extra,
+  };
   const r = cp.spawnSync(cmd, args, { cwd, input, encoding: "utf8", env, shell: process.platform === "win32" && cmd === CE && !path.isAbsolute(CE) });
   if (r.error) throw r.error;
   return { out: (r.stdout || "") + (r.stderr || ""), rc: r.status };
@@ -33,9 +55,15 @@ function run(cmd, args, cwd, input, extra = {}) {
 // in the tree would be one more thing that could differ between runs
 const WHEN = "2026-01-01T00:00:00+00:00";
 
+// Like `baseline` and `eject` below, and unlike its own former self: a
+// git that failed is not a git that did nothing. A dropped exit code
+// here surfaced far downstream as "erase --apply: worktree not clean",
+// which names the wrong thing at the wrong place.
 function git(cwd, ...args) {
   const cfg = ["-c", "user.name=demo", "-c", "user.email=demo@example.com", "-c", "core.autocrlf=false"];
-  return run("git", [...cfg, ...args], cwd, undefined, { GIT_AUTHOR_DATE: WHEN, GIT_COMMITTER_DATE: WHEN });
+  const r = run("git", [...cfg, ...args], cwd, undefined, { GIT_AUTHOR_DATE: WHEN, GIT_COMMITTER_DATE: WHEN });
+  must(r.rc === 0, `git ${args[0]} exited ${r.rc}: ${r.out.trim()}`);
+  return r;
 }
 
 /** A fresh copy of the seed, committed, with its baseline established. */
@@ -74,9 +102,17 @@ function probe(dir, rel, content, lang = "en") {
   return { decision: v.permissionDecision, reason: v.permissionDecisionReason || "" };
 }
 
-/** Scratch paths never reach the transcript. */
+/** Scratch paths never reach the transcript — in every spelling a tool
+ *  might hand back. Matching only the literal we passed in is an
+ *  empirical pin, not a structural one: anything that canonicalises the
+ *  path (macOS /var -> /private/var, a Windows short name) would leak a
+ *  per-run mkdtemp directory straight into a byte-gated artefact, and
+ *  the macOS leg that would catch it only runs on a tag. */
 function normalize(text, dir) {
-  return text.split(slashed(dir)).join("<work>").split(dir).join("<work>").replace(/\r\n/g, "\n").trimEnd();
+  const real = fs.realpathSync.native(dir);
+  let out = text;
+  for (const form of new Set([dir, slashed(dir), real, slashed(real)])) out = out.split(form).join("<work>");
+  return out.replace(/\r\n/g, "\n").trimEnd();
 }
 
 /** eject shuts the daemon (Bye => it exits on its own clock), removes .ce/ */
