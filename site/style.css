@@ -1,6 +1,6 @@
 /* codeeraser.dev — committed dark, the icon's world.
    Palette: ink ground, vermilion eraser, teal keyword, amber string.
-   Editing this file? Bump ?v= on both pages' <link> — HTML is served
+   Editing this file? Bump ?v= on every page's <link> — HTML is served
    uncached but this sheet is edge/browser-cached for 4h; without the
    bump, fresh HTML pairs with a stale sheet on returning visitors. */
 :root {
@@ -129,4 +129,43 @@ footer.site p + p { margin-top: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+}
+
+/* The before/after scoreboard demo/table.js writes into both
+   homepages' `scoreboard` block. Here, and not in their own <style>
+   blocks: /bench/ keeps .data-table page-local and pays for it with a
+   byte-for-byte copy in /zh/bench/, and 26 duplicated lines are
+   duplication nothing here can see — html and css are scan-only,
+   outside the judged set. One definition, and the ?v= bump the header
+   above asks for.
+
+   A .install chip cannot hold a comparison: one value slot, and a
+   label style built for two-word keys. The panel wraps the table
+   rather than the content column — full width put the two figure
+   columns ~400px from labels 300px long, and a number the eye cannot
+   join to its label is not a scoreboard. */
+.board { width: fit-content; max-width: 100%; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 10px; padding: 2px 22px 10px; margin: 26px 0; overflow-x: auto; }
+.board table { width: auto; border-collapse: collapse; }
+.board th, .board td { padding: 11px 0; text-align: right; white-space: nowrap; }
+.board th + th, .board td + td { padding-left: 34px; }
+.board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); }
+.board th { font-weight: 400; font-size: 0.78rem; color: var(--muted); border-bottom: 1px solid var(--panel-edge); }
+.board td + td { font-family: var(--mono); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
+.board tbody tr + tr td { border-top: 1px solid var(--ink-1); }
+.board .was { color: var(--muted); }
+.board .to { color: var(--paper); font-weight: 600; }
+/* Under the site's own 640px breakpoint the three columns cannot fit:
+   the label wrapped to five lines and the "with" column — the one the
+   reader came for — sat off the right edge. So each row stacks, and
+   each figure names its run. */
+@media (max-width: 640px) {
+  .board { width: 100%; padding: 6px 18px 12px; }
+  .board table, .board tbody, .board tr, .board td { display: block; }
+  .board thead { display: none; }
+  .board tbody tr { padding: 12px 0; }
+  .board tbody tr + tr { border-top: 1px solid var(--ink-1); }
+  .board tbody tr + tr td { border-top: none; }
+  .board td, .board td:first-child { padding: 0; text-align: left; white-space: normal; }
+  .board td + td { display: inline-block; padding: 8px 30px 0 0; }
+  .board td + td::before { content: attr(data-run); display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--muted); }
 }

@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=2">
+<link rel="stylesheet" href="/style.css?v=3">
 <style>header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }</style>
 </head>
 <body>
@@ -65,13 +65,15 @@ note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim
 
 <!-- scoreboard:begin -->
 <h2>The same task, run twice</h2>
-<div class="installs">
-<div class="install"><span class="k">writes refused before the file existed</span><code>0 → 2</code></div>
-<div class="install"><span class="k">duplicate clone blocks left behind</span><code>4 → 0</code></div>
-<div class="install"><span class="k">duplicated doc segments</span><code>1 → 0</code></div>
-<div class="install"><span class="k">removals still owed</span><code>1 → 0</code></div>
-<div class="install"><span class="k">check score</span><code>952 → 979</code></div>
-</div>
+<div class="board"><table>
+<thead><tr><th></th><th>Without CodeEraser</th><th>With CodeEraser</th></tr></thead>
+<tbody>
+<tr><td>writes refused before the file existed</td><td class="was" data-run="Without CodeEraser">0</td><td class="to" data-run="With CodeEraser">2</td></tr>
+<tr><td>duplicate clone blocks left behind</td><td class="was" data-run="Without CodeEraser">4</td><td class="to" data-run="With CodeEraser">0</td></tr>
+<tr><td>duplicated doc segments</td><td class="was" data-run="Without CodeEraser">1</td><td class="to" data-run="With CodeEraser">0</td></tr>
+<tr><td>removals still owed</td><td class="was" data-run="Without CodeEraser">1</td><td class="to" data-run="With CodeEraser">0</td></tr>
+<tr><td>check score</td><td class="was" data-run="Without CodeEraser">952</td><td class="to" data-run="With CodeEraser">979</td></tr>
+</tbody></table></div>
 <p class="cap">One seven-step task, two identical copies of the seed; the only variable is whether the write-time guard and the Stop audit are in the loop. Both runs still end red — not on the same things.</p>
 <!-- scoreboard:end -->
 

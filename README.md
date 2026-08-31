@@ -29,7 +29,7 @@ Long-lived LLM-assisted codebases drift the same way: the same function implemen
 ## Evidence — the same task, run twice
 
 <!-- scoreboard:begin -->
-| | without CodeEraser | with CodeEraser |
+| | Without CodeEraser | With CodeEraser |
 |---|---:|---:|
 | writes refused before the file existed | 0 | **2** |
 | duplicate clone blocks left behind | 4 | **0** |

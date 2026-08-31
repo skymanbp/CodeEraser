@@ -1,4 +1,4 @@
-| | without CodeEraser | with CodeEraser |
+| | Without CodeEraser | With CodeEraser |
 |---|---:|---:|
 | writes refused before the file existed | 0 | **2** |
 | duplicate clone blocks left behind | 4 | **0** |

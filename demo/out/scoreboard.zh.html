@@ -1,9 +1,11 @@
 <h2>同一个任务，跑两遍</h2>
-<div class="installs">
-<div class="install"><span class="k">文件落盘前被拒绝的写入</span><code>0 → 2</code></div>
-<div class="install"><span class="k">残留的克隆块</span><code>4 → 0</code></div>
-<div class="install"><span class="k">重复文档段</span><code>1 → 0</code></div>
-<div class="install"><span class="k">仍欠的删除</span><code>1 → 0</code></div>
-<div class="install"><span class="k">检查分数</span><code>952 → 979</code></div>
-</div>
+<div class="board"><table>
+<thead><tr><th></th><th>不带 CodeEraser</th><th>带 CodeEraser</th></tr></thead>
+<tbody>
+<tr><td>文件落盘前被拒绝的写入</td><td class="was" data-run="不带 CodeEraser">0</td><td class="to" data-run="带 CodeEraser">2</td></tr>
+<tr><td>残留的克隆块</td><td class="was" data-run="不带 CodeEraser">4</td><td class="to" data-run="带 CodeEraser">0</td></tr>
+<tr><td>重复文档段</td><td class="was" data-run="不带 CodeEraser">1</td><td class="to" data-run="带 CodeEraser">0</td></tr>
+<tr><td>仍欠的删除</td><td class="was" data-run="不带 CodeEraser">1</td><td class="to" data-run="带 CodeEraser">0</td></tr>
+<tr><td>检查分数</td><td class="was" data-run="不带 CodeEraser">952</td><td class="to" data-run="带 CodeEraser">979</td></tr>
+</tbody></table></div>
 <p class="cap">同一个七步任务，两份完全相同的种子树；唯一的变量是写入时的守卫与 Stop 审计在不在环内。两次都仍以红色收场——但红的不是同一件事。</p>

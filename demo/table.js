@@ -45,7 +45,6 @@ function failed(s) {
 
 const LABELS = {
   en: {
-    head: "| | Without CodeEraser | With CodeEraser |",
     seed: "The seed, by the same six gates: clone blocks · doc twins · dead files",
     landed: "Writes that landed", denied: "Denied at PreToolUse", stop: "Stop audit",
     notInLoop: "not in the loop", blocked: "**blocked** — ", mayEnd: "the turn may end",
@@ -57,7 +56,6 @@ const LABELS = {
     dead: "dead files (`ce deadcode --check`)", erase: "provably-safe removals still planned (`ce erase --check`)",
   },
   zh: {
-    head: "| | 不带 CodeEraser | 带 CodeEraser |",
     seed: "种子树，同样六道门实测：克隆块 · 文档孪生 · 死文件",
     landed: "落地的写入", denied: "PreToolUse 当场拒绝", stop: "Stop 审计",
     notInLoop: "不在环内", blocked: "**拦停** — ", mayEnd: "允许结束",
@@ -73,12 +71,14 @@ const LABELS = {
 /** The five numbers that carry the comparison, for the block ABOVE the
  *  table. A reader who stops here has the finding; the table below is
  *  for the one who does not. Labels stay plain prose — they render into
- *  Markdown and into HTML chips unchanged, and one list of rows feeds
- *  both, so a homepage can never quote a figure the README lacks. */
+ *  a Markdown table and an HTML one unchanged, and one list of rows
+ *  feeds both, so a homepage can never quote a figure the README
+ *  lacks. */
 const HEADLINE = {
   en: {
     title: "The same task, run twice",
-    head: "| | without CodeEraser | with CodeEraser |",
+    without: "Without CodeEraser",
+    withCe: "With CodeEraser",
     refused: "writes refused before the file existed",
     blocks: "duplicate clone blocks left behind",
     docs: "duplicated doc segments",
@@ -88,7 +88,8 @@ const HEADLINE = {
   },
   zh: {
     title: "同一个任务，跑两遍",
-    head: "| | 不带 CodeEraser | 带 CodeEraser |",
+    without: "不带 CodeEraser",
+    withCe: "带 CodeEraser",
     refused: "文件落盘前被拒绝的写入",
     blocks: "残留的克隆块",
     docs: "重复文档段",
@@ -97,6 +98,14 @@ const HEADLINE = {
     cap: "同一个七步任务，两份完全相同的种子树；唯一的变量是写入时的守卫与 Stop 审计在不在环内。两次都仍以红色收场——但红的不是同一件事。",
   },
 };
+
+/** The Markdown header row, once: the scoreboard and the twelve-row
+ *  table below both print it, and the site's <th> is built from the
+ *  same two strings — so no surface spells these columns its own
+ *  way. */
+function heading(L) {
+  return `| | ${L.without} | ${L.withCe} |`;
+}
 
 /** The rows themselves, once. Both shapes below read this. */
 function headlineRows(without, withCe, L) {
@@ -114,17 +123,26 @@ function headlineRows(without, withCe, L) {
 function scoreboard(without, withCe, lang) {
   const L = HEADLINE[lang];
   const rows = headlineRows(without, withCe, L).map(([k, a, b]) => `| ${k} | ${a} | **${b}** |`);
-  return [L.head, "|---|---:|---:|", ...rows].join("\n") + "\n";
+  return [heading(L), "|---|---:|---:|", ...rows].join("\n") + "\n";
 }
 
-/** The same numbers as chips, for the two homepages — the site's own
- *  label+value shape, so this needs no stylesheet of its own. */
+/** The same numbers as a table, for the two homepages. A comparison
+ *  has two columns and the site's .install chip has one value slot,
+ *  so as chips the five figures began at five different x positions,
+ *  under labels that style uppercases because it was built for keys
+ *  two words long. `.board` lives in site/style.css. Each figure also
+ *  carries its run's name, which is what the stacked narrow-screen
+ *  form reads instead of a header row it cannot show. */
 function scoreboardHtml(without, withCe, lang) {
   const L = HEADLINE[lang];
-  const chips = headlineRows(without, withCe, L)
-    .map(([k, a, b]) => `<div class="install"><span class="k">${k}</span><code>${a} \u2192 ${b}</code></div>`)
+  const rows = headlineRows(without, withCe, L)
+    .map(([k, a, b]) => `<tr><td>${k}</td>` +
+      `<td class="was" data-run="${L.without}">${a}</td>` +
+      `<td class="to" data-run="${L.withCe}">${b}</td></tr>`)
     .join("\n");
-  return `<h2>${L.title}</h2>\n<div class="installs">\n${chips}\n</div>\n<p class="cap">${L.cap}</p>\n`;
+  return `<h2>${L.title}</h2>\n<div class="board"><table>\n` +
+    `<thead><tr><th></th><th>${L.without}</th><th>${L.withCe}</th></tr></thead>\n` +
+    `<tbody>\n${rows}\n</tbody></table></div>\n<p class="cap">${L.cap}</p>\n`;
 }
 
 /** The table the three READMEs embed, from the three summaries. */
@@ -151,7 +169,7 @@ function summaryTable(seed, without, withCe, lang) {
     [L.dead, ...both((s) => `${count(s, "dead")} (${gate(s, "deadcode")})`)],
     [L.erase, ...both((s) => `${count(s, "erase")} (${gate(s, "erase")})`)],
   ];
-  return [L.head, "|---|---|---|", ...rows.map((r) => `| ${r.join(" | ")} |`)].join("\n") + "\n";
+  return [heading(HEADLINE[lang]), "|---|---|---|", ...rows.map((r) => `| ${r.join(" | ")} |`)].join("\n") + "\n";
 }
 
 module.exports = { summaryTable, scoreboard, scoreboardHtml };
