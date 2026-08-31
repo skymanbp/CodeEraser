@@ -15,6 +15,15 @@
 //! undercount, never a wrong +1 — a wrong one would flow into the
 //! score and the size gate, an absent one only leaves a point unpaid.
 //!
+//! Resolution is SCOPED, never file-wide. A member off the receiver
+//! reaches the caller's OWN container and nothing else: two classes in
+//! one file whose methods happen to spell each other's names are not a
+//! cycle, and a file-wide lookup minted exactly that pair of arcs. A
+//! bare name reaches a callable whose container is an ANCESTOR of the
+//! call site — what the caller can lexically see — so a module-level
+//! call can never land on a class method it has no way to reach. Both
+//! roads keep the undercount direction: no proof, no edge.
+//!
 //! A callable is not always one unit: Haskell gives every equation of
 //! `f` its own `function` node (divergence D7), and those equations
 //! are one function, not an ambiguity. So names are owned by GROUPS
@@ -33,6 +42,15 @@ use tree_sitter::Node;
 /// (probed against the pinned versions, not recalled).
 const CALLEE: &str = "function";
 
+/// What a caller brings to a resolution: the container its own
+/// declaration sits in, and the receiver name standing for its own
+/// type. One record rather than two more parameters — the fn-params
+/// line this repo sets is five.
+struct Caller<'a> {
+    container: usize,
+    receiver: Option<&'a str>,
+}
+
 /// Edges `(caller, callee)` as indices into `units`, sorted and
 /// deduplicated. Self-edges are kept: direct recursion is a cycle of
 /// length one and the core reads it straight off the arc set.
@@ -43,12 +61,16 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
     let named = Named::of(units);
     let mut out = Vec::new();
     for (from, unit) in units.iter().enumerate() {
-        let mine = receiver_binding(unit.node, src);
+        let receiver = receiver_binding(unit.node, src);
+        let caller = Caller {
+            container: container_of(unit.node),
+            receiver: receiver.as_deref(),
+        };
         for node in own_nodes(unit.node, spec) {
             if !spec.call_kinds.contains(&node.kind()) {
                 continue;
             }
-            let Some(group) = target(node, src, spec, mine.as_deref(), &named) else {
+            let Some(group) = target(node, src, spec, &caller, &named) else {
                 continue;
             };
             out.extend(named.groups[group].iter().map(|&to| (from, to)));
@@ -65,6 +87,7 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
 /// positives out.
 struct Named {
     groups: Vec<Vec<usize>>,
+    containers: Vec<usize>,
     whole: HashMap<String, usize>,
     base: HashMap<String, usize>,
 }
@@ -72,15 +95,17 @@ struct Named {
 impl Named {
     fn of(units: &[FnUnit<'_>]) -> Self {
         let mut groups: Vec<Vec<usize>> = Vec::new();
+        let mut containers: Vec<usize> = Vec::new();
         let mut names: Vec<&str> = Vec::new();
         let mut seat: HashMap<(usize, &str), usize> = HashMap::new();
         for (i, unit) in units.iter().enumerate() {
-            let parent = unit.node.parent().map_or(0, |p| p.id());
+            let parent = container_of(unit.node);
             match seat.get(&(parent, unit.name.as_str())) {
                 Some(&g) => groups[g].push(i),
                 None => {
                     seat.insert((parent, unit.name.as_str()), groups.len());
                     names.push(&unit.name);
+                    containers.push(parent);
                     groups.push(vec![i]);
                 }
             }
@@ -88,6 +113,7 @@ impl Named {
         Named {
             whole: unique(names.iter().copied()),
             base: unique(names.iter().map(|n| base_name(n))),
+            containers,
             groups,
         }
     }
@@ -119,12 +145,13 @@ fn target(
     call: Node<'_>,
     src: &[u8],
     spec: &LangSpec,
-    mine: Option<&str>,
+    caller: &Caller<'_>,
     named: &Named,
 ) -> Option<usize> {
     let callee = call.child_by_field_name(CALLEE)?;
     if spec.call_name_kinds.contains(&callee.kind()) {
-        return named.whole.get(text(callee, src)?).copied();
+        let group = *named.whole.get(text(callee, src)?)?;
+        return sees(call, named.containers[group]).then_some(group);
     }
     if !spec.call_member_kinds.contains(&callee.kind()) {
         return None;
@@ -135,10 +162,33 @@ fn target(
         return None;
     }
     let obj = text(object, src)?;
-    if !spec.call_self_words.contains(&obj) && mine != Some(obj) {
+    if !spec.call_self_words.contains(&obj) && caller.receiver != Some(obj) {
         return None;
     }
-    named.base.get(text(member, src)?).copied()
+    let group = *named.base.get(text(member, src)?)?;
+    (named.containers[group] == caller.container).then_some(group)
+}
+
+/// The node a declaration is declared IN — the identity a scope is
+/// keyed by. Every unit sits inside its file, so the 0 a parentless
+/// node would answer is a value no container ever takes, and `sees`
+/// answers false for it: the safe direction.
+fn container_of(node: Node<'_>) -> usize {
+    node.parent().map_or(0, |p| p.id())
+}
+
+/// Whether a call site can lexically see a callable declared in
+/// `container`: true exactly when that container is the call's own
+/// node or one of its ancestors.
+fn sees(call: Node<'_>, container: usize) -> bool {
+    let mut here = Some(call);
+    while let Some(node) = here {
+        if node.id() == container {
+            return true;
+        }
+        here = node.parent();
+    }
+    false
 }
 
 /// A Go method's receiver BINDING (`t` in `func (t *T) g()`): the one
