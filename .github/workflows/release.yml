@@ -271,9 +271,9 @@ jobs:
           # Two hours, not thirty minutes: this loop waits on a macOS
           # runner GitHub schedules at its own pace, and v1.3.1's first
           # tag run burned the whole budget with build-macos still
-          # QUEUED (never started) while both push legs had been green
-          # for forty minutes. The ceiling has to bound the queue, not
-          # the build.
+          # QUEUED — never started, 30.6 min after the tag push, both
+          # push legs green for the last 17.7 of them. The ceiling has
+          # to bound the queue, not the build.
           for _ in $(seq 1 240); do
             runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs" \
                      --jq '[.check_runs[] | select(.name != "'"${GITHUB_JOB}"'")]')
