@@ -106,7 +106,9 @@ commit 实跑打印 `build-macos(queued)`），runbook §2.2 同批写明「发�
 （50 min / 40 min）改成实测的 30.6 / 17.7。渠道：GitHub Release 十资产、crates.io
 1.3.1（305 文件，含 93 份 `tests/unit/**`）、官网 20/20 逐字节对拍相同（HTML 剥掉
 Cloudflare 注入的那一条 beacon 后比；本次实测该 beacon 是 `<script type="module">`
-形，不是旧脚本假设的 `<script defer>`）。`ce update` 实网冒烟：读到 tag v1.3.1 与
+形，不是旧脚本假设的 `<script defer>`）、npm 1.3.1（指针包，2 文件 1430 B，
+2026-08-31T01:33:33Z 由用户在交互终端发出——passkey-only 账户在非交互 shell 里
+恒 EOTP，见 RELEASE.md §3）。**四渠道齐上。**`ce update` 实网冒烟：读到 tag v1.3.1 与
 **该 tag 上**的 pin，ce / ce-core / installer 三值与 SHA256SUMS 相同，本机 1.3.1
 退 0。
 
