@@ -78,9 +78,13 @@ impl Canceller {
         Self::with(false)
     }
 
-    /// The counterfactual: a canceller whose `fire` does nothing —
-    /// the pre-O64 behaviour, kept so the test can show the gauge
-    /// seeing the leak that the live canceller clears.
+    /// The counterfactual: pre-O64 there was NO canceller, so this
+    /// one is blind at every point the worker could observe the
+    /// deadline — `fire` cancels nothing, and `register`/`fired`
+    /// never refuse. Blinding only the fire left the register
+    /// refusal live, and a runner that stalled the worker past the
+    /// deadline had it bail before its read ever parked — the leak
+    /// the test exists to show never happened (CI 2026-08-31).
     #[cfg(test)]
     pub(super) fn inert() -> Self {
         Self::with(true)
@@ -105,19 +109,22 @@ impl Canceller {
     }
 
     /// The worker holds `stream` now; a deadline that already passed
-    /// refuses here rather than letting the worker read on.
+    /// refuses here rather than letting the worker read on — unless
+    /// the canceller is the inert counterfactual, which must let the
+    /// worker park exactly as the pre-O64 client did.
     pub(super) fn register(&self, stream: &Stream) -> Result<()> {
         self.set(Target::Stream(dup(stream)?));
         ensure!(
-            !self.cancelled.load(SeqCst),
+            self.inert || !self.cancelled.load(SeqCst),
             "daemon deadline passed while connecting"
         );
         Ok(())
     }
 
-    /// Has the deadline passed? The spawn loop asks between attempts.
+    /// Has the deadline passed? The spawn loop asks between attempts;
+    /// the inert counterfactual keeps that observation blind too.
     pub(super) fn fired(&self) -> bool {
-        self.cancelled.load(SeqCst)
+        !self.inert && self.cancelled.load(SeqCst)
     }
 
     /// The deadline: flag first, then cancel whatever is registered.

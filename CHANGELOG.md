@@ -7,6 +7,21 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
+## [Unreleased]
+
+**无默认档位变更；判决语义零变动，生产二进制字节无关**（改动全在
+`#[cfg(test)]` 可达的反事实通道与测试本身）。v1.3.2 发版夜挂账的 Windows
+守时 flake（`an_inert_canceller_leaves_the_worker_parked_and_counted`，CI
+elapsed 1.306 s < 2.8 s，本地 30 次未复现）已根修。机制：负载下 worker 线程
+在 spawn 与 `register` 之间停滞逾 300 ms，deadline 先落 `cancelled` 旗，而
+inert 反事实只废掉了 `fire` 的取消、没废掉 `register` 的拒绝——worker 未及
+park 即被拒回，grace 循环提前收到回复即退出，测试要演示的「泄漏」根本没上场。
+修法：inert canceller 按其本义（pre-O64 根本没有 canceller）致盲 worker 侧
+**全部** deadline 观察点（`register` 拒绝与 `fired()` 两处同扫），并新增
+deadline=0 的竞态腿 `an_inert_canceller_arms_even_when_the_deadline_wins_the_race`
+把该交错钉成必现——修前 100% 复现 CI 签名（27.6 ms、泛化拒绝、无 detached
+残留），修后确定性通过。断言未放宽、未加 sleep、未 ignore。
+
 ## [v1.3.2] — 2026-08-31 — 结项：路线图改写为永久立场
 
 **无默认档位变更；判决语义零变动，分数与 v1.3.0 / v1.3.1 完全可比**——`git
