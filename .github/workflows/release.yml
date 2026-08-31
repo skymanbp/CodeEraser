@@ -268,7 +268,13 @@ jobs:
       - name: CI must be green on this commit
         shell: bash
         run: |
-          for _ in $(seq 1 60); do
+          # Two hours, not thirty minutes: this loop waits on a macOS
+          # runner GitHub schedules at its own pace, and v1.3.1's first
+          # tag run burned the whole budget with build-macos still
+          # QUEUED (never started) while both push legs had been green
+          # for forty minutes. The ceiling has to bound the queue, not
+          # the build.
+          for _ in $(seq 1 240); do
             runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs" \
                      --jq '[.check_runs[] | select(.name != "'"${GITHUB_JOB}"'")]')
             pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
@@ -280,9 +286,13 @@ jobs:
                   | map(.name + "=" + .conclusion) | join(", ")')
             [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
             [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
-            echo "waiting on $pending check(s)"; sleep 30
+            # name them: a bare count cannot say which leg is missing,
+            # and the refusal below is the only record anyone reads
+            names=$(echo "$runs" | jq -r '[.[] | select(.status != "completed")
+                      | .name + "(" + .status + ")"] | join(", ")')
+            echo "waiting on $pending check(s): $names"; sleep 30
           done
-          echo "checks did not settle in 30 min"; exit 1
+          echo "refusing to publish: checks did not settle in 2 h: $names"; exit 1
       - name: Verify draft assets against manifest pins, then publish
         shell: bash
         run: |

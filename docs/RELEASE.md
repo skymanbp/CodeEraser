@@ -42,7 +42,11 @@
    release.yml verify-publish 腿）——十一行齐动，提交并推 main，CI 绿。
 2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**
    后 publish（不重建）；`verify-publish` 复核十资产（九工件对拍
-   SHA256SUMS，九工件对拍 manifest pin）。
+   SHA256SUMS，九工件对拍 manifest pin）。发布前它先等**这个 commit 上
+   全部 check 完成**：tag 会另起一次 CI，其中 `build-macos` 只在 tag 与
+   周程上跑，排队多久由 GitHub 说了算（v1.3.1 首打排队 50 min 未开工，
+   耗尽当时 30 min 预算而拒发——预算已放宽到 2 h，超时按名列出未完成的
+   腿）。届时重跑该 job 即可发布，无须挪 tag。
 3. Release notes：功能面 + 分数迁移声明（如适用）+ 未签名明示
    （代码签名/公证裁定不做——2026-08-19，SHA256 链为永久信任锚；
    ADR-007/R1 立场）。
