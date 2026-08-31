@@ -39,7 +39,7 @@
     with a score that is only allowed to get better.</p>
     <div class="installs">
       <div class="install"><span class="k">Installer</span>
-        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — Windows · Linux · macOS, GUI + CLI + judgment core, SHA256-pinned; the Windows installer auto-wires the Claude Code plugin (v1.0.1+)</code></div>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos, GUI + CLI + judgment core, SHA256-pinned; the Windows installer auto-wires the Claude Code plugin (v1.0.1+)</code></div>
       <div class="install"><span class="k">Cargo</span>
         <code>cargo install codeeraser</code></div>
       <div class="install"><span class="k">Claude Code</span>
@@ -54,7 +54,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 952/1000</span> | axes 0:64 1:0 2:78 3:0 4:0 5:0 6:196 | 33 candidates
+<span class="s">check score 951/1000</span> | axes 0:69 1:0 2:78 3:0 4:0 5:0 6:196 | 33 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -128,7 +128,7 @@ note: 13 blocks collapsed into existing members, 21 intra-file pairs off the sim
 <div class="install"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits </code></div>
 <div class="install"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%) </code></div>
 </div>
-<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs) from one source, contracts/bench/bench.json — never hand-filled. The current release, v1.3.1, has no row of its own.</p>
+<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs) from one source, contracts/bench/bench.json — never hand-filled. The current release, v1.3.2, has no row of its own.</p>
 <!-- bench:end -->
 <p><a href="/bench/">Complete evaluation dashboard →</a></p>
 

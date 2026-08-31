@@ -91,7 +91,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | p50 ms | 1078 | 923 | 4738 | 381 | 801 | 41 | 518 |
 | p95 ms | 1082 | 2093 | 4743 | 384 | 809 | 43 | 2428 |
 
-所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.3.1 没有自己的行。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
+所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.3.2 没有自己的行。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->
 
 延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)），渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
@@ -163,9 +163,11 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据 · ADR-009 文档事实派生、不手写。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
 - **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十三<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑<!--ce:count:gates#word-->六<!--/ce-->道产品门。
 
-## 路线图与已知限制
+## 已知限制
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v1.2.0 → v1.3.0 测试子仓搬迁的分数不可比。**路线图。** 后置束在计划书 K–L 行具名：M（评分与评测项、产品小项）、N（分发）与四道决定守卫类能否晋级的证据门。
+**这就是成品的形状。** 计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——已于 2026-08-31 裁定不做（计划 v2.22，45 条）。以下是立场清单，不是计划清单。
+
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v1.2.0 → v1.3.0 测试子仓搬迁的分数不可比。
 
 ## 文档
 

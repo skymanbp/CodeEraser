@@ -35,7 +35,7 @@
 > beside a version names the version MEASURED — never "the latest" — and says
 > so when the shipped release is a different one.
 
-The current release, v1.3.1, has no row of its own.
+The current release, v1.3.2, has no row of its own.
 
 ## Latency series (self repository)
 
