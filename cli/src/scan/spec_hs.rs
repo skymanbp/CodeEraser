@@ -75,4 +75,12 @@ pub static HASKELL: LangSpec = LangSpec {
     // signature minted three spurious units). Value-level equations
     // and binds always carry the `name` field; the impostors never do.
     fn_named_only_kinds: &["function", "bind"],
+    // `f a b` nests as apply(apply(f, a), b), so only the innermost
+    // application carries a `variable` in callee position: one
+    // application chain yields one edge, not one per argument.
+    call_kinds: &["apply"],
+    call_name_kinds: &["variable"],
+    // No receiver syntax: a Haskell equation is not a method.
+    call_member_kinds: &[],
+    call_self_words: &[],
 };

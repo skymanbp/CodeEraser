@@ -20,39 +20,44 @@ pub enum NameStyle {
     Any,
 }
 
+/// A list of grammar spellings — node kinds, operator tokens,
+/// string delimiters or keywords, depending on the field. Named
+/// because the table repeats it for nearly every entry.
+pub type Kinds = &'static [&'static str];
+
 pub struct LangSpec {
     /// Node kinds counted as standalone function units. Anything not
     /// listed here (Go func_literal, Python lambda) is absorbed into
     /// its host function by construction — no separate flag needed.
-    pub fn_kinds: &'static [&'static str],
+    pub fn_kinds: Kinds,
     /// Kind of the parameter-list child (direct child of a fn node).
-    pub param_list_kinds: &'static [&'static str],
+    pub param_list_kinds: Kinds,
     /// +1 cyclomatic per node of these kinds.
-    pub cc_kinds: &'static [&'static str],
+    pub cc_kinds: Kinds,
     /// Binary-operator tokens adding +1 cyclomatic (short-circuit ops).
-    pub cc_operators: &'static [&'static str],
+    pub cc_operators: Kinds,
     /// Kinds whose N children are joined by N-1 anonymous short-circuit
     /// tokens invisible to cc_operators (Rust let_chain: no `operator`
     /// field). CC adds N-1; CoC adds one operator run.
-    pub chain_kinds: &'static [&'static str],
+    pub chain_kinds: Kinds,
     /// Cognitive: structures that increment AND raise nesting.
-    pub coc_nesting_kinds: &'static [&'static str],
+    pub coc_nesting_kinds: Kinds,
     /// Cognitive: flat +1 (no nesting penalty), e.g. `else`.
-    pub coc_flat_kinds: &'static [&'static str],
+    pub coc_flat_kinds: Kinds,
     /// Cognitive: raise nesting only (lambdas / inline fns).
-    pub coc_nest_only_kinds: &'static [&'static str],
+    pub coc_nest_only_kinds: Kinds,
     /// Cognitive: operator tokens forming counted boolean runs. Split
     /// from cc_operators: the whitepaper (v1.7 p.6 "Ignore shorthand")
     /// ignores null-coalescing in CoC while CC counts it as a branch.
-    pub coc_operators: &'static [&'static str],
+    pub coc_operators: Kinds,
     /// Cognitive: jump statements adding a fundamental +1 when labeled
     /// (whitepaper p.8 "Jumps to labels": goto / break L / continue L).
-    pub coc_jump_kinds: &'static [&'static str],
+    pub coc_jump_kinds: Kinds,
     /// Node kind of the label child that marks a jump as labeled
     /// (AST-probed: Go `label_name`, Rust `label`, TS
     /// `statement_identifier`).
-    pub label_kinds: &'static [&'static str],
-    pub comment_kinds: &'static [&'static str],
+    pub label_kinds: Kinds,
+    pub comment_kinds: Kinds,
     /// Readability: function-name convention (plan §4.1 naming item).
     pub name_style: NameStyle,
     /// Dedup: anonymous string-delimiter tokens that count as literal
@@ -60,13 +65,27 @@ pub struct LangSpec {
     /// grammar lexes char/string content separately — in Rust `'` is
     /// the lifetime/label tick (M2 attack review: classifying it LIT
     /// made every `&'a str` signature a false clone driver).
-    pub literal_delims: &'static [&'static str],
+    pub literal_delims: Kinds,
     /// fn_kinds entries that form a unit ONLY when the node carries a
     /// `name` field. Haskell's `bind` kind is also the do-statement
     /// `x <- act` and pattern-bind kind (AST-probed 3k) — without the
     /// name gate every do line would become a standalone unit and its
     /// complexity would vanish from the host.
-    pub fn_named_only_kinds: &'static [&'static str],
+    pub fn_named_only_kinds: Kinds,
+    /// Recursion (whitepaper p.8, plan v2.23): call/application node
+    /// kinds. Empty = the language mints no call edges. The callee is
+    /// the `function` field of every one of them (grammar-probed).
+    pub call_kinds: Kinds,
+    /// Callee shapes spelling a bare name, matched against the WHOLE
+    /// unit name — a Go method reads `(T) g`, so `g()` never reaches it.
+    pub call_name_kinds: Kinds,
+    /// Callee shapes selecting a member off an object. Only the
+    /// caller's own receiver counts; the name is then matched with the
+    /// receiver prefix stripped.
+    pub call_member_kinds: Kinds,
+    /// Object spellings meaning "the thing I am a method of". Go has
+    /// none: its receiver is a binding each method names itself.
+    pub call_self_words: Kinds,
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -124,6 +143,10 @@ static PYTHON: LangSpec = LangSpec {
     // Python quotes surface as named string_start/string_end kinds.
     literal_delims: &[],
     fn_named_only_kinds: &[],
+    call_kinds: &["call"],
+    call_name_kinds: &["identifier"],
+    call_member_kinds: &["attribute"],
+    call_self_words: &["self", "cls"],
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -173,6 +196,10 @@ static TYPESCRIPT: LangSpec = LangSpec {
     name_style: NameStyle::MixedCaps,
     literal_delims: &["\"", "'", "`"],
     fn_named_only_kinds: &[],
+    call_kinds: &["call_expression"],
+    call_name_kinds: &["identifier"],
+    call_member_kinds: &["member_expression"],
+    call_self_words: &["this"],
 };
 
 static RUST: LangSpec = LangSpec {
@@ -214,6 +241,10 @@ static RUST: LangSpec = LangSpec {
     // token and needs no delimiter piece).
     literal_delims: &["\""],
     fn_named_only_kinds: &[],
+    call_kinds: &["call_expression"],
+    call_name_kinds: &["identifier"],
+    call_member_kinds: &["field_expression", "scoped_identifier"],
+    call_self_words: &["self", "Self"],
 };
 
 static GO: LangSpec = LangSpec {
@@ -255,6 +286,10 @@ static GO: LangSpec = LangSpec {
     // `'` is Go's rune delimiter but rune_literal is a single token.
     literal_delims: &["\"", "`"],
     fn_named_only_kinds: &[],
+    call_kinds: &["call_expression"],
+    call_name_kinds: &["identifier"],
+    call_member_kinds: &["selector_expression"],
+    call_self_words: &[],
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -273,4 +308,8 @@ static MARKDOWN: LangSpec = LangSpec {
     name_style: NameStyle::Any,
     literal_delims: &[],
     fn_named_only_kinds: &[],
+    call_kinds: &[],
+    call_name_kinds: &[],
+    call_member_kinds: &[],
+    call_self_words: &[],
 };

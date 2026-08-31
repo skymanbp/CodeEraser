@@ -776,38 +776,38 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|2f99cfba7853fa18|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 124,
+    "line": 143,
     "text": "// Python quotes surface as named string_start/string_end kinds."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|6102e94730fc5ddf|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 174,
+    "line": 197,
     "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|8f2d953fe270d4e3|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 256,
+    "line": 287,
     "text": "literal_delims: &[\"\\\"\", \"`\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|94c43c67b19eccdd|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 215,
+    "line": 242,
     "text": "literal_delims: &[\"\\\"\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|b778be50cc3e9751|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 213,
+    "line": 240,
     "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|d5dc8ea61e1a0a65|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 255,
+    "line": 286,
     "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|e572e4c6ea75690d|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|fa0e54683c00a56d|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 125,
-    "text": "literal_delims: &[],\nfn_named_only_kinds: &[],\n};\n"
+    "line": 144,
+    "text": "literal_delims: &[],\nfn_named_only_kinds: &[],\ncall_kinds: &[\"call\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
     "target": "../../../cli/src/scan/spec_hs.rs",

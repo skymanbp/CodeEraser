@@ -443,4 +443,11 @@ entry_globs = [
 # Verdict/Cost.hs, 111/169 -> 52 tokens) kept their pair. Zero new
 # rows: the 60-row set is the 63-row set minus those three -- the
 # row-set diff against the HEAD worktree is the CHANGELOG entry's.
-budget = 60
+# 60 -> 56 (v2.23 step 3, the call-edge slice): LangSpec spelled
+# `&'static [&'static str]` once per field, so any window of its
+# declarations rhymed with any other -- the slice's four new call
+# fields pushed that run past the threshold and cost +7. Naming the
+# type (`pub type Kinds`) removes the repetition itself rather than
+# the budget over it, and repays four rows the run already held:
+# +7 -11 = -4 net, measured on formatted code as the ledger requires.
+budget = 56
