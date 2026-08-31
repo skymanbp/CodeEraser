@@ -70,6 +70,63 @@ const LABELS = {
   },
 };
 
+/** The five numbers that carry the comparison, for the block ABOVE the
+ *  table. A reader who stops here has the finding; the table below is
+ *  for the one who does not. Labels stay plain prose — they render into
+ *  Markdown and into HTML chips unchanged, and one list of rows feeds
+ *  both, so a homepage can never quote a figure the README lacks. */
+const HEADLINE = {
+  en: {
+    title: "The same task, run twice",
+    head: "| | without CodeEraser | with CodeEraser |",
+    refused: "writes refused before the file existed",
+    blocks: "duplicate clone blocks left behind",
+    docs: "duplicated doc segments",
+    erase: "removals still owed",
+    score: "check score",
+    cap: "One seven-step task, two identical copies of the seed; the only variable is whether the write-time guard and the Stop audit are in the loop. Both runs still end red — not on the same things.",
+  },
+  zh: {
+    title: "同一个任务，跑两遍",
+    head: "| | 不带 CodeEraser | 带 CodeEraser |",
+    refused: "文件落盘前被拒绝的写入",
+    blocks: "残留的克隆块",
+    docs: "重复文档段",
+    erase: "仍欠的删除",
+    score: "检查分数",
+    cap: "同一个七步任务，两份完全相同的种子树；唯一的变量是写入时的守卫与 Stop 审计在不在环内。两次都仍以红色收场——但红的不是同一件事。",
+  },
+};
+
+/** The rows themselves, once. Both shapes below read this. */
+function headlineRows(without, withCe, L) {
+  const count = (s, key) => figure(s, COUNTS[key][0], COUNTS[key][1]);
+  return [
+    [L.refused, without.denied, withCe.denied],
+    [L.blocks, count(without, "blocks"), count(withCe, "blocks")],
+    [L.docs, count(without, "docs"), count(withCe, "docs")],
+    [L.erase, count(without, "erase"), count(withCe, "erase")],
+    [L.score, count(without, "score"), count(withCe, "score")],
+  ];
+}
+
+/** Markdown, for the two READMEs. */
+function scoreboard(without, withCe, lang) {
+  const L = HEADLINE[lang];
+  const rows = headlineRows(without, withCe, L).map(([k, a, b]) => `| ${k} | ${a} | **${b}** |`);
+  return [L.head, "|---|---:|---:|", ...rows].join("\n") + "\n";
+}
+
+/** The same numbers as chips, for the two homepages — the site's own
+ *  label+value shape, so this needs no stylesheet of its own. */
+function scoreboardHtml(without, withCe, lang) {
+  const L = HEADLINE[lang];
+  const chips = headlineRows(without, withCe, L)
+    .map(([k, a, b]) => `<div class="install"><span class="k">${k}</span><code>${a} \u2192 ${b}</code></div>`)
+    .join("\n");
+  return `<h2>${L.title}</h2>\n<div class="installs">\n${chips}\n</div>\n<p class="cap">${L.cap}</p>\n`;
+}
+
 /** The table the three READMEs embed, from the three summaries. */
 function summaryTable(seed, without, withCe, lang) {
   const L = LABELS[lang];
@@ -97,4 +154,4 @@ function summaryTable(seed, without, withCe, lang) {
   return [L.head, "|---|---|---|", ...rows.map((r) => `| ${r.join(" | ")} |`)].join("\n") + "\n";
 }
 
-module.exports = { summaryTable };
+module.exports = { summaryTable, scoreboard, scoreboardHtml };

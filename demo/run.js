@@ -27,7 +27,7 @@ const os = require("os");
 const path = require("path");
 const { steps, repair } = require("./steps");
 const { renderSvg } = require("./render");
-const { summaryTable } = require("./table");
+const { summaryTable, scoreboard, scoreboardHtml } = require("./table");
 const { vignetteFiles } = require("./vignettes");
 const { CE, run, git, seedTree, probe, normalize, slashed, ejectTree } = require("./tree");
 
@@ -167,6 +167,10 @@ function transcriptText(lines) {
  *  second checker and no second test: `--check` and bless.js both walk
  *  this one table. */
 const EMBEDS = [
+  ["../README.md", "scoreboard.md", "scoreboard"],
+  ["../README.zh.md", "scoreboard.zh.md", "scoreboard"],
+  ["../site/index.html", "scoreboard.html", "scoreboard"],
+  ["../site/zh/index.html", "scoreboard.zh.html", "scoreboard"],
   ["../README.md", "summary.md", "demo"],
   ["../README.zh.md", "summary.zh.md", "demo"],
   ["README.md", "summary.md", "demo"],
@@ -202,6 +206,10 @@ function main() {
     "with-codeeraser.txt": transcriptText(withCe.transcript),
     "without-codeeraser.svg": renderSvg("the same task — without CodeEraser", without.transcript),
     "with-codeeraser.svg": renderSvg("the same task — with CodeEraser", withCe.transcript),
+    "scoreboard.md": scoreboard(without.summary, withCe.summary, "en"),
+    "scoreboard.zh.md": scoreboard(without.summary, withCe.summary, "zh"),
+    "scoreboard.html": scoreboardHtml(without.summary, withCe.summary, "en"),
+    "scoreboard.zh.html": scoreboardHtml(without.summary, withCe.summary, "zh"),
     "summary.md": summaryTable(start, without.summary, withCe.summary, "en"),
     "summary.zh.md": summaryTable(start, without.summary, withCe.summary, "zh"),
     "summary.json": JSON.stringify({ seed: start, without: without.summary, with: withCe.summary }, null, 2) + "\n",

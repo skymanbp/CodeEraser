@@ -28,6 +28,16 @@ Long-lived LLM-assisted codebases drift the same way: the same function implemen
 
 ## Evidence — the same task, run twice
 
+<!-- scoreboard:begin -->
+| | without CodeEraser | with CodeEraser |
+|---|---:|---:|
+| writes refused before the file existed | 0 | **2** |
+| duplicate clone blocks left behind | 4 | **0** |
+| duplicated doc segments | 1 | **0** |
+| removals still owed | 1 | **0** |
+| check score | 952 | **979** |
+<!-- scoreboard:end -->
+
 The same coding task — *add discounts, a compact report, CSV and JSON output, money formatting in the API* — replayed by a scripted agent on two identical copies of [`demo/seed`](demo/seed/README.md), a small invoicing service in Python and TypeScript; the only variable is whether the PreToolUse guard and Stop audit sit in the loop. The seed is measured first, so every finding below was written by the task. Each loop then runs to *its* end — with nothing in the loop nothing refuses anything, so that one ends at the last write. Every verdict is the verbatim output of `ce`, and both trees are measured by the same six commands.
 
 <!-- demo:begin -->

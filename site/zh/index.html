@@ -53,7 +53,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 952/1000</span> | 判轴 0:65 1:0 2:78 3:0 4:0 5:0 6:196 | 候选 33
+<span class="s">检查分数 952/1000</span> | 判轴 0:64 1:0 2:78 3:0 4:0 5:0 6:196 | 候选 33
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：13 块并入既有成员，21 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -61,6 +61,18 @@
   <p class="cap">真实输出——CodeEraser 判决它自己的仓库。棘轮只收不放：
   违规集入基线银行，新增熵直接判负。</p>
 </div>
+
+<!-- scoreboard:begin -->
+<h2>同一个任务，跑两遍</h2>
+<div class="installs">
+<div class="install"><span class="k">文件落盘前被拒绝的写入</span><code>0 → 2</code></div>
+<div class="install"><span class="k">残留的克隆块</span><code>4 → 0</code></div>
+<div class="install"><span class="k">重复文档段</span><code>1 → 0</code></div>
+<div class="install"><span class="k">仍欠的删除</span><code>1 → 0</code></div>
+<div class="install"><span class="k">检查分数</span><code>952 → 979</code></div>
+</div>
+<p class="cap">同一个七步任务，两份完全相同的种子树；唯一的变量是写入时的守卫与 Stop 审计在不在环内。两次都仍以红色收场——但红的不是同一件事。</p>
+<!-- scoreboard:end -->
 
 <h2>看它工作</h2>
 <div class="shots">

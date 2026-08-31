@@ -52,6 +52,14 @@ Transcripts as text: [without](out/without-codeeraser.txt) ·
 [with](out/with-codeeraser.txt) · the numbers as [JSON](out/summary.json) and
 as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
 
+The five numbers that open the comparison — writes refused, clone blocks left
+behind, duplicated doc segments, removals still owed, and the check score —
+render on their own into the `scoreboard` block of both READMEs
+([en](out/scoreboard.md) / [zh](out/scoreboard.zh.md)) and, as the site's own
+label-and-value chips, of both homepages ([en](out/scoreboard.html) /
+[zh](out/scoreboard.zh.html)). One list of rows, two shapes: a homepage cannot
+quote a figure the table below it does not carry.
+
 ## The close-ups
 
 The table answers *does it change the outcome*; the scenes in
