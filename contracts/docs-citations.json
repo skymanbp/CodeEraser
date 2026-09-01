@@ -7647,20 +7647,20 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|36f4b54da51db24e|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
-    "line": 36,
-    "end": 41,
+    "line": 43,
+    "end": 48,
     "text": "const RIPGREP_TEST_DIRS: [&str; 4] = ["
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|6628b59e85cd39fc|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|ae1f3f1c2fcde14b|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
-    "line": 48,
-    "end": 90,
-    "text": "fn measure(name: &str, root: &Path) -> (Formula, Ledger) {"
+    "line": 57,
+    "end": 99,
+    "text": "fn measure(name: &str, root: &Path) -> (Formula, Ledger, Value) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|b2b6311dc9832856|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
-    "line": 71,
-    "end": 85,
+    "line": 80,
+    "end": 94,
     "text": "// ① holds as pre-registered (L4-F3) on all five trees once the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_support/mention.rs|9f4aa36d14a1fa35|0": {

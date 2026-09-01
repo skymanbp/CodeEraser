@@ -5,7 +5,7 @@ Copyright 2026 skymanbp
 Licensed under the Apache License, Version 2.0 (see LICENSE).
 
 This distribution bundles the third-party components below.
-Regenerate with: CE_BLESS=1 cargo test --test notice_gate
+Regenerate with: CE_BLESS=1 cargo test --test it -- notice_gate::
 
 == ce / GUI (Rust crates; cargo metadata over both lockfiles) ==
 

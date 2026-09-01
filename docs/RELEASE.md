@@ -39,7 +39,12 @@
    （九 pin：三平台 ce + 三平台 ce-core + 三平台 GUI 安装包），并同批翻 `CE_MANIFEST_VERSION`
    与 `CE_BASE_URL`（tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.4.1`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.4.1`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
-   release.yml verify-publish 腿）——十一行齐动，提交并推 main，CI 绿。
+   release.yml verify-publish 腿）。**同一个提交里还有第十二行**：
+   `contracts/docs-facts.json` 的 `ver:pin#v` 是从 `CE_MANIFEST_VERSION` 派生的
+   事实，pin 一动它就旧了，`facts_projection` 当场红——跑
+   `CE_BLESS=1 cargo test --test it -- facts_` 与清单同批提交。只推十一行
+   已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿要等的正是这个提交的
+   全部 check。十二行齐动，提交并推 main，CI 绿。
 2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**
    后 publish（不重建）；`verify-publish` 复核十资产（九工件对拍
    SHA256SUMS，九工件对拍 manifest pin）。发布前它先等**这个 commit 上

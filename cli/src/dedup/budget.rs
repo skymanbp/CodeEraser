@@ -77,7 +77,7 @@ pub fn check(
     // #12 found it: the first `--check` on a tree without clones)
     anyhow::ensure!(
         reply.dedup_blocks.unwrap_or(0) == blocks as u64,
-        "core admitted {:?} blocks, the local filter kept {blocks} —          pairs.rs and CE.Dedup.Cost have drifted",
+        "core admitted {:?} blocks, the local filter kept {blocks} — pairs.rs and CE.Dedup.Cost have drifted",
         reply.dedup_blocks
     );
     if reply.fail {

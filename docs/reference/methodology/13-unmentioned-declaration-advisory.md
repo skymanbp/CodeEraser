@@ -266,19 +266,21 @@ A projection gate pins that the symbol column survives the hub's generic table
 
 ### 8. Acceptance
 
-**Universe and census (K23), measured 2026-08-28 with one instrument in one run** on the
-pinned tips of [EVAL-SET-M5-3.md](../../EVAL-SET-M5-3.md) — every number below is copied
-from the leg's own JSON line, which carries every term of the formula
-([eval_mention.rs:48-90](../../../cli/tests/it/eval_mention.rs#L48),
+**Universe and census (K23), one instrument in one run.** The four external corpora were
+measured 2026-08-28 on the pinned tips of [EVAL-SET-M5-3.md](../../EVAL-SET-M5-3.md), and
+their numbers are copied from the leg's own JSON line, which carries every term of the
+formula ([eval_mention.rs:57-99](../../../cli/tests/it/eval_mention.rs#L57),
 [eval_support/mention.rs:146-188](../../../cli/tests/it/eval_support/mention.rs#L146)); the formula pin holds on all five trees. The
-self row is the one corpus this booklet is a member of: it is re-taken on the commit that
-ships the text (digits only, so the fixed point holds) and moves with the tree by design —
-the pin is the formula, the row is the reading.
+self row is the one corpus this booklet is a member of, and the one whose leg runs in CI:
+it is not copied at all. The leg writes it — re-taken on the commit that ships the text
+(digits only, so the fixed point holds) and refused outright when the page states any
+other tree's reading, which it did for five releases while every byte gate stayed green.
+The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 764 (777 − 13 early-NUL) | rust | 2021 (1102) | 297 (0) | 14.7 % | 17 / 297 = 5.7 % | 17 / 1702 |
-| | | haskell | 1333 (309) | 307 (2) | 23.0 % | 14 / 307 = 4.6 % | 14 / 1026 |
+| self @ this commit | 837 (850 − 13 early-NUL) | rust | 2065 (1121) | 299 (0) | 14.5 % | 17 / 299 = 5.7 % | 17 / 1745 |
+| | | haskell | 1372 (312) | 310 (1) | 22.6 % | 14 / 310 = 4.5 % | 14 / 1062 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -292,7 +294,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1102<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1121<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
@@ -319,13 +321,13 @@ spells while their `$`-twin is spelled in `core.mdx` and `wiki/optionality.md`; 
 vetoed with the arm silent too, by their own file's string literal
 (`$constructor("ZodBase64URL", …)`, `:943` / `:2155`), so the arm changes no advisory
 anywhere and its cost is the row count above. The leg prints the rows beside the zero, so
-a non-zero can be read ([eval_mention.rs:71-85](../../../cli/tests/it/eval_mention.rs#L71)); the domain-name
+a non-zero can be read ([eval_mention.rs:80-94](../../../cli/tests/it/eval_mention.rs#L80)); the domain-name
 collateral of the JS arm is 0 on every tree, as pre-registered. requests' 449 → 3 is one
 file, `ext/requests-logo.ai`. `$`-run shapes in zod's JS-family files: 2392 bare, 5416
 leading, 119 trailing, 10 inner. The TEST rule's two pins hold: no external corpus has a
 `test` (singular) component, and ripgrep's package-root rule fires on exactly
 `crates/globset/benches`, `crates/{grep,ignore,searcher}/examples`
-([eval_mention.rs:36-41](../../../cli/tests/it/eval_mention.rs#L36)). Protocol-table hits:
+([eval_mention.rs:43-48](../../../cli/tests/it/eval_mention.rs#L43)). Protocol-table hits:
 requests `setup`, `clean_proxy_environ`; zod `GET` ×3, `generateMetadata` ×2,
 `generateStaticParams` ×2. The FFI/macro rows have no corpus witness and are pinned by
 synthetic fixture instead ([conv/tests.rs:49-56](../../../cli/tests/unit/mention/conv/tests.rs#L49)).
