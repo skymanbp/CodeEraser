@@ -86,4 +86,5 @@ pub static HASKELL: LangSpec = LangSpec {
     // a class method is a top-level name in Haskell, bare-callable
     // like any other; the probe finds no member scope to exclude
     call_member_scopes: &[],
+    call_import_kinds: &[],
 };

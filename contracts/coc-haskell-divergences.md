@@ -14,7 +14,7 @@
 | D1 | 守卫 `\| cond =` | 每个守卫备选 flat +1（elif 类比，无嵌套罚）；每个条件（`boolean`/`pattern_guard`）计 1 个 CC 决策 | p.7 hybrid increments；Python elif 先例 | classify 行：coc 5 / cc 6 |
 | D2 | `case` 备选 | CoC 记 case 一次（备选免费）；CC 逐备选计数**含通配 `_`**（case 是全函数，`_` 是真路径；不采纳 gocyclo 的 default 跳过） | p.10 switch 一次结构增量；Rust match_arm 先例 | getWords 行：coc 1 / cc 5 |
 | D3 | `if-then-else` | 表达式=三元类比：+1 结构带嵌套罚；`else` 零成本；else-if 链按嵌套三元付嵌套罚（S3776 的 else-if 豁免限语句 if，Haskell 没有语句 if） | p.6 三元；TS ternary 先例 | depth 行：coc 3；五语言等价对拍恒 3 |
-| D4 | 循环 / 带标签跳转 | Haskell 无此形：sumOfPrimes/toRegexp 两道白皮书例题**不可移植**（登记非静默略过）；惯用递归承担循环，而递归 +1（S3776）依赖调用图=M1 已录缺口，在 Haskell 面更宽 | p.5/p.10/p.19 例题；M1 recursion 缺口记录 | 本册（无电池行=不可移植的记录本身） |
+| D4 | 循环 / 带标签跳转 | Haskell 无此形：sumOfPrimes/toRegexp 两道白皮书例题**不可移植**（登记非静默略过）；循环由惯用递归承担，而递归 +1（S3776 p.8）**自 v2.23 步 4 起已实现**，故 Haskell 面上"循环"的代价由递归轴收取：`where` 局部与顶层同名是两个可调用体（D7 的分组按 (父结点, 名字)），跨文件环具名不做 | p.5/p.10/p.19 例题；p.8 / Appendix B1 | [cli/tests/it/coc_recursion.rs](../cli/tests/it/coc_recursion.rs)；本册（无循环电池行=不可移植的记录本身） |
 | D5 | 异常处理 | `catch`/`handle` 是普通函数应用，语法层不可见：无增量——与"try 透明"（p.9）对我们可见的语法一致；handler lambda 走 D6 | p.9 try transparent | —（无语法可测） |
 | D6 | `lambda` / `\case` | 吸收进宿主单元、只抬嵌套不增量 | p.9/p.13；Go func_literal 先例 | myMethod2 行：coc 2 |
 | D7 | 多方程函数 | 每方程一单元（`function` 结点本就逐方程），同键由 with_nth 区分；方程间的模式分派本身不计（它是定义层的 case 类比）——相对"一个函数"观是有意低计，如实登记 | —（无条款） | s 行：fns 2 / params 2,2 |

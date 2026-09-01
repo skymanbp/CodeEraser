@@ -32,6 +32,12 @@
 //! before the rule existed, that one shape charged a recursion point
 //! to a `Drop` impl that recurses nowhere.
 //!
+//! The same reading applies to a name an IMPORT binds: inside
+//! `fn symlink { use ...::symlink; symlink(src, dst) }` the bare call
+//! is the imported function, because a `use` item is a lexical binding
+//! and the innermost one wins. The crosscheck corpus held exactly that
+//! shape, and it was the only unit in four corpora the increment moved.
+//!
 //! A callable is not always one unit: Haskell gives every equation of
 //! `f` its own `function` node (divergence D7), and those equations
 //! are one function, not an ambiguity. So names are owned by GROUPS
@@ -43,7 +49,7 @@ use super::ast;
 use super::functions::FnUnit;
 use super::metrics::own_nodes;
 use super::spec::LangSpec;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use tree_sitter::Node;
 
 /// The callee's field name — one spelling across all five grammars
@@ -57,6 +63,7 @@ const CALLEE: &str = "function";
 struct Caller<'a> {
     container: usize,
     receiver: Option<&'a str>,
+    shadowed: HashSet<&'a str>,
 }
 
 /// Edges `(caller, callee)` as indices into `units`, sorted and
@@ -70,11 +77,13 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
     let mut out = Vec::new();
     for (from, unit) in units.iter().enumerate() {
         let receiver = receiver_binding(unit.node, src);
+        let own = own_nodes(unit.node, spec);
         let caller = Caller {
             container: container_of(unit.node),
             receiver: receiver.as_deref(),
+            shadowed: shadowed(&own, src, spec),
         };
-        for node in own_nodes(unit.node, spec) {
+        for node in own {
             if !spec.call_kinds.contains(&node.kind()) {
                 continue;
             }
@@ -177,7 +186,11 @@ fn target(
 ) -> Option<usize> {
     let callee = call.child_by_field_name(CALLEE)?;
     if spec.call_name_kinds.contains(&callee.kind()) {
-        let group = *named.whole.get(text(callee, src)?)?;
+        let name = text(callee, src)?;
+        if caller.shadowed.contains(name) {
+            return None;
+        }
+        let group = *named.whole.get(name)?;
         return sees(call, named.containers[group]).then_some(group);
     }
     if !spec.call_member_kinds.contains(&callee.kind()) {
@@ -194,6 +207,28 @@ fn target(
     }
     let group = *named.base.get(text(member, src)?)?;
     (named.containers[group] == caller.container).then_some(group)
+}
+
+/// Names an import binds inside a unit's own body — see
+/// LangSpec::call_import_kinds. Every name spelled anywhere under such
+/// an item counts: with no resolver, an alias, a list member and a
+/// path segment are indistinguishable, and vetoing one name too many
+/// only costs an edge, which is the direction this module errs in.
+fn shadowed<'s>(own: &[Node<'_>], src: &'s [u8], spec: &LangSpec) -> HashSet<&'s str> {
+    let mut out = HashSet::new();
+    let imports = own
+        .iter()
+        .filter(|n| spec.call_import_kinds.contains(&n.kind()));
+    for import in imports {
+        let mut stack = vec![*import];
+        while let Some(node) = stack.pop() {
+            if spec.call_name_kinds.contains(&node.kind()) {
+                out.extend(text(node, src));
+            }
+            stack.extend(ast::children(node));
+        }
+    }
+    out
 }
 
 /// The node a declaration is declared IN — the identity a scope is

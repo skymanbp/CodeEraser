@@ -13,6 +13,7 @@
 | Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（harness 已随 M7.5 封册退役，复跑从 git 历史复活；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
 | CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/it/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
+| CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见末节） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -84,8 +85,69 @@ myMethod try-catch=9 / lambda 提嵌套=2（p.9）、toRegexp=20（p.19，
 显式收录不回避"）：装饰器（p.15）——ce 单位拆分模型（lizard 同型）下
 Sonar 的装饰器特例天然不适用，not_a_decorator Sonar 聚合=2 vs ce 单位
 和=1，分歧如实记录；`?.` CC/CoC 均不计（CoC 依 p.6，CC 为 M1 立场）；
-Rust `break value` 不误计为 labeled jump。仍未实现：递归 +1（规范 §1，
-需调用图，M5；cognitive.rs 头部注记）。
+Rust `break value` 不误计为 labeled jump。递归 +1 当时未实现，**已于
+2026-08-31（计划 v2.23 步 4）补齐**，见下节。
+
+## 递归增量与它带来的系统性分歧（2026-08-31，计划 v2.23 步 4）
+
+白皮书 p.8 与 Appendix B1 写的是 `+1 for each method in a recursion cycle,
+whether direct or indirect`。**SonarSource 自家三个分析器一条都不实现**——
+sonar-java / sonar-python / sonar-javascript 三仓源码 2026-08-31 第一方核对，
+`recurs` 零命中。我们站规范侧做全，于是与真实 SonarQube 分数之间存在一条
+**系统性正偏**：凡在递归环里的函数，我们比 SonarQube 高 1 分（每个环成员各 1）。
+这条差不是缺陷，也不会在任何语料上被"修掉"——它是两侧对同一份规范的取舍差，
+在此具名登记。
+
+**对照物逐个：**
+
+- **gocognit**（Go 社区的 S3776 实现）：只做直接递归，用符号身份判定。
+  同一份探针实测（2026-08-31）：
+
+  ```
+  $ gocognit -top 20 .
+  2 p fact probe.go:3:1
+  1 p plain probe.go:14:1
+  ```
+
+  `fact`（一个 if + 自递归）两侧都是 **2**，`plain`（一个 if）两侧都是 **1**
+  ——**直接递归部分逐值一致**。互递归的 `a`/`b` gocognit 静默（它省略 CoC=0
+  的函数，已在上文登记），我们各计 1。这一对就是两个实现分手的地方。
+- **rust-code-analysis 0.0.25 / lizard 1.23.0**：均不实现任何递归增量，
+  故本轴对它们全部是系统性正偏，与上同源。
+
+**重跑结果：四份语料零移动。** 用新旧两个二进制在同一棵树上逐函数对拍
+（go 52 / python 118 / rust 319 / typescript 25 个单位，键 = 路径 + 起始行 +
+名字）：**没有任何一个单位的 CoC 变化**。也就是说上表里 gocyclo 52/52、
+lizard 102/104、RCA 322/322、gocognit 29/32 这几行**全部原封不动**——四份语料
+里没有一个我们能证明的文件内环。
+
+首轮重跑曾有**唯一一条**移动，且是**误记**，当场根修：`ignore` crate 的
+`walk.rs:2215`
+
+```rust
+#[cfg(unix)]
+fn symlink<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) {
+    use std::os::unix::fs::symlink;
+    symlink(src, dst).unwrap();
+}
+```
+
+体内那句 `use` 是**最内层绑定**，裸 `symlink(..)` 是被导入的那个函数，不是它
+自己。修法 = `LangSpec::call_import_kinds`：一个单元自己体内的导入所绑定的
+名字，裸调用永不认领（`cli/src/scan/calls.rs`）。配一正一反两条腿；摘掉规则即
+重现这条误记。修后四语料全部零移动。
+
+**锚的来源（白皮书无递归计分例题）。** v1.7 六道例题无一含递归调用，所以锚是
+**推导的**，且推导成两面可对：底数取 p.10 的 `sumOfPrimes`（页边判分 7，已由
+`sonar_whitepaper.rs` 对着同一页边钉住），给它加一句丢弃返回值的自调用——调用
+本身不是结构增量，所以**同一份源码**的环前读数必须仍是 7，而结清后必须是 8。
+差值就是被测的那条规则，两面读数把它钉死在这条规则上而不是别处。
+电池：`cli/tests/it/coc_recursion.rs`，另含互递归与直接递归同价、只有环内成员
+付钱（环外调用者与无环链各 0）、跨文件环不建边三条腿。
+
+**具名不做：跨文件环。** 调用弧是单个解析单元内的词法事实。跨文件要么按名铸边
+（R6 实测精度 0.576），要么走 symEdges（召回约 23 %）——错的 +1 会流进分数与
+尺寸门，漏的只是一分没收。立场以断言的形式留在电池里，不会哪天默默变成真的。
 
 ## 工具注记
 

@@ -95,6 +95,15 @@ pub struct LangSpec {
     /// themselves. A bare name never reaches inside one — a method
     /// answers to a receiver, never to its own name alone.
     pub call_member_scopes: Kinds,
+    /// Kinds that BIND names locally — an import written inside a
+    /// body. Names appearing under one shadow the callable enclosing
+    /// it, so a bare call of that name is not provably the local one:
+    /// the ignore crate's `fn symlink { use ..::symlink; symlink(..) }`
+    /// was measured charging itself a recursion point. Empty where the
+    /// language forbids the collision outright: Go imports are package
+    /// qualified, and TypeScript and Haskell reject a local name that
+    /// duplicates an import in the same scope.
+    pub call_import_kinds: Kinds,
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -157,6 +166,7 @@ static PYTHON: LangSpec = LangSpec {
     call_member_kinds: &["attribute"],
     call_self_words: &["self", "cls"],
     call_member_scopes: &["class_definition"],
+    call_import_kinds: &["import_from_statement", "import_statement"],
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -211,6 +221,7 @@ static TYPESCRIPT: LangSpec = LangSpec {
     call_member_kinds: &["member_expression"],
     call_self_words: &["this"],
     call_member_scopes: &["class_body", "object"],
+    call_import_kinds: &[],
 };
 
 static RUST: LangSpec = LangSpec {
@@ -257,6 +268,7 @@ static RUST: LangSpec = LangSpec {
     call_member_kinds: &["field_expression", "scoped_identifier"],
     call_self_words: &["self", "Self"],
     call_member_scopes: &["impl_item", "trait_item"],
+    call_import_kinds: &["use_declaration"],
 };
 
 static GO: LangSpec = LangSpec {
@@ -305,6 +317,7 @@ static GO: LangSpec = LangSpec {
     // a Go method is declared at the top level and its name carries
     // the receiver type, so a bare name cannot reach one at all
     call_member_scopes: &[],
+    call_import_kinds: &[],
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -330,4 +343,5 @@ static MARKDOWN: LangSpec = LangSpec {
     // a Go method is declared at the top level and its name carries
     // the receiver type, so a bare name cannot reach one at all
     call_member_scopes: &[],
+    call_import_kinds: &[],
 };

@@ -13,8 +13,15 @@
 //! wrapping clause yields to the inner if, which scores flat +1 and
 //! keeps its children at the chain's nesting level (Sonar Appendix B).
 //!
-//! Known M1 divergence (recorded, calibrated at cross-check):
-//! recursion (+1 per Sonar) is not detected — needs a call graph (M5).
+//! What this module does NOT do: the recursion increment (p.8,
+//! Appendix B1 — one point for each function in a recursion cycle).
+//! That rule needs a call relation, so it is split (ADR-008 fourth
+//! instalment): scan/calls.rs states the arcs, the core finds the
+//! cycles, and scan/coc.rs writes the settled value back. `measure`
+//! here therefore answers the PRE-cycle number, on purpose — it is
+//! what the structure family, the one reader that never looks at
+//! complexity, should keep getting. Everything that grades complexity
+//! reads scan::settle instead.
 
 use crate::scan::ast::{self, operator_text};
 use crate::scan::spec::LangSpec;
