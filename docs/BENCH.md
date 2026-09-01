@@ -39,7 +39,7 @@
 > table cannot gain a row the rule forbids, and a release that earns one
 > says which of the two reasons it has none yet.
 
-The current release, v1.5.0, earns a row and does not have one yet: the whole series is replayed in one sitting after the tag.
+The current release, v1.5.1, earns a row and does not have one yet: the whole series is replayed in one sitting after the tag.
 
 ## Latency series (self repository)
 
