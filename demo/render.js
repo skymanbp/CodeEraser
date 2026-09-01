@@ -33,15 +33,44 @@ function esc(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-/** Hard-wrap one transcript line at COLS, continuation lines indented. */
+/** Glyphs drawn two columns wide — CJK and the fullwidth forms. The
+ *  canvas is fixed at COLS * CHAR_W, so a line measured in characters
+ *  would run past the right edge with nothing to notice: a Chinese
+ *  sentence is half the characters and more than half the width. */
+const WIDE = /[\u1100-\u115f\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\ufe30-\ufe6f\uff00-\uff60\uffe0-\uffe6]/;
+
+/** Display columns of a string. */
+function cols(text) {
+  let n = 0;
+  for (const ch of text) n += WIDE.test(ch) ? 2 : 1;
+  return n;
+}
+
+/** How many characters of `text` fit in `width` columns. */
+function fit(text, width) {
+  let taken = 0;
+  let used = 0;
+  for (const ch of text) {
+    const w = WIDE.test(ch) ? 2 : 1;
+    if (used + w > width) break;
+    used += w;
+    taken += ch.length;
+  }
+  return taken;
+}
+
+/** Hard-wrap one transcript line at COLS, continuation lines indented.
+ *  An all-ASCII line wraps exactly where it always did: there `fit`
+ *  answers the width itself, and the rest of the rule is untouched. */
 function wrap(text) {
   const out = [];
   let rest = text;
   let first = true;
-  while (rest.length > (first ? COLS : COLS - 4)) {
+  while (cols(rest) > (first ? COLS : COLS - 4)) {
     const width = first ? COLS : COLS - 4;
-    let cut = rest.lastIndexOf(" ", width);
-    if (cut < width / 2) cut = width;
+    let cut = fit(rest, width);
+    const space = rest.lastIndexOf(" ", cut);
+    if (space >= cut / 2) cut = space;
     out.push((first ? "" : "    ") + rest.slice(0, cut));
     rest = rest.slice(cut).replace(/^ /, "");
     first = false;
@@ -64,6 +93,18 @@ function prefix(kind) {
     default:
       return "";
   }
+}
+
+/** The inverse of prefix(): a console line read back as the typed
+ *  row that produced it, so a scene captured as text can be drawn.
+ *  Ordered so `deny` claims the mark it shares with `block` — the two
+ *  paint the same colour, and only the prefix is being recovered. */
+function typed(line) {
+  for (const kind of ["cmd", "agent", "deny", "allow"]) {
+    const mark = prefix(kind);
+    if (line.startsWith(mark)) return { kind, text: line.slice(mark.length) };
+  }
+  return { kind: "out", text: line };
 }
 
 /** Every transcript line as one or more <text> rows. */
@@ -101,4 +142,4 @@ ${text}
 `;
 }
 
-module.exports = { renderSvg, wrap };
+module.exports = { renderSvg, typed, wrap };

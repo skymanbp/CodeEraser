@@ -23,6 +23,7 @@
 const fs = require("fs");
 const path = require("path");
 const { CE, run, seedTree, probe, normalize, ejectTree } = require("./tree");
+const { renderSvg, typed } = require("./render");
 const { steps } = require("./steps");
 
 const LANGS = ["en", "zh"];
@@ -97,6 +98,16 @@ function render(exhibit, lines, lang) {
   return [exhibit.title[lang], "", "```console", ...lines, "```"].join("\n");
 }
 
+/** The scene the READMEs open with. A reader's first glance should
+ *  be the product doing its one visible thing, not a diagram of the
+ *  machine that does it; this is the same scene as the exhibit below,
+ *  drawn instead of quoted, so there is no second capture to drift. */
+const HERO = "copied-helper";
+const HERO_TITLE = {
+  en: "a copied helper, refused before the file exists",
+  zh: "抄来的辅助函数，在文件存在之前就被拒",
+};
+
 /** Every scene, built once and played in every language: the artefacts
  *  demo/out gains, keyed the way run.js's EMBEDS names them. */
 function vignetteFiles(seed, work) {
@@ -109,9 +120,12 @@ function vignetteFiles(seed, work) {
     return { exhibit, said };
   });
   const files = {};
+  const hero = played.find(({ exhibit }) => exhibit.id === HERO);
+  if (!hero) throw new Error(`vignettes: the hero scene ${HERO} is gone`);
   for (const lang of LANGS) {
-    const name = lang === "en" ? "vignettes.md" : `vignettes.${lang}.md`;
-    files[name] = played.map(({ exhibit, said }) => render(exhibit, said[lang], lang)).join("\n\n") + "\n";
+    const suffix = lang === "en" ? "" : `.${lang}`;
+    files[`vignettes${suffix}.md`] = played.map(({ exhibit, said }) => render(exhibit, said[lang], lang)).join("\n\n") + "\n";
+    files[`hero${suffix}.svg`] = renderSvg(HERO_TITLE[lang], hero.said[lang].map(typed));
   }
   return files;
 }

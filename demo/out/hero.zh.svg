@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="849" height="140" viewBox="0 0 849 140" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
+<title>抄来的辅助函数，在文件存在之前就被拒</title>
+<rect width="849" height="140" rx="8" fill="#0d1117"/>
+<rect width="849" height="32" rx="8" fill="#161b22"/>
+<rect y="16" width="849" height="16" fill="#161b22"/>
+<circle cx="18" cy="16" r="5" fill="#ff5f57"/><circle cx="36" cy="16" r="5" fill="#febc2e"/><circle cx="54" cy="16" r="5" fill="#28c840"/>
+<text x="424.5" y="21" fill="#8b949e" text-anchor="middle">抄来的辅助函数，在文件存在之前就被拒</text>
+<text x="18" y="60" fill="#58a6ff" xml:space="preserve">$ Write invoicer/discount.py</text>
+<text x="18" y="79" fill="#ff7b72" xml:space="preserve">✗ ce：&lt;work&gt;/invoicer/discount.py 的内容与 1 处已索引区域重复：invoicer/money.py:1-18 (89</text>
+<text x="18" y="98" fill="#ff7b72" xml:space="preserve">    tokens)。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入</text>
+<text x="18" y="117" fill="#ff7b72" xml:space="preserve">    随即通过。</text>
+</svg>

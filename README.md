@@ -4,7 +4,7 @@
 
 > An eraser against LLM-induced code & document entropy.
 
-![Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of ten families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces — terminal, GUI, MCP server, Claude Code hooks, CI](docs/assets/architecture.en.svg)
+![The write-time guard refusing a write: an agent asks to create a new file, and CodeEraser answers with the indexed region that content already duplicates and the ordering that would pass instead](demo/out/hero.svg)
 
 ## What it is
 
@@ -157,6 +157,8 @@ Every capability is claimed once in this table, the sets are derived from the co
 <!-- parity:end -->
 
 ## Tech stack, design and philosophy
+
+![Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of ten families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces — terminal, GUI, MCP server, Claude Code hooks, CI](docs/assets/architecture.en.svg)
 
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->** (edition <!--ce:tool:edition#digits-->2,024<!--/ce-->): the `codeeraser` crate — tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> with <!--ce:count:grammars#word-->six<!--/ce--> grammars, rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce--> (bundled SQLite, WAL, index schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->), the `ignore` walker, `interprocess` named pipes / Unix sockets, clap, serde, sha2 for the updater's pins.
 - **Haskell (GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->, GHC2021, `-Wall -Werror`)**: `ce-core` — every judgment family, a frozen dependency graph.

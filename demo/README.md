@@ -80,6 +80,19 @@ No `agent>` narration appears in them, because steps.js writes its narration in
 English only and an English line in the Chinese README would be a translation
 gap dressed as a transcript.
 
+The first of those scenes is also drawn: [`render.js`](render.js) turns the
+lines it just captured into [`out/hero.svg`](out/hero.svg) and
+[`out/hero.zh.svg`](out/hero.zh.svg), the card each README opens with. A reader's
+first glance should be the product doing its one visible thing rather than a
+diagram of the machine that does it — and because the card is drawn from the
+same play as the quoted exhibit below it, there is no second capture that could
+drift away from the first. The Chinese card is what made the renderer count
+display columns instead of characters: a CJK glyph is one character and two
+columns, and the canvas is fixed at `COLS * CHAR_W`, so a line measured the old
+way would have run off the right edge with nothing to notice. An all-ASCII line
+still wraps exactly where it did, which is why the two transcript SVGs beside it
+did not move a byte.
+
 [`tree.js`](tree.js) holds what both drivers need — how a copy of the seed is
 made, committed and given a baseline, how the guard is asked, how a scratch
 path is kept out of a transcript. It is a shared file rather than a copied one
