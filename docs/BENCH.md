@@ -37,7 +37,7 @@
 > this rule itself and names every tag it turns away, so the table and the
 > rule cannot drift apart again.
 
-The newest row, v1.4.0, is the release this build is.
+The current release, v1.4.1, has no row of its own.
 
 ## Latency series (self repository)
 
