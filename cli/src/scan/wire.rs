@@ -32,31 +32,21 @@ pub type Judgment = (Vec<u8>, bool, Vec<String>, Vec<[u64; 2]>);
 /// form). Code 6 (fn-naming) is the boolean row: warn 0, value 0/1.
 /// An incoherent ladder is refused HERE with the ce.toml keys named
 /// (review C6: the core refuses it too, but a config mistake must
-/// not surface as a wire refusal).
+/// not surface as a wire refusal) — through `Thresholds::ladder_fault`,
+/// the predicate that already owns the rule for `Config::load` and the
+/// report.rs mirror. It was restated here as its own pair list until
+/// v2.24's third pair made the two lists clone partners; one rule
+/// spelled twice is what the restatement always was.
 pub fn grade_rows(t: &Thresholds) -> Result<Vec<[u64; 3]>> {
-    for (warn, fail, keys) in [
-        (
-            t.file_lines_warn,
-            t.file_lines_fail,
-            "file_lines_warn/file_lines_fail",
-        ),
-        (
-            t.fn_lines_warn,
-            t.fn_lines_fail,
-            "fn_lines_warn/fn_lines_fail",
-        ),
-    ] {
-        ensure!(
-            fail == 0 || fail >= warn,
-            "ce.toml [thresholds] {keys}: the fail line {fail} sits below the warn line {warn}"
-        );
+    if let Some(fault) = t.ladder_fault() {
+        anyhow::bail!(fault);
     }
     Ok(vec![
         [0, t.file_lines_warn as u64, t.file_lines_fail as u64],
         [1, t.fn_lines_warn as u64, t.fn_lines_fail as u64],
         [2, t.params_warn as u64, 0],
         [3, t.cyclomatic_warn as u64, 0],
-        [4, t.cognitive_warn as u64, 0],
+        [4, t.cognitive_warn as u64, t.cognitive_fail as u64],
         [5, t.nesting_warn as u64, 0],
         [6, 0, 0],
     ])
@@ -86,7 +76,12 @@ pub fn class_grade_rows(rules: &RulesCfg, global: &Thresholds) -> Vec<[u64; 4]> 
                 t.fn_lines_warn,
                 t.fn_lines_fail,
             ),
-            (4, k.cognitive_warn.is_some(), t.cognitive_warn, 0),
+            (
+                4,
+                k.cognitive_warn.or(k.cognitive_fail).is_some(),
+                t.cognitive_warn,
+                t.cognitive_fail,
+            ),
         ];
         for (code, rides, warn, fail) in declared {
             if rides {

@@ -3009,8 +3009,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|213e5a4586c1fae0|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 193,
-    "end": 194,
+    "line": 200,
+    "end": 201,
     "text": "deadIndegCeil :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|25abab9c9efb2321|0": {
@@ -3021,8 +3021,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|282f482011c64c7c|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 250,
-    "end": 254,
+    "line": 257,
+    "end": 261,
     "text": "verdictNodeCap :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|5f54c51ee93e3da0|0": {
@@ -3039,8 +3039,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|730b9020fd437b53|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 186,
-    "end": 187,
+    "line": 193,
+    "end": 194,
     "text": "cocCeil :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|752adad12698c251|0": {
@@ -3063,8 +3063,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|86cdac7551b0138c|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 241,
-    "end": 242,
+    "line": 248,
+    "end": 249,
     "text": "scoreScale :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|8f80f9819c596dd5|0": {
@@ -3087,8 +3087,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|993952d94b6acdbc|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 175,
-    "end": 182,
+    "line": 182,
+    "end": 189,
     "text": "-- | The §B clamp fence: however the repo's distribution leans, the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|a14dd1d8125a0b5b|0": {
@@ -3105,14 +3105,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|c43a03b028922dc3|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 205,
-    "end": 206,
+    "line": 212,
+    "end": 213,
     "text": "violCost :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|cd38faf265bed4ea|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 227,
-    "end": 228,
+    "line": 234,
+    "end": 235,
     "text": "violCostNeutral :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|cd9a97e542c04810|0": {
@@ -3129,8 +3129,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e0728177b7e69a35|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 233,
-    "end": 234,
+    "line": 240,
+    "end": 241,
     "text": "defaultWeight :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e6cce729a02fd8f1|0": {
@@ -6904,7 +6904,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../ce-toml.md|f254a0fcc990eb56|0": {
     "target": "../ce-toml.md",
-    "line": 31,
+    "line": 32,
     "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|0f8dd17e2c8297ba|0": {

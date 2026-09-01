@@ -17,6 +17,15 @@ pub struct Thresholds {
     pub params_warn: usize,
     pub cyclomatic_warn: usize,
     pub cognitive_warn: usize,
+    /// The complexity axis's absolute line (plan v2.24), and 0 — the
+    /// shipped default — is `gradeTable`'s published "no hard line".
+    /// 0 is the honest default: §4.1's own evidence row records that
+    /// CoC has no support on the correctness axis (r = -0.13, CI
+    /// crossing zero). Declared, it reaches the scan fail tier and
+    /// `[[rules.class]]` and nothing else — the score's complexity
+    /// axis still charges against `cocCeil`, so arming this wall
+    /// never moves a score.
+    pub cognitive_fail: usize,
     pub nesting_warn: usize,
 }
 
@@ -30,6 +39,7 @@ impl Default for Thresholds {
             params_warn: 5,
             cyclomatic_warn: 15,
             cognitive_warn: 15,
+            cognitive_fail: 0,
             nesting_warn: 4,
         }
     }
@@ -53,6 +63,11 @@ impl Thresholds {
                 self.fn_lines_warn,
                 self.fn_lines_fail,
                 "fn_lines_warn/fn_lines_fail",
+            ),
+            (
+                self.cognitive_warn,
+                self.cognitive_fail,
+                "cognitive_warn/cognitive_fail",
             ),
         ]
         .into_iter()

@@ -167,8 +167,15 @@ sizePMax = 10
 
 -- | k: the multiplicative-MAD exponent in the soft-line derivation
 -- S = clamp(median·r^k, [softMin, softMax]) (plan v2.6 §B).
--- Calibrated over self + requests + ripgrep (v0.6 P2): k=2 lands S
--- within ±6% of the historical 300 on this repo's judged set.
+-- Calibrated over self + requests + ripgrep (v0.6 P2), where k=2 put
+-- S near the historical 300 on each. That was an OBSERVATION on
+-- three trees, never an invariant, and this comment claimed the
+-- invariant until v2.24 caught it: S is a relative line and travels
+-- with the distribution it is derived from, so no fixed distance
+-- from 300 is a property of k — this repo's own S has since left
+-- that neighbourhood entirely. What bounds S is the [softMin,
+-- softMax] fence below; where the live value lives is the committed
+-- baseline's `softLine`, and nowhere else.
 softLineK :: Integer
 softLineK = 2
 

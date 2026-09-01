@@ -460,4 +460,24 @@ entry_globs = [
 # in which accessor pair they called, and folded into one `kids`
 # walk. Row set measured against the HEAD worktree; every other
 # difference is a rekey (same pair, lines moved).
-budget = 55
+# 55 -> 56 (v2.24, the complexity wall): `[thresholds] cognitive_fail`
+# gave Thresholds its NINTH field, and nine `pub name: usize,` lines
+# is where the struct's declaration run reaches chain range of
+# dedup/t3/mod.rs's Counts -- the record/field-face class this ledger
+# has booked five times already (177, 181, 190 (a), 188 P8, and the
+# +2 at 186 -> 185 -> 187). Measured, not inferred: deleting that one
+# field and nothing else returns the count to 55.
+# A repayment was tried in the same batch AND MEASURED NOT TO WORK,
+# which is recorded here because the ledger's culture is that an
+# attempt is reported either way: scan/wire.rs::grade_rows had
+# restated Thresholds::ladder_fault's pair list as its own, and the
+# third pair made those two lists look like partners -- folding
+# grade_rows onto the predicate that already owns the rule is a real
+# simplification and is kept for its own sake (one rule, one owner),
+# but the block count is 56 with it and 56 without it. The block that
+# landed was never that pair.
+# What remains is the ce.toml SCHEMA itself. These field names are the
+# config's public vocabulary; reshaping a data table so its token run
+# stops rhyming is writing code for the ratio, which the entries above
+# forbid by name. Booked. Measured after cargo fmt.
+budget = 56

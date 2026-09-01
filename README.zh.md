@@ -171,7 +171,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **这就是成品的形状。** 计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——已于 2026-08-31 裁定不做（计划 v2.22，45 条）。以下是立场清单，不是计划清单。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量的分数不可比。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
 
 ## 文档
 

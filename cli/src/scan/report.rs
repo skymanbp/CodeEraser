@@ -111,14 +111,18 @@ fn fn_values(f: &FnMetrics) -> [usize; FN_CODES] {
 /// warn) never reaches here: Thresholds::ladder_fault refuses it at
 /// Config::load, the throat this mirror and wire.rs::grade_rows both
 /// read through — one config must not be refused by one reader and
-/// judged by the other. Naming's limit is 0.
+/// judged by the other. Naming's limit is 0. Cognitive is the one
+/// complexity metric with a fail SLOT (plan v2.24, `cognitive_fail`,
+/// 0 by default so nothing changes until a repo declares one);
+/// params / cyclomatic / nesting stay wall-less by the same evidence
+/// argument that keeps cognitive's own default at 0.
 fn ladders(t: &Thresholds) -> [(usize, usize); 7] {
     [
         (t.file_lines_warn, t.file_lines_fail),
         (t.fn_lines_warn, t.fn_lines_fail),
         (t.params_warn, 0),
         (t.cyclomatic_warn, 0),
-        (t.cognitive_warn, 0),
+        (t.cognitive_warn, t.cognitive_fail),
         (t.nesting_warn, 0),
         (0, 0),
     ]

@@ -36,16 +36,21 @@ pub struct ClassCfg {
 }
 
 /// Absent = inherit the global [thresholds] value. The score reads
-/// the first three as the ceilings table's own codes 0 / 1 / 2
-/// (sizeCeil / cocCeil / sizeHard) with a class dimension — no new
-/// code was minted; the scan ladder (P3, 3.2.0) reads all five as
-/// per-class grade overrides on its codes 0 / 1 / 4.
+/// the size and complexity ceilings as the ceilings table's own codes
+/// 0 / 1 / 2 (sizeCeil / cocCeil / sizeHard) with a class dimension —
+/// no new code was minted; the scan ladder (P3, 3.2.0) reads the six
+/// line knobs as per-class grade overrides on its codes 0 / 1 / 4.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct ClassKnobs {
     pub file_lines_warn: Knob,
     pub file_lines_fail: Knob,
     pub cognitive_warn: Knob,
+    /// The class's own complexity wall (plan v2.24). Absent inherits
+    /// the global `cognitive_fail`, which ships 0 — so a class opts
+    /// in exactly like the global table does, and a class that says
+    /// nothing keeps sending no code-4 fail line at all.
+    pub cognitive_fail: Knob,
     pub fn_lines_warn: Knob,
     pub fn_lines_fail: Knob,
     /// The class's OWN ratchet allowance in lines (5.1.0, plan v2.14
@@ -80,6 +85,7 @@ impl ClassCfg {
             file_lines_warn: k.file_lines_warn.unwrap_or(global.file_lines_warn),
             file_lines_fail: k.file_lines_fail.unwrap_or(global.file_lines_fail),
             cognitive_warn: k.cognitive_warn.unwrap_or(global.cognitive_warn),
+            cognitive_fail: k.cognitive_fail.unwrap_or(global.cognitive_fail),
             fn_lines_warn: k.fn_lines_warn.unwrap_or(global.fn_lines_warn),
             fn_lines_fail: k.fn_lines_fail.unwrap_or(global.fn_lines_fail),
             ..global.clone()
