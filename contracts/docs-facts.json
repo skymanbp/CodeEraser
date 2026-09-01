@@ -379,7 +379,7 @@
       "id": "ver:pin#v",
       "source": "plugin/bin/manifest.env::CE_MANIFEST_VERSION (update::manifest::parse)",
       "tier": "linked",
-      "value": "1.4.0"
+      "value": "1.4.1"
     },
     {
       "id": "ver:proto#v",
