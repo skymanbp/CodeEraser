@@ -68,8 +68,11 @@
   `Pages Write`，账户 ef6ce0a8b2c4ba8529b41aa6fd5b4f45），临时 token
   进 `CLOUDFLARE_API_TOKEN` 跑 `npx wrangler pages deploy site
   --project-name codeeraser`，finally 里 DELETE /user/tokens/<id>
-  销毁；任何 token 值不落对话/不落库/不打印。部署后按页 sha256
-  对拍本地 `site/` 才算上线。
+  销毁；任何 token 值不落对话/不落库/不打印。部署后跑
+  `node scripts/verify_site.js` 才算上线：它把八页逐个与 `git show HEAD:<page>`
+  的 blob 对拍。判据**不是**「剥完摘要相同」——那样会连第二处真差异一起吞掉——
+  而是「至多一处 Cloudflare 边缘注入的 beacon，剥掉它之后与 blob 逐字节相等」；
+  beacon 带属性且连它所在那行的换行一起注入，两点都在脚本头注里写明。
 - **官网截图**：首页三张 GUI 图是**生成物**，不是手摆的窗口——
   `node scripts/shoot_gui.js --out site/assets` 用无头 Edge（即应用自己的
   WebView2 引擎）跑真 `gui/ui`，喂的是 CLI 出的三份报告文档。`gui/ui`
