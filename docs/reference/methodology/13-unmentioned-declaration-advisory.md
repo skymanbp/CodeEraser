@@ -12,7 +12,7 @@ referenced name read as unmentioned) is the direction every rule is built agains
 the four-way verdicts: it never turns a gate red, never enters `ce erase`, and is
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
-[report.rs:53-58](../../../cli/src/graph/deadcode/report.rs#L53)). The plan calls it ADR-008
+[report.rs:58-63](../../../cli/src/graph/deadcode/report.rs#L58)). The plan calls it ADR-008
 step 3b ([DEVELOPMENT_PLAN.md:290](../../DEVELOPMENT_PLAN.md#L290)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
@@ -213,8 +213,8 @@ the same with or without them ([VERSIONING.md:182-199](../../../contracts/VERSIO
 Only `ce deadcode` and the GUI/MCP deadcode faces ask for the advisory; the five other
 consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, the canvas)
 pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:81-84](../../../cli/src/graph/deadcode.rs#L81),
-[deadcode.rs:182-227](../../../cli/src/graph/deadcode.rs#L182)). The reply is consumed once:
+([deadcode.rs:83-86](../../../cli/src/graph/deadcode.rs#L83),
+[deadcode.rs:189-234](../../../cli/src/graph/deadcode.rs#L189)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -222,9 +222,9 @@ the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
 three keys, present only when the road was asked: `unmentioned` rows of five scalars
 `{name, symbol, line, code, why}`, `unmentioned_dropped`, and `unmentioned_cut` — the
 producer's cut, which the core cannot see ([advisory.rs:31-50](../../../cli/src/graph/deadcode/advisory.rs#L31),
-[report.rs:114-145](../../../cli/src/report.rs#L114)). The console prints one line per row, a
+[report.rs:116-147](../../../cli/src/report.rs#L116)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
-([report.rs:53-109](../../../cli/src/graph/deadcode/report.rs#L53)); the MCP `deadcode`
+([report.rs:58-114](../../../cli/src/graph/deadcode/report.rs#L58)); the MCP `deadcode`
 tool returns the same document ([tools.rs:78-82](../../../cli/src/mcp/tools.rs#L78)); the GUI
 graph screen loads that document as a second judgment beside the canvas one, joins the
 two by file path (a rendering join on a shared string, never a verdict, and best-effort
@@ -232,7 +232,7 @@ by path since they are separate runs) and lists a selected file's rows with the
 root-level census and the notices — the two the document carries, and a third when the
 advisory road failed while the canvas drew (a pre-6.2.0 core), so "no advisory" and "not
 judged" never look alike ([graph.js:34-69](../../../gui/ui/graph.js#L34),
-[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:89-99](../../../gui/ui/i18n.js#L89)).
+[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:94-104](../../../gui/ui/i18n.js#L94)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -279,7 +279,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 837 (850 − 13 early-NUL) | rust | 2065 (1121) | 299 (0) | 14.5 % | 17 / 299 = 5.7 % | 17 / 1745 |
+| self @ this commit | 840 (853 − 13 early-NUL) | rust | 2071 (1124) | 299 (0) | 14.4 % | 17 / 299 = 5.7 % | 17 / 1751 |
 | | | haskell | 1372 (312) | 310 (1) | 22.6 % | 14 / 310 = 4.5 % | 14 / 1062 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
@@ -294,7 +294,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
 碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1121<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1124<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

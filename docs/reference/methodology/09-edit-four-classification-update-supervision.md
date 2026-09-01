@@ -157,7 +157,7 @@ The reply is an answer, not an authority ([delta.rs:4-5](../../../cli/src/fourcl
 
 The session's file pairs come from `git diff --name-status -z -M -C HEAD` ([session.rs:22-24](../../../cli/src/fourclass/session.rs#L22)). A copy record (`C`) carries two paths and maps to an **added** file — the source survives and the destination is new material, which is precisely the duplication signal ([session.rs:88-91](../../../cli/src/fourclass/session.rs#L88)); consuming only one of its two tokens desynchronizes the whole stream. Pairs are filtered by `Lang::judged_path` — the scan-only arm is size-gated and never four-classified ([session.rs:98-102](../../../cli/src/fourclass/session.rs#L98)).
 
-Cross-file relocations remain **informational**: no deny path may lean on this report until a multi-file FPR instrument exists, since claiming a move where there is duplication would hide duplication inside a health signal ([session.rs:3-6](../../../cli/src/fourclass/session.rs#L3)).
+Cross-file relocations remain **informational**: no multi-file FPR instrument exists (R-L2-4 — ruled not built at the v2.22 close-out), and claiming a move where there is duplication would hide duplication inside a health signal, so no deny path leans on this report ([session.rs:3-6](../../../cli/src/fourclass/session.rs#L3)).
 
 ### Constants not found
 

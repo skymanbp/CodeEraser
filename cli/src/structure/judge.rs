@@ -2,8 +2,8 @@
 //! once through the scan measurement (ONE walk for every surface),
 //! assemble the fact tables through structure::rows, send ONE
 //! structure.request, and re-label the core's dense verdicts with
-//! the names this side kept (§5.9.2). Report-only until a score
-//! floor lands (S3+): the CLI gates nothing here.
+//! the names this side kept (§5.9.2). Report-only by ruling — no
+//! score floor (v2.22 close-out, O53): the CLI gates nothing here.
 
 // single-path module imports on purpose: the reference ladder
 // resolves them to the sibling FILES, so the graph sees the true

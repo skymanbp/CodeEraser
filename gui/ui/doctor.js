@@ -46,7 +46,7 @@ function renderDoctor() {
   // the handshake is the hero because it is the one fact that decides
   // whether any judgment on this machine is possible at all
   const parts = [
-    `<div id="check-hero"><span id="check-score">${ok ? "OK" : "FAILED"}</span>` +
+    `<div id="check-hero"><span id="check-score">${esc(ok ? tr("handshakeOk") : tr("handshakeFailed"))}</span>` +
     `<span class="verdict ${ok ? "ok" : "bad"}">${esc(tr("handshake"))}</span></div>`,
     drow(tr("project"), d.root),
     drow(`ce`, `${d.ce.version} (proto ${d.ce.proto})`),

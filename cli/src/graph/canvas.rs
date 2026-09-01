@@ -16,8 +16,10 @@ use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 /// JSON output schema id; bump on shape change (plan §7.1). 0.3.0:
-/// each file row carries `cycle`, the core's cycle membership.
-pub const SCHEMA_ID: &str = "ce.graph-canvas/0.3.0";
+/// each file row carries `cycle`, the core's cycle membership. 0.4.0
+/// (plan v2.25, O23): a dead row carries `whyCode` beside the English
+/// `why`, so a face can render the reason in its own language.
+pub const SCHEMA_ID: &str = "ce.graph-canvas/0.4.0";
 
 /// The one-judgment assembly (P10 half-doors end to end): refreshed
 /// index → wire → judge with the full file-tier pos request →
@@ -90,10 +92,10 @@ fn document(
     cycles: &FileCycles,
 ) -> Value {
     let files = file_nodes(w);
-    let dead: BTreeMap<&str, (&str, &str, Option<i64>)> = report
+    let dead: BTreeMap<&str, (&str, usize, Option<i64>)> = report
         .dead
         .iter()
-        .map(|d| (d.path.as_str(), (d.verdict, d.why.as_str(), d.conf)))
+        .map(|d| (d.path.as_str(), (d.verdict, d.why_code, d.conf)))
         .collect();
     let rows: Vec<Value> = files
         .iter()
@@ -102,7 +104,8 @@ fn document(
             json!({
                 "path": p,
                 "verdict": d.map(|&(v, _, _)| v),
-                "why": d.map(|&(_, w, _)| w),
+                "why": d.map(|&(_, w, _)| super::deadcode::WHY_CODES[w].0),
+                "whyCode": d.map(|&(_, w, _)| w),
                 "conf": d.and_then(|&(_, _, c)| c),
                 "pos": pos.get(p),
                 "cycle": cycles.files.contains(p),

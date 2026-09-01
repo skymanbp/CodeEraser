@@ -26,7 +26,12 @@ pub fn print(r: &Report, json: bool) {
             line(
                 "dead: {}  {}  ({}){}",
                 "死件：{}  {}（{}）{}",
-                &[&d.path, &d.verdict, &d.why, &super::conf_word(d.conf)],
+                &[
+                    &d.path,
+                    &d.verdict,
+                    &d.why_line(),
+                    &super::conf_word(d.conf)
+                ],
             )
         );
     }

@@ -7,6 +7,47 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
+## [Unreleased]
+
+**无默认档位变更。** v1.5.0 发布后的收尾维护批（计划 v2.25 修正案，2026-09-01）：
+一轮 43-agent 清扫「能做但没做」+ 一轮 13-agent i18n 同步审计的确认项，全部处置。
+
+- **死件 why 句改为编码（O23 复活，用户裁定 2026-09-01）。** `DeadRow.why` 曾在
+  Rust 里铸成英文句子，直出到中文控制台（`死件：…（no kept in-edge and no entry
+  flag）`）与 GUI 引用图屏的两种语言。现在测量侧只出代码（`WHY_CODES` 两行：0 =
+  无保留入边，1 = 仅被死代码引用），机器面（`ce.deadcode-report` **0.4.0**、
+  `ce.graph-canvas` **0.4.0**）在英文 `why` 旁加性带 `whyCode`，控制台与 GUI 各按
+  自己的语言表渲染；旧文档在 GUI 里回落到它自带的英文句而不是 `undefined`。
+- **GUI 体检屏的 OK/FAILED 是硬编码英文**（i18n 审计确认）：改走 `handshakeOk` /
+  `handshakeFailed` 两键，中文与 CLI 的「握手：正常/失败」同词。
+- **erase 建议行带上未解析站点数**（FIELD-TEST 记的显示项，K 轮步 6 曾列入又无声
+  丢掉，用户裁定做掉）：`language_unresolved` 的行尾附「该语言尚有 N 个未解析引用
+  点位」；`Row.sites` 加性进 `ce.erase-plan` **0.2.0**，wire 的 reason 位不动。
+- **措辞对齐结项裁定**：六处源注释与一册方法学把已裁定「不做」的事写成「等 X 落地」
+  （structure 分数地板 O53 ×3、R-L2-4 多文件 FPR 仪器 ×2、ce.toml `[ui]` 语言路）；
+  计划书 §4.2 `UserPromptSubmit` 行、§6 M5-2 的 R6 条件项、§8 R5 的 dupehound 去向
+  就地补上裁定。均为措辞，无功能变化。
+- **ADR-006 具名重立账补进本册**：c3a2198 与 ba067cf 两次重立只在提交信息里具名，
+  按 ADR-006 规则须在该提交段逐个具名——已补入 [v1.5.0] 两节末尾。
+- 方法学册 08 一条引文标签重瞄（`size-advisory.md:46-48` → `:48-49` + `:52`，§C 改写
+  后被引行位移）；站点 how 页英文「never contributes to the score」补回中文页与册 08
+  都有的限定词 **structure**。
+- **bench.json 冻结点的引文有了执行者**（新门 `bench_frozen_sources.rs`）：九个冻结
+  评测点各以散文写着 `docs/X.md:A-B + contracts/eval/*.json`，而 `docs_citations` 只
+  读 `[label](path#L)` 链接、`source_citations` 只读 Rust 注释，这九条从未被任何门
+  解析——被引行位移后会一路绿着印在 BENCH.md、两个 README 与两个站点页上。现在每段
+  须解析（文件在、行段落在文件内、通配至少命中一个文件），且值里的**每个数**（`17/17`、
+  `1.000`、`0.90`、`1%` 这类整 token）必须逐字出现在被引行内；三条负向探针各按名拒。
+- **docs_consts 六枚芯片改绑源常量，豁免名单 22→16**：`kgram` / `window` 绑
+  `impl Default for Params` 的字段值、`scale` 绑 `structScale`、`row + knob cap` 绑
+  `trendRowCap`、`feed schema` 绑 `OBSERVE_SCHEMA`、四个家族的 `schema` 芯片按文件各
+  绑自家 `SCHEMA_ID`——此前全在豁免名单里以「散文事实」为名，而绑定就在一步之外。
+- **ADR-006 具名重立（本批）**：主仓 CHANGELOG.md 587→636（本节）、`cli/src/erase/render.rs`
+  138→159（`reason_detail` + 测试挂载）、`gui/ui/i18n.js` 329→340（`deadWhy` 两语表 + 体检两键）；
+  子仓 `it/docs_consts.rs` 270→287（六芯片绑定 + 四家族 `schema` 路由）、`unit/graph/deadcode.rs`
+  79→103（O23 两语腿）。`WHY_CODES` 与两个读法拆进新文件 `graph/deadcode/why.rs`，
+  `deadcode.rs` 555→560 落在容差内、不入此账。
+
 ## [v1.5.0] — 2026-09-01 — 复杂度轴的 opt-in 绝对上限；文档规则全部有了执行者
 
 ### 复杂度轴补上绝对上限（计划 v2.24 修正案，2026-09-01）
@@ -57,6 +98,10 @@
 - 审计中一条被对抗核验**推翻**的发现留档：`ce join` 的尺寸计价「不设围栏不认类」
   不成立——该路 `continuous` 表整个为空、其轴按注释明言被忽略，join 只消费
   candidates/severity，从不读分。
+- **ADR-006 具名重立账（本批 ba067cf / 子仓 bc04231）**，超容差上升的文件（旧→新行）：
+  主仓 `CHANGELOG.md` 536→587、`cli/src/config/thresholds.rs` 66→81；子仓
+  `it/docs_consts.rs` 224→270、`it/docs_consts_parts/mod.rs` 125→187、
+  `it/scan_classes.rs` 46→125。
 
 ### 只写在文档里的规则，现在都有了执行者
 
@@ -102,6 +147,10 @@
   已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿等的正是这个提交的全部 check。
 - **两个 README 的可比性句子补上 v0.7.3 → v1.0.0 密度计费改判**（此前只列了三处断代
   中的两处），BENCH.md 页眉散文改为只声称两个写手都真在执行的部分。
+- **ADR-006 具名重立账（本批 c3a2198 / 子仓 2ea881b）**，超容差上升的文件（旧→新行）：
+  主仓 `CHANGELOG.md` 491→536；子仓 `it/bench_render.rs` 186→238、
+  `it/bench_render_dashboard.rs` 222→233、`it/bench_support/mod.rs` 237→289、
+  `it/bench_support/render.rs` 124→200。
 
 ## [v1.4.1] — 2026-09-01 — 五条字节门看不见的缺陷
 

@@ -236,7 +236,7 @@ computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#
 
 The design contract §C lists two benefit terms and one cost term that the **as-built code does
 not implement**: benefit "dedup budget effect" and "hot/cold unit isolation", and cost
-"baseline re-key noise" [size-advisory.md:46-48](../size-advisory.md#L46). The
+"baseline re-key noise" [size-advisory.md:48-49](../size-advisory.md#L48), [size-advisory.md:52](../size-advisory.md#L52). The
 shipped benefit is the soft-zone recovery term alone
 [Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199) and the shipped cost is exactly the
 four legs above [Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). No constant for

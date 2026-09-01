@@ -84,6 +84,11 @@ const CE_I18N = {
     graphCounts: (f, e, d, c) => `${f} files, ${e} edges — ${d} dead, ${c} cycles`, graphAlive: "alive",
     graphInOut: (i, o) => `${i} in / ${o} out`, graphCycleOf: (n) => `in a cycle of ${n} files`,
     graphUnresolved: (n) => `${n} unresolved sites — the graph refuses to know them`,
+    // the dead row's reason BY CODE (ce.graph-canvas 0.4.0, plan v2.25
+    // O23): the sentence rode the wire in English and this pane showed
+    // it to both audiences. A document older than the code falls back
+    // to its English sentence in graph.js, never to "undefined".
+    deadWhy: { 0: "no kept in-edge and no entry flag", 1: "referenced only from dead code; no entry flag" },
     // the symbol-level advisory (ce.deadcode-report 0.3.0, plan v2.17
     // L round): declarations no other file spells, by the core's code
     advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? "" : "s"} in ${f} file${f === 1 ? "" : "s"} — advisory, never a verdict`,
@@ -114,6 +119,10 @@ const CE_I18N = {
     trustNames: ["unvouched — unresolved sites in this language", "vacuous", "vouched"],
     trust: "trust", byVerdict: "by verdict",
     tabDoctor: "doctor", handshake: "handshake", project: "project",
+    // the hero verdict is this diagnostic's own word, not the exit-code
+    // vocabulary `check` borrows FAIL/pass from — the same two words
+    // the CLI's doctor prints (health/doctor.rs), so the faces agree
+    handshakeOk: "OK", handshakeFailed: "FAILED",
     guardTier: "guard tier", indexState: "index", daemonState: "daemon",
     // the doctor document carries CODES since ce.doctor-report/0.2.0
     // (plan v2.15); an unknown code shows AS the code, because a state
@@ -220,6 +229,7 @@ const CE_I18N = {
     graphCounts: (f, e, d, c) => `${f} 文件，${e} 边——${d} 死，${c} 环`, graphAlive: "存活",
     graphInOut: (i, o) => `入 ${i} / 出 ${o}`, graphCycleOf: (n) => `处于 ${n} 文件环`,
     graphUnresolved: (n) => `${n} 个未解析点位——图拒绝臆测它们`,
+    deadWhy: { 0: "无保留入边且无入口标记", 1: "仅被死代码引用且无入口标记" },
     advisoryHead: (n, f) => `${n} 个未提及声明分布于 ${f} 个文件——仅建议，永不判决`,
     advisoryHover: (n) => `${n} 个未提及`,
     advisoryWords: {
@@ -244,6 +254,7 @@ const CE_I18N = {
     trustNames: ["未担保——该语言尚有未解析点位", "空担保", "已担保"],
     trust: "担保", byVerdict: "按判决",
     tabDoctor: "体检", handshake: "握手", project: "项目",
+    handshakeOk: "正常", handshakeFailed: "失败",
     guardTier: "守卫档位", indexState: "索引", daemonState: "daemon",
     indexWords: (s, n) => [
       "缺失（首次 dedup/probe 会建立）",

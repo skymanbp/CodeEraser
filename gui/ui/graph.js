@@ -240,7 +240,9 @@ function renderGraphAside(i) {
   const f = d.files[i], p = f.pos;
   let html = `<h2>${esc(String(f.path))}</h2>`;
   if (f.verdict != null) {
-    html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(String(f.why ?? ""))}</div>`;
+    // the reason by code (0.4.0); a pre-0.4.0 document has no code and
+    // shows the English sentence it carries rather than "undefined"
+    html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(tr("deadWhy")[f.whyCode] ?? String(f.why ?? ""))}</div>`;
     // The trust column (2.32.0) the console prints beside the verdict
     // and this pane dropped. The same number decides whether `ce
     // erase` may act on the row, so a verdict shown without it is a

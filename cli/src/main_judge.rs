@@ -169,7 +169,7 @@ pub fn trend_cmd(a: TrendArgs) -> ExitCode {
 
 /// `ce structure` (M6 S2): the tree-scale entropy judgment —
 /// aggregates to the core's structure/1, dense verdicts re-labelled
-/// with local names. Report-only until a score floor lands (S3+).
+/// with local names. Report-only by ruling — no score floor (v2.22, O53).
 pub fn structure_cmd(a: StructureArgs) -> ExitCode {
     family_checked(
         a.judge,

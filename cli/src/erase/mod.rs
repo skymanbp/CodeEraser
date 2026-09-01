@@ -37,6 +37,7 @@ pub fn plan(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Plan> {
             path: c.path.clone(),
             span: c.span,
             provenance: c.provenance.clone(),
+            sites: c.sites,
         })
         .collect();
     rows.sort_by(|a, b| (&a.path, a.span, a.class).cmp(&(&b.path, b.span, b.class)));

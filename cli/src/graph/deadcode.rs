@@ -28,9 +28,11 @@ mod advisory;
 mod flags;
 mod report;
 mod targets;
+mod why;
 
 pub use advisory::{ADVISORY_NAMES, AdvisoryRow, UnmentionedFace};
 pub use report::print;
+pub use why::WHY_CODES;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
@@ -157,7 +159,12 @@ pub struct GraphWire {
 pub struct DeadRow {
     pub path: String,
     pub verdict: &'static str,
-    pub why: String,
+    /// Index into WHY_CODES — the liveness reason as a CODE (plan
+    /// v2.25, O23): the sentence used to be minted here in English
+    /// and rode into the Chinese console and the GUI's Chinese face
+    /// untranslated. Machine faces still print the English sentence
+    /// (`why()`); presentation faces look the code up in a table.
+    pub why_code: usize,
     pub conf: Option<i64>,
 }
 
@@ -500,15 +507,13 @@ fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<DeadRow>> {
                 "confidence {c} outside 0..2 — wire skew"
             );
         }
-        let why = if verdict <= 2 {
-            "no kept in-edge and no entry flag"
-        } else {
-            "referenced only from dead code; no entry flag"
-        };
         dead.push(DeadRow {
             path: node.path.clone(),
             verdict: name,
-            why: why.to_string(),
+            // verdict codes 0..=2 are the unreferenced family, 3.. the
+            // unreachable one (VERDICT_NAMES order); the reason follows
+            // that split as a WHY_CODES index
+            why_code: usize::from(verdict > 2),
             conf,
         });
     }

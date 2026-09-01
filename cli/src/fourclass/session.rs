@@ -1,9 +1,9 @@
 //! Session-level four-class plumbing shared by the Stop audit
 //! (client side: which pairs changed) and the daemon (report shape).
-//! Cross-file relocations stay INFORMATIONAL until a multi-file FPR
-//! instrument exists (R-L2-4): claiming a move where there is
-//! duplication would hide duplication inside a health signal, so no
-//! deny path may lean on this report yet. Superproject-only by
+//! Cross-file relocations stay INFORMATIONAL: no multi-file FPR
+//! instrument exists (R-L2-4 — ruled not built, v2.22 close-out), and
+//! claiming a move where there is duplication would hide duplication
+//! inside a health signal, so no deny path leans on it. Superproject-only by
 //! design: a declared submodule's edits reach the parent as ONE
 //! gitlink pair (`cli/tests`, no extension, never judged), so this
 //! informational report covers the parent tree; the enforcing Stop

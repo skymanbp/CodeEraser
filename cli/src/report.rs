@@ -102,9 +102,11 @@ pub fn emit<M: Serialize, C: Serialize>(
 /// are a prefix), present exactly when the road was asked (K43) — a
 /// document from a road that never asked carries none of the three,
 /// so "not asked", "asked and clean", "cut" and "dropped" stay
-/// distinct. Named, not inline: the derived-fact registry (plan
+/// distinct; 0.4.0 (plan v2.25, O23): dead rows carry `whyCode`
+/// beside the English `why` — the code every face renders in its own
+/// language. Named, not inline: the derived-fact registry (plan
 /// v2.21) scans cli/src for value-shaped ids.
-const DEADCODE_SCHEMA: &str = "ce.deadcode-report/0.3.0";
+const DEADCODE_SCHEMA: &str = "ce.deadcode-report/0.4.0";
 
 /// The deadcode report as its wire JSON document — one serialization
 /// for the CLI's --format json and the MCP report face (lifted out
@@ -117,7 +119,7 @@ pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
     let mut doc = json!({
         "schema": DEADCODE_SCHEMA,
         "dead": r.dead.iter().map(|d| {
-            json!({"name": d.path, "verdict": d.verdict, "why": d.why, "confidence": d.conf})
+            json!({"name": d.path, "verdict": d.verdict, "why": d.why(), "whyCode": d.why_code, "confidence": d.conf})
         }).collect::<Vec<_>>(),
         "reported": r.reported.iter().map(|(n, v)| {
             json!({"name": n, "verdict": v})

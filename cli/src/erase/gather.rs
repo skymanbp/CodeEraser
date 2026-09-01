@@ -38,7 +38,7 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
     let (segs, dups, _) = crate::docdup::judge::rows_of(root, &idx, core)?;
     drop(idx);
     let mut cache = TextCache::new(root);
-    let mut cands = dead_candidates(&dead)?;
+    let mut cands = dead_candidates(&dead, &lang_unres)?;
     cands.extend(doc_candidates(&segs, &dups, &mut cache)?);
     let mut out_of_class = BTreeMap::new();
     let dead_paths: BTreeSet<&str> = dead.dead.iter().map(|d| d.path.as_str()).collect();
@@ -104,7 +104,10 @@ fn lang_count(map: &BTreeMap<i64, i64>, path: &str) -> i64 {
 /// Class-3 rows (2.32.0, H3): the trust fact is the graph family's
 /// OWN per-row confidence — a reply without the column means the
 /// ledger never rode, refused by name, never defaulted.
-fn dead_candidates(dead: &crate::graph::deadcode::Report) -> Result<Vec<Candidate>> {
+fn dead_candidates(
+    dead: &crate::graph::deadcode::Report,
+    lang_unres: &BTreeMap<i64, i64>,
+) -> Result<Vec<Candidate>> {
     dead.dead
         .iter()
         .map(|d| {
@@ -120,7 +123,8 @@ fn dead_candidates(dead: &crate::graph::deadcode::Report) -> Result<Vec<Candidat
                 facts: [code, conf, 0, 0],
                 path: d.path.clone(),
                 span: None,
-                provenance: format!("deadcode: {} — {}", d.verdict, d.why),
+                provenance: format!("deadcode: {} — {}", d.verdict, d.why()),
+                sites: lang_count(lang_unres, &d.path),
             })
         })
         .collect()
@@ -155,6 +159,8 @@ fn doc_candidates(
                 "docdup: twin of {}:{}-{} (J {}/{}, verbatim {} words)",
                 s.path, s.start_line, s.end_line, m.inter, m.union, m.verbatim
             ),
+            // a doc twin's licence is byte equality, never liveness
+            sites: 0,
         });
     }
     Ok(out)
@@ -215,6 +221,7 @@ fn twin_candidates(
                 "dedup: T1 block twin at {of}:{os}-{oe} ({} tokens), covers unit {}",
                 blk.tokens, covered[0]
             ),
+            sites: lang_count(lang_unres, tf),
         });
     }
     Ok(out)

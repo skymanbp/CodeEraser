@@ -195,7 +195,7 @@
       "id": "report:deadcode#schemaver",
       "source": "cli/src/report.rs",
       "tier": "scraped",
-      "value": "ce.deadcode-report/0.3.0"
+      "value": "ce.deadcode-report/0.4.0"
     },
     {
       "id": "report:dedup#schemaver",
@@ -226,13 +226,13 @@
       "id": "report:erase-plan#schemaver",
       "source": "cli/src/erase/model.rs (typed)",
       "tier": "linked",
-      "value": "ce.erase-plan/0.1.0"
+      "value": "ce.erase-plan/0.2.0"
     },
     {
       "id": "report:graph-canvas#schemaver",
       "source": "cli/src/graph/canvas.rs (typed)",
       "tier": "linked",
-      "value": "ce.graph-canvas/0.3.0"
+      "value": "ce.graph-canvas/0.4.0"
     },
     {
       "id": "report:join#schemaver",

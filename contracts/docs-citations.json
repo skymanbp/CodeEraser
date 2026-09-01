@@ -2354,6 +2354,12 @@
     "end": 207,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 216,
+    "end": 218,
+    "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
+  },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 218,
@@ -2388,12 +2394,6 @@
     "line": 163,
     "end": 176,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|8ef284a4c89161d7|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 216,
-    "end": 218,
-    "text": "-- fail = degraded alone in S2 (the report-only stance: the CLI"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -3565,18 +3565,18 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|01ba091166cd9815|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 303,
+    "line": 310,
     "text": "/// bits through its role table, where an ablation can perturb them);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|0afbf65a97ab5f7b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 412,
+    "line": 419,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|26d7b0c0bb2a5058|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 44,
-    "end": 49,
+    "line": 46,
+    "end": 51,
     "text": "pub const VERDICT_NAMES: [&str; 4] = ["
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|2fa668f1a15fb7d1|0": {
@@ -3587,24 +3587,24 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|47e6b9dce7af0f78|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 454,
-    "end": 458,
+    "line": 461,
+    "end": 465,
     "text": "// bit is wire skew, refused by name like every other absent key"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 338,
-    "end": 341,
+    "line": 345,
+    "end": 348,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|7530c14d4504672d|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 481,
+    "line": 488,
     "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|86dc4520a4549390|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 242,
+    "line": 249,
     "text": "rows,\nedges: wire,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|a612b2e0c056a92d|0": {
@@ -3615,44 +3615,44 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|b48e4a45d7fa65e9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 268,
-    "end": 279,
+    "line": 275,
+    "end": 286,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|bcb4fab990e9b345|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 285,
-    "end": 303,
+    "line": 292,
+    "end": 310,
     "text": ".map(|&i| i as i64)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c18af790a198146f|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 485,
-    "end": 489,
+    "line": 492,
+    "end": 496,
     "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c89240bb0aef2f0a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 471,
-    "end": 478,
+    "line": 478,
+    "end": 485,
     "text": "degraded,\nfail,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|cfcd49a1f86410c9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 518,
-    "end": 532,
+    "line": 523,
+    "end": 537,
     "text": "/// The informational table, labelled `path#unit` for sections. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f0d7ab62d8583e7e|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 425,
-    "end": 434,
+    "line": 432,
+    "end": 441,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f88de50d7b234cc0|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 270,
-    "end": 274,
+    "line": 277,
+    "end": 281,
     "text": "/// rule now (CE.Graph.Cost.assetKind), applied where the cut table"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|4defd042cf7ffd3b|0": {
@@ -4155,8 +4155,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
     "target": "../../../cli/src/report.rs",
-    "line": 114,
-    "end": 128,
+    "line": 116,
+    "end": 130,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_graph_precision.rs|185b850b408ba8bc|0": {
@@ -4538,10 +4538,10 @@
     "line": 102,
     "text": "confRides :: Bool"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../DEVELOPMENT_PLAN.md|e4c4832ca40ddaaf|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../DEVELOPMENT_PLAN.md|bda1de03fe6ea227|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 284,
-    "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
+    "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板；**实测铸边精度 38/66=0.576 < 0.90，按本判据永久关闭（RG10 收案 2026-08-17，见 ADR-008）**）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|a6cae4e7dac804e4|0": {
     "target": "../../../cli/src/churn/mod.rs",
@@ -5532,6 +5532,17 @@
     "end": 95,
     "text": "**切穿克隆块**×roiCloneMilli(500) + 跨缝**共变对**×"
   },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|788886e8d1332f29|0": {
+    "target": "../size-advisory.md",
+    "line": 52,
+    "text": "φ（`roiPhiMilli`）。「基线重键噪声」未实现。"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|81fba25e4c40f4b4|0": {
+    "target": "../size-advisory.md",
+    "line": 48,
+    "end": 49,
+    "text": "- 收益 B = **渐进区罚分回收**，as-built 唯一一项（dedup 预算效应与"
+  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
     "line": 119,
@@ -5548,12 +5559,6 @@
     "line": 115,
     "end": 118,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|facb0352693ff0a9|0": {
-    "target": "../size-advisory.md",
-    "line": 46,
-    "end": 48,
-    "text": "出 n−1 道缝。共引 / 克隆块 / co-change **只进缝价，不产生候选缝**——"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|fc9206488f44c39d|0": {
     "target": "../size-advisory.md",
@@ -5795,11 +5800,11 @@
     "end": 144,
     "text": "let suspicions: Vec<serde_json::Value> = batch"
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|4757cbe650bb5a41|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|438cfc09aec70a44|0": {
     "target": "../../../cli/src/fourclass/session.rs",
     "line": 3,
     "end": 6,
-    "text": "//! Cross-file relocations stay INFORMATIONAL until a multi-file FPR"
+    "text": "//! Cross-file relocations stay INFORMATIONAL: no multi-file FPR"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|49f81cd4f4c48f86|0": {
     "target": "../../../cli/src/fourclass/session.rs",
@@ -6943,23 +6948,23 @@
     "end": 7,
     "text": "//! The erase plan's measurement leg: candidate FACTS from the three"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|51eda2793e94c318|0": {
-    "target": "../../../cli/src/erase/gather.rs",
-    "line": 107,
-    "end": 127,
-    "text": "fn dead_candidates(dead: &crate::graph::deadcode::Report) -> Result<Vec<Candidate>> {"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|5cc7c2244f498b9b|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 163,
-    "end": 218,
+    "line": 169,
+    "end": 224,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|5cc7c2244f498b9b|1": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 163,
-    "end": 218,
+    "line": 169,
+    "end": 224,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|90da22b9b71c3ec7|0": {
+    "target": "../../../cli/src/erase/gather.rs",
+    "line": 107,
+    "end": 127,
+    "text": "fn dead_candidates("
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|b8e09761ad4cc7fe|0": {
     "target": "../../../cli/src/erase/gather.rs",
@@ -6969,14 +6974,14 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|d352a15dd157bae7|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 129,
-    "end": 160,
+    "line": 133,
+    "end": 164,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|d352a15dd157bae7|1": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 129,
-    "end": 158,
+    "line": 133,
+    "end": 162,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|db1d2306348238b7|0": {
@@ -6993,31 +6998,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|fb118b31900abd10|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 117,
+    "line": 120,
     "text": ".context(\"dead row carries no confidence — the graph ledger did not ride\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 53,
-    "end": 84,
+    "line": 54,
+    "end": 85,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 14,
-    "end": 22,
+    "line": 16,
+    "end": 24,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|1": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 14,
-    "end": 21,
+    "line": 16,
+    "end": 23,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|8703f195b0f8e7c3|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 25,
-    "end": 37,
+    "line": 27,
+    "end": 39,
     "text": "/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|555fc245631410bd|0": {
@@ -7283,14 +7288,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|1ebf67098c072c48|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 81,
-    "end": 84,
+    "line": 83,
+    "end": 86,
     "text": "pub enum Advisory {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|64995790ae4f0f45|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 182,
-    "end": 227,
+    "line": 189,
+    "end": 234,
     "text": ".iter()\n.enumerate()\n.filter(|(_, n)| n.kind == super::wire::GRAN_FILE && keep(n))"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|3aaf569eab67efa7|0": {
@@ -7307,14 +7312,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/report.rs|ea05c81abb032374|0": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
-    "line": 53,
-    "end": 58,
+    "line": 58,
+    "end": 63,
     "text": "fn advisory(r: &Report) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/report.rs|ea05c81abb032374|1": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
-    "line": 53,
-    "end": 109,
+    "line": 58,
+    "end": 114,
     "text": "fn advisory(r: &Report) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|0e244c81f92576e1|0": {
@@ -7641,8 +7646,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
     "target": "../../../cli/src/report.rs",
-    "line": 114,
-    "end": 145,
+    "line": 116,
+    "end": 147,
     "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|36f4b54da51db24e|0": {
@@ -7788,8 +7793,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 89,
-    "end": 99,
+    "line": 94,
+    "end": 104,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {

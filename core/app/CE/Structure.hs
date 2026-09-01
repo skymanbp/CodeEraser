@@ -213,8 +213,8 @@ dirRow n (arity, name, extra) i row = case row of
 -- axes join when their tables rode the wire), the Score.hs fold at
 -- equal weight over the judged axis count, the headline entropy rows
 -- and the sparse findings — plus the FULL effective knob echo.
--- fail = degraded alone in S2 (the report-only stance: the CLI
--- gates nothing until a score floor lands with S3+); a degraded
+-- fail = degraded alone (the report-only stance, by ruling: no
+-- score floor — v2.22 close-out, O53; the CLI gates nothing); a degraded
 -- reply carries fail=true (P1) and echoes the defaults. The S3
 -- A-layer keys (divergence + deviations) exist ONLY when the
 -- request declares a layout — an undeclared request answers the

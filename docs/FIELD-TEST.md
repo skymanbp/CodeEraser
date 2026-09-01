@@ -67,9 +67,10 @@ ordering, CI floor re-anchored 800 → 950 at the same bite:
   with named reasons. `language_unresolved` on a plain `.py` file
   reads like a detection bug but is the conservative predicate doing
   its job — the file's LANGUAGE had hundreds of unresolved reference
-  sites, so liveness cannot be trusted; a wording that carries the
-  site count would read better (display-only; the wire reason bits
-  are frozen).
+  sites, so liveness cannot be trusted. Shipped in plan v2.25: the
+  advisory line now carries that language's unresolved-site count
+  (`reason_detail` in cli/src/erase/render.rs) — display-only, the
+  wire reason bits are frozen.
 - **Refusals refuse loudly.** `dedup --check` without a declared
   budget exits 2 with a one-line reason — an unjudgeable gate never
   passes.

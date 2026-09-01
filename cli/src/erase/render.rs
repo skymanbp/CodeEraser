@@ -30,13 +30,14 @@ pub fn print(root: &Path, p: &Plan, as_json: bool) -> Result<()> {
         println!(
             "{}",
             crate::i18n::line(
-                "advisory {} {}{}: {} ({})",
-                "仅建议 {} {}{}：{}（{}）",
+                "advisory {} {}{}: {}{} ({})",
+                "仅建议 {} {}{}：{}{}（{}）",
                 &[
                     &r.class,
                     &r.path,
                     &span_str(r),
                     &r.reason,
+                    &reason_detail(r),
                     &r.provenance.as_str()
                 ],
             )
@@ -94,6 +95,22 @@ fn span_str(r: &Row) -> String {
     }
 }
 
+/// The reason's own number where it has one (FIELD-TEST, plan v2.25):
+/// `language_unresolved` says liveness cannot be trusted because the
+/// row's language still has unresolved reference sites, and the count
+/// is what lets a reader weigh that. Display-only — the wire's reason
+/// bits are frozen.
+fn reason_detail(r: &Row) -> String {
+    if r.reason != "language_unresolved" {
+        return String::new();
+    }
+    crate::i18n::line(
+        " — {} unresolved reference sites in this language",
+        "——该语言尚有 {} 个未解析引用点位",
+        &[&r.sites],
+    )
+}
+
 fn file_diff(out: &mut String, text: &str, rows: &[&Row]) {
     let lines: Vec<&str> = text.lines().collect();
     let path = &rows[0].path;
@@ -136,3 +153,7 @@ fn file_diff(out: &mut String, text: &str, rows: &[&Row]) {
         removed_so_far += cut;
     }
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/erase/render.rs"]
+mod tests;

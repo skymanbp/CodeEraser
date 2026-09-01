@@ -3,9 +3,9 @@
 //! path returns the exact literal at the call site — every test
 //! assertion and every machine consumer of console lines runs under
 //! the default and must see identical bytes. Chinese activates via
-//! the global `--lang zh` flag or CE_LANG=zh — flag wins (G3b-iii;
-//! a ce.toml [ui] road can still join later without moving any call
-//! site). Report JSON is never translated — schemas are the machine
+//! the global `--lang zh` flag or CE_LANG=zh — flag wins (G3b-iii; a
+//! ce.toml [ui] road was ruled not built at the v2.22 close-out — the
+//! two switches are the surface). Report JSON is never translated — schemas are the machine
 //! face.
 
 use std::sync::OnceLock;

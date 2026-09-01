@@ -8,8 +8,10 @@
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-/// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.erase-plan/0.1.0";
+/// JSON output schema id; bump on shape change (plan §7.1). 0.2.0
+/// (plan v2.25): each row carries `sites`, the unresolved reference
+/// sites in its language — the number behind `language_unresolved`.
+pub const SCHEMA_ID: &str = "ce.erase-plan/0.2.0";
 
 /// Frozen class positions — the wire's `class` field (erase/1).
 /// Class 3 is dead_file on the CONFIDENCE road (2.32.0, H3): its
@@ -46,6 +48,10 @@ pub struct Candidate {
     /// 1-based inclusive line span; None = the whole file.
     pub span: Option<(i64, i64)>,
     pub provenance: String,
+    /// Unresolved reference sites in the row's language — the fact
+    /// behind `language_unresolved`, carried for the reader (FIELD-TEST,
+    /// plan v2.25); the wire sees it only where a class's facts do.
+    pub sites: i64,
 }
 
 /// One judged plan row.
@@ -57,6 +63,8 @@ pub struct Row {
     pub path: String,
     pub span: Option<(i64, i64)>,
     pub provenance: String,
+    /// Unresolved sites in this row's language (Candidate::sites).
+    pub sites: i64,
     /// fnv1a64 of the target file's bytes at plan time — apply
     /// refuses a file that moved since planning (plans are not
     /// portable across edits).
