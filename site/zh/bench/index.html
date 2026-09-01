@@ -5,37 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser 评估仪表盘——回放记录</title>
 <meta name="description" content="CodeEraser 完整延迟历史与冻结的准确率、召回率、精度、误报评估记录，由同一 benchmark 合约渲染。">
+<meta name="theme-color" content="#10141d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:url" content="https://codeeraser.dev/zh/bench/">
+<meta property="og:title" content="CodeEraser 评估仪表盘——回放记录">
+<meta property="og:description" content="CodeEraser 完整延迟历史与冻结的准确率、召回率、精度、误报评估记录，由同一 benchmark 合约渲染。">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" hreflang="en" href="https://codeeraser.dev/bench/">
 <link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/bench/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=3">
-<style>
-header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }
-.page-head { padding: 44px 0 8px; }
-.page-head h1 { font-family: var(--mono); font-size: 2rem; color: var(--paper); }
-.page-head p { color: var(--muted); max-width: 48em; margin-top: 12px; }
-.tablewrap { overflow-x: auto; }
-.data-table { margin: 16px 0 32px; }
-.data-table table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.82rem; }
-.data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
-.data-table th { color: var(--amber); font-family: var(--mono); }
-.data-table td { color: var(--muted); }
-.data-table td code { color: var(--text); font-family: var(--mono); white-space: nowrap; }
-</style>
+<link rel="stylesheet" href="/style.css?v=4">
 </head>
 <body>
 <div class="wrap">
 
 <header class="site">
-  <img src="/icon-256.png" alt="">
-  <span class="name">CodeEraser</span>
+  <a class="home" href="/zh/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
   <nav>
     <a href="/zh/">概览</a>
-    <a href="/zh/stack/">技术栈</a>
     <a href="/zh/how/">原理</a>
+    <a href="/zh/stack/">技术栈</a>
     <a href="/bench/">English</a>
     <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
   </nav>
@@ -170,14 +165,20 @@ header.site nav { flex: 1 1 18rem; flex-wrap: wrap; justify-content: flex-end; }
 <tr><td><code>l2_moved_recall</code></td><td>547/547 cross-file moved lines</td><td><code>docs/EVAL-SET.md:97-129 + contracts/eval/commit-l2*-v1.json</code></td></tr>
 <tr><td><code>dedup_recall_vs_jscpd</code></td><td>cobra 106/109 raw -&gt; 106/106 attributed</td><td><code>contracts/fixtures/crosscheck/DEDUP-CALIBRATION.md:96-137</code></td></tr>
 <tr><td><code>t3_recall_vs_similarity</code></td><td>zod 0.50 / requests 0.158 / cobra 0.154 (raw)</td><td><code>docs/EVAL-SET-M5-CLOSE.md:38-63</code></td></tr>
-</tbody></table></div><p class="cap">行来自发布版回放；冻结点保留其账本来源。完整冻结说明仍在 bench.json。</p></div>
+</tbody></table></div></div>
+<p class="cap">行来自发布版回放；冻结点保留其账本来源。完整冻结说明仍在 bench.json。</p>
 <!-- bench:end -->
 
 <p class="trust">方法与 epoch 细节见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/BENCH.md">docs/BENCH.md</a>；机器单源见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/bench/bench.json">contracts/bench/bench.json</a>。</p>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="/zh/">概览</a> · <a href="/zh/stack/">技术栈</a> · <a href="/zh/how/">原理</a></p>
-  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
+  <p>Apache-2.0 · <a href="/zh/">概览</a> ·
+     <a href="/zh/how/">原理</a> ·
+     <a href="/zh/stack/">技术栈</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
+  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，
+     许可证不授予商标权。© 2026 skymanbp。</p>
 </footer>
 
 </div>

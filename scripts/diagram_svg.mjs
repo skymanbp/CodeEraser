@@ -7,7 +7,10 @@
 // those rules the way getComputedStyle would resolve them on a probe
 // element (dark is the default, light swaps in under
 // prefers-color-scheme, svg[data-theme] forces either); the runtime
-// state serializeSvg strips is stripped; the result must be XML.
+// state serializeSvg strips is stripped; the result must be XML. One
+// forcing is applied: the root is stamped data-theme="dark", because
+// every page that hangs the file is committed dark, and an auto-themed
+// diagram flipped to its light palette inside them.
 
 // ---- the viewer's serializeSvg rules, applied to the static markup ----
 
@@ -165,18 +168,17 @@ function assertWellFormed(svg) {
 }
 
 // Chrome archify writes itself, which no IR key reaches: the legend
-// heading is a literal in the viewer template (assets/template.html).
-// The zh twin is meant to be one language throughout, so the word is
-// mapped here — the only place that sees both the rendered markup and
-// the language that asked for it. A term the map does not carry stays
-// in English and the zh-chrome leg names it.
-const CHROME = { zh: { Legend: "图例" } };
+// heading is a literal in the viewer template (assets/template.html);
+// the default classification and the focus-control label are literals
+// in the renderer and land in aria-labels, not text nodes. The zh twin
+// is meant to be one language throughout, so the words are mapped here
+// — the only place that sees both the rendered markup and the language
+// that asked for it — over the whole file. A term the map does not
+// carry stays in English and the zh-chrome leg names it.
+const CHROME = { zh: { Legend: "图例", "Architecture component": "架构组件", "Focus ": "聚焦 " } };
 
 const chrome = (svg, lang) =>
-  Object.entries(CHROME[lang] ?? {}).reduce(
-    (s, [from, to]) => s.replaceAll(`>${from}</text>`, `>${to}</text>`),
-    svg,
-  );
+  Object.entries(CHROME[lang] ?? {}).reduce((s, [from, to]) => s.replaceAll(from, to), svg);
 
 export function extractSvg(html, lang = "en") {
   const style = /<style>([\s\S]*?)<\/style>/.exec(html)?.[1];
@@ -220,7 +222,7 @@ function assemble(svg, kept, rootAttrs) {
   const tagEnd = svg.indexOf(">") + 1;
   const [, w, h] = /viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"/.exec(svg.slice(0, tagEnd)) ?? [];
   if (!w || !h) throw new Error("svg has no viewBox");
-  let tag = svg.slice(0, tagEnd).replace(/\sdata-theme="[^"]*"/, "");
+  let tag = svg.slice(0, tagEnd).replace(/\sdata-theme="[^"]*"/, "").replace(/^<svg/, '<svg data-theme="dark"');
   tag = tag.replace(/^<svg/, `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"`);
   const rest = svg.slice(tagEnd);
   const afterDesc = rest.indexOf("</desc>") >= 0 ? rest.indexOf("</desc>") + "</desc>".length : rest.indexOf("</title>") + "</title>".length;

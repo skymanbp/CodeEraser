@@ -5,71 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How CodeEraser works — deterministic judgment, thirteen families</title>
 <meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: thirteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
+<meta name="theme-color" content="#10141d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://codeeraser.dev/how/">
+<meta property="og:title" content="How CodeEraser works">
+<meta property="og:description" content="Deterministic judgment over measured facts: every verdict is arithmetic, and every constant is cited to the source line that implements it.">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
 <link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=3">
-<style>
-/* page-local: the how-it-works layout. Palette tokens come from style.css. */
-.lede { padding: 44px 0 8px; }
-.lede h1 {
-  font-family: var(--mono); font-size: clamp(1.7rem, 4.4vw, 2.4rem);
-  color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
-}
-.lede p { font-size: 1.05rem; color: var(--muted); margin-top: 16px; max-width: 44em; }
-.lede p em { color: var(--verm); font-style: normal; font-weight: 600; }
-.lede p strong { color: var(--text); font-weight: 600; }
-.lede p code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
-
-.fam {
-  background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: 12px; padding: 18px 20px; margin: 14px 0;
-}
-.fam h3 {
-  font-family: var(--mono); font-size: 1rem; font-weight: 600;
-  color: var(--paper); letter-spacing: -0.01em; line-height: 1.45;
-}
-.fam h3 .n { color: var(--amber); margin-right: 10px; }
-.fam h3 a { color: var(--paper); }
-.fam h3 a:hover { color: var(--teal); }
-.fam .job { font-size: 0.93rem; color: var(--muted); margin: 8px 0 12px; }
-.fam .job code, .fam .note code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
-.fam pre {
-  background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 8px;
-  padding: 12px 14px; overflow-x: auto;
-  font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text);
-}
-.fam pre + pre { margin-top: 8px; }
-.fam .note { font-size: 0.86rem; color: var(--muted); margin-top: 12px; }
-
-ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; list-style: none; }
-ul.consts li {
-  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
-  background: var(--ink-1); border: 1px solid var(--panel-edge);
-  border-radius: 6px; padding: 3px 9px;
-}
-ul.consts li b { color: var(--teal); font-weight: 600; }
-
-.tablewrap { overflow-x: auto; margin: 14px 0 4px; }
-table.ladder { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 30em; }
-table.ladder th, table.ladder td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--panel-edge); }
-table.ladder th {
-  font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber);
-}
-table.ladder td { color: var(--muted); vertical-align: top; }
-table.ladder td:first-child, table.ladder td code { font-family: var(--mono); color: var(--text); }
-</style>
+<link rel="stylesheet" href="/style.css?v=4">
 </head>
 <body>
 <div class="wrap">
 
 <header class="site">
-  <img src="/icon-256.png" alt="">
-  <span class="name">CodeEraser</span>
+  <a class="home" href="/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
   <nav>
     <a href="/">Overview</a>
     <a href="/stack/">Stack</a>
@@ -97,25 +54,19 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
   to the source line that implements it — lives in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
   which every heading here links into.</p>
+  <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#honesty">Honesty boundaries</a></nav>
 </section>
 
 <figure class="arch">
-  <img src="/assets/judgment.en.svg" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows and the reference graph; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
+  <img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows and the reference graph; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
   <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves — an exit code or report rows — on the right.</figcaption>
 </figure>
 
-<figure class="arch">
-  <img src="/assets/methodology.svg" alt="Three lanes: measured facts in Rust (token fingerprints k=25 w=26, AST postorder trees, the reference graph, git windows, LOC multisets, documentation shingles), judgment computations in Haskell with their formulas (winnowing guarantee t=50, TSED 85/100, exact Jaccard 80/100, the soft line S=clamp(floor(m*r^k),[200,500]), the convex soft-zone penalty, liveness closure, entropy and chi-squared divergence, the Theil-Sen median of pairwise slopes, the score fold), and the gates (ADR-006 ratchet, discrete ratchet, dedup budget, --fail-under floor, rulepack fence knobs_digest, guard tier ladder)" loading="lazy">
-  <figcaption>Measure, judge, gate. Lane 1 extracts facts in Rust; lane 2 turns them into
-  verdicts in Haskell with the formulas shown; lane 3 decides the exit code. Every number
-  on the diagram is a constant cited in the methodology sections below.</figcaption>
-</figure>
-
-<h2>The <!--ce:count:booklets#word-->thirteen<!--/ce--> judgment families</h2>
+<h2 id="families">The <!--ce:count:booklets#word-->thirteen<!--/ce--> judgment families</h2>
 <p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->thirteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->ten<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->fourteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, and <code>update_check</code> — the fourteenth — compares this build against the latest release, which is a surface no wire family and no booklet has.</p>
 
 <div class="fam">
-  <h3><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
+  <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
   <p class="job">Finds exact and parameterized duplicate token runs: renamed variables and
   changed constants are clones, changed syntax is not.</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
@@ -139,7 +90,7 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
 </div>
 
 <div class="fam">
-  <h3><span class="n">02</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">T3 near-miss clones — tree edit distance (TSED)</a></h3>
+  <h3 id="f02"><span class="n">02</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">T3 near-miss clones — tree edit distance (TSED)</a></h3>
   <p class="job">Judges two units whose ASTs are structurally almost the same but whose
   token streams are not — reshaped and rewritten copies.</p>
   <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
@@ -166,7 +117,7 @@ clone      ⇔ TSED &gt;= 0.85</pre>
 </div>
 
 <div class="fam">
-  <h3><span class="n">03</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">Documentation duplication — shingling + MinHash/LSH</a></h3>
+  <h3 id="f03"><span class="n">03</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">Documentation duplication — shingling + MinHash/LSH</a></h3>
   <p class="job">Decides whether two blocks of documentation text — markdown paragraphs,
   comment blocks, docstrings — are near-duplicates of each other.</p>
   <pre>dupDecidesWith num den inter union  =  inter * den &gt;= num * union
@@ -195,14 +146,14 @@ dupVerdictWith (num, den, vfloor) inter union run
 </div>
 
 <div class="fam">
-  <h3><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, <!--ce:count:axes#word-->seven<!--/ce--> axes</a></h3>
+  <h3 id="f04"><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, <!--ce:count:structure_axes#word-->seven<!--/ce--> axes</a></h3>
   <p class="job">Judges the tree rather than the file: directory geometry, naming
   distributions, reference locality, documentation coverage, doc staleness, redundancy.</p>
   <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
 tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
 perMille r      = floor (r * 1000)</pre>
-  <pre>charge_i = floor (scale * v_i / (v_i + N))   -- v = flagged dirs, N = dir total
+  <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = flagged dirs, N = dir total
 raw      = Σ_axes (charge_i * violCost)
 score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
   <p class="note">Shannon entropy and KL divergence need logarithms — irrational, therefore
@@ -233,7 +184,7 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
 </div>
 
 <div class="fam">
-  <h3><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">Scoring and the ADR-006 ratchet</a></h3>
+  <h3 id="f05"><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">Scoring and the ADR-006 ratchet</a></h3>
   <p class="job">Folds <!--ce:count:axes#word-->seven<!--/ce--> axes into one 0–1000 score and gates it against a banked
   baseline that is only allowed to tighten.</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
@@ -264,8 +215,8 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column —
   the file's <em>path class</em>, the 1-based index of the first <code>[[rules.class]]</code>
   whose globs match, <code>0</code> for none — beside an additive <code>classKnobs</code> table
-  whose codes are the ceilings' own <code>0 / 1 / 2</code> plus <code>3</code> (5.1.0), the
-  class's own ADR-006 ratchet allowance in lines, and <code>4</code> (6.4.0), its own
+  whose codes are the ceilings' own <code>0 / 1 / 2</code> plus <code>3</code> (proto 5.1.0), the
+  class's own ADR-006 ratchet allowance in lines, and <code>4</code> (proto 6.4.0), its own
   cognitive-complexity allowance — the two knobs whose value <code>0</code> is meaningful, so the
   table's value floor is judged per code. A classed row is charged against its
   class's soft line, hard line and CoC ceiling and falls back to the global line wherever the
@@ -298,7 +249,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
 </div>
 
 <div class="fam">
-  <h3><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">Graph liveness and dead-code verdicts</a></h3>
+  <h3 id="f06"><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">Graph liveness and dead-code verdicts</a></h3>
   <p class="job">Answers one question — which files does nothing live reach? — over a
   reference graph whose node identity is the row index, with no text on the wire.</p>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
@@ -317,7 +268,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   reachability alone. The kind column is the formula's second filter, not baggage:
   <code>inert</code> = {3 asset, 5 unused ref-def} — an image link renders bytes and an unused
   reference definition renders nothing, neither counts as a reference, and the exclusion is
-  executed by the core itself. Since 2.32.0 each dead row carries a confidence column judged from
+  executed by the core itself. Since proto 2.32.0 each dead row carries a confidence column judged from
   the per-language site ledger the request ships — 0 unvouched (the language still has
   unresolved sites), 1 vacuous, 2 vouched — the erase family's trust boundary, executed
   by the family that owns the ledger. Import-edge precision measured
@@ -336,7 +287,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 </div>
 
 <div class="fam">
-  <h3><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">The three-signal join</a></h3>
+  <h3 id="f07"><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">The three-signal join</a></h3>
   <p class="job">Combines similarity × graph position × churn into one of <!--ce:count:join_codes#word-->four<!--/ce--> candidate
   codes — and then deliberately declines to act on it.</p>
   <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
@@ -350,7 +301,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
   order data is what lets the property battery falsify it by rotating the table. Every
   gating row requires the graph bit, so a mask of 5 (graph leg absent) can only carry code
   0 — a missing graph leg refuses to gate rather than pretending indegree 0. Since
-  2.33.0 every candidate row carries a leg-agreement <em>confidence</em> — how many
+  proto 2.33.0 every candidate row carries a leg-agreement <em>confidence</em> — how many
   present legs contributed a held condition — and the table's severity face ships once
   as <code>joinSeverity</code>; <code>ce join</code> judges its pairs over the SAME
   verdict/1 road the check gate uses. The join still produces <em>candidates</em>; no
@@ -370,7 +321,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
 </div>
 
 <div class="fam">
-  <h3><span class="n">08</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">Split-ROI seam pricing (four legs)</a></h3>
+  <h3 id="f08"><span class="n">08</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">Split-ROI seam pricing (four legs)</a></h3>
   <p class="job">Answers "is this long file worth splitting, and where?" with a number
   instead of a slogan — an advisory that never contributes to the structure score or the fail bit.</p>
   <pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
@@ -404,7 +355,7 @@ viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without divis
 </div>
 
 <div class="fam">
-  <h3><span class="n">09</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/09-edit-four-classification-update-supervision.md">Edit four-classification (update supervision)</a></h3>
+  <h3 id="f09"><span class="n">09</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/09-edit-four-classification-update-supervision.md">Edit four-classification (update supervision)</a></h3>
   <p class="job">Reduces every supervised edit to four integer counts per file pair —
   matched, novel, moved, deleted — so that "this update was stacked, not applied" is a
   measurement.</p>
@@ -438,7 +389,7 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
 </div>
 
 <div class="fam">
-  <h3><span class="n">10</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">Score trajectory — the trend slope verdict</a></h3>
+  <h3 id="f10"><span class="n">10</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">Score trajectory — the trend slope verdict</a></h3>
   <p class="job">Answers one question about a repository's history: is the check score
   going up, flat, or down, and by how much per day.</p>
   <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
@@ -471,10 +422,10 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
   </ul>
 </div>
 
-<h2>The FPR discipline — what earns a rule the right to deny</h2>
+<h2 id="fpr">The FPR discipline — what earns a rule the right to deny</h2>
 
 <div class="fam">
-  <h3><span class="n">11</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md">FPR discipline and the guard tier ladder</a></h3>
+  <h3 id="f11"><span class="n">11</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md">FPR discipline and the guard tier ladder</a></h3>
   <p class="job">A deterministic gate over a non-deterministic writer: the guard sits on
   <code>PreToolUse</code> for <code>Write|Edit</code> and answers each pending write with
   exact arithmetic — and a rule class may only enforce once it has paid for the right.</p>
@@ -514,7 +465,7 @@ PROMOTED_DEFAULT = "deny"</pre>
   <code>[[rules.class]]</code> declares, so the hook denies exactly where the CI wall fails.
   <em>Every other rule stays at observe for want of its
   own record.</em></p>
-  <p class="note"><strong>Since 1.2.0 the duplicate-write rule charges novel duplication
+  <p class="note"><strong>Since CodeEraser 1.2.0 the duplicate-write rule charges novel duplication
   only.</strong> The K-round replay resurrected the retired instrument over 2,761 real
   edit events — this repository's full history plus the pinned <code>requests</code>
   tail — and arbitration split the raw intercepts into genuine duplication landings,
@@ -560,8 +511,10 @@ permille = (lines - S) * 1000 / (H - S)
   </ul>
 </div>
 
+<h2 id="acting">Acting on the verdicts — erasure and advice</h2>
+
 <div class="fam">
-  <h3><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">Deterministic erase — the safety predicate</a></h3>
+  <h3 id="f12"><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">Deterministic erase — the safety predicate</a></h3>
   <p class="job">Judges erase-plan rows for <!--ce:count:erase_classes#word-->three<!--/ce--> provable classes — <code>dead_file</code>,
   <code>verbatim_doc</code>, and <code>t1_twin</code> — and refuses every unsafe
   row with a named reason code.</p>
@@ -571,13 +524,13 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
          6 public_surface (6.1.0)</pre>
   <p class="note">Rust assembles integer facts from the three source families;
-  Haskell applies the fixed first-failure predicate. Since 2.32.0 the dead-file
+  Haskell applies the fixed first-failure predicate. Since proto 2.32.0 the dead-file
   family rides class 3, whose trust fact is the graph family's own per-row
-  confidence; since 6.1.0 a public dead verdict — 2 unref_public or 4
+  confidence; since proto 6.1.0 a public dead verdict — 2 unref_public or 4
   unreach_public — is refused as public_surface <em>before</em> that confidence
   is weighed, so an exported API is never eraseable however well vouched, and
   only then does an unvouched confidence refuse the row. Class 0, the same
-  family on the local-count road, retired at 4.0.0 when its grace window
+  family on the local-count road, retired at proto 4.0.0 when its grace window
   closed: the position stays frozen and the core refuses it by name. A degraded
   over-cap reply authorizes nothing, and the safety surface has no knobs.</p>
   <ul class="consts">
@@ -590,7 +543,7 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
 </div>
 
 <div class="fam">
-  <h3><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">Unmentioned-declaration advisory — the mention veto</a></h3>
+  <h3 id="f13"><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">Unmentioned-declaration advisory — the mention veto</a></h3>
   <p class="job">Lists, beside the graph family's verdicts, every judged declaration whose
   name no <em>other</em> file in the tree spells — a negative instrument that reports
   with a visibility code and never judges.</p>
@@ -624,7 +577,14 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   </ul>
 </div>
 
-<h2>Two honesty boundaries</h2>
+<figure class="arch">
+  <img src="/assets/methodology.svg" width="1200" height="820" alt="Three lanes — measured facts in Rust, judgment computations in Haskell with their formulas, and the gates that decide the exit code — with every constant the sections above cite written on the diagram" loading="lazy">
+  <figcaption>The constant sheet. Lane 1 extracts facts in Rust; lane 2 turns them into
+  verdicts in Haskell with the formulas shown; lane 3 decides the exit code. Every number
+  on the diagram is a constant the sections above cite.</figcaption>
+</figure>
+
+<h2 id="honesty">Two honesty boundaries</h2>
 <p class="trust"><code>PreToolUse</code> is a behavior-shaping layer, <strong>not a
 security boundary</strong> — an agent can bypass it with <code>Bash: echo &gt;&gt;</code>
 or <code>sed -i</code>; the backstop is the <code>Stop</code> audit over
@@ -635,7 +595,10 @@ duplicates". Neither property is a gap to be patched later — both are written 
 plan, because a gate that lies about its own reach is worse than one that states it.</p>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
+  <p>Apache-2.0 · <a href="/">Overview</a> ·
+     <a href="/stack/">Stack</a> ·
+     <a href="/bench/">Benchmarks</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
      <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a> ·
      <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
   <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,

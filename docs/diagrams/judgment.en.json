@@ -3,6 +3,7 @@
   "diagram_type": "dataflow",
   "meta": {
       "title": "How a verdict is made",
+      "subtitle": "How a verdict is made: what Rust measures, the Haskell judgment each fact feeds, and what leaves — an exit code or report rows — one wire family per row.",
       "quality_profile": "showcase",
       "viewBox": [650, 760],
       "legend": {

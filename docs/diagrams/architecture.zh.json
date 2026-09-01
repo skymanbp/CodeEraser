@@ -3,6 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
       "title": "CodeEraser 架构",
+      "subtitle": "CodeEraser 的构造：Rust 度量仓库，一条 NDJSON wire 把整数事实送进判决它们的 Haskell 核，各产品面渲染同一批报告。",
       "quality_profile": "showcase",
       "viewBox": [1440, 620],
       "repository": {

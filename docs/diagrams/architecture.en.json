@@ -3,6 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
       "title": "CodeEraser architecture",
+      "subtitle": "How CodeEraser is built: Rust measures the repository, one NDJSON wire carries integer facts to the Haskell core that judges them, and the product faces render the same reports.",
       "quality_profile": "showcase",
       "viewBox": [1440, 620],
       "repository": {

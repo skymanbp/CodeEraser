@@ -3,6 +3,7 @@
   "diagram_type": "dataflow",
   "meta": {
       "title": "一个判决如何产生",
+      "subtitle": "一个判决如何产生：Rust 度量什么、每项事实喂给哪个 Haskell 判决、离开的是什么——退出码或报告行——每行一个 wire 家族。",
       "quality_profile": "showcase",
       "viewBox": [650, 760],
       "legend": {

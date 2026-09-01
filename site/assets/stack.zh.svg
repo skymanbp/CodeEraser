@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1120" role="img"
+     aria-label="CodeEraser 技术栈：Rust 度量、一条 NDJSON wire、Haskell 判决、产品面，以及发布钉扎链">
+  <title>CodeEraser 技术栈</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#57c7a8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="1178" height="1118" rx="18" fill="#10141d" stroke="#2a3347"/>
+
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', 'Noto Sans SC', 'Microsoft YaHei', monospace">
+    <text x="30" y="48" font-size="19" font-weight="600" fill="#f4efe6">CodeEraser——组件栈</text>
+    <text x="30" y="70" font-size="11" fill="#8593ad">度量止于策略之前 · 一条版本化 wire · 判决留在核内</text>
+
+    <g>
+      <rect x="28" y="94" width="1124" height="300" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="94" width="4" height="300" rx="2" fill="#d9a35b"/>
+      <text x="50" y="122" font-size="14" font-weight="600" fill="#d9a35b">度量面 · cli/ · Rust</text>
+      <text x="1128" y="122" font-size="10" text-anchor="end" fill="#8593ad">只出源事实，不出产品判决</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="140" width="530" height="104" rx="8"/>
+        <rect x="598" y="140" width="534" height="104" rx="8"/>
+        <rect x="48" y="260" width="530" height="112" rx="8"/>
+        <rect x="598" y="260" width="534" height="112" rx="8"/>
+      </g>
+
+      <g font-size="12" font-weight="600" fill="#cdd6e4">
+        <text x="66" y="164">tree-sitter + 判决语言边界</text>
+        <text x="616" y="164">winnowing 指纹索引</text>
+        <text x="66" y="284">逐项目惰性 daemon</text>
+        <text x="616" y="284">引用、历史与擦除事实</text>
+      </g>
+      <g font-size="10" fill="#8593ad">
+        <text x="66" y="185">判决语言：Python · TypeScript · TSX · Rust · Go</text>
+        <text x="66" y="202">Markdown · Haskell（Markdown 无语法树）</text>
+        <text x="66" y="224">仅扫描：JS · CSS · HTML · Vue · Svelte · Shell · YAML</text>
+
+        <text x="616" y="185">归一化 token 指纹 → SQLite WAL</text>
+        <text x="616" y="202">逐文件按内容哈希增量失效</text>
+        <text x="616" y="224">多写手收敛缓存；daemon 只是加速</text>
+
+        <text x="66" y="305">Windows 命名管道 · 其他平台 Unix 域套接字</text>
+        <text x="66" y="322">以项目根为身份 · 铸造的鉴权 token</text>
+        <text x="66" y="339">hello 前后的静默截止时限</text>
+        <text x="66" y="356">暖索引 + 常驻 ce-core 子进程</text>
+
+        <text x="616" y="305">解析阶梯：相对 · 别名 · 包 · 再导出</text>
+        <text x="616" y="322">Markdown 文件/章节锚点 · 未解析站点台账</text>
+        <text x="616" y="339">git 变动窗口 · 评分事实 · 结构缝事实</text>
+        <text x="616" y="356">擦除采集：图上判死 · 字节相等 · 全覆盖</text>
+      </g>
+    </g>
+
+    <path d="M590 394 V416" stroke="#57c7a8" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="28" y="422" width="1124" height="184" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="422" width="4" height="184" rx="2" fill="#57c7a8"/>
+      <text x="50" y="450" font-size="14" font-weight="600" fill="#57c7a8">WIRE · contracts/ · stdio 上的 NDJSON</text>
+      <text x="1128" y="450" font-size="10" text-anchor="end" fill="#8593ad">一行一个信封</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="468" width="252" height="116" rx="8"/>
+        <rect x="320" y="468" width="508" height="116" rx="8"/>
+        <rect x="848" y="468" width="284" height="116" rx="8"/>
+      </g>
+      <g font-size="12" font-weight="600" fill="#cdd6e4">
+        <text x="66" y="492">信封 + 协商</text>
+        <text x="338" y="492">能力发现</text>
+        <text x="866" y="492">兼容性证据</text>
+      </g>
+      <g font-size="10" fill="#8593ad">
+        <text x="66" y="513">proto 6.5.0 · SemVer</text>
+        <text x="66" y="530">主版本不合即拒绝</text>
+        <text x="66" y="547">次版本字段只加不改</text>
+        <text x="66" y="564">整数行 · 只过类下标，不过名字</text>
+
+        <text x="338" y="513">hello 发现</text>
+        <text x="338" y="530">十个判决家族：fourclass · graph · clone · docdup · verdict</text>
+        <text x="338" y="547">scan · structure · trend · erase · audit</text>
+        <text x="338" y="564">每个家族有自己的请求/结果形状与有界拒绝</text>
+
+        <text x="866" y="513">共享的 golden 夹具</text>
+        <text x="866" y="530">CI 里回放 Rust 客户端</text>
+        <text x="866" y="547">CI 里回放 Haskell 核</text>
+        <text x="866" y="564">各产品面字节稳定的报告</text>
+      </g>
+    </g>
+
+    <path d="M590 606 V628" stroke="#57c7a8" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="28" y="634" width="1124" height="242" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="634" width="4" height="242" rx="2" fill="#e4574a"/>
+      <text x="50" y="662" font-size="14" font-weight="600" fill="#e4574a">判决核 · core/ · Haskell · GHC 9.14.1</text>
+      <text x="1128" y="662" font-size="10" text-anchor="end" fill="#8593ad">纯判决函数</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="680" width="344" height="172" rx="8"/>
+        <rect x="412" y="680" width="344" height="172" rx="8"/>
+        <rect x="776" y="680" width="356" height="172" rx="8"/>
+      </g>
+      <g font-size="12" font-weight="600" fill="#cdd6e4">
+        <text x="66" y="704">评分与结构</text>
+        <text x="430" y="704">存活性、克隆与擦除</text>
+        <text x="794" y="704">证明压力</text>
+      </g>
+      <g font-size="10" fill="#8593ad">
+        <text x="66" y="726">七条结构判轴 + 精确熵算术</text>
+        <text x="66" y="744">在违规 / 机会事实上的密度评分</text>
+        <text x="66" y="762">ADR-006 连续 + 离散只缩棘轮</text>
+        <text x="66" y="780">拆分 ROI 缝价：引用 · 单元 · 克隆 · 变动</text>
+        <text x="66" y="798">趋势斜率与分级 scan 判决</text>
+        <text x="66" y="816">环轴排除声明的文档宇宙</text>
+
+        <text x="430" y="726">SCC、可达性与文件级存活判决</text>
+        <text x="430" y="744">T3 树编辑距离克隆裁决</text>
+        <text x="430" y="762">shingle 集事实上的精确 docdup 判决</text>
+        <text x="430" y="780">三信号联判与审计定罪表</text>
+        <text x="430" y="798">无旋钮的擦除安全谓词</text>
+        <text x="430" y="816">降级的擦除应答不授权任何行</text>
+
+        <text x="794" y="726">定种子与穷举参照电池</text>
+        <text x="794" y="744">旋钮扰动证明每个策略输入都活着</text>
+        <text x="794" y="762">每个家族的 golden 请求/应答回放</text>
+        <text x="794" y="780">整数 / Rational 比较；没有采样环</text>
+        <text x="794" y="798">fail 位、理由表与计数一并返回</text>
+        <text x="794" y="816">同一批判决行喂给每个产品面</text>
+      </g>
+    </g>
+
+    <path d="M590 876 V898" stroke="#57c7a8" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="28" y="904" width="1124" height="184" rx="12" fill="#1e2534" stroke="#2a3347"/>
+      <rect x="28" y="904" width="4" height="184" rx="2" fill="#57c7a8"/>
+      <text x="50" y="932" font-size="14" font-weight="600" fill="#57c7a8">产品面 · 一种报告形状，多条工作流</text>
+
+      <g fill="#171c28" stroke="#2a3347">
+        <rect x="48" y="950" width="196" height="76" rx="8"/>
+        <rect x="264" y="950" width="196" height="76" rx="8"/>
+        <rect x="480" y="950" width="196" height="76" rx="8"/>
+        <rect x="696" y="950" width="196" height="76" rx="8"/>
+        <rect x="912" y="950" width="220" height="76" rx="8"/>
+      </g>
+      <g font-size="11.5" font-weight="600" fill="#cdd6e4">
+        <text x="64" y="974">终端</text>
+        <text x="280" y="974">Tauri GUI</text>
+        <text x="496" y="974">只读 MCP</text>
+        <text x="712" y="974">Claude Code hooks</text>
+        <text x="928" y="974">CI 门</text>
+      </g>
+      <g font-size="9.5" fill="#8593ad">
+        <text x="64" y="994">控制台 · JSON · SARIF</text>
+        <text x="64" y="1010">英文 / 中文行</text>
+        <text x="280" y="994">十个屏</text>
+        <text x="280" y="1010">只做渲染</text>
+        <text x="496" y="994">报告工具</text>
+        <text x="496" y="1010">不写基线</text>
+        <text x="712" y="994">PreToolUse · Stop</text>
+        <text x="712" y="1010">SessionStart 健康</text>
+        <text x="928" y="994">通过 · 违规 · 内部错误</text>
+        <text x="928" y="1010">棘轮 + 显式地板 946</text>
+      </g>
+
+      <line x1="48" y1="1050" x2="1132" y2="1050" stroke="#2a3347"/>
+      <text x="590" y="1073" text-anchor="middle" font-size="10.5" fill="#d9a35b">每个发布资产之下的信任链：draft 字节 → SHA256SUMS → 提交的 pins → tag 只校验、永不重建</text>
+    </g>
+  </g>
+</svg>

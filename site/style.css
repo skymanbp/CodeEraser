@@ -2,8 +2,14 @@
    Palette: ink ground, vermilion eraser, teal keyword, amber string.
    Editing this file? Bump ?v= on every page's <link> — HTML is served
    uncached but this sheet is edge/browser-cached for 4h; without the
-   bump, fresh HTML pairs with a stale sheet on returning visitors. */
+   bump, fresh HTML pairs with a stale sheet on returning visitors.
+   Every rule the eight pages share lives here and nowhere else: the
+   pages carry no <style> of their own. html and css are scan-only,
+   outside the judged set, so a block copied into two pages is
+   duplication no gate can see — the two /bench/ pages and the two
+   /how/ pages each paid for one such copy before this sheet took them. */
 :root {
+  color-scheme: dark;
   --ink-0: #10141d;
   --ink-1: #171c28;
   --panel: #1e2534;
@@ -14,7 +20,7 @@
   --teal: #57c7a8;
   --amber: #d9a35b;
   --paper: #f4efe6;
-  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, "Noto Sans SC", monospace;
   --sans: "IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,19 +34,27 @@ body {
 }
 a { color: var(--teal); text-decoration: none; }
 a:hover { text-decoration: underline; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
 .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
 header.site {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   padding: 18px 0;
 }
+/* the lockup is a link home on every page but the home page itself */
+header.site .home { display: flex; align-items: center; gap: 12px; color: inherit; }
+header.site .home:hover { text-decoration: none; }
 header.site img { width: 28px; height: 28px; border-radius: 6px; }
 header.site .name { font-family: var(--mono); font-weight: 600; font-size: 1.05rem; color: var(--paper); }
-header.site nav { margin-left: auto; display: flex; gap: 18px; align-items: center; font-size: 0.92rem; }
+header.site nav {
+  flex: 1 1 18rem; display: flex; flex-wrap: wrap; justify-content: flex-end;
+  gap: 18px; align-items: center; font-size: 0.92rem;
+}
 header.site nav a { color: var(--muted); }
 header.site nav a:hover { color: var(--text); }
 
+/* Two openers on purpose: the home hero puts the icon beside the pitch
+   and its install chips; the sub-pages' lede is a title over prose. */
 .hero { padding: 56px 0 40px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
 .hero img { width: 160px; height: 160px; border-radius: 28px; box-shadow: 0 12px 48px rgba(0,0,0,0.5); }
 .hero .pitch { flex: 1; min-width: min(300px, 100%); }
@@ -52,6 +66,26 @@ header.site nav a:hover { color: var(--text); }
 .hero p.tag { font-size: 1.15rem; color: var(--muted); margin: 10px 0 24px; max-width: 34em; }
 .hero p.tag em { color: var(--verm); font-style: normal; font-weight: 600; }
 
+.lede { padding: 44px 0 8px; }
+.lede h1 {
+  font-family: var(--mono); font-size: clamp(1.7rem, 4.4vw, 2.4rem);
+  color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
+}
+.lede p { font-size: 1.05rem; color: var(--muted); margin-top: 16px; max-width: 44em; }
+:lang(zh) .lede p { max-width: 40em; }
+.lede p em { color: var(--verm); font-style: normal; font-weight: 600; }
+.lede p strong { color: var(--text); font-weight: 600; }
+.lede p code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
+.page-head { padding: 44px 0 8px; }
+.page-head h1 { font-family: var(--mono); font-size: 2rem; color: var(--paper); }
+.page-head p { color: var(--muted); max-width: 48em; margin-top: 12px; }
+
+/* the how page's section jump list — the headings carry ids, so
+   scroll-behavior above has somewhere to go */
+.jump { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 18px; font-family: var(--mono); font-size: 0.78rem; }
+.jump a { color: var(--muted); }
+.jump a:hover { color: var(--text); }
+
 .installs { display: flex; flex-direction: column; gap: 10px; }
 .install {
   display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
@@ -61,6 +95,11 @@ header.site nav a:hover { color: var(--text); }
 .install .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); min-width: 7.5em; }
 /* flex:1 + min-width:0 blockify the code cell so overflow-x can act */
 .install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; flex: 1; min-width: 0; }
+/* a measured chip: the key is a metric's full name, not a two-word
+   label, so it keeps its case and takes one column width for the set
+   so the values line up */
+.install.metric .k { text-transform: none; letter-spacing: 0; min-width: min(24em, 100%); }
+.installs + .cap { margin-top: 12px; }
 
 .term {
   background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 12px;
@@ -79,7 +118,12 @@ header.site nav a:hover { color: var(--text); }
 .term .p { color: var(--teal); }
 .term .s { color: var(--paper); font-weight: 600; }
 .term .r { color: var(--verm); }
-.term .cap { padding: 0 20px 14px; font-size: 0.8rem; color: var(--muted); }
+
+/* the two small-print voices: a caption under a block, a note inside one */
+.cap { font-size: 0.8rem; color: var(--muted); }
+.term .cap { padding: 0 20px 14px; }
+.note { font-size: 0.86rem; color: var(--muted); margin-top: 12px; }
+.cap code, .note code, .job code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
 
 h2 {
   font-family: var(--mono); font-size: 1.3rem; color: var(--paper);
@@ -92,7 +136,7 @@ h2 {
   background: var(--panel); border: 1px solid var(--panel-edge);
   border-radius: 10px; padding: 16px 18px;
 }
-.card b { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; display: block; margin-bottom: 6px; }
+.card h3 { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
 .card p { font-size: 0.88rem; color: var(--muted); }
 
 .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 14px; }
@@ -100,13 +144,15 @@ h2 {
   background: var(--panel); border: 1px solid var(--panel-edge);
   border-radius: 12px; overflow: hidden; margin: 0;
 }
-.shot img { width: 100%; display: block; }
+.shot img { width: 100%; height: auto; display: block; }
 .shot figcaption { padding: 10px 14px; font-size: 0.8rem; color: var(--muted); }
 .shot figcaption code { font-family: var(--mono); color: var(--text); }
 
-/* the architecture SVG paints its own ground — no panel behind it */
-.arch { margin: 0; }
-.arch img { width: 100%; display: block; border-radius: 14px; }
+/* the diagrams paint their own ground — no panel behind them; the
+   figure scrolls sideways where the column is narrower than a legible
+   render (the 640px rule below) */
+.arch { margin: 0; overflow-x: auto; }
+.arch img { width: 100%; height: auto; display: block; border-radius: 14px; }
 .arch figcaption { padding: 10px 4px; font-size: 0.8rem; color: var(--muted); }
 
 .trust {
@@ -116,6 +162,72 @@ h2 {
 }
 .trust code { font-family: var(--mono); color: var(--text); }
 
+/* the how page's family blocks: one per methodology booklet */
+.fam {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 12px; padding: 18px 20px; margin: 14px 0;
+}
+.fam h3 {
+  font-family: var(--mono); font-size: 1rem; font-weight: 600;
+  color: var(--paper); letter-spacing: -0.01em; line-height: 1.45;
+}
+:lang(zh) .fam h3 { line-height: 1.5; }
+.fam h3 .n { color: var(--amber); margin-right: 10px; }
+.fam h3 a { color: var(--paper); }
+.fam h3 a:hover { color: var(--teal); }
+.fam .job { font-size: 0.93rem; color: var(--muted); margin: 8px 0 12px; }
+.fam pre {
+  background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto;
+  font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text);
+}
+.fam pre + pre { margin-top: 8px; }
+ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; list-style: none; }
+ul.consts li {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+  background: var(--ink-1); border: 1px solid var(--panel-edge);
+  border-radius: 6px; padding: 3px 9px;
+}
+ul.consts li b { color: var(--teal); font-weight: 600; }
+
+/* Tables. One header voice for all three — the scoreboard, the guard
+   tier ladder and the bench dashboard — and one horizontal-scroll
+   wrapper, `.tablewrap`, whose name the dashboard generator
+   (cli/tests/it/bench_render_dashboard.rs) writes. */
+.board th, table.ladder th, .data-table th {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber);
+}
+.tablewrap { overflow-x: auto; }
+.fam .tablewrap { margin: 14px 0 4px; }
+table.ladder { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 30em; }
+:lang(zh) table.ladder { min-width: 26em; }
+table.ladder th, table.ladder td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--panel-edge); }
+table.ladder td { color: var(--muted); vertical-align: top; }
+table.ladder td:first-child, table.ladder td code { font-family: var(--mono); color: var(--text); }
+.data-table { margin: 16px 0 32px; }
+.data-table table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.82rem; }
+.data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
+.data-table td { color: var(--muted); }
+.data-table td code { color: var(--text); font-family: var(--mono); white-space: nowrap; }
+
+/* The before/after scoreboard demo/table.js writes into both
+   homepages' `scoreboard` block. A .install chip cannot hold a
+   comparison: one value slot, and a label style built for two-word
+   keys. The panel wraps the table rather than the content column —
+   full width put the two figure columns ~400px from labels 300px long,
+   and a number the eye cannot join to its label is not a scoreboard. */
+.board { width: fit-content; max-width: 100%; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 10px; padding: 2px 22px 10px; margin: 26px 0; overflow-x: auto; }
+.board table { width: auto; border-collapse: collapse; }
+.board th, .board td { padding: 11px 0; text-align: right; white-space: nowrap; }
+.board th + th, .board td + td { padding-left: 34px; }
+.board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); }
+.board th { border-bottom: 1px solid var(--panel-edge); }
+.board td + td { font-family: var(--mono); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
+.board tbody tr + tr td { border-top: 1px solid var(--ink-1); }
+.board .was { color: var(--muted); }
+.board .to { color: var(--paper); font-weight: 600; }
+
 footer.site {
   margin-top: 64px; padding: 28px 0 40px;
   border-top: 1px solid var(--panel-edge);
@@ -124,41 +236,16 @@ footer.site {
 footer.site p + p { margin-top: 6px; }
 
 @media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
   .hero { padding-top: 32px; gap: 24px; }
   .hero img { width: 110px; height: 110px; border-radius: 20px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-}
-
-/* The before/after scoreboard demo/table.js writes into both
-   homepages' `scoreboard` block. Here, and not in their own <style>
-   blocks: /bench/ keeps .data-table page-local and pays for it with a
-   byte-for-byte copy in /zh/bench/, and 26 duplicated lines are
-   duplication nothing here can see — html and css are scan-only,
-   outside the judged set. One definition, and the ?v= bump the header
-   above asks for.
-
-   A .install chip cannot hold a comparison: one value slot, and a
-   label style built for two-word keys. The panel wraps the table
-   rather than the content column — full width put the two figure
-   columns ~400px from labels 300px long, and a number the eye cannot
-   join to its label is not a scoreboard. */
-.board { width: fit-content; max-width: 100%; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 10px; padding: 2px 22px 10px; margin: 26px 0; overflow-x: auto; }
-.board table { width: auto; border-collapse: collapse; }
-.board th, .board td { padding: 11px 0; text-align: right; white-space: nowrap; }
-.board th + th, .board td + td { padding-left: 34px; }
-.board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); }
-.board th { font-weight: 400; font-size: 0.78rem; color: var(--muted); border-bottom: 1px solid var(--panel-edge); }
-.board td + td { font-family: var(--mono); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
-.board tbody tr + tr td { border-top: 1px solid var(--ink-1); }
-.board .was { color: var(--muted); }
-.board .to { color: var(--paper); font-weight: 600; }
-/* Under the site's own 640px breakpoint the three columns cannot fit:
-   the label wrapped to five lines and the "with" column — the one the
-   reader came for — sat off the right edge. So each row stacks, and
-   each figure names its run. */
-@media (max-width: 640px) {
+  /* the diagrams are dense: below this width they keep a legible
+     render and scroll inside the figure instead of shrinking to fit */
+  .arch img { min-width: 560px; }
+  /* Under this width the scoreboard's three columns cannot fit: the
+     label wrapped to five lines and the "with" column — the one the
+     reader came for — sat off the right edge. So each row stacks, and
+     each figure names its run. */
   .board { width: 100%; padding: 6px 18px 12px; }
   .board table, .board tbody, .board tr, .board td { display: block; }
   .board thead { display: none; }
@@ -168,4 +255,7 @@ footer.site p + p { margin-top: 6px; }
   .board td, .board td:first-child { padding: 0; text-align: left; white-space: normal; }
   .board td + td { display: inline-block; padding: 8px 30px 0 0; }
   .board td + td::before { content: attr(data-run); display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--muted); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
