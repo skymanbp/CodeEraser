@@ -10,13 +10,17 @@ use anyhow::{Result, ensure};
 /// the core's cap counts (the C15 lesson made structural — the old
 /// rows-only `chunks(SCAN_ROW_CAP)` left no room for the grade
 /// table, so the first chunk of a cap-sized tree degraded): a row
-/// pays 1 (2 with a class column riding — the caller prices that by
-/// reserving the override rows and halving nothing: the row class
-/// travels with its row), a code-6 row pays 2 (its aligned naming
-/// fact travels with it), and the caller reserves the grade and
-/// override tables' rows. The walk that prices code-6 rows is the
-/// walk that slices the facts — alignment by construction; the
-/// chunk's row SPAN is what the caller slices the class column by.
+/// pays 1, or 2 on a classed run because the class column is one
+/// entry per row and `CE.Scan.overCap` sums it as its own dimension;
+/// a code-6 row pays 1 more (its aligned naming fact travels with
+/// it); and the caller reserves the grade and override tables' rows.
+/// The class column is priced HERE, per row, not by the caller's
+/// reservation: `overrides` is at most a few rows per declared class
+/// while `rowClasses` is as long as the chunk, so reserving the one
+/// never paid for the other and a large classed tree degraded. The
+/// walk that prices code-6 rows is the walk that slices the facts —
+/// alignment by construction; the chunk's row SPAN is what the
+/// caller slices the class column by.
 pub(super) struct Chunk<'a> {
     pub(super) rows: &'a [[u64; 2]],
     pub(super) naming: &'a [[i64; 5]],
@@ -58,6 +62,8 @@ fn cut_out<'a>(r: &ScanRequest<'a>, c: Cut) -> Chunk<'a> {
 /// silently drop the arcs that cross the cut.
 pub(super) fn plan<'a>(r: &ScanRequest<'a>, budget: usize) -> Result<Vec<Chunk<'a>>> {
     let mut out = Vec::new();
+    // 2 while a class column rides: it travels one entry per row
+    let per_row = 1 + usize::from(r.row_classes.is_some());
     let (mut start, mut fact0, mut arc0) = (0usize, 0usize, 0usize);
     let (mut weight, mut facts, mut arcs, mut row) = (0usize, 0usize, 0usize, 0usize);
     for &block in r.blocks {
@@ -67,10 +73,10 @@ pub(super) fn plan<'a>(r: &ScanRequest<'a>, budget: usize) -> Result<Vec<Chunk<'
             .iter()
             .take_while(|a| (a[0] as usize) < end)
             .count();
-        let load = block + named + held;
+        let load = block * per_row + named + held;
         ensure!(
             load <= budget,
-            "one file weighs {load} rows and arcs against a chunk budget of {budget} —              a file's rows must not straddle a chunk (scan/wire.rs vs Scan/Cost.hs)"
+            "one file weighs {load} rows and arcs against a chunk budget of {budget} — a file's rows must not straddle a chunk (scan/wire.rs vs Scan/Cost.hs)"
         );
         if weight + load > budget && weight > 0 {
             let cut = Cut {

@@ -54,7 +54,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 953/1000</span> | axes 0:58 1:0 2:76 3:0 4:0 5:0 6:198 | 33 candidates
+<span class="s">check score 953/1000</span> | axes 0:59 1:0 2:76 3:0 4:0 5:0 6:198 | 33 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -120,15 +120,15 @@ note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim
 </div>
 
 <!-- bench:begin -->
-<h2>Measured · v1.3.0</h2>
+<h2>Measured · v1.4.0</h2>
 <div class="installs">
-<div class="install"><span class="k">hook probe p50 (two-file fixture)</span><code>41 ms</code></div>
-<div class="install"><span class="k">full scan p50</span><code>518 ms</code></div>
-<div class="install"><span class="k">incremental index p50 (warm)</span><code>381 ms</code></div>
+<div class="install"><span class="k">hook probe p50 (two-file fixture)</span><code>55 ms</code></div>
+<div class="install"><span class="k">full scan p50</span><code>588 ms</code></div>
+<div class="install"><span class="k">incremental index p50 (warm)</span><code>411 ms</code></div>
 <div class="install"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits </code></div>
 <div class="install"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%) </code></div>
 </div>
-<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs) from one source, contracts/bench/bench.json — never hand-filled. The current release, v1.4.0, has no row of its own.</p>
+<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs) from one source, contracts/bench/bench.json — never hand-filled.</p>
 <!-- bench:end -->
 <p><a href="/bench/">Complete evaluation dashboard →</a></p>
 

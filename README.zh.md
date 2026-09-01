@@ -16,7 +16,7 @@
 
 ![一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口与引用图；Haskell 判决结构与分数、克隆、文档重复、轨迹与审计、存活性与擦除——每行一个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
 
-- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->41<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->43<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
+- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->55<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->80<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙——每个文本文件里的每个标识符，只以 fnv1a64 哈希存储——产出**未被提及的声明**顾问，它永不把门翻红。
@@ -86,14 +86,14 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 <!-- vignettes:end -->
 
 <!-- bench:begin -->
-### 延迟 · v1.3.0
+### 延迟 · v1.4.0
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1078 | 923 | 4738 | 381 | 801 | 41 | 518 |
-| p95 ms | 1082 | 2093 | 4743 | 384 | 809 | 43 | 2428 |
+| p50 ms | 2396 | 1717 | 4448 | 411 | 910 | 55 | 588 |
+| p95 ms | 2501 | 2543 | 4505 | 425 | 1214 | 80 | 2513 |
 
-所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.4.0 没有自己的行。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
+所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->
 
 延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)），渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
@@ -160,7 +160,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ![架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染——终端、GUI、MCP 服务器、Claude Code hooks、CI](docs/assets/architecture.zh.svg)
 
-- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#digits-->2,024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与<!--ce:count:grammars#word-->六<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
+- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与<!--ce:count:grammars#word-->六<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`——每个判决家族、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
 - **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.5.0<!--/ce-->，<!--ce:count:families#word-->十<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.0.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
@@ -171,7 +171,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **这就是成品的形状。** 计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——已于 2026-08-31 裁定不做（计划 v2.22，45 条）。以下是立场清单，不是计划清单。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v1.2.0 → v1.3.0 测试子仓搬迁的分数不可比。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。跨 `[[rules.class]]` 开关、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量的分数不可比。
 
 ## 文档
 

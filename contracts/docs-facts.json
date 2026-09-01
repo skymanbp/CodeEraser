@@ -285,7 +285,7 @@
     },
     {
       "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
-      "id": "tool:edition#digits",
+      "id": "tool:edition#name",
       "source": "cli/Cargo.toml::edition",
       "tier": "scraped",
       "value": "2024"
