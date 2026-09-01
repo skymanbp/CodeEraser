@@ -10,18 +10,17 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 6.4.0 = the fence close-out batch (plan v2.18 step #14, piece
--- (b)), additive on three families. verdict/1: class knob code 4
--- `cognitive_ratchet_tolerance` replaces code 3 for CoC alone
--- (O37); class ids 1..=64 are admitted, one predicate at four
--- readers (O38); the `present` provenance table answers with
--- `ratchet.dropped` and the sixth fail name `rows_dropped` (O40);
--- thresholds code 7 `cycleFloor` with the `cycleSelfLoops` table
--- required exactly at floor 1 (O59); the degraded reply echoes the
--- request digest like the judged one (O43). scan/1: `knobsFence`
--- rides and the reply names `failed` (O33). graph/1: `sccFloor`
--- declared and echoed (O59). A request without the new keys is
--- judged byte for byte as before (K16).
+-- 6.5.0 = the recursion increment (ADR-008 fourth instalment, plan
+-- v2.23), additive on one family. scan/1 gains `callEdges`: the call
+-- arcs of one parse unit as index pairs into `rows`, both ends a
+-- cognitive row, the table strictly ascending. Every unit inside a
+-- cycle over them pays one flat point (S3776 §1 — direct or
+-- indirect, so a cycle and not a self-call is what is looked for),
+-- and the reply names what moved in `cocBumped` as [rowIndex,
+-- effectiveValue]. The cycle is judged here and the increment exists
+-- in one place; the measuring side renders the number without
+-- deriving either. A request without the key is judged byte for byte
+-- as before (K16).
 -- The per-version change ledger lives in contracts/VERSIONING.md and
 -- nowhere else. It used to be mirrored here in English and a third
 -- time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -35,7 +34,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- ledger that documents a size gate is not exempt from it.
 
 proto :: String
-proto = "6.4.0"
+proto = "6.5.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

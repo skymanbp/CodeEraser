@@ -24,6 +24,7 @@ import qualified JoinProps
 import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
+import qualified ScanCyclesProps
 import qualified ScanProps
 import qualified StructureProps
 import qualified TrendProps
@@ -88,6 +89,7 @@ main = do
       , EntropyProps.battery
       , JoinProps.battery
       , ScanProps.battery
+      , ScanCyclesProps.battery
       , StructureProps.battery
       , TrendProps.battery
       , EraseProps.battery

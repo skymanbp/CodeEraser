@@ -38,4 +38,9 @@ pub struct FileMetrics {
     pub total_lines: usize,
     pub comment_lines: usize,
     pub functions: Vec<FnMetrics>,
+    /// The call arcs `scan::calls` proved inside this file, as
+    /// (caller, callee) indices into `functions`. Skipped: wire
+    /// shape, not report vocabulary (schema §7.1 unchanged).
+    #[serde(skip)]
+    pub calls: Vec<(u32, u32)>,
 }

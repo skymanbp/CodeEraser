@@ -31,6 +31,10 @@ data RowsReq = RowsReq
   , knobsOf :: [[Integer]]
   , gradesOf :: [[Integer]]
   , namingOf :: Maybe [[Integer]]
+  , -- scan/1's call table (6.5.0): the arcs the recursion increment
+    -- judges, as indices into `rows`. Nothing = a client that sends
+    -- none, and the reply keeps its legacy bytes.
+    callsOf :: Maybe [[Integer]]
   , rulepackOf :: Rulepack
   , -- scan/1's fence channel (6.4.0, O33): the `knobsFence` value as
     -- it rode — Nothing = the key never came (a client that read no
@@ -62,6 +66,7 @@ instance FromJSON RowsReq where
       <*> o .:? "knobs" .!= []
       <*> o .:? "grades" .!= []
       <*> o .:? "naming"
+      <*> o .:? "callEdges"
       <*> parseJSON (Object o)
       <*> pure (KM.lookup "knobsFence" o)
 

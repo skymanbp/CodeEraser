@@ -10,6 +10,7 @@
 //! facts cross the wire; subjects, names and paths never do
 //! (§5.9.2 index privacy).
 
+use super::chunk;
 use crate::config::{RulesCfg, Thresholds};
 use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
@@ -19,6 +20,11 @@ pub const CAP: &str = "scan/1";
 
 /// Row ceiling — mirror of CE.Scan.Cost.scanRowCap.
 pub const SCAN_ROW_CAP: usize = 524288;
+
+/// One judged scan: the levels positionally, the fail bit, the named
+/// conditions it is the disjunction of, and the cognitive rows the
+/// recursion increment raised (6.5.0) as [rowIndex, effectiveValue].
+pub type Judgment = (Vec<u8>, bool, Vec<String>, Vec<[u64; 2]>);
 
 /// The grade rows ce.toml speaks: all seven codes every time, warn
 /// and fail per row (fail 0 = no hard line), straight from
@@ -108,6 +114,12 @@ pub struct ScanRequest<'a> {
     /// Rides on EVERY scan request this side sends, so a core that
     /// answers no `failed` is a pre-6.4.0 one, refused by name.
     pub fence: Value,
+    /// Each file's row count, in row order (report::blocks_of): the
+    /// unit a chunk boundary must fall between, so no call arc is
+    /// ever cut in half.
+    pub blocks: &'a [usize],
+    /// The call arcs as global row indices (6.5.0, coc::arcs).
+    pub calls: &'a [[u64; 2]],
 }
 
 /// Chunked scan judging over ONE link (review C5: the single-request
@@ -121,19 +133,25 @@ pub struct ScanRequest<'a> {
 /// carries the facts of ITS code-6 rows and the classes of ITS rows.
 /// The named conditions (6.4.0) union across chunks in the core's
 /// canonical order, and the fail bit is their disjunction.
-pub fn judge(core: &str, r: &ScanRequest) -> Result<(Vec<u8>, bool, Vec<String>)> {
+pub fn judge(core: &str, r: &ScanRequest) -> Result<Judgment> {
     let mut link = crate::lockstep::open_family(core, CAP)?;
     let (mut levels, mut held) = (Vec::new(), std::collections::BTreeSet::new());
+    let mut bumped = Vec::new();
     let reserved = r.grades.len() + r.overrides.len();
-    for c in chunk_plan(r.rows, r.naming, SCAN_ROW_CAP - reserved) {
+    for c in chunk::plan(r, SCAN_ROW_CAP - reserved)? {
         let mut body = json!({
             "rows": c.rows, "grades": r.grades, "naming": c.naming, "knobsFence": r.fence,
         });
-        if let Some(classes) = r.row_classes {
-            body["rowClasses"] = json!(&classes[c.span.clone()]);
-        }
-        if !r.overrides.is_empty() {
-            body["gradeOverrides"] = json!(r.overrides);
+        // the optional tables ride only when they carry something: an
+        // absent key and an empty one ask the core different questions
+        let optional = [
+            (!c.calls.is_empty()).then(|| ("callEdges", json!(c.calls))),
+            r.row_classes
+                .map(|classes| ("rowClasses", json!(&classes[c.span.clone()]))),
+            (!r.overrides.is_empty()).then(|| ("gradeOverrides", json!(r.overrides))),
+        ];
+        for (key, table) in optional.into_iter().flatten() {
+            body[key] = table;
         }
         let reply = link.request("scan", body).map_err(anyhow::Error::msg)?;
         ensure!(
@@ -152,6 +170,7 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Vec<u8>, bool, Vec<String>)
         );
         levels.extend(chunk_levels);
         held.extend(failed_of(&reply)?);
+        bumped.extend(bumped_of(&reply, &c)?);
     }
     // the canonical order is the core's (CE.Scan conds), not the
     // set's; a name outside the vocabulary is a wire drift
@@ -164,7 +183,22 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Vec<u8>, bool, Vec<String>)
         failed.len() == held.len(),
         "core named a condition outside the scan/1 vocabulary: {held:?}"
     );
-    Ok((levels, !failed.is_empty(), failed))
+    Ok((levels, !failed.is_empty(), failed, bumped))
+}
+
+/// One chunk's raised cognitive rows (6.5.0), lifted back to global
+/// row indices. The key is required exactly when the arcs rode, so a
+/// core that judged them and answered nothing is a pre-6.5.0 one,
+/// refused by name rather than read as "no cycles".
+fn bumped_of(reply: &Value, c: &chunk::Chunk<'_>) -> Result<Vec<[u64; 2]>> {
+    if c.calls.is_empty() {
+        return Ok(Vec::new());
+    }
+    let moved: Vec<[u64; 2]> = serde_json::from_value(reply["cocBumped"].clone()).context(
+        "cocBumped — a pre-6.5.0 core judges call edges silently; this ce needs scan/1 6.5.0",
+    )?;
+    let base = c.span.start as u64;
+    Ok(moved.into_iter().map(|[i, v]| [i + base, v]).collect())
 }
 
 /// One chunk's named conditions (6.4.0, O33). The key is required
@@ -204,47 +238,6 @@ fn assert_echo(reply: &serde_json::Value, r: &ScanRequest) -> Result<()> {
         r.overrides
     );
     Ok(())
-}
-
-/// Greedy chunk split whose budget counts EVERY request dimension
-/// the core's cap counts (the C15 lesson made structural — the old
-/// rows-only `chunks(SCAN_ROW_CAP)` left no room for the grade
-/// table, so the first chunk of a cap-sized tree degraded): a row
-/// pays 1 (2 with a class column riding — the caller prices that by
-/// reserving the override rows and halving nothing: the row class
-/// travels with its row), a code-6 row pays 2 (its aligned naming
-/// fact travels with it), and the caller reserves the grade and
-/// override tables' rows. The walk that prices code-6 rows is the
-/// walk that slices the facts — alignment by construction; the
-/// chunk's row SPAN is what the caller slices the class column by.
-struct Chunk<'a> {
-    rows: &'a [[u64; 2]],
-    naming: &'a [[i64; 5]],
-    span: std::ops::Range<usize>,
-}
-
-fn chunk_plan<'a>(rows: &'a [[u64; 2]], naming: &'a [[i64; 5]], budget: usize) -> Vec<Chunk<'a>> {
-    let mut out = Vec::new();
-    let (mut row0, mut fact0, mut facts, mut weight) = (0usize, 0usize, 0usize, 0usize);
-    for (i, row) in rows.iter().enumerate() {
-        let w = 1 + usize::from(row[0] == 6);
-        if weight + w > budget && weight > 0 {
-            out.push(Chunk {
-                rows: &rows[row0..i],
-                naming: &naming[fact0..fact0 + facts],
-                span: row0..i,
-            });
-            (row0, fact0, facts, weight) = (i, fact0 + facts, 0, 0);
-        }
-        weight += w;
-        facts += usize::from(row[0] == 6);
-    }
-    out.push(Chunk {
-        rows: &rows[row0..],
-        naming: &naming[fact0..],
-        span: row0..rows.len(),
-    });
-    out
 }
 
 #[cfg(test)]

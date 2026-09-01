@@ -24,6 +24,14 @@
 //! call can never land on a class method it has no way to reach. Both
 //! roads keep the undercount direction: no proof, no edge.
 //!
+//! One thing the ancestor rule alone gets wrong, and the reason a
+//! member scope is named separately: inside `impl Drop { fn drop(..)
+//! { drop(x) } }` the callable `drop` IS an ancestor's child, yet the
+//! bare `drop` is the prelude's free function — a method answers to a
+//! receiver, never to its own name alone. Measured on this repository
+//! before the rule existed, that one shape charged a recursion point
+//! to a `Drop` impl that recurses nowhere.
+//!
 //! A callable is not always one unit: Haskell gives every equation of
 //! `f` its own `function` node (divergence D7), and those equations
 //! are one function, not an ambiguity. So names are owned by GROUPS
@@ -58,7 +66,7 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
     if spec.call_kinds.is_empty() {
         return Vec::new();
     }
-    let named = Named::of(units);
+    let named = Named::of(units, spec);
     let mut out = Vec::new();
     for (from, unit) in units.iter().enumerate() {
         let receiver = receiver_binding(unit.node, src);
@@ -92,11 +100,22 @@ struct Named {
     base: HashMap<String, usize>,
 }
 
+/// Whether a declaration sits in a type's member body — see
+/// LangSpec::call_member_scopes for why both levels are read.
+fn in_member_scope(node: Node<'_>, spec: &LangSpec) -> bool {
+    node.parent().is_some_and(|container| {
+        spec.call_member_scopes.contains(&container.kind())
+            || container
+                .parent()
+                .is_some_and(|owner| spec.call_member_scopes.contains(&owner.kind()))
+    })
+}
+
 impl Named {
-    fn of(units: &[FnUnit<'_>]) -> Self {
+    fn of(units: &[FnUnit<'_>], spec: &LangSpec) -> Self {
         let mut groups: Vec<Vec<usize>> = Vec::new();
         let mut containers: Vec<usize> = Vec::new();
-        let mut names: Vec<&str> = Vec::new();
+        let mut names: Vec<(&str, bool)> = Vec::new();
         let mut seat: HashMap<(usize, &str), usize> = HashMap::new();
         for (i, unit) in units.iter().enumerate() {
             let parent = container_of(unit.node);
@@ -104,15 +123,23 @@ impl Named {
                 Some(&g) => groups[g].push(i),
                 None => {
                     seat.insert((parent, unit.name.as_str()), groups.len());
-                    names.push(&unit.name);
+                    names.push((&unit.name, in_member_scope(unit.node, spec)));
                     containers.push(parent);
                     groups.push(vec![i]);
                 }
             }
         }
+        let seats = names.iter().enumerate();
         Named {
-            whole: unique(names.iter().copied()),
-            base: unique(names.iter().map(|n| base_name(n))),
+            // a member is absent from the bare road entirely, so a
+            // top-level name is not cancelled by a method spelling it
+            whole: unique(
+                seats
+                    .clone()
+                    .filter(|(_, (_, m))| !m)
+                    .map(|(g, (n, _))| (*n, g)),
+            ),
+            base: unique(seats.map(|(g, (n, _))| (base_name(n), g))),
             containers,
             groups,
         }
@@ -120,9 +147,9 @@ impl Named {
 }
 
 /// Keys owned by exactly one group; a repeat erases its key for good.
-fn unique<'a>(names: impl Iterator<Item = &'a str>) -> HashMap<String, usize> {
+fn unique<'a>(named: impl Iterator<Item = (&'a str, usize)>) -> HashMap<String, usize> {
     let mut seen: HashMap<&str, Option<usize>> = HashMap::new();
-    for (group, name) in names.enumerate() {
+    for (name, group) in named {
         seen.entry(name)
             .and_modify(|slot| *slot = None)
             .or_insert(Some(group));

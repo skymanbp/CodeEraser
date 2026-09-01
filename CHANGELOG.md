@@ -111,6 +111,69 @@ Python 8 次而几乎全错（`DirEntry::path` 体内的 `self.dent.path()`、
 棘轮具名重立：`cli/src/scan/calls.rs` 162 → 212 行（容器化查表 + `Caller` 记录 +
 两个谓词 + 头注新增的作用域段），子仓 `cli/tests/unit/scan/calls.rs` 149 → 165 行
 （两条反证腿）、本册自身 283 → 299 行。dedup 恒 56，`ce scan` 函数数 3825 → 3827。
+
+**递归增量：环内每个函数 +1（计划 v2.23 步 4，wire `scan/1` **6.5.0**）。** S3776 白皮书
+v1.7 p.8 与 Appendix B1 写的是 `each method in a recursion cycle, whether direct or
+indirect`，而 SonarSource 自家 java/python/js 三个分析器一个都没实现（各自源码 `recurs`
+命中 0）——**站规范侧做全**，与真实 SonarQube 分数的系统性差走 crosscheck 的归因栏。
+分界照 ADR-008 细则第四期：调用弧是测量侧事实（步 3 的 `scan/calls.rs`），环的判定是
+核的判决。新模块 `core/app/CE/Scan/Cycles.hs` 自己求 SCC——**不复用 `CE.Graph.Cycles`
+本体**，它第一行就自陈 cycles are REPORTED never judged（RG9），本期是判决，两面不得混；
+逐字沿用的只有它对单点的读法（`cyclic [v] = member (v,v) arcs`），故**直接递归无需特判**，
+它就是环长 1。`+1` 这个政策常数全仓只在这一处。
+
+wire 加性两键：请求 `callEdges=[[from,to]…]`（两端都是 `rows` 里的 cognitive 行下标、
+表严格升序，名字与路径永不过线），应答 `cocBumped=[[rowIndex,生效值]]`。送**值**不送
+增量，是为了测量侧渲染核判过的那个数而**永不自己重导**环或增量——`cli/src/scan/coc.rs`
+只做下标算术与一条单调 `ensure`。四个读者（findings / 钉住镜像 `evaluate` / ADR-006
+棘轮的复杂度列 / JSON 报告）因此读的是同一个整数：`scan::settle` 是唯一那条路，
+`score::size_facts` 也改走它，否则一道门会对着另一道门从不展示的值收紧。
+
+分块新增可测不变量「**一个文件的行不得跨 chunk**」：弧以行下标表述，边界落在文件内部
+会把弧拦腰截断，而现有分块论证（rows grade independently，C5 评审）对跨行判决不成立。
+分块因此改走**文件**而非行；装不下的单个文件按名拒绝，不劈开——劈开会静默丢掉跨切口的
+弧，而丢一条弧就是丢一个环。`wire.rs` 被这段推过 300 行敕令，按「拆分优先于豁免」把
+分块整体搬出为 `cli/src/scan/chunk.rs`（wire 336 → 243，chunk 105）。
+
+**本仓库实测被记分的函数：27 个**——同一棵树上跑两个二进制（HEAD 的与本批的）逐函数
+对拍，全部恰好 +1，名字清一色是 `walk` / `go` / `loop` / `visit` / `flatten` / `pairs`
+这类递归形。这次度量当场抓出一个**错记**并已根修：`cli/src/corelink.rs` 的
+`impl Drop { fn drop(&mut self) { drop(...) } }`——那个裸 `drop` 是 prelude 的自由函数，
+而裸名根本够不着方法。新增 `LangSpec::call_member_scopes`（五张表逐个用钉死语法探过：
+Rust 的 `declaration_list` 被 impl/trait/mod 共用故看父节点，TS 的 `class_body`/`object`
+自己就说了算，Go 方法在顶层且名字带接收者、Haskell 类方法本就是顶层名，两者皆空），
+裸名永不进入成员作用域；配一正一反两条腿——摘掉即重现 `[("drop","drop")]`，而
+`mod m { fn a(){b()} fn b(){a()} }` 必须仍然成环，证明规则没有过宽。
+
+核电池 `core/test/ScanCyclesProps.hs` 七腿，主腿是**全部 65536 张四顶点图**与一个
+不碰 `Data.Graph` 的独立预言机（`ReferenceGraph.reachB` 的朴素不动点）逐图对拍；另有
+单向调用不成环、只有 cognitive 行动且只动 1、加边不减免、无表即无变化无键、空的
+`cocBumped` 也要答（「这里没环」与「压根没问」不得同形）、四条具名拒绝。golden：12 份
+应答行按新核重出——**脚本先证明每一行除版本戳外逐字节不变才允许写盘**（第一版用文本管道，
+Windows 把 `\n` 变成 `\r\n`，核把那个 CR 原样回显进了错误消息，改二进制管道）；
+`scan/golden.ndjson` 另加 6 对，三接受三拒绝。VERSIONING §1 加 6.5.0 账本行，§3 三元组
+105 → 111 行、server 恒答 6.5.0。
+
+**先补一笔上一提交欠的账**：`9625914` 推上去时 CI 是红的（run 33448106023，两个平台同一步
+`Dogfood the test suite`）——测试子仓的 dedup 从 119 涨到 122，越过它自己的预算。机制是**表
+写得太长开始跟自己押韵**：`unit/scan/calls.rs` 的 `CASES` 每行都是 `(Lang::X, 片段, &[…], 为什么)`
+这一个骨架，13 行时零克隆，我给作用域规则补的两行让它到了 15 行，就出现三块自相似。修法不是
+抬预算也不是把行删掉，而是让那四行**说出它们本来的意思**：它们回答的是同一条规则（被调用者
+只在调用点看得见的地方才被认领），且天然成对——一个必须拒的形状，配一个必须仍然认领的邻居。
+于是它们独立成 `SCOPE_CASES`，**每行同时装两个片段**，元组形状与主表不同，两张表不再互相押韵。
+配对本身就是断言：只有反证腿证明不了规则没有变宽。结果：子仓 dedup 回到 **119**，且**行集与
+上一次绿（`7c0c637`）逐对相同、零差**；子仓棘轮具名重立一行 `unit/scan/calls.rs` 165 → 205。
+
+棘轮具名重立六行：`cli/src/scan/mod.rs` 189 → 248（`settle` 那条唯一通路）、
+`cli/src/scan/spec.rs` 315 → 333、`cli/src/scan/report.rs` 290 → 307、
+`cli/src/scan/calls.rs` 212 → 239、`core/app/CE/Scan.hs` 270 → 281、本册自身
+299 → 362 行；其余在容差内。**dedup 预算 56 → 55**（台账在 `ce.toml` 注释块）：
+行集是拿 HEAD 工作树逐对比出来的，最终只差一行，其余差异全是行号位移的换键。
+本批曾花掉一行——`scan/wire.rs` 长出第三张可选表之后，它组装请求的形状与
+`structure/wire.rs` 一模一样——**按机制退回**：三个 `if` 改写成一张可选表，我们自家工具
+匹配上的那个形状就此不存在，而不是把它记进豁免。偿的一行：`scan/ast.rs` 的 `children`
+与 `named_children` 除了调哪对访问器之外一字不差，折成一个 `kids` 走查。净 −1。
+分数：CoC 变了，**与 1.3.x 不可比**。
 `LangSpec` 此前把 `&'static [&'static str]` 逐字段拼了十八遍，任一窗口都与另一窗口
 同韵——四个新字段把这段推过克隆阈值，代价 +7 块。修法是给这个类型起名
 （`pub type Kinds`）而不是抬预算：重复本身消失，连带偿掉那段旧欠的 4 块，

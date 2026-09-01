@@ -17,6 +17,7 @@
 module CE.Scan (respond) where
 
 import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
+import CE.Scan.Cycles (callBattery, withCycles)
 import CE.Scan.Fence (Fence (..), drifted, fenceOffence, readFence)
 import CE.Wire (RowsReq (..), Rulepack (..), rowsFamily, tableOffence)
 import Data.Aeson
@@ -36,7 +37,7 @@ import CE.Verdict.Cost (classIdPastFence)
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto =
-  rowsFamily "scan" overCap violation (\req -> reply proto req [] True) (judged proto)
+  rowsFamily "scan" overCap violation (\req -> reply proto req [] [] True) (judged proto)
 
 -- | Every request dimension counts toward the cap (review C15: the
 -- declared ceiling missed the second dimension; the third arrived
@@ -51,6 +52,7 @@ overCap req = toInteger (sum dims) > scanRowCap
     , length (namingRows req)
     , length (overridesOf rp)
     , maybe 0 length (rowClassesOf rp)
+    , maybe 0 length (callsOf req)
     ]
 
 -- | Every row through the ONE graded table — its class's line where
@@ -58,13 +60,16 @@ overCap req = toInteger (sum dims) > scanRowCap
 -- line — with the code-6 values derived from the facts when they
 -- ride.
 judged :: String -> RowsReq -> B8.ByteString
-judged proto req = reply proto req (zipWith (grade eff over) classes rows) False
+judged proto req = reply proto req (zipWith (grade eff over) classes rows) moved False
  where
   rp = rulepackOf req
   eff = effective (gradesOf req)
   over = M.fromList [((c, code), (w, f)) | [c, code, w, f] <- overridesOf rp]
   classes = fromMaybe (repeat 0) (rowClassesOf rp)
-  rows = withFacts (namingOf req) (rowsOf req)
+  -- the two derivations that produce EFFECTIVE values, in the order
+  -- they compose: the naming facts settle each code-6 row, then the
+  -- call cycles raise the cognitive rows they contain
+  (rows, moved) = withCycles (callsOf req) (withFacts (namingOf req) (rowsOf req))
 
 -- | The naming table as sent, [] when absent — the cap's view; road
 -- selection stays on namingOf's Maybe.
@@ -94,6 +99,7 @@ violation req =
     [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
     , tableOffence "grade" (take 1) gradeShape (gradesOf req)
     , namingBattery req
+    , callBattery (rowsOf req) (callsOf req)
     , classBattery req
     , fenceOffence (fenceOf req)
     ]
@@ -230,8 +236,8 @@ grade table over cls row = case row of
 -- pair disagrees), `degraded` (which stands alone, the verdict
 -- tooLarge posture: nothing else was judged). A legacy request
 -- keeps its bytes: the same bit, no names.
-reply :: String -> RowsReq -> [Integer] -> Bool -> B8.ByteString
-reply proto req levels degraded =
+reply :: String -> RowsReq -> [Integer] -> [[Integer]] -> Bool -> B8.ByteString
+reply proto req levels moved degraded =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("scan.result" :: String)
@@ -257,6 +263,11 @@ reply proto req levels degraded =
       -- with (3.2.0): the client asserts the round trip; a legacy or
       -- degraded reply keeps its byte shape
       <> ["gradeOverrides" .= overrides | not degraded && not (null overrides)]
+      -- the recursion increment echoes what it raised, and only when
+      -- the arcs rode (6.5.0): [rowIndex, effectiveValue], ascending
+      -- — the measuring side renders the judged number without ever
+      -- deriving the cycle, or the increment, for itself
+      <> ["cocBumped" .= moved | not degraded && isJust (callsOf req)]
  where
   overrides = overridesOf (rulepackOf req)
   count l = length (filter (== l) levels)

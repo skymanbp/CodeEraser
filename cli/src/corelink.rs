@@ -12,18 +12,17 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 6.4.0 = the fence batch (plan v2.18 step #14, piece (b)). verdict/1
-/// gains the provenance table `present` -- the file entities on disk
-/// under the scope that own no continuous row, read with no ignore
-/// file and no exclude because those are the roads being watched --
-/// answered as `ratchet.dropped` with the sixth fail name
-/// `rows_dropped`; class knob code 4 (a CoC-only ratchet allowance);
-/// threshold code 7 `cycleFloor` beside graph/1's `sccFloor` (one
-/// `[graph] scc_floor`, two faces) with `cycleSelfLoops` required at
-/// floor 1. scan/1 gains `knobsFence` (null = unfenced, [current,
-/// recorded] = the two digests) answered by `failed` in canonical
-/// order, and every reply echoes the digest, degraded ones too. A
-/// repo declaring none of it sends no byte and is judged as before.
+/// 6.5.0 = the recursion increment (ADR-008 fourth instalment, plan
+/// v2.23). scan/1 gains `callEdges`: the call arcs this side proved
+/// inside ONE parse unit, as index pairs into `rows` with both ends a
+/// cognitive row and the table strictly ascending. The core finds the
+/// cycles over them and charges every unit in one a flat point (S3776
+/// §1, direct or indirect), then names what it raised in `cocBumped`
+/// as [rowIndex, effectiveValue] -- this side renders that number and
+/// never derives the cycle, or the increment, for itself. A file
+/// whose rows would straddle a chunk is refused rather than split,
+/// because a split loses the arcs that cross the cut. A tree with no
+/// call syntax sends no byte and is judged as before.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else. It used to be mirrored here in English and a third
 /// time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -35,7 +34,7 @@ use std::process::{Child, Stdio};
 /// question, and the ledger has an address. Four entries had stacked
 /// up here by 6.1.0 and pushed the file past its own ratchet: the
 /// ledger that documents a size gate is not exempt from it.
-pub const PROTO: &str = "6.4.0";
+pub const PROTO: &str = "6.5.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

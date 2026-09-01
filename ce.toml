@@ -450,4 +450,14 @@ entry_globs = [
 # type (`pub type Kinds`) removes the repetition itself rather than
 # the budget over it, and repays four rows the run already held:
 # +7 -11 = -4 net, measured on formatted code as the ledger requires.
-budget = 56
+# 56 -> 55 (v2.23 step 4, the recursion increment): the batch spent one
+# row, took it back, and repaid another -- net -1. The row it spent --
+# scan/wire.rs growing a THIRD optional table made its request
+# assembly the same shape as structure/wire.rs's -- was taken back by
+# writing the three as one table of optionals instead of three ifs,
+# so the shape our own tool matched is gone rather than excused. The
+# repayment: ast.rs's `children` and `named_children` differed only
+# in which accessor pair they called, and folded into one `kids`
+# walk. Row set measured against the HEAD worktree; every other
+# difference is a rekey (same pair, lines moved).
+budget = 55

@@ -132,7 +132,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         None => (Vec::new(), Vec::new()),
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let (continuous, judged_loc, classed) = size_facts(root)?;
+    let (continuous, judged_loc, classed) = size_facts(root, &opts.core)?;
     // the provenance table (6.4.0, O40): every file entity on disk
     // under the scope that owns no row this run — the core answers
     // which committed rows they explain (`ratchet.dropped`)
@@ -294,8 +294,8 @@ fn member_set(root: &Path, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) 
 /// collision ensure below is what would have caught the two paths
 /// double-emitting a file. pub: the 3j gate test asserts per-file
 /// coverage through this same throat.
-pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
-    Ok(size_facts(root)?
+pub fn continuous_rows(root: &Path, core: &str) -> Result<Vec<[u64; 3]>> {
+    Ok(size_facts(root, core)?
         .0
         .into_iter()
         .map(|[u, c, v, _]| [u, c, v])
@@ -311,8 +311,14 @@ pub fn continuous_rows(root: &Path) -> Result<Vec<[u64; 3]>> {
 /// fourth column is the file's rulepack class (3.1.0: first declared
 /// match, 0 = none), assigned HERE where the path is still known;
 /// the flag says whether any class was declared at all.
-fn size_facts(root: &Path) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
-    let (config, files) = scan::measure(root)?;
+///
+/// The walk goes through `scan::settle` rather than `scan::measure`
+/// (6.5.0): a function inside a call cycle carries the recursion
+/// increment, and the ratchet's complexity column must record the
+/// same number `ce scan` reports, or one gate would tighten against
+/// a value the other never shows.
+fn size_facts(root: &Path, core: &str) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
+    let scan::Settled { config, files, .. } = scan::settle(root, core)?;
     let classes =
         scan::classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
     // entities are keyed to the PROJECT root (6.4.0, O40): `ce check

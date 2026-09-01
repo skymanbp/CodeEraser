@@ -32,17 +32,20 @@ pub fn with_tree<T>(
     parse_lang(text, lang).map_or_else(Vec::new, extract)
 }
 
+/// One child walk under either accessor — the two spellings below
+/// differed in nothing but which pair they called, and the ratchet
+/// charged for the repetition.
+/// The cast is safe: a single file cannot hold > u32::MAX AST children.
+fn kids<'t>(count: usize, at: impl Fn(u32) -> Option<Node<'t>>) -> Vec<Node<'t>> {
+    (0..count).filter_map(|i| at(i as u32)).collect()
+}
+
 pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
-    // cast is safe: a single file cannot hold > u32::MAX AST children
-    (0..node.child_count())
-        .filter_map(|i| node.child(i as u32))
-        .collect()
+    kids(node.child_count(), |i| node.child(i))
 }
 
 pub fn named_children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
-    (0..node.named_child_count())
-        .filter_map(|i| node.named_child(i as u32))
-        .collect()
+    kids(node.named_child_count(), |i| node.named_child(i))
 }
 
 /// Text of a node's `operator` field, if any (uniform across grammars:

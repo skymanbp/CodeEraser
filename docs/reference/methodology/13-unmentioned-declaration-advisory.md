@@ -206,7 +206,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:115-122](../../../core/app/CE/Graph.hs#L115)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:173-190](../../../contracts/VERSIONING.md#L173)).
+the same with or without them ([VERSIONING.md:182-199](../../../contracts/VERSIONING.md#L182)).
 
 ### 6. Rendering — one home, three faces
 

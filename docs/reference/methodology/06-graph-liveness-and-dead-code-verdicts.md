@@ -155,7 +155,7 @@ deterministic ([Contract.hs:69-91](../../../core/app/CE/Graph/Contract.hs#L69)):
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
   ([Contract.hs:200-208](../../../core/app/CE/Graph/Contract.hs#L200));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Contract.hs:82](../../../core/app/CE/Graph/Contract.hs#L82), [Wire.hs:147-152](../../../core/app/CE/Wire.hs#L147));
+  ([Contract.hs:82](../../../core/app/CE/Graph/Contract.hs#L82), [Wire.hs:152-157](../../../core/app/CE/Wire.hs#L152));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
   ([Contract.hs:83-87](../../../core/app/CE/Graph/Contract.hs#L83),

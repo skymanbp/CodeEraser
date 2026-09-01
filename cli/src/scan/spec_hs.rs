@@ -83,4 +83,7 @@ pub static HASKELL: LangSpec = LangSpec {
     // No receiver syntax: a Haskell equation is not a method.
     call_member_kinds: &[],
     call_self_words: &[],
+    // a class method is a top-level name in Haskell, bare-callable
+    // like any other; the probe finds no member scope to exclude
+    call_member_scopes: &[],
 };

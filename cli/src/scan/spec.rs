@@ -86,6 +86,15 @@ pub struct LangSpec {
     /// Object spellings meaning "the thing I am a method of". Go has
     /// none: its receiver is a binding each method names itself.
     pub call_self_words: Kinds,
+    /// Kinds marking a MEMBER scope — a body holding a type's members
+    /// rather than a plain lexical block. Matched against a callable's
+    /// container AND that container's parent, because the grammars
+    /// split the distinction differently: Rust's `declaration_list` is
+    /// shared by `impl`, `trait` and `mod`, so only the parent tells
+    /// them apart, while TypeScript's `class_body` and `object` say it
+    /// themselves. A bare name never reaches inside one — a method
+    /// answers to a receiver, never to its own name alone.
+    pub call_member_scopes: Kinds,
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -147,6 +156,7 @@ static PYTHON: LangSpec = LangSpec {
     call_name_kinds: &["identifier"],
     call_member_kinds: &["attribute"],
     call_self_words: &["self", "cls"],
+    call_member_scopes: &["class_definition"],
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -200,6 +210,7 @@ static TYPESCRIPT: LangSpec = LangSpec {
     call_name_kinds: &["identifier"],
     call_member_kinds: &["member_expression"],
     call_self_words: &["this"],
+    call_member_scopes: &["class_body", "object"],
 };
 
 static RUST: LangSpec = LangSpec {
@@ -245,6 +256,7 @@ static RUST: LangSpec = LangSpec {
     call_name_kinds: &["identifier"],
     call_member_kinds: &["field_expression", "scoped_identifier"],
     call_self_words: &["self", "Self"],
+    call_member_scopes: &["impl_item", "trait_item"],
 };
 
 static GO: LangSpec = LangSpec {
@@ -290,6 +302,9 @@ static GO: LangSpec = LangSpec {
     call_name_kinds: &["identifier"],
     call_member_kinds: &["selector_expression"],
     call_self_words: &[],
+    // a Go method is declared at the top level and its name carries
+    // the receiver type, so a bare name cannot reach one at all
+    call_member_scopes: &[],
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -312,4 +327,7 @@ static MARKDOWN: LangSpec = LangSpec {
     call_name_kinds: &[],
     call_member_kinds: &[],
     call_self_words: &[],
+    // a Go method is declared at the top level and its name carries
+    // the receiver type, so a bare name cannot reach one at all
+    call_member_scopes: &[],
 };

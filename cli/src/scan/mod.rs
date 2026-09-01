@@ -7,7 +7,9 @@
 
 pub mod ast;
 pub mod calls;
+pub mod chunk;
 pub mod classes;
+pub mod coc;
 pub mod functions;
 pub mod globs;
 pub mod lang;
@@ -71,8 +73,31 @@ type Judged = (
     Vec<String>,
 );
 
-pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
-    let (config, files) = measure(root)?;
+/// A measured tree with the core's verdict on it, and the ONE road a
+/// cognitive value takes: the recursion increment is settled here and
+/// nowhere else, so `rows` below already carry the numbers the core
+/// judged with. `measure` alone still answers the pre-cycle number,
+/// which is exactly what the structure family — the one reader that
+/// never looks at complexity — should keep getting.
+pub struct Settled {
+    pub config: crate::config::Config,
+    pub files: Vec<FileMetrics>,
+    pub classes: classes::Classes,
+    pub rows: Vec<report::Row>,
+    pub grades: Vec<[u64; 3]>,
+    pub row_classes: Vec<u64>,
+    pub overrides: Vec<[u64; 4]>,
+    pub levels: Vec<u8>,
+    pub fail: bool,
+    pub failed: Vec<String>,
+}
+
+pub fn settle(root: &Path, core: &str) -> Result<Settled> {
+    let (config, mut files) = measure(root)?;
+    let blocks = report::blocks_of(&files);
+    // the call table (6.5.0): arcs this side proved inside one parse
+    // unit, projected onto row indices — the core finds the cycles
+    let calls = coc::arcs(&files, &blocks);
     let rows = report::rows_of(&files);
     let grades = wire::grade_rows(&config.thresholds)?;
     // The facts road (2.30.0, ADR-008 slice 14): the fn-naming
@@ -105,19 +130,47 @@ pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
         row_classes: classes.declared().then_some(row_classes.as_slice()),
         overrides: &overrides,
         fence: fence.wire(),
+        blocks: &blocks,
+        calls: &calls,
     };
-    let (levels, fail, failed) = wire::judge(core, &req)?;
-    let findings = report::findings_from(&rows, &levels, &grades, (&row_classes, &overrides));
-    let mirror: Vec<report::Finding> = files
+    let (levels, fail, failed, bumped) = wire::judge(core, &req)?;
+    coc::apply(&mut files, &blocks, &bumped)?;
+    // rebuilt AFTER the increment: these are the values that were
+    // graded, so the report, the mirror and the core read one number
+    let rows = report::rows_of(&files);
+    Ok(Settled {
+        config,
+        files,
+        classes,
+        rows,
+        grades,
+        row_classes,
+        overrides,
+        levels,
+        fail,
+        failed,
+    })
+}
+
+pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
+    let s = settle(root, core)?;
+    let findings = report::findings_from(
+        &s.rows,
+        &s.levels,
+        &s.grades,
+        (&s.row_classes, &s.overrides),
+    );
+    let mirror: Vec<report::Finding> = s
+        .files
         .iter()
-        .flat_map(|f| report::evaluate(f, &classes.thresholds_for(&config, &f.path)))
+        .flat_map(|f| report::evaluate(f, &s.classes.thresholds_for(&s.config, &f.path)))
         .collect();
     anyhow::ensure!(
         findings == mirror,
         "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
     );
-    let summary = report::summarize(&files, &findings);
-    Ok((files, findings, summary, fail, failed))
+    let summary = report::summarize(&s.files, &findings);
+    Ok((s.files, findings, summary, s.fail, s.failed))
 }
 
 /// The scan report as its canonical JSON string (schema §7.1).
@@ -144,6 +197,7 @@ fn measure_file(src: Vec<u8>, path: &Path, root: &Path, language: Lang) -> Resul
         total_lines: metrics::size::total_lines(&src),
         comment_lines: 0,
         functions: Vec::new(),
+        calls: Vec::new(),
     };
     let Some(grammar) = language.grammar() else {
         return Ok(out); // Markdown: size-only per plan §6 M1
@@ -157,17 +211,22 @@ fn measure_file(src: Vec<u8>, path: &Path, root: &Path, language: Lang) -> Resul
         .parse(&src, None)
         .with_context(|| format!("parse {}", path.display()))?;
     out.comment_lines = metrics::size::comment_lines(tree.root_node(), sp);
-    out.functions = measure_functions(tree.root_node(), &src, sp, language);
+    let units = functions::extract(tree.root_node(), &src, sp);
+    out.calls = calls::edges(&units, &src, sp)
+        .into_iter()
+        .map(|(from, to)| (from as u32, to as u32))
+        .collect();
+    out.functions = measure_functions(units, &src, sp, language);
     Ok(out)
 }
 
 fn measure_functions(
-    root: tree_sitter::Node<'_>,
+    units: Vec<functions::FnUnit<'_>>,
     src: &[u8],
     sp: &spec::LangSpec,
     language: Lang,
 ) -> Vec<FnMetrics> {
-    functions::extract(root, src, sp)
+    units
         .into_iter()
         .map(|unit| {
             let cog = metrics::cognitive::measure(unit.node, src, sp);

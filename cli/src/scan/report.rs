@@ -48,6 +48,23 @@ pub struct Row {
     pub subject: String,
 }
 
+/// Metric codes a function answers for — 1..=6, the length of the
+/// list below. The row arithmetic every other reader does (which row
+/// is this function's cognitive one) is this number's, so it is
+/// declared once, here, beside the walk that lays the rows out.
+pub const FN_CODES: usize = 6;
+
+/// Each file's row count: its own row plus its functions' — the
+/// block a chunk boundary must respect, because a call arc never
+/// leaves the file that minted it. Owned by rows_of's neighbour,
+/// since rows_of is the row order's author.
+pub fn blocks_of(files: &[FileMetrics]) -> Vec<usize> {
+    files
+        .iter()
+        .map(|f| 1 + FN_CODES * f.functions.len())
+        .collect()
+}
+
 /// Every (subject, metric) measurement in report order — the file
 /// row first, then each function's six metric rows: the SAME order
 /// and vocabulary evaluate() walks, so the whole-report mirror
@@ -76,7 +93,7 @@ pub fn rows_of(files: &[FileMetrics]) -> Vec<Row> {
 /// rows_of and evaluate both walk (naming is boolean: 1 = one
 /// non-conforming name). The registry was spelled three ways in this
 /// file until the v2.18 survey folded it.
-fn fn_values(f: &FnMetrics) -> [usize; 6] {
+fn fn_values(f: &FnMetrics) -> [usize; FN_CODES] {
     [
         f.lines,
         f.params,
