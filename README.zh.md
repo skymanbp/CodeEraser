@@ -93,7 +93,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | p50 ms | 1323 | 1024 | 4654 | 405 | 850 | 51 | 606 |
 | p95 ms | 1348 | 2311 | 4770 | 417 | 855 | 57 | 2633 |
 
-所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
+所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.5.0 该有自己的行，而全序列重跑在打 tag 之后，尚未落表。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->
 
 延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)），渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
