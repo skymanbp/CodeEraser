@@ -7,10 +7,15 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
-## [Unreleased]
+## [v1.4.0] — 2026-08-31 — 递归增量：环内每个函数 +1
 
-**无默认档位变更；判决语义零变动，生产二进制字节无关**（改动全在
-`#[cfg(test)]` 可达的反事实通道与测试本身）。v1.3.2 发版夜挂账的 Windows
+**无默认档位变更；判决语义有变——分数与 1.3.x 不可比。** 认知复杂度补上
+S3776 的递归增量（p.8 / Appendix B1：环内每个函数 +1，直接与间接同价），
+所以任何含递归的仓库分数都会动；本仓自身实测 27 个函数各 +1，而 `ce check`
+恰好仍是 953。wire `scan/1` 加性升到 **6.5.0**。以下按落码顺序。
+
+**先是一条测试面的修**（改动全在 `#[cfg(test)]` 可达的反事实通道与测试本身）：
+v1.3.2 发版夜挂账的 Windows
 守时 flake（`an_inert_canceller_leaves_the_worker_parked_and_counted`，CI
 elapsed 1.306 s < 2.8 s，本地 30 次未复现）已根修。机制：负载下 worker 线程
 在 spawn 与 `register` 之间停滞逾 300 ms，deadline 先落 `cancelled` 旗，而
