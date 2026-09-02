@@ -130,15 +130,15 @@ note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim
 </div>
 
 <!-- bench:begin -->
-<h2>Measured · v1.4.1</h2>
+<h2>Measured · v1.5.1</h2>
 <div class="installs">
-<div class="install metric"><span class="k">hook probe p50 (two-file fixture)</span><code>51 ms</code></div>
-<div class="install metric"><span class="k">full scan p50</span><code>606 ms</code></div>
-<div class="install metric"><span class="k">incremental index p50 (warm, dedup_warm)</span><code>405 ms</code></div>
+<div class="install metric"><span class="k">hook probe p50 (two-file fixture)</span><code>44 ms</code></div>
+<div class="install metric"><span class="k">full scan p50</span><code>612 ms</code></div>
+<div class="install metric"><span class="k">incremental index p50 (warm, dedup_warm)</span><code>400 ms</code></div>
 <div class="install metric"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits</code></div>
 <div class="install metric"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%)</code></div>
 </div>
-<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs and bench_backfill.rs) from one source, contracts/bench/bench.json — never hand-filled. The current release, v1.5.1, earns a row and does not have one yet: the whole series is replayed in one sitting after the tag.</p>
+<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs and bench_backfill.rs) from one source, contracts/bench/bench.json — never hand-filled.</p>
 <!-- bench:end -->
 <p><a href="/bench/">Complete evaluation dashboard →</a></p>
 

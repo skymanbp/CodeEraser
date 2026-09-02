@@ -16,7 +16,7 @@ Long-lived LLM-assisted codebases drift the same way: the same function implemen
 
 ![How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows and the reference graph; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase — one wire family per row; the gate and the per-family reports deliver the verdicts](docs/assets/judgment.en.svg)
 
-- **Interception at the instant of writing.** Every file's normalized tokens (identifiers → `ID`, literals → `LIT`, comments dropped) are winnowed with k = 25, w = 26, so any shared run of 50+ tokens is guaranteed a shared fingerprint. The fingerprints live in a SQLite WAL index kept by a lazy per-project daemon; the PreToolUse probe answers in <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->51<!--/ce--> ms p50 / <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->57<!--/ce--> ms p95 on a two-file fixture, and the whole plugin chain in 0.50 s p95. The guard charges only *novel* duplication: matches the replaced content already carried are subtracted, so on the live-stream reading it misfires on none of 719 production probes (0.00 per 500); the 2,761-event replay's full-file-write reading charges the 32 split-a-file intermediate states at 7.03 per 500 — both readings are ledgered in [FPR-REPLAY](docs/FPR-REPLAY.md).
+- **Interception at the instant of writing.** Every file's normalized tokens (identifiers → `ID`, literals → `LIT`, comments dropped) are winnowed with k = 25, w = 26, so any shared run of 50+ tokens is guaranteed a shared fingerprint. The fingerprints live in a SQLite WAL index kept by a lazy per-project daemon; the PreToolUse probe answers in <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->44<!--/ce--> ms p50 / <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->48<!--/ce--> ms p95 on a two-file fixture, and the whole plugin chain in 0.50 s p95. The guard charges only *novel* duplication: matches the replaced content already carried are subtracted, so on the live-stream reading it misfires on none of 719 production probes (0.00 per 500); the 2,761-event replay's full-file-write reading charges the 32 split-a-file intermediate states at 7.03 per 500 — both readings are ledgered in [FPR-REPLAY](docs/FPR-REPLAY.md).
 - **Two clone layers, one verdict owner.** T1/T2 is the hot path above. T3 is a cold path: structural fingerprints and MinHash/LSH (128 permutations, 32 bands × 4 rows) generate candidates without dropping a pair that could pass, and the Haskell core computes Zhang–Shasha tree edit distance and accepts at TSED ≥ 0.85, in exact integer arithmetic.
 - **Documentation duplication that survives rewording.** NFC-normalized words, 5-word shingles, MinHash/LSH candidates, then an exact Jaccard ≥ 0.80 or a 50-word verbatim run, judged in the core with exact rationals.
 - **Liveness that is named, not guessed.** Per-language resolution ladders (imports, re-exports, doc links, assets, package roots) feed a rung-filtered graph; SCCs, reachability from entry roots and a four-way verdict (unreferenced/unreachable × private/public) come back with a confidence code derived from the unresolved-site ledger. Beside it, the mention universe — every identifier in every text file, stored only as fnv1a64 hashes — yields the *unmentioned declaration* advisory, which never turns a gate red.
@@ -86,14 +86,14 @@ scanned 9 files / 19 functions — 1 warn, 1 fail -> FAIL (failed: hard_line)
 <!-- vignettes:end -->
 
 <!-- bench:begin -->
-### Latency · v1.4.1
+### Latency · v1.5.1
 
 | percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 1323 | 1024 | 4654 | 405 | 850 | 51 | 606 |
-| p95 ms | 1348 | 2311 | 4770 | 417 | 855 | 57 | 2633 |
+| p50 ms | 1353 | 1049 | 4247 | 400 | 879 | 44 | 612 |
+| p95 ms | 1395 | 2234 | 4290 | 435 | 944 | 48 | 2460 |
 
-Every value is generated from `contracts/bench/bench.json`; the test rejects hand edits to this block. The current release, v1.5.1, earns a row and does not have one yet: the whole series is replayed in one sitting after the tag. [Full replay notes and per-version series](docs/BENCH.md) · [Complete website dashboard](https://codeeraser.dev/bench/)
+Every value is generated from `contracts/bench/bench.json`; the test rejects hand edits to this block. [Full replay notes and per-version series](docs/BENCH.md) · [Complete website dashboard](https://codeeraser.dev/bench/)
 <!-- bench:end -->
 
 Latency rows are release-build replays on one fixed host, comparable version to version only. The precision and recall points are frozen with their evaluation ledgers ([EVAL-SET](docs/EVAL-SET.md)) and rendered on [BENCH](docs/BENCH.md); comparators (jscpd, similarity-*) are named with the exact version measured.
