@@ -177,8 +177,8 @@ exportVisBit = 0
 -- | Which node FLAG bit an export surface sets: bit 0, the
 -- public/private axis Dead.deadTable has always split on and that no
 -- producer could ever set — entry standing is measured per file, and
--- "bit 0 stays unset at file granularity, public-ness is a symbol
--- fact" is what cli/src/graph/deadcode/flags.rs:9 says. With the
+-- "bit 0 is not a file fact — public-ness is a symbol fact" is what
+-- cli/src/graph/deadcode/flags.rs:9 `symbol fact` says. With the
 -- symbols table riding, a file that declares an exported symbol
 -- finally carries it, so verdict codes 2 and 4 (unref_public,
 -- unreach_public) become reachable for the first time. It is

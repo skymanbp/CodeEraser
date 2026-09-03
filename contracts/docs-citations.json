@@ -1908,7 +1908,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|080a01bb1dcd5a4a|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 58,
+    "line": 59,
     "text": "fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1346a67d5862dd19|0": {
@@ -1919,50 +1919,50 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|15ed3284af3f4c03|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 87,
-    "end": 94,
+    "line": 88,
+    "end": 95,
     "text": "fn visible(line: &str, mask: &[bool]) -> String {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 183,
-    "end": 199,
+    "line": 184,
+    "end": 200,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|3633378bbdbc1b93|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 68,
-    "end": 70,
+    "line": 69,
+    "end": 71,
     "text": "if !cur.is_empty() && no != last + 1 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|596723b90d527bf0|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 170,
-    "end": 178,
+    "line": 171,
+    "end": 179,
     "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b623f07650ed2a1f|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 120,
-    "end": 126,
+    "line": 121,
+    "end": 127,
     "text": "fn bare_marker(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b66256554ecf30f7|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 101,
-    "end": 107,
+    "line": 102,
+    "end": 108,
     "text": "fn paragraph_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|ce98856effa52be8|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 142,
-    "end": 165,
+    "line": 143,
+    "end": 166,
     "text": "fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|dc27f70bed6c0773|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 112,
-    "end": 118,
+    "line": 113,
+    "end": 119,
     "text": "fn html_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/shingle.rs|81495f633501e11c|0": {

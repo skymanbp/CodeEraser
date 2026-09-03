@@ -50,7 +50,8 @@ fn serve_stream(root: &Path, mut input: impl BufRead, out: &mut impl Write) -> R
         // byte as an InvalidData error that `?` propagated, so a single
         // bad byte on stdin killed the whole server. A malformed frame is
         // the same 坏行 class as bad JSON — answer it, keep serving; the
-        // daemon transport already ruled this way (conn.rs:35).
+        // daemon transport already ruled this way
+        // (daemon/server/conn.rs:46-51 `坏行`).
         let decoded = String::from_utf8_lossy(&buf);
         let line = decoded.trim();
         if line.is_empty() {

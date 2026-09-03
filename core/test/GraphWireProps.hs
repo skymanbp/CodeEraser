@@ -132,7 +132,8 @@ unresRefused =
 -- The symbols table only moves node 0's CODE from 1 (unref_private)
 -- to 2 (unref_public) — a pair that had NO producer before this
 -- minor, because bit 0 is never set at file granularity
--- (cli/src/graph/deadcode/flags.rs:9). A visibility word without the
+-- (cli/src/graph/deadcode/flags.rs:9 `symbol fact`). A visibility word
+-- without the
 -- export bit names no surface, so it moves nothing.
 exportRides :: Bool
 exportRides =

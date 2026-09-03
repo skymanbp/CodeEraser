@@ -32,7 +32,8 @@ pub struct RawSeg {
 /// Md extraction's visibility ledger — two different fates. `html`
 /// lines are SHED (markup never reaches a segment); `indented` lines
 /// are counted but KEPT: indented code is deliberately not modeled
-/// (block context is list-sensitive — graph/md.rs:14-16), so those
+/// (block context is list-sensitive — graph/md.rs:14-16 `list context`),
+/// so those
 /// lines stay prose and this count keeps that approximation visible
 /// instead of silent (2026-08-14 attainment-line-B amendment, ccm
 /// #842).

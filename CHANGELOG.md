@@ -7,6 +7,25 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
+## [Unreleased]
+
+**无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：
+- **bench 全序列在同一机器状态落表**：17 tag × 7 = 119 行；v1.4.1 / v1.5.0 / v1.5.1 各经
+  `CE_BENCH_TAGS` 单 tag 重量（另一会话的 AutoShade 测试与前台游戏抢核，v1.5.1 量八次取一）；
+  那次坐下跨了 UTC 午夜、28 行日期不同，而表头「每行同一个测量日期」此前没有执行者——`bench_render.rs`
+  新增 `every_row_shares_one_measured_date` 门，并趁重启后的安静窗口把整条 17-tag 序列同一次坐下重量（UTC 09-03）。
+- **ADR-006 具名重立账**，超容差上升的文件（旧→新行）：07b9155 三个序列多两版本的生成件
+  `docs/BENCH.md` 169→183、`site/bench/index.html` 187→200、`site/zh/bench/index.html` 186→199；
+  本批子仓 `it/bench_render.rs` 247→266（那条门与表头改句），主仓 `CHANGELOG.md` 637→656（本节两条）。
+- **收尾清点（70-agent 九切面只读清点 + 逐条双人反驳核验，仓内确认项全落）**：`memory/` 改名 `.ccm/` 后
+  计划书 :4 / :291 散文里的旧路径就地改；归档册两条根相对链接改为相对 docs/，归档册入冻结集
+  （`frozen_set.rs` + 引文豁免表）；册 06 角色表 `deadcode.rs:296-300` 重瞄 `304-307, 325-326`；
+  **`source_citations.rs` 只认 `.md:` 目标却自称「整个总体」**——拓宽到注释行里的 `.rs:` / `.hs:`，
+  走遍 core/app、core/test、gui/src-tauri/src，扫描器拆入 `source_citations_parts/`；三处漂移引文重瞄
+  （`ladder/md.rs:75→86`、`conn.rs:35→daemon/server/conn.rs:46-51`、`flags.rs:9` 两处引语按现文重引）
+  并全部补锚文本，册 03 因 segments.rs 多一行位移的九条引文重渲染；`docs/assets/gui-structure.png`
+  无读者删除（站点副本由 `shoot_gui.js` 生成并有 `site_screenshots` 门）。
+
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 
 **无默认档位变更。** v1.5.0 发布后的收尾维护批（计划 v2.25 修正案，2026-09-01）：

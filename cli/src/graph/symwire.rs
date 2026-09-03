@@ -19,8 +19,8 @@
 //! What the core does with it (CE.Graph.effectiveFlags): a node named
 //! here as exporting something carries flag bit 0, the public/private
 //! axis Dead.deadTable has always split on and that no producer could
-//! set — "bit 0 stays unset at file granularity, public-ness is a
-//! symbol fact" (deadcode/flags.rs:9). So verdict codes 2 and 4,
+//! set — "bit 0 is not a file fact — public-ness is a symbol fact"
+//! (deadcode/flags.rs:9 `symbol fact`). So verdict codes 2 and 4,
 //! unref_public and unreach_public, become reachable for the first
 //! time since 2.28.0. The bit is deliberately outside entryMask: an
 //! export surface is a verdict axis, never an entry claim (RG10), so

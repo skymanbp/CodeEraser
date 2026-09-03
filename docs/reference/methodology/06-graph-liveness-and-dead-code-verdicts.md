@@ -235,7 +235,7 @@ role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
         through each stanza's source roots                          [targets.rs:18-35, 41-73; cabal.rs:91-116]
 role 7  a declared submodule's node (index `files.owner` = 1; a
         package or section under a foreign file's path), sent ALONE
-        — no other role is measured on a reader                     [flags.rs:31; deadcode.rs:296-300; nodes.rs:32-77]
+        — no other role is measured on a reader                     [flags.rs:31; deadcode.rs:304-307, 325-326; nodes.rs:32-77]
 ```
 
 ([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
