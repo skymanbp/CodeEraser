@@ -6,8 +6,30 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
+    "ts_ms": 0
+  },
+  {
+    "erased": 5,
+    "erased_hashes": [
+      11891235285474208685,
+      9189746967005824922,
+      5853010229714592665,
+      12467694635301975324,
+      11808070890281293351
+    ],
+    "event": "tombstone",
+    "exempt": [],
+    "file": "<file>",
+    "label": 0,
+    "mode": "observe",
+    "prose": 0,
+    "rev": 1,
+    "schema": "ce.observe/0.8.0",
+    "session_erased": 0,
+    "session_id": "t",
+    "sites": [],
     "ts_ms": 0
   },
   {
@@ -17,7 +39,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -26,8 +48,36 @@
     "file": "<file>",
     "mode": "observe",
     "resulting_lines": 751,
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
+    "ts_ms": 0
+  },
+  {
+    "erased": 11,
+    "erased_hashes": [
+      8095481971928999360,
+      11891235285474208685,
+      2214555572463777371,
+      9189746967005824922,
+      3089943341986682694,
+      8506593440268130132,
+      5853010229714592665,
+      3300820206774538237,
+      12467694635301975324,
+      8999596768310594794,
+      11808070890281293351
+    ],
+    "event": "tombstone",
+    "exempt": [],
+    "file": "<file>",
+    "label": 0,
+    "mode": "observe",
+    "prose": 0,
+    "rev": 1,
+    "schema": "ce.observe/0.8.0",
+    "session_erased": 5,
+    "session_id": "t",
+    "sites": [],
     "ts_ms": 0
   },
   {
@@ -37,7 +87,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -47,11 +97,39 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 400,
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
     "soft": 300,
     "ts_ms": 0,
     "zone_permille": 222
+  },
+  {
+    "erased": 11,
+    "erased_hashes": [
+      8095481971928999360,
+      11891235285474208685,
+      2214555572463777371,
+      9189746967005824922,
+      3089943341986682694,
+      8506593440268130132,
+      5853010229714592665,
+      3300820206774538237,
+      12467694635301975324,
+      8999596768310594794,
+      11808070890281293351
+    ],
+    "event": "tombstone",
+    "exempt": [],
+    "file": "<file>",
+    "label": 0,
+    "mode": "observe",
+    "prose": 0,
+    "rev": 1,
+    "schema": "ce.observe/0.8.0",
+    "session_erased": 11,
+    "session_id": "t",
+    "sites": [],
+    "ts_ms": 0
   },
   {
     "degraded": false,
@@ -60,7 +138,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
     "ts_ms": 0
   },
@@ -70,12 +148,82 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 600,
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
     "soft": 300,
     "ts_ms": 0,
     "zone_permille": 666,
     "zone_tier": "warn"
+  },
+  {
+    "erased": 11,
+    "erased_hashes": [
+      8095481971928999360,
+      11891235285474208685,
+      2214555572463777371,
+      9189746967005824922,
+      3089943341986682694,
+      8506593440268130132,
+      5853010229714592665,
+      3300820206774538237,
+      12467694635301975324,
+      8999596768310594794,
+      11808070890281293351
+    ],
+    "event": "tombstone",
+    "exempt": [],
+    "file": "<file>",
+    "label": 0,
+    "mode": "observe",
+    "prose": 0,
+    "rev": 1,
+    "schema": "ce.observe/0.8.0",
+    "session_erased": 11,
+    "session_id": "t",
+    "sites": [],
+    "ts_ms": 0
+  },
+  {
+    "degraded": false,
+    "elapsed_ms": 0,
+    "event": "probe",
+    "file": "<file>",
+    "matches": 0,
+    "mode": "observe",
+    "schema": "ce.observe/0.8.0",
+    "session_id": "t",
+    "ts_ms": 0
+  },
+  {
+    "erased": 11,
+    "erased_hashes": [
+      8095481971928999360,
+      11891231986939324052,
+      2214555572463777371,
+      9189745867494196711,
+      3089943341986682694,
+      8506593440268130132,
+      5853006931179708032,
+      3300820206774538237,
+      12467697933836859957,
+      8999596768310594794,
+      11808071989792921562
+    ],
+    "event": "tombstone",
+    "exempt": [],
+    "file": "<file>",
+    "label": 1,
+    "mode": "observe",
+    "prose": 1,
+    "rev": 1,
+    "schema": "ce.observe/0.8.0",
+    "session_erased": 11,
+    "session_id": "t",
+    "sites": [
+      "a.rs:2 bare",
+      "a.rs:1 prose"
+    ],
+    "ts_ms": 0
   },
   {
     "changed_files": 1,
@@ -87,8 +235,16 @@
     },
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": "t",
+    "tombstone": {
+      "erased": 0,
+      "exempt": [],
+      "label": 0,
+      "prose": 0,
+      "rev": 1,
+      "sites": []
+    },
     "ts_ms": 0
   },
   {
@@ -98,8 +254,16 @@
     "event": "precommit",
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.7.0",
+    "schema": "ce.observe/0.8.0",
     "session_id": null,
+    "tombstone": {
+      "erased": 0,
+      "exempt": [],
+      "label": 0,
+      "prose": 0,
+      "rev": 1,
+      "sites": []
+    },
     "ts_ms": 0
   }
 ]

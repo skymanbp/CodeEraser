@@ -53,16 +53,16 @@
     },
     {
       "bands": {
-        "below_floor": 2,
-        "l": 0,
-        "m": 9,
-        "s": 4
+        "below_floor": 9,
+        "l": 1,
+        "m": 6,
+        "s": 3
       },
       "lang": "rs",
       "path": "cli/src/audit.rs",
-      "sha256": "98624ecda3af7d3097f8c09ee8db95fc24e657e0b8991655e5b4829017aea4c5",
-      "symbols": 15,
-      "units": 15
+      "sha256": "7c693d75c8b276642054dec0a07f951745168c858391d7e45b0663aa2a77dd1f",
+      "symbols": 19,
+      "units": 19
     },
     {
       "bands": {
@@ -255,7 +255,7 @@
       },
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "e8dc7f261598108bc21fc0f5a6740f48f75ea37eba96f93546b85e3c69efd9d0",
+      "sha256": "90ce5c36b63fc71129c60aac3120e0a3644ea48c6f54dc828a45dca658a37bc9",
       "symbols": 13,
       "units": 13
     },
@@ -326,14 +326,14 @@
     },
     {
       "bands": {
-        "below_floor": 6,
+        "below_floor": 7,
         "l": 2,
-        "m": 4,
+        "m": 3,
         "s": 8
       },
       "lang": "rs",
       "path": "cli/src/fourclass/session.rs",
-      "sha256": "340836e861ac31ba7f920b9812b411013139c3401cb3635d0d706739fe65eb7a",
+      "sha256": "aaa3d6313e42097a34ebb3cf63e48818eeb851888b43054e4c3fdcfbb8377eb7",
       "symbols": 20,
       "units": 20
     },
@@ -430,16 +430,16 @@
     },
     {
       "bands": {
-        "below_floor": 3,
+        "below_floor": 9,
         "l": 1,
-        "m": 7,
-        "s": 5
+        "m": 8,
+        "s": 8
       },
       "lang": "rs",
       "path": "cli/src/guard.rs",
-      "sha256": "48784e4dbfabd40222cd8a288c67c8fbeea862fc56ca606a2051c22214f94178",
-      "symbols": 16,
-      "units": 16
+      "sha256": "4fc09f36ee187f6ec5151f9444ad606dedbe2d4f9d4f04d6e2155ec47948a60f",
+      "symbols": 26,
+      "units": 26
     },
     {
       "bands": {
@@ -456,29 +456,29 @@
     },
     {
       "bands": {
-        "below_floor": 3,
+        "below_floor": 12,
         "l": 1,
-        "m": 1,
-        "s": 0
+        "m": 7,
+        "s": 5
       },
       "lang": "rs",
       "path": "cli/src/hookio.rs",
-      "sha256": "9e4e4cf309604f8d705c0ec858e2227fb1d39d3dfc9bb7521d5861491a86cffe",
-      "symbols": 5,
-      "units": 5
+      "sha256": "b97834a91743dcdccb1be5e88618c1415c491842ebbf29e6f62e31054bf42c7e",
+      "symbols": 25,
+      "units": 25
     },
     {
       "bands": {
-        "below_floor": 13,
+        "below_floor": 34,
         "l": 0,
         "m": 0,
         "s": 0
       },
       "lang": "rs",
       "path": "cli/src/lib.rs",
-      "sha256": "852a758ac265ebf49abc1f0c8f55ab323eb25471484174b6fc617522aebbf62e",
-      "symbols": 13,
-      "units": 13
+      "sha256": "734ea738e0605bcd8f39bb71e69baa4cbd154903221a295a0079c2ca09b721b0",
+      "symbols": 34,
+      "units": 34
     },
     {
       "bands": {
@@ -1880,10 +1880,10 @@
       "py/l": 15,
       "py/m": 49,
       "py/s": 41,
-      "rs/below_floor": 580,
-      "rs/l": 131,
-      "rs/m": 503,
-      "rs/s": 599,
+      "rs/below_floor": 624,
+      "rs/l": 132,
+      "rs/m": 506,
+      "rs/s": 606,
       "ts/below_floor": 12,
       "ts/l": 6,
       "ts/m": 1,
@@ -1894,16 +1894,16 @@
       "go": 59,
       "md": 127,
       "py": 126,
-      "rs": 1813,
+      "rs": 1868,
       "ts": 26
     },
-    "total_symbols": 2151,
-    "total_units": 2024,
+    "total_symbols": 2206,
+    "total_units": 2079,
     "units_by": {
       "go": 59,
       "md": 0,
       "py": 126,
-      "rs": 1813,
+      "rs": 1868,
       "ts": 26
     }
   }

@@ -26,6 +26,28 @@
   并全部补锚文本，册 03 因 segments.rs 多一行位移的九条引文重渲染；`docs/assets/gui-structure.png`
   无读者删除（站点副本由 `shoot_gui.js` 生成并有 `site_screenshots` 门）。
 
+**无默认档位变更。** 计划 v2.26 第一段（2026-09-04；用户三裁：分两段先量 FPR / 出处叙事算残留但 changelog
+定位的文档豁免 / 命名 `tombstone`）——**墓碑残留只度量、不判决、零面变化**：
+- **feed schema `ce.observe/0.7.0` → 0.8.0（具名断点）**：PreToolUse 新事件 `tombstone`（仅当本次删了名字
+  或命中时写，带 `erased_hashes` / `session_erased`，名字只以 fnv1a64 键出现）；Stop / precommit 行加性对象
+  `tombstone`（`label` / `prose` / `erased` / `exempt` / `sites`，站点只写 `file:line kind`）；golden 重 bless，
+  `plugin/README.md` feed 段与册 11 同步；precommit 命中时多印一行人读摘要，任何档位不阻断。
+- **度量层 `cli/src/tombstone/`**（frames / names / marked / surfaces / role / texts / mod）：名字只出自结构位
+  （非注释行且字面量之外的标识符 + 单元名、md 标题与列表首词；内联代码跨度只保活不声明），框架窗口两侧对称
+  不成名，标记与名字的合取以句为单位、只读新增行，changelog 定位（路径或版本台账形）整文豁免并入账。
+- **FPR 回放仪器** `it/tombstone_replay.rs`（`#[ignore]`，git 历史驱动，`CE_TOMBSTONE_REPO` / `_LIMIT`）+ 新册
+  `docs/FPR-TOMBSTONE.md`：六轮各修一类定义缺陷（自仓命中提交 123 → 68 → 64 → 11 → 7 → 7，requests
+  1 → 1 → 0 → 0 → 0 → 0）；终轮 9 处逐条仲裁 = 真阳 6 / 中间态 3（全是计划书横幅）/ 误报 0；门 ≤ 1 % 达成
+  （requests 0/400，自仓 3/530 = 0.57 %；把真阳也当误报的保守读法 1.32 % 单独超线，如实写明）。
+- **Stop 腿代价**（PERF-BUDGET.md v2.26 节）：干净树与 HEAD 二进制打平（0.580 vs 0.592 s）；27 文件改动树
+  +0.65 s、72 % 是两个 git spawn；首测多付的 `rev-parse --show-prefix` 改 `HEAD:./path` 消掉，零改动不再配对。
+- **十九条夹具全落测试**：`it/tombstone_guard.rs` 8 腿、`it/tombstone_audit.rs` 5 腿、`unit/tombstone/` 44 腿；
+  `ce:allow(tombstone)` 刻意不接线；feed 站点串在测试里由部件拼出（字面 `file:line` 会被引文门当成引文）。
+- **ADR-006 具名重立账**（旧→新行）：主仓 `hookio.rs` 248→260（schema 0.8.0 头注）、`proc.rs` 55→79
+  （`git_feed`：一次 `cat-file --batch`）、`fourclass/session.rs` 156→169（`scoped_pairs`）、
+  `docs/PERF-BUDGET.md` 296→317（v2.26 A/B 节）、`CHANGELOG.md` 656→678（本节）；软线 372→370 随重立挪动；
+  子仓无超容差文件（两条 discrete 行随克隆消除退场）；册 13 自仓普查行由其腿重取（U 843→864、顾问行仍 0：`STOP_EN` 改私有、`Marked` 由读者拼写）；三份自仓冻结切片六行按名改签，t3 候选册 rs 准入 1233→1244 随之手改同增。
+
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 
 **无默认档位变更。** v1.5.0 发布后的收尾维护批（计划 v2.25 修正案，2026-09-01）：

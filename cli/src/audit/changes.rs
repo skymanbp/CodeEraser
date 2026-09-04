@@ -21,14 +21,7 @@
 //!   * rows — a rename is ONE column, `old => new`; `--no-renames`
 //!     splits it into rows whose paths are real.
 
-use std::io::Read as _;
 use std::path::Path;
-
-/// Files above this count 0 lines (still entering the changed set —
-/// the numstat `-` stance for binaries). The untracked leg READS to
-/// count, so an unbounded read is an availability hole, not just
-/// slowness: a stray 2 GB csv measured 1.96 GB RSS on a Stop.
-const READ_CAP: u64 = 4 << 20;
 
 /// Paths ce owns rather than judges: its own state directory, at ANY
 /// depth (a vendored subpackage carries `vendor/pkg/.ce/`). Both legs
@@ -169,26 +162,12 @@ pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)>
 }
 
 /// Lines of a file ce would index, 0 for anything unreadable, binary,
-/// or past the read cap — the numstat `-` stance, applied to a leg
-/// that has to open the file to know.
-///
-/// The cap is enforced by the READ, not by a metadata check beforehand:
-/// a stat-then-read pair is a race a growing file wins (and a symlink
-/// or /dev/zero has no useful size at all), so the reader itself is
-/// bounded and an over-cap file counts 0 rather than being trusted.
+/// or past the read cap (a stray 2 GB csv measured 1.96 GB RSS on a
+/// Stop) — the numstat `-` stance, applied to a leg that has to open
+/// the file to know. The bounded reader is the tombstone leg's
+/// (tombstone::texts::read_capped): one reader, one cap.
 fn line_count(path: &Path) -> i64 {
-    let Ok(file) = std::fs::File::open(path) else {
-        return 0;
-    };
-    let mut buf = Vec::new();
-    // cap + 1: reading one byte past tells us it was truncated
-    if file.take(READ_CAP + 1).read_to_end(&mut buf).is_err() || buf.len() as u64 > READ_CAP {
-        return 0;
-    }
-    match String::from_utf8(buf) {
-        Ok(text) => text.lines().count() as i64,
-        Err(_) => 0, // binary: counted as a changed file, zero lines
-    }
+    crate::tombstone::texts::read_capped(path).map_or(0, |text| text.lines().count() as i64)
 }
 
 #[cfg(test)]

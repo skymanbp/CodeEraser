@@ -11,6 +11,7 @@
 
 mod changes;
 mod observe;
+mod tombstone;
 mod verdict;
 
 use crate::config::Config;
@@ -75,33 +76,36 @@ pub fn run_hook() -> ExitCode {
 
 /// Shared head of the Stop audit and the pre-commit gate: guard mode,
 /// numstat over `diff`, the core's touched-duplicate verdict (None =
-/// degraded, A9f) and the `event`-stamped observe entry (precommit
-/// must not masquerade as a Stop audit). Outer None = git could not
-/// answer: fail open.
-type Gathered = (String, i64, Vec<String>, Option<verdict::Verdict>);
-fn gather(
-    root: &Path,
-    diff_tail: &[&str],
-    event: &str,
-    session: Option<&str>,
-    fourclass: Option<serde_json::Value>,
-) -> Option<Gathered> {
+/// degraded, A9f), the two informational reports (four-class is a
+/// Stop concern; tombstone rides both legs) and the `event`-stamped
+/// observe entry (precommit must not masquerade as a Stop audit).
+/// Outer None = git could not answer: fail open.
+type Gathered = (
+    String,
+    i64,
+    Vec<String>,
+    Option<verdict::Verdict>,
+    Option<serde_json::Value>,
+);
+fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -> Option<Gathered> {
     // ONE load: tier rendering and the exclusion list both need it,
     // and a broken ce.toml must name itself (config::tier_of).
     let loaded = Config::load(root);
     // The audit class is not §4.2-promoted: unset mode stays observe.
     let mode = crate::config::tier_of(&loaded, "observe");
     let (mut net_loc, mut changed) = changes::diff(root, diff_tail)?;
+    let mut untracked = Vec::new();
     if event == "stop_audit" {
         // §4.2 promises the Stop audit covers Bash writes, but `git
         // diff` cannot see a brand-new untracked file — the stop path
         // merges them in; precommit stays staged-only by design.
         let excludes = loaded.map(|c| c.exclude).unwrap_or_default();
-        if let Some((n, mut files)) = changes::untracked(root, &excludes) {
+        if let Some((n, files)) = changes::untracked(root, &excludes) {
             net_loc += n;
-            changed.append(&mut files);
+            untracked = files;
         }
     }
+    changed.extend_from_slice(&untracked);
     // nothing changed = judged clean without a spawn (INFORMATION
     // never pays; the enforcement leg pays only when there is
     // something to enforce)
@@ -114,6 +118,14 @@ fn gather(
     } else {
         verdict::judge(root, &changed)
     };
+    let fourclass = (event == "stop_audit").then(|| fourclass_report(root));
+    // the same stance for the tombstone leg: no judged file changed =
+    // nothing to pair, measured zero without its diff spawn
+    let tombstone = if changed.is_empty() {
+        Some(tombstone::nothing())
+    } else {
+        tombstone::report(root, event, &untracked)
+    };
     observe_log(
         root,
         AuditEvent {
@@ -124,11 +136,12 @@ fn gather(
             changed: changed.len(),
             dups: dups.as_ref().map(|v| v.dups),
             fourclass,
+            tombstone: tombstone.clone(),
             skipped: None, // this leg MEASURED — see AuditEvent::skipped
             unmeasured: crate::gitmodules::unseated(root),
         },
     );
-    Some((mode, net_loc, changed, dups))
+    Some((mode, net_loc, changed, dups, tombstone))
 }
 
 /// One project's Stop audit: its observe line always, and the block
@@ -140,13 +153,9 @@ fn audit(root: &Path, session: &str) -> Option<String> {
         unmeasured_stop(root, session, Some("no_git"));
         return None;
     };
-    let Some((mode, net_loc, _, dups)) = gather(
-        root,
-        &[base.as_str()],
-        "stop_audit",
-        Some(session),
-        Some(fourclass_report(root)),
-    ) else {
+    let Some((mode, net_loc, _, dups, _)) =
+        gather(root, &[base.as_str()], "stop_audit", Some(session))
+    else {
         unmeasured_stop(root, session, None);
         return None;
     };
@@ -176,6 +185,7 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) {
             // measuring nothing != failing to measure: only the latter
             dups: skipped.map(|_| 0),
             fourclass: None,
+            tombstone: None,
             skipped,
             unmeasured: Vec::new(),
         },
@@ -210,13 +220,8 @@ pub fn run_precommit(root: &Path) -> ExitCode {
     // session owns it — the M4 sampler excludes non-session events.
     // `--cached` needs no base rev: git compares the index against an
     // unborn HEAD without complaint, unlike the Stop leg.
-    let Some((mode, net_loc, changed, dups)) = gather(
-        root,
-        &["--cached"],
-        "precommit",
-        None,
-        None, // four-class is a Stop concern; precommit stays v1
-    ) else {
+    let Some((mode, net_loc, changed, dups, tomb)) = gather(root, &["--cached"], "precommit", None)
+    else {
         eprintln!(
             "{}",
             crate::i18n::line(
@@ -227,6 +232,10 @@ pub fn run_precommit(root: &Path) -> ExitCode {
         );
         return ExitCode::SUCCESS;
     };
+    // informational, and it rides every exit: the person sees it once
+    if let Some(line) = tomb.as_ref().and_then(tombstone::summary) {
+        println!("{line}");
+    }
     let Some(v) = dups.as_ref() else {
         // A9f: fail open but never silently — the human still gets
         // the staged summary the healthy path prints

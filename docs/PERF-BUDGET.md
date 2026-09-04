@@ -198,6 +198,27 @@ A = 旧客户端（1f493df，L 轮前，graph/1 6.1.0）、B = 本批客户端�
 | `ce erase .`（plan，dry-run） | —（不变慢） | 1.526 s（1.451–1.676） | 1.493 s（1.427–1.673） | ✅ |
 | `ce check .`（暖索引） | —（不变慢） | 1.786 s（1.720–2.558） | 1.802 s（1.729–1.928） | ✅ 差 +0.9%，在散布内 |
 
+## v2.26 墓碑度量 Stop 腿 A/B（实测 2026-09-04，release，同一台机、静默窗〔计时前 `Get-CimInstance` 零外来负载〕，n=5 交错 ABAB，各腿先预热一次）
+
+口径：A = HEAD 7e06f45 的二进制（本批之前），B = 本批二进制；两者先在同一棵干净 HEAD worktree
+（0 个改动文件）上量，再在同一棵本批工作树（主根 27 个改动文件 / 578 KB，gated 子仓根 12 / 59 KB）上量——
+tombstone 腿在后者真配对真读真量，A 在同一棵树上付的是它本来就付的 numstat + fourclass diff + 判决索引刷新。
+首测 B 在干净树上慢 190 ms：tombstone 腿在零改动时也付 `diff` + `rev-parse --show-prefix` + `cat-file`
+三个 git spawn——改为 numstat 已知零改动即不配对不 spawn、blob 规格改 `HEAD:./path` 借 `git -C root`
+自解析（去掉 rev-parse 那一个 spawn）后重量如下。
+
+| 项 | 预算 | 实测 A（HEAD） | 实测 B（本批） | 状态 |
+|---|---|---|---|---|
+| `ce audit --hook` e2e（Stop 信封，干净 HEAD 树，0 改动） | median <1.5 s | 0.592 s（0.575–0.594） | 0.580 s（0.561–0.587） | ✅ 不因本批变慢 |
+| 同上，本批工作树（27 改动文件 + 子仓 12） | —（记录） | 3.511 s（3.395–3.897） | 4.166 s（4.060–4.495） | 记录：+0.65 s |
+| ↳ 分解（临时探针三跑取中，实测后即回退；主根 / 子仓根） | —（记录） | — | 配对 `diff -M -C` 180 / 89 ms、`cat-file --batch` 124 / 86 ms、measure 138 / 44 ms | 记录 |
+
+读法：+0.65 s 里约 72 % 是两个 git spawn（每个 gated 根各一对），28 % 是度量本体（每侧三次 tree-sitter
+解析：docdup 段落、单元、字面量）。可攻的两处都在判决侧模块之外不可得：fourclass 与 tombstone 对 HEAD
+问的是同一个 `-M -C` diff 的两种拼法（unscoped / `--relative`），合一省 ≈180 ms 但要先统一 fourclass 的路径
+词汇；三次解析共用一棵树省 ≤ 120 ms 但要给 docdup/units 入口加带树的变体。第一段（observe-only）两者都不动，
+随第二段裁。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

@@ -49,7 +49,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::rc::Rc;
 
 #[path = "md_slug.rs"]
-mod slug;
+pub(crate) mod slug;
 pub use slug::slug_hash;
 
 pub fn resolve(kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {

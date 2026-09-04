@@ -250,7 +250,7 @@
       "id": "report:observe#schemaver",
       "source": "cli/src/hookio.rs (typed)",
       "tier": "linked",
-      "value": "ce.observe/0.7.0"
+      "value": "ce.observe/0.8.0"
     },
     {
       "id": "report:scan#schemaver",

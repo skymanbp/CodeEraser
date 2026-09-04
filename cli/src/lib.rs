@@ -31,6 +31,7 @@ pub mod sarif;
 pub mod scan;
 pub mod score;
 pub mod structure;
+pub mod tombstone;
 pub mod trend;
 pub mod update;
 

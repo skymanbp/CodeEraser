@@ -9,6 +9,7 @@
 
 mod budget;
 mod say;
+mod tombstone;
 
 use crate::config::Config;
 use crate::daemon::client;
@@ -104,6 +105,7 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
             zone = budget::zone_assess(root, &budget::ZoneLines::of(&t, c), env, &mode, lines);
         }
     }
+    tombstone::observe(root, env, &mode, cfg.as_ref().map(|(c, _)| c));
     emit_reasons(&mode, reasons, zone, &broken);
     ExitCode::SUCCESS
 }

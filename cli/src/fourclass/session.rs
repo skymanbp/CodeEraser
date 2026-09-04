@@ -23,6 +23,19 @@ pub fn head_pairs(root: &Path) -> Option<Vec<PathPair>> {
     diff_pairs(root, &["diff", "--name-status", "-z", "-M", "-C", "HEAD"])
 }
 
+/// The pairs of one diff `tail` (`HEAD`, `--cached`, `<a> <b>`) in
+/// the ce root's OWN path vocabulary: `--relative` rebases to the root
+/// and scopes to it, the spelling the audit's changed-file universe
+/// already uses (audit/changes.rs) — the tombstone legs' builder,
+/// whose sites name files a person will open from that root. The
+/// three builders above answer repo-root-relative, unscoped, for the
+/// fourclass and churn readers that were written against that.
+pub fn scoped_pairs(root: &Path, tail: &[&str]) -> Option<Vec<PathPair>> {
+    let mut args = vec!["diff", "--name-status", "-z", "-M", "-C", "--relative"];
+    args.extend_from_slice(tail);
+    diff_pairs(root, &args)
+}
+
 /// One commit's file pairs against its first parent (same pairing
 /// and language filter as head_pairs) — the churn module's walk.
 /// A root commit has no parent; its base is git's empty tree, so its

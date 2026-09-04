@@ -36,9 +36,10 @@
     {
       "lang": "rs",
       "path": "cli/src/audit.rs",
-      "sha256": "98624ecda3af7d3097f8c09ee8db95fc24e657e0b8991655e5b4829017aea4c5",
+      "sha256": "7c693d75c8b276642054dec0a07f951745168c858391d7e45b0663aa2a77dd1f",
       "sites": {
-        "use": 5
+        "mod_decl": 4,
+        "use": 6
       }
     },
     {
@@ -157,7 +158,7 @@
     {
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "e8dc7f261598108bc21fc0f5a6740f48f75ea37eba96f93546b85e3c69efd9d0",
+      "sha256": "90ce5c36b63fc71129c60aac3120e0a3644ea48c6f54dc828a45dca658a37bc9",
       "sites": {
         "use": 5
       }
@@ -206,9 +207,10 @@
     {
       "lang": "rs",
       "path": "cli/src/fourclass/session.rs",
-      "sha256": "340836e861ac31ba7f920b9812b411013139c3401cb3635d0d706739fe65eb7a",
+      "sha256": "aaa3d6313e42097a34ebb3cf63e48818eeb851888b43054e4c3fdcfbb8377eb7",
       "sites": {
-        "use": 4
+        "mod_decl": 1,
+        "use": 3
       }
     },
     {
@@ -273,8 +275,9 @@
     {
       "lang": "rs",
       "path": "cli/src/guard.rs",
-      "sha256": "48784e4dbfabd40222cd8a288c67c8fbeea862fc56ca606a2051c22214f94178",
+      "sha256": "4fc09f36ee187f6ec5151f9444ad606dedbe2d4f9d4f04d6e2155ec47948a60f",
       "sites": {
+        "mod_decl": 4,
         "use": 6
       }
     },
@@ -289,17 +292,18 @@
     {
       "lang": "rs",
       "path": "cli/src/hookio.rs",
-      "sha256": "9e4e4cf309604f8d705c0ec858e2227fb1d39d3dfc9bb7521d5861491a86cffe",
+      "sha256": "b97834a91743dcdccb1be5e88618c1415c491842ebbf29e6f62e31054bf42c7e",
       "sites": {
-        "use": 3
+        "mod_decl": 1,
+        "use": 4
       }
     },
     {
       "lang": "rs",
       "path": "cli/src/lib.rs",
-      "sha256": "852a758ac265ebf49abc1f0c8f55ab323eb25471484174b6fc617522aebbf62e",
+      "sha256": "734ea738e0605bcd8f39bb71e69baa4cbd154903221a295a0079c2ca09b721b0",
       "sites": {
-        "mod_decl": 13
+        "mod_decl": 34
       }
     },
     {
@@ -1179,11 +1183,11 @@
       "md/url": 5,
       "py/import": 21,
       "py/import_from": 50,
-      "rs/mod_decl": 104,
-      "rs/use": 414,
+      "rs/mod_decl": 135,
+      "rs/use": 415,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 669
+    "total_sites": 701
   }
 }

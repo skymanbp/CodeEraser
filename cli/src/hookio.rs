@@ -20,6 +20,11 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.8.0 adds the `tombstone` event (the per-edit leg of plan v2.26's
+/// residue measurement, feed-only in every tier) and the OPTIONAL
+/// `tombstone` object on `stop_audit` / `precommit` lines; every
+/// prior key keeps its shape.
+///
 /// 0.7.0 re-defines `matches` on `probe` events (K step 11 novel-
 /// duplication semantics): the count of matches the REPLACED content
 /// did not already carry (guard::novel_matches), where it was the
@@ -49,13 +54,13 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.7.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.8.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a
 /// writer that never closes parks the PreToolUse path — budgeted at
 /// p95 < 1 s — until the harness kills it. Same cap and same stance as
-/// the audit's untracked leg (`audit::changes::READ_CAP`, "an unbounded
+/// the bounded file reader (`tombstone::texts::READ_CAP`, "an unbounded
 /// read is an availability hole"); 4 MiB clears the biggest thing an
 /// envelope legitimately carries, a Write's whole file body.
 const ENVELOPE_CAP: u64 = 4 << 20;
@@ -217,30 +222,37 @@ fn tail(path: &Path, cap: u64) -> std::io::Result<String> {
     Ok(String::from_utf8_lossy(&buf[start..]).into_owned())
 }
 
+/// This session's lines in the feed window, parsed — the accumulator
+/// every per-session reader asks (the warn suppression below, the
+/// tombstone leg's erased-key union). A read or parse failure, or no
+/// session, = no lines: fail open toward REPORTING, the opposite bias
+/// from enforcement fail-open.
+pub fn session_lines(root: &Path, session: &str) -> Vec<serde_json::Value> {
+    if session.is_empty() {
+        return Vec::new();
+    }
+    let Ok(feed) = tail(&root.join(".ce/observe.ndjson"), FEED_WINDOW) else {
+        return Vec::new();
+    };
+    feed.lines()
+        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+        .filter(|v| v["session_id"] == session)
+        .collect()
+}
+
 /// §4.4 B4 session-level suppression: has this (rule, file) already
 /// FIRED for this session? The observe feed IS the accumulator the
 /// clause's "silently accumulate" half names — probe lines count only
 /// when matches > 0 (a clean probe never warned anyone), and zone
 /// lines only when an ARMED map produced a real tier (an observe-leg
-/// ledger line warned nobody either — v2.7 ①). Any read or parse
-/// failure = not warned: fail open toward REPORTING, the opposite
-/// bias from enforcement fail-open.
+/// ledger line warned nobody either — v2.7 ①).
 pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> bool {
-    if session.is_empty() {
-        return false;
-    }
-    let Ok(feed) = tail(&root.join(".ce/observe.ndjson"), FEED_WINDOW) else {
-        return false;
-    };
-    feed.lines()
-        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
-        .any(|v| {
-            v["session_id"] == session
-                && v["event"] == rule
-                && v["file"] == file
-                && (rule != "probe" || v["matches"].as_u64().unwrap_or(0) > 0)
-                && (rule != "zone" || v["zone_tier"].as_str().is_some_and(|t| t != "observe"))
-        })
+    session_lines(root, session).iter().any(|v| {
+        v["event"] == rule
+            && v["file"] == file
+            && (rule != "probe" || v["matches"].as_u64().unwrap_or(0) > 0)
+            && (rule != "zone" || v["zone_tier"].as_str().is_some_and(|t| t != "observe"))
+    })
 }
 
 #[cfg(test)]

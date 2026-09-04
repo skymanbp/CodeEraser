@@ -116,17 +116,18 @@ fn shipped_budgets(mut cfg: Config) -> Config {
     cfg
 }
 
-/// Exact post-write line count: Write is the payload itself; Edit is
-/// the payload applied to the on-disk file under Edit's own semantics
-/// — CRLF-normalized, and single replacement requires a UNIQUE match
+/// Exact post-write text: Write is the payload itself; Edit is the
+/// payload applied to the on-disk file under Edit's own semantics —
+/// CRLF-normalized, and single replacement requires a UNIQUE match
 /// exactly as the real tool does (attack review F11: replacen on a
 /// non-unique old_string would judge a write that will never land).
 /// None = the tool call is failing on its own (missing file, absent
-/// or ambiguous old_string) — the budget rule stays silent.
-fn resulting_lines(env: &Envelope) -> Option<usize> {
+/// or ambiguous old_string) — the budget rule stays silent, and so
+/// does the tombstone leg, which reads the same text.
+pub(super) fn resulting_text(env: &Envelope) -> Option<String> {
     let t = &env.tool_input;
     if env.tool_name == "Write" {
-        return Some(t.content.lines().count());
+        return Some(t.content.clone());
     }
     let on_disk = std::fs::read_to_string(&t.file_path)
         .ok()?
@@ -144,7 +145,12 @@ fn resulting_lines(env: &Envelope) -> Option<usize> {
         (false, _) => return None, // the real Edit rejects ambiguity
         (true, _) => on_disk.replace(&old, &new),
     };
-    Some(applied.lines().count())
+    Some(applied)
+}
+
+/// Exact post-write line count, off the same applied text.
+fn resulting_lines(env: &Envelope) -> Option<usize> {
+    resulting_text(env).map(|text| text.lines().count())
 }
 
 /// Budget firings get their own feed line (accounting for the §4.2

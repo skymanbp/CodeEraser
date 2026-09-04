@@ -39,15 +39,39 @@ pub fn command(program: impl AsRef<OsStr>) -> Command {
 /// spelling — a quoted path matches nothing and fails SILENTLY (the
 /// Stop deny gate skipped CJK filenames); harmless for -z consumers,
 /// whose output is already literal. stdin is the null device: no
-/// caller feeds git input, and `hash-object --stdin` wants EOF.
+/// caller here feeds git input, and `hash-object --stdin` wants EOF.
 pub fn git_output(root: &Path, args: &[&str]) -> std::io::Result<Output> {
-    command("git")
-        .arg("-C")
+    git_command(root, args).stdin(Stdio::null()).output()
+}
+
+/// The one git invocation that FEEDS stdin: `cat-file --batch` reads
+/// object names from it, and the tombstone legs ask for every changed
+/// file's HEAD or index blob in ONE process rather than a `show` per
+/// file (tombstone::texts). The input is written from its own thread:
+/// git answers as it reads, so a writer that waited on the reply
+/// could deadlock against a full stdout pipe.
+pub fn git_feed(root: &Path, args: &[&str], input: &[u8]) -> std::io::Result<Output> {
+    use std::io::Write as _;
+    let mut child = git_command(root, args)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()?;
+    let mut stdin = child.stdin.take().expect("piped stdin");
+    let input = input.to_vec();
+    let writer = std::thread::spawn(move || stdin.write_all(&input));
+    let out = child.wait_with_output();
+    let _ = writer.join();
+    out
+}
+
+fn git_command(root: &Path, args: &[&str]) -> Command {
+    let mut cmd = command("git");
+    cmd.arg("-C")
         .arg(root)
         .args(["-c", "core.quotePath=false"])
-        .args(args)
-        .stdin(Stdio::null())
-        .output()
+        .args(args);
+    cmd
 }
 
 #[cfg(test)]

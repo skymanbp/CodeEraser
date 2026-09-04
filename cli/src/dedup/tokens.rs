@@ -119,7 +119,7 @@ fn classify(kind: &str, spec: &LangSpec) -> Class {
 /// sequences, and the per-language anonymous delimiter tokens.
 /// Precondition: `kind` is a LEAF kind (composite kinds like Go
 /// `composite_literal` never reach here — tokenize recurses first).
-fn is_literal(kind: &str, spec: &LangSpec) -> bool {
+pub(crate) fn is_literal(kind: &str, spec: &LangSpec) -> bool {
     kind.ends_with("literal")
         || matches!(kind, "integer" | "float" | "number" | "escape_sequence")
         || (kind.contains("string")

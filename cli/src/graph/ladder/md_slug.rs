@@ -57,7 +57,7 @@ pub(super) fn slug_set(text: &str) -> Vec<String> {
 
 /// ATX heading text: 1-6 leading #, then a space, a tab or the end;
 /// the space-separated closing sequence strips (CommonMark).
-fn atx_heading(trimmed: &str) -> Option<&str> {
+pub(crate) fn atx_heading(trimmed: &str) -> Option<&str> {
     let hashes = trimmed.chars().take_while(|&c| c == '#').count();
     if hashes == 0 || hashes > 6 {
         return None;
@@ -76,7 +76,7 @@ fn atx_heading(trimmed: &str) -> Option<&str> {
 /// anyway) and `_` drops only where it PAIRS as emphasis
 /// (`emphasis_underscores`): `snake_case` and an unpaired
 /// `_private_helper()` keep their underscores, `_em_` does not.
-fn render_text(head: &str) -> String {
+pub(crate) fn render_text(head: &str) -> String {
     let bytes = head.as_bytes();
     let emphasis = emphasis_underscores(bytes);
     let mut out = String::new();

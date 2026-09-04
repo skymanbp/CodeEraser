@@ -23,6 +23,10 @@ pub(super) struct AuditEvent<'a> {
     /// M4 informational four-class report (Stop only; absent on the
     /// precommit path).
     pub fourclass: Option<serde_json::Value>,
+    /// WRITER CONTRACT — OPTIONAL, additive (0.8.0): the tombstone
+    /// measurement of the same diff (tombstone::feed_json without the
+    /// per-edit keys); absent when git could not pair the change.
+    pub tombstone: Option<serde_json::Value>,
     /// WRITER CONTRACT — OPTIONAL, additive: present only on a
     /// stop_audit line whose audit measured NOTHING, where the
     /// net_loc / changed_files / dup_blocks zeros are placeholders,
@@ -57,6 +61,9 @@ pub(super) fn observe_log(root: &Path, ev: AuditEvent) {
     }
     if let Some(fc) = ev.fourclass {
         line["fourclass"] = fc;
+    }
+    if let Some(t) = ev.tombstone {
+        line["tombstone"] = t;
     }
     crate::hookio::observe_append(root, ev.session, line);
 }
