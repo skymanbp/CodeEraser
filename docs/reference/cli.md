@@ -32,6 +32,7 @@ Commands:
   audit      Stop audit v1: net LOC + duplicate blocks touching changed files (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
   precommit  pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — the one CI-facing gate that passes on a missing core
+  commitmsg  commit-msg gate: `ce precommit` re-run with the message file git hands the hook as one more surface — a removed name argued away in the message is a tombstone site like one in a README (feed and reason name it COMMIT_EDITMSG:line). Wire it as .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body saved to a file is the same surface (a CI recipe, not a hook)
   mcp        MCP server over stdio: the read-only report face of every judgment family
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
   update     Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
@@ -388,6 +389,22 @@ pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when d
 Usage: ce precommit [OPTIONS] [ROOT]
 
 Arguments:
+  [ROOT]  Repository root (default: current directory)
+
+Options:
+      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+  -h, --help         Print help
+```
+
+## ce commitmsg
+
+```text
+commit-msg gate: `ce precommit` re-run with the message file git hands the hook as one more surface — a removed name argued away in the message is a tombstone site like one in a README (feed and reason name it COMMIT_EDITMSG:line). Wire it as .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body saved to a file is the same surface (a CI recipe, not a hook)
+
+Usage: ce commitmsg [OPTIONS] <FILE> [ROOT]
+
+Arguments:
+  <FILE>  The message file (git's `$1`); its comment lines are ignored
   [ROOT]  Repository root (default: current directory)
 
 Options:

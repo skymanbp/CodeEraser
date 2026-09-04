@@ -26,9 +26,11 @@ use std::path::Path;
 /// names why there is none; `rows` counts the candidate surfaces sent;
 /// an `exempt` entry may carry `line` (a segment) and `why: declared`
 /// (a file `[tombstone] ledger` names); a `tombstone` event's `mode`
-/// is the class's own `[tombstone] tier`. Replaces 0.8.0's Rust-judged
-/// `label` / `prose` / `sites` — a named break of a shape no release
-/// carried.
+/// is the class's own `[tombstone] tier`; the `commitmsg` event (plan
+/// v2.27 step 5) is `precommit`'s line written by `ce commitmsg` over
+/// the staged set plus the message, session null like precommit's.
+/// Replaces 0.8.0's Rust-judged `label` / `prose` / `sites` — a named
+/// break of a shape no release carried.
 ///
 /// 0.8.0 adds the `tombstone` event (the per-edit leg of plan v2.26's
 /// residue measurement, feed-only in every tier) and the OPTIONAL
@@ -133,7 +135,7 @@ fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Op
 /// never worth failing a hook over.
 ///
 /// `session` is `None` for producers that genuinely have no session —
-/// `ce precommit` runs in a terminal, not as a hook. An EMPTY string
+/// `ce precommit` / `ce commitmsg` run in a terminal, not as a hook. An EMPTY string
 /// is normalized to null here rather than at the call sites, so a
 /// payload that omitted `session_id` can never leave a `""` behind
 /// that later reads as a real (and shared) session id.

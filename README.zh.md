@@ -147,7 +147,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 更新检查 | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
 | 更新执行 | `ce update --yes` | `update`, `update_apply` | — 插件副本由 `/plugin update codeeraser` 重钉 |
 | 写入时守卫 | `ce probe --hook` | — 钩子即插件之面 | hook `PreToolUse` |
-| Stop 审计 / pre-commit | `ce audit --hook`, `ce precommit` | — 钩子即插件之面 | hook `Stop` |
+| Stop 审计 / git 钩子 | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — 钩子即插件之面；precommit 与 commitmsg 挂在 git 里 | hook `Stop` |
 | 会话健康行 | `ce health --hook` | — 钩子即插件之面 | hook `SessionStart` |
 | 项目 daemon | `ce daemon`, `ce ping` | — 每一面惰性启动 | — |
 | 只读报告服务器 | `ce mcp` | — 插件自行注册 | `.mcp.json` |

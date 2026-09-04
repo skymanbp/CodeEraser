@@ -1,5 +1,5 @@
-//! The audit's FEED WRITER — one entry per Stop audit or precommit
-//! run. Split out of audit.rs at its own 300-line dogfood gate (K
+//! The audit's FEED WRITER — one entry per Stop audit or git-hook
+//! face run (precommit, commitmsg). Split out of audit.rs at its own 300-line dogfood gate (K
 //! step 8): recording what an audit measured is a different job from
 //! deciding it, and the field docs here are a WRITER CONTRACT that
 //! every reader of .ce/observe.ndjson depends on — those belong with
@@ -7,13 +7,14 @@
 
 use std::path::Path;
 
-/// One Stop-audit / precommit observe entry. A struct rather than
+/// One Stop-audit / precommit / commitmsg observe entry. A struct rather than
 /// positional parameters: the old signature was already past the
 /// scan's fn-params limit of 5.
 pub(super) struct AuditEvent<'a> {
     pub event: &'a str,
     pub mode: &'a str,
-    /// None for `ce precommit` — see the call site.
+    /// None for the git-hook faces (`ce precommit` / `ce commitmsg`)
+    /// — see the call site.
     pub session: Option<&'a str>,
     pub net_loc: i64,
     pub changed: usize,

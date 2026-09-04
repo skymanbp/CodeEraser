@@ -147,7 +147,7 @@ Every capability is claimed once in this table, the sets are derived from the co
 | update check | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
 | update apply | `ce update --yes` | `update`, `update_apply` | — the plugin's copy is re-pinned by `/plugin update codeeraser` |
 | write-time guard | `ce probe --hook` | — hooks are the plugin's face | hook `PreToolUse` |
-| stop audit / pre-commit | `ce audit --hook`, `ce precommit` | — hooks are the plugin's face | hook `Stop` |
+| stop audit / git hooks | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — hooks are the plugin's face; precommit and commitmsg are git's | hook `Stop` |
 | session health line | `ce health --hook` | — hooks are the plugin's face | hook `SessionStart` |
 | project daemon | `ce daemon`, `ce ping` | — started lazily by every face | — |
 | read-only report server | `ce mcp` | — the plugin registers it | `.mcp.json` |

@@ -134,6 +134,9 @@ fn infra(cmd: Cmd) -> ExitCode {
         Cmd::Audit { hook } => cmds::hook_cmd(hook, "audit", codeeraser::audit::run_hook),
         Cmd::Health { hook } => cmds::hook_cmd(hook, "health", codeeraser::health::run_hook),
         Cmd::Precommit { root } => codeeraser::audit::run_precommit(&cmds::or_cwd(root)),
+        Cmd::Commitmsg { file, root } => {
+            codeeraser::audit::run_commitmsg(&cmds::or_cwd(root), &file)
+        }
         Cmd::Mcp { root } => cmds::serve_cmd("mcp", codeeraser::mcp::serve(&cmds::or_cwd(root))),
         Cmd::Eject { root, yes } => codeeraser::eject::run(&cmds::or_cwd(root), yes),
         Cmd::Daemon { root } => cmds::serve_cmd("daemon", daemon::server::serve(&root)),

@@ -204,6 +204,18 @@ pub(crate) enum Cmd {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,
     },
+    /// commit-msg gate: `ce precommit` re-run with the message file
+    /// git hands the hook as one more surface — a removed name argued
+    /// away in the message is a tombstone site like one in a README
+    /// (feed and reason name it COMMIT_EDITMSG:line). Wire it as
+    /// .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body
+    /// saved to a file is the same surface (a CI recipe, not a hook)
+    Commitmsg {
+        /// The message file (git's `$1`); its comment lines are ignored
+        file: PathBuf,
+        /// Repository root (default: current directory)
+        root: Option<PathBuf>,
+    },
     /// MCP server over stdio: the read-only report face of every
     /// judgment family
     Mcp {

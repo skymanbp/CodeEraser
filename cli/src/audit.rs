@@ -10,12 +10,14 @@
 //! changed lives in changes.rs (git's paths in ce's own vocabulary).
 
 mod changes;
+mod commitmsg;
 mod observe;
 mod precommit;
 mod tombstone;
 mod verdict;
 
 use crate::config::Config;
+pub use commitmsg::run_commitmsg;
 use observe::{AuditEvent, observe_log};
 pub use precommit::run_precommit;
 use serde::Deserialize;
@@ -76,12 +78,13 @@ pub fn run_hook() -> ExitCode {
     ExitCode::SUCCESS
 }
 
-/// Shared head of the Stop audit and the pre-commit gate: guard mode,
+/// Shared head of the Stop audit and the git-hook faces: guard mode,
 /// numstat over `diff`, the core's touched-duplicate verdict (None =
 /// degraded, A9f), the two informational reports (four-class is a
-/// Stop concern; tombstone rides both legs) and the `event`-stamped
-/// observe entry (precommit must not masquerade as a Stop audit).
-/// Outer None = git could not answer: fail open.
+/// Stop concern; tombstone rides every leg, and `ce commitmsg`'s
+/// `message` rides the tombstone leg as one more surface) and the
+/// `event`-stamped observe entry (a git hook must not masquerade as a
+/// Stop audit). Outer None = git could not answer: fail open.
 type Gathered = (
     String,
     i64,
@@ -89,27 +92,21 @@ type Gathered = (
     Option<verdict::Verdict>,
     Option<tombstone::Leg>,
 );
-fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -> Option<Gathered> {
+fn gather(
+    root: &Path,
+    diff_tail: &[&str],
+    event: &str,
+    session: Option<&str>,
+    message: Option<&str>,
+) -> Option<Gathered> {
     // ONE load: tier rendering and the exclusion list both need it,
     // and a broken ce.toml must name itself (config::tier_of).
     let loaded = Config::load(root);
     // The audit class is not §4.2-promoted: unset mode stays observe.
     let mode = crate::config::tier_of(&loaded, "observe");
+    let cfg = loaded.as_ref().ok();
     let (mut net_loc, mut changed) = changes::diff(root, diff_tail)?;
-    let mut untracked = Vec::new();
-    if event == "stop_audit" {
-        // §4.2 promises the Stop audit covers Bash writes, but `git
-        // diff` cannot see a brand-new untracked file — the stop path
-        // merges them in; precommit stays staged-only by design.
-        let excludes = loaded
-            .as_ref()
-            .map(|c| c.exclude.clone())
-            .unwrap_or_default();
-        if let Some((n, files)) = changes::untracked(root, &excludes) {
-            net_loc += n;
-            untracked = files;
-        }
-    }
+    let untracked = stop_untracked(root, event, cfg, &mut net_loc);
     changed.extend_from_slice(&untracked);
     // nothing changed = judged clean without a spawn (INFORMATION
     // never pays; the enforcement leg pays only when there is
@@ -125,8 +122,13 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
         verdict::judge(root, &changed, link.as_mut())
     };
     let fourclass = (event == "stop_audit").then(|| fourclass_report(root));
-    let cfg = loaded.as_ref().ok();
-    let tombstone = tombstone::leg(root, event, &changed, &untracked, cfg, link.as_mut());
+    let set = tombstone::Changeset {
+        event,
+        changed: &changed,
+        untracked: &untracked,
+        message,
+    };
+    let tombstone = tombstone::leg(root, &set, cfg, link.as_mut());
     observe_log(
         root,
         AuditEvent {
@@ -145,6 +147,29 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
     Some((mode, net_loc, changed, dups, tombstone))
 }
 
+/// §4.2 promises the Stop audit covers Bash writes, but `git diff`
+/// cannot see a brand-new untracked file — the stop path merges them
+/// in, their lines into `net_loc`; the git-hook faces stay staged-only
+/// by design (nothing for any other event).
+fn stop_untracked(
+    root: &Path,
+    event: &str,
+    cfg: Option<&Config>,
+    net_loc: &mut i64,
+) -> Vec<String> {
+    if event != "stop_audit" {
+        return Vec::new();
+    }
+    let excludes = cfg.map(|c| c.exclude.clone()).unwrap_or_default();
+    match changes::untracked(root, &excludes) {
+        Some((n, files)) => {
+            *net_loc += n;
+            files
+        }
+        None => Vec::new(),
+    }
+}
+
 /// One project's Stop audit: its observe line always, and the block
 /// reasons when a deny tier holds a failing verdict — the duplicate
 /// verdict at `[guard] mode`, the tombstone verdict at `[tombstone]
@@ -157,7 +182,7 @@ fn audit(root: &Path, session: &str) -> Option<String> {
         return None;
     };
     let Some((mode, net_loc, _, dups, tomb)) =
-        gather(root, &[base.as_str()], "stop_audit", Some(session))
+        gather(root, &[base.as_str()], "stop_audit", Some(session), None)
     else {
         unmeasured_stop(root, session, None);
         return None;

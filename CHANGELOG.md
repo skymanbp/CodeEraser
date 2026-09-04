@@ -71,6 +71,13 @@
   回执越界 = feed `judged.degraded` 具名，绝不阻断也绝不默过。**feed schema 0.9.0 改为具名断点**（无任何发布带过
   0.8.0 形）：`tombstone` 对象的计数与站点搬进 `judged{sites,label,prose,over}`，`rows` 计候选面，`tombstone` 事件的
   `mode` = 类档位；`frames::marks` 计数取代 `has_mark`、`names::spelled_all` / `wide_all` 取代首个命中。自仓 ce.toml 不声明 `[tombstone]`。
+- **步 5 `ce commitmsg <file>`**（`audit/commitmsg.rs`，git commit-msg 钩子之面）：与 `ce precommit` 同一具身体
+  （`precommit::run(face, message)`）再跑一次，把 git 交给钩子的提交说明当作多一个 Markdown 面——站点记
+  `COMMIT_EDITMSG:行 prose`；注释行按仓库自己的 `core.commentChar` / `core.commentString`（二者互为别名、后设者胜，
+  git 2.52 亲证）原地置空而不删除，行号即文件行号，`auto` 读作 `#`；deny 档越预算退 1，读不到文件退 2 而非默过；
+  feed 事件 `commitmsg`（precommit 的行形、`session_id` 同为 null，golden 第 12 条）；parity 表与 `ce precommit`
+  同行具名（GUI / MCP / 插件无此面：钩子在 git 里）、README 载体表按名省略、zh 面门加一形、`docs/reference/cli.md`
+  再生；PR 正文存成文件即同一个面（CI 配方，不做腿）。两钩子都装时暂存集判两次；只装 commit-msg 即两者兼得。
 
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 

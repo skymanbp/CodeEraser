@@ -293,5 +293,30 @@
       "rows": 0
     },
     "ts_ms": 0
+  },
+  {
+    "changed_files": 2,
+    "degraded": false,
+    "dup_blocks": 0,
+    "event": "commitmsg",
+    "mode": "observe",
+    "net_loc": 0,
+    "schema": "ce.observe/0.9.0",
+    "session_id": null,
+    "tombstone": {
+      "erased": 5,
+      "exempt": [],
+      "judged": {
+        "label": 0,
+        "over": false,
+        "prose": 1,
+        "sites": [
+          "COMMIT_EDITMSG:3 prose"
+        ]
+      },
+      "rev": 1,
+      "rows": 1
+    },
+    "ts_ms": 0
   }
 ]
