@@ -85,7 +85,7 @@ per-mille ([Axes.hs:217-225](../../../core/app/CE/Structure/Axes.hs#L217)):
 The phrase names the mode in which the family runs with **no external template**: the seven
 axes and the two entropy rows read nothing but the tree's own fact tables, so the tree is
 judged against itself. The only in-tree definition of the term is the config comment at
-[config.rs:118-124](../../../cli/src/config.rs#L118) — "the OPTIONAL layout template the χ² divergence
+[config.rs:121-127](../../../cli/src/config.rs#L121) — "the OPTIONAL layout template the χ² divergence
 judges against. Absent = the self-referential floor alone (row C)". *Caveat for the reader:*
 the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in the tree — the
 booklet was distilled into `structure-axes.md` and its full text lives only in git history
@@ -104,7 +104,7 @@ absent on the undeclared fixture ([StructureProps.hs:143-151](../../../core/test
 
 `ce.toml`'s `[structure.layout]` maps directory paths to relative weights `>= 1`; `"."` is the
 root and, under deepest-owner semantics, the catch-all bin
-([config.rs:118-129](../../../cli/src/config.rs#L118), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
+([config.rs:121-132](../../../cli/src/config.rs#L121), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
 sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
 ([Structure.hs:122](../../../core/app/CE/Structure.hs#L122),

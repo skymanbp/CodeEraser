@@ -99,7 +99,10 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
         // §4.2 promises the Stop audit covers Bash writes, but `git
         // diff` cannot see a brand-new untracked file — the stop path
         // merges them in; precommit stays staged-only by design.
-        let excludes = loaded.map(|c| c.exclude).unwrap_or_default();
+        let excludes = loaded
+            .as_ref()
+            .map(|c| c.exclude.clone())
+            .unwrap_or_default();
         if let Some((n, files)) = changes::untracked(root, &excludes) {
             net_loc += n;
             untracked = files;
@@ -119,13 +122,7 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
         verdict::judge(root, &changed)
     };
     let fourclass = (event == "stop_audit").then(|| fourclass_report(root));
-    // the same stance for the tombstone leg: no judged file changed =
-    // nothing to pair, measured zero without its diff spawn
-    let tombstone = if changed.is_empty() {
-        Some(tombstone::nothing())
-    } else {
-        tombstone::report(root, event, &untracked)
-    };
+    let tombstone = tombstone::leg(root, event, &changed, &untracked, loaded.as_ref().ok());
     observe_log(
         root,
         AuditEvent {

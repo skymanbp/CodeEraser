@@ -10,9 +10,10 @@
 //! ruling 2026-09-04): a quote run or a section body that is itself a
 //! version ledger exempts only itself — the plan book's banner is a
 //! ledger and its §4 is a norm, and a file-level answer would have to
-//! get one of them wrong. Only Markdown can hold the role: a code file
-//! narrates nothing by job. Deliberately no regex: every matcher is a
-//! digit walk.
+//! get one of them wrong; `[tombstone] ledger` declares what no witness
+//! reads (`Witness::Declared`). Only Markdown can hold the role: a code
+//! file narrates nothing by job. Deliberately no regex: every matcher
+//! is a digit walk.
 
 use crate::graph::ladder::md::slug::atx_heading;
 use crate::graph::md::content_lines;
@@ -30,9 +31,12 @@ pub enum Witness {
     /// The touched segment is a version ledger by itself: exempt as a
     /// segment, never as a file (plan v2.27).
     Segment,
+    /// Named in `[tombstone] ledger`: exempt as a file by the
+    /// repository's own word (plan v2.27 step 3).
+    Declared,
 }
 
-const NAMES: [&str; 3] = ["path", "ledger", "segment"];
+const NAMES: [&str; 4] = ["path", "ledger", "segment", "declared"];
 
 impl Witness {
     pub fn name(self) -> &'static str {

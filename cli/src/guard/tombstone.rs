@@ -10,7 +10,7 @@
 
 use super::envelope::Envelope;
 use crate::config::Config;
-use crate::tombstone::{self, PairText};
+use crate::tombstone::{self, PairText, Policy};
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -42,7 +42,8 @@ pub(super) fn observe(root: &Path, env: &Envelope, mode: &str, cfg: Option<&Conf
         after: &after,
         lang,
     };
-    let f = tombstone::measure(&[pair], &session);
+    let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
+    let f = tombstone::measure(&[pair], &session, &policy);
     if f.erased.is_empty() && f.label + f.prose == 0 {
         return;
     }

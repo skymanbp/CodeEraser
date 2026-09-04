@@ -21,9 +21,9 @@ use std::path::Path;
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
 /// 0.9.0 (plan v2.27): a `tombstone` object's `exempt` entry may carry
-/// `line` — the third changelog-role witness exempts a SEGMENT
-/// (`why: "segment"`) and the entry says where it starts; file-level
-/// entries keep their two keys. Additive on 0.8.0.
+/// `line` (the third witness exempts a SEGMENT, `why: "segment"`, and
+/// says where it starts) and `why` may read `declared` (a file named in
+/// `[tombstone] ledger`); file-level entries keep two keys. Additive.
 ///
 /// 0.8.0 adds the `tombstone` event (the per-edit leg of plan v2.26's
 /// residue measurement, feed-only in every tier) and the OPTIONAL

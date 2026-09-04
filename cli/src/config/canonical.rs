@@ -42,18 +42,20 @@
 //! at all — the shipped-default repo keeps the bytes it had before
 //! the fence existed (K11).
 
-use super::{Config, GraphCfg, TrendCfg};
+use super::{Config, GraphCfg, TombstoneCfg, TrendCfg};
 use serde_json::{Map, Value};
 
-/// The shipped defaults as the core JUDGES them: every optional
-/// score / trend / graph knob carries the constant the core uses
-/// when the row is absent (`score::knobs::core_defaults`, pinned
-/// live against the core's echo), so "declared at the default" and
-/// "undeclared" serialize to the same leaf.
+/// The shipped defaults as they are JUDGED: every optional score /
+/// trend / graph knob carries the constant the core uses when the
+/// row is absent (`score::knobs::core_defaults`, pinned live against
+/// the core's echo), the tombstone tier its route default, so
+/// "declared at the default" and "undeclared" serialize to the same
+/// leaf.
 fn effective_default() -> Config {
     Config {
         score: crate::score::knobs::core_defaults(),
         trend: TrendCfg::core(),
+        tombstone: TombstoneCfg::effective(),
         graph: GraphCfg {
             scc_floor: Some(crate::score::knobs::CORE_SCC_FLOOR),
             ..GraphCfg::default()

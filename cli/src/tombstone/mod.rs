@@ -28,11 +28,13 @@
 pub mod frames;
 mod marked;
 pub mod names;
+pub mod policy;
 pub mod role;
 pub mod surfaces;
 pub mod texts;
 pub mod vocab;
 
+pub use policy::Policy;
 pub use vocab::TOMBSTONE_REV;
 
 use crate::scan::lang::Lang;
@@ -118,10 +120,11 @@ pub const SITE_CAP: usize = 10;
 
 /// Measure a changeset. `session` = erased keys carried over from
 /// earlier edits of the same session (empty for a Stop audit, which
-/// sees the whole session's diff at once).
-pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>) -> Findings {
+/// sees the whole session's diff at once); `policy` = what ce.toml
+/// declares (`[tombstone] ledger` / `terms`; default = nothing).
+pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>, policy: &Policy) -> Findings {
     let added: Vec<BTreeSet<usize>> = pairs.iter().map(surfaces::added_lines).collect();
-    let erased = names::erased(pairs, &added);
+    let erased = names::erased(pairs, &added, policy);
     let mut out = Findings {
         erased: erased.names.clone(),
         ..Findings::default()
@@ -130,7 +133,10 @@ pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>) -> Findings {
         return out;
     }
     for (p, added) in pairs.iter().zip(&added) {
-        if let Some(w) = role::changelog_role(p.rel, p.after, p.lang) {
+        // a declared ledger is exempt by the repository's own word,
+        // whatever its language; the witnesses read the rest
+        let declared = policy.declared(p.rel).then_some(Witness::Declared);
+        if let Some(w) = declared.or_else(|| role::changelog_role(p.rel, p.after, p.lang)) {
             out.exempt.push(Exempt {
                 file: p.rel.to_string(),
                 line: None,

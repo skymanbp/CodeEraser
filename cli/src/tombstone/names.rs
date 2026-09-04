@@ -20,10 +20,10 @@
 //! cased and `_`-joined, wide runs verbatim), so `DongpoPork`,
 //! `dongpo_pork` and `Dongpo Pork` in a heading are one name.
 
-use super::PairText;
 use super::frames::{Word, label_candidates, windows, words};
 use super::marked::{Marked, marked};
 use super::vocab::{JOIN_MAX, KEYWORDS, MIN_ASCII_NAME, MIN_WIDE_NAME, NEGATIONS, has, vocabulary};
+use super::{PairText, Policy};
 use crate::dedup::tokens::fnv1a;
 use crate::mention::token::{fold, runs};
 use crate::scan::lang::Lang;
@@ -73,15 +73,16 @@ pub fn spelled_in(text: &str, known: impl Fn(u64) -> bool) -> Option<String> {
 
 /// The name floor: a letter, long enough for its script, no word of
 /// the instrument's vocabulary among its words (a frame, an absence
-/// word, a function word, a mark's word), and not made of reserved
-/// words alone (`user_data` is a name; `data` is not).
-fn admitted(s: &str) -> bool {
+/// word, a function word, a mark's word) nor of the repository's own
+/// (`[tombstone] terms`), and not made of reserved words alone
+/// (`user_data` is a name; `data` is not).
+fn admitted(s: &str, policy: &Policy) -> bool {
     let wide = !s.is_ascii();
     let floor = if wide { MIN_WIDE_NAME } else { MIN_ASCII_NAME };
     let ws: Vec<&str> = s.split('_').collect();
     s.chars().any(char::is_alphabetic)
         && s.chars().filter(|c| *c != '_').count() >= floor
-        && ws.iter().all(|w| !vocabulary(w))
+        && ws.iter().all(|w| !vocabulary(w) && !policy.term(w))
         && ws.iter().any(|w| !has(KEYWORDS, w))
 }
 
@@ -111,14 +112,14 @@ fn free_spellings(text: &str) -> Vec<String> {
 /// de-duplicated. A text that is an absence word WHOLE (`NotFound`,
 /// `no_std`: its fold is in V₀) spells no name at all — its `found`
 /// half must not enter R just because the word is compound.
-pub fn names_of(text: &str, lang: Lang) -> Vec<Name> {
+pub fn names_of(text: &str, lang: Lang, policy: &Policy) -> Vec<Name> {
     let mut seen = BTreeSet::new();
     let positions: Vec<Marked> = marked(text, lang);
     positions
         .iter()
         .filter(|m| m.structural && !has(NEGATIONS, &fold(&m.text)))
         .flat_map(|m| free_spellings(&m.text))
-        .filter(|s| admitted(s))
+        .filter(|s| admitted(s, policy))
         .filter_map(|s| {
             let key = key(&s);
             seen.insert(key).then(|| Name {
@@ -170,11 +171,11 @@ impl Erased {
 /// added): every before-side name that survives on no after side. A
 /// name moved to another changed file still survives; a name that
 /// only recurs inside `(no X)` does not.
-pub fn erased(pairs: &[PairText], added: &[BTreeSet<usize>]) -> Erased {
+pub fn erased(pairs: &[PairText], added: &[BTreeSet<usize>], policy: &Policy) -> Erased {
     let mut seen = BTreeSet::new();
     let before: Vec<Name> = pairs
         .iter()
-        .flat_map(|p| names_of(p.before, p.lang))
+        .flat_map(|p| names_of(p.before, p.lang, policy))
         .filter(|n| seen.insert(n.key))
         .collect();
     let alive: BTreeSet<u64> = pairs

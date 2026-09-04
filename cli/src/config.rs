@@ -20,6 +20,9 @@ pub use tier::{Guard, PROMOTED_DEFAULT, TIERS, tier_of};
 mod rules;
 pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, RulesCfg};
 
+mod tombstone; // the class's own table (plan v2.27), judged at load like the rulepack's
+pub use tombstone::{TOMBSTONE_DEFAULT, TombstoneCfg};
+
 // The knob fingerprint's canonical form (O39): the effective knob
 // set, computed generically over the serialized config.
 mod canonical;
@@ -170,6 +173,8 @@ pub struct Config {
     /// Path classes with their own size/complexity knobs (plan v2.13
     /// ①, `[[rules.class]]`); absent = one global table, wire unchanged.
     pub rules: RulesCfg,
+    /// The tombstone class's own table (plan v2.27, `[tombstone]`).
+    pub tombstone: TombstoneCfg,
 }
 
 /// Seconds from an env TEST SEAM, else the shipped default — the one
@@ -243,6 +248,7 @@ impl Config {
             .ladder_fault()
             .or_else(|| cfg.rules.fault(&cfg.thresholds))
             .or_else(|| cfg.graph.fault())
+            .or_else(|| cfg.tombstone.fault())
             .or_else(|| cfg.globs_fault(path.parent().unwrap_or(root)))
         {
             Some(fault) => Err(fault),
@@ -251,10 +257,11 @@ impl Config {
     }
 
     /// Every ce.toml glob — the exclude list, each class's globs,
-    /// `[graph] entry_globs` — compiles at the load throat in the one
-    /// dialect (scan::globs), so a pattern the dialect would silently
-    /// drop or misread (a `#` comment, an escaped `\\`, a `!`) is a
-    /// named error with the fix in it before any reader judges.
+    /// `[graph] entry_globs`, `[tombstone] ledger` — compiles at the
+    /// load throat in the one dialect (scan::globs), so a pattern the
+    /// dialect would silently drop or misread (a `#` comment, an
+    /// escaped `\\`, a `!`) is a named error with the fix in it before
+    /// any reader judges.
     fn globs_fault(&self, root: &Path) -> Option<String> {
         use crate::scan::globs;
         let mut b = ignore::overrides::OverrideBuilder::new(root);
@@ -271,7 +278,9 @@ impl Config {
         let entries = || {
             globs::compile_inclusions(root, &self.graph.entry_globs, "[graph] entry_globs").err()
         };
-        exclude.or_else(classes).or_else(entries)
+        let ledger =
+            || globs::compile_inclusions(root, &self.tombstone.ledger, "[tombstone] ledger").err();
+        exclude.or_else(classes).or_else(entries).or_else(ledger)
     }
 }
 

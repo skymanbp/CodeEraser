@@ -2287,14 +2287,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 118,
-    "end": 124,
+    "line": 121,
+    "end": 127,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|1": {
     "target": "../../../cli/src/config.rs",
-    "line": 118,
-    "end": 129,
+    "line": 121,
+    "end": 132,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/graph/ladder/hs_boot.rs|ee30d3794dcc0d6c|0": {
@@ -2818,14 +2818,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|76b28420c94d7237|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 68,
-    "end": 96,
+    "line": 70,
+    "end": 98,
     "text": "pub fn canonical(cfg: &Config) -> Value {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|b1fd070c83dda0e1|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 100,
-    "end": 123,
+    "line": 102,
+    "end": 125,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5257d56ada2d008b|0": {
@@ -3537,7 +3537,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/config.rs|ee24ccceee732d24|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 79,
+    "line": 82,
     "text": "pub(crate) fn declared_roots(&self) -> std::collections::BTreeSet<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
@@ -6238,8 +6238,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/config.rs|ade4e98fb475f753|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 138,
-    "end": 140,
+    "line": 141,
+    "end": 143,
     "text": "pub(crate) struct TrendCfg {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {

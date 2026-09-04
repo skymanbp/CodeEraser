@@ -10,18 +10,25 @@
 //! that ledger's raw material. Precommit, which prints for a person,
 //! adds one line when something fired.
 
+use crate::config::Config;
 use crate::fourclass::session;
 use crate::tombstone::texts::{self, Side};
-use crate::tombstone::{self, PairText};
+use crate::tombstone::{self, PairText, Policy};
 use std::collections::BTreeSet;
 use std::path::Path;
 
 /// The changeset's measurement for one audit event; `untracked` = the
 /// Stop audit's untracked leg (already scoped and judged), empty for
-/// precommit. None = git could not pair the change (a Stop on an
-/// unborn HEAD included: there is no before to erase from), and the
-/// feed line then carries no `tombstone` key at all.
-pub(super) fn report(root: &Path, event: &str, untracked: &[String]) -> Option<serde_json::Value> {
+/// precommit; `policy` = ce.toml's declared ledgers and terms. None =
+/// git could not pair the change (a Stop on an unborn HEAD included:
+/// there is no before to erase from), and the feed line then carries
+/// no `tombstone` key at all.
+fn report(
+    root: &Path,
+    event: &str,
+    untracked: &[String],
+    policy: &Policy,
+) -> Option<serde_json::Value> {
     let (mut pairs, after) = if event == "precommit" {
         (session::scoped_pairs(root, &["--cached"])?, Side::Index)
     } else {
@@ -38,18 +45,39 @@ pub(super) fn report(root: &Path, event: &str, untracked: &[String]) -> Option<s
             lang: l.lang,
         })
         .collect();
-    let mut line = tombstone::feed_json(&tombstone::measure(&pairs, &BTreeSet::new()), None);
+    let f = tombstone::measure(&pairs, &BTreeSet::new(), policy);
+    let mut line = tombstone::feed_json(&f, None);
     if unread > 0 {
         line["unread_pairs"] = serde_json::json!(unread);
     }
     Some(line)
 }
 
+/// The leg as the audit runs it, in the clone verdict's stance: no
+/// judged file changed = nothing to pair, measured zero without its
+/// diff spawn; `[tombstone] ledger` / `terms` come from the audit's
+/// one config load (None = a broken or absent ce.toml: nothing
+/// declared).
+pub(super) fn leg(
+    root: &Path,
+    event: &str,
+    changed: &[String],
+    untracked: &[String],
+    cfg: Option<&Config>,
+) -> Option<serde_json::Value> {
+    if changed.is_empty() {
+        return Some(nothing());
+    }
+    let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
+    report(root, event, untracked, &policy)
+}
+
 /// The measurement of a changeset with no judged file in it — the
 /// audit already knows that from its numstat, so this leg pairs
 /// nothing and spawns nothing.
-pub(super) fn nothing() -> serde_json::Value {
-    tombstone::feed_json(&tombstone::measure(&[], &BTreeSet::new()), None)
+fn nothing() -> serde_json::Value {
+    let f = tombstone::measure(&[], &BTreeSet::new(), &Policy::default());
+    tombstone::feed_json(&f, None)
 }
 
 /// The precommit terminal line, only when a site fired — the person
