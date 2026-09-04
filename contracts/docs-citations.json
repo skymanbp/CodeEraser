@@ -21,10 +21,10 @@
     "end": 161,
     "text": "**职责边界（B1 采纳后）**：延迟敏感的热路径（PreToolUse 廉价检查、索引探针）完全在"
   },
-  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|b46b2b5428594894|0": {
+  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|533be90842d8cac2|0": {
     "target": "../DEVELOPMENT_PLAN.md",
     "line": 239,
-    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测全是需源文本的测量，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；豁免是 ce.toml 声明或定位检测，永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。"
+    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测全是需源文本的测量，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。"
   },
   "docs/reference/methodology.md|size-advisory.md|043f13208d084192|0": {
     "target": "size-advisory.md",
@@ -6760,43 +6760,38 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|147dbd779a4128ca|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 46,
-    "end": 47,
+    "line": 51,
+    "end": 52,
     "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|23ad27fadee194db|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 57,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.8.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 164,
-    "end": 166,
+    "line": 169,
+    "end": 171,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 180,
-    "end": 193,
+    "line": 185,
+    "end": 198,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|754ce8b7872981c0|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 49,
-    "end": 56,
+    "line": 54,
+    "end": 61,
     "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 234,
-    "end": 245,
+    "line": 239,
+    "end": 250,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 41,
-    "end": 44,
+    "line": 46,
+    "end": 49,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
@@ -6805,16 +6800,21 @@
     "end": 51,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e38fc9ea230cd547|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 62,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.9.0\";"
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 36,
-    "end": 39,
+    "line": 41,
+    "end": 44,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 243,
-    "end": 259,
+    "line": 248,
+    "end": 264,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {

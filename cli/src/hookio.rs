@@ -20,6 +20,11 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.9.0 (plan v2.27): a `tombstone` object's `exempt` entry may carry
+/// `line` — the third changelog-role witness exempts a SEGMENT
+/// (`why: "segment"`) and the entry says where it starts; file-level
+/// entries keep their two keys. Additive on 0.8.0.
+///
 /// 0.8.0 adds the `tombstone` event (the per-edit leg of plan v2.26's
 /// residue measurement, feed-only in every tier) and the OPTIONAL
 /// `tombstone` object on `stop_audit` / `precommit` lines; every
@@ -54,7 +59,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.8.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.9.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a

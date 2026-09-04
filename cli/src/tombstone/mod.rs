@@ -78,6 +78,21 @@ pub struct Site {
     pub name: String,
     /// The surface's text, clipped to EXCERPT_CHARS; replay only.
     pub excerpt: String,
+    /// Distinct ledger tokens of the segment around the site (Markdown
+    /// only, 0 elsewhere): the replay's column for the third witness's
+    /// threshold, `role::SEGMENT_TOKENS`. Never in the feed.
+    pub ledger: usize,
+}
+
+/// One exemption: a whole file by role (`line` None), or one segment
+/// of a file by the third witness (`line` = where it starts).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Exempt {
+    pub file: String,
+    pub line: Option<usize>,
+    pub why: Witness,
+    /// The segment's ledger tokens (0 for a file); replay only.
+    pub tokens: usize,
 }
 
 /// The measurement of one changeset.
@@ -87,8 +102,10 @@ pub struct Findings {
     pub erased: Vec<names::Name>,
     pub label: usize,
     pub prose: usize,
-    /// Files exempt by role, each with its witness.
-    pub exempt: Vec<(String, Witness)>,
+    /// Every exemption with its witness — a file by role whenever the
+    /// changeset erased something, a segment only when it suppressed a
+    /// site (an exemption that suppressed nothing is nothing to see).
+    pub exempt: Vec<Exempt>,
     pub sites: Vec<Site>,
 }
 
@@ -114,7 +131,12 @@ pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>) -> Findings {
     }
     for (p, added) in pairs.iter().zip(&added) {
         if let Some(w) = role::changelog_role(p.rel, p.after, p.lang) {
-            out.exempt.push((p.rel.to_string(), w));
+            out.exempt.push(Exempt {
+                file: p.rel.to_string(),
+                line: None,
+                why: w,
+                tokens: 0,
+            });
             continue;
         }
         judge(p, added, &erased, session, &mut out);
@@ -140,9 +162,13 @@ fn judge(
             } else {
                 Kind::Bare
             };
-            out.label += 1;
-            out.sites
-                .push(site(p.rel, l.line, kind, &c.span.text, &l.text));
+            let fired = Fired {
+                line: l.line,
+                kind,
+                name: &c.span.text,
+                text: &l.text,
+            };
+            admit(p, out, fired);
         }
     }
     for s in surfaces::prose(p, added) {
@@ -155,9 +181,13 @@ fn judge(
                 .map(|name| (name, sentence))
         });
         if let Some((name, sentence)) = hit {
-            out.prose += 1;
-            out.sites
-                .push(site(p.rel, s.start, Kind::Prose, &name, sentence));
+            let fired = Fired {
+                line: s.start,
+                kind: Kind::Prose,
+                name: &name,
+                text: sentence,
+            };
+            admit(p, out, fired);
         }
     }
 }
@@ -165,27 +195,67 @@ fn judge(
 /// Characters of surface text a site keeps for the replay.
 const EXCERPT_CHARS: usize = 160;
 
-fn site(rel: &str, line: usize, kind: Kind, name: &str, text: &str) -> Site {
-    Site {
-        file: rel.to_string(),
-        line,
-        kind,
-        name: name.to_string(),
-        excerpt: text.chars().take(EXCERPT_CHARS).collect(),
+/// One surface that bound an erased name, before the third witness
+/// has looked at it.
+struct Fired<'a> {
+    line: usize,
+    kind: Kind,
+    name: &'a str,
+    text: &'a str,
+}
+
+/// A fired surface becomes a site — unless the segment around it is
+/// a ledger by itself (role::segment, Markdown only), which exempts
+/// it and is counted once per segment.
+fn admit(p: &PairText, out: &mut Findings, f: Fired) {
+    let (start, tokens) = if p.lang == Lang::Markdown {
+        role::segment(p.after, f.line)
+    } else {
+        (0, 0)
+    };
+    if tokens >= role::SEGMENT_TOKENS {
+        let e = Exempt {
+            file: p.rel.to_string(),
+            line: Some(start),
+            why: Witness::Segment,
+            tokens,
+        };
+        if !out.exempt.contains(&e) {
+            out.exempt.push(e);
+        }
+        return;
     }
+    match f.kind {
+        Kind::Prose => out.prose += 1,
+        Kind::Bracketed | Kind::Bare => out.label += 1,
+    }
+    out.sites.push(Site {
+        file: p.rel.to_string(),
+        line: f.line,
+        kind: f.kind,
+        name: f.name.to_string(),
+        excerpt: f.text.chars().take(EXCERPT_CHARS).collect(),
+        ledger: tokens,
+    });
 }
 
 /// The additive feed object every producer writes (the observe-feed
-/// contract, `hookio::OBSERVE_SCHEMA` 0.8.0): counts, the exempt
-/// files with their witness, the first sites as `file:line kind`,
-/// and — for the per-edit leg, which carries names across a session
-/// — the erased keys (capped) and the session union's size. No name
-/// text.
+/// contract, `hookio::OBSERVE_SCHEMA` 0.9.0): counts, the exemptions
+/// with their witness (a segment's entry says where it starts), the
+/// first sites as `file:line kind`, and — for the per-edit leg, which
+/// carries names across a session — the erased keys (capped) and the
+/// session union's size. No name text.
 pub fn feed_json(f: &Findings, session: Option<usize>) -> serde_json::Value {
     let exempt: Vec<serde_json::Value> = f
         .exempt
         .iter()
-        .map(|(rel, w)| serde_json::json!({"file": rel, "why": w.name()}))
+        .map(|e| {
+            let mut v = serde_json::json!({"file": e.file, "why": e.why.name()});
+            if let Some(line) = e.line {
+                v["line"] = serde_json::json!(line);
+            }
+            v
+        })
         .collect();
     let sites: Vec<String> = f
         .sites
