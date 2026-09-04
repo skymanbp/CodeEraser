@@ -12,17 +12,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 6.5.0 = the recursion increment (ADR-008 fourth instalment, plan
-/// v2.23). scan/1 gains `callEdges`: the call arcs this side proved
-/// inside ONE parse unit, as index pairs into `rows` with both ends a
-/// cognitive row and the table strictly ascending. The core finds the
-/// cycles over them and charges every unit in one a flat point (S3776
-/// §1, direct or indirect), then names what it raised in `cocBumped`
-/// as [rowIndex, effectiveValue] -- this side renders that number and
-/// never derives the cycle, or the increment, for itself. A file
-/// whose rows would straddle a chunk is refused rather than split,
-/// because a split loses the arcs that cross the cut. A tree with no
-/// call syntax sends no byte and is judged as before.
+/// 6.6.0 = the tombstone family (ADR-008 fifth instalment, plan
+/// v2.27), additive: one new family, tombstone/1. This side measures
+/// every candidate surface a changeset wrote and sends one
+/// [kind, marks, erasedNames] row per surface plus the declared budget
+/// as knob 0; the core judges which rows are sites (a label binding an
+/// erased name; a prose sentence with a mark AND a name) and whether
+/// the changeset is over its budget, and answers the site indices,
+/// their label / prose split and `over` -- this side re-labels the
+/// indices into places and never applies the conjunction itself. A
+/// core without the capability is named, never read as "no sites".
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else. It used to be mirrored here in English and a third
 /// time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -34,7 +33,7 @@ use std::process::{Child, Stdio};
 /// question, and the ledger has an address. Four entries had stacked
 /// up here by 6.1.0 and pushed the file past its own ratchet: the
 /// ledger that documents a size gate is not exempt from it.
-pub const PROTO: &str = "6.5.0";
+pub const PROTO: &str = "6.6.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

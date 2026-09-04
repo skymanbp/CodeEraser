@@ -65,8 +65,8 @@ precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部
 每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`——版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
 `tombstone` 事件行（PreToolUse 一次写入删掉了名字、或它的标题 / 标识符 / 散文把本会话删掉的名字
 写回成「无 X」时才落一行，只记名字的哈希）与 Stop / precommit 行上的 `tombstone` 对象
-（本次改动集的度量：删掉的名字数、标签 / 散文命中数、changelog 定位豁免——整文件按路径、台账形或 `[tombstone] ledger` 声明，或只豁免一段而段条目带起始 `line`——、前几处站点）都只是
-度量——不拦、不出现在任何拒绝理由里，FPR 账本见 [docs/FPR-TOMBSTONE.md](../docs/FPR-TOMBSTONE.md)；
+（本次改动集的度量：删掉的名字数、候选面数 `rows`、changelog 定位豁免——整文件按路径、台账形或 `[tombstone] ledger` 声明，或只豁免一段而段条目带起始 `line`——与核的判决 `judged`：前几处站点 `file:line kind`、标签 / 散文分账、`over`）
+按类自己的 `[tombstone] tier`（默认 observe）出声，且只在核答 `over`（站点数超过 `[tombstone] budget`）时——observe 只记不拦，FPR 账本见 [docs/FPR-TOMBSTONE.md](../docs/FPR-TOMBSTONE.md)；
 `session_id` 为 `null` 表示该条不属于任何会话——`ce precommit` 跑在终端里、
 不是 hook，是唯一会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

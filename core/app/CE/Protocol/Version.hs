@@ -10,17 +10,17 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 6.5.0 = the recursion increment (ADR-008 fourth instalment, plan
--- v2.23), additive on one family. scan/1 gains `callEdges`: the call
--- arcs of one parse unit as index pairs into `rows`, both ends a
--- cognitive row, the table strictly ascending. Every unit inside a
--- cycle over them pays one flat point (S3776 §1 — direct or
--- indirect, so a cycle and not a self-call is what is looked for),
--- and the reply names what moved in `cocBumped` as [rowIndex,
--- effectiveValue]. The cycle is judged here and the increment exists
--- in one place; the measuring side renders the number without
--- deriving either. A request without the key is judged byte for byte
--- as before (K16).
+-- 6.6.0 = the tombstone family (ADR-008 fifth instalment, plan
+-- v2.27), additive: one new family, tombstone/1. The measuring side
+-- sends one [kind, marks, erasedNames] row per candidate surface a
+-- changeset wrote, plus an optional budget knob; this side judges
+-- which rows are sites (a label binding an erased name; a prose
+-- sentence with a mark AND a name) and whether the changeset is over
+-- its budget, and answers the site indices, their label / prose
+-- split and `over`. The conjunction and its floors exist in one place
+-- (CE.Tombstone.Cost); the measuring side renders indices back into
+-- places and never judges. Every other family is answered byte for
+-- byte as before.
 -- The per-version change ledger lives in contracts/VERSIONING.md and
 -- nowhere else. It used to be mirrored here in English and a third
 -- time in cli/src/corelink.rs; the three copies drifted (four entries
@@ -34,7 +34,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- ledger that documents a size gate is not exempt from it.
 
 proto :: String
-proto = "6.5.0"
+proto = "6.6.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

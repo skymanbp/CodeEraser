@@ -334,8 +334,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="555" y="436" class="t-muted" font-size="9" text-anchor="middle">churn · score points</text>
         </g>
 
-        <g id="node-wire" data-node-id="wire" data-node-label="NDJSON wire" tabindex="0" role="button" aria-label="Focus NDJSON wire, proto 6.5.0 · ten families, Architecture component" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="proto 6.5.0 · ten families" data-node-context="Architecture component">
-          <title>NDJSON wire · proto 6.5.0 · ten families · Architecture component</title>
+        <g id="node-wire" data-node-id="wire" data-node-label="NDJSON wire" tabindex="0" role="button" aria-label="Focus NDJSON wire, proto 6.6.0 · eleven families, Architecture component" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="proto 6.6.0 · eleven families" data-node-context="Architecture component">
+          <title>NDJSON wire · proto 6.6.0 · eleven families · Architecture component</title>
           <rect x="760" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="760" y="280" width="150" height="64" rx="6" class="c-messagebus" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(766 286) scale(0.6875)">
@@ -345,7 +345,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <circle cx="7" cy="11.5" r="1" class="sigil-fill" />
           </g>
           <text x="835" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">NDJSON wire</text>
-        <text x="835" y="326" class="t-muted" font-size="9" text-anchor="middle">proto 6.5.0 · ten families</text>
+        <text x="835" y="326" class="t-muted" font-size="8.1" text-anchor="middle">proto 6.6.0 · eleven families</text>
         </g>
 
         <g id="node-judge" data-node-id="judge" data-node-label="Judgment core" tabindex="0" role="button" aria-label="Focus Judgment core, exact rationals · no clock · no RNG, core/ — Haskell · judgment" aria-pressed="false" data-node-kind="backend" data-node-sublabel="exact rationals · no clock · no RNG" data-node-context="core/ — Haskell · judgment">

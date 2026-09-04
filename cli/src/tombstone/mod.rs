@@ -13,18 +13,21 @@
 //!           retrospective mark AND an erased name. The conjunction
 //!           is the whole precision argument: `no longer` alone is
 //!           ordinary prose, a mention alone is a migration guide.
-//! A document in the changelog role (role.rs) is exempt whole and
-//! counted, never silent. Stage one is measurement only: nothing
-//! here decides, and every number lands in the observe feed
-//! (feed_json) for the FPR ledger. Stage two (a wire family whose
-//! Haskell side owns the conjunction and the floor) opens only past
-//! that ledger's gate — see docs/DEVELOPMENT_PLAN.md v2.26.
+//! A document in the changelog role (role.rs), a file `[tombstone]
+//! ledger` declares, or a segment that is a ledger by itself is
+//! exempt and counted, never silent. This side MEASURES: every
+//! candidate surface becomes a row of three integers (wire.rs) and
+//! the core judges which rows are sites, the split and the budget
+//! condition (tombstone/1, plan v2.27 — the FPR ledger
+//! docs/FPR-TOMBSTONE.md opened that gate); every number lands in the
+//! observe feed (feed_json), the judgment beside the measurement.
 //!
 //! Erased names cross the session as KEYS only (names::key): the
 //! PreToolUse leg stores this edit's keys in the feed and the next
 //! edit unions them in as `session`, so an X deleted three edits ago
 //! still binds the heading written now. No name is ever written out.
 
+pub mod feed;
 pub mod frames;
 mod marked;
 pub mod names;
@@ -33,9 +36,12 @@ pub mod role;
 pub mod surfaces;
 pub mod texts;
 pub mod vocab;
+pub mod wire;
 
+pub use feed::{HASH_CAP, SITE_CAP, feed_json};
 pub use policy::Policy;
 pub use vocab::TOMBSTONE_REV;
+pub use wire::{Judged, Judgment};
 
 use crate::scan::lang::Lang;
 use names::Erased;
@@ -70,20 +76,35 @@ impl Kind {
     }
 }
 
+/// One candidate surface this change wrote, as the wire reads it —
+/// the three integers the core judges (`kind`, `marks`, `names`) —
+/// and what only this side may know: where it is, the first name it
+/// bound (the replay's arbitration column), an excerpt, its segment's
+/// ledger tokens. A surface with no mark and no name is not a row.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Site {
+pub struct Row {
     pub file: String,
     pub line: usize,
     pub kind: Kind,
-    /// The erased name this site bound — the replay's arbitration
-    /// column; never in the feed (no name text leaves the machine).
+    /// Retrospective marks in the sentence (0 for a label).
+    pub marks: usize,
+    /// Erased names the surface binds.
+    pub names: usize,
+    /// The first bound name's text (empty when none). Never in the feed.
     pub name: String,
     /// The surface's text, clipped to EXCERPT_CHARS; replay only.
     pub excerpt: String,
-    /// Distinct ledger tokens of the segment around the site (Markdown
+    /// Distinct ledger tokens of the segment around the row (Markdown
     /// only, 0 elsewhere): the replay's column for the third witness's
     /// threshold, `role::SEGMENT_TOKENS`. Never in the feed.
     pub ledger: usize,
+}
+
+impl Row {
+    /// `file:line kind` — the feed's spelling of a place.
+    pub fn place(&self) -> String {
+        format!("{}:{} {}", self.file, self.line, self.kind.name())
+    }
 }
 
 /// One exemption: a whole file by role (`line` None), or one segment
@@ -97,26 +118,27 @@ pub struct Exempt {
     pub tokens: usize,
 }
 
-/// The measurement of one changeset.
+/// The measurement of one changeset — facts only; the judgment is
+/// the core's (wire::Judged).
 #[derive(Debug, Default)]
 pub struct Findings {
     /// R — this changeset's erased names (keys leave; texts stay here).
     pub erased: Vec<names::Name>,
-    pub label: usize,
-    pub prose: usize,
-    /// Every exemption with its witness — a file by role whenever the
-    /// changeset erased something, a segment only when it suppressed a
-    /// site (an exemption that suppressed nothing is nothing to see).
+    /// Every exemption with its witness — a file by role or
+    /// declaration whenever the changeset erased something, a segment
+    /// only when it suppressed a row (an exemption that suppressed
+    /// nothing is nothing to see).
     pub exempt: Vec<Exempt>,
-    pub sites: Vec<Site>,
+    /// The candidate rows, in the order the wire sends them.
+    pub rows: Vec<Row>,
 }
 
-/// How many erased keys one feed line carries at most (a whole-file
-/// rewrite erases hundreds of names; the session union is a bounded
-/// read, so the record is bounded too).
-pub const HASH_CAP: usize = 256;
-/// How many sites a feed line names; the counts stay exact.
-pub const SITE_CAP: usize = 10;
+impl Findings {
+    /// The rows the core judged sites, in its order.
+    pub fn judged_rows<'a>(&'a self, j: &'a Judged) -> impl Iterator<Item = &'a Row> + 'a {
+        j.sites.iter().filter_map(move |&i| self.rows.get(i))
+    }
+}
 
 /// Measure a changeset. `session` = erased keys carried over from
 /// earlier edits of the same session (empty for a Stop audit, which
@@ -145,12 +167,15 @@ pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>, policy: &Policy) -> 
             });
             continue;
         }
-        judge(p, added, &erased, session, &mut out);
+        candidates(p, added, &erased, session, &mut out);
     }
     out
 }
 
-fn judge(
+/// Every candidate surface of one pair: a label whose frame binds an
+/// erased name (names = how many), and every prose sentence carrying
+/// a mark or an erased name (the core applies the conjunction).
+fn candidates(
     p: &PairText,
     added: &BTreeSet<usize>,
     erased: &Erased,
@@ -159,63 +184,67 @@ fn judge(
 ) {
     let known = |k: u64| erased.has(k) || session.contains(&k);
     for l in surfaces::labels(p, added) {
-        let hit = frames::label_candidates(&frames::words(&l.text))
+        let bound: Vec<frames::Candidate> = frames::label_candidates(&frames::words(&l.text))
             .into_iter()
-            .find(|c| known(names::key(&c.span.text)));
-        if let Some(c) = hit {
-            let kind = if c.bracketed {
+            .filter(|c| known(names::key(&c.span.text)))
+            .collect();
+        if let Some(first) = bound.first() {
+            let kind = if first.bracketed {
                 Kind::Bracketed
             } else {
                 Kind::Bare
             };
-            let fired = Fired {
+            let surface = Surface {
                 line: l.line,
                 kind,
-                name: &c.span.text,
+                marks: 0,
+                names: bound.len(),
+                name: &first.span.text,
                 text: &l.text,
             };
-            admit(p, out, fired);
+            admit(p, out, surface);
         }
     }
     for s in surfaces::prose(p, added) {
-        let hit = frames::sentences(&s.text).into_iter().find_map(|sentence| {
-            if !frames::has_mark(sentence) {
-                return None;
+        for sentence in frames::sentences(&s.text) {
+            let marks = frames::marks(sentence);
+            let mut bound = names::spelled_all(sentence, known);
+            bound.extend(erased.wide_all(sentence).map(str::to_string));
+            if marks + bound.len() == 0 {
+                continue;
             }
-            names::spelled_in(sentence, known)
-                .or_else(|| erased.wide_in(sentence).map(str::to_string))
-                .map(|name| (name, sentence))
-        });
-        if let Some((name, sentence)) = hit {
-            let fired = Fired {
+            let surface = Surface {
                 line: s.start,
                 kind: Kind::Prose,
-                name: &name,
+                marks,
+                names: bound.len(),
+                name: bound.first().map_or("", String::as_str),
                 text: sentence,
             };
-            admit(p, out, fired);
+            admit(p, out, surface);
         }
     }
 }
 
-/// Characters of surface text a site keeps for the replay.
+/// Characters of surface text a row keeps for the replay.
 const EXCERPT_CHARS: usize = 160;
 
-/// One surface that bound an erased name, before the third witness
-/// has looked at it.
-struct Fired<'a> {
+/// One candidate surface before the third witness has looked at it.
+struct Surface<'a> {
     line: usize,
     kind: Kind,
+    marks: usize,
+    names: usize,
     name: &'a str,
     text: &'a str,
 }
 
-/// A fired surface becomes a site — unless the segment around it is
-/// a ledger by itself (role::segment, Markdown only), which exempts
+/// A candidate surface becomes a row — unless the segment around it
+/// is a ledger by itself (role::segment, Markdown only), which exempts
 /// it and is counted once per segment.
-fn admit(p: &PairText, out: &mut Findings, f: Fired) {
+fn admit(p: &PairText, out: &mut Findings, s: Surface) {
     let (start, tokens) = if p.lang == Lang::Markdown {
-        role::segment(p.after, f.line)
+        role::segment(p.after, s.line)
     } else {
         (0, 0)
     };
@@ -231,58 +260,16 @@ fn admit(p: &PairText, out: &mut Findings, f: Fired) {
         }
         return;
     }
-    match f.kind {
-        Kind::Prose => out.prose += 1,
-        Kind::Bracketed | Kind::Bare => out.label += 1,
-    }
-    out.sites.push(Site {
+    out.rows.push(Row {
         file: p.rel.to_string(),
-        line: f.line,
-        kind: f.kind,
-        name: f.name.to_string(),
-        excerpt: f.text.chars().take(EXCERPT_CHARS).collect(),
+        line: s.line,
+        kind: s.kind,
+        marks: s.marks,
+        names: s.names,
+        name: s.name.to_string(),
+        excerpt: s.text.chars().take(EXCERPT_CHARS).collect(),
         ledger: tokens,
     });
-}
-
-/// The additive feed object every producer writes (the observe-feed
-/// contract, `hookio::OBSERVE_SCHEMA` 0.9.0): counts, the exemptions
-/// with their witness (a segment's entry says where it starts), the
-/// first sites as `file:line kind`, and — for the per-edit leg, which
-/// carries names across a session — the erased keys (capped) and the
-/// session union's size. No name text.
-pub fn feed_json(f: &Findings, session: Option<usize>) -> serde_json::Value {
-    let exempt: Vec<serde_json::Value> = f
-        .exempt
-        .iter()
-        .map(|e| {
-            let mut v = serde_json::json!({"file": e.file, "why": e.why.name()});
-            if let Some(line) = e.line {
-                v["line"] = serde_json::json!(line);
-            }
-            v
-        })
-        .collect();
-    let sites: Vec<String> = f
-        .sites
-        .iter()
-        .take(SITE_CAP)
-        .map(|s| format!("{}:{} {}", s.file, s.line, s.kind.name()))
-        .collect();
-    let mut line = serde_json::json!({
-        "rev": TOMBSTONE_REV,
-        "erased": f.erased.len(),
-        "label": f.label,
-        "prose": f.prose,
-        "exempt": exempt,
-        "sites": sites,
-    });
-    if let Some(carried) = session {
-        let hashes: Vec<u64> = f.erased.iter().take(HASH_CAP).map(|n| n.key).collect();
-        line["erased_hashes"] = serde_json::json!(hashes);
-        line["session_erased"] = serde_json::json!(carried);
-    }
-    line
 }
 
 #[cfg(test)]

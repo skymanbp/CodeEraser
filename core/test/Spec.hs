@@ -14,6 +14,7 @@ import CE.Graph.Cost (edgeCap, nodeCap)
 import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified AdvisoryProps
 import qualified AuditProps
+import qualified TombstoneProps
 import qualified ClassProps
 import qualified CloneProps
 import qualified EntropyProps
@@ -75,6 +76,7 @@ main = do
       , goldenPairs "trend/golden.ndjson"
       , goldenPairs "erase/golden.ndjson"
       , goldenPairs "audit/golden.ndjson"
+      , goldenPairs "tombstone/golden.ndjson"
       , structural
       , refusalProbes
       , docdupStructural
@@ -94,6 +96,7 @@ main = do
       , TrendProps.battery
       , EraseProps.battery
       , AuditProps.battery
+      , TombstoneProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
       , VerdictFenceProps.battery

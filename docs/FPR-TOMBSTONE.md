@@ -1,7 +1,7 @@
 # 墓碑残留度量 FPR 回放记录（2026-09-04，计划 v2.26 第一段 + v2.27 第二段步 2）
 
 > 门（计划 v2.26 步 6）：500 次真实正常编辑误报 ≤ 1%；未达即停在 observe /
-> feed-only，第二段（wire 族、`ce.toml` 档位、册 14）另走 plan-set。
+> feed-only；第二段 = 计划 v2.27（wire 族 `tombstone/1`、`[tombstone]` 档位表、册 14），步 2–4 已落，deny 晋级仍以本册为门。
 > 方法：`cli/tests/it/tombstone_replay.rs`（`#[ignore]`，release 跑，常设）——
 > 把 git first-parent 历史当真实编辑流：**每提交 = 一个改动集**（父 blob → 子 blob，
 > `session::scoped_pairs` 配对、`texts::load` 一次 `cat-file --batch` 取文），跑钩子

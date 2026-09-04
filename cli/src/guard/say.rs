@@ -65,6 +65,19 @@ pub(super) fn graded_zone(
     )
 }
 
+/// The tombstone class (plan v2.27): the core judged more sites than
+/// `[tombstone] budget` allows in this one write.
+pub(super) fn tombstone_over(sites: usize, budget: u32, shown: &str) -> String {
+    line(
+        "ce: this write leaves {} tombstone site(s), past the `[tombstone] budget` \
+         of {}: {}. A removed name must not survive as an absence label or an \
+         argument from absence — drop the label, or say what replaced it.",
+        "ce：这次写入留下 {} 处墓碑残留，越过 `[tombstone] budget` 的 {}：{}。\
+         被删的名字不该以「无 X」标签或缺席论证的形式留下——去掉标签，或写清替代物。",
+        &[&sites, &budget, &shown],
+    )
+}
+
 /// Fail-open, but never silent: a ce.toml that will not parse.
 pub(super) fn config_unreadable(err: &str) -> String {
     line(

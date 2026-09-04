@@ -4,5 +4,6 @@
 {"type":"dedup_report","report":{"blocks":[],"groups":[]}}
 {"type":"probe_report","matches":[],"elapsed_ms":3}
 {"type":"four_class_report","report":{"degraded":null,"pairs":[]}}
+{"type":"tombstone_report","reply":{"counts":{"label":1,"prose":0,"rows":2},"over":false,"sites":[0]}}
 {"type":"error","message":"bad request: expected value"}
 {"type":"bye"}

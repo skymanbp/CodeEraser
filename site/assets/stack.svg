@@ -71,7 +71,7 @@
         <text x="866" y="492">compatibility evidence</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="513">proto 6.5.0 · SemVer</text>
+        <text x="66" y="513">proto 6.6.0 · SemVer</text>
         <text x="66" y="530">major mismatch refuses</text>
         <text x="66" y="547">minor fields are additive</text>
         <text x="66" y="564">integer rows · class index, no names</text>

@@ -334,8 +334,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="555" y="436" class="t-muted" font-size="9" text-anchor="middle">变动 · 分数点</text>
         </g>
 
-        <g id="node-wire" data-node-id="wire" data-node-label="NDJSON wire" tabindex="0" role="button" aria-label="聚焦 NDJSON wire, proto 6.5.0 · 十个家族, 架构组件" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="proto 6.5.0 · 十个家族" data-node-context="架构组件">
-          <title>NDJSON wire · proto 6.5.0 · 十个家族 · 架构组件</title>
+        <g id="node-wire" data-node-id="wire" data-node-label="NDJSON wire" tabindex="0" role="button" aria-label="聚焦 NDJSON wire, proto 6.6.0 · 十一个家族, 架构组件" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="proto 6.6.0 · 十一个家族" data-node-context="架构组件">
+          <title>NDJSON wire · proto 6.6.0 · 十一个家族 · 架构组件</title>
           <rect x="760" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="760" y="280" width="150" height="64" rx="6" class="c-messagebus" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(766 286) scale(0.6875)">
@@ -345,7 +345,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <circle cx="7" cy="11.5" r="1" class="sigil-fill" />
           </g>
           <text x="835" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">NDJSON wire</text>
-        <text x="835" y="326" class="t-muted" font-size="9" text-anchor="middle">proto 6.5.0 · 十个家族</text>
+        <text x="835" y="326" class="t-muted" font-size="9" text-anchor="middle">proto 6.6.0 · 十一个家族</text>
         </g>
 
         <g id="node-judge" data-node-id="judge" data-node-label="判决核" tabindex="0" role="button" aria-label="聚焦 判决核, 精确有理数 · 无时钟 · 无随机, core/ — Haskell · 判决" aria-pressed="false" data-node-kind="backend" data-node-sublabel="精确有理数 · 无时钟 · 无随机" data-node-context="core/ — Haskell · 判决">

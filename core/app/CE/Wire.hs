@@ -11,7 +11,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableOffence) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knobbedRows, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
 
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
@@ -104,6 +104,38 @@ rowsFamily name overCap offence deg jud =
       , famDegraded = deg
       , famJudged = jud
       }
+
+-- | The cap a KNOBBED table family counts against: rows and knob
+-- rows together (review C15's stance — every request dimension
+-- counts). Promoted when the eleventh family (tombstone/1) minted
+-- trend/2's lambda verbatim — this module's own promotion rule.
+tableCap :: Integer -> RowsReq -> Bool
+tableCap cap req = toInteger (length (rowsOf req) + length (knobsOf req)) > cap
+
+-- | A KNOBBED table family (trend/2, tombstone/1): rows and knob rows
+-- count against one cap together, the first malformed row in request
+-- order is the offence, else the first malformed knob — rows are
+-- facts in request order and none is asked to ascend. trend/2 minted
+-- this cascade and tombstone/1 copied it verbatim, so it lives here
+-- (this module's own promotion rule).
+knobbedRows ::
+  String ->
+  Integer ->
+  (Int -> [Integer] -> Maybe String) ->
+  (Int -> [Integer] -> Maybe String) ->
+  (String -> RowsReq -> B8.ByteString) ->
+  (String -> RowsReq -> B8.ByteString) ->
+  String ->
+  B8.ByteString ->
+  Either (Maybe Value, String, String) B8.ByteString
+knobbedRows name cap rowShape knobShape deg jud proto =
+  rowsFamily name (tableCap cap) offence (deg proto) (jud proto)
+ where
+  offence req =
+    asum
+      [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
+      , tableOffence "knob" (take 1) knobShape (knobsOf req)
+      ]
 
 -- | A KNOBLESS table family (erase/1, audit/1): rows
 -- shape-checked per index against a cap, and ANY knob row

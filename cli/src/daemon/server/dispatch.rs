@@ -53,6 +53,12 @@ pub(super) fn build(shared: &Shared, req: Request) -> (Response, bool) {
             },
             true,
         ),
+        Request::Tombstone { rows, budget } => (
+            Response::TombstoneReport {
+                reply: judge.tombstone(&rows, budget),
+            },
+            true,
+        ),
         Request::Shutdown => (Response::Bye, false),
     }
 }

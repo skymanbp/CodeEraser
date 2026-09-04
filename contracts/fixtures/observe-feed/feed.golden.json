@@ -22,14 +22,18 @@
     "event": "tombstone",
     "exempt": [],
     "file": "<file>",
-    "label": 0,
+    "judged": {
+      "label": 0,
+      "over": false,
+      "prose": 0,
+      "sites": []
+    },
     "mode": "observe",
-    "prose": 0,
     "rev": 1,
+    "rows": 0,
     "schema": "ce.observe/0.9.0",
     "session_erased": 0,
     "session_id": "t",
-    "sites": [],
     "ts_ms": 0
   },
   {
@@ -70,14 +74,18 @@
     "event": "tombstone",
     "exempt": [],
     "file": "<file>",
-    "label": 0,
+    "judged": {
+      "label": 0,
+      "over": false,
+      "prose": 0,
+      "sites": []
+    },
     "mode": "observe",
-    "prose": 0,
     "rev": 1,
+    "rows": 0,
     "schema": "ce.observe/0.9.0",
     "session_erased": 5,
     "session_id": "t",
-    "sites": [],
     "ts_ms": 0
   },
   {
@@ -121,14 +129,18 @@
     "event": "tombstone",
     "exempt": [],
     "file": "<file>",
-    "label": 0,
+    "judged": {
+      "label": 0,
+      "over": false,
+      "prose": 0,
+      "sites": []
+    },
     "mode": "observe",
-    "prose": 0,
     "rev": 1,
+    "rows": 0,
     "schema": "ce.observe/0.9.0",
     "session_erased": 11,
     "session_id": "t",
-    "sites": [],
     "ts_ms": 0
   },
   {
@@ -173,14 +185,18 @@
     "event": "tombstone",
     "exempt": [],
     "file": "<file>",
-    "label": 0,
+    "judged": {
+      "label": 0,
+      "over": false,
+      "prose": 0,
+      "sites": []
+    },
     "mode": "observe",
-    "prose": 0,
     "rev": 1,
+    "rows": 0,
     "schema": "ce.observe/0.9.0",
     "session_erased": 11,
     "session_id": "t",
-    "sites": [],
     "ts_ms": 0
   },
   {
@@ -212,17 +228,21 @@
     "event": "tombstone",
     "exempt": [],
     "file": "<file>",
-    "label": 1,
+    "judged": {
+      "label": 1,
+      "over": false,
+      "prose": 1,
+      "sites": [
+        "a.rs:2 bare",
+        "a.rs:1 prose"
+      ]
+    },
     "mode": "observe",
-    "prose": 1,
     "rev": 1,
+    "rows": 2,
     "schema": "ce.observe/0.9.0",
     "session_erased": 11,
     "session_id": "t",
-    "sites": [
-      "a.rs:2 bare",
-      "a.rs:1 prose"
-    ],
     "ts_ms": 0
   },
   {
@@ -240,10 +260,14 @@
     "tombstone": {
       "erased": 0,
       "exempt": [],
-      "label": 0,
-      "prose": 0,
+      "judged": {
+        "label": 0,
+        "over": false,
+        "prose": 0,
+        "sites": []
+      },
       "rev": 1,
-      "sites": []
+      "rows": 0
     },
     "ts_ms": 0
   },
@@ -259,10 +283,14 @@
     "tombstone": {
       "erased": 0,
       "exempt": [],
-      "label": 0,
-      "prose": 0,
+      "judged": {
+        "label": 0,
+        "over": false,
+        "prose": 0,
+        "sites": []
+      },
       "rev": 1,
-      "sites": []
+      "rows": 0
     },
     "ts_ms": 0
   }

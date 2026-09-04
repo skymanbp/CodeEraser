@@ -17,37 +17,24 @@
 module CE.Trend (respond) where
 
 import CE.Trend.Cost (cliffOf, declineRunOf, judgedView, knobTable, slopeMicroPerDay, trendRowCap, verdictOf)
-import CE.Wire (RowsReq (..), pick, rowsFamily, tableOffence)
+import CE.Wire (RowsReq (..), knobbedRows, pick)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
-import Data.Foldable (asum)
 
 
--- | The shared cascade with this family's bindings (CE.Wire).
+-- | The shared knobbed-table cascade with this family's bindings
+-- (CE.Wire knobbedRows).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto =
-  rowsFamily
-    "trend"
-    (\req -> toInteger (length (rowsOf req) + length (knobsOf req)) > trendRowCap)
-    violation
-    (degraded proto)
-    (judged proto)
+respond = knobbedRows "trend" trendRowCap rowShape knobShape degraded judged
 
--- | First boundary-contract offender in request order. Row ORDER is
--- deliberately unconstrained: the judged view sorts by timestamp,
--- and git's first-parent order is topological, not chronological —
--- demanding ascending ts rejected legal histories with rebased or
--- backdated commits (review 2026-08-20 #9). Ties and shuffles alike
--- are data; the all-tied window answers a null slope (no
--- ts-distinct pair), never a refusal — its falls still report.
-violation :: RowsReq -> Maybe String
-violation req =
-  asum
-    [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
-    , tableOffence "knob" (take 1) knobShape (knobsOf req)
-    ]
-
+-- | Boundary contract per row. Row ORDER is deliberately
+-- unconstrained: the judged view sorts by timestamp, and git's
+-- first-parent order is topological, not chronological — demanding
+-- ascending ts rejected legal histories with rebased or backdated
+-- commits (review 2026-08-20 #9). Ties and shuffles alike are data;
+-- the all-tied window answers a null slope (no ts-distinct pair),
+-- never a refusal — its falls still report.
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of
   [ts, score, scale]

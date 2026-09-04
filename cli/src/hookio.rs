@@ -20,10 +20,15 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
-/// 0.9.0 (plan v2.27): a `tombstone` object's `exempt` entry may carry
-/// `line` (the third witness exempts a SEGMENT, `why: "segment"`, and
-/// says where it starts) and `why` may read `declared` (a file named in
-/// `[tombstone] ledger`); file-level entries keep two keys. Additive.
+/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire
+/// (tombstone/1) — its counts and sites live under `judged` (`sites` as
+/// `file:line kind`, `label`, `prose`, `over`), or `judged.degraded`
+/// names why there is none; `rows` counts the candidate surfaces sent;
+/// an `exempt` entry may carry `line` (a segment) and `why: declared`
+/// (a file `[tombstone] ledger` names); a `tombstone` event's `mode`
+/// is the class's own `[tombstone] tier`. Replaces 0.8.0's Rust-judged
+/// `label` / `prose` / `sites` — a named break of a shape no release
+/// carried.
 ///
 /// 0.8.0 adds the `tombstone` event (the per-edit leg of plan v2.26's
 /// residue measurement, feed-only in every tier) and the OPTIONAL

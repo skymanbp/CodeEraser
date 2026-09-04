@@ -158,12 +158,12 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 技术栈、设计与哲学
 
-![架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染——终端、GUI、MCP 服务器、Claude Code hooks、CI](docs/assets/architecture.zh.svg)
+![架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十一个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染——终端、GUI、MCP 服务器、Claude Code hooks、CI](docs/assets/architecture.zh.svg)
 
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与<!--ce:count:grammars#word-->六<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->15<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`——每个判决家族、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
-- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.5.0<!--/ce-->，<!--ce:count:families#word-->十<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.0.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
+- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.6.0<!--/ce-->，<!--ce:count:families#word-->十一<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.1.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据 · ADR-009 文档事实派生、不手写。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
 - **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十三<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑<!--ce:count:gates#word-->六<!--/ce-->道产品门。
 

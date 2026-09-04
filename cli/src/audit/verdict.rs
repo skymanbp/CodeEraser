@@ -8,6 +8,7 @@
 //! a VISIBLE degraded skip (A9f) — a missing core can never block a
 //! session, and can never silently pass one either.
 
+use crate::corelink::Link;
 use serde_json::{Value, json};
 use std::collections::HashSet;
 use std::path::Path;
@@ -25,11 +26,20 @@ pub struct Verdict {
     pub shown: Vec<String>,
 }
 
+/// The audit's core link — the shared head every judged surface
+/// speaks (lockstep::open_family), demanding audit/1. None = no
+/// spawnable core, or a pre-2.24 core without the capability: the
+/// callers' visible degraded skip; local re-judging stays forbidden.
+pub(super) fn open() -> Option<Link> {
+    let bin = crate::daemon::judge::core_bin()?;
+    crate::lockstep::open_family(&bin, "audit/1").ok()
+}
+
 /// Measure (set membership per block side), judge (one audit.request
-/// over a fresh core link), re-label. None = the pipeline, the core
+/// over the audit's link), re-label. None = the pipeline, the core
 /// or the wire failed — DEGRADED, stamped in the observe entry,
 /// never conflated with "no duplicates" (A9f).
-pub fn judge(root: &Path, changed: &[String]) -> Option<Verdict> {
+pub fn judge(root: &Path, changed: &[String], link: Option<&mut Link>) -> Option<Verdict> {
     let (found, _) = crate::dedup::analyze(root, None, None, None).ok()?;
     // a set, not a Vec scan: blocks × changed was O(B·C) string
     // compares on every Stop (~50 M on a large index)
@@ -44,12 +54,7 @@ pub fn judge(root: &Path, changed: &[String]) -> Option<Verdict> {
             ]
         })
         .collect();
-    let bin = crate::daemon::judge::core_bin()?;
-    // .ok()? folds both failure legs — no spawnable core, or a
-    // pre-2.24 core without the capability — into the callers'
-    // visible degraded skip; local re-judging stays forbidden
-    let mut link = crate::lockstep::open_family(&bin, "audit/1").ok()?;
-    let reply = link.request("audit", json!({ "rows": rows })).ok()?;
+    let reply = link?.request("audit", json!({ "rows": rows })).ok()?;
     consume(&reply, &found.blocks)
 }
 

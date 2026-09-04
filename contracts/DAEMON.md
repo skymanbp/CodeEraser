@@ -28,8 +28,10 @@
   每连接一线程（静默连接只占住自己，卡不住 accept 循环；线程上限
   64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
   纪律不变。
-- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.0.0<!--/ce-->**：
-  `hello_ok` 砍去无读者的 `version` 字段〔I 轮 D8，2026-08-24，用户拍板
+- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.1.0<!--/ce-->**：
+  2.1.0 = 加性 `tombstone{rows,budget}` 请求与 `tombstone_report{reply}` 应答〔计划 v2.27 步 4，
+  2026-09-04；2.1.0 客户端遇 2.0.0 daemon 按 §2 回执校验判 stale、请退后 respawn——该条自此有实例〕；
+  2.0.0 = `hello_ok` 砍去无读者的 `version` 字段〔I 轮 D8，2026-08-24，用户拍板
   「现在就删」；删字段 = major，1.x 客户端得 `restart` 后自 respawn〕；1.1.0 =
   加性 `hello.token`，1.0.0 行仍可解析、得 unauthorized 拒绝），与
   ce↔ce-core 的 handshake proto（VERSIONING.md §1）**相互独立**。
@@ -50,7 +52,7 @@
 - **回执校验（2026-08-20 #1）**：客户端**不盲信 `hello_ok`**——回执
   `proto` 旧于自身（同 major、低 minor；判据 = `client.rs::stale` 的 major.minor 比较，
   `refuse_stale` 只对同 major 者代发 shutdown。daemon 2.0.0 起 1.x 旧进程走 major 不符的
-  重启路而非本条；2.0.0 为 2.x 首版，本条今日无实例、是前瞻契约）即判 stale：`request` 令其
+  重启路而非本条；2.1.0 起本条有实例——2.1.0 客户端遇 2.0.0 daemon 即此路）即判 stale：`request` 令其
   shutdown 后 respawn 一轮；`request_if_running` 只放行 Shutdown
   （eject 仍可令其退役），其余请求报错拒信。
 - **空闲退出**：30 分钟无活动（`CE_DAEMON_IDLE_SECS` 仅测试可调）；
@@ -114,6 +116,7 @@
 | `dedup{min_tokens?,min_distinct?}` | 对 daemon 根跑 dedup 管线 | `dedup_report{report}` |
 | `probe{file_path,content}` | M3 廉价门：即将写入内容的 T1/T2 证实匹配（排除自身路径，零刷新） | `probe_report{matches,elapsed_ms}` |
 | `four_class{pairs}` | M4 判决：(before,after) 路径对走 daemon 持有的 ce-core link；只有**路径**过 socket，内容 daemon 侧读（ADR-002） | `four_class_report{report}` |
+| `tombstone{rows,budget?}` | v2.27 墓碑判决：度量钩子的 `[kind,marks,erasedNames]` 行与声明预算走同一条 ce-core link（tombstone/1）；只有**整数**过 socket，行序由钩子回贴成站点 | `tombstone_report{reply}`（原样 `tombstone.result`，或 `{degraded:true,reason}`——核缺席 / 无此能力 / 链断各具名） |
 | `shutdown` | 退出 | `bye` |
 
 - 任何请求的失败面 → `error{message}`；降级信息在 report **内部**
@@ -130,12 +133,13 @@
   `cargo test --test it daemon_proto::`（CE_BLESS=1 蓄意重生成）守护。
 - **覆盖边界（清零批审查注记）**：golden 冻结的是 enum 变体的**信封
   形状**；`dedup_report.report`、`probe_report.matches`、
-  `four_class_report.report` 三个嵌套载荷是 `serde_json::Value` 直通，
+  `four_class_report.report`、`tombstone_report.reply` 四个嵌套载荷是 `serde_json::Value` 直通，
   其内部键**不在**本门覆盖内（fixture 里的载荷是示意占位）。各自的
   权威与钉点：dedup report = `dedup::report_json`（report_schema
   golden `fixtures/dedup-report/` + daemon_e2e 消费）、fourclass
   report = `fourclass::session` 形状（daemon_e2e 断言 + wire_indices
-  索引钉）、probe matches = probe.rs 报告形（guard 电池）。
+  索引钉）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =
+  ce-core 的 `tombstone.result`（wire golden `fixtures/tombstone/` + `tombstone::wire::consume` 单元腿）。
 
 ## 5. 复跑
 

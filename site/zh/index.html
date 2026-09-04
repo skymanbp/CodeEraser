@@ -62,7 +62,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 951/1000</span> | 判轴 0:66 1:0 2:76 3:0 4:0 5:0 6:202 | 候选 34
+<span class="s">检查分数 950/1000</span> | 判轴 0:69 1:0 2:75 3:0 4:0 5:0 6:206 | 候选 34
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：10 块并入既有成员，16 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -143,7 +143,7 @@
 
 <h2>内部构造</h2>
 <figure class="arch">
-  <img src="/assets/architecture.zh.svg" width="1440" height="620" alt="架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染（终端、GUI、MCP 服务器、Claude Code hooks、CI）" loading="lazy">
+  <img src="/assets/architecture.zh.svg" width="1440" height="620" alt="架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十一个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染（终端、GUI、MCP 服务器、Claude Code hooks、CI）" loading="lazy">
   <figcaption>度量在 Rust，判决在 Haskell——一条 wire、每家族一份报告 schema、五张面孔。由 <code>docs/diagrams/architecture.zh.json</code> 渲染；每个组件都引用自己的源文件。</figcaption>
 </figure>
 <p><a href="/zh/stack/">查看组件级技术栈与执行门禁 →</a></p>

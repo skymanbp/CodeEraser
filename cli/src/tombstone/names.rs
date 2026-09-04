@@ -66,9 +66,17 @@ fn long_runs(text: &str) -> impl Iterator<Item = String> + '_ {
         .filter(|c| c.matches('_').count() >= JOIN_MAX)
 }
 
-/// The key of every spelling a text could mention a name under.
-pub fn spelled_in(text: &str, known: impl Fn(u64) -> bool) -> Option<String> {
-    spellings(text).into_iter().find(|s| known(key(s)))
+/// Every known name a text spells, one spelling per key — the count
+/// the wire carries, the first the replay prints.
+pub fn spelled_all(text: &str, known: impl Fn(u64) -> bool) -> Vec<String> {
+    let mut seen = BTreeSet::new();
+    spellings(text)
+        .into_iter()
+        .filter(|s| {
+            let k = key(s);
+            known(k) && seen.insert(k)
+        })
+        .collect()
 }
 
 /// The name floor: a letter, long enough for its script, no word of
@@ -156,13 +164,13 @@ impl Erased {
         self.keys.contains(&key)
     }
 
-    /// The first wide erased name occurring in `text` as a substring
-    /// — the read a key cannot make, since a Chinese sentence is one
+    /// Every wide erased name occurring in `text` as a substring —
+    /// the read a key cannot make, since a Chinese sentence is one
     /// word.
-    pub fn wide_in(&self, text: &str) -> Option<&str> {
+    pub fn wide_all<'a>(&'a self, text: &'a str) -> impl Iterator<Item = &'a str> + 'a {
         self.names
             .iter()
-            .find(|n| n.wide && text.contains(&n.text))
+            .filter(move |n| n.wide && text.contains(&n.text))
             .map(|n| n.text.as_str())
     }
 }

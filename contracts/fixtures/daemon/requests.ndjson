@@ -5,4 +5,5 @@
 {"type":"dedup","min_tokens":null,"min_distinct":null}
 {"type":"probe","file_path":"src/a.rs","content":"fn x() {}\n"}
 {"type":"four_class","pairs":[["a.rs","a.rs"],[null,"new.rs"]]}
+{"type":"tombstone","rows":[[0,0,1],[2,1,1]],"budget":3}
 {"type":"shutdown"}

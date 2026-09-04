@@ -105,15 +105,22 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
             zone = budget::zone_assess(root, &budget::ZoneLines::of(&t, c), env, &mode, lines);
         }
     }
-    tombstone::observe(root, env, &mode, cfg.as_ref().map(|(c, _)| c));
-    emit_reasons(&mode, reasons, zone, &broken);
+    // the third class speaks at its own tier (`[tombstone] tier`)
+    let tomb = tombstone::observe(root, env, cfg.as_ref().map(|(c, _)| c));
+    emit_reasons(
+        &mode,
+        reasons,
+        zone.into_iter().chain(tomb).collect(),
+        &broken,
+    );
     ExitCode::SUCCESS
 }
 
 /// Fired reasons → one decision line, at the STRONGEST tier among
 /// the rules that fired: the two promoted classes carry the class
-/// mode, the zone rule (v2.7 ①, opt-in) its own mapped tier — a
-/// zone warn never rides a deny-class escalator, nor the reverse.
+/// mode, the zone rule (v2.7 ①, opt-in) its own mapped tier and the
+/// tombstone class its own declared one (`tiered`) — a zone warn
+/// never rides a deny-class escalator, nor the reverse.
 /// A BROKEN ce.toml still fails open (a typo must never brick an
 /// edit) but not SILENT: the decision surfaces as a visible warn
 /// naming the config error (review C2). Split from decide() at the
@@ -121,7 +128,7 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
 fn emit_reasons(
     mode: &str,
     class_reasons: Vec<String>,
-    zone: Option<(&'static str, String)>,
+    tiered: Vec<(&'static str, String)>,
     broken: &Option<String>,
 ) {
     let rank = |t: &str| {
@@ -136,9 +143,9 @@ fn emit_reasons(
         mode
     };
     let mut reasons = class_reasons;
-    if let Some((zt, why)) = zone {
-        if rank(zt) > rank(tier) {
-            tier = zt;
+    for (t, why) in tiered {
+        if rank(t) > rank(tier) {
+            tier = t;
         }
         reasons.push(why);
     }

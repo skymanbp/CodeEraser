@@ -247,27 +247,33 @@ pub fn sentences(text: &str) -> Vec<&str> {
         .collect()
 }
 
-/// Whether a prose segment carries a retrospective mark.
-pub fn has_mark(text: &str) -> bool {
+/// The retrospective marks a prose sentence carries: every English
+/// phrase at word boundaries, every Chinese one — the count the wire
+/// carries, which the core's conjunction reads against its floor.
+/// Phrases may overlap (`no longer` inside `is no longer needed`) and
+/// both count: the number is the floor's input, not a tally.
+pub fn marks(text: &str) -> usize {
     let lower = text.to_lowercase();
-    entries(MARKS_EN).any(|m| phrase_in(&lower, m)) || entries(MARKS_ZH).any(|m| text.contains(m))
+    let en: usize = entries(MARKS_EN).map(|m| phrase_count(&lower, m)).sum();
+    let zh: usize = entries(MARKS_ZH).map(|m| text.matches(m).count()).sum();
+    en + zh
 }
 
-/// `needle` (ASCII) in `hay` at word boundaries — `previously` must
-/// not match inside a `previously_seen` identifier. Each occurrence
-/// is tried; the needle starts with an ASCII byte, so `start + 1` is
-/// always a char boundary.
-fn phrase_in(hay: &str, needle: &str) -> bool {
-    let mut from = 0;
+/// Occurrences of `needle` (ASCII) in `hay` at word boundaries —
+/// `previously` must not match inside a `previously_seen` identifier.
+/// Each occurrence is tried; the needle starts with an ASCII byte, so
+/// `start + 1` is always a char boundary.
+fn phrase_count(hay: &str, needle: &str) -> usize {
+    let (mut from, mut hits) = (0, 0);
     while let Some(pos) = hay[from..].find(needle) {
         let (start, end) = (from + pos, from + pos + needle.len());
         let clean = |c: Option<char>| c.is_none_or(|c| !c.is_alphanumeric() && c != '_');
         if clean(hay[..start].chars().next_back()) && clean(hay[end..].chars().next()) {
-            return true;
+            hits += 1;
         }
         from = start + 1;
     }
-    false
+    hits
 }
 
 #[cfg(test)]

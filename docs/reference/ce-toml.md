@@ -87,7 +87,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | key | default | meaning |
 |---|---|---|
 | `tier` | *(absent)* | The tombstone class's own hook tier: observe / warn / ask / deny; unset = observe. `[guard] mode` does not reach this class — a class with a key of its own decides at that key — and the class ships at observe until docs/FPR-TOMBSTONE.md argues a promotion (plan §4.2). Any other value is refused at load by name, so a mistyped tier can never look armed |
-| `budget` | *(absent)* | Sites one changeset may carry before the class's condition holds (`sites > budget`, judged by the core over tombstone/1); absent = never judged, the class stays feed-only. The measurement reaches the observe feed either way |
+| `budget` | *(absent)* | Sites one changeset may carry before the class's condition holds (`sites > budget`, judged by the core over tombstone/1); absent = no condition is evaluated (`over` never holds) while the core still seats the sites; the judgment reaches the observe feed either way |
 | `ledger` | *(absent)* | Files declared to hold the changelog role, in the exclude list's dialect (`dir/` the directory's files): exempt whole and counted `declared` in the feed — the backstop for a ledger neither the path, the shape nor the segment witness reads |
 | `terms` | *(absent)* | The repository's own vocabulary: words that never spell a name, whole or as a word of a compound (`pork` declared keeps `braise_pork` out and leaves `braise` in); matched case-insensitively |
 

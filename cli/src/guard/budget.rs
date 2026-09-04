@@ -106,13 +106,19 @@ pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>)
     }
 }
 
-/// The three budget inputs at their shipped values; everything else
-/// as declared.
+/// The budget inputs at their shipped values; everything else as
+/// declared. The tombstone table's budget, ledger and terms are
+/// budget inputs too (a drifted ledger could exempt the very file
+/// being written); its tier stays declared, as `[guard] mode` does.
 fn shipped_budgets(mut cfg: Config) -> Config {
     let shipped = Config::default();
     cfg.thresholds = shipped.thresholds;
     cfg.exclude = shipped.exclude;
     cfg.rules = shipped.rules;
+    cfg.tombstone = crate::config::TombstoneCfg {
+        tier: cfg.tombstone.tier.take(),
+        ..shipped.tombstone
+    };
     cfg
 }
 

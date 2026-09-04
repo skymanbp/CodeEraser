@@ -15,8 +15,11 @@ use std::path::Path;
 /// 2026-08-24, the user's "delete it now") drops hello_ok.version —
 /// no client ever read it (the negotiation rides `proto`; the binary
 /// a respawn needs is the client's own) — and a removed field is a
-/// major, so a 1.x client meets `restart` and respawns.
-pub const DAEMON_PROTO: &str = "2.0.0";
+/// major, so a 1.x client meets `restart` and respawns; 2.1.0 (plan
+/// v2.27 step 4) adds the `tombstone` request — additive: a 2.1.0
+/// client asks a 2.0.0 daemon to leave (client.rs `stale`, same major
+/// and older minor) before it ever sends one.
+pub const DAEMON_PROTO: &str = "2.1.0";
 
 // Clone: the client's deadline wrapper moves the request into the
 // worker thread that owns the connection (plan v2.16-era #85 close);
@@ -54,6 +57,14 @@ pub enum Request {
     FourClass {
         pairs: Vec<(Option<String>, Option<String>)>,
     },
+    /// The tombstone verdict (plan v2.27): the measuring hook's
+    /// [kind, marks, erasedNames] rows and the declared budget, judged
+    /// over the daemon-owned core link (tombstone/1). Only integers
+    /// cross this socket; the hook re-labels the reply's indices.
+    Tombstone {
+        rows: Vec<[u64; 3]>,
+        budget: Option<u32>,
+    },
     Shutdown,
 }
 
@@ -82,6 +93,11 @@ pub enum Response {
     /// Degradation is inside the report, never silent (A9f).
     FourClassReport {
         report: serde_json::Value,
+    },
+    /// The raw tombstone.result, or a degraded object naming why there
+    /// is none (`{"degraded": true, "reason": …}`) — never silent (A9f).
+    TombstoneReport {
+        reply: serde_json::Value,
     },
     Error {
         message: String,

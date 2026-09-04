@@ -1,0 +1,12 @@
+{"id":1,"proto":"6.0.0","rows":[[0,0,1],[1,0,1],[2,1,1],[2,1,0],[2,0,1],[2,0,0]],"knobs":[[0,1]],"type":"tombstone.request"}
+{"counts":{"label":2,"prose":1,"rows":6},"degraded":false,"id":1,"knobs":[[0,1]],"over":true,"proto":"6.6.0","sites":[0,1,2],"type":"tombstone.result"}
+{"id":2,"proto":"6.0.0","rows":[[2,1,1]],"type":"tombstone.request"}
+{"counts":{"label":0,"prose":1,"rows":1},"degraded":false,"id":2,"knobs":[],"over":false,"proto":"6.6.0","sites":[0],"type":"tombstone.result"}
+{"id":3,"proto":"6.0.0","rows":[[0,0,1],[2,1,1]],"knobs":[[0,2]],"type":"tombstone.request"}
+{"counts":{"label":1,"prose":1,"rows":2},"degraded":false,"id":3,"knobs":[[0,2]],"over":false,"proto":"6.6.0","sites":[0,1],"type":"tombstone.result"}
+{"id":4,"proto":"6.0.0","rows":[[3,0,1]],"type":"tombstone.request"}
+{"code":"contract","id":4,"message":"row 0: kind outside 0..2","proto":"6.6.0","type":"error"}
+{"id":5,"proto":"6.0.0","rows":[[0,0,1]],"knobs":[[1,5]],"type":"tombstone.request"}
+{"code":"contract","id":5,"message":"knob 0: unknown knob code","proto":"6.6.0","type":"error"}
+{"id":6,"proto":"6.0.0","rows":[],"type":"tombstone.request"}
+{"counts":{"label":0,"prose":0,"rows":0},"degraded":false,"id":6,"knobs":[],"over":false,"proto":"6.6.0","sites":[],"type":"tombstone.result"}

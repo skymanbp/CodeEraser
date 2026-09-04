@@ -28,7 +28,7 @@
 
 **无默认档位变更。** 计划 v2.26 第一段（2026-09-04；用户三裁：分两段先量 FPR / 出处叙事算残留但 changelog
 定位的文档豁免 / 命名 `tombstone`）——**墓碑残留只度量、不判决、零面变化**：
-- **feed schema `ce.observe/0.7.0` → 0.8.0（具名断点）→ 0.9.0（v2.27 加性：`exempt` 段级条目带起始 `line`）**：PreToolUse 新事件 `tombstone`（仅当本次删了名字
+- **feed schema `ce.observe/0.7.0` → 0.8.0（具名断点）→ 0.9.0（v2.27 具名断点：判决键 `judged`，段级 `exempt` 条目带起始 `line`——下节步 4）**：PreToolUse 新事件 `tombstone`（仅当本次删了名字
   或命中时写，带 `erased_hashes` / `session_erased`，名字只以 fnv1a64 键出现）；Stop / precommit 行加性对象
   `tombstone`（`label` / `prose` / `erased` / `exempt` / `sites`，站点只写 `file:line kind`）；golden 重 bless，
   `plugin/README.md` feed 段与册 11 同步；precommit 命中时多印一行人读摘要，任何档位不阻断。
@@ -52,7 +52,7 @@
 `[tombstone] ledger` 声明表兑底」两者都做 / 单词名字继续算、ASCII 3 字符地板维持）——按步就地记账：
 - **步 2 段级台账见证**（`role::segment` / `Witness::Segment`）：changelog 定位的第三见证——被触段（`>` 引用块
   连续行，或标题到下一标题的正文）自身含 ≥ 3 个互异版本 / ISO 日期 / 短哈希记号即只豁免该段并入账（feed 条目带
-  起始 `line`，schema 0.9.0 加性）；K = 3 由第七轮回放定（真阳所在段记号 0、横幅段 33 / 75 / 77，窗口 [1, 33]，
+  起始 `line`，schema 0.9.0）；K = 3 由第七轮回放定（真阳所在段记号 0、横幅段 33 / 75 / 77，窗口 [1, 33]，
   与整文件见证「至少三个标题」同一地板）；第七轮：自仓命中提交 7 → 4（三处横幅中间态转段级豁免、6 处真阳原样，
   保守读法 1.32 % → 0.75 %），requests 0/400 不变（`docs/FPR-TOMBSTONE.md` 第七轮节）。
 - **引文门补一扇门**（子仓 `docs_citations_parts/passes.rs`）：`CE_DROP_VANISHED` 点名的条目在按行认领之前退役，
@@ -61,6 +61,16 @@
   `[guard] mode` 不及；四档之外按名拒载）/ `budget`（缺席 = 不判，只入 feed）/ `ledger`（声明台账文件，任何语言整文
   豁免，feed `why` = `declared`）/ `terms`（仓库自有词汇永不成名，含复合词）；四键皆入 `knobs_digest`（默认档位拼写即
   静默）；度量层只多一个 `Policy` 参数（钩子与审计从同一次配置加载建它，回放与无表的仓库用默认）。
+- **步 4 wire 6.6.0 `tombstone/1` + 三腿档位路由**（`core/app/CE/Tombstone.hs` / `CE.Tombstone.Cost` / `cli/src/tombstone/wire.rs`）：
+  第十一判决族——Rust 只送每个候选面的三个整数 `[kind, marks, erasedNames]` 与预算旋钮（码 0），合取（散文 marks ≥ 1 ∧
+  names ≥ 1、标签 names ≥ 1）、标签 / 散文分账与 `over`（sites > budget）全在核（`TombstoneProps` 七腿：真值表全枚举 /
+  无预算恒 false / 边界 / 三类 contract 拒绝 / 降级面），golden 六对随 hello 能力表机器重生（request 行锚仍 6.0.0）；
+  PreToolUse 经 daemon **2.1.0** 加性 `tombstone{rows,budget}` 转发到 daemon 持有的核链，Stop / precommit 复用 audit
+  那一条核链（一次打开、两个判决）；三腿只读两位——类自己的 `[tombstone] tier` 与核答的 `over`——同真才出声
+  （`guard/say.rs` 双语一句；deny 拒写、Stop 阻断、precommit 退 1），observe 只记不说；核不可用 / 旧核无此能力 /
+  回执越界 = feed `judged.degraded` 具名，绝不阻断也绝不默过。**feed schema 0.9.0 改为具名断点**（无任何发布带过
+  0.8.0 形）：`tombstone` 对象的计数与站点搬进 `judged{sites,label,prose,over}`，`rows` 计候选面，`tombstone` 事件的
+  `mode` = 类档位；`frames::marks` 计数取代 `has_mark`、`names::spelled_all` / `wide_all` 取代首个命中。自仓 ce.toml 不声明 `[tombstone]`。
 
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 

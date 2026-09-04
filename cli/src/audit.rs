@@ -11,11 +11,13 @@
 
 mod changes;
 mod observe;
+mod precommit;
 mod tombstone;
 mod verdict;
 
 use crate::config::Config;
 use observe::{AuditEvent, observe_log};
+pub use precommit::run_precommit;
 use serde::Deserialize;
 use std::path::Path;
 use std::process::ExitCode;
@@ -85,7 +87,7 @@ type Gathered = (
     i64,
     Vec<String>,
     Option<verdict::Verdict>,
-    Option<serde_json::Value>,
+    Option<tombstone::Leg>,
 );
 fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -> Option<Gathered> {
     // ONE load: tier rendering and the exclusion list both need it,
@@ -111,7 +113,8 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
     changed.extend_from_slice(&untracked);
     // nothing changed = judged clean without a spawn (INFORMATION
     // never pays; the enforcement leg pays only when there is
-    // something to enforce)
+    // something to enforce) — one core link for both verdicts
+    let mut link = (!changed.is_empty()).then(verdict::open).flatten();
     let dups = if changed.is_empty() {
         Some(verdict::Verdict {
             fail: false,
@@ -119,10 +122,11 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
             shown: Vec::new(),
         })
     } else {
-        verdict::judge(root, &changed)
+        verdict::judge(root, &changed, link.as_mut())
     };
     let fourclass = (event == "stop_audit").then(|| fourclass_report(root));
-    let tombstone = tombstone::leg(root, event, &changed, &untracked, loaded.as_ref().ok());
+    let cfg = loaded.as_ref().ok();
+    let tombstone = tombstone::leg(root, event, &changed, &untracked, cfg, link.as_mut());
     observe_log(
         root,
         AuditEvent {
@@ -133,7 +137,7 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
             changed: changed.len(),
             dups: dups.as_ref().map(|v| v.dups),
             fourclass,
-            tombstone: tombstone.clone(),
+            tombstone: tombstone.as_ref().map(|t| t.feed.clone()),
             skipped: None, // this leg MEASURED — see AuditEvent::skipped
             unmeasured: crate::gitmodules::unseated(root),
         },
@@ -142,22 +146,30 @@ fn gather(root: &Path, diff_tail: &[&str], event: &str, session: Option<&str>) -
 }
 
 /// One project's Stop audit: its observe line always, and the block
-/// reason when deny mode holds a failing verdict — the caller prints,
-/// so a gated submodule's verdict can ride the session's one Stop.
+/// reasons when a deny tier holds a failing verdict — the duplicate
+/// verdict at `[guard] mode`, the tombstone verdict at `[tombstone]
+/// tier`. The caller prints, so a gated submodule's verdict can ride
+/// the session's one Stop.
 fn audit(root: &Path, session: &str) -> Option<String> {
     // Not a git repo: nothing to audit, but the skip is RECORDED.
     let Some(base) = changes::base_rev(root) else {
         unmeasured_stop(root, session, Some("no_git"));
         return None;
     };
-    let Some((mode, net_loc, _, dups, _)) =
+    let Some((mode, net_loc, _, dups, tomb)) =
         gather(root, &[base.as_str()], "stop_audit", Some(session))
     else {
         unmeasured_stop(root, session, None);
         return None;
     };
-    let v = dups.as_ref()?;
-    (mode == "deny" && v.fail).then(|| reason(net_loc, v))
+    let mut reasons = Vec::new();
+    if let Some(v) = dups.as_ref().filter(|v| mode == "deny" && v.fail) {
+        reasons.push(reason(net_loc, v));
+    }
+    if let Some(t) = tomb.as_ref().filter(|t| t.blocks()) {
+        reasons.push(tombstone::reason(t));
+    }
+    (!reasons.is_empty()).then(|| reasons.join(" "))
 }
 
 /// Every Stop that produces NO measurement, said in the feed instead
@@ -205,71 +217,6 @@ fn fourclass_report(root: &Path) -> serde_json::Value {
         Ok(Response::FourClassReport { report }) => report,
         _ => serde_json::json!({"degraded": "daemon_unavailable"}),
     }
-}
-
-/// pre-commit mode: STAGED changes only; blocks the commit (exit 1)
-/// when guard mode is deny and staged files touch duplicate blocks.
-/// Unlike the hooks this prints for humans — it runs in a terminal.
-/// The count is the JUDGED staged set (`changes::diff`'s universe):
-/// a staged `.css` can never match a dedup block either.
-pub fn run_precommit(root: &Path) -> ExitCode {
-    // session = None honestly: `ce precommit` runs in a terminal, no
-    // session owns it — the M4 sampler excludes non-session events.
-    // `--cached` needs no base rev: git compares the index against an
-    // unborn HEAD without complaint, unlike the Stop leg.
-    let Some((mode, net_loc, changed, dups, tomb)) = gather(root, &["--cached"], "precommit", None)
-    else {
-        eprintln!(
-            "{}",
-            crate::i18n::line(
-                "ce precommit: not a git repo (skipped)",
-                "ce precommit：不是 git 仓库（跳过）",
-                &[],
-            )
-        );
-        return ExitCode::SUCCESS;
-    };
-    // informational, and it rides every exit: the person sees it once
-    if let Some(line) = tomb.as_ref().and_then(tombstone::summary) {
-        println!("{line}");
-    }
-    let Some(v) = dups.as_ref() else {
-        // A9f: fail open but never silently — the human still gets
-        // the staged summary the healthy path prints
-        println!("{}", staged_summary(changed.len(), net_loc, true));
-        return ExitCode::SUCCESS;
-    };
-    if v.dups == 0 {
-        println!("{}", staged_summary(changed.len(), net_loc, false));
-        return ExitCode::SUCCESS;
-    }
-    println!("{}", reason(net_loc, v));
-    if mode == "deny" && v.fail {
-        return ExitCode::from(1);
-    }
-    ExitCode::SUCCESS
-}
-
-/// The staged-summary line both healthy exits print. One body, two
-/// tails: written apart they were a token twin by this repo's own
-/// gate. The `+` sign flag is pre-rendered because the bilingual
-/// switch fills plain `{}` holes only — the en bytes are unchanged.
-fn staged_summary(changed: usize, net_loc: i64, degraded: bool) -> String {
-    let net = format!("{net_loc:+}");
-    if degraded {
-        return crate::i18n::line(
-            "ce precommit: {} staged file(s), net {} LOC — duplicate \
-             verdict unavailable (DEGRADED: duplicate check skipped)",
-            "ce precommit：{} 个暂存文件，净 {} 行 — 重复判决不可用\
-             （已降级：重复检查已跳过）",
-            &[&changed, &net],
-        );
-    }
-    crate::i18n::line(
-        "ce precommit: {} staged file(s), net {} LOC, no touched duplicates",
-        "ce precommit：{} 个暂存文件，净 {} 行，未触及重复块",
-        &[&changed, &net],
-    )
 }
 
 /// The human-facing conviction line. Cost stance, unified

@@ -19,6 +19,7 @@ import qualified CE.Handshake as Handshake
 import CE.Protocol.Version (majorMatches, proto)
 import qualified CE.Scan as Scan
 import qualified CE.Structure as Structure
+import qualified CE.Tombstone as Tombstone
 import qualified CE.Trend as Trend
 import qualified CE.Verdict as Verdict
 import Control.Applicative ((<|>))
@@ -98,6 +99,7 @@ families =
   , Fam "trend/2" "trend.request" Trend.respond
   , Fam "erase/1" "erase.request" Erase.respond
   , Fam "audit/1" "audit.request" Audit.respond
+  , Fam "tombstone/1" "tombstone.request" Tombstone.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

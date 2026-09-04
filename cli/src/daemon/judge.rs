@@ -58,6 +58,31 @@ impl Judge {
         session::report_json(&batch, &sent)
     }
 
+    /// The tombstone verdict over the daemon-owned link: the raw
+    /// tombstone.result (the hook re-labels its indices), or a degraded
+    /// object naming why there is none. The failure budget is
+    /// classify's: a dead link counts, a core without the family does
+    /// not (it is healthy, only older than this ce).
+    pub fn tombstone(&mut self, rows: &[[u64; 3]], budget: Option<u32>) -> serde_json::Value {
+        use crate::tombstone::wire;
+        let Some(link) = self.link_mut() else {
+            return degraded("core_unavailable");
+        };
+        if !link.has(wire::CAP) {
+            return degraded("pre-6.6.0 core");
+        }
+        match link.request(wire::KIND, wire::body(rows, budget)) {
+            Ok(reply) => {
+                self.failures = 0;
+                reply
+            }
+            Err(why) => {
+                self.note_failure();
+                degraded(&why)
+            }
+        }
+    }
+
     /// Drop the core link NOW (its Drop kills + reaps the ce-core
     /// child). The whole-daemon exits run `std::process::exit` from a
     /// connection thread (server/dispatch.rs), which skips destructors
@@ -85,6 +110,12 @@ impl Judge {
             );
         }
     }
+}
+
+/// A verdict the daemon could not obtain, said in the reply's own
+/// vocabulary (wire::consume reads it as a named non-judgment).
+fn degraded(reason: &str) -> serde_json::Value {
+    serde_json::json!({"degraded": true, "reason": reason})
 }
 
 /// CE_CORE_BIN, else a ce-core sibling of this binary, else PATH —
