@@ -10,24 +10,24 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 6.6.0 = the tombstone family (ADR-008 fifth instalment, plan
--- v2.27), additive: one new family, tombstone/1. The measuring side
--- sends one [kind, marks, erasedNames] row per candidate surface a
--- changeset wrote, plus an optional budget knob; this side judges
--- which rows are sites (a label binding an erased name; a prose
--- sentence with a mark AND a name) and whether the changeset is over
--- its budget, and answers the site indices, their label / prose
--- split and `over`. The conjunction and its floors exist in one place
--- (CE.Tombstone.Cost); the measuring side renders indices back into
--- places and never judges. Every other family is answered byte for
--- byte as before.
+-- 6.7.0 = the similar family (ADR-008 sixth instalment, plan v2.29),
+-- additive: one new family, similar/1. The measuring side ranks a
+-- query's candidates off its own inverted tables and sends the query
+-- bag as [termHash, weight] pairs plus one [nHit, pHit, cHit, dHit,
+-- sHit, lHit, shapeEqual, bm25Num, bm25Den] row per candidate; this
+-- side answers the order they stand in (exact rationals) and which of
+-- them play the query's role (a shared name AND callee, or two shared
+-- names with the shape equal). The conjunction and its floors exist in
+-- one place (CE.Similar.Cost); the measuring side re-labels indices
+-- and never judges. An advisor: no condition bit, no knob. Every other
+-- family is answered byte for byte as before.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's
 -- constant (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "6.6.0"
+proto = "6.7.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

@@ -71,7 +71,7 @@
         <text x="866" y="492">兼容性证据</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="513">proto 6.6.0 · SemVer</text>
+        <text x="66" y="513">proto 6.7.0 · SemVer</text>
         <text x="66" y="530">主版本不合即拒绝</text>
         <text x="66" y="547">次版本字段只加不改</text>
         <text x="66" y="564">整数行 · 只过类下标，不过名字</text>

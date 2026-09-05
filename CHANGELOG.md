@@ -61,6 +61,25 @@
 - 册 `docs/EVAL-SET-SIMILAR.md` 加「留出集复测」节（抽样 / 仲裁 / 两表 / 三候选 / 裁定三条）；步 2 裁定 2 那句「cooc 表」改按步 3 实测（不建对表、边际进 `df.marg`）。册 13 自仓普查行随树重取（U 923→927；rust 未提及 301→264、haskell 278→247——两份 v2 JSON 拼写了单元键，拼写即提及）。
 - ADR-006 具名重立（旧→新行）：`docs/EVAL-SET-SIMILAR.md` 274→351（新节）、`CHANGELOG.md` 624→639（本块）；子仓 `it/similar_replay.rs` 212→229、`it/similar_replay_parts/mod.rs` 234→257（留出集通道）。
 
+**无默认档位变更。** 计划 v2.29 步 5（2026-09-05）——同角色顾问的**判决进核**：wire **6.7.0** 第十二族 `similar/1`（加性 minor，ADR-008 细则第六期），仍零面变化：
+- 请求 = 查询袋 `query=[[termHash,weight]…]`（可缺省；哈希严格升序、weight ≥ 1）+ 候选行 `rows=[[nHit,pHit,cHit,dHit,sHit,lHit,shapeEqual,bm25Num,bm25Den]…]`；
+  回执 = `order`（BM25 有理数 `Num/Den` 降序、同分按请求下标升序，`Data.Ratio` 精确比较）+ `roles`（同角色位）+ `counts{rows,queryTerms,role}`；
+  query + rows > 65536 具名降级 `similar_too_large`；九种行 / 项形错按行点名 `error/contract`。无旋钮、无 fail 档：顾问只排序与打位（spec §一）。
+- **计划就地修正为九整数**（`DEVELOPMENT_PLAN.md` ADR-008 第六期句 + spec §五）：`shapeEqual` 是落码时补的第七位——idf 为 0 的形状词既不计分也不算证据，`pHit` 还原不出形状相等，
+  合取第二臂 `(nHit ≥ 2 ∧ shapeEqual)` 若不给这一位就只能退回 Rust。合取与地板（`CE.Similar.Cost`：1 / 1 / 2，按留出集复测原样）从 `bm25.rs` 的声明镜像回迁进核。
+- Rust 只做行 ↔ 面映射（`similar/wire.rs`）：`Hit` 加 `score_fp`（16 位定点全值，即排序与过线的那个数；`score` 仍是文档冻结的整数部分），分母恒 `1 << SCORE_FRAC_BITS`，
+  查询袋 = 词哈希→权重和的有序表；`consume` 严格（回执须是 0..n 的置换、roles 同长、counts 相符、degraded 即 Err 具名），无此能力的旧核 = `core offers no similar/1 (pre-6.7.0)` 具名降级。
+- golden 六对（乱序 + role 混合 / 10²⁰+1 : 10²⁰ 对 1 : 1 的有理数精确性 / 空请求 / 三种契约拒绝）；`SimilarProps` 六腿（真值表、排序 = 有理数排序、精确性、空、十种拒绝、降级面）；
+  十三个既有 golden 由新核机器再答、只允许 proto 与 `capabilities` 漂移（`hello-ok` 握手 request 随 server 走 6.7.0，§3）；子仓 `unit/similar/wire.rs` 四腿 + `it/similar_wire.rs` 两腿
+  （go 夹具全体单元真核复判与度量侧同序同位；同一条链上能力在座 → 判 → 按名拒 → 仍在步）。
+- 记账：VERSIONING §1 6.7.0 条 + 能力表 + §3 三元组「123 行，server 恒答 6.7.0」（引文锚三处经 `CE_DROP_VANISHED` 点名重签）；架构图 IR 双语「proto 6.7.0 · twelve / 十二个家族」
+  按 pin 重渲、stack.svg 四份同句；README 双语 / 站点芯片 `ver:proto` `count:families` 随 bless；`CE.Similar.Cost` 的三个地板名带 `roleMin` 前缀——`docs_consts` 按裸名把册 14 的
+  `minName` 芯片绑到 `CE.Tombstone.Cost` 且要求唯一。
+- dedup 预算 56 恒、零新克隆块——第十二族照抄第十一族的五处同形当场消掉：Rust 问答壳提升为 `corelink/judged.rs`（能力门 `ask` / `degraded` / `table` / `count`），
+  `tombstone/wire.rs` 与 `similar/wire.rs` 同改（101→91）；`CE.Similar` 的越界 lambda 抄了 `Graph.hs` 的，改具名 `overCap`；`SimilarProps` 请求构造并成一个 `request`、电池改对表形。
+- ADR-006 具名重立（旧→新行）：`contracts/VERSIONING.md` 658→669、`CHANGELOG.md` 639→658（本块）；新文件入基线 `core/app/CE/Similar.hs` 128、`core/app/CE/Similar/Cost.hs` 64、
+  `core/test/SimilarProps.hs` 96、`cli/src/similar/wire.rs` 105、`cli/src/corelink/judged.rs` 52、`contracts/fixtures/similar/golden.ndjson`；子仓 `it/similar_wire.rs` 63、`unit/similar/wire.rs` 98。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：

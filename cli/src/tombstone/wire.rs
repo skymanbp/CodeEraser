@@ -7,7 +7,7 @@
 //! conflated with "no sites" (A9f).
 
 use super::Findings;
-use crate::corelink::Link;
+use crate::corelink::{Link, judged};
 use serde_json::{Value, json};
 
 /// The capability the core must offer, and the request kind.
@@ -44,13 +44,10 @@ pub fn body(rows: &[[u64; 3]], budget: Option<u32>) -> Value {
     json!({ "rows": rows, "knobs": knobs })
 }
 
-/// One request over a link past its handshake: the capability gate
-/// first — a pre-6.6.0 core is healthy and answers nothing here.
+/// One request over a link past its handshake, behind the capability
+/// gate (a pre-6.6.0 core is healthy and answers nothing here).
 pub fn ask(link: &mut Link, rows: &[[u64; 3]], budget: Option<u32>) -> Result<Value, String> {
-    if !link.has(CAP) {
-        return Err(format!("core offers no {CAP} (pre-6.6.0)"));
-    }
-    link.request(KIND, body(rows, budget))
+    judged::ask(link, CAP, "6.6.0", KIND, body(rows, budget))
 }
 
 /// The reply, consumed: a degraded reply is a named non-judgment; a
@@ -59,23 +56,16 @@ pub fn ask(link: &mut Link, rows: &[[u64; 3]], budget: Option<u32>) -> Result<Va
 /// are wire skew (an absent `over` once read as "not over" — a malformed
 /// reply is never a healthy one); the rest is relayed as the core said.
 pub fn consume(reply: &Value, sent: usize) -> Judgment {
-    if reply["degraded"] == json!(true) {
-        let why = reply["reason"].as_str().unwrap_or("degraded");
-        return Err(why.to_string());
-    }
-    let sites: Vec<usize> =
-        serde_json::from_value(reply["sites"].clone()).map_err(|e| format!("sites: {e}"))?;
+    judged::degraded(reply)?;
+    let sites: Vec<usize> = judged::table(reply, "sites")?;
     let ascending = sites.windows(2).all(|w| w[0] < w[1]);
     if !ascending || sites.iter().any(|&i| i >= sent) {
         return Err("wire skew: sites must ascend within the rows sent".into());
     }
-    let count = |k: &str| {
-        reply["counts"][k]
-            .as_u64()
-            .map(|n| n as usize)
-            .ok_or_else(|| format!("counts.{k} missing"))
-    };
-    let (label, prose) = (count("label")?, count("prose")?);
+    let (label, prose) = (
+        judged::count(reply, "label")?,
+        judged::count(reply, "prose")?,
+    );
     if label + prose != sites.len() {
         return Err("wire skew: counts disagree with the site table".into());
     }

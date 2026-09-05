@@ -15,6 +15,7 @@ import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified AdvisoryProps
 import qualified AuditProps
 import qualified TombstoneProps
+import qualified SimilarProps
 import qualified ClassProps
 import qualified CloneProps
 import qualified EntropyProps
@@ -77,6 +78,7 @@ main = do
       , goldenPairs "erase/golden.ndjson"
       , goldenPairs "audit/golden.ndjson"
       , goldenPairs "tombstone/golden.ndjson"
+      , goldenPairs "similar/golden.ndjson"
       , structural
       , refusalProbes
       , docdupStructural
@@ -97,6 +99,7 @@ main = do
       , EraseProps.battery
       , AuditProps.battery
       , TombstoneProps.battery
+      , SimilarProps.battery
       , VerdictProps.battery
       , VerdictWireProps.battery
       , VerdictFenceProps.battery
