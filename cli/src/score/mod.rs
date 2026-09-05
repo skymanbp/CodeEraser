@@ -9,6 +9,7 @@
 //! fail=true from the core itself since P1 (a gate that could not
 //! judge must never pass, and the core says so).
 
+pub mod anchor;
 pub mod baseline;
 pub mod knobs;
 pub mod model;
@@ -22,7 +23,6 @@ pub use model::{Outcome, SCHEMA_ID};
 pub use report::{print, report_json};
 
 use crate::graph::deadcode;
-use crate::join::churn_unit::UnitMap;
 use crate::{churn, dedup, join, scan};
 use anyhow::Result;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -81,6 +81,10 @@ struct Measured {
     members: Vec<u64>,
     collapsed: usize,
     skipped_self: usize,
+    /// The §7.2 identity anchors off the same index snapshot (7.0.0):
+    /// the discrete members above and the continuous function rows
+    /// size_facts mints both key on them.
+    anchors: anchor::Anchors,
 }
 
 fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
@@ -90,6 +94,12 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // the dogfood gate's hot path: no mention pass, no advisory
     // tables — the score reads positions and the export surface
     let w = deadcode::wire_of(root, &snap, &db_path, deadcode::Advisory::No)?;
+    // the docdup family's verified pairs (7.0.0, O46): until then this
+    // face sent no kind-2 row and the score's docdup axis read a
+    // constant zero — one of seven axes dead, unnoticed because a zero
+    // charge is also what a clean repository earns
+    let (segs, dups, _) = crate::docdup::judge::rows_of(root, &snap, &opts.core)?;
+    let anchors = anchor::Anchors::from_index(&snap)?;
     drop(snap);
     // the verdict universe is this tree's OWN files: a foreign reader
     // seeds liveness in the graph above and owns no row down here
@@ -103,8 +113,16 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         .map(|(i, p)| (p.as_str(), i as i64))
         .collect();
     let mut sim = Vec::new();
-    let skipped_self = sim_rows(&found.blocks, &idx, &mut sim);
-    let (members, collapsed) = member_set(root, &found.blocks);
+    let skipped_self = sim_rows(&found.blocks, &idx, &mut sim)
+        + pair_rows(
+            dups.iter()
+                .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str())),
+            &idx,
+            2,
+            &mut sim,
+        );
+    sim.sort_unstable();
+    let (members, collapsed) = member_set(&anchors, &found.blocks);
     Ok(Measured {
         pos: pos_rows(&files, &posmap),
         symbols: crate::graph::symwire::rekeyed(&w, &idx)?,
@@ -115,6 +133,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         members,
         collapsed,
         skipped_self,
+        anchors,
     })
 }
 
@@ -132,7 +151,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         None => (Vec::new(), Vec::new()),
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let (continuous, judged_loc, classed) = size_facts(root, &opts.core)?;
+    let (continuous, judged_loc, classed) = size_facts(root, &opts.core, &m.anchors)?;
     // the provenance table (6.4.0, O40): every file entity on disk
     // under the scope that owns no row this run — the core answers
     // which committed rows they explain (`ratchet.dropped`)
@@ -246,42 +265,62 @@ pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) ->
         .collect()
 }
 
-/// File pairs with at least one verified block, kind 0 (t1t2) at the
-/// exact-run ratio — deduplicated, ascending, u < v (self pairs are
-/// counted out, the wire cannot carry them).
+/// File pairs with at least one verified clone block, kind 0 (t1t2)
+/// — the join face's leg (join/verdicts.rs) and half of check's.
 pub(crate) fn sim_rows(
     blocks: &[dedup::pairs::Block],
     idx: &HashMap<&str, i64>,
     out: &mut Vec<[i64; 5]>,
 ) -> usize {
-    let mut pairs: BTreeSet<(i64, i64)> = BTreeSet::new();
+    pair_rows(
+        blocks
+            .iter()
+            .map(|b| (b.a_file.as_str(), b.b_file.as_str())),
+        idx,
+        0,
+        out,
+    )
+}
+
+/// File pairs with at least one verified finding of one family, as
+/// `[u, v, kind, 100, 100]` — deduplicated, ascending, u < v, at the
+/// VERIFIED ratio: the pair exists because the owning family already
+/// judged it, so the row carries that family's full bar rather than a
+/// number the score would re-judge against the same bar. Self pairs
+/// are counted out (the wire cannot carry them); the count rides back.
+fn pair_rows<'a>(
+    pairs: impl Iterator<Item = (&'a str, &'a str)>,
+    idx: &HashMap<&str, i64>,
+    kind: i64,
+    out: &mut Vec<[i64; 5]>,
+) -> usize {
+    let mut set: BTreeSet<(i64, i64)> = BTreeSet::new();
     let mut skipped_self = 0;
-    for b in blocks {
-        let (Some(&a), Some(&bb)) = (idx.get(b.a_file.as_str()), idx.get(b.b_file.as_str())) else {
+    for (a, b) in pairs {
+        let (Some(&u), Some(&v)) = (idx.get(a), idx.get(b)) else {
             continue;
         };
-        if a == bb {
+        if u == v {
             skipped_self += 1;
             continue;
         }
-        pairs.insert((a.min(bb), a.max(bb)));
+        set.insert((u.min(v), u.max(v)));
     }
-    out.extend(pairs.into_iter().map(|(u, v)| [u, v, 0, 100, 100]));
+    out.extend(set.into_iter().map(|(u, v)| [u, v, kind, 100, 100]));
     skipped_self
 }
 
 /// The discrete clone-member set: every block's sides attributed to
-/// their owning units (the join's own UnitMap throat), hashed per
-/// §7.2. Returns (ascending set, collapse count).
-fn member_set(root: &Path, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) {
-    let mut map = UnitMap::new(root);
+/// their owning units off the index's own unit table, identified by
+/// the §7.2 container anchor (7.0.0), hashed. Returns (ascending set,
+/// collapse count).
+fn member_set(anchors: &anchor::Anchors, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) {
     let mut set: BTreeSet<u64> = BTreeSet::new();
     let mut collapsed = 0;
     for b in blocks {
-        let a = map.id_of(&b.a_file, b.a_start, b.a_end);
-        let z = map.id_of(&b.b_file, b.b_start, b.b_end);
-        let side = |u: &crate::join::churn_unit::UnitId| (u.path.clone(), u.key.clone(), u.nth);
-        if !set.insert(baseline::member_id("clone", &side(&a), &side(&z))) {
+        let a = anchors.owner(&b.a_file, b.a_start, b.a_end);
+        let z = anchors.owner(&b.b_file, b.b_start, b.b_end);
+        if !set.insert(baseline::member_id("clone", &a, &z)) {
             collapsed += 1;
         }
     }
@@ -295,7 +334,10 @@ fn member_set(root: &Path, blocks: &[dedup::pairs::Block]) -> (Vec<u64>, usize) 
 /// double-emitting a file. pub: the 3j gate test asserts per-file
 /// coverage through this same throat.
 pub fn continuous_rows(root: &Path, core: &str) -> Result<Vec<[u64; 3]>> {
-    Ok(size_facts(root, core)?
+    let (_found, snap, _db) = dedup::snapshot(root, None)?;
+    let anchors = anchor::Anchors::from_index(&snap)?;
+    drop(snap);
+    Ok(size_facts(root, core, &anchors)?
         .0
         .into_iter()
         .map(|[u, c, v, _]| [u, c, v])
@@ -317,7 +359,11 @@ pub fn continuous_rows(root: &Path, core: &str) -> Result<Vec<[u64; 3]>> {
 /// increment, and the ratchet's complexity column must record the
 /// same number `ce scan` reports, or one gate would tighten against
 /// a value the other never shows.
-fn size_facts(root: &Path, core: &str) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
+fn size_facts(
+    root: &Path,
+    core: &str,
+    anchors: &anchor::Anchors,
+) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
     let scan::Settled { config, files, .. } = scan::settle(root, core)?;
     let classes =
         scan::classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
@@ -327,15 +373,13 @@ fn size_facts(root: &Path, core: &str) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)
     // run would read every committed row as removed and every
     // measured one as added
     let keys = provenance::Keys::of(root);
-    let mut rows: Vec<[u64; 4]> = files
-        .iter()
-        .flat_map(|f| {
-            let class = classes.class_of(&f.path);
-            baseline::continuous_rows(f, &keys.key(&f.path))
-                .into_iter()
-                .map(move |[u, c, v]| [u, c, v, class])
-        })
-        .collect();
+    let mut rows: Vec<[u64; 4]> = Vec::new();
+    for f in &files {
+        let class = classes.class_of(&f.path);
+        for [u, c, v] in baseline::continuous_rows(f, &keys.key(&f.path), anchors)? {
+            rows.push([u, c, v, class]);
+        }
+    }
     rows.sort_unstable();
     // a fingerprint collision would silently merge two entities —
     // refuse loudly instead (never observed; FNV64 over short paths)

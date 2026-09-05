@@ -20,8 +20,9 @@
 //! calls (PERF-BUDGET M5-3h: blame alone already costs 155 s on the
 //! self window). Known degradation: nth is taken in each commit's
 //! own after-snapshot, so deleting an earlier same-key sibling later
-//! in the window shifts nth for its survivors (the member-id caveat,
-//! 2026-08-13-m5-3-dedup-algorithms.md §7.2) — recorded, not masked.
+//! in the window shifts nth for its survivors (the §7.2 caveat the
+//! baseline retired at 7.0.0 with container anchors, score/anchor.rs;
+//! this ledger still keys on nth) — recorded, not masked.
 //!
 //! Recorded basis, beside that caveat: the window has exactly ONE
 //! clock on BOTH sides — COMMITTER time. window_commits selects with

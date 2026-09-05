@@ -45,6 +45,11 @@ truthTable =
     , [1, 60, 60, 61, 1], [1, 60, 60, 60, 0]
     , [2, 1, 1, 1, 0], [2, 0, 1, 1, 0], [2, 1, 0, 1, 0]
     , [2, 1, 1, 0, 0], [2, 1, 1, 1, 3]
+    , -- class 2 across the dead domain (7.0.0): the private codes 1
+      -- and 3 license the twin, the public codes 2 and 4 are refused
+      -- as public_surface BEFORE the trust fact is weighed (the last
+      -- row names the order), and the 6.x boolean 1 is code 1
+      [2, 1, 1, 3, 0], [2, 1, 1, 2, 0], [2, 1, 1, 4, 0], [2, 1, 1, 2, 3]
     , -- class 3 across the WHOLE dead domain x the trust fact
       -- (6.1.0). The private codes 1 and 3 answer to confidence
       -- alone as they always did; the public codes 2 and 4 are
@@ -57,12 +62,13 @@ truthTable =
   wants =
     [ (True, 0), (False, 2), (False, 2), (False, 3)
     , (True, 0), (False, 5), (False, 3), (False, 4), (False, 1)
+    , (True, 0), (False, 6), (False, 6), (False, 6)
     , (False, 1), (True, 0), (True, 0)
     , (False, 6), (False, 6), (False, 6)
     ]
 
 req :: [[Integer]] -> Value
-req = rowsRequest "6.4.0" "erase.request"
+req = rowsRequest "7.0.0" "erase.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of
@@ -98,14 +104,24 @@ refusals =
       -- road replaced it (2.32.0's class 3), and no class-0 row can
       -- ever be judged again
       refusedBy respond (req [[0, 1, 0, 0, 0]]) "row 0: retired class 0"
-    , refusedBy respond (req [[3, 0, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
-    , refusedBy respond (req [[3, 1, 3, 0, 0]]) "row 0: confidence outside 0..2"
-    , refusedBy respond (req [[3, 1, -1, 0, 0]]) "row 0: negative fact"
-    , refusedBy respond (req [[3, 5, 0, 0, 0]]) "row 0: dead verdict outside 1..4"
     , refusedBy respond (req [[1, 60, 60, 60, 2]]) "row 0: bytesEqual not a boolean"
-    , refusedBy respond (req [[2, 2, 1, 1, 0]]) "row 0: coverage/equality/death not booleans"
     , refusedBy respond (req [[3, 1, 0, 0]]) "row 0: malformed row"
+    , -- the class-3 (verdict, confidence) and class-2 (covered, equal,
+      -- dead code) shape probes, one row table per class
+      and [refusedBy respond (req [[3, v, c, 0, 0]]) ("row 0: " <> why) | (v, c, why) <- class3]
+    , and [refusedBy respond (req [[2, w, x, y, 0]]) ("row 0: " <> why) | (w, x, y, why) <- class2]
     ]
+  where
+    class3 =
+      [ (0, 0, "dead verdict outside 1..4")
+      , (5, 0, "dead verdict outside 1..4")
+      , (1, 3, "confidence outside 0..2")
+      , (1, -1, "negative fact")
+      ]
+    class2 =
+      [ (2, 1, 1, "coverage/equality not booleans")
+      , (1, 1, 5, "dead verdict outside 0..4")
+      ]
 
 knobless :: Bool
 knobless =

@@ -7,20 +7,30 @@
 //! the wire shape); Rust never computes tolerance or membership —
 //! that is the core's job (ADR-008 anti-preemption).
 //!
-//! Known degradation (§7.2, recorded): deleting an earlier same-key
-//! sibling shifts nth, so that member id reads as one removal plus
-//! one addition.
+//! Same-key siblings are told apart by the §7.2 CONTAINER ANCHOR
+//! (anchor.rs) since 7.0.0, never by nth: the recorded degradation —
+//! deleting an earlier sibling shifted the survivors' nth and read as
+//! one removal plus one addition — is retired, and a 6.x baseline is
+//! refused by name (`ce.baseline/1`) so the identity change is a
+//! visible one-time re-establish, not a silent red.
 
-use crate::fourclass::units::{self, Unit};
+use super::anchor::{Anchors, Side};
 use crate::scan::metrics::FileMetrics;
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 /// Where the committed baseline lives (betterer convention).
 const BASELINE_FILE: &str = "ce-baseline.json";
 
-pub const SCHEMA_ID: &str = "ce.baseline/1";
+/// The schema this ce writes and the ONLY one it reads (7.0.0): every
+/// 6.x file carries `/1` — identities keyed on nth — and read as-is,
+/// every same-key member would register as one removal plus one
+/// addition and the ratchet would fail on "added" clones nobody wrote.
+/// `read` refuses any other stamped schema by the name the FILE
+/// carries, so the family is spelled here once (facts gate).
+pub const SCHEMA_ID: &str = "ce.baseline/2";
 
 /// FNV-1a 64 over the field bytes, NUL-separated — the §7.2 member
 /// identity primitive.
@@ -41,24 +51,23 @@ pub fn fnv1a(fields: &[&[u8]]) -> u64 {
     h
 }
 
-/// One side of a pair member: the cached unit identity.
-pub type Side = (String, String, i64);
-
-/// §7.2: member id = fnv1a(kind ‖0‖ a_path ‖0‖ a_key ‖0‖ a_nth ‖0‖
-/// b_path ‖0‖ b_key ‖0‖ b_nth), sides normalized by (path,key,nth)
-/// lex order. Line numbers and block order are deliberately absent:
-/// moving a clone must not redden; a NEW clone must.
+/// §7.2: member id = fnv1a(kind ‖0‖ a_path ‖0‖ a_key ‖0‖ a_anchor ‖0‖
+/// b_path ‖0‖ b_key ‖0‖ b_anchor), sides normalized by (path, key,
+/// anchor) lex order. Line numbers and block order are deliberately
+/// absent: moving a clone must not redden; a NEW clone must. The
+/// anchor is the container chain's hash plus the unit's order under it
+/// (anchor.rs): a top-level function anchors to one constant, and only
+/// a same-container redefinition can ever shift.
 pub fn member_id(kind: &str, a: &Side, b: &Side) -> u64 {
     let (x, y) = if a <= b { (a, b) } else { (b, a) };
-    let (an, bn) = (x.2.to_string(), y.2.to_string());
     fnv1a(&[
         kind.as_bytes(),
         x.0.as_bytes(),
         x.1.as_bytes(),
-        an.as_bytes(),
+        x.2.as_bytes(),
         y.0.as_bytes(),
         y.1.as_bytes(),
-        bn.as_bytes(),
+        y.2.as_bytes(),
     ])
 }
 
@@ -68,56 +77,44 @@ pub fn file_entity(path: &str) -> u64 {
 }
 
 /// Continuous entity for a function's cognitive complexity
-/// (metricCode 1): (path, key, nth) through the SAME with_nth
-/// ordering the unit caches persist — the fn identity a rename or
-/// move keeps honest.
-fn fn_entity(path: &str, key: &str, nth: i64) -> u64 {
-    fnv1a(&[
-        b"fn",
-        path.as_bytes(),
-        key.as_bytes(),
-        nth.to_string().as_bytes(),
-    ])
+/// (metricCode 1): (path, key, §7.2 anchor) — the fn identity a
+/// rename or move keeps honest, and a deleted sibling leaves alone.
+fn fn_entity(path: &str, key: &str, anchor: &str) -> u64 {
+    fnv1a(&[b"fn", path.as_bytes(), key.as_bytes(), anchor.as_bytes()])
 }
 
 /// Continuous rows [entity, code, value] for one scanned file: its
-/// line count plus every function's cognitive complexity, nth
-/// assigned by the units::with_nth throat over the scan's own spans.
+/// line count plus every function's cognitive complexity, each
+/// function anchored through the index's own unit table (anchor.rs).
 /// `key` is the entity's path as the baseline spells it — the
 /// PROJECT-root-relative one (6.4.0, O40; score::provenance::Keys),
 /// which is the scan's own `f.path` exactly when the scope is the
-/// project.
-pub fn continuous_rows(f: &FileMetrics, key: &str) -> Vec<[u64; 3]> {
+/// project. m.name already carries the Go receiver qualification from
+/// the extraction root (functions::name_of), so the key composed here
+/// and the unit cache's agree by construction (M5-close review D4) —
+/// a function the cache does not know is a named error, never a
+/// guessed identity.
+pub fn continuous_rows(f: &FileMetrics, key: &str, anchors: &Anchors) -> Result<Vec<[u64; 3]>> {
     let mut rows = vec![[file_entity(key), 0, f.total_lines as u64]];
-    // m.name already carries the Go receiver qualification from the
-    // extraction root (functions::name_of), so this composition and
-    // the unit-cache keys agree by construction (M5-close review D4)
-    let fn_units: Vec<Unit> = f
-        .functions
-        .iter()
-        .map(|m| Unit {
-            key: format!("{}/{}", m.name, m.params),
-            start_line: m.start_line,
-            end_line: m.end_line,
-            // these Units exist only to run the with_nth throat over
-            // the scan's spans; neither word enters a baseline entity
-            // key, so reading them here would be dead work
-            vis: 0,
-            conv: 0,
-        })
-        .collect();
-    for (u, nth) in units::with_nth(&fn_units) {
-        // recover the metrics row by POINTER identity — same-line
-        // nested closures share (start,end), so a span lookup could
-        // pair the wrong measurement (the churn unit_id lesson)
-        let idx = fn_units
-            .iter()
-            .position(|x| std::ptr::eq(x, u))
-            .expect("with_nth walks the same slice");
-        let m = &f.functions[idx];
-        rows.push([fn_entity(key, &u.key, nth), 1, u64::from(m.cognitive)]);
+    // same-span same-key functions (closures sharing a line) in scan order
+    let mut seen: BTreeMap<(String, usize, usize), usize> = BTreeMap::new();
+    for m in &f.functions {
+        let unit = format!("{}/{}", m.name, m.params);
+        let nth = seen
+            .entry((unit.clone(), m.start_line, m.end_line))
+            .or_insert(0);
+        let anchor = anchors
+            .of(&f.path, &unit, m.start_line, m.end_line, *nth)
+            .with_context(|| {
+                format!(
+                    "{}:{}-{} {unit}: the scanner measured a function the unit cache does not hold",
+                    f.path, m.start_line, m.end_line
+                )
+            })?;
+        *nth += 1;
+        rows.push([fn_entity(key, &unit, anchor), 1, u64::from(m.cognitive)]);
     }
-    rows
+    Ok(rows)
 }
 
 /// The committed baseline's path for `root`: the project ANCHOR's
@@ -140,6 +137,25 @@ pub fn path_for(root: &Path) -> PathBuf {
 /// (plan v2.18 step #14, O31). The bytes under "continuous"/
 /// "discrete" go on the wire untouched.
 pub fn read(root: &Path) -> Result<Option<Value>> {
+    let Some(doc) = document(root)? else {
+        return Ok(None);
+    };
+    if let Some(stamped) = doc["schema"].as_str().filter(|s| *s != SCHEMA_ID) {
+        let path = path_for(root);
+        bail!(
+            "{}: written under {stamped}, this ce reads {SCHEMA_ID} (7.0.0 keys members on §7.2 container anchors, not nth) — re-establish once: CE_ACCEPT_BASELINE=1 ce baseline .",
+            path.display()
+        );
+    }
+    Ok(Some(doc))
+}
+
+/// The committed document as an ENVELOPE, whatever schema stamped it:
+/// softLine, zoneTiers, knobsDigest and the structure floor mean the
+/// same under every schema, so the fence, the hook's budget and the
+/// structure advisory read here and keep working across the 7.0.0
+/// identity migration — only the ratchet tables (`read`) refuse.
+pub fn document(root: &Path) -> Result<Option<Value>> {
     let path = path_for(root);
     if !path.is_file() {
         return Ok(None);
@@ -185,7 +201,7 @@ impl Fence {
 }
 
 pub(crate) fn fence_status(root: &Path, cfg: &crate::config::Config) -> Result<Fence> {
-    Ok(match read(root)? {
+    Ok(match document(root)? {
         None => Fence::Unfenced,
         Some(doc) => Fence::Fenced {
             current: cfg.knobs_digest(),

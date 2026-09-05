@@ -215,7 +215,7 @@ request per arm over one core link ([face.rs:58-75](../../../cli/src/similar/fac
   carries the role bit: an advisor's line for the evaluation ledger, never a reason to block.
   No new unit, no role hit and nothing degraded = no key at all; the feed schema moved
   additively to `ce.observe/0.10.0` ([audit/similar.rs:1-10](../../../cli/src/audit/similar.rs#L1),
-  [hookio.rs:85](../../../cli/src/hookio.rs#L85)). The tombstone leg and this leg read the
+  [hookio.rs:88](../../../cli/src/hookio.rs#L88)). The tombstone leg and this leg read the
   session's changed pairs once, through one git batch (booklet 14 §1).
 
 The write-time hook does **not** run it: a PreToolUse budget does not hold a retrieval, and a

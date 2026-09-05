@@ -71,7 +71,7 @@
         <text x="866" y="492">兼容性证据</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="513">proto 6.7.0 · SemVer</text>
+        <text x="66" y="513">proto 7.0.0 · SemVer</text>
         <text x="66" y="530">主版本不合即拒绝</text>
         <text x="66" y="547">次版本字段只加不改</text>
         <text x="66" y="564">整数行 · 只过类下标，不过名字</text>
@@ -161,7 +161,7 @@
         <text x="712" y="994">PreToolUse · Stop</text>
         <text x="712" y="1010">SessionStart 健康</text>
         <text x="928" y="994">通过 · 违规 · 内部错误</text>
-        <text x="928" y="1010">棘轮 + 显式地板 946</text>
+        <text x="928" y="1010">棘轮 + 显式地板 939</text>
       </g>
 
       <line x1="48" y1="1050" x2="1132" y2="1050" stroke="#2a3347"/>

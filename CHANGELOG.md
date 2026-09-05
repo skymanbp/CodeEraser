@@ -116,6 +116,37 @@
   ——`node scripts/shoot_gui.js --out site/assets --ce <release ce>` 重拍三张，`contracts/gui-shots.json` 回执随之（本地全跑绿是因为截图与屏在同一未提交树里）；首次在主根重拍撞上插件 1.6.0 的 daemon（索引 schema 15）改写共享 `.ce/index.db`（`ce dedup: no such column: u.id`），改在 HEAD worktree 自带 `.ce/` 里拍——`ce join --days 14` 对 211 提交 / 728 文件的窗口逐文件 `git blame --line-porcelain` 约 7 min，代价事实记此，随步 11 清点归位。
 - ADR-006 具名重立（旧→新行）：`docs/PERF-BUDGET.md` 362→381、`docs/reference/methodology.md` 66→67、`site/how/index.html` 652→695、`site/zh/how/index.html` 562→597、`CHANGELOG.md` 676→694（本块）。
 
+**无默认档位变更。** 计划 v2.29 步 8（2026-09-05）——复活批 A「判决正确性」七条，每条根修不打补丁；**wire 7.0.0（major）**、基线 schema **`ce.baseline/2`**、**`ce check` 分数与 1.6.0 不可比**（自仓 949 → 943、子仓 985 → 983，CI 地板同咬合重定价 946 → 939 / 983 → 979）：
+- O22 / O46 评分：`CE.Verdict.Score` 轴 2（clone）/ 轴 3（docdup）的质量 = 被判定对**触及的互异文件数**（`touched`），分母 = 各自的机会宇宙
+  （代码文件 `nodes − docFiles` / 文档文件 `docFiles`）——此前两轴数对、分母全体节点，一份文件抄进三处按六对计费、分母却是文件；`ce check` 的 `sim` 表
+  首次带 kind = 2 的 docdup 对行（`score/mod.rs::pair_rows`，dedup 与 docdup 同一条路、同一快照）——此前该轴在产品里恒零。`VerdictProps` 夹具按新分母重配
+  （穷举搜索满足可区分性 / 旋钮探针 / 权重探针三组断言）。
+- O47 堆叠：`fourclass/1` 对级 `dup=[hash]` → `dupSpans=[[hash,start,end]]`（`stacking.rs::dup_spans`，每个 after 侧出现一行；请求形状变 = **major**，
+  信封拒绝外来 major，十三族 golden request 行机器重写为 7.0.0、畸形 / 9.0.0 探针不动），核 `suspicions` 只数落在新重复单元跨度内的 novel 行
+  （`inDup ≥ stackingNovelFloor`），删除比仍读整次编辑；`start < 1 ∨ end < start` 在 `violation` 按对点名；`StackingProps` 六腿新电池。
+- O51 擦除：第 2 类事实 3 由死亡位改为死亡判决码 0..4（`gather.rs::verdict_code`；`> 4` 按行点名拒绝），核 `judgeRow` 对 2 / 4 按 reason 6
+  `public_surface` 拒绝——此前 RG10 从未到达孪生路，公开 `copy.py` 只因同路径的 `dead_file` 行按类名排序先赢才被拒；`close_targets` 改按 `licence`
+  （t1_twin 2 > dead_file 1）在可擦整文件行里择优；子仓 `it/erase_e2e.rs` 夹具加私有孪生 `spare.py`（`_spare_total`）——可擦 3、apply 3、
+  `## t1_twin` 进 diff 面、再计划收敛 0；`EraseProps` 加四条第 2 类真值行。
+- O63 daemon：`daemon/judge.rs` 核链「三振永闭」改指数退避（1 s · 2^(n−1)，上限 60 s，永不永久关闭，装完 / 修好 PATH 的核下次尝试即被接回），
+  恢复后首份 classify 报告带 `recovered: n`（feed 0.10.0 `fourclass` 对象加性键；daemon 内层载荷不在 DAEMON 门内，DAEMON_PROTO 2.1.0 不动）；子仓 unit 腿钉
+  倍增到帽、恢复计数只报一次、新一轮从头起。
+- C-nth §7.2：基线成员身份由 `nth`（同键单元的起始行序）改为**容器链锚** `fnv1a(外层单元键链，最外层在前)#同链同键序`（`score/anchor.rs`，读索引
+  单元表不重切）——删掉前面的兄弟不再挪动幸存者的身份，`impl A { fn add }` 与 `impl B { fn add }` 按各自容器分开，同一行两个闭包按扫描序对到索引的第 k 个同跨度单元（重立时两根各撞出一次「continuous entity fingerprint collision」，据此根修）；RM14 门第四本账 `REANCHORED` / `REANCHORED_SUITE`（子仓 `it/baseline_ledgers.rs`：主 45 / 子 37 对 old→new，一次性仪器按同一 `member_id` 喉两种编码推导、与两份提交基线的离散表全等），门把每个期望键映射到锚后继并断言账本只描述现在；`ce-baseline.json` schema
+  `ce.baseline/2`，`ce.baseline/1` 按名拒绝并给出 `CE_ACCEPT_BASELINE=1 ce baseline .`（一次具名重立即迁移）；索引 `nth` 列不动（join / churn /
+  similar 仍以它为键）。
+- O21 守卫：子仓新腿 `it/guard_budget_parity.rs`——PreToolUse 硬预算（`guard/budget.rs::budget_breach`）与 `ce scan`（核 `gradeWith`）对同一字节逐格
+  对拍：全局表 30 / 31 行、`[[rules.class]]` 表 20 / 21 行与类外 25 行、`file_lines_fail = 0` 的 5000 / 400 行，断言两侧判决相等且表跨线两侧。
+- 记账：VERSIONING 7.0.0 条 + §3 三元组「123 行，锚 7.0.0，server 恒答 7.0.0」（`ver:anchor` 事实随 `facts/ver.rs::ANCHOR`）；册 05 轴 2 / 3 行与
+  7.0.0 段、册 09 堆叠节、册 12 第 2 类事实与 reason 4 / 6、erase.md 类表与验收段、DAEMON.md fourclass 载荷注、README 双语可比性句、计划书 v2.29
+  步 8 细则就地改。上一提交 efb2529（gui `cargo fmt`）落在重立之后，`site_roast` 块因此红一次（CI 33983490751）——本批重立后重 bless 修正。
+- dedup 预算 **56 → 55**（ce.toml 台账具名）：本批落下的三块全部消掉（`anchor::units_by_path` 单一所有者、`EraseProps` 两张行表、子仓 parity 腿走
+  `common::write_all` / 基线单测一个闭包），其中 EraseProps 的折叠顺带化掉 6.1.0 起就在的八探针自重叠块，行集对 HEAD 工作树差分净 −1；子仓 119 恒。
+- ADR-006 具名重立（两仓；`ce.baseline/2` 迁移 = 离散集整体换键）：主 `cli/src/fourclass/stacking.rs` 62→75、`cli/src/erase/mod.rs` 120→130、
+  `cli/src/daemon/judge.rs` 175→227、`core/app/CE/Verdict/Score.hs` 261→270、`cli/src/score/mod.rs` 398→432、CHANGELOG 707→725，新文件 `cli/src/score/anchor.rs` 158 /
+  `core/test/StackingProps.hs` 48；子 `it/erase_e2e.rs` 235→269、`unit/fourclass/stacking.rs` 70→75、`it/baseline_ledgers.rs` 172→297、`it/baseline_bridge.rs` 180→210，新文件 `it/guard_budget_parity.rs` 94 / `unit/score/anchor.rs` 132 /
+  `unit/daemon/judge.rs` 36。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：

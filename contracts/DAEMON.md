@@ -138,7 +138,7 @@
   权威与钉点：dedup report = `dedup::report_json`（report_schema
   golden `fixtures/dedup-report/` + daemon_e2e 消费）、fourclass
   report = `fourclass::session` 形状（daemon_e2e 断言 + wire_indices
-  索引钉）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =
+  索引钉；7.0.0 起核链退避恢复后的首份报告可带加性 `recovered: n`，daemon/judge.rs）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =
   ce-core 的 `tombstone.result`（wire golden `fixtures/tombstone/` + `tombstone::wire::consume` 单元腿）。
 
 ## 5. 复跑

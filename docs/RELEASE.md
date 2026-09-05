@@ -7,9 +7,9 @@
 
 ## 0. 前置门（全绿才允许起步）
 
-- 两套<!--ce:count:gates#word-->六<!--/ce-->腿狗粮门：主树 `ce scan` / `ce dedup --check` / <!--ce:gate:floor.main#digits-->`ce check --fail-under 946`<!--/ce-->
+- 两套<!--ce:count:gates#word-->六<!--/ce-->腿狗粮门：主树 `ce scan` / `ce dedup --check` / <!--ce:gate:floor.main#digits-->`ce check --fail-under 939`<!--/ce-->
   / `ce deadcode --check` / `ce docdup --check` / `ce erase --check`，加 `ce doctor`；
-  `cli/tests` 子仓同六门（`ce <gate> tests`，<!--ce:gate:floor.tests#digits-->`--fail-under 983`<!--/ce-->，子仓自带 ce.toml 与基线）。
+  `cli/tests` 子仓同六门（`ce <gate> tests`，<!--ce:gate:floor.tests#digits-->`--fail-under 979`<!--/ce-->，子仓自带 ce.toml 与基线）。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core；`cli/tests` submodule 已 `update --init`）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
 - 版本五处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch

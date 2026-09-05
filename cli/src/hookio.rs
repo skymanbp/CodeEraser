@@ -25,7 +25,10 @@ use std::path::Path;
 /// the session added (`new_units`, `queried`), `rows` of `{unit, twin,
 /// score}` for those whose top-1 the core judged same-role over
 /// similar/1, `degraded` naming why the core did not judge; absent
-/// when there is nothing to say. Every prior key keeps its shape.
+/// when there is nothing to say. The `fourclass` object may carry
+/// `recovered: <n>` on the first report after the daemon's core link
+/// came back from n failed spawn attempts (7.0.0, O63 — the retry
+/// budget backs off and never closes). Every prior key keeps its shape.
 ///
 /// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire
 /// (tombstone/1) — its counts and sites live under `judged` (`sites` as

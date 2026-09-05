@@ -88,23 +88,43 @@ fn converge(root: &Path, db: Option<PathBuf>, core: &str, applied: &Plan) -> Res
 /// Close the target set: one row per (path, span), and a whole-file
 /// deletion subsumes every span row on the same path — an apply that
 /// deleted a file and then tried to splice lines out of it would
-/// refuse on the hash it can no longer read. First row wins within a
-/// key (rows arrive sorted, so the winner is deterministic).
+/// refuse on the hash it can no longer read. Within one key the
+/// ERASEABLE row with the richest licence wins (7.0.0, O51): a dead
+/// file that is also a byte-identical twin of a live unit is proposed
+/// as `t1_twin`, whose provenance names the survivor it duplicates —
+/// before 7.0.0 the dead-file row won by class-name order and the twin
+/// class could never reach apply. With no eraseable row the first
+/// advisory row (class order) stands, so the categorical refusal
+/// (`public_surface`) is the one the reader sees. Rows arrive sorted,
+/// so the winner is deterministic.
 fn close_targets(rows: Vec<Row>) -> Vec<Row> {
     let mut whole: BTreeMap<String, bool> = BTreeMap::new();
     for r in rows.iter().filter(|r| r.span.is_none()) {
         let slot = whole.entry(r.path.clone()).or_insert(false);
         *slot = *slot || r.eraseable;
     }
-    let mut seen = std::collections::BTreeSet::new();
-    rows.into_iter()
-        .filter(|r| {
-            let keep = match (&r.span, whole.get(&r.path)) {
-                // an eraseable whole-file deletion owns the path
-                (Some(_), Some(true)) => false,
-                _ => true,
-            };
-            keep && seen.insert((r.path.clone(), r.span))
-        })
-        .collect()
+    let mut best: BTreeMap<(String, Option<(i64, i64)>), Row> = BTreeMap::new();
+    for r in rows {
+        // an eraseable whole-file deletion owns the path
+        if r.span.is_some() && whole.get(&r.path) == Some(&true) {
+            continue;
+        }
+        let key = (r.path.clone(), r.span);
+        let richer =
+            |cur: &Row| r.eraseable && (!cur.eraseable || licence(r.class) > licence(cur.class));
+        if best.get(&key).is_none_or(richer) {
+            best.insert(key, r);
+        }
+    }
+    best.into_values().collect()
+}
+
+/// How much a class's eraseable row tells the reader: a twin names
+/// the live unit it duplicates, a dead file names only its death.
+fn licence(class: &str) -> u8 {
+    match class {
+        "t1_twin" => 2,
+        "dead_file" => 1,
+        _ => 0,
+    }
 }

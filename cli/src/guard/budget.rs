@@ -254,7 +254,7 @@ fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {
 /// committed_soft transport, second key): [warn, ask] permille,
 /// sane only when 0 < warn <= ask.
 fn committed_tiers(root: &Path) -> Option<(usize, usize)> {
-    let doc = crate::score::baseline::read(root).ok()??;
+    let doc = crate::score::baseline::document(root).ok()??;
     let warn = usize::try_from(doc["zoneTiers"][0].as_u64()?).ok()?;
     let ask = usize::try_from(doc["zoneTiers"][1].as_u64()?).ok()?;
     (warn >= 1 && warn <= ask).then_some((warn, ask))
@@ -267,7 +267,7 @@ fn committed_tiers(root: &Path) -> Option<(usize, usize)> {
 /// the warn threshold here too, or the zone opens on every file
 /// (same guard as structure::judge::committed_soft, its twin).
 fn committed_soft(root: &Path) -> Option<usize> {
-    let doc = crate::score::baseline::read(root).ok()??;
+    let doc = crate::score::baseline::document(root).ok()??;
     usize::try_from(doc["softLine"].as_u64()?)
         .ok()
         .filter(|s| *s >= 1)

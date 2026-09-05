@@ -149,6 +149,14 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **7.0.0**（判决正确性批，**major**，计划 v2.29 步 8，2026-09-05）：`fourclass/1` 对级 `dup=[hash…]` 改为
+> `dupSpans=[[hash,start,end]…]`（每个 after 侧出现一行，1 基闭区间；旧键不再读——请求形状变 = major），堆叠规则据此
+> 改为「≥ `stackingNovelFloor` 条 novel 行落在新重复单元的跨度内」（O47；`start < 1 ∨ end < start` 按对点名拒绝）。同批
+> 随行三条判决改动不改形状：`verdict/1` 轴 2 / 3 的质量改为**被判定对触及的互异文件数**、分母改为各自的机会宇宙——
+> 轴 2 = 代码文件 `nodes − docFiles`、轴 3 = 文档文件 `docFiles`（O22；此前两轴数对、分母全体节点，分数与 1.6.0 不可比随
+> CHANGELOG 声明）；`ce check` 起送 kind = 2 的 docdup 对行（O46；此前该轴在产品里恒零）；`erase/1` 第 2 类第 3 事实由
+> 死亡位改为**死亡判决码 0..4**（0 = 不死；2 / 4 命中 `publicDeadVerdicts` 按 reason 6 拒绝——O51，RG10 自此真的到达
+> 孪生路；`> 4` 按行点名拒绝）。golden 全族 request 行随 major 机器重写为 7.0.0（§3 锚 7.0.0）。
 > **6.7.0**（同角色顾问族，加性 minor，计划 v2.29 步 5，2026-09-05；ADR-008 细则第六期）：第十二判决族
 > `similar/1`——请求 `query=[[termHash,weight]…]`（可缺省 = 空袋；哈希严格升序、weight ≥ 1）+
 > `rows=[[nHit,pHit,cHit,dHit,sHit,lHit,shapeEqual,bm25Num,bm25Den]…]`（每个候选一行九整数：六通道各自的
@@ -516,7 +524,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->6.7.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.0.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -648,12 +656,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
-  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->6.0.0<!--/ce-->**
-  （123 行，server 恒答 6.7.0）——它们是"minor 偏斜
+  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
+  （123 行，server 恒答 7.0.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
-  request 沿用当前 major 锚（今日 6.0.0；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 6.7.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
+  request 沿用当前 major 锚（今日 7.0.0；唯 `handshake/hello-ok` 的握手 request 随
+  server 走 7.0.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -665,5 +673,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->6.7.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->7.0.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.1.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

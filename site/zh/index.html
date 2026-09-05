@@ -62,9 +62,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 949/1000</span> | 判轴 0:86 1:0 2:71 3:0 4:0 5:0 6:206 | 候选 34
+<span class="s">检查分数 943/1000</span> | 判轴 0:89 1:0 2:106 3:0 4:0 5:0 6:210 | 候选 34
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
-注：10 块并入既有成员，16 个文件内对不入相似表
+注：10 块并入既有成员，15 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
 <!-- roast:end -->
   <p class="cap">真实输出——CodeEraser 判决它自己的仓库。棘轮只收不放：
@@ -80,7 +80,7 @@
 <tr><td>残留的克隆块</td><td class="was" data-run="不带 CodeEraser">4</td><td class="to" data-run="带 CodeEraser">0</td></tr>
 <tr><td>重复文档段</td><td class="was" data-run="不带 CodeEraser">1</td><td class="to" data-run="带 CodeEraser">0</td></tr>
 <tr><td>仍欠的删除</td><td class="was" data-run="不带 CodeEraser">1</td><td class="to" data-run="带 CodeEraser">0</td></tr>
-<tr><td>检查分数</td><td class="was" data-run="不带 CodeEraser">952</td><td class="to" data-run="带 CodeEraser">979</td></tr>
+<tr><td>检查分数</td><td class="was" data-run="不带 CodeEraser">871</td><td class="to" data-run="带 CodeEraser">979</td></tr>
 </tbody></table></div>
 <p class="cap">同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。</p>
 <!-- scoreboard:end -->
@@ -105,7 +105,7 @@
 <h2>接进工作流</h2>
 <div class="installs">
   <div class="install"><span class="k">CI 门</span>
-    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->946<!--/ce-->&nbsp;&nbsp;# 棘轮+地板；exit 1 直接把流水线判红</code></div>
+    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->939<!--/ce-->&nbsp;&nbsp;# 棘轮+地板；exit 1 直接把流水线判红</code></div>
   <div class="install"><span class="k">pre-commit</span>
     <code>ce precommit&nbsp;&nbsp;# 暂存区净行数 + 涉改重复块</code></div>
   <div class="install"><span class="k">MCP</span>
