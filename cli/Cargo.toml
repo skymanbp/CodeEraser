@@ -28,7 +28,7 @@ anyhow = "1.0.104"
 clap = { version = "4", features = ["derive"] }
 # daemon token entropy (auth.rs) — already in the tree transitively,
 # so this adds no new build node
-getrandom = "0.3"
+getrandom = "0.4"
 # the mention universe's own exclusion table (mention/walk.rs) is
 # matched on basenames by the engine `ignore` already links — one
 # glob dialect in the tree, no build node added
