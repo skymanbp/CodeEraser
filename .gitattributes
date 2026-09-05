@@ -37,6 +37,12 @@ site/** linguist-documentation
 # v2.21 ⑧). LF on every checkout, on every platform; images stay
 # binary. (The ndjson goldens keep their own rule above.)
 contracts/**/*.json text eol=lf
+# The crosscheck fixtures are frozen upstream slices whose content
+# sha256 is the identity every similar-oracle row carries (plan v2.29
+# step 2): the Windows checkout hashed CRLF text, the ubuntu leg LF
+# (CI 33953181231). LF on every checkout: the ndjson rule's fourth
+# application.
+contracts/fixtures/** text eol=lf
 docs/** text eol=lf
 site/** text eol=lf
 *.png binary
