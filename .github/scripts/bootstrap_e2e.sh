@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its fifteen states with the just-built
+# drives plugin/bin/ce.sh through its seventeen states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -30,6 +30,10 @@
 #  13 health     : SessionStart's `health` always verifies, stamp or
 #                  not (once per session)
 #  14 no stamp   : the unverified PATH leg never stamps
+#  15 hand match : a copy placed by hand at the pinned path that MATCHES
+#                  the pin is the verified leg — exec'd silently, stamped
+#  16 hand reject: a hand-placed copy that does not match is refused BY
+#                  NAME, never exec'd or stamped; PATH ce answers instead
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
 set -eu
 # This suite's whole subject is the PIN resolution chain; an ambient
@@ -332,4 +336,43 @@ for s in "$work"/data0/bound-*; do
     [ -e "$s" ] && fail 14 "the unverified leg left a stamp: $s"
 done
 
-echo "bootstrap_e2e: PASS (15 states, key=$key)"
+# --- state 15: a HAND-PLACED copy at the pinned path that MATCHES the
+# pin is the verified leg — air-gapped, no source at all: it execs
+# silently and stamps (O79; the placement road plugin/README describes)
+mkdir -p "$work/data15"
+cp "$CE_BIN" "$work/data15/$payload"
+: >"$work/out15"
+err=$(CE_MANIFEST_FILE="$work/manifest1.env" CE_AIRGAPPED=1 \
+      CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$work/data15" sh "$STARTER" --version 2>&1 >"$work/out15") || true
+out=$(cat "$work/out15")
+[ "$out" = "$want" ] || fail 15 "hand-placed verified copy answered '$out' not '$want'"
+[ -z "$err" ] || fail 15 "the hand-placed verified leg was not silent: $err"
+[ -f "$work/data15/bound-0.0.0-test.env" ] || fail 15 "the hand-placed verified leg left no stamp"
+
+# --- state 16: a hand-placed copy that does NOT match the pin is
+# refused BY NAME — never exec'd, never stamped — and, air-gapped, the
+# starter degrades to PATH ce with its unverified notice. The file is
+# left where it is: unlike a stray ce-core (state 7) nothing execs an
+# unverified ce out of the data dir, and a hasher answering wrong
+# (state 12) must not cost the operator their placed binary ---------
+mkdir -p "$work/data16"
+cp "$CE_BIN" "$work/data16/$payload"
+cat >"$work/manifest16.env" <<EOF
+CE_MANIFEST_VERSION="0.0.0-test"
+CE_BASE_URL="file:///nonexistent"
+CE_SHA256_${envkey}_CE="0000000000000000000000000000000000000000000000000000000000000000"
+EOF
+rc=0
+out=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest16.env" CE_AIRGAPPED=1 \
+      CLAUDE_PLUGIN_DATA="$work/data16" sh "$STARTER" --version 2>"$work/err16") || rc=$?
+err=$(cat "$work/err16")
+case "$err" in *"REFUSING on-disk ce "*) ;; *) fail 16 "hand-placed mismatch was not refused by name: $err" ;; esac
+case "$err" in *"pin unverified"*) ;; *) fail 16 "no unverified notice on the PATH fallback: $err" ;; esac
+[ "$rc" -eq 0 ] && [ "$out" = "$want" ] || fail 16 "PATH fallback did not answer (rc=$rc): '$out'"
+[ -f "$work/data16/$payload" ] || fail 16 "the refused hand-placed copy was deleted"
+for s in "$work"/data16/bound-*; do
+    [ -e "$s" ] && fail 16 "a refused hand-placed copy left a stamp: $s"
+done
+
+echo "bootstrap_e2e: PASS (17 states, key=$key)"

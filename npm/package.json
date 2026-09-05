@@ -1,0 +1,21 @@
+{
+  "name": "codeeraser",
+  "version": "1.6.0",
+  "description": "CodeEraser — erase LLM-induced code & document entropy. This package is a name-reservation pointer: the tool ships as prebuilt binaries on GitHub Releases, `cargo install codeeraser`, and a Claude Code plugin.",
+  "homepage": "https://github.com/skymanbp/CodeEraser",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skymanbp/CodeEraser.git"
+  },
+  "license": "Apache-2.0",
+  "author": "skymanbp",
+  "keywords": [
+    "codeeraser",
+    "deduplication",
+    "clone-detection",
+    "code-quality",
+    "dead-code",
+    "entropy"
+  ],
+  "files": []
+}

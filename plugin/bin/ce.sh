@@ -258,7 +258,17 @@ target="$data/ce-$ver-$key$ext"
 # answers — the installer leaves one on PATH, and the same bytes are
 # not worth fetching twice. Unmatched ones still face verification.
 for cand in "$target" "$(command -v ce 2>/dev/null || true)"; do
-    [ -n "$cand" ] && [ -x "$cand" ] && [ "$(sha_of "$cand" 2>/dev/null)" = "$pin" ] || continue
+    [ -n "$cand" ] && [ -x "$cand" ] || continue
+    if [ "$(sha_of "$cand" 2>/dev/null)" != "$pin" ]; then
+        # A copy at the pinned path that does not match is refused BY
+        # NAME (O79): skipping it in silence read as "verified" to the
+        # operator who placed it by hand. It stays on disk — nothing
+        # execs an unverified ce out of the data dir (unlike a stray
+        # ce-core, ensure_core), and a hasher answering wrong (e2e
+        # state 12) must not cost the operator their placed binary.
+        [ "$cand" = "$target" ] && echo "codeeraser: REFUSING on-disk ce — SHA256 mismatch, not running $target" >&2
+        continue
+    fi
     ensure_core
     bind "$cand"
     exec "$cand" "$@"

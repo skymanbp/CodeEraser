@@ -7,7 +7,15 @@
 // in a finally block whatever wrangler did. No token value is ever
 // written to the console.
 //
-// Usage: node scripts/deploy_site.js   (exit code = wrangler's)
+// The deploy is not "up" until every served page equals the committed
+// blob (docs/RELEASE.md §3): scripts/verify_site.js is that reader, and
+// it used to be a separate manual step — skipped once, run too early
+// once (O76). It runs here after wrangler, retried: the edge answers
+// stale bytes for a short while after a deploy (v1.5.1's first check
+// read 4/8 and the same check 20 s later 8/8), so the reader is
+// re-run, never softened.
+//
+// Usage: node scripts/deploy_site.js   (exit code = wrangler's, then verify_site.js's)
 "use strict";
 const fs = require("fs");
 const path = require("path");
@@ -73,6 +81,23 @@ function deploy(tempValue) {
   return status;
 }
 
+const VERIFY_TRIES = 8;
+const VERIFY_GAP_MS = 15000;
+
+async function verified() {
+  const script = path.join(__dirname, "verify_site.js");
+  for (let attempt = 1; attempt <= VERIFY_TRIES; attempt += 1) {
+    console.log(`[verify] attempt ${attempt}/${VERIFY_TRIES}`);
+    const run = spawnSync(process.execPath, [script], { cwd: root, stdio: "inherit" });
+    if (run.status === 0) return 0;
+    // waiting on edge propagation, not masking a race: every attempt
+    // compares the pages byte for byte against the committed blobs
+    if (attempt < VERIFY_TRIES) await new Promise((r) => setTimeout(r, VERIFY_GAP_MS));
+  }
+  console.error(`[verify] the site did not match the committed blobs within ${VERIFY_TRIES} attempts`);
+  return 1;
+}
+
 async function main() {
   // trim() strips a UTF-8 BOM too: U+FEFF is ECMAScript WhiteSpace
   const master = fs.readFileSync(path.join(root, ".secret"), "utf8").trim();
@@ -84,6 +109,7 @@ async function main() {
     await cf("DELETE", `/user/tokens/${temp.id}`, master);
     console.log(`[cleanup] temp token ${temp.id} deleted`);
   }
+  if (status === 0) status = await verified();
   process.exit(status);
 }
 

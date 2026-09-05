@@ -13,7 +13,7 @@ the four-way verdicts: it never turns a gate red, never enters `ce erase`, and i
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
 [report.rs:58-63](../../../cli/src/graph/deadcode/report.rs#L58)). The plan calls it ADR-008
-step 3b ([DEVELOPMENT_PLAN.md:290](../../DEVELOPMENT_PLAN.md#L290)); the split follows
+step 3b ([DEVELOPMENT_PLAN.md:291](../../DEVELOPMENT_PLAN.md#L291)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
 
@@ -279,7 +279,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 950 (962 − 12 early-NUL) | rust | 2497 (1381) | 264 (0) | 10.6 % | 9 / 264 = 3.4 % | 9 / 2215 |
+| self @ this commit | 957 (969 − 12 early-NUL) | rust | 2497 (1381) | 264 (0) | 10.6 % | 9 / 264 = 3.4 % | 9 / 2215 |
 | | | haskell | 1457 (333) | 254 (1) | 17.4 % | 14 / 254 = 5.5 % | 14 / 1203 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
