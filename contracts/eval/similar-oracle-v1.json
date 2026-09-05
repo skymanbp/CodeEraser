@@ -521,7 +521,7 @@
           "path": "core/test/ReferenceGraph.hs",
           "role": false,
           "same_file": false,
-          "sha": "d1f4b92869c9a727ec650fab99abe5f8a3f73212a45384613dabc7ee0929d0c3",
+          "sha": "477f77881299928165849a109d757f6d56257de30da6dbfd6571f6c6851ec119",
           "shape_equal": false,
           "start_line": 95,
           "widened": {
@@ -717,7 +717,7 @@
           "path": "cli/src/structure/judge.rs",
           "role": false,
           "same_file": false,
-          "sha": "e6ff4d0f3a96cc4f51e1ab9601318a2be3ec3f5c24587ae82fad4e5976fc8dae",
+          "sha": "1b5492db1a873b50839d30f6ef2a82382338b862c1dac7fd080f8eeb58aac771",
           "shape_equal": false,
           "start_line": 322,
           "widened": null,
@@ -744,7 +744,7 @@
           "path": "cli/src/graph/store.rs",
           "role": false,
           "same_file": false,
-          "sha": "e8394862605e328307856de8236c5fe16f073c44170caa2c128bc730e0b9eaf4",
+          "sha": "5afa77f2d900791afed9908e17aaae1d40ae721ca2b51d7ca559f3523ddedd14",
           "shape_equal": false,
           "start_line": 312,
           "widened": null,
@@ -1311,7 +1311,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": false,
           "same_file": false,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": true,
           "start_line": 158,
           "widened": {
@@ -1537,7 +1537,7 @@
           "path": "cli/src/audit/changes.rs",
           "role": false,
           "same_file": false,
-          "sha": "27b9f83659cfed43cb31a23e3cbfb291788b48cd86cd0c648b3e293e8fb6f254",
+          "sha": "6b154db3e7d113041c83d37e9238c1a5972caa186244c975a456386f29f21bdf",
           "shape_equal": false,
           "start_line": 108,
           "widened": {
@@ -2063,7 +2063,7 @@
       "path": "cli/src/graph/store.rs",
       "rank": "0062e58ab463b91e60187e1c81e786bdd12c33d13790583b2e5a43a5f8fb33a9",
       "role_bare": false,
-      "sha": "e8394862605e328307856de8236c5fe16f073c44170caa2c128bc730e0b9eaf4",
+      "sha": "5afa77f2d900791afed9908e17aaae1d40ae721ca2b51d7ca559f3523ddedd14",
       "start_line": 160
     },
     {
@@ -2503,7 +2503,7 @@
       "path": "core/app/CE/Docdup.hs",
       "rank": "0073bcb121e30ff1b46ff205aeabc7f8668218ec5377f4235402398ec7fe6892",
       "role_bare": false,
-      "sha": "0d7521559c886192ba43bf1a2aa2e85415a0a3f715f763f7de163dbc7d1c434f",
+      "sha": "c2c149c34be5e4dcdeeade1452dc6160f847d45040a7373dfeb1d5f5317d93cf",
       "start_line": 85
     },
     {
@@ -2731,7 +2731,7 @@
           "path": "core/app/CE/Clone.hs",
           "role": false,
           "same_file": false,
-          "sha": "0fa13c5646f330c756ed088aaffeb28c00f8aa7b17d38e2726e803fe7b3f4843",
+          "sha": "92334a42e2b7ca82c11e3c9e38b5785f1a9edafb2719782aa6576d40817a20aa",
           "shape_equal": false,
           "start_line": 49,
           "widened": {
@@ -2761,7 +2761,7 @@
           "path": "core/app/CE/Clone.hs",
           "role": false,
           "same_file": false,
-          "sha": "0fa13c5646f330c756ed088aaffeb28c00f8aa7b17d38e2726e803fe7b3f4843",
+          "sha": "92334a42e2b7ca82c11e3c9e38b5785f1a9edafb2719782aa6576d40817a20aa",
           "shape_equal": false,
           "start_line": 83,
           "widened": {
@@ -3068,7 +3068,7 @@
           "path": "core/app/CE/Structure.hs",
           "role": true,
           "same_file": false,
-          "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+          "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
           "shape_equal": true,
           "start_line": 135,
           "widened": {
@@ -3095,7 +3095,7 @@
           "path": "core/app/CE/Structure.hs",
           "role": true,
           "same_file": false,
-          "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+          "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
           "shape_equal": true,
           "start_line": 274,
           "widened": {
@@ -3147,7 +3147,7 @@
           "path": "core/app/CE/Structure/Knobs.hs",
           "role": true,
           "same_file": false,
-          "sha": "c3a235fb0cb9f22f1bb6dda387e28ec1d28f59bde7a0258c3a5723fb42c9406d",
+          "sha": "4252f898b051b022a9cdf3570fb4062f67e469b061932b690c94b063054f0e72",
           "shape_equal": true,
           "start_line": 16,
           "widened": {
@@ -3177,7 +3177,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": false,
           "same_file": true,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": true,
           "start_line": 169,
           "widened": {
@@ -3207,7 +3207,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": true,
           "same_file": true,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": false,
           "start_line": 145,
           "widened": {
@@ -3237,7 +3237,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": false,
           "same_file": true,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": false,
           "start_line": 183,
           "widened": {
@@ -3267,7 +3267,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": true,
           "same_file": true,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": false,
           "start_line": 158,
           "widened": {
@@ -3287,7 +3287,7 @@
       "path": "core/app/CE/Verdict/Table.hs",
       "rank": "00b9086afaa07513fc2180bd227dd01dd8f44918da4a98834992e2e771064582",
       "role_bare": true,
-      "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+      "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
       "start_line": 99
     },
     {
@@ -3807,7 +3807,7 @@
           "path": "cli/src/structure/judge.rs",
           "role": false,
           "same_file": false,
-          "sha": "e6ff4d0f3a96cc4f51e1ab9601318a2be3ec3f5c24587ae82fad4e5976fc8dae",
+          "sha": "1b5492db1a873b50839d30f6ef2a82382338b862c1dac7fd080f8eeb58aac771",
           "shape_equal": true,
           "start_line": 32,
           "widened": null,
@@ -3851,7 +3851,7 @@
       "path": "cli/src/erase/model.rs",
       "rank": "01095e4816083dd46f99a5f43b90ba556beaf48b97973f512b7bd1bdf800da47",
       "role_bare": false,
-      "sha": "4e757def7f450421a3ebf969f2a5dc7bde9e9a74db24da7970208dd60eaf5aec",
+      "sha": "599813b76bce09808200894c6873d96586bd5396385a008e72183f298ea81302",
       "start_line": 44
     },
     {
@@ -3913,7 +3913,7 @@
           "path": "cli/src/graph/store.rs",
           "role": false,
           "same_file": false,
-          "sha": "e8394862605e328307856de8236c5fe16f073c44170caa2c128bc730e0b9eaf4",
+          "sha": "5afa77f2d900791afed9908e17aaae1d40ae721ca2b51d7ca559f3523ddedd14",
           "shape_equal": true,
           "start_line": 390,
           "widened": {
@@ -4691,7 +4691,7 @@
           "path": "core/app/CE/Structure/Axes.hs",
           "role": true,
           "same_file": true,
-          "sha": "083008863bd43915db64bad49ca9679503d1646f2d3dc932f33cb4e0b29543c7",
+          "sha": "a01a56bc5afceb758dc03e9129cf125b81f4e4117847ad27d14be053cf817c2c",
           "shape_equal": false,
           "start_line": 165,
           "widened": {
@@ -4781,7 +4781,7 @@
           "path": "core/test/Reference.hs",
           "role": false,
           "same_file": false,
-          "sha": "a409a290100385ee3489cb1ce3b9581ee74cdf6c2b96f6ef4d39a3ac07fa9148",
+          "sha": "53f4c2bd69150f068e5c68a234b878b4edb3c2104c74ee0ae5462d2b19594dfa",
           "shape_equal": false,
           "start_line": 106,
           "widened": {
@@ -4835,7 +4835,7 @@
           "path": "core/app/CE/Structure/Axes.hs",
           "role": false,
           "same_file": true,
-          "sha": "083008863bd43915db64bad49ca9679503d1646f2d3dc932f33cb4e0b29543c7",
+          "sha": "a01a56bc5afceb758dc03e9129cf125b81f4e4117847ad27d14be053cf817c2c",
           "shape_equal": true,
           "start_line": 211,
           "widened": {
@@ -4855,7 +4855,7 @@
       "path": "core/app/CE/Structure/Axes.hs",
       "rank": "0132f3d91805472998b1c52efc77de4390f22b124dbc988e92f5a6a4ca8781d5",
       "role_bare": true,
-      "sha": "083008863bd43915db64bad49ca9679503d1646f2d3dc932f33cb4e0b29543c7",
+      "sha": "a01a56bc5afceb758dc03e9129cf125b81f4e4117847ad27d14be053cf817c2c",
       "start_line": 223
     },
     {
@@ -4947,7 +4947,7 @@
           "path": "cli/src/mention/mod.rs",
           "role": false,
           "same_file": false,
-          "sha": "c6e6e4f9db96aeb4c69a9e62af433636829907d4509890630eaf14700d107454",
+          "sha": "9d438ee2ba73beb571eca93aedd6c02b9cbf3ab558c2f49500e025d149cf599c",
           "shape_equal": true,
           "start_line": 181,
           "widened": {
@@ -4977,7 +4977,7 @@
           "path": "cli/src/structure/judge.rs",
           "role": false,
           "same_file": false,
-          "sha": "e6ff4d0f3a96cc4f51e1ab9601318a2be3ec3f5c24587ae82fad4e5976fc8dae",
+          "sha": "1b5492db1a873b50839d30f6ef2a82382338b862c1dac7fd080f8eeb58aac771",
           "shape_equal": false,
           "start_line": 329,
           "widened": {
@@ -5481,7 +5481,7 @@
           "path": "cli/src/graph/store.rs",
           "role": false,
           "same_file": false,
-          "sha": "e8394862605e328307856de8236c5fe16f073c44170caa2c128bc730e0b9eaf4",
+          "sha": "5afa77f2d900791afed9908e17aaae1d40ae721ca2b51d7ca559f3523ddedd14",
           "shape_equal": true,
           "start_line": 390,
           "widened": {
@@ -5915,7 +5915,7 @@
           "path": "core/app/CE/Verdict/Faces.hs",
           "role": false,
           "same_file": false,
-          "sha": "6317959108e074762409619ee132e8473db78948fad995abf60609a8776a546b",
+          "sha": "2e37ae7ba9cc9cb97d4fdf32279ec252429ad5981d0320e49b2380716b0e2f00",
           "shape_equal": false,
           "start_line": 74,
           "widened": null,
@@ -6419,7 +6419,7 @@
           "path": "cli/src/graph/canvas.rs",
           "role": false,
           "same_file": false,
-          "sha": "a2414dea80b962ed2b16abea141de7be3a220b59a58aee24d4863c847fa666a1",
+          "sha": "73612270af82af1ccca59a970d97288697b4ea75bbd2c7b0b8493b8c69a5bacc",
           "shape_equal": true,
           "start_line": 57,
           "widened": {
@@ -6499,7 +6499,7 @@
       "path": "cli/src/structure/judge.rs",
       "rank": "01c76cbef8307328b4521150e4e95e3ea3b2f75088d3a811651723e96f8263ac",
       "role_bare": false,
-      "sha": "e6ff4d0f3a96cc4f51e1ab9601318a2be3ec3f5c24587ae82fad4e5976fc8dae",
+      "sha": "1b5492db1a873b50839d30f6ef2a82382338b862c1dac7fd080f8eeb58aac771",
       "start_line": 178
     },
     {
@@ -6621,7 +6621,7 @@
           "path": "cli/src/faces.rs",
           "role": false,
           "same_file": false,
-          "sha": "709b5e335ddb1dcfa9be444e5fe211b9d482507a64562eb47187c0eb4d71a58a",
+          "sha": "ca8f46f80109bac566fc2483470611b785ab9a6577d9969ba246e55d9e980a1c",
           "shape_equal": false,
           "start_line": 171,
           "widened": {
@@ -6959,7 +6959,7 @@
           "path": "core/app/CE/Structure.hs",
           "role": false,
           "same_file": false,
-          "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+          "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
           "shape_equal": true,
           "start_line": 34,
           "widened": {
@@ -7039,7 +7039,7 @@
       "path": "core/app/CE/Structure/Axes.hs",
       "rank": "01f7d5c8bdb4d63f78fde33980049cc513b1d924ed038070b98b3fbf934bef0c",
       "role_bare": false,
-      "sha": "083008863bd43915db64bad49ca9679503d1646f2d3dc932f33cb4e0b29543c7",
+      "sha": "a01a56bc5afceb758dc03e9129cf125b81f4e4117847ad27d14be053cf817c2c",
       "start_line": 27
     },
     {
@@ -7161,7 +7161,7 @@
           "path": "cli/src/tombstone/marked.rs",
           "role": false,
           "same_file": false,
-          "sha": "44997221d2c990045fbe582e3e1bfe48d6b7a600e1421522a7577edfeeb40625",
+          "sha": "98c91db12043cbf51cd2230c70271a1411ea41dada6e15ce3591d6a0b36fff29",
           "shape_equal": true,
           "start_line": 24,
           "widened": {
@@ -7211,7 +7211,7 @@
       "path": "cli/src/tombstone/texts.rs",
       "rank": "01f884b3dbc6b0e129f13a4364176a5198c4870702d28642e7a5c764009d33af",
       "role_bare": false,
-      "sha": "233e7315510cf177072185297180519a81cfb2a0c1bce966a7fe4d052de00bee",
+      "sha": "84a9a7c78ca28ae74174cc728c00c30ee72ec6d711b7d9848145f81ef1179544",
       "start_line": 38
     },
     {
@@ -7363,7 +7363,7 @@
           "path": "cli/src/tombstone/texts.rs",
           "role": false,
           "same_file": true,
-          "sha": "233e7315510cf177072185297180519a81cfb2a0c1bce966a7fe4d052de00bee",
+          "sha": "84a9a7c78ca28ae74174cc728c00c30ee72ec6d711b7d9848145f81ef1179544",
           "shape_equal": false,
           "start_line": 58,
           "widened": null,
@@ -7407,7 +7407,7 @@
       "path": "cli/src/tombstone/texts.rs",
       "rank": "0209c3b188572ecbe1c5027041af20bac1b5ddb878a88f82661bc932166aeb3e",
       "role_bare": false,
-      "sha": "233e7315510cf177072185297180519a81cfb2a0c1bce966a7fe4d052de00bee",
+      "sha": "84a9a7c78ca28ae74174cc728c00c30ee72ec6d711b7d9848145f81ef1179544",
       "start_line": 50
     },
     {
@@ -7469,7 +7469,7 @@
           "path": "core/test/ReferenceGraph.hs",
           "role": false,
           "same_file": true,
-          "sha": "d1f4b92869c9a727ec650fab99abe5f8a3f73212a45384613dabc7ee0929d0c3",
+          "sha": "477f77881299928165849a109d757f6d56257de30da6dbfd6571f6c6851ec119",
           "shape_equal": false,
           "start_line": 41,
           "widened": {
@@ -7529,7 +7529,7 @@
           "path": "core/test/ReferenceGraph.hs",
           "role": false,
           "same_file": true,
-          "sha": "d1f4b92869c9a727ec650fab99abe5f8a3f73212a45384613dabc7ee0929d0c3",
+          "sha": "477f77881299928165849a109d757f6d56257de30da6dbfd6571f6c6851ec119",
           "shape_equal": false,
           "start_line": 33,
           "widened": {
@@ -7579,7 +7579,7 @@
       "path": "core/test/ReferenceGraph.hs",
       "rank": "020f4ab4de4e88dbae6966d65fbc1430e7abb038a9bbd5ba7fa9d560beddb8e8",
       "role_bare": false,
-      "sha": "d1f4b92869c9a727ec650fab99abe5f8a3f73212a45384613dabc7ee0929d0c3",
+      "sha": "477f77881299928165849a109d757f6d56257de30da6dbfd6571f6c6851ec119",
       "start_line": 76
     },
     {
@@ -8687,7 +8687,7 @@
           "path": "cli/src/main_cli.rs",
           "role": false,
           "same_file": false,
-          "sha": "bd36da9a2053e4342406335eeea190e1ff869e988ef580dad4235b2cda25ddf0",
+          "sha": "277b8d5d9a65f769dda81b65de07fb3fdcda65646a766766be110e4212f2bdd1",
           "shape_equal": true,
           "start_line": 53,
           "widened": {
@@ -8717,7 +8717,7 @@
           "path": "cli/src/graph/ladder/mod.rs",
           "role": false,
           "same_file": false,
-          "sha": "dadeb070f1b94c21c51c04f505477f0d0c159f029d809004bc5b10dd9d94b04d",
+          "sha": "2fd14b932acc4eae9832435181034fc2a66de69b4a4b70dac17ee3c6aa3fd0b4",
           "shape_equal": true,
           "start_line": 66,
           "widened": {
@@ -8747,7 +8747,7 @@
           "path": "cli/src/daemon/proto.rs",
           "role": false,
           "same_file": true,
-          "sha": "63ca5950f8329321c668951124dda867fb7457c4a517ce144c2b98bf1df0f14d",
+          "sha": "9d35a6efb93b206846ea5962fc659df8f3530df723c6346f917d97354d730ed5",
           "shape_equal": true,
           "start_line": 73,
           "widened": {
@@ -8777,7 +8777,7 @@
           "path": "cli/src/main_judge.rs",
           "role": false,
           "same_file": false,
-          "sha": "7f45d4a5ec3ea886fb30dbb4fd06e7ba6d1718a74ca0c5c827d0ef16e880bbc9",
+          "sha": "7eebddeaa9aad365a90c1749b86b261101d16c32600332f3b25e0879f64eafb1",
           "shape_equal": true,
           "start_line": 60,
           "widened": {
@@ -8827,7 +8827,7 @@
       "path": "cli/src/daemon/proto.rs",
       "rank": "0233831304e6419bf5d7077a17a92ce5e75c0d701292649c80d79f0d7a0ba127",
       "role_bare": false,
-      "sha": "63ca5950f8329321c668951124dda867fb7457c4a517ce144c2b98bf1df0f14d",
+      "sha": "9d35a6efb93b206846ea5962fc659df8f3530df723c6346f917d97354d730ed5",
       "start_line": 29
     },
     {
@@ -8949,7 +8949,7 @@
           "path": "cli/src/structure/judge.rs",
           "role": false,
           "same_file": false,
-          "sha": "e6ff4d0f3a96cc4f51e1ab9601318a2be3ec3f5c24587ae82fad4e5976fc8dae",
+          "sha": "1b5492db1a873b50839d30f6ef2a82382338b862c1dac7fd080f8eeb58aac771",
           "shape_equal": true,
           "start_line": 32,
           "widened": {
@@ -10496,7 +10496,7 @@
           "path": "core/app/CE/Structure/Axes.hs",
           "role": false,
           "same_file": false,
-          "sha": "083008863bd43915db64bad49ca9679503d1646f2d3dc932f33cb4e0b29543c7",
+          "sha": "a01a56bc5afceb758dc03e9129cf125b81f4e4117847ad27d14be053cf817c2c",
           "shape_equal": true,
           "start_line": 100,
           "widened": {
@@ -10605,7 +10605,7 @@
           "path": "cli/src/audit/changes.rs",
           "role": false,
           "same_file": false,
-          "sha": "27b9f83659cfed43cb31a23e3cbfb291788b48cd86cd0c648b3e293e8fb6f254",
+          "sha": "6b154db3e7d113041c83d37e9238c1a5972caa186244c975a456386f29f21bdf",
           "shape_equal": true,
           "start_line": 141,
           "widened": {
@@ -10692,7 +10692,7 @@
           "path": "cli/src/guard/budget.rs",
           "role": false,
           "same_file": false,
-          "sha": "65353ea89b18e5621be434e60bc95b0bf24896e5c236a2cf8f026983d3c2929f",
+          "sha": "0f5e2a3d42f98b7ea6d3901fc5e06fa1a7d13af56d5aba9f86e14fe52b246b31",
           "shape_equal": false,
           "start_line": 52,
           "widened": {
@@ -11145,7 +11145,7 @@
           "path": "core/app/CE/Clone.hs",
           "role": true,
           "same_file": false,
-          "sha": "0fa13c5646f330c756ed088aaffeb28c00f8aa7b17d38e2726e803fe7b3f4843",
+          "sha": "92334a42e2b7ca82c11e3c9e38b5785f1a9edafb2719782aa6576d40817a20aa",
           "shape_equal": true,
           "start_line": 122,
           "widened": {
@@ -11175,7 +11175,7 @@
           "path": "core/app/CE/Docdup.hs",
           "role": true,
           "same_file": false,
-          "sha": "0d7521559c886192ba43bf1a2aa2e85415a0a3f715f763f7de163dbc7d1c434f",
+          "sha": "c2c149c34be5e4dcdeeade1452dc6160f847d45040a7373dfeb1d5f5317d93cf",
           "shape_equal": true,
           "start_line": 96,
           "widened": {
@@ -11205,7 +11205,7 @@
           "path": "core/app/CE/Docdup.hs",
           "role": true,
           "same_file": false,
-          "sha": "0d7521559c886192ba43bf1a2aa2e85415a0a3f715f763f7de163dbc7d1c434f",
+          "sha": "c2c149c34be5e4dcdeeade1452dc6160f847d45040a7373dfeb1d5f5317d93cf",
           "shape_equal": true,
           "start_line": 109,
           "widened": {
@@ -11603,7 +11603,7 @@
           "path": "cli/src/config/rules.rs",
           "role": true,
           "same_file": false,
-          "sha": "0a6594d0f94b4c2e8830ce331f9f366087fa04eba0def97179e86e1f7e9f4cd2",
+          "sha": "e03133615c52af790adf1aab1ff71a7daf4851f08a6b360245dd543d6fcd21dc",
           "shape_equal": false,
           "start_line": 102,
           "widened": {
@@ -11881,7 +11881,7 @@
           "path": "core/app/CE/Structure.hs",
           "role": true,
           "same_file": false,
-          "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+          "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
           "shape_equal": false,
           "start_line": 207,
           "widened": {
@@ -11941,7 +11941,7 @@
           "path": "core/app/CE/Clone.hs",
           "role": true,
           "same_file": false,
-          "sha": "0fa13c5646f330c756ed088aaffeb28c00f8aa7b17d38e2726e803fe7b3f4843",
+          "sha": "92334a42e2b7ca82c11e3c9e38b5785f1a9edafb2719782aa6576d40817a20aa",
           "shape_equal": false,
           "start_line": 99,
           "widened": {
@@ -11991,7 +11991,7 @@
       "path": "core/app/CE/Verdict/Table.hs",
       "rank": "037bab52c35d7ac6cdf9d0746831f2a7ba05762de997f233a4b9cef01244b11f",
       "role_bare": true,
-      "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+      "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
       "start_line": 28
     },
     {
@@ -12225,7 +12225,7 @@
           "path": "core/app/CE/Clone.hs",
           "role": true,
           "same_file": false,
-          "sha": "0fa13c5646f330c756ed088aaffeb28c00f8aa7b17d38e2726e803fe7b3f4843",
+          "sha": "92334a42e2b7ca82c11e3c9e38b5785f1a9edafb2719782aa6576d40817a20aa",
           "shape_equal": true,
           "start_line": 122,
           "widened": {
@@ -12255,7 +12255,7 @@
           "path": "core/app/CE/Docdup.hs",
           "role": true,
           "same_file": false,
-          "sha": "0d7521559c886192ba43bf1a2aa2e85415a0a3f715f763f7de163dbc7d1c434f",
+          "sha": "c2c149c34be5e4dcdeeade1452dc6160f847d45040a7373dfeb1d5f5317d93cf",
           "shape_equal": true,
           "start_line": 96,
           "widened": {
@@ -12285,7 +12285,7 @@
           "path": "core/app/CE/Docdup.hs",
           "role": true,
           "same_file": false,
-          "sha": "0d7521559c886192ba43bf1a2aa2e85415a0a3f715f763f7de163dbc7d1c434f",
+          "sha": "c2c149c34be5e4dcdeeade1452dc6160f847d45040a7373dfeb1d5f5317d93cf",
           "shape_equal": true,
           "start_line": 109,
           "widened": {
@@ -12367,7 +12367,7 @@
           "path": "core/app/CE/Structure/Split.hs",
           "role": true,
           "same_file": true,
-          "sha": "dab3162ec47bf82e7abac0789bbbdab39d5ab7b3a4328a4a2b8d801947b24958",
+          "sha": "f78a1b4bd6cd95bf70b89c4c415fa4d122396eae16a5c5c5403e0ef7efac2819",
           "shape_equal": true,
           "start_line": 170,
           "widened": {
@@ -12397,7 +12397,7 @@
           "path": "core/app/CE/Structure/Split.hs",
           "role": true,
           "same_file": true,
-          "sha": "dab3162ec47bf82e7abac0789bbbdab39d5ab7b3a4328a4a2b8d801947b24958",
+          "sha": "f78a1b4bd6cd95bf70b89c4c415fa4d122396eae16a5c5c5403e0ef7efac2819",
           "shape_equal": true,
           "start_line": 169,
           "widened": {
@@ -12427,7 +12427,7 @@
           "path": "core/app/CE/Structure/Split.hs",
           "role": true,
           "same_file": true,
-          "sha": "dab3162ec47bf82e7abac0789bbbdab39d5ab7b3a4328a4a2b8d801947b24958",
+          "sha": "f78a1b4bd6cd95bf70b89c4c415fa4d122396eae16a5c5c5403e0ef7efac2819",
           "shape_equal": true,
           "start_line": 167,
           "widened": {
@@ -12487,7 +12487,7 @@
           "path": "core/app/CE/Structure/Axes.hs",
           "role": true,
           "same_file": false,
-          "sha": "083008863bd43915db64bad49ca9679503d1646f2d3dc932f33cb4e0b29543c7",
+          "sha": "a01a56bc5afceb758dc03e9129cf125b81f4e4117847ad27d14be053cf817c2c",
           "shape_equal": false,
           "start_line": 180,
           "widened": {
@@ -12507,7 +12507,7 @@
       "path": "core/app/CE/Structure/Split.hs",
       "rank": "039891c7b42f177f5b40fd09312cb791dd28ea0ab162f0ec724ba7f7d82d4b8d",
       "role_bare": true,
-      "sha": "dab3162ec47bf82e7abac0789bbbdab39d5ab7b3a4328a4a2b8d801947b24958",
+      "sha": "f78a1b4bd6cd95bf70b89c4c415fa4d122396eae16a5c5c5403e0ef7efac2819",
       "start_line": 168
     },
     {
@@ -13911,7 +13911,7 @@
           "path": "core/app/CE/Structure.hs",
           "role": true,
           "same_file": true,
-          "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+          "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
           "shape_equal": true,
           "start_line": 260,
           "widened": {
@@ -13971,7 +13971,7 @@
           "path": "core/app/CE/Structure.hs",
           "role": false,
           "same_file": true,
-          "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+          "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
           "shape_equal": false,
           "start_line": 118,
           "widened": {
@@ -14075,7 +14075,7 @@
       "path": "core/app/CE/Structure.hs",
       "rank": "048672e3c495624420e40413361a70572bb1707081f0e6a70f7119ef8152be4a",
       "role_bare": true,
-      "sha": "24b141ba8e792d429c9163ebf42b51e7e1df8a984d43288811986bedff465bac",
+      "sha": "d9f54c05563b61094f9d543eac79a26e1aaf65e115974eca76b9e9509c078689",
       "start_line": 253
     },
     {
@@ -14465,7 +14465,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": false,
           "same_file": false,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": false,
           "start_line": 43,
           "widened": {
@@ -14519,7 +14519,7 @@
           "path": "core/app/CE/Clone.hs",
           "role": false,
           "same_file": false,
-          "sha": "0fa13c5646f330c756ed088aaffeb28c00f8aa7b17d38e2726e803fe7b3f4843",
+          "sha": "92334a42e2b7ca82c11e3c9e38b5785f1a9edafb2719782aa6576d40817a20aa",
           "shape_equal": false,
           "start_line": 77,
           "widened": {
@@ -15671,7 +15671,7 @@
           "path": "cli/src/graph/sites.rs",
           "role": true,
           "same_file": false,
-          "sha": "c09cd0fd4e3713c772d32b17c9b1b060c40da875c59c9a5a39a13bac2cfbcbff",
+          "sha": "70f5f289c9231dd6e0da7802393b14c6689c5d2de5a0c7682013c646ab521a34",
           "shape_equal": false,
           "start_line": 178,
           "widened": {
@@ -15731,7 +15731,7 @@
           "path": "cli/src/scan/calls.rs",
           "role": false,
           "same_file": false,
-          "sha": "7cdd085d3f1669ced032c7ffecc96a68eba0266fb15434b3a4cc87bb1df0b364",
+          "sha": "64d0bc2e3e6ac27b7178287e702f24028bfc7eeeb93310acc9e211fbd19d27d3",
           "shape_equal": true,
           "start_line": 263,
           "widened": null,
@@ -15836,7 +15836,7 @@
           "path": "cli/src/scan/calls.rs",
           "role": true,
           "same_file": false,
-          "sha": "7cdd085d3f1669ced032c7ffecc96a68eba0266fb15434b3a4cc87bb1df0b364",
+          "sha": "64d0bc2e3e6ac27b7178287e702f24028bfc7eeeb93310acc9e211fbd19d27d3",
           "shape_equal": true,
           "start_line": 271,
           "widened": {
@@ -16451,7 +16451,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": false,
           "same_file": false,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": false,
           "start_line": 64,
           "widened": {
@@ -16691,7 +16691,7 @@
       "path": "core/app/CE/Verdict/Table.hs",
       "rank": "06716b31d7bc86e6d51b88d419793251eccf8fdc0d291ee0b07b4ccbd36f2f17",
       "role_bare": true,
-      "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+      "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
       "start_line": 135
     },
     {
@@ -17239,7 +17239,7 @@
           "path": "core/app/CE/Verdict/Table.hs",
           "role": true,
           "same_file": false,
-          "sha": "2aa3e05c6a618280f3ae6bac40b9bb50b922ae79a333fbf83d8f45f698c01148",
+          "sha": "fcd7d66f7ef2d4a6589e5e3297e4c1a5aaa48bcdaa8e857a43e8ece8402c2f47",
           "shape_equal": true,
           "start_line": 135,
           "widened": {
@@ -17483,7 +17483,7 @@
           "path": "core/app/CE/Graph/Cost.hs",
           "role": true,
           "same_file": true,
-          "sha": "ed2554f0e5e0c37559dbf68d8935a52e3764099f60219877c7057b437194862d",
+          "sha": "d605ec8f2b6b408c59562a31db66f6be7c136c2da48ef49dee478d70658032f2",
           "shape_equal": true,
           "start_line": 217,
           "widened": {
@@ -17513,7 +17513,7 @@
           "path": "core/app/CE/Graph/Cost.hs",
           "role": false,
           "same_file": true,
-          "sha": "ed2554f0e5e0c37559dbf68d8935a52e3764099f60219877c7057b437194862d",
+          "sha": "d605ec8f2b6b408c59562a31db66f6be7c136c2da48ef49dee478d70658032f2",
           "shape_equal": true,
           "start_line": 197,
           "widened": {
@@ -17543,7 +17543,7 @@
           "path": "core/app/CE/Graph/Cost.hs",
           "role": false,
           "same_file": true,
-          "sha": "ed2554f0e5e0c37559dbf68d8935a52e3764099f60219877c7057b437194862d",
+          "sha": "d605ec8f2b6b408c59562a31db66f6be7c136c2da48ef49dee478d70658032f2",
           "shape_equal": true,
           "start_line": 188,
           "widened": {
@@ -17573,7 +17573,7 @@
           "path": "core/app/CE/Graph/Cost.hs",
           "role": false,
           "same_file": true,
-          "sha": "ed2554f0e5e0c37559dbf68d8935a52e3764099f60219877c7057b437194862d",
+          "sha": "d605ec8f2b6b408c59562a31db66f6be7c136c2da48ef49dee478d70658032f2",
           "shape_equal": true,
           "start_line": 224,
           "widened": {
@@ -17603,7 +17603,7 @@
           "path": "core/app/CE/Graph/Dead.hs",
           "role": false,
           "same_file": false,
-          "sha": "07c19c06981a693470522e3c415fe2f5f6bf194a685953a8365f11c695bdfd2b",
+          "sha": "5d8bcd8172ed68d51291338f5e8868b2adb16fbc8696ffbd9da28b895ae38a11",
           "shape_equal": false,
           "start_line": 56,
           "widened": null,
@@ -17627,7 +17627,7 @@
           "path": "core/app/CE/Graph/Cost.hs",
           "role": false,
           "same_file": true,
-          "sha": "ed2554f0e5e0c37559dbf68d8935a52e3764099f60219877c7057b437194862d",
+          "sha": "d605ec8f2b6b408c59562a31db66f6be7c136c2da48ef49dee478d70658032f2",
           "shape_equal": true,
           "start_line": 211,
           "widened": {
@@ -17647,7 +17647,7 @@
       "path": "core/app/CE/Graph/Cost.hs",
       "rank": "08713c6a3594ff138ca4feff593482e46b2b8abd7284bf61eb467264158c088c",
       "role_bare": true,
-      "sha": "ed2554f0e5e0c37559dbf68d8935a52e3764099f60219877c7057b437194862d",
+      "sha": "d605ec8f2b6b408c59562a31db66f6be7c136c2da48ef49dee478d70658032f2",
       "start_line": 175
     },
     {
@@ -18039,7 +18039,7 @@
       "path": "cli/src/scan/calls.rs",
       "rank": "08e126b75d1c6ea4d81cfcf8786df8a7cb1aee12a3e7338e1010dec4eba1ff09",
       "role_bare": true,
-      "sha": "7cdd085d3f1669ced032c7ffecc96a68eba0266fb15434b3a4cc87bb1df0b364",
+      "sha": "64d0bc2e3e6ac27b7178287e702f24028bfc7eeeb93310acc9e211fbd19d27d3",
       "start_line": 271
     },
     {
