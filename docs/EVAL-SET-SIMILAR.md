@@ -5,8 +5,8 @@
 > [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md)（303 行）→ 本册。度量定义唯一权威 =
 > `.ccm/similar-spec-2026-09-05.md`（本机件，§三 词袋 / §四 PPMI / §七 评估）。本册每个数字直读
 > `contracts/eval/similar-sample-v1.json`（样本）、`contracts/eval/similar-oracle-v1.json`（oracle）与
-> `cli/tests/it/eval_similar_review/sample.json`（仲裁记录），由渲染脚本一次写出后冻结；
-> 重放门 = CI `cargo test --test it -- eval_similar_precision::`。本册与三册前身同入冻结集
+> `cli/tests/it/eval_similar_review/sample.json`（仲裁记录），由渲染脚本一次写出后冻结；第二代（留出集，
+> 「留出集复测」节）同形三件带 `-v2` 后缀；重放门 = CI `cargo test --test it -- eval_similar_precision::`。本册与三册前身同入冻结集
 > （`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。
 
 ## 仪器（`cli/tests/it/similar_replay.rs`，常驻 `--ignored` 腿，release 跑）
@@ -229,7 +229,8 @@ role=1 40/57（基线 39/57），hit@5 76/116（基线 74/116）**——+3 / +1�
    常同现），不是**可替换**（`fetch` 与 `load` 恰恰不在同一单元里出现）——一阶共现估计不了同义；模型上，翻译模型、伪相关反馈、
    二阶「词 → 被调 → 词」都在同一份 oracle 上被测过：顶 1 无一净正，翻译模型与 Rocchio 还是净负；把联想只用来决胜（`ppmi_tie`）
    或限总量（`ppmi_mass4`）能把损失归零，但一个查询也赢不回来。联想真正带来的是**新候选**（`ppmi_m1` 17 槽、二阶 13 槽、RM3 34 槽
-   ——top-5 里出现了未仲裁的身份），那是发现，不是排序。故 spec §四 的数学不动、索引里 `cooc` 表照建，§六 三面把扩展臂改为
+   ——top-5 里出现了未仲裁的身份），那是发现，不是排序。故 spec §四 的数学不动（共现对的**存法**由步 3 实测定：不建 `cooc` 对表，
+   边际进 `df.marg`、对在查询时从 bag 行推导——见 PERF-BUDGET 步 3 节），§六 三面把扩展臂改为
    **opt-in**（`ce similar --widen` / MCP `widen` / GUI 开关），扩展来的候选单独标「联想」且永不计证据、永不亮 role 位；
    默认臂 = 裸臂。这不是「关掉 #4」——RAG 的稀疏检索是默认臂本身，联想是它的第二页。
 3. **行身份 = LF 折叠 sha，写进仪器。** 自仓行按此重识别（表内数字），`similar_fixture_rows_replay_byte_for_byte` 与评测器读同一个
@@ -247,15 +248,90 @@ role=1 40/57（基线 39/57），hit@5 76/116（基线 74/116）**——+3 / +1�
    - **不做的**：PreToolUse 预算装不下一次检索（spec 立场 5 不变）；不在每次按键上查；不对未改动 / 早已存在的单元主动提示；
      不把「同文件相邻」当语义证据。
 
-## 门（`cli/tests/it/eval_similar_precision.rs`，非 ignored）
+## 留出集复测（步 5 前置，2026-09-05：三个候选在第二份样本上先测再定）
 
-- `similar_oracle_consistent`：常量 = 仪器当下常量；词表；≥ 100 个查询；rank 升序且由身份重导；每候选
-  truth 在词表、clone 为布尔、why 过地板；`summary.all` 与每语料块 = 从行重导的度量。
-- `similar_fixture_rows_replay_byte_for_byte`：四份夹具语料按当下代码重量，冻结行的候选表（身份、六通道
+步 2 裁定把 `field_binary` / `binary_query` / `spec ∧ 2N ≥ QN` 三个候选留给「第二份样本的留出集」。第二份样本 =
+**同一仪器、同一配额、同一秩序，只跳过 v1 oracle 仲裁过的 118 个 rank**（`CE_SIMILAR_SAMPLE_GEN=2`；仪器读冻结的
+v1 oracle 取排除集，故留出集可从两份冻结件重导，与 v1 零重叠由门 `similar_oracle_consistent` 断言）。树 `602691d`（步 3 已提交，
+dirty = 步 5 前置的测试改动），`cli/src/similar/bag.rs` 与 `stem.rs` 的单元这次按当下身份纳入。typescript 夹具只有 3 个 role=1
+的 top-1 且全在 v1 里，该层抽到 0 属实（配额不从另一层补）。
+
+| 语料 | 查询 | 其中 role=1 | 候选对 |
+|---|---|---|---|
+| self | 70 | 35 | 405 |
+| go | 13 | 7 | 77 |
+| python | 13 | 7 | 73 |
+| rust | 13 | 7 | 83 |
+| typescript | 6 | 0 | 30 |
+
+仲裁同 v1（codex gpt-6-astra max、五批并行、只给身份与逐字源码），记录 `cli/tests/it/eval_similar_review/sample-v2.json`，
+转录修复 1 处；判决：same_role 151 / related 379 / unrelated 138，其中 clone 39。
+
+| 语料 | 查询 | p@1 裸臂 | p@1 扩展臂 | p@1 裸臂 role=1 | p@1 裸臂 role=0 | p@1 裸臂非 clone | hit@5 裸臂 | hit@5 扩展臂 |
+|---|---|---|---|---|---|---|---|---|
+| all | 115 | 46/115 = 40.0 % | 42/115 = 36.5 % | 30/56 = 53.6 % | 16/59 = 27.1 % | 29/98 = 29.6 % | 69/115 = 60.0 % | 66/115 = 57.4 % |
+| self | 70 | 27/70 = 38.6 % | 26/70 = 37.1 % | 18/35 = 51.4 % | 9/35 = 25.7 % | 17/60 = 28.3 % | 46/70 = 65.7 % | 44/70 = 62.9 % |
+| go | 13 | 4/13 = 30.8 % | 4/13 = 30.8 % | 4/7 = 57.1 % | 0/6 = 0.0 % | 4/13 = 30.8 % | 4/13 = 30.8 % | 4/13 = 30.8 % |
+| python | 13 | 5/13 = 38.5 % | 5/13 = 38.5 % | 4/7 = 57.1 % | 1/6 = 16.7 % | 3/11 = 27.3 % | 6/13 = 46.2 % | 6/13 = 46.2 % |
+| rust | 13 | 5/13 = 38.5 % | 2/13 = 15.4 % | 4/7 = 57.1 % | 1/6 = 16.7 % | 3/11 = 27.3 % | 8/13 = 61.5 % | 7/13 = 53.8 % |
+| typescript | 6 | 5/6 = 83.3 % | 5/6 = 83.3 % | 0/0 | 5/6 = 83.3 % | 2/3 = 66.7 % | 5/6 = 83.3 % | 5/6 = 83.3 % |
+
+| 语料 | 候选对 | role 位 tp | fp | fn | tn | role 位精度 | role 位对候选的召回 |
+|---|---|---|---|---|---|---|---|
+| all | 668 | 86 | 91 | 65 | 426 | 86/177 = 48.6 % | 86/151 = 57.0 % |
+| self | 405 | 55 | 53 | 50 | 247 | 55/108 = 50.9 % | 55/105 = 52.4 % |
+| go | 77 | 8 | 16 | 0 | 53 | 8/24 = 33.3 % | 8/8 = 100.0 % |
+| python | 73 | 11 | 15 | 3 | 44 | 11/26 = 42.3 % | 11/14 = 78.6 % |
+| rust | 83 | 12 | 7 | 1 | 63 | 12/19 = 63.2 % | 12/13 = 92.3 % |
+| typescript | 30 | 0 | 0 | 11 | 19 | 0/0 | 0/11 = 0.0 % |
+
+**读数**：
+- **留出集比 v1 低一档，且低在每个切片**：p@1 46/115（v1 67/118）、role=1 顶 1 30/56 = 53.6 %（v1 66.1 %）、非 clone 顶 1 29/98 = 29.6 %
+  （v1 42.7 %）、role 位精度 86/177 = 48.6 %（v1 61.2 %）；hit@5 60.0 %（v1 62.7 %）持平。v1 的顶 1 里 clone 占 29/67，留出集 17/46——
+  平凡形少了一截，但非 clone 切片也同降，故 v1 读数偏乐观不只是 clone 的功劳；**此后引用顾问精度以两代并列**，门两代各守各的地板。
+- 46/115 个查询的池里没有 same_role（v1 42/118）；69 个有的里裸臂放在第 1 名 46、藏在第 2–5 名 23（v1 9）——留出集上「找得到但排不到顶」的
+  查询多了一倍，这是打分侧还有余地的唯一信号，但下表说明现有候选没有兑现它。
+- PPMI 扩展臂：27/115 顶 1 被改变，配对 2 : 6（v1 2 : 6 完全同形），hit@5 −3；步 2 裁定 ②（联想改 opt-in 视图）在留出集上再次成立。
+- role 位在 go 夹具召回 8/8、精度 8/24：名字与被调各命中一次的合取对 Go 的短单元过松；rust 相反（12/19 精度、12/13 召回）。
+
+**三个候选在留出集上**（评测器 `CE_SIMILAR_ORACLE=2`，115 查询 / 668 对全部对上、零部分池；表落 `cli/target/similar-tune-v2/`）：
+
+| 配置 | p@1 | role=1 | role=0 | 非 clone | hit@5 | W : L | role=1 W : L | hit@5 W : L | 按语料配对 W : L（self / go / python / rust / ts） |
+|---|---|---|---|---|---|---|---|---|---|
+| `baseline` | 46/115 | 30/56 | 16/59 | 29/98 | 69/115 | 0 : 0 | 0 : 0 | 0 : 0 | — |
+| `field_binary` | 49/115 | 31/56 | 18/59 | 31/97 | 68/115 | 5 : 2 | 1 : 0 | 0 : 1 | 3 : 2 / 0 : 0 / 1 : 0 / 1 : 0 / 0 : 0 |
+| `binary_query` | 48/115 | 30/56 | 18/59 | 30/97 | 68/115 | 6 : 4 | 3 : 3 | 0 : 1 | 2 : 4 / 0 : 0 / 1 : 0 / 3 : 0 / 0 : 0 |
+
+| 谓词 | v1 精度 | v1 池内召回 | 留出集精度 | 留出集池内召回 |
+|---|---|---|---|---|
+| spec `(N≥1∧C≥1)∨(N≥2∧形状全等)` | 101/165 | 101/177 | 86/177 | 86/151 |
+| `spec ∧ 2N ≥ QN` | 101/151 | 101/177 | 83/159 | 83/151（少的 3 个全在 go） |
+
+同一套 84 个配置在两份样本上的**方向并不一致**：v1 上最差的三行 `k0`（k1 = 0）、`lm100`、`translation_quarter`（配对 2 : 7 / 1 : 7 / 1 : 9）
+在留出集上成了最好的三行（各 52/115、配对 10 : 4）；五折留出选择在留出集上每折选出的配置各不相同（`binary_query` / `lm100` /
+`translation_quarter` / `k0` / `translation_quarter`）。±6 个查询的赢面在这个样本量上是噪声，两份样本各自「选出」的赢家出了那份样本就换人。
+
+### 裁定（留出集复测，2026-09-05）
+
+1. **三个候选一个不采，`SIMILAR_REV` 1 与 spec 合取原样进步 5。** 预登记的线是「全样本与 role=1 子集各 ≥ +8 且 W ≥ 2L 且无语料变差」：
+   `field_binary` +3 / +1（W 5 : L 2，hit@5 −1）不过 +8；`binary_query` +2 / 0 且自仓 2 : 4 变差；谓词 `spec ∧ 2N ≥ QN` 在 v1 上是弱 Pareto
+   （召回不动、精度 +），在留出集上少 3 个真阳（go），不再 Pareto——它是 v1 那份样本的形状，不是规则。`field_binary` 两代都 +3、方向一致，
+   记为**唯一有留出集佐证的正向候选**，但幅度在噪声带内；步 6 三面落地后若回执样本（裁定 5「记录后果」）攒到第三代 oracle，再测一次即定。
+2. **地板第二代 40 %**（`similar_oracle_floors`，`GENERATIONS` 表按代给地板）：role=1 顶 1 53.6 %、hit@5 60.0 %、role 位精度 48.6 % 三数取最小向下
+   取整到一成；v1 的 60 % 不动（各代各守，一代重冻结落线即红）。
+3. **留出集是仪器的常设通道**：`CE_SIMILAR_SAMPLE_GEN=<n>` 抽第 n 代（跳过更早各代 oracle 的 rank），`CE_SIMILAR_ORACLE=<n>` 让评测器对第 n 代重排，
+   门对每一代断言：与更早各代零重叠、`holdout_of` 点名前一代、常量 = 当下常量、夹具行逐字节回放。第三代起同一条路，不再另写。
+
+## 门（`cli/tests/it/eval_similar_precision.rs`，非 ignored；`GENERATIONS` 表列出每一代与其地板）
+
+- `similar_oracle_consistent`（每代）：常量 = 仪器当下常量；词表；≥ 100 个查询；rank 升序且由身份重导；每候选
+  truth 在词表、clone 为布尔、why 过地板；`summary.all` 与每语料块 = 从行重导的度量（`eval_similar_precision_parts`，与合并脚本同式）；
+  第二代起 `holdout_of` 点名前一代，且没有一个 rank 被更早的一代仲裁过。
+- `similar_fixture_rows_replay_byte_for_byte`：四份夹具语料按当下代码各重量一次，每一代冻结行的候选表（身份、六通道
   整数、形状位、role 位、同文件位、两臂名次与分数）逐字节回来，且行所指文件的身份未变。行身份 = 文本 CRLF 折叠成 LF 后的 sha256
   （`identity_sha`，仪器与评测器同一所有者，检出方式不能改变一行是谁）。自仓行只按身份锚定不重量
   （自仓文件一动 df 就动，重量无意义）。
-- `similar_oracle_floors`：本册「裁定」节定下的地板由该腿执行（见裁定节的数字）。
+- `similar_oracle_floors`：本册两个「裁定」节定下的地板由该腿执行（v1 60 %、留出集 40 %）。
 - 样本 ≺ 判决子树的出处腿（RM2，姊妹族 `dedup_provenance` 同形）待步 5 `core/app/CE/Similar` 落地后加：
   `assert_subtree_postdates` 对空子树按名拒绝（「空子树让门空转」），步 2 加不了。
 
@@ -265,8 +341,10 @@ role=1 40/57（基线 39/57），hit@5 76/116（基线 74/116）**——+3 / +1�
 cd cli && cargo test --test it -- eval_similar_precision::
 export CE_CORE_BIN=…   # 自仓索引刷新要核
 cd cli && cargo test --release --test it -- --ignored similar_replay::similar_replay --nocapture
-cd cli && cargo test --release --test it -- --ignored similar_tune::similar_tune --nocapture   # 84 配置重排，表落 cli/target/similar-tune/
-CE_BLESS=1 …           # 重冻结样本（常量改动后）；CE_SIMILAR_PACKET=<dir> 另写仲裁 packet
+cd cli && cargo test --release --test it -- --ignored similar_tune::similar_tune --nocapture   # 84 配置重排，表落 cli/target/similar-tune-v1/
+CE_BLESS=1 …           # 重冻结样本（常量改动后）；CE_SIMILAR_PACKET=<file> 另写仲裁 packet
+CE_SIMILAR_SAMPLE_GEN=2 CE_BLESS=1 …   # 抽第二代（留出集：跳过 v1 oracle 的 rank）→ similar-sample-v2.json
+CE_SIMILAR_ORACLE=2 …                  # 评测器对第二代 oracle 重排，表落 cli/target/similar-tune-v2/
 ```
 
 仲裁批处理（prompt / packet / 合并脚本）在会话 scratchpad，不入库；重仲裁 = 换仲裁者重跑合并脚本，
