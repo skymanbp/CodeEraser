@@ -17,7 +17,15 @@
   oracle `contracts/eval/similar-oracle-v1.json`；门 `eval_similar_precision.rs` 三腿（一致性 / 夹具逐字节回放 / 60 % 地板）。
 - 读数（册 `docs/EVAL-SET-SIMILAR.md`，第三次拆册）：裸臂顶 1 同角色 67/118，role=1 子集 39/59，hit@5 74/118；
   同角色位对候选精度 101/165；PPMI m = 3 扩展臂顶 1 63/118（配对 6 : 2 反向）。k1 / b / 合取维持 spec 形。
-- ADR-006 具名重立：`cli/src/fourclass/units.rs` 196→217（`node_segments` 让词袋与 unitsig 同一宇宙）。
+- **调优与联想探索（用户裁定后；codex gpt-6-astra 写评测器、本仓第一方复跑）**：`it/similar_tune.rs` + `similar_tune_parts/`（常驻 `--ignored`）
+  在冻结 oracle 的候选池上重排 84 个打分配置 + 16 个同角色谓词，无一过显著线——最好的 `field_binary` p@1 69/116 对基线 66/116
+  （配对 6 : 3），PPMI 原形扩展臂 62/116（配对 2 : 6）；`SIMILAR_REV` 1 不动。裁定：默认臂 = 裸臂，PPMI 联想改为三面 opt-in 联想视图
+  （spec §四数学不动、§六 加开关）；通道分别归一 / 查询 tf 截 1 / `spec ∧ 2N ≥ QN` 三个候选留待步 5 第二份样本留出集复测。册追记节记全表。
+- **冻结行身份改为 CRLF 折叠 LF 后的 sha**（`identity_sha`，仪器与评测器同一所有者）：自仓行冻结时哈希的是本机混行尾工作树的字节，
+  干净检出只对上 13/70 自仓查询；83 行（29 文件）按 LF 字节重识别，冻结后改过的 2 文件（17 行）按实保留，复跑对上 68/70 查询、407/424 候选对（78d226f 钉夹具目录 LF 是同一缺陷的另一半）。
+- 子仓教训：`use super::{a, b}` 花括号组在依赖图里落到父模块（前缀 `super::` 即全部消费），子模块与 `mod.rs` 成环——评测器 15 个子模块改逐行 `use super::x;`、
+  `strongest` 搬进 `feedback.rs` 消掉互引，子仓 check 980 → 985（地板 983）。
+- ADR-006 具名重立：`cli/src/fourclass/units.rs` 196→217（`node_segments` 让词袋与 unitsig 同一宇宙）；本批 `docs/EVAL-SET-SIMILAR.md` 157→272（追记节）。
 
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
