@@ -162,6 +162,15 @@ const CE_I18N = {
     updateConfirm: (v) => `Update to ${v}? ce and ce-core are replaced in place after their SHA-256 pins verify; the previous copies are retired as .old.`,
     updatePlaced: (v, list) => `updated to ${v}: placed ${list}`,
     installerSaved: (p) => `installer saved (verified): ${p} — run it to update the GUI app`,
+    // the similar screen (plan v2.29 step 6): labels only — order and
+    // role bits are the core's, the evidence letters are the wire's
+    tabSimilar: "similar", similarAt: "unit at (file:line)", similarText: "or text",
+    widen: "widen (associative view)", sameRole: "same-role", role: "role",
+    evidence: "evidence N P C D S L", widenedTag: "associative", widenedRows: "from the associative view",
+    noCandidates: "no candidate shares a term with this query",
+    similarNeedsQuery: "name a unit as file:line, or type a text",
+    similarDegraded: (why) => `degraded: ${why} — measured order, no role bits`,
+    emptySimilar: "name a unit (file:line relative to the root) or type a text and load — the same document `ce similar` prints: candidates in the core's order, its same-role bit, the six-channel evidence; widen adds the PPMI associative view",
   },
   zh: {
     tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选", tabGraph: "引用图",
@@ -288,6 +297,13 @@ const CE_I18N = {
     updateConfirm: (v) => `更新到 ${v}？ce 与 ce-core 在 SHA-256 pin 校验通过后就地替换；旧副本改名为 .old 退役。`,
     updatePlaced: (v, list) => `已更新到 ${v}：已放置 ${list}`,
     installerSaved: (p) => `安装包已保存（已校验）：${p} — 运行它以更新 GUI 应用`,
+    tabSimilar: "相似", similarAt: "单元位置（file:line）", similarText: "或文本",
+    widen: "联想（扩展视图）", sameRole: "同角色", role: "角色",
+    evidence: "证据 N P C D S L", widenedTag: "联想", widenedRows: "来自联想视图",
+    noCandidates: "没有候选与此查询共享任何词项",
+    similarNeedsQuery: "请以 file:line 指定一个单元，或输入一段文本",
+    similarDegraded: (why) => `已降级：${why} — 按度量序、无角色位`,
+    emptySimilar: "以 file:line（相对根目录）指定一个单元，或输入文本后点加载——与 `ce similar` 打印的是同一份文档：候选按核的排序、核给的同角色位、六通道证据；勾选联想加 PPMI 扩展视图",
   },
 };
 

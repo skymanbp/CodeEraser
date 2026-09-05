@@ -28,6 +28,13 @@ pub(super) struct AuditEvent<'a> {
     /// measurement of the same diff (tombstone::feed_json without the
     /// per-edit keys); absent when git could not pair the change.
     pub tombstone: Option<serde_json::Value>,
+    /// WRITER CONTRACT — OPTIONAL, additive (0.10.0): the same-role
+    /// advisor's object on a stop_audit line (audit/similar.rs) —
+    /// `rev`, `new_units`, `queried`, `rows` of `{unit, twin, score}`
+    /// for the added units whose top-1 the core judged same-role, and
+    /// `degraded` naming why the core did not judge; ABSENT when the
+    /// session added no unit or nothing was same-role.
+    pub similar: Option<serde_json::Value>,
     /// WRITER CONTRACT — OPTIONAL, additive: present only on a
     /// stop_audit line whose audit measured NOTHING, where the
     /// net_loc / changed_files / dup_blocks zeros are placeholders,
@@ -65,6 +72,9 @@ pub(super) fn observe_log(root: &Path, ev: AuditEvent) {
     }
     if let Some(t) = ev.tombstone {
         line["tombstone"] = t;
+    }
+    if let Some(s) = ev.similar {
+        line["similar"] = s;
     }
     crate::hookio::observe_append(root, ev.session, line);
 }

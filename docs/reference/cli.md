@@ -22,6 +22,7 @@ Commands:
   join       Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only). Costs a churn window plus a full index — minutes; progress rides stderr
   structure  Tree-scale structure judgment: entropy, axes and findings via the core's structure/1 (report-only)
   trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable. Each uncached commit is a full check in a temp worktree — bound a cold run with --batch; progress rides stderr
+  similar    Same-role advisor: the units most like one unit (or a text), ranked and role-bitted by the core's similar/1 over the index's term bags; --widen adds the PPMI associative view (advisory, never a verdict)
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails, and the console names the held conditions; a subdirectory scopes the measurement (nothing is persisted)
   baseline   Persist the core's newBaseline as ce-baseline.json, at the project root only. Three named acts: none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition alone (knobs_digest, rows_dropped) is re-pinned under the declared knobs; CE_ACCEPT_BASELINE=1 — re-establish from the current tree, the one act that creates a missing file. A degraded judgment is never persisted
@@ -229,6 +230,28 @@ Options:
       --commits <COMMITS>  Mainline window: newest N first-parent commits [default: 30]
       --batch <BATCH>      Measure at most this many uncached commits per run (absent = all of them; the GUI passes small batches for progress)
   -h, --help               Print help
+```
+
+## ce similar
+
+```text
+Same-role advisor: the units most like one unit (or a text), ranked and role-bitted by the core's similar/1 over the index's term bags; --widen adds the PPMI associative view (advisory, never a verdict)
+
+Usage: ce similar [OPTIONS] <--at <AT>|--text <TEXT>|--unit <UNIT>> [ROOT]
+
+Arguments:
+  [ROOT]  Directory to analyze (default: current directory)
+
+Options:
+      --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
+      --at <AT>          The unit holding `file:line` (path relative to the root)
+      --text <TEXT>      Free text: its words as name and doc evidence (no shape or callee, so the core's role bit stays false)
+      --unit <UNIT>      A unit by key (`name/arity`); an ambiguous key refuses by name
+      --widen            Add the associative view: candidates the PPMI-widened query reaches that the bare query does not, tagged
+  -h, --help             Print help
 ```
 
 ## ce erase

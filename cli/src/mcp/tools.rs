@@ -8,7 +8,7 @@
 
 use super::adapters::{
     check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, graph_sites,
-    join, scan, structure, trend, update_check,
+    join, scan, similar_units, structure, trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -157,6 +157,23 @@ pub const TOOLS: &[Tool] = &[
             // is how this face came to answer 10 while the CLI said 30
             ("commits", "integer", "mainline window size (default 30)"),
             ("batch", "integer", "max uncached commits measured per call"),
+        ]
+    ),
+    tool!(
+        "similar_units",
+        similar_units,
+        "The same-role advisor (ce.similar-report schema): the units most like one unit \
+         or a text, in the core's order with its role bit and a six-channel evidence row; \
+         `widen` adds the PPMI associative view. Advisory — never a verdict.",
+        &[
+            (
+                "at",
+                "string",
+                "the unit holding `file:line` (path relative to the root)"
+            ),
+            ("text", "string", "free text as name and doc evidence"),
+            ("unit", "string", "a unit by key (`name/arity`)"),
+            ("widen", "boolean", "add the associative view, tagged"),
         ]
     ),
     tool!(

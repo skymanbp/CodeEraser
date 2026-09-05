@@ -1,8 +1,9 @@
-# The CodeEraser GUI — ten screens over one document set (reference)
+# The CodeEraser GUI — eleven screens over one document set (reference)
 
 > Status: shipped in stages — three screens at v0.7.3, eight at
 > v1.0.0 (the graph screen closed M9), nine since the K round added
-> doctor, ten since the L round added update. The implementation answers to this file;
+> doctor, ten since the L round added update, eleven since plan v2.29
+> added the similar advisor. The implementation answers to this file;
 > divergence is a defect in one of the two. The screens live in
 > `gui/ui/*.js`, the Tauri backend in `gui/src-tauri/src/commands.rs`
 > — a separate cargo workspace from the CLI, with its own CI legs.
@@ -32,7 +33,7 @@ Two consequences worth naming:
   face's own word tables (`gui/ui/i18n.js`, en/zh key-for-key, gated
   by `cli/tests/gui/i18n_gate.js`) and never touches the data.
 
-## The ten screens
+## The eleven screens
 
 | tab | document | what it shows |
 |---|---|---|
@@ -42,6 +43,7 @@ Two consequences worth naming:
 | **Trend** | `ce.trend-report` | score points over mainline history plus the core's trend judgment; "measure more" batches uncached commits so a cold cache fills at the reader's pace |
 | **Candidates** | `ce.join-report` + `ce.dedup-report` | the deletion-candidate browser: three-signal file pairs, unit pairs and clone blocks in document order — no ranking is derived here, and the per-row bar is geometry over a printed number |
 | **Graph** | `ce.graph-canvas` + `ce.deadcode-report` | the reference graph as a drawn map, file tier only; the layout is deterministic (the same document draws the same picture), dead files and cycle members ride the alarm ramp, node radius is degree. Selecting a file lists its **unmentioned declarations** — the symbol-level advisory of the deadcode report (6.2.0), line, name and the core's code word — and the aside's root view carries the whole-tree census by code plus the two states the rows cannot show (the producer's cut, the core's drop). The screen loads the deadcode report as a second judgment beside the canvas document and joins the two by file path: a rendering join on a shared string, never a verdict — two runs, so the join is best-effort by path rather than snapshot-identical — and the advisory keeps its one home in the report; when that road fails while the canvas drew (a pre-6.2.0 core), the aside says so in place of the rows |
+| **Similar** | `ce.similar-report` | the same-role advisor's face: a unit at `file:line` or a free text, the candidates in the order the core answered over `similar/1` with its same-role bit and the six-channel evidence row (`N P C D S L` = distinct shared name / shape / callee / doc / structure / literal terms); **widen** adds the in-repo PPMI associative view, its rows tagged. Rendering only: no ranking and no conjunction happen in the webview, and a core without the family shows the document's named degraded posture with a null role column — never a verdict of the screen's own |
 | **Reports** | the remaining families | the diagnostics hub: each family's document rendered generically — counts and name lists as chips (a scan's `failed` conditions among them), row arrays as tables — adding zero interpretation |
 | **Bench** | `contracts/bench/bench.json` | the compiled-in benchmark series, pivoted to one row per metric with a column per version; frozen points carry value **and** source |
 | **Doctor** | `ce.doctor-report` | this machine's state: ce-core handshake, guard tier, index freshness, daemon, degraded-run counter — probed without starting the daemon or rebuilding the index, so the diagnostic reports a state it did not create. A `parked daemon workers` row appears only when the count is non-zero (0.3.0): client conversations the deadline gave up on that have not returned — the read is cancelled at the deadline, so only a connect the kernel still holds can sit here |

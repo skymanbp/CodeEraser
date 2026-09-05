@@ -96,14 +96,14 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
 #hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
 #hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
 #hub-tables h3 small, #bench-series h3 small { color: var(--ink-min); margin-left: var(--s2); }
-#hub-tables table, #bench-series table {
+#hub-tables table, #bench-series table, #similar-rows table {
   border-collapse: collapse;
   font-family: var(--mono);
   font-size: var(--t-sm);
   width: 100%;
   max-width: 1080px;
 }
-#hub-tables th, #bench-series th {
+#hub-tables th, #bench-series th, #similar-rows th {
   text-align: left;
   color: var(--ink-min);
   font-weight: 400;
@@ -112,7 +112,7 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
   padding: var(--s1) var(--s3) var(--s1) 0;
   border-bottom: 1px solid var(--line);
 }
-#hub-tables td, #bench-series td {
+#hub-tables td, #bench-series td, #similar-rows td {
   padding: var(--s1) var(--s3) var(--s1) 0;
   border-bottom: 1px solid var(--line);
   color: var(--ink-mid);

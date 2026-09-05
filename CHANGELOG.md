@@ -80,6 +80,24 @@
 - ADR-006 具名重立（旧→新行）：`contracts/VERSIONING.md` 658→669、`CHANGELOG.md` 639→658（本块）；新文件入基线 `core/app/CE/Similar.hs` 128、`core/app/CE/Similar/Cost.hs` 64、
   `core/test/SimilarProps.hs` 96、`cli/src/similar/wire.rs` 105、`cli/src/corelink/judged.rs` 52、`contracts/fixtures/similar/golden.ndjson`；子仓 `it/similar_wire.rs` 63、`unit/similar/wire.rs` 98。
 
+**无默认档位变更。** 计划 v2.29 步 6（2026-09-05）——同角色顾问**三面同落**（ADR-008 细则第六期；三面等价、仍只当顾问不判决）：
+- 一份文档 `ce.similar-report/0.1.0`（`similar/face.rs::report_json`）：`query{label,terms,widen}`、`candidates` 行 `{at,key,nth,role,score,hits[6],shape_equal,widened}`
+  （前五个标量按字母序即 hub 投影列）、`counts{candidates,role,widened}`、`degraded`；排序与角色位只来自核 `similar/1`，无核 / 旧核 = 具名降级、按度量序、`role` 为 null（A9f）。
+  问法三选一 `similar/query.rs::Ask`：`at file:line` 取最内层座位、`unit key` 唯一否则点名前五处、`text` 只作 Name + Doc 证据（无形状无被调者，核给的角色位构造性为假）。
+- CLI `ce similar --at|--text|--unit [--widen] [--format json]`（`main_similar.rs`，clap 组恰一）；MCP 第十五个只读工具 `similar_units`（`{at,text,unit,widen}`，经 `faces::similar` 同一文档）；
+  GUI 第十一屏 `similar`（`gui/ui/similar.js` + Tauri `similar_report`，i18n 双语 13 键，`reports.css` 复用 hub 表样式）；控制台双语一句头 + 每候选一行 `at key  N P C D S L  role`；`main_lang.rs` zh 帮助表加 `similar` 与四个参数（zh_surface 门抓出英文 about）。
+- Stop 审计 `audit/similar.rs`：本会话新增的单元（after 有、HEAD 无的 (key, nth)）逐个问索引，核判 top-1 role=1 才写 `{unit,twin,score}`；feed **`ce.observe/0.9.0 → 0.10.0` 加性**——
+  `stop_audit` 行可选 `similar{rev,new_units,queried,rows[,degraded]}`，无话可说即无键；墓碑腿与 similar 腿共读一次 git 批（`audit/tombstone.rs::loaded` 拆自 `measured`）。
+- 门与记账：parity 表新行（README 双语 parity 块）、`count:mcp_tools` 14→15、`count:screens` 10→11 随 bless；`docs/reference/cli.md` 再生；`docs/reference/gui.md` 十一屏 + Similar 行；
+  plugin/README 15 工具；官网 how 双语第十五工具句 + feed schema 0.10.0；册 11 feed 版本史补 0.9.0 / 0.10.0、册 14 三处引文重瞄（`CE_DROP_VANISHED` 两枚）；facts `report:similar` 入 LINKED 表。
+- 测试（子仓）：`unit/similar/query.rs` 4 腿、`unit/similar/face.rs` 2 腿、`it/similar_face.rs` 4 腿（CLI == faces 文档且核判同角色、widen 打标、MCP 转发与恰一拒绝、Stop 腿写行 / 提交后无键）；
+  MCP 会话壳提升为 `common/mcp.rs`（`mcp_precommit.rs` 376→339），catalog 断言 15 名；`hub_projection.js` 加 similar 行投影；feed golden 重 bless（只 schema 串）。
+  dedup 主 56 / 子 119 恒：query 测试建库改走 `refreshed_index` 消掉与 store 测试的孪生块。
+- ADR-006 具名重立（旧→新行）：主 `cli/src/audit.rs` 260→273、`cli/src/faces.rs` 173→190、`cli/src/mcp/tools.rs` 191→208、`cli/src/mcp/adapters.rs` 166→178、
+  `gui/src-tauri/src/commands.rs` 272→293、`gui/ui/i18n.js` 340→356、`gui/ui/index.html` 194→210、`docs/reference/cli.md` 460→483、`CHANGELOG.md` 658→676（本块）；
+  新文件入基线 `cli/src/similar/face.rs` 231、`cli/src/similar/query.rs` 144、`cli/src/main_similar.rs` 55、`cli/src/audit/similar.rs` 110、`gui/ui/similar.js` 76；
+  子仓 `gui/hub_projection.js` 73→92，新 `it/common/mcp.rs` 56、`it/similar_face.rs` 203、`unit/similar/query.rs` 109、`unit/similar/face.rs` 89。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：

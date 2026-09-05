@@ -168,6 +168,27 @@ pub async fn check_report(
 face_cmd!(churn_report, "churn", days: |r, _c, d| codeeraser::faces::churn(r, d));
 face_cmd!(join_report, "join", days: codeeraser::faces::join);
 
+/// The same-role advisor (plan v2.29 step 6) — the SAME document
+/// `ce similar` prints: `at` (file:line) or `text`, the associative
+/// view under `widen`. Advisory: the screen renders the order and
+/// role bits the core answered, and a core without the family shows
+/// the document's named degraded posture, never a verdict of the
+/// webview's own.
+#[tauri::command]
+pub async fn similar_report(
+    win: tauri::Window,
+    root: String,
+    at: Option<String>,
+    text: Option<String>,
+    widen: bool,
+) -> Result<Value, String> {
+    task(win, "similar", root, move |r, c| {
+        let ask = codeeraser::similar::query::Ask::from_parts(at.as_deref(), text.as_deref(), None)?;
+        codeeraser::faces::similar(r, c, &ask, widen)
+    })
+    .await
+}
+
 /// The machine's own state (K round step 6) — the SAME document
 /// `ce doctor` renders, so two faces of a diagnostic cannot disagree
 /// about the machine they diagnose. It never fails outward: a core

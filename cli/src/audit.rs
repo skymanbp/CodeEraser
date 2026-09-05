@@ -13,6 +13,7 @@ mod changes;
 mod commitmsg;
 mod observe;
 mod precommit;
+mod similar;
 mod tombstone;
 mod verdict;
 
@@ -80,11 +81,13 @@ pub fn run_hook() -> ExitCode {
 
 /// Shared head of the Stop audit and the git-hook faces: guard mode,
 /// numstat over `diff`, the core's touched-duplicate verdict (None =
-/// degraded, A9f), the two informational reports (four-class is a
-/// Stop concern; tombstone rides every leg, and `ce commitmsg`'s
-/// `message` rides the tombstone leg as one more surface) and the
-/// `event`-stamped observe entry (a git hook must not masquerade as a
-/// Stop audit). Outer None = git could not answer: fail open.
+/// degraded, A9f), the informational reports (four-class and the
+/// similar advisor are Stop concerns; tombstone rides every leg, and
+/// `ce commitmsg`'s `message` rides the tombstone leg as one more
+/// surface — the two text legs read ONE git batch of the changed
+/// pairs) and the `event`-stamped observe entry (a git hook must not
+/// masquerade as a Stop audit). Outer None = git could not answer:
+/// fail open.
 type Gathered = (
     String,
     i64,
@@ -128,7 +131,15 @@ fn gather(
         untracked: &untracked,
         message,
     };
-    let tombstone = tombstone::leg(root, &set, cfg, link.as_mut());
+    let excludes = cfg.map_or(&[][..], |c| c.exclude.as_slice());
+    let texts = (!changed.is_empty())
+        .then(|| tombstone::loaded(root, &set, excludes))
+        .flatten();
+    let tombstone = tombstone::leg(root, &set, texts.as_ref(), cfg, link.as_mut());
+    let similar = texts
+        .as_ref()
+        .filter(|_| event == "stop_audit")
+        .and_then(|(loaded, _)| similar::leg(root, loaded, link.as_mut()));
     observe_log(
         root,
         AuditEvent {
@@ -140,6 +151,7 @@ fn gather(
             dups: dups.as_ref().map(|v| v.dups),
             fourclass,
             tombstone: tombstone.as_ref().map(|t| t.feed.clone()),
+            similar,
             skipped: None, // this leg MEASURED — see AuditEvent::skipped
             unmeasured: crate::gitmodules::unseated(root),
         },
@@ -220,6 +232,7 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) {
             dups: skipped.map(|_| 0),
             fourclass: None,
             tombstone: None,
+            similar: None,
             skipped,
             unmeasured: Vec::new(),
         },

@@ -12,13 +12,17 @@
 //! posture of booklet 13's symbol-layer advisor: nothing here produces
 //! a condition bit, feeds `ce check`, or reaches `ce erase`. Rust
 //! measures; the "same role" conjunction and the rational ordering
-//! become the core's once the wire family lands (step 5) — until then
-//! bm25.rs carries them as the ROI instrument's declared mirror.
+//! are the core's over similar/1 (wire.rs, step 5) — bm25.rs keeps
+//! the conjunction as the ROI instrument's declared mirror, and the
+//! three faces (face.rs, query.rs; the Stop leg in audit/similar.rs)
+//! relay what the core answered.
 
 pub mod bag;
 pub mod bm25;
 pub mod docs;
+pub mod face;
 pub mod ppmi;
+pub mod query;
 pub mod reader;
 pub mod stem;
 pub mod store;
@@ -33,6 +37,10 @@ pub mod wire;
 /// names the definition every frozen `similar-*` eval doc was
 /// measured under.
 pub const SIMILAR_REV: i64 = 1;
+
+/// Candidates kept per arm — the top-K every face shows and the ROI
+/// instrument measured (spec §七: p@1 and hit@5 are read at this K).
+pub const K: usize = 5;
 
 pub use bag::{UnitBag, file_bags};
 pub use terms::Channel;

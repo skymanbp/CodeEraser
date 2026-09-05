@@ -20,6 +20,13 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.10.0 (plan v2.29 step 6): the OPTIONAL `similar` object on
+/// `stop_audit` lines — the same-role advisor asked about every unit
+/// the session added (`new_units`, `queried`), `rows` of `{unit, twin,
+/// score}` for those whose top-1 the core judged same-role over
+/// similar/1, `degraded` naming why the core did not judge; absent
+/// when there is nothing to say. Every prior key keeps its shape.
+///
 /// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire
 /// (tombstone/1) — its counts and sites live under `judged` (`sites` as
 /// `file:line kind`, `label`, `prose`, `over`), or `judged.degraded`
@@ -75,7 +82,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.9.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.10.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a
