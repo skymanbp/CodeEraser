@@ -12,11 +12,11 @@
   `cli/tests` 子仓同六门（`ce <gate> tests`，<!--ce:gate:floor.tests#digits-->`--fail-under 979`<!--/ce-->，子仓自带 ce.toml 与基线）。
 - `cargo test --release` 全绿（含 `CE_CORE_BIN` 指向当前 core；`cli/tests` submodule 已 `update --init`）+
   clippy 零告警 + `bootstrap_e2e.sh` 全态 PASS + GUI lens 不变量。
-- 版本五处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch
+- 版本六处一致：`cli/Cargo.toml`（唯一源，release.yml 的 dispatch
   输入也对它校验）、`core/ce-core.cabal`、`plugin/.claude-plugin/
   plugin.json`、`gui/src-tauri/tauri.conf.json`、`gui/src-tauri/
-  Cargo.toml`（版本镜像门在测试电池里，drift 即红；两个 Cargo.lock
-  由 --locked 兜住）；握手 golden `contracts/fixtures/handshake/
+  Cargo.toml`、`npm/package.json`（版本镜像门在测试电池里，drift 即红；
+  两个 Cargo.lock 由 --locked 兜住）；握手 golden `contracts/fixtures/handshake/
   hello-ok.ndjson` 的 version 回显同批重钉。
 - 守卫档位有变 → CHANGELOG 按既有先例格式记 FPR 依据。
 - **判决语义有变（轴语义/阈值/量纲）→ release notes 必须声明分数迁移**
@@ -31,30 +31,34 @@
    **铁则（用户令 2026-08-28）**：任何渠道分发的二进制——Release 资产、
    plugin manifest 所 pin 的下载物——只能来自本 workflow 的矩阵产物；
    本地构建的二进制永不上传、永不 pin、永不作为「补位」放行。
-3. 本地抽验：下载任一平台二进制 `sha256sum -c` 对 SHA256SUMS。
+3. 本地抽验：下载任一平台二进制 `sha256sum -c` 对 SHA256SUMS。draft 以
+   `--target <构建提交>` 记下产物出自哪个提交——tag 腿据此对拍源码树（§2.3）。
 
 ## 2. 第二段：pin → tag → publish
 
-1. 把 draft 的 SHA256SUMS 逐值写进 `plugin/bin/manifest.env`
-   （九 pin：三平台 ce + 三平台 ce-core + 三平台 GUI 安装包），并同批翻 `CE_MANIFEST_VERSION`
-   与 `CE_BASE_URL`（tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.6.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.6.0`<!--/ce-->），后者须以
+1. `node scripts/pin_release.js <版本>`：从 draft 下载 SHA256SUMS、核对九工件花名册、
+   把九 pin（三平台 ce + 三平台 ce-core + 三平台 GUI 安装包）与 `CE_MANIFEST_VERSION`、
+   `CE_BASE_URL` 写进 `plugin/bin/manifest.env`，并按 `git diff` 断言恰好十一行移动
+   （同版本重钉九行）——不再手抄（tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.6.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.6.0`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
    release.yml verify-publish 腿）。**同一个提交里还有第十二行**：
    `contracts/docs-facts.json` 的 `ver:pin#v` 是从 `CE_MANIFEST_VERSION` 派生的
    事实，pin 一动它就旧了，`facts_projection` 当场红——跑
-   `CE_BLESS=1 cargo test --test it -- facts_` 与清单同批提交。只推十一行
+   `CE_BLESS=1 cargo test --test it -- facts_`（或 `pin_release.js … --bless` 代跑）与清单同批提交。只推十一行
    已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿要等的正是这个提交的
    全部 check。十二行齐动，提交并推 main，CI 绿。
-2. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**只验 pin**
-   后 publish（不重建）；`verify-publish` 复核十资产（九工件对拍
-   SHA256SUMS，九工件对拍 manifest pin）。发布前它先等**这个 commit 上
-   全部 check 完成**：tag 会另起一次 CI，其中 `build-macos` 只在 tag 与
-   周程上跑，排队多久由 GitHub 说了算（v1.3.1 首打排队 30.6 min 未开工，
-   耗尽当时 30 min 预算而拒发——预算已放宽到 2 h，超时按名列出未完成的
-   腿）。届时重跑该 job 即可发布，无须挪 tag。
-3. Release notes：功能面 + 分数迁移声明（如适用）+ 未签名明示
-   （代码签名/公证裁定不做——2026-08-19，SHA256 链为永久信任锚；
-   ADR-007/R1 立场）。
+2. Release notes **先于 tag** 写到 draft 上：`gh release edit vX.Y.Z --notes-file <notes.md>`
+   ——功能面 + 分数迁移声明（如适用）+ 未签名明示（代码签名/公证裁定不做——
+   2026-08-19，SHA256 链为永久信任锚；ADR-007/R1 立场）。tag 腿拒发仍带占位句
+   「Draft build phase」或没有说明的 release（此前的版本都带占位句发出、事后再改）。
+3. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**不重建**：先等**这个 commit 上
+   全部 check 完成**（tag 会另起一次 CI，`build-macos` 自步 9 起每推都跑；排队多久由
+   GitHub 说了算——v1.3.1 首打排队 30.6 min 未开工，耗尽当时 30 min 预算而拒发，预算已
+   放宽到 2 h，超时按名列出未完成的腿，届时重跑该 job 即可，无须挪 tag），再核**来源**
+   （draft 的 `--target` 构建提交与 tag 提交在 `cli/src`、`cli/Cargo.{toml,lock}`、`core/app`、
+   `core/ce-core.cabal`、`core/cabal.project{,.freeze}`、`gui/src-tauri`、`gui/ui` 上树哈希
+   逐一相等——pin 提交只该动清单与 docs-facts 两处）与**说明**，最后 `verify-publish`
+   复核十资产（九工件对拍 SHA256SUMS，九工件对拍 manifest pin）后 publish。
 
 ## 3. 发布后渠道
 
@@ -63,9 +67,9 @@
   （src 每个 `#[cfg(test)]` 的 `#[path]` 挂载目标，步 #13），缺了它下载者的
   `cargo test` 编译即错——`it/unit_mounts.rs` 钉「声明 = 磁盘 = 打包」三集合，
   CI 另解包跑 `cargo check --tests`。
-- **npm 指针**：指针包（package.json + README，只转发 Releases、无
-  二进制）bump version 后 `npm publish`——账户 2FA 需用户在交互终端
-  完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。
+- **npm 指针**：`npm/`（入库：package.json + README，只转发 Releases、无
+  二进制；版本随六处一致门走）——`cd npm && npm publish`。账户 2FA 需用户在
+  交互终端完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。
 - **官网**：Cloudflare Pages **手动部署**（无 GitHub 集成——推 main
   不上线）。`node scripts/deploy_site.js` 一次跑完整链：`.secret`
   里是造币母 token（无 Pages 权限，验证 active 但 /accounts 为空是
@@ -73,8 +77,9 @@
   `Pages Write`，账户 ef6ce0a8b2c4ba8529b41aa6fd5b4f45），临时 token
   进 `CLOUDFLARE_API_TOKEN` 跑 `npx wrangler pages deploy site
   --project-name codeeraser`，finally 里 DELETE /user/tokens/<id>
-  销毁；任何 token 值不落对话/不落库/不打印。部署后跑
-  `node scripts/verify_site.js` 才算上线：它把八页逐个与 `git show HEAD:<page>`
+  销毁；任何 token 值不落对话/不落库/不打印。wrangler 退 0 后它自己串跑
+  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），8/8 才退 0——上线以此为准；
+  该读者也可单独跑：它把八页逐个与 `git show HEAD:<page>`
   的 blob 对拍。判据**不是**「剥完摘要相同」——那样会连第二处真差异一起吞掉——
   而是「至多一处 Cloudflare 边缘注入的 beacon，剥掉它之后与 blob 逐字节相等」；
   beacon 带属性且连它所在那行的换行一起注入，两点都在脚本头注里写明。
@@ -101,4 +106,6 @@
 - 陌生机器一条命令可用（SessionStart 下载→校验→原子落位）；
   校验失败必须响亮拒绝不落位不转 PATH（篡改样本三态回归=
   `bootstrap_e2e.sh`，CI 三平台常驻）。
-- air-gapped 手动放置路保留（空 pin 回归按构造成立）。
+- air-gapped 手动放置路保留（空 pin 回归按构造成立）；非空 pin 的手放：
+  `CLAUDE_PLUGIN_DATA/ce-<版本>-<平台>` 与 pin 相符即按已验证执行并落戳，不相符
+  具名拒绝、不执行、不落戳（`bootstrap_e2e.sh` 状态 15 / 16）。

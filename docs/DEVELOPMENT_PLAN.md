@@ -267,6 +267,7 @@ CodeEraser/
 ├── demo/         # 仓内真实 demo：seed + Node 驱动 + 冻结产出（`demo_replay` 门）
 ├── site/         # 官网八页（codeeraser.dev；bench/stack 块由门生成，`scripts/deploy_site.js` 部署）
 ├── scripts/      # 发布工具（deploy_site.js / shoot_gui.js 等 Node 脚本，不进判决族）
+├── npm/          # npm 指针包（package.json + README，只转发 Releases、零二进制；版本等 crate 版本由子仓 health_plugin.rs 守）
 ├── .github/      # CI 与 release 工作流 + bootstrap e2e 脚本
 ├── .claude-plugin/ # marketplace 清单（plugin/ 注释所指的仓根清单）
 └── .ccm/         # cc-memory 本地状态（原 memory/，插件 2026-08-30 改名；.gitignore 排除，不入库）

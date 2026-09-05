@@ -1,5 +1,8 @@
-# CI per DEVELOPMENT_PLAN.md §6 M0. Private-repo billing (D2-8):
-# macOS is 10x-metered, so it runs only on tags and the weekly schedule.
+# CI per DEVELOPMENT_PLAN.md §6 M0. The repository is public (2026-08-28),
+# so Actions minutes are free and the macOS leg runs on every push like
+# the other two (plan v2.29 step 9; it was tag + weekly while the repo
+# was private and macOS 10x-metered, D2-8). The weekly schedule now
+# carries the one job that must reach the real network: starter-https.
 name: ci
 
 # CI never writes repo CONTENTS back — said explicitly so the token
@@ -15,7 +18,7 @@ on:
     tags: ["v*"]
   pull_request:
   schedule:
-    - cron: "0 3 * * 1" # weekly macOS coverage
+    - cron: "0 3 * * 1" # weekly: starter-https against the live release, plus one more macOS run
 
 # A newer push to the same ref supersedes the in-flight run (billing:
 # rapid push trains used to bill every intermediate tree in full).
@@ -119,15 +122,17 @@ jobs:
           cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
 
-      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, fifteen
+      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, seventeen
       # states (PATH fallback / fresh verified download / warm cache /
       # tampered refusal / pinned ce-core sibling placement / tampered
       # core refusal / failed-download degrade to PATH / mismatching
       # on-disk core refused / ce bound to the pinned path / pin-identical
       # PATH ce reused / pin-identical PATH ce-core reused / the four
-      # session-stamp laws of L round step #15 O52) with the
-      # real debug ce as payload over file:// — hermetic on purpose;
-      # the https transport is curl's contract.
+      # session-stamp laws of L round step #15 O52 / a hand-placed copy
+      # verified or refused by name, O79) with the real debug ce as
+      # payload over file:// — hermetic on purpose; the https transport
+      # is curl's contract, exercised for real by the weekly
+      # starter-https job below.
       - name: Bootstrap chain e2e
         shell: bash
         run: bash .github/scripts/bootstrap_e2e.sh cli/target/debug/ce plugin/bin/ce.sh
@@ -301,6 +306,21 @@ jobs:
         with:
           sarif_file: ce-scan.sarif
           category: ce-scan
+      # The second SARIF lane (O81): `ce dedup --format sarif` has existed
+      # since plan v2.14 and nothing consumed it — the verified clone
+      # blocks the dogfood gate accepted are alerts too now, under their
+      # own category so the two families never overwrite each other.
+      - name: SARIF upload (dedup findings -> code scanning)
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        working-directory: cli
+        run: cargo run --locked -- dedup .. --core "$(cd ../core && cabal list-bin ce-core)" --format sarif > ../ce-dedup.sarif
+      - name: SARIF upload (dedup publish)
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: github/codeql-action/upload-sarif@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4, pinned 2026-08-25
+        with:
+          sarif_file: ce-dedup.sarif
+          category: ce-dedup
 
       - name: Handshake smoke (ce doctor)
         shell: bash
@@ -311,8 +331,11 @@ jobs:
           # spawns a daemon, so nothing lingers holding the exe)
           cargo run --locked -- doctor --core "$CORE_BIN" ..
 
+  # Every push since plan v2.29 step 9 (C-macOS): the repository is
+  # public and the minutes free, and the tag-plus-weekly cadence meant
+  # the release night was the first time weeks of pushes met a Mac
+  # (v1.3.0's first tag run went red exactly there).
   build-macos:
-    if: github.event_name == 'schedule' || startsWith(github.ref, 'refs/tags/')
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -353,10 +376,10 @@ jobs:
       # Same roster as the push matrix (K step 10): this leg used to
       # run build+test only, so a macOS-only clippy lint, a formatting
       # drift, a dogfood red or a webview-gate break surfaced at the
-      # worst possible moment — the release-tag run, which is the
-      # first time this leg fires after weeks of pushes. The v1.0.0
+      # worst possible moment — the release-tag run, which used to be
+      # the first time this leg fired after weeks of pushes. The v1.0.0
       # release-night daemon corpse was exactly this class of late
-      # discovery. Weekly + tag cadence keeps the 10x billing shape.
+      # discovery; the leg now runs on every push (job header).
       - name: Rust build + test + lint
         shell: bash
         working-directory: cli
@@ -438,3 +461,29 @@ jobs:
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check
+
+  # The real transport (O78): every other leg feeds the starter file://
+  # URLs, so the https download — curl's flags, the redirect GitHub
+  # answers with, the pinned bytes actually served — ran only on users'
+  # machines. Weekly, against the committed manifest and the live
+  # release it names: the starter must fetch both binaries over https,
+  # verify them against the pins, exec ce silently, stamp the verified
+  # leg, and the doctor must then reach the downloaded core.
+  starter-https:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Starter over https against the committed pins
+        shell: bash
+        run: |
+          . plugin/bin/manifest.env
+          data="$RUNNER_TEMP/plugin-data"
+          out=$(CLAUDE_PLUGIN_DATA="$data" sh plugin/bin/ce.sh --version 2>"$RUNNER_TEMP/starter.err")
+          err=$(cat "$RUNNER_TEMP/starter.err")
+          [ -z "$err" ] || { echo "the verified leg was not silent: $err"; exit 1; }
+          [ "$out" = "ce $CE_MANIFEST_VERSION" ] || { echo "starter answered '$out', the manifest says $CE_MANIFEST_VERSION"; exit 1; }
+          [ -f "$data/bound-$CE_MANIFEST_VERSION.env" ] || { echo "the verified leg left no stamp"; exit 1; }
+          [ -x "$data/ce-core" ] || { echo "the pinned ce-core was not placed"; exit 1; }
+          CLAUDE_PLUGIN_DATA="$data" sh plugin/bin/ce.sh doctor . | tee "$RUNNER_TEMP/doctor.out"
+          grep -q "handshake: OK" "$RUNNER_TEMP/doctor.out" || { echo "doctor did not reach the downloaded core"; exit 1; }

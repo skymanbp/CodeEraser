@@ -5,9 +5,10 @@
 # plugin/bin/manifest.env as a commit; only then the v* tag is cut,
 # whose job re-downloads the SAME draft assets (no rebuild — Rust and
 # GHC builds are not bit-reproducible across runs, so a rebuild would
-# invalidate honest pins), verifies every pin, and publishes.
-# macOS 10x billing (D2-8) is fine here: releases are rare and
-# explicitly human-triggered.
+# invalidate honest pins), checks that the draft was built from the
+# tag's own sources and carries real notes, verifies every pin, and
+# publishes. macOS 10x billing (D2-8) is fine here: releases are rare
+# and explicitly human-triggered.
 name: release
 
 on:
@@ -26,11 +27,20 @@ on:
 permissions:
   contents: read
 
-# One release operation at a time. Without this a dispatch and a tag
-# run could touch the same release concurrently; queued, never
-# cancelled — a half-finished publish is worse than a late one.
+# The draft's placeholder notes, spelled once: the draft job writes them
+# and the publish gate refuses a release still carrying them (O85) — the
+# real notes are written on the draft BEFORE the tag (docs/RELEASE.md §2).
+env:
+  DRAFT_NOTES_MARKER: "Draft build phase"
+
+# One release operation at a time, repository-wide: the group is a
+# CONSTANT. Keyed on the ref, a dispatch (refs/heads/main) and a tag
+# push (refs/tags/vX) fell into two groups and could touch the same
+# release concurrently — the very pair this line exists to serialise
+# (O86). Queued, never cancelled — a half-finished publish is worse
+# than a late one.
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 jobs:
@@ -222,10 +232,17 @@ jobs:
             [ "$(gh release view "v$VER" --json isDraft -q .isDraft)" = "true" ] || {
               echo "v$VER is already published — refusing to clobber its assets"; exit 1; }
             gh release upload "v$VER" dist/* --clobber
+            # the assets now come from THIS commit, and the provenance
+            # the publish gate reads (verify-publish) must move with them
+            gh release edit "v$VER" --target "$GITHUB_SHA"
           else
-            gh release create "v$VER" --draft \
+            # --target records the commit these assets were built from
+            # (O84): the publish gate compares its source trees with the
+            # tag commit's, so a tag can never ship binaries built from
+            # sources it does not carry
+            gh release create "v$VER" --draft --target "$GITHUB_SHA" \
               --title "CodeEraser $VER" \
-              --notes "Draft build phase (M7-P1). Unsigned binaries — verify SHA256SUMS; pins land in plugin/bin/manifest.env before the tag publishes this release." \
+              --notes "$DRAFT_NOTES_MARKER (M7-P1). Unsigned binaries — verify SHA256SUMS; pins land in plugin/bin/manifest.env before the tag publishes this release." \
               dist/*
           fi
 
@@ -243,6 +260,10 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # the provenance step below reads the draft's build commit,
+          # an ancestor on main: a shallow clone would not hold it
+          fetch-depth: 0
       # Publication was gated on nothing but byte integrity: this job
       # and ci.yml fire on the SAME tag push as independent workflows,
       # and a download + six hashes finishes long before a two-platform
@@ -253,18 +274,18 @@ jobs:
       # SKIPPED is not success (K step 10). The old escape waved every
       # skipped or neutral check through, so a job accidentally
       # conditioned away — the failure mode an `if:` typo produces —
-      # published with nothing behind it. On a tag exactly three
-      # checks skip BY DESIGN, allowed by their REAL surfaced names
-      # below (the v1.2.0 night lesson: a matrix job skipped by its
-      # `if:` collapses to ONE check named plainly `build`, never the
-      # platform-expanded names this list first imagined): this
-      # workflow's own dispatch-phase `build` and `draft`, and ci.yml's
-      # `build-macos`, which skips on plain branch pushes because the
-      # tag push re-runs CI with the real macOS leg — a run this gate
-      # still waits for and gates on. Only the skipped conclusion is
-      # excused: a failed run of any of these names refuses. Any other
-      # skipped or neutral check refuses with its name: the failure
-      # direction is a loud non-publish, never a silent publish.
+      # published with nothing behind it. On a tag exactly two checks
+      # skip BY DESIGN, allowed by their REAL surfaced names below (the
+      # v1.2.0 night lesson: a matrix job skipped by its `if:` collapses
+      # to ONE check named plainly `build`, never the platform-expanded
+      # names this list first imagined): this workflow's own
+      # dispatch-phase `build` and `draft`. ci.yml's `build-macos` used
+      # to be the third — it skipped on plain branch pushes — and since
+      # plan v2.29 step 9 it runs on every push, so its skip is no
+      # longer excused either. Only the skipped conclusion is excused:
+      # a failed run of either name refuses. Any other skipped or
+      # neutral check refuses with its name: the failure direction is a
+      # loud non-publish, never a silent publish.
       - name: CI must be green on this commit
         shell: bash
         run: |
@@ -281,8 +302,7 @@ jobs:
             bad=$(echo "$runs" | jq -r '[.[]
                     | select(.conclusion != null and .conclusion != "success")
                     | select((.conclusion == "skipped" and
-                              (.name == "draft" or .name == "build"
-                               or .name == "build-macos")) | not)]
+                              (.name == "draft" or .name == "build")) | not)]
                   | map(.name + "=" + .conclusion) | join(", ")')
             [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
             [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
@@ -293,6 +313,44 @@ jobs:
             echo "waiting on $pending check(s): $names"; sleep 30
           done
           echo "refusing to publish: checks did not settle in 2 h: $names"; exit 1
+      # Provenance (O84): the binaries were built by the dispatch run at
+      # an earlier commit and the tag names another; nothing tied the
+      # two, so a tag could publish assets built from sources it does
+      # not carry. The draft job records its build commit as the
+      # release target; here every tree the binaries are built from
+      # must be identical at both commits. The pin commit between them
+      # touches plugin/bin/manifest.env and contracts/docs-facts.json
+      # only, so the roster below is exactly what may NOT differ.
+      #
+      # Notes (O85): the draft ships with placeholder notes and nothing
+      # refused to publish them — releases went out reading "Draft
+      # build phase" until a human edited after the fact. The notes
+      # are written on the draft BEFORE the tag (docs/RELEASE.md §2);
+      # a release still carrying the placeholder, or none, is refused.
+      - name: Draft provenance and release notes
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          build=$(gh release view "$TAG" --json targetCommitish -q .targetCommitish)
+          case "$build" in
+            *[!0-9a-f]*|"") echo "release target is not a commit sha: '$build' — the draft must be created with --target"; exit 1 ;;
+          esac
+          [ "${#build}" -eq 40 ] || { echo "release target is not a full sha: $build"; exit 1; }
+          git cat-file -e "$build^{commit}" || { echo "build commit $build is not in this clone"; exit 1; }
+          for tree in cli/src cli/Cargo.toml cli/Cargo.lock core/app core/ce-core.cabal \
+                      core/cabal.project core/cabal.project.freeze gui/src-tauri gui/ui; do
+            at_build=$(git rev-parse "$build:$tree")
+            at_tag=$(git rev-parse "$GITHUB_SHA:$tree")
+            [ "$at_build" = "$at_tag" ] || {
+              echo "refusing to publish: $tree differs between the build commit $build and the tag commit $GITHUB_SHA"; exit 1; }
+            echo "provenance ok: $tree"
+          done
+          body=$(gh release view "$TAG" --json body -q .body)
+          [ -n "$body" ] || { echo "refusing to publish: the release has no notes"; exit 1; }
+          case "$body" in
+            *"$DRAFT_NOTES_MARKER"*) echo "refusing to publish: the notes are still the draft placeholder — write them on the draft first (docs/RELEASE.md §2)"; exit 1 ;;
+          esac
+          echo "notes ok: $(printf '%s\n' "$body" | wc -l) line(s)"
       - name: Verify draft assets against manifest pins, then publish
         shell: bash
         run: |

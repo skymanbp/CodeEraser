@@ -41,8 +41,10 @@ v1.0.1 起 **Windows 安装包装机时自动跑这两步**（检测到 Claude C
 已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（六枚：三平台 ×
 双二进制）从 GitHub Releases 下载并校验 → PATH 兜底。校验按会话一次：验证过的
 路径记在 `CLAUDE_PLUGIN_DATA/bound-<清单版本>.env`，同会话后续 hook 直接 exec；
-清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。源码安装
-（`cargo install codeeraser` 或 `--path cli`）依然可用。
+清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。手放到
+`CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>` 的副本走同一道 pin：相符即按已验证执行并落戳，
+不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
+源码安装（`cargo install codeeraser` 或 `--path cli`）依然可用。
 
 3. 项目里可选 `ce.toml`：
 
