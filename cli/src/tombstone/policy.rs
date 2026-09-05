@@ -13,7 +13,8 @@ use std::path::Path;
 pub struct Policy {
     /// `[tombstone] ledger`, compiled; None = nothing declared.
     ledger: Option<Inclusions>,
-    /// `[tombstone] terms`, lower-cased the way spellings are keyed.
+    /// `[tombstone] terms`, canonical the way spellings are keyed
+    /// (names::canon: `DongpoPork` and `dongpo_pork` are one term).
     terms: Vec<String>,
 }
 
@@ -29,7 +30,7 @@ impl Policy {
             .flatten();
         Policy {
             ledger,
-            terms: t.terms.iter().map(|w| w.to_lowercase()).collect(),
+            terms: t.terms.iter().map(|w| super::names::canon(w)).collect(),
         }
     }
 
@@ -40,8 +41,9 @@ impl Policy {
             .is_some_and(|set| globs::selected(set, rel))
     }
 
-    /// Whether `word` — one word of a spelling, as `names` keys it —
-    /// is the repository's own vocabulary.
+    /// Whether `word` — one word of a spelling, or a whole canonical
+    /// spelling, as `names` keys them — is the repository's own
+    /// vocabulary.
     pub fn term(&self, word: &str) -> bool {
         self.terms.iter().any(|t| t == word)
     }

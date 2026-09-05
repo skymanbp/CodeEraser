@@ -82,7 +82,7 @@ audit	Stop 审计 v1：净行数 + 触及改动文件的重复块（仅 deny 档
 audit.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 health	SessionStart 健康行 + 守护进程预热
 health.hook	钩子模式：从 stdin 读 JSON 信封（必带）
-precommit	pre-commit 门：暂存净行数 + 触及的重复（deny 档触重即退出 1）
+precommit	pre-commit 门：暂存净行数、触及的重复与暂存集上的墓碑残留类（deny 档触重、或 `[tombstone] tier` 为 deny 且越预算即退出 1）。FAIL-OPEN：核不可达即报跳过并退 0——缺核也放行的 CI 门
 precommit.root	仓库根（默认当前目录）
 commitmsg	commit-msg 门：`ce precommit` 再跑一次，把 git 交给钩子的提交说明文件当作多一个面——在说明里把被删的名字论证掉，与 README 里一样是墓碑残留（feed 与拒绝句记为 COMMIT_EDITMSG:行）。接法：.git/hooks/commit-msg 里跑 `ce commitmsg \"$1\"`；PR 正文存成文件即同一个面（CI 配方，不是钩子）
 commitmsg.file	提交说明文件（git 的 `$1`）；其注释行不计

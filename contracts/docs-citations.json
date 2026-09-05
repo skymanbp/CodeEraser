@@ -6542,33 +6542,22 @@
     "end": 118,
     "text": "// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|0328fd60d100783a|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 221,
-    "end": 239,
-    "text": "/// None = probe unavailable (degraded); Some(vec) = verified matches."
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|36288e5d5436f6eb|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 258,
-    "end": 275,
+    "line": 184,
+    "end": 201,
     "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|42113203b8445fa4|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 82,
-    "end": 101,
+    "line": 81,
+    "end": 100,
     "text": "let mut reasons = Vec::new();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4644d41f5beb9e75|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 58,
+    "line": 57,
     "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4dc394b8a4de0542|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 283,
-    "text": "mode: &'a str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|526b9bbfd38078b6|0": {
     "target": "../../../cli/src/guard.rs",
@@ -6576,50 +6565,50 @@
     "end": 8,
     "text": "//! Every probed event is appended to <root>/.ce/observe.ndjson in ALL"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|5c21d22558ace789|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 133,
+    "end": 171,
+    "text": "fn emit_reasons<'a>("
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|616767f83450e8a2|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 298,
+    "line": 224,
     "text": "\"degraded\": ev.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|75ba8e43bbd2ba6d|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 265,
+    "line": 191,
     "text": "_ => return, // observe: log only, no output"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|936605a46cb5f869|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 167,
-    "end": 171,
+    "line": 173,
+    "end": 177,
     "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|a858072dafe20007|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 28,
-    "end": 37,
+    "line": 27,
+    "end": 36,
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|ab386b0206e74c7e|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 67,
-    "end": 69,
+    "line": 66,
+    "end": 68,
     "text": "// not context bloat, and repeat every time they hold"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|bbbddea1d1329200|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 289,
-    "end": 303,
+    "line": 215,
+    "end": 229,
     "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|bd70e7be913080d0|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 133,
-    "end": 150,
-    "text": ") {\nlet rank = |t: &str| {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|c1a8185a714ee541|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 65,
-    "end": 72,
+    "line": 64,
+    "end": 71,
     "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db6bfd272e069abc|0": {
@@ -6628,16 +6617,15 @@
     "end": 6,
     "text": "//! build. FAIL-OPEN: any internal failure allows the edit — a guard"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e19eded611ac0eaf|0": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db9140e34d4295c6|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 177,
-    "end": 207,
-    "text": "/// The rule denies NEW duplication only (K step 11 root fix): the"
+    "line": 209,
+    "text": "mode: &'a str,\nsession: &'a str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e3cae5ea62eb7092|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 159,
-    "end": 163,
+    "line": 164,
+    "end": 168,
     "text": "if let Some(e) = broken {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|1932d340806c453c|0": {
@@ -6648,8 +6636,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|40ff14cbd35248aa|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 199,
-    "end": 201,
+    "line": 204,
+    "end": 206,
     "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|48681a886ec2a600|0": {
@@ -6672,43 +6660,43 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|49f4f255016a7c4c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 209,
+    "line": 214,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|5879461f4eba0e7f|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 237,
-    "end": 246,
+    "line": 242,
+    "end": 251,
     "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|64374015c7e9b12d|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 264,
-    "end": 269,
+    "line": 269,
+    "end": 274,
     "text": "fn committed_soft(root: &Path) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|83b4c2721914357f|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 197,
-    "end": 202,
+    "line": 202,
+    "end": 207,
     "text": "let cap = z.cap;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 219,
-    "end": 225,
+    "line": 224,
+    "end": 230,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 219,
-    "end": 221,
+    "line": 224,
+    "end": 226,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|9d8c7a2bab92d81b|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 162,
-    "end": 175,
+    "line": 167,
+    "end": 180,
     "text": "/// Budget firings get their own feed line (accounting for the §4.2"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|c3a17e14adb4fbe0|0": {
@@ -6719,32 +6707,44 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|d3e01c9814558493|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 138,
-    "end": 153,
+    "line": 143,
+    "end": 158,
     "text": "let on_disk = std::fs::read_to_string(&t.file_path)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 158,
-    "end": 161,
+    "line": 163,
+    "end": 166,
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 158,
-    "end": 178,
+    "line": 163,
+    "end": 183,
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|fc6bb4e1a17bf3b8|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 206,
-    "end": 209,
+    "line": 211,
+    "end": 214,
     "text": "// the B4 suppression consults the feed BEFORE this event lands"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/envelope.rs|2c33cc85a000c037|0": {
     "target": "../../../cli/src/guard/envelope.rs",
     "line": 16,
     "text": "/// Claude Code stamps this on every hook event. Carried into the"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/probe.rs|0328fd60d100783a|0": {
+    "target": "../../../cli/src/guard/probe.rs",
+    "line": 57,
+    "end": 75,
+    "text": "/// None = probe unavailable (degraded); Some(vec) = verified matches."
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/probe.rs|e19eded611ac0eaf|0": {
+    "target": "../../../cli/src/guard/probe.rs",
+    "line": 13,
+    "end": 44,
+    "text": "/// The rule denies NEW duplication only (K step 11 root fix): the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/say.rs|2ac7cf2af55c8a59|0": {
     "target": "../../../cli/src/guard/say.rs",
@@ -6765,38 +6765,38 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|147dbd779a4128ca|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 58,
-    "end": 59,
+    "line": 67,
+    "end": 68,
     "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 176,
-    "end": 178,
+    "line": 185,
+    "end": 187,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 192,
-    "end": 205,
+    "line": 201,
+    "end": 214,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|754ce8b7872981c0|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 61,
-    "end": 68,
+    "line": 70,
+    "end": 77,
     "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 246,
-    "end": 257,
+    "line": 255,
+    "end": 266,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 53,
-    "end": 56,
+    "line": 62,
+    "end": 65,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
@@ -6807,19 +6807,19 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e38fc9ea230cd547|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 69,
+    "line": 78,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.9.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 48,
-    "end": 51,
+    "line": 57,
+    "end": 60,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 255,
-    "end": 271,
+    "line": 264,
+    "end": 280,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {
@@ -7817,5 +7817,664 @@
     "target": "../../PERF-BUDGET.md",
     "line": 54,
     "text": "| 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|43e5c1812a48317d|0": {
+    "target": "../../../cli/src/audit/commitmsg.rs",
+    "line": 14,
+    "end": 33,
+    "text": "/// The face: the message file, its comment lines blanked, into the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|bfe8709bdb06df8e|0": {
+    "target": "../../../cli/src/audit/commitmsg.rs",
+    "line": 35,
+    "end": 59,
+    "text": "/// What a comment line of the message starts with: the repository's"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|c14a4d25da8b8a64|0": {
+    "target": "../../../cli/src/audit/commitmsg.rs",
+    "line": 64,
+    "end": 69,
+    "text": "fn uncommented(text: &str, comment: &str) -> String {"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/precommit.rs|8eea5f37e474adc0|0": {
+    "target": "../../../cli/src/audit/precommit.rs",
+    "line": 22,
+    "end": 61,
+    "text": "pub(super) fn run(root: &Path, face: &str, message: Option<&str>) -> ExitCode {"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|117b51d934117567|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 62,
+    "end": 69,
+    "text": "impl Leg {\n/// The deny tier AND the core's condition AND a whole measurement —"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|94c78ac0964dec37|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! The Stop / precommit / commitmsg leg of the tombstone class (plan"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|cd5da958fe5141c3|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 180,
+    "end": 197,
+    "text": "/// The block reason (deny tier, condition held): who judged what, the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|ed8d7ed61c2d5466|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 164,
+    "end": 176,
+    "text": "// the message is all \"after\": it existed nowhere before the commit,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|ed8d7ed61c2d5466|1": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 164,
+    "end": 176,
+    "text": "// the message is all \"after\": it existed nowhere before the commit,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|f448856dae005fd7|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 127,
+    "end": 147,
+    "text": "/// The changeset measured: git pairs the change, the config's walk"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|fa06ba4f492940c3|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 222,
+    "end": 265,
+    "text": "/// The git-hook faces' terminal line: the judged sites when there are"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|fb61c0ec6361d973|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 26,
+    "end": 28,
+    "text": "/// The message surface's name in a site (`COMMIT_EDITMSG:line prose`):"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/config/tombstone.rs|2b0f2fac9f0b9d88|0": {
+    "target": "../../../cli/src/config/tombstone.rs",
+    "line": 1,
+    "end": 18,
+    "text": "//! The tombstone class's own table, `[tombstone]` (plan v2.27 step 3;"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/config/tombstone.rs|2b0f2fac9f0b9d88|1": {
+    "target": "../../../cli/src/config/tombstone.rs",
+    "line": 1,
+    "end": 29,
+    "text": "//! The tombstone class's own table, `[tombstone]` (plan v2.27 step 3;"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/config/tombstone.rs|b3b12163b3504ccc|0": {
+    "target": "../../../cli/src/config/tombstone.rs",
+    "line": 41,
+    "end": 59,
+    "text": "/// The load-throat refusal: a tier outside the four is a typo,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink.rs|4a632dbf88618ca2|0": {
+    "target": "../../../cli/src/corelink.rs",
+    "line": 36,
+    "text": "pub const PROTO: &str = \"6.6.0\";"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/daemon/proto.rs|ac33dd3ebaabd544|0": {
+    "target": "../../../cli/src/daemon/proto.rs",
+    "line": 60,
+    "end": 67,
+    "text": "/// The tombstone verdict (plan v2.27): the measuring hook's"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|f91505c09ba8cfab|0": {
+    "target": "../../../cli/src/docdup/segments.rs",
+    "line": 181,
+    "end": 200,
+    "text": "/// Contiguous same-column comment nodes merge into one block (design"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/say.rs|7de3ded125c17f93|0": {
+    "target": "../../../cli/src/guard/say.rs",
+    "line": 68,
+    "end": 79,
+    "text": "/// The tombstone class (plan v2.27): the core judged more sites than"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|296961069691d05d|0": {
+    "target": "../../../cli/src/guard/tombstone.rs",
+    "line": 44,
+    "end": 48,
+    "text": "let path = Path::new(&env.tool_input.file_path);"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b3f155fc0aa8b166|0": {
+    "target": "../../../cli/src/guard/tombstone.rs",
+    "line": 33,
+    "end": 51,
+    "text": "/// Measure and judge one Write/Edit. Scope is the budget rule's (a"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|0": {
+    "target": "../../../cli/src/guard/tombstone.rs",
+    "line": 152,
+    "end": 170,
+    "text": "/// The session's erased keys as its earlier `tombstone` lines left"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|1": {
+    "target": "../../../cli/src/guard/tombstone.rs",
+    "line": 152,
+    "end": 178,
+    "text": "/// The session's erased keys as its earlier `tombstone` lines left"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b70fd425a12f96af|0": {
+    "target": "../../../cli/src/guard/tombstone.rs",
+    "line": 72,
+    "end": 82,
+    "text": "let (tier, budget) = knobs(cfg);"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|c2c53e8e5dfcb4ba|0": {
+    "target": "../../../cli/src/guard/tombstone.rs",
+    "line": 1,
+    "end": 15,
+    "text": "//! The PreToolUse leg of the tombstone class (plan v2.26 step 4,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 23,
+    "end": 42,
+    "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 246,
+    "end": 262,
+    "text": "/// This session's lines in the feed window, parsed — the accumulator"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|e38fc9ea230cd547|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 78,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.9.0\";"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/candidates.rs|2de959edc2eec3a9|0": {
+    "target": "../../../cli/src/tombstone/candidates.rs",
+    "line": 31,
+    "end": 71,
+    "text": "/// Every candidate surface of one side: a label whose frame binds a"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/candidates.rs|717d62b894a414a3|0": {
+    "target": "../../../cli/src/tombstone/candidates.rs",
+    "line": 72,
+    "end": 101,
+    "text": "for s in surfaces::prose(p, added) {"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/candidates.rs|dee73f542a0cb9e1|0": {
+    "target": "../../../cli/src/tombstone/candidates.rs",
+    "line": 113,
+    "end": 144,
+    "text": "/// A candidate surface becomes a row — unless the segment around it"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/candidates.rs|dee73f542a0cb9e1|1": {
+    "target": "../../../cli/src/tombstone/candidates.rs",
+    "line": 113,
+    "end": 144,
+    "text": "/// A candidate surface becomes a row — unless the segment around it"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/feed.rs|76dc77bc4f04c087|0": {
+    "target": "../../../cli/src/tombstone/feed.rs",
+    "line": 8,
+    "end": 59,
+    "text": "/// How many erased keys one feed line carries at most (a whole-file"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/feed.rs|ad22a43376f28bd7|0": {
+    "target": "../../../cli/src/tombstone/feed.rs",
+    "line": 1,
+    "end": 4,
+    "text": "//! The `tombstone` object of the observe feed (`hookio::OBSERVE_SCHEMA`"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|1d180596b257ee65|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 177,
+    "end": 208,
+    "text": "/// Every name a label's absence frames bind: `(no Dongpo Pork)`"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|4833c20b4012fa06|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 12,
+    "end": 15,
+    "text": "/// One token of a surface: a bracket, an ASCII word (lower-cased; cut"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|4833c20b4012fa06|1": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 12,
+    "end": 15,
+    "text": "/// One token of a surface: a bracket, an ASCII word (lower-cased; cut"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|98de27a23768b77b|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 219,
+    "end": 229,
+    "text": "/// A wide run as a frame: a Chinese prefix form opens it or a suffix"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|ad527c36d22bf83a|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 128,
+    "end": 134,
+    "text": "/// Every window of 1..=JOIN_MAX adjacent words; a bracket or the end"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|c3d9919d5c34288a|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 210,
+    "end": 217,
+    "text": "/// Inside a bracket pair: the nearest bracket before `i` opens and"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|d055e4d7de1c6a9a|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 231,
+    "end": 255,
+    "text": "/// The sentences of a prose text: cut after `.`, `!`, `?`, `;` when"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|f6df483390c6e092|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 257,
+    "end": 284,
+    "text": "/// The retrospective marks a prose sentence carries: every English"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|51a26ff19e0c3f88|0": {
+    "target": "../../../cli/src/tombstone/marked.rs",
+    "line": 1,
+    "end": 9,
+    "text": "//! The marked positions of a text (spec §三 M1): where a document"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|6ad978eff21c4ad2|0": {
+    "target": "../../../cli/src/tombstone/marked.rs",
+    "line": 119,
+    "end": 124,
+    "text": "/// A Markdown document's marked texts: each heading as rendered and"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|6c8acec707091b77|0": {
+    "target": "../../../cli/src/tombstone/marked.rs",
+    "line": 37,
+    "end": 43,
+    "text": "/// A code file's marked texts: every identifier on a line no comment"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|f7b9bedc4d4f917d|0": {
+    "target": "../../../cli/src/tombstone/marked.rs",
+    "line": 70,
+    "end": 84,
+    "text": "/// The text with every literal blanked to spaces (newlines kept, so"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|0694bd7785d6f8d4|0": {
+    "target": "../../../cli/src/tombstone/mod.rs",
+    "line": 16,
+    "end": 28,
+    "text": "//! A document in the changelog role (role.rs), a file `[tombstone]"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|1f2bd5dbd5d382c5|0": {
+    "target": "../../../cli/src/tombstone/mod.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! Tombstone residue (plan v2.26 T track, ADR-008 fifth period): the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|4595a243c228c9f8|0": {
+    "target": "../../../cli/src/tombstone/mod.rs",
+    "line": 60,
+    "end": 67,
+    "text": "/// How a site fired: a parenthesized label frame (spec kind 0a), a"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|4f343e180e924f7a|0": {
+    "target": "../../../cli/src/tombstone/mod.rs",
+    "line": 147,
+    "end": 195,
+    "text": "/// Measure a changeset. `session` = erased keys carried over from"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|cc090a27c2d16298|0": {
+    "target": "../../../cli/src/tombstone/mod.rs",
+    "line": 51,
+    "end": 58,
+    "text": "/// One changed file: its ce-relative path and both texts (empty ="
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|f8f384f793b988a4|0": {
+    "target": "../../../cli/src/tombstone/mod.rs",
+    "line": 113,
+    "end": 138,
+    "text": "pub struct Exempt {"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|49ce2b0323816e50|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 122,
+    "end": 126,
+    "text": "/// The names one text declares (its structural positions), keyed and"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|4d1d0f8dc05a790e|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 100,
+    "end": 120,
+    "text": "/// The spellings of one marked text outside the slots an absence"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|68087a7fa494b688|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 181,
+    "end": 203,
+    "text": "/// R over a changeset (`added[i]` = the after-side lines pair `i`"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|6971f85f9e6fd7b9|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 43,
+    "end": 52,
+    "text": "/// The canonical spelling a key hashes: the text's words `_`-joined."
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|6e75859752c57566|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 170,
+    "end": 178,
+    "text": "/// Every wide erased name occurring in `text` as a substring —"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|969d792a6b92b9f7|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 145,
+    "end": 156,
+    "text": "/// The keys under which a name survives on one after side (module"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|a3b8948a5d328016|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 70,
+    "end": 81,
+    "text": "/// Every known name a text spells, one spelling per key — the count"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|bd9ec3762c87f118|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 54,
+    "end": 68,
+    "text": "/// Every spelling a text offers a name under: each window of its"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|c3d6a5ef5951052c|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 38,
+    "end": 40,
+    "text": "/// Carries a non-ASCII char: also matched by substring in prose,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|cec5fb277567d18e|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 11,
+    "end": 16,
+    "text": "//! ERASED means: a name of some before side that SURVIVES on no after"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|ef9cb71e6ea66ae3|0": {
+    "target": "../../../cli/src/tombstone/names.rs",
+    "line": 83,
+    "end": 98,
+    "text": "/// The name floor: a letter, long enough for its script, no word of"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/policy.rs|831b1e5c9e77855b|0": {
+    "target": "../../../cli/src/tombstone/policy.rs",
+    "line": 1,
+    "end": 6,
+    "text": "//! What ce.toml adds to the measurement (plan v2.27 step 3): the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/policy.rs|d0ca9420716efb8b|0": {
+    "target": "../../../cli/src/tombstone/policy.rs",
+    "line": 37,
+    "end": 42,
+    "text": "/// Whether `rel` was declared to hold the changelog role."
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|079979cb5b16f276|0": {
+    "target": "../../../cli/src/tombstone/role.rs",
+    "line": 241,
+    "end": 277,
+    "text": "/// Distinct version-ledger tokens in a text: a semver (`1.6.0`, or a"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|5cb832905b0d0281|0": {
+    "target": "../../../cli/src/tombstone/role.rs",
+    "line": 162,
+    "end": 169,
+    "text": "/// Distinct ledger tokens a segment must carry to be a ledger by"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|6d0262850e2eda52|0": {
+    "target": "../../../cli/src/tombstone/role.rs",
+    "line": 47,
+    "end": 102,
+    "text": "/// File stems (lower-cased, extension dropped) that name the role."
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|867a356f73c72967|0": {
+    "target": "../../../cli/src/tombstone/role.rs",
+    "line": 173,
+    "end": 198,
+    "text": "/// The segment around `line` of a Markdown text and its distinct"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|97aa17f9fc7098ee|0": {
+    "target": "../../../cli/src/tombstone/role.rs",
+    "line": 104,
+    "end": 137,
+    "text": "/// At least three headings, and at least half of the level-2/3 ones"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|fb57d917b47e3cef|0": {
+    "target": "../../../cli/src/tombstone/role.rs",
+    "line": 1,
+    "end": 16,
+    "text": "//! The changelog-role detector (user ruling 2026-09-04, spec §三 M5):"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|2b006cd2f8ae1074|0": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 71,
+    "end": 91,
+    "text": "/// S⁺: Markdown reads its added headings (a section IS its heading,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|61e388b4df37dabb|0": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 9,
+    "end": 12,
+    "text": "//! Prose is read RAW (no docdup mask): the name a paragraph mentions"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|ce17ddf914bdc253|0": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 141,
+    "end": 157,
+    "text": "/// P⁺: the SENTENCES this change wrote into every docdup segment of"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|edc90b0007955ca7|0": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 52,
+    "end": 61,
+    "text": "/// The after-side lines this change added or rewrote (1-based), off"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|edc90b0007955ca7|1": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 52,
+    "end": 61,
+    "text": "/// The after-side lines this change added or rewrote (1-based), off"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|f2bf6b3873c4f111|0": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! The two surfaces a change writes that the rule reads (spec §三 M3"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|f96d44e2b69c375a|0": {
+    "target": "../../../cli/src/tombstone/surfaces.rs",
+    "line": 159,
+    "end": 192,
+    "text": "/// One segment's touched sentences: its lines joined by a space, each"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|048b13f996806aa1|0": {
+    "target": "../../../cli/src/tombstone/texts.rs",
+    "line": 56,
+    "end": 64,
+    "text": "let judged: Vec<(&PathPair, Lang)> = pairs"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|619a8594180493f3|0": {
+    "target": "../../../cli/src/tombstone/texts.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The texts a changeset's pairs hold: every git side in ONE `cat-file"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|c2c9c90a75483055|0": {
+    "target": "../../../cli/src/tombstone/texts.rs",
+    "line": 15,
+    "end": 24,
+    "text": "/// Files past this many bytes read as absent. The audit's untracked"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|c2c9c90a75483055|1": {
+    "target": "../../../cli/src/tombstone/texts.rs",
+    "line": 15,
+    "end": 24,
+    "text": "/// Files past this many bytes read as absent. The audit's untracked"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|719662f2a568389b|0": {
+    "target": "../../../cli/src/tombstone/vocab.rs",
+    "line": 60,
+    "end": 66,
+    "text": "/// Retrospective marks a prose segment carries: lower-cased English"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|77a6051f70057bf6|0": {
+    "target": "../../../cli/src/tombstone/vocab.rs",
+    "line": 31,
+    "end": 35,
+    "text": "/// V₀ — absence words that are never names (lower-cased; the wide"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|b8bd1d1f0bc539d7|0": {
+    "target": "../../../cli/src/tombstone/vocab.rs",
+    "line": 79,
+    "end": 91,
+    "text": "/// Whether `w` is a word of the instrument's own vocabulary — a frame,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|b9217842f069fb52|0": {
+    "target": "../../../cli/src/tombstone/vocab.rs",
+    "line": 14,
+    "end": 19,
+    "text": "/// Fewest chars an ASCII name has (`ab` is a preposition, not a name)."
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|c2f121ad59313c7f|0": {
+    "target": "../../../cli/src/tombstone/vocab.rs",
+    "line": 50,
+    "end": 58,
+    "text": "/// English absence frames: a prefix binds the words after it, a"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|132d1988f574ae82|0": {
+    "target": "../../../cli/src/tombstone/wire.rs",
+    "line": 56,
+    "end": 91,
+    "text": "/// The reply, consumed: a degraded reply is a named non-judgment; a"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|1387464a29884596|0": {
+    "target": "../../../cli/src/tombstone/wire.rs",
+    "line": 31,
+    "end": 47,
+    "text": "/// The wire rows: `[kind, marks, erasedNames]` per candidate, in the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|19e97eeb0e914714|0": {
+    "target": "../../../cli/src/tombstone/wire.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! The tombstone/1 leg of the measurement (plan v2.27 step 4): the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/tests/it/tombstone_guard.rs|5944ce094f5f8f01|0": {
+    "target": "../../../cli/tests/it/tombstone_guard.rs",
+    "line": 202,
+    "end": 214,
+    "text": "#[test]\nfn the_allow_pragma_is_deliberately_unwired() {"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/tests/it/tombstone_replay.rs|bdf02674d239bc13|0": {
+    "target": "../../../cli/tests/it/tombstone_replay.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! FPR replay for the tombstone class (plan v2.26 step 6; the ledger"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
+    "target": "../../../core/app/CE/Protocol.hs",
+    "line": 102,
+    "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|454df31193049ba3|0": {
+    "target": "../../../core/app/CE/Tombstone.hs",
+    "line": 63,
+    "end": 89,
+    "text": "-- | Over-cap: a complete degraded reply with an empty site table and"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|dd7b1a58fb0b0268|0": {
+    "target": "../../../core/app/CE/Tombstone.hs",
+    "line": 55,
+    "end": 61,
+    "text": "judged :: String -> RowsReq -> B8.ByteString"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|e902b7affb7f2d5a|0": {
+    "target": "../../../core/app/CE/Tombstone.hs",
+    "line": 29,
+    "end": 53,
+    "text": "-- | The shared knobbed-table cascade with this family's bindings"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone/Cost.hs|0869d0668c3d983e|0": {
+    "target": "../../../core/app/CE/Tombstone/Cost.hs",
+    "line": 29,
+    "end": 35,
+    "text": "-- | A prose site carries at least this many retrospective marks in the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone/Cost.hs|66ccf0e210c90b5b|0": {
+    "target": "../../../core/app/CE/Tombstone/Cost.hs",
+    "line": 18,
+    "end": 45,
+    "text": "-- | Row ceiling: one row per candidate surface of one changeset. A"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone/Cost.hs|9a3ad81385acd577|0": {
+    "target": "../../../core/app/CE/Tombstone/Cost.hs",
+    "line": 47,
+    "end": 58,
+    "text": "-- | One row's verdict."
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone/Cost.hs|d01f9239794519d6|0": {
+    "target": "../../../core/app/CE/Tombstone/Cost.hs",
+    "line": 1,
+    "end": 7,
+    "text": "-- | The tombstone family's constants (plan v2.27 step 4; ADR-008 fifth"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Wire.hs|7ce9998aa97b3b95|0": {
+    "target": "../../../core/app/CE/Wire.hs",
+    "line": 112,
+    "end": 137,
+    "text": "tableCap :: Integer -> RowsReq -> Bool"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/test/TombstoneProps.hs|897b6f6807378652|0": {
+    "target": "../../../core/test/TombstoneProps.hs",
+    "line": 31,
+    "end": 36,
+    "text": "[ \"the conjunction matches its truth table\""
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|33908d0853609694|0": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 125,
+    "text": "- 文档编辑中新增段落与既有段落 MinHash 相似 → **重复陈述嫌疑**；**v2.26 墓碑残留嫌疑**：改动集抹除名字 X（R 只收文本自己**声明**为名字的 run——单元键、非注释行且字面量之外的标识符、md 标题 / 列表首项；md 代码跨度只保活不声明；否定框内的窗口两侧都不是名字；中文名字只在这些边界处可测，如实写进已知限制）**且**同一改动新增的标题 / 单元名 / 文件名以否定框重新命名 X（标签残留 L），或新增散文**句**同时含回溯标记与 X（论证残留 J，合取即精度；六轮回放逐轮修定义见 FPR-TOMBSTONE.md）；出处叙事按用户裁定算残留，changelog 定位文档按两见证整体豁免并入账；**v2.27**：第三见证 = **段级**（被触段自身 ≥ K 个版本 / ISO 日期 / 短哈希记号，K 由回放定，只豁免该段并入账）+ `[tombstone] ledger` 声明路径兑底（整文件、入账）；单词名字继续算，ASCII 3 字符地板不动；"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|33908d0853609694|1": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 125,
+    "text": "- 文档编辑中新增段落与既有段落 MinHash 相似 → **重复陈述嫌疑**；**v2.26 墓碑残留嫌疑**：改动集抹除名字 X（R 只收文本自己**声明**为名字的 run——单元键、非注释行且字面量之外的标识符、md 标题 / 列表首项；md 代码跨度只保活不声明；否定框内的窗口两侧都不是名字；中文名字只在这些边界处可测，如实写进已知限制）**且**同一改动新增的标题 / 单元名 / 文件名以否定框重新命名 X（标签残留 L），或新增散文**句**同时含回溯标记与 X（论证残留 J，合取即精度；六轮回放逐轮修定义见 FPR-TOMBSTONE.md）；出处叙事按用户裁定算残留，changelog 定位文档按两见证整体豁免并入账；**v2.27**：第三见证 = **段级**（被触段自身 ≥ K 个版本 / ISO 日期 / 短哈希记号，K 由回放定，只豁免该段并入账）+ `[tombstone] ledger` 声明路径兑底（整文件、入账）；单词名字继续算，ASCII 3 字符地板不动；"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|596c6b9cbf5bbbac|0": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 103,
+    "text": "每次默认档位变更在 CHANGELOG 记录依据（FPR 数据）。v2.26 第三规则类 `tombstone` 第一段 as-built observe（feed-only），晋级前置 = `docs/FPR-TOMBSTONE.md` 回放 ≤ 1%，与前两类同一道门；2026-09-04 六轮回放实测 requests 0/400、自仓 3/530 = 0.57 %，门达成；**v2.27 第二段**：类得自己的档位键 `[tombstone] tier`（默认 observe；步 4 起合取与预算条件在核 `tombstone/1`，三腿按该键定档、核答 `over` 才出声），deny 晋级仍走本条 FPR 门——回放台账即证据，默认档位不随第二段改变。"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|1de4077e172c8f1e|0": {
+    "target": "../../FPR-TOMBSTONE.md",
+    "line": 24,
+    "end": 33,
+    "text": "| 轮 | 自仓 命中提交 / 站点（标签 + 散文） | requests | 这一轮修掉的机制（修在定义，不是修在阈值） |"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|2749bc37e5139dca|0": {
+    "target": "../../FPR-TOMBSTONE.md",
+    "line": 27,
+    "text": "| 2 | 68 / 88（4 + 84） | 1 / 2 | 三条准入：框架绑定的窗口在 before 侧也不是名字（`def test_header_no_return_chars` 搬一行被读成「删了 `return_chars` 又写回」——requests 那两处的全部来源）；含虚词的窗口（`the_pre`、`budget_is`）不是名字；仪器自己的词汇（`longer`、`removed`）不拼名字 |"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|40ab11432fdf0baf|0": {
+    "target": "../../FPR-TOMBSTONE.md",
+    "line": 46,
+    "end": 56,
+    "text": "| # | 提交 | 站点 | 绑定的名字 | 判 | 理由 |"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|72c4b93385abcd8d|0": {
+    "target": "../../FPR-TOMBSTONE.md",
+    "line": 99,
+    "end": 105,
+    "text": "## 第二段的两条口径（2026-09-04 用户裁定）"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|a13320abd5a20b6c|0": {
+    "target": "../../FPR-TOMBSTONE.md",
+    "line": 83,
+    "end": 91,
+    "text": "| 语料 | 事件 | 命中提交 | 严格读法（中间态计误报） | 保守读法（命中即误报） | 95 % 区间（Clopper–Pearson，严格 / 保守） |"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
+    "target": "../ce-toml.md",
+    "line": 85,
+    "end": 92,
+    "text": "## [tombstone]"
   }
 }

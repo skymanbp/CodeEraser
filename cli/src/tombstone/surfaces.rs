@@ -12,6 +12,7 @@
 //! become segments, so an example's `(no X)` stays an example.
 
 use super::PairText;
+use super::frames::sentences;
 use crate::docdup::segments::{self, RawSeg};
 use crate::fourclass::{classify, units};
 use crate::graph::ladder::md::slug::{atx_heading, render_text};
@@ -25,6 +26,9 @@ pub enum LabelKind {
     Heading,
     Unit,
     FileStem,
+    /// The subject line of an after-only surface that is no file (a
+    /// commit message, `subject`).
+    Subject,
 }
 
 /// One naming surface this change wrote. `line` is on the after side
@@ -36,7 +40,8 @@ pub struct Label {
     pub kind: LabelKind,
 }
 
-/// One prose segment this change touched, raw lines joined by a space.
+/// One sentence this change wrote into a prose segment; `start` /
+/// `end` are the added lines it spans.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Prose {
     pub start: usize,
@@ -45,13 +50,22 @@ pub struct Prose {
 }
 
 /// The after-side lines this change added or rewrote (1-based), off
-/// the same line diff the four-class family judges with.
-pub fn added_lines(pair: &PairText) -> BTreeSet<usize> {
-    classify(pair.before, pair.after, pair.lang)
-        .changed
-        .added
-        .into_iter()
-        .collect()
+/// the same line diff the four-class family judges with — and whether
+/// that diff was BOUNDED (fourclass::Classification::degraded: past
+/// its caps every trimmed line counts as added, so the surfaces would
+/// read untouched text as written). A leg records a degraded pair and
+/// never enforces on it.
+pub struct Added {
+    pub lines: BTreeSet<usize>,
+    pub degraded: bool,
+}
+
+pub fn added(pair: &PairText) -> Added {
+    let c = classify(pair.before, pair.after, pair.lang);
+    Added {
+        lines: c.changed.added.into_iter().collect(),
+        degraded: c.degraded,
+    }
 }
 
 /// S⁺: Markdown reads its added headings (a section IS its heading,
@@ -74,6 +88,22 @@ pub fn labels(pair: &PairText, added: &BTreeSet<usize>) -> Vec<Label> {
         });
     }
     out
+}
+
+/// The label of an after-only surface that is no file — a commit
+/// message: its subject line, the first non-blank one (a message has
+/// no units, and the heading rule would read a `#` line as a heading).
+pub fn subject(text: &str) -> Vec<Label> {
+    text.lines()
+        .enumerate()
+        .find(|(_, l)| !l.trim().is_empty())
+        .map(|(i, l)| Label {
+            line: i + 1,
+            text: l.trim().to_string(),
+            kind: LabelKind::Subject,
+        })
+        .into_iter()
+        .collect()
 }
 
 fn headings(after: &str, added: &BTreeSet<usize>, out: &mut Vec<Label>) {
@@ -108,37 +138,57 @@ fn new_units(pair: &PairText, out: &mut Vec<Label>) {
     }
 }
 
-/// P⁺: the ADDED lines of every docdup segment of the after side —
-/// what this change wrote, not the paragraph it touched: the first
-/// self-history replay fired 219 times, mostly on a version bump
-/// inside a list whose OTHER lines said `此前`, and a mark that stood
-/// there before this change is nobody's residue. No admission floor
-/// (that floor serves the shingle judge, and a one-line `X is no
-/// longer needed` is a whole tombstone); `start` is the first added
-/// line, where a reader should look.
+/// P⁺: the SENTENCES this change wrote into every docdup segment of
+/// the after side. Boundaries are cut in the WHOLE segment text (an
+/// unchanged terminator between two added lines keeps them two
+/// sentences, where the added lines joined alone once read `We no
+/// longer` + `Consult dongpo.` as one), and a sentence is kept when an
+/// added line is among its lines — what this change wrote, not the
+/// paragraph it touched: the first self-history replay fired 219
+/// times, mostly on a version bump inside a list whose OTHER lines
+/// said `此前`, and a mark that stood there before this change is
+/// nobody's residue. No admission floor (that floor serves the shingle
+/// judge, and a one-line `X is no longer needed` is a whole
+/// tombstone); `start` is the sentence's first added line, where a
+/// reader should look.
 pub fn prose(pair: &PairText, added: &BTreeSet<usize>) -> Vec<Prose> {
     let (segs, _) = segments::extract(pair.after, pair.lang);
-    segs.iter().filter_map(|s| mine(s, added)).collect()
+    segs.iter().flat_map(|s| mine(s, added)).collect()
 }
 
-/// One segment's added lines, or None when it has none.
-fn mine(seg: &RawSeg, added: &BTreeSet<usize>) -> Option<Prose> {
-    let lines: Vec<(usize, &str)> = seg
-        .lines
-        .iter()
-        .enumerate()
-        .filter_map(|(i, l)| {
-            let n = usize::try_from(seg.start_line).ok()? + i;
-            added.contains(&n).then_some((n, l.text.as_str()))
+/// One segment's touched sentences: its lines joined by a space, each
+/// line's byte span remembered, the sentences cut in that text and
+/// attributed back to the lines they overlap.
+fn mine(seg: &RawSeg, added: &BTreeSet<usize>) -> Vec<Prose> {
+    let Ok(first) = usize::try_from(seg.start_line) else {
+        return Vec::new();
+    };
+    let (mut text, mut spans) = (String::new(), Vec::new());
+    for (i, l) in seg.lines.iter().enumerate() {
+        if i > 0 {
+            text.push(' ');
+        }
+        let at = text.len();
+        text.push_str(&l.text);
+        spans.push((first + i, at, text.len()));
+    }
+    sentences(&text)
+        .into_iter()
+        .filter_map(|s| {
+            let at = s.as_ptr() as usize - text.as_ptr() as usize;
+            let end = at + s.len();
+            let mut touched = spans
+                .iter()
+                .filter(|(n, a, b)| *a < end && at < *b && added.contains(n))
+                .map(|(n, _, _)| *n);
+            let start = touched.next()?;
+            Some(Prose {
+                start,
+                end: touched.next_back().unwrap_or(start),
+                text: s.to_string(),
+            })
         })
-        .collect();
-    let (start, _) = *lines.first()?;
-    let (end, _) = *lines.last()?;
-    Some(Prose {
-        start,
-        end,
-        text: lines.iter().map(|(_, t)| *t).collect::<Vec<_>>().join(" "),
-    })
+        .collect()
 }
 
 #[cfg(test)]

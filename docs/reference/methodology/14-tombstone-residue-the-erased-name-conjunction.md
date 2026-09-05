@@ -27,41 +27,53 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
 
 - **PreToolUse** — this Write/Edit's on-disk pair, the applied text the budget rule already
   computes, for a judged language inside the config's walk
-  ([guard/tombstone.rs:21-38](../../../cli/src/guard/tombstone.rs#L21)). It is the only leg
+  ([guard/tombstone.rs:33-51](../../../cli/src/guard/tombstone.rs#L33)). It is the only leg
   that sees one file at a time, so it carries the session with it (§7).
 - **Stop** — the working tree against `HEAD`, plus the audit's untracked files: a name that
-  moved into a brand-new file is alive, and a new CHANGELOG is a changelog
+  moved into a brand-new file is alive, and a new CHANGELOG is a changelog. Pairs outside the
+  config's walk scope are dropped before any text is read — an excluded path is nobody's, as
+  the guard leg reads it
   ([audit/tombstone.rs:1-7](../../../cli/src/audit/tombstone.rs#L1),
-  [audit/tombstone.rs:116-123](../../../cli/src/audit/tombstone.rs#L116)).
+  [audit/tombstone.rs:127-147](../../../cli/src/audit/tombstone.rs#L127)).
 - **precommit / commitmsg** — the index against `HEAD`, what the commit will hold; `ce
-  commitmsg` adds the message as one more Markdown after-surface named `COMMIT_EDITMSG`, its
-  comment lines blanked in place so a site's line is the file's own
-  ([audit/tombstone.rs:25-27](../../../cli/src/audit/tombstone.rs#L25),
-  [audit/tombstone.rs:134-140](../../../cli/src/audit/tombstone.rs#L134),
-  [commitmsg.rs:62-67](../../../cli/src/audit/commitmsg.rs#L62)).
+  commitmsg` adds the message as an after-only SURFACE named `COMMIT_EDITMSG` — its subject
+  line is a label, its sentences are prose, but it declares no name and keeps none alive, so R
+  stays the staged pairs' own (a message item `- X is no longer needed` must not keep `X`
+  alive) — its comment lines blanked in place so a site's line is the file's own
+  ([audit/tombstone.rs:26-28](../../../cli/src/audit/tombstone.rs#L26),
+  [audit/tombstone.rs:164-176](../../../cli/src/audit/tombstone.rs#L164),
+  [commitmsg.rs:64-69](../../../cli/src/audit/commitmsg.rs#L64)).
 
-Every git side comes through ONE `cat-file --batch` process and the working tree through one
-bounded read: a blob that is missing, binary or past `READ_CAP` drops its pair, pairs past
-`PAIR_CAP` are never read, and both counts return to the caller
+Every git side comes through ONE `cat-file --batch` process — its reply read as a stream, so
+an over-cap blob is skipped and never held — and the working tree through one bounded read: a
+blob that is missing, binary or past `READ_CAP` drops its pair, pairs past `PAIR_CAP` are
+never read, and every unread pair is counted back to the caller, because a leg that enforces
+must know whether its changeset was whole (§7)
 ([texts.rs:1-8](../../../cli/src/tombstone/texts.rs#L1),
-[texts.rs:14-23](../../../cli/src/tombstone/texts.rs#L14)). The FPR replay walks a whole
+[texts.rs:15-24](../../../cli/src/tombstone/texts.rs#L15)). The FPR replay walks a whole
 history through this same door (§9).
 
 Two surfaces of the after side are read, and only what the change ADDED — both take the
 added-line set off the four-classification's own line diff, so a paragraph that already
-existed is never re-judged ([surfaces.rs:1-7](../../../cli/src/tombstone/surfaces.rs#L1),
-[surfaces.rs:47-55](../../../cli/src/tombstone/surfaces.rs#L47)):
+existed is never re-judged. The diff's own `degraded` bit travels with the set: past the
+diff's caps every trimmed line counts as added, so such a pair is measured, counted as
+degraded, and never enforced on (§7)
+([surfaces.rs:1-7](../../../cli/src/tombstone/surfaces.rs#L1),
+[surfaces.rs:52-61](../../../cli/src/tombstone/surfaces.rs#L52)):
 
 - **S⁺, the naming surface** — headings this change added (Markdown), unit names the after
   side declares and the before side did not (code), the stem of a brand-new file
-  ([surfaces.rs:57-77](../../../cli/src/tombstone/surfaces.rs#L57)).
-- **P⁺, the prose surface** — the added lines of every comment, docstring and paragraph
-  segment docdup extracts, read raw (no mask: the name a paragraph mentions sits in
-  backticks, and masking the span would hide exactly the mention the conjunction needs) and
-  with no admission floor — a one-line `X is no longer needed` is a whole tombstone. Fenced
-  and indented code never become segments, so an example's `(no X)` stays an example
+  ([surfaces.rs:71-91](../../../cli/src/tombstone/surfaces.rs#L71)).
+- **P⁺, the prose surface** — the SENTENCES this change wrote into every comment, docstring
+  and paragraph segment docdup extracts: the boundaries are cut in the whole segment's text
+  and a sentence is kept when an added line is among its lines (the added lines joined alone
+  once read `We no longer` + `Consult X.` as one sentence across an unchanged line), read raw
+  (no mask: the name a paragraph mentions sits in backticks, and masking the span would hide
+  exactly the mention the conjunction needs) and with no admission floor — a one-line `X is
+  no longer needed` is a whole tombstone. Fenced and indented code never become segments, so
+  an example's `(no X)` stays an example
   ([surfaces.rs:9-12](../../../cli/src/tombstone/surfaces.rs#L9),
-  [surfaces.rs:111-122](../../../cli/src/tombstone/surfaces.rs#L111)).
+  [surfaces.rs:141-157](../../../cli/src/tombstone/surfaces.rs#L141)).
 
 ### 2. R — the names a change erased
 
@@ -83,21 +95,21 @@ non-ASCII run whole — plus each run wider than a window, so `braise_dongpo_por
 `dongpo_pork` too, which is what `(no Dongpo Pork)` binds
 ([frames.rs:12-15](../../../cli/src/tombstone/frames.rs#L12),
 [frames.rs:128-134](../../../cli/src/tombstone/frames.rs#L128),
-[names.rs:53-67](../../../cli/src/tombstone/names.rs#L53)). A spelling is keyed by its
+[names.rs:54-68](../../../cli/src/tombstone/names.rs#L54)). A spelling is keyed by its
 canonical form — words `_`-joined — through the dedup family's fnv1a, so `DongpoPork`,
 `dongpo_pork` and `Dongpo Pork` are one name, and keys are all the hub compares and all the
-feed stores ([names.rs:42-51](../../../cli/src/tombstone/names.rs#L42)).
+feed stores ([names.rs:43-52](../../../cli/src/tombstone/names.rs#L43)).
 
 The **name floor** admits a spelling that has a letter, is at least `MIN_ASCII_NAME`
 characters (`MIN_WIDE_NAME` for a CJK one — `ab` is a preposition, not a name), has no word
 of the instrument's own vocabulary among its words (a frame, an absence word, a function
 word, a word of a retrospective mark) nor of the repository's own `[tombstone] terms`, and is
 not made of reserved words alone — `user_data` is a name, `data` is not
-([names.rs:82-95](../../../cli/src/tombstone/names.rs#L82),
+([names.rs:83-98](../../../cli/src/tombstone/names.rs#L83),
 [vocab.rs:14-19](../../../cli/src/tombstone/vocab.rs#L14),
-[vocab.rs:79-90](../../../cli/src/tombstone/vocab.rs#L79)). A text that is an absence word
+[vocab.rs:79-91](../../../cli/src/tombstone/vocab.rs#L79)). A text that is an absence word
 WHOLE (`NotFound`, `no_std`) spells no name at all: its `found` half must not enter R just
-because the word is compound ([names.rs:119-123](../../../cli/src/tombstone/names.rs#L119),
+because the word is compound ([names.rs:122-126](../../../cli/src/tombstone/names.rs#L122),
 [vocab.rs:31-35](../../../cli/src/tombstone/vocab.rs#L31)).
 
 ERASED means: a name of some before side that SURVIVES on no after side. A name survives in
@@ -105,9 +117,9 @@ every marked text this change did not add — a code span included — and in a 
 it did add, outside the slots an absence frame binds there; a mention this change wrote into
 prose or a code span is not survival, because that is where residue is written
 ([names.rs:11-16](../../../cli/src/tombstone/names.rs#L11),
-[names.rs:142-154](../../../cli/src/tombstone/names.rs#L142)). So a name moved to another
+[names.rs:145-156](../../../cli/src/tombstone/names.rs#L145)). So a name moved to another
 changed file is alive, and a name that only recurs inside `(no X)` is erased
-([names.rs:178-200](../../../cli/src/tombstone/names.rs#L178)):
+([names.rs:181-203](../../../cli/src/tombstone/names.rs#L181)):
 
     R = ⋃ᵢ names(beforeᵢ)  \  ⋃ᵢ alive(afterᵢ, addedᵢ)          (compared as keys)
 
@@ -121,39 +133,42 @@ English prefixes (`no`, `not`, `non`, `without`, `sans`, `minus`), English suffi
 1..=`JOIN_MAX` words after it (`no more` counts as one prefix), a suffix the words before it,
 a Chinese form the rest of its own run; the candidates are spellings, the hub keys them and
 asks the erased set — a candidate that names nothing erased is nothing
-([frames.rs:170-201](../../../cli/src/tombstone/frames.rs#L170),
-[frames.rs:212-222](../../../cli/src/tombstone/frames.rs#L212)). A frame inside a bracket
+([frames.rs:177-208](../../../cli/src/tombstone/frames.rs#L177),
+[frames.rs:219-229](../../../cli/src/tombstone/frames.rs#L219)). A frame inside a bracket
 pair is kind 0, `bracketed`; a bare one is kind 1 — the two label kinds the wire carries and
-the feed names ([frames.rs:203-210](../../../cli/src/tombstone/frames.rs#L203),
+the feed names ([frames.rs:210-217](../../../cli/src/tombstone/frames.rs#L210),
 [mod.rs:60-67](../../../cli/src/tombstone/mod.rs#L60)). The label row's `names` is how many
-bound candidates are known — erased by this changeset, or by an earlier edit of the session
-([mod.rs:175-207](../../../cli/src/tombstone/mod.rs#L175)).
+DISTINCT names the bound candidates spell — a name written twice is one name — among those
+known: erased by this changeset, or by an earlier edit of the session
+([candidates.rs:31-71](../../../cli/src/tombstone/candidates.rs#L31)).
 
 The frame reading is **symmetric**: the name side and the survival side read a text through
 the same door, so a window an absence frame binds is neither erased nor alive —
 `fn no_return_chars` declares nothing named `return_chars` on either side of a change. The
 second self-replay round found the asymmetric form: a moved `def test_header_no_return_chars`
 read as "removed `return_chars` and wrote it back", the whole source of the requests corpus's
-two false sites ([names.rs:97-117](../../../cli/src/tombstone/names.rs#L97),
-[FPR-TOMBSTONE.md:26](../../FPR-TOMBSTONE.md#L26)).
+two false sites ([names.rs:100-120](../../../cli/src/tombstone/names.rs#L100),
+[FPR-TOMBSTONE.md:27](../../FPR-TOMBSTONE.md#L27)).
 
 ### 4. The prose conjunction — per sentence
 
-A prose surface is cut into sentences — after `.`, `!`, `?`, `;` when whitespace or the end
-follows (so `ce.toml` and `a.rs` stay whole) and after any full-width `。！？；` — and the
-conjunction is read per sentence: the fourth self-replay round had bound a name mentioned
-3,000 characters away from its mark on one 5,000-character line
-([frames.rs:224-248](../../../cli/src/tombstone/frames.rs#L224)). Each sentence yields one
-row when it carries a retrospective mark or an erased name at all: `marks` counts every
+A prose segment is cut into sentences — after `.`, `!`, `?`, `;` when whitespace or the end
+follows (so `ce.toml` and `a.rs` stay whole) and after any full-width `。！？；` — in its
+WHOLE text, and the conjunction is read per sentence this change touched: the fourth
+self-replay round had bound a name mentioned 3,000 characters away from its mark on one
+5,000-character line ([frames.rs:231-255](../../../cli/src/tombstone/frames.rs#L231),
+[surfaces.rs:159-192](../../../cli/src/tombstone/surfaces.rs#L159)). Each sentence yields
+one row when it carries a retrospective mark or an erased name at all: `marks` counts every
 English phrase of the mark table at word boundaries (`previously` must not match inside
 `previously_seen`) and every Chinese one by substring, overlapping phrases both counting — the
-number is the floor's input, not a tally; `names` counts the known names it spells, every
-window once per key, plus every wide erased name it contains as a substring, since a Chinese
-sentence is one word ([frames.rs:250-277](../../../cli/src/tombstone/frames.rs#L250),
+number is the floor's input, not a tally; `names` counts the known names it spells — every
+window and every wide erased name it contains as a substring (a Chinese sentence is one
+word), once per key across both scripts
+([frames.rs:257-284](../../../cli/src/tombstone/frames.rs#L257),
 [vocab.rs:60-66](../../../cli/src/tombstone/vocab.rs#L60),
-[names.rs:69-80](../../../cli/src/tombstone/names.rs#L69),
-[names.rs:167-176](../../../cli/src/tombstone/names.rs#L167),
-[mod.rs:208-227](../../../cli/src/tombstone/mod.rs#L208)). Which of those rows is a site is
+[names.rs:70-81](../../../cli/src/tombstone/names.rs#L70),
+[names.rs:170-178](../../../cli/src/tombstone/names.rs#L170),
+[candidates.rs:72-101](../../../cli/src/tombstone/candidates.rs#L72)). Which of those rows is a site is
 not decided here: a mark alone is a sentence about something else, a name alone is a mention
 or a migration guide, and the conjunction that makes a tombstone is the core's (§6).
 
@@ -164,25 +179,27 @@ decision record — is exempt as a whole, and every exemption is counted where t
 see it (the docdup ledger discipline: never silent). Only Markdown can hold the role: a code
 file narrates nothing by job ([role.rs:1-16](../../../cli/src/tombstone/role.rs#L1)). Four
 witnesses, the first that answers deciding
-([mod.rs:143-173](../../../cli/src/tombstone/mod.rs#L143)):
+([mod.rs:147-195](../../../cli/src/tombstone/mod.rs#L147)); none of them reads a commit
+message, which is a surface and no file ([candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)):
 
 | witness | reads | exempts | feed `why` |
 |---|---|---|---|
-| **declared** | `[tombstone] ledger`, the exclude list's dialect, compiled once per run | the file, whatever its language | `declared` ([policy.rs:1-6](../../../cli/src/tombstone/policy.rs#L1), [policy.rs:36-40](../../../cli/src/tombstone/policy.rs#L36)) |
+| **declared** | `[tombstone] ledger`, the exclude list's dialect, compiled once per run | the file, whatever its language | `declared` ([policy.rs:1-6](../../../cli/src/tombstone/policy.rs#L1), [policy.rs:37-42](../../../cli/src/tombstone/policy.rs#L37)) |
 | **path** | the stem (`changelog`, `news`, `history`, `migration`, `upgrading`, …, `adr-*`) or a directory on the path (`adr`, `decisions`, `releases`, …) | the file | `path` ([role.rs:47-102](../../../cli/src/tombstone/role.rs#L47)) |
 | **ledger** | the SHAPE: at least three headings, at least half of the level-2/3 ones version-indexed — a `d.d` semver, an ISO date, `Unreleased` / `未发布` | the file | `ledger` ([role.rs:104-137](../../../cli/src/tombstone/role.rs#L104)) |
-| **segment** | the segment around a candidate row — the `>` quote run when the line is quoted (a banner is one run), else the section body from the nearest heading at or above down to the next heading of any level — and its distinct ledger tokens | that segment only, counted once per segment | `segment` ([role.rs:173-191](../../../cli/src/tombstone/role.rs#L173), [mod.rs:242-273](../../../cli/src/tombstone/mod.rs#L242)) |
+| **segment** | the segment around a candidate row — the `>` quote run when the line is quoted (a banner is one run), else the section body from the nearest heading at or above down to the next heading of any level, its own quoted rows left out (a quote run is a segment by itself and lends the prose around it no tokens) — and its distinct ledger tokens | that segment only, counted once per segment | `segment` ([role.rs:173-198](../../../cli/src/tombstone/role.rs#L173), [candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)) |
 
 The third witness exists because a file-level answer had to get one of two things wrong: the
 plan book's banner is a ledger and its §4 is a norm. Its threshold is `SEGMENT_TOKENS` = 3
-distinct ledger tokens — a three-part semver or a `v`-prefixed two-part one (the `v` dropped
-from the key, so one version spelled both ways is one token), an ISO date, a 7–40 hex commit
+distinct ledger tokens — an exactly three-part semver (four parts are an address, not a
+release) or a `v`-prefixed two-part one (the `v` dropped from the key, so one version spelled
+both ways is one token), an ISO date, a 7–40 hex commit
 carrying both a digit and a letter; `§4.2`, `0.57`, a `file:102-103` span and a run number are
 none of these. Three is where a list becomes a ledger — the floor `ledger_shape` already
 applies to headings — and the replay that set it left a window of [1, 33]: every true
 positive's segment carried 0 tokens and the three in-between sites' segments 33, 75 and 77
 (§9; [role.rs:162-169](../../../cli/src/tombstone/role.rs#L162),
-[role.rs:234-256](../../../cli/src/tombstone/role.rs#L234)). `[tombstone] ledger` is the
+[role.rs:241-277](../../../cli/src/tombstone/role.rs#L241)). `[tombstone] ledger` is the
 backstop the 2026-09-04 ruling gave the witness — ledger-like files no witness reads, named
 by the repository itself — and `[tombstone] terms` is the same table's vocabulary key: words
 that never spell a name, whole or as a word of a compound
@@ -190,7 +207,7 @@ that never spell a name, whole or as a word of a compound
 [ce-toml.md:85-92](../ce-toml.md#L85)). An exemption enters the feed only when the changeset
 erased something (a file by role or declaration) or when it suppressed a row (a segment): an
 exemption that suppressed nothing is nothing to see
-([mod.rs:113-134](../../../cli/src/tombstone/mod.rs#L113)).
+([mod.rs:113-138](../../../cli/src/tombstone/mod.rs#L113)).
 
 ### 6. The wire — `tombstone/1`, and what Haskell judges
 
@@ -198,10 +215,12 @@ Rust sends one row per candidate surface, `[kind, marks, erasedNames]`, in measu
 and the budget as knob `0` when one is declared; row index is identity on the wire, and this
 side re-labels the indices it gets back into `file:line kind` places
 ([wire.rs:1-7](../../../cli/src/tombstone/wire.rs#L1),
-[wire.rs:31-45](../../../cli/src/tombstone/wire.rs#L31)). A core that does not offer the
+[wire.rs:31-47](../../../cli/src/tombstone/wire.rs#L31)). A core that does not offer the
 capability — every core before 6.6.0 — is healthy and answers nothing here, a named
-non-judgment like a degraded reply or a site index beyond the rows sent: no failure is ever
-read as "no sites" ([wire.rs:47-81](../../../cli/src/tombstone/wire.rs#L47),
+non-judgment like a degraded reply, a site table that is not an ascending subsequence of the
+rows sent, counts that do not add up to it, or an `over` that is no boolean: no failure, and
+no malformed reply, is ever read as "no sites" or "not over"
+([wire.rs:56-91](../../../cli/src/tombstone/wire.rs#L56),
 [corelink.rs:36](../../../cli/src/corelink.rs#L36)). The core registers the family as the
 eleventh ([Protocol.hs:102](../../../core/app/CE/Protocol.hs#L102)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
@@ -236,43 +255,52 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
 `knobs_digest` ([config/tombstone.rs:1-29](../../../cli/src/config/tombstone.rs#L1),
 [config/tombstone.rs:41-59](../../../cli/src/config/tombstone.rs#L41)).
 
-- **PreToolUse** measures the pair against R ∪ the keys every earlier `tombstone` line of the
-  same session recorded — the observe feed IS the accumulator, as it is for the warn
-  suppression — so an X deleted three edits ago still binds the heading written now. A
-  `tombstone` line lands only when there is something to judge (this edit erased a name, or a
-  surface bound a name the session erased); the judgment travels over the daemon's core link
-  as rows and budget only; the hook speaks only when its tier is not `observe`, a budget is
-  declared and the core said `over`
-  ([guard/tombstone.rs:1-12](../../../cli/src/guard/tombstone.rs#L1),
-  [guard/tombstone.rs:53-68](../../../cli/src/guard/tombstone.rs#L53),
-  [guard/tombstone.rs:98-112](../../../cli/src/guard/tombstone.rs#L98),
-  [hookio.rs:237-253](../../../cli/src/hookio.rs#L237),
+- **PreToolUse** measures the pair against R ∪ the session union: the keys every earlier
+  `tombstone` line of the same session recorded, folded in feed order — a line's erased keys
+  join, the keys its after side declared again (`revived_hashes`) leave, and a line whose
+  write the hook denied (`applied` false) does neither, because that erasure never happened.
+  The observe feed IS the accumulator, as it is for the warn suppression, so an X deleted
+  three edits ago still binds the heading written now, and an X written back two edits ago
+  does not. A `tombstone` line lands only when there is something to record (this edit erased
+  a name, a surface bound a name the session erased, or the edit revived one), and it waits
+  for the hook's decision to carry `applied` (`null` under `ask`: the person decided, the hook
+  cannot see what); the judgment travels over the daemon's core link as rows and budget only;
+  the hook speaks only when its tier is not `observe`, a budget is declared, the core said
+  `over` and the measurement was whole — no pair with a bounded diff
+  ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
+  [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
+  [guard/tombstone.rs:152-170](../../../cli/src/guard/tombstone.rs#L152),
+  [hookio.rs:246-262](../../../cli/src/hookio.rs#L246),
   [proto.rs:60-67](../../../cli/src/daemon/proto.rs#L60),
   [say.rs:68-79](../../../cli/src/guard/say.rs#L68)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
   Stop sees the session's diff at once), judge over the audit's own core link, and block only
-  when two bits agree — the tier is `deny` AND the core's `over`; no core is a degraded object,
-  never a block and never a silent pass. The reason names who judged what, the count, the
+  when three things agree — the tier is `deny`, the core said `over`, and the measurement was
+  whole: a pair the batch could not read or whose diff was bounded is counted in the feed
+  (`unread_pairs`, `degraded_pairs`) and said in the terminal line, never enforced on; no core
+  is a degraded object, never a block and never a silent pass. The reason names who judged what, the count, the
   budget it passed, the first sites, and what to do instead — drop the label, or say what
   replaced it; the terminal faces print one line for the person: the sites when there are
   any, the degradation when there is no verdict, nothing when the changeset is clean
-  ([audit/tombstone.rs:56-61](../../../cli/src/audit/tombstone.rs#L56),
-  [audit/tombstone.rs:143-161](../../../cli/src/audit/tombstone.rs#L143),
-  [audit/tombstone.rs:185-212](../../../cli/src/audit/tombstone.rs#L185),
+  ([audit/tombstone.rs:62-69](../../../cli/src/audit/tombstone.rs#L62),
+  [audit/tombstone.rs:180-197](../../../cli/src/audit/tombstone.rs#L180),
+  [audit/tombstone.rs:222-265](../../../cli/src/audit/tombstone.rs#L222),
   [precommit.rs:22-61](../../../cli/src/audit/precommit.rs#L22)). `ce commitmsg` exits 2
   when it cannot read the file it was handed — a gate that cannot see its input must say so —
-  1 on a block, 0 otherwise ([commitmsg.rs:14-35](../../../cli/src/audit/commitmsg.rs#L14)).
+  1 on a block, 0 otherwise ([commitmsg.rs:14-33](../../../cli/src/audit/commitmsg.rs#L14)).
 
 Every producer writes ONE feed shape, the `tombstone` object of `ce.observe/0.9.0`: `rev`
 (the vocabulary revision — a reader of the ledger must know which tables produced a row),
 `erased`, `rows`, every exemption with its witness (`line` for a segment), and `judged` — the
 first `SITE_CAP` sites as `file:line kind`, the label / prose split and `over` — or
-`judged.degraded` naming why there is none. The per-edit leg adds the erased keys, capped at
-`HASH_CAP`, and the session union's size; the git-hook faces write it with `session_id` null.
+`judged.degraded` naming why there is none, and `degraded_pairs` when any pair's diff was
+bounded. The per-edit leg adds the erased keys, capped at `HASH_CAP`, the session union's
+size, `applied` and, when any, `revived_hashes`; the audit lines add `unread_pairs`; the
+git-hook faces write theirs with `session_id` null.
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:23-33](../../../cli/src/hookio.rs#L23),
-[hookio.rs:69](../../../cli/src/hookio.rs#L69)). The feed is the FPR ledger's raw material
+[hookio.rs:23-42](../../../cli/src/hookio.rs#L23),
+[hookio.rs:78](../../../cli/src/hookio.rs#L78)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated
@@ -281,38 +309,49 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   three-character floor and in no table; four of the six true positives the replay found bound
   a single word. The 2026-09-04 ruling keeps them and keeps the floor — a false site on a
   common word is a `[tombstone] terms` entry away, by the repository's own word
-  ([FPR-TOMBSTONE.md:94-100](../../FPR-TOMBSTONE.md#L94)).
+  ([FPR-TOMBSTONE.md:99-105](../../FPR-TOMBSTONE.md#L99)).
 - **CJK is measured at word boundaries only.** A Chinese phrase is one token of the word cut —
   the segmentation limit the spec states rather than solves — so a wide name is spelled only
   where a run is a heading, a list lead or an identifier by itself, survives only as a whole
   word, and is bound in prose by substring; a Chinese frame is read inside one run or before
   an ASCII name ([frames.rs:12-15](../../../cli/src/tombstone/frames.rs#L12),
-  [names.rs:37-39](../../../cli/src/tombstone/names.rs#L37),
+  [names.rs:38-40](../../../cli/src/tombstone/names.rs#L38),
   [DEVELOPMENT_PLAN.md:125](../../DEVELOPMENT_PLAN.md#L125)).
-- **The session union never forgets within a session.** A name erased in one edit and
-  re-declared in a later one stays in the union until the session ends, so a still-later
-  `(no X)` binds it at PreToolUse; the Stop leg, which reads the whole session's diff at once
-  with an empty union, sees the move as survival and seats no site
-  ([guard/tombstone.rs:98-112](../../../cli/src/guard/tombstone.rs#L98),
-  [audit/tombstone.rs:134-140](../../../cli/src/audit/tombstone.rs#L134)).
+- **The session union forgets only what the hook itself saw.** A name written back by a
+  later Write/Edit leaves it (`revived_hashes`) and a denied write's erasure never enters it,
+  but a name restored outside the hook path — a `git checkout`, another tool — stays in the
+  union until the session ends, so a still-later `(no X)` binds it at PreToolUse; the Stop
+  leg, which reads the whole session's diff at once with an empty union, sees the move as
+  survival and seats no site
+  ([guard/tombstone.rs:152-178](../../../cli/src/guard/tombstone.rs#L152),
+  [audit/tombstone.rs:164-176](../../../cli/src/audit/tombstone.rs#L164)).
+- **A `///` doc comment is one segment per line to docdup.** Its tree-sitter node spans into
+  the next row, so consecutive `///` lines never merge the way `//` runs do — a Rust doc
+  sentence broken across lines is read line by line, and a mark on one line with the name on
+  the next is two sentences about two things (measured 2026-09-04; the merge rule is
+  docdup's, not this class's) ([segments.rs:181-200](../../../cli/src/docdup/segments.rs#L181)).
 - **Only judged languages are measured.** A pair whose after path is not a judged language is
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
-  ([texts.rs:52-60](../../../cli/src/tombstone/texts.rs#L52),
-  [guard/tombstone.rs:31-35](../../../cli/src/guard/tombstone.rs#L31)).
-- **Bounded reads under-count, never over-count.** Pairs past `PAIR_CAP` and blobs past
-  `READ_CAP` are counted back and not measured; a name erased in an unread pair cannot bind
-  ([texts.rs:14-23](../../../cli/src/tombstone/texts.rs#L14)).
+  ([texts.rs:56-64](../../../cli/src/tombstone/texts.rs#L56),
+  [guard/tombstone.rs:44-48](../../../cli/src/guard/tombstone.rs#L44)).
+- **Bounded reads under-count, never over-count — and stand a leg down.** Pairs past
+  `PAIR_CAP`, and pairs with a side the batch or the bounded read refused, are counted back as
+  unread and not measured, so a name erased there cannot bind; a pair whose line diff was
+  bounded is measured and counted as degraded; on either count the legs record and never
+  enforce ([texts.rs:15-24](../../../cli/src/tombstone/texts.rs#L15),
+  [surfaces.rs:52-61](../../../cli/src/tombstone/surfaces.rs#L52)).
 - **Intent is not read.** A frame is a frame: `no_std` is an absence word whole and spells
   nothing, but a genuinely new `(no cache)` heading written in the same change that removed a
   `cache` module is a site by construction, and the way out is the reason's — say what
   replaced it. `ce:allow(tombstone)` is deliberately unwired: a residue class that a pragma in
   the residue itself could wave through would measure nothing
-  ([tombstone_guard.rs:224-236](../../../cli/tests/it/tombstone_guard.rs#L224)).
+  ([tombstone_guard.rs:202-214](../../../cli/tests/it/tombstone_guard.rs#L202)).
 - **The message is Markdown by fiat**, and its comment prefix is the repository's
-  `core.commentChar` / `core.commentString`, the last one set winning; `auto` reads as `#`,
-  and the lines git would have picked another character for are measured as the prose they
-  look like ([commitmsg.rs:37-57](../../../cli/src/audit/commitmsg.rs#L37)).
+  `core.commentChar` / `core.commentString` — matched by their exact names, taken byte for
+  byte, the last one set winning; `auto` reads as `#`, and the lines git would have picked
+  another character for are measured as the prose they look like
+  ([commitmsg.rs:35-59](../../../cli/src/audit/commitmsg.rs#L35)).
 
 ### 9. Acceptance
 
@@ -328,14 +367,20 @@ read only added lines (round 1: 123 → 68 hit commits on self), the framed wind
 neither side (round 2, which also emptied requests: 1 → 0 hit commits), inline code spans
 keeping alive but declaring nothing (round 3: 64), the conjunction per sentence (round 4: 11),
 literals declaring nothing (round 5: 7), arbitration (round 6: 7 commits / 9 sites = 6 true
-positives, 3 in-between sites all on the plan book's version banner, 0 false), and the segment
-witness (round 7: 4 / 6). The gate is ≤ 1 % of events: requests 0 / 400 from round 3 on; self
+positives, 3 in-between sites all on the plan book's version banner, 0 false), the segment
+witness (round 7: 4 / 6), and the codex review's definition fixes re-run as round 8 —
+sentences cut in the whole segment, quoted rows out of a body, exactly three-part versions,
+compound terms whole, distinct names, the message a surface only: 4 / 6 on 536 events, the
+same six true positives. The gate is ≤ 1 % of events: requests 0 / 400 from round 3 on; self
 3 / 530 = 0.57 % at round 6 under the ruling's reading (provenance narrative counts as
 residue, the in-between sites are counted as false), 7 / 530 = 1.32 % if the true positives
-are counted against it too — stated in the ledger as such; round 7: 0 / 531 strict, 4 / 531 =
-0.75 % conservative, both under the line ([FPR-TOMBSTONE.md:23-31](../../FPR-TOMBSTONE.md#L23),
-[FPR-TOMBSTONE.md:44-54](../../FPR-TOMBSTONE.md#L44),
-[FPR-TOMBSTONE.md:81-87](../../FPR-TOMBSTONE.md#L81)). The K = 3 derivation is the ledger's
+are counted against it too — stated in the ledger as such; rounds 7 and 8: 0 strict, 4 / 531
+and 4 / 536 = 0.75 % conservative, under the line as point estimates. The ledger carries the
+exact 95 % Clopper–Pearson interval of every row (0 / 400 → 0–0.918 %, 4 / 536 →
+0.204–1.900 %) and calls itself what it is: calibration evidence on two corpora, not a bound
+on the field ([FPR-TOMBSTONE.md:24-33](../../FPR-TOMBSTONE.md#L24),
+[FPR-TOMBSTONE.md:46-56](../../FPR-TOMBSTONE.md#L46),
+[FPR-TOMBSTONE.md:83-91](../../FPR-TOMBSTONE.md#L83)). The K = 3 derivation is the ledger's
 own table (§5). The replay stays a standing `#[ignore]` leg under the EVAL-SET retirement
 rule; its command line is the ledger's last section.
 
@@ -356,17 +401,23 @@ framed window is no name on either side, a wide name survives only as a whole wo
 witnesses ([unit/tombstone/role.rs](../../../cli/tests/unit/tombstone/role.rs)), the text
 loader ([unit/tombstone/texts.rs](../../../cli/tests/unit/tombstone/texts.rs)), the wire rows
 and every named non-judgment ([unit/tombstone/wire.rs](../../../cli/tests/unit/tombstone/wire.rs)),
-and the hub's rows, exemptions and feed object
-([unit/tombstone.rs](../../../cli/tests/unit/tombstone.rs)). End to end, each leg has its own
-battery — the PreToolUse leg seating a bracketed, a bare and a prose site, a name erased edits
-ago still binding, nothing erased meaning no line at all, the declared tier and budget deciding
-while `observe` stays silent ([tombstone_guard.rs](../../../cli/tests/it/tombstone_guard.rs));
-the Stop and precommit legs judging one site across two files, exempting and counting a
-changelog, a ledger segment and a declared ledger, keeping a moved name alive, blocking at
-`deny` over budget and saying `over` in the feed, and erasing nothing on an unborn HEAD
-([tombstone_audit.rs](../../../cli/tests/it/tombstone_audit.rs)); the commit-msg face
-measuring the message and not its comment lines, refusing at `deny` with the message's line
-named, reading the repository's own comment prefix, and exiting 2 on an unreadable file
+the hub's rows, exemptions and feed object
+([unit/tombstone.rs](../../../cli/tests/unit/tombstone.rs)), and the candidate rows — a
+compound term whole, a message a surface and not a side, a name written twice one name
+([unit/tombstone/candidates.rs](../../../cli/tests/unit/tombstone/candidates.rs)). End to end,
+each leg has its own battery — the PreToolUse leg seating a bracketed, a bare and a prose
+site, nothing erased meaning no line at all
+([tombstone_guard.rs](../../../cli/tests/it/tombstone_guard.rs)), a name erased edits ago
+still binding, a name written back leaving the union, the declared tier and budget deciding
+with `applied` recorded while `observe` stays silent
+([tombstone_guard_session.rs](../../../cli/tests/it/tombstone_guard_session.rs)); the Stop and
+precommit legs judging one site across two files, exempting and counting a changelog, a ledger
+segment and a declared ledger, measuring an excluded path by nobody, keeping a moved name
+alive, blocking at `deny` over budget and saying `over` in the feed, and erasing nothing on an
+unborn HEAD ([tombstone_audit.rs](../../../cli/tests/it/tombstone_audit.rs)); the commit-msg
+face measuring the message and not its comment lines, refusing at `deny` with the message's
+line named, reading the repository's own comment keys exactly, seating the subject as a label,
+and exiting 2 on an unreadable file
 ([tombstone_commitmsg.rs](../../../cli/tests/it/tombstone_commitmsg.rs)). The feed shape is
 the observe golden's, `tombstone`, `precommit` and `commitmsg` entries included
 ([feed.golden.json](../../../contracts/fixtures/observe-feed/feed.golden.json)); the Stop audit

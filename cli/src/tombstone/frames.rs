@@ -163,8 +163,15 @@ fn slot_after(w: &[Word], j: usize) -> Option<usize> {
     Some(if more { j + 2 } else { j + 1 })
 }
 
+/// A suffix frame closes at `w`: an English suffix word, or a Chinese
+/// suffix form standing as a word of its own (`cache已移除`, the mirror
+/// of `无 cache`); inside one run (`东坡肉已移除`) it is wide_frames' job.
 fn closes(w: &Word) -> bool {
-    w.ascii().is_some_and(|a| has(EN_SUFFIX, a))
+    match w {
+        Word::Ascii(a) => has(EN_SUFFIX, a),
+        Word::Wide(r) => has(super::vocab::ZH_SUFFIX, r),
+        _ => false,
+    }
 }
 
 /// Every name a label's absence frames bind: `(no Dongpo Pork)`

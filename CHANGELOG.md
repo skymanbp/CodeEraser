@@ -63,11 +63,11 @@
   静默）；度量层只多一个 `Policy` 参数（钩子与审计从同一次配置加载建它，回放与无表的仓库用默认）。
 - **步 4 wire 6.6.0 `tombstone/1` + 三腿档位路由**（`core/app/CE/Tombstone.hs` / `CE.Tombstone.Cost` / `cli/src/tombstone/wire.rs`）：
   第十一判决族——Rust 只送每个候选面的三个整数 `[kind, marks, erasedNames]` 与预算旋钮（码 0），合取（散文 marks ≥ 1 ∧
-  names ≥ 1、标签 names ≥ 1）、标签 / 散文分账与 `over`（sites > budget）全在核（`TombstoneProps` 七腿：真值表全枚举 /
+  names ≥ 1、标签 names ≥ 1）、标签 / 散文分账与 `over`（sites > budget）全在核（`TombstoneProps` 六腿：真值表全枚举 /
   无预算恒 false / 边界 / 三类 contract 拒绝 / 降级面），golden 六对随 hello 能力表机器重生（request 行锚仍 6.0.0）；
   PreToolUse 经 daemon **2.1.0** 加性 `tombstone{rows,budget}` 转发到 daemon 持有的核链，Stop / precommit 复用 audit
   那一条核链（一次打开、两个判决）；三腿只读两位——类自己的 `[tombstone] tier` 与核答的 `over`——同真才出声
-  （`guard/say.rs` 双语一句；deny 拒写、Stop 阻断、precommit 退 1），observe 只记不说；核不可用 / 旧核无此能力 /
+  （`guard/say.rs` 双语一句；deny 拒写、Stop 阻断、precommit 退 1），observe 档钩子不出声、终端面仍印一行信息；核不可用 / 旧核无此能力 /
   回执越界 = feed `judged.degraded` 具名，绝不阻断也绝不默过。**feed schema 0.9.0 改为具名断点**（无任何发布带过
   0.8.0 形）：`tombstone` 对象的计数与站点搬进 `judged{sites,label,prose,over}`，`rows` 计候选面，`tombstone` 事件的
   `mode` = 类档位；`frames::marks` 计数取代 `has_mark`、`names::spelled_all` / `wide_all` 取代首个命中。自仓 ce.toml 不声明 `[tombstone]`。
@@ -87,6 +87,29 @@
   0..4 五行，实渲亲证）：度量侧「Git windows & diffs · erased names」→ 判决侧「Change verdicts · Theil–Sen · join · conjunction」tag 加 `tombstone/1`（archify 还校验标签宽度：22 字符 136 px 超 124 px 节点即拒，故取伞名），
   几何不动重渲，README ×2 / how ×2 的 alt 同改；常数总表 alt
   的「每个常数」改「常数」——册 13 起图上已不载全部常数，句子早已不真。
+- **codex 审阅批**（2026-09-04，用户令「用 codex 走 gpt-6-astra max 审阅和打磨」；20 条发现 19 落码 1 记账）。
+  **完整性**：`texts::load` 把缺失 / 二进制 / 超 `READ_CAP` 的一侧也计入 `unread`（此前只计超 `PAIR_CAP`），
+  `surfaces::added` 带回四分类 diff 的 `degraded` 位（有界 diff 把每行都当新增），feed 加 `unread_pairs` / `degraded_pairs`，
+  三腿凡度量不完整**只记不判**（`Leg::blocks` 与 PreToolUse 的出声各加一位，终端行加注）；`cat-file --batch` 回执改流式读
+  （`proc::git_feed` 返回子进程，超 cap 的 blob 经固定缓冲跳过、不再整份驻留）。**会话并集**：`tombstone` 事件等钩子决定后
+  再落行并带 `applied`（deny = false，该次擦除从未发生，`session_keys` 跳过；ask = null），本次 after 侧重新声明的会话键记
+  `revived_hashes` 并从并集减去（`tombstone::declared_keys`），并集按 feed 序折叠。**定义**：散文句在**整段**里切再按新增行
+  认领（只拼新增行曾把 `We no longer` + `Consult X.` 隔行读成一句）；正文段记号不借 `>` 引用行；`role::version` 恰好三段
+  （IPv4 不是版本）；`vocabulary` 收 `MARKS_ZH`；`frames::closes` 认独立成词的中文后缀（`cache已移除`）；`[tombstone] terms`
+  经 `names::canon` 规范化并整词匹配（复合词此前永不命中）；同面同名只计一次。**提交说明只当面不当侧**（`measure_with`：
+  主题行为标签、句子为散文，不声明、不保活、不受见证——`- X is no longer needed` 作列表首词此前把 X 保活成漏报）；
+  `ce commitmsg` 改 `texts::read_capped` 有界读（超 cap / 二进制退 2），`comment_prefix` 正则收成
+  `^core\.comment(char|string)$`（`core.commentary` 曾被读作前缀）且值逐字节保留（`## ` 的空格曾被 trim 掉）。
+  **wire**：`consume` 要求 `over` 为布尔、站点表严格升序、`label + prose == |sites|`，畸形回执一律具名拒绝。**守卫**：
+  `budget::shipped_budgets` 在配置漂移下保留声明的 `budget`（出厂值缺席 = 不评条件，抹掉它等于把类关掉），栅栏注记随
+  拒绝句带出；Stop / precommit 的对按配置 `exclude` 走同一 walk 作用域。**拆分**：`tombstone/candidates.rs`（候选面 + 第三
+  见证）、`guard/probe.rs`（重复探针，guard.rs 303→229）；precommit help 补墓碑类（`docs/reference/cli.md` 再生）。
+  **FPR 第八轮**：自仓 536 事件 4 / 6（六处真阳原样）、requests 0 / 400；册加 Clopper–Pearson 95 % 区间列并改口
+  「校准证据」（`docs/FPR-TOMBSTONE.md`）。ADR-006 具名重立：主仓 `tombstone/surfaces.rs` 146→196、`tombstone/texts.rs`
+  175→205、`guard/tombstone.rs` 112→178、`audit/tombstone.rs` 212→265、册 14 374→425、本文件 718→741（本节）；子仓
+  `it/tombstone_audit.rs` 210→233、`it/tombstone_commitmsg.rs` 107→141、`unit/tombstone/surfaces.rs` 86→124、
+  `unit/tombstone/wire.rs` 71→105（子仓五个新克隆块全部消掉，dedup 119 恒）。记账不改码：每候选面重解析 `role::segment`。
+  顺带亲证 docdup 一条事实（未改、待裁）：tree-sitter-rust 的 `///` 节点跨到下一行，`merge_comments` 永不并连续 `///`（`//` 会）。
 
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 

@@ -28,7 +28,16 @@ use std::path::Path;
 /// (a file `[tombstone] ledger` names); a `tombstone` event's `mode`
 /// is the class's own `[tombstone] tier`; the `commitmsg` event (plan
 /// v2.27 step 5) is `precommit`'s line written by `ce commitmsg` over
-/// the staged set plus the message, session null like precommit's.
+/// the staged set plus the message, session null like precommit's. A
+/// `tombstone` event carries `applied` — true when the hook let the
+/// write through, false when it denied it (that erasure never
+/// happened, and the session union skips the line), null under `ask`
+/// (the person decided, the hook cannot see what) — and, when any,
+/// `revived_hashes`: session keys its after side declares again, which
+/// leave the union. `degraded_pairs` (any producer) counts pairs whose
+/// line diff was bounded and `unread_pairs` (audit lines) the pairs the
+/// batch could not read: an incomplete measurement is recorded, never
+/// enforced (codex review 2026-09-04).
 /// Replaces 0.8.0's Rust-judged `label` / `prose` / `sites` — a named
 /// break of a shape no release carried.
 ///

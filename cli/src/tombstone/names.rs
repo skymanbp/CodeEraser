@@ -22,6 +22,7 @@
 
 use super::frames::{Word, label_candidates, windows, words};
 use super::marked::{Marked, marked};
+use super::surfaces::Added;
 use super::vocab::{JOIN_MAX, KEYWORDS, MIN_ASCII_NAME, MIN_WIDE_NAME, NEGATIONS, has, vocabulary};
 use super::{PairText, Policy};
 use crate::dedup::tokens::fnv1a;
@@ -82,14 +83,16 @@ pub fn spelled_all(text: &str, known: impl Fn(u64) -> bool) -> Vec<String> {
 /// The name floor: a letter, long enough for its script, no word of
 /// the instrument's vocabulary among its words (a frame, an absence
 /// word, a function word, a mark's word) nor of the repository's own
-/// (`[tombstone] terms`), and not made of reserved words alone
-/// (`user_data` is a name; `data` is not).
+/// (`[tombstone] terms`, as a word or as the whole spelling:
+/// `terms = ["dongpo_pork"]` names the compound), and not made of
+/// reserved words alone (`user_data` is a name; `data` is not).
 fn admitted(s: &str, policy: &Policy) -> bool {
     let wide = !s.is_ascii();
     let floor = if wide { MIN_WIDE_NAME } else { MIN_ASCII_NAME };
     let ws: Vec<&str> = s.split('_').collect();
     s.chars().any(char::is_alphabetic)
         && s.chars().filter(|c| *c != '_').count() >= floor
+        && !policy.term(s)
         && ws.iter().all(|w| !vocabulary(w) && !policy.term(w))
         && ws.iter().any(|w| !has(KEYWORDS, w))
 }
@@ -179,7 +182,7 @@ impl Erased {
 /// added): every before-side name that survives on no after side. A
 /// name moved to another changed file still survives; a name that
 /// only recurs inside `(no X)` does not.
-pub fn erased(pairs: &[PairText], added: &[BTreeSet<usize>], policy: &Policy) -> Erased {
+pub fn erased(pairs: &[PairText], added: &[Added], policy: &Policy) -> Erased {
     let mut seen = BTreeSet::new();
     let before: Vec<Name> = pairs
         .iter()
@@ -189,7 +192,7 @@ pub fn erased(pairs: &[PairText], added: &[BTreeSet<usize>], policy: &Policy) ->
     let alive: BTreeSet<u64> = pairs
         .iter()
         .zip(added)
-        .flat_map(|(p, a)| surviving(p.after, p.lang, a))
+        .flat_map(|(p, a)| surviving(p.after, p.lang, &a.lines))
         .collect();
     let names: Vec<Name> = before
         .into_iter()

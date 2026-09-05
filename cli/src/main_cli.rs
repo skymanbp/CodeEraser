@@ -196,10 +196,12 @@ pub(crate) enum Cmd {
         #[arg(long)]
         hook: bool,
     },
-    /// pre-commit gate: staged net LOC + touched duplicates (exit 1
-    /// in deny mode when duplicates are touched). FAIL-OPEN: with no
-    /// reachable ce-core it reports the skip and exits 0 — the one
-    /// CI-facing gate that passes on a missing core
+    /// pre-commit gate: staged net LOC, touched duplicates and the
+    /// tombstone class over the staged set (exit 1 in deny mode when
+    /// duplicates are touched, or at `[tombstone] tier` deny past its
+    /// budget). FAIL-OPEN: with no reachable ce-core it reports the
+    /// skip and exits 0 — a CI-facing gate that passes on a missing
+    /// core
     Precommit {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,

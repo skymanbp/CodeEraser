@@ -8,12 +8,11 @@
 //! modes — the untainted M4 evaluation feed (plan D2-1).
 
 mod budget;
+mod probe;
 mod say;
 mod tombstone;
 
 use crate::config::Config;
-use crate::daemon::client;
-use crate::daemon::proto::{Request, Response};
 use envelope::Envelope;
 use std::path::Path;
 use std::process::ExitCode;
@@ -61,7 +60,7 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let cfg = loaded.ok().map(|c| budget::fenced(root, c));
     let file_path = &env.tool_input.file_path;
     let started = std::time::Instant::now();
-    let matches = novel_matches(root, env);
+    let matches = probe::novel_matches(root, env);
     // B4 suppression consults the feed BEFORE this event lands in it;
     // it shapes the warn INJECTION only — deny/ask are enforcement,
     // not context bloat, and repeat every time they hold
@@ -84,7 +83,7 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
         && !ms.is_empty()
         && !dup_seen
     {
-        reasons.push(reason(file_path, ms));
+        reasons.push(probe::reason(file_path, ms));
     }
     let mut zone = None;
     let sized = cfg
@@ -105,14 +104,18 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
             zone = budget::zone_assess(root, &budget::ZoneLines::of(&t, c), env, &mode, lines);
         }
     }
-    // the third class speaks at its own tier (`[tombstone] tier`)
-    let tomb = tombstone::observe(root, env, cfg.as_ref().map(|(c, _)| c));
-    emit_reasons(
+    // the third class speaks at its own tier (`[tombstone] tier`); its
+    // feed line waits for the decision and records it as `applied`
+    let (c, fence) = cfg.as_ref().map_or((None, None), |(c, f)| (Some(c), *f));
+    let tomb: Option<tombstone::Pending> = tombstone::observe(root, env, c, fence);
+    let spoken = tomb.as_ref().and_then(|p| p.speak.clone());
+    let decided = emit_reasons(
         &mode,
         reasons,
-        zone.into_iter().chain(tomb).collect(),
+        zone.into_iter().chain(spoken).collect(),
         &broken,
     );
+    tombstone::record(root, env, tomb, decided);
     ExitCode::SUCCESS
 }
 
@@ -124,13 +127,15 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
 /// A BROKEN ce.toml still fails open (a typo must never brick an
 /// edit) but not SILENT: the decision surfaces as a visible warn
 /// naming the config error (review C2). Split from decide() at the
-/// E01 line.
-fn emit_reasons(
-    mode: &str,
+/// E01 line. Returns the tier it decided at (`observe` when nothing
+/// was emitted) — the tombstone leg records whether its write went
+/// through.
+fn emit_reasons<'a>(
+    mode: &'a str,
     class_reasons: Vec<String>,
     tiered: Vec<(&'static str, String)>,
     broken: &Option<String>,
-) {
+) -> &'a str {
     let rank = |t: &str| {
         crate::config::TIERS
             .iter()
@@ -154,14 +159,15 @@ fn emit_reasons(
     // exactly when it was the ONLY thing to say (batch-7 defect
     // sweep)
     if reasons.is_empty() && broken.is_none() {
-        return;
+        return "observe";
     }
     if let Some(e) = broken {
         reasons.push(say::config_unreadable(e));
         emit_decision("warn", &reasons.join(" "));
-    } else {
-        emit_decision(tier, &reasons.join(" "));
+        return "warn";
     }
+    emit_decision(tier, &reasons.join(" "));
+    tier
 }
 
 /// §4.4 B4: every injected reason rides the warn token budget (the
@@ -172,88 +178,8 @@ fn clipped(reason: &str) -> String {
 }
 
 // The hard-budget rule class lives in budget.rs (split at the
-// 300-line dogfood wall), where scope is judged BEFORE any read.
-
-/// The rule denies NEW duplication only (K step 11 root fix): the
-/// FPR replay measured the whole-content probe denying full-file
-/// rewrites of files that already carry budgeted blocks. Write
-/// replaces the on-disk file, Edit replaces `old_string` — a match
-/// whose source region overlaps a match the REPLACED content already
-/// had is carried forward, not written anew. The baseline probe runs
-/// only when the first probe matched (no unbounded read for a clean
-/// write), and a degraded baseline subtracts nothing: allowance must
-/// never ride an unanswered question, the same discipline as
-/// probe_matches' array check. None = degraded, as before.
-fn novel_matches(root: &Path, env: &Envelope) -> Option<Vec<serde_json::Value>> {
-    let file_path = &env.tool_input.file_path;
-    let content = if env.tool_name == "Write" {
-        &env.tool_input.content
-    } else {
-        &env.tool_input.new_string
-    };
-    let matches = probe_matches(root, file_path, content)?;
-    if matches.is_empty() {
-        return Some(matches);
-    }
-    let replaced = if env.tool_name == "Write" {
-        std::fs::read_to_string(file_path).unwrap_or_default()
-    } else {
-        env.tool_input.old_string.clone()
-    };
-    if replaced.is_empty() {
-        return Some(matches);
-    }
-    let base = probe_matches(root, file_path, &replaced).unwrap_or_default();
-    Some(matches.into_iter().filter(|m| !carried(m, &base)).collect())
-}
-
-/// Same source file, overlapping source region: the replaced content
-/// already matched it, so the new content merely carries it.
-fn carried(m: &serde_json::Value, base: &[serde_json::Value]) -> bool {
-    let span = |v: &serde_json::Value| (v["start_line"].as_u64(), v["end_line"].as_u64());
-    let (ms, me) = span(m);
-    base.iter().any(|b| {
-        let (bs, be) = span(b);
-        b["file"] == m["file"] && bs <= me && ms <= be
-    })
-}
-
-/// None = probe unavailable (degraded); Some(vec) = verified matches.
-fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serde_json::Value>> {
-    let req = Request::Probe {
-        file_path: file_path.to_string(),
-        content: content.to_string(),
-    };
-    match client::request(root, &req) {
-        // Only a real array is a verified answer. `unwrap_or_default`
-        // collapsed null / an object / a string into Some(vec![]) —
-        // "a healthy probe with no duplicates" — laundering a
-        // malformed report into an allow. Any other shape is the
-        // degraded None this function's own contract names.
-        Ok(Response::ProbeReport {
-            matches: serde_json::Value::Array(list),
-            ..
-        }) => Some(list),
-        _ => None,
-    }
-}
-
-fn reason(file_path: &str, matches: &[serde_json::Value]) -> String {
-    let top: Vec<String> = matches
-        .iter()
-        .take(3)
-        .map(|m| {
-            format!(
-                "{}:{}-{} ({} tokens)",
-                m["file"].as_str().unwrap_or("?"),
-                m["start_line"],
-                m["end_line"],
-                m["tokens"]
-            )
-        })
-        .collect();
-    say::duplicate(file_path, matches.len(), &top.join("; "))
-}
+// 300-line dogfood wall), where scope is judged BEFORE any read; the
+// duplicate probe and its novel filter in probe.rs.
 
 /// Decision JSON on stdout — the exact shape proven by cc-enforcer's
 /// working hooks (allow carries the reason as a visible warning).

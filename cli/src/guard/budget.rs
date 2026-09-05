@@ -107,9 +107,13 @@ pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>)
 }
 
 /// The budget inputs at their shipped values; everything else as
-/// declared. The tombstone table's budget, ledger and terms are
-/// budget inputs too (a drifted ledger could exempt the very file
-/// being written); its tier stays declared, as `[guard] mode` does.
+/// declared. The tombstone table's ledger and terms are budget inputs
+/// too (a drifted ledger could exempt the very file being written);
+/// its tier stays declared, as `[guard] mode` does, and so does its
+/// BUDGET: the shipped one is absent, which evaluates no condition at
+/// all, so a drift that dropped the declared budget would have
+/// switched the class off — the fence's strict side is the declared
+/// number (codex review 2026-09-04).
 fn shipped_budgets(mut cfg: Config) -> Config {
     let shipped = Config::default();
     cfg.thresholds = shipped.thresholds;
@@ -117,6 +121,7 @@ fn shipped_budgets(mut cfg: Config) -> Config {
     cfg.rules = shipped.rules;
     cfg.tombstone = crate::config::TombstoneCfg {
         tier: cfg.tombstone.tier.take(),
+        budget: cfg.tombstone.budget,
         ..shipped.tombstone
     };
     cfg

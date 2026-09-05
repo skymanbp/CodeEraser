@@ -77,11 +77,13 @@ const STOP_EN: &str = "a|an|the|is|are|was|were|be|been|being|am|of|to|in|on|at|
     should|would|could|can|may|might|must|will|shall";
 
 /// Whether `w` is a word of the instrument's own vocabulary — a frame,
-/// an absence word, a function word, or a word of a retrospective
-/// mark: none of these spells a name, on either side of a change.
+/// an absence word, a function word, a word of an English mark, or a
+/// Chinese mark whole (a Chinese run is one word, so the mark itself
+/// would otherwise be a name — and its own conjunction): none of these
+/// spells a name, on either side of a change.
 pub fn vocabulary(w: &str) -> bool {
     [
-        NEGATIONS, EN_PREFIX, EN_SUFFIX, ZH_PREFIX, ZH_SUFFIX, STOP_EN,
+        NEGATIONS, EN_PREFIX, EN_SUFFIX, ZH_PREFIX, ZH_SUFFIX, MARKS_ZH, STOP_EN,
     ]
     .iter()
     .any(|t| has(t, w))

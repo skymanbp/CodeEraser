@@ -12,7 +12,7 @@
 
 use std::ffi::OsStr;
 use std::path::Path;
-use std::process::{Command, Output, Stdio};
+use std::process::{Child, Command, Output, Stdio};
 
 /// `Command::new` with the no-console flag on Windows. Shipped spawn
 /// sites go through here instead of `Command::new` — the four call
@@ -49,20 +49,24 @@ pub fn git_output(root: &Path, args: &[&str]) -> std::io::Result<Output> {
 /// file's HEAD or index blob in ONE process rather than a `show` per
 /// file (tombstone::texts). The input is written from its own thread:
 /// git answers as it reads, so a writer that waited on the reply
-/// could deadlock against a full stdout pipe.
-pub fn git_feed(root: &Path, args: &[&str], input: &[u8]) -> std::io::Result<Output> {
+/// could deadlock against a full stdout pipe. The reply comes back as
+/// the RUNNING child, its stdout piped, for the caller to read as a
+/// stream and then wait: collecting it whole (`wait_with_output`)
+/// held every blob in memory before any size cap could look at it.
+/// stderr is the null device — the exit status is the only error the
+/// callers read.
+pub fn git_feed(root: &Path, args: &[&str], input: &[u8]) -> std::io::Result<Child> {
     use std::io::Write as _;
     let mut child = git_command(root, args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
+        .stderr(Stdio::null())
         .spawn()?;
     let mut stdin = child.stdin.take().expect("piped stdin");
     let input = input.to_vec();
-    let writer = std::thread::spawn(move || stdin.write_all(&input));
-    let out = child.wait_with_output();
-    let _ = writer.join();
-    out
+    // detached: it ends when the input is written or the pipe closes
+    std::thread::spawn(move || stdin.write_all(&input));
+    Ok(child)
 }
 
 fn git_command(root: &Path, args: &[&str]) -> Command {

@@ -9,6 +9,7 @@
 
 use crate::fourclass::session::PathPair;
 use crate::scan::lang::Lang;
+use std::io::{BufRead, Read};
 use std::path::Path;
 
 /// Files past this many bytes read as absent. The audit's untracked
@@ -42,7 +43,10 @@ pub struct Loaded {
 }
 
 /// The judged pairs' texts (PAIR_CAP of them at most) and how many
-/// judged pairs were left unread. None = git could not answer.
+/// judged pairs went UNREAD — past the cap, or with a side the batch or
+/// the bounded read refused (missing, binary, past READ_CAP): such a
+/// pair measures nothing, and a leg that enforces must know whether its
+/// changeset was whole. None = git could not answer.
 pub fn load(
     root: &Path,
     pairs: &[PathPair],
@@ -58,7 +62,7 @@ pub fn load(
             ))
         })
         .collect();
-    let dropped = judged.len().saturating_sub(PAIR_CAP);
+    let mut unread = judged.len().saturating_sub(PAIR_CAP);
     let judged = &judged[..judged.len().min(PAIR_CAP)];
     let mut specs = Vec::new();
     for ((b, a), _) in judged {
@@ -70,21 +74,25 @@ pub fn load(
     for ((b, a), lang) in judged {
         let before_text = text(root, before, b.as_deref(), &mut blobs);
         let after_text = text(root, after, a.as_deref(), &mut blobs);
-        if let (Some(before), Some(after)) = (before_text, after_text) {
-            let rel = a
-                .as_deref()
-                .or(b.as_deref())
-                .unwrap_or_default()
-                .to_string();
-            out.push(Loaded {
-                rel,
-                before,
-                after,
-                lang: *lang,
-            });
-        }
+        let (Some(before), Some(after)) = (before_text, after_text) else {
+            // a side the batch or the bounded read refused: the pair
+            // measures nothing, and the count says so
+            unread += 1;
+            continue;
+        };
+        let rel = a
+            .as_deref()
+            .or(b.as_deref())
+            .unwrap_or_default()
+            .to_string();
+        out.push(Loaded {
+            rel,
+            before,
+            after,
+            lang: *lang,
+        });
     }
-    Some((out, dropped))
+    Some((out, unread))
 }
 
 /// The batch line one git-side path needs (none for an absent side or
@@ -122,33 +130,56 @@ fn text(
 /// `git cat-file --batch` over every spec, answers in spec order:
 /// None for a missing object, a non-UTF-8 blob, or one past READ_CAP.
 /// The reply grammar is `<sha> <type> <size>\n<bytes>\n` per object
-/// and `<spec> missing\n` for an absent one.
+/// and `<spec> missing\n` for an absent one. The reply is read as a
+/// STREAM (read_replies): an over-cap body is skipped through a fixed
+/// buffer and never held, where collecting the whole reply first gave
+/// a 2 GB blob 2 GB of memory before the cap could refuse it — the
+/// stance read_capped already takes for the working tree.
 fn batch(root: &Path, specs: &[String]) -> Option<Vec<Option<String>>> {
     if specs.is_empty() {
         return Some(Vec::new());
     }
     let input = specs.join("\n") + "\n";
-    let out = crate::proc::git_feed(root, &["cat-file", "--batch"], input.as_bytes()).ok()?;
-    if !out.status.success() {
-        return None;
-    }
-    let bytes = &out.stdout;
-    let (mut at, mut blobs) = (0, Vec::new());
-    while blobs.len() < specs.len() {
-        let nl = bytes[at..].iter().position(|b| *b == b'\n')?;
-        let header = std::str::from_utf8(&bytes[at..at + nl]).ok()?;
-        at += nl + 1;
-        if header.ends_with(" missing") {
+    let mut child = crate::proc::git_feed(root, &["cat-file", "--batch"], input.as_bytes()).ok()?;
+    let mut reader = std::io::BufReader::new(child.stdout.take()?);
+    let blobs = read_replies(&mut reader, specs.len());
+    // an early None closes the pipe under git, which then exits
+    drop(reader);
+    let status = child.wait().ok()?;
+    blobs.filter(|_| status.success())
+}
+
+/// `n` batch replies off the stream, in order; None when it ends early
+/// or a header does not parse.
+fn read_replies(r: &mut impl BufRead, n: usize) -> Option<Vec<Option<String>>> {
+    let mut blobs = Vec::with_capacity(n);
+    let mut header = String::new();
+    while blobs.len() < n {
+        header.clear();
+        (r.read_line(&mut header).ok()? > 0).then_some(())?;
+        let line = header.trim_end_matches(['\r', '\n']);
+        if line.ends_with(" missing") {
             blobs.push(None);
             continue;
         }
-        let size: usize = header.rsplit(' ').next()?.parse().ok()?;
-        let body = bytes.get(at..at + size)?;
-        at += size + 1;
-        let text = (size <= READ_CAP).then(|| String::from_utf8(body.to_vec()).ok());
-        blobs.push(text.flatten());
+        let size: usize = line.rsplit(' ').next()?.parse().ok()?;
+        blobs.push(read_body(r, size)?);
     }
     Some(blobs)
+}
+
+/// One body of `size` bytes plus git's trailing newline: the text when
+/// within READ_CAP (None if not UTF-8), skipped unheld when past it.
+fn read_body(r: &mut impl Read, size: usize) -> Option<Option<String>> {
+    if size <= READ_CAP {
+        let mut buf = vec![0u8; size + 1];
+        r.read_exact(&mut buf).ok()?;
+        buf.pop();
+        return Some(String::from_utf8(buf).ok());
+    }
+    let total = size as u64 + 1;
+    let skipped = std::io::copy(&mut r.by_ref().take(total), &mut std::io::sink()).ok()?;
+    (skipped == total).then_some(None)
 }
 
 /// A file's text, or None when unreadable, binary, or past READ_CAP.
@@ -158,7 +189,6 @@ fn batch(root: &Path, specs: &[String]) -> Option<Vec<Option<String>>> {
 /// reader itself is bounded and an over-cap file reads as absent
 /// rather than being trusted.
 pub fn read_capped(path: &Path) -> Option<String> {
-    use std::io::Read as _;
     let mut buf = Vec::new();
     std::fs::File::open(path)
         .ok()?

@@ -16,9 +16,10 @@ pub const SITE_CAP: usize = 10;
 /// count, the candidate rows, the exemptions with their witness (a
 /// segment's entry says where it starts) — and the core's judgment
 /// under `judged` (the first sites as `file:line kind`, the split,
-/// the condition) or the named reason there is none; the per-edit
-/// leg, which carries names across a session, adds the erased keys
-/// (capped) and the session union's size.
+/// the condition) or the named reason there is none, and the pairs
+/// whose line diff was bounded (`degraded_pairs`, when any — recorded,
+/// never enforced on); the per-edit leg, which carries names across a
+/// session, adds the erased keys (capped) and the session union's size.
 pub fn feed_json(f: &Findings, session: Option<usize>, judged: &Judgment) -> serde_json::Value {
     let exempt: Vec<serde_json::Value> = f
         .exempt
@@ -38,6 +39,9 @@ pub fn feed_json(f: &Findings, session: Option<usize>, judged: &Judgment) -> ser
         "exempt": exempt,
         "judged": judged_json(f, judged),
     });
+    if f.degraded_pairs > 0 {
+        line["degraded_pairs"] = serde_json::json!(f.degraded_pairs);
+    }
     if let Some(carried) = session {
         let hashes: Vec<u64> = f.erased.iter().take(HASH_CAP).map(|n| n.key).collect();
         line["erased_hashes"] = serde_json::json!(hashes);

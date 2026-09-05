@@ -31,7 +31,7 @@ Commands:
   probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard]
   audit      Stop audit v1: net LOC + duplicate blocks touching changed files (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
-  precommit  pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — the one CI-facing gate that passes on a missing core
+  precommit  pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
   commitmsg  commit-msg gate: `ce precommit` re-run with the message file git hands the hook as one more surface — a removed name argued away in the message is a tombstone site like one in a README (feed and reason name it COMMIT_EDITMSG:line). Wire it as .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body saved to a file is the same surface (a CI recipe, not a hook)
   mcp        MCP server over stdio: the read-only report face of every judgment family
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
@@ -384,7 +384,7 @@ Options:
 ## ce precommit
 
 ```text
-pre-commit gate: staged net LOC + touched duplicates (exit 1 in deny mode when duplicates are touched). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — the one CI-facing gate that passes on a missing core
+pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
 
 Usage: ce precommit [OPTIONS] [ROOT]
 

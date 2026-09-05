@@ -27,6 +27,7 @@
 //! edit unions them in as `session`, so an X deleted three edits ago
 //! still binds the heading written now. No name is ever written out.
 
+mod candidates;
 pub mod feed;
 pub mod frames;
 mod marked;
@@ -44,7 +45,6 @@ pub use vocab::TOMBSTONE_REV;
 pub use wire::{Judged, Judgment};
 
 use crate::scan::lang::Lang;
-use names::Erased;
 use role::Witness;
 use std::collections::BTreeSet;
 
@@ -131,6 +131,10 @@ pub struct Findings {
     pub exempt: Vec<Exempt>,
     /// The candidate rows, in the order the wire sends them.
     pub rows: Vec<Row>,
+    /// Pairs whose line diff was bounded (surfaces::Added::degraded):
+    /// their "added" lines are every trimmed line, so their rows may be
+    /// untouched text — counted in the feed, never enforced on.
+    pub degraded_pairs: usize,
 }
 
 impl Findings {
@@ -145,16 +149,37 @@ impl Findings {
 /// sees the whole session's diff at once); `policy` = what ce.toml
 /// declares (`[tombstone] ledger` / `terms`; default = nothing).
 pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>, policy: &Policy) -> Findings {
-    let added: Vec<BTreeSet<usize>> = pairs.iter().map(surfaces::added_lines).collect();
+    measure_with(pairs, &[], session, policy)
+}
+
+/// `measure` with after-only SURFACES beside the pairs — a commit
+/// message: each offers candidate rows (its subject line as a label,
+/// its sentences as prose) but declares no name and keeps none alive,
+/// so R is the pairs' alone (spec: the staged changes' R × every
+/// surface; a message item `- dongpo is no longer needed` must not
+/// keep `dongpo` alive), and no witness reads it — a ledger is a
+/// file's role, and a message is no file.
+pub fn measure_with(
+    pairs: &[PairText],
+    messages: &[PairText],
+    session: &BTreeSet<u64>,
+    policy: &Policy,
+) -> Findings {
+    let added: Vec<surfaces::Added> = pairs.iter().map(surfaces::added).collect();
     let erased = names::erased(pairs, &added, policy);
     let mut out = Findings {
         erased: erased.names.clone(),
+        degraded_pairs: added.iter().filter(|a| a.degraded).count(),
         ..Findings::default()
     };
     if out.erased.is_empty() && session.is_empty() {
         return out;
     }
-    for (p, added) in pairs.iter().zip(&added) {
+    let known = candidates::Known {
+        erased: &erased,
+        session,
+    };
+    for (p, a) in pairs.iter().zip(&added) {
         // a declared ledger is exempt by the repository's own word,
         // whatever its language; the witnesses read the rest
         let declared = policy.declared(p.rel).then_some(Witness::Declared);
@@ -167,109 +192,22 @@ pub fn measure(pairs: &[PairText], session: &BTreeSet<u64>, policy: &Policy) -> 
             });
             continue;
         }
-        candidates(p, added, &erased, session, &mut out);
+        candidates::of(p, &a.lines, &known, &mut out, false);
+    }
+    for m in messages {
+        candidates::of(m, &surfaces::added(m).lines, &known, &mut out, true);
     }
     out
 }
 
-/// Every candidate surface of one pair: a label whose frame binds an
-/// erased name (names = how many), and every prose sentence carrying
-/// a mark or an erased name (the core applies the conjunction).
-fn candidates(
-    p: &PairText,
-    added: &BTreeSet<usize>,
-    erased: &Erased,
-    session: &BTreeSet<u64>,
-    out: &mut Findings,
-) {
-    let known = |k: u64| erased.has(k) || session.contains(&k);
-    for l in surfaces::labels(p, added) {
-        let bound: Vec<frames::Candidate> = frames::label_candidates(&frames::words(&l.text))
-            .into_iter()
-            .filter(|c| known(names::key(&c.span.text)))
-            .collect();
-        if let Some(first) = bound.first() {
-            let kind = if first.bracketed {
-                Kind::Bracketed
-            } else {
-                Kind::Bare
-            };
-            let surface = Surface {
-                line: l.line,
-                kind,
-                marks: 0,
-                names: bound.len(),
-                name: &first.span.text,
-                text: &l.text,
-            };
-            admit(p, out, surface);
-        }
-    }
-    for s in surfaces::prose(p, added) {
-        for sentence in frames::sentences(&s.text) {
-            let marks = frames::marks(sentence);
-            let mut bound = names::spelled_all(sentence, known);
-            bound.extend(erased.wide_all(sentence).map(str::to_string));
-            if marks + bound.len() == 0 {
-                continue;
-            }
-            let surface = Surface {
-                line: s.start,
-                kind: Kind::Prose,
-                marks,
-                names: bound.len(),
-                name: bound.first().map_or("", String::as_str),
-                text: sentence,
-            };
-            admit(p, out, surface);
-        }
-    }
-}
-
-/// Characters of surface text a row keeps for the replay.
-const EXCERPT_CHARS: usize = 160;
-
-/// One candidate surface before the third witness has looked at it.
-struct Surface<'a> {
-    line: usize,
-    kind: Kind,
-    marks: usize,
-    names: usize,
-    name: &'a str,
-    text: &'a str,
-}
-
-/// A candidate surface becomes a row — unless the segment around it
-/// is a ledger by itself (role::segment, Markdown only), which exempts
-/// it and is counted once per segment.
-fn admit(p: &PairText, out: &mut Findings, s: Surface) {
-    let (start, tokens) = if p.lang == Lang::Markdown {
-        role::segment(p.after, s.line)
-    } else {
-        (0, 0)
-    };
-    if tokens >= role::SEGMENT_TOKENS {
-        let e = Exempt {
-            file: p.rel.to_string(),
-            line: Some(start),
-            why: Witness::Segment,
-            tokens,
-        };
-        if !out.exempt.contains(&e) {
-            out.exempt.push(e);
-        }
-        return;
-    }
-    out.rows.push(Row {
-        file: p.rel.to_string(),
-        line: s.line,
-        kind: s.kind,
-        marks: s.marks,
-        names: s.names,
-        name: s.name.to_string(),
-        excerpt: s.text.chars().take(EXCERPT_CHARS).collect(),
-        ledger: tokens,
-    });
+/// The keys of every name `text` declares — what a later edit of the
+/// session REVIVES when one of them was erased before (the guard leg's
+/// union subtracts them: a name written back is alive, not residue).
+pub fn declared_keys(text: &str, lang: Lang, policy: &Policy) -> BTreeSet<u64> {
+    names::names_of(text, lang, policy)
+        .into_iter()
+        .map(|n| n.key)
+        .collect()
 }
 
 #[cfg(test)]

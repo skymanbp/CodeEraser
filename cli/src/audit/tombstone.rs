@@ -17,6 +17,7 @@ use crate::config::Config;
 use crate::corelink::Link;
 use crate::fourclass::session;
 use crate::scan::lang::Lang;
+use crate::scan::walk::Scope;
 use crate::tombstone::texts::{self, Side};
 use crate::tombstone::{self, Judged, Judgment, PairText, Policy, Row, wire};
 use std::collections::BTreeSet;
@@ -51,13 +52,20 @@ pub(super) struct Leg {
     pub erased: usize,
     /// The event, which names the face in what the person reads.
     pub face: String,
+    /// Why the measurement was not whole — pairs the batch could not
+    /// read, pairs whose line diff was bounded — or None. An incomplete
+    /// measurement is recorded, never enforced: the class cannot know
+    /// what it did not read, or what a bounded diff read as written.
+    pub incomplete: Option<String>,
 }
 
 impl Leg {
-    /// The deny tier AND the core's condition — one without the other
-    /// is a feed entry, not a block.
+    /// The deny tier AND the core's condition AND a whole measurement —
+    /// anything less is a feed entry, not a block.
     pub fn blocks(&self) -> bool {
-        self.tier == "deny" && self.judged.as_ref().is_ok_and(|j| j.over)
+        self.incomplete.is_none()
+            && self.tier == "deny"
+            && self.judged.as_ref().is_ok_and(|j| j.over)
     }
 }
 
@@ -77,10 +85,11 @@ pub(super) fn leg(
     link: Option<&mut Link>,
 ) -> Option<Leg> {
     let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
+    let excludes = cfg.map_or(&[][..], |c| c.exclude.as_slice());
     let (f, unread) = if set.changed.is_empty() {
         (tombstone::measure(&[], &BTreeSet::new(), &policy), 0)
     } else {
-        measured(root, set, &policy)?
+        measured(root, set, &policy, excludes)?
     };
     let budget = cfg.and_then(|c| c.tombstone.budget);
     let judged = match (f.rows.is_empty(), link) {
@@ -96,6 +105,13 @@ pub(super) fn leg(
         .as_ref()
         .map(|j| f.judged_rows(j).take(10).map(Row::place).collect())
         .unwrap_or_default();
+    let incomplete = (unread + f.degraded_pairs > 0).then(|| {
+        crate::i18n::line(
+            "{} pair(s) unread, {} with a bounded diff",
+            "{} 对未读、{} 对 diff 有界",
+            &[&unread, &f.degraded_pairs],
+        )
+    });
     Some(Leg {
         feed,
         judged,
@@ -104,24 +120,39 @@ pub(super) fn leg(
         shown,
         erased: f.erased.len(),
         face: set.event.to_string(),
+        incomplete,
     })
 }
 
-/// The changeset measured: git pairs the change, one batch reads both
-/// sides, the measurement runs over every pair plus the message when
-/// there is one; `unread` = pairs the batch could not read. None = git
-/// could not pair the change (a Stop on an unborn HEAD included: there
-/// is no before to erase from), and the feed line then carries no
-/// `tombstone` key at all.
-fn measured(root: &Path, set: &Changeset, policy: &Policy) -> Option<(tombstone::Findings, usize)> {
+/// The changeset measured: git pairs the change, the config's walk
+/// scope keeps the pairs it would measure (an excluded path is
+/// nobody's, as the guard leg reads it), one batch reads both sides,
+/// the measurement runs over every pair — plus the message as an
+/// after-only SURFACE (tombstone::measure_with: it offers rows, keeps
+/// no name alive) when there is one; `unread` = pairs the batch could
+/// not read. None = git could not pair the change (a Stop on an unborn
+/// HEAD included: there is no before to erase from), and the feed line
+/// then carries no `tombstone` key at all.
+fn measured(
+    root: &Path,
+    set: &Changeset,
+    policy: &Policy,
+    excludes: &[String],
+) -> Option<(tombstone::Findings, usize)> {
     let (mut pairs, after) = if set.event == "stop_audit" {
         (session::scoped_pairs(root, &["HEAD"])?, Side::Worktree)
     } else {
         (session::scoped_pairs(root, &["--cached"])?, Side::Index)
     };
     pairs.extend(set.untracked.iter().map(|f| (None, Some(f.clone()))));
+    if let Ok(mut scope) = Scope::new(root, excludes) {
+        pairs.retain(|(b, a)| {
+            let path = a.as_deref().or(b.as_deref()).unwrap_or_default();
+            scope.contains(Path::new(path))
+        });
+    }
     let (loaded, unread) = texts::load(root, &pairs, Side::Rev("HEAD"), after)?;
-    let mut pairs: Vec<PairText> = loaded
+    let pairs: Vec<PairText> = loaded
         .iter()
         .map(|l| PairText {
             rel: &l.rel,
@@ -130,14 +161,20 @@ fn measured(root: &Path, set: &Changeset, policy: &Policy) -> Option<(tombstone:
             lang: l.lang,
         })
         .collect();
-    // the message is all "after": it existed nowhere before the commit
-    pairs.extend(set.message.map(|after| PairText {
-        rel: MESSAGE,
-        before: "",
-        after,
-        lang: Lang::Markdown,
-    }));
-    Some((tombstone::measure(&pairs, &BTreeSet::new(), policy), unread))
+    // the message is all "after": it existed nowhere before the commit,
+    // and it is no file — a surface, never a side that declares
+    let message: Vec<PairText> = set
+        .message
+        .map(|after| PairText {
+            rel: MESSAGE,
+            before: "",
+            after,
+            lang: Lang::Markdown,
+        })
+        .into_iter()
+        .collect();
+    let f = tombstone::measure_with(&pairs, &message, &BTreeSet::new(), policy);
+    Some((f, unread))
 }
 
 /// The block reason (deny tier, condition held): who judged what, the
@@ -183,8 +220,9 @@ fn subject(face: &str) -> String {
 }
 
 /// The git-hook faces' terminal line: the judged sites when there are
-/// any, the degradation when there is no verdict, nothing when the
-/// changeset is clean — the feed has the rest.
+/// any (with why the measurement was not whole, when it was not — and
+/// so not enforced), the degradation when there is no verdict, nothing
+/// when the changeset is clean — the feed has the rest.
 pub(super) fn summary(leg: &Leg) -> Option<String> {
     match &leg.judged {
         Err(why) => Some(crate::i18n::line(
@@ -193,20 +231,35 @@ pub(super) fn summary(leg: &Leg) -> Option<String> {
             &[&leg.face, why],
         )),
         Ok(j) if j.sites.is_empty() => None,
-        Ok(j) => Some(crate::i18n::line(
-            "ce {}: {} tombstone site(s) — {} label / {} prose over {} erased name(s): {} \
-             (tier {}; see .ce/observe.ndjson)",
-            "ce {}：{} 处墓碑残留 — 标签 {} / 散文 {}，涉及 {} 个被删名字：{}\
-             （档位 {}；详见 .ce/observe.ndjson）",
-            &[
-                &leg.face,
-                &j.sites.len(),
-                &j.label,
-                &j.prose,
-                &leg.erased,
-                &leg.shown.join("; "),
-                &leg.tier,
-            ],
-        )),
+        Ok(j) => Some(sites_line(leg, j) + &incomplete_note(leg)),
     }
+}
+
+/// The note a partial measurement adds to the terminal line.
+fn incomplete_note(leg: &Leg) -> String {
+    leg.incomplete.as_ref().map_or_else(String::new, |why| {
+        crate::i18n::line(
+            " (measurement incomplete: {}; not enforced)",
+            "（度量不完整：{}；不作强制）",
+            &[why],
+        )
+    })
+}
+
+fn sites_line(leg: &Leg, j: &Judged) -> String {
+    crate::i18n::line(
+        "ce {}: {} tombstone site(s) — {} label / {} prose over {} erased name(s): {} \
+             (tier {}; see .ce/observe.ndjson)",
+        "ce {}：{} 处墓碑残留 — 标签 {} / 散文 {}，涉及 {} 个被删名字：{}\
+             （档位 {}；详见 .ce/observe.ndjson）",
+        &[
+            &leg.face,
+            &j.sites.len(),
+            &j.label,
+            &j.prose,
+            &leg.erased,
+            &leg.shown.join("; "),
+            &leg.tier,
+        ],
+    )
 }

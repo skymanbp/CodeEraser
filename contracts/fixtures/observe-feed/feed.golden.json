@@ -11,6 +11,7 @@
     "ts_ms": 0
   },
   {
+    "applied": true,
     "erased": 5,
     "erased_hashes": [
       11891235285474208685,
@@ -57,6 +58,7 @@
     "ts_ms": 0
   },
   {
+    "applied": true,
     "erased": 11,
     "erased_hashes": [
       8095481971928999360,
@@ -112,6 +114,7 @@
     "zone_permille": 222
   },
   {
+    "applied": true,
     "erased": 11,
     "erased_hashes": [
       8095481971928999360,
@@ -168,6 +171,7 @@
     "zone_tier": "warn"
   },
   {
+    "applied": true,
     "erased": 11,
     "erased_hashes": [
       8095481971928999360,
@@ -211,6 +215,7 @@
     "ts_ms": 0
   },
   {
+    "applied": true,
     "erased": 11,
     "erased_hashes": [
       8095481971928999360,

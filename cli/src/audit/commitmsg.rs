@@ -12,23 +12,21 @@ use std::path::Path;
 use std::process::ExitCode;
 
 /// The face: the message file, its comment lines blanked, into the
-/// git-hook body. An unreadable file is a usage error (2), never a
-/// pass: the hook was handed a path, and a gate that cannot see its
-/// input must say so.
+/// git-hook body. An unreadable file — absent, binary, or past
+/// texts::READ_CAP: the hook's input is read bounded, as every other
+/// side is — is a usage error (2), never a pass: the hook was handed a
+/// path, and a gate that cannot see its input must say so.
 pub fn run_commitmsg(root: &Path, file: &Path) -> ExitCode {
-    let text = match std::fs::read_to_string(file) {
-        Ok(t) => t,
-        Err(e) => {
-            eprintln!(
-                "{}",
-                crate::i18n::line(
-                    "ce commitmsg: cannot read {}: {}",
-                    "ce commitmsg：读不了 {}：{}",
-                    &[&file.display(), &e],
-                )
-            );
-            return ExitCode::from(2);
-        }
+    let Some(text) = crate::tombstone::texts::read_capped(file) else {
+        eprintln!(
+            "{}",
+            crate::i18n::line(
+                "ce commitmsg: cannot read {} (absent, binary or past READ_CAP)",
+                "ce commitmsg：读不了 {}（不存在、二进制或超过 READ_CAP）",
+                &[&file.display()],
+            )
+        );
+        return ExitCode::from(2);
     };
     let message = uncommented(&text, &comment_prefix(root));
     super::precommit::run(root, "commitmsg", Some(&message))
@@ -40,16 +38,20 @@ pub fn run_commitmsg(root: &Path, file: &Path) -> ExitCode {
 /// neither is set. `auto` reads as `#`, which is what git picks unless
 /// a message line already begins with `#`; its pick then is recorded
 /// nowhere this hook can read, and those comment lines are measured
-/// as the prose they look like.
+/// as the prose they look like. The two keys are matched by their
+/// exact names (`core.commentary` is somebody else's key) and the
+/// value taken byte for byte: a `## ` with its space is the prefix git
+/// strips, and trimming it would have blanked no line.
 fn comment_prefix(root: &Path) -> String {
-    let out = crate::proc::git_output(root, &["config", "--get-regexp", "^core\\.comment"]);
+    let regexp = "^core\\.comment(char|string)$";
+    let out = crate::proc::git_output(root, &["config", "--get-regexp", regexp]);
     let text = out
         .map(|o| String::from_utf8_lossy(&o.stdout).into_owned())
         .unwrap_or_default();
     let last = text
         .lines()
         .rev()
-        .find_map(|l| l.split_once(' ').map(|(_, v)| v.trim().to_string()));
+        .find_map(|l| l.split_once(' ').map(|(_, v)| v.to_string()));
     match last {
         Some(v) if !v.is_empty() && v != "auto" => v,
         _ => "#".into(),

@@ -53,9 +53,11 @@ pub fn ask(link: &mut Link, rows: &[[u64; 3]], budget: Option<u32>) -> Result<Va
     link.request(KIND, body(rows, budget))
 }
 
-/// The reply, consumed: a degraded reply is a named non-judgment, a
-/// site index beyond the rows sent is wire skew, everything else is
-/// relayed as the core said it.
+/// The reply, consumed: a degraded reply is a named non-judgment; a
+/// site table that is not an ascending subsequence of the rows sent,
+/// counts that do not add up to it, or an `over` that is no boolean
+/// are wire skew (an absent `over` once read as "not over" — a malformed
+/// reply is never a healthy one); the rest is relayed as the core said.
 pub fn consume(reply: &Value, sent: usize) -> Judgment {
     if reply["degraded"] == json!(true) {
         let why = reply["reason"].as_str().unwrap_or("degraded");
@@ -63,8 +65,9 @@ pub fn consume(reply: &Value, sent: usize) -> Judgment {
     }
     let sites: Vec<usize> =
         serde_json::from_value(reply["sites"].clone()).map_err(|e| format!("sites: {e}"))?;
-    if sites.iter().any(|&i| i >= sent) {
-        return Err("wire skew: a site index beyond the rows sent".into());
+    let ascending = sites.windows(2).all(|w| w[0] < w[1]);
+    if !ascending || sites.iter().any(|&i| i >= sent) {
+        return Err("wire skew: sites must ascend within the rows sent".into());
     }
     let count = |k: &str| {
         reply["counts"][k]
@@ -72,11 +75,18 @@ pub fn consume(reply: &Value, sent: usize) -> Judgment {
             .map(|n| n as usize)
             .ok_or_else(|| format!("counts.{k} missing"))
     };
+    let (label, prose) = (count("label")?, count("prose")?);
+    if label + prose != sites.len() {
+        return Err("wire skew: counts disagree with the site table".into());
+    }
+    let over = reply["over"]
+        .as_bool()
+        .ok_or_else(|| "over missing or not a boolean".to_string())?;
     Ok(Judged {
         sites,
-        label: count("label")?,
-        prose: count("prose")?,
-        over: reply["over"] == json!(true),
+        label,
+        prose,
+        over,
     })
 }
 

@@ -175,18 +175,25 @@ type Row<'a> = (usize, &'a str, Vec<bool>);
 /// line is quoted (a banner is one run), else the section body — the
 /// nearest heading at or above the line down to the next heading of
 /// any level (the preamble before any heading is a body too). A line
-/// the walk skipped (inside a fence) is its own empty segment.
+/// the walk skipped (inside a fence) is its own empty segment. A body's
+/// quoted rows are not its own: a quote run is a segment by itself and
+/// lends the prose around it no tokens.
 pub fn segment(after: &str, line: usize) -> (usize, usize) {
     let rows = content_lines(after);
     let Some(at) = rows.iter().position(|(no, _, _)| *no == line) else {
         return (line, 0);
     };
-    let (lo, hi) = if quoted(&rows[at]) {
+    let run = quoted(&rows[at]);
+    let (lo, hi) = if run {
         quote_run(&rows, at)
     } else {
         section(&rows, at)
     };
-    let text: Vec<&str> = rows[lo..hi].iter().map(|r| r.1).collect();
+    let text: Vec<&str> = rows[lo..hi]
+        .iter()
+        .filter(|r| run || !quoted(r))
+        .map(|r| r.1)
+        .collect();
     (rows[lo].0, ledger_tokens(&text.join("\n")))
 }
 
@@ -254,8 +261,9 @@ pub fn ledger_tokens(text: &str) -> usize {
     seen.len()
 }
 
-/// The version a word spells, without its `v`: three numeric parts,
-/// or two behind the prefix.
+/// The version a word spells, without its `v`: exactly three numeric
+/// parts (four are an IPv4 address, not a release), or two behind the
+/// prefix.
 fn version(w: &str) -> Option<&str> {
     let (prefixed, body) = match w.strip_prefix(['v', 'V']) {
         Some(b) => (true, b),
@@ -265,7 +273,7 @@ fn version(w: &str) -> Option<&str> {
     let numeric = parts
         .iter()
         .all(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()));
-    (numeric && (parts.len() >= 3 || (prefixed && parts.len() == 2))).then_some(body)
+    (numeric && (parts.len() == 3 || (prefixed && parts.len() == 2))).then_some(body)
 }
 
 fn commit(w: &str) -> bool {
