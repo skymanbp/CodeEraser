@@ -30,6 +30,18 @@ pub struct UnitBag {
 }
 
 impl UnitBag {
+    /// A unit with identity and no terms yet — the shape the stored
+    /// rows are grouped back into (spans live on the reader's seat).
+    pub fn empty(key: String, nth: i64) -> UnitBag {
+        UnitBag {
+            key,
+            nth,
+            start_line: 0,
+            end_line: 0,
+            terms: BTreeMap::new(),
+        }
+    }
+
     /// Σ tf — the BM25 document length.
     pub fn len(&self) -> u32 {
         self.terms.values().map(|(_, tf)| tf).sum()

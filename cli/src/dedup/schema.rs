@@ -50,9 +50,16 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// file is indexed as a READER (its references and mentions count)
 /// and measured by nobody here; every clone/docdup/score read joins
 /// on the flag. The v14 `bindings` DROP has served its generation.
-const SCHEMA_VERSION: i64 = 15; // 9: trend rows carry their measuring toolchain
+/// v16 (plan v2.29 step 3): the same-role advisor's bag tables
+/// `bag` / `df` (similar/store.rs — hashes and counts only, moved by
+/// difference inside refresh_file's transaction) and `similar_rev` in
+/// the cache key. The wipe clears trend as every bump does — a
+/// release-notes item.
+const SCHEMA_VERSION: i64 = 16; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
+DROP TABLE IF EXISTS df;
+DROP TABLE IF EXISTS bag;
 DROP TABLE IF EXISTS mentions;
 DROP TABLE IF EXISTS mention_files;
 DROP TABLE IF EXISTS resolve_pending;
@@ -123,6 +130,7 @@ fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
     tx.execute_batch(crate::docdup::DOCSEGS_SCHEMA)?;
     tx.execute_batch(crate::trend::TREND_SCHEMA)?;
     tx.execute_batch(crate::mention::store::MENTION_SCHEMA)?;
+    tx.execute_batch(crate::similar::store::SIMILAR_SCHEMA)?;
     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
     let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
     for (k, v) in meta_entries(p) {
@@ -165,7 +173,7 @@ pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {
     Ok(version == SCHEMA_VERSION && meta_matches(conn, p)?)
 }
 
-fn meta_entries(p: Params) -> [(&'static str, i64); 6] {
+fn meta_entries(p: Params) -> [(&'static str, i64); 7] {
     [
         ("kgram", p.kgram as i64),
         ("window", p.window as i64),
@@ -173,6 +181,7 @@ fn meta_entries(p: Params) -> [(&'static str, i64); 6] {
         ("graph_rev", store::GRAPH_REV),
         ("struct_rev", super::struct_fp::STRUCT_REV),
         ("docdup_rev", crate::docdup::DOCDUP_REV),
+        ("similar_rev", crate::similar::SIMILAR_REV),
     ]
 }
 

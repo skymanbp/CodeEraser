@@ -23,9 +23,13 @@ pub const UNITS_SCHEMA_ID: &str = "ce.clone-units/0.1.0";
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one
 /// wipe lifecycle). `sig` = sorted shingle u64s LE; `hist` = sorted
-/// (kind u64, count u32) pairs LE.
+/// (kind u64, count u32) pairs LE. `id` names the row so the
+/// same-role advisor's bag rows can seat on it by foreign key
+/// (similar/store.rs, schema v16): the bag universe is this universe
+/// by construction, and a unit's bag leaves with its unitsig row.
 pub const UNITSIG_SCHEMA: &str = "
 CREATE TABLE unitsig (
+  id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   key TEXT NOT NULL, nth INTEGER NOT NULL,
   nodes INTEGER NOT NULL, sig BLOB NOT NULL, hist BLOB NOT NULL);
