@@ -43,7 +43,7 @@ serde_json = "1"
 # the updater's pin check (update/apply.rs): the same SHA-256 ce.sh
 # asks sha256sum for — already in both lockfiles transitively, so no
 # new build node
-sha2 = "0.10"
+sha2 = "0.11"
 toml = "1.1.4"
 tree-sitter = "0.26.11"
 tree-sitter-go = "0.25.0"
@@ -69,7 +69,7 @@ strip = true
 proptest = "1.11.0"
 # eval-set freeze manifest hashing (tests/eval_extract, M4 D2-1) —
 # dev-only so the product binary carries no digest dependency
-sha2 = "0.10"
+sha2 = "0.11"
 
 [target."cfg(windows)".dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_IO"] }
