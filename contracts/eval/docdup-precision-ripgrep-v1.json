@@ -2,7 +2,7 @@
   "constants": {
     "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 4,
+    "docdup_rev": 5,
     "exempt": [
       "live",
       "license_header",
@@ -27,13 +27,13 @@
     "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
   },
   "d1": {
-    "found": 7,
+    "found": 50,
     "missing": [],
-    "total": 7
+    "total": 50
   },
   "generated_from": {
-    "ce": "0.7.3",
-    "commit": "90cbdb87474f5029a033953958321f31016e6182",
+    "ce": "1.5.1",
+    "commit": "051a73016498c6f46cc3f1b05b19525eadd7948d",
     "dirty": true
   },
   "method": "every census row joined to the FULL product judgment on the materialized pinned tree; correct = {redundant, paraphrase} (delegated mapping), wrong = the six no-duplication families; the D3 gate covers md_para+comment_block, docstring publishes ungated (decision ④); D1 = product coarse-filter recall over the oracle's report-floor pairs; D2 = the core's exact inter/union must equal the offline oracle's; the J-floor grid re-derives from the frozen oracle numbers. The census is the full 32-pair REV-3 universe (population < 100, zero selection); per-kind floors are population-bounded.",
@@ -291,16 +291,18 @@
     }
   },
   "universe": {
-    "dups": 7,
+    "dups": 50,
+    "exempt_allow": 0,
+    "exempt_license": 0,
     "hot_bands": 0,
-    "hot_shingles": 0,
-    "jaccard_dups": 7,
-    "judged": 2056,
-    "lsh_pairs": 8,
+    "hot_shingles": 1,
+    "jaccard_dups": 31,
+    "judged": 2703,
+    "lsh_pairs": 59,
     "over_cap_segments": 0,
     "requests": 1,
-    "seed_pairs": 2048,
-    "segments": 251,
-    "sent": 2056
+    "seed_pairs": 2644,
+    "segments": 568,
+    "sent": 2703
   }
 }

@@ -105,11 +105,19 @@
   拒绝句带出；Stop / precommit 的对按配置 `exclude` 走同一 walk 作用域。**拆分**：`tombstone/candidates.rs`（候选面 + 第三
   见证）、`guard/probe.rs`（重复探针，guard.rs 303→229）；precommit help 补墓碑类（`docs/reference/cli.md` 再生）。
   **FPR 第八轮**：自仓 536 事件 4 / 6（六处真阳原样）、requests 0 / 400；册加 Clopper–Pearson 95 % 区间列并改口
-  「校准证据」（`docs/FPR-TOMBSTONE.md`）。ADR-006 具名重立：主仓 `tombstone/surfaces.rs` 146→196、`tombstone/texts.rs`
+  「校准证据」（`docs/FPR-TOMBSTONE.md`）；**第九轮**（`///` 合段后）自仓 537 事件 6 / 9 = 六处原真阳 + 两处新真阳（本批
+  自己的散文追述被删的 `added_lines`，随即改写）+ 一处误报（单词名 `docs`）——严格 0.19 %、保守 1.12 % 如实入册；requests 0 / 400。ADR-006 具名重立：主仓 `tombstone/surfaces.rs` 146→196、`tombstone/texts.rs`
   175→205、`guard/tombstone.rs` 112→178、`audit/tombstone.rs` 212→265、册 14 374→425、本文件 718→741（本节）；子仓
   `it/tombstone_audit.rs` 210→233、`it/tombstone_commitmsg.rs` 107→141、`unit/tombstone/surfaces.rs` 86→124、
   `unit/tombstone/wire.rs` 71→105（子仓五个新克隆块全部消掉，dedup 119 恒）。记账不改码：每候选面重解析 `role::segment`。
-  顺带亲证 docdup 一条事实（未改、待裁）：tree-sitter-rust 的 `///` 节点跨到下一行，`merge_comments` 永不并连续 `///`（`//` 会）。
+  顺带亲证 docdup 一条缺陷并按用户裁**当批修掉（v2.28 修正案）**：tree-sitter-rust 的 `///` / `//!` 节点跨到下一行列 0，
+  `merge_comments` 只见 `//`，连续 `///` 永不合段且 `end_line` 多一行——合段与 `end_line` 改按节点**最后内容行**，`DOCDUP_REV`
+  4→5 清缓存；同树前后对拍：ripgrep 段 251→568、重复对 7→50（printer / matcher 各 crate 逐字相同的 `///` 块），cobra / zod /
+  requests 零变，自仓段 845→1462、重复对 0→1——`corelink.rs` 与 `Version.hs` 各带一段逐字相同的「台账为何不镜像」说明，收成
+  corelink 一处、Version.hs 一句指回（0→0）；check 949 不动。冻结仪器按 EVAL-SET.md 再生成协议重冻结（复活 0c7c936^ 的三个
+  生成器，五语料 docdup-segments / oracle / precision 同钉 tip；32 行普查零漂移，只有计数回声与 `docdup_rev` 变；self 八行按名
+  改签过的内容按兄弟锚 sha 取回；requests 3 行 / cobra 1 行 md 段早随 5df1dad 的块规则漂移而外部语料无门，本次一并吸收）。
+  **docdup 行与 1.5.x 不可比**（Rust 树的段几何整体变了）；check 分数不受影响。
 
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 

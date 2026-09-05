@@ -1880,26 +1880,26 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|18db33163c95b3ca|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 117,
+    "line": 119,
     "text": "fn shingle_blob(set: &[u64]) -> Vec<u8> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|66f7febe338dcdf3|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 74,
-    "end": 77,
+    "line": 76,
+    "end": 79,
     "text": "if words.len() < spec::MIN_DOC_TOKENS {"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|71613a5b4b953c00|0": {
-    "target": "../../../cli/src/docdup/mod.rs",
-    "line": 22,
-    "end": 28,
-    "text": "/// cache key (schema v5), so stale docsegs rows are wiped. 4 = words"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|7d2c5d39ed50f773|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 32,
-    "end": 37,
+    "line": 34,
+    "end": 39,
     "text": "/// exempt::EXEMPT_NAMES; `shingles` = sorted deduped shingle u64s LE."
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|a6960b0205c782d5|0": {
+    "target": "../../../cli/src/docdup/mod.rs",
+    "line": 21,
+    "end": 30,
+    "text": "/// Bump when segment-extraction semantics change: it sits in the meta"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|acb33abf44d7bee6|0": {
     "target": "../../../cli/src/docdup/mod.rs",
@@ -1925,8 +1925,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 184,
-    "end": 200,
+    "line": 188,
+    "end": 206,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|3633378bbdbc1b93|0": {
@@ -1940,6 +1940,12 @@
     "line": 171,
     "end": 179,
     "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|af4198dae65b1993|0": {
+    "target": "../../../cli/src/docdup/segments.rs",
+    "line": 208,
+    "end": 215,
+    "text": "fn last_row(node: Node<'_>) -> usize {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b623f07650ed2a1f|0": {
     "target": "../../../cli/src/docdup/segments.rs",
@@ -7919,11 +7925,11 @@
     "end": 67,
     "text": "/// The tombstone verdict (plan v2.27): the measuring hook's"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|f91505c09ba8cfab|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 181,
-    "end": 200,
-    "text": "/// Contiguous same-column comment nodes merge into one block (design"
+    "line": 188,
+    "end": 215,
+    "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/say.rs|7de3ded125c17f93|0": {
     "target": "../../../cli/src/guard/say.rs",
@@ -8280,8 +8286,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|f96d44e2b69c375a|0": {
     "target": "../../../cli/src/tombstone/surfaces.rs",
-    "line": 159,
-    "end": 192,
+    "line": 158,
+    "end": 191,
     "text": "/// One segment's touched sentences: its lines joined by a space, each"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|048b13f996806aa1|0": {
@@ -8445,7 +8451,7 @@
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|1de4077e172c8f1e|0": {
     "target": "../../FPR-TOMBSTONE.md",
     "line": 24,
-    "end": 33,
+    "end": 34,
     "text": "| 轮 | 自仓 命中提交 / 站点（标签 + 散文） | requests | 这一轮修掉的机制（修在定义，不是修在阈值） |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|2749bc37e5139dca|0": {
@@ -8453,23 +8459,23 @@
     "line": 27,
     "text": "| 2 | 68 / 88（4 + 84） | 1 / 2 | 三条准入：框架绑定的窗口在 before 侧也不是名字（`def test_header_no_return_chars` 搬一行被读成「删了 `return_chars` 又写回」——requests 那两处的全部来源）；含虚词的窗口（`the_pre`、`budget_is`）不是名字；仪器自己的词汇（`longer`、`removed`）不拼名字 |"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|40ab11432fdf0baf|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|699a5a6150e43137|0": {
     "target": "../../FPR-TOMBSTONE.md",
-    "line": 46,
-    "end": 56,
-    "text": "| # | 提交 | 站点 | 绑定的名字 | 判 | 理由 |"
+    "line": 95,
+    "end": 105,
+    "text": "| CodeEraser 自仓全史（第六轮） | 530 | 7 | 3 / 530 = **0.57 %**（折 /500 = 2.8） | 7 / 530 = 1.32 % | 0.117 – 1.645 % / 0.533 – 2.702 % |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|72c4b93385abcd8d|0": {
     "target": "../../FPR-TOMBSTONE.md",
-    "line": 99,
-    "end": 105,
+    "line": 111,
+    "end": 117,
     "text": "## 第二段的两条口径（2026-09-04 用户裁定）"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|a13320abd5a20b6c|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|dde372e2459f573f|0": {
     "target": "../../FPR-TOMBSTONE.md",
-    "line": 83,
-    "end": 91,
-    "text": "| 语料 | 事件 | 命中提交 | 严格读法（中间态计误报） | 保守读法（命中即误报） | 95 % 区间（Clopper–Pearson，严格 / 保守） |"
+    "line": 47,
+    "end": 57,
+    "text": "| # | 提交 | 站点 | 绑定的名字 | 判 | 理由 |\n|---|---|---|---|---|---|\n| 1 | b883b5a1 | `cli/src/health.rs:48` | `doctor_line` | 真阳 | 头注追述被删的孪生函数「used to sit beside this one」 |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
     "target": "../ce-toml.md",

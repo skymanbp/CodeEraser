@@ -13,8 +13,8 @@
     "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
   },
   "generated_from": {
-    "ce": "0.0.1",
-    "commit": "b70909e0f4431874b98f3aa2eed73436ba56d8f7",
+    "ce": "1.5.1",
+    "commit": "051a73016498c6f46cc3f1b05b19525eadd7948d",
     "dirty": true
   },
   "method": "exact oracle over live admitted segments: every pair with integer-exact Jaccard >= 30/100 on the deduped shingle sets, plus every pair whose longest common contiguous shingle run spans >= 50 words. Candidate enumeration walks the shingle inverted index — complete for both rules since each requires a shared shingle. Segment counts above oracle_segcap withhold the corpus with a written reason (F31), never a silent downsample.",

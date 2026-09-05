@@ -2,7 +2,7 @@
   "constants": {
     "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 4,
+    "docdup_rev": 5,
     "exempt": [
       "live",
       "license_header",
@@ -74,13 +74,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 62
+        "below_floor": 20
       },
-      "live": 1,
+      "live": 5,
       "path": "cli/src/audit.rs",
-      "seg_sha256": "9ab0a89d35745e894e2f79de4293c19ca8b43ce52de6392d9858f9831eba9f98",
+      "seg_sha256": "e4b477f223ea3dc8db5379da150b6f5c7626171ad883056b2cc0c3b872371b72",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 5
       },
       "sha256": "7c693d75c8b276642054dec0a07f951745168c858391d7e45b0663aa2a77dd1f"
     },
@@ -88,19 +88,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 6
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/churn.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "0950b131589faaf7cfcf05c0d2d176a40b1f8affdb2fb4f46ff91d2b5ff72337",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "dac8f5e76ed2585c419a1bcc62202d74a3d4e65f5f00a2618f65bafc9c96ca9a"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 18
+        "below_floor": 8
       },
       "live": 0,
       "path": "cli/src/config.rs",
@@ -112,55 +114,63 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 21
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/corelink.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "a054ee8e626f3e593c38566901670e7d01e6fc09ca2e2655fc520cad04bca246",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "688081e01b0bcbd8d9d8f61bfd884da4ab0df02783efc466871021d9398e7caa"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 22
+        "below_floor": 6
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/daemon/client.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "9019fe7c1d616e30ad9b0b1741c96e515030908db1e6ebf8233ef114063c52fa",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "e365277fc4dc7ce6a1ae0a06f363f959b5aec7d895719ef96d46e58e17a625ba"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 26
+        "below_floor": 1
       },
-      "live": 0,
+      "live": 3,
       "path": "cli/src/daemon/coldstart.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "c7e1a632e993643b5a2946255f6fd8ac0135af68d47fa46bd87675ef642fa1db",
+      "segs_by": {
+        "comment_block": 3
+      },
       "sha256": "c76ef0781125393f260d54b25541f2ae656b86d7b0df3556b2a37d6f03d376a1"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 14
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/daemon/judge.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "d54a212d57e6ba707c3801d7bf2bb91242a9692d88372072aa7fe1e6661d7067",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "4ae0385baec5b396f61898c160544fb2deeb1783f7d238ef6a364a1ea436dfd9"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 4
+        "below_floor": 1
       },
       "live": 0,
       "path": "cli/src/daemon/mod.rs",
@@ -172,7 +182,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 22
+        "below_floor": 9
       },
       "live": 0,
       "path": "cli/src/daemon/proto.rs",
@@ -184,7 +194,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 18
+        "below_floor": 12
       },
       "live": 1,
       "path": "cli/src/daemon/server.rs",
@@ -198,73 +208,99 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/dedup/groups.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "7ef963fb9d00666a559c546b6c4854d2e4f081ea76f0659819b4100403ff285d",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "00ac52a118371c47067a12bd15fe2d91f7f9f3fd5bc17d3b38a06902e4bc133b"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 25
+        "below_floor": 10
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/dedup/index.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "fb4317d119e650a8656f9e9fbdc80b41165fdebe6295f73e959144aa08cb494c",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "17f94ba9fc9d56d6206a8101f6f7c3576082e3891e9a0713b2025c4113a08b3e"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 37
+        "below_floor": 11
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/src/dedup/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "2846f971bca8416a8d7629b0d1dbb885a2b2ef51059af57a6528dfd00b3606c0",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "4343631de944f84e03f1599e4a05ef38120a045b225a69bdd193c0a288f41304"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 43
+        "below_floor": 13
       },
-      "live": 0,
+      "live": 4,
       "path": "cli/src/dedup/pairs.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "6583355d047d23fd6429e2015580a9fa4c3a24ee2f5fcea6c1699788bbe33d8d",
+      "segs_by": {
+        "comment_block": 4
+      },
       "sha256": "87fffed894d5251dedfdd390e0f8519140072f5813272aaf526eb62777964c88"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 14
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/dedup/probe.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "5ea0f8cb801bece5d65aec4c08e36a9df8e751ce2f4e309ce9bb744f96e579e3",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "71a47cdd271ebe53e9e15033a66ddb1ddc448692e0c729cb1acd1b1d2f3a44bb"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 28
+        "below_floor": 8
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/dedup/tokens.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "e394513b30257d018903c4a11861b685b5622598d178fea1840430a06065cfe8",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "90ce5c36b63fc71129c60aac3120e0a3644ea48c6f54dc828a45dca658a37bc9"
+    },
+    {
+      "exempt_by": {},
+      "lang": "rs",
+      "ledger": {
+        "below_floor": 4
+      },
+      "live": 1,
+      "path": "cli/src/dedup/winnow.rs",
+      "seg_sha256": "47e9d2c4901330c2ab21dbac578705dac4f79a2415d03a4067bc0a20e4dabb66",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "652461ff5ee10546d37abdab819c92f91855d73231706bb9ef15b651bf620f40"
     },
     {
       "exempt_by": {},
@@ -272,91 +308,87 @@
       "ledger": {
         "below_floor": 12
       },
-      "live": 0,
-      "path": "cli/src/dedup/winnow.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
-      "sha256": "652461ff5ee10546d37abdab819c92f91855d73231706bb9ef15b651bf620f40"
-    },
-    {
-      "exempt_by": {},
-      "lang": "rs",
-      "ledger": {
-        "below_floor": 53
-      },
-      "live": 0,
+      "live": 4,
       "path": "cli/src/fourclass/batch.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "c8219a82c29e79c05bcff8e4172903134c6b5b9047ab795bd75f0587a2c24371",
+      "segs_by": {
+        "comment_block": 4
+      },
       "sha256": "78d276405e897092ff3b8ba65e4341f286f3925c98a3468a9d2d078dfd444a0f"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 21
+        "below_floor": 9
       },
-      "live": 1,
+      "live": 2,
       "path": "cli/src/fourclass/diff.rs",
-      "seg_sha256": "afd155bf9c03ef1b0cf8069aca9ac55d55e5ed865759c78f0e98296ffed7c12a",
+      "seg_sha256": "831f9102f9d66120c8bdb64758c82121a6ceffdfcded5bdde2690789d3440f35",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 2
       },
       "sha256": "e11c43fd113a98aefaa3ce04c6a0a8fbcf3a6f9216c2d21ca21416964b6b8661"
     },
     {
       "exempt_by": {},
       "lang": "rs",
-      "ledger": {
-        "below_floor": 18
-      },
-      "live": 0,
+      "ledger": {},
+      "live": 2,
       "path": "cli/src/fourclass/kinds.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "06dfd0acaa8f34ffc6f71c474bcfc70cdfa4f1977c9aa9dcfc33fc3b1c30187e",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "5e34f47e02eaa15d69bbb772bda62d64506a07d065f59d7ee5a575853f74f309"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 38
+        "below_floor": 9
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/fourclass/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "78d2c5f54a897c923597c04a4253ec1aae51174e63d6f72188db3d7375c0d105",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "44331fdcb6b9bffb9c80308c8f844d76db5fe5ea56d255e2b32d80baeab34b2e"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 47
+        "below_floor": 6
       },
-      "live": 0,
+      "live": 4,
       "path": "cli/src/fourclass/session.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "07cd707e4a3aced22d3959582bbe761d339958cb8a820a31518026cf70cac52c",
+      "segs_by": {
+        "comment_block": 4
+      },
       "sha256": "aaa3d6313e42097a34ebb3cf63e48818eeb851888b43054e4c3fdcfbb8377eb7"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 15
+        "below_floor": 1
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/fourclass/stacking.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "e81d2da4d2f35e67976d5ed9d5537e9e3f3fabbb0ad2c3dd3a9e03c52117d7a4",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "621f0db4d5bda797173487064e8607c93409e4811a20d6b71fc8c5026bbd8772"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 34
+        "below_floor": 17
       },
       "live": 0,
       "path": "cli/src/fourclass/units.rs",
@@ -368,19 +400,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 35
+        "below_floor": 11
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/graph/md.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "56dfa87611489942e6d117ab98650aa396a7d73b53ff4f02e0af78dd56fae3bb",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "d547999896b9e03463463e7e281e708e97cdee3959057c4bacd498787a379383"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 16
+        "below_floor": 7
       },
       "live": 0,
       "path": "cli/src/graph/md_tests.rs",
@@ -392,7 +426,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 15
+        "below_floor": 7
       },
       "live": 0,
       "path": "cli/src/graph/mod.rs",
@@ -404,37 +438,41 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 39
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 3,
       "path": "cli/src/graph/sites.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "0545f4688c1cae6c7a97f0a38b2988645d8b4851b4a84d7fbbb1ace3fd516715",
+      "segs_by": {
+        "comment_block": 3
+      },
       "sha256": "788a5befbeb36227a26019f5710bff7451da46604fa2e8a9442bd55043d8ca00"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 22
+        "below_floor": 8
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/graph/spec.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "84b53709acc65e6ac4f09f63745ae438a53e73378737f2bcc86dcc63dacc668b",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "11ac8fd76ec348337662529effcdd8a33ba1ae07a67a52512ba6cd874a1288c5"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 57
+        "below_floor": 17
       },
-      "live": 1,
+      "live": 4,
       "path": "cli/src/guard.rs",
-      "seg_sha256": "de2029c57d3013910bc3e8a9edfaf50fe2b2ee238dfb779b2dbb9e4e0e90cfd5",
+      "seg_sha256": "04d732041232e9a5048aaf1ce8ab649b213d925b7324ac3e3a60a02e71da2bbb",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 4
       },
       "sha256": "4fc09f36ee187f6ec5151f9444ad606dedbe2d4f9d4f04d6e2155ec47948a60f"
     },
@@ -442,25 +480,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 21
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/health.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "a91cf0513422c9bec3d36d46994ae801d04b5a2aa564decce641156499631307",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "13482bbfdabab757cd9076a6d8f60061c1c3a64533defc2961812e8ae83620a0"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 118
+        "below_floor": 8
       },
-      "live": 1,
+      "live": 9,
       "path": "cli/src/hookio.rs",
-      "seg_sha256": "bb38141550dbc56393c5036cecf6705d3dca3c11544ecb75c3df29ad8c5bc63f",
+      "seg_sha256": "87f2828c131fc06419856957e330a8aa3de00b3cca8e66afb824a85301084574",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 9
       },
       "sha256": "b97834a91743dcdccb1be5e88618c1415c491842ebbf29e6f62e31054bf42c7e"
     },
@@ -468,7 +508,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 2
+        "below_floor": 1
       },
       "live": 0,
       "path": "cli/src/lib.rs",
@@ -480,7 +520,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 45
+        "below_floor": 34
       },
       "live": 0,
       "path": "cli/src/main.rs",
@@ -492,19 +532,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 13
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/mcp.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "5b3fb8e7c3fa835b15e7eb7c92ad351da3a1b7be2b13a43338179f10da740eeb",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "07853b46e52deadf6f5f5b14fe2770d18b9eb18e76e22f44f3901ecca6d5428d"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 9
+        "below_floor": 4
       },
       "live": 0,
       "path": "cli/src/scan/ast.rs",
@@ -516,7 +558,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 7
+        "below_floor": 3
       },
       "live": 0,
       "path": "cli/src/scan/functions.rs",
@@ -528,7 +570,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 4
+        "below_floor": 2
       },
       "live": 0,
       "path": "cli/src/scan/lang.rs",
@@ -540,19 +582,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 30
+        "below_floor": 11
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/scan/metrics/cognitive.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "90c844546ac8caddd78a97d63095c9c7c5ebeaf1a930193b522805596d778b67",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "19b9445bf52f58ea8bdb88c5a902f3a8798c2c4406968d4257d6df6183be2909"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 4
+        "below_floor": 2
       },
       "live": 0,
       "path": "cli/src/scan/metrics/cyclo.rs",
@@ -564,7 +608,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 4
+        "below_floor": 3
       },
       "live": 0,
       "path": "cli/src/scan/metrics/mod.rs",
@@ -576,7 +620,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 11
+        "below_floor": 5
       },
       "live": 0,
       "path": "cli/src/scan/metrics/naming.rs",
@@ -588,7 +632,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 3
+        "below_floor": 2
       },
       "live": 0,
       "path": "cli/src/scan/metrics/size.rs",
@@ -600,7 +644,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 5
+        "below_floor": 4
       },
       "live": 0,
       "path": "cli/src/scan/mod.rs",
@@ -612,7 +656,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 6
+        "below_floor": 3
       },
       "live": 0,
       "path": "cli/src/scan/report.rs",
@@ -624,13 +668,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 39
+        "below_floor": 31
       },
-      "live": 1,
+      "live": 2,
       "path": "cli/src/scan/spec.rs",
-      "seg_sha256": "d26ce22cb190353048f1165150d67a9996fc46801252633307c043c8582f9285",
+      "seg_sha256": "5251d334dae473b771dd688ac8519938bdb50af9a16a8a682b4f6618c9a45956",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 2
       },
       "sha256": "b98b59967eb0a09afe560659ad3abaa85ae4ea13e76f66d1a6cd2c1db56bdff7"
     },
@@ -638,19 +682,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 9
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/scan/walk.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "51d4783a3192009adee79a0a269679ea04b7e91e5e5a1cb64c842b47c01f9d6d",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "844f6272132559530007ea9c9103971cc1c30322a9500a2b17b2bc29fad98b69"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 9
+        "below_floor": 4
       },
       "live": 0,
       "path": "cli/tests/audit_stop.rs",
@@ -662,7 +708,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 13
+        "below_floor": 6
       },
       "live": 0,
       "path": "cli/tests/churn.rs",
@@ -674,7 +720,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 18
+        "below_floor": 8
       },
       "live": 0,
       "path": "cli/tests/common/hooks.rs",
@@ -686,55 +732,63 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 53
+        "below_floor": 19
       },
-      "live": 0,
+      "live": 3,
       "path": "cli/tests/common/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "3b02d14af1c0c30a461c14abf104ad8b91d279a4d68bac2d870475a3b7a05334",
+      "segs_by": {
+        "comment_block": 3
+      },
       "sha256": "720e88403b0a1729fa065a7d5287219d58d13720c9ec1702d49f59f621878aff"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 29
+        "below_floor": 6
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/core_wire.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "aa2f66608e5d1127e7d3b9375041016538f155de793e46833747234421a1a519",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "9b8d6af69a33ffc135c3e17896c9e692ae56e847b2daaa84b7970254e1ee3d06"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 37
+        "below_floor": 10
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/crosscheck_rca.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "446b3a3d0543c76e9f9d2076191ea1da7d86741bf02770e6bf3ea4f99bd6917f",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "f24fc66dc9e812ccc5f51f0aec5eba41b2efdb58501c67da8f83626f39ac51d9"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 31
+        "below_floor": 12
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/daemon_e2e.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "5cf3dc6712e69f987a8f64c70ed8874c43d53d54e73dc83d0ef558dd4ecc8cad",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "e16adf5dc87dfa32e86ba37c9b502f1de34de906f53fff1ce303f5985a392282"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 3
+        "below_floor": 1
       },
       "live": 0,
       "path": "cli/tests/dedup_check.rs",
@@ -746,7 +800,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 22
+        "below_floor": 10
       },
       "live": 0,
       "path": "cli/tests/dedup_core.rs",
@@ -758,7 +812,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 31
+        "below_floor": 11
       },
       "live": 0,
       "path": "cli/tests/dedup_groups.rs",
@@ -770,7 +824,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 4
       },
       "live": 0,
       "path": "cli/tests/dedup_index.rs",
@@ -782,19 +836,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 8
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/dedup_pairs.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "1481a5a54349a163db9809737e99170f4fa4553c215295b8f5c7b0ffc5ab35ca",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "4559e190a4b1870245c0af3d2adbe4785f888c9574b12247f1d5d89feef73763"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 5
+        "below_floor": 2
       },
       "live": 0,
       "path": "cli/tests/dedup_property.rs",
@@ -806,31 +862,35 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 27
+        "below_floor": 5
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/divergence_stances.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "d04b686b089271272927bd68e65cf183787dc5538de3bb4f9d166aa504b9c438",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "e1e164c5ec50ab67bc52fed4aa962805a71fb55fb94eae3d2e6994d9c46d9963"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 41
+        "below_floor": 9
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_ablation.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "10397defce55df47eefae768483da01b9dbf4edb88f1079005b2340e818a0422",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "d0024c38b2f895fb0ed24181db005744790646a80a1c43034129836ef95cb2fd"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 12
+        "below_floor": 4
       },
       "live": 0,
       "path": "cli/tests/eval_ablation_parts/ledgers.rs",
@@ -842,13 +902,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 51
+        "below_floor": 12
       },
-      "live": 1,
+      "live": 4,
       "path": "cli/tests/eval_ablation_parts/mod.rs",
-      "seg_sha256": "1e401cb0646cede7cdda60bc144369f7b5959140c1f496ccc161dc41ac021809",
+      "seg_sha256": "6d3626bb9255385577a4d532813640d50d43142f049de89fd8cc8f3580e375b0",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 4
       },
       "sha256": "a27c6d944b28fd839ed1443897565f220a1af4dea9811ee27cca43bd3f7d2478"
     },
@@ -856,49 +916,55 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 43
+        "below_floor": 13
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_ablation_parts/variants.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "44dd9ce1fa7aa8ebef3d4ed4ea92887487c252d39ef54cd100622e82073ee6d3",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "f969c8a0cf4a1ef22e130d162b21e9dfb76c0c4ab6b674c56c89521ff6d9a7be"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 27
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/eval_baseline.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "c61512929615f52e2d392ba78bd773187f34a10a9eea58523934a4b759ee401a",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "aa88dd6e122c81c84fb64af39f4b15f65d44818a46ff2ae9d2ca4d6808a77711"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/eval_commit_baseline.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "e28bd3041b7d130c22fea7a4bc7f1a062717b0da96bf740f6e575939f6246c2b",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "c9ccf72f34ac6c3631c482ca93117d4437fdc03536acc0035549345884a9f473"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 38
+        "below_floor": 9
       },
-      "live": 1,
+      "live": 2,
       "path": "cli/tests/eval_commit_labels.rs",
-      "seg_sha256": "2d2dcedf84b61a6b2418098e3a213685bc87be53959a16287bbc7a331bc12908",
+      "seg_sha256": "945ec3821da11d30b7a6f51d855d6e382c6337f4d47bfb146804b28825a71bc7",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 2
       },
       "sha256": "c97b5b412d02713bb4303692cab33f64d42ae9bf6cdb0b85fe07ffaae9ee0787"
     },
@@ -906,73 +972,83 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 53
+        "below_floor": 17
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_commit_review/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "98608145e11e5a94a07ce6eddfbc015e6e2c4ee123438daff9d89fbcf5d866d8",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "34169382929d33d5fe7269995da1aeba5cabc03ea95ca828d6f1a3fdc00023bb"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 57
+        "below_floor": 14
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_commits.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "cce227cbfdc42167b996e647646172dfa9897f6d836793c7488f2d03e6ac7347",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "876c0dee10aff794b5b351ab8008686edc54156d421872fea4f0065fc1391c18"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 24
+        "below_floor": 8
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/eval_extract/freeze.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "8e1121c918c610b6be6a9b74e47ff192db1482992ce2af6213d1b6b64e04978a",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "920574fcc84281a1312b65df46f75925c0efe70ea0fce75ba4cec5f8fd494451"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 21
+        "below_floor": 2
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/eval_extract/main.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "c23c7e106878494d434d68c176dc8bef8b88b83ea613b1170d9f50119edd2657",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "7dda3c721458baa69d3bc7f0af6567c3d6be40149a33d862c0e96bce27fe0934"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 37
+        "below_floor": 12
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_extract/scan.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "df6a007cc840a5b4099ea1d858da3641dbc9559f3f301df3ca03abcd2700202a",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "d8f27792bdfda0e683dd0ba4e20fa5baa7e9cf5fba6887804fcbc183fe180962"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 60
+        "below_floor": 13
       },
-      "live": 1,
+      "live": 5,
       "path": "cli/tests/eval_graph.rs",
-      "seg_sha256": "a38b51e9fd4e9d4d42a7237639c9e50058f309a2901b39896c6247b564fd91df",
+      "seg_sha256": "4946af1b0e05ba21aa946bc272ea28b925bf9d71e1739799455ef34a56264874",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 5
       },
       "sha256": "f27928c31a9c6cbaa3216434e124d85634dc695732d335d8c0c0b1c766e9b944"
     },
@@ -980,25 +1056,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 16
+        "below_floor": 3
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/eval_l1.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "988e3c1d8800f84ee997f4db25a5374c412ebd835e4049e0fded188d769b5ab8",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "271f5a8cdd79f0f0073f220018ed62c6920742aa4423b86f840167a3d42a1c1f"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 59
+        "below_floor": 13
       },
-      "live": 1,
+      "live": 2,
       "path": "cli/tests/eval_l2.rs",
-      "seg_sha256": "4e011a20eabc69b7bf1abf8305b7d2ce816929a3958dd3ac023508a0a71f2eee",
+      "seg_sha256": "0a4dc7f56a3d9372c5e991bc2d0e1bd4c74b0b46fa216d8dfbb23f0cb9020385",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 2
       },
       "sha256": "66b285769170ffee19d7d8c08f0df9f38b8462572ac8389a6f68cb1a34394349"
     },
@@ -1006,19 +1084,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 31
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_l2_parts/cross.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "dd6405044e232128d37f31a0897e176b9181c2ba6bf2976f6318caf9f6bce1af",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "da34e04694486360e3205eb143ca83e9d0c7254b5141736611462ff37e091d20"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 19
+        "below_floor": 14
       },
       "live": 0,
       "path": "cli/tests/eval_l2_parts/mod.rs",
@@ -1030,87 +1110,43 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 32
+        "below_floor": 8
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/eval_l2_register/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "b3973f057eb60945450aaabd784ba6362c4731108114cd400b957a40627658fb",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "2c0feef755a1c8015c79f30eaf654bcf5b5f5a8fe5e0df37fb387c62e946ad73"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 9
+        "below_floor": 2
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/eval_labels.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "f8f214b9165b2ccc88a580bc8b70ab73132e3adb33c0b4eca9d3b2d915ee37bc",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "cec9193279f88003933deb6ec66f50a5bba04d662db87eb06e48597227a17bc3"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 15
-      },
-      "live": 0,
-      "path": "cli/tests/eval_prelabel.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
-      "sha256": "67b2939b8f430b11bd932bceda958b36ad1b68907b894c85e5e11d498b2e99db"
-    },
-    {
-      "exempt_by": {},
-      "lang": "rs",
-      "ledger": {
-        "below_floor": 54
+        "below_floor": 3
       },
       "live": 1,
-      "path": "cli/tests/eval_support/colordiff.rs",
-      "seg_sha256": "f68b10c7e82ee5b8a53d43c34d4bfc7adee90898c052ccf038ac65ad116925f1",
+      "path": "cli/tests/eval_prelabel.rs",
+      "seg_sha256": "2646ee3e6a52ca7ec719841300cdc48943766100d58059ad908a342c3fb8fd7b",
       "segs_by": {
         "comment_block": 1
       },
-      "sha256": "0541b60aa15b3ff2002417dc4894b99284f96651f5135e30afa78573c1a8655c"
-    },
-    {
-      "exempt_by": {},
-      "lang": "rs",
-      "ledger": {
-        "below_floor": 42
-      },
-      "live": 0,
-      "path": "cli/tests/eval_support/corpus.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
-      "sha256": "d1666d52ece40ef337e3f676c9726aa59f865ac42c40e9218c41e827fdf5f97a"
-    },
-    {
-      "exempt_by": {},
-      "lang": "rs",
-      "ledger": {
-        "below_floor": 51
-      },
-      "live": 0,
-      "path": "cli/tests/eval_support/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
-      "sha256": "585c175c92f67a202bbd00fde0f103bbbe1313883a880a9945d192687cf43f50"
-    },
-    {
-      "exempt_by": {},
-      "lang": "rs",
-      "ledger": {
-        "below_floor": 19
-      },
-      "live": 0,
-      "path": "cli/tests/fpr_fourclass.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
-      "sha256": "a9e9ee856ef190d8aec4842eab6249e2b858e374035a3b5f95cf295790791ce0"
+      "sha256": "67b2939b8f430b11bd932bceda958b36ad1b68907b894c85e5e11d498b2e99db"
     },
     {
       "exempt_by": {},
@@ -1118,29 +1154,89 @@
       "ledger": {
         "below_floor": 16
       },
-      "live": 0,
+      "live": 4,
+      "path": "cli/tests/eval_support/colordiff.rs",
+      "seg_sha256": "e2b98ba27551ae216ed969143ef672b3ba8e9efb2ce081c7310603f56335983e",
+      "segs_by": {
+        "comment_block": 4
+      },
+      "sha256": "0541b60aa15b3ff2002417dc4894b99284f96651f5135e30afa78573c1a8655c"
+    },
+    {
+      "exempt_by": {},
+      "lang": "rs",
+      "ledger": {
+        "below_floor": 9
+      },
+      "live": 2,
+      "path": "cli/tests/eval_support/corpus.rs",
+      "seg_sha256": "5b9d67e78d26eafb2a8ea9ffb91383409a040e3ccb73fe6ec5420139015ee515",
+      "segs_by": {
+        "comment_block": 2
+      },
+      "sha256": "d1666d52ece40ef337e3f676c9726aa59f865ac42c40e9218c41e827fdf5f97a"
+    },
+    {
+      "exempt_by": {},
+      "lang": "rs",
+      "ledger": {
+        "below_floor": 20
+      },
+      "live": 3,
+      "path": "cli/tests/eval_support/mod.rs",
+      "seg_sha256": "ad53034656efae253bbff2e882cd430f53002b7885f5d24df277534716613b60",
+      "segs_by": {
+        "comment_block": 3
+      },
+      "sha256": "585c175c92f67a202bbd00fde0f103bbbe1313883a880a9945d192687cf43f50"
+    },
+    {
+      "exempt_by": {},
+      "lang": "rs",
+      "ledger": {
+        "below_floor": 2
+      },
+      "live": 1,
+      "path": "cli/tests/fpr_fourclass.rs",
+      "seg_sha256": "884ea58ccca9b96503d9c668f583f6c19218b406f5071cbc34dd2816f18e938e",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "a9e9ee856ef190d8aec4842eab6249e2b858e374035a3b5f95cf295790791ce0"
+    },
+    {
+      "exempt_by": {},
+      "lang": "rs",
+      "ledger": {
+        "below_floor": 3
+      },
+      "live": 1,
       "path": "cli/tests/fpr_replay.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "4401236154cfd014dc334a9a08dbf24e97c7699688013f970a6790ac8b7b3dad",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "59904ae481eb8a42893ce610c4848b7411643ba15d7e68402002a5b2bf89d0c9"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 36
+        "below_floor": 10
       },
-      "live": 0,
+      "live": 2,
       "path": "cli/tests/guard_hook.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "649d93a50bdc1ae43adeb73506578d607bfafc4d81afa03aa8d023a623b12984",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "11e976d0ce74748728a09e6c854accf08dfc55fa73ccf7353e52f829ce88e63d"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 13
+        "below_floor": 7
       },
       "live": 0,
       "path": "cli/tests/health_plugin.rs",
@@ -1152,7 +1248,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 11
+        "below_floor": 7
       },
       "live": 0,
       "path": "cli/tests/mcp_precommit.rs",
@@ -1164,7 +1260,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 17
+        "below_floor": 13
       },
       "live": 0,
       "path": "cli/tests/metrics.rs",
@@ -1176,31 +1272,35 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 17
+        "below_floor": 5
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/observe_feed.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "0193fa5a50dae01199015664122d5be770f6951676bb294ef96d8072cac6e9e3",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "915a5b6ae14229ac41bdf2e520a6da39bbb604dcbc2a2896798d00bd17413f63"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 12
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/tests/perf_budget.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "8d49e9f874d6d5d380f72600f7e38c0b5ee0f146da38f9ad0c5f24ea1a57621c",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "06fb05e17eada4ff4c248f713f90962e509fc67fd94d497d2b7730ba8f61f891"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 7
+        "below_floor": 4
       },
       "live": 0,
       "path": "cli/tests/probe_gate.rs",
@@ -1212,7 +1312,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 3
       },
       "live": 0,
       "path": "cli/tests/report_schema.rs",
@@ -1224,7 +1324,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 19
+        "below_floor": 7
       },
       "live": 0,
       "path": "cli/tests/sonar_whitepaper.rs",
@@ -1451,13 +1551,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 538
+        "below_floor": 133
       },
-      "live": 2,
+      "live": 21,
       "path": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
-      "seg_sha256": "f04f4518df4da6e279252d09403c220ca47255f3d410295bf717a9b450a4592a",
+      "seg_sha256": "9ce70e7caa55ba492bb950c69fbcbaa2874628a8a4966a4ea31156bf2d395cbf",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 21
       },
       "sha256": "a81c751dc22763d8efda6fb88fd77c0e03c42fb17538a94497a5737ba8b4b919"
     },
@@ -1465,14 +1565,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 205,
-        "fenced_code_line": 2
+        "below_floor": 59,
+        "fenced_code_line": 8
       },
-      "live": 5,
+      "live": 13,
       "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__hyperlink__mod.rs",
-      "seg_sha256": "f4cf5b85ee126046099e3f347efdef9541421a8fae043c960998ed175cc628fa",
+      "seg_sha256": "9f2a5183f3bdc63bfde4b46fe6922d41e36ba3dba563e5b557f5e106c77e235c",
       "segs_by": {
-        "comment_block": 5
+        "comment_block": 13
       },
       "sha256": "8887b066987643638d822ec53ebd44f10b9d1a1bab00d9152579a56dfad284fb"
     },
@@ -1494,13 +1594,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 108
+        "below_floor": 30
       },
-      "live": 2,
+      "live": 5,
       "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__util.rs",
-      "seg_sha256": "08e487e9f7df22f740d3b9cdaad520fbc438da3226e9fdd5cb1cf25c6705065f",
+      "seg_sha256": "713ebc3b18b1eb884d6688d01b993faba68581686f677b88444eea13596860c0",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 5
       },
       "sha256": "59d984c9b7586592faaa8fc146a67346ece2aed3365f8ccc8a211c12744d9484"
     },
@@ -1508,7 +1608,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 3
+        "below_floor": 2
       },
       "live": 0,
       "path": "contracts/fixtures/crosscheck/rust/crates__regex__src__ban.rs",
@@ -1825,8 +1925,8 @@
     }
   ],
   "generated_from": {
-    "ce": "0.7.3",
-    "commit": "90cbdb87474f5029a033953958321f31016e6182",
+    "ce": "1.5.1",
+    "commit": "051a73016498c6f46cc3f1b05b19525eadd7948d",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -1848,17 +1948,17 @@
     "exempt_by": {
       "license_header": 5
     },
-    "files_with_segments": 44,
+    "files_with_segments": 95,
     "ledger": {
-      "below_floor": 3896,
-      "fenced_code_line": 46,
+      "below_floor": 1562,
+      "fenced_code_line": 52,
       "html_line": 2,
       "indented_code_lines": 12,
       "skeleton_line": 60
     },
-    "live": 117,
+    "live": 259,
     "segs_by": {
-      "comment_block": 42,
+      "comment_block": 184,
       "docstring": 16,
       "md_para": 64
     }

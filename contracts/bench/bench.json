@@ -4,14 +4,14 @@
       "asof": "re-frozen at DOCDUP_REV 4 (commit 4b45d5f, 2026-08-21); zero row drift vs rev 3",
       "detail": "attainment line B across five corpora; docstring rows 6/6 publish ungated",
       "metric": "docdup_d3_precision",
-      "source": "docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json",
+      "source": "docs/EVAL-SET-M5-3.md:88-95 + contracts/eval/docdup-precision-*-v1.json",
       "value": "17/17 scoped (100%)"
     },
     {
       "asof": "same re-freeze as D3",
       "detail": "coarse-filter recall over the exact oracle report-floor pairs, hard gate 0.99, all corpora",
       "metric": "docdup_d1_recall",
-      "source": "docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json",
+      "source": "docs/EVAL-SET-M5-3.md:88-95 + contracts/eval/docdup-precision-*-v1.json",
       "value": "100%"
     },
     {

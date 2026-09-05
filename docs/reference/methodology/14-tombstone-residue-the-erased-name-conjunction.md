@@ -66,8 +66,8 @@ degraded, and never enforced on (§7)
   ([surfaces.rs:71-91](../../../cli/src/tombstone/surfaces.rs#L71)).
 - **P⁺, the prose surface** — the SENTENCES this change wrote into every comment, docstring
   and paragraph segment docdup extracts: the boundaries are cut in the whole segment's text
-  and a sentence is kept when an added line is among its lines (the added lines joined alone
-  once read `We no longer` + `Consult X.` as one sentence across an unchanged line), read raw
+  and a sentence is kept when an added line is among its lines (so an unchanged line between
+  two added lines keeps them two sentences), read raw
   (no mask: the name a paragraph mentions sits in backticks, and masking the span would hide
   exactly the mention the conjunction needs) and with no admission floor — a one-line `X is
   no longer needed` is a whole tombstone. Fenced and indented code never become segments, so
@@ -157,7 +157,7 @@ follows (so `ce.toml` and `a.rs` stay whole) and after any full-width `。！？
 WHOLE text, and the conjunction is read per sentence this change touched: the fourth
 self-replay round had bound a name mentioned 3,000 characters away from its mark on one
 5,000-character line ([frames.rs:231-255](../../../cli/src/tombstone/frames.rs#L231),
-[surfaces.rs:159-192](../../../cli/src/tombstone/surfaces.rs#L159)). Each sentence yields
+[surfaces.rs:158-191](../../../cli/src/tombstone/surfaces.rs#L158)). Each sentence yields
 one row when it carries a retrospective mark or an erased name at all: `marks` counts every
 English phrase of the mark table at word boundaries (`previously` must not match inside
 `previously_seen`) and every Chinese one by substring, overlapping phrases both counting — the
@@ -309,7 +309,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   three-character floor and in no table; four of the six true positives the replay found bound
   a single word. The 2026-09-04 ruling keeps them and keeps the floor — a false site on a
   common word is a `[tombstone] terms` entry away, by the repository's own word
-  ([FPR-TOMBSTONE.md:99-105](../../FPR-TOMBSTONE.md#L99)).
+  ([FPR-TOMBSTONE.md:111-117](../../FPR-TOMBSTONE.md#L111)).
 - **CJK is measured at word boundaries only.** A Chinese phrase is one token of the word cut —
   the segmentation limit the spec states rather than solves — so a wide name is spelled only
   where a run is a heading, a list lead or an identifier by itself, survives only as a whole
@@ -325,11 +325,13 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   survival and seats no site
   ([guard/tombstone.rs:152-178](../../../cli/src/guard/tombstone.rs#L152),
   [audit/tombstone.rs:164-176](../../../cli/src/audit/tombstone.rs#L164)).
-- **A `///` doc comment is one segment per line to docdup.** Its tree-sitter node spans into
-  the next row, so consecutive `///` lines never merge the way `//` runs do — a Rust doc
-  sentence broken across lines is read line by line, and a mark on one line with the name on
-  the next is two sentences about two things (measured 2026-09-04; the merge rule is
-  docdup's, not this class's) ([segments.rs:181-200](../../../cli/src/docdup/segments.rs#L181)).
+- **A `///` doc comment is one paragraph to docdup since `DOCDUP_REV` 5.** Its tree-sitter
+  node ends at column 0 of the next row, and until the v2.28 amendment (2026-09-04) the merge
+  rule read that end row, so consecutive `///` lines never merged the way `//` runs do and a
+  mark on one line with the name on the next was two sentences about two things; the rule now
+  reads the node's last content row, so a Rust doc sentence broken across lines is one sentence
+  here as it is to docdup (the merge rule is docdup's, not this class's)
+  ([segments.rs:188-215](../../../cli/src/docdup/segments.rs#L188)).
 - **Only judged languages are measured.** A pair whose after path is not a judged language is
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
@@ -368,19 +370,26 @@ neither side (round 2, which also emptied requests: 1 → 0 hit commits), inline
 keeping alive but declaring nothing (round 3: 64), the conjunction per sentence (round 4: 11),
 literals declaring nothing (round 5: 7), arbitration (round 6: 7 commits / 9 sites = 6 true
 positives, 3 in-between sites all on the plan book's version banner, 0 false), the segment
-witness (round 7: 4 / 6), and the codex review's definition fixes re-run as round 8 —
+witness (round 7: 4 / 6), the codex review's definition fixes re-run as round 8 —
 sentences cut in the whole segment, quoted rows out of a body, exactly three-part versions,
 compound terms whole, distinct names, the message a surface only: 4 / 6 on 536 events, the
-same six true positives. The gate is ≤ 1 % of events: requests 0 / 400 from round 3 on; self
-3 / 530 = 0.57 % at round 6 under the ruling's reading (provenance narrative counts as
-residue, the in-between sites are counted as false), 7 / 530 = 1.32 % if the true positives
-are counted against it too — stated in the ledger as such; rounds 7 and 8: 0 strict, 4 / 531
-and 4 / 536 = 0.75 % conservative, under the line as point estimates. The ledger carries the
-exact 95 % Clopper–Pearson interval of every row (0 / 400 → 0–0.918 %, 4 / 536 →
-0.204–1.900 %) and calls itself what it is: calibration evidence on two corpora, not a bound
-on the field ([FPR-TOMBSTONE.md:24-33](../../FPR-TOMBSTONE.md#L24),
-[FPR-TOMBSTONE.md:46-56](../../FPR-TOMBSTONE.md#L46),
-[FPR-TOMBSTONE.md:83-91](../../FPR-TOMBSTONE.md#L83)). The K = 3 derivation is the ledger's
+same six true positives — and the `///` merge (`DOCDUP_REV` 5, v2.28) re-run as round 9: 6 / 9
+on 537 events, the six true positives plus two more in the codex batch's own prose (a doc
+comment and this booklet narrating what the erased `added_lines` helper did; both reworded
+in the next commit) and the ledger's first surviving false positive — a `///` sentence that
+now spans lines, `used to` on one and the common noun `docs` on the next, bound to a local
+variable `docs` that commit erased (the single-word-name cost the ruling accepted). The gate
+is ≤ 1 % of events: requests 0 / 400 from round 3 on; self 3 / 530 = 0.57 % at round 6 under
+the ruling's reading (provenance narrative counts as residue, the in-between sites are
+counted as false), 7 / 530 = 1.32 % if the true positives are counted against it too — stated
+in the ledger as such; rounds 7 and 8: 0 strict, 4 / 531 and 4 / 536 = 0.75 % conservative;
+round 9: 1 / 537 = 0.19 % strict, 6 / 537 = 1.12 % conservative — the conservative reading
+is over the line by one commit, and the ledger says so rather than moving the line. The
+ledger carries the exact 95 % Clopper–Pearson interval of every row (0 / 400 → 0–0.918 %,
+1 / 537 → 0.005–1.033 %, 6 / 537 → 0.411–2.416 %) and calls itself what it is: calibration
+evidence on two corpora, not a bound on the field ([FPR-TOMBSTONE.md:24-34](../../FPR-TOMBSTONE.md#L24),
+[FPR-TOMBSTONE.md:47-57](../../FPR-TOMBSTONE.md#L47),
+[FPR-TOMBSTONE.md:95-105](../../FPR-TOMBSTONE.md#L95)). The K = 3 derivation is the ledger's
 own table (§5). The replay stays a standing `#[ignore]` leg under the EVAL-SET retirement
 rule; its command line is the ledger's last section.
 

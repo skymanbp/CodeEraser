@@ -141,9 +141,8 @@ fn new_units(pair: &PairText, out: &mut Vec<Label>) {
 /// P⁺: the SENTENCES this change wrote into every docdup segment of
 /// the after side. Boundaries are cut in the WHOLE segment text (an
 /// unchanged terminator between two added lines keeps them two
-/// sentences, where the added lines joined alone once read `We no
-/// longer` + `Consult dongpo.` as one), and a sentence is kept when an
-/// added line is among its lines — what this change wrote, not the
+/// sentences), and a sentence is kept when an added line is among its
+/// lines — what this change wrote, not the
 /// paragraph it touched: the first self-history replay fired 219
 /// times, mostly on a version bump inside a list whose OTHER lines
 /// said `此前`, and a mark that stood there before this change is

@@ -13,14 +13,269 @@
     "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
   },
   "generated_from": {
-    "ce": "0.0.1",
-    "commit": "b70909e0f4431874b98f3aa2eed73436ba56d8f7",
+    "ce": "1.5.1",
+    "commit": "051a73016498c6f46cc3f1b05b19525eadd7948d",
     "dirty": true
   },
   "method": "exact oracle over live admitted segments: every pair with integer-exact Jaccard >= 30/100 on the deduped shingle sets, plus every pair whose longest common contiguous shingle run spans >= 50 words. Candidate enumeration walks the shingle inverted index — complete for both rules since each requires a shared shingle. Segment counts above oracle_segcap withhold the corpus with a written reason (F31), never a silent downsample.",
   "pairs": [
     {
       "a": {
+        "end_line": 95,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 81
+      },
+      "b": {
+        "end_line": 124,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 111
+      },
+      "inter": 95,
+      "union": 116,
+      "verbatim": 99
+    },
+    {
+      "a": {
+        "end_line": 220,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 209
+      },
+      "b": {
+        "end_line": 351,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 337
+      },
+      "inter": 44,
+      "union": 133,
+      "verbatim": 28
+    },
+    {
+      "a": {
+        "end_line": 275,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 264
+      },
+      "b": {
+        "end_line": 131,
+        "kind": "comment_block",
+        "path": "crates/cli/src/process.rs",
+        "start_line": 120
+      },
+      "inter": 91,
+      "union": 91,
+      "verbatim": 95
+    },
+    {
+      "a": {
+        "end_line": 382,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 366
+      },
+      "b": {
+        "end_line": 217,
+        "kind": "comment_block",
+        "path": "crates/cli/src/process.rs",
+        "start_line": 201
+      },
+      "inter": 126,
+      "union": 142,
+      "verbatim": 124
+    },
+    {
+      "a": {
+        "end_line": 419,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 400
+      },
+      "b": {
+        "end_line": 447,
+        "kind": "comment_block",
+        "path": "crates/cli/src/decompress.rs",
+        "start_line": 429
+      },
+      "inter": 128,
+      "union": 155,
+      "verbatim": 132
+    },
+    {
+      "a": {
+        "end_line": 258,
+        "kind": "comment_block",
+        "path": "crates/cli/src/lib.rs",
+        "start_line": 252
+      },
+      "b": {
+        "end_line": 277,
+        "kind": "comment_block",
+        "path": "crates/cli/src/lib.rs",
+        "start_line": 265
+      },
+      "inter": 49,
+      "union": 127,
+      "verbatim": 44
+    },
+    {
+      "a": {
+        "end_line": 258,
+        "kind": "comment_block",
+        "path": "crates/cli/src/lib.rs",
+        "start_line": 252
+      },
+      "b": {
+        "end_line": 290,
+        "kind": "comment_block",
+        "path": "crates/cli/src/lib.rs",
+        "start_line": 284
+      },
+      "inter": 53,
+      "union": 63,
+      "verbatim": 55
+    },
+    {
+      "a": {
+        "end_line": 277,
+        "kind": "comment_block",
+        "path": "crates/cli/src/lib.rs",
+        "start_line": 265
+      },
+      "b": {
+        "end_line": 290,
+        "kind": "comment_block",
+        "path": "crates/cli/src/lib.rs",
+        "start_line": 284
+      },
+      "inter": 49,
+      "union": 127,
+      "verbatim": 44
+    },
+    {
+      "a": {
+        "end_line": 50,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 45
+      },
+      "b": {
+        "end_line": 66,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 61
+      },
+      "inter": 48,
+      "union": 55,
+      "verbatim": 52
+    },
+    {
+      "a": {
+        "end_line": 81,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 76
+      },
+      "b": {
+        "end_line": 103,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 98
+      },
+      "inter": 39,
+      "union": 57,
+      "verbatim": 44
+    },
+    {
+      "a": {
+        "end_line": 81,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 76
+      },
+      "b": {
+        "end_line": 140,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 112
+      },
+      "inter": 37,
+      "union": 83,
+      "verbatim": 42
+    },
+    {
+      "a": {
+        "end_line": 103,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 98
+      },
+      "b": {
+        "end_line": 140,
+        "kind": "comment_block",
+        "path": "crates/cli/src/pattern.rs",
+        "start_line": 112
+      },
+      "inter": 37,
+      "union": 85,
+      "verbatim": 42
+    },
+    {
+      "a": {
+        "end_line": 103,
+        "kind": "comment_block",
+        "path": "crates/cli/src/process.rs",
+        "start_line": 94
+      },
+      "b": {
+        "end_line": 194,
+        "kind": "comment_block",
+        "path": "crates/cli/src/process.rs",
+        "start_line": 181
+      },
+      "inter": 62,
+      "union": 91,
+      "verbatim": 62
+    },
+    {
+      "a": {
+        "end_line": 38,
+        "kind": "comment_block",
+        "path": "crates/cli/src/wtr.rs",
+        "start_line": 31
+      },
+      "b": {
+        "end_line": 53,
+        "kind": "comment_block",
+        "path": "crates/cli/src/wtr.rs",
+        "start_line": 46
+      },
+      "inter": 34,
+      "union": 103,
+      "verbatim": 21
+    },
+    {
+      "a": {
+        "end_line": 62,
+        "kind": "comment_block",
+        "path": "crates/core/flags/config.rs",
+        "start_line": 55
+      },
+      "b": {
+        "end_line": 83,
+        "kind": "comment_block",
+        "path": "crates/core/flags/config.rs",
+        "start_line": 73
+      },
+      "inter": 53,
+      "union": 100,
+      "verbatim": 28
+    },
+    {
+      "a": {
         "end_line": 1300,
         "kind": "comment_block",
         "path": "crates/core/flags/defs.rs",
@@ -120,6 +375,618 @@
       "inter": 75,
       "union": 75,
       "verbatim": 79
+    },
+    {
+      "a": {
+        "end_line": 283,
+        "kind": "comment_block",
+        "path": "crates/core/flags/mod.rs",
+        "start_line": 276
+      },
+      "b": {
+        "end_line": 300,
+        "kind": "comment_block",
+        "path": "crates/core/flags/mod.rs",
+        "start_line": 293
+      },
+      "inter": 40,
+      "union": 67,
+      "verbatim": 44
+    },
+    {
+      "a": {
+        "end_line": 662,
+        "kind": "comment_block",
+        "path": "crates/globset/src/glob.rs",
+        "start_line": 652
+      },
+      "b": {
+        "end_line": 570,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/gitignore.rs",
+        "start_line": 559
+      },
+      "inter": 79,
+      "union": 96,
+      "verbatim": 50
+    },
+    {
+      "a": {
+        "end_line": 662,
+        "kind": "comment_block",
+        "path": "crates/globset/src/glob.rs",
+        "start_line": 652
+      },
+      "b": {
+        "end_line": 179,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/overrides.rs",
+        "start_line": 163
+      },
+      "inter": 84,
+      "union": 125,
+      "verbatim": 88
+    },
+    {
+      "a": {
+        "end_line": 146,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/dir.rs",
+        "start_line": 136
+      },
+      "b": {
+        "end_line": 772,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/dir.rs",
+        "start_line": 764
+      },
+      "inter": 49,
+      "union": 79,
+      "verbatim": 53
+    },
+    {
+      "a": {
+        "end_line": 146,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/dir.rs",
+        "start_line": 136
+      },
+      "b": {
+        "end_line": 509,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/walk.rs",
+        "start_line": 500
+      },
+      "inter": 49,
+      "union": 96,
+      "verbatim": 53
+    },
+    {
+      "a": {
+        "end_line": 772,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/dir.rs",
+        "start_line": 764
+      },
+      "b": {
+        "end_line": 509,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/walk.rs",
+        "start_line": 500
+      },
+      "inter": 49,
+      "union": 74,
+      "verbatim": 53
+    },
+    {
+      "a": {
+        "end_line": 140,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/gitignore.rs",
+        "start_line": 120
+      },
+      "b": {
+        "end_line": 909,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/walk.rs",
+        "start_line": 901
+      },
+      "inter": 44,
+      "union": 136,
+      "verbatim": 46
+    },
+    {
+      "a": {
+        "end_line": 201,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/gitignore.rs",
+        "start_line": 191
+      },
+      "b": {
+        "end_line": 233,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/gitignore.rs",
+        "start_line": 213
+      },
+      "inter": 70,
+      "union": 156,
+      "verbatim": 67
+    },
+    {
+      "a": {
+        "end_line": 570,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/gitignore.rs",
+        "start_line": 559
+      },
+      "b": {
+        "end_line": 179,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/overrides.rs",
+        "start_line": 163
+      },
+      "inter": 79,
+      "union": 137,
+      "verbatim": 50
+    },
+    {
+      "a": {
+        "end_line": 25,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/overrides.rs",
+        "start_line": 15
+      },
+      "b": {
+        "end_line": 109,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/types.rs",
+        "start_line": 96
+      },
+      "inter": 48,
+      "union": 121,
+      "verbatim": 32
+    },
+    {
+      "a": {
+        "end_line": 18,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/pathutil.rs",
+        "start_line": 5
+      },
+      "b": {
+        "end_line": 55,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/pathutil.rs",
+        "start_line": 41
+      },
+      "inter": 46,
+      "union": 57,
+      "verbatim": 52
+    },
+    {
+      "a": {
+        "end_line": 972,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/walk.rs",
+        "start_line": 959
+      },
+      "b": {
+        "end_line": 991,
+        "kind": "comment_block",
+        "path": "crates/ignore/src/walk.rs",
+        "start_line": 981
+      },
+      "inter": 43,
+      "union": 117,
+      "verbatim": 24
+    },
+    {
+      "a": {
+        "end_line": 286,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 275
+      },
+      "b": {
+        "end_line": 1063,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 1044
+      },
+      "inter": 73,
+      "union": 182,
+      "verbatim": 77
+    },
+    {
+      "a": {
+        "end_line": 646,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 640
+      },
+      "b": {
+        "end_line": 667,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 661
+      },
+      "inter": 26,
+      "union": 81,
+      "verbatim": 30
+    },
+    {
+      "a": {
+        "end_line": 646,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 640
+      },
+      "b": {
+        "end_line": 690,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 680
+      },
+      "inter": 48,
+      "union": 85,
+      "verbatim": 30
+    },
+    {
+      "a": {
+        "end_line": 646,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 640
+      },
+      "b": {
+        "end_line": 772,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 765
+      },
+      "inter": 48,
+      "union": 63,
+      "verbatim": 45
+    },
+    {
+      "a": {
+        "end_line": 646,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 640
+      },
+      "b": {
+        "end_line": 818,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 808
+      },
+      "inter": 44,
+      "union": 96,
+      "verbatim": 26
+    },
+    {
+      "a": {
+        "end_line": 667,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 661
+      },
+      "b": {
+        "end_line": 690,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 680
+      },
+      "inter": 55,
+      "union": 81,
+      "verbatim": 59
+    },
+    {
+      "a": {
+        "end_line": 667,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 661
+      },
+      "b": {
+        "end_line": 794,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 788
+      },
+      "inter": 51,
+      "union": 66,
+      "verbatim": 48
+    },
+    {
+      "a": {
+        "end_line": 667,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 661
+      },
+      "b": {
+        "end_line": 818,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 808
+      },
+      "inter": 51,
+      "union": 92,
+      "verbatim": 48
+    },
+    {
+      "a": {
+        "end_line": 690,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 680
+      },
+      "b": {
+        "end_line": 772,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 765
+      },
+      "inter": 44,
+      "union": 96,
+      "verbatim": 26
+    },
+    {
+      "a": {
+        "end_line": 690,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 680
+      },
+      "b": {
+        "end_line": 794,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 788
+      },
+      "inter": 51,
+      "union": 92,
+      "verbatim": 48
+    },
+    {
+      "a": {
+        "end_line": 690,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 680
+      },
+      "b": {
+        "end_line": 818,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 808
+      },
+      "inter": 77,
+      "union": 92,
+      "verbatim": 74
+    },
+    {
+      "a": {
+        "end_line": 772,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 765
+      },
+      "b": {
+        "end_line": 794,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 788
+      },
+      "inter": 33,
+      "union": 88,
+      "verbatim": 37
+    },
+    {
+      "a": {
+        "end_line": 772,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 765
+      },
+      "b": {
+        "end_line": 818,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 808
+      },
+      "inter": 55,
+      "union": 92,
+      "verbatim": 37
+    },
+    {
+      "a": {
+        "end_line": 794,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 788
+      },
+      "b": {
+        "end_line": 818,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 808
+      },
+      "inter": 62,
+      "union": 88,
+      "verbatim": 66
+    },
+    {
+      "a": {
+        "end_line": 1008,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 995
+      },
+      "b": {
+        "end_line": 1034,
+        "kind": "comment_block",
+        "path": "crates/matcher/src/lib.rs",
+        "start_line": 1017
+      },
+      "inter": 114,
+      "union": 154,
+      "verbatim": 112
+    },
+    {
+      "a": {
+        "end_line": 114,
+        "kind": "comment_block",
+        "path": "crates/pcre2/src/matcher.rs",
+        "start_line": 99
+      },
+      "b": {
+        "end_line": 119,
+        "kind": "comment_block",
+        "path": "crates/regex/src/matcher.rs",
+        "start_line": 108
+      },
+      "inter": 84,
+      "union": 128,
+      "verbatim": 52
+    },
+    {
+      "a": {
+        "end_line": 175,
+        "kind": "comment_block",
+        "path": "crates/pcre2/src/matcher.rs",
+        "start_line": 165
+      },
+      "b": {
+        "end_line": 342,
+        "kind": "comment_block",
+        "path": "crates/regex/src/matcher.rs",
+        "start_line": 332
+      },
+      "inter": 88,
+      "union": 88,
+      "verbatim": 93
+    },
+    {
+      "a": {
+        "end_line": 257,
+        "kind": "comment_block",
+        "path": "crates/pcre2/src/matcher.rs",
+        "start_line": 249
+      },
+      "b": {
+        "end_line": 272,
+        "kind": "comment_block",
+        "path": "crates/pcre2/src/matcher.rs",
+        "start_line": 263
+      },
+      "inter": 39,
+      "union": 97,
+      "verbatim": 38
+    },
+    {
+      "a": {
+        "end_line": 389,
+        "kind": "comment_block",
+        "path": "crates/pcre2/src/matcher.rs",
+        "start_line": 376
+      },
+      "b": {
+        "end_line": 522,
+        "kind": "comment_block",
+        "path": "crates/regex/src/matcher.rs",
+        "start_line": 509
+      },
+      "inter": 132,
+      "union": 132,
+      "verbatim": 136
+    },
+    {
+      "a": {
+        "end_line": 105,
+        "kind": "comment_block",
+        "path": "crates/printer/src/json.rs",
+        "start_line": 96
+      },
+      "b": {
+        "end_line": 289,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 280
+      },
+      "inter": 70,
+      "union": 70,
+      "verbatim": 74
+    },
+    {
+      "a": {
+        "end_line": 594,
+        "kind": "comment_block",
+        "path": "crates/printer/src/json.rs",
+        "start_line": 582
+      },
+      "b": {
+        "end_line": 637,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 616
+      },
+      "inter": 78,
+      "union": 181,
+      "verbatim": 39
+    },
+    {
+      "a": {
+        "end_line": 594,
+        "kind": "comment_block",
+        "path": "crates/printer/src/json.rs",
+        "start_line": 582
+      },
+      "b": {
+        "end_line": 482,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 470
+      },
+      "inter": 79,
+      "union": 99,
+      "verbatim": 40
+    },
+    {
+      "a": {
+        "end_line": 634,
+        "kind": "comment_block",
+        "path": "crates/printer/src/json.rs",
+        "start_line": 625
+      },
+      "b": {
+        "end_line": 682,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 673
+      },
+      "inter": 70,
+      "union": 70,
+      "verbatim": 74
+    },
+    {
+      "a": {
+        "end_line": 634,
+        "kind": "comment_block",
+        "path": "crates/printer/src/json.rs",
+        "start_line": 625
+      },
+      "b": {
+        "end_line": 519,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 510
+      },
+      "inter": 70,
+      "union": 70,
+      "verbatim": 74
     },
     {
       "a": {
@@ -137,6 +1004,550 @@
       "inter": 61,
       "union": 74,
       "verbatim": 65
+    },
+    {
+      "a": {
+        "end_line": 69,
+        "kind": "comment_block",
+        "path": "crates/printer/src/path.rs",
+        "start_line": 51
+      },
+      "b": {
+        "end_line": 163,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 147
+      },
+      "inter": 112,
+      "union": 119,
+      "verbatim": 119
+    },
+    {
+      "a": {
+        "end_line": 69,
+        "kind": "comment_block",
+        "path": "crates/printer/src/path.rs",
+        "start_line": 51
+      },
+      "b": {
+        "end_line": 219,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 201
+      },
+      "inter": 119,
+      "union": 119,
+      "verbatim": 126
+    },
+    {
+      "a": {
+        "end_line": 88,
+        "kind": "comment_block",
+        "path": "crates/printer/src/path.rs",
+        "start_line": 78
+      },
+      "b": {
+        "end_line": 179,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 169
+      },
+      "inter": 69,
+      "union": 69,
+      "verbatim": 73
+    },
+    {
+      "a": {
+        "end_line": 88,
+        "kind": "comment_block",
+        "path": "crates/printer/src/path.rs",
+        "start_line": 78
+      },
+      "b": {
+        "end_line": 235,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 225
+      },
+      "inter": 69,
+      "union": 69,
+      "verbatim": 73
+    },
+    {
+      "a": {
+        "end_line": 107,
+        "kind": "comment_block",
+        "path": "crates/printer/src/path.rs",
+        "start_line": 97
+      },
+      "b": {
+        "end_line": 443,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 431
+      },
+      "inter": 57,
+      "union": 110,
+      "verbatim": 56
+    },
+    {
+      "a": {
+        "end_line": 107,
+        "kind": "comment_block",
+        "path": "crates/printer/src/path.rs",
+        "start_line": 97
+      },
+      "b": {
+        "end_line": 314,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 304
+      },
+      "inter": 66,
+      "union": 66,
+      "verbatim": 70
+    },
+    {
+      "a": {
+        "end_line": 126,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 109
+      },
+      "b": {
+        "end_line": 174,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 157
+      },
+      "inter": 104,
+      "union": 104,
+      "verbatim": 108
+    },
+    {
+      "a": {
+        "end_line": 163,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 147
+      },
+      "b": {
+        "end_line": 219,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 201
+      },
+      "inter": 112,
+      "union": 119,
+      "verbatim": 119
+    },
+    {
+      "a": {
+        "end_line": 179,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 169
+      },
+      "b": {
+        "end_line": 235,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 225
+      },
+      "inter": 69,
+      "union": 69,
+      "verbatim": 73
+    },
+    {
+      "a": {
+        "end_line": 202,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 188
+      },
+      "b": {
+        "end_line": 263,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 244
+      },
+      "inter": 81,
+      "union": 159,
+      "verbatim": 36
+    },
+    {
+      "a": {
+        "end_line": 228,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 223
+      },
+      "b": {
+        "end_line": 277,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 269
+      },
+      "inter": 47,
+      "union": 63,
+      "verbatim": 50
+    },
+    {
+      "a": {
+        "end_line": 406,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 399
+      },
+      "b": {
+        "end_line": 422,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 415
+      },
+      "inter": 33,
+      "union": 63,
+      "verbatim": 19
+    },
+    {
+      "a": {
+        "end_line": 443,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 431
+      },
+      "b": {
+        "end_line": 314,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 304
+      },
+      "inter": 57,
+      "union": 110,
+      "verbatim": 56
+    },
+    {
+      "a": {
+        "end_line": 637,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 616
+      },
+      "b": {
+        "end_line": 482,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 470
+      },
+      "inter": 78,
+      "union": 181,
+      "verbatim": 39
+    },
+    {
+      "a": {
+        "end_line": 682,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 673
+      },
+      "b": {
+        "end_line": 519,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 510
+      },
+      "inter": 70,
+      "union": 70,
+      "verbatim": 74
+    },
+    {
+      "a": {
+        "end_line": 1572,
+        "kind": "comment_block",
+        "path": "crates/printer/src/standard.rs",
+        "start_line": 1566
+      },
+      "b": {
+        "end_line": 539,
+        "kind": "comment_block",
+        "path": "crates/printer/src/summary.rs",
+        "start_line": 533
+      },
+      "inter": 57,
+      "union": 57,
+      "verbatim": 61
+    },
+    {
+      "a": {
+        "end_line": 49,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/line_buffer.rs",
+        "start_line": 42
+      },
+      "b": {
+        "end_line": 53,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/searcher/mod.rs",
+        "start_line": 34
+      },
+      "inter": 69,
+      "union": 190,
+      "verbatim": 72
+    },
+    {
+      "a": {
+        "end_line": 232,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/line_buffer.rs",
+        "start_line": 227
+      },
+      "b": {
+        "end_line": 349,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/line_buffer.rs",
+        "start_line": 343
+      },
+      "inter": 37,
+      "union": 74,
+      "verbatim": 23
+    },
+    {
+      "a": {
+        "end_line": 255,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/line_buffer.rs",
+        "start_line": 243
+      },
+      "b": {
+        "end_line": 405,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/line_buffer.rs",
+        "start_line": 389
+      },
+      "inter": 93,
+      "union": 159,
+      "verbatim": 43
+    },
+    {
+      "a": {
+        "end_line": 581,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/searcher/mod.rs",
+        "start_line": 571
+      },
+      "b": {
+        "end_line": 883,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/searcher/mod.rs",
+        "start_line": 875
+      },
+      "inter": 49,
+      "union": 80,
+      "verbatim": 51
+    },
+    {
+      "a": {
+        "end_line": 642,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/searcher/mod.rs",
+        "start_line": 636
+      },
+      "b": {
+        "end_line": 664,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/searcher/mod.rs",
+        "start_line": 659
+      },
+      "inter": 43,
+      "union": 69,
+      "verbatim": 43
+    },
+    {
+      "a": {
+        "end_line": 123,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 111
+      },
+      "b": {
+        "end_line": 141,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 130
+      },
+      "inter": 63,
+      "union": 128,
+      "verbatim": 66
+    },
+    {
+      "a": {
+        "end_line": 123,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 111
+      },
+      "b": {
+        "end_line": 204,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 196
+      },
+      "inter": 42,
+      "union": 120,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 141,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 130
+      },
+      "b": {
+        "end_line": 165,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 151
+      },
+      "inter": 55,
+      "union": 138,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 141,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 130
+      },
+      "b": {
+        "end_line": 186,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 174
+      },
+      "inter": 47,
+      "union": 134,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 141,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 130
+      },
+      "b": {
+        "end_line": 204,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 196
+      },
+      "inter": 42,
+      "union": 109,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 165,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 151
+      },
+      "b": {
+        "end_line": 186,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 174
+      },
+      "inter": 47,
+      "union": 147,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 165,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 151
+      },
+      "b": {
+        "end_line": 204,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 196
+      },
+      "inter": 42,
+      "union": 122,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 186,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 174
+      },
+      "b": {
+        "end_line": 204,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 196
+      },
+      "inter": 42,
+      "union": 110,
+      "verbatim": 47
+    },
+    {
+      "a": {
+        "end_line": 538,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 524
+      },
+      "b": {
+        "end_line": 586,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 570
+      },
+      "inter": 73,
+      "union": 160,
+      "verbatim": 60
+    },
+    {
+      "a": {
+        "end_line": 538,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 524
+      },
+      "b": {
+        "end_line": 636,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 624
+      },
+      "inter": 66,
+      "union": 134,
+      "verbatim": 48
+    },
+    {
+      "a": {
+        "end_line": 586,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 570
+      },
+      "b": {
+        "end_line": 636,
+        "kind": "comment_block",
+        "path": "crates/searcher/src/sink.rs",
+        "start_line": 624
+      },
+      "inter": 75,
+      "union": 138,
+      "verbatim": 48
     },
     {
       "a": {
@@ -159,11 +1570,11 @@
   "schema": "ce.eval-docdup-oracle/1.0.0",
   "summary": {
     "by_rule": {
-      "jaccard": 8,
-      "verbatim": 7
+      "jaccard": 91,
+      "verbatim": 50
     },
-    "candidate_pairs": 2056,
-    "pairs": 8,
-    "segments_live": 251
+    "candidate_pairs": 3086,
+    "pairs": 91,
+    "segments_live": 568
   }
 }

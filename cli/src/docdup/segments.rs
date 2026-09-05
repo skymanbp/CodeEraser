@@ -180,10 +180,14 @@ fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {
 
 /// Contiguous same-column comment nodes merge into one block (design
 /// §5.1: a `//` run is one comment per line lexically but one
-/// paragraph semantically).
+/// paragraph semantically). Adjacency is read off each node's last
+/// CONTENT row, not its end position: tree-sitter-rust's doc-comment
+/// node (`///`, `//!`) consumes the newline and ends at column 0 of
+/// the next row, which until DOCDUP_REV 5 hid every `///` line from
+/// the run before it (codex review 2026-09-04, v2.28 amendment).
 fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {
     let mut out: Vec<RawSeg> = Vec::new();
-    let mut last: Option<(usize, usize)> = None; // (end row, start col)
+    let mut last: Option<(usize, usize)> = None; // (last content row, start col)
     for n in nodes {
         let (row, col) = (n.start_position().row, n.start_position().column);
         let mergeable = last == Some((row.wrapping_sub(1), col));
@@ -194,9 +198,20 @@ fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {
         } else {
             out.push(node_seg(KIND_COMMENT, *n, text));
         }
-        last = Some((n.end_position().row, col));
+        last = Some((last_row(*n), col));
     }
     out
+}
+
+/// The last row a node has content on: a node whose end position is
+/// column 0 of a later row ended with the newline of the row before.
+fn last_row(node: Node<'_>) -> usize {
+    let end = node.end_position();
+    if end.column == 0 && end.row > node.start_position().row {
+        end.row - 1
+    } else {
+        end.row
+    }
 }
 
 fn node_seg(kind: i64, node: Node<'_>, text: &str) -> RawSeg {
@@ -210,7 +225,7 @@ fn node_seg(kind: i64, node: Node<'_>, text: &str) -> RawSeg {
     RawSeg {
         kind,
         start_line: node.start_position().row as i64 + 1,
-        end_line: node.end_position().row as i64 + 1,
+        end_line: last_row(node) as i64 + 1,
         lines,
     }
 }

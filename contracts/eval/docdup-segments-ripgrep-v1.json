@@ -2,7 +2,7 @@
   "constants": {
     "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 4,
+    "docdup_rev": 5,
     "exempt": [
       "live",
       "license_header",
@@ -145,8 +145,7 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 11,
-        "indented_code_lines": 22
+        "below_floor": 3
       },
       "live": 0,
       "path": "benchsuite/runs/2020-10-14-archlinux-frink/README.md",
@@ -158,8 +157,7 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 12,
-        "indented_code_lines": 20
+        "below_floor": 4
       },
       "live": 0,
       "path": "benchsuite/runs/2022-12-16-archlinux-duff/README.md",
@@ -171,12 +169,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 3
       },
-      "live": 0,
+      "live": 1,
       "path": "build.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "b1b39fdec81d2053defcb0a3bf19765e9b7db01469422f682fb1fd5dfc500f12",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "07d72d8929ecd1cc2277e7d1f16092521c9160c92cca9544a682b275bd53d955"
     },
     {
@@ -195,39 +195,43 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 212,
-        "fenced_code_line": 2
+        "below_floor": 21,
+        "fenced_code_line": 10
       },
-      "live": 0,
+      "live": 9,
       "path": "crates/cli/src/decompress.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "72eb2df739b18aed95668ab1e1e7b16bd5e4093014782a7342eb9d164528c762",
+      "segs_by": {
+        "comment_block": 9
+      },
       "sha256": "eaceb58ab4c650f0f9f62de1181fd6611b9e6b5b162816546760d49514045b37"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 60,
-        "fenced_code_line": 4
+        "below_floor": 2,
+        "fenced_code_line": 10
       },
-      "live": 0,
+      "live": 2,
       "path": "crates/cli/src/escape.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "0bacce34188aff73cb36d377e4244e9e54fefebc584cb71e081c59db80ed529b",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "b3ac4121dd2d81be59f22f39bb9e4e473775c2631cc33b063715059ba63ed180"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 17
+        "below_floor": 4
       },
-      "live": 1,
+      "live": 2,
       "path": "crates/cli/src/hostname.rs",
-      "seg_sha256": "0a0f35a8b25e6f0ea64285a324e96c390f527d3be394b3a1aa1731887a8f60f6",
+      "seg_sha256": "201ce3f5e6a96d2cde0047ea09b66976ea7099ba782bbe1a685ad177a0361888",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 2
       },
       "sha256": "3c0eebe1182d54d2caedd4c62515c849bf9e1c4384b79d1181ef7e257b302d07"
     },
@@ -235,26 +239,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 12
+        "below_floor": 1
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/cli/src/human.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "deecc1f2855d033b731cc1fd81ddb5c9ee4fbd360aead85f5010af2000daf59f",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "b85f1391a01ccdfed20951cdf07bd641bf190256c48caccfe83f8ec14e2b1636"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 45,
         "fenced_code_line": 12
       },
-      "live": 1,
+      "live": 5,
       "path": "crates/cli/src/lib.rs",
-      "seg_sha256": "b7222d9c0ba9694a9b71deb2c88dca0d97a2157c7d5e2913fba57332edf47452",
+      "seg_sha256": "6d43229f980e1e3b449087c2c66148fc7497ba6225e72be3e09cb34336638f86",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 5
       },
       "sha256": "b27d0e7de21515df33714d79d4959b17aa3d28c168b1c5233c21c333a8a8c695"
     },
@@ -262,27 +267,29 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 59,
-        "fenced_code_line": 2
+        "below_floor": 2,
+        "fenced_code_line": 16
       },
-      "live": 0,
+      "live": 5,
       "path": "crates/cli/src/pattern.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "3bc1ec93b7b62acf9605c8b2fbaa4b60bb05d08a92c2ec938181e2aa446d6376",
+      "segs_by": {
+        "comment_block": 5
+      },
       "sha256": "22b94d38be203aa3c252bf010cce238349f39cb5c494991ac57b52de1dab722f"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 106,
-        "fenced_code_line": 2
+        "below_floor": 12,
+        "fenced_code_line": 13
       },
-      "live": 1,
+      "live": 6,
       "path": "crates/cli/src/process.rs",
-      "seg_sha256": "0dc780b5d32c7a0a982d85cf0e2d3850b0c760c5beec04957a0c719f6b0056be",
+      "seg_sha256": "97189539cdefb30d9013159e97d4f8491581ba24bdad024b0428e31d7a0ebb95",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 6
       },
       "sha256": "1452fb92570a07c3c5135dc9efc293a30edd3322580cc93d0b342107c2593e3f"
     },
@@ -290,12 +297,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 31
+        "below_floor": 1
       },
-      "live": 0,
+      "live": 3,
       "path": "crates/cli/src/wtr.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "683adcf7081ceb7b661bc334e584822dc7e5813b5685bbf96c0a642f64c6e980",
+      "segs_by": {
+        "comment_block": 3
+      },
       "sha256": "44d2f5192c2e0c74a838a190fee4c8065747d7c643ddb3f8b4d0985e6eb172a9"
     },
     {
@@ -316,7 +325,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 5
+        "below_floor": 2
       },
       "live": 0,
       "path": "crates/core/flags/complete/bash.rs",
@@ -328,7 +337,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 4
+        "below_floor": 2
       },
       "live": 0,
       "path": "crates/core/flags/complete/fish.rs",
@@ -352,7 +361,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 5
+        "below_floor": 2
       },
       "live": 0,
       "path": "crates/core/flags/complete/powershell.rs",
@@ -378,25 +387,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 2,
       "path": "crates/core/flags/config.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "c6727a88ebdea124642e86806ad6356f639471e04e3a5a2e3a89b9d751b1ad79",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "adb0b126590521b981db9d913091f6d564f0b142b2d024861e84538a225cf23e"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 132
+        "below_floor": 120
       },
-      "live": 8,
+      "live": 9,
       "path": "crates/core/flags/defs.rs",
-      "seg_sha256": "1e54afa065d5822cbb77410b79088280c6ab09d34fbd108ed8913be94455e157",
+      "seg_sha256": "66e85f8594f2256d7b582adfd6fb95379276faf6b2f36c10e482c5e5df9584fd",
       "segs_by": {
-        "comment_block": 8
+        "comment_block": 9
       },
       "sha256": "779953a821d814ba7f66877d0e581f2a7d7b44099b2cd5c6c7a7271b517ebd1f"
     },
@@ -404,19 +415,21 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 29
+        "below_floor": 14
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/core/flags/doc/help.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "7abfe410b80edfc3124ad50cd26fcfa8edd1ef6d1342a4a6762636b1c5f927a4",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "c3a5ff9abf738dd84fe957378f2bb8e088838a531783f55a3b5e860a982877cb"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 13
+        "below_floor": 8
       },
       "live": 0,
       "path": "crates/core/flags/doc/man.rs",
@@ -428,37 +441,41 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 10
+        "below_floor": 1
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/core/flags/doc/mod.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "8ae1df1e5be7a7cd890e743da3a3f64ce329d3d92c20e74a2e9fb0c5714526b1",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "49de2b86f8efe2e9807705ae87014c2e80561ce430f8501303ad4553dba9c6ed"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 32
+        "below_floor": 9
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/core/flags/doc/version.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "822761bfb5d46bb68569b6caa6626986ffcbe9f33e11f68309ba0ba6413fc763",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "190b63e9c03db51205ead9a80a61655b618961bea111366dbf4fc2adb38bd6ad"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 269
+        "below_floor": 66
       },
-      "live": 5,
+      "live": 19,
       "path": "crates/core/flags/hiargs.rs",
-      "seg_sha256": "79fb26b66da489f767ea010ee158ab5dca694e077c18e7c971b52920438b778c",
+      "seg_sha256": "aa7931d6a406d6a302bd847d22937b5ab4727e759c44f91ebc4f929ef1d9dbc9",
       "segs_by": {
-        "comment_block": 5
+        "comment_block": 19
       },
       "sha256": "4269c0129575a379a725d4023382d33277e73bc9928e6c81f5e8fa4824019169"
     },
@@ -466,25 +483,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 232
+        "below_floor": 97
       },
-      "live": 0,
+      "live": 8,
       "path": "crates/core/flags/lowargs.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "b11f4dd1bfe4d13d27cbab21f5aa5d7f5c0642c3b0032bc63c9cf949724df935",
+      "segs_by": {
+        "comment_block": 8
+      },
       "sha256": "53f7a3b6831a9223794e297d8aeaaab291c4194f1d068c178d57d6660f9ec9c6"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 142
+        "below_floor": 26
       },
-      "live": 1,
+      "live": 8,
       "path": "crates/core/flags/mod.rs",
-      "seg_sha256": "fb72e566c25b72c12d119791a02f575d17f081e43a90cce92644df5081d9d30c",
+      "seg_sha256": "4ecde1a6369222c81a7e5279d1ffcf2755428f307f43afaeb33e6ef5cc6d3c66",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 8
       },
       "sha256": "73bfbf149d375461e7b57d3967a5ee9c8a1875fad258f53c4c93083687348b71"
     },
@@ -492,13 +511,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 98
+        "below_floor": 47
       },
-      "live": 1,
+      "live": 4,
       "path": "crates/core/flags/parse.rs",
-      "seg_sha256": "ae97f99cab863af8218a65de487c5a5bc7001b01f4d81de6eef27a1be91eda54",
+      "seg_sha256": "401a190e3f79bf168bedeaf8d90ed0e118ae0bdeb78804289fd637550cd9fe51",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 4
       },
       "sha256": "c2a3375396800a6c8d8e00d98c321d5caf3c91f7938fd90eafb4e82ea95b5ca5"
     },
@@ -506,13 +525,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 41
+        "below_floor": 14
       },
-      "live": 2,
+      "live": 3,
       "path": "crates/core/haystack.rs",
-      "seg_sha256": "7c3aee0d7e9a19e863cf9b5e2bee51d4c1080558f267d644a6f736a5c68e1710",
+      "seg_sha256": "0f6a585ac7ff1489fc99c6c4397ef14bb2c8ba866c1c15feb5e9c64e94e1f4d7",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 3
       },
       "sha256": "8766d52fd5acedf59bf7613d5ed9e77186e97a1ffe77d0b516c6ec807e1a9157"
     },
@@ -552,7 +571,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 11
+        "below_floor": 6
       },
       "live": 0,
       "path": "crates/core/logger.rs",
@@ -564,13 +583,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 81
+        "below_floor": 15
       },
-      "live": 2,
+      "live": 8,
       "path": "crates/core/main.rs",
-      "seg_sha256": "4e01de935ac0cfe456814f2e233a8b662eeb2e7002ba07635b569dcf9aae706f",
+      "seg_sha256": "166a8155e0568b3299516fbc80b92b6668063d7ecb0515476b5f643074cfb330",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 8
       },
       "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
     },
@@ -578,7 +597,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 29
+        "below_floor": 14
       },
       "live": 2,
       "path": "crates/core/messages.rs",
@@ -592,13 +611,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 91
+        "below_floor": 28
       },
-      "live": 1,
+      "live": 3,
       "path": "crates/core/search.rs",
-      "seg_sha256": "2a9eab2b909d8c558751181496643854dc7813681a441ef4b9368ce47f3a6966",
+      "seg_sha256": "fb32fb6840eadbc47980a1316520118b4f8977f914c46f2d50eb33d974a38815",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 3
       },
       "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
     },
@@ -644,13 +663,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 186
+        "below_floor": 73
       },
-      "live": 1,
+      "live": 9,
       "path": "crates/globset/src/glob.rs",
-      "seg_sha256": "04797e44af4c1f3a9dbf8564f864968671d43d36f84144415fde42079eb3e7f4",
+      "seg_sha256": "ac68fbd1f167a92f2c26d2a7401302e071f0f486f513d44bc5077f58d3ff8eb6",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 9
       },
       "sha256": "d230e938384da768864b4aff78836271c1e923ee9f1ffae2d9319fed8bb2ccb4"
     },
@@ -658,15 +677,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 127,
-        "fenced_code_line": 39,
+        "below_floor": 38,
+        "fenced_code_line": 57,
         "skeleton_line": 3
       },
-      "live": 2,
+      "live": 6,
       "path": "crates/globset/src/lib.rs",
-      "seg_sha256": "5f6b6c5ef4b54ca5b3c51c588bdb16b94a8eb8dbf3e380f4d5f27baa4f20adb8",
+      "seg_sha256": "169b507e67cf24594085b01624338e4c8a3a083e1ae7d7ed937a9772cae6866f",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 6
       },
       "sha256": "7e34c24673ee164d779de7d0efdaf97f19176f9e0bfc71e0842345ef76f0a38a"
     },
@@ -674,12 +693,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 25
+        "below_floor": 4
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/globset/src/pathutil.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "9b9b03c6e17e3fd911219ccdac008e789621c85f44f30c8a6dc6cdf88bfd2621",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "5780ad5ec2bc89a42201a1532295e06a90f493929583c453f135759b39a70fa5"
     },
     {
@@ -752,25 +773,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 23
+        "below_floor": 13
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/ignore/src/default_types.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "a8cc1fb05a8dc9b17fca5802f529c5f72e484abe8566c4e857daf215a35a4de3",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "7ed94507d800e77a98795fe0c50e1a05a16612d71bacfbb287fc3930bcc10ba9"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 202
+        "below_floor": 88
       },
-      "live": 6,
+      "live": 11,
       "path": "crates/ignore/src/dir.rs",
-      "seg_sha256": "e7b7788640202dc4dfc6c8e23d6220cb3b560e46b3d573fd7665f6e2c8ad8c76",
+      "seg_sha256": "4e1bbb000c9dc6c4e351745f559dfccb22e873e259420cfa1ea010c22195c889",
       "segs_by": {
-        "comment_block": 6
+        "comment_block": 11
       },
       "sha256": "e2ad00e37e22433feb6f06795e4a7aea6af2a4e06f44f6f56e171377e42f56f3"
     },
@@ -778,13 +801,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 189
+        "below_floor": 55
       },
-      "live": 1,
+      "live": 9,
       "path": "crates/ignore/src/gitignore.rs",
-      "seg_sha256": "98574727f278436396016698cf17e7d052ecd094c44bf9f5e71566641df8fad2",
+      "seg_sha256": "9cf5fb1a961a723b8cc1c74392fac543f502d691aaad91245e9d44d0ca8ae8f9",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 9
       },
       "sha256": "e7e4eb6e4a490bf67c4ae422c9cd89978607e20d3e65b52a886afd9bd500471b"
     },
@@ -792,14 +815,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 190,
-        "fenced_code_line": 2
+        "below_floor": 52,
+        "fenced_code_line": 12
       },
-      "live": 2,
+      "live": 9,
       "path": "crates/ignore/src/incremental.rs",
-      "seg_sha256": "77948cb780ff19b7f9e4fcbafb132d0bff9ad81fd169d2f6e989c57937e6a0c0",
+      "seg_sha256": "339051b7956ef17bab6e6ece33f355665c6abdc1562b6aa6ff4b614bd1d8de3d",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 9
       },
       "sha256": "50ab6709241f88dd110e095db174e0018ff0c48697b21f4db049e8cdbabdca67"
     },
@@ -807,15 +830,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 87,
+        "below_floor": 42,
         "fenced_code_line": 19,
         "skeleton_line": 1
       },
-      "live": 1,
+      "live": 3,
       "path": "crates/ignore/src/lib.rs",
-      "seg_sha256": "545770f8585ab7a6a722e1fa8aa715596e7fd92dd54bef092782199a2f8c37d0",
+      "seg_sha256": "17f08f1d12d77950eb5ffd3cee7b83f40a57e4bb31d0b45ad9aa3d69ee948529",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 3
       },
       "sha256": "89cb2cbdd479ae4a8cf5ea0bbea4cad72b6833a6dfb95008e8f51b185b44aafc"
     },
@@ -823,39 +846,43 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 79
+        "below_floor": 15
       },
-      "live": 0,
+      "live": 4,
       "path": "crates/ignore/src/overrides.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "8ce10c80130389b4bd70c44e045fcd24314401da6a9e796419c9830d5754a3e6",
+      "segs_by": {
+        "comment_block": 4
+      },
       "sha256": "4283fd4dc169476a580ea1e393b1b125a357cda4c1862293800097bd91acb69e"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 43
+        "below_floor": 5
       },
-      "live": 0,
+      "live": 2,
       "path": "crates/ignore/src/pathutil.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "eebad9c6adb29e6bb76ae4ce7c584fd9fd1927314a5cb2e49c41fa110e8009d6",
+      "segs_by": {
+        "comment_block": 2
+      },
       "sha256": "69e4ca040721e33b94d0ce6a7ca2cd1289291ca336838fa67d71ed605a7a1f26"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 87,
+        "below_floor": 36,
         "fenced_code_line": 52,
         "skeleton_line": 2
       },
-      "live": 1,
+      "live": 4,
       "path": "crates/ignore/src/types.rs",
-      "seg_sha256": "25532a83f4164e404c95ffcacfb7e91713bce28f5cb69c3445a8c10751b80b42",
+      "seg_sha256": "12dce33474ade47e3b62ae64b9040c4f084a40e97d5f9018ede4d3e9ab1c9c59",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 4
       },
       "sha256": "d058f7a2987e81299b8f0c5dc3a8af0989959fd7aca2cc91b102689b6a7039bf"
     },
@@ -863,13 +890,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 538
+        "below_floor": 133
       },
-      "live": 2,
+      "live": 21,
       "path": "crates/ignore/src/walk.rs",
-      "seg_sha256": "f04f4518df4da6e279252d09403c220ca47255f3d410295bf717a9b450a4592a",
+      "seg_sha256": "9ce70e7caa55ba492bb950c69fbcbaa2874628a8a4966a4ea31156bf2d395cbf",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 21
       },
       "sha256": "a81c751dc22763d8efda6fb88fd77c0e03c42fb17538a94497a5737ba8b4b919"
     },
@@ -889,7 +916,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 4
+        "below_floor": 1
       },
       "live": 0,
       "path": "crates/ignore/tests/gitignore_skip_bom.rs",
@@ -935,7 +962,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 15
+        "below_floor": 12
       },
       "live": 2,
       "path": "crates/index/src/literal.rs",
@@ -961,26 +988,28 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 25
+        "below_floor": 6
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/matcher/src/interpolate.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "61a445cdd22dbc3ee157083824ceabbb41cfda08694228abe581d6cfbdf28284",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "00b130d37cf2ca685e25f10201f37aa332f5d4cdfe04fe59b00df24a3be1e3a4"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 482,
-        "fenced_code_line": 2
+        "below_floor": 47,
+        "fenced_code_line": 7
       },
-      "live": 1,
+      "live": 25,
       "path": "crates/matcher/src/lib.rs",
-      "seg_sha256": "ec346b5d499538780c8888d59c49574ad943531c8c33b80ec1adc042b3556307",
+      "seg_sha256": "76b6b07d0f37467d6be5a7ce108bf117f3414086226983d1e69617c485ba00a2",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 25
       },
       "sha256": "98f194a9cd6a5db50fdd08fe20913f6865bd78b8760236d50395155121ea806e"
     },
@@ -1034,7 +1063,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 12
+        "below_floor": 4
       },
       "live": 0,
       "path": "crates/pcre2/src/error.rs",
@@ -1058,12 +1087,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 179
+        "below_floor": 23
       },
-      "live": 0,
+      "live": 10,
       "path": "crates/pcre2/src/matcher.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "1a419a35013886f3276a94f22fc92f7f11c7404482525066830d9abd59e3c0f8",
+      "segs_by": {
+        "comment_block": 10
+      },
       "sha256": "dbcc491d733c9eaceaa86c3cdb0819548c2deeb5c2efa3b5b0d001fb443ea380"
     },
     {
@@ -1082,20 +1113,22 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 93,
-        "fenced_code_line": 2
+        "below_floor": 22,
+        "fenced_code_line": 15
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/printer/src/color.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "4e061878c7920b1c6c20143d45a371f66a6c526ed1705aa657a96e83ce37ac4b",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "f37f3a667459590e9defc0537246d34401521ec40757aaf787df88086dfa1097"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 7
+        "below_floor": 5
       },
       "live": 0,
       "path": "crates/printer/src/counter.rs",
@@ -1107,7 +1140,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 9
+        "below_floor": 7
       },
       "live": 0,
       "path": "crates/printer/src/hyperlink/aliases.rs",
@@ -1119,14 +1152,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 205,
-        "fenced_code_line": 2
+        "below_floor": 59,
+        "fenced_code_line": 8
       },
-      "live": 5,
+      "live": 13,
       "path": "crates/printer/src/hyperlink/mod.rs",
-      "seg_sha256": "f4cf5b85ee126046099e3f347efdef9541421a8fae043c960998ed175cc628fa",
+      "seg_sha256": "9f2a5183f3bdc63bfde4b46fe6922d41e36ba3dba563e5b557f5e106c77e235c",
       "segs_by": {
-        "comment_block": 5
+        "comment_block": 13
       },
       "sha256": "8887b066987643638d822ec53ebd44f10b9d1a1bab00d9152579a56dfad284fb"
     },
@@ -1134,14 +1167,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 480,
-        "fenced_code_line": 14
+        "below_floor": 24,
+        "fenced_code_line": 106
       },
-      "live": 1,
+      "live": 6,
       "path": "crates/printer/src/json.rs",
-      "seg_sha256": "89b95f4c795db1c913792fc11a68e917f878455f96d9917805158515eeb6ec0b",
+      "seg_sha256": "4aa9de285cc6b063f4795c46f4a9b4fd03d840a29811a502e77b4352e18b4c86",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 6
       },
       "sha256": "310471057be8d646754ff073c75607050ae2f3b355554c59631089ab6223ad74"
     },
@@ -1149,13 +1182,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 17
+        "below_floor": 2
       },
-      "live": 2,
+      "live": 4,
       "path": "crates/printer/src/jsont.rs",
-      "seg_sha256": "0a7fdc7b39333d4142dd9e1ab24913dd6ced609368b554cbefdd3cc6afe7eb49",
+      "seg_sha256": "b52dbb481cb63bcbef444128e591d34d3804b09459ee91e4a0a7cd264782dc87",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 4
       },
       "sha256": "bf5de4c4a28b53cf66b8a2d5f30eb5878abe120b4a72a4465633821d7635379e"
     },
@@ -1189,25 +1222,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 70
+        "below_floor": 7
       },
-      "live": 0,
+      "live": 4,
       "path": "crates/printer/src/path.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "c0e3f23ce7a3633eb90302f2200572c22f60d4e5c28fd49995de99aec270d13e",
+      "segs_by": {
+        "comment_block": 4
+      },
       "sha256": "733d31ce45d34bc521d35fa63494f10b0fc73760496c5181a51a1473b672d234"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 440
+        "below_floor": 69
       },
-      "live": 1,
+      "live": 27,
       "path": "crates/printer/src/standard.rs",
-      "seg_sha256": "e507dc8009c1227c378a526c0f2c21200ea537722e2bf8c8485cb85f6ecb4254",
+      "seg_sha256": "274ce095bb41c72578d682031c2fcff07805916f104b8d8797cb2fa29b88ec05",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 27
       },
       "sha256": "8fc94a8cba6add7dbe8394cd2c6f24dffb773b9f85852ee6d4e97747d40e7460"
     },
@@ -1215,7 +1250,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 26
+        "below_floor": 16
       },
       "live": 0,
       "path": "crates/printer/src/stats.rs",
@@ -1227,13 +1262,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 268
+        "below_floor": 36
       },
-      "live": 1,
+      "live": 14,
       "path": "crates/printer/src/summary.rs",
-      "seg_sha256": "16cf63d8ff9422a8f2e0735388f1b9d2fb5d056fc74f97babc0fe126396e5bc0",
+      "seg_sha256": "2ecd7d50e3d9f390f91d8398062c792e888ac214011fcab7acc7c96877e21f36",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 14
       },
       "sha256": "76ac78ad878a2a6a45a19563659e710b9080678397fbcffdb68746f5eefe3655"
     },
@@ -1241,13 +1276,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 108
+        "below_floor": 30
       },
-      "live": 2,
+      "live": 5,
       "path": "crates/printer/src/util.rs",
-      "seg_sha256": "08e487e9f7df22f740d3b9cdaad520fbc438da3226e9fdd5cb1cf25c6705065f",
+      "seg_sha256": "713ebc3b18b1eb884d6688d01b993faba68581686f677b88444eea13596860c0",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 5
       },
       "sha256": "59d984c9b7586592faaa8fc146a67346ece2aed3365f8ccc8a211c12744d9484"
     },
@@ -1267,7 +1302,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 21
+        "below_floor": 9
       },
       "live": 0,
       "path": "crates/regex/src/ast.rs",
@@ -1279,7 +1314,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 3
+        "below_floor": 2
       },
       "live": 0,
       "path": "crates/regex/src/ban.rs",
@@ -1291,13 +1326,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 84
+        "below_floor": 20
       },
-      "live": 1,
+      "live": 5,
       "path": "crates/regex/src/config.rs",
-      "seg_sha256": "32eaa7efe4a20c4bca5df12552fdc2189363c48a0d7065417725d81a602e96aa",
+      "seg_sha256": "0e42444d0e834ffd8d4383e320254112ee0df81047aa48e066a21dc814f4cdb3",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 5
       },
       "sha256": "8af11cac22616a5227542beead8d7ee9fb62c208a5cfc9923c07186eae1fd9cb"
     },
@@ -1305,12 +1340,14 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 22
+        "below_floor": 6
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/regex/src/error.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "1a85ae0e6713f75674ac782e858fd81f2394440b11b07b8a14eb54b23c45a433",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "af7b8bfe1575546a9a31780c009bbf315a81a02f823099da34f106e416743ffd"
     },
     {
@@ -1329,13 +1366,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 129
+        "below_floor": 42
       },
-      "live": 5,
+      "live": 9,
       "path": "crates/regex/src/literal.rs",
-      "seg_sha256": "125075abfa0839eaa38996d239cb41dcd94b3ebe44fb022a27f33c5e6546ac9f",
+      "seg_sha256": "925f70a1c8894f8144dfc10a5d9cdcaa7da45630e3a32d2b2d7cd762cb82a99d",
       "segs_by": {
-        "comment_block": 5
+        "comment_block": 9
       },
       "sha256": "f1746f2df93ba9defed55f36ad0f7cd5dada16a7fa881f80193f8d98948c981f"
     },
@@ -1343,13 +1380,13 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 238
+        "below_floor": 35
       },
-      "live": 1,
+      "live": 13,
       "path": "crates/regex/src/matcher.rs",
-      "seg_sha256": "13f054e252d1dce0020298d7e12a9d6e55ffc697a0b03be7247846eea0899cb5",
+      "seg_sha256": "79acf0928306b2c0df43475e731c05ed0b7bd2ff04b6d2ffe1357f17574acbb0",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 13
       },
       "sha256": "a98966ab3326c1ff8121987222f602dc8d861b627fbb4f9fa804667ca643065f"
     },
@@ -1357,7 +1394,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 6
+        "below_floor": 5
       },
       "live": 0,
       "path": "crates/regex/src/non_matching.rs",
@@ -1369,13 +1406,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 35,
-        "fenced_code_line": 2
+        "below_floor": 1,
+        "fenced_code_line": 7
       },
-      "live": 0,
+      "live": 1,
       "path": "crates/regex/src/strip.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "1f484188f5330d3d89943406cde3c32eadc44f78a8781f51c55967b265ec5a04",
+      "segs_by": {
+        "comment_block": 1
+      },
       "sha256": "f799bbc604e6a306070f8acdf612f396c7ae230d755e2fb98efdad61367ee7ac"
     },
     {
@@ -1418,24 +1457,28 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 203
+        "below_floor": 56
       },
-      "live": 0,
+      "live": 10,
       "path": "crates/searcher/src/line_buffer.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "60a23dd2a026bdcc1322cb14fc55d3bbaf9c1a5195a2f8e43171fdb2c6f2f8f0",
+      "segs_by": {
+        "comment_block": 10
+      },
       "sha256": "b5f96b093387ca9aacaf3660b2b0be8741cbb01a50076162ebeb413395a7fb10"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 63
+        "below_floor": 15
       },
-      "live": 0,
+      "live": 3,
       "path": "crates/searcher/src/lines.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "2325e12decce3b0ef8263dd33ba78d4c010be39b3797eed644a9bc8fbe3ddb78",
+      "segs_by": {
+        "comment_block": 3
+      },
       "sha256": "37ec6404ed642b0692a726e21313acadae8ca4202da859d6421d5dfd44594bc1"
     },
     {
@@ -1468,7 +1511,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 53
+        "below_floor": 50
       },
       "live": 3,
       "path": "crates/searcher/src/searcher/glue.rs",
@@ -1482,25 +1525,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 40
+        "below_floor": 5
       },
-      "live": 0,
+      "live": 3,
       "path": "crates/searcher/src/searcher/mmap.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "9a743aa167c1b3d54253065d794ee3f4491108e65c8ec5b027fcf38810de83f2",
+      "segs_by": {
+        "comment_block": 3
+      },
       "sha256": "403f00eca491e20ef654d0bd6572acccb07c546489054bc514adf528afee8a2c"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 371
+        "below_floor": 67
       },
-      "live": 1,
+      "live": 19,
       "path": "crates/searcher/src/searcher/mod.rs",
-      "seg_sha256": "6a04aecb8d787c82ed52543c6bbf6a465f5de726b1fa98d3b7596bec3a3ba475",
+      "seg_sha256": "6473dac02387686caad28fe3065f9e27008bd8316354d035af4ef855aa7f4420",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 19
       },
       "sha256": "6ae846df42f0868385bc54ef728db822c86f20f6d6457777d8f8058fc4c67bf0"
     },
@@ -1508,25 +1553,27 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 261
+        "below_floor": 25
       },
-      "live": 0,
+      "live": 14,
       "path": "crates/searcher/src/sink.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "a5b1ee6cde1ed962cdf84477423a3e5ca62a2f1812c82c27fb296f2c74ceb787",
+      "segs_by": {
+        "comment_block": 14
+      },
       "sha256": "703f25a0f08dac9a39742cabc029a332c7e027d9356980d6ffeec34f68953657"
     },
     {
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 121
+        "below_floor": 30
       },
-      "live": 1,
+      "live": 5,
       "path": "crates/searcher/src/testutil.rs",
-      "seg_sha256": "e465c72be0f9276103d6db76f30512ef82c4edca97820c5a8708d5ae0f9bbc06",
+      "seg_sha256": "da9a28d031c7f861fed732945fc8e5fb8403e08503f4e60e8647a86221d7ecd4",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 5
       },
       "sha256": "34055e71ee830bdc897686554a3be65499150e1d67a7d4cde45d7bf9aa9e9e2b"
     },
@@ -1643,7 +1690,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 17
+        "below_floor": 16
       },
       "live": 0,
       "path": "tests/json.rs",
@@ -1717,18 +1764,20 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 115
+        "below_floor": 44
       },
-      "live": 0,
+      "live": 4,
       "path": "tests/util.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "444908c53a26bf3fc1d6975c0f944a887d2a799fcb5332afec6134d11149bfd0",
+      "segs_by": {
+        "comment_block": 4
+      },
       "sha256": "6862edaf5adad5eff8b7bf3c50ed28c221c0212fe733b22387d1f4f09909b447"
     }
   ],
   "generated_from": {
-    "ce": "0.7.3",
-    "commit": "90cbdb87474f5029a033953958321f31016e6182",
+    "ce": "1.5.1",
+    "commit": "051a73016498c6f46cc3f1b05b19525eadd7948d",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -1748,17 +1797,17 @@
   },
   "summary": {
     "exempt_by": {},
-    "files_with_segments": 50,
+    "files_with_segments": 76,
     "ledger": {
-      "below_floor": 8742,
-      "fenced_code_line": 225,
+      "below_floor": 2802,
+      "fenced_code_line": 413,
       "html_line": 54,
-      "indented_code_lines": 61,
+      "indented_code_lines": 19,
       "skeleton_line": 7
     },
-    "live": 251,
+    "live": 568,
     "segs_by": {
-      "comment_block": 89,
+      "comment_block": 406,
       "md_para": 162
     }
   }

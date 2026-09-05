@@ -170,8 +170,8 @@ The newest row, v1.5.1, is the release this build is.
 
 | metric | value | source |
 |---|---|---|
-| docdup_d3_precision | 17/17 scoped (100%) | docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json |
-| docdup_d1_recall | 100% | docs/EVAL-SET-M5-3.md:81-87 + contracts/eval/docdup-precision-*-v1.json |
+| docdup_d3_precision | 17/17 scoped (100%) | docs/EVAL-SET-M5-3.md:88-95 + contracts/eval/docdup-precision-*-v1.json |
+| docdup_d1_recall | 100% | docs/EVAL-SET-M5-3.md:88-95 + contracts/eval/docdup-precision-*-v1.json |
 | t3_precision | 61 answered / 0 wrong (1.000) | docs/EVAL-SET-M5-3.md:41-47 + contracts/eval/t3-precision-*-v1.json |
 | graph_precision | overall gate >= 0.90 held | docs/EVAL-SET.md:280-292 + contracts/eval/graph-precision-*-v1.json |
 | fourclass_fpr | 0/600 flagged (gate <= 1%) | contracts/eval/fpr-fourclass-v1.json + docs/EVAL-SET.md:131-140 |

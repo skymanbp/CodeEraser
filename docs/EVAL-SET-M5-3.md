@@ -59,17 +59,24 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
-`90cbdb8`，DOCDUP_REV **4**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
-（2026-08-21，M9 批 1），按 EVAL-SET.md 复活协议重冻结——五语料逐文件字段与
-summary 零漂移实证，precision 32 行普查同证）；门 `eval_docdup_universe`）：live
-段 self 114 / requests 98 / ripgrep 251 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
+`051a730` 工作树，DOCDUP_REV **5**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
+（2026-08-21，M9 批 1）；rev 4→5 = `///` 合段修复（2026-09-04，计划 v2.28）——两次都按
+EVAL-SET.md 复活协议重冻结：3→4 五语料逐文件字段与 summary 零漂移；4→5 Rust 树的段几何
+整体变了（self 114→259、ripgrep 251→568；self 有八行 2026-09-04 曾按名改签，重冻结按兄弟锚
+graph-slice 的 sha 取内容，三行取自 `70dfebb` 的 blob），zod 只变常量回声；requests 3 行 /
+cobra 1 行 md 段早已随 `5df1dad` 的 CommonMark 块规则漂移（`graph/md_mask.rs` `Blocks::skips`：
+列表外的缩进代码行不再入段）——外部语料没有漂移门，重冻结才看见，本次一并吸收；oracle 同批
+重生成（self 4→5 对、ripgrep 8→91 对：83 新对全是 comment_block，同文件 50 / 跨文件 33），
+precision 32 行普查零漂移、只有计数回声与 `docdup_rev` 变）；门 `eval_docdup_universe`）：
+live 段 self 259 / requests 98 / ripgrep 568 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
 verbatim_floor 50、DOC_LINE_CAP 200、license 头 5 行豁免、SEGCAP 8192。
 
 **oracle**（`docdup-oracle-*-v1.json`，`ce.eval-docdup-oracle/1.0.0`；原门
 `eval_docdup_oracle` 随 v0.5.0 瘦身退役，工件保留，活读者 =
 `eval_docdup_precision` 直读冻结 oracle JSON 做 D2 回声断言）：live 段全对
 枚举整数交叉 Jaccard ≥80/100 ∨ verbatim ≥50，
-oracle 对 self 4 / requests 4 / ripgrep 8 / cobra 8 / zod 8 = **32**。
+oracle 对 rev 4 时 self 4 / requests 4 / ripgrep 8 / cobra 8 / zod 8 = **32**（= 普查行数）；
+rev 5 起 self 5 / requests 4 / ripgrep 91 / cobra 8 / zod 8 = **116**，32 行普查仍是其子集。
 
 **普查**（`docdup-sample-v1.json`，`ce.eval-docdup-sample/1.0.0`；原门
 `eval_docdup_sample` 随 v0.5.0 瘦身退役，冻结件保留、由
@@ -79,10 +86,11 @@ population = report_floor 23 + margin 9。census v2 = v1 的严格子集
 （retired 15 对冻结存证）。
 
 **精度 = 达标线 B 修正案**（`docdup-precision-*-v1.json`，
-`ce.eval-docdup-precision/1.0.0`，生成于 `90cbdb8`；门 `eval_docdup_precision`）：
+`ce.eval-docdup-precision/1.0.0`，生成于 `90cbdb8`，rev 5 于 `051a730` 工作树重生成；门
+`eval_docdup_precision`）：
 D3 scoped **17/17** correct（ripgrep 7 + cobra 4 + zod 6）+ docstring **6/6**
 （self 3 + requests 3，不设门）+ not_reported 9 台账化；D1 oracle 召回
-self 3/3、requests 3/3、ripgrep 7/7、cobra 4/4、zod 6/6 全 100%（硬门 0.99）；
+self 3/3、requests 3/3、ripgrep 7/7（rev 5 起 50/50）、cobra 4/4、zod 6/6 全 100%（硬门 0.99）；
 修正案 = 三条类别级行掩码（html_line / fenced_code_line / overlong_line），
 DOCDUP_REV 2→3 五语料重冻结，J-floor 全表 50..100 逐档 wrong 恒 0。
 

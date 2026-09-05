@@ -21,17 +21,10 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- (CE.Tombstone.Cost); the measuring side renders indices back into
 -- places and never judges. Every other family is answered byte for
 -- byte as before.
--- The per-version change ledger lives in contracts/VERSIONING.md and
--- nowhere else. It used to be mirrored here in English and a third
--- time in cli/src/corelink.rs; the three copies drifted (four entries
--- sat in one English mirror and not the other) and a mirror that
--- gains an entry every minor grows without bound inside a size-gated
--- file. What stays here is THIS version's entry and nothing
--- else, because a reader standing at the constant needs to know what
--- today's number means -- what every past number meant is a ledger
--- question, and the ledger has an address. Four entries had stacked
--- up here by 6.1.0 and pushed the file past its own ratchet: the
--- ledger that documents a size gate is not exempt from it.
+-- The per-version ledger lives in contracts/VERSIONING.md and nowhere
+-- else; only THIS version's entry stays beside the constant. The
+-- reason the mirrors were retired is written once, at the client's
+-- constant (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
 proto = "6.6.0"

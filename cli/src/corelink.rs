@@ -23,16 +23,16 @@ use std::process::{Child, Stdio};
 /// indices into places and never applies the conjunction itself. A
 /// core without the capability is named, never read as "no sites".
 /// The per-version change ledger lives in contracts/VERSIONING.md and
-/// nowhere else. It used to be mirrored here in English and a third
-/// time in cli/src/corelink.rs; the three copies drifted (four entries
-/// sat in one English mirror and not the other) and a mirror that
-/// gains an entry every minor grows without bound inside a size-gated
-/// file. What stays here is THIS version's entry and nothing else,
-/// because a reader standing at the constant needs to know what
-/// today's number means -- what every past number meant is a ledger
-/// question, and the ledger has an address. Four entries had stacked
-/// up here by 6.1.0 and pushed the file past its own ratchet: the
-/// ledger that documents a size gate is not exempt from it.
+/// nowhere else; Version.hs points here for the reason. The ledger
+/// used to be mirrored beside both constants, and the copies drifted
+/// (four entries sat in one mirror and not the other) while a mirror
+/// that gains an entry every minor grows without bound inside a
+/// size-gated file. What stays beside each constant is THIS version's
+/// entry and nothing else, because a reader standing at the constant
+/// needs to know what today's number means -- what every past number
+/// meant is a ledger question, and the ledger has an address. Four
+/// entries had stacked up here by 6.1.0 and pushed the file past its
+/// own ratchet: the ledger that documents a size gate is not exempt.
 pub const PROTO: &str = "6.6.0";
 
 #[derive(Serialize)]

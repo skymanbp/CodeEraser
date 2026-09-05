@@ -2,7 +2,7 @@
   "constants": {
     "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 4,
+    "docdup_rev": 5,
     "exempt": [
       "live",
       "license_header",
@@ -76,8 +76,7 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 5,
-        "indented_code_lines": 1
+        "below_floor": 4
       },
       "live": 0,
       "path": ".github/ISSUE_TEMPLATE.md",
@@ -89,8 +88,7 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 3,
-        "indented_code_lines": 1
+        "below_floor": 2
       },
       "live": 0,
       "path": ".github/ISSUE_TEMPLATE/Bug_report.md",
@@ -140,8 +138,8 @@
       "exempt_by": {},
       "lang": "md",
       "ledger": {
-        "below_floor": 505,
-        "indented_code_lines": 270
+        "below_floor": 502,
+        "indented_code_lines": 266
       },
       "live": 41,
       "path": "HISTORY.md",
@@ -693,8 +691,8 @@
     }
   ],
   "generated_from": {
-    "ce": "0.7.3",
-    "commit": "90cbdb87474f5029a033953958321f31016e6182",
+    "ce": "1.5.1",
+    "commit": "051a73016498c6f46cc3f1b05b19525eadd7948d",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -716,9 +714,9 @@
     "exempt_by": {},
     "files_with_segments": 20,
     "ledger": {
-      "below_floor": 1415,
+      "below_floor": 1410,
       "fenced_code_line": 70,
-      "indented_code_lines": 285,
+      "indented_code_lines": 279,
       "skeleton_line": 246
     },
     "live": 98,

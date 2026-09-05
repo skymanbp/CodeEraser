@@ -19,13 +19,15 @@ use anyhow::Result;
 use rusqlite::Transaction;
 
 /// Bump when segment-extraction semantics change: it sits in the meta
-/// cache key (schema v5), so stale docsegs rows are wiped. 4 = words
-/// are NFC-composed and combining marks no longer split them (review
-/// 2026-08-19), which changes every shingle hash — cached rows are
-/// now unreadable numbers and MUST be wiped. 3 = the 2026-08-14
+/// cache key (schema v5), so stale docsegs rows are wiped. 5 = a
+/// comment node's adjacency and end_line read its last content row,
+/// so `///` / `//!` runs merge like `//` runs (v2.28 amendment,
+/// 2026-09-04) — every Rust doc block changes geometry. 4 = words are
+/// NFC-composed and combining marks no longer split them (review
+/// 2026-08-19), which changes every shingle hash. 3 = the 2026-08-14
 /// attainment-line-B amendment (ccm #842): html_line /
 /// fenced_code_line / overlong_line masks.
-pub const DOCDUP_REV: i64 = 4;
+pub const DOCDUP_REV: i64 = 5;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs). `kind`
 /// and `exempt` are the frozen position codes in spec::KIND_NAMES /
