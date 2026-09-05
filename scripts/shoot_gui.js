@@ -17,8 +17,8 @@
 "use strict";
 
 const { Devtools, devtoolsUrl } = require("./cdp.js");
+const { writeReceipt } = require("./shoot_receipt.js");
 const { spawn, execFileSync } = require("child_process");
-const crypto = require("crypto");
 const fs = require("fs");
 const http = require("http");
 const os = require("os");
@@ -215,38 +215,6 @@ async function capture(cdp, out) {
   }
 }
 
-/// The receipt: which report schemas these pictures show, and which
-/// bytes were actually shot. Ancestry alone would not have caught the
-/// bug that started this — the candidates screen showed
-/// `ce.join-report/0.1.0` through two schema bumps without `gui/ui`
-/// changing once. The digests tie the receipt to the pixels; without
-/// them a schema bump could be answered by editing three strings here
-/// while the old picture stayed on the page.
-function receipt(docs, out) {
-  const file = path.join(REPO, "contracts", "gui-shots.json");
-  if (out !== SITE) {
-    console.log(`  receipt untouched — ${path.relative(REPO, out)} is not what the site serves`);
-    return;
-  }
-  const shots = {};
-  for (const shot of SHOTS) {
-    const png = fs.readFileSync(path.join(out, `${shot.name}.png`));
-    shots[`${shot.name}.png`] = crypto.createHash("sha256").update(png).digest("hex");
-  }
-  const body = {
-    note: "Written by scripts/shoot_gui.js; gated by cli/tests/it/site_screenshots.rs.",
-    window: [VIEW.width, VIEW.height],
-    shots,
-    schemas: {
-      structure: docs.structure.schema,
-      join: docs.join.schema,
-      dedup: docs.dedup.schema,
-    },
-  };
-  fs.writeFileSync(file, JSON.stringify(body, null, 2) + "\n");
-  console.log(`  ${path.relative(REPO, file)}`);
-}
-
 async function main() {
   const out = path.resolve(arg("--out", SITE));
   const root = path.resolve(arg("--root", REPO));
@@ -275,8 +243,9 @@ async function main() {
   try {
     await capture(await attach(profile, origin, root, docs), out);
     // after the pictures, so a failed shoot leaves no receipt claiming
-    // pictures it did not take
-    receipt(docs, out);
+    // pictures it did not take (scripts/shoot_receipt.js — what it
+    // records and why, the `ui` tree digest included)
+    writeReceipt({ repo: REPO, ui: UI, site: SITE, names: SHOTS.map((s) => s.name), view: VIEW, docs, out });
   } finally {
     // Cleanup must never throw: the browser keeps its profile mapped for
     // a moment after the kill, and an EBUSY raised here would REPLACE the
