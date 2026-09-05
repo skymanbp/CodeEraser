@@ -183,7 +183,8 @@ pub async fn similar_report(
     widen: bool,
 ) -> Result<Value, String> {
     task(win, "similar", root, move |r, c| {
-        let ask = codeeraser::similar::query::Ask::from_parts(at.as_deref(), text.as_deref(), None)?;
+        let ask =
+            codeeraser::similar::query::Ask::from_parts(at.as_deref(), text.as_deref(), None)?;
         codeeraser::faces::similar(r, c, &ask, widen)
     })
     .await
