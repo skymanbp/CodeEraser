@@ -38,23 +38,43 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
     let Some(tree) = ast::parse(text, &grammar) else {
         return Vec::new(); // no segmentation: everything is toplevel
     };
-    let src = text.as_bytes();
-    let facts = conv::file_facts(tree.root_node(), src, lang);
+    node_segments(tree.root_node(), text.as_bytes(), lang)
+        .into_iter()
+        .map(|(unit, _)| unit)
+        .collect()
+}
+
+/// Every code unit with its declaration node still in hand — the one
+/// segmentation `segments` drops the nodes from. The similar bag
+/// builder (similar/bag.rs) reads node facts (arity, return, callees,
+/// literal kinds) off the SAME units the unitsig cache keys, so the
+/// bag universe cannot disagree with the T3 universe on what a unit
+/// is (plan v2.29, ADR-008 sixth instalment).
+pub fn node_segments<'t>(
+    root: tree_sitter::Node<'t>,
+    src: &[u8],
+    lang: Lang,
+) -> Vec<(Unit, tree_sitter::Node<'t>)> {
+    let facts = conv::file_facts(root, src, lang);
     // Go receiver qualification ("(T) add") rides f.name from the
     // extraction root (scan::functions::name_of) — one throat for
     // metric names, these keys and the baseline entities (M5-close
     // review D4 retired the post-pass that lived here).
-    let mut units: Vec<Unit> = functions::extract(tree.root_node(), src, spec::spec(lang))
-        .into_iter()
-        .map(|f| Unit {
-            key: format!("{}/{}", f.name, f.params),
-            start_line: f.start_line,
-            end_line: f.end_line,
-            vis: visibility::bits(f.node, src, lang),
-            conv: conv::ast_bits(f.node, src, lang, &facts),
-        })
-        .collect();
-    units.extend(extra_units(tree.root_node(), src, lang, &facts));
+    let mut units: Vec<(Unit, tree_sitter::Node<'t>)> =
+        functions::extract(root, src, spec::spec(lang))
+            .into_iter()
+            .map(|f| {
+                let unit = Unit {
+                    key: format!("{}/{}", f.name, f.params),
+                    start_line: f.start_line,
+                    end_line: f.end_line,
+                    vis: visibility::bits(f.node, src, lang),
+                    conv: conv::ast_bits(f.node, src, lang, &facts),
+                };
+                (unit, f.node)
+            })
+            .collect();
+    units.extend(extra_units(root, src, lang, &facts));
     units
 }
 
@@ -63,12 +83,12 @@ fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<
 /// function metrics do not, which is why this list lives in
 /// fourclass::kinds and not scan/spec. The named register and the
 /// Rust impl form are disjoint, so a node keys at most once.
-fn extra_units(
-    root: tree_sitter::Node,
+fn extra_units<'t>(
+    root: tree_sitter::Node<'t>,
     src: &[u8],
     lang: Lang,
     facts: &conv::FileFacts,
-) -> Vec<Unit> {
+) -> Vec<(Unit, tree_sitter::Node<'t>)> {
     let kinds = super::kinds::extra(lang);
     let mut out = Vec::new();
     if kinds.is_empty() {
@@ -77,13 +97,14 @@ fn extra_units(
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
         if let Some(key) = named_key(node, src, kinds).or_else(|| impl_key(node, src, lang)) {
-            out.push(Unit {
+            let unit = Unit {
                 key,
                 start_line: node.start_position().row + 1,
                 end_line: node.end_position().row + 1,
                 vis: visibility::bits(node, src, lang),
                 conv: conv::ast_bits(node, src, lang, facts),
-            });
+            };
+            out.push((unit, node));
         }
         for i in 0..node.child_count() {
             if let Some(child) = node.child(i as u32) {

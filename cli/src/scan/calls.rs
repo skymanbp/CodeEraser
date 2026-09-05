@@ -110,8 +110,11 @@ struct Named {
 }
 
 /// Whether a declaration sits in a type's member body — see
-/// LangSpec::call_member_scopes for why both levels are read.
-fn in_member_scope(node: Node<'_>, spec: &LangSpec) -> bool {
+/// LangSpec::call_member_scopes for why both levels are read. Crate-
+/// visible: the similar bag's shape word (similar/bag.rs) asks the
+/// same question of the same node, and asked it once more verbatim
+/// before the dedup guard sent it here.
+pub(crate) fn in_member_scope(node: Node<'_>, spec: &LangSpec) -> bool {
     node.parent().is_some_and(|container| {
         spec.call_member_scopes.contains(&container.kind())
             || container

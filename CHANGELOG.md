@@ -7,6 +7,18 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
+## [Unreleased]
+
+**无默认档位变更。** 计划 v2.29 步 2（2026-09-05）——同角色顾问的 **ROI 度量先行**，只加度量与冻结件、零面变化：
+- `cli/src/similar/`（词袋六通道 / Porter 词干 / 整数 BM25 / 仓内 PPMI，`SIMILAR_REV` 1）只被回放仪器
+  `it/similar_replay.rs`（常驻 `--ignored`）读；自仓 + 四份 crosscheck 夹具各自成库，每单元查两臂 top-5。
+- 冻结件：样本 `contracts/eval/similar-sample-v1.json`（118 查询 / 700 候选对，sha256 秩序分层抽样）、
+  仲裁记录 `cli/tests/it/eval_similar_review/sample.json`（codex gpt-6-astra 逐候选 same_role / related / unrelated + clone）、
+  oracle `contracts/eval/similar-oracle-v1.json`；门 `eval_similar_precision.rs` 三腿（一致性 / 夹具逐字节回放 / 60 % 地板）。
+- 读数（册 `docs/EVAL-SET-SIMILAR.md`，第三次拆册）：裸臂顶 1 同角色 67/118，role=1 子集 39/59，hit@5 74/118；
+  同角色位对候选精度 101/165；PPMI m = 3 扩展臂顶 1 63/118（配对 6 : 2 反向）。k1 / b / 合取维持 spec 形。
+- ADR-006 具名重立：`cli/src/fourclass/units.rs` 196→217（`node_segments` 让词袋与 unitsig 同一宇宙）。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：
