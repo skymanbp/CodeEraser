@@ -46,6 +46,21 @@
   dedup 预算主 56 / 子 119 不动：本批新出的三块克隆（两个 `Postings` 实现同形、`Reader` 两条 SQL 读法同形、两处 `QueryTerm` 投影助手）全部消掉——读者的均长在打开时定一次、
   两列查询收成一个助手、`QueryTerm` 派生 `PartialEq` 后直接比。
 
+**无默认档位变更。** 计划 v2.29 步 5 前置（2026-09-05）——步 2 留下的三个候选在**第二份样本的留出集**上复测，测过再落 wire：
+- 仪器得留出集通道：`CE_SIMILAR_SAMPLE_GEN=<n>` 以同一配额、同一 sha256 秩序抽第 n 代，只跳过更早各代 oracle 仲裁过的 rank（排除集从冻结件重导）；
+  `similar-sample-v2.json` 115 查询 / 668 候选对（typescript role=1 层 3 个 top-1 全在 v1，抽到 0 如实报），与 v1 零重叠；codex gpt-6-astra max 五批仲裁
+  → `contracts/eval/similar-oracle-v2.json`（`generation` 2、`holdout_of` v1）+ 记录 `eval_similar_review/sample-v2.json`（转录修复 1 处）。
+- 留出集读数比 v1 低一档：裸臂顶 1 46/115（v1 67/118）、role=1 子集 30/56 = 53.6 %（v1 66.1 %）、非 clone 29/98、hit@5 69/115 = 60.0 %、
+  role 位精度 86/177 = 48.6 %（v1 61.2 %）；PPMI 扩展臂配对 2 : 6 与 v1 同形。此后引用顾问精度两代并列。
+- **三个候选一个不采**（评测器 `CE_SIMILAR_ORACLE=2`，668 对全部对上）：`field_binary` +3 / role=1 +1（配对 5 : 2，hit@5 −1）不过预登记的 +8 线；
+  `binary_query` +2 且自仓 2 : 4 变差；谓词 `spec ∧ 2N ≥ QN` 在留出集上少 3 个真阳（go）、不再 Pareto。v1 最差三行（`k0` / `lm100` / `translation_quarter`）
+  在留出集上成了最好三行（各 52/115、10 : 4）——±6 查询的赢面是噪声。**`SIMILAR_REV` 1 与 spec 合取原样进步 5 的 `CE.Similar`。**
+- 门 `eval_similar_precision.rs` 改按 `GENERATIONS` 表逐代执行（v1 地板 60 %、v2 地板 40 % = 三数最小向下取整到一成；每代与更早各代零重叠、
+  `holdout_of` 点名前一代、夹具行逐字节回放——四夹具各重量一次）；度量算术拆入 `eval_similar_precision_parts/`（E01 文件预算，268 → 251 + 90）。
+  评测器 `similar_tune` 的 metadata 曾把 oracle sha 写死在 v1 路径上，改记运行时读入的那份。
+- 册 `docs/EVAL-SET-SIMILAR.md` 加「留出集复测」节（抽样 / 仲裁 / 两表 / 三候选 / 裁定三条）；步 2 裁定 2 那句「cooc 表」改按步 3 实测（不建对表、边际进 `df.marg`）。册 13 自仓普查行随树重取（U 923→927；rust 未提及 301→264、haskell 278→247——两份 v2 JSON 拼写了单元键，拼写即提及）。
+- ADR-006 具名重立（旧→新行）：`docs/EVAL-SET-SIMILAR.md` 274→351（新节）、`CHANGELOG.md` 624→639（本块）；子仓 `it/similar_replay.rs` 212→229、`it/similar_replay_parts/mod.rs` 234→257（留出集通道）。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：
