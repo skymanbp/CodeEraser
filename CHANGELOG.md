@@ -27,6 +27,25 @@
   `strongest` 搬进 `feedback.rs` 消掉互引，子仓 check 980 → 985（地板 983）。
 - ADR-006 具名重立：`cli/src/fourclass/units.rs` 196→217（`node_segments` 让词袋与 unitsig 同一宇宙）；本批 `docs/EVAL-SET-SIMILAR.md` 157→272（追记节）。
 
+**无默认档位变更。** 计划 v2.29 步 3（2026-09-05）——词袋与倒排表进 `.ce/index.db`（**索引 schema 15 → 16，整库 wipe 一次**；`similar_rev` 入缓存键），仍零面变化：
+- `cli/src/similar/store.rs`：两表只存 fnv1a64 与计数——`bag(term_hash, unit, tf, channel)` 以 `unitsig.id` 为座位（`unitsig` 得 `id INTEGER PRIMARY KEY`，外键级联：词袋宇宙 = unitsig 宇宙；
+  WITHOUT ROWID，主键 (term_hash, unit) 即倒排表）与 `df(term_hash, df, marg)`（`marg` = 该词在 PPMI 96 词帽内被计数的单元数，即共现对计数的边际）。**不建 cooc 对表**：自仓 688k 行、
+  库 10.7 → 58 MB、冷索引 5 → 35–50 s，而联想视图是 opt-in——共现对改由 `similar/reader.rs` 在查询时从携带该词的单元的 bag 行推导，与内存表逐格相同（五语料回放每单元两臂逐位断言）。
+- 随 refresh 差分更新：`retire`（旧袋 −1，在 unitsig 行替换级联掉 bag 行之前）+ `refresh_bags`（新袋 +1，落在新 unitsig id 上），只有净非零的词动 SQL（update-else-insert + 清零行扫除；
+  未动的单元自我抵消）；外来文件（`files.owner` = 1）不写行，`remove_missing` 先退休再删 `files`。SQLite 教训：CHECK 约束在 upsert 冲突消解**之前**按插入值算，下行移动不能骑 `ON CONFLICT DO UPDATE`。
+- 排序只有一条路：`bm25::Postings` / `ppmi::Cooc` 两个 trait 各配自由函数（`top_k` / `neighbours` / `expand`），内存 `Corpus` / `Table`（仪器与单测）与 `similar::reader::Reader`（SQL）各实现一次；
+  邻词精确剪枝 `4·n_a > N ⇒ 无邻词`（PPMI ≤ log2(N/n_a) < 2 bit，门槛之下）。
+- 分词路一处：索引写下的袋 = `file_bags` 现算的袋（身份、行距、逐词相等；单测钉 fetch / user / query / row 与形状词 `p:1`，停用词不入），改一处分词即两边同动；
+  bag 行落在外来文件的单元上 = 读者打开即具名拒绝（`outside the own universe`）。
+- 代价（PERF-BUDGET 新节，自仓 687 文件 release A/B）：冷 `ce dedup` 5.1–5.3 → 8.0–8.7 s（+0.65 s 第六次解析与 docdup 段再抽取、≈2.3 s SQL 其中 ≈1.5 s 是随机键倒排索引在逐文件事务下的写放大）、
+  暖 0.51–0.56 → 0.50–0.55 s 不变、库 10.7 → 18.0 MB（bag 177,536 行 / df 5,697 行 / 自有单元 5,458）；五种布局微基准里取 WITHOUT ROWID (term, unit)（时间与 rowid 双索引打平、体积少 2.5 MB）。
+- 测试（子仓）：`unit/similar/store.rs`（差分随每次 refresh 与全量重算对账、未动单元抵消）、`unit/similar/reader.rs`（持久路 = 内存路、一条分词路、宇宙外 bag 行拒绝）、
+  `unit/dedup/index.rs`（五个 rev 行各自在缓存键里）；回放 `it/similar_replay.rs` 改经 `Reader` 读库、两条路逐位对拍后再量（release 1062 s，五语料零分歧）。
+- ADR-006 具名重立（旧→新行）：`cli/src/similar/ppmi.rs` 130→193（trait + 精确剪枝）、`bm25.rs` 226→273（trait + 自由函数）、`bag.rs` 269→281、
+  `cli/src/dedup/index.rs` 396→407（两半刷新）、`docs/PERF-BUDGET.md` 342→362（新节）、`CHANGELOG.md` 605→624（本块）；子仓 `unit/dedup/index.rs` 27→56（rev 行循环腿）。
+  dedup 预算主 56 / 子 119 不动：本批新出的三块克隆（两个 `Postings` 实现同形、`Reader` 两条 SQL 读法同形、两处 `QueryTerm` 投影助手）全部消掉——读者的均长在打开时定一次、
+  两列查询收成一个助手、`QueryTerm` 派生 `PartialEq` 后直接比。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：

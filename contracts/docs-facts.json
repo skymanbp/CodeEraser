@@ -392,7 +392,7 @@
       "id": "ver:schema.index#digits",
       "source": "cli/src/dedup/schema.rs::SCHEMA_VERSION",
       "tier": "scraped",
-      "value": "15"
+      "value": "16"
     },
     {
       "id": "ver:struct_rev#digits",

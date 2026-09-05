@@ -3,13 +3,17 @@
 //! point from an integer log2, every per-term contribution floored to
 //! 16-bit fixed point — no float anywhere, so the same corpus ranks
 //! the same on every platform and the frozen eval docs compare byte
-//! for byte. The role conjunction computed here is the instrument's
-//! declared MIRROR of what CE.Similar will own once the wire family
-//! lands (step 5); the measurement side never decides alone after
-//! that.
+//! for byte. Ranking is written ONCE, against the `Postings` trait:
+//! the in-memory `Corpus` the instruments build and the persisted
+//! reader over `.ce/index.db` (reader.rs, the product's road) both
+//! feed `top_k`, and the replay asserts they agree on every unit. The
+//! role conjunction computed here is the instrument's declared MIRROR
+//! of what CE.Similar will own once the wire family lands (step 5);
+//! the measurement side never decides alone after that.
 
 use super::bag::UnitBag;
 use super::terms::Channel;
+use anyhow::Result;
 use std::collections::HashMap;
 
 /// Okapi k1 and b (Robertson & Walker 1994's usual settings), as the
@@ -30,7 +34,7 @@ pub struct Doc {
 
 /// One query term: `spelled` = false marks an expansion, which adds
 /// score but never counts as channel evidence.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct QueryTerm {
     pub term: u64,
     pub channel: Channel,
@@ -50,22 +54,96 @@ pub struct Hit {
     pub role: bool,
 }
 
+/// What ranking needs from an index, by seat — a unit's position in
+/// the corpus's (path, key, nth) order: the corpus size and average
+/// length, a term's df and posting list, a seat's length, sorted
+/// shape terms and identity. Fallible because the persisted reader
+/// is; the in-memory corpus never fails.
+pub trait Postings {
+    fn n_docs(&self) -> usize;
+    fn avg_len(&self) -> i128;
+    fn df(&self, term: u64) -> Result<usize>;
+    /// `(seat, tf)` of every unit carrying `term`.
+    fn posting(&self, term: u64) -> Result<Vec<(usize, u32)>>;
+    fn len(&self, seat: usize) -> u32;
+    fn shape(&self, seat: usize) -> Result<Vec<u64>>;
+    fn identity(&self, seat: usize) -> (&str, &str, i64);
+}
+
+/// The top `k` candidates for `query`, excluding `exclude` (the
+/// query's own seat), ordered by score then identity. A term in more
+/// than half the units (idf 0) is neither score nor evidence: sharing
+/// what nearly everything shares says nothing, and walking its
+/// posting list would cost the whole corpus per query — df is asked
+/// first so the list is never fetched. Shape equality and the role
+/// bit are read for the k survivors only; neither orders.
+pub fn top_k(
+    p: &impl Postings,
+    query: &[QueryTerm],
+    k: usize,
+    exclude: Option<usize>,
+) -> Result<Vec<Hit>> {
+    let avg = p.avg_len();
+    let mut acc: HashMap<usize, (i128, [u32; 6])> = HashMap::new();
+    for q in query {
+        let idf = idf_fp(p.n_docs(), p.df(q.term)?);
+        if idf == 0 {
+            continue;
+        }
+        for (seat, tf) in p.posting(q.term)? {
+            let e = acc.entry(seat).or_insert((0, [0; 6]));
+            let len = i128::from(p.len(seat));
+            e.0 += contribution(q.weight, idf, i128::from(tf), len, avg);
+            if q.spelled {
+                e.1[q.channel.index()] += 1;
+            }
+        }
+    }
+    let mut ranked: Vec<(usize, i128, [u32; 6])> = acc
+        .into_iter()
+        .filter(|(seat, _)| Some(*seat) != exclude)
+        .map(|(seat, (score, hits))| (seat, score, hits))
+        .collect();
+    ranked.sort_by(|a, b| {
+        b.1.cmp(&a.1)
+            .then_with(|| p.identity(a.0).cmp(&p.identity(b.0)))
+    });
+    ranked.truncate(k);
+    let shape = shape_terms(query);
+    ranked
+        .into_iter()
+        .map(|(doc, score, hits)| {
+            let shape_equal = p.shape(doc)? == shape;
+            Ok(Hit {
+                doc,
+                score: i64::try_from(score >> SCORE_FRAC_BITS).expect("score fits i64"),
+                hits,
+                shape_equal,
+                role: role(&hits, shape_equal),
+            })
+        })
+        .collect()
+}
+
+/// The in-memory corpus: every bag with its posting lists, for the
+/// instruments and the unit tests (the product reads the persisted
+/// tables through reader.rs).
 pub struct Corpus {
     pub docs: Vec<Doc>,
-    postings: HashMap<u64, Vec<(u32, u32)>>,
+    postings: HashMap<u64, Vec<(usize, u32)>>,
     total_len: u64,
 }
 
 impl Corpus {
-    /// Build the inverted index over `docs` (their order is the
-    /// candidate identity order — callers sort by (path, key, nth)).
+    /// Build the inverted index over `docs` (their order is the seat
+    /// order — callers sort by (path, key, nth)).
     pub fn build(docs: Vec<Doc>) -> Corpus {
-        let mut postings: HashMap<u64, Vec<(u32, u32)>> = HashMap::new();
+        let mut postings: HashMap<u64, Vec<(usize, u32)>> = HashMap::new();
         let mut total_len = 0u64;
         for (i, d) in docs.iter().enumerate() {
             total_len += u64::from(d.bag.len());
             for (term, (_, tf)) in &d.bag.terms {
-                postings.entry(*term).or_default().push((i as u32, *tf));
+                postings.entry(*term).or_default().push((i, *tf));
             }
         }
         Corpus {
@@ -75,71 +153,40 @@ impl Corpus {
         }
     }
 
-    pub fn df(&self, term: u64) -> usize {
-        self.postings.get(&term).map_or(0, Vec::len)
-    }
-
-    /// Average bag length, floored, never below one.
-    pub fn avg_len(&self) -> i128 {
-        (self.total_len / self.docs.len().max(1) as u64).max(1) as i128
-    }
-
     /// A unit's own bag as a query: `tf × channel weight × W_UNIT`.
     pub fn query_of(&self, doc: usize) -> Vec<QueryTerm> {
         query_of(&self.docs[doc].bag)
     }
+}
 
-    /// The top `k` candidates for `query`, excluding `exclude` (the
-    /// query's own seat), ordered by score then identity. A term in
-    /// more than half the units (idf 0) is neither score nor evidence:
-    /// sharing what nearly everything shares says nothing, and walking
-    /// its posting list would cost the whole corpus per query.
-    pub fn top_k(&self, query: &[QueryTerm], k: usize, exclude: Option<usize>) -> Vec<Hit> {
-        let avg = self.avg_len();
-        let mut acc: HashMap<usize, (i128, [u32; 6])> = HashMap::new();
-        for q in query {
-            let Some(posting) = self.postings.get(&q.term) else {
-                continue;
-            };
-            let idf = idf_fp(self.docs.len(), posting.len());
-            if idf == 0 {
-                continue;
-            }
-            for &(doc, tf) in posting {
-                let (doc, len) = (doc as usize, i128::from(self.docs[doc as usize].bag.len()));
-                let e = acc.entry(doc).or_insert((0, [0; 6]));
-                e.0 += contribution(q.weight, idf, i128::from(tf), len, avg);
-                if q.spelled {
-                    e.1[q.channel.index()] += 1;
-                }
-            }
-        }
-        let shape: Vec<u64> = shape_terms(query);
-        let mut hits: Vec<Hit> = acc
-            .into_iter()
-            .filter(|(d, _)| Some(*d) != exclude)
-            .map(|(doc, (score, hits))| {
-                let shape_equal = self.docs[doc].bag.channel(Channel::Shape) == shape;
-                Hit {
-                    doc,
-                    score: i64::try_from(score >> SCORE_FRAC_BITS).expect("score fits i64"),
-                    hits,
-                    shape_equal,
-                    role: role(&hits, shape_equal),
-                }
-            })
-            .collect();
-        hits.sort_by(|a, b| {
-            b.score
-                .cmp(&a.score)
-                .then_with(|| self.identity(a.doc).cmp(&self.identity(b.doc)))
-        });
-        hits.truncate(k);
-        hits
+impl Postings for Corpus {
+    fn n_docs(&self) -> usize {
+        self.docs.len()
     }
 
-    fn identity(&self, doc: usize) -> (&str, &str, i64) {
-        let d = &self.docs[doc];
+    /// Average bag length, floored, never below one.
+    fn avg_len(&self) -> i128 {
+        (self.total_len / self.docs.len().max(1) as u64).max(1) as i128
+    }
+
+    fn df(&self, term: u64) -> Result<usize> {
+        Ok(self.postings.get(&term).map_or(0, Vec::len))
+    }
+
+    fn posting(&self, term: u64) -> Result<Vec<(usize, u32)>> {
+        Ok(self.postings.get(&term).cloned().unwrap_or_default())
+    }
+
+    fn len(&self, seat: usize) -> u32 {
+        self.docs[seat].bag.len()
+    }
+
+    fn shape(&self, seat: usize) -> Result<Vec<u64>> {
+        Ok(self.docs[seat].bag.channel(Channel::Shape))
+    }
+
+    fn identity(&self, seat: usize) -> (&str, &str, i64) {
+        let d = &self.docs[seat];
         (&d.path, &d.bag.key, d.bag.nth)
     }
 }

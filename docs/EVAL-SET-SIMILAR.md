@@ -11,9 +11,10 @@
 
 ## 仪器（`cli/tests/it/similar_replay.rs`，常驻 `--ignored` 腿，release 跑）
 
-五语料各自成库：自仓走产品 walk + scratch 索引（`refreshed_index` → `unit_rows` → 索引看到的文本 →
-`similar::file_bags`，单元多重集与索引逐一对拍，漂移即拒）；四份 crosscheck 夹具目录被 ce.toml 排除在自仓外，
-各自单独成库。每个单元对本库其余单元查两臂 top-k：**裸臂** = 自身袋按通道乘子；**扩展臂** = 裸臂 + 每个
+五语料各自成库：自仓走产品 walk + scratch 索引（`refreshed_index` 把词袋写进 `bag` / `df` 两表〔步 3，schema 16〕→
+`similar::reader::Reader` 读回每个单元的袋 → 与 `similar::file_bags` 对同一文本现算的袋逐词对拍，漂移即拒）；四份 crosscheck
+夹具目录被 ce.toml 排除在自仓外，各自单独成库。排序走持久化的 `Postings` / `Cooc` 读者，并与同一批袋建的内存
+`Corpus` / `Table` 逐位断言相同（一条排序路、两个倒排来源）。每个单元对本库其余单元查两臂 top-k：**裸臂** = 自身袋按通道乘子；**扩展臂** = 裸臂 + 每个
 拼出的词通道词的 top-m PPMI 邻词（权重 ≤ 一半，邻词只计分不成证据）。候选 = 两臂 top-k 并集，每候选一行
 六通道命中整数 + 形状全等位 + 同角色位 + 同文件位 + 两臂名次与分数。同角色位 = (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ 形状全等)，
 与步 5 将落在 Haskell `CE.Similar` 的合取同式（步 2 只在 Rust 镜像以便度量）。

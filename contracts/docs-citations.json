@@ -39,7 +39,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|049be84698107cae|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 329,
+    "line": 340,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// The raw connection. Read surface for the graph domain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|052cdceafa66f65e|0": {
@@ -49,7 +49,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|889b25a08aa9a02d|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 175,
+    "line": 183,
     "text": "tx.commit()?;\nOk(true)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|c124b5aeb74c361c|0": {
@@ -79,12 +79,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|df57b763e96f63e4|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 311,
+    "line": 322,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// Every fingerprint occurrence of an OWN file, deterministically"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|e3dd79e176b2419e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 381,
+    "line": 392,
     "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|eb8666897ba361c5|0": {
@@ -94,7 +94,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|f2467acf48754aa2|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 382,
+    "line": 393,
     "text": "let end = toks[f.start + p.kgram - 1].end_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|fd08efb186625299|0": {
@@ -459,43 +459,43 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|075fec6cbcf4c10d|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 77,
+    "line": 84,
     "text": "CREATE TABLE fingerprints ("
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|21fcccf3b7ffc311|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|202a8c95b30280c7|0": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 53,
-    "text": "const SCHEMA_VERSION: i64 = 15; // 9: trend rows carry their measuring toolchain"
+    "text": "/// v16 (plan v2.29 step 3): the same-role advisor's bag tables"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|27a7c776f82a7121|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 100,
-    "end": 110,
+    "line": 107,
+    "end": 117,
     "text": "/// check — CI caught two autocommit rebuilds interleaving statement"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 163,
+    "line": 171,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|1": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 163,
+    "line": 171,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|413ea62c96e5ef70|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 180,
+    "line": 189,
     "text": "// a pre-meta database (or a foreign file) is a mismatch, not an"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|dac5a67b5dee8629|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 85,
+    "line": 92,
     "text": "CREATE INDEX idx_fp_file ON fingerprints(file_id);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|f733ec08fed99de0|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 164,
+    "line": 172,
     "text": "let version: i64 = conn.query_row(\"PRAGMA user_version\", [], |r| r.get(0))?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1640d969ccad876c|0": {

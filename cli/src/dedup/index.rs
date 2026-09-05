@@ -166,12 +166,20 @@ impl Index {
         insert_fps(&tx, id, &fps, &toks, p)?;
         let text = String::from_utf8_lossy(src);
         store::refresh_graph(&tx, id, &text, lang)?;
+        // the file's old bags leave the df aggregate BEFORE the
+        // unitsig replacement cascades their rows away
+        let retired = crate::similar::store::retire(&tx, id)?;
         // the honest FOURTH per-file parse (design F11) — unitsig
         // rows ride the same content-hash-gated transaction
         super::unitcache::refresh_units(&tx, id, &text, lang)?;
         // and the FIFTH: docdup's own additive tree (RM7 — sharing
         // the tokenizer's would couple TOKENIZER_REV to comments)
         crate::docdup::refresh_segments(&tx, id, &text, lang)?;
+        // and the SIXTH (its own tree) plus docdup's again for the D
+        // channel: the same-role advisor's bags, seated on the fresh
+        // unitsig rows, the aggregate moved by difference
+        // (similar/store.rs; PERF-BUDGET carries the cost)
+        crate::similar::store::refresh_bags(&tx, id, &text, lang, foreign, retired)?;
         tx.commit()?;
         Ok(true)
     }
@@ -207,6 +215,9 @@ impl Index {
         let mut removed = 0;
         for (id, path) in paths {
             if !live.contains(&path) && seen.contains(&path) {
+                // the bag aggregates are moved by hand before the
+                // cascade takes the rows they were counted from
+                crate::similar::store::retire_file(&tx, id)?;
                 tx.execute("DELETE FROM files WHERE id = ?1", (id,))?;
                 removed += 1;
             }
