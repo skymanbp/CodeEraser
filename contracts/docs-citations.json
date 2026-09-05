@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|b37893c848038ca7|0": {
+  "docs/reference/methodology.md|../../README.md|13f0ffee0fd2d497|0": {
     "target": "../../README.md",
     "line": 171,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fourteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fifteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|0081591ba7c6acec|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -8482,5 +8482,456 @@
     "line": 85,
     "end": 92,
     "text": "## [tombstone]"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/audit/similar.rs|4dbfefaca8311860|0": {
+    "target": "../../../cli/src/audit/similar.rs",
+    "line": 1,
+    "end": 10,
+    "text": "//! The Stop audit's similar leg (plan v2.29 step 6, spec §六): every"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|62c207bd4204d2d8|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 85,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.10.0\";"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|72c10c59b78ec5d9|0": {
+    "target": "../../../cli/src/main_similar.rs",
+    "line": 34,
+    "text": "pub fn similar_cmd(a: SimilarArgs) -> ExitCode {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
+    "target": "../../../cli/src/mcp/tools.rs",
+    "line": 163,
+    "text": "\"similar_units\","
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {
+    "target": "../../../cli/src/similar/bag.rs",
+    "line": 1,
+    "end": 9,
+    "text": "//! The six-channel bag of one code unit (spec §三), read off facts"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|08880ba6eb300fe8|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 253,
+    "text": "pub fn log2_fp(num: u128, den: u128) -> i128 {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|09f1ed59312e3ca1|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 25,
+    "end": 27,
+    "text": "/// Query weights ride in 1/W_UNIT, so a PPMI-scaled expansion"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|15a2fafcc0029dd5|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 77,
+    "end": 100,
+    "text": "/// The top `k` candidates for `query`, excluding `exclude` (the"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|316d2c231546020a|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 243,
+    "end": 248,
+    "text": "pub fn contribution(w: i128, idf: i128, tf: i128, len: i128, avg: i128) -> i128 {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|35aba0ef73b4d874|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! Integer BM25 over unit bags (spec §三): k1 = 6/5 and b = 3/4 as"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|4831685187dcb449|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 66,
+    "text": "pub trait Postings {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|496eec400b86a641|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 21,
+    "end": 27,
+    "text": "pub const K1: (i128, i128) = (6, 5);"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|4bce2ef97391370e|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 9,
+    "end": 12,
+    "text": "//! feed `top_k`, and the replay asserts they agree on every unit. The"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|b5af3ed9d8f2e1ed|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 225,
+    "end": 228,
+    "text": "pub fn role(hits: &[u32; 6], shape_equal: bool) -> bool {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bm25.rs|db3ef9c3abc7bb56|0": {
+    "target": "../../../cli/src/similar/bm25.rs",
+    "line": 230,
+    "end": 237,
+    "text": "/// idf(t) = log2((N − df + ½) / (df + ½)) in IDF_FRAC_BITS fixed"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/docs.rs|0e49265103123e00|0": {
+    "target": "../../../cli/src/similar/docs.rs",
+    "line": 13,
+    "end": 14,
+    "text": "pub const LEAD_GAP: usize = 3;"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/docs.rs|88ceb1b331779818|0": {
+    "target": "../../../cli/src/similar/docs.rs",
+    "line": 59,
+    "text": "pub fn doc_owner(d: &DocSeg, all: &[Unit]) -> Option<usize> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|115642791c0edccb|0": {
+    "target": "../../../cli/src/similar/face.rs",
+    "line": 26,
+    "end": 45,
+    "text": "pub const SCHEMA_ID: &str = \"ce.similar-report/0.1.0\";"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|25dca994341b1b4e|0": {
+    "target": "../../../cli/src/similar/face.rs",
+    "line": 165,
+    "text": "pub fn console(r: &Report) -> Vec<String> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|3d907a332a8f9c40|0": {
+    "target": "../../../cli/src/similar/face.rs",
+    "line": 150,
+    "text": "pub fn report_json(r: &Report) -> serde_json::Value {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|8465eac1bc6dec28|0": {
+    "target": "../../../cli/src/similar/face.rs",
+    "line": 58,
+    "end": 75,
+    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask, widen: bool) -> Result<Report> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|b4df2d724ad657a3|0": {
+    "target": "../../../cli/src/similar/face.rs",
+    "line": 44,
+    "end": 45,
+    "text": "/// Reached by the widened query only (the associative view)."
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|0af647de8d71379a|0": {
+    "target": "../../../cli/src/similar/mod.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! similar — the same-role advisor's measurement half (plan v2.29,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|4bc6a96ee6ee332e|0": {
+    "target": "../../../cli/src/similar/mod.rs",
+    "line": 43,
+    "text": "pub const K: usize = 5;"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|857e513176fffcce|0": {
+    "target": "../../../cli/src/similar/mod.rs",
+    "line": 33,
+    "end": 43,
+    "text": "/// words, channel tags, the shape / literal / structure feature"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|5e4ba0213acb00bc|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 21,
+    "end": 35,
+    "text": "/// Neighbours appended per spelled word term."
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|95280d6d02649b84|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 79,
+    "end": 100,
+    "text": "pub fn neighbours(c: &impl Cooc, a: u64) -> Result<Vec<(u64, i128)>> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|9d9826f67449fdd3|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 1,
+    "end": 15,
+    "text": "//! In-repo association by positive PMI (spec §四): two WORD terms"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|9d9826f67449fdd3|1": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 1,
+    "end": 6,
+    "text": "//! In-repo association by positive PMI (spec §四): two WORD terms"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|aee48053176654fe|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 74,
+    "end": 83,
+    "text": "/// The top-m neighbours of `a` at or above MIN_PPMI, ordered by PPMI"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|bda7d1af3b293edf|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 32,
+    "end": 42,
+    "text": "/// Distinct word terms of one unit entering the pair count; a unit"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|da639035ddf6f479|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 65,
+    "text": "fn ppmi_fp(n_units: u32, n_ab: u32, n_a: u32, n_b: u32) -> i128 {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|fb9e7f77539cf375|0": {
+    "target": "../../../cli/src/similar/ppmi.rs",
+    "line": 102,
+    "end": 122,
+    "text": "pub fn expand(c: &impl Cooc, query: &mut Vec<QueryTerm>) -> Result<()> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/query.rs|7bf48deae2d11f3c|0": {
+    "target": "../../../cli/src/similar/query.rs",
+    "line": 16,
+    "end": 53,
+    "text": "pub enum Ask {\nAt { path: String, line: usize },"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/query.rs|b1df876024bab412|0": {
+    "target": "../../../cli/src/similar/query.rs",
+    "line": 61,
+    "end": 94,
+    "text": "pub fn resolve(reader: &Reader<'_>, ask: &Ask) -> Result<Resolved> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/reader.rs|16c7095d7b6b5160|0": {
+    "target": "../../../cli/src/similar/reader.rs",
+    "line": 7,
+    "end": 12,
+    "text": "//! `Postings` / `Cooc` traits bm25.rs and ppmi.rs rank against. The"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/reader.rs|c1dfe469b01371cc|0": {
+    "target": "../../../cli/src/similar/reader.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! Reading the persisted bags back (spec §三): the seats of the own"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/stem.rs|9f92f8b0bf7a02a3|0": {
+    "target": "../../../cli/src/similar/stem.rs",
+    "line": 12,
+    "text": "pub fn stem(word: &str) -> String {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|17c83e1e451ac0e5|0": {
+    "target": "../../../cli/src/similar/store.rs",
+    "line": 79,
+    "text": "pub fn refresh_bags("
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|421a4e5b0170ec8b|0": {
+    "target": "../../../cli/src/similar/store.rs",
+    "line": 45,
+    "end": 58,
+    "text": "pub const SIMILAR_SCHEMA: &str = \""
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|83a23dc624157095|0": {
+    "target": "../../../cli/src/similar/store.rs",
+    "line": 68,
+    "text": "pub fn retire(tx: &Transaction<'_>, file_id: i64) -> Result<Delta> {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|9b202b0befa65e5c|0": {
+    "target": "../../../cli/src/similar/store.rs",
+    "line": 1,
+    "end": 6,
+    "text": "//! The persisted bags (spec §三 倒排表, index schema v16): two tables"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|e2e7efdda2f4dd7f|0": {
+    "target": "../../../cli/src/similar/store.rs",
+    "line": 12,
+    "end": 24,
+    "text": "//! the counts the in-memory table keeps. Written inside refresh_file's"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|e898069309544f2e|0": {
+    "target": "../../../cli/src/similar/store.rs",
+    "line": 7,
+    "end": 12,
+    "text": "//! Pairs themselves are NOT stored: a pair table for this repository"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|4cfa93372dd4bb18|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 49,
+    "end": 56,
+    "text": "/// Query weight multiplier (spec §三 权重位): names ×3, callees ×2,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|6d3a90afaf4bc950|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 66,
+    "end": 69,
+    "text": "/// Prose stop words dropped from the doc channel — a fixed small"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|79ce147193b8cb08|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 1,
+    "end": 5,
+    "text": "//! Term production — the ONE tokenization road index and query share"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|b85e8c0dac70a0d7|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 76,
+    "end": 81,
+    "text": "/// Identifier pieces at camel / underscore / digit boundaries,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|c48d2c19ec350d05|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 129,
+    "end": 138,
+    "text": "/// The term of one WORD under a channel: stemmed, then hashed with"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|ca9efca2174a8154|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 10,
+    "end": 23,
+    "text": "/// The six evidence channels (spec §三). The one-letter label is"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|f789a478015e9416|0": {
+    "target": "../../../cli/src/similar/terms.rs",
+    "line": 119,
+    "end": 126,
+    "text": "/// Words of one prose line: identifier-split pieces with the stop"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/wire.rs|104b04a4a5c6065e|0": {
+    "target": "../../../cli/src/similar/wire.rs",
+    "line": 31,
+    "end": 42,
+    "text": "/// One candidate's wire row: `[nHit, pHit, cHit, dHit, sHit, lHit,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/wire.rs|55d2af1eaba7b8eb|0": {
+    "target": "../../../cli/src/similar/wire.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! The similar/1 leg of the measurement (plan v2.29 step 5): the rows"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/wire.rs|e5052b07e2a6ff42|0": {
+    "target": "../../../cli/src/similar/wire.rs",
+    "line": 82,
+    "end": 101,
+    "text": "pub fn consume(reply: &Value, sent: usize) -> Judgment {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|3fd9786ee83f067a|0": {
+    "target": "../../../cli/tests/it/eval_similar_precision.rs",
+    "line": 165,
+    "text": "fn similar_oracle_floors() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|74f9f9453210f75e|0": {
+    "target": "../../../cli/tests/it/eval_similar_precision.rs",
+    "line": 37,
+    "text": "const GENERATIONS: [(u32, u64); 2] = [(1, 60), (2, 40)];"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|84da349508d0e98c|0": {
+    "target": "../../../cli/tests/it/eval_similar_precision.rs",
+    "line": 65,
+    "text": "fn similar_oracle_consistent() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/face_parity.rs|5a4bc4e95b316259|0": {
+    "target": "../../../cli/tests/it/face_parity.rs",
+    "line": 38,
+    "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | tab:similar, similar_report | mcp:similar_units | |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|55926dc0727ec714|0": {
+    "target": "../../../cli/tests/it/similar_face.rs",
+    "line": 99,
+    "text": "fn widen_tags_what_only_the_widened_query_reaches_and_the_ask_is_exactly_one() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|efe6dd5b4b54977f|0": {
+    "target": "../../../cli/tests/it/similar_face.rs",
+    "line": 48,
+    "text": "fn the_cli_prints_the_library_face_and_the_core_judged_the_pair_same_role() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_replay.rs|6040a3b682aa063c|0": {
+    "target": "../../../cli/tests/it/similar_replay.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! ROI instrument for the same-role advisor (plan v2.29 step 2; spec"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_replay.rs|f166f6544576e5c1|0": {
+    "target": "../../../cli/tests/it/similar_replay.rs",
+    "line": 188,
+    "text": "fn similar_replay() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_replay.rs|f166f6544576e5c1|1": {
+    "target": "../../../cli/tests/it/similar_replay.rs",
+    "line": 188,
+    "text": "fn similar_replay() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_wire.rs|304e2be75fd0a109|0": {
+    "target": "../../../cli/tests/it/similar_wire.rs",
+    "line": 18,
+    "text": "fn the_core_orders_and_roles_every_go_unit_as_the_measurement_did() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_wire.rs|b5d4c9eee6004823|0": {
+    "target": "../../../cli/tests/it/similar_wire.rs",
+    "line": 42,
+    "text": "fn the_family_is_offered_judged_and_refuses_by_name_over_one_link() {"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar.hs|1aea27ad2647faa5|0": {
+    "target": "../../../core/app/CE/Similar.hs",
+    "line": 5,
+    "end": 17,
+    "text": "-- | similar.request handler (plan v2.29 step 5): the twelfth judgment"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar.hs|5f6dfe3a83bc3b27|0": {
+    "target": "../../../core/app/CE/Similar.hs",
+    "line": 104,
+    "end": 107,
+    "text": "-- | Over-cap: a complete degraded reply with empty tables — a query the"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar.hs|72f0e5330ed72aab|0": {
+    "target": "../../../core/app/CE/Similar.hs",
+    "line": 95,
+    "end": 101,
+    "text": "-- | The order: score descending as exact rationals, ties by request"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar.hs|d9d9ba4ce4fdb3c4|0": {
+    "target": "../../../core/app/CE/Similar.hs",
+    "line": 110,
+    "end": 127,
+    "text": "-- | The similar.result object: the candidate indices in judged order,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Cost.hs|083b5f1dc2fe9e50|0": {
+    "target": "../../../core/app/CE/Similar/Cost.hs",
+    "line": 34,
+    "end": 56,
+    "text": "-- | First arm: at least this many shared name terms AND at least this"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Cost.hs|9da86345adfdb746|0": {
+    "target": "../../../core/app/CE/Similar/Cost.hs",
+    "line": 26,
+    "end": 27,
+    "text": "similarCap :: Integer"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Cost.hs|ea40acfffaf9817a|0": {
+    "target": "../../../core/app/CE/Similar/Cost.hs",
+    "line": 29,
+    "end": 31,
+    "text": "-- | The candidate row: [nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|1c370a37e8d2642f|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 222,
+    "text": "### 裁定（调优与联想，2026-09-05）"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|2374d52a68d6c8d8|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 314,
+    "text": "### 裁定（留出集复测，2026-09-05）"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|6f2f3da27ec8cd27|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 77,
+    "end": 80,
+    "text": "## 结果（`contracts/eval/similar-oracle-v1.json` `summary`，CI 门从行重导必须相等）"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|701cd1980d92a19e|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 85,
+    "text": "| all | 118 | 67/118 = 56.8 % | 63/118 = 53.4 % | 39/59 = 66.1 % | 28/59 = 47.5 % | 38/89 = 42.7 % | 74/118 = 62.7 % | 75/118 = 63.6 % |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|7afea72e73130df6|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 94,
+    "text": "| all | 700 | 101 | 64 | 76 | 459 | 101/165 = 61.2 % | 101/177 = 57.1 % |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|e32561623b71ecff|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 281,
+    "text": "| all | 668 | 86 | 91 | 65 | 426 | 86/177 = 48.6 % | 86/151 = 57.0 % |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|ee2f174f1ba74444|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 272,
+    "text": "| all | 115 | 46/115 = 40.0 % | 42/115 = 36.5 % | 30/56 = 53.6 % | 16/59 = 27.1 % | 29/98 = 29.6 % | 69/115 = 60.0 % | 66/115 = 57.4 % |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
+    "target": "../../PERF-BUDGET.md",
+    "line": 247,
+    "end": 266,
+    "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
   }
 }

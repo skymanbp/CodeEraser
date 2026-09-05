@@ -98,6 +98,24 @@
   新文件入基线 `cli/src/similar/face.rs` 231、`cli/src/similar/query.rs` 144、`cli/src/main_similar.rs` 55、`cli/src/audit/similar.rs` 110、`gui/ui/similar.js` 76；
   子仓 `gui/hub_projection.js` 73→92，新 `it/common/mcp.rs` 56、`it/similar_face.rs` 203、`unit/similar/query.rs` 109、`unit/similar/face.rs` 89。
 
+**无默认档位变更。** 计划 v2.29 步 7（2026-09-05）——方法学册 15、十四→十五全扫、两张图、`ce similar` 代价、步 6 CI 唯一红腿：
+- 册 15 `docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md`（296 行，九节：六通道词袋 / 倒排两表与不建对表的裁定 / 整数 BM25 一条排序路 / PPMI 联想 opt-in / wire `similar/1` 与核内合取 /
+  三面 + Stop 腿 / 两代 oracle 与两道地板 / 残余风险 / 验收；每条引文瞄到实现行，`docs_citations` 按 `git add` 后播种）；`methodology.md` 目录行 15、
+  册 14 尾接「→ 15」（`docs_nav` 派生导航绿）。
+- 十四→十五：`count:booklets#word` 芯片随 bless（README 双语、how 双语 h2 与调和句、stack 双语卡）；how 双语 `<title>` / meta 字面手改（facts `LITERALS` 门）；
+  how 双语新节 `#advisor` + f15 卡（`<pre>` 四行公式；consts 芯片 SIMILAR_REV / K / W_UNIT / TERM_CAP / TOP_M / MIN_COOC / roleMinName / roleMinCallee /
+  roleMinNameShape / similarCap 按裸名绑源常量，`docs_consts` 绿）、跳转条 15 与「同角色顾问」；README:171 的 Philosophy 句含该芯片，
+  册 `methodology.md:34` 引它的锚随之重签（`CE_DROP_VANISHED=b37893c848038ca7`）。
+- 图：架构图 IR 双语 `Tauri · eleven screens` / `fifteen read-only tools`；判决图 IR 双语**第 1 行合并**——archify dataflow 只许 0..4 五行（`invalid row 5`），
+  故 `Tokens & term bags` → `Clones & roles`（tag `clone/1 · fourclass/2 · similar/1` 需 119 px，节点 width 124→132）；四张 SVG 按 pin 重渲、
+  `node scripts/diagram.mjs --check` 清；README 双语 / how 双语 alt 加「克隆与同角色顾问」。
+- PERF-BUDGET 新节「v2.29 步 7 `ce similar` 查询代价」（HEAD worktree 自带 `.ce/`，n=5 三臂交错）：裸臂 0.71–0.76 s、`--text` 0.70–0.74 s、
+  `--widen` 1.78–1.88 s（+1.1 s = 步 3 不存 cooc 对表的直接代价，只由 opt-in 者付）、一文件改动后 0.99–1.09 s（+0.3 s 差分）；
+  教训：PowerShell 函数参数名 `$args` 遮蔽自动变量，首轮全部 27 ms 是 `ce` 的 usage 行——计时脚本先看 rc 与产物再信数字。
+- 步 6 CI 33980319590 唯一红腿 `site_screenshots::the_pictures_are_no_older_than_the_screens_they_show`：GUI 第十一屏让 `gui/ui` 的提交比三张截图新
+  ——`node scripts/shoot_gui.js --out site/assets --ce <release ce>` 重拍三张，`contracts/gui-shots.json` 回执随之（本地全跑绿是因为截图与屏在同一未提交树里）；首次在主根重拍撞上插件 1.6.0 的 daemon（索引 schema 15）改写共享 `.ce/index.db`（`ce dedup: no such column: u.id`），改在 HEAD worktree 自带 `.ce/` 里拍——`ce join --days 14` 对 211 提交 / 728 文件的窗口逐文件 `git blame --line-porcelain` 约 7 min，代价事实记此，随步 11 清点归位。
+- ADR-006 具名重立（旧→新行）：`docs/PERF-BUDGET.md` 362→381、`docs/reference/methodology.md` 66→67、`site/how/index.html` 652→695、`site/zh/how/index.html` 562→597、`CHANGELOG.md` 676→694（本块）。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：

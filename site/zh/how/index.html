@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CodeEraser 工作原理——确定性判决，十四个家族</title>
-<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十四个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
+<title>CodeEraser 工作原理——确定性判决，十五个家族</title>
+<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十五个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
 <meta name="theme-color" content="#10141d">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
@@ -48,16 +48,16 @@
   <p>下文每节都是短版。完整推导——每个常数都追溯到实现它的源码行——在
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，
   本页每个小标题都直接链进去。</p>
-  <nav class="jump" aria-label="章节"><a href="#families">家族</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#fpr">FPR 纪律</a> <a href="#acting">据判决行动</a> <a href="#residue">改动时残留</a> <a href="#honesty">诚实边界</a></nav>
+  <nav class="jump" aria-label="章节"><a href="#families">家族</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#f15">15</a> <a href="#fpr">FPR 纪律</a> <a href="#acting">据判决行动</a> <a href="#residue">改动时残留</a> <a href="#advisor">同角色顾问</a> <a href="#honesty">诚实边界</a></nav>
 </section>
 
 <figure class="arch">
-  <img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy">
+  <img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy">
   <figcaption>每行一个 wire 家族：左边是 Rust 度量的事实，中间是它喂给的 Haskell 判决，右边是离开的东西——退出码或报告行。</figcaption>
 </figure>
 
-<h2 id="families"><!--ce:count:booklets#word-->十四<!--/ce-->个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十四<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十二<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十五<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>update_check</code> 拿本构建比对最新发布，这个面既无 wire 家族也无方法学册；<code>similar_units</code>——第十五个——是同角色顾问（与 <code>ce similar</code> 同一份文档：核在 <code>similar/1</code> 上给的排序与角色位，只当顾问）。</p>
+<h2 id="families"><!--ce:count:booklets#word-->十五<!--/ce-->个判决家族</h2>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十五<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十二<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十五<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>update_check</code> 拿本构建比对最新发布，这个面既无 wire 家族也无方法学册；<code>similar_units</code>——第十五个——是同角色顾问（与 <code>ce similar</code> 同一份文档：核在 <code>similar/1</code> 上给的排序与角色位，只当顾问）。</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -534,6 +534,41 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
     <li><b>SITE_CAP</b> 10</li>
     <li><b>入 wire 版本</b> 6.6.0</li>
     <li><b>wire</b> tombstone/1</li>
+  </ul>
+</div>
+
+<h2 id="advisor">顾问家族——扮演同一角色的单元</h2>
+<p class="note">克隆家族要求两个单元长得像。第十五族回答的是「文件 2 现在有个函数，跟文件 1 里的某个函数定位相同」——
+两者可以没有一行相同——对索引自有事实做稀疏检索，在 <code>ce similar</code>、MCP 工具 <code>similar_units</code>、
+GUI 的 <code>similar</code> 屏与 Stop 审计的一行里只当顾问。</p>
+
+<div class="fam">
+  <h3 id="f15"><span class="n">15</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">同角色顾问——稀疏检索与仓内联想</a></h3>
+  <p class="job">用整数 BM25 在六通道词袋上给出与某个单元（或一段文本）最相似的单元——词袋读自索引已有的事实——
+  再问核其中哪些扮演查询的角色：一个确定性、离线、无模型无浮点的「代码 RAG」，只当顾问。</p>
+  <pre>bag    = six channels N P C D S L        (facts the parse already carries; hashes, never words)
+score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
+widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
+role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
+  <p class="note">T3 宇宙里每个单元一个袋：名字碎片、形状、被调者拼写、自有文档段、节点种类直方图与字面量的<em>种类</em>——
+  每个词先词干化再连同通道字母哈希，故共享名字与共享被调者是两种证据。词袋以两张表随同一次内容哈希门控的刷新持久化
+  （<code>bag</code> 表自身即倒排表；spec 初稿的共现对表实测让冷索引慢 7–10×，不建——读者在查询时推导共现）。
+  排序对着 trait 只写一次，仪器建的内存语料与产品跑的 SQL 读者在五份语料的每个单元上一致。Rust 发查询袋与每候选九个整数一行；
+  Haskell 用精确有理数排序并施加角色合取；名字、词与路径永不过线。两代仲裁 oracle 各守地板——首样本 60 %，
+  读数低一档并让首样本偏好的每个调优候选全部退场的留出集 40 %。本族永不使门变红，永不进入 <code>ce erase</code>。</p>
+  <ul class="consts">
+    <li><b>SIMILAR_REV</b> 1</li>
+    <li><b>K</b> 5</li>
+    <li><b>W_UNIT</b> 256</li>
+    <li><b>TERM_CAP</b> 96</li>
+    <li><b>TOP_M</b> 3</li>
+    <li><b>MIN_COOC</b> 2</li>
+    <li><b>roleMinName</b> 1</li>
+    <li><b>roleMinCallee</b> 1</li>
+    <li><b>roleMinNameShape</b> 2</li>
+    <li><b>similarCap</b> 65536</li>
+    <li><b>入 wire 版本</b> 6.7.0</li>
+    <li><b>wire</b> similar/1</li>
   </ul>
 </div>
 

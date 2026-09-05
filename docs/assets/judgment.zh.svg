@@ -250,13 +250,13 @@ rect.c-bg-rect { fill: var(--bg); }
 
         <!-- Flow paths -->
         <path data-edge-from="units" data-edge-to="score" data-edge-label="单元 · 尺寸" data-edge-key="0" data-edge-id="units-score" data-composition-points="162,157;253,157" d="M 162 157 L 253 157" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="units" data-edge-to="clones" data-edge-label="T3 候选" data-edge-key="1" data-edge-id="units-clones" data-composition-points="162,157;230,157;230,271;253,271" d="M 162 157 L 230 157 L 230 271 L 253 271" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="tokens" data-edge-to="clones" data-edge-label="k-gram" data-edge-key="2" data-edge-id="tokens-clones" data-composition-points="162,271;253,271" d="M 162 271 L 253 271" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
+        <path data-edge-from="units" data-edge-to="clones" data-edge-label="T3 候选" data-edge-key="1" data-edge-id="units-clones" data-composition-points="162,157;230,157;230,271;249,271" d="M 162 157 L 230 157 L 230 271 L 249 271" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
+        <path data-edge-from="tokens" data-edge-to="clones" data-edge-label="k-gram" data-edge-key="2" data-edge-id="tokens-clones" data-composition-points="162,271;249,271" d="M 162 271 L 249 271" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="shingles" data-edge-to="docdup" data-edge-label="shingle 集" data-edge-key="3" data-edge-id="shingles-docdup" data-composition-points="162,385;253,385" d="M 162 385 L 253 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="windows" data-edge-to="trend" data-edge-label="窗口 · diff" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="边 · 提及" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;253,613" d="M 162 613 L 253 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="score" data-edge-to="gate" data-edge-label="分数 · 位" data-edge-key="6" data-edge-id="score-gate" data-composition-points="377,157;468,157" d="M 377 157 L 468 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
-        <path data-edge-from="clones" data-edge-to="reports" data-edge-label="行" data-edge-key="7" data-edge-id="clones-reports" data-composition-points="377,271;422.5,271;422.5,385;468,385" d="M 377 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
+        <path data-edge-from="clones" data-edge-to="reports" data-edge-label="行" data-edge-key="7" data-edge-id="clones-reports" data-composition-points="381,271;422.5,271;422.5,385;468,385" d="M 381 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="docdup" data-edge-to="reports" data-edge-label="行" data-edge-key="8" data-edge-id="docdup-reports" data-composition-points="377,385;468,385" d="M 377 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="trend" data-edge-to="reports" data-edge-label="行" data-edge-key="9" data-edge-id="trend-reports" data-composition-points="377,499;422.5,499;422.5,385;468,385" d="M 377 499 L 422.5 499 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="liveness" data-edge-to="reports" data-edge-label="行" data-edge-key="10" data-edge-id="liveness-reports" data-composition-points="377,613;422.5,613;422.5,385;468,385" d="M 377 613 L 422.5 613 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
@@ -273,15 +273,15 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">后序 AST · MinHash/LSH</text>
         </g>
 
-        <g id="node-tokens" data-node-id="tokens" data-node-label="token 指纹" tabindex="0" role="button" aria-label="聚焦 token 指纹, winnow k=25 w=26, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="winnow k=25 w=26" data-node-context="01 / 度量 · Rust">
-          <title>token 指纹 · winnow k=25 w=26 · 01 / 度量 · Rust</title>
+        <g id="node-tokens" data-node-id="tokens" data-node-label="token 指纹与词袋" tabindex="0" role="button" aria-label="聚焦 token 指纹与词袋, winnow k=25 w=26 · 词袋, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="winnow k=25 w=26 · 词袋" data-node-context="01 / 度量 · Rust">
+          <title>token 指纹与词袋 · winnow k=25 w=26 · 词袋 · 01 / 度量 · Rust</title>
           <rect x="38" y="242" width="124" height="58" rx="6" class="c-mask" />
           <rect x="38" y="242" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(44 248) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="100" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">token 指纹</text>
-          <text x="100" y="279" class="t-muted" font-size="7" text-anchor="middle">winnow k=25 w=26</text>
+          <text x="100" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">token 指纹与词袋</text>
+          <text x="100" y="279" class="t-muted" font-size="7" text-anchor="middle">winnow k=25 w=26 · 词袋</text>
         </g>
 
         <g id="node-shingles" data-node-id="shingles" data-node-label="文档 shingle" tabindex="0" role="button" aria-label="聚焦 文档 shingle, 5 词 · MinHash/LSH, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="5 词 · MinHash/LSH" data-node-context="01 / 度量 · Rust">
@@ -329,16 +329,16 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="175" class="t-backend" font-size="6" text-anchor="middle">scan/1 · structure/1 · verdict/1</text>
         </g>
 
-        <g id="node-clones" data-node-id="clones" data-node-label="克隆判决" tabindex="0" role="button" aria-label="聚焦 克隆判决, T1/T2 精确 · T3 TSED ≥ 0.85, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="T1/T2 精确 · T3 TSED ≥ 0.85" data-node-tag="clone/1 · fourclass/2" data-node-context="02 / 判决 · Haskell">
-          <title>克隆判决 · T1/T2 精确 · T3 TSED ≥ 0.85 · 02 / 判决 · Haskell · clone/1 · fourclass/2</title>
-          <rect x="253" y="242" width="124" height="58" rx="6" class="c-mask" />
-          <rect x="253" y="242" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(259 248) scale(0.6875)">
+        <g id="node-clones" data-node-id="clones" data-node-label="克隆与角色判决" tabindex="0" role="button" aria-label="聚焦 克隆与角色判决, T1/T2 · T3 ≥ 0.85 · BM25 角色, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="T1/T2 · T3 ≥ 0.85 · BM25 角色" data-node-tag="clone/1 · fourclass/2 · similar/1" data-node-context="02 / 判决 · Haskell">
+          <title>克隆与角色判决 · T1/T2 · T3 ≥ 0.85 · BM25 角色 · 02 / 判决 · Haskell · clone/1 · fourclass/2 · similar/1</title>
+          <rect x="249" y="242" width="132" height="58" rx="6" class="c-mask" />
+          <rect x="249" y="242" width="132" height="58" rx="6" class="c-backend" stroke-width="1.5" />
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(255 248) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="315" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">克隆判决</text>
-          <text x="315" y="279" class="t-muted" font-size="7" text-anchor="middle">T1/T2 精确 · T3 TSED ≥ 0.85</text>
-        <text x="315" y="289" class="t-backend" font-size="7" text-anchor="middle">clone/1 · fourclass/2</text>
+          <text x="315" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">克隆与角色判决</text>
+          <text x="315" y="279" class="t-muted" font-size="7" text-anchor="middle">T1/T2 · T3 ≥ 0.85 · BM25 角色</text>
+        <text x="315" y="289" class="t-backend" font-size="6.2" text-anchor="middle">clone/1 · fourclass/2 · similar/1</text>
         </g>
 
         <g id="node-docdup" data-node-id="docdup" data-node-label="文档重复" tabindex="0" role="button" aria-label="聚焦 文档重复, Jaccard ≥ 0.80 · 50 词连续段, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Jaccard ≥ 0.80 · 50 词连续段" data-node-tag="docdup/1" data-node-context="02 / 判决 · Haskell">

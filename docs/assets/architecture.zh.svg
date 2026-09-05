@@ -385,8 +385,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="1325" y="106" class="t-muted" font-size="9" text-anchor="middle">ce · 退出码</text>
         </g>
 
-        <g id="node-gui" data-node-id="gui" data-node-label="GUI" tabindex="0" role="button" aria-label="聚焦 GUI, Tauri · 十屏, 面 — 五种渲染" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Tauri · 十屏" data-node-context="面 — 五种渲染">
-          <title>GUI · Tauri · 十屏 · 面 — 五种渲染</title>
+        <g id="node-gui" data-node-id="gui" data-node-label="GUI" tabindex="0" role="button" aria-label="聚焦 GUI, Tauri · 十一屏, 面 — 五种渲染" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Tauri · 十一屏" data-node-context="面 — 五种渲染">
+          <title>GUI · Tauri · 十一屏 · 面 — 五种渲染</title>
           <rect x="1250" y="170" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="170" width="150" height="64" rx="6" class="c-frontend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(1256 176) scale(0.6875)">
@@ -396,11 +396,11 @@ rect.c-bg-rect { fill: var(--bg); }
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill" />
           </g>
           <text x="1325" y="200" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">GUI</text>
-        <text x="1325" y="216" class="t-muted" font-size="9" text-anchor="middle">Tauri · 十屏</text>
+        <text x="1325" y="216" class="t-muted" font-size="9" text-anchor="middle">Tauri · 十一屏</text>
         </g>
 
-        <g id="node-mcp" data-node-id="mcp" data-node-label="MCP 服务器" tabindex="0" role="button" aria-label="聚焦 MCP 服务器, 十四个只读工具, 面 — 五种渲染" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="十四个只读工具" data-node-context="面 — 五种渲染">
-          <title>MCP 服务器 · 十四个只读工具 · 面 — 五种渲染</title>
+        <g id="node-mcp" data-node-id="mcp" data-node-label="MCP 服务器" tabindex="0" role="button" aria-label="聚焦 MCP 服务器, 十五个只读工具, 面 — 五种渲染" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="十五个只读工具" data-node-context="面 — 五种渲染">
+          <title>MCP 服务器 · 十五个只读工具 · 面 — 五种渲染</title>
           <rect x="1250" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="280" width="150" height="64" rx="6" class="c-frontend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(1256 286) scale(0.6875)">
@@ -410,7 +410,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill" />
           </g>
           <text x="1325" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">MCP 服务器</text>
-        <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">十四个只读工具</text>
+        <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">十五个只读工具</text>
         </g>
 
         <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="聚焦 Claude Code hooks, PreToolUse · Stop, 面 — 五种渲染" aria-pressed="false" data-node-kind="security" data-node-sublabel="PreToolUse · Stop" data-node-context="面 — 五种渲染">

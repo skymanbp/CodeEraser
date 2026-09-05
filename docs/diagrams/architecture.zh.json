@@ -22,8 +22,8 @@
     {"id": "judge", "type": "backend", "label": "判决核", "sublabel": "精确有理数 · 无时钟 · 无随机", "pos": [990, 170], "size": [160, 284], "sources": [{"path": "core/app/CE/Verdict/Score.hs"}, {"path": "core/app/CE/Clone/Ted.hs"}, {"path": "core/app/CE/Graph/Dead.hs"}]},
     {"id": "policy", "type": "database", "label": "策略即数据", "sublabel": "ADR-008 · 阈值随 Haskell 发布", "pos": [990, 500], "size": [160, 64], "sources": [{"path": "core/app/CE/Clone/Cost.hs"}, {"path": "core/app/CE/Graph/Cost.hs"}, {"path": "core/app/CE/Verdict/Cost.hs"}]},
     {"id": "cli", "type": "frontend", "label": "终端", "sublabel": "ce · 退出码", "pos": [1250, 60], "size": [150, 64], "sources": [{"path": "cli/src/main_cli.rs"}]},
-    {"id": "gui", "type": "frontend", "label": "GUI", "sublabel": "Tauri · 十屏", "pos": [1250, 170], "size": [150, 64], "sources": [{"path": "gui/src-tauri/src/commands.rs"}]},
-    {"id": "mcp", "type": "frontend", "label": "MCP 服务器", "sublabel": "十四个只读工具", "pos": [1250, 280], "size": [150, 64], "sources": [{"path": "cli/src/mcp/tools.rs"}]},
+    {"id": "gui", "type": "frontend", "label": "GUI", "sublabel": "Tauri · 十一屏", "pos": [1250, 170], "size": [150, 64], "sources": [{"path": "gui/src-tauri/src/commands.rs"}]},
+    {"id": "mcp", "type": "frontend", "label": "MCP 服务器", "sublabel": "十五个只读工具", "pos": [1250, 280], "size": [150, 64], "sources": [{"path": "cli/src/mcp/tools.rs"}]},
     {"id": "hooks", "type": "security", "label": "Claude Code hooks", "sublabel": "PreToolUse · Stop", "pos": [1250, 390], "size": [150, 64], "sources": [{"path": "plugin/hooks/hooks.json"}, {"path": "cli/src/guard.rs"}]},
     {"id": "ci", "type": "cloud", "label": "CI · pre-commit", "sublabel": "ce check --fail-under", "pos": [1250, 500], "size": [150, 64], "sources": [{"path": "cli/src/main_score.rs"}, {"path": ".github/workflows/ci.yml"}]}
   ],

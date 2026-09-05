@@ -385,8 +385,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="1325" y="106" class="t-muted" font-size="9" text-anchor="middle">ce · exit codes</text>
         </g>
 
-        <g id="node-gui" data-node-id="gui" data-node-label="GUI" tabindex="0" role="button" aria-label="Focus GUI, Tauri · ten screens, faces — five renderings" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Tauri · ten screens" data-node-context="faces — five renderings">
-          <title>GUI · Tauri · ten screens · faces — five renderings</title>
+        <g id="node-gui" data-node-id="gui" data-node-label="GUI" tabindex="0" role="button" aria-label="Focus GUI, Tauri · eleven screens, faces — five renderings" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Tauri · eleven screens" data-node-context="faces — five renderings">
+          <title>GUI · Tauri · eleven screens · faces — five renderings</title>
           <rect x="1250" y="170" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="170" width="150" height="64" rx="6" class="c-frontend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(1256 176) scale(0.6875)">
@@ -396,11 +396,11 @@ rect.c-bg-rect { fill: var(--bg); }
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill" />
           </g>
           <text x="1325" y="200" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">GUI</text>
-        <text x="1325" y="216" class="t-muted" font-size="9" text-anchor="middle">Tauri · ten screens</text>
+        <text x="1325" y="216" class="t-muted" font-size="9" text-anchor="middle">Tauri · eleven screens</text>
         </g>
 
-        <g id="node-mcp" data-node-id="mcp" data-node-label="MCP server" tabindex="0" role="button" aria-label="Focus MCP server, fourteen read-only tools, faces — five renderings" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="fourteen read-only tools" data-node-context="faces — five renderings">
-          <title>MCP server · fourteen read-only tools · faces — five renderings</title>
+        <g id="node-mcp" data-node-id="mcp" data-node-label="MCP server" tabindex="0" role="button" aria-label="Focus MCP server, fifteen read-only tools, faces — five renderings" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="fifteen read-only tools" data-node-context="faces — five renderings">
+          <title>MCP server · fifteen read-only tools · faces — five renderings</title>
           <rect x="1250" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="280" width="150" height="64" rx="6" class="c-frontend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(1256 286) scale(0.6875)">
@@ -410,7 +410,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill" />
           </g>
           <text x="1325" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">MCP server</text>
-        <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">fourteen read-only tools</text>
+        <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">fifteen read-only tools</text>
         </g>
 
         <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="Focus Claude Code hooks, PreToolUse · Stop, faces — five renderings" aria-pressed="false" data-node-kind="security" data-node-sublabel="PreToolUse · Stop" data-node-context="faces — five renderings">

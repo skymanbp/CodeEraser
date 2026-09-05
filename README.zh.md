@@ -14,7 +14,7 @@
 
 ## 具体实现——以及它的不同之处
 
-![一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆、文档重复、轨迹与审计、存活性与擦除、墓碑残留——每行一个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
+![一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留——每行一个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
 
 - **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->42<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->45<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。
@@ -168,7 +168,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
 - **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.7.0<!--/ce-->，<!--ce:count:families#word-->十二<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.1.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据 · ADR-009 文档事实派生、不手写。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
-- **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十四<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑<!--ce:count:gates#word-->六<!--/ce-->道产品门。
+- **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十五<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑<!--ce:count:gates#word-->六<!--/ce-->道产品门。
 
 ## 已知限制
 
@@ -178,7 +178,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 文档
 
-- [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)——由二进制与配置 schema 生成，漂移即 CI 变红 · [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十四<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
+- [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)——由二进制与配置 schema 生成，漂移即 CI 变红 · [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十五<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
 - [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)——wire SemVer 与两段式发布 runbook
 - 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [技术栈](https://codeeraser.dev/zh/stack/) · [实测](https://codeeraser.dev/zh/bench/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->
 

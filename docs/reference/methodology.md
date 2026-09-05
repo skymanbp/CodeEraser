@@ -64,3 +64,4 @@ does not get an exemption from the rule it argues for.
 | 12 | [Deterministic erase — the safety predicate](methodology/12-deterministic-erase-the-safety-predicate.md) | what is provably safe to delete |
 | 13 | [Unmentioned-declaration advisory — the mention veto](methodology/13-unmentioned-declaration-advisory.md) | declarations no other file spells (advisory, never a verdict) |
 | 14 | [Tombstone residue — the erased-name conjunction](methodology/14-tombstone-residue-the-erased-name-conjunction.md) | names a change erased that the same change writes back as an absence |
+| 15 | [Same-role advisor — sparse retrieval and in-repo association](methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md) | the units that play the same part as one unit (advisory, never a verdict) |
