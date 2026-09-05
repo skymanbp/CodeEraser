@@ -145,7 +145,7 @@
         <text x="886" y="397">缺席的数对 = 该轴不判</text>
 
         <text x="886" y="455">score &lt; reqFloor  =&gt;  floor</text>
-        <text x="886" y="471">ce check . --fail-under 946</text>
+        <text x="886" y="471">ce check . --fail-under 939</text>
         <text x="886" y="487">exit 1 把流水线判红</text>
 
         <text x="886" y="545">ce.toml 摘要 /= 基线  =&gt;  knobs_digest</text>

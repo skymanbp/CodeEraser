@@ -480,4 +480,17 @@ entry_globs = [
 # config's public vocabulary; reshaping a data table so its token run
 # stops rhyming is writing code for the ratio, which the entries above
 # forbid by name. Booked. Measured after cargo fmt.
-budget = 56
+# 56 -> 55 (v2.29 step 8, the judgment-correctness batch): the batch
+# landed three rows and took all three back, and one of the takings
+# reached a row the ledger already held -- net -1, row set diffed
+# against the HEAD worktree. Landed and taken back: score/anchor.rs
+# grouping the symbols table by path the way erase/gather.rs already
+# did (one owner now, anchor::units_by_path, and gather.rs reads it);
+# EraseProps' refusal battery growing to ten same-shape probes (two
+# row tables now, one per class -- and the fold also dissolved the
+# self-overlap the eight-probe run had held since 6.1.0, the row this
+# entry repays); the sub-repository's parity leg re-spelling
+# common::write_all's mkdir+write, and its baseline unit test spelling
+# three Sides longhand once the anchor became a string. Measured after
+# cargo fmt.
+budget = 55

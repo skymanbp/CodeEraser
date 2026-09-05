@@ -63,9 +63,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 949/1000</span> | axes 0:86 1:0 2:71 3:0 4:0 5:0 6:206 | 34 candidates
+<span class="s">check score 943/1000</span> | axes 0:89 1:0 2:106 3:0 4:0 5:0 6:210 | 34 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
-note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim table
+note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
 <!-- roast:end -->
   <p class="cap">Real output — CodeEraser judging its own repository. The ratchet only shrinks:
@@ -81,7 +81,7 @@ note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim
 <tr><td>duplicate clone blocks left behind</td><td class="was" data-run="Without CodeEraser">4</td><td class="to" data-run="With CodeEraser">0</td></tr>
 <tr><td>duplicated doc segments</td><td class="was" data-run="Without CodeEraser">1</td><td class="to" data-run="With CodeEraser">0</td></tr>
 <tr><td>removals still owed</td><td class="was" data-run="Without CodeEraser">1</td><td class="to" data-run="With CodeEraser">0</td></tr>
-<tr><td>check score</td><td class="was" data-run="Without CodeEraser">952</td><td class="to" data-run="With CodeEraser">979</td></tr>
+<tr><td>check score</td><td class="was" data-run="Without CodeEraser">871</td><td class="to" data-run="With CodeEraser">979</td></tr>
 </tbody></table></div>
 <p class="cap">One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.</p>
 <!-- scoreboard:end -->
@@ -106,7 +106,7 @@ note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim
 <h2>Wire it in</h2>
 <div class="installs">
   <div class="install"><span class="k">CI gate</span>
-    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->946<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
+    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->939<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
   <div class="install"><span class="k">pre-commit</span>
     <code>ce precommit&nbsp;&nbsp;# staged net LOC + touched duplicates</code></div>
   <div class="install"><span class="k">MCP</span>

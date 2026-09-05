@@ -9,8 +9,9 @@
 use crate::erase::model::Candidate;
 use crate::graph::deadcode::{self, Advisory};
 use crate::scan::lang::Lang;
+use crate::score::anchor::{UnitSpans, units_by_path};
 use anyhow::{Context, Result, bail};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 pub struct Gathered {
@@ -19,9 +20,6 @@ pub struct Gathered {
     pub hashes: BTreeMap<String, u64>,
     pub out_of_class: BTreeMap<&'static str, usize>,
 }
-
-/// Cached unit spans per path: (key, start_line, end_line).
-type UnitSpans = BTreeMap<String, Vec<(String, i64, i64)>>;
 
 /// All three measurement legs in family order: deadcode (graph),
 /// docdup (verbatim pairs), dedup (whole-unit T1 twins) — all off
@@ -41,11 +39,17 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
     let mut cands = dead_candidates(&dead, &lang_unres)?;
     cands.extend(doc_candidates(&segs, &dups, &mut cache)?);
     let mut out_of_class = BTreeMap::new();
-    let dead_paths: BTreeSet<&str> = dead.dead.iter().map(|d| d.path.as_str()).collect();
+    // the copy's dead VERDICT, not a death bit (7.0.0): the core's
+    // publicDeadVerdicts bar reaches the twin road through this code
+    let dead_codes: BTreeMap<&str, i64> = dead
+        .dead
+        .iter()
+        .map(|d| (d.path.as_str(), verdict_code(d.verdict)))
+        .collect();
     cands.extend(twin_candidates(
         &found.blocks,
         &units,
-        &dead_paths,
+        &dead_codes,
         &lang_unres,
         &mut cache,
         &mut out_of_class,
@@ -101,6 +105,15 @@ fn lang_count(map: &BTreeMap<i64, i64>, path: &str) -> i64 {
         .unwrap_or(0)
 }
 
+/// The wire's dead verdict code for a graph verdict name: 1..4 in
+/// VERDICT_NAMES order (0 = not dead; erase/1 class 2 and 3 alike).
+fn verdict_code(verdict: &str) -> i64 {
+    1 + crate::graph::deadcode::VERDICT_NAMES
+        .iter()
+        .position(|v| *v == verdict)
+        .unwrap_or(0) as i64
+}
+
 /// Class-3 rows (2.32.0, H3): the trust fact is the graph family's
 /// OWN per-row confidence — a reply without the column means the
 /// ledger never rode, refused by name, never defaulted.
@@ -111,10 +124,7 @@ fn dead_candidates(
     dead.dead
         .iter()
         .map(|d| {
-            let code = 1 + crate::graph::deadcode::VERDICT_NAMES
-                .iter()
-                .position(|v| *v == d.verdict)
-                .unwrap_or(0) as i64;
+            let code = verdict_code(d.verdict);
             let conf = d
                 .conf
                 .context("dead row carries no confidence — the graph ledger did not ride")?;
@@ -168,14 +178,16 @@ fn doc_candidates(
 
 /// Whole-unit T1 twins: a dedup block side that covers at least one
 /// ENTIRE cached unit, byte-identical across sides. The candidate
-/// targets side b's FILE (unit-tier liveness is not unlocked — R6 —
-/// so "the copy is graph-dead" can only mean its file is); blocks
-/// with no whole-unit coverage are counted out-of-class, not
-/// silently dropped.
+/// targets the dead side's FILE (unit-tier liveness is not unlocked —
+/// R6 — so "the copy is graph-dead" can only mean its file is) and
+/// carries that file's four-way dead verdict code (7.0.0, O51): the
+/// RG10 firewall used to hold on this road only because the planner's
+/// closure happened to sort the dead-file row first. Blocks with no
+/// whole-unit coverage are counted out-of-class, not silently dropped.
 fn twin_candidates(
     blocks: &[crate::dedup::pairs::Block],
     units: &UnitSpans,
-    dead_paths: &BTreeSet<&str>,
+    dead_codes: &BTreeMap<&str, i64>,
     lang_unres: &BTreeMap<i64, i64>,
     cache: &mut TextCache,
     out_of_class: &mut BTreeMap<&'static str, usize>,
@@ -187,8 +199,8 @@ fn twin_candidates(
         // still names a concrete file (the row refuses either way)
         let a = (&blk.a_file, blk.a_start, blk.a_end);
         let b = (&blk.b_file, blk.b_start, blk.b_end);
-        let ((tf, ts, te), (of, os, oe)) = if dead_paths.contains(blk.a_file.as_str())
-            && !dead_paths.contains(blk.b_file.as_str())
+        let ((tf, ts, te), (of, os, oe)) = if dead_codes.contains_key(blk.a_file.as_str())
+            && !dead_codes.contains_key(blk.b_file.as_str())
         {
             (a, b)
         } else {
@@ -200,7 +212,7 @@ fn twin_candidates(
             continue;
         }
         let eq = cache.slice(of, os as i64, oe as i64)? == cache.slice(tf, ts as i64, te as i64)?;
-        let dead = dead_paths.contains(tf.as_str());
+        let dead = dead_codes.get(tf.as_str()).copied().unwrap_or(0);
         out.push(Candidate {
             class: 2,
             facts: [
@@ -212,7 +224,7 @@ fn twin_candidates(
                 // core now refuses instead of licensing the erase
                 i64::from(!covered.is_empty()),
                 i64::from(eq),
-                i64::from(dead),
+                dead,
                 lang_count(lang_unres, tf),
             ],
             path: tf.clone(),
@@ -225,19 +237,6 @@ fn twin_candidates(
         });
     }
     Ok(out)
-}
-
-/// Cached unit spans grouped by path — the coverage predicate's table
-/// (graph symbols are the ONE persisted unit identity, candidates.rs
-/// precedent: join on the cache, never a re-segmentation).
-fn units_by_path(idx: &crate::dedup::index::Index) -> Result<UnitSpans> {
-    let mut map: UnitSpans = BTreeMap::new();
-    for s in crate::graph::symbols::symbol_rows(idx)? {
-        map.entry(s.path)
-            .or_default()
-            .push((s.key, s.start_line, s.end_line));
-    }
-    Ok(map)
 }
 
 /// Unit keys fully inside [start, end] on `path` (1-based inclusive).

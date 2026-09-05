@@ -35,7 +35,7 @@
     "gates": {
       "check": {
         "rc": 1,
-        "out": "check score 952/1000 | axes 0:0 1:0 2:142 3:0 4:200 5:0 6:0 | 2 candidates\nratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)\nnote: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table"
+        "out": "check score 871/1000 | axes 0:0 1:0 2:307 3:400 4:200 5:0 6:0 | 3 candidates\nratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)\nnote: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table"
       },
       "dedup": {
         "rc": 1,

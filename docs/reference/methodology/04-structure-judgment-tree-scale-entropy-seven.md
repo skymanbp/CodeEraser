@@ -219,7 +219,7 @@ Since contract 2.26.0 (M9 batch 9 P9, user ruling — a VERSIONING entry, not a 
 version; the protocol is far past it) the structure family runs the **same density
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
-through `chargeAt`, imported from [Score.hs:154](../../../core/app/CE/Verdict/Score.hs#L154)
+through `chargeAt`, imported from [Score.hs:158](../../../core/app/CE/Verdict/Score.hs#L158)
 (one law, two families; [Structure.hs:265-276](../../../core/app/CE/Structure.hs#L265)):
 
 ```

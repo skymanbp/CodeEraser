@@ -20,7 +20,7 @@ import WireHarness (fieldsOf, refusedBy, rowsRequest, runChecks, setKey)
 -- | The request every probe edits: the query bag and the candidate
 -- rows under the anchor proto; `req` is the bagless form.
 request :: [[Integer]] -> [[Integer]] -> Value
-request q rows = setKey "query" (toJSON q) (rowsRequest "6.7.0" "similar.request" rows)
+request q rows = setKey "query" (toJSON q) (rowsRequest "7.0.0" "similar.request" rows)
 
 req :: [[Integer]] -> Value
 req = request []

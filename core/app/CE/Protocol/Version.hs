@@ -10,24 +10,26 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 6.7.0 = the similar family (ADR-008 sixth instalment, plan v2.29),
--- additive: one new family, similar/1. The measuring side ranks a
--- query's candidates off its own inverted tables and sends the query
--- bag as [termHash, weight] pairs plus one [nHit, pHit, cHit, dHit,
--- sHit, lHit, shapeEqual, bm25Num, bm25Den] row per candidate; this
--- side answers the order they stand in (exact rationals) and which of
--- them play the query's role (a shared name AND callee, or two shared
--- names with the shape equal). The conjunction and its floors exist in
--- one place (CE.Similar.Cost); the measuring side re-labels indices
--- and never judges. An advisor: no condition bit, no knob. Every other
--- family is answered byte for byte as before.
+-- 7.0.0 = the judgment-correctness batch (plan v2.29 step 8), a
+-- MAJOR because one request field changed shape: the fourclass pair's
+-- `dup` (duplicated key hashes) is replaced by `dupSpans`
+-- ([hash, start, end] per after-side occurrence), and the stacking
+-- rule now asks whether the novel mass landed INSIDE a duplicated unit
+-- instead of merely beside one (O47). Riding the same number: the
+-- verdict score's clone and docdup axes charge the FILES a verified
+-- pair touches over the code-file and doc-file universes instead of
+-- pairs over files (O22 -- scores are not comparable with 6.x), and
+-- the erase class-2 row's third fact is the copy's four-way dead
+-- verdict code rather than a boolean, so the RG10 firewall reaches
+-- twins by the same publicDeadVerdicts bar (O51). Every other family
+-- is answered byte for byte as before.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's
 -- constant (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "6.7.0"
+proto = "7.0.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

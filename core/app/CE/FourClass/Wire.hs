@@ -41,14 +41,18 @@ data Pair = Pair
   { pIdx :: Int
   , pRem :: [[(Int, Word64, Int)]]
   , pAdd :: [[(Int, Word64, Int)]]
-  , pDup :: [Word64]
-  -- ^ key hashes of units newly DUPLICATED on the after side --
-  -- symbol knowledge stays in Rust (ADR-002), only hashes cross
+  , pDupSpans :: [(Word64, Int, Int)]
+  -- ^ (key hash, start, end) for every after-side occurrence of a
+  -- unit key newly DUPLICATED there (7.0.0, O47; 6.x sent the hashes
+  -- alone as `dup`). Symbol knowledge stays in Rust (ADR-002): only
+  -- hashes and 1-based inclusive line spans cross, and the span is
+  -- what lets the stacking rule ask whether the novel mass landed
+  -- INSIDE a duplicated unit rather than merely beside one.
   }
 
 instance FromJSON Pair where
   parseJSON = withObject "Pair" $ \o ->
-    Pair <$> o .: "i" <*> o .: "rem" <*> o .: "add" <*> o .:? "dup" .!= []
+    Pair <$> o .: "i" <*> o .: "rem" <*> o .: "add" <*> o .:? "dupSpans" .!= []
 
 instance FromJSON Request where
   parseJSON = withObject "Request" $ \o ->

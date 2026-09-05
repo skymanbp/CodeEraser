@@ -26,13 +26,19 @@ respond proto line = case eitherDecodeStrict line of
 -- | First boundary offence: a duplicate pair index — Anchor's run
 -- maps key on (pair, run), where M.fromList would silently DROP an
 -- earlier duplicate's runs (M5-close review LOW; the Rust producer
--- enumerates, so this refuses drift, not traffic) — then the
--- within-first precondition (message bytes golden-pinned).
+-- enumerates, so this refuses drift, not traffic) — then a malformed
+-- duplicated-unit span (7.0.0: a span the stacking rule intersects
+-- must be a 1-based inclusive range, else a novel line could sit
+-- "inside" nothing or everything) — then the within-first
+-- precondition (message bytes golden-pinned).
 violation :: [Pair] -> Maybe String
-violation ps = dup <|> within
+violation ps = dup <|> spans <|> within
  where
   dup = case M.keys (M.filter (> 1) (M.fromListWith (+) [(pIdx p, 1 :: Int) | p <- ps])) of
     (i : _) -> Just ("duplicate pair index: " <> show i)
+    [] -> Nothing
+  spans = case [pIdx p | p <- ps, any (\(_, s, e) -> s < 1 || e < s) (pDupSpans p)] of
+    (i : _) -> Just ("malformed dup span: pair " <> show i)
     [] -> Nothing
   within = case [pIdx p | p <- ps, shares p] of
     (p : _) -> Just ("within-first violated: pair " <> show p)

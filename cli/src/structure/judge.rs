@@ -160,7 +160,7 @@ pub fn run(
 /// fallback and made every file with any lines at all "past the soft
 /// line" — a baseline the core would refuse still drove the advisory.
 pub(crate) fn committed_soft(root: &Path) -> u64 {
-    let stored = crate::score::baseline::read(root)
+    let stored = crate::score::baseline::document(root)
         .ok()
         .flatten()
         .and_then(|doc| doc["softLine"].as_u64())

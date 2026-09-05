@@ -12,7 +12,7 @@
 mod delta;
 
 use super::model::{Classification, classify, significant};
-use super::stacking::dup_units;
+use super::stacking::dup_spans;
 use crate::corelink::Link;
 use crate::dedup::tokens::fnv1a;
 use crate::scan::lang::Lang;
@@ -197,7 +197,9 @@ fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
         .enumerate()
         .filter(|(_, (rem, add))| !rem.is_empty() || !add.is_empty())
         .map(
-            |(i, (rem, add))| json!({"i": i, "rem": rem, "add": add, "dup": dup_units(&inputs[i])}),
+            |(i, (rem, add))| {
+                json!({"i": i, "rem": rem, "add": add, "dupSpans": dup_spans(&inputs[i])})
+            },
         )
         .collect();
     json!({"pairs": pairs})

@@ -59,7 +59,7 @@ Two consequences, both theorems rather than thresholds:
 - `siteCostWithin = 0` ⇒ `1*1 + 0 < 1*3`, so **any single matching line opens a within-file site** — which is exactly L1's unfloored rule ([Cost.hs:25-26](../../../core/app/CE/FourClass/Cost.hs#L25)).
 - `siteCostCross = 2` ⇒ a single cross line gives `1*1 + 2 = 3 = 1*3`, a tie, which does not open. So `destFloor`, defined as the least `n` with `siteOpens siteCostCross n` ([Cost.hs:50-53](../../../core/app/CE/FourClass/Cost.hs#L50)), evaluates to **2**. That tie *is* the coincidence rejection ([Cost.hs:30-33](../../../core/app/CE/FourClass/Cost.hs#L30)).
 
-The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens 2 1)` ([Spec.hs:144-145](../../../core/test/Spec.hs#L144)), and perturbing the site cost moves the floor — `s ∈ {0,2,4,6}` ⇒ floor `{1,2,3,4}` ([Spec.hs:146-149](../../../core/test/Spec.hs#L146)).
+The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens 2 1)` ([Spec.hs:146-147](../../../core/test/Spec.hs#L146)), and perturbing the site cost moves the floor — `s ∈ {0,2,4,6}` ⇒ floor `{1,2,3,4}` ([Spec.hs:148-151](../../../core/test/Spec.hs#L148)).
 
 ### Line-evidence floor plus the anchor-line requirement
 
@@ -75,42 +75,41 @@ The sensitivity test pins the knob as live: `destFloor == 2` and `not (siteOpens
 
 **Work budget.** A hash whose removed × added occurrence product exceeds `bucketCap^2` with `bucketCap = 64` degrades the whole request, all-or-nothing ([Anchor.hs:38-39](../../../core/app/CE/FourClass/Anchor.hs#L38), [Anchor.hs:77-86](../../../core/app/CE/FourClass/Anchor.hs#L77)). The product is computed in `Integer` because machine `Int` is 32-bit on some GHC targets, where two ~50k-occurrence sides would overflow and bypass the budget ([Anchor.hs:73-76](../../../core/app/CE/FourClass/Anchor.hs#L73)). Recorded headroom: largest measured self-slice bucket 9 ([Anchor.hs:37](../../../core/app/CE/FourClass/Anchor.hs#L37)).
 
-**Determinism** is structural, not enforced: no exclusivity, no greedy claiming, no tie-break, because de-duplication commits are many-to-one and accepted blocks are a union of independently derived sets with no dependence on iteration order ([Anchor.hs:6-11](../../../core/app/CE/FourClass/Anchor.hs#L6)). Blocks are sorted on `(bFromPair, bFromLines, bToPair, bToLines)` before emission ([Provenance.hs:31-32](../../../core/app/CE/FourClass/Provenance.hs#L31)).
+**Determinism** is structural, not enforced: no exclusivity, no greedy claiming, no tie-break, because de-duplication commits are many-to-one and accepted blocks are a union of independently derived sets with no dependence on iteration order ([Anchor.hs:6-11](../../../core/app/CE/FourClass/Anchor.hs#L6)). Blocks are sorted on `(bFromPair, bFromLines, bToPair, bToLines)` before emission ([Provenance.hs:34-35](../../../core/app/CE/FourClass/Provenance.hs#L34)).
 
 ### Asymmetric extension: phases 2 and 3
 
 Both phases follow from the cost model: adding a line to an already-open site costs `movedCost < plainCost` with no new site cost, so it is always profitable ([Provenance.hs:2-4](../../../core/app/CE/FourClass/Provenance.hs#L2)).
 
-- **Phase 2 (addition side, run-scoped).** An unclaimed added line is marked moved-in iff it sits in a contiguous added run that already contains an anchored line, *and* its hash occurs among the leftover removals of a pair with an established block edge into this pair ([Provenance.hs:52-81](../../../core/app/CE/FourClass/Provenance.hs#L52)). This recovers one-line tails of proven relocations without licensing file-wide claims.
-- **Phase 3 (removal side, asymmetric).** A leftover removed line whose content landed at any marked-in line of a *different* pair is moved-out ([Provenance.hs:89-97](../../../core/app/CE/FourClass/Provenance.hs#L89)) — no run scoping, no site membership required.
+- **Phase 2 (addition side, run-scoped).** An unclaimed added line is marked moved-in iff it sits in a contiguous added run that already contains an anchored line, *and* its hash occurs among the leftover removals of a pair with an established block edge into this pair ([Provenance.hs:55-84](../../../core/app/CE/FourClass/Provenance.hs#L55)). This recovers one-line tails of proven relocations without licensing file-wide claims.
+- **Phase 3 (removal side, asymmetric).** A leftover removed line whose content landed at any marked-in line of a *different* pair is moved-out ([Provenance.hs:92-100](../../../core/app/CE/FourClass/Provenance.hs#L92)) — no run scoping, no site membership required.
 
 The asymmetry is the product thesis, stated at [Provenance.hs:5-11](../../../core/app/CE/FourClass/Provenance.hs#L5): on the removal side, "the content left its home" is itself provenance (bulk removal of copies is the normal shape of a de-duplication refactor); on the addition side, a fresh line duplicating removed content is **duplication** — the signal the product exists to catch — so additions require site or edge evidence.
 
-Only anchored block lines appear in `blocks`; lines admitted by extension or source attribution appear in `moved` but not in `blocks` — they are a relocation's tail, not its evidence ([Wire.hs:57-60](../../../core/app/CE/FourClass/Wire.hs#L57)).
+Only anchored block lines appear in `blocks`; lines admitted by extension or source attribution appear in `moved` but not in `blocks` — they are a relocation's tail, not its evidence ([Wire.hs:61-64](../../../core/app/CE/FourClass/Wire.hs#L61)).
 
 ### Stacking suspicion
 
-One M4 judgment rule ships, intent-free by design ([Verdict.hs:1-12](../../../core/app/CE/FourClass/Verdict.hs#L1)). It fires only on a conjunction of three signals ([Verdict.hs:34-41](../../../core/app/CE/FourClass/Verdict.hs#L34)):
+One M4 judgment rule ships, intent-free by design ([Verdict.hs:1-14](../../../core/app/CE/FourClass/Verdict.hs#L1)). It fires only on a conjunction of three signals, two of them one line since proto 7.0.0 ([Verdict.hs:42-48](../../../core/app/CE/FourClass/Verdict.hs#L42)):
 
 ```
-not (null (pDup p))                    -- a unit key newly duplicated on the after side
-&& novel   >= stackingNovelFloor       -- 20
+inDup   >= stackingNovelFloor          -- ≥ 20 novel lines INSIDE a newly duplicated unit's span
 && deleted * stackingRatio < novel     -- deletions under novel/10
 ```
 
-with `stackingNovelFloor = 20` ([Verdict.hs:24](../../../core/app/CE/FourClass/Verdict.hs#L24)) and `stackingRatio = 10` ([Verdict.hs:29](../../../core/app/CE/FourClass/Verdict.hs#L29)). Rationale as recorded: below the floor even a true duplicate is a nit; editing-in-place removes roughly what it adds, while stacking removes almost nothing ([Verdict.hs:21-29](../../../core/app/CE/FourClass/Verdict.hs#L21)).
+with `stackingNovelFloor = 20` ([Verdict.hs:25-26](../../../core/app/CE/FourClass/Verdict.hs#L25)) and `stackingRatio = 10` ([Verdict.hs:30-31](../../../core/app/CE/FourClass/Verdict.hs#L30)). Rationale as recorded: below the floor even a true duplicate is a nit; editing-in-place removes roughly what it adds, while stacking removes almost nothing ([Verdict.hs:23-31](../../../core/app/CE/FourClass/Verdict.hs#L23)). `inDup` is the count of the pair's novel lines that fall inside any shipped span ([Verdict.hs:46](../../../core/app/CE/FourClass/Verdict.hs#L46)): a fresh copy written beside the old one puts its lines there, while twenty novel lines elsewhere in a file that happens to gain a duplicate key are ordinary editing — the 6.x rule joined the two signals and fired on that shape (plan v2.29 step 8, O47; [Verdict.hs:34-41](../../../core/app/CE/FourClass/Verdict.hs#L34)). The removal ratio still reads the whole edit.
 
-`novel` and `deleted` here are **post-reclassification** counts supplied by the caller, not the raw leftover list lengths, which would overcount ([Verdict.hs:32-33](../../../core/app/CE/FourClass/Verdict.hs#L32)). They are computed as sent-leftover lines not present in the phase marks: `sigLeft side marks p` ([Provenance.hs:26-27](../../../core/app/CE/FourClass/Provenance.hs#L26)).
+`novel` and `deleted` here are **post-reclassification** — the novel LINES and the deleted count — supplied by the caller, not the raw leftover list lengths, which would overcount ([Verdict.hs:33-36](../../../core/app/CE/FourClass/Verdict.hs#L33)). They are the sent-leftover lines not present in the phase marks, `leftLines side marks p`, kept as lines on the addition side so the rule can place them and counted on the removal side ([Provenance.hs:26](../../../core/app/CE/FourClass/Provenance.hs#L26), [Provenance.hs:30-31](../../../core/app/CE/FourClass/Provenance.hs#L30)).
 
-**The duplication evidence** (`pDup`) is unit-key hashes, computed in Rust and shipped as `fnv1a` hashes only, since symbol knowledge stays on the Rust side per ADR-002 ([stacking.rs:1-4](../../../cli/src/fourclass/stacking.rs#L1), [Wire.hs:45-47](../../../core/app/CE/FourClass/Wire.hs#L45)). A key qualifies iff its after-side count rises to ≥2 *and* strictly exceeds its before-side count: `*n >= 2 && *n > before.get(k)` ([stacking.rs:43](../../../cli/src/fourclass/stacking.rs#L43)). Three scoping exclusions, each a measured false-positive source ([stacking.rs:32-34](../../../cli/src/fourclass/stacking.rs#L32)):
+**The duplication evidence** (`dupSpans`) is one `[fnv1a(key), start, end]` row per after-side occurrence of a newly duplicated unit key, computed in Rust and shipped as hashes and line numbers only, since symbol knowledge stays on the Rust side per ADR-002 ([stacking.rs:1-10](../../../cli/src/fourclass/stacking.rs#L1), [Wire.hs:44](../../../core/app/CE/FourClass/Wire.hs#L44), [Wire.hs:55](../../../core/app/CE/FourClass/Wire.hs#L55)). A key qualifies iff its after-side count rises to ≥2 *and* strictly exceeds its before-side count: `spans.len() >= 2 && spans.len() > before.get(k)` ([stacking.rs:33](../../../cli/src/fourclass/stacking.rs#L33)); a span with `start < 1` or `end < start` is refused by name at the envelope, pair index named ([FourClass.hs:40-41](../../../core/app/CE/FourClass.hs#L40)). Three scoping exclusions, each a measured false-positive source ([stacking.rs:58-60](../../../cli/src/fourclass/stacking.rs#L58)):
 
-- **top-level only** — a unit strictly span-contained in another is excluded ([stacking.rs:26-30](../../../cli/src/fourclass/stacking.rs#L26)), because a method nested in two different classes shares its flat key legitimately;
+- **top-level only** — a unit strictly span-contained in another is excluded ([stacking.rs:52-56](../../../cli/src/fourclass/stacking.rs#L52)), because a method nested in two different classes shares its flat key legitimately;
 - **`(anonymous)` keys excluded** — an anonymous closure has no stacking identity;
 - **`impl ` keys excluded** — impl blocks are containers so methods are not top-level, never stacking identities themselves; a type's inherent and trait impls, or split inherent impls, coexist in normal Rust.
 
-Recorded FPR effect of this scoping on the real-edit corpus: `contracts/eval/fpr-fourclass-v1.json` flagged 8/600 before, 0/600 after ([stacking.rs:16-21](../../../cli/src/fourclass/stacking.rs#L16); corroborated at [EVAL-SET.md:138](../../EVAL-SET.md#L138)).
+Recorded FPR effect of this scoping on the real-edit corpus: `contracts/eval/fpr-fourclass-v1.json` flagged 8/600 before, 0/600 after ([stacking.rs:19-24](../../../cli/src/fourclass/stacking.rs#L19); corroborated at [EVAL-SET.md:138](../../EVAL-SET.md#L138)).
 
-Note the rule checks only that *some* unit was newly duplicated — it does not verify that the novel mass sits inside that unit. The output is `(pair index, "stacking")` ([Verdict.hs:36](../../../core/app/CE/FourClass/Verdict.hs#L36)); the report renders it as `{"file": …, "kind": …}` ([session.rs:153-157](../../../cli/src/fourclass/session.rs#L153)).
+The output is `(pair index, "stacking")` ([Verdict.hs:44](../../../core/app/CE/FourClass/Verdict.hs#L44)); the report renders it as `{"file": …, "kind": …}` ([session.rs:153-157](../../../cli/src/fourclass/session.rs#L153)).
 
 The other §4.3 rules — novel-vs-repository similarity as duplicate-implementation suspicion, and MinHash paragraph similarity as restatement suspicion ([DEVELOPMENT_PLAN.md:121-125](../../DEVELOPMENT_PLAN.md#L121)) — are not implemented in this module; `CE.FourClass.Verdict` exports exactly one rule ([Verdict.hs:1-2](../../../core/app/CE/FourClass/Verdict.hs#L1)).
 
@@ -128,7 +127,7 @@ L2 must prove incremental gain over L1 or the ladder falls back to L1 ([DEVELOPM
 
 **L1 is the IR producer, not a modified engine.** L2 runs L1 per pair unchanged, ships only the leftovers (significant lines L1 called novel/deleted) as `[line, fnv1a(trim), alnum_width]` grouped into runs, and applies a monotone delta ([batch.rs:1-6](../../../cli/src/fourclass/batch.rs#L1), [batch.rs:128-146](../../../cli/src/fourclass/batch.rs#L128)). Single-pair batches with no link are bitwise L1 ([batch.rs:5-6](../../../cli/src/fourclass/batch.rs#L5)).
 
-The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:68-70](../../../core/app/CE/FourClass/Wire.hs#L68), [delta.rs:61-66](../../../cli/src/fourclass/batch/delta.rs#L61)). L2 can therefore only reclassify plain lines as moved, never the reverse.
+The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:72-74](../../../core/app/CE/FourClass/Wire.hs#L72), [delta.rs:61-66](../../../cli/src/fourclass/batch/delta.rs#L61)). L2 can therefore only reclassify plain lines as moved, never the reverse.
 
 **Every fallback returns the pure-L1 result with a named reason** ([batch.rs:8-10](../../../cli/src/fourclass/batch.rs#L8)):
 
@@ -150,7 +149,7 @@ The reply is an answer, not an authority ([delta.rs:4-5](../../../cli/src/fourcl
 - **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:18-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:85-87](../../../cli/src/fourclass/batch.rs#L85)).
 - **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:13-16](../../../cli/src/fourclass/batch/delta.rs#L13), [delta.rs:58-59](../../../cli/src/fourclass/batch/delta.rs#L58)).
 - **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:100-102](../../../cli/src/fourclass/batch/delta.rs#L100), [session.rs:131-141](../../../cli/src/fourclass/session.rs#L131)).
-- **The core machine-checks two preconditions** at its boundary ([FourClass.hs:31-44](../../../core/app/CE/FourClass.hs#L31)): no duplicate pair index (Anchor's run maps key on `(pair, run)`, so `M.fromList` would silently drop an earlier duplicate's runs), and **within-first** — no leftover added hash of a pair may occur among that same pair's leftover removed hashes. Within-first is L1's within-file consumption rule seen from the judgment side; verifying its consequence turns a cross-language assumption into a checked contract ([FourClass.hs:3-6](../../../core/app/CE/FourClass.hs#L3)).
+- **The core machine-checks two preconditions** at its boundary ([FourClass.hs:34-47](../../../core/app/CE/FourClass.hs#L34)): no duplicate pair index (Anchor's run maps key on `(pair, run)`, so `M.fromList` would silently drop an earlier duplicate's runs), and **within-first** — no leftover added hash of a pair may occur among that same pair's leftover removed hashes. Within-first is L1's within-file consumption rule seen from the judgment side; verifying its consequence turns a cross-language assumption into a checked contract ([FourClass.hs:3-6](../../../core/app/CE/FourClass.hs#L3)).
 - **Blocks are unit-attributed line by line**, not head-line only: one block can span several units, and head-line attribution left 7 of 35 registered units unnamed ([delta.rs:89-94](../../../cli/src/fourclass/batch/delta.rs#L89)).
 
 ### Session scope

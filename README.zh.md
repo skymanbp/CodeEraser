@@ -36,7 +36,7 @@
 | 残留的克隆块 | 4 | **0** |
 | 重复文档段 | 1 | **0** |
 | 仍欠的删除 | 1 | **0** |
-| 检查分数 | 952 | **979** |
+| 检查分数 | 871 | **979** |
 
 同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。
 <!-- scoreboard:end -->
@@ -52,7 +52,7 @@
 | Stop 审计 | 不在环内 | **拦停** — `本会话的编辑留下 2 个触及改动文件的重复块（净 +105 行）…` |
 | 审计点名的那处修复 | — | 写下之后，审计转为沉默 |
 | `ce erase --apply` | — | 移除 1 行：逐字文档孪生 |
-| `ce check` 分数（棘轮） | 952/1000 — **FAIL**: ratchet_over, discrete_added | 979/1000 — **FAIL**: ratchet_over |
+| `ce check` 分数（棘轮） | 871/1000 — **FAIL**: ratchet_over, discrete_added | 979/1000 — **FAIL**: ratchet_over |
 | T1/T2 克隆块（`ce dedup --check`，预算 0） | 4 (**FAIL**) | 0 (**pass**) |
 | 近似克隆对（`ce clone`） | 4 | 0 |
 | 重复文档段（`ce docdup --check`） | 1 (**FAIL**) | 0 (**pass**) |
@@ -166,7 +166,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）：`codeeraser` crate——tree-sitter <!--ce:tool:tree_sitter#vminor-->0.26<!--/ce--> 与<!--ce:count:grammars#word-->六<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.37<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->16<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->15<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->2<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`——每个判决家族、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
-- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->6.7.0<!--/ce-->，<!--ce:count:families#word-->十二<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.1.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
+- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->7.0.0<!--/ce-->，<!--ce:count:families#word-->十二<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.1.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据 · ADR-009 文档事实派生、不手写。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
 - **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十五<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户——每次 push 都在这棵树上跑<!--ce:count:gates#word-->六<!--/ce-->道产品门。
 
@@ -174,7 +174,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **这就是成品的形状。** 计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——已于 2026-08-31 裁定不做（计划 v2.22，45 条）。以下是立场清单，不是计划清单。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
 
 ## 文档
 

@@ -33,18 +33,23 @@ check name ok = do
   putStrLn ((if ok then "ok   " else "FAIL ") <> name)
   pure ok
 
--- | The score fixture, refit for the density scoring (M9 batch 6):
--- per axis the (mass, opportunity) odds land the seven charges at
--- 685/500/750/800/269/181/366‰ — pairwise distinct, every axis with
+-- | The score fixture, refit for the density scoring (M9 batch 6)
+-- and again for the file-touched clone/docdup axes (7.0.0, O22): per
+-- axis the (mass, opportunity) odds land the seven charges at
+-- 685/285/461/470/238/181/562‰ — pairwise distinct, every axis with
 -- one row EXACTLY on its threshold so a +1 knob probe has a boundary
--- to flip, and every charge at least 66‰ off the weighted mean 433:
+-- to flip, and every charge at least 77‰ off the weighted mean 395:
 -- a +1 weight bump moves the floored score by about
 -- (charge − mean)/29, so a charge parked within the ±29 integer-div
 -- granularity of the mean moves NOTHING (the axis-5 461-vs-486
--- failure that forced this refit — the same mean trap the count-era
--- fixture documented, one representation later). fPos is written
--- node-ascending (16 = the near-dead row only the deadIndegCeil
--- probe counts; 7 dead rows; 11 cycle members).
+-- failure that forced the first refit — the same mean trap the
+-- count-era fixture documented, one representation later). fPos is
+-- written node-ascending (16 = the near-dead row only the
+-- deadIndegCeil probe counts; 5 dead rows; 9 cycle members; 80 = a
+-- referenced doc file, so the doc universe is nine files and the dup
+-- axis lands off the complexity axis); the eight dup-pair files are
+-- the doc universe the axis-3 odds read, and the six clone-pair files
+-- charge against the seven code files (16 nodes minus nine docs).
 facts :: Facts
 facts =
   Facts
@@ -59,8 +64,9 @@ facts =
         ]
     , fPos =
         [[16, 1, 0, 16, 1, 0]]
-          <> [[u, 0, 0, u, 1, 0] | u <- [17 .. 23]]
-          <> [[u, 1, 1, 50, 2, 1] | u <- [24 .. 34]]
+          <> [[u, 0, 0, u, 1, 0] | u <- [17 .. 21]]
+          <> [[u, 1, 1, 50, 2, 1] | u <- [24 .. 32]]
+          <> [[80, 1, 0, 80, 1, 1]]
     , fChurn =
         -- one clearly rewrite-heavy, one exactly at 50/100 (the
         -- rewriteNum boundary), seven under
@@ -69,8 +75,8 @@ facts =
     , -- 510 lines: the graded axis 0 (v0.6 soft zone, fallback
       -- S=300) masses 10·(210/450)² = 98/45 — inside the zone, and
       -- far enough in that the charge clears the mean margin
-      fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30]]
-    , fDocFiles = []
+      fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30], [3, 1, 5], [4, 1, 5], [5, 1, 5]]
+    , fDocFiles = [9 .. 16] <> [80]
     , fClassKnobs = classKnobsOf []
     , fSelfLoops = []
     }

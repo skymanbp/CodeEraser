@@ -23,9 +23,12 @@ type Mark = (Int, Int) -- (pair, line)
 classify :: Request -> Result
 classify req = Result (reqId req) moved sortedBlocks verdicts reason
  where
-  verdicts = suspicions [(p, sigLeft pAdd inMarks p, sigLeft pRem outMarks p) | p <- ps]
-  sigLeft side marks p =
-    length [() | (l, _, _) <- concat (side p), (pIdx p, l) `S.notMember` marks]
+  verdicts = suspicions [(p, leftLines pAdd inMarks p, length (leftLines pRem outMarks p)) | p <- ps]
+  -- the sent leftovers the phases did not claim, as LINES: the
+  -- stacking rule intersects the novel ones with the duplicated
+  -- units' spans (7.0.0), the deleted ones it only counts
+  leftLines side marks p =
+    [l | (l, _, _) <- concat (side p), (pIdx p, l) `S.notMember` marks]
   ps = reqPairs req
   (blocks, capped) = sites ps
   sortedBlocks =

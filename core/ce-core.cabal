@@ -76,7 +76,7 @@ test-suite ce-core-test
                       AuditProps, TombstoneProps, SimilarProps, EntropyProps, JoinProps, ScanProps, ScanCyclesProps,
                       StructureProps, TrendProps, EraseProps, VerdictProps,
                       VerdictWireProps, VerdictFenceProps, VerdictKnobProps, SplitProps, WireHarness,
-                      ClassProps
+                      ClassProps, StackingProps
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

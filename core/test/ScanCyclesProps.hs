@@ -125,7 +125,7 @@ ask rows arcs = case arcs of
   Nothing -> req
   Just a -> setKey "callEdges" (toJSON a) req
  where
-  req = rowsRequest "6.0.0" "scan.request" rows
+  req = rowsRequest "7.0.0" "scan.request" rows
 
 bumpedOf :: Maybe [[Integer]] -> Maybe Value
 bumpedOf arcs = replyObjWith respond (ask base arcs) >>= \o -> field o "cocBumped"

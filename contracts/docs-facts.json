@@ -130,7 +130,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "56"
+      "value": "55"
     },
     {
       "id": "gate:dedup.tests#digits",
@@ -150,20 +150,20 @@
       "id": "gate:floor.main#digits",
       "source": ".github/workflows/ci.yml::--fail-under (check ..)",
       "tier": "scraped",
-      "value": "946"
+      "value": "939"
     },
     {
       "debt": "spelled on the ce check line of each CI job; promote = one workflow-level env var the jobs and the docs read",
       "id": "gate:floor.tests#digits",
       "source": ".github/workflows/ci.yml::--fail-under (check tests)",
       "tier": "scraped",
-      "value": "983"
+      "value": "979"
     },
     {
       "id": "report:baseline#schemaver",
       "source": "cli/src/score/baseline.rs (typed)",
       "tier": "linked",
-      "value": "ce.baseline/1"
+      "value": "ce.baseline/2"
     },
     {
       "id": "report:check#schemaver",
@@ -349,7 +349,7 @@
       "id": "ver:anchor#v",
       "source": "cli/tests/it/facts/ver.rs::ANCHOR",
       "tier": "linked",
-      "value": "6.0.0"
+      "value": "7.0.0"
     },
     {
       "id": "ver:ce#v",
@@ -391,7 +391,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "6.7.0"
+      "value": "7.0.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",

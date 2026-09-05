@@ -24,7 +24,7 @@ session over: 7 of 7 writes landed
 nothing refuses anything: the turn ends here
 the tree, measured (the CI face):
 $ ce check .
-check score 952/1000 | axes 0:0 1:0 2:142 3:0 4:200 5:0 6:0 | 2 candidates
+check score 871/1000 | axes 0:0 1:0 2:307 3:400 4:200 5:0 6:0 | 3 candidates
 ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
 note: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table
 $ ce dedup . --check

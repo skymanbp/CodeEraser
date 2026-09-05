@@ -125,11 +125,11 @@ penalties k soft f =
   | (code, v, n) <-
       [ (0, sizeMass k soft f, files)
       , (1, cnt (cocOver k f), functions)
-      , (2, cnt (cloneHits k f), files)
-      , (3, cnt (dupHits k f), files)
+      , (2, cnt (cloneFiles k f), codeFiles)
+      , (3, cnt (dupFiles k f), docFiles)
       , (4, cnt (deadFiles k f), nodes)
       , (5, cnt (churnHeavy k f), churned)
-      , (6, cnt (cycleMembers k f), nodes - toInteger (length (fDocFiles f)))
+      , (6, cnt (cycleMembers k f), codeFiles)
       ]
   ]
  where
@@ -140,6 +140,10 @@ penalties k soft f =
   functions = count [() | (_ : 1 : _) <- fCont f]
   nodes = toInteger (length (fPos f))
   churned = toInteger (length (fChurn f))
+  -- the two halves of the verdict universe (7.0.0, O22): the clone
+  -- and cycle axes read the code files, the docdup axis the doc files
+  docFiles = toInteger (length (fDocFiles f))
+  codeFiles = nodes - docFiles
 
 -- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means
 -- no opportunity table (churn without --days) — no evidence charges
@@ -187,12 +191,27 @@ cocOver k f =
     , v > M.findWithDefault (sCocCeil k) (classOf row, 1) (fClassKnobs f)
     ]
 
-cloneHits :: ScoreKnobs -> Facts -> Integer
-cloneHits k f =
-  count [() | [_, _, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]
+-- | Axis 2 / axis 3 mass (7.0.0, O22): the FILES a verified pair
+-- touches, never the pairs. Pairs over files mixed two units, and the
+-- odds were reversible — a repository with more files and the same
+-- pairs charged less, one with the same files and more pairs among
+-- them charged without bound. Files over files is the ratio every
+-- other counting axis already charges; each mass is a subset of its
+-- opportunity set, so neither axis can pass half the scale; and the
+-- docdup axis reads the documentation universe alone — a repository
+-- with no documentation has no docdup opportunity and charges nothing
+-- (the honest-absence stance). The verified bar is the owning
+-- family's, cross-multiplied.
+cloneFiles :: ScoreKnobs -> Facts -> Integer
+cloneFiles k f =
+  touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]
 
-dupHits :: ScoreKnobs -> Facts -> Integer
-dupHits k f = count [() | [_, _, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k]
+dupFiles :: ScoreKnobs -> Facts -> Integer
+dupFiles k f = touched [(u, v) | [u, v, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k]
+
+-- | Distinct file indices across the pairs.
+touched :: [(Integer, Integer)] -> Integer
+touched pairs = toInteger (IS.size (IS.fromList [fromInteger x | (u, v) <- pairs, x <- [u, v]]))
 
 deadFiles :: ScoreKnobs -> Facts -> Integer
 deadFiles k f = count [() | [_, indeg, _, _, _, 0] <- fPos f, indeg <= sDeadIndegCeil k]

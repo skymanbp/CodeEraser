@@ -106,10 +106,11 @@ pub const GRAPH_REV: i64 = 15;
 /// `nth` (schema v5, F2): occurrence order by start_line within one
 /// (file, key) — `(path, key)` alone is NOT an identity (a Rust
 /// method key carries no impl qualifier: `impl A { fn add }` and
-/// `impl B { fn add }` collide in one file). Known degradation,
-/// stated not painted over: deleting an EARLIER same-key sibling
-/// shifts the survivors' nth, which reads as one removal plus one
-/// addition downstream.
+/// `impl B { fn add }` collide in one file). Deleting an EARLIER
+/// same-key sibling shifts the survivors' nth: the join and churn
+/// ledgers key on it and read one removal plus one addition (stated,
+/// not painted over); the baseline stopped keying on it at 7.0.0 —
+/// score/anchor.rs tells siblings apart by their container chain.
 pub const GRAPH_SCHEMA: &str = "
 CREATE TABLE symbols (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,

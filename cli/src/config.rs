@@ -199,7 +199,7 @@ impl Config {
     /// fingerprinted `[[rules.class]]` alone, and an adversarial
     /// review found the scope wrong within the hour: two lines of
     /// `[score]` — `viol_cost = 0` — pin the score at the scale, so
-    /// `ce check --fail-under 946` can never fail again, and
+    /// `ce check --fail-under 939` can never fail again, and
     /// `tol_abs = 100000` erases the ratchet's own tolerance. Both
     /// move the same gates a glob edit moves, neither touched the
     /// class table, and neither asked anyone to name a floor. Picking

@@ -9,10 +9,16 @@
 --                  frozen and is refused by name — renumbering the
 --                  survivors would move three other frozen codes
 --   1 verbatim_doc docdup pair; safe only as FULL-segment byte-equal
---   2 t1_twin      whole-unit T1 twin whose copy's file is dead
---                  (its language-trust fact stays the local count:
---                  a twin row is not a graph dead row, so no core
---                  confidence exists for it — the H3 scope line)
+--   2 t1_twin      whole-unit T1 twin whose copy's file is dead —
+--                  fact 3 is the copy's dead VERDICT code since 7.0.0
+--                  (0 not dead / 1..4 the graph family's four-way
+--                  code), so the RG10 bar below reaches twins by the
+--                  same publicDeadVerdicts table instead of by the
+--                  planner's row-closure order; a 6.x boolean 1 reads
+--                  as unref_private and judges exactly as it did (its
+--                  language-trust fact stays the local count: a twin
+--                  row is not a graph dead row, so no core confidence
+--                  exists for it — the H3 scope line)
 --   3 dead_file    the confidence road (2.32.0, H3): fact 1 is the
 --                  graph family's OWN per-row confidence (0
 --                  unvouched / 1 vacuous / 2 vouched) — refused
@@ -57,10 +63,11 @@ judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]
   | verbatim < wordsA || verbatim < wordsB = (False, 2)
   | bytesEqual /= 1 = (False, 3)
   | otherwise = (True, 0)
-judgeRow [2, unitCovered, bytesEqual, copyFileDead, langUnresolved]
+judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]
   | unitCovered /= 1 = (False, 5)
   | bytesEqual /= 1 = (False, 3)
-  | copyFileDead /= 1 = (False, 4)
+  | copyDead == 0 = (False, 4)
+  | copyDead `elem` publicDeadVerdicts = (False, 6)
   | langUnresolved /= 0 = (False, 1)
   | otherwise = (True, 0)
 -- a public surface is refused BEFORE the trust fact is weighed: no

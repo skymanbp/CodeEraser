@@ -23,7 +23,7 @@ non-deterministic output, and an eraser that guesses would forfeit it.
 |---|---|---|---|
 | dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) and **private**: verdict 1 `unref_private` or 3 `unreach_private` | delete the file | the graph verdict IS the safety proof: nothing in-corpus references it; the unresolved-site count must be zero for its language, else the row is refused (a verdict that assumed no in-corpus lands is not a deletion licence). The PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — is refused by name as `public_surface` since 6.1.0: a library's exported API is unreferenced in-corpus by construction, so "nothing here calls it" is not evidence about its callers, and the four-way dead code exists precisely to keep the two apart (RG10) |
 | verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss; the survivor is chosen deterministically, never judged "better" |
-| whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical AND whose copy is itself graph-dead | delete the dead copy | the narrow intersection of the clone and liveness verdicts — a cross-function clone with live references has NO deterministic-safe erase, and this contract says so instead of pretending |
+| whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical AND whose copy is itself graph-dead **and private** — the row carries the copy's dead verdict code, and 2 / 4 are refused as `public_surface` like a dead file's (proto 7.0.0) | delete the dead copy | the narrow intersection of the clone and liveness verdicts — a cross-function clone with live references has NO deterministic-safe erase, and this contract says so instead of pretending |
 
 The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
 from those families that fail the core predicate remain non-eraseable
@@ -93,12 +93,13 @@ user files; it may create or refresh the `.ce/` cache):
 
 ## Acceptance (the gate this feature must pass)
 
-- plan-then-apply on a fixture tree erases one dead file and one
-  verbatim-doc span, while the tree's second dead file (`copy.py`,
+- plan-then-apply on a fixture tree erases one dead file, one
+  verbatim-doc span and one private dead twin through `t1_twin`
+  itself (`spare.py`, whose `_spare_total` duplicates the live unit
+  in `__main__.py`), while the tree's second dead file (`copy.py`,
   which declares an exported `def`) is refused by name as
   `public_surface` — RG10 held at the acceptance gate through apply,
-  not only in the table above; `t1_twin` is exercised only as a
-  non-eraseable plan row, and the re-run proves zero surviving
+  not only in the table above — and the re-run proves zero surviving
   source verdicts;
 - a dirty worktree, a drifted file hash, and a non-repo root each
   refuse BY NAME without touching anything;

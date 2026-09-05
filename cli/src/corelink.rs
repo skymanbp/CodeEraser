@@ -13,15 +13,17 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 6.7.0 = the similar family (ADR-008 sixth instalment, plan v2.29),
-/// additive: one new family, similar/1. This side ranks a query's
-/// candidates off its own inverted tables and sends the query bag as
-/// [termHash, weight] pairs plus one [nHit, pHit, cHit, dHit, sHit,
-/// lHit, shapeEqual, bm25Num, bm25Den] row per candidate; the core
-/// answers the order they stand in (exact rationals) and which of them
-/// play the query's role -- this side re-labels the indices into units
-/// and never applies the conjunction itself. A core without the
-/// capability is named, never read as "no candidates".
+/// 7.0.0 = the judgment-correctness batch (plan v2.29 step 8), a MAJOR
+/// because one request field changed shape: the fourclass pair's `dup`
+/// (duplicated key hashes) became `dupSpans` ([hash, start, end] per
+/// after-side occurrence), so the core can ask whether the novel mass
+/// landed INSIDE a duplicated unit (O47). Riding the same number: this
+/// side sends the docdup family's verified pairs to verdict/1 as kind-2
+/// sim rows (O46 -- the docdup axis read a constant zero before), the
+/// core charges the clone and docdup axes as files touched over their
+/// own universe (O22 -- scores are not comparable with 6.x), and the
+/// erase class-2 row's third fact is the copy's four-way dead verdict
+/// code (O51). A core of another major is refused at the hello.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -33,7 +35,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "6.7.0";
+pub const PROTO: &str = "7.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

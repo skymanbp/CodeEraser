@@ -27,7 +27,9 @@ pub const CLASS_NAMES: [&str; 4] = ["(retired)", "verbatim_doc", "t1_twin", "dea
 /// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file
 /// whose verdict is `unref_public` or `unreach_public` is refused by
 /// name, because the four-way dead code exists precisely so an
-/// exported API cannot be treated as plain dead.
+/// exported API cannot be treated as plain dead. Since 7.0.0 the twin
+/// road (class 2) carries the copy's verdict code too and meets the
+/// same bar.
 pub const REASON_NAMES: [&str; 7] = [
     "eraseable",
     "language_unresolved",

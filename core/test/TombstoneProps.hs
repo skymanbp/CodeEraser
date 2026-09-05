@@ -19,7 +19,7 @@ import WireHarness (fieldsOf, refusedBy, rowsRequest, runChecks, setKey)
 -- | The request every probe edits: rows under the anchor proto, knobs
 -- added by `withKnobs`.
 req :: [[Integer]] -> Value
-req = rowsRequest "6.6.0" "tombstone.request"
+req = rowsRequest "7.0.0" "tombstone.request"
 
 withKnobs :: [[Integer]] -> Value -> Value
 withKnobs ks = setKey "knobs" (toJSON ks)

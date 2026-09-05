@@ -126,9 +126,17 @@ pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
         return code;
     }
     let (wholesale, fence) = (act("CE_ACCEPT_BASELINE"), act("CE_ACCEPT_FENCE"));
-    opts.baseline = match score::baseline::read(&root) {
-        Ok(committed) => committed,
-        Err(err) => return fail("baseline", err),
+    // the wholesale act judges with a NULL baseline and never reads the
+    // committed file (Judge.establish) -- so a file this ce refuses by
+    // schema (7.0.0, ce.baseline/2) is re-established by the very
+    // command the refusal names, instead of being refused again there
+    opts.baseline = if wholesale {
+        None
+    } else {
+        match score::baseline::read(&root) {
+            Ok(committed) => committed,
+            Err(err) => return fail("baseline", err),
+        }
     };
     if opts.baseline.is_none() && !wholesale {
         eprintln!(

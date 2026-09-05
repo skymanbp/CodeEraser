@@ -62,14 +62,14 @@ sccFloorRoad =
       , "pos" .= ([] :: [Value])
       ]
         <> extra
-  refusedGraph req want = case respond "6.4.0" req of
+  refusedGraph req want = case respond "7.0.0" req of
     Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
     Right _ -> False
 
 -- | The whole reply object of one graph request.
 objOf :: B8.ByteString -> Maybe (KM.KeyMap Value)
 objOf req = do
-  Right bytes <- pure (respond "6.4.0" req)
+  Right bytes <- pure (respond "7.0.0" req)
   Object o <- decodeStrict bytes
   pure o
 
@@ -86,7 +86,7 @@ cyclesOf req = do
 -- arity"; with one legal arity it is simply the second row that is
 -- wrong, and the refusal says which one.
 malformedNode :: Bool
-malformedNode = case respond "6.4.0" req of
+malformedNode = case respond "7.0.0" req of
   Left (_, code, msg) ->
     code == "contract" && msg == "node 1: malformed row (need [lang,kind,roles])"
   Right _ -> False
@@ -111,7 +111,7 @@ confRides =
 -- a verdict out of the wire rather than out of Dead.verdicts.
 deadOf :: B8.ByteString -> Maybe Value
 deadOf req = do
-  Right bytes <- pure (respond "6.4.0" req)
+  Right bytes <- pure (respond "7.0.0" req)
   Object o <- decodeStrict bytes
   KM.lookup "dead" o
 
@@ -124,7 +124,7 @@ unresRefused =
     , refusedMsg (Just [[4, 0, 1], [0, 0, 1]]) "unres 1: not strictly ascending"
     ]
  where
-  refusedMsg unres want = case respond "6.4.0" (graphReq unres) of
+  refusedMsg unres want = case respond "7.0.0" (graphReq unres) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 
@@ -151,7 +151,7 @@ exportRides =
 -- | K5: absence and emptiness are one road, not two — the whole
 -- reply, byte for byte, is what a pre-4.1.0 client already got.
 emptyIsAbsent :: Bool
-emptyIsAbsent = respond "6.4.0" (symReq (Just [])) == respond "6.4.0" (symReq Nothing)
+emptyIsAbsent = respond "7.0.0" (symReq (Just [])) == respond "7.0.0" (symReq Nothing)
 
 symRefused :: Bool
 symRefused =
@@ -163,7 +163,7 @@ symRefused =
     , refusedSym [[0, 1], [0, 1]] "symbol 1: not strictly ascending"
     ]
  where
-  refusedSym syms want = case respond "6.4.0" (symReq (Just syms)) of
+  refusedSym syms want = case respond "7.0.0" (symReq (Just syms)) of
     Left (_, code, msg) -> code == "contract" && msg == want
     Right _ -> False
 

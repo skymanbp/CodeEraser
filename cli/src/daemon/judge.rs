@@ -1,27 +1,80 @@
 //! Daemon-owned judgment channel (ADR-003: ce-core is the DAEMON's
 //! long-lived child, never the short-lived hook's). Holds the
-//! corelink across requests with a restart budget: after
-//! MAX_FAILURES consecutive open/request failures the daemon stops
-//! retrying for its lifetime and reports degraded — never a storm
-//! (R-L2-8). "Visible" means the REPORT's own degraded field, which
-//! reaches the observe feed and `ce doctor`: the stderr line below
-//! is written to a null handle whenever the daemon was lazily
-//! spawned (client.rs gives it Stdio::null), so it is a courtesy for
-//! a foreground daemon, never the channel the A9f promise rests on.
+//! corelink across requests behind a RETRY BUDGET that never closes
+//! (7.0.0, O63): each consecutive open/request failure doubles the
+//! wait before the next spawn attempt (1 s, 2 s, … capped at
+//! BACKOFF_CAP), so a broken core costs at most one spawn a minute and
+//! never a storm (R-L2-8) — and a core that comes back (an install that
+//! finished, a repaired PATH) is picked up at the next attempt instead
+//! of staying L1 for the daemon's lifetime, which is what the retired
+//! three-strikes budget did. The recovery is VISIBLE: the first
+//! classify report after it carries `recovered: <failed attempts>`,
+//! which reaches the observe feed with the rest of the report. "Visible"
+//! never means stderr: that handle is null whenever the daemon was
+//! lazily spawned (client.rs gives it Stdio::null), so the lines below
+//! are a courtesy for a foreground daemon, not the channel the A9f
+//! promise rests on.
 
 use crate::corelink::Link;
 use crate::fourclass::batch::{PairInput, classify_batch};
 use crate::fourclass::session;
 use crate::scan::lang::Lang;
 use std::path::Path;
+use std::time::{Duration, Instant};
 
 #[derive(Default)]
 pub struct Judge {
     link: Option<Link>,
-    failures: u8,
+    budget: Budget,
+    /// Failed attempts the last successful open recovered from, until
+    /// the next classify report carries the number.
+    recovered: Option<u32>,
 }
 
-const MAX_FAILURES: u8 = 3;
+/// First wait after a failure; each further consecutive failure
+/// doubles it.
+const BACKOFF_BASE: Duration = Duration::from_secs(1);
+/// The longest wait between two spawn attempts.
+const BACKOFF_CAP: Duration = Duration::from_secs(60);
+
+/// The retry policy, pure over `Instant`s so a battery can drive it
+/// without spawning anything.
+#[derive(Default)]
+pub(crate) struct Budget {
+    failures: u32,
+    retry_at: Option<Instant>,
+}
+
+impl Budget {
+    /// May an attempt be made now? Always, until a failure has set a
+    /// wait; then only once the wait has run out.
+    pub(crate) fn open(&self, now: Instant) -> bool {
+        self.retry_at.is_none_or(|at| now >= at)
+    }
+
+    /// Record one failure; returns the wait before the next attempt.
+    pub(crate) fn failed(&mut self, now: Instant) -> Duration {
+        self.failures = self.failures.saturating_add(1);
+        let wait = Self::backoff(self.failures);
+        self.retry_at = Some(now + wait);
+        wait
+    }
+
+    /// Record a successful open: Some(failed attempts) when the link
+    /// had been lost, None when nothing was ever wrong.
+    pub(crate) fn recovered(&mut self) -> Option<u32> {
+        self.retry_at = None;
+        let n = std::mem::take(&mut self.failures);
+        (n > 0).then_some(n)
+    }
+
+    /// BACKOFF_BASE · 2^(failures−1), capped — the exponent saturates
+    /// so a daemon that has failed for a year still computes.
+    pub(crate) fn backoff(failures: u32) -> Duration {
+        let shift = failures.saturating_sub(1).min(16);
+        BACKOFF_CAP.min(BACKOFF_BASE * (1u32 << shift))
+    }
+}
 
 impl Judge {
     /// Classify the given (before, after) path pairs of `root`'s
@@ -52,10 +105,12 @@ impl Judge {
         // via its own work budget is HEALTHY, killing it cost a retry.
         if batch.link_failed {
             self.note_failure();
-        } else if batch.degraded.is_none() {
-            self.failures = 0;
         }
-        session::report_json(&batch, &sent)
+        let mut report = session::report_json(&batch, &sent);
+        if let Some(n) = self.recovered.take() {
+            report["recovered"] = serde_json::json!(n);
+        }
+        report
     }
 
     /// The tombstone verdict over the daemon-owned link: the raw
@@ -72,10 +127,7 @@ impl Judge {
             return degraded("pre-6.6.0 core");
         }
         match link.request(wire::KIND, wire::body(rows, budget)) {
-            Ok(reply) => {
-                self.failures = 0;
-                reply
-            }
+            Ok(reply) => reply,
             Err(why) => {
                 self.note_failure();
                 degraded(&why)
@@ -92,9 +144,15 @@ impl Judge {
     }
 
     fn link_mut(&mut self) -> Option<&mut Link> {
-        if self.link.is_none() && self.failures < MAX_FAILURES {
+        if self.link.is_none() && self.budget.open(Instant::now()) {
             match core_bin().and_then(|bin| Link::open(&bin).ok()) {
-                Some((link, _reply)) => self.link = Some(link),
+                Some((link, _reply)) => {
+                    self.link = Some(link);
+                    if let Some(n) = self.budget.recovered() {
+                        self.recovered = Some(n);
+                        eprintln!("ce daemon: ce-core back after {n} failed attempts");
+                    }
+                }
                 None => self.note_failure(),
             }
         }
@@ -102,13 +160,13 @@ impl Judge {
     }
 
     fn note_failure(&mut self) {
-        self.link = None; // a failed link is dead; retry within budget
-        self.failures = self.failures.saturating_add(1);
-        if self.failures == MAX_FAILURES {
-            eprintln!(
-                "ce daemon: ce-core unavailable after {MAX_FAILURES} attempts — L1 for this session"
-            );
-        }
+        self.link = None; // a failed link is dead; the budget times the retry
+        let wait = self.budget.failed(Instant::now());
+        eprintln!(
+            "ce daemon: ce-core unavailable (attempt {}) — next try in {} s",
+            self.budget.failures,
+            wait.as_secs()
+        );
     }
 }
 
@@ -163,3 +221,7 @@ fn load_pair(
 fn head_content(root: &Path, path: &str) -> Option<String> {
     session::git_stdout(root, &["show", &format!("HEAD:{path}")])
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/daemon/judge.rs"]
+mod tests;
