@@ -34,14 +34,16 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
   config's walk scope are dropped before any text is read — an excluded path is nobody's, as
   the guard leg reads it
   ([audit/tombstone.rs:1-7](../../../cli/src/audit/tombstone.rs#L1),
-  [audit/tombstone.rs:127-147](../../../cli/src/audit/tombstone.rs#L127)).
+  [audit/tombstone.rs:127-150](../../../cli/src/audit/tombstone.rs#L127)); since plan v2.29 step 6
+  that one batch also feeds the Stop audit's `similar` leg — the two text legs read the changed
+  pairs once.
 - **precommit / commitmsg** — the index against `HEAD`, what the commit will hold; `ce
   commitmsg` adds the message as an after-only SURFACE named `COMMIT_EDITMSG` — its subject
   line is a label, its sentences are prose, but it declares no name and keeps none alive, so R
   stays the staged pairs' own (a message item `- X is no longer needed` must not keep `X`
   alive) — its comment lines blanked in place so a site's line is the file's own
   ([audit/tombstone.rs:26-28](../../../cli/src/audit/tombstone.rs#L26),
-  [audit/tombstone.rs:164-176](../../../cli/src/audit/tombstone.rs#L164),
+  [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167),
   [commitmsg.rs:64-69](../../../cli/src/audit/commitmsg.rs#L64)).
 
 Every git side comes through ONE `cat-file --batch` process — its reply read as a stream, so
@@ -270,7 +272,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
   [guard/tombstone.rs:152-170](../../../cli/src/guard/tombstone.rs#L152),
-  [hookio.rs:246-262](../../../cli/src/hookio.rs#L246),
+  [hookio.rs:253-269](../../../cli/src/hookio.rs#L253),
   [proto.rs:60-67](../../../cli/src/daemon/proto.rs#L60),
   [say.rs:68-79](../../../cli/src/guard/say.rs#L68)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
@@ -283,13 +285,13 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   replaced it; the terminal faces print one line for the person: the sites when there are
   any, the degradation when there is no verdict, nothing when the changeset is clean
   ([audit/tombstone.rs:62-69](../../../cli/src/audit/tombstone.rs#L62),
-  [audit/tombstone.rs:180-197](../../../cli/src/audit/tombstone.rs#L180),
-  [audit/tombstone.rs:222-265](../../../cli/src/audit/tombstone.rs#L222),
+  [audit/tombstone.rs:182-199](../../../cli/src/audit/tombstone.rs#L182),
+  [audit/tombstone.rs:224-267](../../../cli/src/audit/tombstone.rs#L224),
   [precommit.rs:22-61](../../../cli/src/audit/precommit.rs#L22)). `ce commitmsg` exits 2
   when it cannot read the file it was handed — a gate that cannot see its input must say so —
   1 on a block, 0 otherwise ([commitmsg.rs:14-33](../../../cli/src/audit/commitmsg.rs#L14)).
 
-Every producer writes ONE feed shape, the `tombstone` object of `ce.observe/0.9.0`: `rev`
+Every producer writes ONE feed shape, the `tombstone` object (its shape since `ce.observe/0.9.0`): `rev`
 (the vocabulary revision — a reader of the ledger must know which tables produced a row),
 `erased`, `rows`, every exemption with its witness (`line` for a segment), and `judged` — the
 first `SITE_CAP` sites as `file:line kind`, the label / prose split and `over` — or
@@ -299,8 +301,8 @@ size, `applied` and, when any, `revived_hashes`; the audit lines add `unread_pai
 git-hook faces write theirs with `session_id` null.
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:23-42](../../../cli/src/hookio.rs#L23),
-[hookio.rs:78](../../../cli/src/hookio.rs#L78)). The feed is the FPR ledger's raw material
+[hookio.rs:30-49](../../../cli/src/hookio.rs#L30),
+[hookio.rs:85](../../../cli/src/hookio.rs#L85)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated
@@ -324,7 +326,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   leg, which reads the whole session's diff at once with an empty union, sees the move as
   survival and seats no site
   ([guard/tombstone.rs:152-178](../../../cli/src/guard/tombstone.rs#L152),
-  [audit/tombstone.rs:164-176](../../../cli/src/audit/tombstone.rs#L164)).
+  [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167)).
 - **A `///` doc comment is one paragraph to docdup since `DOCDUP_REV` 5.** Its tree-sitter
   node ends at column 0 of the next row, and until the v2.28 amendment (2026-09-04) the merge
   rule read that end row, so consecutive `///` lines never merged the way `//` runs do and a

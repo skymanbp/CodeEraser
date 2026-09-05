@@ -24,6 +24,7 @@
       <button class="tab" data-tab="trend" data-i18n="tabTrend"></button>
       <button class="tab" data-tab="candidates" data-i18n="tabCandidates"></button>
       <button class="tab" data-tab="graph" data-i18n="tabGraph"></button>
+      <button class="tab" data-tab="similar" data-i18n="tabSimilar"></button>
       <button class="tab" data-tab="reports" data-i18n="tabReports"></button>
       <button class="tab" data-tab="bench" data-i18n="tabBench"></button>
       <button class="tab" data-tab="doctor" data-i18n="tabDoctor"></button>
@@ -131,6 +132,20 @@
     </main>
   </div>
 
+  <div id="view-similar" class="view" hidden>
+    <section class="bar">
+      <label><span data-i18n="similarAt"></span> <input id="similar-at" type="text" spellcheck="false" placeholder="src/lib.rs:42" /></label>
+      <label><span data-i18n="similarText"></span> <input id="similar-text" type="text" spellcheck="false" /></label>
+      <label><input id="similar-widen" type="checkbox" /> <span data-i18n="widen"></span></label>
+      <button id="similar-load" data-i18n="load"></button>
+      <div class="stat" id="similar-summary"></div>
+    </section>
+    <main class="col">
+      <div id="similar-rows"></div>
+      <div class="empty" id="empty-similar" data-i18n="emptySimilar"></div>
+    </main>
+  </div>
+
   <div id="view-reports" class="view" hidden>
     <section class="bar">
       <select id="hub-family"></select>
@@ -184,6 +199,7 @@
   <script src="trend.js" defer></script>
   <script src="candidates.js" defer></script>
   <script src="graph.js" defer></script>
+  <script src="similar.js" defer></script>
   <script src="score.js" defer></script>
   <script src="erase.js" defer></script>
   <script src="reports.js" defer></script>

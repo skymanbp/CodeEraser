@@ -10,7 +10,7 @@
 
 Long-lived LLM-assisted codebases drift the same way: the same function implemented twice, the same paragraph pasted into three files, updates that arrive as appends, files that only ever grow. CodeEraser stops that drift at the moment of writing and gates it in CI, with no model in the loop anywhere. Two refusals happen at write time, before the content reaches disk. A write that would *introduce* an exact T1/T2 clone — duplication the replaced content did not already carry — is denied at PreToolUse, with the region it duplicates named and the ordering that passes taught; a write leaving a file over 750 lines, or over the line its `[[rules.class]]` declares, is denied the same way. Everything else is a report or a gate: the Stop audit refuses the turn, the CI exit codes refuse the commit.
 
-**Scope.** Judged languages: Python, TypeScript/TSX, Rust, Go, Haskell and Markdown (<!--ce:count:langs#word-->seven<!--/ce--> language codes over <!--ce:count:grammars#word-->six<!--/ce--> tree-sitter grammars). Size-only arm: js/mjs/cjs/jsx, css/scss/less, html/htm, vue, svelte, sh/bash, yml/yaml — they enter the size gates, the hard budget and the ratchet, never a semantic verdict. Faces: CLI · GUI (<!--ce:count:screens#word-->ten<!--/ce--> screens) · Claude Code plugin (<!--ce:count:hooks#word-->three<!--/ce--> hooks, <!--ce:count:skills#word-->one<!--/ce--> skill, <!--ce:count:commands#word-->one<!--/ce--> command, <!--ce:count:mcp_tools#word-->fourteen<!--/ce--> read-only MCP tools) · pre-commit · CI.
+**Scope.** Judged languages: Python, TypeScript/TSX, Rust, Go, Haskell and Markdown (<!--ce:count:langs#word-->seven<!--/ce--> language codes over <!--ce:count:grammars#word-->six<!--/ce--> tree-sitter grammars). Size-only arm: js/mjs/cjs/jsx, css/scss/less, html/htm, vue, svelte, sh/bash, yml/yaml — they enter the size gates, the hard budget and the ratchet, never a semantic verdict. Faces: CLI · GUI (<!--ce:count:screens#word-->eleven<!--/ce--> screens) · Claude Code plugin (<!--ce:count:hooks#word-->three<!--/ce--> hooks, <!--ce:count:skills#word-->one<!--/ce--> skill, <!--ce:count:commands#word-->one<!--/ce--> command, <!--ce:count:mcp_tools#word-->fifteen<!--/ce--> read-only MCP tools) · pre-commit · CI.
 
 ## How it works — and what is different about it
 
@@ -113,6 +113,7 @@ Latency rows are release-build replays on one fixed host, comparable version to 
 | `ce clone` / `ce docdup` | T3 near-miss clones; documentation duplication |
 | `ce graph` / `ce deadcode` | reference sites and the mention universe; liveness verdicts + the symbol advisory |
 | `ce churn` / `ce join` / `ce trend` | git-window churn; the three-signal join; score trajectory (progress on stderr) |
+| `ce similar` | the same-role advisor: the units most like one unit (`--at file:line`, `--unit`) or a text, in the core's order with its role bit; `--widen` adds the in-repo PPMI associative view — advisory, never a verdict |
 | `ce structure` | <!--ce:count:structure_axes#word-->seven<!--/ce--> axes; `--split-candidates` prices the best seam of every file past the soft line |
 | `ce check` / `ce baseline` | the ADR-006 ratchet and score floor, <!--ce:count:fail_conditions#word-->six<!--/ce--> fail conditions each named on the console; `baseline` persists only at the root and under a named act |
 | `ce erase` | the deterministic two-phase eraser; dry-run default, `--apply` behind clean-worktree preconditions |
@@ -141,6 +142,7 @@ Every capability is claimed once in this table, the sets are derived from the co
 | tree-scale structure (seven axes, split pricing) | `ce structure` | `structure`, `structure_report` | MCP `structure` |
 | score trajectory | `ce trend` | `trend`, `trend_report` | MCP `trend` |
 | score, ratchet and floor | `ce check` | `score`, `check_report` | MCP `check` |
+| same-role advisor (similar units, associative view) | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
 | baseline writes | `ce baseline` | — CLI only: a machine surface never writes a baseline | — |
 | erase plan | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
 | erase apply | `ce erase --apply` | `erase`, `erase_apply` | — no MCP face: applying is a human act |

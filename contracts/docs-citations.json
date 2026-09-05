@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|b37893c848038ca7|0": {
     "target": "../../README.md",
-    "line": 169,
+    "line": 171,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fourteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|0081591ba7c6acec|0": {
@@ -6771,61 +6771,61 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|147dbd779a4128ca|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 67,
-    "end": 68,
+    "line": 74,
+    "end": 75,
     "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 185,
-    "end": 187,
+    "line": 192,
+    "end": 194,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|62c207bd4204d2d8|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 85,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.10.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 201,
-    "end": 214,
+    "line": 208,
+    "end": 221,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|754ce8b7872981c0|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 70,
-    "end": 77,
+    "line": 77,
+    "end": 84,
     "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 255,
-    "end": 266,
+    "line": 262,
+    "end": 273,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 62,
-    "end": 65,
+    "line": 69,
+    "end": 72,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
     "target": "../../../cli/src/hookio.rs",
     "line": 18,
-    "end": 51,
+    "end": 58,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e38fc9ea230cd547|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 78,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.9.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 57,
-    "end": 60,
+    "line": 64,
+    "end": 67,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 264,
-    "end": 280,
+    "line": 271,
+    "end": 287,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {
@@ -7862,32 +7862,32 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|cd5da958fe5141c3|0": {
     "target": "../../../cli/src/audit/tombstone.rs",
-    "line": 180,
-    "end": 197,
+    "line": 182,
+    "end": 199,
     "text": "/// The block reason (deny tier, condition held): who judged what, the"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|ed4e4eaa3611dea3|0": {
+    "target": "../../../cli/src/audit/tombstone.rs",
+    "line": 127,
+    "end": 150,
+    "text": "/// The changeset's texts, read ONCE for every leg that measures text:"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|ed8d7ed61c2d5466|0": {
     "target": "../../../cli/src/audit/tombstone.rs",
-    "line": 164,
-    "end": 176,
+    "line": 167,
+    "end": 179,
     "text": "// the message is all \"after\": it existed nowhere before the commit,"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|ed8d7ed61c2d5466|1": {
     "target": "../../../cli/src/audit/tombstone.rs",
-    "line": 164,
-    "end": 176,
+    "line": 167,
+    "end": 179,
     "text": "// the message is all \"after\": it existed nowhere before the commit,"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|f448856dae005fd7|0": {
-    "target": "../../../cli/src/audit/tombstone.rs",
-    "line": 127,
-    "end": 147,
-    "text": "/// The changeset measured: git pairs the change, the config's walk"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|fa06ba4f492940c3|0": {
     "target": "../../../cli/src/audit/tombstone.rs",
-    "line": 222,
-    "end": 265,
+    "line": 224,
+    "end": 267,
     "text": "/// The git-hook faces' terminal line: the judged sites when there are"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/tombstone.rs|fb61c0ec6361d973|0": {
@@ -7975,20 +7975,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 23,
-    "end": 42,
+    "line": 30,
+    "end": 49,
     "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|62c207bd4204d2d8|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 85,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.10.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 246,
-    "end": 262,
+    "line": 253,
+    "end": 269,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|e38fc9ea230cd547|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 78,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.9.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/candidates.rs|2de959edc2eec3a9|0": {
     "target": "../../../cli/src/tombstone/candidates.rs",

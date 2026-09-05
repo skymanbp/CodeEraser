@@ -10,6 +10,7 @@ mod main_erase;
 mod main_judge;
 mod main_lang;
 mod main_score;
+mod main_similar;
 mod main_update;
 
 use codeeraser::daemon;
@@ -116,6 +117,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Join(a) => main_judge::join_cmd(a),
         Cmd::Structure(a) => main_judge::structure_cmd(a),
         Cmd::Trend(a) => main_judge::trend_cmd(a),
+        Cmd::Similar(a) => main_similar::similar_cmd(a),
         Cmd::Erase(a) => main_erase::erase_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),

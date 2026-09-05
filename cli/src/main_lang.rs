@@ -56,6 +56,11 @@ structure.split_candidates	为每个越过冻结软线的判决文件计一次�
 trend	主线历史上的分数轨迹：逐提交绝对检查分，缓存于索引，可重建。每个未缓存提交都是临时工作树里的一次完整 check——冷跑请用 --batch 限量；进度走 stderr
 trend.commits	主线窗口：最新 N 个第一父提交
 trend.batch	每次运行至多测量这么多未缓存提交（缺省 = 全部；GUI 传小批量以显示进度）
+similar	同角色顾问：与某个单元（或一段文本）最相似的单元，按核在 similar/1 上给的排序与角色位，读索引里的词袋；--widen 加 PPMI 联想视图（只当顾问，永不判决）
+similar.at	持有 `file:line` 的单元（路径相对根目录）
+similar.text	自由文本：其词作为名字与文档证据（无形状无被调者，核给的角色位保持为假）
+similar.unit	按键指定单元（`name/arity`）；二义的键按名拒绝
+similar.widen	加联想视图：PPMI 扩展查询才到达、裸查询没到的候选，打标
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）

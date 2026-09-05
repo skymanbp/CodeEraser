@@ -155,6 +155,18 @@ pub(super) fn update_check(_root: &Path, _a: &Value) -> Result<String> {
     Ok(crate::faces::update_check()?.to_string())
 }
 
+/// Exactly one ask (the CLI's clap group, spelled here for JSON):
+/// `at` / `text` / `unit`; `widen` opts into the associative view.
+pub(super) fn similar_units(root: &Path, a: &Value) -> Result<String> {
+    let ask = crate::similar::query::Ask::from_parts(
+        a["at"].as_str(),
+        a["text"].as_str(),
+        a["unit"].as_str(),
+    )?;
+    let widen = a["widen"].as_bool().unwrap_or(false);
+    Ok(crate::faces::similar(root, &core(), &ask, widen)?.to_string())
+}
+
 pub(super) fn trend(root: &Path, a: &Value) -> Result<String> {
     let commits = count(a, "commits", crate::trend::DEFAULT_COMMITS);
     // absent = measure every uncached commit, but a PRESENT batch of 0

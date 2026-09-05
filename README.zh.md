@@ -10,7 +10,7 @@
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 750 行——或超过其 `[[rules.class]]` 声明的那条线——的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，CI 退出码拒绝提交。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十四<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十五<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现——以及它的不同之处
 
@@ -113,6 +113,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | `ce clone` / `ce docdup` | T3 近似克隆；文档重复 |
 | `ce graph` / `ce deadcode` | 引用站点与提及宇宙；存活性判决 + 符号顾问 |
 | `ce churn` / `ce join` / `ce trend` | git 窗口变动；三信号联判；分数轨迹（stderr 报进度） |
+| `ce similar` | 同角色顾问：与某个单元（`--at file:line`、`--unit`）或一段文本最相似的单元，按核的排序带核给的角色位；`--widen` 加仓内 PPMI 联想视图——只当顾问，永不判决 |
 | `ce structure` | <!--ce:count:structure_axes#word-->七<!--/ce-->轴；`--split-candidates` 为每个越过软线的文件计最优缝价 |
 | `ce check` / `ce baseline` | ADR-006 棘轮与分数地板，<!--ce:count:fail_conditions#word-->六<!--/ce-->个 fail 条件逐名报在控制台；`baseline` 只在根、且只在具名动作下持久化 |
 | `ce erase` | 确定性两段式擦除；默认演练，`--apply` 有干净工作区前置 |
@@ -141,6 +142,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 树尺度结构（七轴、拆分定价） | `ce structure` | `structure`, `structure_report` | MCP `structure` |
 | 分数轨迹 | `ce trend` | `trend`, `trend_report` | MCP `trend` |
 | 分数、棘轮与地板 | `ce check` | `score`, `check_report` | MCP `check` |
+| 同角色顾问（相似单元、联想视图） | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
 | 基线写入 | `ce baseline` | — 只在 CLI：机器面永不写基线 | — |
 | 擦除计划 | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
 | 擦除执行 | `ce erase --apply` | `erase`, `erase_apply` | — 无 MCP 面：执行是人类动作 |

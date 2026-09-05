@@ -12,6 +12,7 @@ use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
 use crate::main_erase::EraseArgs;
 use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
+use crate::main_similar::SimilarArgs;
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -146,6 +147,11 @@ pub(crate) enum Cmd {
     /// commit is a full check in a temp worktree — bound a cold run
     /// with --batch; progress rides stderr
     Trend(TrendArgs),
+    /// Same-role advisor: the units most like one unit (or a text),
+    /// ranked and role-bitted by the core's similar/1 over the index's
+    /// term bags; --widen adds the PPMI associative view (advisory,
+    /// never a verdict)
+    Similar(SimilarArgs),
     /// Deterministic two-phase eraser: plan what is provably safe to
     /// erase via the core's erase/1; dry-run by default
     Erase(EraseArgs),

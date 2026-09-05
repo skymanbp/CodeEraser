@@ -98,7 +98,7 @@
       "id": "count:mcp_tools#word",
       "source": "cli/src/mcp/tools.rs::TOOLS (tool! rows)",
       "tier": "scraped",
-      "value": "14"
+      "value": "15"
     },
     {
       "id": "count:platforms#word",
@@ -111,7 +111,7 @@
       "id": "count:screens#word",
       "source": "gui/ui/index.html::data-tab",
       "tier": "scraped",
-      "value": "10"
+      "value": "11"
     },
     {
       "id": "count:skills#word",
@@ -250,13 +250,19 @@
       "id": "report:observe#schemaver",
       "source": "cli/src/hookio.rs (typed)",
       "tier": "linked",
-      "value": "ce.observe/0.9.0"
+      "value": "ce.observe/0.10.0"
     },
     {
       "id": "report:scan#schemaver",
       "source": "cli/src/scan/report.rs (typed)",
       "tier": "linked",
       "value": "ce.scan-report/0.2.0"
+    },
+    {
+      "id": "report:similar#schemaver",
+      "source": "cli/src/similar/face.rs (typed)",
+      "tier": "linked",
+      "value": "ce.similar-report/0.1.0"
     },
     {
       "id": "report:sites#schemaver",

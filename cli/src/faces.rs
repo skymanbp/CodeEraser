@@ -154,6 +154,23 @@ pub fn erase(root: &Path, core: &str) -> Result<Value> {
     )?))
 }
 
+/// The same-role advisor's document (plan v2.29 step 6): one ask —
+/// a unit at `file:line`, a unit by key, free text — and the
+/// associative view under `widen`. Advisory like the deadcode
+/// symbol table: order and role bits are the core's answer over
+/// similar/1, a core that cannot answer is NAMED in the document, and
+/// nothing here reaches `ce check`.
+pub fn similar(
+    root: &Path,
+    core: &str,
+    ask: &crate::similar::query::Ask,
+    widen: bool,
+) -> Result<Value> {
+    Ok(crate::similar::face::report_json(
+        &crate::similar::face::run(root, None, core, ask, widen)?,
+    ))
+}
+
 /// The machine's own state. Unlike every sibling it cannot fail: a
 /// core that will not answer IS the finding, and it rides inside the
 /// document (health::doctor).

@@ -18,7 +18,7 @@ use crate::corelink::Link;
 use crate::fourclass::session;
 use crate::scan::lang::Lang;
 use crate::scan::walk::Scope;
-use crate::tombstone::texts::{self, Side};
+use crate::tombstone::texts::{self, Loaded, Side};
 use crate::tombstone::{self, Judged, Judgment, PairText, Policy, Row, wire};
 use std::collections::BTreeSet;
 use std::path::Path;
@@ -81,15 +81,15 @@ impl Leg {
 pub(super) fn leg(
     root: &Path,
     set: &Changeset,
+    texts: Option<&(Vec<Loaded>, usize)>,
     cfg: Option<&Config>,
     link: Option<&mut Link>,
 ) -> Option<Leg> {
     let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
-    let excludes = cfg.map_or(&[][..], |c| c.exclude.as_slice());
-    let (f, unread) = if set.changed.is_empty() {
-        (tombstone::measure(&[], &BTreeSet::new(), &policy), 0)
-    } else {
-        measured(root, set, &policy, excludes)?
+    let (f, unread) = match (set.changed.is_empty(), texts) {
+        (true, _) => (tombstone::measure(&[], &BTreeSet::new(), &policy), 0),
+        (false, Some((loaded, unread))) => (measured(loaded, set, &policy), *unread),
+        (false, None) => return None,
     };
     let budget = cfg.and_then(|c| c.tombstone.budget);
     let judged = match (f.rows.is_empty(), link) {
@@ -124,21 +124,18 @@ pub(super) fn leg(
     })
 }
 
-/// The changeset measured: git pairs the change, the config's walk
-/// scope keeps the pairs it would measure (an excluded path is
-/// nobody's, as the guard leg reads it), one batch reads both sides,
-/// the measurement runs over every pair — plus the message as an
-/// after-only SURFACE (tombstone::measure_with: it offers rows, keeps
-/// no name alive) when there is one; `unread` = pairs the batch could
+/// The changeset's texts, read ONCE for every leg that measures text:
+/// git pairs the change, the config's walk scope keeps the pairs it
+/// would measure (an excluded path is nobody's, as the guard leg reads
+/// it), one batch reads both sides; `unread` = pairs the batch could
 /// not read. None = git could not pair the change (a Stop on an unborn
 /// HEAD included: there is no before to erase from), and the feed line
-/// then carries no `tombstone` key at all.
-fn measured(
+/// then carries no `tombstone` and no `similar` key at all.
+pub(super) fn loaded(
     root: &Path,
     set: &Changeset,
-    policy: &Policy,
     excludes: &[String],
-) -> Option<(tombstone::Findings, usize)> {
+) -> Option<(Vec<Loaded>, usize)> {
     let (mut pairs, after) = if set.event == "stop_audit" {
         (session::scoped_pairs(root, &["HEAD"])?, Side::Worktree)
     } else {
@@ -151,7 +148,13 @@ fn measured(
             scope.contains(Path::new(path))
         });
     }
-    let (loaded, unread) = texts::load(root, &pairs, Side::Rev("HEAD"), after)?;
+    texts::load(root, &pairs, Side::Rev("HEAD"), after)
+}
+
+/// The measurement over every loaded pair — plus the message as an
+/// after-only SURFACE (tombstone::measure_with: it offers rows, keeps
+/// no name alive) when there is one.
+fn measured(loaded: &[Loaded], set: &Changeset, policy: &Policy) -> tombstone::Findings {
     let pairs: Vec<PairText> = loaded
         .iter()
         .map(|l| PairText {
@@ -173,8 +176,7 @@ fn measured(
         })
         .into_iter()
         .collect();
-    let f = tombstone::measure_with(&pairs, &message, &BTreeSet::new(), policy);
-    Some((f, unread))
+    tombstone::measure_with(&pairs, &message, &BTreeSet::new(), policy)
 }
 
 /// The block reason (deny tier, condition held): who judged what, the

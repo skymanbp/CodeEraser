@@ -26,6 +26,7 @@ fn main() {
             commands::docdup_report,
             commands::graphcanvas_report,
             commands::check_report,
+            commands::similar_report,
             commands::erase_preview,
             commands::erase_apply,
             commands::bench_doc,
