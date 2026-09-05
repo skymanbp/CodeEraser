@@ -78,6 +78,15 @@
   feed 事件 `commitmsg`（precommit 的行形、`session_id` 同为 null，golden 第 12 条）；parity 表与 `ce precommit`
   同行具名（GUI / MCP / 插件无此面：钩子在 git 里）、README 载体表按名省略、zh 面门加一形、`docs/reference/cli.md`
   再生；PR 正文存成文件即同一个面（CI 配方，不做腿）。两钩子都装时暂存集判两次；只装 commit-msg 即两者兼得。
+- **步 6 方法学册 14 + 十三→十四全扫**（`docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md`）：九节——改动集与两个面、
+  R 的定义与地板、标签框架、逐句合取、四见证豁免（含 K = 3 推导）、`tombstone/1` 与核的三行判决、三腿一档位一 feed、
+  已知限制七条、验收（FPR 七轮 + 六探针 + 逐模块测试），每个数字引到 `file:line`；索引表第 14 行、册 13 导航行；how 页两语
+  第十四张家族卡另立 `#residue` 节置于常数总表之后（该表手绘、只载树家族常数），十二枚常量芯片逐枚绑源常量（不含
+  `PAIR_CAP`——树内两处同名、门解析不唯一；不含 `READ_CAP`——值 `4 << 20` 非字面数）；页题 / meta 十三→十四手改
+  （facts_registry 字面位），其余 `count:booklets#word` 芯片由 bless 再生；判决数据流图两语第四行并入本族（archify 数据流布局只许
+  0..4 五行，实渲亲证）：度量侧「Git windows & diffs · erased names」→ 判决侧「Change verdicts · Theil–Sen · join · conjunction」tag 加 `tombstone/1`（archify 还校验标签宽度：22 字符 136 px 超 124 px 节点即拒，故取伞名），
+  几何不动重渲，README ×2 / how ×2 的 alt 同改；常数总表 alt
+  的「每个常数」改「常数」——册 13 起图上已不载全部常数，句子早已不真。
 
 ## [v1.5.1] — 2026-09-01 — 维护：死件理由码、三处双语缺口、两条规则的执行者、官网八页整理
 

@@ -1,6 +1,6 @@
 # Unmentioned-declaration advisory — the mention veto
 
-[index](../methodology.md) · [← 12 Deterministic erase — the safety predicate](12-deterministic-erase-the-safety-predicate.md)
+[index](../methodology.md) · [← 12 Deterministic erase — the safety predicate](12-deterministic-erase-the-safety-predicate.md) · [→ 14 Tombstone residue — the erased-name conjunction](14-tombstone-residue-the-erased-name-conjunction.md)
 
 The graph family (booklet 6) judges files. This family reads one level below it and
 issues no verdict at all: for every judged declaration it asks whether any OTHER file in
@@ -279,7 +279,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 878 (890 − 12 early-NUL) | rust | 2258 (1241) | 322 (0) | 14.3 % | 13 / 322 = 4.0 % | 13 / 1914 |
+| self @ this commit | 879 (891 − 12 early-NUL) | rust | 2258 (1241) | 321 (0) | 14.2 % | 13 / 321 = 4.0 % | 13 / 1915 |
 | | | haskell | 1407 (323) | 315 (2) | 22.4 % | 15 / 315 = 4.8 % | 15 / 1092 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |

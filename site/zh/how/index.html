@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CodeEraser 工作原理——确定性判决，十三个家族</title>
-<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十三个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
+<title>CodeEraser 工作原理——确定性判决，十四个家族</title>
+<meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十四个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
 <meta name="theme-color" content="#10141d">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
@@ -48,16 +48,16 @@
   <p>下文每节都是短版。完整推导——每个常数都追溯到实现它的源码行——在
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，
   本页每个小标题都直接链进去。</p>
-  <nav class="jump" aria-label="章节"><a href="#families">家族</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#fpr">FPR 纪律</a> <a href="#acting">据判决行动</a> <a href="#honesty">诚实边界</a></nav>
+  <nav class="jump" aria-label="章节"><a href="#families">家族</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#fpr">FPR 纪律</a> <a href="#acting">据判决行动</a> <a href="#residue">改动时残留</a> <a href="#honesty">诚实边界</a></nav>
 </section>
 
 <figure class="arch">
-  <img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口与引用图；Haskell 判决结构与分数、克隆、文档重复、轨迹与审计、存活性与擦除，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy">
+  <img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy">
   <figcaption>每行一个 wire 家族：左边是 Rust 度量的事实，中间是它喂给的 Haskell 判决，右边是离开的东西——退出码或报告行。</figcaption>
 </figure>
 
-<h2 id="families"><!--ce:count:booklets#word-->十三<!--/ce-->个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十三<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十一<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十四<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>update_check</code>——第十四个——拿本构建比对最新发布，这个面既无 wire 家族也无方法学册。</p>
+<h2 id="families"><!--ce:count:booklets#word-->十四<!--/ce-->个判决家族</h2>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十四<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十一<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十四<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>update_check</code>——第十四个——拿本构建比对最新发布，这个面既无 wire 家族也无方法学册。</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -499,10 +499,44 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
 </div>
 
 <figure class="arch">
-  <img src="/assets/methodology.zh.svg" width="1200" height="820" alt="三条泳道——Rust 侧的实测事实、Haskell 侧带公式的判决计算、决定退出码的门——上文各节引用的每个常数都写在图上" loading="lazy">
+  <img src="/assets/methodology.zh.svg" width="1200" height="820" alt="三条泳道——Rust 侧的实测事实、Haskell 侧带公式的判决计算、决定退出码的门——上文各节引用的常数写在图上" loading="lazy">
   <figcaption>常数总表。泳道 1 在 Rust 侧抽取事实；泳道 2 在 Haskell 侧用图上所示公式把
   它们变成判决；泳道 3 决定退出码。图上每一个数字都是上文各节引用的常数。</figcaption>
 </figure>
+
+<h2 id="residue">改动时家族——一次删除留下了什么</h2>
+<p class="note">上面的家族读的是一棵树。第十四族读的是一次<em>改动</em>——一次编辑、一个会话或一次提交写下的那些
+（before, after）对——在 PreToolUse 钩子、Stop 审计与 <code>ce precommit</code> / <code>ce commitmsg</code> 处。</p>
+
+<div class="fam">
+  <h3 id="f14"><span class="n">14</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md">墓碑残留——被删名字的合取</a></h3>
+  <p class="job">抓的是 agent 被告知「删掉 X」之后留下的形状：X 从代码里消失了，同一次改动却把 X 以缺席的形式写了回来——
+  标题 <code>(no X)</code>、标识符 <code>without_x</code>、一句 <code>X is no longer needed</code>。</p>
+  <pre>R     = ⋃ names(before) \ ⋃ alive(after)      (structural positions only; keys, never text)
+row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
+site  ⇔ names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
+over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
+  <p class="note">名字是文本<em>声明</em>出来的东西——注释与字面量之外的标识符、单元名、标题、列表首词；内联代码跨度只是提及，
+  只保活。Rust 读这次改动新增的两个面——新标题、单元名与文件名；注释、docstring 与段落里新增的行——每个候选面发一行三个整数；
+  Haskell 落座站点并判预算，名字与路径从不过线。changelog 定位的文档整体豁免并入账——按路径约定、按版本索引台账的形状、
+  或按 <code>[tombstone] ledger</code> 声明——自身即台账的引用块或小节只豁免自己。本类出厂即 <code>observe</code>，
+  每次度量都写进 feed；两段历史上的七轮 FPR 回放（<code>docs/FPR-TOMBSTONE.md</code>）是任何晋级都必须据以论证的记录。</p>
+  <ul class="consts">
+    <li><b>TOMBSTONE_REV</b> 1</li>
+    <li><b>MIN_ASCII_NAME</b> 3</li>
+    <li><b>MIN_WIDE_NAME</b> 2</li>
+    <li><b>JOIN_MAX</b> 3</li>
+    <li><b>SEGMENT_TOKENS</b> 3</li>
+    <li><b>minName</b> 1</li>
+    <li><b>minMarks</b> 1</li>
+    <li><b>tombstoneRowCap</b> 65536</li>
+    <li><b>HASH_CAP</b> 256</li>
+    <li><b>SITE_CAP</b> 10</li>
+    <li><b>入 wire 版本</b> 6.6.0</li>
+    <li><b>wire</b> tombstone/1</li>
+  </ul>
+</div>
+
 
 <h2 id="honesty">两条诚实边界</h2>
 <p class="trust"><code>PreToolUse</code> 是一层<strong>行为塑形</strong>，<strong>不是安全边界</strong>——

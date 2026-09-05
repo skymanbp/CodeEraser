@@ -253,7 +253,7 @@ rect.c-bg-rect { fill: var(--bg); }
         <path data-edge-from="units" data-edge-to="clones" data-edge-label="T3 candidates" data-edge-key="1" data-edge-id="units-clones" data-composition-points="162,157;230,157;230,271;253,271" d="M 162 157 L 230 157 L 230 271 L 253 271" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="tokens" data-edge-to="clones" data-edge-label="k-grams" data-edge-key="2" data-edge-id="tokens-clones" data-composition-points="162,271;253,271" d="M 162 271 L 253 271" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="shingles" data-edge-to="docdup" data-edge-label="shingle sets" data-edge-key="3" data-edge-id="shingles-docdup" data-composition-points="162,385;253,385" d="M 162 385 L 253 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="windows" data-edge-to="trend" data-edge-label="windows · points" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
+        <path data-edge-from="windows" data-edge-to="trend" data-edge-label="windows · diffs" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="edges · mentions" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;253,613" d="M 162 613 L 253 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="score" data-edge-to="gate" data-edge-label="score · bits" data-edge-key="6" data-edge-id="score-gate" data-composition-points="377,157;468,157" d="M 377 157 L 468 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
         <path data-edge-from="clones" data-edge-to="reports" data-edge-label="rows" data-edge-key="7" data-edge-id="clones-reports" data-composition-points="377,271;422.5,271;422.5,385;468,385" d="M 377 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
@@ -295,15 +295,15 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="100" y="393" class="t-muted" font-size="7" text-anchor="middle">5-word · MinHash/LSH</text>
         </g>
 
-        <g id="node-windows" data-node-id="windows" data-node-label="Git windows" tabindex="0" role="button" aria-label="Focus Git windows, churn · score points, 01 / Measure · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="churn · score points" data-node-context="01 / Measure · Rust">
-          <title>Git windows · churn · score points · 01 / Measure · Rust</title>
+        <g id="node-windows" data-node-id="windows" data-node-label="Git windows &amp; diffs" tabindex="0" role="button" aria-label="Focus Git windows &amp; diffs, churn · points · erased names, 01 / Measure · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="churn · points · erased names" data-node-context="01 / Measure · Rust">
+          <title>Git windows &amp; diffs · churn · points · erased names · 01 / Measure · Rust</title>
           <rect x="38" y="470" width="124" height="58" rx="6" class="c-mask" />
           <rect x="38" y="470" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(44 476) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="100" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Git windows</text>
-          <text x="100" y="507" class="t-muted" font-size="7" text-anchor="middle">churn · score points</text>
+          <text x="100" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Git windows &amp; diffs</text>
+          <text x="100" y="507" class="t-muted" font-size="6.6" text-anchor="middle">churn · points · erased names</text>
         </g>
 
         <g id="node-refs" data-node-id="refs" data-node-label="Reference graph" tabindex="0" role="button" aria-label="Focus Reference graph, ladders · SCC · mentions, 01 / Measure · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="ladders · SCC · mentions" data-node-context="01 / Measure · Rust">
@@ -353,16 +353,16 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="403" class="t-backend" font-size="7" text-anchor="middle">docdup/1</text>
         </g>
 
-        <g id="node-trend" data-node-id="trend" data-node-label="Trajectory &amp; audit" tabindex="0" role="button" aria-label="Focus Trajectory &amp; audit, Theil–Sen · join lattice, 02 / Judge · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Theil–Sen · join lattice" data-node-tag="trend/2 · audit/1" data-node-context="02 / Judge · Haskell">
-          <title>Trajectory &amp; audit · Theil–Sen · join lattice · 02 / Judge · Haskell · trend/2 · audit/1</title>
+        <g id="node-trend" data-node-id="trend" data-node-label="Change verdicts" tabindex="0" role="button" aria-label="Focus Change verdicts, Theil–Sen · join · conjunction, 02 / Judge · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Theil–Sen · join · conjunction" data-node-tag="trend/2 · audit/1 · tombstone/1" data-node-context="02 / Judge · Haskell">
+          <title>Change verdicts · Theil–Sen · join · conjunction · 02 / Judge · Haskell · trend/2 · audit/1 · tombstone/1</title>
           <rect x="253" y="470" width="124" height="58" rx="6" class="c-mask" />
           <rect x="253" y="470" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(259 476) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="315" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Trajectory &amp; audit</text>
-          <text x="315" y="507" class="t-muted" font-size="7" text-anchor="middle">Theil–Sen · join lattice</text>
-        <text x="315" y="517" class="t-backend" font-size="7" text-anchor="middle">trend/2 · audit/1</text>
+          <text x="315" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Change verdicts</text>
+          <text x="315" y="507" class="t-muted" font-size="6.4" text-anchor="middle">Theil–Sen · join · conjunction</text>
+        <text x="315" y="517" class="t-backend" font-size="6.2" text-anchor="middle">trend/2 · audit/1 · tombstone/1</text>
         </g>
 
         <g id="node-liveness" data-node-id="liveness" data-node-label="Liveness &amp; erase" tabindex="0" role="button" aria-label="Focus Liveness &amp; erase, four-way verdict · unmentioned, 02 / Judge · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="four-way verdict · unmentioned" data-node-tag="graph/1 · erase/1" data-node-context="02 / Judge · Haskell">
@@ -418,9 +418,9 @@ rect.c-bg-rect { fill: var(--bg); }
           <rect x="172.1" y="364" width="70.8" height="16" rx="4" class="c-mask" />
           <text x="207.5" y="375" class="t-muted" font-size="8" text-anchor="middle">shingle sets</text>
         </g>
-        <g data-edge-from="windows" data-edge-to="trend" data-edge-label="windows · points" data-edge-key="4" data-edge-id="windows-trend">
-          <rect x="162.3" y="478" width="90.4" height="16" rx="4" class="c-mask" />
-          <text x="207.5" y="489" class="t-muted" font-size="8" text-anchor="middle">windows · points</text>
+        <g data-edge-from="windows" data-edge-to="trend" data-edge-label="windows · diffs" data-edge-key="4" data-edge-id="windows-trend">
+          <rect x="164.75" y="478" width="85.5" height="16" rx="4" class="c-mask" />
+          <text x="207.5" y="489" class="t-muted" font-size="8" text-anchor="middle">windows · diffs</text>
         </g>
         <g data-edge-from="refs" data-edge-to="liveness" data-edge-label="edges · mentions" data-edge-key="5" data-edge-id="refs-liveness">
           <rect x="162.3" y="592" width="90.4" height="16" rx="4" class="c-mask" />

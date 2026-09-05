@@ -253,7 +253,7 @@ rect.c-bg-rect { fill: var(--bg); }
         <path data-edge-from="units" data-edge-to="clones" data-edge-label="T3 候选" data-edge-key="1" data-edge-id="units-clones" data-composition-points="162,157;230,157;230,271;253,271" d="M 162 157 L 230 157 L 230 271 L 253 271" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="tokens" data-edge-to="clones" data-edge-label="k-gram" data-edge-key="2" data-edge-id="tokens-clones" data-composition-points="162,271;253,271" d="M 162 271 L 253 271" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="shingles" data-edge-to="docdup" data-edge-label="shingle 集" data-edge-key="3" data-edge-id="shingles-docdup" data-composition-points="162,385;253,385" d="M 162 385 L 253 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="windows" data-edge-to="trend" data-edge-label="窗口 · 分数点" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
+        <path data-edge-from="windows" data-edge-to="trend" data-edge-label="窗口 · diff" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="边 · 提及" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;253,613" d="M 162 613 L 253 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="score" data-edge-to="gate" data-edge-label="分数 · 位" data-edge-key="6" data-edge-id="score-gate" data-composition-points="377,157;468,157" d="M 377 157 L 468 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
         <path data-edge-from="clones" data-edge-to="reports" data-edge-label="行" data-edge-key="7" data-edge-id="clones-reports" data-composition-points="377,271;422.5,271;422.5,385;468,385" d="M 377 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
@@ -295,15 +295,15 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="100" y="393" class="t-muted" font-size="7" text-anchor="middle">5 词 · MinHash/LSH</text>
         </g>
 
-        <g id="node-windows" data-node-id="windows" data-node-label="git 窗口" tabindex="0" role="button" aria-label="聚焦 git 窗口, 变动 · 分数点, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="变动 · 分数点" data-node-context="01 / 度量 · Rust">
-          <title>git 窗口 · 变动 · 分数点 · 01 / 度量 · Rust</title>
+        <g id="node-windows" data-node-id="windows" data-node-label="git 窗口与 diff" tabindex="0" role="button" aria-label="聚焦 git 窗口与 diff, 变动 · 分数点 · 被删名字, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="变动 · 分数点 · 被删名字" data-node-context="01 / 度量 · Rust">
+          <title>git 窗口与 diff · 变动 · 分数点 · 被删名字 · 01 / 度量 · Rust</title>
           <rect x="38" y="470" width="124" height="58" rx="6" class="c-mask" />
           <rect x="38" y="470" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(44 476) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="100" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">git 窗口</text>
-          <text x="100" y="507" class="t-muted" font-size="7" text-anchor="middle">变动 · 分数点</text>
+          <text x="100" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">git 窗口与 diff</text>
+          <text x="100" y="507" class="t-muted" font-size="7" text-anchor="middle">变动 · 分数点 · 被删名字</text>
         </g>
 
         <g id="node-refs" data-node-id="refs" data-node-label="引用图" tabindex="0" role="button" aria-label="聚焦 引用图, 解析阶梯 · SCC · 提及, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="解析阶梯 · SCC · 提及" data-node-context="01 / 度量 · Rust">
@@ -353,16 +353,16 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="403" class="t-backend" font-size="7" text-anchor="middle">docdup/1</text>
         </g>
 
-        <g id="node-trend" data-node-id="trend" data-node-label="轨迹与审计" tabindex="0" role="button" aria-label="聚焦 轨迹与审计, Theil–Sen · 联判格, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Theil–Sen · 联判格" data-node-tag="trend/2 · audit/1" data-node-context="02 / 判决 · Haskell">
-          <title>轨迹与审计 · Theil–Sen · 联判格 · 02 / 判决 · Haskell · trend/2 · audit/1</title>
+        <g id="node-trend" data-node-id="trend" data-node-label="改动判决" tabindex="0" role="button" aria-label="聚焦 改动判决, Theil–Sen · 联判格 · 合取, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Theil–Sen · 联判格 · 合取" data-node-tag="trend/2 · audit/1 · tombstone/1" data-node-context="02 / 判决 · Haskell">
+          <title>改动判决 · Theil–Sen · 联判格 · 合取 · 02 / 判决 · Haskell · trend/2 · audit/1 · tombstone/1</title>
           <rect x="253" y="470" width="124" height="58" rx="6" class="c-mask" />
           <rect x="253" y="470" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(259 476) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="315" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">轨迹与审计</text>
-          <text x="315" y="507" class="t-muted" font-size="7" text-anchor="middle">Theil–Sen · 联判格</text>
-        <text x="315" y="517" class="t-backend" font-size="7" text-anchor="middle">trend/2 · audit/1</text>
+          <text x="315" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">改动判决</text>
+          <text x="315" y="507" class="t-muted" font-size="7" text-anchor="middle">Theil–Sen · 联判格 · 合取</text>
+        <text x="315" y="517" class="t-backend" font-size="6.2" text-anchor="middle">trend/2 · audit/1 · tombstone/1</text>
         </g>
 
         <g id="node-liveness" data-node-id="liveness" data-node-label="存活性与擦除" tabindex="0" role="button" aria-label="聚焦 存活性与擦除, 四态判决 · 未被提及, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="四态判决 · 未被提及" data-node-tag="graph/1 · erase/1" data-node-context="02 / 判决 · Haskell">
@@ -418,9 +418,9 @@ rect.c-bg-rect { fill: var(--bg); }
           <rect x="177" y="364" width="61" height="16" rx="4" class="c-mask" />
           <text x="207.5" y="375" class="t-muted" font-size="8" text-anchor="middle">shingle 集</text>
         </g>
-        <g data-edge-from="windows" data-edge-to="trend" data-edge-label="窗口 · 分数点" data-edge-key="4" data-edge-id="windows-trend">
-          <rect x="169.65" y="478" width="75.7" height="16" rx="4" class="c-mask" />
-          <text x="207.5" y="489" class="t-muted" font-size="8" text-anchor="middle">窗口 · 分数点</text>
+        <g data-edge-from="windows" data-edge-to="trend" data-edge-label="窗口 · diff" data-edge-key="4" data-edge-id="windows-trend">
+          <rect x="174.55" y="478" width="65.9" height="16" rx="4" class="c-mask" />
+          <text x="207.5" y="489" class="t-muted" font-size="8" text-anchor="middle">窗口 · diff</text>
         </g>
         <g data-edge-from="refs" data-edge-to="liveness" data-edge-label="边 · 提及" data-edge-key="5" data-edge-id="refs-liveness">
           <rect x="179.45" y="592" width="56.1" height="16" rx="4" class="c-mask" />

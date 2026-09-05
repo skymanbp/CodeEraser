@@ -16,7 +16,7 @@
       "id": "count:booklets#word",
       "source": "docs/reference/methodology/*.md",
       "tier": "linked",
-      "value": "13"
+      "value": "14"
     },
     {
       "id": "count:commands#word",

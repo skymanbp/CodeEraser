@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How CodeEraser works — deterministic judgment, thirteen families</title>
-<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: thirteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
+<title>How CodeEraser works — deterministic judgment, fourteen families</title>
+<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: fourteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
 <meta name="theme-color" content="#10141d">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
@@ -54,16 +54,16 @@
   to the source line that implements it — lives in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
   which every heading here links into.</p>
-  <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#honesty">Honesty boundaries</a></nav>
+  <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#residue">Change-time residue</a> <a href="#honesty">Honesty boundaries</a></nav>
 </section>
 
 <figure class="arch">
-  <img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows and the reference graph; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
+  <img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows, the reference graph and a change's surfaces; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase, and tombstone residue, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
   <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves — an exit code or report rows — on the right.</figcaption>
 </figure>
 
-<h2 id="families">The <!--ce:count:booklets#word-->thirteen<!--/ce--> judgment families</h2>
-<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->thirteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->eleven<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->fourteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, and <code>update_check</code> — the fourteenth — compares this build against the latest release, which is a surface no wire family and no booklet has.</p>
+<h2 id="families">The <!--ce:count:booklets#word-->fourteen<!--/ce--> judgment families</h2>
+<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->fourteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->eleven<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->fourteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, and <code>update_check</code> — the fourteenth — compares this build against the latest release, which is a surface no wire family and no booklet has.</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -578,11 +578,53 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
 </div>
 
 <figure class="arch">
-  <img src="/assets/methodology.svg" width="1200" height="820" alt="Three lanes — measured facts in Rust, judgment computations in Haskell with their formulas, and the gates that decide the exit code — with every constant the sections above cite written on the diagram" loading="lazy">
+  <img src="/assets/methodology.svg" width="1200" height="820" alt="Three lanes — measured facts in Rust, judgment computations in Haskell with their formulas, and the gates that decide the exit code — with the constants the sections above cite written on the diagram" loading="lazy">
   <figcaption>The constant sheet. Lane 1 extracts facts in Rust; lane 2 turns them into
   verdicts in Haskell with the formulas shown; lane 3 decides the exit code. Every number
   on the diagram is a constant the sections above cite.</figcaption>
 </figure>
+
+<h2 id="residue">The change-time family — what an erasure leaves behind</h2>
+<p class="note">The families above read a tree. The fourteenth reads a <em>change</em> — the pairs one
+edit, one session or one commit wrote — at the PreToolUse hook, at the Stop audit and at
+<code>ce precommit</code> / <code>ce commitmsg</code>.</p>
+
+<div class="fam">
+  <h3 id="f14"><span class="n">14</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md">Tombstone residue — the erased-name conjunction</a></h3>
+  <p class="job">Finds the shape an agent leaves when told to remove X: X is gone from the code, and
+  the same change writes X back as an absence — a heading <code>(no X)</code>, an identifier
+  <code>without_x</code>, a sentence <code>X is no longer needed</code>.</p>
+  <pre>R     = ⋃ names(before) \ ⋃ alive(after)      (structural positions only; keys, never text)
+row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
+site  ⇔ names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
+over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
+  <p class="note">A name is what a text <em>declares</em> — an identifier outside comments and literals, a
+  unit name, a heading, a list lead; an inline code span only mentions, and keeps a name alive.
+  Rust reads the two surfaces the change added — new headings, unit names and file stems; the
+  added lines of comments, docstrings and paragraphs — and sends one row of three integers per
+  candidate; Haskell seats the sites and judges the budget, so no name and no path ever crosses
+  the wire. A document in the changelog role is exempt whole and counted — by path convention,
+  by the shape of a version-indexed ledger, or by <code>[tombstone] ledger</code> — and a quote
+  run or section that is a ledger by itself exempts only itself. The class ships at
+  <code>observe</code> and writes every measurement to the feed; the seven-round FPR replay over
+  two histories, recorded in <code>docs/FPR-TOMBSTONE.md</code>, is what any promotion would
+  have to argue from.</p>
+  <ul class="consts">
+    <li><b>TOMBSTONE_REV</b> 1</li>
+    <li><b>MIN_ASCII_NAME</b> 3</li>
+    <li><b>MIN_WIDE_NAME</b> 2</li>
+    <li><b>JOIN_MAX</b> 3</li>
+    <li><b>SEGMENT_TOKENS</b> 3</li>
+    <li><b>minName</b> 1</li>
+    <li><b>minMarks</b> 1</li>
+    <li><b>tombstoneRowCap</b> 65536</li>
+    <li><b>HASH_CAP</b> 256</li>
+    <li><b>SITE_CAP</b> 10</li>
+    <li><b>since proto</b> 6.6.0</li>
+    <li><b>wire</b> tombstone/1</li>
+  </ul>
+</div>
+
 
 <h2 id="honesty">Two honesty boundaries</h2>
 <p class="trust"><code>PreToolUse</code> is a behavior-shaping layer, <strong>not a
