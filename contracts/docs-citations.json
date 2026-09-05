@@ -4,6 +4,11 @@
     "line": 169,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fourteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
+  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|07ef50843c44e58a|0": {
+    "target": "../DEVELOPMENT_PLAN.md",
+    "line": 239,
+    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测全是需源文本的测量，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。**细则第六期 = 同角色顾问 + 稀疏检索（2026-09-05，v2.29）**：分词 / 词干 / 倒排表 / BM25 分子分母 / PPMI 计数全是需源文本的测量，居 Rust `cli/src/similar/`，`SIMILAR_REV` 单点声明（分词路一处：查询与索引同函数，负向探针改一处两边同红）；过线只有整数——查询袋 `[termHash, weight]`、候选 `[nHit, pHit, cHit, dHit, sHit, lHit, bm25Num, bm25Den]`——排序（有理数）与「同角色」合取居 Haskell `CE.Similar`，回执 = 候选下标序 + role 位；名字与词文本永不过线；顾问永不产条件位（册 13 先例），故无 tier、无 §4.2 晋级门。"
+  },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
     "line": 170,
@@ -20,11 +25,6 @@
     "line": 158,
     "end": 161,
     "text": "**职责边界（B1 采纳后）**：延迟敏感的热路径（PreToolUse 廉价检查、索引探针）完全在"
-  },
-  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|533be90842d8cac2|0": {
-    "target": "../DEVELOPMENT_PLAN.md",
-    "line": 239,
-    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测全是需源文本的测量，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。"
   },
   "docs/reference/methodology.md|size-advisory.md|043f13208d084192|0": {
     "target": "size-advisory.md",
