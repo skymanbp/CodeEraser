@@ -5861,26 +5861,26 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 187,
-    "end": 192,
+    "line": 208,
+    "end": 213,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 120,
-    "end": 133,
+    "line": 141,
+    "end": 154,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|6a401f30f46a23ac|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 49,
-    "end": 54,
-    "text": ".map(|f| Unit {"
+    "line": 67,
+    "end": 72,
+    "text": "let unit = Unit {\nkey: format!(\"{}/{}\", f.name, f.params),"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 137,
-    "end": 159,
+    "line": 158,
+    "end": 180,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {

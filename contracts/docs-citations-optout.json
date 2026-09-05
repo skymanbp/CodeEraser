@@ -4,5 +4,6 @@
   "docs/EVAL-SET.md": "frozen evaluation record (M4): line numbers are the frozen snapshot's, not the working tree's",
   "docs/EVAL-SET-M5-3.md": "frozen evaluation record (M5-3): same standing as EVAL-SET.md",
   "docs/EVAL-SET-M5-CLOSE.md": "frozen evaluation record (M5 close): same standing as EVAL-SET.md",
+  "docs/EVAL-SET-SIMILAR.md": "frozen evaluation record (v2.29 similar): same standing as EVAL-SET.md",
   "docs/FIELD-TEST.md": "frozen field-test record: the two real repositories' line numbers are theirs, at their pinned commits"
 }

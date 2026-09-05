@@ -163,6 +163,9 @@ Haskell = 既定验收边界，3l 验收线 = rung fixture 全绿，plan M5-3B �
 M5 收口欠账清算、3m recall 仪器 B、审查热修+CI 门补全、ADR-008 首步、
 挂账清零批的冻结登记 → [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md)
 （本册 300 行线的二次拆册，2026-08-17）。
+v2.29 同角色顾问的 ROI 度量（similar 仪器、样本、仲裁 oracle、p@1 / hit@5 与阈值裁定）
+→ [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md)（第三次拆册，2026-09-05；
+EVAL-SET-M5-CLOSE.md 已 303 行）。
 
 ## 复跑
 

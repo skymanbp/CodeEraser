@@ -30,6 +30,7 @@ pub mod root;
 pub mod sarif;
 pub mod scan;
 pub mod score;
+pub mod similar;
 pub mod structure;
 pub mod tombstone;
 pub mod trend;
