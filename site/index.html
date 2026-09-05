@@ -64,7 +64,7 @@
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
 <span class="s">check score 949/1000</span> | axes 0:76 1:0 2:74 3:0 4:0 5:0 6:207 | 34 candidates
-ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
+ratchet: 0 added, 0 removed, 0 over, 2 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
 <!-- roast:end -->
@@ -138,7 +138,7 @@ note: 10 blocks collapsed into existing members, 16 intra-file pairs off the sim
 <div class="install metric"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits</code></div>
 <div class="install metric"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%)</code></div>
 </div>
-<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs and bench_backfill.rs) from one source, contracts/bench/bench.json — never hand-filled.</p>
+<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs and bench_backfill.rs) from one source, contracts/bench/bench.json — never hand-filled. The current release, v1.6.0, earns a row and does not have one yet: the whole series is replayed in one sitting after the tag.</p>
 <!-- bench:end -->
 <p><a href="/bench/">Complete evaluation dashboard →</a></p>
 
