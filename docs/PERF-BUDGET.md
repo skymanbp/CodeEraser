@@ -264,6 +264,25 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 边际 n_a 存进 `df.marg`，共现对在查询时由携带该词的单元的 bag 行推导（回放五语料逐位与内存表相同）。暖路不付钱：零改动时 `retire` /
 `refresh_bags` 都在内容哈希门之后，一行 SQL 都不发。
 
+## v2.29 步 7 `ce similar` 查询代价（实测 2026-09-05，release eb451bb，同一台机，HEAD 的独立 worktree 自带 `.ce/`，量前 `Get-CimInstance` 系统占用 13 %，各臂预热一次后 n=5 三臂交错）
+
+口径：索引已按步 3 节建好（本次冷 `ce dedup` 9.19 s / 暖 0.52 s，库 17.4 MB，与步 3 节同量级）；`ce similar` 端到端 = 进程起 + 同一内容哈希门的
+索引刷新（零改动即短路）+ `Reader` 打开（座位 / 长度两问）+ 查询 + 一次 `similar/1` 核问答 + 渲染。查询点 `--at cli/src/similar/bm25.rs:84`（`top_k`），
+`--text "fetch the user row by id"`；一文件 Δ = 给 `stem.rs` 追加一行注释再撤回，各三次。顾问不在 bench 面，本节只记代价不设门。
+
+| 项 | 预算 | 实测（n=5，秒） | 状态 |
+|---|---|---|---|
+| `ce similar --at`（裸臂，零改动） | 与 `ce dedup` 暖跑同量级 | 0.71 / 0.72 / 0.74 / 0.76 / 0.76 | ✅ 0.7 s 级 |
+| `ce similar --at --widen`（联想视图） | —（opt-in，不设） | 1.78 / 1.83 / 1.86 / 1.87 / 1.88 | 记录：+1.1 s |
+| `ce similar --text`（自由文本） | 同裸臂 | 0.70 / 0.71 / 0.73 / 0.74 / 0.74 | ✅ 与裸臂打平 |
+| 一文件改动后的 `ce similar --at`（n=3） | 步 3 差分：只付那个文件 | 0.99 / 1.05 / 1.09（撤回后 1.00 / 1.05 / 1.06） | 记录：+0.3 s = 一文件解析 + unitsig + 词袋差分 |
+
+读法：裸臂 0.7 s 里索引刷新短路后的大头是 `Reader::open` 把自有单元的座位与长度整表读出（`SEATS` / `LENS` 两问，5.4k 单元）与一次核握手；
+`--text` 不比 `--at` 便宜，说明查询本身（119 词 × 倒排范围扫描）不是大头。**联想臂多付的 1.1 s 是步 3 裁定的直接代价**：不存 cooc 对表，
+每个拼出的词通道查询词都要从携带它的单元的 bag 行现算共现计数（`reader.rs`，`4·n_a > N` 的词按界直接跳过）——联想视图是 opt-in，所以这
+1.1 s 只由要它的人付，而库不为它多长 40 MB、冷索引不慢 7–10×（步 3 节的 A/B）。一文件 Δ ≈ 0.3 s 与步 3 节「暖不变、差分只付净变化的词」一致。
+复跑：`perf_similar.ps1` 形——`git worktree add --detach <tmp> HEAD` → `ce dedup .` 两次 → 三臂各预热一次 → 5 轮交错 → 追加 / 撤回一行各三次 → 删 worktree。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

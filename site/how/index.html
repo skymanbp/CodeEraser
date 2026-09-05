@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How CodeEraser works — deterministic judgment, fourteen families</title>
-<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: fourteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
+<title>How CodeEraser works — deterministic judgment, fifteen families</title>
+<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: fifteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
 <meta name="theme-color" content="#10141d">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
@@ -54,16 +54,16 @@
   to the source line that implements it — lives in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
   which every heading here links into.</p>
-  <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#residue">Change-time residue</a> <a href="#honesty">Honesty boundaries</a></nav>
+  <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#f15">15</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#residue">Change-time residue</a> <a href="#advisor">Same-role advisor</a> <a href="#honesty">Honesty boundaries</a></nav>
 </section>
 
 <figure class="arch">
-  <img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows, the reference graph and a change's surfaces; Haskell judges structure and score, clones, documentation duplication, trajectory and audit, liveness and erase, and tombstone residue, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
+  <img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows, the reference graph and a change's surfaces; Haskell judges structure and score, clones and same-role advice, documentation duplication, trajectory and audit, liveness and erase, and tombstone residue, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy">
   <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves — an exit code or report rows — on the right.</figcaption>
 </figure>
 
-<h2 id="families">The <!--ce:count:booklets#word-->fourteen<!--/ce--> judgment families</h2>
-<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->fourteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->twelve<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->fifteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> — the fifteenth — is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only).</p>
+<h2 id="families">The <!--ce:count:booklets#word-->fifteen<!--/ce--> judgment families</h2>
+<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->fifteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->twelve<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->fifteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> — the fifteenth — is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only).</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -622,6 +622,49 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
     <li><b>SITE_CAP</b> 10</li>
     <li><b>since proto</b> 6.6.0</li>
     <li><b>wire</b> tombstone/1</li>
+  </ul>
+</div>
+
+<h2 id="advisor">The advisor family — the units that play the same part</h2>
+<p class="note">The clone families need two units to look alike. The fifteenth answers "file 2 now has a
+function that plays the same part as one in file 1" when the two share no line — a sparse
+retrieval over the index's own facts, judged as advice at <code>ce similar</code>, the MCP tool
+<code>similar_units</code>, the GUI's <code>similar</code> screen and one line of the Stop audit.</p>
+
+<div class="fam">
+  <h3 id="f15"><span class="n">15</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">Same-role advisor — sparse retrieval and in-repo association</a></h3>
+  <p class="job">Ranks the units most like one unit (or a text) by integer BM25 over six-channel term
+  bags read off facts the index already carries, and asks the core which of them play the query's
+  role — a deterministic, offline "code RAG" with no model and no float, advisory only.</p>
+  <pre>bag    = six channels N P C D S L        (facts the parse already carries; hashes, never words)
+score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
+widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
+role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
+  <p class="note">Every unit of the T3 universe gets one bag: name pieces, shape, callee spellings, its own
+  doc segment, the node-kind histogram and literal <em>kinds</em> — each word stemmed and hashed with its
+  channel letter, so a shared name and a shared callee are different evidence. The bags persist as two
+  tables inside the one content-hash-gated refresh (<code>bag</code> is its own posting list; the pair
+  table the spec first drew was measured at 7–10× the cold index and not built — the reader derives
+  co-occurrence at query time). Ranking is written once against a trait, so the in-memory corpus the
+  instruments build and the SQL reader the product runs agree on every unit of five corpora. Rust sends
+  the query bag and one nine-integer row per candidate; Haskell orders them as exact rationals and
+  applies the role conjunction; names, words and paths never cross the wire. Two arbitrated oracle
+  generations hold the floors — 60 % on the first sample, 40 % on the holdout that read one step lower
+  and retired every tuning candidate the first sample had favoured. The family never reddens a gate
+  and never enters <code>ce erase</code>.</p>
+  <ul class="consts">
+    <li><b>SIMILAR_REV</b> 1</li>
+    <li><b>K</b> 5</li>
+    <li><b>W_UNIT</b> 256</li>
+    <li><b>TERM_CAP</b> 96</li>
+    <li><b>TOP_M</b> 3</li>
+    <li><b>MIN_COOC</b> 2</li>
+    <li><b>roleMinName</b> 1</li>
+    <li><b>roleMinCallee</b> 1</li>
+    <li><b>roleMinNameShape</b> 2</li>
+    <li><b>similarCap</b> 65536</li>
+    <li><b>since proto</b> 6.7.0</li>
+    <li><b>wire</b> similar/1</li>
   </ul>
 </div>
 

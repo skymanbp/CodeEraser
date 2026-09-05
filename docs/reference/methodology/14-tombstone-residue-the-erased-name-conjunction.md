@@ -1,6 +1,6 @@
 # Tombstone residue — the erased-name conjunction
 
-[index](../methodology.md) · [← 13 Unmentioned-declaration advisory — the mention veto](13-unmentioned-declaration-advisory.md)
+[index](../methodology.md) · [← 13 Unmentioned-declaration advisory — the mention veto](13-unmentioned-declaration-advisory.md) · [→ 15 Same-role advisor — sparse retrieval and in-repo association](15-same-role-advisor-sparse-retrieval-and-in-repo-association.md)
 
 Every family before this one reads a tree. This one reads a **change**: the pairs
 `(before, after)` one edit, one session or one commit wrote, and asks whether a name the
