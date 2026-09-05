@@ -220,9 +220,9 @@ capability — every core before 6.6.0 — is healthy and answers nothing here, 
 non-judgment like a degraded reply, a site table that is not an ascending subsequence of the
 rows sent, counts that do not add up to it, or an `over` that is no boolean: no failure, and
 no malformed reply, is ever read as "no sites" or "not over"
-([wire.rs:56-91](../../../cli/src/tombstone/wire.rs#L56),
+([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
 [corelink.rs:36](../../../cli/src/corelink.rs#L36)). The core registers the family as the
-eleventh ([Protocol.hs:102](../../../core/app/CE/Protocol.hs#L102)) and answers it through
+eleventh ([Protocol.hs:103](../../../core/app/CE/Protocol.hs#L103)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
 knob ([Wire.hs:112-137](../../../core/app/CE/Wire.hs#L112),

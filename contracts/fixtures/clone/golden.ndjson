@@ -1,16 +1,16 @@
 {"proto":"6.0.0","type":"clone.request","id":1,"trees":[{"lab":[0],"lld":[0]},{"lab":[0],"lld":[0]}],"pairs":[[0,1]]}
-{"counts":{"judged":1,"pairs":1,"prefiltered":0,"trees":2},"degraded":false,"id":1,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.6.0","scores":[[0,1,0,1,1]],"type":"clone.result","verdicts":[true]}
+{"counts":{"judged":1,"pairs":1,"prefiltered":0,"trees":2},"degraded":false,"id":1,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.7.0","scores":[[0,1,0,1,1]],"type":"clone.result","verdicts":[true]}
 {"proto":"6.0.0","type":"clone.request","id":2,"trees":[],"pairs":[]}
-{"counts":{"judged":0,"pairs":0,"prefiltered":0,"trees":0},"degraded":false,"id":2,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.6.0","scores":[],"type":"clone.result","verdicts":[]}
+{"counts":{"judged":0,"pairs":0,"prefiltered":0,"trees":0},"degraded":false,"id":2,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.7.0","scores":[],"type":"clone.result","verdicts":[]}
 {"proto":"6.0.0","type":"clone.request","id":3,"trees":[{"lab":[0,1],"lld":[0]}],"pairs":[]}
-{"code":"contract","id":3,"message":"tree 0: lab/lld length mismatch","proto":"6.6.0","type":"error"}
+{"code":"contract","id":3,"message":"tree 0: lab/lld length mismatch","proto":"6.7.0","type":"error"}
 {"proto":"6.0.0","type":"clone.request","id":4,"trees":[{"lab":[0,0],"lld":[0,2]}],"pairs":[]}
-{"code":"contract","id":4,"message":"tree 0: node 1: lld out of range","proto":"6.6.0","type":"error"}
+{"code":"contract","id":4,"message":"tree 0: node 1: lld out of range","proto":"6.7.0","type":"error"}
 {"proto":"6.0.0","type":"clone.request","id":5,"trees":[{"lab":[0],"lld":[0]},{"lab":[0],"lld":[0]}],"pairs":[[0,1],[0,1]]}
-{"code":"contract","id":5,"message":"pair 1: not strictly ascending","proto":"6.6.0","type":"error"}
+{"code":"contract","id":5,"message":"pair 1: not strictly ascending","proto":"6.7.0","type":"error"}
 {"proto":"6.0.0","type":"clone.request","id":6,"trees":[{"lab":[0],"lld":[0]}],"pairs":[[0,1]]}
-{"code":"contract","id":6,"message":"pair 0: endpoint out of range","proto":"6.6.0","type":"error"}
+{"code":"contract","id":6,"message":"pair 0: endpoint out of range","proto":"6.7.0","type":"error"}
 {"proto":"6.0.0","type":"clone.request","id":7,"trees":[{"lab":[1],"lld":[0]},{"lab":[0,0,0,0,0],"lld":[0,0,0,0,0]}],"pairs":[[0,1]]}
-{"counts":{"judged":0,"pairs":1,"prefiltered":1,"trees":2},"degraded":false,"id":7,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.6.0","scores":[],"type":"clone.result","verdicts":[]}
+{"counts":{"judged":0,"pairs":1,"prefiltered":1,"trees":2},"degraded":false,"id":7,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.7.0","scores":[],"type":"clone.result","verdicts":[]}
 {"proto":"6.0.0","type":"clone.request","id":8,"trees":[{"lab":[0,0,0],"lld":[0,0,0]},{"lab":[0,0,0],"lld":[0,1,0]}],"pairs":[[0,1]]}
-{"counts":{"judged":1,"pairs":1,"prefiltered":0,"trees":2},"degraded":false,"id":8,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.6.0","scores":[[0,1,2,3,3]],"type":"clone.result","verdicts":[false]}
+{"counts":{"judged":1,"pairs":1,"prefiltered":0,"trees":2},"degraded":false,"id":8,"knobs":{"minUnitNodes":24,"tsedDen":100,"tsedNum":85},"proto":"6.7.0","scores":[[0,1,2,3,3]],"type":"clone.result","verdicts":[false]}

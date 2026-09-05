@@ -23,6 +23,7 @@ pub mod reader;
 pub mod stem;
 pub mod store;
 pub mod terms;
+pub mod wire;
 
 /// Bump when any term road (identifier splitting, stemming, stop
 /// words, channel tags, the shape / literal / structure feature

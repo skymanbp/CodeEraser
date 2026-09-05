@@ -149,6 +149,16 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+> **6.7.0**（同角色顾问族，加性 minor，计划 v2.29 步 5，2026-09-05；ADR-008 细则第六期）：第十二判决族
+> `similar/1`——请求 `query=[[termHash,weight]…]`（可缺省 = 空袋；哈希严格升序、weight ≥ 1）+
+> `rows=[[nHit,pHit,cHit,dHit,sHit,lHit,shapeEqual,bm25Num,bm25Den]…]`（每个候选一行九整数：六通道各自的
+> 共享拼写项数、形状相等位 ∈ {0,1}、BM25 分数 = Num/Den 有理数——Rust 送 16 位定点的分子与 2^16 分母；名字与
+> 路径永不过线）；回复 `order=[候选下标序]`（Num/Den 有理数降序、同分按请求下标升序，`Data.Ratio` 精确比较、
+> 永不取浮点）+ `roles=[bool 每行]`（同角色位 = `(nHit ≥ 1 ∧ cHit ≥ 1) ∨ (nHit ≥ 2 ∧ shapeEqual)`，地板在
+> `CE.Similar.Cost`）+ `counts{rows,queryTerms,role}`；query + rows > 65536 → 降级回执 `degraded:true,
+> reason:"similar_too_large"`（空 order / roles）；行宽错 / 负计数 / shapeEqual 非布尔 / 负分子 / 非正分母 /
+> 查询项形错 / 哈希非严格升序 → `error/contract` 按行点名。无旋钮、无 fail 档：顾问族只排序与打位，判决权
+> 留给读者（spec §一）；旧核无此能力 = 测量侧具名降级「core offers no similar/1 (pre-6.7.0)」，绝不阻断（A9f）。
 > **6.6.0**（墓碑残留族，加性 minor，计划 v2.27 步 4，2026-09-04；ADR-008 细则第五期）：第十一判决族
 > `tombstone/1`——请求 `rows=[[kind,marks,erasedNames]…]`（每个候选面一行：kind 0 = 带括号标签 / 1 = 裸标签 /
 > 2 = 散文句；marks = 句内回溯记号数；erasedNames = 该面拼出的被删名字数——Rust 的集属度量，两者皆零的面不送，
@@ -506,7 +516,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->6.6.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->6.7.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -524,12 +534,13 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
-  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1"]`；fourclass/2 =
+  "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
+  "similar/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -638,11 +649,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->6.0.0<!--/ce-->**
-  （117 行，server 恒答 6.6.0）——它们是"minor 偏斜
+  （123 行，server 恒答 6.7.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 6.0.0；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 6.6.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
+  server 走 6.7.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -654,5 +665,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->6.6.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->6.7.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.1.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

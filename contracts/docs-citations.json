@@ -4,10 +4,10 @@
     "line": 169,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fourteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
-  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|07ef50843c44e58a|0": {
+  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|0081591ba7c6acec|0": {
     "target": "../DEVELOPMENT_PLAN.md",
     "line": 239,
-    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测全是需源文本的测量，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。**细则第六期 = 同角色顾问 + 稀疏检索（2026-09-05，v2.29）**：分词 / 词干 / 倒排表 / BM25 分子分母 / PPMI 计数全是需源文本的测量，居 Rust `cli/src/similar/`，`SIMILAR_REV` 单点声明（分词路一处：查询与索引同函数，负向探针改一处两边同红）；过线只有整数——查询袋 `[termHash, weight]`、候选 `[nHit, pHit, cHit, dHit, sHit, lHit, bm25Num, bm25Den]`——排序（有理数）与「同角色」合取居 Haskell `CE.Similar`，回执 = 候选下标序 + role 位；名字与词文本永不过线；顾问永不产条件位（册 13 先例），故无 tier、无 §4.2 晋级门。"
+    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测全是需源文本的测量，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。**细则第六期 = 同角色顾问 + 稀疏检索（2026-09-05，v2.29）**：分词 / 词干 / 倒排表 / BM25 分子分母 / PPMI 计数全是需源文本的测量，居 Rust `cli/src/similar/`，`SIMILAR_REV` 单点声明（分词路一处：查询与索引同函数，负向探针改一处两边同红）；过线只有整数——查询袋 `[termHash, weight]`、候选 `[nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual, bm25Num, bm25Den]`（九整数；`shapeEqual` 是步 5 落码时补的第七位：idf 为 0 的形状词既不计分也不计证据，`pHit` 复原不出「形状全等」，而合取第二臂读的正是它——步 2 仪器量的也是这一位）——排序（有理数）与「同角色」合取居 Haskell `CE.Similar`，回执 = 候选下标序 + role 位；名字与词文本永不过线；顾问永不产条件位（册 13 先例），故无 tier、无 §4.2 晋级门。"
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -5268,10 +5268,10 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|b6033c741a2e1a20|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|c07f6764838adf09|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.6.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"6.7.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -6167,14 +6167,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|3511fafd14f9a99b|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 143,
-    "end": 146,
+    "line": 146,
+    "end": 149,
     "text": "c <-\ncheck\n\"floor tracks the site cost (ablation table)\""
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|6688a4e51b1f09e6|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 141,
-    "end": 142,
+    "line": 144,
+    "end": 145,
     "text": "a <- check \"cross floor derives to 2\" (destFloor == 2)"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../DEVELOPMENT_PLAN.md|13b48102ab91505e|0": {
@@ -7056,30 +7056,30 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|3c25922006c00a50|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 430,
-    "end": 444,
+    "line": 440,
+    "end": 454,
     "text": "> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|44d0973e61cc25c9|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 438,
+    "line": 448,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|91b5eaf73b4e802a|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 442,
-    "end": 444,
+    "line": 452,
+    "end": 454,
     "text": "> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|ccde8f76ca6c6ebc|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 433,
+    "line": 443,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|ccde8f76ca6c6ebc|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 433,
-    "end": 437,
+    "line": 443,
+    "end": 447,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
@@ -7728,8 +7728,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|9f35df46a3d80655|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 191,
-    "end": 208,
+    "line": 201,
+    "end": 218,
     "text": "> **6.3.0**（外来读者角色，加性 minor，L 轮 v2.18 步 #12，2026-08-28，用户裁「子仓只当读者、不当被测者」）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -7914,10 +7914,10 @@
     "end": 59,
     "text": "/// The load-throat refusal: a tier outside the four is a typo,"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink.rs|4a632dbf88618ca2|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink.rs|bb736d6e2ae4aff6|0": {
     "target": "../../../cli/src/corelink.rs",
     "line": 36,
-    "text": "pub const PROTO: &str = \"6.6.0\";"
+    "text": "pub const PROTO: &str = \"6.7.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/daemon/proto.rs|ac33dd3ebaabd544|0": {
     "target": "../../../cli/src/daemon/proto.rs",
@@ -8346,8 +8346,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|132d1988f574ae82|0": {
     "target": "../../../cli/src/tombstone/wire.rs",
-    "line": 56,
-    "end": 91,
+    "line": 53,
+    "end": 88,
     "text": "/// The reply, consumed: a degraded reply is a named non-judgment; a"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|1387464a29884596|0": {
@@ -8376,7 +8376,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
-    "line": 102,
+    "line": 103,
     "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|454df31193049ba3|0": {

@@ -42,13 +42,17 @@ pub struct QueryTerm {
     pub spelled: bool,
 }
 
-/// One ranked candidate: fixed-point score, distinct spelled terms
-/// shared per channel `[N,P,C,D,S,L]`, shape equality, and the role
-/// bit — `nHit ≥ 1 ∧ cHit ≥ 1`, or `nHit ≥ 2 ∧ shape equal` (spec §五).
+/// One ranked candidate: the score's integer part (what the frozen
+/// eval docs print), the full fixed-point score (what ranks, and what
+/// rides the wire as `bm25Num` over `1 << SCORE_FRAC_BITS`), distinct
+/// spelled terms shared per channel `[N,P,C,D,S,L]`, shape equality,
+/// and the role bit — `nHit ≥ 1 ∧ cHit ≥ 1`, or `nHit ≥ 2 ∧ shape
+/// equal` (spec §五): the instrument's mirror of CE.Similar.Cost.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Hit {
     pub doc: usize,
     pub score: i64,
+    pub score_fp: i64,
     pub hits: [u32; 6],
     pub shape_equal: bool,
     pub role: bool,
@@ -117,6 +121,8 @@ pub fn top_k(
             Ok(Hit {
                 doc,
                 score: i64::try_from(score >> SCORE_FRAC_BITS).expect("score fits i64"),
+                // bounded by Σ w·idf·2.2 ≪ 2^63 for any bag the store admits
+                score_fp: i64::try_from(score).expect("fixed-point score fits i64"),
                 hits,
                 shape_equal,
                 role: role(&hits, shape_equal),

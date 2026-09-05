@@ -1,0 +1,12 @@
+{"id":1,"proto":"6.0.0","query":[[7,768],[9,256],[11,512]],"rows":[[1,0,1,0,0,0,0,196608,65536],[1,0,0,0,0,0,0,91750,65536],[2,0,0,0,0,0,1,196608,65536],[0,0,0,0,0,0,0,0,65536]],"type":"similar.request"}
+{"counts":{"queryTerms":3,"role":2,"rows":4},"degraded":false,"id":1,"order":[0,2,1,3],"proto":"6.7.0","roles":[true,false,true,false],"type":"similar.result"}
+{"id":2,"proto":"6.0.0","rows":[[0,1,0,2,3,0,1,1,1],[0,0,0,0,0,0,0,100000000000000000001,100000000000000000000]],"type":"similar.request"}
+{"counts":{"queryTerms":0,"role":0,"rows":2},"degraded":false,"id":2,"order":[1,0],"proto":"6.7.0","roles":[false,false],"type":"similar.result"}
+{"id":3,"proto":"6.0.0","query":[],"rows":[],"type":"similar.request"}
+{"counts":{"queryTerms":0,"role":0,"rows":0},"degraded":false,"id":3,"order":[],"proto":"6.7.0","roles":[],"type":"similar.result"}
+{"id":4,"proto":"6.0.0","rows":[[1,0,1,0,0,0,2,1,1]],"type":"similar.request"}
+{"code":"contract","id":4,"message":"row 0: shapeEqual not a boolean","proto":"6.7.0","type":"error"}
+{"id":5,"proto":"6.0.0","query":[[9,256],[7,256]],"rows":[],"type":"similar.request"}
+{"code":"contract","id":5,"message":"query 1: not strictly ascending","proto":"6.7.0","type":"error"}
+{"id":6,"proto":"6.0.0","rows":[[1,0,1,0,0,0,0,1]],"type":"similar.request"}
+{"code":"contract","id":6,"message":"row 0: malformed row (need [nHit,pHit,cHit,dHit,sHit,lHit,shapeEqual,bm25Num,bm25Den])","proto":"6.7.0","type":"error"}

@@ -3,6 +3,7 @@
 //! requests — strict lockstep, exactly one request outstanding; the
 //! one-shot `run` (hello + EOF) remains for `ce doctor`.
 
+pub mod judged;
 mod pipe;
 
 use serde::{Deserialize, Serialize};
@@ -12,16 +13,15 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 6.6.0 = the tombstone family (ADR-008 fifth instalment, plan
-/// v2.27), additive: one new family, tombstone/1. This side measures
-/// every candidate surface a changeset wrote and sends one
-/// [kind, marks, erasedNames] row per surface plus the declared budget
-/// as knob 0; the core judges which rows are sites (a label binding an
-/// erased name; a prose sentence with a mark AND a name) and whether
-/// the changeset is over its budget, and answers the site indices,
-/// their label / prose split and `over` -- this side re-labels the
-/// indices into places and never applies the conjunction itself. A
-/// core without the capability is named, never read as "no sites".
+/// 6.7.0 = the similar family (ADR-008 sixth instalment, plan v2.29),
+/// additive: one new family, similar/1. This side ranks a query's
+/// candidates off its own inverted tables and sends the query bag as
+/// [termHash, weight] pairs plus one [nHit, pHit, cHit, dHit, sHit,
+/// lHit, shapeEqual, bm25Num, bm25Den] row per candidate; the core
+/// answers the order they stand in (exact rationals) and which of them
+/// play the query's role -- this side re-labels the indices into units
+/// and never applies the conjunction itself. A core without the
+/// capability is named, never read as "no candidates".
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -33,7 +33,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "6.6.0";
+pub const PROTO: &str = "6.7.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {
