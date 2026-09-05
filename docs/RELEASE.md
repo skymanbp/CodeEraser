@@ -81,10 +81,12 @@
 - **官网截图**：首页三张 GUI 图是**生成物**，不是手摆的窗口——
   `node scripts/shoot_gui.js --out site/assets` 用无头 Edge（即应用自己的
   WebView2 引擎）跑真 `gui/ui`，喂的是 CLI 出的三份报告文档。`gui/ui`
-  一动就得重拍：`it/site_screenshots.rs` 五腿——按 git 祖先关系拒绝比界面旧的图、
-  整窗尺寸、alt 文本不得手抄数字、`contracts/gui-shots.json` 收据里的 schema
-  必须等于代码当下的三个 `SCHEMA_ID`（界面不动而报告形状动了的那条路）、
-  `site/assets/` 每个文件都得有门认领；`it/site_shoot_motion.rs` 第六腿守住
+  一动就得重拍：`it/site_screenshots.rs` 四腿——按 git 祖先关系拒绝比界面旧的图、
+  整窗尺寸、alt 文本不得手抄数字、`site/assets/` 每个文件都得有门认领；
+  `it/site_shots_receipt.rs` 收据腿——`contracts/gui-shots.json` 里的 schema 必须等于
+  代码当下的三个 `SCHEMA_ID`（界面不动而报告形状动了的那条路），`ui` 摘要必须等于
+  当前 `gui/ui` 树（改了界面没重拍——哪怕还没提交——当场红；祖先关系那腿只读提交，
+  看不见未提交的改动）；`it/site_shoot_motion.rs` 第六腿守住
   「取景器声明 `prefers-reduced-motion` × 应用应答它」这对耦合，少一半图就不再
   可复现。重拍只在拍进 `site/assets` 时重写收据（`--out` 指仓外则不动它）。
 - **marketplace**：清单随 main 走，无独立发布步。

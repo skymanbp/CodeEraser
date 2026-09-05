@@ -142,6 +142,10 @@
   步 8 细则就地改。上一提交 9a90dd9（gui `cargo fmt`）落在重立之后，`site_roast` 块因此红一次（CI 33983490751）——本批重立后重 bless 修正。
 - dedup 预算 **56 → 55**（ce.toml 台账具名）：本批落下的三块全部消掉（`anchor::units_by_path` 单一所有者、`EraseProps` 两张行表、子仓 parity 腿走
   `common::write_all` / 基线单测一个闭包），其中 EraseProps 的折叠顺带化掉 6.1.0 起就在的八探针自重叠块，行集对 HEAD 工作树差分净 −1；子仓 119 恒。
+- 步 8 提交 dcbf8ba 的 CI 33995985204 双平台唯一红腿仍是 `site_screenshots::the_pictures_are_no_older_than_the_screens_they_show`
+  （`gui/ui/score.js` 的地板字面 939 让屏比图新；本地全绿因该改动尚未提交——步 6 同病第二次）：重拍三张 + **根修**——收据 `contracts/gui-shots.json`
+  加 `ui` = `gui/ui` 树内容摘要（sha256 over `路径\0内容\0`，CRLF 折 LF、两端同算），收据腿对**当前工作树**比对而不只读提交；
+  `scripts/shoot_receipt.js` 拆自 `shoot_gui.js`（300→269），子仓 `it/site_shots_receipt.rs` 拆自 `site_screenshots.rs`（333→282）。
 - ADR-006 具名重立（两仓；`ce.baseline/2` 迁移 = 离散集整体换键）：主 `cli/src/fourclass/stacking.rs` 62→75、`cli/src/erase/mod.rs` 120→130、
   `cli/src/daemon/judge.rs` 175→227、`core/app/CE/Verdict/Score.hs` 261→270、`cli/src/score/mod.rs` 398→432、CHANGELOG 707→725，新文件 `cli/src/score/anchor.rs` 158 /
   `core/test/StackingProps.hs` 48；子 `it/erase_e2e.rs` 235→269、`unit/fourclass/stacking.rs` 70→75、`it/baseline_ledgers.rs` 172→297、`it/baseline_bridge.rs` 180→210，新文件 `it/guard_budget_parity.rs` 94 / `unit/score/anchor.rs` 132 /
