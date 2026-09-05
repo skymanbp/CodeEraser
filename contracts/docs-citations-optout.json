@@ -1,6 +1,6 @@
 {
   "CHANGELOG.md": "frozen history: each paragraph quotes line numbers as they stood on the day; a re-rendering would rewrite the record",
-  "docs/CHANGELOG-ARCHIVE.md": "frozen history: the v1.3.0-and-earlier entries moved out of CHANGELOG.md byte for byte on 2026-08-31; same standing as CHANGELOG.md",
+  "docs/CHANGELOG-ARCHIVE.md": "frozen history: the v1.3.0-and-earlier entries moved out of CHANGELOG.md byte for byte on 2026-08-31, v1.3.1-v1.3.2 on 2026-09-05; same standing as CHANGELOG.md",
   "docs/EVAL-SET.md": "frozen evaluation record (M4): line numbers are the frozen snapshot's, not the working tree's",
   "docs/EVAL-SET-M5-3.md": "frozen evaluation record (M5-3): same standing as EVAL-SET.md",
   "docs/EVAL-SET-M5-CLOSE.md": "frozen evaluation record (M5 close): same standing as EVAL-SET.md",
