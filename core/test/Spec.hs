@@ -28,6 +28,7 @@ import qualified ReferenceGraph
 import qualified ReferenceJaccard
 import qualified ScanCyclesProps
 import qualified ScanProps
+import qualified StructureModularityProps
 import qualified StructureProps
 import qualified TrendProps
 import qualified VerdictProps
@@ -96,6 +97,7 @@ main = do
       , ScanProps.battery
       , ScanCyclesProps.battery
       , StructureProps.battery
+      , StructureModularityProps.battery
       , TrendProps.battery
       , EraseProps.battery
       , AuditProps.battery

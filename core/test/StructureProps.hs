@@ -4,16 +4,17 @@
 
 -- | The structure family's battery (M6 S2): one hand-computed tree
 -- fixture through the REAL respond — axes, score, entropy rows and
--- findings all checked to the digit — plus a lever per knob (twelve
--- rows total, F16: 0..8 levered in knobLevers below, 9/10 in the
--- redundancy leg and 11 in the staleness leg), the refusals by
--- name, and the degraded-fails posture.
+-- findings all checked to the digit — plus a lever per knob (F16:
+-- 0..8 levered in knobLevers below, 9/10 in the redundancy leg and
+-- 11 in the staleness leg; 19/20 belong to axis 7 and are levered in
+-- StructureModularityProps, which the E01 300-line wall split off),
+-- the refusals by name, and the degraded-fails posture.
 module StructureProps (battery) where
 
 import CE.Structure (respond)
 import CE.Structure.Cost (structNodeCap)
 import Data.Aeson
-import WireHarness (field, refusedBy, replyObjWith, runChecks, setKey)
+import WireHarness (field, refusedBy, replyObjWith, runChecks, setKey, tabledRequest)
 
 battery :: IO Bool
 battery =
@@ -40,19 +41,13 @@ battery =
 -- → 782‰; dir files [3,9,6] (zero-file dir 3 filtered) → 916‰.
 wireReq :: Value
 wireReq =
-  object
-    [ "proto" .= ("7.0.0" :: String)
-    , "type" .= ("structure.request" :: String)
-    , "id" .= (1 :: Int)
-    , "nodes"
-        .= [ [0, 0, 0, 2, 3]
-           , [1, 0, 1, 0, 9]
-           , [2, 0, 1, 1, 6]
-           , [3, 2, 2, 0, 0 :: Integer]
-           ]
-    , "patterns" .= [[1, 0, 5], [1, 3, 4], [2, 0, 6 :: Integer]]
-    , "conventions" .= [[0, 3 :: Integer]]
-    , "fileRefs" .= [[1, 0, 4, 2 :: Integer]]
+  tabledRequest
+    "7.0.0"
+    "structure.request"
+    [ ("nodes", [[0, 0, 0, 2, 3], [1, 0, 1, 0, 9], [2, 0, 1, 1, 6], [3, 2, 2, 0, 0]])
+    , ("patterns", [[1, 0, 5], [1, 3, 4], [2, 0, 6]])
+    , ("conventions", [[0, 3]])
+    , ("fileRefs", [[1, 0, 4, 2]])
     ]
 
 replyObj :: Value -> Maybe Object
@@ -118,8 +113,9 @@ refusals =
       -- unknown-knob pair probes a stably-unknown 99 instead — the
       -- second face-growth made its probe legal and taught us not
       -- to freeze a moving boundary in a fixture; 17/18 = the v2.7
-      -- price knobs, so max+1 is 19 now)
-      refused (setKey "knobs" (toJSON [[19, 1 :: Integer]]) wireReq) "unknown structure knob"
+      -- price knobs and 19/20 the O54 modularity floors, so max+1 is
+      -- 21 now)
+      refused (setKey "knobs" (toJSON [[21, 1 :: Integer]]) wireReq) "unknown structure knob"
     , refused (setKey "knobs" (toJSON [[3, 0 :: Integer]]) wireReq) "knob below 1"
     , refused (setKey "patterns" (toJSON [[1, 3, 4], [1, 0, 5 :: Integer]]) wireReq) "not strictly ascending"
     , refused (setKey "declared" (toJSON [[9, 1 :: Integer]]) wireReq) "declared 0: dir out of range"

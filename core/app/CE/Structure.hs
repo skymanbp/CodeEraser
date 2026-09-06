@@ -8,9 +8,9 @@
 -- enforce the node cap (over-cap = a complete degraded reply that
 -- FAILS, the P1 posture), machine-check the boundary contract in
 -- request order, then judge the axes — five S2 axes always, plus
--- staleness (5) and redundancy (6) when their S3 fact tables ride
--- the wire — and the headline entropy rows. Names and paths never
--- cross (§5.9.2): the report's
+-- staleness (5), redundancy (6) and modularity (7) when their fact
+-- tables ride the wire — and the headline entropy rows. Names and
+-- paths never cross (§5.9.2): the report's
 -- vocabulary is dense ids, codes and counts, re-labelled by the
 -- Rust side that kept the names. Knob rows ride the established
 -- [code, value] grammar; ce.toml is the source, Cost.hs the
@@ -19,6 +19,7 @@ module CE.Structure (respond) where
 
 import CE.Structure.Axes (Facts (..), Knobs (kScale, kViolCost), axes, entropyRows, findings)
 import CE.Structure.Cost (structNodeCap, structViolCostNeutral)
+import qualified CE.Structure.Modularity as Mod
 import CE.Verdict.Score (chargeAt)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
@@ -55,6 +56,10 @@ data StructReq = StructReq
   -- ^ Both Maybe, not defaulted: an absent table means its axis is
   -- not judged, an empty one that it judged clean — the churn-table
   -- honesty (absence is spoken, never zero-filled).
+  , reqDirEdges :: Maybe [[Integer]]
+  -- ^ 7.1.0 (O54): the directed CROSSING dir-edge table, same Maybe
+  -- stance. The intra mass is fileRefs' `inside` sum halved and never
+  -- rides twice; Mod.crossTableOffence holds the pair to one graph.
   , -- the split-ROI advisory tables (plan v2.6 §C 2.14.0, clones/
     -- churn v2.7 ② 2.15.0 — all additive): seamFiles is the
     -- presence anchor — the two reply keys exist exactly when it
@@ -79,6 +84,7 @@ instance FromJSON StructReq where
       <*> o .:? "staleDocRows"
       <*> o .:? "staleEdgeRows" .!= []
       <*> o .:? "redundancy"
+      <*> o .:? "dirEdges"
       <*> o .:? "seamFiles"
       <*> o .:? "seamUnits" .!= []
       <*> o .:? "seamRefs" .!= []
@@ -104,7 +110,8 @@ respond proto =
         famOverCap = \req ->
           let (u, r, c, h) = seamTables req
               seamRows = maybe 0 length (reqSeamFiles req) + sum (map length [u, r, c, h])
-           in toInteger (length (reqNodes req) + seamRows) > structNodeCap
+              edgeRows = maybe 0 length (reqDirEdges req)
+           in toInteger (length (reqNodes req) + seamRows + edgeRows) > structNodeCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req (effective []) True
       , famJudged = \req -> reply proto req (effective (reqKnobs req)) False
@@ -122,6 +129,9 @@ violation req =
         : [ tableOffence nm proj (dirRow n spec) rows
           | (spec@(_, nm, _), proj, rows) <- dirTables
           ]
+        <> [ Mod.crossTableOffence (reqFileRefs req) rows
+           | Just rows <- [reqDirEdges req]
+           ]
         <> [ splitOffence sf (seamTables req)
            | Just sf <- [reqSeamFiles req]
            ]
@@ -140,6 +150,7 @@ violation req =
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
     , ((2, "declared", declOk), take 1, reqDeclared req)
     , ((3, "redundancy", noExtra), take 1, concat (reqRedundancy req))
+    , (Mod.edgeRowSpec n, take 2, concat (reqDirEdges req))
     ]
   noExtra _ = Nothing
   patternOk row = case row of
@@ -209,7 +220,7 @@ dirRow n (arity, name, extra) i row = case row of
 -- knobsOffence / knobTable / effective live in CE.Structure.Knobs
 -- (E01 split at the 300-line wall, the CE.Verdict.Knobs precedent).
 
--- | The judged reply: five to seven axis rows (the two conditional
+-- | The judged reply: five to eight axis rows (the three conditional
 -- axes join when their tables rode the wire), the Score.hs fold at
 -- equal weight over the judged axis count, the headline entropy rows
 -- and the sparse findings — plus the FULL effective knob echo.
@@ -241,7 +252,7 @@ reply proto req k degraded =
  where
   facts =
     if degraded
-      then Facts [] [] [] [] Nothing Nothing
+      then Facts [] [] [] [] Nothing Nothing Nothing
       else
         Facts
           (reqNodes req)
@@ -250,6 +261,7 @@ reply proto req k degraded =
           (reqFileRefs req)
           (Stale.effectiveStale (reqStaleDocRows req) (reqStaleEdges req))
           (reqRedundancy req)
+          (reqDirEdges req)
   declaredKeys = case declaredRows (fNodes facts) (if degraded then [] else reqDeclared req) of
     Nothing -> []
     Just (divergence, deviations) ->

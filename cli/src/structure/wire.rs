@@ -35,6 +35,13 @@ pub struct Request {
     /// None = the table stays off the wire and axis 6 is honestly
     /// unjudged; Some(empty) = judged clean (absence vs zero).
     pub redundancy: Option<Vec<[u64; 3]>>,
+    /// The directed CROSSING dir-edge table (7.1.0, O54):
+    /// [fromDir, toDir, count], from != to, ascending. Same absence
+    /// semantics — None = axis 7 unjudged, Some(empty) = judged clean.
+    /// The intra mass is NOT here: it is `file_refs`' inside sum
+    /// halved, and the core refuses the pair unless the two tables
+    /// account for the same edges.
+    pub dir_edges: Option<Vec<[u64; 3]>>,
     /// The split-ROI seam tables (plan v2.6 §C, 2.14.0). None = the
     /// advisory is not armed and the reply carries no split keys.
     pub seams: Option<SeamTables>,
@@ -108,12 +115,26 @@ fn pinned_echo(reply: &serde_json::Value, sent: &[[u64; 2]]) -> Result<Vec<[i64;
     Ok(echoed)
 }
 
+/// The rows the CORE prices against its node cap — nodes, the seam
+/// tables and (7.1.0) the dir-edge table together, C15's rule that
+/// every request dimension counts. This mirrors
+/// `CE.Structure.respond`'s `famOverCap` term for term; it used to
+/// price the node rows alone, so a request the core would degrade left
+/// here as a well-formed request and came back as a cap-mirror drift
+/// error instead of a named local refusal.
+fn priced_rows(r: &Request) -> usize {
+    let seams = r.seams.as_ref().map_or(0, |s| {
+        s.files.len() + s.units.len() + s.refs.len() + s.clones.len() + s.churn.len()
+    });
+    r.nodes.len() + seams + r.dir_edges.as_ref().map_or(0, Vec::len)
+}
+
 /// One structure.request over one link.
 pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     ensure!(
-        r.nodes.len() <= STRUCT_NODE_CAP,
-        "{} directory nodes exceed the structure/1 cap {STRUCT_NODE_CAP}",
-        r.nodes.len()
+        priced_rows(r) <= STRUCT_NODE_CAP,
+        "{} structure/1 request rows exceed the cap {STRUCT_NODE_CAP}",
+        priced_rows(r)
     );
     let mut link = crate::lockstep::open_family(core, CAP)?;
     let mut body = json!({
@@ -131,6 +152,9 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     }
     if let Some(rows) = &r.redundancy {
         body["redundancy"] = json!(rows);
+    }
+    if let Some(rows) = &r.dir_edges {
+        body["dirEdges"] = json!(rows);
     }
     if let Some(s) = &r.seams {
         body["seamFiles"] = json!(s.files);

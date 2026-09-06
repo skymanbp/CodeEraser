@@ -124,7 +124,7 @@
       "id": "count:structure_axes#word",
       "source": "core/app/CE/Structure/Axes.hs::axes (count arms)",
       "tier": "scraped",
-      "value": "7"
+      "value": "8"
     },
     {
       "id": "gate:dedup.main#digits",
@@ -402,7 +402,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "7.0.0"
+      "value": "7.1.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",

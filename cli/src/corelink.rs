@@ -13,17 +13,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 7.0.0 = the judgment-correctness batch (plan v2.29 step 8), a MAJOR
-/// because one request field changed shape: the fourclass pair's `dup`
-/// (duplicated key hashes) became `dupSpans` ([hash, start, end] per
-/// after-side occurrence), so the core can ask whether the novel mass
-/// landed INSIDE a duplicated unit (O47). Riding the same number: this
-/// side sends the docdup family's verified pairs to verdict/1 as kind-2
-/// sim rows (O46 -- the docdup axis read a constant zero before), the
-/// core charges the clone and docdup axes as files touched over their
-/// own universe (O22 -- scores are not comparable with 6.x), and the
-/// erase class-2 row's third fact is the copy's four-way dead verdict
-/// code (O51). A core of another major is refused at the hello.
+/// 7.1.0 = the structure family's directed dir-edge table (plan v2.29
+/// step 10 batch C3, O54), additive: `ce structure` now sends
+/// `dirEdges` ([fromDir, toDir, count], crossing edges only, out of
+/// the same join that already produces `fileRefs`), and the core
+/// answers a new axis 7 -- modularity -- exactly when that table
+/// rides. The intra mass stays off the wire: it is `fileRefs`'
+/// `inside` sum halved, and a number with two owners is a number that
+/// can disagree with itself. A core of another major is refused at
+/// the hello; a core of an older MINOR simply answers without the
+/// axis, which is what the Maybe stance is for.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -35,7 +34,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.0.0";
+pub const PROTO: &str = "7.1.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

@@ -275,45 +275,52 @@ fn assemble(
         refs: sorted_refs(&sf.tables.refs),
         ..sf.tables.clone()
     });
-    // The seam pricing judges against the SAME numbers the
-    // measurement selected seam files by: the committed soft line
-    // (codes 12) and the config's hard line (13). Sending nothing let
-    // the core price at its built-in 300/750 while seams.rs gated on
-    // committed_soft — with this repo's frozen 304 the two disagreed
-    // on every file in 301..=304, and on a wide-distribution corpus
-    // (S clamped to 500) the ROI inflated ~2.8x.
-    // ... and code 14, P_max, whenever ce.toml declares one. Sending
-    // 12 and 13 alone was the same defect one knob further along: the
-    // advisory priced at the core's built-in 10 while `verdict/1` got
-    // the declared value through score::knobs::ceiling_rows code 3,
-    // so a repo setting `[score] size_penalty_max` had its two
-    // families disagree about the SAME curve — silently, since both
-    // answers are internally consistent. Absent stays absent: the
-    // core default judges, which is what keeps an undeclaring repo
-    // byte-identical.
-    let knobs = if seams.is_some() {
-        let mut k = vec![
-            [12, committed_soft(root)],
-            [13, cfg.thresholds.file_lines_fail as u64],
-        ];
-        if let Some(p) = cfg.score.size_penalty_max {
-            k.push([14, u64::from(p)]);
-        }
-        k
-    } else {
-        Vec::new()
-    };
+    let knobs = seams
+        .as_ref()
+        .map_or_else(Vec::new, |_| seam_knobs(root, &cfg));
+    // ONE join, two tables (O54): fileRefs and the directed crossing
+    // table are drawn from the same edge multiset, which is what lets
+    // the core read the intra mass off `inside` instead of asking for
+    // it twice.
+    let (file_refs, dir_edges) = rows::ref_rows(w, t)?;
     Ok(wire::Request {
         nodes: rows::node_rows(t),
         patterns: rows::pattern_rows(t),
         conventions: rows::convention_rows(t),
-        file_refs: rows::file_ref_rows(w, t)?,
+        file_refs,
         declared: rows::declared_rows(&cfg.structure.layout, t)?,
         stale_docs,
         redundancy,
+        dir_edges: Some(dir_edges),
         seams,
         knobs,
     })
+}
+
+/// The knob rows the split-ROI advisory rides on, and only it (an
+/// unarmed advisory sends none — absent stays absent, which is what
+/// keeps an undeclaring repo byte-identical). The seam pricing judges
+/// against the SAME numbers the measurement selected seam files by:
+/// the committed soft line (code 12) and the config's hard line (13).
+/// Sending nothing let the core price at its built-in 300/750 while
+/// seams.rs gated on committed_soft — with this repo's frozen 304 the
+/// two disagreed on every file in 301..=304, and on a
+/// wide-distribution corpus (S clamped to 500) the ROI inflated ~2.8x.
+/// Code 14, P_max, rides whenever ce.toml declares one: sending 12 and
+/// 13 alone was the same defect one knob further along — the advisory
+/// priced at the core's built-in 10 while `verdict/1` got the declared
+/// value through score::knobs::ceiling_rows code 3, so a repo setting
+/// `[score] size_penalty_max` had its two families disagree about the
+/// SAME curve, silently, since both answers are internally consistent.
+fn seam_knobs(root: &Path, cfg: &crate::config::Config) -> Vec<[u64; 2]> {
+    let mut k = vec![
+        [12, committed_soft(root)],
+        [13, cfg.thresholds.file_lines_fail as u64],
+    ];
+    if let Some(p) = cfg.score.size_penalty_max {
+        k.push([14, u64::from(p)]);
+    }
+    k
 }
 
 /// The wire demands strictly ascending ref rows; the measurement

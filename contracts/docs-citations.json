@@ -2306,309 +2306,309 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|cc93c4aa52f4e818|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 148,
+    "line": 172,
     "text": "crate::lockstep::refuse_degraded(&reply, \"structure/wire.rs vs Structure/Cost.hs\")?;"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 178,
-    "end": 192,
+    "line": 189,
+    "end": 203,
     "text": "-- | depth == parent.depth + 1 for every non-root row. nodeRow's"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|228575861056e64a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 102,
-    "end": 107,
+    "line": 108,
+    "end": 113,
     "text": ", -- the seam tables count toward the same cap (C15: a declared"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3b211773751c150d|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 145,
-    "end": 149,
+    "line": 156,
+    "end": 160,
     "text": "patternOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3d54266a3b6aab2f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 158,
-    "end": 161,
+    "line": 169,
+    "end": 172,
     "text": "declOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4437845c220d08fa|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 237,
+    "line": 248,
     "text": ", \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 194,
-    "end": 207,
+    "line": 205,
+    "end": 218,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 194,
-    "end": 207,
+    "line": 205,
+    "end": 218,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 216,
-    "end": 218,
+    "line": 227,
+    "end": 229,
     "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 218,
-    "end": 222,
+    "line": 229,
+    "end": 233,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 218,
-    "end": 238,
+    "line": 229,
+    "end": 249,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|69c5155f32c757cf|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 100,
-    "end": 115,
+    "line": 106,
+    "end": 121,
     "text": "{ famName = \"structure\""
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 122,
+    "line": 129,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|81c988138e864ab4|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 12,
-    "end": 15,
-    "text": "-- the wire — and the headline entropy rows. Names and paths never"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|82207190ce81caf3|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 163,
-    "end": 176,
+    "line": 174,
+    "end": 187,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 150,
-    "end": 153,
+    "line": 161,
+    "end": 164,
     "text": "convOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|b48a97004c2921f5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 118,
-    "end": 125,
+    "line": 125,
+    "end": 132,
     "text": "violation req ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|cd614b0e3b0462c4|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 137,
-    "end": 161,
+    "line": 147,
+    "end": 171,
     "text": "dirTables =\n[ ((3, \"pattern\", patternOk), take 2, reqPatterns req)"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ddfc9813db49d347|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 265,
-    "end": 276,
+    "line": 277,
+    "end": 288,
     "text": "-- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ebd15a1b8f029b6d|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 12,
+    "end": 15,
+    "text": "-- tables ride the wire — and the headline entropy rows. Names and"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|1ce45d9f1e01be3f|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 217,
-    "end": 225,
+    "line": 245,
+    "end": 253,
     "text": "entropyRows :: Facts -> [[Integer]]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|286c796a7f5c5c59|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 112,
-    "end": 118,
+    "line": 127,
+    "end": 133,
     "text": "-- | The sparse per-directory drill-down rows [dirId, axis] the GUI"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|2a7079306a53e25f|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 134,
-    "end": 145,
+    "line": 162,
+    "end": 173,
     "text": "stale :: Knobs -> [[Integer]] -> [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|3c5a33a9a5ebacc4|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 201,
-    "end": 211,
+    "line": 229,
+    "end": 239,
     "text": "-- | Big directories missing their README, plus the root missing a"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|561243a328679c4c|0": {
-    "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 1,
-    "end": 7,
-    "text": "-- | The seven structure axes (design booklet §3): S0..S4 always"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|63902b115fe13bf4|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 107,
-    "end": 108,
+    "line": 121,
+    "end": 123,
     "text": "<> [(5, count (stale k rows)) | Just rows <- [fStaleDocs f]]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|79f92640ecc94736|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 188,
+    "line": 216,
     "text": "misplacedDirs k f = M.keys (M.fromList [(d, ()) | (d, _) <- misplacedRows k f])"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|7c55a4dbe330f477|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 191,
-    "end": 199,
+    "line": 219,
+    "end": 227,
     "text": "-- than twice inside (the ratio is the predicate's definition in v1)."
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|81d4365a07612dfe|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 164,
-    "end": 165,
+    "line": 192,
+    "end": 193,
     "text": "patternsByDir :: Facts -> M.Map Integer [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|964900779a6bdbe2|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 156,
-    "end": 165,
+    "line": 184,
+    "end": 193,
     "text": "naming :: Knobs -> Facts -> [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|9b2d3f292e7cae89|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 171,
-    "end": 183,
+    "line": 199,
+    "end": 211,
     "text": "mixing :: Knobs -> Facts -> [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|a4863db5216a0106|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 138,
-    "end": 139,
+    "line": 166,
+    "end": 167,
     "text": "-- its floor — duplication and orphans are the per-file families'"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|a9645b7940c0b765|0": {
+    "target": "../../../core/app/CE/Structure/Axes.hs",
+    "line": 1,
+    "end": 7,
+    "text": "-- | The eight structure axes (design booklet §3): S0..S4 always"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|ac3ef2a45a4680f1|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 36,
-    "end": 42,
+    "line": 37,
+    "end": 49,
     "text": ", fStaleDocs :: Maybe [[Integer]]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|d32169143eb7c136|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 179,
-    "end": 183,
+    "line": 210,
+    "end": 214,
     "text": "touchesByDir :: Facts -> M.Map Integer (Integer, Integer)"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|d7220fc452df90bd|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 187,
-    "end": 199,
+    "line": 215,
+    "end": 227,
     "text": "misplacedDirs :: Knobs -> Facts -> [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|db5df6944d38206b|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 119,
-    "end": 128,
+    "line": 134,
+    "end": 143,
     "text": "findings :: Knobs -> Facts -> [[Integer]]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|f28edc0763a8f36a|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 203,
-    "end": 211,
+    "line": 231,
+    "end": 239,
     "text": "docs :: Knobs -> Facts -> [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|fe12f8551232e54a|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 147,
-    "end": 152,
+    "line": 175,
+    "end": 180,
     "text": "geometry :: Knobs -> Facts -> [Integer]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|18c9f0eea6030e9d|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 153,
-    "end": 156,
+    "line": 184,
+    "end": 187,
     "text": "-- | Node ceiling (the verdictRowCap magnitude anchor): over-cap"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|2300974f81b4c175|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 64,
+    "line": 66,
     "text": "misplaceMin :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|3171c9a34166bb90|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 101,
-    "end": 102,
+    "line": 103,
+    "end": 104,
     "text": "deadMin :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|4af89f0901bbc296|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 75,
-    "end": 76,
+    "line": 77,
+    "end": 78,
     "text": "structViolCost :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|6d00b29d4dffa7f9|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 51,
+    "line": 53,
     "text": "namingCeil :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|7c3336f154875de5|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 39,
+    "line": 41,
     "text": "fanoutCeil :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|96546d4a91108585|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 34,
+    "line": 36,
     "text": "depthCeil :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|a29a07d69edd9c4c|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 61,
-    "end": 64,
+    "line": 63,
+    "end": 66,
     "text": "-- references reach this floor (and outside > 2×inside — the ratio"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|a9be444f7e014cd2|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 84,
-    "end": 85,
+    "line": 86,
+    "end": 87,
     "text": "structViolCostNeutral :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|b162f8cf3274d5ec|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 95,
-    "end": 96,
+    "line": 97,
+    "end": 98,
     "text": "dupMin :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|c1ba8a23dc04c7ed|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 110,
-    "end": 147,
+    "line": 141,
+    "end": 178,
     "text": "-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|c71c1473fe529f1e|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 45,
+    "line": 47,
     "text": "namingMin :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|f351e54d5ad2eb55|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 48,
-    "end": 51,
+    "line": 50,
+    "end": 53,
     "text": "-- | S1: normalized naming Tsallis-2 (‰) above this = an"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|f422e0ae95bee09c|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 57,
+    "line": 59,
     "text": "mixRefFloor :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|f51a81c84362e885|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 69,
+    "line": 71,
     "text": "bigDirFloor :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|f79ff07c058fdc74|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 107,
-    "end": 108,
+    "line": 109,
+    "end": 110,
     "text": "staleMin :: Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|f911a0948d08bb7b|0": {
@@ -2714,7 +2714,7 @@
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Knobs.hs|10231bf93fdd1d77|0": {
     "target": "../../../core/app/CE/Structure/Knobs.hs",
     "line": 28,
-    "end": 51,
+    "end": 59,
     "text": "-- | ONE knob authority: the effective fold and the reply echo both"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Knobs.hs|4ae628165a4af265|0": {
@@ -2725,8 +2725,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Knobs.hs|b8cd9d1777488e72|0": {
     "target": "../../../core/app/CE/Structure/Knobs.hs",
-    "line": 30,
-    "end": 51,
+    "line": 35,
+    "end": 59,
     "text": "knobTable :: [(Integer, Knobs -> Integer, Integer -> Knobs -> Knobs)]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Stale.hs|45b17da0e54adb55|0": {
@@ -2748,56 +2748,62 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|07fa44600b6597f6|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 143,
-    "end": 151,
+    "line": 139,
+    "end": 147,
     "text": "declaredOverlay ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|14d346ea6dcd4fce|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 30,
-    "end": 40,
+    "line": 31,
+    "end": 41,
     "text": "-- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|180053ab236a6370|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 231,
-    "end": 240,
+    "line": 227,
+    "end": 236,
     "text": "-- | P1 posture on the newest family: one node past the cap"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|4ee7ed4b7ebf46f2|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 176,
-    "end": 213,
+    "line": 172,
+    "end": 209,
     "text": "[ probeAt [] \"score\" == Just (toJSON (867 :: Integer))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|885bffb28ea698ca|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 67,
-    "end": 75,
+    "line": 62,
+    "end": 70,
     "text": "fixtureJudged :: Bool"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|b1d82d591529dd0b|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 108,
-    "end": 112,
+    "line": 103,
+    "end": 107,
     "text": ", -- the forged-depth probe (review 2026-08-20 #6): nodeRow's old"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|cc7cfe47d20e7add|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 131,
-    "end": 161,
+    "line": 127,
+    "end": 157,
     "text": "refused = refusedBy respond"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|2206ab3c881c25e7|0": {
+    "target": "../structure-axes.md",
+    "line": 45,
+    "end": 47,
+    "text": "**S7 与 S2 的分界**：S2 的 `outs > ins`（触点口径）等价于「内部占比 < 1/3」，"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|5f426eaff8753207|0": {
     "target": "../structure-axes.md",
-    "line": 40,
-    "end": 42,
+    "line": 41,
+    "end": 43,
     "text": "**覆盖映射（一现象一轴，不双计）**：散落 = 每个受害目录各计 1"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|b48a2394bcccca20|0": {
     "target": "../structure-axes.md",
-    "line": 26,
-    "end": 27,
+    "line": 27,
+    "end": 28,
     "text": "这条路上**不可达**（权重已校验 ≥ 1），撤回由 `Declared.hs` 的 `unowned`"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|c2942a0f9c73d343|0": {
@@ -2808,8 +2814,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|eed078a364913e44|0": {
     "target": "../structure-axes.md",
-    "line": 29,
-    "end": 38,
+    "line": 30,
+    "end": 39,
     "text": "structure——否则 S0 几何 / S1 命名 / S4 文档与两行熵都会随文件总体漂移。"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|76b28420c94d7237|0": {
@@ -5184,8 +5190,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|51898e9fa4010244|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 295,
-    "end": 302,
+    "line": 316,
+    "end": 323,
     "text": "let mut k = vec!["
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|a5ee5be74263c9b8|0": {
@@ -5294,93 +5300,93 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|f7b2326e2b502663|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|ef7aeca5140391cb|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]],\"proto\":\"7.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 257,
-    "end": 264,
+    "line": 269,
+    "end": 276,
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|1c6da934c477c2cd|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 85,
-    "end": 91,
+    "line": 99,
+    "end": 105,
     "text": ", kSeamSoft = Cost.seamSoft"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|2a6e02b09cfda6d9|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
-    "line": 58,
-    "end": 67,
+    "line": 70,
+    "end": 79,
     "text": ", -- the split-ROI advisory's seven (plan v2.6 §C codes 12..16,"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|049c7da6cbe4fbab|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 120,
-    "end": 121,
+    "line": 151,
+    "end": 152,
     "text": "seamSoft :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|43ee1926218091b6|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 129,
-    "end": 139,
+    "line": 160,
+    "end": 170,
     "text": "-- | §C cost prices, in MILLI penalty-units (knob codes 15 / 16):"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|615914f0f7e0234c|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 123,
-    "end": 124,
+    "line": 154,
+    "end": 155,
     "text": "seamHard :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|6d9dd6de5812b351|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 126,
-    "end": 127,
+    "line": 157,
+    "end": 158,
     "text": "seamPMax :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|6e35690d3aebce5c|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 138,
-    "end": 139,
+    "line": 169,
+    "end": 170,
     "text": "roiPhiMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|9f220d8cdc714a19|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 150,
-    "end": 151,
+    "line": 181,
+    "end": 182,
     "text": "roiChurnMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|ab4197b7bb88af03|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 135,
-    "end": 136,
+    "line": 166,
+    "end": 167,
     "text": "roiRefMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|c1ba8a23dc04c7ed|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 110,
-    "end": 119,
+    "line": 141,
+    "end": 150,
     "text": "-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|c862bbeef4114c05|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 147,
-    "end": 148,
+    "line": 178,
+    "end": 179,
     "text": "roiCloneMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|e8dba1ee48a474bf|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 132,
-    "end": 134,
+    "line": 163,
+    "end": 165,
     "text": "-- mental-load overhead the booklet names φ). Defaults sized so a"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|f29557c8656c44ff|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 141,
-    "end": 146,
+    "line": 172,
+    "end": 177,
     "text": "-- | v1.1 prices (plan v2.7 ②, knob codes 17 / 18): a seam CUTTING"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|077b9fc6a128a52c|0": {
@@ -6221,14 +6227,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|3511fafd14f9a99b|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 148,
-    "end": 151,
+    "line": 150,
+    "end": 153,
     "text": "c <-\ncheck\n\"floor tracks the site cost (ablation table)\""
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|6688a4e51b1f09e6|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 146,
-    "end": 147,
+    "line": 148,
+    "end": 149,
     "text": "a <- check \"cross floor derives to 2\" (destFloor == 2)"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../DEVELOPMENT_PLAN.md|13b48102ab91505e|0": {
@@ -7134,30 +7140,30 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|3c25922006c00a50|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 448,
-    "end": 462,
+    "line": 464,
+    "end": 478,
     "text": "> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|44d0973e61cc25c9|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 456,
+    "line": 472,
     "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|91b5eaf73b4e802a|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 460,
-    "end": 462,
+    "line": 476,
+    "end": 478,
     "text": "> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|ccde8f76ca6c6ebc|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 451,
+    "line": 467,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|ccde8f76ca6c6ebc|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 451,
-    "end": 455,
+    "line": 467,
+    "end": 471,
     "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
@@ -7811,8 +7817,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|9f35df46a3d80655|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 209,
-    "end": 226,
+    "line": 225,
+    "end": 242,
     "text": "> **6.3.0**（外来读者角色，加性 minor，L 轮 v2.18 步 #12，2026-08-28，用户裁「子仓只当读者、不当被测者」）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -7999,7 +8005,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink.rs|d3e77308e9a2187d|0": {
     "target": "../../../cli/src/corelink.rs",
-    "line": 36,
+    "line": 35,
     "text": "/// entries had stacked up here by 6.1.0 and pushed the file past its"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/daemon/proto.rs|ac33dd3ebaabd544|0": {

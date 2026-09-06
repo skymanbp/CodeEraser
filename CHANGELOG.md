@@ -9,6 +9,31 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 计划 v2.29 步 10 批 C3 O54（2026-09-06）——structure/1 有向目录边表上 wire，第八条判轴「模块度」判它（**wire 7.1.0 加性 minor**）：
+- 请求加性可选表 `dirEdges=[[fromDir,toDir,count]]`（只载跨目录有向边，`from ≠ to`、按 `(from,to)` 严格升序）。
+  **intra 质量不上 wire**——`fileRefs` 的 `inside` 在目录内边的两端各加一，逐目录之和恰为内部边数两倍，核取半即得；
+  一个数字两个主人正是本族 `seamSoft` 那笔旧账。凭据 = 只在该表在场时执行的**跨表律**（`inside` 之和为偶、
+  `outside` 之和 == `dirEdges` 与之相接的边量），不符即按目录点名拒绝。
+- 判决 `core/app/CE/Structure/Modularity.hs`：目录分划在有向多重图上的 Newman 贡献 `q = e/m − o·i/m²`，
+  除以该目录自身质量的上限 `qMax = mu(m−mu)/m²`，判归一化后的 `rho` 是否低于地板——整数不等式
+  `1000(e·m − o·i) < modFloor·mu·(m−mu)`，全程整数、不做除法、无浮点。**判 rho 而不判 q** 是因为
+  `Σ q_c = Q ≤ 1`：只对 q 设地板会按仓规模成比例地误判大树，正是 2.26.0 密度律退役掉的那个形状。
+  `mu < modMassFloor` 或 `mu == m`（`qMax = 0`，没有可分离的补集）者整条不判——既不算净也不算犯。
+- 旋钮 19 `modFloor=1`（‰，零模型那条线；1/3 局部性线归 S2，一现象一轴）/ 20 `modMassFloor=4`
+  （四条边以下贡献的正负由单条引用决定）；knob 回执 19 → **21 行**，既有 golden 应答各多两行、其余键字节如前。
+- 三面：GUI `axisNames[7]` = modularity / 模块度；控制台印判轴**码**故无新字串；`ce.structure-report/0.6.0`
+  形状不变（`axes` 多一行、不多一键）故不升 schema。MCP 工具说明 seven → eight axes。
+- **自仓结构分迁移、与 1.6.0 不可比**：`ce structure` 恒发该表，判轴数每次都多一，且新轴入等权折叠。
+  实测：本批前的树 **820**（五轴 `0:13 1:26 2:321 3:345 4:195`），本批后的树 **831**（六轴，新增 `7:108`）；
+  同一棵**本批后**的树按旧轴表只判五轴是 819，故 819 → 831 才是轴 7 自己那一笔（余下差额是本批新增文件让树本身动了）。
+  `ce check` / `ce scan` / 其余分数不动；structure 仍报告态不设门（v2.22 结项 O53 立场不变）。
+- Rust cap 镜像同批对齐核的 `famOverCap`（此前只计 nodes 行，seam 表与新表都没计价）；
+  `rows::ref_rows` 一次 join 出两张表——它们必须描述同一张图，而一次 join 是保证不是断言。
+- 记账：`contracts/VERSIONING.md` 7.1.0 条 + §3「127 行，server 恒答 7.1.0」；册 04 改题「eight axes」并新增 S7 行与推导节
+  （文件名保留历史 slug——它是已发布的 URL 与 92 条引文的键）；`structure-axes.md` 改题八轴 + S7 行 + S7/S2 分界；
+  README 双语 / how 双语 / stack 双语随 bless；架构图 IR proto 串重渲；判决图 IR「结构与分数」节点副标改 `8 + 7 axes`（结构八轴、判决分七轴，此前二者恰同为七）、stack.svg ×4「seven structure axes」→ eight；GUI 三张截图随 `scripts/shoot_gui.js` 在 HEAD worktree 重拍（结构屏多一轴）+ `site_shots_receipt` 重签。
+- ADR-006 具名重立（两仓）：主 core/app/CE/Structure/Cost.hs 156→187 / Structure/Axes.hs 225→253 / Structure.hs 276→288 / cli/src/structure/edges.rs 27→52 / structure/wire.rs 182→206 / structure/rows.rs 244→259 / 册 04 312→345 / contracts/VERSIONING.md 677→693 / CHANGELOG 531→559，`core/app/CE/Structure/Modularity.hs`（114）+ `core/test/StructureModularityProps.hs`（146）两新文件入基线；子 unit/structure/edges.rs 14→28，`it/structure_modularity.rs`（167）新文件入基线。
+
 **无默认档位变更。** 计划 v2.29 步 2（2026-09-05）——同角色顾问的 **ROI 度量先行**，只加度量与冻结件、零面变化：
 - `cli/src/similar/`（词袋六通道 / Porter 词干 / 整数 BM25 / 仓内 PPMI，`SIMILAR_REV` 1）只被回放仪器
   `it/similar_replay.rs`（常驻 `--ignored`）读；自仓 + 四份 crosscheck 夹具各自成库，每单元查两臂 top-5。
@@ -259,11 +284,14 @@
 - verify-publish 潜在拒发根修：tag 推送上，ci.yml 里只跑 schedule / workflow_dispatch 的 job（步 9 的 `starter-https` 起、第一组的 `setup-wiring`、本批的 `release-rehearsal` / `packaging-live`）在 tag 提交上以 **SKIPPED** check 出现，原来的门只赦 `build` / `draft`，
   v1.7.0 首打必被拒——改 `SKIPPED_OK` 按名赦免，子仓门 `release_roster.rs::the_tag_gate_excuses_every_schedule_only_job_by_name` 从 ci.yml 各 job 的 `if:` 行推导期望集并要求全等。
 - 第一组 CI 红腿修补（`setup_e2e` kept 行，ubuntu + macOS 各一）：假 `claude` 的 sh 脚本用外部 `cat`，而 setup 跑时 PATH 已清空只剩假目录，`cat: command not found` 让 listing 为空、被读成 fresh 而 `add`——改 builtin `read` / `printf`（cmd 侧本就是内建 `type`）；CI 34010686941 三平台绿。
+- `packaging-live` 首跑双红（dispatch 34015989581）的根修 9a385c8：在分支 ci/packaging-live 上 dispatch 迭代、双平台绿后随 O54 的推送并回 main。三条 Homebrew 事实：① ubuntu runner 的 Homebrew 装在 `/home/linuxbrew` 而不在 PATH（runner-images 自述）→ `brew shellenv`；② Homebrew 4 拒绝 tap 之外的公式文件（`brew style` / `audit` / `install --formula <路径>` 一律 `Homebrew requires formulae to be in a tap`）
+  → `brew tap-new --no-git ci/codeeraser` 建一次性本地 tap、公式 `cp` 进其 `Formula/`、四条命令按全名调——布局与真 tap 相同，验的仍是仓内那份字节；③ 裸二进制 url 的公式装出来没有 x 位——Homebrew `UnpackStrategy::Executable` 只认 `#!` 与 `MZ`，ELF / Mach-O 走 `Uncompressed` 原样拷贝（curl 落盘 0644），`Cleaner` 对非可执行文件 chmod 0444（三处读自 Homebrew 源码）
+  → 生成器在 `def install` 末尾加 `chmod 0755, [bin/"ce", bin/"ce-core"]`（rubocop `zero_only` 写 `0755`）。分支上双平台绿：`brew style` no offenses / `brew audit --strict` 过 / 装 5 files 71.2 MB / `ce --version` 1.6.0 对清单 / `brew test` 过。教训：主树 `scripts/packaging.js` +2 行就让首页 roast 块的 `tolerance drawn` 0→1（js 在纯尺寸臂、进棘轮），CI-only 修补在分支上迭代、与下一次重立同批并回。
 - 子仓：`unit/update/version.rs` 六行表 + 花名册往返腿、`unit/update/manifest.rs` 按 `TARGETS` 逐目标（已建者三枚 64 位 hex pin，其余 `pins()` 具名拒绝）、`it/facts/count.rs` 的 `roster()` 从 `TARGETS` 推导 binaries / platforms / installers 三个事实。
   dedup **55 / 119 恒**——本批两块新克隆（`packaging.rs` / `release_roster.rs` 各一份 `read(rel)`、`packaging.rs` / `docs_diagrams.rs` 同形的 node 驱动调用）消掉：读者统一走 `facts::read`（同类的 `face_parity.rs` 一并改），node 运行器 + 双流断言进 `common/gates.rs`
   （`demo_replay.rs` 同改；先试开新模块 `common/script.rs`，`common/mod.rs` 的索引随即与 `eval_support/mod.rs` 同形、实测多出一块，故并入既有模块）。
 - 记账修正：步 9 批 A / 批 B 与步 10 第一组的三块自 b8d3c1e（第三次拆册）起被追加在 v1.5.0 段末、「更早的版本」之前，现移回 `[Unreleased]` 段（字节不变，只挪位置）。
-- Opus 只读审阅 22 条，落 18 条：**4 blocker**——tag 门的等待环把本 run 自己在 `needs:` 上排队的三条可选腿也算进 pending，v1.7.0 首打必等满两小时被拒 → 按 check suite 过滤本 run 未完成项（已完成的 skipped `build` / `draft` 仍按名赦免）；build-target.yml 新加的 `[ "$(ls dist | wc -l)" = 3 ]` 在两条 macOS 腿上是 BSD `wc` 带前导空格的串比较、正确构建也红 → `set -- dist/*; [ "$#" -eq 3 ]`；§5.10 布局树缺 `packaging/` 一行（`layout_tree` 门在 `git add` 后才红）；README 双语 / 官网两首页四枚数词芯片（三 / 九 → 五 / 十五）随 `facts_` bless。**major**：winget `ProductCode` 由「猜是 productName」改为本机注册表实测 `HKLM\...\Uninstall\CodeEraser`（1.5.1 装机，2026-09-06）；winget 三份 yaml 改纯 ASCII（winget-pkgs 对非 ASCII 要 BOM）——生成器 `render()` 与子仓门各一道断言；bundle 表四处拼写加门 `every_host_spells_the_same_bundle_per_os`；`bootstrap_e2e.sh` Linux 臂与 `ce.sh` 锁步（未知架构 = `unsupported`）；`packaging-live` 只在周程 / 手动跑 → RELEASE.md §2.1 要求打 tag 前手动跑一次。**minor**：`winget_pr.sh` 可重跑（分支已在则 PATCH、PR 已开则 notice）、`homebrew_tap.sh` 印的安装命令用 tap 名而非仓库名、`packaging.js::winget` 拆两表 ≤ 50 行、`RELEASE_VERSION` 经 `GITHUB_ENV` 覆盖后断言非空、`bundle()` 的拒绝在 `$(...)` 里不可达 → 顶层先校验一遍花名册、`packaging-live` 按清单版本取 winget 目录、gui.md 断句。**不加 formula `version` 行**：Homebrew 从 url 的 `/v1.x.y/` 段与 `ce-1.x.y-` 词干都能识别版本，显式行会被 `brew audit` 判冗余——由 `packaging-live` dispatch 实证；可复用工作流 caller 被 skip 时的 check 名（`release-rehearsal`）待本提交推上后按 `check-runs` 实测再定。
+- Opus 只读审阅 22 条，落 18 条：**4 blocker**——tag 门的等待环把本 run 自己在 `needs:` 上排队的三条可选腿也算进 pending，v1.7.0 首打必等满两小时被拒 → 按 check suite 过滤本 run 未完成项（已完成的 skipped `build` / `draft` 仍按名赦免）；build-target.yml 新加的 `[ "$(ls dist | wc -l)" = 3 ]` 在两条 macOS 腿上是 BSD `wc` 带前导空格的串比较、正确构建也红 → `set -- dist/*; [ "$#" -eq 3 ]`；§5.10 布局树缺 `packaging/` 一行（`layout_tree` 门在 `git add` 后才红）；README 双语 / 官网两首页四枚数词芯片（三 / 九 → 五 / 十五）随 `facts_` bless。**major**：winget `ProductCode` 由「猜是 productName」改为本机注册表实测 `HKLM\...\Uninstall\CodeEraser`（1.5.1 装机，2026-09-06）；winget 三份 yaml 改纯 ASCII（winget-pkgs 对非 ASCII 要 BOM）——生成器 `render()` 与子仓门各一道断言；bundle 表四处拼写加门 `every_host_spells_the_same_bundle_per_os`；`bootstrap_e2e.sh` Linux 臂与 `ce.sh` 锁步（未知架构 = `unsupported`）；`packaging-live` 只在周程 / 手动跑 → RELEASE.md §2.1 要求打 tag 前手动跑一次。**minor**：`winget_pr.sh` 可重跑（分支已在则 PATCH、PR 已开则 notice）、`homebrew_tap.sh` 印的安装命令用 tap 名而非仓库名、`packaging.js::winget` 拆两表 ≤ 50 行、`RELEASE_VERSION` 经 `GITHUB_ENV` 覆盖后断言非空、`bundle()` 的拒绝在 `$(...)` 里不可达 → 顶层先校验一遍花名册、`packaging-live` 按清单版本取 winget 目录、gui.md 断句。**不加 formula `version` 行**：Homebrew 从 url 的 `/v1.x.y/` 段与 `ce-1.x.y-` 词干都能识别版本，显式行会被 `brew audit` 判冗余——由 `packaging-live` dispatch 实证；可复用工作流 caller 被 skip 时的 check 名已按 79611e8 的 `check-runs` 实测：就是裸 job 名 `release-rehearsal`（无 `/ build-target` 后缀），该提交的 skipped 名集 = packaging-live / release-rehearsal / setup-wiring / starter-https ⊆ `SKIPPED_OK`；dispatch 34015989581 五目标 rehearsal 5/5 绿（跑起来的 check 名是 `release-rehearsal (<runner>, <key>, <triple>) / build-target`）。
 - ADR-006 具名重立（两仓）：主 CHANGELOG 506→531 / cli/src/update/version.rs 66→139 / docs/RELEASE.md 114→149 / scripts/pin_release.js 128→140，scripts 四新文件 + packaging/winget 三份 yaml 入基线（.rb 与 .github/ 不在度量宇宙）；子 it/common/gates.rs 65→87 / unit/update/version.rs 69→97 / unit/update/manifest.rs 75→92，it/packaging.rs / it/release_roster.rs 两新文件入基线。
 
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）

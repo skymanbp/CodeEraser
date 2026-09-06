@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, setKey) where
+module WireHarness (degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, setKey, tabledRequest) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -31,17 +31,23 @@ runChecks checks = fmap and (mapM one checks)
     putStrLn ((if ok then "ok   " else "FAIL ") <> name)
     pure ok
 
+-- | A request envelope carrying NAMED [[Integer]] fact tables — the
+-- structure family's wireReq shape. Promoted when the modularity
+-- battery reminted the family fixture's `object` head verbatim, the
+-- same way the dedup gate named rowsRequest just below.
+tabledRequest :: String -> String -> [(String, [[Integer]])] -> Value
+tabledRequest protoV kind tables =
+  object
+    ( ["proto" .= protoV, "type" .= kind, "id" .= (1 :: Int)]
+        <> [Key.fromString name .= rows | (name, rows) <- tables]
+    )
+
 -- | A [[Integer]]-rows request envelope — the scan/trend batteries'
 -- shared wireReq shape (the trend family's landing recloned scan's
--- line for line; fifteenth-bite test-half repayment).
+-- line for line; fifteenth-bite test-half repayment). One envelope,
+-- two faces: the single table this one carries is named `rows`.
 rowsRequest :: String -> String -> [[Integer]] -> Value
-rowsRequest protoV kind rows =
-  object
-    [ "proto" .= protoV
-    , "type" .= kind
-    , "id" .= (1 :: Int)
-    , "rows" .= rows
-    ]
+rowsRequest protoV kind rows = tabledRequest protoV kind [("rows", rows)]
 
 -- | Drive a family's REAL respond and decode the reply object.
 replyObjWith ::
