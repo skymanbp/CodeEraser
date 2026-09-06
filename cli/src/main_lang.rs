@@ -21,7 +21,7 @@ use std::sync::OnceLock;
 /// its own (see zh_help).
 const ZH_TSV: &str = "\
 ce	CodeEraser — 消除 LLM 引入的代码与文档熵
-ce.lang	控制台语言（优先于 CE_LANG）
+ce.lang	控制台语言（优先于 CE_LANG 与项目 ce.toml 的 `[ui] lang`）
 judge.root	要分析的目录（默认当前目录）
 judge.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 judge.db	索引数据库路径（默认 <root>/.ce/index.db）
@@ -64,6 +64,7 @@ similar.widen	加联想视图：PPMI 扩展查询才到达、裸查询没到的�
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）
+erase.log	读已执行擦除的审计轨迹（.ce/erase-log.ndjson）而不做计划；有读不出的行即退出 1
 check	棘轮门：对 ce-baseline.json 判决仓库 — 棘轮或 --fail-under 地板，任一独立可判负；给子目录只限定测量范围（不落盘任何东西）
 check.days	改动窗口天数（省略 = 改动表保持为空）
 check.fail_under	分数落在此千分比地板之下即判负

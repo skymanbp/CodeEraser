@@ -2,7 +2,7 @@
 
 # `ce` command reference
 
-Every block below is the binary's own `--help` output (English face; `--lang zh` or `CE_LANG=zh` switches the console at runtime).
+Every block below is the binary's own `--help` output (English face; `--lang zh`, `CE_LANG=zh` or the project's `[ui] lang = "zh"` in ce.toml switches the console at runtime, in that order of precedence).
 
 ## ce
 
@@ -40,7 +40,7 @@ Commands:
   help       Print this message or the help of the given subcommand(s)
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
   -V, --version      Print version
 ```
@@ -57,7 +57,7 @@ Arguments:
 
 Options:
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --format <FORMAT>  [default: console] [possible values: console, json]
   -h, --help             Print help
 ```
@@ -74,7 +74,7 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json, sarif]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help             Print help
 ```
@@ -91,7 +91,7 @@ Arguments:
 
 Options:
       --days <DAYS>      History window in days [default: 14]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --format <FORMAT>  [default: console] [possible values: console, json]
   -h, --help             Print help
 ```
@@ -107,7 +107,7 @@ Arguments:
   [ROOT]  Directory to analyze (default: current directory)
 
 Options:
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --sites            List reference sites
       --mentions         Refresh the mention universe (every text file the tree could reference a name from) and report what it holds
       --db <DB>          Index database path (default: <root>/.ce/index.db)
@@ -127,7 +127,7 @@ Arguments:
 
 Options:
       --db <DB>          Index database path (default: <root>/.ce/index.db)
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
       --check            Exit 1 when any file-tier dead verdict lands, or when the judgment itself degraded (a gate that could not judge never passes)
@@ -146,7 +146,7 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --units            List the unit universe instead of judging
@@ -165,7 +165,7 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --check            Exit 1 when any duplication is reported (the CI dogfood gate)
@@ -184,7 +184,7 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --days <DAYS>      Churn window in days [default: 14]
@@ -203,7 +203,7 @@ Arguments:
 
 Options:
       --format <FORMAT>   [default: console] [possible values: console, json]
-      --lang <LANG>       Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>       Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>       Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>           Index database path (default: <root>/.ce/index.db)
       --deep              Also roll clone blocks and dead units up per directory and judge the S6 redundancy axis (runs the dedup census and the liveness judgment; absent = the axis is honestly unjudged)
@@ -224,7 +224,7 @@ Arguments:
 
 Options:
       --format <FORMAT>    [default: console] [possible values: console, json]
-      --lang <LANG>        Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>        Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>        Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>            Index database path (default: <root>/.ce/index.db)
       --commits <COMMITS>  Mainline window: newest N first-parent commits [default: 30]
@@ -244,7 +244,7 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --at <AT>          The unit holding `file:line` (path relative to the root)
@@ -266,11 +266,12 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --apply            Actually erase what the plan names (requires a git repository, a clean worktree, and unchanged targets; default is dry-run)
       --check            Gate mode: exit 1 when the plan holds ANY eraseable row (the self-repo keeps itself clean)
+      --log              Read the audit trail of applied erases (.ce/erase-log.ndjson) instead of planning; exit 1 when a line cannot be read
   -h, --help             Print help
 ```
 
@@ -286,7 +287,7 @@ Arguments:
 
 Options:
       --format <FORMAT>          [default: console] [possible values: console, json]
-      --lang <LANG>              Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>              Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>              Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>                  Index database path (default: <root>/.ce/index.db)
       --days <DAYS>              Churn window in days (omit = churn tables stay empty)
@@ -307,7 +308,7 @@ Arguments:
 
 Options:
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --days <DAYS>      Churn window in days (omit = churn tables stay empty)
@@ -326,7 +327,7 @@ Arguments:
 
 Options:
       --format <FORMAT>              [default: console] [possible values: console, json, sarif]
-      --lang <LANG>                  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>                  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --db <DB>                      Index database path (default: <path>/.ce/index.db)
       --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50; with --check: default or tighter only)
       --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from measured calibration; 0 disables; with --check: default or tighter only)
@@ -346,7 +347,7 @@ Arguments:
   <ROOT>  Project root to serve
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -361,7 +362,7 @@ Arguments:
   [ROOT]  Project root (default: current directory)
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -374,7 +375,7 @@ Usage: ce probe [OPTIONS]
 
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -387,7 +388,7 @@ Usage: ce audit [OPTIONS]
 
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -400,7 +401,7 @@ Usage: ce health [OPTIONS]
 
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -415,7 +416,7 @@ Arguments:
   [ROOT]  Repository root (default: current directory)
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -431,7 +432,7 @@ Arguments:
   [ROOT]  Repository root (default: current directory)
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -446,7 +447,7 @@ Arguments:
   [ROOT]  Project root the tools operate on (default: current directory)
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
   -h, --help         Print help
 ```
 
@@ -461,7 +462,7 @@ Arguments:
   [ROOT]  Project root to eject (default: current directory)
 
 Options:
-      --lang <LANG>  Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --yes          Actually remove (default: dry run naming every target)
   -h, --help         Print help
 ```
@@ -474,7 +475,7 @@ Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes repl
 Usage: ce update [OPTIONS]
 
 Options:
-      --lang <LANG>      Console language (wins over CE_LANG) [possible values: en, zh]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --yes              Download and place the verified binaries (default: report only)
       --installer        With --yes: also save the verified GUI installer to the temp dir and print its path (running it is your click)
       --format <FORMAT>  [default: console] [possible values: console, json]

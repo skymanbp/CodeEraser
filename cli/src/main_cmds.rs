@@ -29,8 +29,14 @@ pub fn json(format: OutFormat) -> bool {
     matches!(format, OutFormat::Json)
 }
 
+/// The root a command was given, else the working directory — and the
+/// project's `[ui] lang` has spoken before the command's first line
+/// (plan v2.29 step 9, O61); the hooks reach the same pin through
+/// their own Config::load.
 pub fn or_cwd(root: Option<PathBuf>) -> PathBuf {
-    root.unwrap_or_else(|| PathBuf::from("."))
+    let root = root.unwrap_or_else(|| PathBuf::from("."));
+    codeeraser::i18n::pin_project(&root);
+    root
 }
 
 fn findings_fmt(f: FindingsFormat) -> scan::Format {

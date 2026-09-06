@@ -1,0 +1,4227 @@
+{
+  "corpora": [
+    {
+      "blocks": 170,
+      "files": 20,
+      "histogram": {
+        "04": 6,
+        "05": 1,
+        "06": 1,
+        "07": 61,
+        "08": 17,
+        "09": 9,
+        "10": 3,
+        "11": 16,
+        "12": 1,
+        "13": 4,
+        "14": 7,
+        "15": 10,
+        "16": 10,
+        "17": 8,
+        "18": 4,
+        "19": 2,
+        "20": 1,
+        "21": 1,
+        "22": 3,
+        "24": 1,
+        "25": 1,
+        "26": 1,
+        "31": 2
+      },
+      "name": "fixtures",
+      "suppressed": 8,
+      "suppressed_blocks": [
+        {
+          "a": "python/src__requests__status_codes.py:30",
+          "b": "python/src__requests__status_codes.py:93",
+          "distinct": 5,
+          "tokens": 53
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__bg.ts:20",
+          "b": "typescript/packages__zod__src__v4__locales__bg.ts:33",
+          "distinct": 4,
+          "tokens": 52
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__bg.ts:20",
+          "b": "typescript/packages__zod__src__v4__locales__bg.ts:34",
+          "distinct": 4,
+          "tokens": 56
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__ota.ts:20",
+          "b": "typescript/packages__zod__src__v4__locales__ota.ts:33",
+          "distinct": 4,
+          "tokens": 52
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__ota.ts:20",
+          "b": "typescript/packages__zod__src__v4__locales__ota.ts:34",
+          "distinct": 4,
+          "tokens": 56
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__ru.ts:35",
+          "b": "typescript/packages__zod__src__v4__locales__ru.ts:51",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__ru.ts:76",
+          "b": "typescript/packages__zod__src__v4__locales__ru.ts:89",
+          "distinct": 4,
+          "tokens": 52
+        },
+        {
+          "a": "typescript/packages__zod__src__v4__locales__ru.ts:76",
+          "b": "typescript/packages__zod__src__v4__locales__ru.ts:90",
+          "distinct": 4,
+          "tokens": 56
+        }
+      ],
+      "tip": "tracked (SOURCES.md)"
+    },
+    {
+      "blocks": 1903,
+      "files": 36,
+      "histogram": {
+        "05": 6,
+        "06": 7,
+        "07": 4,
+        "08": 7,
+        "09": 6,
+        "10": 7,
+        "11": 57,
+        "12": 92,
+        "13": 100,
+        "14": 1066,
+        "15": 286,
+        "16": 108,
+        "17": 53,
+        "18": 33,
+        "19": 44,
+        "20": 12,
+        "21": 5,
+        "22": 2,
+        "23": 1,
+        "24": 4,
+        "25": 2,
+        "26": 1
+      },
+      "name": "cobra",
+      "suppressed": 13,
+      "suppressed_blocks": [
+        {
+          "a": "bash_completions_test.go:95",
+          "b": "bash_completions_test.go:126",
+          "distinct": 6,
+          "tokens": 53
+        },
+        {
+          "a": "bash_completions_test.go:100",
+          "b": "command_test.go:855",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "bash_completions_test.go:100",
+          "b": "command_test.go:873",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "bash_completions_test.go:100",
+          "b": "command_test.go:880",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "bash_completions_test.go:168",
+          "b": "bash_completions_test.go:181",
+          "distinct": 5,
+          "tokens": 63
+        },
+        {
+          "a": "bash_completions_test.go:168",
+          "b": "bash_completions_test.go:203",
+          "distinct": 5,
+          "tokens": 64
+        },
+        {
+          "a": "bash_completions_test.go:168",
+          "b": "bash_completions_test.go:206",
+          "distinct": 5,
+          "tokens": 64
+        },
+        {
+          "a": "bash_completions_test.go:168",
+          "b": "bash_completions_test.go:207",
+          "distinct": 5,
+          "tokens": 63
+        },
+        {
+          "a": "bash_completions_test.go:181",
+          "b": "bash_completions_test.go:203",
+          "distinct": 5,
+          "tokens": 63
+        },
+        {
+          "a": "bash_completions_test.go:181",
+          "b": "bash_completions_test.go:206",
+          "distinct": 5,
+          "tokens": 65
+        },
+        {
+          "a": "bash_completions_test.go:181",
+          "b": "bash_completions_test.go:207",
+          "distinct": 6,
+          "tokens": 69
+        },
+        {
+          "a": "completions_test.go:3748",
+          "b": "completions_test.go:3768",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "completions_test.go:3748",
+          "b": "completions_test.go:3778",
+          "distinct": 6,
+          "tokens": 70
+        }
+      ],
+      "tip": "adbc881"
+    },
+    {
+      "blocks": 75,
+      "files": 37,
+      "histogram": {
+        "05": 12,
+        "07": 4,
+        "08": 1,
+        "09": 1,
+        "10": 5,
+        "11": 13,
+        "12": 3,
+        "13": 11,
+        "14": 6,
+        "15": 8,
+        "16": 8,
+        "17": 1,
+        "18": 1,
+        "21": 1
+      },
+      "name": "requests",
+      "suppressed": 12,
+      "suppressed_blocks": [
+        {
+          "a": "docs/_themes/flask_theme_support.py:15",
+          "b": "docs/_themes/flask_theme_support.py:55",
+          "distinct": 5,
+          "tokens": 59
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:18",
+          "b": "docs/_themes/flask_theme_support.py:72",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:21",
+          "b": "docs/_themes/flask_theme_support.py:67",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:40",
+          "b": "docs/_themes/flask_theme_support.py:62",
+          "distinct": 5,
+          "tokens": 71
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:40",
+          "b": "docs/_themes/flask_theme_support.py:75",
+          "distinct": 5,
+          "tokens": 64
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:41",
+          "b": "docs/_themes/flask_theme_support.py:62",
+          "distinct": 5,
+          "tokens": 71
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:41",
+          "b": "docs/_themes/flask_theme_support.py:75",
+          "distinct": 5,
+          "tokens": 64
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:42",
+          "b": "docs/_themes/flask_theme_support.py:75",
+          "distinct": 5,
+          "tokens": 64
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:43",
+          "b": "docs/_themes/flask_theme_support.py:75",
+          "distinct": 5,
+          "tokens": 61
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:59",
+          "b": "docs/_themes/flask_theme_support.py:72",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "docs/_themes/flask_theme_support.py:63",
+          "b": "docs/_themes/flask_theme_support.py:75",
+          "distinct": 5,
+          "tokens": 64
+        },
+        {
+          "a": "src/requests/status_codes.py:30",
+          "b": "src/requests/status_codes.py:93",
+          "distinct": 5,
+          "tokens": 53
+        }
+      ],
+      "tip": "8068356"
+    },
+    {
+      "blocks": 10937,
+      "files": 110,
+      "histogram": {
+        "04": 7,
+        "06": 10,
+        "07": 594,
+        "08": 161,
+        "09": 305,
+        "10": 504,
+        "11": 151,
+        "12": 721,
+        "13": 1704,
+        "14": 261,
+        "15": 1283,
+        "16": 289,
+        "17": 503,
+        "18": 519,
+        "19": 837,
+        "20": 869,
+        "21": 535,
+        "22": 216,
+        "23": 392,
+        "24": 227,
+        "25": 203,
+        "26": 75,
+        "27": 73,
+        "28": 199,
+        "29": 102,
+        "30": 25,
+        "31": 156,
+        "32": 7,
+        "33": 3,
+        "34": 5,
+        "35": 1
+      },
+      "name": "ripgrep",
+      "suppressed": 17,
+      "suppressed_blocks": [
+        {
+          "a": "crates/core/flags/hiargs.rs:271",
+          "b": "crates/core/flags/hiargs.rs:299",
+          "distinct": 4,
+          "tokens": 59
+        },
+        {
+          "a": "crates/core/flags/hiargs.rs:272",
+          "b": "crates/core/flags/hiargs.rs:301",
+          "distinct": 4,
+          "tokens": 57
+        },
+        {
+          "a": "crates/core/flags/hiargs.rs:272",
+          "b": "crates/core/flags/hiargs.rs:302",
+          "distinct": 4,
+          "tokens": 57
+        },
+        {
+          "a": "crates/core/flags/hiargs.rs:272",
+          "b": "crates/core/flags/hiargs.rs:303",
+          "distinct": 4,
+          "tokens": 57
+        },
+        {
+          "a": "crates/core/flags/hiargs.rs:272",
+          "b": "crates/core/flags/hiargs.rs:304",
+          "distinct": 4,
+          "tokens": 65
+        },
+        {
+          "a": "crates/core/flags/hiargs.rs:275",
+          "b": "crates/core/flags/hiargs.rs:287",
+          "distinct": 4,
+          "tokens": 53
+        },
+        {
+          "a": "crates/core/flags/hiargs.rs:309",
+          "b": "crates/core/flags/hiargs.rs:320",
+          "distinct": 4,
+          "tokens": 50
+        },
+        {
+          "a": "tests/index/disallowed.rs:23",
+          "b": "tests/index/disallowed.rs:94",
+          "distinct": 6,
+          "tokens": 53
+        },
+        {
+          "a": "tests/index/disallowed.rs:23",
+          "b": "tests/index/disallowed.rs:95",
+          "distinct": 6,
+          "tokens": 53
+        },
+        {
+          "a": "tests/index/disallowed.rs:23",
+          "b": "tests/index/disallowed.rs:100",
+          "distinct": 6,
+          "tokens": 53
+        },
+        {
+          "a": "tests/index/disallowed.rs:23",
+          "b": "tests/index/disallowed.rs:105",
+          "distinct": 6,
+          "tokens": 53
+        },
+        {
+          "a": "tests/index/disallowed.rs:92",
+          "b": "tests/index/disallowed.rs:95",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "tests/index/disallowed.rs:92",
+          "b": "tests/index/disallowed.rs:100",
+          "distinct": 6,
+          "tokens": 75
+        },
+        {
+          "a": "tests/index/disallowed.rs:92",
+          "b": "tests/index/disallowed.rs:105",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "tests/index/disallowed.rs:94",
+          "b": "tests/index/disallowed.rs:154",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "tests/index/disallowed.rs:95",
+          "b": "tests/index/disallowed.rs:154",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "tests/index/disallowed.rs:100",
+          "b": "tests/index/disallowed.rs:154",
+          "distinct": 6,
+          "tokens": 77
+        }
+      ],
+      "tip": "3fce3b5"
+    },
+    {
+      "blocks": 17022,
+      "files": 404,
+      "histogram": {
+        "02": 37,
+        "03": 69,
+        "04": 7,
+        "05": 46,
+        "06": 464,
+        "07": 578,
+        "08": 635,
+        "09": 202,
+        "10": 337,
+        "11": 1040,
+        "12": 1316,
+        "13": 537,
+        "14": 489,
+        "15": 1407,
+        "16": 1800,
+        "17": 1558,
+        "18": 1000,
+        "19": 671,
+        "20": 594,
+        "21": 789,
+        "22": 532,
+        "23": 937,
+        "24": 251,
+        "25": 627,
+        "26": 169,
+        "27": 18,
+        "28": 14,
+        "29": 13,
+        "30": 42,
+        "31": 644,
+        "32": 10,
+        "33": 1,
+        "37": 17,
+        "38": 28,
+        "39": 134,
+        "41": 8,
+        "44": 1
+      },
+      "name": "zod",
+      "suppressed": 623,
+      "suppressed_blocks": [
+        {
+          "a": "packages/bench/init.ts:28",
+          "b": "packages/bench/jit-union.ts:8",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:28",
+          "b": "packages/bench/jit-union.ts:9",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:28",
+          "b": "packages/bench/jit-union.ts:10",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:49",
+          "b": "packages/bench/jit-union.ts:8",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:49",
+          "b": "packages/bench/jit-union.ts:9",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:49",
+          "b": "packages/bench/jit-union.ts:10",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:70",
+          "b": "packages/bench/jit-union.ts:8",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:70",
+          "b": "packages/bench/jit-union.ts:9",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/init.ts:70",
+          "b": "packages/bench/jit-union.ts:10",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/ipv4-regex.ts:5",
+          "b": "packages/zod/src/v3/benchmarks/ipv4.ts:5",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/jit-union.ts:8",
+          "b": "packages/bench/object-moltar-jitless.ts:15",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:8",
+          "b": "packages/bench/object-moltar-jitless.ts:29",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:8",
+          "b": "packages/bench/object-moltar-jitless.ts:43",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:8",
+          "b": "packages/bench/object-moltar.ts:7",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:8",
+          "b": "packages/bench/object-moltar.ts:21",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:8",
+          "b": "packages/bench/object-moltar.ts:35",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:9",
+          "b": "packages/bench/object-moltar-jitless.ts:15",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:9",
+          "b": "packages/bench/object-moltar-jitless.ts:29",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:9",
+          "b": "packages/bench/object-moltar-jitless.ts:43",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:9",
+          "b": "packages/bench/object-moltar.ts:7",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:9",
+          "b": "packages/bench/object-moltar.ts:21",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:9",
+          "b": "packages/bench/object-moltar.ts:35",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:10",
+          "b": "packages/bench/object-moltar-jitless.ts:15",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:10",
+          "b": "packages/bench/object-moltar-jitless.ts:29",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:10",
+          "b": "packages/bench/object-moltar-jitless.ts:43",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:10",
+          "b": "packages/bench/object-moltar.ts:7",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:10",
+          "b": "packages/bench/object-moltar.ts:21",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/jit-union.ts:10",
+          "b": "packages/bench/object-moltar.ts:35",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:73",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:74",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:87",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:88",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:113",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:114",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:115",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:77",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:78",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:91",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:92",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:117",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:118",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:118",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:119",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:73",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:74",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:87",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:88",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:113",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:114",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:115",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:77",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:78",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:91",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:92",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:117",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:118",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/bench/metabench.ts:187",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:119",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:19",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:25",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:31",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:78",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:85",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:124",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:130",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:169",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:175",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:181",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:187",
+          "distinct": 6,
+          "tokens": 75
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:244",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:250",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:256",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:295",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/ecosystem.tsx:301",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:57",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:63",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/bronze.tsx:3",
+          "b": "packages/docs/components/silver.tsx:69",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/ecosystem.tsx:31",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/ecosystem.tsx:37",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:13",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:19",
+          "b": "packages/docs/components/ecosystem.tsx:216",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:25",
+          "b": "packages/docs/components/ecosystem.tsx:216",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:31",
+          "b": "packages/docs/components/ecosystem.tsx:216",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:37",
+          "b": "packages/docs/components/ecosystem.tsx:216",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/ecosystem.tsx:91",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/ecosystem.tsx:97",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/ecosystem.tsx:169",
+          "distinct": 6,
+          "tokens": 132
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:72",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/ecosystem.tsx:136",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/ecosystem.tsx:142",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/ecosystem.tsx:169",
+          "distinct": 6,
+          "tokens": 132
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:118",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:124",
+          "b": "packages/docs/components/ecosystem.tsx:163",
+          "distinct": 6,
+          "tokens": 114
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/ecosystem.tsx:181",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/ecosystem.tsx:187",
+          "distinct": 6,
+          "tokens": 75
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:163",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 151
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:169",
+          "b": "packages/docs/components/ecosystem.tsx:289",
+          "distinct": 6,
+          "tokens": 132
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/ecosystem.tsx:244",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/ecosystem.tsx:250",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/ecosystem.tsx:256",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/ecosystem.tsx:262",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/ecosystem.tsx:307",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:57",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:63",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:69",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:216",
+          "b": "packages/docs/components/silver.tsx:75",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/ecosystem.tsx:256",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/ecosystem.tsx:262",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/ecosystem.tsx:295",
+          "distinct": 6,
+          "tokens": 114
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:238",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/ecosystem.tsx:307",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/ecosystem.tsx:313",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:9",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:15",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/ecosystem.tsx:289",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/silver.tsx:3",
+          "b": "packages/docs/components/silver.tsx:21",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/docs/components/silver.tsx:3",
+          "b": "packages/docs/components/silver.tsx:27",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/docs/components/silver.tsx:3",
+          "b": "packages/docs/components/silver.tsx:33",
+          "distinct": 6,
+          "tokens": 95
+        },
+        {
+          "a": "packages/docs/components/silver.tsx:3",
+          "b": "packages/docs/components/silver.tsx:39",
+          "distinct": 6,
+          "tokens": 114
+        },
+        {
+          "a": "packages/docs/components/silver.tsx:3",
+          "b": "packages/docs/components/silver.tsx:45",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/docs/components/silver.tsx:3",
+          "b": "packages/docs/components/silver.tsx:51",
+          "distinct": 6,
+          "tokens": 152
+        },
+        {
+          "a": "packages/resolution/src/index.cts:9",
+          "b": "packages/resolution/src/index.cts:14",
+          "distinct": 6,
+          "tokens": 64
+        },
+        {
+          "a": "packages/resolution/src/index.cts:9",
+          "b": "packages/resolution/src/index.cts:15",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/resolution/src/index.mts:9",
+          "b": "packages/resolution/src/index.mts:14",
+          "distinct": 6,
+          "tokens": 64
+        },
+        {
+          "a": "packages/resolution/src/index.mts:9",
+          "b": "packages/resolution/src/index.mts:15",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/resolution/src/index.ts:9",
+          "b": "packages/resolution/src/index.ts:14",
+          "distinct": 6,
+          "tokens": 64
+        },
+        {
+          "a": "packages/resolution/src/index.ts:9",
+          "b": "packages/resolution/src/index.ts:15",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/zod/src/v3/tests/bigint.test.ts:50",
+          "b": "packages/zod/src/v3/tests/bigint.test.ts:53",
+          "distinct": 6,
+          "tokens": 62
+        },
+        {
+          "a": "packages/zod/src/v3/tests/coerce.test.ts:91",
+          "b": "packages/zod/src/v3/tests/number.test.ts:87",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v3/tests/coerce.test.ts:121",
+          "b": "packages/zod/src/v3/tests/number.test.ts:87",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/zod/src/v3/tests/complex.test.ts:57",
+          "b": "packages/zod/src/v3/tests/complex.test.ts:63",
+          "distinct": 5,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v3/tests/complex.test.ts:57",
+          "b": "packages/zod/src/v3/tests/complex.test.ts:64",
+          "distinct": 5,
+          "tokens": 55
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:24",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:26",
+          "distinct": 6,
+          "tokens": 63
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:28",
+          "distinct": 6,
+          "tokens": 72
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:30",
+          "distinct": 6,
+          "tokens": 81
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:32",
+          "distinct": 6,
+          "tokens": 90
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:34",
+          "distinct": 6,
+          "tokens": 99
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:36",
+          "distinct": 6,
+          "tokens": 108
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:38",
+          "distinct": 6,
+          "tokens": 117
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:40",
+          "distinct": 6,
+          "tokens": 126
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:42",
+          "distinct": 6,
+          "tokens": 135
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:44",
+          "distinct": 6,
+          "tokens": 144
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:46",
+          "distinct": 6,
+          "tokens": 153
+        },
+        {
+          "a": "packages/zod/src/v3/tests/firstparty.test.ts:12",
+          "b": "packages/zod/src/v3/tests/firstparty.test.ts:48",
+          "distinct": 6,
+          "tokens": 162
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:32",
+          "b": "packages/zod/src/v3/tests/number.test.ts:40",
+          "distinct": 6,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:87",
+          "b": "packages/zod/src/v4/classic/tests/coerce.test.ts:90",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:87",
+          "b": "packages/zod/src/v4/classic/tests/coerce.test.ts:120",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:103",
+          "b": "packages/zod/src/v3/tests/number.test.ts:120",
+          "distinct": 6,
+          "tokens": 176
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:140",
+          "b": "packages/zod/src/v3/tests/number.test.ts:145",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:140",
+          "b": "packages/zod/src/v3/tests/number.test.ts:146",
+          "distinct": 6,
+          "tokens": 72
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:140",
+          "b": "packages/zod/src/v3/tests/number.test.ts:147",
+          "distinct": 6,
+          "tokens": 78
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:140",
+          "b": "packages/zod/src/v3/tests/number.test.ts:159",
+          "distinct": 6,
+          "tokens": 139
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:141",
+          "b": "packages/zod/src/v3/tests/number.test.ts:159",
+          "distinct": 6,
+          "tokens": 138
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:159",
+          "b": "packages/zod/src/v3/tests/number.test.ts:164",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v3/tests/number.test.ts:159",
+          "b": "packages/zod/src/v3/tests/number.test.ts:165",
+          "distinct": 6,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:173",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:189",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:204",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:224",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:87",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:103",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:118",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:135",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:138",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:173",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:204",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:173",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:206",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:173",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:224",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:173",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:226",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:189",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:204",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:189",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:206",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:189",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:224",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v3/tests/partials.test.ts:189",
+          "b": "packages/zod/src/v3/tests/partials.test.ts:226",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v3/tests/readonly.test.ts:13",
+          "b": "packages/zod/src/v3/tests/readonly.test.ts:18",
+          "distinct": 5,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v3/tests/readonly.test.ts:13",
+          "b": "packages/zod/src/v3/tests/readonly.test.ts:19",
+          "distinct": 5,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/tests/string.test.ts:42",
+          "b": "packages/zod/src/v3/tests/string.test.ts:71",
+          "distinct": 6,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/tests/string.test.ts:126",
+          "b": "packages/zod/src/v4/classic/from-json-schema.ts:34",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v3/tests/string.test.ts:557",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:253",
+          "distinct": 6,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v3/tests/string.test.ts:557",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:272",
+          "distinct": 6,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v3/tests/string.test.ts:559",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:252",
+          "distinct": 6,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/tests/string.test.ts:559",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:271",
+          "distinct": 6,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:4959",
+          "b": "packages/zod/src/v3/types.ts:4972",
+          "distinct": 4,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:4959",
+          "b": "packages/zod/src/v3/types.ts:4973",
+          "distinct": 4,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:4959",
+          "b": "packages/zod/src/v3/types.ts:4974",
+          "distinct": 4,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:4959",
+          "b": "packages/zod/src/v3/types.ts:4975",
+          "distinct": 4,
+          "tokens": 64
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:4959",
+          "b": "packages/zod/src/v3/types.ts:4976",
+          "distinct": 4,
+          "tokens": 68
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:4959",
+          "b": "packages/zod/src/v3/types.ts:4977",
+          "distinct": 4,
+          "tokens": 72
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5053",
+          "distinct": 5,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5054",
+          "distinct": 5,
+          "tokens": 63
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5055",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5056",
+          "distinct": 5,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5057",
+          "distinct": 5,
+          "tokens": 84
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5058",
+          "distinct": 5,
+          "tokens": 91
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5059",
+          "distinct": 5,
+          "tokens": 98
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5060",
+          "distinct": 5,
+          "tokens": 105
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5061",
+          "distinct": 5,
+          "tokens": 112
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5062",
+          "distinct": 5,
+          "tokens": 119
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5044",
+          "b": "packages/zod/src/v3/types.ts:5063",
+          "distinct": 5,
+          "tokens": 116
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5096",
+          "b": "packages/zod/src/v4/classic/checks.ts:1",
+          "distinct": 5,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5096",
+          "b": "packages/zod/src/v4/mini/checks.ts:1",
+          "distinct": 5,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:3",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:4",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:5",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:6",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:7",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:8",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/classic/checks.ts:9",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:3",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:4",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:5",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:6",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:7",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:8",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:9",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5097",
+          "b": "packages/zod/src/v4/mini/checks.ts:10",
+          "distinct": 3,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5098",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5099",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5100",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5101",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5102",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5103",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5104",
+          "b": "packages/zod/src/v3/types.ts:5121",
+          "distinct": 3,
+          "tokens": 55
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:2",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:3",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:4",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:5",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:6",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:7",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:8",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:9",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:10",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:11",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:12",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:13",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:14",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:15",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/classic/checks.ts:16",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:2",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:3",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:4",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:5",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:6",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:7",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:8",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:9",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:10",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:11",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:12",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:13",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:14",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:15",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:16",
+          "distinct": 3,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v3/types.ts:5121",
+          "b": "packages/zod/src/v4/mini/checks.ts:17",
+          "distinct": 4,
+          "tokens": 59
+        },
+        {
+          "a": "packages/zod/src/v4/classic/checks.ts:1",
+          "b": "packages/zod/src/v4/mini/checks.ts:1",
+          "distinct": 5,
+          "tokens": 118
+        },
+        {
+          "a": "packages/zod/src/v4/classic/checks.ts:2",
+          "b": "packages/zod/src/v4/classic/checks.ts:15",
+          "distinct": 3,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/checks.ts:2",
+          "b": "packages/zod/src/v4/classic/checks.ts:16",
+          "distinct": 3,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/classic/checks.ts:2",
+          "b": "packages/zod/src/v4/classic/checks.ts:17",
+          "distinct": 3,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/classic/checks.ts:2",
+          "b": "packages/zod/src/v4/mini/checks.ts:3",
+          "distinct": 3,
+          "tokens": 116
+        },
+        {
+          "a": "packages/zod/src/v4/classic/from-json-schema.ts:71",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:69",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/assignability.test.ts:7",
+          "b": "packages/zod/src/v4/classic/tests/assignability.test.ts:19",
+          "distinct": 6,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/assignability.test.ts:7",
+          "b": "packages/zod/src/v4/classic/tests/assignability.test.ts:23",
+          "distinct": 6,
+          "tokens": 71
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/assignability.test.ts:7",
+          "b": "packages/zod/src/v4/classic/tests/assignability.test.ts:39",
+          "distinct": 6,
+          "tokens": 114
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/assignability.test.ts:8",
+          "b": "packages/zod/src/v4/classic/tests/assignability.test.ts:36",
+          "distinct": 6,
+          "tokens": 123
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/assignability.test.ts:12",
+          "b": "packages/zod/src/v4/classic/tests/assignability.test.ts:36",
+          "distinct": 6,
+          "tokens": 123
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/assignability.test.ts:36",
+          "b": "packages/zod/src/v4/classic/tests/assignability.test.ts:48",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/bigint.test.ts:49",
+          "b": "packages/zod/src/v4/classic/tests/bigint.test.ts:52",
+          "distinct": 6,
+          "tokens": 62
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/catch.test.ts:39",
+          "b": "packages/zod/src/v4/classic/tests/catch.test.ts:54",
+          "distinct": 6,
+          "tokens": 54
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/firstparty.test.ts:67",
+          "b": "packages/zod/src/v4/classic/tests/firstparty.test.ts:95",
+          "distinct": 5,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:128",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:133",
+          "distinct": 6,
+          "tokens": 65
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:128",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:134",
+          "distinct": 6,
+          "tokens": 68
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:159",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:363",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:159",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:381",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:159",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:406",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:244",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:248",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:252",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:836",
+          "distinct": 6,
+          "tokens": 59
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:253",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:834",
+          "distinct": 6,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:253",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:839",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:803",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:804",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:805",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:806",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:807",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:808",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:809",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:810",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:811",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:812",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:813",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:814",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:815",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:816",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:819",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:820",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:822",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:823",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:824",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:825",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:254",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:826",
+          "distinct": 6,
+          "tokens": 59
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:263",
+          "b": "packages/zod/src/v4/classic/tests/number.test.ts:267",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:271",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:836",
+          "distinct": 6,
+          "tokens": 59
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:272",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:834",
+          "distinct": 6,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:272",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:839",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:803",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:804",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:805",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:806",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:807",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:808",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:809",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:810",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:811",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:812",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:813",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:814",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:815",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:816",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:819",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:820",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:822",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:823",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:824",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:825",
+          "distinct": 6,
+          "tokens": 67
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/number.test.ts:273",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:826",
+          "distinct": 6,
+          "tokens": 59
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:43",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:47",
+          "distinct": 5,
+          "tokens": 72
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:43",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:49",
+          "distinct": 5,
+          "tokens": 81
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:87",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:118",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:87",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:120",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:87",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:138",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:87",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:140",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:103",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:118",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:103",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:120",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:103",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:138",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/partial.test.ts:103",
+          "b": "packages/zod/src/v4/classic/tests/partial.test.ts:140",
+          "distinct": 5,
+          "tokens": 51
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:68",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:97",
+          "distinct": 6,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:363",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:851",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:381",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:851",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:406",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:851",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:805",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:806",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:807",
+          "distinct": 6,
+          "tokens": 100
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:808",
+          "distinct": 6,
+          "tokens": 120
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:809",
+          "distinct": 6,
+          "tokens": 140
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:810",
+          "distinct": 6,
+          "tokens": 160
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:811",
+          "distinct": 6,
+          "tokens": 180
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:812",
+          "distinct": 6,
+          "tokens": 200
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:813",
+          "distinct": 6,
+          "tokens": 220
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:814",
+          "distinct": 6,
+          "tokens": 240
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:802",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:815",
+          "distinct": 6,
+          "tokens": 229
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:834",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:838",
+          "distinct": 6,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:877",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:880",
+          "distinct": 6,
+          "tokens": 69
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:877",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:881",
+          "distinct": 6,
+          "tokens": 92
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/string.test.ts:877",
+          "b": "packages/zod/src/v4/classic/tests/string.test.ts:882",
+          "distinct": 6,
+          "tokens": 79
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:530",
+          "distinct": 6,
+          "tokens": 64
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:531",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:532",
+          "distinct": 6,
+          "tokens": 96
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:533",
+          "distinct": 6,
+          "tokens": 112
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:534",
+          "distinct": 6,
+          "tokens": 128
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:535",
+          "distinct": 6,
+          "tokens": 144
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:536",
+          "distinct": 6,
+          "tokens": 160
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:537",
+          "distinct": 6,
+          "tokens": 176
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:538",
+          "distinct": 6,
+          "tokens": 192
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:539",
+          "distinct": 6,
+          "tokens": 208
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:540",
+          "distinct": 6,
+          "tokens": 224
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:541",
+          "distinct": 6,
+          "tokens": 240
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:542",
+          "distinct": 6,
+          "tokens": 256
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:548",
+          "distinct": 6,
+          "tokens": 272
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:549",
+          "distinct": 6,
+          "tokens": 288
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:550",
+          "distinct": 6,
+          "tokens": 304
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:551",
+          "distinct": 6,
+          "tokens": 320
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:552",
+          "distinct": 6,
+          "tokens": 336
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:553",
+          "distinct": 6,
+          "tokens": 352
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:554",
+          "distinct": 6,
+          "tokens": 368
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/classic/tests/template-literal.test.ts:555",
+          "distinct": 6,
+          "tokens": 384
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:526",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:527",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:528",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:529",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:530",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:531",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:532",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:533",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:534",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:535",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:536",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:537",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:538",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:539",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:540",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:541",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:542",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:548",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:549",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:550",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:551",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:552",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:553",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:554",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:555",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:556",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:557",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:558",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:559",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:560",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:563",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:566",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:572",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:575",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:578",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:579",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:582",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:583",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:584",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:585",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:586",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:587",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:588",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/template-literal.test.ts:589",
+          "b": "packages/zod/src/v4/mini/tests/computed.test.ts:32",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:63",
+          "distinct": 6,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:179",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:187",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:195",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:202",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:211",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:220",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:228",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:236",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:244",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:253",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:259",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:267",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:34",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "distinct": 6,
+          "tokens": 75
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:179",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:187",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:195",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:202",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:211",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:220",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:228",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:236",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:244",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:253",
+          "distinct": 6,
+          "tokens": 93
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:259",
+          "distinct": 6,
+          "tokens": 84
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 75
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:58",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:63",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "distinct": 6,
+          "tokens": 79
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:63",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 79
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:63",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 75
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:79",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:345",
+          "distinct": 6,
+          "tokens": 87
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:79",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:353",
+          "distinct": 6,
+          "tokens": 85
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:179",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:187",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:195",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:202",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:211",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:220",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:228",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:236",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:244",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:253",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:259",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:131",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:267",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:195",
+          "distinct": 6,
+          "tokens": 57
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:202",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:211",
+          "distinct": 6,
+          "tokens": 95
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:220",
+          "distinct": 6,
+          "tokens": 114
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:228",
+          "distinct": 6,
+          "tokens": 133
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:171",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:236",
+          "distinct": 6,
+          "tokens": 142
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:179",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:179",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:187",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:187",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:195",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:195",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:202",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:202",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:211",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:211",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:220",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:220",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:228",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:228",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:236",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:236",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:244",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:244",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:253",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:253",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:259",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 80
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:259",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 77
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:267",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:267",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 66
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:337",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:613",
+          "distinct": 6,
+          "tokens": 55
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:337",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:620",
+          "distinct": 6,
+          "tokens": 55
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:377",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:425",
+          "distinct": 6,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:546",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:565",
+          "distinct": 6,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:546",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:573",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:546",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:581",
+          "distinct": 6,
+          "tokens": 120
+        },
+        {
+          "a": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:581",
+          "b": "packages/zod/src/v4/classic/tests/to-json-schema.test.ts:597",
+          "distinct": 6,
+          "tokens": 58
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:52",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:53",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:54",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:55",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:56",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:57",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:58",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:59",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:60",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:61",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/schemas.ts:62",
+          "distinct": 3,
+          "tokens": 61
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:31",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:32",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:33",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:34",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:35",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:36",
+          "distinct": 2,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/checks.ts:752",
+          "b": "packages/zod/src/v4/core/util.ts:37",
+          "distinct": 2,
+          "tokens": 59
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:583",
+          "distinct": 3,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:584",
+          "distinct": 3,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:585",
+          "distinct": 3,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:586",
+          "distinct": 3,
+          "tokens": 64
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:587",
+          "distinct": 3,
+          "tokens": 68
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:588",
+          "distinct": 3,
+          "tokens": 72
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:589",
+          "distinct": 3,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/core/json-schema-processors.ts:570",
+          "b": "packages/zod/src/v4/core/json-schema-processors.ts:590",
+          "distinct": 3,
+          "tokens": 76
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:52",
+          "b": "packages/zod/src/v4/core/util.ts:30",
+          "distinct": 2,
+          "tokens": 73
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:53",
+          "b": "packages/zod/src/v4/core/util.ts:30",
+          "distinct": 2,
+          "tokens": 73
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:54",
+          "b": "packages/zod/src/v4/core/util.ts:30",
+          "distinct": 2,
+          "tokens": 73
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:55",
+          "b": "packages/zod/src/v4/core/util.ts:30",
+          "distinct": 2,
+          "tokens": 73
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4662",
+          "b": "packages/zod/src/v4/core/schemas.ts:4703",
+          "distinct": 5,
+          "tokens": 54
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4664",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4665",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4666",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4667",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4668",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4669",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4670",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4671",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4672",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4673",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4674",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4675",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4676",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/schemas.ts:4677",
+          "b": "packages/zod/src/v4/core/schemas.ts:4704",
+          "distinct": 2,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/be.test.ts:73",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:100",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/be.test.ts:100",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:113",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/be.test.ts:100",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:114",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/be.test.ts:101",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:112",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/be.test.ts:112",
+          "b": "packages/zod/src/v4/core/tests/locales/be.test.ts:117",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/ru.test.ts:77",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:104",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/ru.test.ts:104",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:117",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/ru.test.ts:104",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:118",
+          "distinct": 6,
+          "tokens": 70
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/ru.test.ts:105",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:116",
+          "distinct": 6,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/core/tests/locales/ru.test.ts:116",
+          "b": "packages/zod/src/v4/core/tests/locales/ru.test.ts:121",
+          "distinct": 6,
+          "tokens": 50
+        },
+        {
+          "a": "packages/zod/src/v4/locales/be.ts:35",
+          "b": "packages/zod/src/v4/locales/be.ts:51",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/locales/lt.ts:30",
+          "b": "packages/zod/src/v4/locales/lt.ts:47",
+          "distinct": 6,
+          "tokens": 53
+        },
+        {
+          "a": "packages/zod/src/v4/locales/lt.ts:30",
+          "b": "packages/zod/src/v4/locales/lt.ts:64",
+          "distinct": 6,
+          "tokens": 106
+        },
+        {
+          "a": "packages/zod/src/v4/locales/ru.ts:35",
+          "b": "packages/zod/src/v4/locales/ru.ts:51",
+          "distinct": 6,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/mini/checks.ts:2",
+          "b": "packages/zod/src/v4/mini/checks.ts:15",
+          "distinct": 3,
+          "tokens": 52
+        },
+        {
+          "a": "packages/zod/src/v4/mini/checks.ts:2",
+          "b": "packages/zod/src/v4/mini/checks.ts:16",
+          "distinct": 3,
+          "tokens": 56
+        },
+        {
+          "a": "packages/zod/src/v4/mini/checks.ts:2",
+          "b": "packages/zod/src/v4/mini/checks.ts:17",
+          "distinct": 3,
+          "tokens": 60
+        },
+        {
+          "a": "packages/zod/src/v4/mini/tests/assignability.test.ts:7",
+          "b": "packages/zod/src/v4/mini/tests/assignability.test.ts:28",
+          "distinct": 6,
+          "tokens": 72
+        },
+        {
+          "a": "packages/zod/src/v4/mini/tests/assignability.test.ts:10",
+          "b": "packages/zod/src/v4/mini/tests/assignability.test.ts:28",
+          "distinct": 6,
+          "tokens": 77
+        }
+      ],
+      "tip": "912f0f5"
+    }
+  ],
+  "floor": 7,
+  "min_tokens": 50,
+  "schema": "ce.eval-dedup-distinct/1.0.0"
+}

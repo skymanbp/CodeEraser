@@ -22,6 +22,8 @@ pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, RulesCfg};
 
 mod tombstone; // the class's own table (plan v2.27), judged at load like the rulepack's
 pub use tombstone::{TOMBSTONE_DEFAULT, TombstoneCfg};
+mod ui; // the console-language selector (plan v2.29 step 9, O61) — never a knob
+pub use ui::UiCfg;
 
 // The knob fingerprint's canonical form (O39): the effective knob
 // set, computed generically over the serialized config.
@@ -175,6 +177,10 @@ pub struct Config {
     pub rules: RulesCfg,
     /// The tombstone class's own table (plan v2.27, `[tombstone]`).
     pub tombstone: TombstoneCfg,
+    /// The project's console language (`[ui] lang`, plan v2.29 step 9,
+    /// O61) — the third selector after `--lang` and CE_LANG; outside
+    /// the knob fingerprint, because a language is not a judgment knob.
+    pub ui: UiCfg,
 }
 
 /// Seconds from an env TEST SEAM, else the shipped default — the one
@@ -249,10 +255,17 @@ impl Config {
             .or_else(|| cfg.rules.fault(&cfg.thresholds))
             .or_else(|| cfg.graph.fault())
             .or_else(|| cfg.tombstone.fault())
+            .or_else(|| cfg.ui.fault())
             .or_else(|| cfg.globs_fault(path.parent().unwrap_or(root)))
         {
             Some(fault) => Err(fault),
-            None => Ok(cfg),
+            None => {
+                // the one throat every face passes: a validated `[ui]
+                // lang` pins the console language unless `--lang` or
+                // CE_LANG already did (i18n.rs, the selector order)
+                crate::i18n::init_from_config(cfg.ui.lang.as_deref());
+                Ok(cfg)
+            }
         }
     }
 

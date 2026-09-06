@@ -208,7 +208,9 @@ fn twin_candidates(
         };
         let covered = covered_units(units, tf, ts, te);
         if covered.is_empty() {
-            *out_of_class.entry("t1t2_block_no_whole_unit").or_insert(0) += 1;
+            *out_of_class
+                .entry(crate::erase::model::T1T2_NO_WHOLE_UNIT)
+                .or_insert(0) += 1;
             continue;
         }
         let eq = cache.slice(of, os as i64, oe as i64)? == cache.slice(tf, ts as i64, te as i64)?;

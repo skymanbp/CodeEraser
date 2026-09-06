@@ -13,12 +13,16 @@
 
 mod apply;
 pub mod gather;
+pub mod log;
 mod model;
 pub mod render;
 mod wire;
 
 use anyhow::{Result, bail};
-pub use model::{CLASS_NAMES, Candidate, Counts, Plan, REASON_NAMES, Row, SCHEMA_ID};
+pub use model::{
+    CLASS_NAMES, Candidate, Counts, LOG_SCHEMA, Plan, REASON_NAMES, Row, SCHEMA_ID,
+    T1T2_NO_WHOLE_UNIT, family_command,
+};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 

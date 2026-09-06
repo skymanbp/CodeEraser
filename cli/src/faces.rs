@@ -154,6 +154,17 @@ pub fn erase(root: &Path, core: &str) -> Result<Value> {
     )?))
 }
 
+/// The applied-erase audit trail (plan v2.29 step 9, O50): apply.rs
+/// is its one writer and this is its reader — every face renders the
+/// same document, and none can append to it. Read-only like every
+/// sibling; a line the reader cannot parse rides inside the document
+/// by line number rather than failing the face.
+pub fn erase_log(root: &Path) -> Result<Value> {
+    Ok(crate::erase::log::report_json(&crate::erase::log::read(
+        root,
+    )?))
+}
+
 /// The same-role advisor's document (plan v2.29 step 6): one ask —
 /// a unit at `file:line`, a unit by key, free text — and the
 /// associative view under `widen`. Advisory like the deadcode

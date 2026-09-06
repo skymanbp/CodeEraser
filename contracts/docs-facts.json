@@ -98,7 +98,7 @@
       "id": "count:mcp_tools#word",
       "source": "cli/src/mcp/tools.rs::TOOLS (tool! rows)",
       "tier": "scraped",
-      "value": "15"
+      "value": "16"
     },
     {
       "id": "count:platforms#word",
@@ -216,17 +216,22 @@
       "value": "ce.doctor-report/0.3.0"
     },
     {
-      "debt": "erase::apply::LOG_SCHEMA is private; promote = re-export beside SCHEMA_ID",
       "id": "report:erase-log#schemaver",
-      "source": "cli/src/erase/apply.rs",
-      "tier": "scraped",
+      "source": "cli/src/erase/model.rs (typed)",
+      "tier": "linked",
       "value": "ce.erase-log/0.1.0"
     },
     {
       "id": "report:erase-plan#schemaver",
       "source": "cli/src/erase/model.rs (typed)",
       "tier": "linked",
-      "value": "ce.erase-plan/0.2.0"
+      "value": "ce.erase-plan/0.3.0"
+    },
+    {
+      "id": "report:erase-trail#schemaver",
+      "source": "cli/src/erase/log.rs (typed)",
+      "tier": "linked",
+      "value": "ce.erase-trail-report/0.1.0"
     },
     {
       "id": "report:graph-canvas#schemaver",
@@ -414,5 +419,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 22
+  "scraped": 21
 }

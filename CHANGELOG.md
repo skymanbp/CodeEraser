@@ -440,6 +440,42 @@
   `npm/README.md` 19 / `docs/CHANGELOG-ARCHIVE-v1.4.md` 320 随重立入基线；`plugin/bin/ce.sh` 293→303（容差恰用尽）与 RELEASE.md 104→111 在容差内。`.github/` 是隐藏目录、
   在 walk 之外不入棘轮，其三文件的增长如实记：`bootstrap_e2e.sh` 335→378、`ci.yml` 440→489、`release.yml` 349→407、`dependabot.yml` 新 20。`docs/DEVELOPMENT_PLAN.md` 332→333（§5.10 布局树加 `npm/` 一行——`layout_tree` 门抓出）随重立。子仓 `it/health_plugin.rs` 163→166 在容差内、无重立。
 
+**无默认档位变更。** 计划 v2.29 步 9 批 B 后半（2026-09-05）——产品小项六条 O24 / O50 / O61 / O25 / O45 / O49，判决面零变化：`ce.erase-plan` 0.2.0 → **0.3.0 加性**、第十六个 MCP 工具、`[ui] lang` 第三选择器、FPR 回放仪器复立为常设腿：
+- O24 擦除建议行点名家族命令：`erase/model.rs::family_command` 是唯一一张表（`t1t2_block_no_whole_unit` → `ce dedup`），控制台句「见 `ce dedup`」、GUI 摘要芯片 `→ ce dedup` 与计划文档新键 `families`
+  （`ce.erase-plan/0.3.0`，加性）同源；表不认识的 kind 保留旧句「见对应家族命令」、不进 map、不编造命令（子仓 `unit/erase/render.rs` 一腿钉三面同表）。
+- O50 擦除审计轨迹有了读者（三面）：`erase/log.rs` 读 `.ce/erase-log.ndjson` 出一份文档 **`ce.erase-trail-report/0.1.0`**（行 `{ts_ms, class, path, span, provenance, plan}`；读不出的行按行号进 `unreadable`，
+  不作工具错误吞掉整份）——CLI `ce erase --log`（与 `--apply` / `--check` 互斥；有不可读行退 1）、MCP 第十六工具 `erase_log`（只读，永不 apply / append）、GUI 擦除屏「审计日志」段
+  （已打开的日志随 apply 重读；i18n 六键）；`faces::erase_log` 一具身体、`LOG_SCHEMA` 从 `apply.rs` 私有常量提到 `model.rs` 公开导出——facts 登记 `report:erase-log#schemaver` scraped → linked、
+  新 `report:erase-trail#schemaver`、SCRAPED 22 → 21；parity 行「擦除审计日志」、README 双语能力表与 MCP 计数 fifteen → sixteen（架构图双语同改）、erase.md 第 6 条（此前写「今日无 CLI 或 GUI 面渲染它」）、
+  gui.md Erase 行、plugin README、erase skill 各就地改；子仓 `it/erase_e2e.rs` apply 后读轨迹逐行对 applied 行、`unit/erase/log.rs` 两腿、`mcp_precommit` 目录 16 名。
+- O61 `[ui] lang`：ce.toml 新节（`config/ui.rs`；`en` / `zh` 之外按名拒载），第三选择器 `--lang` > `CE_LANG` > 文件，在控制台面加载配置处生效——`i18n::init_from_config` 只在 `progress::armed()`
+  （`ce` 的 main 武装过控制台面、与 TTY 无关）时写入，GUI / MCP / daemon / 测试进程内 `Config::load` 永不切语言；`main_cmds::or_cwd` 解析根目录后立即钉住项目语言，钩子经各自的 `Config::load` 走同一条路
+  （SessionStart 健康行按项目语言答）；`--help` 在项目已知前渲染，只读前两者；canonical 指纹规则 6：`[ui]` 整表丢弃（表现不是旋钮，`knobs_digest` 不动；子仓 `config_contract` 加两行）；
+  `docs/reference/ce-toml.md` / `cli.md` 再生（`ui.lang` 一行、cli 页横幅三选择器）、README 双语一句、`main_lang.rs` zh 帮助；子仓 `it/ui_lang.rs` 三腿（八行选择器矩阵 / `--help` 只读旗与变量 / SessionStart 中文健康行）、
+  `unit/config/ui.rs`；`common::run_ce_env` 清 `CE_LANG`（开发者 shell 导出过会让每条英文断言红）。
+- O25 GUI 断点实测钉数：新 `scripts/measure_header.js`（无头 Edge = 应用自带的 WebView2 引擎；二分求「一行装下十一 tab」的地板；`shoot_gui.js` 导出 `launch / attach / serve / teardown` 供其复用）
+  ——英文 1150 px / 中文 844 px（未挤压自然宽 1618 / 1496；批 9 提案的 1120 是字宽估算），钉 `@media (max-width: 1149px)`：tab 条独占一行、tab 内边距 s4 → s3 让十一 tab 在 860 px 最小窗装下
+  （实测 841 对 828）；三张截图重拍逐字节相同、收据 `contracts/gui-shots.json` 随 `ui` 摘要更新；子仓 `site_screenshots` 腿 1 的「拍摄时刻」见证改为图与收据两者提交的较新者（逐字节相同的重拍动不了图的提交）。
+- O45 `min_distinct` 校准可复现：子仓新 `it/eval_dedup_distinct.rs` 用 `dedup::analyze` 关下限（`min_distinct = 0`）重量五语料在 t = 50 处全部块的 `distinct` 直方图与出厂 7 抑制的块（两端 `文件:行`），
+  冻结 `contracts/eval/dedup-distinct-v1.json`（`ce.eval-dedup-distinct/1.0.0`），表渲染进 `DEDUP-CALIBRATION.md` 新节（`<!-- distinct:begin/end -->`；CI 腿实测 fixtures 并对表，四外部语料 `--ignored regenerate` 重量）；
+  fixtures 8 / cobra 13 / requests 12 抑制块与 2026-08-07 记录逐条相同（pygments 字典族 = `flask_theme_support.py` ×11），ripgrep 17 / zod 623 首次入册；册 01 §7 末段由「本节未复现」改为「产品复现」；
+  `eval_support::corpus::PINNED_CORPORA` 四 tip 单一所有者（`eval_mention` 同读）。
+- O49 FPR 回放仪器复立为常设腿：子仓新 `it/fpr_replay.rs` + `fpr_replay_parts/`（`--ignored`，release 约 7 min；`CE_FPR_REPO` / `CE_FPR_TIP` / `CE_FPR_LIMIT`）——每条拦截对**父版基线**读一次
+  （与孪生共享的 token 和：父版 0 = 新、更大 = 延展、否则 = 漂移；novelty 减法同守卫 `carried` 的重叠规则），对**提交整体落地后的子状态**再读一次（落地 / 写先于削的中间态），孪生同提交去向随行；
+  Markdown 判决但无语法、归 docdup 不入事件（daemon 探针同读法）。全史复跑：requests 窗口（1f6589ec 止，M5-3 钉定克隆内）365 事件 0 拦截；自仓 555 提交 3164 事件 176 拦截事件 / 257 行 =
+  落地 178（账本真阳类）+ 中间态 79（全部孪生同提交被动：改名 30 / 拆并叶 49；b4a0b642 一个提交 26 行；12.48/500 全文写口径、按事件 9.80）；复燃 35 = 延展 11（共享片段多 63～389 token）+
+  归零复引 24 + 漂移 0——K 轮「23 延展复燃按倾向判真阳」改为度量；FPR-REPLAY.md 新节 + 横幅 + 复现（历史配方保留）、EVAL-SET.md 退役行、册 11 立场段、bench.json `guard_fpr_per500` 冻结点
+  source 重瞄 :18-38 + :49-98 + :101-148（BENCH.md / 两 bench 页随 bless）。
+- dedup **55 / 119 恒**，本批落下的五个新克隆块全部消掉而不买单：主仓 `mcp/adapters.rs` 第三个同形壳 `erase_log` 让 `erase` / `doctor` 连成块——三者并入既有 `plain!` 家族（`plain_face` 一具身体，
+  原 `judged` 改名、六面一张 match）；子仓 SessionStart 健康行读取提升 `common::session_start_line`（health_plugin / ui_lang 同读）、`unit/erase/log.rs` 时间戳四连断言改数组一判、
+  文档字段断言串改 `counts` 整对象一判。
+- ADR-006 具名重立（两仓）：主仓 `ce check --format json` 的 `over` 十三项——`cli/src/i18n.rs` 85→136（第三选择器与 `init_from_config`）、`config.rs` 289→302、`progress.rs` 206→220、
+  `faces.rs` 190→201、`main_erase.rs` 58→82、`erase/model.rs` 98→124、`erase/render.rs` 159→181、`gui/ui/erase.js` 75→142、`gui/ui/i18n.js` 356→368、`gui/ui/style.css` 223→244、
+  `scripts/shoot_gui.js` 269→282、`docs/FPR-REPLAY.md` 158→221、CHANGELOG 447→483（本块）；`mcp/adapters.rs` 178→181 在容差内；新文件 `cli/src/config/ui.rs` 33 / `cli/src/erase/log.rs` 184 /
+  `scripts/measure_header.js` 114 随重立入基线（`contracts/eval/dedup-distinct-v1.json` 是 json、不在尺寸臂内）。子仓 `over` 四项——`unit/erase/render.rs` 34→70、`it/eval_support/corpus.rs` 97→129、
+  `it/common/hooks.rs` 172→193、`it/erase_e2e.rs` 269→290；新文件 `it/eval_dedup_distinct.rs` 238 / `it/fpr_replay.rs` 298 / `it/fpr_replay_parts/mod.rs` 120 / `it/ui_lang.rs` 86 /
+  `unit/config/ui.rs` 28 / `unit/erase/log.rs` 108 入基线。分数主 945（地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
+
 ## 更早的版本
 
 v1.4.1 及更早移入归档册：[v1.4.0–v1.4.1](docs/CHANGELOG-ARCHIVE-v1.4.md)（2026-09-05 迁出）、

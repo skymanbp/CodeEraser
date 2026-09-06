@@ -7,8 +7,8 @@
 //! resolver instead of growing a second one.
 
 use super::adapters::{
-    check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, graph_sites,
-    join, scan, similar_units, structure, trend, update_check,
+    check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, erase_log,
+    graph_sites, join, scan, similar_units, structure, trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -138,6 +138,14 @@ pub const TOOLS: &[Tool] = &[
         "The deterministic erase PLAN (ce.erase-plan schema) — dry-run by \
          construction: this surface reaches the plan and nothing else, and \
          applying it is a human act at the CLI or the GUI."
+    ),
+    tool!(
+        "erase_log",
+        erase_log,
+        "The applied-erase audit trail (ce.erase-trail-report schema): every record \
+         `ce erase --apply` or the GUI appended to .ce/erase-log.ndjson, with the \
+         lines the reader could not parse named by number. Read-only — nothing here \
+         can apply or append."
     ),
     tool!(
         "doctor",

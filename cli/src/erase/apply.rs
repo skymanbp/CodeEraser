@@ -9,12 +9,9 @@
 //! ever touched; the log is part of the contract, so unlike the
 //! observe feed its failures are errors, never swallowed telemetry.
 
-use crate::erase::model::{Plan, Row};
+use crate::erase::model::{LOG_SCHEMA, Plan, Row};
 use anyhow::{Context, Result, ensure};
 use std::path::Path;
-
-/// Bump-log: 0.1.0 = the M9 batch-3 landing shape.
-const LOG_SCHEMA: &str = "ce.erase-log/0.1.0";
 
 /// Preconditions + writes + audit log. Returns the applied count.
 pub(super) fn execute(root: &Path, plan: &Plan) -> Result<usize> {

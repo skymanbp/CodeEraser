@@ -4,17 +4,27 @@
 //! content hash on the way — a rendering that showed bytes the plan
 //! did not hash would be a second source of truth.
 
-use crate::erase::model::{Plan, Row};
+use crate::erase::model::{Plan, Row, family_command};
 use anyhow::{Result, ensure};
 use std::path::Path;
 
 const CONTEXT: usize = 3;
 
+/// The plan document. `families` (0.3.0) names the family command
+/// behind every out-of-class kind — the same table the console
+/// sentence reads, so a GUI chip and a console line never disagree.
 pub fn report_json(p: &Plan) -> serde_json::Value {
+    let families: serde_json::Map<String, serde_json::Value> = p
+        .counts
+        .out_of_class
+        .keys()
+        .filter_map(|k| family_command(k).map(|c| ((*k).to_string(), c.into())))
+        .collect();
     serde_json::json!({
         "schema": crate::erase::model::SCHEMA_ID,
         "rows": p.rows,
         "counts": p.counts,
+        "families": families,
     })
 }
 
@@ -44,14 +54,7 @@ pub fn print(root: &Path, p: &Plan, as_json: bool) -> Result<()> {
         );
     }
     for (k, n) in &p.counts.out_of_class {
-        println!(
-            "{}",
-            crate::i18n::line(
-                "advisory {}: {} finding(s) — no deterministic-safe erase; see the family command",
-                "仅建议 {}：{} 条——无确定性安全擦除；见对应家族命令",
-                &[k, n],
-            )
-        );
+        println!("{}", out_of_class_line(k, *n));
     }
     println!(
         "{}",
@@ -86,6 +89,25 @@ pub fn diff(root: &Path, p: &Plan) -> Result<String> {
         file_diff(&mut out, &text, &file_rows);
     }
     Ok(out)
+}
+
+/// The aggregate tail names the family command that owns the kind
+/// (O24): "see the family command" sent the reader somewhere without
+/// saying where. A kind the table does not know keeps the old
+/// sentence rather than inventing a command.
+fn out_of_class_line(kind: &str, n: usize) -> String {
+    match family_command(kind) {
+        Some(cmd) => crate::i18n::line(
+            "advisory {}: {} finding(s) — no deterministic-safe erase; see `{}`",
+            "仅建议 {}：{} 条——无确定性安全擦除；见 `{}`",
+            &[&kind, &n, &cmd],
+        ),
+        None => crate::i18n::line(
+            "advisory {}: {} finding(s) — no deterministic-safe erase; see the family command",
+            "仅建议 {}：{} 条——无确定性安全擦除；见对应家族命令",
+            &[&kind, &n],
+        ),
+    }
 }
 
 fn span_str(r: &Row) -> String {

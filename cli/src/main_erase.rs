@@ -20,10 +20,17 @@ pub struct EraseArgs {
     /// self-repo keeps itself clean)
     #[arg(long)]
     pub(crate) check: bool,
+    /// Read the audit trail of applied erases (.ce/erase-log.ndjson)
+    /// instead of planning; exit 1 when a line cannot be read
+    #[arg(long, conflicts_with_all = ["apply", "check"])]
+    pub(crate) log: bool,
 }
 
 pub fn erase_cmd(a: EraseArgs) -> ExitCode {
     let root = or_cwd(a.judge.root);
+    if a.log {
+        return log_cmd(&root, json(a.judge.format));
+    }
     let plan = match erase::plan(&root, a.judge.db.clone(), &a.judge.core) {
         Ok(p) => p,
         Err(e) => return fail("erase", e),
@@ -55,4 +62,21 @@ pub fn erase_cmd(a: EraseArgs) -> ExitCode {
         };
     }
     ExitCode::SUCCESS
+}
+
+/// `--log`: the trail's reader (erase::log), no core and no plan. A
+/// line the reader refused is printed by number and fails the exit
+/// code — an audit file with an unreadable record is a finding.
+fn log_cmd(root: &std::path::Path, as_json: bool) -> ExitCode {
+    match erase::log::read(root) {
+        Ok(l) => {
+            erase::log::print(&l, as_json);
+            if l.unreadable.is_empty() {
+                ExitCode::SUCCESS
+            } else {
+                ExitCode::FAILURE
+            }
+        }
+        Err(e) => fail("erase", e),
+    }
 }

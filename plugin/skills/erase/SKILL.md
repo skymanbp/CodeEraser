@@ -23,13 +23,17 @@ passing; the score should not fall.
 ```sh
 ce erase .            # dry-run plan: what is PROVABLY safe to remove
 ce erase . --apply    # act on it (git repo + clean worktree required)
+ce erase . --log      # the audit trail every apply appended (.ce/erase-log.ndjson)
 ```
 
 Three classes erase without judgment (dead files, verbatim doc
 duplicates, whole-unit byte-identical twins in dead files) — the tool
 plans them deterministically, applies behind preconditions, and
-proves its own convergence (contract: docs/reference/erase.md). Do
-NOT hand-delete anything the plan already covers. Everything it
+proves its own convergence (contract: docs/reference/erase.md); the
+trail it leaves is the same document the MCP tool `erase_log` and the
+GUI erase screen's audit-log section show, and a record the reader
+cannot parse is named by line. Do NOT hand-delete anything the plan
+already covers. Everything it
 prints as `advisory` is YOUR half — that is where the judgment below
 begins.
 

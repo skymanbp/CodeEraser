@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|13f0ffee0fd2d497|0": {
     "target": "../../README.md",
-    "line": 171,
+    "line": 172,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fifteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|0081591ba7c6acec|0": {
@@ -363,16 +363,6 @@
     "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|bea8e67cbaf506e8|1": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 102,
-    "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|bea8e67cbaf506e8|2": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 102,
-    "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|bea8e67cbaf506e8|3": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 102,
     "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
@@ -1588,15 +1578,15 @@
     "end": 61,
     "text": "增量低因 T3 域与对照物测度轴不同，见下）。**miss 100% 机械归因且全部定义性**："
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../EVAL-SET.md|0e66614ca8102a79|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../EVAL-SET.md|c76ad78e3cead8c3|0": {
     "target": "../../EVAL-SET.md",
     "line": 297,
-    "text": "退役（整文件）：`eval_extract/`（M4 冻结驱动+freeze/scan，manifest 哈希链封册）、`eval_prelabel.rs`、`fpr_replay.rs`（FPR-REPLAY.md 封册为最终记录）、`perf_budget.rs`（PERF-BUDGET.md 同）、`crosscheck_rca.rs`（crosscheck fixtures **保留**=graph 宇宙设计内负对照，活门在读）、`regen_tables.rs`（表变更时从历史复活再冻结）。**v0.5.0 加码批（2026-08-20 用户拍板）**：一次性 attainment/决策仪器整件退役——`eval_ablation`、`eval_baseline`、`eval_commit_baseline`、`eval_commits`、`eval_commit_labels`、`eval_l1`、`eval_churn_ledger`、`eval_t3_recall`、三族 sample/audit 装配腿六件与 `eval_docdup_oracle` 测试 + 伴生 `eval_ablation_parts`/`eval_graph_sample_parts`；留任 = `eval_l2`（主杠，`eval_commit_review/` 因其活读保留）+`eval_labels`+`fpr_fourclass`（M4 主门）+三族 universe 漂移网+三族 precision 回归门（直读冻结 sample/oracle JSON，工件保留）+provenance 双门；克隆预算随删 169→167。"
+    "text": "退役（整文件）：`eval_extract/`（M4 冻结驱动+freeze/scan，manifest 哈希链封册）、`eval_prelabel.rs`、`fpr_replay.rs`（FPR-REPLAY.md 封册为最终记录；2026-09-05 计划 v2.29 步 9 O49 以子仓 `it/fpr_replay.rs` 复立为常设 `#[ignore]` 腿——每条拦截对父版基线与提交整体落地各探一次，账本仍是 FPR-REPLAY.md）、`perf_budget.rs`（PERF-BUDGET.md 同）、`crosscheck_rca.rs`（crosscheck fixtures **保留**=graph 宇宙设计内负对照，活门在读）、`regen_tables.rs`（表变更时从历史复活再冻结）。**v0.5.0 加码批（2026-08-20 用户拍板）**：一次性 attainment/决策仪器整件退役——`eval_ablation`、`eval_baseline`、`eval_commit_baseline`、`eval_commits`、`eval_commit_labels`、`eval_l1`、`eval_churn_ledger`、`eval_t3_recall`、三族 sample/audit 装配腿六件与 `eval_docdup_oracle` 测试 + 伴生 `eval_ablation_parts`/`eval_graph_sample_parts`；留任 = `eval_l2`（主杠，`eval_commit_review/` 因其活读保留）+`eval_labels`+`fpr_fourclass`（M4 主门）+三族 universe 漂移网+三族 precision 回归门（直读冻结 sample/oracle JSON，工件保留）+provenance 双门；克隆预算随删 169→167。"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../EVAL-SET.md|0e66614ca8102a79|1": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../EVAL-SET.md|c76ad78e3cead8c3|1": {
     "target": "../../EVAL-SET.md",
     "line": 297,
-    "text": "退役（整文件）：`eval_extract/`（M4 冻结驱动+freeze/scan，manifest 哈希链封册）、`eval_prelabel.rs`、`fpr_replay.rs`（FPR-REPLAY.md 封册为最终记录）、`perf_budget.rs`（PERF-BUDGET.md 同）、`crosscheck_rca.rs`（crosscheck fixtures **保留**=graph 宇宙设计内负对照，活门在读）、`regen_tables.rs`（表变更时从历史复活再冻结）。**v0.5.0 加码批（2026-08-20 用户拍板）**：一次性 attainment/决策仪器整件退役——`eval_ablation`、`eval_baseline`、`eval_commit_baseline`、`eval_commits`、`eval_commit_labels`、`eval_l1`、`eval_churn_ledger`、`eval_t3_recall`、三族 sample/audit 装配腿六件与 `eval_docdup_oracle` 测试 + 伴生 `eval_ablation_parts`/`eval_graph_sample_parts`；留任 = `eval_l2`（主杠，`eval_commit_review/` 因其活读保留）+`eval_labels`+`fpr_fourclass`（M4 主门）+三族 universe 漂移网+三族 precision 回归门（直读冻结 sample/oracle JSON，工件保留）+provenance 双门；克隆预算随删 169→167。"
+    "text": "退役（整文件）：`eval_extract/`（M4 冻结驱动+freeze/scan，manifest 哈希链封册）、`eval_prelabel.rs`、`fpr_replay.rs`（FPR-REPLAY.md 封册为最终记录；2026-09-05 计划 v2.29 步 9 O49 以子仓 `it/fpr_replay.rs` 复立为常设 `#[ignore]` 腿——每条拦截对父版基线与提交整体落地各探一次，账本仍是 FPR-REPLAY.md）、`perf_budget.rs`（PERF-BUDGET.md 同）、`crosscheck_rca.rs`（crosscheck fixtures **保留**=graph 宇宙设计内负对照，活门在读）、`regen_tables.rs`（表变更时从历史复活再冻结）。**v0.5.0 加码批（2026-08-20 用户拍板）**：一次性 attainment/决策仪器整件退役——`eval_ablation`、`eval_baseline`、`eval_commit_baseline`、`eval_commits`、`eval_commit_labels`、`eval_l1`、`eval_churn_ledger`、`eval_t3_recall`、三族 sample/audit 装配腿六件与 `eval_docdup_oracle` 测试 + 伴生 `eval_ablation_parts`/`eval_graph_sample_parts`；留任 = `eval_l2`（主杠，`eval_commit_review/` 因其活读保留）+`eval_labels`+`fpr_fourclass`（M4 主门）+三族 universe 漂移网+三族 precision 回归门（直读冻结 sample/oracle JSON，工件保留）+provenance 双门；克隆预算随删 169→167。"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/candidates.rs|3ddaef164d254874|0": {
     "target": "../../../cli/src/dedup/candidates.rs",
@@ -2293,14 +2283,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 121,
-    "end": 127,
+    "line": 123,
+    "end": 129,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|1": {
     "target": "../../../cli/src/config.rs",
-    "line": 121,
-    "end": 132,
+    "line": 123,
+    "end": 134,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/graph/ladder/hs_boot.rs|ee30d3794dcc0d6c|0": {
@@ -2824,14 +2814,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|76b28420c94d7237|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 70,
-    "end": 98,
+    "line": 72,
+    "end": 100,
     "text": "pub fn canonical(cfg: &Config) -> Value {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|b1fd070c83dda0e1|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 102,
-    "end": 125,
+    "line": 109,
+    "end": 132,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5257d56ada2d008b|0": {
@@ -3572,7 +3562,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/config.rs|ee24ccceee732d24|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 82,
+    "line": 84,
     "text": "pub(crate) fn declared_roots(&self) -> std::collections::BTreeSet<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
@@ -4178,14 +4168,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|40df88eaa1148ef9|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 121,
-    "end": 141,
+    "line": 127,
+    "end": 147,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|8de58f87dea9366e|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 141,
-    "end": 147,
+    "line": 147,
+    "end": 153,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
@@ -6308,8 +6298,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/config.rs|ade4e98fb475f753|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 141,
-    "end": 143,
+    "line": 143,
+    "end": 145,
     "text": "pub(crate) struct TrendCfg {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -6930,47 +6920,65 @@
     "line": 319,
     "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|12e40c77b441466a|0": {
+    "target": "../../FPR-REPLAY.md",
+    "line": 3,
+    "end": 8,
+    "text": "> **仪器复立（计划 v2.29 步 9 O49，2026-09-05）**：重放仪器以测试子仓"
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|514ca31d0b01bea8|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 8,
-    "end": 13,
+    "line": 10,
+    "end": 15,
     "text": "> 验收门（计划 §6 M3）：500 次真实正常编辑重放误拦 ≤ 1。"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|65f7bd7315bbcea6|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 39,
-    "end": 44,
+    "line": 41,
+    "end": 46,
     "text": "## 重放捎带抓获的产品缺陷（已修）"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|6b8afc790956d002|0": {
+    "target": "../../FPR-REPLAY.md",
+    "line": 132,
+    "end": 148,
+    "text": "- **复燃 35 行的重分类（替代 K 轮「23 延展复燃按倾向判真阳」）**：延展 11（子版与孪生的共享片段比"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|7eda25cdb5ee35e3|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 23,
-    "end": 37,
+    "line": 25,
+    "end": 39,
     "text": "## 自仓 35 条拦截仲裁（全真阳）"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|841296fa75eed59a|0": {
+    "target": "../../FPR-REPLAY.md",
+    "line": 103,
+    "end": 106,
+    "text": "> 仲裁出处：本节没有人工或模型仲裁——两处判定都由仪器实测：**父版基线**（`shared` = 与该孪生"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|952e8a8fb3d5285d|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 54,
-    "end": 90,
+    "line": 56,
+    "end": 92,
     "text": "**第一轮（出厂语义=全文探针）**：requests 尾段 487 事件 **0 拦截**（与原记录逐字同）；"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|9a6031209d9a5f22|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 17,
-    "end": 21,
+    "line": 19,
+    "end": 23,
     "text": "| 语料 | 事件数 | 拦截 | 仲裁后误拦 | 折算 /500 |"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|9bd04c254243580e|0": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|a8aa8afee5378e73|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 98,
-    "end": 154,
-    "text": "仪器 `cli/tests/fpr_replay.rs` 已随 M7.5 封册退役（见文首横幅）——按 EVAL-SET.md「再生成」"
+    "line": 159,
+    "end": 167,
+    "text": "### 历史复现（退役期 2026-08-18～2026-09-05）"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|c75f130e343b8bf4|0": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|b1b24aa6a3e43c6e|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 3,
-    "end": 6,
-    "text": "> **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `fpr_replay.rs` 已随"
+    "line": 112,
+    "end": 115,
+    "text": "| 语料 | 事件 | 拦截事件 | (事件, 孪生) 行 | 落地行 | 中间态行 | 严格 /500 | 中间态计误拦 /500 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../ce-toml.md|5fb201f0c70e3311|0": {
     "target": "../ce-toml.md",
@@ -6989,32 +6997,32 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|0f8dd17e2c8297ba|0": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 82,
-    "end": 91,
+    "line": 79,
+    "end": 88,
     "text": "let mut cache = crate::erase::gather::TextCache::new(root);"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|3ba3f0439591e759|0": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 40,
-    "end": 46,
+    "line": 37,
+    "end": 43,
     "text": "/// Contract order, each refusal by name, nothing written before all"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|4430ba4e8b1d3ff0|0": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 61,
-    "end": 81,
+    "line": 58,
+    "end": 78,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|63dfaddfd6783920|0": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 46,
-    "end": 60,
+    "line": 43,
+    "end": 57,
     "text": "fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|e180d3a745326c7b|0": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 19,
-    "end": 37,
+    "line": 16,
+    "end": 34,
     "text": "/// Preconditions + writes + audit log. Returns the applied count."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|03b69f6290794c98|0": {
@@ -7078,32 +7086,32 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 54,
-    "end": 85,
+    "line": 58,
+    "end": 89,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|a72ddff5ab2ef26f|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 100,
-    "end": 130,
+    "line": 104,
+    "end": 134,
     "text": "fn close_targets(rows: Vec<Row>) -> Vec<Row> {"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 16,
-    "end": 24,
+    "line": 25,
+    "end": 33,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|1": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 16,
-    "end": 23,
+    "line": 25,
+    "end": 32,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|8703f195b0f8e7c3|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 27,
-    "end": 39,
+    "line": 36,
+    "end": 48,
     "text": "/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|555fc245631410bd|0": {
@@ -7738,20 +7746,20 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|36f4b54da51db24e|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
-    "line": 43,
-    "end": 48,
+    "line": 35,
+    "end": 40,
     "text": "const RIPGREP_TEST_DIRS: [&str; 4] = ["
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|ae1f3f1c2fcde14b|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
-    "line": 57,
-    "end": 99,
+    "line": 49,
+    "end": 91,
     "text": "fn measure(name: &str, root: &Path) -> (Formula, Ledger, Value) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|b2b6311dc9832856|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
-    "line": 80,
-    "end": 94,
+    "line": 72,
+    "end": 86,
     "text": "// ① holds as pre-registered (L4-F3) on all five trees once the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_support/mention.rs|9f4aa36d14a1fa35|0": {
@@ -7879,8 +7887,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 94,
-    "end": 104,
+    "line": 101,
+    "end": 111,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {
@@ -8576,7 +8584,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 163,
+    "line": 171,
     "text": "\"similar_units\","
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {

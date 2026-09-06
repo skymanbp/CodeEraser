@@ -215,6 +215,37 @@ async function capture(cdp, out) {
   }
 }
 
+/// The engine, headless, announcing its devtools port under `profile`.
+function launch(profile) {
+  return spawn(browser(), [
+    "--headless=new",
+    "--remote-debugging-port=0",
+    `--user-data-dir=${profile}`,
+    `--window-size=${VIEW.width},${VIEW.height}`,
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--disable-extensions",
+    "--hide-scrollbars",
+    "about:blank",
+  ], { stdio: "ignore" });
+}
+
+/// Cleanup must never throw: the browser keeps its profile mapped for
+/// a moment after the kill, and an EBUSY raised here would REPLACE the
+/// real failure — which is exactly what hid the first shot timeout.
+async function teardown(proc, server, profile) {
+  proc.kill();
+  server.close();
+  for (let i = 0; i < 20; i++) {
+    try {
+      fs.rmSync(profile, { recursive: true, force: true });
+      break;
+    } catch {
+      await new Promise((r) => setTimeout(r, 100));
+    }
+  }
+}
+
 async function main() {
   const out = path.resolve(arg("--out", SITE));
   const root = path.resolve(arg("--root", REPO));
@@ -228,18 +259,7 @@ async function main() {
   const server = await serve();
   const origin = `http://127.0.0.1:${server.address().port}/index.html`;
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), "ce-shoot-"));
-  const proc = spawn(browser(), [
-    "--headless=new",
-    "--remote-debugging-port=0",
-    `--user-data-dir=${profile}`,
-    `--window-size=${VIEW.width},${VIEW.height}`,
-    "--no-first-run",
-    "--no-default-browser-check",
-    "--disable-extensions",
-    "--hide-scrollbars",
-    "about:blank",
-  ], { stdio: "ignore" });
-
+  const proc = launch(profile);
   try {
     await capture(await attach(profile, origin, root, docs), out);
     // after the pictures, so a failed shoot leaves no receipt claiming
@@ -247,23 +267,16 @@ async function main() {
     // records and why, the `ui` tree digest included)
     writeReceipt({ repo: REPO, ui: UI, site: SITE, names: SHOTS.map((s) => s.name), view: VIEW, docs, out });
   } finally {
-    // Cleanup must never throw: the browser keeps its profile mapped for
-    // a moment after the kill, and an EBUSY raised here would REPLACE the
-    // real failure — which is exactly what hid the first shot timeout.
-    proc.kill();
-    server.close();
-    for (let i = 0; i < 20; i++) {
-      try {
-        fs.rmSync(profile, { recursive: true, force: true });
-        break;
-      } catch {
-        await new Promise((r) => setTimeout(r, 100));
-      }
-    }
+    await teardown(proc, server, profile);
   }
 }
 
-main().catch((e) => {
-  console.error(String(e.message || e));
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((e) => {
+    console.error(String(e.message || e));
+    process.exit(1);
+  });
+}
+
+// The shell measure_header.js drives through the same engine and bridge.
+module.exports = { REPO, VIEW, arg, attach, launch, reports, serve, teardown };

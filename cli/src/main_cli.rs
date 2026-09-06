@@ -28,7 +28,7 @@ use std::path::PathBuf;
     arg_required_else_help = true
 )]
 pub(crate) struct Cli {
-    /// Console language (wins over CE_LANG)
+    /// Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`)
     #[arg(long, global = true, value_parser = ["en", "zh"])]
     pub(crate) lang: Option<String>,
     #[command(subcommand)]
