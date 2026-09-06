@@ -317,15 +317,15 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="100" y="621" class="t-muted" font-size="7" text-anchor="middle">解析阶梯 · SCC · 提及</text>
         </g>
 
-        <g id="node-score" data-node-id="score" data-node-label="结构与分数" tabindex="0" role="button" aria-label="聚焦 结构与分数, 七轴 · 0–1000 · 棘轮, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="七轴 · 0–1000 · 棘轮" data-node-tag="scan/1 · structure/1 · verdict/1" data-node-context="02 / 判决 · Haskell">
-          <title>结构与分数 · 七轴 · 0–1000 · 棘轮 · 02 / 判决 · Haskell · scan/1 · structure/1 · verdict/1</title>
+        <g id="node-score" data-node-id="score" data-node-label="结构与分数" tabindex="0" role="button" aria-label="聚焦 结构与分数, 八轴 + 七轴 · 0–1000 · 棘轮, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="八轴 + 七轴 · 0–1000 · 棘轮" data-node-tag="scan/1 · structure/1 · verdict/1" data-node-context="02 / 判决 · Haskell">
+          <title>结构与分数 · 八轴 + 七轴 · 0–1000 · 棘轮 · 02 / 判决 · Haskell · scan/1 · structure/1 · verdict/1</title>
           <rect x="253" y="128" width="124" height="58" rx="6" class="c-mask" />
           <rect x="253" y="128" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(259 134) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="315" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">结构与分数</text>
-          <text x="315" y="165" class="t-muted" font-size="7" text-anchor="middle">七轴 · 0–1000 · 棘轮</text>
+          <text x="315" y="165" class="t-muted" font-size="7" text-anchor="middle">八轴 + 七轴 · 0–1000 · 棘轮</text>
         <text x="315" y="175" class="t-backend" font-size="6" text-anchor="middle">scan/1 · structure/1 · verdict/1</text>
         </g>
 

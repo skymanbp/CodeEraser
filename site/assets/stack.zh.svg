@@ -71,7 +71,7 @@
         <text x="866" y="492">兼容性证据</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="513">proto 7.0.0 · SemVer</text>
+        <text x="66" y="513">proto 7.1.0 · SemVer</text>
         <text x="66" y="530">主版本不合即拒绝</text>
         <text x="66" y="547">次版本字段只加不改</text>
         <text x="66" y="564">整数行 · 只过类下标，不过名字</text>
@@ -107,7 +107,7 @@
         <text x="794" y="704">证明压力</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="726">七条结构判轴 + 精确熵算术</text>
+        <text x="66" y="726">八条结构判轴 + 精确熵算术</text>
         <text x="66" y="744">在违规 / 机会事实上的密度评分</text>
         <text x="66" y="762">ADR-006 连续 + 离散只缩棘轮</text>
         <text x="66" y="780">拆分 ROI 缝价：引用 · 单元 · 克隆 · 变动</text>

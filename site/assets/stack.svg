@@ -71,7 +71,7 @@
         <text x="866" y="492">compatibility evidence</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="513">proto 7.0.0 · SemVer</text>
+        <text x="66" y="513">proto 7.1.0 · SemVer</text>
         <text x="66" y="530">major mismatch refuses</text>
         <text x="66" y="547">minor fields are additive</text>
         <text x="66" y="564">integer rows · class index, no names</text>
@@ -107,7 +107,7 @@
         <text x="794" y="704">proof pressure</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="726">seven structure axes + exact entropy arithmetic</text>
+        <text x="66" y="726">eight structure axes + exact entropy arithmetic</text>
         <text x="66" y="744">density scoring over violation / opportunity facts</text>
         <text x="66" y="762">ADR-006 continuous + discrete shrink-only ratchet</text>
         <text x="66" y="780">split-ROI seam price: refs · units · clones · churn</text>

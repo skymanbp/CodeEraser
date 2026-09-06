@@ -18,7 +18,7 @@ knobsOffence rows =
  where
   one i row = case row of
     [code, v]
-      | code < 0 || code > 18 -> Just (label <> "unknown structure knob")
+      | code < 0 || code > 20 -> Just (label <> "unknown structure knob")
       | v < 1 -> Just (label <> "knob below 1")
       | otherwise -> Nothing
     _ -> Just (label <> "malformed row (need [code,value])")
@@ -26,7 +26,12 @@ knobsOffence rows =
     label = "knob " <> show i <> ": "
 
 -- | ONE knob authority: the effective fold and the reply echo both
--- read this table (codes 0..18; 17/18 = the v2.7 ② prices).
+-- read this table (codes 0..20, ascending — the echo IS this order;
+-- 17/18 = the v2.7 ② prices, 19/20 = the O54 modularity floors, and
+-- those two are APPENDED rather than spliced into the ladder: the
+-- ladder is this file's one clone chain by the repo's own measure,
+-- and a chain that grows a link per axis is a budget that grows with
+-- the roster).
 knobTable :: [(Integer, Knobs -> Integer, Integer -> Knobs -> Knobs)]
 knobTable =
   [ (0, kDepthCeil, \v k -> k {kDepthCeil = v})
@@ -49,6 +54,9 @@ knobTable =
   , (17, kRoiCloneMilli, \v k -> k {kRoiCloneMilli = v})
   , (18, kRoiChurnMilli, \v k -> k {kRoiChurnMilli = v})
   ]
+    <> [ (19, kModFloor, \v k -> k {kModFloor = v})
+       , (20, kModMass, \v k -> k {kModMass = v})
+       ]
 
 -- | Knob rows over the Cost defaults (the effectiveKnobs pattern):
 -- absent rows keep the defaults; the fold grammar is CE.Wire's.

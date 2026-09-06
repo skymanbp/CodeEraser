@@ -18,6 +18,8 @@ module CE.Structure.Cost
   , dupMin
   , deadMin
   , staleMin
+  , modFloor
+  , modMassFloor
   , seamSoft
   , seamHard
   , seamPMax
@@ -106,6 +108,35 @@ deadMin = 1
 -- last edit is entropy in prose form (knob code 11).
 staleMin :: Integer
 staleMin = 1
+
+-- | S7 (knob 19, O54): the per-mille floor on a directory's
+-- NORMALIZED modularity contribution — how much of the cohesion its
+-- own incident mass could buy it actually keeps (1000 = every edge
+-- internal, 0 = exactly the null model's expectation, below 0 = worse
+-- than a random graph with these degrees). 1 is the least the knob
+-- grammar can express (every structure knob is >= 1) AND the line the
+-- measure itself draws, so the default flags only directories that do
+-- no better than chance. The 1/3 locality line already belongs to S2
+-- mixing — `outs > ins` on touch counts IS `inside share < 1/3` — and
+-- putting S7 at the null model instead keeps one phenomenon on one
+-- axis (structure-axes.md's coverage map). What S7 sees and S2 cannot
+-- is the monolith: a directory holding most of the tree's edges
+-- internally passes S2 loudly and still fails the null model, because
+-- most of the degree mass is its own.
+modFloor :: Integer
+modFloor = 1
+
+-- | S7 (knob 20, O54): the smallest incident-edge mass at which a
+-- directory is judged at all. Below four edges the sign of the
+-- contribution is decided by one reference, and a directory nobody has
+-- wired up yet is not a failed module. Four is also the smallest mass
+-- at which a directory can hold as many internal edges as crossing
+-- ones and still cross at all (2 + 2; at three, parity forbids
+-- e == cross). Under the floor a directory is ABSENT from the axis —
+-- never counted clean, never flagged (the F16 non-vacuity stance at
+-- the knob level, mixRefFloor's precedent).
+modMassFloor :: Integer
+modMassFloor = 4
 
 -- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own
 -- copy of the zone triple — S/H/P_max — because the structure

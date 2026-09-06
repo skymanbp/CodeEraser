@@ -146,9 +146,9 @@ dupVerdictWith (num, den, vfloor) inter union run
 </div>
 
 <div class="fam">
-  <h3 id="f04"><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, <!--ce:count:structure_axes#word-->seven<!--/ce--> axes</a></h3>
+  <h3 id="f04"><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, <!--ce:count:structure_axes#word-->eight<!--/ce--> axes</a></h3>
   <p class="job">Judges the tree rather than the file: directory geometry, naming
-  distributions, reference locality, documentation coverage, doc staleness, redundancy.</p>
+  distributions, reference locality, documentation coverage, doc staleness, redundancy, modularity.</p>
   <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
 tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr

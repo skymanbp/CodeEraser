@@ -1,6 +1,6 @@
--- | The seven structure axes (design booklet §3): S0..S4 always
--- judged; staleness (5, S3c) and redundancy (6, S3b) judged when
--- their report rows ride the wire — both landed, both live here.
+-- | The eight structure axes (design booklet §3): S0..S4 always
+-- judged; staleness (5, S3c), redundancy (6, S3b) and modularity
+-- (7, O54) judged when their tables ride the wire — all landed.
 -- Each axis is ONE named predicate over the validated fact tables,
 -- owning its knobs, so the perturbation battery has a lever per
 -- row — the Score.hs mechanism at the tree scale. Everything here
@@ -14,6 +14,7 @@ module CE.Structure.Axes
   , entropyRows
   ) where
 
+import qualified CE.Structure.Modularity as Mod
 import CE.Structure.Entropy (perMille, tsallis2Norm)
 import qualified CE.Structure.Cost as Cost
 import qualified Data.Map.Strict as M
@@ -21,9 +22,9 @@ import qualified Data.Map.Strict as M
 -- | The validated fact tables (row shapes enforced by CE.Structure's
 -- boundary contract before anything reaches here). The S2 mixing
 -- axis judges on file TOUCH counts (fileRefs), one basis for both
--- sides of its comparison; the directed dir-edge table joins the
--- wire in S3+ with modularity proper — an unjudged table is dead
--- freight, not a reservation.
+-- sides of its comparison; the directed dir-edge table rides since
+-- 7.1.0 and axis 7 judges it with modularity proper — the table was
+-- held off the wire until it had a judgment, never reserved.
 data Facts = Facts
   { fNodes :: [[Integer]]
   -- ^ [id, parent, depth, subdirs, files]
@@ -40,6 +41,12 @@ data Facts = Facts
   -- ^ [dirId, dupBlocks, deadUnits] — Nothing = the table never
   -- rode the wire and axis 6 is NOT judged; Just [] = it rode
   -- empty and the axis judged clean (absence vs zero, spoken).
+  , fDirEdges :: Maybe [[Integer]]
+  -- ^ [fromDir, toDir, count], from /= to, ascending — the CROSSING
+  -- reference mass only. The intra mass is fFileRefs' `inside` sum
+  -- halved (both ends of an intra edge count), never sent twice;
+  -- CE.Structure.Modularity.crossTableOffence holds the two tables
+  -- to one graph. Same Maybe stance as the two above.
   }
 
 data Knobs = Knobs
@@ -55,6 +62,11 @@ data Knobs = Knobs
   , kDupMin :: Integer
   , kDeadMin :: Integer
   , kStaleMin :: Integer
+  , -- S7 (O54, codes 19/20): the per-mille floor on a directory's
+    -- NORMALIZED modularity contribution, and the incident-edge mass
+    -- below which it is not judged at all
+    kModFloor :: Integer
+  , kModMass :: Integer
   , -- the split-ROI advisory's seven (plan v2.6 §C codes 12..16,
     -- v2.7 ② codes 17..18): the zone triple S/H/P_max and the
     -- four milli cost prices (ref / phi / clone / churn)
@@ -82,6 +94,8 @@ bound =
     , kDupMin = Cost.dupMin
     , kDeadMin = Cost.deadMin
     , kStaleMin = Cost.staleMin
+    , kModFloor = Cost.modFloor
+    , kModMass = Cost.modMassFloor
     , kSeamSoft = Cost.seamSoft
     , kSeamHard = Cost.seamHard
     , kSeamPMax = Cost.seamPMax
@@ -92,10 +106,10 @@ bound =
     }
 
 -- | Violation count per judged axis — 0 geometry / 1 naming /
--- 2 mixing / 3 misplacement / 4 documentation, plus 5 staleness and
--- 6 redundancy when their fact tables rode the wire (design §3: an
--- absent table is an unjudged axis, and the score divides by the
--- JUDGED count).
+-- 2 mixing / 3 misplacement / 4 documentation, plus 5 staleness,
+-- 6 redundancy and 7 modularity when their fact tables rode the wire
+-- (design §3: an absent table is an unjudged axis, and the score
+-- divides by the JUDGED count).
 axes :: Knobs -> Facts -> [(Integer, Integer)]
 axes k f =
   [ (0, count (geometry k f))
@@ -106,12 +120,13 @@ axes k f =
   ]
     <> [(5, count (stale k rows)) | Just rows <- [fStaleDocs f]]
     <> [(6, count (redundant k rows)) | Just rows <- [fRedundancy f]]
+    <> [(7, count (unmodularDirs k f rows)) | Just rows <- [fDirEdges f]]
  where
   count = toInteger . length
 
 -- | The sparse per-directory drill-down rows [dirId, axis] the GUI
 -- tree colours by. Every axis counts DIRECTORIES, axis 3 included
--- (booklet amendment ①, 2026-08-19): the score folds all seven
+-- (booklet amendment ①, 2026-08-19): the score folds all the
 -- penalties into one sum at equal weight, and the one axis that
 -- counted files let a single junk drawer outweigh every other axis
 -- combined. Files stay the MEASURED unit (fFileRefs, the predicate
@@ -124,8 +139,21 @@ findings k f =
         <> [(3, misplacedDirs k f), (4, docs k f)]
         <> [(5, stale k rows) | Just rows <- [fStaleDocs f]]
         <> [(6, redundant k rows) | Just rows <- [fRedundancy f]]
+        <> [(7, unmodularDirs k f rows) | Just rows <- [fDirEdges f]]
   , d <- ds
   ]
+
+-- | S7: the tree's own directories as the partition, judged by
+-- CE.Structure.Modularity against the two knobs. The dir universe is
+-- the node table's ids — dense and ascending, so the finding rows are
+-- too — and the intra mass comes out of fFileRefs, never the wire.
+unmodularDirs :: Knobs -> Facts -> [[Integer]] -> [Integer]
+unmodularDirs k f rows =
+  Mod.unmodular
+    (kModFloor k, kModMass k)
+    (fFileRefs f)
+    rows
+    [i | [i, _, _, _, _] <- fNodes f]
 
 -- | S5: directories whose stale-document count reaches its floor —
 -- the docs whose referenced code moved on after their last edit
@@ -176,11 +204,11 @@ mixing k f =
   , outs > ins
   ]
 
+-- | ONE projection, two readers: S2 compares the two halves, S7 reads
+-- `inside` as twice the internal edge count (CE.Structure.Modularity,
+-- where the projection lives so both axes share one basis).
 touchesByDir :: Facts -> M.Map Integer (Integer, Integer)
-touchesByDir f =
-  M.fromListWith add [(d, (i * n, o * n)) | [d, i, o, n] <- fFileRefs f]
- where
-  add (a, b) (c, d) = (a + c, b + d)
+touchesByDir f = Mod.endpointsByDir (fFileRefs f)
 
 -- | Directories holding misplaced files, deduped (several fFileRefs
 -- rows per dir) — ONE list feeding both faces of axis 3.

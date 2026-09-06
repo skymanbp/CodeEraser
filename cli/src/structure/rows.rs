@@ -48,15 +48,42 @@ pub fn convention_rows(t: &tree::Tree) -> Vec<[u64; 2]> {
         .collect()
 }
 
-/// The cached reference graph adapted into aggregated
-/// [dirId, inside, outside, count] rows — graph nodes that never
-/// entered the walked tree (a universe mismatch) are an error by
-/// name, never a guess. The wire arrives from the command
+/// The two reference tables structure/1 carries: aggregated
+/// [dirId, inside, outside, count] file rows and the directed
+/// [fromDir, toDir, count] crossing table (7.1.0, O54).
+pub type RefTables = (Vec<[u64; 4]>, Vec<[u64; 3]>);
+
+/// The cached reference graph adapted into BOTH tables off ONE join —
+/// they must describe one graph (the core refuses the pair otherwise),
+/// and one join is how that is guaranteed rather than asserted. Graph
+/// nodes that never entered the walked tree (a universe mismatch) are
+/// an error by name, never a guess. The wire arrives from the command
 /// boundary's one snapshot (batch 9 P10).
-pub fn file_ref_rows(
-    w: &crate::graph::deadcode::GraphWire,
-    t: &tree::Tree,
-) -> Result<Vec<[u64; 4]>> {
+pub fn ref_rows(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<RefTables> {
+    let (pairs, file_dirs) = file_join(w, t)?;
+    let files = edges::aggregate(&pairs, &file_dirs);
+    let mut counted: BTreeMap<[u64; 3], u64> = BTreeMap::new();
+    for (slot, io) in files.iter().enumerate() {
+        if io[0] + io[1] > 0 {
+            *counted
+                .entry([file_dirs[slot] as u64, io[0] as u64, io[1] as u64])
+                .or_insert(0) += 1;
+        }
+    }
+    let refs: Vec<[u64; 4]> = counted
+        .into_iter()
+        .map(|([d, i, o], n)| [d, i, o, n])
+        .collect();
+    Ok((refs, edges::directed(&pairs, &file_dirs)))
+}
+
+/// The join's own two halves: file-node edge pairs by dense slot,
+/// and each slot's owning directory.
+type FileJoin = (Vec<(usize, usize)>, Vec<usize>);
+
+/// File-node edge pairs and each file's owning directory — the join
+/// both reference tables read.
+fn file_join(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<FileJoin> {
     // the measured tier: a foreign reader has no directory in the
     // walked (own) tree and is not this family's to place
     let fnodes = crate::graph::deadcode::measured_nodes(w);
@@ -75,19 +102,7 @@ pub fn file_ref_rows(
         .iter()
         .filter_map(|e| Some((*index_of.get(&e[0])?, *index_of.get(&e[1])?)))
         .collect();
-    let files = edges::aggregate(&pairs, &file_dirs);
-    let mut counted: BTreeMap<[u64; 3], u64> = BTreeMap::new();
-    for (slot, io) in files.iter().enumerate() {
-        if io[0] + io[1] > 0 {
-            *counted
-                .entry([file_dirs[slot] as u64, io[0] as u64, io[1] as u64])
-                .or_insert(0) += 1;
-        }
-    }
-    Ok(counted
-        .into_iter()
-        .map(|([d, i, o], n)| [d, i, o, n])
-        .collect())
+    Ok((pairs, file_dirs))
 }
 
 /// The S6 rollup: clone blocks and dead units convolved per

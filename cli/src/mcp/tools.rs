@@ -106,7 +106,7 @@ pub const TOOLS: &[Tool] = &[
     tool!(
         "structure",
         structure,
-        "Tree-scale structure judgment, seven axes (ce.structure-report schema).",
+        "Tree-scale structure judgment, eight axes (ce.structure-report schema).",
         &[
             ("deep", "boolean", "also judge the S6 redundancy axis"),
             (
