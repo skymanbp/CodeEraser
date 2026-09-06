@@ -6,9 +6,10 @@
 # whose job re-downloads the SAME draft assets (no rebuild — Rust and
 # GHC builds are not bit-reproducible across runs, so a rebuild would
 # invalidate honest pins), checks that the draft was built from the
-# tag's own sources and carries real notes, verifies every pin, and
-# publishes. macOS 10x billing (D2-8) is fine here: releases are rare
-# and explicitly human-triggered.
+# tag's own sources and carries real notes, verifies every pin,
+# publishes, and fast-forwards the `release` branch the marketplace
+# channel reads (O82). macOS 10x billing (D2-8) is fine here: releases
+# are rare and explicitly human-triggered.
 name: release
 
 on:
@@ -405,3 +406,15 @@ jobs:
           check_pin X86_64_LINUX_APPIMAGE "CodeEraser-$VER-x86_64-linux.AppImage"
           check_pin AARCH64_MACOS_DMG "CodeEraser-$VER-aarch64-macos.dmg"
           gh release edit "$TAG" --draft=false
+      # The marketplace channel (O82): `ce setup`, the installers and
+      # both READMEs register skymanbp/CodeEraser@release, so an install
+      # follows releases, not main. Only a PUBLISHED release moves the
+      # branch — this step sits after the edit above — and only as a
+      # fast-forward: the tag commit descends from the previous
+      # release's on main, so a non-fast-forward means a hand moved the
+      # branch; refuse and name the remedy rather than force over it.
+      - name: Fast-forward the release branch to this tag
+        shell: bash
+        run: |
+          git push origin "HEAD:refs/heads/release" || {
+            echo "published, but the release branch did not fast-forward — the marketplace still points at the previous release; by hand: git push origin ${GITHUB_REF_NAME}^{commit}:refs/heads/release"; exit 1; }

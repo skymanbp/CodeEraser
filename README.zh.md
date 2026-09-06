@@ -101,9 +101,9 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 安装、运行与更新
 
-**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->三<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`；Windows 安装包把安装目录写入 PATH，检测到 Claude Code 时自动接入下述插件。<!--ce:count:binaries#word-->九<!--/ce-->个二进制与 `SHA256SUMS` 按裁定不签名——用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
+**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->三<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`。Windows 安装包把安装目录写入 PATH 并运行 `ce setup`；AppImage 与 dmg 用户自己跑一次 `ce setup`——它找到 Claude Code、接入下述插件，并说明那个 `ce` 所在目录是否在 PATH 上。<!--ce:count:binaries#word-->九<!--/ce-->个二进制与 `SHA256SUMS` 按裁定不签名——用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
 
-**Claude Code 插件。** `/plugin marketplace add skymanbp/CodeEraser`，再 `/plugin install codeeraser@codeeraser`。启动器按 pin 解析 `ce` 与 `ce-core`：先取命中的本地或 PATH 副本，再钉扎下载，最后才是会自报未校验的 PATH 二进制。
+**Claude Code 插件。** `ce setup` 在本仓的 `release` 分支上注册 marketplace——每次发布后快进到 tag，装机跟发布不跟 `main`——并安装插件；手动：`/plugin marketplace add skymanbp/CodeEraser@release`，再 `/plugin install codeeraser@codeeraser`。启动器按 pin 解析 `ce` 与 `ce-core`：先取命中的本地或 PATH 副本，再钉扎下载，最后才是会自报未校验的 PATH 二进制。
 
 **只要 CLI，或从源码。** 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`（x86_64-windows / x86_64-linux / aarch64-macos），改名 `ce` / `ce-core` 并排放上 PATH；或 `cargo install codeeraser` 再把 `ce-core` 放旁边；或用钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 自己构建——`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cargo install --path cli`。核解析全线一条链：`CE_CORE_BIN` → 旁边的 `ce-core` → PATH；`--core <路径>` 最优先。
 
@@ -118,7 +118,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | `ce check` / `ce baseline` | ADR-006 棘轮与分数地板，<!--ce:count:fail_conditions#word-->六<!--/ce-->个 fail 条件逐名报在控制台；`baseline` 只在根、且只在具名动作下持久化 |
 | `ce erase` | 确定性两段式擦除；默认演练，`--apply` 有干净工作区前置 |
 | `ce update` | 最新发布对比本构建，退出码 0 / 1 / 2；`--yes` 两枚 pin 都通过后替换 `ce` + `ce-core`，`--installer` 另存已校验的 GUI 安装包 |
-| `ce doctor` / `ce eject` / `ce mcp` | 本机状态；按项目卸载；只读 MCP 服务器 |
+| `ce doctor` / `ce setup` / `ce eject` / `ce mcp` | 本机状态；把本机 Claude Code 接到插件上（退出码 0 已接 / 5 已有保留 / 10 无 Claude Code / 11–12 失败 / 13 提权账户不是登录用户；`--unwire` 只拆它自己接的）；按项目卸载；只读 MCP 服务器 |
 
 控制台输出、`--help` 与钩子自己的拒绝语默认英文，`--lang zh`、`CE_LANG=zh` 或项目 `ce.toml` 的 `[ui] lang = "zh"` 切中文（优先级依此为序，`--help` 只读前两者）；JSON schema 与 FAIL/pass 词汇永不翻译。`ce.toml` 里的 `[[rules.class]]` 给一组 glob 自己的尺寸与复杂度线和棘轮容差（`0` = 一行不许长），分数、`ce scan` 阶梯与 PreToolUse 预算读的是同一条线（[ce.toml 参考](docs/reference/ce-toml.md)）。
 
@@ -156,6 +156,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 项目 daemon | `ce daemon`, `ce ping` | — 每一面惰性启动 | — |
 | 只读报告服务器 | `ce mcp` | — 插件自行注册 | `.mcp.json` |
 | 卸载 | `ce eject` | — 只在 CLI | — |
+| Claude Code 接线 | `ce setup`, `ce setup --unwire` | — 只在 CLI：安装包调用它，AppImage / dmg 用户装后跑一次 | — |
 | 实测仪表盘 | — 编译内置序列；README 与官网带同一块 | `bench`, `bench_doc` | — |
 | 根锚定 | — 每条命令与钩子都经 `root` 锚定 | `default_root`, `resolve_root` | — |
 <!-- parity:end -->
@@ -175,7 +176,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **这就是成品的形状。** 计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——已于 2026-08-31 裁定不做（计划 v2.22，45 条）。以下是立场清单，不是计划清单。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。Claude Code marketplace 条目跟的是 `main`，不是发布。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。一次发布构建三个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`）；插件启动器还能解析出 `x86_64-macos` 与 `aarch64-linux`，这两个键没有 pin 的资产，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）——以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
 
 ## 文档
 

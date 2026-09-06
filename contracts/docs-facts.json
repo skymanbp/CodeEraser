@@ -264,6 +264,12 @@
       "value": "ce.scan-report/0.2.0"
     },
     {
+      "id": "report:setup#schemaver",
+      "source": "cli/src/setup/mod.rs (typed)",
+      "tier": "linked",
+      "value": "ce.setup-report/0.1.0"
+    },
+    {
       "id": "report:similar#schemaver",
       "source": "cli/src/similar/face.rs (typed)",
       "tier": "linked",

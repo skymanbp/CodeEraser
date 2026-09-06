@@ -37,6 +37,7 @@ Commands:
   mcp        MCP server over stdio: the read-only report face of every judgment family
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
   update     Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
+  setup      Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -480,5 +481,20 @@ Options:
       --installer        With --yes: also save the verified GUI installer to the temp dir and print its path (running it is your click)
       --format <FORMAT>  [default: console] [possible values: console, json]
   -h, --help             Print help
+```
+
+## ce setup
+
+```text
+Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added
+
+Usage: ce setup [OPTIONS]
+
+Options:
+      --lang <LANG>       Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --unwire            Remove exactly what a previous `ce setup` added (keyed on its marker file); a registration you made yourself is never touched
+      --marker-dir <DIR>  Directory holding the `claude-plugin-wired` marker (default: this binary's directory — the installer's $INSTDIR)
+      --format <FORMAT>   [default: console] [possible values: console, json]
+  -h, --help              Print help
 ```
 

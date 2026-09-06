@@ -7,22 +7,22 @@
 ; idempotent by construction (reinstalls never stack duplicates).
 ;
 ; Since v1.0.1 the installer has a THIRD job: one install = the whole
-; product. If Claude Code is on this machine (a `claude` CLI on PATH,
-; or the native install at ~\.local\bin\claude.exe), POSTINSTALL
-; registers the public marketplace (skymanbp/CodeEraser — the manifest
-; lives at the REPO ROOT since 9f86d58; pointing at plugin/ is the
-; exact stale registration that silently dropped the guard on the dev
-; machine for three days) and installs/refreshes the codeeraser
-; plugin. Every failure DEGRADES to a DetailPrint with the manual
-; two-liner — an installer must finish installing even when offline.
-; The `claude-plugin-wired` marker is written ONLY when the
-; marketplace was added BY THIS INSTALLER: PREUNINSTALL keys on it, so
-; uninstall removes exactly what install added and never tears down a
-; registration the user made themselves (dev checkouts register the
-; repo directory instead — that one is not ours to remove).
+; product. If Claude Code is on this machine, the plugin gets wired.
+; Since v1.7.0 that wiring is `ce setup` (cli/src/setup/) — one Rust
+; body the AppImage and dmg users run by hand and this hook runs for
+; the Windows user — so the marketplace source, the plugin target and
+; the `claude-plugin-wired` marker are spelled in exactly one place
+; and cli/tests/gui/installer_wiring.js reads them off that source.
+; The marker is written ONLY when the marketplace was added BY THIS
+; INSTALL: PREUNINSTALL keys on it, so uninstall removes exactly what
+; install added and never tears down a registration the user made
+; themselves. Every failure DEGRADES to a DetailPrint — an installer
+; must finish installing even when offline — and `ce setup` prints its
+; own bilingual verdict line into this log before the legend below.
 ; perMachine caveat: the hook runs in the ELEVATED context, so the
-; plugin lands in the elevating user's ~\.claude — on the typical
-; single-admin machine that is the installing user.
+; plugin would land in the elevating user's ~\.claude; `ce setup`
+; compares that account with the console user and refuses by name
+; (exit 13) when they differ instead of wiring the wrong home.
 ;
 ; Two rules this file learned the hard way (review 2026-08-21, both
 ; reproduced first-party against a real machine):
@@ -54,39 +54,34 @@
     DetailPrint "CodeEraser: machine PATH not updated (exit $2) — add $INSTDIR yourself"
   SendMessage 0xFFFF 0x1A 0 "STR:Environment" /TIMEOUT=5000
 
-  ; --- Claude Code plugin wiring (one install = both). Exit codes:
-  ; 0 wired fresh (marker written) · 5 already registered, refreshed ·
-  ; 10 no Claude Code · 11 marketplace add failed · 12 install failed.
-  ; The marketplace-presence probe is textual on `marketplace list`
-  ; (`> codeeraser` row): ANY marketplace of that name counts — a dev
-  ; checkout's directory registration must be reused, not replaced.
-  DetailPrint "CodeEraser: probing for Claude Code"
-  nsExec::ExecToLog "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command $\"$$c=(Get-Command claude -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1).Source; if (-not $$c) { $$p=Join-Path $$env:USERPROFILE '.local\bin\claude.exe'; if (Test-Path $$p) { $$c=$$p } }; if (-not $$c) { exit 10 }; $$l=& $$c plugin marketplace list 2>&1 | Out-String; if ($$LASTEXITCODE -ne 0) { exit 11 }; $$fresh=$$l -notmatch '(?m)^\s*>\s*codeeraser\s*$$'; if ($$fresh) { & $$c plugin marketplace add skymanbp/CodeEraser 2>&1 | Out-Null; if ($$LASTEXITCODE -ne 0) { exit 11 } }; & $$c plugin install codeeraser@codeeraser 2>&1 | Out-Null; if ($$LASTEXITCODE -ne 0) { exit 12 }; & $$c plugin update codeeraser@codeeraser 2>&1 | Out-Null; if ($$fresh) { New-Item -ItemType File -Force -Path (Join-Path $$env:CE_INSTDIR 'claude-plugin-wired') | Out-Null; exit 0 }; exit 5$\""
+  ; --- Claude Code plugin wiring (one install = both), delegated to
+  ; `ce setup`. Its exit codes: 0 wired fresh (marker written) · 5
+  ; already registered, refreshed · 10 no Claude Code · 11 marketplace
+  ; add failed · 12 install failed · 13 elevated account is not the
+  ; logged-in user (nothing wired). 0 and 5 are success; the rest are
+  ; degraded and `ce setup` has already printed what to run by hand —
+  ; this hook spells no claude command of its own (the gate holds it
+  ; to that), so the recovery line can never go stale here.
+  DetailPrint "CodeEraser: wiring the Claude Code plugin (ce setup)"
+  nsExec::ExecToLog '"$INSTDIR\ce.exe" setup'
   Pop $2
-  StrCmp $2 "0" cepi_wired
-  StrCmp $2 "5" cepi_kept
-  StrCmp $2 "10" cepi_nocc
-  DetailPrint "CodeEraser: Claude Code plugin wiring failed (exit $2) — run yourself: claude plugin marketplace add skymanbp/CodeEraser, then claude plugin install codeeraser@codeeraser"
-  Goto cepi_done
-  cepi_nocc:
-  DetailPrint "CodeEraser: Claude Code not detected — plugin not wired (after installing Claude Code: claude plugin marketplace add skymanbp/CodeEraser, then claude plugin install codeeraser@codeeraser)"
-  Goto cepi_done
-  cepi_kept:
-  DetailPrint "CodeEraser: Claude Code plugin already registered — refreshed (restart Claude Code sessions to activate)"
-  Goto cepi_done
-  cepi_wired:
-  DetailPrint "CodeEraser: Claude Code detected — plugin wired (restart Claude Code sessions to activate)"
+  StrCmp $2 "0" cepi_done
+  StrCmp $2 "5" cepi_done
+  DetailPrint "CodeEraser: Claude Code plugin not wired (ce setup exit $2) — see the line above; run `ce setup` from your own account once Claude Code is installed"
   cepi_done:
 !macroend
 
 !macro NSIS_HOOK_PREUNINSTALL
   ; Un-wire ONLY what POSTINSTALL wired: no marker file, no touch.
-  ; Runs BEFORE file removal so the marker is still on disk to read.
+  ; Runs BEFORE file removal so the marker and ce.exe are still on
+  ; disk; `ce setup --unwire` keys on the same marker and deletes it,
+  ; the Delete below covers the exit-13 refusal (the directory is
+  ; about to go either way).
   IfFileExists "$INSTDIR\claude-plugin-wired" 0 ceppu_done
-  nsExec::ExecToLog "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command $\"$$c=(Get-Command claude -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1).Source; if (-not $$c) { $$p=Join-Path $$env:USERPROFILE '.local\bin\claude.exe'; if (Test-Path $$p) { $$c=$$p } }; if (-not $$c) { exit 10 }; & $$c plugin uninstall codeeraser@codeeraser 2>&1 | Out-Null; & $$c plugin marketplace remove codeeraser 2>&1 | Out-Null; exit 0$\""
+  nsExec::ExecToLog '"$INSTDIR\ce.exe" setup --unwire'
   Pop $2
   StrCmp $2 "0" +2 0
-    DetailPrint "CodeEraser: Claude Code plugin not unwired (exit $2) — remove yourself: claude plugin uninstall codeeraser@codeeraser"
+    DetailPrint "CodeEraser: Claude Code plugin not unwired (ce setup --unwire exit $2) — remove yourself: claude plugin uninstall codeeraser@codeeraser, then claude plugin marketplace remove codeeraser"
   Delete "$INSTDIR\claude-plugin-wired"
   ceppu_done:
 !macroend

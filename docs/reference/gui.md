@@ -102,8 +102,10 @@ surfacing by name. The full contract is [erase.md](erase.md).
 
 The three release installers (NSIS `setup.exe` / AppImage / dmg)
 bundle the GUI with `ce` and `ce-core` as sidecars — one install is
-the whole product. The Windows installer also detects Claude Code
-and wires the plugin. Building from source: `cargo build` in
+the whole product. The Windows installer also runs `ce setup`, which
+detects Claude Code and wires the plugin (the marketplace at its
+`release` ref, the plugin, the uninstaller's marker); AppImage and
+dmg users run `ce setup` once. Building from source: `cargo build` in
 `gui/src-tauri/` (its own workspace — building the CLI does not
 build it, which is why CI carries dedicated GUI legs: build, clippy,
 fmt, the three webview gates `lens_invariant.js` / `i18n_gate.js` /

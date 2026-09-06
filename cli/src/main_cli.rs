@@ -12,6 +12,7 @@ use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
 use crate::main_erase::EraseArgs;
 use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
+use crate::main_setup::SetupArgs;
 use crate::main_similar::SimilarArgs;
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
@@ -253,4 +254,9 @@ pub(crate) enum Cmd {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
     },
+    /// Wire this machine's Claude Code to the plugin (register the
+    /// marketplace at its `release` ref, install) and say whether this
+    /// binary's directory is on PATH; the installers call it, AppImage
+    /// / dmg users run it once; --unwire removes only what it added
+    Setup(SetupArgs),
 }
