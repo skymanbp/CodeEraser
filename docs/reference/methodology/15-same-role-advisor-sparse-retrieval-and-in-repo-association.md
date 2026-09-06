@@ -183,7 +183,7 @@ so it binds the cascade directly. On the Rust side `consume` is strict: the orde
 permutation of the rows sent, one role bit per row, counts agreeing with the tables; any skew
 is a *named* non-judgment, never conflated with "no candidates"
 ([wire.rs:82-101](../../../cli/src/similar/wire.rs#L82)). The family entered the protocol at
-6.7.0, additively ([VERSIONING.md](../../VERSIONING.md)).
+6.7.0, additively ([VERSIONING.md](../../../contracts/VERSIONING.md)).
 
 ### 6. Three faces, one document, one Stop line
 

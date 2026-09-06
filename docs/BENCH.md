@@ -29,8 +29,12 @@
 > alone on that same day: every row shares one measured date (a test below
 > holds that line), and rows carrying different dates are not comparable.
 >
-> A release joins only when there is something new to measure. One that ships
-> the same `cli/src` and `core/app` as its predecessor gets no row of its own:
+> A release joins only when there is something new to measure. What is measured
+> is `cli/src` and `core/app` together with the manifests, lockfiles and
+> toolchain pin that decide what those sources compile into: a dependency bump
+> re-times the tokenizer without moving a line of source, and a rule reading
+> two directories would turn that release away. One shipping all of those
+> unchanged, its own version stamp apart, gets no row of its own:
 > replaying the whole series to add a duplicate measurement would publish that
 > drift under a new version number. So every surface printing these numbers
 > beside a version names the version MEASURED — never "the latest" — and says

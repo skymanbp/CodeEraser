@@ -190,8 +190,8 @@ pub(crate) enum Cmd {
         #[arg(long)]
         hook: bool,
     },
-    /// Stop audit v1: net LOC + duplicate blocks touching changed
-    /// files (blocks the stop only in deny mode)
+    /// Stop audit: net LOC + duplicate blocks touching changed files +
+    /// tombstone tier/budget + same-role advisory (blocks the stop only in deny mode)
     Audit {
         /// Hook mode: read the JSON envelope on stdin (required)
         #[arg(long)]

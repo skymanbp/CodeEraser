@@ -89,7 +89,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 <!-- bench:begin -->
 ### 延迟 · v1.5.1
 
-| percentile | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
+| 百分位 | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | p50 ms | 1269 | 950 | 4080 | 398 | 832 | 42 | 585 |
 | p95 ms | 1296 | 2204 | 4092 | 413 | 836 | 45 | 2463 |
@@ -107,7 +107,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **Claude Code 插件。** `ce setup` 在本仓的 `release` 分支上注册 marketplace——每次发布后快进到 tag，装机跟发布不跟 `main`——并安装插件；手动：`/plugin marketplace add skymanbp/CodeEraser@release`，再 `/plugin install codeeraser@codeeraser`。启动器按 pin 解析 `ce` 与 `ce-core`：先取命中的本地或 PATH 副本，再钉扎下载，最后才是会自报未校验的 PATH 二进制。
 
-**只要 CLI，或从源码。** 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`（x86_64-windows / x86_64-linux / aarch64-macos / x86_64-macos / aarch64-linux），改名 `ce` / `ce-core` 并排放上 PATH；或 `cargo install codeeraser` 再把 `ce-core` 放旁边；或用钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 自己构建——`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cargo install --path cli`。核解析全线一条链：`CE_CORE_BIN` → 旁边的 `ce-core` → PATH；`--core <路径>` 最优先。
+**只要 CLI，或从源码。** 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`（x86_64-windows / x86_64-linux / aarch64-macos / x86_64-macos / aarch64-linux），改名 `ce` / `ce-core` 并排放上 PATH；或 `cargo install codeeraser` 再把 `ce-core` 放旁边；或用钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 自己构建——`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cd .. && cargo install --path cli`。核解析全线一条链：`CE_CORE_BIN` → 旁边的 `ce-core` → PATH；`--core <路径>` 最优先。
 
 | 命令 | 报告 / 判决内容 |
 |---|---|
@@ -176,9 +176,9 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 已知限制
 
-**这就是成品的形状。** 计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——已于 2026-08-31 裁定不做（计划 v2.22，45 条）。以下是立场清单，不是计划清单。
+**v1.7.0 的范围。** 计划 v2.29 把部分后置工作复活进 v1.7.0：计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——曾于 2026-08-31 裁定不做（计划 v2.22，45 条），2026-09-05 起按「有收益且代价可接受」逐条复活。以下限制描述当前发布。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。语义判决覆盖上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）——以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。基于 AST 的判决使用上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；Markdown 没有 tree-sitter 语法，由文档与图规则判决；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）——以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
 
 ## 文档
 

@@ -84,7 +84,7 @@ ping	经项目守护进程往返一次 ping（会惰启它）
 ping.root	项目根（默认当前目录）
 probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定
 probe.hook	钩子模式：从 stdin 读 JSON 信封（必带）
-audit	Stop 审计 v1：净行数 + 触及改动文件的重复块（仅 deny 档拦停）
+audit	Stop 审计：净行数 + 触及改动文件的重复块 + 墓碑残留（按其档位 / 预算）+ 同角色顾问行（仅 deny 档拦停）
 audit.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 health	SessionStart 健康行 + 守护进程预热
 health.hook	钩子模式：从 stdin 读 JSON 信封（必带）

@@ -42,32 +42,41 @@
 1. `node scripts/pin_release.js <版本>`：从 draft 下载 SHA256SUMS、核对十五工件花名册
    （`scripts/roster.js` 从目标键派生资产名，`it/release_roster.rs` 守它与 Rust 常量、
    release.yml、ci.yml、清单键集同一份），把十五 pin（五目标 × ce / ce-core / GUI 安装包）
-   与 `CE_MANIFEST_VERSION`、`CE_BASE_URL` 写进 `plugin/bin/manifest.env`，按 `git diff`
-   断言恰好十七行移动（同版本重钉十五行），再跑 `scripts/packaging.js` 重生成 `packaging/`
+   与 `CE_MANIFEST_VERSION`、`CE_BASE_URL` 写进 `plugin/bin/manifest.env`，再按**终态**校验
+   （键集恰好是花名册、每枚 pin 是 64 位十六进制且与 draft 报的那枚相等、两个版本行等于本次
+   tag；判据只读终态，故原样重跑、或补跑 `--bless`，都不再被拒），再跑 `scripts/packaging.js` 重生成 `packaging/`
    下的 Homebrew 公式与 winget 清单（它们是清单的投影，随 pin 同提交）——不再手抄
    （tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.6.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.6.0`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
    release.yml verify-publish 腿）。**同一个提交里还有 docs-facts 一行**：
    `contracts/docs-facts.json` 的 `ver:pin#v` 是从 `CE_MANIFEST_VERSION` 派生的
    事实，pin 一动它就旧了，`facts_projection` 当场红——跑
-   `CE_BLESS=1 cargo test --test it -- facts_`（或 `pin_release.js … --bless` 代跑）与清单同批提交。只推清单不推
+   `CE_BLESS=1 cargo test --manifest-path cli/Cargo.toml --test it -- facts_`
+   （或 `pin_release.js … --bless` 代跑）与清单同批提交。只推清单不推
    docs-facts 已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿要等的正是这个提交的
-   全部 check。清单、docs-facts、`packaging/` 齐动，提交并推 main，CI 绿。**再手动跑一次
-   ci.yml 的 `packaging-live`**（Actions → ci → Run workflow）：它只在周程与手动上跑、不在 push 上跑，
-   而 README 双语与官网两首页自 v1.7.0 起写着 `brew install` / `winget install`——它没绿过一次，
-   那两行就是没有任何读者验过的承诺（`brew style` / `brew audit --strict` / `brew install` /
-   `check-jsonschema` 全在这条腿里）。
+   全部 check。清单、docs-facts、`packaging/` 齐动，提交并推 main，CI 绿。**tag 之前只跑离线
+   三检**：`node scripts/packaging.js --check`（投影与生成器逐字节，`it/packaging.rs` 也跑它）、
+   把公式拷进 `brew tap-new --no-git ci/codeeraser` 再 `brew style` 与 `brew audit --strict`、
+   `pipx run check-jsonschema` 按三份 winget 清单自报的 schema 校验（后两条的逐字命令抄自
+   ci.yml 的 `packaging-live`，需要 Homebrew 与 pipx 的机器）。`packaging-live` 本身**装不了
+   还没发布的 draft**——公式里的 url 是公开发布 URL，此刻 draft 的资产还是 404；它是**公开渠道**
+   验收：每周一随周程，publish 之后再手动 dispatch 一次（§3）——没有那一跑，两个 README 与官网
+   两首页的 `brew install` / `winget install` 就是没有任何读者验过的承诺。
 2. Release notes **先于 tag** 写到 draft 上：`gh release edit vX.Y.Z --notes-file <notes.md>`
    ——功能面 + 分数迁移声明（如适用）+ 未签名明示（代码签名/公证裁定不做——
    2026-08-19，SHA256 链为永久信任锚；ADR-007/R1 立场）。tag 腿拒发仍带占位句
    「Draft build phase」或没有说明的 release（此前的版本都带占位句发出、事后再改）。
-3. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**不重建**：先等**这个 commit 上
-   全部 check 完成**（tag 会另起一次 CI，`build-macos` 自步 9 起每推都跑；排队多久由
+3. `git tag vX.Y.Z && git push origin vX.Y.Z`——tag 腿**不重建**：先等**这个 commit 上全部
+   check 完成，且 `build (ubuntu-latest)` / `build (windows-latest)` / `build-macos` 三条按名
+   到齐且 success**（空的 check 表里既无 pending 也无失败，旧判据读成「全绿」= 零证据即发布；tag 会另起一次 CI，`build-macos` 自步 9 起每推都跑；排队多久由
    GitHub 说了算——v1.3.1 首打排队 30.6 min 未开工，耗尽当时 30 min 预算而拒发，预算已
    放宽到 2 h，超时按名列出未完成的腿，届时重跑该 job 即可，无须挪 tag），再核**来源**
-   （draft 的 `--target` 构建提交与 tag 提交在 `cli/src`、`cli/Cargo.{toml,lock}`、`core/app`、
-   `core/ce-core.cabal`、`core/cabal.project{,.freeze}`、`gui/src-tauri`、`gui/ui` 上树哈希
-   逐一相等——pin 提交只该动清单、docs-facts 与 `packaging/` 三处）与**说明**，最后
+   （draft 的 `--target` 构建提交与 tag 提交在**十二条**路径上树哈希逐一相等：`cli/src`、
+   `cli/Cargo.{toml,lock}`、`core/app`、`core/ce-core.cabal`、`core/cabal.project{,.freeze}`、
+   `gui/src-tauri`、`gui/ui`，外加同样决定字节的三个输入——`contracts/bench/bench.json`
+   （`include_str!` 编进 GUI）、`rust-toolchain.toml`（两个 workspace 的编译器）、
+   `.github/workflows/build-target.yml`（draft 跑的那份配方）——pin 提交只该动清单、
+   docs-facts 与 `packaging/` 三处）与**说明**，最后
    `verify-publish` 按花名册复核十六资产（十五工件对拍 SHA256SUMS，再逐一对拍 manifest pin）
    后 publish，再把 `release` 分支快进到 tag 提交（marketplace 条目注册的就是这个分支，装机据此
    跟发布）。tag 腿等 check 时只赦免**按名列出**的 skipped 腿（`SKIPPED_OK`：本 workflow 的
@@ -88,8 +97,9 @@
   CI 另解包跑 `cargo check --tests`。
 - **Homebrew tap**（O71）：`packaging/homebrew/Formula/codeeraser.rb` 由 `node scripts/packaging.js`
   从清单派生（pin 后自动重生成；`it/packaging.rs` 守字节并把 url / sha256 反读回清单对拍；
-  ci.yml 周程 `packaging-live` 在 macOS 与 ubuntu 上 `brew style` / `brew audit --strict` /
-  `brew install --formula` 装真 pin 并 `ce --version`）。tag 腿 `homebrew-tap` 在 secret
+  ci.yml 的 `packaging-live`——每周一随周程、**publish 之后手动 dispatch 一次**——在 macOS 与
+  ubuntu 上 `brew style` / `brew audit --strict` / `brew install --formula` 装真 pin 并
+  `ce --version`；它装的是公开发布 URL，故发布前跑不得）。tag 腿 `homebrew-tap` 在 secret
   `HOMEBREW_TAP_TOKEN` 在座时经 contents API 把公式写进 `skymanbp/homebrew-codeeraser`
   （该仓须先建好，空仓即可；不存在按名拒绝）；不在座则手动把该文件复制进 tap 仓。用户侧
   `brew install skymanbp/codeeraser/codeeraser`。

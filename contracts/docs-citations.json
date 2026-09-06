@@ -6735,6 +6735,12 @@
     "line": 210,
     "text": "mode: &'a str,\nsession: &'a str,"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e210cd8b91b887db|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 107,
+    "end": 110,
+    "text": "}\n// the third class speaks at its own tier (`[tombstone] tier`); its"
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e3cae5ea62eb7092|0": {
     "target": "../../../cli/src/guard.rs",
     "line": 165,
@@ -7941,8 +7947,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 101,
-    "end": 111,
+    "line": 105,
+    "end": 115,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {

@@ -301,7 +301,7 @@
 > **5.1.0**（规则包围栏 + per-class 棘轮容差 minor，K 轮步 4，2026-08-25，用户拍板 v2.14 ②）：
 > ①`verdict.request` 加性标量 `classDigest`——对 `[[rules.class]]` 规范化声明（名、**声明序**的 globs、旋钮）
 > 的指纹。名与 glob 仍永不过线（§5.9.2）：它们的哈希不是它们。编码为**长度前缀**（netstring 式 `tag:len:bytes`）
-> 而非分隔符——首版靠 fnv1a 的 NUL 分隔，自带的腿当场抓到碰撞：名 `a` 带 glob `b` 与名 `a glob b` 无 glob
+> 而非分隔符——首版靠 fnv1a 的 NUL 分隔，自带的腿当场抓到碰撞：名 `a` 带 glob `b` 与名 `a\0glob\0b` 无 glob
 > 字节流全等（分隔符只能分隔不含它的东西，长度可以）。②`ce-baseline.json` 记录其天花板**在哪套规则包下立的**，
 > 核加持名 fail 条件 `class_digest`，判据是**朴素的 Maybe 不等**且是全的：两边皆无=同意；改了规则包=不同意；
 > 对着围栏之前的旧基线声明规则包=不同意；把基线记过的规则包删掉=也不同意。四种分歧要的是同一个答案：
@@ -688,11 +688,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （130 行，server 恒答 7.1.0）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->130<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.1.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
-  request 沿用当前 major 锚（今日 7.0.0；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 7.1.0）。这组「行数/锚/答版」三元组是手写值，每逢 major 必须复核。
+  request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
+  server 走 <!--ce:ver:proto#v-->7.1.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。

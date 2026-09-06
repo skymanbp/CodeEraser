@@ -35,7 +35,8 @@ site/** linguist-documentation
 # read by gates that compare bytes: chips, generated blocks, the
 # citation renderer, the language gate, the facts projection (plan
 # v2.21 ⑧). LF on every checkout, on every platform; images stay
-# binary. (The ndjson goldens keep their own rule above.)
+# binary. (The ndjson goldens keep their own rule — re-asserted below,
+# after the broad fixture rule that would otherwise swallow it.)
 contracts/**/*.json text eol=lf
 # The crosscheck fixtures are frozen upstream slices whose content
 # sha256 is the identity every similar-oracle row carries (plan v2.29
@@ -43,6 +44,18 @@ contracts/**/*.json text eol=lf
 # (CI 33953181231). LF on every checkout: the ndjson rule's fourth
 # application.
 contracts/fixtures/** text eol=lf
+# …and the goldens keep theirs. The rule above is broader than
+# `*.ndjson` at the top of this file and, being LATER, wins — git takes
+# the last matching line per attribute — so the wire goldens read
+# `text: set` (`git check-attr text eol -- contracts/fixtures/daemon/
+# replies.ndjson`), not the `-text` this file twice says they get.
+# Checkout bytes agree either way while the broad rule says lf; `git
+# add` does not — under `text` it NORMALISES a CRLF-poisoned golden
+# into the index (measured: the same CRLF stream stores as LF under the
+# broad rule, verbatim under this one), and the byte-exact suites would
+# never see the poisoning. Narrower rule re-asserted here, so
+# precedence and the comment above finally agree.
+contracts/fixtures/**/*.ndjson -text
 docs/** text eol=lf
 site/** text eol=lf
 # The package-manager projections (plan v2.29 step 10, O71) are

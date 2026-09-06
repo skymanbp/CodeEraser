@@ -232,7 +232,7 @@ by path since they are separate runs) and lists a selected file's rows with the
 root-level census and the notices — the two the document carries, and a third when the
 advisory road failed while the canvas drew (a pre-6.2.0 core), so "no advisory" and "not
 judged" never look alike ([graph.js:34-69](../../../gui/ui/graph.js#L34),
-[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:101-111](../../../gui/ui/i18n.js#L101)).
+[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:105-115](../../../gui/ui/i18n.js#L105)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -279,8 +279,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1022 (1034 − 12 early-NUL) | rust | 2614 (1453) | 276 (0) | 10.6 % | 6 / 276 = 2.2 % | 6 / 2320 |
-| | | haskell | 1547 (348) | 274 (0) | 17.7 % | 14 / 274 = 5.1 % | 14 / 1273 |
+| self @ this commit | 1027 (1039 − 12 early-NUL) | rust | 2614 (1453) | 276 (0) | 10.6 % | 6 / 276 = 2.2 % | 6 / 2320 |
+| | | haskell | 1547 (348) | 273 (0) | 17.6 % | 14 / 273 = 5.1 % | 14 / 1274 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |

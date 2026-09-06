@@ -41,15 +41,20 @@ function renderBench() {
       )
       .join("") +
     `</tbody></table>`;
+  // the metric names a row and the source is a path a reader opens:
+  // both stay as the ledger spells them. Value, detail and epoch are
+  // prose and go through the i18n table, which splices the ledger's
+  // own numbers into the Chinese sentence rather than restating them.
+  const words = (f, part) => esc(tr("benchFrozenWords", f, part));
   $("bench-frozen").innerHTML =
     `<h3>${esc(tr("benchFrozen"))}</h3>` +
     d.frozen
       .map(
         (f) =>
           `<div class="erow adv"><i>❄</i><b>${esc(f.metric)}</b>` +
-          `<em>${esc(f.value)}</em>` +
-          `<span>${esc(f.detail ?? "")}</span>` +
-          `<small>${esc(f.source)}${f.epoch ? " · " + esc(f.epoch) : ""}</small></div>`,
+          `<em>${words(f, "value")}</em>` +
+          `<span>${words(f, "detail")}</span>` +
+          `<small>${esc(f.source)}${f.epoch ? " · " + words(f, "epoch") : ""}</small></div>`,
       )
       .join("");
 }

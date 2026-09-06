@@ -1,12 +1,12 @@
 # codeeraser plugin
 
-被动 guard 三钩（全部 fail-open，内部失败一律放行）+ 一个主动 skill + 一条命令：
+被动 guard <!--ce:count:hooks#word-->三<!--/ce-->钩（全部 fail-open，内部失败一律放行）+ <!--ce:count:skills#word-->一<!--/ce-->个主动 skill + <!--ce:count:commands#word-->一<!--/ce-->条命令：
 
 | hook | 命令 | 行为 |
 |---|---|---|
 | SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
-| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入内容做 T1/T2 探针；按 `ce.toml [guard] mode` 决策 |
-| Stop | `ce audit --hook` | 净 LOC + 涉改重复块；仅 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md) |
+| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后行数超本文件那条硬线）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声 |
+| Stop | `ce audit --hook` | 净 LOC + 涉改重复块，仅 deny 档拦停；墓碑腿同样在核里按 `[tombstone] tier` 与 budget 判、也只有 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)；同角色顾问行（本会话新增的单元其 top-1 带角色位时）只落进 observe 账本，永不拦停 |
 
 skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
 的发现引导成安全删除（先读全文、查引用、小批删、重跑门证收敛），
@@ -17,7 +17,7 @@ skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
 所以它的更新动作永远是 `/plugin update codeeraser`（新清单带新 pin，下一会话
 启动器重验重下载）；`ce update --yes` 只替换手工放置或安装包随附的副本。
 
-MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），16 个工具随插件
+MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:count:mcp_tools#word-->十六<!--/ce-->个工具随插件
 一起到位——装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
 由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
 `erase` 工具只到**计划**为止、`erase_log` 只读它的审计轨迹：`apply` 没有 face、也不会有——一个能凭自己

@@ -12,6 +12,10 @@ const CE_I18N = {
     benchSeries: "latency series (p50/p95 ms, self repository, release builds)",
     benchMetric: "metric", benchUnit: "cells are p50/p95 in ms; · = not measured at that version",
     benchFrozen: "frozen evaluation points (value + sealed-ledger source)",
+    // a frozen row's value / detail / epoch. English shows the sealed
+    // ledger's own words, so bench.json stays their only owner; the
+    // Chinese table splices the same numbers into BENCH_ZH's templates
+    benchFrozenWords: (f, part) => f[part] ?? "",
     deep: "deep (S6)", days: "days", scan: "scan", off: "off",
     commits: "commits", load: "load",
     resolvedTo: (p) => `resolved to ${p}`,
@@ -186,6 +190,7 @@ const CE_I18N = {
     benchSeries: "延迟系列（p50/p95 毫秒，自仓，release 构建）",
     benchMetric: "指标", benchUnit: "单元格为 p50/p95 毫秒；· = 该版本未测",
     benchFrozen: "冻结评估点位（数值 + 封册出处）",
+    benchFrozenWords: (f, part) => benchZh(f, part),
     deep: "深查 (S6)", days: "天数", scan: "扫描", off: "关",
     commits: "提交数", load: "加载",
     resolvedTo: (p) => `已锚定到 ${p}`,
@@ -336,6 +341,73 @@ function tr(key, ...args) {
 // not, in four places.
 function axisName(code) {
   return tr("axisNames")[code] ?? String(code);
+}
+
+// The frozen bench rows in Chinese: one template per (metric, part)
+// over the numbers the ledger's English states. contracts/bench/bench.json
+// is compiled into the binary and stays the ONLY owner of those
+// numbers — nothing here retypes one, it splices what the row says.
+// The bench screen injected value, detail and epoch verbatim, which
+// put the sealed ledger's English on the Chinese screen with no
+// switch able to reach it.
+//
+// What a reader looks up stays as the ledger spells it: metric names,
+// source paths, corpus names, the comparator's version and commit id.
+const BENCH_NUM = /\d+(?:\.\d+)*/g;
+const BENCH_ZH = {
+  docdup_d3_precision: {
+    value: (n) => `范围内 ${n[0]}/${n[1]}（${n[2]}%）`,
+    detail: (n) => `五语料同一达成线 B；docstring 行 ${n[0]}/${n[1]} 未设门发布`,
+  },
+  docdup_d1_recall: {
+    value: (n) => `${n[0]}%`,
+    detail: (n) => `在预言机报告地板对上的粗筛召回，硬门 ${n[0]}，全语料`,
+  },
+  t3_precision: {
+    value: (n) => `已判 ${n[0]}，误判 ${n[1]}（${n[2]}）`,
+    detail: (n) => `theta 网格 ${n[0]}..${n[1]} 每一点误判 ${n[2]}；分母 ≥ ${n[3]} 的语料各自设门`,
+    epoch: () => `冻结于 Go arity 之前的探测器；部分重冻结在结构上不可能——重生成会连人工审计一并重立（EVAL-SET-M5-3 纪元条款）`,
+  },
+  graph_precision: {
+    value: (n) => `整体门 ≥ ${n[0]} 已满足`,
+    detail: (n) => `自仓 ${n[0]}、zod ${n[1]}、ripgrep ${n[2]}、cobra ${n[3]}；requests ${n[4]} 未设门发布（n=${n[5]} < ${n[6]}）`,
+  },
+  fourclass_fpr: {
+    value: (n) => `${n[1]} 个样本命中 ${n[0]} 个（门 ≤ ${n[2]}%）`,
+    detail: (n) => `${n[0]} 个样本的冻结编辑语料；召回按构造无定义`,
+  },
+  guard_fpr_per500: {
+    value: (n) => `每 ${n[1]} 次编辑 ${n[0]} 次误报`,
+    detail: (n) => `${n[0]} 个回放写入事件（requests 尾段 ${n[1]} 提交 + 自仓历史），${n[2]} 次拦截，仲裁后 ${n[3]} 误报`,
+    epoch: (n) => `拦截的仲裁是人的步骤——按 tag 自动出序列等于伪造它；复核是常设的 --ignored 腿 cli/tests/it/fpr_replay.rs，手动跑（${n[0]}-${n[1]}-${n[2]} 之前是复活的根 fpr_replay.rs），其读数在本值旁另行入册，绝不写进本值`,
+  },
+  l2_moved_recall: {
+    value: (n) => `跨文件搬迁行 ${n[0]}/${n[1]}`,
+    detail: (n) => `自仓 ${n[0]} 个提交；requests ${n[1]}/${n[2]}；ripgrep ${n[3]} + ${n[4]} 低于地板 = ${n[5]}；每个语料 ${n[6]} 处臆造`,
+  },
+  dedup_recall_vs_jscpd: {
+    value: (n) => `cobra 原始 ${n[0]}/${n[1]} → 归因后 ${n[2]}/${n[3]}`,
+    detail: (n) => `requests ${n[0]}/${n[1]} → ${n[2]}/${n[3]}；判准 ${n[4]}% 夹具 / ${n[5]}% requests / cobra n=${n[6]} 抽样 ${n[7]} 误报（二项 ${n[8]}% 下界 ${n[9]}%）`,
+    epoch: (n) => `对比物 = npx jscpd ${n[0]}；判准数字带有已声明的抽样限制——绝不以裸百分数呈现`,
+  },
+  t3_recall_vs_similarity: {
+    value: (n) => `zod ${n[0]} / requests ${n[1]} / cobra ${n[2]}（原始）`,
+    detail: (n) => `对比 similarity-ts/py/generic ${n[0]}；增量 ${n[1]}/${n[2]}/${n[3]}；门是单调回归地板（计划 v${n[4]}）`,
+    epoch: () => `工件已于 db88e48 退役；对比物是未随仓的第三方二进制`,
+  },
+};
+
+// One part of one frozen row in Chinese — or the ledger's own words,
+// when there is no template for it or the numbers do not come back
+// equal. A re-freeze that rewords a row must not leave a template
+// splicing the wrong figures into a fluent-looking sentence.
+function benchZh(f, part) {
+  const text = f[part] ?? "";
+  const t = BENCH_ZH[f.metric]?.[part];
+  if (!t || !text) return text;
+  const facts = (s) => (s.match(BENCH_NUM) ?? []).sort().join(" ");
+  const out = t(text.match(BENCH_NUM) ?? []);
+  return facts(out) === facts(text) ? out : text;
 }
 
 // Static labels re-fill on boot and on toggle; screens re-render

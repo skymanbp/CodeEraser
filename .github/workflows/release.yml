@@ -162,11 +162,32 @@ jobs:
       # failed run of any name refuses. Any other skipped or neutral
       # check refuses with its name: the failure direction is a loud
       # non-publish, never a silent publish.
+      #
+      # ABSENCE was still success (plan v2.29 step 12, item 12b). Every
+      # question this loop asked was about the checks it found: nothing
+      # pending, nothing failed. A commit whose checks have not been
+      # created yet answers with an EMPTY list, and an empty list has
+      # nothing pending and nothing failed — "all checks green" on zero
+      # evidence, which is the same publish the whole step exists to
+      # prevent. So the legs that actually build and test the tagged
+      # tree are REQUIRED by name and must have concluded success: the
+      # ci.yml `build` matrix (surfaced platform-expanded, unlike a
+      # skipped matrix) and `build-macos`, which carries no `if:` and so
+      # runs on every push. Verified against run 34040780731 / commit
+      # 05bb595: `build (ubuntu-latest)`, `build (windows-latest)`,
+      # `build-macos`. Absent is PENDING, not refused — they may simply
+      # not have been created yet — so the wait runs its course and the
+      # timeout below names them. tests/it/release_roster.rs holds this
+      # list to ci.yml's own job and matrix spellings.
       - name: CI must be green on this commit
         shell: bash
         run: |
           SKIPPED_OK="build draft starter-https setup-wiring release-rehearsal packaging-live"
           ok=$(printf '%s\n' $SKIPPED_OK | jq -R . | jq -sc .)
+          # `|`-separated: these names carry spaces, so a word list cannot
+          # hold them (and the shell would split them silently)
+          REQUIRED="build (ubuntu-latest)|build (windows-latest)|build-macos"
+          req=$(printf '%s\n' "$REQUIRED" | tr '|' '\n' | jq -R . | jq -sc .)
           # This run's own UNFINISHED jobs cannot gate this run: this job
           # is in_progress while it polls, and publish-crate /
           # homebrew-tap / winget-pr sit QUEUED on `needs:` it — waiting
@@ -186,22 +207,36 @@ jobs:
           # push legs green for the last 17.7 of them. The ceiling has
           # to bound the queue, not the build.
           for _ in $(seq 1 240); do
-            runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs?per_page=100" \
-                     --jq '[.check_runs[] | select(.status == "completed" or (.check_suite.id // 0) != '"$self"')]')
+            # --paginate: re-runs accumulate check runs on a commit and
+            # one page of 100 is not the list — a required leg on page
+            # two reads exactly like one that never ran. gh applies --jq
+            # per page and concatenates (measured with per_page=3 on
+            # commit 05bb595: 3 pages, 7 objects), so the stream is
+            # slurped back into one array here.
+            runs=$(gh api --paginate \
+                     "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs?per_page=100" \
+                     --jq '.check_runs[]' \
+                   | jq -sc '[.[] | select(.status == "completed" or (.check_suite.id // 0) != '"$self"')]')
             pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
             bad=$(echo "$runs" | jq -r --argjson ok "$ok" '[.[]
                     | select(.conclusion != null and .conclusion != "success")
                     | select((.conclusion == "skipped" and (.name as $n | $ok | index($n) != null)) | not)]
                   | map(.name + "=" + .conclusion) | join(", ")')
             [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
-            [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
+            absent=$(echo "$runs" | jq -r --argjson req "$req" '[$req[] as $n
+                      | select([.[] | select(.name == $n and .conclusion == "success")] | length == 0)
+                      | $n] | join(", ")')
+            if [ "$pending" = "0" ] && [ -z "$absent" ]; then
+              echo "all checks green"; exit 0
+            fi
             # name them: a bare count cannot say which leg is missing,
             # and the refusal below is the only record anyone reads
             names=$(echo "$runs" | jq -r '[.[] | select(.status != "completed")
                       | .name + "(" + .status + ")"] | join(", ")')
-            echo "waiting on $pending check(s): $names"; sleep 30
+            echo "waiting: $pending unfinished [${names:-none}]; required not green [${absent:-none}]"
+            sleep 30
           done
-          echo "refusing to publish: checks did not settle in 2 h: $names"; exit 1
+          echo "refusing to publish: checks did not settle in 2 h: unfinished [${names:-none}]; required not green [${absent:-none}]"; exit 1
       # Provenance (O84): the binaries were built by the dispatch run at
       # an earlier commit and the tag names another; nothing tied the
       # two, so a tag could publish assets built from sources it does
@@ -211,6 +246,15 @@ jobs:
       # touches plugin/bin/manifest.env, contracts/docs-facts.json and
       # the packaging/ projections only, so the roster below is exactly
       # what may NOT differ.
+      #
+      # "Built from" is wider than "sources": the first roster listed
+      # the directories a reader thinks of as the program and missed
+      # three inputs that decide the bytes just as much —
+      # contracts/bench/bench.json is COMPILED INTO the GUI
+      # (include_str!, gui/src-tauri/src/commands.rs), rust-toolchain.toml
+      # picks the compiler both workspaces are built with, and
+      # build-target.yml is the recipe the draft actually ran. Each can
+      # differ across the two commits with every tree above identical.
       #
       # Notes (O85): the draft ships with placeholder notes and nothing
       # refused to publish them — releases went out reading "Draft
@@ -228,7 +272,9 @@ jobs:
           [ "${#build}" -eq 40 ] || { echo "release target is not a full sha: $build"; exit 1; }
           git cat-file -e "$build^{commit}" || { echo "build commit $build is not in this clone"; exit 1; }
           for tree in cli/src cli/Cargo.toml cli/Cargo.lock core/app core/ce-core.cabal \
-                      core/cabal.project core/cabal.project.freeze gui/src-tauri gui/ui; do
+                      core/cabal.project core/cabal.project.freeze gui/src-tauri gui/ui \
+                      contracts/bench/bench.json rust-toolchain.toml \
+                      .github/workflows/build-target.yml; do
             at_build=$(git rev-parse "$build:$tree")
             at_tag=$(git rev-parse "$GITHUB_SHA:$tree")
             [ "$at_build" = "$at_tag" ] || {

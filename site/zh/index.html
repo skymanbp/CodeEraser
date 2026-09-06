@@ -64,7 +64,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 945/1000</span> | 判轴 0:80 1:0 2:102 3:0 4:0 5:0 6:205 | 候选 34
+<span class="s">检查分数 945/1000</span> | 判轴 0:81 1:0 2:102 3:0 4:0 5:0 6:205 | 候选 34
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：10 块并入既有成员，15 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -136,8 +136,8 @@
 <div class="install metric"><span class="k">hook 探针 p50（两文件夹具）</span><code>42 ms</code></div>
 <div class="install metric"><span class="k">全仓扫描 p50</span><code>585 ms</code></div>
 <div class="install metric"><span class="k">增量索引 p50（暖跑，dedup_warm）</span><code>398 ms</code></div>
-<div class="install metric"><span class="k">守卫误报（人裁 630 事件）</span><code>0.00 per 500 edits</code></div>
-<div class="install metric"><span class="k">docdup 判准（冻结黄金集）</span><code>17/17 scoped (100%)</code></div>
+<div class="install metric"><span class="k">守卫误报（人裁 630 事件）</span><code>每 500 次编辑 0.00 次误报</code></div>
+<div class="install metric"><span class="k">docdup 判准（冻结黄金集）</span><code>范围内 17/17（100%）</code></div>
 </div>
 <p class="cap">每个数字由回放产生（cli/tests/it/bench.rs 与 bench_backfill.rs），单源 contracts/bench/bench.json——绝不手填。当前发布 v1.6.0 该有自己的行，而全序列重跑在打 tag 之后，尚未落表。</p>
 <!-- bench:end -->

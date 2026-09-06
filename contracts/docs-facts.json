@@ -63,6 +63,12 @@
       "value": "6"
     },
     {
+      "id": "count:golden_requests#digits",
+      "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
+      "tier": "linked",
+      "value": "130"
+    },
+    {
       "debt": "Lang has no variant iterator; promote = Lang::judged() + grammar().is_some()",
       "id": "count:grammars#word",
       "source": "cli/src/scan/lang.rs::Lang::grammar (Some arms)",
