@@ -7,7 +7,7 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
-## [Unreleased]
+## [v1.7.0] — 2026-09-06 — 同角色顾问 + 稀疏检索 RAG 三面同落、复活批 35 条、wire 7.1.0、五目标十六资产（check 与 structure 分数与 1.6.0 不可比；index schema 16 整库重建一次）
 
 > 本节按计划步序升序排列；同一步的多个批次按交付时间先后。
 
@@ -349,6 +349,12 @@
 - 参考页 / 合约 / runbook：`ce probe` 帮助补「墓碑类按它自己的 `[tombstone] tier` 记账」、`ce mcp` 帮助改「每个判决家族的只读报告面 + 本机与本构建的诊断面，无一能写」（双语，`main_lang.rs` 同行）；ce.toml 参考的 `[guard] mode` 行点名它只管的两类（T1/T2 重复写入、硬预算越线）而墓碑类按自己的键判、`zone_tiers` 行点名 FPR-REPLAY 台账与 `fpr_zone_gate.rs`；生成横幅改 `--manifest-path cli/Cargo.toml`，`docs/reference/cli.md` / `ce-toml.md` 再生；gui.md 状态横幅改「已发布，十一屏」（逐版本史指向 CHANGELOG）、例外命令三条 → 四条（`bench_doc` 读编译进二进制的序列而非打开的树）；size-advisory 软线链改「现行值恒以 `ce-baseline.json` 为准」（标定期五个链节留给 git 历史）；DAEMON.md 核重启预算改 O63 指数退避（1 s·2^(n−1) 帽 60 s、永不永久关闭、恢复首报 `recovered`）；VERSIONING §1 顺序段与倒序段之间补断句与说明行、3.0.0 条的 daemon 行改指 DAEMON.md §1；RELEASE.md 截图门四腿 → 五腿；PERF-BUDGET 无标题的探针表补节标题（口径 / release / n = 30 自块内取，块内无日期即写明）；册 11 引 `ce-toml.md:32` 的锚随 `zone_tiers` 行重签。
 - 官网八页 + 册 + 图：首页双语 `ce similar` 卡、结构卡模块化轴、信任行；how 双语 `erase_log` 工具、序数去除、`judgedAxisCount` 5 到 8、`modFloor` / `modMassFloor` 常量芯片、f09 声明级搬迁段、f11 常设仪器句、区档台账句、九轮；stack / bench 页脚与发布卡；册 01 复现节、02 注释、04 文件名注、05 新段「成员身份（7.0.0）」引 `score/anchor.rs` 与 `baseline.rs`、13、14 九轮、15 spec §2；判决图 IR zh 标签「克隆与角色」、架构图 IR revision 重钉 HEAD、`judgment.zh.svg` 重渲（docs/assets 与 site/assets 同字节）。
 - CHANGELOG `[Unreleased]` 改按计划步序升序（规则行入节首；逐行字节搬运、行数不变）。**判决、分数算法、wire、schema 均不变**；ADR-006 具名重立与门数见提交说明。
+
+**无默认档位变更。** 计划 v2.29 步 15 发版前置（2026-09-06，用户四裁）：
+- 版本 1.6.0 → 1.7.0：九处字面（两 Cargo.toml / 两 Cargo.lock / `ce-core.cabal` / `plugin.json` / `tauri.conf.json` / `npm/package.json` / 握手 golden `hello-ok.ndjson`）+ 本标题；README 双语 / RELEASE.md / `docs-facts.json` 的 `ver:ce` 芯片随 bless。
+- bench 一日期规则改为允许错开（用户裁）：BENCH 页眉改「每行自带测量日期；跨日期读数在版本差之上还含机器日漂移——同日期行是序列、跨日期行只是界」，子仓门 `every_row_shares_one_measured_date` → `every_row_names_its_measured_date`（每行 ISO 日期形）；「尚无自己的行」双语句改「打 tag 之后才被测量」；v1.6.0 / v1.7.0 两行按 `CE_BENCH_TAGS` 单量、不再重放整条序列，2026-09-03 的 119 行原样保留。
+- 三条渠道腿首次启用（用户裁）：空 tap 仓 `skymanbp/homebrew-codeeraser` 与 `skymanbp/winget-pkgs` fork 已建；`CARGO_REGISTRY_TOKEN` / `HOMEBREW_TAP_TOKEN` / `WINGET_TOKEN` 三枚仓库 secret 由用户放置，tag 腿按 secret 在座与否自动发或按名跳过（RELEASE.md §3）。
+- 判决、分数算法、wire、schema 均不变；ADR-006 具名重立与门数见提交说明。
 
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 

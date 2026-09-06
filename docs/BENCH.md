@@ -24,10 +24,13 @@
 > 2026-08-26; replaying that same tag four days later — its own tree, its own
 > binaries — moved every one of its seven metrics, from 11 % faster to 12 %
 > slower, which is wider than most deltas a reader would try to read out of
-> this table. So the series is replayed WHOLE, in one sitting, whenever a
-> release joins it, and a tag whose minutes were disturbed is measured again
-> alone on that same day: every row shares one measured date (a test below
-> holds that line), and rows carrying different dates are not comparable.
+> this table. So every row names the day it was measured (the last column; a
+> test below holds that every row carries one), and a delta read between two
+> dates carries that machine-day drift on top of any version difference: rows
+> of one date are a series, rows of different dates only a bound. Until
+> 2026-09-06 the series was replayed whole, in one sitting, whenever a release
+> joined it; since then a release is measured on its own day and the earlier
+> rows stand.
 >
 > A release joins only when there is something new to measure. What is measured
 > is `cli/src` and `core/app` together with the manifests, lockfiles and
@@ -44,7 +47,7 @@
 > table cannot gain a row the rule forbids, and a release that earns one
 > says which of the two reasons it has none yet.
 
-The current release, v1.6.0, earns a row and does not have one yet: the whole series is replayed in one sitting after the tag.
+The current release, v1.7.0, earns a row and does not have one yet: it is measured after the tag.
 
 ## Latency series (self repository)
 
