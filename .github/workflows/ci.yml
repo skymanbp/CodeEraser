@@ -593,14 +593,22 @@ jobs:
         shell: bash
         run: |
           . plugin/bin/manifest.env
-          f=packaging/homebrew/Formula/codeeraser.rb
-          brew style --formula "$f"
-          brew audit --formula --strict "$f"
-          brew install --formula "$f"
+          # ubuntu runners ship Homebrew off PATH (runner-images Ubuntu2404-Readme)
+          if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"; fi
+          # Homebrew 4 refuses a formula path outside a tap for style / audit /
+          # install ("Homebrew requires formulae to be in a tap"), so the file is
+          # staged in a throwaway local tap laid out the way skymanbp/homebrew-codeeraser
+          # hosts it (Formula/codeeraser.rb) and addressed by its full name
+          tap=ci/codeeraser
+          brew tap-new --no-git "$tap"
+          cp packaging/homebrew/Formula/codeeraser.rb "$(brew --repository "$tap")/Formula/"
+          brew style --formula "$tap/codeeraser"
+          brew audit --formula --strict "$tap/codeeraser"
+          brew install --formula "$tap/codeeraser"
           got=$(ce --version)
           [ "$got" = "ce $CE_MANIFEST_VERSION" ] || { echo "formula installed '$got', the manifest pins $CE_MANIFEST_VERSION"; exit 1; }
           ce-core --version
-          brew test codeeraser
+          brew test "$tap/codeeraser"
       - name: winget manifests validate against the declared schema
         if: matrix.os == 'ubuntu-latest'
         shell: bash
