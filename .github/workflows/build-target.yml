@@ -157,12 +157,23 @@ jobs:
       # static declaration would break every compile gate that has no
       # staged binaries (probed locally 2026-08-18) — bundling config
       # lives with the one pipeline that stages the bundle.
+      # --verbose: tauri-bundler prints bundle_dmg.sh's output only at
+      # debug level, so the one DMG failure seen so far (run 34021025544
+      # attempt 1, macos-15-intel, green on rerun) left no first-hand
+      # line to diagnose. `-- --locked` reaches the cargo build the
+      # runner performs. The retry is bounded to one and names itself:
+      # a second failure is a real failure, not a flake.
       - name: Build GUI bundle (with sidecars)
         shell: bash
         working-directory: gui/src-tauri
         run: |
-          cargo tauri build --config \
-            '{"bundle":{"externalBin":["binaries/ce","binaries/ce-core"]}}'
+          for attempt in 1 2; do
+            cargo tauri build --verbose --config \
+              '{"bundle":{"externalBin":["binaries/ce","binaries/ce-core"]}}' \
+              -- --locked && break
+            [ "$attempt" = 1 ] || exit 1
+            echo "::warning::cargo tauri build failed on attempt $attempt; retrying once (DMG bundling flaked on run 34021025544 attempt 1)"
+          done
       # the asset names scripts/roster.js derives: <what>-<ver>-<key><ext>
       # for the binaries, CodeEraser-<ver>-<key><bundle> for the installer
       # whose kind follows the key's os half
