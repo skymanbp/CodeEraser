@@ -16,6 +16,7 @@
 //! summarizes intact unit relocations.
 
 pub mod batch;
+pub mod decls;
 pub mod diff;
 pub mod kinds;
 mod model;

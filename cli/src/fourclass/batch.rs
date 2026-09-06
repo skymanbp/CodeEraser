@@ -10,6 +10,7 @@
 //! plan R8's "退回 L1 而非退回无" is a code path, not a promise.
 
 mod delta;
+mod edges;
 
 use super::model::{Classification, classify, significant};
 use super::stacking::dup_spans;
@@ -53,13 +54,6 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
         .iter()
         .map(|p| classify(p.before, p.after, p.lang))
         .collect();
-    let done = |pairs, degraded, link_failed| BatchClassification {
-        pairs,
-        relocations: Vec::new(),
-        suspicions: Vec::new(),
-        degraded,
-        link_failed,
-    };
     let Some(link) = link else {
         return done(pairs, Some("no_link".into()), false); // link_mut counted it
     };
@@ -73,30 +67,50 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
     {
         return done(pairs, None, false);
     }
-    match link.request("fourclass", request_body(inputs, &sent)) {
+    match link.request("fourclass", request_body(inputs, &pairs, &sent)) {
         Err(e) => done(pairs, Some(e), true), // the link itself
-        // A degraded reply (bucket cap) may carry the partial blocks
-        // the core still derived — applying them would be partial L2
-        // behind a flag, breaking the header's pure-L1 promise. The
-        // reason is checked BEFORE merge on purpose (attack review
-        // 2026-08-11 F3: the old order merged first).
-        Ok(reply) => match reply["reason"].as_str() {
-            Some(r) => done(pairs, Some(r.to_string()), false), // it ANSWERED
-            // merge works on a COPY: a bad delta falls back to the
-            // UNTOUCHED pure-L1 pairs — the in-place form returned a
-            // half-merged result here (review 2026-08-20 #5)
-            None => match merge(&reply, inputs, &sent, &pairs) {
-                Err(e) => done(pairs, Some(e), false), // live link, bad delta
-                Ok((merged, relocations)) => BatchClassification {
-                    pairs: merged,
-                    relocations,
-                    suspicions: suspicions_of(&reply),
-                    degraded: None,
-                    link_failed: false,
-                },
-            },
-        },
+        Ok(reply) => {
+            consume(&reply, inputs, &sent, &pairs).unwrap_or_else(|e| done(pairs, Some(e), false))
+        }
     }
+}
+
+fn done(
+    pairs: Vec<Classification>,
+    degraded: Option<String>,
+    link_failed: bool,
+) -> BatchClassification {
+    BatchClassification {
+        pairs,
+        relocations: Vec::new(),
+        suspicions: Vec::new(),
+        degraded,
+        link_failed,
+    }
+}
+
+fn consume(
+    reply: &Value,
+    inputs: &[PairInput],
+    sent: &[(Side, Side)],
+    pairs: &[Classification],
+) -> Result<BatchClassification, String> {
+    // Check the reason BEFORE merge: partial blocks behind a bucket
+    // cap must never escape as a complete L2 result (review F3).
+    if let Some(reason) = reply["reason"].as_str() {
+        return Err(reason.to_string());
+    }
+    // Merge copies L1, so a malformed delta or declaration answer
+    // returns the untouched pairs (review 2026-08-20 #5).
+    let (merged, mut relocations) = merge(reply, inputs, sent, pairs)?;
+    relocations.extend(edges::unit_edges(reply, pairs, &relocations)?);
+    Ok(BatchClassification {
+        pairs: merged,
+        relocations,
+        suspicions: suspicions_of(reply),
+        degraded: None,
+        link_failed: false,
+    })
 }
 
 fn suspicions_of(reply: &Value) -> Vec<(usize, String)> {
@@ -191,16 +205,17 @@ fn side_runs(text: &str, changed: &[usize], moved: &[usize]) -> Side {
 /// retired eval_ablation's block-level equivalence replay (v0.5.0,
 /// EVAL-SET.md); classify_batch is its one reader today, so the face
 /// is private — a revival re-opens it together with the instrument.
-fn request_body(inputs: &[PairInput], sent: &[(Side, Side)]) -> Value {
+fn request_body(inputs: &[PairInput], pairs: &[Classification], sent: &[(Side, Side)]) -> Value {
     let pairs: Vec<Value> = sent
         .iter()
         .enumerate()
-        .filter(|(_, (rem, add))| !rem.is_empty() || !add.is_empty())
-        .map(
-            |(i, (rem, add))| {
-                json!({"i": i, "rem": rem, "add": add, "dupSpans": dup_spans(&inputs[i])})
-            },
-        )
+        // Even a pair with no leftovers can be a second declaration
+        // destination. The core needs every pair to judge uniqueness.
+        .map(|(i, (rem, add))| {
+            let (drem, dadd) = super::decls::request_keys(&pairs[i].decls);
+            json!({"i": i, "rem": rem, "add": add, "dupSpans": dup_spans(&inputs[i]),
+                   "declRem": drem, "declAdd": dadd})
+        })
         .collect();
     json!({"pairs": pairs})
 }

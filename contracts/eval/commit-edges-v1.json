@@ -1,0 +1,471 @@
+{
+  "commits": [
+    {
+      "relocations": [
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "read_sample/2",
+          "lines": 3,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "read_sample/2"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "prelabel_labeling_subset/0",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "finish_rows/1"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "(anonymous)/2",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/2"
+        }
+      ],
+      "sha": "2f40f22b85dcf3fd0979395286223ddf972550ff"
+    },
+    {
+      "relocations": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "git/2",
+          "lines": 3,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "git/2"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "seed_repo/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_sources/2"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "project_dir/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "spawn_daemon/1",
+          "lines": 3,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "ping_dedup_shutdown_roundtrip/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "ping_dedup_shutdown_roundtrip/0",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "wait_exit/2"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "version_skew_restarts_daemon/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "version_skew_restarts_daemon/0",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "wait_exit/2"
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "from_unit": null,
+          "lines": 1,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": null
+        },
+        {
+          "from": "cli/tests/dedup_index.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/dedup_property.rs",
+          "from_unit": "case_dir/0",
+          "lines": 3,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/dedup_property.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "seed_project/2",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_sources/2"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "seed_project/2",
+          "lines": 6,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "build_index/1"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "run_hook/2",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "run_hook/3"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "shutdown_daemon/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "shutdown_daemon/1"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/health_plugin.rs",
+          "from_unit": "health_reports_mode_index_and_warm_daemon/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "build_index/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "git/2",
+          "lines": 8,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "git/2"
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "from_unit": "corpus_dir/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/perf_budget.rs",
+          "from_unit": "probe_round_trip_p95_under_150ms/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "from_unit": "tmp/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "tmp/1"
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "from_unit": "rust_fn/1",
+          "lines": 9,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "rust_fn/1"
+        },
+        {
+          "from": "cli/tests/probe_gate.rs",
+          "from_unit": "probe_over_daemon_socket/0",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "spawn_daemon_ready/1"
+        }
+      ],
+      "sha": "4822d04ff0a944eba62fed71cb6ccd226a647e77"
+    },
+    {
+      "relocations": [
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "silent_audit_observe/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "silent_hook_observe/4"
+        },
+        {
+          "from": "cli/tests/audit_stop.rs",
+          "from_unit": "envelope/2",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "stop_envelope/2"
+        },
+        {
+          "from": "cli/tests/guard_hook.rs",
+          "from_unit": "envelope/3",
+          "lines": 11,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "pretooluse_envelope/3"
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": "golden_path/1",
+          "lines": 5,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "golden_path/1"
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": null,
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": null
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": "assert_matches_golden/2",
+          "lines": 10,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "assert_matches_golden/2"
+        },
+        {
+          "from": "cli/tests/report_schema.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 4,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "(anonymous)/1"
+        }
+      ],
+      "sha": "71b607d56a1aeb1c1cacff858d8ec232b19eabd3"
+    },
+    {
+      "relocations": [
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "indexed_file_count/1",
+          "lines": 4,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "indexed_file_count/1"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "init_index_state/1",
+          "lines": 1,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "init/1"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "(anonymous)/0",
+          "lines": 5,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "(anonymous)/0"
+        },
+        {
+          "from": "cli/src/daemon/server.rs",
+          "from_unit": "index_ready/1",
+          "lines": 2,
+          "to": "cli/src/daemon/coldstart.rs",
+          "to_unit": "index_ready/1"
+        }
+      ],
+      "sha": "822e7182f96811f1682a5b797c99faff58e0d8cf"
+    },
+    {
+      "relocations": [
+        {
+          "from": "cli/tests/mcp_precommit.rs",
+          "from_unit": "mcp_session/1",
+          "lines": 2,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_clone_pair/1"
+        },
+        {
+          "from": "cli/tests/daemon_e2e.rs",
+          "from_unit": "seed_clone_pair/1",
+          "lines": 0,
+          "to": "cli/tests/common/mod.rs",
+          "to_unit": "seed_clone_pair/1"
+        }
+      ],
+      "sha": "8d6b237a5f3604ad15cd1e6f80de03e636cdd392"
+    },
+    {
+      "relocations": [
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "by_id/2",
+          "lines": 5,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "by_id/2"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 3,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "numstat/2",
+          "lines": 7,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "numstat/3"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "by_id/2",
+          "lines": 5,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "by_id/2"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 1,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "numstat/2",
+          "lines": 5,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "numstat/3"
+        },
+        {
+          "from": "cli/tests/eval_prelabel.rs",
+          "from_unit": "(anonymous)/1",
+          "lines": 2,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "(anonymous)/1"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "load/1",
+          "lines": 0,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "load/1"
+        },
+        {
+          "from": "cli/tests/eval_baseline.rs",
+          "from_unit": "CLASSES",
+          "lines": 0,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "CLASSES"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "load/1",
+          "lines": 0,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "load/1"
+        },
+        {
+          "from": "cli/tests/eval_labels.rs",
+          "from_unit": "CLASSES",
+          "lines": 0,
+          "to": "cli/tests/eval_support/mod.rs",
+          "to_unit": "CLASSES"
+        }
+      ],
+      "sha": "f84aaa3c8cf71b3cfbf74064d0bd5e65a6a83a89"
+    }
+  ],
+  "corpus": null,
+  "generated_from": "7e7cf6a49ee4fd0522d2061f936bc32e9da8533d",
+  "schema": "ce.eval-commit-edges/1.0.0"
+}

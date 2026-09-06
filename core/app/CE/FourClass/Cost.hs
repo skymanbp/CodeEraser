@@ -12,6 +12,8 @@ module CE.FourClass.Cost
   , siteOpens
   , destFloor
   , anchorFloor
+  , declCredit
+  , declFloor
   ) where
 
 -- | Cost of explaining a line as moved.
@@ -62,3 +64,26 @@ destFloor = go 1
 -- 7+16=23 would re-admit the invention).
 anchorFloor :: Int
 anchorFloor = 19
+
+-- | What a DECLARATION key is worth toward opening a cross site. A
+-- key that vanished from one pair and appeared in exactly one other
+-- is the provenance identity a cross site must buy — it is the very
+-- removed-definition scan the ground-truth reviewers ran by hand —
+-- so it pays the site cost outright. Set this to 0 and declFloor
+-- collapses onto destFloor: the knob is as ablatable as the other
+-- four and cannot hide.
+declCredit :: Int
+declCredit = siteCostCross
+
+-- | Minimal shared leftover content that opens a DECLARATION-anchored
+-- cross site (derived, exactly as destFloor is): the least n whose
+-- site still profits once the key has paid. Evaluates to 1 — one
+-- shared line, which ALONE is the coincidence tie at the line level
+-- (1*1 + 2 = 3 = 1*3), opens once the key carries the identity.
+-- n = 0 stays shut: a declaration that kept its name but not one
+-- line of its body is ADAPTED, and this stage says nothing about it
+-- (docs/EVAL-SET.md, the adapted class).
+declFloor :: Int
+declFloor = go 0
+ where
+  go n = if siteOpens (siteCostCross - declCredit) n then n else go (n + 1)

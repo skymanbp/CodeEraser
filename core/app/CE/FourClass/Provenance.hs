@@ -12,6 +12,7 @@
 module CE.FourClass.Provenance (classify) where
 
 import CE.FourClass.Anchor (sites)
+import qualified CE.FourClass.Decl as Decl
 import CE.FourClass.Verdict (suspicions)
 import CE.FourClass.Wire
 import Data.List (sortOn)
@@ -21,7 +22,10 @@ import qualified Data.Set as S
 type Mark = (Int, Int) -- (pair, line)
 
 classify :: Request -> Result
-classify req = Result (reqId req) moved sortedBlocks verdicts reason
+-- the declaration stage is a SIXTH field, derived from the request's
+-- own decl tables: no line's class, no block and no suspicion depends
+-- on it, so every line-level gate is the measurement it always was
+classify req = Result (reqId req) moved sortedBlocks verdicts reason (Decl.edges ps)
  where
   verdicts = suspicions [(p, leftLines pAdd inMarks p, length (leftLines pRem outMarks p)) | p <- ps]
   -- the sent leftovers the phases did not claim, as LINES: the

@@ -19,6 +19,14 @@
 
 use crate::scan::lang::Lang;
 
+/// Declaration forms carried beside the key hash in fourclass/2.
+/// Kept here so units can measure kinds without importing decls,
+/// which reads the unit table back.
+pub const KIND_FN: i64 = 1;
+pub const KIND_NAMED: i64 = 2;
+pub const KIND_IMPL: i64 = 3;
+pub const KIND_SECTION: i64 = 4;
+
 /// Wrapper kinds whose child declaration REDECLARES a name instead of
 /// introducing one: tree-sitter-haskell wraps `data instance F Int =
 /// …` / `newtype instance …` as a `data_instance` around a plain

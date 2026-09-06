@@ -15,7 +15,8 @@ use crate::scan::spec;
 /// Markdown), spans are 1-based inclusive line ranges, and the two
 /// words carry the declaration's OWN facts — `vis` its visibility
 /// bits (visibility/), `conv` the AST half of its convention-category
-/// word (mention/conv) — read here because this is where the
+/// word (mention/conv), `kind` the declaration form it takes
+/// (fourclass::kinds) — read here because this is where the
 /// declaration node is still in hand, and persisted as `symbols.flags`
 /// and `symbols.conv`.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -25,6 +26,7 @@ pub struct Unit {
     pub end_line: usize,
     pub vis: i64,
     pub conv: i64,
+    pub kind: i64,
 }
 
 pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
@@ -70,6 +72,7 @@ pub fn node_segments<'t>(
                     end_line: f.end_line,
                     vis: visibility::bits(f.node, src, lang),
                     conv: conv::ast_bits(f.node, src, lang, &facts),
+                    kind: super::kinds::KIND_FN,
                 };
                 (unit, f.node)
             })
@@ -96,13 +99,17 @@ fn extra_units<'t>(
     }
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if let Some(key) = named_key(node, src, kinds).or_else(|| impl_key(node, src, lang)) {
+        let named = named_key(node, src, kinds).map(|k| (k, super::kinds::KIND_NAMED));
+        let keyed =
+            named.or_else(|| impl_key(node, src, lang).map(|k| (k, super::kinds::KIND_IMPL)));
+        if let Some((key, kind)) = keyed {
             let unit = Unit {
                 key,
                 start_line: node.start_position().row + 1,
                 end_line: node.end_position().row + 1,
                 vis: visibility::bits(node, src, lang),
                 conv: conv::ast_bits(node, src, lang, facts),
+                kind,
             };
             out.push((unit, node));
         }
@@ -171,6 +178,7 @@ fn markdown_segments(text: &str) -> Vec<Unit> {
                 end_line: i + 1,
                 vis: visibility::MARKDOWN_VIS,
                 conv: 0, // a heading is outside the mention domain (RG9)
+                kind: super::kinds::KIND_SECTION,
             });
         }
     }

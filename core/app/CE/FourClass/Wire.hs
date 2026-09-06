@@ -11,6 +11,7 @@
 module CE.FourClass.Wire
   ( Request (..)
   , Pair (..)
+  , DeclRow
   , Result (..)
   , Block (..)
   , encodeResult
@@ -27,6 +28,10 @@ data Request = Request
   { reqId :: Value
   , reqPairs :: [Pair]
   }
+
+-- | Declaration candidate: (fnv1a key, kind, 1-based inclusive start,
+-- end). Names stay in Rust; kind distinguishes declaration forms.
+type DeclRow = (Word64, Int, Int, Int)
 
 -- | `i` is an opaque pair index — the file-identity key (cross
 -- matching requires differing `i`). `rem`/`add` are ascending
@@ -48,11 +53,18 @@ data Pair = Pair
   -- hashes and 1-based inclusive line spans cross, and the span is
   -- what lets the stacking rule ask whether the novel mass landed
   -- INSIDE a duplicated unit rather than merely beside one.
+  , pDeclRem :: Maybe [DeclRow]
+  -- ^ Before-only declarations (7.1.0, O48). Absent means unmeasured;
+  -- empty means measured with no candidates. The two tables must
+  -- arrive together and cover every pair: uniqueness is batch-wide.
+  , pDeclAdd :: Maybe [DeclRow]
+  -- ^ After-only declarations, with the same presence contract.
   }
 
 instance FromJSON Pair where
   parseJSON = withObject "Pair" $ \o ->
     Pair <$> o .: "i" <*> o .: "rem" <*> o .: "add" <*> o .:? "dupSpans" .!= []
+      <*> o .:? "declRem" <*> o .:? "declAdd"
 
 instance FromJSON Request where
   parseJSON = withObject "Request" $ \o ->
@@ -78,6 +90,10 @@ data Result = Result
   , resBlocks :: [Block]
   , resSuspicions :: [(Int, String)]
   , resDegraded :: Maybe String
+  , resUnitEdges :: Maybe ([(Int, Int, Word64)], Bool)
+  -- ^ Present iff declaration tables were measured: ascending
+  -- (source, destination, key hash) edges and the over-cap flag.
+  -- Over declCap the entire table is refused, never truncated.
   }
 
 encodeResult :: String -> Result -> B8.ByteString
@@ -91,4 +107,7 @@ encodeResult proto r =
     , "suspicions" .= resSuspicions r
     , "degraded" .= maybe False (const True) (resDegraded r)
     ]
+      <> maybe [] unitFields (resUnitEdges r)
       <> maybe [] (\why -> ["reason" .= why]) (resDegraded r)
+ where
+  unitFields (es, dropped) = ("unitEdges" .= es) : ["unitEdgesDropped" .= True | dropped]

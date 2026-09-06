@@ -5606,26 +5606,26 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|1220d9aece6c5c95|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 128,
-    "end": 146,
+    "line": 142,
+    "end": 160,
     "text": "fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|1dec9e7b16e9d0f0|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 169,
-    "end": 171,
+    "line": 183,
+    "end": 185,
     "text": "if !significant(t) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|20dfa340c7ce0cd4|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 66,
-    "end": 68,
+    "line": 60,
+    "end": 62,
     "text": "if !link.has(\"fourclass/2\") {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|2b3fd3dd168c099d|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 164,
-    "end": 166,
+    "line": 178,
+    "end": 180,
     "text": "if l != prev + 1 {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|313f38b5b4ef4de4|0": {
@@ -5636,51 +5636,57 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|36b57b4389a68a93|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 155,
+    "line": 169,
     "text": "const MAX_BRIDGE: usize = 7;"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|4191b278b99a6197|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 70,
-    "end": 75,
+    "line": 64,
+    "end": 69,
     "text": "if sent\n.iter()"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|49f523369c7126e4|0": {
+    "target": "../../../cli/src/fourclass/batch.rs",
+    "line": 73,
+    "text": "consume(&reply, inputs, &sent, &pairs).unwrap_or_else(|e| done(pairs, Some(e), false))"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|4d77f5fdf129d755|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 150,
-    "end": 154,
+    "line": 164,
+    "end": 168,
     "text": "/// into adjacency and fuse remote coincidences (attack review F6)."
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|636e4ce08f676fb4|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|638dba9a1d619d20|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 83,
-    "end": 84,
-    "text": "Ok(reply) => match reply[\"reason\"].as_str() {"
+    "line": 98,
+    "end": 102,
+    "text": "// Check the reason BEFORE merge: partial blocks behind a bucket"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|7ba7fe57c2510fdb|0": {
+    "target": "../../../cli/src/fourclass/batch.rs",
+    "line": 100,
+    "end": 102,
+    "text": "if let Some(reason) = reply[\"reason\"].as_str() {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|9e1657e872adb87f|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 48,
+    "line": 49,
     "text": "pub link_failed: bool, // stated, not inferred: the restart budget keys on it"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|a427f254f63cd5f5|0": {
+    "target": "../../../cli/src/fourclass/batch.rs",
+    "line": 103,
+    "end": 105,
+    "text": "// Merge copies L1, so a malformed delta or declaration answer"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|b28b7f27190c3f56|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 77,
+    "line": 71,
     "text": "Err(e) => done(pairs, Some(e), true), // the link itself"
-  },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|b3b10c7d6eb38d95|0": {
-    "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 85,
-    "end": 87,
-    "text": "// merge works on a COPY: a bad delta falls back to the"
-  },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|bb9478d2e60116b3|0": {
-    "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 89,
-    "text": "Err(e) => done(pairs, Some(e), false), // live link, bad delta"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|c0194eab578bae71|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 64,
+    "line": 58,
     "text": "return done(pairs, Some(\"no_link\".into()), false); // link_mut counted it"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|c97a4b9b13815f37|0": {
@@ -5691,8 +5697,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|e70425702f438258|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 117,
-    "end": 120,
+    "line": 131,
+    "end": 134,
     "text": "/// leftovers are adjacent iff every line between them is also changed"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|e815ad98d06567c5|0": {
@@ -5703,15 +5709,9 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|ed154e77750e3905|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 173,
-    "end": 176,
+    "line": 187,
+    "end": 190,
     "text": "open = false; // a within-moved line breaks the run"
-  },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|f726b0e7966256f7|0": {
-    "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 79,
-    "end": 84,
-    "text": "// the core still derived — applying them would be partial L2"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch/delta.rs|1506f64c88367f2a|0": {
     "target": "../../../cli/src/fourclass/batch/delta.rs",
@@ -5755,6 +5755,16 @@
     "end": 66,
     "text": "if removed {\nc.counts.removed_deleted -= 1;"
   },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch/edges.rs|0b9da59379bdcd03|0": {
+    "target": "../../../cli/src/fourclass/batch/edges.rs",
+    "line": 40,
+    "text": "fn named_already(line_level: &[Relocation], from: usize, to: usize, key: &str) -> bool {"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/decls.rs|551562ea3f5b0b46|0": {
+    "target": "../../../cli/src/fourclass/decls.rs",
+    "line": 76,
+    "text": "pub fn tables(before: &[Unit], after: &[Unit]) -> (Vec<Decl>, Vec<Decl>) {"
+  },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/diff.rs|0a22cd5f00187dab|0": {
     "target": "../../../cli/src/fourclass/diff.rs",
     "line": 36,
@@ -5774,8 +5784,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|34a1176370ed9e32|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 31,
-    "end": 53,
+    "line": 39,
+    "end": 61,
     "text": "pub fn extra(lang: Lang) -> &'static [&'static str] {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
@@ -5792,38 +5802,38 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|14449195336d96ab|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 110,
+    "line": 118,
     "text": "pub fn significant(line: &str) -> bool {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|243c64d5df1b8b6a|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 93,
+    "line": 101,
     "text": "fn hash_lines(lines: &[&str]) -> Vec<u64> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|48e622589be4642c|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 118,
+    "line": 126,
     "text": "pub fn alnum_width(line: &str) -> usize {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|6b3f8d458c92c64e|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 122,
+    "line": 130,
     "text": "fn sig_contents<'s>(lines: &[&'s str], changed: &[usize]) -> HashSet<&'s str> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|95145b539291a677|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 165,
+    "line": 173,
     "text": "if rm + ad > 0 && moved_of(true, &bu.key) == rm && moved_of(false, &au.key) == ad {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|ec743f5a8d375c74|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 13,
-    "end": 18,
+    "line": 14,
+    "end": 19,
     "text": "pub struct FourClass {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/model.rs|ef17739f17adb408|0": {
     "target": "../../../cli/src/fourclass/model.rs",
-    "line": 63,
+    "line": 69,
     "text": "for &i in &d.removed {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|19cee92be350da23|0": {
@@ -5893,38 +5903,38 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 208,
-    "end": 213,
+    "line": 216,
+    "end": 221,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 141,
-    "end": 154,
+    "line": 148,
+    "end": 161,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 67,
-    "end": 72,
+    "line": 69,
+    "end": 74,
     "text": "let unit = Unit {\nkey: format!(\"{}/{}\", f.name, f.params),"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 158,
-    "end": 180,
+    "line": 165,
+    "end": 187,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {
     "target": "../../../core/app/CE/FourClass.hs",
-    "line": 34,
-    "end": 47,
+    "line": 35,
+    "end": 48,
     "text": "violation :: [Pair] -> Maybe String"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|ae4257a6dc81b77f|0": {
     "target": "../../../core/app/CE/FourClass.hs",
-    "line": 40,
-    "end": 41,
+    "line": 41,
+    "end": 42,
     "text": "spans = case [pIdx p | p <- ps, any (\\(_, s, e) -> s < 1 || e < s) (pDupSpans p)] of"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|b7b62f481d23d5b5|0": {
@@ -6006,42 +6016,47 @@
     "end": 122,
     "text": "isStart =\noPos ro == 0"
   },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|4414b96ce66c7773|0": {
+    "target": "../../../core/app/CE/FourClass/Cost.hs",
+    "line": 76,
+    "text": "declCredit = siteCostCross"
+  },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|512ba87552674045|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 19,
+    "line": 21,
     "text": "movedCost = 1\n\n-- | Cost of leaving a line novel / deleted."
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|8f3f429e9f3d0dd9|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 25,
-    "end": 26,
+    "line": 27,
+    "end": 28,
     "text": "-- | Opening a relocation site inside one file pair is free — which"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|9fdc03e4b1d7767f|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 56,
-    "end": 62,
+    "line": 58,
+    "end": 64,
     "text": "-- to hold provenance identity by itself: >= this many alphanumeric"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|ac220e93e5accbe1|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 23,
+    "line": 25,
     "text": "plainCost = 3\n\n-- | Opening a relocation site inside one file pair is free — which"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|ba606feb0544f9e5|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 35,
+    "line": 37,
     "text": "siteCostCross = 2"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|bcba3a2c303184eb|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 44,
-    "end": 47,
+    "line": 46,
+    "end": 49,
     "text": "siteOpens :: Int -> Int -> Bool"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|c8de87d60e8df26d|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 28,
+    "line": 30,
     "text": "siteCostWithin = 0"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|d74ef47455abe852|0": {
@@ -6052,27 +6067,42 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|defd877ad96aad6c|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 46,
-    "end": 47,
+    "line": 48,
+    "end": 49,
     "text": "toInteger n * toInteger movedCost + toInteger s"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|e06cf5c92c443f84|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 63,
-    "end": 64,
+    "line": 65,
+    "end": 66,
     "text": "anchorFloor :: Int"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|f16badb08bf1df33|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 30,
-    "end": 33,
+    "line": 32,
+    "end": 35,
     "text": "-- | Opening a site across two file pairs costs 2 — from which the"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|fcd16bc81097c03b|0": {
     "target": "../../../core/app/CE/FourClass/Cost.hs",
-    "line": 50,
-    "end": 53,
+    "line": 52,
+    "end": 55,
     "text": "destFloor :: Int"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Decl.hs|1b7a054d4271484a|0": {
+    "target": "../../../core/app/CE/FourClass/Decl.hs",
+    "line": 27,
+    "text": "declCap = 65536"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Decl.hs|4a915bf83f576214|0": {
+    "target": "../../../core/app/CE/FourClass/Decl.hs",
+    "line": 49,
+    "text": "declViolation ps = paired <|> uniform <|> spans <|> dups"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Decl.hs|eeea5c20bc4b47ec|0": {
+    "target": "../../../core/app/CE/FourClass/Decl.hs",
+    "line": 71,
+    "text": "edges ps\n| not (any (isJust . pDeclRem) ps) = Nothing"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Provenance.hs|0fbe39c865c32216|0": {
     "target": "../../../core/app/CE/FourClass/Provenance.hs",
@@ -6088,31 +6118,31 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Provenance.hs|35e42d61000c19c1|0": {
     "target": "../../../core/app/CE/FourClass/Provenance.hs",
-    "line": 55,
-    "end": 84,
+    "line": 59,
+    "end": 88,
     "text": "phase2 :: [Pair] -> [Block] -> S.Set Mark"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Provenance.hs|432bde1450acf80a|0": {
     "target": "../../../core/app/CE/FourClass/Provenance.hs",
-    "line": 30,
-    "end": 31,
+    "line": 34,
+    "end": 35,
     "text": "leftLines side marks p ="
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Provenance.hs|4e74e26bb1c92e03|0": {
     "target": "../../../core/app/CE/FourClass/Provenance.hs",
-    "line": 92,
-    "end": 100,
+    "line": 96,
+    "end": 104,
     "text": "phase3 :: [Pair] -> S.Set Mark -> S.Set Mark"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Provenance.hs|bd6ad89407a34dcb|0": {
     "target": "../../../core/app/CE/FourClass/Provenance.hs",
-    "line": 26,
+    "line": 30,
     "text": "verdicts = suspicions [(p, leftLines pAdd inMarks p, length (leftLines pRem outMarks p)) | p <- ps]"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Provenance.hs|fb98c656de14b156|0": {
     "target": "../../../core/app/CE/FourClass/Provenance.hs",
-    "line": 34,
-    "end": 35,
+    "line": 38,
+    "end": 39,
     "text": "sortedBlocks ="
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Verdict.hs|09d50ac530c477e0|0": {
@@ -6175,7 +6205,7 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|1296b9b4d2555e80|0": {
     "target": "../../../core/app/CE/FourClass/Wire.hs",
-    "line": 55,
+    "line": 66,
     "text": "Pair <$> o .: \"i\" <*> o .: \"rem\" <*> o .: \"add\" <*> o .:? \"dupSpans\" .!= []"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|737622ba9c52516c|0": {
@@ -6186,31 +6216,31 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|842a49865b957845|0": {
     "target": "../../../core/app/CE/FourClass/Wire.hs",
-    "line": 72,
-    "end": 74,
+    "line": 84,
+    "end": 86,
     "text": "-- | The reply: a monotone reclassification delta per pair (out:"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|8e3539f4ace89345|0": {
     "target": "../../../core/app/CE/FourClass/Wire.hs",
-    "line": 33,
-    "end": 37,
+    "line": 38,
+    "end": 42,
     "text": "-- (1-based line, trimmed-content hash, alnum width) lists grouped"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|9082010b7f61b080|0": {
     "target": "../../../core/app/CE/FourClass/Wire.hs",
-    "line": 44,
+    "line": 49,
     "text": ", pDupSpans :: [(Word64, Int, Int)]"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|d87b75cf993e6ad2|0": {
     "target": "../../../core/app/CE/FourClass/Wire.hs",
-    "line": 36,
-    "end": 39,
+    "line": 41,
+    "end": 44,
     "text": "-- unchanged gaps and within-moved lines break it) and judgment"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Wire.hs|e3c51c9dc92d8bb2|0": {
     "target": "../../../core/app/CE/FourClass/Wire.hs",
-    "line": 61,
-    "end": 64,
+    "line": 73,
+    "end": 76,
     "text": "-- | An accepted cross-pair correspondence: positionally matching"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Handshake.hs|e311faa0c4aa7bb2|0": {
@@ -6227,14 +6257,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|3511fafd14f9a99b|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 150,
-    "end": 153,
+    "line": 154,
+    "end": 157,
     "text": "c <-\ncheck\n\"floor tracks the site cost (ablation table)\""
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|6688a4e51b1f09e6|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 148,
-    "end": 149,
+    "line": 152,
+    "end": 153,
     "text": "a <- check \"cross floor derives to 2\" (destFloor == 2)"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../DEVELOPMENT_PLAN.md|13b48102ab91505e|0": {
@@ -7138,33 +7168,34 @@
     "end": 109,
     "text": "/// A degraded reply to a client-sized request means the Rust cap"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|3c25922006c00a50|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 464,
-    "end": 478,
-    "text": "> 抵达无 daemon 的 hook（写盘器具名拷贝；默认仍 observe-only，档位"
+    "line": 532,
+    "end": 534,
+    "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|44d0973e61cc25c9|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 472,
-    "text": "> 截断；地板随配置 cochange_floor，默认 2 与核默认字节等价）。克隆对语言"
+    "line": 528,
+    "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|91b5eaf73b4e802a|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 476,
-    "end": 478,
-    "text": "> 加性 `dedupDistinct=[d,...]`（**预过滤**逐块 distinct 计数，随 2.6.0"
+    "line": 520,
+    "end": 534,
+    "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|ccde8f76ca6c6ebc|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 467,
-    "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
+    "line": 523,
+    "end": 524,
+    "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|ccde8f76ca6c6ebc|1": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 467,
-    "end": 471,
-    "text": "> （CE.Docdup.Cost=50）——两枚准入地板执行仍在 Rust 侧 wire 前"
+    "line": 523,
+    "end": 527,
+    "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
     "target": "../../../core/app/CE/Erase.hs",
@@ -7815,11 +7846,11 @@
     "end": 53,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|9f35df46a3d80655|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 225,
-    "end": 242,
-    "text": "> **6.3.0**（外来读者角色，加性 minor，L 轮 v2.18 步 #12，2026-08-28，用户裁「子仓只当读者、不当被测者」）："
+    "line": 259,
+    "end": 261,
+    "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -8003,10 +8034,11 @@
     "end": 59,
     "text": "/// The load-throat refusal: a tier outside the four is a typo,"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink.rs|d3e77308e9a2187d|0": {
-    "target": "../../../cli/src/corelink.rs",
-    "line": 35,
-    "text": "/// entries had stacked up here by 6.1.0 and pushed the file past its"
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink/judged.rs|2fd0e4ba91e5d008|0": {
+    "target": "../../../cli/src/corelink/judged.rs",
+    "line": 17,
+    "end": 28,
+    "text": "pub fn ask(\nlink: &mut Link,"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/daemon/proto.rs|ac33dd3ebaabd544|0": {
     "target": "../../../cli/src/daemon/proto.rs",
