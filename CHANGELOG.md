@@ -11,7 +11,7 @@
 
 **无默认档位变更。** 计划 v2.29 步 12 依赖批 DEP-B：
 - getrandom 升至 0.4、sha2 升至 0.11、rusqlite 升至 0.40.2（保留 `bundled`，启用 `fallible_uint` 的检查式无符号转换）、toml 升至 1.1.5；CLI 与 GUI 两份锁文件同步。
-- 两处 archify 缓存准备移到 Rust 缓存恢复之后；NOTICE 门的 `cargo metadata` 加 `--locked`。按两工作区依赖重生 NOTICE，清除 `CE_BLESS` 后复验。
+- 两处 archify 缓存准备移到 Rust 缓存恢复之后，`scripts/diagram.mjs` 遇到被 rust-cache 掏空的缓存（只剩目录骨架，git 会向上认领 CodeEraser 的 checkout，fetch 报 `not our ref`）即重新初始化；NOTICE 门的 `cargo metadata` 加 `--locked`。按两工作区依赖重生 NOTICE，清除 `CE_BLESS` 后复验。
 - 更新 pin 与截图收据共用逐字节小写十六进制；发布资产经旧、新拼写与系统 SHA-256 对拍，pin 字节不变。旧开发版所建索引可复用，暖路径克隆行一致。
 - **判决、分数算法、schema id 均不变**；不改索引版本与 wire。dependabot PR 编号 1 / 2 / 4 / 6 随本批关闭（升版落在本地锁文件，不合并 PR）。ADR-006 具名重立：主 `cli/src/update/apply.rs` 172→187（`hex` 与测试挂载）；子仓新文件入基线 `unit/update/apply.rs` 57；dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0；codex gpt-6-astra 落码（五条 lib 管道腿、八条 daemon 腿、两条 git 夹具腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
 

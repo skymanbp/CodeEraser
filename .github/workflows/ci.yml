@@ -91,6 +91,10 @@ jobs:
       # The two README/site diagrams are rendered from one pinned archify
       # commit kept in the ignored cargo target dir (plan v2.21): the
       # docs_diagrams gate refuses by name when the cache is absent.
+      # After rust-cache, not before: its restore strips every file under
+      # cli/target on a partial key match and keeps the directories, so a
+      # cache fetched earlier reaches the gate hollow; the script
+      # re-initialises a hollow `.git` (its save strips the same way).
       - name: archify cache (pinned)
         run: node scripts/diagram.mjs --fetch
       - name: Rust build + test + lint
@@ -379,6 +383,10 @@ jobs:
       # The two README/site diagrams are rendered from one pinned archify
       # commit kept in the ignored cargo target dir (plan v2.21): the
       # docs_diagrams gate refuses by name when the cache is absent.
+      # After rust-cache, not before: its restore strips every file under
+      # cli/target on a partial key match and keeps the directories, so a
+      # cache fetched earlier reaches the gate hollow; the script
+      # re-initialises a hollow `.git` (its save strips the same way).
       - name: archify cache (pinned)
         run: node scripts/diagram.mjs --fetch
       # Same roster as the push matrix (K step 10): this leg used to

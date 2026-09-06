@@ -30,7 +30,7 @@ import { fileURLToPath } from "node:url";
 import { extractSvg } from "./diagram_svg.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PIN = "e1ac748f19cf805e44bf74fb93c796662152e273", PIN_REF = "refs/tags/v2.15.0"; // tt-a1i/archify v2.15.0 — fetched by NAME and the checkout asserted against PIN: GitHub's upload-pack answered "not our ref" to a bare-SHA want from Actions runners (2026-09-06, run 34038467696 attempts 1-2, six jobs) while the same SHA fetched from a workstation; a ref is always servable
+const PIN = "e1ac748f19cf805e44bf74fb93c796662152e273", PIN_REF = "refs/tags/v2.15.0"; // tt-a1i/archify v2.15.0 — fetched by name, the checkout asserted against PIN (hollow-cache incident: CodeEraser's own upload-pack answered "not our ref" — 2026-09-06, runs 34038467696 / 34039414098, nine build jobs)
 const REMOTE = "https://github.com/tt-a1i/archify.git";
 const CACHE = path.join(root, "cli", "target", "archify");
 const BIN = path.join(CACHE, "archify", "bin", "archify.mjs");
@@ -45,26 +45,26 @@ const TWINS = ["docs/assets", "site/assets"];
 function run(cmd, args, cwd) {
   const r = spawnSync(cmd, args, { cwd, encoding: "utf8", shell: false });
   if (r.error) throw r.error;
-  if (r.status !== 0) {
-    throw new Error(`${cmd} ${args.join(" ")} exited ${r.status}\n${r.stdout}${r.stderr}`);
-  }
+  if (r.status !== 0) throw new Error(`${cmd} ${args.join(" ")} exited ${r.status}\n${r.stdout}${r.stderr}`);
   return r.stdout;
 }
 
 const git = (args, cwd = CACHE) => run("git", args, cwd).trim();
 
-function cacheHead() {
-  if (!fs.existsSync(path.join(CACHE, ".git"))) return null;
-  try {
-    return git(["rev-parse", "HEAD"]);
-  } catch {
-    return null;
-  }
+// a repository only when git's top level IS the cache: from a hollow `.git`
+// (rust-cache keeps the directories under cli/target and strips their files,
+// restore and save alike) git walks up and answers for the CodeEraser checkout
+function cacheIsRepo() {
+  const r = spawnSync("git", ["rev-parse", "--show-toplevel"], { cwd: CACHE, encoding: "utf8" });
+  return r.status === 0 && path.relative(fs.realpathSync.native(CACHE), r.stdout.trim()) === "";
 }
 
+const cacheHead = () => { try { return cacheIsRepo() ? git(["rev-parse", "HEAD"]) : null; } catch { return null; } };
+
 function fetch() {
-  fs.mkdirSync(CACHE, { recursive: true });
-  if (!fs.existsSync(path.join(CACHE, ".git"))) {
+  if (!cacheIsRepo()) {
+    fs.rmSync(CACHE, { recursive: true, force: true });
+    fs.mkdirSync(CACHE, { recursive: true });
     git(["init", "-q"]);
     git(["remote", "add", "origin", REMOTE]);
   }
