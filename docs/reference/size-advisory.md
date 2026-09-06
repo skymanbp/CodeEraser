@@ -24,9 +24,12 @@
   每写一记）；v0.7 **已接线**位置→档位映射（<25% observe
   / 25–75% warn / >75% ask / >H deny），且切点由**核授权**随基线下发
   （`zoneWarnPermille=250` / `zoneAskPermille=750`）——`ce.toml [guard]
-  zone_tiers` 显式声明才启用，默认恒 observe，默认翻档仍以台账攒出
-  的各档 FPR 记录为准（§6 同款）；武装后台账行加记映射档
-  （feed 0.6.0）。
+  zone_tiers` 显式声明才启用；默认翻档以这一类**自己的** FPR 台账为准
+  （§6 同款）——该台账 2026-09-06 起在 [FPR-REPLAY.md](../FPR-REPLAY.md)
+  「分级区档位映射」节，仪器 `cli/tests/it/fpr_zone_replay.rs`，
+  出厂默认与台账的一致性由 `cli/tests/it/fpr_zone_gate.rs` 执行；武装后台账行加记映射档
+  （feed 0.6.0）。首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %；
+  后者超过 1 %，采用变体 B，`zone_tiers` 默认仍为 `false`，无默认档位变更。
 
 ## B 相对阈值——基线锚定的分布围栏
 

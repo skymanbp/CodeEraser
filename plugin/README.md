@@ -6,7 +6,7 @@
 |---|---|---|
 | SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
 | PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入内容做 T1/T2 探针；按 `ce.toml [guard] mode` 决策 |
-| Stop | `ce audit --hook` | 净 LOC + 涉改重复块；仅 deny 档拦停 |
+| Stop | `ce audit --hook` | 净 LOC + 涉改重复块；仅 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md) |
 
 skill：[`skills/erase/`](skills/erase/SKILL.md)——把 dedup/deadcode/join
 的发现引导成安全删除（先读全文、查引用、小批删、重跑门证收敛），
@@ -68,12 +68,16 @@ file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒�
 [CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
 （写后文件超过其硬线：默认 750，或其 `[[rules.class]]` 声明的那条——hook 经 `guard::budget::lines_for`、`ce scan` 直呼，两面同读 `scan::classes::Classes::thresholds_for` 那张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
+分级区档位映射（软线→硬线之间按位置 <25 % observe / 25–75 % warn / >75 % ask）走 `[guard] zone_tiers`
+这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
 观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
 每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`——版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
 `tombstone` 事件行（PreToolUse 一次写入删掉了名字、或它的标题 / 标识符 / 散文把本会话删掉的名字
 写回成「无 X」时才落一行，只记名字的哈希）与 Stop / precommit / commitmsg 行上的 `tombstone` 对象
 （本次改动集的度量：删掉的名字数、候选面数 `rows`、changelog 定位豁免——整文件按路径、台账形或 `[tombstone] ledger` 声明，或只豁免一段而段条目带起始 `line`——与核的判决 `judged`：前几处站点 `file:line kind`、标签 / 散文分账、`over`）
 按类自己的 `[tombstone] tier`（默认 observe）出声，且只在核答 `over`（站点数超过 `[tombstone] budget`）时——observe 只记不拦，FPR 账本见 [docs/FPR-TOMBSTONE.md](../docs/FPR-TOMBSTONE.md)；
+`fourclass` 对象（跨文件搬迁与堆叠嫌疑）永不出声——它不属于任何档位，其改动集级
+FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格 0/125、宽读法 0/820；唯一 copy 正例 `1035f6b1` 漏过（召回 0/1），本批无默认档位变更；
 `session_id` 为 `null` 表示该条不属于任何会话——`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
 不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

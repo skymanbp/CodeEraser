@@ -218,9 +218,11 @@ violCost = 10
 -- hook through the committed baseline document (written beside
 -- softLine at establish — the hook is daemon-free by design, so a
 -- local file read is the honest transport); the map lived as bare
--- Rust literals with no knob and no wire field before. The default
--- STAYS observe-only until `[guard] zone_tiers` opts in — these
--- numbers decide tiers only after the FPR discipline armed them.
+-- Rust literals with no knob and no wire field before. These numbers
+-- decide tiers only after the FPR discipline armed them, and the
+-- class's own record is docs/FPR-REPLAY.md's graded-zone ledger
+-- (plan v2.29 step 10); the shipped `[guard] zone_tiers` default is
+-- held equal to that ledger's verdict by a gate, not by a comment.
 zoneWarnPermille :: Integer
 zoneWarnPermille = 250
 

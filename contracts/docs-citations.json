@@ -3029,8 +3029,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|282f482011c64c7c|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 257,
-    "end": 261,
+    "line": 259,
+    "end": 263,
     "text": "verdictNodeCap :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|5f54c51ee93e3da0|0": {
@@ -3071,8 +3071,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|86cdac7551b0138c|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 248,
-    "end": 249,
+    "line": 250,
+    "end": 251,
     "text": "scoreScale :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|8f80f9819c596dd5|0": {
@@ -3119,8 +3119,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|cd38faf265bed4ea|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 234,
-    "end": 235,
+    "line": 236,
+    "end": 237,
     "text": "violCostNeutral :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|cd9a97e542c04810|0": {
@@ -3137,8 +3137,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e0728177b7e69a35|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 240,
-    "end": 241,
+    "line": 242,
+    "end": 243,
     "text": "defaultWeight :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e6cce729a02fd8f1|0": {
@@ -5548,60 +5548,60 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|329075613142ec37|0": {
     "target": "../size-advisory.md",
-    "line": 92,
-    "end": 95,
+    "line": 95,
+    "end": 98,
     "text": "benefit = 软区间罚回收（与 verdict 同一曲线权威"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|34258d75cd93294a|0": {
     "target": "../size-advisory.md",
-    "line": 111,
-    "end": 114,
+    "line": 114,
+    "end": 117,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4ea3a6ec3001bf79|0": {
     "target": "../size-advisory.md",
-    "line": 107,
-    "end": 110,
+    "line": 110,
+    "end": 113,
     "text": "候选——豁免与候选语义都以数字落地。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|711e99e0f273753a|0": {
     "target": "../size-advisory.md",
-    "line": 94,
-    "end": 95,
+    "line": 97,
+    "end": 98,
     "text": "**切穿克隆块**×roiCloneMilli(500) + 跨缝**共变对**×"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|788886e8d1332f29|0": {
     "target": "../size-advisory.md",
-    "line": 52,
+    "line": 55,
     "text": "φ（`roiPhiMilli`）。「基线重键噪声」未实现。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|81fba25e4c40f4b4|0": {
     "target": "../size-advisory.md",
-    "line": 48,
-    "end": 49,
+    "line": 51,
+    "end": 52,
     "text": "- 收益 B = **渐进区罚分回收**，as-built 唯一一项（dedup 预算效应与"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
-    "line": 119,
+    "line": 122,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|d080ada365348f88|0": {
     "target": "../size-advisory.md",
-    "line": 99,
-    "end": 103,
+    "line": 102,
+    "end": 106,
     "text": "计边——顾问面非强制面，可容。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|e77a0b42e14cb13a|0": {
     "target": "../size-advisory.md",
-    "line": 115,
-    "end": 118,
+    "line": 118,
+    "end": 121,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|fc9206488f44c39d|0": {
     "target": "../size-advisory.md",
-    "line": 53,
-    "end": 55,
+    "line": 56,
+    "end": 58,
     "text": "- `ROI = B/C`（有理数）。"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|1220d9aece6c5c95|0": {
@@ -5838,38 +5838,38 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|19cee92be350da23|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 131,
-    "end": 141,
+    "line": 133,
+    "end": 143,
     "text": "// The index is the CORE's, so it is checked here rather than"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|3de2c8ae6e838625|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 153,
-    "end": 157,
+    "line": 155,
+    "end": 159,
     "text": "let suspicions: Vec<serde_json::Value> = batch"
-  },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|438cfc09aec70a44|0": {
-    "target": "../../../cli/src/fourclass/session.rs",
-    "line": 3,
-    "end": 6,
-    "text": "//! Cross-file relocations stay INFORMATIONAL: no multi-file FPR"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|49f81cd4f4c48f86|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 111,
-    "end": 115,
+    "line": 113,
+    "end": 117,
     "text": "// judged_path: the scan-only arm (plan v2.5) is size-gated,"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|5e8587e3a602fb04|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 22,
-    "end": 24,
+    "line": 24,
+    "end": 26,
     "text": "pub fn head_pairs(root: &Path) -> Option<Vec<PathPair>> {"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|9e60d854dfee8014|0": {
+    "target": "../../../cli/src/fourclass/session.rs",
+    "line": 3,
+    "end": 8,
+    "text": "//! Cross-file relocations stay INFORMATIONAL by DEFAULT: the class's"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|b9421a160d39c7d3|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 101,
-    "end": 104,
+    "line": 103,
+    "end": 106,
     "text": "Some('C') => {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/stacking.rs|1156296b7d059998|0": {
@@ -6640,19 +6640,19 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|36288e5d5436f6eb|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 184,
-    "end": 201,
+    "line": 185,
+    "end": 202,
     "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|42113203b8445fa4|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 81,
-    "end": 100,
+    "line": 82,
+    "end": 101,
     "text": "let mut reasons = Vec::new();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4644d41f5beb9e75|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 57,
+    "line": 58,
     "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|526b9bbfd38078b6|0": {
@@ -6663,48 +6663,54 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|5c21d22558ace789|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 133,
-    "end": 171,
+    "line": 134,
+    "end": 172,
     "text": "fn emit_reasons<'a>("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|616767f83450e8a2|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 224,
+    "line": 225,
     "text": "\"degraded\": ev.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|75ba8e43bbd2ba6d|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 191,
+    "line": 192,
     "text": "_ => return, // observe: log only, no output"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|83a25b7ceeea26a9|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 96,
+    "end": 105,
+    "text": "let t = budget::lines_for(root, c, file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|936605a46cb5f869|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 173,
-    "end": 177,
+    "line": 174,
+    "end": 178,
     "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|a858072dafe20007|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 27,
-    "end": 36,
+    "line": 28,
+    "end": 37,
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|ab386b0206e74c7e|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 66,
-    "end": 68,
+    "line": 67,
+    "end": 69,
     "text": "// not context bloat, and repeat every time they hold"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|bbbddea1d1329200|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 215,
-    "end": 229,
+    "line": 216,
+    "end": 230,
     "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|c1a8185a714ee541|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 64,
-    "end": 71,
+    "line": 65,
+    "end": 72,
     "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db6bfd272e069abc|0": {
@@ -6715,84 +6721,66 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db9140e34d4295c6|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 209,
+    "line": 210,
     "text": "mode: &'a str,\nsession: &'a str,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e3cae5ea62eb7092|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 164,
-    "end": 168,
+    "line": 165,
+    "end": 169,
     "text": "if let Some(e) = broken {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|1932d340806c453c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 45,
-    "end": 59,
+    "line": 42,
+    "end": 56,
     "text": "/// Scope + exact post-write size — ONE measurement feeding both the"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|40ff14cbd35248aa|0": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 204,
-    "end": 206,
-    "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|48681a886ec2a600|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 72,
-    "end": 78,
+    "line": 69,
+    "end": 75,
     "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|48681a886ec2a600|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 72,
-    "end": 74,
+    "line": 69,
+    "end": 71,
     "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|494fe770a988b909|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 98,
-    "end": 120,
+    "line": 95,
+    "end": 117,
     "text": "pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|49f4f255016a7c4c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 214,
+    "line": 207,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|5879461f4eba0e7f|0": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|4db43f2d1c8ed9c7|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 242,
-    "end": 251,
-    "text": "fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|64374015c7e9b12d|0": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 269,
-    "end": 274,
-    "text": "fn committed_soft(root: &Path) -> Option<usize> {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|83b4c2721914357f|0": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 202,
-    "end": 207,
-    "text": "let cap = z.cap;"
+    "line": 135,
+    "end": 139,
+    "text": "pub(super) fn resulting_text(env: &Envelope) -> Option<String> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 224,
-    "end": 230,
+    "line": 217,
+    "end": 223,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 224,
-    "end": 226,
+    "line": 217,
+    "end": 219,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|9d8c7a2bab92d81b|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 167,
-    "end": 180,
+    "line": 164,
+    "end": 177,
     "text": "/// Budget firings get their own feed line (accounting for the §4.2"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|c3a17e14adb4fbe0|0": {
@@ -6803,26 +6791,20 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|d3e01c9814558493|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 143,
-    "end": 158,
+    "line": 140,
+    "end": 157,
     "text": "let on_disk = std::fs::read_to_string(&t.file_path)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 163,
-    "end": 166,
-    "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|1": {
-    "target": "../../../cli/src/guard/budget.rs",
-    "line": 163,
-    "end": 183,
+    "line": 160,
+    "end": 162,
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|fc6bb4e1a17bf3b8|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 211,
-    "end": 214,
+    "line": 204,
+    "end": 207,
     "text": "// the B4 suppression consults the feed BEFORE this event lands"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/envelope.rs|2c33cc85a000c037|0": {
@@ -6853,6 +6835,30 @@
     "line": 1,
     "end": 19,
     "text": "//! Every sentence the PreToolUse guard speaks, in both languages."
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|2cf16c619aefbaa9|0": {
+    "target": "../../../cli/src/guard/zone.rs",
+    "line": 55,
+    "end": 63,
+    "text": "let (warn, ask) = tiers.unwrap_or(DECLARED_TIERS);"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|40ff14cbd35248aa|0": {
+    "target": "../../../cli/src/guard/zone.rs",
+    "line": 51,
+    "end": 55,
+    "text": "if cap == 0 || cap <= soft || lines <= soft {"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|40ff14cbd35248aa|1": {
+    "target": "../../../cli/src/guard/zone.rs",
+    "line": 51,
+    "end": 53,
+    "text": "if cap == 0 || cap <= soft || lines <= soft {"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|b380312631d7e1f2|0": {
+    "target": "../../../cli/src/guard/zone.rs",
+    "line": 69,
+    "end": 81,
+    "text": "pub fn envelope(doc: &Value) -> (Option<usize>, Option<(usize, usize)>) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/health.rs|d99915876390bb87|0": {
     "target": "../../../cli/src/health.rs",
@@ -7006,8 +7012,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|a8aa8afee5378e73|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 159,
-    "end": 167,
+    "line": 221,
+    "end": 229,
     "text": "### 历史复现（退役期 2026-08-18～2026-09-05）"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|b1b24aa6a3e43c6e|0": {

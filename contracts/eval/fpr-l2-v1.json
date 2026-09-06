@@ -1,0 +1,116 @@
+{
+  "corpora": [
+    {
+      "abnormal": 0,
+      "commits": 47,
+      "corpus": "self",
+      "cp95_strict": [
+        0.0,
+        15.437
+      ],
+      "cp95_wide": [
+        0.0,
+        7.549
+      ],
+      "events": 47,
+      "false_strict": 0,
+      "false_wide": 0,
+      "intercepts": 0,
+      "misses": 0,
+      "normal": 22,
+      "recall_permille": null,
+      "skipped": {},
+      "strict_permille": 0,
+      "tip": "2f40f22b85dcf3fd0979395286223ddf972550ff",
+      "unreviewed": 25,
+      "wide_permille": 0
+    },
+    {
+      "abnormal": 0,
+      "commits": 341,
+      "corpus": "requests",
+      "cp95_strict": [
+        0.0,
+        7.549
+      ],
+      "cp95_wide": [
+        0.0,
+        1.076
+      ],
+      "events": 341,
+      "false_strict": 0,
+      "false_wide": 0,
+      "intercepts": 0,
+      "misses": 0,
+      "normal": 47,
+      "recall_permille": null,
+      "skipped": {},
+      "strict_permille": 0,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "unreviewed": 294,
+      "wide_permille": 0
+    },
+    {
+      "abnormal": 1,
+      "commits": 433,
+      "corpus": "ripgrep",
+      "cp95_strict": [
+        0.0,
+        6.375
+      ],
+      "cp95_wide": [
+        0.0,
+        0.85
+      ],
+      "events": 433,
+      "false_strict": 0,
+      "false_wide": 0,
+      "intercepts": 0,
+      "misses": 1,
+      "normal": 56,
+      "recall_permille": 0,
+      "skipped": {},
+      "strict_permille": 0,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "unreviewed": 376,
+      "wide_permille": 0
+    }
+  ],
+  "gate_max_percent": 1,
+  "generated_from": {
+    "ce": "1.6.0",
+    "commit": "22d43c4d6c9104c2e95c9bf75d06e263b401cb36",
+    "dirty": true
+  },
+  "ground_truth": "by sha off the frozen contracts: copy = a commit-slice row with a pair carrying copied:true (the only duplication-shaped positive the three corpora hold); normal = a reviewed commit-labels row and no copied pair; unreviewed = admitted by the slice, never individually reviewed. Strict rate = false / normal (calibration, below the 500 floor); wide rate = false_wide / (normal + unreviewed), the reading the plan's per-500 line takes. Recall is defined here — the ground truth has a positive, unlike the 600-sample gate.",
+  "method": "every first-parent commit of the three frozen commit slices replayed as the multi-file changeset the Stop audit sees: fourclass::session::commit_pairs over <sha>^..<sha> (renames as one pair, a copy record as an added file), both blob sides through tombstone::texts::load, judged by daemon::judge::Judge::judge_changeset — the seam Judge::classify itself calls, so the same classify_batch and the same fourclass/2 core link. A changeset that is not whole is not an event and is counted under a named skip.",
+  "predicate": "intercept = the counterfactual deny: config::tier_of(.., \"observe\") == \"deny\" AND the core's suspicions non-empty (CE.FourClass.Verdict: novel lines inside a newly duplicated top-level unit span >= 20 AND deleted * 10 < novel). Cross-file relocations are evidence on the row, never the predicate: a clean refactor produces them by the hundred.",
+  "promoted": false,
+  "rows": [],
+  "schema": "ce.eval-fpr-l2/1.0.0",
+  "totals": {
+    "abnormal": 1,
+    "commits": 821,
+    "corpus": "total",
+    "cp95_strict": [
+      0.0,
+      2.908
+    ],
+    "cp95_wide": [
+      0.0,
+      0.449
+    ],
+    "events": 821,
+    "false_strict": 0,
+    "false_wide": 0,
+    "intercepts": 0,
+    "misses": 1,
+    "normal": 125,
+    "recall_permille": 0,
+    "skipped": {},
+    "strict_permille": 0,
+    "tip": "",
+    "unreviewed": 695,
+    "wide_permille": 0
+  }
+}

@@ -16,7 +16,7 @@
 //! promise rests on.
 
 use crate::corelink::Link;
-use crate::fourclass::batch::{PairInput, classify_batch};
+use crate::fourclass::batch::{BatchClassification, PairInput, classify_batch};
 use crate::fourclass::session;
 use crate::scan::lang::Lang;
 use std::path::Path;
@@ -100,17 +100,27 @@ impl Judge {
                 lang: *lang,
             })
             .collect();
-        let batch = classify_batch(&inputs, self.link_mut());
-        // Keyed on the LINK, not on getting a verdict: a core refusing
-        // via its own work budget is HEALTHY, killing it cost a retry.
-        if batch.link_failed {
-            self.note_failure();
-        }
+        let batch = self.judge_changeset(&inputs);
         let mut report = session::report_json(&batch, &sent);
         if let Some(n) = self.recovered.take() {
             report["recovered"] = serde_json::json!(n);
         }
         report
+    }
+
+    /// The judgment half of `classify` over a changeset whose texts
+    /// are already in hand — the seam the cross-file FPR ledger
+    /// (docs/FPR-L2.md) replays git history through, so the ledger
+    /// measures THIS pipeline and not a copy of it. `classify` is its
+    /// only production caller.
+    pub fn judge_changeset(&mut self, inputs: &[PairInput]) -> BatchClassification {
+        let batch = classify_batch(inputs, self.link_mut());
+        // Keyed on the LINK, not on getting a verdict: a core refusing
+        // via its own work budget is HEALTHY, killing it cost a retry.
+        if batch.link_failed {
+            self.note_failure();
+        }
+        batch
     }
 
     /// The tombstone verdict over the daemon-owned link: the raw

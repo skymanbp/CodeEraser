@@ -240,9 +240,11 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) {
 }
 
 /// M4 four-class summary of the session's working-tree diff via the
-/// daemon-owned ce-core link. INFORMATIONAL only (R-L2-4: no deny
-/// path may lean on it); `request_if_running` because a Stop must not
-/// pay a daemon spawn — cold = a visible degraded field, not latency.
+/// daemon-owned ce-core link. INFORMATIONAL: no tier reads it, and a
+/// promotion is argued from the changeset ledger (R-L2-4, replayed
+/// through Judge::judge_changeset — docs/FPR-L2.md), never assumed;
+/// `request_if_running` because a Stop must not pay a daemon spawn —
+/// cold = a visible degraded field, not latency.
 fn fourclass_report(root: &Path) -> serde_json::Value {
     use crate::daemon::{client, proto::Request, proto::Response};
     let Some(pairs) = crate::fourclass::session::head_pairs(root) else {
