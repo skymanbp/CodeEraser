@@ -8,19 +8,20 @@
 
 ## 简介
 
-长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 750 行——或超过其 `[[rules.class]]` 声明的那条线——的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，CI 退出码拒绝提交。
+长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行——或超过其 `[[rules.class]]` 声明的那条线——的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 与 `ce commitmsg` 拒绝提交，CI 退出码拒绝合入。
 
 **范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十六<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现——以及它的不同之处
 
-![一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留——每行一个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
+![一个判决如何产生：Rust 度量语法单元、token 指纹与词袋、文档 shingle、git 窗口与 diff、引用图；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、改动判决（轨迹、审计、墓碑残留）、存活性与擦除——每行一到三个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
 
-- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->42<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->45<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
+- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->42<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->45<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，在墓碑腿加入之前）。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）——两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙——每个文本文件里的每个标识符，只以 fnv1a64 哈希存储——产出**未被提及的声明**顾问，它永不把门翻红。
-- **被度量的结构。** <!--ce:count:structure_axes#word-->八<!--/ce-->轴（几何、命名多样性、混杂、错位、约定、过期文档、冗余、模块度）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
+- **只用本仓事实的同角色建议，零模型。** 索引里已有的事实拼成词袋——名字、形状、被调用者、文档、结构、字面量——以整数 BM25（k1 = 6/5、b = 3/4）打分、在核里判决：候选只有一个精确顺序，外加一个只在名字、被调用者与形状三条证据通道合取时才为真的角色位。`--widen` 加仓内 PPMI 联想视图。由构造只当顾问：无退出码、无门、不拦钩子。
+- **被度量的结构。** <!--ce:count:structure_axes#word-->八<!--/ce-->轴（几何、命名多样性、混杂、错位、文档覆盖、过期文档、冗余、模块度）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
 - **挪几行骗不过的检查分数。** 门自己的各轴（尺寸、复杂度、克隆、文档重复、死码、变动、环）各计 floor(1000·v/(v+n))——违规质量除以机会数——加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`），改一个旋钮会让 `ce check` 具名停下而非挪动所有线。
 - **时间是一等信号。** 最近 512 个分数点上的 Theil–Sen 斜率（一个野点拽不动中位数）；变动 = 新增 − 按 blame 存活的行；联判格把相似度、图位置与变动合成 merge / delete / churn-hotspot，带理由位与置信。
 - **有安全谓词的擦除，不是启发式。** <!--ce:count:erase_classes#word-->三<!--/ce-->类（逐字文档孪生、副本已死的整单元 T1 孪生、置信的非公开死文件）、<!--ce:count:erase_reasons#word-->七<!--/ce-->个冻结理由码、<!--ce:gate:erase.row_cap#digits-->4,096<!--/ce--> 行上限，以及任一已应用判决幸存即失败的收敛重规划。
@@ -41,7 +42,7 @@
 同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。
 <!-- scoreboard:end -->
 
-同一个编码任务——*加折扣、紧凑报表、CSV 与 JSON 输出、API 里的金额格式化*——由脚本化的 agent 在 [`demo/seed`](demo/seed/README.md)（一个 Python + TypeScript 的小型开票服务）的两份相同副本上重放，唯一变量是 CodeEraser 在不在环内——PreToolUse 守卫、Stop 审计，以及审计拒绝之后按门自己点过名的计划执行的 `ce erase --apply`。种子树先被量过一遍，所以下表每一处发现都是这次任务写出来的。此后两条环各自跑到**自己**的终点——环内没有东西时也就没有东西会拒绝什么，于是那一条终止在最后一次写入。每条判决都是 `ce` 的逐字输出，两棵树由同样六条命令度量。
+这个任务——*加折扣、紧凑报表、CSV 与 JSON 输出、API 里的金额格式化*——由脚本化的 agent 在 [`demo/seed`](demo/seed/README.md)（一个 Python + TypeScript 的小型开票服务）上重放。种子树先被量过一遍，所以下表每一处发现都是这次任务写出来的。此后两条环各自跑到**自己**的终点——环内没有东西时也就没有东西会拒绝什么，于是那一条终止在最后一次写入。每条判决都是 `ce` 的逐字输出，两棵树由同样六条命令度量。
 
 <!-- demo:begin -->
 | | 不带 CodeEraser | 带 CodeEraser |
@@ -101,9 +102,9 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 安装、运行与更新
 
-**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->五<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`。Windows 安装包把安装目录写入 PATH 并运行 `ce setup`；AppImage 与 dmg 用户自己跑一次 `ce setup`——它找到 Claude Code、接入下述插件，并说明那个 `ce` 所在目录是否在 PATH 上。<!--ce:count:binaries#word-->十五<!--/ce-->个二进制与 `SHA256SUMS` 按裁定不签名——用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
+**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->五<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`。Windows 安装包把安装目录写入 PATH 并运行 `ce setup`；AppImage 与 dmg 用户自己跑一次 `ce setup`——它找到 Claude Code、接入下述插件，并说明那个 `ce` 所在目录是否在 PATH 上。<!--ce:count:binaries#word-->十五<!--/ce-->件产物——每目标的 `ce` 与 `ce-core` 加上安装包——连同 `SHA256SUMS` 按裁定不签名——用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
 
-**Homebrew / winget。** v1.7.0 起：`brew install skymanbp/codeeraser/codeeraser`（macOS 与 Linux，`ce` + `ce-core` 取自钉扎资产）与 `winget install skymanbp.CodeEraser`（Windows 安装包）。`packaging/` 下的公式与 winget 清单由发布核过的同一份钉扎清单生成——永不手改。
+**Homebrew / winget。** 发布从它自己核过的那份钉扎清单生成 Homebrew 公式与 `packaging/` 下三份 winget 清单——永不手改——并在本仓配好 tap 与 winget 令牌时发布：`brew install skymanbp/codeeraser/codeeraser`（macOS 与 Linux，`ce` + `ce-core` 取自钉扎资产）与 `winget install skymanbp.CodeEraser`（Windows 安装包，须 winget-pkgs 合并之后）。
 
 **Claude Code 插件。** `ce setup` 在本仓的 `release` 分支上注册 marketplace——每次发布后快进到 tag，装机跟发布不跟 `main`——并安装插件；手动：`/plugin marketplace add skymanbp/CodeEraser@release`，再 `/plugin install codeeraser@codeeraser`。启动器按 pin 解析 `ce` 与 `ce-core`：先取命中的本地或 PATH 副本，再钉扎下载，最后才是会自报未校验的 PATH 二进制。
 
@@ -118,7 +119,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | `ce similar` | 同角色顾问：与某个单元（`--at file:line`、`--unit`）或一段文本最相似的单元，按核的排序带核给的角色位；`--widen` 加仓内 PPMI 联想视图——只当顾问，永不判决 |
 | `ce structure` | <!--ce:count:structure_axes#word-->八<!--/ce-->轴；`--split-candidates` 为每个越过软线的文件计最优缝价 |
 | `ce check` / `ce baseline` | ADR-006 棘轮与分数地板，<!--ce:count:fail_conditions#word-->六<!--/ce-->个 fail 条件逐名报在控制台；`baseline` 只在根、且只在具名动作下持久化 |
-| `ce erase` | 确定性两段式擦除；默认演练，`--apply` 有干净工作区前置 |
+| `ce erase` | 确定性两段式擦除；默认演练，`--apply` 有干净工作区前置，`--log` 读已执行擦除的轨迹 |
 | `ce update` | 最新发布对比本构建，退出码 0 / 1 / 2；`--yes` 两枚 pin 都通过后替换 `ce` + `ce-core`，`--installer` 另存已校验的 GUI 安装包 |
 | `ce doctor` / `ce setup` / `ce eject` / `ce mcp` | 本机状态；把本机 Claude Code 接到插件上（退出码 0 已接 / 5 已有保留 / 10 无 Claude Code / 11–12 失败 / 13 提权账户不是登录用户；`--unwire` 只拆它自己接的）；按项目卸载；只读 MCP 服务器 |
 
@@ -141,7 +142,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 存活性判决 + 符号顾问 | `ce deadcode` | `graph`, `graphcanvas_report`, `deadcode_report` | MCP `deadcode` |
 | git 窗口变动 | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
 | 三信号联判 | `ce join` | `candidates`, `join_report` | MCP `join` |
-| 树尺度结构（八轴、拆分定价） | `ce structure` | `structure`, `structure_report` | MCP `structure` |
+| 树尺度结构（拆分定价） | `ce structure` | `structure`, `structure_report` | MCP `structure` |
 | 分数轨迹 | `ce trend` | `trend`, `trend_report` | MCP `trend` |
 | 分数、棘轮与地板 | `ce check` | `score`, `check_report` | MCP `check` |
 | 同角色顾问（相似单元、联想视图） | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
@@ -158,7 +159,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 项目 daemon | `ce daemon`, `ce ping` | — 每一面惰性启动 | — |
 | 只读报告服务器 | `ce mcp` | — 插件自行注册 | `.mcp.json` |
 | 卸载 | `ce eject` | — 只在 CLI | — |
-| Claude Code 接线 | `ce setup`, `ce setup --unwire` | — 只在 CLI：安装包调用它，AppImage / dmg 用户装后跑一次 | — |
+| Claude Code 接线 | `ce setup`, `ce setup --unwire` | — 只在 CLI：Windows 安装包调用它，AppImage / dmg 用户装后跑一次 | — |
 | 实测仪表盘 | — 编译内置序列；README 与官网带同一块 | `bench`, `bench_doc` | — |
 | 根锚定 | — 每条命令与钩子都经 `root` 锚定 | `default_root`, `resolve_root` | — |
 <!-- parity:end -->
@@ -176,14 +177,14 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 已知限制
 
-**v1.7.0 的范围。** 计划 v2.29 把部分后置工作复活进 v1.7.0：计划书 K–L 行具名的三个后置束——评分与评测、分发、以及决定守卫类能否晋级的证据门——曾于 2026-08-31 裁定不做（计划 v2.22，45 条），2026-09-05 起按「有收益且代价可接受」逐条复活。以下限制描述当前发布。
+**v1.7.0 的范围。** 计划 v2.29 把 2026-08-31 收口时裁定不做的后置工作（计划 v2.22，三个后置束共 45 条）逐条重开，只留代价划得来的那些。以下限制就是留存下来的立场。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。基于 AST 的判决使用上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；Markdown 没有 tree-sitter 语法，由文档与图规则判决；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）——以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线从 304（v0.7.3）走到 372（v1.4.1）——把两条线同时套在 v1.4.1 的树上，差三分。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它——Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。基于 AST 的判决使用上述<!--ce:count:grammars#word-->六<!--/ce-->套语法；Markdown 没有 tree-sitter 语法，由文档与图规则判决；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。二进制未签名。符号层存活性只是顾问、永不是判决——`ce deadcode` 自己最后一行就这么写。同角色顾问是顾问不是判决：`ce similar`、MCP `similar_units` 与 GUI 相似屏只排序不裁决——`ce similar` 恒退 0，`ce check` 从不读这一族，Stop 审计的顾问行只落进 observe 账本。守卫类在拿出自己的误报记录之前一律停在 `observe`。复杂度轴出厂不带任何硬线——`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）——以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。墓碑残留把单词名字也算名字——一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表；中文名字只在词边界处可测——宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。`ce structure` 自己那个 0–1000 同样跨 v1.6.0 → v1.7.0 不可比：模块度轴是新的，而每一轴都进等权折叠。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线自 v0.7.3 的 304 起随每次具名重立挪动（v1.4.1 时 372——把两条线同时套在 v1.4.1 的树上差三分）。
 
 ## 文档
 
 - [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)——由二进制与配置 schema 生成，漂移即 CI 变红 · [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十五<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
-- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)——wire SemVer 与两段式发布 runbook
+- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [EVAL-SET-SIMILAR](docs/EVAL-SET-SIMILAR.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md) · [FPR-L2](docs/FPR-L2.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)——wire SemVer 与两段式发布 runbook
 - 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [技术栈](https://codeeraser.dev/zh/stack/) · [实测](https://codeeraser.dev/zh/bench/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->
 
 ## 许可证

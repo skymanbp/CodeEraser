@@ -66,7 +66,7 @@
 <div class="card"><h3>误报纪律</h3><p>判定层：<code>600 个样本命中 0 个（门 ≤ 1%）</code>；写入探针：<code>0/630 误报</code>。其余规则保持 observe。每次晋级都须写入 CHANGELOG 台账。</p></div>
 <!-- bench-stack:end -->
   <div class="card"><h3>擦除是确定性的</h3><p><code>erase/gather.rs</code> 组装事实；<code>CE.Erase</code> 只授权满足安全谓词的行。应用前逐目标验哈希，落笔后重跑来源家族——幸存判决响亮失败；没有 LLM 负责重写。</p></div>
-  <div class="card"><h3>发布分成两段</h3><p><code>release.yml</code> 先为 draft 工件计哈希，再由提交的 pins 绑定这些字节。tag 作业下载同一批工件，检查 CI 与每个 pin，全程不重建。</p></div>
+  <div class="card"><h3>发布分成两段</h3><p><code>release.yml</code> 先为 draft 工件计哈希，再由提交的 pins 绑定这些字节。tag 作业下载同一批工件，检查 CI 与每个 pin，全程不重建。同一组 pin 投影出 Homebrew 公式与 winget 三清单；<code>verify-publish</code> 随后把插件 marketplace 跟随的 <code>release</code> 分支快进。</p></div>
   <div class="card"><h3>方法可以逐行检查</h3><p><!--ce:count:booklets#word-->十五<!--/ce-->册方法学把每条公式链接到实现它的 <code>file:line</code>。<code>docs_citations.rs</code> 查引文台账；<code>docs_nav.rs</code> 查册集与导航。</p></div>
   <div class="card"><h3>Haskell 真正承重</h3><p>只有核能计算分数与棘轮判决、授权 erase 行、决定 cycle 轴成员。属性电池会扰动这些判决，并以参考实现对拍小规模情形。</p></div>
 </div>
@@ -83,7 +83,7 @@
      <a href="/zh/bench/">实测</a> ·
      <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
      <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
-  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，
+  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，
      许可证不授予商标权。© 2026 skymanbp。</p>
 </footer>
 

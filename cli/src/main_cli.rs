@@ -184,7 +184,8 @@ pub(crate) enum Cmd {
         root: Option<PathBuf>,
     },
     /// PreToolUse cheap gate: read the hook envelope on stdin, probe
-    /// the daemon, emit a permission decision per ce.toml [guard]
+    /// the daemon, emit a permission decision per ce.toml [guard] — and
+    /// record the tombstone class at its own [tombstone] tier
     Probe {
         /// Hook mode: read the JSON envelope on stdin (required)
         #[arg(long)]
@@ -226,7 +227,8 @@ pub(crate) enum Cmd {
         root: Option<PathBuf>,
     },
     /// MCP server over stdio: the read-only report face of every
-    /// judgment family
+    /// judgment family, plus this machine's and this build's own
+    /// diagnostics — none of the tools can write
     Mcp {
         /// Project root the tools operate on (default: current directory)
         root: Option<PathBuf>,

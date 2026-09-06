@@ -72,11 +72,12 @@
     （`corelink/pipe.rs`）。core 单行应答上限 **64 MiB**，超限按同一条
     降级路处理——这是**客户端自己的帧上限**，与核各族的 `*_too_large`
     是两回事：后者是核判自己算不动，前者是客户端拒绝读下去。
-  - **core 重启预算**：连续 **3** 次开链/请求失败后，daemon 在**其整个
-    生命周期内**不再重试，全程 L1（`daemon/judge.rs`）。修好 ce-core
-    也不会被这个 daemon 捡起来——要么等它空闲退出，要么 shutdown。
-    该状态经报文的 `degraded` 字段可见；那条 stderr 提示在懒启动的
-    daemon 上写进空句柄，不是可依赖的通道。
+  - **core 重启预算（7.0.0，O63）**：开链/请求连续失败即退避——第 n 次
+    失败后等 1 s·2^(n−1)、上限 60 s 才再试一次（`daemon/judge.rs::Budget`），
+    **永不永久关闭**：装完或修好 PATH 的 ce-core 在下一次尝试即被接回，
+    恢复后的首份 classify 报告带 `recovered: <失败次数>`（feed 0.10.0 的
+    `fourclass` 加性键）。退避窗口内该状态经报文的 `degraded` 字段可见；
+    那条 stderr 提示在懒启动的 daemon 上写进空句柄，不是可依赖的通道。
   - **客户端 → daemon 整场对话期限**：默认 **75 s**（daemon 自己的
     60 s core 期限加余量——最慢的合法应答是等核的 four_class 批，客户端
     期限短于服务端会把健康的慢判决误读成挂死），`CE_CLIENT_DEADLINE_SECS`

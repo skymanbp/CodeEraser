@@ -4,7 +4,7 @@
 
 T1/T2 clone detection reports *exact* and *parameterized* duplicate token runs. T3 covers the near-miss case: two units whose ASTs are structurally almost the same but whose token streams are not. The judgment is an exact tree edit distance under a fixed normalization, computed in the Haskell core, with the Rust side restricted to parsing, candidate selection, and transport.
 
-The plan row that scopes this: `clone` covers "跨文件 T1/T2（热路径）；T3 near-miss（冷路径）；**不承诺 T4**", with the threshold given as "T3 TSED 0.85（定义与阈值仓内自定义并文档化）" — the repo owns the definition rather than citing one ([DEVELOPMENT_PLAN.md:64](../../DEVELOPMENT_PLAN.md#L64), restated at [Cost.hs:13-20](../../../core/app/CE/Clone/Cost.hs#L13)).
+The plan row that scopes this: `clone` covers "跨文件 T1/T2（热路径）；T3 near-miss（冷路径）；**不承诺 T4**" (cross-file T1/T2 on the hot path, T3 near-miss on the cold path, no T4 promised), with the threshold given as "T3 TSED 0.85（定义与阈值仓内自定义并文档化）" (T3 TSED 0.85, defined and documented in-repo) — the repo owns the definition rather than citing one ([DEVELOPMENT_PLAN.md:64](../../DEVELOPMENT_PLAN.md#L64), restated at [Cost.hs:13-20](../../../core/app/CE/Clone/Cost.hs#L13)).
 
 ### The judged object
 

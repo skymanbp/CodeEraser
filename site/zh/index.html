@@ -64,7 +64,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 945/1000</span> | 判轴 0:81 1:0 2:102 3:0 4:0 5:0 6:205 | 候选 34
+<span class="s">检查分数 945/1000</span> | 判轴 0:83 1:0 2:102 3:0 4:0 5:0 6:205 | 候选 34
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：10 块并入既有成员，15 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -121,12 +121,13 @@
   <div class="card"><h3>ce clone</h3><p>T3 近似克隆：Haskell 核的树编辑距离判决，改名换形的拷贝一并抓。</p></div>
   <div class="card"><h3>ce deadcode</h3><p>缓存引用图上的存活性判决：无保留入边、无入口声明——判死，门就红。旁边是未被提及的声明顾问，它永不把门翻红。</p></div>
   <div class="card"><h3>ce docdup</h3><p>文档与注释里的重复散文，活段上的精确 Jaccard 判决。</p></div>
-  <div class="card"><h3>ce structure</h3><p>树尺度结构熵：布局偏离、文档陈旧、冗余诸轴，整仓一览。</p></div>
+  <div class="card"><h3>ce structure</h3><p>树尺度结构熵：布局偏离、文档陈旧、冗余、模块度诸轴，整仓一览。</p></div>
   <div class="card"><h3>ce scan</h3><p>逐文件逐函数的尺寸、复杂度、可读性——经典指标，核分级；判的是全局表，或该文件自己那条 <code>[[rules.class]]</code> 线。</p></div>
   <div class="card"><h3>ce trend</h3><p>主线历史上的分数轨迹——逐提交缓存、可重建、方向诚实。</p></div>
   <div class="card"><h3>ce erase</h3><p>确定性两段式擦除器：死文件、逐字重复的文档孪生、整单元精确克隆——先出计划，只在干净工作区上应用，且永不通过让模型重写代码来完成。</p></div>
   <div class="card"><h3>ce churn</h3><p>git 窗口内的改动热度，逐单元归属——一个文件是在被重写，还是只在被追加。</p></div>
   <div class="card"><h3>ce join</h3><p>三信号联判：把改动、重复与存活性折成一条判决，热的、重复的、已死的那个角落会自己报名。</p></div>
+  <div class="card"><h3>ce similar</h3><p>同角色顾问：在索引已有的词袋上做整数 BM25，由核判定哪些候选扮演查询的角色——确定性、离线的检索，只当顾问，永不把门翻红。</p></div>
   <div class="card"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，停止时审计，会话开始报健康。</p></div>
 </div>
 
@@ -151,7 +152,7 @@
 <p><a href="/zh/stack/">查看组件级技术栈与执行门禁 →</a></p>
 
 <h2>信任锚</h2>
-<p class="trust">全部<!--ce:count:binaries#word-->十五<!--/ce-->个发布二进制——<!--ce:count:platforms#word-->五<!--/ce-->平台 × ce / ce-core，v0.7.3 起再加<!--ce:count:installers#word-->五<!--/ce-->个 GUI
+<p class="trust">全部<!--ce:count:binaries#word-->十五<!--/ce-->个发布二进制——<!--ce:count:platforms#word-->五<!--/ce-->平台 × ce / ce-core，再加<!--ce:count:installers#word-->五<!--/ce-->个 GUI
 安装包——都以 SHA256 钉扎在 <code>plugin/bin/manifest.env</code>；tag 阶段逐 pin 校验、
 等被打标提交的 CI 全绿、拒绝任何计划外资产，然后才发布。<code>SHA256SUMS</code> 覆盖
 全集可离线核对。代码签名被刻意排除在设计外——哈希链就是永久信任锚。本仓库每次提交都用自己的工具给自己把门。</p>
@@ -162,7 +163,7 @@
      <a href="/zh/bench/">实测</a> ·
      <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
      <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
-  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，
+  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，
      许可证不授予商标权。© 2026 skymanbp。</p>
 </footer>
 

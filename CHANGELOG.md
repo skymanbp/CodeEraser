@@ -9,74 +9,7 @@
 
 ## [Unreleased]
 
-**无默认档位变更。** 计划 v2.29 步 12 依赖批 DEP-B：
-- getrandom 升至 0.4、sha2 升至 0.11、rusqlite 升至 0.40.2（保留 `bundled`，启用 `fallible_uint` 的检查式无符号转换）、toml 升至 1.1.5；CLI 与 GUI 两份锁文件同步。
-- 两处 archify 缓存准备移到 Rust 缓存恢复之后，`scripts/diagram.mjs` 遇到被 rust-cache 掏空的缓存（只剩目录骨架，git 会向上认领 CodeEraser 的 checkout，fetch 报 `not our ref`）即重新初始化；NOTICE 门的 `cargo metadata` 加 `--locked`。按两工作区依赖重生 NOTICE，清除 `CE_BLESS` 后复验。
-- 更新 pin 与截图收据共用逐字节小写十六进制；发布资产经旧、新拼写与系统 SHA-256 对拍，pin 字节不变。旧开发版所建索引可复用，暖路径克隆行一致。
-- **判决、分数算法、schema id 均不变**；不改索引版本与 wire。dependabot PR 编号 1 / 2 / 4 / 6 随本批关闭（升版落在本地锁文件，不合并 PR）。ADR-006 具名重立：主 `cli/src/update/apply.rs` 172→187（`hex` 与测试挂载）；子仓新文件入基线 `unit/update/apply.rs` 57；dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0；codex gpt-6-astra 落码（五条 lib 管道腿、八条 daemon 腿、两条 git 夹具腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
-
-**无默认档位变更。** 计划 v2.29 步 12 依赖批 DEP-TS（dependabot PR 5；codex gpt-6-astra 落码到对拍与测试全落时订阅额度用尽，Claude 审阅收口）：
-- tree-sitter 0.26.11 → 0.27.0（CLI 与 GUI 两份锁文件同步，`tree-sitter-language` 0.1.8；NOTICE 重生）。`Node::child_count` 回到 `u32`，三处显式转换随之删除，`scan/ast.rs` 头注写明子计数与命名子计数各自的宽度、两个取子都收 `u32`（0.27.0 源码核对）。
-- `TOKENIZER_REV` 2 → 3，缓存失效拆两层：存储 / 算法键不符仍整库重建；**只有解析器修订不符**时走 `dedup/schema/parser.rs::invalidate`——清 13 张解析派生表与 `full_build` / `resolve_key` / `mention_rev` 三枚戳、换 epoch，`trend` 行保留。trend 的工具链戳自此含 `tokenizer{REV}`，旧戳行在复用前重量（`it/trend_parser.rs`；单测两条：迁移保史、失败回滚）。`schema_current` = 存储键 ∧ 解析器键，`index::peek` 仍只读。meta 键名只拼一处（`parser::KEY`）。
-- 不变性协议（同树 f9a0775，旧 / 新二进制各自 worktree 与 `.ce`）：16 族 JSON 报告逐字节相同——codex 首跑 churn 一族差异 = 14 天滚动窗口在两次运行之间前移，同窗口背靠背重跑逐字节同（54361 字节）；自仓索引 12 张表逐行相同（files 758 / fingerprints 38774 / symbols 9847 / sites 5082 / edges 3696 / unitsig 9425 / docsegs 2074 / bag 190398 / df 5834 / mentions 336356 / mention_files 1019 / result_cache 1）；四外部语料 mention 报告相同；FPR 全史回放 257 行相同；similar 五语料回放 ok（SQL 读者与内存语料逐位一致，tally 是索引表与 `SIMILAR_REV` 1 的函数）；`ce check` 945 / 棘轮零动用。冷 `ce dedup` 中位 10545 → 10232 ms、暖 668 → 672 ms（三轮各），库大小逐字节同——在噪声内，PERF-BUDGET 只改失效口径那一句。
-- eval：`tokens.rs` 因常量改动丢冻结锚（三份自仓切片 25 → 24 行，覆盖率非判决），按 EVAL-SET.md 复活协议 `CE_REFREEZE=cli/src/dedup/tokens.rs` 具名续冻——graph-slice / t3-universe 只换 sha，docdup-segments 该文件多出一段 live 注释段（`TOKENIZER_REV` 的文档注释过了长度地板：live 259 → 260）；25 行地板复位。
-- 文档：册 01 的失效句改为「清解析派生表、trend 保留并重量」并引 `schema/parser.rs` 与 trend 头注（`tokens.rs:21` 锚随常量值改签）；site how 双页 `TOKENIZER_REV` 3；README 双语 tree-sitter 芯片与事实投影随 bless；册 13 自仓普查行重取。
-- 子仓 `it/docs_diagrams.rs` 删掉 archify 缓存的第二读者 `cache_head`（骨架缓存下 `git -C cli/target/archify rev-parse HEAD` 会答 CodeEraser 的 HEAD），`--check` 的 exit 2 具名拒绝是唯一谓词；`hs_grammar_pin` 随 `child_count` 宽度改。
-- **判决、分数算法、schema id 均不变**；wire 不动。ADR-006 具名重立与门数见提交说明。
-
-**无默认档位变更。** 计划 v2.29 步 12 清点落实批 INV-FIX（codex 清点的 23 条采纳项；codex 额度用尽后由 Claude 分四包落码——三个 Opus 子代理各一包、Claude 一包并逐 diff 审阅）：
-- 手写事实配执行者（1–3、21）：架构图 IR 的四个子标签（wire / scan / gui / mcp）经注册表模板渲染后对拍（`it/docs_diagrams.rs` 新腿；`{id}` 渲染器提为 `facts::template` 单一所有者）；VERSIONING §3 三元组里的行数与答版改成 chip——新事实 `count:golden_requests#digits`（= 130，linked 档：golden 文件本身就是源，无债可记），`fixture_contract` 腿同时对拍注册表计数与 Spec.hs 名单；plugin/README 的三钩 / 一 skill / 一命令 / 十六工具四枚 chip，该页入 `facts_chips::SURFACES`；VERSIONING.md:304 两个裸 NUL 字节改成可见的 `\0`，文件回到文本（grep 不再答 Binary）。
-- 双语渲染器（4–6）：冻结评估点的值列有了语言——`bench_support/frozen.rs` 一张按指标键的中文模板表（一个 `|` 串而非二元组表：后者与 `unit/structure/tree.rs` 同韵成克隆），数字只从台账的英文值里抽出再拼，多重集不等即回落英文并由门抓出；仪表盘表 / stack 卡 / 首页芯片三处渲染器同改，README zh 表头 `percentile` → `百分位`，`measured()` 的脏树后缀按语言；GUI `bench.js` 经 `benchFrozenWords` 键走 `i18n.js` 的 `BENCH_ZH`（9 指标 × 22 模板，同样只拼台账数字，不等即回落）；新门 `docs_lang_generated`（十词拒绝表 flagged / answered / scoped / held / wrong / attributed / raw / per / percentile / dirty）修前 13 处红、修后绿，外加回放已发布 stack 卡块的负向探针；`every_frozen_point_has_a_chinese_sentence` 拒绝半翻译的新冻结点。zh 三页生成块随 `bench_render` bless 重写（如 `范围内 17/17（100%）`、`600 个样本命中 0 个（门 ≤ 1%）`、`每 500 次编辑 0.00 次误报`）。
-- 立场文本（7–10、17、19、20）：CHANGELOG 补步 1 块；计划书横幅首句改「v2.29 修正案执行中」、步 11「发版后」→「发版前」（334 行不动）；README 双语「成品的形状」段改 v1.7.0 范围段（45 条裁定作带日期的历史留一句）、「语义判决覆盖六套语法」改「基于 AST 的判决…Markdown 没有 tree-sitter 语法，由文档与图规则判决」、源码安装序列补 `cd ..`；plugin/README 钩子两行按 guard.rs / audit.rs 现状重写（PreToolUse：T1/T2 探针 + 硬预算 + 分级区记账 + 墓碑类按自己的档位；Stop：净行数 + 涉改重复块 + 墓碑腿 + 只记不拦的同角色顾问行）；册 15 的 VERSIONING 链接、册 11「两类规则」→「三类」（含墓碑类，引文按行播种）；`ce audit` 帮助文案（en 源 + zh 表）描述今日的 Stop 审计，`cli.md` 再生。
-- 发版工具（11–16、22、23）：RELEASE.md §2.1 改「tag 前只跑离线三检，`packaging-live` 是公开渠道验收——周程 + publish 后手动 dispatch 一次」；verify-publish 来源环加 `contracts/bench/bench.json`（`include_str!` 编进 GUI）/ `rust-toolchain.toml` / `build-target.yml` 共十二条；check 环 `--paginate` 并按名要求 `build (ubuntu-latest)` / `build (windows-latest)` / `build-macos` 三条 success（空 check 表不再读成「全绿」；缺席 = pending，2 h 超时按名列出），`release_roster` 新腿从 ci.yml 无 `if:` 的 job 与其矩阵推出同一集合（ci.yml 的 job 模型拆入 `release_roster_parts/`，schedule-only 扫描同读一份解析）；`pin_release.js` 改终态判定（键集 = 花名册、每枚 pin 64 位十六进制且等于 draft 报的、两个版本行 = 本次 tag），行数只从本进程读写的那一对算，`CE_PIN_SANDBOX` 离线缝 + `it/pin_release.rs` 四腿六练（首钉 / 原样重跑 / `--bless` 重跑 / 少资产 / 多资产 / 花名册外的键）；bless 命令补 `--manifest-path`（runbook 与脚本同一拼写 `BLESS`）；`starter-https` 可 dispatch；tauri-cli 2.11.4 源码核实 `-- --locked` 直达 cargo（`desktop.rs:259`），该步不改；`brings_something_new` 搬 `bench_support/joins.rs`——两源目录按名比、六个构建输入（两 manifest / 两 lock / cabal.project(.freeze) / rust-toolchain）按内容比并剔除发布自身的版本戳（不剔则每个发布都「有新东西」），21 对 tag 回放拦下的仍是 v0.7.1 / v1.0.1 / v1.3.1 / v1.3.2 四个，BENCH.md 页眉句随之；`.gitattributes` 在宽规则之后重申 `contracts/fixtures/**/*.ndjson -text`（实测：宽规则让 `git add` 把 CRLF 中毒的 golden 归一成 LF 存进索引，字节门就看不见中毒）。
-- 记账（18）：ci.yml:82 注释路径改 `tests/it/core_size_gate.rs`；`cli/Cargo.toml` 那半没有此字面，无事可做。dedup 主 55 / 子 119 恒（frozen.rs 的二元组表折成 `|` 串消掉唯一的新块）；ADR-006 具名重立与门数见提交说明。
-
-**无默认档位变更。** 计划 v2.29 步 10（C-R-L2-4，证据门四条之一）——**跨文件搬迁 / 堆叠判定的改动集级 FPR 仪器与账本首立**，零面变化、零 wire、零 ce.toml：
-- `Judge::judge_changeset` 供 `classify` 与仪器共用：判决仍走 `classify_batch`，保留核链失败记账。仪器与 O48 共用 `pair_inputs`，按冻结切片批量取父/子 blob；不完整的改动集按六种原因记跳过。行的文本与 JSON 输出统一由 Serde 序列化，区间表迭代归算术检查宿主；子仓新增五块消重后回到 119，不抬预算。
-- 拦截只读 Haskell 的 `suspicions`（M4 堆叠合取）；跨文件搬迁量随行作证。标签按冻结切片与 labels 的 sha 读取，严格 / 宽读法、两组 CP 95 % 区间、召回均入表。
-- `l2_fpr_gate` 七腿核对提交守恒、逐提交仲裁计数、全部表格单元、区间与晋级蕴含式；合成改动集另验搬迁放行、堆叠命中。冻结只准同次完整回放 self / requests / ripgrep。
-- `session.rs` 注释更新使旧自仓视图的逐字节匹配数 25→24；以 `CE_REFREEZE=cli/src/fourclass/session.rs` 对 graph-slice / t3-universe / docdup-segments 三视图具名续冻该行，25 行覆盖地板不降，八条关联门通过。
-- **首测冻结**：self / requests / ripgrep 分别 **47 / 341 / 433** 个完整事件，六类跳过均 0，`INTERCEPT` 共 0 条、仲裁行 0。严格 **0/125**（CP 95 % **0.000–2.908 %**）、宽读法 **0/820**（**0.000–0.449 %**）；唯一 copy 正例 ripgrep `1035f6b1` 未被拦截，**漏 1、召回 0/1**，保留标签与门线、不翻档。消重后三语料同次复冻测试体 **328.41 s**，冻结件与首测逐字节相同；逐行表与漏报 diff 复核见 `docs/FPR-L2.md`，机器件 `contracts/eval/fpr-l2-v1.json` 由仪器写入。
-
-
-**无默认档位变更；采用变体 B，`[guard] zone_tiers` 默认维持 `false`。** 计划 v2.29 步 10 C-zone_tiers（2026-09-06）：
-- 纯映射迁入 `guard::zone`（`landing` / `envelope` / `table_for`），钩子与回放共用；`budget.rs` 缩小，基线每次写入只解析一次。零 wire 变化。
-- `fpr_zone_replay` 逐父提交物化策略、记录档位与硬线遮蔽；`fpr_zone_gate` 复算冻结行并把默认值钉到两语料 `rate_ppm <= 10000` 的合取。四份回放共用 `common/history.rs`，区间算术共用 `common/stats.rs`。
-- **实测依据**：自仓 568 提交，28 / 5196 事件 = **0.5388 %**（CP 95 % 上界 **0.7778 %**）；requests 钉定尾段 400 提交，11 / 448 = **2.4553 %**（上界 **4.3507 %**），后者超过 1 %，不满足两语料合取。ask 被硬线遮蔽分别 5 / 190，配置不可读均 0；表与全部拦截冻结于 `contracts/eval/fpr-zone-v1.json`，正文见 `docs/FPR-REPLAY.md`。消重后复冻测试体耗时 408.44 / 69.16 s，冻结件与首测逐字节相同。
-- ADR-006 具名重立（两仓）：主 `docs/FPR-REPLAY.md` 221→283（本节）、`CHANGELOG.md` 566→581（本块与上块）；新文件入基线 `cli/src/guard/zone.rs` 108、`docs/FPR-L2.md` 149；子仓无超线，新文件入基线 `it/common/history.rs` 78、`it/common/stats.rs` 97、`it/fpr_zone_replay.rs` 240、`it/fpr_zone_replay_parts/mod.rs` 134、`it/fpr_zone_gate.rs` 158、`it/fpr_zone_gate_helpers/mod.rs` 10、`it/l2_fpr_replay.rs` 245、`it/l2_fpr_replay_parts/{mod,fixtures,render,tally}.rs` 101 / 106 / 81 / 85、`it/l2_fpr_gate.rs` 207、`it/l2_fpr_gate/checks.rs` 87、`unit/guard/zone.rs` 106。dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0、cabal PASS、lib 369、clippy + fmt 清（cli / gui）、GUI 四腿 ok；codex gpt-6-astra 落码（`guard_say` / `observe_feed` / 四条 `guard_hook` 与五条 lib 管道腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
-
-
-**无默认档位变更。** 计划 v2.29 步 10 批 C3 O48（2026-09-06）——声明级搬迁，折入同一未发布的 **wire 7.1.0**：
-- `fourclass/2` 请求加性 `declRem` / `declAdd`，回执 `unitEdges` / `unitEdgesDropped`；Rust 量名字、种类与跨度，Haskell 判同名同种、唯一目的地与跨度内共同内容。声明支付跨站成本，导出 `declFloor = 1`；多源可汇一处，两目的地拒绝，`declCap = 65536` 超限整表放弃。
-- 搬迁表补 `lines = 0` 行，已有行级记录优先；**分数和行分类不变**，既有 L2 冻结件与七条行门不动。声明边是报告信息，不进入守卫判决。
-- 真核回放 `commit-edges{,-requests,-ripgrep}-v1.json`：边覆盖 **自仓 31/37 → 36/37、requests 1/1、ripgrep 22/22**；五对短体补齐，`~out_dir` 零共同内容仍未覆盖。六对诊断、改编边界与 ripgrep 六条登记外发现见 [续测台账](docs/EVAL-SET-M5-3.md#声明级搬迁o48)，不改 GT。
-- 三对 golden 由核重答、旧回复字节不动；§3 由夹具门导出 **130 行，server 恒答 7.1.0**。主册 EVAL-SET 保持 300 行，册 09 英文推导与中文续测就地对齐。
-- ADR-006 具名重立（两仓）：主 `cli/src/fourclass/batch.rs` 211→226、`core/app/CE/FourClass/Wire.hs` 94→113、`core/app/CE/FourClass/Cost.hs` 64→89、`contracts/VERSIONING.md` 693→708、`docs/EVAL-SET-M5-3.md` 182→213、册 09 163→179；新文件入基线 `cli/src/fourclass/decls.rs` 96、`cli/src/fourclass/batch/edges.rs` 125、`core/app/CE/FourClass/Decl.hs` 93、`core/test/DeclProps.hs` 89；子 `it/eval_commit_review/mod.rs` 76→90，新文件 `it/eval_l2_edges.rs` 191、`it/eval_l2_edges_parts/mod.rs` 128、`it/fourclass_decls.rs` 99、`unit/fourclass/decls.rs` 72、`unit/fourclass/batch/edges.rs` 83。dedup 55 / 119 恒；门主 945 / 55 / 0、子 984 / 119 / 0、cabal PASS（DeclProps 11 检查）、lib 366、clippy + fmt 清。
-
-**无默认档位变更。** 计划 v2.29 步 10 批 C3 O54（2026-09-06）——structure/1 有向目录边表上 wire，第八条判轴「模块度」判它（**wire 7.1.0 加性 minor**）：
-- 请求加性可选表 `dirEdges=[[fromDir,toDir,count]]`（只载跨目录有向边，`from ≠ to`、按 `(from,to)` 严格升序）。
-  **intra 质量不上 wire**——`fileRefs` 的 `inside` 在目录内边的两端各加一，逐目录之和恰为内部边数两倍，核取半即得；
-  一个数字两个主人正是本族 `seamSoft` 那笔旧账。凭据 = 只在该表在场时执行的**跨表律**（`inside` 之和为偶、
-  `outside` 之和 == `dirEdges` 与之相接的边量），不符即按目录点名拒绝。
-- 判决 `core/app/CE/Structure/Modularity.hs`：目录分划在有向多重图上的 Newman 贡献 `q = e/m − o·i/m²`，
-  除以该目录自身质量的上限 `qMax = mu(m−mu)/m²`，判归一化后的 `rho` 是否低于地板——整数不等式
-  `1000(e·m − o·i) < modFloor·mu·(m−mu)`，全程整数、不做除法、无浮点。**判 rho 而不判 q** 是因为
-  `Σ q_c = Q ≤ 1`：只对 q 设地板会按仓规模成比例地误判大树，正是 2.26.0 密度律退役掉的那个形状。
-  `mu < modMassFloor` 或 `mu == m`（`qMax = 0`，没有可分离的补集）者整条不判——既不算净也不算犯。
-- 旋钮 19 `modFloor=1`（‰，零模型那条线；1/3 局部性线归 S2，一现象一轴）/ 20 `modMassFloor=4`
-  （四条边以下贡献的正负由单条引用决定）；knob 回执 19 → **21 行**，既有 golden 应答各多两行、其余键字节如前。
-- 三面：GUI `axisNames[7]` = modularity / 模块度；控制台印判轴**码**故无新字串；`ce.structure-report/0.6.0`
-  形状不变（`axes` 多一行、不多一键）故不升 schema。MCP 工具说明 seven → eight axes。
-- **自仓结构分迁移、与 1.6.0 不可比**：`ce structure` 恒发该表，判轴数每次都多一，且新轴入等权折叠。
-  实测：本批前的树 **820**（五轴 `0:13 1:26 2:321 3:345 4:195`），本批后的树 **831**（六轴，新增 `7:108`）；
-  同一棵**本批后**的树按旧轴表只判五轴是 819，故 819 → 831 才是轴 7 自己那一笔（余下差额是本批新增文件让树本身动了）。
-  `ce check` / `ce scan` / 其余分数不动；structure 仍报告态不设门（v2.22 结项 O53 立场不变）。
-- Rust cap 镜像同批对齐核的 `famOverCap`（此前只计 nodes 行，seam 表与新表都没计价）；
-  `rows::ref_rows` 一次 join 出两张表——它们必须描述同一张图，而一次 join 是保证不是断言。
-- 记账：`contracts/VERSIONING.md` 7.1.0 条 + §3「127 行，server 恒答 7.1.0」；册 04 改题「eight axes」并新增 S7 行与推导节
-  （文件名保留历史 slug——它是已发布的 URL 与 92 条引文的键）；`structure-axes.md` 改题八轴 + S7 行 + S7/S2 分界；
-  README 双语 / how 双语 / stack 双语随 bless；架构图 IR proto 串重渲；判决图 IR「结构与分数」节点副标改 `8 + 7 axes`（结构八轴、判决分七轴，此前二者恰同为七）、stack.svg ×4「seven structure axes」→ eight；GUI 三张截图随 `scripts/shoot_gui.js` 在 HEAD worktree 重拍（结构屏多一轴）+ `site_shots_receipt` 重签。
-- ADR-006 具名重立（两仓）：主 core/app/CE/Structure/Cost.hs 156→187 / Structure/Axes.hs 225→253 / Structure.hs 276→288 / cli/src/structure/edges.rs 27→52 / structure/wire.rs 182→206 / structure/rows.rs 244→259 / 册 04 312→345 / contracts/VERSIONING.md 677→693 / CHANGELOG 531→559，`core/app/CE/Structure/Modularity.hs`（114）+ `core/test/StructureModularityProps.hs`（146）两新文件入基线；子 unit/structure/edges.rs 14→28，`it/structure_modularity.rs`（167）新文件入基线。
+> 本节按计划步序升序排列；同一步的多个批次按交付时间先后。
 
 **无默认档位变更。** 计划 v2.29 步 1（2026-09-05，143cfe0）——计划书 v2.29 语义层修正案：
 - 用户三问 + 深夜三裁后立项：先发 v1.6.0（已发，tag af8dbf8）；语义层 #3「确定性同角色顾问」+ #4「轻量代码 RAG = 稀疏检索（BM25 形，索引已有事实拼词袋，倒排表进 index.db）+ 仓内 PPMI 联想，零外部模型」随 v1.7.0；npm 与桌面装机等 1.7.0 同批；v1.6.0 不单独跑 bench（一日期门下单量一个 tag 就得整条重量），其行随 1.7.0 整条序列入列；45 条后置束按「有收益且代价可接受」逐条复活——35 条具名做，O08 / O80 无收益不做，O03 / O14 / O53 / O67 与 README 永久立场冲突不翻，O23 / O83 已做（清单为本机件）。
@@ -341,6 +274,81 @@
 - 记账修正：步 9 批 A / 批 B 与步 10 第一组的三块自 b8d3c1e（第三次拆册）起被追加在 v1.5.0 段末、「更早的版本」之前，现移回 `[Unreleased]` 段（字节不变，只挪位置）。
 - Opus 只读审阅 22 条，落 18 条：**4 blocker**——tag 门的等待环把本 run 自己在 `needs:` 上排队的三条可选腿也算进 pending，v1.7.0 首打必等满两小时被拒 → 按 check suite 过滤本 run 未完成项（已完成的 skipped `build` / `draft` 仍按名赦免）；build-target.yml 新加的 `[ "$(ls dist | wc -l)" = 3 ]` 在两条 macOS 腿上是 BSD `wc` 带前导空格的串比较、正确构建也红 → `set -- dist/*; [ "$#" -eq 3 ]`；§5.10 布局树缺 `packaging/` 一行（`layout_tree` 门在 `git add` 后才红）；README 双语 / 官网两首页四枚数词芯片（三 / 九 → 五 / 十五）随 `facts_` bless。**major**：winget `ProductCode` 由「猜是 productName」改为本机注册表实测 `HKLM\...\Uninstall\CodeEraser`（1.5.1 装机，2026-09-06）；winget 三份 yaml 改纯 ASCII（winget-pkgs 对非 ASCII 要 BOM）——生成器 `render()` 与子仓门各一道断言；bundle 表四处拼写加门 `every_host_spells_the_same_bundle_per_os`；`bootstrap_e2e.sh` Linux 臂与 `ce.sh` 锁步（未知架构 = `unsupported`）；`packaging-live` 只在周程 / 手动跑 → RELEASE.md §2.1 要求打 tag 前手动跑一次。**minor**：`winget_pr.sh` 可重跑（分支已在则 PATCH、PR 已开则 notice）、`homebrew_tap.sh` 印的安装命令用 tap 名而非仓库名、`packaging.js::winget` 拆两表 ≤ 50 行、`RELEASE_VERSION` 经 `GITHUB_ENV` 覆盖后断言非空、`bundle()` 的拒绝在 `$(...)` 里不可达 → 顶层先校验一遍花名册、`packaging-live` 按清单版本取 winget 目录、gui.md 断句。**不加 formula `version` 行**：Homebrew 从 url 的 `/v1.x.y/` 段与 `ce-1.x.y-` 词干都能识别版本，显式行会被 `brew audit` 判冗余——由 `packaging-live` dispatch 实证；可复用工作流 caller 被 skip 时的 check 名已按 79611e8 的 `check-runs` 实测：就是裸 job 名 `release-rehearsal`（无 `/ build-target` 后缀），该提交的 skipped 名集 = packaging-live / release-rehearsal / setup-wiring / starter-https ⊆ `SKIPPED_OK`；dispatch 34015989581 五目标 rehearsal 5/5 绿（跑起来的 check 名是 `release-rehearsal (<runner>, <key>, <triple>) / build-target`）。
 - ADR-006 具名重立（两仓）：主 CHANGELOG 506→531 / cli/src/update/version.rs 66→139 / docs/RELEASE.md 114→149 / scripts/pin_release.js 128→140，scripts 四新文件 + packaging/winget 三份 yaml 入基线（.rb 与 .github/ 不在度量宇宙）；子 it/common/gates.rs 65→87 / unit/update/version.rs 69→97 / unit/update/manifest.rs 75→92，it/packaging.rs / it/release_roster.rs 两新文件入基线。
+
+**无默认档位变更。** 计划 v2.29 步 10 批 C3 O54（2026-09-06）——structure/1 有向目录边表上 wire，第八条判轴「模块度」判它（**wire 7.1.0 加性 minor**）：
+- 请求加性可选表 `dirEdges=[[fromDir,toDir,count]]`（只载跨目录有向边，`from ≠ to`、按 `(from,to)` 严格升序）。
+  **intra 质量不上 wire**——`fileRefs` 的 `inside` 在目录内边的两端各加一，逐目录之和恰为内部边数两倍，核取半即得；
+  一个数字两个主人正是本族 `seamSoft` 那笔旧账。凭据 = 只在该表在场时执行的**跨表律**（`inside` 之和为偶、
+  `outside` 之和 == `dirEdges` 与之相接的边量），不符即按目录点名拒绝。
+- 判决 `core/app/CE/Structure/Modularity.hs`：目录分划在有向多重图上的 Newman 贡献 `q = e/m − o·i/m²`，
+  除以该目录自身质量的上限 `qMax = mu(m−mu)/m²`，判归一化后的 `rho` 是否低于地板——整数不等式
+  `1000(e·m − o·i) < modFloor·mu·(m−mu)`，全程整数、不做除法、无浮点。**判 rho 而不判 q** 是因为
+  `Σ q_c = Q ≤ 1`：只对 q 设地板会按仓规模成比例地误判大树，正是 2.26.0 密度律退役掉的那个形状。
+  `mu < modMassFloor` 或 `mu == m`（`qMax = 0`，没有可分离的补集）者整条不判——既不算净也不算犯。
+- 旋钮 19 `modFloor=1`（‰，零模型那条线；1/3 局部性线归 S2，一现象一轴）/ 20 `modMassFloor=4`
+  （四条边以下贡献的正负由单条引用决定）；knob 回执 19 → **21 行**，既有 golden 应答各多两行、其余键字节如前。
+- 三面：GUI `axisNames[7]` = modularity / 模块度；控制台印判轴**码**故无新字串；`ce.structure-report/0.6.0`
+  形状不变（`axes` 多一行、不多一键）故不升 schema。MCP 工具说明 seven → eight axes。
+- **自仓结构分迁移、与 1.6.0 不可比**：`ce structure` 恒发该表，判轴数每次都多一，且新轴入等权折叠。
+  实测：本批前的树 **820**（五轴 `0:13 1:26 2:321 3:345 4:195`），本批后的树 **831**（六轴，新增 `7:108`）；
+  同一棵**本批后**的树按旧轴表只判五轴是 819，故 819 → 831 才是轴 7 自己那一笔（余下差额是本批新增文件让树本身动了）。
+  `ce check` / `ce scan` / 其余分数不动；structure 仍报告态不设门（v2.22 结项 O53 立场不变）。
+- Rust cap 镜像同批对齐核的 `famOverCap`（此前只计 nodes 行，seam 表与新表都没计价）；
+  `rows::ref_rows` 一次 join 出两张表——它们必须描述同一张图，而一次 join 是保证不是断言。
+- 记账：`contracts/VERSIONING.md` 7.1.0 条 + §3「127 行，server 恒答 7.1.0」；册 04 改题「eight axes」并新增 S7 行与推导节
+  （文件名保留历史 slug——它是已发布的 URL 与 92 条引文的键）；`structure-axes.md` 改题八轴 + S7 行 + S7/S2 分界；
+  README 双语 / how 双语 / stack 双语随 bless；架构图 IR proto 串重渲；判决图 IR「结构与分数」节点副标改 `8 + 7 axes`（结构八轴、判决分七轴，此前二者恰同为七）、stack.svg ×4「seven structure axes」→ eight；GUI 三张截图随 `scripts/shoot_gui.js` 在 HEAD worktree 重拍（结构屏多一轴）+ `site_shots_receipt` 重签。
+- ADR-006 具名重立（两仓）：主 core/app/CE/Structure/Cost.hs 156→187 / Structure/Axes.hs 225→253 / Structure.hs 276→288 / cli/src/structure/edges.rs 27→52 / structure/wire.rs 182→206 / structure/rows.rs 244→259 / 册 04 312→345 / contracts/VERSIONING.md 677→693 / CHANGELOG 531→559，`core/app/CE/Structure/Modularity.hs`（114）+ `core/test/StructureModularityProps.hs`（146）两新文件入基线；子 unit/structure/edges.rs 14→28，`it/structure_modularity.rs`（167）新文件入基线。
+
+**无默认档位变更。** 计划 v2.29 步 10 批 C3 O48（2026-09-06）——声明级搬迁，折入同一未发布的 **wire 7.1.0**：
+- `fourclass/2` 请求加性 `declRem` / `declAdd`，回执 `unitEdges` / `unitEdgesDropped`；Rust 量名字、种类与跨度，Haskell 判同名同种、唯一目的地与跨度内共同内容。声明支付跨站成本，导出 `declFloor = 1`；多源可汇一处，两目的地拒绝，`declCap = 65536` 超限整表放弃。
+- 搬迁表补 `lines = 0` 行，已有行级记录优先；**分数和行分类不变**，既有 L2 冻结件与七条行门不动。声明边是报告信息，不进入守卫判决。
+- 真核回放 `commit-edges{,-requests,-ripgrep}-v1.json`：边覆盖 **自仓 31/37 → 36/37、requests 1/1、ripgrep 22/22**；五对短体补齐，`~out_dir` 零共同内容仍未覆盖。六对诊断、改编边界与 ripgrep 六条登记外发现见 [续测台账](docs/EVAL-SET-M5-3.md#声明级搬迁o48)，不改 GT。
+- 三对 golden 由核重答、旧回复字节不动；§3 由夹具门导出 **130 行，server 恒答 7.1.0**。主册 EVAL-SET 保持 300 行，册 09 英文推导与中文续测就地对齐。
+- ADR-006 具名重立（两仓）：主 `cli/src/fourclass/batch.rs` 211→226、`core/app/CE/FourClass/Wire.hs` 94→113、`core/app/CE/FourClass/Cost.hs` 64→89、`contracts/VERSIONING.md` 693→708、`docs/EVAL-SET-M5-3.md` 182→213、册 09 163→179；新文件入基线 `cli/src/fourclass/decls.rs` 96、`cli/src/fourclass/batch/edges.rs` 125、`core/app/CE/FourClass/Decl.hs` 93、`core/test/DeclProps.hs` 89；子 `it/eval_commit_review/mod.rs` 76→90，新文件 `it/eval_l2_edges.rs` 191、`it/eval_l2_edges_parts/mod.rs` 128、`it/fourclass_decls.rs` 99、`unit/fourclass/decls.rs` 72、`unit/fourclass/batch/edges.rs` 83。dedup 55 / 119 恒；门主 945 / 55 / 0、子 984 / 119 / 0、cabal PASS（DeclProps 11 检查）、lib 366、clippy + fmt 清。
+
+**无默认档位变更；采用变体 B，`[guard] zone_tiers` 默认维持 `false`。** 计划 v2.29 步 10 C-zone_tiers（2026-09-06）：
+- 纯映射迁入 `guard::zone`（`landing` / `envelope` / `table_for`），钩子与回放共用；`budget.rs` 缩小，基线每次写入只解析一次。零 wire 变化。
+- `fpr_zone_replay` 逐父提交物化策略、记录档位与硬线遮蔽；`fpr_zone_gate` 复算冻结行并把默认值钉到两语料 `rate_ppm <= 10000` 的合取。四份回放共用 `common/history.rs`，区间算术共用 `common/stats.rs`。
+- **实测依据**：自仓 568 提交，28 / 5196 事件 = **0.5388 %**（CP 95 % 上界 **0.7778 %**）；requests 钉定尾段 400 提交，11 / 448 = **2.4553 %**（上界 **4.3507 %**），后者超过 1 %，不满足两语料合取。ask 被硬线遮蔽分别 5 / 190，配置不可读均 0；表与全部拦截冻结于 `contracts/eval/fpr-zone-v1.json`，正文见 `docs/FPR-REPLAY.md`。消重后复冻测试体耗时 408.44 / 69.16 s，冻结件与首测逐字节相同。
+- ADR-006 具名重立（两仓）：主 `docs/FPR-REPLAY.md` 221→283（本节）、`CHANGELOG.md` 566→581（本块与上块）；新文件入基线 `cli/src/guard/zone.rs` 108、`docs/FPR-L2.md` 149；子仓无超线，新文件入基线 `it/common/history.rs` 78、`it/common/stats.rs` 97、`it/fpr_zone_replay.rs` 240、`it/fpr_zone_replay_parts/mod.rs` 134、`it/fpr_zone_gate.rs` 158、`it/fpr_zone_gate_helpers/mod.rs` 10、`it/l2_fpr_replay.rs` 245、`it/l2_fpr_replay_parts/{mod,fixtures,render,tally}.rs` 101 / 106 / 81 / 85、`it/l2_fpr_gate.rs` 207、`it/l2_fpr_gate/checks.rs` 87、`unit/guard/zone.rs` 106。dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0、cabal PASS、lib 369、clippy + fmt 清（cli / gui）、GUI 四腿 ok；codex gpt-6-astra 落码（`guard_say` / `observe_feed` / 四条 `guard_hook` 与五条 lib 管道腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
+
+**无默认档位变更。** 计划 v2.29 步 10（C-R-L2-4，证据门四条之一）——**跨文件搬迁 / 堆叠判定的改动集级 FPR 仪器与账本首立**，零面变化、零 wire、零 ce.toml：
+- `Judge::judge_changeset` 供 `classify` 与仪器共用：判决仍走 `classify_batch`，保留核链失败记账。仪器与 O48 共用 `pair_inputs`，按冻结切片批量取父/子 blob；不完整的改动集按六种原因记跳过。行的文本与 JSON 输出统一由 Serde 序列化，区间表迭代归算术检查宿主；子仓新增五块消重后回到 119，不抬预算。
+- 拦截只读 Haskell 的 `suspicions`（M4 堆叠合取）；跨文件搬迁量随行作证。标签按冻结切片与 labels 的 sha 读取，严格 / 宽读法、两组 CP 95 % 区间、召回均入表。
+- `l2_fpr_gate` 七腿核对提交守恒、逐提交仲裁计数、全部表格单元、区间与晋级蕴含式；合成改动集另验搬迁放行、堆叠命中。冻结只准同次完整回放 self / requests / ripgrep。
+- `session.rs` 注释更新使旧自仓视图的逐字节匹配数 25→24；以 `CE_REFREEZE=cli/src/fourclass/session.rs` 对 graph-slice / t3-universe / docdup-segments 三视图具名续冻该行，25 行覆盖地板不降，八条关联门通过。
+- **首测冻结**：self / requests / ripgrep 分别 **47 / 341 / 433** 个完整事件，六类跳过均 0，`INTERCEPT` 共 0 条、仲裁行 0。严格 **0/125**（CP 95 % **0.000–2.908 %**）、宽读法 **0/820**（**0.000–0.449 %**）；唯一 copy 正例 ripgrep `1035f6b1` 未被拦截，**漏 1、召回 0/1**，保留标签与门线、不翻档。消重后三语料同次复冻测试体 **328.41 s**，冻结件与首测逐字节相同；逐行表与漏报 diff 复核见 `docs/FPR-L2.md`，机器件 `contracts/eval/fpr-l2-v1.json` 由仪器写入。
+
+**无默认档位变更。** 计划 v2.29 步 12 依赖批 DEP-B：
+- getrandom 升至 0.4、sha2 升至 0.11、rusqlite 升至 0.40.2（保留 `bundled`，启用 `fallible_uint` 的检查式无符号转换）、toml 升至 1.1.5；CLI 与 GUI 两份锁文件同步。
+- 两处 archify 缓存准备移到 Rust 缓存恢复之后，`scripts/diagram.mjs` 遇到被 rust-cache 掏空的缓存（只剩目录骨架，git 会向上认领 CodeEraser 的 checkout，fetch 报 `not our ref`）即重新初始化；NOTICE 门的 `cargo metadata` 加 `--locked`。按两工作区依赖重生 NOTICE，清除 `CE_BLESS` 后复验。
+- 更新 pin 与截图收据共用逐字节小写十六进制；发布资产经旧、新拼写与系统 SHA-256 对拍，pin 字节不变。旧开发版所建索引可复用，暖路径克隆行一致。
+- **判决、分数算法、schema id 均不变**；不改索引版本与 wire。dependabot PR 编号 1 / 2 / 4 / 6 随本批关闭（升版落在本地锁文件，不合并 PR）。ADR-006 具名重立：主 `cli/src/update/apply.rs` 172→187（`hex` 与测试挂载）；子仓新文件入基线 `unit/update/apply.rs` 57；dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0；codex gpt-6-astra 落码（五条 lib 管道腿、八条 daemon 腿、两条 git 夹具腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
+
+**无默认档位变更。** 计划 v2.29 步 12 依赖批 DEP-TS（dependabot PR 5；codex gpt-6-astra 落码到对拍与测试全落时订阅额度用尽，Claude 审阅收口）：
+- tree-sitter 0.26.11 → 0.27.0（CLI 与 GUI 两份锁文件同步，`tree-sitter-language` 0.1.8；NOTICE 重生）。`Node::child_count` 回到 `u32`，三处显式转换随之删除，`scan/ast.rs` 头注写明子计数与命名子计数各自的宽度、两个取子都收 `u32`（0.27.0 源码核对）。
+- `TOKENIZER_REV` 2 → 3，缓存失效拆两层：存储 / 算法键不符仍整库重建；**只有解析器修订不符**时走 `dedup/schema/parser.rs::invalidate`——清 13 张解析派生表与 `full_build` / `resolve_key` / `mention_rev` 三枚戳、换 epoch，`trend` 行保留。trend 的工具链戳自此含 `tokenizer{REV}`，旧戳行在复用前重量（`it/trend_parser.rs`；单测两条：迁移保史、失败回滚）。`schema_current` = 存储键 ∧ 解析器键，`index::peek` 仍只读。meta 键名只拼一处（`parser::KEY`）。
+- 不变性协议（同树 f9a0775，旧 / 新二进制各自 worktree 与 `.ce`）：16 族 JSON 报告逐字节相同——codex 首跑 churn 一族差异 = 14 天滚动窗口在两次运行之间前移，同窗口背靠背重跑逐字节同（54361 字节）；自仓索引 12 张表逐行相同（files 758 / fingerprints 38774 / symbols 9847 / sites 5082 / edges 3696 / unitsig 9425 / docsegs 2074 / bag 190398 / df 5834 / mentions 336356 / mention_files 1019 / result_cache 1）；四外部语料 mention 报告相同；FPR 全史回放 257 行相同；similar 五语料回放 ok（SQL 读者与内存语料逐位一致，tally 是索引表与 `SIMILAR_REV` 1 的函数）；`ce check` 945 / 棘轮零动用。冷 `ce dedup` 中位 10545 → 10232 ms、暖 668 → 672 ms（三轮各），库大小逐字节同——在噪声内，PERF-BUDGET 只改失效口径那一句。
+- eval：`tokens.rs` 因常量改动丢冻结锚（三份自仓切片 25 → 24 行，覆盖率非判决），按 EVAL-SET.md 复活协议 `CE_REFREEZE=cli/src/dedup/tokens.rs` 具名续冻——graph-slice / t3-universe 只换 sha，docdup-segments 该文件多出一段 live 注释段（`TOKENIZER_REV` 的文档注释过了长度地板：live 259 → 260）；25 行地板复位。
+- 文档：册 01 的失效句改为「清解析派生表、trend 保留并重量」并引 `schema/parser.rs` 与 trend 头注（`tokens.rs:21` 锚随常量值改签）；site how 双页 `TOKENIZER_REV` 3；README 双语 tree-sitter 芯片与事实投影随 bless；册 13 自仓普查行重取。
+- 子仓 `it/docs_diagrams.rs` 删掉 archify 缓存的第二读者 `cache_head`（骨架缓存下 `git -C cli/target/archify rev-parse HEAD` 会答 CodeEraser 的 HEAD），`--check` 的 exit 2 具名拒绝是唯一谓词；`hs_grammar_pin` 随 `child_count` 宽度改。
+- **判决、分数算法、schema id 均不变**；wire 不动。ADR-006 具名重立与门数见提交说明。
+
+**无默认档位变更。** 计划 v2.29 步 12 清点落实批 INV-FIX（codex 清点的 23 条采纳项；codex 额度用尽后由 Claude 分四包落码——三个 Opus 子代理各一包、Claude 一包并逐 diff 审阅）：
+- 手写事实配执行者（1–3、21）：架构图 IR 的四个子标签（wire / scan / gui / mcp）经注册表模板渲染后对拍（`it/docs_diagrams.rs` 新腿；`{id}` 渲染器提为 `facts::template` 单一所有者）；VERSIONING §3 三元组里的行数与答版改成 chip——新事实 `count:golden_requests#digits`（= 130，linked 档：golden 文件本身就是源，无债可记），`fixture_contract` 腿同时对拍注册表计数与 Spec.hs 名单；plugin/README 的三钩 / 一 skill / 一命令 / 十六工具四枚 chip，该页入 `facts_chips::SURFACES`；VERSIONING.md:304 两个裸 NUL 字节改成可见的 `\0`，文件回到文本（grep 不再答 Binary）。
+- 双语渲染器（4–6）：冻结评估点的值列有了语言——`bench_support/frozen.rs` 一张按指标键的中文模板表（一个 `|` 串而非二元组表：后者与 `unit/structure/tree.rs` 同韵成克隆），数字只从台账的英文值里抽出再拼，多重集不等即回落英文并由门抓出；仪表盘表 / stack 卡 / 首页芯片三处渲染器同改，README zh 表头 `percentile` → `百分位`，`measured()` 的脏树后缀按语言；GUI `bench.js` 经 `benchFrozenWords` 键走 `i18n.js` 的 `BENCH_ZH`（9 指标 × 22 模板，同样只拼台账数字，不等即回落）；新门 `docs_lang_generated`（十词拒绝表 flagged / answered / scoped / held / wrong / attributed / raw / per / percentile / dirty）修前 13 处红、修后绿，外加回放已发布 stack 卡块的负向探针；`every_frozen_point_has_a_chinese_sentence` 拒绝半翻译的新冻结点。zh 三页生成块随 `bench_render` bless 重写（如 `范围内 17/17（100%）`、`600 个样本命中 0 个（门 ≤ 1%）`、`每 500 次编辑 0.00 次误报`）。
+- 立场文本（7–10、17、19、20）：CHANGELOG 补步 1 块；计划书横幅首句改「v2.29 修正案执行中」、步 11「发版后」→「发版前」（334 行不动）；README 双语「成品的形状」段改 v1.7.0 范围段（45 条裁定作带日期的历史留一句）、「语义判决覆盖六套语法」改「基于 AST 的判决…Markdown 没有 tree-sitter 语法，由文档与图规则判决」、源码安装序列补 `cd ..`；plugin/README 钩子两行按 guard.rs / audit.rs 现状重写（PreToolUse：T1/T2 探针 + 硬预算 + 分级区记账 + 墓碑类按自己的档位；Stop：净行数 + 涉改重复块 + 墓碑腿 + 只记不拦的同角色顾问行）；册 15 的 VERSIONING 链接、册 11「两类规则」→「三类」（含墓碑类，引文按行播种）；`ce audit` 帮助文案（en 源 + zh 表）描述今日的 Stop 审计，`cli.md` 再生。
+- 发版工具（11–16、22、23）：RELEASE.md §2.1 改「tag 前只跑离线三检，`packaging-live` 是公开渠道验收——周程 + publish 后手动 dispatch 一次」；verify-publish 来源环加 `contracts/bench/bench.json`（`include_str!` 编进 GUI）/ `rust-toolchain.toml` / `build-target.yml` 共十二条；check 环 `--paginate` 并按名要求 `build (ubuntu-latest)` / `build (windows-latest)` / `build-macos` 三条 success（空 check 表不再读成「全绿」；缺席 = pending，2 h 超时按名列出），`release_roster` 新腿从 ci.yml 无 `if:` 的 job 与其矩阵推出同一集合（ci.yml 的 job 模型拆入 `release_roster_parts/`，schedule-only 扫描同读一份解析）；`pin_release.js` 改终态判定（键集 = 花名册、每枚 pin 64 位十六进制且等于 draft 报的、两个版本行 = 本次 tag），行数只从本进程读写的那一对算，`CE_PIN_SANDBOX` 离线缝 + `it/pin_release.rs` 四腿六练（首钉 / 原样重跑 / `--bless` 重跑 / 少资产 / 多资产 / 花名册外的键）；bless 命令补 `--manifest-path`（runbook 与脚本同一拼写 `BLESS`）；`starter-https` 可 dispatch；tauri-cli 2.11.4 源码核实 `-- --locked` 直达 cargo（`desktop.rs:259`），该步不改；`brings_something_new` 搬 `bench_support/joins.rs`——两源目录按名比、六个构建输入（两 manifest / 两 lock / cabal.project(.freeze) / rust-toolchain）按内容比并剔除发布自身的版本戳（不剔则每个发布都「有新东西」），21 对 tag 回放拦下的仍是 v0.7.1 / v1.0.1 / v1.3.1 / v1.3.2 四个，BENCH.md 页眉句随之；`.gitattributes` 在宽规则之后重申 `contracts/fixtures/**/*.ndjson -text`（实测：宽规则让 `git add` 把 CRLF 中毒的 golden 归一成 LF 存进索引，字节门就看不见中毒）。
+- 记账（18）：ci.yml:82 注释路径改 `tests/it/core_size_gate.rs`；`cli/Cargo.toml` 那半没有此字面，无事可做。dedup 主 55 / 子 119 恒（frozen.rs 的二元组表折成 `|` 串消掉唯一的新块）；ADR-006 具名重立与门数见提交说明。
+
+**无默认档位变更。** 计划 v2.29 步 13 全量文档——三个只读 Opus 审计（README 双语 + plugin README / 参考页 + 合约 + runbook / 官网八页 + 十五册 + 图 IR）61 条发现逐条裁「做」并全落，无一条被推回；改动分三包（Claude：README 双语 / plugin README / CHANGELOG / 事实登记册；两个 Opus 子代理：官网 + 册 + 图、参考页 + 合约 + runbook），每包逐 diff 审阅：
+- 手打数字改事实：新事实 `gate:size.file_lines_fail#digits`（= 750，linked 档，源 `config/thresholds.rs::Thresholds::default`）与 `count:assets#word`（= 二进制数 + 1 = 16，源 `update/version.rs::TARGETS`）；README 双语的 750、plugin README 的 750 与「五目标十五枚」、RELEASE.md 的五目标 / 十五工件 / 十六资产、gui.md 的十一屏 / 五安装包全走芯片，`facts_chips` 面表随之（README 双语 36 → 37、plugin 4 → 7、RELEASE.md 5 → 13、gui.md 新登 4）；RELEASE.md「v1.7.0 起五个，此前三个」是历史句、具名不芯片化；parity 表两行不再手打「八轴」、接线行点名 Windows 安装包。
+- README 双语：拒绝者三处点名（Stop 审计拒回合、`ce precommit` / `ce commitmsg` 拒提交、CI 退出码拒合并）；判决图 alt 文字按当前五行 IR 重写；插件全链 p95 0.50 s 加测量日期与「墓碑腿并入之前」；新增「同角色建议，零模型」一行（名字 / 形状 / 被调用者 / 文档 / 结构 / 字面量六通道词袋、整数 BM25 k1 = 6/5、b = 3/4、角色位只在名字 / 被调用者 / 形状三通道同意时成立、`--widen` 仓内 PPMI 联想；无退出码、无门、无钩子拦停）；结构行补「文档覆盖」；证据段去重；Homebrew · winget 行改条件句（tap 与 winget token 配好才发、winget-pkgs 合并后）；`ce erase` 行补 `--log`；v1.7.0 范围段改写；限制段三句（顾问永非判决：`ce similar` 恒退 0、`ce check` 不读该族、Stop 顾问行只进 observe；`ce structure` 分数因模块化轴新入与 1.6.0 不可比；软线随每次具名重立移动，不再冻数字）；文档清单补 EVAL-SET-SIMILAR / FPR-TOMBSTONE / FPR-L2。
+- plugin/README：`## 配置` 标题；pins 行改五目标 × 三枚十五枚芯片 + 「v1.7.0 前的清单只钉前三个目标」；feed 的 `similar` 对象（`rev` / `new_units` / `queried` / `rows{unit,twin,score}` / `degraded`）一行。
+- 参考页 / 合约 / runbook：`ce probe` 帮助补「墓碑类按它自己的 `[tombstone] tier` 记账」、`ce mcp` 帮助改「每个判决家族的只读报告面 + 本机与本构建的诊断面，无一能写」（双语，`main_lang.rs` 同行）；ce.toml 参考的 `[guard] mode` 行点名它只管的两类（T1/T2 重复写入、硬预算越线）而墓碑类按自己的键判、`zone_tiers` 行点名 FPR-REPLAY 台账与 `fpr_zone_gate.rs`；生成横幅改 `--manifest-path cli/Cargo.toml`，`docs/reference/cli.md` / `ce-toml.md` 再生；gui.md 状态横幅改「已发布，十一屏」（逐版本史指向 CHANGELOG）、例外命令三条 → 四条（`bench_doc` 读编译进二进制的序列而非打开的树）；size-advisory 软线链改「现行值恒以 `ce-baseline.json` 为准」（标定期五个链节留给 git 历史）；DAEMON.md 核重启预算改 O63 指数退避（1 s·2^(n−1) 帽 60 s、永不永久关闭、恢复首报 `recovered`）；VERSIONING §1 顺序段与倒序段之间补断句与说明行、3.0.0 条的 daemon 行改指 DAEMON.md §1；RELEASE.md 截图门四腿 → 五腿；PERF-BUDGET 无标题的探针表补节标题（口径 / release / n = 30 自块内取，块内无日期即写明）；册 11 引 `ce-toml.md:32` 的锚随 `zone_tiers` 行重签。
+- 官网八页 + 册 + 图：首页双语 `ce similar` 卡、结构卡模块化轴、信任行；how 双语 `erase_log` 工具、序数去除、`judgedAxisCount` 5 到 8、`modFloor` / `modMassFloor` 常量芯片、f09 声明级搬迁段、f11 常设仪器句、区档台账句、九轮；stack / bench 页脚与发布卡；册 01 复现节、02 注释、04 文件名注、05 新段「成员身份（7.0.0）」引 `score/anchor.rs` 与 `baseline.rs`、13、14 九轮、15 spec §2；判决图 IR zh 标签「克隆与角色」、架构图 IR revision 重钉 HEAD、`judgment.zh.svg` 重渲（docs/assets 与 site/assets 同字节）。
+- CHANGELOG `[Unreleased]` 改按计划步序升序（规则行入节首；逐行字节搬运、行数不变）。**判决、分数算法、wire、schema 均不变**；ADR-006 具名重立与门数见提交说明。
 
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 

@@ -329,14 +329,14 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="175" class="t-backend" font-size="6" text-anchor="middle">scan/1 · structure/1 · verdict/1</text>
         </g>
 
-        <g id="node-clones" data-node-id="clones" data-node-label="克隆与角色判决" tabindex="0" role="button" aria-label="聚焦 克隆与角色判决, T1/T2 · T3 ≥ 0.85 · BM25 角色, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="T1/T2 · T3 ≥ 0.85 · BM25 角色" data-node-tag="clone/1 · fourclass/2 · similar/1" data-node-context="02 / 判决 · Haskell">
-          <title>克隆与角色判决 · T1/T2 · T3 ≥ 0.85 · BM25 角色 · 02 / 判决 · Haskell · clone/1 · fourclass/2 · similar/1</title>
+        <g id="node-clones" data-node-id="clones" data-node-label="克隆与角色" tabindex="0" role="button" aria-label="聚焦 克隆与角色, T1/T2 · T3 ≥ 0.85 · BM25 角色, 02 / 判决 · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="T1/T2 · T3 ≥ 0.85 · BM25 角色" data-node-tag="clone/1 · fourclass/2 · similar/1" data-node-context="02 / 判决 · Haskell">
+          <title>克隆与角色 · T1/T2 · T3 ≥ 0.85 · BM25 角色 · 02 / 判决 · Haskell · clone/1 · fourclass/2 · similar/1</title>
           <rect x="249" y="242" width="132" height="58" rx="6" class="c-mask" />
           <rect x="249" y="242" width="132" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(255 248) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="315" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">克隆与角色判决</text>
+          <text x="315" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">克隆与角色</text>
           <text x="315" y="279" class="t-muted" font-size="7" text-anchor="middle">T1/T2 · T3 ≥ 0.85 · BM25 角色</text>
         <text x="315" y="289" class="t-backend" font-size="6.2" text-anchor="middle">clone/1 · fourclass/2 · similar/1</text>
         </g>

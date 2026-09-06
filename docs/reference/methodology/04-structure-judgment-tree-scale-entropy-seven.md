@@ -11,6 +11,8 @@ language set enters the tree; the size-gate-only language arm is excluded, or th
 population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
 NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
 has no language term at all ([judge.rs:206-211](../../../cli/src/structure/judge.rs#L206)) ([structure-axes.md:27-28](../structure-axes.md#L27)).
+This file keeps its original `-seven` name because that anchor is linked from outside the
+repository; the axis roster itself has been eight since proto 7.1.0 added modularity (S7).
 
 ### 1. The entropy primitive: exact rationals, no logarithms
 

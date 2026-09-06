@@ -1,6 +1,12 @@
 {
   "facts": [
     {
+      "id": "count:assets#word",
+      "source": "cli/src/update/version.rs::TARGETS",
+      "tier": "linked",
+      "value": "16"
+    },
+    {
       "id": "count:axes#word",
       "source": "cli/src/score/knobs.rs::AXES",
       "tier": "linked",
@@ -164,6 +170,12 @@
       "source": ".github/workflows/ci.yml::--fail-under (check tests)",
       "tier": "scraped",
       "value": "979"
+    },
+    {
+      "id": "gate:size.file_lines_fail#digits",
+      "source": "cli/src/config/thresholds.rs::Thresholds::default (file_lines_fail)",
+      "tier": "linked",
+      "value": "750"
     },
     {
       "id": "report:baseline#schemaver",

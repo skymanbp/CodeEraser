@@ -365,7 +365,7 @@ changeset, parent blob before and child blob after, the same `measure` the hooks
 `tombstone/1` judgment over one core link — and prints every seated site with the name it bound
 and an excerpt, for arbitration
 ([tombstone_replay.rs:1-12](../../../cli/tests/it/tombstone_replay.rs#L1)). Two corpora: the
-last 400 commits of `requests` and this repository's whole history. Seven rounds, each fixing
+last 400 commits of `requests` and this repository's whole history. Nine rounds, each fixing
 one class of DEFINITION defect and re-running in full — never a threshold: the prose surface
 read only added lines (round 1: 123 → 68 hit commits on self), the framed window admitted on
 neither side (round 2, which also emptied requests: 1 → 0 hit commits), inline code spans

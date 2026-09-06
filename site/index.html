@@ -65,7 +65,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 945/1000</span> | axes 0:81 1:0 2:102 3:0 4:0 5:0 6:205 | 34 candidates
+<span class="s">check score 945/1000</span> | axes 0:83 1:0 2:102 3:0 4:0 5:0 6:205 | 34 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -122,12 +122,13 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
   <div class="card"><h3>ce clone</h3><p>T3 near-clones judged by tree edit distance in the Haskell core — renamed and reshaped copies included.</p></div>
   <div class="card"><h3>ce deadcode</h3><p>Liveness verdicts on the cached reference graph: no kept in-edge and no entry flag — dead, and the gate says so. Beside it, the unmentioned-declaration advisory, which never reddens a gate.</p></div>
   <div class="card"><h3>ce docdup</h3><p>Duplicated prose across docs and comments, judged by exact Jaccard over live segments.</p></div>
-  <div class="card"><h3>ce structure</h3><p>Tree-scale entropy: layout divergence, doc staleness, redundancy axes over the whole repository.</p></div>
+  <div class="card"><h3>ce structure</h3><p>Tree-scale entropy: layout divergence, doc staleness, redundancy and modularity axes over the whole repository.</p></div>
   <div class="card"><h3>ce scan</h3><p>Size, complexity and readability per file and function — the classic metrics, core-graded against the global table or the file's own <code>[[rules.class]]</code> lines.</p></div>
   <div class="card"><h3>ce trend</h3><p>Your score across mainline history — cached per commit, rebuildable, honest about direction.</p></div>
   <div class="card"><h3>ce erase</h3><p>The deterministic two-phase eraser: dead files, verbatim document twins and whole-unit exact clones — planned first, applied only from a clean worktree, never by asking a model to rewrite code.</p></div>
   <div class="card"><h3>ce churn</h3><p>Change heat over a git window, attributed per unit — how much of a file is being rewritten rather than added to.</p></div>
   <div class="card"><h3>ce join</h3><p>The three-signal join: churn, duplication and liveness folded into one verdict, so a hot duplicated dead corner names itself.</p></div>
+  <div class="card"><h3>ce similar</h3><p>The same-role advisor: integer BM25 over term bags the index already holds, with the core deciding which candidates play the query's role — a deterministic offline retrieval, advice only, never a gate.</p></div>
   <div class="card"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
 </div>
 
@@ -153,7 +154,7 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
 
 <h2>Trust anchor</h2>
 <p class="trust">All <!--ce:count:binaries#word-->fifteen<!--/ce--> release binaries — <!--ce:count:platforms#word-->five<!--/ce--> platforms × ce / ce-core, plus the <!--ce:count:installers#word-->five<!--/ce-->
-GUI installers since v0.7.3 — are pinned by SHA256 in <code>plugin/bin/manifest.env</code>;
+GUI installers — are pinned by SHA256 in <code>plugin/bin/manifest.env</code>;
 the tag phase verifies every pin, waits for a green CI on the tagged commit, and refuses
 an unexpected asset before anything publishes. <code>SHA256SUMS</code> covers the set for
 offline checking. Code signing is deliberately out of scope — the hash chain is the permanent

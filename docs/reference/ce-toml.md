@@ -1,4 +1,4 @@
-<!-- GENERATED — do not edit. Regenerate: CE_BLESS=1 cargo test --test it docs_gate::. CI reddens when this file drifts from its regeneration. Length rides the CLI surface (a machine-generated projection, the hs_boot stance), so the scan's file-lines warn on the CLI page is an accounted standing warn, not maintained prose over budget. -->
+<!-- GENERATED — do not edit. Regenerate: CE_BLESS=1 cargo test --manifest-path cli/Cargo.toml --test it docs_gate::. CI reddens when this file drifts from its regeneration. Length rides the CLI surface (a machine-generated projection, the hs_boot stance), so the scan's file-lines warn on the CLI page is an accounted standing warn, not maintained prose over budget. -->
 
 # `ce.toml` reference
 
@@ -28,8 +28,8 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 
 | key | default | meaning |
 |---|---|---|
-| `mode` | *(absent)* | Explicit hook tier for every rule class: observe / warn / ask / deny; unset = per-class route defaults (deny for the two FPR-promoted classes, observe otherwise). Any other value is a typo, not a tier: it resolves to observe and the SessionStart line, `ce doctor` and the observe feed all name it, so a mistyped mode can never look armed |
-| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |
+| `mode` | *(absent)* | Explicit hook tier for the classes `[guard]` owns — the T1/T2 duplicate write and the hard-budget breach: observe / warn / ask / deny; unset = per-class route defaults (deny for those two FPR-promoted classes, observe otherwise). The tombstone class is NOT one of them: a class with a key of its own decides at that key (`[tombstone] tier`). Any other value is a typo, not a tier: it resolves to observe and the SessionStart line, `ce doctor` and the observe feed all name it, so a mistyped mode can never look armed |
+| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25–75% warns, >75% asks. Default OFF — the measured record is the `zone_tiers` section of docs/FPR-REPLAY.md (one corpus over the 1% line, so the default stays off) and the factory value is held against that ledger by cli/tests/it/fpr_zone_gate.rs; until a repo opts in the zone is feed-only, and the observe feed records the mapped tier when armed |
 
 ## [dedup]
 

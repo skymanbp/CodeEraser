@@ -82,7 +82,7 @@ daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰
 daemon.root	要服务的项目根
 ping	经项目守护进程往返一次 ping（会惰启它）
 ping.root	项目根（默认当前目录）
-probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定
+probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定；墓碑类按它自己的 [tombstone] tier 记账
 probe.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 audit	Stop 审计：净行数 + 触及改动文件的重复块 + 墓碑残留（按其档位 / 预算）+ 同角色顾问行（仅 deny 档拦停）
 audit.hook	钩子模式：从 stdin 读 JSON 信封（必带）
@@ -93,7 +93,7 @@ precommit.root	仓库根（默认当前目录）
 commitmsg	commit-msg 门：`ce precommit` 再跑一次，把 git 交给钩子的提交说明文件当作多一个面——在说明里把被删的名字论证掉，与 README 里一样是墓碑残留（feed 与拒绝句记为 COMMIT_EDITMSG:行）。接法：.git/hooks/commit-msg 里跑 `ce commitmsg \"$1\"`；PR 正文存成文件即同一个面（CI 配方，不是钩子）
 commitmsg.file	提交说明文件（git 的 `$1`）；其注释行不计
 commitmsg.root	仓库根（默认当前目录）
-mcp	stdio 上的 MCP 服务器：每个判决家族的只读报告面
+mcp	stdio 上的 MCP 服务器：每个判决家族的只读报告面，外加本机与本构建自己的诊断面——无一能写
 mcp.root	工具作用的项目根（默认当前目录）
 eject	卸载项目状态：.ce/、基线、钉扎件（默认试运行）
 eject.root	要卸载的项目根（默认当前目录）

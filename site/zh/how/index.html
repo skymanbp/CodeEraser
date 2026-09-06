@@ -57,7 +57,7 @@
 </figure>
 
 <h2 id="families"><!--ce:count:booklets#word-->十五<!--/ce-->个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十五<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十二<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十六<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>update_check</code> 拿本构建比对最新发布，这个面既无 wire 家族也无方法学册；<code>similar_units</code>——第十五个——是同角色顾问（与 <code>ce similar</code> 同一份文档：核在 <code>similar/1</code> 上给的排序与角色位，只当顾问）。</p>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十五<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十二<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十六<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>erase_log</code> 读的是已应用擦除的审计轨迹，<code>update_check</code> 拿本构建比对最新发布，这个面既无 wire 家族也无方法学册；<code>similar_units</code> 是同角色顾问（与 <code>ce similar</code> 同一份文档：核在 <code>similar/1</code> 上给的排序与角色位，只当顾问）。</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
@@ -138,16 +138,16 @@ dupVerdictWith (num, den, vfloor) inter union run
 tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
 perMille r      = floor (r * 1000)</pre>
-  <pre>charge_i = floor(scale * v_i / (v_i + N))   -- N = 目录总数
+  <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = 被点名目录数, N = 目录总数
 raw      = Σ_axes (charge_i * violCost)
 score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
   <p class="note">Shannon 熵与 KL 散度需要对数——无理数，因而不可精确判定——所以本家族改为发布
   同族中在有理数下封闭的成员：Tsallis-2 多样性与 χ² f-散度，全程跑在 <code>Data.Ratio</code> 上。
   若某个 bin 参考质量为 0 而观测质量非 0，χ² 返回 <code>Nothing</code>：那是一次拒绝而不是一个零，
   报告会点名那些目录。每条判轴的违规质量 <code>v</code> 是被点名的<em>目录</em>计数，再经与判决族
-  同一条密度律折算成 ‰ of scale——判轴行携带的是 charge 而非计数，除数另带
+  同一条密度律折算成 scale 的千分数——判轴行携带的是 charge 而非计数，除数另带
   <code>structViolCostNeutral = 10</code>；<code>judgedAxisCount</code> 依可选
-  事实表是否上 wire 取 5、6 或 7。</p>
+  事实表是否上 wire 取 5 到 8。</p>
   <ul class="consts">
     <li><b>violCost</b> 10</li>
     <li><b>scale</b> 1000</li>
@@ -162,6 +162,8 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
     <li><b>dupMin</b> 1</li>
     <li><b>deadMin</b> 1</li>
     <li><b>structNodeCap</b> 524288</li>
+    <li><b>modFloor</b> 1</li>
+    <li><b>modMassFloor</b> 4</li>
   </ul>
 </div>
 
@@ -327,7 +329,11 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
   <code>destFloor</code> 求值为 2——那个平局<em>就是</em>巧合拒斥本身。唯一一个「拍板而非推导」的
   常数是 <code>anchorFloor = 19</code>：在双语料影子消融里，被凭空发明出来的站点其最宽锚点实测
   16 个 alnum 字符，而最细的真实锚点是 19，故 19 是那个「杀掉全部实测巧合、同时保住全部实测真站」
-  窗口的上沿。L2 的 delta 只在一个方向上单调——普通行可以被改判为 moved，反向绝不可以。</p>
+  窗口的上沿。L2 的 delta 只在一个方向上单调——普通行可以被改判为 moved，反向绝不可以。自 proto
+  7.1.0 起，行级 delta 之侧多一条更粗的腿：成对的 <code>declRem</code> / <code>declAdd</code>
+  声明键表——一侧消失、恰在另一侧出现一次，两跨度内 leftover 至少共享 <code>declFloor = 1</code>
+  个哈希即接受；键自己付掉跨站代价（<code>declCredit = siteCostCross</code>），故一行共同内容就开边，
+  而行证据需要两行。它只追加 <code>lines = 0</code> 的搬迁，行分类、块、嫌疑与分数分毫不动。</p>
   <ul class="consts">
     <li><b>movedCost</b> 1</li>
     <li><b>plainCost</b> 3</li>
@@ -417,7 +423,9 @@ PROMOTED_DEFAULT = "deny"</pre>
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>。</p>
   <p class="note">在册的重放把 git 线性历史当作真实编辑流——先探测、后落盘，跑在
   <code>t = 50</code> 与 <code>min_distinct = 7</code> 这两个出厂默认档上：<strong>630 个事件、
-  35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>。那 35 个自仓块全部仲裁为真阳并已被清理，
+  35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>。那是 M3 那一轮；常设仪器（<code>cli/tests/it/fpr_replay.rs</code>）
+  已于 2026-09-05 重测——requests 365 事件 0 拦截，自仓 3164 事件里 178 次真落地引入加 79 次先写后削的中间态
+  ——两种读法都在 FPR-REPLAY.md 里。那 35 个自仓块全部仲裁为真阳并已被清理，
   克隆块预算同步下棘 251 → 211 → 209 → 205 → 202。</p>
   <pre>cap      = lines_for(file).file_lines_fail     // 文件自身的类表；class 0 用全局默认 750
 breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
@@ -427,9 +435,10 @@ permille = (lines - S) * 1000 / (H - S)
 250 ..= 750  →  warn
 751 ..       →  ask</pre>
   <p class="note">区的 <code>S</code> 回退与 <code>H</code> 同样取自文件自己那张表。区内档位映射就是把同一套纪律用在自己身上：<code>[guard] zone_tiers</code>
-  <strong>默认关闭</strong>，所以区规则只写 feed、不注入任何东西。它还没有自己的 FPR 台账，
-  因此默认不执法——<code>zone</code> 这个 feed 事件的存在意义，恰恰就是「将来任何一次区→档位的
-  提档必须据以论证 FPR 的那份逐规则记录」。告警按（规则、文件、会话）限一次并按 token 预算裁剪；
+  <strong>默认关闭</strong>，所以区规则只写 feed、不注入任何东西。它的台账现已建立，而默认仍不执法：
+  预定规则是每份语料都 ≤ 1 % 才翻档，首测自仓 0.54 %、requests 2.46 % 超线 ⇒ 变体 B，
+  <code>zone_tiers</code> 维持 <code>false</code>，出厂默认由 <code>fpr_zone_gate.rs</code>
+  钉在这份算术许可的那一档上。告警按（规则、文件、会话）限一次并按 token 预算裁剪；
   执法不限流，因为一次 deny 不是上下文膨胀。</p>
   <ul class="consts">
     <li><b>file_lines_warn S</b> 300</li>
@@ -520,7 +529,7 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
   只保活。Rust 读这次改动新增的两个面——新标题、单元名与文件名；注释、docstring 与段落里新增的行——每个候选面发一行三个整数；
   Haskell 落座站点并判预算，名字与路径从不过线。changelog 定位的文档整体豁免并入账——按路径约定、按版本索引台账的形状、
   或按 <code>[tombstone] ledger</code> 声明——自身即台账的引用块或小节只豁免自己。本类出厂即 <code>observe</code>，
-  每次度量都写进 feed；两段历史上的七轮 FPR 回放（<code>docs/FPR-TOMBSTONE.md</code>）是任何晋级都必须据以论证的记录。</p>
+  每次度量都写进 feed；两段历史上的九轮 FPR 回放（<code>docs/FPR-TOMBSTONE.md</code>）是任何晋级都必须据以论证的记录。</p>
   <ul class="consts">
     <li><b>TOMBSTONE_REV</b> 1</li>
     <li><b>MIN_ASCII_NAME</b> 3</li>
@@ -588,7 +597,7 @@ agent 可以用 <code>Bash: echo &gt;&gt;</code> 或 <code>sed -i</code> 绕过�
      <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
      <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法学</a> ·
      <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
-  <p>"CodeEraser"™ 为 skymanbp 商标。依 Apache-2.0 §6，
+  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，
      许可证不授予商标权。© 2026 skymanbp。</p>
 </footer>
 

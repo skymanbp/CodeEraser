@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|13f0ffee0fd2d497|0": {
     "target": "../../README.md",
-    "line": 175,
+    "line": 176,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fifteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user — every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|0081591ba7c6acec|0": {
@@ -2870,6 +2870,24 @@
     "end": 53,
     "text": "pub fn fail_suffix(failed: &[String]) -> String {"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|072302f94e01214a|0": {
+    "target": "../../../cli/src/score/anchor.rs",
+    "line": 18,
+    "end": 20,
+    "text": "//! index's `nth` column is untouched: the join and churn ledgers still key on"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|5056146d0b57b0a1|0": {
+    "target": "../../../cli/src/score/anchor.rs",
+    "line": 1,
+    "end": 20,
+    "text": "//! §7.2 member-identity anchors (7.0.0, C-nth): what tells two"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/baseline.rs|9ae6be972602062d|0": {
+    "target": "../../../cli/src/score/baseline.rs",
+    "line": 27,
+    "end": 33,
+    "text": "/// The schema this ce writes and the ONLY one it reads (7.0.0): every"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/baseline.rs|a50729428b78c9e9|0": {
     "target": "../../../cli/src/score/baseline.rs",
     "line": 139,
@@ -2881,6 +2899,12 @@
     "line": 223,
     "end": 235,
     "text": "pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/baseline.rs|cf046c8ecd036f7e|0": {
+    "target": "../../../cli/src/score/baseline.rs",
+    "line": 10,
+    "end": 15,
+    "text": "//! Same-key siblings are told apart by the §7.2 CONTAINER ANCHOR"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/knobs.rs|f54c2e9de298eca5|0": {
     "target": "../../../cli/src/score/knobs.rs",
@@ -5559,26 +5583,26 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|329075613142ec37|0": {
     "target": "../size-advisory.md",
-    "line": 95,
-    "end": 98,
+    "line": 94,
+    "end": 97,
     "text": "benefit = 软区间罚回收（与 verdict 同一曲线权威"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|34258d75cd93294a|0": {
     "target": "../size-advisory.md",
-    "line": 114,
-    "end": 117,
+    "line": 113,
+    "end": 116,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4ea3a6ec3001bf79|0": {
     "target": "../size-advisory.md",
-    "line": 110,
-    "end": 113,
+    "line": 109,
+    "end": 112,
     "text": "候选——豁免与候选语义都以数字落地。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|711e99e0f273753a|0": {
     "target": "../size-advisory.md",
-    "line": 97,
-    "end": 98,
+    "line": 96,
+    "end": 97,
     "text": "**切穿克隆块**×roiCloneMilli(500) + 跨缝**共变对**×"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|788886e8d1332f29|0": {
@@ -5594,19 +5618,19 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
-    "line": 122,
+    "line": 121,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|d080ada365348f88|0": {
     "target": "../size-advisory.md",
-    "line": 102,
-    "end": 106,
+    "line": 101,
+    "end": 105,
     "text": "计边——顾问面非强制面，可容。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|e77a0b42e14cb13a|0": {
     "target": "../size-advisory.md",
-    "line": 118,
-    "end": 121,
+    "line": 117,
+    "end": 120,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|fc9206488f44c39d|0": {
@@ -7039,6 +7063,11 @@
     "end": 115,
     "text": "| 语料 | 事件 | 拦截事件 | (事件, 孪生) 行 | 落地行 | 中间态行 | 严格 /500 | 中间态计误拦 /500 |"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../ce-toml.md|0ca9a8da8821d2b4|0": {
+    "target": "../ce-toml.md",
+    "line": 32,
+    "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25–75% warns, >75% asks. Default OFF — the measured record is the `zone_tiers` section of docs/FPR-REPLAY.md (one corpus over the 1% line, so the default stays off) and the factory value is held against that ledger by cli/tests/it/fpr_zone_gate.rs; until a repo opts in the zone is feed-only, and the observe feed records the mapped tier when armed |"
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../ce-toml.md|5fb201f0c70e3311|0": {
     "target": "../ce-toml.md",
     "line": 18,
@@ -7048,11 +7077,6 @@
     "target": "../ce-toml.md",
     "line": 17,
     "text": "| `file_lines_warn` | `300` | Warn once a source file passes this line count |"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../ce-toml.md|f254a0fcc990eb56|0": {
-    "target": "../ce-toml.md",
-    "line": 32,
-    "text": "| `zone_tiers` | `false` | Arm the graded-zone tier map (plan v2.7): a write landing <25% into (softLine, hard budget] stays observe, 25-75% warns, >75% asks. Default OFF - the zone is feed-only until a repo opts in, and the observe feed records the mapped tier when armed |"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|0f8dd17e2c8297ba|0": {
     "target": "../../../cli/src/erase/apply.rs",
@@ -7193,31 +7217,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 532,
-    "end": 534,
+    "line": 533,
+    "end": 535,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 528,
+    "line": 529,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 520,
-    "end": 534,
+    "line": 521,
+    "end": 535,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 523,
-    "end": 524,
+    "line": 524,
+    "end": 525,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 523,
-    "end": 527,
+    "line": 524,
+    "end": 528,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
@@ -7871,8 +7895,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 259,
-    "end": 261,
+    "line": 261,
+    "end": 263,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {

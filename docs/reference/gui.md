@@ -1,9 +1,8 @@
-# The CodeEraser GUI — eleven screens over one document set (reference)
+# The CodeEraser GUI — <!--ce:count:screens#word-->eleven<!--/ce--> screens over one document set (reference)
 
-> Status: shipped in stages — three screens at v0.7.3, eight at
-> v1.0.0 (the graph screen closed M9), nine since the K round added
-> doctor, ten since the L round added update, eleven since plan v2.29
-> added the similar advisor. The implementation answers to this file;
+> Status: shipped. <!--ce:count:screens#Word-->Eleven<!--/ce--> screens
+> today, added a few per release since v0.7.3 (the per-screen history
+> is in CHANGELOG.md). The implementation answers to this file;
 > divergence is a defect in one of the two. The screens live in
 > `gui/ui/*.js`, the Tauri backend in `gui/src-tauri/src/commands.rs`
 > — a separate cargo workspace from the CLI, with its own CI legs.
@@ -33,7 +32,7 @@ Two consequences worth naming:
   face's own word tables (`gui/ui/i18n.js`, en/zh key-for-key, gated
   by `cli/tests/gui/i18n_gate.js`) and never touches the data.
 
-## The eleven screens
+## The <!--ce:count:screens#word-->eleven<!--/ce--> screens
 
 | tab | document | what it shows |
 |---|---|---|
@@ -68,12 +67,13 @@ project and says so), resolve the core once (the CLI's own chain:
 installers stage ce-core as exactly that sibling), run the library
 closure off the async runtime, and bracket it with `ce-task` events
 that the status bar renders. A missing core fails loudly by name,
-same as the CLI. Three commands sit outside that shape by design:
+same as the CLI. Four commands sit outside that shape by design:
 `doctor_report` runs unbracketed (the face a reader reaches for when
-the event plumbing may itself be broken), and the Update screen's
-`update_check` / `update_apply` take no root and resolve no core at
-all — the question they ask is about this build, not the opened
-project.
+the event plumbing may itself be broken), `bench_doc` reads the series
+compiled into the binary rather than the opened tree, and the Update
+screen's `update_check` / `update_apply` take no root and resolve no
+core at all — the question they ask is about this build, not the
+opened project.
 
 The erase pair is the one road past `faces`, by design: the preview
 needs the typed `Plan` (to hash targets and render the diff from the
@@ -101,7 +101,7 @@ surfacing by name. The full contract is [erase.md](erase.md).
 ## Getting it
 
 The release installers (NSIS `setup.exe` / AppImage / dmg) — one per
-target, five since v1.7.0 — bundle the GUI with `ce` and `ce-core` as
+target, <!--ce:count:installers#word-->five<!--/ce--> since v1.7.0 — bundle the GUI with `ce` and `ce-core` as
 sidecars: one install is the whole product. The Windows installer also
 runs `ce setup`, which detects Claude Code and wires the plugin (the
 marketplace at its

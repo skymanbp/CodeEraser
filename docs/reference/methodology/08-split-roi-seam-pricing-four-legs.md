@@ -133,14 +133,14 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
 [seams.rs:216-235](../../../cli/src/structure/seams.rs#L216),
-[size-advisory.md:95-98](../size-advisory.md#L95). Word-boundedness is
+[size-advisory.md:94-97](../size-advisory.md#L94). Word-boundedness is
 identifier-char adjacency on both sides
 [seams.rs:237-255](../../../cli/src/structure/seams.rs#L237). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
 [seams.rs:227](../../../cli/src/structure/seams.rs#L227). Documented limitation: short names and
 in-string mentions will count an edge; the advisory face is non-binding, so this is tolerated
-[size-advisory.md:97-98](../size-advisory.md#L97).
+[size-advisory.md:96-97](../size-advisory.md#L96).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
 (`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
@@ -158,7 +158,7 @@ a tree without git history prices the leg at zero rather than failing the adviso
 `CHURN_WINDOW_DAYS = 14` — the §4.1 two-week anchor, and deliberately a **measurement
 constant, not a wire knob** (the prices are the knobs)
 [seams.rs:36-39](../../../cli/src/structure/seams.rs#L36),
-[size-advisory.md:122](../size-advisory.md#L122).
+[size-advisory.md:121](../size-advisory.md#L121).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
 booklet names φ [Cost.hs:160-170](../../../core/app/CE/Structure/Cost.hs#L160). Defaults were sized so
@@ -169,26 +169,26 @@ a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing referen
 
 The v1.1 legs were calibrated by recompiling the `Cost.hs` price points and replaying
 `--split-candidates` over corpora, comparing candidate/exemption flips and best-seam movement
-[size-advisory.md:110-113](../size-advisory.md#L110).
+[size-advisory.md:109-112](../size-advisory.md#L109).
 
 - `roiCloneMilli = 500` (= 2 × ref): swept `{250, 500, 1000}` over four external corpora / 86
   candidates. Zero candidate flips across the fourfold price range — the price is a
   *seam-steering* term, not a candidate killer — with exactly one best-seam move per price
   point, each in the correct direction (cobra's `command_test` moves its seam off the clone
   block at the 1000 price point)
-  [size-advisory.md:114-117](../size-advisory.md#L114).
+  [size-advisory.md:113-116](../size-advisory.md#L113).
 - `roiChurnMilli = 150` (= 0.6 × ref, reflecting that historical correlation is weaker
   evidence than in-situ code coupling): swept `{150, 300, 600}` on the self repo only —
   external corpora tips are frozen outside the 14-day window, so their churn leg is honestly
   zero and only a live window can be calibrated. Zero label flips over the fourfold range,
   with cost scaling verified linear (`graph_ladder` 800 → 1100 → 1700)
-  [size-advisory.md:118-121](../size-advisory.md#L118).
+  [size-advisory.md:117-120](../size-advisory.md#L117).
 
 Self-repo first run at the `S = 294` calibration: `graph_ladder.rs` got a real seam after line
 318 (2120‰ benefit against 500‰ cost, ROI 4.2); `DEVELOPMENT_PLAN.md` and `main_cmds.rs` got
 machine-written cohesion exemptions (11‰ vs 500‰ and 0‰ vs 2000‰); `cli.md` crossed the line
 by one notch (507‰ vs 500‰) and flipped to a candidate
-[size-advisory.md:102-106](../size-advisory.md#L102).
+[size-advisory.md:101-105](../size-advisory.md#L101).
 
 ### The ROI auto-exemption
 

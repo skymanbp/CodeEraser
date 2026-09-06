@@ -219,7 +219,7 @@ request per arm over one core link ([face.rs:58-75](../../../cli/src/similar/fac
   session's changed pairs once, through one git batch (booklet 14 §1).
 
 The write-time hook does **not** run it: a PreToolUse budget does not hold a retrieval, and a
-family without a deny tier has nothing to say there (spec §二).
+family without a deny tier has nothing to say there (spec §2).
 
 ### 7. Evaluation — two oracle generations, two floors
 

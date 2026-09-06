@@ -206,7 +206,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:115-122](../../../core/app/CE/Graph.hs#L115)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:259-261](../../../contracts/VERSIONING.md#L259)).
+the same with or without them ([VERSIONING.md:261-263](../../../contracts/VERSIONING.md#L261)).
 
 ### 6. Rendering — one home, three faces
 
@@ -291,8 +291,8 @@ The pin is the formula, the row is the reading.
 
 Survival = unmentioned / declared at the veto layer, and the collision-saved rate — of the
 survivors' population, the share that only a same-name declaration in another file kept
-out of the table — is the second number the criterion asked for (§0 clause 3: 存活/域,
-碰撞得救/未提及); the last column restates the same count over the by-other vetoes, the
+out of the table — is the second number the criterion asked for (§0 clause 3: survival over
+domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
 operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1453<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript

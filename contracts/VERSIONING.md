@@ -149,6 +149,8 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
+
+> **以下按版本倒序（最新在前），至 2.15.0 止；上方 2.0.0–2.14.0 是最初的顺序段。**
 > **7.1.0**（structure/1 模块度轴 + fourclass/2 声明级搬迁，加性 minor，计划 v2.29 步 10 批 C3 O54 / O48，2026-09-06）：
 > `structure.request` 加性可选表 `dirEdges=[[fromDir,toDir,count]]`（**只载跨目录**有向边，
 > `from ≠ to`、两端 `< |nodes|`、`count ≥ 1`、按 `(from,to)` 严格升序；缺席 = 轴 7 不判、空表 = 判为净——
@@ -390,9 +392,8 @@
 > 破坏性变更，按 §2 升 major：两侧实现 + 三个 core 测试 harness 的 proto 字面量 + **全十族 golden**
 > 同批重生（请求行 proto 一律改写为 3.0.0；回复行经核机器再生，与旧回复除 proto/server 字串外
 > 逐字节相同——判决面零变化的亲证）；「留+记愿望单」落选（用户裁）。同批 daemon 协议独立升
-> **2.0.0**（`hello_ok` 砍无读者的 `version` 字段，见 [DAEMON.md](DAEMON.md)）；daemon **2.1.0**（计划 v2.27 步 4，
-> 2026-09-04）加性 `tombstone{rows,budget}` / `tombstone_report{reply}`——墓碑判决经 daemon 持有的核链转发，
-> 同 major 低 minor 的旧 daemon 由 `client.rs::stale` 请退，DAEMON.md §2 那条回执校验自此有实例。
+> **2.0.0**（`hello_ok` 砍无读者的 `version` 字段）——daemon 协议自有台账，见
+> [DAEMON.md](DAEMON.md) §1（其后每一次 daemon bump 只记在那里）。
 > **2.33.0**（join 格深化 minor，H4，2026-08-24，用户拍板）：①verdictTable 增**严重度**列
 > （delete 3 > merge 2 > hotspot 1，表数据、电池可置换）；②candidates 行**加宽为六列**
 > [u,v,code,reasonBits,legsMask,**confidence**]——腿一致性置信 = 在场且有据的腿数

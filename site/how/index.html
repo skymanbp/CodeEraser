@@ -63,7 +63,7 @@
 </figure>
 
 <h2 id="families">The <!--ce:count:booklets#word-->fifteen<!--/ce--> judgment families</h2>
-<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->fifteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->twelve<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->sixteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> — the fifteenth — is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only).</p>
+<p class="note">Three counts of "family" ship across this site and they measure different things, so here is the reconciliation: <b><!--ce:count:booklets#word-->fifteen<!--/ce--></b> booklets below, one per judgment whose math is worth its own derivation; <b><!--ce:count:families#word-->twelve<!--/ce--></b> capabilities on the wire (the stack diagram's count — the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request); and <b><!--ce:count:mcp_tools#word-->sixteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire — <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>erase_log</code> reads the applied-erase audit trail, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only).</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -164,8 +164,8 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
   Each axis's violation mass <code>v</code> is its flagged-<em>directory</em> count, charged
   through the verdict family's density law into ‰ of scale — the axis rows carry charges,
   not counts, folded through <code>structViolCostNeutral = 10</code>;
-  <code>judgedAxisCount</code> is 5,
-  6 or 7 depending on which optional fact tables rode the wire.</p>
+  <code>judgedAxisCount</code> is 5 to 8
+  depending on which optional fact tables rode the wire.</p>
   <ul class="consts">
     <li><b>violCost</b> 10</li>
     <li><b>scale</b> 1000</li>
@@ -180,6 +180,8 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
     <li><b>dupMin</b> 1</li>
     <li><b>deadMin</b> 1</li>
     <li><b>structNodeCap</b> 524288</li>
+    <li><b>modFloor</b> 1</li>
+    <li><b>modMassFloor</b> 4</li>
   </ul>
 </div>
 
@@ -372,7 +374,14 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
   ablation the invented station's widest anchor measured 16 alnum characters and the
   thinnest real anchor 19, so 19 is the top of the window that kills every measured
   coincidence while keeping every measured real site. The L2 delta is monotone in one
-  direction only — plain lines may become moved, never the reverse.</p>
+  direction only — plain lines may become moved, never the reverse. Since proto 7.1.0 a
+  second, coarser stage rides beside the line delta: paired <code>declRem</code> /
+  <code>declAdd</code> tables of declaration keys that vanish on one side and appear on
+  exactly one other, accepted when the two spans share at least <code>declFloor = 1</code>
+  leftover hash — the key pays the cross-site cost itself
+  (<code>declCredit = siteCostCross</code>), so one shared line opens an edge where a line
+  would need two. It appends relocations with <code>lines = 0</code>; no line
+  classification, block, suspicion or score moves.</p>
   <ul class="consts">
     <li><b>movedCost</b> 1</li>
     <li><b>plainCost</b> 3</li>
@@ -481,9 +490,12 @@ PROMOTED_DEFAULT = "deny"</pre>
   <p class="note">The recorded replay treats git linear history as a real edit stream —
   probe first, then apply, at the shipped default knobs <code>t = 50</code> and
   <code>min_distinct = 7</code>: <strong>630 events, 35 blocks, 0 false after
-  arbitration → 0.00 per 500</strong>. The 35 self-repo blocks arbitrated as true
-  positives and were remediated, stepping the clone-block budget 251 → 211 → 209 → 205 →
-  202 in lockstep.</p>
+  arbitration → 0.00 per 500</strong>. That was the M3 round; the standing instrument
+  (<code>cli/tests/it/fpr_replay.rs</code>) re-measured on 2026-09-05 — requests 365 events
+  / 0 intercepts, and 3164 self-repo events raising 178 landed introductions plus 79
+  write-first mid-states — and both readings live in FPR-REPLAY.md. The 35 self-repo blocks
+  arbitrated as true positives and were remediated, stepping the clone-block budget
+  251 → 211 → 209 → 205 → 202 in lockstep.</p>
   <pre>cap      = lines_for(file).file_lines_fail     // the file's class table; 750 for class 0
 breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
 
@@ -494,9 +506,12 @@ permille = (lines - S) * 1000 / (H - S)
   <p class="note">The graded zone reads its <code>S</code> fallback and its <code>H</code> off the
   same per-file table as the hard budget. The map is the same discipline applied to itself:
   <code>[guard] zone_tiers</code> is <strong>off by default</strong>, so the zone rule is
-  feed-only and injects nothing. It has no FPR ledger of its own yet, therefore it does
-  not enforce — the <code>zone</code> feed event exists precisely as the per-rule record
-  any future promotion must argue its case from. Warns are rate-limited to once per
+  feed-only and injects nothing. Its ledger now exists and it still does not enforce: the
+  pre-registered rule armed the default only if <em>every</em> corpus measured at or under
+  1 %, and the first run read self 0.54 % but requests 2.46 % — variant B,
+  <code>zone_tiers</code> stays <code>false</code>, with
+  <code>cli/tests/it/fpr_zone_gate.rs</code> holding the shipped default equal to what
+  that arithmetic licenses. Warns are rate-limited to once per
   (rule, file, session) and clipped at a token budget; enforcement is not rate-limited,
   because a deny is not context bloat.</p>
   <ul class="consts">
@@ -606,7 +621,7 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
   the wire. A document in the changelog role is exempt whole and counted — by path convention,
   by the shape of a version-indexed ledger, or by <code>[tombstone] ledger</code> — and a quote
   run or section that is a ledger by itself exempts only itself. The class ships at
-  <code>observe</code> and writes every measurement to the feed; the seven-round FPR replay over
+  <code>observe</code> and writes every measurement to the feed; the nine-round FPR replay over
   two histories, recorded in <code>docs/FPR-TOMBSTONE.md</code>, is what any promotion would
   have to argue from.</p>
   <ul class="consts">

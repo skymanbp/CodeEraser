@@ -26,11 +26,11 @@
 
 1. GitHub Actions → `release` workflow → Run workflow，输入裸版本号
    （如 `0.5.0`，不带 v）。版本输入与 crate 不符会在首步拒绝。
-2. 五目标并行构建 `ce` + `ce-core` + GUI 实包（NSIS/AppImage/dmg；花名册 =
+2. <!--ce:count:platforms#word-->五<!--/ce-->目标并行构建 `ce` + `ce-core` + GUI 实包（NSIS/AppImage/dmg；花名册 =
    `update::version::TARGETS`：x86_64-windows / x86_64-linux / aarch64-macos /
    x86_64-macos / aarch64-linux，v1.7.0 起五个，此前三个；每个目标走同一份可复用
    workflow `build-target.yml`，ci.yml 每周的 `release-rehearsal` 也跑它、不上传），
-   十五工件 + `SHA256SUMS` 共十六资产上传为 **draft** Release。
+   <!--ce:count:binaries#word-->十五<!--/ce-->工件 + `SHA256SUMS` 共<!--ce:count:assets#word-->十六<!--/ce-->资产上传为 **draft** Release。
    **铁则（用户令 2026-08-28）**：任何渠道分发的二进制——Release 资产、
    plugin manifest 所 pin 的下载物——只能来自本 workflow 的矩阵产物；
    本地构建的二进制永不上传、永不 pin、永不作为「补位」放行。
@@ -39,9 +39,9 @@
 
 ## 2. 第二段：pin → tag → publish
 
-1. `node scripts/pin_release.js <版本>`：从 draft 下载 SHA256SUMS、核对十五工件花名册
+1. `node scripts/pin_release.js <版本>`：从 draft 下载 SHA256SUMS、核对<!--ce:count:binaries#word-->十五<!--/ce-->工件花名册
    （`scripts/roster.js` 从目标键派生资产名，`it/release_roster.rs` 守它与 Rust 常量、
-   release.yml、ci.yml、清单键集同一份），把十五 pin（五目标 × ce / ce-core / GUI 安装包）
+   release.yml、ci.yml、清单键集同一份），把<!--ce:count:binaries#word-->十五<!--/ce--> pin（<!--ce:count:platforms#word-->五<!--/ce-->目标 × ce / ce-core / GUI 安装包）
    与 `CE_MANIFEST_VERSION`、`CE_BASE_URL` 写进 `plugin/bin/manifest.env`，再按**终态**校验
    （键集恰好是花名册、每枚 pin 是 64 位十六进制且与 draft 报的那枚相等、两个版本行等于本次
    tag；判据只读终态，故原样重跑、或补跑 `--bless`，都不再被拒），再跑 `scripts/packaging.js` 重生成 `packaging/`
@@ -77,7 +77,7 @@
    （`include_str!` 编进 GUI）、`rust-toolchain.toml`（两个 workspace 的编译器）、
    `.github/workflows/build-target.yml`（draft 跑的那份配方）——pin 提交只该动清单、
    docs-facts 与 `packaging/` 三处）与**说明**，最后
-   `verify-publish` 按花名册复核十六资产（十五工件对拍 SHA256SUMS，再逐一对拍 manifest pin）
+   `verify-publish` 按花名册复核<!--ce:count:assets#word-->十六<!--/ce-->资产（<!--ce:count:binaries#word-->十五<!--/ce-->工件对拍 SHA256SUMS，再逐一对拍 manifest pin）
    后 publish，再把 `release` 分支快进到 tag 提交（marketplace 条目注册的就是这个分支，装机据此
    跟发布）。tag 腿等 check 时只赦免**按名列出**的 skipped 腿（`SKIPPED_OK`：本 workflow 的
    dispatch 段 `build` / `draft` + ci.yml 只在周程 / 手动跑的 `starter-https` / `setup-wiring` /
@@ -132,8 +132,9 @@
 - **官网截图**：首页三张 GUI 图是**生成物**，不是手摆的窗口——
   `node scripts/shoot_gui.js --out site/assets` 用无头 Edge（即应用自己的
   WebView2 引擎）跑真 `gui/ui`，喂的是 CLI 出的三份报告文档。`gui/ui`
-  一动就得重拍：`it/site_screenshots.rs` 四腿——按 git 祖先关系拒绝比界面旧的图、
-  整窗尺寸、alt 文本不得手抄数字、`site/assets/` 每个文件都得有门认领；
+  一动就得重拍：`it/site_screenshots.rs` 五腿——按 git 祖先关系拒绝比界面旧的图、
+  整窗尺寸、页面必须在图加载前预留窗位、alt 文本不得手抄数字、
+  `site/assets/` 每个文件都得有门认领；
   `it/site_shots_receipt.rs` 收据腿——`contracts/gui-shots.json` 里的 schema 必须等于
   代码当下的三个 `SCHEMA_ID`（界面不动而报告形状动了的那条路），`ui` 摘要必须等于
   当前 `gui/ui` 树（改了界面没重拍——哪怕还没提交——当场红；祖先关系那腿只读提交，

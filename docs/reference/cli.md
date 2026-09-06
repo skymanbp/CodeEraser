@@ -1,4 +1,4 @@
-<!-- GENERATED — do not edit. Regenerate: CE_BLESS=1 cargo test --test it docs_gate::. CI reddens when this file drifts from its regeneration. Length rides the CLI surface (a machine-generated projection, the hs_boot stance), so the scan's file-lines warn on the CLI page is an accounted standing warn, not maintained prose over budget. -->
+<!-- GENERATED — do not edit. Regenerate: CE_BLESS=1 cargo test --manifest-path cli/Cargo.toml --test it docs_gate::. CI reddens when this file drifts from its regeneration. Length rides the CLI surface (a machine-generated projection, the hs_boot stance), so the scan's file-lines warn on the CLI page is an accounted standing warn, not maintained prose over budget. -->
 
 # `ce` command reference
 
@@ -29,12 +29,12 @@ Commands:
   dedup      Detect T1/T2 clones via the winnowing fingerprint index
   daemon     Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
   ping       Round-trip a ping through the project daemon (lazy-starts it)
-  probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard]
+  probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone class at its own [tombstone] tier
   audit      Stop audit: net LOC + duplicate blocks touching changed files + tombstone tier/budget + same-role advisory (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
   precommit  pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
   commitmsg  commit-msg gate: `ce precommit` re-run with the message file git hands the hook as one more surface — a removed name argued away in the message is a tombstone site like one in a README (feed and reason name it COMMIT_EDITMSG:line). Wire it as .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body saved to a file is the same surface (a CI recipe, not a hook)
-  mcp        MCP server over stdio: the read-only report face of every judgment family
+  mcp        MCP server over stdio: the read-only report face of every judgment family, plus this machine's and this build's own diagnostics — none of the tools can write
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
   update     Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
   setup      Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added
@@ -370,7 +370,7 @@ Options:
 ## ce probe
 
 ```text
-PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard]
+PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone class at its own [tombstone] tier
 
 Usage: ce probe [OPTIONS]
 
@@ -440,7 +440,7 @@ Options:
 ## ce mcp
 
 ```text
-MCP server over stdio: the read-only report face of every judgment family
+MCP server over stdio: the read-only report face of every judgment family, plus this machine's and this build's own diagnostics — none of the tools can write
 
 Usage: ce mcp [OPTIONS] [ROOT]
 
