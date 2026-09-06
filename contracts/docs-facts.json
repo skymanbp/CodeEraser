@@ -326,7 +326,7 @@
       "id": "tool:rusqlite#vminor",
       "source": "cli/Cargo.toml::rusqlite",
       "tier": "scraped",
-      "value": "0.37"
+      "value": "0.40"
     },
     {
       "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",

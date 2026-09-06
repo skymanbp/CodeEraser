@@ -11,12 +11,23 @@ use super::version::Platform;
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
+use std::fmt::Write;
 use std::path::{Path, PathBuf};
+
+/// Lowercase hexadecimal with two digits per byte, shared with receipts.
+pub fn hex(bytes: &[u8]) -> String {
+    bytes
+        .iter()
+        .fold(String::with_capacity(bytes.len() * 2), |mut out, byte| {
+            write!(out, "{byte:02x}").expect("writing to a String");
+            out
+        })
+}
 
 /// Hex SHA-256 of a file — the pin's own spelling.
 pub fn sha256_hex(path: &Path) -> Result<String> {
     let bytes = std::fs::read(path).with_context(|| format!("read {}", path.display()))?;
-    Ok(format!("{:x}", Sha256::digest(&bytes)))
+    Ok(hex(&Sha256::digest(&bytes)))
 }
 
 /// Apply what the check document promised. `installer` also saves
@@ -170,3 +181,7 @@ fn save_installer(pins: &Pins, plat: &Platform) -> Result<PathBuf> {
     }
     Ok(dest)
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/update/apply.rs"]
+mod tests;
