@@ -476,6 +476,29 @@
   `it/common/hooks.rs` 172→193、`it/erase_e2e.rs` 269→290；新文件 `it/eval_dedup_distinct.rs` 238 / `it/fpr_replay.rs` 298 / `it/fpr_replay_parts/mod.rs` 120 / `it/ui_lang.rs` 86 /
   `unit/config/ui.rs` 28 / `unit/erase/log.rs` 108 入基线。分数主 945（地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
 
+**无默认档位变更。** 计划 v2.29 步 10 批 C 第一组（2026-09-05）——分发接线 O72 / O73 / O82 + C-installer 动态腿 + `update_e2e` 竞态根修，判决面零变化：
+- O72 新子命令 **`ce setup`**（`cli/src/setup/`，文档 `ce.setup-report/0.1.0`）：找到 Claude Code（PATH 上的 `claude.exe` / `.cmd` / `.bat` 或 `claude`，兜底 `~/.local/bin`；`.cmd` 经 `%ComSpec% /c`）
+  → `plugin marketplace list --json`（旧 CLI 回落散文表，`❯` / `>` 行取裸名）→ 未注册才 `marketplace add skymanbp/CodeEraser@release`（已注册者保留、永不替换——开发 clone 的目录注册是人做的）
+  → `plugin install codeeraser@codeeraser` → 尽力 `plugin update` → 只在本次注册时写 `claude-plugin-wired` 标记（默认在本二进制旁，`--marker-dir` 可指）→ 报告该目录是否在 PATH 上（不在则多一行提示）；
+  退出码沿用 v1.0.1 安装日志图例 0 已接 / 5 保留 / 10 无 Claude Code / 11 add 失败 / 12 install 失败，新增 **13**；`--unwire` 以标记为凭只拆自己接的（uninstall + marketplace remove + 删标记），无标记即什么都不问退 0；
+  `--format json` 出整份文档，控制台双语一句 + PATH 提示（`main_lang.rs` zh 帮助三键）。名字只拼一处（`setup::NAMES`：source / marketplace / plugin / marker）；NSIS `hooks.nsh` 的 POSTINSTALL / PREUNINSTALL
+  改为调 `"$INSTDIR\ce.exe" setup` / `setup --unwire`、只印图例、自身不再拼任何 claude 命令（v1.0.1 起的内联 PowerShell 接线程序删除）。
+- O73 提权账户 ≠ 登录用户：`setup::env::users` 读运行账户（USERNAME / USER / LOGNAME）与登录账户（`CE_SETUP_LOGON_USER` 测试缝 → `SUDO_USER` → Windows `Win32_ComputerSystem.UserName`），
+  `DOMAIN\name` 与 `name` 大小写不敏感同账户；两者皆知且不同才退 13、什么都不接、句子点名两个账户；登录未知（CI runner、服务会话）永不拒绝。README 双语限制段以此句替换「marketplace 跟 main」。
+- O82 marketplace 改跟 `release` 分支（`claude plugin marketplace add owner/repo@ref` 亲测支持，`list --json` 回 `"ref": "release"`；分支已建在 af8dbf8 = v1.6.0 pin 提交）：release.yml verify-publish 在 publish 之后
+  新增一步 `git push origin HEAD:refs/heads/release`（只快进；非快进即红并给手动命令）；README 双语安装段 / 命令表、plugin README 安装节、官网两首页安装行、docs/RELEASE.md §2.3 + §3、gui.md「Getting it」同批改。
+- C-installer 动态腿，**先核实再加**：空 `CLAUDE_CONFIG_DIR`（无账户、无既有 marketplace）下真 `claude` 2.1.259 对 `ce setup` 答 added / installed 1.6.0（13 s）、第二次退 5 保留、`--unwire` 干净（本机第一方）；
+  据此 ci.yml 新增 `setup-wiring` job（ubuntu + windows：`npm i -g @anthropic-ai/claude-code` 后跑真 `ce setup` 三幕，jq 断言文档与 `plugin marketplace list --json` 的 name / ref），随周程 schedule 跑、新增 `workflow_dispatch` 可按需触发；
+  `installer_wiring.js` 门改读 `setup::NAMES` 四字段：钩子须委托 `ce setup` / `--unwire`、自身不得拼 `marketplace add`、slug 整词等于 `skymanbp/CodeEraser` 且 ref 为 `release`、插件目标在仓根清单里可解析。
+- 子仓 `it/setup_e2e.rs`：脚本化假 `claude`（Windows `.cmd` / unix sh，记录每次调用，按行剧本答 listing / add / install 退出码）——五行图例表（接 / 保留 / add 败 / install 败 / 他人账户）+ 无 Claude Code + 接 / 拆 / 再拆三幕表；
+  `unit/setup/{claude,env}.rs` 四腿（JSON 与散文 listing、账户等价表、PATH 成员）；parity 表新行「Claude Code 接线」只在 CLI（安装包调用、AppImage / dmg 用户跑一次），README 载体表补 `ce setup`，`docs/reference/cli.md` 再生。
+- `update_e2e` 竞态根修（CI 34006228086 ubuntu 红 `run ce: NotFound`）：`check()` 曾共用一个 `tmp("update-cwd")`——`tmp` 先删再建，并行的腿把兄弟的 cwd 删掉、spawn 找不到目录；改为每腿传自己的目录。
+- dedup **55 / 119 恒**，本批落下的十个新克隆块全部消掉：主仓 `setup/mod.rs` 五个 `&str` + 六个 `u8` 常量与 `graph/wire.rs` / `tombstone/vocab.rs` 的常量表同形（六块）→ 名字并成一张 `Names` 结构常量、退出码改 `#[repr(u8)] enum Exit`；
+  `Exit` 的派生列表与 `mention::conv::Conv` 同形（一块）→ 只派生用到的 `Clone, Copy`；子仓 `setup_e2e.rs` 两处断言元组同形、四常量表与 `eval_dedup_distinct.rs` 同形、「删日志 → 跑 → 断言」三连（三块）→ `states()` 四词一串 + listing 由名字生成 + 三幕表 `ACTS`。
+- ADR-006 具名重立（两仓）：主仓 `over` 两项——`docs/reference/cli.md` 484→500（`ce setup` 节）、CHANGELOG 483→506（本块）；新文件 `cli/src/setup/mod.rs` 271 / `setup/claude.rs` 116 / `setup/env.rs` 114 / `cli/src/main_setup.rs` 39
+  入基线（`hooks.nsh` 与 `.github/` 不在度量宇宙）。子仓 `over` 一项——`gui/installer_wiring.js` 88→105；新文件 `it/setup_e2e.rs` 309 / `unit/setup/claude.rs` 23 / `unit/setup/env.rs` 32 入基线；`it/update_e2e.rs` 300→303、
+  `it/face_parity.rs` 277→278 在容差内。分数主 945（重立前读 946——重立把软线挪了一分，尺寸轴 73 → 74；地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
+
 ## 更早的版本
 
 v1.4.1 及更早移入归档册：[v1.4.0–v1.4.1](docs/CHANGELOG-ARCHIVE-v1.4.md)（2026-09-05 迁出）、

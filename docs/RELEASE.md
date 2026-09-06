@@ -58,7 +58,8 @@
    （draft 的 `--target` 构建提交与 tag 提交在 `cli/src`、`cli/Cargo.{toml,lock}`、`core/app`、
    `core/ce-core.cabal`、`core/cabal.project{,.freeze}`、`gui/src-tauri`、`gui/ui` 上树哈希
    逐一相等——pin 提交只该动清单与 docs-facts 两处）与**说明**，最后 `verify-publish`
-   复核十资产（九工件对拍 SHA256SUMS，九工件对拍 manifest pin）后 publish。
+   复核十资产（九工件对拍 SHA256SUMS，九工件对拍 manifest pin）后 publish，再把
+   `release` 分支快进到 tag 提交（marketplace 条目注册的就是这个分支，装机据此跟发布）。
 
 ## 3. 发布后渠道
 
@@ -94,7 +95,9 @@
   看不见未提交的改动）；`it/site_shoot_motion.rs` 第六腿守住
   「取景器声明 `prefers-reduced-motion` × 应用应答它」这对耦合，少一半图就不再
   可复现。重拍只在拍进 `site/assets` 时重写收据（`--out` 指仓外则不动它）。
-- **marketplace**：清单随 main 走，无独立发布步。
+- **marketplace**：安装包与 `ce setup` 注册的是 `skymanbp/CodeEraser@release`，verify-publish
+  在 publish 之后把 `release` 分支快进到 tag 提交（非快进即拒绝并点名；手动补救
+  `git push origin vX.Y.Z^{commit}:refs/heads/release`）——main 上的清单改动要等下一次发布才到装机。
 - **`ce update`**（v1.3.0 起）：装机自检读 `releases/latest` 的 tag 与**该 tag 上**的
   `plugin/bin/manifest.env`——本 runbook「pin 提交先于 tag」的既有序正是它的信任锚，
   无需另发任何东西。publish 后在任一旧版装机上 `ce update` 应退 1 并报新版本；

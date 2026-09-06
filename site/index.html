@@ -47,11 +47,11 @@
     with a score that is only allowed to get better.</p>
     <div class="installs">
       <div class="install"><span class="k">Installer</span>
-        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos, GUI + CLI + judgment core, SHA256-pinned; the Windows installer auto-wires the Claude Code plugin (v1.0.1+)</code></div>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos, GUI + CLI + judgment core, SHA256-pinned; the Windows installer runs <code>ce setup</code>, AppImage / dmg users run it once</code></div>
       <div class="install"><span class="k">Cargo</span>
         <code>cargo install codeeraser</code></div>
       <div class="install"><span class="k">Claude Code</span>
-        <code>/plugin marketplace add skymanbp/CodeEraser, then /plugin install codeeraser@codeeraser</code></div>
+        <code>ce setup — or by hand: /plugin marketplace add skymanbp/CodeEraser@release, then /plugin install codeeraser@codeeraser</code></div>
       <div class="install"><span class="k">Update</span>
         <code>ce update --yes</code></div>
     </div>
@@ -63,7 +63,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 945/1000</span> | axes 0:73 1:0 2:105 3:0 4:0 5:0 6:209 | 34 candidates
+<span class="s">check score 945/1000</span> | axes 0:74 1:0 2:104 3:0 4:0 5:0 6:207 | 34 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>

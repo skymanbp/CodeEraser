@@ -101,6 +101,9 @@ eject.yes	真正移除（默认试运行并点名每个目标）
 update	检查新发布版本（退出码 0 已最新 / 1 有更新 / 2 未知）；--yes 就地替换 ce 与 ce-core，逐项对照发布提交自带的 SHA256 pin——插件或 cargo 所有的副本不动（各自有自己的更新路）
 update.yes	下载并落位已校验的二进制（默认只报告）
 update.installer	配合 --yes：另把已校验的 GUI 安装器存到临时目录并打印路径（运行它由你点击）
+setup	把本机的 Claude Code 接到插件上（在 `release` 引用处注册 marketplace + 安装），并说明本二进制所在目录是否在 PATH 上；安装包会调用它，AppImage / dmg 用户装后跑一次；--unwire 只移除它自己加的
+setup.unwire	只移除上一次 `ce setup` 加的东西（以其标记文件为凭）；你自己做的注册永不触碰
+setup.marker_dir	存放 `claude-plugin-wired` 标记的目录（默认：本二进制所在目录——安装包的 $INSTDIR）
 ";
 
 fn zh_map() -> &'static HashMap<&'static str, &'static str> {

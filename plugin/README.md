@@ -26,16 +26,20 @@ MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），16 个工�
 
 ## 安装
 
-公开 marketplace 一键装（清单在仓根 `.claude-plugin/marketplace.json`）：
+公开 marketplace 一键装（清单在仓根 `.claude-plugin/marketplace.json`；注册的是
+`release` 分支——verify-publish 每次 publish 后把它快进到 tag 提交，装机跟发布不跟 main）：
 
-1. `/plugin marketplace add skymanbp/CodeEraser`
+1. `/plugin marketplace add skymanbp/CodeEraser@release`
 2. `/plugin install codeeraser@codeeraser`
 
-v1.0.1 起 **Windows 安装包装机时自动跑这两步**（检测到 Claude Code 才动手，
-失败一律降级为提示行；`gui/src-tauri/windows/hooks.nsh` 是权威实现）——
-手动路径留给 AppImage/dmg/纯 CLI 底座。本地开发 clone 则注册**仓根目录**
-为 marketplace（`claude plugin marketplace add <repo根>`）；注册 `plugin/`
-子目录是 9f86d58 之前的旧位，清单已不在那里，会以 cache-miss 静默掉钩。
+v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/src/setup/`）：找到 Claude Code
+→ 已注册则保留、否则注册 → 安装并刷新 → 只在本次注册时写 `claude-plugin-wired` 标记
+→ 报告本二进制所在目录是否在 PATH 上；运行账户 ≠ 登录用户时按名拒绝、退 13 什么都不接；
+`--unwire` 以标记为凭只拆它自己接的。Windows 安装包装机 / 卸载时各调一次
+（`gui/src-tauri/windows/hooks.nsh` 只印退出码图例，失败一律降级为提示行），AppImage / dmg /
+纯 CLI 底座自己跑一次。本地开发 clone 则注册**仓根目录**为 marketplace
+（`claude plugin marketplace add <repo根>`）；注册 `plugin/` 子目录是 9f86d58 之前的旧位，
+清单已不在那里，会以 cache-miss 静默掉钩。
 
 `ce` 与判决核 `ce-core` 两个真身均由 `bin/ce.sh` 三级解析（ADR-007）：
 已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（六枚：三平台 ×

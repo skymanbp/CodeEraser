@@ -46,11 +46,11 @@
     CodeEraser 度量它、判决它、用一个只准变好的分数把住大门。</p>
     <div class="installs">
       <div class="install"><span class="k">安装包</span>
-        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos，GUI + CLI + 判决核，SHA256 钉扎；Windows 安装包自动接入 Claude Code 插件（v1.0.1 起）</code></div>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos，GUI + CLI + 判决核，SHA256 钉扎；Windows 安装包运行 <code>ce setup</code>，AppImage / dmg 用户自己跑一次</code></div>
       <div class="install"><span class="k">Cargo</span>
         <code>cargo install codeeraser</code></div>
       <div class="install"><span class="k">Claude Code</span>
-        <code>/plugin marketplace add skymanbp/CodeEraser，再 /plugin install codeeraser@codeeraser</code></div>
+        <code>ce setup——或手动：/plugin marketplace add skymanbp/CodeEraser@release，再 /plugin install codeeraser@codeeraser</code></div>
       <div class="install"><span class="k">更新</span>
         <code>ce update --yes</code></div>
     </div>
@@ -62,7 +62,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 945/1000</span> | 判轴 0:73 1:0 2:105 3:0 4:0 5:0 6:209 | 候选 34
+<span class="s">检查分数 945/1000</span> | 判轴 0:74 1:0 2:104 3:0 4:0 5:0 6:207 | 候选 34
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：10 块并入既有成员，15 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>

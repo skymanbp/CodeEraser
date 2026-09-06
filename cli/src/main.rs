@@ -10,6 +10,7 @@ mod main_erase;
 mod main_judge;
 mod main_lang;
 mod main_score;
+mod main_setup;
 mod main_similar;
 mod main_update;
 
@@ -148,6 +149,7 @@ fn infra(cmd: Cmd) -> ExitCode {
             installer,
             format,
         } => main_update::update_cmd(yes, installer, format),
+        Cmd::Setup(a) => main_setup::setup_cmd(a),
         _ => unreachable!("analysis() owns every other command"),
     }
 }
