@@ -36,6 +36,8 @@ class Codeeraser < Formula
   def install
     bin.install Dir["ce-#{version}-*"].fetch(0) => "ce"
     resource("ce-core").stage { bin.install Dir["ce-core-#{version}-*"].fetch(0) => "ce-core" }
+    # a raw release binary lands 0644 (curl) and the cleaner keeps only the x bit it finds
+    chmod 0755, [bin/"ce", bin/"ce-core"]
   end
 
   test do
