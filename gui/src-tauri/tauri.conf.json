@@ -23,6 +23,7 @@
   },
   "bundle": {
     "active": true,
+    "publisher": "skymanbp",
     "targets": ["nsis", "appimage", "dmg"],
     "windows": {
       "nsis": {

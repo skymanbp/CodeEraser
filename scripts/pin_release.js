@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 // The pin step of the two-phase release (docs/RELEASE.md §2.1), as a
 // program instead of a transcription: read the draft's SHA256SUMS, put
-// the nine measured hashes into plugin/bin/manifest.env beside the new
-// CE_MANIFEST_VERSION and CE_BASE_URL, and assert that exactly the lines
-// that must move did move. Hand-copying these eleven lines shipped a
-// wrong pin once and a stale base URL once; each release the same
-// scratch script was rewritten from memory (revival O77).
+// the measured hashes — one ce, one ce-core, one GUI bundle per roster
+// target (scripts/roster.js) — into plugin/bin/manifest.env beside the
+// new CE_MANIFEST_VERSION and CE_BASE_URL, regenerate the package-
+// manager projections under packaging/ (scripts/packaging.js), and
+// assert that exactly the manifest lines that must move did move.
+// Hand-copying these lines shipped a wrong pin once and a stale base
+// URL once; each release the same scratch script was rewritten from
+// memory (revival O77).
 //
 // Usage: node scripts/pin_release.js <version> [--bless]
 //   <version>  bare, e.g. 1.7.0 — the draft release is v<version>
-//   --bless    also refresh the twelfth line: contracts/docs-facts.json
+//   --bless    also refresh the docs-facts line: contracts/docs-facts.json
 //              carries `ver:pin#v`, derived from CE_MANIFEST_VERSION
 //              (`CE_BLESS=1 cargo test --test it -- facts_`, run here)
 // Exit 0 = the manifest now pins the draft; anything else refused by name.
@@ -18,24 +21,20 @@ const { execFileSync, spawnSync } = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const { TARGETS, WHAT, asset, pinKey } = require("./roster");
 
 const ROOT = path.join(__dirname, "..");
 const MANIFEST = path.join(ROOT, "plugin", "bin", "manifest.env");
+/** Pins per release: three artifacts per target; assets: those plus SHA256SUMS. */
+const PINS = TARGETS.length * WHAT.length;
+const ASSETS = PINS + 1;
 
-/** Asset name -> manifest key, for one version. The same nine names
+/** Asset name -> manifest key, for one version — the same names
  *  release.yml's verify-publish downloads by roster. */
 function roster(ver) {
-  return {
-    [`ce-${ver}-x86_64-windows.exe`]: "CE_SHA256_X86_64_WINDOWS_CE",
-    [`ce-${ver}-x86_64-linux`]: "CE_SHA256_X86_64_LINUX_CE",
-    [`ce-${ver}-aarch64-macos`]: "CE_SHA256_AARCH64_MACOS_CE",
-    [`ce-core-${ver}-x86_64-windows.exe`]: "CE_SHA256_X86_64_WINDOWS_CECORE",
-    [`ce-core-${ver}-x86_64-linux`]: "CE_SHA256_X86_64_LINUX_CECORE",
-    [`ce-core-${ver}-aarch64-macos`]: "CE_SHA256_AARCH64_MACOS_CECORE",
-    [`CodeEraser-${ver}-x86_64-windows-setup.exe`]: "CE_SHA256_X86_64_WINDOWS_SETUP",
-    [`CodeEraser-${ver}-x86_64-linux.AppImage`]: "CE_SHA256_X86_64_LINUX_APPIMAGE",
-    [`CodeEraser-${ver}-aarch64-macos.dmg`]: "CE_SHA256_AARCH64_MACOS_DMG",
-  };
+  const out = {};
+  for (const key of TARGETS) for (const what of WHAT) out[asset(what, ver, key)] = pinKey(what, key);
+  return out;
 }
 
 function gh(args) {
@@ -47,12 +46,12 @@ function fail(msg) {
   process.exit(1);
 }
 
-/** The draft must exist, be a draft, and carry exactly the ten assets. */
+/** The draft must exist, be a draft, and carry exactly the roster's assets. */
 function draftAssets(tag) {
   const view = JSON.parse(gh(["release", "view", tag, "--json", "isDraft,assets"]));
   if (view.isDraft !== true) fail(`${tag} is not a draft — a published release is never re-pinned`);
   const names = view.assets.map((a) => a.name).sort();
-  if (names.length !== 10) fail(`${tag} carries ${names.length} assets, expected 10: ${names.join(", ")}`);
+  if (names.length !== ASSETS) fail(`${tag} carries ${names.length} assets, expected ${ASSETS}: ${names.join(", ")}`);
   return names;
 }
 
@@ -83,6 +82,16 @@ function setLine(text, key, value) {
   return text.replace(re, `${key}="${value}"`);
 }
 
+/** A sibling script, inheriting stdio; a non-zero exit refuses by name. */
+function sibling(script, args, env) {
+  const r = spawnSync(process.execPath, [path.join(__dirname, script), ...args], {
+    cwd: ROOT,
+    stdio: "inherit",
+    env: { ...process.env, ...env },
+  });
+  if (r.status !== 0) fail(`${script} exited ${r.status}`);
+}
+
 function main() {
   const ver = process.argv[2];
   if (!/^\d+\.\d+\.\d+$/.test(ver || "")) fail("usage: node scripts/pin_release.js <N.N.N> [--bless]");
@@ -98,21 +107,24 @@ function main() {
   for (const [name, key] of Object.entries(roster(ver))) text = setLine(text, key, hashes[name]);
   fs.writeFileSync(MANIFEST, text);
 
-  // the proof is the diff, not the intent: nine pins move, plus the two
+  // the proof is the diff, not the intent: every pin moves, plus the two
   // version lines when the version moves — nothing else may
   const numstat = execFileSync("git", ["diff", "--numstat", "--", "plugin/bin/manifest.env"], {
     cwd: ROOT,
     encoding: "utf8",
   }).trim();
   const [added, removed] = numstat ? numstat.split("\t").map(Number) : [0, 0];
-  const expected = 9 + (versionMoves ? 2 : 0);
+  const expected = PINS + (versionMoves ? 2 : 0);
   if (added !== expected || removed !== expected) {
     fail(`manifest diff is +${added}/-${removed} lines, expected ${expected}/${expected} (git diff plugin/bin/manifest.env)`);
   }
   console.log(`pinned ${tag}: ${expected} lines moved in plugin/bin/manifest.env`);
+  // the Homebrew formula and the winget manifests are projections of
+  // the manifest just written — they move with it, in the same commit
+  sibling("packaging.js", [], {});
 
   if (process.argv.includes("--bless")) {
-    console.log("refreshing the twelfth line (contracts/docs-facts.json ver:pin#v) …");
+    console.log("refreshing the docs-facts line (contracts/docs-facts.json ver:pin#v) …");
     const r = spawnSync("cargo", ["test", "--test", "it", "--", "facts_"], {
       cwd: path.join(ROOT, "cli"),
       stdio: "inherit",
@@ -121,7 +133,7 @@ function main() {
     });
     if (r.status !== 0) fail("the facts bless did not pass");
   } else {
-    console.log("twelfth line: CE_BLESS=1 cargo test --test it -- facts_   (or re-run with --bless)");
+    console.log("docs-facts line: CE_BLESS=1 cargo test --test it -- facts_   (or re-run with --bless)");
   }
 }
 

@@ -46,7 +46,9 @@
     CodeEraser 度量它、判决它、用一个只准变好的分数把住大门。</p>
     <div class="installs">
       <div class="install"><span class="k">安装包</span>
-        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos，GUI + CLI + 判决核，SHA256 钉扎；Windows 安装包运行 <code>ce setup</code>，AppImage / dmg 用户自己跑一次</code></div>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux，GUI + CLI + 判决核，SHA256 钉扎；Windows 安装包运行 <code>ce setup</code>，AppImage / dmg 用户自己跑一次</code></div>
+      <div class="install"><span class="k">Homebrew · winget</span>
+        <code>brew install skymanbp/codeeraser/codeeraser · winget install skymanbp.CodeEraser——由同一组 pin 生成</code></div>
       <div class="install"><span class="k">Cargo</span>
         <code>cargo install codeeraser</code></div>
       <div class="install"><span class="k">Claude Code</span>
@@ -149,7 +151,7 @@
 <p><a href="/zh/stack/">查看组件级技术栈与执行门禁 →</a></p>
 
 <h2>信任锚</h2>
-<p class="trust">全部<!--ce:count:binaries#word-->九<!--/ce-->个发布二进制——<!--ce:count:platforms#word-->三<!--/ce-->平台 × ce / ce-core，v0.7.3 起再加<!--ce:count:installers#word-->三<!--/ce-->个 GUI
+<p class="trust">全部<!--ce:count:binaries#word-->十五<!--/ce-->个发布二进制——<!--ce:count:platforms#word-->五<!--/ce-->平台 × ce / ce-core，v0.7.3 起再加<!--ce:count:installers#word-->五<!--/ce-->个 GUI
 安装包——都以 SHA256 钉扎在 <code>plugin/bin/manifest.env</code>；tag 阶段逐 pin 校验、
 等被打标提交的 CI 全绿、拒绝任何计划外资产，然后才发布。<code>SHA256SUMS</code> 覆盖
 全集可离线核对。代码签名被刻意排除在设计外——哈希链就是永久信任锚。本仓库每次提交都用自己的工具给自己把门。</p>

@@ -48,11 +48,19 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
 # Independent recomputation of ce.sh's platform key (lockstep on
-# purpose: if the product's key grammar drifts, state 1 goes red).
+# purpose: if the product's key grammar drifts, state 1 goes red) —
+# the five-target roster of update::version::TARGETS (O70).
 case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*) key="x86_64-windows"; ext=".exe" ;;
-    Darwin) key="aarch64-macos"; ext="" ;;
-    *) key="x86_64-linux"; ext="" ;;
+    Darwin) case "$(uname -m)" in
+                arm64) key="aarch64-macos" ;;
+                *) key="x86_64-macos" ;;
+            esac; ext="" ;;
+    *) case "$(uname -m)" in
+           x86_64) key="x86_64-linux" ;;
+           aarch64) key="aarch64-linux" ;;
+           *) key="unsupported" ;;
+       esac; ext="" ;;
 esac
 envkey=$(echo "$key" | tr 'a-z-' 'A-Z_')
 want=$("$CE_BIN" --version)

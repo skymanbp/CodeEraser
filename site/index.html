@@ -47,7 +47,9 @@
     with a score that is only allowed to get better.</p>
     <div class="installs">
       <div class="install"><span class="k">Installer</span>
-        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos, GUI + CLI + judgment core, SHA256-pinned; the Windows installer runs <code>ce setup</code>, AppImage / dmg users run it once</code></div>
+        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a> — x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux, GUI + CLI + judgment core, SHA256-pinned; the Windows installer runs <code>ce setup</code>, AppImage / dmg users run it once</code></div>
+      <div class="install"><span class="k">Homebrew · winget</span>
+        <code>brew install skymanbp/codeeraser/codeeraser · winget install skymanbp.CodeEraser — generated from the same pins</code></div>
       <div class="install"><span class="k">Cargo</span>
         <code>cargo install codeeraser</code></div>
       <div class="install"><span class="k">Claude Code</span>
@@ -150,7 +152,7 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
 <p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>
 
 <h2>Trust anchor</h2>
-<p class="trust">All <!--ce:count:binaries#word-->nine<!--/ce--> release binaries — <!--ce:count:platforms#word-->three<!--/ce--> platforms × ce / ce-core, plus the <!--ce:count:installers#word-->three<!--/ce-->
+<p class="trust">All <!--ce:count:binaries#word-->fifteen<!--/ce--> release binaries — <!--ce:count:platforms#word-->five<!--/ce--> platforms × ce / ce-core, plus the <!--ce:count:installers#word-->five<!--/ce-->
 GUI installers since v0.7.3 — are pinned by SHA256 in <code>plugin/bin/manifest.env</code>;
 the tag phase verifies every pin, waits for a green CI on the tagged commit, and refuses
 an unexpected asset before anything publishes. <code>SHA256SUMS</code> covers the set for

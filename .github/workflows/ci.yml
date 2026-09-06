@@ -1,9 +1,12 @@
 # CI per DEVELOPMENT_PLAN.md §6 M0. The repository is public (2026-08-28),
 # so Actions minutes are free and the macOS leg runs on every push like
 # the other two (plan v2.29 step 9; it was tag + weekly while the repo
-# was private and macOS 10x-metered, D2-8). The weekly schedule now
-# carries the two jobs that must reach the real network — starter-https
-# and setup-wiring — and workflow_dispatch runs them on demand.
+# was private and macOS 10x-metered, D2-8). The weekly schedule carries
+# the jobs that must reach the real network — starter-https,
+# setup-wiring, packaging-live — and the five-target release rehearsal;
+# workflow_dispatch runs them on demand. Every job that never runs on a
+# push is named in release.yml's SKIPPED_OK (its skipped check on the
+# tag commit would refuse the publish otherwise; tests/it/release_roster.rs).
 name: ci
 
 # CI never writes repo CONTENTS back — said explicitly so the token
@@ -19,8 +22,8 @@ on:
     tags: ["v*"]
   pull_request:
   schedule:
-    - cron: "0 3 * * 1" # weekly: starter-https and setup-wiring against the live release and the live Claude Code, plus one more macOS run
-  workflow_dispatch: # the two network legs, on demand
+    - cron: "0 3 * * 1" # weekly: the network legs against the live release and the live Claude Code, the five-target release rehearsal, plus one more macOS run
+  workflow_dispatch: # the network legs and the rehearsal, on demand
 
 # A newer push to the same ref supersedes the in-flight run (billing:
 # rapid push trains used to bill every intermediate tree in full).
@@ -542,3 +545,77 @@ jobs:
           "$ce" setup --unwire --format json --marker-dir "$RUNNER_TEMP/marker" | tee "$RUNNER_TEMP/unwire.json"
           jq -e '.exit == 0 and .plugin.state == "uninstalled" and .marketplace.state == "removed" and .marker.after == false' "$RUNNER_TEMP/unwire.json"
           cl plugin marketplace list --json | jq -e 'map(select(.name == "codeeraser")) | length == 0'
+
+  # The release build, rehearsed (plan v2.29 step 10, O70): the five
+  # roster targets through the SAME reusable workflow release.yml's
+  # build matrix calls — ce, ce-core and the GUI bundle with sidecars on
+  # the runner image the release will use — without uploading. A runner
+  # image, GHC bindist or bundler break on a target then surfaces
+  # weekly and on demand, not on the tag (the v1.3.0 lesson, now for
+  # five targets). The matrix rows are the roster
+  # (tests/it/release_roster.rs holds them to update::version::TARGETS).
+  release-rehearsal:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, key: x86_64-windows, triple: x86_64-pc-windows-msvc, ext: ".exe" }
+          - { os: ubuntu-latest, key: x86_64-linux, triple: x86_64-unknown-linux-gnu, ext: "" }
+          - { os: macos-latest, key: aarch64-macos, triple: aarch64-apple-darwin, ext: "" }
+          - { os: macos-15-intel, key: x86_64-macos, triple: x86_64-apple-darwin, ext: "" }
+          - { os: ubuntu-24.04-arm, key: aarch64-linux, triple: aarch64-unknown-linux-gnu, ext: "" }
+    uses: ./.github/workflows/build-target.yml
+    with:
+      os: ${{ matrix.os }}
+      key: ${{ matrix.key }}
+      triple: ${{ matrix.triple }}
+      ext: ${{ matrix.ext }}
+      version: ""
+      upload: false
+
+  # The package-manager projections against the live release (O71):
+  # the generated formula must install from the pinned assets on both
+  # Homebrew platforms and pass Homebrew's own style and audit, and the
+  # winget manifests must validate against Microsoft's schema for the
+  # version they declare. tests/it/packaging.rs holds the files to the
+  # manifest byte by byte; this leg is the one reader that is not us.
+  packaging-live:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Homebrew formula — style, audit, install from the pins, test
+        shell: bash
+        run: |
+          . plugin/bin/manifest.env
+          f=packaging/homebrew/Formula/codeeraser.rb
+          brew style --formula "$f"
+          brew audit --formula --strict "$f"
+          brew install --formula "$f"
+          got=$(ce --version)
+          [ "$got" = "ce $CE_MANIFEST_VERSION" ] || { echo "formula installed '$got', the manifest pins $CE_MANIFEST_VERSION"; exit 1; }
+          ce-core --version
+          brew test codeeraser
+      - name: winget manifests validate against the declared schema
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          # the directory the manifest names, never the first one sorted:
+          # a stale sibling would otherwise validate in the release's place
+          . plugin/bin/manifest.env
+          dir=packaging/winget/manifests/s/skymanbp/CodeEraser/$CE_MANIFEST_VERSION
+          [ -d "$dir" ] || { echo "$dir is missing — run node scripts/packaging.js"; exit 1; }
+          v=$(sed -n 's/^ManifestVersion: //p' "$dir/skymanbp.CodeEraser.yaml")
+          for kind in version installer defaultLocale; do
+            case "$kind" in
+              version) file="$dir/skymanbp.CodeEraser.yaml" ;;
+              installer) file="$dir/skymanbp.CodeEraser.installer.yaml" ;;
+              defaultLocale) file="$dir/skymanbp.CodeEraser.locale.en-US.yaml" ;;
+            esac
+            pipx run check-jsonschema==0.38.0 --schemafile "https://aka.ms/winget-manifest.$kind.$v.schema.json" "$file"
+          done

@@ -290,7 +290,7 @@ corpus and the SQL reader to one ranking on five corpora
 ([similar_replay.rs:188](../../../cli/tests/it/similar_replay.rs#L188)); the precision gate
 holds both oracle generations to their floors. The advisor is one row of the three-face parity
 table — CLI, GUI tab and Tauri command, MCP tool — and the fifteenth tool in the MCP catalogue
-([face_parity.rs:38](../../../cli/tests/it/face_parity.rs#L38)). Docs cite implementation lines
+([face_parity.rs:39](../../../cli/tests/it/face_parity.rs#L39)). Docs cite implementation lines
 (this booklet is under the citations gate), the constants above bind to their source names
 under `docs_consts`, and the feed golden carries the `similar` key at `ce.observe/0.10.0`
 ([feed.golden.json](../../../contracts/fixtures/observe-feed/feed.golden.json)).
