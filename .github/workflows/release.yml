@@ -1,15 +1,20 @@
 # Release automation (M7-P1, ADR-007). Two-phase by design
-# (docs/RELEASE.md, distilled from the M7 booklet in git history): a manual
-# workflow_dispatch builds the three platforms and uploads DRAFT
-# assets + SHA256SUMS; the measured hashes then land in
-# plugin/bin/manifest.env as a commit; only then the v* tag is cut,
+# (docs/RELEASE.md, distilled from the M7 booklet in git history): a
+# manual workflow_dispatch builds the five roster targets (plan v2.29
+# step 10, O70 — x86_64 and aarch64 for Linux and macOS, x86_64
+# Windows; update::version::TARGETS) through one reusable workflow,
+# build-target.yml, which ci.yml's weekly release-rehearsal runs too,
+# and uploads DRAFT assets + SHA256SUMS; the measured hashes then land
+# in plugin/bin/manifest.env as a commit; only then the v* tag is cut,
 # whose job re-downloads the SAME draft assets (no rebuild — Rust and
 # GHC builds are not bit-reproducible across runs, so a rebuild would
 # invalidate honest pins), checks that the draft was built from the
 # tag's own sources and carries real notes, verifies every pin,
-# publishes, and fast-forwards the `release` branch the marketplace
-# channel reads (O82). macOS 10x billing (D2-8) is fine here: releases
-# are rare and explicitly human-triggered.
+# publishes, fast-forwards the `release` branch the marketplace channel
+# reads (O82), and — each behind a secret the repository owner chooses
+# to set — publishes the crate (O75), pushes the Homebrew formula and
+# opens the winget pull request (O71). macOS 10x billing (D2-8) is fine
+# here: releases are rare and explicitly human-triggered.
 name: release
 
 on:
@@ -24,7 +29,7 @@ on:
 # Least privilege per job (2026-08-19 review): the workflow-level
 # write handed a release-editing token to the BUILD job too — which
 # compiles third-party build.rs/Setup.hs and needs no write at all.
-# Only the two jobs that touch the release carry it.
+# Only the jobs that touch the release carry it.
 permissions:
   contents: read
 
@@ -45,160 +50,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The roster, one row per key — held to update::version::TARGETS by
+  # tests/it/release_roster.rs, so a sixth target lands here, in the
+  # verify loop below, in the manifest and in scripts/roster.js, or in
+  # none of them.
   build:
     if: github.event_name == 'workflow_dispatch'
-    env:
-      RELEASE_VERSION: ${{ inputs.version }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: windows-latest
-            key: x86_64-windows
-            triple: x86_64-pc-windows-msvc
-            ext: .exe
-          - os: ubuntu-latest
-            key: x86_64-linux
-            triple: x86_64-unknown-linux-gnu
-            ext: ""
-          - os: macos-latest
-            key: aarch64-macos
-            triple: aarch64-apple-darwin
-            ext: ""
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      # the version has ONE source — cli/Cargo.toml. v0.1.0 shipped
-      # binaries reporting 0.0.1 because the input was free text;
-      # now a mismatch fails before any platform builds.
-      - name: Version input must match the crate
-        shell: bash
-        run: |
-          # the input is bound through env, never spliced into this
-          # script's source: a curly-brace expression substitutes
-          # BEFORE bash parses, so a value carrying a quote and a
-          # command substitution would execute here (and the previous
-          # version of THIS comment proved the point — the literal
-          # expression delimiters inside it were themselves parsed,
-          # invalidating the whole workflow file)
-          case "$RELEASE_VERSION" in
-            [0-9]*.[0-9]*.[0-9]*) ;;
-            *) echo "version input must be N.N.N, got: $RELEASE_VERSION"; exit 1 ;;
-          esac
-          CRATE=$(grep -m1 '^version' cli/Cargo.toml | cut -d'"' -f2)
-          [ "$CRATE" = "$RELEASE_VERSION" ] || {
-            echo "input $RELEASE_VERSION != cli/Cargo.toml $CRATE"; exit 1; }
-      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable branch, pinned 2026-08-19; version comes from rust-toolchain.toml (repo root, both workspaces)
-      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
-        with:
-          workspaces: |
-            cli
-            gui/src-tauri
-      - name: GUI system deps (ubuntu only)
-        if: matrix.os == 'ubuntu-latest'
-        # Same apt armor as ci.yml (see the full why there): mirrorlist
-        # pinned off the black-holing azure mirror, per-try timeout(1)
-        # so retries actually cycle, step timeout as the hard floor.
-        # The sleep is retry backoff, not race masking.
-        timeout-minutes: 15
-        run: |
-          echo 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
-          APT='-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30'
-          ok=""
-          for i in 1 2 3; do
-            if timeout 120 sudo apt-get $APT update && timeout 420 sudo apt-get $APT install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev; then ok=1; break; fi
-            echo "apt attempt $i failed; backing off" && sleep 10
-          done
-          [ -n "$ok" ]
-      # ce-core ships beside ce from v0.2.0 — the judgment layer stops
-      # being source-install-only (the release face's biggest UX gap).
-      # The freeze file pins the build plan, so the cache key is honest.
-      # macOS only: the runner image ships no preinstalled 9.14.1, so
-      # without this cache every release build re-downloads GHC from
-      # downloads.haskell.org (the 2026-08-19 outage lesson, see
-      # ci.yml build-macos for the full why).
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        if: matrix.os == 'macos-latest'
-        with:
-          path: ~/.ghcup
-          key: ghcup-macos-ghc9.14.1
-      - uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2
-        with:
-          ghc-version: "9.14.1"
-      - name: Cabal store cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: |
-            ~/.cabal/store
-            core/dist-newstyle
-          key: cecore-${{ matrix.key }}-${{ hashFiles('core/cabal.project.freeze') }}
-      - name: Build ce-core (release)
-        shell: bash
-        working-directory: core
-        run: |
-          cabal update
-          cabal build exe:ce-core
-      - name: Build ce (release)
-        shell: bash
-        working-directory: cli
-        run: cargo build --release --locked
-      # tauri-cli compiles from source (~minutes) — acceptable at
-      # release cadence; rust-cache does not cover cargo install.
-      # EXACT version: '^2' floated whatever crates.io served that
-      # day into the release toolchain (--locked honours tauri-cli's
-      # own lockfile, not its version). Bump deliberately.
-      - name: Install tauri-cli
-        shell: bash
-        run: cargo install tauri-cli --version 2.11.4 --locked
-      # the installer carries all three binaries (v0.2.0 formalization):
-      # externalBin sidecars land in the app dir, which is exactly
-      # where ce's ce-core sibling resolution probes
-      - name: Stage sidecar binaries for the bundle
-        shell: bash
-        run: |
-          mkdir -p gui/src-tauri/binaries
-          cp "cli/target/release/ce${{ matrix.ext }}" \
-             "gui/src-tauri/binaries/ce-${{ matrix.triple }}${{ matrix.ext }}"
-          CORE=$(cd core && cabal list-bin ce-core)
-          cp "$CORE" "gui/src-tauri/binaries/ce-core-${{ matrix.triple }}${{ matrix.ext }}"
-      # externalBin is injected HERE, not in tauri.conf.json:
-      # tauri-build validates the sidecar files at COMPILE time, so a
-      # static declaration would break every compile gate that has no
-      # staged binaries (probed locally 2026-08-18) — bundling config
-      # lives with the one pipeline that stages the bundle.
-      - name: Build GUI bundle (with sidecars)
-        shell: bash
-        working-directory: gui/src-tauri
-        run: |
-          cargo tauri build --config \
-            '{"bundle":{"externalBin":["binaries/ce","binaries/ce-core"]}}'
-      - name: Stage versioned artifacts
-        shell: bash
-        run: |
-          VER="$RELEASE_VERSION"
-          KEY="${{ matrix.key }}"
-          EXT="${{ matrix.ext }}"
-          mkdir -p dist
-          cp "cli/target/release/ce$EXT" "dist/ce-$VER-$KEY$EXT"
-          CORE=$(cd core && cabal list-bin ce-core)
-          cp "$CORE" "dist/ce-core-$VER-$KEY$EXT"
-          case "$KEY" in
-            x86_64-windows)
-              cp gui/src-tauri/target/release/bundle/nsis/*-setup.exe \
-                 "dist/CodeEraser-$VER-$KEY-setup.exe" ;;
-            x86_64-linux)
-              cp gui/src-tauri/target/release/bundle/appimage/*.AppImage \
-                 "dist/CodeEraser-$VER-$KEY.AppImage" ;;
-            aarch64-macos)
-              cp gui/src-tauri/target/release/bundle/dmg/*.dmg \
-                 "dist/CodeEraser-$VER-$KEY.dmg" ;;
-          esac
-          ls -l dist
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: dist-${{ matrix.key }}
-          path: dist/*
-          if-no-files-found: error
+          - { os: windows-latest, key: x86_64-windows, triple: x86_64-pc-windows-msvc, ext: ".exe" }
+          - { os: ubuntu-latest, key: x86_64-linux, triple: x86_64-unknown-linux-gnu, ext: "" }
+          - { os: macos-latest, key: aarch64-macos, triple: aarch64-apple-darwin, ext: "" }
+          - { os: macos-15-intel, key: x86_64-macos, triple: x86_64-apple-darwin, ext: "" }
+          - { os: ubuntu-24.04-arm, key: aarch64-linux, triple: aarch64-unknown-linux-gnu, ext: "" }
+    uses: ./.github/workflows/build-target.yml
+    with:
+      os: ${{ matrix.os }}
+      key: ${{ matrix.key }}
+      triple: ${{ matrix.triple }}
+      ext: ${{ matrix.ext }}
+      version: ${{ inputs.version }}
+      upload: true
 
   draft:
     if: github.event_name == 'workflow_dispatch'
@@ -267,29 +141,44 @@ jobs:
           fetch-depth: 0
       # Publication was gated on nothing but byte integrity: this job
       # and ci.yml fire on the SAME tag push as independent workflows,
-      # and a download + six hashes finishes long before a two-platform
-      # build+test matrix can report — so a fully red CI on the tagged
-      # commit published anyway. Wait for this commit's checks, and
-      # refuse on any conclusion that is not success.
+      # and a download + a few hashes finishes long before a
+      # multi-platform build+test matrix can report — so a fully red CI
+      # on the tagged commit published anyway. Wait for this commit's
+      # checks, and refuse on any conclusion that is not success.
       #
       # SKIPPED is not success (K step 10). The old escape waved every
       # skipped or neutral check through, so a job accidentally
       # conditioned away — the failure mode an `if:` typo produces —
-      # published with nothing behind it. On a tag exactly two checks
-      # skip BY DESIGN, allowed by their REAL surfaced names below (the
-      # v1.2.0 night lesson: a matrix job skipped by its `if:` collapses
-      # to ONE check named plainly `build`, never the platform-expanded
-      # names this list first imagined): this workflow's own
-      # dispatch-phase `build` and `draft`. ci.yml's `build-macos` used
-      # to be the third — it skipped on plain branch pushes — and since
-      # plan v2.29 step 9 it runs on every push, so its skip is no
-      # longer excused either. Only the skipped conclusion is excused:
-      # a failed run of either name refuses. Any other skipped or
-      # neutral check refuses with its name: the failure direction is a
-      # loud non-publish, never a silent publish.
+      # published with nothing behind it. On a tag a few checks skip BY
+      # DESIGN and are excused by their REAL surfaced names (the v1.2.0
+      # night lesson: a matrix job skipped by its `if:` collapses to ONE
+      # check named plainly `build`, never the platform-expanded names
+      # this list first imagined): this workflow's own dispatch-phase
+      # `build` and `draft`, and ci.yml's schedule/dispatch-only jobs —
+      # the network legs and the release rehearsal, which never run on
+      # a push. tests/it/release_roster.rs holds SKIPPED_OK to ci.yml's
+      # `if:` lines, so a new schedule-only job cannot silently refuse
+      # the next publish. Only the skipped conclusion is excused: a
+      # failed run of any name refuses. Any other skipped or neutral
+      # check refuses with its name: the failure direction is a loud
+      # non-publish, never a silent publish.
       - name: CI must be green on this commit
         shell: bash
         run: |
+          SKIPPED_OK="build draft starter-https setup-wiring release-rehearsal packaging-live"
+          ok=$(printf '%s\n' $SKIPPED_OK | jq -R . | jq -sc .)
+          # This run's own UNFINISHED jobs cannot gate this run: this job
+          # is in_progress while it polls, and publish-crate /
+          # homebrew-tap / winget-pr sit QUEUED on `needs:` it — waiting
+          # for them is waiting for ourselves until the ceiling expires
+          # on a release that was fine. Identity is the check SUITE, so
+          # a job added below later is covered without editing anything;
+          # this run's COMPLETED checks (the skipped dispatch phase) stay
+          # in the list and are excused by name like any other.
+          self=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --jq .check_suite_id)
+          case "$self" in
+            ''|*[!0-9]*) echo "cannot read this run's check suite id: '$self'"; exit 1 ;;
+          esac
           # Two hours, not thirty minutes: this loop waits on a macOS
           # runner GitHub schedules at its own pace, and v1.3.1's first
           # tag run burned the whole budget with build-macos still
@@ -297,13 +186,12 @@ jobs:
           # push legs green for the last 17.7 of them. The ceiling has
           # to bound the queue, not the build.
           for _ in $(seq 1 240); do
-            runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs" \
-                     --jq '[.check_runs[] | select(.name != "'"${GITHUB_JOB}"'")]')
+            runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs?per_page=100" \
+                     --jq '[.check_runs[] | select(.status == "completed" or (.check_suite.id // 0) != '"$self"')]')
             pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
-            bad=$(echo "$runs" | jq -r '[.[]
+            bad=$(echo "$runs" | jq -r --argjson ok "$ok" '[.[]
                     | select(.conclusion != null and .conclusion != "success")
-                    | select((.conclusion == "skipped" and
-                              (.name == "draft" or .name == "build")) | not)]
+                    | select((.conclusion == "skipped" and (.name as $n | $ok | index($n) != null)) | not)]
                   | map(.name + "=" + .conclusion) | join(", ")')
             [ -z "$bad" ] || { echo "refusing to publish: $bad"; exit 1; }
             [ "$pending" != "0" ] || { echo "all checks green"; exit 0; }
@@ -320,8 +208,9 @@ jobs:
       # not carry. The draft job records its build commit as the
       # release target; here every tree the binaries are built from
       # must be identical at both commits. The pin commit between them
-      # touches plugin/bin/manifest.env and contracts/docs-facts.json
-      # only, so the roster below is exactly what may NOT differ.
+      # touches plugin/bin/manifest.env, contracts/docs-facts.json and
+      # the packaging/ projections only, so the roster below is exactly
+      # what may NOT differ.
       #
       # Notes (O85): the draft ships with placeholder notes and nothing
       # refused to publish them — releases went out reading "Draft
@@ -352,6 +241,14 @@ jobs:
             *"$DRAFT_NOTES_MARKER"*) echo "refusing to publish: the notes are still the draft placeholder — write them on the draft first (docs/RELEASE.md §2)"; exit 1 ;;
           esac
           echo "notes ok: $(printf '%s\n' "$body" | wc -l) line(s)"
+      # The asset roster is DERIVED from the target list the way
+      # scripts/roster.js derives it — one ce, one ce-core, one GUI
+      # bundle per key, the bundle kind and the binary suffix following
+      # the key's os half — and the target list is held to
+      # update::version::TARGETS by tests/it/release_roster.rs. An
+      # explicit roster, not a wildcard: `--pattern '*'` made an
+      # unexpected asset a silent passenger, and `sha256sum -c` ignores
+      # files the list does not name.
       - name: Verify draft assets against manifest pins, then publish
         shell: bash
         run: |
@@ -369,42 +266,56 @@ jobs:
             */download/"$TAG") ;;
             *) echo "base url $CE_BASE_URL does not end in /download/$TAG"; exit 1 ;;
           esac
+          TARGETS="x86_64-windows x86_64-linux aarch64-macos x86_64-macos aarch64-linux"
+          bundle() { # $1=key -> "<asset suffix> <manifest tail>"
+            case "$1" in
+              *-windows) echo "-setup.exe SETUP" ;;
+              *-linux) echo ".AppImage APPIMAGE" ;;
+              *-macos) echo ".dmg DMG" ;;
+              *) echo "roster key $1 names no bundle kind" >&2; return 1 ;;
+            esac
+          }
+          # validated once at top level: inside the `$(...)` below a
+          # failing bundle() would only empty its own substitution
+          for key in $TARGETS; do bundle "$key" >/dev/null || exit 1; done
+          asset() { # $1=key $2=ce|ce-core|CodeEraser
+            case "$2" in
+              CodeEraser) echo "CodeEraser-$VER-$1$(bundle "$1" | cut -d' ' -f1)" ;;
+              *) case "$1" in *-windows) echo "$2-$VER-$1.exe" ;; *) echo "$2-$VER-$1" ;; esac ;;
+            esac
+          }
           mkdir dist && cd dist
-          # an explicit roster, not a wildcard: `--pattern '*'` made an
-          # unexpected asset a silent passenger, and `sha256sum -c`
-          # ignores files the list does not name
-          for a in "ce-$VER-x86_64-windows.exe" "ce-$VER-x86_64-linux" "ce-$VER-aarch64-macos" \
-                   "ce-core-$VER-x86_64-windows.exe" "ce-core-$VER-x86_64-linux" "ce-core-$VER-aarch64-macos" \
-                   "CodeEraser-$VER-x86_64-windows-setup.exe" "CodeEraser-$VER-x86_64-linux.AppImage" \
-                   "CodeEraser-$VER-aarch64-macos.dmg" SHA256SUMS; do
-            gh release download "$TAG" --pattern "$a"
+          n=0
+          for key in $TARGETS; do
+            for what in ce ce-core CodeEraser; do
+              gh release download "$TAG" --pattern "$(asset "$key" "$what")"
+              n=$((n + 1))
+            done
           done
+          gh release download "$TAG" --pattern SHA256SUMS
           extra=$(gh release view "$TAG" --json assets \
                     --jq '[.assets[].name] | length')
-          [ "$extra" = "10" ] || { echo "release carries $extra assets, expected 10"; exit 1; }
+          [ "$extra" = "$((n + 1))" ] || { echo "release carries $extra assets, expected $((n + 1))"; exit 1; }
           sha256sum -c SHA256SUMS
-          check_pin() { # $1=envkey tail (PLATFORM_CE | PLATFORM_CECORE) $2=filename
+          check_pin() { # $1=envkey tail (PLATFORM_CE | PLATFORM_CECORE | PLATFORM_BUNDLE) $2=filename
             eval "pin=\${CE_SHA256_$1:-}"
             [ -n "$pin" ] || { echo "pin $1 is EMPTY — tag phase requires complete pins"; exit 1; }
             got=$(sha256sum "$2" | cut -d' ' -f1)
             [ "$got" = "$pin" ] || { echo "pin $1 mismatch: expected $pin got $got"; exit 1; }
             echo "pin $1 ok"
           }
-          check_pin X86_64_WINDOWS_CE "ce-$VER-x86_64-windows.exe"
-          check_pin X86_64_LINUX_CE "ce-$VER-x86_64-linux"
-          check_pin AARCH64_MACOS_CE "ce-$VER-aarch64-macos"
-          check_pin X86_64_WINDOWS_CECORE "ce-core-$VER-x86_64-windows.exe"
-          check_pin X86_64_LINUX_CECORE "ce-core-$VER-x86_64-linux"
-          check_pin AARCH64_MACOS_CECORE "ce-core-$VER-aarch64-macos"
-          # The installers were the three assets with no committed
-          # pin, checked only against a SHA256SUMS generated by the
-          # same mutable draft — internal consistency, not provenance.
-          # They are also the highest-privilege artifact in the
-          # release (elevated, machine-PATH-writing), so they get the
-          # same out-of-band commitment as the binaries.
-          check_pin X86_64_WINDOWS_SETUP "CodeEraser-$VER-x86_64-windows-setup.exe"
-          check_pin X86_64_LINUX_APPIMAGE "CodeEraser-$VER-x86_64-linux.AppImage"
-          check_pin AARCH64_MACOS_DMG "CodeEraser-$VER-aarch64-macos.dmg"
+          # The installers were once the assets with no committed pin,
+          # checked only against a SHA256SUMS generated by the same
+          # mutable draft — internal consistency, not provenance. They
+          # are also the highest-privilege artifact in the release
+          # (elevated, machine-PATH-writing), so they get the same
+          # out-of-band commitment as the binaries.
+          for key in $TARGETS; do
+            mkey=$(echo "$key" | tr 'a-z-' 'A-Z_')
+            check_pin "${mkey}_CE" "$(asset "$key" ce)"
+            check_pin "${mkey}_CECORE" "$(asset "$key" ce-core)"
+            check_pin "${mkey}_$(bundle "$key" | cut -d' ' -f2)" "$(asset "$key" CodeEraser)"
+          done
           gh release edit "$TAG" --draft=false
       # The marketplace channel (O82): `ce setup`, the installers and
       # both READMEs register skymanbp/CodeEraser@release, so an install
@@ -418,3 +329,78 @@ jobs:
         run: |
           git push origin "HEAD:refs/heads/release" || {
             echo "published, but the release branch did not fast-forward — the marketplace still points at the previous release; by hand: git push origin ${GITHUB_REF_NAME}^{commit}:refs/heads/release"; exit 1; }
+
+  # crates.io (O75): the crate goes out only after the GitHub release
+  # did, from the tag's own tree, and only when the repository owner has
+  # put a token in the CARGO_REGISTRY_TOKEN secret. Without it the dry
+  # run still proves the package builds and the job passes with a
+  # notice — the hand publish in docs/RELEASE.md §3 stays the path.
+  publish-crate:
+    if: github.event_name == 'push'
+    needs: verify-publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          submodules: true # tests/unit/** ships in the crate (docs/RELEASE.md §3)
+      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable branch, pinned 2026-08-19; version comes from rust-toolchain.toml (repo root)
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
+        with:
+          workspaces: cli
+      - name: Package (dry run), then publish when the token is set
+        shell: bash
+        working-directory: cli
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          CRATE=$(grep -m1 '^version' Cargo.toml | cut -d'"' -f2)
+          [ "$CRATE" = "$VER" ] || { echo "tag $VER != cli/Cargo.toml $CRATE"; exit 1; }
+          cargo publish --dry-run --locked
+          if [ -z "$CARGO_REGISTRY_TOKEN" ]; then
+            echo "::notice::CARGO_REGISTRY_TOKEN is not set — the crate packaged but was not published; cd cli && cargo publish by hand (docs/RELEASE.md §3)"
+            exit 0
+          fi
+          # a hand publish that raced this leg is not a failure of the release
+          if curl -fsS -A "codeeraser-release-workflow (https://github.com/skymanbp/CodeEraser)" \
+               "https://crates.io/api/v1/crates/codeeraser/$VER" >/dev/null 2>&1; then
+            echo "::notice::crates.io already serves codeeraser $VER — nothing to publish"
+            exit 0
+          fi
+          cargo publish --locked
+
+  # Homebrew tap (O71): packaging/homebrew/Formula/codeeraser.rb is a
+  # projection of the manifest pins (scripts/packaging.js, held by
+  # tests/it/packaging.rs); scripts/homebrew_tap.sh puts it into the
+  # tap repository skymanbp/homebrew-codeeraser when HOMEBREW_TAP_TOKEN
+  # (a token that can write that repository) is set, so `brew install
+  # skymanbp/codeeraser/codeeraser` follows every release. Without the
+  # secret: a notice and the by-hand path (docs/RELEASE.md §3).
+  homebrew-tap:
+    if: github.event_name == 'push'
+    needs: verify-publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Put the formula into the tap
+        shell: bash
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: sh scripts/homebrew_tap.sh "${GITHUB_REF_NAME#v}"
+
+  # winget (O71): the three manifests under packaging/winget are
+  # generated the same way; scripts/winget_pr.sh pushes them to the
+  # owner's fork of microsoft/winget-pkgs and opens the pull request
+  # when WINGET_TOKEN (a token of the forking account) is set. Without
+  # the secret: a notice and the by-hand path (docs/RELEASE.md §3).
+  winget-pr:
+    if: github.event_name == 'push'
+    needs: verify-publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Open the winget-pkgs pull request
+        shell: bash
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+        run: sh scripts/winget_pr.sh "${GITHUB_REF_NAME#v}"

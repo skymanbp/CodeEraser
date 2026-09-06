@@ -45,4 +45,8 @@ contracts/**/*.json text eol=lf
 contracts/fixtures/** text eol=lf
 docs/** text eol=lf
 site/** text eol=lf
+# The package-manager projections (plan v2.29 step 10, O71) are
+# generated with LF and compared byte for byte with the generator's
+# output by tests/it/packaging.rs on every platform.
+packaging/** text eol=lf
 *.png binary

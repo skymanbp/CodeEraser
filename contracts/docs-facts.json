@@ -8,9 +8,9 @@
     },
     {
       "id": "count:binaries#word",
-      "source": "plugin/bin/manifest.env::CE_SHA256_* (update::manifest::parse)",
+      "source": "cli/src/update/version.rs::TARGETS",
       "tier": "linked",
-      "value": "9"
+      "value": "15"
     },
     {
       "id": "count:booklets#word",
@@ -77,9 +77,9 @@
     },
     {
       "id": "count:installers#word",
-      "source": "plugin/bin/manifest.env::CE_SHA256_* (update::manifest::parse)",
+      "source": "cli/src/update/version.rs::TARGETS",
       "tier": "linked",
-      "value": "3"
+      "value": "5"
     },
     {
       "id": "count:join_codes#word",
@@ -102,9 +102,9 @@
     },
     {
       "id": "count:platforms#word",
-      "source": "plugin/bin/manifest.env::CE_SHA256_* (update::manifest::parse)",
+      "source": "cli/src/update/version.rs::TARGETS",
       "tier": "linked",
-      "value": "3"
+      "value": "5"
     },
     {
       "debt": "the tab strip is HTML; promote = a tab roster the GUI and the registry both read",

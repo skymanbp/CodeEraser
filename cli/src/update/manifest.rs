@@ -5,7 +5,7 @@
 //! shape the file is written in — a key, `=`, an optionally quoted
 //! value — and nothing sh would evaluate: no expansion, no command.
 
-use super::version::Platform;
+use super::version::{Bundle, Platform};
 use anyhow::{Context, Result};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -70,12 +70,7 @@ pub fn pins(text: &str, plat: &Platform) -> Result<Pins> {
             .with_context(|| format!("manifest carries no {k}"))
     };
     let plat_key = plat.manifest_key();
-    let installer_key = match plat.key {
-        "x86_64-windows" => "SETUP",
-        "x86_64-linux" => "APPIMAGE",
-        "aarch64-macos" => "DMG",
-        _ => "",
-    };
+    let installer_key = plat.bundle().map_or("", Bundle::manifest_tail);
     Ok(Pins {
         version: get("CE_MANIFEST_VERSION")?,
         base_url: get("CE_BASE_URL")?,

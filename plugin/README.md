@@ -42,8 +42,8 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 清单已不在那里，会以 cache-miss 静默掉钩。
 
 `ce` 与判决核 `ce-core` 两个真身均由 `bin/ce.sh` 三级解析（ADR-007）：
-已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（六枚：三平台 ×
-双二进制）从 GitHub Releases 下载并校验 → PATH 兜底。校验按会话一次：验证过的
+已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（每目标两枚：五目标 ×
+双二进制，v1.7.0 前的清单只钉前三个目标）从 GitHub Releases 下载并校验 → PATH 兜底。校验按会话一次：验证过的
 路径记在 `CLAUDE_PLUGIN_DATA/bound-<清单版本>.env`，同会话后续 hook 直接 exec；
 清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。手放到
 `CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>` 的副本走同一道 pin：相符即按已验证执行并落戳，

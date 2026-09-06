@@ -227,9 +227,9 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
   已验证的绝对路径写入 `CLAUDE_PLUGIN_DATA` 下按清单版本命名的绑定戳，后续 hook 经戳直接
   exec，清单或二进制比戳新即重走全链、SessionStart 的 `health` 恒全链；信任边界不变（戳与
   二进制同目录同属主），省下的只是每 hook 两次 SHA256 与 ~15 次 fork（Windows 全链 2.0–2.3 s
-  → p95 0.50 s，O52，2026-08-29，PERF-BUDGET 全链注）。三平台二进制
+  → p95 0.50 s，O52，2026-08-29，PERF-BUDGET 全链注）。五目标二进制（v1.7.0 起，O70；此前三）
   预期 8–19 MB/个（shellcheck 7.69 MB ~ hlint 18.99 MB 区间），不塞仓库。
-  air-gapped 模式：允许用户手动放置二进制 + 本地校验。**二进制只出自 release.yml 三 OS 矩阵**（用户令 2026-08-28，RELEASE.md §1 铁则；本地构建物永不上传、永不 pin）。代码签名/公证**裁定不做**
+  air-gapped 模式：允许用户手动放置二进制 + 本地校验。**二进制只出自 release.yml 目标矩阵**（用户令 2026-08-28，RELEASE.md §1 铁则；本地构建物永不上传、永不 pin）。代码签名/公证**裁定不做**
   （2026-08-19，成本/收益不成立；有商业需求再议）——SHA256 链为永久信任锚，README 明示。
 - DENY 协议：exit 2 + stderr，或 exit 0 + `{"hookSpecificOutput":{"permissionDecision":"deny",...}}`；
   自设 `timeout` 并按 R3 fail-open + 显式记录。
@@ -268,6 +268,7 @@ CodeEraser/
 ├── site/         # 官网八页（codeeraser.dev；bench/stack 块由门生成，`scripts/deploy_site.js` 部署）
 ├── scripts/      # 发布工具（deploy_site.js / shoot_gui.js 等 Node 脚本，不进判决族）
 ├── npm/          # npm 指针包（package.json + README，只转发 Releases、零二进制；版本等 crate 版本由子仓 health_plugin.rs 守）
+├── packaging/    # 包管理器投影（Homebrew 公式 + winget 三清单）：scripts/packaging.js 从 plugin/bin/manifest.env 的 pin 生成，子仓 it/packaging.rs 守字节并反读 pin，永不手编
 ├── .github/      # CI 与 release 工作流 + bootstrap e2e 脚本
 ├── .claude-plugin/ # marketplace 清单（plugin/ 注释所指的仓根清单）
 └── .ccm/         # cc-memory 本地状态（原 memory/，插件 2026-08-30 改名；.gitignore 排除，不入库）

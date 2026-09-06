@@ -151,6 +151,121 @@
   `core/test/StackingProps.hs` 48；子 `it/erase_e2e.rs` 235→269、`unit/fourclass/stacking.rs` 70→75、`it/baseline_ledgers.rs` 172→297、`it/baseline_bridge.rs` 180→210，新文件 `it/guard_budget_parity.rs` 94 / `unit/score/anchor.rs` 132 /
   `unit/daemon/judge.rs` 36。
 
+**无默认档位变更。** 计划 v2.29 步 9 批 A（2026-09-05）——复活批 B 的前半：发布信任链九条 + O87 dependabot + C-macOS 每推，外加步 8 修补提交的 CI 红腿与 CHANGELOG 第三次拆册：
+- O84 来源绑定：draft 以 `--target "$GITHUB_SHA"` 建在构建提交上（重传走 `gh release edit --target`）；verify-publish（`fetch-depth: 0`）对 `cli/src` / `cli/Cargo.toml` / `cli/Cargo.lock` /
+  `core/app` / `core/ce-core.cabal` / `core/cabal.project` / `core/cabal.project.freeze` / `gui/src-tauri` / `gui/ui` 九条路径逐条比 `git rev-parse <构建提交>:<路径>` 与 tag 提交的树哈希，
+  任一不等即按名拒发；draft 的 target 不是提交 sha 也拒——二进制自此绑定到它真正出自的源码树，不只绑定到 pin 的哈希。
+- O85 占位说明：占位句由 workflow env `DRAFT_NOTES_MARKER`（"Draft build phase"）单一所有者，publish 前读 release 正文——仍含占位句或为空即拒发；说明改在打 tag **之前**写
+  （`gh release edit vX.Y.Z --notes-file`），RELEASE.md §2.2 / §2.3 就地改序。
+- O86 并发组：`concurrency.group` 由 `release-${{ github.ref }}` 改常量 `release`——dispatch（建 draft）与 tag（校验发布）此前不互斥，同跑会对同一 draft 边传边验。
+- O77 pin 生成器：`scripts/pin_release.js <版本> [--bless]` 读 draft 自己的 SHA256SUMS（须是 draft、恰十资产、名字全在九人名册内），改写 `plugin/bin/manifest.env` 的十一行并以
+  `git diff --numstat` 断言恰 11（版本变）/ 9（同版本重 pin）行移动；`--bless` 顺带跑 `facts_` 刷第十二行 `ver:pin#v`；非 draft / 名册外资产 / 重复键各按名拒绝。
+- O74 npm 指针包入库 `npm/`（package.json + README，逐字复制已发布 1.5.1 的元数据与指针文，`files: []` 零二进制）；子仓 `it/health_plugin.rs::version_mirrors_move_with_the_crate`
+  的 json 镜像表加 `npm/package.json`——版本必须等于 crate 版本；RELEASE.md 六处一致加它，§3 npm 一腿 `cd npm && npm publish`。
+- O76 部署后校验进部署脚本：`scripts/deploy_site.js` 在 wrangler 之后自己跑 `verify_site.js`（最多 8 次 × 15 s 等边缘节点刷新，8/8 逐字节等于提交的 blob 才退 0）——此前是
+  RELEASE.md §3 里部署、校验两步手动链。
+- O79 气隙手放：`plugin/bin/ce.sh` 候选循环——data 目录手放副本与 PATH 上的 `ce` 都先过 sha256 对 pin；手放副本不等 pin 时**按名拒绝并保留文件**
+  （`REFUSING on-disk ce — SHA256 mismatch, not running <路径>`，不删不覆盖）再试下一候选；`bootstrap_e2e.sh` 15 → 17 态（15 = `CE_AIRGAPPED` 下手放匹配副本直接执行且落戳；
+  16 = pin 为零值时手放副本被拒、stdout 仍是回落 `ce` 的输出、文件保留、无戳）。
+- O78 真 HTTPS 腿：ci.yml 周程 schedule 新 job `starter-https`——对已提交的 manifest 跑一次真 starter（从 GitHub Release 下载 ce 与 ce-core），断言 stderr 静默、`--version` 等
+  `CE_MANIFEST_VERSION`、会话戳落下、`ce-core` 放到位、`ce doctor` 握手 OK；此前只有 `file://` 语料。
+- O81 dedup SARIF：ci.yml main 推送加 `ce dedup --format sarif` 上传腿（category `ce-dedup`，与 `ce-scan` 各自成族）——该格式自 v2.14 起存在而无消费者。
+- O87 `.github/dependabot.yml`：github-actions（`/`）+ cargo（`/cli`、`/gui/src-tauri`）三条周程；npm 指针包无依赖不设。
+- C-macOS：`build-macos` 改每推——此前只在 tag 与周一 schedule 跑，v1.3.0 首打红即此类（`daemon_cwd` 入库后第一次 macOS 运行就是 tag）；公共仓 Actions 分钟免费。
+- 记账：RELEASE.md（§1.3 `--target`、§2.1 生成器十一 / 九行、§2.2 说明先于 tag、§2.3 tag 后顺序 = checks → 来源名册 → 说明 → pin → publish、§3 npm 与官网校验、§4 手放两态）、
+  plugin/README 手放副本一句、ci.yml / release.yml 头注。
+- 步 8 修补提交 08e4e3b 的 CI 33997942800 双平台唯一红腿 `eval_mention::the_self_corpus_holds_the_preregistered_zeros`：`scripts/shoot_receipt.js` 与子仓 `it/site_shots_receipt.rs`
+  两个新文件进了提及宇宙（U 950 → 952）而册 13 自仓普查行未重取——普查数字要在**全部文件到位之后**取；本批文件到位后重 bless（U → 957 = 969 − 12 early-NUL；npm/package.json 亦入宇宙）。
+- CHANGELOG 729 / 750 第三次抵硬线：v1.4.0–v1.4.1 两条目（314 行）逐字节迁入第二归档册 `docs/CHANGELOG-ARCHIVE-v1.4.md`（第一归档册 685 行装不下），冻结集 `frozen_set.rs` /
+  引文 opt-out 同批登记；本册 729 → 447。
+- ADR-006 具名重立（主）：`scripts/deploy_site.js` 93→119（+26，容差 10；`ce check --format json` 的 `over` 唯一一项）；新文件 `scripts/pin_release.js` 128 /
+  `npm/README.md` 19 / `docs/CHANGELOG-ARCHIVE-v1.4.md` 320 随重立入基线；`plugin/bin/ce.sh` 293→303（容差恰用尽）与 RELEASE.md 104→111 在容差内。`.github/` 是隐藏目录、
+  在 walk 之外不入棘轮，其三文件的增长如实记：`bootstrap_e2e.sh` 335→378、`ci.yml` 440→489、`release.yml` 349→407、`dependabot.yml` 新 20。`docs/DEVELOPMENT_PLAN.md` 332→333（§5.10 布局树加 `npm/` 一行——`layout_tree` 门抓出）随重立。子仓 `it/health_plugin.rs` 163→166 在容差内、无重立。
+
+**无默认档位变更。** 计划 v2.29 步 9 批 B 后半（2026-09-05）——产品小项六条 O24 / O50 / O61 / O25 / O45 / O49，判决面零变化：`ce.erase-plan` 0.2.0 → **0.3.0 加性**、第十六个 MCP 工具、`[ui] lang` 第三选择器、FPR 回放仪器复立为常设腿：
+- O24 擦除建议行点名家族命令：`erase/model.rs::family_command` 是唯一一张表（`t1t2_block_no_whole_unit` → `ce dedup`），控制台句「见 `ce dedup`」、GUI 摘要芯片 `→ ce dedup` 与计划文档新键 `families`
+  （`ce.erase-plan/0.3.0`，加性）同源；表不认识的 kind 保留旧句「见对应家族命令」、不进 map、不编造命令（子仓 `unit/erase/render.rs` 一腿钉三面同表）。
+- O50 擦除审计轨迹有了读者（三面）：`erase/log.rs` 读 `.ce/erase-log.ndjson` 出一份文档 **`ce.erase-trail-report/0.1.0`**（行 `{ts_ms, class, path, span, provenance, plan}`；读不出的行按行号进 `unreadable`，
+  不作工具错误吞掉整份）——CLI `ce erase --log`（与 `--apply` / `--check` 互斥；有不可读行退 1）、MCP 第十六工具 `erase_log`（只读，永不 apply / append）、GUI 擦除屏「审计日志」段
+  （已打开的日志随 apply 重读；i18n 六键）；`faces::erase_log` 一具身体、`LOG_SCHEMA` 从 `apply.rs` 私有常量提到 `model.rs` 公开导出——facts 登记 `report:erase-log#schemaver` scraped → linked、
+  新 `report:erase-trail#schemaver`、SCRAPED 22 → 21；parity 行「擦除审计日志」、README 双语能力表与 MCP 计数 fifteen → sixteen（架构图双语同改）、erase.md 第 6 条（此前写「今日无 CLI 或 GUI 面渲染它」）、
+  gui.md Erase 行、plugin README、erase skill 各就地改；子仓 `it/erase_e2e.rs` apply 后读轨迹逐行对 applied 行、`unit/erase/log.rs` 两腿、`mcp_precommit` 目录 16 名。
+- O61 `[ui] lang`：ce.toml 新节（`config/ui.rs`；`en` / `zh` 之外按名拒载），第三选择器 `--lang` > `CE_LANG` > 文件，在控制台面加载配置处生效——`i18n::init_from_config` 只在 `progress::armed()`
+  （`ce` 的 main 武装过控制台面、与 TTY 无关）时写入，GUI / MCP / daemon / 测试进程内 `Config::load` 永不切语言；`main_cmds::or_cwd` 解析根目录后立即钉住项目语言，钩子经各自的 `Config::load` 走同一条路
+  （SessionStart 健康行按项目语言答）；`--help` 在项目已知前渲染，只读前两者；canonical 指纹规则 6：`[ui]` 整表丢弃（表现不是旋钮，`knobs_digest` 不动；子仓 `config_contract` 加两行）；
+  `docs/reference/ce-toml.md` / `cli.md` 再生（`ui.lang` 一行、cli 页横幅三选择器）、README 双语一句、`main_lang.rs` zh 帮助；子仓 `it/ui_lang.rs` 三腿（八行选择器矩阵 / `--help` 只读旗与变量 / SessionStart 中文健康行）、
+  `unit/config/ui.rs`；`common::run_ce_env` 清 `CE_LANG`（开发者 shell 导出过会让每条英文断言红）。
+- O25 GUI 断点实测钉数：新 `scripts/measure_header.js`（无头 Edge = 应用自带的 WebView2 引擎；二分求「一行装下十一 tab」的地板；`shoot_gui.js` 导出 `launch / attach / serve / teardown` 供其复用）
+  ——英文 1150 px / 中文 844 px（未挤压自然宽 1618 / 1496；批 9 提案的 1120 是字宽估算），钉 `@media (max-width: 1149px)`：tab 条独占一行、tab 内边距 s4 → s3 让十一 tab 在 860 px 最小窗装下
+  （实测 841 对 828）；三张截图重拍逐字节相同、收据 `contracts/gui-shots.json` 随 `ui` 摘要更新；子仓 `site_screenshots` 腿 1 的「拍摄时刻」见证改为图与收据两者提交的较新者（逐字节相同的重拍动不了图的提交）。
+- O45 `min_distinct` 校准可复现：子仓新 `it/eval_dedup_distinct.rs` 用 `dedup::analyze` 关下限（`min_distinct = 0`）重量五语料在 t = 50 处全部块的 `distinct` 直方图与出厂 7 抑制的块（两端 `文件:行`），
+  冻结 `contracts/eval/dedup-distinct-v1.json`（`ce.eval-dedup-distinct/1.0.0`），表渲染进 `DEDUP-CALIBRATION.md` 新节（`<!-- distinct:begin/end -->`；CI 腿实测 fixtures 并对表，四外部语料 `--ignored regenerate` 重量）；
+  fixtures 8 / cobra 13 / requests 12 抑制块与 2026-08-07 记录逐条相同（pygments 字典族 = `flask_theme_support.py` ×11），ripgrep 17 / zod 623 首次入册；册 01 §7 末段由「本节未复现」改为「产品复现」；
+  `eval_support::corpus::PINNED_CORPORA` 四 tip 单一所有者（`eval_mention` 同读）。
+- O49 FPR 回放仪器复立为常设腿：子仓新 `it/fpr_replay.rs` + `fpr_replay_parts/`（`--ignored`，release 约 7 min；`CE_FPR_REPO` / `CE_FPR_TIP` / `CE_FPR_LIMIT`）——每条拦截对**父版基线**读一次
+  （与孪生共享的 token 和：父版 0 = 新、更大 = 延展、否则 = 漂移；novelty 减法同守卫 `carried` 的重叠规则），对**提交整体落地后的子状态**再读一次（落地 / 写先于削的中间态），孪生同提交去向随行；
+  Markdown 判决但无语法、归 docdup 不入事件（daemon 探针同读法）。全史复跑：requests 窗口（1f6589ec 止，M5-3 钉定克隆内）365 事件 0 拦截；自仓 555 提交 3164 事件 176 拦截事件 / 257 行 =
+  落地 178（账本真阳类）+ 中间态 79（全部孪生同提交被动：改名 30 / 拆并叶 49；b4a0b642 一个提交 26 行；12.48/500 全文写口径、按事件 9.80）；复燃 35 = 延展 11（共享片段多 63～389 token）+
+  归零复引 24 + 漂移 0——K 轮「23 延展复燃按倾向判真阳」改为度量；FPR-REPLAY.md 新节 + 横幅 + 复现（历史配方保留）、EVAL-SET.md 退役行、册 11 立场段、bench.json `guard_fpr_per500` 冻结点
+  source 重瞄 :18-38 + :49-98 + :101-148（BENCH.md / 两 bench 页随 bless）。
+- dedup **55 / 119 恒**，本批落下的五个新克隆块全部消掉而不买单：主仓 `mcp/adapters.rs` 第三个同形壳 `erase_log` 让 `erase` / `doctor` 连成块——三者并入既有 `plain!` 家族（`plain_face` 一具身体，
+  原 `judged` 改名、六面一张 match）；子仓 SessionStart 健康行读取提升 `common::session_start_line`（health_plugin / ui_lang 同读）、`unit/erase/log.rs` 时间戳四连断言改数组一判、
+  文档字段断言串改 `counts` 整对象一判。
+- ADR-006 具名重立（两仓）：主仓 `ce check --format json` 的 `over` 十三项——`cli/src/i18n.rs` 85→136（第三选择器与 `init_from_config`）、`config.rs` 289→302、`progress.rs` 206→220、
+  `faces.rs` 190→201、`main_erase.rs` 58→82、`erase/model.rs` 98→124、`erase/render.rs` 159→181、`gui/ui/erase.js` 75→142、`gui/ui/i18n.js` 356→368、`gui/ui/style.css` 223→244、
+  `scripts/shoot_gui.js` 269→282、`docs/FPR-REPLAY.md` 158→221、CHANGELOG 447→483（本块）；`mcp/adapters.rs` 178→181 在容差内；新文件 `cli/src/config/ui.rs` 33 / `cli/src/erase/log.rs` 184 /
+  `scripts/measure_header.js` 114 随重立入基线（`contracts/eval/dedup-distinct-v1.json` 是 json、不在尺寸臂内）。子仓 `over` 四项——`unit/erase/render.rs` 34→70、`it/eval_support/corpus.rs` 97→129、
+  `it/common/hooks.rs` 172→193、`it/erase_e2e.rs` 269→290；新文件 `it/eval_dedup_distinct.rs` 238 / `it/fpr_replay.rs` 298 / `it/fpr_replay_parts/mod.rs` 120 / `it/ui_lang.rs` 86 /
+  `unit/config/ui.rs` 28 / `unit/erase/log.rs` 108 入基线。分数主 945（地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
+
+**无默认档位变更。** 计划 v2.29 步 10 批 C 第一组（2026-09-05）——分发接线 O72 / O73 / O82 + C-installer 动态腿 + `update_e2e` 竞态根修，判决面零变化：
+- O72 新子命令 **`ce setup`**（`cli/src/setup/`，文档 `ce.setup-report/0.1.0`）：找到 Claude Code（PATH 上的 `claude.exe` / `.cmd` / `.bat` 或 `claude`，兜底 `~/.local/bin`；`.cmd` 经 `%ComSpec% /c`）
+  → `plugin marketplace list --json`（旧 CLI 回落散文表，`❯` / `>` 行取裸名）→ 未注册才 `marketplace add skymanbp/CodeEraser@release`（已注册者保留、永不替换——开发 clone 的目录注册是人做的）
+  → `plugin install codeeraser@codeeraser` → 尽力 `plugin update` → 只在本次注册时写 `claude-plugin-wired` 标记（默认在本二进制旁，`--marker-dir` 可指）→ 报告该目录是否在 PATH 上（不在则多一行提示）；
+  退出码沿用 v1.0.1 安装日志图例 0 已接 / 5 保留 / 10 无 Claude Code / 11 add 失败 / 12 install 失败，新增 **13**；`--unwire` 以标记为凭只拆自己接的（uninstall + marketplace remove + 删标记），无标记即什么都不问退 0；
+  `--format json` 出整份文档，控制台双语一句 + PATH 提示（`main_lang.rs` zh 帮助三键）。名字只拼一处（`setup::NAMES`：source / marketplace / plugin / marker）；NSIS `hooks.nsh` 的 POSTINSTALL / PREUNINSTALL
+  改为调 `"$INSTDIR\ce.exe" setup` / `setup --unwire`、只印图例、自身不再拼任何 claude 命令（v1.0.1 起的内联 PowerShell 接线程序删除）。
+- O73 提权账户 ≠ 登录用户：`setup::env::users` 读运行账户（USERNAME / USER / LOGNAME）与登录账户（`CE_SETUP_LOGON_USER` 测试缝 → `SUDO_USER` → Windows `Win32_ComputerSystem.UserName`），
+  `DOMAIN\name` 与 `name` 大小写不敏感同账户；两者皆知且不同才退 13、什么都不接、句子点名两个账户；登录未知（CI runner、服务会话）永不拒绝。README 双语限制段以此句替换「marketplace 跟 main」。
+- O82 marketplace 改跟 `release` 分支（`claude plugin marketplace add owner/repo@ref` 亲测支持，`list --json` 回 `"ref": "release"`；分支已建在 af8dbf8 = v1.6.0 pin 提交）：release.yml verify-publish 在 publish 之后
+  新增一步 `git push origin HEAD:refs/heads/release`（只快进；非快进即红并给手动命令）；README 双语安装段 / 命令表、plugin README 安装节、官网两首页安装行、docs/RELEASE.md §2.3 + §3、gui.md「Getting it」同批改。
+- C-installer 动态腿，**先核实再加**：空 `CLAUDE_CONFIG_DIR`（无账户、无既有 marketplace）下真 `claude` 2.1.259 对 `ce setup` 答 added / installed 1.6.0（13 s）、第二次退 5 保留、`--unwire` 干净（本机第一方）；
+  据此 ci.yml 新增 `setup-wiring` job（ubuntu + windows：`npm i -g @anthropic-ai/claude-code` 后跑真 `ce setup` 三幕，jq 断言文档与 `plugin marketplace list --json` 的 name / ref），随周程 schedule 跑、新增 `workflow_dispatch` 可按需触发；
+  `installer_wiring.js` 门改读 `setup::NAMES` 四字段：钩子须委托 `ce setup` / `--unwire`、自身不得拼 `marketplace add`、slug 整词等于 `skymanbp/CodeEraser` 且 ref 为 `release`、插件目标在仓根清单里可解析。
+- 子仓 `it/setup_e2e.rs`：脚本化假 `claude`（Windows `.cmd` / unix sh，记录每次调用，按行剧本答 listing / add / install 退出码）——五行图例表（接 / 保留 / add 败 / install 败 / 他人账户）+ 无 Claude Code + 接 / 拆 / 再拆三幕表；
+  `unit/setup/{claude,env}.rs` 四腿（JSON 与散文 listing、账户等价表、PATH 成员）；parity 表新行「Claude Code 接线」只在 CLI（安装包调用、AppImage / dmg 用户跑一次），README 载体表补 `ce setup`，`docs/reference/cli.md` 再生。
+- `update_e2e` 竞态根修（CI 34006228086 ubuntu 红 `run ce: NotFound`）：`check()` 曾共用一个 `tmp("update-cwd")`——`tmp` 先删再建，并行的腿把兄弟的 cwd 删掉、spawn 找不到目录；改为每腿传自己的目录。
+- dedup **55 / 119 恒**，本批落下的十个新克隆块全部消掉：主仓 `setup/mod.rs` 五个 `&str` + 六个 `u8` 常量与 `graph/wire.rs` / `tombstone/vocab.rs` 的常量表同形（六块）→ 名字并成一张 `Names` 结构常量、退出码改 `#[repr(u8)] enum Exit`；
+  `Exit` 的派生列表与 `mention::conv::Conv` 同形（一块）→ 只派生用到的 `Clone, Copy`；子仓 `setup_e2e.rs` 两处断言元组同形、四常量表与 `eval_dedup_distinct.rs` 同形、「删日志 → 跑 → 断言」三连（三块）→ `states()` 四词一串 + listing 由名字生成 + 三幕表 `ACTS`。
+- ADR-006 具名重立（两仓）：主仓 `over` 两项——`docs/reference/cli.md` 484→500（`ce setup` 节）、CHANGELOG 483→506（本块）；新文件 `cli/src/setup/mod.rs` 271 / `setup/claude.rs` 116 / `setup/env.rs` 114 / `cli/src/main_setup.rs` 39
+  入基线（`hooks.nsh` 与 `.github/` 不在度量宇宙）。子仓 `over` 一项——`gui/installer_wiring.js` 88→105；新文件 `it/setup_e2e.rs` 309 / `unit/setup/claude.rs` 23 / `unit/setup/env.rs` 32 入基线；`it/update_e2e.rs` 300→303、
+  `it/face_parity.rs` 277→278 在容差内。分数主 945（重立前读 946——重立把软线挪了一分，尺寸轴 73 → 74；地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
+
+**无默认档位变更。** 计划 v2.29 步 10 批 C 第二组（2026-09-06）——分发面 O70 五目标 / O71 Homebrew + winget / O75 crates.io 腿，外加 verify-publish 一处潜在拒发的根修与第一组 CI 红腿的修补，判决面零变化：
+- O70 五目标：花名册只拼一处 `update::version::TARGETS`（`x86_64-windows` / `x86_64-linux` / `aarch64-macos` / `x86_64-macos` / `aarch64-linux`），`FULL_ROSTER_SINCE = "1.7.0"`、`built(version)`（更早的版本只前三个）、
+  `Bundle {Setup, AppImage, Dmg}` 由键的 os 半推出（`-setup.exe` / `.AppImage` / `.dmg` 与清单尾 `SETUP` / `APPIMAGE` / `DMG`）；读不到常量的宿主——`plugin/bin/manifest.env` 键集（十五枚 pin，六枚新键在 1.7.0 前为空）、
+  release.yml 构建矩阵与 `TARGETS="…"` 校验环、ci.yml `release-rehearsal` 矩阵、`scripts/roster.js`、`bootstrap_e2e.sh` 键表——由子仓门 `it/release_roster.rs` 逐个对拍（流式矩阵行 `key: x, triple: …` 的读者第一版把整段尾巴读进值里，当场修）。
+  每目标的构建配方搬进可复用工作流 `.github/workflows/build-target.yml`（`workflow_call`）：release.yml `build`（上传）与 ci.yml `release-rehearsal`（不上传、版本 = crate 自己的、周程 + 手动触发）同一份；新 runner `macos-15-intel` / `ubuntu-24.04-arm`
+  （第一方核过 actions/runner-images 标签与 GHC 9.14.1 两平台 bindist；apt 镜像按 `dpkg --print-architecture` 选）。一次发布 = 十五个二进制 + SHA256SUMS = 十六资产；`scripts/pin_release.js` 移十五枚 pin（+ 两行版本）并再生 `packaging/`；
+  `update` 的安装器资产按 Bundle 命名（x86_64-macos dmg / aarch64-linux AppImage）。README 双语 / 官网两首页 / plugin README / gui.md / RELEASE.md §1.2 §2.1 §2.3 的「三个目标 / 十资产 / 十二行」改为五 / 十六 / 十七（数词走 `count:platforms` 芯片），
+  并写明 1.7.0 前的清单在新两目标上只有空 pin、插件启动器回落 PATH 上的 `ce` 或源码安装。
+- O71 Homebrew + winget 作为清单的**生成投影**：`scripts/packaging.js` 从 pin 清单渲染 `packaging/homebrew/Formula/codeeraser.rb`（`on_macos` / `on_linux` × `on_arm` / `on_intel` 只写有 pin 的目标，`resource "ce-core"`）
+  与 `packaging/winget/manifests/s/skymanbp/CodeEraser/<版本>/` 三份 yaml（schema 1.10.0、`nullsoft` / `/S` / machine 作用域、`ProductCode` = NSIS 卸载键 `CodeEraser`，本机注册表核过）；`--check` 逐字节比对、陈旧版本目录点名；
+  `.gitattributes` 钉 `packaging/** eol=lf`。子仓门 `it/packaging.rs` 用自己的行读者把 pin 从提交的文件里读回来对清单（生成器说谎也过不了）。release.yml 在 verify-publish 之后加三条**按 secret 存在与否**走的可选腿：
+  `publish-crate`（O75：永远 `cargo publish --dry-run --locked`；有 `CARGO_REGISTRY_TOKEN` 且 crates.io 尚无该版本才真发，否则 `::notice::` 跳过）、`homebrew-tap`（`HOMEBREW_TAP_TOKEN` → `scripts/homebrew_tap.sh` 经 contents API 写 `skymanbp/homebrew-codeeraser`，仓库尚未建）、
+  `winget-pr`（`WINGET_TOKEN` → `scripts/winget_pr.sh`：fork 同步 / 分支 / 三文件 / `gh pr create` 到 microsoft/winget-pkgs）——token 只经环境变量，永不落码、不打印。ci.yml `packaging-live`（周程 + 手动；ubuntu + macos）：`brew style` / `brew audit --formula --strict` /
+  `brew install --formula` / `ce --version` 对清单 / `brew test`，ubuntu 再以 `check-jsonschema` 对 1.10.0 三份 schema 校验 winget yaml。`tauri.conf.json` `bundle.publisher = "skymanbp"` 让 ARP 发行者与 winget 标识 `skymanbp.CodeEraser` 同名。
+  **deb / rpm / AUR 不做**（RELEASE.md §3 记理由：与 AppImage 同一批二进制再钉四枚 pin 却无消费者；AUR 需维护者账户与第三方 PKGBUILD；Linuxbrew 已覆盖 Linux）。推 tap / 提 winget PR 是对外动作——发版时 AskUserQuestion 裁三枚 secret 与 tap 仓库，不设则发版前把 README / 官网的「Homebrew · winget」行摘掉。
+- verify-publish 潜在拒发根修：tag 推送上，ci.yml 里只跑 schedule / workflow_dispatch 的 job（步 9 的 `starter-https` 起、第一组的 `setup-wiring`、本批的 `release-rehearsal` / `packaging-live`）在 tag 提交上以 **SKIPPED** check 出现，原来的门只赦 `build` / `draft`，
+  v1.7.0 首打必被拒——改 `SKIPPED_OK` 按名赦免，子仓门 `release_roster.rs::the_tag_gate_excuses_every_schedule_only_job_by_name` 从 ci.yml 各 job 的 `if:` 行推导期望集并要求全等。
+- 第一组 CI 红腿修补（`setup_e2e` kept 行，ubuntu + macOS 各一）：假 `claude` 的 sh 脚本用外部 `cat`，而 setup 跑时 PATH 已清空只剩假目录，`cat: command not found` 让 listing 为空、被读成 fresh 而 `add`——改 builtin `read` / `printf`（cmd 侧本就是内建 `type`）；CI 34010686941 三平台绿。
+- 子仓：`unit/update/version.rs` 六行表 + 花名册往返腿、`unit/update/manifest.rs` 按 `TARGETS` 逐目标（已建者三枚 64 位 hex pin，其余 `pins()` 具名拒绝）、`it/facts/count.rs` 的 `roster()` 从 `TARGETS` 推导 binaries / platforms / installers 三个事实。
+  dedup **55 / 119 恒**——本批两块新克隆（`packaging.rs` / `release_roster.rs` 各一份 `read(rel)`、`packaging.rs` / `docs_diagrams.rs` 同形的 node 驱动调用）消掉：读者统一走 `facts::read`（同类的 `face_parity.rs` 一并改），node 运行器 + 双流断言进 `common/gates.rs`
+  （`demo_replay.rs` 同改；先试开新模块 `common/script.rs`，`common/mod.rs` 的索引随即与 `eval_support/mod.rs` 同形、实测多出一块，故并入既有模块）。
+- 记账修正：步 9 批 A / 批 B 与步 10 第一组的三块自 b8d3c1e（第三次拆册）起被追加在 v1.5.0 段末、「更早的版本」之前，现移回 `[Unreleased]` 段（字节不变，只挪位置）。
+- Opus 只读审阅 22 条，落 18 条：**4 blocker**——tag 门的等待环把本 run 自己在 `needs:` 上排队的三条可选腿也算进 pending，v1.7.0 首打必等满两小时被拒 → 按 check suite 过滤本 run 未完成项（已完成的 skipped `build` / `draft` 仍按名赦免）；build-target.yml 新加的 `[ "$(ls dist | wc -l)" = 3 ]` 在两条 macOS 腿上是 BSD `wc` 带前导空格的串比较、正确构建也红 → `set -- dist/*; [ "$#" -eq 3 ]`；§5.10 布局树缺 `packaging/` 一行（`layout_tree` 门在 `git add` 后才红）；README 双语 / 官网两首页四枚数词芯片（三 / 九 → 五 / 十五）随 `facts_` bless。**major**：winget `ProductCode` 由「猜是 productName」改为本机注册表实测 `HKLM\...\Uninstall\CodeEraser`（1.5.1 装机，2026-09-06）；winget 三份 yaml 改纯 ASCII（winget-pkgs 对非 ASCII 要 BOM）——生成器 `render()` 与子仓门各一道断言；bundle 表四处拼写加门 `every_host_spells_the_same_bundle_per_os`；`bootstrap_e2e.sh` Linux 臂与 `ce.sh` 锁步（未知架构 = `unsupported`）；`packaging-live` 只在周程 / 手动跑 → RELEASE.md §2.1 要求打 tag 前手动跑一次。**minor**：`winget_pr.sh` 可重跑（分支已在则 PATCH、PR 已开则 notice）、`homebrew_tap.sh` 印的安装命令用 tap 名而非仓库名、`packaging.js::winget` 拆两表 ≤ 50 行、`RELEASE_VERSION` 经 `GITHUB_ENV` 覆盖后断言非空、`bundle()` 的拒绝在 `$(...)` 里不可达 → 顶层先校验一遍花名册、`packaging-live` 按清单版本取 winget 目录、gui.md 断句。**不加 formula `version` 行**：Homebrew 从 url 的 `/v1.x.y/` 段与 `ce-1.x.y-` 词干都能识别版本，显式行会被 `brew audit` 判冗余——由 `packaging-live` dispatch 实证；可复用工作流 caller 被 skip 时的 check 名（`release-rehearsal`）待本提交推上后按 `check-runs` 实测再定。
+- ADR-006 具名重立（两仓）：主 CHANGELOG 506→531 / cli/src/update/version.rs 66→139 / docs/RELEASE.md 114→149 / scripts/pin_release.js 128→140，scripts 四新文件 + packaging/winget 三份 yaml 入基线（.rb 与 .github/ 不在度量宇宙）；子 it/common/gates.rs 65→87 / unit/update/version.rs 69→97 / unit/update/manifest.rs 75→92，it/packaging.rs / it/release_roster.rs 两新文件入基线。
+
 ## [v1.6.0] — 2026-09-05 — 墓碑残留判决进核、`ce commitmsg`、docdup `///` 合段（docdup 行与 1.5.x 不可比）
 
 **无默认档位变更。** v1.5.1 发布后的 bench 落表（07b9155）与其补账：
@@ -408,96 +523,6 @@
   主仓 `CHANGELOG.md` 491→536；子仓 `it/bench_render.rs` 186→238、
   `it/bench_render_dashboard.rs` 222→233、`it/bench_support/mod.rs` 237→289、
   `it/bench_support/render.rs` 124→200。
-
-**无默认档位变更。** 计划 v2.29 步 9 批 A（2026-09-05）——复活批 B 的前半：发布信任链九条 + O87 dependabot + C-macOS 每推，外加步 8 修补提交的 CI 红腿与 CHANGELOG 第三次拆册：
-- O84 来源绑定：draft 以 `--target "$GITHUB_SHA"` 建在构建提交上（重传走 `gh release edit --target`）；verify-publish（`fetch-depth: 0`）对 `cli/src` / `cli/Cargo.toml` / `cli/Cargo.lock` /
-  `core/app` / `core/ce-core.cabal` / `core/cabal.project` / `core/cabal.project.freeze` / `gui/src-tauri` / `gui/ui` 九条路径逐条比 `git rev-parse <构建提交>:<路径>` 与 tag 提交的树哈希，
-  任一不等即按名拒发；draft 的 target 不是提交 sha 也拒——二进制自此绑定到它真正出自的源码树，不只绑定到 pin 的哈希。
-- O85 占位说明：占位句由 workflow env `DRAFT_NOTES_MARKER`（"Draft build phase"）单一所有者，publish 前读 release 正文——仍含占位句或为空即拒发；说明改在打 tag **之前**写
-  （`gh release edit vX.Y.Z --notes-file`），RELEASE.md §2.2 / §2.3 就地改序。
-- O86 并发组：`concurrency.group` 由 `release-${{ github.ref }}` 改常量 `release`——dispatch（建 draft）与 tag（校验发布）此前不互斥，同跑会对同一 draft 边传边验。
-- O77 pin 生成器：`scripts/pin_release.js <版本> [--bless]` 读 draft 自己的 SHA256SUMS（须是 draft、恰十资产、名字全在九人名册内），改写 `plugin/bin/manifest.env` 的十一行并以
-  `git diff --numstat` 断言恰 11（版本变）/ 9（同版本重 pin）行移动；`--bless` 顺带跑 `facts_` 刷第十二行 `ver:pin#v`；非 draft / 名册外资产 / 重复键各按名拒绝。
-- O74 npm 指针包入库 `npm/`（package.json + README，逐字复制已发布 1.5.1 的元数据与指针文，`files: []` 零二进制）；子仓 `it/health_plugin.rs::version_mirrors_move_with_the_crate`
-  的 json 镜像表加 `npm/package.json`——版本必须等于 crate 版本；RELEASE.md 六处一致加它，§3 npm 一腿 `cd npm && npm publish`。
-- O76 部署后校验进部署脚本：`scripts/deploy_site.js` 在 wrangler 之后自己跑 `verify_site.js`（最多 8 次 × 15 s 等边缘节点刷新，8/8 逐字节等于提交的 blob 才退 0）——此前是
-  RELEASE.md §3 里部署、校验两步手动链。
-- O79 气隙手放：`plugin/bin/ce.sh` 候选循环——data 目录手放副本与 PATH 上的 `ce` 都先过 sha256 对 pin；手放副本不等 pin 时**按名拒绝并保留文件**
-  （`REFUSING on-disk ce — SHA256 mismatch, not running <路径>`，不删不覆盖）再试下一候选；`bootstrap_e2e.sh` 15 → 17 态（15 = `CE_AIRGAPPED` 下手放匹配副本直接执行且落戳；
-  16 = pin 为零值时手放副本被拒、stdout 仍是回落 `ce` 的输出、文件保留、无戳）。
-- O78 真 HTTPS 腿：ci.yml 周程 schedule 新 job `starter-https`——对已提交的 manifest 跑一次真 starter（从 GitHub Release 下载 ce 与 ce-core），断言 stderr 静默、`--version` 等
-  `CE_MANIFEST_VERSION`、会话戳落下、`ce-core` 放到位、`ce doctor` 握手 OK；此前只有 `file://` 语料。
-- O81 dedup SARIF：ci.yml main 推送加 `ce dedup --format sarif` 上传腿（category `ce-dedup`，与 `ce-scan` 各自成族）——该格式自 v2.14 起存在而无消费者。
-- O87 `.github/dependabot.yml`：github-actions（`/`）+ cargo（`/cli`、`/gui/src-tauri`）三条周程；npm 指针包无依赖不设。
-- C-macOS：`build-macos` 改每推——此前只在 tag 与周一 schedule 跑，v1.3.0 首打红即此类（`daemon_cwd` 入库后第一次 macOS 运行就是 tag）；公共仓 Actions 分钟免费。
-- 记账：RELEASE.md（§1.3 `--target`、§2.1 生成器十一 / 九行、§2.2 说明先于 tag、§2.3 tag 后顺序 = checks → 来源名册 → 说明 → pin → publish、§3 npm 与官网校验、§4 手放两态）、
-  plugin/README 手放副本一句、ci.yml / release.yml 头注。
-- 步 8 修补提交 08e4e3b 的 CI 33997942800 双平台唯一红腿 `eval_mention::the_self_corpus_holds_the_preregistered_zeros`：`scripts/shoot_receipt.js` 与子仓 `it/site_shots_receipt.rs`
-  两个新文件进了提及宇宙（U 950 → 952）而册 13 自仓普查行未重取——普查数字要在**全部文件到位之后**取；本批文件到位后重 bless（U → 957 = 969 − 12 early-NUL；npm/package.json 亦入宇宙）。
-- CHANGELOG 729 / 750 第三次抵硬线：v1.4.0–v1.4.1 两条目（314 行）逐字节迁入第二归档册 `docs/CHANGELOG-ARCHIVE-v1.4.md`（第一归档册 685 行装不下），冻结集 `frozen_set.rs` /
-  引文 opt-out 同批登记；本册 729 → 447。
-- ADR-006 具名重立（主）：`scripts/deploy_site.js` 93→119（+26，容差 10；`ce check --format json` 的 `over` 唯一一项）；新文件 `scripts/pin_release.js` 128 /
-  `npm/README.md` 19 / `docs/CHANGELOG-ARCHIVE-v1.4.md` 320 随重立入基线；`plugin/bin/ce.sh` 293→303（容差恰用尽）与 RELEASE.md 104→111 在容差内。`.github/` 是隐藏目录、
-  在 walk 之外不入棘轮，其三文件的增长如实记：`bootstrap_e2e.sh` 335→378、`ci.yml` 440→489、`release.yml` 349→407、`dependabot.yml` 新 20。`docs/DEVELOPMENT_PLAN.md` 332→333（§5.10 布局树加 `npm/` 一行——`layout_tree` 门抓出）随重立。子仓 `it/health_plugin.rs` 163→166 在容差内、无重立。
-
-**无默认档位变更。** 计划 v2.29 步 9 批 B 后半（2026-09-05）——产品小项六条 O24 / O50 / O61 / O25 / O45 / O49，判决面零变化：`ce.erase-plan` 0.2.0 → **0.3.0 加性**、第十六个 MCP 工具、`[ui] lang` 第三选择器、FPR 回放仪器复立为常设腿：
-- O24 擦除建议行点名家族命令：`erase/model.rs::family_command` 是唯一一张表（`t1t2_block_no_whole_unit` → `ce dedup`），控制台句「见 `ce dedup`」、GUI 摘要芯片 `→ ce dedup` 与计划文档新键 `families`
-  （`ce.erase-plan/0.3.0`，加性）同源；表不认识的 kind 保留旧句「见对应家族命令」、不进 map、不编造命令（子仓 `unit/erase/render.rs` 一腿钉三面同表）。
-- O50 擦除审计轨迹有了读者（三面）：`erase/log.rs` 读 `.ce/erase-log.ndjson` 出一份文档 **`ce.erase-trail-report/0.1.0`**（行 `{ts_ms, class, path, span, provenance, plan}`；读不出的行按行号进 `unreadable`，
-  不作工具错误吞掉整份）——CLI `ce erase --log`（与 `--apply` / `--check` 互斥；有不可读行退 1）、MCP 第十六工具 `erase_log`（只读，永不 apply / append）、GUI 擦除屏「审计日志」段
-  （已打开的日志随 apply 重读；i18n 六键）；`faces::erase_log` 一具身体、`LOG_SCHEMA` 从 `apply.rs` 私有常量提到 `model.rs` 公开导出——facts 登记 `report:erase-log#schemaver` scraped → linked、
-  新 `report:erase-trail#schemaver`、SCRAPED 22 → 21；parity 行「擦除审计日志」、README 双语能力表与 MCP 计数 fifteen → sixteen（架构图双语同改）、erase.md 第 6 条（此前写「今日无 CLI 或 GUI 面渲染它」）、
-  gui.md Erase 行、plugin README、erase skill 各就地改；子仓 `it/erase_e2e.rs` apply 后读轨迹逐行对 applied 行、`unit/erase/log.rs` 两腿、`mcp_precommit` 目录 16 名。
-- O61 `[ui] lang`：ce.toml 新节（`config/ui.rs`；`en` / `zh` 之外按名拒载），第三选择器 `--lang` > `CE_LANG` > 文件，在控制台面加载配置处生效——`i18n::init_from_config` 只在 `progress::armed()`
-  （`ce` 的 main 武装过控制台面、与 TTY 无关）时写入，GUI / MCP / daemon / 测试进程内 `Config::load` 永不切语言；`main_cmds::or_cwd` 解析根目录后立即钉住项目语言，钩子经各自的 `Config::load` 走同一条路
-  （SessionStart 健康行按项目语言答）；`--help` 在项目已知前渲染，只读前两者；canonical 指纹规则 6：`[ui]` 整表丢弃（表现不是旋钮，`knobs_digest` 不动；子仓 `config_contract` 加两行）；
-  `docs/reference/ce-toml.md` / `cli.md` 再生（`ui.lang` 一行、cli 页横幅三选择器）、README 双语一句、`main_lang.rs` zh 帮助；子仓 `it/ui_lang.rs` 三腿（八行选择器矩阵 / `--help` 只读旗与变量 / SessionStart 中文健康行）、
-  `unit/config/ui.rs`；`common::run_ce_env` 清 `CE_LANG`（开发者 shell 导出过会让每条英文断言红）。
-- O25 GUI 断点实测钉数：新 `scripts/measure_header.js`（无头 Edge = 应用自带的 WebView2 引擎；二分求「一行装下十一 tab」的地板；`shoot_gui.js` 导出 `launch / attach / serve / teardown` 供其复用）
-  ——英文 1150 px / 中文 844 px（未挤压自然宽 1618 / 1496；批 9 提案的 1120 是字宽估算），钉 `@media (max-width: 1149px)`：tab 条独占一行、tab 内边距 s4 → s3 让十一 tab 在 860 px 最小窗装下
-  （实测 841 对 828）；三张截图重拍逐字节相同、收据 `contracts/gui-shots.json` 随 `ui` 摘要更新；子仓 `site_screenshots` 腿 1 的「拍摄时刻」见证改为图与收据两者提交的较新者（逐字节相同的重拍动不了图的提交）。
-- O45 `min_distinct` 校准可复现：子仓新 `it/eval_dedup_distinct.rs` 用 `dedup::analyze` 关下限（`min_distinct = 0`）重量五语料在 t = 50 处全部块的 `distinct` 直方图与出厂 7 抑制的块（两端 `文件:行`），
-  冻结 `contracts/eval/dedup-distinct-v1.json`（`ce.eval-dedup-distinct/1.0.0`），表渲染进 `DEDUP-CALIBRATION.md` 新节（`<!-- distinct:begin/end -->`；CI 腿实测 fixtures 并对表，四外部语料 `--ignored regenerate` 重量）；
-  fixtures 8 / cobra 13 / requests 12 抑制块与 2026-08-07 记录逐条相同（pygments 字典族 = `flask_theme_support.py` ×11），ripgrep 17 / zod 623 首次入册；册 01 §7 末段由「本节未复现」改为「产品复现」；
-  `eval_support::corpus::PINNED_CORPORA` 四 tip 单一所有者（`eval_mention` 同读）。
-- O49 FPR 回放仪器复立为常设腿：子仓新 `it/fpr_replay.rs` + `fpr_replay_parts/`（`--ignored`，release 约 7 min；`CE_FPR_REPO` / `CE_FPR_TIP` / `CE_FPR_LIMIT`）——每条拦截对**父版基线**读一次
-  （与孪生共享的 token 和：父版 0 = 新、更大 = 延展、否则 = 漂移；novelty 减法同守卫 `carried` 的重叠规则），对**提交整体落地后的子状态**再读一次（落地 / 写先于削的中间态），孪生同提交去向随行；
-  Markdown 判决但无语法、归 docdup 不入事件（daemon 探针同读法）。全史复跑：requests 窗口（1f6589ec 止，M5-3 钉定克隆内）365 事件 0 拦截；自仓 555 提交 3164 事件 176 拦截事件 / 257 行 =
-  落地 178（账本真阳类）+ 中间态 79（全部孪生同提交被动：改名 30 / 拆并叶 49；b4a0b642 一个提交 26 行；12.48/500 全文写口径、按事件 9.80）；复燃 35 = 延展 11（共享片段多 63～389 token）+
-  归零复引 24 + 漂移 0——K 轮「23 延展复燃按倾向判真阳」改为度量；FPR-REPLAY.md 新节 + 横幅 + 复现（历史配方保留）、EVAL-SET.md 退役行、册 11 立场段、bench.json `guard_fpr_per500` 冻结点
-  source 重瞄 :18-38 + :49-98 + :101-148（BENCH.md / 两 bench 页随 bless）。
-- dedup **55 / 119 恒**，本批落下的五个新克隆块全部消掉而不买单：主仓 `mcp/adapters.rs` 第三个同形壳 `erase_log` 让 `erase` / `doctor` 连成块——三者并入既有 `plain!` 家族（`plain_face` 一具身体，
-  原 `judged` 改名、六面一张 match）；子仓 SessionStart 健康行读取提升 `common::session_start_line`（health_plugin / ui_lang 同读）、`unit/erase/log.rs` 时间戳四连断言改数组一判、
-  文档字段断言串改 `counts` 整对象一判。
-- ADR-006 具名重立（两仓）：主仓 `ce check --format json` 的 `over` 十三项——`cli/src/i18n.rs` 85→136（第三选择器与 `init_from_config`）、`config.rs` 289→302、`progress.rs` 206→220、
-  `faces.rs` 190→201、`main_erase.rs` 58→82、`erase/model.rs` 98→124、`erase/render.rs` 159→181、`gui/ui/erase.js` 75→142、`gui/ui/i18n.js` 356→368、`gui/ui/style.css` 223→244、
-  `scripts/shoot_gui.js` 269→282、`docs/FPR-REPLAY.md` 158→221、CHANGELOG 447→483（本块）；`mcp/adapters.rs` 178→181 在容差内；新文件 `cli/src/config/ui.rs` 33 / `cli/src/erase/log.rs` 184 /
-  `scripts/measure_header.js` 114 随重立入基线（`contracts/eval/dedup-distinct-v1.json` 是 json、不在尺寸臂内）。子仓 `over` 四项——`unit/erase/render.rs` 34→70、`it/eval_support/corpus.rs` 97→129、
-  `it/common/hooks.rs` 172→193、`it/erase_e2e.rs` 269→290；新文件 `it/eval_dedup_distinct.rs` 238 / `it/fpr_replay.rs` 298 / `it/fpr_replay_parts/mod.rs` 120 / `it/ui_lang.rs` 86 /
-  `unit/config/ui.rs` 28 / `unit/erase/log.rs` 108 入基线。分数主 945（地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
-
-**无默认档位变更。** 计划 v2.29 步 10 批 C 第一组（2026-09-05）——分发接线 O72 / O73 / O82 + C-installer 动态腿 + `update_e2e` 竞态根修，判决面零变化：
-- O72 新子命令 **`ce setup`**（`cli/src/setup/`，文档 `ce.setup-report/0.1.0`）：找到 Claude Code（PATH 上的 `claude.exe` / `.cmd` / `.bat` 或 `claude`，兜底 `~/.local/bin`；`.cmd` 经 `%ComSpec% /c`）
-  → `plugin marketplace list --json`（旧 CLI 回落散文表，`❯` / `>` 行取裸名）→ 未注册才 `marketplace add skymanbp/CodeEraser@release`（已注册者保留、永不替换——开发 clone 的目录注册是人做的）
-  → `plugin install codeeraser@codeeraser` → 尽力 `plugin update` → 只在本次注册时写 `claude-plugin-wired` 标记（默认在本二进制旁，`--marker-dir` 可指）→ 报告该目录是否在 PATH 上（不在则多一行提示）；
-  退出码沿用 v1.0.1 安装日志图例 0 已接 / 5 保留 / 10 无 Claude Code / 11 add 失败 / 12 install 失败，新增 **13**；`--unwire` 以标记为凭只拆自己接的（uninstall + marketplace remove + 删标记），无标记即什么都不问退 0；
-  `--format json` 出整份文档，控制台双语一句 + PATH 提示（`main_lang.rs` zh 帮助三键）。名字只拼一处（`setup::NAMES`：source / marketplace / plugin / marker）；NSIS `hooks.nsh` 的 POSTINSTALL / PREUNINSTALL
-  改为调 `"$INSTDIR\ce.exe" setup` / `setup --unwire`、只印图例、自身不再拼任何 claude 命令（v1.0.1 起的内联 PowerShell 接线程序删除）。
-- O73 提权账户 ≠ 登录用户：`setup::env::users` 读运行账户（USERNAME / USER / LOGNAME）与登录账户（`CE_SETUP_LOGON_USER` 测试缝 → `SUDO_USER` → Windows `Win32_ComputerSystem.UserName`），
-  `DOMAIN\name` 与 `name` 大小写不敏感同账户；两者皆知且不同才退 13、什么都不接、句子点名两个账户；登录未知（CI runner、服务会话）永不拒绝。README 双语限制段以此句替换「marketplace 跟 main」。
-- O82 marketplace 改跟 `release` 分支（`claude plugin marketplace add owner/repo@ref` 亲测支持，`list --json` 回 `"ref": "release"`；分支已建在 af8dbf8 = v1.6.0 pin 提交）：release.yml verify-publish 在 publish 之后
-  新增一步 `git push origin HEAD:refs/heads/release`（只快进；非快进即红并给手动命令）；README 双语安装段 / 命令表、plugin README 安装节、官网两首页安装行、docs/RELEASE.md §2.3 + §3、gui.md「Getting it」同批改。
-- C-installer 动态腿，**先核实再加**：空 `CLAUDE_CONFIG_DIR`（无账户、无既有 marketplace）下真 `claude` 2.1.259 对 `ce setup` 答 added / installed 1.6.0（13 s）、第二次退 5 保留、`--unwire` 干净（本机第一方）；
-  据此 ci.yml 新增 `setup-wiring` job（ubuntu + windows：`npm i -g @anthropic-ai/claude-code` 后跑真 `ce setup` 三幕，jq 断言文档与 `plugin marketplace list --json` 的 name / ref），随周程 schedule 跑、新增 `workflow_dispatch` 可按需触发；
-  `installer_wiring.js` 门改读 `setup::NAMES` 四字段：钩子须委托 `ce setup` / `--unwire`、自身不得拼 `marketplace add`、slug 整词等于 `skymanbp/CodeEraser` 且 ref 为 `release`、插件目标在仓根清单里可解析。
-- 子仓 `it/setup_e2e.rs`：脚本化假 `claude`（Windows `.cmd` / unix sh，记录每次调用，按行剧本答 listing / add / install 退出码）——五行图例表（接 / 保留 / add 败 / install 败 / 他人账户）+ 无 Claude Code + 接 / 拆 / 再拆三幕表；
-  `unit/setup/{claude,env}.rs` 四腿（JSON 与散文 listing、账户等价表、PATH 成员）；parity 表新行「Claude Code 接线」只在 CLI（安装包调用、AppImage / dmg 用户跑一次），README 载体表补 `ce setup`，`docs/reference/cli.md` 再生。
-- `update_e2e` 竞态根修（CI 34006228086 ubuntu 红 `run ce: NotFound`）：`check()` 曾共用一个 `tmp("update-cwd")`——`tmp` 先删再建，并行的腿把兄弟的 cwd 删掉、spawn 找不到目录；改为每腿传自己的目录。
-- dedup **55 / 119 恒**，本批落下的十个新克隆块全部消掉：主仓 `setup/mod.rs` 五个 `&str` + 六个 `u8` 常量与 `graph/wire.rs` / `tombstone/vocab.rs` 的常量表同形（六块）→ 名字并成一张 `Names` 结构常量、退出码改 `#[repr(u8)] enum Exit`；
-  `Exit` 的派生列表与 `mention::conv::Conv` 同形（一块）→ 只派生用到的 `Clone, Copy`；子仓 `setup_e2e.rs` 两处断言元组同形、四常量表与 `eval_dedup_distinct.rs` 同形、「删日志 → 跑 → 断言」三连（三块）→ `states()` 四词一串 + listing 由名字生成 + 三幕表 `ACTS`。
-- ADR-006 具名重立（两仓）：主仓 `over` 两项——`docs/reference/cli.md` 484→500（`ce setup` 节）、CHANGELOG 483→506（本块）；新文件 `cli/src/setup/mod.rs` 271 / `setup/claude.rs` 116 / `setup/env.rs` 114 / `cli/src/main_setup.rs` 39
-  入基线（`hooks.nsh` 与 `.github/` 不在度量宇宙）。子仓 `over` 一项——`gui/installer_wiring.js` 88→105；新文件 `it/setup_e2e.rs` 309 / `unit/setup/claude.rs` 23 / `unit/setup/env.rs` 32 入基线；`it/update_e2e.rs` 300→303、
-  `it/face_parity.rs` 277→278 在容差内。分数主 945（重立前读 946——重立把软线挪了一分，尺寸轴 73 → 74；地板 939）/ 子 984（地板 979），两仓 `added` 皆 0。
 
 ## 更早的版本
 

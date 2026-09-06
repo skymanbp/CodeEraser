@@ -26,8 +26,11 @@
 
 1. GitHub Actions → `release` workflow → Run workflow，输入裸版本号
    （如 `0.5.0`，不带 v）。版本输入与 crate 不符会在首步拒绝。
-2. 三平台并行构建 `ce` + `ce-core` + GUI 实包（NSIS/AppImage/dmg），
-   九工件 + `SHA256SUMS` 共十资产上传为 **draft** Release。
+2. 五目标并行构建 `ce` + `ce-core` + GUI 实包（NSIS/AppImage/dmg；花名册 =
+   `update::version::TARGETS`：x86_64-windows / x86_64-linux / aarch64-macos /
+   x86_64-macos / aarch64-linux，v1.7.0 起五个，此前三个；每个目标走同一份可复用
+   workflow `build-target.yml`，ci.yml 每周的 `release-rehearsal` 也跑它、不上传），
+   十五工件 + `SHA256SUMS` 共十六资产上传为 **draft** Release。
    **铁则（用户令 2026-08-28）**：任何渠道分发的二进制——Release 资产、
    plugin manifest 所 pin 的下载物——只能来自本 workflow 的矩阵产物；
    本地构建的二进制永不上传、永不 pin、永不作为「补位」放行。
@@ -36,17 +39,24 @@
 
 ## 2. 第二段：pin → tag → publish
 
-1. `node scripts/pin_release.js <版本>`：从 draft 下载 SHA256SUMS、核对九工件花名册、
-   把九 pin（三平台 ce + 三平台 ce-core + 三平台 GUI 安装包）与 `CE_MANIFEST_VERSION`、
-   `CE_BASE_URL` 写进 `plugin/bin/manifest.env`，并按 `git diff` 断言恰好十一行移动
-   （同版本重钉九行）——不再手抄（tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.6.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.6.0`<!--/ce-->），后者须以
+1. `node scripts/pin_release.js <版本>`：从 draft 下载 SHA256SUMS、核对十五工件花名册
+   （`scripts/roster.js` 从目标键派生资产名，`it/release_roster.rs` 守它与 Rust 常量、
+   release.yml、ci.yml、清单键集同一份），把十五 pin（五目标 × ce / ce-core / GUI 安装包）
+   与 `CE_MANIFEST_VERSION`、`CE_BASE_URL` 写进 `plugin/bin/manifest.env`，按 `git diff`
+   断言恰好十七行移动（同版本重钉十五行），再跑 `scripts/packaging.js` 重生成 `packaging/`
+   下的 Homebrew 公式与 winget 清单（它们是清单的投影，随 pin 同提交）——不再手抄
+   （tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.6.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.6.0`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
-   release.yml verify-publish 腿）。**同一个提交里还有第十二行**：
+   release.yml verify-publish 腿）。**同一个提交里还有 docs-facts 一行**：
    `contracts/docs-facts.json` 的 `ver:pin#v` 是从 `CE_MANIFEST_VERSION` 派生的
    事实，pin 一动它就旧了，`facts_projection` 当场红——跑
-   `CE_BLESS=1 cargo test --test it -- facts_`（或 `pin_release.js … --bless` 代跑）与清单同批提交。只推十一行
-   已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿要等的正是这个提交的
-   全部 check。十二行齐动，提交并推 main，CI 绿。
+   `CE_BLESS=1 cargo test --test it -- facts_`（或 `pin_release.js … --bless` 代跑）与清单同批提交。只推清单不推
+   docs-facts 已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿要等的正是这个提交的
+   全部 check。清单、docs-facts、`packaging/` 齐动，提交并推 main，CI 绿。**再手动跑一次
+   ci.yml 的 `packaging-live`**（Actions → ci → Run workflow）：它只在周程与手动上跑、不在 push 上跑，
+   而 README 双语与官网两首页自 v1.7.0 起写着 `brew install` / `winget install`——它没绿过一次，
+   那两行就是没有任何读者验过的承诺（`brew style` / `brew audit --strict` / `brew install` /
+   `check-jsonschema` 全在这条腿里）。
 2. Release notes **先于 tag** 写到 draft 上：`gh release edit vX.Y.Z --notes-file <notes.md>`
    ——功能面 + 分数迁移声明（如适用）+ 未签名明示（代码签名/公证裁定不做——
    2026-08-19，SHA256 链为永久信任锚；ADR-007/R1 立场）。tag 腿拒发仍带占位句
@@ -57,17 +67,42 @@
    放宽到 2 h，超时按名列出未完成的腿，届时重跑该 job 即可，无须挪 tag），再核**来源**
    （draft 的 `--target` 构建提交与 tag 提交在 `cli/src`、`cli/Cargo.{toml,lock}`、`core/app`、
    `core/ce-core.cabal`、`core/cabal.project{,.freeze}`、`gui/src-tauri`、`gui/ui` 上树哈希
-   逐一相等——pin 提交只该动清单与 docs-facts 两处）与**说明**，最后 `verify-publish`
-   复核十资产（九工件对拍 SHA256SUMS，九工件对拍 manifest pin）后 publish，再把
-   `release` 分支快进到 tag 提交（marketplace 条目注册的就是这个分支，装机据此跟发布）。
+   逐一相等——pin 提交只该动清单、docs-facts 与 `packaging/` 三处）与**说明**，最后
+   `verify-publish` 按花名册复核十六资产（十五工件对拍 SHA256SUMS，再逐一对拍 manifest pin）
+   后 publish，再把 `release` 分支快进到 tag 提交（marketplace 条目注册的就是这个分支，装机据此
+   跟发布）。tag 腿等 check 时只赦免**按名列出**的 skipped 腿（`SKIPPED_OK`：本 workflow 的
+   dispatch 段 `build` / `draft` + ci.yml 只在周程 / 手动跑的 `starter-https` / `setup-wiring` /
+   `release-rehearsal` / `packaging-live`；`it/release_roster.rs` 守这张名单等于 ci.yml 的 `if:`
+   行——漏一个名字，下一次 publish 就被它的 skipped 拒掉）。publish 之后三条**可选**腿各看
+   一个仓库 secret，缺则具名跳过、走 §3 手动：`publish-crate`（`CARGO_REGISTRY_TOKEN`）、
+   `homebrew-tap`（`HOMEBREW_TAP_TOKEN`）、`winget-pr`（`WINGET_TOKEN`）。
 
 ## 3. 发布后渠道
 
-- **crates.io**：`cd cli && cargo publish`（token 由用户本机配置，
-  永不入库/入对话）。子仓 `cli/tests` 必须在座：包里带 `tests/unit/**`
+- **crates.io**：tag 腿 `publish-crate` 每次都先 `cargo publish --dry-run --locked`
+  （证明包能建），仓库 secret `CARGO_REGISTRY_TOKEN` 在座才 `cargo publish`（crates.io
+  已有该版本即具名跳过，不算失败）；不在座则手动 `cd cli && cargo publish`（token 由用户
+  本机配置，永不入库/入对话）。子仓 `cli/tests` 必须在座：包里带 `tests/unit/**`
   （src 每个 `#[cfg(test)]` 的 `#[path]` 挂载目标，步 #13），缺了它下载者的
   `cargo test` 编译即错——`it/unit_mounts.rs` 钉「声明 = 磁盘 = 打包」三集合，
   CI 另解包跑 `cargo check --tests`。
+- **Homebrew tap**（O71）：`packaging/homebrew/Formula/codeeraser.rb` 由 `node scripts/packaging.js`
+  从清单派生（pin 后自动重生成；`it/packaging.rs` 守字节并把 url / sha256 反读回清单对拍；
+  ci.yml 周程 `packaging-live` 在 macOS 与 ubuntu 上 `brew style` / `brew audit --strict` /
+  `brew install --formula` 装真 pin 并 `ce --version`）。tag 腿 `homebrew-tap` 在 secret
+  `HOMEBREW_TAP_TOKEN` 在座时经 contents API 把公式写进 `skymanbp/homebrew-codeeraser`
+  （该仓须先建好，空仓即可；不存在按名拒绝）；不在座则手动把该文件复制进 tap 仓。用户侧
+  `brew install skymanbp/codeeraser/codeeraser`。
+- **winget**（O71）：`packaging/winget/manifests/s/skymanbp/CodeEraser/<版本>/` 三份清单同源派生
+  （schema 1.10.0；`packaging-live` 经 pipx 调 `check-jsonschema` 对 Microsoft 的 schema 校验——CI 的
+  校验工具，不是仓内实现语言；清单字节纯 ASCII，生成器拒绝其他）。tag 腿
+  `winget-pr` 在 `WINGET_TOKEN` 在座时同步用户的 fork、切分支、经 contents API 放文件、对
+  microsoft/winget-pkgs 开 PR（首次标题 New package，其后 New version）；不在座则手动从该目录
+  开 PR。合并后 `winget install skymanbp.CodeEraser`。
+- **裁定点**：三条腿首次启用是对外动作（tap 仓、fork、PR 都挂在用户账户下），发版前由用户裁
+  是否放 secret；裁不放则 README 双语与官网两首页的 Homebrew · winget 行须在发版前撤下。
+  deb / rpm / AUR **不做**（2026-09-06 裁：deb / rpm 与 AppImage 同一份二进制只换外壳、各加
+  四枚 pin 而无人要；AUR 要维护者账户与第三方仓里的 PKGBUILD；Linuxbrew 已覆盖 Linux 包管理）。
 - **npm 指针**：`npm/`（入库：package.json + README，只转发 Releases、无
   二进制；版本随六处一致门走）——`cd npm && npm publish`。账户 2FA 需用户在
   交互终端完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。
