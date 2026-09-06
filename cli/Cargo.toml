@@ -28,23 +28,22 @@ anyhow = "1.0.104"
 clap = { version = "4", features = ["derive"] }
 # daemon token entropy (auth.rs) — already in the tree transitively,
 # so this adds no new build node
-getrandom = "0.3"
+getrandom = "0.4"
 # the mention universe's own exclusion table (mention/walk.rs) is
 # matched on basenames by the engine `ignore` already links — one
 # glob dialect in the tree, no build node added
 globset = "0.4.20"
 ignore = "0.4.33"
 interprocess = "2.4.3"
-# 0.38+ pulls libsqlite3-sys 0.38 whose build.rs needs unstable
-# cfg_select! — incompatible with the pinned Rust 1.94.1 toolchain
-rusqlite = { version = "0.37", features = ["bundled"] }
+# 0.40.2 / libsqlite3-sys 0.38.2 build on the pinned stable toolchain (rust-toolchain.toml); fallible_uint keeps the checked usize/u64 ToSql/FromSql impls mention/store.rs reads with (off by default since 0.38)
+rusqlite = { version = "0.40", features = ["bundled", "fallible_uint"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # the updater's pin check (update/apply.rs): the same SHA-256 ce.sh
 # asks sha256sum for — already in both lockfiles transitively, so no
 # new build node
-sha2 = "0.10"
-toml = "1.1.4"
+sha2 = "0.11"
+toml = "1.1.5"
 tree-sitter = "0.26.11"
 tree-sitter-go = "0.25.0"
 # 3k spike (2026-08-14): 0.23.1 loads under core 0.26 — the ABI pin
@@ -67,9 +66,9 @@ strip = true
 
 [dev-dependencies]
 proptest = "1.11.0"
-# eval-set freeze manifest hashing (tests/eval_extract, M4 D2-1) —
-# dev-only so the product binary carries no digest dependency
-sha2 = "0.10"
+# eval-set freeze manifest hashing (tests/eval_extract, M4 D2-1),
+# shared with the updater, citations and screenshot receipts
+sha2 = "0.11"
 
 [target."cfg(windows)".dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_IO"] }
