@@ -153,6 +153,10 @@ h2 {
    render (the 640px rule below) */
 .arch { margin: 0; overflow-x: auto; }
 .arch img { width: 100%; height: auto; display: block; border-radius: 14px; }
+/* the picture is the way into itself: the asset is vector with a
+   viewBox, so opening it standalone gives the reader a zoom this
+   column cannot -- and costs the site no script */
+.arch .zoomable { display: block; cursor: zoom-in; }
 .arch figcaption { padding: 10px 4px; font-size: 0.8rem; color: var(--muted); }
 
 .trust {

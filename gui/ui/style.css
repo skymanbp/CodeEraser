@@ -36,6 +36,19 @@ body {
 button, input { font: inherit; }
 button { cursor: pointer; transition: background 0.12s, color 0.12s, border-color 0.12s; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+/* Every control that pins its own height refuses to wrap its label,
+   in one place rather than per control. CSS allows a line break
+   between any two Han characters, so a Chinese label's min-content
+   width is a single character: a flex item's default `min-width: auto`
+   stops holding the control open, the label takes a second line, and
+   that line spills below the fixed `height`. An English label has no
+   break opportunity inside a word, so only the translated faces broke
+   — the language button shipped showing 中文 across two lines, and in
+   Chinese every tab did the same above the breakpoint below. The
+   header's breakpoint is measured against this rule, not around it
+   (`node scripts/measure_header.js`, whose clipping predicate asks
+   both axes for the same reason). */
+#tabs .tab, #lang, .bar button { white-space: nowrap; }
 
 /* one home for hidden-ness: flex/grid displays would otherwise beat
    the UA's [hidden] rule (the blank-summary-band bug) */
@@ -140,23 +153,35 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   text-align: right;
 }
 #status.err { color: var(--err); }
-/* Below 1150px the header cannot seat the eleven-tab strip beside the
+/* Below 1163px the header cannot seat the eleven-tab strip beside the
    brand, the root field at its 120px minimum and the language button
-   even with the echo and the status column squeezed to nothing — the
-   strip and the button start to clip. Measured, not estimated: `node
-   scripts/measure_header.js` in headless Edge (the engine the app ships
-   on), 2026-09-05 — one row fits from 1150px in English, 844px in
-   Chinese; the batch-9 proposal's 1120px was a glyph-width guess (plan
-   v2.29 step 9, O25). Above the line the status column keeps shrinking
-   as designed (0–105px between 1150 and the 1280px default window in
-   English); a wrap at the unsqueezed natural width (1618px) would put
-   the strip on its own row at the default window and was not taken.
-   Below it the strip takes a row of its own; its tabs give up 4px of
-   padding a side so the eleven fit that row down to the app's 860px
-   minimum window (measured: 841px of tabs against the 828px the row
-   has there), and the strip wraps inside its row rather than clip if
-   a narrower window ever shows it. */
-@media (max-width: 1149px) {
+   even with the echo and the status column squeezed to nothing — it
+   spills. Measured, not estimated: `node scripts/measure_header.js` in
+   headless Edge (the engine the app ships on), with this query
+   disabled so the number is the one-row layout's own floor and not the
+   query's — 2026-09-06, one row fits from 1163px in English and 1040px
+   in Chinese, so English binds and the wrap sits one pixel below it.
+   The batch-9 proposal's 1120px was a glyph-width guess (plan v2.29
+   step 9, O25).
+
+   The 1150px/844px pinned here until 2026-09-06 were artefacts of the
+   label-wrapping bug the `white-space: nowrap` rule above fixes: the
+   language button and, in Chinese, all eleven tabs were answering a
+   squeeze by breaking their labels across two lines instead of holding
+   their width, so the header measured 13px (English) and 196px
+   (Chinese) narrower than it truly is, and the probe — which then
+   asked only `scrollWidth > clientWidth` — called that a fit.
+
+   Above the line the status column keeps shrinking as designed
+   (0–92px between 1163 and the 1280px default window in English); a
+   wrap at the unsqueezed natural width would put the strip on its own
+   row at the default window and was not taken. Below it the strip
+   takes a row of its own; its tabs give up 4px of padding a side so
+   the eleven fit that row down to the app's 860px minimum window
+   (measured: 828px of tabs in both languages against the 828px the row
+   has there), and the strip wraps inside its row rather than clip if a
+   narrower window ever shows it. */
+@media (max-width: 1162px) {
   header { flex-wrap: wrap; }
   #tabs { order: 5; flex-basis: 100%; flex-wrap: wrap; }
   #tabs .tab { padding: 0 var(--s3); }

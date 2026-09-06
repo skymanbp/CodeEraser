@@ -32,19 +32,33 @@ const LADDER = "860,900,940,980,1020,1060,1100,1140,1180,1220,1280,1424";
 // the squeezable columns kept, and which children clip their own
 // content — the root field and the status column are built to
 // (scrolling input, ellipsis), so only the others count as clipping.
+//
+// Clipping is asked in BOTH axes, and the tabs are asked one by one.
+// A label overflows a fixed-height control by wrapping, not by
+// widening: CSS allows a line break between any two Han characters, so
+// a Chinese label's min-content width is a single character and the
+// flex item's default `min-width: auto` stops holding it open — the
+// control keeps its box, the label takes a second line, and the line
+// spills below `height`. `scrollWidth > clientWidth` alone reads that
+// as a fit, which is how the language button shipped with 中文 broken
+// across two lines (2026-09-06). An English label has no break
+// opportunity inside a word, so the horizontal half never saw it.
 const PROBE = `(() => {
   const h = document.querySelector("header");
+  const strip = [...document.getElementById("tabs").children];
   const kids = [...h.children];
   const rect = (e) => e.getBoundingClientRect();
   const lines = (els) => new Set([...els].map((e) => Math.round(rect(e).top + rect(e).height / 2))).size;
   const w = (id) => Math.round(rect(document.getElementById(id)).width);
+  const clips = (e) => e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1;
   return {
     rows: lines(kids),
-    strip: lines(document.getElementById("tabs").children),
+    strip: lines(strip),
     spill: h.scrollWidth > h.clientWidth + 1,
     tabs: w("tabs"), root: w("root"), status: w("status"),
-    clipped: kids.filter((e) => !["root", "status", "rootecho"].includes(e.id))
-      .filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => e.id || e.tagName.toLowerCase()),
+    clipped: [...kids, ...strip]
+      .filter((e) => !["root", "status", "rootecho"].includes(e.id))
+      .filter(clips).map((e) => e.id || e.dataset.tab || e.tagName.toLowerCase()),
   };
 })()`;
 
@@ -66,8 +80,15 @@ function row(p) {
 /// The smallest viewport width at which nothing spills or clips on a
 /// one-row header, by bisection over [lo, hi]: the width just below
 /// it is where the header needs the wrap.
+///
+/// `rows === 1` is part of the predicate, not an aside: without it the
+/// bisection walks straight past the breakpoint into the wrapped
+/// two-row layout, which of course also seats everything, and answers
+/// with the width where THAT gives out instead (601px here). The
+/// number this returns is pinned in gui/ui/style.css, so it has to be
+/// the width the sentence beside it claims.
 async function floor(cdp, lo, hi) {
-  const fits = (p) => !p.spill && p.clipped.length === 0;
+  const fits = (p) => p.rows === 1 && !p.spill && p.clipped.length === 0;
   if (!fits(await probeAt(cdp, hi))) throw new Error(`the header does not fit even at ${hi}px`);
   while (hi - lo > 1) {
     const mid = (lo + hi) >> 1;
