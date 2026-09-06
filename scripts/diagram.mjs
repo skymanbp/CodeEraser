@@ -30,7 +30,7 @@ import { fileURLToPath } from "node:url";
 import { extractSvg } from "./diagram_svg.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PIN = "e1ac748f19cf805e44bf74fb93c796662152e273"; // tt-a1i/archify v2.15.0
+const PIN = "e1ac748f19cf805e44bf74fb93c796662152e273", PIN_REF = "refs/tags/v2.15.0"; // tt-a1i/archify v2.15.0 — fetched by NAME and the checkout asserted against PIN: GitHub's upload-pack answered "not our ref" to a bare-SHA want from Actions runners (2026-09-06, run 34038467696 attempts 1-2, six jobs) while the same SHA fetched from a workstation; a ref is always servable
 const REMOTE = "https://github.com/tt-a1i/archify.git";
 const CACHE = path.join(root, "cli", "target", "archify");
 const BIN = path.join(CACHE, "archify", "bin", "archify.mjs");
@@ -68,7 +68,7 @@ function fetch() {
     git(["init", "-q"]);
     git(["remote", "add", "origin", REMOTE]);
   }
-  git(["fetch", "-q", "--depth", "1", "origin", PIN]);
+  git(["fetch", "-q", "--depth", "1", "origin", PIN_REF]);
   git(["checkout", "-q", "--detach", "FETCH_HEAD"]);
   const head = cacheHead();
   if (head !== PIN) throw new Error(`cache at ${head}, pinned ${PIN}`);
