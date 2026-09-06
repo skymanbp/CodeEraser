@@ -15,6 +15,15 @@
 - 更新 pin 与截图收据共用逐字节小写十六进制；发布资产经旧、新拼写与系统 SHA-256 对拍，pin 字节不变。旧开发版所建索引可复用，暖路径克隆行一致。
 - **判决、分数算法、schema id 均不变**；不改索引版本与 wire。dependabot PR 编号 1 / 2 / 4 / 6 随本批关闭（升版落在本地锁文件，不合并 PR）。ADR-006 具名重立：主 `cli/src/update/apply.rs` 172→187（`hex` 与测试挂载）；子仓新文件入基线 `unit/update/apply.rs` 57；dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0；codex gpt-6-astra 落码（五条 lib 管道腿、八条 daemon 腿、两条 git 夹具腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
 
+**无默认档位变更。** 计划 v2.29 步 12 依赖批 DEP-TS（dependabot PR 5；codex gpt-6-astra 落码到对拍与测试全落时订阅额度用尽，Claude 审阅收口）：
+- tree-sitter 0.26.11 → 0.27.0（CLI 与 GUI 两份锁文件同步，`tree-sitter-language` 0.1.8；NOTICE 重生）。`Node::child_count` 回到 `u32`，三处显式转换随之删除，`scan/ast.rs` 头注写明子计数与命名子计数各自的宽度、两个取子都收 `u32`（0.27.0 源码核对）。
+- `TOKENIZER_REV` 2 → 3，缓存失效拆两层：存储 / 算法键不符仍整库重建；**只有解析器修订不符**时走 `dedup/schema/parser.rs::invalidate`——清 13 张解析派生表与 `full_build` / `resolve_key` / `mention_rev` 三枚戳、换 epoch，`trend` 行保留。trend 的工具链戳自此含 `tokenizer{REV}`，旧戳行在复用前重量（`it/trend_parser.rs`；单测两条：迁移保史、失败回滚）。`schema_current` = 存储键 ∧ 解析器键，`index::peek` 仍只读。meta 键名只拼一处（`parser::KEY`）。
+- 不变性协议（同树 f9a0775，旧 / 新二进制各自 worktree 与 `.ce`）：16 族 JSON 报告逐字节相同——codex 首跑 churn 一族差异 = 14 天滚动窗口在两次运行之间前移，同窗口背靠背重跑逐字节同（54361 字节）；自仓索引 12 张表逐行相同（files 758 / fingerprints 38774 / symbols 9847 / sites 5082 / edges 3696 / unitsig 9425 / docsegs 2074 / bag 190398 / df 5834 / mentions 336356 / mention_files 1019 / result_cache 1）；四外部语料 mention 报告相同；FPR 全史回放 257 行相同；similar 五语料回放 ok（SQL 读者与内存语料逐位一致，tally 是索引表与 `SIMILAR_REV` 1 的函数）；`ce check` 945 / 棘轮零动用。冷 `ce dedup` 中位 10545 → 10232 ms、暖 668 → 672 ms（三轮各），库大小逐字节同——在噪声内，PERF-BUDGET 只改失效口径那一句。
+- eval：`tokens.rs` 因常量改动丢冻结锚（三份自仓切片 25 → 24 行，覆盖率非判决），按 EVAL-SET.md 复活协议 `CE_REFREEZE=cli/src/dedup/tokens.rs` 具名续冻——graph-slice / t3-universe 只换 sha，docdup-segments 该文件多出一段 live 注释段（`TOKENIZER_REV` 的文档注释过了长度地板：live 259 → 260）；25 行地板复位。
+- 文档：册 01 的失效句改为「清解析派生表、trend 保留并重量」并引 `schema/parser.rs` 与 trend 头注（`tokens.rs:21` 锚随常量值改签）；site how 双页 `TOKENIZER_REV` 3；README 双语 tree-sitter 芯片与事实投影随 bless；册 13 自仓普查行重取。
+- 子仓 `it/docs_diagrams.rs` 删掉 archify 缓存的第二读者 `cache_head`（骨架缓存下 `git -C cli/target/archify rev-parse HEAD` 会答 CodeEraser 的 HEAD），`--check` 的 exit 2 具名拒绝是唯一谓词；`hs_grammar_pin` 随 `child_count` 宽度改。
+- **判决、分数算法、schema id 均不变**；wire 不动。ADR-006 具名重立与门数见提交说明。
+
 **无默认档位变更。** 计划 v2.29 步 10（C-R-L2-4，证据门四条之一）——**跨文件搬迁 / 堆叠判定的改动集级 FPR 仪器与账本首立**，零面变化、零 wire、零 ce.toml：
 - `Judge::judge_changeset` 供 `classify` 与仪器共用：判决仍走 `classify_batch`，保留核链失败记账。仪器与 O48 共用 `pair_inputs`，按冻结切片批量取父/子 blob；不完整的改动集按六种原因记跳过。行的文本与 JSON 输出统一由 Serde 序列化，区间表迭代归算术检查宿主；子仓新增五块消重后回到 119，不抬预算。
 - 拦截只读 Haskell 的 `suspicions`（M4 堆叠合取）；跨文件搬迁量随行作证。标签按冻结切片与 labels 的 sha 读取，严格 / 宽读法、两组 CP 95 % 区间、召回均入表。

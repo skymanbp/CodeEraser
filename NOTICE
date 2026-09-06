@@ -396,11 +396,10 @@ tower-service 0.3.3 — MIT
 tracing 0.1.44 — MIT
 tracing-core 0.1.36 — MIT
 tray-icon 0.24.2 — MIT OR Apache-2.0
-tree-sitter 0.26.11 — MIT
-tree-sitter 0.26.12 — MIT
+tree-sitter 0.27.0 — MIT
 tree-sitter-go 0.25.0 — MIT
 tree-sitter-haskell 0.23.1 — MIT
-tree-sitter-language 0.1.7 — MIT
+tree-sitter-language 0.1.8 — MIT
 tree-sitter-python 0.25.0 — MIT
 tree-sitter-rust 0.24.2 — MIT
 tree-sitter-typescript 0.23.2 — MIT

@@ -162,7 +162,7 @@ analyze 是全产品暖路的单一咽喉（audit Stop 腿、precommit、`ce che
 腿、erase/structure/join/docdup/deadcode、GUI 与 MCP faces、daemon 两臂、CLI），
 一处缓存全员受益、零 wire 变更。实现 = `dedup/rescache.rs` 单槽结果缓存入
 index.db（schema v12），失效键按原设计钉 = files 表逐文件 content-hash 链式聚合
-摘要 + 生效 filter；params 与全部算法 rev 沿既有 meta 键整库 wipe，免费失效。
+摘要 + 生效 filter；params 与各算法 rev 沿既有 meta 键整库 wipe（tokenizer rev 例外：只清解析派生表，trend 行按工具链戳保留待重量，v2.29 DEP-TS 起），免费失效。
 命中路仍跑 refresh（变更检测本身）与边扫（resolve_key 可无内容漂移而变），summary
 的 refreshed/removed 按本次实况重建、绝不回放存储跑的值。
 

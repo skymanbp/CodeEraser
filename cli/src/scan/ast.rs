@@ -1,6 +1,6 @@
-//! Tiny AST helpers shared by scan modules. tree-sitter 0.26 mixes
-//! usize (`child_count`) with u32 (`child(i)`) — centralize the cast
-//! here instead of sprinkling `as u32` through every walker.
+//! Tiny AST helpers shared by scan modules. Tree-sitter 0.27 returns
+//! u32 child counts and usize named-child counts; both accessors take
+//! u32 indices. Keep the count conversions in these shared walks.
 
 use tree_sitter::Node;
 
@@ -41,7 +41,7 @@ fn kids<'t>(count: usize, at: impl Fn(u32) -> Option<Node<'t>>) -> Vec<Node<'t>>
 }
 
 pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
-    kids(node.child_count(), |i| node.child(i))
+    kids(node.child_count() as usize, |i| node.child(i))
 }
 
 pub fn named_children<'t>(node: Node<'t>) -> Vec<Node<'t>> {

@@ -13,11 +13,12 @@ use crate::scan::spec::LangSpec;
 use anyhow::{Context, Result};
 use tree_sitter::Node;
 
-/// Bump when normalization semantics change: the index stores this in
-/// its meta table and wipes itself on mismatch (attack-review D2 —
-/// stale fingerprints from an older tokenizer never mix with new).
-/// rev 2: same-parent LIT merge + per-language literal delimiters.
-pub const TOKENIZER_REV: i64 = 2;
+/// Bump when parser or normalization semantics change: the meta key
+/// invalidates parser-derived tables while retaining stamped trend
+/// history; stale fingerprints never mix with new measurements.
+/// 3: tree-sitter 0.27 — a new parser is a new instrument, so every
+/// parser-derived row rebuilds (the five-corpus replay moved nothing).
+pub const TOKENIZER_REV: i64 = 3;
 
 /// One normalized token, carrying its source span for report mapping.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

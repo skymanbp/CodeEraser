@@ -278,15 +278,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 8
+        "below_floor": 7
       },
-      "live": 1,
+      "live": 2,
       "path": "cli/src/dedup/tokens.rs",
-      "seg_sha256": "e394513b30257d018903c4a11861b685b5622598d178fea1840430a06065cfe8",
+      "seg_sha256": "76ea4a5685022bc854227fe8c3b8c19a3bfc3e401fdb7a69030e1f849b92a21c",
       "segs_by": {
-        "comment_block": 1
+        "comment_block": 2
       },
-      "sha256": "90ce5c36b63fc71129c60aac3120e0a3644ea48c6f54dc828a45dca658a37bc9"
+      "sha256": "3341f471e148aa7ae7bfa19036b8c74a7e193e669061dedf6195240bc4400fac"
     },
     {
       "exempt_by": {},
@@ -1950,15 +1950,15 @@
     },
     "files_with_segments": 95,
     "ledger": {
-      "below_floor": 1562,
+      "below_floor": 1561,
       "fenced_code_line": 52,
       "html_line": 2,
       "indented_code_lines": 12,
       "skeleton_line": 60
     },
-    "live": 259,
+    "live": 260,
     "segs_by": {
-      "comment_block": 184,
+      "comment_block": 185,
       "docstring": 16,
       "md_para": 64
     }

@@ -10,8 +10,10 @@ use crate::graph::store;
 use anyhow::Result;
 use rusqlite::{Connection, Transaction, TransactionBehavior};
 
-/// Pre-release schema versioning: a mismatch drops and recreates the
-/// tables (the index is a cache — rebuilding is always safe).
+mod parser;
+
+/// Storage/schema mismatches retain pre-release drop-and-recreate.
+/// Tokenizer-only changes preserve trend and clear derived tables.
 /// v7 (M7-P4): the trend table — score points ride the SAME wipe as
 /// the fingerprints because a measurement-rev bump breaks their
 /// comparability (trend/mod.rs header). v6 (M5 close): idx_edge_site —
@@ -53,8 +55,8 @@ use rusqlite::{Connection, Transaction, TransactionBehavior};
 /// v16 (plan v2.29 step 3): the same-role advisor's bag tables
 /// `bag` / `df` (similar/store.rs — hashes and counts only, moved by
 /// difference inside refresh_file's transaction) and `similar_rev` in
-/// the cache key. The wipe clears trend as every bump does — a
-/// release-notes item.
+/// the cache key. Storage-key mismatches clear trend; parser-only
+/// changes preserve it under a separate gate (schema/parser.rs).
 const SCHEMA_VERSION: i64 = 16; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
@@ -100,8 +102,8 @@ CREATE TABLE result_cache (
 );
 ";
 
-/// Wipe-and-recreate unless both the schema version and the meta
-/// cache key (params + tokenizer rev + graph rev) match
+/// Rebuild unless the schema version and meta cache key match;
+/// tokenizer-only changes clear derived tables, preserving trend.
 /// (attack-review D2: params/tokenizer changes silently reused stale
 /// fingerprints for unchanged files). Concurrent openers race this
 /// check — CI caught two autocommit rebuilds interleaving statement
@@ -121,9 +123,12 @@ pub(crate) fn ensure_cache_key(conn: &Connection, p: Params) -> Result<()> {
     Ok(())
 }
 
-/// The wipe-and-recreate body, one DDL domain per line (split out
-/// when the trend batch pushed the caller over the complexity gate).
+/// Parser-only invalidation preserves history; other schema or
+/// algorithm mismatches retain the existing wipe-and-recreate policy.
 fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
+    if storage_current(tx, p)? {
+        return parser::invalidate(tx, new_epoch());
+    }
     tx.execute_batch(SCHEMA)?;
     tx.execute_batch(store::GRAPH_SCHEMA)?;
     tx.execute_batch(super::unitcache::UNITSIG_SCHEMA)?;
@@ -164,11 +169,13 @@ pub(crate) fn epoch(conn: &Connection) -> Result<Option<i64>> {
         .map_err(Into::into)
 }
 
-/// Whether the stored schema version AND cache key already match this
-/// binary's. `pub(crate)` for index::peek — the diagnostics need the
-/// verdict WITHOUT ensure_cache_key's wipe, and a second copy of
-/// SCHEMA_VERSION over in index.rs would drift the day this one bumps.
+/// Read-only freshness verdict for index::peek: storage and parser
+/// keys must match, without invalidating measurements or history.
 pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {
+    Ok(storage_current(conn, p)? && parser::current(conn)?)
+}
+
+fn storage_current(conn: &Connection, p: Params) -> Result<bool> {
     let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     Ok(version == SCHEMA_VERSION && meta_matches(conn, p)?)
 }
@@ -177,7 +184,7 @@ fn meta_entries(p: Params) -> [(&'static str, i64); 7] {
     [
         ("kgram", p.kgram as i64),
         ("window", p.window as i64),
-        ("tokenizer_rev", tokens::TOKENIZER_REV),
+        (parser::KEY, tokens::TOKENIZER_REV),
         ("graph_rev", store::GRAPH_REV),
         ("struct_rev", super::struct_fp::STRUCT_REV),
         ("docdup_rev", crate::docdup::DOCDUP_REV),
@@ -196,7 +203,10 @@ fn meta_matches(conn: &Connection, p: Params) -> Result<bool> {
     if has_meta == 0 {
         return Ok(false);
     }
-    for (k, want) in meta_entries(p) {
+    for (k, want) in meta_entries(p)
+        .into_iter()
+        .filter(|(k, _)| *k != parser::KEY)
+    {
         let got: Option<i64> = conn
             .query_row("SELECT v FROM meta WHERE k = ?1", (k,), |r| r.get(0))
             .map(Some)

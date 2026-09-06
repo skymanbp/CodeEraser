@@ -38,7 +38,7 @@ A **word** is a maximal run of `char::is_alphanumeric()` characters — a combin
 ```
 h = 0xcbf29ce484222325;  for each byte b:  h = (h XOR b) * 0x00000100000001b3   (wrapping u64)
 ```
-([tokens.rs:134-141](../../../cli/src/dedup/tokens.rs#L134))
+([tokens.rs:135-142](../../../cli/src/dedup/tokens.rs#L135))
 
 The **admission floor** is applied to the surviving word sequence: `words.len() < MIN_DOC_TOKENS` sends the segment to `ledger.below_floor` and it is never stored, with `MIN_DOC_TOKENS = 50` ([spec.rs:14](../../../cli/src/docdup/spec.rs#L14), [mod.rs:76-79](../../../cli/src/docdup/mod.rs#L76)).
 

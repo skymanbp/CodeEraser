@@ -347,14 +347,14 @@
       "id": "tool:tree_sitter#v",
       "source": "cli/Cargo.toml::tree-sitter",
       "tier": "scraped",
-      "value": "0.26.11"
+      "value": "0.27.0"
     },
     {
       "debt": "read by a line grammar, not a TOML reader; promote = parse the manifest with the toml crate the product already links",
       "id": "tool:tree_sitter#vminor",
       "source": "cli/Cargo.toml::tree-sitter",
       "tier": "scraped",
-      "value": "0.26"
+      "value": "0.27"
     },
     {
       "id": "ver:anchor#v",
@@ -421,7 +421,7 @@
       "id": "ver:tokenizer_rev#digits",
       "source": "cli/src/dedup/tokens.rs::TOKENIZER_REV",
       "tier": "linked",
-      "value": "2"
+      "value": "3"
     }
   ],
   "schema": "ce.docs-facts/0.1.0",

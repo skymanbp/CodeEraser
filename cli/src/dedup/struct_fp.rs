@@ -47,7 +47,7 @@ pub fn spine(root: tree_sitter::Node) -> Spine {
         }
         // push children reversed so the stack pops them in order
         for i in (0..node.child_count()).rev() {
-            if let Some(child) = node.child(i as u32) {
+            if let Some(child) = node.child(i) {
                 stack.push(child);
             }
         }

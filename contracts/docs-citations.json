@@ -449,108 +449,113 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|075fec6cbcf4c10d|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 84,
+    "line": 86,
     "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|202a8c95b30280c7|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 53,
+    "line": 55,
     "text": "/// v16 (plan v2.29 step 3): the same-role advisor's bag tables"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|27a7c776f82a7121|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 107,
-    "end": 117,
+    "line": 109,
+    "end": 119,
     "text": "/// check — CI caught two autocommit rebuilds interleaving statement"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 171,
+    "line": 174,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|1": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 171,
+    "line": 174,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|413ea62c96e5ef70|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 189,
+    "line": 196,
     "text": "// a pre-meta database (or a foreign file) is a mismatch, not an"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|dac5a67b5dee8629|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 92,
+    "line": 94,
     "text": "CREATE INDEX idx_fp_file ON fingerprints(file_id);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|f733ec08fed99de0|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 172,
+    "line": 179,
     "text": "let version: i64 = conn.query_row(\"PRAGMA user_version\", [], |r| r.get(0))?;"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema/parser.rs|393a9b6adcd8c25e|0": {
+    "target": "../../../cli/src/dedup/schema/parser.rs",
+    "line": 26,
+    "text": "pub(super) fn invalidate(tx: &Transaction<'_>, epoch: i64) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1640d969ccad876c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 107,
+    "line": 108,
     "text": "fn classify(kind: &str, spec: &LangSpec) -> Class {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1c30cf58e5583678|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 68,
+    "line": 69,
     "text": "}\nmatch classify(node.kind(), spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1c7dce5fb9062090|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 105,
+    "line": 106,
     "text": "}\n\nfn classify(kind: &str, spec: &LangSpec) -> Class {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|227629f256b666bf|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 92,
+    "line": 93,
     "text": "Class::Text => kind.as_bytes(),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|310ac55b91af4a11|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 122,
+    "line": 123,
     "text": "pub(crate) fn is_literal(kind: &str, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|3cd7baf5c7a4584c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 65,
+    "line": 66,
     "text": "if node.child_count() > 0 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|46408540c4d32c8c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 131,
+    "line": 132,
     "text": "}\n\n/// FNV-1a: tiny, dependency-free, stable across runs (index persists)."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|471c40c0b6619ae4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 30,
+    "line": 31,
     "text": "const ID_MARK: &[u8] = b\"\\x01ID\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 134,
+    "line": 135,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4d032b82895954e2|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 70,
+    "line": 71,
     "text": "Class::Lit => {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|504e1857b50781a4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 31,
+    "line": 32,
     "text": "const LIT_MARK: &[u8] = b\"\\x02LIT\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|5105ac07c75a2849|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 111,
+    "line": 112,
     "text": "if is_literal(kind, spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|65c85db61f029727|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 108,
+    "line": 109,
     "text": "if kind.ends_with(\"identifier\") {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|6b59d2da04b0a563|0": {
@@ -560,28 +565,28 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|704f90d8eac8f679|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 141,
+    "line": 142,
     "head": 3,
     "text": "h = h.wrapping_mul(0x0000_0100_0000_01b3);\n}\nh\n}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|86c909cd702d30ac|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 78,
+    "line": 79,
     "text": "}\nclass => {\nlit_parent = None;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|891fbed043c45717|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 28,
+    "line": 29,
     "text": "}\n\nconst ID_MARK: &[u8] = b\"\\x01ID\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|8b07b0cb7a9e59e7|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 115,
+    "line": 116,
     "text": "}\n\n/// Literal pieces across the four grammars (probe-derived): whole"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|96775608fcd4b371|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 64,
+    "line": 65,
     "text": "}\nif node.child_count() > 0 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ac32eb56804c01cf|0": {
@@ -591,47 +596,47 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 23,
+    "line": 24,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|bf8b1e0c6681c9d6|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 20,
-    "text": "pub const TOKENIZER_REV: i64 = 2;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|cb675dae93f5970c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 62,
+    "line": 63,
     "text": "if spec.comment_kinds.contains(&node.kind()) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ccbe521930534218|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 121,
+    "line": 122,
     "text": "/// `composite_literal` never reach here — tokenize recurses first)."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d691461b7dc2e716|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 57,
+    "line": 58,
     "text": "pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d79f5ced4fa0d091|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 101,
+    "line": 102,
     "text": "fn extend_last(out: &mut [Token], node: Node<'_>) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d9671b76536d6a08|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 86,
+    "line": 87,
     "text": "}\n\nfn token(class: &Class, kind: &str, node: Node<'_>) -> Token {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|eb23972bdbd6302e|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 120,
+    "line": 121,
     "text": "/// Precondition: `kind` is a LEAF kind (composite kinds like Go"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ecf4e084dea9236c|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 21,
+    "text": "pub const TOKENIZER_REV: i64 = 3;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|f13e91d15cb652f1|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 114,
+    "line": 115,
     "text": "Class::Text\n}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|0211250c62de4a09|0": {
@@ -808,6 +813,12 @@
     "target": "../../../cli/src/scan/spec_hs.rs",
     "line": 71,
     "text": "literal_delims: &[],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/trend/mod.rs|452a1b52cbdfe32a|0": {
+    "target": "../../../cli/src/trend/mod.rs",
+    "line": 4,
+    "end": 8,
+    "text": "//! (trend_rebuild.rs pins exactly that). Parser-only invalidation"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../DEVELOPMENT_PLAN.md|1f91856ca2808b4b|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -1635,8 +1646,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 134,
-    "end": 141,
+    "line": 135,
+    "end": 142,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/winnow.rs|61828f98f0a3db21|0": {

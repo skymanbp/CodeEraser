@@ -1,11 +1,11 @@
 //! `ce trend` (M7-P4): the check score's trajectory over mainline
 //! git history. Charter ruling ②: HISTORY IS THE SOURCE OF TRUTH —
 //! the SQLite rows are a cache, rebuildable from commits at will
-//! (trend_rebuild.rs pins exactly that). The rows live inside
-//! `.ce/index.db`'s one wipe lifecycle, so a measurement-rev bump
-//! wipes them WITH the fingerprints: points measured under different
-//! toolchain revs are not comparable, and the shared wipe IS the
-//! comparability contract, not a cost.
+//! (trend_rebuild.rs pins exactly that). Parser-only invalidation
+//! retains the rows; their toolchain stamps include TOKENIZER_REV so
+//! a new parser remeasures them before reuse. Other schema/algorithm
+//! mismatches retain the shared wipe lifecycle. Different measuring
+//! toolchains never contribute points to the same trajectory.
 //!
 //! Each point = `score::run` at that commit in a detached temp
 //! worktree — NULL baseline (absolute score, no ratchet noise), no
@@ -34,7 +34,7 @@ use worktree::Worktree;
 pub const DEFAULT_COMMITS: usize = 30;
 
 /// DDL executed inside the index's ONE schema batch (dedup::schema)
-/// — created and wiped with the cache, never on a second lifecycle.
+/// — parser-only invalidation preserves rows, separated by stamp.
 pub const TREND_SCHEMA: &str = "
 CREATE TABLE trend (
   commit_hash TEXT PRIMARY KEY,
@@ -206,8 +206,8 @@ fn cached(conn: &rusqlite::Connection, stamp: &str) -> Result<HashMap<String, Ro
 }
 
 /// Idempotent insert (ADR-003 v1.7): the key is an immutable commit
-/// hash and the value is deterministic under the db's cache key —
-/// rev changes wipe the table — so re-landing a row converges.
+/// hash and the value is deterministic under its measuring stamp;
+/// remeasuring a retained old-parser row replaces it atomically.
 fn put(conn: &rusqlite::Connection, r: &Row, stamp: &str) -> Result<()> {
     // REPLACE, not IGNORE: the primary key is the commit, and a row
     // left by another toolchain is exactly the one this run just
@@ -228,17 +228,15 @@ fn put(conn: &rusqlite::Connection, r: &Row, stamp: &str) -> Result<()> {
     Ok(())
 }
 
-/// The measuring pair, as one opaque string: this binary's version and
-/// the core's, asked of the core itself through the handshake it
-/// already performs. The index cache key cannot carry this — its six
-/// values describe MEASUREMENT revisions (params, tokenizer, graph,
-/// struct, docdup) and say nothing about the scoring formula, so a
-/// ce-core upgrade left old points scored by the old formula.
+/// The measuring toolchain: CLI/core versions and parser revision.
+/// Preserved rows from an older parser must be remeasured even while
+/// the package versions still match during an unreleased upgrade.
 fn toolchain_stamp(core: &str) -> Result<String> {
     let hello = crate::corelink::run(core).map_err(anyhow::Error::msg)?;
     Ok(format!(
-        "ce{} core{}",
+        "ce{} core{} tokenizer{}",
         env!("CARGO_PKG_VERSION"),
-        hello.version
+        hello.version,
+        dedup::tokens::TOKENIZER_REV
     ))
 }
