@@ -167,6 +167,37 @@ v2.29 同角色顾问的 ROI 度量（similar 仪器、样本、仲裁 oracle、
 → [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md)（第三次拆册，2026-09-05；
 EVAL-SET-M5-CLOSE.md 已 303 行）。
 
+## 声明级搬迁（O48）
+
+`it/eval_l2_edges.rs` 从真核回放冻结件导出边覆盖：**自仓 36/37、requests 1/1、ripgrep 22/22**。
+前值自仓 31/37、requests 1/1；ripgrep 边覆盖此前未测。自仓 31 对由行站命名、5 对由声明对齐命名、1 对未覆盖；requests 1 对为行站；ripgrep 21 对为行站、1 对为声明对齐（`HYPERLINK_PATTERN_ALIASES`）。
+度量以 `(提交, 源文件, 目的文件, 单元)` 为一对，两端任一名字命中即记覆盖；下表展开原六对遗漏，GT 原样保留。
+
+| 提交 | 源 → 目的（均在 `cli/tests/`） | 单元 | 原因与本次结果 |
+|---|---|---|---|
+| `8d6b237a5` | `daemon_e2e.rs` → `common/mod.rs` | `seed_clone_pair/1` | 两行体中一行的 expect 字串改变，仅一行同一；声明对齐补齐 |
+| `f84aaa3c8` | `eval_baseline.rs` → `eval_support/mod.rs` | `CLASSES` | 四行同一，alnum 宽度 10/10/14/12 均低于 anchorFloor 19；声明对齐补齐 |
+| `f84aaa3c8` | `eval_baseline.rs` → `eval_support/mod.rs` | `load/1` | 仅一行体，低于 destFloor 2；声明对齐补齐 |
+| `f84aaa3c8` | `eval_labels.rs` → `eval_support/mod.rs` | `CLASSES` | 同一四行短锚，另一来源汇入同一目的地；声明对齐补齐 |
+| `f84aaa3c8` | `eval_labels.rs` → `eval_support/mod.rs` | `load/1` | 同一单行体，另一来源汇入同一目的地；声明对齐补齐 |
+| `2f40f22b8` | `eval_prelabel.rs` → `eval_support/mod.rs` | `~out_dir/0` | 名字与种类保留，签名和唯一体行途中重限定，零行同一；仍为 adapted，未覆盖 |
+
+**改编边界。** `out_dir` 的 `PathBuf::from(…)` 变成 `std::path::PathBuf::from(…)`：名字/种类加至少一行共同内容的精确谓词不成立；T2 归一后 token 数不同；结构骨架的 scoped_identifier 深度不同。不能以名字相同冒充内容相同；相似性判断需要独立定义与评测，本批诚实保留这一类。
+判决推导与 wire 边界见[册 09 声明节](reference/methodology/09-edit-four-classification-update-supervision.md#declaration-level-relocation-proto-710)。声明支付 `siteCostCross`，导出 `declFloor = 1`，不改变行分类、分数或旧 `commit-l2` 冻结件。
+
+**登记外发现。** `no_edge_document_invents_a_tabled_relocation` 为绿（tabled unit 的错误边为零），但门只核对已登记单元，不能据此声称全体新边精确。ripgrep 另有以下六条 `lines = 0` 边；跨度由同一 Rust 单元提取器读取该提交的父树 → 提交树，均为 1-based 闭区间。它们是待维护者审阅的发现，不进入覆盖分母，也不改登记册。其中 `compile_cpu_features/0`、`config`、`find/1` 三条已第一方对照该提交两侧源码核为真搬迁（前者与后者签名各有改编、体内仍有共同行；`config` 是 `mod config;` 整行迁移），属登记册漏记而非阶段误判；`stdout/1`、`printer_summary/3`、`printer_json/2` 三条未核。
+
+| 提交 | key | 源路径:跨度 → 目的路径:跨度 |
+|---|---|---|
+| `082245dad` | `compile_cpu_features/0` | `crates/core/app.rs:114-127` → `crates/core/flags/doc/version.rs:97-126` |
+| `082245dad` | `stdout/1` | `crates/core/args.rs:305-314` → `crates/core/flags/hiargs.rs:805-818` |
+| `082245dad` | `printer_summary/3` | `crates/core/args.rs:814-832` → `crates/core/flags/hiargs.rs:626-643` |
+| `082245dad` | `printer_json/2` | `crates/core/args.rs:753-760` → `crates/core/flags/hiargs.rs:578-587` |
+| `082245dad` | `config` | `crates/core/main.rs:15-15` → `crates/core/flags/mod.rs:42-42` |
+| `66aa4a63b` | `find/1` | `crates/printer/src/hyperlink_aliases.rs:27-32` → `crates/printer/src/hyperlink/mod.rs:229-234` |
+
+冻结文件为 `contracts/eval/commit-edges{,-requests,-ripgrep}-v1.json`；自仓回放 6 提交，requests 1，ripgrep 6。外部根与 tip 由 `eval_support/corpus.rs` 逐一复核；生成命令在 cli 为 `cargo test -j 8 --test it -- --ignored eval_l2_edges --nocapture`（先设 CE_CORE_BIN 与 RUST_TEST_THREADS=8），常驻门为 `cargo test -j 8 --test it -- eval_l2_edges --nocapture`，逐对分类完整打印。
+
 ## 复跑
 
 ```

@@ -34,9 +34,9 @@ entry (l, h) = (l, h, widthOf h)
 -- against length so both depth and hash diversity get full coverage.
 instances :: [[Pair]]
 instances =
-  [ [Pair 0 rem0 [] [], Pair 1 [] add1 []] ++ probe
+  [ [Pair 0 rem0 [] [] Nothing Nothing, Pair 1 [] add1 [] Nothing Nothing] ++ probe
   | (rem0, add1) <- sides
-  , probe <- [] : [[Pair 2 [[entry (30, h)]] [] []] | h <- [1, 2, 3]]
+  , probe <- [] : [[Pair 2 [[entry (30, h)]] [] [] Nothing Nothing] | h <- [1, 2, 3]]
   ]
  where
   sides :: [([Run], [Run])]

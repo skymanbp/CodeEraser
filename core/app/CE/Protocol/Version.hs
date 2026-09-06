@@ -18,8 +18,10 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- normalized Newman contribution, and the incident-edge mass below
 -- which it is not judged). The intra mass is fileRefs' `inside` sum
 -- halved and never rides twice; the two tables are held to one graph
--- by a boundary law. Every other family, and every structure request
--- without the key, is answered as before -- only the knob echo grows.
+-- by a boundary law. O48 adds declaration relocation to fourclass in
+-- the same unreleased minor: paired declRem/declAdd tables receive
+-- unitEdges (or unitEdgesDropped over the cap). Line judgments and
+-- replies without declaration tables are unchanged.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's

@@ -1,0 +1,19 @@
+{
+  "commits": [
+    {
+      "relocations": [
+        {
+          "from": "requests/sessions.py",
+          "from_unit": "rebuild_proxies/3",
+          "lines": 4,
+          "to": "requests/utils.py",
+          "to_unit": "resolve_proxies/3"
+        }
+      ],
+      "sha": "99b3b492418d0751ca960178d274f89805095e4c"
+    }
+  ],
+  "corpus": "requests",
+  "generated_from": "8068356288978c4f54661ae6f95afe0e0831885e",
+  "schema": "ce.eval-commit-edges/1.0.0"
+}

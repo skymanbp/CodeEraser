@@ -6,6 +6,7 @@
 -- assumption into a checked contract without duplicating the rule.
 module CE.FourClass (respond) where
 
+import CE.FourClass.Decl (declViolation)
 import CE.FourClass.Provenance (classify)
 import CE.FourClass.Wire
 import Control.Applicative ((<|>))
@@ -29,10 +30,10 @@ respond proto line = case eitherDecodeStrict line of
 -- enumerates, so this refuses drift, not traffic) — then a malformed
 -- duplicated-unit span (7.0.0: a span the stacking rule intersects
 -- must be a 1-based inclusive range, else a novel line could sit
--- "inside" nothing or everything) — then the within-first
+-- "inside" nothing or everything) — then declaration tables and within-first
 -- precondition (message bytes golden-pinned).
 violation :: [Pair] -> Maybe String
-violation ps = dup <|> spans <|> within
+violation ps = dup <|> spans <|> declViolation ps <|> within
  where
   dup = case M.keys (M.filter (> 1) (M.fromListWith (+) [(pIdx p, 1 :: Int) | p <- ps])) of
     (i : _) -> Just ("duplicate pair index: " <> show i)

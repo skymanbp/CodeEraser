@@ -22,7 +22,9 @@ use std::process::{Child, Stdio};
 /// `inside` sum halved, and a number with two owners is a number that
 /// can disagree with itself. A core of another major is refused at
 /// the hello; a core of an older MINOR simply answers without the
-/// axis, which is what the Maybe stance is for.
+/// axis, which is what the Maybe stance is for. O48 shares this
+/// unreleased minor: fourclass pairs carry `declRem` / `declAdd`,
+/// answered with `unitEdges` without changing line classifications.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted

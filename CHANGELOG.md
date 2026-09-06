@@ -9,6 +9,13 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 计划 v2.29 步 10 批 C3 O48（2026-09-06）——声明级搬迁，折入同一未发布的 **wire 7.1.0**：
+- `fourclass/2` 请求加性 `declRem` / `declAdd`，回执 `unitEdges` / `unitEdgesDropped`；Rust 量名字、种类与跨度，Haskell 判同名同种、唯一目的地与跨度内共同内容。声明支付跨站成本，导出 `declFloor = 1`；多源可汇一处，两目的地拒绝，`declCap = 65536` 超限整表放弃。
+- 搬迁表补 `lines = 0` 行，已有行级记录优先；**分数和行分类不变**，既有 L2 冻结件与七条行门不动。声明边是报告信息，不进入守卫判决。
+- 真核回放 `commit-edges{,-requests,-ripgrep}-v1.json`：边覆盖 **自仓 31/37 → 36/37、requests 1/1、ripgrep 22/22**；五对短体补齐，`~out_dir` 零共同内容仍未覆盖。六对诊断、改编边界与 ripgrep 六条登记外发现见 [续测台账](docs/EVAL-SET-M5-3.md#声明级搬迁o48)，不改 GT。
+- 三对 golden 由核重答、旧回复字节不动；§3 由夹具门导出 **130 行，server 恒答 7.1.0**。主册 EVAL-SET 保持 300 行，册 09 英文推导与中文续测就地对齐。
+- ADR-006 具名重立（两仓）：主 `cli/src/fourclass/batch.rs` 211→226、`core/app/CE/FourClass/Wire.hs` 94→113、`core/app/CE/FourClass/Cost.hs` 64→89、`contracts/VERSIONING.md` 693→708、`docs/EVAL-SET-M5-3.md` 182→213、册 09 163→179；新文件入基线 `cli/src/fourclass/decls.rs` 96、`cli/src/fourclass/batch/edges.rs` 125、`core/app/CE/FourClass/Decl.hs` 93、`core/test/DeclProps.hs` 89；子 `it/eval_commit_review/mod.rs` 76→90，新文件 `it/eval_l2_edges.rs` 191、`it/eval_l2_edges_parts/mod.rs` 128、`it/fourclass_decls.rs` 99、`unit/fourclass/decls.rs` 72、`unit/fourclass/batch/edges.rs` 83。dedup 55 / 119 恒；门主 945 / 55 / 0、子 984 / 119 / 0、cabal PASS（DeclProps 11 检查）、lib 366、clippy + fmt 清。
+
 **无默认档位变更。** 计划 v2.29 步 10 批 C3 O54（2026-09-06）——structure/1 有向目录边表上 wire，第八条判轴「模块度」判它（**wire 7.1.0 加性 minor**）：
 - 请求加性可选表 `dirEdges=[[fromDir,toDir,count]]`（只载跨目录有向边，`from ≠ to`、按 `(from,to)` 严格升序）。
   **intra 质量不上 wire**——`fileRefs` 的 `inside` 在目录内边的两端各加一，逐目录之和恰为内部边数两倍，核取半即得；

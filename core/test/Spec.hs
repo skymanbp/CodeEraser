@@ -14,6 +14,7 @@ import CE.Graph.Cost (edgeCap, nodeCap)
 import CE.Verdict.Ratchet (ratchetBound, tolerated)
 import qualified AdvisoryProps
 import qualified AuditProps
+import qualified DeclProps
 import qualified TombstoneProps
 import qualified SimilarProps
 import qualified ClassProps
@@ -65,53 +66,56 @@ main = do
   -- the whole suite mid-run. The harness pins its own encoding.
   hSetEncoding stdout utf8
   hSetEncoding stderr utf8
-  results <-
-    sequence
-      [ goldenPairs "handshake/hello-ok.ndjson"
-      , goldenPairs "handshake/wire-errors.ndjson"
-      , goldenPairs "fourclass/golden.ndjson"
-      , goldenPairs "graph/golden.ndjson"
-      , goldenPairs "clone/golden.ndjson"
-      , goldenPairs "docdup/golden.ndjson"
-      , goldenPairs "verdict/golden.ndjson"
-      , goldenPairs "scan/golden.ndjson"
-      , goldenPairs "structure/golden.ndjson"
-      , goldenPairs "trend/golden.ndjson"
-      , goldenPairs "erase/golden.ndjson"
-      , goldenPairs "audit/golden.ndjson"
-      , goldenPairs "tombstone/golden.ndjson"
-      , goldenPairs "similar/golden.ndjson"
-      , structural
-      , refusalProbes
-      , docdupStructural
-      , costModel
-      , Reference.equivalence
-      , ReferenceGraph.equivalence
-      , ReferenceJaccard.equivalence
-      , GraphProps.battery
-      , GraphWireProps.battery
-      , AdvisoryProps.battery
-      , CloneProps.battery
-      , EntropyProps.battery
-      , JoinProps.battery
-      , ScanProps.battery
-      , ScanCyclesProps.battery
-      , StructureProps.battery
-      , StructureModularityProps.battery
-      , TrendProps.battery
-      , EraseProps.battery
-      , AuditProps.battery
-      , TombstoneProps.battery
-      , SimilarProps.battery
-      , VerdictProps.battery
-      , VerdictWireProps.battery
-      , VerdictFenceProps.battery
-      , VerdictKnobProps.battery
-      , SplitProps.battery
-      , ClassProps.battery
-      , StackingProps.battery
-      ]
+  results <- sequence batteries
   unless (and results) exitFailure
+
+batteries :: [IO Bool]
+batteries =
+  [ goldenPairs "handshake/hello-ok.ndjson"
+  , goldenPairs "handshake/wire-errors.ndjson"
+  , goldenPairs "fourclass/golden.ndjson"
+  , goldenPairs "graph/golden.ndjson"
+  , goldenPairs "clone/golden.ndjson"
+  , goldenPairs "docdup/golden.ndjson"
+  , goldenPairs "verdict/golden.ndjson"
+  , goldenPairs "scan/golden.ndjson"
+  , goldenPairs "structure/golden.ndjson"
+  , goldenPairs "trend/golden.ndjson"
+  , goldenPairs "erase/golden.ndjson"
+  , goldenPairs "audit/golden.ndjson"
+  , goldenPairs "tombstone/golden.ndjson"
+  , goldenPairs "similar/golden.ndjson"
+  , structural
+  , refusalProbes
+  , docdupStructural
+  , costModel
+  , Reference.equivalence
+  , ReferenceGraph.equivalence
+  , ReferenceJaccard.equivalence
+  , GraphProps.battery
+  , GraphWireProps.battery
+  , AdvisoryProps.battery
+  , CloneProps.battery
+  , EntropyProps.battery
+  , JoinProps.battery
+  , ScanProps.battery
+  , ScanCyclesProps.battery
+  , StructureProps.battery
+  , StructureModularityProps.battery
+  , TrendProps.battery
+  , EraseProps.battery
+  , AuditProps.battery
+  , TombstoneProps.battery
+  , SimilarProps.battery
+  , VerdictProps.battery
+  , VerdictWireProps.battery
+  , VerdictFenceProps.battery
+  , VerdictKnobProps.battery
+  , SplitProps.battery
+  , ClassProps.battery
+  , StackingProps.battery
+  , DeclProps.battery
+  ]
 
 -- | Runtime-generated docdup cap probes (the graph over-cap posture:
 -- an 8k-element set has no business weighing down a fixture file).

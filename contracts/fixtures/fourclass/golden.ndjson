@@ -16,3 +16,9 @@
 {"blocks":[],"degraded":false,"id":8,"moved":[],"proto":"7.1.0","suspicions":[],"type":"fourclass.result"}
 {"proto":"7.0.0","type":"fourclass.request","id":9,"pairs":[{"i":0,"rem":[[[1,101,7],[2,102,16]]],"add":[]},{"i":1,"rem":[],"add":[[[9,101,7],[10,102,16]]]}]}
 {"blocks":[],"degraded":false,"id":9,"moved":[],"proto":"7.1.0","suspicions":[],"type":"fourclass.result"}
+{"proto":"7.0.0","type":"fourclass.request","id":10,"pairs":[{"i":0,"rem":[[[11,555,40]]],"add":[],"declRem":[[9001,1,10,12]],"declAdd":[]},{"i":1,"rem":[],"add":[[[6,555,40]]],"declRem":[],"declAdd":[[9001,1,5,7]]}]}
+{"blocks":[],"degraded":false,"id":10,"moved":[],"proto":"7.1.0","suspicions":[],"type":"fourclass.result","unitEdges":[[0,1,9001]]}
+{"proto":"7.0.0","type":"fourclass.request","id":11,"pairs":[{"i":0,"rem":[[[11,555,40]]],"add":[],"declRem":[[9001,1,10,12],[9002,2,20,21]],"declAdd":[]},{"i":1,"rem":[],"add":[[[6,555,40]]],"declRem":[],"declAdd":[[9001,1,5,7]]},{"i":2,"rem":[],"add":[[[8,777,40]]],"declRem":[],"declAdd":[[9001,1,7,9],[9002,2,30,31]]}]}
+{"blocks":[],"degraded":false,"id":11,"moved":[],"proto":"7.1.0","suspicions":[],"type":"fourclass.result","unitEdges":[]}
+{"proto":"7.0.0","type":"fourclass.request","id":12,"pairs":[{"i":3,"rem":[],"add":[],"declRem":[[9001,1,10,12]]}]}
+{"code":"contract","id":12,"message":"decl tables come in pairs: pair 3","proto":"7.1.0","type":"error"}

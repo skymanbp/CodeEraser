@@ -149,7 +149,7 @@
 > 克隆/共变价目=v1.1 预留。knobs 码域 0..11 → **0..16**
 > （12=seamSoft/13=seamHard/14=seamPMax/15=roiRefMilli/16=roiPhiMilli），
 > knob 回执 12 行 → **17 行**。
-> **7.1.0**（structure/1 有向目录边表与模块度轴，加性 minor，计划 v2.29 步 10 批 C3 O54，2026-09-06）：
+> **7.1.0**（structure/1 模块度轴 + fourclass/2 声明级搬迁，加性 minor，计划 v2.29 步 10 批 C3 O54 / O48，2026-09-06）：
 > `structure.request` 加性可选表 `dirEdges=[[fromDir,toDir,count]]`（**只载跨目录**有向边，
 > `from ≠ to`、两端 `< |nodes|`、`count ≥ 1`、按 `(from,to)` 严格升序；缺席 = 轴 7 不判、空表 = 判为净——
 > staleDocs / redundancy 的 Maybe 立场原样）。**intra 质量不上 wire**：`fileRefs` 的 `inside` 在一条
@@ -165,6 +165,20 @@
 > Rust 镜像同批改为逐项对齐核的 `famOverCap`（此前只计 nodes 行）。测量侧 = `ce structure` 恒发（与
 > `fileRefs` 同一次 join，无第二次 walk、无新 I/O），故**自仓结构分迁移、与 1.6.0 不可比**；报告态不设门
 > （v2.22 结项 O53 立场不变）。
+> 同一未发布 minor 的 O48：`fourclass/2` 的对可加带成对可选两表
+> `declRem` / `declAdd=[[keyHash,kind,start,end]…]`——本对**之前有之后无**（rem）/ **之前无之后有**（add）且该侧多重度恰为 1 的
+> 声明键：keyHash = fnv1a(单元键)、kind ∈ {1 函数 / 2 具名非函数 / 3 impl / 4 Markdown 节}、跨距 1 基闭区间（名字与路径永不过线）。
+> 两键**同生同死**且**必须覆盖整批**（目的地唯一性是批级量词，半批无法可靠回答）——半表 / 半批 / 跨距或 kind 形错 / 同侧同键
+> 两行，各按对点名 `error/contract`（`decl tables come in pairs: pair i` / `decl tables must cover every pair: pair i` /
+> `malformed decl span: pair i` / `duplicate decl key: pair i`）。回执随之带 `unitEdges=[[源i,宿i,keyHash]…]`（严格升序）：同 kind 的键在**恰好一个**
+> 对里出现（两个即按名弃该键，无平局裁决、无相似度）、且两侧跨距内的 leftover 内容共享 ≥ `CE.FourClass.Cost.declFloor` 个互异
+> 哈希时成边。`declFloor` 是**推导**的：一个「从一处消失、在唯一另一处出现」的声明键**就是**跨站要买的出处身份，故它付掉
+> `siteCostCross`，余下要付的只有内容 ⇒ `declFloor = 1`（`declCredit = 0` 时塌回 `destFloor = 2`，旋钮可消融）。0 个共享行 =
+> **改编**，本级对它不出声。两张声明表的总行数 > `CE.FourClass.Decl.declCap` 65536 ⇒ `unitEdges:[]` + `unitEdgesDropped:true`
+> （拒绝，绝不截断）。**请求不带两表 = 回执不带 `unitEdges`，与本批前逐字节相同**：无行改类、无 block 移动、无 suspicion 变化，
+> 故 L2 的七道行级门与 81,640 穷举参照等价全部不动。fourclass golden 新增三对（10 一行证据开边 / 11 双目的地拒 + 改编零边 /
+> 12 半表按名拒）；§3 锚行数由 `fixture_contract` 从文件推导。报告新边 `lines:0`，行级已具名的边优先、只报一次。
+
 > **7.0.0**（判决正确性批，**major**，计划 v2.29 步 8，2026-09-05）：`fourclass/1` 对级 `dup=[hash…]` 改为
 > `dupSpans=[[hash,start,end]…]`（每个 after 侧出现一行，1 基闭区间；旧键不再读——请求形状变 = major），堆叠规则据此
 > 改为「≥ `stackingNovelFloor` 条 novel 行落在新重复单元的跨度内」（O47；`start < 1 ∨ end < start` 按对点名拒绝）。同批
@@ -560,7 +574,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
   "similar/1"]`；fourclass/2 =
-  2.0.0 的锚宽请求形状——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
+  2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
@@ -568,21 +582,22 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
-- `fourclass.request`（2.0.0 形状）：`{"id","pairs":[{"i","rem":[[[行,hash,宽],…],…],
-  "add":[…],"dup":[keyhash]}]}`——rem/add 为 L1 判 novel/deleted 的**显著**行按
+- `fourclass.request`（2.0.0 形状，7.0.0 起 `dupSpans`，7.1.0 起可带声明两表）：
+  `{"id","pairs":[{"i","rem":[[[行,hash,宽],…],…],"add":[…],"dupSpans":[[keyhash,起,止]],
+  "declRem":[[keyhash,kind,起,止]],"declAdd":[…]}]}`——rem/add 为 L1 判 novel/deleted 的**显著**行按
   **run 分组**（run 结构=对齐产物，Rust 侧产出），hash = fnv1a(trim)，宽 =
-  trim 后 alnum 计数（行事实，Cost.anchorFloor 的判定输入）；`dup` =
-  after 侧新出现重复的**顶层具名单元**键哈希（堆叠证据，符号知识留在 Rust，
-  仅哈希过线——ADR-002 A6）；`i` 为**不透明的文件对键**：批内唯一、由客户端选定，
-  接收方只拿它当 Map/Set 键，**绝不按它下标回查**（`CE/FourClass/Wire.hs:31` 的
+  trim 后 alnum 计数（行事实，Cost.anchorFloor 的判定输入）；`dupSpans` =
+  after 侧新出现重复的**顶层具名单元**每次出现的键哈希与跨度（堆叠证据，符号知识留在 Rust，
+  仅整数过线——ADR-002 A6）；`i` 为**不透明的文件对键**：批内唯一、由客户端选定，
+  接收方只拿它当 Map/Set 键，**绝不按它下标回查**（`CE/FourClass/Wire.hs:36` 的
   pIdx 自述 "an opaque pair index"；重复 `i` 由 `CE.FourClass.violation` 判
   `error/contract`——Anchor 的 (pair,run) 图会静默丢掉重复者的 run；跨匹配要求
-  `i` 不同）。批内合法地**稀疏**——发送方在滤掉空对**之前**取下标
-  （`cli/src/fourclass/batch.rs:194-204`，enumerate 先于 filter）；旧文"稠密 0 基
-  文件对位置"两侧实现从未成立，2026-08-20 就地更正（纯勘误，wire 字节不变）。
+  `i` 不同）。协议允许**稀疏**键；7.1.0 的生产者发送全部已度量对，空 leftover 对也可能是第二声明目的地，
+  不得在判唯一性之前丢掉。`declRem` / `declAdd` 同生同死、覆盖整批，缺席与空表不同（上方 O48 条）。
   within-first 前置（同对 add∩rem 必空）由 core 在边界校验，违反 → `error/contract`。
 - `fourclass.result`：`{"id","moved":[[i,出行,入行]],"blocks":[[源i,源行,宿i,宿行]],
-  "suspicions":[[i,规则名]],"degraded"(,"reason"∈{bucket_cap})}`——moved 为单调
+  "suspicions":[[i,规则名]],"degraded"(,"reason"∈{bucket_cap})(,"unitEdges":[[源i,宿i,keyhash]]
+  (,"unitEdgesDropped":true))}`——`unitEdges` 当且仅当请求带声明两表时在场；moved 为单调
   重分类 delta；blocks 为 ≥2 行站点证据（扩展/归因行只进 moved 不进 blocks）；
   suspicions 为 M4 判定规则点火记录（堆叠常数在 CE.FourClass.Verdict）。
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
@@ -673,7 +688,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （127 行，server 恒答 7.1.0）——它们是"minor 偏斜
+  （130 行，server 恒答 7.1.0）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 7.0.0；唯 `handshake/hello-ok` 的握手 request 随

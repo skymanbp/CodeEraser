@@ -223,7 +223,7 @@ non-judgment like a degraded reply, a site table that is not an ascending subseq
 rows sent, counts that do not add up to it, or an `over` that is no boolean: no failure, and
 no malformed reply, is ever read as "no sites" or "not over"
 ([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
-[corelink.rs:35](../../../cli/src/corelink.rs#L35)). The core registers the family as the
+[judged.rs:17-28](../../../cli/src/corelink/judged.rs#L17)). The core registers the family as the
 eleventh ([Protocol.hs:103](../../../core/app/CE/Protocol.hs#L103)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed

@@ -1,0 +1,436 @@
+{
+  "commits": [
+    {
+      "relocations": [
+        {
+          "from": "crates/core/app.rs",
+          "from_unit": "LONG",
+          "lines": 124,
+          "to": "crates/core/flags/defs.rs",
+          "to_unit": "doc_long/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "Command",
+          "lines": 3,
+          "to": "crates/core/flags/lowargs.rs",
+          "to_unit": "Mode"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "search_worker/2",
+          "lines": 2,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "search_worker/4"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "SortByKind",
+          "lines": 8,
+          "to": "crates/core/flags/lowargs.rs",
+          "to_unit": "SortModeKind"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "EncodingMode",
+          "lines": 6,
+          "to": "crates/core/flags/lowargs.rs",
+          "to_unit": "EncodingMode"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "impl ArgMatches",
+          "lines": 14,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "impl HiArgs"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "matcher_engine/3",
+          "lines": 10,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "matcher/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "matcher_rust/2",
+          "lines": 9,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "matcher_rust/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "matcher_pcre2/2",
+          "lines": 9,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "matcher_pcre2/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "searcher/2",
+          "lines": 5,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "searcher/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "overrides/1",
+          "lines": 2,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "globs/2"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "path_separator/1",
+          "lines": 4,
+          "to": "crates/core/flags/defs.rs",
+          "to_unit": "update/3"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "suggest/1",
+          "lines": 3,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "suggest_other_engine/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": null,
+          "lines": 13,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": null
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "suggest_pcre2/1",
+          "lines": 1,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "suggest_pcre2/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "suggest/1",
+          "lines": 6,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "suggest_pcre2/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "suggest_multiline/1",
+          "lines": 8,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "suggest_multiline/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "current_dir/0",
+          "lines": 3,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "current_dir/0"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "hostname/1",
+          "lines": 35,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "hostname/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "platform_hostname/0",
+          "lines": 12,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "platform_hostname/0"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "wsl_prefix/0",
+          "lines": 9,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "wsl_prefix/0"
+        },
+        {
+          "from": "crates/core/search.rs",
+          "from_unit": "print_stats_human/3",
+          "lines": 14,
+          "to": "crates/core/main.rs",
+          "to_unit": "print_stats/4"
+        },
+        {
+          "from": "crates/core/search.rs",
+          "from_unit": "print_stats_json/3",
+          "lines": 3,
+          "to": "crates/core/main.rs",
+          "to_unit": "print_stats/4"
+        },
+        {
+          "from": "crates/core/app.rs",
+          "from_unit": "compile_cpu_features/0",
+          "lines": 0,
+          "to": "crates/core/flags/doc/version.rs",
+          "to_unit": "compile_cpu_features/0"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "stdout/1",
+          "lines": 0,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "stdout/1"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "printer_summary/3",
+          "lines": 0,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "printer_summary/3"
+        },
+        {
+          "from": "crates/core/args.rs",
+          "from_unit": "printer_json/2",
+          "lines": 0,
+          "to": "crates/core/flags/hiargs.rs",
+          "to_unit": "printer_json/2"
+        },
+        {
+          "from": "crates/core/main.rs",
+          "from_unit": "config",
+          "lines": 0,
+          "to": "crates/core/flags/mod.rs",
+          "to_unit": "config"
+        }
+      ],
+      "sha": "082245dadb3854238e62b91aa95a46018cf16ef1"
+    },
+    {
+      "relocations": [
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": null,
+          "lines": 4,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": null
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "Config",
+          "lines": 5,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "Config"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "impl Default for Config",
+          "lines": 1,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "impl Default for Config"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "default/0",
+          "lines": 6,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "default/0"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "PathPrinterBuilder",
+          "lines": 2,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "PathPrinterBuilder"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "impl PathPrinterBuilder",
+          "lines": 4,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "impl PathPrinterBuilder"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "new/0",
+          "lines": 2,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "new/0"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "build/2",
+          "lines": 2,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "build/2"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "color_specs/2",
+          "lines": 6,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "color_specs/2"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "hyperlink_pattern/2",
+          "lines": 6,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "hyperlink_pattern/2"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "separator/2",
+          "lines": 3,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "separator/2"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "terminator/2",
+          "lines": 3,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "terminator/2"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "PathPrinter",
+          "lines": 4,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "PathPrinter"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "impl PathPrinter<W>",
+          "lines": 3,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "impl PathPrinter<W>"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "write_path/2",
+          "lines": 10,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "write/2"
+        },
+        {
+          "from": "crates/core/path_printer.rs",
+          "from_unit": "start_hyperlink_span/2",
+          "lines": 12,
+          "to": "crates/printer/src/path.rs",
+          "to_unit": "start_hyperlink_span/2"
+        }
+      ],
+      "sha": "23e21133ba6a8ca2c4d040092ad1bc22f14e8861"
+    },
+    {
+      "relocations": [
+        {
+          "from": "crates/core/main.rs",
+          "from_unit": "version_pcre2/0",
+          "lines": 3,
+          "to": "crates/core/flags/doc/version.rs",
+          "to_unit": "generate_pcre2/0"
+        }
+      ],
+      "sha": "286de9564e511f01f13756c207e9b26ec781591d"
+    },
+    {
+      "relocations": [
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": null,
+          "lines": 2,
+          "to": "crates/printer/src/hyperlink/aliases.rs",
+          "to_unit": null
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": "is_sorted/0",
+          "lines": 5,
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "to_unit": "aliases_are_sorted/0"
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": "tests",
+          "lines": 2,
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "to_unit": "tests"
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": "alias_names_are_reasonable/0",
+          "lines": 9,
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "to_unit": "alias_names_are_reasonable/0"
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": "aliases_are_valid_formats/0",
+          "lines": 1,
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "to_unit": "aliases_are_valid_formats/0"
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": "HYPERLINK_PATTERN_ALIASES",
+          "lines": 0,
+          "to": "crates/printer/src/hyperlink/aliases.rs",
+          "to_unit": "HYPERLINK_PATTERN_ALIASES"
+        },
+        {
+          "from": "crates/printer/src/hyperlink_aliases.rs",
+          "from_unit": "find/1",
+          "lines": 0,
+          "to": "crates/printer/src/hyperlink/mod.rs",
+          "to_unit": "find/1"
+        }
+      ],
+      "sha": "66aa4a63bb52468aa789cfa00c0643111ff03239"
+    },
+    {
+      "relocations": [
+        {
+          "from": "crates/printer/src/standard.rs",
+          "from_unit": "impl StandardBuilder",
+          "lines": 3,
+          "to": "crates/searcher/src/searcher/mod.rs",
+          "to_unit": "impl SearcherBuilder"
+        },
+        {
+          "from": "crates/printer/src/standard.rs",
+          "from_unit": "impl StandardBuilder",
+          "lines": 3,
+          "to": "crates/searcher/src/searcher/mod.rs",
+          "to_unit": "impl Searcher"
+        },
+        {
+          "from": "crates/printer/src/standard.rs",
+          "from_unit": "max_matches/2",
+          "lines": 2,
+          "to": "crates/searcher/src/searcher/mod.rs",
+          "to_unit": "max_matches/2"
+        },
+        {
+          "from": "crates/searcher/src/searcher/glue.rs",
+          "from_unit": "find/1",
+          "lines": 2,
+          "to": "crates/searcher/src/searcher/core.rs",
+          "to_unit": "find/2"
+        }
+      ],
+      "sha": "a6e0be3c909c5c09e5fb402c907f3beb88cfb4c4"
+    },
+    {
+      "relocations": [
+        {
+          "from": "crates/printer/src/hyperlink.rs",
+          "from_unit": "aliases_are_valid/0",
+          "lines": 2,
+          "to": "crates/printer/src/hyperlink_aliases.rs",
+          "to_unit": "aliases_are_valid_formats/0"
+        }
+      ],
+      "sha": "f608d4d9b3ab210b7e6964ca7d1d7dc9c077329e"
+    }
+  ],
+  "corpus": "ripgrep",
+  "generated_from": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "schema": "ce.eval-commit-edges/1.0.0"
+}

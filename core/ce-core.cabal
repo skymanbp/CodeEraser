@@ -17,7 +17,7 @@ executable ce-core
                       CE.Handshake, CE.Protocol, CE.Protocol.Version, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
-                      CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,
+                      CE.FourClass.Verdict, CE.FourClass.Decl, CE.Graph, CE.Graph.Cost,
                       CE.Graph.Build, CE.Graph.Dead, CE.Graph.Cycles,
                       CE.Graph.Position, CE.Graph.Contract, CE.Graph.Advisory,
                       CE.Clone, CE.Clone.Cost,
@@ -55,7 +55,7 @@ test-suite ce-core-test
                       CE.Handshake, CE.Protocol, CE.Protocol.Version, CE.FourClass,
                       CE.FourClass.Wire, CE.FourClass.Cost,
                       CE.FourClass.Anchor, CE.FourClass.Provenance,
-                      CE.FourClass.Verdict, CE.Graph, CE.Graph.Cost,
+                      CE.FourClass.Verdict, CE.FourClass.Decl, CE.Graph, CE.Graph.Cost,
                       CE.Graph.Build, CE.Graph.Dead, CE.Graph.Cycles,
                       CE.Graph.Position, CE.Graph.Contract, CE.Graph.Advisory,
                       CE.Clone, CE.Clone.Cost,
@@ -76,7 +76,7 @@ test-suite ce-core-test
                       AuditProps, TombstoneProps, SimilarProps, EntropyProps, JoinProps, ScanProps, ScanCyclesProps,
                       StructureProps, StructureModularityProps, TrendProps, EraseProps, VerdictProps,
                       VerdictWireProps, VerdictFenceProps, VerdictKnobProps, SplitProps, WireHarness,
-                      ClassProps, StackingProps
+                      ClassProps, StackingProps, DeclProps
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

@@ -30,7 +30,7 @@ battery =
     , ("a malformed span refuses by name", malformed)
     ]
  where
-  pair spans = Pair 0 [] [] spans
+  pair spans = Pair 0 [] [] spans Nothing Nothing
   novel = [1 .. stackingNovelFloor]
   inside = suspicions [(pair [(9, 1, stackingNovelFloor)], novel, 0)]
   outside = suspicions [(pair [(9, 100, 200)], novel, 0)]

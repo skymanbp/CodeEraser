@@ -4,6 +4,7 @@
 //! sprint: batch.rs and delta.rs importing these THROUGH mod.rs
 //! made the family a module cycle the graph axis itself billed.
 
+use super::decls::{self, Decl};
 use super::diff;
 use super::units::{self, Unit};
 use crate::scan::lang::Lang;
@@ -44,6 +45,11 @@ pub struct Classification {
     /// Unit keys present on both sides whose changed lines are all
     /// moves — the "function relocated intact" summary.
     pub relocated_units: Vec<String>,
+    /// Declarations that vanished from the before side / appeared on
+    /// the after side (`fourclass/1` 7.1.0, O48). Measured HERE
+    /// because this is the one place both unit tables are already in
+    /// hand; the pairing across pairs is judged in CE.FourClass.Decl.
+    pub decls: (Vec<Decl>, Vec<Decl>),
     pub changed: ChangedLines,
     pub degraded: bool,
 }
@@ -77,6 +83,7 @@ pub fn classify(before: &str, after: &str, lang: Lang) -> Classification {
         }
     }
     let relocated_units = relocated(&moved, &before_units, &after_units, &d);
+    let decls = decls::tables(&before_units, &after_units);
     let changed = ChangedLines {
         removed: d.removed.iter().map(|&i| i + 1).collect(),
         added: d.added.iter().map(|&j| j + 1).collect(),
@@ -85,6 +92,7 @@ pub fn classify(before: &str, after: &str, lang: Lang) -> Classification {
         counts,
         moved,
         relocated_units,
+        decls,
         changed,
         degraded: d.degraded,
     }
