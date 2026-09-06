@@ -47,7 +47,7 @@
 > table cannot gain a row the rule forbids, and a release that earns one
 > says which of the two reasons it has none yet.
 
-The current release, v1.7.0, earns a row and does not have one yet: it is measured after the tag.
+The newest row, v1.7.0, is the release this build is.
 
 ## Latency series (self repository)
 
@@ -172,6 +172,20 @@ The current release, v1.7.0, earns a row and does not have one yet: it is measur
 | 1.5.1 | docdup_warm | 832 | 836 | 3 | windows/x86_64/16cpu | 2026-09-03 |
 | 1.5.1 | hook_probe | 42 | 45 | 30 | windows/x86_64/16cpu | 2026-09-03 |
 | 1.5.1 | scan | 585 | 2463 | 5 | windows/x86_64/16cpu | 2026-09-03 |
+| 1.6.0 | check_warm | 1352 | 1393 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.6.0 | deadcode_warm | 1066 | 2406 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.6.0 | dedup_cold | 5327 | 5407 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.6.0 | dedup_warm | 430 | 442 | 5 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.6.0 | docdup_warm | 1196 | 1219 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.6.0 | hook_probe | 47 | 50 | 30 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.6.0 | scan | 616 | 2931 | 5 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | check_warm | 2387 | 2396 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | deadcode_warm | 1166 | 2873 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | dedup_cold | 10293 | 10326 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | dedup_warm | 495 | 509 | 5 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | docdup_warm | 1408 | 1428 | 3 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | hook_probe | 48 | 58 | 30 | windows/x86_64/16cpu | 2026-09-06 |
+| 1.7.0 | scan | 683 | 2622 | 5 | windows/x86_64/16cpu | 2026-09-06 |
 
 ## Frozen evaluation points
 
