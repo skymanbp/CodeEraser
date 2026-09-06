@@ -76,7 +76,10 @@ user files; it may create or refresh the `.ce/` cache):
    part of apply, not a suggestion);
 6. an append-only record in `.ce/erase-log.ndjson`: ts, class,
    file/span, provenance, plan hash — an audit file for human review
-   alongside git's recovery path; no CLI or GUI surface renders it today.
+   alongside git's recovery path, read back by `ce erase --log`, the
+   MCP tool `erase_log` and the GUI erase screen's audit-log section
+   (one document, `ce.erase-trail-report`; a line the reader cannot parse
+   is named by number and fails `--log`'s exit code).
 
 ## Boundaries
 

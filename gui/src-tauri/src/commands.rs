@@ -143,6 +143,11 @@ face_cmd!(
 face_cmd!(deadcode_report, "deadcode", codeeraser::faces::deadcode);
 face_cmd!(clone_report, "clone", codeeraser::faces::clone_t3);
 face_cmd!(docdup_report, "docdup", codeeraser::faces::docdup);
+// the audit trail's reader (O50) — no core, never a writer: the erase
+// screen's third command reads what its second one appended
+face_cmd!(erase_log_report, "erase_log", |r, _| {
+    codeeraser::faces::erase_log(r)
+});
 face_cmd!(
     graphcanvas_report,
     "graphcanvas",

@@ -35,7 +35,9 @@
 //!    the tag in error text, reaching no threshold, no wire field
 //!    and no rendered row — dropped, so a rename is silence (step
 //!    #16, O42's open half); declaration ORDER, which is
-//!    precedence, still counts through rule 3.
+//!    precedence, still counts through rule 3;
+//! 6. the `[ui]` table is presentation — which language a sentence is
+//!    spoken in moves no line — dropped whole (plan v2.29 step 9, O61).
 //!
 //! What survives is hashed as JSON (serde_json's map is key-ordered,
 //! so the bytes are canonical); an empty survivor is no fingerprint
@@ -69,6 +71,11 @@ fn effective_default() -> Config {
 /// the config judges as the shipped default does.
 pub fn canonical(cfg: &Config) -> Value {
     let mut declared = serde_json::to_value(cfg).expect("Config serializes");
+    // rule 6: the console language is presentation, never a knob —
+    // the `[ui]` table is dropped whole (plan v2.29 step 9, O61)
+    if let Some(top) = declared.as_object_mut() {
+        top.remove("ui");
+    }
     // rule 5: the class name is a label, never a knob
     if let Some(classes) = declared
         .get_mut("rules")

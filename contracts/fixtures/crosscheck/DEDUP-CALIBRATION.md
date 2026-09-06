@@ -135,3 +135,26 @@ FP 类 distinct ≤6 / TP 类 ≥7 的分离带下沿；抑制数入 summary 透
 - jscpd：`npx jscpd --min-tokens 50 --reporters json --output <tmp>
   --format "python,typescript,go,rust" contracts/fixtures/crosscheck/`
 - ce：`ce dedup contracts/fixtures/crosscheck --format json --db <tmp>/ce.db`
+
+### 多样性下限的复测（现仪器，2026-09-05 起常设）
+
+上文「FP 类 distinct ≤6 / TP 类 ≥7」的逐语料数字此前只有 `pairs.rs` 一段注释
+引用，无人复跑。测试子仓 `it/eval_dedup_distinct.rs` 用产品自己的 `dedup::analyze`
+关掉下限（`--min-distinct 0`）重量：每个语料在 t=50 处的全部块保留各自的
+`distinct`，直方图、出厂下限（7）抑制的块数与被抑制的块（两端 `文件:行`）逐条落
+`contracts/eval/dedup-distinct-v1.json`，下表由该冻结件渲染。CI 腿
+`the_fixtures_reproduce_the_calibration_and_the_record_restates_the_doc` 每次都实测钉定
+fixtures 并对表；四个外部语料（tip 见 EVAL-SET-M5-3.md，本表只写前七位）由
+`CE_BLESS=1 cargo test --release --test it -- --ignored eval_dedup_distinct::regenerate --nocapture`
+重量并重写冻结件与下表。仪器再生的是数字，不是读法：哪一块是数据行（真阳 / 假阳）
+仍是 2026-08-07 仲裁的记录。
+
+<!-- distinct:begin -->
+| 语料 @ tip | 文件 | 块（下限关） | distinct ≤ 6 = 出厂 7 抑制 | 落在哪些文件（族 = 两端文件名） |
+|---|---|---|---|---|
+| fixtures @ tracked (SOURCES.md) | 20 | 170 | 8 | packages__zod__src__v4__locales__ru.ts ×3, packages__zod__src__v4__locales__bg.ts ×2, packages__zod__src__v4__locales__ota.ts ×2, src__requests__status_codes.py ×1 |
+| cobra @ adbc881 | 36 | 1903 | 13 | bash_completions_test.go ×8, bash_completions_test.go ↔ command_test.go ×3, completions_test.go ×2 |
+| requests @ 8068356 | 37 | 75 | 12 | flask_theme_support.py ×11, status_codes.py ×1 |
+| ripgrep @ 3fce3b5 | 110 | 10937 | 17 | disallowed.rs ×10, hiargs.rs ×7 |
+| zod @ 912f0f5 | 404 | 17022 | 623 | to-json-schema.test.ts ×88, ecosystem.tsx ↔ silver.tsx ×58, number.test.ts ↔ string.test.ts ×53, types.ts ↔ checks.ts ×48, template-literal.test.ts ↔ computed.test.ts ×44, ecosystem.tsx ×26, … 另 41 族 |
+<!-- distinct:end -->

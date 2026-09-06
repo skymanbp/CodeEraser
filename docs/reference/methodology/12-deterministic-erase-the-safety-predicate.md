@@ -39,7 +39,7 @@ folded per-language unresolved count
 
 The class positions are part of the source contract: position `0` is
 retired, `1` is `verbatim_doc`, `2` is `t1_twin`, and `3` is `dead_file`
-([Cost.hs:5-20](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:16-24](../../../cli/src/erase/model.rs#L16)). Each class below is
+([Cost.hs:5-20](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:25-33](../../../cli/src/erase/model.rs#L25)). Each class below is
 written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
 
@@ -57,7 +57,7 @@ rows ([gather.rs:86-106](../../../cli/src/erase/gather.rs#L86)).
 The position stays frozen and is refused **by name** rather than folded into
 `unknown class`, so a client still sending it learns which road replaced it
 ([Erase.hs:32](../../../core/app/CE/Erase.hs#L32),
-[model.rs:16-23](../../../cli/src/erase/model.rs#L16)). Renumbering the
+[model.rs:25-32](../../../cli/src/erase/model.rs#L25)). Renumbering the
 survivors would have moved three other frozen codes to reclaim one array
 slot, so the name array keeps a `(retired)` placeholder in that position.
 The Rust graph leg still refuses a degraded deadcode report by name before
@@ -98,7 +98,7 @@ this road: the acceptance fixture's public `copy.py` twin was refused only
 because the `dead_file` row for the same path won the plan's closure by
 class-name order (plan v2.29 step 8, O51). The closure now keeps the richer
 eraseable row for a path — a twin names the live unit it duplicates, a dead file
-names only its death ([mod.rs:100-130](../../../cli/src/erase/mod.rs#L100)).
+names only its death ([mod.rs:104-134](../../../cli/src/erase/mod.rs#L104)).
 
 **Predicate.** `judgeRow` evaluates those facts in source order: coverage must
 be `1`, bytes must be equal, the copy must be dead and not a public surface
@@ -119,7 +119,7 @@ The same candidate family as class 0 with the trust judgment moved to its owner:
 ### 3. The seven reason codes
 
 The advisory vocabulary is frozen at seven positions in the client model
-([model.rs:27-39](../../../cli/src/erase/model.rs#L27)). The table records the
+([model.rs:36-48](../../../cli/src/erase/model.rs#L36)). The table records the
 meaning and the exact `judgeRow` condition that emits each code. Reason `0` is
 the successful verdict; the other six are refusals. The domain only ever
 grows — position 6 arrived at 6.1.0 and nothing renumbered, because a frozen
@@ -161,23 +161,23 @@ requires `degraded == false` and reports cap-mirror drift when it is not
 
 Applying a plan enters the executor only after it has collected the rows marked
 eraseable. The executor's precondition function is deliberately ordered
-([apply.rs:40-46](../../../cli/src/erase/apply.rs#L40)).
+([apply.rs:37-43](../../../cli/src/erase/apply.rs#L37)).
 
 1. **Repository identity.** `git rev-parse --show-toplevel` must succeed, and
    its canonical path must equal the supplied erase root
-   ([apply.rs:46-60](../../../cli/src/erase/apply.rs#L46)).
+   ([apply.rs:43-57](../../../cli/src/erase/apply.rs#L43)).
 2. **Worktree cleanliness.** `git status --porcelain` must succeed; after the
    `.ce` state directory is removed from the comparison, no user dirt may
-   remain ([apply.rs:61-81](../../../cli/src/erase/apply.rs#L61)).
+   remain ([apply.rs:58-78](../../../cli/src/erase/apply.rs#L58)).
 3. **Target identity.** Every target is read again and its FNV-1a content hash
    must equal the hash captured in the plan
-   ([apply.rs:82-91](../../../cli/src/erase/apply.rs#L82)).
+   ([apply.rs:79-88](../../../cli/src/erase/apply.rs#L79)).
 
 Only after all three checks does the executor write targets and append the
-audit records ([apply.rs:19-37](../../../cli/src/erase/apply.rs#L19)). The apply
+audit records ([apply.rs:16-34](../../../cli/src/erase/apply.rs#L16)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
-([mod.rs:54-85](../../../cli/src/erase/mod.rs#L54)).
+([mod.rs:58-89](../../../cli/src/erase/mod.rs#L58)).
 
 ### 6. No tuning surface
 

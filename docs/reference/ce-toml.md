@@ -91,3 +91,9 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | `ledger` | *(absent)* | Files declared to hold the changelog role, in the exclude list's dialect (`dir/` the directory's files): exempt whole and counted `declared` in the feed — the backstop for a ledger neither the path, the shape nor the segment witness reads |
 | `terms` | *(absent)* | The repository's own vocabulary: words that never spell a name, whole or as a word of a compound (`pork` declared keeps `braise_pork` out and leaves `braise` in); matched case-insensitively |
 
+## [ui]
+
+| key | default | meaning |
+|---|---|---|
+| `lang` | *(absent)* | The project's console language, `en` or `zh` (any other value is refused at load by name): the third selector — `--lang` wins, then `CE_LANG`, then this key — read where the console face loads its config, so `ce` commands, the hooks' refusal sentences and the git hooks answer in it; never `--help`, which renders before a project is known, and never the GUI, which keeps its own language button. Outside the knob fingerprint: a language moves no line |
+

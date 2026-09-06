@@ -69,36 +69,50 @@ pub(super) fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
     Ok(crate::graph::sites_json(&crate::graph::analyze(root)?))
 }
 
-/// The plain judged faces (no extra knobs) share ONE adapter body —
-/// the census caught their three shells chaining into clone blocks;
-/// the shell exists once and thin per-name fns satisfy the table's
-/// fn-pointer field (the pre-batch-4 banked shape, now over faces).
-fn judged(root: &Path, which: &str) -> Result<String> {
-    let core = core();
+/// The plain faces (no extra knobs) share ONE adapter body — the
+/// census caught the three judged shells chaining into clone blocks,
+/// and the trail reader (O50) made `erase` / `erase_log` / `doctor`
+/// the next such chain; the shell exists once and thin per-name fns
+/// satisfy the table's fn-pointer field (the pre-batch-4 banked
+/// shape, now over faces). `erase` reaches the PLAN alone and
+/// `erase_log` reads the trail it leaves, without a core; `doctor` is
+/// the one tool whose FINDING may be a failure — a core that will not
+/// answer rides inside its document rather than as a tool error, so
+/// the caller reading it learns the state instead of an exception.
+fn plain_face(root: &Path, which: &str) -> Result<String> {
     let doc = match which {
-        "deadcode" => crate::faces::deadcode(root, &core)?,
-        "clone" => crate::faces::clone_t3(root, &core)?,
-        "docdup" => crate::faces::docdup(root, &core)?,
-        other => anyhow::bail!("not a plain judged face: {other}"),
+        "deadcode" => crate::faces::deadcode(root, &core())?,
+        "clone" => crate::faces::clone_t3(root, &core())?,
+        "docdup" => crate::faces::docdup(root, &core())?,
+        "erase" => crate::faces::erase(root, &core())?,
+        "erase_log" => crate::faces::erase_log(root)?,
+        "doctor" => crate::faces::doctor(root, &core())?,
+        other => anyhow::bail!("not a plain face: {other}"),
     };
     Ok(doc.to_string())
 }
 
 /// The adapters that differ by ONE string. The catalog needs a
-/// distinct fn pointer per row, so the three-line body `judged(root,
-/// NAME)` was typed once per family — and once the split put them
-/// side by side this repo's own clone gate counted them as a block,
-/// which is the correct reading: they are one function wearing three
-/// names. Minted here instead (the face_cmd! precedent).
+/// distinct fn pointer per row, so the three-line body
+/// `plain_face(root, NAME)` was typed once per family — and once the
+/// split put them side by side this repo's own clone gate counted them
+/// as a block, which is the correct reading: they are one function
+/// wearing several names. Minted here instead (the face_cmd! precedent).
 macro_rules! plain {
     ($($name:ident => $family:literal),+ $(,)?) => { $(
         pub(super) fn $name(root: &Path, _a: &Value) -> Result<String> {
-            judged(root, $family)
+            plain_face(root, $family)
         }
     )+ };
 }
 
-plain!(deadcode => "deadcode", docdup => "docdup");
+plain!(
+    deadcode => "deadcode",
+    docdup => "docdup",
+    erase => "erase",
+    erase_log => "erase_log",
+    doctor => "doctor",
+);
 
 /// Not plain: `units` switches this row to the OTHER document its own
 /// CLI flag produces, so the branch is real and stays written out.
@@ -106,7 +120,7 @@ pub(super) fn clone_report(root: &Path, a: &Value) -> Result<String> {
     if a["units"].as_bool().unwrap_or(false) {
         return Ok(crate::faces::clone_units(root)?.to_string());
     }
-    judged(root, "clone")
+    plain_face(root, "clone")
 }
 
 pub(super) fn join(root: &Path, a: &Value) -> Result<String> {
@@ -135,17 +149,6 @@ pub(super) fn check(root: &Path, a: &Value) -> Result<String> {
         .as_u64()
         .map(|v| u32::try_from(v).unwrap_or(u32::MAX));
     Ok(crate::faces::check(root, &core(), floor)?.to_string())
-}
-
-pub(super) fn erase(root: &Path, _a: &Value) -> Result<String> {
-    Ok(crate::faces::erase(root, &core())?.to_string())
-}
-
-/// The one tool whose FINDING may be a failure: a core that will not
-/// answer rides inside the document rather than as a tool error, so
-/// the caller reading it learns the state instead of an exception.
-pub(super) fn doctor(root: &Path, _a: &Value) -> Result<String> {
-    Ok(crate::faces::doctor(root, &core())?.to_string())
 }
 
 /// The one tool about the BINARY rather than the project: `path`

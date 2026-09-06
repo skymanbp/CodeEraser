@@ -9,7 +9,7 @@
     "gui-tree.png": "ee50c3e026167d2d4a03d44f114e714c2fc3d88a343009d2c632c65430f574f6",
     "gui-candidates.png": "2dff67c8df339bc4a7da09386672b16610b0701bb6c62d1e28c45eadc21ff4ee"
   },
-  "ui": "be93a3ffc1aff751807f5f88d676fd42975a7b9b237ef9b42fbeb39a1b15c98d",
+  "ui": "8fd587bac36bb987488ea0489ab266285391e90c46a78cb4c6513403d0bb50c2",
   "schemas": {
     "structure": "ce.structure-report/0.6.0",
     "join": "ce.join-report/0.3.0",

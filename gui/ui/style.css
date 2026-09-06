@@ -140,6 +140,27 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   text-align: right;
 }
 #status.err { color: var(--err); }
+/* Below 1150px the header cannot seat the eleven-tab strip beside the
+   brand, the root field at its 120px minimum and the language button
+   even with the echo and the status column squeezed to nothing — the
+   strip and the button start to clip. Measured, not estimated: `node
+   scripts/measure_header.js` in headless Edge (the engine the app ships
+   on), 2026-09-05 — one row fits from 1150px in English, 844px in
+   Chinese; the batch-9 proposal's 1120px was a glyph-width guess (plan
+   v2.29 step 9, O25). Above the line the status column keeps shrinking
+   as designed (0–105px between 1150 and the 1280px default window in
+   English); a wrap at the unsqueezed natural width (1618px) would put
+   the strip on its own row at the default window and was not taken.
+   Below it the strip takes a row of its own; its tabs give up 4px of
+   padding a side so the eleven fit that row down to the app's 860px
+   minimum window (measured: 841px of tabs against the 828px the row
+   has there), and the strip wraps inside its row rather than clip if
+   a narrower window ever shows it. */
+@media (max-width: 1149px) {
+  header { flex-wrap: wrap; }
+  #tabs { order: 5; flex-basis: 100%; flex-wrap: wrap; }
+  #tabs .tab { padding: 0 var(--s3); }
+}
 
 /* ---- per-view control bar ---- */
 .view { flex: 1; display: flex; flex-direction: column; min-height: 0; }

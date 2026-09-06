@@ -11,7 +11,16 @@ use std::collections::BTreeMap;
 /// JSON output schema id; bump on shape change (plan §7.1). 0.2.0
 /// (plan v2.25): each row carries `sites`, the unresolved reference
 /// sites in its language — the number behind `language_unresolved`.
-pub const SCHEMA_ID: &str = "ce.erase-plan/0.2.0";
+/// 0.3.0 (plan v2.29 step 9, O24): `families` — every kind in
+/// `counts.out_of_class` mapped to the family command that owns the
+/// finding, so the console, the GUI and the MCP document name the
+/// same command instead of "see the family command".
+pub const SCHEMA_ID: &str = "ce.erase-plan/0.3.0";
+
+/// The audit trail's record schema — apply.rs writes it, log.rs reads
+/// it back (plan v2.29 step 9, O50). Bump-log: 0.1.0 = the M9 batch-3
+/// landing shape.
+pub const LOG_SCHEMA: &str = "ce.erase-log/0.1.0";
 
 /// Frozen class positions — the wire's `class` field (erase/1).
 /// Class 3 is dead_file on the CONFIDENCE road (2.32.0, H3): its
@@ -39,6 +48,23 @@ pub const REASON_NAMES: [&str; 7] = [
     "unit_not_covered",
     "public_surface",
 ];
+
+/// The one out-of-class kind gather.rs counts: a verified T1/T2 clone
+/// block covering no whole unit has no deterministic-safe erase, and
+/// the family that judged it is where the reader goes next.
+pub const T1T2_NO_WHOLE_UNIT: &str = "t1t2_block_no_whole_unit";
+
+/// The family command that owns an out-of-class kind (O24): the one
+/// table every face reads — the console sentence, the GUI chip and
+/// the `families` map in the plan document all come from here. A kind
+/// this table does not know renders without a command rather than
+/// with a wrong one.
+pub fn family_command(kind: &str) -> Option<&'static str> {
+    match kind {
+        T1T2_NO_WHOLE_UNIT => Some("ce dedup"),
+        _ => None,
+    }
+}
 
 /// One candidate as measured: the dense facts the wire carries plus
 /// the labels the wire deliberately does not (row index is identity;

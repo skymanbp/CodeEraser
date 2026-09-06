@@ -28,7 +28,7 @@
 use crate::i18n;
 use std::io::{IsTerminal, Write};
 use std::sync::OnceLock;
-use std::sync::atomic::{AtomicI64, AtomicU64, AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicI64, AtomicU64, AtomicUsize, Ordering};
 use std::time::Instant;
 
 /// Which measurement is running. A TYPE rather than the bare integer
@@ -99,6 +99,19 @@ struct Sink {
 /// daemon, every test — is silent without doing anything.
 static SINK: OnceLock<Option<Sink>> = OnceLock::new();
 
+/// Set by `arm()` whether or not the face paints: this process IS a
+/// console face. Painting is a TTY question; being a face is not — a
+/// hook with piped stderr is one, and the project's `[ui] lang`
+/// reads this bit (i18n::init_from_config), never the sink.
+static FACE: AtomicBool = AtomicBool::new(false);
+
+/// Whether `arm()` ran: the one console-face bit, for the library
+/// paths that must stay inert in the GUI, the MCP server, the daemon
+/// and every test.
+pub fn armed() -> bool {
+    FACE.load(Ordering::Relaxed)
+}
+
 /// Arm the console face. `CE_PROGRESS=1` forces it on and `=0` off;
 /// otherwise a terminal on stderr decides. The override is not a
 /// convenience: a TTY-only feature cannot be observed by a test or a
@@ -108,6 +121,7 @@ static SINK: OnceLock<Option<Sink>> = OnceLock::new();
 /// of them ever paint (CE_LANG / CE_BLESS / CE_ACCEPT_BASELINE are
 /// the same shape).
 pub fn arm() {
+    FACE.store(true, Ordering::Relaxed);
     let on = match std::env::var("CE_PROGRESS").as_deref() {
         Ok("0") => false,
         Ok("1") => true,

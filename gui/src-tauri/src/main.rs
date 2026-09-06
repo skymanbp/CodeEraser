@@ -29,6 +29,7 @@ fn main() {
             commands::similar_report,
             commands::erase_preview,
             commands::erase_apply,
+            commands::erase_log_report,
             commands::bench_doc,
             commands::doctor_report,
             commands::update_check,

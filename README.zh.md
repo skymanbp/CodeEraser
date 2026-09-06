@@ -10,7 +10,7 @@
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 750 行——或超过其 `[[rules.class]]` 声明的那条线——的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，CI 退出码拒绝提交。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十五<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、Markdown（<!--ce:count:grammars#word-->六<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->七<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml——进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十六<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现——以及它的不同之处
 
@@ -120,7 +120,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | `ce update` | 最新发布对比本构建，退出码 0 / 1 / 2；`--yes` 两枚 pin 都通过后替换 `ce` + `ce-core`，`--installer` 另存已校验的 GUI 安装包 |
 | `ce doctor` / `ce eject` / `ce mcp` | 本机状态；按项目卸载；只读 MCP 服务器 |
 
-控制台输出、`--help` 与钩子自己的拒绝语默认英文，`--lang zh`（或 `CE_LANG=zh`）切中文；JSON schema 与 FAIL/pass 词汇永不翻译。`ce.toml` 里的 `[[rules.class]]` 给一组 glob 自己的尺寸与复杂度线和棘轮容差（`0` = 一行不许长），分数、`ce scan` 阶梯与 PreToolUse 预算读的是同一条线（[ce.toml 参考](docs/reference/ce-toml.md)）。
+控制台输出、`--help` 与钩子自己的拒绝语默认英文，`--lang zh`、`CE_LANG=zh` 或项目 `ce.toml` 的 `[ui] lang = "zh"` 切中文（优先级依此为序，`--help` 只读前两者）；JSON schema 与 FAIL/pass 词汇永不翻译。`ce.toml` 里的 `[[rules.class]]` 给一组 glob 自己的尺寸与复杂度线和棘轮容差（`0` = 一行不许长），分数、`ce scan` 阶梯与 PreToolUse 预算读的是同一条线（[ce.toml 参考](docs/reference/ce-toml.md)）。
 
 **更新。** 发布分两段——draft 工件被哈希，pin 提交进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节（[RELEASE](docs/RELEASE.md)）——`ce update` 与 tag 腿的安装包校验读的都是它。`ce update` 读最新 tag 与该 tag 上已提交的 `manifest.env`；判定即退出码，`--yes` 只在没有别的账本管着这份二进制时动手。插件绑定的副本由 `/plugin update codeeraser` 重钉；cargo 安装由 `cargo install codeeraser`；GUI 应用本体由 `--installer` 保存的安装包更新。插件的 SessionStart 行每天通报一次新版本（`CE_UPDATE_CHECK=0` 关闭）；GUI 有更新屏；`/codeeraser:update` 在 Claude Code 里跑检查。
 
@@ -146,6 +146,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 基线写入 | `ce baseline` | — 只在 CLI：机器面永不写基线 | — |
 | 擦除计划 | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
 | 擦除执行 | `ce erase --apply` | `erase`, `erase_apply` | — 无 MCP 面：执行是人类动作 |
+| 擦除审计日志 | `ce erase --log` | `erase`, `erase_log_report` | MCP `erase_log` |
 | 本机状态 | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
 | 更新检查 | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
 | 更新执行 | `ce update --yes` | `update`, `update_apply` | — 插件副本由 `/plugin update codeeraser` 重钉 |
