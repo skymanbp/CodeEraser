@@ -18,10 +18,7 @@ use std::path::Path;
 /// failure), and `ce scan`/`ce check` refuse that config out loud.
 pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {
     let rel = crate::scan::walk::rel_str(root, Path::new(path));
-    match crate::scan::classes::Classes::compile(root, &cfg.rules) {
-        Ok(classes) => classes.thresholds_for(cfg, &rel),
-        Err(_) => cfg.thresholds.clone(),
-    }
+    super::zone::table_for(root, cfg, &rel)
 }
 
 /// The graded zone's two lines and its arming, resolved once per
@@ -199,14 +196,10 @@ pub(super) fn zone_assess(
     mode: &str,
     lines: usize,
 ) -> Option<(&'static str, String)> {
-    let cap = z.cap;
-    let soft = committed_soft(root).unwrap_or(z.warn);
-    if cap == 0 || cap <= soft || lines <= soft {
-        return None;
-    }
-    let permille = (lines - soft) * 1000 / (cap - soft);
-    let armed = z.armed;
-    let tier = zone_tier(permille, committed_tiers(root));
+    let (cap, armed) = (z.cap, z.armed);
+    let (frozen, tiers) = committed(root);
+    let soft = frozen.unwrap_or(z.warn);
+    let super::zone::Landing { permille, tier } = super::zone::landing(lines, soft, cap, tiers)?;
     let file = &env.tool_input.file_path;
     // the B4 suppression consults the feed BEFORE this event lands
     // in it (the probe rule's ordering — a warn must not read its
@@ -234,41 +227,17 @@ pub(super) fn zone_assess(
     ))
 }
 
-/// The v2.6 §A map, wired v2.7 ① behind the ce.toml opt-in. Since
-/// 2.21.0 (batch-7 slice 5) the cut points are CORE-authored
-/// (CE.Verdict.Cost zoneWarnPermille/zoneAskPermille) and ride the
-/// committed baseline; the compiled pair is the declared mirror a
-/// pre-2.21 baseline falls back to.
-fn zone_tier(permille: usize, tiers: Option<(usize, usize)>) -> &'static str {
-    let (warn, ask) = tiers.unwrap_or((250, 750));
-    if permille < warn {
-        "observe"
-    } else if permille <= ask {
-        "warn"
-    } else {
-        "ask"
+/// The zone's two core-authored inputs off the committed
+/// ce-baseline.json — the hook's one channel to the §B fence
+/// (daemon-free by design, so a plain local read is the honest
+/// transport). ONE read per write: the frozen soft line and the tier
+/// cut pair used to open, parse and drop the same document twice, on
+/// a file that is 25 000 lines in this repository. An unreadable or
+/// absent baseline answers (None, None) — every fallback is the pure
+/// half's, spelled once (guard::zone).
+fn committed(root: &Path) -> (Option<usize>, Option<(usize, usize)>) {
+    match crate::score::baseline::document(root) {
+        Ok(Some(doc)) => super::zone::envelope(&doc),
+        _ => (None, None),
     }
-}
-
-/// The core-authored tier pair off the committed baseline (the
-/// committed_soft transport, second key): [warn, ask] permille,
-/// sane only when 0 < warn <= ask.
-fn committed_tiers(root: &Path) -> Option<(usize, usize)> {
-    let doc = crate::score::baseline::document(root).ok()??;
-    let warn = usize::try_from(doc["zoneTiers"][0].as_u64()?).ok()?;
-    let ask = usize::try_from(doc["zoneTiers"][1].as_u64()?).ok()?;
-    (warn >= 1 && warn <= ask).then_some((warn, ask))
-}
-
-/// The frozen soft line, read off the committed ce-baseline.json —
-/// the hook's one channel to the §B fence (daemon-free by design,
-/// so a plain local read is the honest transport). Bounded >= 1 the
-/// way the core bounds it: a zero the core would refuse must fall to
-/// the warn threshold here too, or the zone opens on every file
-/// (same guard as structure::judge::committed_soft, its twin).
-fn committed_soft(root: &Path) -> Option<usize> {
-    let doc = crate::score::baseline::document(root).ok()??;
-    usize::try_from(doc["softLine"].as_u64()?)
-        .ok()
-        .filter(|s| *s >= 1)
 }

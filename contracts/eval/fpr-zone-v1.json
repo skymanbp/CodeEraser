@@ -1,0 +1,2433 @@
+{
+  "corpora": [
+    {
+      "ask": 201,
+      "ask_shadowed": 190,
+      "commits": 400,
+      "config_unreadable_commits": 0,
+      "cp_upper_ppm": 43507,
+      "events": 448,
+      "events_shared": 365,
+      "false_asks": 11,
+      "in_zone": 237,
+      "intercepts": [
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 767,
+          "permille": 1037,
+          "sha": "80011a79",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 957,
+          "permille": 1460,
+          "sha": "b15056d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 954,
+          "permille": 1453,
+          "sha": "fd13816d",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 783,
+          "permille": 1073,
+          "sha": "fd13816d",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1666,
+          "permille": 3035,
+          "sha": "b7c6aba8",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1671,
+          "permille": 3046,
+          "sha": "251f73f6",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2529,
+          "permille": 4953,
+          "sha": "427e8eb1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 954,
+          "permille": 1453,
+          "sha": "9ed5db8e",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 769,
+          "permille": 1042,
+          "sha": "2b3436e0",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 954,
+          "permille": 1453,
+          "sha": "7c719822",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1681,
+          "permille": 3068,
+          "sha": "0797c61f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 982,
+          "permille": 1515,
+          "sha": "1ca1c52e",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 956,
+          "permille": 1457,
+          "sha": "8149e9fe",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 781,
+          "permille": 1068,
+          "sha": "02eb5a2c",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 988,
+          "permille": 1528,
+          "sha": "2f70990c",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2529,
+          "permille": 4953,
+          "sha": "320a10d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1699,
+          "permille": 3108,
+          "sha": "03957eb1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 992,
+          "permille": 1537,
+          "sha": "589c4547",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 781,
+          "permille": 1068,
+          "sha": "6de4f104",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1710,
+          "permille": 3133,
+          "sha": "c2b307db",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 781,
+          "permille": 1068,
+          "sha": "8c211a96",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2568,
+          "permille": 5040,
+          "sha": "8c211a96",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 961,
+          "permille": 1468,
+          "sha": "54336568",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 966,
+          "permille": 1480,
+          "sha": "05a1a215",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2573,
+          "permille": 5051,
+          "sha": "05a1a215",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1725,
+          "permille": 3166,
+          "sha": "2ed84f55",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 966,
+          "permille": 1480,
+          "sha": "2ed84f55",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1007,
+          "permille": 1571,
+          "sha": "24630743",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1727,
+          "permille": 3171,
+          "sha": "53514694",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1013,
+          "permille": 1584,
+          "sha": "53514694",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1734,
+          "permille": 3186,
+          "sha": "f6c0619d",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2573,
+          "permille": 5051,
+          "sha": "e253eba5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1751,
+          "permille": 3224,
+          "sha": "a1a6a549",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1756,
+          "permille": 3235,
+          "sha": "db575eee",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 973,
+          "permille": 1495,
+          "sha": "db575eee",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2578,
+          "permille": 5062,
+          "sha": "db575eee",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1017,
+          "permille": 1593,
+          "sha": "d8829f9f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 787,
+          "permille": 1082,
+          "sha": "d8829f9f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1756,
+          "permille": 3235,
+          "sha": "9572d6a2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1756,
+          "permille": 3235,
+          "sha": "fc106ab5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1017,
+          "permille": 1593,
+          "sha": "fc106ab5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 771,
+          "permille": 1046,
+          "sha": "99b3b492",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1045,
+          "permille": 1655,
+          "sha": "99b3b492",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2587,
+          "permille": 5082,
+          "sha": "99b3b492",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1759,
+          "permille": 3242,
+          "sha": "2d2447e2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1048,
+          "permille": 1662,
+          "sha": "2d2447e2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 800,
+          "permille": 1111,
+          "sha": "2d2447e2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 973,
+          "permille": 1495,
+          "sha": "2b06a952",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 973,
+          "permille": 1495,
+          "sha": "d0965999",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2589,
+          "permille": 5086,
+          "sha": "d0965999",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1057,
+          "permille": 1682,
+          "sha": "28d537dd",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 801,
+          "permille": 1113,
+          "sha": "28d537dd",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1056,
+          "permille": 1680,
+          "sha": "77d1e9aa",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1799,
+          "permille": 3331,
+          "sha": "0192aac2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1060,
+          "permille": 1688,
+          "sha": "8fa97243",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 809,
+          "permille": 1131,
+          "sha": "8fa97243",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1807,
+          "permille": 3348,
+          "sha": "31a89d9c",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2599,
+          "permille": 5108,
+          "sha": "fa1b0a36",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1812,
+          "permille": 3360,
+          "sha": "95f45673",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 981,
+          "permille": 1513,
+          "sha": "95f45673",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2636,
+          "permille": 5191,
+          "sha": "95f45673",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 778,
+          "permille": 1062,
+          "sha": "79f60274",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2672,
+          "permille": 5271,
+          "sha": "79f60274",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1817,
+          "permille": 3371,
+          "sha": "8bce583b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 965,
+          "permille": 1477,
+          "sha": "8bce583b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 774,
+          "permille": 1053,
+          "sha": "8bce583b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1056,
+          "permille": 1680,
+          "sha": "8bce583b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2668,
+          "permille": 5262,
+          "sha": "8bce583b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 806,
+          "permille": 1124,
+          "sha": "8bce583b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 967,
+          "permille": 1482,
+          "sha": "2d551768",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 1035,
+          "permille": 1633,
+          "sha": "2a6f290b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 831,
+          "permille": 1180,
+          "sha": "2a6f290b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1089,
+          "permille": 1753,
+          "sha": "2a6f290b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2752,
+          "permille": 5448,
+          "sha": "2a6f290b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 892,
+          "permille": 1315,
+          "sha": "2a6f290b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2758,
+          "permille": 5462,
+          "sha": "cb233a10",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1089,
+          "permille": 1753,
+          "sha": "79f2ec3a",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1089,
+          "permille": 1753,
+          "sha": "210095fd",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 925,
+          "permille": 1388,
+          "sha": "210095fd",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1086,
+          "permille": 1746,
+          "sha": "e36f3459",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2760,
+          "permille": 5466,
+          "sha": "e36f3459",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1836,
+          "permille": 3413,
+          "sha": "da9996fe",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 1034,
+          "permille": 1631,
+          "sha": "16b418b4",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1848,
+          "permille": 3440,
+          "sha": "4d394574",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 1034,
+          "permille": 1631,
+          "sha": "bda7f017",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1859,
+          "permille": 3464,
+          "sha": "61c324da",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2765,
+          "permille": 5477,
+          "sha": "15585909",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1094,
+          "permille": 1764,
+          "sha": "7f694b79",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2790,
+          "permille": 5533,
+          "sha": "7f694b79",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1867,
+          "permille": 3482,
+          "sha": "87d63de8",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1879,
+          "permille": 3508,
+          "sha": "2ad18e0e",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1879,
+          "permille": 3508,
+          "sha": "d3d50443",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 833,
+          "permille": 1184,
+          "sha": "74ea7cf7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2810,
+          "permille": 5577,
+          "sha": "74ea7cf7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1906,
+          "permille": 3568,
+          "sha": "147c8511",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 833,
+          "permille": 1184,
+          "sha": "6e5b15d5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2811,
+          "permille": 5580,
+          "sha": "6e5b15d5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 835,
+          "permille": 1188,
+          "sha": "fecf3dc4",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1090,
+          "permille": 1755,
+          "sha": "dfe46c1b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/models.py",
+          "hard": 750,
+          "lines": 1032,
+          "permille": 1626,
+          "sha": "8112fcc7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/sessions.py",
+          "hard": 750,
+          "lines": 831,
+          "permille": 1180,
+          "sha": "8112fcc7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "requests/utils.py",
+          "hard": 750,
+          "lines": 1091,
+          "permille": 1757,
+          "sha": "8112fcc7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2798,
+          "permille": 5551,
+          "sha": "8112fcc7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1032,
+          "permille": 1626,
+          "sha": "d63e94f5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 831,
+          "permille": 1180,
+          "sha": "d63e94f5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1091,
+          "permille": 1757,
+          "sha": "d63e94f5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2797,
+          "permille": 5548,
+          "sha": "005571d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 926,
+          "permille": 1391,
+          "sha": "005571d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2797,
+          "permille": 5548,
+          "sha": "839a8ede",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1091,
+          "permille": 1757,
+          "sha": "9e98a874",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1091,
+          "permille": 1757,
+          "sha": "0b4d4941",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2812,
+          "permille": 5582,
+          "sha": "3b5978fc",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2822,
+          "permille": 5604,
+          "sha": "382fc2c0",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1094,
+          "permille": 1764,
+          "sha": "b8be93a7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2839,
+          "permille": 5642,
+          "sha": "b8be93a7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1906,
+          "permille": 3568,
+          "sha": "f3f2611d",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2846,
+          "permille": 5657,
+          "sha": "a58d7f2f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2976,
+          "permille": 5946,
+          "sha": "eeafb6ab",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1096,
+          "permille": 1768,
+          "sha": "8dd3b26b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 958,
+          "permille": 1462,
+          "sha": "8dd3b26b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2976,
+          "permille": 5946,
+          "sha": "31ebb810",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2976,
+          "permille": 5946,
+          "sha": "d6dded3f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1037,
+          "permille": 1637,
+          "sha": "0c030f78",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1952,
+          "permille": 3671,
+          "sha": "d6ebc4a2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1959,
+          "permille": 3686,
+          "sha": "970e8cec",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 641,
+          "permille": 757,
+          "sha": "c98e4d13",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1973,
+          "permille": 3717,
+          "sha": "88dce9d8",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1980,
+          "permille": 3733,
+          "sha": "145b5399",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 705,
+          "permille": 900,
+          "sha": "145b5399",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 719,
+          "permille": 931,
+          "sha": "e1887993",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1982,
+          "permille": 3737,
+          "sha": "0e322af8",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1099,
+          "permille": 1775,
+          "sha": "79b74ef7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 2983,
+          "permille": 5962,
+          "sha": "79b74ef7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1039,
+          "permille": 1642,
+          "sha": "1b7c37ef",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1987,
+          "permille": 3748,
+          "sha": "579cd9f2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3009,
+          "permille": 6020,
+          "sha": "c65c7808",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1093,
+          "permille": 1762,
+          "sha": "96ba401c",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3040,
+          "permille": 6088,
+          "sha": "7bc45877",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1086,
+          "permille": 1746,
+          "sha": "5b4b64c3",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 977,
+          "permille": 1504,
+          "sha": "5b4b64c3",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 1998,
+          "permille": 3773,
+          "sha": "821770e8",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 719,
+          "permille": 931,
+          "sha": "3f07f990",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 696,
+          "permille": 880,
+          "sha": "90fee087",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 831,
+          "permille": 1180,
+          "sha": "d58d8aa2",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2002,
+          "permille": 3782,
+          "sha": "2edca111",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2012,
+          "permille": 3804,
+          "sha": "b25c87d7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 698,
+          "permille": 884,
+          "sha": "f8bec2f7",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1041,
+          "permille": 1646,
+          "sha": "f8bec2f7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 832,
+          "permille": 1182,
+          "sha": "f8bec2f7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1084,
+          "permille": 1742,
+          "sha": "f8bec2f7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3039,
+          "permille": 6086,
+          "sha": "f8bec2f7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1084,
+          "permille": 1742,
+          "sha": "47914226",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 987,
+          "permille": 1526,
+          "sha": "47914226",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 834,
+          "permille": 1186,
+          "sha": "5f338446",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 697,
+          "permille": 882,
+          "sha": "e331a288",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1085,
+          "permille": 1744,
+          "sha": "e331a288",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1086,
+          "permille": 1746,
+          "sha": "66d21cb0",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2041,
+          "permille": 3868,
+          "sha": "bc04dfd6",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 990,
+          "permille": 1533,
+          "sha": "389eea58",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3044,
+          "permille": 6097,
+          "sha": "bc7dd0fc",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1083,
+          "permille": 1740,
+          "sha": "f0198e6d",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 990,
+          "permille": 1533,
+          "sha": "f0198e6d",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2050,
+          "permille": 3888,
+          "sha": "111d2b77",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 833,
+          "permille": 1184,
+          "sha": "ef439eb7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3052,
+          "permille": 6115,
+          "sha": "ef439eb7",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1046,
+          "permille": 1657,
+          "sha": "d2f6bdec",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3052,
+          "permille": 6115,
+          "sha": "5f3ff9b9",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 697,
+          "permille": 882,
+          "sha": "27e09819",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3052,
+          "permille": 6115,
+          "sha": "27e09819",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 750,
+          "permille": 1000,
+          "sha": "561e4b68",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1180,
+          "permille": 1955,
+          "sha": "561e4b68",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 913,
+          "permille": 1362,
+          "sha": "561e4b68",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1153,
+          "permille": 1895,
+          "sha": "561e4b68",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3053,
+          "permille": 6117,
+          "sha": "561e4b68",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2065,
+          "permille": 3922,
+          "sha": "f7822f7c",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 748,
+          "permille": 995,
+          "sha": "fd628095",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 913,
+          "permille": 1362,
+          "sha": "b684dcb9",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1153,
+          "permille": 1895,
+          "sha": "3816cfa1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1155,
+          "permille": 1900,
+          "sha": "a4f9a599",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_utils.py",
+          "hard": 750,
+          "lines": 1013,
+          "permille": 1584,
+          "sha": "a4f9a599",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 920,
+          "permille": 1377,
+          "sha": "86b378d3",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2080,
+          "permille": 3955,
+          "sha": "0b401c76",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1180,
+          "permille": 1955,
+          "sha": "6404f345",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3068,
+          "permille": 6151,
+          "sha": "6404f345",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1180,
+          "permille": 1955,
+          "sha": "2144213c",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1181,
+          "permille": 1957,
+          "sha": "e511bc72",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 920,
+          "permille": 1377,
+          "sha": "e511bc72",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2094,
+          "permille": 3986,
+          "sha": "b7b549b5",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1180,
+          "permille": 1955,
+          "sha": "84d10f0b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "HISTORY.md",
+          "hard": 750,
+          "lines": 2102,
+          "permille": 4004,
+          "sha": "6e83187b",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 920,
+          "permille": 1377,
+          "sha": "cd90742e",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1180,
+          "permille": 1955,
+          "sha": "e50e5945",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1181,
+          "permille": 1957,
+          "sha": "1190afd1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/adapters.py",
+          "hard": 750,
+          "lines": 748,
+          "permille": 995,
+          "sha": "661970d1",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1185,
+          "permille": 1966,
+          "sha": "661970d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/sessions.py",
+          "hard": 750,
+          "lines": 920,
+          "permille": 1377,
+          "sha": "661970d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/utils.py",
+          "hard": 750,
+          "lines": 1155,
+          "permille": 1900,
+          "sha": "661970d1",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1187,
+          "permille": 1971,
+          "sha": "6f205ff4",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3079,
+          "permille": 6175,
+          "sha": "6f205ff4",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "src/requests/models.py",
+          "hard": 750,
+          "lines": 1184,
+          "permille": 1964,
+          "sha": "6f66281a",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "tests/test_requests.py",
+          "hard": 750,
+          "lines": 3094,
+          "permille": 6208,
+          "sha": "6f66281a",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        }
+      ],
+      "name": "requests",
+      "observe": 15,
+      "rate_ppm": 24553,
+      "soft_lines": {
+        "300": 448
+      },
+      "tip": "1f6589ec",
+      "warn": 21
+    },
+    {
+      "ask": 33,
+      "ask_shadowed": 5,
+      "commits": 568,
+      "config_unreadable_commits": 0,
+      "cp_upper_ppm": 7778,
+      "events": 5196,
+      "events_shared": 3228,
+      "false_asks": 28,
+      "in_zone": 470,
+      "intercepts": [
+        {
+          "file": "contracts/fixtures/crosscheck/go/completions.go",
+          "hard": 750,
+          "lines": 1024,
+          "permille": 1608,
+          "sha": "55748e8f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/fixtures/crosscheck/python/src__requests__models.py",
+          "hard": 750,
+          "lines": 1184,
+          "permille": 1964,
+          "sha": "55748e8f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+          "hard": 750,
+          "lines": 1155,
+          "permille": 1900,
+          "sha": "55748e8f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+          "hard": 750,
+          "lines": 2740,
+          "permille": 5422,
+          "sha": "55748e8f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/fixtures/crosscheck/rust/crates__printer__src__hyperlink__mod.rs",
+          "hard": 750,
+          "lines": 1165,
+          "permille": 1922,
+          "sha": "55748e8f",
+          "shadowed": true,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "cli/src/graph/ladder/hs_boot.rs",
+          "hard": 750,
+          "lines": 676,
+          "permille": 835,
+          "sha": "830705f2",
+          "shadowed": false,
+          "soft": 300,
+          "tier": "ask"
+        },
+        {
+          "file": "cli/tests/it/graph_ladder.rs",
+          "hard": 750,
+          "lines": 662,
+          "permille": 789,
+          "sha": "5df1dadf",
+          "shadowed": false,
+          "soft": 332,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 687,
+          "permille": 833,
+          "sha": "7a00afe3",
+          "shadowed": false,
+          "soft": 372,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 702,
+          "permille": 873,
+          "sha": "29c97f55",
+          "shadowed": false,
+          "soft": 372,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 749,
+          "permille": 997,
+          "sha": "9618b079",
+          "shadowed": false,
+          "soft": 372,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 656,
+          "permille": 751,
+          "sha": "7e06f459",
+          "shadowed": false,
+          "soft": 372,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 678,
+          "permille": 809,
+          "sha": "70dfebb4",
+          "shadowed": false,
+          "soft": 372,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 688,
+          "permille": 836,
+          "sha": "6fd475d1",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 692,
+          "permille": 846,
+          "sha": "49963b68",
+          "shadowed": false,
+          "soft": 371,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 702,
+          "permille": 873,
+          "sha": "640b1225",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/VERSIONING.md",
+          "hard": 750,
+          "lines": 658,
+          "permille": 757,
+          "sha": "640b1225",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 709,
+          "permille": 894,
+          "sha": "23d5f5ee",
+          "shadowed": false,
+          "soft": 360,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 718,
+          "permille": 917,
+          "sha": "27313ee5",
+          "shadowed": false,
+          "soft": 361,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 741,
+          "permille": 976,
+          "sha": "051a7301",
+          "shadowed": false,
+          "soft": 362,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 749,
+          "permille": 997,
+          "sha": "7a0698c8",
+          "shadowed": false,
+          "soft": 363,
+          "tier": "ask"
+        },
+        {
+          "file": "docs/CHANGELOG-ARCHIVE.md",
+          "hard": 750,
+          "lines": 685,
+          "permille": 832,
+          "sha": "6d8f31d8",
+          "shadowed": false,
+          "soft": 363,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 658,
+          "permille": 757,
+          "sha": "53de351c",
+          "shadowed": false,
+          "soft": 371,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/VERSIONING.md",
+          "hard": 750,
+          "lines": 669,
+          "permille": 786,
+          "sha": "53de351c",
+          "shadowed": false,
+          "soft": 371,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 676,
+          "permille": 805,
+          "sha": "05abf06b",
+          "shadowed": false,
+          "soft": 369,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 694,
+          "permille": 853,
+          "sha": "655f5b78",
+          "shadowed": false,
+          "soft": 369,
+          "tier": "ask"
+        },
+        {
+          "file": "site/how/index.html",
+          "hard": 750,
+          "lines": 695,
+          "permille": 855,
+          "sha": "655f5b78",
+          "shadowed": false,
+          "soft": 369,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 725,
+          "permille": 934,
+          "sha": "dcbf8ba5",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/VERSIONING.md",
+          "hard": 750,
+          "lines": 677,
+          "permille": 807,
+          "sha": "dcbf8ba5",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "hard": 750,
+          "lines": 729,
+          "permille": 944,
+          "sha": "08e4e3ba",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "site/how/index.html",
+          "hard": 750,
+          "lines": 695,
+          "permille": 855,
+          "sha": "197da584",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/VERSIONING.md",
+          "hard": 750,
+          "lines": 693,
+          "permille": 850,
+          "sha": "0a0b70af",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "site/how/index.html",
+          "hard": 750,
+          "lines": 695,
+          "permille": 855,
+          "sha": "0a0b70af",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        },
+        {
+          "file": "contracts/VERSIONING.md",
+          "hard": 750,
+          "lines": 708,
+          "permille": 889,
+          "sha": "c551298f",
+          "shadowed": false,
+          "soft": 370,
+          "tier": "ask"
+        }
+      ],
+      "name": "self",
+      "observe": 260,
+      "rate_ppm": 5388,
+      "soft_lines": {
+        "294": 54,
+        "300": 1724,
+        "303": 29,
+        "304": 114,
+        "308": 24,
+        "318": 20,
+        "319": 62,
+        "320": 41,
+        "321": 18,
+        "322": 24,
+        "324": 46,
+        "325": 140,
+        "326": 17,
+        "327": 72,
+        "328": 36,
+        "329": 121,
+        "330": 28,
+        "332": 135,
+        "333": 164,
+        "335": 10,
+        "336": 237,
+        "337": 37,
+        "338": 38,
+        "339": 127,
+        "340": 12,
+        "341": 112,
+        "342": 124,
+        "343": 112,
+        "344": 186,
+        "345": 4,
+        "347": 10,
+        "350": 77,
+        "351": 40,
+        "360": 18,
+        "361": 12,
+        "362": 29,
+        "363": 54,
+        "367": 23,
+        "369": 49,
+        "370": 403,
+        "371": 201,
+        "372": 285,
+        "373": 24,
+        "377": 20,
+        "385": 83
+      },
+      "tip": "9ee086ad",
+      "warn": 177
+    }
+  ],
+  "gate_ppm": 10000,
+  "generated_from": "cli/tests/it/fpr_zone_replay.rs",
+  "schema": "ce.eval-fpr-zone/1.0.0"
+}

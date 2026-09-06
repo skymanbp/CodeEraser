@@ -147,14 +147,76 @@ Edit 减 `old_string` 的自有匹配（基线探针仅首探命中才发；基�
 - 行按目录：`cli/tests` 147 / `cli/src` 43 / `core/app` 42 / `core/test` 22 / `contracts/fixtures` 3
   ——测试树仍是抄 helper 的主场（2026-08-07 的结论没变）；98 / 555 个提交带行。
 
+## 分级区档位映射 `zone_tiers` 的台账（2026-09-06，计划 v2.29 步 10 C-zone_tiers）
+
+> 两份历史已实跑并冻结：自仓 0.5388 %、requests 2.4553 %。后者超过 1 %，
+> 按预定合取采用 **B：默认维持 `false`，无默认档位变更**。
+
+> 门（计划 §4.2 默认档位演进路线第 3 级）：**每次默认档位变更在 CHANGELOG 记录依据（FPR 数据）**，
+> 本节采用 M4 的误报率 ≤ 1 % 线；M3 的「500 次误拦 ≤ 1」是另一条更严的线。`[guard] zone_tiers` 自 v2.7 ① 起
+> opt-in，此前每个周期的 CHANGELOG 都写「本周期无新增独立 FPR 记录，按 §4.2 维持原档」——
+> 因为这一类**根本没有自己的台账**。本节是那份台账；仪器 = 测试子仓
+> `cli/tests/it/fpr_zone_replay.rs`（`#[ignore]`，release 跑，常设），冻结件 =
+> `contracts/eval/fpr-zone-v1.json`，执行者 = `cli/tests/it/fpr_zone_gate.rs`（非 ignored：
+> 冻结件的算术自洽，且**出厂默认必须正好是这份算术许可的那一档**）。
+
+**口径**（每一条都由仪器实测，本节无人工仲裁）：
+
+- **事件** = 某个第一父提交里，一个改动文件（`A`/`M`；`D` 不写入）的一次 Write。范围与钩子完全同读：
+  有语言臂（`Lang::from_path`，含 md 与纯尺寸臂 js/yml/html/css/sh）**且** 在父提交那棵树的
+  walk 作用域内（`ce.toml` 的 `exclude`、各级 `.gitignore` / `.ceignore`、`.gitmodules` 声明的
+  submodule 路径按 `Owner::Foreign` 出局）。另记 `与 fpr_replay 同分母的事件` = 有语法的判决语言
+  子集，两册据此可并读；**率按事件全集算**，那才是这条规则真正看见的总体。
+- **行数** = 子 blob 的 `lines().count()`，与 `budget::resulting_lines` 对 Write 的算法逐字节相同。
+- **S** = 父提交已提交基线的 `softLine`（下界 1），无则回落该文件自己那张表的 `file_lines_warn`；
+  **H** = 同一张表的 `file_lines_fail`；切点取父提交基线的 `zoneTiers`，不合法则用编译期镜像
+  (250, 750)。三者都经 `guard::zone::envelope` / `guard::zone::table_for` 读，**位置与档位只经
+  `guard::zone::landing`** —— 钩子 `zone_assess` 调的就是这一个函数，仪器里没有第二份 25/75。
+- **拦截** = 档位为 `ask`（唯一执法的一档；`warn` 吃每（规则,文件,会话）一次的注入预算，`observe`
+  只写 feed）。
+- **误拦** = 落在「经审查为正常」的编辑上的拦截。两份语料按定义整体正常，故**每一条 ask 都是误拦，
+  除非它被硬线遮蔽**：`H != 0 且 行数 > H` 时 `guard.rs` 走的是硬预算那条分支，`zone_assess`
+  根本不被调用，区的 ask 到不了决定行——单列一栏 `ask 被硬线遮蔽`，从误拦里减去，**不**从事件里减。
+- **warn 档只作信息**（不执法），照列不入率。
+- **软线会搬家**：自仓 `softLine` 2026-08-20 之前不存在（回落 300），此后从 294 一路走到 370。
+  仪器读**父提交当天**那条线——这是唯一诚实的读法，冻结件里另记 `soft_lines: {S: 事件数}`，
+  让读者看得见左边缘怎么动、各段各计了多少事件。不回归到今天的 S：那测的是没人跑过的规则。
+
+| 语料 | 提交 | 事件 | 同分母事件 | 落区 | observe | warn | ask | ask 被硬线遮蔽 | 误拦 ask | 率 | CP 95 % 上界 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| requests @ 1f6589ec | 400 | 448 | 365 | 237 | 15 | 21 | 201 | 190 | 11 | 2.4553 % | 4.3507 % |
+| self @ 9ee086ad | 568 | 5196 | 3228 | 470 | 260 | 177 | 33 | 5 | 28 | 0.5388 % | 0.7778 % |
+
+每条 ask 打印 `INTERCEPT` JSON（sha / file / lines / soft / hard / permille / tier / shadowed），同一序列化器写入冻结件的 `intercepts`。
+
+**裁定规则（先写下来，再看数）**：两份语料的**率**都 ≤ 1 % ⇒ `[guard] zone_tiers` 默认翻到
+`true`，CHANGELOG 该版本条目首句写「默认档位变更 + 依据 = 本节数据」；任一份超线 ⇒ 维持 `false`，
+CHANGELOG 写「无默认档位变更」并点名本节。**区间如实说**：本节的 CP 95 % 上界是校准证据的宽度，
+不是野外误报率的上界；点估计与上界分列，不合成单一数字（FPR-TOMBSTONE.md 同一立场）。
+两者的一致性由 `fpr_zone_gate.rs` 执行：出厂 `Guard::default().zone_tiers` 必须等于
+「每一份语料都 ≤ `gate_ppm`」，不等即 CI 红——**只写在文档里的规则没人执行**，这一条有执行者。
+
+`config_unreadable_commits`（今天的 `Config` 读不了父提交声明的覆盖缺口）两份均为 **0**。
+消重后复冻耗时：自仓 **408.44 s**，requests **69.16 s**（release 测试体；首测 396.40 / 57.87 s，冻结件逐字节相同）；requests 的 11 次
+未遮蔽 ask 全在 `src/requests/adapters.py`（641～750 行），H 处仍归区内，超过 H 才遮蔽。
+自仓全集 5196 比设计估计的 4300～4700 大；同分母事件 3228 与另外 1968 次 Markdown / 纯尺寸写入
+分列，保留产品作用域的实测全集，不按估计删样本。语料历史均完整，钉定窗口未扩大。
+
 ## 复现
 
 常设腿（测试子仓 `cli/tests/it/fpr_replay.rs`，release 跑，cwd `cli/`）：
 
-- 自仓全史：`cargo test --release --test it -- --ignored fpr_replay --nocapture`（本机约 7 min）；
-- requests 窗口：`CE_FPR_REPO=<M5-3 钉定的 requests 克隆> CE_FPR_TIP=1f6589ec3a1ee910f9a65cc3ceac60b26677bc0e CE_FPR_LIMIT=400 cargo test --release --test it -- --ignored fpr_replay --nocapture`
+- 自仓全史：`cargo test --release -j 8 --test it -- --ignored fpr_replay::every_intercept_is_read_against_its_parent_baseline --exact --nocapture`（本机约 7 min；精确过滤，避免同时启动同名子串的 L2 仪器）；
+- requests 窗口：PowerShell 逐句设 `$env:CE_FPR_REPO='<M5-3 钉定的 requests 克隆>'`、`$env:CE_FPR_TIP='1f6589ec3a1ee910f9a65cc3ceac60b26677bc0e'`、`$env:CE_FPR_LIMIT='400'`，再跑上一条精确命令；
   ——1f6589ec 是 EVAL-SET-M5-3 钉定 tip 8068356 的祖先（`git rev-list --first-parent` 626 提交），不必另克隆；
 - `CE_FPR_LIMIT=N` 只放最新 N 个提交、以其前一提交的树为种子（冒烟）。
+
+分级区台账腿（同三个环境变量，语料名另由 `CE_FPR_CORPUS` 给，默认 `self`；不建索引、不探针，
+比 fpr_replay 快一个量级）：
+
+- 自仓全史：PowerShell 清除上述 `CE_FPR_*` 选择，再设 `$env:CE_BLESS='1'`，执行 `cargo test --release -j 8 --test it -- --ignored fpr_zone_replay --nocapture`；
+- requests 窗口：另一次 PowerShell 调用，逐句设 `$env:CE_FPR_CORPUS='requests'` 与上述 requests 三变量，再设 `$env:CE_BLESS='1'`，执行同一条 zone 命令；
+- 每次 bless 只重写自己那一行，另一行原样留在 `contracts/eval/fpr-zone-v1.json` 里。
 
 ### 历史复现（退役期 2026-08-18～2026-09-05）
 

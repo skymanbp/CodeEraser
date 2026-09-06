@@ -9,6 +9,21 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 计划 v2.29 步 10（C-R-L2-4，证据门四条之一）——**跨文件搬迁 / 堆叠判定的改动集级 FPR 仪器与账本首立**，零面变化、零 wire、零 ce.toml：
+- `Judge::judge_changeset` 供 `classify` 与仪器共用：判决仍走 `classify_batch`，保留核链失败记账。仪器与 O48 共用 `pair_inputs`，按冻结切片批量取父/子 blob；不完整的改动集按六种原因记跳过。行的文本与 JSON 输出统一由 Serde 序列化，区间表迭代归算术检查宿主；子仓新增五块消重后回到 119，不抬预算。
+- 拦截只读 Haskell 的 `suspicions`（M4 堆叠合取）；跨文件搬迁量随行作证。标签按冻结切片与 labels 的 sha 读取，严格 / 宽读法、两组 CP 95 % 区间、召回均入表。
+- `l2_fpr_gate` 七腿核对提交守恒、逐提交仲裁计数、全部表格单元、区间与晋级蕴含式；合成改动集另验搬迁放行、堆叠命中。冻结只准同次完整回放 self / requests / ripgrep。
+- `session.rs` 注释更新使旧自仓视图的逐字节匹配数 25→24；以 `CE_REFREEZE=cli/src/fourclass/session.rs` 对 graph-slice / t3-universe / docdup-segments 三视图具名续冻该行，25 行覆盖地板不降，八条关联门通过。
+- **首测冻结**：self / requests / ripgrep 分别 **47 / 341 / 433** 个完整事件，六类跳过均 0，`INTERCEPT` 共 0 条、仲裁行 0。严格 **0/125**（CP 95 % **0.000–2.908 %**）、宽读法 **0/820**（**0.000–0.449 %**）；唯一 copy 正例 ripgrep `1035f6b1` 未被拦截，**漏 1、召回 0/1**，保留标签与门线、不翻档。消重后三语料同次复冻测试体 **328.41 s**，冻结件与首测逐字节相同；逐行表与漏报 diff 复核见 `docs/FPR-L2.md`，机器件 `contracts/eval/fpr-l2-v1.json` 由仪器写入。
+
+
+**无默认档位变更；采用变体 B，`[guard] zone_tiers` 默认维持 `false`。** 计划 v2.29 步 10 C-zone_tiers（2026-09-06）：
+- 纯映射迁入 `guard::zone`（`landing` / `envelope` / `table_for`），钩子与回放共用；`budget.rs` 缩小，基线每次写入只解析一次。零 wire 变化。
+- `fpr_zone_replay` 逐父提交物化策略、记录档位与硬线遮蔽；`fpr_zone_gate` 复算冻结行并把默认值钉到两语料 `rate_ppm <= 10000` 的合取。四份回放共用 `common/history.rs`，区间算术共用 `common/stats.rs`。
+- **实测依据**：自仓 568 提交，28 / 5196 事件 = **0.5388 %**（CP 95 % 上界 **0.7778 %**）；requests 钉定尾段 400 提交，11 / 448 = **2.4553 %**（上界 **4.3507 %**），后者超过 1 %，不满足两语料合取。ask 被硬线遮蔽分别 5 / 190，配置不可读均 0；表与全部拦截冻结于 `contracts/eval/fpr-zone-v1.json`，正文见 `docs/FPR-REPLAY.md`。消重后复冻测试体耗时 408.44 / 69.16 s，冻结件与首测逐字节相同。
+- ADR-006 具名重立（两仓）：主 `docs/FPR-REPLAY.md` 221→283（本节）、`CHANGELOG.md` 566→581（本块与上块）；新文件入基线 `cli/src/guard/zone.rs` 108、`docs/FPR-L2.md` 149；子仓无超线，新文件入基线 `it/common/history.rs` 78、`it/common/stats.rs` 97、`it/fpr_zone_replay.rs` 240、`it/fpr_zone_replay_parts/mod.rs` 134、`it/fpr_zone_gate.rs` 158、`it/fpr_zone_gate_helpers/mod.rs` 10、`it/l2_fpr_replay.rs` 245、`it/l2_fpr_replay_parts/{mod,fixtures,render,tally}.rs` 101 / 106 / 81 / 85、`it/l2_fpr_gate.rs` 207、`it/l2_fpr_gate/checks.rs` 87、`unit/guard/zone.rs` 106。dedup 55 / 119 恒；门主 945 / 55 / 0、子 983 / 119 / 0、cabal PASS、lib 369、clippy + fmt 清（cli / gui）、GUI 四腿 ok；codex gpt-6-astra 落码（`guard_say` / `observe_feed` / 四条 `guard_hook` 与五条 lib 管道腿只在沙箱红，沙箱外全绿），Claude 审阅与最终改动。
+
+
 **无默认档位变更。** 计划 v2.29 步 10 批 C3 O48（2026-09-06）——声明级搬迁，折入同一未发布的 **wire 7.1.0**：
 - `fourclass/2` 请求加性 `declRem` / `declAdd`，回执 `unitEdges` / `unitEdgesDropped`；Rust 量名字、种类与跨度，Haskell 判同名同种、唯一目的地与跨度内共同内容。声明支付跨站成本，导出 `declFloor = 1`；多源可汇一处，两目的地拒绝，`declCap = 65536` 超限整表放弃。
 - 搬迁表补 `lines = 0` 行，已有行级记录优先；**分数和行分类不变**，既有 L2 冻结件与七条行门不动。声明边是报告信息，不进入守卫判决。

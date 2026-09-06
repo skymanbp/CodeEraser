@@ -11,6 +11,7 @@ mod budget;
 mod probe;
 mod say;
 mod tombstone;
+pub mod zone;
 
 use crate::config::Config;
 use envelope::Envelope;
