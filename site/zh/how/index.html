@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CodeEraser 工作原理——确定性判决，十五个家族</title>
+<title>CodeEraser 工作原理：确定性判决，十五个家族</title>
 <meta name="description" content="CodeEraser 用确定性计算去审计语言模型的非确定性产出：十五个判决家族，每条判决都是对实测事实的算术，每个常数都钉在源码行上。">
 <meta name="theme-color" content="#10141d">
 <meta property="og:type" content="website">
@@ -39,13 +39,13 @@
 <section class="lede">
   <h1>工作原理</h1>
   <p>CodeEraser 用<em>确定性</em>计算去审计语言模型的非确定性产出。模型往一个长命仓库里写代码，
-  会漂向堆叠而不是编辑——同一个函数实现两遍、同一条事实在第三个文件里重述一次、一次更新以追加的
+  会漂向堆叠而不是编辑：同一个函数实现两遍、同一条事实在第三个文件里重述一次、一次更新以追加的
   形式落地。顺手的做法是再拉一个模型来审计这份漂移。本项目的承诺正好相反。</p>
   <p>下面每一条判决都是对树上实测事实的算术：token 指纹、树编辑距离、图入度、git 窗口计数，
   以及针对<strong>写下来的</strong>阈值所做的整数与有理数比较。证据与判决之间没有任何采样温度，
   判决层里没有浮点数，回路里没有模型。同一棵树在任何机器、任何时刻都产出同样的字节；因此关于代码
   健康度的分歧靠重跑那个数、读它指向的 <code>file:line</code> 来收场。</p>
-  <p>下文每节都是短版。完整推导——每个常数都追溯到实现它的源码行——在
+  <p>下文每节都是短版。完整推导（每个常数都追溯到实现它的源码行）在
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，
   本页每个小标题都直接链进去。</p>
   <nav class="jump" aria-label="章节"><a href="#families">家族</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#f15">15</a> <a href="#fpr">FPR 纪律</a> <a href="#acting">据判决行动</a> <a href="#residue">改动时残留</a> <a href="#advisor">同角色顾问</a> <a href="#honesty">诚实边界</a></nav>
@@ -53,18 +53,18 @@
 
 <figure class="arch">
   <a class="zoomable" href="/assets/judgment.zh.svg"><img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy"></a>
-  <figcaption>每行一个 wire 家族：左边是 Rust 度量的事实，中间是它喂给的 Haskell 判决，右边是离开的东西——退出码或报告行。点开图即可看原尺寸 SVG。</figcaption>
+  <figcaption>每行一个 wire 家族：左边是 Rust 度量的事实，中间是它喂给的 Haskell 判决，右边是离开的东西（退出码或报告行）。点开图即可看原尺寸 SVG。</figcaption>
 </figure>
 
 <h2 id="families"><!--ce:count:booklets#word-->十五<!--/ce-->个判决家族</h2>
-<p class="note">本站出现过三种「家族」计数，量的是三件不同的事，在此调和：下面 <b><!--ce:count:booklets#word-->十五<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上 <b><!--ce:count:families#word-->十二<!--/ce--></b> 个能力（技术栈图上的那个数——联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP <b><!--ce:count:mcp_tools#word-->十六<!--/ce--></b> 个工具，随报告面而非 wire——<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>erase_log</code> 读的是已应用擦除的审计轨迹，<code>update_check</code> 拿本构建比对最新发布，这个面既无 wire 家族也无方法学册；<code>similar_units</code> 是同角色顾问（与 <code>ce similar</code> 同一份文档：核在 <code>similar/1</code> 上给的排序与角色位，只当顾问）。</p>
+<p class="note">本站出现过三种「家族」计数，量的是三件不同的事。下面有 <b><!--ce:count:booklets#word-->十五<!--/ce--></b> 册，每册对应一条数学值得单独推导的判决；wire 上有 <b><!--ce:count:families#word-->十二<!--/ce--></b> 个能力（技术栈图上的那个数；联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）；只读 MCP 工具有 <b><!--ce:count:mcp_tools#word-->十六<!--/ce--></b> 个，随报告面而非 wire：<code>churn</code> 与 <code>graph --sites</code> 各占一个，<code>erase</code> 只到演练计划为止，<code>doctor</code> 答的是机器状态而非判决，<code>erase_log</code> 读的是已应用擦除的审计轨迹，<code>update_check</code> 拿本构建比对最新发布，这个面既无 wire 家族也无方法学册；<code>similar_units</code> 是同角色顾问（与 <code>ce similar</code> 同一份文档：核在 <code>similar/1</code> 上给的排序与角色位，只当顾问）。</p>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
   <p class="job">找出精确与参数化的重复 token 段：改名的变量、换掉的常量算克隆，改掉的语法不算。</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
   <p class="note">任何长度至少为 <code>t</code> 的归一化公共 token 子串，必然包含
-  <code>t - k + 1 = w</code> 个连续 k-gram——即一整个完整窗口；而窗口最小值的选取只依赖该窗口
+  <code>t - k + 1 = w</code> 个连续 k-gram（即一整个完整窗口）；而窗口最小值的选取只依赖该窗口
   内部的内容，所以两份拷贝必选出同一个最小值。因此<strong>必然至少共享一个指纹</strong>：这是
   Schleimer 等人 SIGMOD'03 的 no-miss 下界，作为正确性契约而非估计。滚动哈希是 Rabin-Karp，
   <code>h = (h - t[i-k]*top)*BASE + t[i]</code>，跑在 FNV-1a 叶子哈希之上。</p>
@@ -83,15 +83,15 @@
 
 <div class="fam">
   <h3 id="f02"><span class="n">02</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">T3 近似克隆——树编辑距离（TSED）</a></h3>
-  <p class="job">判决两个 AST 结构上几乎相同、但 token 流并不相同的单元——被改形、被重写的拷贝。</p>
+  <p class="job">判决两个 AST 结构上几乎相同、但 token 流并不相同的单元：被改形、被重写的拷贝。</p>
   <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
 clone      ⇔ TSED &gt;= 0.85</pre>
   <pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den &gt;= num * mx  where mx = max n1 n2</pre>
   <p class="note"><code>ted</code> 是单位代价的 Zhang-Shasha（删 = 插 = 1，kind 码相同时
   relabel = 0，否则 1），恒为整数，所以比较是精确的交叉相乘，边界两侧都可判定：在
   <code>max = 100</code> 时 <code>ted 15</code> 是克隆、<code>ted 16</code> 不是。两条<em>可证
-  可采纳</em>的 O(1) 预筛在任何 TED 之前就砍掉候选对——对 <code>q ∈ {min(n1,n2), I}</code> 有
-  <code>q · tsedDen &lt; tsedNum · max</code>，其中 <code>I = Σ_label min(c1, c2)</code>——而预筛
+  可采纳</em>的 O(1) 预筛在任何 TED 之前就砍掉候选对：对 <code>q ∈ {min(n1,n2), I}</code> 有
+  <code>q · tsedDen &lt; tsedNum · max</code>，其中 <code>I = Σ_label min(c1, c2)</code>，而预筛
   用的正是判决将要用的那个 85/100，这个同一性恰恰就是它可采纳的原因。</p>
   <ul class="consts">
     <li><b>tsedNum</b> 85</li>
@@ -107,14 +107,14 @@ clone      ⇔ TSED &gt;= 0.85</pre>
 
 <div class="fam">
   <h3 id="f03"><span class="n">03</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">文档重复——shingling + MinHash/LSH</a></h3>
-  <p class="job">判定两段文档文本——markdown 段落、注释块、docstring——是否互为近似重复。</p>
+  <p class="job">判定两段文档文本（markdown 段落、注释块、docstring）是否互为近似重复。</p>
   <pre>dupDecidesWith num den inter union  =  inter * den &gt;= num * union
 
 dupVerdictWith (num, den, vfloor) inter union run
   =  dupDecidesWith num den inter union  ||  run &gt;= vfloor</pre>
   <p class="note">生产绑定为 <code>(80, 100, 50)</code>：Jaccard 达到 0.80（整数精确判定），
   <em>或者</em>存在至少 50 词的逐字连续段。<code>inter</code> 与 <code>union</code> 由核自己
-  从升序去重的 shingle 集合算出——过 wire 的是原始计数、绝不是比值，否则「复核发生在 Haskell」
+  从升序去重的 shingle 集合算出；过 wire 的是原始计数、绝不是比值，否则「复核发生在 Haskell」
   就是一句空话。MinHash/LSH 只是粗筛，且无 RNG：置换下标本身就是盐。<code>R</code> 个 shingle
   的连续段横跨 <code>R + k - 1</code> 个词。</p>
   <ul class="consts">
@@ -141,11 +141,11 @@ perMille r      = floor (r * 1000)</pre>
   <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = 被点名目录数, N = 目录总数
 raw      = Σ_axes (charge_i * violCost)
 score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
-  <p class="note">Shannon 熵与 KL 散度需要对数——无理数，因而不可精确判定——所以本家族改为发布
+  <p class="note">Shannon 熵与 KL 散度需要对数（无理数，因而不可精确判定），所以本家族改为发布
   同族中在有理数下封闭的成员：Tsallis-2 多样性与 χ² f-散度，全程跑在 <code>Data.Ratio</code> 上。
   若某个 bin 参考质量为 0 而观测质量非 0，χ² 返回 <code>Nothing</code>：那是一次拒绝而不是一个零，
   报告会点名那些目录。每条判轴的违规质量 <code>v</code> 是被点名的<em>目录</em>计数，再经与判决族
-  同一条密度律折算成 scale 的千分数——判轴行携带的是 charge 而非计数，除数另带
+  同一条密度律折算成 scale 的千分数，故判轴行携带的是 charge 而非计数，除数另带
   <code>structViolCostNeutral = 10</code>；<code>judgedAxisCount</code> 依可选
   事实表是否上 wire 取 5 到 8。</p>
   <ul class="consts">
@@ -186,21 +186,21 @@ S = clamp(floor(m * r^k), [softMin, softMax])</pre>
 added   = current \ baseline        -- non-empty =&gt; fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
   <p class="note">判轴 0 是唯一一条不是计数的轴：对文件尺寸的凸罚，精确 <code>Rational</code>，
-  越过硬线之后仍单调上升——<code>pMax</code> 是<em>落在</em> <code>H</code> 上的取值，不是上限。
+  越过硬线之后仍单调上升。<code>pMax</code> 是<em>落在</em> <code>H</code> 上的取值，不是上限。
   软线 <code>S</code> 是仓库自身冻结 LOC 分布的一个统计量，即把
   <code>S = clamp(median + k·MAD, …)</code> 改写成乘性形式，从而全程不取对数；它只在 establish
-  时导出，随后冻进基线。fail 位是<!--ce:count:fail_conditions#word-->六<!--/ce-->个<em>具名</em>条件的析取——<code>ratchet_over</code>、
+  时导出，随后冻进基线。fail 位是<!--ce:count:fail_conditions#word-->六<!--/ce-->个<em>具名</em>条件的析取：<code>ratchet_over</code>、
   <code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、
-  <code>knobs_digest</code>、<code>rows_dropped</code>——回包同时带回究竟是哪几个成立，控制台按同一顺序把它们印在 <code>FAIL</code> 之后。</p>
-  <p class="note">自规则包起（proto 3.1.0），连续行可带第四列——该文件的<em>路径类</em>，即首个 glob
-  命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无——旁边是加性的
+  <code>knobs_digest</code>、<code>rows_dropped</code>。回包同时带回究竟是哪几个成立，控制台按同一顺序把它们印在 <code>FAIL</code> 之后。</p>
+  <p class="note">自规则包起（proto 3.1.0），连续行可带第四列，即该文件的<em>路径类</em>：首个 glob
+  命中的 <code>[[rules.class]]</code> 的 1 基下标，<code>0</code> 表示无。旁边是加性的
   <code>classKnobs</code> 表，码域是 ceilings 自己的 <code>0 / 1 / 2</code> 加 <code>3</code>
   （proto 5.1.0，该类自己的 ADR-006 棘轮容差，行数绝对值）与 <code>4</code>（proto 6.4.0，该类自己的
-  认知复杂度容差）——这两个都是取值 <code>0</code> 有意义的类旋钮，故表的
+  认知复杂度容差）。这两个都是取值 <code>0</code> 有意义的类旋钮，故表的
   取值下界按码分判。带类的行按其类声明的软线、硬线与 CoC 上限收费，类未声明处回落到全局线；
-  收费定律本身分毫未动。棘轮读第四列只为取该容差——按（类、指标）分别取：声明了 <code>4</code>
+  收费定律本身分毫未动。棘轮读第四列只为取该容差，按（类、指标）分别取：声明了 <code>4</code>
   号时它答认知复杂度，其余情形由 <code>3</code> 号作答；声明即<em>取代</em>两条全局腿，<code>0</code>
-  意味任何增长皆超——写回的基线仍是三列，所以类是本次收费参数、永远不是基线事实。类名与 glob 留在客户端：过线的只有下标与 knobs。</p>
+  意味任何增长皆超。写回的基线仍是三列，所以类是本次收费参数、永远不是基线事实。类名与 glob 留在客户端：过线的只有下标与 knobs。</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
@@ -224,7 +224,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
 
 <div class="fam">
   <h3 id="f06"><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">图存活性与死代码判决</a></h3>
-  <p class="job">只回答一个问题——哪些文件是任何活物都够不着的？——在一张节点身份即行下标、
+  <p class="job">只回答一个问题（「哪些文件是任何活物都够不着的？」），在一张节点身份即行下标、
   wire 上没有任何文本的引用图上作答。</p>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
@@ -236,11 +236,11 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <code>1 unref_private</code>、<code>2 unref_public</code>、<code>3 unreach_private</code>、
   <code>4 unreach_public</code>。解析从不猜：一个 site 按本语言的梯级依次向上走，第一个产出
   <em>恰好一个</em>在域候选的梯级胜出；多于一个即 <code>Unresolved</code>，而
-  <code>External</code> 是正确的终局答案、不是漏判。环只报不判——没有入口种子的环岛仅凭可达性
+  <code>External</code> 是正确的终局答案、不是漏判。环只报不判；没有入口种子的环岛仅凭可达性
   就已判死，无需特例。kind 列是公式的第二道过滤器、不是废柱：<code>inert</code> =
-  {3 资产, 5 未用 ref-def}——图片链接渲染字节、未用的引用定义什么也不渲染，都不算引用，
-  排除由核心亲自执行。自 proto 2.32.0 起，每条死件行带一列置信——由请求携带的按语言点位台账判出：
-  0 未担保（该语言尚有未解析点位）、1 空担保、2 已担保——这是擦除家族的信任边界，由持有台账的
+  {3 资产, 5 未用 ref-def}，因为图片链接渲染字节、未用的引用定义什么也不渲染，都不算引用，
+  排除由核心亲自执行。自 proto 2.32.0 起，每条死件行带一列置信，由请求携带的按语言点位台账判出：
+  0 未担保（该语言尚有未解析点位）、1 空担保、2 已担保。这是擦除家族的信任边界，由持有台账的
   家族亲自执行。import 边精度实测 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着
   ≥ 0.90 的门；样本在任何解析器存在之前就已冻结。</p>
   <ul class="consts">
@@ -257,7 +257,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 
 <div class="fam">
   <h3 id="f07"><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">三信号 join</a></h3>
-  <p class="job">把相似度 × 图位置 × 变动史合成<!--ce:count:join_codes#word-->四<!--/ce-->个候选码之一——然后刻意拒绝据此行动。</p>
+  <p class="job">把相似度 × 图位置 × 变动史合成<!--ce:count:join_codes#word-->四<!--/ce-->个候选码之一，然后刻意拒绝据此行动。</p>
   <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
 (2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
 (3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
@@ -265,12 +265,12 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 cochangeHot = cochange &gt;= cochangeFloor
 legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
   <p class="note">优先级是<em>数据</em>而不是守卫顺序：第一行「required 位全部成立且 forbidden 位
-  全部为空」的规则胜出，否则码为 0。把顺序做成数据，正是让性质电池能够证伪它——把表旋转一下再判
+  全部为空」的规则胜出，否则码为 0。把顺序做成数据，正是让性质电池能够证伪它：把表旋转一下再判
   同一行，答案必须翻转。每条会 gate 的规则都要求 graph 位，所以掩码 5（图腿缺席）只可能带码 0：
   缺一条图腿就拒绝 gate，而不是假装入度为 0。自 proto 2.33.0 起每条候选行带一列腿一致性<em>置信</em>
-  ——在场且有据的腿数——表的严重度面以 <code>joinSeverity</code> 一次性过线；
+  即在场且有据的腿数；表的严重度面以 <code>joinSeverity</code> 一次性过线；
   <code>ce join</code> 的判决出自与 check 门同一条 verdict/1 路。join 产出的仍是<em>候选</em>；
-  fail 位里不出现任何 verdict 码，故 <code>ce join</code> 从不拿自己的判决当门——
+  fail 位里不出现任何 verdict 码，故 <code>ce join</code> 从不拿自己的判决当门；
   除非这一趟本身跑失败，否则退 0；核缺失或拒绝属跑失败（退 2），不是悄悄放行。</p>
   <ul class="consts">
     <li><b>rewriteNum/Den</b> 50/100</li>
@@ -286,7 +286,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
 
 <div class="fam">
   <h3 id="f08"><span class="n">08</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">拆分 ROI 缝价（四条腿）</a></h3>
-  <p class="job">用一个数而不是一句口号回答「这个长文件值不值得拆、从哪儿拆」——它是<strong>建议</strong>，
+  <p class="job">用一个数而不是一句口号回答「这个长文件值不值得拆、从哪儿拆」，它是<strong>建议</strong>，
   永不进结构分数、也永不进 fail 位。</p>
   <pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
 
@@ -296,7 +296,7 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + roiPhiMilli
 
 viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without division</pre>
-  <p class="note">收益是拆分退回来的那部分软区罚分，算在<em>与判决家族同一条</em>凸曲线上——直接
+  <p class="note">收益是拆分退回来的那部分软区罚分，算在<em>与判决家族同一条</em>凸曲线上，直接
   import 而不是重新推一遍；因为 <code>p</code> 是凸的且 <code>p(0) = 0</code>，故超可加，所以
   那个方括号非负。最佳缝的选取是对 ROI 的精确有理数 argmax，用交叉相乘的 <code>b % c</code> 比较。
   一个有 <code>n</code> 个顶层单元的文件产出 <code>n - 1</code> 条缝。长而内聚会得到一条<em>带
@@ -317,8 +317,8 @@ viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without divis
 
 <div class="fam">
   <h3 id="f09"><span class="n">09</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/09-edit-four-classification-update-supervision.md">编辑四分类（更新监督）</a></h3>
-  <p class="job">把每一次被监督的编辑归约成逐文件对的四个整数计数——matched / novel / moved /
-  deleted——从而让「这次更新是堆上去的，不是改上去的」成为一次测量。</p>
+  <p class="job">把每一次被监督的编辑归约成逐文件对的四个整数计数：matched / novel / moved /
+  deleted，从而让「这次更新是堆上去的，不是改上去的」成为一次测量。</p>
   <pre>siteOpens s n  =  n * movedCost + s  &lt;  n * plainCost
 
 destFloor      =  least n with siteOpens siteCostCross n   =  2</pre>
@@ -326,12 +326,12 @@ destFloor      =  least n with siteOpens siteCostCross n   =  2</pre>
 anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
   <p class="note">跨文件证据下限是<em>推出来的</em>而不是调出来的：<code>siteCostCross = 2</code>
   使单条跨文件行恰好打平（<code>1*1 + 2 = 3 = 1*3</code>），而打平不开站，于是
-  <code>destFloor</code> 求值为 2——那个平局<em>就是</em>巧合拒斥本身。唯一一个「拍板而非推导」的
+  <code>destFloor</code> 求值为 2，那个平局<em>就是</em>巧合拒斥本身。唯一一个「拍板而非推导」的
   常数是 <code>anchorFloor = 19</code>：在双语料影子消融里，被凭空发明出来的站点其最宽锚点实测
   16 个 alnum 字符，而最细的真实锚点是 19，故 19 是那个「杀掉全部实测巧合、同时保住全部实测真站」
-  窗口的上沿。L2 的 delta 只在一个方向上单调——普通行可以被改判为 moved，反向绝不可以。自 proto
+  窗口的上沿。L2 的 delta 只在一个方向上单调：普通行可以被改判为 moved，反向绝不可以。自 proto
   7.1.0 起，行级 delta 之侧多一条更粗的腿：成对的 <code>declRem</code> / <code>declAdd</code>
-  声明键表——一侧消失、恰在另一侧出现一次，两跨度内 leftover 至少共享 <code>declFloor = 1</code>
+  声明键表，一侧消失、恰在另一侧出现一次，两跨度内 leftover 至少共享 <code>declFloor = 1</code>
   个哈希即接受；键自己付掉跨站代价（<code>declCredit = siteCostCross</code>），故一行共同内容就开边，
   而行证据需要两行。它只追加 <code>lines = 0</code> 的搬迁，行分类、块、嫌疑与分数分毫不动。</p>
   <ul class="consts">
@@ -361,12 +361,12 @@ slope &gt;  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro</pre>
   <p class="note">这里的 <code>%</code> 是 <code>Data.Ratio</code> 的精确比构造子，不是取模；
   <code>y</code> 把每次提交重新归一到固定的 10⁶ 满量程网格上，使不同 <code>scoreScale</code> 下
-  测得的行可以通约。斜率取成对斜率的<b>中位数</b>（trend/2）：一个野点——测出来的坏提交——能把最小二乘的均值
-  拽到任何地方，却拽不动中位数半步。行序被刻意不加约束——判决视图按时间戳排序，
+  测得的行可以通约。斜率取成对斜率的<b>中位数</b>（trend/2）：一个野点（测出来的坏提交）能把最小二乘的均值
+  拽到任何地方，却拽不动中位数半步。行序被刻意不加约束：判决视图按时间戳排序，
   并封顶在 tsWindow 个最近点上，所以 rebase 过的提交是合法输入。最陡的单步跌落以
   <code>cliff</code> 过线、最长的连续下跌以 <code>declineRun</code> 过线，各自用请求索引指认
-  提交——hash 永不过线。低于 <code>minPoints</code>、或没有任何时间戳相异的点对时，斜率是
-  <code>Nothing</code>——是缺席，不是编造出来的「持平」——且 fail 位保持 false。在默认地板 0 下，
+  提交；hash 永不过线。低于 <code>minPoints</code>、或没有任何时间戳相异的点对时，斜率是
+  <code>Nothing</code>（是缺席，不是编造出来的「持平」），且 fail 位保持 false。在默认地板 0 下，
   「下滑」可以被报出来但不能判负。</p>
   <ul class="consts">
     <li><b>minPoints</b> 3（knob 0）</li>
@@ -378,12 +378,12 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
   </ul>
 </div>
 
-<h2 id="fpr">FPR 纪律——一条规则凭什么获得 deny 的资格</h2>
+<h2 id="fpr">FPR 纪律：一条规则凭什么获得 deny 的资格</h2>
 
 <div class="fam">
   <h3 id="f11"><span class="n">11</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md">FPR 纪律与守卫档位阶梯</a></h3>
   <p class="job">一道架在非确定性写手之上的确定性门：守卫挂在 <code>Write|Edit</code> 的
-  <code>PreToolUse</code> 上，用精确算术回答每一次待落盘的写——而一条规则类只有先付清代价，
+  <code>PreToolUse</code> 上，用精确算术回答每一次待落盘的写，而一条规则类只有先付清代价，
   才有资格执法。</p>
   <pre>TIERS = ["observe", "warn", "ask", "deny"]
 PROMOTED_DEFAULT = "deny"</pre>
@@ -391,7 +391,7 @@ PROMOTED_DEFAULT = "deny"</pre>
   <table class="ladder">
     <thead><tr><th>档位</th><th>permissionDecision</th><th>效果</th></tr></thead>
     <tbody>
-      <tr><td>observe</td><td><em>无——打印前即返回</em></td><td>只写一行 feed，不注入任何文本</td></tr>
+      <tr><td>observe</td><td><em>无，打印前即返回</em></td><td>只写一行 feed，不注入任何文本</td></tr>
       <tr><td>warn</td><td><code>allow</code></td><td>编辑照常落盘，理由作为可见告警浮出</td></tr>
       <tr><td>ask</td><td><code>ask</code></td><td>弹给用户确认</td></tr>
       <tr><td>deny</td><td><code>deny</code></td><td>写被拒，理由指向已存在的 <code>file:line</code></td></tr>
@@ -399,8 +399,8 @@ PROMOTED_DEFAULT = "deny"</pre>
   </table>
   </div>
   <p class="note">确定性是靠<em>重放这次写</em>而不是估计它买来的：<code>resulting_lines</code>
-  算出精确的写后行数；任何本来就会失败的工具调用——文件不存在、非 <code>replace_all</code> 的
-  匹配不唯一——都返回 <code>None</code>，规则保持沉默。门永远不去判决一次落不了盘的写。无法识别的
+  算出精确的写后行数；任何本来就会失败的工具调用（文件不存在、非 <code>replace_all</code> 的
+  匹配不唯一）都返回 <code>None</code>，规则保持沉默。门永远不去判决一次落不了盘的写。无法识别的
   <code>[guard] mode</code> 会解析成 <code>observe (ce.toml ERROR: …)</code> 字符串而不是原样透传，
   因为一个透传的拼写错误曾经把所有执法路径全部解除武装，而会话横幅仍在打印「已武装」。</p>
   <p class="note"><strong>为什么不能直接把一条规则类设成 deny。</strong>这道阶梯是写进计划的
@@ -408,24 +408,24 @@ PROMOTED_DEFAULT = "deny"</pre>
   准入是定量的：M3 验收判据是<strong>500 次真实正常编辑中误拦 ≤ 1 次</strong>，且明确不许拿
   <code>N=1</code> 的演示充数；M4 主门是<strong>500 次真实正常编辑上 FPR ≤ 1%</strong>，评估集须在
   实现之前预注册冻结，≥ 200 个编辑样本，≥ 50% 取自真实 agent 记录。样本纯度是门的一部分：只有
-  observe 模式与无守卫时期的会话可被采样，守卫已经介入过的编辑必须排除——否则 FPR 会被守卫自己的
+  observe 模式与无守卫时期的会话可被采样，守卫已经介入过的编辑必须排除，否则 FPR 会被守卫自己的
   塑形效应压低，deny 准入就成了自我背书。到今天为止只有两类付清了：T1/T2 精确重复写入，以及
-  <code>文件 &gt; 自己那条硬线</code>的硬预算突破——默认 750，或该文件的 <code>[[rules.class]]</code>
+  <code>文件 &gt; 自己那条硬线</code>的硬预算突破，默认 750，或该文件的 <code>[[rules.class]]</code>
   所声明的那条，于是钩子拒的位置正是 CI 墙会红的位置。<em>其余每一条规则都因为没有自己的记录而停在
   observe。</em></p>
   <p class="note"><strong>CodeEraser 1.2.0 起，重复写入规则只计新引入的重复。</strong>K 轮把退役的重放仪器
-  复活，在 2,761 个真实编辑事件上重测——本仓全史加钉定的 <code>requests</code> 尾段——仲裁把
-  原始拦截分成三类：真实落地的重复引入、携带预算内债块文件上的复燃、以及拆叶/并叶中间态——正是
+  复活，在 2,761 个真实编辑事件上重测（本仓全史加钉定的 <code>requests</code> 尾段），仲裁把
+  原始拦截分成三类：真实落地的重复引入、携带预算内债块文件上的复燃、以及拆叶/并叶中间态，正是
   300 行纪律自己产出的「先写新叶后削宿主」次序。修法是减去<em>被替换</em>内容本就携带的匹配
   （Write 替换盘上文件、Edit 替换 <code>old_string</code>）：携债重写保持沉默、真引入照拒；拆到
-  新文件的写在写入瞬间与复制无从分辨，所以仍拒——但拒绝词会教出能通过的次序（先削源）。两种口径
+  新文件的写在写入瞬间与复制无从分辨，所以仍拒，但拒绝词会教出能通过的次序（先削源）。两种口径
   的最终比率都记在
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>。</p>
-  <p class="note">在册的重放把 git 线性历史当作真实编辑流——先探测、后落盘，跑在
+  <p class="note">在册的重放把 git 线性历史当作真实编辑流：先探测、后落盘，跑在
   <code>t = 50</code> 与 <code>min_distinct = 7</code> 这两个出厂默认档上：<strong>630 个事件、
   35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>。那是 M3 那一轮；常设仪器（<code>cli/tests/it/fpr_replay.rs</code>）
-  已于 2026-09-05 重测——requests 365 事件 0 拦截，自仓 3164 事件里 178 次真落地引入加 79 次先写后削的中间态
-  ——两种读法都在 FPR-REPLAY.md 里。那 35 个自仓块全部仲裁为真阳并已被清理，
+  已于 2026-09-05 重测：requests 365 事件 0 拦截，自仓 3164 事件里 178 次真落地引入加 79 次先写后削的中间态。
+  两种读法都在 FPR-REPLAY.md 里。那 35 个自仓块全部仲裁为真阳并已被清理，
   克隆块预算同步下棘 251 → 211 → 209 → 205 → 202。</p>
   <pre>cap      = lines_for(file).file_lines_fail     // 文件自身的类表；class 0 用全局默认 750
 breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
@@ -452,12 +452,12 @@ permille = (lines - S) * 1000 / (H - S)
   </ul>
 </div>
 
-<h2 id="acting">据判决行动——擦除与顾问</h2>
+<h2 id="acting">据判决行动：擦除与顾问</h2>
 
 <div class="fam">
   <h3 id="f12"><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">确定性擦除——安全谓词</a></h3>
-  <p class="job">判决擦除计划的行，覆盖<!--ce:count:erase_classes#word-->三<!--/ce-->个可证明安全的家族——<code>dead_file</code>、
-  <code>verbatim_doc</code> 与 <code>t1_twin</code>；其余行都以具名 reason code 拒绝。</p>
+  <p class="job">判决擦除计划的行，覆盖<!--ce:count:erase_classes#word-->三<!--/ce-->个可证明安全的家族（<code>dead_file</code>、
+  <code>verbatim_doc</code> 与 <code>t1_twin</code>）；其余行都以具名 reason code 拒绝。</p>
   <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
          3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
@@ -465,7 +465,7 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          6 public_surface (6.1.0)</pre>
   <p class="note">Rust 从三个来源家族组装整数事实；Haskell 执行固定的首个失败谓词。
   自 proto 2.32.0 起死件家族改走 class 3，其信任事实是 graph 家族亲判的逐行置信；自 proto 6.1.0 起公开死件
-  判决——2 unref_public / 4 unreach_public——在权衡置信<em>之前</em>即以 public_surface 拒绝，
+  判决（2 unref_public / 4 unreach_public）在权衡置信<em>之前</em>即以 public_surface 拒绝，
   导出的 API 无论担保多足都不可擦，此后未担保的置信才拒行。class 0 是同家族的本地计数老路，
   已于 proto 4.0.0 宽限窗关闭时退役：位置永久冻结、由核心按名拒绝。超过上限的降级应答不授权任何擦除，
   而安全谓词没有可调旋钮。</p>
@@ -480,20 +480,20 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
 
 <div class="fam">
   <h3 id="f13"><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">未提及声明顾问——提及否决</a></h3>
-  <p class="job">在 graph 家族的判决之侧，列出树中没有任何<em>他</em>文件拼写其名的已判决声明——
+  <p class="job">在 graph 家族的判决之侧，列出树中没有任何<em>他</em>文件拼写其名的已判决声明，
   一件负向仪器：带可见性码上报，永不判决。</p>
   <pre>veto  = another file spells it | fold (Rust, ≥2 segments ∧ ≥7 chars)
         | the file's own exception regions spell it
 row   = [node, vis, conv]      (integers only — a name never rides the wire)
 emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
 code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
-  <p class="note">U 是自有的一次 walk——隐藏文件进入，<code>.git</code>/<code>.ce</code> 按名裁掉，
-  <em>未声明</em>的嵌套仓库被整体裁掉，而根的 <code>.gitmodules</code> 声明的路径是外来的——它能拼出名字，
+  <p class="note">U 是自有的一次 walk：隐藏文件进入，<code>.git</code>/<code>.ce</code> 按名裁掉，
+  <em>未声明</em>的嵌套仓库被整体裁掉，而根的 <code>.gitmodules</code> 声明的路径是外来的，它能拼出名字，
   故留在 U 里，但永不被度量；
-  只认 <code>.gitignore</code> 与 <code>.ceignore</code>——因此同一提交在任何机器上得到同一个 U，walk 的每个参数
+  只认 <code>.gitignore</code> 与 <code>.ceignore</code>，因此同一提交在任何机器上得到同一个 U，walk 的每个参数
   都是 <code>MENTION_REV</code> 的输入。mentions 存的是 64 位哈希而非文本。Rust 抽取每条声明的提及名与类别词，
-  按最廉价者先问三个否决问题；Haskell 只读可见性词与 mounts 行——文件的 <code>mod</code> 挂载有几处私有、
-  是否有门面再导出、其包是否将其保私——并赋上面那条冻结全序。两表随 <code>graph.request</code> 同来同去：
+  按最廉价者先问三个否决问题；Haskell 只读可见性词与 mounts 行（文件的 <code>mod</code> 挂载有几处私有、
+  是否有门面再导出、其包是否将其保私），并赋上面那条冻结全序。两表随 <code>graph.request</code> 同来同去：
   不带两表的请求得到逐字节相同的十键应答，死集两种情形相同。超过 <code>unmentionedCap</code> 时核仍判图、
   丢表并具名说明。顾问永不使门变红，永不进入 <code>ce erase</code>。</p>
   <ul class="consts">
@@ -508,27 +508,27 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
 </div>
 
 <figure class="arch">
-  <a class="zoomable" href="/assets/methodology.zh.svg"><img src="/assets/methodology.zh.svg" width="1200" height="820" alt="三条泳道——Rust 侧的实测事实、Haskell 侧带公式的判决计算、决定退出码的门——上文各节引用的常数写在图上" loading="lazy"></a>
+  <a class="zoomable" href="/assets/methodology.zh.svg"><img src="/assets/methodology.zh.svg" width="1200" height="820" alt="三条泳道（Rust 侧的实测事实、Haskell 侧带公式的判决计算、决定退出码的门），上文各节引用的常数写在图上" loading="lazy"></a>
   <figcaption>常数总表。泳道 1 在 Rust 侧抽取事实；泳道 2 在 Haskell 侧用图上所示公式把
   它们变成判决；泳道 3 决定退出码。图上每一个数字都是上文各节引用的常数。点开图即可看原尺寸 SVG。</figcaption>
 </figure>
 
-<h2 id="residue">改动时家族——一次删除留下了什么</h2>
-<p class="note">上面的家族读的是一棵树。第十四族读的是一次<em>改动</em>——一次编辑、一个会话或一次提交写下的那些
-（before, after）对——在 PreToolUse 钩子、Stop 审计与 <code>ce precommit</code> / <code>ce commitmsg</code> 处。</p>
+<h2 id="residue">改动时家族：一次删除留下了什么</h2>
+<p class="note">上面的家族读的是一棵树。第十四族读的是一次<em>改动</em>，即一次编辑、一个会话或一次提交写下的那些
+（before, after）对，落在 PreToolUse 钩子、Stop 审计与 <code>ce precommit</code> / <code>ce commitmsg</code> 处。</p>
 
 <div class="fam">
   <h3 id="f14"><span class="n">14</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md">墓碑残留——被删名字的合取</a></h3>
-  <p class="job">抓的是 agent 被告知「删掉 X」之后留下的形状：X 从代码里消失了，同一次改动却把 X 以缺席的形式写了回来——
+  <p class="job">抓的是 agent 被告知「删掉 X」之后留下的形状：X 从代码里消失了，同一次改动却把 X 以缺席的形式写了回来：
   标题 <code>(no X)</code>、标识符 <code>without_x</code>、一句 <code>X is no longer needed</code>。</p>
   <pre>R     = ⋃ names(before) \ ⋃ alive(after)      (structural positions only; keys, never text)
 row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
 site  ⇔ names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
 over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
-  <p class="note">名字是文本<em>声明</em>出来的东西——注释与字面量之外的标识符、单元名、标题、列表首词；内联代码跨度只是提及，
-  只保活。Rust 读这次改动新增的两个面——新标题、单元名与文件名；注释、docstring 与段落里新增的行——每个候选面发一行三个整数；
-  Haskell 落座站点并判预算，名字与路径从不过线。changelog 定位的文档整体豁免并入账——按路径约定、按版本索引台账的形状、
-  或按 <code>[tombstone] ledger</code> 声明——自身即台账的引用块或小节只豁免自己。本类出厂即 <code>observe</code>，
+  <p class="note">名字是文本<em>声明</em>出来的东西：注释与字面量之外的标识符、单元名、标题、列表首词；内联代码跨度只是提及，
+  只保活。Rust 读这次改动新增的两个面（新标题、单元名与文件名；注释、docstring 与段落里新增的行），每个候选面发一行三个整数；
+  Haskell 落座站点并判预算，名字与路径从不过线。changelog 定位的文档整体豁免并入账，按路径约定、按版本索引台账的形状、
+  或按 <code>[tombstone] ledger</code> 声明；自身即台账的引用块或小节只豁免自己。本类出厂即 <code>observe</code>，
   每次度量都写进 feed；两段历史上的九轮 FPR 回放（<code>docs/FPR-TOMBSTONE.md</code>）是任何晋级都必须据以论证的记录。</p>
   <ul class="consts">
     <li><b>TOMBSTONE_REV</b> 1</li>
@@ -546,24 +546,24 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
   </ul>
 </div>
 
-<h2 id="advisor">顾问家族——扮演同一角色的单元</h2>
-<p class="note">克隆家族要求两个单元长得像。第十五族回答的是「文件 2 现在有个函数，跟文件 1 里的某个函数定位相同」——
-两者可以没有一行相同——对索引自有事实做稀疏检索，在 <code>ce similar</code>、MCP 工具 <code>similar_units</code>、
+<h2 id="advisor">顾问家族：扮演同一角色的单元</h2>
+<p class="note">克隆家族要求两个单元长得像。第十五族回答的是「文件 2 现在有个函数，跟文件 1 里的某个函数定位相同」，
+哪怕两者没有一行相同：对索引自有事实做稀疏检索，在 <code>ce similar</code>、MCP 工具 <code>similar_units</code>、
 GUI 的 <code>similar</code> 屏与 Stop 审计的一行里只当顾问。</p>
 
 <div class="fam">
   <h3 id="f15"><span class="n">15</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">同角色顾问——稀疏检索与仓内联想</a></h3>
-  <p class="job">用整数 BM25 在六通道词袋上给出与某个单元（或一段文本）最相似的单元——词袋读自索引已有的事实——
+  <p class="job">用整数 BM25 在六通道词袋上给出与某个单元（或一段文本）最相似的单元（词袋读自索引已有的事实），
   再问核其中哪些扮演查询的角色：一个确定性、离线、无模型无浮点的「代码 RAG」，只当顾问。</p>
   <pre>bag    = six channels N P C D S L        (facts the parse already carries; hashes, never words)
 score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
 widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
 role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
-  <p class="note">T3 宇宙里每个单元一个袋：名字碎片、形状、被调者拼写、自有文档段、节点种类直方图与字面量的<em>种类</em>——
+  <p class="note">T3 宇宙里每个单元一个袋：名字碎片、形状、被调者拼写、自有文档段、节点种类直方图与字面量的<em>种类</em>，
   每个词先词干化再连同通道字母哈希，故共享名字与共享被调者是两种证据。词袋以两张表随同一次内容哈希门控的刷新持久化
-  （<code>bag</code> 表自身即倒排表；spec 初稿的共现对表实测让冷索引慢 7–10×，不建——读者在查询时推导共现）。
+  （<code>bag</code> 表自身即倒排表；spec 初稿的共现对表实测让冷索引慢 7–10×，不建，故读者在查询时推导共现）。
   排序对着 trait 只写一次，仪器建的内存语料与产品跑的 SQL 读者在五份语料的每个单元上一致。Rust 发查询袋与每候选九个整数一行；
-  Haskell 用精确有理数排序并施加角色合取；名字、词与路径永不过线。两代仲裁 oracle 各守地板——首样本 60 %，
+  Haskell 用精确有理数排序并施加角色合取；名字、词与路径永不过线。两代仲裁 oracle 各守地板：首样本 60 %，
   读数低一档并让首样本偏好的每个调优候选全部退场的留出集 40 %。本族永不使门变红，永不进入 <code>ce erase</code>。</p>
   <ul class="consts">
     <li><b>SIMILAR_REV</b> 1</li>
@@ -583,11 +583,11 @@ role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskel
 
 
 <h2 id="honesty">两条诚实边界</h2>
-<p class="trust"><code>PreToolUse</code> 是一层<strong>行为塑形</strong>，<strong>不是安全边界</strong>——
+<p class="trust"><code>PreToolUse</code> 是一层<strong>行为塑形</strong>，<strong>不是安全边界</strong>：
 agent 可以用 <code>Bash: echo &gt;&gt;</code> 或 <code>sed -i</code> 绕过它；兜底是跑在
 <code>git diff</code> 上、与写入工具无关的 <code>Stop</code> 审计，加上 CI 门。而这个 hook 是
 刻意<strong>fail-open</strong> 的：任何内部失败都放行该次编辑，降级的那次运行落进 observe feed，
-而不是被悄悄读成「没有重复」。这两条都不是「以后再补」的缺口——它们都写进了计划，因为一道对自己
+而不是被悄悄读成「没有重复」。这两条都不是「以后再补」的缺口；它们都写进了计划，因为一道对自己
 覆盖范围撒谎的门，比一道如实声明覆盖范围的门更糟。</p>
 
 <footer class="site">

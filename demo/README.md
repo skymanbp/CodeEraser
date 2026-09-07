@@ -1,4 +1,4 @@
-# demo — the same task, run twice
+# demo: the same task, run twice
 
 ```sh
 node demo/run.js            # run both, write demo/out/*
@@ -11,10 +11,10 @@ node demo/run.js --keep     # also leave all three scratch trees on disk to poke
 Needs `ce` on PATH (or `CE_BIN=/path/to/ce`) with a reachable `ce-core`
 (`CE_CORE_BIN` or a sibling), git and node. No packages.
 
-One coding task — *add discounts, a compact report, CSV and JSON output, and
-money formatting in the API* — run twice against identical copies of
+One coding task (*add discounts, a compact report, CSV and JSON output, and
+money formatting in the API*) run twice against identical copies of
 [`seed/`](seed/README.md), a small cent-exact invoicing service in Python and
-TypeScript. The only variable is whether CodeEraser is in the loop at all —
+TypeScript. The only variable is whether CodeEraser is in the loop at all:
 its PreToolUse guard, its Stop audit, and, once the audit refuses, the
 `ce erase --apply` that acts on the plan the gates already named
 (`seed/ce.toml` says `[guard] mode = "deny"`).
@@ -25,7 +25,7 @@ Each loop then runs to **its own** end, which is the point rather than a
 thumb on the scale: with nothing in the loop nothing refuses anything, so
 that run ends at the last write; with the hooks in it the audit refuses to
 end the turn, the repair it names is written, and `ce erase --apply` removes
-what the plan proves safe. Both trees are then measured — the CI face.
+what the plan proves safe. Both trees are then measured; that is the CI face.
 
 <!-- demo:begin -->
 | | Without CodeEraser | With CodeEraser |
@@ -56,26 +56,26 @@ Transcripts as text: [without](out/without-codeeraser.txt) ·
 [with](out/with-codeeraser.txt) · the numbers as [JSON](out/summary.json) and
 as the table above ([en](out/summary.md) / [zh](out/summary.zh.md)).
 
-The five numbers that open the comparison — writes refused, clone blocks left
-behind, duplicated doc segments, removals still owed, and the check score —
+The five numbers that open the comparison (writes refused, clone blocks left
+behind, duplicated doc segments, removals still owed, and the check score)
 render on their own into the `scoreboard` block of both READMEs
 ([en](out/scoreboard.md) / [zh](out/scoreboard.zh.md)) and of both homepages
 ([en](out/scoreboard.html) / [zh](out/scoreboard.zh.html)). One list of rows,
-two shapes — a Markdown table and an HTML one under `.board` in
-`site/style.css` — so a homepage cannot quote a figure the table below it
+two shapes, a Markdown table and an HTML one under `.board` in
+`site/style.css`, so a homepage cannot quote a figure the table below it
 does not carry.
 
 ## The close-ups
 
 The table answers *does it change the outcome*; the scenes in
-[`vignettes.js`](vignettes.js) answer *what does it look like* — one question
+[`vignettes.js`](vignettes.js) answer *what does it look like*, one question
 each, played on their own copy of the seed and rendered into the READMEs'
 `vignettes` blocks ([en](out/vignettes.md) / [zh](out/vignettes.zh.md)). Each
 scene is asked once per language against the **same** tree, so the pair is one
 run translated rather than two runs that happened to agree, and every act
 declares the answer it must get: a probe against a tree whose index never got
 built degrades to `allow`, so without that assertion a refusal exhibit would
-quietly become a picture of the guard doing nothing — byte-gated in that state.
+quietly become a picture of the guard doing nothing, byte-gated in that state.
 No `agent>` narration appears in them, because steps.js writes its narration in
 English only and an English line in the Chinese README would be a translation
 gap dressed as a transcript.
@@ -84,7 +84,7 @@ The first of those scenes is also drawn: [`render.js`](render.js) turns the
 lines it just captured into [`out/hero.svg`](out/hero.svg) and
 [`out/hero.zh.svg`](out/hero.zh.svg), the card each README opens with. A reader's
 first glance should be the product doing its one visible thing rather than a
-diagram of the machine that does it — and because the card is drawn from the
+diagram of the machine that does it. And because the card is drawn from the
 same play as the quoted exhibit below it, there is no second capture that could
 drift away from the first. The Chinese card is what made the renderer count
 display columns instead of characters: a CJK glyph is one character and two
@@ -93,7 +93,7 @@ way would have run off the right edge with nothing to notice. An all-ASCII line
 still wraps exactly where it did, which is why the two transcript SVGs beside it
 did not move a byte.
 
-[`tree.js`](tree.js) holds what both drivers need — how a copy of the seed is
+[`tree.js`](tree.js) holds what both drivers need: how a copy of the seed is
 made, committed and given a baseline, how the guard is asked, how a scratch
 path is kept out of a transcript. It is a shared file rather than a copied one
 for a reason this repo can state precisely: JavaScript rides the size-only arm
@@ -102,17 +102,17 @@ invisible to every gate in this repository and visible to every reader of it.
 
 ## What is real and what is scripted
 
-- **Real** — every verdict. Each PreToolUse decision is the verbatim stdout of
+- **Real.** Every verdict. Each PreToolUse decision is the verbatim stdout of
   `ce probe --hook` fed the envelope Claude Code sends for a `Write`; the Stop
-  line is `ce audit --hook`'s, asked once per language (`CE_LANG=en` and `zh` —
+  line is `ce audit --hook`'s, asked once per language (`CE_LANG=en` and `zh`;
   the audit is read-only) so each README's table quotes the verdict in its own
   language; every gate line is the command's own output,
   path-normalized (`<work>`), with `advisory` and diff lines dropped and only
-  the last 8 lines shown — the unclipped text is in [`out/summary.json`](out/summary.json).
+  the last 8 lines shown; the unclipped text is in [`out/summary.json`](out/summary.json).
   In the comparison table the Stop verdict is quoted up to the colon that
   opens its block list and marked `…` where it was cut; the sentence in full,
   block list included, is in that same file.
-- **Scripted** — the agent's seven moves, the repair the audit asks for
+- **Scripted.** The agent's seven moves, the repair the audit asks for
   ([`steps.js`](steps.js)), and the `ce erase --apply` that answers the plan's
   own red gate. No model is in the loop. Each write is built from the seed
   alone, so no move depends on an earlier one having landed, and a refusal in
@@ -127,7 +127,7 @@ invisible to every gate in this repository and visible to every reader of it.
   named row, and gates that exit 0 or 1 and never crash. Every one of those
   channels is fail-open, so without the declaration a degraded run would
   render a table shaped exactly like a measured one.
-- **Gated** — the replay test in the test suite re-runs this driver and
+- **Gated.** The replay test in the test suite re-runs this driver and
   compares `out/` and every marked README block byte for byte, so a change in
   any verdict's wording fails CI rather than leaving a stale picture here. The
   block's marker is a column of run.js's `EMBEDS` table, which `--check` and
@@ -140,26 +140,26 @@ invisible to every gate in this repository and visible to every reader of it.
 
 | # | write | the drift it stands for | write-time verdict |
 |---|---|---|---|
-| 1 | `invoicer/discount.py` | copies `to_cents` and `scale_cents` out of `money.py` "to stay self-contained" | **denied** — an exact T1 clone of an indexed region, named by file and lines |
-| 2 | `invoicer/report.py` | a "compact" renderer: the old rows and footer, renamed and reordered | lands — the file already carried those blocks, so the write introduces nothing *novel*; the Stop audit convicts it |
-| 3 | `docs/DISCOUNTS.md` | opens by pasting the pricing paragraph | lands — doc duplication is judged by `ce docdup`, not at write time (no false-positive record yet) |
-| 4 | `invoicer/invoice.py` | CSV export appended to the busiest module | lands — growth inside the hard line is the ratchet's business (`ce check`: `ratchet_over`) |
-| 5 | `invoicer/report_json.py` | a JSON renderer, written fresh | lands — genuinely new |
-| 6 | `invoicer/cli.py` | switches the CLI to JSON; `report.py` is left behind | lands — `ce deadcode` names the orphan |
-| 7 | `web/api.ts` | a local copy of `format.ts`'s `formatCents` | **denied** — the TypeScript twin of move 1 |
-| 8 | `invoicer/report.py` | not the task's: the repair the Stop audit named — one renderer, the compact variant differing only where it really differs | lands, and the audit falls silent |
+| 1 | `invoicer/discount.py` | copies `to_cents` and `scale_cents` out of `money.py` "to stay self-contained" | **denied**: an exact T1 clone of an indexed region, named by file and lines |
+| 2 | `invoicer/report.py` | a "compact" renderer: the old rows and footer, renamed and reordered | lands: the file already carried those blocks, so the write introduces nothing *novel*; the Stop audit convicts it |
+| 3 | `docs/DISCOUNTS.md` | opens by pasting the pricing paragraph | lands: doc duplication is judged by `ce docdup`, not at write time (no false-positive record yet) |
+| 4 | `invoicer/invoice.py` | CSV export appended to the busiest module | lands: growth inside the hard line is the ratchet's business (`ce check`: `ratchet_over`) |
+| 5 | `invoicer/report_json.py` | a JSON renderer, written fresh | lands: genuinely new |
+| 6 | `invoicer/cli.py` | switches the CLI to JSON; `report.py` is left behind | lands: `ce deadcode` names the orphan |
+| 7 | `web/api.ts` | a local copy of `format.ts`'s `formatCents` | **denied**: the TypeScript twin of move 1 |
+| 8 | `invoicer/report.py` | not the task's: the repair the Stop audit named: one renderer, the compact variant differing only where it really differs | lands, and the audit falls silent |
 
 Move 2 is the honest boundary on purpose: the duplicate-write rule charges
 only duplication a write *introduces* (the 2,761-event replay in
 [FPR-REPLAY.md](../docs/FPR-REPLAY.md) is why), and a full-file rewrite that
-copies its own blocks introduces none — so the next layer, the Stop audit,
+copies its own blocks introduces none, so the next layer, the Stop audit,
 refuses to end the turn over exactly those two blocks, which is what move 8
 answers.
 
 Two gates are still red when the loop converges, and both are asking a person
 for a decision rather than reporting a defect: `invoicer/invoice.py` stands at
 93 lines against a tolerated ceiling of 61 (move 4), which ADR-006 keeps open
-for a named re-establish instead of absorbing, and two files are unreferenced
-— `docs/DISCOUNTS.md`, which nothing links, and `invoicer/report.py`, orphaned
+for a named re-establish instead of absorbing, and two files are unreferenced:
+`docs/DISCOUNTS.md`, which nothing links, and `invoicer/report.py`, orphaned
 by move 6. A demo that scripted those away would be scripting the human out of
 a judgement only a human makes.
