@@ -99,11 +99,20 @@ have_hasher() {
     command -v sha256sum >/dev/null 2>&1 || command -v shasum >/dev/null 2>&1
 }
 
+# Hashed through stdin, deliberately: given a filename, GNU coreutils
+# escapes one containing a backslash or newline and marks the line by
+# prefixing it with a literal '\', so `cut -d' ' -f1` yields "\<hash>"
+# and no comparison against a pin can ever succeed. That is not
+# hypothetical on Windows -- CLAUDE_PLUGIN_DATA arrives as a native
+# path, so every candidate built from it carries backslashes, and a
+# byte-identical binary was refused with "SHA256 mismatch". Reading
+# stdin leaves no filename in the output to escape: both tools print
+# "<hash>  -".
 sha_of() {
     if command -v sha256sum >/dev/null 2>&1; then
-        sha256sum "$1" | cut -d' ' -f1
+        sha256sum < "$1" | cut -d' ' -f1
     else
-        shasum -a 256 "$1" | cut -d' ' -f1
+        shasum -a 256 < "$1" | cut -d' ' -f1
     fi
 }
 

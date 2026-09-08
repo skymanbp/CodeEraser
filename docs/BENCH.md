@@ -47,7 +47,7 @@
 > table cannot gain a row the rule forbids, and a release that earns one
 > says which of the two reasons it has none yet.
 
-The newest row, v1.7.0, is the release this build is.
+The current release, v1.7.1, ships the same measured code as the newest row and gets none of its own.
 
 ## Latency series (self repository)
 

@@ -9,6 +9,14 @@
 
 ## [Unreleased]
 
+## [v1.7.1] — 2026-09-07 — Windows 上 pin 校验读错自己算出的哈希，插件三钩子与 MCP 面一起静默失效
+
+**无默认档位变更。** 一处分发链路缺陷（2026-09-07，用户报「`.ce` 没建、插件没生效」后第一方定位）：
+
+- **`sha_of` 在带反斜杠的路径上交出的不是哈希**：GNU coreutils 对含反斜杠或换行的文件名做转义，并以行首一个字面 `\` 标记该行，于是 `sha256sum "$1" | cut -d' ' -f1` 读出 `\<64 位十六进制>`——比 pin 多一个字符，与任何 pin 都不可能相等。这在 Windows 上不是假设：`CLAUDE_PLUGIN_DATA` 是原生路径，由它拼出的每个候选都带反斜杠，data 目录里那枚**与 pin 逐字节相同**的 `ce-1.7.0-x86_64-windows.exe` 因此被当成篡改品拒绝（`REFUSING on-disk ce — SHA256 mismatch`），`ce.sh` 随即按 R3 fail-open 退出 0，SessionStart / PreToolUse / Stop 三个钩子与 MCP 报告面**一起静默失效**：没有健康行、没有 `.ce/`、没有守卫，而失效的方式恰好是不出声。
+- **改为经 stdin 哈希**（`sha256sum < "$1"`，`shasum -a 256` 同改）：输出里根本没有文件名可转义，两者都只印 `<hash>  -`，反斜杠路径与 POSIX 路径同解。第一方复核：`Get-FileHash` 与清单 pin 同为 `051184…5680f`，改前 `sha_of` 报 `\051184…5680f`、改后报 `051184…5680f`。
+- **另一条腿不在本仓，一并具名**（不改码，两份 plugin README 记为前置）：钩子与 `.mcp.json` 都以裸 `sh` 起头，而 Claude Code 是原生 Windows 进程、按 Windows PATH 找第一个 token；Git 装机默认只把 `Git\cmd` 放进 PATH（内有 `git.exe`、无 `sh.exe`），`sh.exe` 在 `Git\bin` 与 `Git\usr\bin`。PATH 上没有 `sh` 时三个钩子与 MCP 都起不来——起不来的正是本该报错的那个脚本，所以同样不出声。
+
 **无默认档位变更。** 两处读者面缺陷（2026-09-06，用户报）：
 - **GUI 的语言按钮与中文页签裂成两行**：CSS 允许在任意两个汉字之间断行，中文标签的 min-content 宽度因此只有一个字，flex 子项默认的 `min-width: auto` 不再撑住控件——被挤窄后标签折到第二行，而这些控件各自钉死了 `height`，第二行遂溢出；英文标签词内没有断点故永不折行，这就是只有翻译面出事的原因。一条规则收拢整类（`#tabs .tab, #lang, .bar button { white-space: nowrap }`），不逐个补丁。
 - **量它的仪器只问了一个轴**：`scripts/measure_header.js` 判裁切用 `scrollWidth > clientWidth`，而标签是靠折行、不是靠变宽溢出固定高度的，于是它把裂开的按钮读成「装得下」；判据改为两轴同问并把十一个页签逐个纳入，`floor` 的 fits 补 `rows === 1`（不补则二分越过断点走进已换行的两行版图，答出的是那一版的极限 601px 而非断点）。断点按新判据重量（临时关掉本查询以免自指）：英文 1163px、中文 1040px，英文为约束方 ⇒ `@media (max-width: 1162px)`；此前钉的 1150 / 844 是该缺陷的产物——控件当时以裂行代替撑宽，头部遂量得比实际窄 13px（英）与 196px（中）。

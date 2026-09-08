@@ -50,6 +50,16 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
 源码安装（`cargo install codeeraser` 或 `--path cli`）依然可用。
 
+**Windows 前置：`sh` 要在 Windows PATH 上。** 三个钩子与 `.mcp.json` 都以裸 `sh`
+起头去跑 `bin/ce.sh`，而 Claude Code 是原生 Windows 进程，按 Windows PATH 找第一个
+token。Git for Windows 默认只把 `Git\cmd` 放进 PATH，那里有 `git.exe` 没有 `sh.exe`；
+`sh.exe` 在 `Git\bin` 与 `Git\usr\bin`。PATH 上没有 `sh` 时钩子与 MCP 面都起不来，
+且这个失败不出声：起不来的正是本该报错的那个脚本，症状是没有健康行、没有 `.ce/`、
+`/mcp` 里那条 server 连不上。把 `Git\bin` 追加到用户 PATH 即可（只有
+`bash.exe` / `git.exe` / `sh.exe` 三个文件，不会遮蔽 `find` / `sort` 这些同名 Windows
+工具，那些在 `Git\usr\bin`）；追加而非前置，则 `bash` 仍解析到 system32 的 WSL 那只。
+改完 PATH 要重启 Claude Code：钩子配置在会话启动时读取。
+
 ## 配置
 
 项目里可选 `ce.toml`：
