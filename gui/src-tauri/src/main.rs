@@ -5,12 +5,17 @@
 //! command surface lives in commands.rs — every report family the
 //! CLI prints, the erase preview/apply pair, root anchoring through
 //! codeeraser::root, and `ce-task` progress events. This file keeps
-//! only the builder and the handler roster.
+//! only the builder, the one plugin (the native folder picker behind
+//! the root field's browse button) and the handler roster.
 
 mod commands;
 
 fn main() {
     tauri::Builder::default()
+        // `plugin:dialog|open` in directory mode: the webview learns a
+        // path only by the user's own act, typed or picked, and the
+        // picked one still anchors through resolve_root like a typed one
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             commands::default_root,
             commands::resolve_root,

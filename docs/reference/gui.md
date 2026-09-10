@@ -59,6 +59,14 @@ its screenshot — naming them is the fix; they cannot be reconciled.
 
 ## How a screen runs
 
+The root field in the header names the tree every screen judges: type
+a path, or press the folder button beside it for the OS folder picker
+(`tauri-plugin-dialog`, granted `dialog:allow-open` and nothing else —
+the one dialog the shell opens). A picked path lands in the same field
+and goes through the same change handler as a typed one, so it is
+remembered across launches and echoed where it anchored; cancelling
+the dialog changes nothing.
+
 Every judgment button drives one Tauri command, and every root-scoped
 judgment command is the same shape: anchor the root
 (`codeeraser::root::project_root` — the GUI re-roots to the enclosing

@@ -14,6 +14,11 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
+# the OS folder picker behind the root field's browse button — the
+# one dialog the shell opens (capabilities/default.json grants
+# `dialog:allow-open` alone); under `withGlobalTauri` its script lands
+# on window.__TAURI__.dialog beside core, no bundler involved
+tauri-plugin-dialog = "2.7.3"
 serde_json = "1"
 # error type of the library faces judged() delegates to (M7-P4);
 # already in this lockfile transitively via codeeraser

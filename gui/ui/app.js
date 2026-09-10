@@ -65,6 +65,24 @@ async function echoRoot() {
   }
 }
 
+// The OS folder picker beside the root field (tauri-plugin-dialog in
+// directory mode): a second way to fill the SAME field. The picked
+// path goes through the field's own change handler, so it is
+// remembered and echoed exactly as a typed one; a cancelled dialog
+// answers null and changes nothing.
+async function pickRoot() {
+  try {
+    const dir = await window.__TAURI__.dialog.open({
+      directory: true, title: tr("pickRoot"), defaultPath: $("root").value || undefined,
+    });
+    if (!dir) return;
+    $("root").value = dir;
+    $("root").dispatchEvent(new Event("change"));
+  } catch (e) {
+    setStatus(String(e), true);
+  }
+}
+
 // ce-task progress feed: every backend command brackets itself with
 // start/done/error events — long judgments tick in the status line
 // instead of freezing it.
@@ -78,6 +96,7 @@ function listenTasks() {
 async function boot() {
   applyStaticI18n();
   $("lang").addEventListener("click", toggleLang);
+  $("pick").addEventListener("click", pickRoot);
   tabs();
   listenTasks();
   const remembered = localStorage.getItem("ce-root");

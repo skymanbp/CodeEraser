@@ -9,6 +9,13 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** GUI 读者面（2026-09-10，用户报两条）：
+
+- **根目录有了选择入口**：头部根路径框旁一枚文件夹按钮，点开系统的目录选择器——`tauri-plugin-dialog` 2.7.3，`capabilities/default.json` 只授 `dialog:allow-open`（不取插件的 `default` 集：message / save / ask / confirm 一个不授），`withGlobalTauri` 下插件脚本落在 `window.__TAURI__.dialog`，webview 仍零打包零框架。选中的路径写进根路径框并派发它自己的 `change` 事件，记忆（localStorage）与锚定回显（`resolve_root`）与手打是同一条路；取消（null）不改任何东西；对话框标题与按钮 tooltip 共用一枚 i18n 键 `pickRoot`。子仓 `face_parity.rs` 新腿钉住授权集恰为三条并要求 gui.md 那句「granted `dialog:allow-open` and nothing else」在场。第一方核实：debug 构建的真 app 经 WebView2 远程调试读到 `typeof window.__TAURI__.dialog.open === "function"`；无头 Edge 下桩掉 `open` 驱动按钮——选中即写入、存储、回显，第二次打开的 `defaultPath` 是上次选中值，取消不动。
+- **头部一行版图的地板随之重量**（`scripts/measure_header.js`，临时关掉本查询）：英文 1205px / 中文 1082px——2026-09-06 的 1163 / 1040 各加按钮自己的 42px（34px 按钮 + 8px 间距）——英文为约束方 ⇒ `@media (max-width: 1204px)`；1280px 默认窗口下状态列在英文里余 50px。
+- **「中文」按钮溢出的第二次报告不是回归**：用户机器上的 GUI 本体是 1.7.0（`ce-gui.exe` sha `a0e84680…`、注册表 DisplayVersion 1.7.0）——`ce update` 只换 ce 与 ce-core，GUI 本体要跑安装包；修复（`white-space: nowrap`，e9323d1）已在 1.7.1 发出。第一方复现：v1.7.0 的 `gui/ui` 在无头 Edge 1280px 下语言按钮盒 31×32、文字盒 13×36（两行各一字，scrollHeight 38 > clientHeight 30）；HEAD 44×32 / 26×17。本批不改码，随本版安装包一并到位。
+- NOTICE 随 gui 锁文件重生 +14 行（rfd 0.16.0、tauri-plugin 2.6.3、tauri-plugin-dialog 2.7.3、tauri-plugin-fs 2.5.2、windows-sys 0.60.2 与九个 windows_* 目标 0.53.1）；三张官网 GUI 截图重拍（头部多一枚按钮），收据 `ui` 摘要随之。ADR-006 具名重立：`gui/ui/app.js` 104 → 123（picker 一函数）、子仓 `it/face_parity.rs` 275 → 304（一腿）；`gui/ui/style.css` 269 → 275、`gui/src-tauri/src/main.rs` 40 → 45、`docs/reference/gui.md` 116 → 124 在容差内同定。check 944 / dedup 55 / scan 0 fail 不动，子仓 983 / 119 / 0。
+
 ## [v1.7.1] — 2026-09-07 — Windows 上 pin 校验读错自己算出的哈希，插件三钩子与 MCP 面一起静默失效
 
 **无默认档位变更。** 一处分发链路缺陷（2026-09-07，用户报「`.ce` 没建、插件没生效」后第一方定位）：

@@ -55,7 +55,7 @@ button { cursor: pointer; transition: background 0.12s, color 0.12s, border-colo
 .view[hidden], #summary[hidden], #legend[hidden], .empty[hidden],
 #treemap[hidden], #structree[hidden], #vswitch[hidden] { display: none; }
 
-/* ---- header: brand · root · tabs · lang · status ---- */
+/* ---- header: brand · root · pick · tabs · lang · status ---- */
 header {
   display: flex;
   gap: var(--s2);
@@ -130,7 +130,9 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   border-radius: var(--r-sm);
   background: var(--brand);
 }
-#lang {
+/* the two quiet chrome buttons — the language switch and the folder
+   picker beside the root field — share one outline shape */
+#lang, #pick {
   background: none;
   color: var(--ink-low);
   border: 1px solid var(--line);
@@ -139,7 +141,9 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   padding: 0 var(--s2);
   font-size: var(--t-sm);
 }
-#lang:hover { color: var(--ink); border-color: var(--ink-low); }
+#lang:hover, #pick:hover { color: var(--ink); border-color: var(--ink-low); }
+#pick { display: inline-flex; align-items: center; }
+#pick svg { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
 #status {
   /* fixed column: a status text sized to itself would shove the tab
      strip sideways on every screen switch and mid-run swap (it may shrink, never grow - batch 9 P17) */
@@ -153,16 +157,18 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   text-align: right;
 }
 #status.err { color: var(--err); }
-/* Below 1163px the header cannot seat the eleven-tab strip beside the
-   brand, the root field at its 120px minimum and the language button
-   even with the echo and the status column squeezed to nothing — it
-   spills. Measured, not estimated: `node scripts/measure_header.js` in
-   headless Edge (the engine the app ships on), with this query
-   disabled so the number is the one-row layout's own floor and not the
-   query's — 2026-09-06, one row fits from 1163px in English and 1040px
-   in Chinese, so English binds and the wrap sits one pixel below it.
-   The batch-9 proposal's 1120px was a glyph-width guess (plan v2.29
-   step 9, O25).
+/* Below 1205px the header cannot seat the eleven-tab strip beside the
+   brand, the root field at its 120px minimum, the folder button and
+   the language button even with the echo and the status column
+   squeezed to nothing — it spills. Measured, not estimated: `node
+   scripts/measure_header.js` in headless Edge (the engine the app
+   ships on), with this query disabled so the number is the one-row
+   layout's own floor and not the query's — 2026-09-10, one row fits
+   from 1205px in English and 1082px in Chinese, so English binds and
+   the wrap sits one pixel below it. The folder button (2026-09-10)
+   moved both floors up by its own 42px — 34px of button and one 8px
+   gap — from the 1163px / 1040px measured on 2026-09-06. The batch-9
+   proposal's 1120px was a glyph-width guess (plan v2.29 step 9, O25).
 
    The 1150px/844px pinned here until 2026-09-06 were artefacts of the
    label-wrapping bug the `white-space: nowrap` rule above fixes: the
@@ -173,7 +179,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
    asked only `scrollWidth > clientWidth` — called that a fit.
 
    Above the line the status column keeps shrinking as designed
-   (0–92px between 1163 and the 1280px default window in English); a
+   (0–50px between 1205 and the 1280px default window in English); a
    wrap at the unsqueezed natural width would put the strip on its own
    row at the default window and was not taken. Below it the strip
    takes a row of its own; its tabs give up 4px of padding a side so
@@ -181,7 +187,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
    (measured: 828px of tabs in both languages against the 828px the row
    has there), and the strip wraps inside its row rather than clip if a
    narrower window ever shows it. */
-@media (max-width: 1162px) {
+@media (max-width: 1204px) {
   header { flex-wrap: wrap; }
   #tabs { order: 5; flex-basis: 100%; flex-wrap: wrap; }
   #tabs .tab { padding: 0 var(--s3); }
