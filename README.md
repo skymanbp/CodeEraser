@@ -95,7 +95,7 @@ scanned 9 files / 19 functions — 1 warn, 1 fail -> FAIL (failed: hard_line)
 | p50 ms | 2387 | 1166 | 10293 | 495 | 1408 | 48 | 683 |
 | p95 ms | 2396 | 2873 | 10326 | 509 | 1428 | 58 | 2622 |
 
-Every value is generated from `contracts/bench/bench.json`; the test rejects hand edits to this block. The current release, v1.7.1, ships the same measured code as the newest row and gets none of its own. [Full replay notes and per-version series](docs/BENCH.md) · [Complete website dashboard](https://codeeraser.dev/bench/)
+Every value is generated from `contracts/bench/bench.json`; the test rejects hand edits to this block. The current release, v1.7.2, ships the same measured code as the newest row and gets none of its own. [Full replay notes and per-version series](docs/BENCH.md) · [Complete website dashboard](https://codeeraser.dev/bench/)
 <!-- bench:end -->
 
 Latency rows are release-build replays on one fixed host, comparable version to version only. The precision and recall points are frozen with their evaluation ledgers ([EVAL-SET](docs/EVAL-SET.md)) and rendered on [BENCH](docs/BENCH.md); comparators (jscpd, similarity-*) are named with the exact version measured.

@@ -9,6 +9,8 @@
 
 ## [Unreleased]
 
+## [v1.7.2] — 2026-09-10 — GUI 根目录选择器；1.7.1 只到了 Release 与插件的五条渠道在本版补齐
+
 **无默认档位变更。** GUI 读者面（2026-09-10，用户报两条）：
 
 - **根目录有了选择入口**：头部根路径框旁一枚文件夹按钮，点开系统的目录选择器——`tauri-plugin-dialog` 2.7.3，`capabilities/default.json` 只授 `dialog:allow-open`（不取插件的 `default` 集：message / save / ask / confirm 一个不授），`withGlobalTauri` 下插件脚本落在 `window.__TAURI__.dialog`，webview 仍零打包零框架。选中的路径写进根路径框并派发它自己的 `change` 事件，记忆（localStorage）与锚定回显（`resolve_root`）与手打是同一条路；取消（null）不改任何东西；对话框标题与按钮 tooltip 共用一枚 i18n 键 `pickRoot`。子仓 `face_parity.rs` 新腿钉住授权集恰为三条并要求 gui.md 那句「granted `dialog:allow-open` and nothing else」在场。第一方核实：debug 构建的真 app 经 WebView2 远程调试读到 `typeof window.__TAURI__.dialog.open === "function"`；无头 Edge 下桩掉 `open` 驱动按钮——选中即写入、存储、回显，第二次打开的 `defaultPath` 是上次选中值，取消不动。
