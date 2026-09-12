@@ -188,7 +188,7 @@ ignore 0.4.33 — Unlicense OR MIT
 indexmap 1.9.3 — Apache-2.0 OR MIT
 indexmap 2.14.0 — Apache-2.0 OR MIT
 infer 0.19.0 — MIT
-interprocess 2.4.3 — 0BSD OR Apache-2.0
+interprocess 2.4.4 — 0BSD OR Apache-2.0
 ipnet 2.12.1 — MIT OR Apache-2.0
 is_terminal_polyfill 1.70.2 — MIT OR Apache-2.0
 itoa 1.0.18 — MIT OR Apache-2.0
