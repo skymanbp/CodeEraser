@@ -384,7 +384,7 @@
       "id": "ver:ce#v",
       "source": "cli/Cargo.toml::version",
       "tier": "linked",
-      "value": "1.7.2"
+      "value": "1.7.3"
     },
     {
       "id": "ver:daemon#v",
@@ -414,7 +414,7 @@
       "id": "ver:pin#v",
       "source": "plugin/bin/manifest.env::CE_MANIFEST_VERSION (update::manifest::parse)",
       "tier": "linked",
-      "value": "1.7.2"
+      "value": "1.7.3"
     },
     {
       "id": "ver:proto#v",

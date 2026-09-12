@@ -9,6 +9,8 @@
 
 ## [Unreleased]
 
+## [v1.7.3] — 2026-09-12 — 插件 hooks.json 说明键改名 description；dependabot 第二批（interprocess 2.4.4、upload-sarif 4.38.0）随本版发出；判决代码与 1.7.2 相同
+
 **无默认档位变更。** 插件读者面（2026-09-12，用户报 `hooks.json: unknown key "_why_timeout" ignored`）：
 
 - **`plugin/hooks/hooks.json` 顶层那个说明键改名 `description`**：Claude Code 从 2.1.267 起按白名单核该文件的顶层键（`description` / `hooks` / `modules` / `surface`；本机留存的三个二进制实测：2.1.266 无此检查，2.1.267 与 2.1.269 有；其 changelog 未记），不在名单的键每次开会话点名一次后忽略。原键 `_why_timeout` 自 2026-08-19（cd11fda）起未动，装机 1.7.2 那份与仓内逐字节同；改名只换键名，说明文字逐字保留、行数不变。三条钩子的接线从未受影响（键被忽略、钩子照常跑），子仓读该文件的三个门（`face_parity` / `facts/count` / `health_plugin`）只读 `hooks` 键。装机上的副本要等下个版本发出并 `claude plugin update` 后才换，此前告警仍在。ADR-006 具名重立：CHANGELOG 651 → 655。

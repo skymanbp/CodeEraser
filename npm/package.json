@@ -1,6 +1,6 @@
 {
   "name": "codeeraser",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "CodeEraser — erase LLM-induced code & document entropy. This package is a name-reservation pointer: the tool ships as prebuilt binaries on GitHub Releases, `cargo install codeeraser`, and a Claude Code plugin.",
   "homepage": "https://github.com/skymanbp/CodeEraser",
   "repository": {
