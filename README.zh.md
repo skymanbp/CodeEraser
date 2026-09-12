@@ -16,7 +16,7 @@
 
 [![一个判决如何产生：Rust 度量语法单元、token 指纹与词袋、文档 shingle、git 窗口与 diff、引用图；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、改动判决（轨迹、审计、墓碑残留）、存活性与擦除，每行一到三个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)](docs/assets/judgment.zh.svg)
 
-- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->48<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->58<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，在墓碑腿加入之前）。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）；两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
+- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->46<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->52<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，在墓碑腿加入之前）。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）；两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙（每个文本文件里的每个标识符，只以 fnv1a64 哈希存储）产出**未被提及的声明**顾问，它永不把门翻红。
@@ -88,14 +88,14 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 <!-- vignettes:end -->
 
 <!-- bench:begin -->
-### 延迟 · v1.7.0
+### 延迟 · v1.7.3
 
 | 百分位 | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 2387 | 1166 | 10293 | 495 | 1408 | 48 | 683 |
-| p95 ms | 2396 | 2873 | 10326 | 509 | 1428 | 58 | 2622 |
+| p50 ms | 2348 | 1140 | 9321 | 490 | 1417 | 46 | 671 |
+| p95 ms | 2349 | 2826 | 10337 | 494 | 1420 | 52 | 2778 |
 
-所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.7.3 该有自己的行，而它在打 tag 之后才被测量，尚未落表。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
+所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->
 
 延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)），渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
