@@ -13,6 +13,13 @@
 
 - **`plugin/hooks/hooks.json` 顶层那个说明键改名 `description`**：Claude Code 从 2.1.267 起按白名单核该文件的顶层键（`description` / `hooks` / `modules` / `surface`；本机留存的三个二进制实测：2.1.266 无此检查，2.1.267 与 2.1.269 有；其 changelog 未记），不在名单的键每次开会话点名一次后忽略。原键 `_why_timeout` 自 2026-08-19（cd11fda）起未动，装机 1.7.2 那份与仓内逐字节同；改名只换键名，说明文字逐字保留、行数不变。三条钩子的接线从未受影响（键被忽略、钩子照常跑），子仓读该文件的三个门（`face_parity` / `facts/count` / `health_plugin`）只读 `hooks` 键。装机上的副本要等下个版本发出并 `claude plugin update` 后才换，此前告警仍在。ADR-006 具名重立：CHANGELOG 651 → 655。
 
+**无默认档位变更。** dependabot 每周批第二轮（2026-09-12；PR #11 / #12，用户裁「修两行注释后并入」与「现在并、做全套记账」）：
+
+- **PR #12 `github/codeql-action/upload-sarif` 4.37.9 → 4.38.0**：ci.yml 两处 SARIF 上传 action 的 sha `cdf488f5…` → `b96794f0…`（= v4.38.0 tag 解引用，GitHub API 核过）。dependabot 换 sha 不改行尾注释，两行仍写 v4.37.9 / 2026-09-06 / #7——`.github/` 不在度量宇宙、无门可抓——在 PR 分支补一笔注释提交后合并。
+- **PR #11 `interprocess` 2.4.3 → 2.4.4**（daemon 的命名管道 IPC 库）：上游只改文档与打包——错字、死链、`checks-and-tests.py` 不再入包（免得发行版打包器以为要 Python）；两版 Cargo.toml 的依赖段逐字节同，windows-sys 要求仍是 0.61。gui 锁文件手动同点 2.4.4（version + checksum 两行，两工作区 `cargo metadata --locked` 过）：`cargo update -p interprocess --precise 2.4.4` 会顺带把七个无关包（anstyle-query、anstyle-wincon、dirs-sys、socket2、winapi-util 等）的 windows-sys 引用从 0.61.2 改到 0.60.2 / 0.59.0——cargo 解锁被点名包的依赖子树、其余包偏好仍锁着的版本——比这次升级该动的宽，不采。NOTICE 一行随之再生。
+- **bench 七个面翻成「该有行、tag 后测量」**（README 双语、docs/BENCH.md、两首页、两 bench 页）：`cli/Cargo.lock` 是构建输入（`bench_support/joins.rs` 按内容比、只剔版本戳），锁一动即不再是 v1.7.0 那份被测程序；PR 首跑 CI 的 5 条红（三平台同）正是这四条 bench 门 + NOTICE 门。判决 / 分数算法 / schema id / wire 不变；下个发布按 BENCH.md 入列规则须量一次 bench。
+- 门：主 check 944 / dedup 55 / scan 0 fail（deadcode 0 / docdup 0 / erase 0），子仓 983 / 119 / 0，lib 373、it 399 (12 ign；`layout_tree` / `docs_diagrams` 两腿只在度量用的 worktree 里红——前者要机器本地的 `.ccm/`、后者要 `cli/target/archify` 缓存——CI 为准)，两锁 `--locked` 过；ADR-006 具名重立：CHANGELOG 655 → 662（首页自测块 944 / 尺寸轴 86 不动，无需重 bless）。
+
 ## [v1.7.2] — 2026-09-10 — GUI 根目录选择器；1.7.1 只到了 Release 与插件的五条渠道在本版补齐
 
 **无默认档位变更。** GUI 读者面（2026-09-10，用户报两条）：
