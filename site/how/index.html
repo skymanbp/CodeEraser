@@ -20,7 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=4">
+<link rel="stylesheet" href="/style.css?v=5">
+<link rel="stylesheet" href="/viewer.css?v=1">
+<script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -57,9 +59,9 @@
   <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#f15">15</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#residue">Change-time residue</a> <a href="#advisor">Same-role advisor</a> <a href="#honesty">Honesty boundaries</a></nav>
 </section>
 
-<figure class="arch">
-  <a class="zoomable" href="/assets/judgment.en.svg"><img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows, the reference graph and a change's surfaces; Haskell judges structure and score, clones and same-role advice, documentation duplication, trajectory and audit, liveness and erase, and tombstone residue, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy"></a>
-  <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves (an exit code or report rows) on the right. Select the diagram for the full-size SVG.</figcaption>
+<figure class="arch deep" id="verdict">
+  <div class="stage"><img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows, the reference graph and a change's surfaces; Haskell judges structure and score, clones and same-role advice, documentation duplication, trajectory and audit, liveness and erase, and tombstone residue, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy"></div>
+  <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves (an exit code or report rows) on the right. Open the <a href="/assets/judgment.en.svg">full-size SVG</a>.</figcaption>
 </figure>
 
 <h2 id="families">The <!--ce:count:booklets#word-->fifteen<!--/ce--> judgment families</h2>
@@ -592,11 +594,11 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   </ul>
 </div>
 
-<figure class="arch">
-  <a class="zoomable" href="/assets/methodology.svg"><img src="/assets/methodology.svg" width="1200" height="820" alt="Three lanes (measured facts in Rust, judgment computations in Haskell with their formulas, and the gates that decide the exit code) with the constants the sections above cite written on the diagram" loading="lazy"></a>
+<figure class="arch" id="constants">
+  <div class="stage"><img src="/assets/methodology.svg" width="1200" height="820" alt="Three lanes (measured facts in Rust, judgment computations in Haskell with their formulas, and the gates that decide the exit code) with the constants the sections above cite written on the diagram" loading="lazy"></div>
   <figcaption>The constant sheet. Lane 1 extracts facts in Rust; lane 2 turns them into
   verdicts in Haskell with the formulas shown; lane 3 decides the exit code. Every number
-  on the diagram is a constant the sections above cite. Select the diagram for the full-size SVG.</figcaption>
+  on the diagram is a constant the sections above cite. Open the <a href="/assets/methodology.svg">full-size SVG</a>.</figcaption>
 </figure>
 
 <h2 id="residue">The change-time family: what an erasure leaves behind</h2>

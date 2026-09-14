@@ -20,7 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=4">
+<link rel="stylesheet" href="/style.css?v=5">
+<link rel="stylesheet" href="/viewer.css?v=1">
+<script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -43,19 +45,19 @@
     versioned wire connects them. This is the boundary set by ADR-002 and kept
     load-bearing by ADR-008: parsing, extraction and indexing stop before policy;
     score, ratchet and authorization stay in the core.</p>
-    <div class="installs">
-      <div class="install"><span class="k">core</span><code>GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--></code></div>
-      <div class="install"><span class="k">wire</span><code>NDJSON · proto <!--ce:ver:proto#v-->7.1.0<!--/ce--> · SemVer negotiation</code></div>
-      <div class="install"><span class="k">evidence</span><code><a href="/bench/">Open the complete evaluation dashboard</a></code></div>
-    </div>
   </div>
 </section>
+<div class="installs">
+  <div class="install"><span class="k">core</span><code>GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--></code></div>
+  <div class="install"><span class="k">wire</span><code>NDJSON · proto <!--ce:ver:proto#v-->7.1.0<!--/ce--> · SemVer negotiation</code></div>
+  <div class="install"><span class="k">evidence</span><code><a href="/bench/">Open the complete evaluation dashboard</a></code></div>
+</div>
 
-<figure class="arch">
-  <a class="zoomable" href="/assets/stack.svg"><img src="/assets/stack.svg" width="1180" height="1120" alt="Detailed CodeEraser stack: the Rust measurement plane, NDJSON wire and twelve judgment families, Haskell judgment core, five product faces, and the SHA256 release pin chain" loading="eager"></a>
+<figure class="arch" id="components">
+  <div class="stage"><img src="/assets/stack.svg" width="1180" height="1120" alt="Detailed CodeEraser stack: the Rust measurement plane, NDJSON wire and twelve judgment families, Haskell judgment core, five product faces, and the SHA256 release pin chain" loading="eager"></div>
   <figcaption>The component map. Every box names an implementation boundary found in
   <code>cli/</code>, <code>core/</code>, <code>gui/</code>, <code>plugin/</code>,
-  <code>contracts/</code>, or the release workflows. Select the diagram for the full-size SVG.</figcaption>
+  <code>contracts/</code>, or the release workflows. Open the <a href="/assets/stack.svg">full-size SVG</a>.</figcaption>
 </figure>
 
 <h2>What holds it honest</h2>

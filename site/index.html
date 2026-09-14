@@ -20,7 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=4">
+<link rel="stylesheet" href="/style.css?v=5">
+<link rel="stylesheet" href="/viewer.css?v=1">
+<script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -45,27 +47,27 @@
     <p class="tag">LLMs write code that <em>accretes</em>: duplicated blocks, dead files,
     stale docs, structural sprawl. CodeEraser measures it, judges it, and gates it
     with a score that is only allowed to get better.</p>
-    <div class="installs">
-      <div class="install"><span class="k">Installer</span>
-        <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>: x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux, GUI + CLI + judgment core, SHA256-pinned; the Windows installer runs <code>ce setup</code>, AppImage / dmg users run it once</code></div>
-      <div class="install"><span class="k">Homebrew · winget</span>
-        <code>brew install skymanbp/codeeraser/codeeraser · winget install skymanbp.CodeEraser (generated from the same pins)</code></div>
-      <div class="install"><span class="k">Cargo</span>
-        <code>cargo install codeeraser</code></div>
-      <div class="install"><span class="k">Claude Code</span>
-        <code>ce setup, or by hand: /plugin marketplace add skymanbp/CodeEraser@release, then /plugin install codeeraser@codeeraser</code></div>
-      <div class="install"><span class="k">Update</span>
-        <code>ce update --yes</code></div>
-    </div>
-    <p class="cap"><code>ce update</code> compares the latest tag against this build (exit 0 / 1 / 2); <code>--yes</code> replaces <code>ce</code> and <code>ce-core</code> after both SHA256 pins verify (never a copy the plugin or cargo owns, which name their own update), and <code>--installer</code> saves the verified GUI installer. The GUI has an update screen; in Claude Code, <code>/codeeraser:update</code>.</p>
   </div>
 </section>
+<div class="installs">
+  <div class="install"><span class="k">Installer</span>
+    <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>: x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux, GUI + CLI + judgment core, SHA256-pinned; the Windows installer runs <code>ce setup</code>, AppImage / dmg users run it once</code></div>
+  <div class="install"><span class="k">Homebrew · winget</span>
+    <code>brew install skymanbp/codeeraser/codeeraser · winget install skymanbp.CodeEraser (generated from the same pins)</code></div>
+  <div class="install"><span class="k">Cargo</span>
+    <code>cargo install codeeraser</code></div>
+  <div class="install"><span class="k">Claude Code</span>
+    <code>ce setup, or by hand: /plugin marketplace add skymanbp/CodeEraser@release, then /plugin install codeeraser@codeeraser</code></div>
+  <div class="install"><span class="k">Update</span>
+    <code>ce update --yes</code></div>
+</div>
+<p class="cap"><code>ce update</code> compares the latest tag against this build (exit 0 / 1 / 2); <code>--yes</code> replaces <code>ce</code> and <code>ce-core</code> after both SHA256 pins verify (never a copy the plugin or cargo owns, which name their own update), and <code>--installer</code> saves the verified GUI installer. The GUI has an update screen; in Claude Code, <code>/codeeraser:update</code>.</p>
 
 <div class="term">
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 944/1000</span> | axes 0:86 1:0 2:102 3:0 4:0 5:0 6:205 | 34 candidates
+<span class="s">check score 944/1000</span> | axes 0:87 1:0 2:102 3:0 4:0 5:0 6:205 | 34 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -90,17 +92,22 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
 <p class="cap">The seed is <code>demo/seed/</code>, a small cent-exact invoicing service in Python and TypeScript, measured clean by the same gates before either run; the task adds discounts, a compact report, CSV and JSON output, and money formatting in the API.</p>
 
 <h2>See it work</h2>
-<div class="shots">
-  <figure class="shot">
-    <img src="/assets/gui-structure.png" width="1424" height="892" alt="CodeEraser GUI: squarified structure treemap of the CodeEraser repository, tiles heated by findings density, with the run's score, entropy and axis chips above it" loading="lazy">
+<div class="gallery">
+  <div class="tabs" role="tablist" aria-label="GUI screens" hidden>
+    <button type="button" role="tab" id="tab-structure" aria-controls="shot-structure" aria-selected="true">Structure treemap</button>
+    <button type="button" role="tab" id="tab-tree" aria-controls="shot-tree" aria-selected="false" tabindex="-1">Tree view</button>
+    <button type="button" role="tab" id="tab-candidates" aria-controls="shot-candidates" aria-selected="false" tabindex="-1">Deletion candidates</button>
+  </div>
+  <figure class="shot" id="shot-structure" role="tabpanel" aria-labelledby="tab-structure">
+    <div class="stage"><img src="/assets/gui-structure.png" width="1424" height="892" alt="CodeEraser GUI: squarified structure treemap of the CodeEraser repository, tiles heated by findings density, with the run's score, entropy and axis chips above it" loading="lazy"></div>
     <figcaption>The structure screen judging this repository: a squarified treemap, tiles heated by findings density, and the <em>structure score</em> above it. That score is tree-scale entropy, a different measure from the <em>check score</em> in the terminal above, which is the gate's own axes plus the ratchet.</figcaption>
   </figure>
-  <figure class="shot">
-    <img src="/assets/gui-tree.png" width="1424" height="892" alt="CodeEraser GUI: structure tree view with subtree-heat rail, per-directory findings chips and inline axis tags" loading="lazy">
+  <figure class="shot" id="shot-tree" role="tabpanel" aria-labelledby="tab-tree">
+    <div class="stage"><img src="/assets/gui-tree.png" width="1424" height="892" alt="CodeEraser GUI: structure tree view with subtree-heat rail, per-directory findings chips and inline axis tags" loading="lazy"></div>
     <figcaption>The same judgment as a tree: subtree trouble rolls up into the heat rail, and every row names its axes.</figcaption>
   </figure>
-  <figure class="shot">
-    <img src="/assets/gui-candidates.png" width="1424" height="892" alt="CodeEraser GUI: deletion-candidate browser listing similar file pairs with block and token counts" loading="lazy">
+  <figure class="shot" id="shot-candidates" role="tabpanel" aria-labelledby="tab-candidates">
+    <div class="stage"><img src="/assets/gui-candidates.png" width="1424" height="892" alt="CodeEraser GUI: deletion-candidate browser listing similar file pairs with block and token counts" loading="lazy"></div>
     <figcaption>The deletion-candidate browser: similarity × graph position × churn, the same rows <code>ce join</code> prints.</figcaption>
   </figure>
 </div>
@@ -129,7 +136,7 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
   <div class="card"><h3>ce churn</h3><p>Change heat over a git window, attributed per unit, so you see how much of a file is being rewritten rather than added to.</p></div>
   <div class="card"><h3>ce join</h3><p>The three-signal join: churn, duplication and liveness folded into one verdict, so a hot duplicated dead corner names itself.</p></div>
   <div class="card"><h3>ce similar</h3><p>The same-role advisor: integer BM25 over term bags the index already holds, with the core deciding which candidates play the query's role. A deterministic offline retrieval, advice only, never a gate.</p></div>
-  <div class="card"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
+  <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
 </div>
 
 <!-- bench:begin -->
@@ -146,9 +153,9 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
 <p><a href="/bench/">Complete evaluation dashboard →</a></p>
 
 <h2>Under the hood</h2>
-<figure class="arch">
-  <a class="zoomable" href="/assets/architecture.en.svg"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of twelve families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></a>
-  <figcaption>Measurement in Rust, judgment in Haskell: one wire, one report schema per family, five faces. Rendered from <code>docs/diagrams/architecture.en.json</code>; every component cites its source files. Select the diagram for the full-size SVG.</figcaption>
+<figure class="arch deep" id="architecture">
+  <div class="stage"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of twelve families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></div>
+  <figcaption>Measurement in Rust, judgment in Haskell: one wire, one report schema per family, five faces. Rendered from <code>docs/diagrams/architecture.en.json</code>; every component cites its source files. Open the <a href="/assets/architecture.en.svg">full-size SVG</a>.</figcaption>
 </figure>
 <p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>
 

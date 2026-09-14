@@ -130,7 +130,10 @@ function renderSvg(title, lines) {
       return `<text x="${PAD_X}" y="${y}" fill="${row.color}" xml:space="preserve">${esc(row.text)}</text>`;
     })
     .join("\n");
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" font-family="${FONT}" font-size="${FONT_SIZE}">
+  // viewBox only: an <img> of an SVG with no width/height of its own
+  // takes its container's width (CSS 2.1 §10.3.2), so the card spans
+  // the README's text column instead of stopping 50px short of it
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" font-family="${FONT}" font-size="${FONT_SIZE}">
 <title>${esc(title)}</title>
 <rect width="${width}" height="${height}" rx="8" fill="${COLOR.bg}"/>
 <rect width="${width}" height="32" rx="8" fill="${COLOR.chrome}"/>

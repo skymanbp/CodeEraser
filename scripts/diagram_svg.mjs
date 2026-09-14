@@ -222,8 +222,13 @@ function assemble(svg, kept, rootAttrs) {
   const tagEnd = svg.indexOf(">") + 1;
   const [, w, h] = /viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"/.exec(svg.slice(0, tagEnd)) ?? [];
   if (!w || !h) throw new Error("svg has no viewBox");
+  // viewBox only, no width/height on the root: an <img> of such an SVG
+  // takes its container's width (CSS 2.1 §10.3.2), so the READMEs'
+  // diagrams span the text column instead of stopping at 650 or 1440
+  // CSS pixels, and the standalone file fits any window. The pages
+  // reserve the box with width/height on the <img> instead.
   let tag = svg.slice(0, tagEnd).replace(/\sdata-theme="[^"]*"/, "").replace(/^<svg/, '<svg data-theme="dark"');
-  tag = tag.replace(/^<svg/, `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"`);
+  tag = tag.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
   const rest = svg.slice(tagEnd);
   const afterDesc = rest.indexOf("</desc>") >= 0 ? rest.indexOf("</desc>") + "</desc>".length : rest.indexOf("</title>") + "</title>".length;
   const inject = `\n<style>${css}</style>\n<rect width="100%" height="100%" class="c-bg-rect"/>`;

@@ -20,7 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=4">
+<link rel="stylesheet" href="/style.css?v=5">
+<link rel="stylesheet" href="/viewer.css?v=1">
+<script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -51,9 +53,9 @@
   <nav class="jump" aria-label="章节"><a href="#families">家族</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#f15">15</a> <a href="#fpr">FPR 纪律</a> <a href="#acting">据判决行动</a> <a href="#residue">改动时残留</a> <a href="#advisor">同角色顾问</a> <a href="#honesty">诚实边界</a></nav>
 </section>
 
-<figure class="arch">
-  <a class="zoomable" href="/assets/judgment.zh.svg"><img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy"></a>
-  <figcaption>每行一个 wire 家族：左边是 Rust 度量的事实，中间是它喂给的 Haskell 判决，右边是离开的东西（退出码或报告行）。点开图即可看原尺寸 SVG。</figcaption>
+<figure class="arch deep" id="verdict">
+  <div class="stage"><img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy"></div>
+  <figcaption>每行一个 wire 家族：左边是 Rust 度量的事实，中间是它喂给的 Haskell 判决，右边是离开的东西（退出码或报告行）。打开<a href="/assets/judgment.zh.svg">原尺寸 SVG</a>。</figcaption>
 </figure>
 
 <h2 id="families"><!--ce:count:booklets#word-->十五<!--/ce-->个判决家族</h2>
@@ -507,10 +509,10 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   </ul>
 </div>
 
-<figure class="arch">
-  <a class="zoomable" href="/assets/methodology.zh.svg"><img src="/assets/methodology.zh.svg" width="1200" height="820" alt="三条泳道（Rust 侧的实测事实、Haskell 侧带公式的判决计算、决定退出码的门），上文各节引用的常数写在图上" loading="lazy"></a>
+<figure class="arch" id="constants">
+  <div class="stage"><img src="/assets/methodology.zh.svg" width="1200" height="820" alt="三条泳道（Rust 侧的实测事实、Haskell 侧带公式的判决计算、决定退出码的门），上文各节引用的常数写在图上" loading="lazy"></div>
   <figcaption>常数总表。泳道 1 在 Rust 侧抽取事实；泳道 2 在 Haskell 侧用图上所示公式把
-  它们变成判决；泳道 3 决定退出码。图上每一个数字都是上文各节引用的常数。点开图即可看原尺寸 SVG。</figcaption>
+  它们变成判决；泳道 3 决定退出码。图上每一个数字都是上文各节引用的常数。打开<a href="/assets/methodology.zh.svg">原尺寸 SVG</a>。</figcaption>
 </figure>
 
 <h2 id="residue">改动时家族：一次删除留下了什么</h2>

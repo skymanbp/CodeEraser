@@ -3,11 +3,17 @@
    Editing this file? Bump ?v= on every page's <link> — HTML is served
    uncached but this sheet is edge/browser-cached for 4h; without the
    bump, fresh HTML pairs with a stale sheet on returning visitors.
-   Every rule the eight pages share lives here and nowhere else: the
-   pages carry no <style> of their own. html and css are scan-only,
+   Every rule the eight pages share lives here and nowhere else — the
+   pages carry no <style> of their own — and the picture viewer's own
+   rules live beside it in viewer.css, loaded only by the six pages
+   that hang a picture. html and css are scan-only,
    outside the judged set, so a block copied into two pages is
    duplication no gate can see — the two /bench/ pages and the two
-   /how/ pages each paid for one such copy before this sheet took them. */
+   /how/ pages each paid for one such copy before this sheet took them.
+   One column, one width: every block between the header and the
+   footer spans the same 912px (.wrap minus its padding) — the hero's
+   chips, the scoreboard, the pictures, the card grids. A block that
+   is narrower than its neighbours reads as a different column. */
 :root {
   color-scheme: dark;
   --ink-0: #10141d;
@@ -22,6 +28,10 @@
   --paper: #f4efe6;
   --mono: "IBM Plex Mono", ui-monospace, Consolas, "Noto Sans SC", monospace;
   --sans: "IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif;
+  /* two radii: framed blocks (terminal, pictures, panels) and the
+     small chips and cards inside a stack */
+  --r-frame: 12px;
+  --r-chip: 10px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -35,6 +45,7 @@ body {
 a { color: var(--teal); text-decoration: none; }
 a:hover { text-decoration: underline; }
 :focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
+button { font: inherit; color: inherit; }
 .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
 header.site {
@@ -53,9 +64,11 @@ header.site nav {
 header.site nav a { color: var(--muted); }
 header.site nav a:hover { color: var(--text); }
 
-/* Two openers on purpose: the home hero puts the icon beside the pitch
-   and its install chips; the sub-pages' lede is a title over prose. */
-.hero { padding: 56px 0 40px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+/* Two openers on purpose: the home hero puts the icon beside the pitch;
+   the sub-pages' lede is a title over prose. The hero holds only the
+   name and the pitch — the install chips follow it at full column
+   width, so they line up with every block below them. */
+.hero { padding: 56px 0 28px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
 .hero img { width: 160px; height: 160px; border-radius: 28px; box-shadow: 0 12px 48px rgba(0,0,0,0.5); }
 .hero .pitch { flex: 1; min-width: min(300px, 100%); }
 .hero h1 {
@@ -63,7 +76,7 @@ header.site nav a:hover { color: var(--text); }
   color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
 }
 .hero h1 .tm { font-size: 0.45em; vertical-align: super; color: var(--muted); }
-.hero p.tag { font-size: 1.15rem; color: var(--muted); margin: 10px 0 24px; max-width: 34em; }
+.hero p.tag { font-size: 1.15rem; color: var(--muted); margin-top: 10px; max-width: 34em; }
 .hero p.tag em { color: var(--verm); font-style: normal; font-weight: 600; }
 
 .lede { padding: 44px 0 8px; }
@@ -86,25 +99,37 @@ header.site nav a:hover { color: var(--text); }
 .jump a { color: var(--muted); }
 .jump a:hover { color: var(--text); }
 
-.installs { display: flex; flex-direction: column; gap: 10px; }
+/* Key/value chips. The stack is a two-column grid and each chip a
+   subgrid row of it, so every key in one stack takes the width of the
+   widest key and every value starts on one vertical line — a
+   min-width on the key could not do that ("Homebrew · winget" pushed
+   its value 50px right of its neighbours'). Where subgrid is missing
+   the chip falls back to one column, key over value, which is also
+   the narrow-screen layout below. */
+.installs { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 0; }
 .install {
-  display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+  display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
+  column-gap: 16px; align-items: baseline;
   background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: 10px; padding: 10px 16px;
+  border-radius: var(--r-chip); padding: 10px 16px;
 }
-.install .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); min-width: 7.5em; }
-/* flex:1 + min-width:0 blockify the code cell so overflow-x can act */
-.install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; flex: 1; min-width: 0; }
+.install .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); }
+/* min-width:0 lets the value cell shrink so overflow-x can act */
+.install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; min-width: 0; }
 /* a measured chip: the key is a metric's full name, not a two-word
-   label, so it keeps its case and takes one column width for the set
-   so the values line up */
-.install.metric .k { text-transform: none; letter-spacing: 0; min-width: min(24em, 100%); }
+   label, so it keeps its case */
+.install.metric .k { text-transform: none; letter-spacing: 0; }
 .installs + .cap { margin-top: 12px; }
 
-.term {
-  background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 12px;
-  margin: 40px 0; overflow: hidden;
+/* Framed blocks — the terminal, the diagrams, the screenshots — share
+   one frame: ink ground, one hairline, one radius, and a caption or
+   control bar inside the frame rather than floating under it (the
+   picture figures' insides: viewer.css). */
+.term, .arch, .shot {
+  background: var(--ink-0); border: 1px solid var(--panel-edge);
+  border-radius: var(--r-frame); overflow: hidden; margin: 0;
 }
+.term { background: #0c0f16; margin: 40px 0; }
 .term .bar {
   display: flex; gap: 7px; padding: 11px 14px;
   border-bottom: 1px solid var(--panel-edge);
@@ -129,39 +154,25 @@ h2 {
   font-family: var(--mono); font-size: 1.3rem; color: var(--paper);
   margin: 48px 0 18px; letter-spacing: -0.01em;
 }
-/* min(Npx, 100%) caps every fixed column floor at the container width:
-   a 320px floor inside a 312px viewport was blowing the whole page wide */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(215px, 100%), 1fr)); gap: 14px; }
+/* Three columns at full width, two on a tablet, one on a phone.
+   min(Npx, 100%) caps the column floor at the container width: a
+   320px floor inside a 312px viewport was blowing the whole page
+   wide. Twelve families and nine stack cards both fill their rows;
+   the one card that is not a family (the plugin's hooks) spans the
+   row as a band instead of sitting alone in a fourth row. */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(272px, 100%), 1fr)); gap: 14px; }
 .card {
   background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: 10px; padding: 16px 18px;
+  border-radius: var(--r-chip); padding: 16px 18px;
 }
 .card h3 { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
 .card p { font-size: 0.88rem; color: var(--muted); }
-
-.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 14px; }
-.shot {
-  background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: 12px; overflow: hidden; margin: 0;
-}
-.shot img { width: 100%; height: auto; display: block; }
-.shot figcaption { padding: 10px 14px; font-size: 0.8rem; color: var(--muted); }
-.shot figcaption code { font-family: var(--mono); color: var(--text); }
-
-/* the diagrams paint their own ground — no panel behind them; the
-   figure scrolls sideways where the column is narrower than a legible
-   render (the 640px rule below) */
-.arch { margin: 0; overflow-x: auto; }
-.arch img { width: 100%; height: auto; display: block; border-radius: 14px; }
-/* the picture is the way into itself: the asset is vector with a
-   viewBox, so opening it standalone gives the reader a zoom this
-   column cannot -- and costs the site no script */
-.arch .zoomable { display: block; cursor: zoom-in; }
-.arch figcaption { padding: 10px 4px; font-size: 0.8rem; color: var(--muted); }
+.card.band { grid-column: 1 / -1; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 24px; align-items: baseline; }
+.card.band h3 { margin: 0; }
 
 .trust {
   background: var(--panel); border-left: 3px solid var(--amber);
-  border-radius: 0 10px 10px 0; padding: 18px 22px; margin: 20px 0 8px;
+  border-radius: 0 var(--r-chip) var(--r-chip) 0; padding: 18px 22px; margin: 20px 0 8px;
   font-size: 0.95rem; color: var(--muted);
 }
 .trust code { font-family: var(--mono); color: var(--text); }
@@ -169,7 +180,7 @@ h2 {
 /* the how page's family blocks: one per methodology booklet */
 .fam {
   background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: 12px; padding: 18px 20px; margin: 14px 0;
+  border-radius: var(--r-frame); padding: 18px 20px; margin: 14px 0;
 }
 .fam h3 {
   font-family: var(--mono); font-size: 1rem; font-weight: 600;
@@ -197,7 +208,8 @@ ul.consts li b { color: var(--teal); font-weight: 600; }
 /* Tables. One header voice for all three — the scoreboard, the guard
    tier ladder and the bench dashboard — and one horizontal-scroll
    wrapper, `.tablewrap`, whose name the dashboard generator
-   (cli/tests/it/bench_render_dashboard.rs) writes. */
+   (cli/tests/it/bench_render_dashboard.rs) writes, as it writes
+   `.num` on every cell that holds a count. */
 .board th, table.ladder th, .data-table th {
   font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber);
@@ -213,22 +225,25 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
 .data-table table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.82rem; }
 .data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
 .data-table td { color: var(--muted); }
+.data-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
 .data-table td code { color: var(--text); font-family: var(--mono); white-space: nowrap; }
+.data-table .num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
 /* The before/after scoreboard demo/table.js writes into both
    homepages' `scoreboard` block. A .install chip cannot hold a
    comparison: one value slot, and a label style built for two-word
-   keys. The panel wraps the table rather than the content column —
-   full width put the two figure columns ~400px from labels 300px long,
-   and a number the eye cannot join to its label is not a scoreboard. */
-.board { width: fit-content; max-width: 100%; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 10px; padding: 2px 22px 10px; margin: 26px 0; overflow-x: auto; }
-.board table { width: auto; border-collapse: collapse; }
+   keys. The panel spans the column like every block around it; the
+   row rules run the full width so the eye rides one line from a
+   label to its two figures. */
+.board { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-chip); padding: 2px 22px 10px; margin: 26px 0; overflow-x: auto; }
+.board table { width: 100%; border-collapse: collapse; }
 .board th, .board td { padding: 11px 0; text-align: right; white-space: nowrap; }
-.board th + th, .board td + td { padding-left: 34px; }
+.board th + th, .board td + td { padding-left: 34px; width: 11em; }
 .board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); }
 .board th { border-bottom: 1px solid var(--panel-edge); }
 .board td + td { font-family: var(--mono); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
 .board tbody tr + tr td { border-top: 1px solid var(--ink-1); }
+.board tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
 .board .was { color: var(--muted); }
 .board .to { color: var(--paper); font-weight: 600; }
 
@@ -243,21 +258,21 @@ footer.site p + p { margin-top: 6px; }
   .wrap { padding: 0 16px; }
   .hero { padding-top: 32px; gap: 24px; }
   .hero img { width: 110px; height: 110px; border-radius: 20px; }
-  /* the diagrams are dense: below this width they keep a legible
-     render and scroll inside the figure instead of shrinking to fit */
-  .arch img { min-width: 560px; }
+  /* a key beside its value no longer fits: key over value */
+  .installs, .install, .card.band { grid-template-columns: minmax(0, 1fr); }
+  .install { row-gap: 2px; }
   /* Under this width the scoreboard's three columns cannot fit: the
      label wrapped to five lines and the "with" column — the one the
      reader came for — sat off the right edge. So each row stacks, and
      each figure names its run. */
-  .board { width: 100%; padding: 6px 18px 12px; }
+  .board { padding: 6px 18px 12px; }
   .board table, .board tbody, .board tr, .board td { display: block; }
   .board thead { display: none; }
   .board tbody tr { padding: 12px 0; }
   .board tbody tr + tr { border-top: 1px solid var(--ink-1); }
   .board tbody tr + tr td { border-top: none; }
   .board td, .board td:first-child { padding: 0; text-align: left; white-space: normal; }
-  .board td + td { display: inline-block; padding: 8px 30px 0 0; }
+  .board td + td { display: inline-block; width: auto; padding: 8px 30px 0 0; }
   .board td + td::before { content: attr(data-run); display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--muted); }
 }
 @media (prefers-reduced-motion: reduce) {
