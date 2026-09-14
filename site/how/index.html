@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=5">
+<link rel="stylesheet" href="/style.css?v=6">
 <link rel="stylesheet" href="/viewer.css?v=1">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -56,7 +56,18 @@
   to the source line that implements it) lives in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
   which every heading here links into.</p>
-  <nav class="jump" aria-label="Sections"><a href="#families">Families</a> <a href="#f01">01</a> <a href="#f02">02</a> <a href="#f03">03</a> <a href="#f04">04</a> <a href="#f05">05</a> <a href="#f06">06</a> <a href="#f07">07</a> <a href="#f08">08</a> <a href="#f09">09</a> <a href="#f10">10</a> <a href="#f11">11</a> <a href="#f12">12</a> <a href="#f13">13</a> <a href="#f14">14</a> <a href="#f15">15</a> <a href="#fpr">FPR discipline</a> <a href="#acting">Acting on verdicts</a> <a href="#residue">Change-time residue</a> <a href="#advisor">Same-role advisor</a> <a href="#honesty">Honesty boundaries</a></nav>
+  <nav class="toc" aria-label="Sections">
+    <p class="k">On this page</p>
+    <div class="row"><a class="sec" href="#families">Families</a><ul>
+      <li><a href="#f01"><b>01</b>T1/T2 clones</a></li><li><a href="#f02"><b>02</b>T3 near-miss clones</a></li><li><a href="#f03"><b>03</b>Documentation duplication</a></li><li><a href="#f04"><b>04</b>Structure judgment</a></li><li><a href="#f05"><b>05</b>Scoring and ratchet</a></li>
+      <li><a href="#f06"><b>06</b>Dead code</a></li><li><a href="#f07"><b>07</b>Three-signal join</a></li><li><a href="#f08"><b>08</b>Split-ROI pricing</a></li><li><a href="#f09"><b>09</b>Edit classes</a></li><li><a href="#f10"><b>10</b>Trend slope</a></li>
+    </ul></div>
+    <div class="row"><a class="sec" href="#fpr">FPR discipline</a><ul><li><a href="#f11"><b>11</b>Guard tier ladder</a></li></ul></div>
+    <div class="row"><a class="sec" href="#acting">Acting on verdicts</a><ul><li><a href="#f12"><b>12</b>Deterministic erase</a></li><li><a href="#f13"><b>13</b>Mention veto</a></li></ul></div>
+    <div class="row"><a class="sec" href="#residue">Change-time residue</a><ul><li><a href="#f14"><b>14</b>Tombstone residue</a></li></ul></div>
+    <div class="row"><a class="sec" href="#advisor">Same-role advisor</a><ul><li><a href="#f15"><b>15</b>Sparse retrieval</a></li></ul></div>
+    <div class="row"><a class="sec" href="#honesty">Honesty boundaries</a><ul><li><a href="#honesty">not a security boundary</a></li><li><a href="#honesty">fail-open</a></li></ul></div>
+  </nav>
 </section>
 
 <figure class="arch deep" id="verdict">
