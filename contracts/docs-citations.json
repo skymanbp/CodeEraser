@@ -4789,15 +4789,21 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6e6e351ef11fb49b|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 412,
-    "end": 418,
+    "line": 438,
+    "end": 444,
     "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 399,
-    "end": 402,
+    "line": 425,
+    "end": 428,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|b5ae71bae3b1d60d|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 334,
+    "end": 337,
+    "text": "fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|ddb3e784660bcd82|0": {
     "target": "../../../cli/src/score/mod.rs",

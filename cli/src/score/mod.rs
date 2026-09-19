@@ -121,7 +121,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
             2,
             &mut sim,
         );
-    sim.sort_unstable();
+    one_row_per_pair(&mut sim);
     let (members, collapsed) = member_set(&anchors, &found.blocks);
     Ok(Measured {
         pos: pos_rows(&files, &posmap),
@@ -310,6 +310,32 @@ fn pair_rows<'a>(
     skipped_self
 }
 
+/// ONE row per file pair, ascending: the sim table's wire identity is
+/// the pair alone (`table "sim" (simRow n) 2`, strictly ascending)
+/// and the core emits one join candidate per row. Each family hands
+/// over its OWN ascending set, so their concatenation is neither
+/// ordered nor unique across the two — a pair both judged arrived
+/// twice and the core refused the whole request by name (`contract:
+/// sim <i>: not strictly ascending`), taking `ce check` down on the
+/// tree. Until 7.0.0 the case could not arise: only the clone family
+/// sent rows. It arises on any tree where two files share code AND
+/// prose, which is the ordinary shape of sibling modules — ten such
+/// pairs in one 55-file directory of the first repository that hit it.
+///
+/// The survivor is the STRONGER finding: the sort orders kind within
+/// a pair and the kind enum is ordered by strength (0 t1t2, 1 t3,
+/// 2 docdup), so the first row of each run is the clone it is rather
+/// than the prose that also matches. That choice changes no judgment
+/// today — both rows carry their family's VERIFIED ratio 100/100 and
+/// kind only picks which bar the ratio is cross-multiplied against
+/// (clone 85/100, docdup 80/100, both cleared) — which is exactly why
+/// the unit test pins it: nothing downstream would redden if it
+/// flipped.
+fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {
+    sim.sort_unstable();
+    sim.dedup_by(|a, b| a[0] == b[0] && a[1] == b[1]);
+}
+
 /// The discrete clone-member set: every block's sides attributed to
 /// their owning units off the index's own unit table, identified by
 /// the §7.2 container anchor (7.0.0), hashed. Returns (ascending set,
@@ -430,3 +456,7 @@ pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> Chur
     }
     (churn_t, coch.into_iter().collect())
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/score/sim_table.rs"]
+mod tests;
