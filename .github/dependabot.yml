@@ -4,17 +4,24 @@
 # when it should. Dependabot opens the PR; the same CI that gates every
 # push gates the bump. The npm pointer package (npm/) declares no
 # dependencies and needs no lane.
+# PARKED 2026-09-19 (user ruling, project is closed and maintenance-only): version updates open nothing on a schedule.
+# `schedule.interval` has no manual value, so the lanes stay declared and `open-pull-requests-limit: 0` holds them at zero —
+# the documented way to disable version updates for a package manager. SECURITY updates are a separate channel and still
+# arrive. To upgrade something on purpose: raise the limit on that lane, let the run open its PR, then set it back to 0.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 0
   - package-ecosystem: cargo
     directory: /cli
     schedule:
       interval: weekly
+    open-pull-requests-limit: 0
   - package-ecosystem: cargo
     directory: /gui/src-tauri
     schedule:
       interval: weekly
+    open-pull-requests-limit: 0

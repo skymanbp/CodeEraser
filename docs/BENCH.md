@@ -45,9 +45,16 @@
 > rule: the backfill names every tag it turns away, and a checkout that
 > brings nothing new is refused rather than measured a second time. So the
 > table cannot gain a row the rule forbids, and a release that earns one
-> says which of the two reasons it has none yet.
+> says which of the three reasons it has none yet. The third is a
+> judgment rather than a reading: the rule compares paths and cannot see
+> that a change sits outside what these seven metrics time, so a release
+> may DECLARE in bench.json that it carries a named release's numbers.
+> The gates refuse that declaration where the rule already turned the
+> release away, where the declaring release holds rows of its own, or
+> where the release it names holds none — so the claim is checkable, and
+> the diff it rests on is public.
 
-The current release, v1.7.4, earns a row and does not have one yet: it is measured after the tag.
+The current release, v1.7.4, carries v1.7.3's numbers: the rule counts it as a new program, but what it changed sits outside what these seven metrics time, so it was not measured again.
 
 ## Latency series (self repository)
 

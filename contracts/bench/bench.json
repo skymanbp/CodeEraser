@@ -65,6 +65,13 @@
       "value": "zod 0.50 / requests 0.158 / cobra 0.154 (raw)"
     }
   ],
+  "inherits": [
+    {
+      "from": "1.7.3",
+      "version": "1.7.4",
+      "why": "the only compiled change is one function on the producing side of the verdict request, run once per `ce check` between a snapshot and a wire round trip; core/app and gui/ui are byte-identical to 1.7.3"
+    }
+  ],
   "rows": [
     {
       "commit": "9b00a03065ea8221bc8178c77b7d3049362ddd6f",
@@ -2167,5 +2174,5 @@
       "version": "1.7.3"
     }
   ],
-  "schema": "ce.bench/0.1.0"
+  "schema": "ce.bench/0.2.0"
 }
