@@ -109,6 +109,14 @@
   `winget-pr` 在 `WINGET_TOKEN` 在座时同步用户的 fork、切分支、经 contents API 放文件、对
   microsoft/winget-pkgs 开 PR（首次标题 New package，其后 New version）；不在座则手动从该目录
   开 PR。合并后 `winget install skymanbp.CodeEraser`。
+- **一次只开一个 winget PR，且只为当前发布**（2026-09-20 用户裁）：winget-pkgs 的合并要等社区
+  志愿者管理员，排队以周计；若新版本先发出去而旧 PR 还没过，**撤掉旧的**，只留最新那一个——
+  否则管理员要替同一个包审一摞已经被取代的版本。撤时在 PR 上写明去向与替代者。
+- **合并之前，官网两首页不得把 winget 列为安装方式**（同一裁定）：README 双语写
+  「须 winget-pkgs 合并之后」是可以的，但首页的安装芯片是祈使句、读者会照着敲，敲不通就是
+  假话。实录：1.7.0 / 1.7.2 / 1.7.3 三个 PR 自 2026-09-06 起挂到 09-20 无人审（十项校验全过、
+  CLA 已签，纯等管理员），而两个首页那段时间一直印着 `winget install skymanbp.CodeEraser`，
+  本机实测 `winget search` 找不到这个包。合并当天再把芯片加回去。
 - **裁定点**：三条腿首次启用是对外动作（tap 仓、fork、PR 都挂在用户账户下），发版前由用户裁
   是否放 secret；裁不放则 README 双语与官网两首页的 Homebrew · winget 行须在发版前撤下。
   deb / rpm / AUR **不做**（2026-09-06 裁：deb / rpm 与 AppImage 同一份二进制只换外壳、各加
