@@ -1,0 +1,4 @@
+# the pinned grammar versions in Cargo.toml are the contract; the
+# lockfile is a build by-product here, not a distributed artifact
+Cargo.lock
+target/

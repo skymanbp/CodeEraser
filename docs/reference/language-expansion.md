@@ -1,6 +1,8 @@
 # 语言扩展设计册：C / C++ / Lua / Java / Ruby / R / HTML（计划 v2.30 修正案草案）
 
-> 状态：**设计稿，待用户拍板**（§14 列出全部待裁项）。本册只设计、不落码：计划书 `docs/DEVELOPMENT_PLAN.md` 已由 cc-memory 锁定，流程是「改计划 → 重新锁定 → 才能动代码」，本册即拟并入计划横幅的 v2.30 修正案正文与 §6 新轨步表。表内每个 tree-sitter 结点 kind 与字段名都于 2026-09-24 在 tree-sitter 0.27.0 上**实探**（两轮，§10），不是回忆；标 † 的条目未入本轮样本，落码时由电池实证。先例：M5-3k（Haskell 全文法入判决集，`contracts/coc-haskell-divergences.md`）与计划 v2.5（尺寸门语言臂）——本册是前者的七倍，边界沿用后者。
+<!-- ce:allow(deadcode) -- 设计稿尚未被计划书链接；v2.30 修正案并入计划横幅并链接本册后删除本行 -->
+
+> 状态：**设计稿，待用户拍板**（§14 列出全部待裁项）。本册只设计、不落码：计划书 `docs/DEVELOPMENT_PLAN.md` 已由 cc-memory 锁定，流程是「改计划 → 重新锁定 → 才能动代码」，本册即拟并入计划横幅的 v2.30 修正案正文与 §6 新轨步表。表内每个 tree-sitter 结点 kind 与字段名都于 2026-09-24 在 tree-sitter 0.27.0 上**实探**（两轮，§10），不是回忆；标 † 的条目未入本轮样本，落码时由电池实证。先例：M5-3k（Haskell 全文法入判决集，`contracts/coc-haskell-divergences.md`）与计划 v2.5（尺寸门语言臂）——本册是前者的七倍，边界沿用后者。 探针与十四个样本随本册入库：[`scripts/tsprobe`](../../scripts/tsprobe/README.md)；交接事项见 §15。
 
 ## 0. 一句话定位
 
@@ -209,3 +211,11 @@ README 双语「范围」句与「语言」行（纯尺寸臂列表随之收窄�
 10. 交叉核对语料候选（§11 七个仓）。
 11. 版本号 1.8.0 与「分数与 1.7.x 不可比」声明。
 12. `Member` 不扩展（D23）；Ruby 顶层 def 按导出（D15）。
+
+## 15. 交接（本节随 v2.30 并入计划后删除）
+
+- **本会话（2026-09-24，claude.ai/code 云会话）做了什么**：读码定位语言接入的全部触点（`scan/lang.rs`、`scan/spec*.rs`、`fourclass/kinds.rs`、`fourclass/visibility/`、`graph/spec.rs`、`graph/ladder/`、`graph/mounts.rs`、`graph/deadcode/flags.rs`、`mention/conv/`、`mention/selfref.rs`、`docdup/spec.rs`、`docdup/segments.rs`、`dedup/tokens.rs`，核侧 `CE/Scan.hs` 与 `CE/Graph/Contract.hs` 的两处 `lang > 6`）；查 crates.io 取七套文法的最新稳定版；探针两轮十四个样本；写本册；本册与探针分别以两个提交落在分支 `claude/loving-planck-n8sha8`，随后快进并入 `main`。
+- **没做什么**：未改计划书、README、`Cargo.toml`、任何代码；未跑 `cabal test`、`cargo test`、六条自食腿——容器无 GHC（`downloads.haskell.org` 被出站代理以 403 拒绝），tests 子仓可克隆但每条门都要 `ce-core`。本册与探针文件按门的源码逐个核过（`docs_nav` 只读 `methodology.md` 目录表、`layout_tree` 只看顶层目录、`docs_lang` 不管 `docs/`、`mention_universe` 钉的是公式不是字面量），但没有跑过。
+- **并入 main 后预期会红、请本地先重钉的门**：① `it/eval_mention.rs`（`parts::check_booklet`）——册 13 自仓普查行随树重取，新文件改变 U；② `it/site_roast.rs`——两首页自测块随判决人口移动。两者都是 `CE_BLESS=1` 重写（子仓 `it/eval_mention_parts/mod.rs` 与 `facts::block` 的说明；既往顺序 site_roast → docs_citations → eval_mention → facts）。③ `ce check` 若分数因新文件移动：容差内同定或 `CE_ACCEPT_BASELINE=1` 具名重立——新文件都在软线之下，不应新增违规行。④ `deadcode --check` 由本册顶部的 allow 行与本册到探针 README 的链接保活；`docdup` / `erase` / `dedup` 应绿（探针的 `grammar()` 每臂六个 token，不够一个块）。
+- **本地起手式（§13 步 0–1）**：拍板 §14 → 改计划横幅与 §6 → 重锁；`cli/Cargo.toml` 加七行依赖（版本同 `scripts/tsprobe/Cargo.toml`）；`scan/lang.rs` LANGS 表六行 + Html 翻位 + `grammar()` 七臂 + `fingerprints()`；`scan/spec.rs` 的 `spec()` 分派到 `spec_c.rs` / `spec_lua.rs` / `spec_java.rs` / `spec_ruby.rs` / `spec_r.rs`（RM16 拆文件先例）；核 `namingShape` 与 `unresRow` 改读 `judgedMask`；`corelink.rs::PROTO` 与 `Version.hs` 7.2.0；golden 重生；子仓 `it/hs_grammar_pin.rs` 扩为七文法；落地后把 `scripts/tsprobe/snippets/**` 加进 `ce.toml` 的 `exclude`（README 已写）。
+- **文件清单**：`docs/reference/language-expansion.md`（本册）；`scripts/tsprobe/{Cargo.toml, .gitignore, README.md, src/main.rs, snippets/×14}`。探针转录不入库：`cargo run --release -- <文法> snippets/<样本>` 十秒内重出。
