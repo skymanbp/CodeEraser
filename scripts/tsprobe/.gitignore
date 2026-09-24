@@ -2,3 +2,10 @@
 # lockfile is a build by-product here, not a distributed artifact
 Cargo.lock
 target/
+# the fourteen samples are fixtures for the probe, not files of this
+# repository. They stay tracked (`git add -f`); this pattern is what
+# keeps them out of ce's two walks, which read .gitignore PATTERNS and
+# never the index — so they enter neither the scan nor the advisory's
+# mention universe (the universe formula counts them under
+# pattern-ignored, the zod corpus precedent; a .ceignore is refused).
+snippets/

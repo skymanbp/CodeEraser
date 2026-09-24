@@ -18,4 +18,4 @@ cargo run --release -- ruby snippets/probe.rb > /tmp/ruby.txt
 
 2026-09-24 两轮十四个样本全部 `has_error=false`、零 `!!ERROR`。加一门语言 = 加一个 `grammar()` 臂、一条 Cargo 依赖、一份样本；改样本后重跑并核对设计册 §10 的事实行。
 
-**自食提示**：`snippets/` 里的七种扩展名今天不在判决集，`ce` 不走它们（`.html` 只进尺寸臂）；等这些语言落地后，请把 `scripts/tsprobe/snippets/**` 加进根 `ce.toml` 的 `exclude`（与 `contracts/fixtures/crosscheck/**` 同理），否则样本会以真实文件的身份进指纹索引与引用图。改 `ce.toml` 会动旋钮指纹，走 `CE_ACCEPT_FENCE=1` 重钉。
+**自食提示**：`snippets/` 写在本目录的 `.gitignore` 里，但十四个样本是 `git add -f` 进库、照常被 git 跟踪的。`ce` 的两条走查（度量走查与提及宇宙）按 `.gitignore` 的**模式**而非索引跳过文件，所以样本既不进尺寸门与指纹索引，也不会以自己的标识符「提及」本仓的符号而遮掉未提及顾问行；提及宇宙的公式门把它们记在 `pattern-ignored` 一项（zod 语料的同款先例），而 `.ceignore` 会被那条门拒绝。新增样本要 `git add -f`；这些语言落地后也不必改 `ce.toml`。探针自己的 `src/main.rs` 照常被判决。
