@@ -115,8 +115,4 @@ knobsEcho k rk jk dedupFloor judgedMask cycleRode =
       -- a legacy reply keeps its bytes, and the degraded reply's
       -- defaults echo omits it too
       <> ["cycleFloor" .= sCycleFloor k | cycleRode]
-      -- the cycle floor echoes exactly when code 7 rode (6.4.0):
-      -- a legacy reply keeps its bytes, and the degraded reply's
-      -- defaults echo omits it too
-      <> ["cycleFloor" .= sCycleFloor k | cycleRode]
 

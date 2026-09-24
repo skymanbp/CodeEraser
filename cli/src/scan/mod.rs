@@ -6,16 +6,19 @@
 //! — CLI gate, MCP tool and GUI face alike since batch-7 slice 8.
 
 pub mod ast;
+pub mod callees;
 pub mod calls;
 pub mod chunk;
 pub mod classes;
 pub mod coc;
+pub mod declarator;
 pub mod functions;
 pub mod globs;
 pub mod lang;
 pub mod metrics;
 pub mod report;
 pub mod spec;
+pub mod spec_c;
 pub mod spec_hs;
 pub mod walk;
 pub mod wire;

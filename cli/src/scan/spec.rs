@@ -104,6 +104,12 @@ pub struct LangSpec {
     /// qualified, and TypeScript and Haskell reject a local name that
     /// duplicates an import in the same scope.
     pub call_import_kinds: Kinds,
+    /// (parent kind, field) pairs whose child is compile-time text the
+    /// parser types as an expression all the same — a `#if` / `#elif`
+    /// condition. No metric reads through one: its operators are no
+    /// branches and its calls no arcs (register D1). Empty where the
+    /// grammar has no preprocessor.
+    pub opaque_fields: &'static [(&'static str, &'static str)],
 }
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
@@ -114,6 +120,7 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
         Lang::Go => &GO,
         Lang::Markdown => &MARKDOWN,
         Lang::Haskell => &super::spec_hs::HASKELL,
+        Lang::C | Lang::Cpp => &super::spec_c::C_FAMILY,
         // The sentinel is never walked; the scan-only arm (plan
         // v2.5) is size-only like Markdown — grammar() is None for
         // all of them, so measure_file never reaches these tables:
@@ -167,6 +174,7 @@ static PYTHON: LangSpec = LangSpec {
     call_self_words: &["self", "cls"],
     call_member_scopes: &["class_definition"],
     call_import_kinds: &["import_from_statement", "import_statement"],
+    opaque_fields: &[],
 };
 
 static TYPESCRIPT: LangSpec = LangSpec {
@@ -222,6 +230,7 @@ static TYPESCRIPT: LangSpec = LangSpec {
     call_self_words: &["this"],
     call_member_scopes: &["class_body", "object"],
     call_import_kinds: &[],
+    opaque_fields: &[],
 };
 
 static RUST: LangSpec = LangSpec {
@@ -269,6 +278,7 @@ static RUST: LangSpec = LangSpec {
     call_self_words: &["self", "Self"],
     call_member_scopes: &["impl_item", "trait_item"],
     call_import_kinds: &["use_declaration"],
+    opaque_fields: &[],
 };
 
 static GO: LangSpec = LangSpec {
@@ -318,6 +328,7 @@ static GO: LangSpec = LangSpec {
     // the receiver type, so a bare name cannot reach one at all
     call_member_scopes: &[],
     call_import_kinds: &[],
+    opaque_fields: &[],
 };
 
 static MARKDOWN: LangSpec = LangSpec {
@@ -344,4 +355,5 @@ static MARKDOWN: LangSpec = LangSpec {
     // the receiver type, so a bare name cannot reach one at all
     call_member_scopes: &[],
     call_import_kinds: &[],
+    opaque_fields: &[],
 };

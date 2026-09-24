@@ -83,6 +83,20 @@ const IMPORT_REQUIRE: SiteKind = SiteKind {
     via: Specifier::Field("source"),
 };
 
+/// The C family's one site (plan v2.30 step 2): `#include`, whose
+/// `path` field is a `string_literal` or a `system_lib_string` (both
+/// probed). The quoted form loses its quotes like every string
+/// specifier and the system form keeps its angle brackets — the
+/// delimiter is the search order the ladder reads (ladder/c.rs). A
+/// macro-spelled include (`#include HEADER`) carries an identifier in
+/// the field and is a site whose spec no rung can answer — the
+/// honest ledger row, never a guess.
+const INCLUDE: [SiteKind; 1] = [SiteKind {
+    node: "preproc_include",
+    label: "include",
+    via: Specifier::Field("path"),
+}];
+
 /// The site vocabulary of one language. Labels are frozen doc/wire
 /// identity — renaming one is a contract change.
 pub fn sites(lang: Lang) -> &'static [SiteKind] {
@@ -138,6 +152,7 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
             via: Specifier::Field("path"),
         }],
         Lang::Haskell => &HASKELL,
+        Lang::C | Lang::Cpp => &INCLUDE,
         // Markdown scans line-wise in graph/md.rs (no grammar); the
         // sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — no site vocabulary either way.

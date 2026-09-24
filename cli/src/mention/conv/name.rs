@@ -9,10 +9,12 @@
 //!   - the PATH: `Test` by path component, package-root-qualified
 //!     directory, equal basename or pattern (`*` non-empty); `Ambient`
 //!     by the `.d.ts` family;
-//!   - the NAME × language: `Main` (Python/Haskell `main`), `Protocol`
-//!     (the framework names a loader spells for the author — Python
-//!     unittest/xunit/pluggy/Django/reflection prefixes, TS filename ×
-//!     export-name conventions, Haskell autogen modules and hspec);
+//!   - the NAME × language: `Main` (Python/Haskell/C/C++ `main`),
+//!     `Protocol` (the framework names a loader spells for the author —
+//!     Python unittest/xunit/pluggy/Django/reflection prefixes, TS
+//!     filename × export-name conventions, Haskell autogen modules and
+//!     hspec, the C-family entries a linker, a JVM or a language
+//!     runtime looks up by name);
 //!   - the KEY: a Go method's receiver decides `MemberDispatch` (an
 //!     unexported receiver — only an interface or embedding reaches
 //!     it) or `MemberApi` (an exported one);
@@ -27,6 +29,17 @@ use std::path::{Path, PathBuf};
 
 /// Path components that make a file a test file wherever they sit.
 const TEST_DIRS: [&str; 5] = ["test", "tests", "spec", "__tests__", "testdata"];
+/// Basename suffixes behind a non-empty stem (`starred`): the Go and
+/// Python `_test` files, hspec's `Spec.hs`, the C-family `_test`
+/// convention (plan v2.30 step 2).
+const TEST_SUFFIXES: [&str; 6] = [
+    "_test.go",
+    "_test.py",
+    "Spec.hs",
+    "_test.c",
+    "_test.cc",
+    "_test.cpp",
+];
 
 /// Python names a loader spells: unittest's discovered hooks, pytest's
 /// xunit-style hooks, Django's loader targets. Prefixes follow.
@@ -61,6 +74,15 @@ const TS_PAGES: &str =
     "getStaticProps getServerSideProps getStaticPaths GET POST PUT PATCH DELETE HEAD OPTIONS ALL";
 const TS_ROUTES: &str = "loader action meta links headers ErrorBoundary HydrateFallback \
                          shouldRevalidate clientLoader clientAction";
+
+/// C / C++ names a loader, the linker or a language runtime spells for
+/// the author (plan v2.30 step 2): the Windows DLL and program entries,
+/// the bare-metal entry, the JNI, Node-API and libFuzzer hooks. `main`
+/// is `Main`, the category the criterion keeps for it. Prefixes follow:
+/// CPython, Lua and JNI native modules are looked up by a prefixed name.
+const C_NAMES: &str = "DllMain WinMain wWinMain wmain _start JNI_OnLoad JNI_OnUnload \
+                       napi_register_module_v1 LLVMFuzzerTestOneInput LLVMFuzzerInitialize";
+const C_PREFIXES: [&str; 3] = ["PyInit_", "luaopen_", "Java_"];
 
 /// The path-derived bits of every file, memoized per file, with the
 /// package-root stats memoized per DIRECTORY (one `Cargo.toml` stat
@@ -126,10 +148,8 @@ impl PathWords {
         }
         matches!(*base, "conftest.py" | "Spec.hs")
             || (*base == "build.rs" && self.is_pkg_root(&dirs.join("/")))
-            || starred(base, "", "_test.go")
-            || starred(base, "", "_test.py")
+            || TEST_SUFFIXES.iter().any(|s| starred(base, "", s))
             || starred(base, "test_", ".py")
-            || starred(base, "", "Spec.hs")
             || infixed(base, ".test.")
             || infixed(base, ".spec.")
     }
@@ -152,7 +172,7 @@ fn infixed(base: &str, mid: &str) -> bool {
 /// the Go receiver pair. `name` is `mention_name` of `key`.
 pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {
     let mut word = 0;
-    if matches!(lang, Lang::Python | Lang::Haskell) && name == "main" {
+    if matches!(lang, Lang::Python | Lang::Haskell | Lang::C | Lang::Cpp) && name == "main" {
         word |= Conv::Main.bit();
     }
     if protocol(lang, rel, name) {
@@ -183,6 +203,9 @@ fn protocol(lang: Lang, rel: &str, name: &str) -> bool {
             base.starts_with("Paths_")
                 || base.starts_with("PackageInfo_")
                 || (name == "spec" && starred(base, "", "Spec.hs"))
+        }
+        Lang::C | Lang::Cpp => {
+            listed(C_NAMES, name) || C_PREFIXES.iter().any(|p| starred(name, p, ""))
         }
         _ => false,
     }

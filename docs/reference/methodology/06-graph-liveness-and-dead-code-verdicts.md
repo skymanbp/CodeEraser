@@ -19,12 +19,12 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:88-144](../../../cli/src/graph/spec.rs#L88)), so the site universe (the precision denominator)
+([spec.rs:102-158](../../../cli/src/graph/spec.rs#L102)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:141](../../../cli/src/graph/spec.rs#L141)). The eleven frozen site
+grammar and scans line-wise ([spec.rs:156](../../../cli/src/graph/spec.rs#L156)). The eleven frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star`
-([store.rs:135-150](../../../cli/src/graph/store.rs#L135)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:100](../../../cli/src/graph/store.rs#L100), currently <!--ce:ver:graph_rev#digits-->`15`<!--/ce-->); `export_star` (a TS
+([store.rs:140-155](../../../cli/src/graph/store.rs#L140)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:105](../../../cli/src/graph/store.rs#L105), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -38,13 +38,13 @@ candidate resolves it, and more than one candidate at a rung is `Unresolved(ambi
 picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph/ladder/mod.rs#L1)).
 `External` (stdlib, registry, `node_modules`) is a **correct terminal answer, not a miss**
 (same lines). Every resolved edge stores the rung that answered it
-([ladder/mod.rs:41](../../../cli/src/graph/ladder/mod.rs#L41)), which is what makes per-level precision
+([ladder/mod.rs:43](../../../cli/src/graph/ladder/mod.rs#L43)), which is what makes per-level precision
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported, Empty`
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
-([ladder/mod.rs:47-58](../../../cli/src/graph/ladder/mod.rs#L47)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:215-218](../../../cli/src/graph/ladder/mod.rs#L215)).
+([ladder/mod.rs:49-60](../../../cli/src/graph/ladder/mod.rs#L49)); a language without rungs must return
+`Unsupported`, never a silent skip ([ladder/mod.rs:221-224](../../../cli/src/graph/ladder/mod.rs#L221)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -107,7 +107,7 @@ are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
 reference definition's in-scope target, which resolves and travels as an edge while the core
 excludes it from liveness beside the asset kind
-([wire.rs:23-32](../../../cli/src/graph/wire.rs#L23), [Cost.hs:156-163](../../../core/app/CE/Graph/Cost.hs#L156)); granularity
+([wire.rs:23-32](../../../cli/src/graph/wire.rs#L23), [Cost.hs:159-166](../../../core/app/CE/Graph/Cost.hs#L159)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
 ([wire.rs:34-37](../../../cli/src/graph/wire.rs#L34)).
 
@@ -126,7 +126,7 @@ Two transformations happen on the way to the wire:
    must not keep its target alive (user decision D3); since 2.20.0 every edge kind travels and the
    exclusion is the core's own rule — `assetKind`
    ([Cost.hs:116-124](../../../core/app/CE/Graph/Cost.hs#L116)) since 2.20.0, `refdefKind`
-   ([Cost.hs:156-163](../../../core/app/CE/Graph/Cost.hs#L156)) since 2.29.0 — the two riding one
+   ([Cost.hs:159-166](../../../core/app/CE/Graph/Cost.hs#L159)) since 2.29.0 — the two riding one
    inert list into the same comprehension as the rung filter
    ([Graph.hs:132](../../../core/app/CE/Graph.hs#L132), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
    ([deadcode.rs:275-286](../../../cli/src/graph/deadcode.rs#L275)). An endpoint that is not a node
@@ -239,7 +239,7 @@ role 7  a declared submodule's node (index `files.owner` = 1; a
 ```
 
 ([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
-[flags.rs:33-70](../../../cli/src/graph/deadcode/flags.rs#L33)). The role→bit landing is the
+[flags.rs:39-76](../../../cli/src/graph/deadcode/flags.rs#L39)). The role→bit landing is the
 core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, and role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has. **Role 6 closes
@@ -253,8 +253,8 @@ crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for t
 ([targets.rs:67](../../../cli/src/graph/deadcode/targets.rs#L67)) and a crate root for the
 Rust ladder's `mod` and `crate::` rungs alike
 ([rs.rs:79](../../../cli/src/graph/ladder/rs.rs#L79)), one normalizer serving both readers
-([config.rs:84](../../../cli/src/config.rs#L84)); a declared path the walk does not hold, or that
-is no Rust file, is refused by name ([walkidx.rs:94](../../../cli/src/dedup/walkidx.rs#L94)). The legacy flags column this
+([graph.rs:77](../../../cli/src/config/graph.rs#L77)); a declared path the walk does not hold, or that
+is no Rust file, is refused by name ([walkidx.rs:127](../../../cli/src/dedup/walkidx.rs#L127)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.
@@ -371,7 +371,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:150](../../../core/app/CE/Graph/Cost.hs#L150)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:249](../../../cli/src/graph/deadcode.rs#L249)), fences every returned index and bounds the column ([deadcode.rs:499](../../../cli/src/graph/deadcode.rs#L499)), and renders the trust word beside each dead file ([deadcode.rs:430](../../../cli/src/graph/deadcode.rs#L430)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
+([Cost.hs:153](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:249](../../../cli/src/graph/deadcode.rs#L249)), fences every returned index and bounds the column ([deadcode.rs:499](../../../cli/src/graph/deadcode.rs#L499)), and renders the trust word beside each dead file ([deadcode.rs:430](../../../cli/src/graph/deadcode.rs#L430)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
 
 ### 9. Acceptance
 

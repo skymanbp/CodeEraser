@@ -11,6 +11,13 @@
 | typescript | colinhacks/zod | 912f0f51b0ced654d0069741e7160834dca742ee | MIT |
 | go | spf13/cobra | adbc8813901bba65827259daa8e22ff94ec1f30e | Apache-2.0 |
 | rust | BurntSushi/ripgrep | 3fce3b5bb0236da2df6d99672afb8a719642eca7 | MIT OR Unlicense |
+| c | lua/lua | 0b29f408433e92953cc72b1d3e06c7ac8139e439 | MIT（lua.h 末尾许可段） |
+| cpp | fmtlib/fmt | 6d71f74624be5daa548073ff8e4e0c8aa5476010 | MIT |
+
+c / cpp 两行是 2026-09-24（计划 v2.30 步 2）按同一规则加入的：lua 取 `*.c`，
+fmt 取 `*.h`（`.h` 按 2026-09-24 拍板归 C++，同规则下 fmt 的 `*.cc` 只有四个
+源文件，头文件才是它的代码所在）。fmt 抽中的 `include/fmt/base.h` 是一个
+8 行的兼容头（只含一句 `#include "core.h"`），与 zod 的 locale 文件同理保留。
 
 ## 抽样规则（确定性，复现命令见下）
 
@@ -32,7 +39,8 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 
 ## 对照工具版本（本机安装记录）
 
-- lizard 1.23.0（CC：python/typescript/rust 兜底）
+- lizard 1.23.0（CC：python/typescript/rust 兜底；C/C++ 的唯一对照物——
+  C/C++ 没有认知复杂度对照物，CoC 只对白皮书电池 `cli/tests/it/coc_c.rs`）
 - gocyclo v0.6.0（CC：go；complexity.go 明示 "ignore default case"——
   ce 同步不计 default_case）
 - gocognit（CoC：go，唯一外部 CoC 对照）

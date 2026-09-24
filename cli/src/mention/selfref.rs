@@ -6,7 +6,9 @@
 //! template literal (minus the code inside `${…}`, plus the strings
 //! nested in that code), a Python doctest line, a Rust
 //! `macro_rules!` body or a fenced block in a run of doc comments,
-//! a fenced or bird-tracked block in a run of Haskell haddock. Plain
+//! a fenced or bird-tracked block in a run of Haskell haddock, a C /
+//! C++ string literal (the `dlsym` argument, the method-table entry,
+//! the Lua or Python registration name — TS's reason). Plain
 //! comments and prose of the same file never count (X-5/X-6: a
 //! language-neutral rule revived dead code from docstrings in one
 //! corpus and killed live code in another).
@@ -92,6 +94,12 @@ fn regions(rel: &str, source: &str) -> Vec<String> {
             (Lang::Python, "string") => py_doctest(node, src, &mut out),
             // a `macro_rules!` body is a second grammar (§2 (b))
             (Lang::Rust, "macro_definition") => out.push(text(node, src).to_string()),
+            // every C-family string, raw strings included (a
+            // concatenated string's pieces are string nodes of their
+            // own and collect themselves)
+            (Lang::C | Lang::Cpp, "string_literal" | "raw_string_literal") => {
+                out.push(text(node, src).to_string());
+            }
             _ => {}
         }
         // a run of doc comments is a fact about siblings in document

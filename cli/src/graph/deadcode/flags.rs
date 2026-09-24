@@ -29,6 +29,12 @@ const ROLE_DECLARED: i64 = 1 << 6;
 /// the entry bits, and this side measures none of its other roles
 /// (they would only cost the reads).
 pub(super) const ROLE_FOREIGN: i64 = 1 << 7;
+/// A compilation unit (plan v2.30 step 2, register D18): a `.c` /
+/// `.cc` / `.cpp` / `.cxx` file is never included by anything — the
+/// build compiles it on its own — so without a role of its own every
+/// one would be a dead candidate the moment its tree names no main.
+/// The core lands it on the executable bit (roleBits row 8, 7.2.0).
+const ROLE_UNIT: i64 = 1 << 8;
 
 /// Role facts of one file node. Main.hs is cabal's executable
 /// main-is convention — nothing imports a main module, exactly like
@@ -39,9 +45,22 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     let mut r = 0i64;
     if matches!(
         base,
-        "main.rs" | "main.go" | "__main__.py" | "build.rs" | "Main.hs"
+        "main.rs"
+            | "main.go"
+            | "__main__.py"
+            | "build.rs"
+            | "Main.hs"
+            | "main.c"
+            | "main.cc"
+            | "main.cpp"
     ) {
         r |= ROLE_ENTRY_NAMED;
+    }
+    if matches!(
+        base.rsplit_once('.').map(|(_, ext)| ext),
+        Some("c" | "cc" | "cpp" | "cxx")
+    ) {
+        r |= ROLE_UNIT;
     }
     if ["src/bin/", "examples/", "benches/", "cmd/"]
         .iter()
@@ -80,9 +99,13 @@ fn allow_claim(root: &Path, path: &str) -> bool {
 }
 
 /// Spec.hs is the cabal test-suite main-is convention (hspec/stack
-/// templates) — the test root nothing imports, like _test.go.
+/// templates) — the test root nothing imports, like _test.go; the
+/// C-family `_test` suffix is googletest's and Unity's (plan v2.30).
 fn is_test(path: &str, base: &str) -> bool {
     base.ends_with("_test.go")
+        || base.ends_with("_test.c")
+        || base.ends_with("_test.cc")
+        || base.ends_with("_test.cpp")
         || base.ends_with(".test.ts")
         || (base.starts_with("test_") && base.ends_with(".py"))
         || base == "Spec.hs"

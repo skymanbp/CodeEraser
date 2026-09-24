@@ -12,7 +12,7 @@ use crate::graph::store;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
 use anyhow::Result;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 /// One full-tree pass: what lives, how much of it carries tokens,
@@ -28,11 +28,14 @@ pub(super) struct WalkIndex {
     /// ce.toml `[graph] crate_roots` ∩ live: the Rust ladder's declared
     /// roots (a declaration naming a missing file declares nothing).
     pub crate_roots: BTreeSet<String>,
+    /// ce.toml `[graph.search_roots]`: language → directories, each
+    /// holding at least one walked file (plan v2.30).
+    pub search_roots: BTreeMap<String, BTreeSet<String>>,
 }
 
-/// Reads go through walk::read_surviving: a mid-walk deletion is a
-/// skip and the next run converges (the survival rule scan and graph
-/// already walk under); an unreadable file that EXISTS still aborts.
+/// One full-tree pass: the walk (refresh_tree) and then the phase-2
+/// key over every resolver input — config bytes, the `[graph]`
+/// declarations, md slug sets, TS fs facts.
 pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) -> Result<WalkIndex> {
     let mut out = WalkIndex {
         live: BTreeSet::new(),
@@ -41,14 +44,43 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         dirty: BTreeSet::new(),
         resolve_key: 0,
         crate_roots: BTreeSet::new(),
+        search_roots: BTreeMap::new(),
     };
-    let mut configs: Vec<(String, u64)> = Vec::new();
     // md slug sets are resolver INPUTS like config bytes (the anchor
     // rung reads the target's headings), so they join the key — a
     // heading edit anywhere re-fires the phase-2 sweep (M5 close,
     // repaying the 2f cross-file staleness debt). Key inputs only:
     // Scope.configs stays real config paths.
     let mut md_facts: Vec<(String, u64)> = Vec::new();
+    let configs = refresh_tree(root, config, idx, &mut out, &mut md_facts)?;
+    // collect() sorts and live is a BTreeSet — the key is a function
+    // of the tree, not of walk order. TS fs facts (compiled-JS twins,
+    // node_modules names) join like md slugs: the ladder stats them
+    // but the walk can never carry them (clearance review MED — their
+    // mutation previously never re-fired the sweep).
+    let mut key_inputs = configs.clone();
+    key_inputs.extend(declarations(config, &mut out)?);
+    key_inputs.extend(md_facts);
+    key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live));
+    out.resolve_key = store::resolve_key(&out.live, &key_inputs);
+    out.configs = configs.into_iter().map(|(path, _)| path).collect();
+    Ok(out)
+}
+
+/// The walk: every judged file through refresh_file, the md facts
+/// gathered, and the resolver configs returned with their content
+/// hashes (key inputs). Reads go through walk::read_surviving: a
+/// mid-walk deletion is a skip and the next run converges (the
+/// survival rule scan and graph already walk under); an unreadable
+/// file that EXISTS still aborts.
+fn refresh_tree(
+    root: &Path,
+    config: &Config,
+    idx: &mut index::Index,
+    out: &mut WalkIndex,
+    md_facts: &mut Vec<(String, u64)>,
+) -> Result<Vec<(String, u64)>> {
+    let mut configs: Vec<(String, u64)> = Vec::new();
     // foreign files (a declared submodule's) enter the index too: the
     // graph needs the references they hold and the advisory the names
     // they spell — their `foreign` flag is what keeps every
@@ -69,7 +101,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         let Some(src) = walk::read_surviving(&path)? else {
             continue; // vanished mid-walk: not live this pass
         };
-        lang_fact(lang, &rel, &src, &mut md_facts);
+        lang_fact(lang, &rel, &src, md_facts);
         if idx.refresh_file(&rel, &src, lang, Params::default(), foreign)? {
             out.dirty.insert(rel.clone());
         }
@@ -78,17 +110,18 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         }
         out.live.insert(rel);
     }
-    // collect() sorts and live is a BTreeSet — the key is a function
-    // of the tree, not of walk order. TS fs facts (compiled-JS twins,
-    // node_modules names) join like md slugs: the ladder stats them
-    // but the walk can never carry them (clearance review MED — their
-    // mutation previously never re-fired the sweep).
-    // the declared crate roots are a resolver INPUT like the manifests
-    // the walk collected, and hashed into the key so that editing the
-    // declaration re-fires the sweep. A root the walk did not see, or
-    // one that is no Rust file, is refused by name (the [structure]
-    // layout posture): silently dropping it would put the tree back
-    // in the false-dead shape the knob exists to end.
+    Ok(configs)
+}
+
+/// The two `[graph]` declarations the resolver reads, seated on the
+/// walk index and returned as key inputs: they are resolver INPUTS
+/// like the manifests the walk collected, hashed into the key so that
+/// editing a declaration re-fires the sweep. A crate root the walk did
+/// not see, or one that is no Rust file, and a search root holding no
+/// walked file, are each refused by name (the [structure] layout
+/// posture): silently dropping one would put the tree back in the
+/// false-dead shape the knob exists to end.
+fn declarations(config: &Config, out: &mut WalkIndex) -> Result<Vec<(String, u64)>> {
     out.crate_roots = config.graph.declared_roots();
     for r in &out.crate_roots {
         anyhow::ensure!(
@@ -96,23 +129,43 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
             "[graph] crate_roots declares {r:?}, which is not a walked Rust file"
         );
     }
-    let mut key_inputs = configs.clone();
-    key_inputs.push((
-        "ce.toml#graph.crate_roots".to_string(),
-        tokens::fnv1a(roots_bytes(&out.crate_roots).as_slice()),
-    ));
-    key_inputs.extend(md_facts);
-    key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live));
-    out.resolve_key = store::resolve_key(&out.live, &key_inputs);
-    out.configs = configs.into_iter().map(|(path, _)| path).collect();
-    Ok(out)
+    out.search_roots = config.graph.declared_search_roots();
+    let empty = out.search_roots.iter().find_map(|(lang, dirs)| {
+        let prefix = |d: &str| {
+            if d.is_empty() {
+                String::new()
+            } else {
+                format!("{d}/")
+            }
+        };
+        dirs.iter()
+            .find(|d| !out.live.iter().any(|f| f.starts_with(&prefix(d))))
+            .map(|d| (lang.clone(), d.clone()))
+    });
+    if let Some((lang, dir)) = empty {
+        anyhow::bail!("[graph.search_roots] {lang} declares {dir:?}, which holds no walked file");
+    }
+    let search: Vec<String> = out
+        .search_roots
+        .iter()
+        .flat_map(|(lang, dirs)| dirs.iter().map(move |d| format!("{lang}={d}")))
+        .collect();
+    Ok(vec![
+        (
+            "ce.toml#graph.crate_roots".to_string(),
+            tokens::fnv1a(roots_bytes(out.crate_roots.iter()).as_slice()),
+        ),
+        (
+            "ce.toml#graph.search_roots".to_string(),
+            tokens::fnv1a(roots_bytes(search.iter()).as_slice()),
+        ),
+    ])
 }
 
-/// The declared-root set as one byte string for the key (NUL-joined:
-/// a separator no path carries).
-fn roots_bytes(roots: &BTreeSet<String>) -> Vec<u8> {
+/// A declared set as one byte string for the key (NUL-joined: a
+/// separator no path carries).
+fn roots_bytes<'r>(roots: impl Iterator<Item = &'r String>) -> Vec<u8> {
     roots
-        .iter()
         .flat_map(|r| r.bytes().chain(std::iter::once(0)))
         .collect()
 }

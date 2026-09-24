@@ -1,36 +1,134 @@
 {
   "corpora": [
     {
-      "blocks": 170,
-      "files": 20,
+      "blocks": 208,
+      "files": 30,
       "histogram": {
+        "02": 2,
         "04": 6,
-        "05": 1,
+        "05": 15,
         "06": 1,
         "07": 61,
         "08": 17,
         "09": 9,
-        "10": 3,
-        "11": 16,
-        "12": 1,
-        "13": 4,
-        "14": 7,
-        "15": 10,
+        "10": 4,
+        "11": 18,
+        "12": 2,
+        "13": 5,
+        "14": 8,
+        "15": 14,
         "16": 10,
-        "17": 8,
+        "17": 10,
         "18": 4,
-        "19": 2,
-        "20": 1,
+        "19": 6,
+        "20": 4,
         "21": 1,
-        "22": 3,
+        "22": 5,
+        "23": 1,
         "24": 1,
         "25": 1,
         "26": 1,
         "31": 2
       },
       "name": "fixtures",
-      "suppressed": 8,
+      "suppressed": 24,
       "suppressed_blocks": [
+        {
+          "a": "c/lbaselib.c:510",
+          "b": "c/lbaselib.c:519",
+          "distinct": 5,
+          "tokens": 54
+        },
+        {
+          "a": "c/lbaselib.c:510",
+          "b": "c/lbaselib.c:520",
+          "distinct": 5,
+          "tokens": 60
+        },
+        {
+          "a": "c/lbaselib.c:510",
+          "b": "c/lbaselib.c:521",
+          "distinct": 5,
+          "tokens": 66
+        },
+        {
+          "a": "c/lbaselib.c:510",
+          "b": "c/lbaselib.c:522",
+          "distinct": 5,
+          "tokens": 67
+        },
+        {
+          "a": "c/lbaselib.c:511",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "c/lbaselib.c:512",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "c/lbaselib.c:513",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "c/lbaselib.c:514",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "c/lbaselib.c:515",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "c/lbaselib.c:516",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "c/lbaselib.c:517",
+          "b": "c/ldblib.c:453",
+          "distinct": 5,
+          "tokens": 97
+        },
+        {
+          "a": "cpp/include__fmt__format.h:1235",
+          "b": "cpp/include__fmt__format.h:1236",
+          "distinct": 2,
+          "tokens": 62
+        },
+        {
+          "a": "cpp/include__fmt__format.h:1235",
+          "b": "cpp/include__fmt__format.h:1237",
+          "distinct": 2,
+          "tokens": 63
+        },
+        {
+          "a": "cpp/include__fmt__format.h:1295",
+          "b": "cpp/include__fmt__format.h:1298",
+          "distinct": 5,
+          "tokens": 55
+        },
+        {
+          "a": "cpp/include__fmt__format.h:1295",
+          "b": "cpp/include__fmt__format.h:1299",
+          "distinct": 5,
+          "tokens": 70
+        },
+        {
+          "a": "cpp/include__fmt__format.h:1295",
+          "b": "cpp/include__fmt__format.h:1300",
+          "distinct": 5,
+          "tokens": 79
+        },
         {
           "a": "python/src__requests__status_codes.py:30",
           "b": "python/src__requests__status_codes.py:93",

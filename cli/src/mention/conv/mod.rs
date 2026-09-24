@@ -14,6 +14,7 @@
 //! Positions are frozen. Adding, removing or re-reading an AST-half
 //! producer is a GRAPH_REV bump; the name-table half moves freely.
 
+mod c;
 pub mod name;
 mod py;
 mod rs;
@@ -39,8 +40,8 @@ pub enum Conv {
     /// holding the atom `test` (AST half, rs.rs).
     Test = 1,
     /// A foreign-function surface: Rust export attributes and
-    /// `extern`, a Haskell `foreign export`, a Go `//export` directive
-    /// (AST half).
+    /// `extern`, a Haskell `foreign export`, a Go `//export` directive,
+    /// a C / C++ `extern "C"` or linker-facing attribute (AST half).
     Ffi = 2,
     /// Registered by a decorator: Python's registrar table, any TS
     /// decorator (AST half).
@@ -99,6 +100,7 @@ pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i6
         Lang::Python => py::bits(node, src),
         Lang::Go => go_bits(node, src),
         Lang::Haskell => hs_bits(node, src, &facts.foreign_exports),
+        Lang::C | Lang::Cpp => c::bits(node, src),
         _ => 0,
     }
 }

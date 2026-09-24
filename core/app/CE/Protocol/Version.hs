@@ -18,7 +18,10 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- request without the key is judged against the legacy seven, byte
 -- for byte; a judged reply echoes the mask exactly when it rode. A
 -- language turning judged on the Rust side is thereby a request
--- fact, never a core release. No capability name changes.
+-- fact, never a core release. No capability name changes. Step 2 of
+-- the same plan (C / C++) adds, inside this unreleased minor, roleBits
+-- row 8: a C-family compilation unit — a `.c` file nothing includes —
+-- lands on the executable bit (CE.Graph.Cost).
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's

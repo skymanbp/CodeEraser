@@ -9,7 +9,7 @@ use tree_sitter::Node;
 
 pub fn measure(fn_node: Node<'_>, src: &[u8], spec: &LangSpec) -> u32 {
     let mut cc: u32 = 1;
-    for node in own_nodes(fn_node, spec) {
+    for node in own_nodes(fn_node, src, spec) {
         // keyword tokens can share their structure's kind name
         // (Haskell: the anon `case` token inside the `case` node) —
         // kind tables describe named STRUCTURE nodes only

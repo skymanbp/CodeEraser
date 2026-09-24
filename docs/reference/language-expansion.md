@@ -1,6 +1,6 @@
 # 语言扩展设计册：C / C++ / Lua / Java / Ruby / R / HTML（计划 v2.30 修正案）
 
-> 状态：**已拍板 2026-09-24，v2.30 修正案已并入计划书**（`docs/DEVELOPMENT_PLAN.md` 横幅句与 §6 T 轨八步表；cc-memory 已重锁；每条裁定见 §14）。本册是落码的设计权威：表内每个 tree-sitter 结点 kind 与字段名都于 2026-09-24 在 tree-sitter 0.27.0 上**实探**（两轮，§10；本机复跑十四个样本零 ERROR），不是回忆；标 † 的条目未入本轮样本，落码时由电池实证。先例：M5-3k（Haskell 全文法入判决集，`contracts/coc-haskell-divergences.md`）与计划 v2.5（尺寸门语言臂）——本册是前者的七倍，边界沿用后者。探针与十四个样本随本册入库：[`scripts/tsprobe`](../../scripts/tsprobe/README.md)。
+> 状态：**已拍板 2026-09-24，v2.30 修正案已并入计划书**（`docs/DEVELOPMENT_PLAN.md` 横幅句与 §6 T 轨步表——八步语言扩展，外加同日追加的步 7b 判决回迁三件，后者不属本册；cc-memory 已重锁；每条裁定见 §14）。本册是落码的设计权威：表内每个 tree-sitter 结点 kind 与字段名都于 2026-09-24 在 tree-sitter 0.27.0 上**实探**（两轮，§10；本机复跑十四个样本零 ERROR），不是回忆；标 † 的条目未入本轮样本，落码时由电池实证。先例：M5-3k（Haskell 全文法入判决集，`contracts/coc-haskell-divergences.md`）与计划 v2.5（尺寸门语言臂）——本册是前者的七倍，边界沿用后者。探针与十四个样本随本册入库：[`scripts/tsprobe`](../../scripts/tsprobe/README.md)。
 
 ## 0. 一句话定位
 
@@ -87,11 +87,16 @@ HTML 的 LangSpec 为空表（MARKDOWN 同款），只提供 `comment_kinds = [c
 | D16 | R 可见性 | 文件有 roxygen 串则 `#' @export` 为准，否则点号约定（`.name` 内部）；`NAMESPACE` 是另一文件不读——Python `__all__` 前的同一路，后置 | visibility/mod.rs 原则 |
 | D17 | Java 同包引用、Ruby 常量自动加载 | 不经 import/require：以 `type_ref`/`const_ref` 名字站点补（§8），否则每个只被同包/自动加载引用的文件都成「未引用」 | 存活判决可用性 |
 | D18 | C/C++ 翻译单元、R 包 `R/` | `.c/.cc/.cpp/.cxx` 从不被 include：按「编译单元」角色入口，死候选是无人 include 的头；R 包的 `R/*.R` 由加载器整体 collate：按声明目标角色（DESCRIPTION 即清单） | roleBits 是核的表 |
-| D19 | C++ `and`/`or`、`attribute_specifier`、Ruby `unless`/`until_modifier`、Java 带实参 `annotation` | 本轮样本未含，表内先列（†），电池落地时实证 | 诚实登记 |
+| D19 | C++ `and`/`or`、`attribute_specifier`、Ruby `unless`/`until_modifier`、Java 带实参 `annotation` | C++ 两项已由步 2 电池实证（`coc_c.rs` 行 `c`；`attribute_specifier` 走 Ffi 读法）；Ruby / Java 项本轮样本未含，表内先列（†），电池落地时实证 | 诚实登记 |
 | D20 | HTML 文本 | `text` 叶被内联元素切开，段 = 块级元素文本后代的串接；`pre/code/script/style/textarea` 与 `comment` shed 计数 | md 围栏与 HTML 注释 mask 先例 |
 | D21 | Lua 局部绑定遮蔽（`local helper = other.helper`） | 不建模（`call_import_kinds` 空），递归边可能多计——语料实测命中则补 `variable_declaration` 遮蔽读法 | ignore 仓 `use` 先例 |
 | D22 | 命名轴 | C/C++/Lua/R 无社区统一规范 → Any（style 0）；Java MixedCaps；Ruby Snake（`?`/`!`/`=` 后缀与运算符名不含大写下划线，不受罚） | 规范出处各语言风格指南 |
 | D23 | `Member` 类别 | 不扩展到 Java/Ruby/C++（会让未提及顾问对它们空转；Python 的 Member 有其动态访问缘由），协议名走 Protocol 表 | 顾问要锋利 |
+| D24 | C++ `function_definition` 无 `body`（`= default` / `= delete`；`= 0` 本就是 field_declaration） | 不是单元：无代码可量（lizard 同） | 步 2 对拍，fmt 5 条 |
+| D25 | 宏未展开留下的定义形：声明链无形参表（`FMT_BEGIN_NAMESPACE` + `namespace detail {` 读成名为 `namespace` 的函数）、叶非名字结点（struct 折进 type、ERROR 叶）、类内无 `type` 且不带类名 / `~` / `operator`（`FMT_CATCH(...) { }`） | 不是单元；无 owner 的无 type 定义保留（其类体可能已被恢复读成块，安全侧） | 步 2 对拍，`scan/declarator.rs` |
+| D26 | 体内嵌套 `function_definition`（C++ 宏块、GNU C 嵌套函数） | 吸收进宿主，平计（lambda 先例）；局部类成员照旧独立单元 | 步 2 电池 |
+| D27 | 名字里的模板实参与换行（`spec<int>`、`Box<T>::b`、偏特化 `formatter<T, char, …>::write`） | 名取标识符：`spec`、`Box::b`、`formatter::write`（语言查找的名字；lizard 同） | 步 2 对拍 |
+| D28 | `#if` / `#elif` 条件里的 `&&` / `\|\|` / 调用 | 编译期文本，度量不读（`LangSpec::opaque_fields`）——D1 的另一半 | 步 2 对拍，fmt `is_big_endian` |
 
 ## 6. 单元键与声明域（`fourclass::kinds::extra`，只列带 `name` 字段者；`type_definition` 的名在 `declarator` 字段，表加一列字段名即可）
 
@@ -185,7 +190,7 @@ README 双语「范围」句与「语言」行（纯尺寸臂列表随之收窄�
 |---|---|---|
 | 0 | 计划修正 v2.30（横幅句 + §6 新轨表）+ §14 拍板 → cc-memory 重锁 | 用户拍板（已交付 2026-09-24） |
 | 1 | 骨架（已交付 2026-09-24）：七 crate 钉版（两份 Cargo.lock + NOTICE）、`Lang` 六行保留码 15–20（无扩展名、scan_only、无文法——翻位随各语言自己的步，HTML 翻位在步 5，理由见 §1）、`fingerprints()` 接管四处指纹消费者、`judgedMask` 上 scan/graph 请求（proto 7.2.0，缺席 = 127，应答回显、Rust 钉漂移）、核两处边界改读 `CE.Wire.judgedLang`、`Version.hs`/VERSIONING 台账、golden 重生（既有 135 对只动 proto 字面，新增 5 对）、`grammar_pins` 门（十三套文法） | 既有五语言四语料对拍逐字节不动（DEP-TS 的 16 家族对拍先例）；五语言电池绿 |
-| 2 | C/C++：LangSpec 表、`Declarator` 命名、类内键拼 `Class::`、可见性、include 站点/阶梯、`compile_commands.json` 配置、编译单元角色（核 roleBits）、`coc_c.rs` 电池、交叉核对、D 表落册 | 对拍全归因；D1/D2/D12/D13 各有电池行 |
+| 2 | C/C++（已交付 2026-09-24）：LangSpec 表、`Declarator` 命名（`scan/declarator.rs`，D24–D27）、类内键拼 `Class::`、可见性、include 站点/阶梯、`compile_commands.json` 配置、`[graph.search_roots]` 旋钮、编译单元角色（核 roleBits 行 8）、`coc_c.rs` 电池、交叉核对（lua 五文件 116/118、fmt 五头文件 394/420 join，两侧独有 18 条全归因）、D 表落册（D24–D28） | 对拍全归因；D1/D2/D12/D13 各有电池行 |
 | 3 | Java：表、`callee_field` 机制、包反推源根、`type_ref` 站点与 JDK 名表、注解 Registration、可见性、电池/对拍 | 同上；`type_ref` 精度单独出行 |
 | 4 | Lua + Ruby + R（共享 `CallArg` 站点机制与 `Assign`/`LuaBind` 命名）：各自表、阶梯、可见性节状态机、Protocol 表、R 的 `param` 旋钮、电池/对拍 | 同上；Ruby 节状态机每形一电池行 |
 | 5 | HTML：`Attr` 站点、`html.rs` 阶梯（复用 md 链）、节锚单元、docdup kind 3 与 shed、自食处理 | `site/` 八页孤页/断链为零或已豁免有据 |
@@ -193,7 +198,7 @@ README 双语「范围」句与「语言」行（纯尺寸臂列表随之收窄�
 | 7 | 文档与事实（§12） | docs 门全绿、引文重签 |
 | 8 | 发版 1.8.0：分数不可比声明、基线具名重立、bench 入列 | RELEASE.md 链 |
 
-依赖：1 先于一切；2/3/4/5 只追加各自的行与文件，可并行；6 随各语言步收口；7/8 最后。拍板项 3 已裁一版 1.8.0 七语言，不拆两版。
+依赖：1 先于一切；2/3/4/5 只追加各自的行与文件，可并行；6 随各语言步收口；7 / 7b / 8 最后（步 7b = 计划书 §6 T 轨 2026-09-24 追加的判决回迁三件：erase 择优、structure 图案形、CoC / CC / 嵌套规则应用进核——Haskell 占比增项，不属本册）。拍板项 3 已裁一版 1.8.0 七语言，不拆两版。
 
 ## 14. 拍板记录（2026-09-24）
 

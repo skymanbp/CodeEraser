@@ -114,7 +114,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 294,
+    "line": 295,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|3c4c22af6667dce2|0": {
@@ -144,7 +144,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|757b0378afa2499a|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 263,
+    "line": 264,
     "text": "idx.resolve_refreshed(&dirty, &mut resolver)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|764cfb44238d1148|0": {
@@ -154,22 +154,22 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 284,
+    "line": 285,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 302,
+    "line": 303,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|1": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 302,
+    "line": 303,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|c97285682ec824a2|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 307,
+    "line": 308,
     "text": "kgram: 25,\nwindow: 26,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|0": {
@@ -761,42 +761,42 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 164,
+    "line": 188,
     "text": "pub fn fingerprints(self) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|2f99cfba7853fa18|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 161,
+    "line": 168,
     "text": "// Python quotes surface as named string_start/string_end kinds."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|6102e94730fc5ddf|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 217,
+    "line": 225,
     "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|8f2d953fe270d4e3|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 311,
+    "line": 321,
     "text": "literal_delims: &[\"\\\"\", \"`\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|94c43c67b19eccdd|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 264,
+    "line": 273,
     "text": "literal_delims: &[\"\\\"\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|b778be50cc3e9751|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 262,
+    "line": 271,
     "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|d5dc8ea61e1a0a65|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 310,
+    "line": 320,
     "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|fa0e54683c00a56d|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 162,
+    "line": 169,
     "text": "literal_delims: &[],\nfn_named_only_kinds: &[],\ncall_kinds: &[\"call\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
@@ -931,14 +931,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 294,
-    "end": 298,
+    "line": 295,
+    "end": 299,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 302,
-    "end": 310,
+    "line": 303,
+    "end": 311,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -2289,14 +2289,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 123,
-    "end": 129,
+    "line": 76,
+    "end": 82,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|1": {
     "target": "../../../cli/src/config.rs",
-    "line": 123,
-    "end": 134,
+    "line": 76,
+    "end": 87,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/graph/ladder/hs_boot.rs|ee30d3794dcc0d6c|0": {
@@ -3596,14 +3596,14 @@
     "end": 218,
     "text": "- 与 `--fail-under` 合成：有基线的仓库以棘轮为主门，`--fail-under` 为下限保险；"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/config.rs|ee24ccceee732d24|0": {
-    "target": "../../../cli/src/config.rs",
-    "line": 84,
-    "text": "pub(crate) fn declared_roots(&self) -> std::collections::BTreeSet<String> {"
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/config/graph.rs|055258c9fff20fb6|0": {
+    "target": "../../../cli/src/config/graph.rs",
+    "line": 77,
+    "text": "pub(crate) fn declared_roots(&self) -> BTreeSet<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
     "target": "../../../cli/src/dedup/walkidx.rs",
-    "line": 94,
+    "line": 127,
     "text": "anyhow::ensure!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
@@ -3718,8 +3718,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|4defd042cf7ffd3b|0": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 33,
-    "end": 70,
+    "line": 39,
+    "end": 76,
     "text": "/// Role facts of one file node. Main.hs is cabal's executable"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|533cea80c55142f9|0": {
@@ -3896,8 +3896,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|6e425539668b7f43|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 215,
-    "end": 218,
+    "line": 221,
+    "end": 224,
     "text": "Lang::Rust => rs::resolve(site, scope),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -3908,13 +3908,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 47,
-    "end": 58,
+    "line": 49,
+    "end": 60,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|e63f76e53c783474|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 41,
+    "line": 43,
     "text": "pub type Rung = u8;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|04440d166e5d3c04|0": {
@@ -4136,13 +4136,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|3e0121921e556557|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 88,
-    "end": 144,
+    "line": 102,
+    "end": 158,
     "text": "pub fn sites(lang: Lang) -> &'static [SiteKind] {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|43216d5bb511435f|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 141,
+    "line": 156,
     "text": "// Markdown scans line-wise in graph/md.rs (no grammar); the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|4a89ebeaad9f1ec2|0": {
@@ -4161,15 +4161,15 @@
     "line": 42,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|78d6e93bc6aaf14e|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|b7ec742e36bb0247|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 100,
-    "text": "pub const GRAPH_REV: i64 = 15;"
+    "line": 105,
+    "text": "pub const GRAPH_REV: i64 = 16;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dc145d0e51fefed8|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 135,
-    "end": 150,
+    "line": 140,
+    "end": 155,
     "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
@@ -4453,14 +4453,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|5cba7297f841c0fc|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 156,
-    "end": 163,
+    "line": 159,
+    "end": 166,
     "text": "((_, t) : _) | t > 0 -> 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|5cba7297f841c0fc|1": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 156,
-    "end": 163,
+    "line": 159,
+    "end": 166,
     "text": "((_, t) : _) | t > 0 -> 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|82245fd68248f095|0": {
@@ -4477,7 +4477,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|95c8a6f74a7e6e44|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 150,
+    "line": 153,
     "text": "-- fully resolved reference population. An absent language row reads"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|95e8c5ffea66fc74|0": {
@@ -5820,8 +5820,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|34a1176370ed9e32|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 39,
-    "end": 61,
+    "line": 73,
+    "end": 95,
     "text": "pub fn extra(lang: Lang) -> &'static [&'static str] {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
@@ -5939,14 +5939,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 216,
-    "end": 221,
+    "line": 226,
+    "end": 231,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 148,
-    "end": 161,
+    "line": 158,
+    "end": 171,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
@@ -5957,8 +5957,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 165,
-    "end": 187,
+    "line": 175,
+    "end": 197,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {
@@ -6370,8 +6370,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/config.rs|ade4e98fb475f753|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 143,
-    "end": 145,
+    "line": 96,
+    "end": 98,
     "text": "pub(crate) struct TrendCfg {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -6664,8 +6664,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 284,
-    "end": 310,
+    "line": 285,
+    "end": 311,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|98cd5d387767c13a|0": {
@@ -7218,31 +7218,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 545,
-    "end": 547,
+    "line": 549,
+    "end": 551,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 541,
+    "line": 545,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 533,
-    "end": 547,
+    "line": 537,
+    "end": 551,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 536,
-    "end": 537,
+    "line": 540,
+    "end": 541,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 536,
-    "end": 540,
+    "line": 540,
+    "end": 544,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
@@ -7434,17 +7434,17 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|30ccbd2d9190022f|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 75,
+    "line": 80,
     "text": "pub const VIS_RESTRICTED: i64 = 1 << 2;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|342a9df605f3ff81|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 71,
+    "line": 76,
     "text": "pub const VIS_EXPORTED: i64 = 1 << 0;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|3eb5f25bbd28fd7c|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 73,
+    "line": 78,
     "text": "pub const VIS_SCOPE_EXPORTED: i64 = 1 << 1;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/py.rs|411a2c6aae78ef2d|0": {
@@ -7574,49 +7574,49 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|46d157f7613a2c08|0": {
     "target": "../../../cli/src/mention/conv/mod.rs",
-    "line": 35,
-    "end": 67,
+    "line": 36,
+    "end": 68,
     "text": "pub enum Conv {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|e2ac031b7a1e5cdc|0": {
     "target": "../../../cli/src/mention/conv/mod.rs",
-    "line": 95,
-    "end": 104,
+    "line": 96,
+    "end": 105,
     "text": "pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|4aca9b8f144898bb|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 29,
+    "line": 31,
     "text": "const TEST_DIRS: [&str; 5] = [\"test\", \"tests\", \"spec\", \"__tests__\", \"testdata\"];"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|63d363616b9351ce|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 33,
-    "end": 63,
+    "line": 46,
+    "end": 76,
     "text": "const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|712e15f5fedd6462|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 153,
-    "end": 207,
+    "line": 173,
+    "end": 227,
     "text": "pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|81b073da29331bbb|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 217,
-    "end": 229,
+    "line": 240,
+    "end": 252,
     "text": "fn go_member(key: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|d0662c6502f5d3c8|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 169,
-    "end": 175,
+    "line": 189,
+    "end": 195,
     "text": "pub fn text_bits(text: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|e9da6bea8e856d37|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 116,
-    "end": 135,
+    "line": 138,
+    "end": 157,
     "text": "fn test_file(&mut self, rel: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/py.rs|cba48a2d1cbb6671|0": {
@@ -7673,13 +7673,13 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|13ffd4191b66779e|0": {
     "target": "../../../cli/src/mention/name.rs",
-    "line": 30,
-    "end": 44,
+    "line": 33,
+    "end": 47,
     "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|d826aab6108efd42|0": {
     "target": "../../../cli/src/mention/name.rs",
-    "line": 63,
+    "line": 67,
     "text": "fn single_token(rel: &str, name: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/rates.rs|92c605251b67836d|0": {
@@ -7702,14 +7702,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref.rs|09b87349acdc7268|0": {
     "target": "../../../cli/src/mention/selfref.rs",
-    "line": 71,
-    "end": 109,
+    "line": 73,
+    "end": 111,
     "text": "fn regions(rel: &str, source: &str) -> Vec<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref.rs|76eaab87fb163228|0": {
     "target": "../../../cli/src/mention/selfref.rs",
-    "line": 206,
-    "end": 264,
+    "line": 214,
+    "end": 272,
     "text": "fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/store.rs|295d30e8a6dc7f2e|0": {
@@ -7896,8 +7896,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 273,
-    "end": 275,
+    "line": 277,
+    "end": 279,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -7944,12 +7944,12 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|1ad97326f59c570c|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 194,
+    "line": 197,
     "text": "-- and not a public-surface question. The ablation 1<<2 alone narrows"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|68004a2583dc91ca|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 208,
+    "line": 211,
     "text": "-- word never exempts (K36 pins that a row with an empty category"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|e9399251f9a18f6c|0": {
@@ -8648,8 +8648,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
     "target": "../ce-toml.md",
-    "line": 85,
-    "end": 92,
+    "line": 86,
+    "end": 93,
     "text": "## [tombstone]"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/audit/similar.rs|4dbfefaca8311860|0": {

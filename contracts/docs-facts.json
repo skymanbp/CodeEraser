@@ -77,9 +77,9 @@
     {
       "debt": "Lang has no variant iterator; promote = Lang::judged() + grammar().is_some()",
       "id": "count:grammars#word",
-      "source": "cli/src/scan/lang.rs::Lang::grammar (Some arms)",
+      "source": "cli/src/scan/lang.rs::GRAMMARS (rows)",
       "tier": "scraped",
-      "value": "6"
+      "value": "8"
     },
     {
       "id": "count:hooks#word",
@@ -103,7 +103,7 @@
       "id": "count:langs#word",
       "source": "cli/src/scan/lang.rs::Lang::judged_mask (set bits)",
       "tier": "linked",
-      "value": "7"
+      "value": "9"
     },
     {
       "debt": "mcp::tools is a private module; promote = a pub names() face",
@@ -402,7 +402,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "15"
+      "value": "16"
     },
     {
       "id": "ver:mention_rev#digits",

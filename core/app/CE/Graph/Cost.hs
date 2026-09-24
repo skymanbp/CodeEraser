@@ -137,8 +137,11 @@ assetKind = 3
 -- it seeds reachability and is never judged), and role 6 is the
 -- slice-3 defect fix — a declared [[bin]] path or cabal main-is
 -- target is a root, where before only the name conventions were.
+-- Role 8 (7.2.0, plan v2.30 step 2) is a C-family compilation unit —
+-- a `.c` / `.cc` / `.cpp` / `.cxx` file nothing includes, compiled on
+-- its own by the build — and lands beside roles 0, 1 and 6.
 roleBits :: [(Integer, Integer)]
-roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2)]
+roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2), (8, 1)]
 -- | The dead-row confidence (H3, 2.32.0): how far the dead node's
 -- OWN language can vouch for its verdict, judged from the request's
 -- per-language site ledger [[lang, unresolvedSites, totalSites]].

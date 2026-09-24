@@ -18,8 +18,11 @@
 //! is ever judged or fingerprinted under a placeholder spec; the core
 //! reads the judged set off the wire (`judgedMask`, proto 7.2.0)
 //! instead of a constant, so a row flipping here needs no core change.
+//! Step 2 turned C and C++ (spec_c.rs; `.h` is C++ by the 2026-09-24
+//! ruling — a header parsed as C loses every class body).
 
 use std::path::Path;
+use tree_sitter_language::LanguageFn;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Lang {
@@ -78,16 +81,42 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
     (Lang::Svelte, &["svelte"], "svelte", true),
     (Lang::Shell, &["sh", "bash"], "shell", true),
     (Lang::Yaml, &["yml", "yaml"], "yaml", true),
-    // plan v2.30 reserved rows: the wire code is frozen here (RM15)
-    // while the extensions, the grammar and the tables arrive with the
-    // language's own step (§13) — an extension-less row is what the
-    // sentinel already is, and the judged mask never counts one
-    (Lang::C, &[], "c", true),
-    (Lang::Cpp, &[], "cpp", true),
+    // plan v2.30 rows: the wire code was frozen here first (RM15); the
+    // extensions, the grammar and the tables arrive with the language's
+    // own step (§13) — an extension-less row is what the sentinel
+    // already is, and the judged mask never counts one
+    (Lang::C, &["c"], "c", false),
+    (
+        Lang::Cpp,
+        &["cpp", "cc", "cxx", "hpp", "hh", "hxx", "h", "inl"],
+        "cpp",
+        false,
+    ),
     (Lang::Lua, &[], "lua", true),
     (Lang::Java, &[], "java", true),
     (Lang::Ruby, &[], "ruby", true),
     (Lang::R, &[], "r", true),
+];
+
+/// The grammar of every AST-backed language, as the `LanguageFn`
+/// value its crate exports (`Language::from` converts at lookup). A
+/// row is five distinct tokens, under the clone gate's diversity
+/// floor; a match arm per grammar read as clones of itself from the
+/// eighth arm on (tests/it/grammar_pins.rs stores its pins the same
+/// way, for the same reason). The plan v2.30 reserved codes join as
+/// their steps land.
+const GRAMMARS: [(Lang, LanguageFn); 8] = [
+    (Lang::Python, tree_sitter_python::LANGUAGE),
+    (
+        Lang::TypeScript,
+        tree_sitter_typescript::LANGUAGE_TYPESCRIPT,
+    ),
+    (Lang::Tsx, tree_sitter_typescript::LANGUAGE_TSX),
+    (Lang::Rust, tree_sitter_rust::LANGUAGE),
+    (Lang::Go, tree_sitter_go::LANGUAGE),
+    (Lang::Haskell, tree_sitter_haskell::LANGUAGE),
+    (Lang::C, tree_sitter_c::LANGUAGE),
+    (Lang::Cpp, tree_sitter_cpp::LANGUAGE),
 ];
 
 impl Lang {
@@ -143,15 +172,10 @@ impl Lang {
     /// the scan-only arm), the wire sentinel (never walked) or a plan
     /// v2.30 reserved code whose grammar lands with its own step.
     pub fn grammar(self) -> Option<tree_sitter::Language> {
-        match self {
-            Self::Python => Some(tree_sitter_python::LANGUAGE.into()),
-            Self::TypeScript => Some(tree_sitter_typescript::LANGUAGE_TYPESCRIPT.into()),
-            Self::Tsx => Some(tree_sitter_typescript::LANGUAGE_TSX.into()),
-            Self::Rust => Some(tree_sitter_rust::LANGUAGE.into()),
-            Self::Go => Some(tree_sitter_go::LANGUAGE.into()),
-            Self::Haskell => Some(tree_sitter_haskell::LANGUAGE.into()),
-            _ => None,
-        }
+        GRAMMARS
+            .iter()
+            .find(|(l, _)| *l == self)
+            .map(|&(_, f)| f.into())
     }
 
     /// The T1/T2/T3 population (plan v2.30 §2): a grammar to tokenize

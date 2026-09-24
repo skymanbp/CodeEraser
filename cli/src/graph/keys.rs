@@ -12,8 +12,16 @@ use std::path::Path;
 /// conventionally read tsconfig.<flavor>.json and participate in
 /// resolution — leaving them out of the key would serve stale edges
 /// (2f refinement); an extends target under an arbitrary name stays
-/// a documented boundary.
-const CONFIG_NAMES: &[&str] = &["Cargo.toml", "go.mod", "package.json", "pyproject.toml"];
+/// a documented boundary. compile_commands.json (plan v2.30 step 2)
+/// is the C-family ladder's third rung wherever it sits — a build
+/// directory inside the tree is the common home.
+const CONFIG_NAMES: &[&str] = &[
+    "Cargo.toml",
+    "go.mod",
+    "package.json",
+    "pyproject.toml",
+    "compile_commands.json",
+];
 
 /// `.cabal` is a basename SUFFIX (the file carries the package name:
 /// ce-core.cabal); cabal.project stays out — the hs ladder anchors

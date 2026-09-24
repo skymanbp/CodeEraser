@@ -14,6 +14,8 @@
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
 | CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/it/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
 | CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见末节） |
+| C CC | lizard 1.23.0 | 118 | **116/118** | 2 条归因保留（`default:`，D2；2026-09-24 计划 v2.30 步 2，详见 C / C++ 节） |
+| C++ CC | lizard 1.23.0 | 420 join（lizard 430 起始行 / ce 428 单位） | 394/420 | 26 条 + 两侧独有 18 条全归因：D1 20、D2 3、局部类 1 + 4、解析器恢复 1 + 14、lizard 三类缺陷 1 + 1 + 10 重复行（详见 C / C++ 节） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -148,6 +150,103 @@ fn symlink<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) {
 **具名不做：跨文件环。** 调用弧是单个解析单元内的词法事实。跨文件要么按名铸边
 （R6 实测精度 0.576），要么走 symEdges（召回约 23 %）——错的 +1 会流进分数与
 尺寸门，漏的只是一分没收。立场以断言的形式留在电池里，不会哪天默默变成真的。
+
+## C / C++ 对拍（2026-09-24，计划 v2.30 步 2；fixtures 见 SOURCES.md 的 c / cpp 行）
+
+对照物只有 lizard 1.23.0 的 CCN：C/C++ 没有认知复杂度对照物，CoC 的执行者是
+白皮书电池 `cli/tests/it/coc_c.rs`（每条 D 表立场各一行）。join 键 = 文件 +
+起始行；lizard 在同一起始行重复报出的两行算一个单位（见下）。复现：
+
+```
+python -m lizard -l c   contracts/fixtures/crosscheck/c/*.c
+python -m lizard -l cpp contracts/fixtures/crosscheck/cpp/*.h
+ce scan contracts/fixtures/crosscheck --format json     # 按 start_line join
+```
+
+**C（lua 五文件）**：118 / 118 单位逐一 join，116 一致；2 条差 = D2——
+lbaselib.c:201 `luaB_collectgarbage` ce 8 / lizard 7、lfunc.c:145
+`prepcallclosemth` ce 4 / lizard 3，各恰含一个 `default:`（ce 计真路径，lizard
+只计 `case` 关键字）。零两侧独有。
+
+**C++（fmt 五头文件）**：lizard 440 行 = 430 个起始行（10 行重复），ce 428 单位，
+join 420，一致 394。26 条差值全部机械归因（lizard − ce == 区间内 `#if` 系行数
+− `default:` 行数 + Σ 局部类成员 (cc − 1)，残差 2 条逐条读过）：
+
+- **D1 预处理条件 20 条**：lizard 对每条 `#if` / `#ifdef` / `#ifndef` / `#elif` 行
+  +1，ce 不计——且条件表达式里的 `&&` / `||` 也不计。后半句是本轮对拍修出来的
+  ce 缺口：首轮 `is_big_endian`（format.h:272）读 2，多出的 1 是 `#elif
+  defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)` 里的 `&&`；`operator+=`
+  （:368）读 7 与 lizard 的 7 相等纯属两种错误相抵（lizard 计三条 `#if` 行，ce
+  计三条行里的三个 `&&`）。修法 = LangSpec 新增 `opaque_fields`
+  （`(preproc_if | preproc_elif, condition)`），度量层唯一的子结点入口
+  `metrics::walk::measured` 跳过；电池行 `q`。
+- **D2 `default:` 3 条**：`write_escaped_cp`（:2003）、`write_int`（:2173、:2296）
+  各含一个 `default:`。
+- **局部类成员 1 + 4 条**：`write`（:2395）体内的 `struct bounded_output_iterator`
+  四个运算符（:2458–:2465）ce 各自成单位（电池 `local() { struct L { void m() {} }; }`
+  行），lizard 折进宿主——宿主 lizard 24 = ce 23 + `operator=` 的一个 `if`。
+- **`if FMT_CONSTEXPR20 (…)` 1 条**：`write`（:2371）lizard 4 / ce 3——`if constexpr`
+  的 constexpr 由宏拼写（:2377），tree-sitter 读不成 if_statement（ERROR）。解析器
+  恢复，不改。
+- **lizard 右值引用 1 条**：`nested_format_specs::write`（:4089）lizard 4 / ce 2——
+  `static_cast<T&&>(values)...` 两处的 `&&` 被 lizard 当逻辑算子。最小样本：
+  `return static_cast<T&&>(v) ? 1 : 0;` lizard CCN 3。lizard 无类型层，本项目立项
+  要解决的那类问题。
+
+两侧独有 18 条（lizard 10 / ce 8）：
+
+- **解析器恢复（宏未展开）14 条**。fmt 的 `FMT_*` 宏让 tree-sitter-cpp 的错误恢复
+  移动单位边界，两侧各有各的读法，ce 不追：
+  - color.h：`FMT_CONSTEXPR styled_arg(const T& v, text_style s) : value(v), style(s) {}`
+    （:474）——宏在构造函数前被读成返回类型，随后的成员初始化列表打断解析，整个
+    `struct styled_arg` 折进下一个函数的 type：ce 一单位 `vprint` 起始 :471，lizard
+    `styled_arg` 构造 :474 + `vprint` :497（lizard 2 / ce 1）。
+  - format.h :2279 `FMT_CONSTEXPR size_padding(int …) : size(…)` 同形——struct 体永不
+    闭合，:2296–:4089 的成员在 ce 侧都带上 `size_padding::` 伪 owner，构造函数本身
+    lizard 有 ce 无（1 / 0）。
+  - format.h :935 `template <…> class basic_memory_buffer : public detail::buffer<T> {`
+    折进 placeholder 约束：类体内的方法两侧都读到（:945–:1024 七条一致），但移动
+    构造 :1029 被读成 field_declaration（lizard 有 ce 无），`operator=` :1035 成了那个
+    折叠定义的声明子——ce 的单位起始位移到 :937（lizard 1035 / ce 937）。同一类里
+    `FMT_CONSTEXPR20 ~basic_memory_buffer()`（:984）的 `~` 落进 ERROR 结点，ce 把它
+    放回名字（`dropped_tilde`，电池行）。
+  - format.h :1138 / :1145 `FMT_EXPORT template <…> constexpr auto compile_string_to_view`
+    ——宏在 `template` 前，两条被读成 ERROR / 无名叶的定义：ce 零单位（名叶规则），
+    lizard 两条。
+  - format.h :1355–:1361 `extern template FMT_API auto …` 五行被折进 `write2digits`
+    的前缀：ce 一单位起始 :1358 吞掉两条 `equal2`（:1366 / :1369），lizard 三条
+    （3 / 1）。
+- **lizard 大括号初始化 1 条**：format.h :323 `return {~n.hi_, ~n.lo_};` 之后的
+  `friend FMT_CONSTEXPR auto operator+`（:326）被 lizard 并进 `operator~`（最小样本
+  重现：合成一个名为 `U::operator ~( const U & n ) -> U { return {…} ; } friend …`
+  的单位）。ce 独有 :326。
+- **局部类 4 条**（上）。
+
+lizard 同一起始行重复报出 10 行：:1559 / :2173 / :2296 / :2395 / :2727 / :3141 /
+:3277 / :3377 / :3677 / :3734，都是多行签名且形参表含模板实参
+（`basic_string_view<WChar>`、`digit_grouping<Char>`…），两行数值相同，按一个单位计。
+
+**对拍修掉的 ce 缺口（真收益，都在 `scan/declarator.rs` 与 `spec_c.rs`）**：
+
+1. 预处理条件里的算子当分支（上，D1）。
+2. `= default` / `= delete` 当函数单位（无 body 的 function_definition：format.h
+   :2980 / :2981 / :4130 / :4131、color.h :211，共 5 条）→ 定义须有 body。
+3. 宏行 + `namespace detail {` 被读成名为 `namespace` 的函数（std.h :80、ostream.h
+   :33、format.h :1122）、`namespace detail {` 被读成名为 `detail` 的函数（color.h
+   :206）、:2275 的 struct 折叠体（名字是三行文本）→ 声明链须有形参表、叶须是名字
+   结点（ERROR / 折进来的类型都不是）。
+4. 类内 `FMT_CATCH(...) { }`（std.h :524）→ 类内无 type 的定义须是构造 / 析构 /
+   转换运算符（三者带类名或 `~` / `operator`）；无 owner 的保留（:4126 的构造函数
+   所在类体被恢复读成了块）。
+5. 体内嵌套 function_definition（宏块、GNU 嵌套函数）→ 吸收进宿主（lambda 先例），
+   局部类成员照旧独立。
+6. 名字含模板实参与换行（std.h :656 `formatter<\n T, char, …>::write`）→ 名字取
+   标识符：`formatter::write`、`Box::b`、`spec`。
+
+修后 C++ 单位 440 → 428（12 条伪单位消失：`= default/delete` 5、`namespace` 4、
+struct 折叠 1、`FMT_CATCH` 1、`basic_string_view<Char>` 1）。四份既有语料同树重扫
+单位数不变（go 52 / python 118 / rust 322 / typescript 25）：新规则只对带 `declarator`
+字段的结点生效，`opaque_fields` 只有 C 表非空。
 
 ## 工具注记
 

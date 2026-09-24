@@ -97,7 +97,12 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
-pub const GRAPH_REV: i64 = 15;
+/// 16 = the C family enters the graph (plan v2.30 step 2): the
+/// `include` site kind joins KINDS, C / C++ declarations enter the
+/// symbols table with their own visibility and convention words, and
+/// compile_commands.json becomes a resolver config — a new stored kind
+/// code and new stored rows, so every site is re-detected.
+pub const GRAPH_REV: i64 = 16;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -147,6 +152,7 @@ const KINDS: &[&str] = &[
     "ref_def",
     "url",
     "export_star",
+    "include",
 ];
 
 /// The frozen code for one site kind. KINDS is the single owner of

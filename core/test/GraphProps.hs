@@ -76,7 +76,8 @@ inertNeverAlive =
 -- | 2.28.0 (batch-7 slice 3): every role row lands on its declared
 -- bit — the named-main, executable-dir and declared-target roles all
 -- on bit 1, test/glob/doc/allow on theirs, the 6.4.0 foreign reader
--- beside the test convention on bit 2 — and a combined mask ORs.
+-- beside the test convention on bit 2, the 7.2.0 compilation unit
+-- beside the executables on bit 1 — and a combined mask ORs.
 rolesDerive :: Bool
 rolesDerive =
   and
@@ -88,6 +89,7 @@ rolesDerive =
     , deriveFlags roleBits 32 == 64
     , deriveFlags roleBits 64 == 2
     , deriveFlags roleBits 128 == 4
+    , deriveFlags roleBits 256 == 2
     , deriveFlags roleBits (1 + 4 + 64) == 6
     ]
 

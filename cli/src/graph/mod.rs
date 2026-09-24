@@ -9,6 +9,7 @@
 pub mod cabal;
 pub mod canvas;
 pub mod cargo;
+pub mod compdb;
 pub mod deadcode;
 pub mod gomod;
 pub mod jsonc;

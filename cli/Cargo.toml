@@ -64,6 +64,11 @@ tree-sitter-r = "1.3.0"
 tree-sitter-ruby = "0.23.1"
 tree-sitter-rust = "0.24.2"
 tree-sitter-typescript = "0.23.2"
+# the `LanguageFn` type scan/lang.rs stores its grammar table as, and
+# tests/it/grammar_pins.rs its pins (tree-sitter does not re-export
+# it); the one version every grammar crate above already resolves
+# to, so no new build node
+tree-sitter-language = "0.1.8"
 # docdup word hashing: NFC + General_Category=Mark test, so canonically
 # equivalent prose cannot hash two ways (docdup/shingle.rs)
 unicode-normalization = "0.1.25"
@@ -78,10 +83,6 @@ strip = true
 
 [dev-dependencies]
 proptest = "1.11.0"
-# the `LanguageFn` type tests/it/grammar_pins.rs stores its table of
-# pinned grammars as (tree-sitter does not re-export it); the one
-# version every grammar crate above already resolves to
-tree-sitter-language = "0.1.8"
 # eval-set freeze manifest hashing (tests/eval_extract, M4 D2-1),
 # shared with the updater, citations and screenshot receipts
 sha2 = "0.11"

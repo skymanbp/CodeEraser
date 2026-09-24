@@ -87,4 +87,5 @@ pub static HASKELL: LangSpec = LangSpec {
     // like any other; the probe finds no member scope to exclude
     call_member_scopes: &[],
     call_import_kinds: &[],
+    opaque_fields: &[],
 };

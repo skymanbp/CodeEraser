@@ -35,11 +35,14 @@ struct Slot<'a> {
     field: Option<&'a str>,
 }
 
-/// One node per line: `field: kind` for named nodes, the kind quoted
-/// for anonymous tokens, `!!ERROR` on error or missing nodes, and the
-/// first forty characters of a leaf's text in angle brackets.
+/// One node per line: the node's 1-based start line, then `field: kind`
+/// for named nodes, the kind quoted for anonymous tokens, `!!ERROR` on
+/// error or missing nodes, and the first forty characters of a leaf's
+/// text in angle brackets. The line prefix is what lets a transcript of
+/// a whole header be read against the source it came from (the step-2
+/// crosscheck reads fmt's format.h this way).
 fn dump(out: &mut String, node: Node<'_>, src: &[u8], slot: Slot<'_>) {
-    let indent = "  ".repeat(slot.depth);
+    let indent = format!("{:5} {}", node.start_position().row + 1, "  ".repeat(slot.depth));
     let field = slot.field.map(|f| format!("{f}: ")).unwrap_or_default();
     let kind = if node.is_named() {
         node.kind().to_string()

@@ -161,7 +161,11 @@
 > 在上过线时恒携——Rust 两侧据此钉漂移（无回显 = 7.2.0 之前的核，按名拒绝）。判决字节零变化：既有 135 对
 > golden 只有 proto 字面动；新增 scan 三对（16 mask 内 lang 15 判并回显 / 17 缺席拒 / 18 负值拒）与 graph
 > 两对（25 mask 内 lang 20 判并回显 / 26 缺席拒）。此键是语言扩展（设计册 `docs/reference/language-expansion.md`）
-> 的接线：新语言在各自的步翻 `scan_only` 位即入集，核不必再改。
+> 的接线：新语言在各自的步翻 `scan_only` 位即入集，核不必再改。步 2（C / C++，同一未发布 minor 内加性）：核
+> `CE.Graph.Cost.roleBits` 加第九行 `(8, 1)`——编译单元角色（Rust 侧 `ROLE_UNIT = 1 << 8`，`.c/.cc/.cpp/.cxx`，
+> 设计册 D18）落在可执行位，请求不带该位时字节同前；Rust 侧另有三件存储与配置事实、皆不过线：`store::KINDS`
+> 追加 `include` 站点标签（GRAPH_REV 15 → 16）、`compile_commands.json` 入解析器配置、`[graph.search_roots]`
+> 入 resolve_key。
 
 > **7.1.0**（structure/1 模块度轴 + fourclass/2 声明级搬迁，加性 minor，计划 v2.29 步 10 批 C3 O54 / O48，2026-09-06）：
 > `structure.request` 加性可选表 `dirEdges=[[fromDir,toDir,count]]`（**只载跨目录**有向边，

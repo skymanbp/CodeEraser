@@ -464,6 +464,7 @@ dependencies = [
  "tree-sitter-haskell",
  "tree-sitter-html",
  "tree-sitter-java",
+ "tree-sitter-language",
  "tree-sitter-lua",
  "tree-sitter-python",
  "tree-sitter-r",

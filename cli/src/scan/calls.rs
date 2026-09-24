@@ -8,12 +8,13 @@
 //! `DirEntry::path` calling `self.dent.path()` and on `Request.prepare`
 //! calling `p.prepare(...)` — same spelling, a different type. A callee
 //! resolves two ways instead, both against the units this file itself
-//! declares: a bare name matched WHOLE, or a member selected off the
-//! caller's own receiver, matched with the receiver prefix stripped.
-//! Anything else mints nothing, and a name owned by two callables
-//! mints nothing either. With no semantic model the error direction is
-//! undercount, never a wrong +1 — a wrong one would flow into the
-//! score and the size gate, an absent one only leaves a point unpaid.
+//! declares (the index is scan/callees.rs): a bare name matched WHOLE,
+//! or a member selected off the caller's own receiver, matched with
+//! the receiver prefix stripped. Anything else mints nothing, and a
+//! name owned by two callables mints nothing either. With no semantic
+//! model the error direction is undercount, never a wrong +1 — a wrong
+//! one would flow into the score and the size gate, an absent one only
+//! leaves a point unpaid.
 //!
 //! Resolution is SCOPED, never file-wide. A member off the receiver
 //! reaches the caller's OWN container and nothing else: two classes in
@@ -38,32 +39,40 @@
 //! and the innermost one wins. The crosscheck corpus held exactly that
 //! shape, and it was the only unit in four corpora the increment moved.
 //!
-//! A callable is not always one unit: Haskell gives every equation of
-//! `f` its own `function` node (divergence D7), and those equations
-//! are one function, not an ambiguity. So names are owned by GROUPS
-//! keyed by (parent, name) — equations share a parent, while a
-//! `where`-local `go` and a top-level `go` do not, and stay two
-//! callables that cancel each other out.
+//! C++ (plan v2.30 step 2) adds one thing the container rule cannot
+//! express: a member may be DEFINED out of its class (`void K::b()`),
+//! so the members of one class do not share a container, and inside a
+//! member a bare `m()` reaches the class's own `m` before anything the
+//! enclosing scopes declare. Both roads therefore carry the OWNER the
+//! unit answers to (functions::owner_of — the class chain of an
+//! in-body definition, the spelled qualifier of an out-of-class one):
+//! the member road matches `this->m()`, `K::m()` and, inside a member
+//! of `K`, a bare `m()` against (owner, base) — undercount still: a
+//! qualifier naming any other class, a call off another object, or a
+//! virtual override in some other file all mint nothing.
 
 use super::ast;
-use super::functions::FnUnit;
+use super::callees::{Named, container_of};
+use super::functions::{self, FnUnit};
 use super::metrics::own_nodes;
 use super::spec::LangSpec;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use tree_sitter::Node;
 
-/// The callee's field name — one spelling across all five grammars
+/// The callee's field name — one spelling across all seven grammars
 /// (probed against the pinned versions, not recalled).
 const CALLEE: &str = "function";
 
 /// What a caller brings to a resolution: the container its own
-/// declaration sits in, and the receiver name standing for its own
-/// type. One record rather than two more parameters — the fn-params
+/// declaration sits in, the receiver name standing for its own type,
+/// the names its own imports bind, and (C family) the class it is a
+/// member of. One record rather than more parameters — the fn-params
 /// line this repo sets is five.
 struct Caller<'a> {
     container: usize,
     receiver: Option<&'a str>,
     shadowed: HashSet<&'a str>,
+    owner: Option<String>,
 }
 
 /// Edges `(caller, callee)` as indices into `units`, sorted and
@@ -73,15 +82,16 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
     if spec.call_kinds.is_empty() {
         return Vec::new();
     }
-    let named = Named::of(units, spec);
+    let named = Named::of(units, src, spec);
     let mut out = Vec::new();
     for (from, unit) in units.iter().enumerate() {
         let receiver = receiver_binding(unit.node, src);
-        let own = own_nodes(unit.node, spec);
+        let own = own_nodes(unit.node, src, spec);
         let caller = Caller {
             container: container_of(unit.node),
             receiver: receiver.as_deref(),
             shadowed: shadowed(&own, src, spec),
+            owner: functions::owner_of(unit.node, src),
         };
         for node in own {
             if !spec.call_kinds.contains(&node.kind()) {
@@ -98,87 +108,6 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
     out
 }
 
-/// The callables this file declares and the names they answer to,
-/// whole and receiver-stripped. A name owned by two groups is dropped
-/// rather than disambiguated — that one rule keeps the measured false
-/// positives out.
-struct Named {
-    groups: Vec<Vec<usize>>,
-    containers: Vec<usize>,
-    whole: HashMap<String, usize>,
-    base: HashMap<String, usize>,
-}
-
-/// Whether a declaration sits in a type's member body — see
-/// LangSpec::call_member_scopes for why both levels are read. Crate-
-/// visible: the similar bag's shape word (similar/bag.rs) asks the
-/// same question of the same node, and asked it once more verbatim
-/// before the dedup guard sent it here.
-pub(crate) fn in_member_scope(node: Node<'_>, spec: &LangSpec) -> bool {
-    node.parent().is_some_and(|container| {
-        spec.call_member_scopes.contains(&container.kind())
-            || container
-                .parent()
-                .is_some_and(|owner| spec.call_member_scopes.contains(&owner.kind()))
-    })
-}
-
-impl Named {
-    fn of(units: &[FnUnit<'_>], spec: &LangSpec) -> Self {
-        let mut groups: Vec<Vec<usize>> = Vec::new();
-        let mut containers: Vec<usize> = Vec::new();
-        let mut names: Vec<(&str, bool)> = Vec::new();
-        let mut seat: HashMap<(usize, &str), usize> = HashMap::new();
-        for (i, unit) in units.iter().enumerate() {
-            let parent = container_of(unit.node);
-            match seat.get(&(parent, unit.name.as_str())) {
-                Some(&g) => groups[g].push(i),
-                None => {
-                    seat.insert((parent, unit.name.as_str()), groups.len());
-                    names.push((&unit.name, in_member_scope(unit.node, spec)));
-                    containers.push(parent);
-                    groups.push(vec![i]);
-                }
-            }
-        }
-        let seats = names.iter().enumerate();
-        Named {
-            // a member is absent from the bare road entirely, so a
-            // top-level name is not cancelled by a method spelling it
-            whole: unique(
-                seats
-                    .clone()
-                    .filter(|(_, (_, m))| !m)
-                    .map(|(g, (n, _))| (*n, g)),
-            ),
-            base: unique(seats.map(|(g, (n, _))| (base_name(n), g))),
-            containers,
-            groups,
-        }
-    }
-}
-
-/// Keys owned by exactly one group; a repeat erases its key for good.
-fn unique<'a>(named: impl Iterator<Item = (&'a str, usize)>) -> HashMap<String, usize> {
-    let mut seen: HashMap<&str, Option<usize>> = HashMap::new();
-    for (name, group) in named {
-        seen.entry(name)
-            .and_modify(|slot| *slot = None)
-            .or_insert(Some(group));
-    }
-    seen.into_iter()
-        .filter_map(|(name, slot)| Some((name.to_string(), slot?)))
-        .collect()
-}
-
-/// `(T) add` → `add` — the receiver qualification functions::name_of
-/// puts on Go methods. Every other spelling is its own base.
-fn base_name(name: &str) -> &str {
-    name.strip_prefix('(')
-        .and_then(|rest| rest.split_once(") "))
-        .map_or(name, |(_, base)| base)
-}
-
 /// The group a call reaches, or None when nothing proves one.
 fn target(
     call: Node<'_>,
@@ -189,12 +118,7 @@ fn target(
 ) -> Option<usize> {
     let callee = call.child_by_field_name(CALLEE)?;
     if spec.call_name_kinds.contains(&callee.kind()) {
-        let name = text(callee, src)?;
-        if caller.shadowed.contains(name) {
-            return None;
-        }
-        let group = *named.whole.get(name)?;
-        return sees(call, named.containers[group]).then_some(group);
+        return bare(call, text(callee, src)?, caller, named);
     }
     if !spec.call_member_kinds.contains(&callee.kind()) {
         return None;
@@ -205,11 +129,41 @@ fn target(
         return None;
     }
     let obj = text(object, src)?;
-    if !spec.call_self_words.contains(&obj) && caller.receiver != Some(obj) {
+    let own_type = spec.call_self_words.contains(&obj)
+        || caller.receiver == Some(obj)
+        || owner_tail(caller) == Some(obj);
+    if !own_type {
         return None;
     }
-    let group = *named.base.get(text(member, src)?)?;
-    (named.containers[group] == caller.container).then_some(group)
+    let key = (caller.owner.clone(), text(member, src)?.to_string());
+    let group = *named.base.get(&key)?;
+    (caller.owner.is_some() || named.containers[group] == caller.container).then_some(group)
+}
+
+/// The bare road. A name an import binds is not provably the local
+/// callable; inside a C++ member the class's own members come first
+/// (class scope precedes every enclosing scope, and a member defined
+/// out of class is not lexically visible at all); otherwise a whole
+/// name reaches a callable the call site can see.
+fn bare(call: Node<'_>, name: &str, caller: &Caller<'_>, named: &Named) -> Option<usize> {
+    if caller.shadowed.contains(name) {
+        return None;
+    }
+    if caller.owner.is_some()
+        && let Some(&group) = named.base.get(&(caller.owner.clone(), name.to_string()))
+    {
+        return Some(group);
+    }
+    let group = *named.whole.get(name)?;
+    sees(call, named.containers[group]).then_some(group)
+}
+
+/// `K::m()` inside a member of `K`: the qualifier names the caller's
+/// own class by its unqualified name — the innermost segment of the
+/// owner chain (`Outer::Inner` answers to `Inner`). Any other
+/// qualifier (a base class, a namespace) proves nothing here.
+fn owner_tail<'c>(caller: &'c Caller<'_>) -> Option<&'c str> {
+    caller.owner.as_deref().and_then(|o| o.rsplit("::").next())
 }
 
 /// Names an import binds inside a unit's own body — see
@@ -232,14 +186,6 @@ fn shadowed<'s>(own: &[Node<'_>], src: &'s [u8], spec: &LangSpec) -> HashSet<&'s
         }
     }
     out
-}
-
-/// The node a declaration is declared IN — the identity a scope is
-/// keyed by. Every unit sits inside its file, so the 0 a parentless
-/// node would answer is a value no container ever takes, and `sees`
-/// answers false for it: the safe direction.
-fn container_of(node: Node<'_>) -> usize {
-    node.parent().map_or(0, |p| p.id())
 }
 
 /// Whether a call site can lexically see a callable declared in

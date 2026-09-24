@@ -7,20 +7,22 @@
 //! rung, so precision is attributable per level and a dirty rung can
 //! be voted out by data at 2h.
 //!
-//! All six ladders have landed (TS → Py → Rust → Go → Md → Hs); a
-//! future language without rungs must return Unresolved(Unsupported)
-//! — an honest ledger row, never a silent skip. Dispatch carries the
-//! site's frozen kind label (store::KINDS): the TS/Py rungs are
-//! kind-uniform, Rust's mod_decl and use walk different rungs, and
-//! Markdown routes five kinds through one chain.
+//! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
+//! and the C family's followed in plan v2.30 step 2 (c.rs); a language
+//! without rungs must return Unresolved(Unsupported) — an honest
+//! ledger row, never a silent skip. Dispatch carries the site's frozen
+//! kind label (store::KINDS): the TS/Py rungs are kind-uniform, Rust's
+//! mod_decl and use walk different rungs, and Markdown routes five
+//! kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
 use std::cell::RefCell;
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::Path;
 use std::rc::Rc;
 
+pub mod c;
 pub mod go;
 pub mod hs;
 // hs.rs consumes its BOOT table; the regen_tables drift check that
@@ -143,13 +145,17 @@ impl Outcome {
 /// mint an in-scope candidate. `crate_roots` are the declared Rust
 /// crate roots (ce.toml `[graph] crate_roots` ∩ files) the Rust ladder
 /// unions with the manifest's — a tree that is a slice of a package
-/// elsewhere has no manifest to read.
+/// elsewhere has no manifest to read. `search_roots` is the declared
+/// `[graph.search_roots]` table (language name → directories ∩ the
+/// walked tree, plan v2.30): the rung a language's ladder walks after
+/// the site's own directory and before its build configuration.
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
     pub configs: &'a [String],
     pub root: &'a Path,
     pub memo: &'a Memo,
     pub crate_roots: &'a BTreeSet<String>,
+    pub search_roots: &'a BTreeMap<String, BTreeSet<String>>,
 }
 
 /// The memo's slot table, aliased so the shape reads once.
@@ -216,6 +222,7 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Go => go::resolve(site.from, site.spec, scope),
         Lang::Markdown => md::resolve(site.kind, site.from, site.spec, scope),
         Lang::Haskell => hs::resolve(site.from, site.spec, scope),
+        Lang::C | Lang::Cpp => c::resolve(site.from, site.spec, scope),
         // The sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — if either ever arrives, the honest
         // answer is the documented no-rungs stance, never a guess.

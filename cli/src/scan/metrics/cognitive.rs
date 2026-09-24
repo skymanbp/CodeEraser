@@ -55,7 +55,7 @@ struct Walker<'s, 'sp> {
 
 impl Walker<'_, '_> {
     fn walk_children(&mut self, node: Node<'_>, nesting: u32) {
-        for child in ast::children(node) {
+        for child in super::walk::measured(node, self.spec) {
             self.visit(child, nesting);
         }
     }
@@ -69,7 +69,7 @@ impl Walker<'_, '_> {
             return;
         }
         let kind = node.kind();
-        if crate::scan::functions::is_unit_node(node, self.spec) {
+        if crate::scan::functions::is_unit_node(node, self.src, self.spec) {
             return; // nested standalone unit: measured separately
         }
         if self.is_logic_root(node) {

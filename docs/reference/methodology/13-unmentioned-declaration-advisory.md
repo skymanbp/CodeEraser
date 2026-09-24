@@ -105,8 +105,8 @@ header the operator sees ([mod.rs:87-92](../../../cli/src/mention/mod.rs#L87),
 The domain is every judged declaration whose key yields a **single-token** mention
 name — the name the veto can look for at all. Arity suffixes are stripped, Python dunders
 and multi-token keys (`foo'`, `(<+>)`, `r#type`, `"zod 3"`) are out of the domain on the
-safe side ([name.rs:30-44](../../../cli/src/mention/name.rs#L30),
-[name.rs:63](../../../cli/src/mention/name.rs#L63)); the unit is `(file, name)`, so a file
+safe side ([name.rs:33-47](../../../cli/src/mention/name.rs#L33),
+[name.rs:67](../../../cli/src/mention/name.rs#L67)); the unit is `(file, name)`, so a file
 declaring one name twice is one candidate
 ([candidates.rs:163-191](../../../cli/src/mention/candidates.rs#L163)).
 
@@ -122,8 +122,8 @@ yes ([candidates.rs:89-111](../../../cli/src/mention/candidates.rs#L89)):
 3. **the file's own exception regions spell it** — Go template actions, TS string and
    template literals, Python doctests, Rust macro definitions and fenced doc blocks,
    Haskell haddock fences: text inside the declaring file that a loader or a reader
-   treats as a reference ([selfref.rs:71-109](../../../cli/src/mention/selfref.rs#L71),
-   [selfref.rs:206-264](../../../cli/src/mention/selfref.rs#L206)).
+   treats as a reference ([selfref.rs:73-111](../../../cli/src/mention/selfref.rs#L73),
+   [selfref.rs:214-272](../../../cli/src/mention/selfref.rs#L214)).
 
 A survivor becomes one row keyed `[node, vis, conv]` with its names kept beside the key
 on the Rust side — the wire carries integers only, never a name
@@ -144,30 +144,30 @@ read after it yields one false unmentioned that the next run converges away
 
 Every survivor carries a twelve-bit category word; bits 0–10 are *exemptions* (a reason
 the name is reached without being spelled), bit 11 is rendered and never exempts
-([conv/mod.rs:35-67](../../../cli/src/mention/conv/mod.rs#L35)). The AST half is stored at
+([conv/mod.rs:36-68](../../../cli/src/mention/conv/mod.rs#L36)). The AST half is stored at
 index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign export`, Go
 `//export`; `Registration` for a decorator; `Member`; `DefaultExport`; `Ambient`; Rust
-`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:95-104](../../../cli/src/mention/conv/mod.rs#L95)).
+`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:96-105](../../../cli/src/mention/conv/mod.rs#L96)).
 The name-table half is computed at wire time from the path, the name and the key: a test
 file by path component, a `benches`/`examples` component only under a Cargo package
 root, `conftest.py`/`Spec.hs`/`build.rs` and the `*_test.go` / `test_*.py` / `.test.` /
-`.spec.` patterns ([conv/name.rs:29](../../../cli/src/mention/conv/name.rs#L29),
-[conv/name.rs:116-135](../../../cli/src/mention/conv/name.rs#L116)); Python/Haskell `main`;
+`.spec.` patterns ([conv/name.rs:31](../../../cli/src/mention/conv/name.rs#L31),
+[conv/name.rs:138-157](../../../cli/src/mention/conv/name.rs#L138)); Python/Haskell `main`;
 the framework `Protocol` names a loader spells for the author — Python unittest/xunit/
 pluggy/Django hooks, TS file-form × export-name rows, Haskell `Paths_*` and hspec
-([conv/name.rs:33-63](../../../cli/src/mention/conv/name.rs#L33),
-[conv/name.rs:153-207](../../../cli/src/mention/conv/name.rs#L153)); a Go method's receiver
-exportedness ([conv/name.rs:217-229](../../../cli/src/mention/conv/name.rs#L217)); and a
+([conv/name.rs:46-76](../../../cli/src/mention/conv/name.rs#L46),
+[conv/name.rs:173-227](../../../cli/src/mention/conv/name.rs#L173)); a Go method's receiver
+exportedness ([conv/name.rs:240-252](../../../cli/src/mention/conv/name.rs#L240)); and a
 file-level `ce:allow(unmentioned) -- <why>` claim
-([conv/name.rs:169-175](../../../cli/src/mention/conv/name.rs#L169)). Every bit is silence,
+([conv/name.rs:189-195](../../../cli/src/mention/conv/name.rs#L189)). Every bit is silence,
 the safe direction.
 
 ### 5. Visibility, mounts and the core's code
 
 The core reads two more integer facts per row. The visibility word is three bits: bit 0
-is "exported" ([visibility/mod.rs:71](../../../cli/src/fourclass/visibility/mod.rs#L71)), bit 1 that the enclosing scopes let the
-name out too ([visibility/mod.rs:73](../../../cli/src/fourclass/visibility/mod.rs#L73)), and bit 2 marks a restricted export
-(`pub(crate)` and kin) ([visibility/mod.rs:75](../../../cli/src/fourclass/visibility/mod.rs#L75)). The **mounts** table is one row per node —
+is "exported" ([visibility/mod.rs:76](../../../cli/src/fourclass/visibility/mod.rs#L76)), bit 1 that the enclosing scopes let the
+name out too ([visibility/mod.rs:78](../../../cli/src/fourclass/visibility/mod.rs#L78)), and bit 2 marks a restricted export
+(`pub(crate)` and kin) ([visibility/mod.rs:80](../../../cli/src/fourclass/visibility/mod.rs#L80)). The **mounts** table is one row per node —
 `[node, private, total, bits]` — computed for every node without exception: how many of
 the file's `mod` mounts are private, how many mounts it has, whether a façade re-exports
 it (a Rust `via_reexport` edge or a TS `export *` target — bit 0) and whether its own
@@ -190,7 +190,7 @@ category word has none of the exempt bits 0..10 (bit 11, a Rust `cfg` naming no 
 is rendered but never exempts) — the mask reads the
 visibility word, the exemptions read the category word, and the two never cross
 ([Advisory.hs:61-70](../../../core/app/CE/Graph/Advisory.hs#L61),
-[Cost.hs:194](../../../core/app/CE/Graph/Cost.hs#L194), [Cost.hs:208](../../../core/app/CE/Graph/Cost.hs#L208)).
+[Cost.hs:197](../../../core/app/CE/Graph/Cost.hs#L197), [Cost.hs:211](../../../core/app/CE/Graph/Cost.hs#L211)).
 The code is a frozen total order `1 > 2 > 3 > 0`: **1 private** when the file has at
 least one mount, every mount is a private `mod` and no façade re-exports it, or the
 package keeps it private; **2 restricted** on visibility bit 2; **3 reexported** on mounts
@@ -206,7 +206,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:118-125](../../../core/app/CE/Graph.hs#L118)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:273-275](../../../contracts/VERSIONING.md#L273)).
+the same with or without them ([VERSIONING.md:277-279](../../../contracts/VERSIONING.md#L277)).
 
 ### 6. Rendering — one home, three faces
 
@@ -279,8 +279,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1041 (1067 − 14 pattern-ignored − 12 early-NUL) | rust | 2621 (1454) | 271 (0) | 10.3 % | 6 / 271 = 2.2 % | 6 / 2331 |
-| | | haskell | 1560 (352) | 273 (0) | 17.5 % | 18 / 273 = 6.6 % | 18 / 1287 |
+| self @ this commit | 1064 (1090 − 14 pattern-ignored − 12 early-NUL) | rust | 2688 (1476) | 288 (0) | 10.7 % | 4 / 288 = 1.4 % | 4 / 2381 |
+| | | haskell | 1560 (352) | 271 (0) | 17.4 % | 18 / 271 = 6.6 % | 18 / 1289 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -294,7 +294,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1454<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1476<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

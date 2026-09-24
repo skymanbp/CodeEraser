@@ -206,7 +206,7 @@ backstop the 2026-09-04 ruling gave the witness — ledger-like files no witness
 by the repository itself — and `[tombstone] terms` is the same table's vocabulary key: words
 that never spell a name, whole or as a word of a compound
 ([config/tombstone.rs:1-18](../../../cli/src/config/tombstone.rs#L1),
-[ce-toml.md:85-92](../ce-toml.md#L85)). An exemption enters the feed only when the changeset
+[ce-toml.md:86-93](../ce-toml.md#L86)). An exemption enters the feed only when the changeset
 erased something (a file by role or declaration) or when it suppressed a row (a segment): an
 exemption that suppressed nothing is nothing to see
 ([mod.rs:113-138](../../../cli/src/tombstone/mod.rs#L113)).

@@ -15,7 +15,7 @@ use crate::scan::ast;
 use crate::scan::lang::Lang;
 use crate::scan::metrics::own_nodes;
 use crate::scan::spec::{self, LangSpec};
-use crate::scan::{calls, functions};
+use crate::scan::{callees, functions};
 use std::collections::BTreeMap;
 use tree_sitter::Node;
 
@@ -129,14 +129,14 @@ fn build(u: &Unit, nth: i64, seat: usize, node: Node<'_>, f: &FileFacts<'_>) -> 
     for w in name_words(&u.key) {
         bag.add(Channel::Name, terms::word_term(Channel::Name, &w), 1);
     }
-    for s in shape(u, node, f.sp) {
+    for s in shape(u, node, f.src, f.sp) {
         bag.add(
             Channel::Shape,
             terms::feature_term(Channel::Shape, s.as_bytes()),
             1,
         );
     }
-    let own = own_nodes(node, f.sp);
+    let own = own_nodes(node, f.src, f.sp);
     for w in callees(&own, f.src, f.sp) {
         bag.add(Channel::Callee, terms::word_term(Channel::Callee, &w), 1);
     }
@@ -187,12 +187,12 @@ fn name_words(key: &str) -> Vec<String> {
 
 /// Shape features: the unit's kind word, its arity, and for a
 /// callable whether it declares a return.
-fn shape(u: &Unit, node: Node<'_>, sp: &LangSpec) -> Vec<String> {
-    let mut out = vec![format!("k:{}", kind_word(u, node, sp))];
+fn shape(u: &Unit, node: Node<'_>, src: &[u8], sp: &LangSpec) -> Vec<String> {
+    let mut out = vec![format!("k:{}", kind_word(u, node, src, sp))];
     if let Some(n) = arity(&u.key) {
         out.push(format!("p:{n}"));
     }
-    if functions::is_unit_node(node, sp) {
+    if functions::is_unit_node(node, src, sp) {
         let ret = ["return_type", "result"]
             .iter()
             .any(|f| node.child_by_field_name(f).is_some());
@@ -203,12 +203,12 @@ fn shape(u: &Unit, node: Node<'_>, sp: &LangSpec) -> Vec<String> {
 
 /// The kind word: a callable is a lambda, a method (the grammar's own
 /// method kinds, or a declaration in a member scope by the reading
-/// scan/calls.rs uses) or a plain fn; the named register's kinds fold
-/// to const / mod / impl / class / type.
-fn kind_word(u: &Unit, node: Node<'_>, sp: &LangSpec) -> &'static str {
-    if functions::is_unit_node(node, sp) {
+/// scan/callees.rs uses) or a plain fn; the named register's kinds
+/// fold to const / mod / impl / class / type.
+fn kind_word(u: &Unit, node: Node<'_>, src: &[u8], sp: &LangSpec) -> &'static str {
+    if functions::is_unit_node(node, src, sp) {
         let method = matches!(node.kind(), "method_declaration" | "method_definition")
-            || calls::in_member_scope(node, sp);
+            || callees::in_member_scope(node, sp);
         return if u.key.starts_with("(anonymous)") {
             "lambda"
         } else if method {
@@ -218,12 +218,13 @@ fn kind_word(u: &Unit, node: Node<'_>, sp: &LangSpec) -> &'static str {
         };
     }
     match node.kind() {
-        "const_item" | "static_item" => "const",
-        "mod_item" => "mod",
+        "const_item" | "static_item" | "preproc_def" | "preproc_function_def" => "const",
+        "mod_item" | "namespace_definition" => "mod",
         "impl_item" => "impl",
         "class_definition"
         | "class_declaration"
         | "class"
+        | "class_specifier"
         | "trait_item"
         | "interface_declaration" => "class",
         _ => "type",

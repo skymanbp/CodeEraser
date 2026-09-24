@@ -48,6 +48,28 @@ pub fn named_children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
     kids(node.named_child_count(), |i| node.named_child(i))
 }
 
+/// Pre-order nodes under `root`: `kids` yields a node's children and
+/// `enter` prunes a subtree (the root itself is never asked). The one
+/// walk unit extraction and the per-unit metric walk drive — they
+/// differed in nothing but their two closures, and the ratchet
+/// charged for the repeated loop.
+pub fn preorder<'t>(
+    root: Node<'t>,
+    enter: impl Fn(Node<'t>) -> bool,
+    kids: impl Fn(Node<'t>) -> Vec<Node<'t>>,
+) -> Vec<Node<'t>> {
+    let mut out = Vec::new();
+    let mut stack = vec![root];
+    while let Some(node) = stack.pop() {
+        if node.id() != root.id() && !enter(node) {
+            continue;
+        }
+        out.push(node);
+        stack.extend(kids(node).into_iter().rev());
+    }
+    out
+}
+
 /// Text of a node's `operator` field, if any (uniform across grammars:
 /// python boolean_operator, ts/rust/go binary_expression all expose it).
 pub fn operator_text<'s>(node: Node<'_>, src: &'s [u8]) -> Option<&'s str> {

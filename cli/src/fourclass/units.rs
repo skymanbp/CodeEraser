@@ -133,7 +133,17 @@ fn named_key(node: tree_sitter::Node, src: &[u8], kinds: &[&str]) -> Option<Stri
     {
         return None;
     }
-    let name = node.child_by_field_name("name")?;
+    // a C `struct K x;` spells K by the node kind that declares it —
+    // only the form with a body is a declaration (kinds::BODIED)
+    if super::kinds::BODIED.contains(&node.kind()) && node.child_by_field_name("body").is_none() {
+        return None;
+    }
+    let name = match node.kind() {
+        // a C typedef names the new type at the leaf of its declarator
+        // chain: `typedef int (*fp)(int);` names `fp`
+        "type_definition" => crate::scan::declarator::chain(node)?.0,
+        _ => node.child_by_field_name("name")?,
+    };
     Some(String::from_utf8_lossy(&src[name.byte_range()]).into_owned())
 }
 

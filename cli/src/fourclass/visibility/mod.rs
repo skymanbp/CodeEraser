@@ -50,7 +50,12 @@
 //!     `mod` is exported by its own declaration); what the enclosing
 //!     scopes do to it is bit 1's question, answered from the same
 //!     file, and reachability across files stays with the graph.
+//!   - C's linkage keyword and C++'s access specifiers are read on the
+//!     declaration and its enclosing class bodies (c.rs); an
+//!     out-of-class member definition cannot see its specifier from
+//!     its own file and reads as exported — the safe side.
 
+mod c;
 mod hs;
 mod hs_lex;
 mod py;
@@ -88,6 +93,7 @@ pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
         Lang::Python => word(py::exported(node, src), py::scope_open(node, src)),
         Lang::Go => word(go_exported(node, src), go_scope_open(node)),
         Lang::Haskell => word(hs::exported(node, src), true),
+        Lang::C | Lang::Cpp => c::bits(node, src),
         _ => 0,
     }
 }
