@@ -45,11 +45,23 @@ serde_json = "1"
 sha2 = "0.11"
 toml = "1.1.5"
 tree-sitter = "0.27.0"
+# Every grammar below must speak an ABI the 0.27 core accepts (13–15):
+# tests/it/grammar_pins.rs parses a sample under each one and reads
+# abi_version() back, so a bump that breaks a grammar fails loudly
+# instead of degrading scan output. The seven crates after Haskell are
+# the plan v2.30 language expansion (docs/reference/language-expansion.md
+# §1, versions as probed in scripts/tsprobe): pinned and gated here since
+# step 1, wired into `Lang::grammar` by each language's own step.
+tree-sitter-c = "0.24.2"
+tree-sitter-cpp = "0.23.4"
 tree-sitter-go = "0.25.0"
-# Haskell's ABI 14 is accepted by core 0.27 (ABIs 13–15).
-# Compatibility is gated by tests/it/hs_grammar_pin.rs.
 tree-sitter-haskell = "0.23.1"
+tree-sitter-html = "0.23.2"
+tree-sitter-java = "0.23.5"
+tree-sitter-lua = "0.5.0"
 tree-sitter-python = "0.25.0"
+tree-sitter-r = "1.3.0"
+tree-sitter-ruby = "0.23.1"
 tree-sitter-rust = "0.24.2"
 tree-sitter-typescript = "0.23.2"
 # docdup word hashing: NFC + General_Category=Mark test, so canonically
@@ -66,6 +78,10 @@ strip = true
 
 [dev-dependencies]
 proptest = "1.11.0"
+# the `LanguageFn` type tests/it/grammar_pins.rs stores its table of
+# pinned grammars as (tree-sitter does not re-export it); the one
+# version every grammar crate above already resolves to
+tree-sitter-language = "0.1.8"
 # eval-set freeze manifest hashing (tests/eval_extract, M4 D2-1),
 # shared with the updater, citations and screenshot receipts
 sha2 = "0.11"

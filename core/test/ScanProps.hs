@@ -26,6 +26,7 @@ battery = do
       , ("the facts road derives fn-naming, exemption gated on Go", factsRoad)
       , ("naming refusals: alignment, shape, the pre-judged value", namingRefusals)
       , ("an over-cap scan request degrades to a reply that FAILS", degradedFails)
+      , ("the judged-language mask widens naming by name, echoes when it rode, refuses out of range", maskRoad)
       ]
   -- the rulepack channel (3.2.0), its own table
   rulepack <-
@@ -225,3 +226,30 @@ degradedFails = case replyObj (wireReq [[0, 0] | _ <- [0 .. scanRowCap]]) of
   Just o ->
     field o "degraded" == Just (Bool True)
       && field o "fail" == Just (Bool True)
+
+-- | The judged-language mask (7.2.0, plan v2.30 step 1): a naming
+-- row whose lang is outside the legacy seven judges under a mask
+-- that names it (32895 = the seven plus bit 15) and refuses by name
+-- without one — absent and an explicit 127 are one legacy road; the
+-- mask echoes exactly when it rode and the reply is not degraded; a
+-- negative or over-wide value refuses by name (CE.Wire.maskOffence,
+-- the same read graph/1 makes).
+maskRoad :: Bool
+maskRoad =
+  and
+    [ levelsOf (masked 32895 (namingReq [[15, 2, 0, 1, 1]] [[6, 0]])) == Just (toJSON [1 :: Integer])
+    , echoOf (masked 32895 (namingReq [[15, 2, 0, 1, 1]] [[6, 0]])) == Just (toJSON (32895 :: Integer))
+    , refusedBy respond (namingReq [[15, 2, 0, 1, 1]] [[6, 0]]) "naming 0: lang outside the judged set"
+    , refusedBy respond (masked 127 (namingReq [[15, 2, 0, 1, 1]] [[6, 0]])) "naming 0: lang outside the judged set"
+    , levelsOf (wireReq [[0, 10]]) == Just (toJSON [0 :: Integer])
+    , echoOf (wireReq [[0, 10]]) == Nothing
+    , echoOf (masked 127 (wireReq [[0, 10]])) == Just (toJSON (127 :: Integer))
+    , echoOf (masked 127 (wireReq [[0, 0] | _ <- [0 .. scanRowCap]])) == Nothing
+    , refusedBy respond (masked (-1) (wireReq [[0, 10]])) "judgedMask: negative"
+    , refusedBy respond (masked 9223372036854775808 (wireReq [[0, 10]])) "judgedMask: outside i64"
+    ]
+ where
+  masked m = setKey "judgedMask" (toJSON (m :: Integer))
+  namingReq naming rows = setKey "naming" (toJSON (naming :: [[Integer]])) (wireReq rows)
+  levelsOf r = replyObj r >>= (`field` "levels")
+  echoOf r = replyObj r >>= (`field` "judgedMask")

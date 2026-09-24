@@ -48,10 +48,14 @@ pub struct UnitFact {
     pub hist: BTreeMap<u64, u32>,
 }
 
-/// Every code unit's facts. Markdown (no grammar) and parse failures
-/// yield none — T3 judges code units only; text duplication is
-/// docdup's domain.
+/// Every code unit's facts. Markdown (no grammar), a grammar that
+/// never fingerprints (`Lang::fingerprints` — HTML, plan v2.30 §2)
+/// and parse failures yield none — T3 judges code units only; text
+/// duplication is docdup's domain.
 pub fn unit_facts(text: &str, lang: Lang) -> Vec<UnitFact> {
+    if !lang.fingerprints() {
+        return Vec::new();
+    }
     ast::with_tree(text, lang, |tree| {
         let spine = struct_fp::spine(tree.root_node());
         let segments = units::segments(text, lang);

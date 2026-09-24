@@ -346,14 +346,24 @@ pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
     if reply["degraded"] != json!(true) && rows != pos.len() {
         bail!("graph.result answered {rows} of {} pos rows", pos.len());
     }
+    // the judged-language mask (7.2.0) rides on every request and is
+    // echoed by every judged reply: a silent core is a pre-7.2.0 one
+    let mask = crate::scan::lang::Lang::judged_mask();
+    if reply["degraded"] != json!(true) && reply["judgedMask"] != json!(mask) {
+        bail!(
+            "graph.result echoed judgedMask {}, ce sent {mask} — this ce needs graph/1 7.2.0",
+            reply["judgedMask"]
+        );
+    }
     Ok(reply)
 }
 
 /// The graph.request body — ONE producer, shared with the K6/K16
 /// legs so a key added here lands in their assertions. The five
-/// legacy keys are unconditional; the two advisory tables ride only
-/// when the wire carries them (6.2.0), inserted rather than spelled
-/// in a second `json!` literal. Key order is not a wire fact:
+/// legacy keys and the judged-language mask (7.2.0) are
+/// unconditional; the two advisory tables ride only when the wire
+/// carries them (6.2.0), inserted rather than spelled in a second
+/// `json!` literal. Key order is not a wire fact:
 /// serde_json's Map is a BTreeMap (no `preserve_order` feature), so
 /// an inserted key lands where a literal one would (K16 (a)). The
 /// mounts map flattens to `[node, private, total, bits]` rows the way
@@ -367,6 +377,7 @@ pub fn request_body(w: &GraphWire, pos: &[i64]) -> Value {
         "pos": pos,
         "unres": w.unres,
         "symbols": w.symbols.iter().collect::<Vec<_>>(),
+        "judgedMask": crate::scan::lang::Lang::judged_mask(),
     });
     let obj = body.as_object_mut().expect("json! object literal");
     // the one `[graph] scc_floor` (6.4.0, O59): the core's cycle table

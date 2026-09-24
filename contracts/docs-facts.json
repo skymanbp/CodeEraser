@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "130"
+      "value": "135"
     },
     {
       "debt": "Lang has no variant iterator; promote = Lang::judged() + grammar().is_some()",
@@ -142,7 +142,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "55"
+      "value": "54"
     },
     {
       "id": "gate:dedup.tests#digits",
@@ -420,7 +420,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "7.1.0"
+      "value": "7.2.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",

@@ -493,4 +493,17 @@ entry_globs = [
 # common::write_all's mkdir+write, and its baseline unit test spelling
 # three Sides longhand once the anchor became a string. Measured after
 # cargo fmt.
-budget = 55
+# 55 -> 54 (v2.30 step 1, the language-expansion skeleton): the
+# judged-language mask pushed CE/Scan.hs to 291 lines, past the
+# core-file wall the tests sub-repository holds (core_size_gate:
+# tolerated(291) = 301 > 300), and the split that answered it -- the
+# request's boundary contract into CE/Scan/Contract.hs, the
+# CE.Graph.Contract precedent -- met the write-time clone gate on its
+# way out: the hand-rolled rowShape it carried rhymed with trend/2's
+# (80 tokens; trimming that block out of Scan.hs alone took the count
+# to 54, so the row was one of the 55). Reading every scan row shape
+# through CE.Wire.rowCheck, the skeleton the other families already
+# share, removes the repetition itself rather than the budget over
+# it; every refusal is golden-pinned text and stays byte-identical.
+# That one row left, none arrived. Measured on the formatted tree.
+budget = 54

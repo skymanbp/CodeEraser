@@ -18,7 +18,7 @@
 module CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation) where
 
 import CE.Graph.Advisory (mountRow, unmentionedRow)
-import CE.Wire (rowCheck, tableOffence)
+import CE.Wire (judgedLang, maskOffence, rowCheck, tableOffence)
 import Data.Aeson
 import Data.Foldable (asum)
 
@@ -51,6 +51,12 @@ data GraphReq = GraphReq
     -- shipped Cost.sccFloor, echoed exactly when it rode. 1 admits a
     -- self-loop singleton and never an isolated node (CE.Graph.Cycles).
     reqSccFloor :: Maybe Integer
+  , -- the judged-language set as sent (7.2.0, plan v2.30): the
+    -- bitmask the unres ledger's language codes are checked against
+    -- — absent = the legacy seven (CE.Wire.legacyJudged), echoed
+    -- exactly when it rode. The node rows carry a code too, but only
+    -- its sign was ever checked (the sentinel 7 rides there).
+    reqJudgedMask :: Maybe Integer
   }
 
 instance FromJSON GraphReq where
@@ -65,6 +71,7 @@ instance FromJSON GraphReq where
       <*> o .:? "unmentioned"
       <*> o .:? "mounts"
       <*> o .:? "sccFloor"
+      <*> o .:? "judgedMask"
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
@@ -77,6 +84,7 @@ violation :: GraphReq -> Maybe String
 violation req =
   asum
     [ pairing (reqUnmentioned req) (reqMounts req)
+    , maskOffence (reqJudgedMask req)
     , sccFloorOffence (reqSccFloor req)
     , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , tableOffence "edge" id (edgeRow n) es
@@ -91,7 +99,7 @@ violation req =
       tableOffence "symbol" id (symRow n) ss
     , -- ascending langs: duplicate-free, so the confidence lookup's
       -- first match is the only match
-      tableOffence "unres" (take 1) unresRow us
+      tableOffence "unres" (take 1) (unresRow (reqJudgedMask req)) us
     , -- ascending NODES (the `unres` projection, not the row): one
       -- mounts row per node is what makes Advisory's lookup a map,
       -- and under a whole-row projection a second row for one node
@@ -167,11 +175,13 @@ symRow n = rowCheck "symbol" "malformed row (need [node,visibility])" 2 fields
     | node >= n = Just "node out of range"
   fields _ = Nothing
 
-unresRow :: Int -> [Integer] -> Maybe String
-unresRow = rowCheck "unres" "malformed row (need [lang,unresolved,total])" 3 fields
+-- | One ledger row; the language code must be in the judged set the
+-- request declared (7.2.0), the legacy seven when it declared none.
+unresRow :: Maybe Integer -> Int -> [Integer] -> Maybe String
+unresRow mask = rowCheck "unres" "malformed row (need [lang,unresolved,total])" 3 fields
  where
   fields [lang, unres, total]
-    | lang < 0 || lang > 6 = Just "lang outside the judged set"
+    | not (judgedLang mask lang) = Just "lang outside the judged set"
     | unres < 0 || total < 0 = Just "negative count"
     | unres > total = Just "unresolved above total"
   fields _ = Nothing

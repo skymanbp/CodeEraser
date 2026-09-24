@@ -73,7 +73,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         if idx.refresh_file(&rel, &src, lang, Params::default(), foreign)? {
             out.dirty.insert(rel.clone());
         }
-        if lang.grammar().is_some() {
+        if lang.fingerprints() {
             out.tokenized += 1;
         }
         out.live.insert(rel);

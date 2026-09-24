@@ -12,19 +12,21 @@ use std::io::Write;
 use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
-/// with core/app/CE/Protocol.hs::proto — contracts/VERSIONING.md §1).
-/// 7.1.0 = the structure family's directed dir-edge table (plan v2.29
-/// step 10 batch C3, O54), additive: `ce structure` now sends
-/// `dirEdges` ([fromDir, toDir, count], crossing edges only, out of
-/// the same join that already produces `fileRefs`), and the core
-/// answers a new axis 7 -- modularity -- exactly when that table
-/// rides. The intra mass stays off the wire: it is `fileRefs`'
-/// `inside` sum halved, and a number with two owners is a number that
-/// can disagree with itself. A core of another major is refused at
-/// the hello; a core of an older MINOR simply answers without the
-/// axis, which is what the Maybe stance is for. O48 shares this
-/// unreleased minor: fourclass pairs carry `declRem` / `declAdd`,
-/// answered with `unitEdges` without changing line classifications.
+/// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
+/// §1). 7.2.0 = the judged-language set rides the wire (plan v2.30
+/// step 1), additive: every `scan.request` and `graph.request` this
+/// side sends carries `judgedMask` — `Lang::judged_mask()`, the same
+/// summary of the LANGS table the verdict family has echoed as a knob
+/// since 2.29.0 — and the core checks the language code of a naming
+/// row or an unres row against THAT set instead of the constant `6`
+/// two validators used to spell. A request without the key is judged
+/// against the pre-7.2.0 set (codes 0..6), byte for byte as before;
+/// the judged reply echoes the mask exactly when it rode, and this
+/// side refuses a reply without the echo as a pre-7.2.0 core, by
+/// name. What it buys: a language row flipping to judged in lang.rs
+/// (each of the seven plan v2.30 languages does, in its own step) is
+/// a Rust-side fact the core learns from the request, never a core
+/// release. No family changes its capability name.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -36,7 +38,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.1.0";
+pub const PROTO: &str = "7.2.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

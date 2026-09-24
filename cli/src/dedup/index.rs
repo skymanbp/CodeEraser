@@ -137,13 +137,15 @@ impl Index {
         if stored == Some((chash, foreign)) {
             return Ok(false);
         }
-        // Markdown (no grammar) enters `files` for the graph cache
-        // with zero fingerprint rows: all_instances joins from the
-        // fingerprints side, so the dedup ratchet is structurally
-        // untouched (design §3)
-        let toks = match lang.grammar() {
-            Some(_) => tokens::stream(src, lang)?,
-            None => Vec::new(),
+        // Markdown (no grammar) — and any grammar that does not
+        // fingerprint (`Lang::fingerprints`, plan v2.30 §2) — enters
+        // `files` for the graph cache with zero fingerprint rows:
+        // all_instances joins from the fingerprints side, so the dedup
+        // ratchet is structurally untouched (design §3)
+        let toks = if lang.fingerprints() {
+            tokens::stream(src, lang)?
+        } else {
+            Vec::new()
         };
         let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();
         let fps = winnow::fingerprints(&hashes, p);
@@ -157,7 +159,7 @@ impl Index {
                 rel,
                 chash,
                 toks.len() as i64,
-                i64::from(lang.grammar().is_some()),
+                i64::from(lang.fingerprints()),
                 i64::from(foreign),
             ),
         )?;

@@ -11,12 +11,14 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knobbedRows, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, judgedLang, knobbedRows, knoblessRows, legacyJudged, maskOffence, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
 
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
+import Data.Bits (testBit)
 import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
+import Data.Maybe (fromMaybe)
 
 -- | The [[Integer]]-rows request the table families share: id, the
 -- fact rows, and the optional side tables — Trend/Erase read knobs,
@@ -42,6 +44,12 @@ data RowsReq = RowsReq
     -- (unfenced), Just [current, recorded] = the two digests to
     -- compare. Three states, so absent and null are never one.
     fenceOf :: Maybe Value
+  , -- the judged-language set as sent (7.2.0, plan v2.30): the
+    -- bitmask scan/1 checks its naming rows' language codes against.
+    -- Nothing = a pre-7.2.0 client, read as `legacyJudged` — the
+    -- seven codes the constant bound used to spell — so its bytes
+    -- never move.
+    maskOf :: Maybe Integer
   }
 
 -- | scan/1's rulepack channel (3.2.0), read off the SAME object: each
@@ -69,6 +77,30 @@ instance FromJSON RowsReq where
       <*> o .:? "callEdges"
       <*> parseJSON (Object o)
       <*> pure (KM.lookup "knobsFence" o)
+      <*> o .:? "judgedMask"
+
+-- | The judged-language set before it rode the wire (7.2.0): codes
+-- 0..6, the bound `lang > 6` two validators spelled until plan v2.30
+-- made the set a request fact. A request that declares no mask is
+-- judged against exactly this one, byte for byte as before.
+legacyJudged :: Integer
+legacyJudged = 127
+
+-- | Is @lang@ in the judged set the request declared (the legacy set
+-- when it declared none)? A negative code is in no set, and a code
+-- past bit 62 could be in no i64 mask a producer can send.
+judgedLang :: Maybe Integer -> Integer -> Bool
+judgedLang mask lang =
+  lang >= 0 && lang < 63 && testBit (fromMaybe legacyJudged mask) (fromInteger lang)
+
+-- | The mask's own contract: absent is the legacy road, else a
+-- non-negative i64 — the only shape the producer's `judged_mask`
+-- can take, so anything else is a foreign client, refused by name.
+maskOffence :: Maybe Integer -> Maybe String
+maskOffence (Just m)
+  | m < 0 = Just "judgedMask: negative"
+  | m >= 9223372036854775808 = Just "judgedMask: outside i64"
+maskOffence _ = Nothing
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family

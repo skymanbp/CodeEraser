@@ -151,6 +151,18 @@
 > knob 回执 12 行 → **17 行**。
 
 > **以下按版本倒序（最新在前），至 2.15.0 止；上方 2.0.0–2.14.0 是最初的顺序段。**
+> **7.2.0**（判决语言集上线，加性 minor，计划 v2.30 步 1，2026-09-24）：`scan.request` 与 `graph.request`
+> 各加一个可选整数键 `judgedMask`——Rust 侧 `Lang::judged_mask()` 从 LANGS 表按 `scan_only` 列推出的位集
+> （今日 `0x7F` = 码 0..6），ce 恒发。核此前把「lang 在判决集内」写死为 `lang ≤ 6`（`CE.Scan.Contract.namingShape` 与
+> `CE.Graph.Contract.unresRow` 各一份常量）；自本版起两处同读 `CE.Wire.judgedLang`：`naming` 行与 `unres` 行的
+> lang 位在 mask 内即合法，否则仍按行点名 `lang outside the judged set`。缺席 = `CE.Wire.legacyJudged` 127，
+> 行为与 7.1.0 逐字节同；负值 / ≥ 2^63 按名拒绝（`judgedMask: negative` / `judgedMask: outside i64`），位序
+> ≥ 63 的 lang 永不在集内。回显：`scan.result` 在 mask 上过线且未降级时携同值 `judgedMask`，`graph.result`
+> 在上过线时恒携——Rust 两侧据此钉漂移（无回显 = 7.2.0 之前的核，按名拒绝）。判决字节零变化：既有 135 对
+> golden 只有 proto 字面动；新增 scan 三对（16 mask 内 lang 15 判并回显 / 17 缺席拒 / 18 负值拒）与 graph
+> 两对（25 mask 内 lang 20 判并回显 / 26 缺席拒）。此键是语言扩展（设计册 `docs/reference/language-expansion.md`）
+> 的接线：新语言在各自的步翻 `scan_only` 位即入集，核不必再改。
+
 > **7.1.0**（structure/1 模块度轴 + fourclass/2 声明级搬迁，加性 minor，计划 v2.29 步 10 批 C3 O54 / O48，2026-09-06）：
 > `structure.request` 加性可选表 `dirEdges=[[fromDir,toDir,count]]`（**只载跨目录**有向边，
 > `from ≠ to`、两端 `< |nodes|`、`count ≥ 1`、按 `(from,to)` 严格升序；缺席 = 轴 7 不判、空表 = 判为净——
@@ -555,7 +567,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.1.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.2.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -604,7 +616,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
   [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]],
   "symbols":[[node,visibility]],"unmentioned":[[node,vis,conv]],
-  "mounts":[[node,private,total,bits]],"sccFloor":u64}`——稠密 0 基索引即
+  "mounts":[[node,private,total,bits]],"sccFloor":u64,"judgedMask":u64}`——稠密 0 基索引即
   节点身份，**无文本形物过线**（ADR-002 A6；6.2.0 的两张顾问表同律——候选名 `AdvisoryName`
   留在 Rust 侧，过线的只有整数）；节点行**三元组、单一合法元数**（5.0.0 起：
   pre-2.28 的 flags 列裁除，宽窄不对的行按**行下标**报 `node i: malformed row (need
@@ -616,7 +628,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   具名配对拒绝，占校验 asum 最前）：`unmentioned` 按 `id` 投影严格升序、每行 `[node, vis, conv]`；
   `mounts` 全节点恒一行、`take 1` 投影升序、`private ≤ total`、bits bit 0 再导出目标 / bit 1
   包私有；两表各自析取项计价（`mountCap` 131072 / `unmentionedHardCap` 524288），节点净空不动；
-  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。`sccFloor` 是 6.4.0 起的可选环底（与 `verdict` 的 `cycleFloor` 同读一份 `[graph] scc_floor`；≥1 否则按名拒绝，上过线即在 `graph.result` 回显）。
+  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。`sccFloor` 是 6.4.0 起的可选环底（与 `verdict` 的 `cycleFloor` 同读一份 `[graph] scc_floor`；≥1 否则按名拒绝，上过线即在 `graph.result` 回显）。`judgedMask` 是 7.2.0 起的可选判决语言位集（ce 恒发 `Lang::judged_mask()`；`unres` 行的 lang 按位校验，缺席 = 127 即旧七码；上过线即在 `graph.result` 回显）。
   `unres` 是 2.32.0 起的可选按语言站点
   台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
   两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
@@ -661,7 +673,8 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     `degraded.reason ∈ {verdict_too_large}`。
   - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],
     "naming":[[lang,style,upper,under,test]]}`（码 0..6，主体名/路径不过线；naming 自 2.30.0
-    由 ce 恒发、与码 6 行逐位对齐，core 容其缺席）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
+    由 ce 恒发、与码 6 行逐位对齐，core 容其缺席；行内 lang 自 7.2.0 按判决语言位集 `judgedMask` 校验——ce 恒发
+    `Lang::judged_mask()`，缺席 = 127 即旧七码，未降级的 result 回显同值）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
     + 规则包两键（3.2.0）：`rowClasses`（与 rows 逐位对齐的 classId）与 `gradeOverrides`
     `[[classId,code,warn,fail]]`（码 ∈ {0,1,4}，回复原样回显）
     （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）+ 围栏键 `knobsFence`（6.4.0，ce 恒发：`null` = 无基线未围、`[current,recorded]` 两摘要各 u64 或 null）；result 回
@@ -689,11 +702,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->130<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.1.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->135<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.2.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->7.1.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  server 走 <!--ce:ver:proto#v-->7.2.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -705,5 +718,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->7.1.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->7.2.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.1.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

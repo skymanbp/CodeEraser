@@ -1,7 +1,7 @@
 //! Language identification and per-language tree-sitter grammar lookup.
 //! M1 launch set (plan §6 M1): TypeScript / Python / Rust / Go / Markdown
 //! (Markdown is size-only: no grammar, no functions). M5-3k adds
-//! Haskell (full grammar — spike pinned in tests/hs_grammar_pin.rs).
+//! Haskell (full grammar — spike pinned in tests/it/grammar_pins.rs).
 //! Plan v2.5 adds the SCAN-ONLY arm: common front-end/script
 //! extensions that enter the scan's size gates, the guard's hard
 //! budget and the score ratchet — and nothing else (see scan_only).
@@ -10,6 +10,14 @@
 //! rows) — inserting a variant would silently relabel every language
 //! code downstream (RM15). Scan-only variants sit AFTER the sentinel
 //! and never reach the wire anyway (they are never indexed).
+//!
+//! Plan v2.30 (docs/reference/language-expansion.md) reserves six
+//! more codes after the arm — C / C++ / Lua / Java / Ruby / R — and
+//! promotes HTML to a judged document language. Each row turns judged
+//! in its own step, together with its measurement tables, so no file
+//! is ever judged or fingerprinted under a placeholder spec; the core
+//! reads the judged set off the wire (`judgedMask`, proto 7.2.0)
+//! instead of a constant, so a row flipping here needs no core change.
 
 use std::path::Path;
 
@@ -36,6 +44,14 @@ pub enum Lang {
     Svelte,     // 12
     Shell,      // 13
     Yaml,       // 14
+    // ---- plan v2.30 reserved codes (language-expansion.md §1):
+    // each turns judged in its own step, with its tables ----
+    C,    // 15
+    Cpp,  // 16
+    Lua,  // 17
+    Java, // 18
+    Ruby, // 19
+    R,    // 20
 }
 
 /// ONE row per language: variant, extensions, report name, scan-only
@@ -62,6 +78,16 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
     (Lang::Svelte, &["svelte"], "svelte", true),
     (Lang::Shell, &["sh", "bash"], "shell", true),
     (Lang::Yaml, &["yml", "yaml"], "yaml", true),
+    // plan v2.30 reserved rows: the wire code is frozen here (RM15)
+    // while the extensions, the grammar and the tables arrive with the
+    // language's own step (§13) — an extension-less row is what the
+    // sentinel already is, and the judged mask never counts one
+    (Lang::C, &[], "c", true),
+    (Lang::Cpp, &[], "cpp", true),
+    (Lang::Lua, &[], "lua", true),
+    (Lang::Java, &[], "java", true),
+    (Lang::Ruby, &[], "ruby", true),
+    (Lang::R, &[], "r", true),
 ];
 
 impl Lang {
@@ -114,7 +140,8 @@ impl Lang {
     }
 
     /// Grammar for AST-backed languages; None = size-only (Markdown,
-    /// the scan-only arm) or the wire sentinel (never walked).
+    /// the scan-only arm), the wire sentinel (never walked) or a plan
+    /// v2.30 reserved code whose grammar lands with its own step.
     pub fn grammar(self) -> Option<tree_sitter::Language> {
         match self {
             Self::Python => Some(tree_sitter_python::LANGUAGE.into()),
@@ -125,6 +152,17 @@ impl Lang {
             Self::Haskell => Some(tree_sitter_haskell::LANGUAGE.into()),
             _ => None,
         }
+    }
+
+    /// The T1/T2/T3 population (plan v2.30 §2): a grammar to tokenize
+    /// with AND a code language. HTML parses — docdup segments, the
+    /// reference ladder, section anchors — but never fingerprints: its
+    /// leaves carry no identifiers, so any two pages would hash into
+    /// one clone pair. The index refresh, the guard's clone probe and
+    /// the unit cache read this; every other grammar consumer keeps
+    /// reading `grammar()`.
+    pub fn fingerprints(self) -> bool {
+        self.grammar().is_some() && self != Self::Html
     }
 
     pub fn name(self) -> &'static str {

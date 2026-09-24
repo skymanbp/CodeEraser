@@ -38,7 +38,8 @@ respond proto =
       , famId = reqId
       , -- the unres ledger counts toward a cap too (the scan C15
         -- discipline: every request dimension is priced) — validation
-        -- bounds it to seven rows, but the cap must not need that.
+        -- bounds it to the judged set's size, but the cap must not
+        -- need that.
         -- The two advisory tables (6.2.0) price their OWN disjuncts,
         -- like `symbols`: folded into nodeCap they would halve the
         -- node headroom, and an advisory that can degrade a request
@@ -92,8 +93,10 @@ result proto req =
       , "degraded" .= False
       ]
       -- the declared floor echoes exactly when it rode (6.4.0): the
-      -- unmentioned/mounts precedent, legacy bytes untouched
+      -- unmentioned/mounts precedent, legacy bytes untouched; the
+      -- judged-language mask (7.2.0) rides and echoes the same way
       <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
+      <> ["judgedMask" .= m | Just m <- [reqJudgedMask req]]
       <> advisoryKeys req
  where
   (b, reach, deadRows, reportedRows) = liveness req

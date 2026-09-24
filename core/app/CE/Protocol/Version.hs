@@ -10,25 +10,22 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 7.1.0 = the structure family's directed dir-edge table (plan v2.29
--- step 10 batch C3, O54), additive: `structure.request` accepts
--- `dirEdges` ([fromDir, toDir, count], crossing edges only), and the
--- reply gains axis 7 -- modularity -- exactly when that table rides,
--- with knob codes 19/20 (the per-mille floor on a directory's
--- normalized Newman contribution, and the incident-edge mass below
--- which it is not judged). The intra mass is fileRefs' `inside` sum
--- halved and never rides twice; the two tables are held to one graph
--- by a boundary law. O48 adds declaration relocation to fourclass in
--- the same unreleased minor: paired declRem/declAdd tables receive
--- unitEdges (or unitEdgesDropped over the cap). Line judgments and
--- replies without declaration tables are unchanged.
+-- 7.2.0 = the judged-language set rides the wire (plan v2.30 step 1),
+-- additive: `scan.request` and `graph.request` accept `judgedMask`,
+-- the producer's own bitmask of judged language codes, and the two
+-- validators that used to bound a naming row's or an unres row's
+-- code with the constant 6 now test the bit (CE.Wire.judgedLang). A
+-- request without the key is judged against the legacy seven, byte
+-- for byte; a judged reply echoes the mask exactly when it rode. A
+-- language turning judged on the Rust side is thereby a request
+-- fact, never a core release. No capability name changes.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's
 -- constant (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "7.1.0"
+proto = "7.2.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

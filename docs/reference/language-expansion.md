@@ -18,7 +18,7 @@
 | R | `R r` | tree-sitter-r 1.3.0（r-lib 组织） | 14 | 判决·代码 | 20 | Any | 无（D0） |
 | HTML | `html htm` | tree-sitter-html 0.23.2 | 14 | 判决·文档 | **10（既有码，翻 scan_only 位）** | Any | 无 |
 
-- **语言码追加式**（lang.rs 头注 RM15）：六个新变元追加在 `Yaml = 14` 之后，`Lang as i64` 冻结位不重排；HTML 沿用 10，只把 LANGS 表该行的 scan_only 列翻为 false——码 10 此前从未上过 wire，翻位不改任何既有 golden。`judged_mask()` 由 `0x7F` 变为 `0x1F847F`（位 0–6、10、15–20）。七个 crate 全部接受核心 0.27 的 ABI 13–15 窗口，与 Haskell 的 `hs_grammar_pin` 同一条门。
+- **语言码追加式**（lang.rs 头注 RM15）：六个新变元追加在 `Yaml = 14` 之后，`Lang as i64` 冻结位不重排——**步 1 只保留码**（15–20 各一行：无扩展名、scan_only、无文法），每个语言在自己的步（§13 步 2–5）同批翻 scan_only 位、挂扩展名与文法臂；HTML 沿用 10，在步 5 才把 LANGS 表该行的 scan_only 列翻为 false——码 10 此前从未上过 wire，翻位不改任何既有 golden。`judged_mask()` 由表推出：步 1 仍是 `0x7F`，七个语言落齐后为 `0x1F847F`（位 0–6、10、15–20）——mask 已上 wire（§3），此后每次翻位核不必再改。不在步 1 提前翻位的理由：翻了位而没有文法的语言会以 Markdown 的 spec 进索引、留下指纹与单元行，内容哈希刷新永不重算它们；没有阶梯的判决文件在 deadcode 里成孤儿；README 的语言芯片会先于事实说话；逐语言 FPR 发布门（§11）也要求每个语言能单独不入集。七个 crate 全部接受核心 0.27 的 ABI 13–15 窗口，与 Haskell 同在 `grammar_pins` 一条门（步 1 起十三套文法同表钉版：ABI 窗口、样本零 ERROR、根 kind）。
 - **`.h` 归 C++ 文法**：tree-sitter-cpp 是 tree-sitter-c 的超集，C 头文件在其下零 ERROR（§10 实探，含 `int class;` 这种 C 合法而 C++ 保留字的字段名，仍只是 `field_identifier`）；反之 Qt / LLVM / Chromium 式 C++ 项目把类体写在 `.h` 里，用 C 文法解析会整块 ERROR、方法从度量里消失。代价是纯 C 项目的 `.h` 挂 cpp 码：ledger 多一行语言，S2 混流轴读的是命名模式分布而非语言（structure/judge.rs 批-7 勘误），无判决影响。两文法共享一张 LangSpec 表（TS/TSX 先例），C++ 独有 kind 在 C 树里永不出现。
 - **纯尺寸臂**收窄为 js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。HTML 内嵌的 `<script>`/`<style>` 是 `raw_text`，不解析——JS/CSS 仍在尺寸臂，本册不动。
 - 不在本册：`.C`/`.H` 大写扩展、`.Rmd`/`.qmd`、`.erb`/`.haml`、Objective-C、模板语言；C/C++ 宏展开与预处理条件求值（D1）；Ruby `private_constant`（D15）；R `NAMESPACE`（D16）。
@@ -184,7 +184,7 @@ README 双语「范围」句与「语言」行（纯尺寸臂列表随之收窄�
 | 步 | 内容 | 门 |
 |---|---|---|
 | 0 | 计划修正 v2.30（横幅句 + §6 新轨表）+ §14 拍板 → cc-memory 重锁 | 用户拍板（已交付 2026-09-24） |
-| 1 | 骨架：七 crate 钉版、`Lang` 六行 + HTML 翻位、`fingerprints()`、`judgedMask` 上 scan/graph 请求（proto 7.2.0）、核两处边界改读 mask、`Version.hs`/VERSIONING 台账、golden 重生、`grammar_pins` 门 | 既有五语言四语料对拍逐字节不动（DEP-TS 的 16 家族对拍先例）；五语言电池绿 |
+| 1 | 骨架（已交付 2026-09-24）：七 crate 钉版（两份 Cargo.lock + NOTICE）、`Lang` 六行保留码 15–20（无扩展名、scan_only、无文法——翻位随各语言自己的步，HTML 翻位在步 5，理由见 §1）、`fingerprints()` 接管四处指纹消费者、`judgedMask` 上 scan/graph 请求（proto 7.2.0，缺席 = 127，应答回显、Rust 钉漂移）、核两处边界改读 `CE.Wire.judgedLang`、`Version.hs`/VERSIONING 台账、golden 重生（既有 135 对只动 proto 字面，新增 5 对）、`grammar_pins` 门（十三套文法） | 既有五语言四语料对拍逐字节不动（DEP-TS 的 16 家族对拍先例）；五语言电池绿 |
 | 2 | C/C++：LangSpec 表、`Declarator` 命名、类内键拼 `Class::`、可见性、include 站点/阶梯、`compile_commands.json` 配置、编译单元角色（核 roleBits）、`coc_c.rs` 电池、交叉核对、D 表落册 | 对拍全归因；D1/D2/D12/D13 各有电池行 |
 | 3 | Java：表、`callee_field` 机制、包反推源根、`type_ref` 站点与 JDK 名表、注解 Registration、可见性、电池/对拍 | 同上；`type_ref` 精度单独出行 |
 | 4 | Lua + Ruby + R（共享 `CallArg` 站点机制与 `Assign`/`LuaBind` 命名）：各自表、阶梯、可见性节状态机、Protocol 表、R 的 `param` 旋钮、电池/对拍 | 同上；Ruby 节状态机每形一电池行 |

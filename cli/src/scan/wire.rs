@@ -8,7 +8,9 @@
 //! the auxiliary surfaces, proven equal by scan::run's whole-report
 //! ensure on every gate run). Only codes, values and name-shape
 //! facts cross the wire; subjects, names and paths never do
-//! (§5.9.2 index privacy).
+//! (§5.9.2 index privacy). Since 7.2.0 every request also carries
+//! `judgedMask` — the judged-language set the naming rows' codes are
+//! checked against, echoed back and pinned here like the grade table.
 
 use super::chunk;
 use crate::config::{RulesCfg, Thresholds};
@@ -136,6 +138,7 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<Judgment> {
     for c in chunk::plan(r, SCAN_ROW_CAP - reserved)? {
         let mut body = json!({
             "rows": c.rows, "grades": r.grades, "naming": c.naming, "knobsFence": r.fence,
+            "judgedMask": crate::scan::lang::Lang::judged_mask(),
         });
         // the optional tables ride only when they carry something: an
         // absent key and an empty one ask the core different questions
@@ -214,8 +217,18 @@ fn failed_of(reply: &Value) -> Result<Vec<String>> {
 
 /// Both tables the core judged with must be the ones this side sent
 /// — one table, two owners; the override echo is absent exactly when
-/// none rode.
+/// none rode. The judged-language mask (7.2.0) is held the same way:
+/// this side always sends it, so a reply without the echo is a
+/// pre-7.2.0 core, refused by name rather than read as "judged".
 fn assert_echo(reply: &serde_json::Value, r: &ScanRequest) -> Result<()> {
+    let mask = reply["judgedMask"].as_i64().context(
+        "judgedMask — a pre-7.2.0 core judges the language set silently; this ce needs scan/1 7.2.0",
+    )?;
+    ensure!(
+        mask == crate::scan::lang::Lang::judged_mask(),
+        "core judged with judgedMask {mask}, ce sent {}",
+        crate::scan::lang::Lang::judged_mask()
+    );
     let echoed: Vec<[u64; 3]> =
         serde_json::from_value(reply["grades"].clone()).context("grades")?;
     ensure!(

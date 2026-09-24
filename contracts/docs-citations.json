@@ -39,52 +39,52 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|049be84698107cae|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 340,
+    "line": 342,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// The raw connection. Read surface for the graph domain"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|052cdceafa66f65e|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|4941b6562b468902|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 140,
-    "text": "// Markdown (no grammar) enters `files` for the graph cache"
+    "line": 145,
+    "text": "let toks = if lang.fingerprints() {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|5e1b6f2f364b8f2e|0": {
+    "target": "../../../cli/src/dedup/index.rs",
+    "line": 162,
+    "text": "i64::from(lang.fingerprints()),"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|7693117b0ef98faa|0": {
+    "target": "../../../cli/src/dedup/index.rs",
+    "line": 139,
+    "text": "}\n// Markdown (no grammar) — and any grammar that does not"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|889b25a08aa9a02d|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 183,
+    "line": 185,
     "text": "tx.commit()?;\nOk(true)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|c124b5aeb74c361c|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 149,
+    "line": 151,
     "text": "let fps = winnow::fingerprints(&hashes, p);"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|c124b5aeb74c361c|1": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 149,
-    "text": "let fps = winnow::fingerprints(&hashes, p);"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|c6d1090b61db8f16|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 139,
-    "text": "}\n// Markdown (no grammar) enters `files` for the graph cache"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|cd3b9b36ea3bf35e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 150,
+    "line": 152,
     "text": "let tx = self.conn.transaction()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|d4d0ef2ed905d0c6|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 148,
+    "line": 150,
     "text": "let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|df57b763e96f63e4|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 322,
+    "line": 324,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// Every fingerprint occurrence of an OWN file, deterministically"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|e3dd79e176b2419e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 392,
+    "line": 394,
     "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|eb8666897ba361c5|0": {
@@ -94,7 +94,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|f2467acf48754aa2|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 393,
+    "line": 395,
     "text": "let end = toks[f.start + p.kgram - 1].end_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|fd08efb186625299|0": {
@@ -759,15 +759,10 @@
     "line": 43,
     "text": "pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|257709d8a7dc4f5e|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 116,
-    "text": "/// Grammar for AST-backed languages; None = size-only (Markdown,"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|a16fcf992d4d2f17|0": {
-    "target": "../../../cli/src/scan/lang.rs",
-    "line": 114,
-    "text": "}\n\n/// Grammar for AST-backed languages; None = size-only (Markdown,"
+    "line": 164,
+    "text": "pub fn fingerprints(self) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|2f99cfba7853fa18|0": {
     "target": "../../../cli/src/scan/spec.rs",
@@ -2282,8 +2277,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Wire.hs|6c6e6a1e762976b9|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 169,
-    "end": 182,
+    "line": 201,
+    "end": 214,
     "text": "-- | decode → cap check (a complete degraded reply, never a"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../ce.toml|509b429c9ce82c99|0": {
@@ -3636,7 +3631,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|0afbf65a97ab5f7b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 419,
+    "line": 430,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|26d7b0c0bb2a5058|0": {
@@ -3653,8 +3648,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|47e6b9dce7af0f78|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 461,
-    "end": 465,
+    "line": 472,
+    "end": 476,
     "text": "// bit is wire skew, refused by name like every other absent key"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
@@ -3665,7 +3660,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|7530c14d4504672d|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 488,
+    "line": 499,
     "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|86dc4520a4549390|0": {
@@ -3693,26 +3688,26 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c18af790a198146f|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 492,
-    "end": 496,
+    "line": 503,
+    "end": 507,
     "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c89240bb0aef2f0a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 478,
-    "end": 485,
+    "line": 489,
+    "end": 496,
     "text": "degraded,\nfail,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|cfcd49a1f86410c9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 523,
-    "end": 537,
+    "line": 534,
+    "end": 548,
     "text": "/// The informational table, labelled `path#unit` for sections. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f0d7ab62d8583e7e|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 432,
-    "end": 441,
+    "line": 443,
+    "end": 452,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f88de50d7b234cc0|0": {
@@ -4320,41 +4315,41 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|16d9f55e08d25b48|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 152,
-    "end": 154,
+    "line": 155,
+    "end": 157,
     "text": "declaredBits :: [Integer] -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|422fc27589865b29|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 103,
+    "line": 106,
     "text": "deadOut i v = case reqUnres req of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|a9965c7fea5c3599|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 146,
-    "end": 148,
+    "line": 149,
+    "end": 151,
     "text": "fileIdx = IS.fromList [i | (i, _ : k : _) <- zip [0 ..] (reqNodes req), k == granFile]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|b64bbfd00c63fb77|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 129,
+    "line": 132,
     "text": "b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|b64bbfd00c63fb77|1": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 129,
+    "line": 132,
     "text": "b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|be627d41b9635251|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 159,
-    "end": 182,
+    "line": 162,
+    "end": 185,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|be627d41b9635251|1": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 159,
-    "end": 182,
+    "line": 162,
+    "end": 185,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Build.hs|11d50cd97df21a57|0": {
@@ -4388,31 +4383,31 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|218b48ca3a9e695a|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 82,
+    "line": 90,
     "text": ", tableOffence \"edge\" id (edgeRow n) es"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|3387c02ebee80a49|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 200,
-    "end": 208,
+    "line": 210,
+    "end": 218,
     "text": "nonNegative row = if any (< 0) row then Just \"negative field\" else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|6782f370920e2abe|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 205,
-    "end": 208,
+    "line": 215,
+    "end": 218,
     "text": "posRow :: Integer -> Int -> Integer -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|7af31fbd5801de44|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 183,
-    "end": 198,
+    "line": 193,
+    "end": 208,
     "text": "-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|83b3d1c7a8a7681b|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 83,
-    "end": 87,
+    "line": 91,
+    "end": 95,
     "text": ", -- ascending pos is also the reply BOUND (M5-close review MED:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|93cec9aca650cd49|0": {
@@ -4423,13 +4418,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|9c522356ed628d7f|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 69,
-    "end": 91,
+    "line": 76,
+    "end": 98,
     "text": "-- | First boundary-contract offender, if any — checked in request"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|f9794f7ca8482a30|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 172,
+    "line": 182,
     "text": "where\nfields [lang, unres, total]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|0482f5b9a84ffd99|0": {
@@ -4595,13 +4590,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Wire.hs|cb5765da5377654d|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 184,
-    "end": 189,
+    "line": 216,
+    "end": 221,
     "text": "-- | Strictly-ascending row check with the family's label vocabulary"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/test/GraphWireProps.hs|13d8ff795a63a163|0": {
     "target": "../../../core/test/GraphWireProps.hs",
-    "line": 102,
+    "line": 132,
     "text": "confRides :: Bool"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../DEVELOPMENT_PLAN.md|bda1de03fe6ea227|0": {
@@ -5341,10 +5336,10 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|ef7aeca5140391cb|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|ee66ff07977bf446|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.2.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -6568,12 +6563,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|25ec30a05fd96d35|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 131,
+    "line": 163,
     "text": "knobbedRows name cap rowShape knobShape deg jud proto ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|27cf496b88cbf446|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 137,
+    "line": 169,
     "text": ", tableOffence \"knob\" (take 1) knobShape (knobsOf req)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/test/TrendProps.hs|05522fba8966ee03|0": {
@@ -7223,31 +7218,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 533,
-    "end": 535,
+    "line": 545,
+    "end": 547,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 529,
+    "line": 541,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 521,
-    "end": 535,
+    "line": 533,
+    "end": 547,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 524,
-    "end": 525,
+    "line": 536,
+    "end": 537,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 524,
-    "end": 528,
+    "line": 536,
+    "end": 540,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
@@ -7901,14 +7896,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 261,
-    "end": 263,
+    "line": 273,
+    "end": 275,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 115,
-    "end": 122,
+    "line": 118,
+    "end": 125,
     "text": "advisoryKeys :: GraphReq -> [Pair]"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Advisory.hs|1d8463e986c9fd4f|0": {
@@ -7931,14 +7926,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|57a6c65bff23e598|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 112,
-    "end": 119,
+    "line": 120,
+    "end": 127,
     "text": "-- | The advisory tables are one fact in two halves: `unmentioned`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|8c8ee6d34f3f3fe6|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 65,
-    "end": 66,
+    "line": 71,
+    "end": 72,
     "text": "<*> o .:? \"unmentioned\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|007fe87498837f89|0": {
@@ -8597,8 +8592,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Wire.hs|7ce9998aa97b3b95|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 112,
-    "end": 137,
+    "line": 144,
+    "end": 169,
     "text": "tableCap :: Integer -> RowsReq -> Bool"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/test/TombstoneProps.hs|897b6f6807378652|0": {

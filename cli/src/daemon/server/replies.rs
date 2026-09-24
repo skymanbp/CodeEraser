@@ -43,7 +43,8 @@ pub(super) fn probe_reply(root: &Path, file_path: &str, content: &str) -> Respon
 }
 
 /// Cheap by design (ADR-004): opens the index read-path only, never
-/// refreshes; unknown language probes report no matches.
+/// refreshes; unknown-language probes — and languages the index never
+/// fingerprints (`Lang::fingerprints`) — report no matches.
 fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::Value> {
     use crate::dedup::{Params, index::Index, pairs, probe};
     use crate::scan::lang::Lang;
@@ -51,7 +52,7 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     let Some(lang) = Lang::from_path(path) else {
         return Ok(serde_json::json!([]));
     };
-    if lang.grammar().is_none() {
+    if !lang.fingerprints() {
         return Ok(serde_json::json!([]));
     }
     // Same containment authority as the FourClass leg: the path rides
