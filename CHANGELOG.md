@@ -20,6 +20,11 @@
 - **dependabot 三条车道停到手动**（用户裁「推荐。改成手动触发。」）：`schedule.interval` 没有 `manual` 这个值，所以车道照旧声明、`open-pull-requests-limit: 0` 把它们按在零——这正是官方文档给的「暂时停掉某个包管理器的版本更新」的办法。**安全更新是另一条通道，不受这个上限影响**，仓库照收。要升级某样东西时：把那条车道的上限抬起来、让它开 PR、再设回 0。
 - 门：主 check 944 / dedup 55 / scan 88 warn 0 fail，子仓 983 / dedup 119 / scan 42 warn 0 fail，两仓棘轮 pass；lib 375、it 408 (12 ign)、`cabal test` PASS、clippy 与 fmt 清。ADR-006 具名重立（**子仓**）：`it/bench_support/render.rs` 200 → 264 超容差（cap 210）、`it/bench_render.rs` 296 → 358（cap 306），softLine 296 → 297，另三行容差内同定；该次写入同时记下树上早已存在、却从未被写进基线的条目（`check_sim_table.rs`、`unit/score/sim_table.rs`、`site_viewer.rs`、`site_contents.rs`、`site/camera.js` 与四十条单元行），都不是本轮的新活。
 
+**无默认档位变更。** 语言扩展轨道 v2.30 立项（2026-09-24，用户三裁：立项 / HTML 升格为文档类判决语言 / 一版 1.8.0；其余九条按既定原则裁定，逐条记在设计册 §14）：
+
+- **设计先于代码**：`docs/reference/language-expansion.md`（C / C++ / Lua / Java / Ruby / R 走 Haskell 走过的全套——文法钉版、单元、CC 与 CoC、克隆指纹、引用图阶梯、可见性、提及规约；HTML 从纯尺寸臂升格为文档类判决语言；每个 tree-sitter 结点 kind 与字段名都实探于 0.27.0）与 `scripts/tsprobe`（七套钉版文法的 AST 探针 + 十四个样本，本机复跑零 ERROR）由云端会话落在 6900c3f / 1e1bda8。其 CI 35945413754 三平台各只红一项——册 13 自仓普查行：新文件让 U 1034 → 1053（listed 1046 → 1065）。补救 84af1a4 把十四个样本用 `scripts/tsprobe/.gitignore` 的 `snippets/` 模式挡在两条走查之外（文件仍 `git add -f` 跟踪；公式门记 `pattern-ignored` 14，U = 1065 − 14 − 12 = 1039）并重钉普查行，CI 35947387600 全绿。
+- **计划书 v2.30 修正案**：横幅句 + §6 T 轨八步（步 0 计划修正 → 步 1 骨架 → 步 2–5 C/C++ · Java · Lua/Ruby/R · HTML 可并行 → 步 6 评估 → 步 7 文档 → 步 8 发版 1.8.0）；设计册改由横幅链接保活（顶部临时 `ce:allow(deadcode)` 行删除）、§14 改为拍板记录、§15 交接段删除；cc-memory 重锁九步。本提交零判决代码改动：主 check 944 / dedup 55 / scan 88 warn 0 fail，子仓 983 / 119 / 42 warn 0 fail；ADR-006 具名重立（主仓）：`CHANGELOG.md` 691 → 696 超容差（cap 693，长出来的就是本块记账），另两行容差内同定。
+
 ## [v1.7.4] — 2026-09-19 — 官网八页的图片取景器、整站元件对齐、how 页目录面板与中文散文不再断在句中；判决请求的 `sim` 表改成一对文件只出一行（两个家族都判过的那一对曾让核拒收整份请求，`ce check` 在那棵树上一个判决也给不出）
 
 **无默认档位变更。** 官网与 README 读者面（2026-09-14，用户四条：架构图要能放大缩小 / 拖动〔参照 AutoShade README〕、README 首张架构图与正文宽度岔开、网页各元件长宽对齐、截图区一大坨难看 + 全面美化）：

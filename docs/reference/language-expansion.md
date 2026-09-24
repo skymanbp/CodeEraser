@@ -1,8 +1,6 @@
-# 语言扩展设计册：C / C++ / Lua / Java / Ruby / R / HTML（计划 v2.30 修正案草案）
+# 语言扩展设计册：C / C++ / Lua / Java / Ruby / R / HTML（计划 v2.30 修正案）
 
-<!-- ce:allow(deadcode) -- 设计稿尚未被计划书链接；v2.30 修正案并入计划横幅并链接本册后删除本行 -->
-
-> 状态：**设计稿，待用户拍板**（§14 列出全部待裁项）。本册只设计、不落码：计划书 `docs/DEVELOPMENT_PLAN.md` 已由 cc-memory 锁定，流程是「改计划 → 重新锁定 → 才能动代码」，本册即拟并入计划横幅的 v2.30 修正案正文与 §6 新轨步表。表内每个 tree-sitter 结点 kind 与字段名都于 2026-09-24 在 tree-sitter 0.27.0 上**实探**（两轮，§10），不是回忆；标 † 的条目未入本轮样本，落码时由电池实证。先例：M5-3k（Haskell 全文法入判决集，`contracts/coc-haskell-divergences.md`）与计划 v2.5（尺寸门语言臂）——本册是前者的七倍，边界沿用后者。 探针与十四个样本随本册入库：[`scripts/tsprobe`](../../scripts/tsprobe/README.md)；交接事项见 §15。
+> 状态：**已拍板 2026-09-24，v2.30 修正案已并入计划书**（`docs/DEVELOPMENT_PLAN.md` 横幅句与 §6 T 轨八步表；cc-memory 已重锁；每条裁定见 §14）。本册是落码的设计权威：表内每个 tree-sitter 结点 kind 与字段名都于 2026-09-24 在 tree-sitter 0.27.0 上**实探**（两轮，§10；本机复跑十四个样本零 ERROR），不是回忆；标 † 的条目未入本轮样本，落码时由电池实证。先例：M5-3k（Haskell 全文法入判决集，`contracts/coc-haskell-divergences.md`）与计划 v2.5（尺寸门语言臂）——本册是前者的七倍，边界沿用后者。探针与十四个样本随本册入库：[`scripts/tsprobe`](../../scripts/tsprobe/README.md)。
 
 ## 0. 一句话定位
 
@@ -185,7 +183,7 @@ README 双语「范围」句与「语言」行（纯尺寸臂列表随之收窄�
 
 | 步 | 内容 | 门 |
 |---|---|---|
-| 0 | 计划修正 v2.30（横幅句 + §6 新轨表）+ §14 拍板 → cc-memory 重锁 | 用户拍板 |
+| 0 | 计划修正 v2.30（横幅句 + §6 新轨表）+ §14 拍板 → cc-memory 重锁 | 用户拍板（已交付 2026-09-24） |
 | 1 | 骨架：七 crate 钉版、`Lang` 六行 + HTML 翻位、`fingerprints()`、`judgedMask` 上 scan/graph 请求（proto 7.2.0）、核两处边界改读 mask、`Version.hs`/VERSIONING 台账、golden 重生、`grammar_pins` 门 | 既有五语言四语料对拍逐字节不动（DEP-TS 的 16 家族对拍先例）；五语言电池绿 |
 | 2 | C/C++：LangSpec 表、`Declarator` 命名、类内键拼 `Class::`、可见性、include 站点/阶梯、`compile_commands.json` 配置、编译单元角色（核 roleBits）、`coc_c.rs` 电池、交叉核对、D 表落册 | 对拍全归因；D1/D2/D12/D13 各有电池行 |
 | 3 | Java：表、`callee_field` 机制、包反推源根、`type_ref` 站点与 JDK 名表、注解 Registration、可见性、电池/对拍 | 同上；`type_ref` 精度单独出行 |
@@ -195,27 +193,21 @@ README 双语「范围」句与「语言」行（纯尺寸臂列表随之收窄�
 | 7 | 文档与事实（§12） | docs 门全绿、引文重签 |
 | 8 | 发版 1.8.0：分数不可比声明、基线具名重立、bench 入列 | RELEASE.md 链 |
 
-依赖：1 先于一切；2/3/4/5 只追加各自的行与文件，可并行；6 随各语言步收口；7/8 最后。可选拆两版：1.8.0 六个代码语言，1.9.0 HTML（拍板项 3）。
+依赖：1 先于一切；2/3/4/5 只追加各自的行与文件，可并行；6 随各语言步收口；7/8 最后。拍板项 3 已裁一版 1.8.0 七语言，不拆两版。
 
-## 14. 待拍板
+## 14. 拍板记录（2026-09-24）
 
-1. `.h` 归 C++ 文法（§1）——备选：`.h` 归 C，C++ 项目须改用 `.hpp`。
-2. HTML 升格为文档类判决语言（docdup + 图 + 节锚，无指纹）——备选：维持纯尺寸臂，本册去掉 §5 D20、§8 HTML 行与步 5。
-3. 一版（1.8.0 七语言）还是两版（代码语言先、HTML 后）。
-4. 复杂度立场 D1（预处理不计）、D2（default 全计）、D3（Lua/R 匿名函数为独立单元）、D9（R 向量化运算符不计）。
-5. 可见性安全侧 D13 / D14 / D15 / D16。
-6. `type_ref` / `const_ref` 名字站点入图（D17）——不入则 Java/Ruby 的文件级存活判决不可用，须在 README 明示。
-7. 编译单元入口角色与 R 包 `R/` 声明目标（D18；核 roleBits 表加一位）。
-8. `[graph.search_roots]` 键形（每语言一数组）——备选：每语言各一键 `include_dirs` / `lua_paths` / `site_roots`。
-9. 逐语言发布门 = FPR ≤ 1 %（未达门的语言不随版发布）。
-10. 交叉核对语料候选（§11 七个仓）。
-11. 版本号 1.8.0 与「分数与 1.7.x 不可比」声明。
-12. `Member` 不扩展（D23）；Ruby 顶层 def 按导出（D15）。
+用户三裁（本机会话，AskUserQuestion）：立项、第 2 条升格、第 3 条一版；其余九条先按既定原则（最完整最彻底、误判「死」比漏判贵、有先例照先例）自答，只剩一个完整选项的直接定，用户确认「按处置做」。括号里是被排除的备选。
 
-## 15. 交接（本节随 v2.30 并入计划后删除）
-
-- **本会话（2026-09-24，claude.ai/code 云会话）做了什么**：读码定位语言接入的全部触点（`scan/lang.rs`、`scan/spec*.rs`、`fourclass/kinds.rs`、`fourclass/visibility/`、`graph/spec.rs`、`graph/ladder/`、`graph/mounts.rs`、`graph/deadcode/flags.rs`、`mention/conv/`、`mention/selfref.rs`、`docdup/spec.rs`、`docdup/segments.rs`、`dedup/tokens.rs`，核侧 `CE/Scan.hs` 与 `CE/Graph/Contract.hs` 的两处 `lang > 6`）；查 crates.io 取七套文法的最新稳定版；探针两轮十四个样本；写本册；本册与探针分别以两个提交落在分支 `claude/loving-planck-n8sha8`，随后快进并入 `main`。
-- **没做什么**：未改计划书、README、`Cargo.toml`、任何代码；未跑 `cabal test`、`cargo test`、六条自食腿——容器无 GHC（`downloads.haskell.org` 被出站代理以 403 拒绝），tests 子仓可克隆但每条门都要 `ce-core`。本册与探针文件按门的源码逐个核过（`docs_nav` 只读 `methodology.md` 目录表、`layout_tree` 只看顶层目录、`docs_lang` 不管 `docs/`、`mention_universe` 钉的是公式不是字面量），但没有跑过。
-- **CI 实况（main 上的 run 35945413754，三平台同）**：`cargo test` 408 项只红一项——`it/eval_mention.rs` 的册 13 自仓普查行（U 1034 → 1053，探针样本里的通用标识符还遮掉了 7 行未提及顾问）；`site_roast`（两首页自测块）、`docs_nav`、`layout_tree`、`docs_lang`、`facts_*`、`hs_grammar_pin`、`notice_gate` 全绿。两处补救随后一个提交落地：① 样本改由 `scripts/tsprobe/.gitignore` 的 `snippets/` 模式挡在两条走查之外（文件仍 `git add -f` 跟踪；公式门记 `pattern-ignored` 14，`.ceignore` 会被 `mention_universe` 拒绝），U 回到 1039、遮蔽消失；② 册 13 自仓行在本会话 `CE_BLESS=1` 重钉（该门不依赖 ce-core），随后 `eval_mention` / `facts_chips` / `facts_projection` / `facts_registry` / `mention_universe` 本地全绿。**仍未经 CI 验证的只剩六条自食腿**（上一轮在测试步之后被跳过）：`deadcode --check` 靠本册顶部的 allow 行与本册到探针 README 的链接保活，`docdup` / `erase` / `dedup` / `check` 应绿——以补救提交触发的那次 CI 为准。
-- **本地起手式（§13 步 0–1）**：拍板 §14 → 改计划横幅与 §6 → 重锁；`cli/Cargo.toml` 加七行依赖（版本同 `scripts/tsprobe/Cargo.toml`）；`scan/lang.rs` LANGS 表六行 + Html 翻位 + `grammar()` 七臂 + `fingerprints()`；`scan/spec.rs` 的 `spec()` 分派到 `spec_c.rs` / `spec_lua.rs` / `spec_java.rs` / `spec_ruby.rs` / `spec_r.rs`（RM16 拆文件先例）；核 `namingShape` 与 `unresRow` 改读 `judgedMask`；`corelink.rs::PROTO` 与 `Version.hs` 7.2.0；golden 重生；子仓 `it/hs_grammar_pin.rs` 扩为七文法；样本已由 `.gitignore` 模式挡在走查之外，落地后不必改 `ce.toml`（README 已写）。
-- **文件清单**：`docs/reference/language-expansion.md`（本册）；`scripts/tsprobe/{Cargo.toml, .gitignore, README.md, src/main.rs, snippets/×14}`；册 13 自仓普查行（重钉）。探针转录不入库：`cargo run --release -- <文法> snippets/<样本>` 十秒内重出。
+1. `.h` 归 C++ 文法（§1）——**C++**：tree-sitter-cpp 是 tree-sitter-c 的超集，C 头文件在其下零 ERROR（§10；本机复跑 `round2.h`，`int class;` 仍只是 `field_identifier`）；代价只是纯 C 项目的 `.h` 在语言台账里记成 cpp（备选「归 C」会让 Qt / LLVM 式项目写在 `.h` 里的类体整块 ERROR、方法从度量里消失）。
+2. HTML 升格为文档类判决语言——**升格**（用户裁）：docdup + 引用图 + 节锚，无指纹、无函数单元（备选「维持纯尺寸臂」）。
+3. 一版还是两版——**一版 1.8.0 七语言**（用户裁）：逐语言发布门（第 9 条）兜底，未达门的语言不随版发，不拖整版（备选「代码语言先 1.8.0、HTML 后 1.9.0」）。
+4. 复杂度立场 D1 / D2 / D3 / D9——**按 §5 原案**：预处理条件不计（编译期分支不是控制流）、`default` 全计（Rust match_arm / Haskell D2）、Lua / R 匿名函数是独立单元（它们是该语言的函数声明形；Go func_literal 与 TS arrow 两先例各取其一）、R 向量化 `&` / `|` 不计（短路才是分支）。
+5. 可见性安全侧 D13 / D14 / D15 / D16——**安全侧 = 导出**：只读本文件本结点，拿不准就算导出（误判「死」比漏判贵；visibility/mod.rs 原则）。
+6. `type_ref` / `const_ref` 名字站点入图（D17）——**入图**：不入则 Java / Ruby 的文件级存活判决不可用（每个只被同包 / 自动加载引用的文件都成「未引用」）；两类站点的精度单独出行（§11）。
+7. 编译单元入口角色与 R 包 `R/` 声明目标（D18）——**做**：核 roleBits 加位 8，随 7.2.0 minor；`.c/.cc/.cpp/.cxx` 从不被 include，不给角色即全部成死候选。
+8. `[graph.search_roots]` 键形——**一张表，键 = 语言名、值 = 目录数组**（§8）：一处权威、一份文档（备选每语言各一键 `include_dirs` / `lua_paths` / `site_roots`，是同一概念的六种拼写）。
+9. 逐语言发布门 = FPR ≤ 1 %——**是**（R4 先例）：未达门的语言不随版发布。
+10. 交叉核对语料——**按 §11 七仓**：钉版时逐个核许可证与 commit。
+11. 版本号与声明——**1.8.0 + 「分数与 1.7.x 不可比」**：判决人口变 = 分数迁移（1.4.0 先例）。
+12. `Member` 不扩展（D23）、Ruby 顶层 def 按导出（D15）——**是**：顾问要锋利；安全侧。
